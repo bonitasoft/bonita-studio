@@ -373,36 +373,38 @@ public class CustomPasteCommand extends AbstractTransactionalCommand {
 		}
 	}
 
-	private void copyActorsAndActorsMapping(final Element toCopyElement,
-			Element res, AbstractProcess mainProc, AbstractProcess pool) {
+	protected void copyActorsAndActorsMapping(final Element originalElement,
+			Element elementCopy, AbstractProcess mainProc, AbstractProcess pool) {
 		// Copy referenced groups
-		if (toCopyElement instanceof Task && !inSamePool(toCopyElement, targetElement)) {
-			Set<Actor> newActorMappingTypes = getNewGroups(toCopyElement,mainProc) ;
-			Set<Actor> existingActorMappingTypes = getExistingGroups(toCopyElement,mainProc) ;
+		if (originalElement instanceof Task && !inSamePool(originalElement, targetElement)) {
+			Set<Actor> newActorMappingTypes = getNewGroups(originalElement,mainProc) ;
+			Set<Actor> existingActorMappingTypes = getExistingGroups(originalElement,mainProc) ;
 			for (Actor g : newActorMappingTypes) {
 				Actor copiedActorMappingType = EcoreUtil.copy(g);
+				// set initiator to false to avoid conflict with target pool
+				copiedActorMappingType.setInitiator(false);
 				Actor existingActor = getExistingActor(pool.getActors(), copiedActorMappingType);
 				if (existingActor==null){
 					pool.getActors().add(copiedActorMappingType);
 					existingActor = copiedActorMappingType;
 				}
-				((Task) res).setActor(existingActor);
+				((Task) elementCopy).setActor(existingActor);
 			}
-			if (ModelHelper.getParentLane(toCopyElement)!=null && !((Task)toCopyElement).isOverrideActorsOfTheLane()){
-				Actor actor = ModelHelper.getParentLane(toCopyElement).getActor();
+			if (ModelHelper.getParentLane(originalElement)!=null && !((Task)originalElement).isOverrideActorsOfTheLane()){
+				Actor actor = ModelHelper.getParentLane(originalElement).getActor();
 				Actor copiedActorMappingType = EcoreUtil.copy(actor);
 				Actor existingActor = getExistingActor(pool.getActors(), copiedActorMappingType);
 				if (existingActor==null && copiedActorMappingType!=null){
 					pool.getActors().add(copiedActorMappingType);
 					existingActor = copiedActorMappingType;
 				}
-				((Task) res).setActor(existingActor);
-				((Task)res).setOverrideActorsOfTheLane(true);
+				((Task) elementCopy).setActor(existingActor);
+				((Task)elementCopy).setOverrideActorsOfTheLane(true);
 			}
 			for(Actor existingActorMappingType : existingActorMappingTypes){
 				for(Actor procGroup : mainProc.getActors()){
 					if(procGroup.getName().equals(existingActorMappingType.getName())){
-						((Task) res).setActor(procGroup);
+						((Task) elementCopy).setActor(procGroup);
 					}
 				}
 			}
