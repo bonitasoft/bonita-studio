@@ -161,7 +161,7 @@ public class BPMNToProc extends ToProcProcessor {
 	private String resourceName;
 	private List<BPMNPlane> bpmnProcessDiagrams;
 	private BPMNShape subProc;
-	private ArrayList<TProcess> bpmnProcess;
+	private List<TProcess> bpmnProcess;
 	private final List<Object> errorElements = new ArrayList<Object>();
 	private TDefinitions definitions;
 	private EList<TRootElement> rootElements;
