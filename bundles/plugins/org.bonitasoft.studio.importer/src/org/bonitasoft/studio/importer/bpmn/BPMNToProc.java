@@ -184,6 +184,41 @@ public class BPMNToProc extends ToProcProcessor {
 	// private Point posMin;//used in case, no pool shape defined and no
 	// participant defined and no laneset defined
 
+	private final static String[] tagNameWithQNames = new String[] { "source", "target",
+			"sourceRef", "targetRef", "attachedToRef",
+			"supportedInterfaceRef", "calledElement",
+			"calledChoreographyRef", "calledCollaborationRef",
+			"eventDefinitionRef", "participantRef",
+			"initiatingParticipantRef",
+			"messageFlowRef",
+			"choreographyRef",
+			"activityRef",
+			"innerConversationNodeRef",
+			"outerConversationNodeRef",
+			"participantRef",
+			"messageFlowRef",
+			"correlationPropertyRef",
+			"type",
+			"messageRef",
+			"correlationKeyRef",
+			"itemSubjectRef",
+			"dataStoreRef",
+			"structureRef",
+			"errorRef",
+			"escalationRef",
+			"definition",// check that it collapsed not with other
+			"categoryValueRef", "incoming", "outgoing",
+			"evaluatesToTypeRef", "initiatingParticipantRef",
+			"implementationRef", "operationRef", "partitionElementRef",
+			"itemRef", "innerMessageFlowRef", "outerMessageFlowRef",
+			"loopDataInputRef", "loopDataOutputRef",
+			"oneBehaviorEventRef", "noneBehaviorEventRef",
+			"inMessageRef", "outMessageRef", "endPointRef",
+			"processRef", "innerParticipantRef", "outerParticipantRef",
+			"participantRef", "supports",
+			"definitionalCollaborationRef", "itemSubjectRef",
+			"parameterRef", "resourceRef", "signalRef",
+			"eventDefinitionRef", "attachedToRef" };
 	/**
 	 * @param resourceName
 	 */
@@ -219,41 +254,6 @@ public class BPMNToProc extends ToProcProcessor {
 			}
 
 			/* Search for bad Qname */
-			String[] tagNameWithQNames = new String[] { "source", "target",
-					"sourceRef", "targetRef", "attachedToRef",
-					"supportedInterfaceRef", "calledElement",
-					"calledChoreographyRef", "calledCollaborationRef",
-					"eventDefinitionRef", "participantRef",
-					"initiatingParticipantRef",
-					"messageFlowRef",
-					"choreographyRef",
-					"activityRef",
-					"innerConversationNodeRef",
-					"outerConversationNodeRef",
-					"participantRef",
-					"messageFlowRef",
-					"correlationPropertyRef",
-					"type",
-					"messageRef",
-					"correlationKeyRef",
-					"itemSubjectRef",
-					"dataStoreRef",
-					"structureRef",
-					"errorRef",
-					"escalationRef",
-					"definition",// check that it collapsed not with other
-					"categoryValueRef", "incoming", "outgoing",
-					"evaluatesToTypeRef", "initiatingParticipantRef",
-					"implementationRef", "operationRef", "partitionElementRef",
-					"itemRef", "innerMessageFlowRef", "outerMessageFlowRef",
-					"loopDataInputRef", "loopDataOutputRef",
-					"oneBehaviorEventRef", "noneBehaviorEventRef",
-					"inMessageRef", "outMessageRef", "endPointRef",
-					"processRef", "innerParticipantRef", "outerParticipantRef",
-					"participantRef", "supports",
-					"definitionalCollaborationRef", "itemSubjectRef",
-					"parameterRef", "resourceRef", "signalRef",
-					"eventDefinitionRef", "attachedToRef" };
 			for (String tagName : tagNameWithQNames) {
 				NodeList nodeList = document.getDocumentElement()
 						.getElementsByTagName(tagName);
@@ -1929,52 +1929,61 @@ public class BPMNToProc extends ToProcProcessor {
 		// TODO: in order to support more import, we should be able to
 		// understand also when there is simple xsd type
 		String prefix = itemDefinition.getStructureRef().getPrefix();
-		String dataTypeToRetrieve = itemDefinition.getStructureRef()
-				.getLocalPart();
+		String dataTypeToRetrieve = itemDefinition.getStructureRef().getLocalPart();
 		return getDataType(prefix, dataTypeToRetrieve);
 	}
 
 	protected DataType getDataType(String prefix, String dataTypeToRetrieve) {
 		if (JAVA_XMLNS.equals(prefix)) {
 			if (dataTypeToRetrieve != null) {
-				if ("java.lang.Long".equals(dataTypeToRetrieve)) {
-					return DataType.LONG;
-				} else if ("java.lang.Integer".equals(dataTypeToRetrieve)) {
-					return DataType.INTEGER;
-				} else if ("java.lang.Double".equals(dataTypeToRetrieve)) {
-					return DataType.DOUBLE;
-				} else if ("java.util.Date".equals(dataTypeToRetrieve)) {
-					return DataType.DATE;
-				} else if ("java.lang.Boolean".equals(dataTypeToRetrieve)) {
-					return DataType.BOOLEAN;
-				} else if ("org.ow2.bonita.facade.runtime.AttachmentInstance"
-						.equals(dataTypeToRetrieve)) {
-					return DataType.ATTACHMENT;
-				} else if ("java.lang.String".equals(dataTypeToRetrieve)) {
-					return DataType.STRING;
-				} else if ("java.lang.Float".equals(dataTypeToRetrieve)) {
-					return DataType.DECIMAL;
-				} else {// java class
-					return DataType.JAVA;
-				}
+				return getDataTypeForJavaSpace(dataTypeToRetrieve);
 			}
 		} else if ("xsd".equals(prefix)) {
-			if (toString.contains(dataTypeToRetrieve)) {
-				return DataType.STRING;
-			} else if (toInteger.contains(dataTypeToRetrieve)) {
-				return DataType.INTEGER;
-			} else if (toDecimal.contains(dataTypeToRetrieve)) {
-				return DataType.DECIMAL;
-			} else if (toDate.contains(dataTypeToRetrieve)) {
-				return DataType.DATE;
-			} else if ("boolean".equals(dataTypeToRetrieve)) {
-				return DataType.BOOLEAN;
-			}
+			return getDataTypeForXmlSpace(dataTypeToRetrieve);
 		} else {
 			// another xml types? how to check?
 			return DataType.XML;
 		}
 		return null;
+	}
+
+	private DataType getDataTypeForXmlSpace(String dataTypeToRetrieve) {
+		if (toString.contains(dataTypeToRetrieve)) {
+			return DataType.STRING;
+		} else if (toInteger.contains(dataTypeToRetrieve)) {
+			return DataType.INTEGER;
+		} else if (toDecimal.contains(dataTypeToRetrieve)) {
+			return DataType.DECIMAL;
+		} else if (toDate.contains(dataTypeToRetrieve)) {
+			return DataType.DATE;
+		} else if ("boolean".equals(dataTypeToRetrieve)) {
+			return DataType.BOOLEAN;
+		} else {
+			return null;
+		}
+	}
+
+	private DataType getDataTypeForJavaSpace(String dataTypeToRetrieve) {
+		if ("java.lang.Long".equals(dataTypeToRetrieve)) {
+			return DataType.LONG;
+		} else if ("java.lang.Integer".equals(dataTypeToRetrieve)) {
+			return DataType.INTEGER;
+		} else if ("java.lang.Double".equals(dataTypeToRetrieve)) {
+			return DataType.DOUBLE;
+		} else if ("java.util.Date".equals(dataTypeToRetrieve)) {
+			return DataType.DATE;
+		} else if ("java.lang.Boolean".equals(dataTypeToRetrieve)) {
+			return DataType.BOOLEAN;
+		} else if ("org.ow2.bonita.facade.runtime.AttachmentInstance"
+				.equals(dataTypeToRetrieve)) {
+			return DataType.ATTACHMENT;
+		} else if ("java.lang.String".equals(dataTypeToRetrieve)) {
+			return DataType.STRING;
+		} else if ("java.lang.Float".equals(dataTypeToRetrieve)) {
+			return DataType.DECIMAL;
+		} else {// java class
+			return DataType.JAVA;
+		}
 	}
 
 	private TItemDefinition getItemDefinition(QName itemSubjectRef) {
