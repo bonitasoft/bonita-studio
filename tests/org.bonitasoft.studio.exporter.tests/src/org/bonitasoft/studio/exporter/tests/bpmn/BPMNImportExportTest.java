@@ -49,6 +49,7 @@ import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -286,6 +287,16 @@ public class BPMNImportExportTest extends TestCase {
 	}
 	public void testImportExportBruceSampleOurSubsNoPoolCorrected() throws MalformedURLException, IOException, InterruptedException{
 		final String bpmnFileName = "brucesample/ourSubsNoPool-corrected.bpmn";
+		doTest(bpmnFileName);
+	}
+	
+	public void testImportExportPositionsForSeveralPoolWithoutLanes() throws MalformedURLException, IOException, InterruptedException{
+		final String bpmnFileName = "Interchange Demo.bpmn";
+		doTest(bpmnFileName);
+	}
+	
+	public void testImportExportWithEmptyLaneset() throws MalformedURLException, IOException, InterruptedException{
+		final String bpmnFileName = "Front office.bpmn";
 		doTest(bpmnFileName);
 	}
 
@@ -730,10 +741,21 @@ public class BPMNImportExportTest extends TestCase {
 			/*Search in all Processes ...*/
 			if(rootElement instanceof TProcess){
 				/*... in all LaneSets...*/
-				for(TLaneSet laneSet : ((TProcess)rootElement).getLaneSet()){
-					containerId = findContainerIdOf(id, laneSet);
-					if(containerId != null){
-						break;
+				final EList<TLaneSet> laneSet = ((TProcess) rootElement).getLaneSet();
+				if(!laneSet.isEmpty()){
+					for (TLaneSet childLaneSet : laneSet) {
+						containerId = findContainerIdOf(id, childLaneSet);
+						if (containerId != null) {
+							break;
+						}
+					}
+				} else {
+					//Search directly in the process
+					for(TFlowElement flowElement : ((TProcess)rootElement).getFlowElement()){
+						if(id.equals(flowElement.getId())){
+							containerId = rootElement.getId();
+							break;
+						}
 					}
 				}
 			}
@@ -774,7 +796,10 @@ public class BPMNImportExportTest extends TestCase {
 		}
 		Point containerLocation = new Point();
 		if(containerId != null){
-			containerLocation = getLocationFor(tDefinitions, containerId).getCopy().translate(-25, -25);
+			final Point initialLocationContainer = getLocationFor(tDefinitions, containerId);
+			if(initialLocationContainer != null){
+				containerLocation = initialLocationContainer.getCopy().translate(-25, -25);
+			}
 		} else {
 			//TODO : support recursivity fort subprocesses, we are doing it only in tests because
 			/*check we were not in a subprocess from BPMN that is not in a lane*/

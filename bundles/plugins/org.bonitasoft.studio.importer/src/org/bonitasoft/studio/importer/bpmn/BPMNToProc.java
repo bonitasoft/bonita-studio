@@ -233,8 +233,7 @@ public class BPMNToProc extends ToProcProcessor {
 	}
 
 	@Override
-	public File createDiagram(URL sourceBPMNUrl,
-			IProgressMonitor progressMonitor) {
+	public File createDiagram(URL sourceBPMNUrl, IProgressMonitor progressMonitor) {
 
 		progressMonitor.beginTask(Messages.importFromBPMN,
 				IProgressMonitor.UNKNOWN);
@@ -254,34 +253,7 @@ public class BPMNToProc extends ToProcProcessor {
 			}
 
 			/* Search for bad Qname */
-			for (String tagName : tagNameWithQNames) {
-				NodeList nodeList = document.getDocumentElement()
-						.getElementsByTagName(tagName);
-				for (int i = 0; i < nodeList.getLength(); i++) {
-					org.w3c.dom.Node node = nodeList.item(i);
-					NodeList sourceNodeList = node.getChildNodes();
-					for (int j = 0; j < sourceNodeList.getLength(); j++) {
-						org.w3c.dom.Node sourceNode = sourceNodeList.item(j);
-						final String nodeValue = sourceNode.getNodeValue();
-						try {
-							new org.eclipse.emf.ecore.xml.type.internal.QName(
-									nodeValue);
-						} catch (Exception e) {
-							/*
-							 * this is not a valid QName, replace it and avert
-							 * user
-							 */
-							final String convertedQName = nodeValue.replace(
-									'/', '_').replace(':', '_');
-							errorElements.add("invalid QName of tagName "
-									+ tagName + ": " + nodeValue
-									+ " converted to " + convertedQName);
-							sourceNode.setNodeValue(convertedQName);
-							hadBeenPreProcessed = true;
-						}
-					}
-				}
-			}
+			hadBeenPreProcessed = replaceBadQNames(document) || hadBeenPreProcessed;
 
 			if (hadBeenPreProcessed) {
 				File file = File.createTempFile("importBPMN", ".bpmn",
@@ -325,40 +297,17 @@ public class BPMNToProc extends ToProcProcessor {
 
 			final DocumentRoot docRoot = (DocumentRoot) rootContent;
 
-			String id = null;
-			String name = null;
 			final TDefinitions docRootDefinitions = docRoot.getDefinitions();
 			if (docRootDefinitions == null) {
 				throw new Exception("Document type not supported");
 			}
-			if (docRootDefinitions.getId() == null
-					|| docRootDefinitions.getId().length() == 0) {
-				id = resourceName.substring(0, resourceName.lastIndexOf("."));
-			} else {
-				id = docRootDefinitions.getId();
-			}
-			if (docRootDefinitions.getName() == null
-					|| docRootDefinitions.getName().isEmpty()) {
-				name = resourceName.substring(0, resourceName.lastIndexOf("."));
-			} else {
-				name = docRootDefinitions.getName();
-			}
+			String id = calculateBonitaDiagramId(docRootDefinitions);
+			String name = calculateBonitaDiagramName(docRootDefinitions);
 			result = File.createTempFile(id, ".proc");
 			builder.createDiagram(id, name, "1.0", result);
 			// create model and diagram
 
-			for (java.util.Map.Entry<String, String> entry : docRoot
-					.getXMLNSPrefixMap().entrySet()) {
-				if ("http://jcp.org/en/jsr/detail?id=270".equals(entry
-						.getValue())) {
-					JAVA_XMLNS = entry.getKey();
-				} else if ("http://www.bonitasoft.org/studio/connector/definition/6.0"
-						.equals(entry.getValue())) {
-					XMLNS_HTTP_BONITASOFT_COM_BONITA_CONNECTOR_DEFINITION = entry
-							.getKey();
-				}
-
-			}
+			updateXMLNamespaceIfNeeded(docRoot);
 			importFromBPMN(docRootDefinitions);
 
 			builder.done();
@@ -367,6 +316,75 @@ public class BPMNToProc extends ToProcProcessor {
 			BonitaStudioLog.error(e);
 		}
 		return null;
+	}
+
+	private void updateXMLNamespaceIfNeeded(final DocumentRoot docRoot) {
+		for (java.util.Map.Entry<String, String> entry : docRoot
+				.getXMLNSPrefixMap().entrySet()) {
+			if ("http://jcp.org/en/jsr/detail?id=270".equals(entry
+					.getValue())) {
+				JAVA_XMLNS = entry.getKey();
+			} else if ("http://www.bonitasoft.org/studio/connector/definition/6.0"
+					.equals(entry.getValue())) {
+				XMLNS_HTTP_BONITASOFT_COM_BONITA_CONNECTOR_DEFINITION = entry
+						.getKey();
+			}
+		}
+	}
+
+	private String calculateBonitaDiagramName(final TDefinitions docRootDefinitions) {
+		String name = null;
+		if (docRootDefinitions.getName() == null
+				|| docRootDefinitions.getName().isEmpty()) {
+			name = resourceName.substring(0, resourceName.lastIndexOf("."));
+		} else {
+			name = docRootDefinitions.getName();
+		}
+		return name;
+	}
+
+	private String calculateBonitaDiagramId(final TDefinitions docRootDefinitions) {
+		String id = null;
+		if (docRootDefinitions.getId() == null
+				|| docRootDefinitions.getId().length() == 0) {
+			id = resourceName.substring(0, resourceName.lastIndexOf("."));
+		} else {
+			id = docRootDefinitions.getId();
+		}
+		return id;
+	}
+
+	private boolean replaceBadQNames(Document document) {
+		boolean hadBeenPreProcessed = false;
+		for (String tagName : tagNameWithQNames) {
+			NodeList nodeList = document.getDocumentElement()
+					.getElementsByTagName(tagName);
+			for (int i = 0; i < nodeList.getLength(); i++) {
+				org.w3c.dom.Node node = nodeList.item(i);
+				NodeList sourceNodeList = node.getChildNodes();
+				for (int j = 0; j < sourceNodeList.getLength(); j++) {
+					org.w3c.dom.Node sourceNode = sourceNodeList.item(j);
+					final String nodeValue = sourceNode.getNodeValue();
+					try {
+						new org.eclipse.emf.ecore.xml.type.internal.QName(
+								nodeValue);
+					} catch (Exception e) {
+						/*
+						 * this is not a valid QName, replace it and avert
+						 * user
+						 */
+						final String convertedQName = nodeValue.replace(
+								'/', '_').replace(':', '_');
+						errorElements.add("invalid QName of tagName "
+								+ tagName + ": " + nodeValue
+								+ " converted to " + convertedQName);
+						sourceNode.setNodeValue(convertedQName);
+						hadBeenPreProcessed = true;
+					}
+				}
+			}
+		}
+		return hadBeenPreProcessed;
 	}
 
 	/**
@@ -427,8 +445,7 @@ public class BPMNToProc extends ToProcProcessor {
 	 * @param el
 	 * @throws Exception
 	 */
-	private Point createProcess(TProcess el, Point location)
-			throws ProcBuilderException {
+	private Point createProcess(TProcess el, Point location) throws ProcBuilderException {
 		posMax = new Point();
 		// posMin = new Point();
 		TProcess process = el;
@@ -452,69 +469,70 @@ public class BPMNToProc extends ToProcProcessor {
 		processDataObjects(process);
 
 		final EList<TFlowElement> flowElements = process.getFlowElement();
-		int nbActivities = 0;
 		if (process.getLaneSet().isEmpty()) {
-			nbActivities = processActivities(flowElements, false);
-			if (!useBpmnDiagram) {
-				Dimension newSize = new Dimension();
-				newSize.width = 100 + Math.max(150 * (nbActivities % 7),
-						posMax.x) + 300;
-				newSize.height = Math.max(100 * (1 + (nbActivities / 7)),
-						posMax.y) + 100;
-				builder.updateSize(process.getId(), newSize);
-			}
+			createProcessWithoutLanes(process, flowElements);
 		} else {
-
 			List<TLane> lanes = getAllTLanes(process.getLaneSet());
-			for (TLane tLane : lanes) {
-				final Dimension sizeFor = getSizeFor(tLane.getId());
-				if (sizeFor != null) {
-					sizeFor.width = -1;
-				}
-				String laneName = tLane.getName();
-				if (tLane.getName() == null || tLane.getName().isEmpty()) {
-					laneName = tLane.getId();
-				}
-				builder.addLane(tLane.getId(), laneName, sizeFor);
-				addFontStyle(tLane.getId());
-				/* Put Documentation */
-				StringBuilder sb = new StringBuilder();
-				for (TDocumentation doc : tLane.getDocumentation()) {
-					final Iterator<org.eclipse.emf.ecore.util.FeatureMap.Entry> iterator = doc
-							.getMixed().iterator();
-					while (iterator.hasNext()) {
-						FeatureMap.Entry entry = iterator.next();
-						if (FeatureMapUtil.isText(entry)) {
-							sb.append(entry.getValue()).append("\n");
-						}
-					}
-				}
-				builder.addDescription(sb.toString());
-
-				List<TFlowElement> inLane = new ArrayList<TFlowElement>();
-				/* Retrieve flowElement that are in the Tlane */
-				for (String flownNodeRef : tLane.getFlowNodeRef()) {
-					for (TFlowElement flowElement : flowElements) {
-						if (flownNodeRef.equals(flowElement.getId())) {
-							inLane.add(flowElement);
-							break;
-						}
-					}
-				}
-				nbActivities = processActivities(inLane, false);
-				if (!useBpmnDiagram) {
-					Dimension newSize = new Dimension();
-					newSize.width = 100 + 150 * (nbActivities % 7) + 300;
-					newSize.height = 100 * (1 + (nbActivities / 7)) + 100;
-					builder.updateSize(tLane.getId(), newSize);
-				}
-
-				builder.switchToParentContainer();
-			}
+			if(!lanes.isEmpty()){
+				createProcessWithLanes(flowElements, lanes);
+			} else {
+				//Some tools are exporting empty laneset (IBM BlueWorks Live for instance)
+				createProcessWithoutLanes(process, flowElements);
+			}			
 		}
 		processBoundaries(flowElements);
 
 		return location;
+	}
+
+	private void createProcessWithLanes(final EList<TFlowElement> flowElements, List<TLane> lanes) throws ProcBuilderException {
+		int nbActivities = 0;
+		for (TLane tLane : lanes) {
+			final Dimension sizeFor = getSizeFor(tLane.getId());
+			if (sizeFor != null) {
+				sizeFor.width = -1;
+			}
+			String laneName = tLane.getName();
+			if (tLane.getName() == null || tLane.getName().isEmpty()) {
+				laneName = tLane.getId();
+			}
+			builder.addLane(tLane.getId(), laneName, sizeFor);
+			addFontStyle(tLane.getId());
+			builder.addDescription(retrieveDocumentation(tLane));
+
+			List<TFlowElement> inLane = new ArrayList<TFlowElement>();
+			/* Retrieve flowElement that are in the Tlane */
+			for (String flownNodeRef : tLane.getFlowNodeRef()) {
+				for (TFlowElement flowElement : flowElements) {
+					if (flownNodeRef.equals(flowElement.getId())) {
+						inLane.add(flowElement);
+						break;
+					}
+				}
+			}
+			nbActivities = processActivities(inLane, false);
+			if (!useBpmnDiagram) {
+				Dimension newSize = new Dimension();
+				newSize.width = 100 + 150 * (nbActivities % 7) + 300;
+				newSize.height = 100 * (1 + (nbActivities / 7)) + 100;
+				builder.updateSize(tLane.getId(), newSize);
+			}
+
+			builder.switchToParentContainer();
+		}
+	}
+
+	private void createProcessWithoutLanes(TProcess process,
+			final EList<TFlowElement> flowElements) throws ProcBuilderException {
+		int nbActivities = processActivities(flowElements, false);
+		if (!useBpmnDiagram) {
+			Dimension newSize = new Dimension();
+			newSize.width = 100 + Math.max(150 * (nbActivities % 7),
+					posMax.x) + 300;
+			newSize.height = Math.max(100 * (1 + (nbActivities / 7)),
+					posMax.y) + 100;
+			builder.updateSize(process.getId(), newSize);
+		}
 	}
 
 	protected void addFontStyle(String bpmnId) throws ProcBuilderException {
@@ -1117,13 +1135,7 @@ public class BPMNToProc extends ToProcProcessor {
 						// after
 						activityNumber++;
 
-						String name;
-						if (flowNode.getName() != null
-								&& flowNode.getName().length() > 0) {
-							name = flowNode.getName();
-						} else {
-							name = flowNode.getId();
-						}
+						String name = computeBonitaNameOf(flowNode);
 
 						// Documentation
 						final String documentation = retrieveDocumentation(flowNode);
@@ -1189,30 +1201,7 @@ public class BPMNToProc extends ToProcProcessor {
 
 							if (taskType == TaskType.CALL_ACTIVITY) {
 								if (flowNode instanceof TSubProcess) {
-									TSubProcess bpmnSubProcess = ((TSubProcess) flowNode);
-									builder.addCallActivityTargetProcess(
-											"subProc_"+NamingUtils.convertToId(flowNode
-													.getId()), "1.0");
-
-									for (TDataInputAssociation input : bpmnSubProcess
-											.getDataInputAssociation()) {
-										for (TAssignment assignment : input
-												.getAssignment()) {
-											// assignment.getFrom()
-										}
-										builder.addCallActivityInParameter(
-												input.getTargetRef(), null);
-									}
-
-									for (TDataOutputAssociation output : bpmnSubProcess
-											.getDataOutputAssociation()) {
-										builder.addCallActivityOutParameter(
-												null, output.getTargetRef());
-									}
-									// the sub process event will be set with
-									// the correct pool when we create it
-									// create a pool for the subprocess
-									subProcesses.add((TSubProcess) flowNode);
+									processSubProcess((TSubProcess) flowNode);
 								} else if (flowNode instanceof TCallActivity) {
 									TCallActivity callActivity = (TCallActivity) flowNode;
 									fillCalledActivity(callActivity);
@@ -1230,6 +1219,43 @@ public class BPMNToProc extends ToProcProcessor {
 			}
 		}
 		return activityNumber;
+	}
+
+	private String computeBonitaNameOf(TFlowNode flowNode) {
+		String name;
+		if (flowNode.getName() != null
+				&& flowNode.getName().length() > 0) {
+			name = flowNode.getName();
+		} else {
+			name = flowNode.getId();
+		}
+		return name;
+	}
+
+	private void processSubProcess(TSubProcess bpmnSubProcess) throws ProcBuilderException {
+		builder.addCallActivityTargetProcess(
+				"subProc_"+NamingUtils.convertToId(bpmnSubProcess
+						.getId()), "1.0");
+
+		for (TDataInputAssociation input : bpmnSubProcess
+				.getDataInputAssociation()) {
+			for (TAssignment assignment : input
+					.getAssignment()) {
+				// assignment.getFrom()
+			}
+			builder.addCallActivityInParameter(
+					input.getTargetRef(), null);
+		}
+
+		for (TDataOutputAssociation output : bpmnSubProcess
+				.getDataOutputAssociation()) {
+			builder.addCallActivityOutParameter(
+					null, output.getTargetRef());
+		}
+		// the sub process event will be set with
+		// the correct pool when we create it
+		// create a pool for the subprocess
+		subProcesses.add((TSubProcess) bpmnSubProcess);
 	}
 
 	private void fillCalledActivity(TCallActivity callActivity)	throws ProcBuilderException {
@@ -2140,40 +2166,10 @@ public class BPMNToProc extends ToProcProcessor {
 
 		if (flowNode instanceof TCatchEvent) {
 			if (flowNode instanceof TStartEvent) {
-				if (!((TStartEvent) flowNode).getEventDefinition().isEmpty()) {
-					for (TEventDefinition e : ((TStartEvent) flowNode)
-							.getEventDefinition()) {
-						if (e instanceof TMessageEventDefinition) {
-							return EventType.START_MESSAGE;
-						} else if (e instanceof TTimerEventDefinition) {
-							return EventType.START_TIMER;
-						} else if (e instanceof TSignalEventDefinition) {
-							return EventType.START_SIGNAL;
-						} else if (e instanceof TErrorEventDefinition) {
-							return EventType.START_ERROR;
-						}
-					}
-				}
-				return EventType.START;
+				return getStartEventTypeFor(flowNode);
 			}
 			if (flowNode instanceof TBoundaryEvent) {
-				if (!((TBoundaryEvent) flowNode).getEventDefinition().isEmpty()) {
-					for (TEventDefinition e : ((TBoundaryEvent) flowNode)
-							.getEventDefinition()) {
-						if (e instanceof TMessageEventDefinition) {
-							return EventType.MESSAGE_BOUNDARY;
-						} else if (e instanceof TTimerEventDefinition && ((TBoundaryEvent) flowNode).isCancelActivity()) {
-							return EventType.TIMER_BOUNDARY;
-						}else if (e instanceof TTimerEventDefinition && !((TBoundaryEvent) flowNode).isCancelActivity()) {
-							return EventType.NON_INTERRUPTING_TIMER_BOUNDARY;
-						} else if (e instanceof TSignalEventDefinition) {
-							return EventType.SIGNAL_BOUNDARY;
-						} else if (e instanceof TErrorEventDefinition) {
-							return EventType.ERROR_BOUNDARY;
-						}
-					}
-				}
-
+				return getBoundaryEventType(flowNode);
 			} else {
 				if (!((TCatchEvent) flowNode).getEventDefinition().isEmpty()) {
 					for (TEventDefinition e : ((TCatchEvent) flowNode)
@@ -2199,21 +2195,7 @@ public class BPMNToProc extends ToProcProcessor {
 		}
 		if (flowNode instanceof TThrowEvent) {
 			if (flowNode instanceof TEndEvent) {
-				if (!((TEndEvent) flowNode).getEventDefinition().isEmpty()) {
-					for (TEventDefinition e : ((TEndEvent) flowNode)
-							.getEventDefinition()) {
-						if (e instanceof TMessageEventDefinition) {
-							return EventType.END_MESSAGE;
-						} else if (e instanceof TSignalEventDefinition) {
-							return EventType.END_SIGNAL;
-						} else if (e instanceof TErrorEventDefinition) {
-							return EventType.END_ERROR;
-						} else if (e instanceof TTerminateEventDefinition) {
-							return EventType.END_TERMINATED;
-						}
-					}
-				}
-				return EventType.END;
+				return getEndEventTypeFor(flowNode);
 			}
 			if (flowNode instanceof TThrowEvent) {
 				if (!((TThrowEvent) flowNode).getEventDefinition().isEmpty()) {
@@ -2227,11 +2209,75 @@ public class BPMNToProc extends ToProcProcessor {
 							return EventType.INTERMEDIATE_THROW_SIGNAL;
 						}
 					}
-
 				}
 			}
 		}
 		return null;
+	}
+
+	private EventType getBoundaryEventType(TEvent flowNode) {
+		if (!((TBoundaryEvent) flowNode).getEventDefinition().isEmpty()) {
+			for (TEventDefinition e : ((TBoundaryEvent) flowNode)
+					.getEventDefinition()) {
+				if (e instanceof TMessageEventDefinition) {
+					return EventType.MESSAGE_BOUNDARY;
+				} else if (e instanceof TTimerEventDefinition && ((TBoundaryEvent) flowNode).isCancelActivity()) {
+					return EventType.TIMER_BOUNDARY;
+				}else if (e instanceof TTimerEventDefinition && !((TBoundaryEvent) flowNode).isCancelActivity()) {
+					return EventType.NON_INTERRUPTING_TIMER_BOUNDARY;
+				} else if (e instanceof TSignalEventDefinition) {
+					return EventType.SIGNAL_BOUNDARY;
+				} else if (e instanceof TErrorEventDefinition) {
+					return EventType.ERROR_BOUNDARY;
+				}
+			}
+		}
+		return null;
+	}
+
+	private EventType getEndEventTypeFor(TEvent flowNode) {
+		if (!((TEndEvent) flowNode).getEventDefinition().isEmpty()) {
+			for (TEventDefinition e : ((TEndEvent) flowNode)
+					.getEventDefinition()) {
+				if (e instanceof TMessageEventDefinition) {
+					return EventType.END_MESSAGE;
+				} else if (e instanceof TSignalEventDefinition) {
+					return EventType.END_SIGNAL;
+				} else if (e instanceof TErrorEventDefinition) {
+					return EventType.END_ERROR;
+				} else if (e instanceof TTerminateEventDefinition) {
+					return EventType.END_TERMINATED;
+				}
+			}
+		}
+		return EventType.END;
+	}
+
+	private EventType getStartEventTypeFor(TEvent flowNode) {
+		if (!((TStartEvent) flowNode).getEventDefinition().isEmpty()) {
+			for (TEventDefinition e : ((TStartEvent) flowNode)
+					.getEventDefinition()) {
+				EventType res = getStartEventTypeFor(e);
+				if(res !=null){
+					return res;
+				}
+			}
+		}
+		return EventType.START;
+	}
+
+	private EventType getStartEventTypeFor(TEventDefinition e) {
+		if (e instanceof TMessageEventDefinition) {
+			return EventType.START_MESSAGE;
+		} else if (e instanceof TTimerEventDefinition) {
+			return EventType.START_TIMER;
+		} else if (e instanceof TSignalEventDefinition) {
+			return EventType.START_SIGNAL;
+		} else if (e instanceof TErrorEventDefinition) {
+			return EventType.START_ERROR;
+		} else {
+			return null;
+		}
 	}
 
 	private TEventDefinition findCorrespondingEventDefinition(QName qNameEventDefRef) {
@@ -2278,8 +2324,7 @@ public class BPMNToProc extends ToProcProcessor {
 								 * the current element
 								 */
 								final Bounds bounds = subProc.getBounds();
-								Point parentLoc = new Point(bounds.getX(),
-										bounds.getY());
+								Point parentLoc = new Point((int)bounds.getX(),	(int)bounds.getY());
 								loc.translate(parentLoc.getNegated())
 								.translate(30, 0);
 								break;
@@ -2360,7 +2405,7 @@ public class BPMNToProc extends ToProcProcessor {
 							+ 35;
 					final double y = bounds.getY() - containerLocation.y
 							+ 35;
-					return new Point(Math.max(x, 0), Math.max(0, y));
+					return new Point((int)Math.max(x, 0), (int)Math.max(0, y));
 				}
 			}
 		}
@@ -2369,21 +2414,7 @@ public class BPMNToProc extends ToProcProcessor {
 
 	protected Point getContainerLocationFor(String id) {
 		/* Retrieve container */
-		String containerId = null;
-		Iterator<TRootElement> rootElementsIterator = rootElements.iterator();
-		while (containerId == null && rootElementsIterator.hasNext()) {
-			TRootElement rootElement = rootElementsIterator.next();
-			/* Search in all Processes ... */
-			if (rootElement instanceof TProcess) {
-				/* ... in all LaneSets... */
-				for (TLaneSet laneSet : ((TProcess) rootElement).getLaneSet()) {
-					containerId = findContainerIdOf(id, laneSet);
-					if (containerId != null) {
-						break;
-					}
-				}
-			}
-		}
+		String containerId = findContainerId(id);
 		/* if we don't find a container, perhaps it is because it is a TArtifact */
 		if (containerId == null) {
 			/* so search with a different algo... thanks BPMN2!!! */
@@ -2442,10 +2473,43 @@ public class BPMNToProc extends ToProcProcessor {
 
 		Point containerLocation = new Point();
 		if (containerId != null) {
-			containerLocation = getLocationFor(containerId).getCopy()
-					.translate(-25, -25);
+			final Point initialContainerLocation = getLocationFor(containerId);
+			if(initialContainerLocation != null){
+				containerLocation = initialContainerLocation.getCopy()
+						.translate(-25, -25);
+			}
 		}
 		return containerLocation;
+	}
+
+	private String findContainerId(String id) {
+		String containerId = null;
+		Iterator<TRootElement> rootElementsIterator = rootElements.iterator();
+		while (containerId == null && rootElementsIterator.hasNext()) {
+			TRootElement rootElement = rootElementsIterator.next();
+			/* Search in all Processes ... */
+			if (rootElement instanceof TProcess) {
+				/* ... in all LaneSets... */
+				final EList<TLaneSet> laneSet = ((TProcess) rootElement).getLaneSet();
+				if(!laneSet.isEmpty()){
+					for (TLaneSet childLaneSet : laneSet) {
+						containerId = findContainerIdOf(id, childLaneSet);
+						if (containerId != null) {
+							break;
+						}
+					}
+				} else {
+					//Search directly in the process
+					for(TFlowElement flowElement : ((TProcess)rootElement).getFlowElement()){
+						if(id.equals(flowElement.getId())){
+							containerId = rootElement.getId();
+							break;
+						}
+					}
+				}
+			}
+		}
+		return containerId;
 	}
 
 	protected String findContainerIdOf(String id, TLaneSet laneSet) {
