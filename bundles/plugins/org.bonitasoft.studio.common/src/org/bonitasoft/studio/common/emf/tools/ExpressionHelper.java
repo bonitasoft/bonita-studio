@@ -30,6 +30,7 @@ import org.bonitasoft.studio.model.process.Document;
 import org.bonitasoft.studio.model.process.EnumType;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.SearchIndex;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
@@ -125,10 +126,8 @@ public class ExpressionHelper {
 			return widgetDependency;
 		}
 		if(dependency instanceof Data){
-			Data dataDependency = (Data) ProcessFactory.eINSTANCE.create(dependency.eClass());
-			dataDependency.setName(((Data) dependency).getName());
-			dataDependency.setDatasourceId(((Data) dependency).getDatasourceId());
-			dataDependency.setDataType(((Data) dependency).getDataType());
+			Data dataDependency = (Data) EcoreUtil.copy(dependency);
+			dataDependency.setDefaultValue(null);
 			return dataDependency;
 		}
 		if(dependency instanceof Document){
@@ -144,5 +143,13 @@ public class ExpressionHelper {
 			return searchIndexDependency;
 		}
 		return EcoreUtil.copy(dependency);
+	}
+	
+	public static void clearExpression(Expression expr) {
+		Assert.isLegal(expr!=null, "Expression cannot be null.");
+		expr.setName("");
+		expr.setContent("");
+		expr.setType(ExpressionConstants.CONSTANT_TYPE);
+		expr.getReferencedElements().clear();
 	}
 }

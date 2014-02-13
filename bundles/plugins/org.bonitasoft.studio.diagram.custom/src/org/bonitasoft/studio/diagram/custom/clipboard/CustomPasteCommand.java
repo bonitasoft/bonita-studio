@@ -257,7 +257,7 @@ public class CustomPasteCommand extends AbstractTransactionalCommand {
 	protected void copyOnePart(final IProgressMonitor progressMonitor, IGraphicalEditPart part, List<IGraphicalEditPart> toCopy) {
 		if(part.resolveSemanticElement() instanceof Element){
 			final Element toCopyElement = (Element) part.resolveSemanticElement();
-			Element res = EcoreUtil.copy(toCopyElement);
+			Element copyOfElement = EcoreUtil.copy(toCopyElement);
 			if (canHandlePaste(part, toCopy)) {
 				final Container container = (Container) targetElement;
 
@@ -275,27 +275,27 @@ public class CustomPasteCommand extends AbstractTransactionalCommand {
 					}
 				}
 				if(alreadyExists){
-					updateLabelandId(toCopyElement.getName(), res, elems);
+					updateLabelandId(toCopyElement.getName(), copyOfElement, elems);
 				}
 
-				removeConnections(res);
-				copyReferencedDataTypes(toCopyElement, res, mainProc);
-				copyActorsAndActorsMapping(toCopyElement, res, mainProc, pool);
-				resetConnections(toCopyElement, res, container);
+				removeConnections(copyOfElement);
+				copyReferencedDataTypes(toCopyElement, copyOfElement, mainProc);
+				copyActorsAndActorsMapping(toCopyElement, copyOfElement, mainProc, pool);
+				resetConnections(toCopyElement, copyOfElement, container);
 
-				View resView = copyView(retrieveTargetCompartment(selectedTargetEditPart).getNotationView(), part, res,toCopy);
+				View resView = copyView(retrieveTargetCompartment(selectedTargetEditPart).getNotationView(), part, copyOfElement,toCopy);
 				mapping.put(part.resolveSemanticElement(), resView);
 				
-				copyFormsDiagram(res);
+				copyFormsDiagram(copyOfElement);
 				//Copy Boundary view
-				if(res instanceof Activity){
-					if(!((Activity) res).getBoundaryIntermediateEvents().isEmpty()){
+				if(copyOfElement instanceof Activity){
+					if(!((Activity) copyOfElement).getBoundaryIntermediateEvents().isEmpty()){
 						//remove bad boundary copies
 						List<View> boundaryViewsToRemove = new ArrayList<View>();
 						for(Object childView : resView.getChildren()){
 							if(childView instanceof Shape){
 
-								if(res.equals(((Shape) childView).getElement())){
+								if(copyOfElement.equals(((Shape) childView).getElement())){
 									boundaryViewsToRemove.add((View) childView);
 								}
 							}
@@ -308,7 +308,7 @@ public class CustomPasteCommand extends AbstractTransactionalCommand {
 							View parentView = mapping.get(semanticParent);
 							if(parentView != null){
 								Activity newParent = (Activity)parentView.getElement();
-								if(newParent.equals(res)){
+								if(newParent.equals(copyOfElement)){
 									BoundaryEvent newBoundarySemantic = null;
 									for (BoundaryEvent event : newParent.getBoundaryIntermediateEvents()) {
 										if (event.getName().equals(semanticBoundary.getName())) {
@@ -322,13 +322,13 @@ public class CustomPasteCommand extends AbstractTransactionalCommand {
 					}
 				}
 				AbstractProcess targetProcess = ModelHelper.getParentProcess(targetElement);
-				AbstractProcess sourceProcess = ModelHelper.getParentProcess(res);
+				AbstractProcess sourceProcess = ModelHelper.getParentProcess(copyOfElement);
 				if(targetProcess == null || !targetProcess.equals(sourceProcess)){
-					ModelHelper.removedReferencedEObjects(res,targetElement);//REMOVE DANDLING REFS !
+					ModelHelper.removedReferencedEObjects(copyOfElement,targetElement);//REMOVE DANDLING REFS !
 				}
 			}
 
-			final IGraphicalEditPart newEp = (IGraphicalEditPart) selectedTargetEditPart.findEditPart(selectedTargetEditPart, res);
+			final IGraphicalEditPart newEp = (IGraphicalEditPart) selectedTargetEditPart.findEditPart(selectedTargetEditPart, copyOfElement);
 
 			if (newEp != null) {
 				/* Create Node related to form element */
@@ -373,20 +373,21 @@ public class CustomPasteCommand extends AbstractTransactionalCommand {
 		}
 	}
 
-	private void copyActorsAndActorsMapping(final Element toCopyElement,
-			Element res, AbstractProcess mainProc, AbstractProcess pool) {
+	private void copyActorsAndActorsMapping(final Element toCopyElement, Element copyOfElement, AbstractProcess mainProc, AbstractProcess pool) {
 		// Copy referenced groups
 		if (toCopyElement instanceof Task && !inSamePool(toCopyElement, targetElement)) {
 			Set<Actor> newActorMappingTypes = getNewGroups(toCopyElement,mainProc) ;
 			Set<Actor> existingActorMappingTypes = getExistingGroups(toCopyElement,mainProc) ;
 			for (Actor g : newActorMappingTypes) {
 				Actor copiedActorMappingType = EcoreUtil.copy(g);
+				// Set the initiator to false to do not conflict with existing initiator
+				copiedActorMappingType.setInitiator(false);
 				Actor existingActor = getExistingActor(pool.getActors(), copiedActorMappingType);
 				if (existingActor==null){
 					pool.getActors().add(copiedActorMappingType);
 					existingActor = copiedActorMappingType;
 				}
-				((Task) res).setActor(existingActor);
+				((Task) copyOfElement).setActor(existingActor);
 			}
 			if (ModelHelper.getParentLane(toCopyElement)!=null && !((Task)toCopyElement).isOverrideActorsOfTheLane()){
 				Actor actor = ModelHelper.getParentLane(toCopyElement).getActor();
@@ -396,13 +397,13 @@ public class CustomPasteCommand extends AbstractTransactionalCommand {
 					pool.getActors().add(copiedActorMappingType);
 					existingActor = copiedActorMappingType;
 				}
-				((Task) res).setActor(existingActor);
-				((Task)res).setOverrideActorsOfTheLane(true);
+				((Task) copyOfElement).setActor(existingActor);
+				((Task)copyOfElement).setOverrideActorsOfTheLane(true);
 			}
 			for(Actor existingActorMappingType : existingActorMappingTypes){
 				for(Actor procGroup : mainProc.getActors()){
 					if(procGroup.getName().equals(existingActorMappingType.getName())){
-						((Task) res).setActor(procGroup);
+						((Task) copyOfElement).setActor(procGroup);
 					}
 				}
 			}
@@ -419,11 +420,10 @@ public class CustomPasteCommand extends AbstractTransactionalCommand {
 		}
 	}
 
-	private void copyReferencedDataTypes(final Element toCopyElement,
-			Element res, AbstractProcess mainProc) {
+	private void copyReferencedDataTypes(final Element toCopyElement, Element copyOfElement, AbstractProcess mainProc) {
 		// Copy referenced data types
-		if (res instanceof DataAware && !inSamePool(toCopyElement, targetElement)) {
-			List<Data> datas = ModelHelper.getAllItemsOfType(res, ProcessPackage.Literals.DATA);
+		if (copyOfElement instanceof DataAware && !inSamePool(toCopyElement, targetElement)) {
+			List<Data> datas = ModelHelper.getAllItemsOfType(copyOfElement, ProcessPackage.Literals.DATA);
 			for (Data d : datas) {
 				if (!mainProc.getDatatypes().contains(d.getDataType()) && d.getDataType() instanceof EnumType) {
 					EnumType newDt = (EnumType) EcoreUtil.copy(d.getDataType());
