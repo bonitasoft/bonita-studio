@@ -20,8 +20,8 @@ import java.util.Set;
 
 import org.bonitasoft.studio.actors.ActorsPlugin;
 import org.bonitasoft.studio.actors.i18n.Messages;
+import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
 import org.bonitasoft.studio.common.repository.filestore.PackageFileStore;
-import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.store.SourceRepositoryStore;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.swt.graphics.Image;
@@ -31,7 +31,7 @@ import org.eclipse.swt.graphics.Image;
  * @author Romain Bioteau
  *
  */
-public class ActorFilterSourceRepositoryStore extends SourceRepositoryStore {
+public class ActorFilterSourceRepositoryStore extends SourceRepositoryStore<AbstractFileStore> {
 
     private static final String STORE_NAME = "src-filters";
 
@@ -39,7 +39,7 @@ public class ActorFilterSourceRepositoryStore extends SourceRepositoryStore {
      * @see org.bonitasoft.studio.common.repository.model.IRepositoryStore#createRepositoryFileStore(java.lang.String)
      */
     @Override
-    public IRepositoryFileStore createRepositoryFileStore(String packageName) {
+    public AbstractFileStore createRepositoryFileStore(String packageName) {
         return new PackageFileStore(packageName, this);
     }
 

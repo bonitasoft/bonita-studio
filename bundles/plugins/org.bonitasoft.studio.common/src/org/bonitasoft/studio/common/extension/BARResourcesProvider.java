@@ -18,11 +18,13 @@
 package org.bonitasoft.studio.common.extension;
 
 import java.util.List;
+import java.util.Set;
 
 import org.bonitasoft.engine.bpm.bar.BarResource;
 import org.bonitasoft.engine.bpm.bar.BusinessArchiveBuilder;
 import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.model.process.AbstractProcess;
+import org.eclipse.emf.ecore.EObject;
 
 /**
  * @author Romain Bioteau
@@ -38,9 +40,10 @@ public interface BARResourcesProvider {
      * @param builder
      * @param process
      * @param configuration
+     * @param excludedObject 
      * @return a list of the added BAR resources
      * @throws Exception
      */
-    List<BarResource> addResourcesForConfiguration(BusinessArchiveBuilder builder ,AbstractProcess process, Configuration configuration) throws Exception;
+    List<BarResource> addResourcesForConfiguration(BusinessArchiveBuilder builder ,AbstractProcess process, Configuration configuration, Set<EObject> excludedObject) throws Exception;
 
 }

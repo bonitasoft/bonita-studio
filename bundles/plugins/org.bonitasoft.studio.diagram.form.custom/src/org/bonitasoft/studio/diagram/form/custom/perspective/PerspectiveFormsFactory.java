@@ -19,11 +19,11 @@ package org.bonitasoft.studio.diagram.form.custom.perspective;
 
 import org.bonitasoft.studio.common.perspectives.AbstractPerspectiveFactory;
 import org.bonitasoft.studio.common.perspectives.BonitaPerspectivesUtils;
+import org.bonitasoft.studio.diagram.form.custom.views.FormPaletteView;
 import org.bonitasoft.studio.migration.model.report.Report;
 import org.bonitasoft.studio.model.process.diagram.form.part.FormDiagramEditor;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.gef.ui.views.palette.PaletteView;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
@@ -45,7 +45,6 @@ public class PerspectiveFormsFactory extends AbstractPerspectiveFactory {
 				editorArea);//$NON-NLS-1$
 		bottomLeft.addView("org.bonitasoft.studio.views.overview.tree");
 		bottomLeft.addView("org.bonitasoft.studio.views.overview");
-		bottomLeft.setProperty(VIEW_KIND, BONITA_OVERVIEW);
 		// Bottom right.
 		IFolderLayout bottomRight = layout.createFolder(
 				"bottomRight", IPageLayout.RIGHT, (float) 0.3,//$NON-NLS-1$
@@ -58,7 +57,6 @@ public class PerspectiveFormsFactory extends AbstractPerspectiveFactory {
 		for (String viewId : BonitaPerspectivesUtils.getContributedPropertiesViews(FORM_PERSPECTIVE_ID)) {
 			bottomRight.addView(viewId);
 		}
-		bottomRight.setProperty(VIEW_KIND, BONITA_TABS);
 
 		createLeftViewFolder(layout, editorArea);
 
@@ -70,9 +68,9 @@ public class PerspectiveFormsFactory extends AbstractPerspectiveFactory {
 				IPageLayout.LEFT,
 				(float) 0.1,
 				editorArea);
-		left.addView(PaletteView.ID);
-		layout.getViewLayout(PaletteView.ID).setCloseable(false);
-		layout.getViewLayout(PaletteView.ID).setMoveable(false);
+		left.addView(FormPaletteView.ID);
+		layout.getViewLayout(FormPaletteView.ID).setCloseable(false);
+		layout.getViewLayout(FormPaletteView.ID).setMoveable(false);
 		left.addPlaceholder("org.bonitasoft.studio.migration.view");
 	}
 

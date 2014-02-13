@@ -17,14 +17,14 @@
  */
 package org.bonitasoft.studio.application;
 
+import java.util.List;
+
 import org.bonitasoft.studio.common.perspectives.AutomaticSwitchPerspectivePartListener;
-import org.bonitasoft.studio.common.perspectives.BonitaPerspectivesUtils;
-import org.bonitasoft.studio.common.perspectives.PerspectiveIDRegistry;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
-import org.bonitasoft.studio.profiles.manager.BonitaProfilesManager;
 import org.eclipse.core.runtime.IProduct;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.e4.ui.model.application.ui.MUIElement;
+import org.eclipse.e4.ui.model.application.ui.basic.MPartStack;
 import org.eclipse.e4.ui.model.application.ui.basic.MWindow;
 import org.eclipse.e4.ui.workbench.modeling.EModelService;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
@@ -32,7 +32,6 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.osgi.util.NLS;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPreferenceConstants;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -72,13 +71,7 @@ public class BonitaStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 			}
 		};
 	}
-
-
-	@Override
-	public void preWindowOpen() {
-		BonitaProfilesManager.getInstance().setActiveProfile(BonitaProfilesManager.getInstance().getActiveProfile(),false) ;
-	}
-
+	
 	@Override
 	public void postWindowCreate() {
 		final MWindow model = ((WorkbenchWindow)window).getModel();
@@ -86,14 +79,6 @@ public class BonitaStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 		MUIElement statusBar = modelService.find("org.eclipse.ui.trim.status", model);
 		if(statusBar != null){
 			statusBar.setVisible(false);
-		}
-		MUIElement leftTrimbar = modelService.find("org.eclipse.ui.trim.vertical1", model);
-		if(leftTrimbar != null){
-			leftTrimbar.setVisible(false);
-		}
-		MUIElement rightTrimbar = modelService.find("org.eclipse.ui.trim.vertical2", model);
-		if(rightTrimbar != null){
-			rightTrimbar.setVisible(false);
 		}
 	}
 
@@ -103,11 +88,16 @@ public class BonitaStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 		PlatformUtil.closeIntro();
 		PrefUtil.getAPIPreferenceStore().setValue(IWorkbenchPreferenceConstants.SHOW_INTRO, true);
 		PrefUtil.saveAPIPrefs();
-		BonitaPerspectivesUtils.switchToPerspective(PerspectiveIDRegistry.PROCESS_PERSPECTIVE_ID);
-		if(window.getActivePage().getPerspective() != null) {
-			super.openIntro();
-			PlatformUtil.openIntro();
-		}
+		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+
+			@Override
+			public void run() {
+				if(!PlatformUtil.isIntroOpen()){
+					PlatformUtil.openIntro();
+				}
+			}
+		});	
+
 	}
 
 
@@ -117,14 +107,6 @@ public class BonitaStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 	 */
 	@Override
 	public void postWindowOpen() {
-		if(window.getShell().getShells().length > 0){
-			Shell shell = window.getShell().getShells()[0];
-			shell.removeListener(SWT.Activate, shell.getListeners(SWT.Activate)[0]);
-			shell.removeListener(SWT.Close,shell.getListeners(SWT.Close)[0]);
-			shell.removeListener(SWT.Deactivate,shell.getListeners(SWT.Deactivate)[0]);
-			shell.removeListener(SWT.Iconify,shell.getListeners(SWT.Iconify)[0]);
-			shell.removeListener(SWT.Deiconify,shell.getListeners(SWT.Deiconify)[0]);
-		}
 		final MWindow model = ((WorkbenchPage)window.getActivePage()).getWindowModel();
 		model.getContext().get(EPartService.class).addPartListener(new AutomaticSwitchPerspectivePartListener());
 	}

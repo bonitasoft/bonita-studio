@@ -234,8 +234,10 @@ public class ConnectorDefinitionWizardPageTest extends SWTBotGefTestCase {
         
         bot.button(IDialogConstants.OK_LABEL).click();
         bot.button(Messages.apply).click();
+        bot.button(IDialogConstants.CANCEL_LABEL).click();
 
     }
+    
 
 
 }

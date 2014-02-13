@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.data.i18n.Messages;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionEditor;
@@ -125,7 +126,7 @@ public class DataExpressionProvider implements IExpressionProvider {
 		exp.setContent(d.getName()) ;
 		exp.setName(d.getName()) ;
 		exp.setReturnType(org.bonitasoft.studio.common.DataUtil.getTechnicalTypeFor(d)) ;
-		exp.getReferencedElements().add(EcoreUtil.copy(d)) ;
+		exp.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(d)) ;
 		return exp;
 	}
 

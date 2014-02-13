@@ -58,9 +58,19 @@ public class PatternExpressionMigration extends CustomMigration {
 			throws MigrationException {
 		for(Instance expression : model.getAllInstances("expression.Expression")){
 			if(expressions.containsKey(expression.getUuid())){
-				expression.set("content", addDelimiters(expressions.get(expression.getUuid()),expression));
+				String content = replaceSpecialCharacter(expressions.get(expression.getUuid()));
+				expression.set("content", addDelimiters(content,expression));
 			}
 		}
+	}
+
+	/**Replace all character defined by "&nbsp;" by a whitespace
+	 * Without the replace, this character is shown as a sharp (#) instead of a whitespace.
+	 * @param content
+	 * @return 
+	 */
+	private String replaceSpecialCharacter(String content) {
+		return content.replaceAll("&nbsp;", " ");
 	}
 
 	private String addDelimiters(String content, Instance expression) {
@@ -79,9 +89,14 @@ public class PatternExpressionMigration extends CustomMigration {
 				while(index != null && index.getOffset() <  lenght){
 					if(isNotEscapeWord(content, index.getOffset())){
 						patternExpressionContent.append(content.substring(i, index.getOffset()));
-						patternExpressionContent.append("${");
-						patternExpressionContent.append(depName);
-						patternExpressionContent.append("}");
+						if(alreadyDep(content, index.getLength(), index.getOffset())){
+							patternExpressionContent.append(depName);
+						}else{
+							patternExpressionContent.append("${");
+							patternExpressionContent.append(depName);
+							patternExpressionContent.append("}");
+
+						}
 					}else{
 						patternExpressionContent.append(content.substring(i, index.getOffset()-1));
 						patternExpressionContent.append(content.substring(index.getOffset(),index.getOffset()+index.getLength()));
@@ -114,6 +129,16 @@ public class PatternExpressionMigration extends CustomMigration {
 			return content.charAt(offset-1) != '\\';
 		}
 		return true;
+	}
+	
+	private boolean alreadyDep(String content, int lenghtName, int offset){
+		int start = offset-2;
+		int end = offset+lenghtName;
+		if(start>-1 && end<content.length()){
+			return (content.substring(start).startsWith("${") && content.substring(end).startsWith("}")); 
+		}
+		return false;
+		
 	}
 
 }

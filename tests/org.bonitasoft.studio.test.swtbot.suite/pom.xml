@@ -26,7 +26,7 @@
 					<product>org.bonitasoft.studio.product</product>
 					<showEclipseLog>true</showEclipseLog>
 					<includes>
-						<include>**/AllSWTBotTests*.java</include>
+						<include>**/AllSWTBotTests.java</include>
 					</includes>
 					<argLine>${tycho.testArgLine} -Xms512m -Xmx1024m -XX:MaxPermSize=640m -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=SWTBotTests.hprof -Dbonita.client.home=${license.dir} -Dorg.eclipse.swt.browser.DefaultType=mozilla -Dbonita.noregister=1 -Dbonita.noExpireWarning=1 -Declipse.log.level=${tests.log.level}</argLine>
 					<appArgLine>-nl en</appArgLine>
@@ -65,7 +65,4 @@
   			</plugin>
 		</plugins>
 	</build>
-	<properties>
-   			<sonar.jacoco.itReportPath>../../../../bos-studio/target/jacoco.exec</sonar.jacoco.itReportPath>
-  		</properties>
 </project>

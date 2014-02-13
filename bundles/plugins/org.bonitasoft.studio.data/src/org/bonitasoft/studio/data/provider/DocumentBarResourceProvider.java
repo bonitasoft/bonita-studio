@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.bonitasoft.engine.bpm.bar.BarResource;
 import org.bonitasoft.engine.bpm.bar.BusinessArchiveBuilder;
@@ -35,6 +36,7 @@ import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Document;
 import org.bonitasoft.studio.model.process.Pool;
+import org.eclipse.emf.ecore.EObject;
 
 
 /**
@@ -47,7 +49,7 @@ public class DocumentBarResourceProvider implements BARResourcesProvider {
      * @see org.bonitasoft.studio.common.extension.BARResourcesProvider#getResourcesForConfiguration(org.bonitasoft.studio.model.process.AbstractProcess, org.bonitasoft.studio.model.configuration.Configuration, org.bonitasoft.engine.bpm.model.DesignProcessDefinition, java.util.Map)
      */
     @Override
-    public List<BarResource> addResourcesForConfiguration(BusinessArchiveBuilder builder, AbstractProcess process, Configuration configuration) {
+    public List<BarResource> addResourcesForConfiguration(BusinessArchiveBuilder builder, AbstractProcess process, Configuration configuration,Set<EObject> excludedObjects) {
     	final List<BarResource> resources = new ArrayList<BarResource>() ;
     	if(process instanceof Pool){
     		final List<Document> documents = ((Pool)process).getDocuments();

@@ -23,6 +23,7 @@ import java.lang.reflect.InvocationTargetException;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.store.AbstractRepositoryStore;
 import org.bonitasoft.studio.connector.model.definition.IDefinitionRepositoryStore;
 import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementation;
 import org.bonitasoft.studio.connector.model.implementation.provider.ConnectorImplementationContentProvider;
@@ -67,8 +68,10 @@ public class ExportConnectorWizard extends Wizard {
         return new ConnectorImplementationLabelProvider((IDefinitionRepositoryStore)RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class),ConnectorPlugin.getDefault().getBundle());
     }
 
-    protected IContentProvider getContentProvider() {
-        return new ConnectorImplementationContentProvider(RepositoryManager.getInstance().getRepositoryStore(ConnectorImplRepositoryStore.class),false);
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+	protected IContentProvider getContentProvider() {
+    	ConnectorImplRepositoryStore repositoryStore = RepositoryManager.getInstance().getRepositoryStore(ConnectorImplRepositoryStore.class);
+        return new ConnectorImplementationContentProvider((AbstractRepositoryStore)repositoryStore,false);
     }
 
     protected String getPageDescription() {

@@ -17,6 +17,8 @@
 package org.bonitasoft.studio.actors.configuration;
 
 import org.bonitasoft.studio.actors.ui.wizard.SelectUserFilterImplementationWizard;
+import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
+import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.connector.model.implementation.provider.ConnectorImplementationContentProvider;
 import org.bonitasoft.studio.model.configuration.DefinitionMapping;
 import org.eclipse.jface.viewers.IContentProvider;
@@ -37,9 +39,9 @@ public class SelectActorFilterImplementationWizard extends SelectUserFilterImple
         definitionVersion = connectorAssociation.getDefinitionVersion() ;
     }
 
-    @Override
+	@Override
     protected IContentProvider getContentProvider() {
-        return new ConnectorImplementationContentProvider(getImplementationStore(), definitionId,definitionVersion);
+        return new ConnectorImplementationContentProvider((IRepositoryStore<IRepositoryFileStore>) getImplementationStore(), definitionId,definitionVersion);
     }
 
 

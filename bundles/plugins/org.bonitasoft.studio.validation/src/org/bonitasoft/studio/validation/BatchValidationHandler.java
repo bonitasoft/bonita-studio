@@ -201,7 +201,7 @@ public class BatchValidationHandler extends AbstractHandler {
 
 	@Override
 	public boolean isEnabled() {
-		if(PlatformUI.isWorkbenchRunning()){
+		if(PlatformUI.isWorkbenchRunning() &&  PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null){
 			IEditorPart part = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor() ;
 			return part instanceof DiagramEditor;
 		}

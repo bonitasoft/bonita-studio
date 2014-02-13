@@ -80,9 +80,9 @@ public class MessageMigration extends ReportCustomMigration {
 	}
 
 	private void setMessageContent(Instance message,Model model) {
+		final Instance tableExpression = model.newInstance("expression.TableExpression");
 		if(messageContents.containsKey(message.getUuid())){
 			final List<Instance> content = messageContents.get(message.getUuid());
-			final Instance tableExpression = model.newInstance("expression.TableExpression");
 			for(Instance expression : content){
 				final Instance rowExpression = model.newInstance("expression.ListExpression");
 				final Instance keyExpression = StringToExpressionConverter.createExpressionInstance(model, expression.get("name")+"Key", expression.get("name")+"Key", String.class.getName(),ExpressionConstants.CONSTANT_TYPE,true);
@@ -92,6 +92,8 @@ public class MessageMigration extends ReportCustomMigration {
 			}
 			message.set("messageContent", tableExpression);
 			addReportChange((String) message.get("name"),message.getType().getEClass().getName(), message.getUuid(),Messages.messageContentMigrationDescription, Messages.messagesProperty, IStatus.WARNING);
+		}else{
+			message.set("messageContent", tableExpression);
 		}
 	}
 

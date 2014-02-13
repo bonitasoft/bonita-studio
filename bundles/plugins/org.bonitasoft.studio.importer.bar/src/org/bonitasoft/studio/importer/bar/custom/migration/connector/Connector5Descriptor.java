@@ -16,6 +16,7 @@
  */
 package org.bonitasoft.studio.importer.bar.custom.migration.connector;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -83,7 +84,6 @@ public class Connector5Descriptor {
 	private Map<String, Object> outputs = new HashMap<String,Object>();
 	private IConnectorDefinitionMapper definitionMapper;
 	private EClass containerType;
-
 
 	public Connector5Descriptor(Instance connectorInstance) {
 		this.uuid = connectorInstance.getUuid();
@@ -201,8 +201,18 @@ public class Connector5Descriptor {
 			StringToExpressionConverter converter, final String variableToSet,
 			final String varValue) {
 		Instance operationContainerInstance = connectorInstance.getContainer();
-		Instance leftOperand = StringToExpressionConverter.createExpressionInstance(model, variableToSet, variableToSet, "java.lang.Object", ExpressionConstants.VARIABLE_TYPE, true);
-		Instance rightOperand = converter.parse(varValue, "java.lang.Object", false);
+		Instance originalVariable = getOriginalVariable(model, variableToSet);
+		
+		// set variable dependency of left operand
+		String returnType=Object.class.getName();
+		Instance leftOperand=null;
+		if(originalVariable!=null){
+			returnType=StringToExpressionConverter.getDataReturnType(originalVariable);
+			leftOperand = StringToExpressionConverter.createExpressionInstanceWithDependency(model, variableToSet, variableToSet, returnType, ExpressionConstants.VARIABLE_TYPE, true, originalVariable );
+		}else{
+			leftOperand = StringToExpressionConverter.createExpressionInstance(model, variableToSet, variableToSet, returnType, ExpressionConstants.VARIABLE_TYPE, true);
+		}
+		Instance rightOperand = converter.parse(varValue, returnType, false);
 		Instance operatorInstance = model.newInstance("expression.Operator");
 		operatorInstance.set("type", ExpressionConstants.ASSIGNMENT_OPERATOR);
 		Instance operationInstance = model.newInstance("expression.Operation");
@@ -211,6 +221,16 @@ public class Connector5Descriptor {
 		operationInstance.set("operator", operatorInstance);
 		operationContainerInstance.add("operations", operationInstance);
 	}
+	
+	private Instance getOriginalVariable(final Model model, final String variableToSet) {
+		for(Instance variable : model.getAllInstances("process.Data")){
+			String varName = (String) variable.get("name");
+			if(varName!=null && varName.equals(variableToSet)){
+				return variable;
+			}
+		}
+		return null;
+	}
 
 	public boolean isBonitaSetVarConnector() {
 		return connectorId != null && ("SetVariable".equals(connectorId) || "SetVariables".equals(connectorId));
@@ -218,11 +238,22 @@ public class Connector5Descriptor {
 
 	private void addOutputs(Model model, Instance connectorInstance, StringToExpressionConverter converter) {
 		for(Entry<String, Object> output : outputs.entrySet()){
-			final Instance operation = converter.parseOperation(String.class.getName(), false, (String) output.getValue(), output.getKey());
+			
+			final String outputValue = output.getValue().toString();
+			final String outputType = isAnOutputConnector(outputValue)? ExpressionConstants.CONNECTOR_OUTPUT_TYPE : ExpressionConstants.SCRIPT_TYPE;
+			final String returnType = definitionMapper.getOutputReturnType(outputValue);
+			
+			final Instance operation = converter.parseOperation(returnType, false, (String) output.getValue(), output.getKey(), outputType);
 			connectorInstance.add(OUTPUTS, operation);
 		}
 	}
 
+	private boolean isAnOutputConnector(String outputVAlueTmp){
+			if(definitionMapper.getOutputReturnType(outputVAlueTmp)!=null){
+				return true;
+			}
+		return false;
+	}
 
 	private String getDefinitionVersion() {
 		return definitionMapper.getDefinitionVersion();
@@ -259,6 +290,7 @@ public class Connector5Descriptor {
 	private String getReturnType(String inputName) {
 		return definitionMapper.getInputReturnType(inputName);
 	}
+	
 
 	private Instance getParameterExpressionFor(Model model,String input,StringToExpressionConverter converter, Object value, String returnType) {
 		if(value instanceof String || value instanceof Boolean || value instanceof Number){

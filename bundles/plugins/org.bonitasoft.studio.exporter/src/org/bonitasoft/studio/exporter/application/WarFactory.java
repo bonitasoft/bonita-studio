@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Properties;
 import java.util.zip.ZipOutputStream;
@@ -43,6 +44,7 @@ import org.bonitasoft.studio.exporter.runtime.RuntimeExportMode;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.emf.ecore.EObject;
 
 /**
  * @author Romain Bioteau
@@ -243,7 +245,7 @@ public class WarFactory implements IWarFactory{
     protected void exportFormsXML(AbstractProcess process,
             IProgressMonitor monitor, File dest )
                     throws Exception {
-        FormsXMLExporter.exportFormsXML(process, dest, false, monitor);
+        FormsXMLExporter.exportFormsXML(process, dest, false, Collections.<EObject>emptySet(), monitor);
     }
 
     protected void removeLib(File dest, String startingWith) {

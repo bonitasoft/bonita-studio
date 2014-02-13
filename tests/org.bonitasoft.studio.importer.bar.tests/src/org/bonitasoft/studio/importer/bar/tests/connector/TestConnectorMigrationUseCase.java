@@ -427,6 +427,56 @@ public class TestConnectorMigrationUseCase {
 		assertEquals("No operations should have been created", 0, operations.size());
 			
 	}
+	
+	@Test
+	public void testSetBonitaVariableConnectorMigration() throws Exception {
+		final MainProcess mainProc = importBar("VariousConnectorSetVariableToMigrate--1.0.bar");
+		final List<Connector> connectors = ModelHelper.getAllItemsOfType(mainProc, ProcessPackage.Literals.CONNECTOR);
+		assertEquals("Invalid number of connector", 0, connectors.size());
+
+		Activity activity = (Activity) ModelHelper.findElement(mainProc, "Etape2", true);
+		final EList<Operation> operations = activity.getOperations();
+		assertEquals("5 operations should have been created", 5, operations.size());
+		
+		// check return type in operations
+		for(Operation operation : operations){
+			String opeName = operation.getLeftOperand().getName();
+			if("varInt".equals(opeName)){
+				String intergerName =  Integer.class.getName();
+				assertEquals("Return type of left operand created after connector migration must be "+intergerName,operation.getLeftOperand().getReturnType(), intergerName);
+				assertEquals("Return type of right operand created after connector migration must be "+intergerName,operation.getRightOperand().getReturnType(), intergerName);		
+			}else if("varBool".equals(opeName)){
+				String booleanName = Boolean.class.getName();
+				assertEquals("Return type of left operand created after connector migration must be "+booleanName,operation.getLeftOperand().getReturnType(), booleanName);
+				assertEquals("Return type of right operand created after connector migration must be "+booleanName,operation.getRightOperand().getReturnType(), booleanName);		
+			
+			}
+		}
+	}
+	
+	@Test
+	public void testScriptOutputConnectorMigration() throws Exception {
+		final MainProcess mainProc = importBar("ScriptConnectorsOutputs--1.0.bar");
+		final List<Connector> connectors = ModelHelper.getAllItemsOfType(mainProc, ProcessPackage.Literals.CONNECTOR);
+		assertEquals("Invalid number of connector", 1, connectors.size());
+		
+		Connector connector = connectors.get(0);
+		final EList<Operation> operations = connector.getOutputs();
+		assertEquals("3 operations should have been created during the migration", 3, operations.size());
+		
+		// check return type in operations
+		final String objectClassName = Object.class.getName();
+		final String booleanClassName = Boolean.class.getName();
+		for(Operation operation : operations){
+			String rightName = operation.getRightOperand().getName();
+			if("migratedScript".equals(rightName)){
+				assertEquals("Return type of right operand created after connector migration must be "+objectClassName,objectClassName, operation.getRightOperand().getReturnType());
+			}else if("p1".equals(rightName)){
+				assertEquals("Return type of right operand created after connector migration must be "+booleanClassName, booleanClassName, operation.getRightOperand().getReturnType());		
+			
+			}
+		}
+	}
 
 	private MainProcess importBar(final String barName) throws Exception {
 		final URL url = TestConnectorMigrationUseCase.class.getResource(barName);

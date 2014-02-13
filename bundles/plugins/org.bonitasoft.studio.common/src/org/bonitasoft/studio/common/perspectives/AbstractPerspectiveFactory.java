@@ -29,25 +29,9 @@ import org.eclipse.ui.IPerspectiveFactory;
  */
 public abstract class AbstractPerspectiveFactory implements IPerspectiveFactory {
 
-	/**
-	 * value of VIEW_KIND to tell the view is tabbed
-	 */
-	public static final String BONITA_TABS = "bonita.tabs";
-	/**
-	 * value of VIEW_KIND to tell the view to show toolbar
-	 */
-	public static final String BONITA_VIEWS_TOOLBAR = "bonita.view.toolbar";
-	/**
-	 * value of VIEW_KIND to tell the view to hide toolbar
-	 */
-	public static final String BONITA_VIEWS_NO_TOOLBAR = "bonita.view.no.toolbar";
-	/**
-	 * property to set the kind of view it is (with or without tabs)
-	 */
-	public static final String VIEW_KIND = "viewKind";
-	public static final String PERSPECTIVE_ID = "org.bonitasoft.studio.application.perspective";
 	
-	public static final String BONITA_OVERVIEW = "bonita.overview";
+	public static final String PERSPECTIVE_ID = "org.bonitasoft.studio.application.perspective";
+
 	/**
 	 * returns true if the perspective must be activated when opening the editor part given in param
 	 * 

@@ -19,6 +19,7 @@ package org.bonitasoft.studio.connector.model.implementation.provider;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementation;
 import org.bonitasoft.studio.connector.model.implementation.IImplementationRepositoryStore;
@@ -33,18 +34,18 @@ import org.eclipse.jface.viewers.Viewer;
  */
 public class ConnectorImplementationContentProvider implements IStructuredContentProvider {
 
-    private final IRepositoryStore store;
+    private final IRepositoryStore<IRepositoryFileStore> store;
     private final boolean userImplementationOnly;
     private String definitionId;
     private String definitionVersion;
 
-    public ConnectorImplementationContentProvider(IRepositoryStore store ,boolean userImplementationOnly){
+    public ConnectorImplementationContentProvider(IRepositoryStore<IRepositoryFileStore> store ,boolean userImplementationOnly){
         Assert.isTrue(store instanceof IImplementationRepositoryStore) ;
         this.store = store ;
         this.userImplementationOnly = userImplementationOnly ;
     }
 
-    public ConnectorImplementationContentProvider(IRepositoryStore store, String definitionId, String definitionVersion) {
+    public ConnectorImplementationContentProvider(IRepositoryStore<IRepositoryFileStore> store, String definitionId, String definitionVersion) {
         Assert.isTrue(store instanceof IImplementationRepositoryStore) ;
         this.store = store ;
         userImplementationOnly = false ;

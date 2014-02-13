@@ -32,7 +32,6 @@ import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementat
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.validation.IValidator;
-import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
@@ -104,7 +103,7 @@ public abstract class AbstractDefinitionSelectionImpementationWizardPage extends
 		this.implementation = implementation;
 		this.messageProvider = messageProvider ;
 		this.definitions = definitions ;
-		checkOnlyCustom = true;
+		checkOnlyCustom = implementation.getDefinitionId() == null;
 	}
 
 	public AbstractDefinitionSelectionImpementationWizardPage(List<ConnectorImplementation> existingImpl,List<ConnectorDefinition> definitions,String pageTitle,String pageDescription,DefinitionResourceProvider messageProvider) {
@@ -226,7 +225,7 @@ public abstract class AbstractDefinitionSelectionImpementationWizardPage extends
 				if(from instanceof ConnectorDefinition){
 					return ((ConnectorDefinition) from).getId() ;
 				}
-				return "";
+				return null;
 			}
 
 		}) ;
@@ -234,9 +233,9 @@ public abstract class AbstractDefinitionSelectionImpementationWizardPage extends
 
 			@Override
 			public IStatus validate(Object value) {
-				if(value == null || value.toString().isEmpty()){
-					return ValidationStatus.error(Messages.missingDefinition) ;
-				}
+//				if(value == null || value.toString().isEmpty()){
+//					return ValidationStatus.error(Messages.missingDefinition) ;
+//				}
 				return Status.OK_STATUS;
 			}
 		}) ;
@@ -248,22 +247,28 @@ public abstract class AbstractDefinitionSelectionImpementationWizardPage extends
 			@Override
 			public Object convert(Object from) {
 				if(from instanceof String){
-					List<Object> definitions = (List<Object>) explorer.getRightTableViewer().getInput();
-					for(Object c : definitions){
-						if(c instanceof ConnectorDefinition && ((ConnectorDefinition)c).getId().equals(from.toString())){
-							return c;
-						}
-					}
+					return getConnectorDefinitionFromId((String) from);
 				}
 				return null;
 			}
 
 		}) ;
-
-		bindValue();
 		updateOnlyCustomCheckbox();
+		bindValue();
+	
 
 		setControl(mainComposite);
+	}
+	
+	@SuppressWarnings("unchecked")
+	protected ConnectorDefinition getConnectorDefinitionFromId(String definitionId) {
+		List<Object> definitions = (List<Object>) explorer.getRightTableViewer().getInput();
+		for(Object c : definitions){
+			if(c instanceof ConnectorDefinition && ((ConnectorDefinition)c).getId().equals(definitionId)){
+				return (ConnectorDefinition) c;
+			}
+		}
+		return null;
 	}
 
 	protected TreeExplorer createTreeExplorer(Composite mainComposite) {

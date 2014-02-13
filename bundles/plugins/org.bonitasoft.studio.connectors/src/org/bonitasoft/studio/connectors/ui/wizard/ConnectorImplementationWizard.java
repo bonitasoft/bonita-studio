@@ -21,11 +21,11 @@ import java.util.List;
 
 import org.bonitasoft.engine.connector.AbstractConnector;
 import org.bonitasoft.studio.common.NamingUtils;
-import org.bonitasoft.studio.common.editor.BonitaJavaEditor;
 import org.bonitasoft.studio.common.jface.ExtensibleWizard;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.ClassGenerator;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
 import org.bonitasoft.studio.common.repository.filestore.SourceFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
@@ -73,68 +73,69 @@ import org.eclipse.ui.part.FileEditorInput;
 public class ConnectorImplementationWizard extends ExtensibleWizard {
 
 
-    private boolean editMode = false;
-    protected IRepositoryFileStore fileStore;
-    protected final ConnectorImplementation implWorkingCopy;
-    protected ConnectorImplementation originalImpl;
-    private IFile fileToOpen;
-    protected  IRepositoryStore implStore;
-    protected SourceRepositoryStore sourceStore;
-    protected IRepositoryStore defStore;
-    protected DefinitionResourceProvider messageProvider;
+	private boolean editMode = false;
+	protected IRepositoryFileStore fileStore;
+	protected final ConnectorImplementation implWorkingCopy;
+	protected ConnectorImplementation originalImpl;
+	private IFile fileToOpen;
+	protected IRepositoryStore<? extends IRepositoryFileStore> implStore;
+	protected SourceRepositoryStore<AbstractFileStore> sourceStore;
+	protected IRepositoryStore<? extends IRepositoryFileStore> defStore;
+	protected DefinitionResourceProvider messageProvider;
 
-    public ConnectorImplementationWizard(){
-        setWindowTitle(Messages.newConnectorImplementation) ;
-        setNeedsProgressMonitor(true) ;
-        setDefaultPageImageDescriptor(Pics.getWizban()) ;
-        implWorkingCopy = ConnectorImplementationFactory.eINSTANCE.createConnectorImplementation() ;
-        implWorkingCopy.setImplementationVersion("1.0.0") ;
-        implWorkingCopy.setJarDependencies(ConnectorImplementationFactory.eINSTANCE.createJarDependencies()) ;
-        initialize() ;
-    }
-
-
-
-    public ConnectorImplementationWizard(ConnectorImplementation implementation){
-        setNeedsProgressMonitor(true) ;
-        setWindowTitle(Messages.editConnectorImplementation) ;
-        setDefaultPageImageDescriptor(Pics.getWizban()) ;
-        editMode  = true ;
-        originalImpl = implementation ;
-        implWorkingCopy = EcoreUtil.copy(implementation) ;
-        if(implWorkingCopy.getJarDependencies() == null){
-            implWorkingCopy.setJarDependencies(ConnectorImplementationFactory.eINSTANCE.createJarDependencies()) ;
-        }
-        initialize() ;
-    }
-
-    protected void initialize() {
-        implStore = RepositoryManager.getInstance().getRepositoryStore(ConnectorImplRepositoryStore.class) ;
-        if(originalImpl != null){
-            fileStore = implStore.getChild(NamingUtils.getEResourceFileName(originalImpl,true)) ;
-        }
-        defStore =  RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class) ;
-        sourceStore = (ConnectorSourceRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorSourceRepositoryStore.class) ;
-        messageProvider = DefinitionResourceProvider.getInstance(defStore, ConnectorPlugin.getDefault().getBundle()) ;
-    }
-
-    @Override
-    public void addPages() {
-        List<ConnectorImplementation> existingImplementation = ((IImplementationRepositoryStore)implStore).getImplementations() ;
-        if(originalImpl != null){
-            existingImplementation.clear() ;
-            for(ConnectorImplementation impl : ((IImplementationRepositoryStore)implStore).getImplementations()){
-                if(!(impl.getImplementationId().equals(originalImpl.getImplementationId()) && impl.getImplementationVersion().equals(originalImpl.getImplementationVersion()))){
-                    existingImplementation.add(impl) ;
-                }
-            }
-        }
+	public ConnectorImplementationWizard(){
+		setWindowTitle(Messages.newConnectorImplementation) ;
+		setNeedsProgressMonitor(true) ;
+		setDefaultPageImageDescriptor(Pics.getWizban()) ;
+		implWorkingCopy = ConnectorImplementationFactory.eINSTANCE.createConnectorImplementation() ;
+		implWorkingCopy.setImplementationVersion("1.0.0") ;
+		implWorkingCopy.setJarDependencies(ConnectorImplementationFactory.eINSTANCE.createJarDependencies()) ;
+		initialize() ;
+	}
 
 
 
-        addPage(getDefinitionSelectionWizardPage(existingImplementation)) ;
-        addPage(getImplementationPage(existingImplementation));
-    }
+	public ConnectorImplementationWizard(ConnectorImplementation implementation){
+		setNeedsProgressMonitor(true) ;
+		setWindowTitle(Messages.editConnectorImplementation) ;
+		setDefaultPageImageDescriptor(Pics.getWizban()) ;
+		editMode  = true ;
+		originalImpl = implementation ;
+		implWorkingCopy = EcoreUtil.copy(implementation) ;
+		if(implWorkingCopy.getJarDependencies() == null){
+			implWorkingCopy.setJarDependencies(ConnectorImplementationFactory.eINSTANCE.createJarDependencies()) ;
+		}
+		initialize() ;
+	}
+
+	@SuppressWarnings("unchecked")
+	protected void initialize() {
+		implStore = RepositoryManager.getInstance().getRepositoryStore(ConnectorImplRepositoryStore.class) ;
+		if(originalImpl != null){
+			fileStore = implStore.getChild(NamingUtils.getEResourceFileName(originalImpl,true)) ;
+		}
+		defStore =  RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class) ;
+		sourceStore = RepositoryManager.getInstance().getRepositoryStore(ConnectorSourceRepositoryStore.class) ;
+		messageProvider = DefinitionResourceProvider.getInstance(defStore, ConnectorPlugin.getDefault().getBundle()) ;
+	}
+
+	@Override
+	public void addPages() {
+		List<ConnectorImplementation> existingImplementation = ((IImplementationRepositoryStore)implStore).getImplementations() ;
+		if(originalImpl != null){
+			existingImplementation.clear() ;
+			for(ConnectorImplementation impl : ((IImplementationRepositoryStore)implStore).getImplementations()){
+				if(!(impl.getImplementationId().equals(originalImpl.getImplementationId()) && impl.getImplementationVersion().equals(originalImpl.getImplementationVersion()))){
+					existingImplementation.add(impl) ;
+				}
+			}
+		}
+
+
+
+		addPage(getDefinitionSelectionWizardPage(existingImplementation)) ;
+		addPage(getImplementationPage(existingImplementation));
+	}
 
 
 
@@ -146,7 +147,7 @@ public class ConnectorImplementationWizard extends ExtensibleWizard {
 			protected ITreeContentProvider getContentProvider() {
 				return new UniqueConnectorDefinitionContentProvider();
 			}
-			
+
 			@Override
 			protected ITreeContentProvider getCustomContentProvider() {
 				return new UniqueConnectorDefinitionContentProvider(true);
@@ -158,10 +159,14 @@ public class ConnectorImplementationWizard extends ExtensibleWizard {
 				context.bindValue(observeSingleSelection, EMFObservables.observeValue(implementation, ConnectorImplementationPackage.Literals.CONNECTOR_IMPLEMENTATION__DEFINITION_ID),defIdStrategy,defModelStrategy) ;
 				context.bindValue(ViewersObservables.observeSingleSelection(versionCombo), EMFObservables.observeValue(implementation, ConnectorImplementationPackage.Literals.CONNECTOR_IMPLEMENTATION__DEFINITION_VERSION));
 			}
-			
+
 		};
 	}
-	
+
+
+
+
+
 	protected String getSelectionPageDescription() {
 		return Messages.selectConnectorDefinitionForImplDesc;
 	}
@@ -178,102 +183,102 @@ public class ConnectorImplementationWizard extends ExtensibleWizard {
 			protected ITreeContentProvider getContentProvider() {
 				return new ConnectorDefinitionContentProvider();
 			}
-			
+
 		};
 	}
 
-    protected String getPageDescription() {
-        return Messages.connectorImplementationDesc;
-    }
+	protected String getPageDescription() {
+		return Messages.connectorImplementationDesc;
+	}
 
-    protected String getPageTitle() {
-        return Messages.connectorImplementationTitle;
-    }
+	protected String getPageTitle() {
+		return Messages.connectorImplementationTitle;
+	}
 
-    @Override
-    public boolean canFinish() {
-    	if(getContainer().getCurrentPage() instanceof AbstractDefinitionSelectionImpementationWizardPage){
-    		return false;
-    	}
-    	return super.canFinish();
-    }
+	@Override
+	public boolean canFinish() {
+		if(getContainer().getCurrentPage() instanceof AbstractDefinitionSelectionImpementationWizardPage){
+			return false;
+		}
+		return super.canFinish();
+	}
 
-    @Override
-    public boolean performFinish() {
-        try {
-            getContainer().run(false, false, new IRunnableWithProgress() {
+	@Override
+	public boolean performFinish() {
+		try {
+			getContainer().run(false, false, new IRunnableWithProgress() {
 
-                @Override
-                public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+				@Override
+				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 
-                    String implId =  NamingUtils.toConnectorImplementationFilename(implWorkingCopy.getImplementationId(),implWorkingCopy.getImplementationVersion(),false);
-                    String implFileName = implId+"."+ConnectorImplRepositoryStore.CONNECTOR_IMPL_EXT;
+					String implId =  NamingUtils.toConnectorImplementationFilename(implWorkingCopy.getImplementationId(),implWorkingCopy.getImplementationVersion(),false);
+					String implFileName = implId+"."+ConnectorImplRepositoryStore.CONNECTOR_IMPL_EXT;
 
-                    if(editMode){
-                        final String qualifiedClassname = implWorkingCopy.getImplementationClassname() ;
-                        final IRepositoryFileStore file = sourceStore.getChild(ClassGenerator.getAbstractClassName(originalImpl.getImplementationClassname())) ;
-                        if(file != null){
-                            file.delete() ;
-                        }
-                        if(!originalImpl.getImplementationClassname().equals(implWorkingCopy.getImplementationClassname())){
-                            SourceFileStore sourceFile = (SourceFileStore) sourceStore.getChild(originalImpl.getImplementationClassname()) ;
-                            if(sourceFile != null){
-                                sourceFile.rename(qualifiedClassname) ;
-                                try {
-                                    ClassGenerator.updateConnectorImplementationAbstractClassName(implWorkingCopy, ClassGenerator.getAbstractClassName(originalImpl.getImplementationClassname()), sourceFile, monitor);
-                                } catch (Exception e) {
-                                    BonitaStudioLog.error(e);
-                                }
-                            }
-                        }
+					if(editMode){
+						final String qualifiedClassname = implWorkingCopy.getImplementationClassname() ;
+						final IRepositoryFileStore file = sourceStore.getChild(ClassGenerator.getAbstractClassName(originalImpl.getImplementationClassname())) ;
+						if(file != null){
+							file.delete() ;
+						}
+						if(!originalImpl.getImplementationClassname().equals(implWorkingCopy.getImplementationClassname())){
+							SourceFileStore sourceFile = (SourceFileStore) sourceStore.getChild(originalImpl.getImplementationClassname()) ;
+							if(sourceFile != null){
+								sourceFile.rename(qualifiedClassname) ;
+								try {
+									ClassGenerator.updateConnectorImplementationAbstractClassName(implWorkingCopy, ClassGenerator.getAbstractClassName(originalImpl.getImplementationClassname()), sourceFile, monitor);
+								} catch (Exception e) {
+									BonitaStudioLog.error(e);
+								}
+							}
+						}
 
-                        if(!fileStore.getName().equals(implFileName)){
-                            fileStore.delete() ;
-                        }
-                    }
+						if(!fileStore.getName().equals(implFileName)){
+							fileStore.delete() ;
+						}
+					}
 
-                    fileStore = implStore.createRepositoryFileStore(implFileName) ;
-                    fileStore.save(implWorkingCopy) ;
+					fileStore = implStore.createRepositoryFileStore(implFileName) ;
+					fileStore.save(implWorkingCopy) ;
 
-                    try {
-                        ConnectorDefinition definition = ((IDefinitionRepositoryStore) defStore).getDefinition(implWorkingCopy.getDefinitionId(),implWorkingCopy.getDefinitionVersion()) ;
-                        ClassGenerator.generateConnectorImplementationAbstractClass(implWorkingCopy,definition,getAbstractClassName(),sourceStore, monitor) ;
-                        fileToOpen = ClassGenerator.generateConnectorImplementationClass(implWorkingCopy,definition,sourceStore, monitor) ;
-                    } catch (Exception e) {
-                        BonitaStudioLog.error(e) ;
-                    }
-                    monitor.done() ;
-                }
-            });
-        } catch (Exception e){
-            BonitaStudioLog.error(e) ;
-        }
+					try {
+						ConnectorDefinition definition = ((IDefinitionRepositoryStore) defStore).getDefinition(implWorkingCopy.getDefinitionId(),implWorkingCopy.getDefinitionVersion()) ;
+						ClassGenerator.generateConnectorImplementationAbstractClass(implWorkingCopy,definition,getAbstractClassName(),sourceStore, monitor) ;
+						fileToOpen = ClassGenerator.generateConnectorImplementationClass(implWorkingCopy,definition,sourceStore, monitor) ;
+					} catch (Exception e) {
+						BonitaStudioLog.error(e) ;
+					}
+					monitor.done() ;
+				}
+			});
+		} catch (Exception e){
+			BonitaStudioLog.error(e) ;
+		}
 
-        if(fileToOpen != null){
-            BusyIndicator.showWhile(Display.getDefault(),new Runnable() {
-                @Override
-                public void run() {
-                    //need to get the acive page from the UI shell
-                    IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-                    try {
-                        IEditorPart part = IDE.openEditor(page, new FileEditorInput(fileToOpen), BonitaJavaEditor.ID);
-                        PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().saveEditor(part, false);
-                    } catch (PartInitException e) {
-                    }
-                }
-            });
-        }
+		if(fileToOpen != null){
+			BusyIndicator.showWhile(Display.getDefault(),new Runnable() {
+				@Override
+				public void run() {
+					//need to get the acive page from the UI shell
+					IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+					try {
+						IEditorPart part = IDE.openEditor(page, new FileEditorInput(fileToOpen), "org.eclipse.jdt.ui.CompilationUnitEditor");
+						PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().saveEditor(part, false);
+					} catch (PartInitException e) {
+					}
+				}
+			});
+		}
 
-        return true;
-    }
+		return true;
+	}
 
-    protected String getAbstractClassName() {
-        return AbstractConnector.class.getName();
-    }
+	protected String getAbstractClassName() {
+		return AbstractConnector.class.getName();
+	}
 
-    public ConnectorImplementation getOriginalImplementation() {
-        return originalImpl;
-    }
+	public ConnectorImplementation getOriginalImplementation() {
+		return originalImpl;
+	}
 
 
 }

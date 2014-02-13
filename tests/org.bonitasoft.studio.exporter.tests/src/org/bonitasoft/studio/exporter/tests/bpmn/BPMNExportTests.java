@@ -179,7 +179,7 @@ public class BPMNExportTests extends SWTBotGefTestCase {
         bot.waitUntil(Conditions.waitForEditor(new BaseMatcher<IEditorReference>() {
 
             public boolean matches(Object item) {
-                return "org.bonitasoft.studio.editor.java".equals(((IEditorReference)item).getId());
+                return "org.eclipse.jdt.ui.CompilationUnitEditor".equals(((IEditorReference)item).getId());
             }
 
             public void describeTo(Description description) {
@@ -188,7 +188,7 @@ public class BPMNExportTests extends SWTBotGefTestCase {
 
         }), 10000);
         SWTBotEditor activeEditor = bot.activeEditor();
-        assertEquals("org.bonitasoft.studio.editor.java",activeEditor.getReference().getId());
+        assertEquals("org.eclipse.jdt.ui.CompilationUnitEditor",activeEditor.getReference().getId());
 
 
         final SWTBotMenu processMenu = bot.menu("Diagram");

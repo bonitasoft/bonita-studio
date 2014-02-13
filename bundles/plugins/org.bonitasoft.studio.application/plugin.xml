@@ -546,20 +546,20 @@
       <handler
             class="org.bonitasoft.studio.application.actions.UndoCommandHandler"
             commandId="org.eclipse.ui.edit.undo">
-         <activeWhen>
+         <enabledWhen>
             <reference
                   definitionId="isActiveEditorAnInstanceOfBonitaEditor">
             </reference>
-         </activeWhen>
+         </enabledWhen>
       </handler>
       <handler
             class="org.bonitasoft.studio.application.actions.RedoCommandHandler"
             commandId="org.eclipse.ui.edit.redo">
-         <activeWhen>
+         <enabledWhen>
             <reference
                   definitionId="isActiveEditorAnInstanceOfBonitaEditor">
             </reference>
-         </activeWhen>
+         </enabledWhen>
       </handler>
       <handler
             class="org.bonitasoft.studio.application.actions.FindHandler"
@@ -892,12 +892,6 @@
             priority="0"
             toolbarPosition="14">
       </coolbarItem>
-   </extension>
-   <extension
-         point="org.eclipse.ui.startup">
-      <startup
-            class="org.bonitasoft.studio.application.BonitaStudioWorkbenchAdvisor">
-      </startup>
    </extension>
 
 </plugin>

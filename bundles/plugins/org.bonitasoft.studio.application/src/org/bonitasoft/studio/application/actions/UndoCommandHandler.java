@@ -37,38 +37,44 @@ import org.eclipse.ui.PlatformUI;
  */
 public class UndoCommandHandler  extends AbstractHandler implements IHandler  {
 
-    public UndoCommandHandler(){
+	public UndoCommandHandler(){
 
-    }
+	}
 
-    @Override
-    public Object execute(ExecutionEvent event) throws ExecutionException {
-        IEditorPart part = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor() ;
-        GlobalAction action = GlobalActionManager.getInstance().getGlobalActionHandler(part,GlobalActionId.UNDO);
-        if(action.isRunnable()){
-            action.run();
-        }
-        return null;
-    }
+	@Override
+	public Object execute(ExecutionEvent event) throws ExecutionException {
+		IEditorPart part = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor() ;
+		GlobalAction action = GlobalActionManager.getInstance().getGlobalActionHandler(part,GlobalActionId.UNDO);
+		if(action.isRunnable()){
+			action.run();
+		}
+		return null;
+	}
 
-    /* (non-Javadoc)
-     * @see org.eclipse.core.commands.AbstractHandler#isEnabled()
-     */
-    @Override
-    public boolean isEnabled() {
-        IEditorPart editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor() ;
-        IOperationHistory history = (IOperationHistory) editor.getAdapter(IOperationHistory.class);
-        IUndoContext context = (IUndoContext) editor.getAdapter(IUndoContext.class);
-        if(history != null && context != null){
-            IUndoableOperation ctxt = history.getUndoHistory(context)[history.getUndoHistory(context).length-1] ;
-            if(ctxt.getLabel().contains("Lane")){//Avoid Exception on undo //$NON-NLS-1$
-                return false ;
-            } else {
-                return ctxt.canUndo();
-            }
-        } else {
-            return false;
-        }
-    }
+	/* (non-Javadoc)
+	 * @see org.eclipse.core.commands.AbstractHandler#isEnabled()
+	 */
+	@Override
+	public boolean isEnabled() {
+		IEditorPart editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor() ;
+		if(editor != null){
+			IOperationHistory history = (IOperationHistory) editor.getAdapter(IOperationHistory.class);
+			IUndoContext context = (IUndoContext) editor.getAdapter(IUndoContext.class);
+			if(history != null && context != null){
+				IUndoableOperation[] undoHistory = history.getUndoHistory(context);
+				if(undoHistory != null){
+					IUndoableOperation ctxt = undoHistory[history.getUndoHistory(context).length-1] ;
+					if(ctxt.getLabel() != null && ctxt.getLabel().contains("Lane")){//Avoid Exception on undo //$NON-NLS-1$
+						return false ;
+					} else {
+						return ctxt.canUndo();
+					}
+				}
+			} else {
+				return false;
+			}
+		}
+		return false;
+	}
 
 }

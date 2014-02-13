@@ -1,6 +1,7 @@
 package org.bonitasoft.studio.document.ui;
 
 import static org.bonitasoft.studio.common.Messages.bosProductName;
+import static org.bonitasoft.studio.properties.i18n.Messages.explanationMimeTypeDocument;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.jface.databinding.validator.GroovyReferenceValidator;
@@ -121,10 +122,10 @@ public class DocumentWizardPage extends WizardPage {
 		Label description = new Label(detailsComposite,SWT.NONE);
 		description.setText(Messages.description);
 		documentDescriptionText = new Text(
-				detailsComposite, SWT.BORDER);
+				detailsComposite, SWT.BORDER | SWT.V_SCROLL);
 		documentDescriptionText.setText("");
 		documentDescriptionText.setLayoutData(GridDataFactory.fillDefaults()
-				.grab(true, false).create());
+				.grab(true, false).hint(SWT.DEFAULT, 60).create());
 	}
 
 	private void createDocumentMimeTypeField(Composite detailsComposite) {
@@ -142,7 +143,7 @@ public class DocumentWizardPage extends WizardPage {
 		documentMimeTypeViewer.setExample(Messages.hintMimeTypeDocument);
 		ControlDecoration cd = new ControlDecoration(mimeTypeLabel, SWT.RIGHT);
 		cd.setImage(Pics.getImage(PicsConstants.hint));
-		cd.setDescriptionText(Messages.explanationMimeTypeDocument);
+		cd.setDescriptionText(explanationMimeTypeDocument);
 	}
 
 	private void createDocumentTypeCheckbox(Composite detailsComposite) {
@@ -232,7 +233,6 @@ public class DocumentWizardPage extends WizardPage {
 		emfDataBindingContext.bindValue(ViewerProperties.singleSelection()
 				.observe(documentMimeTypeViewer), mimeTypeObserved);
 		documentMimeTypeViewer.setInput(document);
-
 		final UpdateValueStrategy targetToModel = new UpdateValueStrategy();
 
 		targetToModel.setAfterGetValidator(new InputLengthValidator(
