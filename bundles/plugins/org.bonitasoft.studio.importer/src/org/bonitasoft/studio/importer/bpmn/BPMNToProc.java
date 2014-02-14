@@ -1687,36 +1687,54 @@ public class BPMNToProc extends ToProcProcessor {
 			}
 		}
 	}
-
-	private void populateSignalEvent(TFlowNode flowNode)
-			throws ProcBuilderException {
-		String signalRef = null;
-		if (flowNode instanceof TCatchEvent) {
-			final QName signalRef2 = ((TSignalEventDefinition) ((TCatchEvent) flowNode)
-					.getEventDefinition().get(0)).getSignalRef();
-			if (signalRef2 != null) {
-				signalRef = signalRef2.getLocalPart();
-			}
-		} else {
-			final QName signalRef2 = ((TSignalEventDefinition) ((TThrowEvent) flowNode)
-					.getEventDefinition().get(0)).getSignalRef();
-			if (signalRef2 != null) {
-				signalRef = signalRef2.getLocalPart();
-			}
-		}
+	
+	/**
+	 * @param flowNode, flowNode can be a TCatchEvent or a TThrowEvent
+	 */
+	private void populateSignalEvent(TFlowNode flowNode) throws ProcBuilderException {
+		final String signalRef = retrieveSignalReference(flowNode);
 		if (signalRef != null) {
-			for (TRootElement rootElem : definitions.getRootElement()) {
-				if (rootElem instanceof TSignal) {
-					TSignal signal = (TSignal) rootElem;
-					if (signal.getId().equals(signalRef)) {
-						final String signalName = signal.getName();
-						if (signalName != null && signalName.length() != 0) {
-							builder.addSignalCode(signalName);
-						} else {
-							builder.addSignalCode(signal.getId());
-						}
-						break;
+			addSignalCodeFor(signalRef);
+		}
+	}
+
+	/**
+	 * @param flowNode, flowNode can be a TCatchEvent or a TThrowEvent
+	 * @return
+	 */
+	private String retrieveSignalReference(TFlowNode flowNode) {
+		String signalRef = null;
+		QName signalRefAsQName = retrieveTSignalEventDefinition(flowNode).getSignalRef();			
+		if (signalRefAsQName != null) {
+			signalRef = signalRefAsQName.getLocalPart();
+		}
+		return signalRef;
+	}
+	
+	/**
+	 * @param flowNode, flowNode can be a TCatchEvent or a TThrowEvent
+	 * @return
+	 */
+	private TSignalEventDefinition retrieveTSignalEventDefinition(TFlowNode flowNode){
+		if (flowNode instanceof TCatchEvent) {
+			return (TSignalEventDefinition) ((TCatchEvent) flowNode).getEventDefinition().get(0);
+		} else {
+			return (TSignalEventDefinition) ((TThrowEvent) flowNode).getEventDefinition().get(0);
+		}
+	}
+
+	private void addSignalCodeFor(String signalRef) throws ProcBuilderException {
+		for (TRootElement rootElem : definitions.getRootElement()) {
+			if (rootElem instanceof TSignal) {
+				TSignal signal = (TSignal) rootElem;
+				if (signal.getId().equals(signalRef)) {
+					final String signalName = signal.getName();
+					if (signalName != null && signalName.length() != 0) {
+						builder.addSignalCode(signalName);
+					} else {
+						builder.addSignalCode(signal.getId());
 					}
+					break;
 				}
 			}
 		}
