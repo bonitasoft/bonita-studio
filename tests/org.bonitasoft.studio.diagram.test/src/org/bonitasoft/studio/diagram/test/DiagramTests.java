@@ -231,12 +231,16 @@ public class DiagramTests extends SWTBotGefTestCase {
 					}
 				}
 
-				// remove 2 of 3 variables in the form
-				for (int j = 0; j < 3; j++) {
-					if (j != itmp) {
-						bot.checkBox(j).deselect();
-					}
+				// add 1 variable in the form
+				if(itmp == 0){
+					bot.tree().getTreeItem("varText").check();
+				}else if(itmp == 1){
+					bot.tree().getTreeItem("varInteger").check();
+				}else{
+					bot.tree().getTreeItem("varBoolean").check();
 				}
+			
+		
 				// last shell "Add form..."
 				bot.button(IDialogConstants.FINISH_LABEL).click();
 
@@ -289,6 +293,7 @@ public class DiagramTests extends SWTBotGefTestCase {
 			//second shell "Add form..."
 			bot.button(IDialogConstants.NEXT_LABEL).click();
 		}
+		bot.checkBox("Select all").select();
 
 		// last shell "Add form..."
 		bot.button(IDialogConstants.FINISH_LABEL).click();
