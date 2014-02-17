@@ -49,15 +49,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 /**
- * @author aurelie Zara
- *
+ * @author Aurelie Zara
+ * @author Romain Bioteau
  */
 @RunWith(SWTBotJunit4ClassRunner.class)
 public class TestWebPurchase extends SWTBotGefTestCase implements SWTBotConstants{
     
 	private static final String PAGEFLOW_LABEL = "Pageflow";
-	private final String TEXT_FORM_FIELD ="Text Form Field";
-    private final String RADIO_FORM_FIELD="Radio Form Field";
     private String diagramTitle=null;
 
     @Test
@@ -158,6 +156,7 @@ public class TestWebPurchase extends SWTBotGefTestCase implements SWTBotConstant
         SWTBotView properties = bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_APPLICATION);
         properties.bot().button("Add...").click();
         bot.waitUntil(Conditions.shellIsActive("Add form..."));
+        bot.checkBox("Select all").select();
         bot.button(IDialogConstants.FINISH_LABEL).click();
         bot.viewById(SWTBotTestUtil.VIEWS_TREE_OVERVIEW).show();
         bot.viewById(SWTBotTestUtil.VIEWS_TREE_OVERVIEW).setFocus();
@@ -220,6 +219,7 @@ public class TestWebPurchase extends SWTBotGefTestCase implements SWTBotConstant
         SWTBotView properties = bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_APPLICATION);
         properties.bot().button("Add...").click();
         bot.waitUntil(Conditions.shellIsActive("Add form..."));
+        bot.checkBox("Select all").select();
         bot.button(IDialogConstants.FINISH_LABEL).click();
         bot.viewById(SWTBotTestUtil.VIEWS_TREE_OVERVIEW).show();
         bot.viewById(SWTBotTestUtil.VIEWS_TREE_OVERVIEW).setFocus();
@@ -288,10 +288,9 @@ public class TestWebPurchase extends SWTBotGefTestCase implements SWTBotConstant
             bot.waitUntil(Conditions.widgetIsEnabled(nextButton));
             nextButton.click();
         }
-        bot.button("Unselect all").click();
-        bot.checkBox(0).select();
-        bot.checkBox(1).select();
-        bot.checkBox(2).select();
+        bot.tree().getAllItems()[0].check();
+        bot.tree().getAllItems()[1].check();
+        bot.tree().getAllItems()[2].check();
         bot.button(IDialogConstants.FINISH_LABEL).click();
         SWTBotGefEditor formEditor =  bot.gefEditor(bot.activeEditor().getTitle());
         formEditor.activateTool("Message");
