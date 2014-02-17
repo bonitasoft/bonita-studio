@@ -54,7 +54,7 @@ public interface ExpressionConstants {
     String JAVA_METHOD_OPERATOR = OperatorType.JAVA_METHOD.name() ;
     String XPATH_UPDATE_OPERATOR = OperatorType.XPATH_UPDATE_QUERY.name() ;
     String CREATE_BUSINESS_DATA_OPERATOR = OperatorType.CREATE_BUSINESS_DATA.name() ;
-    String  BUSINESS_DATA_JAVA_SETTER_OPERATOR = OperatorType.BUSINESS_DATA_JAVA_SETTER.name() ;
+    String BUSINESS_DATA_JAVA_SETTER_OPERATOR = OperatorType.BUSINESS_DATA_JAVA_SETTER.name() ;
     
     
     String GROOVY = ExpressionInterpreter.GROOVY.name();

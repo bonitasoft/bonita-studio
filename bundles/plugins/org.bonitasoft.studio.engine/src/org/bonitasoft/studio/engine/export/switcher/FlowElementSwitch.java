@@ -732,11 +732,12 @@ public class FlowElementSwitch extends AbstractSwitch {
 						idx++;
 					}
 				} else {
-					builder.addOperation(EngineExpressionUtil.createLeftOperand(operation.getLeftOperand()), OperatorType.valueOf(operation.getOperator().getType()), operation.getOperator().getExpression(),inputType, EngineExpressionUtil.createExpression(operation.getRightOperand())) ;
+					builder.addOperation(EngineExpressionUtil.createLeftOperand(operation.getLeftOperand()), OperatorType.valueOf(EngineExpressionUtil.getOperatorType(operation)), operation.getOperator().getExpression(),inputType, EngineExpressionUtil.createExpression(operation.getRightOperand())) ;
 				}
 			}
 		}
 	}
+
 
 	protected void addLoop(ActivityDefinitionBuilder builder,Activity activity) {
 		if(activity.getIsLoop()){

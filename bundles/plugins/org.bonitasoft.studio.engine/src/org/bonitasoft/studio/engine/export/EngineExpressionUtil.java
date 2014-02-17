@@ -77,7 +77,7 @@ public class EngineExpressionUtil {
 	public static org.bonitasoft.engine.operation.Operation createOperation(final Operation operation) {
 		final OperationBuilder builder = new OperationBuilder();
 		builder.createNewInstance();
-		builder.setType(OperatorType.valueOf(operation.getOperator().getType()));
+		builder.setType(OperatorType.valueOf(EngineExpressionUtil.getOperatorType(operation)));
 		builder.setOperator(operation.getOperator().getExpression());
 		final EList<String> operatorInputTypes = operation.getOperator().getInputTypes();
 		if (!operatorInputTypes.isEmpty()) {
@@ -101,6 +101,17 @@ public class EngineExpressionUtil {
 		builder.setLeftOperand(createLeftOperand(operation.getLeftOperand(),isExternal));
 		return builder.done();
 	}
+	
+	public static String getOperatorType(Operation operation){
+		if(ExpressionConstants.JAVA_METHOD_OPERATOR.equals(operation.getOperator().getType())
+				&& operation.getLeftOperand() != null
+				&& !operation.getLeftOperand().getReferencedElements().isEmpty()
+				&& operation.getLeftOperand().getReferencedElements().get(0) instanceof BusinessObjectData){
+			return ExpressionConstants.BUSINESS_DATA_JAVA_SETTER_OPERATOR;
+		}
+		return operation.getOperator().getType();
+	}
+	
 	/**
 	 * Hack function because we want only constant in UI but we need a Variable type for the engine
 	 * 
@@ -111,7 +122,7 @@ public class EngineExpressionUtil {
 	public static org.bonitasoft.engine.operation.Operation createOperationForMessageContent(final Operation operation) {
 		final OperationBuilder builder = new OperationBuilder();
 		builder.createNewInstance();
-		builder.setType(OperatorType.valueOf(operation.getOperator().getType()));
+		builder.setType(OperatorType.valueOf(EngineExpressionUtil.getOperatorType(operation)));
 		builder.setOperator(operation.getOperator().getExpression());
 		final EList<String> operatorInputTypes = operation.getOperator().getInputTypes();
 		if (!operatorInputTypes.isEmpty()) {

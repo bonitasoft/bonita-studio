@@ -112,7 +112,7 @@ public abstract class AbstractSwitch extends ProcessSwitch<Element> {
                             && outputOpeartion.getRightOperand().getContent() != null){
                         connectorBuilder.addOutput(
                                 EngineExpressionUtil.createLeftOperand(outputOpeartion.getLeftOperand()),
-                                OperatorType.valueOf(outputOpeartion.getOperator().getType()),
+                                OperatorType.valueOf(EngineExpressionUtil.getOperatorType(outputOpeartion)),
                                 outputOpeartion.getOperator().getExpression(),inputType,
                                 EngineExpressionUtil.createExpression(outputOpeartion.getRightOperand())) ;
                     }
@@ -173,5 +173,6 @@ public abstract class AbstractSwitch extends ProcessSwitch<Element> {
             builder.addDescription(description) ;
         }
     }
+    
 
 }
