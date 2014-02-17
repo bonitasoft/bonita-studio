@@ -59,6 +59,7 @@ import org.eclipse.swtbot.swt.finder.waits.Conditions;
 import org.eclipse.swtbot.swt.finder.waits.ICondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotButton;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotCheckBox;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
@@ -241,9 +242,9 @@ public class DiagramTests extends SWTBotGefTestCase {
 				}
 			
 		
-				// last shell "Add form..."
+				SWTBotShell activeShell = bot.activeShell();
 				bot.button(IDialogConstants.FINISH_LABEL).click();
-
+				bot.waitUntil(Conditions.shellCloses(activeShell));
 				// add script to conver to an integer on "Step3"
 				if(nametask.equals("Step2")){
 					SWTBotGefEditor formEditor = bot.gefEditor(bot.activeEditor().getTitle());
