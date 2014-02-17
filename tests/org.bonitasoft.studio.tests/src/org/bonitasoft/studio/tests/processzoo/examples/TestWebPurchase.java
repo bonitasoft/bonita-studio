@@ -45,6 +45,7 @@ import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditor;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotButton;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -157,7 +158,10 @@ public class TestWebPurchase extends SWTBotGefTestCase implements SWTBotConstant
         properties.bot().button("Add...").click();
         bot.waitUntil(Conditions.shellIsActive("Add form..."));
         bot.checkBox("Select all").select();
+        SWTBotShell activeShell = bot.activeShell();
         bot.button(IDialogConstants.FINISH_LABEL).click();
+        bot.waitUntil(Conditions.shellCloses(activeShell));
+       
         bot.viewById(SWTBotTestUtil.VIEWS_TREE_OVERVIEW).show();
         bot.viewById(SWTBotTestUtil.VIEWS_TREE_OVERVIEW).setFocus();
         bot.tree().select("customerPhone1");
@@ -220,7 +224,9 @@ public class TestWebPurchase extends SWTBotGefTestCase implements SWTBotConstant
         properties.bot().button("Add...").click();
         bot.waitUntil(Conditions.shellIsActive("Add form..."));
         bot.checkBox("Select all").select();
+        SWTBotShell activeShell = bot.activeShell();
         bot.button(IDialogConstants.FINISH_LABEL).click();
+        bot.waitUntil(Conditions.shellCloses(activeShell));
         bot.viewById(SWTBotTestUtil.VIEWS_TREE_OVERVIEW).show();
         bot.viewById(SWTBotTestUtil.VIEWS_TREE_OVERVIEW).setFocus();
         bot.tree().select("customerPhone1");
@@ -291,7 +297,9 @@ public class TestWebPurchase extends SWTBotGefTestCase implements SWTBotConstant
         bot.tree().getAllItems()[0].check();
         bot.tree().getAllItems()[1].check();
         bot.tree().getAllItems()[2].check();
+        SWTBotShell activeShell = bot.activeShell();
         bot.button(IDialogConstants.FINISH_LABEL).click();
+        bot.waitUntil(Conditions.shellCloses(activeShell));
         SWTBotGefEditor formEditor =  bot.gefEditor(bot.activeEditor().getTitle());
         formEditor.activateTool("Message");
         formEditor.click( 500, 90);
