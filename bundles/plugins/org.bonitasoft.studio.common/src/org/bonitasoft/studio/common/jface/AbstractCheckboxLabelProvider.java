@@ -14,9 +14,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.migration.ui.view;
+package org.bonitasoft.studio.common.jface;
 
-import org.bonitasoft.studio.migration.model.report.Change;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.StyledCellLabelProvider;
@@ -32,48 +31,83 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.swt.widgets.TreeItem;
+import org.eclipse.swt.widgets.Widget;
 
-public class CheckboxLabelProvider extends StyledCellLabelProvider implements ILabelProvider{
+public abstract class AbstractCheckboxLabelProvider extends StyledCellLabelProvider implements ILabelProvider{
 
-	private static final String CHECKED_KEY = "checkedKey";//NON-NLS-1
-	private static final String UNCHECK_KEY = "uncheckKey";//NON-NLS-1
-	
-	public CheckboxLabelProvider(Control control){
-		if (JFaceResources.getImageRegistry().getDescriptor(CHECKED_KEY) == null) {
-			JFaceResources.getImageRegistry().put(UNCHECK_KEY,
-					makeShot(control, false));
-			JFaceResources.getImageRegistry().put(CHECKED_KEY,
-					makeShot(control, true));
+	protected static final String CHECKED_KEY = "checkedKey";//NON-NLS-1
+	protected static final String UNCHECK_KEY = "uncheckKey";//NON-NLS-1
+	protected static final String DISABLED_CHECKED_KEY = "checkedKeyDisabled";
+	protected static final String DISABLED_UNCHECKED_KEY = "uncheckKeyDisabled";
+
+	public AbstractCheckboxLabelProvider(Control control){
+		if(control != null){
+			if (JFaceResources.getImageRegistry().getDescriptor(UNCHECK_KEY) == null) {
+				JFaceResources.getImageRegistry().put(UNCHECK_KEY,
+						makeShot(control, false,true));
+			}
+			if (JFaceResources.getImageRegistry().getDescriptor(CHECKED_KEY) == null) {
+				JFaceResources.getImageRegistry().put(CHECKED_KEY,
+						makeShot(control, true,true));
+			}
+			if (JFaceResources.getImageRegistry().getDescriptor(DISABLED_CHECKED_KEY) == null) {
+				JFaceResources.getImageRegistry().put(DISABLED_CHECKED_KEY,
+						makeShot(control, true,false));
+			}
+			if (JFaceResources.getImageRegistry().getDescriptor(DISABLED_UNCHECKED_KEY) == null) {
+				JFaceResources.getImageRegistry().put(DISABLED_UNCHECKED_KEY,
+						makeShot(control, false,false));
+			}
 		}
 	}
-	
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.viewers.ILabelProvider#getImage(java.lang.Object)
+	 */
 	@Override
 	public Image getImage(Object element) {
-		return null;
+		if(isSelected(element)){
+			if(isEnabled(element)){
+				return JFaceResources.getImage(CHECKED_KEY);
+			}else{
+				return JFaceResources.getImage(DISABLED_CHECKED_KEY);
+			}
+			
+		}
+		return isEnabled(element) ? JFaceResources.getImage(UNCHECK_KEY) : JFaceResources.getImage(DISABLED_UNCHECKED_KEY);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.viewers.ILabelProvider#getText(java.lang.Object)
+	 */
 	@Override
 	public String getText(Object element) {
-		if(element instanceof Change){
-			return Boolean.valueOf(((Change) element).isReviewed()).toString();
-		}
-		return Boolean.FALSE.toString();
+		return ((Boolean)isSelected(element)).toString();
 	}
+
+	protected abstract boolean isSelected(Object element);
 	
-	private Image makeShot(Control control, boolean type){
+	protected boolean isEnabled(Object element){
+		return true;
+	}
+
+	private Image makeShot(Control control, boolean type, boolean enabled){
 		// Hopefully no platform uses exactly this color because we'll make
 		// it transparent in the image.
 		Color greenScreen = new Color(control.getDisplay(), 222, 223, 224);
 
 		Shell shell = new Shell(control.getShell(), SWT.NO_TRIM);
-
+		shell.setVisible(false);
 		// otherwise we have a default gray color
 		shell.setBackground(greenScreen);
 
 		Button button = new Button(shell, SWT.CHECK);
 		button.setBackground(greenScreen);
 		button.setSelection(type);
+		if(!enabled){
+			button.setEnabled(false);
+		}
 
 		// otherwise an image is located in a corner
 		button.setLocation(1, 1);
@@ -103,15 +137,17 @@ public class CheckboxLabelProvider extends StyledCellLabelProvider implements IL
 	@Override
 	protected void paint(Event event, Object element) {
 		super.paint(event, element);
-		Image image = null;
-		Change change = (Change)element;
-		if(change.isReviewed()){
-			image = JFaceResources.getImage(CHECKED_KEY);
-		} else {
-			image = JFaceResources.getImage(UNCHECK_KEY);
+		Image image = getImage(element);
+		if(image == null){
+			return;
 		}
-		Rectangle bounds = ((TableItem) event.item)
-				.getBounds(event.index);
+		Widget item = event.item;
+		Rectangle bounds = null;
+		if(item instanceof TreeItem){
+			bounds = ((TreeItem) item).getBounds(event.index);
+		}else if(item instanceof TableItem){
+			bounds = ((TableItem) item).getBounds(event.index);
+		}
 		Rectangle imgBounds = image.getBounds();
 		bounds.width /= 2;
 		bounds.width -= imgBounds.width / 2;
@@ -121,7 +157,7 @@ public class CheckboxLabelProvider extends StyledCellLabelProvider implements IL
 		int x = bounds.width > 0 ? bounds.x + bounds.width : bounds.x;
 		int y = bounds.height > 0 ? bounds.y + bounds.height : bounds.y;
 
-		event.gc.drawImage(image, x, y);
+		event.gc.drawImage(image, x, y-3);
 	}
 
 
