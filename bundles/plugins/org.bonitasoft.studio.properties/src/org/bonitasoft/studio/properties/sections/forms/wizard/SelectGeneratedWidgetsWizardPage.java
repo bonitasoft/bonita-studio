@@ -166,7 +166,7 @@ public class SelectGeneratedWidgetsWizardPage extends WizardSelectionPage implem
 
 		TreeViewerColumn nameTreeViewerColumn = new TreeViewerColumn(treeViewer, SWT.FILL);
 		nameTreeViewerColumn.getColumn().setText(Messages.name);
-		nameTreeViewerColumn.getColumn().setWidth(200);
+		nameTreeViewerColumn.getColumn().setWidth(250);
 		nameTreeViewerColumn.setLabelProvider(createNameColumnLabelProvider());
 
 		TreeViewerColumn widgetTreeViewerColumn = new TreeViewerColumn(treeViewer, SWT.FILL);
@@ -186,13 +186,13 @@ public class SelectGeneratedWidgetsWizardPage extends WizardSelectionPage implem
 
 		TreeViewerColumn mandatoryTreeViewerColumn = new TreeViewerColumn(treeViewer, SWT.CENTER);
 		mandatoryTreeViewerColumn.getColumn().setText(Messages.mandatory);
-		mandatoryTreeViewerColumn.getColumn().setWidth(80);
+		mandatoryTreeViewerColumn.getColumn().setWidth(90);
 		mandatoryTreeViewerColumn.setLabelProvider(new MandatoryCheckboxLabelProvider(treeViewer.getControl()));
 		mandatoryTreeViewerColumn.setEditingSupport(createMandatoryEditingSupport(treeViewer));
 
 		TreeViewerColumn readOnlyTreeViewerColumn = new TreeViewerColumn(treeViewer, SWT.CENTER);
 		readOnlyTreeViewerColumn.getColumn().setText(Messages.readOnly);
-		readOnlyTreeViewerColumn.getColumn().setWidth(80);
+		readOnlyTreeViewerColumn.getColumn().setWidth(90);
 		readOnlyTreeViewerColumn.setLabelProvider(new ReadOnlyCheckboxLabelProvider(treeViewer.getControl()));
 		readOnlyTreeViewerColumn.setEditingSupport(createReadOnlyEditingSupport(treeViewer));
 

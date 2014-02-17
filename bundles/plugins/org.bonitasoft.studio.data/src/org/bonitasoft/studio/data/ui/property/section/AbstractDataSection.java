@@ -114,14 +114,14 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
 		super.createControls(parent, aTabbedPropertySheetPage);
 		mainComposite = getWidgetFactory().createComposite(parent);
 		mainComposite.setLayout(createMainCompositeLayout());
+		
 		mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true,true).create());
 		final Composite dataComposite = getWidgetFactory().createComposite(mainComposite) ;
 		dataComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true,true).create()) ;
 		dataComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(0, 0).create()) ;
 		createDataComposite(dataComposite);
 	}
-
-
+	
 	protected GridLayout createMainCompositeLayout() {
 		return GridLayoutFactory.fillDefaults().numColumns(1).margins(20, 15).create();
 	}
