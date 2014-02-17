@@ -46,7 +46,7 @@ import org.eclipse.jface.wizard.Wizard;
 
 public class SelectFormWizard extends Wizard {
 
-	
+
 	protected Element pageFlow;
 	protected TransactionalEditingDomain editingDomain;
 	protected EStructuralFeature feature;
@@ -71,7 +71,7 @@ public class SelectFormWizard extends Wizard {
 		page.setDescription(Messages.createForm_desc);
 		return page;
 	}
-	
+
 	protected List<EObject> getAccessibleModelElements() {
 		List<EObject> elements = new ArrayList<EObject>();
 		if(pageFlow instanceof PageFlow){
@@ -91,7 +91,7 @@ public class SelectFormWizard extends Wizard {
 
 		return elements;
 	}
-	
+
 	protected String generateDefaultFormName() {
 		String baseName = pageFlow.getName();
 		int i = ((List<?>) pageFlow.eGet(feature)).size();
@@ -145,7 +145,11 @@ public class SelectFormWizard extends Wizard {
 
 	protected CreateFormCommand getCreateFormCommand(String name,
 			List<? extends WidgetMapping> widgesMappings) {
-		return new CreateFormCommand(pageFlow, feature, name, getSelectGeneratedWidgetsWizardPage().getFormDescription(), widgesMappings, editingDomain);
+		if(widgesMappings == null){
+			return new CreateFormCommand(pageFlow, feature, name, getSelectGeneratedWidgetsWizardPage().getFormDescription(), editingDomain);
+		}else{
+			return new CreateFormCommand(pageFlow, feature, name, getSelectGeneratedWidgetsWizardPage().getFormDescription(), widgesMappings, editingDomain);
+		}
 	}
 
 	@Override

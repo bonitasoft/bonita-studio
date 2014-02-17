@@ -17,6 +17,7 @@
 package org.bonitasoft.studio.diagram.form.custom.commands;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -56,6 +57,7 @@ import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.diagram.form.providers.ElementInitializers;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.codegen.util.CodeGenUtil;
@@ -79,7 +81,7 @@ public class CreateFormCommand extends AbstractTransactionalCommand {
 	private static final int MIN_BUTTON_LINE = 2;
 
 	private final String formName;
-	private final List<? extends WidgetMapping> widgesMappings;
+	private List<? extends WidgetMapping> widgesMappings;
 
 
 	private final Element pageFlow;
@@ -93,11 +95,20 @@ public class CreateFormCommand extends AbstractTransactionalCommand {
 			List<? extends WidgetMapping> widgesMappings,
 			TransactionalEditingDomain editingDomain) {
 		super(editingDomain, "Create form", getWorkspaceFiles(pageFlow));
+		Assert.isNotNull(widgesMappings);
 		this.formName = NamingUtils.toJavaIdentifier(formName,true);
 		this.description = description;
 		this.widgesMappings = widgesMappings;
 		this.pageFlow = pageFlow;
 		this.feature = feature;
+	}
+	
+	public CreateFormCommand(Element pageFlow, 
+			EStructuralFeature feature,
+			String formName, 
+			String description, 
+			TransactionalEditingDomain editingDomain) {
+		this(pageFlow,feature,formName,description,Collections.<WidgetMapping>emptyList(),editingDomain);
 	}
 
 	protected Expression createLabelExpression(String name) {
