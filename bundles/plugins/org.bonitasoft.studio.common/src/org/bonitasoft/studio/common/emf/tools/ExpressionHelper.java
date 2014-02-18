@@ -23,6 +23,7 @@ import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.expression.Operation;
 import org.bonitasoft.studio.model.expression.Operator;
+import org.bonitasoft.studio.model.form.Duplicable;
 import org.bonitasoft.studio.model.form.FormFactory;
 import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.process.Data;
@@ -123,6 +124,9 @@ public class ExpressionHelper {
 			Widget widgetDependency = (Widget) FormFactory.eINSTANCE.create(dependency.eClass());
 			widgetDependency.setName(((Widget) dependency).getName());
 			widgetDependency.setReturnTypeModifier(((Widget) dependency).getReturnTypeModifier());
+			if(dependency instanceof Duplicable){
+				((Duplicable) widgetDependency).setDuplicate(((Duplicable) dependency).isDuplicate());
+			}
 			return widgetDependency;
 		}
 		if(dependency instanceof Data){
