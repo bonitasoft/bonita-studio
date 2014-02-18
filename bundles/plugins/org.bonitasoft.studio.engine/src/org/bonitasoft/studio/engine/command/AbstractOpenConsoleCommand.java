@@ -139,13 +139,11 @@ public abstract class AbstractOpenConsoleCommand extends AbstractHandler {
 
 	protected String buildUrl(IProgressMonitor monitor) throws UnsupportedEncodingException {
 		final IPreferenceStore store = getPreferenceStore();
-		final String port = store.getString(BonitaPreferenceConstants.CONSOLE_PORT);
-		final String host = store.getString(BonitaPreferenceConstants.CONSOLE_HOST);
 		final String userName =  store.getString(BonitaPreferenceConstants.USER_NAME);
 		final String password = store.getString(BonitaPreferenceConstants.USER_PASSWORD);
 		final String locale = store.getString(BonitaPreferenceConstants.CURRENT_UXP_LOCALE);
 		final String loginUrl = BOSWebServerManager.getInstance().generateLoginURL(userName, password) ;
-		final String consoleURl = "http://"+host+":"+ port + getURLRelativePath(locale);
+		final String consoleURl = getURLRelativePath(locale);
 		return loginUrl+"&redirectUrl="+URLEncoder.encode(consoleURl, "UTF-8");
 	}
 
