@@ -49,6 +49,7 @@ import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditPart;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditor;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -160,8 +161,10 @@ public class TestMultiInstantiation extends SWTBotGefTestCase implements SWTBotC
         // Add a new Form
         bot.button("Add...").click();
         bot.waitUntil(Conditions.shellIsActive(addFormTitle));
+        bot.checkBox("Select all").select();
+        SWTBotShell activeShell = bot.activeShell();
         bot.button(IDialogConstants.FINISH_LABEL).click();
-
+        bot.waitUntil(Conditions.shellCloses(activeShell));
 
         gmfEditor = bot.gefEditor("Step1");
 
