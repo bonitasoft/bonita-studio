@@ -45,7 +45,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
  */
 public class ApplicationURLBuilder {
 
-    public static final String APPLI_PATH = "/bonita/portal/homepage?"; //$NON-NLS-1$
+    public static final String APPLI_PATH = "portal/homepage?"; //$NON-NLS-1$
     public static final String MODE_APP ="app";
     public static final String MODE_FORM="form";
 
@@ -72,8 +72,6 @@ public class ApplicationURLBuilder {
         Configuration conf = getConfiguration(process, configurationId) ;
         IPreferenceStore store =  BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore() ;
         String locale = store.getString(BonitaPreferenceConstants.CURRENT_UXP_LOCALE) ;
-        String port = store.getString(BonitaPreferenceConstants.CONSOLE_PORT);
-        String host = store.getString(BonitaPreferenceConstants.CONSOLE_HOST) ;
         String token = "" ;
         String userName = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().getString(BonitaPreferenceConstants.USER_NAME) ;
         String password = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().getString(BonitaPreferenceConstants.USER_PASSWORD) ;
@@ -83,7 +81,7 @@ public class ApplicationURLBuilder {
         }
 
         final String loginURL = BOSWebServerManager.getInstance().generateLoginURL(userName, password) ;
-        final String runUrl = "http://"+ host+":"+ port + APPLI_PATH + token +"ui=form&locale="+locale+"#form="+URLEncoder.encode(process.getName()+"--"+process.getVersion(), "UTF-8")+"$entry&process="+processId+"&mode="+mode;
+        final String runUrl = APPLI_PATH + token +"ui=form&locale="+locale+"#form="+URLEncoder.encode(process.getName()+"--"+process.getVersion(), "UTF-8")+"$entry&process="+processId+"&mode="+mode;
         return new URL(loginURL+"&redirectUrl="+URLEncoder.encode(runUrl, "UTF-8"));
     }
     
