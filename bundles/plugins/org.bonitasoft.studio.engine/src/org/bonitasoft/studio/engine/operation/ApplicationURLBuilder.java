@@ -83,8 +83,6 @@ public class ApplicationURLBuilder {
         return new URL(loginURL+"&redirectUrl="+URLEncoder.encode(runUrl, "UTF-8"));
     }
     
-   
-
     private Configuration getConfiguration(final AbstractProcess process,String configurationId) {
         Configuration configuration = null ;
         final ProcessConfigurationRepositoryStore processConfStore = (ProcessConfigurationRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ProcessConfigurationRepositoryStore.class) ;

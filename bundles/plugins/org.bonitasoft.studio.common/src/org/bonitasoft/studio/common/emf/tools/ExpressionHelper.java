@@ -23,6 +23,7 @@ import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.expression.Operation;
 import org.bonitasoft.studio.model.expression.Operator;
+import org.bonitasoft.studio.model.form.Duplicable;
 import org.bonitasoft.studio.model.form.FormFactory;
 import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.process.Data;
@@ -30,6 +31,7 @@ import org.bonitasoft.studio.model.process.Document;
 import org.bonitasoft.studio.model.process.EnumType;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.SearchIndex;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
@@ -123,6 +125,9 @@ public class ExpressionHelper {
 			Widget widgetDependency = (Widget) FormFactory.eINSTANCE.create(dependency.eClass());
 			widgetDependency.setName(((Widget) dependency).getName());
 			widgetDependency.setReturnTypeModifier(((Widget) dependency).getReturnTypeModifier());
+			if(dependency instanceof Duplicable){
+				((Duplicable) widgetDependency).setDuplicate(((Duplicable) dependency).isDuplicate());
+			}
 			return widgetDependency;
 		}
 		if(dependency instanceof Data){
@@ -147,4 +152,13 @@ public class ExpressionHelper {
 		}
 		return EcoreUtil.copy(dependency);
 	}
+	
+	public static void clearExpression(Expression expr) {
+		Assert.isLegal(expr!=null, "Expression cannot be null.");
+		expr.setName("");
+		expr.setContent("");
+		expr.setType(ExpressionConstants.CONSTANT_TYPE);
+		expr.getReferencedElements().clear();
+	}
+	
 }

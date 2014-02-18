@@ -155,10 +155,9 @@ public class FormsUtils {
     };
 
 
-    public static void duplicateForm(Element pageFlow, TransactionalEditingDomain editingDomain, EStructuralFeature feature, Form baseForm, String formName,
-            String id, String formDesc) {
+    public static void duplicateForm(Element pageFlow, TransactionalEditingDomain editingDomain, EStructuralFeature feature, Form baseForm, String id, String formDesc) {
         try {
-            OperationHistoryFactory.getOperationHistory().execute(new DuplicateFormCommand(pageFlow, feature, baseForm, formName, id, formDesc, editingDomain),
+            OperationHistoryFactory.getOperationHistory().execute(new DuplicateFormCommand(pageFlow, feature, baseForm, id, formDesc, editingDomain),
                     new NullProgressMonitor(), null);
         } catch (ExecutionException e) {
             BonitaStudioLog.error(e);
