@@ -82,8 +82,8 @@ public class SelectGeneratedWidgetsWizardPage extends WizardSelectionPage implem
 	private String formDescription;
 
 	protected List<EObject> inputElements;
-	private List<? extends WidgetMapping> widgetMappingList;
 	private IViewerObservableSet observeCheckedElements;
+	private List<? extends WidgetMapping> widgetMappingList;
 
 	public SelectGeneratedWidgetsWizardPage(String defautFormName,List<EObject> inputElements) {
 		super(SelectGeneratedWidgetsWizardPage.class.getName());
@@ -148,8 +148,8 @@ public class SelectGeneratedWidgetsWizardPage extends WizardSelectionPage implem
 	protected void createWidgetSelectionGroup(Composite composite) {
 		Group parentGroup = createWidgetGroup(composite);
 		Composite treeContainerComposite = createTreeContainer(parentGroup);
-		List<? extends WidgetMapping> input =  asWidgetMappingList(inputElements);
-		createProcessDataMappingTreeViewer(treeContainerComposite,input);
+		widgetMappingList =  asWidgetMappingList(inputElements);
+		createProcessDataMappingTreeViewer(treeContainerComposite,widgetMappingList);
 	}
 
 	protected CheckboxTreeViewer createProcessDataMappingTreeViewer(
@@ -197,7 +197,7 @@ public class SelectGeneratedWidgetsWizardPage extends WizardSelectionPage implem
 		readOnlyTreeViewerColumn.setEditingSupport(createReadOnlyEditingSupport(treeViewer));
 
 
-		
+
 		WritableValue dataAndDocumentList = new WritableValue();
 		dataAndDocumentList.setValue(input);
 		databindingContext.bindValue(ViewersObservables.observeInput(treeViewer),dataAndDocumentList);
@@ -244,10 +244,10 @@ public class SelectGeneratedWidgetsWizardPage extends WizardSelectionPage implem
 	@Override
 	public void checkStateChanged(CheckStateChangedEvent event) {
 		WidgetMapping mapping = (WidgetMapping) event.getElement();
-		
+
 		//SELECT/DESELECT ALL CHILDREN
 		((CheckboxTreeViewer)event.getSource()).setSubtreeChecked(mapping,event.getChecked());
-		
+
 		//DESELECT PARENT IF NO CHILD SELECTED
 		if(!event.getChecked() && mapping.getParent() != null){
 			for(WidgetMapping m : mapping.getParent().getChildren()){
@@ -374,7 +374,11 @@ public class SelectGeneratedWidgetsWizardPage extends WizardSelectionPage implem
 	}
 
 	public List<? extends WidgetMapping> getWidgetMappings() {
-		return widgetMappingList;
+		List<WidgetMapping> result = new ArrayList<WidgetMapping>();
+		if(widgetMappingList != null){
+			result.addAll(widgetMappingList);
+		}
+		return result;
 	}
 
 
