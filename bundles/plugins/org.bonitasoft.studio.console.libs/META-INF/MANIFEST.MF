@@ -1,13 +1,13 @@
 Manifest-Version: 1.0
-Bnd-LastModified: 1391440469362
+Bnd-LastModified: 1392225958474
 Build-Jdk: 1.7.0_45
 Built-By: aurelie
 Bundle-ClassPath: .,lib/bonita-client.jar,lib/httpclient.jar,lib/httpcor
  e.jar,lib/commons-logging.jar,lib/xstream.jar,lib/xmlpull.jar,lib/xpp3_
- min.jar,lib/httpmime.jar,lib/commons-codec.jar,lib/bonita-client.jar,li
- b/bonita-common.jar,lib/bonita-server.jar,lib/theme-builder.jar,lib/for
- ms-server.jar,lib/forms-model.jar,lib/forms-rpc.jar,lib/console-server.
- jar,lib/common-server.jar
+ min.jar,lib/httpmime.jar,lib/commons-codec.jar,lib/hamcrest-core.jar,li
+ b/bonita-client.jar,lib/bonita-common.jar,lib/bonita-server.jar,lib/the
+ me-builder.jar,lib/forms-server.jar,lib/forms-model.jar,lib/forms-rpc.j
+ ar,lib/console-server.jar,lib/common-server.jar
 Bundle-ManifestVersion: 2
 Bundle-Name: Bonita Console embedded in Studio
 Bundle-SymbolicName: org.bonitasoft.studio.console.libs;singleton:=true
@@ -27,18 +27,19 @@ Embedded-Artifacts: lib/bonita-client.jar;g="org.bonitasoft.engine";a="b
  ks.xstream";a="xstream";v="1.4.2",lib/xmlpull.jar;g="xmlpull";a="xmlpul
  l";v="1.1.3.1",lib/xpp3_min.jar;g="xpp3";a="xpp3_min";v="1.1.4c",lib/ht
  tpmime.jar;g="org.apache.httpcomponents";a="httpmime";v="4.2.5",lib/com
- mons-codec.jar;g="commons-codec";a="commons-codec";v="1.7",lib/bonita-c
- lient.jar;g="org.bonitasoft.engine";a="bonita-client";v="6.3.0-SNAPSHOT
- ";c="sources",lib/bonita-common.jar;g="org.bonitasoft.engine";a="bonita
- -common";v="6.3.0-SNAPSHOT",lib/bonita-server.jar;g="org.bonitasoft.eng
- ine";a="bonita-server";v="6.3.0-SNAPSHOT",lib/theme-builder.jar;g="org.
- bonitasoft.web";a="theme-builder";v="6.1.0",lib/forms-server.jar;g="org
- .bonitasoft.forms";a="forms-server";v="6.3.0-SNAPSHOT",lib/forms-model.
- jar;g="org.bonitasoft.forms";a="forms-model";v="6.3.0-SNAPSHOT",lib/for
- ms-rpc.jar;g="org.bonitasoft.forms";a="forms-rpc";v="6.3.0-SNAPSHOT",li
- b/console-server.jar;g="org.bonitasoft.console";a="console-server";v="6
- .3.0-SNAPSHOT",lib/common-server.jar;g="org.bonitasoft.console";a="comm
- on-server";v="6.3.0-SNAPSHOT"
+ mons-codec.jar;g="commons-codec";a="commons-codec";v="1.7",lib/hamcrest
+ -core.jar;g="org.hamcrest";a="hamcrest-core";v="1.3",lib/bonita-client.
+ jar;g="org.bonitasoft.engine";a="bonita-client";v="6.3.0-SNAPSHOT";c="s
+ ources",lib/bonita-common.jar;g="org.bonitasoft.engine";a="bonita-commo
+ n";v="6.3.0-SNAPSHOT",lib/bonita-server.jar;g="org.bonitasoft.engine";a
+ ="bonita-server";v="6.3.0-SNAPSHOT",lib/theme-builder.jar;g="org.bonita
+ soft.web";a="theme-builder";v="6.1.0",lib/forms-server.jar;g="org.bonit
+ asoft.forms";a="forms-server";v="6.3.0-SNAPSHOT",lib/forms-model.jar;g=
+ "org.bonitasoft.forms";a="forms-model";v="6.3.0-SNAPSHOT",lib/forms-rpc
+ .jar;g="org.bonitasoft.forms";a="forms-rpc";v="6.3.0-SNAPSHOT",lib/cons
+ ole-server.jar;g="org.bonitasoft.console";a="console-server";v="6.3.0-S
+ NAPSHOT",lib/common-server.jar;g="org.bonitasoft.console";a="common-ser
+ ver";v="6.3.0-SNAPSHOT"
 Export-Package: org.bonitasoft.console.common.server.preferences.constan
  ts;version="0.0.0",org.bonitasoft.console.common.server.preferences.pro
  perties;version="0.0.0",org.bonitasoft.console.common.server.sso;versio
@@ -235,8 +236,8 @@ Export-Package: org.bonitasoft.console.common.server.preferences.constan
  .0",org.bonitasoft.engine.core.expression.control.api.impl;version="0.0
  .0",org.bonitasoft.engine.core.process.instance.model.builder.event.tri
  gger.impl;version="0.0.0",org.bonitasoft.engine.platform.model;version=
- "0.0.0",org.bonitasoft.engine.data.instance.model.archive.builder.impl;
- version="0.0.0",org.bonitasoft.engine.bpm.connector;version="0.0.0",org
+ "0.0.0",org.bonitasoft.engine.bpm.connector;version="0.0.0",org.bonitas
+ oft.engine.data.instance.model.archive.builder.impl;version="0.0.0",org
  .bonitasoft.engine.core.process.comment.model.builder.impl;version="0.0
  .0",org.bonitasoft.engine.core.process.instance.api.exceptions.event.tr
  igger;version="0.0.0",org.bonitasoft.engine.entitymember.impl;version="
@@ -293,8 +294,8 @@ Export-Package: org.bonitasoft.console.common.server.preferences.constan
  ine.core.process.definition.exception;version="0.0.0",org.bonitasoft.en
  gine.log.technical;version="0.0.0",org.bonitasoft.engine.core.process.c
  omment.model.impl.db.archive;version="0.0.0",org.bonitasoft.engine.job;
- version="0.0.0",org.bonitasoft.engine.data.instance.model.archive;versi
- on="0.0.0",org.bonitasoft.engine.bpm.process;version="0.0.0",org.bonita
+ version="0.0.0",org.bonitasoft.engine.bpm.process;version="0.0.0",org.b
+ onitasoft.engine.data.instance.model.archive;version="0.0.0",org.bonita
  soft.engine.core.process.instance.impl;version="0.0.0",org.bonitasoft.e
  ngine.api.impl.transaction.actor;version="0.0.0",org.bonitasoft.engine.
  bpm.process.impl;version="0.0.0",org.bonitasoft.engine.core.process.ins

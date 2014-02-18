@@ -17,7 +17,10 @@
 package org.bonitasoft.studio.common.emf.tools;
 
 import static org.fest.assertions.Assertions.assertThat;
+import static org.junit.Assert.*;
 
+import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.form.DateFormField;
 import org.bonitasoft.studio.model.form.Duplicable;
@@ -113,4 +116,24 @@ public class ExpressionHelperTest {
 		assertThat(((Duplicable)dependencyFromEObject).isDuplicate()).isTrue();
 	}
 
+	@Test
+	public void shouldClearExpression_SetEmptyExpression() throws Exception {
+		Expression expression = ExpressionFactory.eINSTANCE.createExpression();
+		expression.setName("Toto");
+		expression.setContent("Titi2014");
+		expression.setType(ExpressionConstants.SCRIPT_TYPE);
+		expression.getReferencedElements().add(ProcessFactory.eINSTANCE.createData());
+		
+		
+		ExpressionHelper.clearExpression(expression);
+		assertThat(expression.getName()).isEmpty();
+		assertThat(expression.getContent()).isEmpty();
+		assertThat(expression.getType()).isEqualTo(ExpressionConstants.CONSTANT_TYPE);
+		assertThat(expression.getReferencedElements()).isEmpty();
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void shouldClearExpression_ThrowIllegalArgumentException() throws Exception {
+		ExpressionHelper.clearExpression(null);
+	}
 }
