@@ -123,6 +123,7 @@ public class ExpressionHelper {
 		if(dependency instanceof Widget){
 			Widget widgetDependency = (Widget) FormFactory.eINSTANCE.create(dependency.eClass());
 			widgetDependency.setName(((Widget) dependency).getName());
+			widgetDependency.setReturnTypeModifier(((Widget) dependency).getReturnTypeModifier());
 			return widgetDependency;
 		}
 		if(dependency instanceof Data){
