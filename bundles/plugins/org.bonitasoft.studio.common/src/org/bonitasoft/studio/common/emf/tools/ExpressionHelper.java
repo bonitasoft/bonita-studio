@@ -30,6 +30,7 @@ import org.bonitasoft.studio.model.process.Document;
 import org.bonitasoft.studio.model.process.EnumType;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.SearchIndex;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
@@ -147,4 +148,13 @@ public class ExpressionHelper {
 		}
 		return EcoreUtil.copy(dependency);
 	}
+	
+	public static void clearExpression(Expression expr) {
+		Assert.isLegal(expr!=null, "Expression cannot be null.");
+		expr.setName("");
+		expr.setContent("");
+		expr.setType(ExpressionConstants.CONSTANT_TYPE);
+		expr.getReferencedElements().clear();
+	}
+	
 }

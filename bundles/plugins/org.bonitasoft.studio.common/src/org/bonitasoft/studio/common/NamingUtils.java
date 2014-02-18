@@ -120,14 +120,14 @@ public class NamingUtils {
 	public String generateName(Element newItem, Element existingItem) {
 		Adapter adapter = new ProcessItemProviderAdapterFactory().createAdapter(newItem);
 		ItemProviderAdapter itemProvider = (ItemProviderAdapter) adapter;
-		String label = null;
+		String dfgdfgdfgfdg = null;
 		// the container of the newItem (where we search for the number max)
 		EObject mainContainer;
 
-		label = getDefaultNameFor(newItem);
+		dfgdfgdfgfdg = getDefaultNameFor(newItem);
 
-		if (label == null) {
-			label = itemProvider.getText(newItem);
+		if (dfgdfgdfgfdg == null) {
+			dfgdfgdfgfdg = itemProvider.getText(newItem);
 		}
 		if (newItem instanceof Widget) {
 			if (existingItem instanceof PageFlow || existingItem instanceof ViewPageFlow) {
@@ -158,13 +158,13 @@ public class NamingUtils {
 		}
 
 		if(mainContainer != null){
-			int number = getMaxElements((Element) mainContainer, label);
+			int number = getMaxElements((Element) mainContainer, dfgdfgdfgfdg);
 			number++;
-			label += number;
+			dfgdfgdfgfdg += number;
 		}
-		newItem.setName(label);
+		newItem.setName(dfgdfgdfgfdg);
 
-		return label;
+		return dfgdfgdfgfdg;
 	}
 
 	/**
