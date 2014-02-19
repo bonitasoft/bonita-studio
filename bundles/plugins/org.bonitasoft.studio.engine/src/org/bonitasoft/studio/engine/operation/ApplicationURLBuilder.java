@@ -45,23 +45,21 @@ import org.eclipse.jface.preference.IPreferenceStore;
  */
 public class ApplicationURLBuilder {
 
-    public static final String APPLI_PATH = "/bonita/portal/homepage?"; //$NON-NLS-1$
+	private static final String ENCODING = "UTF-8";
+	public static final String APPLI_PATH = "portal/homepage?"; //$NON-NLS-1$
     public static final String MODE_APP ="app";
     public static final String MODE_FORM="form";
 
-    private static final String LOCALE_PARAM = "locale";
     private final AbstractProcess process;
     private final Long processId;
-    private final String configurationId;
+    private String configurationId;
     private String mode;
 
-    
     public ApplicationURLBuilder(AbstractProcess process, Long processId, String configurationId){
     	this(process,processId,configurationId,MODE_APP);
     }
     
     public ApplicationURLBuilder(AbstractProcess process, Long processId, String configurationId,String mode) {
-    	Assert.isNotNull(mode);
         this.process = process ;
         this.processId = processId ;
         this.configurationId = configurationId ;
@@ -69,27 +67,54 @@ public class ApplicationURLBuilder {
     }
 
     public URL toURL(IProgressMonitor monitor) throws MalformedURLException, UnsupportedEncodingException, URISyntaxException {
-        Configuration conf = getConfiguration(process, configurationId) ;
-        IPreferenceStore store =  BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore() ;
-        String locale = store.getString(BonitaPreferenceConstants.CURRENT_UXP_LOCALE) ;
-        String port = store.getString(BonitaPreferenceConstants.CONSOLE_PORT);
-        String host = store.getString(BonitaPreferenceConstants.CONSOLE_HOST) ;
-        String token = "" ;
-        String userName = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().getString(BonitaPreferenceConstants.USER_NAME) ;
-        String password = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().getString(BonitaPreferenceConstants.USER_PASSWORD) ;
+        String locale = getWebLocale() ;
+        String userName = getDefaultUsername() ;
+        String password = getDefaultPassword() ;
+      
+        Configuration conf = getConfiguration() ;
         if(conf != null && conf.getUsername() != null){
             userName = conf.getUsername() ;
             password = conf.getPassword() ;
         }
 
-        final String loginURL = BOSWebServerManager.getInstance().generateLoginURL(userName, password) ;
-        final String runUrl = "http://"+ host+":"+ port + APPLI_PATH + token +"ui=form&locale="+locale+"#form="+URLEncoder.encode(process.getName()+"--"+process.getVersion(), "UTF-8")+"$entry&process="+processId+"&mode="+mode;
-        return new URL(loginURL+"&redirectUrl="+URLEncoder.encode(runUrl, "UTF-8"));
+        final String loginURL = buildLoginUrl(userName, password) ;
+        return new URL(loginURL+"&redirectUrl="+URLEncoder.encode(getRedirectURL(locale), ENCODING));
     }
     
-   
+    protected String getRedirectURL(String locale) throws UnsupportedEncodingException {
+		return APPLI_PATH + "ui=form&"+getLocaleParameter(locale)+"#form="+URLEncoder.encode(process.getName()+"--"+process.getVersion(), ENCODING)+"$entry&process="+processId+"&"+getModeParameter();
+	}
+    
+    protected String getLocaleParameter(String locale) {
+		return "locale="+locale;
+	}
 
-    private Configuration getConfiguration(final AbstractProcess process,String configurationId) {
+    protected String getModeParameter(){
+    	Assert.isNotNull(mode);
+    	return "mode="+mode;
+    }
+    
+	protected String buildLoginUrl(String userName, String password) {
+		return BOSWebServerManager.getInstance().generateLoginURL(userName, password);
+	}
+
+	protected IPreferenceStore getPreferenceStore() {
+		return BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore();
+	}
+
+	protected String getWebLocale() {
+		return getPreferenceStore().getString(BonitaPreferenceConstants.CURRENT_UXP_LOCALE);
+	}
+
+	protected String getDefaultPassword() {
+		return getPreferenceStore().getString(BonitaPreferenceConstants.USER_PASSWORD);
+	}
+
+	protected String getDefaultUsername() {
+		return getPreferenceStore().getString(BonitaPreferenceConstants.USER_NAME);
+	}
+    
+	protected Configuration getConfiguration() {
         Configuration configuration = null ;
         final ProcessConfigurationRepositoryStore processConfStore = (ProcessConfigurationRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ProcessConfigurationRepositoryStore.class) ;
         if(configurationId == null){
@@ -99,7 +124,6 @@ public class ApplicationURLBuilder {
             String id = ModelHelper.getEObjectID(process) ;
             IRepositoryFileStore file = processConfStore.getChild(id+".conf") ;
             if(file == null){
-                //FIXME warn user that there is no configuration for the process
                 throw new BonitaRuntimeException("Unable to run process, you must first configure it");
             }
             configuration = (Configuration) file.getContent();

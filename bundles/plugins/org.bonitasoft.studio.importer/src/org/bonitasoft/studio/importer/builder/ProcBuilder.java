@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2011 BonitaSoft S.A.
- * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2011-2014 BonitaSoft S.A.
+ * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -106,10 +106,8 @@ import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.command.AddCommand;
 import org.eclipse.emf.edit.command.SetCommand;
-import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.workspace.util.WorkspaceSynchronizer;
 import org.eclipse.gef.EditPart;
@@ -272,14 +270,8 @@ public class ProcBuilder implements IProcBuilder {
         id = NamingUtils.convertToId(id) ;
         ViewAndElementDescriptor viewDescriptor = new ViewAndElementDescriptor(new CreateElementRequestAdapter(new CreateElementRequest(ProcessElementTypes.Pool_2007)), Node.class,
                 ((IHintedType) ProcessElementTypes.Pool_2007).getSemanticHint(), diagramPart.getDiagramPreferencesHint());
-        CreateViewAndElementRequest createRequest = new CreateViewAndElementRequest(viewDescriptor);
-        if(location != null){
-            createRequest.setLocation(location);
-        }
-
-        if(size != null){
-            createRequest.setSize(size) ;
-        }
+        CreateViewAndElementRequest createRequest = createCreationRequest(
+				location, size, viewDescriptor);
         diagramPart.getDiagramEditDomain().getDiagramCommandStack().execute(diagramPart.getCommand(createRequest));
 
 
@@ -334,16 +326,7 @@ public class ProcBuilder implements IProcBuilder {
         diagramPart.refresh();
         IGraphicalEditPart parentEditPart = GMFTools.findEditPart(diagramPart, (Element)currentContainer) ;
 
-        IGraphicalEditPart compartment = null ;
-        for(Object c : parentEditPart.getChildren()){
-            if(c instanceof ShapeCompartmentEditPart){
-                compartment = (IGraphicalEditPart) c ;
-            }
-        }
-
-        if(compartment == null){
-            compartment = parentEditPart ;
-        }
+        IGraphicalEditPart compartment = retrieveCompartmentEditPartFor(parentEditPart);
 
         diagramPart.getDiagramEditDomain().getDiagramCommandStack().execute(compartment.getCommand(request));
         compartment.refresh();
@@ -480,24 +463,8 @@ public class ProcBuilder implements IProcBuilder {
         ShapeNodeEditPart sourceNode = editParts.get(srcId);
         ShapeNodeEditPart targetNode = editParts.get(trgtId);
 
-        if(sourceNode == null){
-            return ;
-        }
-
-        if(targetNode == null){
-            return ;
-        }
-
-        final EObject sourceElement = steps.get(srcId);
-        final EObject targetElement = steps.get(trgtId);
-        if(sourceElement != null && targetElement != null){
-            if(!ModelHelper.getParentProcess(sourceElement).equals( ModelHelper.getParentProcess(targetElement))){
-                return ;//TODO HAPPENS WITH EMBEDDED SUBPROC AND NOT SUPPORTED YET IN BOS
-            }
-        }
-
-        if(createdSequenceFlows.contains(new Pair<String,String>(srcId,trgtId))){
-            return ; //Already exists
+        if(!canSequenceFlowBeCreated(srcId, trgtId, sourceNode, targetNode)){
+        	return;
         }
 
         CreateConnectionViewAndElementRequest request = new CreateConnectionViewAndElementRequest(ProcessElementTypes.SequenceFlow_4001, ((IHintedType) ProcessElementTypes.SequenceFlow_4001).getSemanticHint(), diagramPart
@@ -514,25 +481,11 @@ public class ProcBuilder implements IProcBuilder {
         }
 
         if(bendpoints != null && bendpoints.size() > 1){
-            /*Manage BendPoints*/
-            SetConnectionBendpointsCommand setConnectionBendPointsCommand = new SetConnectionBendpointsCommand(editingDomain);
-            setConnectionBendPointsCommand.setEdgeAdapter(newObject);
-            setConnectionBendPointsCommand.setNewPointList(bendpoints, bendpoints.getFirstPoint(), bendpoints.getLastPoint());
-            diagramPart.getDiagramEditDomain().getDiagramCommandStack().execute(new ICommandProxy(setConnectionBendPointsCommand));
+            setBendPoints(bendpoints, newObject);
         }
 
+        handleSequenceFlowAnchors(sourceAnchor, targetAnchor, newObject);
 
-        SetConnectionAnchorsCommand setConnectionAnchorsCommand = new SetConnectionAnchorsCommand(editingDomain, "Add anchors") ;
-        setConnectionAnchorsCommand.setEdgeAdaptor(newObject) ;
-        if(sourceAnchor != null){
-            setConnectionAnchorsCommand.setNewSourceTerminal("("+sourceAnchor.preciseX()+","+sourceAnchor.preciseY()+")") ;
-        }
-        if(targetAnchor != null){
-            setConnectionAnchorsCommand.setNewTargetTerminal("("+targetAnchor.preciseX()+","+targetAnchor.preciseY()+")") ;
-        }
-        diagramPart.getDiagramEditDomain().getDiagramCommandStack().execute(new ICommandProxy(setConnectionAnchorsCommand));
-
-        //
         commandStack.append(SetCommand.create(editingDomain, createdElement, ProcessPackage.eINSTANCE.getSequenceFlow_IsDefault(), isDefault)) ;
         if(edge != null){
             commandStack.append(SetCommand.create(editingDomain,  edge.getStyle(NotationPackage.eINSTANCE.getLineStyle()), NotationPackage.eINSTANCE.getLineStyle_LineColor(), FigureUtilities.colorToInteger(ColorConstants.lightGray))) ;
@@ -542,6 +495,65 @@ public class ProcBuilder implements IProcBuilder {
         currentElement = createdElement ;
         execute() ;
     }
+
+
+	private void handleSequenceFlowAnchors(final Point sourceAnchor,
+			final Point targetAnchor,
+			final ConnectionViewAndElementDescriptor newObject) {
+		SetConnectionAnchorsCommand setConnectionAnchorsCommand = new SetConnectionAnchorsCommand(editingDomain, "Add anchors") ;
+        setConnectionAnchorsCommand.setEdgeAdaptor(newObject) ;
+        if(sourceAnchor != null){
+            setConnectionAnchorsCommand.setNewSourceTerminal("("+sourceAnchor.preciseX()+","+sourceAnchor.preciseY()+")") ;
+        }
+        if(targetAnchor != null){
+            setConnectionAnchorsCommand.setNewTargetTerminal("("+targetAnchor.preciseX()+","+targetAnchor.preciseY()+")") ;
+        }
+        diagramPart.getDiagramEditDomain().getDiagramCommandStack().execute(new ICommandProxy(setConnectionAnchorsCommand));
+	}
+
+
+	/**
+	 * 
+	 * It depends if source and target are correctly defined and already exists.
+	 * @param srcId
+	 * @param trgtId
+	 * @param sourceNode
+	 * @param targetNode
+	 * @return
+	 */
+	private boolean canSequenceFlowBeCreated(final String srcId, final String trgtId,
+			ShapeNodeEditPart sourceNode, ShapeNodeEditPart targetNode) {
+		if(sourceNode == null){
+            return false;
+        }
+
+        if(targetNode == null){
+            return false;
+        }
+
+        final EObject sourceElement = steps.get(srcId);
+        final EObject targetElement = steps.get(trgtId);
+        if(sourceElement != null && targetElement != null){
+            if(!ModelHelper.getParentProcess(sourceElement).equals( ModelHelper.getParentProcess(targetElement))){
+                return false;//TODO HAPPENS WITH EMBEDDED SUBPROC AND NOT SUPPORTED YET IN BOS
+            }
+        }
+
+        if(createdSequenceFlows.contains(new Pair<String,String>(srcId,trgtId))){
+            return false; //Already exists
+        }
+        
+        return true;
+	}
+
+
+	private void setBendPoints(final PointList bendpoints,
+			final ConnectionViewAndElementDescriptor newObject) {
+		SetConnectionBendpointsCommand setConnectionBendPointsCommand = new SetConnectionBendpointsCommand(editingDomain);
+		setConnectionBendPointsCommand.setEdgeAdapter(newObject);
+		setConnectionBendPointsCommand.setNewPointList(bendpoints, bendpoints.getFirstPoint(), bendpoints.getLastPoint());
+		diagramPart.getDiagramEditDomain().getDiagramCommandStack().execute(new ICommandProxy(setConnectionBendPointsCommand));
+	}
 
     public void addSequenceFlowCondition(final String content, final String returnType, final String interpreter, final String expressionType){
         Expression condition = createExpression(content, returnType, interpreter, expressionType);
@@ -701,33 +713,15 @@ public class ProcBuilder implements IProcBuilder {
         store.setValue("isCollapsed", isCollapsed);
         ViewAndElementDescriptor viewDescriptor = new ViewAndElementDescriptor(new CreateElementRequestAdapter(new CreateElementRequest(type)), Node.class,
                 ((IHintedType) type).getSemanticHint(), hint);
-        CreateViewAndElementRequest createRequest = new CreateViewAndElementRequest(viewDescriptor);
-        if(location != null){
-            createRequest.setLocation(location);
-        }
-        if(size != null){
-            createRequest.setSize(size);
-        }
+        CreateViewAndElementRequest createRequest = createCreationRequest(location, size, viewDescriptor);
 
         if(container == null ||!(container instanceof Element)){
             throw new ProcBuilderException("Impossible to find the parent EditPart") ;
         }
         diagramPart.refresh();
-        IGraphicalEditPart parentEditPart = GMFTools.findEditPart(diagramPart, (Element)container) ;
-
-        IGraphicalEditPart compartment = null ;
-        for(Object c : parentEditPart.getChildren()){
-            if(c instanceof ShapeCompartmentEditPart){
-                compartment = (IGraphicalEditPart) c ;
-            }
-        }
-
-        if(compartment == null){
-            compartment = parentEditPart ;
-        }
-
+        IGraphicalEditPart parentEditPart = GMFTools.findEditPart(diagramPart, (Element)container); 
+        IGraphicalEditPart compartment = retrieveCompartmentEditPartFor(parentEditPart);
         diagramPart.getDiagramEditDomain().getDiagramCommandStack().execute(compartment.getCommand(createRequest));
-
         compartment.refresh();
 
         Node newNode = (Node) viewDescriptor.getAdapter(Node.class);
@@ -748,6 +742,35 @@ public class ProcBuilder implements IProcBuilder {
     }
 
 
+	private CreateViewAndElementRequest createCreationRequest(Point location,
+			Dimension size, ViewAndElementDescriptor viewDescriptor) {
+		CreateViewAndElementRequest createRequest = new CreateViewAndElementRequest(viewDescriptor);
+        if(location != null){
+            createRequest.setLocation(location);
+        }
+        if(size != null){
+            createRequest.setSize(size);
+        }
+		return createRequest;
+	}
+
+
+	private IGraphicalEditPart retrieveCompartmentEditPartFor(
+			IGraphicalEditPart editPart) {
+		IGraphicalEditPart compartment = null ;
+        for(Object c : editPart.getChildren()){
+            if(c instanceof ShapeCompartmentEditPart){
+                compartment = (IGraphicalEditPart) c ;
+            }
+        }
+
+        if(compartment == null){
+            compartment = editPart ;
+        }
+		return compartment;
+	}
+
+
     /* (non-Javadoc)
      * @see org.bonitasoft.studio.importer.builder.IProcBuilder#addAnnotation(java.lang.String, java.lang.String, org.eclipse.draw2d.geometry.Point, org.eclipse.draw2d.geometry.Dimension, java.lang.String)
      */
@@ -755,13 +778,8 @@ public class ProcBuilder implements IProcBuilder {
 
         ViewAndElementDescriptor viewDescriptor = new ViewAndElementDescriptor(new CreateElementRequestAdapter(new CreateElementRequest(ProcessElementTypes.TextAnnotation_3015)), Node.class,
                 ((IHintedType) ProcessElementTypes.TextAnnotation_3015).getSemanticHint(), diagramPart.getDiagramPreferencesHint());
-        CreateViewAndElementRequest createRequest = new CreateViewAndElementRequest(viewDescriptor);
-        if(location != null){
-            createRequest.setLocation(location);
-        }
-        if(size != null){
-            createRequest.setSize(size);
-        }
+        CreateViewAndElementRequest createRequest = createCreationRequest(
+				location, size, viewDescriptor);
         IGraphicalEditPart parentEditPart = null ;
 
         boolean sourceCanBeProcessed =false ;
@@ -791,16 +809,7 @@ public class ProcBuilder implements IProcBuilder {
 
 
 
-        IGraphicalEditPart compartment = null ;
-        for(Object c : parentEditPart.getChildren()){
-            if(c instanceof ShapeCompartmentEditPart){
-                compartment = (IGraphicalEditPart) c ;
-            }
-        }
-
-        if(compartment == null){
-            compartment = parentEditPart ;
-        }
+        IGraphicalEditPart compartment = retrieveCompartmentEditPartFor(parentEditPart);
 
         diagramPart.getDiagramEditDomain().getDiagramCommandStack().execute(compartment.getCommand(createRequest));
         compartment.refresh();
@@ -815,32 +824,35 @@ public class ProcBuilder implements IProcBuilder {
         commandStack.append(SetCommand.create(editingDomain, createdElement, ProcessPackage.eINSTANCE.getTextAnnotation_Text(), text))  ;
 
         if(sourceId != null && sourceCanBeProcessed){
-
-            Element sourceElement = (Element) steps.get(NamingUtils.convertToId(sourceId));
-            if (sourceElement != null) {
-                IElementType itemType = ProcessElementTypes.TextAnnotationAttachment_4003;
-                CreateConnectionViewAndElementRequest request = new CreateConnectionViewAndElementRequest(itemType,
-                        ((IHintedType) itemType).getSemanticHint(), diagramPart.getDiagramPreferencesHint());
-
-                EditPart sourceEp = editParts.get(NamingUtils.convertToId(sourceId)) ;
-                EditPart targetEp = GMFTools.findEditPart(diagramPart, createdElement) ;
-                if(sourceEp != null){//this case can happen when th etext annotation is link to a seuqneceflow but don't know why.
-                    Command createSequenceFlowCommand = CreateConnectionViewAndElementRequest.getCreateCommand(request, targetEp,sourceEp);
-                    diagramPart.getDiagramEditDomain().getDiagramCommandStack().execute(createSequenceFlowCommand);
-
-                    Node source = 	(Node) ((IGraphicalEditPart) sourceEp).getNotationView() ;
-                    Location loc = (Location) source.getLayoutConstraint();
-                    Node node = (Node) ((IGraphicalEditPart) targetEp).getNotationView() ;
-                    if(loc != null){
-                        commandStack.append(SetCommand.create(editingDomain, node.getLayoutConstraint(), NotationPackage.eINSTANCE.getLocation_X(), loc.getX() + 60)) ;
-                        commandStack.append(SetCommand.create(editingDomain,  node.getLayoutConstraint(), NotationPackage.eINSTANCE.getLocation_Y(), loc.getY() - 50)) ;
-                    }
-                }
-            }
+            createLinkBetweenTextAnnotationAndSourceEditPart(sourceId, createdElement);
         }
         execute() ;
 
     }
+
+	private void createLinkBetweenTextAnnotationAndSourceEditPart(final String sourceId, TextAnnotation createdElement) {
+		Element sourceElement = (Element) steps.get(NamingUtils.convertToId(sourceId));
+		if (sourceElement != null) {
+		    IElementType itemType = ProcessElementTypes.TextAnnotationAttachment_4003;
+		    CreateConnectionViewAndElementRequest request = new CreateConnectionViewAndElementRequest(itemType,
+		            ((IHintedType) itemType).getSemanticHint(), diagramPart.getDiagramPreferencesHint());
+
+		    EditPart sourceEp = editParts.get(NamingUtils.convertToId(sourceId)) ;
+		    EditPart targetEp = GMFTools.findEditPart(diagramPart, createdElement) ;
+		    if(sourceEp != null){//this case can happen when th etext annotation is link to a seuqneceflow but don't know why.
+		        Command createSequenceFlowCommand = CreateConnectionViewAndElementRequest.getCreateCommand(request, targetEp,sourceEp);
+		        diagramPart.getDiagramEditDomain().getDiagramCommandStack().execute(createSequenceFlowCommand);
+
+		        Node source = 	(Node) ((IGraphicalEditPart) sourceEp).getNotationView() ;
+		        Location loc = (Location) source.getLayoutConstraint();
+		        Node node = (Node) ((IGraphicalEditPart) targetEp).getNotationView() ;
+		        if(loc != null){
+		            commandStack.append(SetCommand.create(editingDomain, node.getLayoutConstraint(), NotationPackage.eINSTANCE.getLocation_X(), loc.getX() + 60)) ;
+		            commandStack.append(SetCommand.create(editingDomain,  node.getLayoutConstraint(), NotationPackage.eINSTANCE.getLocation_Y(), loc.getY() - 50)) ;
+		        }
+		    }
+		}
+	}
 
     private void execute() {
         editingDomain.getCommandStack().execute(commandStack) ;
@@ -1193,26 +1205,11 @@ public class ProcBuilder implements IProcBuilder {
         execute() ;
     }
 
-
     private IElementType resolveBoundaryEventType(final EventType eventType, final EObject parentStep) {
         if(parentStep instanceof Task){
-            switch (eventType) {
-                case ERROR_BOUNDARY: return ProcessElementTypes.IntermediateErrorCatchEvent_3029;
-                case MESSAGE_BOUNDARY: return ProcessElementTypes.BoundaryMessageEvent_3035;
-                case TIMER_BOUNDARY: return ProcessElementTypes.BoundaryTimerEvent_3043;
-                case NON_INTERRUPTING_TIMER_BOUNDARY: return ProcessElementTypes.NonInterruptingBoundaryTimerEvent_3064;
-                case SIGNAL_BOUNDARY: return ProcessElementTypes.BoundarySignalEvent_3052;
-                default:break;
-            }
+            return getBoundaryElementTypeOnTask(eventType);
         }else if(parentStep instanceof CallActivity){
-            switch (eventType) {
-                case ERROR_BOUNDARY: return ProcessElementTypes.IntermediateErrorCatchEvent_3030;
-                case MESSAGE_BOUNDARY: return ProcessElementTypes.BoundaryMessageEvent_3036;
-                case TIMER_BOUNDARY: return ProcessElementTypes.BoundaryTimerEvent_3044;
-                case NON_INTERRUPTING_TIMER_BOUNDARY: return ProcessElementTypes.NonInterruptingBoundaryTimerEvent_3065;
-                case SIGNAL_BOUNDARY: return ProcessElementTypes.BoundarySignalEvent_3053;
-                default:break;
-            }
+            return getBoundaryElementTypeOnCallActivity(eventType);
         }else if(parentStep instanceof ScriptTask){
             return ProcessElementTypes.IntermediateErrorCatchEvent_3033;
         }else if(parentStep instanceof ServiceTask){
@@ -1225,6 +1222,27 @@ public class ProcBuilder implements IProcBuilder {
         return null;
     }
 
+	private IElementType getBoundaryElementTypeOnTask(final EventType eventType) {
+		switch (eventType) {
+		    case ERROR_BOUNDARY: return ProcessElementTypes.IntermediateErrorCatchEvent_3029;
+		    case MESSAGE_BOUNDARY: return ProcessElementTypes.BoundaryMessageEvent_3035;
+		    case TIMER_BOUNDARY: return ProcessElementTypes.BoundaryTimerEvent_3043;
+		    case NON_INTERRUPTING_TIMER_BOUNDARY: return ProcessElementTypes.NonInterruptingBoundaryTimerEvent_3064;
+		    case SIGNAL_BOUNDARY: return ProcessElementTypes.BoundarySignalEvent_3052;
+		    default: return null;
+		}
+	}
+
+	private IElementType getBoundaryElementTypeOnCallActivity(final EventType eventType) {
+		switch (eventType) {
+		    case ERROR_BOUNDARY: return ProcessElementTypes.IntermediateErrorCatchEvent_3030;
+		    case MESSAGE_BOUNDARY: return ProcessElementTypes.BoundaryMessageEvent_3036;
+		    case TIMER_BOUNDARY: return ProcessElementTypes.BoundaryTimerEvent_3044;
+		    case NON_INTERRUPTING_TIMER_BOUNDARY: return ProcessElementTypes.NonInterruptingBoundaryTimerEvent_3065;
+		    case SIGNAL_BOUNDARY: return ProcessElementTypes.BoundarySignalEvent_3053;
+		    default: return null;
+		}
+	}
 
     private IElementType resolveEventType(final EventType eventType) {
         switch (eventType) {
@@ -1249,6 +1267,9 @@ public class ProcBuilder implements IProcBuilder {
             case START_SIGNAL: return ProcessElementTypes.StartSignalEvent_3023 ;
             case START_TIMER: return ProcessElementTypes.StartTimerEvent_3016 ;
             case TIMER_BOUNDARY: return ProcessElementTypes.BoundaryTimerEvent_3044 ;
+            case NON_INTERRUPTING_TIMER_BOUNDARY: return ProcessElementTypes.NonInterruptingBoundaryTimerEvent_3065;
+		default:
+			break;
         }
         return ProcessElementTypes.StartEvent_3002;
     }
