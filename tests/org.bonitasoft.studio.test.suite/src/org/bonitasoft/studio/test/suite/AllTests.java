@@ -56,7 +56,6 @@ import org.bonitasoft.studio.tests.IHeapDumper;
 import org.bonitasoft.studio.tests.TestBugSave;
 import org.bonitasoft.studio.tests.TestFullScenario;
 import org.bonitasoft.studio.tests.TestPathSize;
-import org.bonitasoft.studio.tests.TestURLs;
 import org.bonitasoft.studio.tests.conditions.TestConditions;
 import org.bonitasoft.studio.tests.subprocess.TestSubprocess;
 import org.bonitasoft.studio.util.test.BonitaJunit4TestSuite;
@@ -120,7 +119,6 @@ import org.junit.runners.Suite;
     TestRepositoryLocation.class,
     TestShowEngineLog.class,
     TestAutoLogin.class,
-    TestURLs.class,
     CloseAllEditors.class
 })
 public class AllTests {
