@@ -45,6 +45,7 @@ import org.bonitasoft.engine.connector.AbstractConnector;
 import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.ProjectUtil;
+import org.bonitasoft.studio.common.jface.BonitaErrorDialog;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.ClassGenerator;
@@ -80,7 +81,9 @@ import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.ISourceRange;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.swt.widgets.Display;
 import org.ow2.bonita.connector.core.ConnectorDescription;
 import org.ow2.bonita.connector.core.desc.Array;
 import org.ow2.bonita.connector.core.desc.Checkbox;
@@ -577,7 +580,7 @@ public class ConnectorDescriptorToConnectorDefinition {
 		if(v5Descriptor.getIconPath() != null && !v5Descriptor.getIconPath().isEmpty() ){
 			InputStream iconInputStream = v5Descriptor.getIcon();
 			final String iconName = getIconName(v5Descriptor.getIconPath());
-			if(iconInputStream != null){
+			if(iconInputStream != null && isSupportedIconExtension(iconName)){
 				BufferedImage image = ImageIO.read(iconInputStream) ;
                 image = FileUtil.resizeImage(image,16) ;
                 File createTempFile = File.createTempFile("icon", ".png");
@@ -591,6 +594,15 @@ public class ConnectorDescriptorToConnectorDefinition {
 			}
 		}
 		importI18NFiles();
+	}
+	
+	private boolean isSupportedIconExtension(String iconName){
+		if (iconName.matches(".*\\.jpg|.*\\.jpeg|.*\\.gif|.*\\.png|.*\\.bmp")){
+			return true;
+		} else {
+			MessageDialog.openWarning(Display.getCurrent().getActiveShell(), Messages.warningImageFormat, Messages.bind(Messages.warningImageFormatMessage,iconName));
+			return false;
+		}
 	}
 
 	protected void importI18NFiles() throws ZipException, IOException {
