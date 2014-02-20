@@ -143,6 +143,8 @@ public class Messages extends NLS {
 	public static String unsupportedVersionMessage;
 	public static String descripitonProperty;
 	public static String tooLongDescriptionHasBeenTruncated;
+	public static String warningImageFormat;
+	public static String warningImageFormatMessage;
 	
 
     static {
