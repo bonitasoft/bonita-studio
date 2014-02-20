@@ -152,6 +152,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 	private List<IExpressionValidationListener> validationListeners = new ArrayList<IExpressionValidationListener>();
 	private ToolItem eraseControl;
 	private boolean isPageFlowContext = false;
+	private boolean isOverviewContext = false;
 	private AbstractRefactorOperation operation;
 	private AbstractRefactorOperation  removeOperation;
 
@@ -1261,6 +1262,23 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 
 		}
 		return isExecuted;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.bonitasoft.studio.common.IBonitaVariableContext#isOverViewContext()
+	 */
+	@Override
+	public boolean isOverViewContext() {
+		return isOverviewContext;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.bonitasoft.studio.common.IBonitaVariableContext#setIsOverviewContext(boolean)
+	 */
+	@Override
+	public void setIsOverviewContext(boolean isOverviewContext) {
+		this.isOverviewContext=isOverviewContext;
+		
 	}
 
 }

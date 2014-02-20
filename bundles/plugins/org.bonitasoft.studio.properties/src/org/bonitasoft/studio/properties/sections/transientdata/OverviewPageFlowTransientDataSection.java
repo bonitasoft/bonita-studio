@@ -34,4 +34,12 @@ public class OverviewPageFlowTransientDataSection extends ApplicationTransientDa
 		return ProcessPackage.Literals.RECAP_FLOW__RECAP_TRANSIENT_DATA;
 	}
 
+	
+/* (non-Javadoc)
+ * @see org.bonitasoft.studio.data.ui.property.section.AbstractDataSection#isOverViewContext()
+ */
+@Override
+public boolean isOverViewContext() {
+	return true;
+}
 }

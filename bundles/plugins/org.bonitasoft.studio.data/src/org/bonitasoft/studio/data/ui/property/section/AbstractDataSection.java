@@ -104,6 +104,7 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
 	private IObservableList observeTransient;
 	private IObservableList observeJObjectType;
 	private boolean isPageFlowContext = false;
+	private boolean isOverviewContext = false;
 
 	/*
 	 * (non-Javadoc)
@@ -327,7 +328,8 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
 
 	 public void setWizardDialog(){
 		 DataWizard wizard= new DataWizard(getEObject(), getDataFeature(), getDataFeatureToCheckUniqueID(), getShowAutoGenerateForm());
-		 wizard.setIsPageFlowContext(isPageFlowContext());
+		 wizard.setIsPageFlowContext(this.isPageFlowContext());
+		 wizard.setIsOverviewContext(this.isOverViewContext());
 		 WizardDialog wizardDialog = new DataWizardDialog(Display.getCurrent().getActiveShell(),wizard ,this);
 		 if(wizardDialog.open() == Dialog.OK){
 			 tableViewer.refresh();
@@ -355,6 +357,7 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
 		 } else {
 			 DataWizard wizard = new DataWizard((Data) selection.getFirstElement(),getDataFeature(),getDataFeatureToCheckUniqueID(), getShowAutoGenerateForm());
 			 wizard.setIsPageFlowContext(isPageFlowContext());
+			 wizard.setIsOverviewContext(isOverViewContext());
 			 WizardDialog wizardDialog = new DataWizardDialog(Display.getCurrent().getActiveShell(), wizard,null);
 			 wizardDialog.open();
 			 tableViewer.setInput(getEObject());
@@ -502,7 +505,6 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
 	  
 	  @Override
 	public boolean isPageFlowContext() {
-		
 		return isPageFlowContext;
 	}
 	  
@@ -510,5 +512,22 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
 	public void setIsPageFlowContext(boolean isPageFlowContext) {
 		this.isPageFlowContext=isPageFlowContext;
 		
+	}
+	  
+	/* (non-Javadoc)
+	 * @see org.bonitasoft.studio.common.IBonitaVariableContext#isOverViewContext()
+	 */
+	@Override
+	public boolean isOverViewContext() {
+	return isOverviewContext;
+		
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.bonitasoft.studio.common.IBonitaVariableContext#setIsOverviewContext(boolean)
+	 */
+	@Override
+	public void setIsOverviewContext(boolean isOverviewContext) {
+		this.isOverviewContext = isOverviewContext;
 	}
 }
