@@ -234,6 +234,9 @@ public class SelectGeneratedWidgetsWizardPage extends WizardSelectionPage implem
 				}
 			}
 		});
+		if(treeViewer.getSelection().isEmpty()){
+			treeViewer.getTree().select(treeViewer.getTree().getItem(0));
+		}
 		return treeViewer;
 	}
 
