@@ -158,7 +158,7 @@ public class SelectGeneratedWidgetsWizardPage extends WizardSelectionPage implem
 		final Button selectAllCheckbox = new Button(treeContainerComposite, SWT.CHECK);
 		selectAllCheckbox.setText(Messages.selectAll);
 
-		final CheckboxTreeViewer treeViewer = new CheckboxTreeViewer(treeContainerComposite, SWT.BORDER | SWT.V_SCROLL);
+		final CheckboxTreeViewer treeViewer = new CheckboxTreeViewer(treeContainerComposite, SWT.FULL_SELECTION | SWT.BORDER | SWT.V_SCROLL);
 		treeViewer.getTree().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 200).create());
 		treeViewer.getTree().setHeaderVisible(true) ;
 		treeViewer.setContentProvider(new WidgetMappingTreeContentProvider());
