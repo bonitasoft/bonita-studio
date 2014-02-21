@@ -1,3 +1,4 @@
+
 /**
  * Copyright (C) 2013 BonitaSoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
@@ -61,6 +62,24 @@ public class WizardPageOperationsComposite extends OperationsComposite {
 		if (tabbedPropertySheetPage != null) {
 			tabbedPropertySheetPage.resizeScrolledComposite();
 		}
+	}
+
+
+
+
+	/* (non-Javadoc)
+	 * @see org.bonitasoft.studio.common.IBonitaVariableContext#isOverViewContext()
+	 */
+	@Override
+	public boolean isOverViewContext() {
+		return false;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.bonitasoft.studio.common.IBonitaVariableContext#setIsOverviewContext(boolean)
+	 */
+	@Override
+	public void setIsOverviewContext(boolean isOverviewContext) {
 	}
 
 }

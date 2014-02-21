@@ -70,5 +70,4 @@ public class ApplicationTransientDataSection extends AbstractDataSection {
 		return true;
 	}
 
-
 }

@@ -1,3 +1,4 @@
+
 /**
  * Copyright (C) 2010 BonitaSoft S.A.
  * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
@@ -34,4 +35,15 @@ public class OverviewPageFlowTransientDataSection extends ApplicationTransientDa
 		return ProcessPackage.Literals.RECAP_FLOW__RECAP_TRANSIENT_DATA;
 	}
 
+
+
+	
+/* (non-Javadoc)
+ * @see org.bonitasoft.studio.data.ui.property.section.AbstractDataSection#isOverViewContext()
+ */
+@Override
+public boolean isOverViewContext() {
+	return true;
 }
+}
+
