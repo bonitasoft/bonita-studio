@@ -19,12 +19,7 @@ package org.bonitasoft.studio.application.actions;
 
 import org.bonitasoft.studio.engine.command.AbstractOpenConsoleCommand;
 
-
-
-
 public class OpenConsoleCommand extends AbstractOpenConsoleCommand {
-
-    public static final String CONSOLE_PATH = "/bonita/portal/homepage?"; //$NON-NLS-1$
 
     public OpenConsoleCommand(){
         this(false);
@@ -34,13 +29,4 @@ public class OpenConsoleCommand extends AbstractOpenConsoleCommand {
         this.runSynchronously = runSynchronously;
     }
 
-    @Override
-    protected String getLocaleParameter(String locale) {
-		return "_l="+locale;
-	}
-    
-    @Override
-    protected String getURLRelativePath(String locale) {
-        return CONSOLE_PATH + getLocaleParameter(locale) +"#?_p=tasklistinguser&_pf=1&_f=available" ;
-    }
 }

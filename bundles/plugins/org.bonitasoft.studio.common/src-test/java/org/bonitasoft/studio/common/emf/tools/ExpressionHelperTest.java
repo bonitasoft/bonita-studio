@@ -23,6 +23,7 @@ import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.form.DateFormField;
+import org.bonitasoft.studio.model.form.Duplicable;
 import org.bonitasoft.studio.model.form.FormFactory;
 import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.process.DataType;
@@ -84,7 +85,7 @@ public class ExpressionHelperTest {
 	}
 	
 	@Test
-	public void shouldCreateDependencyFromEObject_CopyWidgetWithNameOnly() throws Exception {
+	public void shouldCreateDependencyFromEObject_CopyWidgetWithName() throws Exception {
 		Widget widget = FormFactory.eINSTANCE.createDateFormField();
 		widget.setName("myWidget");
 		widget.setDisplayLabel(ExpressionFactory.eINSTANCE.createExpression());
@@ -95,6 +96,24 @@ public class ExpressionHelperTest {
 		assertThat(((Widget)dependencyFromEObject).getName()).isEqualTo(widget.getName());
 		assertThat(((Widget)dependencyFromEObject).getDisplayLabel()).isNull();
 		assertThat(((Widget)dependencyFromEObject).getInputExpression()).isNull();
+	}
+	
+	@Test
+	public void shouldCreateDependencyFromEObject_CopyWidgetReturnTypeModifier() throws Exception {
+		Widget widget = FormFactory.eINSTANCE.createTextFormField();
+		widget.setReturnTypeModifier(Integer.class.getName());
+		
+		EObject dependencyFromEObject = ExpressionHelper.createDependencyFromEObject(widget);
+		assertThat(((Widget)dependencyFromEObject).getReturnTypeModifier()).isEqualTo(Integer.class.getName());
+	}
+	
+	@Test
+	public void shouldCreateDependencyFromEObject_CopyWidgetDuplicateValue() throws Exception {
+		Widget widget = FormFactory.eINSTANCE.createTextFormField();
+		((Duplicable) widget).setDuplicate(true);
+		
+		EObject dependencyFromEObject = ExpressionHelper.createDependencyFromEObject(widget);
+		assertThat(((Duplicable)dependencyFromEObject).isDuplicate()).isTrue();
 	}
 
 	@Test
