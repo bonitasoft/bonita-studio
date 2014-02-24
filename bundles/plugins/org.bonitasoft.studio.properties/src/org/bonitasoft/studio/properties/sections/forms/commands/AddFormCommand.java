@@ -232,11 +232,11 @@ public class AddFormCommand extends AbstractTransactionalCommand {
             String name  = computeName(key.getName());
             tempWidget.setName(name);
             Expression displayLabel = ExpressionFactory.eINSTANCE.createExpression();
-            displayLabel.setName(name);
+            displayLabel.setName(key.getName());
             displayLabel.setType(ExpressionConstants.CONSTANT_TYPE);
             displayLabel.setReturnType(String.class.getName());
             displayLabel.setReturnTypeFixed(true);
-            displayLabel.setContent(name);
+            displayLabel.setContent(key.getName());
             tempWidget.setDisplayLabel(displayLabel);
             Expression insertWidgetIf = createInsertWidgetIfScript(); 
             tempWidget.setInjectWidgetScript(insertWidgetIf);
