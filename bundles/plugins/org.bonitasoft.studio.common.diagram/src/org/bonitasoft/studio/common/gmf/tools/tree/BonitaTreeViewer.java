@@ -47,6 +47,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -65,7 +66,30 @@ import org.eclipse.ui.dialogs.PatternFilter;
 public abstract class BonitaTreeViewer extends AbstractEditPartViewer implements ISelectionProvider,SWTBotConstants{
 
 
-    protected FilteredTree treeViewer;
+    private static final class SearchPatternFilter extends PatternFilter {
+		@Override
+		protected boolean isLeafMatch(org.eclipse.jface.viewers.Viewer viewer, Object element) {
+		    String labelText = ((ILabelProvider) ((StructuredViewer) viewer).getLabelProvider()).getText(element);
+
+		    if(labelText == null) {
+		        return false;
+		    }
+		    if(wordMatches(labelText)){
+		        return true ;
+		    }else{
+		        for(EAttribute attribute : ((EObject) element).eClass().getEAllAttributes()){
+		            Object value = ((EObject) element).eGet(attribute) ;
+		            if( value != null && attribute.getEType().getName().equals("EString") && wordMatches(value.toString())){
+		                return true ;
+		            }
+		        }
+		    }
+		    return false;
+		}
+	}
+
+
+	protected FilteredTree filteredTree;
     protected DiagramEditPart diagramEditPart;
     private final  ComposedAdapterFactory adapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
     private final AdapterFactoryContentProvider adapterFactoryContentProvider = new AdapterFactoryContentProvider(adapterFactory);
@@ -112,47 +136,21 @@ public abstract class BonitaTreeViewer extends AbstractEditPartViewer implements
         mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(5, 10).create());
         mainComposite.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
-        PatternFilter filter = new PatternFilter() {
-
-            @Override
-            protected boolean isLeafMatch(org.eclipse.jface.viewers.Viewer viewer, Object element) {
-                String labelText = ((ILabelProvider) ((StructuredViewer) viewer).getLabelProvider()).getText(element);
-
-                if(labelText == null) {
-                    return false;
-                }
-                if(wordMatches(labelText)){
-                    return true ;
-                }else{
-                    for(EAttribute attribute : ((EObject) element).eClass().getEAllAttributes()){
-                        Object value = ((EObject) element).eGet(attribute) ;
-                        if( value != null && attribute.getEType().getName().equals("EString") && wordMatches(value.toString())){
-                            return true ;
-                        }
-                    }
-                }
-                return false;
-            }
-        } ;
+        PatternFilter filter = new SearchPatternFilter() ;
         filter.setIncludeLeadingWildcard(true) ;
-        treeViewer = new FilteredTree(mainComposite, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL,filter,true);
-        treeViewer.getViewer().getTree().setData(SWTBOT_WIDGET_ID_KEY, BONITA_OVERVIEW_TREE_ID);
-        treeViewer.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        treeViewer.getFilterControl().setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
-        treeViewer.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
+        filteredTree = new FilteredTree(mainComposite, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL,filter,true);
+        final TreeViewer treeViewer = filteredTree.getViewer();
+		treeViewer.getTree().setData(SWTBOT_WIDGET_ID_KEY, BONITA_OVERVIEW_TREE_ID);
+        filteredTree.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        filteredTree.getFilterControl().setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
+        filteredTree.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
 
-        treeViewer.getViewer().setLabelProvider(adapterFactoryLabelProvider);
-        treeViewer.getViewer().setContentProvider(adapterFactoryContentProvider) ;
+        treeViewer.setLabelProvider(adapterFactoryLabelProvider);
+        treeViewer.setContentProvider(adapterFactoryContentProvider) ;
 
-        treeViewer.getViewer().addFilter(new DatatypesViewFilter());
-        treeViewer.getViewer().addFilter(new DecisionTableViewFilter());
-        treeViewer.getViewer().addFilter(new TextAnnotationLinkViewFilter());
-        treeViewer.getViewer().addFilter(new EmptyExpressionViewFilter());
-        treeViewer.getViewer().addFilter(new EmptySearchIndexViewFilter());
-        treeViewer.getViewer().addFilter(new MultiInstanciationViewFilter());
-        treeViewer.getViewer().addFilter(new EmptyOperationViewFilter());
+        addFilters(treeViewer);
 
-        treeViewer.getViewer().getTree().addListener(SWT.MouseDoubleClick, new Listener() {
+        treeViewer.getTree().addListener(SWT.MouseDoubleClick, new Listener() {
 
             public void handleEvent(Event event) {
                 handlTreeDoubleClick();
@@ -165,20 +163,27 @@ public abstract class BonitaTreeViewer extends AbstractEditPartViewer implements
     }
 
 
-
-
+	private void addFilters(final TreeViewer treeViewer) {
+		treeViewer.addFilter(new DatatypesViewFilter());
+        treeViewer.addFilter(new DecisionTableViewFilter());
+        treeViewer.addFilter(new TextAnnotationLinkViewFilter());
+        treeViewer.addFilter(new EmptyExpressionViewFilter());
+        treeViewer.addFilter(new EmptySearchIndexViewFilter());
+        treeViewer.addFilter(new MultiInstanciationViewFilter());
+        treeViewer.addFilter(new EmptyOperationViewFilter());
+	}
 
     public void setDiagramEditPart(final DiagramEditPart diagramEditPart){
         this.diagramEditPart = diagramEditPart ;
-        if(treeViewer != null){
+        if(filteredTree != null){
             EObject resolveSemanticElement = ((IGraphicalEditPart) diagramEditPart).resolveSemanticElement();
-			treeViewer.getViewer().setInput(resolveSemanticElement) ;
+			filteredTree.getViewer().setInput(resolveSemanticElement) ;
 			diagramEditPart.getViewer().addSelectionChangedListener(new ISelectionChangedListener() {
 				
 				@Override
 				public void selectionChanged(SelectionChangedEvent event) {
-					if (!treeViewer.isDisposed()) {
-						treeViewer.getViewer().refresh();
+					if (!filteredTree.isDisposed()) {
+						filteredTree.getViewer().refresh();
 						final EditPartViewer viewer = diagramEditPart.getViewer();
 						if(viewer != null){
 							IStructuredSelection selection= (IStructuredSelection) viewer.getSelection();
@@ -186,11 +191,11 @@ public abstract class BonitaTreeViewer extends AbstractEditPartViewer implements
 							if (ep instanceof IGraphicalEditPart){
 								EObject element = ((IGraphicalEditPart) ep).resolveSemanticElement();
 								if (element !=null){
-									Object selected = ((IStructuredSelection) treeViewer.getViewer().getSelection()).getFirstElement();
+									Object selected = ((IStructuredSelection) filteredTree.getViewer().getSelection()).getFirstElement();
 									if(selected != null && selected instanceof EObject){
 										IGraphicalEditPart foundEP = findEditPartFor((EObject) selected);
 										if(!foundEP.equals(ep)){
-											treeViewer.getViewer().setSelection(new StructuredSelection(element));
+											filteredTree.getViewer().setSelection(new StructuredSelection(element));
 										}
 									}
 								}
@@ -232,8 +237,8 @@ public abstract class BonitaTreeViewer extends AbstractEditPartViewer implements
             return;
         }
 
-        final Tree tree =  treeViewer.getViewer().getTree();
-        treeViewer.getViewer().addSelectionChangedListener(new ISelectionChangedListener() {
+        final Tree tree =  filteredTree.getViewer().getTree();
+        filteredTree.getViewer().addSelectionChangedListener(new ISelectionChangedListener() {
 			
 			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
@@ -328,6 +333,6 @@ public abstract class BonitaTreeViewer extends AbstractEditPartViewer implements
 
 
     public Tree getTree() {
-        return treeViewer.getViewer().getTree();
+        return filteredTree.getViewer().getTree();
     }
 }

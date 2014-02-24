@@ -120,8 +120,8 @@ public class BonitaProcessTreeViewer extends BonitaTreeViewer {
 
 	@Override
 	protected void handlTreeDoubleClick() {
-		if(!treeViewer.getViewer().getSelection().isEmpty()){
-			EObject element =  (EObject) ((IStructuredSelection) treeViewer.getViewer().getSelection()).getFirstElement() ;
+		if(!filteredTree.getViewer().getSelection().isEmpty()){
+			EObject element =  (EObject) ((IStructuredSelection) filteredTree.getViewer().getSelection()).getFirstElement() ;
 			if(element.eClass().getEPackage().getName().equals(FormPackage.eINSTANCE.getName())){
 				while (element != null && !(element instanceof Form)) {
 					element  = element.eContainer() ;
@@ -140,7 +140,7 @@ public class BonitaProcessTreeViewer extends BonitaTreeViewer {
 				/* open the form editor */
 				DiagramEditor editor = (DiagramEditor) EditorService.getInstance().openEditor(new URIEditorInput(uri, ((Element) element).getName()));
 				editor.getDiagramEditPart().getViewer().deselectAll();
-				EObject elem = (EObject)((IStructuredSelection) treeViewer.getViewer().getSelection()).getFirstElement() ;
+				EObject elem = (EObject)((IStructuredSelection) filteredTree.getViewer().getSelection()).getFirstElement() ;
 				Element selectedElem = null ;
 				if(elem instanceof Validator || elem instanceof Expression){
 					selectedElem = (Element) elem.eContainer() ;
