@@ -31,7 +31,7 @@ import org.eclipse.ui.PlatformUI;
 public class TestVersion extends TestCase {
 
 	public void testNewProcessVersionMatchesProduct() throws Exception {
-		String version = "6.2.2";//TO BE MODIFIED AT EACH RELEASE
+		String version = "6.2.3";//TO BE MODIFIED AT EACH RELEASE
 		NewDiagramCommandHandler command = new NewDiagramCommandHandler();
 		command.execute(null);
 		ProcessDiagramEditor editor = (ProcessDiagramEditor)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
