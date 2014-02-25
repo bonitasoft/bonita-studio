@@ -252,7 +252,7 @@
               xsi:type="ecore:EReference"
               href="../form.ecore#//Widget/inputExpression"/>
           <value
-              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;empty_list&quot;);&#xD;&#xA;exp.setType(org.bonitasoft.studio.common.ExpressionConstants.SCRIPT_TYPE);&#xD;&#xA;exp.setContent(&quot;[]&quot;);&#xD;&#xA;exp.setReturnType(java.util.List.class.getName());&#xD;&#xA;return exp ;"
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;empty_list&quot;);&#xD;&#xA;exp.setType(org.bonitasoft.studio.common.ExpressionConstants.SCRIPT_TYPE);&#xD;&#xA;exp.setInterpreter(org.bonitasoft.studio.common.ExpressionConstants.GROOVY);&#xD;&#xA;exp.setContent(&quot;[]&quot;);&#xD;&#xA;exp.setReturnType(java.util.List.class.getName());&#xD;&#xA;return exp ;"
               language="java"/>
         </initializers>
         <initializers
@@ -351,7 +351,7 @@
               xsi:type="ecore:EReference"
               href="../form.ecore#//MultipleValuatedFormField/defaultExpressionAfterEvent"/>
           <value
-              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setType(org.bonitasoft.studio.common.ExpressionConstants.SCRIPT_TYPE);&#xD;&#xA;exp.setContent(&quot;[]&quot;);&#xD;&#xA;exp.setReturnType(java.util.List.class.getName());&#xD;&#xA;return exp ;"
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setType(org.bonitasoft.studio.common.ExpressionConstants.SCRIPT_TYPE);&#xD;&#xA;exp.setInterpreter(org.bonitasoft.studio.common.ExpressionConstants.GROOVY);&#xD;&#xA;exp.setContent(&quot;[]&quot;);&#xD;&#xA;exp.setReturnType(java.util.List.class.getName());&#xD;&#xA;return exp ;"
               language="java"/>
         </initializers>
         <initializers
@@ -623,7 +623,7 @@
               xsi:type="ecore:EReference"
               href="../form.ecore#//Widget/inputExpression"/>
           <value
-              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;empty_list&quot;);&#xD;&#xA;exp.setType(org.bonitasoft.studio.common.ExpressionConstants.SCRIPT_TYPE);&#xD;&#xA;exp.setContent(&quot;[]&quot;);&#xD;&#xA;exp.setReturnType(java.util.List.class.getName());&#xD;&#xA;return exp ;"
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setType(org.bonitasoft.studio.common.ExpressionConstants.SCRIPT_TYPE);&#xD;&#xA;exp.setInterpreter(org.bonitasoft.studio.common.ExpressionConstants.GROOVY);&#xD;&#xA;exp.setContent(&quot;[]&quot;);&#xD;&#xA;exp.setReturnType(java.util.List.class.getName());&#xD;&#xA;return exp ;"
               language="java"/>
         </initializers>
         <initializers
@@ -713,7 +713,7 @@
               xsi:type="ecore:EReference"
               href="../form.ecore#//MultipleValuatedFormField/defaultExpression"/>
           <value
-              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;empty_list&quot;);&#xD;&#xA;exp.setType(org.bonitasoft.studio.common.ExpressionConstants.SCRIPT_TYPE);&#xD;&#xA;exp.setContent(&quot;[]&quot;);&#xD;&#xA;exp.setReturnType(java.util.List.class.getName());&#xD;&#xA;return exp ;"
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setType(org.bonitasoft.studio.common.ExpressionConstants.SCRIPT_TYPE);&#xD;&#xA;exp.setInterpreter(org.bonitasoft.studio.common.ExpressionConstants.GROOVY);&#xD;&#xA;exp.setContent(&quot;[]&quot;);&#xD;&#xA;exp.setReturnType(java.util.List.class.getName());&#xD;&#xA;return exp ;"
               language="java"/>
         </initializers>
         <initializers
@@ -722,7 +722,7 @@
               xsi:type="ecore:EReference"
               href="../form.ecore#//MultipleValuatedFormField/defaultExpressionAfterEvent"/>
           <value
-              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;empty_list&quot;);&#xD;&#xA;exp.setType(org.bonitasoft.studio.common.ExpressionConstants.SCRIPT_TYPE);&#xD;&#xA;exp.setContent(&quot;[]&quot;);&#xD;&#xA;exp.setReturnType(java.util.List.class.getName());&#xD;&#xA;&#xA;return exp ;"
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setType(org.bonitasoft.studio.common.ExpressionConstants.SCRIPT_TYPE);&#xD;&#xA;exp.setInterpreter(org.bonitasoft.studio.common.ExpressionConstants.GROOVY);&#xD;&#xA;exp.setContent(&quot;[]&quot;);&#xD;&#xA;exp.setReturnType(java.util.List.class.getName());&#xD;&#xA;return exp ;"
               language="java"/>
         </initializers>
         <initializers
@@ -997,7 +997,7 @@
               xsi:type="ecore:EReference"
               href="../form.ecore#//Widget/inputExpression"/>
           <value
-              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;empty_list&quot;);&#xD;&#xA;exp.setType(org.bonitasoft.studio.common.ExpressionConstants.SCRIPT_TYPE);&#xD;&#xA;exp.setContent(&quot;[]&quot;);&#xD;&#xA;exp.setReturnType(java.util.List.class.getName());&#xD;&#xA;return exp ;"
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setType(org.bonitasoft.studio.common.ExpressionConstants.SCRIPT_TYPE);&#xD;&#xA;exp.setInterpreter(org.bonitasoft.studio.common.ExpressionConstants.GROOVY);&#xD;&#xA;exp.setContent(&quot;[]&quot;);&#xD;&#xA;exp.setReturnType(java.util.List.class.getName());&#xD;&#xA;return exp ;"
               language="java"/>
         </initializers>
         <initializers
@@ -1193,7 +1193,7 @@
               xsi:type="ecore:EReference"
               href="../form.ecore#//Widget/inputExpression"/>
           <value
-              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;empty_list&quot;);&#xD;&#xA;exp.setType(org.bonitasoft.studio.common.ExpressionConstants.SCRIPT_TYPE);&#xD;&#xA;exp.setContent(&quot;[]&quot;);&#xD;&#xA;exp.setReturnType(java.util.List.class.getName());&#xD;&#xA;return exp ;"
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setType(org.bonitasoft.studio.common.ExpressionConstants.SCRIPT_TYPE);&#xD;&#xA;exp.setInterpreter(org.bonitasoft.studio.common.ExpressionConstants.GROOVY);&#xD;&#xA;exp.setContent(&quot;[]&quot;);&#xD;&#xA;exp.setReturnType(java.util.List.class.getName());&#xD;&#xA;return exp ;"
               language="java"/>
         </initializers>
         <initializers
@@ -1389,7 +1389,7 @@
               xsi:type="ecore:EReference"
               href="../form.ecore#//Widget/inputExpression"/>
           <value
-              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;empty_list&quot;);&#xD;&#xA;exp.setType(org.bonitasoft.studio.common.ExpressionConstants.SCRIPT_TYPE);&#xD;&#xA;exp.setContent(&quot;[]&quot;);&#xD;&#xA;exp.setReturnType(java.util.List.class.getName());&#xD;&#xA;return exp ;"
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setType(org.bonitasoft.studio.common.ExpressionConstants.SCRIPT_TYPE);&#xD;&#xA;exp.setInterpreter(org.bonitasoft.studio.common.ExpressionConstants.GROOVY);&#xD;&#xA;exp.setContent(&quot;[]&quot;);&#xD;&#xA;exp.setReturnType(java.util.List.class.getName());&#xD;&#xA;return exp ;"
               language="java"/>
         </initializers>
         <initializers
@@ -3183,7 +3183,7 @@
               xsi:type="ecore:EReference"
               href="../form.ecore#//Widget/inputExpression"/>
           <value
-              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;empty_list&quot;);&#xD;&#xA;exp.setType(org.bonitasoft.studio.common.ExpressionConstants.SCRIPT_TYPE);&#xD;&#xA;exp.setContent(&quot;[]&quot;);&#xD;&#xA;exp.setReturnType(java.util.List.class.getName());&#xD;&#xA;return exp ;"
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setType(org.bonitasoft.studio.common.ExpressionConstants.SCRIPT_TYPE);&#xD;&#xA;exp.setInterpreter(org.bonitasoft.studio.common.ExpressionConstants.GROOVY);&#xD;&#xA;exp.setContent(&quot;[]&quot;);&#xD;&#xA;exp.setReturnType(java.util.List.class.getName());&#xD;&#xA;return exp ;"
               language="java"/>
         </initializers>
         <initializers
@@ -3273,7 +3273,7 @@
               xsi:type="ecore:EReference"
               href="../form.ecore#//MultipleValuatedFormField/defaultExpression"/>
           <value
-              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;empty_list&quot;);&#xD;&#xA;exp.setType(org.bonitasoft.studio.common.ExpressionConstants.SCRIPT_TYPE);&#xD;&#xA;exp.setContent(&quot;[]&quot;);&#xD;&#xA;exp.setReturnType(java.util.List.class.getName());&#xD;&#xA;return exp ;"
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setType(org.bonitasoft.studio.common.ExpressionConstants.SCRIPT_TYPE);&#xD;&#xA;exp.setInterpreter(org.bonitasoft.studio.common.ExpressionConstants.GROOVY);&#xD;&#xA;exp.setContent(&quot;[]&quot;);&#xD;&#xA;exp.setReturnType(java.util.List.class.getName());&#xD;&#xA;return exp ;"
               language="java"/>
         </initializers>
         <initializers
@@ -3282,7 +3282,7 @@
               xsi:type="ecore:EReference"
               href="../form.ecore#//MultipleValuatedFormField/defaultExpressionAfterEvent"/>
           <value
-              body="org.bonitasoft.studio.model.expression.Expression exp = NamingUtils.generateConstantExpression(&quot;empty_list&quot;);&#xD;&#xA;exp.setType(org.bonitasoft.studio.common.ExpressionConstants.SCRIPT_TYPE);&#xD;&#xA;exp.setContent(&quot;[]&quot;);&#xD;&#xA;exp.setReturnType(java.util.List.class.getName());&#xD;&#xA;return exp ;"
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setType(org.bonitasoft.studio.common.ExpressionConstants.SCRIPT_TYPE);&#xD;&#xA;exp.setInterpreter(org.bonitasoft.studio.common.ExpressionConstants.GROOVY);&#xD;&#xA;exp.setContent(&quot;[]&quot;);&#xD;&#xA;exp.setReturnType(java.util.List.class.getName());&#xD;&#xA;return exp ;"
               language="java"/>
         </initializers>
         <initializers
