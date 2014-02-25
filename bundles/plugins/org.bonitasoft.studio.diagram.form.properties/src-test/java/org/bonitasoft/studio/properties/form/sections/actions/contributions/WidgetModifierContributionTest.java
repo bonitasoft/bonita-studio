@@ -17,6 +17,7 @@
 package org.bonitasoft.studio.properties.form.sections.actions.contributions;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.bonitasoft.studio.model.expression.assertions.ExpressionAssert.assertThat;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
@@ -74,7 +75,7 @@ public class WidgetModifierContributionTest {
         operation.setRightOperand(actionExp);
         textFormField.setAction(operation);
         widgetModifierContribution.updateWidgetReferences(textFormField, Integer.class.getName());
-        ExpressionAssert.assertThat(actionExp).hasReturnType(Integer.class.getName());
+        assertThat(actionExp).hasReturnType(Integer.class.getName());
     }
     
     @Test
