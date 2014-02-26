@@ -17,16 +17,14 @@
  */
 package org.bonitasoft.studio.engine.command;
 
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLEncoder;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.engine.BOSEngineManager;
-import org.bonitasoft.studio.engine.BOSWebServerManager;
 import org.bonitasoft.studio.engine.i18n.Messages;
+import org.bonitasoft.studio.engine.operation.PortalURLBuilder;
 import org.bonitasoft.studio.engine.preferences.BonitaUserXpPreferencePage;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
@@ -38,7 +36,6 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressService;
@@ -55,13 +52,12 @@ public abstract class AbstractOpenConsoleCommand extends AbstractHandler {
 	protected boolean runSynchronously;
 	protected boolean refreshTheme = true ;
 
-	/**
-	 * @return
-	 */
-	private static IPreferenceStore getPreferenceStore() {
-		return BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore();
-	}
 
+
+	public AbstractOpenConsoleCommand() {
+		super();
+	}
+	
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		try{
@@ -92,7 +88,7 @@ public abstract class AbstractOpenConsoleCommand extends AbstractHandler {
 					try{
 						monitor.beginTask(Messages.initializingUserXP, IProgressMonitor.UNKNOWN);
 						BOSEngineManager.getInstance().start();
-						setURL(buildUrl(monitor));
+						setURL(getURLBuilder().toURL(monitor));
 						if(refreshTheme){
 							String currentTheme = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().getString(BonitaPreferenceConstants.DEFAULT_USERXP_THEME) ;
 							String installedTheme = BonitaUserXpPreferencePage.getInstalledThemeId()  ;
@@ -137,51 +133,19 @@ public abstract class AbstractOpenConsoleCommand extends AbstractHandler {
 
 	}
 
-	protected String buildUrl(IProgressMonitor monitor) throws UnsupportedEncodingException {
-		final IPreferenceStore store = getPreferenceStore();
-		final String port = store.getString(BonitaPreferenceConstants.CONSOLE_PORT);
-		final String host = store.getString(BonitaPreferenceConstants.CONSOLE_HOST);
-		final String userName =  store.getString(BonitaPreferenceConstants.USER_NAME);
-		final String password = store.getString(BonitaPreferenceConstants.USER_PASSWORD);
-		final String locale = store.getString(BonitaPreferenceConstants.CURRENT_UXP_LOCALE);
-		final String loginUrl = BOSWebServerManager.getInstance().generateLoginURL(userName, password) ;
-		final String consoleURl = "http://"+host+":"+ port + getURLRelativePath(locale);
-		return loginUrl+"&redirectUrl="+URLEncoder.encode(consoleURl, "UTF-8");
+	protected PortalURLBuilder getURLBuilder() {
+		return new PortalURLBuilder();
 	}
 
-	protected String getLocaleParameter(String locale) {
-		return "locale="+locale;
-	}
-
-	/**
-	 * @param store
-	 * @return
-	 * @throws MalformedURLException
-	 */
 	public URL getURL() throws MalformedURLException {
 		return url;
 	}
 
-	/**
-	 * @param store
-	 * @return
-	 * @throws MalformedURLException
-	 */
-	public void setURL(String path) throws MalformedURLException {
-		url = new URL(path);
+
+	public void setURL(URL url) throws MalformedURLException {
+		this.url = url;
 	}
 
-	/**
-	 * 
-	 */
-	public AbstractOpenConsoleCommand() {
-		super();
-	}
 
-	/**
-	 * @param locale 
-	 * @return
-	 */
-	protected abstract String getURLRelativePath(String locale);
 
 }
