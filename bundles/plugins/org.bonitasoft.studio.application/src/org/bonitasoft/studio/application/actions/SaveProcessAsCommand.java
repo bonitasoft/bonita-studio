@@ -31,6 +31,7 @@ import org.bonitasoft.studio.common.OpenNameAndVersionForDiagramDialog;
 import org.bonitasoft.studio.common.OpenNameAndVersionForDiagramDialog.ProcessesNameVersion;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.diagram.custom.repository.ApplicationResourceFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.ApplicationResourceRepositoryStore;
@@ -41,6 +42,7 @@ import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationRepos
 import org.bonitasoft.studio.diagram.custom.repository.WebTemplatesUtil;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.form.Form;
+import org.bonitasoft.studio.model.form.FormPackage;
 import org.bonitasoft.studio.model.form.ImageWidget;
 import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.process.AbstractProcess;
@@ -56,6 +58,8 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.operations.OperationHistoryFactory;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.EObject;
@@ -352,7 +356,7 @@ public class SaveProcessAsCommand extends AbstractHandler {
                 }
             }
 
-            /*Duplicate Process Page Template*/
+            /*Duplicate Welcome Page Template*/
             final AssociatedFile welcomePage = newProc.getWelcomePage();
             if(welcomePage != null){
                 File welcomePageFile = WebTemplatesUtil.getFile(welcomePage.getPath());
@@ -383,10 +387,25 @@ public class SaveProcessAsCommand extends AbstractHandler {
                     }
                 }
             }
-
+            List<Form> allForms = ModelHelper.getAllItemsOfType(newProc, FormPackage.Literals.FORM);
+            for (Form form : allForms) {
+                AssociatedFile htmlTemplate = form.getHtmlTemplate();
+                if(htmlTemplate != null && htmlTemplate.getPath() != null){
+                    //copy template
+                    String path = htmlTemplate.getPath();
+                    IFile originalFile = resourceStore.getResource().getFile(path);
+                    if(originalFile.exists()){
+                        String newPath = path.replace(ModelHelper.getEObjectID(oldProc), newProcId);
+                        try {
+                            originalFile.copy(resourceStore.getResource().getFile(newPath).getFullPath(), true, Repository.NULL_PROGRESS_MONITOR);
+                            htmlTemplate.setPath(newPath);
+                        } catch (CoreException e) {
+                            BonitaStudioLog.error(e);
+                        }
+                    }
+                }
+            }
         }
-
-
     }
 
     protected ApplicationResourceFileStore getApplicationResourceFileStore(
@@ -400,14 +419,16 @@ public class SaveProcessAsCommand extends AbstractHandler {
 
 
 
-
     /* (non-Javadoc)
      * @see org.eclipse.core.commands.AbstractHandler#isEnabled()
      */
     @Override
     public boolean isEnabled() {
-        IEditorPart editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
-        return editor != null && editor instanceof ProcessDiagramEditor;
+        if(PlatformUI.isWorkbenchRunning() && PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null){
+            IEditorPart editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+            return editor != null && editor instanceof ProcessDiagramEditor;
+        }
+        return false;
     }
 
 
