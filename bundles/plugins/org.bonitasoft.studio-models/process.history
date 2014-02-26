@@ -7753,5 +7753,8 @@
       </changes>
     </changes>
   </releases>
+  <releases date="2014-02-17T12:36:39.611+0100" label="6.2.4-001">
+    <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.custom.migration.DependenciesCopyCustomMigration"/>
+  </releases>
   <releases/>
 </history:History>

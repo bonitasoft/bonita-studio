@@ -44,7 +44,8 @@ public class ModelVersion {
     public static final String VERSION_6_0_0_GA_005 = "6.0.0-ga-005";
     public static final String VERSION_6_0_1_001 = "6.0.1-001";
     public static final String VERSION_6_1_1_001 = "6.1.1-001";
-    public static final String CURRENT_VERSION = VERSION_6_1_1_001;
+    public static final String VERSION_6_2_4_001 = "6.2.4-001";
+    public static final String CURRENT_VERSION = VERSION_6_2_4_001;
 
 
     public static boolean sameVersion(String version){
