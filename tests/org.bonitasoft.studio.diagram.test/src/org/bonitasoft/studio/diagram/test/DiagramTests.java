@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2012 BonitaSoft S.A.
+ * Copyright (C) 2010-2014 BonitaSoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  *
  * This program is free software: you can redistribute it and/or modify
@@ -130,7 +130,7 @@ public class DiagramTests extends SWTBotGefTestCase {
 	 */
 	@Test
 	public void test4TasksDiagram() throws Exception {
-
+	
 		// create a new process
 		SWTBotTestUtil.createNewDiagram(bot);
 		
@@ -215,25 +215,9 @@ public class DiagramTests extends SWTBotGefTestCase {
 				// last shell "Add form..."
 				bot.button(IDialogConstants.FINISH_LABEL).click();
 				
-				// add script to conver to an integer on "Step3"
+				// add script to convert to an integer on "Step2"
 				if(nametask.equals("Step2")){
-					SWTBotGefEditor formEditor = bot.gefEditor(bot.activeEditor().getTitle());
-					formEditor.getEditPart("varInteger1").click();
-					bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_FORM_GENERAL).show();
-					SWTBotTestUtil.selectTabbedPropertyView(bot, "Data");
-					bot.toolbarButtonWithId(ExpressionViewer.SWTBOT_ID_EDITBUTTON, 1).click();
-					String valueOf = "Integer.valueOf(field_varInteger1)";
-					SWTBotTestUtil.setScriptExpression(bot, "theInteger", valueOf, Integer.class.getName());
-					bot.waitUntil(new DefaultCondition() {
-						
-						public boolean test() throws Exception {
-							return bot.textWithId(ExpressionViewer.SWTBOT_ID_EXPRESSIONVIEWER_TEXT,2).getText().equals("theInteger");
-						}
-						
-						public String getFailureMessage() {
-							return "Expression not set properly";
-						}
-					});
+					convertToAVarInteger();
 				}
 				
 				
@@ -266,7 +250,7 @@ public class DiagramTests extends SWTBotGefTestCase {
 		
 		SWTBotGefEditor formEditor = bot.gefEditor(bot.activeEditor().getTitle());
 		
-		final String[] varTab = new String[]{"varText1", "varBoolean1", "varInteger1"};
+		final String[] varTab = new String[]{"varText", "varBoolean", "varInteger"};
 		for(String s : varTab){
 
 			formEditor.getEditPart(s).click();
@@ -282,6 +266,26 @@ public class DiagramTests extends SWTBotGefTestCase {
 		IStatus status = SWTBotTestUtil.selectAndRunFirstPoolFound(bot);
 		assertTrue(status.getMessage(),status.isOK());
 
+	}
+
+	private void convertToAVarInteger() {
+		SWTBotGefEditor formEditor = bot.gefEditor(bot.activeEditor().getTitle());
+		formEditor.getEditPart("varInteger").click();
+		bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_FORM_GENERAL).show();
+		SWTBotTestUtil.selectTabbedPropertyView(bot, "Data");
+		bot.toolbarButtonWithId(ExpressionViewer.SWTBOT_ID_EDITBUTTON, 1).click();
+		String valueOf = "Integer.valueOf(field_varInteger)";
+		SWTBotTestUtil.setScriptExpression(bot, "theInteger", valueOf, Integer.class.getName());
+		bot.waitUntil(new DefaultCondition() {
+			
+			public boolean test() throws Exception {
+				return bot.textWithId(ExpressionViewer.SWTBOT_ID_EXPRESSIONVIEWER_TEXT,2).getText().equals("theInteger");
+			}
+			
+			public String getFailureMessage() {
+				return "Expression not set properly";
+			}
+		});
 	}
 
 	/** Change the type of a Task to be 'Human'
