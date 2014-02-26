@@ -22,6 +22,7 @@ import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.gmf.tools.CopyEObjectFeaturesCommand;
+import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.form.FormFactory;
 import org.bonitasoft.studio.model.form.FormPackage;
@@ -54,7 +55,7 @@ public class DuplicateFormCommand  extends AbstractTransactionalCommand {
     private final String formDesc;
     private final EStructuralFeature feature;
 
-	public DuplicateFormCommand(Element pageFlow2, EStructuralFeature feature, Form baseForm, String id, String formDesc, TransactionalEditingDomain editingDomain) {
+    public DuplicateFormCommand(Element pageFlow2, EStructuralFeature feature, Form baseForm, String id, String formDesc, TransactionalEditingDomain editingDomain) {
         super(editingDomain, "Duplicate form", getWorkspaceFiles(pageFlow2));
         pageFlow = pageFlow2;
         this.baseForm = baseForm;
@@ -86,8 +87,8 @@ public class DuplicateFormCommand  extends AbstractTransactionalCommand {
                 CopyEObjectFeaturesCommand.copyFeatures(EcoreUtil.copy(baseForm), form);
 
 
-				cleanWidgetsContingenciesPropertiesOfForm(form);
-                
+                cleanWidgetsContingenciesPropertiesOfForm(form);
+
             }
         }
 
@@ -103,24 +104,34 @@ public class DuplicateFormCommand  extends AbstractTransactionalCommand {
     }
 
 
-	protected void cleanWidgetsContingenciesPropertiesOfForm(Form form){
-		List<Widget> widgets = form.getWidgets();
-		for(Widget widget : widgets){
-			if( widget.getDependOn() != null ){
-				widget.getDependOn().clear();
-			}
-			ExpressionHelper.clearExpression(widget.getDisplayAfterEventDependsOnConditionScript());
+    protected void cleanWidgetsContingenciesPropertiesOfForm(Form form){
+        List<Widget> widgets = form.getWidgets();
+        for(Widget widget : widgets){
+            if( widget.getDependOn() != null ){
+                widget.getDependOn().clear();
+            }
+            Expression displayAfterEventDependsOnConditionScript = widget.getDisplayAfterEventDependsOnConditionScript();
+            if(displayAfterEventDependsOnConditionScript != null){
+                ExpressionHelper.clearExpression(displayAfterEventDependsOnConditionScript);
+            }
+            Expression displayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition = widget.getDisplayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition();
+            if(displayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition != null){
+                ExpressionHelper.clearExpression(displayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition);
+            }
+            Expression afterEventExpression = widget.getAfterEventExpression();
+            if(afterEventExpression != null){
+                ExpressionHelper.clearExpression(afterEventExpression);
+            }
+            if(widget instanceof MultipleValuatedFormField){
+                Expression defaultExpressionAfterEvent = ((MultipleValuatedFormField)widget).getDefaultExpressionAfterEvent();
+                if(defaultExpressionAfterEvent != null){
+                    ExpressionHelper.clearExpression(defaultExpressionAfterEvent);
+                }
+            }
 
-			ExpressionHelper.clearExpression(widget.getDisplayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition());
 
-			ExpressionHelper.clearExpression(widget.getAfterEventExpression());
-			if(widget instanceof MultipleValuatedFormField){
-				ExpressionHelper.clearExpression(((MultipleValuatedFormField)widget).getDefaultExpressionAfterEvent());
-			}
-		
-
-		}
-	}
+        }
+    }
 
 
 }
