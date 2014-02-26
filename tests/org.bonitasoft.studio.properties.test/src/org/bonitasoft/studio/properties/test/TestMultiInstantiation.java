@@ -155,13 +155,13 @@ public class TestMultiInstantiation extends SWTBotGefTestCase implements SWTBotC
         gmfEditor = bot.gefEditor("Step1");
 
         // configure the nbTicketsAvailable widget to a Message field
-        setWidgetProperties(gmfEditor,  "nbTicketsAvailable1",  null, "Message", null,0,  null,null);
+        setWidgetProperties(gmfEditor,  "nbTicketsAvailable",  null, "Message", null,0,  null,null);
         bot.toolbarButtonWithId(ExpressionViewer.SWTBOT_ID_EDITBUTTON, 0).click();
         SWTBotTestUtil.setScriptExpression( bot, "nbTicketsAvailable",  "\"Only \"+nbTicketsAvailable+\" tickets available.\"",  "java.lang.String" );
 
 
         // configure the nbTickets widget to a text field
-        setWidgetProperties(gmfEditor,  "nbTickets1",  "Nbr de Tickets à reserver", "Text field", "0",  1, "nbTickets","java.lang.Integer");
+        setWidgetProperties(gmfEditor,  "nbTickets",  "Nbr de Tickets à reserver", "Text field", "0",  1, "nbTickets","java.lang.Integer");
         bot.toolbarButtonWithId(ExpressionViewer.SWTBOT_ID_EDITBUTTON, 1).click();
         SWTBotTestUtil.setScriptExpression( bot, "nbTickets",  "Integer.valueOf(field_nbTickets1)",  "java.lang.Integer" );
 
