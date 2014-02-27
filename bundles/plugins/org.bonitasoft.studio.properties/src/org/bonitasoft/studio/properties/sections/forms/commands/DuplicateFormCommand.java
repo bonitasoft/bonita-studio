@@ -42,7 +42,7 @@ import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCo
 
 /**
  * 
- * 	allow to duplicate an existing Form
+ *  allow to duplicate an existing Form
  * 
  * @author Baptiste Mesta
  * @author Aurelien Pupier - use AbstractTransactionalCommand to avoid memory leaks (instead of Command)
