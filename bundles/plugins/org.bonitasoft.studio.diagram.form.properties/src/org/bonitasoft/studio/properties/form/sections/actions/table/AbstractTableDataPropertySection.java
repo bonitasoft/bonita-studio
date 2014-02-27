@@ -156,6 +156,14 @@ public abstract class AbstractTableDataPropertySection extends AbstractBonitaDes
             }else{
                 tableViewer.setSelection(table.getInputExpression()) ;
             }
+            if(tableViewer.isTableMode()){
+                magicComposite.show(headersComposite) ;
+                magicComposite.hide(headersValueComposite) ;
+            }else{
+                magicComposite.show(headersValueComposite) ;
+                magicComposite.hide(headersComposite) ;
+            }
+            magicComposite.getParent().getParent().layout(true, true);
         }
     }
 
@@ -297,17 +305,6 @@ public abstract class AbstractTableDataPropertySection extends AbstractBonitaDes
 
             tableViewer.setInput(table) ;
             tableViewer.setEditingDomain(getEditingDomain());
-     
-            if(tableViewer.isTableMode()){
-                magicComposite.show(headersValueComposite) ;
-                magicComposite.hide(headersComposite) ;
-                magicComposite.getParent().getParent().layout(true, true);
-            }else{
-                magicComposite.show(headersComposite) ;
-                magicComposite.hide(headersValueComposite) ;
-                magicComposite.getParent().getParent().layout(true, true);
-            }
-            magicComposite.getParent().getParent().layout(true, true);
         }
 
         if(tableHorizontalHeaders != null && !tableHorizontalHeaders.getControl().isDisposed()){

@@ -48,6 +48,7 @@ import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.diagram.custom.repository.WebTemplatesUtil;
 import org.bonitasoft.studio.diagram.custom.resources.ResourceTreeContentProvider;
 import org.bonitasoft.studio.engine.export.EngineExpressionUtil;
+import org.bonitasoft.studio.model.expression.AbstractExpression;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ListExpression;
 import org.bonitasoft.studio.model.expression.Operation;
@@ -408,16 +409,21 @@ public class FormsExporter {
         }
     }
 
-    protected String getExpressionType(final Expression expression) {
-        String type = expression.getType();
-        if (ExpressionConstants.VARIABLE_TYPE.equals(type)) {
-            final Data data = (Data) expression.getReferencedElements().get(0);
-            final String ds = data.getDatasourceId();
-            if (DatasourceConstants.PAGEFLOW_DATASOURCE.equals(ds)) {
-                type = ExpressionConstants.FORM_FIELD_TYPE;
+    protected String getExpressionType(final AbstractExpression expression) {
+        if(expression instanceof Expression){
+            Expression exp = (Expression)expression;
+            String type = exp.getType();
+            if (ExpressionConstants.VARIABLE_TYPE.equals(type)) {
+                final Data data = (Data) exp.getReferencedElements().get(0);
+                final String ds = data.getDatasourceId();
+                if (DatasourceConstants.PAGEFLOW_DATASOURCE.equals(ds)) {
+                    type = ExpressionConstants.FORM_FIELD_TYPE;
+                }
             }
+            return type;
         }
-        return type;
+        return null;
+
     }
 
     protected void addExpressionDependency(final IFormBuilder builder, final org.bonitasoft.engine.expression.Expression expression)
@@ -1440,7 +1446,9 @@ public class FormsExporter {
         // for multiple valuated fields
         if (widget instanceof MultipleValuatedFormField) {
             addMultipleValuatedFormFieldInitialValue((MultipleValuatedFormField) widget, builder);
-            addAvailableValues((MultipleValuatedFormField) widget, builder);
+            if(!(widget instanceof AbstractTable)){
+                addAvailableValues((MultipleValuatedFormField) widget, builder);
+            }
         }
     }
 

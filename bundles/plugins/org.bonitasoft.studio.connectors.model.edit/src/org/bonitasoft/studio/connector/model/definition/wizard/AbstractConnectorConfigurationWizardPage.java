@@ -67,12 +67,12 @@ public abstract class AbstractConnectorConfigurationWizardPage extends WizardPag
 
     @Override
     public final void createControl(final Composite parent) {
-        setControl(doCreateControl(parent,context)) ;
         supportPage = WizardPageSupport.create(this, context) ;
+        setControl(doCreateControl(parent,context)) ;
     }
 
     protected EMFDataBindingContext getDatabindingContext(){
-    	return context;
+        return context;
     }
 
     protected abstract Control doCreateControl(Composite parent,EMFDataBindingContext context) ;
@@ -134,42 +134,42 @@ public abstract class AbstractConnectorConfigurationWizardPage extends WizardPag
     }
     
     protected Input getInput(String inputName) {
-		for(Input input : getDefinition().getInput()){
-			if(input.getName().equals(inputName)){
-				return input;
-			}
-		}
-		throw new IllegalArgumentException("Input "+inputName +" not found in connector definition "+getDefinition().getId());
-	}
+        for(Input input : getDefinition().getInput()){
+            if(input.getName().equals(inputName)){
+                return input;
+            }
+        }
+        throw new IllegalArgumentException("Input "+inputName +" not found in connector definition "+getDefinition().getId());
+    }
 
     protected ConnectorParameter getConnectorParameter(Input input) {
-		for(ConnectorParameter param : configuration.getParameters()){
-			if(param.getKey().equals(input.getName())){
-				if(param.getExpression() == null){
-					param.setExpression(createExpression(input)) ;
-				}
-				return param ;
-			}
-		}
+        for(ConnectorParameter param : configuration.getParameters()){
+            if(param.getKey().equals(input.getName())){
+                if(param.getExpression() == null){
+                    param.setExpression(createExpression(input)) ;
+                }
+                return param ;
+            }
+        }
 
-		final ConnectorParameter parameter = ConnectorConfigurationFactory.eINSTANCE.createConnectorParameter() ;
-		parameter.setKey(input.getName()) ;
-		parameter.setExpression(createExpression(input)) ;
-		getConfiguration().getParameters().add(parameter) ;
+        final ConnectorParameter parameter = ConnectorConfigurationFactory.eINSTANCE.createConnectorParameter() ;
+        parameter.setKey(input.getName()) ;
+        parameter.setExpression(createExpression(input)) ;
+        getConfiguration().getParameters().add(parameter) ;
 
-		return parameter ;
-	}
+        return parameter ;
+    }
 
-	protected AbstractExpression createExpression(Input input) {
-		String inputClassName = input.getType() ;
-		final Expression expression = ExpressionFactory.eINSTANCE.createExpression() ;
-		expression.setReturnType(inputClassName) ;
-		expression.setReturnTypeFixed(true) ;
-		expression.setType(ExpressionConstants.CONSTANT_TYPE) ;
-		expression.setName(input.getDefaultValue()) ;
-		expression.setContent(input.getDefaultValue()) ;
-		return expression ;
-	}
+    protected AbstractExpression createExpression(Input input) {
+        String inputClassName = input.getType() ;
+        final Expression expression = ExpressionFactory.eINSTANCE.createExpression() ;
+        expression.setReturnType(inputClassName) ;
+        expression.setReturnTypeFixed(true) ;
+        expression.setType(ExpressionConstants.CONSTANT_TYPE) ;
+        expression.setName(input.getDefaultValue()) ;
+        expression.setContent(input.getDefaultValue()) ;
+        return expression ;
+    }
 
     @Override
     public IWizardPage getPreviousPage() {
@@ -180,37 +180,37 @@ public abstract class AbstractConnectorConfigurationWizardPage extends WizardPag
         return super.getPreviousPage();
     }
 
-	public AvailableExpressionTypeFilter getExpressionTypeFilter() {
-		return connectorExpressionContentTypeFilter;
-	}
+    public AvailableExpressionTypeFilter getExpressionTypeFilter() {
+        return connectorExpressionContentTypeFilter;
+    }
 
-	public void setExpressionTypeFilter(AvailableExpressionTypeFilter connectorExpressionContentTypeFilter) {
-		this.connectorExpressionContentTypeFilter = connectorExpressionContentTypeFilter;
-	}
+    public void setExpressionTypeFilter(AvailableExpressionTypeFilter connectorExpressionContentTypeFilter) {
+        this.connectorExpressionContentTypeFilter = connectorExpressionContentTypeFilter;
+    }
 
-	@Override
-	public boolean isPageFlowContext() {
+    @Override
+    public boolean isPageFlowContext() {
 
-		return isPageFlowContext;
-	}
-	
-	@Override
-	public void setIsPageFlowContext(boolean isPageFlowContext) {
-		this.isPageFlowContext = isPageFlowContext;
-	}
+        return isPageFlowContext;
+    }
+    
+    @Override
+    public void setIsPageFlowContext(boolean isPageFlowContext) {
+        this.isPageFlowContext = isPageFlowContext;
+    }
 
-	/* (non-Javadoc)
-	 * @see org.bonitasoft.studio.common.IBonitaVariableContext#isOverViewContext()
-	 */
-	@Override
-	public boolean isOverViewContext() {
-		return false;
-	}
-	
-	/* (non-Javadoc)
-	 * @see org.bonitasoft.studio.common.IBonitaVariableContext#setIsOverviewContext(boolean)
-	 */
-	@Override
-	public void setIsOverviewContext(boolean isOverviewContext) {
-	}
+    /* (non-Javadoc)
+     * @see org.bonitasoft.studio.common.IBonitaVariableContext#isOverViewContext()
+     */
+    @Override
+    public boolean isOverViewContext() {
+        return false;
+    }
+    
+    /* (non-Javadoc)
+     * @see org.bonitasoft.studio.common.IBonitaVariableContext#setIsOverviewContext(boolean)
+     */
+    @Override
+    public void setIsOverviewContext(boolean isOverviewContext) {
+    }
 }
