@@ -176,7 +176,8 @@ public class ConnectorDescriptorToConnectorDefinition {
 		connectorImplementation.setHasSources(true);
 		connectorImplementation.setDescription(v5Descriptor.getDescription());
 		connectorImplementation.setImplementationClassname(getNewImplementationClassName());
-
+		connectorImplementation.setJarDependencies(ConnectorImplementationFactory.eINSTANCE.createJarDependencies());
+		
 		final ConnectorDefRepositoryStore defStore = (ConnectorDefRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class);
 		final ConnectorSourceRepositoryStore sourceStore = (ConnectorSourceRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorSourceRepositoryStore.class);
 		ConnectorDefinition definition = ((IDefinitionRepositoryStore) defStore).getDefinition(connectorImplementation.getDefinitionId(),connectorImplementation.getDefinitionVersion()) ;
