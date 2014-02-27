@@ -120,6 +120,7 @@ public abstract class AbstractTableDataPropertySection extends AbstractBonitaDes
                     tableViewer.setEditingDomain(getEditingDomain());
                     magicComposite.show(headersComposite) ;
                     magicComposite.hide(headersValueComposite) ;
+                    magicComposite.getParent().getParent().layout(true, true);
                 }
 
                 public void useSimpleExpression() {
@@ -128,6 +129,7 @@ public abstract class AbstractTableDataPropertySection extends AbstractBonitaDes
                     tableViewer.setEditingDomain(getEditingDomain());
                     magicComposite.hide(headersComposite) ;
                     magicComposite.show(headersValueComposite) ;
+                    magicComposite.getParent().getParent().layout(true, true);
                 }
             };
 
@@ -171,22 +173,22 @@ public abstract class AbstractTableDataPropertySection extends AbstractBonitaDes
         parent.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         TabbedPropertySheetWidgetFactory widgetFactory = aTabbedPropertySheetPage.getWidgetFactory();
         Composite mainComposite = widgetFactory.createComposite(parent);
-        mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create()) ;
+        mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
         mainComposite.setLayout(new GridLayout(2, false));
 
         allowHtmlButton = widgetFactory.createButton(mainComposite, Messages.GeneralSection_allowHTML, SWT.CHECK);
         allowHtmlButton.setLayoutData(GridDataFactory.fillDefaults().span(2, 1).create()) ;
 
         tableViewer = new ExpressionCollectionViewer(mainComposite,0,false,2,false,null,widgetFactory,getEditingDomain(), true, false,true) ;
-        tableViewer.setLayoutData(GridDataFactory.fillDefaults().grab(true,true).span(2, 1).create()) ;
+        tableViewer.setLayoutData(GridDataFactory.fillDefaults().grab(true,false).span(2, 1).create()) ;
         tableViewer.addFilter(getExpressionViewerFilter());
         tableViewer.addFilter(getExpressionViewerFilter());
         
         magicComposite = new MagicComposite(mainComposite, SWT.NONE) ;
         magicComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true,false).span(2,1).create());
+     
         magicComposite.setLayout(new GridLayout(1, false)) ;
         widgetFactory.adapt(magicComposite) ;
-
         headersComposite = widgetFactory.createComposite(magicComposite);
         headersComposite.setLayout(new GridLayout(2, false));
         headersComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
@@ -295,7 +297,17 @@ public abstract class AbstractTableDataPropertySection extends AbstractBonitaDes
 
             tableViewer.setInput(table) ;
             tableViewer.setEditingDomain(getEditingDomain());
-         
+     
+            if(tableViewer.isTableMode()){
+                magicComposite.show(headersValueComposite) ;
+                magicComposite.hide(headersComposite) ;
+                magicComposite.getParent().getParent().layout(true, true);
+            }else{
+                magicComposite.show(headersComposite) ;
+                magicComposite.hide(headersValueComposite) ;
+                magicComposite.getParent().getParent().layout(true, true);
+            }
+            magicComposite.getParent().getParent().layout(true, true);
         }
 
         if(tableHorizontalHeaders != null && !tableHorizontalHeaders.getControl().isDisposed()){
