@@ -55,9 +55,9 @@ public class DuplicateFormCommand  extends AbstractTransactionalCommand {
     private final String formDesc;
     private final EStructuralFeature feature;
 
-    public DuplicateFormCommand(Element pageFlow2, EStructuralFeature feature, Form baseForm, String id, String formDesc, TransactionalEditingDomain editingDomain) {
-        super(editingDomain, "Duplicate form", getWorkspaceFiles(pageFlow2));
-        pageFlow = pageFlow2;
+    public DuplicateFormCommand(Element pageFlow, EStructuralFeature feature, Form baseForm, String id, String formDesc, TransactionalEditingDomain editingDomain) {
+        super(editingDomain, "Duplicate form", getWorkspaceFiles(pageFlow));
+        this.pageFlow = pageFlow;
         this.baseForm = baseForm;
         this.formName = NamingUtils.toJavaIdentifier(id, true);
         this.formDesc = formDesc;
@@ -65,6 +65,7 @@ public class DuplicateFormCommand  extends AbstractTransactionalCommand {
     }
 
 
+    @SuppressWarnings("unchecked")
     @Override
     protected CommandResult doExecuteWithResult(IProgressMonitor monitor,
             IAdaptable info) throws ExecutionException {
@@ -85,14 +86,13 @@ public class DuplicateFormCommand  extends AbstractTransactionalCommand {
             }else{
                 form = FormFactory.eINSTANCE.createViewForm();
                 CopyEObjectFeaturesCommand.copyFeatures(EcoreUtil.copy(baseForm), form);
-
                 cleanWidgetsContingenciesPropertiesOfForm(form);
             }
         }
 
         form.setName(formName);
         form.setDocumentation(formDesc);
-        ((List) pageFlow.eGet(feature)).add(form);
+        ((List<Form>) pageFlow.eGet(feature)).add(form);
         //remove data out of the scope
         ModelHelper.removedReferencedEObjects(form,pageFlow);
 
