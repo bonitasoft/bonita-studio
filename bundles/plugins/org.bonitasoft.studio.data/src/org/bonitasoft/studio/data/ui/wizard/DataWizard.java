@@ -163,8 +163,8 @@ public class DataWizard extends Wizard implements IBonitaVariableContext {
 			op.setNewData(workingCopy) ;
 			op.setOldData(originalData) ;
 			op.updateReferencesInScripts();
-			final boolean switchingDataeClass = !originalData.eClass().equals(workingCopy.eClass());
-			op.setUpdateDataReferences(switchingDataeClass);
+			final boolean switchingDataEClass = !originalData.eClass().equals(workingCopy.eClass());
+			op.setUpdateDataReferences(switchingDataEClass);
 			if (op.isCanExecute()){
 				try {
 
@@ -176,7 +176,8 @@ public class DataWizard extends Wizard implements IBonitaVariableContext {
 					BonitaStudioLog.error(e);
 				}
 
-				if(switchingDataeClass){
+				cc = new CompoundCommand();
+				if(switchingDataEClass){
 					List<?> dataList =  (List<?>) container.eGet(dataContainmentFeature) ;
 					int index = dataList.indexOf(originalData) ;
 					cc.append(RemoveCommand.create(editingDomain, container, dataContainmentFeature, originalData)) ;
@@ -195,7 +196,7 @@ public class DataWizard extends Wizard implements IBonitaVariableContext {
 			editingDomain.getCommandStack().execute(AddCommand.create(editingDomain, container, dataContainmentFeature, workingCopy)) ;
 		}
 		try {
-			RepositoryManager.getInstance().getCurrentRepository().getProject().build(IncrementalProjectBuilder.FULL_BUILD,XtextProjectHelper.BUILDER_ID,Collections.EMPTY_MAP,null);
+			RepositoryManager.getInstance().getCurrentRepository().getProject().build(IncrementalProjectBuilder.FULL_BUILD,XtextProjectHelper.BUILDER_ID,Collections.<String,String>emptyMap(),null);
 		} catch (CoreException e) {
 			BonitaStudioLog.error(e, DataPlugin.PLUGIN_ID);
 		}
