@@ -17,7 +17,10 @@
  */
 package org.bonitasoft.studio.application.actions;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
@@ -59,6 +62,7 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.operations.OperationHistoryFactory;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -141,7 +145,7 @@ public class SaveProcessAsCommand extends AbstractHandler {
                     if (diagramStore==null){
                         diagramStore = (DiagramRepositoryStore) RepositoryManager.getInstance().getCurrentRepository().getRepositoryStore(DiagramRepositoryStore.class) ;
                     }
-                    Copier copier = new Copier(true, false);
+                    final Copier copier = new Copier(true, false);
                     Collection<EObject> copiedElements = copier.copyAll(diagram.eResource().getContents());
                     copier.copyReferences();//don't forget this line otherwise we loose link between diagrams and model
                     DiagramFileStore store = diagramStore.createRepositoryFileStore(NamingUtils.toDiagramFilename(newProcessLabel, newProcessVersion));
@@ -159,7 +163,15 @@ public class SaveProcessAsCommand extends AbstractHandler {
 
                             @Override
                             protected CommandResult doExecuteWithResult(IProgressMonitor arg0, IAdaptable arg1) throws ExecutionException {
-                                changePathAndCopyResources(diagram, newDiagram, createEditingDomain);
+                                try {
+                                    changePathAndCopyResources(diagram, newDiagram, createEditingDomain,copier);
+                                } catch (IOException e) {
+                                    BonitaStudioLog.error(e);
+                                    return CommandResult.newErrorCommandResult(e);
+                                } catch (CoreException e) {
+                                    BonitaStudioLog.error(e);
+                                    return CommandResult.newErrorCommandResult(e);
+                                }
                                 return CommandResult.newOKCommandResult();
                             }
 
@@ -237,9 +249,12 @@ public class SaveProcessAsCommand extends AbstractHandler {
      * @param oldProcess
      * @param newProcess
      * @param createEditingDomain
+     * @param copier 
+     * @throws IOException 
+     * @throws CoreException 
      */
     private void changePathAndCopyResources(MainProcess oldProcess, MainProcess newProcess,
-            TransactionalEditingDomain createEditingDomain) {
+            TransactionalEditingDomain createEditingDomain, Copier copier) throws IOException, CoreException {
 
         ApplicationResourceRepositoryStore resourceStore = (ApplicationResourceRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ApplicationResourceRepositoryStore.class) ;
         for(AbstractProcess oldProc : ModelHelper.getAllProcesses(oldProcess)){
@@ -284,8 +299,6 @@ public class SaveProcessAsCommand extends AbstractHandler {
             }
             /*And also in all tasks*/
             //TODO: duplicate confirmation template for tasks
-
-
             /*Duplicate Error Template*/
             final AssociatedFile errorTemplate = newProc.getErrorTemplate();
             if(errorTemplate != null){
@@ -389,26 +402,67 @@ public class SaveProcessAsCommand extends AbstractHandler {
             }
 
 
-            List<Form> allForms = ModelHelper.getAllItemsOfType(newProc, FormPackage.Literals.FORM);
-            for (Form form : allForms) {
-                AssociatedFile htmlTemplate = form.getHtmlTemplate();
-                if(htmlTemplate != null && htmlTemplate.getPath() != null){
-                    //copy template
-                    String path = htmlTemplate.getPath();
-                    IFile originalFile = resourceStore.getResource().getFile(path);
-                    if(originalFile.exists()){
-                        String newPath = path.replace(ModelHelper.getEObjectID(oldProc), newProcId);
-                        try {
-                            originalFile.copy(resourceStore.getResource().getFile(newPath).getFullPath(), true, Repository.NULL_PROGRESS_MONITOR);
-                            htmlTemplate.setPath(newPath);
-                        } catch (CoreException e) {
-                            BonitaStudioLog.error(e);
-                        }
+            updateFormCustomTemplate(copier, resourceStore, oldProc, newProc);
+        }
+    }
+
+    protected void updateFormCustomTemplate(Copier copier, ApplicationResourceRepositoryStore resourceStore, AbstractProcess oldProc, AbstractProcess newProc) throws CoreException, IOException {
+        List<Form> allForms = ModelHelper.getAllItemsOfType(newProc, FormPackage.Literals.FORM);
+        for (Form form : allForms) {
+            AssociatedFile htmlTemplate = form.getHtmlTemplate();
+            if(htmlTemplate != null && htmlTemplate.getPath() != null){
+                //copy template
+                String path = htmlTemplate.getPath();
+                String newFormId = ModelHelper.getEObjectID(form);
+                String originalFormId = null;
+                for(java.util.Map.Entry<EObject, EObject> entry : copier.entrySet()){
+                    if(form.equals(entry.getValue())){
+                        originalFormId = ModelHelper.getEObjectID(entry.getKey());
+                        break;
                     }
+                }
+                if(originalFormId == null){
+                    throw new RuntimeException("No original object found for "+newFormId);
+                }
+                IFile originalFile = resourceStore.getResource().getFile(path);
+                if(originalFile.exists()){
+                    String newProcId = ModelHelper.getEObjectID(newProc) ;
+                    String newPath = path.replace(ModelHelper.getEObjectID(oldProc), newProcId).replace(originalFormId, newFormId);
+                    IFile newFile = resourceStore.getResource().getFile(newPath);
+                    originalFile.copy(newFile.getFullPath(), true, Repository.NULL_PROGRESS_MONITOR);
+                    htmlTemplate.setPath(newPath);
+                    replaceIdInFile(newFile,copier);
                 }
             }
         }
     }
+
+    private void replaceIdInFile(IFile file, Copier copier) throws IOException, CoreException{
+        File fileToModify = file.getLocation().toFile();
+        BufferedReader reader = new BufferedReader(new FileReader(fileToModify));
+        StringBuilder sb = new StringBuilder();
+        String line = ""; //$NON-NLS-1$
+        while((line = reader.readLine()) != null) {
+            sb.append(line);
+            sb.append("\r\n");//$NON-NLS-1$
+        }
+        reader.close();
+
+        for(java.util.Map.Entry<EObject, EObject> entry : copier.entrySet()){
+            String originalId = ModelHelper.getEObjectID(entry.getKey());
+            String newId = ModelHelper.getEObjectID(entry.getValue());
+            String content = sb.toString();
+            if(content.contains(originalId)){
+                sb = new StringBuilder(content.replaceAll(originalId, newId));
+            }
+        }
+
+        FileWriter writer = new FileWriter(fileToModify.getAbsolutePath());
+        writer.write(sb.toString());
+        writer.close();
+        file.refreshLocal(IResource.DEPTH_ONE, Repository.NULL_PROGRESS_MONITOR);
+    }
+    
 
     protected ApplicationResourceFileStore getApplicationResourceFileStore(
             ApplicationResourceRepositoryStore resourceStore, String newProcId) {
