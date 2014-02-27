@@ -32,9 +32,15 @@ import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.model.expression.ListExpression;
 import org.bonitasoft.studio.model.expression.TableExpression;
+import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.core.databinding.validation.MultiValidator;
+import org.eclipse.core.databinding.validation.ValidationStatus;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.databinding.EMFDataBindingContext;
+import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.edit.command.AddCommand;
 import org.eclipse.emf.edit.command.MoveCommand;
 import org.eclipse.emf.edit.command.RemoveCommand;
@@ -125,7 +131,8 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
         }
     };
     private LineTableCreator lineTableCreator;
-
+    private MultiValidator mandatoryValidator;
+    private EMFDataBindingContext validationContext;
 
 
     public void setEditingDomain(EditingDomain editingDomain) {
@@ -368,6 +375,9 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
             }
             viewerComposite.setData(MagicComposite.HIDDEN, false);
             viewerComposite.setVisible(true);
+            if(validationContext != null){
+                validationContext.addValidationStatusProvider(mandatoryValidator);
+            }
         } else {
             if (allowSwitchTableMode) {
                 switchTableModeLink.setText("<A>" + Messages.editAsTable
@@ -377,6 +387,9 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
             }
             viewerComposite.setData(MagicComposite.HIDDEN, true);
             viewerComposite.setVisible(false);
+            if(validationContext != null){
+                validationContext.removeValidationStatusProvider(mandatoryValidator);
+            }
         }
     }
 
@@ -1097,6 +1110,36 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
 
     public boolean isTableMode(){
         return isTableMode;
+    }
+    
+    public void setMandatoryField(final String label, EMFDataBindingContext context) {
+        expressionEditor.setMandatoryField(label, context);
+        mandatoryValidator = new MultiValidator() {
+
+            @Override
+            protected IStatus validate() {
+                if(isTableMode()){
+                    AbstractExpression expression = getValue();
+                    if(expression instanceof ListExpression){
+                        ListExpression listExpression = (ListExpression) expression;
+                        final IObservableValue listValue = EMFObservables.observeValue(listExpression, ExpressionPackage.Literals.LIST_EXPRESSION__EXPRESSIONS);
+                        listValue.getValue();
+                        if(listExpression.getExpressions() == null || listExpression.getExpressions().isEmpty()){
+                            return ValidationStatus.error(Messages.bind(Messages.AtLeastOneRowShouldBeAddedFor,label));
+                        }
+                    }else if(expression instanceof TableExpression){
+                        TableExpression tableExpression = (TableExpression) expression;
+                        final IObservableValue listValue = EMFObservables.observeValue(tableExpression, ExpressionPackage.Literals.TABLE_EXPRESSION__EXPRESSIONS);
+                        listValue.getValue();
+                        if(tableExpression.getExpressions() == null || tableExpression.getExpressions().isEmpty()){
+                            return ValidationStatus.error(Messages.bind(Messages.AtLeastOneRowShouldBeAddedFor,label));
+                        }
+                    }
+                }
+                return ValidationStatus.ok();
+            }
+        };
+        this.validationContext = context;
     }
     
 }
