@@ -75,9 +75,6 @@ import org.wfmc._2002.xpdl1.util.Xpdl1ResourceFactoryImpl;
  */
 public class XPDLToProc extends ToProcProcessor {
 
-    private static final String INSTANTIATOR_WRAPPER_ID = "MultiInstantiatorInstantiator";
-    private static final String JOIN_CHECKER_WRAPPER_ID = "MultiInstantiatorJoinChecker";
-
     private static final String X_OFFSET = "XOffset"; //$NON-NLS-1$
     private static final String Y_OFFSET = "YOffset"; //$NON-NLS-1$
     private Dimension poolSize;

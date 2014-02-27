@@ -183,6 +183,7 @@ public interface IProcBuilder {
      */
     public void addGateway(String id,String name,Point location, Dimension size,GatewayType gatewayType) throws ProcBuilderException;
 
+    public void addGateway(String id,String name,Point location, Dimension size,GatewayType gatewayType,boolean displayLabel) throws ProcBuilderException;
     /**
      * @param id
      * @param name
