@@ -137,6 +137,7 @@ import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.runtime.emf.type.core.IHintedType;
 import org.eclipse.gmf.runtime.emf.type.core.requests.CreateElementRequest;
 import org.eclipse.gmf.runtime.emf.type.core.requests.CreateRelationshipRequest;
+import org.eclipse.gmf.runtime.notation.DecorationNode;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.DrawerStyle;
 import org.eclipse.gmf.runtime.notation.Edge;
@@ -147,6 +148,7 @@ import org.eclipse.gmf.runtime.notation.Node;
 import org.eclipse.gmf.runtime.notation.NotationFactory;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.jface.preference.PreferenceStore;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
 
@@ -182,7 +184,7 @@ public class ProcBuilder implements IProcBuilder {
     private final Map<String, Lane> lanes;
     private Shell shell;
     private Map<Element, String> elementToReplaceName;
-	private Node currentView;
+    private Node currentView;
 
     public ProcBuilder(){
         this(new NullProgressMonitor()) ;
@@ -245,15 +247,21 @@ public class ProcBuilder implements IProcBuilder {
         } catch (ExecutionException e) {
             ProcessDiagramEditorPlugin.getInstance().logError("Unable to create model and diagram", e); //$NON-NLS-1$
         }
+        Display.getDefault().syncExec(new Runnable() {
 
-        shell = new Shell();
-        try {
-            diagramPart = (MainProcessEditPart) OffscreenEditPartFactory.getInstance().createDiagramEditPart(diagram, shell);
-        } catch (Exception ex) {
-            diagramPart = (MainProcessEditPart) OffscreenEditPartFactory.getInstance().createDiagramEditPart(diagram, shell);
-        } finally {
-            //from 3.7, no more cal dispose on the shell here because it disposes some controls that we need after.
-        }
+            @Override
+            public void run() {
+                shell = new Shell();
+                try {
+                    diagramPart = (MainProcessEditPart) OffscreenEditPartFactory.getInstance().createDiagramEditPart(diagram, shell);
+                } catch (Exception ex) {
+                    diagramPart = (MainProcessEditPart) OffscreenEditPartFactory.getInstance().createDiagramEditPart(diagram, shell);
+                } finally {
+                    //from 3.7, no more cal dispose on the shell here because it disposes some controls that we need after.
+                }
+            }
+        });
+
 
         setCharset(WorkspaceSynchronizer.getFile(diagramResource));
 
@@ -271,7 +279,7 @@ public class ProcBuilder implements IProcBuilder {
         ViewAndElementDescriptor viewDescriptor = new ViewAndElementDescriptor(new CreateElementRequestAdapter(new CreateElementRequest(ProcessElementTypes.Pool_2007)), Node.class,
                 ((IHintedType) ProcessElementTypes.Pool_2007).getSemanticHint(), diagramPart.getDiagramPreferencesHint());
         CreateViewAndElementRequest createRequest = createCreationRequest(
-				location, size, viewDescriptor);
+                location, size, viewDescriptor);
         diagramPart.getDiagramEditDomain().getDiagramCommandStack().execute(diagramPart.getCommand(createRequest));
 
 
@@ -464,7 +472,7 @@ public class ProcBuilder implements IProcBuilder {
         ShapeNodeEditPart targetNode = editParts.get(trgtId);
 
         if(!canSequenceFlowBeCreated(srcId, trgtId, sourceNode, targetNode)){
-        	return;
+            return;
         }
 
         CreateConnectionViewAndElementRequest request = new CreateConnectionViewAndElementRequest(ProcessElementTypes.SequenceFlow_4001, ((IHintedType) ProcessElementTypes.SequenceFlow_4001).getSemanticHint(), diagramPart
@@ -497,10 +505,10 @@ public class ProcBuilder implements IProcBuilder {
     }
 
 
-	private void handleSequenceFlowAnchors(final Point sourceAnchor,
-			final Point targetAnchor,
-			final ConnectionViewAndElementDescriptor newObject) {
-		SetConnectionAnchorsCommand setConnectionAnchorsCommand = new SetConnectionAnchorsCommand(editingDomain, "Add anchors") ;
+    private void handleSequenceFlowAnchors(final Point sourceAnchor,
+            final Point targetAnchor,
+            final ConnectionViewAndElementDescriptor newObject) {
+        SetConnectionAnchorsCommand setConnectionAnchorsCommand = new SetConnectionAnchorsCommand(editingDomain, "Add anchors") ;
         setConnectionAnchorsCommand.setEdgeAdaptor(newObject) ;
         if(sourceAnchor != null){
             setConnectionAnchorsCommand.setNewSourceTerminal("("+sourceAnchor.preciseX()+","+sourceAnchor.preciseY()+")") ;
@@ -509,21 +517,21 @@ public class ProcBuilder implements IProcBuilder {
             setConnectionAnchorsCommand.setNewTargetTerminal("("+targetAnchor.preciseX()+","+targetAnchor.preciseY()+")") ;
         }
         diagramPart.getDiagramEditDomain().getDiagramCommandStack().execute(new ICommandProxy(setConnectionAnchorsCommand));
-	}
+    }
 
 
-	/**
-	 * 
-	 * It depends if source and target are correctly defined and already exists.
-	 * @param srcId
-	 * @param trgtId
-	 * @param sourceNode
-	 * @param targetNode
-	 * @return
-	 */
-	private boolean canSequenceFlowBeCreated(final String srcId, final String trgtId,
-			ShapeNodeEditPart sourceNode, ShapeNodeEditPart targetNode) {
-		if(sourceNode == null){
+    /**
+     * 
+     * It depends if source and target are correctly defined and already exists.
+     * @param srcId
+     * @param trgtId
+     * @param sourceNode
+     * @param targetNode
+     * @return
+     */
+    private boolean canSequenceFlowBeCreated(final String srcId, final String trgtId,
+            ShapeNodeEditPart sourceNode, ShapeNodeEditPart targetNode) {
+        if(sourceNode == null){
             return false;
         }
 
@@ -542,18 +550,18 @@ public class ProcBuilder implements IProcBuilder {
         if(createdSequenceFlows.contains(new Pair<String,String>(srcId,trgtId))){
             return false; //Already exists
         }
-        
+
         return true;
-	}
+    }
 
 
-	private void setBendPoints(final PointList bendpoints,
-			final ConnectionViewAndElementDescriptor newObject) {
-		SetConnectionBendpointsCommand setConnectionBendPointsCommand = new SetConnectionBendpointsCommand(editingDomain);
-		setConnectionBendPointsCommand.setEdgeAdapter(newObject);
-		setConnectionBendPointsCommand.setNewPointList(bendpoints, bendpoints.getFirstPoint(), bendpoints.getLastPoint());
-		diagramPart.getDiagramEditDomain().getDiagramCommandStack().execute(new ICommandProxy(setConnectionBendPointsCommand));
-	}
+    private void setBendPoints(final PointList bendpoints,
+            final ConnectionViewAndElementDescriptor newObject) {
+        SetConnectionBendpointsCommand setConnectionBendPointsCommand = new SetConnectionBendpointsCommand(editingDomain);
+        setConnectionBendPointsCommand.setEdgeAdapter(newObject);
+        setConnectionBendPointsCommand.setNewPointList(bendpoints, bendpoints.getFirstPoint(), bendpoints.getLastPoint());
+        diagramPart.getDiagramEditDomain().getDiagramCommandStack().execute(new ICommandProxy(setConnectionBendPointsCommand));
+    }
 
     public void addSequenceFlowCondition(final String content, final String returnType, final String interpreter, final String expressionType){
         Expression condition = createExpression(content, returnType, interpreter, expressionType);
@@ -651,13 +659,24 @@ public class ProcBuilder implements IProcBuilder {
      * @see org.bonitasoft.studio.importer.builder.IProcBuilder#addGateway(java.lang.String, java.lang.String, org.eclipse.draw2d.geometry.Point, org.eclipse.draw2d.geometry.Dimension, org.bonitasoft.studio.importer.builder.IProcBuilder.GatewayType)
      */
     public void addGateway(String id, final String name, final Point location,final Dimension size, final GatewayType gatewayType) throws ProcBuilderException {
+        addGateway(id, name, location, size, gatewayType, true);
+    }
 
+    /* (non-Javadoc)
+     * @see org.bonitasoft.studio.importer.builder.IProcBuilder#addGateway(java.lang.String, java.lang.String, org.eclipse.draw2d.geometry.Point, org.eclipse.draw2d.geometry.Dimension, org.bonitasoft.studio.importer.builder.IProcBuilder.GatewayType)
+     */
+    public void addGateway(String id, final String name, final Point location,final Dimension size, final GatewayType gatewayType,boolean displayLabel) throws ProcBuilderException {
         id = NamingUtils.convertToId(id) ;
         IElementType type = resolveGatewayType(gatewayType) ;
         Element createdElement = createShape(id,currentContainer,location,size,type);
-
+        if(currentView != null && !currentView.getPersistedChildren().isEmpty()){
+            Object decorator = currentView.getPersistedChildren().get(0);
+            if(decorator instanceof DecorationNode){
+                commandStack.append(SetCommand.create(editingDomain, decorator, NotationPackage.Literals.VIEW__VISIBLE,displayLabel));
+            }
+        }
         commandStack.append(SetCommand.create(editingDomain, createdElement, ProcessPackage.eINSTANCE.getElement_Name(),name)) ;
-        
+
         currentStep = createdElement ;
         currentElement = createdElement ;
 
@@ -742,22 +761,22 @@ public class ProcBuilder implements IProcBuilder {
     }
 
 
-	private CreateViewAndElementRequest createCreationRequest(Point location,
-			Dimension size, ViewAndElementDescriptor viewDescriptor) {
-		CreateViewAndElementRequest createRequest = new CreateViewAndElementRequest(viewDescriptor);
+    private CreateViewAndElementRequest createCreationRequest(Point location,
+            Dimension size, ViewAndElementDescriptor viewDescriptor) {
+        CreateViewAndElementRequest createRequest = new CreateViewAndElementRequest(viewDescriptor);
         if(location != null){
             createRequest.setLocation(location);
         }
         if(size != null){
             createRequest.setSize(size);
         }
-		return createRequest;
-	}
+        return createRequest;
+    }
 
 
-	private IGraphicalEditPart retrieveCompartmentEditPartFor(
-			IGraphicalEditPart editPart) {
-		IGraphicalEditPart compartment = null ;
+    private IGraphicalEditPart retrieveCompartmentEditPartFor(
+            IGraphicalEditPart editPart) {
+        IGraphicalEditPart compartment = null ;
         for(Object c : editPart.getChildren()){
             if(c instanceof ShapeCompartmentEditPart){
                 compartment = (IGraphicalEditPart) c ;
@@ -767,8 +786,8 @@ public class ProcBuilder implements IProcBuilder {
         if(compartment == null){
             compartment = editPart ;
         }
-		return compartment;
-	}
+        return compartment;
+    }
 
 
     /* (non-Javadoc)
@@ -779,7 +798,7 @@ public class ProcBuilder implements IProcBuilder {
         ViewAndElementDescriptor viewDescriptor = new ViewAndElementDescriptor(new CreateElementRequestAdapter(new CreateElementRequest(ProcessElementTypes.TextAnnotation_3015)), Node.class,
                 ((IHintedType) ProcessElementTypes.TextAnnotation_3015).getSemanticHint(), diagramPart.getDiagramPreferencesHint());
         CreateViewAndElementRequest createRequest = createCreationRequest(
-				location, size, viewDescriptor);
+                location, size, viewDescriptor);
         IGraphicalEditPart parentEditPart = null ;
 
         boolean sourceCanBeProcessed =false ;
@@ -830,29 +849,29 @@ public class ProcBuilder implements IProcBuilder {
 
     }
 
-	private void createLinkBetweenTextAnnotationAndSourceEditPart(final String sourceId, TextAnnotation createdElement) {
-		Element sourceElement = (Element) steps.get(NamingUtils.convertToId(sourceId));
-		if (sourceElement != null) {
-		    IElementType itemType = ProcessElementTypes.TextAnnotationAttachment_4003;
-		    CreateConnectionViewAndElementRequest request = new CreateConnectionViewAndElementRequest(itemType,
-		            ((IHintedType) itemType).getSemanticHint(), diagramPart.getDiagramPreferencesHint());
+    private void createLinkBetweenTextAnnotationAndSourceEditPart(final String sourceId, TextAnnotation createdElement) {
+        Element sourceElement = (Element) steps.get(NamingUtils.convertToId(sourceId));
+        if (sourceElement != null) {
+            IElementType itemType = ProcessElementTypes.TextAnnotationAttachment_4003;
+            CreateConnectionViewAndElementRequest request = new CreateConnectionViewAndElementRequest(itemType,
+                    ((IHintedType) itemType).getSemanticHint(), diagramPart.getDiagramPreferencesHint());
 
-		    EditPart sourceEp = editParts.get(NamingUtils.convertToId(sourceId)) ;
-		    EditPart targetEp = GMFTools.findEditPart(diagramPart, createdElement) ;
-		    if(sourceEp != null){//this case can happen when th etext annotation is link to a seuqneceflow but don't know why.
-		        Command createSequenceFlowCommand = CreateConnectionViewAndElementRequest.getCreateCommand(request, targetEp,sourceEp);
-		        diagramPart.getDiagramEditDomain().getDiagramCommandStack().execute(createSequenceFlowCommand);
+            EditPart sourceEp = editParts.get(NamingUtils.convertToId(sourceId)) ;
+            EditPart targetEp = GMFTools.findEditPart(diagramPart, createdElement) ;
+            if(sourceEp != null){//this case can happen when th etext annotation is link to a seuqneceflow but don't know why.
+                Command createSequenceFlowCommand = CreateConnectionViewAndElementRequest.getCreateCommand(request, targetEp,sourceEp);
+                diagramPart.getDiagramEditDomain().getDiagramCommandStack().execute(createSequenceFlowCommand);
 
-		        Node source = 	(Node) ((IGraphicalEditPart) sourceEp).getNotationView() ;
-		        Location loc = (Location) source.getLayoutConstraint();
-		        Node node = (Node) ((IGraphicalEditPart) targetEp).getNotationView() ;
-		        if(loc != null){
-		            commandStack.append(SetCommand.create(editingDomain, node.getLayoutConstraint(), NotationPackage.eINSTANCE.getLocation_X(), loc.getX() + 60)) ;
-		            commandStack.append(SetCommand.create(editingDomain,  node.getLayoutConstraint(), NotationPackage.eINSTANCE.getLocation_Y(), loc.getY() - 50)) ;
-		        }
-		    }
-		}
-	}
+                Node source = 	(Node) ((IGraphicalEditPart) sourceEp).getNotationView() ;
+                Location loc = (Location) source.getLayoutConstraint();
+                Node node = (Node) ((IGraphicalEditPart) targetEp).getNotationView() ;
+                if(loc != null){
+                    commandStack.append(SetCommand.create(editingDomain, node.getLayoutConstraint(), NotationPackage.eINSTANCE.getLocation_X(), loc.getX() + 60)) ;
+                    commandStack.append(SetCommand.create(editingDomain,  node.getLayoutConstraint(), NotationPackage.eINSTANCE.getLocation_Y(), loc.getY() - 50)) ;
+                }
+            }
+        }
+    }
 
     private void execute() {
         editingDomain.getCommandStack().execute(commandStack) ;
@@ -1016,7 +1035,7 @@ public class ProcBuilder implements IProcBuilder {
         processMessageFlows() ;
 
         processExpressionDataReferences();
-        
+
         processElementIDNameConversion();
 
         /*Need to release DiagramEventBroker because the OffscreenEditpart create on, and don't release it itself*/
@@ -1032,20 +1051,27 @@ public class ProcBuilder implements IProcBuilder {
         }
 
         if(shell != null){
-            shell.dispose();
-            shell = null;
+            Display.getDefault().syncExec(new Runnable() {
+
+                @Override
+                public void run() {
+                    shell.dispose();
+                    shell = null;
+                }
+            });
+
         }
     }
 
     private void processElementIDNameConversion() {
-    	for (Entry<Element, String> entry : elementToReplaceName.entrySet()) {
-			//commandStack.append(SetCommand.create(editingDomain, entry.getKey(), ProcessPackage.eINSTANCE.getElement_Name(), entry.getValue()));
-		}
-    	execute();
-	}
+        for (Entry<Element, String> entry : elementToReplaceName.entrySet()) {
+            //commandStack.append(SetCommand.create(editingDomain, entry.getKey(), ProcessPackage.eINSTANCE.getElement_Name(), entry.getValue()));
+        }
+        execute();
+    }
 
 
-	private void processExpressionDataReferences() {
+    private void processExpressionDataReferences() {
         // TODO Auto-generated method stub
 
     }
@@ -1222,27 +1248,27 @@ public class ProcBuilder implements IProcBuilder {
         return null;
     }
 
-	private IElementType getBoundaryElementTypeOnTask(final EventType eventType) {
-		switch (eventType) {
-		    case ERROR_BOUNDARY: return ProcessElementTypes.IntermediateErrorCatchEvent_3029;
-		    case MESSAGE_BOUNDARY: return ProcessElementTypes.BoundaryMessageEvent_3035;
-		    case TIMER_BOUNDARY: return ProcessElementTypes.BoundaryTimerEvent_3043;
-		    case NON_INTERRUPTING_TIMER_BOUNDARY: return ProcessElementTypes.NonInterruptingBoundaryTimerEvent_3064;
-		    case SIGNAL_BOUNDARY: return ProcessElementTypes.BoundarySignalEvent_3052;
-		    default: return null;
-		}
-	}
+    private IElementType getBoundaryElementTypeOnTask(final EventType eventType) {
+        switch (eventType) {
+            case ERROR_BOUNDARY: return ProcessElementTypes.IntermediateErrorCatchEvent_3029;
+            case MESSAGE_BOUNDARY: return ProcessElementTypes.BoundaryMessageEvent_3035;
+            case TIMER_BOUNDARY: return ProcessElementTypes.BoundaryTimerEvent_3043;
+            case NON_INTERRUPTING_TIMER_BOUNDARY: return ProcessElementTypes.NonInterruptingBoundaryTimerEvent_3064;
+            case SIGNAL_BOUNDARY: return ProcessElementTypes.BoundarySignalEvent_3052;
+            default: return null;
+        }
+    }
 
-	private IElementType getBoundaryElementTypeOnCallActivity(final EventType eventType) {
-		switch (eventType) {
-		    case ERROR_BOUNDARY: return ProcessElementTypes.IntermediateErrorCatchEvent_3030;
-		    case MESSAGE_BOUNDARY: return ProcessElementTypes.BoundaryMessageEvent_3036;
-		    case TIMER_BOUNDARY: return ProcessElementTypes.BoundaryTimerEvent_3044;
-		    case NON_INTERRUPTING_TIMER_BOUNDARY: return ProcessElementTypes.NonInterruptingBoundaryTimerEvent_3065;
-		    case SIGNAL_BOUNDARY: return ProcessElementTypes.BoundarySignalEvent_3053;
-		    default: return null;
-		}
-	}
+    private IElementType getBoundaryElementTypeOnCallActivity(final EventType eventType) {
+        switch (eventType) {
+            case ERROR_BOUNDARY: return ProcessElementTypes.IntermediateErrorCatchEvent_3030;
+            case MESSAGE_BOUNDARY: return ProcessElementTypes.BoundaryMessageEvent_3036;
+            case TIMER_BOUNDARY: return ProcessElementTypes.BoundaryTimerEvent_3044;
+            case NON_INTERRUPTING_TIMER_BOUNDARY: return ProcessElementTypes.NonInterruptingBoundaryTimerEvent_3065;
+            case SIGNAL_BOUNDARY: return ProcessElementTypes.BoundarySignalEvent_3053;
+            default: return null;
+        }
+    }
 
     private IElementType resolveEventType(final EventType eventType) {
         switch (eventType) {
@@ -1268,8 +1294,8 @@ public class ProcBuilder implements IProcBuilder {
             case START_TIMER: return ProcessElementTypes.StartTimerEvent_3016 ;
             case TIMER_BOUNDARY: return ProcessElementTypes.BoundaryTimerEvent_3044 ;
             case NON_INTERRUPTING_TIMER_BOUNDARY: return ProcessElementTypes.NonInterruptingBoundaryTimerEvent_3065;
-		default:
-			break;
+            default:
+                break;
         }
         return ProcessElementTypes.StartEvent_3002;
     }
@@ -1588,20 +1614,20 @@ public class ProcBuilder implements IProcBuilder {
 
     }
 
-	public void setFontStyle(String name, int height, boolean isBold,boolean isItalic) throws ProcBuilderException {
-		if(currentView == null){
-			 throw new ProcBuilderException("Impossible to set font style property. There is no view set") ;
-		}
-		FontStyle fontStyle = (FontStyle) currentView.getStyle(NotationPackage.Literals.FONT_STYLE);
-		if(fontStyle == null){
-			fontStyle = NotationFactory.eINSTANCE.createFontStyle();
-		}
-		 commandStack.append(SetCommand.create(editingDomain, fontStyle, NotationPackage.Literals.FONT_STYLE__BOLD, isBold)) ;
-         commandStack.append(SetCommand.create(editingDomain, fontStyle, NotationPackage.Literals.FONT_STYLE__ITALIC,isItalic)) ;
-         commandStack.append(SetCommand.create(editingDomain, fontStyle, NotationPackage.Literals.FONT_STYLE__FONT_NAME,name)) ;
-         commandStack.append(SetCommand.create(editingDomain, fontStyle, NotationPackage.Literals.FONT_STYLE__FONT_HEIGHT,height)) ;
-		execute();
-	}
+    public void setFontStyle(String name, int height, boolean isBold,boolean isItalic) throws ProcBuilderException {
+        if(currentView == null){
+            throw new ProcBuilderException("Impossible to set font style property. There is no view set") ;
+        }
+        FontStyle fontStyle = (FontStyle) currentView.getStyle(NotationPackage.Literals.FONT_STYLE);
+        if(fontStyle == null){
+            fontStyle = NotationFactory.eINSTANCE.createFontStyle();
+        }
+        commandStack.append(SetCommand.create(editingDomain, fontStyle, NotationPackage.Literals.FONT_STYLE__BOLD, isBold)) ;
+        commandStack.append(SetCommand.create(editingDomain, fontStyle, NotationPackage.Literals.FONT_STYLE__ITALIC,isItalic)) ;
+        commandStack.append(SetCommand.create(editingDomain, fontStyle, NotationPackage.Literals.FONT_STYLE__FONT_NAME,name)) ;
+        commandStack.append(SetCommand.create(editingDomain, fontStyle, NotationPackage.Literals.FONT_STYLE__FONT_HEIGHT,height)) ;
+        execute();
+    }
 
 
 

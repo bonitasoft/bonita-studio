@@ -1152,8 +1152,10 @@ public class BPMNToProc extends ToProcProcessor {
 							populateEvent(flowNode, eventType);
 
 						} else if (isGateway) {
-							builder.addGateway(flowNode.getId(), name,
-									location, null, gateType);
+		
+					         String gatewayName = flowNode.getName();
+							builder.addGateway(flowNode.getId(), gatewayName,
+									location, null, gateType,gatewayName != null && !gatewayName.isEmpty());
 							builder.addDescription(documentation);
 						} else if (isSubprocessEvent) {
 							processSubProcessEvent(fromSubProcess, flowNode, location, name, documentation);
@@ -1234,7 +1236,7 @@ public class BPMNToProc extends ToProcProcessor {
 	private String computeBonitaNameOf(TFlowNode flowNode) {
 		String name;
 		if (flowNode.getName() != null
-				&& flowNode.getName().length() > 0) {
+				&& !flowNode.getName().isEmpty()) {
 			name = flowNode.getName();
 		} else {
 			name = flowNode.getId();
