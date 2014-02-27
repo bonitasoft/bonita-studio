@@ -1154,7 +1154,7 @@ public class BPMNToProc extends ToProcProcessor {
 						} else if (isGateway) {
 		
 					         String gatewayName = flowNode.getName();
-							builder.addGateway(flowNode.getId(), gatewayName,
+							builder.addGateway(flowNode.getId(), name,
 									location, null, gateType,gatewayName != null && !gatewayName.isEmpty());
 							builder.addDescription(documentation);
 						} else if (isSubprocessEvent) {
