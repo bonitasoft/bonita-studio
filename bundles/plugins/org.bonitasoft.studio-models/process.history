@@ -7755,6 +7755,7 @@
   </releases>
   <releases date="2014-02-17T16:36:39.611+0100" label="6.2.4-001">
     <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.custom.migration.DependenciesCopyCustomMigration"/>
+    <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.custom.migration.InterpreterCustomMigration"/>
   </releases>
   <releases date="2014-02-23T16:36:39.611+0100" label="6.3.0-001">
     <changes xsi:type="history:OperationChange">
