@@ -32,7 +32,11 @@ import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.model.expression.ListExpression;
 import org.bonitasoft.studio.model.expression.TableExpression;
+import org.eclipse.core.databinding.Binding;
+import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.core.databinding.observable.value.WritableValue;
+import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.MultiValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
@@ -133,6 +137,8 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
     private LineTableCreator lineTableCreator;
     private MultiValidator mandatoryValidator;
     private EMFDataBindingContext validationContext;
+    private String mandatoryLabel;
+    private Binding bindValue;
 
     public void setEditingDomain(EditingDomain editingDomain) {
         this.editingDomain = editingDomain;
@@ -374,9 +380,6 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
             }
             viewerComposite.setData(MagicComposite.HIDDEN, false);
             viewerComposite.setVisible(true);
-            if(validationContext != null){
-                validationContext.addValidationStatusProvider(mandatoryValidator);
-            }
         } else {
             if (allowSwitchTableMode) {
                 switchTableModeLink.setText("<A>" + Messages.editAsTable
@@ -386,11 +389,50 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
             }
             viewerComposite.setData(MagicComposite.HIDDEN, true);
             viewerComposite.setVisible(false);
-            if(validationContext != null){
-                validationContext.removeValidationStatusProvider(mandatoryValidator);
-            }
         }
-      
+
+    }
+
+    protected MultiValidator createListExpressionValidator() {
+        final ListExpression listExpression = (ListExpression) getValue();
+        final IObservableValue listValue = EMFObservables.observeValue(listExpression, ExpressionPackage.Literals.LIST_EXPRESSION__EXPRESSIONS);
+        return new MultiValidator() {
+
+            @Override
+            protected IStatus validate() {
+                if(isTableMode()){
+                    AbstractExpression expression = getValue();
+                    if(expression instanceof ListExpression){
+                        listValue.getValue();
+                        if(listExpression.getExpressions() == null || listExpression.getExpressions().isEmpty()){
+                            return ValidationStatus.error(Messages.bind(Messages.AtLeastOneRowShouldBeAddedFor,mandatoryLabel));
+                        }
+                    }
+                }
+                return ValidationStatus.ok();
+            }
+        };
+    }
+
+    protected MultiValidator createTableExpressionValidator() {
+        final TableExpression tableExpression = (TableExpression) getValue();
+        final IObservableValue tableValue = EMFObservables.observeValue(tableExpression, ExpressionPackage.Literals.TABLE_EXPRESSION__EXPRESSIONS);
+        return new MultiValidator() {
+
+            @Override
+            protected IStatus validate() {
+                if(isTableMode()){
+                    AbstractExpression expression = getValue();
+                    if(expression instanceof TableExpression){
+                        tableValue.getValue();
+                        if(tableExpression.getExpressions() == null || tableExpression.getExpressions().isEmpty()){
+                            return ValidationStatus.error(Messages.bind(Messages.AtLeastOneRowShouldBeAddedFor,mandatoryLabel));
+                        }
+                    }
+                }
+                return ValidationStatus.ok();
+            }
+        };
     }
 
     private void createRowSortButtons(
@@ -929,17 +971,60 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
 
 
     public void setSelection(AbstractExpression input) {
+        if(validationContext != null){
+            if(bindValue != null){
+                validationContext.removeBinding(bindValue);
+                bindValue.dispose();
+                bindValue = null;
+            }
+            expressionEditor.setMandatoryField(null, validationContext);
+        }
+       
         if (input instanceof Expression && expressionEditor != null) {
             initializeTableOrExpression(false);
+            expressionEditor.setMandatoryField(mandatoryLabel, validationContext);
             expressionEditor.setSelection(new StructuredSelection(input));
         } else if (input instanceof ListExpression
                 || input instanceof TableExpression) {
+            expressionEditor.setSelection(new StructuredSelection(ExpressionFactory.eINSTANCE.createExpression()));
             initializeTableOrExpression(true);
             viewer.setInput(input);
             if (input instanceof TableExpression
                     && !((TableExpression) input).getExpressions().isEmpty()) {
                 updateColumns();
             }
+            if(validationContext != null){
+
+                IObservableValue observeValue = null;
+                if(input instanceof ListExpression){
+                    observeValue = EMFObservables.observeValue(input, ExpressionPackage.Literals.LIST_EXPRESSION__EXPRESSIONS);
+                }else{
+                    observeValue = EMFObservables.observeValue(input, ExpressionPackage.Literals.TABLE_EXPRESSION__EXPRESSIONS);
+                }
+                UpdateValueStrategy strategy = new UpdateValueStrategy();
+                strategy.setAfterGetValidator(new IValidator() {
+
+                    @Override
+                    public IStatus validate(Object value) {
+                        if(isTableMode()){
+                            AbstractExpression expression = getValue();
+                            if(expression instanceof ListExpression){
+                                if(((ListExpression) expression).getExpressions() == null || ((ListExpression) expression).getExpressions().isEmpty()){
+                                    return ValidationStatus.error(Messages.bind(Messages.AtLeastOneRowShouldBeAddedFor,mandatoryLabel));
+                                }
+                            }
+                            if(expression instanceof TableExpression){
+                                if(((TableExpression) expression).getExpressions() == null || ((TableExpression) expression).getExpressions().isEmpty()){
+                                    return ValidationStatus.error(Messages.bind(Messages.AtLeastOneRowShouldBeAddedFor,mandatoryLabel));
+                                }
+                            }
+                        }
+                        return ValidationStatus.ok();
+                    }
+                });
+                bindValue = validationContext.bindValue(new WritableValue(), observeValue,strategy,strategy);
+            }
+
         }
     }
 
@@ -1111,32 +1196,9 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
 
     public void setMandatoryField(final String label, EMFDataBindingContext context) {
         expressionEditor.setMandatoryField(label, context);
-        mandatoryValidator = new MultiValidator() {
-
-            @Override
-            protected IStatus validate() {
-                if(isTableMode()){
-                    AbstractExpression expression = getValue();
-                    if(expression instanceof ListExpression){
-                        ListExpression listExpression = (ListExpression) expression;
-                        final IObservableValue listValue = EMFObservables.observeValue(listExpression, ExpressionPackage.Literals.LIST_EXPRESSION__EXPRESSIONS);
-                        listValue.getValue();
-                        if(listExpression.getExpressions() == null || listExpression.getExpressions().isEmpty()){
-                            return ValidationStatus.error(Messages.bind(Messages.AtLeastOneRowShouldBeAddedFor,label));
-                        }
-                    }else if(expression instanceof TableExpression){
-                        TableExpression tableExpression = (TableExpression) expression;
-                        final IObservableValue listValue = EMFObservables.observeValue(tableExpression, ExpressionPackage.Literals.TABLE_EXPRESSION__EXPRESSIONS);
-                        listValue.getValue();
-                        if(tableExpression.getExpressions() == null || tableExpression.getExpressions().isEmpty()){
-                            return ValidationStatus.error(Messages.bind(Messages.AtLeastOneRowShouldBeAddedFor,label));
-                        }
-                    }
-                }
-                return ValidationStatus.ok();
-            }
-        };
+        this.mandatoryLabel = label;
         this.validationContext = context;
+
     }
 
 }
