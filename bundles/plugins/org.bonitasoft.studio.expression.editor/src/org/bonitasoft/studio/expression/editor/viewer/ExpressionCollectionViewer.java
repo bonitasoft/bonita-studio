@@ -832,23 +832,23 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
 					&& (!viewer.getSelection().isEmpty() || viewer
 							.isCellEditorActive()));
 		}
-		if (addColumnButton != null) {
+		if (addColumnButton != null && !addColumnButton.isDisposed()) {
 			addColumnButton.setEnabled(getNbRows() > 0);
 		}
 
-		if (removeColButton != null && viewer.getSelection() != null) {
+		if (removeColButton != null  && !removeColButton.isDisposed() && viewer.getSelection() != null) {
 			removeColButton.setEnabled(getNbRows() > 0
 					&& getNbCols() > 0
 					&& getNbCols() > minNbCol
 					&& (!viewer.getSelection().isEmpty() || viewer
 							.isCellEditorActive()));
 		}
-		if (upRowSortButton != null) {
+		if (upRowSortButton != null && !upRowSortButton.isDisposed()) {
 			upRowSortButton.setEnabled(!viewer.getSelection().isEmpty()
 					|| viewer.isCellEditorActive());
 		}
 
-		if (downRowSortButton != null) {
+		if (downRowSortButton != null && !downRowSortButton.isDisposed()) {
 			downRowSortButton.setEnabled(!viewer.getSelection().isEmpty()
 					|| viewer.isCellEditorActive());
 		}
@@ -889,6 +889,10 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
 		return viewer;
 	}
 
+	public boolean isTableMode(){
+	    return isTableMode;
+	}
+	
 	public boolean isEmpty() {
 		if (isTableMode) {
 			AbstractExpression value = getValue();
