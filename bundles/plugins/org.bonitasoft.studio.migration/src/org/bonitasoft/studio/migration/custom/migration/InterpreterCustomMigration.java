@@ -36,11 +36,13 @@ public class InterpreterCustomMigration extends CustomMigration {
     @Override
     public void migrateAfter(Model model, Metamodel metamodel) throws MigrationException {
         for(Instance expInstance : model.getAllInstances("expression.Expression")){
-            String interpreter = expInstance.get("interpreter");
-            if(!ExpressionConstants.GROOVY.equals(interpreter)){
-                expInstance.set("interpreter", ExpressionConstants.GROOVY);
+            String type = expInstance.get("type");
+            if(ExpressionConstants.SCRIPT_TYPE.equals(type)){
+                String interpreter = expInstance.get("interpreter");
+                if(!ExpressionConstants.GROOVY.equals(interpreter)){
+                    expInstance.set("interpreter", ExpressionConstants.GROOVY);
+                }
             }
-
         }
     }
 
