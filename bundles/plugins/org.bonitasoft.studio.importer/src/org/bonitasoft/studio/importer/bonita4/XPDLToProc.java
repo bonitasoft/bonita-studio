@@ -194,7 +194,7 @@ public class XPDLToProc extends ToProcProcessor {
                 }
                 builder.addSequenceFlow(transition.getName(), transition.getFrom(),transition.getTo(), false, null,null,new PointList()) ;
                 if(!condition.isEmpty()){
-                    builder.addSequenceFlowCondition(condition, "java.lang.Boolean", ExpressionConstants.GROOVY, ExpressionConstants.SCRIPT_TYPE);
+                    builder.addSequenceFlowCondition(condition, ExpressionConstants.GROOVY, ExpressionConstants.SCRIPT_TYPE);
                 }
                 builder.addDescription(transition.getDescription()) ;
             }

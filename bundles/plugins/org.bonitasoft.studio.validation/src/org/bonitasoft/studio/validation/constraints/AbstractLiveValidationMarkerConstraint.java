@@ -161,7 +161,7 @@ public abstract class AbstractLiveValidationMarkerConstraint extends AbstractMod
 				}
 
 				// create problem markers on the appropriate resources
-				if(!status.isOK()){
+				if(status != null && !status.isOK()){
 					createMarkers(target,(IStatus) status, diagramEditPart,(DiagramEditor) editorPart);
 				}
 			}
