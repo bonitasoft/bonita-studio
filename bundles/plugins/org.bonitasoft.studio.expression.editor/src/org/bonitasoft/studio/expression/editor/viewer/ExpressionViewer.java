@@ -850,7 +850,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 
 		Set<String> cache = new HashSet<String>();
 		for (Expression e : getFilteredExpressions()) {
-			if (e.getName().equals(input)) {
+			if (e.getName() != null && e.getName().equals(input)) {
 				cache.add(e.getContent());
 			}
 		}
@@ -896,7 +896,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 
 		Set<String> cache = new HashSet<String>();
 		for (Expression e : getFilteredExpressions()) {
-			if (e.getName().equals(input)) {
+			if (e.getName() != null && e.getName().equals(input)) {
 				cache.add(e.getType());
 			}
 		}
