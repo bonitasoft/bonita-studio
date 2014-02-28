@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.net.URL;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.filestore.EMFFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.emf.common.util.URI;
@@ -35,7 +36,7 @@ public class URLValidatorDescriptorFileStore extends ValidatorDescriptorFileStor
 
     private final URL url;
 
-    public URLValidatorDescriptorFileStore(URL url, IRepositoryStore store) {
+    public URLValidatorDescriptorFileStore(URL url, IRepositoryStore<? extends EMFFileStore> store) {
         super(url.toString(), store);
         this.url = url ;
     }

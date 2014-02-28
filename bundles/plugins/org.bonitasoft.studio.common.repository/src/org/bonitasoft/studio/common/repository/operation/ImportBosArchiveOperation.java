@@ -243,8 +243,15 @@ public class ImportBosArchiveOperation {
 			PlatformUtil.unzipZipFiles(archive, container.getLocation().toFile(), Repository.NULL_PROGRESS_MONITOR);
 		} catch (Exception e) {
 			BonitaStudioLog.error(e);
-			MessageDialog.openError(Display.getDefault().getActiveShell(), Messages.importBonita6xTitle,
-					Messages.bind(Messages.importBonita6xError, new Object[] { archive.getName() }));
+			Display.getDefault().syncExec(new Runnable() {
+				
+				@Override
+				public void run() {
+					MessageDialog.openError(Display.getDefault().getActiveShell(), Messages.importBonita6xTitle,
+							Messages.bind(Messages.importBonita6xError, new Object[] { archive.getName() }));
+				}
+			});
+		
 		}
 		container.refreshLocal(IResource.DEPTH_INFINITE, Repository.NULL_PROGRESS_MONITOR);
 		return container;
