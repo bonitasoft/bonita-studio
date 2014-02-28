@@ -37,7 +37,6 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.gmf.runtime.diagram.ui.OffscreenEditPartFactory;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.notation.Diagram;
-import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
@@ -46,7 +45,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotCombo;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotMenu;
 import org.eclipse.ui.IEditorReference;
 import org.hamcrest.BaseMatcher;
@@ -179,7 +177,7 @@ public class BPMNExportTests extends SWTBotGefTestCase {
         bot.waitUntil(Conditions.waitForEditor(new BaseMatcher<IEditorReference>() {
 
             public boolean matches(Object item) {
-                return "org.bonitasoft.studio.editor.java".equals(((IEditorReference)item).getId());
+                return "org.eclipse.jdt.ui.CompilationUnitEditor".equals(((IEditorReference)item).getId());
             }
 
             public void describeTo(Description description) {
@@ -188,7 +186,7 @@ public class BPMNExportTests extends SWTBotGefTestCase {
 
         }), 10000);
         SWTBotEditor activeEditor = bot.activeEditor();
-        assertEquals("org.bonitasoft.studio.editor.java",activeEditor.getReference().getId());
+        assertEquals("org.eclipse.jdt.ui.CompilationUnitEditor",activeEditor.getReference().getId());
 
 
         final SWTBotMenu processMenu = bot.menu("Diagram");

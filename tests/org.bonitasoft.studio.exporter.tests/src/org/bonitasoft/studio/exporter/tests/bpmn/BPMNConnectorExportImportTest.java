@@ -51,7 +51,6 @@ import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditPart;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditor;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.omg.spec.bpmn.di.util.DiResourceFactoryImpl;
@@ -77,11 +76,6 @@ public class BPMNConnectorExportImportTest extends SWTBotGefTestCase {
         isInitalized = true;
     }
 
-    @Test
-    @Ignore("Feature Not yet implemented, it is currently using the id.")
-    public void testSingleConnectorOnServiceTask_name() throws IOException, ExecutionException{
-        assertEquals("Connector name is not correct", connectorName, connectorAfterReimport.getName());
-    }
 
     @Test
     public void testSingleConnectorOnServiceTask_version() throws IOException, ExecutionException{
@@ -194,10 +188,6 @@ public class BPMNConnectorExportImportTest extends SWTBotGefTestCase {
     }
 
 
-    //TODO check connector parameter mapping with variable
-    //TODO check connector parameter mapping with groovy script
-    //TODO check connector output mapping
-
     protected void prepareTest() throws IOException {
         SWTBotTestUtil.importProcessWIthPathFromClass(bot, "diagramToTestConnectorBPMNImportExport-1.0.bos", "Bonita 6.x", "diagramToTestConnectorBPMNImportExport", BPMNConnectorExportImportTest.class, false);
         SWTBotGefEditor editor1 = bot.gefEditor(bot.activeEditor().getTitle());
@@ -237,67 +227,5 @@ public class BPMNConnectorExportImportTest extends SWTBotGefTestCase {
             }
         }
     }
-
-    //	private AbstractProcess createProcessWithConnector() throws ExecutionException {
-    //		NewDiagramCommandHandler newDiagramCommand = new NewDiagramCommandHandler();
-    //		newDiagramCommand.execute(null);
-    //
-    //		final MainProcess mainProcess = newDiagramCommand.getNewDiagramFileStore().getContent();
-    //		Pool process = (Pool) mainProcess.getElements().get(0);
-    //
-    //		Data processData = ProcessFactory.eINSTANCE.createData();
-    //		processData.setDatasourceId("BOS");
-    //		processData.setName("globalData");
-    //		processData.setDataType(ModelHelper.getDataTypeForID(mainProcess, DataTypeLabels.stringDataType));
-    //		process.getData().add(processData);
-    //
-    //		final Lane lane = (Lane)process.getElements().get(0);
-    //		final EList<Element> elements = lane.getElements();
-    //		Element activityToRemove = null;
-    //		for(Element element : elements){
-    //			if(element instanceof Activity){
-    //				activityToRemove = element;
-    //				elements.remove(element);
-    //				break;
-    //			}
-    //		}
-    //		elements.remove(activityToRemove);
-    //		final Diagram diagramFor = ModelHelper.getDiagramFor(mainProcess);
-    //		diagramFor.get
-    //		GMFTools.convert(targetEClass, node, elementTypeResolver, editorType)
-    //		final ServiceTask serviceTask = ProcessFactory.eINSTANCE.createServiceTask();
-    //		Data localData = ProcessFactory.eINSTANCE.createData();
-    //		localData.setDatasourceId("BOS");
-    //		localData.setName("localData");
-    //		localData.setDataType(ModelHelper.getDataTypeForID(mainProcess, DataTypeLabels.stringDataType));
-    //		serviceTask.getData().add(localData);
-    //		lane.getElements().add(serviceTask);
-    //
-    //		Connector connector = ProcessFactory.eINSTANCE.createConnector();
-    //
-    //		connector.setName(connectorName);
-    //		connector.setDefinitionId("email");
-    //
-    //		connector.setDefinitionVersion(connectorDefVersion);
-    //		connector.setEvent(ConnectorEvent.ON_ENTER.toString());
-    //
-    //		ConnectorConfiguration connectorConfiguration = ConnectorConfigurationFactory.eINSTANCE.createConnectorConfiguration();
-    //		EList<ConnectorParameter> parameters = connectorConfiguration.getParameters();
-    //		ConnectorParameter connectorParameter = ConnectorConfigurationFactory.eINSTANCE.createConnectorParameter();
-    //		connectorParameter.setKey("from");
-    //		Expression expression = ExpressionFactory.eINSTANCE.createExpression();
-    //		expression.setContent("fromConstantValue");
-    //		expression.setName("fromConstantValue");
-    //
-    //		connectorParameter.setExpression(expression);
-    //
-    //		parameters.add(connectorParameter);
-    //		connector.setConfiguration(connectorConfiguration);
-    //
-    //		serviceTask.getConnectors().add(connector);
-    //
-    //
-    //		return mainProcess;
-    //	}
 
 }

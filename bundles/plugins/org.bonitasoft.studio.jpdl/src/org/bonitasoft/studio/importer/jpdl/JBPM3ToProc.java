@@ -406,7 +406,7 @@ public class JBPM3ToProc extends ToProcProcessor {
         for (TransitionDesc transition : transitions) {
             builder.addSequenceFlow(transition.getName(), transition.getSource(), transition.getTo(), false,null,null, null);
             if(transition.getCondition() != null && !transition.getCondition().isEmpty()){
-                builder.addSequenceFlowCondition(transition.getCondition(), "java.lang.Boolean", ExpressionConstants.GROOVY, ExpressionConstants.SCRIPT_TYPE);
+                builder.addSequenceFlowCondition(transition.getCondition(), ExpressionConstants.GROOVY, ExpressionConstants.SCRIPT_TYPE);
             }
         }
 

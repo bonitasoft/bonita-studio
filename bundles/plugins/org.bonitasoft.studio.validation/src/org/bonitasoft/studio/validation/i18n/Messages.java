@@ -95,7 +95,8 @@ public class Messages extends NLS {
 	public static String Validation_InconsistentActorDefAndConfigurationOutput;
 	public static String removed;
 	public static String mandatory;
-
+	public static String emptynameMessage;
+	public static String elementName;
     
     static {
         // initialize resource bundle

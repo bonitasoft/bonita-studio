@@ -20,12 +20,12 @@
                   class="org.bonitasoft.studio.validation.constraints.process.EmptyNameConstraint"
                   id="org.bonitasoft.studio.validation.constraints.nonemptynames"
                   lang="Java"
-                  mode="Live"
+                  mode="Batch"
                   name="%NotEmptyNameConstraint"
                   severity="WARNING"
                   statusCode="1">
                <message>
-                  %constraints.emptyname.message
+                  {0}
                </message>
                <target
                      class="Element">
