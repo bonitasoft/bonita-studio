@@ -41,7 +41,6 @@ import org.bonitasoft.studio.common.jface.TableColumnSorter;
 import org.bonitasoft.studio.common.jface.databinding.WizardPageSupportWithoutMessages;
 import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
 import org.bonitasoft.studio.pics.Pics;
-import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
@@ -260,13 +259,9 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 				@Override
 				public void handleValueChange(ValueChangeEvent event) {
 					User user = (User) ((EObjectObservableValue)event.getObservable()).getObserved();
-					String oldUserValue = event.diff.getOldValue().toString();
 					for(Membership m : userMemberShips){
 						m.setUserName(user.getUserName()) ;
 					}
-//					managerNameCombo.removeAll() ;
-//					managerNameCombo.add("") ;
-					
 					updateDelegueeMembership(event.diff.getOldValue().toString(),event.diff.getNewValue().toString()) ;
 					getViewer().refresh(user) ;
 					
@@ -296,37 +291,6 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 			
 			context.bindValue(SWTObservables.observeSelection(managerNameCombo), EMFObservables.observeValue(selectedUser,  OrganizationPackage.Literals.USER__MANAGER));
 			
-			for(Entry<EAttribute, Control> entry : generalWidgetMap.entrySet()){
-				EAttribute attributre = entry.getKey() ;
-				Control control =  entry.getValue() ;
-				if(!control.isDisposed()){
-					IObservableValue observableValue = EMFObservables.observeValue(selectedUser, attributre) ;
-					UpdateValueStrategy mandatoryStartegy = null;
-					if(attributre.equals(OrganizationPackage.Literals.USER__FIRST_NAME) ||
-							attributre.equals(OrganizationPackage.Literals.USER__LAST_NAME)){
-						observableValue.addValueChangeListener(new IValueChangeListener() {
-
-							@Override
-							public void handleValueChange(ValueChangeEvent event) {
-								getViewer().refresh(((EObjectObservableValue)event.getObservable()).getObserved()) ;
-							}
-						}) ;
-						mandatoryStartegy = new UpdateValueStrategy();
-						if(attributre.equals(OrganizationPackage.Literals.USER__FIRST_NAME)){
-							mandatoryStartegy.setAfterGetValidator(new EmptyInputValidator(Messages.firstName));
-						}else if( attributre.equals(OrganizationPackage.Literals.USER__LAST_NAME))  {
-							mandatoryStartegy.setAfterGetValidator(new EmptyInputValidator(Messages.lastName));
-						}
-
-					}
-					if(mandatoryStartegy != null){
-						ControlDecorationSupport.create(context.bindValue(SWTObservables.observeText(control,SWT.Modify), observableValue,mandatoryStartegy,null),SWT.LEFT) ;
-					}else{
-						context.bindValue(SWTObservables.observeText(control,SWT.Modify), observableValue);
-					}
-				}
-			}
-
 			if(selectedUser.getPersonalData() == null){
 				selectedUser.setPersonalData(OrganizationFactory.eINSTANCE.createContactData()) ;
 			}
