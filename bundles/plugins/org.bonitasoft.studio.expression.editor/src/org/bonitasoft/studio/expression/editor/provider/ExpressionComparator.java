@@ -28,7 +28,7 @@ public class ExpressionComparator implements Comparator<Expression> {
 
 	@Override
 	public int compare(Expression exp0, Expression exp1) {
-		if(exp0.getType().equals(exp1.getType()) && exp0.getName() != null){
+		if(exp0.getType().equals(exp1.getType()) && exp0.getName() != null && exp1.getName() != null){
 			return exp0.getName().compareTo(exp1.getName()) ;
 		}
 		

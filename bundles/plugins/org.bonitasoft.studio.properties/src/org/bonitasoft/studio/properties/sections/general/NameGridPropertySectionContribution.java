@@ -43,6 +43,7 @@ import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.Message;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.studio.model.process.SequenceFlow;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.LaneEditPart;
 import org.bonitasoft.studio.properties.i18n.Messages;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -230,7 +231,7 @@ public class NameGridPropertySectionContribution extends AbstractNamePropertySec
 		
 		labelTargetToModelUpdate.setAfterGetValidator(new UTF8InputValidator(Messages.name)) ;
 		List<IValidator> validators = new ArrayList<IValidator>();
-		validators.add(new InputLengthValidator(Messages.name,1, 50));
+		validators.add(new InputLengthValidator(Messages.name,element instanceof SequenceFlow ? 0 : 1,50));
 		MultiValidator multiValidation = new MultiValidator(validators);
 		labelTargetToModelUpdate.setBeforeSetValidator(multiValidation) ;
 		labelTargetToModelUpdate.setAfterConvertValidator(new SpecialCharactersValidator());
