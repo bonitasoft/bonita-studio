@@ -1159,14 +1159,8 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
         expressionEditor.setMandatoryField(label, context);
         this.mandatoryLabel = label;
         this.validationContext = context;
-<<<<<<< 6.2.x
     }
     
-}
-=======
-
-    }
 
 }
 
->>>>>>> af4d38f Fix table export in FromExporter
