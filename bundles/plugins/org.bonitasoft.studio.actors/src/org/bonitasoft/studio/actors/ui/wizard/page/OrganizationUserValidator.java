@@ -53,12 +53,12 @@ public class OrganizationUserValidator implements IValidator {
             if(u.getPassword() == null || u.getPassword().getValue() == null || u.getPassword().getValue().isEmpty()){
                 return ValidationStatus.error(Messages.bind(Messages.userPasswordMissing,u.getUserName()));
             }
-            if(u.getFirstName() == null || u.getFirstName().isEmpty()){
-                return ValidationStatus.error(Messages.bind(Messages.userFirstNameMissing,u.getUserName()));
-            }
-            if(u.getLastName() == null || u.getLastName().isEmpty()){
-                return ValidationStatus.error(Messages.bind(Messages.userLastNameMissing,u.getUserName()));
-            }
+//            if(u.getFirstName() == null || u.getFirstName().isEmpty()){
+//                return ValidationStatus.error(Messages.bind(Messages.userFirstNameMissing,u.getUserName()));
+//            }
+//            if(u.getLastName() == null || u.getLastName().isEmpty()){
+//                return ValidationStatus.error(Messages.bind(Messages.userLastNameMissing,u.getUserName()));
+//            }
 
             if(u.getManager() != null && !u.getManager().isEmpty()){
                 IStatus status = checkManagerCycles(organization,u);
