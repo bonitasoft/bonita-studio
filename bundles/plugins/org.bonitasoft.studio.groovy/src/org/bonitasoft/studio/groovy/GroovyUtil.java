@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import org.bonitasoft.engine.bpm.document.DocumentValue;
 import org.bonitasoft.engine.expression.ExpressionConstants;
 import org.bonitasoft.forms.server.api.IFormExpressionsAPI;
 import org.bonitasoft.forms.server.validator.AbstractFormValidator;
@@ -39,6 +40,7 @@ import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.form.Duplicable;
 import org.bonitasoft.studio.model.form.DynamicTable;
+import org.bonitasoft.studio.model.form.FileWidget;
 import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.form.FormField;
 import org.bonitasoft.studio.model.form.Group;
@@ -512,7 +514,9 @@ public class GroovyUtil {
 		if (widget instanceof Duplicable && ((Duplicable) widget).isDuplicate()) {
 			type = List.class.getName();
 		} else {
-			if (widget instanceof TextFormField
+			if (widget instanceof FileWidget){
+				type = DocumentValue.class.getName();
+			}else if (widget instanceof TextFormField
 					&& widget.getReturnTypeModifier() != null) {
 				type = widget.getReturnTypeModifier();
 			} else {
