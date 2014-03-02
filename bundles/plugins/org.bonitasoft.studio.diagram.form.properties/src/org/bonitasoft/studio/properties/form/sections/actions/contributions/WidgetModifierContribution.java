@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.common.emf.tools.WidgetHelper;
 import org.bonitasoft.studio.common.emf.tools.WidgetModifiersSwitch;
 import org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection;
 import org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution;
@@ -136,7 +137,7 @@ public class WidgetModifierContribution implements IExtensibleGridPropertySectio
         CompoundCommand cc = new CompoundCommand("Update widget modifier");
         List<Expression> allExpressionOfWidget = ModelHelper.getAllItemsOfType(ModelHelper.getParentForm(widget), ExpressionPackage.Literals.EXPRESSION);
         for(Expression exp : allExpressionOfWidget){
-            if(exp.getContent() != null && ("field_"+widget.getName()).equals(exp.getContent()) && ExpressionConstants.FORM_FIELD_TYPE.equals(exp.getType()) && !type.equals(exp.getReturnType())){
+            if(exp.getContent() != null && (WidgetHelper.FIELD_PREFIX+widget.getName()).equals(exp.getContent()) && ExpressionConstants.FORM_FIELD_TYPE.equals(exp.getType()) && !type.equals(exp.getReturnType())){
                 cc.append(SetCommand.create(editingDomain, exp, ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE, type));
             }
         }

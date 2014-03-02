@@ -123,7 +123,6 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
  */
 public class FormsExporter {
 
-    public static final String FIELD_IDENTIFIER = ExporterTools.FIELD_IDENTIFIER;
     private long timestamp;
 
     private String procDefid;

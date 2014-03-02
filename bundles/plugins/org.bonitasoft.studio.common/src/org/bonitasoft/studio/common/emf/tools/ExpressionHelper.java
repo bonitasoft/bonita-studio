@@ -99,8 +99,8 @@ public class ExpressionHelper {
         action.setLeftOperand(storageExpression) ;
 
         Expression actionExpression = ExpressionFactory.eINSTANCE.createExpression();
-        actionExpression.setContent("field_"+widget.getName()) ;
-        actionExpression.setName("field_"+widget.getName()) ;
+        actionExpression.setContent(WidgetHelper.FIELD_PREFIX+widget.getName()) ;
+        actionExpression.setName(WidgetHelper.FIELD_PREFIX+widget.getName()) ;
         actionExpression.setType(ExpressionConstants.FORM_FIELD_TYPE) ;
         actionExpression.setReturnType(ExpressionConstants.DOCUMENT_VALUE_RETURN_TYPE) ;
         actionExpression.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(widget)) ;

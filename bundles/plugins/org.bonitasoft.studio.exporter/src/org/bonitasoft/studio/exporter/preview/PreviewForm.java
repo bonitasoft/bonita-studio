@@ -42,6 +42,7 @@ import net.htmlparser.jericho.SourceFormatter;
 import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.common.emf.tools.WidgetHelper;
 import org.bonitasoft.studio.common.exporter.ExporterTools;
 import org.bonitasoft.studio.common.exporter.ExporterTools.TemplateType;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -1011,7 +1012,7 @@ public class PreviewForm {
 			if(w instanceof TextInfo ||w instanceof ImageWidget || (w instanceof FileWidget && ((FileWidget) w).isDownloadOnly()) ){
 				class_attr.append("static_field_");
 			}else{
-				class_attr.append("field_");
+				class_attr.append(WidgetHelper.FIELD_PREFIX);
 			}
 			switch (w.getLabelPosition()) {
 			case DOWN:

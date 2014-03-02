@@ -22,6 +22,7 @@ import java.util.Map;
 
 import org.bonitasoft.engine.bpm.document.DocumentValue;
 import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.common.emf.tools.WidgetHelper;
 import org.bonitasoft.studio.common.emf.tools.WidgetModifiersSwitch;
 import org.bonitasoft.studio.importer.bar.i18n.Messages;
 import org.bonitasoft.studio.migration.migrator.ReportCustomMigration;
@@ -143,7 +144,7 @@ public class WidgetMigration extends ReportCustomMigration {
 					if(eClassifier instanceof EClass){
 						EObject widgetInstance = FormFactory.eINSTANCE.create((EClass) eClassifier);
 						if(widgetInstance instanceof Widget){
-							return ((Widget) widgetInstance).getAssociatedReturnType();
+							return WidgetHelper.getAssociatedReturnType(((Widget) widgetInstance));
 						}
 					}
 					return String.class.getName();
