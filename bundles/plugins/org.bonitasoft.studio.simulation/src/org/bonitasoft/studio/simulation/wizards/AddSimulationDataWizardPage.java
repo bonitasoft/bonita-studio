@@ -26,8 +26,10 @@ import java.util.Set;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.databinding.BonitaNumberFormat;
+import org.bonitasoft.studio.common.databinding.MultiValidator;
 import org.bonitasoft.studio.common.databinding.WrappingValidator;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.common.jface.databinding.validator.GroovyReferenceValidator;
 import org.bonitasoft.studio.common.properties.DynamicAddRemoveLineComposite;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
@@ -180,7 +182,7 @@ public class AddSimulationDataWizardPage extends WizardPage {
 
 
     private String generateDataName() {
-        return Messages.Data + (ModelHelper.getAllItemsOfType(ModelHelper.getParentProcess(element), SimulationPackage.eINSTANCE.getSimulationData()).size()+1);
+        return Messages.Data.toLowerCase() + (ModelHelper.getAllItemsOfType(ModelHelper.getParentProcess(element), SimulationPackage.eINSTANCE.getSimulationData()).size()+1);
     }
 
     /* (non-Javadoc)
@@ -536,8 +538,9 @@ public class AddSimulationDataWizardPage extends WizardPage {
         final Text labelText = new Text(composite, SWT.BORDER);
         labelText.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
 
+        MultiValidator multiValidator = new MultiValidator();
         // Add an validator so that age can only be a number
-        IValidator validator = new IValidator() {
+        multiValidator.addValidator(new IValidator() {
 
             Set<String> existingDataNames = null;
 
@@ -559,9 +562,10 @@ public class AddSimulationDataWizardPage extends WizardPage {
                 return ValidationStatus.ok();
             }
 
-        };
+        });
+        multiValidator.addValidator(new GroovyReferenceValidator(Messages.name, true, true));
         UpdateValueStrategy strategy = new UpdateValueStrategy();
-        strategy.setBeforeSetValidator(validator);
+        strategy.setBeforeSetValidator(multiValidator);
 
         Binding bindingDataName = context.bindValue(SWTObservables.observeText(labelText,
                 SWT.Modify), PojoObservables.observeValue(this, "dataName"), strategy, null);
@@ -679,12 +683,6 @@ public class AddSimulationDataWizardPage extends WizardPage {
 
     @Override
     public boolean isPageComplete() {
-        if(getDataName() == null || getDataName().trim().length() == 0){
-            setErrorMessage(Messages.AddSimulationDataWizardPage_Error_EmptyName) ;
-            return false ;
-        }
-
-
         if(!isExpressionBased()){
             if(SimulationPackage.eINSTANCE.getSimulationLiteralData().equals(dataClass)){
                 double total = 0 ;
