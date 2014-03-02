@@ -36,6 +36,7 @@ import org.bonitasoft.studio.common.Pair;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.gmf.tools.GMFTools;
+import org.bonitasoft.studio.common.jface.databinding.validator.URLEncodableInputValidator;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfigurationFactory;
@@ -232,7 +233,11 @@ public class ProcBuilder implements IProcBuilder {
 				if (diagram != null) {
 					diagramResource.getContents().add(diagram);
 					diagram.setName(id);
-					diagramModel.setName(NamingUtils.convertToId(name)) ;
+					if(!new URLEncodableInputValidator("").validate(name).isOK()){
+					    diagramModel.setName(NamingUtils.convertToId(name)) ;
+					}else{
+					    diagramModel.setName(name) ;
+					}
 					diagramModel.setVersion(version) ;
 					diagramModel.setBonitaModelVersion("5.5") ;
 					diagramModel.setBonitaVersion("5.5") ;
