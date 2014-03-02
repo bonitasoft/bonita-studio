@@ -21,6 +21,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import org.bonitasoft.engine.bpm.document.DocumentValue;
 import org.bonitasoft.engine.expression.Expression;
 import org.bonitasoft.engine.expression.ExpressionBuilder;
 import org.bonitasoft.engine.expression.ExpressionType;
@@ -49,6 +50,7 @@ import org.bonitasoft.studio.model.expression.ListExpression;
 import org.bonitasoft.studio.model.expression.Operation;
 import org.bonitasoft.studio.model.expression.TableExpression;
 import org.bonitasoft.studio.model.form.Duplicable;
+import org.bonitasoft.studio.model.form.FileWidget;
 import org.bonitasoft.studio.model.form.TextFormField;
 import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.parameter.Parameter;
@@ -172,7 +174,9 @@ public class EngineExpressionUtil {
 		if(element instanceof Duplicable && (((Duplicable)element).isDuplicate())){
 			exp.setReturnType(List.class.getName());
 		}else{
-			if(element instanceof TextFormField && element.getReturnTypeModifier() != null){
+			if(element instanceof FileWidget){
+				exp.setReturnType(DocumentValue.class.getName());
+			}else if(element instanceof TextFormField && element.getReturnTypeModifier() != null){
 				exp.setReturnType(element.getReturnTypeModifier());
 			}else{
 				exp.setReturnType(element.getAssociatedReturnType());

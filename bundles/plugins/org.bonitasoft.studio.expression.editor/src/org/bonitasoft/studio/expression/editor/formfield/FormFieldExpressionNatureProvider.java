@@ -20,11 +20,13 @@ package org.bonitasoft.studio.expression.editor.formfield;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bonitasoft.engine.bpm.document.DocumentValue;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionNatureProvider;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
+import org.bonitasoft.studio.model.form.FileWidget;
 import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.form.FormField;
 import org.bonitasoft.studio.model.form.NextFormButton;
@@ -132,8 +134,11 @@ IExpressionNatureProvider {
 		exp.setType(getExpressionType()) ;
 		exp.setContent("field_"+w.getName()) ;
 		exp.setName("field_"+w.getName()) ;
+	
 		if(w.getReturnTypeModifier() != null ){
 			exp.setReturnType(w.getReturnTypeModifier()) ;
+		}else if(w instanceof FileWidget){
+			exp.setReturnType(DocumentValue.class.getName()) ;
 		}else{
 			exp.setReturnType(w.getAssociatedReturnType()) ;
 		}
