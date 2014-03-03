@@ -7753,7 +7753,10 @@
       </changes>
     </changes>
   </releases>
-  <releases>
+  <releases date="2014-02-17T16:36:39.611+0100" label="6.2.4-001">
+    <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.custom.migration.DependenciesCopyCustomMigration"/>
+  </releases>
+  <releases date="2014-02-23T16:36:39.611+0100" label="6.3.0-001">
     <changes xsi:type="history:OperationChange">
       <changes xsi:type="history:Create" target="process.ecore#/" referenceName="eClassifiers"
           element="process.ecore#//BusinessObjectData">
@@ -7889,5 +7892,7 @@
         </parameters>
       </operation>
     </changes>
+    <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.custom.migration.BusinessObjectTypeCustomMigration"/>
   </releases>
+  <releases/>
 </history:History>

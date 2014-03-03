@@ -20,10 +20,8 @@ package org.bonitasoft.studio.common;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
@@ -74,7 +72,6 @@ public class NamingUtils {
 	private static final String VERSION_SEPARATOR = "-";
 	private static final String UTF8 = "UTF-8";
 	private MainProcess process;
-	private static Map<MainProcess, NamingUtils> instances = new HashMap<MainProcess, NamingUtils>();
 
 	private NamingUtils(MainProcess process) {
 		this.process = process;
@@ -86,13 +83,6 @@ public class NamingUtils {
 
 	public static NamingUtils getInstance(Element element) {
 		MainProcess process = ModelHelper.getMainProcess(element);
-		//        NamingUtils instance = null;
-		//        if (!instances.containsKey(process)) {
-		//            instance = new NamingUtils(process);
-		//            instances.put(process, instance);
-		//        } else {
-		//            instance = instances.get(process);
-		//        }
 		if(process != null){
 			return new NamingUtils(process);
 		}
@@ -120,14 +110,11 @@ public class NamingUtils {
 	public String generateName(Element newItem, Element existingItem) {
 		Adapter adapter = new ProcessItemProviderAdapterFactory().createAdapter(newItem);
 		ItemProviderAdapter itemProvider = (ItemProviderAdapter) adapter;
-		String dfgdfgdfgfdg = null;
+		String defaultName = getDefaultNameFor(newItem);
 		// the container of the newItem (where we search for the number max)
 		EObject mainContainer;
-
-		dfgdfgdfgfdg = getDefaultNameFor(newItem);
-
-		if (dfgdfgdfgfdg == null) {
-			dfgdfgdfgfdg = itemProvider.getText(newItem);
+		if (defaultName == null) {
+			defaultName = itemProvider.getText(newItem);
 		}
 		if (newItem instanceof Widget) {
 			if (existingItem instanceof PageFlow || existingItem instanceof ViewPageFlow) {
@@ -158,13 +145,13 @@ public class NamingUtils {
 		}
 
 		if(mainContainer != null){
-			int number = getMaxElements((Element) mainContainer, dfgdfgdfgfdg);
+			int number = getMaxElements((Element) mainContainer, defaultName);
 			number++;
-			dfgdfgdfgfdg += number;
+			defaultName += number;
 		}
-		newItem.setName(dfgdfgdfgfdg);
+		newItem.setName(defaultName);
 
-		return dfgdfgdfgfdg;
+		return defaultName;
 	}
 
 	/**
