@@ -89,7 +89,7 @@ Expression_Boolean:
 	value = BOOLEAN
 ;
 terminal UTF8_CHARACTERS : ('\u00C0'..'\uFEFF');
-terminal ID: ('a'..'z'|'A'..'Z'|'_'|UTF8_CHARACTERS) ('a'..'z'|'A'..'Z'|'_'|'0'..'9'|UTF8_CHARACTERS)*;
+
 terminal WS:
 	 (' '|'\t'|'\r'|'\n')+
 ;
@@ -98,5 +98,6 @@ terminal BOOLEAN returns ecore::EBoolean: 'true' | 'false';
 terminal DATE returns ecore::EDate: "'" (!"'")* "'";
 terminal LONG returns ecore::ELong : ('-')?('0'..'9')+;
 terminal DOUBLE returns ecore::EDouble: ('-')?INT'.'INT;
+terminal ID: ('a'..'z'|'A'..'Z'|'_'|UTF8_CHARACTERS) ('a'..'z'|'A'..'Z'|'_'|'0'..'9'|UTF8_CHARACTERS)*;
 
 
