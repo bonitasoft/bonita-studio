@@ -1042,6 +1042,10 @@ ruleExpression_Boolean returns [EObject current=null]
 
 
 
+RULE_UTF8_CHARACTERS : '\u00C0'..'\uFEFF';
+
+RULE_ID : ('a'..'z'|'A'..'Z'|'_'|RULE_UTF8_CHARACTERS) ('a'..'z'|'A'..'Z'|'_'|'0'..'9'|RULE_UTF8_CHARACTERS)*;
+
 RULE_WS : (' '|'\t'|'\r'|'\n')+;
 
 RULE_BOOLEAN : ('true'|'false');
@@ -1051,8 +1055,6 @@ RULE_DATE : '\'' ~('\'')* '\'';
 RULE_LONG : '-'? ('0'..'9')+;
 
 RULE_DOUBLE : '-'? RULE_INT '.' RULE_INT;
-
-RULE_ID : '^'? ('a'..'z'|'A'..'Z'|'_') ('a'..'z'|'A'..'Z'|'_'|'0'..'9')*;
 
 RULE_INT : ('0'..'9')+;
 

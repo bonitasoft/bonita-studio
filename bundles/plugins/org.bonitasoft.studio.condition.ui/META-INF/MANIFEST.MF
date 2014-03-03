@@ -30,5 +30,6 @@ Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: org.bonitasoft.studio.condition.ui.contentassist,
  org.bonitasoft.studio.condition.ui.contentassist.antlr,
  org.bonitasoft.studio.condition.ui.expression,
- org.bonitasoft.studio.condition.ui.internal
+ org.bonitasoft.studio.condition.ui.internal,
+ org.bonitasoft.studio.condition.ui.quickfix
 Bundle-Activator: org.bonitasoft.studio.condition.ui.internal.ConditionModelActivator
