@@ -17,12 +17,11 @@
  */
 package org.bonitasoft.studio.common.gmf.tools;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
-import org.bonitasoft.studio.model.form.FormButton;
-import org.bonitasoft.studio.model.form.FormPackage;
 import org.bonitasoft.studio.model.form.Info;
 import org.bonitasoft.studio.model.process.ANDGateway;
 import org.bonitasoft.studio.model.process.CatchLinkEvent;
@@ -144,21 +143,13 @@ public final class CopyEObjectFeaturesCommand extends AbstractTransactionalComma
                         targetElement.eSet(feature, sourceElement.eGet(feature));
                     }
                 } else if (feature instanceof EAttribute) {
-                    /*Object value = sourceElement.eGet(feature);
-				if (value instanceof EList) {
-					EList sourceList = (EList)value;
-					EList destList = (EList)targetElement.eGet(feature);
-					for (Object item : sourceList) {
-						if (item instanceof EReference) {
-							EReference reference = (EReference)item;
-						} else {
-							sourceList.remove(item);
-							destList.add(item);
-						}
-					}
-				} else {*/
                     targetElement.eSet(feature, sourceElement.eGet(feature));
-                    //}
+                }
+            }else{//unset other features
+                if(feature.isMany()){
+                    sourceElement.eSet(feature, Collections.emptyList());
+                }else{
+                    sourceElement.eSet(feature, feature.getDefaultValue());
                 }
             }
         }
