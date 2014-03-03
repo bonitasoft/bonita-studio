@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2011 BonitaSoft S.A.
- * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2011-2014 Bonitasoft S.A.
+ * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,6 +28,7 @@ import org.eclipse.draw2d.Viewport;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
@@ -97,7 +98,8 @@ public abstract class BonitaTreeViewer extends AbstractEditPartViewer implements
 
         @Override
         public String getText(Object object) {
-            if(((EObject)object).eContainingFeature() != null && ((EObject)object).eContainingFeature().equals(ProcessPackage.eINSTANCE.getAssignable_Filters())){
+            final EStructuralFeature eContainingFeature = ((EObject)object).eContainingFeature();
+			if(eContainingFeature != null && eContainingFeature.equals(ProcessPackage.eINSTANCE.getAssignable_Filters())){
                 return "Filter "+((Element) object).getName() ;
             }
             if (object instanceof Element){
@@ -136,14 +138,7 @@ public abstract class BonitaTreeViewer extends AbstractEditPartViewer implements
         mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(5, 10).create());
         mainComposite.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
-        PatternFilter filter = new SearchPatternFilter() ;
-        filter.setIncludeLeadingWildcard(true) ;
-        filteredTree = new FilteredTree(mainComposite, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL,filter,true);
-        final TreeViewer treeViewer = filteredTree.getViewer();
-		treeViewer.getTree().setData(SWTBOT_WIDGET_ID_KEY, BONITA_OVERVIEW_TREE_ID);
-        filteredTree.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        filteredTree.getFilterControl().setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
-        filteredTree.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
+        final TreeViewer treeViewer = createFilteredTree(mainComposite);
 
         treeViewer.setLabelProvider(adapterFactoryLabelProvider);
         treeViewer.setContentProvider(adapterFactoryContentProvider) ;
@@ -161,6 +156,19 @@ public abstract class BonitaTreeViewer extends AbstractEditPartViewer implements
         setControl(mainComposite);
         return mainComposite;
     }
+
+
+	private TreeViewer createFilteredTree(final Composite mainComposite) {
+		PatternFilter filter = new SearchPatternFilter() ;
+        filter.setIncludeLeadingWildcard(true) ;
+        filteredTree = new FilteredTree(mainComposite, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL,filter,true);
+        final TreeViewer treeViewer = filteredTree.getViewer();
+		treeViewer.getTree().setData(SWTBOT_WIDGET_ID_KEY, BONITA_OVERVIEW_TREE_ID);
+        filteredTree.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        filteredTree.getFilterControl().setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
+        filteredTree.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
+		return treeViewer;
+	}
 
 
 	private void addFilters(final TreeViewer treeViewer) {
