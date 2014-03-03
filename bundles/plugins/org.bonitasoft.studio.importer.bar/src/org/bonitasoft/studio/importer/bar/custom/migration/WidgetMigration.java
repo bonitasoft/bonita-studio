@@ -380,7 +380,9 @@ public class WidgetMigration extends ReportCustomMigration {
 					}
 				}
 				expression.set("returnType", StringToExpressionConverter.getDataReturnType(data));
-				if(getParentPageFlow(widget).instanceOf("process.Pool")){
+				String dataName = expression.get("name");
+                Instance parentPageFlow = getParentPageFlow(widget);
+                if(!isPageFlowData(dataName,parentPageFlow) && parentPageFlow.instanceOf("process.Pool")){
 					model.delete(expression);
 					widget.set("inputExpression", StringToExpressionConverter.createExpressionInstance(model, "", "", String.class.getName(), ExpressionConstants.CONSTANT_TYPE, false));
 					addReportChange((String) widget.get("name"),widget.getEClass().getName(), widget.getUuid(), Messages.widgetDataInputAtProcessLevelMigrationDescription, Messages.dataProperty, IStatus.ERROR);
@@ -401,6 +403,17 @@ public class WidgetMigration extends ReportCustomMigration {
 		widget.set("inputExpression", expression);
 	}
 
+    protected boolean isPageFlowData(String dataName, Instance parentPageFlow) {
+        List<Instance> transientData = parentPageFlow.get("transientData");
+        for(Instance data : transientData){
+            String name = data.get("name");
+            if(dataName.equals(name)){
+                return true;
+            }
+        }
+        return false;
+    }
+	
 	private Instance createWidgetOutput(Model model,Instance connector) {
 		Instance output = model.newInstance("expression.Operation");
 		Instance expression = model.newInstance("expression.Expression");
