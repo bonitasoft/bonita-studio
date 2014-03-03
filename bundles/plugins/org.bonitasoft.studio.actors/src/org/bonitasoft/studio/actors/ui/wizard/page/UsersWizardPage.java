@@ -291,6 +291,27 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 			
 			context.bindValue(SWTObservables.observeSelection(managerNameCombo), EMFObservables.observeValue(selectedUser,  OrganizationPackage.Literals.USER__MANAGER));
 			
+			for(Entry<EAttribute, Control> entry : generalWidgetMap.entrySet()){
+				EAttribute attributre = entry.getKey() ;
+				Control control =  entry.getValue() ;
+				if(!control.isDisposed()){
+					IObservableValue observableValue = EMFObservables.observeValue(selectedUser, attributre) ;
+					if(attributre.equals(OrganizationPackage.Literals.USER__FIRST_NAME) ||
+							attributre.equals(OrganizationPackage.Literals.USER__LAST_NAME)){
+						observableValue.addValueChangeListener(new IValueChangeListener() {
+
+							@Override
+							public void handleValueChange(ValueChangeEvent event) {
+								getViewer().refresh(((EObjectObservableValue)event.getObservable()).getObserved()) ;
+							}
+						}) ;
+					}
+				
+					context.bindValue(SWTObservables.observeText(control,SWT.Modify), observableValue);
+					
+				}
+			}
+
 			if(selectedUser.getPersonalData() == null){
 				selectedUser.setPersonalData(OrganizationFactory.eINSTANCE.createContactData()) ;
 			}
