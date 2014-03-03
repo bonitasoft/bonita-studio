@@ -210,88 +210,27 @@ public class InternalConditionModelLexer extends Lexer {
     }
     // $ANTLR end "RULE_UTF8_CHARACTERS"
 
-    // $ANTLR start "RULE_ID"
-    public final void mRULE_ID() throws RecognitionException {
-        try {
-            int _type = RULE_ID;
-            int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../org.bonitasoft.studio.condition.ui/src-gen/org/bonitasoft/studio/condition/ui/contentassist/antlr/internal/InternalConditionModel.g:2284:9: ( ( 'a' .. 'z' | 'A' .. 'Z' | '_' | RULE_UTF8_CHARACTERS ) ( 'a' .. 'z' | 'A' .. 'Z' | '_' | '0' .. '9' | RULE_UTF8_CHARACTERS )* )
-            // ../org.bonitasoft.studio.condition.ui/src-gen/org/bonitasoft/studio/condition/ui/contentassist/antlr/internal/InternalConditionModel.g:2284:11: ( 'a' .. 'z' | 'A' .. 'Z' | '_' | RULE_UTF8_CHARACTERS ) ( 'a' .. 'z' | 'A' .. 'Z' | '_' | '0' .. '9' | RULE_UTF8_CHARACTERS )*
-            {
-            if ( (input.LA(1)>='A' && input.LA(1)<='Z')||input.LA(1)=='_'||(input.LA(1)>='a' && input.LA(1)<='z')||(input.LA(1)>='\u00C0' && input.LA(1)<='\uFEFF') ) {
-                input.consume();
-
-            }
-            else {
-                MismatchedSetException mse = new MismatchedSetException(null,input);
-                recover(mse);
-                throw mse;}
-
-            // ../org.bonitasoft.studio.condition.ui/src-gen/org/bonitasoft/studio/condition/ui/contentassist/antlr/internal/InternalConditionModel.g:2284:56: ( 'a' .. 'z' | 'A' .. 'Z' | '_' | '0' .. '9' | RULE_UTF8_CHARACTERS )*
-            loop1:
-            do {
-                int alt1=2;
-                int LA1_0 = input.LA(1);
-
-                if ( ((LA1_0>='0' && LA1_0<='9')||(LA1_0>='A' && LA1_0<='Z')||LA1_0=='_'||(LA1_0>='a' && LA1_0<='z')||(LA1_0>='\u00C0' && LA1_0<='\uFEFF')) ) {
-                    alt1=1;
-                }
-
-
-                switch (alt1) {
-            	case 1 :
-            	    // ../org.bonitasoft.studio.condition.ui/src-gen/org/bonitasoft/studio/condition/ui/contentassist/antlr/internal/InternalConditionModel.g:
-            	    {
-            	    if ( (input.LA(1)>='0' && input.LA(1)<='9')||(input.LA(1)>='A' && input.LA(1)<='Z')||input.LA(1)=='_'||(input.LA(1)>='a' && input.LA(1)<='z')||(input.LA(1)>='\u00C0' && input.LA(1)<='\uFEFF') ) {
-            	        input.consume();
-
-            	    }
-            	    else {
-            	        MismatchedSetException mse = new MismatchedSetException(null,input);
-            	        recover(mse);
-            	        throw mse;}
-
-
-            	    }
-            	    break;
-
-            	default :
-            	    break loop1;
-                }
-            } while (true);
-
-
-            }
-
-            state.type = _type;
-            state.channel = _channel;
-        }
-        finally {
-        }
-    }
-    // $ANTLR end "RULE_ID"
-
     // $ANTLR start "RULE_WS"
     public final void mRULE_WS() throws RecognitionException {
         try {
             int _type = RULE_WS;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../org.bonitasoft.studio.condition.ui/src-gen/org/bonitasoft/studio/condition/ui/contentassist/antlr/internal/InternalConditionModel.g:2286:9: ( ( ' ' | '\\t' | '\\r' | '\\n' )+ )
-            // ../org.bonitasoft.studio.condition.ui/src-gen/org/bonitasoft/studio/condition/ui/contentassist/antlr/internal/InternalConditionModel.g:2286:11: ( ' ' | '\\t' | '\\r' | '\\n' )+
+            // ../org.bonitasoft.studio.condition.ui/src-gen/org/bonitasoft/studio/condition/ui/contentassist/antlr/internal/InternalConditionModel.g:2284:9: ( ( ' ' | '\\t' | '\\r' | '\\n' )+ )
+            // ../org.bonitasoft.studio.condition.ui/src-gen/org/bonitasoft/studio/condition/ui/contentassist/antlr/internal/InternalConditionModel.g:2284:11: ( ' ' | '\\t' | '\\r' | '\\n' )+
             {
-            // ../org.bonitasoft.studio.condition.ui/src-gen/org/bonitasoft/studio/condition/ui/contentassist/antlr/internal/InternalConditionModel.g:2286:11: ( ' ' | '\\t' | '\\r' | '\\n' )+
-            int cnt2=0;
-            loop2:
+            // ../org.bonitasoft.studio.condition.ui/src-gen/org/bonitasoft/studio/condition/ui/contentassist/antlr/internal/InternalConditionModel.g:2284:11: ( ' ' | '\\t' | '\\r' | '\\n' )+
+            int cnt1=0;
+            loop1:
             do {
-                int alt2=2;
-                int LA2_0 = input.LA(1);
+                int alt1=2;
+                int LA1_0 = input.LA(1);
 
-                if ( ((LA2_0>='\t' && LA2_0<='\n')||LA2_0=='\r'||LA2_0==' ') ) {
-                    alt2=1;
+                if ( ((LA1_0>='\t' && LA1_0<='\n')||LA1_0=='\r'||LA1_0==' ') ) {
+                    alt1=1;
                 }
 
 
-                switch (alt2) {
+                switch (alt1) {
             	case 1 :
             	    // ../org.bonitasoft.studio.condition.ui/src-gen/org/bonitasoft/studio/condition/ui/contentassist/antlr/internal/InternalConditionModel.g:
             	    {
@@ -309,12 +248,12 @@ public class InternalConditionModelLexer extends Lexer {
             	    break;
 
             	default :
-            	    if ( cnt2 >= 1 ) break loop2;
+            	    if ( cnt1 >= 1 ) break loop1;
                         EarlyExitException eee =
-                            new EarlyExitException(2, input);
+                            new EarlyExitException(1, input);
                         throw eee;
                 }
-                cnt2++;
+                cnt1++;
             } while (true);
 
 
@@ -333,28 +272,28 @@ public class InternalConditionModelLexer extends Lexer {
         try {
             int _type = RULE_BOOLEAN;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../org.bonitasoft.studio.condition.ui/src-gen/org/bonitasoft/studio/condition/ui/contentassist/antlr/internal/InternalConditionModel.g:2288:14: ( ( 'true' | 'false' ) )
-            // ../org.bonitasoft.studio.condition.ui/src-gen/org/bonitasoft/studio/condition/ui/contentassist/antlr/internal/InternalConditionModel.g:2288:16: ( 'true' | 'false' )
+            // ../org.bonitasoft.studio.condition.ui/src-gen/org/bonitasoft/studio/condition/ui/contentassist/antlr/internal/InternalConditionModel.g:2286:14: ( ( 'true' | 'false' ) )
+            // ../org.bonitasoft.studio.condition.ui/src-gen/org/bonitasoft/studio/condition/ui/contentassist/antlr/internal/InternalConditionModel.g:2286:16: ( 'true' | 'false' )
             {
-            // ../org.bonitasoft.studio.condition.ui/src-gen/org/bonitasoft/studio/condition/ui/contentassist/antlr/internal/InternalConditionModel.g:2288:16: ( 'true' | 'false' )
-            int alt3=2;
-            int LA3_0 = input.LA(1);
+            // ../org.bonitasoft.studio.condition.ui/src-gen/org/bonitasoft/studio/condition/ui/contentassist/antlr/internal/InternalConditionModel.g:2286:16: ( 'true' | 'false' )
+            int alt2=2;
+            int LA2_0 = input.LA(1);
 
-            if ( (LA3_0=='t') ) {
-                alt3=1;
+            if ( (LA2_0=='t') ) {
+                alt2=1;
             }
-            else if ( (LA3_0=='f') ) {
-                alt3=2;
+            else if ( (LA2_0=='f') ) {
+                alt2=2;
             }
             else {
                 NoViableAltException nvae =
-                    new NoViableAltException("", 3, 0, input);
+                    new NoViableAltException("", 2, 0, input);
 
                 throw nvae;
             }
-            switch (alt3) {
+            switch (alt2) {
                 case 1 :
-                    // ../org.bonitasoft.studio.condition.ui/src-gen/org/bonitasoft/studio/condition/ui/contentassist/antlr/internal/InternalConditionModel.g:2288:17: 'true'
+                    // ../org.bonitasoft.studio.condition.ui/src-gen/org/bonitasoft/studio/condition/ui/contentassist/antlr/internal/InternalConditionModel.g:2286:17: 'true'
                     {
                     match("true"); 
 
@@ -362,7 +301,7 @@ public class InternalConditionModelLexer extends Lexer {
                     }
                     break;
                 case 2 :
-                    // ../org.bonitasoft.studio.condition.ui/src-gen/org/bonitasoft/studio/condition/ui/contentassist/antlr/internal/InternalConditionModel.g:2288:24: 'false'
+                    // ../org.bonitasoft.studio.condition.ui/src-gen/org/bonitasoft/studio/condition/ui/contentassist/antlr/internal/InternalConditionModel.g:2286:24: 'false'
                     {
                     match("false"); 
 
@@ -388,24 +327,24 @@ public class InternalConditionModelLexer extends Lexer {
         try {
             int _type = RULE_DATE;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../org.bonitasoft.studio.condition.ui/src-gen/org/bonitasoft/studio/condition/ui/contentassist/antlr/internal/InternalConditionModel.g:2290:11: ( '\\'' (~ ( '\\'' ) )* '\\'' )
-            // ../org.bonitasoft.studio.condition.ui/src-gen/org/bonitasoft/studio/condition/ui/contentassist/antlr/internal/InternalConditionModel.g:2290:13: '\\'' (~ ( '\\'' ) )* '\\''
+            // ../org.bonitasoft.studio.condition.ui/src-gen/org/bonitasoft/studio/condition/ui/contentassist/antlr/internal/InternalConditionModel.g:2288:11: ( '\\'' (~ ( '\\'' ) )* '\\'' )
+            // ../org.bonitasoft.studio.condition.ui/src-gen/org/bonitasoft/studio/condition/ui/contentassist/antlr/internal/InternalConditionModel.g:2288:13: '\\'' (~ ( '\\'' ) )* '\\''
             {
             match('\''); 
-            // ../org.bonitasoft.studio.condition.ui/src-gen/org/bonitasoft/studio/condition/ui/contentassist/antlr/internal/InternalConditionModel.g:2290:18: (~ ( '\\'' ) )*
-            loop4:
+            // ../org.bonitasoft.studio.condition.ui/src-gen/org/bonitasoft/studio/condition/ui/contentassist/antlr/internal/InternalConditionModel.g:2288:18: (~ ( '\\'' ) )*
+            loop3:
             do {
-                int alt4=2;
-                int LA4_0 = input.LA(1);
+                int alt3=2;
+                int LA3_0 = input.LA(1);
 
-                if ( ((LA4_0>='\u0000' && LA4_0<='&')||(LA4_0>='(' && LA4_0<='\uFFFF')) ) {
-                    alt4=1;
+                if ( ((LA3_0>='\u0000' && LA3_0<='&')||(LA3_0>='(' && LA3_0<='\uFFFF')) ) {
+                    alt3=1;
                 }
 
 
-                switch (alt4) {
+                switch (alt3) {
             	case 1 :
-            	    // ../org.bonitasoft.studio.condition.ui/src-gen/org/bonitasoft/studio/condition/ui/contentassist/antlr/internal/InternalConditionModel.g:2290:18: ~ ( '\\'' )
+            	    // ../org.bonitasoft.studio.condition.ui/src-gen/org/bonitasoft/studio/condition/ui/contentassist/antlr/internal/InternalConditionModel.g:2288:18: ~ ( '\\'' )
             	    {
             	    if ( (input.LA(1)>='\u0000' && input.LA(1)<='&')||(input.LA(1)>='(' && input.LA(1)<='\uFFFF') ) {
             	        input.consume();
@@ -421,7 +360,7 @@ public class InternalConditionModelLexer extends Lexer {
             	    break;
 
             	default :
-            	    break loop4;
+            	    break loop3;
                 }
             } while (true);
 
@@ -442,19 +381,19 @@ public class InternalConditionModelLexer extends Lexer {
         try {
             int _type = RULE_LONG;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../org.bonitasoft.studio.condition.ui/src-gen/org/bonitasoft/studio/condition/ui/contentassist/antlr/internal/InternalConditionModel.g:2292:11: ( ( '-' )? ( '0' .. '9' )+ )
-            // ../org.bonitasoft.studio.condition.ui/src-gen/org/bonitasoft/studio/condition/ui/contentassist/antlr/internal/InternalConditionModel.g:2292:13: ( '-' )? ( '0' .. '9' )+
+            // ../org.bonitasoft.studio.condition.ui/src-gen/org/bonitasoft/studio/condition/ui/contentassist/antlr/internal/InternalConditionModel.g:2290:11: ( ( '-' )? ( '0' .. '9' )+ )
+            // ../org.bonitasoft.studio.condition.ui/src-gen/org/bonitasoft/studio/condition/ui/contentassist/antlr/internal/InternalConditionModel.g:2290:13: ( '-' )? ( '0' .. '9' )+
             {
-            // ../org.bonitasoft.studio.condition.ui/src-gen/org/bonitasoft/studio/condition/ui/contentassist/antlr/internal/InternalConditionModel.g:2292:13: ( '-' )?
-            int alt5=2;
-            int LA5_0 = input.LA(1);
+            // ../org.bonitasoft.studio.condition.ui/src-gen/org/bonitasoft/studio/condition/ui/contentassist/antlr/internal/InternalConditionModel.g:2290:13: ( '-' )?
+            int alt4=2;
+            int LA4_0 = input.LA(1);
 
-            if ( (LA5_0=='-') ) {
-                alt5=1;
+            if ( (LA4_0=='-') ) {
+                alt4=1;
             }
-            switch (alt5) {
+            switch (alt4) {
                 case 1 :
-                    // ../org.bonitasoft.studio.condition.ui/src-gen/org/bonitasoft/studio/condition/ui/contentassist/antlr/internal/InternalConditionModel.g:2292:13: '-'
+                    // ../org.bonitasoft.studio.condition.ui/src-gen/org/bonitasoft/studio/condition/ui/contentassist/antlr/internal/InternalConditionModel.g:2290:13: '-'
                     {
                     match('-'); 
 
@@ -463,21 +402,21 @@ public class InternalConditionModelLexer extends Lexer {
 
             }
 
-            // ../org.bonitasoft.studio.condition.ui/src-gen/org/bonitasoft/studio/condition/ui/contentassist/antlr/internal/InternalConditionModel.g:2292:18: ( '0' .. '9' )+
-            int cnt6=0;
-            loop6:
+            // ../org.bonitasoft.studio.condition.ui/src-gen/org/bonitasoft/studio/condition/ui/contentassist/antlr/internal/InternalConditionModel.g:2290:18: ( '0' .. '9' )+
+            int cnt5=0;
+            loop5:
             do {
-                int alt6=2;
-                int LA6_0 = input.LA(1);
+                int alt5=2;
+                int LA5_0 = input.LA(1);
 
-                if ( ((LA6_0>='0' && LA6_0<='9')) ) {
-                    alt6=1;
+                if ( ((LA5_0>='0' && LA5_0<='9')) ) {
+                    alt5=1;
                 }
 
 
-                switch (alt6) {
+                switch (alt5) {
             	case 1 :
-            	    // ../org.bonitasoft.studio.condition.ui/src-gen/org/bonitasoft/studio/condition/ui/contentassist/antlr/internal/InternalConditionModel.g:2292:19: '0' .. '9'
+            	    // ../org.bonitasoft.studio.condition.ui/src-gen/org/bonitasoft/studio/condition/ui/contentassist/antlr/internal/InternalConditionModel.g:2290:19: '0' .. '9'
             	    {
             	    matchRange('0','9'); 
 
@@ -485,12 +424,12 @@ public class InternalConditionModelLexer extends Lexer {
             	    break;
 
             	default :
-            	    if ( cnt6 >= 1 ) break loop6;
+            	    if ( cnt5 >= 1 ) break loop5;
                         EarlyExitException eee =
-                            new EarlyExitException(6, input);
+                            new EarlyExitException(5, input);
                         throw eee;
                 }
-                cnt6++;
+                cnt5++;
             } while (true);
 
 
@@ -509,19 +448,19 @@ public class InternalConditionModelLexer extends Lexer {
         try {
             int _type = RULE_DOUBLE;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../org.bonitasoft.studio.condition.ui/src-gen/org/bonitasoft/studio/condition/ui/contentassist/antlr/internal/InternalConditionModel.g:2294:13: ( ( '-' )? RULE_INT '.' RULE_INT )
-            // ../org.bonitasoft.studio.condition.ui/src-gen/org/bonitasoft/studio/condition/ui/contentassist/antlr/internal/InternalConditionModel.g:2294:15: ( '-' )? RULE_INT '.' RULE_INT
+            // ../org.bonitasoft.studio.condition.ui/src-gen/org/bonitasoft/studio/condition/ui/contentassist/antlr/internal/InternalConditionModel.g:2292:13: ( ( '-' )? RULE_INT '.' RULE_INT )
+            // ../org.bonitasoft.studio.condition.ui/src-gen/org/bonitasoft/studio/condition/ui/contentassist/antlr/internal/InternalConditionModel.g:2292:15: ( '-' )? RULE_INT '.' RULE_INT
             {
-            // ../org.bonitasoft.studio.condition.ui/src-gen/org/bonitasoft/studio/condition/ui/contentassist/antlr/internal/InternalConditionModel.g:2294:15: ( '-' )?
-            int alt7=2;
-            int LA7_0 = input.LA(1);
+            // ../org.bonitasoft.studio.condition.ui/src-gen/org/bonitasoft/studio/condition/ui/contentassist/antlr/internal/InternalConditionModel.g:2292:15: ( '-' )?
+            int alt6=2;
+            int LA6_0 = input.LA(1);
 
-            if ( (LA7_0=='-') ) {
-                alt7=1;
+            if ( (LA6_0=='-') ) {
+                alt6=1;
             }
-            switch (alt7) {
+            switch (alt6) {
                 case 1 :
-                    // ../org.bonitasoft.studio.condition.ui/src-gen/org/bonitasoft/studio/condition/ui/contentassist/antlr/internal/InternalConditionModel.g:2294:15: '-'
+                    // ../org.bonitasoft.studio.condition.ui/src-gen/org/bonitasoft/studio/condition/ui/contentassist/antlr/internal/InternalConditionModel.g:2292:15: '-'
                     {
                     match('-'); 
 
@@ -543,6 +482,67 @@ public class InternalConditionModelLexer extends Lexer {
         }
     }
     // $ANTLR end "RULE_DOUBLE"
+
+    // $ANTLR start "RULE_ID"
+    public final void mRULE_ID() throws RecognitionException {
+        try {
+            int _type = RULE_ID;
+            int _channel = DEFAULT_TOKEN_CHANNEL;
+            // ../org.bonitasoft.studio.condition.ui/src-gen/org/bonitasoft/studio/condition/ui/contentassist/antlr/internal/InternalConditionModel.g:2294:9: ( ( 'a' .. 'z' | 'A' .. 'Z' | '_' | RULE_UTF8_CHARACTERS ) ( 'a' .. 'z' | 'A' .. 'Z' | '_' | '0' .. '9' | RULE_UTF8_CHARACTERS )* )
+            // ../org.bonitasoft.studio.condition.ui/src-gen/org/bonitasoft/studio/condition/ui/contentassist/antlr/internal/InternalConditionModel.g:2294:11: ( 'a' .. 'z' | 'A' .. 'Z' | '_' | RULE_UTF8_CHARACTERS ) ( 'a' .. 'z' | 'A' .. 'Z' | '_' | '0' .. '9' | RULE_UTF8_CHARACTERS )*
+            {
+            if ( (input.LA(1)>='A' && input.LA(1)<='Z')||input.LA(1)=='_'||(input.LA(1)>='a' && input.LA(1)<='z')||(input.LA(1)>='\u00C0' && input.LA(1)<='\uFEFF') ) {
+                input.consume();
+
+            }
+            else {
+                MismatchedSetException mse = new MismatchedSetException(null,input);
+                recover(mse);
+                throw mse;}
+
+            // ../org.bonitasoft.studio.condition.ui/src-gen/org/bonitasoft/studio/condition/ui/contentassist/antlr/internal/InternalConditionModel.g:2294:56: ( 'a' .. 'z' | 'A' .. 'Z' | '_' | '0' .. '9' | RULE_UTF8_CHARACTERS )*
+            loop7:
+            do {
+                int alt7=2;
+                int LA7_0 = input.LA(1);
+
+                if ( ((LA7_0>='0' && LA7_0<='9')||(LA7_0>='A' && LA7_0<='Z')||LA7_0=='_'||(LA7_0>='a' && LA7_0<='z')||(LA7_0>='\u00C0' && LA7_0<='\uFEFF')) ) {
+                    alt7=1;
+                }
+
+
+                switch (alt7) {
+            	case 1 :
+            	    // ../org.bonitasoft.studio.condition.ui/src-gen/org/bonitasoft/studio/condition/ui/contentassist/antlr/internal/InternalConditionModel.g:
+            	    {
+            	    if ( (input.LA(1)>='0' && input.LA(1)<='9')||(input.LA(1)>='A' && input.LA(1)<='Z')||input.LA(1)=='_'||(input.LA(1)>='a' && input.LA(1)<='z')||(input.LA(1)>='\u00C0' && input.LA(1)<='\uFEFF') ) {
+            	        input.consume();
+
+            	    }
+            	    else {
+            	        MismatchedSetException mse = new MismatchedSetException(null,input);
+            	        recover(mse);
+            	        throw mse;}
+
+
+            	    }
+            	    break;
+
+            	default :
+            	    break loop7;
+                }
+            } while (true);
+
+
+            }
+
+            state.type = _type;
+            state.channel = _channel;
+        }
+        finally {
+        }
+    }
+    // $ANTLR end "RULE_ID"
 
     // $ANTLR start "RULE_INT"
     public final void mRULE_INT() throws RecognitionException {
@@ -923,7 +923,7 @@ public class InternalConditionModelLexer extends Lexer {
     // $ANTLR end "RULE_ANY_OTHER"
 
     public void mTokens() throws RecognitionException {
-        // ../org.bonitasoft.studio.condition.ui/src-gen/org/bonitasoft/studio/condition/ui/contentassist/antlr/internal/InternalConditionModel.g:1:8: ( T__16 | T__17 | T__18 | T__19 | T__20 | T__21 | T__22 | RULE_UTF8_CHARACTERS | RULE_ID | RULE_WS | RULE_BOOLEAN | RULE_DATE | RULE_LONG | RULE_DOUBLE | RULE_INT | RULE_STRING | RULE_ML_COMMENT | RULE_SL_COMMENT | RULE_ANY_OTHER )
+        // ../org.bonitasoft.studio.condition.ui/src-gen/org/bonitasoft/studio/condition/ui/contentassist/antlr/internal/InternalConditionModel.g:1:8: ( T__16 | T__17 | T__18 | T__19 | T__20 | T__21 | T__22 | RULE_UTF8_CHARACTERS | RULE_WS | RULE_BOOLEAN | RULE_DATE | RULE_LONG | RULE_DOUBLE | RULE_ID | RULE_INT | RULE_STRING | RULE_ML_COMMENT | RULE_SL_COMMENT | RULE_ANY_OTHER )
         int alt16=19;
         alt16 = dfa16.predict(input);
         switch (alt16) {
@@ -984,44 +984,44 @@ public class InternalConditionModelLexer extends Lexer {
                 }
                 break;
             case 9 :
-                // ../org.bonitasoft.studio.condition.ui/src-gen/org/bonitasoft/studio/condition/ui/contentassist/antlr/internal/InternalConditionModel.g:1:73: RULE_ID
-                {
-                mRULE_ID(); 
-
-                }
-                break;
-            case 10 :
-                // ../org.bonitasoft.studio.condition.ui/src-gen/org/bonitasoft/studio/condition/ui/contentassist/antlr/internal/InternalConditionModel.g:1:81: RULE_WS
+                // ../org.bonitasoft.studio.condition.ui/src-gen/org/bonitasoft/studio/condition/ui/contentassist/antlr/internal/InternalConditionModel.g:1:73: RULE_WS
                 {
                 mRULE_WS(); 
 
                 }
                 break;
-            case 11 :
-                // ../org.bonitasoft.studio.condition.ui/src-gen/org/bonitasoft/studio/condition/ui/contentassist/antlr/internal/InternalConditionModel.g:1:89: RULE_BOOLEAN
+            case 10 :
+                // ../org.bonitasoft.studio.condition.ui/src-gen/org/bonitasoft/studio/condition/ui/contentassist/antlr/internal/InternalConditionModel.g:1:81: RULE_BOOLEAN
                 {
                 mRULE_BOOLEAN(); 
 
                 }
                 break;
-            case 12 :
-                // ../org.bonitasoft.studio.condition.ui/src-gen/org/bonitasoft/studio/condition/ui/contentassist/antlr/internal/InternalConditionModel.g:1:102: RULE_DATE
+            case 11 :
+                // ../org.bonitasoft.studio.condition.ui/src-gen/org/bonitasoft/studio/condition/ui/contentassist/antlr/internal/InternalConditionModel.g:1:94: RULE_DATE
                 {
                 mRULE_DATE(); 
 
                 }
                 break;
-            case 13 :
-                // ../org.bonitasoft.studio.condition.ui/src-gen/org/bonitasoft/studio/condition/ui/contentassist/antlr/internal/InternalConditionModel.g:1:112: RULE_LONG
+            case 12 :
+                // ../org.bonitasoft.studio.condition.ui/src-gen/org/bonitasoft/studio/condition/ui/contentassist/antlr/internal/InternalConditionModel.g:1:104: RULE_LONG
                 {
                 mRULE_LONG(); 
 
                 }
                 break;
-            case 14 :
-                // ../org.bonitasoft.studio.condition.ui/src-gen/org/bonitasoft/studio/condition/ui/contentassist/antlr/internal/InternalConditionModel.g:1:122: RULE_DOUBLE
+            case 13 :
+                // ../org.bonitasoft.studio.condition.ui/src-gen/org/bonitasoft/studio/condition/ui/contentassist/antlr/internal/InternalConditionModel.g:1:114: RULE_DOUBLE
                 {
                 mRULE_DOUBLE(); 
+
+                }
+                break;
+            case 14 :
+                // ../org.bonitasoft.studio.condition.ui/src-gen/org/bonitasoft/studio/condition/ui/contentassist/antlr/internal/InternalConditionModel.g:1:126: RULE_ID
+                {
+                mRULE_ID(); 
 
                 }
                 break;
@@ -1068,43 +1068,44 @@ public class InternalConditionModelLexer extends Lexer {
 
     protected DFA16 dfa16 = new DFA16(this);
     static final String DFA16_eotS =
-        "\1\uffff\1\21\1\23\1\25\1\17\1\27\1\30\1\uffff\1\30\1\uffff\2\17"+
-        "\1\40\2\17\12\uffff\1\30\1\uffff\1\30\3\uffff\1\40\1\uffff\1\40"+
-        "\4\uffff\2\30\1\52\3\uffff\1\30\1\uffff";
+        "\1\uffff\1\21\1\23\1\25\1\17\1\27\1\uffff\2\30\2\17\1\40\1\uffff"+
+        "\2\17\13\uffff\2\30\3\uffff\1\40\2\uffff\1\40\3\uffff\2\30\1\52"+
+        "\2\uffff\1\55\1\30\1\uffff\1\55";
     static final String DFA16_eofS =
-        "\56\uffff";
+        "\57\uffff";
     static final String DFA16_minS =
-        "\1\0\4\75\1\60\1\162\1\uffff\1\141\1\uffff\1\0\1\60\1\56\1\0\1\52"+
-        "\12\uffff\1\165\1\uffff\1\154\1\0\1\uffff\1\0\1\56\1\uffff\1\56"+
-        "\4\uffff\1\145\1\163\2\0\2\uffff\1\145\1\uffff";
+        "\1\0\4\75\1\60\1\uffff\1\162\1\141\1\0\1\60\1\56\1\uffff\1\0\1\52"+
+        "\13\uffff\1\165\1\154\2\0\1\uffff\1\56\2\uffff\1\56\3\uffff\1\145"+
+        "\1\163\2\0\1\uffff\1\60\1\145\1\uffff\1\60";
     static final String DFA16_maxS =
-        "\1\uffff\4\75\1\ufeff\1\162\1\uffff\1\141\1\uffff\1\uffff\2\71\1"+
-        "\uffff\1\57\12\uffff\1\165\1\uffff\1\154\1\uffff\1\uffff\1\uffff"+
-        "\1\71\1\uffff\1\71\4\uffff\1\145\1\163\2\uffff\2\uffff\1\145\1\uffff";
+        "\1\uffff\4\75\1\ufeff\1\uffff\1\162\1\141\1\uffff\2\71\1\uffff\1"+
+        "\uffff\1\57\13\uffff\1\165\1\154\2\uffff\1\uffff\1\71\2\uffff\1"+
+        "\71\3\uffff\1\145\1\163\2\uffff\1\uffff\1\ufeff\1\145\1\uffff\1"+
+        "\ufeff";
     static final String DFA16_acceptS =
-        "\7\uffff\1\12\1\uffff\1\11\5\uffff\1\23\1\1\1\2\1\3\1\4\1\5\1\7"+
-        "\1\6\1\10\1\11\1\uffff\1\12\2\uffff\1\14\2\uffff\1\15\1\uffff\1"+
-        "\16\1\20\1\21\1\22\4\uffff\1\14\1\11\1\uffff\1\11";
+        "\6\uffff\1\11\5\uffff\1\16\2\uffff\1\23\1\1\1\2\1\3\1\4\1\5\1\7"+
+        "\1\6\1\10\1\16\1\11\4\uffff\1\13\1\uffff\1\14\1\15\1\uffff\1\20"+
+        "\1\21\1\22\4\uffff\1\13\2\uffff\1\12\1\uffff";
     static final String DFA16_specialS =
-        "\1\4\11\uffff\1\6\2\uffff\1\3\16\uffff\1\5\1\uffff\1\1\11\uffff"+
-        "\1\2\1\0\4\uffff}>";
+        "\1\2\10\uffff\1\0\3\uffff\1\1\16\uffff\1\6\1\5\12\uffff\1\3\1\4"+
+        "\5\uffff}>";
     static final String[] DFA16_transitionS = {
-            "\11\17\2\7\2\17\1\7\22\17\1\7\1\3\1\15\4\17\1\12\5\17\1\13\1"+
-            "\17\1\16\12\14\2\17\1\1\1\4\1\2\2\17\32\11\4\17\1\11\1\17\5"+
-            "\11\1\10\15\11\1\6\6\11\105\17\ufe40\5\u0100\17",
+            "\11\17\2\6\2\17\1\6\22\17\1\6\1\3\1\15\4\17\1\11\5\17\1\12\1"+
+            "\17\1\16\12\13\2\17\1\1\1\4\1\2\2\17\32\14\4\17\1\14\1\17\5"+
+            "\14\1\10\15\14\1\7\6\14\105\17\ufe40\5\u0100\17",
             "\1\20",
             "\1\22",
             "\1\24",
             "\1\26",
             "\12\30\7\uffff\32\30\4\uffff\1\30\1\uffff\32\30\105\uffff\ufe40"+
             "\30",
-            "\1\31",
             "",
+            "\1\32",
             "\1\33",
-            "",
-            "\47\36\1\35\64\36\1\34\uffa3\36",
+            "\47\35\1\36\64\35\1\34\uffa3\35",
             "\12\37",
-            "\1\42\1\uffff\12\41",
+            "\1\41\1\uffff\12\42",
+            "",
             "\0\43",
             "\1\44\4\uffff\1\45",
             "",
@@ -1117,28 +1118,31 @@ public class InternalConditionModelLexer extends Lexer {
             "",
             "",
             "",
-            "\1\46",
             "",
+            "\1\46",
             "\1\47",
             "\42\52\1\51\4\52\1\50\64\52\1\51\5\52\1\51\3\52\1\51\7\52\1"+
             "\51\3\52\1\51\1\52\2\51\uff8a\52",
+            "\47\35\1\36\64\35\1\34\uffa3\35",
             "",
-            "\47\36\1\35\64\36\1\34\uffa3\36",
-            "\1\42\1\uffff\12\37",
+            "\1\41\1\uffff\12\37",
             "",
-            "\1\42\1\uffff\12\41",
             "",
+            "\1\41\1\uffff\12\42",
             "",
             "",
             "",
             "\1\53",
             "\1\54",
             "\0\43",
-            "\47\36\1\35\64\36\1\34\uffa3\36",
+            "\47\35\1\36\64\35\1\34\uffa3\35",
             "",
+            "\12\30\7\uffff\32\30\4\uffff\1\30\1\uffff\32\30\105\uffff\ufe40"+
+            "\30",
+            "\1\56",
             "",
-            "\1\55",
-            ""
+            "\12\30\7\uffff\32\30\4\uffff\1\30\1\uffff\32\30\105\uffff\ufe40"+
+            "\30"
     };
 
     static final short[] DFA16_eot = DFA.unpackEncodedString(DFA16_eotS);
@@ -1171,47 +1175,27 @@ public class InternalConditionModelLexer extends Lexer {
             this.transition = DFA16_transition;
         }
         public String getDescription() {
-            return "1:1: Tokens : ( T__16 | T__17 | T__18 | T__19 | T__20 | T__21 | T__22 | RULE_UTF8_CHARACTERS | RULE_ID | RULE_WS | RULE_BOOLEAN | RULE_DATE | RULE_LONG | RULE_DOUBLE | RULE_INT | RULE_STRING | RULE_ML_COMMENT | RULE_SL_COMMENT | RULE_ANY_OTHER );";
+            return "1:1: Tokens : ( T__16 | T__17 | T__18 | T__19 | T__20 | T__21 | T__22 | RULE_UTF8_CHARACTERS | RULE_WS | RULE_BOOLEAN | RULE_DATE | RULE_LONG | RULE_DOUBLE | RULE_ID | RULE_INT | RULE_STRING | RULE_ML_COMMENT | RULE_SL_COMMENT | RULE_ANY_OTHER );";
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             IntStream input = _input;
         	int _s = s;
             switch ( s ) {
                     case 0 : 
-                        int LA16_41 = input.LA(1);
+                        int LA16_9 = input.LA(1);
 
                         s = -1;
-                        if ( (LA16_41=='\'') ) {s = 29;}
+                        if ( (LA16_9=='\\') ) {s = 28;}
 
-                        else if ( (LA16_41=='\\') ) {s = 28;}
+                        else if ( ((LA16_9>='\u0000' && LA16_9<='&')||(LA16_9>='(' && LA16_9<='[')||(LA16_9>=']' && LA16_9<='\uFFFF')) ) {s = 29;}
 
-                        else if ( ((LA16_41>='\u0000' && LA16_41<='&')||(LA16_41>='(' && LA16_41<='[')||(LA16_41>=']' && LA16_41<='\uFFFF')) ) {s = 30;}
+                        else if ( (LA16_9=='\'') ) {s = 30;}
+
+                        else s = 15;
 
                         if ( s>=0 ) return s;
                         break;
                     case 1 : 
-                        int LA16_30 = input.LA(1);
-
-                        s = -1;
-                        if ( (LA16_30=='\'') ) {s = 29;}
-
-                        else if ( (LA16_30=='\\') ) {s = 28;}
-
-                        else if ( ((LA16_30>='\u0000' && LA16_30<='&')||(LA16_30>='(' && LA16_30<='[')||(LA16_30>=']' && LA16_30<='\uFFFF')) ) {s = 30;}
-
-                        if ( s>=0 ) return s;
-                        break;
-                    case 2 : 
-                        int LA16_40 = input.LA(1);
-
-                        s = -1;
-                        if ( ((LA16_40>='\u0000' && LA16_40<='\uFFFF')) ) {s = 35;}
-
-                        else s = 42;
-
-                        if ( s>=0 ) return s;
-                        break;
-                    case 3 : 
                         int LA16_13 = input.LA(1);
 
                         s = -1;
@@ -1221,7 +1205,7 @@ public class InternalConditionModelLexer extends Lexer {
 
                         if ( s>=0 ) return s;
                         break;
-                    case 4 : 
+                    case 2 : 
                         int LA16_0 = input.LA(1);
 
                         s = -1;
@@ -1235,19 +1219,19 @@ public class InternalConditionModelLexer extends Lexer {
 
                         else if ( ((LA16_0>='\u00C0' && LA16_0<='\uFEFF')) ) {s = 5;}
 
-                        else if ( (LA16_0=='t') ) {s = 6;}
+                        else if ( ((LA16_0>='\t' && LA16_0<='\n')||LA16_0=='\r'||LA16_0==' ') ) {s = 6;}
 
-                        else if ( ((LA16_0>='\t' && LA16_0<='\n')||LA16_0=='\r'||LA16_0==' ') ) {s = 7;}
+                        else if ( (LA16_0=='t') ) {s = 7;}
 
                         else if ( (LA16_0=='f') ) {s = 8;}
 
-                        else if ( ((LA16_0>='A' && LA16_0<='Z')||LA16_0=='_'||(LA16_0>='a' && LA16_0<='e')||(LA16_0>='g' && LA16_0<='s')||(LA16_0>='u' && LA16_0<='z')) ) {s = 9;}
+                        else if ( (LA16_0=='\'') ) {s = 9;}
 
-                        else if ( (LA16_0=='\'') ) {s = 10;}
+                        else if ( (LA16_0=='-') ) {s = 10;}
 
-                        else if ( (LA16_0=='-') ) {s = 11;}
+                        else if ( ((LA16_0>='0' && LA16_0<='9')) ) {s = 11;}
 
-                        else if ( ((LA16_0>='0' && LA16_0<='9')) ) {s = 12;}
+                        else if ( ((LA16_0>='A' && LA16_0<='Z')||LA16_0=='_'||(LA16_0>='a' && LA16_0<='e')||(LA16_0>='g' && LA16_0<='s')||(LA16_0>='u' && LA16_0<='z')) ) {s = 12;}
 
                         else if ( (LA16_0=='\"') ) {s = 13;}
 
@@ -1257,7 +1241,41 @@ public class InternalConditionModelLexer extends Lexer {
 
                         if ( s>=0 ) return s;
                         break;
+                    case 3 : 
+                        int LA16_40 = input.LA(1);
+
+                        s = -1;
+                        if ( ((LA16_40>='\u0000' && LA16_40<='\uFFFF')) ) {s = 35;}
+
+                        else s = 42;
+
+                        if ( s>=0 ) return s;
+                        break;
+                    case 4 : 
+                        int LA16_41 = input.LA(1);
+
+                        s = -1;
+                        if ( (LA16_41=='\'') ) {s = 30;}
+
+                        else if ( (LA16_41=='\\') ) {s = 28;}
+
+                        else if ( ((LA16_41>='\u0000' && LA16_41<='&')||(LA16_41>='(' && LA16_41<='[')||(LA16_41>=']' && LA16_41<='\uFFFF')) ) {s = 29;}
+
+                        if ( s>=0 ) return s;
+                        break;
                     case 5 : 
+                        int LA16_29 = input.LA(1);
+
+                        s = -1;
+                        if ( (LA16_29=='\'') ) {s = 30;}
+
+                        else if ( (LA16_29=='\\') ) {s = 28;}
+
+                        else if ( ((LA16_29>='\u0000' && LA16_29<='&')||(LA16_29>='(' && LA16_29<='[')||(LA16_29>=']' && LA16_29<='\uFFFF')) ) {s = 29;}
+
+                        if ( s>=0 ) return s;
+                        break;
+                    case 6 : 
                         int LA16_28 = input.LA(1);
 
                         s = -1;
@@ -1266,20 +1284,6 @@ public class InternalConditionModelLexer extends Lexer {
                         else if ( (LA16_28=='\"'||LA16_28=='\\'||LA16_28=='b'||LA16_28=='f'||LA16_28=='n'||LA16_28=='r'||(LA16_28>='t' && LA16_28<='u')) ) {s = 41;}
 
                         else if ( ((LA16_28>='\u0000' && LA16_28<='!')||(LA16_28>='#' && LA16_28<='&')||(LA16_28>='(' && LA16_28<='[')||(LA16_28>=']' && LA16_28<='a')||(LA16_28>='c' && LA16_28<='e')||(LA16_28>='g' && LA16_28<='m')||(LA16_28>='o' && LA16_28<='q')||LA16_28=='s'||(LA16_28>='v' && LA16_28<='\uFFFF')) ) {s = 42;}
-
-                        if ( s>=0 ) return s;
-                        break;
-                    case 6 : 
-                        int LA16_10 = input.LA(1);
-
-                        s = -1;
-                        if ( (LA16_10=='\\') ) {s = 28;}
-
-                        else if ( (LA16_10=='\'') ) {s = 29;}
-
-                        else if ( ((LA16_10>='\u0000' && LA16_10<='&')||(LA16_10>='(' && LA16_10<='[')||(LA16_10>=']' && LA16_10<='\uFFFF')) ) {s = 30;}
-
-                        else s = 15;
 
                         if ( s>=0 ) return s;
                         break;

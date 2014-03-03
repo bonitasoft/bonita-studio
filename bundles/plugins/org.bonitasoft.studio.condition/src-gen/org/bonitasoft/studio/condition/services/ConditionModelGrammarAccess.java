@@ -551,12 +551,12 @@ public class ConditionModelGrammarAccess extends AbstractGrammarElementFinder {
 	private Expression_ProcessRefElements pExpression_ProcessRef;
 	private Expression_BooleanElements pExpression_Boolean;
 	private TerminalRule tUTF8_CHARACTERS;
-	private TerminalRule tID;
 	private TerminalRule tWS;
 	private TerminalRule tBOOLEAN;
 	private TerminalRule tDATE;
 	private TerminalRule tLONG;
 	private TerminalRule tDOUBLE;
+	private TerminalRule tID;
 	
 	private final Grammar grammar;
 
@@ -773,12 +773,6 @@ public class ConditionModelGrammarAccess extends AbstractGrammarElementFinder {
 		return (tUTF8_CHARACTERS != null) ? tUTF8_CHARACTERS : (tUTF8_CHARACTERS = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "UTF8_CHARACTERS"));
 	} 
 
-	//terminal ID:
-	//	("a".."z" | "A".."Z" | "_" | UTF8_CHARACTERS) ("a".."z" | "A".."Z" | "_" | "0".."9" | UTF8_CHARACTERS)*;
-	public TerminalRule getIDRule() {
-		return (tID != null) ? tID : (tID = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "ID"));
-	} 
-
 	//terminal WS:
 	//	(" " | "\t" | "\r" | "\n")+;
 	public TerminalRule getWSRule() {
@@ -807,6 +801,12 @@ public class ConditionModelGrammarAccess extends AbstractGrammarElementFinder {
 	//	"-"? INT "." INT;
 	public TerminalRule getDOUBLERule() {
 		return (tDOUBLE != null) ? tDOUBLE : (tDOUBLE = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "DOUBLE"));
+	} 
+
+	//terminal ID:
+	//	("a".."z" | "A".."Z" | "_" | UTF8_CHARACTERS) ("a".."z" | "A".."Z" | "_" | "0".."9" | UTF8_CHARACTERS)*;
+	public TerminalRule getIDRule() {
+		return (tID != null) ? tID : (tID = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "ID"));
 	} 
 
 	//terminal INT returns ecore::EInt:
