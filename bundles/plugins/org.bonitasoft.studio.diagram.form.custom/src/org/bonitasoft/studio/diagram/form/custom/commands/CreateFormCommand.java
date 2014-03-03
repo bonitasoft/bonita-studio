@@ -275,7 +275,7 @@ public class CreateFormCommand extends AbstractTransactionalCommand {
 	protected void addSubmitButton(Form myForm) {
 		Widget submitButton = FormFactory.eINSTANCE.createSubmitFormButton();
 		String submitButtonName = NamingUtils.getInstance(pageFlow).generateName(submitButton, pageFlow);
-		submitButton.setName(NamingUtils.convertToId(submitButtonName, submitButton));
+		submitButton.setName(NamingUtils.toJavaIdentifier(submitButtonName, true));
 		submitButton.setDisplayLabel(createLabelExpression(submitButtonName));
 		submitButton.setInjectWidgetScript(createInsertWidgetIfScript());
 		WidgetLayoutInfo wLayout = FormFactory.eINSTANCE.createWidgetLayoutInfo();
@@ -291,7 +291,7 @@ public class CreateFormCommand extends AbstractTransactionalCommand {
 		Widget previousButton = FormFactory.eINSTANCE.createPreviousFormButton();
 		String previousName = NamingUtils.getInstance(pageFlow).generateName(previousButton, pageFlow);
 		previousButton.setDisplayLabel(createLabelExpression(previousName));
-		previousButton.setName(NamingUtils.convertToId(previousName, previousButton));
+		previousButton.setName(NamingUtils.toJavaIdentifier(previousName, true));
 		previousButton.setInjectWidgetScript(createInsertWidgetIfScript());
 		WidgetLayoutInfo wLayout = FormFactory.eINSTANCE.createWidgetLayoutInfo();
 		wLayout.setLine(Math.max(myForm.getWidgets().size(), MIN_BUTTON_LINE));
