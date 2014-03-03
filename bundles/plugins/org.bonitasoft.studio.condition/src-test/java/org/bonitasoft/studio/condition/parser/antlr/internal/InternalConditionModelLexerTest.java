@@ -23,8 +23,23 @@ public class InternalConditionModelLexerTest {
     public void shouldNextToken_BuildATokenForUTF8Strings() throws Exception {
         Token nextToken = new InternalConditionModelLexer(new ANTLRStringStream("varąčęėoo")).nextToken();
         assertThat(nextToken.getText()).isEqualTo("varąčęėoo");
-       
+        assertThat(nextToken.getType()).isEqualTo(InternalConditionModelLexer.RULE_ID);
+        
         nextToken = new InternalConditionModelLexer(new ANTLRStringStream("カタカナ")).nextToken();
         assertThat(nextToken.getText()).isEqualTo("カタカナ");
+        assertThat(nextToken.getType()).isEqualTo(InternalConditionModelLexer.RULE_ID);
+        
+       
+    }
+    
+    @Test
+    public void shouldNextToken_BuildABooleanTokenForTrueAndFalse() throws Exception {
+        Token  nextToken = new InternalConditionModelLexer(new ANTLRStringStream("true")).nextToken();
+        assertThat(nextToken.getText()).isEqualTo("true");
+        assertThat(nextToken.getType()).isEqualTo(InternalConditionModelLexer.RULE_BOOLEAN);
+        
+         nextToken = new InternalConditionModelLexer(new ANTLRStringStream("false")).nextToken();
+        assertThat(nextToken.getText()).isEqualTo("false");
+        assertThat(nextToken.getType()).isEqualTo(InternalConditionModelLexer.RULE_BOOLEAN);
     }
 }
