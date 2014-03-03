@@ -17,7 +17,6 @@
 package org.bonitasoft.studio.properties.sections.forms.commands;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -31,7 +30,6 @@ import org.bonitasoft.engine.bpm.document.DocumentValue;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
-import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.emf.tools.WidgetModifiersSwitch;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
@@ -110,7 +108,7 @@ public class AddFormCommand extends AbstractTransactionalCommand {
     public AddFormCommand(Element pageFlow2, EStructuralFeature feature, String formName, String description, Map<Element, WidgetEnum> vars,
             TransactionalEditingDomain editingDomain) {
         super(editingDomain, Messages.formAddFormCommandLabel, getWorkspaceFiles(pageFlow2));
-        this.formName = NamingUtils.toJavaIdentifier(formName,true);
+        this.formName = NamingUtils.toJavaIdentifier(formName,false);
         Expression expr = ExpressionFactory.eINSTANCE.createExpression();
         expr.setName(formName);
         expr.setContent(formName);
@@ -313,7 +311,7 @@ public class AddFormCommand extends AbstractTransactionalCommand {
             previousLabel.setContent(previousName);
             previousLabel.setReturnTypeFixed(true);
             tempWidget.setDisplayLabel(previousLabel);
-            tempWidget.setName(NamingUtils.convertToId(previousName, tempWidget));
+            tempWidget.setName(NamingUtils.toJavaIdentifier(previousName, false));
             Expression insertWidgetIf = createInsertWidgetIfScript(); 
             tempWidget.setInjectWidgetScript(insertWidgetIf);
             wLayout = FormFactory.eINSTANCE.createWidgetLayoutInfo();
@@ -326,7 +324,7 @@ public class AddFormCommand extends AbstractTransactionalCommand {
             // add a submit button
             tempWidget = FormFactory.eINSTANCE.createSubmitFormButton();
             String submitButtonName = NamingUtils.getInstance(pageFlow).generateName(tempWidget, pageFlow);
-            tempWidget.setName(NamingUtils.convertToId(submitButtonName, tempWidget));
+            tempWidget.setName(NamingUtils.toJavaIdentifier(submitButtonName, false));
            
          
             Expression submitLabel = ExpressionFactory.eINSTANCE.createExpression();
