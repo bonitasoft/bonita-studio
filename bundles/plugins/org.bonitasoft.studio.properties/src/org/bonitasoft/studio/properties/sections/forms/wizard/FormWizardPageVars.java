@@ -24,7 +24,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.databinding.validator.InputLengthValidator;
 import org.bonitasoft.studio.model.form.Form;
@@ -250,7 +249,7 @@ public class FormWizardPageVars extends WizardSelectionPage {
 			if(documents != null){
 				for (Document document : documents) {
 					Button checkbox = new Button(scrollable, SWT.CHECK);
-					checkbox.setText(NamingUtils.convertToId(document.getName()));
+					checkbox.setText(document.getName());
 					documentToCheckboxes.put(document, checkbox);
 					Label label = new Label(scrollable, SWT.LEFT);
 					StringBuilder labelText = new StringBuilder();
