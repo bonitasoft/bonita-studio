@@ -16,6 +16,7 @@
  */
 package org.bonitasoft.studio.importer.bar.custom.migration;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -406,7 +407,13 @@ public class WidgetMigration extends ReportCustomMigration {
 
 
     protected boolean isPageFlowData(String dataName, Instance parentPageFlow) {
-        List<Instance> transientData = parentPageFlow.get("transientData");
+        List<Instance> transientData = new ArrayList<Instance>();
+        if(parentPageFlow.instanceOf("process.PageFlow")){
+            transientData = parentPageFlow.get("transientData");
+        }else if(parentPageFlow.instanceOf("process.ViewPageFlow")){
+            transientData = parentPageFlow.get("viewTransientData");
+        }
+      
         for(Instance data : transientData){
             String name = data.get("name");
             if(dataName.equals(name)){
