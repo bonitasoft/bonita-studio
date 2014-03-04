@@ -135,7 +135,6 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
         }
     };
     private LineTableCreator lineTableCreator;
-    private MultiValidator mandatoryValidator;
     private EMFDataBindingContext validationContext;
     private String mandatoryLabel;
     private Binding bindValue;
@@ -971,59 +970,61 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
 
 
     public void setSelection(AbstractExpression input) {
-        if(expressionEditor != null){
-            if(validationContext != null){
-                if(bindValue != null){
-                    validationContext.removeBinding(bindValue);
-                    bindValue.dispose();
-                    bindValue = null;
-                }
+        if(validationContext != null){
+            if(bindValue != null){
+                validationContext.removeBinding(bindValue);
+                bindValue.dispose();
+                bindValue = null;
+            }
+            if(expressionEditor != null){
                 expressionEditor.setMandatoryField(null, validationContext);
             }
+        }
 
-            if (input instanceof Expression) {
-                initializeTableOrExpression(false);
-                expressionEditor.setMandatoryField(mandatoryLabel, validationContext);
-                expressionEditor.setSelection(new StructuredSelection(input));
-            } else if (input instanceof ListExpression
-                    || input instanceof TableExpression) {
+        if (input instanceof Expression) {
+            initializeTableOrExpression(false);
+            expressionEditor.setMandatoryField(mandatoryLabel, validationContext);
+            expressionEditor.setSelection(new StructuredSelection(input));
+        } else if (input instanceof ListExpression
+                || input instanceof TableExpression) {
+            if(expressionEditor != null){
                 expressionEditor.setSelection(new StructuredSelection(ExpressionFactory.eINSTANCE.createExpression()));
-                initializeTableOrExpression(true);
-                viewer.setInput(input);
-                if (input instanceof TableExpression
-                        && !((TableExpression) input).getExpressions().isEmpty()) {
-                    updateColumns();
+            }
+            initializeTableOrExpression(true);
+            viewer.setInput(input);
+            if (input instanceof TableExpression
+                    && !((TableExpression) input).getExpressions().isEmpty()) {
+                updateColumns();
+            }
+            if(validationContext != null){
+                IObservableValue observeValue = null;
+                if(input instanceof ListExpression){
+                    observeValue = EMFObservables.observeValue(input, ExpressionPackage.Literals.LIST_EXPRESSION__EXPRESSIONS);
+                }else{
+                    observeValue = EMFObservables.observeValue(input, ExpressionPackage.Literals.TABLE_EXPRESSION__EXPRESSIONS);
                 }
-                if(validationContext != null){
-                    IObservableValue observeValue = null;
-                    if(input instanceof ListExpression){
-                        observeValue = EMFObservables.observeValue(input, ExpressionPackage.Literals.LIST_EXPRESSION__EXPRESSIONS);
-                    }else{
-                        observeValue = EMFObservables.observeValue(input, ExpressionPackage.Literals.TABLE_EXPRESSION__EXPRESSIONS);
-                    }
-                    UpdateValueStrategy strategy = new UpdateValueStrategy();
-                    strategy.setAfterGetValidator(new IValidator() {
+                UpdateValueStrategy strategy = new UpdateValueStrategy();
+                strategy.setAfterGetValidator(new IValidator() {
 
-                        @Override
-                        public IStatus validate(Object value) {
-                            if(isTableMode()){
-                                AbstractExpression expression = getValue();
-                                if(expression instanceof ListExpression){
-                                    if(((ListExpression) expression).getExpressions() == null || ((ListExpression) expression).getExpressions().isEmpty()){
-                                        return ValidationStatus.error(Messages.bind(Messages.AtLeastOneRowShouldBeAddedFor,mandatoryLabel));
-                                    }
-                                }
-                                if(expression instanceof TableExpression){
-                                    if(((TableExpression) expression).getExpressions() == null || ((TableExpression) expression).getExpressions().isEmpty()){
-                                        return ValidationStatus.error(Messages.bind(Messages.AtLeastOneRowShouldBeAddedFor,mandatoryLabel));
-                                    }
+                    @Override
+                    public IStatus validate(Object value) {
+                        if(isTableMode()){
+                            AbstractExpression expression = getValue();
+                            if(expression instanceof ListExpression){
+                                if(((ListExpression) expression).getExpressions() == null || ((ListExpression) expression).getExpressions().isEmpty()){
+                                    return ValidationStatus.error(Messages.bind(Messages.AtLeastOneRowShouldBeAddedFor,mandatoryLabel));
                                 }
                             }
-                            return ValidationStatus.ok();
+                            if(expression instanceof TableExpression){
+                                if(((TableExpression) expression).getExpressions() == null || ((TableExpression) expression).getExpressions().isEmpty()){
+                                    return ValidationStatus.error(Messages.bind(Messages.AtLeastOneRowShouldBeAddedFor,mandatoryLabel));
+                                }
+                            }
                         }
-                    });
-                    bindValue = validationContext.bindValue(new WritableValue(), observeValue,strategy,strategy);
-                }
+                        return ValidationStatus.ok();
+                    }
+                });
+                bindValue = validationContext.bindValue(new WritableValue(), observeValue,strategy,strategy);
             }
         }
     }
