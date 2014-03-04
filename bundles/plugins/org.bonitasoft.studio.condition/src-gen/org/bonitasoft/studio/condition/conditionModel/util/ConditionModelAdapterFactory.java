@@ -1,4 +1,7 @@
 /**
+ * <copyright>
+ * </copyright>
+ *
  */
 package org.bonitasoft.studio.condition.conditionModel.util;
 

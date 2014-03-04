@@ -1,4 +1,7 @@
 /**
+ * <copyright>
+ * </copyright>
+ *
  */
 package org.bonitasoft.studio.condition.conditionModel.impl;
 
@@ -30,7 +33,7 @@ public class ConditionModelFactoryImpl extends EFactoryImpl implements Condition
   {
     try
     {
-      ConditionModelFactory theConditionModelFactory = (ConditionModelFactory)EPackage.Registry.INSTANCE.getEFactory(ConditionModelPackage.eNS_URI);
+      ConditionModelFactory theConditionModelFactory = (ConditionModelFactory)EPackage.Registry.INSTANCE.getEFactory("http://www.bonitasoft.org/studio/condition/ConditionModel"); 
       if (theConditionModelFactory != null)
       {
         return theConditionModelFactory;
