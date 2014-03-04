@@ -74,7 +74,6 @@ public class NamingUtils {
     private static final String VERSION_SEPARATOR = "-";
     private static final String UTF8 = "UTF-8";
     private MainProcess process;
-    private static Map<MainProcess, NamingUtils> instances = new HashMap<MainProcess, NamingUtils>();
 
     private NamingUtils(MainProcess process) {
         this.process = process;
@@ -86,13 +85,6 @@ public class NamingUtils {
 
     public static NamingUtils getInstance(Element element) {
         MainProcess process = ModelHelper.getMainProcess(element);
-        //        NamingUtils instance = null;
-        //        if (!instances.containsKey(process)) {
-        //            instance = new NamingUtils(process);
-        //            instances.put(process, instance);
-        //        } else {
-        //            instance = instances.get(process);
-        //        }
         if(process != null){
             return new NamingUtils(process);
         }
@@ -208,7 +200,7 @@ public class NamingUtils {
             String name = null;
             name = getFormPaletteText(false, item.eClass());
             if (name != null) {
-                return toJavaIdentifier(name,false);
+                return toJavaIdentifier(name,true);
             } else {
                 return Messages.WidgetDefaultLabel;
             }
