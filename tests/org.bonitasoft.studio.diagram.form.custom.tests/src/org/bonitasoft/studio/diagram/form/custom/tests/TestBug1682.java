@@ -20,6 +20,7 @@ package org.bonitasoft.studio.diagram.form.custom.tests;
 import org.bonitasoft.studio.model.process.diagram.form.part.FormDiagramEditor;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditor;
@@ -55,6 +56,7 @@ public class TestBug1682 extends SWTBotGefTestCase {
 					/*get the form in the first process (pool)*/
 					gefEditor.mainEditPart().children().get(0).select();
 					gefEditor.clickContextMenu("Delete");
+					bot.button(IDialogConstants.OK_LABEL).click();
 					nbPartsAfterDelete = editor.getDiagramEditPart().getChildren().size();					
 					gefEditor.save();
 				} catch (Exception e) {
