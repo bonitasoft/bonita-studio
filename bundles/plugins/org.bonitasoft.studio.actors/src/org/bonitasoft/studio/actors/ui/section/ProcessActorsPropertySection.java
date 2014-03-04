@@ -33,24 +33,20 @@ import org.bonitasoft.studio.model.process.Actor;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.pics.Pics;
-import org.eclipse.core.databinding.ObservablesManager;
-import org.eclipse.core.databinding.observable.ChangeEvent;
-import org.eclipse.core.databinding.observable.IChangeListener;
-import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.emf.common.command.CompoundCommand;
+import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.edit.EMFEditObservables;
-import org.eclipse.emf.databinding.edit.EMFEditProperties;
-import org.eclipse.emf.databinding.edit.IEMFEditListProperty;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.edit.command.AddCommand;
 import org.eclipse.emf.edit.command.DeleteCommand;
 import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
-import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
+import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.ColumnWeightData;
@@ -87,11 +83,8 @@ public class ProcessActorsPropertySection extends AbstractBonitaDescriptionSecti
     private ActorNameEditingSupport nameEditingSupport;
     private ActorDescripitonEditingSupport descripitonEditingSupport;
     private Button setAsInitiatorButton;
-    protected ObservablesManager observablesManager = new ObservablesManager();
-    private IChangeListener actorListener;
-    private IObservableList observeActorsList;
-	private IObservableList observeActorsNameList;
-    
+    private EMFDataBindingContext context;
+
 
     @Override
     public void createControls(Composite parent,TabbedPropertySheetPage aTabbedPropertySheetPage) {
@@ -117,7 +110,7 @@ public class ProcessActorsPropertySection extends AbstractBonitaDescriptionSecti
         removeButton = createRemoveButton(buttonsComposite,widgetFactory) ;
 
         createTable(widgetFactory, mainComposite, statusControl);
-        
+
         widgetFactory.createLabel(mainComposite, "");
         widgetFactory.createLabel(mainComposite, Messages.initiatorExplanation);
 
@@ -125,12 +118,12 @@ public class ProcessActorsPropertySection extends AbstractBonitaDescriptionSecti
     }
 
 
-	protected void createTable(TabbedPropertySheetWidgetFactory widgetFactory,
-			Composite mainComposite, final CLabel statusControl) {
-		actorsViewer = new TableViewer(mainComposite, SWT.FULL_SELECTION | SWT.BORDER | SWT.MULTI | SWT.V_SCROLL) ;
+    protected void createTable(TabbedPropertySheetWidgetFactory widgetFactory,
+            Composite mainComposite, final CLabel statusControl) {
+        actorsViewer = new TableViewer(mainComposite, SWT.FULL_SELECTION | SWT.BORDER | SWT.MULTI | SWT.V_SCROLL) ;
         widgetFactory.adapt(actorsViewer.getTable(),false,false) ;
         actorsViewer.getTable().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        actorsViewer.setContentProvider(new ObservableListContentProvider());
+        actorsViewer.setContentProvider(new ArrayContentProvider());
         TableLayout tableLayout = new TableLayout() ;
         tableLayout.addColumnData(new ColumnWeightData(3)) ;
         tableLayout.addColumnData(new ColumnWeightData(30)) ;
@@ -221,7 +214,7 @@ public class ProcessActorsPropertySection extends AbstractBonitaDescriptionSecti
 
         TableColumnSorter sorter = new TableColumnSorter(actorsViewer) ;
         sorter.setColumn(column) ;
-	}
+    }
 
 
     private Button createRemoveButton(Composite buttonsComposite, TabbedPropertySheetWidgetFactory widgetFactory) {
@@ -272,7 +265,16 @@ public class ProcessActorsPropertySection extends AbstractBonitaDescriptionSecti
                 }
                 cc.append(SetCommand.create(getEditingDomain(), selectedActor, ProcessPackage.Literals.ACTOR__INITIATOR, true)) ;
                 getEditingDomain().getCommandStack().execute(cc) ;
-                actorsViewer.refresh() ;
+                Display.getDefault().asyncExec(new Runnable() {
+                    
+                    @Override
+                    public void run() {
+                        if(actorsViewer != null && !actorsViewer.getControl().isDisposed()){
+                            actorsViewer.refresh() ;
+                        }
+                    }
+                });
+               
                 updateButtons();
             }
         }) ;
@@ -292,7 +294,6 @@ public class ProcessActorsPropertySection extends AbstractBonitaDescriptionSecti
         Set<String> actorsName = new HashSet<String>() ;
         for(Actor a : process.getActors()){
             actorsName.add(a.getName()) ;
-
         }
 
         return NamingUtils.generateNewName(actorsName,Messages.defaultActorName) ;
@@ -300,26 +301,11 @@ public class ProcessActorsPropertySection extends AbstractBonitaDescriptionSecti
 
 
     private void bindActorList(){
-    	if (observeActorsList != null 
-				&& actorListener!=null 
-				&& observeActorsNameList!=null ){
-    		observeActorsList.removeChangeListener(actorListener);
-    		observeActorsList.dispose();
-    		observeActorsNameList.removeChangeListener(actorListener);
-    		observeActorsList.dispose();
-    	} 
-		IEMFEditListProperty list = EMFEditProperties.list(getEditingDomain(), getActorFeature());
-		observeActorsList = list.observe(getEObject());
-		observeActorsNameList = list.values(ProcessPackage.Literals.ELEMENT__NAME).observe(getEObject());
-		actorListener = new IChangeListener() {
-
-			@Override
-			public void handleChange(ChangeEvent event) {
-				actorsViewer.refresh();
-			}
-		};
-		observeActorsList.addChangeListener(actorListener);
-		observeActorsNameList.addChangeListener(actorListener);
+        if( context != null ){
+            context.dispose();
+        }
+        context = new EMFDataBindingContext();
+        context.bindValue(ViewersObservables.observeInput(actorsViewer), EMFEditObservables.observeValue(getEditingDomain(), getEObject(), ProcessPackage.Literals.ABSTRACT_PROCESS__ACTORS));
     }
 
 
@@ -327,10 +313,7 @@ public class ProcessActorsPropertySection extends AbstractBonitaDescriptionSecti
     public void refresh() {
         super.refresh();
         if(getEObject() != null){
-            AbstractProcess process = (AbstractProcess) getEObject() ;
-            actorsViewer.setInput(EMFEditObservables.observeList(getEditingDomain(), process, ProcessPackage.Literals.ABSTRACT_PROCESS__ACTORS)) ;
             updateButtons() ;
-            bindActorList();
         }
     }
 
@@ -374,17 +357,17 @@ public class ProcessActorsPropertySection extends AbstractBonitaDescriptionSecti
     }
 
     protected EStructuralFeature getActorFeature(){
-    	return ProcessPackage.Literals.ABSTRACT_PROCESS__ACTORS;
+        return ProcessPackage.Literals.ABSTRACT_PROCESS__ACTORS;
     }
 
     @Override
     public String getSectionDescription() {
         return Messages.addRemoveActors;
     }
-    
+
     @Override
-	public void setEObject(EObject object) {
-		super.setEObject(object);
-		bindActorList();
-	}
+    public void setEObject(EObject object) {
+        super.setEObject(object);
+        bindActorList();
+    }
 }
