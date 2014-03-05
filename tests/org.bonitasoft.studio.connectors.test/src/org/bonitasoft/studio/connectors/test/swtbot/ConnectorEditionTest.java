@@ -36,7 +36,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 /**
- * @author Aurï¿½lie Zara
+ * @author AurŽlie Zara
  * 
  */
 @RunWith(SWTBotJunit4ClassRunner.class)
@@ -48,7 +48,8 @@ public class ConnectorEditionTest extends SWTBotGefTestCase {
 		bot.waitUntil(new ICondition() {
 
 			public boolean test() throws Exception {
-				bot.tree().select("Uncategorized").expandNode("Uncategorized").select(name + " (" + version + ")");
+			    bot.tree().collapseNode("Uncategorized");
+				bot.tree().expandNode("Uncategorized").select(name + " (" + version + ")");
 				return bot.tree().selectionCount() > 0;
 			}
 
