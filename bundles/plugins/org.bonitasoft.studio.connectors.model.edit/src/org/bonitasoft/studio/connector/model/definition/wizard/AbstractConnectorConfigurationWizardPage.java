@@ -67,8 +67,8 @@ public abstract class AbstractConnectorConfigurationWizardPage extends WizardPag
 
     @Override
     public final void createControl(final Composite parent) {
-        setControl(doCreateControl(parent,context)) ;
         supportPage = WizardPageSupport.create(this, context) ;
+        setControl(doCreateControl(parent,context)) ;
     }
 
     protected EMFDataBindingContext getDatabindingContext(){

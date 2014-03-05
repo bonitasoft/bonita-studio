@@ -103,7 +103,7 @@ public class TestSimpleMigrationUseCase {
 		final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
 
 		final List<DataType> datatypes =  ModelHelper.getAllItemsOfType(mainProc, ProcessPackage.Literals.DATA_TYPE);
-		assertEquals("Invalid number of datatypes", 9, datatypes.size()); //8 provided + 1 enum
+		assertEquals("Invalid number of datatypes", 10, datatypes.size()); //9 provided + 1 enum
 		final DataTypeSwitch typesSwitch = new DataTypeSwitch(datatypes);
 		typesSwitch.testDatatypesConsistency();
 	}

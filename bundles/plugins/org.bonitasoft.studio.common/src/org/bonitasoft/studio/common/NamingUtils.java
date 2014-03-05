@@ -195,7 +195,7 @@ public class NamingUtils {
 			String name = null;
 			name = getFormPaletteText(false, item.eClass());
 			if (name != null) {
-				return convertToId(name);
+				return toJavaIdentifier(name, true);
 			} else {
 				return Messages.WidgetDefaultLabel;
 			}

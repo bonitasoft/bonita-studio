@@ -163,7 +163,7 @@ public class TemplateGridPropertySectionContribution implements IExtensibleGridP
         useDefaultTemplate.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(final SelectionEvent e) {
-                boolean confirm = true;// TODO NLS
+                boolean confirm = true;
                 AssociatedFile htmlTemplate = form.getHtmlTemplate();
                 if (htmlTemplate != null && htmlTemplate.getPath() != null && !htmlTemplate.getPath().isEmpty()) {
                     File template = WebTemplatesUtil.getFile(htmlTemplate.getPath());

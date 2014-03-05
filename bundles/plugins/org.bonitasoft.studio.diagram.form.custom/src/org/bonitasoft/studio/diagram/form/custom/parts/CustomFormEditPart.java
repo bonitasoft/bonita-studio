@@ -51,16 +51,10 @@ public class CustomFormEditPart extends FormEditPart {
 		/* feedback on the move and layout */
 		removeEditPolicy(EditPolicy.LAYOUT_ROLE);
 		installEditPolicy(EditPolicy.LAYOUT_ROLE, new GridLayoutEditPolicy()/*new GridLayerLayoutEditPolicy()*//*new GridLayoutEditPolicy2()*/);
-//		installEditPolicy(EditPolicy.LAYOUT_ROLE,
-//				new CustomConstrainedToolbarLayoutEditPolicy(
-//						FormPackage.Literals.FORM__WIDGETS));
 		/* set target feedback on creation by the palette */
 		removeEditPolicy(EditPolicyRoles.CREATION_ROLE);
 		installEditPolicy(EditPolicyRoles.CREATION_ROLE,
 				new GridLayoutCreationEditPolicy());
-//		/* allow only vertical move */
-//		removeEditPolicy(EditPolicyRoles.DRAG_DROP_ROLE);
-//		installEditPolicy(EditPolicyRoles.DRAG_DROP_ROLE, new CustomDiagramDragDropEditPolicy());
 	}
 
 	
@@ -69,34 +63,9 @@ public class CustomFormEditPart extends FormEditPart {
 	 */
 	@Override
 	protected IFigure createFigure() {		
-		/*Try with gmf GridLayout but send clascastexception (rectangle into GridData...???)*/
-//		GridLayout manager = new GridLayout();
-//		manager.makeColumnsEqualWidth = true;
-//		manager.numColumns = 2;
-//		GridData gridData = new GridData();
-//		manager.setConstraint(figure, gridData);
-//		layer.setLayoutManager(manager);
-		
-		/*Try with gmf GridLayerEx*/
-//		GridLayerEx layerEx = new GridLayerEx();
-//		layerEx.setSpacing(new Dimension(300,100));
-		
-		/*Use our custom GridFreeFormLayer*/
 		GridLayer layer = new GridLayer(this);
 		return layer;
 	}
-		
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart#refresh()
-	 */
-//	@Override
-//	public void refresh() {
-//		IFigure fig = getFigure();
-//		Rectangle bounds = getFigure().getBounds().getCopy();
-//		bounds.setSize(800, bounds.height);
-//		getFigure().setBounds(bounds);
-//		//getFigure().repaint();
-//		super.refresh();
-//	}
+
 	
 }

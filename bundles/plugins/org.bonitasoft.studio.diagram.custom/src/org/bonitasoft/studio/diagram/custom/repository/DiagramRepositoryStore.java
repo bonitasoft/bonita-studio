@@ -217,8 +217,16 @@ public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFi
 	protected DiagramFileStore doImportIResource(String fileName, IResource resource) {
 
 		DiagramFileStore fileStore = super.doImportIResource(fileName, resource);
+		if(fileStore == null){
+			return null;
+		}
 		if(!FileActionDialog.getDisablePopup()){
-			final List<AbstractProcess> importedProcess = ModelHelper.getAllProcesses(fileStore.getContent());
+			MainProcess content = fileStore.getContent();
+			if(content == null){
+				fileStore.delete();
+				return null;
+			}
+			final List<AbstractProcess> importedProcess = ModelHelper.getAllProcesses(content);
 			final List<AbstractProcess> duplicateProcess = new ArrayList<AbstractProcess>();
 			final List<AbstractProcess> processes = getAllProcesses();
 			for (AbstractProcess p : importedProcess) {

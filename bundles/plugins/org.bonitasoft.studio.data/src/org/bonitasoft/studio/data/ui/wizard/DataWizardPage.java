@@ -550,7 +550,7 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
 						if (object instanceof Data) {
 							final Data otherData = (Data) object;
 							final Data originalData = ((DataWizard) getWizard()).getOriginalData();
-							if (!otherData.equals(originalData) && value.toString().equals(otherData.getName())) {
+							if (!otherData.equals(originalData) && value.toString().toLowerCase().equals(otherData.getName().toLowerCase())) {
 								return new Status(IStatus.ERROR, DataPlugin.PLUGIN_ID, Messages.dataAlreadyExist);
 							}
 						}
@@ -569,7 +569,7 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
 					if (object instanceof Data && !(object.eContainer() instanceof Expression)) {
 						final Data otherData = (Data) object;
 						final Data originalData = ((DataWizard) getWizard()).getOriginalData();
-						if (!otherData.equals(originalData) && value.toString().equals(otherData.getName())) {
+						if (!otherData.equals(originalData) && value.toString().toLowerCase().equals(otherData.getName().toLowerCase())) {
 							return new Status(IStatus.ERROR, DataPlugin.PLUGIN_ID, Messages.dataAlreadyExist);
 						}
 					}

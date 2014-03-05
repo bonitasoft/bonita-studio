@@ -16,12 +16,14 @@
  */
 package org.bonitasoft.studio.importer.bar.custom.migration;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.bonitasoft.engine.bpm.document.DocumentValue;
 import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.common.emf.tools.WidgetHelper;
 import org.bonitasoft.studio.common.emf.tools.WidgetModifiersSwitch;
 import org.bonitasoft.studio.importer.bar.i18n.Messages;
 import org.bonitasoft.studio.migration.migrator.ReportCustomMigration;
@@ -143,7 +145,7 @@ public class WidgetMigration extends ReportCustomMigration {
 					if(eClassifier instanceof EClass){
 						EObject widgetInstance = FormFactory.eINSTANCE.create((EClass) eClassifier);
 						if(widgetInstance instanceof Widget){
-							return ((Widget) widgetInstance).getAssociatedReturnType();
+							return WidgetHelper.getAssociatedReturnType(((Widget) widgetInstance));
 						}
 					}
 					return String.class.getName();
@@ -380,7 +382,9 @@ public class WidgetMigration extends ReportCustomMigration {
 					}
 				}
 				expression.set("returnType", StringToExpressionConverter.getDataReturnType(data));
-				if(getParentPageFlow(widget).instanceOf("process.Pool")){
+				String dataName = expression.get("name");
+				Instance parentPageFlow = getParentPageFlow(widget);
+                if(!isPageFlowData(dataName,parentPageFlow) && parentPageFlow.instanceOf("process.Pool")){
 					model.delete(expression);
 					widget.set("inputExpression", StringToExpressionConverter.createExpressionInstance(model, "", "", String.class.getName(), ExpressionConstants.CONSTANT_TYPE, false));
 					addReportChange((String) widget.get("name"),widget.getEClass().getName(), widget.getUuid(), Messages.widgetDataInputAtProcessLevelMigrationDescription, Messages.dataProperty, IStatus.ERROR);
@@ -401,7 +405,25 @@ public class WidgetMigration extends ReportCustomMigration {
 		widget.set("inputExpression", expression);
 	}
 
-	private Instance createWidgetOutput(Model model,Instance connector) {
+
+    protected boolean isPageFlowData(String dataName, Instance parentPageFlow) {
+        List<Instance> transientData = new ArrayList<Instance>();
+        if(parentPageFlow.instanceOf("process.PageFlow")){
+            transientData = parentPageFlow.get("transientData");
+        }else if(parentPageFlow.instanceOf("process.ViewPageFlow")){
+            transientData = parentPageFlow.get("viewTransientData");
+        }
+      
+        for(Instance data : transientData){
+            String name = data.get("name");
+            if(dataName.equals(name)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private Instance createWidgetOutput(Model model,Instance connector) {
 		Instance output = model.newInstance("expression.Operation");
 		Instance expression = model.newInstance("expression.Expression");
 		output.set("rightOperand", expression);

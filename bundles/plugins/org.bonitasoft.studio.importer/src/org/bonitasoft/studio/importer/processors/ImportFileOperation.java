@@ -107,7 +107,10 @@ public class ImportFileOperation implements IRunnableWithProgress {
 				try {
 					fis = new FileInputStream(f);
 					DiagramRepositoryStore diagramStore = (DiagramRepositoryStore) RepositoryManager.getInstance().getCurrentRepository().getRepositoryStore(DiagramRepositoryStore.class) ;
-					fileStoresToOpen.add(diagramStore.importInputStream(f.getName(), fis)) ;
+					DiagramFileStore fileStore = diagramStore.importInputStream(f.getName(), fis);
+					if(fileStore instanceof DiagramFileStore){
+					    fileStoresToOpen.add(fileStore) ;
+					}
 					f.delete();
 				} catch (FileNotFoundException e) {
 					throw new InvocationTargetException(e);

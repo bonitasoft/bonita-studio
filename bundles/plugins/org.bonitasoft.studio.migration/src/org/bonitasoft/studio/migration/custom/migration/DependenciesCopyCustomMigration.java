@@ -99,7 +99,11 @@ public class DependenciesCopyCustomMigration extends CustomMigration {
     protected Instance newCleanedWidgetDependency(Instance refElement, Model model) {
         Instance newInstance = model.newInstance(refElement.getEClass());
         newInstance.set("name", refElement.get("name"));
-        newInstance.set("returnTypeModifier", refElement.get("returnTypeModifier"));
+        Object modifier = refElement.get("returnTypeModifier");
+        if(modifier == null){
+            modifier = String.class.getName();
+        }
+        newInstance.set("returnTypeModifier", modifier);
         if(newInstance.instanceOf("form.Duplicable")){
             newInstance.set("duplicate", refElement.get("duplicate"));
         }

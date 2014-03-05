@@ -61,6 +61,7 @@ import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
@@ -248,7 +249,8 @@ public class DiagramFileStore extends EMFFileStore implements IRepositoryFileSto
 
 	@Override
 	protected void doClose() {
-		if(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage() != null){
+		IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+		if(activeWorkbenchWindow != null && activeWorkbenchWindow.getActivePage() != null){
 			IEditorReference[] editors = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getEditorReferences();
 			// look for the resource in other editors
 			for (IEditorReference iEditorReference : editors) {

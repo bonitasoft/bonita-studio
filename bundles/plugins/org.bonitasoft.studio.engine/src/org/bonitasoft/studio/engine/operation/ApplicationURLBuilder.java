@@ -22,7 +22,6 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLEncoder;
 
-import org.bonitasoft.engine.exception.BonitaRuntimeException;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
@@ -124,7 +123,7 @@ public class ApplicationURLBuilder {
             String id = ModelHelper.getEObjectID(process) ;
             IRepositoryFileStore file = processConfStore.getChild(id+".conf") ;
             if(file == null){
-                throw new BonitaRuntimeException("Unable to run process, you must first configure it");
+            	return null;
             }
             configuration = (Configuration) file.getContent();
         }else{

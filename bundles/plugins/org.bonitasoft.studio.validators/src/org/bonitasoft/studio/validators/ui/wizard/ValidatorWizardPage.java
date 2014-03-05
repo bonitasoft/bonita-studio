@@ -18,10 +18,15 @@
 
 package org.bonitasoft.studio.validators.ui.wizard;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.bonitasoft.studio.common.databinding.MultiValidator;
+import org.bonitasoft.studio.common.jface.databinding.validator.InputLengthValidator;
+import org.bonitasoft.studio.common.jface.databinding.validator.URLEncodableInputValidator;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
-import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.dependencies.ui.dialog.SelectJarsDialog;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.validators.ValidatorPlugin;
@@ -95,7 +100,7 @@ public class ValidatorWizardPage extends NewTypeWizardPage implements ISelection
         setDescription(Messages.ValidatorWizardPage_description);
         this.validator =  validator ;
         this.editMode = editMode ;
-        final IRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(ValidatorSourceRepositorySotre.class) ;
+        final ValidatorSourceRepositorySotre store = RepositoryManager.getInstance().getRepositoryStore(ValidatorSourceRepositorySotre.class) ;
         try {
             IPackageFragmentRoot root = RepositoryManager.getInstance().getCurrentRepository().getJavaProject().findPackageFragmentRoot(store.getResource().getFullPath());
             setPackageFragmentRoot(root, false) ;
@@ -232,17 +237,10 @@ public class ValidatorWizardPage extends NewTypeWizardPage implements ISelection
         displayNameText.setLayoutData(GridDataFactory.fillDefaults().grab(true,false).span(2, 1).create());
 
         UpdateValueStrategy targetToModel = new UpdateValueStrategy() ;
-        targetToModel.setAfterGetValidator(new IValidator() {
-
-            @Override
-            public IStatus validate(Object value) {
-                if(value == null || value.toString().isEmpty()){
-                    return new Status(IStatus.ERROR, ValidatorPlugin.PLUGIN_ID,Messages.nameIsEmpty) ;
-                }
-                return Status.OK_STATUS ;
-            }
-        }) ;
-
+        List<IValidator> validators = new ArrayList<IValidator>();
+        validators.add(new InputLengthValidator(Messages.createValidatorWizardPage_displayNameLabel,1,50));
+        validators.add(new URLEncodableInputValidator(Messages.createValidatorWizardPage_displayNameLabel));
+		targetToModel.setBeforeSetValidator(new MultiValidator(validators ));
         context.bindValue(SWTObservables.observeText(displayNameText, SWT.Modify), EMFObservables.observeValue(validator, ValidatorPackage.Literals.VALIDATOR_DESCRIPTOR__NAME),targetToModel,null) ;
     }
 

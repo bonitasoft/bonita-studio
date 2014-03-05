@@ -43,7 +43,7 @@ import org.eclipse.ui.IWorkbenchPart;
  */
 public class ValidatorDescriptorFileStore extends EMFFileStore {
 
-    public ValidatorDescriptorFileStore(String fileName, IRepositoryStore store) {
+    public ValidatorDescriptorFileStore(String fileName, IRepositoryStore<? extends EMFFileStore> store) {
         super(fileName, store);
     }
 

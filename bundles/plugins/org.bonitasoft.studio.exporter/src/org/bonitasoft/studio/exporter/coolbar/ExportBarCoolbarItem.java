@@ -94,8 +94,7 @@ public class ExportBarCoolbarItem implements IBonitaContributionItem {
 	 */
 	@Override
 	public boolean isEnabled() {
-		Command cmd = getCommand();
-		return  cmd.getHandler() != null && cmd.getHandler().isEnabled();
+		return true;
 	}
 
 	/* (non-Javadoc)

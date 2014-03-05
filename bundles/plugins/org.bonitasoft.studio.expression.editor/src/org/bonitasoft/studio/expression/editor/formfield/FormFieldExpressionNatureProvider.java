@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
+import org.bonitasoft.studio.common.emf.tools.WidgetHelper;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionNatureProvider;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
@@ -35,7 +36,6 @@ import org.bonitasoft.studio.model.process.RecapFlow;
 import org.bonitasoft.studio.model.process.ViewPageFlow;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 
 /**
  * @author Aurelie Zara
@@ -130,13 +130,9 @@ IExpressionNatureProvider {
 	private Expression createExpression(Widget w) {
 		Expression exp = ExpressionFactory.eINSTANCE.createExpression() ;
 		exp.setType(getExpressionType()) ;
-		exp.setContent("field_"+w.getName()) ;
-		exp.setName("field_"+w.getName()) ;
-		if(w.getReturnTypeModifier() != null ){
-			exp.setReturnType(w.getReturnTypeModifier()) ;
-		}else{
-			exp.setReturnType(w.getAssociatedReturnType()) ;
-		}
+		exp.setContent(WidgetHelper.FIELD_PREFIX+w.getName()) ;
+		exp.setName(WidgetHelper.FIELD_PREFIX+w.getName()) ;
+		exp.setReturnType(WidgetHelper.getAssociatedReturnType(w)) ;
 		exp.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(w)) ;
 		return exp;
 	}
