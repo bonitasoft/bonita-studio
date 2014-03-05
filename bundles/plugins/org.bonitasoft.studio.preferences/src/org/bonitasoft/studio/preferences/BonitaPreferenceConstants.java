@@ -17,7 +17,6 @@
  */
 package org.bonitasoft.studio.preferences;
 
-import java.util.Locale;
 
 /**
  * @author Romain Bioteau
@@ -45,34 +44,6 @@ public class BonitaPreferenceConstants {
     public static final String CURRENT_UXP_LOCALE = "currentUXPLocale"; //$NON-NLS-1$
     public static final String CURRENT_STUDIO_LOCALE = "currentStudioLocale"; //$NON-NLS-1$
     public static final String AUTOMATIC_ID = "automaticId"; //$NON-NLS-1$
-    public static final Locale[] AVAILABLE_LOCALES_USER_XP = {
-        Locale.ENGLISH,
-        Locale.GERMAN,
-        new Locale("es"),
-        //        new Locale("cat"),
-        //        new Locale("et"),
-        Locale.FRENCH,
-        //        new Locale("hr"),
-        //        new Locale("hu"),
-       	Locale.ITALIAN,
-        //        new Locale("nl"),
-        //        new Locale("pt"),
-        new Locale("pt","BR"),
-        //        new Locale("ru"),
-        //        new Locale("tr"),
-        //        Locale.CHINESE
-    };
-    public static final Locale[] AVAILABLE_LOCALES = {
-        Locale.ENGLISH,
-                new Locale("es"),
-                Locale.FRENCH,
-                Locale.GERMAN,
-                Locale.ITALIAN,
-                //new Locale("pt"),
-                new Locale("pt","BR"),
-                Locale.JAPANESE//,
-                //new Locale("zh")
-    };
 
     public static final String SHOW_CONDITION_ON_TRANSITION = "showConditiononTransition"; //$NON-NLS-1$
 
@@ -208,22 +179,5 @@ public class BonitaPreferenceConstants {
 	public static final String PUBLISH_ORGANIZATION="publishOrganization";
 	public static final String DEFAULT_STUDIO_LOCALE = "defaultLocale";
 
-    /**
-     * @param locales2 TODO
-     * @return
-     */
-    public static String[][] getAvailableLocales(Locale[] locales2) {
-        String[][] locales = new String[locales2.length][];
-        for (int i = 0; i < locales2.length; i++) {
-            Locale locale = locales2[i];
-            String displayLanguage = locale.getDisplayLanguage(locale);
-            displayLanguage = displayLanguage.substring(0, 1).toUpperCase() + displayLanguage.substring(1);
-            if(locale.getCountry() != null && locale.getCountry().length()>0){
-                displayLanguage += " ("+locale.getDisplayCountry()+")";
-            }
-            String[] local_s = { displayLanguage, locale.toString() };
-            locales[i] = local_s;
-        }
-        return locales;
-    }
+
 }
