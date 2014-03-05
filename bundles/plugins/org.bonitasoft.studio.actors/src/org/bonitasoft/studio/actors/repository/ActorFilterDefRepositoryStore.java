@@ -23,7 +23,6 @@ import java.util.Set;
 
 import org.bonitasoft.studio.actors.ActorsPlugin;
 import org.bonitasoft.studio.actors.i18n.Messages;
-import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.connector.model.definition.AbstractDefinitionRepositoryStore;
 import org.bonitasoft.studio.connector.model.definition.Category;
 import org.bonitasoft.studio.connector.model.i18n.DefinitionResourceProvider;
@@ -57,17 +56,12 @@ public class ActorFilterDefRepositoryStore extends AbstractDefinitionRepositoryS
         return null;
     }
 
-    @Override
-    public void createRepositoryStore(IRepository repository) {
-        super.createRepositoryStore(repository);
-        final ActorsPlugin plugin = ActorsPlugin.getDefault();
-        final Bundle bundle = plugin.getBundle();
-        resourceProvider = DefinitionResourceProvider.getInstance(this,bundle);
-        resourceProvider.loadDefinitionsCategories(null);
-    }
-
 
     public DefinitionResourceProvider getResourceProvider() {
+        if(resourceProvider == null){
+            resourceProvider = DefinitionResourceProvider.getInstance(this,getBundle());
+            resourceProvider.loadDefinitionsCategories(null);
+        }
         return resourceProvider;
     }
 
@@ -123,11 +117,11 @@ public class ActorFilterDefRepositoryStore extends AbstractDefinitionRepositoryS
             messageProvider.loadDefinitionsCategories(null);
         }
     }
-    
+
     @Override
     public void migrate() throws CoreException, MigrationException {
-    	super.migrate();
-    	 resourceProvider.loadDefinitionsCategories(null);
+        super.migrate();
+        getResourceProvider().loadDefinitionsCategories(null);
     }
 
 }
