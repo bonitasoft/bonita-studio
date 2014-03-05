@@ -311,7 +311,7 @@ public class AddFormCommand extends AbstractTransactionalCommand {
             previousLabel.setContent(previousName);
             previousLabel.setReturnTypeFixed(true);
             tempWidget.setDisplayLabel(previousLabel);
-            tempWidget.setName(NamingUtils.toJavaIdentifier(previousName, false));
+            tempWidget.setName(NamingUtils.toJavaIdentifier(previousName, true));
             Expression insertWidgetIf = createInsertWidgetIfScript(); 
             tempWidget.setInjectWidgetScript(insertWidgetIf);
             wLayout = FormFactory.eINSTANCE.createWidgetLayoutInfo();
@@ -324,7 +324,7 @@ public class AddFormCommand extends AbstractTransactionalCommand {
             // add a submit button
             tempWidget = FormFactory.eINSTANCE.createSubmitFormButton();
             String submitButtonName = NamingUtils.getInstance(pageFlow).generateName(tempWidget, pageFlow);
-            tempWidget.setName(NamingUtils.toJavaIdentifier(submitButtonName, false));
+            tempWidget.setName(NamingUtils.toJavaIdentifier(submitButtonName, true));
            
          
             Expression submitLabel = ExpressionFactory.eINSTANCE.createExpression();
