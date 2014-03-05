@@ -96,6 +96,9 @@ public class Messages extends NLS {
 	public static String businessDataNotCompatibleForOperator;
 
 
+    public static String AtLeastOneRowShouldBeAddedFor;
+
+
 
 
     private Messages() {

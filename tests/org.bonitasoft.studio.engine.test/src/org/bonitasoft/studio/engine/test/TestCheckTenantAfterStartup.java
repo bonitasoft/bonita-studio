@@ -17,7 +17,7 @@
  */
 package org.bonitasoft.studio.engine.test;
 
-import junit.framework.TestCase;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.bonitasoft.engine.api.IdentityAPI;
 import org.bonitasoft.engine.api.ProcessAPI;
@@ -30,44 +30,48 @@ import org.bonitasoft.studio.actors.preference.ActorsPreferenceConstants;
 import org.bonitasoft.studio.actors.repository.OrganizationFileStore;
 import org.bonitasoft.studio.actors.repository.OrganizationRepositoryStore;
 import org.bonitasoft.studio.actors.ui.wizard.page.GroupContentProvider;
+import org.bonitasoft.studio.application.job.StartEngineJob;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
+import org.eclipse.core.runtime.jobs.Job;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
- * @author Baptiste Mesta
+ * @author Romain Bioteau
  * 
  */
-public class TestCheckTenantAfterStartup extends TestCase {
+public class TestCheckTenantAfterStartup {
 
     private APISession session;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
+        Job.getJobManager().join(StartEngineJob.FAMILY, Repository.NULL_PROGRESS_MONITOR);
         session = BOSEngineManager.getInstance().loginDefaultTenant(Repository.NULL_PROGRESS_MONITOR);
+        assertThat(session).isNotNull();
     }
 
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
+
+    @After
+    public void tearDown() throws Exception {
         if(session != null){
             BOSEngineManager.getInstance().logoutDefaultTenant(session);
         }
     }
 
-    /**
-     * Check if the data base was droped and elements are retrieved
-     */
+    @Test
     public void testCheckTenantIsEmptyAfterStartup() throws Exception {
         final ProcessAPI processApi = BOSEngineManager.getInstance().getProcessAPI(session);
 
-        assertEquals("No process definition should exists",0, processApi.getNumberOfProcessDeploymentInfos());
-        assertEquals("No process instance should exists",0, processApi.getNumberOfProcessInstances());
+        assertThat(processApi.getNumberOfProcessDeploymentInfos()).isZero().as("No process definition should exists");
+        assertThat(processApi.getNumberOfProcessInstances()).isZero().as("No process instance should exists");
     }
 
-
+    @Test
     public void testOrganizationSynchronization() throws Exception {
         final IdentityAPI identityAPI = BOSEngineManager.getInstance().getIdentityAPI(session);
 
@@ -77,15 +81,15 @@ public class TestCheckTenantAfterStartup extends TestCase {
 
         final Organization organization = fileStore.getContent();
         for(Group group : organization.getGroups().getGroup()){
-            assertNotNull("Group "+group.getName()+" is missing after restart",identityAPI.getGroupByPath(GroupContentProvider.getGroupPath(group)));
+            assertThat(identityAPI.getGroupByPath(GroupContentProvider.getGroupPath(group))).isNotNull().as("Group "+group.getName()+" is missing after restart");
         }
 
         for(Role role : organization.getRoles().getRole()){
-            assertNotNull("Role "+role.getName()+" is missing after restart",identityAPI.getRoleByName(role.getName()));
+            assertThat(identityAPI.getRoleByName(role.getName())).isNotNull().as("Role "+role.getName()+" is missing after restart");
         }
 
         for(User user : organization.getUsers().getUser()){
-            assertNotNull("User "+user.getUserName()+" is missing after restart",identityAPI.getUserByUserName(user.getUserName()));
+            assertThat(identityAPI.getUserByUserName(user.getUserName())).isNotNull().as("User "+user.getUserName()+" is missing after restart");
         }
     }
 

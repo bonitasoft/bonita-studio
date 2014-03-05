@@ -40,6 +40,7 @@ import org.bonitasoft.studio.connector.model.definition.Category;
 import org.bonitasoft.studio.connector.model.definition.Component;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinitionFactory;
+import org.bonitasoft.studio.connector.model.definition.Group;
 import org.bonitasoft.studio.connector.model.definition.IDefinitionRepositoryStore;
 import org.bonitasoft.studio.connector.model.definition.Input;
 import org.bonitasoft.studio.connector.model.definition.Page;
@@ -337,7 +338,7 @@ public abstract class AbstractDefinitionWizard extends ExtensibleWizard {
 				if (input.isMandatory() && (input.getDefaultValue()==null || input.getDefaultValue().isEmpty())){
 					boolean isPageContainingInput = false;
 					for (Page page:definitionWorkingCopy.getPage()){
-						isPageContainingInput = isPageContainingInput || isPageContainingInput(input,page);
+						isPageContainingInput = isPageContainingInput || isPageContainingInput(input,page.getWidget());
 					}
 					if (!isPageContainingInput){
 						return input;
@@ -349,13 +350,15 @@ public abstract class AbstractDefinitionWizard extends ExtensibleWizard {
 		return null;
 	}
 
-	private boolean isPageContainingInput(Input input,Page page){
-		for (Component component:page.getWidget()){
+	private boolean isPageContainingInput(Input input,List<Component> components){
+		for (Component component:components){
 			if (component instanceof WidgetComponent){
 				WidgetComponent widget = (WidgetComponent)component;
 				if (widget.getInputName().equals(input.getName())){
 					return true;
 				}
+			}else if(component instanceof Group){
+				return isPageContainingInput(input, ((Group) component).getWidget());
 			}
 		}
 		return false;

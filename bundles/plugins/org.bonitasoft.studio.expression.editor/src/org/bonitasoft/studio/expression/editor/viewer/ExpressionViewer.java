@@ -32,6 +32,7 @@ import java.util.TreeSet;
 import org.bonitasoft.studio.common.AbstractRefactorOperation;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.IBonitaVariableContext;
+import org.bonitasoft.studio.common.emf.tools.WidgetHelper;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
@@ -850,7 +851,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 
 		Set<String> cache = new HashSet<String>();
 		for (Expression e : getFilteredExpressions()) {
-			if (e.getName().equals(input)) {
+			if (e.getName() != null && e.getName().equals(input)) {
 				cache.add(e.getContent());
 			}
 		}
@@ -896,7 +897,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 
 		Set<String> cache = new HashSet<String>();
 		for (Expression e : getFilteredExpressions()) {
-			if (e.getName().equals(input)) {
+			if (e.getName() != null && e.getName().equals(input)) {
 				cache.add(e.getType());
 			}
 		}
@@ -1175,7 +1176,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 				}
 				if (parent instanceof Widget) {
 					final Widget w = (Widget) parent;
-					if (w != null && w instanceof TextFormField && copy.getName().equals("field_" + w.getName())) {
+					if (w != null && w instanceof TextFormField && copy.getName().equals(WidgetHelper.FIELD_PREFIX + w.getName())) {
 						String returnTypeModifier = w.getReturnTypeModifier();
 						if (returnTypeModifier != null) {
 							if(w instanceof Duplicable && ((Duplicable) w).isDuplicate()){

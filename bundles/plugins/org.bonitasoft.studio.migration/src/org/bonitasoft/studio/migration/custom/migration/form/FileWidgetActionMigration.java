@@ -17,6 +17,7 @@
 package org.bonitasoft.studio.migration.custom.migration.form;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.common.emf.tools.WidgetHelper;
 import org.bonitasoft.studio.migration.utils.StringToExpressionConverter;
 import org.eclipse.emf.edapt.migration.CustomMigration;
 import org.eclipse.emf.edapt.migration.Instance;
@@ -45,7 +46,7 @@ public class FileWidgetActionMigration extends CustomMigration {
 						String.class.getName(), 
 						ExpressionConstants.DOCUMENT_REF_TYPE,
 						false);
-				String widgetId = "field_"+fileWidget.get("name");
+				String widgetId = WidgetHelper.FIELD_PREFIX+fileWidget.get("name");
 				Instance actionExpression = StringToExpressionConverter.createExpressionInstanceWithDependency(model, 
 						widgetId, 
 						widgetId, 

@@ -69,7 +69,6 @@ public class ExporterTools {
     public static final String ATTR_MAXLENGTH = "attr:maxlength"; //$NON-NLS-1$
     public static final String ATTR_MAXHEIGHT = "attr:maxheight"; //$NON-NLS-1$
     public static final String TEXT_JUSTIFY = "css:text-justify"; //$NON-NLS-1$
-    public static final String FIELD_IDENTIFIER = "field_";//$NON-NLS-1$
     public static final String GROOVY_PREFIX = "${"; //$NON-NLS-1$
     public static final String GROOVY_SUFFIX = "}"; //$NON-NLS-1$
     public static final String CONSULTATION = "consultation";

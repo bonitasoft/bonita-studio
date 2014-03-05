@@ -20,6 +20,7 @@ package org.bonitasoft.studio.connector.model.definition.wizard;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.common.emf.tools.WidgetHelper;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
@@ -98,7 +99,7 @@ public class SelectConnectorConfigurationWizard extends Wizard  {
 					Form parentForm = ModelHelper.getParentForm(currentConfiguraiton);
 					if(parentForm != null){
 						for(Widget w : ModelHelper.getAllAccessibleWidgetInsideForm(parentForm)){
-							if(("field_"+w.getName()).equals(expression.getContent())){
+							if((WidgetHelper.FIELD_PREFIX+w.getName()).equals(expression.getContent())){
 								expression.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(w));
 								break;
 							}

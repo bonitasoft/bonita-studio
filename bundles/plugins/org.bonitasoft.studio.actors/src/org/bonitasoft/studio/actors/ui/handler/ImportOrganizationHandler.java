@@ -81,7 +81,11 @@ public class ImportOrganizationHandler extends AbstractHandler {
 								MessageDialog.openError(Display.getDefault().getActiveShell(),  Messages.importOrganizationFailedTitle, Messages.importOrganizationFailedMessage);
 							}
 						} catch(CancellationException ce) {
-							MessageDialog.openWarning(Display.getDefault().getActiveShell(), Messages.importOrganizationCancelledTitle, Messages.importOrganizationCancelledMessage);
+							String message = Messages.importOrganizationCancelledMessage;
+							if(ce.getMessage() != null){
+								message = Messages.importOrganizationCancelledMessage + ":\n"+ce.getMessage();
+							}
+							MessageDialog.openWarning(Display.getDefault().getActiveShell(), Messages.importOrganizationCancelledTitle, message);
 						} catch (Exception e) {
 							BonitaStudioLog.error(e) ; 
 							OrganizationFileStore file = organizationStore.getChild(new File(filePath).getName().replace(".xml", "."+OrganizationRepositoryStore.ORGANIZATION_EXT));

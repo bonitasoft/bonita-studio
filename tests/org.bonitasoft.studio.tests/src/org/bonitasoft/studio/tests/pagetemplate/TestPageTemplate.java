@@ -85,6 +85,7 @@ public class TestPageTemplate extends SWTBotGefTestCase {
 
         formGefEditor.getEditPart("Date1").parent().select();
         formGefEditor.clickContextMenu("Delete");
+        bot.button(IDialogConstants.OK_LABEL).click();
         bot.waitUntil(Conditions.shellIsActive("Warning"));
         bot.button(IDialogConstants.OK_LABEL).click();
         saveEditorAndWaitNoMoreDirtyState();

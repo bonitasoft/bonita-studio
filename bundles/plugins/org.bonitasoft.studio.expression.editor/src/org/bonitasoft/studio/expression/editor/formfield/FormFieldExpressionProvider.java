@@ -21,24 +21,21 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.bonitasoft.engine.bpm.document.DocumentValue;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.common.emf.tools.WidgetHelper;
 import org.bonitasoft.studio.expression.editor.i18n.Messages;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionEditor;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionProvider;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
-import org.bonitasoft.studio.model.form.Duplicable;
-import org.bonitasoft.studio.model.form.FileWidget;
 import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.form.FormButton;
 import org.bonitasoft.studio.model.form.FormField;
 import org.bonitasoft.studio.model.form.Group;
 import org.bonitasoft.studio.model.form.NextFormButton;
 import org.bonitasoft.studio.model.form.SubmitFormButton;
-import org.bonitasoft.studio.model.form.TextFormField;
 import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.form.WidgetDependency;
 import org.bonitasoft.studio.model.process.AbstractPageFlow;
@@ -50,7 +47,6 @@ import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.swt.graphics.Image;
@@ -190,21 +186,10 @@ public class FormFieldExpressionProvider implements IExpressionProvider {
 	private Expression createExpression(Widget w) {
 		Expression exp = ExpressionFactory.eINSTANCE.createExpression() ;
 		exp.setType(getExpressionType()) ;
-		exp.setContent("field_"+w.getName()) ;
-		exp.setName("field_"+w.getName()) ;
-		if(w instanceof Duplicable && ((Duplicable) w).isDuplicate()){
-			exp.setReturnType(List.class.getName()) ; 
-		}else{
-			if(w instanceof TextFormField && w.getReturnTypeModifier() != null ){
-				exp.setReturnType(w.getReturnTypeModifier()) ;
-			}else{
-				if(w instanceof FileWidget){
-					exp.setReturnType(DocumentValue.class.getName());
-				}else{
-					exp.setReturnType(w.getAssociatedReturnType()) ;
-				}
-			}
-		}
+		exp.setContent(WidgetHelper.FIELD_PREFIX+w.getName()) ;
+		exp.setName(WidgetHelper.FIELD_PREFIX+w.getName()) ;
+		exp.setReturnType(WidgetHelper.getAssociatedReturnType(w)) ;
+
 		Widget copy = (Widget) ExpressionHelper.createDependencyFromEObject(w);
 		copy.getDependOn().clear();
 		exp.getReferencedElements().add(copy) ;

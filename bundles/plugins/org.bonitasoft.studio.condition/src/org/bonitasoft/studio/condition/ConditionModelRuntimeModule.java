@@ -21,4 +21,6 @@ public class ConditionModelRuntimeModule extends org.bonitasoft.studio.condition
 	public Class<? extends Manager> bindIContainer$Manager() {
 		return SimpleResourceDescriptionsBasedContainerManager.class;
 	}
+
+	
 }
