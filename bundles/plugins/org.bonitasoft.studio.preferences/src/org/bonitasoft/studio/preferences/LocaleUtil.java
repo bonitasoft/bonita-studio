@@ -42,8 +42,8 @@ public class LocaleUtil {
         }
 
     };
-    
-    
+
+
     public static Locale[] getProtalLocales() {
         File portalI18NFolder = BonitaHomeUtil.getPortalI18NFolder();
         String[] poFiles = portalI18NFolder.list(new FilenameFilter() {
@@ -55,18 +55,20 @@ public class LocaleUtil {
         });
         Set<Locale> locales = new TreeSet<Locale>(localeComparator);
         locales.add(Locale.ENGLISH);
-        for(String poFile : poFiles){
-            poFile = poFile.replace("mobile_", "").replace("portal-sp_", "").replace("portal_", "").replace(".po", "").replace("mobile", "").replace("portal-sp", "").replace("portal", "");
-            if(!poFile.isEmpty()){
-                String country = null;
-                String language = null;
-                if(poFile.contains("_")){
-                    language = poFile.split("_")[0];
-                    country = poFile.split("_")[1];
-                }else{
-                    language = poFile;
+        if(poFiles != null){
+            for(String poFile : poFiles){
+                poFile = poFile.replace("mobile_", "").replace("portal-sp_", "").replace("portal_", "").replace(".po", "").replace("mobile", "").replace("portal-sp", "").replace("portal", "");
+                if(!poFile.isEmpty()){
+                    String country = null;
+                    String language = null;
+                    if(poFile.contains("_")){
+                        language = poFile.split("_")[0];
+                        country = poFile.split("_")[1];
+                    }else{
+                        language = poFile;
+                    }
+                    locales.add(country == null ? new Locale(language) : new Locale(language,country));
                 }
-                locales.add(country == null ? new Locale(language) : new Locale(language,country));
             }
         }
         return locales.toArray(new Locale[locales.size()]);
@@ -76,22 +78,24 @@ public class LocaleUtil {
         Enumeration<URL> findEntries = BonitaStudioPreferencesPlugin.getDefault().getBundle().findEntries("/", "message*_*.properties", false);
         Set<Locale> locales = new TreeSet<Locale>(localeComparator);
         locales.add(Locale.ENGLISH);
-        while(findEntries.hasMoreElements()){
-            URL propertiesFile =  findEntries.nextElement();
-            String file = propertiesFile.getFile();
-            String[] split = file.replace(".properties", "").split("_");
-            String language = null;
-            String country = null;
-            if(split.length == 2){
-                language = split[1];
-            }else if(split.length == 3){
-                country = split[2];
-            }
-            if(language != null){
-                locales.add(country == null ? new Locale(language) : new Locale(language,country));
+        if(findEntries != null){
+            while(findEntries.hasMoreElements()){
+                URL propertiesFile =  findEntries.nextElement();
+                String file = propertiesFile.getFile();
+                String[] split = file.replace(".properties", "").split("_");
+                String language = null;
+                String country = null;
+                if(split.length == 2){
+                    language = split[1];
+                }else if(split.length == 3){
+                    country = split[2];
+                }
+                if(language != null){
+                    locales.add(country == null ? new Locale(language) : new Locale(language,country));
+                }
             }
         }
         return locales.toArray(new Locale[locales.size()]);
     }
-    
+
 }
