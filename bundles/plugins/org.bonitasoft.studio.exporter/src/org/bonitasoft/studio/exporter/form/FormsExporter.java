@@ -96,7 +96,6 @@ import org.bonitasoft.studio.model.process.AbstractPageFlow;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Activity;
 import org.bonitasoft.studio.model.process.AssociatedFile;
-import org.bonitasoft.studio.model.process.BusinessObjectData;
 import org.bonitasoft.studio.model.process.ConsultationPageFlowType;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.Element;
@@ -528,18 +527,8 @@ public class FormsExporter {
     }
 
 	protected ActionType getActionType(final Operation operation) {
-		if(ExpressionConstants.JAVA_METHOD_OPERATOR.equals(operation.getOperator())
-				&& operation.getLeftOperand() != null
-				&& !operation.getLeftOperand().getReferencedElements().isEmpty()
-				&& operation.getLeftOperand().getReferencedElements().get(0) instanceof BusinessObjectData){
-			return ActionType.valueOf(ExpressionConstants.BUSINESS_DATA_JAVA_SETTER_OPERATOR);
-		}
-		return ActionType.valueOf(operation.getOperator().getType());
+		return ActionType.valueOf(EngineExpressionUtil.getOperatorType(operation));
 	}
-
-
-
-
 
     protected boolean isTransientData(final Expression expression) {
         if (expression != null) {
