@@ -67,8 +67,8 @@ public abstract class AbstractConnectorConfigurationWizardPage extends WizardPag
 
     @Override
     public final void createControl(final Composite parent) {
-        setControl(doCreateControl(parent,context)) ;
         supportPage = WizardPageSupport.create(this, context) ;
+        setControl(doCreateControl(parent,context)) ;
     }
 
     protected EMFDataBindingContext getDatabindingContext(){
@@ -199,4 +199,20 @@ public abstract class AbstractConnectorConfigurationWizardPage extends WizardPag
 		this.isPageFlowContext = isPageFlowContext;
 	}
 
+
+
+	/* (non-Javadoc)
+	 * @see org.bonitasoft.studio.common.IBonitaVariableContext#isOverViewContext()
+	 */
+	@Override
+	public boolean isOverViewContext() {
+		return false;
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.bonitasoft.studio.common.IBonitaVariableContext#setIsOverviewContext(boolean)
+	 */
+	@Override
+	public void setIsOverviewContext(boolean isOverviewContext) {
+	}
 }

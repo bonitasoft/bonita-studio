@@ -408,7 +408,6 @@ public class DataExpressionEditor extends SelectionAwareExpressionEditor
 
 	@Override
 	public boolean isPageFlowContext() {
-		
 		return isPageFlowContext;
 	}
 
@@ -416,5 +415,20 @@ public class DataExpressionEditor extends SelectionAwareExpressionEditor
 	public void setIsPageFlowContext(boolean isPageFlowContext) {
 		this.isPageFlowContext=isPageFlowContext;
 		
+	}
+
+	/* (non-Javadoc)
+	 * @see org.bonitasoft.studio.common.IBonitaVariableContext#isOverViewContext()
+	 */
+	@Override
+	public boolean isOverViewContext() {
+		return false;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.bonitasoft.studio.common.IBonitaVariableContext#setIsOverviewContext(boolean)
+	 */
+	@Override
+	public void setIsOverviewContext(boolean isOverviewContext) {
 	}
 }

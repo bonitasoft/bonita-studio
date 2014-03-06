@@ -33,7 +33,11 @@ Require-Bundle: org.eclipse.ui,
  org.mockito;bundle-version="1.9.5";resolution:=optional
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
-Export-Package: org.bonitasoft.studio.diagram.custom;x-friends:="org.bonitasoft.studio.properties.test,org.bonitasoft.studio.tests,org.bonitasoft.studio.diagram.test",
+Export-Package: org.bonitasoft.studio.diagram.custom;
+  x-friends:="org.bonitasoft.studio.properties.test,
+   org.bonitasoft.studio.tests,
+   org.bonitasoft.studio.diagram.test,
+   org.bonitasoft.studio.tests.ex",
  org.bonitasoft.studio.diagram.custom.actions,
  org.bonitasoft.studio.diagram.custom.commands,
  org.bonitasoft.studio.diagram.custom.editPolicies,

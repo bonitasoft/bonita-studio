@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
-import org.bonitasoft.studio.connector.model.definition.ConnectorDefinitionFactory;
+import org.bonitasoft.studio.common.emf.tools.WidgetHelper;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinitionPackage;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
@@ -38,7 +38,6 @@ import org.w3c.dom.Document;
  */
 public class StringToExpressionConverter {
 
-	private static final String FORM_FIELD_PREFIX = "field_";
 	private static final String GROOVY_SUFFIX = "}";
 	private static final String GROOVY_PREFIX = "${";
 
@@ -60,7 +59,7 @@ public class StringToExpressionConverter {
 		}
 		for(Instance widget : model.getAllInstances("form.Widget")){
 			if(isInScope(container,widget)){
-				this.widget.put(FORM_FIELD_PREFIX+widget.get("name"),widget);
+				this.widget.put(WidgetHelper.FIELD_PREFIX+widget.get("name"),widget);
 			}
 		}
 		for(Instance document : model.getAllInstances("process.Document")){
@@ -93,7 +92,7 @@ public class StringToExpressionConverter {
 				if(widget != null){
 					widgetName = widget.get("name");
 				}
-				expressionScript = "${"+FORM_FIELD_PREFIX+widgetName+"}";
+				expressionScript = "${"+WidgetHelper.FIELD_PREFIX+widgetName+"}";
 			}
 		}
 

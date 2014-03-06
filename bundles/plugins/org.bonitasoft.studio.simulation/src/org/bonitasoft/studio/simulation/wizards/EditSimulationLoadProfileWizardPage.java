@@ -22,10 +22,11 @@ import java.util.Calendar;
 import java.util.List;
 
 import org.bonitasoft.simulation.model.Period;
-import org.bonitasoft.studio.common.NamingUtils;
+import org.bonitasoft.studio.common.databinding.MultiValidator;
+import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
+import org.bonitasoft.studio.common.jface.databinding.validator.URLEncodableInputValidator;
 import org.bonitasoft.studio.common.properties.DynamicAddRemoveLineComposite;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.model.simulation.InjectionPeriod;
 import org.bonitasoft.studio.model.simulation.LoadProfile;
 import org.bonitasoft.studio.model.simulation.RepartitionType;
@@ -34,6 +35,7 @@ import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.simulation.i18n.Messages;
 import org.bonitasoft.studio.simulation.repository.SimulationLoadProfileRepositoryStore;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.fieldassist.FieldDecoration;
 import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
@@ -69,7 +71,7 @@ public class EditSimulationLoadProfileWizardPage extends WizardPage {
 	private List<InjectionPeriod> injectionPeriods = new ArrayList<InjectionPeriod>();
 	private ScrolledComposite scrolledComposite;
 	private Composite pageComposite;
-	private IRepositoryStore loadProfileStore;
+	private SimulationLoadProfileRepositoryStore loadProfileStore;
 
 
 	/**
@@ -409,11 +411,14 @@ public class EditSimulationLoadProfileWizardPage extends WizardPage {
 		}
 
 
-
-		if(!NamingUtils.convertToId(getNameText()).equals(getNameText())){
-			setErrorMessage(Messages.EditSimulationResourceWizard_ErrorInvalidName); //$NON-NLS-1$
-			return false;
-		}
+		MultiValidator validator = new MultiValidator();
+        validator.addValidator(new EmptyInputValidator(Messages.name));
+        validator.addValidator(new URLEncodableInputValidator(Messages.name));
+        IStatus nameStatus = validator.validate(getNameText());
+        if(!nameStatus.isOK()){
+            setErrorMessage(nameStatus.getMessage());
+            return false;
+        }
 
 		if( !getNameText().equals(loadProfile.getName()) && loadProfileStore.getChild(getNameText()+"."+SimulationLoadProfileRepositoryStore.SIMULATION_LOADPROFILE_EXT) != null){
 			setErrorMessage(Messages.EditSimulationResourceWizard_ErrorSameName); //$NON-NLS-1$

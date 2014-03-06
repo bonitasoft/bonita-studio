@@ -267,6 +267,9 @@ public class HtmlTemplateGenerator {
                 Resource outResource = resourceSet.createResource(uri);
                 final EObject htmlForm = getXhtmlForm(outObjects, eObject);
                 if(htmlForm == null){
+                    if(os != null){
+                        os.close();
+                    }
                     throw new RuntimeException("Form template generation failed");
                 }
                 outResource.getContents().add(htmlForm);

@@ -100,6 +100,8 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
 	private TableViewer dataTableViewer;
 	private boolean isPageFlowContext = false;
 	protected EMFDataBindingContext context;
+	private boolean isOverviewContext = false;
+
 
 	/*
 	 * (non-Javadoc)
@@ -182,10 +184,9 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
 		res.append(" ?"); //$NON-NLS-1$
 		return res.toString();
 	}
+	
 
-
-
-	protected void removeData(IStructuredSelection structuredSelection) {
+protected void removeData(IStructuredSelection structuredSelection) {
 			String[] buttonList = {IDialogConstants.OK_LABEL,IDialogConstants.CANCEL_LABEL};
 			OutlineDialog dialog = new OutlineDialog(Display.getDefault().getActiveShell(), Messages.deleteDataDialogTitle, Display.getCurrent().getSystemImage(SWT.ICON_WARNING),createMessage(structuredSelection),MessageDialog.CONFIRM,buttonList,1,structuredSelection.toList());
 			if (dialog.open() == Dialog.OK) {
@@ -285,6 +286,7 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
 	public void addData(){
 		DataWizard wizard= new DataWizard(getEObject(), getDataFeature(), getDataFeatureToCheckUniqueID(), getShowAutoGenerateForm());
 		wizard.setIsPageFlowContext(isPageFlowContext());
+		wizard.setIsOverviewContext(isOverViewContext());
 		if(new DataWizardDialog(Display.getCurrent().getActiveShell(),wizard ,this).open() == Dialog.OK){
 			dataTableViewer.refresh();
 		}
@@ -310,6 +312,7 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
 			Data selectedData = (Data) selection.getFirstElement();
 			DataWizard wizard = new DataWizard(selectedData,getDataFeature(),getDataFeatureToCheckUniqueID(), getShowAutoGenerateForm());
 			wizard.setIsPageFlowContext(isPageFlowContext());
+			wizard.setIsOverviewContext(isOverViewContext());
 			new CustomWizardDialog(Display.getCurrent().getActiveShell(), wizard ,IDialogConstants.OK_LABEL).open();
 			dataTableViewer.refresh() ;
 		}
@@ -437,4 +440,22 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
 		this.isPageFlowContext=isPageFlowContext;
 
 	}
+	
+	/* (non-Javadoc)
+	 * @see org.bonitasoft.studio.common.IBonitaVariableContext#isOverViewContext()
+	 */
+	@Override
+	public boolean isOverViewContext() {
+	return isOverviewContext;
+		
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.bonitasoft.studio.common.IBonitaVariableContext#setIsOverviewContext(boolean)
+	 */
+	@Override
+	public void setIsOverviewContext(boolean isOverviewContext) {
+		this.isOverviewContext = isOverviewContext;
+	}
 }
+

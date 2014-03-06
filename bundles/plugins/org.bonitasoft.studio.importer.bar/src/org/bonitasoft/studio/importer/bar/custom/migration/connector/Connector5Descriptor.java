@@ -27,6 +27,7 @@ import java.util.Set;
 
 import org.bonitasoft.engine.bpm.connector.ConnectorEvent;
 import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.common.emf.tools.WidgetHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.connectors.extension.IConnectorDefinitionMapper;
 import org.bonitasoft.studio.importer.bar.BarImporterPlugin;
@@ -108,7 +109,7 @@ public class Connector5Descriptor {
 				}else{
 					Instance container = connectorInstance.getContainer();
 					if(container.instanceOf("form.Widget")){
-						String id = "field_"+container.get("name");
+						String id = WidgetHelper.FIELD_PREFIX+container.get("name");
 						outputs.put(id, value);
 					}
 				}

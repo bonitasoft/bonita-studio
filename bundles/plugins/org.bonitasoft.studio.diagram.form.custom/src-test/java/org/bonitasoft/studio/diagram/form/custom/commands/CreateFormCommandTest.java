@@ -20,14 +20,12 @@ package org.bonitasoft.studio.diagram.form.custom.commands;
 import static org.fest.assertions.Assertions.assertThat;
 
 import java.util.Collections;
-import java.util.List;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.diagram.form.custom.model.WidgetContainer;
 import org.bonitasoft.studio.diagram.form.custom.model.WidgetMapping;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.form.CheckBoxSingleFormField;
-import org.bonitasoft.studio.model.form.Duplicable;
 import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.form.FormFactory;
 import org.bonitasoft.studio.model.form.FormPackage;
@@ -140,30 +138,7 @@ public class CreateFormCommandTest {
 		assertThat(exp.getType()).isEqualTo(ExpressionConstants.CONSTANT_TYPE);
 		assertThat(exp.getReferencedElements()).isEmpty();
 	}
-	
-	@Test
-	public void shouldgetWidgetReturnType_ReturnListForDuplicatedWidget() throws Exception {
-		Widget widget = FormFactory.eINSTANCE.createTextFormField();
-		widget.setReturnTypeModifier(String.class.getName());
-		((Duplicable) widget).setDuplicate(true);
-		assertThat(commandUnderTest.getWidgetReturnType(widget)).isEqualTo(List.class.getName());
-	}
-	
-	@Test
-	public void shouldgetWidgetReturnType_ReturnReturnTypeModifier() throws Exception {
-		Widget widget = FormFactory.eINSTANCE.createTextFormField();
-		widget.setReturnTypeModifier(Integer.class.getName());
-		assertThat(commandUnderTest.getWidgetReturnType(widget)).isEqualTo(Integer.class.getName());
-	}
-	
-	@Test
-	public void shouldgetWidgetReturnType_ReturnAssociatedReturnType() throws Exception {
-		Widget widget = FormFactory.eINSTANCE.createTextFormField();
-		assertThat(commandUnderTest.getWidgetReturnType(widget)).isEqualTo(String.class.getName());
-		
-		widget = FormFactory.eINSTANCE.createCheckBoxSingleFormField();
-		assertThat(commandUnderTest.getWidgetReturnType(widget)).isEqualTo(Boolean.class.getName());
-	}
+
 	
 	@Test
 	public void shouldGetVerticalSpan_ReturnOneIfWidgetIsNotAGroup() throws Exception {

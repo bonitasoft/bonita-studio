@@ -29,7 +29,7 @@ import org.eclipse.core.runtime.IStatus;
 public class URLEncodableInputValidator implements IValidator {
 
     private final String inputName;
-    public static String[] reservedChars = new String[]{":" , "/" , "?", "#" , "[" , "]" , "@", "!", "$", "&" , "'" , "(",")", "*","+",",",";", "="};
+    public static String[] reservedChars = new String[]{":" , "/" , "?", "#" , "[" , "]" , "@", "!", "$", "&" , "'" , "(",")", "*","+",",",";", "=",">","<"};
     public URLEncodableInputValidator(String inputName){
         this.inputName = inputName ;
     }

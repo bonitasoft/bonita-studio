@@ -155,7 +155,7 @@ public class GroovyEditorDocumentationDialogTray extends DialogTray {
     }
 
     private void createFunctionsList(Composite parent) {
-        Composite funcComposite = new Composite(parent, SWT.BORDER | SWT.CENTER);
+        Composite funcComposite = new Composite(parent, SWT.NONE);
         funcComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(210, SWT.DEFAULT).create());
         funcComposite.setLayout(new GridLayout(1, true));
 
@@ -254,7 +254,7 @@ public class GroovyEditorDocumentationDialogTray extends DialogTray {
 	}
 
     private void createFunctionDocumentaion(Composite parent) {
-        Composite docComposite = new Composite(parent, SWT.BORDER | SWT.CENTER);
+        Composite docComposite = new Composite(parent, SWT.NONE);
         docComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         docComposite.setLayout(new GridLayout(1, true));
 

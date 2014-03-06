@@ -33,7 +33,7 @@ import org.bonitasoft.studio.common.DataUtil;
 import org.bonitasoft.studio.common.DatasourceConstants;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.common.exporter.ExporterTools;
+import org.bonitasoft.studio.common.emf.tools.WidgetHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.condition.conditionModel.Operation_Compare;
@@ -48,8 +48,6 @@ import org.bonitasoft.studio.engine.export.switcher.ExpressionConditionModelSwit
 import org.bonitasoft.studio.model.expression.ListExpression;
 import org.bonitasoft.studio.model.expression.Operation;
 import org.bonitasoft.studio.model.expression.TableExpression;
-import org.bonitasoft.studio.model.form.Duplicable;
-import org.bonitasoft.studio.model.form.TextFormField;
 import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.parameter.Parameter;
 import org.bonitasoft.studio.model.process.AbstractProcess;
@@ -178,19 +176,10 @@ public class EngineExpressionUtil {
 	 */
 	private static Expression createWidgetExpression(final Widget element) {
 		final ExpressionBuilder exp = new ExpressionBuilder();
-		exp.createNewInstance(ExporterTools.FIELD_IDENTIFIER + element.getName());
-		exp.setContent(ExporterTools.FIELD_IDENTIFIER + element.getName());
+		exp.createNewInstance(WidgetHelper.FIELD_PREFIX + element.getName());
+		exp.setContent(WidgetHelper.FIELD_PREFIX + element.getName());
 		exp.setExpressionType(ExpressionConstants.FORM_FIELD_TYPE);
-		if(element instanceof Duplicable && (((Duplicable)element).isDuplicate())){
-			exp.setReturnType(List.class.getName());
-		}else{
-			if(element instanceof TextFormField && element.getReturnTypeModifier() != null){
-				exp.setReturnType(element.getReturnTypeModifier());
-			}else{
-				exp.setReturnType(element.getAssociatedReturnType());
-			}
-		}
-
+		exp.setReturnType(WidgetHelper.getAssociatedReturnType(element));
 		try {
 			return exp.done();
 		} catch (final InvalidExpressionException e) {

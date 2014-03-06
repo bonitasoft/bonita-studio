@@ -21,27 +21,28 @@ import java.util.ArrayList;
 @SuppressWarnings("all")
 public class InternalConditionModelParser extends AbstractInternalAntlrParser {
     public static final String[] tokenNames = new String[] {
-        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "RULE_DOUBLE", "RULE_LONG", "RULE_STRING", "RULE_ID", "RULE_BOOLEAN", "RULE_WS", "RULE_DATE", "RULE_INT", "RULE_ML_COMMENT", "RULE_SL_COMMENT", "RULE_ANY_OTHER", "'<='", "'<'", "'>='", "'>'", "'!='", "'=='", "'!'"
+        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "RULE_DOUBLE", "RULE_LONG", "RULE_STRING", "RULE_ID", "RULE_BOOLEAN", "RULE_UTF8_CHARACTERS", "RULE_WS", "RULE_DATE", "RULE_INT", "RULE_ML_COMMENT", "RULE_SL_COMMENT", "RULE_ANY_OTHER", "'<='", "'<'", "'>='", "'>'", "'!='", "'=='", "'!'"
     };
     public static final int RULE_BOOLEAN=8;
     public static final int RULE_ID=7;
-    public static final int RULE_DATE=10;
+    public static final int RULE_DATE=11;
     public static final int RULE_LONG=5;
-    public static final int RULE_ANY_OTHER=14;
+    public static final int T__22=22;
+    public static final int RULE_ANY_OTHER=15;
     public static final int T__21=21;
     public static final int T__20=20;
-    public static final int RULE_SL_COMMENT=13;
+    public static final int RULE_SL_COMMENT=14;
     public static final int EOF=-1;
+    public static final int RULE_UTF8_CHARACTERS=9;
     public static final int RULE_DOUBLE=4;
-    public static final int RULE_ML_COMMENT=12;
+    public static final int RULE_ML_COMMENT=13;
     public static final int T__19=19;
     public static final int RULE_STRING=6;
     public static final int T__16=16;
-    public static final int T__15=15;
     public static final int T__18=18;
     public static final int T__17=17;
-    public static final int RULE_INT=11;
-    public static final int RULE_WS=9;
+    public static final int RULE_INT=12;
+    public static final int RULE_WS=10;
 
     // delegates
     // delegators
@@ -160,7 +161,7 @@ public class InternalConditionModelParser extends AbstractInternalAntlrParser {
                 {
                 int LA1_1 = input.LA(2);
 
-                if ( ((LA1_1>=15 && LA1_1<=20)) ) {
+                if ( ((LA1_1>=16 && LA1_1<=21)) ) {
                     alt1=1;
                 }
                 else if ( (LA1_1==EOF) ) {
@@ -178,7 +179,7 @@ public class InternalConditionModelParser extends AbstractInternalAntlrParser {
                 {
                 int LA1_2 = input.LA(2);
 
-                if ( ((LA1_2>=15 && LA1_2<=20)) ) {
+                if ( ((LA1_2>=16 && LA1_2<=21)) ) {
                     alt1=1;
                 }
                 else if ( (LA1_2==EOF) ) {
@@ -196,7 +197,7 @@ public class InternalConditionModelParser extends AbstractInternalAntlrParser {
                 {
                 int LA1_3 = input.LA(2);
 
-                if ( ((LA1_3>=15 && LA1_3<=20)) ) {
+                if ( ((LA1_3>=16 && LA1_3<=21)) ) {
                     alt1=1;
                 }
                 else if ( (LA1_3==EOF) ) {
@@ -214,7 +215,7 @@ public class InternalConditionModelParser extends AbstractInternalAntlrParser {
                 {
                 int LA1_4 = input.LA(2);
 
-                if ( ((LA1_4>=15 && LA1_4<=20)) ) {
+                if ( ((LA1_4>=16 && LA1_4<=21)) ) {
                     alt1=1;
                 }
                 else if ( (LA1_4==EOF) ) {
@@ -235,7 +236,7 @@ public class InternalConditionModelParser extends AbstractInternalAntlrParser {
                 if ( (LA1_5==EOF) ) {
                     alt1=2;
                 }
-                else if ( ((LA1_5>=15 && LA1_5<=20)) ) {
+                else if ( ((LA1_5>=16 && LA1_5<=21)) ) {
                     alt1=1;
                 }
                 else {
@@ -246,7 +247,7 @@ public class InternalConditionModelParser extends AbstractInternalAntlrParser {
                 }
                 }
                 break;
-            case 21:
+            case 22:
                 {
                 alt1=2;
                 }
@@ -397,7 +398,7 @@ public class InternalConditionModelParser extends AbstractInternalAntlrParser {
             if ( ((LA2_0>=RULE_DOUBLE && LA2_0<=RULE_BOOLEAN)) ) {
                 alt2=1;
             }
-            else if ( (LA2_0==21) ) {
+            else if ( (LA2_0==22) ) {
                 alt2=2;
             }
             else {
@@ -753,7 +754,7 @@ public class InternalConditionModelParser extends AbstractInternalAntlrParser {
 
             }
 
-            otherlv_2=(Token)match(input,15,FOLLOW_15_in_ruleOperation_Less_Equals623); 
+            otherlv_2=(Token)match(input,16,FOLLOW_16_in_ruleOperation_Less_Equals623); 
 
                 	newLeafNode(otherlv_2, grammarAccess.getOperation_Less_EqualsAccess().getLessThanSignEqualsSignKeyword_2());
                 
@@ -906,7 +907,7 @@ public class InternalConditionModelParser extends AbstractInternalAntlrParser {
 
             }
 
-            otherlv_2=(Token)match(input,16,FOLLOW_16_in_ruleOperation_Less757); 
+            otherlv_2=(Token)match(input,17,FOLLOW_17_in_ruleOperation_Less757); 
 
                 	newLeafNode(otherlv_2, grammarAccess.getOperation_LessAccess().getLessThanSignKeyword_2());
                 
@@ -1059,7 +1060,7 @@ public class InternalConditionModelParser extends AbstractInternalAntlrParser {
 
             }
 
-            otherlv_2=(Token)match(input,17,FOLLOW_17_in_ruleOperation_Greater_Equals891); 
+            otherlv_2=(Token)match(input,18,FOLLOW_18_in_ruleOperation_Greater_Equals891); 
 
                 	newLeafNode(otherlv_2, grammarAccess.getOperation_Greater_EqualsAccess().getGreaterThanSignEqualsSignKeyword_2());
                 
@@ -1212,7 +1213,7 @@ public class InternalConditionModelParser extends AbstractInternalAntlrParser {
 
             }
 
-            otherlv_2=(Token)match(input,18,FOLLOW_18_in_ruleOperation_Greater1025); 
+            otherlv_2=(Token)match(input,19,FOLLOW_19_in_ruleOperation_Greater1025); 
 
                 	newLeafNode(otherlv_2, grammarAccess.getOperation_GreaterAccess().getGreaterThanSignKeyword_2());
                 
@@ -1365,7 +1366,7 @@ public class InternalConditionModelParser extends AbstractInternalAntlrParser {
 
             }
 
-            otherlv_2=(Token)match(input,19,FOLLOW_19_in_ruleOperation_Not_Equals1159); 
+            otherlv_2=(Token)match(input,20,FOLLOW_20_in_ruleOperation_Not_Equals1159); 
 
                 	newLeafNode(otherlv_2, grammarAccess.getOperation_Not_EqualsAccess().getExclamationMarkEqualsSignKeyword_2());
                 
@@ -1518,7 +1519,7 @@ public class InternalConditionModelParser extends AbstractInternalAntlrParser {
 
             }
 
-            otherlv_2=(Token)match(input,20,FOLLOW_20_in_ruleOperation_Equals1293); 
+            otherlv_2=(Token)match(input,21,FOLLOW_21_in_ruleOperation_Equals1293); 
 
                 	newLeafNode(otherlv_2, grammarAccess.getOperation_EqualsAccess().getEqualsSignEqualsSignKeyword_2());
                 
@@ -1753,7 +1754,7 @@ public class InternalConditionModelParser extends AbstractInternalAntlrParser {
 
             }
 
-            otherlv_1=(Token)match(input,21,FOLLOW_21_in_ruleOperation_NotUnary1507); 
+            otherlv_1=(Token)match(input,22,FOLLOW_22_in_ruleOperation_NotUnary1507); 
 
                 	newLeafNode(otherlv_1, grammarAccess.getOperation_NotUnaryAccess().getExclamationMarkKeyword_1());
                 
@@ -2570,9 +2571,9 @@ public class InternalConditionModelParser extends AbstractInternalAntlrParser {
     static final String DFA3_eofS =
         "\14\uffff";
     static final String DFA3_minS =
-        "\1\4\5\17\6\uffff";
+        "\1\4\5\20\6\uffff";
     static final String DFA3_maxS =
-        "\1\10\5\24\6\uffff";
+        "\1\10\5\25\6\uffff";
     static final String DFA3_acceptS =
         "\6\uffff\1\6\1\1\1\2\1\3\1\5\1\4";
     static final String DFA3_specialS =
@@ -2645,40 +2646,40 @@ public class InternalConditionModelParser extends AbstractInternalAntlrParser {
     public static final BitSet FOLLOW_ruleOperation_Equals_in_ruleOperation511 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_ruleOperation_Less_Equals_in_entryRuleOperation_Less_Equals546 = new BitSet(new long[]{0x0000000000000000L});
     public static final BitSet FOLLOW_EOF_in_entryRuleOperation_Less_Equals556 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleExpression_Terminal_in_ruleOperation_Less_Equals611 = new BitSet(new long[]{0x0000000000008000L});
-    public static final BitSet FOLLOW_15_in_ruleOperation_Less_Equals623 = new BitSet(new long[]{0x00000000000001F0L});
+    public static final BitSet FOLLOW_ruleExpression_Terminal_in_ruleOperation_Less_Equals611 = new BitSet(new long[]{0x0000000000010000L});
+    public static final BitSet FOLLOW_16_in_ruleOperation_Less_Equals623 = new BitSet(new long[]{0x00000000000001F0L});
     public static final BitSet FOLLOW_ruleExpression_Terminal_in_ruleOperation_Less_Equals644 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_ruleOperation_Less_in_entryRuleOperation_Less680 = new BitSet(new long[]{0x0000000000000000L});
     public static final BitSet FOLLOW_EOF_in_entryRuleOperation_Less690 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleExpression_Terminal_in_ruleOperation_Less745 = new BitSet(new long[]{0x0000000000010000L});
-    public static final BitSet FOLLOW_16_in_ruleOperation_Less757 = new BitSet(new long[]{0x00000000000001F0L});
+    public static final BitSet FOLLOW_ruleExpression_Terminal_in_ruleOperation_Less745 = new BitSet(new long[]{0x0000000000020000L});
+    public static final BitSet FOLLOW_17_in_ruleOperation_Less757 = new BitSet(new long[]{0x00000000000001F0L});
     public static final BitSet FOLLOW_ruleExpression_Terminal_in_ruleOperation_Less778 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_ruleOperation_Greater_Equals_in_entryRuleOperation_Greater_Equals814 = new BitSet(new long[]{0x0000000000000000L});
     public static final BitSet FOLLOW_EOF_in_entryRuleOperation_Greater_Equals824 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleExpression_Terminal_in_ruleOperation_Greater_Equals879 = new BitSet(new long[]{0x0000000000020000L});
-    public static final BitSet FOLLOW_17_in_ruleOperation_Greater_Equals891 = new BitSet(new long[]{0x00000000000001F0L});
+    public static final BitSet FOLLOW_ruleExpression_Terminal_in_ruleOperation_Greater_Equals879 = new BitSet(new long[]{0x0000000000040000L});
+    public static final BitSet FOLLOW_18_in_ruleOperation_Greater_Equals891 = new BitSet(new long[]{0x00000000000001F0L});
     public static final BitSet FOLLOW_ruleExpression_Terminal_in_ruleOperation_Greater_Equals912 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_ruleOperation_Greater_in_entryRuleOperation_Greater948 = new BitSet(new long[]{0x0000000000000000L});
     public static final BitSet FOLLOW_EOF_in_entryRuleOperation_Greater958 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleExpression_Terminal_in_ruleOperation_Greater1013 = new BitSet(new long[]{0x0000000000040000L});
-    public static final BitSet FOLLOW_18_in_ruleOperation_Greater1025 = new BitSet(new long[]{0x00000000000001F0L});
+    public static final BitSet FOLLOW_ruleExpression_Terminal_in_ruleOperation_Greater1013 = new BitSet(new long[]{0x0000000000080000L});
+    public static final BitSet FOLLOW_19_in_ruleOperation_Greater1025 = new BitSet(new long[]{0x00000000000001F0L});
     public static final BitSet FOLLOW_ruleExpression_Terminal_in_ruleOperation_Greater1046 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_ruleOperation_Not_Equals_in_entryRuleOperation_Not_Equals1082 = new BitSet(new long[]{0x0000000000000000L});
     public static final BitSet FOLLOW_EOF_in_entryRuleOperation_Not_Equals1092 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleExpression_Terminal_in_ruleOperation_Not_Equals1147 = new BitSet(new long[]{0x0000000000080000L});
-    public static final BitSet FOLLOW_19_in_ruleOperation_Not_Equals1159 = new BitSet(new long[]{0x00000000000001F0L});
+    public static final BitSet FOLLOW_ruleExpression_Terminal_in_ruleOperation_Not_Equals1147 = new BitSet(new long[]{0x0000000000100000L});
+    public static final BitSet FOLLOW_20_in_ruleOperation_Not_Equals1159 = new BitSet(new long[]{0x00000000000001F0L});
     public static final BitSet FOLLOW_ruleExpression_Terminal_in_ruleOperation_Not_Equals1180 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_ruleOperation_Equals_in_entryRuleOperation_Equals1216 = new BitSet(new long[]{0x0000000000000000L});
     public static final BitSet FOLLOW_EOF_in_entryRuleOperation_Equals1226 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleExpression_Terminal_in_ruleOperation_Equals1281 = new BitSet(new long[]{0x0000000000100000L});
-    public static final BitSet FOLLOW_20_in_ruleOperation_Equals1293 = new BitSet(new long[]{0x00000000000001F0L});
+    public static final BitSet FOLLOW_ruleExpression_Terminal_in_ruleOperation_Equals1281 = new BitSet(new long[]{0x0000000000200000L});
+    public static final BitSet FOLLOW_21_in_ruleOperation_Equals1293 = new BitSet(new long[]{0x00000000000001F0L});
     public static final BitSet FOLLOW_ruleExpression_Terminal_in_ruleOperation_Equals1314 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_ruleOperation_Unary_in_entryRuleOperation_Unary1350 = new BitSet(new long[]{0x0000000000000000L});
     public static final BitSet FOLLOW_EOF_in_entryRuleOperation_Unary1360 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_ruleExpression_Terminal_in_ruleOperation_Unary1415 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_ruleOperation_NotUnary_in_entryRuleOperation_NotUnary1451 = new BitSet(new long[]{0x0000000000000000L});
     public static final BitSet FOLLOW_EOF_in_entryRuleOperation_NotUnary1461 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_21_in_ruleOperation_NotUnary1507 = new BitSet(new long[]{0x00000000000001F0L});
+    public static final BitSet FOLLOW_22_in_ruleOperation_NotUnary1507 = new BitSet(new long[]{0x00000000000001F0L});
     public static final BitSet FOLLOW_ruleExpression_Terminal_in_ruleOperation_NotUnary1528 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_ruleExpression_Terminal_in_entryRuleExpression_Terminal1564 = new BitSet(new long[]{0x0000000000000000L});
     public static final BitSet FOLLOW_EOF_in_entryRuleExpression_Terminal1574 = new BitSet(new long[]{0x0000000000000002L});

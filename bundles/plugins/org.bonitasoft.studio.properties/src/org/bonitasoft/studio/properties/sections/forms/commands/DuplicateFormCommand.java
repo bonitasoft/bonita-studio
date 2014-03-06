@@ -22,6 +22,7 @@ import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.gmf.tools.CopyEObjectFeaturesCommand;
+import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.form.FormFactory;
 import org.bonitasoft.studio.model.form.FormPackage;
@@ -41,84 +42,94 @@ import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCo
 
 /**
  * 
- * 	allow to duplicate an existing Form
+ *  allow to duplicate an existing Form
  * 
  * @author Baptiste Mesta
  * @author Aurelien Pupier - use AbstractTransactionalCommand to avoid memory leaks (instead of Command)
  */
 public class DuplicateFormCommand  extends AbstractTransactionalCommand {
 
-	private final Element pageFlow;
-	private final Form baseForm;
-	private final String formName;
-	private final String formDesc;
-	private final EStructuralFeature feature;
+    private final Element pageFlow;
+    private final Form baseForm;
+    private final String formName;
+    private final String formDesc;
+    private final EStructuralFeature feature;
 
-	public DuplicateFormCommand(Element pageFlow2, EStructuralFeature feature, Form baseForm, String id, String formDesc, TransactionalEditingDomain editingDomain) {
-		super(editingDomain, "Duplicate form", getWorkspaceFiles(pageFlow2));
-		pageFlow = pageFlow2;
-		this.baseForm = baseForm;
-		this.formName = NamingUtils.toJavaIdentifier(id, true);
-		this.formDesc = formDesc;
-		this.feature = feature;
-	}
-
-
-	@Override
-	protected CommandResult doExecuteWithResult(IProgressMonitor monitor,
-			IAdaptable info) throws ExecutionException {
-
-		Form form;
-		if(baseForm instanceof ViewForm){
-			if(feature.getEType().equals(FormPackage.Literals.VIEW_FORM)){
-				//nothing to convert
-				form = EcoreUtil.copy(baseForm);
-			}else{
-				form = FormFactory.eINSTANCE.createForm();
-				CopyEObjectFeaturesCommand.copyFeatures(EcoreUtil.copy(baseForm), form);
-			}
-		}else{
-			if(feature.getEType().equals(FormPackage.Literals.FORM)){
-				//nothing to convert
-				form = EcoreUtil.copy(baseForm);
-			}else{
-				form = FormFactory.eINSTANCE.createViewForm();
-				CopyEObjectFeaturesCommand.copyFeatures(EcoreUtil.copy(baseForm), form);
-
-				cleanWidgetsContingenciesPropertiesOfForm(form);
-			}
-		}
-
-		form.setName(formName);
-		form.setDocumentation(formDesc);
-		((List) pageFlow.eGet(feature)).add(form);
-		//remove data out of the scope
-		ModelHelper.removedReferencedEObjects(form,pageFlow);
-
-		FormsUtils.createDiagram(form, getEditingDomain(), pageFlow);
-		FormsUtils.openDiagram(form,getEditingDomain());
-		return CommandResult.newOKCommandResult(form);
-	}
+    public DuplicateFormCommand(Element pageFlow, EStructuralFeature feature, Form baseForm, String id, String formDesc, TransactionalEditingDomain editingDomain) {
+        super(editingDomain, "Duplicate form", getWorkspaceFiles(pageFlow));
+        this.pageFlow = pageFlow;
+        this.baseForm = baseForm;
+        this.formName = NamingUtils.toJavaIdentifier(id, true);
+        this.formDesc = formDesc;
+        this.feature = feature;
+    }
 
 
-	protected void cleanWidgetsContingenciesPropertiesOfForm(Form form){
-		List<Widget> widgets = form.getWidgets();
-		for(Widget widget : widgets){
-			if( widget.getDependOn() != null ){
-				widget.getDependOn().clear();
-			}
-			ExpressionHelper.clearExpression(widget.getDisplayAfterEventDependsOnConditionScript());
+    @SuppressWarnings("unchecked")
+    @Override
+    protected CommandResult doExecuteWithResult(IProgressMonitor monitor,
+            IAdaptable info) throws ExecutionException {
 
-			ExpressionHelper.clearExpression(widget.getDisplayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition());
+        Form form;
+        if(baseForm instanceof ViewForm){
+            if(feature.getEType().equals(FormPackage.Literals.VIEW_FORM)){
+                //nothing to convert
+                form = EcoreUtil.copy(baseForm);
+            }else{
+                form = FormFactory.eINSTANCE.createForm();
+                CopyEObjectFeaturesCommand.copyFeatures(EcoreUtil.copy(baseForm), form);
+            }
+        }else{
+            if(feature.getEType().equals(FormPackage.Literals.FORM)){
+                //nothing to convert
+                form = EcoreUtil.copy(baseForm);
+            }else{
+                form = FormFactory.eINSTANCE.createViewForm();
+                CopyEObjectFeaturesCommand.copyFeatures(EcoreUtil.copy(baseForm), form);
+                cleanWidgetsContingenciesPropertiesOfForm(form);
+            }
+        }
 
-			ExpressionHelper.clearExpression(widget.getAfterEventExpression());
-			if(widget instanceof MultipleValuatedFormField){
-				ExpressionHelper.clearExpression(((MultipleValuatedFormField)widget).getDefaultExpressionAfterEvent());
-			}
-		
+        form.setName(formName);
+        form.setDocumentation(formDesc);
+        ((List<Form>) pageFlow.eGet(feature)).add(form);
+        //remove data out of the scope
+        ModelHelper.removedReferencedEObjects(form,pageFlow);
 
-		}
-	}
+        FormsUtils.createDiagram(form, getEditingDomain(), pageFlow);
+        FormsUtils.openDiagram(form,getEditingDomain());
+        return CommandResult.newOKCommandResult(form);
+    }
+
+
+    protected void cleanWidgetsContingenciesPropertiesOfForm(Form form){
+        List<Widget> widgets = form.getWidgets();
+        for(Widget widget : widgets){
+            if( widget.getDependOn() != null ){
+                widget.getDependOn().clear();
+            }
+            Expression displayAfterEventDependsOnConditionScript = widget.getDisplayAfterEventDependsOnConditionScript();
+            if(displayAfterEventDependsOnConditionScript != null){
+                ExpressionHelper.clearExpression(displayAfterEventDependsOnConditionScript);
+            }
+            Expression displayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition = widget.getDisplayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition();
+            if(displayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition != null){
+                ExpressionHelper.clearExpression(displayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition);
+            }
+            Expression afterEventExpression = widget.getAfterEventExpression();
+            if(afterEventExpression != null){
+                ExpressionHelper.clearExpression(afterEventExpression);
+            }
+            if(widget instanceof MultipleValuatedFormField){
+                Expression defaultExpressionAfterEvent = ((MultipleValuatedFormField)widget).getDefaultExpressionAfterEvent();
+                if(defaultExpressionAfterEvent != null){
+                    ExpressionHelper.clearExpression(defaultExpressionAfterEvent);
+                }
+            }
+
+
+        }
+    }
 
 
 }

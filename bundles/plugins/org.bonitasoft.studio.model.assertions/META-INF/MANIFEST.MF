@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Process Model Assertions
+Bundle-SymbolicName: org.bonitasoft.studio.model.assertions
+Bundle-Version: 6.3.0.qualifier
+Bundle-Vendor: BonitaSoft S.A.
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Export-Package: org.bonitasoft.studio.model.expression.assertions
+Require-Bundle: assertj-core,
+ org.bonitasoft.studio.model

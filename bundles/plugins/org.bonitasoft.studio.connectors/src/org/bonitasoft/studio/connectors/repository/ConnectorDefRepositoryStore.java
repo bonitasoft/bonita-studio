@@ -54,10 +54,6 @@ public class ConnectorDefRepositoryStore extends AbstractDefinitionRepositorySto
     @Override
     public void createRepositoryStore(IRepository repository) {
         super.createRepositoryStore(repository);
-        final ConnectorPlugin plugin = ConnectorPlugin.getDefault();
-        final Bundle bundle = plugin.getBundle();
-        resourceProvider = DefinitionResourceProvider.getInstance(this,bundle);
-        resourceProvider.loadDefinitionsCategories(null);
     }
 
     @Override
@@ -70,6 +66,10 @@ public class ConnectorDefRepositoryStore extends AbstractDefinitionRepositorySto
     }
 
     public DefinitionResourceProvider getResourceProvider() {
+        if(resourceProvider == null){
+            resourceProvider = DefinitionResourceProvider.getInstance(this,getBundle());
+            resourceProvider.loadDefinitionsCategories(null);
+        }
         return resourceProvider;
     }
 
@@ -132,7 +132,7 @@ public class ConnectorDefRepositoryStore extends AbstractDefinitionRepositorySto
     @Override
     public void migrate() throws CoreException, MigrationException {
     	super.migrate();
-    	 resourceProvider.loadDefinitionsCategories(null);
+    	 getResourceProvider().loadDefinitionsCategories(null);
     }
 
 }

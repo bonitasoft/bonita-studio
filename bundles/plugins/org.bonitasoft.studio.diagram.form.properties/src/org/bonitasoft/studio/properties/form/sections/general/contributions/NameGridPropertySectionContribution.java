@@ -103,11 +103,11 @@ public class NameGridPropertySectionContribution extends AbstractNamePropertySec
 		labelTargetToModelUpdate = new UpdateValueStrategy();
 		labelTargetToModelUpdate.setConverter(convertToId);
 		List<IValidator> validators = new ArrayList<IValidator>();
+		validators.add(new InputLengthValidator(Messages.name, 50));
 		validators.add(new GroovyReferenceValidator(Messages.name, true,false));
-		validators.add(getWidgetValidator());
+		validators.add(createUniqueWidgetIdValidator());
 		MultiValidator multiValidation = new MultiValidator(validators);
 		labelTargetToModelUpdate.setAfterGetValidator(multiValidation) ;
-		labelTargetToModelUpdate.setBeforeSetValidator(new InputLengthValidator(Messages.name, 50)) ;
 		ISWTObservableValue observable = SWTObservables.observeDelayedValue(400, SWTObservables.observeText(text, SWT.Modify));
 		ControlDecorationSupport.create(context.bindValue(observable, EMFEditObservables.observeValue(editingDomain, element, ProcessPackage.Literals.ELEMENT__NAME),labelTargetToModelUpdate,null),SWT.LEFT);
 	}
@@ -192,7 +192,7 @@ public class NameGridPropertySectionContribution extends AbstractNamePropertySec
 		}
 	}
 
-	private IValidator getWidgetValidator(){
+	private IValidator createUniqueWidgetIdValidator(){
 		return new IValidator(){
 
 			public IStatus validate(Object value) {
