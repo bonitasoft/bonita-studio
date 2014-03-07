@@ -411,6 +411,10 @@ public class EngineExpressionUtil {
 
 				final Expression rightExpression = new ExpressionConditionModelSwitch(simpleExpression).doSwitch(rightExp);
 				final Expression leftExpression = new ExpressionConditionModelSwitch(simpleExpression).doSwitch(leftExp);
+				if(rightExpression == null || leftExpression == null){
+				    throw new InvalidExpressionException("Condition expression "+name
+	                        + " must have exactly two dependencies. The first one is the left oparand and the second one the right operand.");
+				}
 				return exp.createComparisonExpression(name, leftExpression, operator, rightExpression);
 			}
 
