@@ -410,11 +410,13 @@ public class EngineExpressionUtil {
 				}.doSwitch(op);
 
 				final Expression rightExpression = new ExpressionConditionModelSwitch(simpleExpression).doSwitch(rightExp);
+				if(rightExpression == null){
+                    throw new InvalidExpressionException("Condition expression "+name+ " failed to export right operand: "+rightExp.toString());
+                }
 				final Expression leftExpression = new ExpressionConditionModelSwitch(simpleExpression).doSwitch(leftExp);
-				if(rightExpression == null || leftExpression == null){
-				    throw new InvalidExpressionException("Condition expression "+name
-	                        + " must have exactly two dependencies. The first one is the left oparand and the second one the right operand.");
-				}
+				if(leftExpression == null){
+                    throw new InvalidExpressionException("Condition expression "+name+ " failed to export left operand: "+leftExp.toString());
+                }
 				return exp.createComparisonExpression(name, leftExpression, operator, rightExpression);
 			}
 
