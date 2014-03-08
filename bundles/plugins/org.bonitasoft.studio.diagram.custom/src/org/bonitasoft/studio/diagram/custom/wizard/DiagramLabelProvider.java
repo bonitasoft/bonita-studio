@@ -63,7 +63,7 @@ public class DiagramLabelProvider extends StyledCellLabelProvider implements
             StyledString styledString = new StyledString();
 
             styledString.append(fileStoreLabelProvider.getText(filseStore), null);
-            if(filseStore.getMigrationReport() != null){
+            if(filseStore.hasMigrationReport()){
             	  styledString.append(" -- ",StyledString.DECORATIONS_STYLER) ;
             	  styledString.append( Messages.migrationOngoing ,StyledString.COUNTER_STYLER) ;
             }

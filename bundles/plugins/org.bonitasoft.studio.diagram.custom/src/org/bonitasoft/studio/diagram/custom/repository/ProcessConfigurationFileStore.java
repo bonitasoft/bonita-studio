@@ -17,12 +17,10 @@
 package org.bonitasoft.studio.diagram.custom.repository;
 
 import java.io.IOException;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.filestore.EMFFileStore;
@@ -30,9 +28,7 @@ import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.diagram.custom.Messages;
 import org.bonitasoft.studio.model.configuration.Configuration;
-import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.xmi.XMLResource;
@@ -45,7 +41,7 @@ import org.eclipse.ui.IWorkbenchPart;
  */
 public class ProcessConfigurationFileStore extends EMFFileStore implements IRepositoryFileStore {
 
-    public ProcessConfigurationFileStore(String folderName, IRepositoryStore store) {
+    public ProcessConfigurationFileStore(String folderName, IRepositoryStore<? extends EMFFileStore> store) {
         super(folderName, store);
     }
 
@@ -84,8 +80,8 @@ public class ProcessConfigurationFileStore extends EMFFileStore implements IRepo
             options.put(XMLResource.OPTION_XML_VERSION, "1.0");
             resource.save(options) ;
             resource.unload() ;
-           
-           
+
+
         } catch (IOException e) {
             BonitaStudioLog.error(e) ;
         }
@@ -102,41 +98,30 @@ public class ProcessConfigurationFileStore extends EMFFileStore implements IRepo
     public IFile getResource() {
         return getParentStore().getResource().getFile(getName());
     }
-    
+
 
 
     @Override
     public String getDisplayName() {
         Configuration conf =  getContent() ;
-        final DiagramRepositoryStore diagramStore = (DiagramRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class) ;
-        AbstractProcess process = null ;
+        final DiagramRepositoryStore diagramStore =  RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class) ;
         String confId = getName().substring(0,getName().lastIndexOf(".")) ;
-        for(AbstractProcess p : diagramStore.getAllProcesses()){
-            String pId =  ModelHelper.getEObjectID(p) ;
-            if(confId.equals(pId)){
-                process = p ;
-                break ;
-            }
-        }
-        String processName ="" ;
-        if(process != null){
-            processName = process.getName() +" ("+process.getVersion()+")";
-        }
         String confName = conf.getName() ;
         if(confName == null){
             confName = "Local" ;
         }
-        return Messages.bind(Messages.configuration, confName,processName) ;
+        String processLabel = diagramStore.getLabelFor(confId);
+        return Messages.bind(Messages.configuration, confName,processLabel != null ? processLabel : confId);
     }
 
     @Override
     public Image getIcon() {
         return getParentStore().getIcon() ;
     }
-    
-   
-    
-    
-    
+
+
+
+
+
 
 }
