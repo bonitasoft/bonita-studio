@@ -74,7 +74,11 @@ public class SequenceFlowSwitch extends ProcessSwitch<SequenceFlow> {
 						&& condition != null
 						&& condition.getContent() != null
 						&& !condition.getContent().isEmpty()){
-					builder.addTransition(sourceId, targetId, EngineExpressionUtil.createExpression(condition));
+					org.bonitasoft.engine.expression.Expression conditionExpression = EngineExpressionUtil.createExpression(condition);
+					if(conditionExpression == null){
+					    throw new RuntimeException("Condition expression "+condition.getName()+" on SequenceFlow from "+sourceId+" to "+targetId +" is invalid");
+					}
+                    builder.addTransition(sourceId, targetId, conditionExpression);
 				}else if(conditionType == SequenceFlowConditionType.DECISION_TABLE){
 					builder.addTransition(sourceId, targetId, EngineExpressionUtil.createExpression(DecisionTableUtil.toGroovyScriptExpression(sequenceFlow.getDecisionTable())));
 				} else{

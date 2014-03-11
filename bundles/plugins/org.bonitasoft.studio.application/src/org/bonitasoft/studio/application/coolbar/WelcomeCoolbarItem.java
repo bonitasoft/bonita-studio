@@ -92,7 +92,7 @@ public class WelcomeCoolbarItem implements IBonitaContributionItem {
 	 */
 	@Override
 	public boolean isEnabled() {
-		return handler.isEnabled();
+		return true;
 	}
 
 	/* (non-Javadoc)
