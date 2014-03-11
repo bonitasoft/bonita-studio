@@ -243,7 +243,7 @@ public class FormPreviewOperation implements IRunnableWithProgress {
 		}
 		final String taskName=((Task)process.getElements().get(0)).getName();
 		final String loginURL = BOSWebServerManager.getInstance().generateLoginURL(userName, password) ;
-		final String runUrl = "http://"+ host+":"+ port + ApplicationURLBuilder.APPLI_PATH + token +"ui=form&theme="+procId+"&locale="+locale+"#form="+URLEncoder.encode(process.getName()+"--"+process.getVersion()+"--"+taskName, "UTF-8")+"$entry&task="+task.getId()+"&mode=form";
+		final String runUrl = ApplicationURLBuilder.APPLI_PATH + token +"ui=form&theme="+procId+"&locale="+locale+"#form="+URLEncoder.encode(process.getName()+"--"+process.getVersion()+"--"+taskName, "UTF-8")+"$entry&task="+task.getId()+"&mode=form";
 		return new URL(loginURL+"&redirectUrl="+URLEncoder.encode(runUrl, "UTF-8"));
 
 	}

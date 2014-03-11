@@ -25,7 +25,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.ModelVersion;
-import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
@@ -36,7 +35,6 @@ import org.bonitasoft.studio.diagram.custom.Messages;
 import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.model.configuration.util.ConfigurationAdapterFactory;
 import org.bonitasoft.studio.model.process.AbstractProcess;
-import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.resources.IFile;

@@ -97,6 +97,7 @@ public class Messages extends NLS {
 	public static String mandatory;
 	public static String emptynameMessage;
 	public static String elementName;
+    public static String invalidConditionExpression;
     
     static {
         // initialize resource bundle
