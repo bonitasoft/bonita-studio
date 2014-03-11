@@ -22,27 +22,28 @@ import java.util.ArrayList;
 @SuppressWarnings("all")
 public class InternalConditionModelParser extends AbstractInternalContentAssistParser {
     public static final String[] tokenNames = new String[] {
-        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "RULE_DOUBLE", "RULE_LONG", "RULE_STRING", "RULE_ID", "RULE_BOOLEAN", "RULE_WS", "RULE_DATE", "RULE_INT", "RULE_ML_COMMENT", "RULE_SL_COMMENT", "RULE_ANY_OTHER", "'<='", "'<'", "'>='", "'>'", "'!='", "'=='", "'!'"
+        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "RULE_DOUBLE", "RULE_LONG", "RULE_STRING", "RULE_ID", "RULE_BOOLEAN", "RULE_UTF8_CHARACTERS", "RULE_WS", "RULE_DATE", "RULE_INT", "RULE_ML_COMMENT", "RULE_SL_COMMENT", "RULE_ANY_OTHER", "'<='", "'<'", "'>='", "'>'", "'!='", "'=='", "'!'"
     };
     public static final int RULE_BOOLEAN=8;
     public static final int RULE_ID=7;
-    public static final int RULE_DATE=10;
+    public static final int RULE_DATE=11;
     public static final int RULE_LONG=5;
-    public static final int RULE_ANY_OTHER=14;
+    public static final int T__22=22;
+    public static final int RULE_ANY_OTHER=15;
     public static final int T__21=21;
     public static final int T__20=20;
-    public static final int RULE_SL_COMMENT=13;
+    public static final int RULE_SL_COMMENT=14;
     public static final int EOF=-1;
+    public static final int RULE_UTF8_CHARACTERS=9;
     public static final int RULE_DOUBLE=4;
-    public static final int RULE_ML_COMMENT=12;
+    public static final int RULE_ML_COMMENT=13;
     public static final int T__19=19;
     public static final int RULE_STRING=6;
     public static final int T__16=16;
-    public static final int T__15=15;
     public static final int T__18=18;
     public static final int T__17=17;
-    public static final int RULE_INT=11;
-    public static final int RULE_WS=9;
+    public static final int RULE_INT=12;
+    public static final int RULE_WS=10;
 
     // delegates
     // delegators
@@ -1412,7 +1413,7 @@ public class InternalConditionModelParser extends AbstractInternalContentAssistP
                 {
                 int LA1_1 = input.LA(2);
 
-                if ( ((LA1_1>=15 && LA1_1<=20)) ) {
+                if ( ((LA1_1>=16 && LA1_1<=21)) ) {
                     alt1=1;
                 }
                 else if ( (LA1_1==EOF) ) {
@@ -1430,7 +1431,7 @@ public class InternalConditionModelParser extends AbstractInternalContentAssistP
                 {
                 int LA1_2 = input.LA(2);
 
-                if ( ((LA1_2>=15 && LA1_2<=20)) ) {
+                if ( ((LA1_2>=16 && LA1_2<=21)) ) {
                     alt1=1;
                 }
                 else if ( (LA1_2==EOF) ) {
@@ -1448,7 +1449,7 @@ public class InternalConditionModelParser extends AbstractInternalContentAssistP
                 {
                 int LA1_3 = input.LA(2);
 
-                if ( ((LA1_3>=15 && LA1_3<=20)) ) {
+                if ( ((LA1_3>=16 && LA1_3<=21)) ) {
                     alt1=1;
                 }
                 else if ( (LA1_3==EOF) ) {
@@ -1466,7 +1467,7 @@ public class InternalConditionModelParser extends AbstractInternalContentAssistP
                 {
                 int LA1_4 = input.LA(2);
 
-                if ( ((LA1_4>=15 && LA1_4<=20)) ) {
+                if ( ((LA1_4>=16 && LA1_4<=21)) ) {
                     alt1=1;
                 }
                 else if ( (LA1_4==EOF) ) {
@@ -1487,7 +1488,7 @@ public class InternalConditionModelParser extends AbstractInternalContentAssistP
                 if ( (LA1_5==EOF) ) {
                     alt1=2;
                 }
-                else if ( ((LA1_5>=15 && LA1_5<=20)) ) {
+                else if ( ((LA1_5>=16 && LA1_5<=21)) ) {
                     alt1=1;
                 }
                 else {
@@ -1498,7 +1499,7 @@ public class InternalConditionModelParser extends AbstractInternalContentAssistP
                 }
                 }
                 break;
-            case 21:
+            case 22:
                 {
                 alt1=2;
                 }
@@ -1580,7 +1581,7 @@ public class InternalConditionModelParser extends AbstractInternalContentAssistP
             if ( ((LA2_0>=RULE_DOUBLE && LA2_0<=RULE_BOOLEAN)) ) {
                 alt2=1;
             }
-            else if ( (LA2_0==21) ) {
+            else if ( (LA2_0==22) ) {
                 alt2=2;
             }
             else {
@@ -2309,7 +2310,7 @@ public class InternalConditionModelParser extends AbstractInternalContentAssistP
             // ../org.bonitasoft.studio.condition.ui/src-gen/org/bonitasoft/studio/condition/ui/contentassist/antlr/internal/InternalConditionModel.g:817:1: '<='
             {
              before(grammarAccess.getOperation_Less_EqualsAccess().getLessThanSignEqualsSignKeyword_2()); 
-            match(input,15,FOLLOW_15_in_rule__Operation_Less_Equals__Group__2__Impl1686); 
+            match(input,16,FOLLOW_16_in_rule__Operation_Less_Equals__Group__2__Impl1686); 
              after(grammarAccess.getOperation_Less_EqualsAccess().getLessThanSignEqualsSignKeyword_2()); 
 
             }
@@ -2624,7 +2625,7 @@ public class InternalConditionModelParser extends AbstractInternalContentAssistP
             // ../org.bonitasoft.studio.condition.ui/src-gen/org/bonitasoft/studio/condition/ui/contentassist/antlr/internal/InternalConditionModel.g:944:1: '<'
             {
              before(grammarAccess.getOperation_LessAccess().getLessThanSignKeyword_2()); 
-            match(input,16,FOLLOW_16_in_rule__Operation_Less__Group__2__Impl1934); 
+            match(input,17,FOLLOW_17_in_rule__Operation_Less__Group__2__Impl1934); 
              after(grammarAccess.getOperation_LessAccess().getLessThanSignKeyword_2()); 
 
             }
@@ -2939,7 +2940,7 @@ public class InternalConditionModelParser extends AbstractInternalContentAssistP
             // ../org.bonitasoft.studio.condition.ui/src-gen/org/bonitasoft/studio/condition/ui/contentassist/antlr/internal/InternalConditionModel.g:1071:1: '>='
             {
              before(grammarAccess.getOperation_Greater_EqualsAccess().getGreaterThanSignEqualsSignKeyword_2()); 
-            match(input,17,FOLLOW_17_in_rule__Operation_Greater_Equals__Group__2__Impl2182); 
+            match(input,18,FOLLOW_18_in_rule__Operation_Greater_Equals__Group__2__Impl2182); 
              after(grammarAccess.getOperation_Greater_EqualsAccess().getGreaterThanSignEqualsSignKeyword_2()); 
 
             }
@@ -3254,7 +3255,7 @@ public class InternalConditionModelParser extends AbstractInternalContentAssistP
             // ../org.bonitasoft.studio.condition.ui/src-gen/org/bonitasoft/studio/condition/ui/contentassist/antlr/internal/InternalConditionModel.g:1198:1: '>'
             {
              before(grammarAccess.getOperation_GreaterAccess().getGreaterThanSignKeyword_2()); 
-            match(input,18,FOLLOW_18_in_rule__Operation_Greater__Group__2__Impl2430); 
+            match(input,19,FOLLOW_19_in_rule__Operation_Greater__Group__2__Impl2430); 
              after(grammarAccess.getOperation_GreaterAccess().getGreaterThanSignKeyword_2()); 
 
             }
@@ -3569,7 +3570,7 @@ public class InternalConditionModelParser extends AbstractInternalContentAssistP
             // ../org.bonitasoft.studio.condition.ui/src-gen/org/bonitasoft/studio/condition/ui/contentassist/antlr/internal/InternalConditionModel.g:1325:1: '!='
             {
              before(grammarAccess.getOperation_Not_EqualsAccess().getExclamationMarkEqualsSignKeyword_2()); 
-            match(input,19,FOLLOW_19_in_rule__Operation_Not_Equals__Group__2__Impl2678); 
+            match(input,20,FOLLOW_20_in_rule__Operation_Not_Equals__Group__2__Impl2678); 
              after(grammarAccess.getOperation_Not_EqualsAccess().getExclamationMarkEqualsSignKeyword_2()); 
 
             }
@@ -3884,7 +3885,7 @@ public class InternalConditionModelParser extends AbstractInternalContentAssistP
             // ../org.bonitasoft.studio.condition.ui/src-gen/org/bonitasoft/studio/condition/ui/contentassist/antlr/internal/InternalConditionModel.g:1452:1: '=='
             {
              before(grammarAccess.getOperation_EqualsAccess().getEqualsSignEqualsSignKeyword_2()); 
-            match(input,20,FOLLOW_20_in_rule__Operation_Equals__Group__2__Impl2926); 
+            match(input,21,FOLLOW_21_in_rule__Operation_Equals__Group__2__Impl2926); 
              after(grammarAccess.getOperation_EqualsAccess().getEqualsSignEqualsSignKeyword_2()); 
 
             }
@@ -4269,7 +4270,7 @@ public class InternalConditionModelParser extends AbstractInternalContentAssistP
             // ../org.bonitasoft.studio.condition.ui/src-gen/org/bonitasoft/studio/condition/ui/contentassist/antlr/internal/InternalConditionModel.g:1613:1: '!'
             {
              before(grammarAccess.getOperation_NotUnaryAccess().getExclamationMarkKeyword_1()); 
-            match(input,21,FOLLOW_21_in_rule__Operation_NotUnary__Group__1__Impl3236); 
+            match(input,22,FOLLOW_22_in_rule__Operation_NotUnary__Group__1__Impl3236); 
              after(grammarAccess.getOperation_NotUnaryAccess().getExclamationMarkKeyword_1()); 
 
             }
@@ -5969,9 +5970,9 @@ public class InternalConditionModelParser extends AbstractInternalContentAssistP
     static final String DFA3_eofS =
         "\14\uffff";
     static final String DFA3_minS =
-        "\1\4\5\17\6\uffff";
+        "\1\4\5\20\6\uffff";
     static final String DFA3_maxS =
-        "\1\10\5\24\6\uffff";
+        "\1\10\5\25\6\uffff";
     static final String DFA3_acceptS =
         "\6\uffff\1\6\1\2\1\1\1\4\1\5\1\3";
     static final String DFA3_specialS =
@@ -6092,79 +6093,79 @@ public class InternalConditionModelParser extends AbstractInternalContentAssistP
     public static final BitSet FOLLOW_ruleExpression_Boolean_in_rule__Expression_Terminal__Alternatives1348 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_ruleExpression_String_in_rule__Expression_Terminal__Alternatives1365 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_ruleExpression_ProcessRef_in_rule__Expression_Terminal__Alternatives1382 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_rule__Operation_Compare__Group__0__Impl_in_rule__Operation_Compare__Group__01412 = new BitSet(new long[]{0x00000000002001F0L});
+    public static final BitSet FOLLOW_rule__Operation_Compare__Group__0__Impl_in_rule__Operation_Compare__Group__01412 = new BitSet(new long[]{0x00000000004001F0L});
     public static final BitSet FOLLOW_rule__Operation_Compare__Group__1_in_rule__Operation_Compare__Group__01415 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_rule__Operation_Compare__Group__1__Impl_in_rule__Operation_Compare__Group__11473 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_rule__Operation_Compare__OpAssignment_1_in_rule__Operation_Compare__Group__1__Impl1500 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_rule__Operation_Less_Equals__Group__0__Impl_in_rule__Operation_Less_Equals__Group__01534 = new BitSet(new long[]{0x00000000000001F0L});
     public static final BitSet FOLLOW_rule__Operation_Less_Equals__Group__1_in_rule__Operation_Less_Equals__Group__01537 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_rule__Operation_Less_Equals__Group__1__Impl_in_rule__Operation_Less_Equals__Group__11595 = new BitSet(new long[]{0x0000000000008000L});
+    public static final BitSet FOLLOW_rule__Operation_Less_Equals__Group__1__Impl_in_rule__Operation_Less_Equals__Group__11595 = new BitSet(new long[]{0x0000000000010000L});
     public static final BitSet FOLLOW_rule__Operation_Less_Equals__Group__2_in_rule__Operation_Less_Equals__Group__11598 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_rule__Operation_Less_Equals__LeftAssignment_1_in_rule__Operation_Less_Equals__Group__1__Impl1625 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_rule__Operation_Less_Equals__Group__2__Impl_in_rule__Operation_Less_Equals__Group__21655 = new BitSet(new long[]{0x00000000000001F0L});
     public static final BitSet FOLLOW_rule__Operation_Less_Equals__Group__3_in_rule__Operation_Less_Equals__Group__21658 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_15_in_rule__Operation_Less_Equals__Group__2__Impl1686 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_16_in_rule__Operation_Less_Equals__Group__2__Impl1686 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_rule__Operation_Less_Equals__Group__3__Impl_in_rule__Operation_Less_Equals__Group__31717 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_rule__Operation_Less_Equals__RightAssignment_3_in_rule__Operation_Less_Equals__Group__3__Impl1744 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_rule__Operation_Less__Group__0__Impl_in_rule__Operation_Less__Group__01782 = new BitSet(new long[]{0x00000000000001F0L});
     public static final BitSet FOLLOW_rule__Operation_Less__Group__1_in_rule__Operation_Less__Group__01785 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_rule__Operation_Less__Group__1__Impl_in_rule__Operation_Less__Group__11843 = new BitSet(new long[]{0x0000000000010000L});
+    public static final BitSet FOLLOW_rule__Operation_Less__Group__1__Impl_in_rule__Operation_Less__Group__11843 = new BitSet(new long[]{0x0000000000020000L});
     public static final BitSet FOLLOW_rule__Operation_Less__Group__2_in_rule__Operation_Less__Group__11846 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_rule__Operation_Less__LeftAssignment_1_in_rule__Operation_Less__Group__1__Impl1873 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_rule__Operation_Less__Group__2__Impl_in_rule__Operation_Less__Group__21903 = new BitSet(new long[]{0x00000000000001F0L});
     public static final BitSet FOLLOW_rule__Operation_Less__Group__3_in_rule__Operation_Less__Group__21906 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_16_in_rule__Operation_Less__Group__2__Impl1934 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_17_in_rule__Operation_Less__Group__2__Impl1934 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_rule__Operation_Less__Group__3__Impl_in_rule__Operation_Less__Group__31965 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_rule__Operation_Less__RightAssignment_3_in_rule__Operation_Less__Group__3__Impl1992 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_rule__Operation_Greater_Equals__Group__0__Impl_in_rule__Operation_Greater_Equals__Group__02030 = new BitSet(new long[]{0x00000000000001F0L});
     public static final BitSet FOLLOW_rule__Operation_Greater_Equals__Group__1_in_rule__Operation_Greater_Equals__Group__02033 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_rule__Operation_Greater_Equals__Group__1__Impl_in_rule__Operation_Greater_Equals__Group__12091 = new BitSet(new long[]{0x0000000000020000L});
+    public static final BitSet FOLLOW_rule__Operation_Greater_Equals__Group__1__Impl_in_rule__Operation_Greater_Equals__Group__12091 = new BitSet(new long[]{0x0000000000040000L});
     public static final BitSet FOLLOW_rule__Operation_Greater_Equals__Group__2_in_rule__Operation_Greater_Equals__Group__12094 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_rule__Operation_Greater_Equals__LeftAssignment_1_in_rule__Operation_Greater_Equals__Group__1__Impl2121 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_rule__Operation_Greater_Equals__Group__2__Impl_in_rule__Operation_Greater_Equals__Group__22151 = new BitSet(new long[]{0x00000000000001F0L});
     public static final BitSet FOLLOW_rule__Operation_Greater_Equals__Group__3_in_rule__Operation_Greater_Equals__Group__22154 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_17_in_rule__Operation_Greater_Equals__Group__2__Impl2182 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_18_in_rule__Operation_Greater_Equals__Group__2__Impl2182 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_rule__Operation_Greater_Equals__Group__3__Impl_in_rule__Operation_Greater_Equals__Group__32213 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_rule__Operation_Greater_Equals__RightAssignment_3_in_rule__Operation_Greater_Equals__Group__3__Impl2240 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_rule__Operation_Greater__Group__0__Impl_in_rule__Operation_Greater__Group__02278 = new BitSet(new long[]{0x00000000000001F0L});
     public static final BitSet FOLLOW_rule__Operation_Greater__Group__1_in_rule__Operation_Greater__Group__02281 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_rule__Operation_Greater__Group__1__Impl_in_rule__Operation_Greater__Group__12339 = new BitSet(new long[]{0x0000000000040000L});
+    public static final BitSet FOLLOW_rule__Operation_Greater__Group__1__Impl_in_rule__Operation_Greater__Group__12339 = new BitSet(new long[]{0x0000000000080000L});
     public static final BitSet FOLLOW_rule__Operation_Greater__Group__2_in_rule__Operation_Greater__Group__12342 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_rule__Operation_Greater__LeftAssignment_1_in_rule__Operation_Greater__Group__1__Impl2369 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_rule__Operation_Greater__Group__2__Impl_in_rule__Operation_Greater__Group__22399 = new BitSet(new long[]{0x00000000000001F0L});
     public static final BitSet FOLLOW_rule__Operation_Greater__Group__3_in_rule__Operation_Greater__Group__22402 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_18_in_rule__Operation_Greater__Group__2__Impl2430 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_19_in_rule__Operation_Greater__Group__2__Impl2430 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_rule__Operation_Greater__Group__3__Impl_in_rule__Operation_Greater__Group__32461 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_rule__Operation_Greater__RightAssignment_3_in_rule__Operation_Greater__Group__3__Impl2488 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_rule__Operation_Not_Equals__Group__0__Impl_in_rule__Operation_Not_Equals__Group__02526 = new BitSet(new long[]{0x00000000000001F0L});
     public static final BitSet FOLLOW_rule__Operation_Not_Equals__Group__1_in_rule__Operation_Not_Equals__Group__02529 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_rule__Operation_Not_Equals__Group__1__Impl_in_rule__Operation_Not_Equals__Group__12587 = new BitSet(new long[]{0x0000000000080000L});
+    public static final BitSet FOLLOW_rule__Operation_Not_Equals__Group__1__Impl_in_rule__Operation_Not_Equals__Group__12587 = new BitSet(new long[]{0x0000000000100000L});
     public static final BitSet FOLLOW_rule__Operation_Not_Equals__Group__2_in_rule__Operation_Not_Equals__Group__12590 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_rule__Operation_Not_Equals__LeftAssignment_1_in_rule__Operation_Not_Equals__Group__1__Impl2617 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_rule__Operation_Not_Equals__Group__2__Impl_in_rule__Operation_Not_Equals__Group__22647 = new BitSet(new long[]{0x00000000000001F0L});
     public static final BitSet FOLLOW_rule__Operation_Not_Equals__Group__3_in_rule__Operation_Not_Equals__Group__22650 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_19_in_rule__Operation_Not_Equals__Group__2__Impl2678 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_20_in_rule__Operation_Not_Equals__Group__2__Impl2678 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_rule__Operation_Not_Equals__Group__3__Impl_in_rule__Operation_Not_Equals__Group__32709 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_rule__Operation_Not_Equals__RightAssignment_3_in_rule__Operation_Not_Equals__Group__3__Impl2736 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_rule__Operation_Equals__Group__0__Impl_in_rule__Operation_Equals__Group__02774 = new BitSet(new long[]{0x00000000000001F0L});
     public static final BitSet FOLLOW_rule__Operation_Equals__Group__1_in_rule__Operation_Equals__Group__02777 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_rule__Operation_Equals__Group__1__Impl_in_rule__Operation_Equals__Group__12835 = new BitSet(new long[]{0x0000000000100000L});
+    public static final BitSet FOLLOW_rule__Operation_Equals__Group__1__Impl_in_rule__Operation_Equals__Group__12835 = new BitSet(new long[]{0x0000000000200000L});
     public static final BitSet FOLLOW_rule__Operation_Equals__Group__2_in_rule__Operation_Equals__Group__12838 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_rule__Operation_Equals__LeftAssignment_1_in_rule__Operation_Equals__Group__1__Impl2865 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_rule__Operation_Equals__Group__2__Impl_in_rule__Operation_Equals__Group__22895 = new BitSet(new long[]{0x00000000000001F0L});
     public static final BitSet FOLLOW_rule__Operation_Equals__Group__3_in_rule__Operation_Equals__Group__22898 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_20_in_rule__Operation_Equals__Group__2__Impl2926 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_21_in_rule__Operation_Equals__Group__2__Impl2926 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_rule__Operation_Equals__Group__3__Impl_in_rule__Operation_Equals__Group__32957 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_rule__Operation_Equals__RightAssignment_3_in_rule__Operation_Equals__Group__3__Impl2984 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_rule__Operation_Unary__Group__0__Impl_in_rule__Operation_Unary__Group__03022 = new BitSet(new long[]{0x00000000000001F0L});
     public static final BitSet FOLLOW_rule__Operation_Unary__Group__1_in_rule__Operation_Unary__Group__03025 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_rule__Operation_Unary__Group__1__Impl_in_rule__Operation_Unary__Group__13083 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_rule__Operation_Unary__ValueAssignment_1_in_rule__Operation_Unary__Group__1__Impl3110 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_rule__Operation_NotUnary__Group__0__Impl_in_rule__Operation_NotUnary__Group__03144 = new BitSet(new long[]{0x00000000002001F0L});
+    public static final BitSet FOLLOW_rule__Operation_NotUnary__Group__0__Impl_in_rule__Operation_NotUnary__Group__03144 = new BitSet(new long[]{0x00000000004001F0L});
     public static final BitSet FOLLOW_rule__Operation_NotUnary__Group__1_in_rule__Operation_NotUnary__Group__03147 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_rule__Operation_NotUnary__Group__1__Impl_in_rule__Operation_NotUnary__Group__13205 = new BitSet(new long[]{0x00000000000001F0L});
     public static final BitSet FOLLOW_rule__Operation_NotUnary__Group__2_in_rule__Operation_NotUnary__Group__13208 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_21_in_rule__Operation_NotUnary__Group__1__Impl3236 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_22_in_rule__Operation_NotUnary__Group__1__Impl3236 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_rule__Operation_NotUnary__Group__2__Impl_in_rule__Operation_NotUnary__Group__23267 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_rule__Operation_NotUnary__ValueAssignment_2_in_rule__Operation_NotUnary__Group__2__Impl3294 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_rule__Expression_Double__Group__0__Impl_in_rule__Expression_Double__Group__03330 = new BitSet(new long[]{0x0000000000000010L});

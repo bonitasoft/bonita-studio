@@ -69,7 +69,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 
         Locale defaultLocal = Locale.getDefault();
         boolean defaultLocalExists=false;
-        for (Locale locale : BonitaPreferenceConstants.AVAILABLE_LOCALES) {
+        for (Locale locale : LocaleUtil.getStudioLocales()) {
         	if(locale.getLanguage().equals(defaultLocal.getLanguage())){
         		defaultLocal = locale;
         		defaultLocalExists = true;
@@ -78,7 +78,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
         }
 
         boolean defaultUseXPLocalExists=false;
-        for (Locale locale : BonitaPreferenceConstants.AVAILABLE_LOCALES_USER_XP) {
+        for (Locale locale : LocaleUtil.getProtalLocales()) {
         	if(locale.getLanguage().equals(defaultLocal.getLanguage())){
         		defaultLocal = locale;
         		defaultUseXPLocalExists = true;

@@ -21,6 +21,7 @@ import java.util.regex.Pattern;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.common.emf.tools.WidgetHelper;
 import org.bonitasoft.studio.expression.editor.provider.ExpressionTypeLabelProvider;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.form.Widget;
@@ -85,7 +86,7 @@ public class ExpressionDependenciesConstraint  extends AbstractLiveValidationMar
 						}
 					}
 					if(dep instanceof Widget){
-						String name = "field_"+((Widget) dep).getName();
+						String name = WidgetHelper.FIELD_PREFIX+((Widget) dep).getName();
 						if(depName.equals(name)){
 							found = true;
 							break;

@@ -187,7 +187,6 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EReference form.ecore#//Widget/displayLabel"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EReference form.ecore#//Widget/injectWidgetScript"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//Widget/returnTypeModifier"/>
-      <genOperations ecoreOperation="form.ecore#//Widget/getAssociatedReturnType"/>
     </genClasses>
     <genClasses ecoreClass="form.ecore#//WidgetDependency">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference form.ecore#//WidgetDependency/widget"/>
@@ -202,7 +201,6 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//Group/useIterator"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//Group/iteratorName"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//Group/iteratorClassName"/>
-      <genOperations ecoreOperation="form.ecore#//Group/getAssociatedReturnType"/>
     </genClasses>
     <genClasses image="false" ecoreClass="form.ecore#//FormField">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//FormField/description"/>
@@ -212,7 +210,6 @@
     <genClasses image="false" ecoreClass="form.ecore#//MultipleValuatedFormField">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference form.ecore#//MultipleValuatedFormField/defaultExpression"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference form.ecore#//MultipleValuatedFormField/defaultExpressionAfterEvent"/>
-      <genOperations ecoreOperation="form.ecore#//MultipleValuatedFormField/getAssociatedReturnType"/>
     </genClasses>
     <genClasses image="false" ecoreClass="form.ecore#//SingleValuatedFormField"/>
     <genClasses ecoreClass="form.ecore#//CheckBoxMultipleFormField"/>
@@ -220,7 +217,6 @@
     <genClasses ecoreClass="form.ecore#//DateFormField">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//DateFormField/initialFormat"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//DateFormField/displayFormat"/>
-      <genOperations ecoreOperation="form.ecore#//DateFormField/getAssociatedReturnType"/>
     </genClasses>
     <genClasses ecoreClass="form.ecore#//ListFormField">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//ListFormField/maxHeigth"/>
@@ -228,12 +224,8 @@
     <genClasses ecoreClass="form.ecore#//PasswordFormField">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//PasswordFormField/maxLength"/>
     </genClasses>
-    <genClasses ecoreClass="form.ecore#//RadioFormField">
-      <genOperations ecoreOperation="form.ecore#//RadioFormField/getAssociatedReturnType"/>
-    </genClasses>
-    <genClasses ecoreClass="form.ecore#//SelectFormField">
-      <genOperations ecoreOperation="form.ecore#//SelectFormField/getAssociatedReturnType"/>
-    </genClasses>
+    <genClasses ecoreClass="form.ecore#//RadioFormField"/>
+    <genClasses ecoreClass="form.ecore#//SelectFormField"/>
     <genClasses ecoreClass="form.ecore#//TextFormField">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//TextFormField/maxLength"/>
     </genClasses>
@@ -249,15 +241,11 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference form.ecore#//SubmitFormButton/actions"/>
     </genClasses>
     <genClasses ecoreClass="form.ecore#//PreviousFormButton"/>
-    <genClasses ecoreClass="form.ecore#//NextFormButton">
-      <genOperations ecoreOperation="form.ecore#//NextFormButton/getAssociatedReturnType"/>
-    </genClasses>
+    <genClasses ecoreClass="form.ecore#//NextFormButton"/>
     <genClasses ecoreClass="form.ecore#//Info"/>
     <genClasses ecoreClass="form.ecore#//TextInfo"/>
     <genClasses ecoreClass="form.ecore#//MessageInfo"/>
-    <genClasses ecoreClass="form.ecore#//CheckBoxSingleFormField">
-      <genOperations ecoreOperation="form.ecore#//CheckBoxSingleFormField/getAssociatedReturnType"/>
-    </genClasses>
+    <genClasses ecoreClass="form.ecore#//CheckBoxSingleFormField"/>
     <genClasses ecoreClass="form.ecore#//Validator">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//Validator/validatorClass"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//Validator/htmlClass"/>
@@ -307,7 +295,6 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//DurationFormField/hour"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//DurationFormField/min"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//DurationFormField/sec"/>
-      <genOperations ecoreOperation="form.ecore#//DurationFormField/getAssociatedReturnType"/>
     </genClasses>
     <genClasses image="false" ecoreClass="form.ecore#//ItemContainer">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//ItemContainer/itemClass"/>
@@ -355,7 +342,6 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EReference form.ecore#//DynamicTable/minNumberOfRow"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EReference form.ecore#//DynamicTable/maxNumberOfColumn"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EReference form.ecore#//DynamicTable/maxNumberOfRow"/>
-      <genOperations ecoreOperation="form.ecore#//DynamicTable/getAssociatedReturnType"/>
     </genClasses>
     <genClasses ecoreClass="form.ecore#//IFrameWidget"/>
     <genClasses image="false" ecoreClass="form.ecore#//MandatoryFieldsCustomization">
@@ -371,7 +357,6 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//SuggestBox/useMaxItems"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//SuggestBox/asynchronous"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//SuggestBox/delay"/>
-      <genOperations ecoreOperation="form.ecore#//SuggestBox/getAssociatedReturnType"/>
     </genClasses>
   </genPackages>
   <genPackages prefix="Kpi" basePackage="org.bonitasoft.studio.model" ecorePackage="kpi.ecore#/">

@@ -46,7 +46,7 @@ import org.eclipse.swt.graphics.Image;
  * @author Romain Bioteau
  *
  */
-public class ApplicationResourceRepositoryStore extends AbstractRepositoryStore {
+public class ApplicationResourceRepositoryStore extends AbstractRepositoryStore<IRepositoryFileStore> {
 
     private static final String STORE_NAME = "application_resources" ;
 

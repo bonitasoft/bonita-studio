@@ -47,69 +47,71 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
  */
 public class TestImportBPMN2 extends TestCase {
 
-    protected org.eclipse.emf.common.util.URI toEMFURI(File file) throws MalformedURLException {
+    private File destFile;
+
+	protected org.eclipse.emf.common.util.URI toEMFURI(File file) throws MalformedURLException {
         org.eclipse.emf.common.util.URI res = URI.createFileURI(file.getAbsolutePath());
         return res;
     }
+	
+	@Override
+	protected void tearDown() throws Exception {
+		if(destFile != null){
+			destFile.delete();
+		}
+	}
 
     public void testImportBPMN2() throws Exception {
         URL bpmnResource = FileLocator.toFileURL(getClass().getResource("standardProcess.bpmn")); //$NON-NLS-1$
         BPMNToProc bpmnToProc = new BPMNToProc(bpmnResource.getFile());
-        File destFile = bpmnToProc.createDiagram(bpmnResource, new NullProgressMonitor());
+        destFile = bpmnToProc.createDiagram(bpmnResource, new NullProgressMonitor());
 
         ResourceSet resourceSet = new ResourceSetImpl();
         Resource resource = resourceSet.getResource(toEMFURI(destFile), true);
         MainProcess mainProcess = (MainProcess)resource.getContents().get(0);
 
         checkContent(mainProcess, 4, 14, 3, 0, 1, null);
-        destFile.delete();
     }
 
 
     public void testImportBPMN2WithUnknownDiagramNS() throws Exception {
         URL bpmnResource = FileLocator.toFileURL(getClass().getResource("standardProcess_badNameSpace.bpmn")); //$NON-NLS-1$
         BPMNToProc bpmnToProc = new BPMNToProc(bpmnResource.getFile());
-        File destFile = bpmnToProc.createDiagram(bpmnResource, new NullProgressMonitor());
+        destFile = bpmnToProc.createDiagram(bpmnResource, new NullProgressMonitor());
 
         ResourceSet resourceSet = new ResourceSetImpl();
         Resource resource = resourceSet.getResource(toEMFURI(destFile), true);
         MainProcess mainProcess = (MainProcess)resource.getContents().get(0);
 
         checkContent(mainProcess, 4, 14, 3, 0, 1, null);
-        destFile.delete();
     }
 
     public void testImportBPMN2WithOMG_ns() throws Exception {
         URL bpmnResource = FileLocator.toFileURL(getClass().getResource("testimport.bpmn")); //$NON-NLS-1$
         BPMNToProc bpmnToProc = new BPMNToProc(bpmnResource.getFile());
-        File destFile = bpmnToProc.createDiagram(bpmnResource, new NullProgressMonitor());
+        destFile = bpmnToProc.createDiagram(bpmnResource, new NullProgressMonitor());
 
         ResourceSet resourceSet = new ResourceSetImpl();
         Resource resource = resourceSet.getResource(toEMFURI(destFile), true);
         MainProcess mainProcess = (MainProcess)resource.getContents().get(0);
 
         checkContent(mainProcess, 2, 4, 0, 0, 0, null);
-        destFile.delete();
     }
 
     public void testBug1908a() throws Exception {
         URL bpmnResource = FileLocator.toFileURL(getClass().getResource("definitionsTest2.bpmn")); //$NON-NLS-1$
         BPMNToProc bpmnToProc = new BPMNToProc(bpmnResource.getFile());
-        File destFile = bpmnToProc.createDiagram(bpmnResource, new NullProgressMonitor());
+        destFile = bpmnToProc.createDiagram(bpmnResource, new NullProgressMonitor());
 
         ResourceSet resourceSet = new ResourceSetImpl();
         Resource resource = resourceSet.getResource(toEMFURI(destFile), true);
         MainProcess mainProcess = (MainProcess)resource.getContents().get(0);
 
         checkContent(mainProcess, 1, 2, 0, 0, 0, null);
-        destFile.delete();
     }
 
 
     public void testBug1908b() throws Exception {
-        File destFile = new File("destBug1908b" + System.currentTimeMillis() + ".proc");  //$NON-NLS-1$//$NON-NLS-2$
-        destFile.createNewFile();
-
         URL bpmnResource = FileLocator.toFileURL(getClass().getResource("definitionsTest3.bpmn")); //$NON-NLS-1$
         BPMNToProc bpmnToProc = new BPMNToProc(bpmnResource.getFile());
         destFile = bpmnToProc.createDiagram(bpmnResource, new NullProgressMonitor());
@@ -119,7 +121,7 @@ public class TestImportBPMN2 extends TestCase {
         MainProcess mainProcess = (MainProcess)resource.getContents().get(0);
 
         checkContent(mainProcess, 1, 2, 0, 0, 0, null);
-        destFile.delete();
+       
     }
 
     public void testImportActivitiSamples() throws Exception {
@@ -130,18 +132,7 @@ public class TestImportBPMN2 extends TestCase {
         "FinancialReportProcess.bpmn"};
         for (String bpmnFileName : fileNames) {
             File destFile = importFileWithName(bpmnFileName);
-            //			ResourceSet resourceSet = new ResourceSetImpl();
-            //			Resource resource = resourceSet.getResource(toEMFURI(destFile), true);
-            //			MainProcess mainProcess = (MainProcess)resource.getContents().get(0);
-            //
-            //			int pools = 0 ;
-            //			for(Element e : mainProcess.getElements()){
-            //				if(e instanceof Pool){
-            //					pools++ ;
-            //				}
-            //			}
-            //			assertEquals("Missing Pools", 1, pools) ; //$NON-NLS-1$
-            destFile.delete();
+            destFile.deleteOnExit();
         }
 
 
@@ -154,30 +145,23 @@ public class TestImportBPMN2 extends TestCase {
         "Delivery-to-Payment.bpmn"};
         for (String bpmnFileName : fileNames) {
             File destFile = importFileWithName("signaviosamples/"+bpmnFileName);
-            destFile.delete();
+            destFile.deleteOnExit();
         }
     }
 
-    //	public void testWrongQName(){
-    //		final String qname = "https://editor";
-    //		new javax.xml.namespace.QName(qname);
-    //		new org.eclipse.emf.ecore.xml.type.internal.QName(qname);
-    //	}
-
 
     public void testImportMessageFlow() throws MalformedURLException, IOException{
-        File destFile = importFileWithName("withMessageFlow.bpmn");
+        destFile = importFileWithName("withMessageFlow.bpmn");
         ResourceSet resourceSet = new ResourceSetImpl();
         Resource resource = resourceSet.getResource(toEMFURI(destFile), true);
         MainProcess mainProcess = (MainProcess)resource.getContents().get(0);
 
         checkContent(mainProcess, 2, 3, 0, 0, 0, null);
         assertEquals("Missing Message Flow", 1, mainProcess.getMessageConnections().size()); //$NON-NLS-1$
-        destFile.delete();
     }
 
     public void testImportWithSubProc() throws MalformedURLException, IOException{
-        File destFile = importFileWithName("withSubProc.bpmn");
+        destFile = importFileWithName("withSubProc.bpmn");
         ResourceSet resourceSet = new ResourceSetImpl();
         Resource resource = resourceSet.getResource(toEMFURI(destFile), true);
         MainProcess mainProcess = (MainProcess)resource.getContents().get(0);
@@ -189,12 +173,10 @@ public class TestImportBPMN2 extends TestCase {
 
         final Pool subProcPool = (Pool)ModelHelper.findElement(mainProcess,subprocTask.getCalledActivityName().getContent(), true);
         assertNotNull("Sub proc not found",	subProcPool);
-
-        destFile.delete();
     }
 
     public void testImportWithAll() throws MalformedURLException, IOException{
-        File destFile = importFileWithName("withAll.bpmn");
+        destFile = importFileWithName("withAll.bpmn");
         ResourceSet resourceSet = new ResourceSetImpl();
         Resource resource = resourceSet.getResource(toEMFURI(destFile), true);
         MainProcess mainProcess = (MainProcess)resource.getContents().get(0);
@@ -209,7 +191,6 @@ public class TestImportBPMN2 extends TestCase {
         checkContent(mainProcess, expectedPools, expectedEvents,
                 expectedBoundaryEvents, expectedeventSubprocPool,
                 expectedTextAnnotations, poolName);
-        destFile.delete();
     }
 
     protected void checkContent(MainProcess mainProcess,
@@ -253,11 +234,9 @@ public class TestImportBPMN2 extends TestCase {
 
     protected File importFileWithName(final String bpmnFileName)
             throws IOException, MalformedURLException {
-        File destFile = new File("destbpmnFileName" + System.currentTimeMillis() + ".proc");  //$NON-NLS-1$//$NON-NLS-2$
-        destFile.createNewFile();
         URL bpmnResource = FileLocator.toFileURL(getClass().getResource(bpmnFileName));
         BPMNToProc bpmnToProc = new BPMNToProc(bpmnResource.getFile());
-        destFile = bpmnToProc.createDiagram(bpmnResource, new NullProgressMonitor());
+        File  destFile = bpmnToProc.createDiagram(bpmnResource, new NullProgressMonitor());
         return destFile;
     }
 

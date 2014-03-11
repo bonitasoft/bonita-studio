@@ -28,6 +28,7 @@ import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.BonitaErrorDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
@@ -36,14 +37,15 @@ import org.bonitasoft.studio.exporter.ExporterService;
 import org.bonitasoft.studio.exporter.ExporterService.SERVICE_TYPE;
 import org.bonitasoft.studio.exporter.application.HtmlTemplateGenerator;
 import org.bonitasoft.studio.model.form.Form;
-import org.bonitasoft.studio.model.form.FormPackage;
-import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.MainProcess;
+import org.bonitasoft.studio.model.process.PageFlow;
 import org.bonitasoft.studio.model.process.diagram.form.edit.parts.FormEditPart;
 import org.bonitasoft.studio.model.process.diagram.form.part.FormDiagramEditor;
 import org.bonitasoft.studio.model.process.diagram.form.part.FormDiagramEditorPlugin;
 import org.bonitasoft.studio.properties.i18n.Messages;
+import org.bonitasoft.studio.properties.sections.forms.adapters.FormRemovedAdapter;
+import org.bonitasoft.studio.properties.sections.forms.adapters.WidgetAddedOrRemoved;
 import org.bonitasoft.studio.properties.sections.forms.commands.DuplicateFormCommand;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.operations.OperationHistoryFactory;
@@ -51,14 +53,12 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.notify.Adapter;
-import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.common.ui.URIEditorInput;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -70,7 +70,6 @@ import org.eclipse.gmf.runtime.diagram.core.services.ViewService;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCommand;
 import org.eclipse.gmf.runtime.notation.Diagram;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 
@@ -84,72 +83,6 @@ public class FormsUtils {
 
     protected static final String TMP_DIR = ProjectUtil.getBonitaStudioWorkFolder().getAbsolutePath();
 
-    private static final class WidgetAddedOrRemoved extends AdapterImpl {
-        private final Form form;
-
-        /**
-         * 
-         */
-        public WidgetAddedOrRemoved(Form form) {
-            this.form = form;
-        }
-
-        @Override
-        public void notifyChanged(Notification notification) {
-            // Listen for changes to features.
-            switch (notification.getFeatureID(Form.class)) {
-                case FormPackage.FORM__WIDGETS:
-                    if (notification.getEventType() == Notification.ADD) {
-                        final Widget widget = ((Widget) (notification.getNewValue()));
-                        if (ModelHelper.formIsCustomized(form)) {
-                            // there is a template
-
-                            HtmlTemplateGenerator generator = ((HtmlTemplateGenerator) ExporterService.getInstance().getExporterService(SERVICE_TYPE.HtmlTemplateGenerator));
-
-                            File file = WebTemplatesUtil.getFile(form.getHtmlTemplate().getPath());
-                            FileInputStream fis;
-                            try {
-                                fis = new FileInputStream(file);
-                                File tempFile = File.createTempFile("tempForm", ".html");
-                                FileWriter fileWriter = new FileWriter(tempFile);
-                                String label = NamingUtils.getDefaultNameFor(widget);
-                                label = NamingUtils.convertToId(label);
-                                int number = NamingUtils.getMaxElements(form, label);
-                                number++;
-                                label += number;
-                                generator.addDivInTemplate(label, fis, fileWriter);
-                                fis.close();
-                                fileWriter.close();
-                                FileUtil.copy(tempFile, file);
-                                WebTemplatesUtil.refreshFile(form.getHtmlTemplate().getPath());
-                            } catch (final Exception e) {
-                                BonitaStudioLog.error(e);
-                                Display.getDefault().syncExec(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        new BonitaErrorDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), Messages.Error, "Unexpected error", e).open();
-                                    }
-                                });
-                            }
-                        }
-                    } else if (notification.getEventType() == Notification.REMOVE) {
-                        if (form.getHtmlTemplate() != null && form.getHtmlTemplate().getPath() != null && !form.getHtmlTemplate().getPath().isEmpty()) {
-                            // there is a template
-                            Display.getDefault().syncExec(new Runnable() {
-                                @Override
-                                public void run() {
-                                    MessageDialog.openWarning(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), Messages.widgetRemovedWarning_title, Messages.widgetRemovedWarning_msg);
-                                }
-                            });
-                        }
-
-                    }
-            }
-        }
-
-
-    }
-
     public static enum WidgetEnum {
         TEXT, TEXT_AREA, COMBO, CHECKBOX,CHECKBOX_LIST, DATE, LIST, PASSWORD, RADIO, SELECT, FILE
     };
@@ -158,7 +91,7 @@ public class FormsUtils {
     public static void duplicateForm(Element pageFlow, TransactionalEditingDomain editingDomain, EStructuralFeature feature, Form baseForm, String id, String formDesc) {
         try {
             OperationHistoryFactory.getOperationHistory().execute(new DuplicateFormCommand(pageFlow, feature, baseForm, id, formDesc, editingDomain),
-                    new NullProgressMonitor(), null);
+                    Repository.NULL_PROGRESS_MONITOR, null);
         } catch (ExecutionException e) {
             BonitaStudioLog.error(e);
         }
@@ -222,6 +155,10 @@ public class FormsUtils {
         /* open the form editor */
         FormDiagramEditor formEditor = (FormDiagramEditor) EditorService.getInstance().openEditor(new URIEditorInput(uri, form.getName()));
         formEditor.getDiagramGraphicalViewer().select(formEditor.getDiagramEditPart());
+        EObject parent = form.eContainer();
+        if(parent instanceof PageFlow){
+            parent.eAdapters().add(new FormRemovedAdapter(form, formEditor));
+        }
         EList<Adapter> eAdapters = form.eAdapters();
         boolean alreadyHere = false;
         for (Adapter adapter : eAdapters) {

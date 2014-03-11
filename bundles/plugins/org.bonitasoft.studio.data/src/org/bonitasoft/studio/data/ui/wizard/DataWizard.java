@@ -71,6 +71,7 @@ public class DataWizard extends Wizard implements IBonitaVariableContext {
 	private DataWizardPage page;
 	private String fixedReturnType;
 	private boolean isPageFlowContext=false;
+	private boolean isOverviewContext=false;
 
 	public DataWizard(EObject container,EStructuralFeature dataContainmentFeature ,Set<EStructuralFeature> featureToCheckForUniqueID, boolean showAutogenerateForm){
 		initDataWizard(dataContainmentFeature, showAutogenerateForm);
@@ -124,6 +125,7 @@ public class DataWizard extends Wizard implements IBonitaVariableContext {
 		if(!dataContainmentFeature.equals(ProcessPackage.Literals.DATA_AWARE__DATA)){
 			page = new DataWizardPage(dataWorkingCopy,container,false,false,false, showAutogenerateForm,featureToCheckForUniqueID, fixedReturnType);
 			page.setIsPageFlowContext(isPageFlowContext);
+			page.setIsOverviewContext(isOverviewContext);
 			if (editMode){
 				page.setTitle(Messages.editVariableTitle);
 				page.setDescription(Messages.editVariableDescription);
@@ -133,6 +135,7 @@ public class DataWizard extends Wizard implements IBonitaVariableContext {
 			boolean isOnActivity = container instanceof Activity;
 			page = new DataWizardPage(dataWorkingCopy,container,true, true, isOnActivity, showAutogenerateForm, featureToCheckForUniqueID, fixedReturnType);
 			page.setIsPageFlowContext(isPageFlowContext);
+			page.setIsOverviewContext(isOverviewContext);
 		}
 		if (editMode){
 			page.setTitle(Messages.editVariableTitle);
@@ -160,8 +163,8 @@ public class DataWizard extends Wizard implements IBonitaVariableContext {
 			op.setNewData(workingCopy) ;
 			op.setOldData(originalData) ;
 			op.updateReferencesInScripts();
-			final boolean switchingDataeClass = !originalData.eClass().equals(workingCopy.eClass());
-			op.setUpdateDataReferences(switchingDataeClass);
+			final boolean switchingDataEClass = !originalData.eClass().equals(workingCopy.eClass());
+			op.setUpdateDataReferences(switchingDataEClass);
 			if (op.isCanExecute()){
 				try {
 
@@ -173,7 +176,8 @@ public class DataWizard extends Wizard implements IBonitaVariableContext {
 					BonitaStudioLog.error(e);
 				}
 
-				if(switchingDataeClass){
+				cc = new CompoundCommand();
+				if(switchingDataEClass){
 					List<?> dataList =  (List<?>) container.eGet(dataContainmentFeature) ;
 					int index = dataList.indexOf(originalData) ;
 					cc.append(RemoveCommand.create(editingDomain, container, dataContainmentFeature, originalData)) ;
@@ -192,7 +196,7 @@ public class DataWizard extends Wizard implements IBonitaVariableContext {
 			editingDomain.getCommandStack().execute(AddCommand.create(editingDomain, container, dataContainmentFeature, workingCopy)) ;
 		}
 		try {
-			RepositoryManager.getInstance().getCurrentRepository().getProject().build(IncrementalProjectBuilder.FULL_BUILD,XtextProjectHelper.BUILDER_ID,Collections.EMPTY_MAP,null);
+			RepositoryManager.getInstance().getCurrentRepository().getProject().build(IncrementalProjectBuilder.FULL_BUILD,XtextProjectHelper.BUILDER_ID,Collections.<String,String>emptyMap(),null);
 		} catch (CoreException e) {
 			BonitaStudioLog.error(e, DataPlugin.PLUGIN_ID);
 		}
@@ -229,6 +233,23 @@ public class DataWizard extends Wizard implements IBonitaVariableContext {
 	public void setIsPageFlowContext(boolean isPageFlowContext) {
 		this.isPageFlowContext=isPageFlowContext;
 
+	}
+
+	/* (non-Javadoc)
+	 * @see org.bonitasoft.studio.common.IBonitaVariableContext#isOverViewContext()
+	 */
+	@Override
+	public boolean isOverViewContext() {
+		return isOverviewContext;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.bonitasoft.studio.common.IBonitaVariableContext#setIsOverviewContext(boolean)
+	 */
+	@Override
+	public void setIsOverviewContext(boolean isOverviewContext) {
+		this.isOverviewContext=isOverviewContext;
+		
 	}
 
 }

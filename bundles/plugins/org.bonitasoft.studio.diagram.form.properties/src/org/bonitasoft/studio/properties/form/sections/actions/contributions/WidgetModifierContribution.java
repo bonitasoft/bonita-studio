@@ -17,20 +17,24 @@
 package org.bonitasoft.studio.properties.form.sections.actions.contributions;
 
 import java.util.Collection;
+import java.util.List;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.common.emf.tools.WidgetHelper;
 import org.bonitasoft.studio.common.emf.tools.WidgetModifiersSwitch;
 import org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection;
 import org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution;
 import org.bonitasoft.studio.form.properties.i18n.Messages;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
-import org.bonitasoft.studio.model.expression.Operation;
 import org.bonitasoft.studio.model.form.FormPackage;
 import org.bonitasoft.studio.model.form.TextFormField;
 import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
+import org.eclipse.core.runtime.Assert;
+import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.edit.EMFEditObservables;
 import org.eclipse.emf.ecore.EObject;
@@ -123,14 +127,28 @@ public class WidgetModifierContribution implements IExtensibleGridPropertySectio
 
     public void selectionChanged(SelectionChangedEvent event) {
         String type = (String) ((IStructuredSelection) event.getSelection()).getFirstElement();
-        if(widget != null){
-            Operation operation = widget.getAction();
-            if(operation != null){
-                final Expression exp = operation.getRightOperand();
-                if(exp != null && exp.getContent() != null && !exp.getContent().isEmpty() && ExpressionConstants.FORM_FIELD_TYPE.equals(exp.getType())){
-                    editingDomain.getCommandStack().execute(SetCommand.create(editingDomain, exp, ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE, type));
-                }
+        if(widget != null && type != null){
+            updateWidgetReferences(widget,type);
+        }
+    }
+
+    protected void updateWidgetReferences(Widget widget,String type) {
+        Assert.isNotNull(type);
+        CompoundCommand cc = new CompoundCommand("Update widget modifier");
+        List<Expression> allExpressionOfWidget = ModelHelper.getAllItemsOfType(ModelHelper.getParentForm(widget), ExpressionPackage.Literals.EXPRESSION);
+        for(Expression exp : allExpressionOfWidget){
+            if(exp.getContent() != null && (WidgetHelper.FIELD_PREFIX+widget.getName()).equals(exp.getContent()) && ExpressionConstants.FORM_FIELD_TYPE.equals(exp.getType()) && !type.equals(exp.getReturnType())){
+                cc.append(SetCommand.create(editingDomain, exp, ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE, type));
             }
+        }
+        List<Widget> allWidget = ModelHelper.getAllItemsOfType(ModelHelper.getParentForm(widget), FormPackage.Literals.WIDGET);
+        for(Widget w : allWidget){
+            if(w.getName().equals(widget.getName()) && w.eClass().equals(widget.eClass()) && !type.equals(w.getReturnTypeModifier())){
+                cc.append(SetCommand.create(editingDomain, w, FormPackage.Literals.WIDGET__RETURN_TYPE_MODIFIER, type));
+            }
+        }
+        if(!cc.isEmpty()){
+            editingDomain.getCommandStack().execute(cc);
         }
     }
 

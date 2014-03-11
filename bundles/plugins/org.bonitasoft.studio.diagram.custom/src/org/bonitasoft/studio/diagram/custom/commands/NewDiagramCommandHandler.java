@@ -36,6 +36,7 @@ import org.bonitasoft.studio.diagram.custom.repository.ApplicationResourceFileSt
 import org.bonitasoft.studio.diagram.custom.repository.ApplicationResourceRepositoryStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
+import org.bonitasoft.studio.diagram.custom.repository.PoolNotificationListener;
 import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationRepositoryStore;
 import org.bonitasoft.studio.diagram.custom.repository.WebTemplatesUtil;
 import org.bonitasoft.studio.model.actormapping.ActorMapping;
@@ -357,7 +358,7 @@ public class NewDiagramCommandHandler extends AbstractHandler {
 		diagramEp.getDiagramEditDomain().getDiagramCommandStack().execute(diagramEp.getCommand(req));
 		CompoundCommand cc = new CompoundCommand();
 		AbstractProcess pool = (AbstractProcess) req.getViewAndElementDescriptor().getElementAdapter().getAdapter(EObject.class) ;
-		
+		pool.eAdapters().add(new PoolNotificationListener());
 		
 		String newProcessName = Messages.newProcessPrefix;
 		if(diagramIdentifier!=null && !diagramIdentifier.isEmpty()){

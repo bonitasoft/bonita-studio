@@ -31,6 +31,7 @@ import org.bonitasoft.studio.common.DataUtil;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
+import org.bonitasoft.studio.common.emf.tools.WidgetHelper;
 import org.bonitasoft.studio.common.emf.tools.WidgetModifiersSwitch;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
@@ -274,7 +275,7 @@ public class CreateFormCommand extends AbstractTransactionalCommand {
 	protected void addSubmitButton(Form myForm) {
 		Widget submitButton = FormFactory.eINSTANCE.createSubmitFormButton();
 		String submitButtonName = NamingUtils.getInstance(pageFlow).generateName(submitButton, pageFlow);
-		submitButton.setName(NamingUtils.convertToId(submitButtonName, submitButton));
+		submitButton.setName(NamingUtils.toJavaIdentifier(submitButtonName, true));
 		submitButton.setDisplayLabel(createLabelExpression(submitButtonName));
 		submitButton.setInjectWidgetScript(createInsertWidgetIfScript());
 		WidgetLayoutInfo wLayout = FormFactory.eINSTANCE.createWidgetLayoutInfo();
@@ -290,7 +291,7 @@ public class CreateFormCommand extends AbstractTransactionalCommand {
 		Widget previousButton = FormFactory.eINSTANCE.createPreviousFormButton();
 		String previousName = NamingUtils.getInstance(pageFlow).generateName(previousButton, pageFlow);
 		previousButton.setDisplayLabel(createLabelExpression(previousName));
-		previousButton.setName(NamingUtils.convertToId(previousName, previousButton));
+		previousButton.setName(NamingUtils.toJavaIdentifier(previousName, true));
 		previousButton.setInjectWidgetScript(createInsertWidgetIfScript());
 		WidgetLayoutInfo wLayout = FormFactory.eINSTANCE.createWidgetLayoutInfo();
 		wLayout.setLine(Math.max(myForm.getWidgets().size(), MIN_BUTTON_LINE));
@@ -338,8 +339,8 @@ public class CreateFormCommand extends AbstractTransactionalCommand {
 		action.setLeftOperand(storageExpression) ;
 
 		Expression actionExpression = ExpressionFactory.eINSTANCE.createExpression();
-		actionExpression.setContent("field_"+widget.getName()) ;
-		actionExpression.setName("field_"+widget.getName()) ;
+		actionExpression.setContent(WidgetHelper.FIELD_PREFIX+widget.getName()) ;
+		actionExpression.setName(WidgetHelper.FIELD_PREFIX+widget.getName()) ;
 		actionExpression.setType(ExpressionConstants.FORM_FIELD_TYPE) ;
 		actionExpression.setReturnType(DocumentValue.class.getName()) ;
 		actionExpression.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(widget)) ;
@@ -359,14 +360,10 @@ public class CreateFormCommand extends AbstractTransactionalCommand {
 
 	protected Expression createWidgetExpression(Widget widget) {
 		Expression actionExpression = ExpressionFactory.eINSTANCE.createExpression();
-		actionExpression.setContent("field_"+widget.getName()) ;
-		actionExpression.setName("field_"+widget.getName()) ;
+		actionExpression.setContent(WidgetHelper.FIELD_PREFIX+widget.getName()) ;
+		actionExpression.setName(WidgetHelper.FIELD_PREFIX+widget.getName()) ;
 		actionExpression.setType(ExpressionConstants.FORM_FIELD_TYPE) ;
-		if(widget.getReturnTypeModifier() != null){
-			actionExpression.setReturnType(widget.getReturnTypeModifier()) ;
-		}else{
-			actionExpression.setReturnType(widget.getAssociatedReturnType()) ;
-		}
+		actionExpression.setReturnType(WidgetHelper.getAssociatedReturnType(widget)) ;
 		actionExpression.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(widget)) ;
 		return actionExpression;
 	}
