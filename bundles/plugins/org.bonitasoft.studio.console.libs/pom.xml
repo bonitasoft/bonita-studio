@@ -11,7 +11,7 @@
 	<groupId>org.bonitasoft.studio.plugins</groupId>
 	<artifactId>org.bonitasoft.studio.console.libs</artifactId>
 	<version>6.3.0-SNAPSHOT</version>
-	<packaging>eclipse-plugin</packaging>
+	<packaging>jar</packaging>
 
 	<properties>
 		<tomcat.bundle.dir>${basedir}/tomcat</tomcat.bundle.dir>
@@ -21,6 +21,7 @@
 		<tomcat.version>6.0.37</tomcat.version>
 	</properties>
 
+	
 	<dependencies>
 		<dependency>
 			<groupId>org.bonitasoft.engine</groupId>
@@ -37,91 +38,54 @@
 			<groupId>org.bonitasoft.engine</groupId>
 			<artifactId>bonita-common</artifactId>
 			<version>${engine.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>*</groupId>
-					<artifactId>*</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>org.bonitasoft.engine</groupId>
-			<artifactId>bonita-server</artifactId>
-			<version>${engine.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>*</groupId>
-					<artifactId>*</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.bonitasoft.web</groupId>
 			<artifactId>theme-builder</artifactId>
 			<version>${theme.builder.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>*</groupId>
-					<artifactId>*</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.bonitasoft.forms</groupId>
 			<artifactId>forms-server</artifactId>
 			<version>${bundle.version}</version>
+			<scope>compile</scope>
 			<exclusions>
 				<exclusion>
-					<groupId>*</groupId>
-					<artifactId>*</artifactId>
+					<groupId>org.bonitasoft.web</groupId>
+					<artifactId>bonita-rest-model</artifactId>
 				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>org.bonitasoft.forms</groupId>
-			<artifactId>forms-model</artifactId>
-			<version>${bundle.version}</version>
-			<exclusions>
 				<exclusion>
-					<groupId>*</groupId>
-					<artifactId>*</artifactId>
+					<groupId>org.bonitasoft.web</groupId>
+					<artifactId>bonita-rest-server</artifactId>
 				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>org.bonitasoft.forms</groupId>
-			<artifactId>forms-rpc</artifactId>
-			<version>${bundle.version}</version>
-			<exclusions>
 				<exclusion>
-					<groupId>*</groupId>
-					<artifactId>*</artifactId>
+					<groupId>org.lesscss</groupId>
+					<artifactId>lesscss</artifactId>
 				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>org.bonitasoft.console</groupId>
-			<artifactId>console-server</artifactId>
-			<version>${bundle.version}</version>
-			<exclusions>
 				<exclusion>
-					<groupId>*</groupId>
-					<artifactId>*</artifactId>
+					<groupId>org.apache.poi</groupId>
+					<artifactId>poi-ooxml</artifactId>
 				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>org.bonitasoft.console</groupId>
-			<artifactId>common-server</artifactId>
-			<version>${bundle.version}</version>
-			<exclusions>
 				<exclusion>
-					<groupId>*</groupId>
-					<artifactId>*</artifactId>
+					<groupId>javax.validation</groupId>
+					<artifactId>validation-api</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>net.htmlparser.jericho</groupId>
+					<artifactId>jericho-html</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.google.gwt</groupId>
+					<artifactId>gwt-servlet</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.bonitasoft.console</groupId>
+					<artifactId>common-server</artifactId>
 				</exclusion>
 			</exclusions>
 		</dependency>
 	</dependencies>
+
 	<build>
 		<pluginManagement>
 			<plugins>
@@ -234,7 +198,7 @@
 						</configuration>
 					</execution>
 					<execution>
-						<id>Retrieve bonita-client dependencies</id>
+						<id>Retrieve engine and web dependencies</id>
 						<phase>process-sources</phase>
 						<goals>
 							<goal>copy-dependencies</goal>
@@ -245,6 +209,7 @@
 							<overWriteReleases>true</overWriteReleases>
 							<overWriteSnapshots>true</overWriteSnapshots>
 							<overWriteIfNewer>true</overWriteIfNewer>
+							<excludeArtifactIds>junit,hamcrest-core</excludeArtifactIds>
 						</configuration>
 					</execution>
 				</executions>
@@ -258,6 +223,7 @@
 						<phase>clean</phase>
 						<configuration>
 							<target>
+								<delete dir="${lib.dir}" />
 								<delete dir="${tomcat.bundle.dir}" />
 								<delete dir="${bonita.home.dir}" />
 								<delete file="javadoc.zip" />
@@ -308,12 +274,10 @@
 					<manifestLocation>META-INF/</manifestLocation>
 					<supportedProjectTypes>
 						<supportedProjectType>eclipse-plugin</supportedProjectType>
+						<supportedProjectType>jar</supportedProjectType>
 					</supportedProjectTypes>
 					<instructions>
 						<_exportcontents>
-							 org.bonitasoft.console.common.server.preferences.constants;version="0.0.0",
-							 org.bonitasoft.console.common.server.preferences.properties;version="0.0.0",
-							 org.bonitasoft.console.common.server.sso;version="0.0.0",
 							 !org.bonitasoft.engine.dependency-platform.model.impl.db;version="0.0.0",
 							 org.bonitasoft.engine.*;version="0.0.0",
 							 org.bonitasoft.forms.client.model;version="0.0.0",
@@ -332,6 +296,7 @@
 						<Bundle-Name>Bonita Console embedded in Studio</Bundle-Name>
 						<Bundle-Vendor>BonitaSoft S.A.</Bundle-Vendor>
 						<Bundle-Version>6.3.0.qualifier</Bundle-Version>
+						<Bundle-RequiredExecutionEnvironment>JavaSE-1.6</Bundle-RequiredExecutionEnvironment>
 						<Embed-Transitive>true</Embed-Transitive>
 						<Embed-Directory>${lib.dir}</Embed-Directory>
 						<Embed-StripVersion>true</Embed-StripVersion>
