@@ -46,7 +46,7 @@ public class InputLengthValidator implements IValidator {
      */
     @Override
     public IStatus validate(Object input) {
-    	 if(input != null && input.toString().length() < minChar){
+    	 if(input != null && input.toString().trim().length() < minChar){
              return ValidationStatus.error(Messages.bind(Messages.fieldIsTooShort,inputName,minChar)) ;
          }
         if(input != null && input.toString().length() >= maxChar){

@@ -18,6 +18,7 @@ package org.bonitasoft.studio.properties.form.sections.actions.contributions;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.common.emf.tools.WidgetHelper;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
 import org.bonitasoft.studio.expression.editor.formfield.FormFieldExpressionProvider;
 import org.bonitasoft.studio.model.expression.Expression;
@@ -68,7 +69,7 @@ public class InitialValueExpressionFilter extends AvailableExpressionTypeFilter 
 						for(Form f : pageflow.getForm()){
 							if(!EcoreUtil.equals(f, form)){
 								for(Widget w : ModelHelper.getAllAccessibleWidgetInsideForm(f)){
-									if(expression.getName().equals("field_"+w.getName())){
+									if(expression.getName().equals(WidgetHelper.FIELD_PREFIX+w.getName())){
 										return true;
 									}
 								}

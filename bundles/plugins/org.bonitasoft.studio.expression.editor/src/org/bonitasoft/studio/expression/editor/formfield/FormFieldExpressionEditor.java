@@ -22,8 +22,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.bonitasoft.engine.bpm.document.DocumentValue;
 import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.common.emf.tools.WidgetHelper;
 import org.bonitasoft.studio.common.jface.TableColumnSorter;
 import org.bonitasoft.studio.expression.editor.ExpressionEditorService;
 import org.bonitasoft.studio.expression.editor.i18n.Messages;
@@ -33,9 +33,6 @@ import org.bonitasoft.studio.expression.editor.provider.SelectionAwareExpression
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
-import org.bonitasoft.studio.model.form.Duplicable;
-import org.bonitasoft.studio.model.form.FileWidget;
-import org.bonitasoft.studio.model.form.TextFormField;
 import org.bonitasoft.studio.model.form.Widget;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.conversion.Converter;
@@ -200,7 +197,7 @@ public class FormFieldExpressionEditor extends SelectionAwareExpressionEditor im
 		IConverter contentConverter = new Converter(Widget.class,String.class){
 
 			public Object convert(Object widget) {
-				return "field_"+((Widget) widget).getName();
+				return WidgetHelper.FIELD_PREFIX+((Widget) widget).getName();
 			}
 
 		};
@@ -210,15 +207,7 @@ public class FormFieldExpressionEditor extends SelectionAwareExpressionEditor im
 		IConverter returnTypeConverter = new Converter(Widget.class,String.class){
 
 			public Object convert(Object widget) {
-				if(widget instanceof Duplicable && ((Duplicable) widget).isDuplicate()){
-					return List.class.getName();
-				}else if(widget instanceof TextFormField && ((Widget) widget).getReturnTypeModifier() != null){
-					return ((Widget) widget).getReturnTypeModifier();
-				}
-				if(widget instanceof FileWidget){
-					return DocumentValue.class.getName();
-				}
-				return ((Widget) widget).getAssociatedReturnType()  ;
+				return WidgetHelper.getAssociatedReturnType((Widget) widget) ;
 			}
 
 		};
@@ -243,7 +232,8 @@ public class FormFieldExpressionEditor extends SelectionAwareExpressionEditor im
 				Widget w = ((List<Widget>) widgetList).get(0);
 				Collection<Widget> inputData = (Collection<Widget>) viewer.getInput();
 				for(Widget widget : inputData){
-					if(widget.getName().equals(w.getName()) && widget.getAssociatedReturnType().equals(w.getAssociatedReturnType())){
+					if(widget.getName().equals(w.getName()) 
+							&& WidgetHelper.getAssociatedReturnType(widget).equals(WidgetHelper.getAssociatedReturnType(w))){
 						return widget ;
 					}
 				}
@@ -289,4 +279,22 @@ public class FormFieldExpressionEditor extends SelectionAwareExpressionEditor im
 	}
 
 
+
+	/* (non-Javadoc)
+	 * @see org.bonitasoft.studio.common.IBonitaVariableContext#isOverViewContext()
+	 */
+	@Override
+	public boolean isOverViewContext() {
+		return false;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.bonitasoft.studio.common.IBonitaVariableContext#setIsOverviewContext(boolean)
+	 */
+	@Override
+	public void setIsOverviewContext(boolean isOverviewContext) {
+	}
+
+
 }
+

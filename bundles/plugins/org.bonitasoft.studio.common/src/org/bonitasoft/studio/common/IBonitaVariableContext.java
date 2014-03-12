@@ -6,4 +6,7 @@ public boolean isPageFlowContext();
 
 public void setIsPageFlowContext(boolean isPageFlowContext);
 
+public boolean isOverViewContext();
+
+public void setIsOverviewContext(boolean isOverviewContext);
 }

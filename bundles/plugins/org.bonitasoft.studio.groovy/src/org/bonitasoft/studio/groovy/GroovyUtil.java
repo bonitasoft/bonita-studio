@@ -29,7 +29,7 @@ import org.bonitasoft.forms.server.api.IFormExpressionsAPI;
 import org.bonitasoft.forms.server.validator.AbstractFormValidator;
 import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.common.exporter.ExporterTools;
+import org.bonitasoft.studio.common.emf.tools.WidgetHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.connector.model.definition.Output;
@@ -37,14 +37,10 @@ import org.bonitasoft.studio.data.util.DataUtil;
 import org.bonitasoft.studio.expression.editor.filter.DisplayEngineExpressionWithName;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
-import org.bonitasoft.studio.model.form.Duplicable;
-import org.bonitasoft.studio.model.form.DynamicTable;
 import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.form.FormField;
 import org.bonitasoft.studio.model.form.Group;
-import org.bonitasoft.studio.model.form.NextFormButton;
 import org.bonitasoft.studio.model.form.SubmitFormButton;
-import org.bonitasoft.studio.model.form.TextFormField;
 import org.bonitasoft.studio.model.form.Validator;
 import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.parameter.Parameter;
@@ -508,28 +504,8 @@ public class GroovyUtil {
 	}
 
 	public static ScriptVariable createScriptVariable(final Widget widget) {
-		String type = String.class.getName();
-		if (widget instanceof Duplicable && ((Duplicable) widget).isDuplicate()) {
-			type = List.class.getName();
-		} else {
-			if (widget instanceof TextFormField
-					&& widget.getReturnTypeModifier() != null) {
-				type = widget.getReturnTypeModifier();
-			} else {
-				type = widget.getAssociatedReturnType();
-			}
-			if (widget instanceof FormField) {
-				if (widget instanceof Group) {
-					type = Map.class.getName();
-				} else if (widget instanceof DynamicTable) {
-					type = List.class.getName();
-				}
-			} else if (widget instanceof NextFormButton) {
-				type = Boolean.class.getName();
-			}
-		}
-		return new ScriptVariable(ExporterTools.FIELD_IDENTIFIER
-				+ widget.getName(), type);
+		return new ScriptVariable(WidgetHelper.FIELD_PREFIX
+				+ widget.getName(), WidgetHelper.getAssociatedReturnType(widget));
 	}
 
 	public static List<ScriptVariable> createScriptVariablesFromFormElement(

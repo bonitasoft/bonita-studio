@@ -20,12 +20,12 @@
                   class="org.bonitasoft.studio.validation.constraints.process.EmptyNameConstraint"
                   id="org.bonitasoft.studio.validation.constraints.nonemptynames"
                   lang="Java"
-                  mode="Live"
+                  mode="Batch"
                   name="%NotEmptyNameConstraint"
                   severity="WARNING"
                   statusCode="1">
                <message>
-                  %constraints.emptyname.message
+                  {0}
                </message>
                <target
                      class="Element">
@@ -945,6 +945,22 @@
                  </message>
                  <target
                        class="Connector">
+                 </target>
+              </constraint>
+              <constraint
+                    class="org.bonitasoft.studio.validation.constraints.process.ConditionExpressionConstraint"
+                    id="org.bonitasoft.studio.validation.constraints.condition_expression"
+                    isEnabledByDefault="true"
+                    lang="Java"
+                    mode="Batch"
+                    name="Condition expression constraint"
+                    severity="ERROR"
+                    statusCode="1">
+                 <message>
+                    {0}
+                 </message>
+                 <target
+                       class="SequenceFlow">
                  </target>
               </constraint>
          </constraints>

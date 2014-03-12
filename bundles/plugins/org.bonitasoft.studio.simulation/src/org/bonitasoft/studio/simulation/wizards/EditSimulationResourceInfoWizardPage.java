@@ -17,9 +17,11 @@
  */
 package org.bonitasoft.studio.simulation.wizards;
 
-import org.bonitasoft.studio.common.NamingUtils;
+import org.bonitasoft.studio.common.databinding.MultiValidator;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.extension.IWidgetContribtution;
+import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
+import org.bonitasoft.studio.common.jface.databinding.validator.URLEncodableInputValidator;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
@@ -30,6 +32,7 @@ import org.bonitasoft.studio.simulation.i18n.Messages;
 import org.bonitasoft.studio.simulation.repository.SimulationResourceRepositoryStore;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.wizard.WizardPage;
@@ -376,15 +379,16 @@ public class EditSimulationResourceInfoWizardPage extends WizardPage {
 				return false;
 			}
 		}
-		if(getNameText().length()==0){
-			setErrorMessage(Messages.EditSimulationResourceWizard_ErrorEmptyName); //$NON-NLS-1$
-			return false;
-		}
 
-		if(!NamingUtils.convertToId(getNameText()).equals(getNameText())){
-			setErrorMessage(Messages.EditSimulationResourceWizard_ErrorInvalidName); //$NON-NLS-1$
-			return false;
-		}
+		
+		MultiValidator validator = new MultiValidator();
+		validator.addValidator(new EmptyInputValidator(Messages.name));
+		validator.addValidator(new URLEncodableInputValidator(Messages.name));
+		IStatus nameStatus = validator.validate(getNameText());
+        if(!nameStatus.isOK()){
+            setErrorMessage(nameStatus.getMessage());
+            return false;
+        }
 
 		try{
 			Double.parseDouble(getFixedCostText());

@@ -11,18 +11,17 @@ import org.bonitasoft.studio.common.AbstractRefactorOperation;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.Messages;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.common.emf.tools.WidgetHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.model.form.Widget;
-import org.bonitasoft.studio.model.parameter.Parameter;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.command.RemoveCommand;
 import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.eclipse.emf.edit.domain.EditingDomain;
-import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.jdt.core.JavaModelException;
 
 /**
@@ -51,7 +50,7 @@ public class RemoveWidgetReferencesOperation extends AbstractRefactorOperation {
 		if (canExecute){
 			List<Expression> expressions = ModelHelper.getAllItemsOfType(container,ExpressionPackage.Literals.EXPRESSION);
 			for (Expression exp : expressions){
-				if (ExpressionConstants.FORM_FIELD_TYPE.equals(exp.getType()) && exp.getName().equals("field_"+widgetToRemove.getName())){
+				if (ExpressionConstants.FORM_FIELD_TYPE.equals(exp.getType()) && exp.getName().equals(WidgetHelper.FIELD_PREFIX+widgetToRemove.getName())){
 					//update name and content
 					cc.append(SetCommand.create(editingDomain, exp, ExpressionPackage.Literals.EXPRESSION__NAME,""));
 					cc.append(SetCommand.create(editingDomain, exp, ExpressionPackage.Literals.EXPRESSION__CONTENT, ""));
@@ -73,7 +72,7 @@ public class RemoveWidgetReferencesOperation extends AbstractRefactorOperation {
 		if (!scriptExpressions.isEmpty() && !widgetToRemove.getName().equals(EMPTY_VALUE)){
 			BonitaGroovyRefactoringAction renameAction;
 			try {
-				renameAction = new BonitaGroovyRefactoringAction("field_"+widgetToRemove.getName(),EMPTY_VALUE,scriptExpressions,cc,editingDomain,BonitaGroovyRefactoringAction.REMOVE_OPERATION);
+				renameAction = new BonitaGroovyRefactoringAction(WidgetHelper.FIELD_PREFIX+widgetToRemove.getName(),EMPTY_VALUE,scriptExpressions,cc,editingDomain,BonitaGroovyRefactoringAction.REMOVE_OPERATION);
 				renameAction.run(null);
 				canExecute = renameAction.getStatus();
 				if (canExecute){

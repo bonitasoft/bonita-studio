@@ -183,6 +183,7 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
 	private WizardPageSupport pageSupport;
 	private String fixedReturnType;
 	private boolean isPageFlowContext=false;
+	private boolean isOverviewContext=false;
 	final private Set<String> availableDataNames = new HashSet<String>();
 
 	private final ViewerFilter typeViewerFilter = new ViewerFilter() {
@@ -549,7 +550,7 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
 						if (object instanceof Data) {
 							final Data otherData = (Data) object;
 							final Data originalData = ((DataWizard) getWizard()).getOriginalData();
-							if (!otherData.equals(originalData) && value.toString().equals(otherData.getName())) {
+							if (!otherData.equals(originalData) && value.toString().toLowerCase().equals(otherData.getName().toLowerCase())) {
 								return new Status(IStatus.ERROR, DataPlugin.PLUGIN_ID, Messages.dataAlreadyExist);
 							}
 						}
@@ -568,7 +569,7 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
 					if (object instanceof Data && !(object.eContainer() instanceof Expression)) {
 						final Data otherData = (Data) object;
 						final Data originalData = ((DataWizard) getWizard()).getOriginalData();
-						if (!otherData.equals(originalData) && value.toString().equals(otherData.getName())) {
+						if (!otherData.equals(originalData) && value.toString().toLowerCase().equals(otherData.getName().toLowerCase())) {
 							return new Status(IStatus.ERROR, DataPlugin.PLUGIN_ID, Messages.dataAlreadyExist);
 						}
 					}
@@ -821,6 +822,7 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
 
 		defaultValueViewer = new ExpressionViewer(defaultValueComposite, SWT.BORDER, ProcessPackage.Literals.DATA__DEFAULT_VALUE);
 		defaultValueViewer.setIsPageFlowContext(isPageFlowContext);
+		defaultValueViewer.setIsOverviewContext(isOverviewContext);
 		defaultValueViewer.getControl().setLayoutData(GridDataFactory.swtDefaults().align(SWT.FILL, SWT.CENTER).grab(true, false).create());
 		defaultValueViewer.setContext(container);
 
@@ -851,7 +853,7 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
 				if(element instanceof Expression && ExpressionConstants.VARIABLE_TYPE.equals(((Expression)element).getType())){
 					return availableDataNames.contains(((Expression)element).getName());
 				}else if(element instanceof IExpressionProvider && ExpressionConstants.VARIABLE_TYPE.equals(((IExpressionProvider) element).getExpressionType())){
-					return !(container instanceof AbstractProcess );
+					return !(container instanceof AbstractProcess ) || (container instanceof Pool && isOverviewContext);
 				}
 				return selected;
 			}
@@ -1303,6 +1305,31 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
 			for(Data d : availableData){
 				availableDataNames.add(d.getName());
 			}
+		} else {
+			if (container instanceof Pool && isOverviewContext){
+				List<Data> availableData = ModelHelper.getAccessibleData(ModelHelper.getParentProcess(container));
+				availableData.addAll(((Pool)container).getData());
+				for(Data d : availableData){
+					availableDataNames.add(d.getName());
+				}
+			}
 		}
+	}
+
+	/* (non-Javadoc)
+	 * @see org.bonitasoft.studio.common.IBonitaVariableContext#isOverViewContext()
+	 */
+	@Override
+	public boolean isOverViewContext() {
+		return isOverviewContext;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.bonitasoft.studio.common.IBonitaVariableContext#setIsOverviewContext(boolean)
+	 */
+	@Override
+	public void setIsOverviewContext(boolean isOverviewContext) {
+		this.isOverviewContext=isOverviewContext;
+		
 	}
 }

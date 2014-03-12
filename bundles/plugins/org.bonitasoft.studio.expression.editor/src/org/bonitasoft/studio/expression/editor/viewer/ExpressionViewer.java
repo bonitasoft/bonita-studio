@@ -1,3 +1,4 @@
+
 /**
  * Copyright (C) 2012 BonitaSoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
@@ -31,6 +32,7 @@ import java.util.TreeSet;
 import org.bonitasoft.studio.common.AbstractRefactorOperation;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.IBonitaVariableContext;
+import org.bonitasoft.studio.common.emf.tools.WidgetHelper;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
@@ -152,6 +154,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 	private List<IExpressionValidationListener> validationListeners = new ArrayList<IExpressionValidationListener>();
 	private ToolItem eraseControl;
 	private boolean isPageFlowContext = false;
+	private boolean isOverviewContext = false;
 	private AbstractRefactorOperation operation;
 	private AbstractRefactorOperation  removeOperation;
 
@@ -848,7 +851,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 
 		Set<String> cache = new HashSet<String>();
 		for (Expression e : getFilteredExpressions()) {
-			if (e.getName().equals(input)) {
+			if (e.getName() != null && e.getName().equals(input)) {
 				cache.add(e.getContent());
 			}
 		}
@@ -894,7 +897,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 
 		Set<String> cache = new HashSet<String>();
 		for (Expression e : getFilteredExpressions()) {
-			if (e.getName().equals(input)) {
+			if (e.getName() != null && e.getName().equals(input)) {
 				cache.add(e.getType());
 			}
 		}
@@ -1173,7 +1176,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 				}
 				if (parent instanceof Widget) {
 					final Widget w = (Widget) parent;
-					if (w != null && w instanceof TextFormField && copy.getName().equals("field_" + w.getName())) {
+					if (w != null && w instanceof TextFormField && copy.getName().equals(WidgetHelper.FIELD_PREFIX + w.getName())) {
 						String returnTypeModifier = w.getReturnTypeModifier();
 						if (returnTypeModifier != null) {
 							if(w instanceof Duplicable && ((Duplicable) w).isDuplicate()){
@@ -1262,6 +1265,25 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 
 		}
 		return isExecuted;
+	}
+
+
+
+	/* (non-Javadoc)
+	 * @see org.bonitasoft.studio.common.IBonitaVariableContext#isOverViewContext()
+	 */
+	@Override
+	public boolean isOverViewContext() {
+		return isOverviewContext;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.bonitasoft.studio.common.IBonitaVariableContext#setIsOverviewContext(boolean)
+	 */
+	@Override
+	public void setIsOverviewContext(boolean isOverviewContext) {
+		this.isOverviewContext=isOverviewContext;
+		
 	}
 
 }

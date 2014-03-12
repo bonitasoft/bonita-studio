@@ -46,10 +46,8 @@ public class BonitaHomeUtil {
 
 	private static final String API_TYPE = "org.bonitasoft.engine.api-type";
 	public static final String HTTP = "HTTP";
-	private static final String API_TYPE_PARAMETERS = "org.bonitasoft.engine.api-type.parameters";
 	private static final String SERVER_URL = "server.url";
 	private static final String APPLICATION_NAME = "application.name";
-	private static final String HTTP_PARAMETERS = SERVER_URL+","+APPLICATION_NAME;
 	private static final String BONITA_APPLICATION = "bonita";
 
 	public static File getBonitaHome() {
@@ -75,6 +73,14 @@ public class BonitaHomeUtil {
 				+ File.separator + BonitaConstants.DEFAULT_DOMAIN
 				+ File.separator + "conf";
 	}
+	
+	public static File getPortalI18NFolder() {
+	    File bonitaFolder =  new File(ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString() + File.separator + "tomcat"+File.separator+"bonita");
+        return new File(bonitaFolder, "client"
+                + File.separator + "platform"
+                + File.separator + "work"
+                + File.separator + "i18n");
+    }
 
 
 
@@ -141,7 +147,6 @@ public class BonitaHomeUtil {
 			p.load(inStream);
 			p.setProperty(API_TYPE, apiType);
 			if(HTTP.equals(apiType)){
-				p.setProperty(API_TYPE_PARAMETERS, HTTP_PARAMETERS);
 				p.setProperty(SERVER_URL, "http://"+host+":"+serverPort);
 				p.setProperty(APPLICATION_NAME, BONITA_APPLICATION);
 			}

@@ -16,7 +16,7 @@
  */
 package org.bonitasoft.studio.common.emf.tools;
 
-import static org.fest.assertions.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.form.FormFactory;

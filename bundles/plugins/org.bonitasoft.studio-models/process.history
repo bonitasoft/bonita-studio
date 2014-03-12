@@ -3472,22 +3472,22 @@
             referenceValue="form.ecore#//Widget"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//Widget" referenceName="eOperations"
-          element="form.ecore#//Widget/getAssociatedReturnType">
-        <changes xsi:type="history:Set" element="form.ecore#//Widget/getAssociatedReturnType"
+          element="#//@releases.10/@changes.6/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.10/@changes.6/@changes.0/@element"
             featureName="name" dataValue="getAssociatedReturnType"/>
-        <changes xsi:type="history:Set" element="form.ecore#//Widget/getAssociatedReturnType"
+        <changes xsi:type="history:Set" element="#//@releases.10/@changes.6/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
-      <changes xsi:type="history:Create" target="form.ecore#//Widget/getAssociatedReturnType"
-          referenceName="eAnnotations" element="form.ecore#//Widget/getAssociatedReturnType/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%">
-        <changes xsi:type="history:Set" element="form.ecore#//Widget/getAssociatedReturnType/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"
+      <changes xsi:type="history:Create" target="#//@releases.10/@changes.6/@changes.0/@element"
+          referenceName="eAnnotations" element="#//@releases.10/@changes.6/@changes.0/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%">
+        <changes xsi:type="history:Set" element="#//@releases.10/@changes.6/@changes.0/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"
             featureName="source" dataValue="http://www.eclipse.org/emf/2002/GenModel"/>
       </changes>
-      <changes xsi:type="history:Create" target="form.ecore#//Widget/getAssociatedReturnType/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"
-          referenceName="details" element="form.ecore#//Widget/getAssociatedReturnType/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0">
-        <changes xsi:type="history:Set" element="form.ecore#//Widget/getAssociatedReturnType/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"
+      <changes xsi:type="history:Create" target="#//@releases.10/@changes.6/@changes.0/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"
+          referenceName="details" element="#//@releases.10/@changes.6/@changes.0/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0">
+        <changes xsi:type="history:Set" element="#//@releases.10/@changes.6/@changes.0/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"
             featureName="key" dataValue="body"/>
-        <changes xsi:type="history:Set" element="form.ecore#//Widget/getAssociatedReturnType/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"
+        <changes xsi:type="history:Set" element="#//@releases.10/@changes.6/@changes.0/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"
             featureName="value" dataValue="return String.class.getName();"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//Widget" referenceName="eStructuralFeatures"
@@ -3660,22 +3660,22 @@
             referenceValue="form.ecore#//Duplicable"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//Group" referenceName="eOperations"
-          element="form.ecore#//Group/getAssociatedReturnType">
-        <changes xsi:type="history:Set" element="form.ecore#//Group/getAssociatedReturnType"
+          element="#//@releases.10/@changes.6/@changes.1/@element">
+        <changes xsi:type="history:Set" element="#//@releases.10/@changes.6/@changes.1/@element"
             featureName="name" dataValue="getAssociatedReturnType"/>
-        <changes xsi:type="history:Set" element="form.ecore#//Group/getAssociatedReturnType"
+        <changes xsi:type="history:Set" element="#//@releases.10/@changes.6/@changes.1/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
-      <changes xsi:type="history:Create" target="form.ecore#//Group/getAssociatedReturnType"
-          referenceName="eAnnotations" element="form.ecore#//Group/getAssociatedReturnType/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%">
-        <changes xsi:type="history:Set" element="form.ecore#//Group/getAssociatedReturnType/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"
+      <changes xsi:type="history:Create" target="#//@releases.10/@changes.6/@changes.1/@element"
+          referenceName="eAnnotations" element="#//@releases.10/@changes.6/@changes.1/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%">
+        <changes xsi:type="history:Set" element="#//@releases.10/@changes.6/@changes.1/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"
             featureName="source" dataValue="http://www.eclipse.org/emf/2002/GenModel"/>
       </changes>
-      <changes xsi:type="history:Create" target="form.ecore#//Group/getAssociatedReturnType/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"
-          referenceName="details" element="form.ecore#//Group/getAssociatedReturnType/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0">
-        <changes xsi:type="history:Set" element="form.ecore#//Group/getAssociatedReturnType/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"
+      <changes xsi:type="history:Create" target="#//@releases.10/@changes.6/@changes.1/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"
+          referenceName="details" element="#//@releases.10/@changes.6/@changes.1/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0">
+        <changes xsi:type="history:Set" element="#//@releases.10/@changes.6/@changes.1/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"
             featureName="key" dataValue="body"/>
-        <changes xsi:type="history:Set" element="form.ecore#//Group/getAssociatedReturnType/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"
+        <changes xsi:type="history:Set" element="#//@releases.10/@changes.6/@changes.1/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"
             featureName="value" dataValue="return java.util.Map.class.getName();"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//Group" referenceName="eStructuralFeatures"
@@ -3786,22 +3786,22 @@
             featureName="eSuperTypes" referenceValue="form.ecore#//FormField"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//MultipleValuatedFormField"
-          referenceName="eOperations" element="form.ecore#//MultipleValuatedFormField/getAssociatedReturnType">
-        <changes xsi:type="history:Set" element="form.ecore#//MultipleValuatedFormField/getAssociatedReturnType"
+          referenceName="eOperations" element="#//@releases.10/@changes.6/@changes.2/@element">
+        <changes xsi:type="history:Set" element="#//@releases.10/@changes.6/@changes.2/@element"
             featureName="name" dataValue="getAssociatedReturnType"/>
-        <changes xsi:type="history:Set" element="form.ecore#//MultipleValuatedFormField/getAssociatedReturnType"
+        <changes xsi:type="history:Set" element="#//@releases.10/@changes.6/@changes.2/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
-      <changes xsi:type="history:Create" target="form.ecore#//MultipleValuatedFormField/getAssociatedReturnType"
-          referenceName="eAnnotations" element="form.ecore#//MultipleValuatedFormField/getAssociatedReturnType/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%">
-        <changes xsi:type="history:Set" element="form.ecore#//MultipleValuatedFormField/getAssociatedReturnType/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"
+      <changes xsi:type="history:Create" target="#//@releases.10/@changes.6/@changes.2/@element"
+          referenceName="eAnnotations" element="#//@releases.10/@changes.6/@changes.2/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%">
+        <changes xsi:type="history:Set" element="#//@releases.10/@changes.6/@changes.2/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"
             featureName="source" dataValue="http://www.eclipse.org/emf/2002/GenModel"/>
       </changes>
-      <changes xsi:type="history:Create" target="form.ecore#//MultipleValuatedFormField/getAssociatedReturnType/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"
-          referenceName="details" element="form.ecore#//MultipleValuatedFormField/getAssociatedReturnType/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0">
-        <changes xsi:type="history:Set" element="form.ecore#//MultipleValuatedFormField/getAssociatedReturnType/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"
+      <changes xsi:type="history:Create" target="#//@releases.10/@changes.6/@changes.2/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"
+          referenceName="details" element="#//@releases.10/@changes.6/@changes.2/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0">
+        <changes xsi:type="history:Set" element="#//@releases.10/@changes.6/@changes.2/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"
             featureName="key" dataValue="body"/>
-        <changes xsi:type="history:Set" element="form.ecore#//MultipleValuatedFormField/getAssociatedReturnType/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"
+        <changes xsi:type="history:Set" element="#//@releases.10/@changes.6/@changes.2/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"
             featureName="value" dataValue="return java.util.List.class.getName();"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#/" referenceName="eClassifiers"
@@ -3837,22 +3837,22 @@
             referenceValue="form.ecore#//SingleValuatedFormField"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//DateFormField" referenceName="eOperations"
-          element="form.ecore#//DateFormField/getAssociatedReturnType">
-        <changes xsi:type="history:Set" element="form.ecore#//DateFormField/getAssociatedReturnType"
+          element="#//@releases.10/@changes.6/@changes.3/@element">
+        <changes xsi:type="history:Set" element="#//@releases.10/@changes.6/@changes.3/@element"
             featureName="name" dataValue="getAssociatedReturnType"/>
-        <changes xsi:type="history:Set" element="form.ecore#//DateFormField/getAssociatedReturnType"
+        <changes xsi:type="history:Set" element="#//@releases.10/@changes.6/@changes.3/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
-      <changes xsi:type="history:Create" target="form.ecore#//DateFormField/getAssociatedReturnType"
-          referenceName="eAnnotations" element="form.ecore#//DateFormField/getAssociatedReturnType/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%">
-        <changes xsi:type="history:Set" element="form.ecore#//DateFormField/getAssociatedReturnType/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"
+      <changes xsi:type="history:Create" target="#//@releases.10/@changes.6/@changes.3/@element"
+          referenceName="eAnnotations" element="#//@releases.10/@changes.6/@changes.3/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%">
+        <changes xsi:type="history:Set" element="#//@releases.10/@changes.6/@changes.3/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"
             featureName="source" dataValue="http://www.eclipse.org/emf/2002/GenModel"/>
       </changes>
-      <changes xsi:type="history:Create" target="form.ecore#//DateFormField/getAssociatedReturnType/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"
-          referenceName="details" element="form.ecore#//DateFormField/getAssociatedReturnType/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0">
-        <changes xsi:type="history:Set" element="form.ecore#//DateFormField/getAssociatedReturnType/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"
+      <changes xsi:type="history:Create" target="#//@releases.10/@changes.6/@changes.3/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"
+          referenceName="details" element="#//@releases.10/@changes.6/@changes.3/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0">
+        <changes xsi:type="history:Set" element="#//@releases.10/@changes.6/@changes.3/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"
             featureName="key" dataValue="body"/>
-        <changes xsi:type="history:Set" element="form.ecore#//DateFormField/getAssociatedReturnType/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"
+        <changes xsi:type="history:Set" element="#//@releases.10/@changes.6/@changes.3/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"
             featureName="value" dataValue="return java.util.Date.class.getName();"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//DateFormField" referenceName="eStructuralFeatures"
@@ -3919,22 +3919,22 @@
             referenceValue="form.ecore#//ItemContainer"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//RadioFormField" referenceName="eOperations"
-          element="form.ecore#//RadioFormField/getAssociatedReturnType">
-        <changes xsi:type="history:Set" element="form.ecore#//RadioFormField/getAssociatedReturnType"
+          element="#//@releases.10/@changes.6/@changes.4/@element">
+        <changes xsi:type="history:Set" element="#//@releases.10/@changes.6/@changes.4/@element"
             featureName="name" dataValue="getAssociatedReturnType"/>
-        <changes xsi:type="history:Set" element="form.ecore#//RadioFormField/getAssociatedReturnType"
+        <changes xsi:type="history:Set" element="#//@releases.10/@changes.6/@changes.4/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
-      <changes xsi:type="history:Create" target="form.ecore#//RadioFormField/getAssociatedReturnType"
-          referenceName="eAnnotations" element="form.ecore#//RadioFormField/getAssociatedReturnType/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%">
-        <changes xsi:type="history:Set" element="form.ecore#//RadioFormField/getAssociatedReturnType/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"
+      <changes xsi:type="history:Create" target="#//@releases.10/@changes.6/@changes.4/@element"
+          referenceName="eAnnotations" element="#//@releases.10/@changes.6/@changes.4/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%">
+        <changes xsi:type="history:Set" element="#//@releases.10/@changes.6/@changes.4/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"
             featureName="source" dataValue="http://www.eclipse.org/emf/2002/GenModel"/>
       </changes>
-      <changes xsi:type="history:Create" target="form.ecore#//RadioFormField/getAssociatedReturnType/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"
-          referenceName="details" element="form.ecore#//RadioFormField/getAssociatedReturnType/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0">
-        <changes xsi:type="history:Set" element="form.ecore#//RadioFormField/getAssociatedReturnType/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"
+      <changes xsi:type="history:Create" target="#//@releases.10/@changes.6/@changes.4/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"
+          referenceName="details" element="#//@releases.10/@changes.6/@changes.4/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0">
+        <changes xsi:type="history:Set" element="#//@releases.10/@changes.6/@changes.4/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"
             featureName="key" dataValue="body"/>
-        <changes xsi:type="history:Set" element="form.ecore#//RadioFormField/getAssociatedReturnType/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"
+        <changes xsi:type="history:Set" element="#//@releases.10/@changes.6/@changes.4/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"
             featureName="value" dataValue="return String.class.getName();"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#/" referenceName="eClassifiers"
@@ -3957,22 +3957,22 @@
             featureName="value" dataValue="The select is mapped with LISTBOX_SIMPLE in forms.xml (and so GWT)"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//SelectFormField" referenceName="eOperations"
-          element="form.ecore#//SelectFormField/getAssociatedReturnType">
-        <changes xsi:type="history:Set" element="form.ecore#//SelectFormField/getAssociatedReturnType"
+          element="#//@releases.10/@changes.6/@changes.5/@element">
+        <changes xsi:type="history:Set" element="#//@releases.10/@changes.6/@changes.5/@element"
             featureName="name" dataValue="getAssociatedReturnType"/>
-        <changes xsi:type="history:Set" element="form.ecore#//SelectFormField/getAssociatedReturnType"
+        <changes xsi:type="history:Set" element="#//@releases.10/@changes.6/@changes.5/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
-      <changes xsi:type="history:Create" target="form.ecore#//SelectFormField/getAssociatedReturnType"
-          referenceName="eAnnotations" element="form.ecore#//SelectFormField/getAssociatedReturnType/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%">
-        <changes xsi:type="history:Set" element="form.ecore#//SelectFormField/getAssociatedReturnType/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"
+      <changes xsi:type="history:Create" target="#//@releases.10/@changes.6/@changes.5/@element"
+          referenceName="eAnnotations" element="#//@releases.10/@changes.6/@changes.5/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%">
+        <changes xsi:type="history:Set" element="#//@releases.10/@changes.6/@changes.5/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"
             featureName="source" dataValue="http://www.eclipse.org/emf/2002/GenModel"/>
       </changes>
-      <changes xsi:type="history:Create" target="form.ecore#//SelectFormField/getAssociatedReturnType/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"
-          referenceName="details" element="form.ecore#//SelectFormField/getAssociatedReturnType/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0">
-        <changes xsi:type="history:Set" element="form.ecore#//SelectFormField/getAssociatedReturnType/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"
+      <changes xsi:type="history:Create" target="#//@releases.10/@changes.6/@changes.5/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"
+          referenceName="details" element="#//@releases.10/@changes.6/@changes.5/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0">
+        <changes xsi:type="history:Set" element="#//@releases.10/@changes.6/@changes.5/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"
             featureName="key" dataValue="body"/>
-        <changes xsi:type="history:Set" element="form.ecore#//SelectFormField/getAssociatedReturnType/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"
+        <changes xsi:type="history:Set" element="#//@releases.10/@changes.6/@changes.5/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"
             featureName="value" dataValue="return String.class.getName();"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#/" referenceName="eClassifiers"
@@ -4069,22 +4069,22 @@
             referenceValue="form.ecore#//FormButton"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//NextFormButton" referenceName="eOperations"
-          element="form.ecore#//NextFormButton/getAssociatedReturnType">
-        <changes xsi:type="history:Set" element="form.ecore#//NextFormButton/getAssociatedReturnType"
+          element="#//@releases.10/@changes.6/@changes.6/@element">
+        <changes xsi:type="history:Set" element="#//@releases.10/@changes.6/@changes.6/@element"
             featureName="name" dataValue="getAssociatedReturnType"/>
-        <changes xsi:type="history:Set" element="form.ecore#//NextFormButton/getAssociatedReturnType"
+        <changes xsi:type="history:Set" element="#//@releases.10/@changes.6/@changes.6/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
-      <changes xsi:type="history:Create" target="form.ecore#//NextFormButton/getAssociatedReturnType"
-          referenceName="eAnnotations" element="form.ecore#//NextFormButton/getAssociatedReturnType/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%">
-        <changes xsi:type="history:Set" element="form.ecore#//NextFormButton/getAssociatedReturnType/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"
+      <changes xsi:type="history:Create" target="#//@releases.10/@changes.6/@changes.6/@element"
+          referenceName="eAnnotations" element="#//@releases.10/@changes.6/@changes.6/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%">
+        <changes xsi:type="history:Set" element="#//@releases.10/@changes.6/@changes.6/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"
             featureName="source" dataValue="http://www.eclipse.org/emf/2002/GenModel"/>
       </changes>
-      <changes xsi:type="history:Create" target="form.ecore#//NextFormButton/getAssociatedReturnType/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"
-          referenceName="details" element="form.ecore#//NextFormButton/getAssociatedReturnType/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0">
-        <changes xsi:type="history:Set" element="form.ecore#//NextFormButton/getAssociatedReturnType/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"
+      <changes xsi:type="history:Create" target="#//@releases.10/@changes.6/@changes.6/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"
+          referenceName="details" element="#//@releases.10/@changes.6/@changes.6/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0">
+        <changes xsi:type="history:Set" element="#//@releases.10/@changes.6/@changes.6/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"
             featureName="key" dataValue="body"/>
-        <changes xsi:type="history:Set" element="form.ecore#//NextFormButton/getAssociatedReturnType/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"
+        <changes xsi:type="history:Set" element="#//@releases.10/@changes.6/@changes.6/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"
             featureName="value" dataValue="return Boolean.class.getName();"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#/" referenceName="eClassifiers"
@@ -4142,22 +4142,22 @@
             featureName="eSuperTypes" referenceValue="form.ecore#//SingleValuatedFormField"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//CheckBoxSingleFormField"
-          referenceName="eOperations" element="form.ecore#//CheckBoxSingleFormField/getAssociatedReturnType">
-        <changes xsi:type="history:Set" element="form.ecore#//CheckBoxSingleFormField/getAssociatedReturnType"
+          referenceName="eOperations" element="#//@releases.10/@changes.6/@changes.7/@element">
+        <changes xsi:type="history:Set" element="#//@releases.10/@changes.6/@changes.7/@element"
             featureName="name" dataValue="getAssociatedReturnType"/>
-        <changes xsi:type="history:Set" element="form.ecore#//CheckBoxSingleFormField/getAssociatedReturnType"
+        <changes xsi:type="history:Set" element="#//@releases.10/@changes.6/@changes.7/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
-      <changes xsi:type="history:Create" target="form.ecore#//CheckBoxSingleFormField/getAssociatedReturnType"
-          referenceName="eAnnotations" element="form.ecore#//CheckBoxSingleFormField/getAssociatedReturnType/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%">
-        <changes xsi:type="history:Set" element="form.ecore#//CheckBoxSingleFormField/getAssociatedReturnType/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"
+      <changes xsi:type="history:Create" target="#//@releases.10/@changes.6/@changes.7/@element"
+          referenceName="eAnnotations" element="#//@releases.10/@changes.6/@changes.7/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%">
+        <changes xsi:type="history:Set" element="#//@releases.10/@changes.6/@changes.7/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"
             featureName="source" dataValue="http://www.eclipse.org/emf/2002/GenModel"/>
       </changes>
-      <changes xsi:type="history:Create" target="form.ecore#//CheckBoxSingleFormField/getAssociatedReturnType/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"
-          referenceName="details" element="form.ecore#//CheckBoxSingleFormField/getAssociatedReturnType/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0">
-        <changes xsi:type="history:Set" element="form.ecore#//CheckBoxSingleFormField/getAssociatedReturnType/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"
+      <changes xsi:type="history:Create" target="#//@releases.10/@changes.6/@changes.7/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"
+          referenceName="details" element="#//@releases.10/@changes.6/@changes.7/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0">
+        <changes xsi:type="history:Set" element="#//@releases.10/@changes.6/@changes.7/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"
             featureName="key" dataValue="body"/>
-        <changes xsi:type="history:Set" element="form.ecore#//CheckBoxSingleFormField/getAssociatedReturnType/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"
+        <changes xsi:type="history:Set" element="#//@releases.10/@changes.6/@changes.7/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"
             featureName="value" dataValue="return Boolean.class.getName();"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#/" referenceName="eClassifiers"
@@ -4270,22 +4270,22 @@
             referenceValue="form.ecore#//ItemContainer"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//DurationFormField" referenceName="eOperations"
-          element="form.ecore#//DurationFormField/getAssociatedReturnType">
-        <changes xsi:type="history:Set" element="form.ecore#//DurationFormField/getAssociatedReturnType"
+          element="#//@releases.10/@changes.6/@changes.8/@element">
+        <changes xsi:type="history:Set" element="#//@releases.10/@changes.6/@changes.8/@element"
             featureName="name" dataValue="getAssociatedReturnType"/>
-        <changes xsi:type="history:Set" element="form.ecore#//DurationFormField/getAssociatedReturnType"
+        <changes xsi:type="history:Set" element="#//@releases.10/@changes.6/@changes.8/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
-      <changes xsi:type="history:Create" target="form.ecore#//DurationFormField/getAssociatedReturnType"
-          referenceName="eAnnotations" element="form.ecore#//DurationFormField/getAssociatedReturnType/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%">
-        <changes xsi:type="history:Set" element="form.ecore#//DurationFormField/getAssociatedReturnType/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"
+      <changes xsi:type="history:Create" target="#//@releases.10/@changes.6/@changes.8/@element"
+          referenceName="eAnnotations" element="#//@releases.10/@changes.6/@changes.8/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%">
+        <changes xsi:type="history:Set" element="#//@releases.10/@changes.6/@changes.8/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"
             featureName="source" dataValue="http://www.eclipse.org/emf/2002/GenModel"/>
       </changes>
-      <changes xsi:type="history:Create" target="form.ecore#//DurationFormField/getAssociatedReturnType/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"
-          referenceName="details" element="form.ecore#//DurationFormField/getAssociatedReturnType/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0">
-        <changes xsi:type="history:Set" element="form.ecore#//DurationFormField/getAssociatedReturnType/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"
+      <changes xsi:type="history:Create" target="#//@releases.10/@changes.6/@changes.8/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"
+          referenceName="details" element="#//@releases.10/@changes.6/@changes.8/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0">
+        <changes xsi:type="history:Set" element="#//@releases.10/@changes.6/@changes.8/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"
             featureName="key" dataValue="body"/>
-        <changes xsi:type="history:Set" element="form.ecore#//DurationFormField/getAssociatedReturnType/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"
+        <changes xsi:type="history:Set" element="#//@releases.10/@changes.6/@changes.8/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"
             featureName="value" dataValue="return Long.class.getName();"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//DurationFormField" referenceName="eStructuralFeatures"
@@ -4442,22 +4442,22 @@
             referenceValue="form.ecore#//SingleValuatedFormField"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//DynamicTable" referenceName="eOperations"
-          element="form.ecore#//DynamicTable/getAssociatedReturnType">
-        <changes xsi:type="history:Set" element="form.ecore#//DynamicTable/getAssociatedReturnType"
+          element="#//@releases.10/@changes.6/@changes.9/@element">
+        <changes xsi:type="history:Set" element="#//@releases.10/@changes.6/@changes.9/@element"
             featureName="name" dataValue="getAssociatedReturnType"/>
-        <changes xsi:type="history:Set" element="form.ecore#//DynamicTable/getAssociatedReturnType"
+        <changes xsi:type="history:Set" element="#//@releases.10/@changes.6/@changes.9/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
-      <changes xsi:type="history:Create" target="form.ecore#//DynamicTable/getAssociatedReturnType"
-          referenceName="eAnnotations" element="form.ecore#//DynamicTable/getAssociatedReturnType/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%">
-        <changes xsi:type="history:Set" element="form.ecore#//DynamicTable/getAssociatedReturnType/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"
+      <changes xsi:type="history:Create" target="#//@releases.10/@changes.6/@changes.9/@element"
+          referenceName="eAnnotations" element="#//@releases.10/@changes.6/@changes.9/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%">
+        <changes xsi:type="history:Set" element="#//@releases.10/@changes.6/@changes.9/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"
             featureName="source" dataValue="http://www.eclipse.org/emf/2002/GenModel"/>
       </changes>
-      <changes xsi:type="history:Create" target="form.ecore#//DynamicTable/getAssociatedReturnType/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"
-          referenceName="details" element="form.ecore#//DynamicTable/getAssociatedReturnType/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0">
-        <changes xsi:type="history:Set" element="form.ecore#//DynamicTable/getAssociatedReturnType/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"
+      <changes xsi:type="history:Create" target="#//@releases.10/@changes.6/@changes.9/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"
+          referenceName="details" element="#//@releases.10/@changes.6/@changes.9/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0">
+        <changes xsi:type="history:Set" element="#//@releases.10/@changes.6/@changes.9/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"
             featureName="key" dataValue="body"/>
-        <changes xsi:type="history:Set" element="form.ecore#//DynamicTable/getAssociatedReturnType/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"
+        <changes xsi:type="history:Set" element="#//@releases.10/@changes.6/@changes.9/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"
             featureName="value" dataValue="return java.util.List.class.getName();"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//DynamicTable" referenceName="eStructuralFeatures"
@@ -4878,22 +4878,22 @@
             referenceValue="form.ecore#//MultipleValuatedFormField"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//SuggestBox" referenceName="eOperations"
-          element="form.ecore#//SuggestBox/getAssociatedReturnType">
-        <changes xsi:type="history:Set" element="form.ecore#//SuggestBox/getAssociatedReturnType"
+          element="#//@releases.10/@changes.6/@changes.10/@element">
+        <changes xsi:type="history:Set" element="#//@releases.10/@changes.6/@changes.10/@element"
             featureName="name" dataValue="getAssociatedReturnType"/>
-        <changes xsi:type="history:Set" element="form.ecore#//SuggestBox/getAssociatedReturnType"
+        <changes xsi:type="history:Set" element="#//@releases.10/@changes.6/@changes.10/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
-      <changes xsi:type="history:Create" target="form.ecore#//SuggestBox/getAssociatedReturnType"
-          referenceName="eAnnotations" element="form.ecore#//SuggestBox/getAssociatedReturnType/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%">
-        <changes xsi:type="history:Set" element="form.ecore#//SuggestBox/getAssociatedReturnType/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"
+      <changes xsi:type="history:Create" target="#//@releases.10/@changes.6/@changes.10/@element"
+          referenceName="eAnnotations" element="#//@releases.10/@changes.6/@changes.10/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%">
+        <changes xsi:type="history:Set" element="#//@releases.10/@changes.6/@changes.10/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"
             featureName="source" dataValue="http://www.eclipse.org/emf/2002/GenModel"/>
       </changes>
-      <changes xsi:type="history:Create" target="form.ecore#//SuggestBox/getAssociatedReturnType/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"
-          referenceName="details" element="form.ecore#//SuggestBox/getAssociatedReturnType/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0">
-        <changes xsi:type="history:Set" element="form.ecore#//SuggestBox/getAssociatedReturnType/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"
+      <changes xsi:type="history:Create" target="#//@releases.10/@changes.6/@changes.10/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"
+          referenceName="details" element="#//@releases.10/@changes.6/@changes.10/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0">
+        <changes xsi:type="history:Set" element="#//@releases.10/@changes.6/@changes.10/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"
             featureName="key" dataValue="body"/>
-        <changes xsi:type="history:Set" element="form.ecore#//SuggestBox/getAssociatedReturnType/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"
+        <changes xsi:type="history:Set" element="#//@releases.10/@changes.6/@changes.10/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"
             featureName="value" dataValue="return String.class.getName();"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//SuggestBox" referenceName="eStructuralFeatures"
@@ -7753,7 +7753,11 @@
       </changes>
     </changes>
   </releases>
-  <releases>
+  <releases date="2014-02-17T16:36:39.611+0100" label="6.2.4-001">
+    <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.custom.migration.DependenciesCopyCustomMigration"/>
+    <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.custom.migration.InterpreterCustomMigration"/>
+  </releases>
+  <releases date="2014-02-23T16:36:39.611+0100" label="6.3.0-001">
     <changes xsi:type="history:OperationChange">
       <changes xsi:type="history:Create" target="process.ecore#/" referenceName="eClassifiers"
           element="process.ecore#//BusinessObjectData">
@@ -7889,5 +7893,88 @@
         </parameters>
       </operation>
     </changes>
+    <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.custom.migration.BusinessObjectTypeCustomMigration"/>
+    <changes xsi:type="history:CompositeChange">
+      <changes xsi:type="history:Delete" target="form.ecore#//Widget" referenceName="eOperations">
+        <element xsi:type="ecore:EOperation" name="getAssociatedReturnType" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+          <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+            <details key="body" value="return String.class.getName();"/>
+          </eAnnotations>
+        </element>
+      </changes>
+      <changes xsi:type="history:Delete" target="form.ecore#//Group" referenceName="eOperations">
+        <element xsi:type="ecore:EOperation" name="getAssociatedReturnType" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+          <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+            <details key="body" value="return java.util.Map.class.getName();"/>
+          </eAnnotations>
+        </element>
+      </changes>
+      <changes xsi:type="history:Delete" target="form.ecore#//MultipleValuatedFormField"
+          referenceName="eOperations">
+        <element xsi:type="ecore:EOperation" name="getAssociatedReturnType" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+          <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+            <details key="body" value="return java.util.List.class.getName();"/>
+          </eAnnotations>
+        </element>
+      </changes>
+      <changes xsi:type="history:Delete" target="form.ecore#//DateFormField" referenceName="eOperations">
+        <element xsi:type="ecore:EOperation" name="getAssociatedReturnType" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+          <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+            <details key="body" value="return java.util.Date.class.getName();"/>
+          </eAnnotations>
+        </element>
+      </changes>
+      <changes xsi:type="history:Delete" target="form.ecore#//RadioFormField" referenceName="eOperations">
+        <element xsi:type="ecore:EOperation" name="getAssociatedReturnType" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+          <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+            <details key="body" value="return String.class.getName();"/>
+          </eAnnotations>
+        </element>
+      </changes>
+      <changes xsi:type="history:Delete" target="form.ecore#//SelectFormField" referenceName="eOperations">
+        <element xsi:type="ecore:EOperation" name="getAssociatedReturnType" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+          <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+            <details key="body" value="return String.class.getName();"/>
+          </eAnnotations>
+        </element>
+      </changes>
+      <changes xsi:type="history:Delete" target="form.ecore#//NextFormButton" referenceName="eOperations">
+        <element xsi:type="ecore:EOperation" name="getAssociatedReturnType" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+          <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+            <details key="body" value="return Boolean.class.getName();"/>
+          </eAnnotations>
+        </element>
+      </changes>
+      <changes xsi:type="history:Delete" target="form.ecore#//CheckBoxSingleFormField"
+          referenceName="eOperations">
+        <element xsi:type="ecore:EOperation" name="getAssociatedReturnType" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+          <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+            <details key="body" value="return Boolean.class.getName();"/>
+          </eAnnotations>
+        </element>
+      </changes>
+      <changes xsi:type="history:Delete" target="form.ecore#//DurationFormField" referenceName="eOperations">
+        <element xsi:type="ecore:EOperation" name="getAssociatedReturnType" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+          <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+            <details key="body" value="return Long.class.getName();"/>
+          </eAnnotations>
+        </element>
+      </changes>
+      <changes xsi:type="history:Delete" target="form.ecore#//DynamicTable" referenceName="eOperations">
+        <element xsi:type="ecore:EOperation" name="getAssociatedReturnType" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+          <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+            <details key="body" value="return java.util.List.class.getName();"/>
+          </eAnnotations>
+        </element>
+      </changes>
+      <changes xsi:type="history:Delete" target="form.ecore#//SuggestBox" referenceName="eOperations">
+        <element xsi:type="ecore:EOperation" name="getAssociatedReturnType" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+          <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+            <details key="body" value="return String.class.getName();"/>
+          </eAnnotations>
+        </element>
+      </changes>
+    </changes>
   </releases>
+  <releases/>
 </history:History>

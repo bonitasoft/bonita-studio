@@ -139,7 +139,7 @@ public interface IProcBuilder {
      */
     public void addSequenceFlow(String id,String sourceId,String targetId,boolean isDefault, Point sourceAnchor, Point targetAnchor, PointList bendpoints) throws ProcBuilderException;
 
-    public void addSequenceFlowCondition(final String content, final String returnType, final String interpreter, final String expressionType);
+    public void addSequenceFlowCondition(final String content, final String interpreter, final String expressionType);
     public void addSequenceFlowDecisionTable();
     /**
      * @param name
@@ -179,10 +179,12 @@ public interface IProcBuilder {
      * @param location
      * @param size
      * @param gatewayType
+     * @param displayLabel 
      * @throws ProcBuilderException
      */
-    public void addGateway(String id,String name,Point location, Dimension size,GatewayType gatewayType) throws ProcBuilderException;
+    public void addGateway(String id,String name,Point location, Dimension size,GatewayType gatewayType, boolean displayLabel) throws ProcBuilderException;
 
+    public void addGateway(String id,String name,Point location, Dimension size,GatewayType gatewayType) throws ProcBuilderException;
     /**
      * @param id
      * @param name

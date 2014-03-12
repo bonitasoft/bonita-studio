@@ -34,11 +34,6 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Widget" abstract="true" interface="true"
       eSuperTypes="process.ecore#//Element #//CSSCustomizable">
-    <eOperations name="getAssociatedReturnType" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="body" value="return String.class.getName();"/>
-      </eAnnotations>
-    </eOperations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="widgetLayoutInfo" eType="#//WidgetLayoutInfo"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="showDisplayLabel" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBooleanObject"
@@ -109,11 +104,6 @@
     <eLiterals name="onClick" value="3" literal="onClick"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Group" eSuperTypes="#//Widget #//Duplicable">
-    <eOperations name="getAssociatedReturnType" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="body" value="return java.util.Map.class.getName();"/>
-      </eAnnotations>
-    </eOperations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="widgets" upperBound="-1"
         eType="#//Widget" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="showBorder" lowerBound="1"
@@ -136,11 +126,6 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="MultipleValuatedFormField" abstract="true"
       eSuperTypes="#//FormField">
-    <eOperations name="getAssociatedReturnType" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="body" value="return java.util.List.class.getName();"/>
-      </eAnnotations>
-    </eOperations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="defaultExpression" eType="ecore:EClass expression.ecore#//Expression"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="defaultExpressionAfterEvent"
@@ -151,11 +136,6 @@
   <eClassifiers xsi:type="ecore:EClass" name="CheckBoxMultipleFormField" eSuperTypes="#//MultipleValuatedFormField #//ItemContainer"/>
   <eClassifiers xsi:type="ecore:EClass" name="ComboFormField" eSuperTypes="#//MultipleValuatedFormField"/>
   <eClassifiers xsi:type="ecore:EClass" name="DateFormField" eSuperTypes="#//SingleValuatedFormField">
-    <eOperations name="getAssociatedReturnType" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="body" value="return java.util.Date.class.getName();"/>
-      </eAnnotations>
-    </eOperations>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="initialFormat" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="displayFormat" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
@@ -168,22 +148,11 @@
   <eClassifiers xsi:type="ecore:EClass" name="PasswordFormField" eSuperTypes="#//SingleValuatedFormField">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="maxLength" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="RadioFormField" eSuperTypes="#//MultipleValuatedFormField #//ItemContainer">
-    <eOperations name="getAssociatedReturnType" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="body" value="return String.class.getName();"/>
-      </eAnnotations>
-    </eOperations>
-  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="RadioFormField" eSuperTypes="#//MultipleValuatedFormField #//ItemContainer"/>
   <eClassifiers xsi:type="ecore:EClass" name="SelectFormField" eSuperTypes="#//MultipleValuatedFormField">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="The select is mapped with LISTBOX_SIMPLE in forms.xml (and so GWT)"/>
     </eAnnotations>
-    <eOperations name="getAssociatedReturnType" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="body" value="return String.class.getName();"/>
-      </eAnnotations>
-    </eOperations>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="TextFormField" eSuperTypes="#//SingleValuatedFormField">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
@@ -205,13 +174,7 @@
         eType="ecore:EClass expression.ecore#//Operation" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="PreviousFormButton" eSuperTypes="#//FormButton"/>
-  <eClassifiers xsi:type="ecore:EClass" name="NextFormButton" eSuperTypes="#//FormButton">
-    <eOperations name="getAssociatedReturnType" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="body" value="return Boolean.class.getName();"/>
-      </eAnnotations>
-    </eOperations>
-  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="NextFormButton" eSuperTypes="#//FormButton"/>
   <eClassifiers xsi:type="ecore:EClass" name="Info" eSuperTypes="#//Widget">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="Info widget are non-editable widget."/>
@@ -223,13 +186,7 @@
     </eAnnotations>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="MessageInfo" eSuperTypes="#//Info"/>
-  <eClassifiers xsi:type="ecore:EClass" name="CheckBoxSingleFormField" eSuperTypes="#//SingleValuatedFormField">
-    <eOperations name="getAssociatedReturnType" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="body" value="return Boolean.class.getName();"/>
-      </eAnnotations>
-    </eOperations>
-  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="CheckBoxSingleFormField" eSuperTypes="#//SingleValuatedFormField"/>
   <eClassifiers xsi:type="ecore:EClass" name="Validator">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="validatorClass" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
@@ -298,11 +255,6 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="HiddenWidget" eSuperTypes="#//SingleValuatedFormField #//Duplicable"/>
   <eClassifiers xsi:type="ecore:EClass" name="DurationFormField" eSuperTypes="#//SingleValuatedFormField #//ItemContainer">
-    <eOperations name="getAssociatedReturnType" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="body" value="return Long.class.getName();"/>
-      </eAnnotations>
-    </eOperations>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="day" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBooleanObject"
         defaultValueLiteral="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="hour" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBooleanObject"
@@ -378,11 +330,6 @@
         containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="DynamicTable" eSuperTypes="#//AbstractTable #//SingleValuatedFormField">
-    <eOperations name="getAssociatedReturnType" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="body" value="return java.util.List.class.getName();"/>
-      </eAnnotations>
-    </eOperations>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="limitMinNumberOfColumn"
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean" defaultValueLiteral="false"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="limitMinNumberOfRow" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
@@ -423,11 +370,6 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="HtmlWidget" eSuperTypes="#//Info"/>
   <eClassifiers xsi:type="ecore:EClass" name="SuggestBox" eSuperTypes="#//MultipleValuatedFormField">
-    <eOperations name="getAssociatedReturnType" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="body" value="return String.class.getName();"/>
-      </eAnnotations>
-    </eOperations>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="maxItems" lowerBound="1"
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt" defaultValueLiteral="-1"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="useMaxItems" lowerBound="1"
