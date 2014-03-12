@@ -17,14 +17,13 @@
  */
 package org.bonitasoft.studio.engine.preferences;
 
-import java.io.File;
+import static org.bonitasoft.studio.common.Messages.bonitaPortalModuleName;
+
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
-import org.bonitasoft.console.common.server.preferences.constants.WebBonitaConstantsUtils;
 import org.bonitasoft.studio.common.BonitaHomeUtil;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.engine.BOSWebServerManager;
 import org.bonitasoft.studio.engine.i18n.Messages;
@@ -38,7 +37,6 @@ import org.bonitasoft.studio.repository.themes.LookNFeelRepositoryStore;
 import org.bonitasoft.studio.repository.themes.UserXpFileStore;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -53,7 +51,6 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressService;
-import static org.bonitasoft.studio.common.Messages.bonitaPortalModuleName;
 
 /**
  * @author Romain Bioteau This class represents a preference page that is
@@ -77,7 +74,6 @@ public class BonitaUserXpPreferencePage extends AbstractBonitaPreferencePage imp
     private String newTheme;
     private StringFieldEditor host;
     private String newHost;
-    private final static WebBonitaConstantsUtils WEB_CONSTANTS =  WebBonitaConstantsUtils.getInstance(1)  ;
 
     public BonitaUserXpPreferencePage() {
         super(GRID);
@@ -136,32 +132,32 @@ public class BonitaUserXpPreferencePage extends AbstractBonitaPreferencePage imp
 
 
     public static void updateBonitaHome() {
-        LookNFeelRepositoryStore store = (LookNFeelRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(LookNFeelRepositoryStore.class) ;
-        String themeId = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().getString(BonitaPreferenceConstants.DEFAULT_USERXP_THEME) ;
-        List<UserXpFileStore> artifacts = store.getUserXPLookNFeels() ;
-        UserXpFileStore artifact = null ;
-        for(UserXpFileStore item : artifacts){
-            if(item.getName().equals(themeId)){
-                artifact = item ;
-            }
-        }
-        if(artifact != null){
-            File target = null;
-            target = new File(BonitaHomeUtil.getBonitaHome(),WEB_CONSTANTS.getPortalThemeFolder().getAbsolutePath()+File.separatorChar+artifact.getName());
-            target.delete() ;
-            target.mkdirs() ;
-            File zipFile = new File(target,artifact.getName()+".zip") ;
-            zipFile.delete() ;
-            artifact.export(zipFile.getAbsolutePath()) ;
-            try{
-            	PlatformUtil.unzipZipFiles(zipFile, target, new NullProgressMonitor()) ;
-            }catch(Exception e){
-            	BonitaStudioLog.error(e);
-            }
-            if(zipFile!=null){
-            	zipFile.delete() ;
-            }
-        }
+//        LookNFeelRepositoryStore store = (LookNFeelRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(LookNFeelRepositoryStore.class) ;
+//        String themeId = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().getString(BonitaPreferenceConstants.DEFAULT_USERXP_THEME) ;
+//        List<UserXpFileStore> artifacts = store.getUserXPLookNFeels() ;
+//        UserXpFileStore artifact = null ;
+//        for(UserXpFileStore item : artifacts){
+//            if(item.getName().equals(themeId)){
+//                artifact = item ;
+//            }
+//        }
+//        if(artifact != null){
+//            File target = null;
+//            target = new File(BonitaHomeUtil.getBonitaHome(),WEB_CONSTANTS.getPortalThemeFolder().getAbsolutePath()+File.separatorChar+artifact.getName());
+//            target.delete() ;
+//            target.mkdirs() ;
+//            File zipFile = new File(target,artifact.getName()+".zip") ;
+//            zipFile.delete() ;
+//            artifact.export(zipFile.getAbsolutePath()) ;
+//            try{
+//            	PlatformUtil.unzipZipFiles(zipFile, target, new NullProgressMonitor()) ;
+//            }catch(Exception e){
+//            	BonitaStudioLog.error(e);
+//            }
+//            if(zipFile!=null){
+//            	zipFile.delete() ;
+//            }
+//        }
     }
 
     @Override

@@ -53,8 +53,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.mockito;bundle-version="1.9.5";resolution:=optional
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: org.bonitasoft.studio.exporter.Activator
-Import-Package: org.bonitasoft.console.common.server.preferences.properties,
- org.bonitasoft.engine.bpm,
+Import-Package: org.bonitasoft.engine.bpm,
  org.bonitasoft.engine.bpm.bar,
  org.bonitasoft.engine.bpm.process,
  org.bonitasoft.engine.expression,

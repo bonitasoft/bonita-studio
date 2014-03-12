@@ -28,5 +28,3 @@ Export-Package: org.bonitasoft.studio.preferences,
  org.bonitasoft.studio.preferences.extension,
  org.bonitasoft.studio.preferences.pages
 Bundle-ClassPath: .
-Import-Package: org.bonitasoft.console.common.server.preferences.constants,
- org.bonitasoft.console.common.server.preferences.properties
