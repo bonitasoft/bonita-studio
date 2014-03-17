@@ -479,8 +479,8 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
 
 				protected boolean isReturnTypeCompatible(String technicalTypeFor, final String returnType) {
 					try{
-						Class typeClass = Class.forName(technicalTypeFor);
-						Class returnTypeClass = Class.forName(returnType);
+						Class<?> typeClass = Class.forName(technicalTypeFor);
+						Class<?> returnTypeClass = Class.forName(returnType);
 						return typeClass.isAssignableFrom(returnTypeClass);
 					}catch (Exception e) {
 						return returnType.equals(technicalTypeFor);

@@ -73,8 +73,8 @@ public class ProcessEnablementProblemsDialog extends MessageDialog {
         if(processResolutionProblems.isEmpty()){
             return super.createCustomArea(parent);
         }
-        TableViewer problemsViewer = new TableViewer(parent,SWT.BORDER | SWT.V_SCROLL);
-        problemsViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 100).indent(0, 10).create());
+        TableViewer problemsViewer = new TableViewer(parent,SWT.BORDER | SWT.V_SCROLL |  SWT.H_SCROLL);
+        problemsViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(300, 100).indent(0, 10).create());
         problemsViewer.setContentProvider(new ArrayContentProvider());
         problemsViewer.setLabelProvider(new LabelProvider(){
             /* (non-Javadoc)
