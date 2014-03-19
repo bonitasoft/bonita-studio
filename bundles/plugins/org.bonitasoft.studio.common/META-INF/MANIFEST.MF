@@ -48,6 +48,7 @@ Import-Package: org.bonitasoft.engine.bpm.bar,
  org.bonitasoft.engine.bpm.document,
  org.bonitasoft.engine.expression,
  org.bonitasoft.engine.operation,
+ org.bonitasoft.engine.session,
  org.bonitasoft.engine.util,
  org.bonitasoft.forms.client.model
 Export-Package: org.bonitasoft.studio.common,

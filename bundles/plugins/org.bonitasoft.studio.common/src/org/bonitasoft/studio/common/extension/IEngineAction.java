@@ -17,12 +17,14 @@
  */
 package org.bonitasoft.studio.common.extension;
 
+import org.bonitasoft.engine.session.APISession;
+
 /**
  * @author Romain Bioteau
  *
  */
 public interface IEngineAction {
 
-	public void run() ;
+	public void run(APISession session) throws Exception;
 	
 }
