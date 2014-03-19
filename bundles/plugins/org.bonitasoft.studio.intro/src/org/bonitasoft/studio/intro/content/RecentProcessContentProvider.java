@@ -112,14 +112,14 @@ public class RecentProcessContentProvider implements IIntroXHTMLContentProvider 
 				DiagramFileStore diagram = (DiagramFileStore) proc;
 
 				a.setAttribute("title", displayNameForLabelProvider);
-				int maxChar = diagram.getMigrationReport() != null ? 25 : 40 ; 
+				int maxChar = diagram.hasMigrationReport() ? 25 : 40 ; 
 				if (displayNameForLabelProvider.length() > maxChar) {
 					displayNameForLabelProvider = displayNameForLabelProvider
 							.substring(0, maxChar) + "...";
 				}
 				Text procName = doc.createTextNode(displayNameForLabelProvider);
 				a.appendChild(procName);
-				if (diagram.getMigrationReport() != null) {
+				if (diagram.hasMigrationReport()) {
 					Element style = doc.createElement("font");
 					a.appendChild(style);
 					style.setAttribute("color", "#01A8CE");

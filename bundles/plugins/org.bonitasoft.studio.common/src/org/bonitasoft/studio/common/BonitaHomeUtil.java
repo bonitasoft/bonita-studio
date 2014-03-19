@@ -73,6 +73,14 @@ public class BonitaHomeUtil {
 				+ File.separator + BonitaConstants.DEFAULT_DOMAIN
 				+ File.separator + "conf";
 	}
+	
+	public static File getPortalI18NFolder() {
+	    File bonitaFolder =  new File(ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString() + File.separator + "tomcat"+File.separator+"bonita");
+        return new File(bonitaFolder, "client"
+                + File.separator + "platform"
+                + File.separator + "work"
+                + File.separator + "i18n");
+    }
 
 
 

@@ -92,8 +92,7 @@ public class ImportBarCoolbarItem implements IBonitaContributionItem {
 	 */
 	@Override
 	public boolean isEnabled() {
-		Command cmd = getCommand();
-		return cmd.isEnabled();
+		return true;
 	}
 
 	/* (non-Javadoc)
