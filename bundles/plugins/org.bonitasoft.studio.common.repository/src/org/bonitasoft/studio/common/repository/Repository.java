@@ -91,6 +91,8 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.internal.core.ClasspathValidation;
 import org.eclipse.jdt.internal.core.JavaModelManager;
 import org.eclipse.jdt.internal.core.JavaProject;
+import org.eclipse.jdt.internal.ui.wizards.buildpaths.BuildPathsBlock;
+import org.eclipse.jdt.internal.ui.wizards.buildpaths.CPListElement;
 import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.osgi.framework.adaptor.BundleClassLoader;
 import org.eclipse.swt.graphics.Image;
@@ -478,8 +480,7 @@ public class Repository implements IRepository {
                 }
                 IJavaProject javaProject = getJavaProject();
                 if(javaProject != null){
-                    JavaModelManager manager = JavaModelManager.getJavaModelManager();
-                    manager.getJavaModel().refreshExternalArchives(null, Repository.NULL_PROGRESS_MONITOR);
+                    refreshClasspath(javaProject,null,monitor);
                     getProject().build(IncrementalProjectBuilder.INCREMENTAL_BUILD, monitor);
                     
                 }
@@ -489,6 +490,17 @@ public class Repository implements IRepository {
         }
     }
 
+    protected void refreshClasspath(IJavaProject javaProject,List<CPListElement> classPathElementList,
+            IProgressMonitor monitor) throws JavaModelException, CoreException {
+        JavaModelManager manager = JavaModelManager.getJavaModelManager();
+        manager.getJavaModel().refreshExternalArchives(null, Repository.NULL_PROGRESS_MONITOR);
+        if(classPathElementList == null){
+            CPListElement[] existingCPElement = CPListElement.createFromExisting(javaProject);
+            classPathElementList = Arrays.asList(existingCPElement);
+        }
+        BuildPathsBlock.flush(classPathElementList,javaProject.getOutputLocation(), javaProject, null, monitor);
+    }
+    
     @Override
     public boolean isBuildEnable() {
         return RepositoryManager.getInstance().getPreferenceStore().getBoolean(RepositoryPreferenceConstant.BUILD_ENABLE);
