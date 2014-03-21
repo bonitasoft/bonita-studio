@@ -40,9 +40,8 @@ import org.bonitasoft.engine.search.SearchOptions;
 import org.bonitasoft.engine.search.SearchOptionsBuilder;
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.common.repository.Repository;
-import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.operation.ImportBosArchiveOperation;
-import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.command.RunProcessCommand;
 import org.bonitasoft.studio.model.process.MainProcess;
@@ -66,7 +65,6 @@ public class TestDatabaseConnectorResulset {
 
 	private HumanTaskInstance newTask;
 	private APISession session;
-	private DiagramRepositoryStore store = (DiagramRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
 
 	@Before
 	public void setUp() throws LoginException, BonitaHomeNotSetException, ServerAPIException, UnknownAPITypeException {
@@ -86,7 +84,10 @@ public class TestDatabaseConnectorResulset {
 		URL fileURL1 = FileLocator.toFileURL(TestDatabaseConnectorResulset.class.getResource("testDatabaseResultSet-2.0.bos")); //$NON-NLS-1$
 		op.setArchiveFile(FileLocator.toFileURL(fileURL1).getFile());
 		op.run(new NullProgressMonitor());
-		MainProcess mainProcess = store.getChild("testDatabaseResultSet-2.0.proc").getContent();
+		for(IRepositoryFileStore fStore : op.getFileStoresToOpen()){
+            fStore.open();
+        }
+        MainProcess mainProcess =  (MainProcess) op.getFileStoresToOpen().get(0).getContent();
 
 		final SearchOptions searchOptions = new SearchOptionsBuilder(0, 10).done();
 		final List<HumanTaskInstance> tasks =processApi.searchPendingTasksForUser(session.getUserId(), searchOptions).getResult();
