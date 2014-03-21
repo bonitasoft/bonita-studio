@@ -56,7 +56,7 @@ public class WidgetMapping {
 	
 	private boolean isReadOnly;
 	
-	private EObject modelElement;
+	private Object modelElement;
 
 	private Widget widgetType;
 	
@@ -64,7 +64,7 @@ public class WidgetMapping {
 	
 	private WidgetMapping parent;
 
-	public WidgetMapping(EObject modelElement){
+	public WidgetMapping(Object modelElement){
 		Assert.isNotNull(modelElement);
 		this.modelElement = modelElement;
 		this.children = new ArrayList<WidgetMapping>();
@@ -98,7 +98,7 @@ public class WidgetMapping {
 		this.isGenerated = isGenerated;
 	}
 
-	public EObject getModelElement() {
+	public Object getModelElement() {
 		return modelElement;
 	}
 
@@ -112,7 +112,7 @@ public class WidgetMapping {
 
 	public void setWidgetType(Widget widgetType) {
 		Assert.isNotNull(widgetType);
-		Assert.isLegal(getCompatibleWidgetTypes().contains(widgetType.eClass()),widgetType.eClass().getName() + " is not compatible with "+modelElement);
+		Assert.isLegal(getCompatibleWidgetTypes().contains(widgetType.eClass()),widgetType.eClass().getName() + " is not compatible with "+ modelElement);
 		this.widgetType = widgetType;
 	}
 

@@ -300,7 +300,7 @@ public class SelectGeneratedWidgetsWizardPage extends WizardSelectionPage implem
 
 			@Override
 			public void update(ViewerCell cell) {
-				EObject element = ((WidgetMapping) cell.getElement()).getModelElement();
+				Object element = ((WidgetMapping) cell.getElement()).getModelElement();
 				if(element instanceof Element){
 					cell.setText(((Element) element).getName());
 				}

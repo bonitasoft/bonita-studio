@@ -61,7 +61,6 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.codegen.util.CodeGenUtil;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.edit.command.AddCommand;
@@ -235,7 +234,7 @@ public class CreateFormCommand extends AbstractTransactionalCommand {
 	}
 
 	protected void addMappingExpressions(final WidgetMapping mapping, Widget widget) {
-		EObject modelElement = mapping.getModelElement();
+		Object modelElement = mapping.getModelElement();
 		if(modelElement instanceof Data){
 			setWidgetModifier(DataUtil.getTechnicalTypeFor((Data) modelElement),widget);
 			addInputExpressionForData((Data) modelElement, widget);
@@ -249,7 +248,7 @@ public class CreateFormCommand extends AbstractTransactionalCommand {
 
 	protected void addNameAndDisplayLabel(final WidgetMapping mapping,
 			Widget widget) {
-		EObject modelElement = mapping.getModelElement();
+	    Object modelElement = mapping.getModelElement();
 		if(modelElement instanceof Element){
 			String keyName = ((Element) modelElement).getName();
 			String widgetId  = computeWidgetId(keyName,widget);

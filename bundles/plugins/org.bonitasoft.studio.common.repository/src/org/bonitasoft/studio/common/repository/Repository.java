@@ -89,9 +89,8 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.internal.core.ClasspathValidation;
+import org.eclipse.jdt.internal.core.JavaModelManager;
 import org.eclipse.jdt.internal.core.JavaProject;
-import org.eclipse.jdt.internal.ui.wizards.buildpaths.BuildPathsBlock;
-import org.eclipse.jdt.internal.ui.wizards.buildpaths.CPListElement;
 import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.osgi.framework.adaptor.BundleClassLoader;
 import org.eclipse.swt.graphics.Image;
@@ -479,24 +478,16 @@ public class Repository implements IRepository {
                 }
                 IJavaProject javaProject = getJavaProject();
                 if(javaProject != null){
-                    refreshClasspath(javaProject,null,monitor);
+                    JavaModelManager manager = JavaModelManager.getJavaModelManager();
+                    manager.getJavaModel().refreshExternalArchives(null, Repository.NULL_PROGRESS_MONITOR);
                     getProject().build(IncrementalProjectBuilder.INCREMENTAL_BUILD, monitor);
+                    
                 }
             } catch (Exception ex) {
                 BonitaStudioLog.error(ex);
             }
         }
     }
-
-    protected void refreshClasspath(IJavaProject javaProject,List<CPListElement> classPathElementList,
-            IProgressMonitor monitor) throws JavaModelException, CoreException {
-        if(classPathElementList == null){
-            CPListElement[] existingCPElement = CPListElement.createFromExisting(javaProject);
-            classPathElementList = Arrays.asList(existingCPElement);
-        }
-        BuildPathsBlock.flush(classPathElementList,javaProject.getOutputLocation(), javaProject, null, monitor);
-    }
-
 
     @Override
     public boolean isBuildEnable() {
