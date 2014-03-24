@@ -24,7 +24,6 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
-import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -37,7 +36,6 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -50,7 +48,6 @@ import org.eclipse.swt.widgets.Shell;
  *
  */
 public class OutlineDialog extends MessageDialog{
-
 	
 	private String message;
 	private Label messageLabel;
@@ -71,13 +68,27 @@ public class OutlineDialog extends MessageDialog{
 		this.warningImg=dialogTitleImage;
 	}
 	
-	
-	
 	@Override
 	protected Control createMessageArea(Composite parent) {
 		Composite mainComposite = new Composite(parent,SWT.NONE);
 		mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(10,20).create());
 		mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+		
+		createMessageComposite(mainComposite);
+		
+		Composite viewersComposite = new Composite(mainComposite,SWT.NONE);
+		viewersComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).spacing(5,20).create());
+		viewersComposite.setLayoutData(GridDataFactory.fillDefaults().hint(450,250).grab(true,true).create());
+		
+		createObjectListViewer(viewersComposite);		
+		createOutline(viewersComposite);
+	    
+	    objectListViewer.setSelection(new StructuredSelection(elementToDisplay.get(0)),true);
+	    
+		return mainComposite;
+	}
+
+	private void createMessageComposite(Composite mainComposite) {
 		Composite messageComposite = new Composite(mainComposite,SWT.NONE);
 		messageComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
 		messageComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
@@ -85,6 +96,10 @@ public class OutlineDialog extends MessageDialog{
 		warningImg.setBackground(imageLabel.getBackground());
 		imageLabel.setImage(warningImg);
 		GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.BEGINNING).applyTo(imageLabel);
+		createMessageLabel(messageComposite);
+	}
+
+	private void createMessageLabel(Composite messageComposite) {
 		messageLabel = new Label(messageComposite,SWT.WRAP);
 		if (message!=null){
 			messageLabel.setText(message);
@@ -95,9 +110,24 @@ public class OutlineDialog extends MessageDialog{
 			.hint(400,
 					SWT.DEFAULT).applyTo(messageLabel);
 		}
-		Composite viewersComposite = new Composite(mainComposite,SWT.NONE);
-		viewersComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).spacing(5,20).create());
-		viewersComposite.setLayoutData(GridDataFactory.fillDefaults().hint(450,250).grab(true,true).create());
+	}
+
+	private void createOutline(Composite viewersComposite) {
+		outline = new TreeViewer(viewersComposite);
+		outline.getTree().setLayoutData(GridDataFactory.fillDefaults().hint(300,200).create());
+		outline.setLabelProvider(new AdapterFactoryLabelProvider(adapterFactory));
+		outline.setContentProvider(new AdapterFactoryContentProvider(adapterFactory));
+		new OutlineFilter();
+		ViewerFilter[] filters = {new OutlineFilter()};
+		outline.setFilters(filters);
+		if (!(elementToDisplay.get(0) instanceof Widget)){
+			outline.setInput(ModelHelper.getParentProcess((EObject)elementToDisplay.get(0)));
+		} else {
+			outline.setInput(ModelHelper.getPageFlow((Widget)elementToDisplay.get(0)));
+		}
+	}
+
+	private void createObjectListViewer(Composite viewersComposite) {
 		objectListViewer = new ListViewer(viewersComposite);
 		objectListViewer.getList().setLayoutData(GridDataFactory.fillDefaults().hint(100,200).create());
 		objectListViewer.setLabelProvider(new AdapterFactoryLabelProvider(adapterFactory));
@@ -116,23 +146,6 @@ public class OutlineDialog extends MessageDialog{
 			}
 		});
 		objectListViewer.setInput(elementToDisplay);
-		
-		outline = new TreeViewer(viewersComposite);
-		outline.getTree().setLayoutData(GridDataFactory.fillDefaults().hint(300,200).create());
-		outline.setLabelProvider(new AdapterFactoryLabelProvider(adapterFactory));
-		outline.setContentProvider(new AdapterFactoryContentProvider(adapterFactory));
-		new OutlineFilter();
-		ViewerFilter[] filters = {new OutlineFilter()};
-		outline.setFilters(filters);
-		if (!(elementToDisplay.get(0) instanceof Widget)){
-			outline.setInput(ModelHelper.getParentProcess((EObject)elementToDisplay.get(0)));
-		} else {
-			outline.setInput(ModelHelper.getPageFlow((Widget)elementToDisplay.get(0)));
-		}
-	    
-	    objectListViewer.setSelection(new StructuredSelection(elementToDisplay.get(0)),true);
-	    
-		return mainComposite;
 	}
 	
 	

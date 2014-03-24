@@ -282,6 +282,11 @@
 								</move>
 								<concat append="true"
 									destfile="${tomcat.bundle.dir}/conf/catalina.properties">java.awt.headless=true</concat>
+								<replace
+									file="${tomcat.bundle.dir}/conf/logging.properties"
+									token="org.bonitasoft.level = WARNING"
+									value="org.bonitasoft.level = INFO"
+									failOnNoReplacements="true"/>
 								<delete dir="${tomcat.bundle.dir}/webapps/examples" />
 								<!-- Clean bonita-home server part -->
 								<delete dir="${bonita.home.dir}/server" />
