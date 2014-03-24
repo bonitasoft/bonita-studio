@@ -59,16 +59,16 @@ public class OutlineFilter extends ViewerFilter {
 	}
 	
 	private boolean isReferencedInExpression(Expression expr){
-		for (EObject o:expr.getReferencedElements()){
-			if (o instanceof Parameter && elementToDisplay instanceof Parameter){
-				return ((Parameter)o).getName().equals(((Parameter)elementToDisplay).getName());
+		for (EObject referencedElement:expr.getReferencedElements()){
+			if (referencedElement instanceof Parameter && elementToDisplay instanceof Parameter){
+				return ((Parameter)referencedElement).getName().equals(((Parameter)elementToDisplay).getName());
 			}
 			
-			if (o instanceof SearchIndex && elementToDisplay instanceof SearchIndex){
-				return ((SearchIndex)o).getName().getName().equals(((SearchIndex)elementToDisplay).getName().getName());
+			if (referencedElement instanceof SearchIndex && elementToDisplay instanceof SearchIndex){
+				return ((SearchIndex)referencedElement).getName().getName().equals(((SearchIndex)elementToDisplay).getName().getName());
 			}
-			if (o instanceof Element && elementToDisplay instanceof Element){
-				return ((Element)o).getName().equals(((Element)elementToDisplay).getName());
+			if (referencedElement instanceof Element && elementToDisplay instanceof Element){
+				return ((Element)referencedElement).getName().equals(((Element)elementToDisplay).getName());
 			}
 		}
 		return false;
