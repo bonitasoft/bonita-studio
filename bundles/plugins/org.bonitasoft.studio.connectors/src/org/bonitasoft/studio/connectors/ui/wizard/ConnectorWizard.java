@@ -34,6 +34,8 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
+import org.bonitasoft.studio.connector.model.definition.AbstractDefFileStore;
+import org.bonitasoft.studio.connector.model.definition.AbstractDefinitionRepositoryStore;
 import org.bonitasoft.studio.connector.model.definition.Array;
 import org.bonitasoft.studio.connector.model.definition.Category;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
@@ -89,6 +91,7 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -230,7 +233,8 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 		if(editMode){
 			final IDefinitionRepositoryStore definitionStore = getDefinitionStore();
 			final ConnectorDefinition definition =  definitionStore.getDefinition(connectorWorkingCopy.getDefinitionId(),connectorWorkingCopy.getDefinitionVersion(),definitions) ;
-			if(cleanConfiguration(definition)){
+			AbstractDefFileStore fStore = (AbstractDefFileStore) ((AbstractDefinitionRepositoryStore) definitionStore).getChild(URI.decode(definition.eResource().getURI().lastSegment()));
+			if(!fStore.isReadOnly() && cleanConfiguration(definition)){
 				MessageDialog.openWarning(Display.getDefault().getActiveShell(), Messages.configurationChangedTitle, Messages.configurationChangedMsg);
 			}
 			extension = findCustomWizardExtension(definition) ;
