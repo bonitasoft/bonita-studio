@@ -561,7 +561,7 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//Data/generated"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//Data/multiple"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//Data/transient"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EReference process.ecore#//Data/defaultValue"/>
+      <genFeatures children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//Data/defaultValue"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//Data/datasourceId"/>
     </genClasses>
     <genClasses ecoreClass="process.ecore#//DataAware">
