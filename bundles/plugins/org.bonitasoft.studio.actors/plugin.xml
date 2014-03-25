@@ -284,23 +284,4 @@
              class="org.bonitasoft.studio.actors.configuration.ActorMappingConfigurationSynchronizer">
        </synchronier>
     </extension>
-    <extension
-          point="org.bonitasoft.studio.common.barResourcesProvider">
-       <barResourceProvider
-             providerClass="org.bonitasoft.studio.actors.configuration.ActorFilterBarResourceProvider">
-       </barResourceProvider>
-    </extension>
-    <extension
-          point="org.bonitasoft.studio.bosArchiveProvider">
-       <bosArchiveProvider
-             providerClass="org.bonitasoft.studio.actors.repository.ActorFilterResourceProvider">
-       </bosArchiveProvider>
-    </extension>
-    <extension
-          point="org.eclipse.emf.edapt.migrators">
-       <migrator
-             path="model/Organization.history">
-       </migrator>
-    </extension>
-
 </plugin>

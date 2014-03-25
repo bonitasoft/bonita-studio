@@ -19,8 +19,8 @@ package org.bonitasoft.studio.actors.model.organization.impl;
 
 import java.util.Collection;
 
-import org.bonitasoft.studio.actors.model.organization.Group;
-import org.bonitasoft.studio.actors.model.organization.Groups;
+import org.bonitasoft.studio.actors.model.organization.CustomUserInfoValue;
+import org.bonitasoft.studio.actors.model.organization.CustomUserInfoValuesType;
 import org.bonitasoft.studio.actors.model.organization.OrganizationPackage;
 
 import org.eclipse.emf.common.notify.NotificationChain;
@@ -37,34 +37,34 @@ import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Groups</b></em>'.
+ * An implementation of the model object '<em><b>Custom User Info Values Type</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.bonitasoft.studio.actors.model.organization.impl.GroupsImpl#getGroup <em>Group</em>}</li>
+ *   <li>{@link org.bonitasoft.studio.actors.model.organization.impl.CustomUserInfoValuesTypeImpl#getCustomUserInfoValue <em>Custom User Info Value</em>}</li>
  * </ul>
  * </p>
  *
  * @generated
  */
-public class GroupsImpl extends EObjectImpl implements Groups {
+public class CustomUserInfoValuesTypeImpl extends EObjectImpl implements CustomUserInfoValuesType {
 	/**
-	 * The cached value of the '{@link #getGroup() <em>Group</em>}' containment reference list.
+	 * The cached value of the '{@link #getCustomUserInfoValue() <em>Custom User Info Value</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getGroup()
+	 * @see #getCustomUserInfoValue()
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<Group> group;
+	protected EList<CustomUserInfoValue> customUserInfoValue;
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected GroupsImpl() {
+	protected CustomUserInfoValuesTypeImpl() {
 		super();
 	}
 
@@ -75,7 +75,7 @@ public class GroupsImpl extends EObjectImpl implements Groups {
 	 */
 	@Override
 	protected EClass eStaticClass() {
-		return OrganizationPackage.Literals.GROUPS;
+		return OrganizationPackage.Literals.CUSTOM_USER_INFO_VALUES_TYPE;
 	}
 
 	/**
@@ -83,11 +83,11 @@ public class GroupsImpl extends EObjectImpl implements Groups {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList<Group> getGroup() {
-		if (group == null) {
-			group = new EObjectContainmentEList<Group>(Group.class, this, OrganizationPackage.GROUPS__GROUP);
+	public EList<CustomUserInfoValue> getCustomUserInfoValue() {
+		if (customUserInfoValue == null) {
+			customUserInfoValue = new EObjectContainmentEList<CustomUserInfoValue>(CustomUserInfoValue.class, this, OrganizationPackage.CUSTOM_USER_INFO_VALUES_TYPE__CUSTOM_USER_INFO_VALUE);
 		}
-		return group;
+		return customUserInfoValue;
 	}
 
 	/**
@@ -98,8 +98,8 @@ public class GroupsImpl extends EObjectImpl implements Groups {
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-			case OrganizationPackage.GROUPS__GROUP:
-				return ((InternalEList<?>)getGroup()).basicRemove(otherEnd, msgs);
+			case OrganizationPackage.CUSTOM_USER_INFO_VALUES_TYPE__CUSTOM_USER_INFO_VALUE:
+				return ((InternalEList<?>)getCustomUserInfoValue()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -112,8 +112,8 @@ public class GroupsImpl extends EObjectImpl implements Groups {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case OrganizationPackage.GROUPS__GROUP:
-				return getGroup();
+			case OrganizationPackage.CUSTOM_USER_INFO_VALUES_TYPE__CUSTOM_USER_INFO_VALUE:
+				return getCustomUserInfoValue();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -127,9 +127,9 @@ public class GroupsImpl extends EObjectImpl implements Groups {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case OrganizationPackage.GROUPS__GROUP:
-				getGroup().clear();
-				getGroup().addAll((Collection<? extends Group>)newValue);
+			case OrganizationPackage.CUSTOM_USER_INFO_VALUES_TYPE__CUSTOM_USER_INFO_VALUE:
+				getCustomUserInfoValue().clear();
+				getCustomUserInfoValue().addAll((Collection<? extends CustomUserInfoValue>)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -143,8 +143,8 @@ public class GroupsImpl extends EObjectImpl implements Groups {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case OrganizationPackage.GROUPS__GROUP:
-				getGroup().clear();
+			case OrganizationPackage.CUSTOM_USER_INFO_VALUES_TYPE__CUSTOM_USER_INFO_VALUE:
+				getCustomUserInfoValue().clear();
 				return;
 		}
 		super.eUnset(featureID);
@@ -158,10 +158,10 @@ public class GroupsImpl extends EObjectImpl implements Groups {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case OrganizationPackage.GROUPS__GROUP:
-				return group != null && !group.isEmpty();
+			case OrganizationPackage.CUSTOM_USER_INFO_VALUES_TYPE__CUSTOM_USER_INFO_VALUE:
+				return customUserInfoValue != null && !customUserInfoValue.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}
 
-} //GroupsImpl
+} //CustomUserInfoValuesTypeImpl

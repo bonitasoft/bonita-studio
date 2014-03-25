@@ -22,6 +22,20 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Organization.ecore#//ContactData/country"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Organization.ecore#//ContactData/website"/>
     </genClasses>
+    <genClasses ecoreClass="Organization.ecore#//CustomUserInfoDefinition">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Organization.ecore#//CustomUserInfoDefinition/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Organization.ecore#//CustomUserInfoDefinition/description"/>
+    </genClasses>
+    <genClasses ecoreClass="Organization.ecore#//CustomUserInfoDefinitions">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Organization.ecore#//CustomUserInfoDefinitions/customUserInfoDefinition"/>
+    </genClasses>
+    <genClasses ecoreClass="Organization.ecore#//CustomUserInfoValue">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Organization.ecore#//CustomUserInfoValue/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Organization.ecore#//CustomUserInfoValue/value"/>
+    </genClasses>
+    <genClasses ecoreClass="Organization.ecore#//CustomUserInfoValuesType">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Organization.ecore#//CustomUserInfoValuesType/customUserInfoValue"/>
+    </genClasses>
     <genClasses ecoreClass="Organization.ecore#//DocumentRoot">
       <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EAttribute Organization.ecore#//DocumentRoot/mixed"/>
       <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference Organization.ecore#//DocumentRoot/xMLNSPrefixMap"/>
@@ -58,6 +72,7 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Organization.ecore#//MetaDatasType/metaData"/>
     </genClasses>
     <genClasses ecoreClass="Organization.ecore#//Organization">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Organization.ecore#//Organization/customUserInfoDefinitions"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Organization.ecore#//Organization/users"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Organization.ecore#//Organization/roles"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Organization.ecore#//Organization/groups"/>
@@ -88,7 +103,8 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Organization.ecore#//User/metaDatas"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Organization.ecore#//User/userName"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Organization.ecore#//User/enabled"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EReference Organization.ecore#//User/password"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Organization.ecore#//User/customUserInfoValues"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Organization.ecore#//User/password"/>
     </genClasses>
     <genClasses ecoreClass="Organization.ecore#//Users">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Organization.ecore#//Users/user"/>

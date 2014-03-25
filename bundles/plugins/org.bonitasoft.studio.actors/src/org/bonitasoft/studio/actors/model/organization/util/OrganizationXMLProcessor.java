@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2009-2013 BonitaSoft S.A.
- * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2009-2012 BonitaSoft S.A.
+ * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,15 +17,14 @@
  */
 package org.bonitasoft.studio.actors.model.organization.util;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 
 import org.bonitasoft.studio.actors.model.organization.OrganizationPackage;
+
 import org.eclipse.emf.ecore.EPackage;
+
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.xmi.XMLResource;
+
 import org.eclipse.emf.ecore.xmi.util.XMLProcessor;
 
 /**
@@ -36,25 +35,25 @@ import org.eclipse.emf.ecore.xmi.util.XMLProcessor;
  */
 public class OrganizationXMLProcessor extends XMLProcessor {
 
-    /**
+	/**
 	 * Public constructor to instantiate the helper.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    public OrganizationXMLProcessor() {
+	public OrganizationXMLProcessor() {
 		super((EPackage.Registry.INSTANCE));
 		OrganizationPackage.eINSTANCE.eClass();
 	}
-
-    /**
+	
+	/**
 	 * Register for "*" and "xml" file extensions the OrganizationResourceFactoryImpl factory.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    @Override
-    protected Map<String, Resource.Factory> getRegistrations() {
+	@Override
+	protected Map<String, Resource.Factory> getRegistrations() {
 		if (registrations == null) {
 			super.getRegistrations();
 			registrations.put(XML_EXTENSION, new OrganizationResourceFactoryImpl());
@@ -62,25 +61,5 @@ public class OrganizationXMLProcessor extends XMLProcessor {
 		}
 		return registrations;
 	}
-    
-    
-    /* (non-Javadoc)
-     * @see org.eclipse.emf.ecore.xmi.util.XMLProcessor#saveToString(org.eclipse.emf.ecore.resource.Resource, java.util.Map)
-     *
-     * Use charset for the toString
-     */
-    @Override
-    public String saveToString(Resource resource, Map<?, ?> options) throws IOException{
-      ByteArrayOutputStream os = new ByteArrayOutputStream();
-      if (options != null){
-        Map<Object, Object> mergedOptions = new HashMap<Object, Object>(saveOptions);
-        mergedOptions.putAll(options);
-        
-        ((XMLResource)resource).save(os, mergedOptions);
-      } else {
-        ((XMLResource)resource).save(os, saveOptions);
-      }
-      return os.toString("UTF-8");
-    }
 
 } //OrganizationXMLProcessor

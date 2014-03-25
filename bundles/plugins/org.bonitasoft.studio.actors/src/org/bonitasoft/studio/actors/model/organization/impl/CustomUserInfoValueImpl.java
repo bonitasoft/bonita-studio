@@ -17,7 +17,7 @@
  */
 package org.bonitasoft.studio.actors.model.organization.impl;
 
-import org.bonitasoft.studio.actors.model.organization.Metadata;
+import org.bonitasoft.studio.actors.model.organization.CustomUserInfoValue;
 import org.bonitasoft.studio.actors.model.organization.OrganizationPackage;
 
 import org.eclipse.emf.common.notify.Notification;
@@ -29,19 +29,19 @@ import org.eclipse.emf.ecore.impl.EObjectImpl;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Metadata</b></em>'.
+ * An implementation of the model object '<em><b>Custom User Info Value</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.bonitasoft.studio.actors.model.organization.impl.MetadataImpl#getName <em>Name</em>}</li>
- *   <li>{@link org.bonitasoft.studio.actors.model.organization.impl.MetadataImpl#getValue <em>Value</em>}</li>
+ *   <li>{@link org.bonitasoft.studio.actors.model.organization.impl.CustomUserInfoValueImpl#getName <em>Name</em>}</li>
+ *   <li>{@link org.bonitasoft.studio.actors.model.organization.impl.CustomUserInfoValueImpl#getValue <em>Value</em>}</li>
  * </ul>
  * </p>
  *
  * @generated
  */
-public class MetadataImpl extends EObjectImpl implements Metadata {
+public class CustomUserInfoValueImpl extends EObjectImpl implements CustomUserInfoValue {
 	/**
 	 * The default value of the '{@link #getName() <em>Name</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -87,7 +87,7 @@ public class MetadataImpl extends EObjectImpl implements Metadata {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected MetadataImpl() {
+	protected CustomUserInfoValueImpl() {
 		super();
 	}
 
@@ -98,7 +98,7 @@ public class MetadataImpl extends EObjectImpl implements Metadata {
 	 */
 	@Override
 	protected EClass eStaticClass() {
-		return OrganizationPackage.Literals.METADATA;
+		return OrganizationPackage.Literals.CUSTOM_USER_INFO_VALUE;
 	}
 
 	/**
@@ -119,7 +119,7 @@ public class MetadataImpl extends EObjectImpl implements Metadata {
 		String oldName = name;
 		name = newName;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, OrganizationPackage.METADATA__NAME, oldName, name));
+			eNotify(new ENotificationImpl(this, Notification.SET, OrganizationPackage.CUSTOM_USER_INFO_VALUE__NAME, oldName, name));
 	}
 
 	/**
@@ -140,7 +140,7 @@ public class MetadataImpl extends EObjectImpl implements Metadata {
 		String oldValue = value;
 		value = newValue;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, OrganizationPackage.METADATA__VALUE, oldValue, value));
+			eNotify(new ENotificationImpl(this, Notification.SET, OrganizationPackage.CUSTOM_USER_INFO_VALUE__VALUE, oldValue, value));
 	}
 
 	/**
@@ -151,9 +151,9 @@ public class MetadataImpl extends EObjectImpl implements Metadata {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case OrganizationPackage.METADATA__NAME:
+			case OrganizationPackage.CUSTOM_USER_INFO_VALUE__NAME:
 				return getName();
-			case OrganizationPackage.METADATA__VALUE:
+			case OrganizationPackage.CUSTOM_USER_INFO_VALUE__VALUE:
 				return getValue();
 		}
 		return super.eGet(featureID, resolve, coreType);
@@ -167,10 +167,10 @@ public class MetadataImpl extends EObjectImpl implements Metadata {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case OrganizationPackage.METADATA__NAME:
+			case OrganizationPackage.CUSTOM_USER_INFO_VALUE__NAME:
 				setName((String)newValue);
 				return;
-			case OrganizationPackage.METADATA__VALUE:
+			case OrganizationPackage.CUSTOM_USER_INFO_VALUE__VALUE:
 				setValue((String)newValue);
 				return;
 		}
@@ -185,10 +185,10 @@ public class MetadataImpl extends EObjectImpl implements Metadata {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case OrganizationPackage.METADATA__NAME:
+			case OrganizationPackage.CUSTOM_USER_INFO_VALUE__NAME:
 				setName(NAME_EDEFAULT);
 				return;
-			case OrganizationPackage.METADATA__VALUE:
+			case OrganizationPackage.CUSTOM_USER_INFO_VALUE__VALUE:
 				setValue(VALUE_EDEFAULT);
 				return;
 		}
@@ -203,9 +203,9 @@ public class MetadataImpl extends EObjectImpl implements Metadata {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case OrganizationPackage.METADATA__NAME:
+			case OrganizationPackage.CUSTOM_USER_INFO_VALUE__NAME:
 				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
-			case OrganizationPackage.METADATA__VALUE:
+			case OrganizationPackage.CUSTOM_USER_INFO_VALUE__VALUE:
 				return VALUE_EDEFAULT == null ? value != null : !VALUE_EDEFAULT.equals(value);
 		}
 		return super.eIsSet(featureID);
@@ -229,4 +229,4 @@ public class MetadataImpl extends EObjectImpl implements Metadata {
 		return result.toString();
 	}
 
-} //MetadataImpl
+} //CustomUserInfoValueImpl
