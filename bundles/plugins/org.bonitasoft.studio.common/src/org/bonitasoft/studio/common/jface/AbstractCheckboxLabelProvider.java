@@ -99,6 +99,7 @@ public abstract class AbstractCheckboxLabelProvider extends StyledCellLabelProvi
 
 		Shell shell = new Shell(control.getShell(), SWT.NO_TRIM);
 		shell.setVisible(false);
+		shell.setLocation(0, 0);
 		// otherwise we have a default gray color
 		shell.setBackground(greenScreen);
 
