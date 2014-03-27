@@ -198,7 +198,9 @@ public class BOSEngineManager {
 
     protected APISession loginTenant(String login, String password,boolean waitForOrganization, IProgressMonitor monitor) throws LoginException, BonitaHomeNotSetException, ServerAPIException, UnknownAPITypeException {
         if(!isRunning()){
-            monitor.subTask(Messages.waitingForEngineToStart) ;
+            if(monitor != null){
+                monitor.subTask(Messages.waitingForEngineToStart) ;
+            }
             start() ;
         }
         if(BonitaStudioLog.isLoggable(IStatus.OK)){
