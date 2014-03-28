@@ -138,7 +138,7 @@ public class InitialValueContribution implements IExtensibleGridPropertySectionC
 					ExpressionConstants.SCRIPT_TYPE,
 					ExpressionConstants.DOCUMENT_TYPE,
 					ExpressionConstants.XPATH_TYPE,
-					ExpressionConstants.I18N_TYPE});
+					ExpressionConstants.I18N_TYPE},true);
 			initialValueExpressionFilter.setWidget(widget);
 		}
 		return initialValueExpressionFilter;

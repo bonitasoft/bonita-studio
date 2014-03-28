@@ -38,7 +38,11 @@ public class InitialValueExpressionFilter extends AvailableExpressionTypeFilter 
 	public InitialValueExpressionFilter(String[] contentTypes) {
 		super(contentTypes);
 	}
-
+	
+	public InitialValueExpressionFilter(String[] contentTypes, boolean hasGroupIterator) {
+		super(contentTypes, hasGroupIterator);
+	}	
+	
 	private Widget widget;
 
 	/* (non-Javadoc)

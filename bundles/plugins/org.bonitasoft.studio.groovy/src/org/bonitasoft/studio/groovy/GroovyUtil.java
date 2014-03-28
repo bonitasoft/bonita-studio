@@ -440,11 +440,7 @@ public class GroovyUtil {
 		return t;
 	}
 
-	public static FieldNode createVariablesFromGroupIterator(final Group group,
-			final Class<?> clazz) {
-		return new FieldNode(group.getIteratorName(), Modifier.PUBLIC,
-				new ClassNode(clazz), new ClassNode(clazz), null);
-	}
+
 
 	public static boolean isMultipleData(final Element container,
 			String inputScript) {
