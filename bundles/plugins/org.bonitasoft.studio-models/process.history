@@ -3734,17 +3734,17 @@
             referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//Group" referenceName="eStructuralFeatures"
-          element="form.ecore#//Group/iteratorName">
-        <changes xsi:type="history:Set" element="form.ecore#//Group/iteratorName"
+          element="#//@releases.11/@changes.0/@changes.0/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.11/@changes.0/@changes.0/@changes.0/@element"
             featureName="name" dataValue="iteratorName"/>
-        <changes xsi:type="history:Set" element="form.ecore#//Group/iteratorName"
+        <changes xsi:type="history:Set" element="#//@releases.11/@changes.0/@changes.0/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//Group" referenceName="eStructuralFeatures"
-          element="form.ecore#//Group/iteratorClassName">
-        <changes xsi:type="history:Set" element="form.ecore#//Group/iteratorClassName"
+          element="#//@releases.11/@changes.0/@changes.1/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.11/@changes.0/@changes.1/@changes.0/@element"
             featureName="name" dataValue="iteratorClassName"/>
-        <changes xsi:type="history:Set" element="form.ecore#//Group/iteratorClassName"
+        <changes xsi:type="history:Set" element="#//@releases.11/@changes.0/@changes.1/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#/" referenceName="eClassifiers"
@@ -7973,6 +7973,114 @@
             <details key="body" value="return String.class.getName();"/>
           </eAnnotations>
         </element>
+      </changes>
+    </changes>
+  </releases>
+  <releases date="2014-03-31T13:36:39.611+0200" label="6.3.0-002">
+    <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.custom.migration.form.GroupIteratorMigration">
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Delete" target="form.ecore#//Group" referenceName="eStructuralFeatures">
+          <element xsi:type="ecore:EAttribute" name="iteratorName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        </changes>
+        <operation name="deleteFeature2">
+          <parameters name="feature">
+            <referenceValue element="#//@releases.11/@changes.0/@changes.0/@changes.0/@element"/>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Delete" target="form.ecore#//Group" referenceName="eStructuralFeatures">
+          <element xsi:type="ecore:EAttribute" name="iteratorClassName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        </changes>
+        <operation name="deleteFeature2">
+          <parameters name="feature">
+            <referenceValue element="#//@releases.11/@changes.0/@changes.1/@changes.0/@element"/>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Create" target="form.ecore#/" referenceName="eClassifiers"
+            element="form.ecore#//GroupIterator">
+          <changes xsi:type="history:Set" element="form.ecore#//GroupIterator" featureName="name"
+              dataValue="GroupIterator"/>
+          <changes xsi:type="history:Add" element="form.ecore#//GroupIterator" featureName="eSuperTypes"
+              referenceValue="process.ecore#//Element"/>
+        </changes>
+        <operation name="newClass">
+          <parameters name="ePackage">
+            <referenceValue element="form.ecore#/"/>
+          </parameters>
+          <parameters name="name">
+            <dataValue>GroupIterator</dataValue>
+          </parameters>
+          <parameters name="superClasses">
+            <referenceValue element="process.ecore#//Element"/>
+          </parameters>
+          <parameters name="abstr">
+            <dataValue>false</dataValue>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Create" target="form.ecore#//GroupIterator" referenceName="eStructuralFeatures"
+            element="form.ecore#//GroupIterator/className">
+          <changes xsi:type="history:Set" element="form.ecore#//GroupIterator/className"
+              featureName="name" dataValue="className"/>
+          <changes xsi:type="history:Set" element="form.ecore#//GroupIterator/className"
+              featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        </changes>
+        <operation name="newAttribute">
+          <parameters name="eClass">
+            <referenceValue element="form.ecore#//GroupIterator"/>
+          </parameters>
+          <parameters name="name">
+            <dataValue>className</dataValue>
+          </parameters>
+          <parameters name="type">
+            <referenceValue element="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+          </parameters>
+          <parameters name="lowerBound">
+            <dataValue>0</dataValue>
+          </parameters>
+          <parameters name="upperBound">
+            <dataValue>1</dataValue>
+          </parameters>
+          <parameters name="defaultValue">
+            <dataValue xsi:nil="true"/>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Create" target="form.ecore#//Group" referenceName="eStructuralFeatures"
+            element="form.ecore#//Group/iterator">
+          <changes xsi:type="history:Set" element="form.ecore#//Group/iterator" featureName="name"
+              dataValue="iterator"/>
+          <changes xsi:type="history:Set" element="form.ecore#//Group/iterator" featureName="containment"
+              dataValue="true" oldDataValue="false"/>
+          <changes xsi:type="history:Set" element="form.ecore#//Group/iterator" featureName="eType"
+              referenceValue="form.ecore#//GroupIterator"/>
+        </changes>
+        <operation name="newReference">
+          <parameters name="eClass">
+            <referenceValue element="form.ecore#//Group"/>
+          </parameters>
+          <parameters name="name">
+            <dataValue>iterator</dataValue>
+          </parameters>
+          <parameters name="type">
+            <referenceValue element="form.ecore#//GroupIterator"/>
+          </parameters>
+          <parameters name="lowerBound">
+            <dataValue>0</dataValue>
+          </parameters>
+          <parameters name="upperBound">
+            <dataValue>1</dataValue>
+          </parameters>
+          <parameters name="containment">
+            <dataValue>true</dataValue>
+          </parameters>
+          <parameters name="opposite"/>
+        </operation>
       </changes>
     </changes>
   </releases>

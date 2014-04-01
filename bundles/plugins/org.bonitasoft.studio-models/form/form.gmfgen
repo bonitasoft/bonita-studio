@@ -880,6 +880,12 @@
             <feature
                 href="../process.genmodel#//form/Widget/action"/>
           </initializers>
+          <initializers
+              xsi:type="gmfgen:GenFeatureValueSpec"
+              value="//@expressionProviders/@providers.0/@expressions.243">
+            <feature
+                href="../process.genmodel#//form/Group/iterator"/>
+          </initializers>
         </modelElementInitializer>
       </modelFacet>
     </childNodes>
@@ -2158,109 +2164,109 @@
             xsi:type="gmfgen:GenFeatureSeqInitializer">
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.243">
+              value="//@expressionProviders/@providers.0/@expressions.244">
             <feature
                 href="../process.genmodel#//process/Element/name"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.244">
+              value="//@expressionProviders/@providers.0/@expressions.245">
             <feature
                 href="../process.genmodel#//form/Widget/displayLabel"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.245">
+              value="//@expressionProviders/@providers.0/@expressions.246">
             <feature
                 href="../process.genmodel#//form/Widget/injectWidgetScript"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.246">
+              value="//@expressionProviders/@providers.0/@expressions.247">
             <feature
                 href="../process.genmodel#//form/FormField/exampleMessage"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.247">
+              value="//@expressionProviders/@providers.0/@expressions.248">
             <feature
                 href="../process.genmodel#//form/Widget/helpMessage"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.248">
+              value="//@expressionProviders/@providers.0/@expressions.249">
             <feature
                 href="../process.genmodel#//form/Widget/tooltip"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.249">
+              value="//@expressionProviders/@providers.0/@expressions.250">
             <feature
                 href="../process.genmodel#//form/Widget/inputExpression"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.250">
+              value="//@expressionProviders/@providers.0/@expressions.251">
             <feature
                 href="../process.genmodel#//form/Widget/displayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.251">
+              value="//@expressionProviders/@providers.0/@expressions.252">
             <feature
                 href="../process.genmodel#//form/Widget/displayAfterEventDependsOnConditionScript"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.252">
+              value="//@expressionProviders/@providers.0/@expressions.253">
             <feature
                 href="../process.genmodel#//form/Widget/afterEventExpression"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.253">
+              value="//@expressionProviders/@providers.0/@expressions.254">
             <feature
                 href="../process.genmodel#//form/Duplicable/tooltipForRemove"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.254">
+              value="//@expressionProviders/@providers.0/@expressions.255">
             <feature
                 href="../process.genmodel#//form/Duplicable/tooltipForAdd"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.255">
+              value="//@expressionProviders/@providers.0/@expressions.256">
             <feature
                 href="../process.genmodel#//form/Duplicable/displayLabelForRemove"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.256">
+              value="//@expressionProviders/@providers.0/@expressions.257">
             <feature
                 href="../process.genmodel#//form/Duplicable/displayLabelForAdd"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.257">
+              value="//@expressionProviders/@providers.0/@expressions.258">
             <feature
                 href="../process.genmodel#//form/Duplicable/minNumberOfDuplication"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.258">
+              value="//@expressionProviders/@providers.0/@expressions.259">
             <feature
                 href="../process.genmodel#//form/Duplicable/maxNumberOfDuplication"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.259">
+              value="//@expressionProviders/@providers.0/@expressions.260">
             <feature
                 href="../process.genmodel#//form/FileWidget/outputDocumentListExpression"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.260">
+              value="//@expressionProviders/@providers.0/@expressions.261">
             <feature
                 href="../process.genmodel#//form/Widget/action"/>
           </initializers>
@@ -2323,115 +2329,115 @@
             xsi:type="gmfgen:GenFeatureSeqInitializer">
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.261">
+              value="//@expressionProviders/@providers.0/@expressions.262">
             <feature
                 href="../process.genmodel#//process/Element/name"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.262">
+              value="//@expressionProviders/@providers.0/@expressions.263">
             <feature
                 href="../process.genmodel#//form/Widget/displayLabel"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.263">
+              value="//@expressionProviders/@providers.0/@expressions.264">
             <feature
                 href="../process.genmodel#//form/Widget/injectWidgetScript"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.264">
+              value="//@expressionProviders/@providers.0/@expressions.265">
             <feature
                 href="../process.genmodel#//form/FormField/exampleMessage"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.265">
+              value="//@expressionProviders/@providers.0/@expressions.266">
             <feature
                 href="../process.genmodel#//form/Widget/helpMessage"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.266">
+              value="//@expressionProviders/@providers.0/@expressions.267">
             <feature
                 href="../process.genmodel#//form/Widget/tooltip"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.267">
+              value="//@expressionProviders/@providers.0/@expressions.268">
             <feature
                 href="../process.genmodel#//form/Widget/inputExpression"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.268">
+              value="//@expressionProviders/@providers.0/@expressions.269">
             <feature
                 href="../process.genmodel#//form/Widget/displayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.269">
+              value="//@expressionProviders/@providers.0/@expressions.270">
             <feature
                 href="../process.genmodel#//form/Widget/displayAfterEventDependsOnConditionScript"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.270">
+              value="//@expressionProviders/@providers.0/@expressions.271">
             <feature
                 href="../process.genmodel#//form/Widget/afterEventExpression"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.271">
+              value="//@expressionProviders/@providers.0/@expressions.272">
             <feature
                 href="../process.genmodel#//form/Duplicable/tooltipForRemove"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.272">
+              value="//@expressionProviders/@providers.0/@expressions.273">
             <feature
                 href="../process.genmodel#//form/Duplicable/tooltipForAdd"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.273">
+              value="//@expressionProviders/@providers.0/@expressions.274">
             <feature
                 href="../process.genmodel#//form/Duplicable/displayLabelForRemove"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.274">
+              value="//@expressionProviders/@providers.0/@expressions.275">
             <feature
                 href="../process.genmodel#//form/Duplicable/displayLabelForAdd"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.275">
+              value="//@expressionProviders/@providers.0/@expressions.276">
             <feature
                 href="../process.genmodel#//form/Duplicable/minNumberOfDuplication"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.276">
+              value="//@expressionProviders/@providers.0/@expressions.277">
             <feature
                 href="../process.genmodel#//form/Duplicable/maxNumberOfDuplication"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.277">
+              value="//@expressionProviders/@providers.0/@expressions.278">
             <feature
                 href="../process.genmodel#//form/MultipleValuatedFormField/defaultExpression"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.278">
+              value="//@expressionProviders/@providers.0/@expressions.279">
             <feature
                 href="../process.genmodel#//form/MultipleValuatedFormField/defaultExpressionAfterEvent"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.279">
+              value="//@expressionProviders/@providers.0/@expressions.280">
             <feature
                 href="../process.genmodel#//form/Widget/action"/>
           </initializers>
@@ -2491,103 +2497,103 @@
             xsi:type="gmfgen:GenFeatureSeqInitializer">
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.280">
+              value="//@expressionProviders/@providers.0/@expressions.281">
             <feature
                 href="../process.genmodel#//process/Element/name"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.281">
+              value="//@expressionProviders/@providers.0/@expressions.282">
             <feature
                 href="../process.genmodel#//form/Widget/displayLabel"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.282">
+              value="//@expressionProviders/@providers.0/@expressions.283">
             <feature
                 href="../process.genmodel#//form/Widget/injectWidgetScript"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.283">
+              value="//@expressionProviders/@providers.0/@expressions.284">
             <feature
                 href="../process.genmodel#//form/FormField/exampleMessage"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.284">
+              value="//@expressionProviders/@providers.0/@expressions.285">
             <feature
                 href="../process.genmodel#//form/Widget/helpMessage"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.285">
+              value="//@expressionProviders/@providers.0/@expressions.286">
             <feature
                 href="../process.genmodel#//form/Widget/tooltip"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.286">
+              value="//@expressionProviders/@providers.0/@expressions.287">
             <feature
                 href="../process.genmodel#//form/Widget/inputExpression"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.287">
+              value="//@expressionProviders/@providers.0/@expressions.288">
             <feature
                 href="../process.genmodel#//form/Widget/displayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.288">
+              value="//@expressionProviders/@providers.0/@expressions.289">
             <feature
                 href="../process.genmodel#//form/Widget/displayAfterEventDependsOnConditionScript"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.289">
+              value="//@expressionProviders/@providers.0/@expressions.290">
             <feature
                 href="../process.genmodel#//form/Widget/afterEventExpression"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.290">
+              value="//@expressionProviders/@providers.0/@expressions.291">
             <feature
                 href="../process.genmodel#//form/Duplicable/tooltipForRemove"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.291">
+              value="//@expressionProviders/@providers.0/@expressions.292">
             <feature
                 href="../process.genmodel#//form/Duplicable/tooltipForAdd"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.292">
+              value="//@expressionProviders/@providers.0/@expressions.293">
             <feature
                 href="../process.genmodel#//form/Duplicable/displayLabelForRemove"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.293">
+              value="//@expressionProviders/@providers.0/@expressions.294">
             <feature
                 href="../process.genmodel#//form/Duplicable/displayLabelForAdd"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.294">
+              value="//@expressionProviders/@providers.0/@expressions.295">
             <feature
                 href="../process.genmodel#//form/Duplicable/minNumberOfDuplication"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.295">
+              value="//@expressionProviders/@providers.0/@expressions.296">
             <feature
                 href="../process.genmodel#//form/Duplicable/maxNumberOfDuplication"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.296">
+              value="//@expressionProviders/@providers.0/@expressions.297">
             <feature
                 href="../process.genmodel#//form/Widget/action"/>
           </initializers>
@@ -2647,97 +2653,97 @@
             xsi:type="gmfgen:GenFeatureSeqInitializer">
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.297">
+              value="//@expressionProviders/@providers.0/@expressions.298">
             <feature
                 href="../process.genmodel#//process/Element/name"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.298">
+              value="//@expressionProviders/@providers.0/@expressions.299">
             <feature
                 href="../process.genmodel#//form/Widget/injectWidgetScript"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.299">
+              value="//@expressionProviders/@providers.0/@expressions.300">
             <feature
                 href="../process.genmodel#//form/FormField/exampleMessage"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.300">
+              value="//@expressionProviders/@providers.0/@expressions.301">
             <feature
                 href="../process.genmodel#//form/Widget/helpMessage"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.301">
+              value="//@expressionProviders/@providers.0/@expressions.302">
             <feature
                 href="../process.genmodel#//form/Widget/tooltip"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.302">
+              value="//@expressionProviders/@providers.0/@expressions.303">
             <feature
                 href="../process.genmodel#//form/Widget/inputExpression"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.303">
+              value="//@expressionProviders/@providers.0/@expressions.304">
             <feature
                 href="../process.genmodel#//form/Widget/displayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.304">
+              value="//@expressionProviders/@providers.0/@expressions.305">
             <feature
                 href="../process.genmodel#//form/Widget/displayAfterEventDependsOnConditionScript"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.305">
+              value="//@expressionProviders/@providers.0/@expressions.306">
             <feature
                 href="../process.genmodel#//form/Widget/afterEventExpression"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.306">
+              value="//@expressionProviders/@providers.0/@expressions.307">
             <feature
                 href="../process.genmodel#//form/Duplicable/tooltipForRemove"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.307">
+              value="//@expressionProviders/@providers.0/@expressions.308">
             <feature
                 href="../process.genmodel#//form/Duplicable/tooltipForAdd"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.308">
+              value="//@expressionProviders/@providers.0/@expressions.309">
             <feature
                 href="../process.genmodel#//form/Duplicable/displayLabelForRemove"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.309">
+              value="//@expressionProviders/@providers.0/@expressions.310">
             <feature
                 href="../process.genmodel#//form/Duplicable/displayLabelForAdd"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.310">
+              value="//@expressionProviders/@providers.0/@expressions.311">
             <feature
                 href="../process.genmodel#//form/Duplicable/minNumberOfDuplication"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.311">
+              value="//@expressionProviders/@providers.0/@expressions.312">
             <feature
                 href="../process.genmodel#//form/Duplicable/maxNumberOfDuplication"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.312">
+              value="//@expressionProviders/@providers.0/@expressions.313">
             <feature
                 href="../process.genmodel#//form/Widget/action"/>
           </initializers>
@@ -2797,103 +2803,103 @@
             xsi:type="gmfgen:GenFeatureSeqInitializer">
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.313">
+              value="//@expressionProviders/@providers.0/@expressions.314">
             <feature
                 href="../process.genmodel#//process/Element/name"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.314">
+              value="//@expressionProviders/@providers.0/@expressions.315">
             <feature
                 href="../process.genmodel#//form/Widget/displayLabel"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.315">
+              value="//@expressionProviders/@providers.0/@expressions.316">
             <feature
                 href="../process.genmodel#//form/Widget/injectWidgetScript"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.316">
+              value="//@expressionProviders/@providers.0/@expressions.317">
             <feature
                 href="../process.genmodel#//form/Widget/helpMessage"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.317">
+              value="//@expressionProviders/@providers.0/@expressions.318">
             <feature
                 href="../process.genmodel#//form/Widget/tooltip"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.318">
+              value="//@expressionProviders/@providers.0/@expressions.319">
             <feature
                 href="../process.genmodel#//form/Widget/inputExpression"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.319">
+              value="//@expressionProviders/@providers.0/@expressions.320">
             <feature
                 href="../process.genmodel#//form/Widget/displayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.320">
+              value="//@expressionProviders/@providers.0/@expressions.321">
             <feature
                 href="../process.genmodel#//form/Widget/displayAfterEventDependsOnConditionScript"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.321">
+              value="//@expressionProviders/@providers.0/@expressions.322">
             <feature
                 href="../process.genmodel#//form/Widget/afterEventExpression"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.322">
+              value="//@expressionProviders/@providers.0/@expressions.323">
             <feature
                 href="../process.genmodel#//form/Duplicable/tooltipForRemove"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.323">
+              value="//@expressionProviders/@providers.0/@expressions.324">
             <feature
                 href="../process.genmodel#//form/Duplicable/tooltipForAdd"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.324">
+              value="//@expressionProviders/@providers.0/@expressions.325">
             <feature
                 href="../process.genmodel#//form/Duplicable/displayLabelForRemove"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.325">
+              value="//@expressionProviders/@providers.0/@expressions.326">
             <feature
                 href="../process.genmodel#//form/Duplicable/displayLabelForAdd"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.326">
+              value="//@expressionProviders/@providers.0/@expressions.327">
             <feature
                 href="../process.genmodel#//form/Duplicable/minNumberOfDuplication"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.327">
+              value="//@expressionProviders/@providers.0/@expressions.328">
             <feature
                 href="../process.genmodel#//form/Duplicable/maxNumberOfDuplication"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.328">
+              value="//@expressionProviders/@providers.0/@expressions.329">
             <feature
                 href="../process.genmodel#//form/ImageWidget/imgPath"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.329">
+              value="//@expressionProviders/@providers.0/@expressions.330">
             <feature
                 href="../process.genmodel#//form/Widget/action"/>
           </initializers>
@@ -2953,61 +2959,61 @@
             xsi:type="gmfgen:GenFeatureSeqInitializer">
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.330">
+              value="//@expressionProviders/@providers.0/@expressions.331">
             <feature
                 href="../process.genmodel#//process/Element/name"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.331">
+              value="//@expressionProviders/@providers.0/@expressions.332">
             <feature
                 href="../process.genmodel#//form/Widget/displayLabel"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.332">
+              value="//@expressionProviders/@providers.0/@expressions.333">
             <feature
                 href="../process.genmodel#//form/Widget/injectWidgetScript"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.333">
+              value="//@expressionProviders/@providers.0/@expressions.334">
             <feature
                 href="../process.genmodel#//form/Widget/helpMessage"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.334">
+              value="//@expressionProviders/@providers.0/@expressions.335">
             <feature
                 href="../process.genmodel#//form/Widget/tooltip"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.335">
+              value="//@expressionProviders/@providers.0/@expressions.336">
             <feature
                 href="../process.genmodel#//form/Widget/inputExpression"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.336">
+              value="//@expressionProviders/@providers.0/@expressions.337">
             <feature
                 href="../process.genmodel#//form/Widget/displayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.337">
+              value="//@expressionProviders/@providers.0/@expressions.338">
             <feature
                 href="../process.genmodel#//form/Widget/displayAfterEventDependsOnConditionScript"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.338">
+              value="//@expressionProviders/@providers.0/@expressions.339">
             <feature
                 href="../process.genmodel#//form/Widget/afterEventExpression"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.339">
+              value="//@expressionProviders/@providers.0/@expressions.340">
             <feature
                 href="../process.genmodel#//form/Widget/action"/>
           </initializers>
@@ -3067,61 +3073,61 @@
             xsi:type="gmfgen:GenFeatureSeqInitializer">
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.340">
+              value="//@expressionProviders/@providers.0/@expressions.341">
             <feature
                 href="../process.genmodel#//process/Element/name"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.341">
+              value="//@expressionProviders/@providers.0/@expressions.342">
             <feature
                 href="../process.genmodel#//form/Widget/displayLabel"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.342">
+              value="//@expressionProviders/@providers.0/@expressions.343">
             <feature
                 href="../process.genmodel#//form/Widget/injectWidgetScript"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.343">
+              value="//@expressionProviders/@providers.0/@expressions.344">
             <feature
                 href="../process.genmodel#//form/Widget/helpMessage"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.344">
+              value="//@expressionProviders/@providers.0/@expressions.345">
             <feature
                 href="../process.genmodel#//form/Widget/tooltip"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.345">
+              value="//@expressionProviders/@providers.0/@expressions.346">
             <feature
                 href="../process.genmodel#//form/Widget/inputExpression"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.346">
+              value="//@expressionProviders/@providers.0/@expressions.347">
             <feature
                 href="../process.genmodel#//form/Widget/displayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.347">
+              value="//@expressionProviders/@providers.0/@expressions.348">
             <feature
                 href="../process.genmodel#//form/Widget/displayAfterEventDependsOnConditionScript"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.348">
+              value="//@expressionProviders/@providers.0/@expressions.349">
             <feature
                 href="../process.genmodel#//form/Widget/afterEventExpression"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.349">
+              value="//@expressionProviders/@providers.0/@expressions.350">
             <feature
                 href="../process.genmodel#//form/Widget/action"/>
           </initializers>
@@ -3181,61 +3187,61 @@
             xsi:type="gmfgen:GenFeatureSeqInitializer">
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.350">
+              value="//@expressionProviders/@providers.0/@expressions.351">
             <feature
                 href="../process.genmodel#//process/Element/name"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.351">
+              value="//@expressionProviders/@providers.0/@expressions.352">
             <feature
                 href="../process.genmodel#//form/Widget/displayLabel"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.352">
+              value="//@expressionProviders/@providers.0/@expressions.353">
             <feature
                 href="../process.genmodel#//form/Widget/injectWidgetScript"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.353">
+              value="//@expressionProviders/@providers.0/@expressions.354">
             <feature
                 href="../process.genmodel#//form/Widget/helpMessage"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.354">
+              value="//@expressionProviders/@providers.0/@expressions.355">
             <feature
                 href="../process.genmodel#//form/Widget/tooltip"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.355">
+              value="//@expressionProviders/@providers.0/@expressions.356">
             <feature
                 href="../process.genmodel#//form/Widget/inputExpression"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.356">
+              value="//@expressionProviders/@providers.0/@expressions.357">
             <feature
                 href="../process.genmodel#//form/Widget/displayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.357">
+              value="//@expressionProviders/@providers.0/@expressions.358">
             <feature
                 href="../process.genmodel#//form/Widget/displayAfterEventDependsOnConditionScript"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.358">
+              value="//@expressionProviders/@providers.0/@expressions.359">
             <feature
                 href="../process.genmodel#//form/Widget/afterEventExpression"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.359">
+              value="//@expressionProviders/@providers.0/@expressions.360">
             <feature
                 href="../process.genmodel#//form/Widget/action"/>
           </initializers>
@@ -3295,7 +3301,7 @@
             xsi:type="gmfgen:GenFeatureSeqInitializer">
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.360">
+              value="//@expressionProviders/@providers.0/@expressions.361">
             <feature
                 href="../process.genmodel#//process/Element/name"/>
           </initializers>
@@ -3307,145 +3313,145 @@
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.361">
+              value="//@expressionProviders/@providers.0/@expressions.362">
             <feature
                 href="../process.genmodel#//form/Widget/displayLabel"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.362">
+              value="//@expressionProviders/@providers.0/@expressions.363">
             <feature
                 href="../process.genmodel#//form/Widget/injectWidgetScript"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.363">
+              value="//@expressionProviders/@providers.0/@expressions.364">
             <feature
                 href="../process.genmodel#//form/FormField/exampleMessage"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.364">
+              value="//@expressionProviders/@providers.0/@expressions.365">
             <feature
                 href="../process.genmodel#//form/Widget/helpMessage"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.365">
+              value="//@expressionProviders/@providers.0/@expressions.366">
             <feature
                 href="../process.genmodel#//form/Widget/tooltip"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.366">
+              value="//@expressionProviders/@providers.0/@expressions.367">
             <feature
                 href="../process.genmodel#//form/Widget/inputExpression"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.367">
+              value="//@expressionProviders/@providers.0/@expressions.368">
             <feature
                 href="../process.genmodel#//form/Widget/displayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.368">
+              value="//@expressionProviders/@providers.0/@expressions.369">
             <feature
                 href="../process.genmodel#//form/Widget/displayAfterEventDependsOnConditionScript"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.369">
+              value="//@expressionProviders/@providers.0/@expressions.370">
             <feature
                 href="../process.genmodel#//form/Widget/afterEventExpression"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.370">
+              value="//@expressionProviders/@providers.0/@expressions.371">
             <feature
                 href="../process.genmodel#//form/Duplicable/tooltipForRemove"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.371">
+              value="//@expressionProviders/@providers.0/@expressions.372">
             <feature
                 href="../process.genmodel#//form/Duplicable/tooltipForAdd"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.372">
+              value="//@expressionProviders/@providers.0/@expressions.373">
             <feature
                 href="../process.genmodel#//form/Duplicable/displayLabelForRemove"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.373">
+              value="//@expressionProviders/@providers.0/@expressions.374">
             <feature
                 href="../process.genmodel#//form/Duplicable/displayLabelForAdd"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.374">
+              value="//@expressionProviders/@providers.0/@expressions.375">
             <feature
                 href="../process.genmodel#//form/Duplicable/minNumberOfDuplication"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.375">
+              value="//@expressionProviders/@providers.0/@expressions.376">
             <feature
                 href="../process.genmodel#//form/Duplicable/maxNumberOfDuplication"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.376">
+              value="//@expressionProviders/@providers.0/@expressions.377">
             <feature
                 href="../process.genmodel#//form/Table/maxRowForPagination"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.377">
+              value="//@expressionProviders/@providers.0/@expressions.378">
             <feature
                 href="../process.genmodel#//form/MultipleValuatedFormField/defaultExpression"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.378">
+              value="//@expressionProviders/@providers.0/@expressions.379">
             <feature
                 href="../process.genmodel#//form/MultipleValuatedFormField/defaultExpressionAfterEvent"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.379">
+              value="//@expressionProviders/@providers.0/@expressions.380">
             <feature
                 href="../process.genmodel#//form/Table/columnForInitialSelectionIndex"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.380">
+              value="//@expressionProviders/@providers.0/@expressions.381">
             <feature
                 href="../process.genmodel#//form/Table/selectedValues"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.381">
+              value="//@expressionProviders/@providers.0/@expressions.382">
             <feature
                 href="../process.genmodel#//form/AbstractTable/verticalHeaderExpression"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.382">
+              value="//@expressionProviders/@providers.0/@expressions.383">
             <feature
                 href="../process.genmodel#//form/AbstractTable/tableExpression"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.383">
+              value="//@expressionProviders/@providers.0/@expressions.384">
             <feature
                 href="../process.genmodel#//form/AbstractTable/horizontalHeaderExpression"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.384">
+              value="//@expressionProviders/@providers.0/@expressions.385">
             <feature
                 href="../process.genmodel#//form/Widget/action"/>
           </initializers>
@@ -3505,7 +3511,7 @@
             xsi:type="gmfgen:GenFeatureSeqInitializer">
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.385">
+              value="//@expressionProviders/@providers.0/@expressions.386">
             <feature
                 href="../process.genmodel#//process/Element/name"/>
           </initializers>
@@ -3517,139 +3523,139 @@
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.386">
+              value="//@expressionProviders/@providers.0/@expressions.387">
             <feature
                 href="../process.genmodel#//form/Widget/displayLabel"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.387">
+              value="//@expressionProviders/@providers.0/@expressions.388">
             <feature
                 href="../process.genmodel#//form/Widget/injectWidgetScript"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.388">
+              value="//@expressionProviders/@providers.0/@expressions.389">
             <feature
                 href="../process.genmodel#//form/FormField/exampleMessage"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.389">
+              value="//@expressionProviders/@providers.0/@expressions.390">
             <feature
                 href="../process.genmodel#//form/Widget/helpMessage"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.390">
+              value="//@expressionProviders/@providers.0/@expressions.391">
             <feature
                 href="../process.genmodel#//form/Widget/tooltip"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.391">
+              value="//@expressionProviders/@providers.0/@expressions.392">
             <feature
                 href="../process.genmodel#//form/Widget/inputExpression"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.392">
+              value="//@expressionProviders/@providers.0/@expressions.393">
             <feature
                 href="../process.genmodel#//form/Widget/displayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.393">
+              value="//@expressionProviders/@providers.0/@expressions.394">
             <feature
                 href="../process.genmodel#//form/Widget/displayAfterEventDependsOnConditionScript"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.394">
+              value="//@expressionProviders/@providers.0/@expressions.395">
             <feature
                 href="../process.genmodel#//form/Widget/afterEventExpression"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.395">
+              value="//@expressionProviders/@providers.0/@expressions.396">
             <feature
                 href="../process.genmodel#//form/Duplicable/tooltipForRemove"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.396">
+              value="//@expressionProviders/@providers.0/@expressions.397">
             <feature
                 href="../process.genmodel#//form/Duplicable/tooltipForAdd"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.397">
+              value="//@expressionProviders/@providers.0/@expressions.398">
             <feature
                 href="../process.genmodel#//form/Duplicable/displayLabelForRemove"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.398">
+              value="//@expressionProviders/@providers.0/@expressions.399">
             <feature
                 href="../process.genmodel#//form/Duplicable/displayLabelForAdd"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.399">
+              value="//@expressionProviders/@providers.0/@expressions.400">
             <feature
                 href="../process.genmodel#//form/Duplicable/minNumberOfDuplication"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.400">
+              value="//@expressionProviders/@providers.0/@expressions.401">
             <feature
                 href="../process.genmodel#//form/Duplicable/maxNumberOfDuplication"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.401">
+              value="//@expressionProviders/@providers.0/@expressions.402">
             <feature
                 href="../process.genmodel#//form/AbstractTable/verticalHeaderExpression"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.402">
+              value="//@expressionProviders/@providers.0/@expressions.403">
             <feature
                 href="../process.genmodel#//form/AbstractTable/tableExpression"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.403">
+              value="//@expressionProviders/@providers.0/@expressions.404">
             <feature
                 href="../process.genmodel#//form/AbstractTable/horizontalHeaderExpression"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.404">
+              value="//@expressionProviders/@providers.0/@expressions.405">
             <feature
                 href="../process.genmodel#//form/DynamicTable/maxNumberOfColumn"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.405">
+              value="//@expressionProviders/@providers.0/@expressions.406">
             <feature
                 href="../process.genmodel#//form/DynamicTable/maxNumberOfRow"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.406">
+              value="//@expressionProviders/@providers.0/@expressions.407">
             <feature
                 href="../process.genmodel#//form/DynamicTable/minNumberOfColumn"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.407">
+              value="//@expressionProviders/@providers.0/@expressions.408">
             <feature
                 href="../process.genmodel#//form/DynamicTable/minNumberOfRow"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.408">
+              value="//@expressionProviders/@providers.0/@expressions.409">
             <feature
                 href="../process.genmodel#//form/Widget/action"/>
           </initializers>
@@ -3709,61 +3715,61 @@
             xsi:type="gmfgen:GenFeatureSeqInitializer">
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.409">
+              value="//@expressionProviders/@providers.0/@expressions.410">
             <feature
                 href="../process.genmodel#//process/Element/name"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.410">
+              value="//@expressionProviders/@providers.0/@expressions.411">
             <feature
                 href="../process.genmodel#//form/Widget/displayLabel"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.411">
+              value="//@expressionProviders/@providers.0/@expressions.412">
             <feature
                 href="../process.genmodel#//form/Widget/injectWidgetScript"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.412">
+              value="//@expressionProviders/@providers.0/@expressions.413">
             <feature
                 href="../process.genmodel#//form/Widget/helpMessage"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.413">
+              value="//@expressionProviders/@providers.0/@expressions.414">
             <feature
                 href="../process.genmodel#//form/Widget/tooltip"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.414">
+              value="//@expressionProviders/@providers.0/@expressions.415">
             <feature
                 href="../process.genmodel#//form/Widget/inputExpression"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.415">
+              value="//@expressionProviders/@providers.0/@expressions.416">
             <feature
                 href="../process.genmodel#//form/Widget/displayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.416">
+              value="//@expressionProviders/@providers.0/@expressions.417">
             <feature
                 href="../process.genmodel#//form/Widget/displayAfterEventDependsOnConditionScript"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.417">
+              value="//@expressionProviders/@providers.0/@expressions.418">
             <feature
                 href="../process.genmodel#//form/Widget/afterEventExpression"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.418">
+              value="//@expressionProviders/@providers.0/@expressions.419">
             <feature
                 href="../process.genmodel#//form/Widget/action"/>
           </initializers>
@@ -3823,61 +3829,61 @@
             xsi:type="gmfgen:GenFeatureSeqInitializer">
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.419">
+              value="//@expressionProviders/@providers.0/@expressions.420">
             <feature
                 href="../process.genmodel#//process/Element/name"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.420">
+              value="//@expressionProviders/@providers.0/@expressions.421">
             <feature
                 href="../process.genmodel#//form/Widget/displayLabel"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.421">
+              value="//@expressionProviders/@providers.0/@expressions.422">
             <feature
                 href="../process.genmodel#//form/Widget/injectWidgetScript"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.422">
+              value="//@expressionProviders/@providers.0/@expressions.423">
             <feature
                 href="../process.genmodel#//form/Widget/helpMessage"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.423">
+              value="//@expressionProviders/@providers.0/@expressions.424">
             <feature
                 href="../process.genmodel#//form/Widget/tooltip"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.424">
+              value="//@expressionProviders/@providers.0/@expressions.425">
             <feature
                 href="../process.genmodel#//form/Widget/inputExpression"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.425">
+              value="//@expressionProviders/@providers.0/@expressions.426">
             <feature
                 href="../process.genmodel#//form/Widget/displayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.426">
+              value="//@expressionProviders/@providers.0/@expressions.427">
             <feature
                 href="../process.genmodel#//form/Widget/displayAfterEventDependsOnConditionScript"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.427">
+              value="//@expressionProviders/@providers.0/@expressions.428">
             <feature
                 href="../process.genmodel#//form/Widget/afterEventExpression"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.428">
+              value="//@expressionProviders/@providers.0/@expressions.429">
             <feature
                 href="../process.genmodel#//form/Widget/action"/>
           </initializers>
@@ -6318,6 +6324,12 @@
             <feature
                 href="../process.genmodel#//form/Widget/action"/>
           </initializers>
+          <initializers
+              xsi:type="gmfgen:GenFeatureValueSpec"
+              value="//@expressionProviders/@providers.0/@expressions.243">
+            <feature
+                href="../process.genmodel#//form/Group/iterator"/>
+          </initializers>
         </modelElementInitializer>
       </modelFacet>
     </topLevelNodes>
@@ -6349,61 +6361,61 @@
             xsi:type="gmfgen:GenFeatureSeqInitializer">
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.330">
+              value="//@expressionProviders/@providers.0/@expressions.331">
             <feature
                 href="../process.genmodel#//process/Element/name"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.331">
+              value="//@expressionProviders/@providers.0/@expressions.332">
             <feature
                 href="../process.genmodel#//form/Widget/displayLabel"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.332">
+              value="//@expressionProviders/@providers.0/@expressions.333">
             <feature
                 href="../process.genmodel#//form/Widget/injectWidgetScript"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.333">
+              value="//@expressionProviders/@providers.0/@expressions.334">
             <feature
                 href="../process.genmodel#//form/Widget/helpMessage"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.334">
+              value="//@expressionProviders/@providers.0/@expressions.335">
             <feature
                 href="../process.genmodel#//form/Widget/tooltip"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.335">
+              value="//@expressionProviders/@providers.0/@expressions.336">
             <feature
                 href="../process.genmodel#//form/Widget/inputExpression"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.336">
+              value="//@expressionProviders/@providers.0/@expressions.337">
             <feature
                 href="../process.genmodel#//form/Widget/displayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.337">
+              value="//@expressionProviders/@providers.0/@expressions.338">
             <feature
                 href="../process.genmodel#//form/Widget/displayAfterEventDependsOnConditionScript"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.338">
+              value="//@expressionProviders/@providers.0/@expressions.339">
             <feature
                 href="../process.genmodel#//form/Widget/afterEventExpression"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.339">
+              value="//@expressionProviders/@providers.0/@expressions.340">
             <feature
                 href="../process.genmodel#//form/Widget/action"/>
           </initializers>
@@ -6462,61 +6474,61 @@
             xsi:type="gmfgen:GenFeatureSeqInitializer">
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.340">
+              value="//@expressionProviders/@providers.0/@expressions.341">
             <feature
                 href="../process.genmodel#//process/Element/name"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.341">
+              value="//@expressionProviders/@providers.0/@expressions.342">
             <feature
                 href="../process.genmodel#//form/Widget/displayLabel"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.342">
+              value="//@expressionProviders/@providers.0/@expressions.343">
             <feature
                 href="../process.genmodel#//form/Widget/injectWidgetScript"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.343">
+              value="//@expressionProviders/@providers.0/@expressions.344">
             <feature
                 href="../process.genmodel#//form/Widget/helpMessage"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.344">
+              value="//@expressionProviders/@providers.0/@expressions.345">
             <feature
                 href="../process.genmodel#//form/Widget/tooltip"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.345">
+              value="//@expressionProviders/@providers.0/@expressions.346">
             <feature
                 href="../process.genmodel#//form/Widget/inputExpression"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.346">
+              value="//@expressionProviders/@providers.0/@expressions.347">
             <feature
                 href="../process.genmodel#//form/Widget/displayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.347">
+              value="//@expressionProviders/@providers.0/@expressions.348">
             <feature
                 href="../process.genmodel#//form/Widget/displayAfterEventDependsOnConditionScript"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.348">
+              value="//@expressionProviders/@providers.0/@expressions.349">
             <feature
                 href="../process.genmodel#//form/Widget/afterEventExpression"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.349">
+              value="//@expressionProviders/@providers.0/@expressions.350">
             <feature
                 href="../process.genmodel#//form/Widget/action"/>
           </initializers>
@@ -6575,109 +6587,109 @@
             xsi:type="gmfgen:GenFeatureSeqInitializer">
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.243">
+              value="//@expressionProviders/@providers.0/@expressions.244">
             <feature
                 href="../process.genmodel#//process/Element/name"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.244">
+              value="//@expressionProviders/@providers.0/@expressions.245">
             <feature
                 href="../process.genmodel#//form/Widget/displayLabel"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.245">
+              value="//@expressionProviders/@providers.0/@expressions.246">
             <feature
                 href="../process.genmodel#//form/Widget/injectWidgetScript"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.246">
+              value="//@expressionProviders/@providers.0/@expressions.247">
             <feature
                 href="../process.genmodel#//form/FormField/exampleMessage"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.247">
+              value="//@expressionProviders/@providers.0/@expressions.248">
             <feature
                 href="../process.genmodel#//form/Widget/helpMessage"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.248">
+              value="//@expressionProviders/@providers.0/@expressions.249">
             <feature
                 href="../process.genmodel#//form/Widget/tooltip"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.249">
+              value="//@expressionProviders/@providers.0/@expressions.250">
             <feature
                 href="../process.genmodel#//form/Widget/inputExpression"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.250">
+              value="//@expressionProviders/@providers.0/@expressions.251">
             <feature
                 href="../process.genmodel#//form/Widget/displayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.251">
+              value="//@expressionProviders/@providers.0/@expressions.252">
             <feature
                 href="../process.genmodel#//form/Widget/displayAfterEventDependsOnConditionScript"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.252">
+              value="//@expressionProviders/@providers.0/@expressions.253">
             <feature
                 href="../process.genmodel#//form/Widget/afterEventExpression"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.253">
+              value="//@expressionProviders/@providers.0/@expressions.254">
             <feature
                 href="../process.genmodel#//form/Duplicable/tooltipForRemove"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.254">
+              value="//@expressionProviders/@providers.0/@expressions.255">
             <feature
                 href="../process.genmodel#//form/Duplicable/tooltipForAdd"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.255">
+              value="//@expressionProviders/@providers.0/@expressions.256">
             <feature
                 href="../process.genmodel#//form/Duplicable/displayLabelForRemove"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.256">
+              value="//@expressionProviders/@providers.0/@expressions.257">
             <feature
                 href="../process.genmodel#//form/Duplicable/displayLabelForAdd"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.257">
+              value="//@expressionProviders/@providers.0/@expressions.258">
             <feature
                 href="../process.genmodel#//form/Duplicable/minNumberOfDuplication"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.258">
+              value="//@expressionProviders/@providers.0/@expressions.259">
             <feature
                 href="../process.genmodel#//form/Duplicable/maxNumberOfDuplication"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.259">
+              value="//@expressionProviders/@providers.0/@expressions.260">
             <feature
                 href="../process.genmodel#//form/FileWidget/outputDocumentListExpression"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.260">
+              value="//@expressionProviders/@providers.0/@expressions.261">
             <feature
                 href="../process.genmodel#//form/Widget/action"/>
           </initializers>
@@ -6739,115 +6751,115 @@
             xsi:type="gmfgen:GenFeatureSeqInitializer">
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.261">
+              value="//@expressionProviders/@providers.0/@expressions.262">
             <feature
                 href="../process.genmodel#//process/Element/name"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.262">
+              value="//@expressionProviders/@providers.0/@expressions.263">
             <feature
                 href="../process.genmodel#//form/Widget/displayLabel"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.263">
+              value="//@expressionProviders/@providers.0/@expressions.264">
             <feature
                 href="../process.genmodel#//form/Widget/injectWidgetScript"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.264">
+              value="//@expressionProviders/@providers.0/@expressions.265">
             <feature
                 href="../process.genmodel#//form/FormField/exampleMessage"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.265">
+              value="//@expressionProviders/@providers.0/@expressions.266">
             <feature
                 href="../process.genmodel#//form/Widget/helpMessage"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.266">
+              value="//@expressionProviders/@providers.0/@expressions.267">
             <feature
                 href="../process.genmodel#//form/Widget/tooltip"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.267">
+              value="//@expressionProviders/@providers.0/@expressions.268">
             <feature
                 href="../process.genmodel#//form/Widget/inputExpression"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.268">
+              value="//@expressionProviders/@providers.0/@expressions.269">
             <feature
                 href="../process.genmodel#//form/Widget/displayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.269">
+              value="//@expressionProviders/@providers.0/@expressions.270">
             <feature
                 href="../process.genmodel#//form/Widget/displayAfterEventDependsOnConditionScript"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.270">
+              value="//@expressionProviders/@providers.0/@expressions.271">
             <feature
                 href="../process.genmodel#//form/Widget/afterEventExpression"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.271">
+              value="//@expressionProviders/@providers.0/@expressions.272">
             <feature
                 href="../process.genmodel#//form/Duplicable/tooltipForRemove"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.272">
+              value="//@expressionProviders/@providers.0/@expressions.273">
             <feature
                 href="../process.genmodel#//form/Duplicable/tooltipForAdd"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.273">
+              value="//@expressionProviders/@providers.0/@expressions.274">
             <feature
                 href="../process.genmodel#//form/Duplicable/displayLabelForRemove"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.274">
+              value="//@expressionProviders/@providers.0/@expressions.275">
             <feature
                 href="../process.genmodel#//form/Duplicable/displayLabelForAdd"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.275">
+              value="//@expressionProviders/@providers.0/@expressions.276">
             <feature
                 href="../process.genmodel#//form/Duplicable/minNumberOfDuplication"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.276">
+              value="//@expressionProviders/@providers.0/@expressions.277">
             <feature
                 href="../process.genmodel#//form/Duplicable/maxNumberOfDuplication"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.277">
+              value="//@expressionProviders/@providers.0/@expressions.278">
             <feature
                 href="../process.genmodel#//form/MultipleValuatedFormField/defaultExpression"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.278">
+              value="//@expressionProviders/@providers.0/@expressions.279">
             <feature
                 href="../process.genmodel#//form/MultipleValuatedFormField/defaultExpressionAfterEvent"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.279">
+              value="//@expressionProviders/@providers.0/@expressions.280">
             <feature
                 href="../process.genmodel#//form/Widget/action"/>
           </initializers>
@@ -6906,103 +6918,103 @@
             xsi:type="gmfgen:GenFeatureSeqInitializer">
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.313">
+              value="//@expressionProviders/@providers.0/@expressions.314">
             <feature
                 href="../process.genmodel#//process/Element/name"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.314">
+              value="//@expressionProviders/@providers.0/@expressions.315">
             <feature
                 href="../process.genmodel#//form/Widget/displayLabel"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.315">
+              value="//@expressionProviders/@providers.0/@expressions.316">
             <feature
                 href="../process.genmodel#//form/Widget/injectWidgetScript"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.316">
+              value="//@expressionProviders/@providers.0/@expressions.317">
             <feature
                 href="../process.genmodel#//form/Widget/helpMessage"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.317">
+              value="//@expressionProviders/@providers.0/@expressions.318">
             <feature
                 href="../process.genmodel#//form/Widget/tooltip"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.318">
+              value="//@expressionProviders/@providers.0/@expressions.319">
             <feature
                 href="../process.genmodel#//form/Widget/inputExpression"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.319">
+              value="//@expressionProviders/@providers.0/@expressions.320">
             <feature
                 href="../process.genmodel#//form/Widget/displayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.320">
+              value="//@expressionProviders/@providers.0/@expressions.321">
             <feature
                 href="../process.genmodel#//form/Widget/displayAfterEventDependsOnConditionScript"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.321">
+              value="//@expressionProviders/@providers.0/@expressions.322">
             <feature
                 href="../process.genmodel#//form/Widget/afterEventExpression"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.322">
+              value="//@expressionProviders/@providers.0/@expressions.323">
             <feature
                 href="../process.genmodel#//form/Duplicable/tooltipForRemove"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.323">
+              value="//@expressionProviders/@providers.0/@expressions.324">
             <feature
                 href="../process.genmodel#//form/Duplicable/tooltipForAdd"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.324">
+              value="//@expressionProviders/@providers.0/@expressions.325">
             <feature
                 href="../process.genmodel#//form/Duplicable/displayLabelForRemove"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.325">
+              value="//@expressionProviders/@providers.0/@expressions.326">
             <feature
                 href="../process.genmodel#//form/Duplicable/displayLabelForAdd"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.326">
+              value="//@expressionProviders/@providers.0/@expressions.327">
             <feature
                 href="../process.genmodel#//form/Duplicable/minNumberOfDuplication"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.327">
+              value="//@expressionProviders/@providers.0/@expressions.328">
             <feature
                 href="../process.genmodel#//form/Duplicable/maxNumberOfDuplication"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.328">
+              value="//@expressionProviders/@providers.0/@expressions.329">
             <feature
                 href="../process.genmodel#//form/ImageWidget/imgPath"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.329">
+              value="//@expressionProviders/@providers.0/@expressions.330">
             <feature
                 href="../process.genmodel#//form/Widget/action"/>
           </initializers>
@@ -7061,97 +7073,97 @@
             xsi:type="gmfgen:GenFeatureSeqInitializer">
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.297">
+              value="//@expressionProviders/@providers.0/@expressions.298">
             <feature
                 href="../process.genmodel#//process/Element/name"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.298">
+              value="//@expressionProviders/@providers.0/@expressions.299">
             <feature
                 href="../process.genmodel#//form/Widget/injectWidgetScript"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.299">
+              value="//@expressionProviders/@providers.0/@expressions.300">
             <feature
                 href="../process.genmodel#//form/FormField/exampleMessage"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.300">
+              value="//@expressionProviders/@providers.0/@expressions.301">
             <feature
                 href="../process.genmodel#//form/Widget/helpMessage"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.301">
+              value="//@expressionProviders/@providers.0/@expressions.302">
             <feature
                 href="../process.genmodel#//form/Widget/tooltip"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.302">
+              value="//@expressionProviders/@providers.0/@expressions.303">
             <feature
                 href="../process.genmodel#//form/Widget/inputExpression"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.303">
+              value="//@expressionProviders/@providers.0/@expressions.304">
             <feature
                 href="../process.genmodel#//form/Widget/displayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.304">
+              value="//@expressionProviders/@providers.0/@expressions.305">
             <feature
                 href="../process.genmodel#//form/Widget/displayAfterEventDependsOnConditionScript"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.305">
+              value="//@expressionProviders/@providers.0/@expressions.306">
             <feature
                 href="../process.genmodel#//form/Widget/afterEventExpression"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.306">
+              value="//@expressionProviders/@providers.0/@expressions.307">
             <feature
                 href="../process.genmodel#//form/Duplicable/tooltipForRemove"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.307">
+              value="//@expressionProviders/@providers.0/@expressions.308">
             <feature
                 href="../process.genmodel#//form/Duplicable/tooltipForAdd"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.308">
+              value="//@expressionProviders/@providers.0/@expressions.309">
             <feature
                 href="../process.genmodel#//form/Duplicable/displayLabelForRemove"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.309">
+              value="//@expressionProviders/@providers.0/@expressions.310">
             <feature
                 href="../process.genmodel#//form/Duplicable/displayLabelForAdd"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.310">
+              value="//@expressionProviders/@providers.0/@expressions.311">
             <feature
                 href="../process.genmodel#//form/Duplicable/minNumberOfDuplication"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.311">
+              value="//@expressionProviders/@providers.0/@expressions.312">
             <feature
                 href="../process.genmodel#//form/Duplicable/maxNumberOfDuplication"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.312">
+              value="//@expressionProviders/@providers.0/@expressions.313">
             <feature
                 href="../process.genmodel#//form/Widget/action"/>
           </initializers>
@@ -7210,103 +7222,103 @@
             xsi:type="gmfgen:GenFeatureSeqInitializer">
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.280">
+              value="//@expressionProviders/@providers.0/@expressions.281">
             <feature
                 href="../process.genmodel#//process/Element/name"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.281">
+              value="//@expressionProviders/@providers.0/@expressions.282">
             <feature
                 href="../process.genmodel#//form/Widget/displayLabel"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.282">
+              value="//@expressionProviders/@providers.0/@expressions.283">
             <feature
                 href="../process.genmodel#//form/Widget/injectWidgetScript"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.283">
+              value="//@expressionProviders/@providers.0/@expressions.284">
             <feature
                 href="../process.genmodel#//form/FormField/exampleMessage"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.284">
+              value="//@expressionProviders/@providers.0/@expressions.285">
             <feature
                 href="../process.genmodel#//form/Widget/helpMessage"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.285">
+              value="//@expressionProviders/@providers.0/@expressions.286">
             <feature
                 href="../process.genmodel#//form/Widget/tooltip"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.286">
+              value="//@expressionProviders/@providers.0/@expressions.287">
             <feature
                 href="../process.genmodel#//form/Widget/inputExpression"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.287">
+              value="//@expressionProviders/@providers.0/@expressions.288">
             <feature
                 href="../process.genmodel#//form/Widget/displayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.288">
+              value="//@expressionProviders/@providers.0/@expressions.289">
             <feature
                 href="../process.genmodel#//form/Widget/displayAfterEventDependsOnConditionScript"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.289">
+              value="//@expressionProviders/@providers.0/@expressions.290">
             <feature
                 href="../process.genmodel#//form/Widget/afterEventExpression"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.290">
+              value="//@expressionProviders/@providers.0/@expressions.291">
             <feature
                 href="../process.genmodel#//form/Duplicable/tooltipForRemove"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.291">
+              value="//@expressionProviders/@providers.0/@expressions.292">
             <feature
                 href="../process.genmodel#//form/Duplicable/tooltipForAdd"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.292">
+              value="//@expressionProviders/@providers.0/@expressions.293">
             <feature
                 href="../process.genmodel#//form/Duplicable/displayLabelForRemove"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.293">
+              value="//@expressionProviders/@providers.0/@expressions.294">
             <feature
                 href="../process.genmodel#//form/Duplicable/displayLabelForAdd"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.294">
+              value="//@expressionProviders/@providers.0/@expressions.295">
             <feature
                 href="../process.genmodel#//form/Duplicable/minNumberOfDuplication"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.295">
+              value="//@expressionProviders/@providers.0/@expressions.296">
             <feature
                 href="../process.genmodel#//form/Duplicable/maxNumberOfDuplication"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.296">
+              value="//@expressionProviders/@providers.0/@expressions.297">
             <feature
                 href="../process.genmodel#//form/Widget/action"/>
           </initializers>
@@ -7365,61 +7377,61 @@
             xsi:type="gmfgen:GenFeatureSeqInitializer">
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.350">
+              value="//@expressionProviders/@providers.0/@expressions.351">
             <feature
                 href="../process.genmodel#//process/Element/name"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.351">
+              value="//@expressionProviders/@providers.0/@expressions.352">
             <feature
                 href="../process.genmodel#//form/Widget/displayLabel"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.352">
+              value="//@expressionProviders/@providers.0/@expressions.353">
             <feature
                 href="../process.genmodel#//form/Widget/injectWidgetScript"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.353">
+              value="//@expressionProviders/@providers.0/@expressions.354">
             <feature
                 href="../process.genmodel#//form/Widget/helpMessage"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.354">
+              value="//@expressionProviders/@providers.0/@expressions.355">
             <feature
                 href="../process.genmodel#//form/Widget/tooltip"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.355">
+              value="//@expressionProviders/@providers.0/@expressions.356">
             <feature
                 href="../process.genmodel#//form/Widget/inputExpression"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.356">
+              value="//@expressionProviders/@providers.0/@expressions.357">
             <feature
                 href="../process.genmodel#//form/Widget/displayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.357">
+              value="//@expressionProviders/@providers.0/@expressions.358">
             <feature
                 href="../process.genmodel#//form/Widget/displayAfterEventDependsOnConditionScript"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.358">
+              value="//@expressionProviders/@providers.0/@expressions.359">
             <feature
                 href="../process.genmodel#//form/Widget/afterEventExpression"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.359">
+              value="//@expressionProviders/@providers.0/@expressions.360">
             <feature
                 href="../process.genmodel#//form/Widget/action"/>
           </initializers>
@@ -7478,7 +7490,7 @@
             xsi:type="gmfgen:GenFeatureSeqInitializer">
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.360">
+              value="//@expressionProviders/@providers.0/@expressions.361">
             <feature
                 href="../process.genmodel#//process/Element/name"/>
           </initializers>
@@ -7490,145 +7502,145 @@
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.361">
+              value="//@expressionProviders/@providers.0/@expressions.362">
             <feature
                 href="../process.genmodel#//form/Widget/displayLabel"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.362">
+              value="//@expressionProviders/@providers.0/@expressions.363">
             <feature
                 href="../process.genmodel#//form/Widget/injectWidgetScript"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.363">
+              value="//@expressionProviders/@providers.0/@expressions.364">
             <feature
                 href="../process.genmodel#//form/FormField/exampleMessage"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.364">
+              value="//@expressionProviders/@providers.0/@expressions.365">
             <feature
                 href="../process.genmodel#//form/Widget/helpMessage"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.365">
+              value="//@expressionProviders/@providers.0/@expressions.366">
             <feature
                 href="../process.genmodel#//form/Widget/tooltip"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.366">
+              value="//@expressionProviders/@providers.0/@expressions.367">
             <feature
                 href="../process.genmodel#//form/Widget/inputExpression"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.367">
+              value="//@expressionProviders/@providers.0/@expressions.368">
             <feature
                 href="../process.genmodel#//form/Widget/displayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.368">
+              value="//@expressionProviders/@providers.0/@expressions.369">
             <feature
                 href="../process.genmodel#//form/Widget/displayAfterEventDependsOnConditionScript"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.369">
+              value="//@expressionProviders/@providers.0/@expressions.370">
             <feature
                 href="../process.genmodel#//form/Widget/afterEventExpression"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.370">
+              value="//@expressionProviders/@providers.0/@expressions.371">
             <feature
                 href="../process.genmodel#//form/Duplicable/tooltipForRemove"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.371">
+              value="//@expressionProviders/@providers.0/@expressions.372">
             <feature
                 href="../process.genmodel#//form/Duplicable/tooltipForAdd"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.372">
+              value="//@expressionProviders/@providers.0/@expressions.373">
             <feature
                 href="../process.genmodel#//form/Duplicable/displayLabelForRemove"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.373">
+              value="//@expressionProviders/@providers.0/@expressions.374">
             <feature
                 href="../process.genmodel#//form/Duplicable/displayLabelForAdd"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.374">
+              value="//@expressionProviders/@providers.0/@expressions.375">
             <feature
                 href="../process.genmodel#//form/Duplicable/minNumberOfDuplication"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.375">
+              value="//@expressionProviders/@providers.0/@expressions.376">
             <feature
                 href="../process.genmodel#//form/Duplicable/maxNumberOfDuplication"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.376">
+              value="//@expressionProviders/@providers.0/@expressions.377">
             <feature
                 href="../process.genmodel#//form/Table/maxRowForPagination"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.377">
+              value="//@expressionProviders/@providers.0/@expressions.378">
             <feature
                 href="../process.genmodel#//form/MultipleValuatedFormField/defaultExpression"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.378">
+              value="//@expressionProviders/@providers.0/@expressions.379">
             <feature
                 href="../process.genmodel#//form/MultipleValuatedFormField/defaultExpressionAfterEvent"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.379">
+              value="//@expressionProviders/@providers.0/@expressions.380">
             <feature
                 href="../process.genmodel#//form/Table/columnForInitialSelectionIndex"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.380">
+              value="//@expressionProviders/@providers.0/@expressions.381">
             <feature
                 href="../process.genmodel#//form/Table/selectedValues"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.381">
+              value="//@expressionProviders/@providers.0/@expressions.382">
             <feature
                 href="../process.genmodel#//form/AbstractTable/verticalHeaderExpression"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.382">
+              value="//@expressionProviders/@providers.0/@expressions.383">
             <feature
                 href="../process.genmodel#//form/AbstractTable/tableExpression"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.383">
+              value="//@expressionProviders/@providers.0/@expressions.384">
             <feature
                 href="../process.genmodel#//form/AbstractTable/horizontalHeaderExpression"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.384">
+              value="//@expressionProviders/@providers.0/@expressions.385">
             <feature
                 href="../process.genmodel#//form/Widget/action"/>
           </initializers>
@@ -7687,7 +7699,7 @@
             xsi:type="gmfgen:GenFeatureSeqInitializer">
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.385">
+              value="//@expressionProviders/@providers.0/@expressions.386">
             <feature
                 href="../process.genmodel#//process/Element/name"/>
           </initializers>
@@ -7699,139 +7711,139 @@
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.386">
+              value="//@expressionProviders/@providers.0/@expressions.387">
             <feature
                 href="../process.genmodel#//form/Widget/displayLabel"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.387">
+              value="//@expressionProviders/@providers.0/@expressions.388">
             <feature
                 href="../process.genmodel#//form/Widget/injectWidgetScript"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.388">
+              value="//@expressionProviders/@providers.0/@expressions.389">
             <feature
                 href="../process.genmodel#//form/FormField/exampleMessage"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.389">
+              value="//@expressionProviders/@providers.0/@expressions.390">
             <feature
                 href="../process.genmodel#//form/Widget/helpMessage"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.390">
+              value="//@expressionProviders/@providers.0/@expressions.391">
             <feature
                 href="../process.genmodel#//form/Widget/tooltip"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.391">
+              value="//@expressionProviders/@providers.0/@expressions.392">
             <feature
                 href="../process.genmodel#//form/Widget/inputExpression"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.392">
+              value="//@expressionProviders/@providers.0/@expressions.393">
             <feature
                 href="../process.genmodel#//form/Widget/displayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.393">
+              value="//@expressionProviders/@providers.0/@expressions.394">
             <feature
                 href="../process.genmodel#//form/Widget/displayAfterEventDependsOnConditionScript"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.394">
+              value="//@expressionProviders/@providers.0/@expressions.395">
             <feature
                 href="../process.genmodel#//form/Widget/afterEventExpression"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.395">
+              value="//@expressionProviders/@providers.0/@expressions.396">
             <feature
                 href="../process.genmodel#//form/Duplicable/tooltipForRemove"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.396">
+              value="//@expressionProviders/@providers.0/@expressions.397">
             <feature
                 href="../process.genmodel#//form/Duplicable/tooltipForAdd"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.397">
+              value="//@expressionProviders/@providers.0/@expressions.398">
             <feature
                 href="../process.genmodel#//form/Duplicable/displayLabelForRemove"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.398">
+              value="//@expressionProviders/@providers.0/@expressions.399">
             <feature
                 href="../process.genmodel#//form/Duplicable/displayLabelForAdd"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.399">
+              value="//@expressionProviders/@providers.0/@expressions.400">
             <feature
                 href="../process.genmodel#//form/Duplicable/minNumberOfDuplication"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.400">
+              value="//@expressionProviders/@providers.0/@expressions.401">
             <feature
                 href="../process.genmodel#//form/Duplicable/maxNumberOfDuplication"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.401">
+              value="//@expressionProviders/@providers.0/@expressions.402">
             <feature
                 href="../process.genmodel#//form/AbstractTable/verticalHeaderExpression"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.402">
+              value="//@expressionProviders/@providers.0/@expressions.403">
             <feature
                 href="../process.genmodel#//form/AbstractTable/tableExpression"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.403">
+              value="//@expressionProviders/@providers.0/@expressions.404">
             <feature
                 href="../process.genmodel#//form/AbstractTable/horizontalHeaderExpression"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.404">
+              value="//@expressionProviders/@providers.0/@expressions.405">
             <feature
                 href="../process.genmodel#//form/DynamicTable/maxNumberOfColumn"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.405">
+              value="//@expressionProviders/@providers.0/@expressions.406">
             <feature
                 href="../process.genmodel#//form/DynamicTable/maxNumberOfRow"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.406">
+              value="//@expressionProviders/@providers.0/@expressions.407">
             <feature
                 href="../process.genmodel#//form/DynamicTable/minNumberOfColumn"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.407">
+              value="//@expressionProviders/@providers.0/@expressions.408">
             <feature
                 href="../process.genmodel#//form/DynamicTable/minNumberOfRow"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.408">
+              value="//@expressionProviders/@providers.0/@expressions.409">
             <feature
                 href="../process.genmodel#//form/Widget/action"/>
           </initializers>
@@ -7890,61 +7902,61 @@
             xsi:type="gmfgen:GenFeatureSeqInitializer">
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.409">
+              value="//@expressionProviders/@providers.0/@expressions.410">
             <feature
                 href="../process.genmodel#//process/Element/name"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.410">
+              value="//@expressionProviders/@providers.0/@expressions.411">
             <feature
                 href="../process.genmodel#//form/Widget/displayLabel"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.411">
+              value="//@expressionProviders/@providers.0/@expressions.412">
             <feature
                 href="../process.genmodel#//form/Widget/injectWidgetScript"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.412">
+              value="//@expressionProviders/@providers.0/@expressions.413">
             <feature
                 href="../process.genmodel#//form/Widget/helpMessage"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.413">
+              value="//@expressionProviders/@providers.0/@expressions.414">
             <feature
                 href="../process.genmodel#//form/Widget/tooltip"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.414">
+              value="//@expressionProviders/@providers.0/@expressions.415">
             <feature
                 href="../process.genmodel#//form/Widget/inputExpression"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.415">
+              value="//@expressionProviders/@providers.0/@expressions.416">
             <feature
                 href="../process.genmodel#//form/Widget/displayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.416">
+              value="//@expressionProviders/@providers.0/@expressions.417">
             <feature
                 href="../process.genmodel#//form/Widget/displayAfterEventDependsOnConditionScript"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.417">
+              value="//@expressionProviders/@providers.0/@expressions.418">
             <feature
                 href="../process.genmodel#//form/Widget/afterEventExpression"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.418">
+              value="//@expressionProviders/@providers.0/@expressions.419">
             <feature
                 href="../process.genmodel#//form/Widget/action"/>
           </initializers>
@@ -8003,61 +8015,61 @@
             xsi:type="gmfgen:GenFeatureSeqInitializer">
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.419">
+              value="//@expressionProviders/@providers.0/@expressions.420">
             <feature
                 href="../process.genmodel#//process/Element/name"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.420">
+              value="//@expressionProviders/@providers.0/@expressions.421">
             <feature
                 href="../process.genmodel#//form/Widget/displayLabel"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.421">
+              value="//@expressionProviders/@providers.0/@expressions.422">
             <feature
                 href="../process.genmodel#//form/Widget/injectWidgetScript"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.422">
+              value="//@expressionProviders/@providers.0/@expressions.423">
             <feature
                 href="../process.genmodel#//form/Widget/helpMessage"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.423">
+              value="//@expressionProviders/@providers.0/@expressions.424">
             <feature
                 href="../process.genmodel#//form/Widget/tooltip"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.424">
+              value="//@expressionProviders/@providers.0/@expressions.425">
             <feature
                 href="../process.genmodel#//form/Widget/inputExpression"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.425">
+              value="//@expressionProviders/@providers.0/@expressions.426">
             <feature
                 href="../process.genmodel#//form/Widget/displayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.426">
+              value="//@expressionProviders/@providers.0/@expressions.427">
             <feature
                 href="../process.genmodel#//form/Widget/displayAfterEventDependsOnConditionScript"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.427">
+              value="//@expressionProviders/@providers.0/@expressions.428">
             <feature
                 href="../process.genmodel#//form/Widget/afterEventExpression"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.428">
+              value="//@expressionProviders/@providers.0/@expressions.429">
             <feature
                 href="../process.genmodel#//form/Widget/action"/>
           </initializers>
@@ -9078,6 +9090,8 @@
           body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Integer.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"/>
       <expressions
           body="org.bonitasoft.studio.model.expression.Operation action = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createOperation() ;&#xD;&#xA;                org.bonitasoft.studio.model.expression.Operator op = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createOperator() ;&#xD;&#xA;                op.setType(org.bonitasoft.studio.common.ExpressionConstants.ASSIGNMENT_OPERATOR) ;&#xD;&#xA;                op.setExpression(&quot;=&quot;) ;&#xD;&#xA;                action.setOperator(op) ;&#xD;&#xA;&#xD;&#xA;                org.bonitasoft.studio.model.expression.Expression variableExp = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createExpression() ;&#xD;&#xA;                org.bonitasoft.studio.model.expression.Expression actionExp = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createExpression() ;&#xD;&#xA;                action.setLeftOperand(variableExp) ;&#xD;&#xA;                action.setRightOperand(actionExp) ;&#xD;&#xA;return action;"/>
+      <expressions
+          body="org.bonitasoft.studio.model.form.GroupIterator iterator = org.bonitasoft.studio.model.form.FormFactory.eINSTANCE.createGroupIterator();&#xA;iterator.setName(&quot;&quot;);&#xA;iterator.setClassName(Object.class.getName());&#xA;return iterator;"/>
       <expressions
           body="return org.bonitasoft.studio.common.NamingUtils.getInstance(self).generateName(self, self);"/>
       <expressions

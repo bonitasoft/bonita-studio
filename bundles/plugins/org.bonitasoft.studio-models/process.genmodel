@@ -199,8 +199,7 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference form.ecore#//Group/columns"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference form.ecore#//Group/lines"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//Group/useIterator"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//Group/iteratorName"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//Group/iteratorClassName"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference form.ecore#//Group/iterator"/>
     </genClasses>
     <genClasses image="false" ecoreClass="form.ecore#//FormField">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//FormField/description"/>
@@ -357,6 +356,9 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//SuggestBox/useMaxItems"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//SuggestBox/asynchronous"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//SuggestBox/delay"/>
+    </genClasses>
+    <genClasses ecoreClass="form.ecore#//GroupIterator">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//GroupIterator/className"/>
     </genClasses>
   </genPackages>
   <genPackages prefix="Kpi" basePackage="org.bonitasoft.studio.model" ecorePackage="kpi.ecore#/">
