@@ -6,10 +6,10 @@
   <parent>
     <groupId>org.bonitasoft.studio</groupId>
     <artifactId>patched-plugins</artifactId>
-    <version>6.2.6-SNAPSHOT</version>
+    <version>6.2.6</version>
   </parent>
 	<groupId>org.bonitasoft.studio.patched-plugins</groupId>
 	<artifactId>org.bonitasoft.studio_antTasks</artifactId>
-	<version>6.2.6-SNAPSHOT</version>
+	<version>6.2.6</version>
 	<packaging>eclipse-plugin</packaging>
 </project>
