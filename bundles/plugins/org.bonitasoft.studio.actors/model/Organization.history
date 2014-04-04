@@ -2387,7 +2387,7 @@
         <changes xsi:type="history:Set" element="Organization.ecore#//Organization/customUserInfoDefinitions"
             featureName="resolveProxies" dataValue="false" oldDataValue="true"/>
         <changes xsi:type="history:Set" element="Organization.ecore#//Organization/customUserInfoDefinitions"
-            featureName="eType" referenceValue="_6.ecore#//CustomUserInfoDefinitions"/>
+            featureName="eType" referenceValue="Organization.ecore#//CustomUserInfoDefinitions"/>
       </changes>
       <changes xsi:type="history:Create" target="Organization.ecore#//Organization/customUserInfoDefinitions"
           referenceName="eAnnotations" element="Organization.ecore#//Organization/customUserInfoDefinitions/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%">
@@ -2417,7 +2417,7 @@
         <changes xsi:type="history:Set" element="Organization.ecore#//User/customUserInfoValues"
             featureName="resolveProxies" dataValue="false" oldDataValue="true"/>
         <changes xsi:type="history:Set" element="Organization.ecore#//User/customUserInfoValues"
-            featureName="eType" referenceValue="_6.ecore#//CustomUserInfoValuesType"/>
+            featureName="eType" referenceValue="Organization.ecore#//CustomUserInfoValuesType"/>
       </changes>
       <changes xsi:type="history:Create" target="Organization.ecore#//User/customUserInfoValues"
           referenceName="eAnnotations" element="Organization.ecore#//User/customUserInfoValues/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%">
@@ -2458,5 +2458,9 @@
             featureName="value" dataValue="encrypted"/>
       </changes>
     </changes>
+    <changes xsi:type="history:CompositeChange"/>
+    <changes xsi:type="history:Set" element="Organization.ecore#/" featureName="nsURI"
+        dataValue="http://documentation.bonitasoft.com/organization-xml-schema" oldDataValue="http://www.bonitasoft.org/ns/organization/6.3"/>
   </releases>
+  <releases/>
 </history:History>

@@ -216,6 +216,7 @@ public class OrganizationRepositoryStore extends AbstractEMFRepositoryStore<Orga
 				Map<String, String> options = new HashMap<String, String>() ;
 				options.put(XMLResource.OPTION_ENCODING, "UTF-8");
 				options.put(XMLResource.OPTION_XML_VERSION, "1.0");
+				options.put(XMLResource.XML_NS, "http://documentation.bonitasoft.com/organization-xml-schema");
 				File target = new File(resourceURI.toFileString());
 				fos = new FileOutputStream(target)  ;
 				new OrganizationXMLProcessor().save(fos, resource, options)  ;

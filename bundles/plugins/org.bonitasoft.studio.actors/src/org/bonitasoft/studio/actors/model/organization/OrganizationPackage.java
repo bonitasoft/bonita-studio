@@ -58,7 +58,7 @@ public interface OrganizationPackage extends EPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	String eNS_URI = "http://www.bonitasoft.org/ns/organization/6.3";
+	String eNS_URI = "http://documentation.bonitasoft.com/organization-xml-schema";
 
 	/**
 	 * The package namespace name.
