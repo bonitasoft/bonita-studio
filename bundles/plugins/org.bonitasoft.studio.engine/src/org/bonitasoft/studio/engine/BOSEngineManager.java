@@ -140,7 +140,7 @@ public class BOSEngineManager {
     public synchronized void stop(){
         BOSWebServerManager.getInstance().stopServer(monitor);
         if(BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().getBoolean(BonitaPreferenceConstants.DELETE_TENANT_ON_EXIT)){
-            BOSWebServerManager.getInstance().cleanTomCatServer();
+            BOSWebServerManager.getInstance().cleanBeforeShutdown();
         }
         isRunning = false ;
     }
