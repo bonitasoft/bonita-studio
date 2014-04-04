@@ -2458,9 +2458,8 @@
             featureName="value" dataValue="encrypted"/>
       </changes>
     </changes>
-    <changes xsi:type="history:CompositeChange"/>
     <changes xsi:type="history:Set" element="Organization.ecore#/" featureName="nsURI"
-        dataValue="http://documentation.bonitasoft.com/organization-xml-schema" oldDataValue="http://www.bonitasoft.org/ns/organization/6.3"/>
+        dataValue="http://documentation.bonitasoft.com/organization-xml-schema" oldDataValue="http://www.bonitasoft.org/ns/organization/6.0.0-beta-016"/>
   </releases>
   <releases/>
 </history:History>
