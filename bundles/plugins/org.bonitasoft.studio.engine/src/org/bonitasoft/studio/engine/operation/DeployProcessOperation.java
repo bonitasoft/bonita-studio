@@ -31,6 +31,7 @@ import java.util.Set;
 
 import org.bonitasoft.engine.api.ProcessAPI;
 import org.bonitasoft.engine.bpm.bar.BusinessArchive;
+import org.bonitasoft.engine.bpm.process.Problem;
 import org.bonitasoft.engine.bpm.process.ProcessActivationException;
 import org.bonitasoft.engine.bpm.process.ProcessDefinition;
 import org.bonitasoft.engine.bpm.process.ProcessDeployException;
@@ -41,25 +42,21 @@ import org.bonitasoft.engine.exception.DeletionException;
 import org.bonitasoft.engine.exception.ProcessInstanceHierarchicalDeletionException;
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.configuration.ConfigurationPlugin;
-import org.bonitasoft.studio.configuration.preferences.ConfigurationPreferenceConstants;
-import org.bonitasoft.studio.configuration.ui.handler.ConfigureHandler;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.EnginePlugin;
 import org.bonitasoft.studio.engine.export.BarExporter;
 import org.bonitasoft.studio.engine.i18n.Messages;
+import org.bonitasoft.studio.engine.ui.dialog.ProcessEnablementProblemsDialog;
 import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.MainProcess;
-import org.eclipse.core.commands.Command;
-import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.commands.ICommandService;
+import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.swt.widgets.Display;
 
 /**
  * @author Romain Bioteau
@@ -71,6 +68,7 @@ public class DeployProcessOperation  {
 	private String configurationId;
 	private final List<AbstractProcess> processes ;
 	private final Map<AbstractProcess, Long> processIdsMap;
+    private int problemResolutionResult;
 
 	public DeployProcessOperation() {
 		processes = new ArrayList<AbstractProcess>() ;
@@ -187,7 +185,6 @@ public class DeployProcessOperation  {
 			session = createSession(process,monitor);
 			final ProcessAPI processApi = BOSEngineManager.getInstance().getProcessAPI(session);
 			def = processApi.deploy(bar) ;
-			//TODO Use definition state to detect resolution issues
 		}  catch (ProcessDeployException e) {
 			if(process != null){
 				BonitaStudioLog.log("Error when trying to deploy the process named: "+ process.getName());
@@ -210,17 +207,14 @@ public class DeployProcessOperation  {
 	}
 
 	protected IStatus enableProcess(final AbstractProcess process,IProgressMonitor monitor) throws Exception {
-		APISession session = null;
+		APISession session = createSession(process,monitor);
+		final ProcessAPI processApi = BOSEngineManager.getInstance().getProcessAPI(session);
+		Long processDefinitionId = processIdsMap.get(process);
 		try {
-			session = createSession(process,monitor);
-			final ProcessAPI processApi = BOSEngineManager.getInstance().getProcessAPI(session);
-			processApi.enableProcess(processIdsMap.get(process)) ;
+            processApi.enableProcess(processDefinitionId) ;
 		}  catch (ProcessEnablementException e) {
-			BonitaStudioLog.error(e,EnginePlugin.PLUGIN_ID);
-			if(e.getMessage() != null && e.getMessage().contains("org.bonitasoft.engine.xml.SValidationException")){
-				return new Status(IStatus.ERROR, EnginePlugin.PLUGIN_ID, e.getMessage(),e);
-			}
-			IStatus status = openConfigurationPopup(process) ;
+		    List<Problem> processResolutionProblems = processApi.getProcessResolutionProblems(processDefinitionId);
+			IStatus status = openProcessEnablementProblemsDialog(process,processResolutionProblems) ;
 			if(status.isOK()){
 				undeployProcess(process, monitor) ;
 				status = deployProcess(process,monitor) ;
@@ -296,19 +290,16 @@ public class DeployProcessOperation  {
 		return process.getName()+ " ("+process.getVersion()+")";
 	}
 
-	protected IStatus openConfigurationPopup(final AbstractProcess process) {
-		ICommandService service = (ICommandService)PlatformUI.getWorkbench().getService(ICommandService.class);
-		Command cmd = service.getCommand("org.bonitasoft.studio.configuration.configure") ;
-		try {
-			Map<String,Object> parameters = new HashMap<String, Object>() ;
-			String configuration = ConfigurationPlugin.getDefault().getPreferenceStore().getString(ConfigurationPreferenceConstants.DEFAULT_CONFIGURATION) ;
-			parameters.put("configuration", configuration) ;
-			parameters.put("process", process) ;
-			return (IStatus) new ConfigureHandler().execute(new ExecutionEvent(cmd,parameters,null,null)) ;
-		} catch (Exception e){
-			BonitaStudioLog.error(e) ;
-		}
-		return Status.CANCEL_STATUS ;
+	protected IStatus openProcessEnablementProblemsDialog(final AbstractProcess process, final List<Problem> processResolutionProblems) {
+	    Display.getDefault().syncExec(new Runnable() {
+
+            @Override
+            public void run() {
+                problemResolutionResult = new ProcessEnablementProblemsDialog(Display.getDefault().getActiveShell(), process,processResolutionProblems).open();
+            }
+        });
+	   
+		return problemResolutionResult == IDialogConstants.OK_ID ? Status.OK_STATUS : Status.CANCEL_STATUS ;
 	}
 
 
