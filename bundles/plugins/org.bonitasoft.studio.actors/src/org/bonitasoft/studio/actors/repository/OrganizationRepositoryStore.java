@@ -20,29 +20,18 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CancellationException;
 
 import org.bonitasoft.studio.actors.ActorsPlugin;
 import org.bonitasoft.studio.actors.i18n.Messages;
-import org.bonitasoft.studio.actors.model.organization.DocumentRoot;
 import org.bonitasoft.studio.actors.model.organization.Organization;
-import org.bonitasoft.studio.actors.model.organization.OrganizationFactory;
-import org.bonitasoft.studio.actors.model.organization.OrganizationPackage;
-import org.bonitasoft.studio.actors.model.organization.PasswordType;
 import org.bonitasoft.studio.actors.model.organization.util.OrganizationAdapterFactory;
 import org.bonitasoft.studio.actors.model.organization.util.OrganizationResourceFactoryImpl;
-import org.bonitasoft.studio.actors.model.organization.util.OrganizationResourceImpl;
-import org.bonitasoft.studio.actors.model.organization.util.OrganizationXMLProcessor;
 import org.bonitasoft.studio.actors.ui.wizard.page.OrganizationUserValidator;
 import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.ProjectUtil;
-import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
@@ -53,14 +42,9 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.emf.ecore.xmi.XMLResource;
-import org.eclipse.emf.ecore.xmi.impl.XMLResourceImpl;
 import org.eclipse.emf.edapt.history.Release;
 import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.emf.edapt.migration.execution.Migrator;
-import org.eclipse.emf.edapt.migration.execution.ValidationLevel;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.swt.graphics.Image;
 
@@ -70,6 +54,8 @@ import org.eclipse.swt.graphics.Image;
  */
 public class OrganizationRepositoryStore extends AbstractEMFRepositoryStore<OrganizationFileStore> {
 
+	private static final String NAMESPACE_6_3_0 = "xmlns:organization=\"http://documentation.bonitasoft.com/organization-xml-schema\"";
+	private static final String NAMESPACE_6_0_0_BETA_016 = "xmlns:organization=\"http://www.bonitasoft.org/ns/organization/6.0.0-beta-016\"";
 	private static final String STORE_NAME = "organizations";
 	public static final String ORGANIZATION_EXT = "organization";
 	private static final Set<String> extensions = new HashSet<String>() ;
@@ -145,7 +131,7 @@ public class OrganizationRepositoryStore extends AbstractEMFRepositoryStore<Orga
 						throw new CancellationException(status.getMessage());
 					}
 				}
-				
+
 			}
 		}catch(Exception e){
 			if(e instanceof CancellationException){
@@ -195,42 +181,11 @@ public class OrganizationRepositoryStore extends AbstractEMFRepositoryStore<Orga
 		return null;
 	}
 
-	protected void performMigration(Migrator migrator, URI resourceURI, Release release) throws MigrationException {
-		migrator.setLevel(ValidationLevel.RELEASE);
-		ResourceSet rSet = migrator.migrateAndLoad(
-				Collections.singletonList(resourceURI), release,
-				null, Repository.NULL_PROGRESS_MONITOR);
-		if(!rSet.getResources().isEmpty()){
-			FileOutputStream fos = null;
-			try{
-				OrganizationResourceImpl r = (OrganizationResourceImpl) rSet.getResources().get(0);
-				Resource resource = new XMLResourceImpl(resourceURI) ;
-				DocumentRoot root = OrganizationFactory.eINSTANCE.createDocumentRoot() ;
-				final Organization orga = EcoreUtil.copy(((DocumentRoot)r.getContents().get(0)).getOrganization());
-				List<PasswordType> passwords = ModelHelper.getAllItemsOfType(orga, OrganizationPackage.Literals.PASSWORD_TYPE);
-				for(PasswordType p : passwords){
-					p.setEncrypted(p.isEncrypted());
-				}
-				root.setOrganization(orga);
-				resource.getContents().add(root) ;
-				Map<String, String> options = new HashMap<String, String>() ;
-				options.put(XMLResource.OPTION_ENCODING, "UTF-8");
-				options.put(XMLResource.OPTION_XML_VERSION, "1.0");
-				options.put(XMLResource.XML_NS, "http://documentation.bonitasoft.com/organization-xml-schema");
-				File target = new File(resourceURI.toFileString());
-				fos = new FileOutputStream(target)  ;
-				new OrganizationXMLProcessor().save(fos, resource, options)  ;
-			}catch (Exception e) {
-				BonitaStudioLog.error(e, ActorsPlugin.PLUGIN_ID);
-			}finally{
-				if(fos != null){
-					try {
-						fos.close() ;
-					} catch (IOException e) {
-						BonitaStudioLog.error(e,ActorsPlugin.PLUGIN_ID);
-					}
-				}
-			}
-		}
+
+	@Override
+	protected void performMigration(Migrator migrator, URI resourceURI , Release release) throws MigrationException {
+			FileUtil.replaceStringInFile(new File(resourceURI.toFileString()),  NAMESPACE_6_0_0_BETA_016,  NAMESPACE_6_3_0);
 	}
+
+
 }

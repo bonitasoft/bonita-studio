@@ -58,8 +58,6 @@ import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
  */
 public abstract class AbstractEMFRepositoryStore<T extends EMFFileStore> extends AbstractRepositoryStore<T> implements IRepositoryStore<T> {
 
-	private static final String NAMESPACE_6_3_0 = "xmlns:organization=\"http://documentation.bonitasoft.com/organization-xml-schema\"";
-	private static final String NAMESPACE_6_0_0_BETA_016 = "xmlns:organization=\"http://www.bonitasoft.org/ns/organization/6.0.0-beta-016\"";
 	
 	private static final String MIGRATION_HISTORY_PATH = "process.history";
 	private AdapterFactoryLabelProvider labelProvider;
@@ -141,7 +139,17 @@ public abstract class AbstractEMFRepositoryStore<T extends EMFFileStore> extends
 		if (targetMigrator != null) {
 			Release release =  getRelease(targetMigrator,resource);
 			if (release != null && !release.isLatestRelease()) {
-				FileUtil.replaceStringInFile(new File(resourceURI.toFileString()),  NAMESPACE_6_0_0_BETA_016,  NAMESPACE_6_3_0);
+				try {
+					performMigration(targetMigrator, resourceURI, release);
+				}catch (MigrationException e) {
+					if(tmpFile != null){
+						tmpFile.delete();
+					}
+					if(copyIs != null){
+						copyIs.close();
+					}
+					throw e;
+				}
 				try {
 					copyIs.close();
 					final FileInputStream newIs = new FileInputStream(tmpFile);

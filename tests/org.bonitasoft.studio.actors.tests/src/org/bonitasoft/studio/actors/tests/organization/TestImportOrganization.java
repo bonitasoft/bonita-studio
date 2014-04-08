@@ -137,7 +137,7 @@ public class TestImportOrganization extends  TestCase{
 		if(fis != null){
 			fis.close() ;	
 		}
-		assertNull(id+" was imported",fStore);
+		assertNotNull(id+" was imported",fStore);
 	}
 
 	
