@@ -1971,12 +1971,6 @@
           featureName="value" dataValue="password_._type"/>
       <changes xsi:type="history:Create" target="Organization.ecore#//PasswordType/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%"
           referenceName="details" element="Organization.ecore#//PasswordType/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.1"/>
-      <changes xsi:type="history:Set" element="Organization.ecore#//PasswordType/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.1"
-          featureName="key" dataValue=""/>
-      <changes xsi:type="history:Set" element="Organization.ecore#//PasswordType/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.1"
-          featureName="key" dataValue="kind" oldDataValue=""/>
-      <changes xsi:type="history:Set" element="Organization.ecore#//PasswordType/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.1"
-          featureName="value" dataValue="simple"/>
     </changes>
     <changes xsi:type="history:OperationChange">
       <changes xsi:type="history:Create" target="Organization.ecore#//PasswordType"
@@ -2011,6 +2005,22 @@
       <changes xsi:type="history:Set" element="Organization.ecore#//PasswordType/value"
           featureName="eType" referenceValue="http://www.eclipse.org/emf/2003/XMLType#//String"
           oldReferenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      <changes xsi:type="history:Create" target="Organization.ecore#//PasswordType/value"
+          referenceName="eAnnotations" element="Organization.ecore#//PasswordType/value/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%"/>
+      <changes xsi:type="history:Set" element="Organization.ecore#//PasswordType/value/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%"
+          featureName="source" dataValue="http:///org/eclipse/emf/ecore/util/ExtendedMetaData"/>
+      <changes xsi:type="history:Create" target="Organization.ecore#//PasswordType/value/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%"
+          referenceName="details" element="Organization.ecore#//PasswordType/value/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.0"/>
+      <changes xsi:type="history:Set" element="Organization.ecore#//PasswordType/value/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.0"
+          featureName="key" dataValue="name"/>
+      <changes xsi:type="history:Set" element="Organization.ecore#//PasswordType/value/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.0"
+          featureName="value" dataValue=":0"/>
+      <changes xsi:type="history:Create" target="Organization.ecore#//PasswordType/value/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%"
+          referenceName="details" element="Organization.ecore#//PasswordType/value/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.1"/>
+      <changes xsi:type="history:Set" element="Organization.ecore#//PasswordType/value/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.1"
+          featureName="key" dataValue="kind"/>
+      <changes xsi:type="history:Set" element="Organization.ecore#//PasswordType/value/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.1"
+          featureName="value" dataValue="simple"/>
     </changes>
     <changes xsi:type="history:OperationChange">
       <changes xsi:type="history:Create" target="Organization.ecore#//PasswordType"
