@@ -553,7 +553,8 @@ public class FormsExporter {
     protected void addActionExpression(final IFormBuilder builder, final Expression expression) throws InvalidFormDefinitionException {
         final org.bonitasoft.engine.expression.Expression engineExpression = EngineExpressionUtil.createExpression(expression);
         builder.addActionExpression(engineExpression.getName(), engineExpression.getContent(), engineExpression.getExpressionType(),
-                engineExpression.getReturnType(), engineExpression.getInterpreter().isEmpty() ? null : engineExpression.getInterpreter());
+                engineExpression.getReturnType(), engineExpression.getInterpreter() == null || engineExpression.getInterpreter().isEmpty() ? null
+                        : engineExpression.getInterpreter());
         addExpressionDependency(builder, engineExpression);
     }
 

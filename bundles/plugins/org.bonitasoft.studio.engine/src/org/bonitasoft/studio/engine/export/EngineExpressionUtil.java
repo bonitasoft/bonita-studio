@@ -107,6 +107,12 @@ public class EngineExpressionUtil {
                 && operation.getLeftOperand().getReferencedElements().get(0) instanceof BusinessObjectData) {
             return ExpressionConstants.BUSINESS_DATA_JAVA_SETTER_OPERATOR;
         }
+        if (ExpressionConstants.ASSIGNMENT_OPERATOR.equals(operation.getOperator().getType())
+                && operation.getLeftOperand() != null
+                && !operation.getLeftOperand().getReferencedElements().isEmpty()
+                && operation.getLeftOperand().getReferencedElements().get(0) instanceof BusinessObjectData) {
+            return ExpressionConstants.ATTACH_EXISTING_BUSINESS_DATA;
+        }
         return operation.getOperator().getType();
     }
 
@@ -359,7 +365,8 @@ public class EngineExpressionUtil {
             }
         }
         try {
-            return expressionBuilder.createQueryBusinessDataExpression(simpleExpression.getName(), simpleExpression.getName(), simpleExpression.getReturnType(),
+            return expressionBuilder.createQueryBusinessDataExpression(simpleExpression.getName(), simpleExpression.getName(),
+                    simpleExpression.getReturnType(),
                     dependencies.toArray(new Expression[dependencies.size()]));
         } catch (InvalidExpressionException e) {
             BonitaStudioLog.error(e);
