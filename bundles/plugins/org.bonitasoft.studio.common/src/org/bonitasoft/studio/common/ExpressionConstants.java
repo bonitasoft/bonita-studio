@@ -93,6 +93,6 @@ public interface ExpressionConstants {
 
     String GROUP_ITERATOR_TYPE = "GROUP_ITERATOR_TYPE";
 
-    String QUERY_TYPE = "QUERY_TYPE";
+    String QUERY_TYPE = ExpressionType.TYPE_QUERY_BUSINESS_DATA.name();
 
 }
