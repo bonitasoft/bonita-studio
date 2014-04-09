@@ -46,6 +46,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.Widget;
 
 /**
  * @author Romain Bioteau
@@ -56,13 +57,15 @@ public abstract class AbstractOrganizationWizardPage extends WizardPage implemen
     private StructuredViewer viewer;
     private Group infoGroup;
     private String searchQuery;
-    private Organization organization;
+    protected Organization organization;
     protected List<Membership> membershipList;
     protected List<org.bonitasoft.studio.actors.model.organization.Group> groupList;
     protected List<User> userList;
     protected List<Role> roleList;
     protected EMFDataBindingContext context;
     protected WizardPageSupportWithoutMessages pageSupport;
+    protected TabFolder tabFolder;
+    protected Composite mainComposite;
 
     protected AbstractOrganizationWizardPage(String pageName) {
         super(pageName);
@@ -85,7 +88,13 @@ public abstract class AbstractOrganizationWizardPage extends WizardPage implemen
      */
     @Override
     public void createControl(Composite parent) {
-        Composite mainComposite = new Composite(parent,SWT.NONE) ;
+    	
+    	mainComposite = addUsersComposite(parent);
+        setControl(mainComposite) ;
+    }
+
+	protected Composite addUsersComposite(Composite parent) {
+		Composite mainComposite = new Composite(parent, SWT.NONE);
         mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create()) ;
         mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(3).margins(10, 10).equalWidth(false).create()) ;
 
@@ -117,8 +126,8 @@ public abstract class AbstractOrganizationWizardPage extends WizardPage implemen
         configureInfoGroup(infoGroup) ;
 
         pageSupport = WizardPageSupportWithoutMessages.create(this, context) ;
-        setControl(mainComposite) ;
-    }
+		return mainComposite;
+	}
 
     /**
      * Returns the remove button
@@ -238,5 +247,10 @@ public abstract class AbstractOrganizationWizardPage extends WizardPage implemen
     public Organization getOrganization(){
         return organization  ;
     }
+
+	protected Widget initTab(Composite parent) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }
