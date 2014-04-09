@@ -23,36 +23,36 @@ import org.eclipse.emf.ecore.EObject;
 
 /**
  * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Meta Datas Type</b></em>'.
+ * A representation of the model object '<em><b>Custom User Info Definitions</b></em>'.
  * <!-- end-user-doc -->
  *
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link org.bonitasoft.studio.actors.model.organization.MetaDatasType#getMetaData <em>Meta Data</em>}</li>
+ *   <li>{@link org.bonitasoft.studio.actors.model.organization.CustomUserInfoDefinitions#getCustomUserInfoDefinition <em>Custom User Info Definition</em>}</li>
  * </ul>
  * </p>
  *
- * @see org.bonitasoft.studio.actors.model.organization.OrganizationPackage#getMetaDatasType()
- * @model extendedMetaData="name='metaDatas_._type' kind='elementOnly'"
+ * @see org.bonitasoft.studio.actors.model.organization.OrganizationPackage#getCustomUserInfoDefinitions()
+ * @model extendedMetaData="name='CustomUserInfoDefinitions' kind='elementOnly'"
  * @generated
  */
-public interface MetaDatasType extends EObject {
+public interface CustomUserInfoDefinitions extends EObject {
 	/**
-	 * Returns the value of the '<em><b>Meta Data</b></em>' containment reference list.
-	 * The list contents are of type {@link org.bonitasoft.studio.actors.model.organization.Metadata}.
+	 * Returns the value of the '<em><b>Custom User Info Definition</b></em>' containment reference list.
+	 * The list contents are of type {@link org.bonitasoft.studio.actors.model.organization.CustomUserInfoDefinition}.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Meta Data</em>' containment reference list isn't clear,
+	 * If the meaning of the '<em>Custom User Info Definition</em>' containment reference list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Meta Data</em>' containment reference list.
-	 * @see org.bonitasoft.studio.actors.model.organization.OrganizationPackage#getMetaDatasType_MetaData()
+	 * @return the value of the '<em>Custom User Info Definition</em>' containment reference list.
+	 * @see org.bonitasoft.studio.actors.model.organization.OrganizationPackage#getCustomUserInfoDefinitions_CustomUserInfoDefinition()
 	 * @model containment="true"
-	 *        extendedMetaData="kind='element' name='metaData'"
+	 *        extendedMetaData="kind='element' name='customUserInfoDefinition'"
 	 * @generated
 	 */
-	EList<Metadata> getMetaData();
+	EList<CustomUserInfoDefinition> getCustomUserInfoDefinition();
 
-} // MetaDatasType
+} // CustomUserInfoDefinitions

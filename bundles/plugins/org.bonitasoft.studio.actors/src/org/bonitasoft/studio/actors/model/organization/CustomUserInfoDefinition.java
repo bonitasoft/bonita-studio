@@ -21,22 +21,22 @@ import org.eclipse.emf.ecore.EObject;
 
 /**
  * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Metadata</b></em>'.
+ * A representation of the model object '<em><b>Custom User Info Definition</b></em>'.
  * <!-- end-user-doc -->
  *
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link org.bonitasoft.studio.actors.model.organization.Metadata#getName <em>Name</em>}</li>
- *   <li>{@link org.bonitasoft.studio.actors.model.organization.Metadata#getValue <em>Value</em>}</li>
+ *   <li>{@link org.bonitasoft.studio.actors.model.organization.CustomUserInfoDefinition#getName <em>Name</em>}</li>
+ *   <li>{@link org.bonitasoft.studio.actors.model.organization.CustomUserInfoDefinition#getDescription <em>Description</em>}</li>
  * </ul>
  * </p>
  *
- * @see org.bonitasoft.studio.actors.model.organization.OrganizationPackage#getMetadata()
- * @model extendedMetaData="name='Metadata' kind='empty'"
+ * @see org.bonitasoft.studio.actors.model.organization.OrganizationPackage#getCustomUserInfoDefinition()
+ * @model extendedMetaData="name='CustomUserInfoDefinition' kind='elementOnly'"
  * @generated
  */
-public interface Metadata extends EObject {
+public interface CustomUserInfoDefinition extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
@@ -47,15 +47,15 @@ public interface Metadata extends EObject {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Name</em>' attribute.
 	 * @see #setName(String)
-	 * @see org.bonitasoft.studio.actors.model.organization.OrganizationPackage#getMetadata_Name()
+	 * @see org.bonitasoft.studio.actors.model.organization.OrganizationPackage#getCustomUserInfoDefinition_Name()
 	 * @model dataType="org.eclipse.emf.ecore.xml.type.String" required="true"
-	 *        extendedMetaData="kind='attribute' name='name'"
+	 *        extendedMetaData="kind='element' name='name'"
 	 * @generated
 	 */
 	String getName();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.actors.model.organization.Metadata#getName <em>Name</em>}' attribute.
+	 * Sets the value of the '{@link org.bonitasoft.studio.actors.model.organization.CustomUserInfoDefinition#getName <em>Name</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Name</em>' attribute.
@@ -65,30 +65,30 @@ public interface Metadata extends EObject {
 	void setName(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Value</b></em>' attribute.
+	 * Returns the value of the '<em><b>Description</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Value</em>' attribute isn't clear,
+	 * If the meaning of the '<em>Description</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Value</em>' attribute.
-	 * @see #setValue(String)
-	 * @see org.bonitasoft.studio.actors.model.organization.OrganizationPackage#getMetadata_Value()
+	 * @return the value of the '<em>Description</em>' attribute.
+	 * @see #setDescription(String)
+	 * @see org.bonitasoft.studio.actors.model.organization.OrganizationPackage#getCustomUserInfoDefinition_Description()
 	 * @model dataType="org.eclipse.emf.ecore.xml.type.String"
-	 *        extendedMetaData="kind='attribute' name='value'"
+	 *        extendedMetaData="kind='element' name='description'"
 	 * @generated
 	 */
-	String getValue();
+	String getDescription();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.actors.model.organization.Metadata#getValue <em>Value</em>}' attribute.
+	 * Sets the value of the '{@link org.bonitasoft.studio.actors.model.organization.CustomUserInfoDefinition#getDescription <em>Description</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Value</em>' attribute.
-	 * @see #getValue()
+	 * @param value the new value of the '<em>Description</em>' attribute.
+	 * @see #getDescription()
 	 * @generated
 	 */
-	void setValue(String value);
+	void setDescription(String value);
 
-} // Metadata
+} // CustomUserInfoDefinition

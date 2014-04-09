@@ -284,7 +284,7 @@
              class="org.bonitasoft.studio.actors.configuration.ActorMappingConfigurationSynchronizer">
        </synchronier>
     </extension>
-    <extension
+        <extension
           point="org.bonitasoft.studio.common.barResourcesProvider">
        <barResourceProvider
              providerClass="org.bonitasoft.studio.actors.configuration.ActorFilterBarResourceProvider">

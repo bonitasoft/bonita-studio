@@ -87,6 +87,30 @@ public class OrganizationSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case OrganizationPackage.CUSTOM_USER_INFO_DEFINITION: {
+				CustomUserInfoDefinition customUserInfoDefinition = (CustomUserInfoDefinition)theEObject;
+				T result = caseCustomUserInfoDefinition(customUserInfoDefinition);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case OrganizationPackage.CUSTOM_USER_INFO_DEFINITIONS: {
+				CustomUserInfoDefinitions customUserInfoDefinitions = (CustomUserInfoDefinitions)theEObject;
+				T result = caseCustomUserInfoDefinitions(customUserInfoDefinitions);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case OrganizationPackage.CUSTOM_USER_INFO_VALUE: {
+				CustomUserInfoValue customUserInfoValue = (CustomUserInfoValue)theEObject;
+				T result = caseCustomUserInfoValue(customUserInfoValue);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case OrganizationPackage.CUSTOM_USER_INFO_VALUES_TYPE: {
+				CustomUserInfoValuesType customUserInfoValuesType = (CustomUserInfoValuesType)theEObject;
+				T result = caseCustomUserInfoValuesType(customUserInfoValuesType);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case OrganizationPackage.DOCUMENT_ROOT: {
 				DocumentRoot documentRoot = (DocumentRoot)theEObject;
 				T result = caseDocumentRoot(documentRoot);
@@ -185,6 +209,66 @@ public class OrganizationSwitch<T> extends Switch<T> {
 	}
 
 	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Custom User Info Definition</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Custom User Info Definition</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseCustomUserInfoDefinition(CustomUserInfoDefinition object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Custom User Info Definitions</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Custom User Info Definitions</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseCustomUserInfoDefinitions(CustomUserInfoDefinitions object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Custom User Info Value</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Custom User Info Value</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseCustomUserInfoValue(CustomUserInfoValue object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Custom User Info Values Type</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Custom User Info Values Type</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseCustomUserInfoValuesType(CustomUserInfoValuesType object) {
+		return null;
+	}
+
+	/**
 	 * Returns the result of interpreting the object as an instance of '<em>Document Root</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
@@ -277,19 +361,19 @@ public class OrganizationSwitch<T> extends Switch<T> {
 	/**
 	 * Returns the result of interpreting the object as an instance of '<em>Meta Datas Type</em>'.
 	 * <!-- begin-user-doc -->
-     * This implementation returns null;
-     * returning a non-null result will terminate the switch.
-     * <!-- end-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Meta Datas Type</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-    public T caseMetaDatasType(MetaDatasType object) {
+	public T caseMetaDatasType(MetaDatasType object) {
 		return null;
 	}
 
-    /**
+	/**
 	 * Returns the result of interpreting the object as an instance of '<em>Organization</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
