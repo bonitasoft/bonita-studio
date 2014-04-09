@@ -1222,7 +1222,8 @@ public class FormsExporter {
         if (expression.getContent() != null && !expression.getContent().isEmpty()) {
             final org.bonitasoft.engine.expression.Expression engineExpression = EngineExpressionUtil.createExpression(expression);
             builder.addAvailableValuesExpression(engineExpression.getName(), engineExpression.getContent(), engineExpression.getExpressionType(),
-                    engineExpression.getReturnType(), engineExpression.getInterpreter().isEmpty() ? null : engineExpression.getInterpreter());
+                    engineExpression.getReturnType(), engineExpression.getInterpreter() == null || engineExpression.getInterpreter().isEmpty() ? null
+                            : engineExpression.getInterpreter());
             addExpressionDependency(builder, engineExpression);
         }
     }
