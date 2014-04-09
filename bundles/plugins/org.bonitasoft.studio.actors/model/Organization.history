@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<history:History xmi:version="2.0"
-    xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<history:History xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:history="http://www.eclipse.org/emf/edapt/history/0.3">
   <releases date="2012-12-10T10:29:27.012+0100" label="6.0">
     <changes xsi:type="history:CompositeChange">
@@ -1972,12 +1971,6 @@
           featureName="value" dataValue="password_._type"/>
       <changes xsi:type="history:Create" target="Organization.ecore#//PasswordType/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%"
           referenceName="details" element="Organization.ecore#//PasswordType/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.1"/>
-      <changes xsi:type="history:Set" element="Organization.ecore#//PasswordType/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.1"
-          featureName="key" dataValue=""/>
-      <changes xsi:type="history:Set" element="Organization.ecore#//PasswordType/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.1"
-          featureName="key" dataValue="kind" oldDataValue=""/>
-      <changes xsi:type="history:Set" element="Organization.ecore#//PasswordType/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.1"
-          featureName="value" dataValue="simple"/>
     </changes>
     <changes xsi:type="history:OperationChange">
       <changes xsi:type="history:Create" target="Organization.ecore#//PasswordType"
@@ -2012,6 +2005,22 @@
       <changes xsi:type="history:Set" element="Organization.ecore#//PasswordType/value"
           featureName="eType" referenceValue="http://www.eclipse.org/emf/2003/XMLType#//String"
           oldReferenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      <changes xsi:type="history:Create" target="Organization.ecore#//PasswordType/value"
+          referenceName="eAnnotations" element="Organization.ecore#//PasswordType/value/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%"/>
+      <changes xsi:type="history:Set" element="Organization.ecore#//PasswordType/value/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%"
+          featureName="source" dataValue="http:///org/eclipse/emf/ecore/util/ExtendedMetaData"/>
+      <changes xsi:type="history:Create" target="Organization.ecore#//PasswordType/value/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%"
+          referenceName="details" element="Organization.ecore#//PasswordType/value/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.0"/>
+      <changes xsi:type="history:Set" element="Organization.ecore#//PasswordType/value/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.0"
+          featureName="key" dataValue="name"/>
+      <changes xsi:type="history:Set" element="Organization.ecore#//PasswordType/value/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.0"
+          featureName="value" dataValue=":0"/>
+      <changes xsi:type="history:Create" target="Organization.ecore#//PasswordType/value/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%"
+          referenceName="details" element="Organization.ecore#//PasswordType/value/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.1"/>
+      <changes xsi:type="history:Set" element="Organization.ecore#//PasswordType/value/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.1"
+          featureName="key" dataValue="kind"/>
+      <changes xsi:type="history:Set" element="Organization.ecore#//PasswordType/value/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.1"
+          featureName="value" dataValue="simple"/>
     </changes>
     <changes xsi:type="history:OperationChange">
       <changes xsi:type="history:Create" target="Organization.ecore#//PasswordType"
@@ -2106,6 +2115,361 @@
         </operation>
       </changes>
     </changes>
+  </releases>
+  <releases date="2014-03-25T11:52:48.595+0100" label="6.3-001">
+    <changes xsi:type="history:CompositeChange">
+      <changes xsi:type="history:Create" target="Organization.ecore#/" referenceName="eClassifiers"
+          element="Organization.ecore#//CustomUserInfoDefinition">
+        <changes xsi:type="history:Set" element="Organization.ecore#//CustomUserInfoDefinition"
+            featureName="name" dataValue="CustomUserInfoDefinition"/>
+      </changes>
+      <changes xsi:type="history:Create" target="Organization.ecore#//CustomUserInfoDefinition"
+          referenceName="eAnnotations" element="Organization.ecore#//CustomUserInfoDefinition/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%">
+        <changes xsi:type="history:Set" element="Organization.ecore#//CustomUserInfoDefinition/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%"
+            featureName="source" dataValue="http:///org/eclipse/emf/ecore/util/ExtendedMetaData"/>
+      </changes>
+      <changes xsi:type="history:Create" target="Organization.ecore#//CustomUserInfoDefinition/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%"
+          referenceName="details" element="Organization.ecore#//CustomUserInfoDefinition/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.0">
+        <changes xsi:type="history:Set" element="Organization.ecore#//CustomUserInfoDefinition/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.0"
+            featureName="key" dataValue="name"/>
+        <changes xsi:type="history:Set" element="Organization.ecore#//CustomUserInfoDefinition/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.0"
+            featureName="value" dataValue="CustomUserInfoDefinition"/>
+      </changes>
+      <changes xsi:type="history:Create" target="Organization.ecore#//CustomUserInfoDefinition/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%"
+          referenceName="details" element="Organization.ecore#//CustomUserInfoDefinition/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.1">
+        <changes xsi:type="history:Set" element="Organization.ecore#//CustomUserInfoDefinition/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.1"
+            featureName="key" dataValue="kind"/>
+        <changes xsi:type="history:Set" element="Organization.ecore#//CustomUserInfoDefinition/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.1"
+            featureName="value" dataValue="elementOnly"/>
+      </changes>
+      <changes xsi:type="history:Create" target="Organization.ecore#//CustomUserInfoDefinition"
+          referenceName="eStructuralFeatures" element="Organization.ecore#//CustomUserInfoDefinition/name">
+        <changes xsi:type="history:Set" element="Organization.ecore#//CustomUserInfoDefinition/name"
+            featureName="name" dataValue="name"/>
+        <changes xsi:type="history:Set" element="Organization.ecore#//CustomUserInfoDefinition/name"
+            featureName="lowerBound" dataValue="1" oldDataValue="0"/>
+        <changes xsi:type="history:Set" element="Organization.ecore#//CustomUserInfoDefinition/name"
+            featureName="eType" referenceValue="http://www.eclipse.org/emf/2003/XMLType#//String"/>
+      </changes>
+      <changes xsi:type="history:Create" target="Organization.ecore#//CustomUserInfoDefinition/name"
+          referenceName="eAnnotations" element="Organization.ecore#//CustomUserInfoDefinition/name/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%">
+        <changes xsi:type="history:Set" element="Organization.ecore#//CustomUserInfoDefinition/name/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%"
+            featureName="source" dataValue="http:///org/eclipse/emf/ecore/util/ExtendedMetaData"/>
+      </changes>
+      <changes xsi:type="history:Create" target="Organization.ecore#//CustomUserInfoDefinition/name/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%"
+          referenceName="details" element="Organization.ecore#//CustomUserInfoDefinition/name/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.0">
+        <changes xsi:type="history:Set" element="Organization.ecore#//CustomUserInfoDefinition/name/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.0"
+            featureName="key" dataValue="kind"/>
+        <changes xsi:type="history:Set" element="Organization.ecore#//CustomUserInfoDefinition/name/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.0"
+            featureName="value" dataValue="element"/>
+      </changes>
+      <changes xsi:type="history:Create" target="Organization.ecore#//CustomUserInfoDefinition/name/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%"
+          referenceName="details" element="Organization.ecore#//CustomUserInfoDefinition/name/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.1">
+        <changes xsi:type="history:Set" element="Organization.ecore#//CustomUserInfoDefinition/name/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.1"
+            featureName="key" dataValue="name"/>
+        <changes xsi:type="history:Set" element="Organization.ecore#//CustomUserInfoDefinition/name/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.1"
+            featureName="value" dataValue="name"/>
+      </changes>
+      <changes xsi:type="history:Create" target="Organization.ecore#//CustomUserInfoDefinition"
+          referenceName="eStructuralFeatures" element="Organization.ecore#//CustomUserInfoDefinition/description">
+        <changes xsi:type="history:Set" element="Organization.ecore#//CustomUserInfoDefinition/description"
+            featureName="name" dataValue="description"/>
+        <changes xsi:type="history:Set" element="Organization.ecore#//CustomUserInfoDefinition/description"
+            featureName="eType" referenceValue="http://www.eclipse.org/emf/2003/XMLType#//String"/>
+      </changes>
+      <changes xsi:type="history:Create" target="Organization.ecore#//CustomUserInfoDefinition/description"
+          referenceName="eAnnotations" element="Organization.ecore#//CustomUserInfoDefinition/description/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%">
+        <changes xsi:type="history:Set" element="Organization.ecore#//CustomUserInfoDefinition/description/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%"
+            featureName="source" dataValue="http:///org/eclipse/emf/ecore/util/ExtendedMetaData"/>
+      </changes>
+      <changes xsi:type="history:Create" target="Organization.ecore#//CustomUserInfoDefinition/description/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%"
+          referenceName="details" element="Organization.ecore#//CustomUserInfoDefinition/description/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.0">
+        <changes xsi:type="history:Set" element="Organization.ecore#//CustomUserInfoDefinition/description/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.0"
+            featureName="key" dataValue="kind"/>
+        <changes xsi:type="history:Set" element="Organization.ecore#//CustomUserInfoDefinition/description/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.0"
+            featureName="value" dataValue="element"/>
+      </changes>
+      <changes xsi:type="history:Create" target="Organization.ecore#//CustomUserInfoDefinition/description/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%"
+          referenceName="details" element="Organization.ecore#//CustomUserInfoDefinition/description/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.1">
+        <changes xsi:type="history:Set" element="Organization.ecore#//CustomUserInfoDefinition/description/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.1"
+            featureName="key" dataValue="name"/>
+        <changes xsi:type="history:Set" element="Organization.ecore#//CustomUserInfoDefinition/description/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.1"
+            featureName="value" dataValue="description"/>
+      </changes>
+      <changes xsi:type="history:Create" target="Organization.ecore#/" referenceName="eClassifiers"
+          element="Organization.ecore#//CustomUserInfoDefinitions">
+        <changes xsi:type="history:Set" element="Organization.ecore#//CustomUserInfoDefinitions"
+            featureName="name" dataValue="CustomUserInfoDefinitions"/>
+      </changes>
+      <changes xsi:type="history:Create" target="Organization.ecore#//CustomUserInfoDefinitions"
+          referenceName="eAnnotations" element="Organization.ecore#//CustomUserInfoDefinitions/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%">
+        <changes xsi:type="history:Set" element="Organization.ecore#//CustomUserInfoDefinitions/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%"
+            featureName="source" dataValue="http:///org/eclipse/emf/ecore/util/ExtendedMetaData"/>
+      </changes>
+      <changes xsi:type="history:Create" target="Organization.ecore#//CustomUserInfoDefinitions/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%"
+          referenceName="details" element="Organization.ecore#//CustomUserInfoDefinitions/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.0">
+        <changes xsi:type="history:Set" element="Organization.ecore#//CustomUserInfoDefinitions/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.0"
+            featureName="key" dataValue="name"/>
+        <changes xsi:type="history:Set" element="Organization.ecore#//CustomUserInfoDefinitions/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.0"
+            featureName="value" dataValue="CustomUserInfoDefinitions"/>
+      </changes>
+      <changes xsi:type="history:Create" target="Organization.ecore#//CustomUserInfoDefinitions/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%"
+          referenceName="details" element="Organization.ecore#//CustomUserInfoDefinitions/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.1">
+        <changes xsi:type="history:Set" element="Organization.ecore#//CustomUserInfoDefinitions/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.1"
+            featureName="key" dataValue="kind"/>
+        <changes xsi:type="history:Set" element="Organization.ecore#//CustomUserInfoDefinitions/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.1"
+            featureName="value" dataValue="elementOnly"/>
+      </changes>
+      <changes xsi:type="history:Create" target="Organization.ecore#//CustomUserInfoDefinitions"
+          referenceName="eStructuralFeatures" element="Organization.ecore#//CustomUserInfoDefinitions/customUserInfoDefinition">
+        <changes xsi:type="history:Set" element="Organization.ecore#//CustomUserInfoDefinitions/customUserInfoDefinition"
+            featureName="name" dataValue="customUserInfoDefinition"/>
+        <changes xsi:type="history:Set" element="Organization.ecore#//CustomUserInfoDefinitions/customUserInfoDefinition"
+            featureName="upperBound" dataValue="-1" oldDataValue="1"/>
+        <changes xsi:type="history:Set" element="Organization.ecore#//CustomUserInfoDefinitions/customUserInfoDefinition"
+            featureName="containment" dataValue="true" oldDataValue="false"/>
+        <changes xsi:type="history:Set" element="Organization.ecore#//CustomUserInfoDefinitions/customUserInfoDefinition"
+            featureName="resolveProxies" dataValue="false" oldDataValue="true"/>
+        <changes xsi:type="history:Set" element="Organization.ecore#//CustomUserInfoDefinitions/customUserInfoDefinition"
+            featureName="eType" referenceValue="Organization.ecore#//CustomUserInfoDefinition"/>
+      </changes>
+      <changes xsi:type="history:Create" target="Organization.ecore#//CustomUserInfoDefinitions/customUserInfoDefinition"
+          referenceName="eAnnotations" element="Organization.ecore#//CustomUserInfoDefinitions/customUserInfoDefinition/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%">
+        <changes xsi:type="history:Set" element="Organization.ecore#//CustomUserInfoDefinitions/customUserInfoDefinition/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%"
+            featureName="source" dataValue="http:///org/eclipse/emf/ecore/util/ExtendedMetaData"/>
+      </changes>
+      <changes xsi:type="history:Create" target="Organization.ecore#//CustomUserInfoDefinitions/customUserInfoDefinition/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%"
+          referenceName="details" element="Organization.ecore#//CustomUserInfoDefinitions/customUserInfoDefinition/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.0">
+        <changes xsi:type="history:Set" element="Organization.ecore#//CustomUserInfoDefinitions/customUserInfoDefinition/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.0"
+            featureName="key" dataValue="kind"/>
+        <changes xsi:type="history:Set" element="Organization.ecore#//CustomUserInfoDefinitions/customUserInfoDefinition/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.0"
+            featureName="value" dataValue="element"/>
+      </changes>
+      <changes xsi:type="history:Create" target="Organization.ecore#//CustomUserInfoDefinitions/customUserInfoDefinition/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%"
+          referenceName="details" element="Organization.ecore#//CustomUserInfoDefinitions/customUserInfoDefinition/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.1">
+        <changes xsi:type="history:Set" element="Organization.ecore#//CustomUserInfoDefinitions/customUserInfoDefinition/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.1"
+            featureName="key" dataValue="name"/>
+        <changes xsi:type="history:Set" element="Organization.ecore#//CustomUserInfoDefinitions/customUserInfoDefinition/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.1"
+            featureName="value" dataValue="customUserInfoDefinition"/>
+      </changes>
+      <changes xsi:type="history:Create" target="Organization.ecore#/" referenceName="eClassifiers"
+          element="Organization.ecore#//CustomUserInfoValue">
+        <changes xsi:type="history:Set" element="Organization.ecore#//CustomUserInfoValue"
+            featureName="name" dataValue="CustomUserInfoValue"/>
+      </changes>
+      <changes xsi:type="history:Create" target="Organization.ecore#//CustomUserInfoValue"
+          referenceName="eAnnotations" element="Organization.ecore#//CustomUserInfoValue/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%">
+        <changes xsi:type="history:Set" element="Organization.ecore#//CustomUserInfoValue/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%"
+            featureName="source" dataValue="http:///org/eclipse/emf/ecore/util/ExtendedMetaData"/>
+      </changes>
+      <changes xsi:type="history:Create" target="Organization.ecore#//CustomUserInfoValue/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%"
+          referenceName="details" element="Organization.ecore#//CustomUserInfoValue/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.0">
+        <changes xsi:type="history:Set" element="Organization.ecore#//CustomUserInfoValue/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.0"
+            featureName="key" dataValue="name"/>
+        <changes xsi:type="history:Set" element="Organization.ecore#//CustomUserInfoValue/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.0"
+            featureName="value" dataValue="CustomUserInfoValue"/>
+      </changes>
+      <changes xsi:type="history:Create" target="Organization.ecore#//CustomUserInfoValue/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%"
+          referenceName="details" element="Organization.ecore#//CustomUserInfoValue/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.1">
+        <changes xsi:type="history:Set" element="Organization.ecore#//CustomUserInfoValue/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.1"
+            featureName="key" dataValue="kind"/>
+        <changes xsi:type="history:Set" element="Organization.ecore#//CustomUserInfoValue/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.1"
+            featureName="value" dataValue="elementOnly"/>
+      </changes>
+      <changes xsi:type="history:Create" target="Organization.ecore#//CustomUserInfoValue"
+          referenceName="eStructuralFeatures" element="Organization.ecore#//CustomUserInfoValue/name">
+        <changes xsi:type="history:Set" element="Organization.ecore#//CustomUserInfoValue/name"
+            featureName="name" dataValue="name"/>
+        <changes xsi:type="history:Set" element="Organization.ecore#//CustomUserInfoValue/name"
+            featureName="lowerBound" dataValue="1" oldDataValue="0"/>
+        <changes xsi:type="history:Set" element="Organization.ecore#//CustomUserInfoValue/name"
+            featureName="eType" referenceValue="http://www.eclipse.org/emf/2003/XMLType#//String"/>
+      </changes>
+      <changes xsi:type="history:Create" target="Organization.ecore#//CustomUserInfoValue/name"
+          referenceName="eAnnotations" element="Organization.ecore#//CustomUserInfoValue/name/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%">
+        <changes xsi:type="history:Set" element="Organization.ecore#//CustomUserInfoValue/name/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%"
+            featureName="source" dataValue="http:///org/eclipse/emf/ecore/util/ExtendedMetaData"/>
+      </changes>
+      <changes xsi:type="history:Create" target="Organization.ecore#//CustomUserInfoValue/name/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%"
+          referenceName="details" element="Organization.ecore#//CustomUserInfoValue/name/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.0">
+        <changes xsi:type="history:Set" element="Organization.ecore#//CustomUserInfoValue/name/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.0"
+            featureName="key" dataValue="kind"/>
+        <changes xsi:type="history:Set" element="Organization.ecore#//CustomUserInfoValue/name/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.0"
+            featureName="value" dataValue="element"/>
+      </changes>
+      <changes xsi:type="history:Create" target="Organization.ecore#//CustomUserInfoValue/name/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%"
+          referenceName="details" element="Organization.ecore#//CustomUserInfoValue/name/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.1">
+        <changes xsi:type="history:Set" element="Organization.ecore#//CustomUserInfoValue/name/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.1"
+            featureName="key" dataValue="name"/>
+        <changes xsi:type="history:Set" element="Organization.ecore#//CustomUserInfoValue/name/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.1"
+            featureName="value" dataValue="name"/>
+      </changes>
+      <changes xsi:type="history:Create" target="Organization.ecore#//CustomUserInfoValue"
+          referenceName="eStructuralFeatures" element="Organization.ecore#//CustomUserInfoValue/value">
+        <changes xsi:type="history:Set" element="Organization.ecore#//CustomUserInfoValue/value"
+            featureName="name" dataValue="value"/>
+        <changes xsi:type="history:Set" element="Organization.ecore#//CustomUserInfoValue/value"
+            featureName="lowerBound" dataValue="1" oldDataValue="0"/>
+        <changes xsi:type="history:Set" element="Organization.ecore#//CustomUserInfoValue/value"
+            featureName="eType" referenceValue="http://www.eclipse.org/emf/2003/XMLType#//String"/>
+      </changes>
+      <changes xsi:type="history:Create" target="Organization.ecore#//CustomUserInfoValue/value"
+          referenceName="eAnnotations" element="Organization.ecore#//CustomUserInfoValue/value/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%">
+        <changes xsi:type="history:Set" element="Organization.ecore#//CustomUserInfoValue/value/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%"
+            featureName="source" dataValue="http:///org/eclipse/emf/ecore/util/ExtendedMetaData"/>
+      </changes>
+      <changes xsi:type="history:Create" target="Organization.ecore#//CustomUserInfoValue/value/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%"
+          referenceName="details" element="Organization.ecore#//CustomUserInfoValue/value/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.0">
+        <changes xsi:type="history:Set" element="Organization.ecore#//CustomUserInfoValue/value/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.0"
+            featureName="key" dataValue="kind"/>
+        <changes xsi:type="history:Set" element="Organization.ecore#//CustomUserInfoValue/value/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.0"
+            featureName="value" dataValue="element"/>
+      </changes>
+      <changes xsi:type="history:Create" target="Organization.ecore#//CustomUserInfoValue/value/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%"
+          referenceName="details" element="Organization.ecore#//CustomUserInfoValue/value/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.1">
+        <changes xsi:type="history:Set" element="Organization.ecore#//CustomUserInfoValue/value/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.1"
+            featureName="key" dataValue="name"/>
+        <changes xsi:type="history:Set" element="Organization.ecore#//CustomUserInfoValue/value/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.1"
+            featureName="value" dataValue="value"/>
+      </changes>
+      <changes xsi:type="history:Create" target="Organization.ecore#/" referenceName="eClassifiers"
+          element="Organization.ecore#//CustomUserInfoValuesType">
+        <changes xsi:type="history:Set" element="Organization.ecore#//CustomUserInfoValuesType"
+            featureName="name" dataValue="CustomUserInfoValuesType"/>
+      </changes>
+      <changes xsi:type="history:Create" target="Organization.ecore#//CustomUserInfoValuesType"
+          referenceName="eAnnotations" element="Organization.ecore#//CustomUserInfoValuesType/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%">
+        <changes xsi:type="history:Set" element="Organization.ecore#//CustomUserInfoValuesType/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%"
+            featureName="source" dataValue="http:///org/eclipse/emf/ecore/util/ExtendedMetaData"/>
+      </changes>
+      <changes xsi:type="history:Create" target="Organization.ecore#//CustomUserInfoValuesType/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%"
+          referenceName="details" element="Organization.ecore#//CustomUserInfoValuesType/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.0">
+        <changes xsi:type="history:Set" element="Organization.ecore#//CustomUserInfoValuesType/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.0"
+            featureName="key" dataValue="name"/>
+        <changes xsi:type="history:Set" element="Organization.ecore#//CustomUserInfoValuesType/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.0"
+            featureName="value" dataValue="customUserInfoValues_._type"/>
+      </changes>
+      <changes xsi:type="history:Create" target="Organization.ecore#//CustomUserInfoValuesType/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%"
+          referenceName="details" element="Organization.ecore#//CustomUserInfoValuesType/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.1">
+        <changes xsi:type="history:Set" element="Organization.ecore#//CustomUserInfoValuesType/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.1"
+            featureName="key" dataValue="kind"/>
+        <changes xsi:type="history:Set" element="Organization.ecore#//CustomUserInfoValuesType/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.1"
+            featureName="value" dataValue="elementOnly"/>
+      </changes>
+      <changes xsi:type="history:Create" target="Organization.ecore#//CustomUserInfoValuesType"
+          referenceName="eStructuralFeatures" element="Organization.ecore#//CustomUserInfoValuesType/customUserInfoValue">
+        <changes xsi:type="history:Set" element="Organization.ecore#//CustomUserInfoValuesType/customUserInfoValue"
+            featureName="name" dataValue="customUserInfoValue"/>
+        <changes xsi:type="history:Set" element="Organization.ecore#//CustomUserInfoValuesType/customUserInfoValue"
+            featureName="upperBound" dataValue="-1" oldDataValue="1"/>
+        <changes xsi:type="history:Set" element="Organization.ecore#//CustomUserInfoValuesType/customUserInfoValue"
+            featureName="containment" dataValue="true" oldDataValue="false"/>
+        <changes xsi:type="history:Set" element="Organization.ecore#//CustomUserInfoValuesType/customUserInfoValue"
+            featureName="resolveProxies" dataValue="false" oldDataValue="true"/>
+        <changes xsi:type="history:Set" element="Organization.ecore#//CustomUserInfoValuesType/customUserInfoValue"
+            featureName="eType" referenceValue="Organization.ecore#//CustomUserInfoValue"/>
+      </changes>
+      <changes xsi:type="history:Create" target="Organization.ecore#//CustomUserInfoValuesType/customUserInfoValue"
+          referenceName="eAnnotations" element="Organization.ecore#//CustomUserInfoValuesType/customUserInfoValue/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%">
+        <changes xsi:type="history:Set" element="Organization.ecore#//CustomUserInfoValuesType/customUserInfoValue/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%"
+            featureName="source" dataValue="http:///org/eclipse/emf/ecore/util/ExtendedMetaData"/>
+      </changes>
+      <changes xsi:type="history:Create" target="Organization.ecore#//CustomUserInfoValuesType/customUserInfoValue/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%"
+          referenceName="details" element="Organization.ecore#//CustomUserInfoValuesType/customUserInfoValue/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.0">
+        <changes xsi:type="history:Set" element="Organization.ecore#//CustomUserInfoValuesType/customUserInfoValue/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.0"
+            featureName="key" dataValue="kind"/>
+        <changes xsi:type="history:Set" element="Organization.ecore#//CustomUserInfoValuesType/customUserInfoValue/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.0"
+            featureName="value" dataValue="element"/>
+      </changes>
+      <changes xsi:type="history:Create" target="Organization.ecore#//CustomUserInfoValuesType/customUserInfoValue/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%"
+          referenceName="details" element="Organization.ecore#//CustomUserInfoValuesType/customUserInfoValue/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.1">
+        <changes xsi:type="history:Set" element="Organization.ecore#//CustomUserInfoValuesType/customUserInfoValue/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.1"
+            featureName="key" dataValue="name"/>
+        <changes xsi:type="history:Set" element="Organization.ecore#//CustomUserInfoValuesType/customUserInfoValue/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.1"
+            featureName="value" dataValue="customUserInfoValue"/>
+      </changes>
+      <changes xsi:type="history:Create" target="Organization.ecore#//Organization"
+          referenceName="eStructuralFeatures" element="Organization.ecore#//Organization/customUserInfoDefinitions">
+        <changes xsi:type="history:Set" element="Organization.ecore#//Organization/customUserInfoDefinitions"
+            featureName="name" dataValue="customUserInfoDefinitions"/>
+        <changes xsi:type="history:Set" element="Organization.ecore#//Organization/customUserInfoDefinitions"
+            featureName="containment" dataValue="true" oldDataValue="false"/>
+        <changes xsi:type="history:Set" element="Organization.ecore#//Organization/customUserInfoDefinitions"
+            featureName="resolveProxies" dataValue="false" oldDataValue="true"/>
+        <changes xsi:type="history:Set" element="Organization.ecore#//Organization/customUserInfoDefinitions"
+            featureName="eType" referenceValue="Organization.ecore#//CustomUserInfoDefinitions"/>
+      </changes>
+      <changes xsi:type="history:Create" target="Organization.ecore#//Organization/customUserInfoDefinitions"
+          referenceName="eAnnotations" element="Organization.ecore#//Organization/customUserInfoDefinitions/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%">
+        <changes xsi:type="history:Set" element="Organization.ecore#//Organization/customUserInfoDefinitions/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%"
+            featureName="source" dataValue="http:///org/eclipse/emf/ecore/util/ExtendedMetaData"/>
+      </changes>
+      <changes xsi:type="history:Create" target="Organization.ecore#//Organization/customUserInfoDefinitions/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%"
+          referenceName="details" element="Organization.ecore#//Organization/customUserInfoDefinitions/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.0">
+        <changes xsi:type="history:Set" element="Organization.ecore#//Organization/customUserInfoDefinitions/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.0"
+            featureName="key" dataValue="kind"/>
+        <changes xsi:type="history:Set" element="Organization.ecore#//Organization/customUserInfoDefinitions/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.0"
+            featureName="value" dataValue="element"/>
+      </changes>
+      <changes xsi:type="history:Create" target="Organization.ecore#//Organization/customUserInfoDefinitions/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%"
+          referenceName="details" element="Organization.ecore#//Organization/customUserInfoDefinitions/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.1">
+        <changes xsi:type="history:Set" element="Organization.ecore#//Organization/customUserInfoDefinitions/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.1"
+            featureName="key" dataValue="name"/>
+        <changes xsi:type="history:Set" element="Organization.ecore#//Organization/customUserInfoDefinitions/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.1"
+            featureName="value" dataValue="customUserInfoDefinitions"/>
+      </changes>
+      <changes xsi:type="history:Create" target="Organization.ecore#//User" referenceName="eStructuralFeatures"
+          element="Organization.ecore#//User/customUserInfoValues">
+        <changes xsi:type="history:Set" element="Organization.ecore#//User/customUserInfoValues"
+            featureName="name" dataValue="customUserInfoValues"/>
+        <changes xsi:type="history:Set" element="Organization.ecore#//User/customUserInfoValues"
+            featureName="containment" dataValue="true" oldDataValue="false"/>
+        <changes xsi:type="history:Set" element="Organization.ecore#//User/customUserInfoValues"
+            featureName="resolveProxies" dataValue="false" oldDataValue="true"/>
+        <changes xsi:type="history:Set" element="Organization.ecore#//User/customUserInfoValues"
+            featureName="eType" referenceValue="Organization.ecore#//CustomUserInfoValuesType"/>
+      </changes>
+      <changes xsi:type="history:Create" target="Organization.ecore#//User/customUserInfoValues"
+          referenceName="eAnnotations" element="Organization.ecore#//User/customUserInfoValues/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%">
+        <changes xsi:type="history:Set" element="Organization.ecore#//User/customUserInfoValues/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%"
+            featureName="source" dataValue="http:///org/eclipse/emf/ecore/util/ExtendedMetaData"/>
+      </changes>
+      <changes xsi:type="history:Create" target="Organization.ecore#//User/customUserInfoValues/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%"
+          referenceName="details" element="Organization.ecore#//User/customUserInfoValues/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.0">
+        <changes xsi:type="history:Set" element="Organization.ecore#//User/customUserInfoValues/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.0"
+            featureName="key" dataValue="kind"/>
+        <changes xsi:type="history:Set" element="Organization.ecore#//User/customUserInfoValues/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.0"
+            featureName="value" dataValue="element"/>
+      </changes>
+      <changes xsi:type="history:Create" target="Organization.ecore#//User/customUserInfoValues/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%"
+          referenceName="details" element="Organization.ecore#//User/customUserInfoValues/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.1">
+        <changes xsi:type="history:Set" element="Organization.ecore#//User/customUserInfoValues/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.1"
+            featureName="key" dataValue="name"/>
+        <changes xsi:type="history:Set" element="Organization.ecore#//User/customUserInfoValues/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.1"
+            featureName="value" dataValue="customUserInfoValues"/>
+      </changes>
+      <changes xsi:type="history:Create" target="Organization.ecore#//PasswordType/encrypted"
+          referenceName="eAnnotations" element="Organization.ecore#//PasswordType/encrypted/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%">
+        <changes xsi:type="history:Set" element="Organization.ecore#//PasswordType/encrypted/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%"
+            featureName="source" dataValue="http:///org/eclipse/emf/ecore/util/ExtendedMetaData"/>
+      </changes>
+      <changes xsi:type="history:Create" target="Organization.ecore#//PasswordType/encrypted/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%"
+          referenceName="details" element="Organization.ecore#//PasswordType/encrypted/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.0">
+        <changes xsi:type="history:Set" element="Organization.ecore#//PasswordType/encrypted/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.0"
+            featureName="key" dataValue="kind"/>
+        <changes xsi:type="history:Set" element="Organization.ecore#//PasswordType/encrypted/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.0"
+            featureName="value" dataValue="attribute"/>
+      </changes>
+      <changes xsi:type="history:Create" target="Organization.ecore#//PasswordType/encrypted/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%"
+          referenceName="details" element="Organization.ecore#//PasswordType/encrypted/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.1">
+        <changes xsi:type="history:Set" element="Organization.ecore#//PasswordType/encrypted/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.1"
+            featureName="key" dataValue="name"/>
+        <changes xsi:type="history:Set" element="Organization.ecore#//PasswordType/encrypted/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.1"
+            featureName="value" dataValue="encrypted"/>
+      </changes>
+    </changes>
+    <changes xsi:type="history:Set" element="Organization.ecore#/" featureName="nsURI"
+        dataValue="http://documentation.bonitasoft.com/organization-xml-schema" oldDataValue="http://www.bonitasoft.org/ns/organization/6.0.0-beta-016"/>
   </releases>
   <releases/>
 </history:History>

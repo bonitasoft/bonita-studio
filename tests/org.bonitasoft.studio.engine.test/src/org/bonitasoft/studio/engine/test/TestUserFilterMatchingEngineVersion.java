@@ -93,7 +93,7 @@ public class TestUserFilterMatchingEngineVersion {
 		final ProcessDefinition processDef = processApi.getProcessDefinition(processId);
 		assertNotNull("processDef should not be null",processDef);
 		final ProcessInstance processInstance = processApi.startProcess(processId);
-		System.out.println("Proces Instance started in state: "+processInstance.getState());
+		System.out.println("Process Instance started in state: "+processInstance.getState());
 		
         boolean evaluateAsync = new TestAsyncThread(30, 1000) {
             @Override

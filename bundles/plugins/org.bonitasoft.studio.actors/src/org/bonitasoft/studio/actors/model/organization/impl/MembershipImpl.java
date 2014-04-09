@@ -129,53 +129,53 @@ public class MembershipImpl extends EObjectImpl implements Membership {
 	/**
 	 * The default value of the '{@link #getAssignedBy() <em>Assigned By</em>}' attribute.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @see #getAssignedBy()
 	 * @generated
 	 * @ordered
 	 */
-    protected static final String ASSIGNED_BY_EDEFAULT = null;
+	protected static final String ASSIGNED_BY_EDEFAULT = null;
 
-    /**
+	/**
 	 * The cached value of the '{@link #getAssignedBy() <em>Assigned By</em>}' attribute.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @see #getAssignedBy()
 	 * @generated
 	 * @ordered
 	 */
-    protected String assignedBy = ASSIGNED_BY_EDEFAULT;
+	protected String assignedBy = ASSIGNED_BY_EDEFAULT;
 
-    /**
+	/**
 	 * The default value of the '{@link #getAssignedDate() <em>Assigned Date</em>}' attribute.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @see #getAssignedDate()
 	 * @generated
 	 * @ordered
 	 */
-    protected static final long ASSIGNED_DATE_EDEFAULT = 0L;
+	protected static final long ASSIGNED_DATE_EDEFAULT = 0L;
 
-    /**
+	/**
 	 * The cached value of the '{@link #getAssignedDate() <em>Assigned Date</em>}' attribute.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @see #getAssignedDate()
 	 * @generated
 	 * @ordered
 	 */
-    protected long assignedDate = ASSIGNED_DATE_EDEFAULT;
+	protected long assignedDate = ASSIGNED_DATE_EDEFAULT;
 
-    /**
+	/**
 	 * This is true if the Assigned Date attribute has been set.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-    protected boolean assignedDateESet;
+	protected boolean assignedDateESet;
 
-    /**
+	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -280,40 +280,40 @@ public class MembershipImpl extends EObjectImpl implements Membership {
 
 	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    public String getAssignedBy() {
+	public String getAssignedBy() {
 		return assignedBy;
 	}
 
-    /**
+	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    public void setAssignedBy(String newAssignedBy) {
+	public void setAssignedBy(String newAssignedBy) {
 		String oldAssignedBy = assignedBy;
 		assignedBy = newAssignedBy;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, OrganizationPackage.MEMBERSHIP__ASSIGNED_BY, oldAssignedBy, assignedBy));
 	}
 
-    /**
+	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    public long getAssignedDate() {
+	public long getAssignedDate() {
 		return assignedDate;
 	}
 
-    /**
+	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    public void setAssignedDate(long newAssignedDate) {
+	public void setAssignedDate(long newAssignedDate) {
 		long oldAssignedDate = assignedDate;
 		assignedDate = newAssignedDate;
 		boolean oldAssignedDateESet = assignedDateESet;
@@ -322,12 +322,12 @@ public class MembershipImpl extends EObjectImpl implements Membership {
 			eNotify(new ENotificationImpl(this, Notification.SET, OrganizationPackage.MEMBERSHIP__ASSIGNED_DATE, oldAssignedDate, assignedDate, !oldAssignedDateESet));
 	}
 
-    /**
+	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    public void unsetAssignedDate() {
+	public void unsetAssignedDate() {
 		long oldAssignedDate = assignedDate;
 		boolean oldAssignedDateESet = assignedDateESet;
 		assignedDate = ASSIGNED_DATE_EDEFAULT;
@@ -336,16 +336,16 @@ public class MembershipImpl extends EObjectImpl implements Membership {
 			eNotify(new ENotificationImpl(this, Notification.UNSET, OrganizationPackage.MEMBERSHIP__ASSIGNED_DATE, oldAssignedDate, ASSIGNED_DATE_EDEFAULT, oldAssignedDateESet));
 	}
 
-    /**
+	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    public boolean isSetAssignedDate() {
+	public boolean isSetAssignedDate() {
 		return assignedDateESet;
 	}
 
-    /**
+	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated

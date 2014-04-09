@@ -54,9 +54,7 @@ Export-Package: org.bonitasoft.studio.engine,
  org.bonitasoft.studio.engine.ui.wizard
 Bundle-Activator: org.bonitasoft.studio.engine.EnginePlugin
 Bundle-ActivationPolicy: lazy
-Import-Package: org.bonitasoft.console.common.server.preferences.constants,
- org.bonitasoft.console.common.server.preferences.properties,
- org.bonitasoft.engine.api,
+Import-Package: org.bonitasoft.engine.api,
  org.bonitasoft.engine.bpm,
  org.bonitasoft.engine.bpm.bar,
  org.bonitasoft.engine.bpm.connector,
