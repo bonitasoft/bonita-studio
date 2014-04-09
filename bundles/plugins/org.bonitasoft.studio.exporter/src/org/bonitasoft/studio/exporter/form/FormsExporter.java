@@ -27,6 +27,9 @@ import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.bonitasoft.engine.expression.ExpressionType;
+import org.bonitasoft.engine.operation.LeftOperand;
+import org.bonitasoft.engine.operation.LeftOperandType;
 import org.bonitasoft.forms.client.model.ActionType;
 import org.bonitasoft.forms.client.model.ReducedFormSubtitle.SubTitlePosition;
 import org.bonitasoft.forms.client.model.ReducedFormValidator.ValidatorPosition;
@@ -117,6 +120,8 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.gmf.runtime.diagram.ui.OffscreenEditPartFactory;
+import org.eclipse.m2m.qvt.oml.ecore.ImperativeOCL.ReturnExp;
 
 /**
  * @author Aurelien Pupier
@@ -511,35 +516,28 @@ public class FormsExporter {
     }
 
     protected void addAction(final IFormBuilder builder, final Operation action, final String submitButtonIdName) throws InvalidFormDefinitionException {
-        final String storeExpression = action.getLeftOperand().getContent();
-        final Expression expression = action.getRightOperand();
+    	final ActionType actionType = getActionTypeFromStudioOperatorType(action.getOperator().getType());
+    	final String variableName = action.getLeftOperand().getContent();
+        final String variableType = EngineExpressionUtil.getVariableType(action.getLeftOperand(), false);
+        final String operator = action.getOperator().getExpression();
         final EList<String> inputTypes = action.getOperator().getInputTypes();
-        if (submitButtonIdName != null) {
-            builder.addAction(ActionType.valueOf(action.getOperator().getType()), storeExpression, isTransientData(action.getLeftOperand()), action
-                    .getOperator().getExpression(), inputTypes != null && !inputTypes.isEmpty() ? inputTypes.get(0) : null, submitButtonIdName);
-        } else {
-            // FIXME: add Action with no submittton id
-            builder.addAction(ActionType.valueOf(action.getOperator().getType()), storeExpression, isTransientData(action.getLeftOperand()), action
-                    .getOperator().getExpression(), inputTypes != null && !inputTypes.isEmpty() ? inputTypes.get(0) : null, null);
-        }
+        final String operatorInputType = inputTypes != null && !inputTypes.isEmpty() ? inputTypes.get(0) : null;
+        final Expression expression = action.getRightOperand();
+        
+       	builder.addAction(actionType, variableName, variableType, operator, operatorInputType, submitButtonIdName);
         addActionExpression(builder, expression);
     }
 
 
-    protected boolean isTransientData(final Expression expression) {
-        if (expression != null) {
-            if (ExpressionConstants.VARIABLE_TYPE.equals(expression.getType())) {
-                final EList<EObject> referencedElements = expression.getReferencedElements();
-                if (!referencedElements.isEmpty()) {
-                    final EObject referencedElement = referencedElements.get(0);
-                    if (referencedElement instanceof Data) {
-                        return DatasourceConstants.PAGEFLOW_DATASOURCE.equals(((Data) referencedElement).getDatasourceId());
-                    }
-                }
-            }
-        }
-        return false;
-    }
+
+
+    protected ActionType getActionTypeFromStudioOperatorType(String type) {
+    	if(ExpressionConstants.SET_DOCUMENT_OPERATOR.equals(type)) {
+    		// this is just assignment, the type document is put on the action variable type
+    		return ActionType.ASSIGNMENT;
+    	}
+		return ActionType.valueOf(type);
+	}
 
     protected void addActionExpression(final IFormBuilder builder, final Expression expression) throws InvalidFormDefinitionException {
         final org.bonitasoft.engine.expression.Expression engineExpression = EngineExpressionUtil.createExpression(expression);

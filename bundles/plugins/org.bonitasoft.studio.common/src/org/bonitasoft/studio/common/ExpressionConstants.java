@@ -29,10 +29,14 @@ import org.bonitasoft.forms.client.model.ActionType;
  */
 public interface ExpressionConstants {
 
+	/*
+	 * constants in type attribute of expressions
+	 */
     String CONSTANT_TYPE = ExpressionType.TYPE_CONSTANT.name() ;
     String CONDITION_TYPE = ExpressionType.TYPE_CONDITION.name();
     String SCRIPT_TYPE = ExpressionType.TYPE_READ_ONLY_SCRIPT.name();
     String VARIABLE_TYPE = ExpressionType.TYPE_VARIABLE.name() ;
+    String TRANSIENT_VARIABLE_TYPE = ExpressionType.TYPE_TRANSIENT_VARIABLE.name() ;
     String PARAMETER_TYPE = ExpressionType.TYPE_PARAMETER.name() ;
     String I18N_TYPE = ExpressionType.TYPE_I18N.name() ;
     String FORM_FIELD_TYPE = ExpressionType.TYPE_INPUT.name() ;
@@ -49,7 +53,6 @@ public interface ExpressionConstants {
     String JAVA_TYPE = ExpressionType.TYPE_JAVA_METHOD_CALL.name();
 
     String ASSIGNMENT_OPERATOR = OperatorType.ASSIGNMENT.name() ;
-    String SEARCH_INDEX_OPERATOR = OperatorType.STRING_INDEX.name();
     String JAVA_METHOD_OPERATOR = OperatorType.JAVA_METHOD.name() ;
     String XPATH_UPDATE_OPERATOR = OperatorType.XPATH_UPDATE_QUERY.name() ;
     String CREATE_BUSINESS_DATA_OPERATOR = "CREATE_BUSINESS_DATA" ;
@@ -58,7 +61,7 @@ public interface ExpressionConstants {
     String SIMULATION_VARIABLE_TYPE = "SIMULATION_VARIABLE_TYPE";
     String DOCUMENT_TYPE = ExpressionType.TYPE_DOCUMENT.name();
     String PATTERN_TYPE = ExpressionType.TYPE_PATTERN.name();
-    String SET_DOCUMENT_OPERATOR = ActionType.DOCUMENT_CREATE_UPDATE.name();
+	String SET_DOCUMENT_OPERATOR = "DOCUMENT_CREATE_UPDATE";
     String VARIABLE_TYPE_FOR_FORM_OUPUT = "VARIABLE_TYPE_FOR_FORM_OUPUT";
     String DOCUMENT_VALUE_RETURN_TYPE = DocumentValue.class.getName();
 	String DOCUMENT_REF_TYPE = "DOCUMENT_REF_TYPE";

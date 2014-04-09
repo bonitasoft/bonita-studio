@@ -43,6 +43,7 @@ import org.bonitasoft.engine.bpm.process.impl.SubProcessDefinitionBuilder;
 import org.bonitasoft.engine.bpm.process.impl.ThrowMessageEventTriggerBuilder;
 import org.bonitasoft.engine.bpm.process.impl.UserFilterDefinitionBuilder;
 import org.bonitasoft.engine.bpm.process.impl.UserTaskDefinitionBuilder;
+import org.bonitasoft.engine.operation.LeftOperand;
 import org.bonitasoft.engine.operation.LeftOperandBuilder;
 import org.bonitasoft.engine.operation.OperationBuilder;
 import org.bonitasoft.engine.operation.OperatorType;
@@ -413,6 +414,7 @@ public class FlowElementSwitch extends AbstractSwitch {
             final LeftOperandBuilder builder = new LeftOperandBuilder() ;
             builder.createNewInstance() ;
             builder.setName(mapping.getSubprocessTarget()) ;
+            builder.setType(LeftOperand.DATA);
             opBuilder.setLeftOperand(builder.done());
             opBuilder.setType(OperatorType.ASSIGNMENT);
             activityBuilder.addDataInputOperation(opBuilder.done());
@@ -427,6 +429,7 @@ public class FlowElementSwitch extends AbstractSwitch {
             final LeftOperandBuilder builder = new LeftOperandBuilder() ;
             builder.createNewInstance() ;
             builder.setName(mapping.getProcessTarget().getName()) ;
+            builder.setType(LeftOperand.DATA);
             opBuilder.setLeftOperand(builder.done());
             opBuilder.setType(OperatorType.ASSIGNMENT);
             activityBuilder.addDataOutputOperation(opBuilder.done());
@@ -750,17 +753,15 @@ public class FlowElementSwitch extends AbstractSwitch {
                     if(pool!=null){
                         searchIndexList = pool.getSearchIndexes();
                     }
-                    int idx=1;
                     for(SearchIndex searchIdx : searchIndexList){
                         // get the related searchIndex to set the operation
                         if(searchIdx.getName().getContent().equals(operation.getLeftOperand().getName())){
-                            builder.addOperation(EngineExpressionUtil.createLeftOperandIndex(idx), OperatorType.STRING_INDEX, null, null, EngineExpressionUtil.createExpression(operation.getRightOperand()));
+                            builder.addOperation(EngineExpressionUtil.createOperation(operation));
                             break;
                         }
-                        idx++;
                     }
                 } else {
-                    builder.addOperation(EngineExpressionUtil.createLeftOperand(operation.getLeftOperand()), OperatorType.valueOf(operation.getOperator().getType()), operation.getOperator().getExpression(),inputType, EngineExpressionUtil.createExpression(operation.getRightOperand())) ;
+                    builder.addOperation(EngineExpressionUtil.createOperation(operation)) ;
                 }
             }
         }
