@@ -302,4 +302,11 @@
              path="model/Organization.history">
        </migrator>
     </extension>
+    <extension
+          point="org.bonitasoft.studio.engine.postEngineAction">
+       <action
+             class="org.bonitasoft.studio.actors.action.PublishActiveOrganizationAction">
+       </action>
+    </extension>
+
 </plugin>
