@@ -36,7 +36,7 @@ import org.eclipse.emf.ecore.EReference;
  * <!-- begin-model-doc -->
  * 
  * 			Organization Schema 1.0 for Bonita Open Solution.
- * 			Copyright (C) 2012 BonitaSoft S.A.
+ * 			Copyright (C) 2012, 2013 BonitaSoft S.A.
  * 		
  * <!-- end-model-doc -->
  * @see org.bonitasoft.studio.actors.model.organization.OrganizationFactory
@@ -58,7 +58,7 @@ public interface OrganizationPackage extends EPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	String eNS_URI = "http://www.bonitasoft.org/ns/organization/6.0.0-beta-016";
+	String eNS_URI = "http://documentation.bonitasoft.com/organization-xml-schema";
 
 	/**
 	 * The package namespace name.
@@ -204,6 +204,136 @@ public interface OrganizationPackage extends EPackage {
 	int CONTACT_DATA_FEATURE_COUNT = 12;
 
 	/**
+	 * The meta object id for the '{@link org.bonitasoft.studio.actors.model.organization.impl.CustomUserInfoDefinitionImpl <em>Custom User Info Definition</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.bonitasoft.studio.actors.model.organization.impl.CustomUserInfoDefinitionImpl
+	 * @see org.bonitasoft.studio.actors.model.organization.impl.OrganizationPackageImpl#getCustomUserInfoDefinition()
+	 * @generated
+	 */
+	int CUSTOM_USER_INFO_DEFINITION = 1;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CUSTOM_USER_INFO_DEFINITION__NAME = 0;
+
+	/**
+	 * The feature id for the '<em><b>Description</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CUSTOM_USER_INFO_DEFINITION__DESCRIPTION = 1;
+
+	/**
+	 * The number of structural features of the '<em>Custom User Info Definition</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CUSTOM_USER_INFO_DEFINITION_FEATURE_COUNT = 2;
+
+	/**
+	 * The meta object id for the '{@link org.bonitasoft.studio.actors.model.organization.impl.CustomUserInfoDefinitionsImpl <em>Custom User Info Definitions</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.bonitasoft.studio.actors.model.organization.impl.CustomUserInfoDefinitionsImpl
+	 * @see org.bonitasoft.studio.actors.model.organization.impl.OrganizationPackageImpl#getCustomUserInfoDefinitions()
+	 * @generated
+	 */
+	int CUSTOM_USER_INFO_DEFINITIONS = 2;
+
+	/**
+	 * The feature id for the '<em><b>Custom User Info Definition</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CUSTOM_USER_INFO_DEFINITIONS__CUSTOM_USER_INFO_DEFINITION = 0;
+
+	/**
+	 * The number of structural features of the '<em>Custom User Info Definitions</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CUSTOM_USER_INFO_DEFINITIONS_FEATURE_COUNT = 1;
+
+	/**
+	 * The meta object id for the '{@link org.bonitasoft.studio.actors.model.organization.impl.CustomUserInfoValueImpl <em>Custom User Info Value</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.bonitasoft.studio.actors.model.organization.impl.CustomUserInfoValueImpl
+	 * @see org.bonitasoft.studio.actors.model.organization.impl.OrganizationPackageImpl#getCustomUserInfoValue()
+	 * @generated
+	 */
+	int CUSTOM_USER_INFO_VALUE = 3;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CUSTOM_USER_INFO_VALUE__NAME = 0;
+
+	/**
+	 * The feature id for the '<em><b>Value</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CUSTOM_USER_INFO_VALUE__VALUE = 1;
+
+	/**
+	 * The number of structural features of the '<em>Custom User Info Value</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CUSTOM_USER_INFO_VALUE_FEATURE_COUNT = 2;
+
+	/**
+	 * The meta object id for the '{@link org.bonitasoft.studio.actors.model.organization.impl.CustomUserInfoValuesTypeImpl <em>Custom User Info Values Type</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.bonitasoft.studio.actors.model.organization.impl.CustomUserInfoValuesTypeImpl
+	 * @see org.bonitasoft.studio.actors.model.organization.impl.OrganizationPackageImpl#getCustomUserInfoValuesType()
+	 * @generated
+	 */
+	int CUSTOM_USER_INFO_VALUES_TYPE = 4;
+
+	/**
+	 * The feature id for the '<em><b>Custom User Info Value</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CUSTOM_USER_INFO_VALUES_TYPE__CUSTOM_USER_INFO_VALUE = 0;
+
+	/**
+	 * The number of structural features of the '<em>Custom User Info Values Type</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CUSTOM_USER_INFO_VALUES_TYPE_FEATURE_COUNT = 1;
+
+	/**
 	 * The meta object id for the '{@link org.bonitasoft.studio.actors.model.organization.impl.DocumentRootImpl <em>Document Root</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -211,7 +341,7 @@ public interface OrganizationPackage extends EPackage {
 	 * @see org.bonitasoft.studio.actors.model.organization.impl.OrganizationPackageImpl#getDocumentRoot()
 	 * @generated
 	 */
-	int DOCUMENT_ROOT = 1;
+	int DOCUMENT_ROOT = 5;
 
 	/**
 	 * The feature id for the '<em><b>Mixed</b></em>' attribute list.
@@ -266,7 +396,7 @@ public interface OrganizationPackage extends EPackage {
 	 * @see org.bonitasoft.studio.actors.model.organization.impl.OrganizationPackageImpl#getGroup()
 	 * @generated
 	 */
-	int GROUP = 2;
+	int GROUP = 6;
 
 	/**
 	 * The feature id for the '<em><b>Display Name</b></em>' attribute.
@@ -339,7 +469,7 @@ public interface OrganizationPackage extends EPackage {
 	 * @see org.bonitasoft.studio.actors.model.organization.impl.OrganizationPackageImpl#getGroups()
 	 * @generated
 	 */
-	int GROUPS = 3;
+	int GROUPS = 7;
 
 	/**
 	 * The feature id for the '<em><b>Group</b></em>' containment reference list.
@@ -367,7 +497,7 @@ public interface OrganizationPackage extends EPackage {
 	 * @see org.bonitasoft.studio.actors.model.organization.impl.OrganizationPackageImpl#getMembership()
 	 * @generated
 	 */
-	int MEMBERSHIP = 4;
+	int MEMBERSHIP = 8;
 
 	/**
 	 * The feature id for the '<em><b>User Name</b></em>' attribute.
@@ -408,22 +538,22 @@ public interface OrganizationPackage extends EPackage {
 	/**
 	 * The feature id for the '<em><b>Assigned By</b></em>' attribute.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-    int MEMBERSHIP__ASSIGNED_BY = 4;
+	int MEMBERSHIP__ASSIGNED_BY = 4;
 
-    /**
+	/**
 	 * The feature id for the '<em><b>Assigned Date</b></em>' attribute.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-    int MEMBERSHIP__ASSIGNED_DATE = 5;
+	int MEMBERSHIP__ASSIGNED_DATE = 5;
 
-    /**
+	/**
 	 * The number of structural features of the '<em>Membership</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -440,7 +570,7 @@ public interface OrganizationPackage extends EPackage {
 	 * @see org.bonitasoft.studio.actors.model.organization.impl.OrganizationPackageImpl#getMemberships()
 	 * @generated
 	 */
-	int MEMBERSHIPS = 5;
+	int MEMBERSHIPS = 9;
 
 	/**
 	 * The feature id for the '<em><b>Membership</b></em>' containment reference list.
@@ -468,7 +598,7 @@ public interface OrganizationPackage extends EPackage {
 	 * @see org.bonitasoft.studio.actors.model.organization.impl.OrganizationPackageImpl#getMetadata()
 	 * @generated
 	 */
-	int METADATA = 6;
+	int METADATA = 10;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -500,32 +630,32 @@ public interface OrganizationPackage extends EPackage {
 	/**
 	 * The meta object id for the '{@link org.bonitasoft.studio.actors.model.organization.impl.MetaDatasTypeImpl <em>Meta Datas Type</em>}' class.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @see org.bonitasoft.studio.actors.model.organization.impl.MetaDatasTypeImpl
 	 * @see org.bonitasoft.studio.actors.model.organization.impl.OrganizationPackageImpl#getMetaDatasType()
 	 * @generated
 	 */
-    int META_DATAS_TYPE = 7;
+	int META_DATAS_TYPE = 11;
 
-    /**
+	/**
 	 * The feature id for the '<em><b>Meta Data</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-    int META_DATAS_TYPE__META_DATA = 0;
+	int META_DATAS_TYPE__META_DATA = 0;
 
-    /**
+	/**
 	 * The number of structural features of the '<em>Meta Datas Type</em>' class.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-    int META_DATAS_TYPE_FEATURE_COUNT = 1;
+	int META_DATAS_TYPE_FEATURE_COUNT = 1;
 
-    /**
+	/**
 	 * The meta object id for the '{@link org.bonitasoft.studio.actors.model.organization.impl.OrganizationImpl <em>Organization</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -533,7 +663,16 @@ public interface OrganizationPackage extends EPackage {
 	 * @see org.bonitasoft.studio.actors.model.organization.impl.OrganizationPackageImpl#getOrganization()
 	 * @generated
 	 */
-	int ORGANIZATION = 8;
+	int ORGANIZATION = 12;
+
+	/**
+	 * The feature id for the '<em><b>Custom User Info Definitions</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ORGANIZATION__CUSTOM_USER_INFO_DEFINITIONS = 0;
 
 	/**
 	 * The feature id for the '<em><b>Users</b></em>' containment reference.
@@ -542,7 +681,7 @@ public interface OrganizationPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ORGANIZATION__USERS = 0;
+	int ORGANIZATION__USERS = 1;
 
 	/**
 	 * The feature id for the '<em><b>Roles</b></em>' containment reference.
@@ -551,7 +690,7 @@ public interface OrganizationPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ORGANIZATION__ROLES = 1;
+	int ORGANIZATION__ROLES = 2;
 
 	/**
 	 * The feature id for the '<em><b>Groups</b></em>' containment reference.
@@ -560,7 +699,7 @@ public interface OrganizationPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ORGANIZATION__GROUPS = 2;
+	int ORGANIZATION__GROUPS = 3;
 
 	/**
 	 * The feature id for the '<em><b>Memberships</b></em>' containment reference.
@@ -569,34 +708,34 @@ public interface OrganizationPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ORGANIZATION__MEMBERSHIPS = 3;
+	int ORGANIZATION__MEMBERSHIPS = 4;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-    int ORGANIZATION__NAME = 4;
+	int ORGANIZATION__NAME = 5;
 
-    /**
+	/**
 	 * The feature id for the '<em><b>Description</b></em>' attribute.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-    int ORGANIZATION__DESCRIPTION = 5;
+	int ORGANIZATION__DESCRIPTION = 6;
 
-    /**
+	/**
 	 * The number of structural features of the '<em>Organization</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ORGANIZATION_FEATURE_COUNT = 6;
+	int ORGANIZATION_FEATURE_COUNT = 7;
 
 	/**
 	 * The meta object id for the '{@link org.bonitasoft.studio.actors.model.organization.impl.RoleImpl <em>Role</em>}' class.
@@ -606,7 +745,7 @@ public interface OrganizationPackage extends EPackage {
 	 * @see org.bonitasoft.studio.actors.model.organization.impl.OrganizationPackageImpl#getRole()
 	 * @generated
 	 */
-	int ROLE = 9;
+	int ROLE = 13;
 
 	/**
 	 * The feature id for the '<em><b>Display Name</b></em>' attribute.
@@ -670,7 +809,7 @@ public interface OrganizationPackage extends EPackage {
 	 * @see org.bonitasoft.studio.actors.model.organization.impl.OrganizationPackageImpl#getRoles()
 	 * @generated
 	 */
-	int ROLES = 10;
+	int ROLES = 14;
 
 	/**
 	 * The feature id for the '<em><b>Role</b></em>' containment reference list.
@@ -698,7 +837,7 @@ public interface OrganizationPackage extends EPackage {
 	 * @see org.bonitasoft.studio.actors.model.organization.impl.OrganizationPackageImpl#getUser()
 	 * @generated
 	 */
-	int USER = 11;
+	int USER = 15;
 
 	/**
 	 * The feature id for the '<em><b>First Name</b></em>' attribute.
@@ -784,13 +923,13 @@ public interface OrganizationPackage extends EPackage {
 	/**
 	 * The feature id for the '<em><b>Meta Datas</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-    int USER__META_DATAS = 9;
+	int USER__META_DATAS = 9;
 
-    /**
+	/**
 	 * The feature id for the '<em><b>User Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -809,13 +948,22 @@ public interface OrganizationPackage extends EPackage {
 	int USER__ENABLED = 11;
 
 	/**
+	 * The feature id for the '<em><b>Custom User Info Values</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int USER__CUSTOM_USER_INFO_VALUES = 12;
+
+	/**
 	 * The feature id for the '<em><b>Password</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int USER__PASSWORD = 12;
+	int USER__PASSWORD = 13;
 
 	/**
 	 * The number of structural features of the '<em>User</em>' class.
@@ -824,7 +972,7 @@ public interface OrganizationPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int USER_FEATURE_COUNT = 13;
+	int USER_FEATURE_COUNT = 14;
 
 	/**
 	 * The meta object id for the '{@link org.bonitasoft.studio.actors.model.organization.impl.UsersImpl <em>Users</em>}' class.
@@ -834,7 +982,7 @@ public interface OrganizationPackage extends EPackage {
 	 * @see org.bonitasoft.studio.actors.model.organization.impl.OrganizationPackageImpl#getUsers()
 	 * @generated
 	 */
-	int USERS = 12;
+	int USERS = 16;
 
 	/**
 	 * The feature id for the '<em><b>User</b></em>' containment reference list.
@@ -854,7 +1002,6 @@ public interface OrganizationPackage extends EPackage {
 	 */
 	int USERS_FEATURE_COUNT = 1;
 
-
 	/**
 	 * The meta object id for the '{@link org.bonitasoft.studio.actors.model.organization.impl.PasswordTypeImpl <em>Password Type</em>}' class.
 	 * <!-- begin-user-doc -->
@@ -863,7 +1010,7 @@ public interface OrganizationPackage extends EPackage {
 	 * @see org.bonitasoft.studio.actors.model.organization.impl.OrganizationPackageImpl#getPasswordType()
 	 * @generated
 	 */
-	int PASSWORD_TYPE = 13;
+	int PASSWORD_TYPE = 17;
 
 	/**
 	 * The feature id for the '<em><b>Value</b></em>' attribute.
@@ -1034,6 +1181,112 @@ public interface OrganizationPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getContactData_Website();
+
+	/**
+	 * Returns the meta object for class '{@link org.bonitasoft.studio.actors.model.organization.CustomUserInfoDefinition <em>Custom User Info Definition</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Custom User Info Definition</em>'.
+	 * @see org.bonitasoft.studio.actors.model.organization.CustomUserInfoDefinition
+	 * @generated
+	 */
+	EClass getCustomUserInfoDefinition();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.bonitasoft.studio.actors.model.organization.CustomUserInfoDefinition#getName <em>Name</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Name</em>'.
+	 * @see org.bonitasoft.studio.actors.model.organization.CustomUserInfoDefinition#getName()
+	 * @see #getCustomUserInfoDefinition()
+	 * @generated
+	 */
+	EAttribute getCustomUserInfoDefinition_Name();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.bonitasoft.studio.actors.model.organization.CustomUserInfoDefinition#getDescription <em>Description</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Description</em>'.
+	 * @see org.bonitasoft.studio.actors.model.organization.CustomUserInfoDefinition#getDescription()
+	 * @see #getCustomUserInfoDefinition()
+	 * @generated
+	 */
+	EAttribute getCustomUserInfoDefinition_Description();
+
+	/**
+	 * Returns the meta object for class '{@link org.bonitasoft.studio.actors.model.organization.CustomUserInfoDefinitions <em>Custom User Info Definitions</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Custom User Info Definitions</em>'.
+	 * @see org.bonitasoft.studio.actors.model.organization.CustomUserInfoDefinitions
+	 * @generated
+	 */
+	EClass getCustomUserInfoDefinitions();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link org.bonitasoft.studio.actors.model.organization.CustomUserInfoDefinitions#getCustomUserInfoDefinition <em>Custom User Info Definition</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Custom User Info Definition</em>'.
+	 * @see org.bonitasoft.studio.actors.model.organization.CustomUserInfoDefinitions#getCustomUserInfoDefinition()
+	 * @see #getCustomUserInfoDefinitions()
+	 * @generated
+	 */
+	EReference getCustomUserInfoDefinitions_CustomUserInfoDefinition();
+
+	/**
+	 * Returns the meta object for class '{@link org.bonitasoft.studio.actors.model.organization.CustomUserInfoValue <em>Custom User Info Value</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Custom User Info Value</em>'.
+	 * @see org.bonitasoft.studio.actors.model.organization.CustomUserInfoValue
+	 * @generated
+	 */
+	EClass getCustomUserInfoValue();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.bonitasoft.studio.actors.model.organization.CustomUserInfoValue#getName <em>Name</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Name</em>'.
+	 * @see org.bonitasoft.studio.actors.model.organization.CustomUserInfoValue#getName()
+	 * @see #getCustomUserInfoValue()
+	 * @generated
+	 */
+	EAttribute getCustomUserInfoValue_Name();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.bonitasoft.studio.actors.model.organization.CustomUserInfoValue#getValue <em>Value</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Value</em>'.
+	 * @see org.bonitasoft.studio.actors.model.organization.CustomUserInfoValue#getValue()
+	 * @see #getCustomUserInfoValue()
+	 * @generated
+	 */
+	EAttribute getCustomUserInfoValue_Value();
+
+	/**
+	 * Returns the meta object for class '{@link org.bonitasoft.studio.actors.model.organization.CustomUserInfoValuesType <em>Custom User Info Values Type</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Custom User Info Values Type</em>'.
+	 * @see org.bonitasoft.studio.actors.model.organization.CustomUserInfoValuesType
+	 * @generated
+	 */
+	EClass getCustomUserInfoValuesType();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link org.bonitasoft.studio.actors.model.organization.CustomUserInfoValuesType#getCustomUserInfoValue <em>Custom User Info Value</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Custom User Info Value</em>'.
+	 * @see org.bonitasoft.studio.actors.model.organization.CustomUserInfoValuesType#getCustomUserInfoValue()
+	 * @see #getCustomUserInfoValuesType()
+	 * @generated
+	 */
+	EReference getCustomUserInfoValuesType_CustomUserInfoValue();
 
 	/**
 	 * Returns the meta object for class '{@link org.bonitasoft.studio.actors.model.organization.DocumentRoot <em>Document Root</em>}'.
@@ -1243,26 +1496,26 @@ public interface OrganizationPackage extends EPackage {
 	/**
 	 * Returns the meta object for the attribute '{@link org.bonitasoft.studio.actors.model.organization.Membership#getAssignedBy <em>Assigned By</em>}'.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Assigned By</em>'.
 	 * @see org.bonitasoft.studio.actors.model.organization.Membership#getAssignedBy()
 	 * @see #getMembership()
 	 * @generated
 	 */
-    EAttribute getMembership_AssignedBy();
+	EAttribute getMembership_AssignedBy();
 
-    /**
+	/**
 	 * Returns the meta object for the attribute '{@link org.bonitasoft.studio.actors.model.organization.Membership#getAssignedDate <em>Assigned Date</em>}'.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Assigned Date</em>'.
 	 * @see org.bonitasoft.studio.actors.model.organization.Membership#getAssignedDate()
 	 * @see #getMembership()
 	 * @generated
 	 */
-    EAttribute getMembership_AssignedDate();
+	EAttribute getMembership_AssignedDate();
 
-    /**
+	/**
 	 * Returns the meta object for class '{@link org.bonitasoft.studio.actors.model.organization.Memberships <em>Memberships</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1318,25 +1571,25 @@ public interface OrganizationPackage extends EPackage {
 	/**
 	 * Returns the meta object for class '{@link org.bonitasoft.studio.actors.model.organization.MetaDatasType <em>Meta Datas Type</em>}'.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @return the meta object for class '<em>Meta Datas Type</em>'.
 	 * @see org.bonitasoft.studio.actors.model.organization.MetaDatasType
 	 * @generated
 	 */
-    EClass getMetaDatasType();
+	EClass getMetaDatasType();
 
-    /**
+	/**
 	 * Returns the meta object for the containment reference list '{@link org.bonitasoft.studio.actors.model.organization.MetaDatasType#getMetaData <em>Meta Data</em>}'.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @return the meta object for the containment reference list '<em>Meta Data</em>'.
 	 * @see org.bonitasoft.studio.actors.model.organization.MetaDatasType#getMetaData()
 	 * @see #getMetaDatasType()
 	 * @generated
 	 */
-    EReference getMetaDatasType_MetaData();
+	EReference getMetaDatasType_MetaData();
 
-    /**
+	/**
 	 * Returns the meta object for class '{@link org.bonitasoft.studio.actors.model.organization.Organization <em>Organization</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1345,6 +1598,17 @@ public interface OrganizationPackage extends EPackage {
 	 * @generated
 	 */
 	EClass getOrganization();
+
+	/**
+	 * Returns the meta object for the containment reference '{@link org.bonitasoft.studio.actors.model.organization.Organization#getCustomUserInfoDefinitions <em>Custom User Info Definitions</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Custom User Info Definitions</em>'.
+	 * @see org.bonitasoft.studio.actors.model.organization.Organization#getCustomUserInfoDefinitions()
+	 * @see #getOrganization()
+	 * @generated
+	 */
+	EReference getOrganization_CustomUserInfoDefinitions();
 
 	/**
 	 * Returns the meta object for the containment reference '{@link org.bonitasoft.studio.actors.model.organization.Organization#getUsers <em>Users</em>}'.
@@ -1358,17 +1622,6 @@ public interface OrganizationPackage extends EPackage {
 	EReference getOrganization_Users();
 
 	/**
-	 * Returns the meta object for the containment reference '{@link org.bonitasoft.studio.actors.model.organization.Organization#getGroups <em>Groups</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference '<em>Groups</em>'.
-	 * @see org.bonitasoft.studio.actors.model.organization.Organization#getGroups()
-	 * @see #getOrganization()
-	 * @generated
-	 */
-	EReference getOrganization_Groups();
-
-	/**
 	 * Returns the meta object for the containment reference '{@link org.bonitasoft.studio.actors.model.organization.Organization#getRoles <em>Roles</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1378,6 +1631,17 @@ public interface OrganizationPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getOrganization_Roles();
+
+	/**
+	 * Returns the meta object for the containment reference '{@link org.bonitasoft.studio.actors.model.organization.Organization#getGroups <em>Groups</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Groups</em>'.
+	 * @see org.bonitasoft.studio.actors.model.organization.Organization#getGroups()
+	 * @see #getOrganization()
+	 * @generated
+	 */
+	EReference getOrganization_Groups();
 
 	/**
 	 * Returns the meta object for the containment reference '{@link org.bonitasoft.studio.actors.model.organization.Organization#getMemberships <em>Memberships</em>}'.
@@ -1393,26 +1657,26 @@ public interface OrganizationPackage extends EPackage {
 	/**
 	 * Returns the meta object for the attribute '{@link org.bonitasoft.studio.actors.model.organization.Organization#getName <em>Name</em>}'.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Name</em>'.
 	 * @see org.bonitasoft.studio.actors.model.organization.Organization#getName()
 	 * @see #getOrganization()
 	 * @generated
 	 */
-    EAttribute getOrganization_Name();
+	EAttribute getOrganization_Name();
 
-    /**
+	/**
 	 * Returns the meta object for the attribute '{@link org.bonitasoft.studio.actors.model.organization.Organization#getDescription <em>Description</em>}'.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Description</em>'.
 	 * @see org.bonitasoft.studio.actors.model.organization.Organization#getDescription()
 	 * @see #getOrganization()
 	 * @generated
 	 */
-    EAttribute getOrganization_Description();
+	EAttribute getOrganization_Description();
 
-    /**
+	/**
 	 * Returns the meta object for class '{@link org.bonitasoft.studio.actors.model.organization.Role <em>Role</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1507,17 +1771,6 @@ public interface OrganizationPackage extends EPackage {
 	 * @generated
 	 */
 	EClass getUser();
-
-	/**
-	 * Returns the meta object for the containment reference '{@link org.bonitasoft.studio.actors.model.organization.User#getPassword <em>Password</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference '<em>Password</em>'.
-	 * @see org.bonitasoft.studio.actors.model.organization.User#getPassword()
-	 * @see #getUser()
-	 * @generated
-	 */
-	EReference getUser_Password();
 
 	/**
 	 * Returns the meta object for the attribute '{@link org.bonitasoft.studio.actors.model.organization.User#getFirstName <em>First Name</em>}'.
@@ -1621,15 +1874,15 @@ public interface OrganizationPackage extends EPackage {
 	/**
 	 * Returns the meta object for the containment reference '{@link org.bonitasoft.studio.actors.model.organization.User#getMetaDatas <em>Meta Datas</em>}'.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @return the meta object for the containment reference '<em>Meta Datas</em>'.
 	 * @see org.bonitasoft.studio.actors.model.organization.User#getMetaDatas()
 	 * @see #getUser()
 	 * @generated
 	 */
-    EReference getUser_MetaDatas();
+	EReference getUser_MetaDatas();
 
-    /**
+	/**
 	 * Returns the meta object for the attribute '{@link org.bonitasoft.studio.actors.model.organization.User#getUserName <em>User Name</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1650,6 +1903,28 @@ public interface OrganizationPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getUser_Enabled();
+
+	/**
+	 * Returns the meta object for the containment reference '{@link org.bonitasoft.studio.actors.model.organization.User#getCustomUserInfoValues <em>Custom User Info Values</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Custom User Info Values</em>'.
+	 * @see org.bonitasoft.studio.actors.model.organization.User#getCustomUserInfoValues()
+	 * @see #getUser()
+	 * @generated
+	 */
+	EReference getUser_CustomUserInfoValues();
+
+	/**
+	 * Returns the meta object for the containment reference '{@link org.bonitasoft.studio.actors.model.organization.User#getPassword <em>Password</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Password</em>'.
+	 * @see org.bonitasoft.studio.actors.model.organization.User#getPassword()
+	 * @see #getUser()
+	 * @generated
+	 */
+	EReference getUser_Password();
 
 	/**
 	 * Returns the meta object for class '{@link org.bonitasoft.studio.actors.model.organization.Users <em>Users</em>}'.
@@ -1833,6 +2108,94 @@ public interface OrganizationPackage extends EPackage {
 		EAttribute CONTACT_DATA__WEBSITE = eINSTANCE.getContactData_Website();
 
 		/**
+		 * The meta object literal for the '{@link org.bonitasoft.studio.actors.model.organization.impl.CustomUserInfoDefinitionImpl <em>Custom User Info Definition</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.bonitasoft.studio.actors.model.organization.impl.CustomUserInfoDefinitionImpl
+		 * @see org.bonitasoft.studio.actors.model.organization.impl.OrganizationPackageImpl#getCustomUserInfoDefinition()
+		 * @generated
+		 */
+		EClass CUSTOM_USER_INFO_DEFINITION = eINSTANCE.getCustomUserInfoDefinition();
+
+		/**
+		 * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute CUSTOM_USER_INFO_DEFINITION__NAME = eINSTANCE.getCustomUserInfoDefinition_Name();
+
+		/**
+		 * The meta object literal for the '<em><b>Description</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute CUSTOM_USER_INFO_DEFINITION__DESCRIPTION = eINSTANCE.getCustomUserInfoDefinition_Description();
+
+		/**
+		 * The meta object literal for the '{@link org.bonitasoft.studio.actors.model.organization.impl.CustomUserInfoDefinitionsImpl <em>Custom User Info Definitions</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.bonitasoft.studio.actors.model.organization.impl.CustomUserInfoDefinitionsImpl
+		 * @see org.bonitasoft.studio.actors.model.organization.impl.OrganizationPackageImpl#getCustomUserInfoDefinitions()
+		 * @generated
+		 */
+		EClass CUSTOM_USER_INFO_DEFINITIONS = eINSTANCE.getCustomUserInfoDefinitions();
+
+		/**
+		 * The meta object literal for the '<em><b>Custom User Info Definition</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference CUSTOM_USER_INFO_DEFINITIONS__CUSTOM_USER_INFO_DEFINITION = eINSTANCE.getCustomUserInfoDefinitions_CustomUserInfoDefinition();
+
+		/**
+		 * The meta object literal for the '{@link org.bonitasoft.studio.actors.model.organization.impl.CustomUserInfoValueImpl <em>Custom User Info Value</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.bonitasoft.studio.actors.model.organization.impl.CustomUserInfoValueImpl
+		 * @see org.bonitasoft.studio.actors.model.organization.impl.OrganizationPackageImpl#getCustomUserInfoValue()
+		 * @generated
+		 */
+		EClass CUSTOM_USER_INFO_VALUE = eINSTANCE.getCustomUserInfoValue();
+
+		/**
+		 * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute CUSTOM_USER_INFO_VALUE__NAME = eINSTANCE.getCustomUserInfoValue_Name();
+
+		/**
+		 * The meta object literal for the '<em><b>Value</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute CUSTOM_USER_INFO_VALUE__VALUE = eINSTANCE.getCustomUserInfoValue_Value();
+
+		/**
+		 * The meta object literal for the '{@link org.bonitasoft.studio.actors.model.organization.impl.CustomUserInfoValuesTypeImpl <em>Custom User Info Values Type</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.bonitasoft.studio.actors.model.organization.impl.CustomUserInfoValuesTypeImpl
+		 * @see org.bonitasoft.studio.actors.model.organization.impl.OrganizationPackageImpl#getCustomUserInfoValuesType()
+		 * @generated
+		 */
+		EClass CUSTOM_USER_INFO_VALUES_TYPE = eINSTANCE.getCustomUserInfoValuesType();
+
+		/**
+		 * The meta object literal for the '<em><b>Custom User Info Value</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference CUSTOM_USER_INFO_VALUES_TYPE__CUSTOM_USER_INFO_VALUE = eINSTANCE.getCustomUserInfoValuesType_CustomUserInfoValue();
+
+		/**
 		 * The meta object literal for the '{@link org.bonitasoft.studio.actors.model.organization.impl.DocumentRootImpl <em>Document Root</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -1995,20 +2358,20 @@ public interface OrganizationPackage extends EPackage {
 		/**
 		 * The meta object literal for the '<em><b>Assigned By</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
-         * <!-- end-user-doc -->
+		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-        EAttribute MEMBERSHIP__ASSIGNED_BY = eINSTANCE.getMembership_AssignedBy();
+		EAttribute MEMBERSHIP__ASSIGNED_BY = eINSTANCE.getMembership_AssignedBy();
 
-        /**
+		/**
 		 * The meta object literal for the '<em><b>Assigned Date</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
-         * <!-- end-user-doc -->
+		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-        EAttribute MEMBERSHIP__ASSIGNED_DATE = eINSTANCE.getMembership_AssignedDate();
+		EAttribute MEMBERSHIP__ASSIGNED_DATE = eINSTANCE.getMembership_AssignedDate();
 
-        /**
+		/**
 		 * The meta object literal for the '{@link org.bonitasoft.studio.actors.model.organization.impl.MembershipsImpl <em>Memberships</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -2055,22 +2418,22 @@ public interface OrganizationPackage extends EPackage {
 		/**
 		 * The meta object literal for the '{@link org.bonitasoft.studio.actors.model.organization.impl.MetaDatasTypeImpl <em>Meta Datas Type</em>}' class.
 		 * <!-- begin-user-doc -->
-         * <!-- end-user-doc -->
+		 * <!-- end-user-doc -->
 		 * @see org.bonitasoft.studio.actors.model.organization.impl.MetaDatasTypeImpl
 		 * @see org.bonitasoft.studio.actors.model.organization.impl.OrganizationPackageImpl#getMetaDatasType()
 		 * @generated
 		 */
-        EClass META_DATAS_TYPE = eINSTANCE.getMetaDatasType();
+		EClass META_DATAS_TYPE = eINSTANCE.getMetaDatasType();
 
-        /**
+		/**
 		 * The meta object literal for the '<em><b>Meta Data</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
-         * <!-- end-user-doc -->
+		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-        EReference META_DATAS_TYPE__META_DATA = eINSTANCE.getMetaDatasType_MetaData();
+		EReference META_DATAS_TYPE__META_DATA = eINSTANCE.getMetaDatasType_MetaData();
 
-        /**
+		/**
 		 * The meta object literal for the '{@link org.bonitasoft.studio.actors.model.organization.impl.OrganizationImpl <em>Organization</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -2081,6 +2444,14 @@ public interface OrganizationPackage extends EPackage {
 		EClass ORGANIZATION = eINSTANCE.getOrganization();
 
 		/**
+		 * The meta object literal for the '<em><b>Custom User Info Definitions</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference ORGANIZATION__CUSTOM_USER_INFO_DEFINITIONS = eINSTANCE.getOrganization_CustomUserInfoDefinitions();
+
+		/**
 		 * The meta object literal for the '<em><b>Users</b></em>' containment reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -2089,20 +2460,20 @@ public interface OrganizationPackage extends EPackage {
 		EReference ORGANIZATION__USERS = eINSTANCE.getOrganization_Users();
 
 		/**
-		 * The meta object literal for the '<em><b>Groups</b></em>' containment reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference ORGANIZATION__GROUPS = eINSTANCE.getOrganization_Groups();
-
-		/**
 		 * The meta object literal for the '<em><b>Roles</b></em>' containment reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
 		EReference ORGANIZATION__ROLES = eINSTANCE.getOrganization_Roles();
+
+		/**
+		 * The meta object literal for the '<em><b>Groups</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference ORGANIZATION__GROUPS = eINSTANCE.getOrganization_Groups();
 
 		/**
 		 * The meta object literal for the '<em><b>Memberships</b></em>' containment reference feature.
@@ -2115,20 +2486,20 @@ public interface OrganizationPackage extends EPackage {
 		/**
 		 * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
-         * <!-- end-user-doc -->
+		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-        EAttribute ORGANIZATION__NAME = eINSTANCE.getOrganization_Name();
+		EAttribute ORGANIZATION__NAME = eINSTANCE.getOrganization_Name();
 
-        /**
+		/**
 		 * The meta object literal for the '<em><b>Description</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
-         * <!-- end-user-doc -->
+		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-        EAttribute ORGANIZATION__DESCRIPTION = eINSTANCE.getOrganization_Description();
+		EAttribute ORGANIZATION__DESCRIPTION = eINSTANCE.getOrganization_Description();
 
-        /**
+		/**
 		 * The meta object literal for the '{@link org.bonitasoft.studio.actors.model.organization.impl.RoleImpl <em>Role</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -2207,14 +2578,6 @@ public interface OrganizationPackage extends EPackage {
 		EClass USER = eINSTANCE.getUser();
 
 		/**
-		 * The meta object literal for the '<em><b>Password</b></em>' containment reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference USER__PASSWORD = eINSTANCE.getUser_Password();
-
-		/**
 		 * The meta object literal for the '<em><b>First Name</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -2289,12 +2652,12 @@ public interface OrganizationPackage extends EPackage {
 		/**
 		 * The meta object literal for the '<em><b>Meta Datas</b></em>' containment reference feature.
 		 * <!-- begin-user-doc -->
-         * <!-- end-user-doc -->
+		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-        EReference USER__META_DATAS = eINSTANCE.getUser_MetaDatas();
+		EReference USER__META_DATAS = eINSTANCE.getUser_MetaDatas();
 
-        /**
+		/**
 		 * The meta object literal for the '<em><b>User Name</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -2309,6 +2672,22 @@ public interface OrganizationPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute USER__ENABLED = eINSTANCE.getUser_Enabled();
+
+		/**
+		 * The meta object literal for the '<em><b>Custom User Info Values</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference USER__CUSTOM_USER_INFO_VALUES = eINSTANCE.getUser_CustomUserInfoValues();
+
+		/**
+		 * The meta object literal for the '<em><b>Password</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference USER__PASSWORD = eINSTANCE.getUser_Password();
 
 		/**
 		 * The meta object literal for the '{@link org.bonitasoft.studio.actors.model.organization.impl.UsersImpl <em>Users</em>}' class.

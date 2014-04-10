@@ -78,6 +78,7 @@ public interface PasswordType extends EObject {
 	 * @see #setEncrypted(boolean)
 	 * @see org.bonitasoft.studio.actors.model.organization.OrganizationPackage#getPasswordType_Encrypted()
 	 * @model unsettable="true" dataType="org.eclipse.emf.ecore.xml.type.Boolean" required="true"
+	 *        extendedMetaData="kind='attribute' name='encrypted'"
 	 * @generated
 	 */
 	boolean isEncrypted();
