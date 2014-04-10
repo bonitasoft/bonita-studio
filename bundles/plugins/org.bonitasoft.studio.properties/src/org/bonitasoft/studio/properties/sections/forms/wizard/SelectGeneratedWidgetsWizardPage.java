@@ -77,7 +77,7 @@ import org.eclipse.swt.widgets.Text;
  */
 public class SelectGeneratedWidgetsWizardPage extends WizardSelectionPage implements ICheckStateListener {
 
-    private DataBindingContext databindingContext;
+    protected DataBindingContext databindingContext;
 
     private String formName;
 
@@ -336,7 +336,7 @@ public class SelectGeneratedWidgetsWizardPage extends WizardSelectionPage implem
 
     protected Composite createTreeContainer(Composite parent) {
         final Composite container = new Composite(parent, SWT.NONE);
-        container.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).create());
+        container.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(10, 10).create());
         container.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         return container;
     }
