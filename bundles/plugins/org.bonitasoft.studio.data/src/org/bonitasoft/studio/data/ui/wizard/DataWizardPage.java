@@ -1215,7 +1215,10 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
             public void handleEvent(final Event event) {
                 openClassSelectionDialog(classText);
                 data.getDefaultValue().setReturnType(classText.getText());
-                data.getDefaultValue().setType(ExpressionConstants.SCRIPT_TYPE);
+                String type = data.getDefaultValue().getType();
+                if (!type.equals(ExpressionConstants.QUERY_TYPE) && !type.equals(ExpressionConstants.SCRIPT_TYPE)) {
+                    data.getDefaultValue().setType(ExpressionConstants.SCRIPT_TYPE);
+                }
             }
         });
         return client;
