@@ -24,9 +24,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
-import org.bonitasoft.studio.common.extension.IEngineAction;
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.perspectives.BonitaPerspectivesUtils;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
@@ -36,8 +33,6 @@ import org.bonitasoft.studio.profiles.ProfilePlugin;
 import org.bonitasoft.studio.profiles.i18n.Messages;
 import org.bonitasoft.studio.profiles.repository.ProfileFileStore;
 import org.bonitasoft.studio.profiles.repository.ProfileRepositoryStore;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IViewPart;
@@ -174,19 +169,6 @@ public class BonitaProfilesManager implements IBonitaActivitiesCategory {
     }
 
 
-    private void startJetty() {
-        IConfigurationElement[] elements = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements("org.bonitasoft.studio.engine.preEngineAction"); //$NON-NLS-1$
-        IEngineAction contrib = null;
-        for (IConfigurationElement elem : elements){
-            try {
-                contrib = (IEngineAction) elem.createExecutableExtension("class"); //$NON-NLS-1$
-            } catch (CoreException e) {
-                BonitaStudioLog.error(e);
-            }
-            contrib.run();
-        }
-    }
-
     public void setActiveProfile(String profileName,boolean updateUI) {
         final ProfileRepositoryStore profileStore = (ProfileRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ProfileRepositoryStore.class) ;
         if(profileStore.getChild(profileName+"."+ProfileRepositoryStore.PROFILE_EXT) == null){
@@ -233,7 +215,6 @@ public class BonitaProfilesManager implements IBonitaActivitiesCategory {
                 }
                 activePage.resetPerspective();
             }
-            startJetty();
         }
     }
 

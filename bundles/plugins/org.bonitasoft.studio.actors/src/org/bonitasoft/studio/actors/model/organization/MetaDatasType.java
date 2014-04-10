@@ -38,21 +38,21 @@ import org.eclipse.emf.ecore.EObject;
  * @generated
  */
 public interface MetaDatasType extends EObject {
-    /**
+	/**
 	 * Returns the value of the '<em><b>Meta Data</b></em>' containment reference list.
 	 * The list contents are of type {@link org.bonitasoft.studio.actors.model.organization.Metadata}.
 	 * <!-- begin-user-doc -->
-     * <p>
-     * If the meaning of the '<em>Meta Data</em>' containment reference list isn't clear,
-     * there really should be more of a description here...
-     * </p>
-     * <!-- end-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Meta Data</em>' containment reference list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Meta Data</em>' containment reference list.
 	 * @see org.bonitasoft.studio.actors.model.organization.OrganizationPackage#getMetaDatasType_MetaData()
 	 * @model containment="true"
 	 *        extendedMetaData="kind='element' name='metaData'"
 	 * @generated
 	 */
-    EList<Metadata> getMetaData();
+	EList<Metadata> getMetaData();
 
 } // MetaDatasType

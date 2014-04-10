@@ -78,6 +78,7 @@ public class ApplicationURLBuilder {
 
         final String loginURL = buildLoginUrl(userName, password) ;
         return new URL(loginURL+"&redirectUrl="+URLEncoder.encode(getRedirectURL(locale), ENCODING));
+
     }
     
     protected String getRedirectURL(String locale) throws UnsupportedEncodingException {

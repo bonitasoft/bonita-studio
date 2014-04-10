@@ -58,6 +58,7 @@ import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
  */
 public abstract class AbstractEMFRepositoryStore<T extends EMFFileStore> extends AbstractRepositoryStore<T> implements IRepositoryStore<T> {
 
+	
 	private static final String MIGRATION_HISTORY_PATH = "process.history";
 	private AdapterFactoryLabelProvider labelProvider;
 	private final ComposedAdapterFactory adapterFactory;
@@ -126,6 +127,8 @@ public abstract class AbstractEMFRepositoryStore<T extends EMFFileStore> extends
 		final File tmpFile = new File(resource.getURI().toFileString());
 		String nsURI = ReleaseUtils.getNamespaceURI(resourceURI);
 
+		
+		
 		if(nsURI==null){
 			tmpFile.delete();
 			copyIs.close();

@@ -149,14 +149,14 @@ public interface Membership extends EObject {
 	 */
 	void setGroupParentPath(String value);
 
-    /**
+	/**
 	 * Returns the value of the '<em><b>Assigned By</b></em>' attribute.
 	 * <!-- begin-user-doc -->
-     * <p>
-     * If the meaning of the '<em>Assigned By</em>' attribute isn't clear,
-     * there really should be more of a description here...
-     * </p>
-     * <!-- end-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Assigned By</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Assigned By</em>' attribute.
 	 * @see #setAssignedBy(String)
 	 * @see org.bonitasoft.studio.actors.model.organization.OrganizationPackage#getMembership_AssignedBy()
@@ -164,26 +164,26 @@ public interface Membership extends EObject {
 	 *        extendedMetaData="kind='element' name='assignedBy'"
 	 * @generated
 	 */
-    String getAssignedBy();
+	String getAssignedBy();
 
-    /**
+	/**
 	 * Sets the value of the '{@link org.bonitasoft.studio.actors.model.organization.Membership#getAssignedBy <em>Assigned By</em>}' attribute.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Assigned By</em>' attribute.
 	 * @see #getAssignedBy()
 	 * @generated
 	 */
-    void setAssignedBy(String value);
+	void setAssignedBy(String value);
 
-    /**
+	/**
 	 * Returns the value of the '<em><b>Assigned Date</b></em>' attribute.
 	 * <!-- begin-user-doc -->
-     * <p>
-     * If the meaning of the '<em>Assigned Date</em>' attribute isn't clear,
-     * there really should be more of a description here...
-     * </p>
-     * <!-- end-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Assigned Date</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Assigned Date</em>' attribute.
 	 * @see #isSetAssignedDate()
 	 * @see #unsetAssignedDate()
@@ -193,41 +193,41 @@ public interface Membership extends EObject {
 	 *        extendedMetaData="kind='element' name='assignedDate'"
 	 * @generated
 	 */
-    long getAssignedDate();
+	long getAssignedDate();
 
-    /**
+	/**
 	 * Sets the value of the '{@link org.bonitasoft.studio.actors.model.organization.Membership#getAssignedDate <em>Assigned Date</em>}' attribute.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Assigned Date</em>' attribute.
 	 * @see #isSetAssignedDate()
 	 * @see #unsetAssignedDate()
 	 * @see #getAssignedDate()
 	 * @generated
 	 */
-    void setAssignedDate(long value);
+	void setAssignedDate(long value);
 
-    /**
+	/**
 	 * Unsets the value of the '{@link org.bonitasoft.studio.actors.model.organization.Membership#getAssignedDate <em>Assigned Date</em>}' attribute.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @see #isSetAssignedDate()
 	 * @see #getAssignedDate()
 	 * @see #setAssignedDate(long)
 	 * @generated
 	 */
-    void unsetAssignedDate();
+	void unsetAssignedDate();
 
-    /**
+	/**
 	 * Returns whether the value of the '{@link org.bonitasoft.studio.actors.model.organization.Membership#getAssignedDate <em>Assigned Date</em>}' attribute is set.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @return whether the value of the '<em>Assigned Date</em>' attribute is set.
 	 * @see #unsetAssignedDate()
 	 * @see #getAssignedDate()
 	 * @see #setAssignedDate(long)
 	 * @generated
 	 */
-    boolean isSetAssignedDate();
+	boolean isSetAssignedDate();
 
 } // Membership
