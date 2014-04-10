@@ -1620,12 +1620,20 @@ public class FormsExporter {
                         addDefaultFloatValidator(formField, builder);
                         return;
                     }
+                    if (Short.class.getName().equals(returnTypeModifier)) {
+                        addDefaultShortValidator(formField, builder);
+                        return;
+                    }
                     if (Double.class.getName().equals(returnTypeModifier)) {
                         addDefaultDoubleValidator(formField, builder);
                         return;
                     }
                     if (Long.class.getName().equals(returnTypeModifier)) {
                         addDefaultLongValidator(formField, builder);
+                        return;
+                    }
+                    if (Character.class.getName().equals(returnTypeModifier)) {
+                        addDefaultCharValidator(formField, builder);
                         return;
                     }
                 }
@@ -1682,6 +1690,20 @@ public class FormsExporter {
         builder.addValidator(formField.getName() + "_default_validator",
                 DefaultValidatorsProperties.getInstance().getDefaultValidator(Float.class.getName()), null, ValidatorPosition.BOTTOM);
         builder.addLabelExpression("#numericFloatFieldValidatorLabel", "#numericFloatFieldValidatorLabel",
+                ExpressionConstants.CONSTANT_TYPE, String.class.getName(), null);
+    }
+
+    private void addDefaultShortValidator(final FormField formField, final IFormBuilder builder) throws InvalidFormDefinitionException {
+        builder.addValidator(formField.getName() + "_default_validator",
+                DefaultValidatorsProperties.getInstance().getDefaultValidator(Short.class.getName()), null, ValidatorPosition.BOTTOM);
+        builder.addLabelExpression("#numericShortFieldValidatorLabel", "#numericShortFieldValidatorLabel",
+                ExpressionConstants.CONSTANT_TYPE, String.class.getName(), null);
+    }
+
+    private void addDefaultCharValidator(final FormField formField, final IFormBuilder builder) throws InvalidFormDefinitionException {
+        builder.addValidator(formField.getName() + "_default_validator",
+                DefaultValidatorsProperties.getInstance().getDefaultValidator(Character.class.getName()), null, ValidatorPosition.BOTTOM);
+        builder.addLabelExpression("#charFieldValidatorLabel", "#charFieldValidatorLabel",
                 ExpressionConstants.CONSTANT_TYPE, String.class.getName(), null);
     }
 
