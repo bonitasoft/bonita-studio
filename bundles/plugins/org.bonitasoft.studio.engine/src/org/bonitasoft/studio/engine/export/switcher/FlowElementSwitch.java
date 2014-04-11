@@ -713,12 +713,6 @@ public class FlowElementSwitch extends AbstractSwitch {
         }
     }
 
-    protected void addDisplayDescriptionAfterCompletion(GatewayDefinitionBuilder builder, FlowElement flowElement){
-        org.bonitasoft.engine.expression.Expression exp =   EngineExpressionUtil.createExpression(flowElement.getStepSummary()) ;
-        if(exp != null){
-            builder.addDisplayDescriptionAfterCompletion(exp) ;
-        }
-    }
 
     protected void addDisplayTitle(GatewayDefinitionBuilder builder, FlowElement flowElement) {
         org.bonitasoft.engine.expression.Expression exp =   EngineExpressionUtil.createExpression(flowElement.getDynamicLabel()) ;
@@ -726,54 +720,63 @@ public class FlowElementSwitch extends AbstractSwitch {
             builder.addDisplayName(exp) ;
         }
     }
-
-    protected void addOperation(ActivityDefinitionBuilder builder,OperationContainer activity) {
-        for(Operation operation : activity.getOperations()){
-            String inputType = null ;
-            if(!operation.getOperator().getInputTypes().isEmpty()){
-                inputType = operation.getOperator().getInputTypes().get(0) ;
-            }
-            if(operation.getLeftOperand() != null
-                    && operation.getLeftOperand().getContent() != null
-                    && operation.getRightOperand() != null
-                    && operation.getRightOperand().getContent() != null){
-                if (ExpressionConstants.SEARCH_INDEX_TYPE.equals(operation.getLeftOperand().getType())){
-                    // get the pool to get the list of searchIndex list
-                    Pool pool = null;
-                    if(activity.eContainer() instanceof Pool){
-                        pool = (Pool) activity.eContainer();
-                    }else if(activity.eContainer().eContainer() instanceof Pool){
-                        pool = (Pool) activity.eContainer().eContainer();
-                    }
-                    // get the searchIndex list
-                    List<SearchIndex> searchIndexList = new ArrayList<SearchIndex>();
-                    if(pool!=null){
-                        searchIndexList = pool.getSearchIndexes();
-                    }
-                    int idx=1;
-                    for(SearchIndex searchIdx : searchIndexList){
-                        // get the related searchIndex to set the operation
-                        if(searchIdx.getName().getContent().equals(operation.getLeftOperand().getName())){
-                            builder.addOperation(EngineExpressionUtil.createLeftOperandIndex(idx), OperatorType.STRING_INDEX, null, null, EngineExpressionUtil.createExpression(operation.getRightOperand()));
-                            break;
-                        }
-                        idx++;
-                    }
-                } else {
-                    builder.addOperation(EngineExpressionUtil.createLeftOperand(operation.getLeftOperand()), OperatorType.valueOf(operation.getOperator().getType()), operation.getOperator().getExpression(),inputType, EngineExpressionUtil.createExpression(operation.getRightOperand())) ;
-                }
-            }
+    
+    protected void addDisplayDescriptionAfterCompletion(GatewayDefinitionBuilder builder, FlowElement flowElement){
+        org.bonitasoft.engine.expression.Expression exp =   EngineExpressionUtil.createExpression(flowElement.getStepSummary()) ;
+        if(exp != null){
+            builder.addDisplayDescriptionAfterCompletion(exp) ;
         }
     }
 
-    protected void addLoop(ActivityDefinitionBuilder builder,Activity activity) {
-        if(activity.getIsLoop()){
-            if(activity.getLoopCondition() != null){
-                builder.addLoop(activity.getTestBefore(), EngineExpressionUtil.createExpression(activity.getLoopCondition()), EngineExpressionUtil.createExpression(activity.getLoopMaximum())) ;
-            }
-        }
-    }
+    
+	protected void addOperation(ActivityDefinitionBuilder builder,OperationContainer activity) {
+		for(Operation operation : activity.getOperations()){
+			String inputType = null ;
+			if(!operation.getOperator().getInputTypes().isEmpty()){
+				inputType = operation.getOperator().getInputTypes().get(0) ;
+			}
+			if(operation.getLeftOperand() != null
+					&& operation.getLeftOperand().getContent() != null
+					&& operation.getRightOperand() != null
+					&& operation.getRightOperand().getContent() != null){
+				if (ExpressionConstants.SEARCH_INDEX_TYPE.equals(operation.getLeftOperand().getType())){
+					// get the pool to get the list of searchIndex list
+					Pool pool = null;
+					if(activity.eContainer() instanceof Pool){
+						pool = (Pool) activity.eContainer();
+					}else if(activity.eContainer().eContainer() instanceof Pool){
+						pool = (Pool) activity.eContainer().eContainer();
+					}
+					// get the searchIndex list
+					List<SearchIndex> searchIndexList = new ArrayList<SearchIndex>();
+					if(pool!=null){
+						searchIndexList = pool.getSearchIndexes();
+					}
+					int idx=1;
+					for(SearchIndex searchIdx : searchIndexList){
+						// get the related searchIndex to set the operation
+						if(searchIdx.getName().getContent().equals(operation.getLeftOperand().getName())){
+							builder.addOperation(EngineExpressionUtil.createLeftOperandIndex(idx), OperatorType.STRING_INDEX, null, null, EngineExpressionUtil.createExpression(operation.getRightOperand()));
+							break;
+						}
+						idx++;
+					}
+				} else {
+					builder.addOperation(EngineExpressionUtil.createLeftOperand(operation.getLeftOperand()), OperatorType.valueOf(EngineExpressionUtil.getOperatorType(operation)), operation.getOperator().getExpression(),inputType, EngineExpressionUtil.createExpression(operation.getRightOperand())) ;
+				}
+			}
+		}
+	}
 
+
+
+	protected void addLoop(ActivityDefinitionBuilder builder,Activity activity) {
+		if(activity.getIsLoop()){
+			if(activity.getLoopCondition() != null){
+				builder.addLoop(activity.getTestBefore(), EngineExpressionUtil.createExpression(activity.getLoopCondition()), EngineExpressionUtil.createExpression(activity.getLoopMaximum())) ;
+			}
+		}
+	}
 
 
 

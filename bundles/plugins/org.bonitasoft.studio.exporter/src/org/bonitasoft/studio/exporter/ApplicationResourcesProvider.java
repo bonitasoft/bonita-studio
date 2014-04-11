@@ -34,7 +34,6 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.bonitasoft.console.common.server.preferences.properties.SecurityProperties;
 import org.bonitasoft.engine.bpm.bar.BarResource;
 import org.bonitasoft.engine.bpm.bar.BusinessArchiveBuilder;
 import org.bonitasoft.studio.common.BonitaHomeUtil;
@@ -69,7 +68,10 @@ import org.eclipse.emf.ecore.EObject;
  */
 public class ApplicationResourcesProvider implements BARResourcesProvider {
 
-
+    public static final String AUTO_LOGIN_PROPERTY = "forms.application.login.auto";
+    public static final String AUTO_LOGIN_USERNAME_PROPERTY = "forms.application.login.auto.username";
+    public static final String AUTO_LOGIN_PASSWORD_PROPERTY = "forms.application.login.auto.password";
+    
 	protected static final String CSS_BONITA_FORM_DEFAULT = "css/bonita_form_default.css";
 	private static final long TENANT_ID = 1;
 	private final File tmpDir = ProjectUtil.getBonitaStudioWorkFolder();
@@ -332,12 +334,12 @@ public class ApplicationResourcesProvider implements BARResourcesProvider {
 				Properties properties = new Properties();
 				FileInputStream is = new FileInputStream(securityConfig);
 				properties.load(is) ;
-				properties.setProperty(SecurityProperties.AUTO_LOGIN_PROPERTY, Boolean.TRUE.toString());
+				properties.setProperty(AUTO_LOGIN_PROPERTY, Boolean.TRUE.toString());
 				String autoLoginUserName = conf.getAnonymousUserName();
 				String autoLoginPassword = conf.getAnonymousPassword();
 				if (autoLoginUserName != null && !autoLoginUserName.isEmpty()) {
-					properties.setProperty(SecurityProperties.AUTO_LOGIN_USERNAME_PROPERTY, autoLoginUserName);
-					properties.setProperty(SecurityProperties.AUTO_LOGIN_PASSWORD_PROPERTY, (autoLoginPassword!=null && !autoLoginPassword.isEmpty())? autoLoginPassword : "");
+					properties.setProperty(AUTO_LOGIN_USERNAME_PROPERTY, autoLoginUserName);
+					properties.setProperty(AUTO_LOGIN_PASSWORD_PROPERTY, (autoLoginPassword!=null && !autoLoginPassword.isEmpty())? autoLoginPassword : "");
 				}
 				
 				ByteArrayOutputStream os = new ByteArrayOutputStream();

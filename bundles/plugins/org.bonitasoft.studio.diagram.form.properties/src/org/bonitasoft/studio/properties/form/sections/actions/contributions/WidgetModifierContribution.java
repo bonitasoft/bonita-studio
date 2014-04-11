@@ -33,6 +33,8 @@ import org.bonitasoft.studio.model.form.TextFormField;
 import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
+import org.eclipse.core.databinding.UpdateValueStrategy;
+import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
@@ -40,6 +42,7 @@ import org.eclipse.emf.databinding.edit.EMFEditObservables;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -88,6 +91,19 @@ public class WidgetModifierContribution implements IExtensibleGridPropertySectio
         deco.setShowOnlyOnFocus(false);
 
         dataBindingContext.bindValue(ViewersObservables.observeSingleSelection(modifiersCombo), EMFEditObservables.observeValue(editingDomain, widget, FormPackage.Literals.WIDGET__RETURN_TYPE_MODIFIER));
+     
+        UpdateValueStrategy notStrategy = new UpdateValueStrategy();
+        notStrategy.setConverter(new Converter(Boolean.class,Boolean.class) {
+			
+			public Object convert(Object fromObject) {
+				if((Boolean)fromObject){
+					return !(Boolean)fromObject;
+				}
+				return true;
+			}
+		});
+        
+        dataBindingContext.bindValue(SWTObservables.observeEnabled(modifiersCombo.getCombo()), EMFEditObservables.observeValue(editingDomain, widget, FormPackage.Literals.DUPLICABLE__DUPLICATE),notStrategy,notStrategy);
     }
 
     private Collection<String> getAvailableModifiersFor(Widget widget) {

@@ -110,6 +110,11 @@ public class OperatorSelectionDialog extends Dialog implements ISelectionChanged
 		}
 		return closed ;
 	}
+	
+	protected boolean isSupportedType(Expression exp) {
+		String type = exp.getType();
+		return ExpressionConstants.VARIABLE_TYPE.equals(type);
+	}
 
 	@Override
 	protected Control createDialogArea(Composite parent) {
@@ -129,7 +134,7 @@ public class OperatorSelectionDialog extends Dialog implements ISelectionChanged
 			@Override
 			public boolean select(Viewer viewer, Object parentElement, Object element) {
 				Expression exp = operation.getLeftOperand() ;
-				if(exp != null && !exp.getReferencedElements().isEmpty() && ExpressionConstants.VARIABLE_TYPE.equals(exp.getType())){
+				if(exp != null && !exp.getReferencedElements().isEmpty() && isSupportedType(exp)){
 					EObject data = exp.getReferencedElements().get(0) ;
 					if(data instanceof BusinessObjectData){
 						return element.equals(ExpressionConstants.CREATE_BUSINESS_DATA_OPERATOR) ||  element.equals(ExpressionConstants.JAVA_METHOD_OPERATOR);
@@ -145,6 +150,8 @@ public class OperatorSelectionDialog extends Dialog implements ISelectionChanged
 				}
 				return element.equals(ExpressionConstants.ASSIGNMENT_OPERATOR) ;
 			}
+
+			
 		}) ;
 
 
@@ -186,7 +193,7 @@ public class OperatorSelectionDialog extends Dialog implements ISelectionChanged
 		Expression exp = operation.getLeftOperand() ;
 		String operatorType = (String) ((IStructuredSelection) event.getSelection()).getFirstElement() ;
 		createOperatorEditorFor(section, operatorType, operator, exp) ;
-		if(ExpressionConstants.ASSIGNMENT_OPERATOR.equals(operator.getType())){
+		if(ExpressionConstants.CREATE_BUSINESS_DATA_OPERATOR.equals(operator.getType()) || ExpressionConstants.ASSIGNMENT_OPERATOR.equals(operator.getType())){
 			enableOKButton(true);
 		}
 		relayout() ;

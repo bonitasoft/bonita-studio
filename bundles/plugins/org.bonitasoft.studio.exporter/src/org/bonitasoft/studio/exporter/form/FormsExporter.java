@@ -129,9 +129,13 @@ public class FormsExporter {
 
     // dummy expression properties for empty cells in Table and EditableGrid widgets
     private final String EMPTY_EXPRESSION_NAME = "empty";
+
     private final String EMPTY_EXPRESSION_CONTENT = "";
+
     private final String EMPTY_EXPRESSION_TYPE = ExpressionConstants.CONSTANT_TYPE;
+
     private final String EMPTY_EXPRESSION_RETURN_TYPE = String.class.getName();
+
     protected Set<EObject> excludedObject;
 
     public File createXmlForms(final AbstractProcess studioProcess, final boolean isAllInBarExport, Set<EObject> excludedObject) throws Exception {
@@ -214,13 +218,13 @@ public class FormsExporter {
      * @throws InvalidFormDefinitionException
      */
     protected void exportViewPageFlow(final ViewPageFlow viewPageFlow, final IFormBuilder builder) throws InvalidFormDefinitionException {
-        //		if (viewPageFlow.getViewPageFlowType() == ConsultationPageFlowType.PAGEFLOW) {
-        //			if (viewPageFlow instanceof AbstractProcess) {
-        //				addProcessConsultationPageFlow(viewPageFlow, builder);
-        //			} else {
-        //				addConsultationPageFlow(viewPageFlow, builder);
-        //			}
-        //		}
+        // if (viewPageFlow.getViewPageFlowType() == ConsultationPageFlowType.PAGEFLOW) {
+        // if (viewPageFlow instanceof AbstractProcess) {
+        // addProcessConsultationPageFlow(viewPageFlow, builder);
+        // } else {
+        // addConsultationPageFlow(viewPageFlow, builder);
+        // }
+        // }
     }
 
     /**
@@ -237,7 +241,8 @@ public class FormsExporter {
                 builder.addEntryForm(buildEntryFormID(pageFlow));
                 builder.addPermissions(buildPermission(pageFlow));
                 break;
-            case REDIRECT:break;
+            case REDIRECT:
+                break;
         }
     }
 
@@ -399,18 +404,18 @@ public class FormsExporter {
             builder.addLabelExpression(engineExpression.getName(), engineExpression.getContent(), engineExpression.getExpressionType(),
                     engineExpression.getReturnType(), engineExpression.getInterpreter().isEmpty() ? null : engineExpression.getInterpreter());
             addExpressionDependency(builder, engineExpression);
-        }else{
-            builder.addLabelExpression(	EMPTY_EXPRESSION_NAME,
+        } else {
+            builder.addLabelExpression(EMPTY_EXPRESSION_NAME,
                     EMPTY_EXPRESSION_CONTENT,
                     EMPTY_EXPRESSION_TYPE,
-                    EMPTY_EXPRESSION_RETURN_TYPE, 
+                    EMPTY_EXPRESSION_RETURN_TYPE,
                     null);
         }
     }
 
     protected String getExpressionType(final AbstractExpression expression) {
-        if(expression instanceof Expression){
-            Expression exp = (Expression)expression;
+        if (expression instanceof Expression) {
+            Expression exp = (Expression) expression;
             String type = exp.getType();
             if (ExpressionConstants.VARIABLE_TYPE.equals(type)) {
                 final Data data = (Data) exp.getReferencedElements().get(0);
@@ -429,7 +434,7 @@ public class FormsExporter {
             throws InvalidFormDefinitionException {
         for (final org.bonitasoft.engine.expression.Expression dependency : expression.getDependencies()) {
             builder.addDependentExpression(dependency.getName(), dependency.getContent(), dependency.getExpressionType(), dependency.getReturnType(),
-                    (dependency.getInterpreter() !=null && !dependency.getInterpreter().isEmpty()) ?  dependency.getInterpreter() : null );
+                    (dependency.getInterpreter() != null && !dependency.getInterpreter().isEmpty()) ? dependency.getInterpreter() : null);
         }
     }
 
@@ -461,8 +466,9 @@ public class FormsExporter {
     protected void addFormGlobalActions(final IFormBuilder builder, final Form f) throws InvalidFormDefinitionException {
         // add forms global actions last
         for (final Operation action : f.getActions()) {
-            if (action.getRightOperand() != null && action.getRightOperand().getContent() != null && !action.getRightOperand().getContent().isEmpty() && action.getLeftOperand() != null
-                    && action.getLeftOperand().getContent() != null &&  !action.getLeftOperand().getContent().isEmpty()) {
+            if (action.getRightOperand() != null && action.getRightOperand().getContent() != null && !action.getRightOperand().getContent().isEmpty()
+                    && action.getLeftOperand() != null
+                    && action.getLeftOperand().getContent() != null && !action.getLeftOperand().getContent().isEmpty()) {
                 addAction(builder, action);
             }
         }
@@ -470,7 +476,8 @@ public class FormsExporter {
 
     protected void addSubmitButtonActions(final IFormBuilder builder, final SubmitFormButton w) throws InvalidFormDefinitionException {
         for (final Operation action : w.getActions()) {
-            if (action.getRightOperand() != null && action.getRightOperand().getContent() != null && !action.getRightOperand().getContent().isEmpty() && action.getLeftOperand() != null
+            if (action.getRightOperand() != null && action.getRightOperand().getContent() != null && !action.getRightOperand().getContent().isEmpty()
+                    && action.getLeftOperand() != null
                     && action.getLeftOperand().getContent() != null && !action.getLeftOperand().getContent().isEmpty()) {
                 addAction(builder, action);
             }
@@ -479,7 +486,7 @@ public class FormsExporter {
 
     protected void addWidgetAction(final Widget w, final PageFlow pageflow, final IFormBuilder builder) throws InvalidFormDefinitionException {
         if (w instanceof FormField) {
-            if(w instanceof FileWidget && ((FileWidget) w).isDownloadOnly()){
+            if (w instanceof FileWidget && ((FileWidget) w).isDownloadOnly()) {
                 return;
             }
 
@@ -494,6 +501,20 @@ public class FormsExporter {
         }
     }
 
+    protected void addAction(final IFormBuilder builder, final Operation action, final String submitButtonIdName) throws InvalidFormDefinitionException {
+        final String storeExpression = action.getLeftOperand().getContent();
+        final Expression expression = action.getRightOperand();
+        final EList<String> inputTypes = action.getOperator().getInputTypes();
+        if (submitButtonIdName != null) {
+            builder.addAction(getActionType(action), storeExpression, isTransientData(action.getLeftOperand()), action
+                    .getOperator().getExpression(), inputTypes != null && !inputTypes.isEmpty() ? inputTypes.get(0) : null, submitButtonIdName);
+        } else {
+            // FIXME: add Action with no submittton id
+            builder.addAction(getActionType(action), storeExpression, isTransientData(action.getLeftOperand()), action
+                    .getOperator().getExpression(), inputTypes != null && !inputTypes.isEmpty() ? inputTypes.get(0) : null, null);
+        }
+        addActionExpression(builder, expression);
+    }
 
     /**
      * @param pageflow
@@ -510,21 +531,9 @@ public class FormsExporter {
         addAction(builder, action, widgetName);
     }
 
-    protected void addAction(final IFormBuilder builder, final Operation action, final String submitButtonIdName) throws InvalidFormDefinitionException {
-        final String storeExpression = action.getLeftOperand().getContent();
-        final Expression expression = action.getRightOperand();
-        final EList<String> inputTypes = action.getOperator().getInputTypes();
-        if (submitButtonIdName != null) {
-            builder.addAction(ActionType.valueOf(action.getOperator().getType()), storeExpression, isTransientData(action.getLeftOperand()), action
-                    .getOperator().getExpression(), inputTypes != null && !inputTypes.isEmpty() ? inputTypes.get(0) : null, submitButtonIdName);
-        } else {
-            // FIXME: add Action with no submittton id
-            builder.addAction(ActionType.valueOf(action.getOperator().getType()), storeExpression, isTransientData(action.getLeftOperand()), action
-                    .getOperator().getExpression(), inputTypes != null && !inputTypes.isEmpty() ? inputTypes.get(0) : null, null);
-        }
-        addActionExpression(builder, expression);
+    protected ActionType getActionType(final Operation operation) {
+        return ActionType.valueOf(EngineExpressionUtil.getOperatorType(operation));
     }
-
 
     protected boolean isTransientData(final Expression expression) {
         if (expression != null) {
@@ -544,7 +553,7 @@ public class FormsExporter {
     protected void addActionExpression(final IFormBuilder builder, final Expression expression) throws InvalidFormDefinitionException {
         final org.bonitasoft.engine.expression.Expression engineExpression = EngineExpressionUtil.createExpression(expression);
         builder.addActionExpression(engineExpression.getName(), engineExpression.getContent(), engineExpression.getExpressionType(),
-                engineExpression.getReturnType(), engineExpression.getInterpreter().isEmpty()?null : engineExpression.getInterpreter());
+                engineExpression.getReturnType(), engineExpression.getInterpreter().isEmpty() ? null : engineExpression.getInterpreter());
         addExpressionDependency(builder, engineExpression);
     }
 
@@ -578,44 +587,45 @@ public class FormsExporter {
     protected void addTransientDataExpression(final IFormBuilder builder, final Expression expression) throws InvalidFormDefinitionException {
         final org.bonitasoft.engine.expression.Expression engineExpression = EngineExpressionUtil.createExpression(expression);
         builder.addTransientDataExpression(engineExpression.getName(), engineExpression.getContent(), engineExpression.getExpressionType(),
-                engineExpression.getReturnType(), engineExpression.getInterpreter().isEmpty() ? null : engineExpression.getInterpreter()  );
+                engineExpression.getReturnType(), engineExpression.getInterpreter().isEmpty() ? null : engineExpression.getInterpreter());
         addExpressionDependency(builder, engineExpression);
     }
+
     //
-    //	/**
-    //	 * @param theData
-    //	 * @return the class of the data as string
-    //	 */
-    //	public String getReturnTypeClassFor(final Data data) {
-    //		final DataType dataType = data.getDataType();
-    //		if (data.isMultiple()) {
-    //			return List.class.getName();
-    //		} else if (data.getDataType() instanceof EnumType) {
-    //			// TODO no enum
-    //		} else if (dataType instanceof DateType) { // To be tested before
-    //			// StringType
-    //			return Date.class.getName();
-    //		} else if (dataType instanceof StringType) {
-    //			return String.class.getName();
-    //		} else if (dataType instanceof BooleanType) {
-    //			return Boolean.class.getName();
-    //		} else if (dataType instanceof IntegerType) {
-    //			return Long.class.getName();
-    //		} else if (dataType instanceof FloatType) {
-    //			return Double.class.getName();
-    //		} else if (dataType instanceof JavaType) {
-    //			final JavaObjectData javaObjectData = (JavaObjectData) data;
-    //			if (javaObjectData.getClassName() != null) {
-    //				return javaObjectData.getClassName();
-    //			} else {
-    //				return Object.class.getName();
-    //			}
-    //		} else if (dataType instanceof XMLType) {
-    //			// TODO no xml
-    //		}
+    // /**
+    // * @param theData
+    // * @return the class of the data as string
+    // */
+    // public String getReturnTypeClassFor(final Data data) {
+    // final DataType dataType = data.getDataType();
+    // if (data.isMultiple()) {
+    // return List.class.getName();
+    // } else if (data.getDataType() instanceof EnumType) {
+    // // TODO no enum
+    // } else if (dataType instanceof DateType) { // To be tested before
+    // // StringType
+    // return Date.class.getName();
+    // } else if (dataType instanceof StringType) {
+    // return String.class.getName();
+    // } else if (dataType instanceof BooleanType) {
+    // return Boolean.class.getName();
+    // } else if (dataType instanceof IntegerType) {
+    // return Long.class.getName();
+    // } else if (dataType instanceof FloatType) {
+    // return Double.class.getName();
+    // } else if (dataType instanceof JavaType) {
+    // final JavaObjectData javaObjectData = (JavaObjectData) data;
+    // if (javaObjectData.getClassName() != null) {
+    // return javaObjectData.getClassName();
+    // } else {
+    // return Object.class.getName();
+    // }
+    // } else if (dataType instanceof XMLType) {
+    // // TODO no xml
+    // }
     //
-    //		return String.class.getName();
-    //	}
+    // return String.class.getName();
+    // }
 
     /**
      * @param task
@@ -676,9 +686,9 @@ public class FormsExporter {
 
     protected void addParameterExpression(final IFormBuilder builder, final Expression expression) throws InvalidFormDefinitionException {
         final org.bonitasoft.engine.expression.Expression engineExpression = EngineExpressionUtil.createExpression(expression);
-        if(engineExpression != null
+        if (engineExpression != null
                 && engineExpression.getContent() != null
-                && !engineExpression.getContent().isEmpty()){
+                && !engineExpression.getContent().isEmpty()) {
             builder.addParameterExpression(engineExpression.getName(), engineExpression.getContent(), engineExpression.getExpressionType(),
                     engineExpression.getReturnType(), engineExpression.getInterpreter().isEmpty() ? null : engineExpression.getInterpreter());
             addExpressionDependency(builder, engineExpression);
@@ -787,7 +797,7 @@ public class FormsExporter {
     }
 
     protected void addModifierReturnType(final IFormBuilder builder, final Widget widget) throws InvalidFormDefinitionException {
-        if(widget instanceof TextFormField && widget.getReturnTypeModifier() != null){
+        if (widget instanceof TextFormField && widget.getReturnTypeModifier() != null) {
             builder.addFieldOutputType(widget.getReturnTypeModifier());
         }
     }
@@ -801,12 +811,12 @@ public class FormsExporter {
 
     protected void addHtmlAttributes(final IFormBuilder builder, final Widget widget) throws InvalidFormDefinitionException {
         final String s = widget.getRealHtmlAttributes();
-        if(widget instanceof Duplicable){
-            if( ((Duplicable) widget).isDuplicate()){
+        if (widget instanceof Duplicable) {
+            if (((Duplicable) widget).isDuplicate()) {
                 return;
             }
         }
-        if (widget instanceof Group){
+        if (widget instanceof Group) {
             return;
         }
         if (s != null && !s.isEmpty()) {
@@ -856,10 +866,10 @@ public class FormsExporter {
                         if (isAnApplicationResource(process, path)) {
                             builder.addInitialValueExpression(path.getName(), ExporterTools.toApplicationResourceURL("application/" + path.getContent().trim(),
                                     process.getName(), process.getVersion(), timestamp), ExpressionConstants.CONSTANT_TYPE, String.class.getName(), null);
-                        } else if(isARootResource(process, path)){
+                        } else if (isARootResource(process, path)) {
                             builder.addInitialValueExpression(path.getName(), ExporterTools.toApplicationResourceURL(path.getContent().trim(),
                                     process.getName(), process.getVersion(), timestamp), ExpressionConstants.CONSTANT_TYPE, String.class.getName(), null);
-                        }else {
+                        } else {
                             addInitialValueExpression(builder, path);
                         }
                     } else {
@@ -884,14 +894,14 @@ public class FormsExporter {
                 if (temp instanceof File) {
                     if (((File) temp).getName().equals(item)) {
                         if (!((File) temp).isDirectory()) {
-                            if(!tokenizer.hasMoreElements()){
+                            if (!tokenizer.hasMoreElements()) {
                                 return true;
                             }
                         }
                     }
                 } else if (temp instanceof ResourceFile) {
                     if (((ResourceFile) temp).getPath().endsWith("/" + item)) {
-                        if(!tokenizer.hasMoreElements()){
+                        if (!tokenizer.hasMoreElements()) {
                             return true;
                         }
                     }
@@ -1087,7 +1097,7 @@ public class FormsExporter {
                 }
             }
         } else {
-            if(table.isFirstRowIsHeader() || table.isLastRowIsHeader()){
+            if (table.isFirstRowIsHeader() || table.isLastRowIsHeader()) {
                 final Expression horizontalHeaderExpression = table.getHorizontalHeaderExpression();
                 if (horizontalHeaderExpression != null && horizontalHeaderExpression.getContent() != null && !horizontalHeaderExpression.getContent().isEmpty()) {
                     addHorizontalHeaderExpression(builder, horizontalHeaderExpression);
@@ -1098,30 +1108,30 @@ public class FormsExporter {
 
     protected void addHorizontalHeaderExpression(final IFormBuilder builder, final Expression expression) throws InvalidFormDefinitionException {
         final org.bonitasoft.engine.expression.Expression engineExpression = EngineExpressionUtil.createExpression(expression);
-        if(engineExpression != null){
+        if (engineExpression != null) {
             builder.addHorizontalHeaderExpression(engineExpression.getName(), engineExpression.getContent(), engineExpression.getExpressionType(),
                     engineExpression.getReturnType(), engineExpression.getInterpreter().isEmpty() ? null : engineExpression.getInterpreter());
             addExpressionDependency(builder, engineExpression);
-        }else{
-            builder.addHorizontalHeaderExpression(	EMPTY_EXPRESSION_NAME,
+        } else {
+            builder.addHorizontalHeaderExpression(EMPTY_EXPRESSION_NAME,
                     EMPTY_EXPRESSION_CONTENT,
                     EMPTY_EXPRESSION_TYPE,
-                    EMPTY_EXPRESSION_RETURN_TYPE, 
+                    EMPTY_EXPRESSION_RETURN_TYPE,
                     null);
         }
     }
 
     protected void addVerticalHeaderExpression(final IFormBuilder builder, final Expression expression) throws InvalidFormDefinitionException {
         final org.bonitasoft.engine.expression.Expression engineExpression = EngineExpressionUtil.createExpression(expression);
-        if(engineExpression != null){
+        if (engineExpression != null) {
             builder.addVerticalHeaderExpression(engineExpression.getName(), engineExpression.getContent(), engineExpression.getExpressionType(),
                     engineExpression.getReturnType(), engineExpression.getInterpreter().isEmpty() ? null : engineExpression.getInterpreter());
             addExpressionDependency(builder, engineExpression);
-        }else{
-            builder.addHorizontalHeaderExpression(	EMPTY_EXPRESSION_NAME,
+        } else {
+            builder.addHorizontalHeaderExpression(EMPTY_EXPRESSION_NAME,
                     EMPTY_EXPRESSION_CONTENT,
                     EMPTY_EXPRESSION_TYPE,
-                    EMPTY_EXPRESSION_RETURN_TYPE, 
+                    EMPTY_EXPRESSION_RETURN_TYPE,
                     null);
         }
 
@@ -1150,7 +1160,7 @@ public class FormsExporter {
                 }
             }
         } else {
-            if(table.isRightColumnIsHeader() || table.isLeftColumnIsHeader()){
+            if (table.isRightColumnIsHeader() || table.isLeftColumnIsHeader()) {
                 final Expression verticalHeaderExpression = table.getVerticalHeaderExpression();
                 if (verticalHeaderExpression != null && verticalHeaderExpression.getContent() != null && !verticalHeaderExpression.getContent().isEmpty()) {
                     addVerticalHeaderExpression(builder, verticalHeaderExpression);
@@ -1197,11 +1207,11 @@ public class FormsExporter {
             builder.addValueExpression(engineExpression.getName(), engineExpression.getContent(), engineExpression.getExpressionType(),
                     engineExpression.getReturnType(), engineExpression.getInterpreter().isEmpty() ? null : engineExpression.getInterpreter());
             addExpressionDependency(builder, engineExpression);
-        }else{
-            builder.addValueExpression(	EMPTY_EXPRESSION_NAME,
+        } else {
+            builder.addValueExpression(EMPTY_EXPRESSION_NAME,
                     EMPTY_EXPRESSION_CONTENT,
                     EMPTY_EXPRESSION_TYPE,
-                    EMPTY_EXPRESSION_RETURN_TYPE, 
+                    EMPTY_EXPRESSION_RETURN_TYPE,
                     null);
         }
     }
@@ -1290,7 +1300,7 @@ public class FormsExporter {
     protected void addInitialValueExpression(final IFormBuilder builder, final Expression expression) throws InvalidFormDefinitionException {
         if (expression != null && expression.getContent() != null && !expression.getContent().isEmpty()) {
             final org.bonitasoft.engine.expression.Expression engineExpression = EngineExpressionUtil.createExpression(expression);
-            if(engineExpression != null){
+            if (engineExpression != null) {
                 final String interpreter = engineExpression.getInterpreter();
                 builder.addInitialValueExpression(
                         engineExpression.getName(),
@@ -1300,11 +1310,11 @@ public class FormsExporter {
                         interpreter == null || interpreter.isEmpty() ? null : interpreter);
                 addExpressionDependency(builder, engineExpression);
             }
-        }else{ // add empty expression
-            builder.addInitialValueExpression(	EMPTY_EXPRESSION_NAME,
+        } else { // add empty expression
+            builder.addInitialValueExpression(EMPTY_EXPRESSION_NAME,
                     EMPTY_EXPRESSION_CONTENT,
                     EMPTY_EXPRESSION_TYPE,
-                    EMPTY_EXPRESSION_RETURN_TYPE, 
+                    EMPTY_EXPRESSION_RETURN_TYPE,
                     null);
         }
     }
@@ -1317,7 +1327,7 @@ public class FormsExporter {
     protected void addLabel(final IFormBuilder builder, final Widget widget) throws InvalidFormDefinitionException {
         // show display == false -> no label
         final Expression displayLabel = widget.getDisplayLabel();
-        if ((widget.getShowDisplayLabel() == null || widget.getShowDisplayLabel().booleanValue()) && displayLabel != null && displayLabel.getContent() != null 
+        if ((widget.getShowDisplayLabel() == null || widget.getShowDisplayLabel().booleanValue()) && displayLabel != null && displayLabel.getContent() != null
                 && !displayLabel.getContent().isEmpty()) {
             // display label
             addLabelExpressionIfValid(builder, displayLabel);
@@ -1361,12 +1371,12 @@ public class FormsExporter {
         if (widget instanceof TextFormField) {
             builder.addWidget(widget.getName(), WidgetType.TEXTBOX);
             addInitialValue(widget, builder);
-            if (((TextFormField) widget).getMaxLength() != 0) {
+            if (((TextFormField) widget).getMaxLength() > 0) {
                 builder.addMaxLength(((TextFormField) widget).getMaxLength());
             }
         } else if (widget instanceof PasswordFormField) {
             builder.addWidget(widget.getName(), WidgetType.PASSWORD);
-            if (((PasswordFormField) widget).getMaxLength() != 0) {
+            if (((PasswordFormField) widget).getMaxLength() > 0) {
                 builder.addMaxLength(((PasswordFormField) widget).getMaxLength());
             }
             addInitialValue(widget, builder);
@@ -1379,10 +1389,10 @@ public class FormsExporter {
             addInitialValue(widget, builder);
         } else if (widget instanceof TextAreaFormField) {
             builder.addWidget(widget.getName(), WidgetType.TEXTAREA);
-            if (((TextAreaFormField) widget).getMaxLength() != 0) {
+            if (((TextAreaFormField) widget).getMaxLength() > 0) {
                 builder.addMaxLength(((TextAreaFormField) widget).getMaxLength());
             }
-            if (((TextAreaFormField) widget).getMaxHeigth() != 0) {
+            if (((TextAreaFormField) widget).getMaxHeigth() > 0) {
                 builder.addMaxHeight(((TextAreaFormField) widget).getMaxHeigth());
             }
             addInitialValue(widget, builder);
@@ -1402,7 +1412,7 @@ public class FormsExporter {
             }
         } else if (widget instanceof ListFormField) {
             builder.addWidget(widget.getName(), WidgetType.LISTBOX_MULTIPLE);
-            if (((ListFormField) widget).getMaxHeigth() != 0) {
+            if (((ListFormField) widget).getMaxHeigth() > 0) {
                 builder.addMaxHeight(((ListFormField) widget).getMaxHeigth());
             }
 
@@ -1445,7 +1455,7 @@ public class FormsExporter {
         // for multiple valuated fields
         if (widget instanceof MultipleValuatedFormField) {
             addMultipleValuatedFormFieldInitialValue((MultipleValuatedFormField) widget, builder);
-            if(!(widget instanceof AbstractTable)){
+            if (!(widget instanceof AbstractTable)) {
                 addAvailableValues((MultipleValuatedFormField) widget, builder);
             }
         }
@@ -1453,11 +1463,18 @@ public class FormsExporter {
 
     protected void addDocumentInitialValue(final FileWidget widget, final IFormBuilder builder) throws InvalidFormDefinitionException {
         final FileWidgetInputType widgetInputType = widget.getInputType();
-        switch(widgetInputType){
-            case DOCUMENT : builder.addFileWidgetInputType(org.bonitasoft.forms.client.model.FileWidgetInputType.ALL);break;
-            case URL : builder.addFileWidgetInputType(org.bonitasoft.forms.client.model.FileWidgetInputType.URL);break;
-            case RESOURCE : builder.addFileWidgetInputType(org.bonitasoft.forms.client.model.FileWidgetInputType.FILE);break;
-            default : break;
+        switch (widgetInputType) {
+            case DOCUMENT:
+                builder.addFileWidgetInputType(org.bonitasoft.forms.client.model.FileWidgetInputType.ALL);
+                break;
+            case URL:
+                builder.addFileWidgetInputType(org.bonitasoft.forms.client.model.FileWidgetInputType.URL);
+                break;
+            case RESOURCE:
+                builder.addFileWidgetInputType(org.bonitasoft.forms.client.model.FileWidgetInputType.FILE);
+                break;
+            default:
+                break;
         }
         if (widgetInputType == FileWidgetInputType.URL || widgetInputType == FileWidgetInputType.DOCUMENT) {
             final Expression inputExpression = widget.getInputExpression();
@@ -1617,7 +1634,8 @@ public class FormsExporter {
                             // long)
                             builder.addValidator(formField.getName() + "_default_validator",
                                     DefaultValidatorsProperties.getInstance().getDefaultValidator(Integer.class.getName()), null, ValidatorPosition.BOTTOM);
-                            builder.addLabelExpression("#numericIntegerFieldValidatorLabel", "#numericIntegerFieldValidatorLabel", ExpressionConstants.CONSTANT_TYPE,
+                            builder.addLabelExpression("#numericIntegerFieldValidatorLabel", "#numericIntegerFieldValidatorLabel",
+                                    ExpressionConstants.CONSTANT_TYPE,
                                     String.class.getName(), null);
                         }
                         if (dataTypeEclass.equals(ProcessPackage.eINSTANCE.getFloatType())) {
