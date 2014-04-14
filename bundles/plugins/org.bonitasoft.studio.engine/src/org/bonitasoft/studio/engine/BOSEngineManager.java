@@ -5,14 +5,14 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
+ * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.engine;
 
@@ -52,39 +52,48 @@ import org.eclipse.core.runtime.IStatus;
 
 /**
  * @author Romain Bioteau
- *
+ * 
  */
 public class BOSEngineManager {
 
     private static final String POSTSTARTUP_CONTIBUTION_ID = "org.bonitasoft.studio.engine.postEngineAction";
+
     public static final String PLATFORM_PASSWORD = "platform";
+
     public static final String PLATFORM_USER = "platformAdmin";
+
     public static final String BONITA_TECHNICAL_USER = "install";
+
     public static final String BONITA_TECHNICAL_USER_PASSWORD = "install";
 
     public static final String API_TYPE_PROPERTY_NAME = "org.bonitasoft.engine.api-type";
+
     public static final String DEFAULT_TENANT_NAME = "default";
+
     public static final String DEFAULT_TENANT_DESC = "The default tenant created by the Studio";
+
     private static final String ENGINESERVERMANAGER_EXTENSION_D = "org.bonitasoft.studio.engine.bonitaEngineManager";
-    private static BOSEngineManager INSTANCE ;
+
+    private static BOSEngineManager INSTANCE;
+
     private boolean isRunning = false;
+
     private IProgressMonitor monitor;
 
-
     protected BOSEngineManager(IProgressMonitor monitor) {
-        if(monitor == null){
-            this.monitor = Repository.NULL_PROGRESS_MONITOR ;
-        }else{
-            this.monitor = monitor ;
+        if (monitor == null) {
+            this.monitor = Repository.NULL_PROGRESS_MONITOR;
+        } else {
+            this.monitor = monitor;
         }
     }
 
-    public static BOSEngineManager getInstance(){
-        return getInstance(null) ;
+    public static BOSEngineManager getInstance() {
+        return getInstance(null);
     }
 
-    public static synchronized BOSEngineManager getInstance(IProgressMonitor monitor){
-        if(INSTANCE == null){
+    public static synchronized BOSEngineManager getInstance(IProgressMonitor monitor) {
+        if (INSTANCE == null) {
             // Setting useCaches to false avoids a memory leak of URLJarFile
             // instances
             // It's a workaround for a Sun bug (see bug id 4167874 - fixed in
@@ -100,32 +109,31 @@ public class BOSEngineManager {
             } catch (IOException ioe) {
                 // Can't Log this. Should we send to STDOUT/STDERR?
             }
-            INSTANCE = createInstance(monitor) ;
+            INSTANCE = createInstance(monitor);
         }
-        return INSTANCE ;
+        return INSTANCE;
     }
 
     protected static BOSEngineManager createInstance(IProgressMonitor monitor) {
-        for(IConfigurationElement element : BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(ENGINESERVERMANAGER_EXTENSION_D)){
+        for (IConfigurationElement element : BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(ENGINESERVERMANAGER_EXTENSION_D)) {
             try {
                 return (BOSEngineManager) element.createExecutableExtension("class");
             } catch (CoreException e) {
-                BonitaStudioLog.error(e,EnginePlugin.PLUGIN_ID);
+                BonitaStudioLog.error(e, EnginePlugin.PLUGIN_ID);
             }
         }
 
         return new BOSEngineManager(monitor);
     }
 
-
-    public synchronized void start(){
-        if(!isRunning()){
-            monitor.beginTask(Messages.initializingProcessEngine, IProgressMonitor.UNKNOWN) ;
-            initBonitaHome() ;
-            BOSWebServerManager.getInstance().startServer(monitor) ;
+    public synchronized void start() {
+        if (!isRunning()) {
+            monitor.beginTask(Messages.initializingProcessEngine, IProgressMonitor.UNKNOWN);
+            initBonitaHome();
+            BOSWebServerManager.getInstance().startServer(monitor);
             postEngineStart();
-            isRunning = true ;
-            monitor.done() ;
+            isRunning = true;
+            monitor.done();
         }
     }
 
@@ -137,18 +145,19 @@ public class BOSEngineManager {
         }
     }
 
-    public synchronized void stop(){
-        BOSWebServerManager.getInstance().stopServer(monitor);
-        if(BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().getBoolean(BonitaPreferenceConstants.DELETE_TENANT_ON_EXIT)){
-            BOSWebServerManager.getInstance().cleanBeforeShutdown();
+    public synchronized void stop() {
+        if (isRunning()) {
+            BOSWebServerManager.getInstance().stopServer(monitor);
+            isRunning = false;
         }
-        isRunning = false ;
+        BOSWebServerManager.getInstance().cleanBeforeShutdown();
+
     }
 
     protected void executePostStartupContributions() throws Exception {
         IConfigurationElement[] elements = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(POSTSTARTUP_CONTIBUTION_ID);
         IEngineAction contrib = null;
-        for (IConfigurationElement elem : elements){
+        for (IConfigurationElement elem : elements) {
             try {
                 contrib = (IEngineAction) elem.createExecutableExtension("class"); //$NON-NLS-1$
             } catch (CoreException e) {
@@ -157,8 +166,8 @@ public class BOSEngineManager {
             APISession session = getLoginAPI().login(BONITA_TECHNICAL_USER, BONITA_TECHNICAL_USER_PASSWORD);
             try {
                 contrib.run(session);
-            }finally{
-                if(session != null){
+            } finally {
+                if (session != null) {
                     logoutDefaultTenant(session);
                 }
             }
@@ -166,9 +175,8 @@ public class BOSEngineManager {
 
     }
 
-
     private void initBonitaHome() {
-        BonitaHomeUtil.initBonitaHome() ;
+        BonitaHomeUtil.initBonitaHome();
     }
 
     public boolean isRunning() {
@@ -177,38 +185,41 @@ public class BOSEngineManager {
 
     public ProcessAPI getProcessAPI(APISession session) {
         try {
-            return	TenantAPIAccessor.getProcessAPI(session);
+            return TenantAPIAccessor.getProcessAPI(session);
         } catch (Exception e) {
-            BonitaStudioLog.error(e) ;
+            BonitaStudioLog.error(e);
         }
-        return null ;
+        return null;
     }
 
     protected LoginAPI getLoginAPI() throws BonitaHomeNotSetException, ServerAPIException, UnknownAPITypeException {
         return TenantAPIAccessor.getLoginAPI();
     }
 
-    public APISession loginDefaultTenant(IProgressMonitor monitor) throws LoginException, BonitaHomeNotSetException, ServerAPIException, UnknownAPITypeException {
-        return loginTenant(BONITA_TECHNICAL_USER, BONITA_TECHNICAL_USER_PASSWORD,false, monitor);
+    public APISession loginDefaultTenant(IProgressMonitor monitor) throws LoginException, BonitaHomeNotSetException, ServerAPIException,
+            UnknownAPITypeException {
+        return loginTenant(BONITA_TECHNICAL_USER, BONITA_TECHNICAL_USER_PASSWORD, false, monitor);
     }
 
-    public APISession loginTenant(String login, String password, IProgressMonitor monitor) throws LoginException, BonitaHomeNotSetException, ServerAPIException, UnknownAPITypeException {
+    public APISession loginTenant(String login, String password, IProgressMonitor monitor) throws LoginException, BonitaHomeNotSetException,
+            ServerAPIException, UnknownAPITypeException {
         return loginTenant(login, password, true, monitor);
     }
 
-    protected APISession loginTenant(String login, String password,boolean waitForOrganization, IProgressMonitor monitor) throws LoginException, BonitaHomeNotSetException, ServerAPIException, UnknownAPITypeException {
-        if(!isRunning()){
-            if(monitor != null){
-                monitor.subTask(Messages.waitingForEngineToStart) ;
+    protected APISession loginTenant(String login, String password, boolean waitForOrganization, IProgressMonitor monitor) throws LoginException,
+            BonitaHomeNotSetException, ServerAPIException, UnknownAPITypeException {
+        if (!isRunning()) {
+            if (monitor != null) {
+                monitor.subTask(Messages.waitingForEngineToStart);
             }
-            start() ;
+            start();
         }
-        if(BonitaStudioLog.isLoggable(IStatus.OK)){
-            BonitaStudioLog.debug("Attempt to login as "+login, EnginePlugin.PLUGIN_ID);
+        if (BonitaStudioLog.isLoggable(IStatus.OK)) {
+            BonitaStudioLog.debug("Attempt to login as " + login, EnginePlugin.PLUGIN_ID);
         }
         APISession session = getLoginAPI().login(login, password);
-        if(session != null){
-            if(BonitaStudioLog.isLoggable(IStatus.OK)){
+        if (session != null) {
+            if (BonitaStudioLog.isLoggable(IStatus.OK)) {
                 BonitaStudioLog.debug("Login successful.", EnginePlugin.PLUGIN_ID);
             }
 
@@ -217,16 +228,16 @@ public class BOSEngineManager {
     }
 
     public void logoutDefaultTenant(APISession session) {
-        try{
-            getLoginAPI().logout(session)  ;
+        try {
+            getLoginAPI().logout(session);
         } catch (Exception e) {
-            BonitaStudioLog.error(e) ;
+            BonitaStudioLog.error(e);
         }
     }
 
-    protected ClassLoader createEngineClassloader(){
+    protected ClassLoader createEngineClassloader() {
         Set<URL> urls = new HashSet<URL>();
-        Enumeration<URL> foundJars = ProjectUtil.getConsoleLibsBundle().findEntries("/lib","*.jar", true);
+        Enumeration<URL> foundJars = ProjectUtil.getConsoleLibsBundle().findEntries("/lib", "*.jar", true);
         while (foundJars.hasMoreElements()) {
             URL url = foundJars.nextElement();
             try {
@@ -235,7 +246,7 @@ public class BOSEngineManager {
                 BonitaStudioLog.error(e);
             }
         }
-        foundJars = ProjectUtil.getConsoleLibsBundle().findEntries("/h2","h2-*.jar", true);
+        foundJars = ProjectUtil.getConsoleLibsBundle().findEntries("/h2", "h2-*.jar", true);
         while (foundJars.hasMoreElements()) {
             URL url = foundJars.nextElement();
             try {
@@ -244,10 +255,11 @@ public class BOSEngineManager {
                 BonitaStudioLog.error(e);
             }
         }
-        return new NonLockingJarFileClassLoader("Bonita Engine CLassloader", urls.toArray(new URL[]{}));
+        return new NonLockingJarFileClassLoader("Bonita Engine CLassloader", urls.toArray(new URL[] {}));
     }
 
-    public IdentityAPI getIdentityAPI(APISession session) throws InvalidSessionException, BonitaHomeNotSetException, ServerAPIException, UnknownAPITypeException {
+    public IdentityAPI getIdentityAPI(APISession session) throws InvalidSessionException, BonitaHomeNotSetException, ServerAPIException,
+            UnknownAPITypeException {
         return TenantAPIAccessor.getIdentityAPI(session);
     }
 
