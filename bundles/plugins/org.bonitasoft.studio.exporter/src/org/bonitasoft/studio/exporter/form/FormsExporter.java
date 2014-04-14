@@ -553,7 +553,8 @@ public class FormsExporter {
     protected void addActionExpression(final IFormBuilder builder, final Expression expression) throws InvalidFormDefinitionException {
         final org.bonitasoft.engine.expression.Expression engineExpression = EngineExpressionUtil.createExpression(expression);
         builder.addActionExpression(engineExpression.getName(), engineExpression.getContent(), engineExpression.getExpressionType(),
-                engineExpression.getReturnType(), engineExpression.getInterpreter().isEmpty() ? null : engineExpression.getInterpreter());
+                engineExpression.getReturnType(), engineExpression.getInterpreter() == null || engineExpression.getInterpreter().isEmpty() ? null
+                        : engineExpression.getInterpreter());
         addExpressionDependency(builder, engineExpression);
     }
 
@@ -587,7 +588,8 @@ public class FormsExporter {
     protected void addTransientDataExpression(final IFormBuilder builder, final Expression expression) throws InvalidFormDefinitionException {
         final org.bonitasoft.engine.expression.Expression engineExpression = EngineExpressionUtil.createExpression(expression);
         builder.addTransientDataExpression(engineExpression.getName(), engineExpression.getContent(), engineExpression.getExpressionType(),
-                engineExpression.getReturnType(), engineExpression.getInterpreter().isEmpty() ? null : engineExpression.getInterpreter());
+                engineExpression.getReturnType(), engineExpression.getInterpreter() == null || engineExpression.getInterpreter().isEmpty() ? null
+                        : engineExpression.getInterpreter());
         addExpressionDependency(builder, engineExpression);
     }
 
@@ -1220,7 +1222,8 @@ public class FormsExporter {
         if (expression.getContent() != null && !expression.getContent().isEmpty()) {
             final org.bonitasoft.engine.expression.Expression engineExpression = EngineExpressionUtil.createExpression(expression);
             builder.addAvailableValuesExpression(engineExpression.getName(), engineExpression.getContent(), engineExpression.getExpressionType(),
-                    engineExpression.getReturnType(), engineExpression.getInterpreter().isEmpty() ? null : engineExpression.getInterpreter());
+                    engineExpression.getReturnType(), engineExpression.getInterpreter() == null || engineExpression.getInterpreter().isEmpty() ? null
+                            : engineExpression.getInterpreter());
             addExpressionDependency(builder, engineExpression);
         }
     }
@@ -1604,62 +1607,119 @@ public class FormsExporter {
                 && !formField.isDuplicate()
                 && !(formField instanceof MultipleValuatedFormField)) {
             if (formField instanceof DateFormField) {
-                builder.addValidator(formField.getName() + "_default_validator",
-                        DefaultValidatorsProperties.getInstance().getDefaultValidator(Date.class.getName()), null, ValidatorPosition.BOTTOM);
-                builder.addLabelExpression("#dateFieldValidatorLabel", "#dateFieldValidatorLabel", ExpressionConstants.CONSTANT_TYPE, String.class.getName(),
-                        null);
-            } else {
-                final Operation formFieldScript = formField.getAction();
-                if (formFieldScript != null && formFieldScript.getRightOperand() != null && formFieldScript.getRightOperand().getContent() != null
-                        && formFieldScript.getLeftOperand() != null && formFieldScript.getLeftOperand().getReferencedElements() != null
-                        && !formFieldScript.getLeftOperand().getReferencedElements().isEmpty()) {
-
-                    final EObject element = formFieldScript.getLeftOperand().getReferencedElements().get(0);
-                    if (element instanceof Data) {
-                        final Data data = (Data) element;
-                        final EClass dataTypeEclass = data.getDataType().eClass();
-                        if (dataTypeEclass.equals(ProcessPackage.eINSTANCE.getDateType())) {
-                            builder.addValidator(formField.getName() + "_default_validator",
-                                    DefaultValidatorsProperties.getInstance().getDefaultValidator(Date.class.getName()), null, ValidatorPosition.BOTTOM);
-                            builder.addLabelExpression("#dateFieldValidatorLabel", "#dateFieldValidatorLabel", ExpressionConstants.CONSTANT_TYPE,
-                                    String.class.getName(), null);
-                        }
-                        if (dataTypeEclass.equals(ProcessPackage.eINSTANCE.getIntegerType()) && !(formField instanceof DurationFormField)) {// no
-                            // validator
-                            // for
-                            // durationFormfield
-                            // (always
-                            // return
-                            // a
-                            // long)
-                            builder.addValidator(formField.getName() + "_default_validator",
-                                    DefaultValidatorsProperties.getInstance().getDefaultValidator(Integer.class.getName()), null, ValidatorPosition.BOTTOM);
-                            builder.addLabelExpression("#numericIntegerFieldValidatorLabel", "#numericIntegerFieldValidatorLabel",
-                                    ExpressionConstants.CONSTANT_TYPE,
-                                    String.class.getName(), null);
-                        }
-                        if (dataTypeEclass.equals(ProcessPackage.eINSTANCE.getFloatType())) {
-                            builder.addValidator(formField.getName() + "_default_validator",
-                                    DefaultValidatorsProperties.getInstance().getDefaultValidator(Float.class.getName()), null, ValidatorPosition.BOTTOM);
-                            builder.addLabelExpression("#numericFloatFieldValidatorLabel", "#numericFloatFieldValidatorLabel",
-                                    ExpressionConstants.CONSTANT_TYPE, String.class.getName(), null);
-                        }
-                        if (dataTypeEclass.equals(ProcessPackage.eINSTANCE.getDoubleType())) {
-                            builder.addValidator(formField.getName() + "_default_validator",
-                                    DefaultValidatorsProperties.getInstance().getDefaultValidator(Double.class.getName()), null, ValidatorPosition.BOTTOM);
-                            builder.addLabelExpression("#numericDoubleFieldValidatorLabel", "#numericDoubleFieldValidatorLabel",
-                                    ExpressionConstants.CONSTANT_TYPE, String.class.getName(), null);
-                        }
-                        if (dataTypeEclass.equals(ProcessPackage.eINSTANCE.getLongType())) {
-                            builder.addValidator(formField.getName() + "_default_validator",
-                                    DefaultValidatorsProperties.getInstance().getDefaultValidator(Long.class.getName()), null, ValidatorPosition.BOTTOM);
-                            builder.addLabelExpression("#numericLongFieldValidatorLabel", "#numericLongFieldValidatorLabel",
-                                    ExpressionConstants.CONSTANT_TYPE, String.class.getName(), null);
-                        }
+                addDefaultDateValidator(formField, builder);
+                return;
+            } else if (formField instanceof TextFormField) {
+                String returnTypeModifier = ((TextFormField) formField).getReturnTypeModifier();
+                if (returnTypeModifier != null) {
+                    if (Integer.class.getName().equals(returnTypeModifier)) {
+                        addDefaultIntegerValidator(formField, builder);
+                        return;
+                    }
+                    if (Float.class.getName().equals(returnTypeModifier)) {
+                        addDefaultFloatValidator(formField, builder);
+                        return;
+                    }
+                    if (Short.class.getName().equals(returnTypeModifier)) {
+                        addDefaultShortValidator(formField, builder);
+                        return;
+                    }
+                    if (Double.class.getName().equals(returnTypeModifier)) {
+                        addDefaultDoubleValidator(formField, builder);
+                        return;
+                    }
+                    if (Long.class.getName().equals(returnTypeModifier)) {
+                        addDefaultLongValidator(formField, builder);
+                        return;
+                    }
+                    if (Character.class.getName().equals(returnTypeModifier)) {
+                        addDefaultCharValidator(formField, builder);
+                        return;
                     }
                 }
             }
+            final Operation formFieldScript = formField.getAction();
+            if (formFieldScript != null && formFieldScript.getRightOperand() != null && formFieldScript.getRightOperand().getContent() != null
+                    && formFieldScript.getLeftOperand() != null && formFieldScript.getLeftOperand().getReferencedElements() != null
+                    && !formFieldScript.getLeftOperand().getReferencedElements().isEmpty()) {
+                final EObject element = formFieldScript.getLeftOperand().getReferencedElements().get(0);
+                if (element instanceof Data) {
+                    final Data data = (Data) element;
+                    final EClass dataTypeEclass = data.getDataType().eClass();
+                    if (dataTypeEclass.equals(ProcessPackage.eINSTANCE.getDateType())) {
+                        addDefaultDateValidator(formField, builder);
+                        return;
+                    }
+                    if (dataTypeEclass.equals(ProcessPackage.eINSTANCE.getIntegerType()) && !(formField instanceof DurationFormField)) {
+                        addDefaultIntegerValidator(formField, builder);
+                        return;
+                    }
+                    if (dataTypeEclass.equals(ProcessPackage.eINSTANCE.getFloatType())) {
+                        addDefaultFloatValidator(formField, builder);
+                        return;
+                    }
+                    if (dataTypeEclass.equals(ProcessPackage.eINSTANCE.getDoubleType())) {
+                        addDefaultDoubleValidator(formField, builder);
+                        return;
+                    }
+                    if (dataTypeEclass.equals(ProcessPackage.eINSTANCE.getLongType())) {
+                        addDefaultLongValidator(formField, builder);
+                        return;
+                    }
+                }
+            }
+
         }
+    }
+
+    private void addDefaultLongValidator(final FormField formField, final IFormBuilder builder) throws InvalidFormDefinitionException {
+        builder.addValidator(formField.getName() + "_default_validator",
+                DefaultValidatorsProperties.getInstance().getDefaultValidator(Long.class.getName()), null, ValidatorPosition.BOTTOM);
+        builder.addLabelExpression("#numericLongFieldValidatorLabel", "#numericLongFieldValidatorLabel",
+                ExpressionConstants.CONSTANT_TYPE, String.class.getName(), null);
+    }
+
+    private void addDefaultDoubleValidator(final FormField formField, final IFormBuilder builder) throws InvalidFormDefinitionException {
+        builder.addValidator(formField.getName() + "_default_validator",
+                DefaultValidatorsProperties.getInstance().getDefaultValidator(Double.class.getName()), null, ValidatorPosition.BOTTOM);
+        builder.addLabelExpression("#numericDoubleFieldValidatorLabel", "#numericDoubleFieldValidatorLabel",
+                ExpressionConstants.CONSTANT_TYPE, String.class.getName(), null);
+    }
+
+    private void addDefaultFloatValidator(final FormField formField, final IFormBuilder builder) throws InvalidFormDefinitionException {
+        builder.addValidator(formField.getName() + "_default_validator",
+                DefaultValidatorsProperties.getInstance().getDefaultValidator(Float.class.getName()), null, ValidatorPosition.BOTTOM);
+        builder.addLabelExpression("#numericFloatFieldValidatorLabel", "#numericFloatFieldValidatorLabel",
+                ExpressionConstants.CONSTANT_TYPE, String.class.getName(), null);
+    }
+
+    private void addDefaultShortValidator(final FormField formField, final IFormBuilder builder) throws InvalidFormDefinitionException {
+        builder.addValidator(formField.getName() + "_default_validator",
+                DefaultValidatorsProperties.getInstance().getDefaultValidator(Short.class.getName()), null, ValidatorPosition.BOTTOM);
+        builder.addLabelExpression("#numericShortFieldValidatorLabel", "#numericShortFieldValidatorLabel",
+                ExpressionConstants.CONSTANT_TYPE, String.class.getName(), null);
+    }
+
+    private void addDefaultCharValidator(final FormField formField, final IFormBuilder builder) throws InvalidFormDefinitionException {
+        builder.addValidator(formField.getName() + "_default_validator",
+                DefaultValidatorsProperties.getInstance().getDefaultValidator(Character.class.getName()), null, ValidatorPosition.BOTTOM);
+        builder.addLabelExpression("#charFieldValidatorLabel", "#charFieldValidatorLabel",
+                ExpressionConstants.CONSTANT_TYPE, String.class.getName(), null);
+    }
+
+    private void addDefaultIntegerValidator(final FormField formField, final IFormBuilder builder) throws InvalidFormDefinitionException {
+        builder.addValidator(formField.getName() + "_default_validator",
+                DefaultValidatorsProperties.getInstance().getDefaultValidator(Integer.class.getName()), null, ValidatorPosition.BOTTOM);
+        builder.addLabelExpression("#numericIntegerFieldValidatorLabel", "#numericIntegerFieldValidatorLabel",
+                ExpressionConstants.CONSTANT_TYPE,
+                String.class.getName(), null);
+    }
+
+    private void addDefaultDateValidator(final FormField formField, final IFormBuilder builder) throws InvalidFormDefinitionException {
+        builder.addValidator(formField.getName() + "_default_validator",
+                DefaultValidatorsProperties.getInstance().getDefaultValidator(Date.class.getName()), null, ValidatorPosition.BOTTOM);
+        builder.addLabelExpression("#dateFieldValidatorLabel", "#dateFieldValidatorLabel", ExpressionConstants.CONSTANT_TYPE,
+                String.class.getName(), null);
     }
 
     protected void addFormFieldUserValidators(final FormField formField, final IFormBuilder builder) throws InvalidFormDefinitionException {

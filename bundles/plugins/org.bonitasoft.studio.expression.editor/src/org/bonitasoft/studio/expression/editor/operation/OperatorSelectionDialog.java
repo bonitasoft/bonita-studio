@@ -5,14 +5,14 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
+ * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.expression.editor.operation;
 
@@ -56,183 +56,184 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.forms.widgets.Section;
 
-
 /**
  * @author Romain Bioteau
- *
+ * 
  */
 public class OperatorSelectionDialog extends Dialog implements ISelectionChangedListener {
 
-	private static final String OPERATOR_EDITOR_CONTRIBUTION_ID = "org.bonitasoft.studio.expression.operatorEditor";
-	private final Operation operation;
-	private final Operator operator;
-	private final EMFDataBindingContext context;
-	private Section section;
-	private List<IOperatorEditor> operatorEditors;
-	private final static  List<String> operatorTypeList = new ArrayList<String>() ;
-	static{
-		operatorTypeList.add(ExpressionConstants.ASSIGNMENT_OPERATOR) ;
-		operatorTypeList.add(ExpressionConstants.JAVA_METHOD_OPERATOR) ;
-		operatorTypeList.add(ExpressionConstants.XPATH_UPDATE_OPERATOR) ;
-		operatorTypeList.add(ExpressionConstants.SET_DOCUMENT_OPERATOR) ;
-		operatorTypeList.add(ExpressionConstants.CREATE_BUSINESS_DATA_OPERATOR) ;
-	}
+    private static final String OPERATOR_EDITOR_CONTRIBUTION_ID = "org.bonitasoft.studio.expression.operatorEditor";
 
-	protected OperatorSelectionDialog(Shell parentShell,Operation operation) {
-		super(parentShell);
-		this.operation = operation ;
-		operator = EcoreUtil.copy(operation.getOperator()) ;
-		context = new EMFDataBindingContext() ;
-		initializeOperatorEditors() ;
-	}
+    private final Operation operation;
 
-	private void initializeOperatorEditors() {
-		if(operatorEditors == null){
-			operatorEditors = new ArrayList<IOperatorEditor>() ;
-			for(IConfigurationElement elem :  BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(OPERATOR_EDITOR_CONTRIBUTION_ID)){
-				try{
-					IOperatorEditor editor = (IOperatorEditor) elem.createExecutableExtension("class") ;
-					operatorEditors.add(editor) ;
-				}catch (Exception e) {
-					BonitaStudioLog.error(e) ;
-				}
-			}
-		}
-	}
+    private final Operator operator;
 
-	@Override
-	public boolean close() {
-		boolean closed =  super.close();
-		if(closed){
-			if(context != null){
-				context.dispose() ;
-			}
-		}
-		return closed ;
-	}
-	
-	protected boolean isSupportedType(Expression exp) {
-		String type = exp.getType();
-		return ExpressionConstants.VARIABLE_TYPE.equals(type);
-	}
+    private final EMFDataBindingContext context;
 
-	@Override
-	protected Control createDialogArea(Composite parent) {
-		final Composite mainComposite = new Composite(parent, SWT.NONE) ;
-		mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(300, SWT.DEFAULT).create()) ;
-		mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(10,10).create()) ;
-		final Label operatorType = new Label(mainComposite, SWT.NONE) ;
-		operatorType.setText(Messages.operatorType) ;
+    private Section section;
 
-		final ComboViewer operatorViewer = new ComboViewer(mainComposite,SWT.READ_ONLY | SWT.BORDER);
-		operatorViewer.getCombo().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+    private List<IOperatorEditor> operatorEditors;
 
-		operatorViewer.setContentProvider(new ArrayContentProvider()) ;
-		operatorViewer.setLabelProvider(new OperatorLabelProvider()) ;
-		operatorViewer.addFilter(new ViewerFilter() {
+    private final static List<String> operatorTypeList = new ArrayList<String>();
+    static {
+        operatorTypeList.add(ExpressionConstants.ASSIGNMENT_OPERATOR);
+        operatorTypeList.add(ExpressionConstants.JAVA_METHOD_OPERATOR);
+        operatorTypeList.add(ExpressionConstants.XPATH_UPDATE_OPERATOR);
+        operatorTypeList.add(ExpressionConstants.SET_DOCUMENT_OPERATOR);
+        operatorTypeList.add(ExpressionConstants.CREATE_BUSINESS_DATA_OPERATOR);
+    }
 
-			@Override
-			public boolean select(Viewer viewer, Object parentElement, Object element) {
-				Expression exp = operation.getLeftOperand() ;
-				if(exp != null && !exp.getReferencedElements().isEmpty() && isSupportedType(exp)){
-					EObject data = exp.getReferencedElements().get(0) ;
-					if(data instanceof BusinessObjectData){
-						return element.equals(ExpressionConstants.CREATE_BUSINESS_DATA_OPERATOR) ||  element.equals(ExpressionConstants.JAVA_METHOD_OPERATOR);
-					}else if(data instanceof JavaObjectData){
-						return element.equals(ExpressionConstants.ASSIGNMENT_OPERATOR) ||  element.equals(ExpressionConstants.JAVA_METHOD_OPERATOR);
-					}else if(data instanceof XMLData){
-						return element.equals(ExpressionConstants.ASSIGNMENT_OPERATOR) ||  element.equals(ExpressionConstants.XPATH_UPDATE_OPERATOR);
-					}else{
-						return element.equals(ExpressionConstants.ASSIGNMENT_OPERATOR) ;
-					}
-				}else if(exp != null && !exp.getReferencedElements().isEmpty() && ExpressionConstants.DOCUMENT_REF_TYPE.equals(exp.getType())){
-					return element.equals(ExpressionConstants.SET_DOCUMENT_OPERATOR);
-				}
-				return element.equals(ExpressionConstants.ASSIGNMENT_OPERATOR) ;
-			}
+    protected OperatorSelectionDialog(Shell parentShell, Operation operation) {
+        super(parentShell);
+        this.operation = operation;
+        operator = EcoreUtil.copy(operation.getOperator());
+        context = new EMFDataBindingContext();
+        initializeOperatorEditors();
+    }
 
-			
-		}) ;
+    private void initializeOperatorEditors() {
+        if (operatorEditors == null) {
+            operatorEditors = new ArrayList<IOperatorEditor>();
+            for (IConfigurationElement elem : BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(OPERATOR_EDITOR_CONTRIBUTION_ID)) {
+                try {
+                    IOperatorEditor editor = (IOperatorEditor) elem.createExecutableExtension("class");
+                    operatorEditors.add(editor);
+                } catch (Exception e) {
+                    BonitaStudioLog.error(e);
+                }
+            }
+        }
+    }
 
+    @Override
+    public boolean close() {
+        boolean closed = super.close();
+        if (closed) {
+            if (context != null) {
+                context.dispose();
+            }
+        }
+        return closed;
+    }
 
-		operatorViewer.setInput(operatorTypeList) ;
+    protected boolean isSupportedType(Expression exp) {
+        String type = exp.getType();
+        return ExpressionConstants.VARIABLE_TYPE.equals(type);
+    }
 
-		section = new Section(mainComposite, Section.NO_TITLE) ;
-		section.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 1).create()) ;
+    @Override
+    protected Control createDialogArea(Composite parent) {
+        final Composite mainComposite = new Composite(parent, SWT.NONE);
+        mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(300, SWT.DEFAULT).create());
+        mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(10, 10).create());
+        final Label operatorType = new Label(mainComposite, SWT.NONE);
+        operatorType.setText(Messages.operatorType);
 
-		Expression exp = operation.getLeftOperand() ;
-		for(IOperatorEditor opEditor : operatorEditors){
-			if(!opEditor.appliesTo(exp) && opEditor.appliesTo(operator.getType())){
-				operator.setType(ExpressionConstants.ASSIGNMENT_OPERATOR);
-			}
-		}
-		createOperatorEditorFor(section, operator.getType(), operator, exp) ;
+        final ComboViewer operatorViewer = new ComboViewer(mainComposite, SWT.READ_ONLY | SWT.BORDER);
+        operatorViewer.getCombo().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
+        operatorViewer.setContentProvider(new ArrayContentProvider());
+        operatorViewer.setLabelProvider(new OperatorLabelProvider());
+        operatorViewer.addFilter(new ViewerFilter() {
 
-		context.bindValue(ViewersObservables.observeSingleSelection(operatorViewer), EMFObservables.observeValue(operator, ExpressionPackage.Literals.OPERATOR__TYPE)) ;
-		operatorViewer.addSelectionChangedListener(this) ;
+            @Override
+            public boolean select(Viewer viewer, Object parentElement, Object element) {
+                Expression exp = operation.getLeftOperand();
+                if (exp != null && !exp.getReferencedElements().isEmpty() && isSupportedType(exp)) {
+                    EObject data = exp.getReferencedElements().get(0);
+                    if (data instanceof BusinessObjectData) {
+                        return element.equals(ExpressionConstants.ASSIGNMENT_OPERATOR) || element.equals(ExpressionConstants.CREATE_BUSINESS_DATA_OPERATOR)
+                                || element.equals(ExpressionConstants.JAVA_METHOD_OPERATOR);
+                    } else if (data instanceof JavaObjectData) {
+                        return element.equals(ExpressionConstants.ASSIGNMENT_OPERATOR) || element.equals(ExpressionConstants.JAVA_METHOD_OPERATOR);
+                    } else if (data instanceof XMLData) {
+                        return element.equals(ExpressionConstants.ASSIGNMENT_OPERATOR) || element.equals(ExpressionConstants.XPATH_UPDATE_OPERATOR);
+                    } else {
+                        return element.equals(ExpressionConstants.ASSIGNMENT_OPERATOR);
+                    }
+                } else if (exp != null && !exp.getReferencedElements().isEmpty() && ExpressionConstants.DOCUMENT_REF_TYPE.equals(exp.getType())) {
+                    return element.equals(ExpressionConstants.SET_DOCUMENT_OPERATOR);
+                }
+                return element.equals(ExpressionConstants.ASSIGNMENT_OPERATOR);
+            }
 
-		return mainComposite ;
-	}
+        });
 
+        operatorViewer.setInput(operatorTypeList);
 
-	protected void enableOKButton(boolean enabled) {
-		final Button button = getButton(OK) ;
-		if(button != null){
-			button.setEnabled(enabled) ;
-		}
-	}
+        section = new Section(mainComposite, Section.NO_TITLE);
+        section.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 1).create());
 
+        Expression exp = operation.getLeftOperand();
+        for (IOperatorEditor opEditor : operatorEditors) {
+            if (!opEditor.appliesTo(exp) && opEditor.appliesTo(operator.getType())) {
+                operator.setType(ExpressionConstants.ASSIGNMENT_OPERATOR);
+            }
+        }
+        createOperatorEditorFor(section, operator.getType(), operator, exp);
 
-	public Operator getOperator(){
-		return operator ;
-	}
+        context.bindValue(ViewersObservables.observeSingleSelection(operatorViewer),
+                EMFObservables.observeValue(operator, ExpressionPackage.Literals.OPERATOR__TYPE));
+        operatorViewer.addSelectionChangedListener(this);
 
-	@Override
-	public void selectionChanged(SelectionChangedEvent event) {
-		Expression exp = operation.getLeftOperand() ;
-		String operatorType = (String) ((IStructuredSelection) event.getSelection()).getFirstElement() ;
-		createOperatorEditorFor(section, operatorType, operator, exp) ;
-		if(ExpressionConstants.CREATE_BUSINESS_DATA_OPERATOR.equals(operator.getType()) || ExpressionConstants.ASSIGNMENT_OPERATOR.equals(operator.getType())){
-			enableOKButton(true);
-		}
-		relayout() ;
-	}
+        return mainComposite;
+    }
 
-	private void relayout() {
-		Shell shell = section.getShell();
-		Point defaultSize = shell.getSize() ;
-		Point size = shell.computeSize(SWT.DEFAULT, SWT.DEFAULT, true) ;
-		shell.setSize(defaultSize.x, size.y) ;
-		shell.layout(true, true) ;
-	}
+    protected void enableOKButton(boolean enabled) {
+        final Button button = getButton(OK);
+        if (button != null) {
+            button.setEnabled(enabled);
+        }
+    }
 
+    public Operator getOperator() {
+        return operator;
+    }
 
-	protected void createOperatorEditorFor(Section parentSection,String operatorType,Operator operator,Expression sourceExpression){
-		Composite client = null ;
-		boolean expand = false;
-		if(parentSection.getClient() != null){
-			parentSection.getClient().dispose() ;
-		}
-		for(final IOperatorEditor editor : operatorEditors){
-			if(editor.appliesTo(operatorType)){
-				expand = true;
-				client = editor.createOpeartorEditor(parentSection, operator, sourceExpression) ;
-				editor.addSelectionChangedListener(new ISelectionChangedListener() {
+    @Override
+    public void selectionChanged(SelectionChangedEvent event) {
+        Expression exp = operation.getLeftOperand();
+        String operatorType = (String) ((IStructuredSelection) event.getSelection()).getFirstElement();
+        createOperatorEditorFor(section, operatorType, operator, exp);
+        if (ExpressionConstants.CREATE_BUSINESS_DATA_OPERATOR.equals(operator.getType()) || ExpressionConstants.ASSIGNMENT_OPERATOR.equals(operator.getType())) {
+            enableOKButton(true);
+        }
+        relayout();
+    }
 
-					@Override
-					public void selectionChanged(SelectionChangedEvent event) {
-						enableOKButton(editor.canFinish()) ;
-					}
-				}) ;
-				enableOKButton(editor.canFinish()) ;
-			}
-		}
-		if(client == null){
-			client = new Composite(parentSection, SWT.NONE) ;
-		}
-		parentSection.setClient(client) ;
-		parentSection.setExpanded(expand) ;
-	}
+    private void relayout() {
+        Shell shell = section.getShell();
+        Point defaultSize = shell.getSize();
+        Point size = shell.computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
+        shell.setSize(defaultSize.x, size.y);
+        shell.layout(true, true);
+    }
+
+    protected void createOperatorEditorFor(Section parentSection, String operatorType, Operator operator, Expression sourceExpression) {
+        Composite client = null;
+        boolean expand = false;
+        if (parentSection.getClient() != null) {
+            parentSection.getClient().dispose();
+        }
+        for (final IOperatorEditor editor : operatorEditors) {
+            if (editor.appliesTo(operatorType)) {
+                expand = true;
+                client = editor.createOpeartorEditor(parentSection, operator, sourceExpression);
+                editor.addSelectionChangedListener(new ISelectionChangedListener() {
+
+                    @Override
+                    public void selectionChanged(SelectionChangedEvent event) {
+                        enableOKButton(editor.canFinish());
+                    }
+                });
+                enableOKButton(editor.canFinish());
+            }
+        }
+        if (client == null) {
+            client = new Composite(parentSection, SWT.NONE);
+        }
+        parentSection.setClient(client);
+        parentSection.setExpanded(expand);
+    }
 
 }
