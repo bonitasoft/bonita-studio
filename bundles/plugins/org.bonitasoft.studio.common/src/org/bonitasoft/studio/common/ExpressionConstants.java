@@ -20,8 +20,8 @@ package org.bonitasoft.studio.common;
 import org.bonitasoft.engine.bpm.document.DocumentValue;
 import org.bonitasoft.engine.expression.ExpressionInterpreter;
 import org.bonitasoft.engine.expression.ExpressionType;
+import org.bonitasoft.engine.operation.LeftOperand;
 import org.bonitasoft.engine.operation.OperatorType;
-import org.bonitasoft.forms.client.model.ActionType;
 
 /**
  * @author Romain Bioteau
@@ -67,7 +67,13 @@ public interface ExpressionConstants {
 	String DOCUMENT_REF_TYPE = "DOCUMENT_REF_TYPE";
 	String ALL_TYPES = "ALL_TYPES";
 	String GROUP_ITERATOR_TYPE = "GROUP_ITERATOR_TYPE";
-   
 
-  
+	// left operand types:
+
+	String LEFT_OPERAND_DATA = LeftOperand.DATA;
+	String LEFT_OPERAND_SEARCH_INDEX = LeftOperand.SEARCH_INDEX;
+	String LEFT_OPERAND_DOCUMENT = LeftOperand.DOCUMENT;
+	String LEFT_OPERAND_EXTERNAL_DATA = LeftOperand.EXTERNAL_DATA;
+	String LEFT_OPERAND_TRANSIENT_DATA = LeftOperand.TRANSIENT_DATA;
+
 }

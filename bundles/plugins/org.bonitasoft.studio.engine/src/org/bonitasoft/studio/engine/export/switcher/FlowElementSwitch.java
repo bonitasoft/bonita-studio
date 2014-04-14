@@ -732,10 +732,6 @@ public class FlowElementSwitch extends AbstractSwitch {
 
     protected void addOperation(ActivityDefinitionBuilder builder,OperationContainer activity) {
         for(Operation operation : activity.getOperations()){
-            String inputType = null ;
-            if(!operation.getOperator().getInputTypes().isEmpty()){
-                inputType = operation.getOperator().getInputTypes().get(0) ;
-            }
             if(operation.getLeftOperand() != null
                     && operation.getLeftOperand().getContent() != null
                     && operation.getRightOperand() != null
@@ -753,12 +749,14 @@ public class FlowElementSwitch extends AbstractSwitch {
                     if(pool!=null){
                         searchIndexList = pool.getSearchIndexes();
                     }
+                    int idx=1;
                     for(SearchIndex searchIdx : searchIndexList){
                         // get the related searchIndex to set the operation
                         if(searchIdx.getName().getContent().equals(operation.getLeftOperand().getName())){
-                            builder.addOperation(EngineExpressionUtil.createOperation(operation));
+                            builder.addOperation(EngineExpressionUtil.createOperation(operation, EngineExpressionUtil.createLeftOperandIndex(idx)));
                             break;
                         }
+                        idx++;
                     }
                 } else {
                     builder.addOperation(EngineExpressionUtil.createOperation(operation)) ;
