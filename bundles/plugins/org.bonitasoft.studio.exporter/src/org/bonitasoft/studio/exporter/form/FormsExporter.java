@@ -27,9 +27,6 @@ import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.bonitasoft.engine.expression.ExpressionType;
-import org.bonitasoft.engine.operation.LeftOperand;
-import org.bonitasoft.engine.operation.LeftOperandType;
 import org.bonitasoft.forms.client.model.ActionType;
 import org.bonitasoft.forms.client.model.ReducedFormSubtitle.SubTitlePosition;
 import org.bonitasoft.forms.client.model.ReducedFormValidator.ValidatorPosition;
@@ -120,8 +117,6 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.gmf.runtime.diagram.ui.OffscreenEditPartFactory;
-import org.eclipse.m2m.qvt.oml.ecore.ImperativeOCL.ReturnExp;
 
 /**
  * @author Aurelien Pupier
@@ -506,21 +501,6 @@ public class FormsExporter {
         }
     }
 
-    protected void addAction(final IFormBuilder builder, final Operation action, final String submitButtonIdName) throws InvalidFormDefinitionException {
-        final String storeExpression = action.getLeftOperand().getContent();
-        final Expression expression = action.getRightOperand();
-        final EList<String> inputTypes = action.getOperator().getInputTypes();
-        if (submitButtonIdName != null) {
-            builder.addAction(getActionType(action), storeExpression, isTransientData(action.getLeftOperand()), action
-                    .getOperator().getExpression(), inputTypes != null && !inputTypes.isEmpty() ? inputTypes.get(0) : null, submitButtonIdName);
-        } else {
-            // FIXME: add Action with no submittton id
-            builder.addAction(getActionType(action), storeExpression, isTransientData(action.getLeftOperand()), action
-                    .getOperator().getExpression(), inputTypes != null && !inputTypes.isEmpty() ? inputTypes.get(0) : null, null);
-        }
-        addActionExpression(builder, expression);
-    }
-
     /**
      * @param pageflow
      * @param builder
@@ -539,6 +519,7 @@ public class FormsExporter {
     protected ActionType getActionType(final Operation operation) {
         return ActionType.valueOf(EngineExpressionUtil.getOperatorType(operation));
     }
+    
     protected void addAction(final IFormBuilder builder, final Operation action, final String submitButtonIdName) throws InvalidFormDefinitionException {
     	final ActionType actionType = getActionTypeFromStudioOperatorType(action.getOperator().getType());
     	final String variableName = action.getLeftOperand().getContent();

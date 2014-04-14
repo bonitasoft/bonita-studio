@@ -422,9 +422,9 @@ public class FlowElementSwitch extends AbstractSwitch {
             final LeftOperandBuilder builder = new LeftOperandBuilder() ;
             builder.createNewInstance() ;
             builder.setName(mapping.getSubprocessTarget()) ;
-            builder.setType(LeftOperand.DATA);
+            builder.setType(getLeftOperandTypeForData(mapping.getProcessSource()));
             opBuilder.setLeftOperand(builder.done());
-            opBuilder.setType(getOperatorTypeForData(mapping.getProcessSource()));
+            opBuilder.setType(OperatorType.ASSIGNMENT);
             activityBuilder.addDataInputOperation(opBuilder.done());
         }
 
@@ -437,9 +437,9 @@ public class FlowElementSwitch extends AbstractSwitch {
             final LeftOperandBuilder builder = new LeftOperandBuilder() ;
             builder.createNewInstance() ;
             builder.setName(mapping.getProcessTarget().getName()) ;
-            builder.setType(LeftOperand.DATA);
+            builder.setType(getLeftOperandTypeForData(mapping.getProcessTarget()));
             opBuilder.setLeftOperand(builder.done());
-            opBuilder.setType(getOperatorTypeForData(mapping.getProcessTarget()));
+            opBuilder.setType(OperatorType.ASSIGNMENT);
             activityBuilder.addDataOutputOperation(opBuilder.done());
         }
 
@@ -447,11 +447,11 @@ public class FlowElementSwitch extends AbstractSwitch {
         return object;
     }
 
-    private OperatorType getOperatorTypeForData(Data data) {
+    private String getLeftOperandTypeForData(Data data) {
         if (data instanceof BusinessObjectData) {
-            return OperatorType.ATTACH_EXISTING_BUSINESS_DATA;
+            return LeftOperand.TYPE_BUSINESS_DATA;
         }
-        return OperatorType.ASSIGNMENT;
+        return LeftOperand.TYPE_DATA;
     }
 
     @Override

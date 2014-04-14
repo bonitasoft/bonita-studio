@@ -69,12 +69,6 @@ public interface ExpressionConstants {
     String JAVA_METHOD_OPERATOR = OperatorType.JAVA_METHOD.name() ;
 
     String XPATH_UPDATE_OPERATOR = OperatorType.XPATH_UPDATE_QUERY.name() ;
-    
-    String CREATE_BUSINESS_DATA_OPERATOR = OperatorType.CREATE_BUSINESS_DATA.name();
-
-    String BUSINESS_DATA_JAVA_SETTER_OPERATOR = OperatorType.BUSINESS_DATA_JAVA_SETTER.name();
-
-    String ATTACH_EXISTING_BUSINESS_DATA = OperatorType.ATTACH_EXISTING_BUSINESS_DATA.name();
 
     String GROOVY = ExpressionInterpreter.GROOVY.name();
 
@@ -95,12 +89,31 @@ public interface ExpressionConstants {
 	String GROUP_ITERATOR_TYPE = "GROUP_ITERATOR_TYPE";
    
     String QUERY_TYPE = ExpressionType.TYPE_QUERY_BUSINESS_DATA.name();
+    
+    
+    
+    
+    
 	// left operand types:
+	String LEFT_OPERAND_DATA = LeftOperand.TYPE_DATA;
+	String LEFT_OPERAND_SEARCH_INDEX = LeftOperand.TYPE_SEARCH_INDEX;
+	String LEFT_OPERAND_DOCUMENT = LeftOperand.TYPE_DOCUMENT;
+	String LEFT_OPERAND_EXTERNAL_DATA = LeftOperand.TYPE_EXTERNAL_DATA;
+	String LEFT_OPERAND_TRANSIENT_DATA = LeftOperand.TYPE_TRANSIENT_DATA;
+    String LEFT_OPERAND_BUSINESS_DATA = LeftOperand.TYPE_BUSINESS_DATA;
+    
 
-	String LEFT_OPERAND_DATA = LeftOperand.DATA;
-	String LEFT_OPERAND_SEARCH_INDEX = LeftOperand.SEARCH_INDEX;
-	String LEFT_OPERAND_DOCUMENT = LeftOperand.DOCUMENT;
-	String LEFT_OPERAND_EXTERNAL_DATA = LeftOperand.EXTERNAL_DATA;
-	String LEFT_OPERAND_TRANSIENT_DATA = LeftOperand.TRANSIENT_DATA;
+    /*
+     * It is an assignment to a left operand that is a a business data  (business data do not exists exists)
+     */
+    String CREATE_BUSINESS_DATA_OPERATOR = "CREATE_BUSINESS_DATA";
+    /*
+     * It is an java operation to a left operand that is a a business data
+     */
+    String BUSINESS_DATA_JAVA_SETTER_OPERATOR = "BUSINESS_DATA_JAVA_SETTER";
+    /*
+     * It is an assignment to a left operand that is a a business data (business data already exists)
+     */
+    String ATTACH_EXISTING_BUSINESS_DATA = "ATTACH_EXISTING_BUSINESS_DATA";
   
 }
