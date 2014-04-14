@@ -73,6 +73,8 @@ public interface ExpressionConstants {
 
     String BUSINESS_DATA_JAVA_SETTER_OPERATOR = OperatorType.BUSINESS_DATA_JAVA_SETTER.name();
 
+    String ATTACH_EXISTING_BUSINESS_DATA = OperatorType.ATTACH_EXISTING_BUSINESS_DATA.name();
+
     String GROOVY = ExpressionInterpreter.GROOVY.name();
 
     String SIMULATION_VARIABLE_TYPE = "SIMULATION_VARIABLE_TYPE";
@@ -93,6 +95,6 @@ public interface ExpressionConstants {
 
     String GROUP_ITERATOR_TYPE = "GROUP_ITERATOR_TYPE";
 
-    String QUERY_TYPE = "QUERY_TYPE";
+    String QUERY_TYPE = ExpressionType.TYPE_QUERY_BUSINESS_DATA.name();
 
 }
