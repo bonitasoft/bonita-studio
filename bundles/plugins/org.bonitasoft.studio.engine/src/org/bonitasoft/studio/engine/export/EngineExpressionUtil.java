@@ -48,6 +48,7 @@ import org.bonitasoft.studio.engine.export.switcher.ExpressionConditionModelSwit
 import org.bonitasoft.studio.model.expression.ListExpression;
 import org.bonitasoft.studio.model.expression.Operation;
 import org.bonitasoft.studio.model.expression.TableExpression;
+import org.bonitasoft.studio.model.form.GroupIterator;
 import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.parameter.Parameter;
 import org.bonitasoft.studio.model.process.AbstractProcess;
@@ -140,11 +141,27 @@ public class EngineExpressionUtil {
 					result.add(createWidgetExpression((Widget) element));
 				} else if (element instanceof Document) {
 					result.add(createDocumentExpression((Document) element));
+				}else if (element instanceof GroupIterator) {
+					result.add(createGroupIteratorExpression((GroupIterator) element));
 				}
 			}
 		}
 
 		return result;
+	}
+
+	private static Expression createGroupIteratorExpression(GroupIterator element) {
+		final ExpressionBuilder exp = new ExpressionBuilder();
+		exp.createNewInstance(element.getName());
+		exp.setContent(element.getName());
+		exp.setExpressionType(ExpressionConstants.FORM_FIELD_TYPE);
+		exp.setReturnType(element.getClassName());
+		try {
+			return exp.done();
+		} catch (final InvalidExpressionException e) {
+			BonitaStudioLog.error(e);
+			throw new RuntimeException(e);
+		}
 	}
 
 	private static Expression createDocumentExpression(Document element) {

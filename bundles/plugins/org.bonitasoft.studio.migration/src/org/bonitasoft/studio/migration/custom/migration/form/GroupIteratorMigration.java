@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013 BonitaSoft S.A.
+ * Copyright (C) 2014 BonitaSoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  *
  * This program is free software: you can redistribute it and/or modify
@@ -70,11 +70,9 @@ public class GroupIteratorMigration extends CustomMigration {
 
 			if(nameMap.containsKey(uuid)){
 				instance.set("name", nameMap.get(uuid));
-				
 				instance.set("className", Object.class.getName());
-
-				group.set("iterator", instance);
 			}
+			group.set("iterator", instance);
 		}
 	}
 

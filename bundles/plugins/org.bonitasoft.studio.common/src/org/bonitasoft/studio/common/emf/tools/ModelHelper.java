@@ -1955,6 +1955,11 @@ public class ModelHelper {
 
     public static Group getParentGroup(EObject context) {
         Widget widget = getParentWidget(context);
+        
+        if(context.equals(widget) && widget instanceof Group && widget.eContainer() instanceof Group){
+        	widget = (Widget) widget.eContainer();
+        }
+        
         if(widget != null){
             Widget parentGroup = widget;
             while (parentGroup != null && !(parentGroup instanceof Group)) {
