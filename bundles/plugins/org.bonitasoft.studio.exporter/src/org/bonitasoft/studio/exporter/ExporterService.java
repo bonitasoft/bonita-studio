@@ -23,8 +23,6 @@ import java.util.Map;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.exporter.application.HtmlTemplateGenerator;
-import org.bonitasoft.studio.exporter.application.WarFactory;
-import org.bonitasoft.studio.exporter.application.service.IWarFactory;
 import org.bonitasoft.studio.exporter.preview.PreviewForm;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -40,7 +38,7 @@ import org.eclipse.core.runtime.IConfigurationElement;
  */
 public class ExporterService {
 
-    public enum SERVICE_TYPE {HtmlTemplateGenerator,FormPreview, WarFactory};
+    public enum SERVICE_TYPE {HtmlTemplateGenerator,FormPreview};
 
     private static final String CLASS = "class";//$NON-NLS-1$
 
@@ -83,18 +81,12 @@ public class ExporterService {
                 case FormPreview:
                     map.put(type, new PreviewForm());
                     break;
-                case WarFactory:
-                    map.put(type, new WarFactory());
 
                 default:
                     break;
             }
         }
         return map.get(type);
-    }
-
-    public IWarFactory getWarFactory() {
-        return (IWarFactory) getExporterService(SERVICE_TYPE.WarFactory);
     }
 
 }

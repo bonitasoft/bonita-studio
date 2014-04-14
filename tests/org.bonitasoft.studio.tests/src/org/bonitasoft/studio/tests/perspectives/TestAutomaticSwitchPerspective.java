@@ -17,15 +17,15 @@
  */
 package org.bonitasoft.studio.tests.perspectives;
 
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.Iterator;
 
 import junit.framework.TestCase;
 
 import org.bonitasoft.studio.diagram.custom.commands.NewDiagramCommandHandler;
 import org.bonitasoft.studio.diagram.form.custom.commands.CreateFormCommand;
+import org.bonitasoft.studio.diagram.form.custom.model.WidgetMapping;
 import org.bonitasoft.studio.model.form.Form;
-import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.PageFlow;
 import org.bonitasoft.studio.model.process.ProcessPackage;
@@ -101,7 +101,7 @@ public class TestAutomaticSwitchPerspective extends TestCase {
         }
         IEditorPart editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
         TransactionalEditingDomain editingDomain = ((ProcessDiagramEditor)editor).getEditingDomain();
-        CreateFormCommand formCommand = new CreateFormCommand(pageflow,ProcessPackage.Literals.PAGE_FLOW__FORM,"testForm","form to test perspectives", new HashMap<EObject, Widget>(), editingDomain);
+        CreateFormCommand formCommand = new CreateFormCommand(pageflow,ProcessPackage.Literals.PAGE_FLOW__FORM,"testForm","form to test perspectives", Collections.<WidgetMapping>emptyList(), editingDomain);
         formCommand.execute(new NullProgressMonitor(), null);
         Form createdForm = (Form) formCommand.getCommandResult().getReturnValue();
 		FormsUtils.createDiagram(createdForm, editingDomain, pageflow);

@@ -143,7 +143,7 @@ public abstract class AbstractSwitch extends ProcessSwitch<Element> {
             if(!data.isMultiple()){
                 final ProcessSwitch<DataDefinitionBuilder> dataSwitch = getDataSwitch(dataContainerBuilder, data, expr) ;
                 final DataDefinitionBuilder dataBuilder =  dataSwitch.doSwitch(data.getDataType());
-                if(data.isTransient()){
+                if(data.isTransient() && dataBuilder != null){
                     dataBuilder.isTransient();
                 }
             }else{
@@ -151,7 +151,7 @@ public abstract class AbstractSwitch extends ProcessSwitch<Element> {
                     expr = EngineExpressionUtil.createEmptyListExpression();
                 }
                 final DataDefinitionBuilder dataBuilder = dataContainerBuilder.addData(data.getName(), Collection.class.getName(), expr);
-                if(data.isTransient()){
+                if(data.isTransient() && dataBuilder != null){
                     dataBuilder.isTransient();
                 }
             }
@@ -169,5 +169,6 @@ public abstract class AbstractSwitch extends ProcessSwitch<Element> {
             builder.addDescription(description) ;
         }
     }
+
 
 }

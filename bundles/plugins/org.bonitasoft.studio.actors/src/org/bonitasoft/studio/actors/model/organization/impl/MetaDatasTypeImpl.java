@@ -49,54 +49,54 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * @generated
  */
 public class MetaDatasTypeImpl extends EObjectImpl implements MetaDatasType {
-    /**
+	/**
 	 * The cached value of the '{@link #getMetaData() <em>Meta Data</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @see #getMetaData()
 	 * @generated
 	 * @ordered
 	 */
-    protected EList<Metadata> metaData;
+	protected EList<Metadata> metaData;
 
-    /**
+	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    protected MetaDatasTypeImpl() {
+	protected MetaDatasTypeImpl() {
 		super();
 	}
 
-    /**
+	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    @Override
-    protected EClass eStaticClass() {
+	@Override
+	protected EClass eStaticClass() {
 		return OrganizationPackage.Literals.META_DATAS_TYPE;
 	}
 
-    /**
+	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    public EList<Metadata> getMetaData() {
+	public EList<Metadata> getMetaData() {
 		if (metaData == null) {
 			metaData = new EObjectContainmentEList<Metadata>(Metadata.class, this, OrganizationPackage.META_DATAS_TYPE__META_DATA);
 		}
 		return metaData;
 	}
 
-    /**
+	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    @Override
-    public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+	@Override
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case OrganizationPackage.META_DATAS_TYPE__META_DATA:
 				return ((InternalEList<?>)getMetaData()).basicRemove(otherEnd, msgs);
@@ -104,13 +104,13 @@ public class MetaDatasTypeImpl extends EObjectImpl implements MetaDatasType {
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
-    /**
+	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    @Override
-    public Object eGet(int featureID, boolean resolve, boolean coreType) {
+	@Override
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case OrganizationPackage.META_DATAS_TYPE__META_DATA:
 				return getMetaData();
@@ -118,14 +118,14 @@ public class MetaDatasTypeImpl extends EObjectImpl implements MetaDatasType {
 		return super.eGet(featureID, resolve, coreType);
 	}
 
-    /**
+	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    @SuppressWarnings("unchecked")
-    @Override
-    public void eSet(int featureID, Object newValue) {
+	@SuppressWarnings("unchecked")
+	@Override
+	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case OrganizationPackage.META_DATAS_TYPE__META_DATA:
 				getMetaData().clear();
@@ -135,13 +135,13 @@ public class MetaDatasTypeImpl extends EObjectImpl implements MetaDatasType {
 		super.eSet(featureID, newValue);
 	}
 
-    /**
+	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    @Override
-    public void eUnset(int featureID) {
+	@Override
+	public void eUnset(int featureID) {
 		switch (featureID) {
 			case OrganizationPackage.META_DATAS_TYPE__META_DATA:
 				getMetaData().clear();
@@ -150,13 +150,13 @@ public class MetaDatasTypeImpl extends EObjectImpl implements MetaDatasType {
 		super.eUnset(featureID);
 	}
 
-    /**
+	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    @Override
-    public boolean eIsSet(int featureID) {
+	@Override
+	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case OrganizationPackage.META_DATAS_TYPE__META_DATA:
 				return metaData != null && !metaData.isEmpty();

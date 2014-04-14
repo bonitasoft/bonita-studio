@@ -161,4 +161,39 @@ public class EngineExpressionUtilTest {
 		return stringData;
 	}
 
+	@Test
+	public void shouldCreateVariableExpression_SetVariableExpressionType() throws Exception {
+		Data textData = ProcessFactory.eINSTANCE.createData();
+		textData.setDataType(ProcessFactory.eINSTANCE.createStringType());
+		textData.setName("textData");
+		assertThat(EngineExpressionUtil.createVariableExpression(textData).getExpressionType()).isEqualTo(ExpressionType.TYPE_VARIABLE.name());
+	}
+	
+	@Test
+	public void shouldCreateVariableExpression_SetBusinessObjectExpressionType() throws Exception {
+		BusinessObjectData businessObjectData = ProcessFactory.eINSTANCE.createBusinessObjectData();
+		businessObjectData.setDataType(ProcessFactory.eINSTANCE.createBusinessObjectType());
+		businessObjectData.setName("leaveRequest");
+		businessObjectData.setClassName("org.bonita.business.LeaveRequest");
+		Expression createVariableExpression = EngineExpressionUtil.createVariableExpression(businessObjectData);
+		assertThat(createVariableExpression.getExpressionType()).isEqualTo("TYPE_BUSINESS_DATA");
+		assertThat(createVariableExpression.getReturnType()).isEqualTo("org.bonita.business.LeaveRequest");
+	}
+	
+	@Test
+	public void shouldGetOperatorType_ReturnBusinessDataJavaSetter() throws Exception {
+		BusinessObjectData businessObjectData = ProcessFactory.eINSTANCE.createBusinessObjectData();
+		businessObjectData.setDataType(ProcessFactory.eINSTANCE.createBusinessObjectType());
+		businessObjectData.setName("leaveRequest");
+		businessObjectData.setClassName("org.bonita.business.LeaveRequest");
+		Operation operation = ExpressionFactory.eINSTANCE.createOperation();
+		org.bonitasoft.studio.model.expression.Expression businessDataExpression =  ExpressionFactory.eINSTANCE.createExpression();
+		businessDataExpression.setContent("businessDataExpression");
+		businessDataExpression.getReferencedElements().add(businessObjectData);
+		operation.setLeftOperand(businessDataExpression);
+		Operator op = ExpressionFactory.eINSTANCE.createOperator();
+		op.setType(ExpressionConstants.JAVA_METHOD_OPERATOR);
+		operation.setOperator(op);
+		assertThat(EngineExpressionUtil.getOperatorType(operation)).isEqualTo(ExpressionConstants.BUSINESS_DATA_JAVA_SETTER_OPERATOR);
+	}
 }

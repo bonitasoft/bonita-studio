@@ -134,9 +134,13 @@ public class FormsExporter {
 
     // dummy expression properties for empty cells in Table and EditableGrid widgets
     private final String EMPTY_EXPRESSION_NAME = "empty";
+
     private final String EMPTY_EXPRESSION_CONTENT = "";
+
     private final String EMPTY_EXPRESSION_TYPE = ExpressionConstants.CONSTANT_TYPE;
+
     private final String EMPTY_EXPRESSION_RETURN_TYPE = String.class.getName();
+
     protected Set<EObject> excludedObject;
 
     public File createXmlForms(final AbstractProcess studioProcess, final boolean isAllInBarExport, Set<EObject> excludedObject) throws Exception {
@@ -242,7 +246,8 @@ public class FormsExporter {
                 builder.addEntryForm(buildEntryFormID(pageFlow));
                 builder.addPermissions(buildPermission(pageFlow));
                 break;
-            case REDIRECT:break;
+            case REDIRECT:
+                break;
         }
     }
 
@@ -466,7 +471,8 @@ public class FormsExporter {
     protected void addFormGlobalActions(final IFormBuilder builder, final Form f) throws InvalidFormDefinitionException {
         // add forms global actions last
         for (final Operation action : f.getActions()) {
-            if (action.getRightOperand() != null && action.getRightOperand().getContent() != null && !action.getRightOperand().getContent().isEmpty() && action.getLeftOperand() != null
+            if (action.getRightOperand() != null && action.getRightOperand().getContent() != null && !action.getRightOperand().getContent().isEmpty()
+                    && action.getLeftOperand() != null
                     && action.getLeftOperand().getContent() != null &&  !action.getLeftOperand().getContent().isEmpty()) {
                 addAction(builder, action);
             }
@@ -475,7 +481,8 @@ public class FormsExporter {
 
     protected void addSubmitButtonActions(final IFormBuilder builder, final SubmitFormButton w) throws InvalidFormDefinitionException {
         for (final Operation action : w.getActions()) {
-            if (action.getRightOperand() != null && action.getRightOperand().getContent() != null && !action.getRightOperand().getContent().isEmpty() && action.getLeftOperand() != null
+            if (action.getRightOperand() != null && action.getRightOperand().getContent() != null && !action.getRightOperand().getContent().isEmpty()
+                    && action.getLeftOperand() != null
                     && action.getLeftOperand().getContent() != null && !action.getLeftOperand().getContent().isEmpty()) {
                 addAction(builder, action);
             }
@@ -499,6 +506,20 @@ public class FormsExporter {
         }
     }
 
+    protected void addAction(final IFormBuilder builder, final Operation action, final String submitButtonIdName) throws InvalidFormDefinitionException {
+        final String storeExpression = action.getLeftOperand().getContent();
+        final Expression expression = action.getRightOperand();
+        final EList<String> inputTypes = action.getOperator().getInputTypes();
+        if (submitButtonIdName != null) {
+            builder.addAction(getActionType(action), storeExpression, isTransientData(action.getLeftOperand()), action
+                    .getOperator().getExpression(), inputTypes != null && !inputTypes.isEmpty() ? inputTypes.get(0) : null, submitButtonIdName);
+        } else {
+            // FIXME: add Action with no submittton id
+            builder.addAction(getActionType(action), storeExpression, isTransientData(action.getLeftOperand()), action
+                    .getOperator().getExpression(), inputTypes != null && !inputTypes.isEmpty() ? inputTypes.get(0) : null, null);
+        }
+        addActionExpression(builder, expression);
+    }
 
     /**
      * @param pageflow
@@ -515,6 +536,9 @@ public class FormsExporter {
         addAction(builder, action, widgetName);
     }
 
+    protected ActionType getActionType(final Operation operation) {
+        return ActionType.valueOf(EngineExpressionUtil.getOperatorType(operation));
+    }
     protected void addAction(final IFormBuilder builder, final Operation action, final String submitButtonIdName) throws InvalidFormDefinitionException {
     	final ActionType actionType = getActionTypeFromStudioOperatorType(action.getOperator().getType());
     	final String variableName = action.getLeftOperand().getContent();
@@ -535,14 +559,15 @@ public class FormsExporter {
     	if(ExpressionConstants.SET_DOCUMENT_OPERATOR.equals(type)) {
     		// this is just assignment, the type document is put on the action variable type
     		return ActionType.ASSIGNMENT;
-    	}
+                    }
 		return ActionType.valueOf(type);
-	}
+    }
 
     protected void addActionExpression(final IFormBuilder builder, final Expression expression) throws InvalidFormDefinitionException {
         final org.bonitasoft.engine.expression.Expression engineExpression = EngineExpressionUtil.createExpression(expression);
         builder.addActionExpression(engineExpression.getName(), engineExpression.getContent(), engineExpression.getExpressionType(),
-                engineExpression.getReturnType(), engineExpression.getInterpreter().isEmpty()?null : engineExpression.getInterpreter());
+                engineExpression.getReturnType(), engineExpression.getInterpreter() == null || engineExpression.getInterpreter().isEmpty() ? null
+                        : engineExpression.getInterpreter());
         addExpressionDependency(builder, engineExpression);
     }
 
@@ -576,9 +601,11 @@ public class FormsExporter {
     protected void addTransientDataExpression(final IFormBuilder builder, final Expression expression) throws InvalidFormDefinitionException {
         final org.bonitasoft.engine.expression.Expression engineExpression = EngineExpressionUtil.createExpression(expression);
         builder.addTransientDataExpression(engineExpression.getName(), engineExpression.getContent(), engineExpression.getExpressionType(),
-                engineExpression.getReturnType(), engineExpression.getInterpreter().isEmpty() ? null : engineExpression.getInterpreter()  );
+                engineExpression.getReturnType(), engineExpression.getInterpreter() == null || engineExpression.getInterpreter().isEmpty() ? null
+                        : engineExpression.getInterpreter());
         addExpressionDependency(builder, engineExpression);
     }
+
     //
     //	/**
     //	 * @param theData
@@ -1208,7 +1235,8 @@ public class FormsExporter {
         if (expression.getContent() != null && !expression.getContent().isEmpty()) {
             final org.bonitasoft.engine.expression.Expression engineExpression = EngineExpressionUtil.createExpression(expression);
             builder.addAvailableValuesExpression(engineExpression.getName(), engineExpression.getContent(), engineExpression.getExpressionType(),
-                    engineExpression.getReturnType(), engineExpression.getInterpreter().isEmpty() ? null : engineExpression.getInterpreter());
+                    engineExpression.getReturnType(), engineExpression.getInterpreter() == null || engineExpression.getInterpreter().isEmpty() ? null
+                            : engineExpression.getInterpreter());
             addExpressionDependency(builder, engineExpression);
         }
     }
@@ -1359,12 +1387,12 @@ public class FormsExporter {
         if (widget instanceof TextFormField) {
             builder.addWidget(widget.getName(), WidgetType.TEXTBOX);
             addInitialValue(widget, builder);
-            if (((TextFormField) widget).getMaxLength() != 0) {
+            if (((TextFormField) widget).getMaxLength() > 0) {
                 builder.addMaxLength(((TextFormField) widget).getMaxLength());
             }
         } else if (widget instanceof PasswordFormField) {
             builder.addWidget(widget.getName(), WidgetType.PASSWORD);
-            if (((PasswordFormField) widget).getMaxLength() != 0) {
+            if (((PasswordFormField) widget).getMaxLength() > 0) {
                 builder.addMaxLength(((PasswordFormField) widget).getMaxLength());
             }
             addInitialValue(widget, builder);
@@ -1377,10 +1405,10 @@ public class FormsExporter {
             addInitialValue(widget, builder);
         } else if (widget instanceof TextAreaFormField) {
             builder.addWidget(widget.getName(), WidgetType.TEXTAREA);
-            if (((TextAreaFormField) widget).getMaxLength() != 0) {
+            if (((TextAreaFormField) widget).getMaxLength() > 0) {
                 builder.addMaxLength(((TextAreaFormField) widget).getMaxLength());
             }
-            if (((TextAreaFormField) widget).getMaxHeigth() != 0) {
+            if (((TextAreaFormField) widget).getMaxHeigth() > 0) {
                 builder.addMaxHeight(((TextAreaFormField) widget).getMaxHeigth());
             }
             addInitialValue(widget, builder);
@@ -1400,7 +1428,7 @@ public class FormsExporter {
             }
         } else if (widget instanceof ListFormField) {
             builder.addWidget(widget.getName(), WidgetType.LISTBOX_MULTIPLE);
-            if (((ListFormField) widget).getMaxHeigth() != 0) {
+            if (((ListFormField) widget).getMaxHeigth() > 0) {
                 builder.addMaxHeight(((ListFormField) widget).getMaxHeigth());
             }
 
@@ -1452,10 +1480,17 @@ public class FormsExporter {
     protected void addDocumentInitialValue(final FileWidget widget, final IFormBuilder builder) throws InvalidFormDefinitionException {
         final FileWidgetInputType widgetInputType = widget.getInputType();
         switch(widgetInputType){
-            case DOCUMENT : builder.addFileWidgetInputType(org.bonitasoft.forms.client.model.FileWidgetInputType.ALL);break;
-            case URL : builder.addFileWidgetInputType(org.bonitasoft.forms.client.model.FileWidgetInputType.URL);break;
-            case RESOURCE : builder.addFileWidgetInputType(org.bonitasoft.forms.client.model.FileWidgetInputType.FILE);break;
-            default : break;
+            case DOCUMENT:
+                builder.addFileWidgetInputType(org.bonitasoft.forms.client.model.FileWidgetInputType.ALL);
+                break;
+            case URL:
+                builder.addFileWidgetInputType(org.bonitasoft.forms.client.model.FileWidgetInputType.URL);
+                break;
+            case RESOURCE:
+                builder.addFileWidgetInputType(org.bonitasoft.forms.client.model.FileWidgetInputType.FILE);
+                break;
+            default:
+                break;
         }
         if (widgetInputType == FileWidgetInputType.URL || widgetInputType == FileWidgetInputType.DOCUMENT) {
             final Expression inputExpression = widget.getInputExpression();
@@ -1585,61 +1620,119 @@ public class FormsExporter {
                 && !formField.isDuplicate()
                 && !(formField instanceof MultipleValuatedFormField)) {
             if (formField instanceof DateFormField) {
-                builder.addValidator(formField.getName() + "_default_validator",
-                        DefaultValidatorsProperties.getInstance().getDefaultValidator(Date.class.getName()), null, ValidatorPosition.BOTTOM);
-                builder.addLabelExpression("#dateFieldValidatorLabel", "#dateFieldValidatorLabel", ExpressionConstants.CONSTANT_TYPE, String.class.getName(),
-                        null);
-            } else {
+                addDefaultDateValidator(formField, builder);
+                return;
+            } else if (formField instanceof TextFormField) {
+                String returnTypeModifier = ((TextFormField) formField).getReturnTypeModifier();
+                if (returnTypeModifier != null) {
+                    if (Integer.class.getName().equals(returnTypeModifier)) {
+                        addDefaultIntegerValidator(formField, builder);
+                        return;
+                    }
+                    if (Float.class.getName().equals(returnTypeModifier)) {
+                        addDefaultFloatValidator(formField, builder);
+                        return;
+                    }
+                    if (Short.class.getName().equals(returnTypeModifier)) {
+                        addDefaultShortValidator(formField, builder);
+                        return;
+                    }
+                    if (Double.class.getName().equals(returnTypeModifier)) {
+                        addDefaultDoubleValidator(formField, builder);
+                        return;
+                    }
+                    if (Long.class.getName().equals(returnTypeModifier)) {
+                        addDefaultLongValidator(formField, builder);
+                        return;
+                    }
+                    if (Character.class.getName().equals(returnTypeModifier)) {
+                        addDefaultCharValidator(formField, builder);
+                        return;
+                    }
+                }
+            }
                 final Operation formFieldScript = formField.getAction();
                 if (formFieldScript != null && formFieldScript.getRightOperand() != null && formFieldScript.getRightOperand().getContent() != null
                         && formFieldScript.getLeftOperand() != null && formFieldScript.getLeftOperand().getReferencedElements() != null
                         && !formFieldScript.getLeftOperand().getReferencedElements().isEmpty()) {
-
                     final EObject element = formFieldScript.getLeftOperand().getReferencedElements().get(0);
                     if (element instanceof Data) {
                         final Data data = (Data) element;
                         final EClass dataTypeEclass = data.getDataType().eClass();
                         if (dataTypeEclass.equals(ProcessPackage.eINSTANCE.getDateType())) {
-                            builder.addValidator(formField.getName() + "_default_validator",
-                                    DefaultValidatorsProperties.getInstance().getDefaultValidator(Date.class.getName()), null, ValidatorPosition.BOTTOM);
-                            builder.addLabelExpression("#dateFieldValidatorLabel", "#dateFieldValidatorLabel", ExpressionConstants.CONSTANT_TYPE,
-                                    String.class.getName(), null);
+                        addDefaultDateValidator(formField, builder);
+                        return;
                         }
-                        if (dataTypeEclass.equals(ProcessPackage.eINSTANCE.getIntegerType()) && !(formField instanceof DurationFormField)) {// no
-                            // validator
-                            // for
-                            // durationFormfield
-                            // (always
-                            // return
-                            // a
-                            // long)
-                            builder.addValidator(formField.getName() + "_default_validator",
-                                    DefaultValidatorsProperties.getInstance().getDefaultValidator(Integer.class.getName()), null, ValidatorPosition.BOTTOM);
-                            builder.addLabelExpression("#numericIntegerFieldValidatorLabel", "#numericIntegerFieldValidatorLabel", ExpressionConstants.CONSTANT_TYPE,
-                                    String.class.getName(), null);
+                    if (dataTypeEclass.equals(ProcessPackage.eINSTANCE.getIntegerType()) && !(formField instanceof DurationFormField)) {
+                        addDefaultIntegerValidator(formField, builder);
+                        return;
                         }
                         if (dataTypeEclass.equals(ProcessPackage.eINSTANCE.getFloatType())) {
+                        addDefaultFloatValidator(formField, builder);
+                        return;
+                    }
+                    if (dataTypeEclass.equals(ProcessPackage.eINSTANCE.getDoubleType())) {
+                        addDefaultDoubleValidator(formField, builder);
+                        return;
+                    }
+                    if (dataTypeEclass.equals(ProcessPackage.eINSTANCE.getLongType())) {
+                        addDefaultLongValidator(formField, builder);
+                        return;
+                    }
+                }
+            }
+
+        }
+    }
+
+    private void addDefaultLongValidator(final FormField formField, final IFormBuilder builder) throws InvalidFormDefinitionException {
                             builder.addValidator(formField.getName() + "_default_validator",
-                                    DefaultValidatorsProperties.getInstance().getDefaultValidator(Float.class.getName()), null, ValidatorPosition.BOTTOM);
-                            builder.addLabelExpression("#numericFloatFieldValidatorLabel", "#numericFloatFieldValidatorLabel",
+                DefaultValidatorsProperties.getInstance().getDefaultValidator(Long.class.getName()), null, ValidatorPosition.BOTTOM);
+        builder.addLabelExpression("#numericLongFieldValidatorLabel", "#numericLongFieldValidatorLabel",
                                     ExpressionConstants.CONSTANT_TYPE, String.class.getName(), null);
                         }
-                        if (dataTypeEclass.equals(ProcessPackage.eINSTANCE.getDoubleType())) {
+
+    private void addDefaultDoubleValidator(final FormField formField, final IFormBuilder builder) throws InvalidFormDefinitionException {
                             builder.addValidator(formField.getName() + "_default_validator",
                                     DefaultValidatorsProperties.getInstance().getDefaultValidator(Double.class.getName()), null, ValidatorPosition.BOTTOM);
                             builder.addLabelExpression("#numericDoubleFieldValidatorLabel", "#numericDoubleFieldValidatorLabel",
                                     ExpressionConstants.CONSTANT_TYPE, String.class.getName(), null);
                         }
-                        if (dataTypeEclass.equals(ProcessPackage.eINSTANCE.getLongType())) {
+
+    private void addDefaultFloatValidator(final FormField formField, final IFormBuilder builder) throws InvalidFormDefinitionException {
                             builder.addValidator(formField.getName() + "_default_validator",
-                                    DefaultValidatorsProperties.getInstance().getDefaultValidator(Long.class.getName()), null, ValidatorPosition.BOTTOM);
-                            builder.addLabelExpression("#numericLongFieldValidatorLabel", "#numericLongFieldValidatorLabel",
+                DefaultValidatorsProperties.getInstance().getDefaultValidator(Float.class.getName()), null, ValidatorPosition.BOTTOM);
+        builder.addLabelExpression("#numericFloatFieldValidatorLabel", "#numericFloatFieldValidatorLabel",
                                     ExpressionConstants.CONSTANT_TYPE, String.class.getName(), null);
                         }
+
+    private void addDefaultShortValidator(final FormField formField, final IFormBuilder builder) throws InvalidFormDefinitionException {
+        builder.addValidator(formField.getName() + "_default_validator",
+                DefaultValidatorsProperties.getInstance().getDefaultValidator(Short.class.getName()), null, ValidatorPosition.BOTTOM);
+        builder.addLabelExpression("#numericShortFieldValidatorLabel", "#numericShortFieldValidatorLabel",
+                ExpressionConstants.CONSTANT_TYPE, String.class.getName(), null);
                     }
+
+    private void addDefaultCharValidator(final FormField formField, final IFormBuilder builder) throws InvalidFormDefinitionException {
+        builder.addValidator(formField.getName() + "_default_validator",
+                DefaultValidatorsProperties.getInstance().getDefaultValidator(Character.class.getName()), null, ValidatorPosition.BOTTOM);
+        builder.addLabelExpression("#charFieldValidatorLabel", "#charFieldValidatorLabel",
+                ExpressionConstants.CONSTANT_TYPE, String.class.getName(), null);
                 }
+
+    private void addDefaultIntegerValidator(final FormField formField, final IFormBuilder builder) throws InvalidFormDefinitionException {
+        builder.addValidator(formField.getName() + "_default_validator",
+                DefaultValidatorsProperties.getInstance().getDefaultValidator(Integer.class.getName()), null, ValidatorPosition.BOTTOM);
+        builder.addLabelExpression("#numericIntegerFieldValidatorLabel", "#numericIntegerFieldValidatorLabel",
+                ExpressionConstants.CONSTANT_TYPE,
+                String.class.getName(), null);
             }
-        }
+
+    private void addDefaultDateValidator(final FormField formField, final IFormBuilder builder) throws InvalidFormDefinitionException {
+        builder.addValidator(formField.getName() + "_default_validator",
+                DefaultValidatorsProperties.getInstance().getDefaultValidator(Date.class.getName()), null, ValidatorPosition.BOTTOM);
+        builder.addLabelExpression("#dateFieldValidatorLabel", "#dateFieldValidatorLabel", ExpressionConstants.CONSTANT_TYPE,
+                String.class.getName(), null);
     }
 
     protected void addFormFieldUserValidators(final FormField formField, final IFormBuilder builder) throws InvalidFormDefinitionException {

@@ -24,14 +24,20 @@ import org.bonitasoft.studio.model.form.CheckBoxMultipleFormField;
 import org.bonitasoft.studio.model.form.CheckBoxSingleFormField;
 import org.bonitasoft.studio.model.form.DateFormField;
 import org.bonitasoft.studio.model.form.DurationFormField;
+import org.bonitasoft.studio.model.form.DynamicTable;
 import org.bonitasoft.studio.model.form.FileWidget;
 import org.bonitasoft.studio.model.form.FormFactory;
+import org.bonitasoft.studio.model.form.Group;
 import org.bonitasoft.studio.model.form.ListFormField;
+import org.bonitasoft.studio.model.form.MessageInfo;
 import org.bonitasoft.studio.model.form.PasswordFormField;
 import org.bonitasoft.studio.model.form.RadioFormField;
+import org.bonitasoft.studio.model.form.RichTextAreaFormField;
 import org.bonitasoft.studio.model.form.SelectFormField;
+import org.bonitasoft.studio.model.form.Table;
 import org.bonitasoft.studio.model.form.TextAreaFormField;
 import org.bonitasoft.studio.model.form.TextFormField;
+import org.bonitasoft.studio.model.form.TextInfo;
 import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.process.diagram.form.providers.ElementInitializers;
 import org.junit.After;
@@ -148,5 +154,45 @@ public class CreateWidgetSwitchTest {
 		verify(initializer).init_RadioFormField_3110((RadioFormField) widget);
 	}
 	
+	@Test
+	public void shouldDoSwitchMessageInfo_InitializeWidget() throws Exception {
+		Widget widget = createWidgetSwitch.doSwitch(formFactory.createMessageInfo());
+		assertThat(widget).isNotNull().isInstanceOf(MessageInfo.class);
+		verify(initializer).init_MessageInfo_3124((MessageInfo) widget);
+	}
+	
+	@Test
+	public void shouldDoSwitchTextInfo_InitializeWidget() throws Exception {
+		Widget widget = createWidgetSwitch.doSwitch(formFactory.createTextInfo());
+		assertThat(widget).isNotNull().isInstanceOf(TextInfo.class);
+		verify(initializer).init_TextInfo_3125((TextInfo) widget);
+	}
 
+	@Test
+	public void shouldDoSwitchRichTextArea_InitializeWidget() throws Exception {
+		Widget widget = createWidgetSwitch.doSwitch(formFactory.createRichTextAreaFormField());
+		assertThat(widget).isNotNull().isInstanceOf(RichTextAreaFormField.class);
+		verify(initializer).init_RichTextAreaFormField_3128((RichTextAreaFormField) widget);
+	}
+	
+	@Test
+	public void shouldDoSwitchGroup_InitializeWidget() throws Exception {
+		Widget widget = createWidgetSwitch.doSwitch(formFactory.createGroup());
+		assertThat(widget).isNotNull().isInstanceOf(Group.class);
+		verify(initializer).init_Group_3106((Group) widget);
+	}
+	
+	@Test
+	public void shouldDoSwitchTable_InitializeWidget() throws Exception {
+		Widget widget = createWidgetSwitch.doSwitch(formFactory.createTable());
+		assertThat(widget).isNotNull().isInstanceOf(Table.class);
+		verify(initializer).init_Table_3127((Table) widget);
+	}
+	
+	@Test
+	public void shouldDoSwitchDynamicTable_InitializeWidget() throws Exception {
+		Widget widget = createWidgetSwitch.doSwitch(formFactory.createDynamicTable());
+		assertThat(widget).isNotNull().isInstanceOf(DynamicTable.class);
+		verify(initializer).init_DynamicTable_3129((DynamicTable) widget);
+	}
 }

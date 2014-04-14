@@ -5,14 +5,14 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
+ * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.scripting.provider;
 
@@ -67,266 +67,281 @@ import org.eclipse.swt.widgets.Text;
 
 /**
  * @author Romain Bioteau
- *
+ * 
  */
 public class ScriptExpressionEditor extends SelectionAwareExpressionEditor implements IExpressionEditor {
 
-	private final String languageId;
-	private Composite mainComposite;
-	private Text expressionNameText;
-	private Combo expressionInterpreterCombo;
-	private IExpressionEditor editor;
-	private ComboViewer typeCombo;
-	private Button browseClassesButton;
-	private Expression inputExpression;
-	private IObservableValue returnTypeModelObservable = null;
-	private boolean isPageFlowContext=false;
+    private final String languageId;
 
-	public ScriptExpressionEditor(Expression expression) {
-		if(expression != null){
-			if(expression.getInterpreter() == null || expression.getInterpreter().isEmpty()){
-				expression.setInterpreter(ScriptLanguageService.getInstance().getDefaultLanguage()) ;
-			}
-			languageId = expression.getInterpreter() ;
-		}else{
-			languageId = "";
-		}
-	}
+    private Composite mainComposite;
 
-	/* (non-Javadoc)
-	 * @see org.bonitasoft.studio.expression.editor.provider.IExpressionEditor#createExpressionEditor(org.eclipse.swt.widgets.Composite)
-	 */
-	@Override
-	public Control createExpressionEditor(Composite parent) {
-		mainComposite = new Composite(parent,SWT.NONE) ;
-		mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create()) ;
-		GridLayout layout = new GridLayout(4, false) ;
-		layout.marginBottom = 0 ;
-		layout.marginHeight = 0 ;
-		layout.marginWidth = 0 ;
-		layout.marginTop = 10 ;
-		layout.marginRight = 0 ;
-		layout.marginLeft = 0 ;
-		mainComposite.setLayout(layout) ;
+    private Text expressionNameText;
 
-		Label scriptNameLabel = new Label(mainComposite, SWT.NONE) ;
-		scriptNameLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).create());
-		scriptNameLabel.setText(Messages.name+" *") ;
+    private Combo expressionInterpreterCombo;
 
-		expressionNameText = new Text(mainComposite, SWT.BORDER | SWT.SINGLE) ;
-		expressionNameText.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(true,false).create()) ;
+    private IExpressionEditor editor;
 
-		Label interpreterLabel = new Label(mainComposite, SWT.NONE) ;
-		interpreterLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).create());
-		interpreterLabel.setText(Messages.interpreter) ;
+    private ComboViewer typeCombo;
 
-		expressionInterpreterCombo = new Combo(mainComposite, SWT.READ_ONLY | SWT.BORDER) ;
-		expressionInterpreterCombo.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(true,false).create()) ;
+    private Button browseClassesButton;
 
-		for(IScriptLanguageProvider provider : ScriptLanguageService.getInstance().getScriptLanguageProviders()){
-			expressionInterpreterCombo.add(provider.getLanguageName()) ;
-		}
+    private Expression inputExpression;
 
-		if(expressionInterpreterCombo.getItemCount() < 2){
-			expressionInterpreterCombo.setEnabled(false);
-		}
+    private IObservableValue returnTypeModelObservable = null;
 
-		IScriptLanguageProvider provider = ScriptLanguageService.getInstance().getScriptLanguageProvider(languageId) ;
-		editor = provider.getExpressionEditor() ;
-		editor.setIsPageFlowContext(isPageFlowContext);
-		Composite editorComposite = new Composite(mainComposite, SWT.NONE);
-		editorComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true,true).span(4, 1).create()) ;
-		layout = new GridLayout(1, false) ;
-		layout.marginBottom = 0 ;
-		layout.marginHeight = 0 ;
-		layout.marginWidth = 0 ;
-		layout.marginTop = 10 ;
-		layout.marginRight = 0 ;
-		layout.marginLeft = 0 ;
-		editorComposite.setLayout(layout) ;
-		editor.createExpressionEditor(editorComposite) ;
-		
-		createReturnTypeComposite(editorComposite);
+    private boolean isPageFlowContext = false;
 
-		return mainComposite;
-	}
+    public ScriptExpressionEditor(Expression expression) {
+        if (expression != null) {
+            if (expression.getInterpreter() == null || expression.getInterpreter().isEmpty()) {
+                expression.setInterpreter(ScriptLanguageService.getInstance().getDefaultLanguage());
+            }
+            languageId = expression.getInterpreter();
+        } else {
+            languageId = "";
+        }
+    }
 
-	protected void createReturnTypeComposite(Composite parent) {
-		Composite typeComposite = new Composite(parent,SWT.NONE) ;
-		typeComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true,false).create()) ;
-		GridLayout gl = new GridLayout(3,false) ;
-		gl.marginWidth = 0 ;
-		gl.marginHeight = 0 ;
-		typeComposite.setLayout(gl) ;
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.expression.editor.provider.IExpressionEditor#createExpressionEditor(org.eclipse.swt.widgets.Composite)
+     */
+    @Override
+    public Control createExpressionEditor(Composite parent, EMFDataBindingContext ctx) {
+        mainComposite = new Composite(parent, SWT.NONE);
+        mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        GridLayout layout = new GridLayout(4, false);
+        layout.marginBottom = 0;
+        layout.marginHeight = 0;
+        layout.marginWidth = 0;
+        layout.marginTop = 10;
+        layout.marginRight = 0;
+        layout.marginLeft = 0;
+        mainComposite.setLayout(layout);
 
-		final Label typeLabel = new Label(typeComposite, SWT.NONE) ;
-		typeLabel.setText(Messages.returnType) ;
-		typeLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).create()) ;
+        Label scriptNameLabel = new Label(mainComposite, SWT.NONE);
+        scriptNameLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).create());
+        scriptNameLabel.setText(Messages.name + " *");
 
-		typeCombo = new ComboViewer(typeComposite, SWT.BORDER) ;
-		typeCombo.getCombo().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).align(SWT.FILL, SWT.CENTER).indent(10, 0).create()) ;
-		typeCombo.setContentProvider(new ExpressionReturnTypeContentProvider()) ;
-		typeCombo.setLabelProvider(new LabelProvider()) ;
-		typeCombo.setSorter(new ViewerSorter(){
-			@Override
-			public int compare(Viewer viewer, Object e1, Object e2) {
-				String t1 = (String) e1 ;
-				String t2 = (String) e2 ;
-				return t1.compareTo(t2);
-			}
-		}) ;
-		typeCombo.getCombo().addModifyListener(new ModifyListener() {
+        expressionNameText = new Text(mainComposite, SWT.BORDER | SWT.SINGLE);
+        expressionNameText.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(true, false).create());
 
-			@Override
-			public void modifyText(ModifyEvent e) {
-				fireSelectionChanged();
-			}
-		}) ;
+        Label interpreterLabel = new Label(mainComposite, SWT.NONE);
+        interpreterLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).create());
+        interpreterLabel.setText(Messages.interpreter);
 
-		browseClassesButton = new Button(typeComposite, SWT.PUSH);
-		browseClassesButton.setText(Messages.browse);
-		browseClassesButton.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).create()) ;
-		browseClassesButton.addListener(SWT.Selection, new Listener() {
-			@Override
-			public void handleEvent(Event event) {
-				openClassSelectionDialog();
-			}
-		});
-	}
+        expressionInterpreterCombo = new Combo(mainComposite, SWT.READ_ONLY | SWT.BORDER);
+        expressionInterpreterCombo.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(true, false).create());
 
-	/**
-	 * @param classText
-	 */
-	@SuppressWarnings("restriction")
-	private void openClassSelectionDialog() {
-		JavaSearchScope scope = new JavaSearchScope();
-		try {
-			scope.add(RepositoryManager.getInstance().getCurrentRepository().getJavaProject());
-		} catch (Exception ex) {
-			BonitaStudioLog.error(ex);
-		}
-		FilteredTypesSelectionDialog searchDialog = new FilteredTypesSelectionDialog(Display.getDefault().getActiveShell(), false, null, scope, IJavaSearchConstants.TYPE);
-		if (searchDialog.open() == Dialog.OK) {
-			String selectedTypeName = ((IType) searchDialog.getFirstResult()).getFullyQualifiedName();
-			typeCombo.setInput(selectedTypeName) ;
-			inputExpression.setReturnType(selectedTypeName) ;
-		}
-	}
+        for (IScriptLanguageProvider provider : ScriptLanguageService.getInstance().getScriptLanguageProviders()) {
+            expressionInterpreterCombo.add(provider.getLanguageName());
+        }
 
-	@Override
-	public void bindExpression(EMFDataBindingContext dataBindingContext,EObject context, Expression inputExpression, ViewerFilter[] filters,ExpressionViewer viewer) {
-		this.inputExpression = inputExpression;
-		IObservableValue nameModelObservable = EMFObservables.observeValue(inputExpression, ExpressionPackage.Literals.EXPRESSION__NAME) ;
-		IObservableValue interpreterModelObservable = EMFObservables.observeValue(inputExpression, ExpressionPackage.Literals.EXPRESSION__INTERPRETER) ;
-		//        IObservableValue propagationModelObservable = EMFObservables.observeValue(inputExpression, ExpressionPackage.Literals.EXPRESSION__PROPAGATE_VARIABLE_CHANGE) ;
+        if (expressionInterpreterCombo.getItemCount() < 2) {
+            expressionInterpreterCombo.setEnabled(false);
+        }
 
-		UpdateValueStrategy opposite = new UpdateValueStrategy() ;
-		opposite.setConverter(new Converter(Boolean.class,Boolean.class) {
+        IScriptLanguageProvider provider = ScriptLanguageService.getInstance().getScriptLanguageProvider(languageId);
+        editor = provider.getExpressionEditor();
+        editor.setIsPageFlowContext(isPageFlowContext);
+        Composite editorComposite = new Composite(mainComposite, SWT.NONE);
+        editorComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).span(4, 1).create());
+        layout = new GridLayout(1, false);
+        layout.marginBottom = 0;
+        layout.marginHeight = 0;
+        layout.marginWidth = 0;
+        layout.marginTop = 10;
+        layout.marginRight = 0;
+        layout.marginLeft = 0;
+        editorComposite.setLayout(layout);
+        editor.createExpressionEditor(editorComposite, ctx);
 
-			@Override
-			public Object convert(Object fromObject) {
-				return !(Boolean)fromObject;
-			}
-		}) ;
+        createReturnTypeComposite(editorComposite);
 
-		UpdateValueStrategy targetToModel = new UpdateValueStrategy();
-		targetToModel.setAfterConvertValidator(new EmptyInputValidator(Messages.name));
-		ControlDecorationSupport.create(dataBindingContext.bindValue(SWTObservables.observeText(expressionNameText,SWT.Modify), nameModelObservable,targetToModel,null),SWT.LEFT) ;
-		dataBindingContext.bindValue(SWTObservables.observeSelection(expressionInterpreterCombo), interpreterModelObservable) ;
-		nameModelObservable.addValueChangeListener(new IValueChangeListener() {
+        return mainComposite;
+    }
 
-			@Override
-			public void handleValueChange(ValueChangeEvent arg0) {
-				fireSelectionChanged() ;
-			}
-		}) ;
+    protected void createReturnTypeComposite(Composite parent) {
+        Composite typeComposite = new Composite(parent, SWT.NONE);
+        typeComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+        GridLayout gl = new GridLayout(3, false);
+        gl.marginWidth = 0;
+        gl.marginHeight = 0;
+        typeComposite.setLayout(gl);
 
-		editor.bindExpression(dataBindingContext, context, inputExpression,filters,viewer) ;
+        final Label typeLabel = new Label(typeComposite, SWT.NONE);
+        typeLabel.setText(Messages.returnType);
+        typeLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).create());
 
-		if(inputExpression.getReturnType() != null){
-			typeCombo.setInput(inputExpression.getReturnType()) ;
-		}else{
-			typeCombo.setInput(new Object()) ;
-		}
-		returnTypeModelObservable = EMFObservables.observeValue(inputExpression, ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE) ;
-		dataBindingContext.bindValue(ViewersObservables.observeSingleSelection(typeCombo), returnTypeModelObservable) ;
-		dataBindingContext.bindValue(SWTObservables.observeText(typeCombo.getCombo()), returnTypeModelObservable) ;
-		
-		typeCombo.getCombo().setEnabled(!inputExpression.isReturnTypeFixed()) ;
-		browseClassesButton.setEnabled(!inputExpression.isReturnTypeFixed()) ;
-	}
+        typeCombo = new ComboViewer(typeComposite, SWT.BORDER);
+        typeCombo.getCombo().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).align(SWT.FILL, SWT.CENTER).indent(10, 0).create());
+        typeCombo.setContentProvider(new ExpressionReturnTypeContentProvider());
+        typeCombo.setLabelProvider(new LabelProvider());
+        typeCombo.setSorter(new ViewerSorter() {
 
+            @Override
+            public int compare(Viewer viewer, Object e1, Object e2) {
+                String t1 = (String) e1;
+                String t2 = (String) e2;
+                return t1.compareTo(t2);
+            }
+        });
+        typeCombo.getCombo().addModifyListener(new ModifyListener() {
 
+            @Override
+            public void modifyText(ModifyEvent e) {
+                fireSelectionChanged();
+            }
+        });
 
-	@Override
-	public void addListener(Listener listener) {
-		super.addListener(listener);
-		editor.addListener(listener) ;
-	}
+        browseClassesButton = new Button(typeComposite, SWT.PUSH);
+        browseClassesButton.setText(Messages.browse);
+        browseClassesButton.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).create());
+        browseClassesButton.addListener(SWT.Selection, new Listener() {
 
-	@Override
-	public boolean canFinish() {
-		return expressionNameText != null && !expressionNameText.isDisposed() && !expressionNameText.getText().isEmpty() && editor.canFinish() && typeCombo != null && !typeCombo.getCombo().isDisposed() && !typeCombo.getCombo().getText().trim().isEmpty();
-	}
+            @Override
+            public void handleEvent(Event event) {
+                openClassSelectionDialog();
+            }
+        });
+    }
 
-	@Override
-	public void dispose() {
-		super.dispose();
-		if(editor != null){
-			editor.dispose();
-		}
-		if(returnTypeModelObservable != null){
-			returnTypeModelObservable.dispose();
-		}
-	}
+    /**
+     * @param classText
+     */
+    @SuppressWarnings("restriction")
+    private void openClassSelectionDialog() {
+        JavaSearchScope scope = new JavaSearchScope();
+        try {
+            scope.add(RepositoryManager.getInstance().getCurrentRepository().getJavaProject());
+        } catch (Exception ex) {
+            BonitaStudioLog.error(ex);
+        }
+        FilteredTypesSelectionDialog searchDialog = new FilteredTypesSelectionDialog(Display.getDefault().getActiveShell(), false, null, scope,
+                IJavaSearchConstants.TYPE);
+        if (searchDialog.open() == Dialog.OK) {
+            String selectedTypeName = ((IType) searchDialog.getFirstResult()).getFullyQualifiedName();
+            typeCombo.setInput(selectedTypeName);
+            inputExpression.setReturnType(selectedTypeName);
+        }
+    }
 
-	@Override
-	public void okPressed() {
-		editor.okPressed();
-	}
+    @Override
+    public void bindExpression(EMFDataBindingContext dataBindingContext, EObject context, Expression inputExpression, ViewerFilter[] filters,
+            ExpressionViewer viewer) {
+        this.inputExpression = inputExpression;
+        IObservableValue nameModelObservable = EMFObservables.observeValue(inputExpression, ExpressionPackage.Literals.EXPRESSION__NAME);
+        IObservableValue interpreterModelObservable = EMFObservables.observeValue(inputExpression, ExpressionPackage.Literals.EXPRESSION__INTERPRETER);
+        // IObservableValue propagationModelObservable = EMFObservables.observeValue(inputExpression,
+        // ExpressionPackage.Literals.EXPRESSION__PROPAGATE_VARIABLE_CHANGE) ;
 
-	@Override
-	public boolean provideDialogTray() {
-		return editor.provideDialogTray();
-	}
+        UpdateValueStrategy opposite = new UpdateValueStrategy();
+        opposite.setConverter(new Converter(Boolean.class, Boolean.class) {
 
-	@Override
-	public DialogTray createDialogTray() {
-		return editor.createDialogTray();
-	}
+            @Override
+            public Object convert(Object fromObject) {
+                return !(Boolean) fromObject;
+            }
+        });
 
-	@Override
-	public Control getTextControl() {
-		return editor.getTextControl();
-	}
+        UpdateValueStrategy targetToModel = new UpdateValueStrategy();
+        targetToModel.setAfterConvertValidator(new EmptyInputValidator(Messages.name));
+        ControlDecorationSupport.create(
+                dataBindingContext.bindValue(SWTObservables.observeText(expressionNameText, SWT.Modify), nameModelObservable, targetToModel, null), SWT.LEFT);
+        dataBindingContext.bindValue(SWTObservables.observeSelection(expressionInterpreterCombo), interpreterModelObservable);
+        nameModelObservable.addValueChangeListener(new IValueChangeListener() {
 
-	@Override
-	public boolean isPageFlowContext() {
-		
-		return isPageFlowContext;
-	}
+            @Override
+            public void handleValueChange(ValueChangeEvent arg0) {
+                fireSelectionChanged();
+            }
+        });
 
-	@Override
-	public void setIsPageFlowContext(boolean isPageFlowContext) {
-		this.isPageFlowContext=isPageFlowContext;
-		
-	}
+        editor.bindExpression(dataBindingContext, context, inputExpression, filters, viewer);
 
+        if (inputExpression.getReturnType() != null) {
+            typeCombo.setInput(inputExpression.getReturnType());
+        } else {
+            typeCombo.setInput(new Object());
+        }
+        returnTypeModelObservable = EMFObservables.observeValue(inputExpression, ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE);
+        dataBindingContext.bindValue(ViewersObservables.observeSingleSelection(typeCombo), returnTypeModelObservable);
+        dataBindingContext.bindValue(SWTObservables.observeText(typeCombo.getCombo()), returnTypeModelObservable);
 
-	/* (non-Javadoc)
-	 * @see org.bonitasoft.studio.common.IBonitaVariableContext#isOverViewContext()
-	 */
-	@Override
-	public boolean isOverViewContext() {
-		return false;
-	}
+        typeCombo.getCombo().setEnabled(!inputExpression.isReturnTypeFixed());
+        browseClassesButton.setEnabled(!inputExpression.isReturnTypeFixed());
+    }
 
-	/* (non-Javadoc)
-	 * @see org.bonitasoft.studio.common.IBonitaVariableContext#setIsOverviewContext(boolean)
-	 */
-	@Override
-	public void setIsOverviewContext(boolean isOverviewContext) {	
-	}
+    @Override
+    public void addListener(Listener listener) {
+        super.addListener(listener);
+        editor.addListener(listener);
+    }
+
+    @Override
+    public boolean canFinish() {
+        return expressionNameText != null && !expressionNameText.isDisposed() && !expressionNameText.getText().isEmpty() && editor.canFinish()
+                && typeCombo != null && !typeCombo.getCombo().isDisposed() && !typeCombo.getCombo().getText().trim().isEmpty();
+    }
+
+    @Override
+    public void dispose() {
+        super.dispose();
+        if (editor != null) {
+            editor.dispose();
+        }
+        if (returnTypeModelObservable != null) {
+            returnTypeModelObservable.dispose();
+        }
+    }
+
+    @Override
+    public void okPressed() {
+        editor.okPressed();
+    }
+
+    @Override
+    public boolean provideDialogTray() {
+        return editor.provideDialogTray();
+    }
+
+    @Override
+    public DialogTray createDialogTray() {
+        return editor.createDialogTray();
+    }
+
+    @Override
+    public Control getTextControl() {
+        return editor.getTextControl();
+    }
+
+    @Override
+    public boolean isPageFlowContext() {
+
+        return isPageFlowContext;
+    }
+
+    @Override
+    public void setIsPageFlowContext(boolean isPageFlowContext) {
+        this.isPageFlowContext = isPageFlowContext;
+
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.common.IBonitaVariableContext#isOverViewContext()
+     */
+    @Override
+    public boolean isOverViewContext() {
+        return false;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.common.IBonitaVariableContext#setIsOverviewContext(boolean)
+     */
+    @Override
+    public void setIsOverviewContext(boolean isOverviewContext) {
+    }
 
 }
-

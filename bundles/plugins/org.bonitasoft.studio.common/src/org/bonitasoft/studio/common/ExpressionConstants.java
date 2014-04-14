@@ -33,41 +33,68 @@ public interface ExpressionConstants {
 	 * constants in type attribute of expressions
 	 */
     String CONSTANT_TYPE = ExpressionType.TYPE_CONSTANT.name() ;
+
     String CONDITION_TYPE = ExpressionType.TYPE_CONDITION.name();
+
     String SCRIPT_TYPE = ExpressionType.TYPE_READ_ONLY_SCRIPT.name();
+
     String VARIABLE_TYPE = ExpressionType.TYPE_VARIABLE.name() ;
+
     String TRANSIENT_VARIABLE_TYPE = ExpressionType.TYPE_TRANSIENT_VARIABLE.name() ;
     String PARAMETER_TYPE = ExpressionType.TYPE_PARAMETER.name() ;
+
     String I18N_TYPE = ExpressionType.TYPE_I18N.name() ;
+
     String FORM_FIELD_TYPE = ExpressionType.TYPE_INPUT.name() ;
+
     String ENGINE_CONSTANT_TYPE = ExpressionType.TYPE_ENGINE_CONSTANT.name();
+
     String CONNECTOR_OUTPUT_TYPE = "CONNECTOR_OUTPUT_TYPE";
+
     String MESSAGE_ID_TYPE = "MESSAGE_ID_TYPE";
+
     String SEARCH_INDEX_TYPE="SEARCH_INDEX_TYPE";
     
+    String BUSINESS_DATA_TYPE = ExpressionType.TYPE_BUSINESS_DATA.name();
+
     String URL_ATTRIBUTE_TYPE="URL_ATTRIBUTE_TYPE";
 
     String CONNECTOR_TYPE = "CONNECTOR_TYPE" ;
 
     String XPATH_TYPE = ExpressionType.TYPE_XPATH_READ.name();
+
     String JAVA_TYPE = ExpressionType.TYPE_JAVA_METHOD_CALL.name();
 
     String ASSIGNMENT_OPERATOR = OperatorType.ASSIGNMENT.name() ;
     String JAVA_METHOD_OPERATOR = OperatorType.JAVA_METHOD.name() ;
+
     String XPATH_UPDATE_OPERATOR = OperatorType.XPATH_UPDATE_QUERY.name() ;
-    String CREATE_BUSINESS_DATA_OPERATOR = "CREATE_BUSINESS_DATA" ;
     
+    String CREATE_BUSINESS_DATA_OPERATOR = OperatorType.CREATE_BUSINESS_DATA.name();
+
+    String BUSINESS_DATA_JAVA_SETTER_OPERATOR = OperatorType.BUSINESS_DATA_JAVA_SETTER.name();
+
+    String ATTACH_EXISTING_BUSINESS_DATA = OperatorType.ATTACH_EXISTING_BUSINESS_DATA.name();
+
     String GROOVY = ExpressionInterpreter.GROOVY.name();
+
     String SIMULATION_VARIABLE_TYPE = "SIMULATION_VARIABLE_TYPE";
+
     String DOCUMENT_TYPE = ExpressionType.TYPE_DOCUMENT.name();
+
     String PATTERN_TYPE = ExpressionType.TYPE_PATTERN.name();
 	String SET_DOCUMENT_OPERATOR = "DOCUMENT_CREATE_UPDATE";
     String VARIABLE_TYPE_FOR_FORM_OUPUT = "VARIABLE_TYPE_FOR_FORM_OUPUT";
-    String DOCUMENT_VALUE_RETURN_TYPE = DocumentValue.class.getName();
-	String DOCUMENT_REF_TYPE = "DOCUMENT_REF_TYPE";
-	String ALL_TYPES = "ALL_TYPES";
-	String GROUP_ITERATOR_TYPE = "GROUP_ITERATOR_TYPE";
 
+    String DOCUMENT_VALUE_RETURN_TYPE = DocumentValue.class.getName();
+
+	String DOCUMENT_REF_TYPE = "DOCUMENT_REF_TYPE";
+
+	String ALL_TYPES = "ALL_TYPES";
+
+	String GROUP_ITERATOR_TYPE = "GROUP_ITERATOR_TYPE";
+   
+    String QUERY_TYPE = ExpressionType.TYPE_QUERY_BUSINESS_DATA.name();
 	// left operand types:
 
 	String LEFT_OPERAND_DATA = LeftOperand.DATA;
@@ -75,5 +102,5 @@ public interface ExpressionConstants {
 	String LEFT_OPERAND_DOCUMENT = LeftOperand.DOCUMENT;
 	String LEFT_OPERAND_EXTERNAL_DATA = LeftOperand.EXTERNAL_DATA;
 	String LEFT_OPERAND_TRANSIENT_DATA = LeftOperand.TRANSIENT_DATA;
-
+  
 }

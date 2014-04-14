@@ -28,6 +28,7 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.bonitasoft.studio.diagram.form.custom.clipboard,
  org.bonitasoft.studio.diagram.form.custom.commands,
  org.bonitasoft.studio.diagram.form.custom.editpolicies,
+ org.bonitasoft.studio.diagram.form.custom.model,
  org.bonitasoft.studio.diagram.form.custom.part,
  org.bonitasoft.studio.diagram.form.custom.parts,
  org.bonitasoft.studio.diagram.form.custom.providers
