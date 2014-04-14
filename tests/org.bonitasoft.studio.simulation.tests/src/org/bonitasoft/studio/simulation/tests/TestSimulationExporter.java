@@ -6,14 +6,14 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
+ * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 package org.bonitasoft.studio.simulation.tests;
@@ -63,140 +63,144 @@ import org.eclipse.ui.progress.IProgressService;
  */
 public class TestSimulationExporter extends TestCase {
 
-	private MainProcess proc;
-	private AbstractProcess processe;
-	private AbstractProcess dataProcess;
-	private SimulationExporter simulationExporter;
+    private MainProcess proc;
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
+    private AbstractProcess processe;
 
+    private AbstractProcess dataProcess;
 
-		DiagramRepositoryStore drs = (DiagramRepositoryStore)RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
-		DiagramFileStore pa = drs.getChild("Loan-1.0.proc");
-		if (pa == null) {
-			ImportBosArchiveOperation op = new ImportBosArchiveOperation();
-			URL url = TestSimulationExporter.class.getResource("Loan_1_0.bos"); //$NON-NLS-1$
+    private SimulationExporter simulationExporter;
 
-			op.setArchiveFile(FileLocator.toFileURL(url).getFile());
-			op.run(new NullProgressMonitor());
-			pa = drs.getChild("Loan-1.0.proc");
-		}
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
 
-		proc = pa.getContent();
+        DiagramRepositoryStore drs = (DiagramRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
+        DiagramFileStore pa = drs.getChild("Loan-1.0.proc");
+        if (pa == null) {
+            ImportBosArchiveOperation op = new ImportBosArchiveOperation();
+            URL url = TestSimulationExporter.class.getResource("Loan_1_0.bos"); //$NON-NLS-1$
 
-		processe = ModelHelper.getAllProcesses(proc).get(0);
-		DiagramFileStore pa2 = drs.getChild("TestSimulation-1.0.proc");
-		if (pa2 == null) {
-			ImportBosArchiveOperation op = new ImportBosArchiveOperation();
-			URL url = TestSimulationExporter.class.getResource("TestSimulation_1_0.bos"); //$NON-NLS-1$
+            op.setArchiveFile(FileLocator.toFileURL(url).getFile());
+            op.setCurrentRepository(RepositoryManager.getInstance().getCurrentRepository());
+            op.run(new NullProgressMonitor());
+            pa = drs.getChild("Loan-1.0.proc");
+        }
 
-			op.setArchiveFile(FileLocator.toFileURL(url).getFile());
-			op.run(new NullProgressMonitor());
-			pa2 = drs.getChild("TestSimulation-1.0.proc");
-		}
-		dataProcess = ModelHelper.getAllProcesses(pa2.getContent()).get(0);
+        proc = pa.getContent();
 
-		simulationExporter = new SimulationExporter();
-	}
+        processe = ModelHelper.getAllProcesses(proc).get(0);
+        DiagramFileStore pa2 = drs.getChild("TestSimulation-1.0.proc");
+        if (pa2 == null) {
+            ImportBosArchiveOperation op = new ImportBosArchiveOperation();
+            URL url = TestSimulationExporter.class.getResource("TestSimulation_1_0.bos"); //$NON-NLS-1$
 
-	public void testSetupIsOk() throws Exception {
-		assertTrue("Tested artifact is corrupt", proc.getName().equals("Loan")); //$NON-NLS-1$ //$NON-NLS-2$
-	}
+            op.setArchiveFile(FileLocator.toFileURL(url).getFile());
+            op.run(new NullProgressMonitor());
+            pa2 = drs.getChild("TestSimulation-1.0.proc");
+        }
+        dataProcess = ModelHelper.getAllProcesses(pa2.getContent()).get(0);
 
-	public void testExportProcess() throws Exception {
+        simulationExporter = new SimulationExporter();
+    }
 
-		SimProcess simulationProcesse = simulationExporter.createSimulationProcess(processe);
-		assertTrue("Missing simultion processes", simulationProcesse != null); //$NON-NLS-1$
+    public void testSetupIsOk() throws Exception {
+        assertTrue("Tested artifact is corrupt", proc.getName().equals("Loan")); //$NON-NLS-1$ //$NON-NLS-2$
+    }
 
-		List<EClass> superTypes = new ArrayList<EClass>();
-		superTypes.add(ProcessPackage.Literals.FLOW_ELEMENT);
-		List<Element> processElement = new ArrayList<Element>();
+    public void testExportProcess() throws Exception {
 
-		ModelHelper.findAllElementsByNature(processe, processElement, superTypes);
+        SimProcess simulationProcesse = simulationExporter.createSimulationProcess(processe);
+        assertTrue("Missing simultion processes", simulationProcesse != null); //$NON-NLS-1$
 
-		List<SimNamedElement> simElements = SimulationHelper.findSimNamedElement(simulationProcesse, SimActivity.class);
+        List<EClass> superTypes = new ArrayList<EClass>();
+        superTypes.add(ProcessPackage.Literals.FLOW_ELEMENT);
+        List<Element> processElement = new ArrayList<Element>();
 
-		assertEquals("Can't find all SimActivities", processElement.size(), simElements.size());
-		List<Element> processTransition = new ArrayList<Element>();
-		superTypes = new ArrayList<EClass>();
-		superTypes.add(ProcessPackage.Literals.CONNECTION);
-		ModelHelper.findAllElementsByNature(processe, processTransition, superTypes);
+        ModelHelper.findAllElementsByNature(processe, processElement, superTypes);
 
-		List<SimNamedElement> simTransitions = SimulationHelper.findSimNamedElement(simulationProcesse, SimTransition.class);
+        List<SimNamedElement> simElements = SimulationHelper.findSimNamedElement(simulationProcesse, SimActivity.class);
 
-		assertEquals("Can't find all SimTransitions", processTransition.size(), simTransitions.size());
+        assertEquals("Can't find all SimActivities", processElement.size(), simElements.size());
+        List<Element> processTransition = new ArrayList<Element>();
+        superTypes = new ArrayList<EClass>();
+        superTypes.add(ProcessPackage.Literals.CONNECTION);
+        ModelHelper.findAllElementsByNature(processe, processTransition, superTypes);
 
-	}
+        List<SimNamedElement> simTransitions = SimulationHelper.findSimNamedElement(simulationProcesse, SimTransition.class);
 
-	public void testExportSimulationData() throws Exception {
-		boolean booleanDataNoExp = false;
-		boolean booleanDataExp = false;
-		boolean literalDataNoExp = false;
-		boolean numberDataExp = false;
-		boolean numberDataNoExp = false;
+        assertEquals("Can't find all SimTransitions", processTransition.size(), simTransitions.size());
 
-		for (SimulationData el : dataProcess.getSimulationData()) {
+    }
 
-			SimulationData data = el;
-			if (data.getName().equals("booleanDataNoExp")) {
-				SimData simData = simulationExporter.getData(data);
-				assertTrue("bad data export", simData instanceof SimBooleanData);
-				booleanDataNoExp = true;
-				continue;
-			}
-			if (data.getName().equals("booleanDataExp")) {
-				SimData simData = simulationExporter.getData(data);
-				assertTrue("bad data export", simData instanceof SimBooleanData);
-				booleanDataExp = true;
-				continue;
-			}
-			if (data.getName().equals("literalDataNoExp")) {
-				SimData simData = simulationExporter.getData(data);
-				assertTrue("bad data export", simData instanceof SimLiteralsData);
-				literalDataNoExp = true;
-				continue;
-			}
-			if (data.getName().equals("numberDataExp")) {
-				SimData simData = simulationExporter.getData(data);
-				assertTrue("bad data export", simData instanceof SimNumberData);
-				numberDataExp = true;
-				continue;
-			}
-			if (data.getName().equals("numberDataNoExp")) {
-				SimData simData = simulationExporter.getData(data);
-				assertTrue("bad data export", simData instanceof SimNumberData);
-				numberDataNoExp = true;
-				continue;
-			}
-		}
-		assertTrue("not all data were checked (test issue)", booleanDataNoExp && booleanDataExp && literalDataNoExp && numberDataExp && numberDataNoExp);
-	}
+    public void testExportSimulationData() throws Exception {
+        boolean booleanDataNoExp = false;
+        boolean booleanDataExp = false;
+        boolean literalDataNoExp = false;
+        boolean numberDataExp = false;
+        boolean numberDataNoExp = false;
 
-	public void testRunSimulation() throws Exception {
-		File path = new File(System.getProperty("java.io.tmpdir")+File.separatorChar+"testSimu") ;
-		path.delete() ;
-		path.mkdir() ;
+        for (SimulationData el : dataProcess.getSimulationData()) {
 
-		SimulationLoadProfileRepositoryStore slprs =(SimulationLoadProfileRepositoryStore)RepositoryManager.getInstance().getRepositoryStore(SimulationLoadProfileRepositoryStore.class);
-		SimulationLoadProfileFileStore lp = slprs.getChild("LoadProfile_1."+SimulationLoadProfileRepositoryStore.SIMULATION_LOADPROFILE_EXT);
+            SimulationData data = el;
+            if (data.getName().equals("booleanDataNoExp")) {
+                SimData simData = simulationExporter.getData(data);
+                assertTrue("bad data export", simData instanceof SimBooleanData);
+                booleanDataNoExp = true;
+                continue;
+            }
+            if (data.getName().equals("booleanDataExp")) {
+                SimData simData = simulationExporter.getData(data);
+                assertTrue("bad data export", simData instanceof SimBooleanData);
+                booleanDataExp = true;
+                continue;
+            }
+            if (data.getName().equals("literalDataNoExp")) {
+                SimData simData = simulationExporter.getData(data);
+                assertTrue("bad data export", simData instanceof SimLiteralsData);
+                literalDataNoExp = true;
+                continue;
+            }
+            if (data.getName().equals("numberDataExp")) {
+                SimData simData = simulationExporter.getData(data);
+                assertTrue("bad data export", simData instanceof SimNumberData);
+                numberDataExp = true;
+                continue;
+            }
+            if (data.getName().equals("numberDataNoExp")) {
+                SimData simData = simulationExporter.getData(data);
+                assertTrue("bad data export", simData instanceof SimNumberData);
+                numberDataNoExp = true;
+                continue;
+            }
+        }
+        assertTrue("not all data were checked (test issue)", booleanDataNoExp && booleanDataExp && literalDataNoExp && numberDataExp && numberDataNoExp);
+    }
 
-		SimulationWithMonitorRunner runnable = new SimulationWithMonitorRunner(processe,path.getAbsolutePath(),((LoadProfile) lp.getContent()).getName(),86400000L*30L);
-		IProgressService serive = PlatformUI.getWorkbench().getProgressService();
-		serive.run(true, false, runnable);
+    public void testRunSimulation() throws Exception {
+        File path = new File(System.getProperty("java.io.tmpdir") + File.separatorChar + "testSimu");
+        path.delete();
+        path.mkdir();
 
+        SimulationLoadProfileRepositoryStore slprs = (SimulationLoadProfileRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(
+                SimulationLoadProfileRepositoryStore.class);
+        SimulationLoadProfileFileStore lp = slprs.getChild("LoadProfile_1." + SimulationLoadProfileRepositoryStore.SIMULATION_LOADPROFILE_EXT);
 
-		assertNotNull("No Report has been generated",runnable.getReportFile()) ;
+        SimulationWithMonitorRunner runnable = new SimulationWithMonitorRunner(processe, path.getAbsolutePath(), ((LoadProfile) lp.getContent()).getName(),
+                86400000L * 30L);
+        IProgressService serive = PlatformUI.getWorkbench().getProgressService();
+        serive.run(true, false, runnable);
 
-		File report = new File(runnable.getReportFile()) ;
-		assertTrue("Report doesn't exists", report.exists()) ;
-		final FileInputStream is = new FileInputStream(report) ;
-		assertTrue("Report is empty", is.read() != -1) ;
+        assertNotNull("No Report has been generated", runnable.getReportFile());
 
-		is.close();
-		path.delete() ;
+        File report = new File(runnable.getReportFile());
+        assertTrue("Report doesn't exists", report.exists());
+        final FileInputStream is = new FileInputStream(report);
+        assertTrue("Report is empty", is.read() != -1);
 
-	}
+        is.close();
+        path.delete();
+
+    }
 
 }

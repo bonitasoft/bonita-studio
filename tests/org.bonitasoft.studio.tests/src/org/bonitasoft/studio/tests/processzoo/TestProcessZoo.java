@@ -1,19 +1,19 @@
 /**
  * Copyright (C) 2009-2012 BonitaSoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
- *
+ * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
+ * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.tests.processzoo;
 
@@ -51,13 +51,13 @@ import org.junit.Test;
 
 /**
  * @author Mickael Istria
- *
+ * 
  */
-public class TestProcessZoo  {
+public class TestProcessZoo {
 
     @Before
     public void setUp() throws Exception {
-        BOSEngineManager.getInstance().start() ;
+        BOSEngineManager.getInstance().start();
     }
 
     @Test
@@ -70,7 +70,7 @@ public class TestProcessZoo  {
             try {
                 applyTestsOnProcess(url);
             } catch (Exception ex) {
-            	BonitaStudioLog.error(ex);
+                BonitaStudioLog.error(ex);
                 throw new Exception("Error on file: " + url.toString(), ex);
             }
             foundProcesses++;
@@ -78,43 +78,46 @@ public class TestProcessZoo  {
         assertNotSame("No process was tested", 0, foundProcesses);
     }
 
-
     protected void applyTestsOnProcess(URL url) throws Throwable {
         int beforeImport = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getEditorReferences().length;
-        File file  = new File(FileLocator.toFileURL(url).getFile());
+        File file = new File(FileLocator.toFileURL(url).getFile());
         ImportBosArchiveOperation ibao = new ImportBosArchiveOperation();
         ibao.setArchiveFile(file.getAbsolutePath());
+        ibao.setCurrentRepository(RepositoryManager.getInstance().getCurrentRepository());
         ibao.run(Repository.NULL_PROGRESS_MONITOR);
 
-       for( IRepositoryFileStore f : ibao.getFileStoresToOpen()){
-    	   f.open();
-       }
-        
+        for (IRepositoryFileStore f : ibao.getFileStoresToOpen()) {
+            f.open();
+        }
+
         IEditorPart editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
         if (editor instanceof ErrorEditorPart) {
-            ErrorEditorPart errorEditor = (ErrorEditorPart)editor;
+            ErrorEditorPart errorEditor = (ErrorEditorPart) editor;
             IStatus error = (IStatus) ErrorEditorPart.class.getField("error").get(errorEditor);
             throw error.getException();
         }
         ProcessDiagramEditor processEditor = (ProcessDiagramEditor) editor;
-        /*for mickeyprocessses .proc will overrided (as it is sorted) when they come so need*/
-        if(url.toString().contains("mickeyProcesses/") && url.toString().contains(".proc")){
-            assertEquals("Import should have opened another process editor but colsed another one for " + url, beforeImport , PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getEditorReferences().length);
+        /* for mickeyprocessses .proc will overrided (as it is sorted) when they come so need */
+        if (url.toString().contains("mickeyProcesses/") && url.toString().contains(".proc")) {
+            assertEquals("Import should have opened another process editor but colsed another one for " + url, beforeImport, PlatformUI.getWorkbench()
+                    .getActiveWorkbenchWindow().getActivePage().getEditorReferences().length);
         } else {
-            assertEquals("Import should have opened another process editor for " + url, beforeImport + 1, PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getEditorReferences().length);
+            assertEquals("Import should have opened another process editor for " + url, beforeImport + 1, PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+                    .getActivePage().getEditorReferences().length);
         }
         AbstractProcess diagram = (AbstractProcess) processEditor.getDiagramEditPart().resolveSemanticElement();
 
-        if(file.getAbsolutePath().endsWith(".bos")){//Check unresolved dependencies for BAR Files
-            final DependencyRepositoryStore store = (DependencyRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DependencyRepositoryStore.class) ;
-            for(Element element : diagram.getElements()){
-                if(element instanceof AbstractProcess){
-                    for(Configuration config : ((AbstractProcess) element).getConfigurations()){
-                        for(FragmentContainer fragmentContainer : config.getProcessDependencies()){
-                            for(Fragment fragment : fragmentContainer.getFragments()){
-                                String lib = fragment.getValue() ;
-                                if(lib.endsWith(DependencyRepositoryStore.JAR_EXT)){
-                                    assertNotNull("A lib is unresolved "+ lib,store.getChild(lib)) ;
+        if (file.getAbsolutePath().endsWith(".bos")) {// Check unresolved dependencies for BAR Files
+            final DependencyRepositoryStore store = (DependencyRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(
+                    DependencyRepositoryStore.class);
+            for (Element element : diagram.getElements()) {
+                if (element instanceof AbstractProcess) {
+                    for (Configuration config : ((AbstractProcess) element).getConfigurations()) {
+                        for (FragmentContainer fragmentContainer : config.getProcessDependencies()) {
+                            for (Fragment fragment : fragmentContainer.getFragments()) {
+                                String lib = fragment.getValue();
+                                if (lib.endsWith(DependencyRepositoryStore.JAR_EXT)) {
+                                    assertNotNull("A lib is unresolved " + lib, store.getChild(lib));
                                 }
                             }
                         }
@@ -123,53 +126,52 @@ public class TestProcessZoo  {
             }
         }
 
-        RunProcessCommand command = new RunProcessCommand(diagram,true);
+        RunProcessCommand command = new RunProcessCommand(diagram, true);
         command.execute(null);
-        assertNotNull("There should be an application deployed and running for " + url , command.getUrl().getContent());
+        assertNotNull("There should be an application deployed and running for " + url, command.getUrl().getContent());
     }
 
-    /*attempt to be able to run the test locally*/
+    /* attempt to be able to run the test locally */
     protected List<URL> getEntries() {
         List<URL> res = new ArrayList<URL>();
-        String[] nameForEntry = new String[]{
+        String[] nameForEntry = new String[] {
                 "toqa/Buy a NEW mini-1.0.bos",
                 "BPMN-ShowcaseToTestDynamicLabels-1.0.bos",
                 "testonsLesValidateurs-1.0.bos"
-                //Deactivate previous processes import
-                //				"bug1657/Create_User_Sequence--1.1.bar",
-                //				"My_Bar_Process_1.1.bar",
-                //				"BPMN_Showcase_1.0.proc",//test bug 1642
-                //				"testonslesValidators.bar", //test import of validators from .bar doesn't crash
-                //				"bonita4/approvalWorkflow.bar",
-                //				"bonita4/carpool.bar",
-                //				"bonita4/webSale.bar",
-                //				"mickeyProcesses/1_Enter_order_1.3.bar",
-                //				"mickeyProcesses/2_Order_Car_from_Factory_1.0.bar",
-                //				//"mickeyProcesses/Bonita_New_Car_Sales_1.0.proc",
-                //				"previewExamples/Request_For_Advance_Payment_1.0.proc",
-                //				//"mickeyProcesses/Enter_order_1.3.proc",
-                //				"previewExamples/Web_Purchase_1.0.proc",
-                //				"Travel_request_approval_process--1.0.proc",
-                //				"mickeyProcesses/3_Bonita_New_Car_Sales_1.0.bar",
-                //				//				"mickeyProcesses/Order_Car_from_Factory_1.0.proc"
-                //				"JavaConnector-5.4.bar",
-                //				"bug4181/Trip_Request--1.0.bar",
-                //				"TestProvidedLibsMigration--1.0.bar",
-                //				"test_boundary_signal--1.0.proc",
-                //				"Business_trip_application_process--1.0.bar"
+                // Deactivate previous processes import
+                // "bug1657/Create_User_Sequence--1.1.bar",
+                // "My_Bar_Process_1.1.bar",
+                // "BPMN_Showcase_1.0.proc",//test bug 1642
+                // "testonslesValidators.bar", //test import of validators from .bar doesn't crash
+                // "bonita4/approvalWorkflow.bar",
+                // "bonita4/carpool.bar",
+                // "bonita4/webSale.bar",
+                // "mickeyProcesses/1_Enter_order_1.3.bar",
+                // "mickeyProcesses/2_Order_Car_from_Factory_1.0.bar",
+                // //"mickeyProcesses/Bonita_New_Car_Sales_1.0.proc",
+                // "previewExamples/Request_For_Advance_Payment_1.0.proc",
+                // //"mickeyProcesses/Enter_order_1.3.proc",
+                // "previewExamples/Web_Purchase_1.0.proc",
+                // "Travel_request_approval_process--1.0.proc",
+                // "mickeyProcesses/3_Bonita_New_Car_Sales_1.0.bar",
+                // // "mickeyProcesses/Order_Car_from_Factory_1.0.proc"
+                // "JavaConnector-5.4.bar",
+                // "bug4181/Trip_Request--1.0.bar",
+                // "TestProvidedLibsMigration--1.0.bar",
+                // "test_boundary_signal--1.0.proc",
+                // "Business_trip_application_process--1.0.bar"
         };
 
-        for(String name : nameForEntry){
+        for (String name : nameForEntry) {
             res.add(this.getClass().getResource(name));
         }
         return res;
     }
 
-
     /**
      * @return the name package separate with "/" instead of "." where to search the process to test.
      */
-    protected String getPackage(){
+    protected String getPackage() {
         return "/org/bonitasoft/studio/tests/processzoo";
     }
 

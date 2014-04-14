@@ -20,15 +20,21 @@ import org.bonitasoft.studio.model.form.CheckBoxMultipleFormField;
 import org.bonitasoft.studio.model.form.CheckBoxSingleFormField;
 import org.bonitasoft.studio.model.form.DateFormField;
 import org.bonitasoft.studio.model.form.DurationFormField;
+import org.bonitasoft.studio.model.form.DynamicTable;
 import org.bonitasoft.studio.model.form.FileWidget;
 import org.bonitasoft.studio.model.form.FileWidgetInputType;
 import org.bonitasoft.studio.model.form.FormFactory;
+import org.bonitasoft.studio.model.form.Group;
 import org.bonitasoft.studio.model.form.ListFormField;
+import org.bonitasoft.studio.model.form.MessageInfo;
 import org.bonitasoft.studio.model.form.PasswordFormField;
 import org.bonitasoft.studio.model.form.RadioFormField;
+import org.bonitasoft.studio.model.form.RichTextAreaFormField;
 import org.bonitasoft.studio.model.form.SelectFormField;
+import org.bonitasoft.studio.model.form.Table;
 import org.bonitasoft.studio.model.form.TextAreaFormField;
 import org.bonitasoft.studio.model.form.TextFormField;
+import org.bonitasoft.studio.model.form.TextInfo;
 import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.form.util.FormSwitch;
 import org.bonitasoft.studio.model.process.diagram.form.providers.ElementInitializers;
@@ -124,4 +130,66 @@ public class CreateWidgetSwitch extends FormSwitch<Widget> {
 		initializer.init_SelectFormField_3111(widget);
 		return widget ;
 	}
+	
+	/* (non-Javadoc)
+	 * @see org.bonitasoft.studio.model.form.util.FormSwitch#caseMessageInfo(org.bonitasoft.studio.model.form.MessageInfo)
+	 */
+	@Override
+	public Widget caseMessageInfo(MessageInfo object) {
+		MessageInfo messageInfo = factory.createMessageInfo();
+		initializer.init_MessageInfo_3124(messageInfo);
+		return messageInfo;
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.bonitasoft.studio.model.form.util.FormSwitch#caseTextInfo(org.bonitasoft.studio.model.form.TextInfo)
+	 */
+	@Override
+	public Widget caseTextInfo(TextInfo object) {
+		TextInfo textInfo = factory.createTextInfo();
+		initializer.init_TextInfo_3125(textInfo);
+		return textInfo;
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.bonitasoft.studio.model.form.util.FormSwitch#caseRichTextAreaFormField(org.bonitasoft.studio.model.form.RichTextAreaFormField)
+	 */
+	@Override
+	public Widget caseRichTextAreaFormField(RichTextAreaFormField object) {
+		RichTextAreaFormField richTextArea = factory.createRichTextAreaFormField();
+		initializer.init_RichTextAreaFormField_3128(richTextArea);
+		return richTextArea;
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.bonitasoft.studio.model.form.util.FormSwitch#caseTable(org.bonitasoft.studio.model.form.Table)
+	 */
+	@Override
+	public Widget caseTable(Table object) {
+		Table table = factory.createTable();
+		initializer.init_Table_3127(table);
+		return table;
+	}
+	
+	
+	/* (non-Javadoc)
+	 * @see org.bonitasoft.studio.model.form.util.FormSwitch#caseDynamicTable(org.bonitasoft.studio.model.form.DynamicTable)
+	 */
+	@Override
+	public Widget caseDynamicTable(DynamicTable object) {
+		DynamicTable table = factory.createDynamicTable();
+		initializer.init_DynamicTable_3129(table);
+		return table;
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.bonitasoft.studio.model.form.util.FormSwitch#caseGroup(org.bonitasoft.studio.model.form.Group)
+	 */
+	@Override
+	public Widget caseGroup(Group object) {
+		Group group = factory.createGroup();
+		initializer.init_Group_3106(group);
+		return group;
+	}
+	
 }

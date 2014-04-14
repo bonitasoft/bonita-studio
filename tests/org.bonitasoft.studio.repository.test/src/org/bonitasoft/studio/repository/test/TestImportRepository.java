@@ -1,19 +1,19 @@
 /**
  * Copyright (C) 2009 BonitaSoft S.A.
  * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
- *
+ * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
+ * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.repository.test;
 
@@ -35,30 +35,31 @@ import org.junit.Test;
 
 /**
  * @author Mickael Istria
- *
+ * 
  */
 public class TestImportRepository extends TestCase {
 
-
-
     private static final String TEST_ATTACHMENT_ARTIFACT_ID = "attachment.txt"; //$NON-NLS-1$
+
     private static final String TEST_ATTACHMENT_BAR_NAME = "Test Attachment Import-1.0.bos"; //$NON-NLS-1$
+
     private static final String TEST_GROOVY_ARTIFACT_ID = "Test.groovy";
+
     private File bosFile;
 
-
-
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see junit.framework.TestCase#setUp()
      */
     @Override
     protected void setUp() throws Exception {
         URL url = TestImportRepository.class.getResource(TEST_ATTACHMENT_BAR_NAME);
         try {
-            URL fileUrl =  FileLocator.toFileURL(url);
+            URL fileUrl = FileLocator.toFileURL(url);
             bosFile = new File(fileUrl.getFile());
             ImportBosArchiveOperation op = new ImportBosArchiveOperation();
             op.setArchiveFile(bosFile.getAbsolutePath());
+            op.setCurrentRepository(RepositoryManager.getInstance().getCurrentRepository());
             op.run(Repository.NULL_PROGRESS_MONITOR);
         } catch (Exception e) {
             e.printStackTrace();
@@ -66,23 +67,21 @@ public class TestImportRepository extends TestCase {
         }
     }
 
-
-
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see junit.framework.TestCase#tearDown()
      */
     @Override
     protected void tearDown() throws Exception {
         GroovyRepositoryStore gStore = (GroovyRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(GroovyRepositoryStore.class);
-        for(GroovyFileStore artifact : gStore.getChildren()){
-            artifact.delete() ;
+        for (GroovyFileStore artifact : gStore.getChildren()) {
+            artifact.delete();
         }
         final DocumentRepositoryStore store = (DocumentRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DocumentRepositoryStore.class);
-        for(DocumentFileStore artifact : store.getChildren()){
-            artifact.delete() ;
+        for (DocumentFileStore artifact : store.getChildren()) {
+            artifact.delete();
         }
     }
-
 
     @Test
     public void testImportAttachments() throws Exception {
@@ -93,7 +92,7 @@ public class TestImportRepository extends TestCase {
         assertEquals(fileStore.getName(), TEST_ATTACHMENT_ARTIFACT_ID);
         InputStream is = (InputStream) fileStore.getContent();
         assertTrue(is.read() > 0);
-        /*don't forget to close the inputStream*/
+        /* don't forget to close the inputStream */
         is.close();
 
     }
@@ -106,9 +105,8 @@ public class TestImportRepository extends TestCase {
         assertEquals(artifact.getName(), TEST_GROOVY_ARTIFACT_ID);
         InputStream is = artifact.getResource().getContents();
         assertTrue(is.read() > 0);
-        /*don't forget to close the inputStream*/
+        /* don't forget to close the inputStream */
         is.close();
     }
-
 
 }

@@ -50,6 +50,10 @@ public class DataSwitch extends ProcessSwitch<DataDefinitionBuilder> {
         expr = defaultValue ;
     }
 
+    public Expression getDefaultValueExpression() {
+		return expr;
+	}
+    
     public Data getData() {
 		return data;
 	}

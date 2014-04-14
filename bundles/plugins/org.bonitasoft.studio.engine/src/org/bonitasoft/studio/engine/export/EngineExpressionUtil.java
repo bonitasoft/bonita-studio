@@ -52,6 +52,7 @@ import org.bonitasoft.studio.model.form.GroupIterator;
 import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.parameter.Parameter;
 import org.bonitasoft.studio.model.process.AbstractProcess;
+import org.bonitasoft.studio.model.process.BusinessObjectData;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.Document;
 import org.eclipse.emf.common.util.EList;
@@ -72,58 +73,74 @@ import com.google.inject.Injector;
  */
 public class EngineExpressionUtil {
 
-	public static org.bonitasoft.engine.operation.Operation createOperation(final Operation operation) {
-		final OperationBuilder builder = new OperationBuilder();
-		builder.createNewInstance();
-		builder.setType(OperatorType.valueOf(operation.getOperator().getType()));
-		builder.setOperator(operation.getOperator().getExpression());
-		final EList<String> operatorInputTypes = operation.getOperator().getInputTypes();
-		if (!operatorInputTypes.isEmpty()) {
-			builder.setOperatorInputType(operatorInputTypes.get(0));
-		}
-		builder.setRightOperand(createExpression(operation.getRightOperand()));
-		builder.setLeftOperand(createLeftOperand(operation.getLeftOperand()));
-		return builder.done();
-	}
+    public static org.bonitasoft.engine.operation.Operation createOperation(final Operation operation) {
+        final OperationBuilder builder = new OperationBuilder();
+        builder.createNewInstance();
+        builder.setType(OperatorType.valueOf(EngineExpressionUtil.getOperatorType(operation)));
+        builder.setOperator(operation.getOperator().getExpression());
+        final EList<String> operatorInputTypes = operation.getOperator().getInputTypes();
+        if (!operatorInputTypes.isEmpty()) {
+            builder.setOperatorInputType(operatorInputTypes.get(0));
+        }
+        builder.setRightOperand(createExpression(operation.getRightOperand()));
+        builder.setLeftOperand(createLeftOperand(operation.getLeftOperand()));
+        return builder.done();
+    }
 
-	public static org.bonitasoft.engine.operation.Operation createOperation(final Operation operation,boolean isExternal) {
-		final OperationBuilder builder = new OperationBuilder();
-		builder.createNewInstance();
-		builder.setType(OperatorType.valueOf(operation.getOperator().getType()));
-		builder.setOperator(operation.getOperator().getExpression());
-		final EList<String> operatorInputTypes = operation.getOperator().getInputTypes();
-		if (!operatorInputTypes.isEmpty()) {
-			builder.setOperatorInputType(operatorInputTypes.get(0));
-		}
-		builder.setRightOperand(createExpression(operation.getRightOperand()));
-		builder.setLeftOperand(createLeftOperand(operation.getLeftOperand(),isExternal));
-		return builder.done();
-	}
-	/**
-	 * Hack function because we want only constant in UI but we need a Variable type for the engine
-	 * 
-	 * @param operation
-	 * @return
-	 */
-	@Deprecated
-	public static org.bonitasoft.engine.operation.Operation createOperationForMessageContent(final Operation operation) {
-		final OperationBuilder builder = new OperationBuilder();
-		builder.createNewInstance();
-		builder.setType(OperatorType.valueOf(operation.getOperator().getType()));
-		builder.setOperator(operation.getOperator().getExpression());
-		final EList<String> operatorInputTypes = operation.getOperator().getInputTypes();
-		if (!operatorInputTypes.isEmpty()) {
-			builder.setOperatorInputType(operatorInputTypes.get(0));
-		}
-		final org.bonitasoft.studio.model.expression.Expression rightOperand = EcoreUtil.copy(operation.getRightOperand());
-		rightOperand.setType(ExpressionConstants.VARIABLE_TYPE);
-		rightOperand.setReturnType(operation.getLeftOperand().getReturnType());//use return type of the left operand
-		
-		builder.setRightOperand(createExpression(rightOperand));	
-		builder.setLeftOperand(createLeftOperand(operation.getLeftOperand()));
-		return builder.done();
-	}
+    public static org.bonitasoft.engine.operation.Operation createOperation(final Operation operation, boolean isExternal) {
+        final OperationBuilder builder = new OperationBuilder();
+        builder.createNewInstance();
+        builder.setType(OperatorType.valueOf(operation.getOperator().getType()));
+        builder.setOperator(operation.getOperator().getExpression());
+        final EList<String> operatorInputTypes = operation.getOperator().getInputTypes();
+        if (!operatorInputTypes.isEmpty()) {
+            builder.setOperatorInputType(operatorInputTypes.get(0));
+        }
+        builder.setRightOperand(createExpression(operation.getRightOperand()));
+        builder.setLeftOperand(createLeftOperand(operation.getLeftOperand(), isExternal));
+        return builder.done();
+    }
 
+    public static String getOperatorType(Operation operation) {
+        if (ExpressionConstants.JAVA_METHOD_OPERATOR.equals(operation.getOperator().getType())
+                && operation.getLeftOperand() != null
+                && !operation.getLeftOperand().getReferencedElements().isEmpty()
+                && operation.getLeftOperand().getReferencedElements().get(0) instanceof BusinessObjectData) {
+            return ExpressionConstants.BUSINESS_DATA_JAVA_SETTER_OPERATOR;
+        }
+        if (ExpressionConstants.ASSIGNMENT_OPERATOR.equals(operation.getOperator().getType())
+                && operation.getLeftOperand() != null
+                && !operation.getLeftOperand().getReferencedElements().isEmpty()
+                && operation.getLeftOperand().getReferencedElements().get(0) instanceof BusinessObjectData) {
+            return ExpressionConstants.ATTACH_EXISTING_BUSINESS_DATA;
+        }
+        return operation.getOperator().getType();
+    }
+
+    /**
+     * Hack function because we want only constant in UI but we need a Variable type for the engine
+     * 
+     * @param operation
+     * @return
+     */
+    @Deprecated
+    public static org.bonitasoft.engine.operation.Operation createOperationForMessageContent(final Operation operation) {
+        final OperationBuilder builder = new OperationBuilder();
+        builder.createNewInstance();
+        builder.setType(OperatorType.valueOf(EngineExpressionUtil.getOperatorType(operation)));
+        builder.setOperator(operation.getOperator().getExpression());
+        final EList<String> operatorInputTypes = operation.getOperator().getInputTypes();
+        if (!operatorInputTypes.isEmpty()) {
+            builder.setOperatorInputType(operatorInputTypes.get(0));
+        }
+        final org.bonitasoft.studio.model.expression.Expression rightOperand = EcoreUtil.copy(operation.getRightOperand());
+        rightOperand.setType(ExpressionConstants.VARIABLE_TYPE);
+        rightOperand.setReturnType(operation.getLeftOperand().getReturnType());// use return type of the left operand
+
+        builder.setRightOperand(createExpression(rightOperand));
+        builder.setLeftOperand(createLeftOperand(operation.getLeftOperand()));
+        return builder.done();
+    }
 	public static List<Expression> createDependenciesList(final org.bonitasoft.studio.model.expression.Expression expression) {
 		final List<Expression> result = new ArrayList<Expression>();
 		if (expression.getType().equals(ExpressionConstants.SCRIPT_TYPE) || expression.getType().equals(ExpressionConstants.PATTERN_TYPE)
@@ -141,8 +158,6 @@ public class EngineExpressionUtil {
 					result.add(createWidgetExpression((Widget) element));
 				} else if (element instanceof Document) {
 					result.add(createDocumentExpression((Document) element));
-				}else if (element instanceof GroupIterator) {
-					result.add(createGroupIteratorExpression((GroupIterator) element));
 				}
 			}
 		}
