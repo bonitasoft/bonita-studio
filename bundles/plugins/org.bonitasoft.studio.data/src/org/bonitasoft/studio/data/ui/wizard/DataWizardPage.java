@@ -80,6 +80,7 @@ import org.bonitasoft.studio.xml.repository.XSDFileStore;
 import org.bonitasoft.studio.xml.repository.XSDRepositoryStore;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.conversion.Converter;
+import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.IValueChangeListener;
 import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
@@ -276,6 +277,8 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
 
     private Composite mainComposite;
 
+    private IObservableValue returnTypeObservable;
+
     public DataWizardPage(final Data data, final EObject container, final boolean allowXML, final boolean allowEnum, final boolean showIsTransient,
             final boolean showAutoGenerateform, final Set<EStructuralFeature> featureToCheckForUniqueID, String fixedReturnType) {
         super(DataWizardPage.class.getName());
@@ -434,6 +437,8 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
 
             typeDescriptionDecorator.setDescriptionText(getHintFor(data.getDataType()));
 
+            returnTypeObservable = EMFObservables.observeDetailValue(Realm.getDefault(), observeSingleSelectionDefaultValueExpression,
+                    ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE);
             MultiValidator returnTypeValidator = new MultiValidator() {
 
                 @Override
@@ -447,8 +452,6 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
                     }
                     final Expression defaultValueExp = (Expression) observeSingleSelectionDefaultValueExpression.getValue();
                     if (defaultValueExp != null) {
-                        final IObservableValue returnTypeObservable = EMFObservables.observeValue(defaultValueExp,
-                                ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE);
                         final IObservableValue contentObservable = EMFObservables.observeValue(defaultValueExp, ExpressionPackage.Literals.EXPRESSION__CONTENT);
                         final IObservableValue typeObservable = EMFObservables.observeValue(defaultValueExp, ExpressionPackage.Literals.EXPRESSION__TYPE);
                         final IObservableValue multipleObservable = EMFObservables.observeValue(data, ProcessPackage.Literals.DATA__MULTIPLE);
@@ -1214,8 +1217,18 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
             @Override
             public void handleEvent(final Event event) {
                 openClassSelectionDialog(classText);
-                data.getDefaultValue().setReturnType(classText.getText());
-                data.getDefaultValue().setType(ExpressionConstants.SCRIPT_TYPE);
+                Expression defaultValue = data.getDefaultValue();
+                String type = defaultValue.getType();
+                if (!defaultValue.isReturnTypeFixed()) {
+                    returnTypeObservable.setValue(classText.getText());
+                } else {
+                    Object value = returnTypeObservable.getValue();
+                    returnTypeObservable.setValue(null);
+                    returnTypeObservable.setValue(value);
+                }
+                if (!type.equals(ExpressionConstants.QUERY_TYPE) && !type.equals(ExpressionConstants.SCRIPT_TYPE)) {
+                    defaultValue.setType(ExpressionConstants.SCRIPT_TYPE);
+                }
             }
         });
         return client;
