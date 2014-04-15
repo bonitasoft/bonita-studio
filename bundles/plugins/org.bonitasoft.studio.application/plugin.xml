@@ -927,5 +927,11 @@
          </property>
       </product>
    </extension>
+   <extension
+         point="org.eclipse.ui.startup">
+      <startup
+            class="org.bonitasoft.studio.application.BonitaStudioWorkbenchAdvisor">
+      </startup>
+   </extension>
 
 </plugin>
