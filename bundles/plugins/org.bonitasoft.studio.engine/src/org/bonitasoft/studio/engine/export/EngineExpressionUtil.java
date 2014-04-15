@@ -158,6 +158,8 @@ public class EngineExpressionUtil {
 					result.add(createWidgetExpression((Widget) element));
 				} else if (element instanceof Document) {
 					result.add(createDocumentExpression((Document) element));
+				}else if (element instanceof GroupIterator) {
+					result.add(createGroupIteratorExpression((GroupIterator) element));
 				}
 			}
 		}
@@ -169,7 +171,7 @@ public class EngineExpressionUtil {
 		final ExpressionBuilder exp = new ExpressionBuilder();
 		exp.createNewInstance(element.getName());
 		exp.setContent(element.getName());
-		exp.setExpressionType(ExpressionConstants.FORM_FIELD_TYPE);
+		exp.setExpressionType(ExpressionType.TYPE_INPUT);
 		exp.setReturnType(element.getClassName());
 		try {
 			return exp.done();

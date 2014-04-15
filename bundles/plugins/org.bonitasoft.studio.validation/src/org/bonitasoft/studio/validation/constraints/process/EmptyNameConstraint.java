@@ -19,6 +19,8 @@ package org.bonitasoft.studio.validation.constraints.process;
 
 import org.bonitasoft.studio.common.jface.databinding.validator.InputLengthValidator;
 import org.bonitasoft.studio.common.jface.databinding.validator.SpecialCharactersValidator;
+import org.bonitasoft.studio.model.form.Group;
+import org.bonitasoft.studio.model.form.GroupIterator;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.FlowElement;
 import org.bonitasoft.studio.model.process.MultiInstantiation;
@@ -67,7 +69,7 @@ public class EmptyNameConstraint extends AbstractLiveValidationMarkerConstraint{
 		if (eObj instanceof Element){
 			final String name = ((Element) eObj).getName();
 			if (name == null || name.trim().isEmpty()){
-				if(eObj instanceof SequenceFlow ||  eObj instanceof TextAnnotation ||  eObj instanceof MultiInstantiation) {
+				if(eObj instanceof SequenceFlow ||  eObj instanceof TextAnnotation ||  eObj instanceof MultiInstantiation ||  ( eObj instanceof GroupIterator && !((Group)eObj.eContainer()).isUseIterator())) {
 					return ctx.createSuccessStatus();
 				}
 				return ctx.createFailureStatus(Messages.bind(Messages.emptynameMessage,eObj.eClass().getName()));
