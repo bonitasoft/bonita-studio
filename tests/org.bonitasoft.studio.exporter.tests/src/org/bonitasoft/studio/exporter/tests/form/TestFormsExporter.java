@@ -150,7 +150,7 @@ public class TestFormsExporter extends TestCase {
         is.close();
         XPath xpathEvaluator = XPathFactory.newInstance().newXPath();
 
-        Object result = xpathEvaluator.evaluate("//pages/page[@id='Step1']/actions/action[@type='"+ExpressionConstants.SET_DOCUMENT_OPERATOR+"']/variable",document,XPathConstants.STRING);
+        Object result = xpathEvaluator.evaluate("//pages/page[@id='Step1']/actions/action[variable-type='"+ExpressionConstants.LEFT_OPERAND_DOCUMENT+"']/variable",document,XPathConstants.STRING);
         assertEquals("myDocument", result);
 
         is.close();
