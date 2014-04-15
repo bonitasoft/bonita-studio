@@ -1,26 +1,25 @@
 /**
  * Copyright (C) 2011 BonitaSoft S.A.
  * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
- *
+ * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
+ * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.engine.test;
 
 import java.net.URL;
 
 import junit.framework.TestCase;
-
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
@@ -35,24 +34,25 @@ import org.junit.Test;
 
 /**
  * @author Romain Bioteau
- *
+ * 
  */
 public class TestSubprocessEventExport extends TestCase {
 
-	@Test
-	public void testExportSubprocessEvent() throws Exception {
-		DiagramFileStore initialPa=null;
-		DiagramRepositoryStore drs = (DiagramRepositoryStore)RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
-		ImportBosArchiveOperation op = new ImportBosArchiveOperation();
-		URL fileURL1 = FileLocator.toFileURL(TestSubprocessEventExport.class.getResource("TestSubp-1.0.bos")); //$NON-NLS-1$
+    @Test
+    public void testExportSubprocessEvent() throws Exception {
+        DiagramFileStore initialPa = null;
+        DiagramRepositoryStore drs = (DiagramRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
+        ImportBosArchiveOperation op = new ImportBosArchiveOperation();
+        URL fileURL1 = FileLocator.toFileURL(TestSubprocessEventExport.class.getResource("TestSubp-1.0.bos")); //$NON-NLS-1$
         op.setArchiveFile(FileLocator.toFileURL(fileURL1).getFile());
+        op.setCurrentRepository(RepositoryManager.getInstance().getCurrentRepository());
         op.run(new NullProgressMonitor());
         initialPa = drs.getChild("MyDiagram3-1.0.proc");
-		for(AbstractProcess process :initialPa.getProcesses()){
-			if(process.getName().equals("Pool3")){
-				assertNotNull("Missing Event Subprocess @ Studio Engine Export",ModelHelper.findElement(process, "SignalEventProc", true)) ;
-			}
-		}
-	}
-	
+        for (AbstractProcess process : initialPa.getProcesses()) {
+            if (process.getName().equals("Pool3")) {
+                assertNotNull("Missing Event Subprocess @ Studio Engine Export", ModelHelper.findElement(process, "SignalEventProc", true));
+            }
+        }
+    }
+
 }
