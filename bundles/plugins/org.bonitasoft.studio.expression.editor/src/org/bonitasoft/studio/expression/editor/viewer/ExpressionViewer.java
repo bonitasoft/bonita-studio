@@ -28,7 +28,6 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.bonitasoft.studio.common.AbstractRefactorOperation;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.IBonitaVariableContext;
 import org.bonitasoft.studio.common.emf.tools.WidgetHelper;
@@ -36,6 +35,7 @@ import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManag
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.refactoring.AbstractRefactorOperation;
 import org.bonitasoft.studio.expression.editor.ExpressionEditorPlugin;
 import org.bonitasoft.studio.expression.editor.autocompletion.AutoCompletionField;
 import org.bonitasoft.studio.expression.editor.autocompletion.BonitaContentProposalAdapter;
@@ -1275,7 +1275,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
     private boolean executeOperation(String newValue) {
         boolean hasBeenExecuted = false;
         if (operation != null) {
-            operation.setNewValue(newValue);
+            operation.setNewValueName(newValue);
             IProgressService service = PlatformUI.getWorkbench().getProgressService();
             try {
                 service.busyCursorWhile(operation);

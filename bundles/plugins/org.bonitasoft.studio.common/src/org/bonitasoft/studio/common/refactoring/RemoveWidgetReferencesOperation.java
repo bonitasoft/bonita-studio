@@ -1,116 +1,107 @@
 /**
+ * Copyright (C) 2014 BonitaSoft S.A.
+ * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2.0 of the License, or
+ * (at your option) any later version.
  * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.common.refactoring;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 import java.util.List;
 
-import org.bonitasoft.studio.common.AbstractRefactorOperation;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.Messages;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.emf.tools.WidgetHelper;
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.model.form.Widget;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.command.RemoveCommand;
 import org.eclipse.emf.edit.command.SetCommand;
-import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.eclipse.emf.edit.domain.EditingDomain;
-import org.eclipse.jdt.core.JavaModelException;
 
 /**
  * @author Aurelie Zara
- *
+ * @author Romain Bioteau
+ * 
  */
 public class RemoveWidgetReferencesOperation extends AbstractRefactorOperation {
 
-	private Widget widgetToRemove;
-	private EObject container;
-	private List<Expression> scriptExpressions;
-	private boolean canExecute=true;
-	private EditingDomain editingDomain;
+    private Widget widgetToRemove;
 
-	public RemoveWidgetReferencesOperation(EObject container,Widget widgetToRemove){
-		this.container = container;
-		this.scriptExpressions = new ArrayList<Expression>();
-		this.widgetToRemove=widgetToRemove;
-		editingDomain = AdapterFactoryEditingDomain.getEditingDomainFor(widgetToRemove);
-	}
+    private EObject container;
 
-	@Override
-	public void run(IProgressMonitor monitor) throws InvocationTargetException,
-	InterruptedException {
-		monitor.beginTask(Messages.removingWidgetReferences, IProgressMonitor.UNKNOWN);
-		if (canExecute){
-			List<Expression> expressions = ModelHelper.getAllItemsOfType(container,ExpressionPackage.Literals.EXPRESSION);
-			for (Expression exp : expressions){
-				if (ExpressionConstants.FORM_FIELD_TYPE.equals(exp.getType()) && exp.getName().equals(WidgetHelper.FIELD_PREFIX+widgetToRemove.getName())){
-					//update name and content
-					cc.append(SetCommand.create(editingDomain, exp, ExpressionPackage.Literals.EXPRESSION__NAME,""));
-					cc.append(SetCommand.create(editingDomain, exp, ExpressionPackage.Literals.EXPRESSION__CONTENT, ""));
-					//update return type
-					cc.append(SetCommand.create(editingDomain, exp, ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE, String.class.getName()));
-					cc.append(SetCommand.create(editingDomain, exp, ExpressionPackage.Literals.EXPRESSION__TYPE, ExpressionConstants.CONSTANT_TYPE));
-					//update referenced data
-					cc.append(RemoveCommand.create(editingDomain, exp, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS,exp.getReferencedElements()));
-				}
-			}
-			editingDomain.getCommandStack().execute(cc);
-		} else {
-			cc.dispose();
-		}
-	}
+    private EditingDomain editingDomain;
 
-	public void updateReferencesInScripts(){
-		scriptExpressions = ModelHelper.findAllScriptAndConditionsExpressionWithReferencedElement(ModelHelper.getPageFlow(widgetToRemove),widgetToRemove);
-		if (!scriptExpressions.isEmpty() && !widgetToRemove.getName().equals(EMPTY_VALUE)){
-			BonitaGroovyRefactoringAction renameAction;
-			try {
-				renameAction = new BonitaGroovyRefactoringAction(WidgetHelper.FIELD_PREFIX+widgetToRemove.getName(),EMPTY_VALUE,scriptExpressions,cc,editingDomain,BonitaGroovyRefactoringAction.REMOVE_OPERATION);
-				renameAction.run(null);
-				canExecute = renameAction.getStatus();
-				if (canExecute){
-					for (Expression expr:scriptExpressions){
-						EObject reference = getReferencedObjectInScriptsOperation(expr);
-						if (reference!=null) {
-							cc.append(RemoveCommand.create(editingDomain,expr,ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS,reference));
-						}
-					}
+    public RemoveWidgetReferencesOperation(EObject container, Widget widgetToRemove) {
+        super(RefactoringOperationType.REMOVE);
+        this.container = container;
+        this.widgetToRemove = widgetToRemove;
+    }
 
-				}
-			}
-			catch (JavaModelException e) {
-				BonitaStudioLog.error(e);
-			}	
-		}
+    @Override
+    protected void doExecute(IProgressMonitor monitor) {
+        monitor.beginTask(Messages.removingWidgetReferences, IProgressMonitor.UNKNOWN);
+        List<Expression> expressions = ModelHelper.getAllItemsOfType(container, ExpressionPackage.Literals.EXPRESSION);
+        for (Expression exp : expressions) {
+            if (ExpressionConstants.FORM_FIELD_TYPE.equals(exp.getType()) && exp.getName().equals(getNewValueName())) {
+                // update name and content
+                compoundCommand.append(SetCommand.create(editingDomain, exp, ExpressionPackage.Literals.EXPRESSION__NAME, ""));
+                compoundCommand.append(SetCommand.create(editingDomain, exp, ExpressionPackage.Literals.EXPRESSION__CONTENT, ""));
+                // update return type
+                compoundCommand.append(SetCommand.create(editingDomain, exp, ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE, String.class.getName()));
+                compoundCommand.append(SetCommand
+                        .create(editingDomain, exp, ExpressionPackage.Literals.EXPRESSION__TYPE, ExpressionConstants.CONSTANT_TYPE));
+                // update referenced data
+                compoundCommand.append(RemoveCommand.create(editingDomain, exp, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS,
+                        exp.getReferencedElements()));
+            }
+        }
+    }
 
-	}
+    @Override
+    protected EObject getContainer() {
+        return container;
+    }
 
+    @Override
+    protected EObject getOldValue() {
+        return widgetToRemove;
+    }
 
-	public EObject getReferencedObjectInScriptsOperation(Expression expr){
-		for (EObject reference:expr.getReferencedElements()){
-			if (reference instanceof Widget){
-				if (((Widget)reference).getName().equals(widgetToRemove.getName())){
-					return reference;
-				}
-			}
-		}
-		return null;
-	}
+    @Override
+    protected EObject getNewValue() {
+        return null;
+    }
 
-	public boolean isCanExecute() {
-		return canExecute;
-	}
+    @Override
+    protected String getOldValueName() {
+        return WidgetHelper.FIELD_PREFIX + widgetToRemove.getName();
+    }
 
-	public void setCanExecute(boolean canExecute) {
-		this.canExecute = canExecute;
-	}
-	
-	
+    @Override
+    protected String getNewValueName() {
+        return AbstractRefactorOperation.EMPTY_VALUE;
+    }
+
+    @Override
+    protected AbstractScriptExpressionRefactoringAction getScriptExpressionRefactoringAction(EObject newValue, String oldName, String newName,
+            List<Expression> scriptExpressions, List<Expression> refactoredScriptExpression, CompoundCommand compoundCommand, EditingDomain domain,
+            RefactoringOperationType operationType) {
+        return new WidgetScriptExpressionRefactoringAction(getNewValue(), getOldValueName(), getNewValueName(), scriptExpressions,
+                refactoredScriptExpression, compoundCommand, domain,
+                operationType);
+    }
 }
