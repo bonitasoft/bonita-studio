@@ -36,7 +36,6 @@ import org.bonitasoft.simulation.model.process.SimNumberData;
 import org.bonitasoft.simulation.model.process.SimProcess;
 import org.bonitasoft.simulation.model.process.SimTransition;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.operation.ImportBosArchiveOperation;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
@@ -94,7 +93,7 @@ public class TestSimulationExporter extends TestCase {
         if (pa2 == null) {
             ImportBosArchiveOperation op = new ImportBosArchiveOperation();
             URL url = TestSimulationExporter.class.getResource("TestSimulation_1_0.bos"); //$NON-NLS-1$
-
+            op.setCurrentRepository(RepositoryManager.getInstance().getCurrentRepository());
             op.setArchiveFile(FileLocator.toFileURL(url).getFile());
             op.run(new NullProgressMonitor());
             pa2 = drs.getChild("TestSimulation-1.0.proc");

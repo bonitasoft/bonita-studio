@@ -61,6 +61,7 @@ public class TestBOSArchiveImport extends TestCase {
     public void testImportSeveralDiagrams() throws IOException {
         final ImportBosArchiveOperation operation = new ImportBosArchiveOperation();
         File file = new File(FileLocator.toFileURL(TestBOSArchiveImport.class.getResource("severalDiagramsImportTest.bos")).getFile());
+        operation.setCurrentRepository(RepositoryManager.getInstance().getCurrentRepository());
         operation.setArchiveFile(file.getAbsolutePath());
         IStatus status = operation.run(new NullProgressMonitor());
         assertNotNull(status);
