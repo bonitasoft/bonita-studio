@@ -121,6 +121,7 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -139,6 +140,8 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
+import org.eclipse.ui.ISharedImages;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.events.IExpansionListener;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
@@ -241,6 +244,7 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
             if (newType instanceof JavaType && !(data instanceof JavaObjectData)) {
                 final JavaObjectData javaData = ProcessFactory.eINSTANCE.createJavaObjectData();
                 javaData.setDataType(newType);
+                javaData.setClassName(List.class.getName());
                 copyDataFeature(javaData);
                 data = javaData;
                 updateDatabinding();
@@ -278,6 +282,8 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
     private Composite mainComposite;
 
     private IObservableValue returnTypeObservable;
+
+    private CLabel transientDataWarning;
 
     public DataWizardPage(final Data data, final EObject container, final boolean allowXML, final boolean allowEnum, final boolean showIsTransient,
             final boolean showAutoGenerateform, final Set<EStructuralFeature> featureToCheckForUniqueID, String fixedReturnType) {
@@ -425,7 +431,6 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
                 emfDatabindingContext.dispose();
             }
             emfDatabindingContext = new EMFDataBindingContext();
-            pageSupport = WizardPageSupport.create(this, emfDatabindingContext);
             bindNameAndDescription();
             bindGenerateDataCheckbox();
             bindDataTypeCombo();
@@ -526,7 +531,7 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
                 }
             };
             emfDatabindingContext.addValidationStatusProvider(returnTypeValidator);
-
+            pageSupport = WizardPageSupport.create(this, emfDatabindingContext);
         }
     }
 
@@ -713,8 +718,11 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
 
     protected void bindTransientButton() {
         if (isTransientButton != null && !isTransientButton.isDisposed()) {
-            emfDatabindingContext.bindValue(SWTObservables.observeSelection(isTransientButton),
+            ISWTObservableValue observeSelection = SWTObservables.observeSelection(isTransientButton);
+            emfDatabindingContext.bindValue(observeSelection,
                     EMFObservables.observeValue(data, ProcessPackage.Literals.DATA__TRANSIENT));
+            emfDatabindingContext.bindValue(observeSelection, SWTObservables.observeVisible(transientDataWarning), null, new UpdateValueStrategy(
+                    UpdateValueStrategy.POLICY_NEVER));
         }
     }
 
@@ -1132,13 +1140,21 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
 
         if (showAutoGenerateform && showIsTransient) {
             if (generateDataCheckbox != null) {
-                generateDataCheckbox.setLayoutData(GridDataFactory.fillDefaults().create());
+                generateDataCheckbox.setLayoutData(GridDataFactory.swtDefaults().create());
             }
             isTransientButton.setLayoutData(GridDataFactory.fillDefaults().create());
         } else if (showAutoGenerateform && !showIsTransient && generateDataCheckbox != null) {
             generateDataCheckbox.setLayoutData(GridDataFactory.fillDefaults().span(2, 1).create());
         } else if (!showAutoGenerateform && showIsTransient) {
             isTransientButton.setLayoutData(GridDataFactory.fillDefaults().span(2, 1).create());
+        }
+
+        if (showIsTransient) {
+            transientDataWarning = new CLabel(composite, SWT.WRAP);
+            transientDataWarning.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(3, 1).create());
+            transientDataWarning.setText(Messages.transientDataWarning);
+            transientDataWarning.setImage(PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_WARN_TSK));
+            transientDataWarning.setVisible(data.isTransient());
         }
     }
 
