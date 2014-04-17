@@ -181,13 +181,6 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
         editMode = true;
         this.featureToCheckForUniqueID = featureToCheckForUniqueID;
         setNeedsProgressMonitor(false);
-        ConnectorDefinition def = getDefinition();
-        DefinitionResourceProvider resourceProvider = initMessageProvider();
-        String connectorDefinitionLabel = resourceProvider.getConnectorDefinitionLabel(def);
-        if (connectorDefinitionLabel == null) {
-            connectorDefinitionLabel = def.getId();
-        }
-        setWindowTitle(connectorDefinitionLabel + " (" + def.getVersion() + ")");
     }
 
     protected void setEditMode(boolean isEdit) {
@@ -207,6 +200,13 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
         }
         IDefinitionRepositoryStore defStore = getDefinitionStore();
         definitions = defStore.getDefinitions();
+        ConnectorDefinition def = getDefinition();
+        DefinitionResourceProvider resourceProvider = initMessageProvider();
+        String connectorDefinitionLabel = resourceProvider.getConnectorDefinitionLabel(def);
+        if (connectorDefinitionLabel == null) {
+            connectorDefinitionLabel = def.getId();
+        }
+        setWindowTitle(connectorDefinitionLabel + " (" + def.getVersion() + ")");
     }
 
     protected void initializeContainment() {
