@@ -34,6 +34,7 @@ import org.bonitasoft.studio.model.form.DurationFormField;
 import org.bonitasoft.studio.model.form.FileWidget;
 import org.bonitasoft.studio.model.form.FormField;
 import org.bonitasoft.studio.model.form.FormPackage;
+import org.bonitasoft.studio.model.form.Group;
 import org.bonitasoft.studio.model.form.HtmlWidget;
 import org.bonitasoft.studio.model.form.IFrameWidget;
 import org.bonitasoft.studio.model.form.Info;
@@ -129,6 +130,9 @@ public class InitialValueContribution implements IExtensibleGridPropertySectionC
 	}
 
 	protected AvailableExpressionTypeFilter getExpressionViewerFilter() {
+		
+		boolean allowGroupIterator = widget.eContainer() instanceof Group ;
+		
 		if(initialValueExpressionFilter == null){
 			initialValueExpressionFilter = new InitialValueExpressionFilter(new String[]{
 					ExpressionConstants.VARIABLE_TYPE,
@@ -138,7 +142,7 @@ public class InitialValueContribution implements IExtensibleGridPropertySectionC
 					ExpressionConstants.SCRIPT_TYPE,
 					ExpressionConstants.DOCUMENT_TYPE,
 					ExpressionConstants.XPATH_TYPE,
-					ExpressionConstants.I18N_TYPE});
+					ExpressionConstants.I18N_TYPE}, allowGroupIterator);
 			initialValueExpressionFilter.setWidget(widget);
 		}
 		return initialValueExpressionFilter;

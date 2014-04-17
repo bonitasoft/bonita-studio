@@ -440,11 +440,7 @@ public class GroovyUtil {
 		return t;
 	}
 
-	public static FieldNode createVariablesFromGroupIterator(final Group group,
-			final Class<?> clazz) {
-		return new FieldNode(group.getIteratorName(), Modifier.PUBLIC,
-				new ClassNode(clazz), new ClassNode(clazz), null);
-	}
+
 
 	public static boolean isMultipleData(final Element container,
 			String inputScript) {
@@ -642,7 +638,7 @@ public class GroovyUtil {
 			return scriptVariable;
 		}else if (org.bonitasoft.studio.common.ExpressionConstants.GROUP_ITERATOR_TYPE.equals(e.getType())) {
 			ScriptVariable scriptVariable = new ScriptVariable(e.getContent(), e.getReturnType());
-			scriptVariable.setCategory(org.bonitasoft.studio.common.ExpressionConstants.VARIABLE_TYPE);
+			scriptVariable.setCategory(org.bonitasoft.studio.common.ExpressionConstants.GROUP_ITERATOR_TYPE);
 			return scriptVariable;
 		}
 		return null;
