@@ -442,7 +442,7 @@ public class GroovyUtil {
 
 	public static FieldNode createVariablesFromGroupIterator(final Group group,
 			final Class<?> clazz) {
-		return new FieldNode(group.getIteratorName(), Modifier.PUBLIC,
+		return new FieldNode(group.getIterator().getName(), Modifier.PUBLIC,
 				new ClassNode(clazz), new ClassNode(clazz), null);
 	}
 
