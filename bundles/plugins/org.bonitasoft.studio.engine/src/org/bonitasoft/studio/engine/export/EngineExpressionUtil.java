@@ -90,14 +90,27 @@ public class EngineExpressionUtil {
 		return builder.done();
 	}
 
-	private static OperatorType getEngineOperator(final Operation operation) {
+	public static OperatorType getEngineOperator(final Operation operation) {
 		String type = operation.getOperator().getType();
+		return getEngineOperator(type);
+	}
+	public static OperatorType getEngineOperator(String type) {
 		//it's the left operand that tell if it's a document to set
 		if(OperatorType.DOCUMENT_CREATE_UPDATE.name().equals(type)) {
 			return OperatorType.ASSIGNMENT;
 		}
 		//it's the left operand that tell if it's a string index to set
 		if(OperatorType.STRING_INDEX.name().equals(type)) {
+			return OperatorType.ASSIGNMENT;
+		}
+		//it's the left operand that tell if it's a string index to set
+		if(ExpressionConstants.CREATE_BUSINESS_DATA_OPERATOR.equals(type)) {
+			return OperatorType.ASSIGNMENT;
+		}
+		if(ExpressionConstants.BUSINESS_DATA_JAVA_SETTER_OPERATOR.equals(type)) {
+			return OperatorType.JAVA_METHOD;
+		}
+		if(ExpressionConstants.ATTACH_EXISTING_BUSINESS_DATA.equals(type)) {
 			return OperatorType.ASSIGNMENT;
 		}
 		return OperatorType.valueOf(type);
@@ -249,6 +262,8 @@ public class EngineExpressionUtil {
 					Data data = (Data)referencedElement; 
 					if(data.isTransient()) {
 						return ExpressionConstants.LEFT_OPERAND_TRANSIENT_DATA;
+					}else if(data instanceof BusinessObjectData) {
+						return ExpressionConstants.LEFT_OPERAND_BUSINESS_DATA;
 					}else if(external || DatasourceConstants.PAGEFLOW_DATASOURCE.equals(data.getDatasourceId())) {
 						return ExpressionConstants.LEFT_OPERAND_EXTERNAL_DATA;
 					}
