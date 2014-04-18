@@ -66,12 +66,10 @@ public class GroupIteratorMigration extends CustomMigration {
 			String uuid = group.getUuid();
 			Instance instance = model.newInstance("form.GroupIterator");
 			instance.set("name", "");
-			instance.set("className", "");
-
 			if(nameMap.containsKey(uuid)){
 				instance.set("name", nameMap.get(uuid));
-				instance.set("className", Object.class.getName());
 			}
+				instance.set("className", Object.class.getName());
 			group.set("iterator", instance);
 		}
 	}
