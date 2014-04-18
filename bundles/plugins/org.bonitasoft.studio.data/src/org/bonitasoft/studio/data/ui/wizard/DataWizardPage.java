@@ -19,6 +19,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.util.AbstractCollection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
@@ -97,17 +100,19 @@ import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.util.EObjectContainmentEList;
+import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.search.IJavaSearchConstants;
-import org.eclipse.jdt.internal.core.search.JavaSearchScope;
-import org.eclipse.jdt.internal.ui.dialogs.FilteredTypesSelectionDialog;
+import org.eclipse.jdt.core.search.IJavaSearchScope;
+import org.eclipse.jdt.core.search.SearchEngine;
+import org.eclipse.jdt.internal.ui.dialogs.OpenTypeSelectionDialog;
 import org.eclipse.jface.databinding.swt.ISWTObservableValue;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.databinding.wizard.WizardPageSupport;
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -394,7 +399,7 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
         updateDatabinding();
 
         if (fixedReturnType != null) {
-            for (Object object : (EObjectContainmentEList) typeCombo.getInput()) {
+            for (Object object : (AbstractCollection<?>) typeCombo.getInput()) {
                 final DataType type = (DataType) object;
                 if (fixedReturnType.equals(String.class.getName()) && type.getName().equals("Text")) {
                     typeCombo.setSelection(new StructuredSelection(type));
@@ -508,8 +513,10 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
                                 }
                             } else if (Date.class.getName().equals(returnType)) {
                                 try {
-                                    new Date(content);
+                                    DateFormat.getInstance().parse(content);
                                 } catch (IllegalArgumentException e) {
+                                    return ValidationStatus.warning(Messages.dataDefaultValueNotCompatibleWithReturnType);
+                                } catch (ParseException e) {
                                     return ValidationStatus.warning(Messages.dataDefaultValueNotCompatibleWithReturnType);
                                 }
                             }
@@ -1235,8 +1242,12 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
                 openClassSelectionDialog(classText);
                 Expression defaultValue = data.getDefaultValue();
                 String type = defaultValue.getType();
+                String className = classText.getText();
+                if (data.isMultiple()) {
+                    className = List.class.getName();
+                }
                 if (!defaultValue.isReturnTypeFixed()) {
-                    returnTypeObservable.setValue(classText.getText());
+                    returnTypeObservable.setValue(className);
                 } else {
                     Object value = returnTypeObservable.getValue();
                     returnTypeObservable.setValue(null);
@@ -1252,14 +1263,10 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
 
     @SuppressWarnings("restriction")
     protected void openClassSelectionDialog(final Text classText) {
-        final JavaSearchScope scope = new JavaSearchScope();
-        try {
-            scope.add(RepositoryManager.getInstance().getCurrentRepository().getJavaProject());
-        } catch (final Exception ex) {
-            BonitaStudioLog.error(ex);
-        }
-        final FilteredTypesSelectionDialog searchDialog = new FilteredTypesSelectionDialog(getShell(), false, null, scope, IJavaSearchConstants.TYPE);
-        if (searchDialog.open() == Window.OK) {
+        IJavaSearchScope searchScope = SearchEngine.createJavaSearchScope(new IJavaElement[] { RepositoryManager.getInstance().getCurrentRepository()
+                .getJavaProject() });
+        final OpenTypeSelectionDialog searchDialog = new OpenTypeSelectionDialog(getShell(), false, null, searchScope, IJavaSearchConstants.TYPE);
+        if (searchDialog.open() == Dialog.OK) {
             classText.setText(((IType) searchDialog.getFirstResult()).getFullyQualifiedName());
         }
     }

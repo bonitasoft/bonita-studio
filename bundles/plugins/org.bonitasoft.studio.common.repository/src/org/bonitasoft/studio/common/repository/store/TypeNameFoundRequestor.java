@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2012 BonitaSoft S.A.
- * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2014 BonitaSoft S.A.
+ * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -16,22 +16,23 @@
  */
 package org.bonitasoft.studio.common.repository.store;
 
-import java.util.Comparator;
-
-import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
-import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
+import org.eclipse.jdt.core.search.TypeNameRequestor;
 
 /**
  * @author Romain Bioteau
  * 
  */
-public class RepositoryStoreComparator implements Comparator<IRepositoryStore<? extends IRepositoryFileStore>> {
+public class TypeNameFoundRequestor extends TypeNameRequestor {
+
+    private boolean found;
 
     @Override
-    public int compare(IRepositoryStore<? extends IRepositoryFileStore> f1, IRepositoryStore<? extends IRepositoryFileStore> f2) {
-        String f1Name = f1.getDisplayName() == null ? f1.getName() : f1.getDisplayName();
-        String f2Name = f2.getDisplayName() == null ? f2.getName() : f2.getDisplayName();
-        return f1Name.compareTo(f2Name);
+    public void acceptType(int modifiers, char[] packageName, char[] simpleTypeName, char[][] enclosingTypeNames, String path) {
+        found = true;
+    }
+
+    public boolean isFound() {
+        return found;
     }
 
 }
