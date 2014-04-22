@@ -28,6 +28,8 @@ import org.bonitasoft.studio.condition.conditionModel.Operation_Greater;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.expression.Operation;
+import org.bonitasoft.studio.model.form.FormFactory;
+import org.bonitasoft.studio.model.form.TextFormField;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.SequenceFlow;
 import org.eclipse.core.runtime.IStatus;
@@ -127,5 +129,27 @@ public class OperationLeftOperandConsistencyConstraintTest {
 			
 	    	//then
 	        assertThat(status.isOK()).isFalse();
+	    }
+
+	    @Test
+	    public void should_performBatchValidation__ok_if_in_read_only_widget() throws Exception {
+	    	//given
+	    	Operation operation = expressionFactory.createOperation();
+	    	Expression expression = expressionFactory.createExpression();
+	    	expression.setType(ExpressionConstants.CONSTANT_TYPE);
+	    	expression.setName("dataName");
+	    	expression.setContent("dataName");
+			operation.setLeftOperand(expression);
+			TextFormField widget = FormFactory.eINSTANCE.createTextFormField();
+			widget.setAction(operation);
+			widget.setReadOnly(true);
+			when(context.getTarget()).thenReturn(operation);
+			
+			
+	    	//when
+			IStatus status = constraint.performBatchValidation(context);
+			
+	    	//then
+	        assertThat(status.isOK()).isTrue();
 	    }
 }

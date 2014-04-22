@@ -18,8 +18,10 @@
 package org.bonitasoft.studio.validation.constraints.process;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.Operation;
+import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.process.diagram.form.part.FormDiagramEditor;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditor;
 import org.bonitasoft.studio.model.process.diagram.providers.ProcessMarkerNavigationProvider;
@@ -68,11 +70,17 @@ public class OperationLeftOperandConsistencyConstraint extends AbstractLiveValid
 			String type = leftOperand.getType();
 			if(ExpressionConstants.VARIABLE_TYPE.equals(type)) {
 				if(leftOperand.getReferencedElements().isEmpty()) {
-					return ctx.createFailureStatus(Messages.bind(Messages.inconsistentLeftOperand,leftOperand.getName()));
+					Widget widget = ModelHelper.getParentWidget(operation);
+					if(widget == null || !widget.isReadOnly()) {
+						return ctx.createFailureStatus(Messages.bind(Messages.inconsistentLeftOperand,leftOperand.getName()));
+					}
 				}
 			}
 			if(ExpressionConstants.CONSTANT_TYPE.equals(type)) {
-				return ctx.createFailureStatus(Messages.bind(Messages.inconsistentLeftOperand,leftOperand.getName()));
+				Widget widget = ModelHelper.getParentWidget(operation);
+				if(widget == null || !widget.isReadOnly()) {
+					return ctx.createFailureStatus(Messages.bind(Messages.inconsistentLeftOperand,leftOperand.getName()));
+				}
 			}
 		}
 		return ctx.createSuccessStatus();
