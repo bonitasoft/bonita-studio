@@ -205,6 +205,8 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
         String connectorDefinitionLabel = resourceProvider.getConnectorDefinitionLabel(def);
         if (connectorDefinitionLabel == null && def != null) {
             connectorDefinitionLabel = def.getId();
+        }
+        if (connectorDefinitionLabel != null) {
             setWindowTitle(connectorDefinitionLabel + " (" + def.getVersion() + ")");
         }
     }
