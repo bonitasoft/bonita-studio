@@ -98,6 +98,7 @@ public class Messages extends NLS {
 	public static String emptynameMessage;
 	public static String elementName;
     public static String invalidConditionExpression;
+	public static String inconsistentLeftOperand;
     
     static {
         // initialize resource bundle
