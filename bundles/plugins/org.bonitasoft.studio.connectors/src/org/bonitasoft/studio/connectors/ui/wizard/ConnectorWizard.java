@@ -203,10 +203,10 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
         ConnectorDefinition def = getDefinition();
         DefinitionResourceProvider resourceProvider = initMessageProvider();
         String connectorDefinitionLabel = resourceProvider.getConnectorDefinitionLabel(def);
-        if (connectorDefinitionLabel == null) {
+        if (connectorDefinitionLabel == null && def != null) {
             connectorDefinitionLabel = def.getId();
+            setWindowTitle(connectorDefinitionLabel + " (" + def.getVersion() + ")");
         }
-        setWindowTitle(connectorDefinitionLabel + " (" + def.getVersion() + ")");
     }
 
     protected void initializeContainment() {
