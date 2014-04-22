@@ -1782,7 +1782,11 @@ public class ModelHelper {
             if (parentForm != null) {
                 result.addAll(ModelHelper.getAccessibleDataInFormsWithNoRestriction(parentForm.eContainer(), parentForm.eContainingFeature()));
             }
-            result.addAll(ModelHelper.getAccessibleData(element));
+            for (Data d : ModelHelper.getAccessibleData(element)) {
+                if (!result.contains(d)) {
+                    result.add(d);
+                }
+            }
             return result;
         } else {
             List<Data> data = new ArrayList<Data>();
