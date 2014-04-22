@@ -251,7 +251,8 @@ public abstract class SourceRepositoryStore<T extends AbstractFileStore> extends
         sEngine.searchAllTypeNames(NamingUtils.getPackageName(qualifiedClassname).toCharArray(), SearchPattern.R_EXACT_MATCH,
                 NamingUtils.getSimpleName(qualifiedClassname)
                         .toCharArray(),
-                SearchPattern.R_EXACT_MATCH, IJavaSearchConstants.TYPE, searchScope, nameRequestor, IJavaSearchConstants.FORCE_IMMEDIATE_SEARCH,
+                SearchPattern.R_EXACT_MATCH, IJavaSearchConstants.CLASS_AND_INTERFACE, searchScope, nameRequestor,
+                IJavaSearchConstants.WAIT_UNTIL_READY_TO_SEARCH,
                 Repository.NULL_PROGRESS_MONITOR);
         return nameRequestor.isFound();
     }
