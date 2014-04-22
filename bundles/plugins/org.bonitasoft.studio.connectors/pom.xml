@@ -11,7 +11,7 @@
 	<groupId>org.bonitasoft.studio.bundles.plugins</groupId>
 	<artifactId>org.bonitasoft.studio.connectors</artifactId>
 	<version>6.3.0-SNAPSHOT</version>
-	<packaging>jar</packaging>
+	<packaging>eclipse-plugin</packaging>
 
 	<properties>
 		<connectors.impl.target>${basedir}/connectors-impl</connectors.impl.target>
