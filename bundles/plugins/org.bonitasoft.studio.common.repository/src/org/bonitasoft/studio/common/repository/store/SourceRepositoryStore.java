@@ -48,6 +48,7 @@ import org.eclipse.jdt.core.search.IJavaSearchConstants;
 import org.eclipse.jdt.core.search.IJavaSearchScope;
 import org.eclipse.jdt.core.search.SearchEngine;
 import org.eclipse.jdt.core.search.SearchPattern;
+import org.eclipse.jdt.internal.core.SourceType;
 
 /**
  * @author Romain Bioteau
@@ -226,8 +227,7 @@ public abstract class SourceRepositoryStore<T extends AbstractFileStore> extends
             final IJavaProject javaProject = RepositoryManager.getInstance().getCurrentRepository().getJavaProject();
             IType javaType = javaProject.findType(fileName);
             if (javaType != null) {
-                boolean isSourceType = isSourceType(fileName, javaProject);
-                if (isSourceType) {
+                if (javaType instanceof SourceType || isSourceType(fileName, javaProject)) {
                     return (T) new SourceFileStore(fileName, this);
                 }
                 return null;
