@@ -642,7 +642,7 @@ public class GroovyUtil {
 			return scriptVariable;
 		}else if (org.bonitasoft.studio.common.ExpressionConstants.GROUP_ITERATOR_TYPE.equals(e.getType())) {
 			ScriptVariable scriptVariable = new ScriptVariable(e.getContent(), e.getReturnType());
-			scriptVariable.setCategory(org.bonitasoft.studio.common.ExpressionConstants.VARIABLE_TYPE);
+			scriptVariable.setCategory(org.bonitasoft.studio.common.ExpressionConstants.GROUP_ITERATOR_TYPE);
 			return scriptVariable;
 		}
 		return null;

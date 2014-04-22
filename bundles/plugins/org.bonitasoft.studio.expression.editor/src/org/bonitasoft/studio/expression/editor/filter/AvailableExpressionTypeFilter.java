@@ -33,18 +33,11 @@ import org.eclipse.jface.viewers.ViewerFilter;
 public class AvailableExpressionTypeFilter extends ViewerFilter {
 
 	private final Set<String> contentTypes;
-	protected boolean hasGroupIterator;
 
 	public AvailableExpressionTypeFilter(String[] contentTypes){
-		this(contentTypes, false);
+		this.contentTypes = new HashSet<String>(Arrays.asList(contentTypes))  ;
 	}
 	
-	public AvailableExpressionTypeFilter(String[] contentTypes, boolean hasGroupIterator){
-	
-		this.contentTypes = new HashSet<String>(Arrays.asList(contentTypes))  ;
-		this.hasGroupIterator=hasGroupIterator;
-	}	
-
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.viewers.ViewerFilter#select(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
 	 */
@@ -55,9 +48,7 @@ public class AvailableExpressionTypeFilter extends ViewerFilter {
 			this.contentTypes.add(ExpressionConstants.XPATH_TYPE);
 			
 		}
-		if(hasGroupIterator){
-			this.contentTypes.add(ExpressionConstants.GROUP_ITERATOR_TYPE);
-		}
+
 		
 		if(element instanceof Expression){
 			return contentTypes.contains(((Expression)element).getType());
