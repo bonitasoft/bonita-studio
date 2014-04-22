@@ -85,7 +85,7 @@ public abstract class AbstractRefactorOperation implements IRunnableWithProgress
     protected void updateReferencesInScripts() {
         List<Expression> scriptExpressions = ModelHelper.findAllScriptAndConditionsExpressionWithReferencedElement(getContainer(), getOldValue());
         List<Expression> refactoredScriptExpression = performRefactoringForAllScripts(getOldValueName(), getNewValueName(), scriptExpressions);
-        if (!scriptExpressions.isEmpty() && !getOldValueName().equals(getNewValue())) {
+        if (!scriptExpressions.isEmpty() && !getOldValueName().equals(getNewValueName())) {
             AbstractScriptExpressionRefactoringAction action = getScriptExpressionRefactoringAction(getNewValue(), getOldValueName(), getNewValueName(),
                     scriptExpressions, refactoredScriptExpression, compoundCommand, domain, operationType);
             if (action != null) {
