@@ -37,6 +37,7 @@ import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -91,6 +92,7 @@ public class RefactorDataOperationTest {
     }
 
     @Test
+    @Ignore
     public void should_run_refactor_data_in_script_expression() throws Exception {
         Data newData = ProcessFactory.eINSTANCE.createData();
         newData.setName("refactored");

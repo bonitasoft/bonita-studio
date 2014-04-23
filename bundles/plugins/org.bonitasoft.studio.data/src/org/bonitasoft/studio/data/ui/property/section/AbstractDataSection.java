@@ -206,7 +206,9 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
                 try {
                     if (op.canExecute()) {
                         service.run(true, false, op);
-                        getEditingDomain().getCommandStack().execute(DeleteCommand.create(getEditingDomain(), d));
+                        if (!op.isCancelled()) {
+                            getEditingDomain().getCommandStack().execute(DeleteCommand.create(getEditingDomain(), d));
+                        }
                     }
                 } catch (InvocationTargetException e) {
                     BonitaStudioLog.error(e, DataPlugin.PLUGIN_ID);
