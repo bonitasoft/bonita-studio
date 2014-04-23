@@ -26,6 +26,7 @@ import java.util.regex.Pattern;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.groovy.repository.GroovyFileStore;
 import org.bonitasoft.studio.groovy.repository.ProvidedGroovyRepositoryStore;
@@ -193,12 +194,11 @@ public abstract class AbstractRefactorOperation implements IRunnableWithProgress
                 try {
                     rename.apply(document);
                 } catch (MalformedTreeException e) {
-                    e.printStackTrace();
+                    BonitaStudioLog.error(e);
                 } catch (BadLocationException e) {
-                    e.printStackTrace();
+                    BonitaStudioLog.error(e);
                 }
                 return document.get();
-
             }
         }
         tmpGroovyFileStore.delete();

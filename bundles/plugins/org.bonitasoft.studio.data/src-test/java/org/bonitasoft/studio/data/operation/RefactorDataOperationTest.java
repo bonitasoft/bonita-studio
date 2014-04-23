@@ -37,7 +37,6 @@ import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -56,6 +55,8 @@ public class RefactorDataOperationTest {
 
     private EditingDomain domain;
 
+    private Operation operation;
+
     /**
      * @throws java.lang.Exception
      */
@@ -67,17 +68,12 @@ public class RefactorDataOperationTest {
         myData.setName("myData");
         parentProcess.getData().add(myData);
         Task task = ProcessFactory.eINSTANCE.createTask();
-        Operation operation = ExpressionFactory.eINSTANCE.createOperation();
+        operation = ExpressionFactory.eINSTANCE.createOperation();
         leftOperand = ExpressionFactory.eINSTANCE.createExpression();
         leftOperand.setName(myData.getName());
         leftOperand.setContent(myData.getName());
         leftOperand.setType(ExpressionConstants.VARIABLE_TYPE);
         leftOperand.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(myData));
-        rightOperand = ExpressionFactory.eINSTANCE.createExpression();
-        rightOperand.setName("getData");
-        rightOperand.setContent("return " + myData.getName() + ";");
-        rightOperand.setType(ExpressionConstants.SCRIPT_TYPE);
-        rightOperand.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(myData));
         operation.setLeftOperand(leftOperand);
         operation.setRightOperand(rightOperand);
         task.getOperations().add(operation);
@@ -92,8 +88,14 @@ public class RefactorDataOperationTest {
     }
 
     @Test
-    @Ignore
-    public void should_run_refactor_data_in_script_expression() throws Exception {
+    public void should_run_refactor_data_in_pattern_expression() throws Exception {
+        rightOperand = ExpressionFactory.eINSTANCE.createExpression();
+        rightOperand.setName("getData");
+        rightOperand.setContent("hello ${" + myData.getName() + "}");
+        rightOperand.setType(ExpressionConstants.PATTERN_TYPE);
+        rightOperand.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(myData));
+        operation.setRightOperand(rightOperand);
+
         Data newData = ProcessFactory.eINSTANCE.createData();
         newData.setName("refactored");
         RefactorDataOperation refacorDataOperation = new RefactorDataOperation(RefactoringOperationType.UPDATE);
@@ -104,7 +106,7 @@ public class RefactorDataOperationTest {
         refacorDataOperation.setNewData(newData);
         refacorDataOperation.run(null);
         ExpressionAssert.assertThat(leftOperand).hasName(newData.getName());
-        ExpressionAssert.assertThat(rightOperand).hasContent("return " + newData.getName() + ";");
+        ExpressionAssert.assertThat(rightOperand).hasContent("hello ${" + newData.getName() + "}");
         EList<EObject> referencedElements = rightOperand.getReferencedElements();
         assertThat(referencedElements).hasSize(1);
         EObject dep = referencedElements.get(0);
