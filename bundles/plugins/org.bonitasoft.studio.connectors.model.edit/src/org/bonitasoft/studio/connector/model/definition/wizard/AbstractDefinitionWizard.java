@@ -55,6 +55,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -161,6 +162,7 @@ public abstract class AbstractDefinitionWizard extends ExtensibleWizard {
         } else {
             String defId = NamingUtils.toConnectorDefinitionFilename(definitionWorkingCopy.getId(), definitionWorkingCopy.getVersion(), false);
             String defFileName = defId + "." + DEF_EXT;
+
             if (editMode) {
                 if (!editConnectorDefinition()) {
                     return false;
@@ -186,12 +188,12 @@ public abstract class AbstractDefinitionWizard extends ExtensibleWizard {
                     }
                 }
             }
+            fileStore = defStore.createRepositoryFileStore(defFileName);
+            fileStore.save(definitionWorkingCopy);
             messageProvider.setConnectorDefinitionLabel(messages, infoPage.getDisplayName());
             messageProvider.setConnectorDefinitionDescription(messages, infoPage.getDefinitionDescription());
             messageProvider.saveMessagesProperties(definitionWorkingCopy, messages);
 
-            fileStore = defStore.createRepositoryFileStore(defFileName);
-            fileStore.save(definitionWorkingCopy);
             reloadCategories();
             final List<IFile> filesToOpen = openPropertiesEditor(i18nPage.getSelectedLocales());
 
@@ -234,6 +236,7 @@ public abstract class AbstractDefinitionWizard extends ExtensibleWizard {
 
         String oldDefId = NamingUtils.toConnectorDefinitionFilename(originalDefinition.getId(), originalDefinition.getVersion(), false);
         String defId = NamingUtils.toConnectorDefinitionFilename(definitionWorkingCopy.getId(), definitionWorkingCopy.getVersion(), false);
+        String oldFileName = oldDefId + "." + DEF_EXT;
         String defFileName = defId + "." + DEF_EXT;
         if (!oldDefId.equals(defId)) {
             String oldId = oldDefId + ".properties";
@@ -266,8 +269,18 @@ public abstract class AbstractDefinitionWizard extends ExtensibleWizard {
             }
         }
 
-        if (fileStore != null && !fileStore.getName().equals(defFileName)) {
-            fileStore.delete();
+        IRepositoryFileStore oldDefFilseStore = defStore.getChild(oldFileName);
+        if (!oldFileName.equals(defFileName)) {
+            if (oldDefFilseStore != null) {
+                oldDefFilseStore.delete();
+            }
+        } else if (oldDefFilseStore == null) {
+            ConnectorDefinition oldef = defStore.getDefinition(originalDefinition.getId(), originalDefinition.getVersion());
+            oldFileName = URI.decode(oldef.eResource().getURI().lastSegment());
+            oldDefFilseStore = defStore.getChild(oldFileName);
+            if (oldDefFilseStore != null) {
+                oldDefFilseStore.delete();
+            }
         }
         return true;
     }
