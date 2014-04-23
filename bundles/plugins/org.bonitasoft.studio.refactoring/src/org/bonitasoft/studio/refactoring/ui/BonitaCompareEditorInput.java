@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.common.refactoring;
+package org.bonitasoft.studio.refactoring.ui;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -27,6 +27,7 @@ import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorParameter;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.process.Pool;
+import org.bonitasoft.studio.refactoring.core.RefactoringOperationType;
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.CompareEditorInput;
 import org.eclipse.compare.IContentChangeListener;

@@ -15,7 +15,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.bonitasoft.studio.common.refactoring;
+package org.bonitasoft.studio.refactoring.core;
 
 import java.util.List;
 
@@ -24,6 +24,7 @@ import org.bonitasoft.studio.common.Messages;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
+import org.bonitasoft.studio.refactoring.ui.BonitaCompareEditorInput;
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.CompareUI;
 import org.eclipse.emf.common.command.CompoundCommand;

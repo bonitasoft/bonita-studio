@@ -22,9 +22,6 @@ import java.util.List;
 
 import org.bonitasoft.studio.actors.i18n.Messages;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.common.refactoring.AbstractRefactorOperation;
-import org.bonitasoft.studio.common.refactoring.AbstractScriptExpressionRefactoringAction;
-import org.bonitasoft.studio.common.refactoring.RefactoringOperationType;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationRepositoryStore;
@@ -36,12 +33,16 @@ import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Actor;
 import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.studio.refactoring.core.AbstractRefactorOperation;
+import org.bonitasoft.studio.refactoring.core.AbstractScriptExpressionRefactoringAction;
+import org.bonitasoft.studio.refactoring.core.RefactoringOperationType;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.edit.domain.EditingDomain;
+import org.eclipse.jdt.core.IJavaProject;
 
 /**
  * @author Aurelie Zara

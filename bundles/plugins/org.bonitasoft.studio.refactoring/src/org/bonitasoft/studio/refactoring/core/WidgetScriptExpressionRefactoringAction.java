@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.bonitasoft.studio.common.refactoring;
+package org.bonitasoft.studio.refactoring.core;
 
 import java.util.List;
 
@@ -12,7 +12,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.domain.EditingDomain;
 
 /**
- * @author Romain
+ * @author Romain Bioteau
  * 
  */
 public class WidgetScriptExpressionRefactoringAction extends AbstractScriptExpressionRefactoringAction {

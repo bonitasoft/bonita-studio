@@ -5,10 +5,10 @@ package org.bonitasoft.studio.data.operation;
 
 import java.util.List;
 
-import org.bonitasoft.studio.common.refactoring.AbstractScriptExpressionRefactoringAction;
-import org.bonitasoft.studio.common.refactoring.RefactoringOperationType;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.process.Data;
+import org.bonitasoft.studio.refactoring.core.AbstractScriptExpressionRefactoringAction;
+import org.bonitasoft.studio.refactoring.core.RefactoringOperationType;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.domain.EditingDomain;

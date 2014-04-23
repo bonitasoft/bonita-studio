@@ -14,16 +14,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.common.refactoring;
+package org.bonitasoft.studio.refactoring.core;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.Map;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.groovy.repository.GroovyFileStore;
+import org.bonitasoft.studio.groovy.repository.ProvidedGroovyRepositoryStore;
 import org.bonitasoft.studio.model.expression.Expression;
+import org.codehaus.groovy.eclipse.codeassist.requestor.CompletionNodeFinder;
+import org.codehaus.groovy.eclipse.codeassist.requestor.ContentAssistContext;
+import org.codehaus.jdt.groovy.model.GroovyCompilationUnit;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -31,7 +37,12 @@ import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.domain.EditingDomain;
+import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.jface.text.Document;
+import org.eclipse.text.edits.MalformedTreeException;
+import org.eclipse.text.edits.MultiTextEdit;
 
 /**
  * @author Romain Bioteau
@@ -117,38 +128,38 @@ public abstract class AbstractRefactorOperation implements IRunnableWithProgress
     }
 
     private String performRefactoring(String elementToRefactorName, String newElementName, String script) {
-        String contextRegex = "[\\W^_]";
-        Pattern p = Pattern.compile(elementToRefactorName);
-        Matcher m = p.matcher(script);
-        StringBuffer buf = new StringBuffer();
-        while (m.find()) {
-            String prefix = null;
-            String suffix = null;
-            if (m.start() > 0) {
-                prefix = script.substring(m.start() - 1, m.start());
-            }
-            if (m.end() < script.length()) {
-                suffix = script.substring(m.end(), m.end() + 1);
-            }
-            if (prefix == null && suffix == null) {
-                m.appendReplacement(buf, newElementName);
-            } else {
-                if (prefix != null && prefix.matches(contextRegex) && suffix == null) {
-                    m.appendReplacement(buf, newElementName);
-                } else {
-                    if (prefix == null && suffix != null && suffix.matches(contextRegex)) {
-                        m.appendReplacement(buf, newElementName);
-                    } else {
-                        if (prefix != null && suffix != null && prefix.matches(contextRegex) && suffix.matches(contextRegex)) {
-                            m.appendReplacement(buf, newElementName);
-                        }
-                    }
-                }
-            }
+        final ProvidedGroovyRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(ProvidedGroovyRepositoryStore.class);
+        GroovyFileStore tmpGroovyFileStore = store.createRepositoryFileStore("script" + System.currentTimeMillis() + ".groovy");
+        tmpGroovyFileStore.save(script);
+        GroovyCompilationUnit compilationUnitFrom = (GroovyCompilationUnit) JavaCore.createCompilationUnitFrom(tmpGroovyFileStore.getResource());
 
+        CompletionNodeFinder finder = new CompletionNodeFinder(0, 0, 0, "", ""); //$NON-NLS-1$ //$NON-NLS-2$
+        ContentAssistContext assistContext = finder.findContentAssistContext(compilationUnitFrom);
+
+        org.codehaus.groovy.ast.ASTNode astNode = null;
+        if (assistContext != null) {
+            astNode = assistContext.containingCodeBlock;
         }
-        m.appendTail(buf);
-        return buf.toString();
+        if (astNode != null) {
+            ProcessVariableRenamer variableRenamer = new ProcessVariableRenamer();
+            Map<String, String> variableToRename = new HashMap<String, String>();
+            variableToRename.put(elementToRefactorName, newElementName);
+            MultiTextEdit rename = variableRenamer.rename(astNode, variableToRename);
+            if (rename.getChildrenSize() > 0) {
+                Document document = new Document(script);
+                try {
+                    rename.apply(document);
+                } catch (MalformedTreeException e) {
+                    e.printStackTrace();
+                } catch (BadLocationException e) {
+                    e.printStackTrace();
+                }
+                return document.get();
+
+            }
+        }
+        tmpGroovyFileStore.delete();
+        return script;
     }
 
     public void setEditingDomain(EditingDomain domain) {

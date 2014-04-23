@@ -1247,6 +1247,7 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
                     className = List.class.getName();
                 }
                 if (!defaultValue.isReturnTypeFixed()) {
+                    returnTypeObservable.setValue(null);
                     returnTypeObservable.setValue(className);
                 } else {
                     Object value = returnTypeObservable.getValue();

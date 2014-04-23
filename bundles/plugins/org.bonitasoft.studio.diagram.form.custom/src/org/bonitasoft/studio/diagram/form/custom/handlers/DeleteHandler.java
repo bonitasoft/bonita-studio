@@ -22,10 +22,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bonitasoft.studio.common.Messages;
+import org.bonitasoft.studio.common.diagram.refactoring.RemoveWidgetReferencesOperation;
 import org.bonitasoft.studio.common.dialog.OutlineDialog;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.refactoring.RemoveWidgetReferencesOperation;
 import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.diagram.form.edit.parts.FormEditPart;
