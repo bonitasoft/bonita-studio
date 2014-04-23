@@ -21,7 +21,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.groovy.repository.GroovyFileStore;
@@ -121,13 +124,53 @@ public abstract class AbstractRefactorOperation implements IRunnableWithProgress
         List<Expression> newExpressions = new ArrayList<Expression>(groovyScriptExpressions.size());
         for (Expression expr : groovyScriptExpressions) {
             Expression newExpr = EcoreUtil.copy(expr);
-            newExpr.setContent(performRefactoring(elementNameToUpdate, newName, expr.getContent()));
+            if (ExpressionConstants.SCRIPT_TYPE.equals(expr.getType())) {
+                newExpr.setContent(performGroovyRefactoring(elementNameToUpdate, newName, expr.getContent()));
+            } else {
+                newExpr.setContent(performTextReplacement(elementNameToUpdate, newName, expr.getContent()));
+            }
+
             newExpressions.add(newExpr);
         }
         return newExpressions;
     }
 
-    private String performRefactoring(String elementToRefactorName, String newElementName, String script) {
+    private String performTextReplacement(String elementNameToUpdate, String newElementName, String script) {
+        String contextRegex = "[\\W^_]";
+        Pattern p = Pattern.compile(elementNameToUpdate);
+        Matcher m = p.matcher(script);
+        StringBuffer buf = new StringBuffer();
+        while (m.find()) {
+            String prefix = null;
+            String suffix = null;
+            if (m.start() > 0) {
+                prefix = script.substring(m.start() - 1, m.start());
+            }
+            if (m.end() < script.length()) {
+                suffix = script.substring(m.end(), m.end() + 1);
+            }
+            if (prefix == null && suffix == null) {
+                m.appendReplacement(buf, newElementName);
+            } else {
+                if (prefix != null && prefix.matches(contextRegex) && suffix == null) {
+                    m.appendReplacement(buf, newElementName);
+                } else {
+                    if (prefix == null && suffix != null && suffix.matches(contextRegex)) {
+                        m.appendReplacement(buf, newElementName);
+                    } else {
+                        if (prefix != null && suffix != null && prefix.matches(contextRegex) && suffix.matches(contextRegex)) {
+                            m.appendReplacement(buf, newElementName);
+                        }
+                    }
+                }
+            }
+
+        }
+        m.appendTail(buf);
+        return buf.toString();
+    }
+
+    private String performGroovyRefactoring(String elementToRefactorName, String newElementName, String script) {
         final ProvidedGroovyRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(ProvidedGroovyRepositoryStore.class);
         GroovyFileStore tmpGroovyFileStore = store.createRepositoryFileStore("script" + System.currentTimeMillis() + ".groovy");
         tmpGroovyFileStore.save(script);

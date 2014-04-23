@@ -25,7 +25,6 @@ import org.bonitasoft.studio.common.DataUtil;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.data.i18n.Messages;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
@@ -47,7 +46,6 @@ import org.eclipse.emf.edit.command.AddCommand;
 import org.eclipse.emf.edit.command.RemoveCommand;
 import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.edit.domain.EditingDomain;
-import org.eclipse.jdt.core.IJavaProject;
 
 /**
  * @author Romain Bioteau
@@ -86,7 +84,7 @@ public class RefactorDataOperation extends AbstractRefactorOperation {
     private void updateDataReferenceInExpressions(CompoundCommand finalCommand) {
         List<Expression> expressions = ModelHelper.getAllItemsOfType(parentProcess, ExpressionPackage.Literals.EXPRESSION);
         for (Expression exp : expressions) {
-            if (!ExpressionConstants.SCRIPT_TYPE.equals(exp.getType())) {
+            if (!ExpressionConstants.SCRIPT_TYPE.equals(exp.getType()) && !ExpressionConstants.PATTERN_TYPE.equals(exp.getType())) {
                 for (EObject dependency : exp.getReferencedElements()) {
                     if (dependency instanceof Data) {
                         if (((Data) dependency).getName().equals(oldData.getName())) {

@@ -976,7 +976,6 @@ public class ModelHelper {
             if (ExpressionConstants.SCRIPT_TYPE.equals(expr.getType()) || ExpressionConstants.CONDITION_TYPE.equals(expr.getType())
                     || ExpressionConstants.PATTERN_TYPE.equals(expr.getType())) {
                 if (isElementIsReferencedInScript(expr, element)) {
-
                     result.add(expr);
                 }
             }
