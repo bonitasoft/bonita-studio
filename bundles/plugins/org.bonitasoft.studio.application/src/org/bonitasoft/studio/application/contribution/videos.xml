@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" ?>
+<rss version="2.0">
+  <channel>
+    <pubDate>2011-07-25</pubDate>
+    <author>BonitaSoft</author>
+    <category>Training</category>
+    <title>BonitaSoft Training</title>
+    <link>http://www.bonitasoft.com/blog</link>
+    <description>Training feed from BonitaSoft</description>
+    <item>
+       <pubDate>2011-08-22</pubDate>
+       <author>Jeremy Lipp</author>
+       <category>Training</category>
+       <title>Process Application Development</title>
+       <link>http://www.bonitasoft.com/training/register-training?training_id=753</link>
+       <description>This training module will cover BPMN2 (Business Process Management Notation) process mapping, data management and scripting capabilities, mapping actors and roles, applying filters, creating new filters, connect to external systems (databases, email, document management, Rules, others), custom connectors creation, end user interfaces (complete customization of forms in a Web application) and, a complete end-to-end process development</description>
+    </item>
+
+    <item>
+       <pubDate>2011-08-29</pubDate>
+       <author>Jeremy Lipp</author>
+       <category>Training</category>
+       <title>Process Application Development</title>
+       <link>http://www.bonitasoft.com/training/register-training?training_id=755</link>
+       <description>This training module will cover BPMN2 (Business Process Management Notation) process mapping, data management and scripting capabilities, mapping actors and roles, applying filters, creating new filters, connect to external systems (databases, email, document management, Rules, others), custom connectors creation, end user interfaces (complete customization of forms in a Web application) and, a complete end-to-end process development</description>
+    </item>
+	</channel>
+</rss>
+
+
