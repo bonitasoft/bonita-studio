@@ -73,22 +73,6 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
             }
         }
 
-        Locale defaulPortalLocal = Locale.getDefault();
-        boolean defaultUseXPLocalExists = false;
-        for (Locale locale : LocaleUtil.getProtalLocales()) {
-            if (locale.getLanguage().equals(defaulPortalLocal.getLanguage())) {
-                defaulPortalLocal = locale;
-                defaultUseXPLocalExists = true;
-                break;
-            }
-        }
-
-        if (store.getString(BonitaPreferenceConstants.CURRENT_UXP_LOCALE) == null || store.getString(BonitaPreferenceConstants.CURRENT_UXP_LOCALE).isEmpty()) {
-            store.setDefault(BonitaPreferenceConstants.CURRENT_UXP_LOCALE,
-                    defaultUseXPLocalExists ? defaulPortalLocal.getLanguage() : Locale.ENGLISH.getLanguage());
-            store.setValue(BonitaPreferenceConstants.CURRENT_UXP_LOCALE,
-                    defaultUseXPLocalExists ? defaulPortalLocal.getLanguage() : Locale.ENGLISH.getLanguage());
-        }
         String defaultLocaleValue = store.getString(BonitaPreferenceConstants.DEFAULT_STUDIO_LOCALE);// Default value is compute on the first the studio is run
                                                                                                      // only because Locale.getDefault() is based on osgi.nl
                                                                                                      // property
@@ -97,6 +81,8 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
                     defaultLocalExists ? defaultStudioLocal.getLanguage() : Locale.ENGLISH.getLanguage());
             defaultLocaleValue = store.getString(BonitaPreferenceConstants.DEFAULT_STUDIO_LOCALE);
         }
+
+        store.setDefault(BonitaPreferenceConstants.CURRENT_UXP_LOCALE, defaultLocaleValue != null ? defaultLocaleValue : Locale.ENGLISH.getLanguage());
         store.setDefault(BonitaPreferenceConstants.CURRENT_STUDIO_LOCALE, defaultLocaleValue != null ? defaultLocaleValue : Locale.ENGLISH.getLanguage());
 
         store.setDefault(BonitaCoolBarPreferenceConstant.COOLBAR_DEFAULT_SIZE, BonitaCoolBarPreferenceConstant.NORMAL);
