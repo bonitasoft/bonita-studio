@@ -260,6 +260,8 @@ public class EdaptBarToProcProcessor extends ToProcProcessor {
             } catch (NoClassDefFoundError e) {
                 additionalChanges.add(createImportFailureReport(connectorClassname, e));
             }
+        } else {
+            BonitaStudioLog.debug("No custom connector found in:" + tmpConnectorJarFile, BarImporterPlugin.PLUGIN_ID);
         }
         if (!toDelete.isEmpty()) {
             for (File f : toDelete) {
