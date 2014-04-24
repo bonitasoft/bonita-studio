@@ -48,23 +48,27 @@ import org.eclipse.core.commands.operations.OperationHistoryFactory;
 import org.eclipse.core.databinding.ObservablesManager;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.conversion.Converter;
+import org.eclipse.core.databinding.observable.list.IObservableList;
+import org.eclipse.core.databinding.observable.map.IObservableMap;
+import org.eclipse.core.databinding.observable.set.IObservableSet;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
+import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.databinding.edit.EMFEditObservables;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.edit.command.DeleteCommand;
 import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
-import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -151,8 +155,16 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
         dataTableViewer.getTable().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(200, 100).create());
         dataTableViewer.setSorter(new ViewerSorter());
         dataTableViewer.addDoubleClickListener(this);
-        dataTableViewer.setContentProvider(new ArrayContentProvider());
-        dataTableViewer.setLabelProvider(new DataStyledTreeLabelProvider());
+		ObservableListContentProvider contentProvider = new ObservableListContentProvider();
+		dataTableViewer.setContentProvider(contentProvider);
+		
+		// create the label provider including monitoring 
+		// of the changes of the labels
+		IObservableSet knownElements = contentProvider.getKnownElements();
+		IObservableMap[] labelMaps = EMFObservables.observeMaps(knownElements, new EStructuralFeature[]{ProcessPackage.Literals.ELEMENT__NAME,ProcessPackage.Literals.DATA__DATA_TYPE});
+		dataTableViewer.setLabelProvider(new DataStyledTreeLabelProvider(labelMaps));
+		
+		
     }
 
     public TableViewer getDataTableViewer() {
@@ -342,8 +354,8 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
         context = new EMFDataBindingContext();
         if (getEObject() != null) {
             if (dataTableViewer != null) {
-                context.bindValue(ViewersObservables.observeInput(dataTableViewer),
-                        EMFEditObservables.observeValue(getEditingDomain(), getEObject(), getDataFeature()));
+				IObservableList dataObservableList = EMFEditObservables.observeList(getEditingDomain(), getEObject(),getDataFeature());
+				dataTableViewer.setInput(dataObservableList);
                 final UpdateValueStrategy enableStrategy = new UpdateValueStrategy();
                 enableStrategy.setConverter(new Converter(Data.class, Boolean.class) {
 
