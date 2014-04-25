@@ -1,19 +1,19 @@
 /**
  * Copyright (C) 2010 BonitaSoft S.A.
  * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
- *
+ * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
+ * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.intro.content;
 
@@ -21,6 +21,7 @@ import java.io.File;
 import java.io.PrintWriter;
 import java.net.URL;
 import java.text.DateFormat;
+import java.util.Locale;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -39,61 +40,68 @@ import com.sun.syndication.io.XmlReader;
 
 /**
  * @author Mickael Istria
- *
+ * 
  */
 public class RssContentProvider implements IIntroXHTMLContentProvider {
 
-
     private int nbNews;
-    protected String xmlName;
-    private static DateFormat dateInstance = DateFormat.getDateInstance(DateFormat.SHORT);
 
-    /* (non-Javadoc)
+    protected String xmlName;
+
+    private static DateFormat dateInstance = DateFormat.getDateInstance(DateFormat.DEFAULT, Locale.getDefault());
+
+    /*
+     * (non-Javadoc)
      * @see org.eclipse.ui.intro.config.IIntroContentProvider#init(org.eclipse.ui.intro.config.IIntroContentProviderSite)
      */
     public void init(IIntroContentProviderSite site) {
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see org.eclipse.ui.intro.config.IIntroContentProvider#createContent(java.lang.String, java.io.PrintWriter)
      */
     public void createContent(String id, PrintWriter out) {
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.ui.intro.config.IIntroContentProvider#createContent(java.lang.String, org.eclipse.swt.widgets.Composite, org.eclipse.ui.forms.widgets.FormToolkit)
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.ui.intro.config.IIntroContentProvider#createContent(java.lang.String, org.eclipse.swt.widgets.Composite,
+     * org.eclipse.ui.forms.widgets.FormToolkit)
      */
     public void createContent(String id, Composite parent, FormToolkit toolkit) {
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see org.eclipse.ui.intro.config.IIntroContentProvider#dispose()
      */
     public void dispose() {
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see org.eclipse.ui.intro.config.IIntroXHTMLContentProvider#createContent(java.lang.String, org.w3c.dom.Element)
      */
     public void createContent(String id, Element parent) {
         try {
             read(id);
             URL fileUrl = getRSS();
-            if(fileUrl != null){
+            if (fileUrl != null) {
                 Document dom = parent.getOwnerDocument();
 
                 SyndFeedInput input = new SyndFeedInput();
                 SyndFeed feed = null;
-                try{
+                try {
                     feed = input.build(new XmlReader(fileUrl));
-                }catch (Exception e) {
-                    BonitaStudioLog.error("RSS parsing exception for "+fileUrl,"org.bonitasoft.studio.intro");
-                    BonitaStudioLog.error(e,"org.bonitasoft.studio.intro");
+                } catch (Exception e) {
+                    BonitaStudioLog.error("RSS parsing exception for " + fileUrl, "org.bonitasoft.studio.intro");
+                    BonitaStudioLog.error(e, "org.bonitasoft.studio.intro");
                 }
                 Node ul = parent.appendChild(dom.createElement("ul"));
                 int i = 0;
                 for (Object entry : feed.getEntries()) {
-                    SyndEntry syndEntry = (SyndEntry)entry;
+                    SyndEntry syndEntry = (SyndEntry) entry;
                     Element li = createLiRssEntryNode(dom, syndEntry);
                     ul.appendChild(li);
                     i++;
@@ -103,7 +111,7 @@ public class RssContentProvider implements IIntroXHTMLContentProvider {
                 }
             }
         } catch (Exception ex) {
-            BonitaStudioLog.error(ex,"org.bonitasoft.studio.intro");
+            BonitaStudioLog.error(ex, "org.bonitasoft.studio.intro");
         }
 
     }
@@ -117,21 +125,7 @@ public class RssContentProvider implements IIntroXHTMLContentProvider {
         xmlName = segments[1].trim();
     }
 
-    /**
-     * @param dom
-     * @param syndEntry
-     * @return
-     */
     private Element createLiRssEntryNode(Document dom, SyndEntry syndEntry) {
-        /*
-         * <li>
-         * 		<a class="rssLink" hef="[link]">
-         * 			<span class="rssPubDate">[pubDate] - </span>
-         * 			<span class="rssTitle">[title]</span>
-         *		</a>
-         *		<span class="rssDesc"><br />[description]
-         * </li>
-         */
         Element li = dom.createElement("li");
         Element a = dom.createElement("a");
         a.setAttribute("href", syndEntry.getLink());
@@ -140,7 +134,7 @@ public class RssContentProvider implements IIntroXHTMLContentProvider {
         {
             Element dateSpan = dom.createElement("span");
             dateSpan.setAttribute("class", "rssPubDate");
-            dateSpan.appendChild( dom.createTextNode(dateInstance.format(syndEntry.getPublishedDate()) + " - " ));
+            dateSpan.appendChild(dom.createTextNode(dateInstance.format(syndEntry.getPublishedDate()) + " - "));
             a.appendChild(dateSpan);
         }
         {
@@ -173,7 +167,7 @@ public class RssContentProvider implements IIntroXHTMLContentProvider {
     }
 
     protected URL getRSS() throws Exception {
-        File xmlFile = new File(ResourcesPlugin.getWorkspace().getRoot().getLocation().toFile(),xmlName + ".xml");
-        return xmlFile.toURL();
+        File xmlFile = new File(ResourcesPlugin.getWorkspace().getRoot().getLocation().toFile(), xmlName + ".xml");
+        return xmlFile.toURI().toURL();
     }
 }

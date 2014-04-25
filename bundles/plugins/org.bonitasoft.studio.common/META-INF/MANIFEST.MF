@@ -40,7 +40,12 @@ Require-Bundle: org.eclipse.core.runtime,
  org.mockito;bundle-version="1.9.5";resolution:=optional,
  org.eclipse.compare;bundle-version="3.5.202",
  assertj-core;bundle-version="1.5.0";resolution:=optional,
- org.bonitasoft.studio.model.assertions;bundle-version="6.3.0";resolution:=optional
+ org.bonitasoft.studio.model.assertions;bundle-version="6.3.0";resolution:=optional,
+ org.codehaus.groovy.eclipse.core,
+ org.codehaus.groovy;bundle-version="1.8.6",
+ org.eclipse.jdt.groovy.core,
+ org.codehaus.groovy.eclipse.codeassist.completion,
+ org.eclipse.xtext.ui
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Import-Package: org.bonitasoft.engine.bpm.bar,
@@ -70,7 +75,6 @@ Export-Package: org.bonitasoft.studio.common,
  org.bonitasoft.studio.common.perspectives,
  org.bonitasoft.studio.common.platform.tools,
  org.bonitasoft.studio.common.properties,
- org.bonitasoft.studio.common.refactoring,
  org.bonitasoft.studio.common.views,
  org.bonitasoft.studio.common.widgets
 Bundle-ClassPath: .,

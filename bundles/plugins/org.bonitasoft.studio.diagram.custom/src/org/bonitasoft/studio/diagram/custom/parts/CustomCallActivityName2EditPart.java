@@ -6,14 +6,14 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
+ * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 package org.bonitasoft.studio.diagram.custom.parts;
@@ -30,7 +30,7 @@ import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * @author Romain Bioteau
- *
+ * 
  */
 public class CustomCallActivityName2EditPart extends CallActivityName2EditPart {
 
@@ -48,14 +48,14 @@ public class CustomCallActivityName2EditPart extends CallActivityName2EditPart {
         super.setLabel(figure);
     }
 
-
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see org.bonitasoft.studio.model.process.diagram.edit.parts.ActivityName2EditPart#getManager()
      */
     @Override
     protected DirectEditManager getManager() {
         if (manager == null) {
-            /*Create custom text director which use wrap label editor*/
+            /* Create custom text director which use wrap label editor */
             setManager(new CustomTextDirectEditManager(this, CustomTextDirectEditManager
                     .getTextCellEditorClass(this), ProcessEditPartFactory
                     .getTextCellEditorLocator(this)));
@@ -63,7 +63,8 @@ public class CustomCallActivityName2EditPart extends CallActivityName2EditPart {
         return manager;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see org.bonitasoft.studio.model.process.diagram.edit.parts.ActivityName2EditPart#setManager(org.eclipse.gef.tools.DirectEditManager)
      */
     @Override
@@ -71,13 +72,9 @@ public class CustomCallActivityName2EditPart extends CallActivityName2EditPart {
         this.manager = manager;
     }
 
-
-    /* (non-Javadoc)
-     * @see org.bonitasoft.studio.model.process.diagram.edit.parts.ActivityName2EditPart#refreshLabel()
-     */
     @Override
-    protected void refreshLabel() {
-        super.refreshLabel();
-        FiguresHelper.resizeActivitiesFigure((IGraphicalEditPart) getParent(), getLabelText());
+    public void setLabelText(String text) {
+        super.setLabelText(text);
+        FiguresHelper.resizeActivitiesFigure((IGraphicalEditPart) getParent(), text);
     }
 }

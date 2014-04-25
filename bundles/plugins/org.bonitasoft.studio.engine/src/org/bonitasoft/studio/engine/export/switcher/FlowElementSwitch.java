@@ -230,7 +230,9 @@ public class FlowElementSwitch extends AbstractSwitch {
         if (message != null) {
             CatchMessageEventTriggerDefinitionBuilder triggerBuilder = eventBuilder.addMessageEventTrigger(message);
             addMessageContent(object, triggerBuilder);
-            // addMessageCorrelation(object, triggerBuilder);
+            if (ModelHelper.isInEvenementialSubProcessPool(object)) {
+                addMessageCorrelation(object, triggerBuilder);
+            }
         }
         addDescription(eventBuilder, object.getDocumentation());
         return object;
@@ -255,7 +257,7 @@ public class FlowElementSwitch extends AbstractSwitch {
         }
     }
 
-    private void addMessageCorrelation(AbstractCatchMessageEvent messageEvent, CatchMessageEventTriggerDefinitionBuilder triggerBuilder) {
+    protected void addMessageCorrelation(AbstractCatchMessageEvent messageEvent, CatchMessageEventTriggerDefinitionBuilder triggerBuilder) {
         if (messageEvent.getCorrelation() != null) {
             for (ListExpression row : messageEvent.getCorrelation().getExpressions()) {
                 List<org.bonitasoft.studio.model.expression.Expression> col = row.getExpressions();
