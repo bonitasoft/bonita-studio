@@ -435,6 +435,7 @@ public class FormsExporter {
         for (final org.bonitasoft.engine.expression.Expression dependency : expression.getDependencies()) {
             builder.addDependentExpression(dependency.getName(), dependency.getContent(), dependency.getExpressionType(), dependency.getReturnType(),
                     (dependency.getInterpreter() != null && !dependency.getInterpreter().isEmpty()) ? dependency.getInterpreter() : null);
+            // addExpressionDependency(builder, dependency);
         }
     }
 

@@ -66,7 +66,6 @@ public class RecoverWorkspaceAdvisor extends InstallerApplicationWorkbenchAdviso
 			}
 		}
 		RepositoryManager.getInstance().setRepository("default");
-		PlatformUI.getWorkbench().close() ; //close application
 	}
 
 	/* (non-Javadoc)

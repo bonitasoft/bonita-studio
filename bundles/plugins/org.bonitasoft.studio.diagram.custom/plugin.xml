@@ -488,7 +488,7 @@
          </activeWhen>
       </handler>
       <handler
-            class="org.bonitasoft.studio.diagram.custom.refactoring.ExtractSubprocess"
+            class="org.bonitasoft.studio.diagram.custom.refactoring.ExtractAsCallActivityHandler"
             commandId="org.bonitasoft.studio.diagram.custom.extractSubprocess">
          <activeWhen>
             <reference

@@ -6,20 +6,21 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
+ * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 package org.bonitasoft.studio.properties.sections.timer.wizard;
 
 import org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution;
 import org.bonitasoft.studio.model.expression.Expression;
+import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.process.AbstractTimerEvent;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.properties.i18n.Messages;
@@ -34,35 +35,41 @@ import org.eclipse.jface.wizard.Wizard;
  */
 public class EditTimerConditionWizard extends Wizard {
 
-	private TimerConditionWizardPage page;
-	private Expression condition;
-	private AbstractTimerEvent event;
-	private TransactionalEditingDomain editingDomain;
-	private IExtensibleGridPropertySectionContribution section;
+    private TimerConditionWizardPage page;
 
-	public EditTimerConditionWizard(AbstractTimerEvent event, TransactionalEditingDomain editingDomain,
-			IExtensibleGridPropertySectionContribution section) {
-		this.event = event;
-		this.condition = EcoreUtil.copy(event.getCondition());
-		this.editingDomain = editingDomain;
-		this.section = section;
-		this.setWindowTitle(Messages.timerConditionWizardTitle);
-	}
-	
-	
+    private Expression condition;
 
-	@Override
-	public void addPages() {
-		page = new TimerConditionWizardPage(event, condition);
-		this.addPage(page);
-	}
+    private AbstractTimerEvent event;
 
-	@Override
-	public boolean performFinish() {
-		editingDomain.getCommandStack().execute(
-					SetCommand.create(editingDomain, event, ProcessPackage.Literals.ABSTRACT_TIMER_EVENT__CONDITION,  page.getCondition()));
-		section.refresh();
-		return true;
-	}
+    private TransactionalEditingDomain editingDomain;
+
+    private IExtensibleGridPropertySectionContribution section;
+
+    public EditTimerConditionWizard(AbstractTimerEvent event, TransactionalEditingDomain editingDomain,
+            IExtensibleGridPropertySectionContribution section) {
+        this.event = event;
+        Expression condition = event.getCondition();
+        if (condition == null) {
+            condition = ExpressionFactory.eINSTANCE.createExpression();
+        }
+        this.condition = EcoreUtil.copy(condition);
+        this.editingDomain = editingDomain;
+        this.section = section;
+        this.setWindowTitle(Messages.timerConditionWizardTitle);
+    }
+
+    @Override
+    public void addPages() {
+        page = new TimerConditionWizardPage(event, condition);
+        this.addPage(page);
+    }
+
+    @Override
+    public boolean performFinish() {
+        editingDomain.getCommandStack().execute(
+                SetCommand.create(editingDomain, event, ProcessPackage.Literals.ABSTRACT_TIMER_EVENT__CONDITION, page.getCondition()));
+        section.refresh();
+        return true;
+    }
 
 }

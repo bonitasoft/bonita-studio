@@ -1,19 +1,19 @@
 /**
  * Copyright (C) 2011-2013 BonitaSoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
- *
+ * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
+ * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.application.contribution;
 
@@ -35,7 +35,7 @@ import org.eclipse.core.runtime.Platform;
 
 /**
  * @author Romain Bioteau
- *
+ * 
  */
 public class UpdateRSSContribution implements IPreStartupContribution {
 
@@ -44,21 +44,24 @@ public class UpdateRSSContribution implements IPreStartupContribution {
     protected class UpdateRSSThread extends Thread {
 
         private URL rssUrl;
+
         private final String xmlName;
+
         private final String url;
+
         private final Class currentClass;
 
-        public UpdateRSSThread(String xmlName,String url,Class currentClass) {
+        public UpdateRSSThread(String xmlName, String url, Class currentClass) {
             super();
-            this.xmlName = xmlName ;
-            this.url = url ;
-            this.currentClass = currentClass ;
+            this.xmlName = xmlName;
+            this.url = url;
+            this.currentClass = currentClass;
         }
 
         @Override
         public void run() {
             try {
-                File xmlFile = new File(ResourcesPlugin.getWorkspace().getRoot().getLocation().toFile(),xmlName + ".xml");
+                File xmlFile = new File(ResourcesPlugin.getWorkspace().getRoot().getLocation().toFile(), xmlName + ".xml");
                 boolean isFirstRun = false;
                 if (!xmlFile.exists()) {
                     isFirstRun = true;
@@ -72,79 +75,83 @@ public class UpdateRSSContribution implements IPreStartupContribution {
 
                 long millisecondsSinceRefresh = System.currentTimeMillis() - xmlFile.lastModified();
                 if (isFirstRun || millisecondsSinceRefresh > ONE_DAY) {
-                    InputStream stream =null ;
-                    FileOutputStream out = null ;
-                    try{
-                        BonitaStudioLog.debug("Updating RSS feed:"+xmlFile.getName(), ApplicationPlugin.PLUGIN_ID);
-                        URLConnection connection = new URL(url).openConnection() ;
-                        connection.setConnectTimeout(4000) ;
-                        stream = connection.getInputStream() ;
+                    InputStream stream = null;
+                    FileOutputStream out = null;
+                    try {
+                        BonitaStudioLog.debug("Updating RSS feed:" + xmlFile.getName(), ApplicationPlugin.PLUGIN_ID);
+                        URLConnection connection = new URL(url).openConnection();
+                        connection.setConnectTimeout(4000);
+                        stream = connection.getInputStream();
                         out = copyStream(xmlFile, stream, out);
-                    }catch (ConnectException e) {
-                        BonitaStudioLog.error(e) ;
+                    } catch (ConnectException e) {
+                        BonitaStudioLog.error(e);
                     } catch (IOException e) {
-                        BonitaStudioLog.error(e) ;
-                    }finally{
+                        BonitaStudioLog.error(e);
+                    } finally {
                         closeStreams(stream, out);
                     }
                 }
             } catch (Exception e) {
-                BonitaStudioLog.error(e) ;
+                BonitaStudioLog.error(e);
             }
         }
 
-		private void closeStreams(InputStream stream, FileOutputStream out) {
-			if(stream != null){
-			    try {
-			        stream.close();
-			    } catch (IOException e) {
-			        BonitaStudioLog.error(e) ;
-			    }
-			}
-			if(out != null){
-			    try {
-			        out.close();
-			    } catch (IOException e) {
-			        BonitaStudioLog.error(e) ;
-			    }
-			}
-		}
+        private void closeStreams(InputStream stream, FileOutputStream out) {
+            if (stream != null) {
+                try {
+                    stream.close();
+                } catch (IOException e) {
+                    BonitaStudioLog.error(e);
+                }
+            }
+            if (out != null) {
+                try {
+                    out.close();
+                } catch (IOException e) {
+                    BonitaStudioLog.error(e);
+                }
+            }
+        }
 
-		private FileOutputStream copyStream(File xmlFile, InputStream stream,
-				FileOutputStream out) throws IOException, FileNotFoundException {
-			if(stream.available() > 0){
-			    out = new FileOutputStream(xmlFile);
-			    FileUtil.copy(stream, out);
-			    out.close();
-			    stream.close();
-			    BonitaStudioLog.debug("RSS feed:"+xmlFile.getName()+" updated successfuly!", ApplicationPlugin.PLUGIN_ID);
-			}else{
-			    BonitaStudioLog.debug("RSS feed:"+xmlFile.getName()+" update has failed!", ApplicationPlugin.PLUGIN_ID);
-			}
-			return out;
-		}
+        private FileOutputStream copyStream(File xmlFile, InputStream stream,
+                FileOutputStream out) throws IOException, FileNotFoundException {
+            if (stream.available() > 0) {
+                out = new FileOutputStream(xmlFile);
+                FileUtil.copy(stream, out);
+                out.close();
+                stream.close();
+                BonitaStudioLog.debug("RSS feed:" + xmlFile.getName() + " updated successfuly!", ApplicationPlugin.PLUGIN_ID);
+            } else {
+                BonitaStudioLog.debug("RSS feed:" + xmlFile.getName() + " update has failed!", ApplicationPlugin.PLUGIN_ID);
+            }
+            return out;
+        }
 
-        public URL getRss(){
-            return rssUrl ;
+        public URL getRss() {
+            return rssUrl;
         }
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see org.bonitasoft.studio.application.contribution.IPreStartupContribution#execute()
      */
     @Override
     public void execute() {
-        new UpdateRSSThread("resources", "http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=63",getClass()).start() ;
-        new UpdateRSSThread("news", "http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=61",getClass()).start()  ;
-        new UpdateRSSThread("training", "http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=62",getClass()).start()  ;
+        new UpdateRSSThread("resources", "http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=63", getClass()).start();
+        new UpdateRSSThread("news", "http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=61", getClass()).start();
+        new UpdateRSSThread("training", "http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=62", getClass()).start();
+        new UpdateRSSThread("videos", "http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=151", getClass()).start();
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see org.bonitasoft.studio.application.contribution.IPreStartupContribution#canExecute()
      */
     @Override
     public boolean canExecute() {
-        return !PlatformUtil.isHeadless() && Platform.getProduct() != null && !Platform.getProduct().getId().equals("org.bonitasoft.studioEx.product") && !Platform.getProduct().getId().equals("org.bonitasoft.talendBPM.product");
+        return !PlatformUtil.isHeadless() && Platform.getProduct() != null && !Platform.getProduct().getId().equals("org.bonitasoft.studioEx.product")
+                && !Platform.getProduct().getId().equals("org.bonitasoft.talendBPM.product");
     }
 
 }

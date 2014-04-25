@@ -307,30 +307,6 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
                     }
                 }
             };
-
-            // p.run(true, false, new IRunnableWithProgress() {
-            //
-            // @Override
-            // public void run(IProgressMonitor monitor) throws InvocationTargetException,InterruptedException {
-            // monitor.beginTask(Messages.shuttingDown, IProgressMonitor.UNKNOWN) ;
-            // Job.getJobManager().cancel(StartEngineJob.FAMILY);
-            //						IConfigurationElement[] elements = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements("org.bonitasoft.studio.application.preshutdown"); //$NON-NLS-1$
-            // IPreShutdownContribution contrib = null;
-            // for (IConfigurationElement elem : elements){
-            // try {
-            //								contrib = (IPreShutdownContribution) elem.createExecutableExtension("class"); //$NON-NLS-1$
-            // } catch (CoreException e) {
-            // BonitaStudioLog.error(e);
-            // }
-            // contrib.execute();
-            // }
-            // if(BOSEngineManager.getInstance().isRunning()){
-            // BOSEngineManager.getInstance().stop() ;
-            // }
-            // FileUtil.deleteDir(ProjectUtil.getBonitaStudioWorkFolder());
-            // monitor.done() ;
-            // }
-            // });
             p.run(true, false, runnable);
         } catch (InvocationTargetException e) {
             status
