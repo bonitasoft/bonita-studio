@@ -5,14 +5,14 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
+ * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.connectors.repository;
 
@@ -33,21 +33,21 @@ import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.swt.graphics.Image;
 import org.osgi.framework.Bundle;
 
-
 /**
  * @author Romain Bioteau
  * @author Baptiste Mesta
- * This extends SourceRepositoryStore in order to find message resources
+ *         This extends SourceRepositoryStore in order to find message resources
  */
-public class ConnectorDefRepositoryStore extends AbstractDefinitionRepositoryStore<ConnectorDefFileStore>{
+public class ConnectorDefRepositoryStore extends AbstractDefinitionRepositoryStore<ConnectorDefFileStore> {
 
     public static final String STORE_NAME = "connectors-def";
-    private static final Set<String> extensions = new HashSet<String>() ;
-    public static final String CONNECTOR_DEF_EXT = "def";
-    static{
-        extensions.add(CONNECTOR_DEF_EXT) ;
-    }
 
+    private static final Set<String> extensions = new HashSet<String>();
+
+    public static final String CONNECTOR_DEF_EXT = "def";
+    static {
+        extensions.add(CONNECTOR_DEF_EXT);
+    }
 
     private DefinitionResourceProvider resourceProvider;
 
@@ -58,16 +58,16 @@ public class ConnectorDefRepositoryStore extends AbstractDefinitionRepositorySto
 
     @Override
     public ConnectorDefFileStore createRepositoryFileStore(String fileName) {
-        if(fileName.endsWith(CONNECTOR_DEF_EXT)){
-        	clearCachedFileStore();
+        if (fileName.endsWith(CONNECTOR_DEF_EXT)) {
+            clearCachedFileStore();
             return new ConnectorDefFileStore(fileName, this);
         }
         return null;
     }
 
     public DefinitionResourceProvider getResourceProvider() {
-        if(resourceProvider == null){
-            resourceProvider = DefinitionResourceProvider.getInstance(this,getBundle());
+        if (resourceProvider == null) {
+            resourceProvider = DefinitionResourceProvider.getInstance(this, getBundle());
             resourceProvider.loadDefinitionsCategories(null);
         }
         return resourceProvider;
@@ -76,30 +76,29 @@ public class ConnectorDefRepositoryStore extends AbstractDefinitionRepositorySto
     @Override
     protected ConnectorDefFileStore doImportInputStream(String fileName, InputStream inputStream) {
         ConnectorDefFileStore definition = super.doImportInputStream(fileName, inputStream);
-        if(definition != null){
-            final DefinitionResourceProvider resourceProvider = DefinitionResourceProvider.getInstance(this,getBundle());
+        if (definition != null) {
+            final DefinitionResourceProvider resourceProvider = DefinitionResourceProvider.getInstance(this, getBundle());
             reloadCategories(definition.getContent(), resourceProvider);
         }
         return definition;
     }
 
-    private void reloadCategories(org.bonitasoft.studio.connector.model.definition.ConnectorDefinition definition,DefinitionResourceProvider messageProvider) {
-        boolean reloadCategories = false ;
-        for(Category c : definition.getCategory()){
-            if(!messageProvider.getAllCategories().contains(c)){
-                reloadCategories = true ;
+    private void reloadCategories(org.bonitasoft.studio.connector.model.definition.ConnectorDefinition definition, DefinitionResourceProvider messageProvider) {
+        boolean reloadCategories = false;
+        for (Category c : definition.getCategory()) {
+            if (!messageProvider.getAllCategories().contains(c)) {
+                reloadCategories = true;
                 break;
             }
         }
-        if(reloadCategories){
+        if (reloadCategories) {
             messageProvider.loadDefinitionsCategories(null);
         }
     }
 
-
     @Override
     public String getName() {
-        return STORE_NAME ;
+        return STORE_NAME;
     }
 
     @Override
@@ -109,7 +108,7 @@ public class ConnectorDefRepositoryStore extends AbstractDefinitionRepositorySto
 
     @Override
     public Image getIcon() {
-        return Pics.getImage("connector.png",ConnectorPlugin.getDefault());
+        return Pics.getImage("connector.png", ConnectorPlugin.getDefault());
     }
 
     @Override
@@ -117,22 +116,20 @@ public class ConnectorDefRepositoryStore extends AbstractDefinitionRepositorySto
         return extensions;
     }
 
-
     @Override
     protected ConnectorDefFileStore getDefFileStore(URL url) {
         return new URLConnectorDefFileStore(url, this);
     }
 
-
     @Override
     protected Bundle getBundle() {
         return ConnectorPlugin.getDefault().getBundle();
     }
-    
+
     @Override
     public void migrate() throws CoreException, MigrationException {
-    	super.migrate();
-    	 getResourceProvider().loadDefinitionsCategories(null);
+        super.migrate();
+        getResourceProvider().loadDefinitionsCategories(null);
     }
 
 }

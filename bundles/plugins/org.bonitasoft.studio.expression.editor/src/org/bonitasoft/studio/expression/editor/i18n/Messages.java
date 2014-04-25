@@ -138,6 +138,8 @@ public class Messages extends NLS {
 
     public static String editQueryExpressionTooltip;
 
+    public static String transientDataWarning;
+
     private Messages() {
         // Do not instantiate
     }

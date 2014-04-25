@@ -51,6 +51,7 @@ Export-Package: org.bonitasoft.studio.engine,
  org.bonitasoft.studio.engine.preferences,
  org.bonitasoft.studio.engine.store,
  org.bonitasoft.studio.engine.ui,
+ org.bonitasoft.studio.engine.ui.dialog,
  org.bonitasoft.studio.engine.ui.wizard
 Bundle-Activator: org.bonitasoft.studio.engine.EnginePlugin
 Bundle-ActivationPolicy: lazy

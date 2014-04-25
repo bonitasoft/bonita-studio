@@ -28,7 +28,6 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.bonitasoft.studio.common.AbstractRefactorOperation;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.IBonitaVariableContext;
 import org.bonitasoft.studio.common.emf.tools.WidgetHelper;
@@ -59,6 +58,7 @@ import org.bonitasoft.studio.model.form.TextFormField;
 import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
+import org.bonitasoft.studio.refactoring.core.AbstractRefactorOperation;
 import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
@@ -1275,7 +1275,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
     private boolean executeOperation(String newValue) {
         boolean hasBeenExecuted = false;
         if (operation != null) {
-            operation.setNewValue(newValue);
+            operation.setNewValueName(newValue);
             IProgressService service = PlatformUI.getWorkbench().getProgressService();
             try {
                 service.busyCursorWhile(operation);

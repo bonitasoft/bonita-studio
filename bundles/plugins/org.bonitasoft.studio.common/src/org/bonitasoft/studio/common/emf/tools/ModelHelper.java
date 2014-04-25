@@ -6,14 +6,14 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
+ * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 package org.bonitasoft.studio.common.emf.tools;
@@ -101,10 +101,15 @@ import org.eclipse.gmf.runtime.notation.Diagram;
 public class ModelHelper {
 
     public static final String STRING_DATA_TYPE = NamingUtils.convertToId(DataTypeLabels.stringDataType);
+
     public static final String INTEGER_DATA_TYPE = NamingUtils.convertToId(DataTypeLabels.integerDataType);
+
     public static final String FLOAT_DATA_TYPE = NamingUtils.convertToId(DataTypeLabels.floatDataType);
+
     public static final String BOOLEAN_DATA_TYPE = NamingUtils.convertToId(DataTypeLabels.booleanDataType);
+
     public static final String DATE_DATA_TYPE = NamingUtils.convertToId(DataTypeLabels.dateDataType);
+
     public static final String JAVA_DATA_TYPE = NamingUtils.convertToId(DataTypeLabels.javaDataType);
 
     /**
@@ -132,7 +137,7 @@ public class ModelHelper {
     public static List<AbstractProcess> getAllProcesses(Element eObject) {
         List<AbstractProcess> res = new ArrayList<AbstractProcess>();
         MainProcess mainProcess = getMainProcess(eObject);
-        if(mainProcess != null){
+        if (mainProcess != null) {
             findAllProcesses(mainProcess, res);
         }
         return res;
@@ -140,263 +145,259 @@ public class ModelHelper {
 
     private static List<AbstractProcess> findAllProcesses(Element element, List<AbstractProcess> processes) {
 
-        //		List<URI> newwayFindProcesses = newwayFindProcesses(element, processes);
-        //		ResultSet resultSet = newWayFindProcessesWithQueriesInObjectFormat(element);
+        // List<URI> newwayFindProcesses = newwayFindProcesses(element, processes);
+        // ResultSet resultSet = newWayFindProcessesWithQueriesInObjectFormat(element);
         List<AbstractProcess> oldwayFindProcesses = oldwayFindProcesses(element, processes);
-        //		ResultSet resultSet2 = newwayFindProcessesWithXtextQuery(element);
+        // ResultSet resultSet2 = newwayFindProcessesWithXtextQuery(element);
         //
-        //		if(resultSet2.getSize() != oldwayFindProcesses.size()){
-        //			System.out.println("erdf:\n"+resultSet2.getSize()+"\n\n"+oldwayFindProcesses);
-        //		} else {
-        //			System.out.println("all is fine using Xtext");
-        //		}
+        // if(resultSet2.getSize() != oldwayFindProcesses.size()){
+        // System.out.println("erdf:\n"+resultSet2.getSize()+"\n\n"+oldwayFindProcesses);
+        // } else {
+        // System.out.println("all is fine using Xtext");
+        // }
         //
-        //		if(resultSet.getSize() != oldwayFindProcesses.size()){
-        //			System.out.println("erdf:\n"+resultSet.getSize()+"\n\n"+oldwayFindProcesses);
-        //		} else {
-        //			System.out.println("all is fine using Object format");
-        //		}
-        //		if(newwayFindProcesses.size() != oldwayFindProcesses.size()){
-        //			System.out.println("erdf:\n"+newwayFindProcesses+"\n\n"+oldwayFindProcesses);
-        //		} else {
-        //			System.out.println("all is fine using basic query");
-        //		}
+        // if(resultSet.getSize() != oldwayFindProcesses.size()){
+        // System.out.println("erdf:\n"+resultSet.getSize()+"\n\n"+oldwayFindProcesses);
+        // } else {
+        // System.out.println("all is fine using Object format");
+        // }
+        // if(newwayFindProcesses.size() != oldwayFindProcesses.size()){
+        // System.out.println("erdf:\n"+newwayFindProcesses+"\n\n"+oldwayFindProcesses);
+        // } else {
+        // System.out.println("all is fine using basic query");
+        // }
         return oldwayFindProcesses;
     }
 
-    //	private static List<URI> newwayFindProcesses(Element element,
-    //			List<AbstractProcess> processes) {
-    //		final EObjectQuery<EObjectDescriptor> eObjectQuery = IndexQueryFactory.createEObjectQuery();
-    //		eObjectQuery.eClassURI(EcoreUtil.getURI(ProcessPackage.Literals.POOL));
-    //		final List<URI> result = new ArrayList<URI>();
-    //		getIndexFactory().executeQueryCommand(new QueryCommand() {
+    // private static List<URI> newwayFindProcesses(Element element,
+    // List<AbstractProcess> processes) {
+    // final EObjectQuery<EObjectDescriptor> eObjectQuery = IndexQueryFactory.createEObjectQuery();
+    // eObjectQuery.eClassURI(EcoreUtil.getURI(ProcessPackage.Literals.POOL));
+    // final List<URI> result = new ArrayList<URI>();
+    // getIndexFactory().executeQueryCommand(new QueryCommand() {
     //
-    //			public void execute(QueryExecutor queryExecutor) {
-    //				QueryResult<EObjectDescriptor> execute = queryExecutor.execute(eObjectQuery);
-    //				for (EObjectDescriptor objDesc : execute) {
-    //					URI candidateResourceUri = objDesc.getResourceURI();
-    //					//boolean isInScope = scope.contains(candidateResourceUri);
-    ////					if (isInclusiveScope == isInScope) {
-    //						// add uri of instance to result
-    //						result.add(candidateResourceUri.appendFragment(objDesc.getFragment()));
-    ////					}
-    //				}
-    //			}
-    //		});
-    //		return result;
-    //	}
+    // public void execute(QueryExecutor queryExecutor) {
+    // QueryResult<EObjectDescriptor> execute = queryExecutor.execute(eObjectQuery);
+    // for (EObjectDescriptor objDesc : execute) {
+    // URI candidateResourceUri = objDesc.getResourceURI();
+    // //boolean isInScope = scope.contains(candidateResourceUri);
+    // // if (isInclusiveScope == isInScope) {
+    // // add uri of instance to result
+    // result.add(candidateResourceUri.appendFragment(objDesc.getFragment()));
+    // // }
+    // }
+    // }
+    // });
+    // return result;
+    // }
     //
-    //	private static Model model;
-    //	private static QueryProcessor queryProcessor;
-    //	private static XtextResourceSet set;
-    //	private static boolean firstQuery;
+    // private static Model model;
+    // private static QueryProcessor queryProcessor;
+    // private static XtextResourceSet set;
+    // private static boolean firstQuery;
     //
-    //	private static ResultSet newwayFindProcessesWithXtextQuery(final Element element) {
+    // private static ResultSet newwayFindProcessesWithXtextQuery(final Element element) {
     //
-    //		MQLquery query = findQuery("searchAllProcesses");
-    //		Query internalQuery = QueryTransformer.transform(query);
-    //		Index indexFactory = getIndexFactory();
-    //		QueryProcessor queryProcessor = getQueryProcessorFactory().createQueryProcessor(indexFactory);
-    //		final ResultSet result = queryProcessor.execute(internalQuery, new QueryContext() {
+    // MQLquery query = findQuery("searchAllProcesses");
+    // Query internalQuery = QueryTransformer.transform(query);
+    // Index indexFactory = getIndexFactory();
+    // QueryProcessor queryProcessor = getQueryProcessorFactory().createQueryProcessor(indexFactory);
+    // final ResultSet result = queryProcessor.execute(internalQuery, new QueryContext() {
     //
-    //			public ResourceSet getResourceSet() {
-    //				return element.eResource().getResourceSet();
-    //			}
+    // public ResourceSet getResourceSet() {
+    // return element.eResource().getResourceSet();
+    // }
     //
-    //			public URI[] getResourceScope() {
-    //				return new URI[]{element.eResource().getURI()};
-    //			}
-    //		});
+    // public URI[] getResourceScope() {
+    // return new URI[]{element.eResource().getURI()};
+    // }
+    // });
     //
-    //		return result;
-    //	}
+    // return result;
+    // }
     //
-    //	private static MQLquery findQuery(String queryName) {
-    //		if(model == null){
-    //			new org.eclipse.emf.mwe.utils.StandaloneSetup().setPlatformUri("..");
-    //			Injector injector = new QueryStandaloneSetup().createInjectorAndDoEMFRegistration();
-    //			set = injector.getInstance(XtextResourceSet.class);
-    //			set.addLoadOption(XtextResource.OPTION_RESOLVE_ALL, Boolean.TRUE);
-    //			URI resourceURI = URI.createURI(
-    //			         "platform:/plugin/org.bonitasoft.studio.common/bonita.query");
-    //			URI normalized = set.getURIConverter().normalize(resourceURI);
-    //			LazyLinkingResource xtextResource = (LazyLinkingResource) set.getResource(normalized, true);
-    //			Index indexFactory = getIndexFactory();
-    //			queryProcessor = getQueryProcessorFactory().createQueryProcessor(indexFactory);
-    //			model = (Model) xtextResource.getContents().get(0);
-    //		}
-    //		if (queryName == null) {
-    //			return model.getDefaultQuery();
-    //		}
-    //		for (NamedQuery query : model.getNamedQueries()) {
-    //			if (query.getName().equals(queryName)) {
-    //				return query.getQuery();
-    //			}
-    //		}
-    //		return null;
-    //	}
+    // private static MQLquery findQuery(String queryName) {
+    // if(model == null){
+    // new org.eclipse.emf.mwe.utils.StandaloneSetup().setPlatformUri("..");
+    // Injector injector = new QueryStandaloneSetup().createInjectorAndDoEMFRegistration();
+    // set = injector.getInstance(XtextResourceSet.class);
+    // set.addLoadOption(XtextResource.OPTION_RESOLVE_ALL, Boolean.TRUE);
+    // URI resourceURI = URI.createURI(
+    // "platform:/plugin/org.bonitasoft.studio.common/bonita.query");
+    // URI normalized = set.getURIConverter().normalize(resourceURI);
+    // LazyLinkingResource xtextResource = (LazyLinkingResource) set.getResource(normalized, true);
+    // Index indexFactory = getIndexFactory();
+    // queryProcessor = getQueryProcessorFactory().createQueryProcessor(indexFactory);
+    // model = (Model) xtextResource.getContents().get(0);
+    // }
+    // if (queryName == null) {
+    // return model.getDefaultQuery();
+    // }
+    // for (NamedQuery query : model.getNamedQueries()) {
+    // if (query.getName().equals(queryName)) {
+    // return query.getQuery();
+    // }
+    // }
+    // return null;
+    // }
     //
-    //	private static boolean indexHasChangedSinceLastGetAllProcessesRequest = true;
-    //	private static ResultSet allProcessesCache;
+    // private static boolean indexHasChangedSinceLastGetAllProcessesRequest = true;
+    // private static ResultSet allProcessesCache;
     //
-    //	public static ResultSet getAllProcesses() {
-    //		if(firstQuery){
-    //			IndexFactory.getInstance().getEventListenerRegistry().addIndexChangeListener(new IndexChangeListener() {
+    // public static ResultSet getAllProcesses() {
+    // if(firstQuery){
+    // IndexFactory.getInstance().getEventListenerRegistry().addIndexChangeListener(new IndexChangeListener() {
     //
-    //				public void indexChanged(IndexChangeEvent arg0) {
-    //					indexHasChangedSinceLastGetAllProcessesRequest = true;
-    //				}
-    //			});
-    //		}
-    //		if(indexHasChangedSinceLastGetAllProcessesRequest){
-    //			final List<URI> resourcesList = new ArrayList<URI>();
-    //			executeQueryCommandToRetrieveResourceScope(resourcesList);
-    //			final URI[] resourceScopes = resourcesList.toArray(new URI[resourcesList.size()]);
+    // public void indexChanged(IndexChangeEvent arg0) {
+    // indexHasChangedSinceLastGetAllProcessesRequest = true;
+    // }
+    // });
+    // }
+    // if(indexHasChangedSinceLastGetAllProcessesRequest){
+    // final List<URI> resourcesList = new ArrayList<URI>();
+    // executeQueryCommandToRetrieveResourceScope(resourcesList);
+    // final URI[] resourceScopes = resourcesList.toArray(new URI[resourcesList.size()]);
     //
-    //			//		List<String> attrs = new ArrayList<String>();
-    //			//		attrs.add("name");
-    //			//		attrs.add("version");
+    // // List<String> attrs = new ArrayList<String>();
+    // // attrs.add("name");
+    // // attrs.add("version");
     //
-    //			//		SelectEntry selectPoolEntry = new SelectAttrs("pool", attrs);//new SelectAlias("pool");
+    // // SelectEntry selectPoolEntry = new SelectAttrs("pool", attrs);//new SelectAlias("pool");
     //
-    //			FromType fromType = constructFromType(resourceScopes);
+    // FromType fromType = constructFromType(resourceScopes);
     //
-    //			final Query query = constructQuery(fromType);
+    // final Query query = constructQuery(fromType);
     //
-    //			QueryProcessor queryProcessor = constructQueryProcessor();
-    //			allProcessesCache = executeQuery(resourceScopes, query,
-    //					queryProcessor);
-    //			indexHasChangedSinceLastGetAllProcessesRequest = false;
-    //		}
-    //		return allProcessesCache;
+    // QueryProcessor queryProcessor = constructQueryProcessor();
+    // allProcessesCache = executeQuery(resourceScopes, query,
+    // queryProcessor);
+    // indexHasChangedSinceLastGetAllProcessesRequest = false;
+    // }
+    // return allProcessesCache;
 
-
-
-    //		MQLquery query = findQuery("searchAllProcesses");
-    //		Query internalQuery = QueryTransformer.transform(query);
-    //		final ResultSet result = queryProcessor.execute(internalQuery, new QueryContext() {
+    // MQLquery query = findQuery("searchAllProcesses");
+    // Query internalQuery = QueryTransformer.transform(query);
+    // final ResultSet result = queryProcessor.execute(internalQuery, new QueryContext() {
     //
-    //			public ResourceSet getResourceSet() {
-    //				return new ResourceSetImpl();
-    //			}
+    // public ResourceSet getResourceSet() {
+    // return new ResourceSetImpl();
+    // }
     //
-    //			public URI[] getResourceScope() {
-    //				final List<URI> result = new ArrayList<URI>();
-    //				IndexFactory.getInstance().executeQueryCommand(new QueryCommand() {
+    // public URI[] getResourceScope() {
+    // final List<URI> result = new ArrayList<URI>();
+    // IndexFactory.getInstance().executeQueryCommand(new QueryCommand() {
     //
-    //					public void execute(QueryExecutor queryExecutor) {
-    //						ResourceQuery<ResourceDescriptor> resourceQuery = IndexQueryFactory.createResourceQuery();
-    //						for (ResourceDescriptor desc : queryExecutor.execute(resourceQuery)) {
-    //							result.add(desc.getURI());
-    //						}
-    //					}
+    // public void execute(QueryExecutor queryExecutor) {
+    // ResourceQuery<ResourceDescriptor> resourceQuery = IndexQueryFactory.createResourceQuery();
+    // for (ResourceDescriptor desc : queryExecutor.execute(resourceQuery)) {
+    // result.add(desc.getURI());
+    // }
+    // }
     //
-    //				});
-    //				return result.toArray(new URI[result.size()]);
-    //			}
-    //		});
+    // });
+    // return result.toArray(new URI[result.size()]);
+    // }
+    // });
     //
-    //		return result;
+    // return result;
     //
-    //	}
+    // }
     //
-    //	protected static void executeQueryCommandToRetrieveResourceScope(
-    //			final List<URI> resourcesList) {
-    //		getIndexFactory().executeQueryCommand(new QueryCommand() {
+    // protected static void executeQueryCommandToRetrieveResourceScope(
+    // final List<URI> resourcesList) {
+    // getIndexFactory().executeQueryCommand(new QueryCommand() {
     //
-    //			public void execute(QueryExecutor queryExecutor) {
-    //				ResourceQuery<ResourceDescriptor> resourceQuery = IndexQueryFactory.createResourceQuery();
-    //				for (ResourceDescriptor desc : queryExecutor.execute(resourceQuery)) {
-    //					resourcesList.add(desc.getURI());
-    //				}
-    //			}
+    // public void execute(QueryExecutor queryExecutor) {
+    // ResourceQuery<ResourceDescriptor> resourceQuery = IndexQueryFactory.createResourceQuery();
+    // for (ResourceDescriptor desc : queryExecutor.execute(resourceQuery)) {
+    // resourcesList.add(desc.getURI());
+    // }
+    // }
     //
-    //		});
-    //	}
+    // });
+    // }
     //
-    //	protected static ResultSet executeQuery(final URI[] resourceScopes,
-    //			final Query query, QueryProcessor queryProcessor) {
-    //		final ResultSet result = queryProcessor.execute(query, new QueryContext() {
+    // protected static ResultSet executeQuery(final URI[] resourceScopes,
+    // final Query query, QueryProcessor queryProcessor) {
+    // final ResultSet result = queryProcessor.execute(query, new QueryContext() {
     //
-    //			public ResourceSet getResourceSet() {
-    //				return new ResourceSetImpl();
-    //			}
+    // public ResourceSet getResourceSet() {
+    // return new ResourceSetImpl();
+    // }
     //
-    //			public URI[] getResourceScope() {
-    //				return resourceScopes;
-    //			}
-    //		});
-    //		return result;
-    //	}
+    // public URI[] getResourceScope() {
+    // return resourceScopes;
+    // }
+    // });
+    // return result;
+    // }
     //
-    //	protected static QueryProcessor constructQueryProcessor() {
-    //		QueryProcessor queryProcessor = getQueryProcessorFactory().createQueryProcessor(getIndexFactory());
-    //		return queryProcessor;
-    //	}
+    // protected static QueryProcessor constructQueryProcessor() {
+    // QueryProcessor queryProcessor = getQueryProcessorFactory().createQueryProcessor(getIndexFactory());
+    // return queryProcessor;
+    // }
     //
-    //	protected static Query constructQuery(FromType fromType) {
-    //		final Query query = new Query(new SelectEntry[] {new SelectAlias("pool")/*selectPoolEntry*/}, new FromType[] { fromType });
-    //		return query;
-    //	}
+    // protected static Query constructQuery(FromType fromType) {
+    // final Query query = new Query(new SelectEntry[] {new SelectAlias("pool")/*selectPoolEntry*/}, new FromType[] { fromType });
+    // return query;
+    // }
     //
-    //	protected static FromType constructFromType(final URI[] resourceScopes) {
-    //		FromType fromType = new FromType("pool", EcoreUtil.getURI(ProcessPackage.Literals.POOL), true,
-    //				new  TypeScopeProvider() {
+    // protected static FromType constructFromType(final URI[] resourceScopes) {
+    // FromType fromType = new FromType("pool", EcoreUtil.getURI(ProcessPackage.Literals.POOL), true,
+    // new TypeScopeProvider() {
     //
-    //			public boolean isInclusiveScope() {
-    //				return true;
-    //			}
-    //			public URI[] getResourceScope() {
-    //				return resourceScopes;
-    //			}
-    //		});
-    //		return fromType;
-    //	}
+    // public boolean isInclusiveScope() {
+    // return true;
+    // }
+    // public URI[] getResourceScope() {
+    // return resourceScopes;
+    // }
+    // });
+    // return fromType;
+    // }
     //
-    //	protected static QueryProcessorFactory getQueryProcessorFactory() {
-    //		return QueryProcessorFactory.getDefault();
-    //	}
+    // protected static QueryProcessorFactory getQueryProcessorFactory() {
+    // return QueryProcessorFactory.getDefault();
+    // }
     //
-    //	protected static Index getIndexFactory() {
-    //		return IndexFactory.getInstance();
-    //	}
+    // protected static Index getIndexFactory() {
+    // return IndexFactory.getInstance();
+    // }
     //
     //
     //
-    //	private static ResultSet newWayFindProcessesWithQueriesInObjectFormat(final Element element){
+    // private static ResultSet newWayFindProcessesWithQueriesInObjectFormat(final Element element){
     //
-    //		SelectEntry selectPoolEntry = new SelectAlias("pool");
+    // SelectEntry selectPoolEntry = new SelectAlias("pool");
     //
-    //		FromType fromType = new FromType("pool", EcoreUtil.getURI(ProcessPackage.Literals.POOL), false,
-    //				new  TypeScopeProvider() {
+    // FromType fromType = new FromType("pool", EcoreUtil.getURI(ProcessPackage.Literals.POOL), false,
+    // new TypeScopeProvider() {
     //
-    //			public boolean isInclusiveScope() {
-    //				return true;
-    //			}
-    //			public URI[] getResourceScope() {
-    //				return new URI[]{element.eResource().getURI()};
-    //			}
-    //		});
+    // public boolean isInclusiveScope() {
+    // return true;
+    // }
+    // public URI[] getResourceScope() {
+    // return new URI[]{element.eResource().getURI()};
+    // }
+    // });
     //
-    //		final Query query = new Query(new SelectEntry[] {selectPoolEntry}, new FromType[] { fromType });
+    // final Query query = new Query(new SelectEntry[] {selectPoolEntry}, new FromType[] { fromType });
     //
-    //		Index indexFactory = getIndexFactory();
+    // Index indexFactory = getIndexFactory();
     //
-    //		QueryProcessor queryProcessor = getQueryProcessorFactory().createQueryProcessor(indexFactory);
-    //		final ResultSet result = queryProcessor.execute(query, new QueryContext() {
+    // QueryProcessor queryProcessor = getQueryProcessorFactory().createQueryProcessor(indexFactory);
+    // final ResultSet result = queryProcessor.execute(query, new QueryContext() {
     //
-    //			public ResourceSet getResourceSet() {
-    //				return element.eResource().getResourceSet();
-    //			}
+    // public ResourceSet getResourceSet() {
+    // return element.eResource().getResourceSet();
+    // }
     //
-    //			public URI[] getResourceScope() {
-    //				return new URI[]{element.eResource().getURI()};
-    //			}
-    //		});
-    //		return result;
-    //	}
-
-
+    // public URI[] getResourceScope() {
+    // return new URI[]{element.eResource().getURI()};
+    // }
+    // });
+    // return result;
+    // }
 
     protected static List<AbstractProcess> oldwayFindProcesses(Element element,
             List<AbstractProcess> processes) {
@@ -414,17 +415,15 @@ public class ModelHelper {
         return processes;
     }
 
-
-
-
     /**
      * Return Top Parent execlude embedded process
+     * 
      * @param object
      * @return process
      */
     public static AbstractProcess getParentProcess(EObject object) {
         EObject process = object;
-        while (process != null &&  !(process instanceof AbstractProcess && !(process instanceof SubProcessEvent))) {
+        while (process != null && !(process instanceof AbstractProcess && !(process instanceof SubProcessEvent))) {
             if (process.eContainer() != null) {
                 process = process.eContainer();
             } else {
@@ -438,25 +437,25 @@ public class ModelHelper {
         }
     }
 
-    //	public static AbstractProcess getParentProcessIncludedEmbedded(EObject object) {
-    //		EObject process = object;
-    //		while (process != null &&  !(process instanceof AbstractProcess)) {
-    //			if (process.eContainer() != null) {
-    //				process = process.eContainer();
-    //			} else {
-    //				break;
-    //			}
-    //		}
-    //		if (process instanceof AbstractProcess) {
-    //			return (AbstractProcess) process;
-    //		} else {
-    //			return null;
-    //		}
-    //	}
+    // public static AbstractProcess getParentProcessIncludedEmbedded(EObject object) {
+    // EObject process = object;
+    // while (process != null && !(process instanceof AbstractProcess)) {
+    // if (process.eContainer() != null) {
+    // process = process.eContainer();
+    // } else {
+    // break;
+    // }
+    // }
+    // if (process instanceof AbstractProcess) {
+    // return (AbstractProcess) process;
+    // } else {
+    // return null;
+    // }
+    // }
 
     public static Container getParentContainer(EObject object) {
         EObject container = object;
-        while (container != null &&  !(container instanceof Container)) {
+        while (container != null && !(container instanceof Container)) {
             if (container.eContainer() != null) {
                 container = container.eContainer();
             } else {
@@ -470,11 +469,8 @@ public class ModelHelper {
         }
     }
 
-
-
-
     public static MainProcess getMainProcess(EObject object) {
-        if(object == null){
+        if (object == null) {
             return null;
         }
         EObject process = object;
@@ -535,19 +531,18 @@ public class ModelHelper {
         return result;
     }
 
-
-    public static List<Data> getAccessibleDataInForms(EObject element,EStructuralFeature feature) {
-        if(element instanceof Pool && ProcessPackage.Literals.PAGE_FLOW__FORM.equals(feature)){ //Only add transient form data
+    public static List<Data> getAccessibleDataInForms(EObject element, EStructuralFeature feature) {
+        if (element instanceof Pool && ProcessPackage.Literals.PAGE_FLOW__FORM.equals(feature)) { // Only add transient form data
             EReference trFeature;
             List<Data> accessibleData = new ArrayList<Data>();
-            if(feature.equals(ProcessPackage.Literals.PAGE_FLOW__FORM)){
+            if (feature.equals(ProcessPackage.Literals.PAGE_FLOW__FORM)) {
                 trFeature = ProcessPackage.Literals.PAGE_FLOW__TRANSIENT_DATA;
-            }else if(feature.equals(ProcessPackage.Literals.VIEW_PAGE_FLOW__VIEW_FORM)){
+            } else if (feature.equals(ProcessPackage.Literals.VIEW_PAGE_FLOW__VIEW_FORM)) {
                 trFeature = ProcessPackage.Literals.VIEW_PAGE_FLOW__VIEW_TRANSIENT_DATA;
-            }else{
+            } else {
                 trFeature = ProcessPackage.Literals.RECAP_FLOW__RECAP_TRANSIENT_DATA;
             }
-            if(trFeature != null){
+            if (trFeature != null) {
                 accessibleData.addAll((List<Data>) element.eGet(trFeature));
             }
             return accessibleData;
@@ -558,13 +553,13 @@ public class ModelHelper {
 
     public static List<Data> getAccessibleDataInFormsWithNoRestriction(EObject pageflow, EStructuralFeature feature) {
         List<Data> accessibleData = getAccessibleData(pageflow, null);
-        if(feature != null){
+        if (feature != null) {
             EReference trFeature;
-            if(feature.equals(ProcessPackage.Literals.PAGE_FLOW__FORM)){
+            if (feature.equals(ProcessPackage.Literals.PAGE_FLOW__FORM)) {
                 trFeature = ProcessPackage.Literals.PAGE_FLOW__TRANSIENT_DATA;
-            }else if(feature.equals(ProcessPackage.Literals.VIEW_PAGE_FLOW__VIEW_FORM)){
+            } else if (feature.equals(ProcessPackage.Literals.VIEW_PAGE_FLOW__VIEW_FORM)) {
                 trFeature = ProcessPackage.Literals.VIEW_PAGE_FLOW__VIEW_TRANSIENT_DATA;
-            }else{
+            } else {
                 trFeature = ProcessPackage.Literals.RECAP_FLOW__RECAP_TRANSIENT_DATA;
             }
             accessibleData.addAll((List<Data>) pageflow.eGet(trFeature));
@@ -580,7 +575,7 @@ public class ModelHelper {
         List<Data> data = new ArrayList<Data>();
         boolean processFound = false;
         while (!processFound && element != null) {
-            if(element instanceof SequenceFlow){
+            if (element instanceof SequenceFlow) {
                 if (((SequenceFlow) element).getSource() instanceof DataAware) {
                     addAllDataWithType((DataAware) ((SequenceFlow) element).getSource(), data, dataType);
                 }
@@ -660,18 +655,18 @@ public class ModelHelper {
         doubleDataType.setName(DataTypeLabels.doubleDataType);
         proc.getDatatypes().add(doubleDataType);
         // float NOT SUPORTED IN ENGINE YET
-        //        DataType floatDataType = ProcessFactory.eINSTANCE.createFloatType();
-        //        floatDataType.setName(DataTypeLabels.floatDataType);
-        //        proc.getDatatypes().add(floatDataType);
+        // DataType floatDataType = ProcessFactory.eINSTANCE.createFloatType();
+        // floatDataType.setName(DataTypeLabels.floatDataType);
+        // proc.getDatatypes().add(floatDataType);
         // string
         DataType stringDataType = ProcessFactory.eINSTANCE.createStringType();
         stringDataType.setName(DataTypeLabels.stringDataType);
         proc.getDatatypes().add(stringDataType);
-        //        // attachement
-        //        DataType attachedDocDataType = ProcessFactory.eINSTANCE.createAttachmentType();
-        //        attachedDocDataType.setName(DataTypeLabels.attachedDocDataType);
+        // // attachement
+        // DataType attachedDocDataType = ProcessFactory.eINSTANCE.createAttachmentType();
+        // attachedDocDataType.setName(DataTypeLabels.attachedDocDataType);
         //
-        //        proc.getDatatypes().add(attachedDocDataType);
+        // proc.getDatatypes().add(attachedDocDataType);
         // java
         DataType javaDataType = ProcessFactory.eINSTANCE.createJavaType();
         javaDataType.setName(NamingUtils.convertToId(DataTypeLabels.javaDataType, javaDataType));
@@ -689,9 +684,11 @@ public class ModelHelper {
 
     public static DataType getDataTypeForID(EObject elem, String name) {
         MainProcess proc = getMainProcess(elem);
-        for (DataType type : proc.getDatatypes()) {
-            if (type.getName().equals(NamingUtils.convertToId(name))) {
-                return type;
+        if (proc != null) {
+            for (DataType type : proc.getDatatypes()) {
+                if (type.getName().equals(NamingUtils.convertToId(name))) {
+                    return type;
+                }
             }
         }
         return null;
@@ -739,7 +736,7 @@ public class ModelHelper {
     }
 
     public static List<AbstractCatchMessageEvent> getAllCatchEvent(AbstractProcess proc) {
-        return getAllItemsOfType(proc, ProcessPackage.eINSTANCE.getAbstractCatchMessageEvent()) ;
+        return getAllItemsOfType(proc, ProcessPackage.eINSTANCE.getAbstractCatchMessageEvent());
     }
 
     public static void findAllCatchEvents(Element element, List<AbstractCatchMessageEvent> events) {
@@ -791,30 +788,31 @@ public class ModelHelper {
     }
 
     public static AbstractProcess findProcess(Element element, String procName) {
-        //		if(findNewProcess(element, procName).getSize() != 1){
-        //			System.out.println("it doesn't work to find process");
-        //		}
+        // if(findNewProcess(element, procName).getSize() != 1){
+        // System.out.println("it doesn't work to find process");
+        // }
 
         return findOldProcesses(element, procName);
     }
+
     //
-    //	private static ResultSet findNewProcess(final Element element, String procName) {
-    //		MQLquery query = findQuery("findProcess");
-    //		Query internalQuery = QueryTransformer.transform(query, new Object[]{procName});
-    //		final ResultSet result = queryProcessor.execute(internalQuery, new QueryContext() {
+    // private static ResultSet findNewProcess(final Element element, String procName) {
+    // MQLquery query = findQuery("findProcess");
+    // Query internalQuery = QueryTransformer.transform(query, new Object[]{procName});
+    // final ResultSet result = queryProcessor.execute(internalQuery, new QueryContext() {
     //
-    //			public ResourceSet getResourceSet() {
-    //				return new ResourceSetImpl();
-    //			}
+    // public ResourceSet getResourceSet() {
+    // return new ResourceSetImpl();
+    // }
     //
-    //			public URI[] getResourceScope() {
-    //				return new URI[]{element.eResource().getURI()};
-    //			}
-    //		});
+    // public URI[] getResourceScope() {
+    // return new URI[]{element.eResource().getURI()};
+    // }
+    // });
     //
-    //		return result;
+    // return result;
     //
-    //	}
+    // }
 
     protected static AbstractProcess findOldProcesses(Element element,
             String procName) {
@@ -924,6 +922,7 @@ public class ModelHelper {
             findProcessRecursivly(subProcessName, version, elements, processes);
             if (processes.size() > 0) {
                 Collections.sort(processes, new Comparator<AbstractProcess>() {
+
                     @Override
                     public int compare(AbstractProcess o1, AbstractProcess o2) {
                         return o1.getVersion().compareTo(o2.getVersion());
@@ -949,7 +948,6 @@ public class ModelHelper {
         return null;
     }
 
-
     /**
      * @param subProcessName
      * @param version
@@ -971,15 +969,13 @@ public class ModelHelper {
         }
     }
 
-
-
-    public static List<Expression> findAllScriptAndConditionsExpressionWithReferencedElement(EObject container,EObject element){
+    public static List<Expression> findAllScriptAndConditionsExpressionWithReferencedElement(EObject container, EObject element) {
         List<Expression> result = new ArrayList<Expression>();
-        for (EObject o:ModelHelper.getAllItemsOfType(container, ExpressionPackage.Literals.EXPRESSION)){
-            Expression expr = (Expression)o;
-            if (ExpressionConstants.SCRIPT_TYPE.equals(expr.getType()) || ExpressionConstants.CONDITION_TYPE.equals(expr.getType()) || ExpressionConstants.PATTERN_TYPE.equals(expr.getType())){
-                if (isElementIsReferencedInScript(expr, element)){
-
+        for (EObject o : ModelHelper.getAllItemsOfType(container, ExpressionPackage.Literals.EXPRESSION)) {
+            Expression expr = (Expression) o;
+            if (ExpressionConstants.SCRIPT_TYPE.equals(expr.getType()) || ExpressionConstants.CONDITION_TYPE.equals(expr.getType())
+                    || ExpressionConstants.PATTERN_TYPE.equals(expr.getType())) {
+                if (isElementIsReferencedInScript(expr, element)) {
                     result.add(expr);
                 }
             }
@@ -988,14 +984,13 @@ public class ModelHelper {
 
     }
 
-
-    private static boolean isElementIsReferencedInScript(Expression expr,EObject element){
-        if (!expr.getReferencedElements().isEmpty()){
-            for (EObject o:expr.getReferencedElements()){
-                if ( element instanceof Element && o instanceof Element && ((Element)element).getName().equals(((Element)o).getName())){
+    private static boolean isElementIsReferencedInScript(Expression expr, EObject element) {
+        if (!expr.getReferencedElements().isEmpty()) {
+            for (EObject o : expr.getReferencedElements()) {
+                if (element instanceof Element && o instanceof Element && ((Element) element).getName().equals(((Element) o).getName())) {
                     return (true && !isAExpressionReferencedElement(expr));
                 } else {
-                    if (element instanceof Parameter && o instanceof Parameter && ((Parameter)element).getName().equals(((Parameter)o).getName())){
+                    if (element instanceof Parameter && o instanceof Parameter && ((Parameter) element).getName().equals(((Parameter) o).getName())) {
                         return true && !isAExpressionReferencedElement(expr);
                     }
                 }
@@ -1006,8 +1001,8 @@ public class ModelHelper {
 
     public static boolean isAExpressionReferencedElement(EObject target) {
         EObject container = target.eContainer();
-        while (container!=null ){
-            if (container instanceof Expression){
+        while (container != null) {
+            if (container instanceof Expression) {
                 return true;
             }
             container = container.eContainer();
@@ -1110,7 +1105,6 @@ public class ModelHelper {
          * wg.getWidgetLayoutInfo().getColumn() + dx && x <
          * wg.getWidgetLayoutInfo().getColumn() +
          * wg.getWidgetLayoutInfo().getHorizontalSpan() + dx) return w; } }
-         * 
          * } return null;
          */
     }
@@ -1135,27 +1129,27 @@ public class ModelHelper {
 
         List<Point> slots = new ArrayList<Point>();
         for (int i = 0; i < form.getNColumn(); i++) {
-            for (int j = 0; j < form.getNLine(); j++) {//for all cases in the grid
-                if (getWidgetIn(form, i, j, false) == null) {//if there is no widget in the case
+            for (int j = 0; j < form.getNLine(); j++) {// for all cases in the grid
+                if (getWidgetIn(form, i, j, false) == null) {// if there is no widget in the case
                     boolean available = true;
-                    Group potentialGroup = (Group)getWidgetIn(form, i, j, true);//check if we are in a group or not
-                    if(potentialGroup != null){
-                        /*So we are in a Group*/
+                    Group potentialGroup = (Group) getWidgetIn(form, i, j, true);// check if we are in a group or not
+                    if (potentialGroup != null) {
+                        /* So we are in a Group */
                         for (int k = 0; k < size.x; k++) {
                             for (int l = 0; l < size.y; l++) {
                                 if (k != 0 || l != 0) {
                                     WidgetLayoutInfo groupLayoutInfo = potentialGroup.getWidgetLayoutInfo();
-                                    EObject parent = potentialGroup.eContainer() ;
-                                    int colOffset = groupLayoutInfo.getColumn() ;
-                                    int lineOffset = groupLayoutInfo.getLine() ;
-                                    while(parent instanceof Group){ //Manage group recursion
-                                        WidgetLayoutInfo layout = ((Group)parent).getWidgetLayoutInfo() ;
-                                        colOffset = colOffset + layout.getColumn() ;
-                                        lineOffset = lineOffset + layout.getLine() ;
-                                        parent = parent.eContainer() ;
+                                    EObject parent = potentialGroup.eContainer();
+                                    int colOffset = groupLayoutInfo.getColumn();
+                                    int lineOffset = groupLayoutInfo.getLine();
+                                    while (parent instanceof Group) { // Manage group recursion
+                                        WidgetLayoutInfo layout = ((Group) parent).getWidgetLayoutInfo();
+                                        colOffset = colOffset + layout.getColumn();
+                                        lineOffset = lineOffset + layout.getLine();
+                                        parent = parent.eContainer();
                                     }
                                     if (getWidgetIn(form, i + k, j + l, false) != null
-                                            || i + k >= groupLayoutInfo.getHorizontalSpan() +colOffset
+                                            || i + k >= groupLayoutInfo.getHorizontalSpan() + colOffset
                                             || j + l >= groupLayoutInfo.getVerticalSpan() + lineOffset) {
                                         available = false;
                                         break;
@@ -1167,14 +1161,15 @@ public class ModelHelper {
                             }
                         }
                     } else {
-                        EObject container = getWidgetContainer(form,i,j) ;
+                        EObject container = getWidgetContainer(form, i, j);
                         for (int k = 0; k < size.x; k++) {
-                            for (int l = 0; l < size.y; l++) {//For all the place that the copied element took
+                            for (int l = 0; l < size.y; l++) {// For all the place that the copied element took
                                 if (k != 0 || l != 0) {
                                     if (getWidgetIn(form, i + k, j + l, false) != null
                                             || i + k >= form.getNColumn()
                                             || j + l >= form.getNLine()
-                                            || !getWidgetContainer(form,i + k,j+l).equals(container)) {//check that the case is empty and that we are still on the grid
+                                            || !getWidgetContainer(form, i + k, j + l).equals(container)) {// check that the case is empty and that we are still
+                                                                                                           // on the grid
                                         available = false;
                                         break;
                                     }
@@ -1212,14 +1207,14 @@ public class ModelHelper {
     }
 
     public static EObject getWidgetContainer(Form form, int i, int j) {
-        Widget w = getWidgetIn(form, i, j, true) ;
-        if( w != null){
-            if(w instanceof Group){
-                return w ;
-            }else{
+        Widget w = getWidgetIn(form, i, j, true);
+        if (w != null) {
+            if (w instanceof Group) {
+                return w;
+            } else {
                 return w.eContainer();
             }
-        }else{
+        } else {
             return form;
         }
 
@@ -1260,8 +1255,8 @@ public class ModelHelper {
         List<Form> forms = (List<Form>) pageFlow.eGet(eContainmentFeature);
         for (Form form : forms) {
             List<Widget> widgets = getAllWidgetInsideForm(form);
-            for(Widget element : widgets){
-                if(!res.contains(element)){
+            for (Widget element : widgets) {
+                if (!res.contains(element)) {
                     res.add(element);
                 }
             }
@@ -1280,7 +1275,7 @@ public class ModelHelper {
         if (pageFlow != null) {
             for (Form form : (List<Form>) pageFlow.eGet(eContainmentFeature)) {
                 for (Widget widget2 : form.getWidgets()) {
-                    getAccessibleFields(res,widget2, relativeWidget);
+                    getAccessibleFields(res, widget2, relativeWidget);
                 }
             }
         }
@@ -1293,37 +1288,37 @@ public class ModelHelper {
      * @param widget
      */
     private static void getAccessibleFields(ArrayList<Widget> res, Widget widget, Element relativeWidget) {
-        if(widget instanceof Group){
+        if (widget instanceof Group) {
             Group group = (Group) widget;
-            if(group.isDuplicate()){
+            if (group.isDuplicate()) {
                 res.add(group);
-                if(isTargetWidgetInsideGroup(group, relativeWidget)){
+                if (isTargetWidgetInsideGroup(group, relativeWidget)) {
                     for (Widget widget2 : group.getWidgets()) {
-                        if(widget2 instanceof FormField){
+                        if (widget2 instanceof FormField) {
                             getAccessibleFields(res, widget2, relativeWidget);
                         }
                     }
                 }
-            }else{
+            } else {
                 res.add(group);
                 for (Widget widget2 : group.getWidgets()) {
-                    if(widget2 instanceof FormField){
+                    if (widget2 instanceof FormField) {
                         getAccessibleFields(res, widget2, relativeWidget);
                     }
                 }
             }
-        } else if(widget instanceof FormField){
+        } else if (widget instanceof FormField) {
             res.add(widget);
         }
     }
 
     private static boolean isTargetWidgetInsideGroup(Group group, Element relativeWidget) {
-        if(relativeWidget != null){
-            for(Widget widgetInGroup : group.getWidgets()){
-                if(widgetInGroup.equals(relativeWidget)){
+        if (relativeWidget != null) {
+            for (Widget widgetInGroup : group.getWidgets()) {
+                if (widgetInGroup.equals(relativeWidget)) {
                     return true;
                 } else {
-                    if(widgetInGroup instanceof Group){
+                    if (widgetInGroup instanceof Group) {
                         return isTargetWidgetInsideGroup((Group) widgetInGroup, relativeWidget);
                     }
                 }
@@ -1348,8 +1343,6 @@ public class ModelHelper {
             return Collections.singletonList(widget);
         }
     }
-
-
 
     /**
      * @param modelProcess2
@@ -1391,27 +1384,27 @@ public class ModelHelper {
      * @param form
      * @return the diagram corresponding to the form.
      */
-    public static Diagram getDiagramFor(EObject element,EditingDomain domain) {
+    public static Diagram getDiagramFor(EObject element, EditingDomain domain) {
         if (element == null) {
             return null;
         }
         Diagram diag = null;
-        Resource r  = null ;
-        if(domain == null){
-            domain = AdapterFactoryEditingDomain.getEditingDomainFor(element) ;
-            if(domain != null){
-                r = domain.getResourceSet().getResource(element.eResource().getURI(),false) ;
-            }else{
-                r = element.eResource() ;
+        Resource r = null;
+        if (domain == null) {
+            domain = AdapterFactoryEditingDomain.getEditingDomainFor(element);
+            if (domain != null) {
+                r = domain.getResourceSet().getResource(element.eResource().getURI(), false);
+            } else {
+                r = element.eResource();
             }
 
-        }else{
-            r = domain.getResourceSet().getResource(element.eResource().getURI(),false) ;
+        } else {
+            r = domain.getResourceSet().getResource(element.eResource().getURI(), false);
         }
 
-        if(!r.isLoaded()){
+        if (!r.isLoaded()) {
             try {
-                r.load(Collections.EMPTY_MAP) ;
+                r.load(Collections.EMPTY_MAP);
             } catch (IOException e) {
                 BonitaStudioLog.error(e);
             }
@@ -1468,7 +1461,7 @@ public class ModelHelper {
      * 
      */
     public static String getEObjectID(EObject eObject) {
-        if(eObject == null){
+        if (eObject == null) {
             return null;
         }
         Resource eResource = eObject.eResource();
@@ -1548,7 +1541,7 @@ public class ModelHelper {
      * 
      * @param widget
      */
-    public static void removedReferencedEObjects(EObject eObject,EObject targetContainer) {
+    public static void removedReferencedEObjects(EObject eObject, EObject targetContainer) {
 
         Set<EObject> containedEObjects = new HashSet<EObject>();
         // get all contained EObjects
@@ -1559,44 +1552,44 @@ public class ModelHelper {
                 Object o = toCheck.eGet(reference);
                 if (o instanceof EObject) {
                     EObject child = (EObject) o;
-                    //keep enum reference from the same diagram
-                    if(child instanceof Data && ((Data) child).getDataType() instanceof EnumType){
+                    // keep enum reference from the same diagram
+                    if (child instanceof Data && ((Data) child).getDataType() instanceof EnumType) {
                         MainProcess mainProcess = ModelHelper.getMainProcess(targetContainer);
                         MainProcess childMainProcess = ModelHelper.getMainProcess(child);
-                        if(mainProcess != null
+                        if (mainProcess != null
                                 && childMainProcess != null
-                                && mainProcess.equals(childMainProcess)){
+                                && mainProcess.equals(childMainProcess)) {
                             break;
                         }
                     }
                     if (!containedEObjects.contains(child)) {
                         boolean removeReference = true;
-                        if(child instanceof DataType){ //retrieve the equivalent Data Type in the target MainProcess
+                        if (child instanceof DataType) { // retrieve the equivalent Data Type in the target MainProcess
                             MainProcess mainProcess = ModelHelper.getMainProcess(targetContainer);
                             MainProcess childMainProcess = ModelHelper.getMainProcess(child);
-                            if(mainProcess != null
+                            if (mainProcess != null
                                     && childMainProcess != null
-                                    && mainProcess.equals(childMainProcess)){
+                                    && mainProcess.equals(childMainProcess)) {
                                 removeReference = false;
-                            }else{
-                               for(DataType dt : mainProcess.getDatatypes()){
-                                   if(dt.eClass().equals(child.eClass())){
-                                       if(dt.eClass().equals(ProcessPackage.Literals.ENUM_TYPE)){
-                                           if(((EnumType)child).getName().equals(dt.getName())){
-                                               toCheck.eSet(reference, dt);
-                                               removeReference = false;
-                                               break;
-                                           }
-                                       }else{
-                                           toCheck.eSet(reference, dt);
-                                           removeReference = false;
-                                           break;
-                                       }
-                                   }
-                               }
+                            } else {
+                                for (DataType dt : mainProcess.getDatatypes()) {
+                                    if (dt.eClass().equals(child.eClass())) {
+                                        if (dt.eClass().equals(ProcessPackage.Literals.ENUM_TYPE)) {
+                                            if (((EnumType) child).getName().equals(dt.getName())) {
+                                                toCheck.eSet(reference, dt);
+                                                removeReference = false;
+                                                break;
+                                            }
+                                        } else {
+                                            toCheck.eSet(reference, dt);
+                                            removeReference = false;
+                                            break;
+                                        }
+                                    }
+                                }
                             }
                         }
-                        if(removeReference){
+                        if (removeReference) {
                             // referenced outside: we unset it
                             toCheck.eUnset(reference);
                             // must not be the main eobject
@@ -1714,7 +1707,7 @@ public class ModelHelper {
      * @param res
      */
     private static <T extends EObject> void addAllWidgetsOfContainer(EObject container, List<T> res, EClass eClass) {
-        if(container != null){
+        if (container != null) {
             if (eClass.isSuperTypeOf(container.eClass())) {
                 res.add((T) container);
             }
@@ -1741,26 +1734,26 @@ public class ModelHelper {
 
     public static boolean isInEvenementialSubProcessPool(EObject semanticElement) {
         EObject tempPart = semanticElement;
-        while(tempPart != null && !(tempPart instanceof SubProcessEvent)){
+        while (tempPart != null && !(tempPart instanceof SubProcessEvent)) {
             tempPart = tempPart.eContainer();
         }
         return tempPart instanceof SubProcessEvent;
     }
 
-    public static List<AbstractCatchMessageEvent> findAllCatchEventsCatching(MainProcess mainProcess,String eventName) {
+    public static List<AbstractCatchMessageEvent> findAllCatchEventsCatching(MainProcess mainProcess, String eventName) {
         List<AbstractCatchMessageEvent> result = new ArrayList<AbstractCatchMessageEvent>();
-        for(AbstractCatchMessageEvent ev : getAllCatchEvent(mainProcess)){
-            if(ev.getEvent() != null && ev.getEvent().equals(eventName)){
-                result.add(ev) ;
+        for (AbstractCatchMessageEvent ev : getAllCatchEvent(mainProcess)) {
+            if (ev.getEvent() != null && ev.getEvent().equals(eventName)) {
+                result.add(ev);
             }
         }
-        return result ;
+        return result;
     }
 
-    public static SubProcessEvent findSubprocessEvent(AbstractProcess process,String name) {
-        for(EObject e : ModelHelper.getAllItemsOfType(process, ProcessPackage.eINSTANCE.getSubProcessEvent())){
-            if(((Element) e).getName().equals(name)){
-                return (SubProcessEvent) e ;
+    public static SubProcessEvent findSubprocessEvent(AbstractProcess process, String name) {
+        for (EObject e : ModelHelper.getAllItemsOfType(process, ProcessPackage.eINSTANCE.getSubProcessEvent())) {
+            if (((Element) e).getName().equals(name)) {
+                return (SubProcessEvent) e;
             }
         }
         return null;
@@ -1768,50 +1761,54 @@ public class ModelHelper {
 
     /**
      * As we did a really bad architecture, we need to differentiate concrete Activity which are Abstract Task
+     * 
      * @param model
      * @return
      */
-    public static boolean isActivityButNotAbstractTask(Activity model){
+    public static boolean isActivityButNotAbstractTask(Activity model) {
         return model instanceof ReceiveTask
                 || model instanceof ScriptTask
                 || model instanceof SendTask
                 || model instanceof ServiceTask
                 || model instanceof CallActivity
-                || model instanceof Task
-                ;
+                || model instanceof Task;
     }
 
-    public static List<Data> getAccessibleData(EObject element,boolean includeTransientData) {
+    public static List<Data> getAccessibleData(EObject element, boolean includeTransientData) {
         List<Data> result = new ArrayList<Data>();
-        if(includeTransientData){
+        if (includeTransientData) {
             Form parentForm = getParentForm(element);
-            if(parentForm != null){
+            if (parentForm != null) {
                 result.addAll(ModelHelper.getAccessibleDataInFormsWithNoRestriction(parentForm.eContainer(), parentForm.eContainingFeature()));
             }
-            result.addAll(ModelHelper.getAccessibleData(element));
-            return result;
-        }else{
-            List<Data> data = new ArrayList<Data>() ;
-            for(Data d : ModelHelper.getAccessibleData(element)){
-                if(!d.isTransient()){
-                    data.add(d) ;
+            for (Data d : ModelHelper.getAccessibleData(element)) {
+                if (!result.contains(d)) {
+                    result.add(d);
                 }
             }
-            return data ;
+            return result;
+        } else {
+            List<Data> data = new ArrayList<Data>();
+            for (Data d : ModelHelper.getAccessibleData(element)) {
+                if (!d.isTransient()) {
+                    data.add(d);
+                }
+            }
+            return data;
         }
     }
 
     public static ConnectableElement getParentConnectableElement(Element element) {
-        if(element != null){
-            EObject result = element ;
-            if(element instanceof Widget){
-                result = ModelHelper.getPageFlow((Widget) element) ;
+        if (element != null) {
+            EObject result = element;
+            if (element instanceof Widget) {
+                result = ModelHelper.getPageFlow((Widget) element);
             }
-            while (result != null && !(result instanceof ConnectableElement)){
-                result = result.eContainer() ;
+            while (result != null && !(result instanceof ConnectableElement)) {
+                result = result.eContainer();
             }
-            if(result != null){
-                return (ConnectableElement) result ;
+            if (result != null) {
+                return (ConnectableElement) result;
             }
         }
         return null;
@@ -1819,10 +1816,10 @@ public class ModelHelper {
 
     public static List<AbstractProcess> findAllProcesses(
             List<AbstractProcess> allProcesses, String subDefName) {
-        List<AbstractProcess> processes = new ArrayList<AbstractProcess>() ;
+        List<AbstractProcess> processes = new ArrayList<AbstractProcess>();
         for (AbstractProcess p : allProcesses) {
             if (subDefName.equals(p.getName())) {
-                processes.add(p) ;
+                processes.add(p);
             }
         }
         return processes;
@@ -1839,11 +1836,11 @@ public class ModelHelper {
         return form.getHtmlTemplate() != null && form.getHtmlTemplate().getPath() != null && !form.getHtmlTemplate().getPath().isEmpty();
     }
 
-    /**Currently a copy of the data is done, so need to use this to have access to the original data*/
-    public static Data getDataReferencedInExpression(Data referencedData){
+    /** Currently a copy of the data is done, so need to use this to have access to the original data */
+    public static Data getDataReferencedInExpression(Data referencedData) {
         List<Data> accessibleData = ModelHelper.getAccessibleData(referencedData.eContainer().eContainer().eContainer().eContainer().eContainer());
         for (Data data : accessibleData) {
-            if(data.getName().equals(referencedData.getName())){
+            if (data.getName().equals(referencedData.getName())) {
                 return data;
             }
         }
@@ -1851,38 +1848,37 @@ public class ModelHelper {
     }
 
     public static Lane getParentLane(EObject element) {
-        EObject lane = element.eContainer() ;
+        EObject lane = element.eContainer();
         while (lane != null && !(lane instanceof Lane)) {
-            lane = lane.eContainer() ;
+            lane = lane.eContainer();
         }
         return (Lane) lane;
     }
 
     public static List<SimulationData> getAccessibleSimulationData(EObject context) {
-        List<SimulationData> result = new ArrayList<SimulationData>() ;
-        if(context instanceof SimulationDataContainer){
-            SimulationDataContainer container = (SimulationDataContainer) context ;
-            while(container != null){
-                for(SimulationData d : container.getSimulationData()){
-                    result.add(d) ;
+        List<SimulationData> result = new ArrayList<SimulationData>();
+        if (context instanceof SimulationDataContainer) {
+            SimulationDataContainer container = (SimulationDataContainer) context;
+            while (container != null) {
+                for (SimulationData d : container.getSimulationData()) {
+                    result.add(d);
                 }
-                if(container.eContainer() instanceof SimulationDataContainer){
-                    container = (SimulationDataContainer) container.eContainer() ;
-                }else{
-                    container = null ;
+                if (container.eContainer() instanceof SimulationDataContainer) {
+                    container = (SimulationDataContainer) container.eContainer();
+                } else {
+                    container = null;
                 }
             }
 
-        }else if(context instanceof SimulationTransition){
-            if(((Connection)context).eContainer() instanceof SimulationDataContainer){
-                for(SimulationData d : ((SimulationDataContainer) ((Connection)context).eContainer()).getSimulationData()){
-                    result.add(d) ;
+        } else if (context instanceof SimulationTransition) {
+            if (((Connection) context).eContainer() instanceof SimulationDataContainer) {
+                for (SimulationData d : ((SimulationDataContainer) ((Connection) context).eContainer()).getSimulationData()) {
+                    result.add(d);
                 }
             }
         }
         return result;
     }
-
 
     public static FlowElement getParentFlowElement(EObject eObject) {
         EObject flowElement = eObject;
@@ -1912,7 +1908,7 @@ public class ModelHelper {
         EObject current = expression;
         EObject container = current.eContainer();
         while (container != null) {
-            if(current.eContainingFeature().equals(ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS)){
+            if (current.eContainingFeature().equals(ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS)) {
                 return true;
             }
             current = container;
@@ -1929,7 +1925,7 @@ public class ModelHelper {
         return (Element) element;
     }
 
-    public static  List<Widget> getAllAccessibleWidgetInsideForm(Form form) {
+    public static List<Widget> getAllAccessibleWidgetInsideForm(Form form) {
         List<Widget> res = new ArrayList<Widget>();
         for (Widget w : form.getWidgets()) {
             res.addAll(getAccessibleWidgets(w));
@@ -1937,12 +1933,11 @@ public class ModelHelper {
         return res;
     }
 
-
     protected static List<Widget> getAccessibleWidgets(Widget widget) {
         if (widget instanceof Group) {
             List<Widget> res = new ArrayList<Widget>();
             res.add(widget);
-            if(!((Group) widget).isDuplicate()){
+            if (!((Group) widget).isDuplicate()) {
                 for (Widget w : ((Group) widget).getWidgets()) {
                     res.addAll(getWidgets(w));
                 }
@@ -1955,24 +1950,21 @@ public class ModelHelper {
 
     public static Group getParentGroup(EObject context) {
         Widget widget = getParentWidget(context);
-        if(widget != null){
+        if (widget != null) {
             Widget parentGroup = widget;
             while (parentGroup != null && !(parentGroup instanceof Group)) {
                 EObject parent = parentGroup.eContainer();
-                if(parent instanceof Widget){
+                if (parent instanceof Widget) {
                     parentGroup = (Widget) parent;
-                }else{
+                } else {
                     parentGroup = null;
                 }
             }
-            if(parentGroup != null){
+            if (parentGroup != null) {
                 return (Group) parentGroup;
             }
         }
         return null;
     }
-
-
-
 
 }

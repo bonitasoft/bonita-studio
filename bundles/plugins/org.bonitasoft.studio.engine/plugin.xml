@@ -10,7 +10,6 @@
   <extension
         point="org.eclipse.ui.commands">
         <command
-            defaultHandler="org.bonitasoft.studio.engine.command.RunProcessCommand"
             id="org.bonitasoft.studio.engine.runCommand"
             name="%runProcessCommand">
            <commandParameter
@@ -160,6 +159,15 @@
      <handler
            class="org.bonitasoft.studio.engine.command.ExportAsBarFileHandler"
            commandId="org.bonitasoft.studio.engine.exportAsBarCommand">
+        <activeWhen>
+           <reference
+                 definitionId="isABonitaProduct">
+           </reference>
+        </activeWhen>
+     </handler>
+     <handler
+           class="org.bonitasoft.studio.engine.command.RunProcessCommand"
+           commandId="org.bonitasoft.studio.engine.runCommand">
         <activeWhen>
            <reference
                  definitionId="isABonitaProduct">
