@@ -45,7 +45,6 @@ import org.bonitasoft.studio.model.process.TargetElement;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.MainProcessEditPart;
 import org.bonitasoft.studio.model.process.diagram.providers.ProcessElementTypes;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.draw2d.IFigure;
@@ -138,7 +137,10 @@ public class ExtractAsCallActivityTransactionalCommand extends AbstractTransacti
         poolReq.setLocation(new Point(20, processEp.getFigure().getSize().height - 1));
         Dimension size = new Dimension(processEp.getFigure().getSize().width, computePoolHeight(parts));
         poolReq.setSize(size);
-        CompositeCommand cc = new CompositeCommand("Create call activity");
+        // processEp.getCommand(req).execute();
+        CompositeCommand cc = new CompositeCommand("Create subprocess");
+        // String id = NamingUtils.convertToId(((AbstractProcess)processEp.resolveSemanticElement()).getName(),(Element)
+        // req.getViewAndElementDescriptor().getElementAdapter().getAdapter(EObject.class));
         final Command createCommand = processEp.getCommand(poolReq);
         cc.add(new CommandProxy(createCommand));
 
@@ -150,8 +152,7 @@ public class ExtractAsCallActivityTransactionalCommand extends AbstractTransacti
 
         IGraphicalEditPart containerEp = (IGraphicalEditPart) refNode.getParent();
 
-        IElementType subprocessType = null;
-        subprocessType = ProcessElementTypes.CallActivity_3063;
+        IElementType subprocessType = ProcessElementTypes.CallActivity_3063;
         final ViewAndElementDescriptor subprocessDescriptor = new ViewAndElementDescriptor(
                 new CreateElementRequestAdapter(new CreateElementRequest(subprocessType)),
                 Node.class,
@@ -168,20 +169,21 @@ public class ExtractAsCallActivityTransactionalCommand extends AbstractTransacti
                 ExpressionHelper.createConstantExpression(extractedSubprocessName, String.class.getName()), processSemantic));
         new ICommandProxy(cc).execute();
         cc.dispose();
+
         processEp.refresh();
-        IGraphicalEditPart ep = GMFTools.findEditPart(processEp, (EObject) poolReq.getViewAndElementDescriptor().getElementAdapter().getAdapter(EObject.class));
-        Assert.isNotNull(ep);
-        getEditingDomain()
+        containerEp.refresh();
+        EObject newPool = (EObject) poolReq.getViewAndElementDescriptor().getElementAdapter().getAdapter(EObject.class);
+        IGraphicalEditPart ep = GMFTools.findEditPart(processEp, newPool);
+        ep.getEditingDomain()
                 .getCommandStack()
                 .execute(
-                        SetCommand.create(getEditingDomain(), ((Node) ep.getNotationView()).getLayoutConstraint(),
+                        SetCommand.create(ep.getEditingDomain(), ((Node) ep.getNotationView()).getLayoutConstraint(),
                                 NotationPackage.eINSTANCE.getSize_Width(), size.width));
-        getEditingDomain()
+        ep.getEditingDomain()
                 .getCommandStack()
                 .execute(
-                        SetCommand.create(getEditingDomain(), ((Node) ep.getNotationView()).getLayoutConstraint(),
+                        SetCommand.create(ep.getEditingDomain(), ((Node) ep.getNotationView()).getLayoutConstraint(),
                                 NotationPackage.eINSTANCE.getSize_Height(), size.height));
-        ep.refresh();
 
         cc = new CompositeCommand("Populate subprocess");
         final CallActivity newSubProcess = (CallActivity) subprocessDescriptor.getElementAdapter().getAdapter(EObject.class);
@@ -203,7 +205,7 @@ public class ExtractAsCallActivityTransactionalCommand extends AbstractTransacti
             }
         }
         cc.add(new MoveItemsAndCopyDataCommand(processEp.getEditingDomain(), poolReq, subprocessDescriptor, parts));
-        processEp.getDiagramEditDomain().getDiagramCommandStack().execute(new ICommandProxy(cc));
+        new ICommandProxy(cc).execute();
         cc.dispose();
 
         cc = new CompositeCommand("clean");
@@ -216,7 +218,7 @@ public class ExtractAsCallActivityTransactionalCommand extends AbstractTransacti
                 cc.add(new DestroyElementCommand(new DestroyElementRequest(part.resolveSemanticElement(), false)));
             }
         }
-        processEp.getDiagramEditDomain().getDiagramCommandStack().execute(new ICommandProxy(cc));
+        new ICommandProxy(cc).execute();
     }
 
     private int computePoolHeight(List<IGraphicalEditPart> elements) {
