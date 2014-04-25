@@ -21,6 +21,7 @@ import java.io.File;
 import java.io.PrintWriter;
 import java.net.URL;
 import java.text.DateFormat;
+import java.util.Locale;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -47,7 +48,7 @@ public class RssContentProvider implements IIntroXHTMLContentProvider {
 
     protected String xmlName;
 
-    private static DateFormat dateInstance = DateFormat.getDateInstance(DateFormat.SHORT);
+    private static DateFormat dateInstance = DateFormat.getDateInstance(DateFormat.DEFAULT, Locale.getDefault());
 
     /*
      * (non-Javadoc)
@@ -167,6 +168,6 @@ public class RssContentProvider implements IIntroXHTMLContentProvider {
 
     protected URL getRSS() throws Exception {
         File xmlFile = new File(ResourcesPlugin.getWorkspace().getRoot().getLocation().toFile(), xmlName + ".xml");
-        return xmlFile.toURL();
+        return xmlFile.toURI().toURL();
     }
 }
