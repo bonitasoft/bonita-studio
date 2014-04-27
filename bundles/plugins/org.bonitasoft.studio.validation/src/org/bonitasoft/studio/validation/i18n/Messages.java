@@ -176,6 +176,8 @@ public class Messages extends NLS {
 
     public static String overviewFormCantHaveSubmitButton;
 
+	public static String inconsistentLeftOperand;
+    
     static {
         // initialize resource bundle
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);
