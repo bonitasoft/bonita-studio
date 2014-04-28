@@ -19,11 +19,13 @@
 package org.bonitasoft.studio.diagram.custom.clipboard;
 
 import static org.fest.assertions.Assertions.assertThat;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.diagram.custom.parts.CustomLaneEditPart;
 import org.bonitasoft.studio.model.process.Actor;
+import org.bonitasoft.studio.model.process.Lane;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessFactory;
@@ -56,8 +58,11 @@ public class CustomPasteCommandTest {
 	private Pool pool;
 
 	private Task task;
+	private Task taskInLane;
 
 	private Pool targetPool;
+
+	private Pool poolWithLane;
 	/**
 	 * @throws java.lang.Exception
 	 */
@@ -68,18 +73,31 @@ public class CustomPasteCommandTest {
 		
 		// source Pool with original Task and its initiator Actor
 		pool = ProcessFactory.eINSTANCE.createPool();
-		Actor initiatorActor =  ProcessFactory.eINSTANCE.createActor();
-		initiatorActor.setName("myActor");
-		initiatorActor.setInitiator(true);
+		Actor initiatorActor =  createActor("myActor", true);
 		pool.getActors().add(initiatorActor );
 		task = ProcessFactory.eINSTANCE.createTask();
 		task.setActor(initiatorActor);
 		pool.getElements().add(task);
 		diagram.getElements().add(pool);
 		
+		// source pool with original tasks that use Lane actor as Actor
+		taskInLane =  ProcessFactory.eINSTANCE.createTask();
+		taskInLane.setOverrideActorsOfTheLane(true);
+		Lane lane = ProcessFactory.eINSTANCE.createLane();
+		Actor actorLane = createActor("ActorLane", true);
+		lane.setActor(actorLane);
+		lane.getElements().add(taskInLane);
+		poolWithLane = ProcessFactory.eINSTANCE.createPool();
+		poolWithLane.getElements().add(lane);
+		diagram.getElements().add(poolWithLane);
+		
+		
 		// target Pool when to copy the original Task
 		targetPool = ProcessFactory.eINSTANCE.createPool();
 		diagram.getElements().add(targetPool);
+		
+		
+		
 		
 		// mock behaviour
 		when(editPart.resolveSemanticElement()).thenReturn(targetPool);
@@ -87,6 +105,13 @@ public class CustomPasteCommandTest {
 		// create the command
 		customPasteCommand = new CustomPasteCommand("Paste",editPart);
 		
+	}
+
+	private Actor createActor(String actorName, boolean isInitiator) {
+		Actor actor = ProcessFactory.eINSTANCE.createActor();
+		actor.setName(actorName);
+		actor.setInitiator(isInitiator);
+		return actor;
 	}
 
 	/**
@@ -102,8 +127,14 @@ public class CustomPasteCommandTest {
 	@Test
 	public void shouldCopyActorsAndActorsMapping_DisableProcessInitiator() throws Exception {
 		Task taskCopy = EcoreUtil.copy(task);
-		
 		customPasteCommand.copyActorsAndActorsMapping(task,taskCopy,diagram,targetPool);
+		assertThat(taskCopy.getActor().isInitiator()).isFalse();
+	}
+	
+	@Test
+	public void should_CopyActorFromLaneToAnotherPool_DisableProcessInitiator() throws Exception {
+		Task taskCopy = EcoreUtil.copy(taskInLane);
+		customPasteCommand.copyActorsAndActorsMapping(taskInLane,taskCopy,diagram,targetPool);
 		assertThat(taskCopy.getActor().isInitiator()).isFalse();
 	}
 
