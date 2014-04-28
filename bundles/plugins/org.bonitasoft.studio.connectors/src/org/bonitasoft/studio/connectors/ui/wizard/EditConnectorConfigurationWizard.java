@@ -5,14 +5,14 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
+ * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 package org.bonitasoft.studio.connectors.ui.wizard;
@@ -32,74 +32,79 @@ import org.eclipse.jface.wizard.IWizardPage;
 
 /**
  * @author Aurelie Zara
- *
+ * 
  */
 public class EditConnectorConfigurationWizard extends ConnectorWizard {
 
-	private SelectConnectorConfigurationWizardPage selectConfigurationPage;
-	private ConnectorDefRepositoryStore connectorDefStore;
-	private ConnectorConfRepositoryStore connectorConfStore;
-	
-	public EditConnectorConfigurationWizard(EObject container,EStructuralFeature connectorContainmentFeature ,Set<EStructuralFeature> featureToCheckForUniqueID){
-		super(container,connectorContainmentFeature,featureToCheckForUniqueID);
-		setEditMode(false);
-		connectorDefStore = (ConnectorDefRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class) ;
-		connectorConfStore = (ConnectorConfRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorConfRepositoryStore.class);
-		setForcePreviousAndNextButtons(true);
-	}
+    private SelectConnectorConfigurationWizardPage selectConfigurationPage;
 
+    private ConnectorDefRepositoryStore connectorDefStore;
 
-	/* (non-Javadoc)
-	 * @see org.bonitasoft.studio.connectors.ui.wizard.ConnectorWizard#addPages()
-	 */
-	@Override
-	public void addPages() {
-		selectConfigurationPage = new SelectConnectorConfigurationWizardPage();
-		addPage(selectConfigurationPage);
-	}
+    private ConnectorConfRepositoryStore connectorConfStore;
 
-	@Override
-	public IWizardPage getNextPage(IWizardPage page) {
-		if(page.equals(selectConfigurationPage)){
-			final ConnectorConfiguration conf = selectConfigurationPage.getSelectedConfiguration();
-			if(conf != null){
-				ConnectorDefinition definition = connectorDefStore.getDefinition(conf.getDefinitionId(), conf.getVersion());
-				connectorWorkingCopy.setDefinitionId(definition.getId());
-				connectorWorkingCopy.setDefinitionVersion(definition.getVersion());
-				
+    public EditConnectorConfigurationWizard(EObject container, EStructuralFeature connectorContainmentFeature, Set<EStructuralFeature> featureToCheckForUniqueID) {
+        super(container, connectorContainmentFeature, featureToCheckForUniqueID);
+        setEditMode(false);
+        connectorDefStore = (ConnectorDefRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class);
+        connectorConfStore = (ConnectorConfRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorConfRepositoryStore.class);
+        setForcePreviousAndNextButtons(true);
+    }
 
-				checkDefinitionDependencies(definition) ;
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.connectors.ui.wizard.ConnectorWizard#addPages()
+     */
+    @Override
+    public void addPages() {
+        initialize();
+        selectConfigurationPage = new SelectConnectorConfigurationWizardPage();
+        addPage(selectConfigurationPage);
+    }
 
-				connectorWorkingCopy.setConfiguration(conf);
-				extension = findCustomWizardExtension(definition) ;
-				recreateConnectorConfigurationPages(definition,false);
-			}
-		}
-		return super.getNextPage(page);
-	}
-	/* (non-Javadoc)
-	 * @see org.bonitasoft.studio.connectors.ui.wizard.ConnectorWizard#addNameAndDescriptionPage()
-	 */
-	@Override
-	protected void addNameAndDescriptionPage() {
+    @Override
+    public IWizardPage getNextPage(IWizardPage page) {
+        if (page.equals(selectConfigurationPage)) {
+            final ConnectorConfiguration conf = selectConfigurationPage.getSelectedConfiguration();
+            if (conf != null) {
+                ConnectorDefinition definition = connectorDefStore.getDefinition(conf.getDefinitionId(), conf.getVersion());
+                connectorWorkingCopy.setDefinitionId(definition.getId());
+                connectorWorkingCopy.setDefinitionVersion(definition.getVersion());
 
-	}
+                checkDefinitionDependencies(definition);
 
-	/* (non-Javadoc)
-	 * @see org.bonitasoft.studio.connectors.ui.wizard.ConnectorWizard#addOuputPage(org.bonitasoft.studio.connector.model.definition.ConnectorDefinition)
-	 */
-	@Override
-	protected void addOuputPage(ConnectorDefinition definition) {
-		
-	}
+                connectorWorkingCopy.setConfiguration(conf);
+                extension = findCustomWizardExtension(definition);
+                recreateConnectorConfigurationPages(definition, false);
+            }
+        }
+        return super.getNextPage(page);
+    }
 
-	@Override
-	public boolean performFinish() {
-		ConnectorConfiguration conf = connectorWorkingCopy.getConfiguration();
-		DefinitionConfigurationFileStore fileStore = connectorConfStore.getChild(conf.getName()+"."+ConnectorConfRepositoryStore.CONF_EXT);
-		fileStore.save(conf);
-		return true;
-		
-	}
-	
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.connectors.ui.wizard.ConnectorWizard#addNameAndDescriptionPage()
+     */
+    @Override
+    protected void addNameAndDescriptionPage() {
+
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.connectors.ui.wizard.ConnectorWizard#addOuputPage(org.bonitasoft.studio.connector.model.definition.ConnectorDefinition)
+     */
+    @Override
+    protected void addOuputPage(ConnectorDefinition definition) {
+
+    }
+
+    @Override
+    public boolean performFinish() {
+        ConnectorConfiguration conf = connectorWorkingCopy.getConfiguration();
+        DefinitionConfigurationFileStore fileStore = connectorConfStore.getChild(conf.getName() + "." + ConnectorConfRepositoryStore.CONF_EXT);
+        fileStore.save(conf);
+        return true;
+
+    }
+
 }

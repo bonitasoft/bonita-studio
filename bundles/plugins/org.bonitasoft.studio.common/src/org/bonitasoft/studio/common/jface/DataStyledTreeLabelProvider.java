@@ -44,119 +44,121 @@ import org.eclipse.swt.graphics.TextStyle;
  */
 public class DataStyledTreeLabelProvider extends StyledCellLabelProvider implements ILabelProvider {
 
-    private final IMapChangeListener mapChangeListener = new IMapChangeListener() {
-        @Override
-        public void handleMapChange(MapChangeEvent event) {
-            Set<?> affectedElements = event.diff.getChangedKeys();
-            if (!affectedElements.isEmpty()) {
-                LabelProviderChangedEvent newEvent = new LabelProviderChangedEvent(DataStyledTreeLabelProvider.this, affectedElements.toArray());
-                fireLabelProviderChanged(newEvent);
-            }
-        }
-    };
-    private Styler italicGrey;
-    private AdapterFactoryLabelProvider imageProvider;
+	private final IMapChangeListener mapChangeListener = new IMapChangeListener() {
+		@Override
+		public void handleMapChange(MapChangeEvent event) {
+			Set<?> affectedElements = event.diff.getChangedKeys();
+			if (!affectedElements.isEmpty()) {
+				LabelProviderChangedEvent newEvent = new LabelProviderChangedEvent(DataStyledTreeLabelProvider.this, affectedElements.toArray());
+				fireLabelProviderChanged(newEvent);
+			}
+		}
+	};
+	private Styler italicGrey;
+	private AdapterFactoryLabelProvider imageProvider;
 
 
-    public DataStyledTreeLabelProvider() {
-        super();
-        imageProvider = new AdapterFactoryLabelProvider(new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE)) ;
-        initStyle();
-    }
+	public DataStyledTreeLabelProvider() {
+		super();
+		initStyle();
+	}
 
-    private void initStyle() {
-        italicGrey = new StyledString.Styler() {
-            @Override
-            public void applyStyles(TextStyle textStyle) {
-                textStyle.font = BonitaStudioFontRegistry.getTransientDataFont();
-                textStyle.foreground = JFaceResources.getColorRegistry().get(JFacePreferences.QUALIFIER_COLOR);
-            }
-        };
-    }
 
-    public DataStyledTreeLabelProvider(int style) {
-        super(style);
-        initStyle();
-    }
 
-    public DataStyledTreeLabelProvider(IObservableMap... attributeMaps) {
-        for (int i = 0; i < attributeMaps.length; i++) {
-            attributeMaps[i].addMapChangeListener(mapChangeListener);
-        }
-        initStyle();
-    }
+	public DataStyledTreeLabelProvider(int style) {
+		super(style);
+		initStyle();
+	}
 
-    @Override
-    public String getToolTipText(Object element) {
-        return null;
-    }
+	public DataStyledTreeLabelProvider(IObservableMap... attributeMaps) {
+		for (int i = 0; i < attributeMaps.length; i++) {
+			attributeMaps[i].addMapChangeListener(mapChangeListener);
+		}
+		initStyle();
+	}
 
-    @Override
-    public void update(ViewerCell cell) {
-        if (cell.getElement() instanceof Data) {
-            Data d = (Data) cell.getElement();
-            StyledString styledString = new StyledString();
+	private void initStyle() {
+		imageProvider = new AdapterFactoryLabelProvider(new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE)) ;
+		italicGrey = new StyledString.Styler() {
+			@Override
+			public void applyStyles(TextStyle textStyle) {
+				textStyle.font = BonitaStudioFontRegistry.getTransientDataFont();
+				textStyle.foreground = JFaceResources.getColorRegistry().get(JFacePreferences.QUALIFIER_COLOR);
+			}
+		};
+	}
+	
+	@Override
+	public String getToolTipText(Object element) {
+		return null;
+	}
 
-            String decoration = " -- " + getTypeLabel(d);
-            if (d.isTransient()) {
-                styledString.append(d.getName(), italicGrey);
-            } else {
-                styledString.append(d.getName(), null);
-            }
-            styledString.append(decoration, StyledString.DECORATIONS_STYLER);
-            if(d.getDefaultValue() != null
-                    && d.getDefaultValue().getName() != null
-                    && !d.getDefaultValue().getName().isEmpty()){
-                String content =  d.getDefaultValue().getName();
-                content  = Messages.defaultValue+": "  + content.replaceAll("\n", " ")  ;
-                styledString.append(" -- ",StyledString.DECORATIONS_STYLER) ;
-                styledString.append(content, StyledString.QUALIFIER_STYLER);
-            }
+	@Override
+	public void update(ViewerCell cell) {
+		if (cell.getElement() instanceof Data) {
+			Data d = (Data) cell.getElement();
+			StyledString styledString = new StyledString();
 
-            cell.setText(styledString.getString());
-            cell.setImage(getImage(d)) ;
-            cell.setStyleRanges(styledString.getStyleRanges());
-        }
-    }
+			String decoration = " -- " + getTypeLabel(d);
+			if (d.isTransient()) {
+				styledString.append(d.getName(), italicGrey);
+			} else {
+				styledString.append(d.getName(), null);
+			}
+			styledString.append(decoration, StyledString.DECORATIONS_STYLER);
+			if(d.getDefaultValue() != null
+					&& d.getDefaultValue().getName() != null
+					&& !d.getDefaultValue().getName().isEmpty()){
+				String content =  d.getDefaultValue().getName();
+				content  = Messages.defaultValue+": "  + content.replaceAll("\n", " ")  ;
+				styledString.append(" -- ",StyledString.DECORATIONS_STYLER) ;
+				styledString.append(content, StyledString.QUALIFIER_STYLER);
+			}
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.eclipse.jface.viewers.ILabelProvider#getImage(java.lang.Object)
-     */
-    @Override
-    public Image getImage(Object element) {
-        return imageProvider.getImage(element);
-    }
+			cell.setText(styledString.getString());
+			cell.setImage(getImage(d)) ;
+			cell.setStyleRanges(styledString.getStyleRanges());
+		}
+	}
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.eclipse.jface.viewers.ILabelProvider#getText(java.lang.Object)
-     */
-    @Override
-    public String getText(Object element) {
-        // only for filtered Tree
-        return ((Data) element).getName();
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.jface.viewers.ILabelProvider#getImage(java.lang.Object)
+	 */
+	@Override
+	public Image getImage(Object element) {
+		return imageProvider.getImage(element);
+	}
 
-    private String getTypeLabel(Data element) {
-        StringBuilder builder = new StringBuilder();
-        if (element.isMultiple()) {
-            builder.append("List<"); //$NON-NLS-1$
-        }
-        if (element instanceof JavaObjectData) {
-            builder.append(((JavaObjectData) element).getClassName());
-        }else if (element.getDataType() == null || element.getDataType().getName() == null) {
-            builder.append("?");
-        } else {
-            builder.append(ModelHelper.getDataTypeNLLabel(element.getDataType().getName()));
-        }
-        if (element.isMultiple()) {
-            builder.append(">"); //$NON-NLS-1$
-        }
-        return builder.toString();
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.jface.viewers.ILabelProvider#getText(java.lang.Object)
+	 */
+	@Override
+	public String getText(Object element) {
+		// only for filtered Tree
+		return ((Data) element).getName();
+	}
+
+	private String getTypeLabel(Data element) {
+		StringBuilder builder = new StringBuilder();
+		if (element.isMultiple()) {
+			builder.append("List<"); //$NON-NLS-1$
+		}
+		if (element instanceof JavaObjectData) {
+			builder.append(((JavaObjectData) element).getClassName());
+		}else if (element.getDataType() == null || element.getDataType().getName() == null) {
+			builder.append("?");
+		} else {
+			builder.append(ModelHelper.getDataTypeNLLabel(element.getDataType().getName()));
+		}
+		if (element.isMultiple()) {
+			builder.append(">"); //$NON-NLS-1$
+		}
+		return builder.toString();
+	}
 }

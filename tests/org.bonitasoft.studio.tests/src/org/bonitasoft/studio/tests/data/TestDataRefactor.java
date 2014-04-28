@@ -1,19 +1,19 @@
 /**
  * Copyright (C) 2012 BonitaSoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
- *
+ * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
+ * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.tests.data;
 
@@ -26,7 +26,6 @@ import org.bonitasoft.studio.common.DataTypeLabels;
 import org.bonitasoft.studio.common.DataUtil;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.common.refactoring.BonitaGroovyRefactoringAction;
 import org.bonitasoft.studio.data.operation.RefactorDataOperation;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
@@ -39,6 +38,7 @@ import org.bonitasoft.studio.model.process.MultiInstantiation;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.util.ProcessAdapterFactory;
+import org.bonitasoft.studio.refactoring.core.RefactoringOperationType;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.command.BasicCommandStack;
 import org.eclipse.emf.common.command.CompoundCommand;
@@ -52,24 +52,28 @@ import org.junit.Test;
 
 /**
  * @author Aurelien Pupier
- *
+ * 
  */
 public class TestDataRefactor {
 
     private Data processData;
-    private Data localData;
-    private RefactorDataOperation refactorDataOperation;
-    private Pool process;
-	private CompoundCommand cc;
-	private EditingDomain editingDomain;
 
+    private Data localData;
+
+    private RefactorDataOperation refactorDataOperation;
+
+    private Pool process;
+
+    private CompoundCommand cc;
+
+    private EditingDomain editingDomain;
 
     @Test
-    public void testNameRefactorWithGlobalDataReferencedInMultiInstanciation() throws InvocationTargetException, InterruptedException{
+    public void testNameRefactorWithGlobalDataReferencedInMultiInstanciation() throws InvocationTargetException, InterruptedException {
         final String newDataName = "newDataName";
         AbstractProcess process = initTestForGlobalDataRefactor(newDataName);
 
-        //Data referenced in multi-instanciation
+        // Data referenced in multi-instanciation
         Activity activity = ProcessFactory.eINSTANCE.createActivity();
         final MultiInstantiation multiInstantiation = ProcessFactory.eINSTANCE.createMultiInstantiation();
         multiInstantiation.setCollectionDataToMultiInstantiate(processData);
@@ -80,17 +84,19 @@ public class TestDataRefactor {
         processData.setName(newDataName);
 
         assertEquals("There are too many datas. The old one migth not be removed.", 1, process.getData().size());
-        assertEquals("Data name has not been updated correctly in multinstantiation", newDataName, multiInstantiation.getCollectionDataToMultiInstantiate().getName());
-        assertEquals("Data name has not been updated correctly in multinstantiation", newDataName, multiInstantiation.getListDataContainingOutputResults().getName());
+        assertEquals("Data name has not been updated correctly in multinstantiation", newDataName, multiInstantiation.getCollectionDataToMultiInstantiate()
+                .getName());
+        assertEquals("Data name has not been updated correctly in multinstantiation", newDataName, multiInstantiation.getListDataContainingOutputResults()
+                .getName());
 
     }
 
     @Test
-    public void testNameRefactorWithLocalDataReferencedInMultiInstanciation() throws InvocationTargetException, InterruptedException{
+    public void testNameRefactorWithLocalDataReferencedInMultiInstanciation() throws InvocationTargetException, InterruptedException {
         final String newDataName = "newDataName";
         AbstractProcess process = initTestForLocalDataRefactor(newDataName);
 
-        //Data referenced in multi-instanciation
+        // Data referenced in multi-instanciation
         Activity activity = (Activity) process.getElements().get(0);
         final MultiInstantiation multiInstantiation = ProcessFactory.eINSTANCE.createMultiInstantiation();
         multiInstantiation.setInputData(localData);
@@ -107,11 +113,11 @@ public class TestDataRefactor {
     }
 
     @Test
-    public void testNameRefactorWithLocalDataReferencedInVariableExpression() throws InvocationTargetException, InterruptedException{
+    public void testNameRefactorWithLocalDataReferencedInVariableExpression() throws InvocationTargetException, InterruptedException {
         final String newDataName = "newDataName";
         AbstractProcess process = initTestForLocalDataRefactor(newDataName);
 
-        //Data referenced in expression
+        // Data referenced in expression
         Activity activity = (Activity) process.getElements().get(0);
         final MultiInstantiation multiInstantiation = ProcessFactory.eINSTANCE.createMultiInstantiation();
         final Expression variableExpression = ExpressionFactory.eINSTANCE.createExpression();
@@ -127,7 +133,8 @@ public class TestDataRefactor {
         refactorDataOperation.run(new NullProgressMonitor());
         editingDomain.getCommandStack().execute(cc);
         assertEquals("There are too many datas. The old one migth not be removed.", 1, process.getData().size());
-        assertEquals("Data name has not been updated correctly in expression", newDataName, ((Element) variableExpression.getReferencedElements().get(0)).getName());
+        assertEquals("Data name has not been updated correctly in expression", newDataName,
+                ((Element) variableExpression.getReferencedElements().get(0)).getName());
         assertEquals("Data name has not been updated correctly in expression", newDataName, variableExpression.getName());
         assertEquals("Data name has not been updated correctly in expression", newDataName, variableExpression.getContent());
 
@@ -135,13 +142,13 @@ public class TestDataRefactor {
 
     private AdapterFactoryEditingDomain createEditingDomain() {
         ComposedAdapterFactory adapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
-        adapterFactory.addAdapterFactory(new ProcessAdapterFactory()) ;
+        adapterFactory.addAdapterFactory(new ProcessAdapterFactory());
 
         // command stack that will notify this editor as commands are executed
         BasicCommandStack commandStack = new BasicCommandStack();
 
         // Create the editing domain with our adapterFactory and command stack.
-        return new AdapterFactoryEditingDomain(adapterFactory,commandStack, new HashMap<Resource, Boolean>());
+        return new AdapterFactoryEditingDomain(adapterFactory, commandStack, new HashMap<Resource, Boolean>());
     }
 
     @Before
@@ -149,13 +156,12 @@ public class TestDataRefactor {
         createProcessWithData();
     }
 
-
     /**
      * @return an AbstractProcess with a global data and a local data on an activity.
      */
 
     private AbstractProcess createProcessWithData() {
-        if(process == null){
+        if (process == null) {
             final MainProcess mainProcess = ProcessFactory.eINSTANCE.createMainProcess();
             ModelHelper.addDataTypes(mainProcess);
             process = ProcessFactory.eINSTANCE.createPool();
@@ -188,9 +194,7 @@ public class TestDataRefactor {
 
     private AbstractProcess initTestForDataRefactor(final String newDataName, final Data dataToRefactor) {
         final AbstractProcess process = createProcessWithData();
-        refactorDataOperation = new RefactorDataOperation(BonitaGroovyRefactoringAction.REFACTOR_OPERATION);
-        cc = new CompoundCommand();
-        refactorDataOperation.setCompoundCommand(cc);
+        refactorDataOperation = new RefactorDataOperation(RefactoringOperationType.UPDATE);
         refactorDataOperation.setContainer(process);
         refactorDataOperation.setOldData(dataToRefactor);
         final Data newProcessData = EcoreUtil.copy(dataToRefactor);
@@ -200,6 +204,5 @@ public class TestDataRefactor {
         refactorDataOperation.setEditingDomain(editingDomain);
         return process;
     }
-
 
 }

@@ -1,0 +1,26 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Refactoring lugin
+Bundle-SymbolicName: org.bonitasoft.studio.refactoring
+Bundle-Version: 6.3.0.qualifier
+Bundle-Activator: org.bonitasoft.studio.refactoring.RefactoringPlugin
+Bundle-Vendor: BonitaSoft S.A.
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.emf.common,
+ org.eclipse.emf.edit,
+ org.bonitasoft.studio.model,
+ org.bonitasoft.studio.common,
+ org.eclipse.jdt.core,
+ org.eclipse.jdt.groovy.core,
+ org.codehaus.groovy.eclipse.codeassist.completion,
+ org.eclipse.compare,
+ org.eclipse.emf.edit.ui,
+ org.codehaus.groovy;bundle-version="1.8.6",
+ org.bonitasoft.studio.common.repository;bundle-version="6.3.0",
+ org.bonitasoft.studio.groovy,
+ org.codehaus.groovy.eclipse.refactoring,
+ org.eclipse.text
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ActivationPolicy: lazy
+Export-Package: org.bonitasoft.studio.refactoring.core

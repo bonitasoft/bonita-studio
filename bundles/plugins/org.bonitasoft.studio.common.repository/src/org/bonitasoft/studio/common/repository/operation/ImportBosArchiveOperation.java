@@ -109,7 +109,7 @@ public class ImportBosArchiveOperation {
             final IResource[] folders = rootContainer.members(IContainer.FOLDER);
             if (folders != null) {
                 final List<IResource> folderSortedList = new ArrayList<IResource>(Arrays.asList(folders));
-                final Comparator<IResource> importFolderComparator = new ImportFolderComparator<IResource>();
+                final Comparator<IResource> importFolderComparator = new ImportFolderComparator();
                 Collections.sort(folderSortedList, importFolderComparator);
                 for (final IResource folder : folderSortedList) {
                     try {

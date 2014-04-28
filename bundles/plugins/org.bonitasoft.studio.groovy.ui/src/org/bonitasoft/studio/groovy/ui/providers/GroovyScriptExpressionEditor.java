@@ -503,7 +503,7 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
 
         addDependencyButton.setEnabled(!inputExpression.isAutomaticDependencies());
 
-        dependencyJob = new ComputeScriptDependenciesJob(sourceViewer.getDocument());
+        dependencyJob = new ComputeScriptDependenciesJob(groovyViewer.getGroovyCompilationUnit());
         dependencyJob.setContext(context);
         this.nodes.addAll(GroovyUtil.getBonitaVariables(context, filters, isPageFlowContext));
         dependencyJob.setNodes(nodes);

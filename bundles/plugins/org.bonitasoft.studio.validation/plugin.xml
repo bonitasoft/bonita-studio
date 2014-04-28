@@ -963,6 +963,22 @@
                        class="SequenceFlow">
                  </target>
               </constraint>
+            <constraint
+                  class="org.bonitasoft.studio.validation.constraints.process.OperationLeftOperandConsistencyConstraint"
+                  id="org.bonitasoft.studio.validation.constraints.operationleftoperandconsistency"
+                  isEnabledByDefault="true"
+                  lang="java"
+                  mode="Batch"
+                  name="Operation target consistency"
+                  severity="ERROR"
+                  statusCode="1">
+               <message>
+                  {0}
+               </message>
+               <target
+                     class="Operation">
+               </target>
+            </constraint>
          </constraints>
          <package
                namespaceUri="http://www.bonitasoft.org/ns/studio/process">
@@ -1064,6 +1080,9 @@
                <message>
                   {0}
                </message>
+               <target
+                     class="FormButton">
+               </target>
                <target
                      class="Form">
                </target>

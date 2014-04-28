@@ -1,19 +1,19 @@
 /**
  * Copyright (C) 2012 BonitaSoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
- *
+ * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
+ * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.expression.editor.operation;
 
@@ -71,422 +71,451 @@ import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 
 /**
  * @author Aurelien Pupier
- *
+ * 
  */
-public class OperationViewer extends Composite implements IBonitaVariableContext{
+public class OperationViewer extends Composite implements IBonitaVariableContext {
 
-	public static final String SWTBOT_ID_REMOVE_LINE = "actionLinesCompositeRemoveButton";
-	protected EMFDataBindingContext context;
-	private final TabbedPropertySheetWidgetFactory widgetFactory;
-	private EObject eObject;
-	private EReference operationContainmentFeature;
-	private final ViewerFilter storageExpressionFilter;
-	private final ViewerFilter actionExpressionFilter;
-	private IExpressionNatureProvider storageExpressionProvider;
-	private ReadOnlyExpressionViewer storageViewer;
-	private Link operatorLink;
-	private ExpressionViewer actionExpression;
-	private final OperatorLabelProvider labelProvider = new OperatorLabelProvider() ;
-	private EditingDomain editingDomain;
-	private final OperationReturnTypesValidator operationReturnTypeValidator;
-	private DefaultToolTip operatorTooltip;
-	private IExpressionNatureProvider actionExpressionProvider;
-	private Operation operation;
-	private EObject eObjectContext;
-	private boolean isPageFlowContext;
-	
-	
-	public OperationViewer(Composite parent,TabbedPropertySheetWidgetFactory widgetFactory ,EditingDomain editingDomain, ViewerFilter actionExpressionFilter, ViewerFilter storageExpressionFilter,boolean isPageFlowContext){
-		super(parent, SWT.NONE);
-		this.isPageFlowContext=isPageFlowContext;
-		this.editingDomain = editingDomain ;
-		this.widgetFactory = widgetFactory ;
-		if(widgetFactory != null){
-			widgetFactory.adapt(this);
-		}
-		this.actionExpressionFilter = actionExpressionFilter;
-		this.storageExpressionFilter = storageExpressionFilter;
-		operationReturnTypeValidator = new OperationReturnTypesValidator();
-		setLayout(GridLayoutFactory.fillDefaults().numColumns(4).margins(0, 0).create());
-		doCreateControls() ;
-	}
+    public static final String SWTBOT_ID_REMOVE_LINE = "actionLinesCompositeRemoveButton";
 
-	public OperationViewer(Composite parent,TabbedPropertySheetWidgetFactory widgetFactory ,EditingDomain editingDomain, ViewerFilter actionExpressionFilter, ViewerFilter storageExpressionFilter) {
-		this(parent,widgetFactory,editingDomain,actionExpressionFilter,storageExpressionFilter,false);
-	}
+    protected EMFDataBindingContext context;
 
-	public void refreshDatabinding(){
-		final Operation action = getOperation() ;
-		if(action != null){
-			actionExpression.setExternalDataBindingContext(context); 
-			storageViewer.setExternalDataBindingContext(context);
-			if(actionExpressionProvider != null){
-				actionExpression.setExpressionNatureProvider(actionExpressionProvider);
-			}
-			actionExpression.setInput(getEObject()) ;
-			if(storageExpressionProvider != null){
-				storageViewer.setExpressionNatureProvider(storageExpressionProvider);
-			}
-			if(eObjectContext!= null){
-				storageViewer.setContext(eObjectContext);
-			}
-			storageViewer.setInput(action);
+    private final TabbedPropertySheetWidgetFactory widgetFactory;
 
-			Expression actionExp = action.getRightOperand() ;
-			if(actionExp == null){
-				actionExp  = ExpressionFactory.eINSTANCE.createExpression() ;
-				if(actionExpressionFilter instanceof AvailableExpressionTypeFilter){
-					if(!((AvailableExpressionTypeFilter) actionExpressionFilter).getContentTypes().contains(ExpressionConstants.CONSTANT_TYPE)){
-						if(!((AvailableExpressionTypeFilter) actionExpressionFilter).getContentTypes().isEmpty()){
-							actionExp.setType(((AvailableExpressionTypeFilter) actionExpressionFilter).getContentTypes().iterator().next());
-						}
-					}
-				}
-				if(editingDomain != null){
-					editingDomain.getCommandStack().execute(SetCommand.create(editingDomain, action, ExpressionPackage.Literals.OPERATION__RIGHT_OPERAND, actionExp));
-				}else{
-					action.setRightOperand(actionExp) ;
-				}
-			}
-			Expression storageExp = action.getLeftOperand() ;
-			if(storageExp == null){
-				storageExp  = ExpressionFactory.eINSTANCE.createExpression() ;
-				if(editingDomain != null){
-					editingDomain.getCommandStack().execute(SetCommand.create(editingDomain, action, ExpressionPackage.Literals.OPERATION__LEFT_OPERAND, storageExp));
-				}else{
-					action.setLeftOperand(storageExp) ;
-				}
-			}
+    private EObject eObject;
 
-			operationReturnTypeValidator.setDataExpression(action.getLeftOperand());
-			operationReturnTypeValidator.setInputExpression(action.getRightOperand());
+    private EReference operationContainmentFeature;
 
-			IObservableValue leftOperandObservableValue =  EMFEditObservables.observeValue(editingDomain, action, ExpressionPackage.Literals.OPERATION__LEFT_OPERAND) ;
-			UpdateValueStrategy targetToModel = new UpdateValueStrategy() ;
-			targetToModel.setConverter(new Converter(Expression.class,Expression.class) {
+    private final ViewerFilter storageExpressionFilter;
 
-				@Override
-				public Object convert(Object from) {
-					if(from != null){
-						Expression copy =  EcoreUtil.copy((Expression)from);
-						operationReturnTypeValidator.setDataExpression(copy);
-						return copy;
-					}
-					return null;
-				}
-			} ) ;
-			context.bindValue(ViewersObservables.observeSingleSelection(storageViewer), leftOperandObservableValue,targetToModel,null) ;
+    private final ViewerFilter actionExpressionFilter;
 
+    private IExpressionNatureProvider storageExpressionProvider;
 
+    private ReadOnlyExpressionViewer storageViewer;
 
-			actionExpression.addExpressionValidator(ExpressionConstants.ALL_TYPES, operationReturnTypeValidator);
-			IObservableValue actionExpressionObservableValue = EMFEditProperties
-					.value(editingDomain,
-							ExpressionPackage.Literals.OPERATION__RIGHT_OPERAND)
-							.observe(action);
-			IObservableValue returnTypeExpressionObservableValue = EMFEditProperties
-					.value(editingDomain,
-							ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE)
-							.observe(action.getRightOperand());
-			context.bindValue(
-					ViewerProperties.singleSelection().observe(actionExpression),
-					actionExpressionObservableValue);
-			
-			returnTypeExpressionObservableValue.addValueChangeListener(new IValueChangeListener() {
-				
-				@Override
-				public void handleValueChange(ValueChangeEvent event) {
-					actionExpression.validate();
-				}
-			});
+    private Link operatorLink;
 
+    private ExpressionViewer actionExpression;
 
-			operatorLink.setText("<A>"+labelProvider.getText(action.getOperator())+"</A>") ;
-			if(!action.getOperator().getType().equals(ExpressionConstants.ASSIGNMENT_OPERATOR) && action.getOperator().getExpression() != null  && !action.getOperator().getExpression().isEmpty() ){
-				operatorTooltip.setText(action.getOperator().getExpression());
-			}
+    private final OperatorLabelProvider labelProvider = new OperatorLabelProvider();
 
-			IObservableValue value = EMFEditObservables.observeValue(editingDomain, actionExp, ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE);
-			value.addChangeListener(new IChangeListener() {
+    private EditingDomain editingDomain;
 
-				@Override
-				public void handleChange(ChangeEvent arg0) {
-					actionExpression.validate();
-				}
-			});
+    private final OperationReturnTypesValidator operationReturnTypeValidator;
 
-			storageViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+    private DefaultToolTip operatorTooltip;
 
-				@Override
-				public void selectionChanged(SelectionChangedEvent event) {
-					Expression selectedExpression = (Expression) ((IStructuredSelection) event.getSelection()).getFirstElement() ;
-					if(selectedExpression != null){
-						Operator operator = action.getOperator();
-						if(operator.getType() == null){
-							if(editingDomain == null){
-								operator.setType(ExpressionConstants.ASSIGNMENT_OPERATOR) ;
-							}else{
-								editingDomain.getCommandStack().execute(SetCommand.create(editingDomain, operator, ExpressionPackage.Literals.OPERATOR__TYPE, ExpressionConstants.ASSIGNMENT_OPERATOR)) ;
-							}
-						}
-						final OperatorLabelProvider labelProvider = new OperatorLabelProvider() ;
-						operatorLink.setText("<A>"+labelProvider.getText(action.getOperator())+"</A>") ;
-						if(!action.getOperator().getType().equals(ExpressionConstants.ASSIGNMENT_OPERATOR) && action.getOperator().getExpression() != null && !action.getOperator().getExpression().isEmpty()){
-							operatorTooltip.setText(action.getOperator().getExpression());
-						}
-						operationReturnTypeValidator.setDataExpression(action.getLeftOperand());
-						updateRightOperandReturnType(action);
-						actionExpression.validate();
-						operatorLink.getParent().layout(true,true) ;
-					}
-				}
-			}) ;
-		}
-	}
+    private IExpressionNatureProvider actionExpressionProvider;
 
-	protected void updateRightOperandReturnType(Operation action) {
-		Operator operator = action.getOperator();
-		Expression right = action.getRightOperand();
-		Expression left = action.getLeftOperand();
-		if(operator.getType().equals(ExpressionConstants.ASSIGNMENT_OPERATOR) 
-				&& ExpressionConstants.CONSTANT_TYPE.equals(right.getType())
-				&& !left.getReturnType().equals(right.getReturnType())
-				&& isPrimitiveType(left.getReturnType())){
-			if(editingDomain == null){
-				right.setReturnType(right.getReturnType()) ;
-			}else{
-				editingDomain.getCommandStack().execute(SetCommand.create(editingDomain, right, ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE, left.getReturnType())) ;
-			}
-		}
-		
-	}
+    private Operation operation;
 
-	private boolean isPrimitiveType(String returnType) {
-		return returnType.equals(String.class.getName()) 
-				|| returnType.equals(Integer.class.getName()) 
-				|| returnType.equals(Long.class.getName()) 
-				|| returnType.equals(Boolean.class.getName()) 
-				|| returnType.equals(Double.class.getName())
-				|| returnType.equals(Float.class.getName()) ;
-	}
+    private EObject eObjectContext;
 
-	protected void doCreateControls() {
-		storageViewer =  createStorageViewer() ;
-		operatorLink = createOperatorLink();
-		actionExpression = createActionExpressionViewer();
-	}
+    private boolean isPageFlowContext;
 
+    public OperationViewer(Composite parent, TabbedPropertySheetWidgetFactory widgetFactory, EditingDomain editingDomain, ViewerFilter actionExpressionFilter,
+            ViewerFilter storageExpressionFilter, boolean isPageFlowContext) {
+        super(parent, SWT.NONE);
+        this.isPageFlowContext = isPageFlowContext;
+        this.editingDomain = editingDomain;
+        this.widgetFactory = widgetFactory;
+        if (widgetFactory != null) {
+            widgetFactory.adapt(this);
+        }
+        this.actionExpressionFilter = actionExpressionFilter;
+        this.storageExpressionFilter = storageExpressionFilter;
+        operationReturnTypeValidator = new OperationReturnTypesValidator();
+        setLayout(GridLayoutFactory.fillDefaults().numColumns(4).margins(0, 0).create());
+        doCreateControls();
+    }
 
-	protected Link createOperatorLink() {
-		final Link operatorLabel = new Link(this, SWT.NONE) ;
-		if(widgetFactory != null){
-			widgetFactory.adapt(operatorLabel,false,false) ;
-		}
-		operatorTooltip = new DefaultToolTip(operatorLabel);
-		operatorTooltip.setText(Messages.changeOperator);
-		operatorTooltip.setPopupDelay(50);
-		operatorTooltip.setShift(new Point(10,5));
+    public OperationViewer(Composite parent, TabbedPropertySheetWidgetFactory widgetFactory, EditingDomain editingDomain, ViewerFilter actionExpressionFilter,
+            ViewerFilter storageExpressionFilter) {
+        this(parent, widgetFactory, editingDomain, actionExpressionFilter, storageExpressionFilter, false);
+    }
 
-		operatorLabel.setLayoutData(GridDataFactory.swtDefaults().align(SWT.BEGINNING, SWT.CENTER).create()) ;
-		operatorLabel.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				final Operation action = getOperation() ;
-				OperatorSelectionDialog dialog =  new OperatorSelectionDialog(Display.getDefault().getActiveShell(),action) ;
-				if(dialog.open() == Dialog.OK){
-					Operator newOperator =  dialog.getOperator() ;
-					if(editingDomain == null){
-						action.setOperator(newOperator) ;
-					}else{
-						editingDomain.getCommandStack().execute(SetCommand.create(editingDomain, action, ExpressionPackage.Literals.OPERATION__OPERATOR, newOperator));
-					}
+    public void refreshDatabinding() {
+        final Operation action = getOperation();
+        if (action != null) {
+            actionExpression.setExternalDataBindingContext(context);
+            storageViewer.setExternalDataBindingContext(context);
+            if (actionExpressionProvider != null) {
+                actionExpression.setExpressionNatureProvider(actionExpressionProvider);
+            }
+            actionExpression.setInput(getEObject());
+            if (storageExpressionProvider != null) {
+                storageViewer.setExpressionNatureProvider(storageExpressionProvider);
+            }
+            if (eObjectContext != null) {
+                storageViewer.setContext(eObjectContext);
+            }
+            storageViewer.setInput(action);
 
-					operatorLabel.setText("<A>"+labelProvider.getText(newOperator)+"</A>") ;
-					if(newOperator.getExpression() != null && !newOperator.getType().equals(ExpressionConstants.ASSIGNMENT_OPERATOR) && !newOperator.getExpression().isEmpty()){
-						operatorTooltip.setText(newOperator.getExpression()) ;
-					}
-					actionExpression.validate();
-					operatorLabel.getParent().layout(true, true) ;
-				}
-			}
-		}) ;
+            Expression actionExp = action.getRightOperand();
+            if (actionExp == null) {
+                actionExp = ExpressionFactory.eINSTANCE.createExpression();
+                if (actionExpressionFilter instanceof AvailableExpressionTypeFilter) {
+                    if (!((AvailableExpressionTypeFilter) actionExpressionFilter).getContentTypes().contains(ExpressionConstants.CONSTANT_TYPE)) {
+                        if (!((AvailableExpressionTypeFilter) actionExpressionFilter).getContentTypes().isEmpty()) {
+                            actionExp.setType(((AvailableExpressionTypeFilter) actionExpressionFilter).getContentTypes().iterator().next());
+                        }
+                    }
+                }
+                if (editingDomain != null) {
+                    editingDomain.getCommandStack().execute(
+                            SetCommand.create(editingDomain, action, ExpressionPackage.Literals.OPERATION__RIGHT_OPERAND, actionExp));
+                } else {
+                    action.setRightOperand(actionExp);
+                }
+            }
+            Expression storageExp = action.getLeftOperand();
+            if (storageExp == null) {
+                storageExp = ExpressionFactory.eINSTANCE.createExpression();
+                if (editingDomain != null) {
+                    editingDomain.getCommandStack().execute(
+                            SetCommand.create(editingDomain, action, ExpressionPackage.Literals.OPERATION__LEFT_OPERAND, storageExp));
+                } else {
+                    action.setLeftOperand(storageExp);
+                }
+            }
 
-		return operatorLabel ;
-	}
+            operationReturnTypeValidator.setDataExpression(action.getLeftOperand());
+            operationReturnTypeValidator.setInputExpression(action.getRightOperand());
 
-	public void setEditingDomain(EditingDomain editingDomain){
-		this.editingDomain = editingDomain ;
-		actionExpression.setEditingDomain(editingDomain) ;
-		storageViewer.setEditingDomain(editingDomain);
-	}
+            IObservableValue leftOperandObservableValue = EMFEditObservables.observeValue(editingDomain, action,
+                    ExpressionPackage.Literals.OPERATION__LEFT_OPERAND);
+            UpdateValueStrategy targetToModel = new UpdateValueStrategy();
+            targetToModel.setConverter(new Converter(Expression.class, Expression.class) {
 
-	protected ReadOnlyExpressionViewer createStorageViewer() {
-		final ReadOnlyExpressionViewer storageViewer = new ReadOnlyExpressionViewer(this,SWT.BORDER,widgetFactory,editingDomain,ExpressionPackage.Literals.OPERATION__LEFT_OPERAND) ;
-		storageViewer.setIsPageFlowContext(isPageFlowContext);
-		storageViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().hint(230, SWT.DEFAULT).grab(false, false).create());
-		if(storageExpressionFilter != null){
-			storageViewer.addFilter(storageExpressionFilter) ;
-		}
-		storageViewer.getEraseControl().addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				Operation action = getOperation();
-				if(action != null){
-					final Operator op = action.getOperator();
-					if(op != null){
-						if(editingDomain !=null){
-							editingDomain.getCommandStack().execute(SetCommand.create(editingDomain, op, ExpressionPackage.Literals.OPERATOR__TYPE, ExpressionConstants.ASSIGNMENT_OPERATOR));
-						}else{
-							op.setType(ExpressionConstants.ASSIGNMENT_OPERATOR);
-						}
-						operatorLink.setText("<A>"+labelProvider.getText(op)+"</A>") ;
-						actionExpression.validate();
-						operatorLink.getParent().layout(true, true) ;
-					}
-				}
-			}
-		});
-		return storageViewer;
-	}
+                @Override
+                public Object convert(Object from) {
+                    if (from != null) {
+                        Expression copy = EcoreUtil.copy((Expression) from);
+                        operationReturnTypeValidator.setDataExpression(copy);
+                        return copy;
+                    }
+                    return null;
+                }
+            });
+            context.bindValue(ViewersObservables.observeSingleSelection(storageViewer), leftOperandObservableValue, targetToModel, null);
 
+            storageViewer.addExpressionValidator(ExpressionConstants.VARIABLE_TYPE, new TransientDataValidator());
+            actionExpression.addExpressionValidator(ExpressionConstants.ALL_TYPES, operationReturnTypeValidator);
+            IObservableValue actionExpressionObservableValue = EMFEditProperties
+                    .value(editingDomain,
+                            ExpressionPackage.Literals.OPERATION__RIGHT_OPERAND)
+                    .observe(action);
+            IObservableValue returnTypeExpressionObservableValue = EMFEditProperties
+                    .value(editingDomain,
+                            ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE)
+                    .observe(action.getRightOperand());
+            context.bindValue(
+                    ViewerProperties.singleSelection().observe(actionExpression),
+                    actionExpressionObservableValue);
 
-	protected ExpressionViewer createActionExpressionViewer() {
-		final ExpressionViewer actionViewer = new ExpressionViewer(this,SWT.BORDER,widgetFactory,editingDomain, getActionTargetFeature()) ;
-		actionViewer.setIsPageFlowContext(isPageFlowContext);
-		actionViewer.addFilter(actionExpressionFilter) ;
-		actionViewer.setExternalDataBindingContext(context);
-		actionViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true,false).hint(200, SWT.DEFAULT).create());
-		return actionViewer;
-	}
+            returnTypeExpressionObservableValue.addValueChangeListener(new IValueChangeListener() {
 
+                @Override
+                public void handleValueChange(ValueChangeEvent event) {
+                    actionExpression.validate();
+                }
+            });
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @seeorg.eclipse.gmf.runtime.diagram.ui.properties.sections.
-	 * AbstractModelerPropertySection#dispose()
-	 */
-	@Override
-	public void dispose() {
-		super.dispose();
-		if (actionExpression != null && !actionExpression.getControl().isDisposed()) {
-			actionExpression.getControl().dispose();
-		}
-		if (storageViewer != null && !storageViewer.getControl().isDisposed()) {
-			storageViewer.getControl().dispose();
-		}
-		if (operatorLink != null && !operatorLink.isDisposed()) {
-			operatorLink.dispose();
-		}
-	}
+            operatorLink.setText("<A>" + labelProvider.getText(action.getOperator()) + "</A>");
+            if (!action.getOperator().getType().equals(ExpressionConstants.ASSIGNMENT_OPERATOR) && action.getOperator().getExpression() != null
+                    && !action.getOperator().getExpression().isEmpty()) {
+                operatorTooltip.setText(action.getOperator().getExpression());
+            }
 
-	public void setContext(EMFDataBindingContext emfDataBindingContext) {
-		context = emfDataBindingContext ;
-	}
+            IObservableValue value = EMFEditObservables.observeValue(editingDomain, actionExp, ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE);
+            value.addChangeListener(new IChangeListener() {
 
-	public void setEObject(EObject eObject) {
-		this.eObject = eObject;
-		if (eObject instanceof Widget) {
-			setOperationContainmentFeature(FormPackage.Literals.WIDGET__ACTION) ;
-		}
-		refreshDatabinding() ;
-	}
-	
-	public void setContext(EObject eObject) {
-		this.eObjectContext = eObject;
-	}
+                @Override
+                public void handleChange(ChangeEvent arg0) {
+                    actionExpression.validate();
+                }
+            });
 
-	public void setOperationContainmentFeature(EReference actionTargetFeature) {
-		operationContainmentFeature = actionTargetFeature;
-	}
+            storageViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 
-	public EObject getEObject(){
-		return eObject;
-	}
+                @Override
+                public void selectionChanged(SelectionChangedEvent event) {
+                    Expression selectedExpression = (Expression) ((IStructuredSelection) event.getSelection()).getFirstElement();
+                    if (selectedExpression != null) {
+                        Operator operator = action.getOperator();
+                        if (operator.getType() == null) {
+                            if (editingDomain == null) {
+                                operator.setType(ExpressionConstants.ASSIGNMENT_OPERATOR);
+                            } else {
+                                editingDomain.getCommandStack().execute(
+                                        SetCommand.create(editingDomain, operator, ExpressionPackage.Literals.OPERATOR__TYPE,
+                                                ExpressionConstants.ASSIGNMENT_OPERATOR));
+                            }
+                        }
+                        final OperatorLabelProvider labelProvider = new OperatorLabelProvider();
+                        operatorLink.setText("<A>" + labelProvider.getText(action.getOperator()) + "</A>");
+                        if (!action.getOperator().getType().equals(ExpressionConstants.ASSIGNMENT_OPERATOR) && action.getOperator().getExpression() != null
+                                && !action.getOperator().getExpression().isEmpty()) {
+                            operatorTooltip.setText(action.getOperator().getExpression());
+                        }
+                        operationReturnTypeValidator.setDataExpression(action.getLeftOperand());
+                        updateRightOperandReturnType(action);
+                        actionExpression.validate();
+                        operatorLink.getParent().layout(true, true);
+                    }
+                }
+            });
+        }
+    }
 
+    protected void updateRightOperandReturnType(Operation action) {
+        Operator operator = action.getOperator();
+        Expression right = action.getRightOperand();
+        Expression left = action.getLeftOperand();
+        if (operator.getType().equals(ExpressionConstants.ASSIGNMENT_OPERATOR)
+                && ExpressionConstants.CONSTANT_TYPE.equals(right.getType())
+                && !left.getReturnType().equals(right.getReturnType())
+                && isPrimitiveType(left.getReturnType())) {
+            if (editingDomain == null) {
+                right.setReturnType(right.getReturnType());
+            } else {
+                editingDomain.getCommandStack().execute(
+                        SetCommand.create(editingDomain, right, ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE, left.getReturnType()));
+            }
+        }
 
-	protected EReference getActionTargetFeature() {
-		return operationContainmentFeature;
-	}
+    }
 
+    private boolean isPrimitiveType(String returnType) {
+        return returnType.equals(String.class.getName())
+                || returnType.equals(Integer.class.getName())
+                || returnType.equals(Long.class.getName())
+                || returnType.equals(Boolean.class.getName())
+                || returnType.equals(Double.class.getName())
+                || returnType.equals(Float.class.getName());
+    }
 
-	public void setOperation(Operation operation){
-		this.operation = operation ;
-	}
+    protected void doCreateControls() {
+        storageViewer = createStorageViewer();
+        operatorLink = createOperatorLink();
+        actionExpression = createActionExpressionViewer();
+    }
 
-	private Operation getOperation() {
-		if(operation != null){
-			return operation;
-		}
-		EObject eObject = getEObject() ;
-		if(eObject instanceof Operation){
-			return (Operation) eObject;
-		}
-		if(getEObject() instanceof Lane){
-			eObject = getEObject().eContainer() ;
-		}
-		return (Operation) eObject.eGet(getActionTargetFeature());
-	}
+    protected Link createOperatorLink() {
+        final Link operatorLabel = new Link(this, SWT.NONE);
+        if (widgetFactory != null) {
+            widgetFactory.adapt(operatorLabel, false, false);
+        }
+        operatorTooltip = new DefaultToolTip(operatorLabel);
+        operatorTooltip.setText(Messages.changeOperator);
+        operatorTooltip.setPopupDelay(50);
+        operatorTooltip.setShift(new Point(10, 5));
 
-	/**
-	 * Set a specify IExpressionNamtureProvider for the left operand
-	 * @param provider
-	 */
-	public void setStorageExpressionNatureProvider(IExpressionNatureProvider provider) {
-		storageExpressionProvider = provider ;
-	}
+        operatorLabel.setLayoutData(GridDataFactory.swtDefaults().align(SWT.BEGINNING, SWT.CENTER).create());
+        operatorLabel.addSelectionListener(new SelectionAdapter() {
 
-	/**
-	 * Set a specify IExpressionNamtureProvider for the left operand
-	 * @param provider
-	 */
-	public void setActionExpressionNatureProvider(IExpressionNatureProvider provider) {
-		actionExpressionProvider = provider ;
-	}
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                final Operation action = getOperation();
+                OperatorSelectionDialog dialog = new OperatorSelectionDialog(Display.getDefault().getActiveShell(), action);
+                if (dialog.open() == Dialog.OK) {
+                    Operator newOperator = dialog.getOperator();
+                    if (editingDomain == null) {
+                        action.setOperator(newOperator);
+                    } else {
+                        editingDomain.getCommandStack().execute(
+                                SetCommand.create(editingDomain, action, ExpressionPackage.Literals.OPERATION__OPERATOR, newOperator));
+                    }
 
-	public Control getTextControl() {
-		return actionExpression.getTextControl();
-	}
+                    operatorLabel.setText("<A>" + labelProvider.getText(newOperator) + "</A>");
+                    if (newOperator.getExpression() != null && !newOperator.getType().equals(ExpressionConstants.ASSIGNMENT_OPERATOR)
+                            && !newOperator.getExpression().isEmpty()) {
+                        operatorTooltip.setText(newOperator.getExpression());
+                    }
+                    actionExpression.validate();
+                    operatorLabel.getParent().layout(true, true);
+                }
+            }
+        });
 
-	public ToolItem getButtonControl() {
-		return actionExpression.getButtonControl();
-	}
+        return operatorLabel;
+    }
 
-	public Control getOperatorControl() {
-		return operatorLink;
-	}
+    public void setEditingDomain(EditingDomain editingDomain) {
+        this.editingDomain = editingDomain;
+        actionExpression.setEditingDomain(editingDomain);
+        storageViewer.setEditingDomain(editingDomain);
+    }
 
-	public Control getComboControl() {
-		return storageViewer.getControl();
-	}
+    protected ReadOnlyExpressionViewer createStorageViewer() {
+        final ReadOnlyExpressionViewer storageViewer = new ReadOnlyExpressionViewer(this, SWT.BORDER, widgetFactory, editingDomain,
+                ExpressionPackage.Literals.OPERATION__LEFT_OPERAND);
+        storageViewer.setIsPageFlowContext(isPageFlowContext);
+        storageViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().hint(230, SWT.DEFAULT).grab(false, false).create());
+        if (storageExpressionFilter != null) {
+            storageViewer.addFilter(storageExpressionFilter);
+        }
+        storageViewer.getEraseControl().addSelectionListener(new SelectionAdapter() {
 
-	public void addActionExpressionValidator(String expressionType,IExpressionValidator validator) {
-		actionExpression.addExpressionValidator(expressionType, validator);
-	}
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                Operation action = getOperation();
+                if (action != null) {
+                    final Operator op = action.getOperator();
+                    if (op != null) {
+                        if (editingDomain != null) {
+                            editingDomain.getCommandStack().execute(
+                                    SetCommand.create(editingDomain, op, ExpressionPackage.Literals.OPERATOR__TYPE, ExpressionConstants.ASSIGNMENT_OPERATOR));
+                        } else {
+                            op.setType(ExpressionConstants.ASSIGNMENT_OPERATOR);
+                        }
+                        operatorLink.setText("<A>" + labelProvider.getText(op) + "</A>");
+                        actionExpression.validate();
+                        operatorLink.getParent().layout(true, true);
+                    }
+                }
+            }
+        });
+        return storageViewer;
+    }
 
-	@Override
-	public boolean isPageFlowContext() {
-		
-		return isPageFlowContext;
-	}
+    protected ExpressionViewer createActionExpressionViewer() {
+        final ExpressionViewer actionViewer = new ExpressionViewer(this, SWT.BORDER, widgetFactory, editingDomain, getActionTargetFeature());
+        actionViewer.setIsPageFlowContext(isPageFlowContext);
+        actionViewer.addFilter(actionExpressionFilter);
+        actionViewer.setExternalDataBindingContext(context);
+        actionViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(200, SWT.DEFAULT).create());
+        return actionViewer;
+    }
 
-	@Override
-	public void setIsPageFlowContext(boolean isPageFlowContext) {
-		this.isPageFlowContext=isPageFlowContext;
-	}
+    /*
+     * (non-Javadoc)
+     * @seeorg.eclipse.gmf.runtime.diagram.ui.properties.sections.
+     * AbstractModelerPropertySection#dispose()
+     */
+    @Override
+    public void dispose() {
+        super.dispose();
+        if (actionExpression != null && !actionExpression.getControl().isDisposed()) {
+            actionExpression.getControl().dispose();
+        }
+        if (storageViewer != null && !storageViewer.getControl().isDisposed()) {
+            storageViewer.getControl().dispose();
+        }
+        if (operatorLink != null && !operatorLink.isDisposed()) {
+            operatorLink.dispose();
+        }
+    }
 
-	/* (non-Javadoc)
-	 * @see org.bonitasoft.studio.common.IBonitaVariableContext#isOverViewContext()
-	 */
-	@Override
-	public boolean isOverViewContext() {
-		return false;
-	}
+    public void setContext(EMFDataBindingContext emfDataBindingContext) {
+        context = emfDataBindingContext;
+    }
 
-	/* (non-Javadoc)
-	 * @see org.bonitasoft.studio.common.IBonitaVariableContext#setIsOverviewContext(boolean)
-	 */
-	@Override
-	public void setIsOverviewContext(boolean isOverviewContext) {
-	}
+    public void setEObject(EObject eObject) {
+        this.eObject = eObject;
+        if (eObject instanceof Widget) {
+            setOperationContainmentFeature(FormPackage.Literals.WIDGET__ACTION);
+        }
+        refreshDatabinding();
+    }
+
+    public void setContext(EObject eObject) {
+        this.eObjectContext = eObject;
+    }
+
+    public void setOperationContainmentFeature(EReference actionTargetFeature) {
+        operationContainmentFeature = actionTargetFeature;
+    }
+
+    public EObject getEObject() {
+        return eObject;
+    }
+
+    protected EReference getActionTargetFeature() {
+        return operationContainmentFeature;
+    }
+
+    public void setOperation(Operation operation) {
+        this.operation = operation;
+    }
+
+    private Operation getOperation() {
+        if (operation != null) {
+            return operation;
+        }
+        EObject eObject = getEObject();
+        if (eObject instanceof Operation) {
+            return (Operation) eObject;
+        }
+        if (getEObject() instanceof Lane) {
+            eObject = getEObject().eContainer();
+        }
+        return (Operation) eObject.eGet(getActionTargetFeature());
+    }
+
+    /**
+     * Set a specify IExpressionNamtureProvider for the left operand
+     * 
+     * @param provider
+     */
+    public void setStorageExpressionNatureProvider(IExpressionNatureProvider provider) {
+        storageExpressionProvider = provider;
+    }
+
+    /**
+     * Set a specify IExpressionNamtureProvider for the left operand
+     * 
+     * @param provider
+     */
+    public void setActionExpressionNatureProvider(IExpressionNatureProvider provider) {
+        actionExpressionProvider = provider;
+    }
+
+    public Control getTextControl() {
+        return actionExpression.getTextControl();
+    }
+
+    public ToolItem getButtonControl() {
+        return actionExpression.getButtonControl();
+    }
+
+    public Control getOperatorControl() {
+        return operatorLink;
+    }
+
+    public Control getComboControl() {
+        return storageViewer.getControl();
+    }
+
+    public void addActionExpressionValidator(String expressionType, IExpressionValidator validator) {
+        actionExpression.addExpressionValidator(expressionType, validator);
+    }
+
+    @Override
+    public boolean isPageFlowContext() {
+
+        return isPageFlowContext;
+    }
+
+    @Override
+    public void setIsPageFlowContext(boolean isPageFlowContext) {
+        this.isPageFlowContext = isPageFlowContext;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.common.IBonitaVariableContext#isOverViewContext()
+     */
+    @Override
+    public boolean isOverViewContext() {
+        return false;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.common.IBonitaVariableContext#setIsOverviewContext(boolean)
+     */
+    @Override
+    public void setIsOverviewContext(boolean isOverviewContext) {
+    }
 }

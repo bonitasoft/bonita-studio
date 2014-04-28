@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.common.refactoring;
+package org.bonitasoft.studio.refactoring.ui;
 
 import org.bonitasoft.studio.common.jface.BonitaStudioFontRegistry;
 import org.eclipse.compare.structuremergeviewer.DiffNode;
