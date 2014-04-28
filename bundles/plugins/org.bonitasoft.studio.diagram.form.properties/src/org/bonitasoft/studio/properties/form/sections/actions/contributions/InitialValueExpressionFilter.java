@@ -38,7 +38,7 @@ public class InitialValueExpressionFilter extends AvailableExpressionTypeFilter 
 	public InitialValueExpressionFilter(String[] contentTypes) {
 		super(contentTypes);
 	}
-
+	
 	private Widget widget;
 
 	/* (non-Javadoc)

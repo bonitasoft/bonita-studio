@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013 BonitaSoft S.A.
+ * Copyright (C) 2013-2014 Bonitasoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -69,9 +69,9 @@ public class ImportFileOperation implements IRunnableWithProgress {
 		try {
 			processor.createDiagram(fileToImport.toURI().toURL(), monitor)  ;
 		} catch (MalformedURLException e) {
-			throw new InvocationTargetException(e);
+			throw new InvocationTargetException(e, e.getMessage());
 		} catch (Exception e) {
-			throw new InvocationTargetException(e);
+			throw new InvocationTargetException(e, e.getMessage());
 		}
 		handleErrors(processor);
 		addFileStoresToOpen(processor);

@@ -375,7 +375,10 @@
 	<choiceParameter>
             <name>retrieveWorksapce</name>
             <title>${msg(retrieve.workspace.title)}</title>
-            <explanation>${msg(retrieve.workspace.message)}</explanation>
+            <explanation>${msg(retrieve.workspace.message)}
+
+${msg(retrieve.workspace.message.warning)}
+            </explanation>
             <value></value>
             <default>false</default>
             <allowEmptyValue>0</allowEmptyValue>
@@ -443,7 +446,11 @@
 			<name>Oldworkspace</name>
 			<title>${msg(workspace.location.title)}</title>
 			<description>${msg(workspace.location.description)}</description>
-			<explanation>${msg(workspace.location.explanation)}</explanation>
+			<explanation>${msg(workspace.location.explanation)}
+${msg(workspace.location.explanation.choice1)}
+${msg(workspace.location.explanation.choice2)}
+			
+${msg(workspace.location.explanation.end)}</explanation>
 			<value></value>
 			<default>${platform_install_prefix}/</default>
 			<allowEmptyValue>0</allowEmptyValue>
