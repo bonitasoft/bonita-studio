@@ -182,21 +182,11 @@ public class ManageOrganizationWizardPage extends WizardPage implements ISelecti
 
     @Override
     public boolean canFlipToNextPage() {
-    	
         return  !viewer.getSelection().isEmpty() ;
     }
 
     public Organization getSelectedOrganization() {
         return (Organization) ((IStructuredSelection) viewer.getSelection()).getFirstElement();
     }
-    
 
-    public boolean isValidOrganization(){
-    	OrganizationUserValidator validator = new OrganizationUserValidator() ;
-    	if(validator.validate(getSelectedOrganization()).isOK()){
-    		return true;
-    	}
-    	return false;
-    }
-    
 }

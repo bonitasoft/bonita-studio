@@ -104,16 +104,6 @@ public class OrganizationUserValidator implements IValidator {
                 return ValidationStatus.error(Messages.bind(Messages.missingMembershipForUser,u.getUserName()));
             }
         }
-        
-        for(Role role : organization.getRoles().getRole()){
-        	for(Role roleTmp : organization.getRoles().getRole()){
-        		if(!roleTmp.equals(role) && roleTmp.getName().equals(role.getName())){
-        			return ValidationStatus.error(Messages.bind(Messages.multipleRolesWithSameName,roleTmp.getName()));
-        		}
-        	}
-        }
-        
-        
         return ValidationStatus.ok() ;
     }
 
