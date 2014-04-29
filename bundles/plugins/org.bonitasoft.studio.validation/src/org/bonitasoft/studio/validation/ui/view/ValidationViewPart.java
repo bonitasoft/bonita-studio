@@ -203,7 +203,14 @@ public class ValidationViewPart extends ViewPart implements ISelectionListener,
 					int idx = location.lastIndexOf(":");
 					if (idx > 0) {
 						String result = location.substring(idx + 1);
-						;
+						
+						// get parent name if name is empty
+						if(result.trim().isEmpty() && (idx-1)>0){
+							location = location.substring(0,idx-1);
+							idx = location.lastIndexOf(":");
+							result = location.substring(idx + 1);
+						}
+						
 						if (!(result.startsWith("<") && result.endsWith(">"))) {
 							return result;
 						} else {

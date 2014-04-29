@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2009-2011 BonitaSoft S.A.
- * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2012 BonitaSoft S.A.
+ * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,31 +17,30 @@
  */
 package org.bonitasoft.studio.validation.constraints.process;
 
-import org.bonitasoft.studio.common.jface.databinding.validator.InputLengthValidator;
-import org.bonitasoft.studio.common.jface.databinding.validator.SpecialCharactersValidator;
-import org.bonitasoft.studio.model.form.Group;
-import org.bonitasoft.studio.model.form.GroupIterator;
-import org.bonitasoft.studio.model.process.Element;
-import org.bonitasoft.studio.model.process.FlowElement;
-import org.bonitasoft.studio.model.process.MultiInstantiation;
-import org.bonitasoft.studio.model.process.SequenceFlow;
-import org.bonitasoft.studio.model.process.TextAnnotation;
+import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.model.expression.Expression;
+import org.bonitasoft.studio.model.expression.Operation;
+import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.process.diagram.form.part.FormDiagramEditor;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditor;
 import org.bonitasoft.studio.model.process.diagram.providers.ProcessMarkerNavigationProvider;
 import org.bonitasoft.studio.validation.constraints.AbstractLiveValidationMarkerConstraint;
 import org.bonitasoft.studio.validation.i18n.Messages;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.validation.IValidationContext;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 
 /**
  * 
+ * Check that the left operand update a valid and consistent data/document/...
+ * 
  * @author Romain Bioteau
+ * @author Baptiste Mesta
  *
  */
-public class EmptyNameConstraint extends AbstractLiveValidationMarkerConstraint{
+public class OperationLeftOperandConsistencyConstraint extends AbstractLiveValidationMarkerConstraint {
+
 
 	@Override
 	protected IStatus performLiveValidation(IValidationContext ctx) {
@@ -55,35 +54,33 @@ public class EmptyNameConstraint extends AbstractLiveValidationMarkerConstraint{
 		}else if(editor instanceof FormDiagramEditor){
 			return org.bonitasoft.studio.model.process.diagram.form.providers.ProcessMarkerNavigationProvider.MARKER_TYPE;
 		}
-		return ProcessMarkerNavigationProvider.MARKER_TYPE;
+		return null;
 	}
 
 	@Override
 	protected String getConstraintId() {
-		return "org.bonitasoft.studio.validation.constraints.nonemptynames";
+		return "org.bonitasoft.studio.validation.constraints.operationleftoperandconsistency";
 	}
 
 	@Override
 	protected IStatus performBatchValidation(IValidationContext ctx) {
-		final EObject eObj = ctx.getTarget();
-		if (eObj instanceof Element){
-			final String name = ((Element) eObj).getName();
-			if (name == null || name.trim().isEmpty()){
-				if(eObj instanceof SequenceFlow ||  eObj instanceof TextAnnotation ||  eObj instanceof MultiInstantiation ||  ( eObj instanceof GroupIterator && !((Group)eObj.eContainer()).isUseIterator())) {
-					return ctx.createSuccessStatus();
+		final Operation operation = (Operation) ctx.getTarget();
+		Expression leftOperand = operation.getLeftOperand();
+		if(leftOperand != null && leftOperand.getContent() != null && !leftOperand.getContent().isEmpty()) {
+			String type = leftOperand.getType();
+			if(ExpressionConstants.VARIABLE_TYPE.equals(type)) {
+				if(leftOperand.getReferencedElements().isEmpty()) {
+					Widget widget = ModelHelper.getParentWidget(operation);
+					if(widget == null || !widget.isReadOnly()) {
+						return ctx.createFailureStatus(Messages.bind(Messages.inconsistentLeftOperand,leftOperand.getName()));
+					}
 				}
-				return ctx.createFailureStatus(Messages.bind(Messages.emptynameMessage,eObj.eClass().getName()));
-			}else if(eObj instanceof SequenceFlow || eObj instanceof FlowElement){
-				IStatus status = new SpecialCharactersValidator().validate(name);
-				if(!status.isOK()){
-					return ctx.createFailureStatus(status.getMessage());
+			}
+			if(ExpressionConstants.CONSTANT_TYPE.equals(type)) {
+				Widget widget = ModelHelper.getParentWidget(operation);
+				if(widget == null || !widget.isReadOnly()) {
+					return ctx.createFailureStatus(Messages.bind(Messages.inconsistentLeftOperand,leftOperand.getName()));
 				}
-				status = new InputLengthValidator(eObj.eClass().getName() + " " + Messages.elementName,50).validate(name);
-				if(!status.isOK()){
-					return ctx.createFailureStatus(status.getMessage());
-				}
-				return ctx.createSuccessStatus();
-				
 			}
 		}
 		return ctx.createSuccessStatus();

@@ -16,7 +16,10 @@
  */
 package org.bonitasoft.studio.properties.form.sections.actions.contributions;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection;
@@ -34,6 +37,7 @@ import org.bonitasoft.studio.model.form.DurationFormField;
 import org.bonitasoft.studio.model.form.FileWidget;
 import org.bonitasoft.studio.model.form.FormField;
 import org.bonitasoft.studio.model.form.FormPackage;
+import org.bonitasoft.studio.model.form.Group;
 import org.bonitasoft.studio.model.form.HtmlWidget;
 import org.bonitasoft.studio.model.form.IFrameWidget;
 import org.bonitasoft.studio.model.form.Info;
@@ -129,16 +133,24 @@ public class InitialValueContribution implements IExtensibleGridPropertySectionC
 	}
 
 	protected AvailableExpressionTypeFilter getExpressionViewerFilter() {
+		
+		boolean allowGroupIterator = widget.eContainer() instanceof Group ;
+		
 		if(initialValueExpressionFilter == null){
-			initialValueExpressionFilter = new InitialValueExpressionFilter(new String[]{
-					ExpressionConstants.VARIABLE_TYPE,
-					ExpressionConstants.SCRIPT_TYPE,
-					ExpressionConstants.CONSTANT_TYPE,
-					ExpressionConstants.PARAMETER_TYPE,
-					ExpressionConstants.SCRIPT_TYPE,
-					ExpressionConstants.DOCUMENT_TYPE,
-					ExpressionConstants.XPATH_TYPE,
-					ExpressionConstants.I18N_TYPE});
+			List<String> contentTypes = new ArrayList<String>();
+			contentTypes.add(ExpressionConstants.VARIABLE_TYPE);
+			contentTypes.add(ExpressionConstants.SCRIPT_TYPE);
+			contentTypes.add(ExpressionConstants.CONSTANT_TYPE);
+			contentTypes.add(ExpressionConstants.PARAMETER_TYPE);
+			contentTypes.add(ExpressionConstants.SCRIPT_TYPE);
+			contentTypes.add(ExpressionConstants.DOCUMENT_TYPE);
+			contentTypes.add(ExpressionConstants.XPATH_TYPE);
+			contentTypes.add(ExpressionConstants.I18N_TYPE);
+			
+			if(allowGroupIterator){
+				contentTypes.add(ExpressionConstants.GROUP_ITERATOR_TYPE);
+			}
+			initialValueExpressionFilter = new InitialValueExpressionFilter(contentTypes.toArray(new String[contentTypes.size()]));
 			initialValueExpressionFilter.setWidget(widget);
 		}
 		return initialValueExpressionFilter;
