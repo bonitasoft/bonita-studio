@@ -69,6 +69,7 @@ public class ManageOrganizationWizard extends Wizard {
 	private final OrganizationUserValidator validator = new OrganizationUserValidator() ;
 	private Organization activeOrganization;
 	private boolean activeOrganizationHasBeenModified = false;
+	private ManageOrganizationWizardPage manageOrganizationWizardPage;
 	String userName;
 
 	public ManageOrganizationWizard(){
@@ -102,13 +103,14 @@ public class ManageOrganizationWizard extends Wizard {
 
 	@Override
 	public void addPages() {
-		addPage(new ManageOrganizationWizardPage(organizationsWorkingCopy)) ;
-		GroupsWizardPage p = new GroupsWizardPage() ;
-		RolesWizardPage p1 = new RolesWizardPage() ;
-		UsersWizardPage p2 = new UsersWizardPage() ;
-		addPage(p) ;
-		addPage(p1) ;
-		addPage(p2) ;
+		manageOrganizationWizardPage = new ManageOrganizationWizardPage(organizationsWorkingCopy);
+		addPage(manageOrganizationWizardPage) ;
+		GroupsWizardPage groupsWizardPage = new GroupsWizardPage() ;
+		RolesWizardPage rolesWizardPage = new RolesWizardPage() ;
+		UsersWizardPage usersWizardPage = new UsersWizardPage() ;
+		addPage(groupsWizardPage) ;
+		addPage(rolesWizardPage) ;
+		addPage(usersWizardPage) ;
 	}
 
 	@Override
@@ -293,5 +295,10 @@ public class ManageOrganizationWizard extends Wizard {
 		return null;
 	}
 
+	
+	@Override
+	public boolean canFinish() {
+		return (manageOrganizationWizardPage.getSelectedOrganization()!=null && manageOrganizationWizardPage.isValidOrganization());
+	}
 
 }
