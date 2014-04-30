@@ -64,7 +64,7 @@ public abstract class AbstractRefactorOperation implements IRunnableWithProgress
 
     private boolean isCancelled = false;
 
-    private RefactoringOperationType operationType;
+    protected RefactoringOperationType operationType;
 
     private boolean askConfirmation;
 
@@ -130,7 +130,6 @@ public abstract class AbstractRefactorOperation implements IRunnableWithProgress
             } else {
                 newExpr.setContent(performTextReplacement(elementNameToUpdate, newName, expr.getContent()));
             }
-
             newExpressions.add(newExpr);
         }
         return newExpressions;

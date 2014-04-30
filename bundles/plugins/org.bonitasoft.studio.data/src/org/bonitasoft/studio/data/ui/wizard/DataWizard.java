@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2012 BonitaSoft S.A.
- * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2012-2014 Bonitasoft S.A.
+ * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -19,7 +19,6 @@ package org.bonitasoft.studio.data.ui.wizard;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.DataTypeLabels;
@@ -41,13 +40,10 @@ import org.bonitasoft.studio.refactoring.core.RefactoringOperationType;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.command.AddCommand;
-import org.eclipse.emf.edit.command.RemoveCommand;
-import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.xtext.ui.XtextProjectHelper;
@@ -186,18 +182,6 @@ public class DataWizard extends Wizard implements IBonitaVariableContext {
                 if (op.isCancelled()) {
                     return false;
                 }
-                CompoundCommand cc = new CompoundCommand();
-                if (switchingDataEClass) {
-                    List<?> dataList = (List<?>) container.eGet(dataContainmentFeature);
-                    int index = dataList.indexOf(originalData);
-                    cc.append(RemoveCommand.create(editingDomain, container, dataContainmentFeature, originalData));
-                    cc.append(AddCommand.create(editingDomain, container, dataContainmentFeature, workingCopy, index));
-                } else {
-                    for (EStructuralFeature feature : originalData.eClass().getEAllStructuralFeatures()) {
-                        cc.append(SetCommand.create(editingDomain, originalData, feature, workingCopy.eGet(feature)));
-                    }
-                }
-                editingDomain.getCommandStack().execute(cc);
             }
         } else {
             editingDomain.getCommandStack().execute(AddCommand.create(editingDomain, container, dataContainmentFeature, workingCopy));
