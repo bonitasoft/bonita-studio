@@ -47,6 +47,7 @@ import org.bonitasoft.studio.model.process.DataAware;
 import org.bonitasoft.studio.model.process.DataType;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.EnumType;
+import org.bonitasoft.studio.model.process.Lane;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.SourceElement;
 import org.bonitasoft.studio.model.process.TargetElement;
@@ -377,7 +378,7 @@ public class CustomPasteCommand extends AbstractTransactionalCommand {
 			Element elementCopy, AbstractProcess mainProc, AbstractProcess pool) {
 		// Copy referenced groups
 		if (originalElement instanceof Task && !inSamePool(originalElement, targetElement)) {
-			Set<Actor> newActorMappingTypes = getNewGroups(originalElement,mainProc) ;
+			Set<Actor> newActorMappingTypes = getActorsFromElement(originalElement,mainProc) ;
 			Set<Actor> existingActorMappingTypes = getExistingGroups(originalElement,mainProc) ;
 			for (Actor g : newActorMappingTypes) {
 				Actor copiedActorMappingType = EcoreUtil.copy(g);
@@ -462,10 +463,14 @@ public class CustomPasteCommand extends AbstractTransactionalCommand {
 		return existingGroups;
 	}
 
-	private Set<Actor> getNewGroups(Element toCopyElement,
-			AbstractProcess mainProc) {
-		Set<Actor> newGroups = new HashSet<Actor>();
+	private Set<Actor> getActorsFromElement(Element toCopyElement, AbstractProcess mainProc) {
+		Set<Actor> actors = new HashSet<Actor>();
 		Actor actor = ((Task)toCopyElement).getActor();
+		Lane parentLane = ModelHelper.getParentLane((Task)toCopyElement);
+		if(actor== null && parentLane != null){
+			actor = parentLane.getActor();
+		}
+		
 		if(actor != null){
 			boolean exists = false ;
 			for (Actor targetGroup : mainProc.getActors()) {
@@ -474,10 +479,10 @@ public class CustomPasteCommand extends AbstractTransactionalCommand {
 				}
 			}
 			if(!exists){
-				newGroups.add(actor)  ;
+				actors.add(actor)  ;
 			}
 		}
-		return newGroups;
+		return actors;
 	}
 
 	private void updateLabelandId(String name , Element sourceCopy,List<Element> elems) {
