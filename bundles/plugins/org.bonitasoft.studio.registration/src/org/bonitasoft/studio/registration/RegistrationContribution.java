@@ -18,6 +18,7 @@
 package org.bonitasoft.studio.registration;
 
 import org.bonitasoft.studio.common.extension.IPostStartupContribution;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.swt.widgets.Display;
 
 public class RegistrationContribution implements IPostStartupContribution {
@@ -30,13 +31,16 @@ public class RegistrationContribution implements IPostStartupContribution {
      * @see org.bonitasoft.studio.application.contribution.IPostStartupContribution#execute()
      */
     public void execute() {
-        Display.getDefault().syncExec(new Runnable() {
+    	final String productId = Platform.getProduct().getId();
+		if(!"org.bonitasoft.studio.workspaceRecovery".equals(productId)
+    			&& !"org.bonitasoft.studio.initializer".equals(productId)){
+    		Display.getDefault().syncExec(new Runnable() {
 
-            public void run() {
-                new BonitaRegistrationDialog( Display.getDefault().getActiveShell(), new BonitaRegisterWizard()).open();
-            }
-        });
-
+    			public void run() {
+    				new BonitaRegistrationDialog( Display.getDefault().getActiveShell(), new BonitaRegisterWizard()).open();
+    			}
+    		});
+    	}
     }
 
 
