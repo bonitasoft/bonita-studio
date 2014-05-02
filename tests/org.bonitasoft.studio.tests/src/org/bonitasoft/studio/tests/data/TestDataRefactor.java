@@ -44,6 +44,8 @@ import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.MultiInstantiation;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessFactory;
+import org.bonitasoft.studio.model.process.SequenceFlow;
+import org.bonitasoft.studio.model.process.SequenceFlowConditionType;
 import org.bonitasoft.studio.model.process.util.ProcessAdapterFactory;
 import org.bonitasoft.studio.refactoring.core.RefactoringOperationType;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -239,11 +241,112 @@ public class TestDataRefactor {
     }
     
     @Test
-    @Ignore("Undo wrequires two steps when removing data")
     public void testDeleteData() throws InvocationTargetException, InterruptedException{
     	AbstractProcess process = initTestForGlobalDataRefactor(null);
     	refactorDataOperation.run(new NullProgressMonitor());
     	assertEquals("The data has not been removed", 0, process.getData().size());
+    	
+    	 editingDomain.getCommandStack().undo();
+    	 
+    	 assertEquals("The data has not been removed", 1, process.getData().size());
+    }
+    
+    @Test
+    public void testDeleteDataWithReferenceInScript() throws InvocationTargetException, InterruptedException{
+    	AbstractProcess process = initTestForGlobalDataRefactor(null);
+    	
+        Activity activity = (Activity) process.getElements().get(0);
+        Operation operationWithScriptUsingData = ExpressionFactory.eINSTANCE.createOperation();
+        Operator assignOperator = ExpressionFactory.eINSTANCE.createOperator();
+        assignOperator.setType(ExpressionConstants.ASSIGNMENT_OPERATOR);
+		operationWithScriptUsingData.setOperator(assignOperator);
+        final Expression variableExpression = ExpressionFactory.eINSTANCE.createExpression();
+        variableExpression.setType(ExpressionConstants.VARIABLE_TYPE);
+        variableExpression.setName(processData.getName());
+        variableExpression.setContent(processData.getName());
+        variableExpression.getReferencedElements().add(EcoreUtil.copy(processData));
+        variableExpression.setReturnType(DataUtil.getTechnicalTypeFor(processData));
+		operationWithScriptUsingData.setLeftOperand(variableExpression);
+		Expression scriptUsingData = ExpressionFactory.eINSTANCE.createExpression();
+		scriptUsingData.setType(ExpressionConstants.SCRIPT_TYPE);
+		scriptUsingData.setName(processData.getName());
+		scriptUsingData.setContent(processData.getName());
+		scriptUsingData.getReferencedElements().add(EcoreUtil.copy(processData));
+		scriptUsingData.setReturnType(DataUtil.getTechnicalTypeFor(processData));
+		operationWithScriptUsingData.setRightOperand(scriptUsingData);
+		activity.getOperations().add(operationWithScriptUsingData);
+		process.getElements().add(activity);
+    
+    	refactorDataOperation.run(new NullProgressMonitor());
+    	assertEquals("The data has not been removed", 0, process.getData().size());
+    	assertEquals("Referenced Data has been removed from script", 0, scriptUsingData.getReferencedElements().size());
+    	
+    	 editingDomain.getCommandStack().undo();
+    	 assertEquals("The data has not been readded on undo", 1, process.getData().size());
+    	 assertEquals("Referenced Data has been removed from script", 1, scriptUsingData.getReferencedElements().size());
+    }
+    
+    @Test
+    public void testDeleteDataWithReferenceInCondition() throws InvocationTargetException, InterruptedException{
+    	AbstractProcess process = initTestForGlobalDataRefactor(null);
+    	
+    	final Activity activity = ProcessFactory.eINSTANCE.createActivity();
+    	process.getElements().add(activity);
+    	SequenceFlow sequenceFlow = ProcessFactory.eINSTANCE.createSequenceFlow();
+    	sequenceFlow.setConditionType(SequenceFlowConditionType.EXPRESSION);
+    	Expression conditionExpression = ExpressionFactory.eINSTANCE.createExpression();
+    	conditionExpression.setType(ExpressionConstants.CONDITION_TYPE);
+    	conditionExpression.setContent(processData.getName()+" == \"plop\"");
+    	conditionExpression.setName("conditionExpression");
+    	conditionExpression.getReferencedElements().add(EcoreUtil.copy(processData));
+    	sequenceFlow.setCondition(conditionExpression);
+    	process.getConnections().add(sequenceFlow);
+    	
+    	refactorDataOperation.run(new NullProgressMonitor());
+    	assertEquals("The data has not been removed", 0, process.getData().size());
+    	assertEquals("Referenced Data has been removed from script", 0, conditionExpression.getReferencedElements().size());
+    	
+   	 	editingDomain.getCommandStack().undo();
+   	 	assertEquals("The data has not been readded on undo", 1, process.getData().size());
+   	 	assertEquals("Referenced Data has been removed from script", 1, conditionExpression.getReferencedElements().size());
+    }
+    
+    @Test
+    @Ignore("not implemented")
+    public void testDeleteDataWithReferenceInPatternExpression() throws InvocationTargetException, InterruptedException{
+    	AbstractProcess process = initTestForGlobalDataRefactor(null);
+    	refactorDataOperation.run(new NullProgressMonitor());
+    	assertEquals("The data has not been removed", 0, process.getData().size());
+    }
+    
+    @Test
+    public void testRenameDataWithReferenceInCondition() throws InvocationTargetException, InterruptedException{
+    	final String newDataName = "newDataName";
+    	AbstractProcess process = initTestForGlobalDataRefactor(newDataName);
+    	
+    	final Activity activity = ProcessFactory.eINSTANCE.createActivity();
+    	process.getElements().add(activity);
+    	SequenceFlow sequenceFlow = ProcessFactory.eINSTANCE.createSequenceFlow();
+    	sequenceFlow.setConditionType(SequenceFlowConditionType.EXPRESSION);
+    	Expression conditionExpression = ExpressionFactory.eINSTANCE.createExpression();
+    	conditionExpression.setType(ExpressionConstants.CONDITION_TYPE);
+    	conditionExpression.setContent(processData.getName()+" == \"plop\"");
+    	conditionExpression.setName("conditionExpression");
+    	conditionExpression.getReferencedElements().add(EcoreUtil.copy(processData));
+    	sequenceFlow.setCondition(conditionExpression);
+    	process.getConnections().add(sequenceFlow);
+    	final String initialDataName = processData.getName();
+    	
+    	refactorDataOperation.run(new NullProgressMonitor());
+    	assertEquals("The old data might not have been updated", 1, process.getData().size());
+    	assertEquals("The data has not been renamed in condition", newDataName+" == \"plop\"",conditionExpression.getContent());
+    	assertEquals("The data has not been removed from dependency", newDataName,((Data)conditionExpression.getReferencedElements().get(0)).getName());
+    	
+    	editingDomain.getCommandStack().undo();
+    	
+    	assertEquals("The old data might not have been updated", 1, process.getData().size());
+    	assertEquals("The data has not been renamed in condition", initialDataName+" == \"plop\"",conditionExpression.getContent());
+    	assertEquals("The data dependency has not been back on undo", initialDataName,((Data)conditionExpression.getReferencedElements().get(0)).getName());
     }
     
 
@@ -310,7 +413,11 @@ public class TestDataRefactor {
 
 	private AbstractProcess initTestForDataRefactor(final String newDataName, final String newDataType, final Data dataToRefactor) {
         final AbstractProcess process = createProcessWithData();
-        refactorDataOperation = new RefactorDataOperation(RefactoringOperationType.UPDATE);
+        if(newDataName != null){
+        	refactorDataOperation = new RefactorDataOperation(RefactoringOperationType.UPDATE);
+        } else {
+        	refactorDataOperation = new RefactorDataOperation(RefactoringOperationType.REMOVE);
+        }
         refactorDataOperation.setContainer(process);
         refactorDataOperation.setOldData(dataToRefactor);
         if(newDataName != null){
