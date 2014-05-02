@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012 BonitaSoft S.A.
+ * Copyright (C) 2012-2014 BonitaSoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,8 +19,9 @@ package org.bonitasoft.studio.condition.ui.expression;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
@@ -85,8 +86,10 @@ public class ComparisonExpressionValidator implements IExpressionValidator {
 		final XtextResourceSetProvider xtextResourceSetProvider = injector.getInstance(XtextResourceSetProvider.class);
 		final ResourceSet resourceSet = xtextResourceSetProvider.get(RepositoryManager.getInstance().getCurrentRepository().getProject());
 		final XtextResource resource = (XtextResource) resourceSet.createResource(URI.createURI("somefile.cmodel"));
+		Map<String, String> options = new HashMap<String, String>();
+		options.put(XtextResource.OPTION_ENCODING, "UTF-8");
 		try {
-			resource.load(new StringInputStream(value.toString(), "UTF-8"), Collections.emptyMap());
+			resource.load(new StringInputStream(value.toString(), "UTF-8"), options);
 		} catch (UnsupportedEncodingException e1) {
 			BonitaStudioLog.error(e1, ExpressionEditorPlugin.PLUGIN_ID);
 		} catch (IOException e1) {

@@ -7,7 +7,7 @@ Bundle-ClassPath: .
 Bundle-Activator: org.bonitasoft.studio.model.process.diagram.form.part.FormDiagramEditorPlugin
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
-Export-Package: org.bonitasoft.studio.model.process.diagram.form.edit.parts, 
+Export-Package: org.bonitasoft.studio.model.process.diagram.form.edit.parts,
  org.bonitasoft.studio.model.process.diagram.form.part,
  org.bonitasoft.studio.model.process.diagram.form.providers
 Require-Bundle: org.eclipse.core.runtime,

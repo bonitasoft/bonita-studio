@@ -41,8 +41,10 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.command.AddCommand;
+import org.eclipse.emf.edit.command.DeleteCommand;
 import org.eclipse.emf.edit.command.RemoveCommand;
 import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.edit.domain.EditingDomain;
@@ -61,6 +63,10 @@ public class RefactorDataOperation extends AbstractRefactorOperation {
 
     private boolean updateDataReferences = false;
 
+	private EStructuralFeature dataContainmentFeature;
+
+	private EObject directContainer;
+
     public RefactorDataOperation(RefactoringOperationType operationType) {
         super(operationType);
     }
@@ -75,9 +81,20 @@ public class RefactorDataOperation extends AbstractRefactorOperation {
             updateDataReferenceInExpressions(compoundCommand);
             if (updateDataReferences) {
                 updateDataReferenceInMultinstanciation(compoundCommand);
+                List<?> dataList = (List<?>) parentProcess.eGet(dataContainmentFeature);
+                int index = dataList.indexOf(oldData);
+                compoundCommand.append(RemoveCommand.create(domain, directContainer, dataContainmentFeature, oldData));
+                compoundCommand.append(AddCommand.create(domain, directContainer, dataContainmentFeature, newData, index));
+            } else {
+            	for (EStructuralFeature feature : oldData.eClass().getEAllStructuralFeatures()) {
+            		compoundCommand.append(SetCommand.create(domain, oldData, feature, newData.eGet(feature)));
+            	}
             }
         } else {
             removeAllDataReferences(compoundCommand);
+        }
+        if(RefactoringOperationType.REMOVE.equals(operationType)){
+        	compoundCommand.append(DeleteCommand.create(domain, oldData));
         }
     }
 
@@ -239,5 +256,13 @@ public class RefactorDataOperation extends AbstractRefactorOperation {
         }
         return EMPTY_VALUE;
     }
+
+	public void setDataContainmentFeature(EStructuralFeature dataContainmentFeature) {
+		this.dataContainmentFeature = dataContainmentFeature;
+	}
+
+	public void setDirectDataContainer(EObject container) {
+		this.directContainer = container;
+	}
 
 }

@@ -196,7 +196,6 @@
 				</platformTest>
 			</conditionRuleList>
 		</if>
-		
 	</postInstallationActionList>
 		<postBuildActionList>
 	<actionGroup>
