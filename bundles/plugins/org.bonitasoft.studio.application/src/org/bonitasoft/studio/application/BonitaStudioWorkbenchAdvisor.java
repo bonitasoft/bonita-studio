@@ -448,11 +448,15 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
 
         long startupDuration = System.currentTimeMillis() - BonitaStudioApplication.START_TIME;
         BonitaStudioLog.info("Startup duration : " + DateUtil.getDisplayDuration(startupDuration), ApplicationPlugin.PLUGIN_ID);
-
-        if (PlatformUI.isWorkbenchRunning()) {
-            sendUserInfo();
-            openStartupDialog();
-        }
+    }
+    
+    @Override
+    public void postStartup() {
+    	super.postStartup();
+    	if (PlatformUI.isWorkbenchRunning()) {
+    		sendUserInfo();
+    		openStartupDialog();
+    	}
     }
 
 }
