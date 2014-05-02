@@ -1,6 +1,6 @@
-/*
- * Copyright (C) 2009-2011 BonitaSoft S.A.
- * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
+/**
+ * Copyright (C) 2009-2014 BonitaSoft S.A.
+ * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -113,6 +113,12 @@ public class BonitaLanguagePreferencePage extends AbstractBonitaPreferencePage i
             getPreferenceStore().setDefault(BonitaPreferenceConstants.CURRENT_UXP_LOCALE, defaultValue);
         }
         super.propertyChange(event);
+    }
+    
+    @Override
+    protected void performDefaults() {
+    	super.performDefaults();
+    	newLocale = getPreferenceStore().getString(BonitaPreferenceConstants.CURRENT_STUDIO_LOCALE);
     }
 
     /*
