@@ -497,7 +497,7 @@ ${msg(workspace.location.explanation.end)}</explanation>
 						</runProgram>
 						<runProgram>
 							<program>${java_executable}</program>
-							<programArguments>-Xmx512m -XX:MaxPermSize=512m -jar "${installdir}/plugins/org.eclipse.equinox.launcher_1.3.0.v20130327-1440.jar" -product org.bonitasoft.studio.initializer -data "${installdir}/workspace" -noSplash</programArguments>
+							<programArguments>-Xmx512m -XX:MaxPermSize=512m -jar "${installdir}/plugins/org.eclipse.equinox.launcher_1.3.0.v20130327-1440.jar" -product org.bonitasoft.studio.initializer -application org.bonitasoft.studio.application.InitializerApplication -data "${installdir}/workspace" -noSplash</programArguments>
 							<progressText>${msg(initializing.progressMessage)} ${product_fullname}...</progressText>
 							<ruleList>
 								<platformTest>
@@ -522,7 +522,7 @@ ${msg(workspace.location.explanation.end)}</explanation>
 						<runProgram>
 							<program>${java_executable}</program>
 							<!-- Change bundle version when Equinox version change -->
-							<programArguments>-Xmx512m -XX:MaxPermSize=512m -XstartOnFirstThread -jar "${installdir}/plugins/org.eclipse.equinox.launcher_1.3.0.v20130327-1440.jar" -product org.bonitasoft.studio.initializer -data "${installdir}/workspace" -noSplash</programArguments>
+							<programArguments>-Xmx512m -XX:MaxPermSize=512m -XstartOnFirstThread -jar "${installdir}/plugins/org.eclipse.equinox.launcher_1.3.0.v20130327-1440.jar" -product org.bonitasoft.studio.initializer -application org.bonitasoft.studio.application.InitializerApplication -data "${installdir}/workspace" -noSplash</programArguments>
 							<progressText>${msg(initializing.progressMessage)} ${product_fullname}...</progressText>
 							<ruleList>
 								<platformTest>
