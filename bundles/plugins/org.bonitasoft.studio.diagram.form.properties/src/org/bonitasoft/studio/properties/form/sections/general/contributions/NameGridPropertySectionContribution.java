@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2009 BonitaSoft S.A.
- * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2009-2014 BonitaSoft S.A.
+ * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,7 +21,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.databinding.MultiValidator;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.OpenNameDialog;
@@ -37,19 +36,16 @@ import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.PageFlow;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.diagram.form.part.FormDiagramEditor;
-import org.bonitasoft.studio.properties.sections.forms.FormsUtils;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.edit.EMFEditObservables;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.jface.databinding.fieldassist.ControlDecorationSupport;
 import org.eclipse.jface.databinding.swt.ISWTObservableValue;
 import org.eclipse.jface.databinding.swt.SWTObservables;
@@ -158,7 +154,6 @@ public class NameGridPropertySectionContribution extends AbstractNamePropertySec
         // change the id of the form
         // if (element instanceof Widget && element.eContainer() instanceof Form && ModelHelper.formIsCustomized((Form) element.eContainer())) {
         if ((element instanceof Widget && element.eContainer() instanceof Form)) {
-            Form form = (Form) element.eContainer();
             if (!workingCopy.getName().equals(element.getName())) {
                 workingCopy.setName(element.getName());
             }
@@ -179,16 +174,6 @@ public class NameGridPropertySectionContribution extends AbstractNamePropertySec
                     } catch (InterruptedException e) {
                         BonitaStudioLog.error(e);
                     }
-                }
-                if (element instanceof Widget && element.eContainer() instanceof Form && ModelHelper.formIsCustomized((Form) element.eContainer())) {
-                    String srcName = dialog.getSrcName();
-                    String name = dialog.getNewName();
-                    CompoundCommand cc = new CompoundCommand();
-                    cc.append(SetCommand.create(editingDomain, element, ProcessPackage.eINSTANCE.getElement_Name(), NamingUtils.convertToId(name)));
-                    editingDomain.getCommandStack().execute(cc);
-
-                    // change the template
-                    FormsUtils.changeIdInTemplate(form, srcName, name);
                 }
             }
         }

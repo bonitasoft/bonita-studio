@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2009-2012 BonitaSoft S.A.
+ * Copyright (C) 2009-2014 Bonitasoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  *
  * This program is free software: you can redistribute it and/or modify
@@ -27,6 +27,7 @@ import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManag
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.connectors.test.TestProvidedDefinitionAndImplementation;
+import org.bonitasoft.studio.connectors.test.TestTestConnectorOperation;
 import org.bonitasoft.studio.engine.test.TestUserFilterMatchingEngineVersion;
 import org.bonitasoft.studio.exporter.tests.application.TestHtmlTemplateGenerator;
 import org.bonitasoft.studio.exporter.tests.bpmn.BPMNDataExportImportTest;
@@ -102,6 +103,7 @@ import org.junit.runners.Suite;
     TestDeployCommand.class,
     MigrationReportPDFExportTest.class,
     TestValidationConstraints.class,
+    TestTestConnectorOperation.class,
     CloseAllEditors.class,
 })
 public class AllTests2 extends TestSuite {

@@ -555,6 +555,7 @@ div.caption p {
 
 #news li span.rssDesc,
 #resources li span.rssDesc,
+#video li span.rssDesc,
 #training li span.rssDesc {
 	padding-left: 30px;
 	font-size: 11px;
@@ -563,11 +564,15 @@ div.caption p {
 
 #news li span.rssDesc,
 #resources li span.rssDesc,
+#video li span.rssDesc,
 #training li span.rssDesc {
 	display:none;
 }
 
-#news li span.rssPubDate, #resources li span.rssPubDate, #training li span.rssPubDate {
+#news li span.rssPubDate,
+#resources li span.rssPubDate,
+#video li span.rssPubDate,
+#training li span.rssPubDate{
 	font-size: 11px;
 }
 
