@@ -333,7 +333,12 @@ public class EdaptBarToProcProcessor extends ToProcProcessor {
     private String findCustomConnectorClassName(File archiveFile) throws ZipException, IOException {
         ZipFile zipfile = null;
         try {
-            zipfile = new ZipFile(archiveFile);
+        	try {
+        		zipfile = new ZipFile(archiveFile);
+        	} catch (ZipException ex){
+        		BonitaStudioLog.error(ex);
+        		return null;
+        	}
             Enumeration<?> enumEntries = zipfile.entries();
             ZipEntry zipEntry = null;
             String className = null;
