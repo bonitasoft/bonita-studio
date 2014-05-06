@@ -444,15 +444,15 @@ div.caption p {
 #recently-modified li,
 #example li,
 #run li,
-#video li,
 #documentation li,
 #forums li {
 	line-height: 21px;
 }
 
 #news li,
-#video li,
+
 #documentation li,
+#video li,
 #training li,
 #articles li,
 #resources li {
@@ -572,7 +572,7 @@ div.caption p {
 #news li span.rssPubDate,
 #resources li span.rssPubDate,
 #video li span.rssPubDate,
-#training li span.rssPubDate{
+#training li span.rssPubDate {
 	font-size: 11px;
 }
 
