@@ -20,13 +20,10 @@ import org.bonitasoft.studio.common.gmf.tools.GMFTools;
 import org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection;
 import org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution;
 import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.process.AbstractTimerEvent;
-import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.properties.i18n.Messages;
 import org.bonitasoft.studio.properties.sections.timer.wizard.EditTimerConditionWizard;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.LabelEditPart;
@@ -60,7 +57,6 @@ public class TimerEventConditionContribution implements IExtensibleGridPropertyS
     private GridData gd;
 
     public void createControl(Composite composite, TabbedPropertySheetWidgetFactory widgetFactory, ExtensibleGridPropertySection extensibleGridPropertySection) {
-
         this.widgetFactory = widgetFactory;
 
         composite.setLayout(new GridLayout(2, false));
@@ -70,7 +66,6 @@ public class TimerEventConditionContribution implements IExtensibleGridPropertyS
         gd.widthHint = 150;
         conditionViewer.setLayoutData(gd);
         createEditConditionButton(composite);
-
     }
 
     private Button createEditConditionButton(final Composite parent) {
@@ -103,26 +98,20 @@ public class TimerEventConditionContribution implements IExtensibleGridPropertyS
 
     public void refresh() {
         Expression condition = eObject.getCondition();
-        if (condition == null) {
-            condition = ExpressionFactory.eINSTANCE.createExpression();
-            editingDomain.getCommandStack().execute(new SetCommand(editingDomain, eObject, ProcessPackage.Literals.ABSTRACT_TIMER_EVENT__CONDITION, condition));
+        if (condition != null) {
+            String conditionLabel = groovyToLabel(condition);
+            conditionViewer.setText(conditionLabel != null ? conditionLabel : "");
+
+            DiagramEditor editor = (DiagramEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+            if (editor != null) {
+                EditPart ep = GMFTools.findEditPart(editor.getDiagramEditPart(), eObject);
+                if (ep != null) {
+                    if (!ep.getChildren().isEmpty()) {
+                        ((LabelEditPart) ep.getChildren().get(0)).refresh();
+                    }
+                }
+            }
         }
-        String conditionLabel = groovyToLabel(condition);
-           
-        
-
-        conditionViewer.setText(conditionLabel != null? conditionLabel:"");
-
-        DiagramEditor editor = (DiagramEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
-        if(editor != null){
-        	EditPart ep = GMFTools.findEditPart(editor.getDiagramEditPart(), eObject);
-        	if (ep != null) {
-        		if (!ep.getChildren().isEmpty()) {
-        			((LabelEditPart) ep.getChildren().get(0)).refresh();
-        		}
-        	}
-        }
-
     }
 
     private String groovyToLabel(Expression condition) {
@@ -137,67 +126,8 @@ public class TimerEventConditionContribution implements IExtensibleGridPropertyS
         return conditionLabel;
     }
 
-    /**
-     * @param day
-     * @return
-     */
-    private String getDay(int day) {
-        switch (day) {
-            case 1:
-                return Messages.sunday;
-            case 2:
-                return Messages.monday;
-            case 3:
-                return Messages.tuesday;
-            case 4:
-                return Messages.wednesday;
-            case 5:
-                return Messages.thursday;
-            case 6:
-                return Messages.friday;
-            case 7:
-                return Messages.saturday;
-        }
-        return "";
-    }
-
-    /**
-     * @param month
-     * @return
-     */
-    private String getMonth(int month) {
-        switch (month) {
-            case 0:
-                return Messages.january;
-            case 1:
-                return Messages.february;
-            case 2:
-                return Messages.march;
-            case 3:
-                return Messages.april;
-            case 4:
-                return Messages.may;
-            case 5:
-                return Messages.june;
-            case 6:
-                return Messages.july;
-            case 7:
-                return Messages.august;
-            case 8:
-                return Messages.september;
-            case 9:
-                return Messages.october;
-            case 10:
-                return Messages.november;
-            case 11:
-                return Messages.december;
-        }
-        return "";
-    }
-
     public void setEObject(EObject object) {
         eObject = (AbstractTimerEvent) object;
-
     }
 
     public void setEditingDomain(TransactionalEditingDomain editingDomain) {

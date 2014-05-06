@@ -101,10 +101,15 @@ import org.eclipse.gmf.runtime.notation.Diagram;
 public class ModelHelper {
 
     public static final String STRING_DATA_TYPE = NamingUtils.convertToId(DataTypeLabels.stringDataType);
+
     public static final String INTEGER_DATA_TYPE = NamingUtils.convertToId(DataTypeLabels.integerDataType);
+
     public static final String FLOAT_DATA_TYPE = NamingUtils.convertToId(DataTypeLabels.floatDataType);
+
     public static final String BOOLEAN_DATA_TYPE = NamingUtils.convertToId(DataTypeLabels.booleanDataType);
+
     public static final String DATE_DATA_TYPE = NamingUtils.convertToId(DataTypeLabels.dateDataType);
+
     public static final String JAVA_DATA_TYPE = NamingUtils.convertToId(DataTypeLabels.javaDataType);
 
     /**
@@ -132,7 +137,7 @@ public class ModelHelper {
     public static List<AbstractProcess> getAllProcesses(Element eObject) {
         List<AbstractProcess> res = new ArrayList<AbstractProcess>();
         MainProcess mainProcess = getMainProcess(eObject);
-        if(mainProcess != null){
+        if (mainProcess != null) {
             findAllProcesses(mainProcess, res);
         }
         return res;
@@ -176,10 +181,10 @@ public class ModelHelper {
     //				for (EObjectDescriptor objDesc : execute) {
     //					URI candidateResourceUri = objDesc.getResourceURI();
     //					//boolean isInScope = scope.contains(candidateResourceUri);
-    ////					if (isInclusiveScope == isInScope) {
+    // // if (isInclusiveScope == isInScope) {
     //						// add uri of instance to result
     //						result.add(candidateResourceUri.appendFragment(objDesc.getFragment()));
-    ////					}
+    // // }
     //				}
     //			}
     //		});
@@ -269,8 +274,6 @@ public class ModelHelper {
     //			indexHasChangedSinceLastGetAllProcessesRequest = false;
     //		}
     //		return allProcessesCache;
-
-
 
     //		MQLquery query = findQuery("searchAllProcesses");
     //		Query internalQuery = QueryTransformer.transform(query);
@@ -396,8 +399,6 @@ public class ModelHelper {
     //		return result;
     //	}
 
-
-
     protected static List<AbstractProcess> oldwayFindProcesses(Element element,
             List<AbstractProcess> processes) {
         if (element instanceof AbstractProcess && !(element instanceof MainProcess)) {
@@ -414,11 +415,9 @@ public class ModelHelper {
         return processes;
     }
 
-
-
-
     /**
      * Return Top Parent execlude embedded process
+     * 
      * @param object
      * @return process
      */
@@ -470,11 +469,8 @@ public class ModelHelper {
         }
     }
 
-
-
-
     public static MainProcess getMainProcess(EObject object) {
-        if(object == null){
+        if (object == null) {
             return null;
         }
         EObject process = object;
@@ -535,19 +531,18 @@ public class ModelHelper {
         return result;
     }
 
-
-    public static List<Data> getAccessibleDataInForms(EObject element,EStructuralFeature feature) {
-        if(element instanceof Pool && ProcessPackage.Literals.PAGE_FLOW__FORM.equals(feature)){ //Only add transient form data
+    public static List<Data> getAccessibleDataInForms(EObject element, EStructuralFeature feature) {
+        if (element instanceof Pool && ProcessPackage.Literals.PAGE_FLOW__FORM.equals(feature)) { // Only add transient form data
             EReference trFeature;
             List<Data> accessibleData = new ArrayList<Data>();
-            if(feature.equals(ProcessPackage.Literals.PAGE_FLOW__FORM)){
+            if (feature.equals(ProcessPackage.Literals.PAGE_FLOW__FORM)) {
                 trFeature = ProcessPackage.Literals.PAGE_FLOW__TRANSIENT_DATA;
-            }else if(feature.equals(ProcessPackage.Literals.VIEW_PAGE_FLOW__VIEW_FORM)){
+            } else if (feature.equals(ProcessPackage.Literals.VIEW_PAGE_FLOW__VIEW_FORM)) {
                 trFeature = ProcessPackage.Literals.VIEW_PAGE_FLOW__VIEW_TRANSIENT_DATA;
-            }else{
+            } else {
                 trFeature = ProcessPackage.Literals.RECAP_FLOW__RECAP_TRANSIENT_DATA;
             }
-            if(trFeature != null){
+            if (trFeature != null) {
                 accessibleData.addAll((List<Data>) element.eGet(trFeature));
             }
             return accessibleData;
@@ -558,13 +553,13 @@ public class ModelHelper {
 
     public static List<Data> getAccessibleDataInFormsWithNoRestriction(EObject pageflow, EStructuralFeature feature) {
         List<Data> accessibleData = getAccessibleData(pageflow, null);
-        if(feature != null){
+        if (feature != null) {
             EReference trFeature;
-            if(feature.equals(ProcessPackage.Literals.PAGE_FLOW__FORM)){
+            if (feature.equals(ProcessPackage.Literals.PAGE_FLOW__FORM)) {
                 trFeature = ProcessPackage.Literals.PAGE_FLOW__TRANSIENT_DATA;
-            }else if(feature.equals(ProcessPackage.Literals.VIEW_PAGE_FLOW__VIEW_FORM)){
+            } else if (feature.equals(ProcessPackage.Literals.VIEW_PAGE_FLOW__VIEW_FORM)) {
                 trFeature = ProcessPackage.Literals.VIEW_PAGE_FLOW__VIEW_TRANSIENT_DATA;
-            }else{
+            } else {
                 trFeature = ProcessPackage.Literals.RECAP_FLOW__RECAP_TRANSIENT_DATA;
             }
             accessibleData.addAll((List<Data>) pageflow.eGet(trFeature));
@@ -580,7 +575,7 @@ public class ModelHelper {
         List<Data> data = new ArrayList<Data>();
         boolean processFound = false;
         while (!processFound && element != null) {
-            if(element instanceof SequenceFlow){
+            if (element instanceof SequenceFlow) {
                 if (((SequenceFlow) element).getSource() instanceof DataAware) {
                     addAllDataWithType((DataAware) ((SequenceFlow) element).getSource(), data, dataType);
                 }
@@ -689,10 +684,12 @@ public class ModelHelper {
 
     public static DataType getDataTypeForID(EObject elem, String name) {
         MainProcess proc = getMainProcess(elem);
+        if (proc != null) {
         for (DataType type : proc.getDatatypes()) {
             if (type.getName().equals(NamingUtils.convertToId(name))) {
                 return type;
             }
+        }
         }
         return null;
     }
@@ -739,7 +736,7 @@ public class ModelHelper {
     }
 
     public static List<AbstractCatchMessageEvent> getAllCatchEvent(AbstractProcess proc) {
-        return getAllItemsOfType(proc, ProcessPackage.eINSTANCE.getAbstractCatchMessageEvent()) ;
+        return getAllItemsOfType(proc, ProcessPackage.eINSTANCE.getAbstractCatchMessageEvent());
     }
 
     public static void findAllCatchEvents(Element element, List<AbstractCatchMessageEvent> events) {
@@ -797,6 +794,7 @@ public class ModelHelper {
 
         return findOldProcesses(element, procName);
     }
+
     //
     //	private static ResultSet findNewProcess(final Element element, String procName) {
     //		MQLquery query = findQuery("findProcess");
@@ -924,6 +922,7 @@ public class ModelHelper {
             findProcessRecursivly(subProcessName, version, elements, processes);
             if (processes.size() > 0) {
                 Collections.sort(processes, new Comparator<AbstractProcess>() {
+
                     @Override
                     public int compare(AbstractProcess o1, AbstractProcess o2) {
                         return o1.getVersion().compareTo(o2.getVersion());
@@ -949,7 +948,6 @@ public class ModelHelper {
         return null;
     }
 
-
     /**
      * @param subProcessName
      * @param version
@@ -971,15 +969,13 @@ public class ModelHelper {
         }
     }
 
-
-
-    public static List<Expression> findAllScriptAndConditionsExpressionWithReferencedElement(EObject container,EObject element){
+    public static List<Expression> findAllScriptAndConditionsExpressionWithReferencedElement(EObject container, EObject element) {
         List<Expression> result = new ArrayList<Expression>();
-        for (EObject o:ModelHelper.getAllItemsOfType(container, ExpressionPackage.Literals.EXPRESSION)){
-            Expression expr = (Expression)o;
-            if (ExpressionConstants.SCRIPT_TYPE.equals(expr.getType()) || ExpressionConstants.CONDITION_TYPE.equals(expr.getType()) || ExpressionConstants.PATTERN_TYPE.equals(expr.getType())){
-                if (isElementIsReferencedInScript(expr, element)){
-
+        for (EObject o : ModelHelper.getAllItemsOfType(container, ExpressionPackage.Literals.EXPRESSION)) {
+            Expression expr = (Expression) o;
+            if (ExpressionConstants.SCRIPT_TYPE.equals(expr.getType()) || ExpressionConstants.CONDITION_TYPE.equals(expr.getType())
+                    || ExpressionConstants.PATTERN_TYPE.equals(expr.getType())) {
+                if (isElementIsReferencedInScript(expr, element)) {
                     result.add(expr);
                 }
             }
@@ -988,14 +984,13 @@ public class ModelHelper {
 
     }
 
-
-    private static boolean isElementIsReferencedInScript(Expression expr,EObject element){
-        if (!expr.getReferencedElements().isEmpty()){
-            for (EObject o:expr.getReferencedElements()){
-                if ( element instanceof Element && o instanceof Element && ((Element)element).getName().equals(((Element)o).getName())){
+    private static boolean isElementIsReferencedInScript(Expression expr, EObject element) {
+        if (!expr.getReferencedElements().isEmpty()) {
+            for (EObject o : expr.getReferencedElements()) {
+                if (element instanceof Element && o instanceof Element && ((Element) element).getName().equals(((Element) o).getName())) {
                     return (true && !isAExpressionReferencedElement(expr));
                 } else {
-                    if (element instanceof Parameter && o instanceof Parameter && ((Parameter)element).getName().equals(((Parameter)o).getName())){
+                    if (element instanceof Parameter && o instanceof Parameter && ((Parameter) element).getName().equals(((Parameter) o).getName())) {
                         return true && !isAExpressionReferencedElement(expr);
                     }
                 }
@@ -1006,8 +1001,8 @@ public class ModelHelper {
 
     public static boolean isAExpressionReferencedElement(EObject target) {
         EObject container = target.eContainer();
-        while (container!=null ){
-            if (container instanceof Expression){
+        while (container != null) {
+            if (container instanceof Expression) {
                 return true;
             }
             container = container.eContainer();
@@ -1110,7 +1105,6 @@ public class ModelHelper {
          * wg.getWidgetLayoutInfo().getColumn() + dx && x <
          * wg.getWidgetLayoutInfo().getColumn() +
          * wg.getWidgetLayoutInfo().getHorizontalSpan() + dx) return w; } }
-         * 
          * } return null;
          */
     }
@@ -1135,27 +1129,27 @@ public class ModelHelper {
 
         List<Point> slots = new ArrayList<Point>();
         for (int i = 0; i < form.getNColumn(); i++) {
-            for (int j = 0; j < form.getNLine(); j++) {//for all cases in the grid
-                if (getWidgetIn(form, i, j, false) == null) {//if there is no widget in the case
+            for (int j = 0; j < form.getNLine(); j++) {// for all cases in the grid
+                if (getWidgetIn(form, i, j, false) == null) {// if there is no widget in the case
                     boolean available = true;
-                    Group potentialGroup = (Group)getWidgetIn(form, i, j, true);//check if we are in a group or not
-                    if(potentialGroup != null){
-                        /*So we are in a Group*/
+                    Group potentialGroup = (Group) getWidgetIn(form, i, j, true);// check if we are in a group or not
+                    if (potentialGroup != null) {
+                        /* So we are in a Group */
                         for (int k = 0; k < size.x; k++) {
                             for (int l = 0; l < size.y; l++) {
                                 if (k != 0 || l != 0) {
                                     WidgetLayoutInfo groupLayoutInfo = potentialGroup.getWidgetLayoutInfo();
-                                    EObject parent = potentialGroup.eContainer() ;
-                                    int colOffset = groupLayoutInfo.getColumn() ;
-                                    int lineOffset = groupLayoutInfo.getLine() ;
-                                    while(parent instanceof Group){ //Manage group recursion
-                                        WidgetLayoutInfo layout = ((Group)parent).getWidgetLayoutInfo() ;
-                                        colOffset = colOffset + layout.getColumn() ;
-                                        lineOffset = lineOffset + layout.getLine() ;
-                                        parent = parent.eContainer() ;
+                                    EObject parent = potentialGroup.eContainer();
+                                    int colOffset = groupLayoutInfo.getColumn();
+                                    int lineOffset = groupLayoutInfo.getLine();
+                                    while (parent instanceof Group) { // Manage group recursion
+                                        WidgetLayoutInfo layout = ((Group) parent).getWidgetLayoutInfo();
+                                        colOffset = colOffset + layout.getColumn();
+                                        lineOffset = lineOffset + layout.getLine();
+                                        parent = parent.eContainer();
                                     }
                                     if (getWidgetIn(form, i + k, j + l, false) != null
-                                            || i + k >= groupLayoutInfo.getHorizontalSpan() +colOffset
+                                            || i + k >= groupLayoutInfo.getHorizontalSpan() + colOffset
                                             || j + l >= groupLayoutInfo.getVerticalSpan() + lineOffset) {
                                         available = false;
                                         break;
@@ -1167,14 +1161,15 @@ public class ModelHelper {
                             }
                         }
                     } else {
-                        EObject container = getWidgetContainer(form,i,j) ;
+                        EObject container = getWidgetContainer(form, i, j);
                         for (int k = 0; k < size.x; k++) {
-                            for (int l = 0; l < size.y; l++) {//For all the place that the copied element took
+                            for (int l = 0; l < size.y; l++) {// For all the place that the copied element took
                                 if (k != 0 || l != 0) {
                                     if (getWidgetIn(form, i + k, j + l, false) != null
                                             || i + k >= form.getNColumn()
                                             || j + l >= form.getNLine()
-                                            || !getWidgetContainer(form,i + k,j+l).equals(container)) {//check that the case is empty and that we are still on the grid
+                                            || !getWidgetContainer(form, i + k, j + l).equals(container)) {// check that the case is empty and that we are still
+                                                                                                           // on the grid
                                         available = false;
                                         break;
                                     }
@@ -1212,14 +1207,14 @@ public class ModelHelper {
     }
 
     public static EObject getWidgetContainer(Form form, int i, int j) {
-        Widget w = getWidgetIn(form, i, j, true) ;
-        if( w != null){
-            if(w instanceof Group){
-                return w ;
-            }else{
+        Widget w = getWidgetIn(form, i, j, true);
+        if (w != null) {
+            if (w instanceof Group) {
+                return w;
+            } else {
                 return w.eContainer();
             }
-        }else{
+        } else {
             return form;
         }
 
@@ -1260,8 +1255,8 @@ public class ModelHelper {
         List<Form> forms = (List<Form>) pageFlow.eGet(eContainmentFeature);
         for (Form form : forms) {
             List<Widget> widgets = getAllWidgetInsideForm(form);
-            for(Widget element : widgets){
-                if(!res.contains(element)){
+            for (Widget element : widgets) {
+                if (!res.contains(element)) {
                     res.add(element);
                 }
             }
@@ -1280,7 +1275,7 @@ public class ModelHelper {
         if (pageFlow != null) {
             for (Form form : (List<Form>) pageFlow.eGet(eContainmentFeature)) {
                 for (Widget widget2 : form.getWidgets()) {
-                    getAccessibleFields(res,widget2, relativeWidget);
+                    getAccessibleFields(res, widget2, relativeWidget);
                 }
             }
         }
@@ -1293,37 +1288,37 @@ public class ModelHelper {
      * @param widget
      */
     private static void getAccessibleFields(ArrayList<Widget> res, Widget widget, Element relativeWidget) {
-        if(widget instanceof Group){
+        if (widget instanceof Group) {
             Group group = (Group) widget;
-            if(group.isDuplicate()){
+            if (group.isDuplicate()) {
                 res.add(group);
-                if(isTargetWidgetInsideGroup(group, relativeWidget)){
+                if (isTargetWidgetInsideGroup(group, relativeWidget)) {
                     for (Widget widget2 : group.getWidgets()) {
-                        if(widget2 instanceof FormField){
+                        if (widget2 instanceof FormField) {
                             getAccessibleFields(res, widget2, relativeWidget);
                         }
                     }
                 }
-            }else{
+            } else {
                 res.add(group);
                 for (Widget widget2 : group.getWidgets()) {
-                    if(widget2 instanceof FormField){
+                    if (widget2 instanceof FormField) {
                         getAccessibleFields(res, widget2, relativeWidget);
                     }
                 }
             }
-        } else if(widget instanceof FormField){
+        } else if (widget instanceof FormField) {
             res.add(widget);
         }
     }
 
     private static boolean isTargetWidgetInsideGroup(Group group, Element relativeWidget) {
-        if(relativeWidget != null){
-            for(Widget widgetInGroup : group.getWidgets()){
-                if(widgetInGroup.equals(relativeWidget)){
+        if (relativeWidget != null) {
+            for (Widget widgetInGroup : group.getWidgets()) {
+                if (widgetInGroup.equals(relativeWidget)) {
                     return true;
                 } else {
-                    if(widgetInGroup instanceof Group){
+                    if (widgetInGroup instanceof Group) {
                         return isTargetWidgetInsideGroup((Group) widgetInGroup, relativeWidget);
                     }
                 }
@@ -1348,8 +1343,6 @@ public class ModelHelper {
             return Collections.singletonList(widget);
         }
     }
-
-
 
     /**
      * @param modelProcess2
@@ -1391,27 +1384,27 @@ public class ModelHelper {
      * @param form
      * @return the diagram corresponding to the form.
      */
-    public static Diagram getDiagramFor(EObject element,EditingDomain domain) {
+    public static Diagram getDiagramFor(EObject element, EditingDomain domain) {
         if (element == null) {
             return null;
         }
         Diagram diag = null;
-        Resource r  = null ;
-        if(domain == null){
-            domain = AdapterFactoryEditingDomain.getEditingDomainFor(element) ;
-            if(domain != null){
-                r = domain.getResourceSet().getResource(element.eResource().getURI(),false) ;
-            }else{
-                r = element.eResource() ;
+        Resource r = null;
+        if (domain == null) {
+            domain = AdapterFactoryEditingDomain.getEditingDomainFor(element);
+            if (domain != null) {
+                r = domain.getResourceSet().getResource(element.eResource().getURI(), false);
+            } else {
+                r = element.eResource();
             }
 
-        }else{
-            r = domain.getResourceSet().getResource(element.eResource().getURI(),false) ;
+        } else {
+            r = domain.getResourceSet().getResource(element.eResource().getURI(), false);
         }
 
-        if(!r.isLoaded()){
+        if (!r.isLoaded()) {
             try {
-                r.load(Collections.EMPTY_MAP) ;
+                r.load(Collections.EMPTY_MAP);
             } catch (IOException e) {
                 BonitaStudioLog.error(e);
             }
@@ -1468,7 +1461,7 @@ public class ModelHelper {
      * 
      */
     public static String getEObjectID(EObject eObject) {
-        if(eObject == null){
+        if (eObject == null) {
             return null;
         }
         Resource eResource = eObject.eResource();
@@ -1548,7 +1541,7 @@ public class ModelHelper {
      * 
      * @param widget
      */
-    public static void removedReferencedEObjects(EObject eObject,EObject targetContainer) {
+    public static void removedReferencedEObjects(EObject eObject, EObject targetContainer) {
 
         Set<EObject> containedEObjects = new HashSet<EObject>();
         // get all contained EObjects
@@ -1559,35 +1552,35 @@ public class ModelHelper {
                 Object o = toCheck.eGet(reference);
                 if (o instanceof EObject) {
                     EObject child = (EObject) o;
-                    //keep enum reference from the same diagram
-                    if(child instanceof Data && ((Data) child).getDataType() instanceof EnumType){
+                    // keep enum reference from the same diagram
+                    if (child instanceof Data && ((Data) child).getDataType() instanceof EnumType) {
                         MainProcess mainProcess = ModelHelper.getMainProcess(targetContainer);
                         MainProcess childMainProcess = ModelHelper.getMainProcess(child);
-                        if(mainProcess != null
+                        if (mainProcess != null
                                 && childMainProcess != null
-                                && mainProcess.equals(childMainProcess)){
+                                && mainProcess.equals(childMainProcess)) {
                             break;
                         }
                     }
                     if (!containedEObjects.contains(child)) {
                         boolean removeReference = true;
-                        if(child instanceof DataType){ //retrieve the equivalent Data Type in the target MainProcess
+                        if (child instanceof DataType) { // retrieve the equivalent Data Type in the target MainProcess
                             MainProcess mainProcess = ModelHelper.getMainProcess(targetContainer);
                             MainProcess childMainProcess = ModelHelper.getMainProcess(child);
-                            if(mainProcess != null
+                            if (mainProcess != null
                                     && childMainProcess != null
-                                    && mainProcess.equals(childMainProcess)){
+                                    && mainProcess.equals(childMainProcess)) {
                                 removeReference = false;
-                            }else{
-                               for(DataType dt : mainProcess.getDatatypes()){
-                                   if(dt.eClass().equals(child.eClass())){
-                                       if(dt.eClass().equals(ProcessPackage.Literals.ENUM_TYPE)){
-                                           if(((EnumType)child).getName().equals(dt.getName())){
+                            } else {
+                                for (DataType dt : mainProcess.getDatatypes()) {
+                                    if (dt.eClass().equals(child.eClass())) {
+                                        if (dt.eClass().equals(ProcessPackage.Literals.ENUM_TYPE)) {
+                                            if (((EnumType) child).getName().equals(dt.getName())) {
                                                toCheck.eSet(reference, dt);
                                                removeReference = false;
                                                break;
                                            }
-                                       }else{
+                                        } else {
                                            toCheck.eSet(reference, dt);
                                            removeReference = false;
                                            break;
@@ -1596,7 +1589,7 @@ public class ModelHelper {
                                }
                             }
                         }
-                        if(removeReference){
+                        if (removeReference) {
                             // referenced outside: we unset it
                             toCheck.eUnset(reference);
                             // must not be the main eobject
@@ -1714,7 +1707,7 @@ public class ModelHelper {
      * @param res
      */
     private static <T extends EObject> void addAllWidgetsOfContainer(EObject container, List<T> res, EClass eClass) {
-        if(container != null){
+        if (container != null) {
             if (eClass.isSuperTypeOf(container.eClass())) {
                 res.add((T) container);
             }
@@ -1741,26 +1734,26 @@ public class ModelHelper {
 
     public static boolean isInEvenementialSubProcessPool(EObject semanticElement) {
         EObject tempPart = semanticElement;
-        while(tempPart != null && !(tempPart instanceof SubProcessEvent)){
+        while (tempPart != null && !(tempPart instanceof SubProcessEvent)) {
             tempPart = tempPart.eContainer();
         }
         return tempPart instanceof SubProcessEvent;
     }
 
-    public static List<AbstractCatchMessageEvent> findAllCatchEventsCatching(MainProcess mainProcess,String eventName) {
+    public static List<AbstractCatchMessageEvent> findAllCatchEventsCatching(MainProcess mainProcess, String eventName) {
         List<AbstractCatchMessageEvent> result = new ArrayList<AbstractCatchMessageEvent>();
-        for(AbstractCatchMessageEvent ev : getAllCatchEvent(mainProcess)){
-            if(ev.getEvent() != null && ev.getEvent().equals(eventName)){
-                result.add(ev) ;
+        for (AbstractCatchMessageEvent ev : getAllCatchEvent(mainProcess)) {
+            if (ev.getEvent() != null && ev.getEvent().equals(eventName)) {
+                result.add(ev);
             }
         }
-        return result ;
+        return result;
     }
 
-    public static SubProcessEvent findSubprocessEvent(AbstractProcess process,String name) {
-        for(EObject e : ModelHelper.getAllItemsOfType(process, ProcessPackage.eINSTANCE.getSubProcessEvent())){
-            if(((Element) e).getName().equals(name)){
-                return (SubProcessEvent) e ;
+    public static SubProcessEvent findSubprocessEvent(AbstractProcess process, String name) {
+        for (EObject e : ModelHelper.getAllItemsOfType(process, ProcessPackage.eINSTANCE.getSubProcessEvent())) {
+            if (((Element) e).getName().equals(name)) {
+                return (SubProcessEvent) e;
             }
         }
         return null;
@@ -1768,50 +1761,54 @@ public class ModelHelper {
 
     /**
      * As we did a really bad architecture, we need to differentiate concrete Activity which are Abstract Task
+     * 
      * @param model
      * @return
      */
-    public static boolean isActivityButNotAbstractTask(Activity model){
+    public static boolean isActivityButNotAbstractTask(Activity model) {
         return model instanceof ReceiveTask
                 || model instanceof ScriptTask
                 || model instanceof SendTask
                 || model instanceof ServiceTask
                 || model instanceof CallActivity
-                || model instanceof Task
-                ;
+                || model instanceof Task;
     }
 
-    public static List<Data> getAccessibleData(EObject element,boolean includeTransientData) {
+    public static List<Data> getAccessibleData(EObject element, boolean includeTransientData) {
         List<Data> result = new ArrayList<Data>();
-        if(includeTransientData){
+        if (includeTransientData) {
             Form parentForm = getParentForm(element);
-            if(parentForm != null){
+            if (parentForm != null) {
                 result.addAll(ModelHelper.getAccessibleDataInFormsWithNoRestriction(parentForm.eContainer(), parentForm.eContainingFeature()));
             }
-            result.addAll(ModelHelper.getAccessibleData(element));
-            return result;
-        }else{
-            List<Data> data = new ArrayList<Data>() ;
-            for(Data d : ModelHelper.getAccessibleData(element)){
-                if(!d.isTransient()){
-                    data.add(d) ;
+            for (Data d : ModelHelper.getAccessibleData(element)) {
+                if (!result.contains(d)) {
+                    result.add(d);
                 }
             }
-            return data ;
+            return result;
+        } else {
+            List<Data> data = new ArrayList<Data>();
+            for (Data d : ModelHelper.getAccessibleData(element)) {
+                if (!d.isTransient()) {
+                    data.add(d);
+                }
+            }
+            return data;
         }
     }
 
     public static ConnectableElement getParentConnectableElement(Element element) {
-        if(element != null){
-            EObject result = element ;
-            if(element instanceof Widget){
-                result = ModelHelper.getPageFlow((Widget) element) ;
+        if (element != null) {
+            EObject result = element;
+            if (element instanceof Widget) {
+                result = ModelHelper.getPageFlow((Widget) element);
             }
-            while (result != null && !(result instanceof ConnectableElement)){
-                result = result.eContainer() ;
+            while (result != null && !(result instanceof ConnectableElement)) {
+                result = result.eContainer();
             }
-            if(result != null){
-                return (ConnectableElement) result ;
+            if (result != null) {
+                return (ConnectableElement) result;
             }
         }
         return null;
@@ -1819,10 +1816,10 @@ public class ModelHelper {
 
     public static List<AbstractProcess> findAllProcesses(
             List<AbstractProcess> allProcesses, String subDefName) {
-        List<AbstractProcess> processes = new ArrayList<AbstractProcess>() ;
+        List<AbstractProcess> processes = new ArrayList<AbstractProcess>();
         for (AbstractProcess p : allProcesses) {
             if (subDefName.equals(p.getName())) {
-                processes.add(p) ;
+                processes.add(p);
             }
         }
         return processes;
@@ -1839,11 +1836,11 @@ public class ModelHelper {
         return form.getHtmlTemplate() != null && form.getHtmlTemplate().getPath() != null && !form.getHtmlTemplate().getPath().isEmpty();
     }
 
-    /**Currently a copy of the data is done, so need to use this to have access to the original data*/
-    public static Data getDataReferencedInExpression(Data referencedData){
+    /** Currently a copy of the data is done, so need to use this to have access to the original data */
+    public static Data getDataReferencedInExpression(Data referencedData) {
         List<Data> accessibleData = ModelHelper.getAccessibleData(referencedData.eContainer().eContainer().eContainer().eContainer().eContainer());
         for (Data data : accessibleData) {
-            if(data.getName().equals(referencedData.getName())){
+            if (data.getName().equals(referencedData.getName())) {
                 return data;
             }
         }
@@ -1851,38 +1848,37 @@ public class ModelHelper {
     }
 
     public static Lane getParentLane(EObject element) {
-        EObject lane = element.eContainer() ;
+        EObject lane = element.eContainer();
         while (lane != null && !(lane instanceof Lane)) {
-            lane = lane.eContainer() ;
+            lane = lane.eContainer();
         }
         return (Lane) lane;
     }
 
     public static List<SimulationData> getAccessibleSimulationData(EObject context) {
-        List<SimulationData> result = new ArrayList<SimulationData>() ;
-        if(context instanceof SimulationDataContainer){
-            SimulationDataContainer container = (SimulationDataContainer) context ;
-            while(container != null){
-                for(SimulationData d : container.getSimulationData()){
-                    result.add(d) ;
+        List<SimulationData> result = new ArrayList<SimulationData>();
+        if (context instanceof SimulationDataContainer) {
+            SimulationDataContainer container = (SimulationDataContainer) context;
+            while (container != null) {
+                for (SimulationData d : container.getSimulationData()) {
+                    result.add(d);
                 }
-                if(container.eContainer() instanceof SimulationDataContainer){
-                    container = (SimulationDataContainer) container.eContainer() ;
-                }else{
-                    container = null ;
+                if (container.eContainer() instanceof SimulationDataContainer) {
+                    container = (SimulationDataContainer) container.eContainer();
+                } else {
+                    container = null;
                 }
             }
 
-        }else if(context instanceof SimulationTransition){
-            if(((Connection)context).eContainer() instanceof SimulationDataContainer){
-                for(SimulationData d : ((SimulationDataContainer) ((Connection)context).eContainer()).getSimulationData()){
-                    result.add(d) ;
+        } else if (context instanceof SimulationTransition) {
+            if (((Connection) context).eContainer() instanceof SimulationDataContainer) {
+                for (SimulationData d : ((SimulationDataContainer) ((Connection) context).eContainer()).getSimulationData()) {
+                    result.add(d);
                 }
             }
         }
         return result;
     }
-
 
     public static FlowElement getParentFlowElement(EObject eObject) {
         EObject flowElement = eObject;
@@ -1912,7 +1908,7 @@ public class ModelHelper {
         EObject current = expression;
         EObject container = current.eContainer();
         while (container != null) {
-            if(current.eContainingFeature().equals(ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS)){
+            if (current.eContainingFeature().equals(ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS)) {
                 return true;
             }
             current = container;
@@ -1937,12 +1933,11 @@ public class ModelHelper {
         return res;
     }
 
-
     protected static List<Widget> getAccessibleWidgets(Widget widget) {
         if (widget instanceof Group) {
             List<Widget> res = new ArrayList<Widget>();
             res.add(widget);
-            if(!((Group) widget).isDuplicate()){
+            if (!((Group) widget).isDuplicate()) {
                 for (Widget w : ((Group) widget).getWidgets()) {
                     res.addAll(getWidgets(w));
                 }
@@ -1955,24 +1950,26 @@ public class ModelHelper {
 
     public static Group getParentGroup(EObject context) {
         Widget widget = getParentWidget(context);
+        
+        if(context.equals(widget) && widget instanceof Group && widget.eContainer() instanceof Group){
+        	widget = (Widget) widget.eContainer();
+        }
+        
         if(widget != null){
             Widget parentGroup = widget;
             while (parentGroup != null && !(parentGroup instanceof Group)) {
                 EObject parent = parentGroup.eContainer();
-                if(parent instanceof Widget){
+                if (parent instanceof Widget) {
                     parentGroup = (Widget) parent;
-                }else{
+                } else {
                     parentGroup = null;
                 }
             }
-            if(parentGroup != null){
+            if (parentGroup != null) {
                 return (Group) parentGroup;
             }
         }
         return null;
     }
-
-
-
 
 }

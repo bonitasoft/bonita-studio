@@ -358,8 +358,12 @@ div.caption p {
 	margin-bottom: -20px
 }
 
-
-#documentation, #training, #forums, #example, #news {
+#video,
+#documentation,
+#training,
+#forums,
+#example,
+#news {
 	float: left;
 	width: 350px;
 	margin: 0px;
@@ -381,6 +385,8 @@ div.caption p {
 	width: 32%;
 	text-align:center;
 }
+
+
 
 #new-process a {
 	background-image: url(../images/new.png);
@@ -407,21 +413,49 @@ div.caption p {
 }
 
 
-#news ul, #recently-modified ul, #example ul, #run ul, #documentation ul, #training ul, #forums ul, #articles ul, #resources ul {
+#news ul,
+#recently-modified ul,
+#example ul,
+#run ul,
+#video ul,
+#documentation ul,
+#training ul,
+#forums ul,
+#articles ul,
+#resources ul {
 	padding-left:0px;
 
 }
 
-#news li, #recently-modified li, #example li, #run li, #documentation li, #training li, #forums li, #articles li, #resources li {
+#news li,
+#recently-modified li,
+#example li,
+#run li,
+#video li,
+#documentation li,
+#training li,
+#forums li,
+#articles li,
+#resources li {
 	padding-left: 3px;
 	list-style-type:none;
 }
 
-#recently-modified li, #example li, #run li, #documentation li, #forums li {
+#recently-modified li,
+#example li,
+#run li,
+#video li,
+#documentation li,
+#forums li {
 	line-height: 21px;
 }
 
-#news li, #documentation li, #training li, #articles li, #resources li {
+#news li,
+#video li,
+#documentation li,
+#training li,
+#articles li,
+#resources li {
 	line-height: 18px;
 	padding-top: 3px;
 	padding-bottom: 2px;
@@ -434,7 +468,16 @@ div.caption p {
 	background-repeat: no-repeat
 }
 
-#news li a, #recently-modified li a, #example li a, #run li a, #documentation li a, #training li a, #forums li a, #articles li a, #resources li a {
+#news li a,
+#recently-modified li a,
+#example li a,
+#run li a,
+#video li a,
+#documentation li a,
+#training li a,
+#forums li a,
+#articles li a,
+#resources li a {
 	background-repeat:no-repeat;
 	display:block;
 //	width:315px;
@@ -443,37 +486,84 @@ div.caption p {
 //	margin-right: -10px;
 }
 
-#news li a, #recently-modified li a, #example li a, #run li a, #documentation li a, #training li a, #forums li a, #articles li a, #resources li a {
+#news li a,
+#recently-modified li a,
+#example li a,
+#run li a,
+#video li a,
+#documentation li a,
+#training li a,
+#forums li a,
+#articles li a,
+#resources li a {
 	color: #1B465F;
 	background-image: url(../images/list.png);
 	background-position: 6px 3px;
 }
 
-#news li a:hover, #recently-modified li a:hover, #example li a:hover, #run li a:hover, #documentation li a:hover, #training li a:hover, #forums li a:hover, #articles li a:hover, #resources li a:hover {
+#news li a:hover,
+#recently-modified li a:hover,
+#example li a:hover,
+#run li a:hover,
+#video li a:hover,
+#documentation li a:hover,
+#training li a:hover,
+#forums li a:hover,
+#articles li a:hover,
+#resources li a:hover {
 	color: #1B465F;
 	background-color: #f3f3f3;
 	display:block;
 }
 
-#news li a, #recently-modified li a:visited, #example li a:visited, #run li a:visited, #documentation li a:visited, #training li a:visited, #forums li a:visited, #articles li a:visited, #resources li a:visited {
+#news li a,
+#recently-modified li a:visited,
+#example li a:visited,
+#run li a:visited,
+#video li a:visited,
+#documentation li a:visited,
+#training li a:visited,
+#forums li a:visited,
+#articles li a:visited,
+#resources li a:visited {
 	color: #1B465F;
 }
 
-#recently-modified li a:active, #example li a:active, #run li a:active, #documentation li a:active, #training li a:active, #forums li a:active, #articles li a:active, #resources li a:active {
+#recently-modified li a:active,
+#example li a:active,
+#run li a:active,
+#video li a:active,
+#documentation li a:active,
+#training li a:active,
+#forums li a:active,
+#articles li a:active,
+#resources li a:active {
 	color: #DD052B;
 }
 
-#recently-modified li a:link, #example li a:link, #run li a:link, #documentation li a:link, #training li a:link, #forums li a:link, #articles li  a:link, #resources li a:link {
+#recently-modified li a:link,
+#example li a:link,
+#run li a:link,
+#video li a:link,
+#documentation li a:link,
+#training li a:link,
+#forums li a:link,
+#articles li  a:link,
+#resources li a:link {
 	color: #1B465F;
 }
 
-#news li span.rssDesc, #resources li span.rssDesc, #training li span.rssDesc {
+#news li span.rssDesc,
+#resources li span.rssDesc,
+#training li span.rssDesc {
 	padding-left: 30px;
 	font-size: 11px;
 }
 
 
-#news li span.rssDesc, #resources li span.rssDesc, #training li span.rssDesc {
+#news li span.rssDesc,
+#resources li span.rssDesc,
+#training li span.rssDesc {
 	display:none;
 }
 

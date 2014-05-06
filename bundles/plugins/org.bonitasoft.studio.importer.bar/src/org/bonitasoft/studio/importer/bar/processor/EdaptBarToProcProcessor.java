@@ -246,8 +246,13 @@ public class EdaptBarToProcProcessor extends ToProcProcessor {
             }
         }
         final URLClassLoader customURLClassLoader = createBarClassloader(archiveFile, tmpConnectorJarFile);
+
+        BonitaStudioLog.debug("Searching for custom connector in " + tmpConnectorJarFile.getName() + "...", BarImporterPlugin.PLUGIN_ID);
+
         String connectorClassname = findCustomConnectorClassName(tmpConnectorJarFile);
         if (connectorClassname != null) {
+            BonitaStudioLog
+                    .debug("Custom connector " + connectorClassname + " has been found in " + tmpConnectorJarFile.getName(), BarImporterPlugin.PLUGIN_ID);
             connectorsJars.add(tmpConnectorJarFile.getName());
             Class<? extends Connector> instanceClass = (Class<? extends Connector>) customURLClassLoader.loadClass(connectorClassname);
             try {
@@ -260,6 +265,8 @@ public class EdaptBarToProcProcessor extends ToProcProcessor {
             } catch (NoClassDefFoundError e) {
                 additionalChanges.add(createImportFailureReport(connectorClassname, e));
             }
+        } else {
+            BonitaStudioLog.debug("No custom connector found in:" + tmpConnectorJarFile.getName(), BarImporterPlugin.PLUGIN_ID);
         }
         if (!toDelete.isEmpty()) {
             for (File f : toDelete) {
@@ -324,23 +331,30 @@ public class EdaptBarToProcProcessor extends ToProcProcessor {
     }
 
     private String findCustomConnectorClassName(File archiveFile) throws ZipException, IOException {
-        final ZipFile zipfile = new ZipFile(archiveFile);
-        Enumeration<?> enumEntries = zipfile.entries();
-        ZipEntry zipEntry = null;
-        String className = null;
-        String startWith = null;
-        while (enumEntries.hasMoreElements()) {
-            zipEntry = (ZipEntry) enumEntries.nextElement();
-            if (!zipEntry.isDirectory() && zipEntry.getName().endsWith(".class")) {
-                startWith = zipEntry.toString().replace(".class", "");
-                className = zipEntry.toString().replace("/", ".").replace(".class", "");
-                Enumeration<? extends ZipEntry> newEntries = zipfile.entries();
-                while (newEntries.hasMoreElements()) {
-                    ZipEntry newEntry = (ZipEntry) newEntries.nextElement();
-                    if (!newEntry.isDirectory() && newEntry.toString().endsWith(startWith + ".properties")) {
-                        return className;
+        ZipFile zipfile = null;
+        try {
+            zipfile = new ZipFile(archiveFile);
+            Enumeration<?> enumEntries = zipfile.entries();
+            ZipEntry zipEntry = null;
+            String className = null;
+            String startWith = null;
+            while (enumEntries.hasMoreElements()) {
+                zipEntry = (ZipEntry) enumEntries.nextElement();
+                if (!zipEntry.isDirectory() && zipEntry.getName().endsWith(".class")) {
+                    startWith = zipEntry.toString().replace(".class", "");
+                    className = zipEntry.toString().replace("/", ".").replace(".class", "");
+                    Enumeration<? extends ZipEntry> newEntries = zipfile.entries();
+                    while (newEntries.hasMoreElements()) {
+                        ZipEntry newEntry = (ZipEntry) newEntries.nextElement();
+                        if (!newEntry.isDirectory() && newEntry.toString().endsWith(startWith + ".properties")) {
+                            return className;
+                        }
                     }
                 }
+            }
+        } finally {
+            if (zipfile != null) {
+                zipfile.close();
             }
         }
 
