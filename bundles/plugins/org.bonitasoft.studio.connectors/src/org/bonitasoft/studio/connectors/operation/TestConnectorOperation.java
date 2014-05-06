@@ -188,7 +188,7 @@ public class TestConnectorOperation implements IRunnableWithProgress {
 			if(processApi != null && procId != -1){
 				try{
 					processApi.disableProcess(procId) ;
-					processApi.deleteProcess(procId);
+					processApi.deleteProcessDefinition(procId);
 				}catch (Exception e) {
 					BonitaStudioLog.error(e);
 				}
@@ -360,7 +360,7 @@ public class TestConnectorOperation implements IRunnableWithProgress {
 					}catch (ProcessActivationException e) {
 
 					}
-					processApi.deleteProcess(info.getProcessId()) ;
+					processApi.deleteProcessDefinition(info.getProcessId()) ;
 				}
 			}
 		}
