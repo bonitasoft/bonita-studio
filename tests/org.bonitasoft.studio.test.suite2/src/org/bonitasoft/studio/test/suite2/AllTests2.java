@@ -28,6 +28,7 @@ import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.connectors.test.TestProvidedDefinitionAndImplementation;
 import org.bonitasoft.studio.connectors.test.TestTestConnectorOperation;
+import org.bonitasoft.studio.connectors.test.TestWebserviceVersionForBPMNImport;
 import org.bonitasoft.studio.engine.test.TestUserFilterMatchingEngineVersion;
 import org.bonitasoft.studio.exporter.tests.application.TestHtmlTemplateGenerator;
 import org.bonitasoft.studio.exporter.tests.bpmn.BPMNDataExportImportTest;
@@ -108,6 +109,7 @@ import org.junit.runners.Suite;
     TestTestConnectorOperation.class,
     TestRefactorWidgetOperation.class,
     TestRemoveWidgetReferencesOperation.class,
+    TestWebserviceVersionForBPMNImport.class,
     CloseAllEditors.class,
 })
 public class AllTests2 extends TestSuite {
