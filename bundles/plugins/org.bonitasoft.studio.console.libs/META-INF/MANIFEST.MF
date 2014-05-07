@@ -20,7 +20,7 @@ Embed-Directory: lib
 Embed-StripVersion: true
 Embed-Transitive: true
 Embedded-Artifacts: lib/bonita-client.jar;g="org.bonitasoft.engine";a="b
- onita-client";v="6.3.0-SNAPSHOT",lib/httpclient.jar;g="org.apache.httpc
+ onita-client";v="6.3.1-SNAPSHOT",lib/httpclient.jar;g="org.apache.httpc
  omponents";a="httpclient";v="4.2.5",lib/httpcore.jar;g="org.apache.http
  components";a="httpcore";v="4.2.4",lib/commons-logging.jar;g="commons-l
  ogging";a="commons-logging";v="1.1.1",lib/xstream.jar;g="com.thoughtwor
@@ -29,17 +29,17 @@ Embedded-Artifacts: lib/bonita-client.jar;g="org.bonitasoft.engine";a="b
  tpmime.jar;g="org.apache.httpcomponents";a="httpmime";v="4.2.5",lib/com
  mons-codec.jar;g="commons-codec";a="commons-codec";v="1.7",lib/commons-
  lang3.jar;g="org.apache.commons";a="commons-lang3";v="3.1",lib/bonita-c
- lient.jar;g="org.bonitasoft.engine";a="bonita-client";v="6.3.0-SNAPSHOT
+ lient.jar;g="org.bonitasoft.engine";a="bonita-client";v="6.3.1-SNAPSHOT
  ";c="sources",lib/bonita-common.jar;g="org.bonitasoft.engine";a="bonita
- -common";v="6.3.0-SNAPSHOT",lib/bonita-server.jar;g="org.bonitasoft.eng
- ine";a="bonita-server";v="6.3.0-SNAPSHOT",lib/theme-builder.jar;g="org.
+ -common";v="6.3.1-SNAPSHOT",lib/bonita-server.jar;g="org.bonitasoft.eng
+ ine";a="bonita-server";v="6.3.1-SNAPSHOT",lib/theme-builder.jar;g="org.
  bonitasoft.web";a="theme-builder";v="6.1.0",lib/forms-server.jar;g="org
- .bonitasoft.forms";a="forms-server";v="6.3.0-SNAPSHOT",lib/forms-model.
- jar;g="org.bonitasoft.forms";a="forms-model";v="6.3.0-SNAPSHOT",lib/for
- ms-rpc.jar;g="org.bonitasoft.forms";a="forms-rpc";v="6.3.0-SNAPSHOT",li
+ .bonitasoft.forms";a="forms-server";v="6.3.1-SNAPSHOT",lib/forms-model.
+ jar;g="org.bonitasoft.forms";a="forms-model";v="6.3.1-SNAPSHOT",lib/for
+ ms-rpc.jar;g="org.bonitasoft.forms";a="forms-rpc";v="6.3.1-SNAPSHOT",li
  b/console-server.jar;g="org.bonitasoft.console";a="console-server";v="6
- .3.0-SNAPSHOT",lib/common-server.jar;g="org.bonitasoft.console";a="comm
- on-server";v="6.3.0-SNAPSHOT"
+ .3.1-SNAPSHOT",lib/common-server.jar;g="org.bonitasoft.console";a="comm
+ on-server";v="6.3.1-SNAPSHOT"
 Export-Package: org.bonitasoft.console.common.server.preferences.const
  ants;version="0.0.0",org.bonitasoft.console.common.server.preferences
  .properties;version="0.0.0",org.bonitasoft.console.common.server.sso;
