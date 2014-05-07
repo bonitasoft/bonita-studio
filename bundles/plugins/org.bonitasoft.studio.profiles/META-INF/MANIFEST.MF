@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: User Profiles Plug-In
 Bundle-SymbolicName: org.bonitasoft.studio.profiles;singleton:=true
-Bundle-Version: 6.3.0.qualifier
+Bundle-Version: 6.3.1.qualifier
 Bundle-Activator: org.bonitasoft.studio.profiles.ProfilePlugin
 Bundle-Vendor: BonitaSoft S.A.
 Require-Bundle: org.eclipse.ui,
@@ -20,6 +20,5 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.core.expressions;bundle-version="3.4.500"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
-Export-Package: org.bonitasoft.studio.profiles,
- org.bonitasoft.studio.profiles.manager,
- org.bonitasoft.studio.profiles.repository
+Export-Package: org.bonitasoft.studio.profiles,org.bonitasoft.studio.p
+ rofiles.manager,org.bonitasoft.studio.profiles.repository

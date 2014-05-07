@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Repository Common Plugin
 Bundle-SymbolicName: org.bonitasoft.studio.common.repository;singleton:=true
-Bundle-Version: 6.3.0.qualifier
+Bundle-Version: 6.3.1.qualifier
 Bundle-Localization: plugin
 Bundle-Activator: org.bonitasoft.studio.common.repository.CommonRepositoryPlugin
 Bundle-Vendor: BonitaSoft S.A.
@@ -36,18 +36,15 @@ Require-Bundle: org.eclipse.ui,
  assertj-core;bundle-version="1.5.0";resolution:=optional
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
-Export-Package: org.apache.xbean.classloader,
- org.bonitasoft.studio.common.repository,
- org.bonitasoft.studio.common.repository.extension,
- org.bonitasoft.studio.common.repository.filestore,
- org.bonitasoft.studio.common.repository.handler,
- org.bonitasoft.studio.common.repository.model,
- org.bonitasoft.studio.common.repository.operation,
- org.bonitasoft.studio.common.repository.preferences,
- org.bonitasoft.studio.common.repository.provider,
- org.bonitasoft.studio.common.repository.store,
- org.bonitasoft.studio.common.repository.ui.viewer,
- org.bonitasoft.studio.common.repository.ui.wizard
+Export-Package: org.apache.xbean.classloader,org.bonitasoft.studio.com
+ mon.repository,org.bonitasoft.studio.common.repository.extension,org.
+ bonitasoft.studio.common.repository.filestore,org.bonitasoft.studio.c
+ ommon.repository.handler,org.bonitasoft.studio.common.repository.mode
+ l,org.bonitasoft.studio.common.repository.operation,org.bonitasoft.st
+ udio.common.repository.preferences,org.bonitasoft.studio.common.repos
+ itory.provider,org.bonitasoft.studio.common.repository.store,org.boni
+ tasoft.studio.common.repository.ui.viewer,org.bonitasoft.studio.commo
+ n.repository.ui.wizard
 Bundle-ClassPath: lib/nlcl.jar,
  .
 Import-Package: org.bonitasoft.engine.bpm.bar,

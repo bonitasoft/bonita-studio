@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Test for connectors creation
 Bundle-SymbolicName: org.bonitasoft.studio.connectors.test
-Bundle-Version: 6.3.0.qualifier
+Bundle-Version: 6.3.1.qualifier
 Bundle-Activator: org.bonitasoft.studio.connectors.test.Activator
 Bundle-Vendor: BonitaSoft S.A.
 Require-Bundle: org.eclipse.ui,
@@ -32,10 +32,9 @@ Require-Bundle: org.eclipse.ui,
  org.bonitasoft.studio.test.swtbot.util;bundle-version="1.0.0"
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ActivationPolicy: lazy
-Export-Package: org.bonitasoft.studio.connectors.test,
- org.bonitasoft.studio.connectors.test.database,
- org.bonitasoft.studio.connectors.test.exporter,
- org.bonitasoft.studio.connectors.test.importer,
- org.bonitasoft.studio.connectors.test.swtbot
+Export-Package: org.bonitasoft.studio.connectors.test,org.bonitasoft.s
+ tudio.connectors.test.database,org.bonitasoft.studio.connectors.test.
+ exporter,org.bonitasoft.studio.connectors.test.importer,org.bonitasof
+ t.studio.connectors.test.swtbot
 Import-Package: org.bonitasoft.studio.dependencies.i18n,
  org.bonitasoft.studio.expression.editor.i18n

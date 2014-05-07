@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Debug Plugin
 Bundle-Localization: plugin
 Bundle-SymbolicName: org.bonitasoft.studio.debug;singleton:=true
-Bundle-Version: 6.3.0.qualifier
+Bundle-Version: 6.3.1.qualifier
 Bundle-Activator: org.bonitasoft.studio.debug.DebugPlugin
 Bundle-Vendor: BonitaSoft S.A.
 Require-Bundle: org.eclipse.ui,
@@ -25,8 +25,8 @@ Require-Bundle: org.eclipse.ui,
  org.bonitasoft.studio.connectors;bundle-version="1.0.0",
  org.bonitasoft.studio.diagram.custom;bundle-version="1.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Export-Package: org.bonitasoft.studio.debug,
- org.bonitasoft.studio.debug.command,
- org.bonitasoft.studio.debug.i18n;x-friends:="org.bonitasoft.studio.tests"
+Export-Package: org.bonitasoft.studio.debug,org.bonitasoft.studio.debu
+ g.command,org.bonitasoft.studio.debug.i18n;x-friends:="org.bonitasoft
+ .studio.tests"
 Bundle-ActivationPolicy: lazy
 
