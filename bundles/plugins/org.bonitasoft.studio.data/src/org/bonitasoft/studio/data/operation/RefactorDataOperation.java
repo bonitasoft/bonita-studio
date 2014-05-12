@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2012 BonitaSoft S.A.
- * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2012-2014 BonitaSoft S.A.
+ * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -17,9 +17,7 @@
 package org.bonitasoft.studio.data.operation;
 
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.bonitasoft.studio.common.DataUtil;
 import org.bonitasoft.studio.common.ExpressionConstants;
@@ -101,7 +99,9 @@ public class RefactorDataOperation extends AbstractRefactorOperation {
     private void updateDataReferenceInExpressions(CompoundCommand finalCommand) {
         List<Expression> expressions = ModelHelper.getAllItemsOfType(parentProcess, ExpressionPackage.Literals.EXPRESSION);
         for (Expression exp : expressions) {
-            if (!ExpressionConstants.SCRIPT_TYPE.equals(exp.getType()) && !ExpressionConstants.PATTERN_TYPE.equals(exp.getType())) {
+            if (!ExpressionConstants.SCRIPT_TYPE.equals(exp.getType())
+            		&& !ExpressionConstants.PATTERN_TYPE.equals(exp.getType())
+            		&& !ExpressionConstants.CONDITION_TYPE.equals(exp.getType())) {
                 for (EObject dependency : exp.getReferencedElements()) {
                     if (dependency instanceof Data) {
                         if (((Data) dependency).getName().equals(oldData.getName())) {
@@ -132,20 +132,7 @@ public class RefactorDataOperation extends AbstractRefactorOperation {
                 cc.append(SetCommand.create(domain, exp, ExpressionPackage.Literals.EXPRESSION__TYPE, ExpressionConstants.CONSTANT_TYPE));
                 // update referenced data
                 cc.append(RemoveCommand.create(domain, exp, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS, exp.getReferencedElements()));
-            } else if (ExpressionConstants.SCRIPT_TYPE.equals(exp.getType()) || ExpressionConstants.CONDITION_TYPE.equals(exp.getType())) {
-                Set<EObject> toRemove = new HashSet<EObject>();
-                for (EObject dep : exp.getReferencedElements()) {
-                    if (dep instanceof Data) {
-                        if (oldData.getName().equals(((Data) dep).getName()) && dep.eClass().equals(oldData.eClass())) {
-                            toRemove.add(dep);
-                        }
-                    }
-                }
-                if (!toRemove.isEmpty()) {
-                    cc.append(RemoveCommand.create(domain, exp, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS, toRemove));
-                }
             }
-
         }
     }
 

@@ -1,30 +1,43 @@
 ﻿<?xml version="1.0" ?>
 <rss version="2.0">
   <channel>
-    <pubDate>2011-07-25</pubDate>
+    <pubDate>2014-04-24</pubDate>
     <author>BonitaSoft</author>
     <category>Training</category>
     <title>BonitaSoft Training</title>
     <link>http://www.bonitasoft.com/blog</link>
     <description>Training feed from BonitaSoft</description>
     <item>
-       <pubDate>2011-08-22</pubDate>
-       <author>Jeremy Lipp</author>
+       <pubDate>2014-04-28</pubDate>
+       <author>Julien Espitallier</author>
        <category>Training</category>
-       <title>Process Application Development</title>
-       <link>http://www.bonitasoft.com/training/register-training?training_id=753</link>
-       <description>This training module will cover BPMN2 (Business Process Management Notation) process mapping, data management and scripting capabilities, mapping actors and roles, applying filters, creating new filters, connect to external systems (databases, email, document management, Rules, others), custom connectors creation, end user interfaces (complete customization of forms in a Web application) and, a complete end-to-end process development</description>
+       <title>Advanced Integration - Remote (Spanish)</title>
+       <link>http://www.bonitasoft.com/be-part-of-it/training/2303201404281400-advanced-integration-remote-spanish</link>
+       <description></description>
     </item>
-
-    <item>
-       <pubDate>2011-08-29</pubDate>
+	<item>
+       <pubDate>2014-05-05</pubDate>
        <author>Jeremy Lipp</author>
        <category>Training</category>
-       <title>Process Application Development</title>
-       <link>http://www.bonitasoft.com/training/register-training?training_id=755</link>
-       <description>This training module will cover BPMN2 (Business Process Management Notation) process mapping, data management and scripting capabilities, mapping actors and roles, applying filters, creating new filters, connect to external systems (databases, email, document management, Rules, others), custom connectors creation, end user interfaces (complete customization of forms in a Web application) and, a complete end-to-end process development</description>
+       <title>Business Process Application... (English)</title>
+       <link>http://www.bonitasoft.com/be-part-of-it/training/2302201405050900-business-process-application-development-remote-english</link>
+       <description></description>
+    </item>
+	<item>
+       <pubDate>2014-05-05</pubDate>
+       <author>Jeremy Lipp</author>
+       <category>Training</category>
+       <title>Process Modeling - On BS... (French)</title>
+       <link>http://www.bonitasoft.com/be-part-of-it/training/2101201405050930-process-modeling-bs-premises-french</link>
+       <description></description>
+    </item>
+	<item>
+       <pubDate>2014-05-05</pubDate>
+       <author>Jeremy Lipp</author>
+       <category>Training</category>
+       <title>Administration Training... (English)</title>
+       <link>http://www.bonitasoft.com/be-part-of-it/training/2302201405050930-administration-training-remote-english</link>
+       <description></description>
     </item>
 	</channel>
 </rss>
-
-

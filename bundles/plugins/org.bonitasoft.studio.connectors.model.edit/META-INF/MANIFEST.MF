@@ -2,21 +2,20 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.bonitasoft.studio.connectors.model.edit;singleton:=true
-Bundle-Version: 6.3.0.qualifier
+Bundle-Version: 6.3.1.qualifier
 Bundle-ClassPath: .
 Bundle-Activator: org.bonitasoft.studio.connector.model.definition.provider.ConnectorEditPlugin$Implementation
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
-Export-Package: org.bonitasoft.studio.connector.model.definition,
- org.bonitasoft.studio.connector.model.definition.dialog,
- org.bonitasoft.studio.connector.model.definition.provider,
- org.bonitasoft.studio.connector.model.definition.wizard,
- org.bonitasoft.studio.connector.model.definition.wizard.support,
- org.bonitasoft.studio.connector.model.i18n,
- org.bonitasoft.studio.connector.model.implementation,
- org.bonitasoft.studio.connector.model.implementation.provider,
- org.bonitasoft.studio.connector.model.implementation.wizard
+Export-Package: org.bonitasoft.studio.connector.model.definition,org.b
+ onitasoft.studio.connector.model.definition.dialog,org.bonitasoft.stu
+ dio.connector.model.definition.provider,org.bonitasoft.studio.connect
+ or.model.definition.wizard,org.bonitasoft.studio.connector.model.defi
+ nition.wizard.support,org.bonitasoft.studio.connector.model.i18n,org.
+ bonitasoft.studio.connector.model.implementation,org.bonitasoft.studi
+ o.connector.model.implementation.provider,org.bonitasoft.studio.conne
+ ctor.model.implementation.wizard
 Require-Bundle: org.eclipse.core.runtime,
  org.bonitasoft.studio.connectors.model;visibility:=reexport,
  org.bonitasoft.studio.model;bundle-version="1.0.0",

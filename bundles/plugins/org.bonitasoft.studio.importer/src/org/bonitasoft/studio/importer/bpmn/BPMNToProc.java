@@ -1380,7 +1380,7 @@ public class BPMNToProc extends ToProcProcessor {
 				processBonitaConnector(name, id, tServiceTask, operationRefName);
 			} else if("##WebService".equals(tServiceTask.getImplementation())){
 				// TODO: handle default implem for web services as Service tasks
-				builder.addConnector(id, name, "webservices", "1.0", ConnectorEvent.ON_FINISH, true);
+				builder.addConnector(id, name, "webservice", "1.0.0", ConnectorEvent.ON_FINISH, true);
 			}
 		}
 	}
