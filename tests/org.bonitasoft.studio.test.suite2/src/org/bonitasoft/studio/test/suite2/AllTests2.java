@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2009-2012 BonitaSoft S.A.
+ * Copyright (C) 2009-2014 Bonitasoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  *
  * This program is free software: you can redistribute it and/or modify
@@ -27,6 +27,8 @@ import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManag
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.connectors.test.TestProvidedDefinitionAndImplementation;
+import org.bonitasoft.studio.connectors.test.TestTestConnectorOperation;
+import org.bonitasoft.studio.connectors.test.TestWebserviceVersionForBPMNImport;
 import org.bonitasoft.studio.engine.test.TestUserFilterMatchingEngineVersion;
 import org.bonitasoft.studio.exporter.tests.application.TestHtmlTemplateGenerator;
 import org.bonitasoft.studio.exporter.tests.bpmn.BPMNDataExportImportTest;
@@ -49,6 +51,8 @@ import org.bonitasoft.studio.tests.data.TestDataRefactor;
 import org.bonitasoft.studio.tests.form.TestCommands;
 import org.bonitasoft.studio.tests.perspectives.TestAutomaticSwitchPerspective;
 import org.bonitasoft.studio.tests.processzoo.TestProcessZoo;
+import org.bonitasoft.studio.tests.refactoring.widget.TestRefactorWidgetOperation;
+import org.bonitasoft.studio.tests.refactoring.widget.TestRemoveWidgetReferencesOperation;
 import org.bonitasoft.studio.tests.timer.TestNonInterruptingBoundaryTimerEvent;
 import org.bonitasoft.studio.themes.tests.TestCSSModel;
 import org.bonitasoft.studio.themes.tests.TestDirtyState;
@@ -102,6 +106,10 @@ import org.junit.runners.Suite;
     TestDeployCommand.class,
     MigrationReportPDFExportTest.class,
     TestValidationConstraints.class,
+    TestTestConnectorOperation.class,
+    TestRefactorWidgetOperation.class,
+    TestRemoveWidgetReferencesOperation.class,
+    TestWebserviceVersionForBPMNImport.class,
     CloseAllEditors.class,
 })
 public class AllTests2 extends TestSuite {

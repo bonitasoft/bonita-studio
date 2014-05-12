@@ -20,16 +20,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.emf.tools.WidgetHelper;
-import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.form.properties.i18n.Messages;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
+import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.form.FormFactory;
 import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.studio.properties.sections.forms.FormsUtils;
 import org.bonitasoft.studio.refactoring.core.AbstractRefactorOperation;
 import org.bonitasoft.studio.refactoring.core.AbstractScriptExpressionRefactoringAction;
 import org.bonitasoft.studio.refactoring.core.RefactoringOperationType;
@@ -37,11 +39,11 @@ import org.bonitasoft.studio.refactoring.core.WidgetScriptExpressionRefactoringA
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.edit.command.AbstractOverrideableCommand;
 import org.eclipse.emf.edit.command.AddCommand;
 import org.eclipse.emf.edit.command.RemoveCommand;
 import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.edit.domain.EditingDomain;
-import org.eclipse.jdt.core.IJavaProject;
 
 /**
  * @author Romain Bioteau
@@ -94,6 +96,30 @@ public class RefactorWidgetOperation extends AbstractRefactorOperation {
                         ExpressionHelper.createDependencyFromEObject(widgetCopy)));
             }
         }
+        
+        if (widget.eContainer() instanceof Form && ModelHelper.formIsCustomized((Form) widget.eContainer())) {
+            final String srcName = widget.getName();
+ 
+            compoundCommand.append(SetCommand.create(domain, widget, ProcessPackage.eINSTANCE.getElement_Name(), NamingUtils.convertToId(newName)));
+            
+            compoundCommand.append(new AbstractOverrideableCommand(domain, "Change Id in template") {
+				
+				@Override
+				public void doUndo() {
+					FormsUtils.changeIdInTemplate((Form)widget.eContainer(), newName, srcName);
+				}
+				
+				@Override
+				public void doRedo() {
+					FormsUtils.changeIdInTemplate((Form)widget.eContainer(), srcName, newName);					
+				}
+				
+				@Override
+				public void doExecute() {
+					FormsUtils.changeIdInTemplate((Form)widget.eContainer(), srcName, newName);
+				}
+			});
+        }
     }
 
     @Override
@@ -116,7 +142,7 @@ public class RefactorWidgetOperation extends AbstractRefactorOperation {
 
     @Override
     protected String getOldValueName() {
-        return widget.getName();
+        return WidgetHelper.FIELD_PREFIX+widget.getName();
     }
 
     @Override
@@ -126,7 +152,7 @@ public class RefactorWidgetOperation extends AbstractRefactorOperation {
 
     @Override
     protected String getNewValueName() {
-        return newName;
+        return WidgetHelper.FIELD_PREFIX+newName;
     }
 
 }

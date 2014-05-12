@@ -271,6 +271,9 @@ public class EngineExpressionUtil {
 	}
 
 	public static String getVariableType(final org.bonitasoft.studio.model.expression.Expression leftOperand, boolean external) {
+		if(external){
+			return ExpressionConstants.LEFT_OPERAND_EXTERNAL_DATA;
+		}
 		String leftOperandType = leftOperand.getType();
     	if(ExpressionConstants.DOCUMENT_TYPE.equals(leftOperandType)|| ExpressionConstants.DOCUMENT_REF_TYPE.equals(leftOperandType) ) {
     		return ExpressionConstants.LEFT_OPERAND_DOCUMENT;

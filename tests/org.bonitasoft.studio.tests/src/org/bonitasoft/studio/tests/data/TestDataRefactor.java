@@ -44,6 +44,8 @@ import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.MultiInstantiation;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessFactory;
+import org.bonitasoft.studio.model.process.SequenceFlow;
+import org.bonitasoft.studio.model.process.SequenceFlowConditionType;
 import org.bonitasoft.studio.model.process.util.ProcessAdapterFactory;
 import org.bonitasoft.studio.refactoring.core.RefactoringOperationType;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -54,7 +56,6 @@ import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -136,7 +137,6 @@ public class TestDataRefactor {
         process.getElements().add(activity);
 
         refactorDataOperation.run(new NullProgressMonitor());
-        //editingDomain.getCommandStack().execute(cc);
         assertEquals("There are too many datas. The old one migth not be removed.", 1, process.getData().size());
         assertEquals("Data name has not been updated correctly in expression", newDataName,
                 ((Element) variableExpression.getReferencedElements().get(0)).getName());
@@ -175,7 +175,6 @@ public class TestDataRefactor {
 		final String initialDataName = processData.getName();
 		
 		refactorDataOperation.run(new NullProgressMonitor());
-        //editingDomain.getCommandStack().execute(cc);
         assertEquals("There are too many datas. The old one might not be removed.", 1, process.getData().size());
         assertEquals("Data has not been renamed", newDataName, process.getData().get(0).getName());
         assertEquals("Data name has not been updated correctly in expression", newDataName,
@@ -205,21 +204,7 @@ public class TestDataRefactor {
     	final String newDataType = DataTypeLabels.integerDataType;
     	AbstractProcess process = initTestForGlobalDataRefactor(newDataName, newDataType);
     	Activity activity = (Activity) process.getElements().get(0);
-    	Connector groovyScriptConnector = ProcessFactory.eINSTANCE.createConnector();
-
-    	ConnectorConfiguration groovyScriptConnectorConfiguration = ConnectorConfigurationFactory.eINSTANCE.createConnectorConfiguration();
-    	ConnectorParameter connectorParameter = ConnectorConfigurationFactory.eINSTANCE.createConnectorParameter();
-    	Expression scriptUsingData = ExpressionFactory.eINSTANCE.createExpression();
-		scriptUsingData.setType(ExpressionConstants.SCRIPT_TYPE);
-		scriptUsingData.setName(processData.getName());
-		scriptUsingData.setContent(processData.getName());
-		scriptUsingData.getReferencedElements().add(EcoreUtil.copy(processData));
-		scriptUsingData.setReturnType(DataUtil.getTechnicalTypeFor(processData));
-    	connectorParameter.setExpression(scriptUsingData);
-		groovyScriptConnectorConfiguration.getParameters().add(connectorParameter);
-    	groovyScriptConnector.setConfiguration(groovyScriptConnectorConfiguration);
-
-    	activity.getConnectors().add(groovyScriptConnector);
+    	Expression scriptUsingData = createGroovyScriptConnectortWithDataReferenced(activity);
 
     	final String initialDataName = processData.getName();
 
@@ -237,14 +222,176 @@ public class TestDataRefactor {
         assertEquals("Data name has not been updated correctly in expression of right operand operation after undo", initialDataName, ((Data)scriptUsingData.getReferencedElements().get(0)).getName());
  
     }
+
+	private Expression createGroovyScriptConnectortWithDataReferenced(
+			Activity activity) {
+		Connector groovyScriptConnector = ProcessFactory.eINSTANCE.createConnector();
+
+    	ConnectorConfiguration groovyScriptConnectorConfiguration = ConnectorConfigurationFactory.eINSTANCE.createConnectorConfiguration();
+    	ConnectorParameter connectorParameter = ConnectorConfigurationFactory.eINSTANCE.createConnectorParameter();
+    	Expression scriptUsingData = ExpressionFactory.eINSTANCE.createExpression();
+		scriptUsingData.setType(ExpressionConstants.SCRIPT_TYPE);
+		scriptUsingData.setName(processData.getName());
+		scriptUsingData.setContent(processData.getName());
+		scriptUsingData.getReferencedElements().add(EcoreUtil.copy(processData));
+		scriptUsingData.setReturnType(DataUtil.getTechnicalTypeFor(processData));
+    	connectorParameter.setExpression(scriptUsingData);
+		groovyScriptConnectorConfiguration.getParameters().add(connectorParameter);
+    	groovyScriptConnector.setConfiguration(groovyScriptConnectorConfiguration);
+
+    	activity.getConnectors().add(groovyScriptConnector);
+		return scriptUsingData;
+	}
     
     @Test
-    @Ignore("Undo wrequires two steps when removing data")
     public void testDeleteData() throws InvocationTargetException, InterruptedException{
     	AbstractProcess process = initTestForGlobalDataRefactor(null);
     	refactorDataOperation.run(new NullProgressMonitor());
     	assertEquals("The data has not been removed", 0, process.getData().size());
+    	
+    	 editingDomain.getCommandStack().undo();
+    	 
+    	 assertEquals("The data has not been set back after undo", 1, process.getData().size());
     }
+    
+    @Test
+    public void testDeleteDataWithReferenceInScript() throws InvocationTargetException, InterruptedException{
+    	AbstractProcess process = initTestForGlobalDataRefactor(null);
+    	
+        Activity activity = (Activity) process.getElements().get(0);
+        Operation operationWithScriptUsingData = ExpressionFactory.eINSTANCE.createOperation();
+        Operator assignOperator = ExpressionFactory.eINSTANCE.createOperator();
+        assignOperator.setType(ExpressionConstants.ASSIGNMENT_OPERATOR);
+		operationWithScriptUsingData.setOperator(assignOperator);
+        final Expression variableExpression = ExpressionFactory.eINSTANCE.createExpression();
+        variableExpression.setType(ExpressionConstants.VARIABLE_TYPE);
+        variableExpression.setName(processData.getName());
+        variableExpression.setContent(processData.getName());
+        variableExpression.getReferencedElements().add(EcoreUtil.copy(processData));
+        variableExpression.setReturnType(DataUtil.getTechnicalTypeFor(processData));
+		operationWithScriptUsingData.setLeftOperand(variableExpression);
+		Expression scriptUsingData = ExpressionFactory.eINSTANCE.createExpression();
+		scriptUsingData.setType(ExpressionConstants.SCRIPT_TYPE);
+		scriptUsingData.setName(processData.getName());
+		scriptUsingData.setContent(processData.getName());
+		scriptUsingData.getReferencedElements().add(EcoreUtil.copy(processData));
+		scriptUsingData.setReturnType(DataUtil.getTechnicalTypeFor(processData));
+		operationWithScriptUsingData.setRightOperand(scriptUsingData);
+		activity.getOperations().add(operationWithScriptUsingData);
+		process.getElements().add(activity);
+    
+    	refactorDataOperation.run(new NullProgressMonitor());
+    	assertEquals("The data has not been removed", 0, process.getData().size());
+    	assertEquals("Referenced Data has been removed from script", 0, scriptUsingData.getReferencedElements().size());
+    	
+    	 editingDomain.getCommandStack().undo();
+    	 assertEquals("The data has not been readded on undo", 1, process.getData().size());
+    	 assertEquals("Referenced Data has been removed from script", 1, scriptUsingData.getReferencedElements().size());
+    }
+    
+    @Test
+    public void testDeleteDataWithReferenceInCondition() throws InvocationTargetException, InterruptedException{
+    	AbstractProcess process = initTestForGlobalDataRefactor(null);
+    	
+    	Expression conditionExpression = createSequenceFlowWithConditionExpression(process);
+    	
+    	refactorDataOperation.run(new NullProgressMonitor());
+    	assertEquals("The data has not been removed", 0, process.getData().size());
+    	assertEquals("Referenced Data has been removed from script", 0, conditionExpression.getReferencedElements().size());
+    	
+   	 	editingDomain.getCommandStack().undo();
+   	 	assertEquals("The data has not been readded on undo", 1, process.getData().size());
+   	 	assertEquals("Referenced Data has been removed from script", 1, conditionExpression.getReferencedElements().size());
+    }
+    
+    @Test
+    public void testDeleteDataWithReferenceInPatternExpression() throws InvocationTargetException, InterruptedException{
+    	AbstractProcess process = initTestForGlobalDataRefactor(null);
+    	
+    	Expression patternExpr = createConnectorWithPatternExpression(process);
+    	final String initialDataName = processData.getName();
+    	
+    	refactorDataOperation.run(new NullProgressMonitor());
+    	assertEquals("The data has not been removed", 0, process.getData().size());
+    	
+    	editingDomain.getCommandStack().undo();
+    	assertEquals("The data has not been readded on undo", 1, process.getData().size());
+   	 	assertEquals("Referenced Data has been removed from script", 1, patternExpr.getReferencedElements().size());
+   	 	assertEquals("Pattern expression", "${"+initialDataName+"}", patternExpr.getContent());
+    }
+    
+    @Test
+    public void testRenameDataWithReferenceInPatternExpression() throws InvocationTargetException, InterruptedException{
+    	final String newDataName = "newDataName";
+    	AbstractProcess process = initTestForGlobalDataRefactor(newDataName);
+    	
+    	Expression patternExpr = createConnectorWithPatternExpression(process);
+    	final String initialDataName = processData.getName();
+    	
+    	refactorDataOperation.run(new NullProgressMonitor());
+    	assertEquals("The data has n been duplicated", 1, process.getData().size());
+   	 	assertEquals("Referenced Data has been removed from script", 1, patternExpr.getReferencedElements().size());
+   	 	assertEquals("Referenced Data has not been renamed", newDataName, ((Data)patternExpr.getReferencedElements().get(0)).getName());
+   	 	assertEquals("Pattern expression", "${"+newDataName+"}", patternExpr.getContent());
+    	
+    	editingDomain.getCommandStack().undo();
+    	assertEquals("The data has not been readded on undo", 1, process.getData().size());
+   	 	assertEquals("Referenced Data has been removed from script", 1, patternExpr.getReferencedElements().size());
+   	 	assertEquals("Pattern expression", "${"+initialDataName+"}", patternExpr.getContent());
+    }
+
+	private Expression createConnectorWithPatternExpression(AbstractProcess process) {
+		Connector mailConnector = ProcessFactory.eINSTANCE.createConnector();
+
+    	ConnectorConfiguration groovyScriptConnectorConfiguration = ConnectorConfigurationFactory.eINSTANCE.createConnectorConfiguration();
+    	ConnectorParameter connectorParameter = ConnectorConfigurationFactory.eINSTANCE.createConnectorParameter();
+    	Expression patternExpr = ExpressionFactory.eINSTANCE.createExpression();
+		patternExpr.setType(ExpressionConstants.PATTERN_TYPE);
+		patternExpr.setName(processData.getName());
+		patternExpr.setContent("${"+processData.getName()+"}");
+		patternExpr.getReferencedElements().add(EcoreUtil.copy(processData));
+		patternExpr.setReturnType(DataUtil.getTechnicalTypeFor(processData));
+    	connectorParameter.setExpression(patternExpr);
+		groovyScriptConnectorConfiguration.getParameters().add(connectorParameter);
+    	mailConnector.setConfiguration(groovyScriptConnectorConfiguration);
+    	
+    	process.getConnectors().add(mailConnector);
+		return patternExpr;
+	}
+    
+    @Test
+    public void testRenameDataWithReferenceInCondition() throws InvocationTargetException, InterruptedException{
+    	final String newDataName = "newDataName";
+    	AbstractProcess process = initTestForGlobalDataRefactor(newDataName);
+
+    	Expression conditionExpression = createSequenceFlowWithConditionExpression(process);
+    	final String initialDataName = processData.getName();
+    	
+    	refactorDataOperation.run(new NullProgressMonitor());
+    	assertEquals("The old data might not have been updated", 1, process.getData().size());
+    	assertEquals("The data has not been renamed in condition", newDataName+" == \"plop\"",conditionExpression.getContent());
+    	assertEquals("The data has not been removed from dependency", newDataName,((Data)conditionExpression.getReferencedElements().get(0)).getName());
+    	
+    	editingDomain.getCommandStack().undo();
+    	
+    	assertEquals("The old data might not have been updated", 1, process.getData().size());
+    	assertEquals("The data has not been renamed in condition", initialDataName+" == \"plop\"",conditionExpression.getContent());
+    	assertEquals("The data dependency has not been back on undo", initialDataName,((Data)conditionExpression.getReferencedElements().get(0)).getName());
+    }
+
+	private Expression createSequenceFlowWithConditionExpression(
+			AbstractProcess process) {
+		SequenceFlow sequenceFlow = ProcessFactory.eINSTANCE.createSequenceFlow();
+    	sequenceFlow.setConditionType(SequenceFlowConditionType.EXPRESSION);
+    	Expression conditionExpression = ExpressionFactory.eINSTANCE.createExpression();
+    	conditionExpression.setType(ExpressionConstants.CONDITION_TYPE);
+    	conditionExpression.setContent(processData.getName()+" == \"plop\"");
+    	conditionExpression.setName("conditionExpression");
+    	conditionExpression.getReferencedElements().add(EcoreUtil.copy(processData));
+    	sequenceFlow.setCondition(conditionExpression);
+    	process.getConnections().add(sequenceFlow);
+		return conditionExpression;
+	}
     
 
 	private AdapterFactoryEditingDomain createEditingDomain() {
@@ -310,7 +457,11 @@ public class TestDataRefactor {
 
 	private AbstractProcess initTestForDataRefactor(final String newDataName, final String newDataType, final Data dataToRefactor) {
         final AbstractProcess process = createProcessWithData();
-        refactorDataOperation = new RefactorDataOperation(RefactoringOperationType.UPDATE);
+        if(newDataName != null){
+        	refactorDataOperation = new RefactorDataOperation(RefactoringOperationType.UPDATE);
+        } else {
+        	refactorDataOperation = new RefactorDataOperation(RefactoringOperationType.REMOVE);
+        }
         refactorDataOperation.setContainer(process);
         refactorDataOperation.setOldData(dataToRefactor);
         if(newDataName != null){

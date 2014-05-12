@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Properties for the form editor
 Bundle-SymbolicName: org.bonitasoft.studio.diagram.form.properties;singleton:=true
-Bundle-Version: 6.3.0.qualifier
+Bundle-Version: 6.3.1.qualifier
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.ui.views.properties.tabbed,
@@ -54,5 +54,6 @@ Export-Package: org.bonitasoft.studio.form.properties.i18n;
  org.bonitasoft.studio.properties.form.sections.actions,
  org.bonitasoft.studio.properties.form.sections.actions.contributions,
  org.bonitasoft.studio.properties.form.sections.appearance,
- org.bonitasoft.studio.properties.form.sections.appearance.contributions
+ org.bonitasoft.studio.properties.form.sections.appearance.contributions,
+ org.bonitasoft.studio.properties.form.sections.general.contributions
 Import-Package: org.bonitasoft.engine.bpm.document
