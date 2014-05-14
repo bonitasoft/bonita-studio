@@ -242,7 +242,8 @@ public class OperationViewer extends Composite implements IBonitaVariableContext
                 operatorTooltip.setText(action.getOperator().getExpression());
             }
 
-            boolean isLeftOperandABusinessData = !operation.getLeftOperand().getReferencedElements().isEmpty()
+            boolean isLeftOperandABusinessData = operation != null && operation.getLeftOperand() != null
+                    && !operation.getLeftOperand().getReferencedElements().isEmpty()
                     && operation.getLeftOperand().getReferencedElements().get(0) instanceof BusinessObjectData;
             actionExpression.getControl().setVisible(
                     !ExpressionConstants.DELETION_OPERATOR.equals(action.getOperator().getType()) || !isLeftOperandABusinessData);

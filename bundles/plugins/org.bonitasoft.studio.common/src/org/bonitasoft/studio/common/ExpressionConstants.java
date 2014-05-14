@@ -96,6 +96,8 @@ public interface ExpressionConstants {
 
     String QUERY_TYPE = ExpressionType.TYPE_QUERY_BUSINESS_DATA.name();
 
+    String DAO_TYPE = ExpressionType.TYPE_BUSINESS_OBJECT_DAO.name();
+
     // left operand types:
     String LEFT_OPERAND_DATA = LeftOperand.TYPE_DATA;
 

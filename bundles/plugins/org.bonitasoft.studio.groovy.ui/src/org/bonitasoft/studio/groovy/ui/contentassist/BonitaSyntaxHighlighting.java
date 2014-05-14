@@ -79,10 +79,10 @@ public class BonitaSyntaxHighlighting implements IHighlightingExtender {
                 } catch (final Exception e) {
                     BonitaStudioLog.error(e);
                 }
-            }else if(keyWord.equals(IFormExpressionsAPI.USER_LOCALE)){
-            	return Locale.class;
-            }else if(keyWord.equals(AbstractFormValidator.CLICKED_BUTTON_VARNAME)){
-            	return String.class;
+            } else if (keyWord.equals(IFormExpressionsAPI.USER_LOCALE)) {
+                return Locale.class;
+            } else if (keyWord.equals(AbstractFormValidator.CLICKED_BUTTON_VARNAME)) {
+                return String.class;
             }
         }
         return null;

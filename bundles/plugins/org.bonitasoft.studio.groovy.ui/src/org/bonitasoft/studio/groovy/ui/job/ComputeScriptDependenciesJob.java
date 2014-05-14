@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.expression.editor.ExpressionEditorService;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionProvider;
@@ -107,6 +108,11 @@ public class ComputeScriptDependenciesJob extends Job {
                 deps.add(EcoreUtil.copy(engineConstantExpression));
                 continue variablesloop;
             }
+            final Expression daoExpression = getDAOExpression(name);
+            if (daoExpression != null) {
+                deps.add(EcoreUtil.copy(daoExpression));
+                continue variablesloop;
+            }
             for (IExpressionProvider provider : ExpressionEditorService.getInstance().getExpressionProviders()) {
                 if (provider.isRelevantFor(context)) {
                     for (Expression exp : provider.getExpressions(context)) {
@@ -118,6 +124,19 @@ public class ComputeScriptDependenciesJob extends Job {
                 }
             }
         }
+    }
+
+    private Expression getDAOExpression(String name) {
+        IExpressionProvider daoExpressionProvider = ExpressionEditorService.getInstance().getExpressionProvider(ExpressionConstants.DAO_TYPE);
+        if (daoExpressionProvider == null) {
+            return null;
+        }
+        for (Expression exp : daoExpressionProvider.getExpressions(context)) {
+            if (exp.getName().equals(name)) {
+                return exp;
+            }
+        }
+        return null;
     }
 
     public List<EObject> getDependencies(final String expression) {

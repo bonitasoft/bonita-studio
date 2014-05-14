@@ -17,7 +17,9 @@
 package org.bonitasoft.studio.groovy.ui.providers;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -30,8 +32,10 @@ import org.bonitasoft.studio.common.jface.databinding.observables.DocumentObserv
 import org.bonitasoft.studio.common.jface.databinding.validator.InputLengthValidator;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.dependencies.ui.dialog.ManageConnectorJarDialog;
+import org.bonitasoft.studio.expression.editor.ExpressionEditorService;
 import org.bonitasoft.studio.expression.editor.provider.ExpressionContentProvider;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionEditor;
+import org.bonitasoft.studio.expression.editor.provider.IExpressionProvider;
 import org.bonitasoft.studio.expression.editor.provider.SelectionAwareExpressionEditor;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.expression.editor.viewer.SelectDependencyDialog;
@@ -481,8 +485,8 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
                 dataCombo.getTableCombo().setEnabled(false);
             }
         }
-
-        bonitaDataCombo.setInput(GroovyUtil.getBonitaVariables(context, filters, isPageFlowContext));
+        List<ScriptVariable> varaibles = GroovyUtil.getBonitaVariables(context, filters, isPageFlowContext);
+        bonitaDataCombo.setInput(varaibles);
         bonitaDataCombo.setSelection(new StructuredSelection(ProcessVariableContentProvider.SELECT_ENTRY));
 
         dataBindingContext.bindValue(ViewersObservables.observeInput(dependenciesViewer), dependenciesModelObservable);
@@ -611,6 +615,18 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
         dataBindingContext.bindValue(SWTObservables.observeEnabled(testButton),
                 SWTObservables.observeText(groovyViewer.getSourceViewer().getTextWidget(), SWT.Modify), null,
                 evaluateStrategy);
+    }
+
+    private Collection<? extends ScriptVariable> getDAOExpressionVariables() {
+        List<ScriptVariable> result = new ArrayList<ScriptVariable>();
+        IExpressionProvider daoExpressionProvider = ExpressionEditorService.getInstance().getExpressionProvider(ExpressionConstants.DAO_TYPE);
+        if (daoExpressionProvider == null) {
+            return result;
+        }
+        for (Expression exp : daoExpressionProvider.getExpressions(context)) {
+            result.add(new ScriptVariable(exp.getName(), exp.getReturnType()));
+        }
+        return result;
     }
 
     @Override
