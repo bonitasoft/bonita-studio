@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2012 BonitaSoft S.A.
- * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2012-2014 Bonitasoft S.A.
+ * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -221,37 +221,49 @@ public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFi
         if(fileStore == null){
             return null;
         }
+        MainProcess content = fileStore.getContent();
+        if(content == null){
+        	fileStore.delete();
+        	return null;
+        }
+        
         if(!FileActionDialog.getDisablePopup()){
-            MainProcess content = fileStore.getContent();
-            if(content == null){
-                fileStore.delete();
-                return null;
-            }
-            final List<AbstractProcess> importedProcess = ModelHelper.getAllProcesses(content);
-            final List<AbstractProcess> duplicateProcess = new ArrayList<AbstractProcess>();
-            final List<AbstractProcess> processes = getAllProcesses();
-            for (AbstractProcess p : importedProcess) {
-                if (processExistInList(p, processes)) {
-                    duplicateProcess.add(p);
-                }
-            }
+        	final List<AbstractProcess> importedProcess = ModelHelper.getAllProcesses(content);
+            final List<AbstractProcess> duplicateProcess = findDuplicatedProcess(importedProcess);
             if (!duplicateProcess.isEmpty()) {
-                Display.getDefault().syncExec(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        StringBuilder sb = new StringBuilder();
-                        for (AbstractProcess p : duplicateProcess) {
-                            sb.append(SWT.CR);
-                            sb.append(p.getName()+" "+"("+p.getVersion()+")");
-                        }
-                        MessageDialog.openWarning(Display.getDefault().getActiveShell(), Messages.warningDuplicateDialogTitle, Messages.bind(Messages.poolAlreadyExistWarningMessage,sb.toString()));
-                    }
-                });
+                openWarningForDuplicatedProcess(duplicateProcess);
             }
         }
+       
         return fileStore;
     }
+
+	private List<AbstractProcess> findDuplicatedProcess(final List<AbstractProcess> importedProcess) {
+		final List<AbstractProcess> processes = getAllProcesses();
+		final List<AbstractProcess> duplicateProcess = new ArrayList<AbstractProcess>();
+		for (AbstractProcess p : importedProcess) {
+		    if (processExistInList(p, processes)) {
+		        duplicateProcess.add(p);
+		    }
+		}
+		return duplicateProcess;
+	}
+
+	private void openWarningForDuplicatedProcess(
+			final List<AbstractProcess> duplicateProcess) {
+		Display.getDefault().syncExec(new Runnable() {
+
+		    @Override
+		    public void run() {
+		        StringBuilder sb = new StringBuilder();
+		        for (AbstractProcess p : duplicateProcess) {
+		            sb.append(SWT.CR);
+		            sb.append(p.getName()+" "+"("+p.getVersion()+")");
+		        }
+		        MessageDialog.openWarning(Display.getDefault().getActiveShell(), Messages.warningDuplicateDialogTitle, Messages.bind(Messages.poolAlreadyExistWarningMessage,sb.toString()));
+		    }
+		});
+	}
 
     @Override
     protected DiagramFileStore doImportInputStream(String fileName, InputStream inputStream) {
