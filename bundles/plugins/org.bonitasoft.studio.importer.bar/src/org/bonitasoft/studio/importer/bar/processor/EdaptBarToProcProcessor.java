@@ -166,7 +166,7 @@ public class EdaptBarToProcProcessor extends ToProcProcessor {
             return null;
         }
         final File archiveFile = new File(URI.decode(sourceFileURL.getFile()));
-        final File barProcFile = getProcFormBar(archiveFile);
+        final File barProcFile = BarReaderUtil.getProcFormBar(archiveFile);
 
         importAttachment(archiveFile, progressMonitor);
         importCustomConnectors(archiveFile, progressMonitor);
@@ -249,7 +249,7 @@ public class EdaptBarToProcProcessor extends ToProcProcessor {
 
         BonitaStudioLog.debug("Searching for custom connector in " + tmpConnectorJarFile.getName() + "...", BarImporterPlugin.PLUGIN_ID);
 
-        String connectorClassname = findCustomConnectorClassName(tmpConnectorJarFile);
+        String connectorClassname = BarReaderUtil.findCustomConnectorClassName(tmpConnectorJarFile);
         if (connectorClassname != null) {
             BonitaStudioLog
                     .debug("Custom connector " + connectorClassname + " has been found in " + tmpConnectorJarFile.getName(), BarImporterPlugin.PLUGIN_ID);
@@ -328,37 +328,6 @@ public class EdaptBarToProcProcessor extends ToProcProcessor {
         change.setPropertyName(Messages.development);
         change.setStatus(IStatus.ERROR);
         return change;
-    }
-
-    private String findCustomConnectorClassName(File archiveFile) throws ZipException, IOException {
-        ZipFile zipfile = null;
-        try {
-            zipfile = new ZipFile(archiveFile);
-            Enumeration<?> enumEntries = zipfile.entries();
-            ZipEntry zipEntry = null;
-            String className = null;
-            String startWith = null;
-            while (enumEntries.hasMoreElements()) {
-                zipEntry = (ZipEntry) enumEntries.nextElement();
-                if (!zipEntry.isDirectory() && zipEntry.getName().endsWith(".class")) {
-                    startWith = zipEntry.toString().replace(".class", "");
-                    className = zipEntry.toString().replace("/", ".").replace(".class", "");
-                    Enumeration<? extends ZipEntry> newEntries = zipfile.entries();
-                    while (newEntries.hasMoreElements()) {
-                        ZipEntry newEntry = (ZipEntry) newEntries.nextElement();
-                        if (!newEntry.isDirectory() && newEntry.toString().endsWith(startWith + ".properties")) {
-                            return className;
-                        }
-                    }
-                }
-            }
-        } finally {
-            if (zipfile != null) {
-                zipfile.close();
-            }
-        }
-
-        return null;
     }
 
     private Release getAlphaRelease(Migrator nextMigrator) {
@@ -519,43 +488,7 @@ public class EdaptBarToProcProcessor extends ToProcProcessor {
         }
         zipfile.close();
     }
-
-    private File getProcFormBar(File archiveFile) throws Exception {
-        ZipInputStream zin = null;
-        FileOutputStream out = null;
-        try {
-            zin = new ZipInputStream(new FileInputStream(archiveFile));
-            ZipEntry zipEntry = zin.getNextEntry();
-            while (zipEntry != null && !zipEntry.getName().endsWith(".proc")) {
-                zipEntry = zin.getNextEntry();
-            }
-            if (zipEntry == null) {
-                throw new FileNotFoundException(Messages.bind(Messages.invalidArchiveStructure, archiveFile.getName()));
-            }
-            String entryName = zipEntry.getName();
-            if (entryName.indexOf("/") != -1) {
-                entryName.substring(entryName.lastIndexOf("/"));
-            }
-            final File tempFile = new File(ProjectUtil.getBonitaStudioWorkFolder(), entryName);
-            byte[] buf = new byte[1024];
-            tempFile.delete();
-            int len;
-            out = new FileOutputStream(tempFile);
-            while ((len = zin.read(buf)) > 0) {
-                out.write(buf, 0, len);
-            }
-            return tempFile;
-        } finally {
-            if (zin != null) {
-                zin.close();
-            }
-            if (out != null) {
-                out.close();
-            }
-        }
-
-    }
-
+    
     /*
      * (non-Javadoc)
      * @see org.bonitasoft.studio.importer.ToProcProcessor#getResources()

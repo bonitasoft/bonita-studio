@@ -6,11 +6,10 @@
 	<parent>
 		<groupId>org.bonitasoft.studio.bundles</groupId>
 		<artifactId>plugins</artifactId>
-		<version>6.3.0-SNAPSHOT</version>
+		<version>6.3.1-SNAPSHOT</version>
 	</parent>
 	<groupId>org.bonitasoft.studio.plugins</groupId>
 	<artifactId>org.bonitasoft.studio.console.libs</artifactId>
-	<version>6.3.0-SNAPSHOT</version>
 	<packaging>eclipse-plugin</packaging>
 
 	<properties>
@@ -103,6 +102,7 @@
 			<groupId>org.bonitasoft.console</groupId>
 			<artifactId>console-server</artifactId>
 			<version>${bundle.version}</version>
+			<classifier>classes</classifier>
 			<exclusions>
 				<exclusion>
 					<groupId>*</groupId>
@@ -112,7 +112,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.bonitasoft.console</groupId>
-			<artifactId>common-server</artifactId>
+			<artifactId>console-common</artifactId>
 			<version>${bundle.version}</version>
 			<exclusions>
 				<exclusion>
@@ -241,6 +241,7 @@
 						</goals>
 						<configuration>
 							<stripVersion>true</stripVersion>
+							<stripClassifier>true</stripClassifier>
 							<outputDirectory>${lib.dir}</outputDirectory>
 							<overWriteReleases>true</overWriteReleases>
 							<overWriteSnapshots>true</overWriteSnapshots>
@@ -336,7 +337,7 @@
 						<Bundle-SymbolicName>${project.artifactId};singleton:=true</Bundle-SymbolicName>
 						<Bundle-Name>Bonita Console embedded in Studio</Bundle-Name>
 						<Bundle-Vendor>BonitaSoft S.A.</Bundle-Vendor>
-						<Bundle-Version>6.3.0.qualifier</Bundle-Version>
+						<Bundle-Version>6.3.1.qualifier</Bundle-Version>
 						<Embed-Transitive>true</Embed-Transitive>
 						<Embed-Directory>${lib.dir}</Embed-Directory>
 						<Embed-StripVersion>true</Embed-StripVersion>
