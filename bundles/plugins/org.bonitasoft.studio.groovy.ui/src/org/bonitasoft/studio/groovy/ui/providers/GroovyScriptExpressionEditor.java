@@ -40,7 +40,6 @@ import org.bonitasoft.studio.expression.editor.provider.SelectionAwareExpression
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.expression.editor.viewer.SelectDependencyDialog;
 import org.bonitasoft.studio.groovy.GroovyPlugin;
-import org.bonitasoft.studio.groovy.GroovyUtil;
 import org.bonitasoft.studio.groovy.ScriptVariable;
 import org.bonitasoft.studio.groovy.ui.Messages;
 import org.bonitasoft.studio.groovy.ui.dialog.BonitaVariableLabelProvider;
@@ -466,7 +465,7 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
         inputExpression.setInterpreter(ExpressionConstants.GROOVY);
 
         groovyViewer.setContext(context, filters, viewer.getExpressionNatureProvider());
-        nodes = groovyViewer.getFieldNodes();
+        nodes = new ArrayList<ScriptVariable>(groovyViewer.getFieldNodes());
 
         if (context == null && nodes == null) {
             dataCombo.add(Messages.noProcessVariableAvailable);
@@ -485,8 +484,7 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
                 dataCombo.getTableCombo().setEnabled(false);
             }
         }
-        List<ScriptVariable> varaibles = GroovyUtil.getBonitaVariables(context, filters, isPageFlowContext);
-        bonitaDataCombo.setInput(varaibles);
+        bonitaDataCombo.setInput(groovyViewer.getProvidedVariables(context, filters));
         bonitaDataCombo.setSelection(new StructuredSelection(ProcessVariableContentProvider.SELECT_ENTRY));
 
         dataBindingContext.bindValue(ViewersObservables.observeInput(dependenciesViewer), dependenciesModelObservable);
@@ -509,7 +507,7 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
 
         dependencyJob = new ComputeScriptDependenciesJob(groovyViewer.getGroovyCompilationUnit());
         dependencyJob.setContext(context);
-        this.nodes.addAll(GroovyUtil.getBonitaVariables(context, filters, isPageFlowContext));
+        this.nodes.addAll(groovyViewer.getProvidedVariables(context, filters));
         dependencyJob.setNodes(nodes);
 
         final InputLengthValidator lenghtValidator = new InputLengthValidator("", GroovyViewer.MAX_SCRIPT_LENGTH);

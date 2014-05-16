@@ -49,10 +49,6 @@ public class AvailableExpressionTypeFilter extends ViewerFilter {
             this.contentTypes.add(ExpressionConstants.XPATH_TYPE);
 
         }
-        if (this.contentTypes.contains(ExpressionConstants.SCRIPT_TYPE)) {
-            this.contentTypes.add(ExpressionConstants.DAO_TYPE);
-        }
-
         if (element instanceof Expression) {
             return contentTypes.contains(((Expression) element).getType());
         } else if (element instanceof IExpressionProvider) {
