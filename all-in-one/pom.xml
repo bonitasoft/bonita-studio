@@ -25,7 +25,7 @@
 		<jre.winx86.x64.url>jre1.7.0_55-windows-x64</jre.winx86.x64.url>
 		<jre.linuxx86.url>jre1.7.0_55-linux</jre.linuxx86.url>
 		<jre.linuxx86.x64.url>jre1.7.0_55-linux-x64</jre.linuxx86.x64.url>
-		<jre.osx.url>jre1.7.0_55-osx.zip</jre.osx.url>
+		<jre.osx.url>jre1.7.0_55-osx</jre.osx.url>
 	</properties>
 
 	<build>
