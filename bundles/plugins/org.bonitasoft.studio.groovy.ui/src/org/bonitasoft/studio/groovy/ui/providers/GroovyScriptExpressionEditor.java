@@ -200,9 +200,9 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
         final ScriptVariable e1sv = ((ScriptVariable) e1);
         final ScriptVariable e2sv = ((ScriptVariable) e2);
         if (e1sv.getCategory() == null) {
-            return -1;
-        } else if (e2sv.getCategory() == null) {
             return 1;
+        } else if (e2sv.getCategory() == null) {
+            return -1;
         } else {
             if (e1sv.getCategory().equals(e2sv.getCategory())) {
                 return e1sv.getName().compareToIgnoreCase(e2sv.getName());

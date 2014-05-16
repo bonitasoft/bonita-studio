@@ -380,7 +380,8 @@ public class GroovyViewer {
         IExpressionProvider daoExpressionProvider = ExpressionEditorService.getInstance().getExpressionProvider(ExpressionConstants.DAO_TYPE);
         if (daoExpressionProvider != null) {
             for (Expression e : daoExpressionProvider.getExpressions(null)) {
-                providedScriptVariable.add(new ScriptVariable(e.getName(), e.getReturnType()));
+                ScriptVariable scriptVariable = new ScriptVariable(e.getName(), e.getReturnType());
+                providedScriptVariable.add(scriptVariable);
             }
         }
         return providedScriptVariable;

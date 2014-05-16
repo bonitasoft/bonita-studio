@@ -124,6 +124,9 @@ public class VariablesTypeCompletionProposal implements IJavaCompletionProposalC
                                                     .getFullyQualifiedName());
                                             proposal.setDeclarationSignature(ProposalUtils.createTypeSignature(classNode));
                                             proposal.setParameterNames(parametersArray);
+                                            if (m.getDeclaringType().getFullyQualifiedName().equals(f.getType())) {
+                                                proposal.setRelevance(100);
+                                            }
 
                                             MethodNode methodNode = new MethodNode(m.getElementName(), m.getFlags(), ClassHelper.make(Signature
                                                     .getSignatureSimpleName(m.getReturnType())),
