@@ -17,6 +17,8 @@
  */
 package org.bonitasoft.studio.common.diagram.tools;
 
+import static org.bonitasoft.studio.common.Messages.removalConfirmationDialogTitle;
+
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
@@ -60,7 +62,7 @@ public class CustomDiagramGraphicalViewerKeyHandler extends
             String[] buttonList = { IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL };
             List<Object> widgetSelected = new ArrayList<Object>();
             widgetSelected.add(widget);
-            OutlineDialog dialog = new OutlineDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), Messages.deleteFormFieldDialogTitle,
+            OutlineDialog dialog = new OutlineDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), removalConfirmationDialogTitle,
                     Display.getCurrent().getSystemImage(SWT.ICON_WARNING), Messages.bind(Messages.askConfirmationForDeleting, widget.getName()),
                     MessageDialog.CONFIRM, buttonList, 1, widgetSelected);
             int ok = 0;

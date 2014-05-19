@@ -16,6 +16,8 @@
  */
 package org.bonitasoft.studio.data.ui.property.section;
 
+import static org.bonitasoft.studio.common.Messages.removalConfirmationDialogTitle;
+
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -203,7 +205,7 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
 
     protected void removeData(IStructuredSelection structuredSelection) {
         String[] buttonList = { IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL };
-        OutlineDialog dialog = new OutlineDialog(Display.getDefault().getActiveShell(), Messages.deleteDataDialogTitle, Display.getCurrent().getSystemImage(
+        OutlineDialog dialog = new OutlineDialog(Display.getDefault().getActiveShell(), removalConfirmationDialogTitle, Display.getCurrent().getSystemImage(
                 SWT.ICON_WARNING), createMessage(structuredSelection), MessageDialog.CONFIRM, buttonList, 1, structuredSelection.toList());
         if (dialog.open() == Dialog.OK) {
             IProgressService service = PlatformUI.getWorkbench().getProgressService();

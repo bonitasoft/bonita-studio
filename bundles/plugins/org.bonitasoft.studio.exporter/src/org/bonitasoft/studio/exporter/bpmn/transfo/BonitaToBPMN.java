@@ -1194,7 +1194,7 @@ public class BonitaToBPMN implements IBonitaTransformer {
 					bpmnBoundary.setCancelActivity(true);
 				}
 
-				bpmnBoundary.setAttachedToRef(QName.valueOf(bpmnBoundary.getId()));
+				bpmnBoundary.setAttachedToRef(QName.valueOf(((TFlowElement)bpmnElement).getId()));
 				bpmnProcess.getFlowElement().add(bpmnBoundary);
 				mapping.put(boundaryEvent, bpmnBoundary);
 

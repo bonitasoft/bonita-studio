@@ -19,9 +19,6 @@ package org.bonitasoft.studio.migration.custom.migration.form;
 
 import java.util.HashMap;
 
-import org.bonitasoft.studio.model.form.FormPackage;
-import org.bonitasoft.studio.model.form.Group;
-import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.eclipse.emf.edapt.migration.CustomMigration;
 import org.eclipse.emf.edapt.migration.Instance;
 import org.eclipse.emf.edapt.migration.Metamodel;

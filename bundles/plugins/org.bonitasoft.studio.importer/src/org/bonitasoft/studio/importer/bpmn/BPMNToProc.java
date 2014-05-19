@@ -1659,7 +1659,8 @@ public class BPMNToProc extends ToProcProcessor {
 			populateSignalEvent(flowNode);
 		} else if (eventType == EventType.TIMER_BOUNDARY
 				|| eventType == EventType.INTERMEDIATE_CATCH_TIMER
-				|| eventType == EventType.START_TIMER) {
+				|| eventType == EventType.START_TIMER
+				|| eventType == EventType.NON_INTERRUPTING_TIMER_BOUNDARY) {
 			populateTimerEvent(flowNode);
 		} else if (eventType == EventType.INTERMEDIATE_THROW_LINK) {
 			populateThrowLinkEvent(flowNode);
