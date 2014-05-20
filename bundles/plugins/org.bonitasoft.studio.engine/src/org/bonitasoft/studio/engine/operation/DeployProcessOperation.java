@@ -63,7 +63,7 @@ import org.eclipse.swt.widgets.Display;
  */
 public class DeployProcessOperation {
 
-    private static final int MAX_RESULTS = 100;
+    private static final int MAX_RESULTS = 1000;
 
     private Set<EObject> excludedObject;
 
