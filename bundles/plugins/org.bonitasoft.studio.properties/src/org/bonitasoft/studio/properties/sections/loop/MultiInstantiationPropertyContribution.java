@@ -673,33 +673,36 @@ public class MultiInstantiationPropertyContribution implements IExtensibleGridPr
     }
 
     protected void bindCompletionCondition() {
-        context.bindValue(ViewerProperties.singleSelection().observe(completionConditionViewer),
-                EMFEditProperties.value(editingDomain, ProcessPackage.Literals.MULTI_INSTANTIATION__COMPLETION_CONDITION).observe(multiInstantiation));
         Expression completionCondition = multiInstantiation.getCompletionCondition();
         if (completionCondition == null) {
             completionCondition = ExpressionFactory.eINSTANCE.createExpression();
             completionCondition.setReturnType(Boolean.class.getName());
             completionCondition.setReturnTypeFixed(true);
+            editingDomain.getCommandStack().execute(
+                    SetCommand
+                            .create(editingDomain, multiInstantiation, ProcessPackage.Literals.MULTI_INSTANTIATION__COMPLETION_CONDITION, completionCondition));
         }
         completionConditionViewer.setContext(activity);
         completionConditionViewer.setInput(multiInstantiation);
-        completionConditionViewer.setSelection(new StructuredSelection(completionCondition));
+        context.bindValue(ViewerProperties.singleSelection().observe(completionConditionViewer),
+                EMFEditProperties.value(editingDomain, ProcessPackage.Literals.MULTI_INSTANTIATION__COMPLETION_CONDITION).observe(multiInstantiation));
     }
 
     protected void bindCardinality() {
         context.bindValue(WidgetProperties.selection().observe(useCardinalityButton),
                 EMFEditProperties.value(editingDomain, ProcessPackage.Literals.MULTI_INSTANTIATION__USE_CARDINALITY).observe(multiInstantiation));
-        context.bindValue(ViewerProperties.singleSelection().observe(cardinalityExpression),
-                EMFEditProperties.value(editingDomain, ProcessPackage.Literals.MULTI_INSTANTIATION__CARDINALITY).observe(multiInstantiation));
 
         Expression cardinality = multiInstantiation.getCardinality();
         if (cardinality == null) {
             cardinality = ExpressionFactory.eINSTANCE.createExpression();
             cardinality.setReturnType(Integer.class.getName());
             cardinality.setReturnTypeFixed(true);
+            editingDomain.getCommandStack().execute(
+                    SetCommand.create(editingDomain, multiInstantiation, ProcessPackage.Literals.MULTI_INSTANTIATION__CARDINALITY, cardinality));
         }
         cardinalityExpression.setInput(multiInstantiation);
-        cardinalityExpression.setSelection(new StructuredSelection(cardinality));
+        context.bindValue(ViewerProperties.singleSelection().observe(cardinalityExpression),
+                EMFEditProperties.value(editingDomain, ProcessPackage.Literals.MULTI_INSTANTIATION__CARDINALITY).observe(multiInstantiation));
     }
 
     protected void bindFieldsForEnablement() {

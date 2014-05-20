@@ -615,26 +615,14 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
                 evaluateStrategy);
     }
 
-    private Collection<? extends ScriptVariable> getDAOExpressionVariables() {
-        List<ScriptVariable> result = new ArrayList<ScriptVariable>();
-        IExpressionProvider daoExpressionProvider = ExpressionEditorService.getInstance().getExpressionProvider(ExpressionConstants.DAO_TYPE);
-        if (daoExpressionProvider == null) {
-            return result;
-        }
-        for (Expression exp : daoExpressionProvider.getExpressions(context)) {
-            result.add(new ScriptVariable(exp.getName(), exp.getReturnType()));
-        }
-        return result;
-    }
-
     @Override
     public void dispose() {
         super.dispose();
-        if (groovyViewer != null) {
-            groovyViewer.dispose();
-        }
         if (dependencyJob != null) {
             dependencyJob.cancel();
+        }
+        if (groovyViewer != null) {
+            groovyViewer.dispose();
         }
     }
 
