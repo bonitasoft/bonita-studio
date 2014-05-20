@@ -34,9 +34,8 @@ import org.bonitasoft.engine.bpm.bar.BusinessArchive;
 import org.bonitasoft.engine.bpm.process.Problem;
 import org.bonitasoft.engine.bpm.process.ProcessActivationException;
 import org.bonitasoft.engine.bpm.process.ProcessDefinition;
+import org.bonitasoft.engine.bpm.process.ProcessDefinitionNotFoundException;
 import org.bonitasoft.engine.bpm.process.ProcessDeployException;
-import org.bonitasoft.engine.bpm.process.ProcessDeploymentInfo;
-import org.bonitasoft.engine.bpm.process.ProcessDeploymentInfoCriterion;
 import org.bonitasoft.engine.bpm.process.ProcessEnablementException;
 import org.bonitasoft.engine.exception.DeletionException;
 import org.bonitasoft.engine.exception.ProcessInstanceHierarchicalDeletionException;
@@ -251,34 +250,42 @@ public class DeployProcessOperation {
             final ProcessAPI processApi = BOSEngineManager.getInstance().getProcessAPI(session);
             long nbDeployedProcesses = processApi.getNumberOfProcessDeploymentInfos();
             if (nbDeployedProcesses > 0) {
-                List<ProcessDeploymentInfo> processes = processApi.getProcessDeploymentInfos(0, (int) nbDeployedProcesses,
-                        ProcessDeploymentInfoCriterion.DEFAULT);
-                for (ProcessDeploymentInfo info : processes) {
-                    if (info.getName().equals(process.getName()) && info.getVersion().equals(process.getVersion())) {
-                        monitor.subTask(Messages.bind(Messages.undeploying, getProcessLabel(process)));
-                        final long processId = info.getProcessId();
-                        try {
-                            processApi.disableProcess(processId);
-                        } catch (ProcessActivationException e) {
+                long processDefinitionId = processApi.getProcessDefinitionId(process.getName(), process.getVersion());
+                monitor.subTask(Messages.bind(Messages.undeploying, getProcessLabel(process)));
+                try {
+                    monitor.subTask(Messages.bind(Messages.disablingProcessDefinition, getProcessLabel(process)));
+                    processApi.disableProcess(processDefinitionId);
+                } catch (ProcessActivationException e) {
 
-                        }
-                        boolean succesfullDelete = false;
-                        while (!succesfullDelete) {
-                            try {
-                                processApi.deleteProcess(processId);
-                                succesfullDelete = true;
-                            } catch (DeletionException e) {
-                                if (e instanceof ProcessInstanceHierarchicalDeletionException) {
-                                    long blockingProcessId = ((ProcessInstanceHierarchicalDeletionException) e).getProcessInstanceId();
-                                    processApi.deleteProcessInstance(blockingProcessId);
-                                } else {
-                                    throw e;
-                                }
-                            }
+                }
+                boolean allInstancesDeleted = false;
+                int startIndex = 0;
+                int maxResults = 100;
+                monitor.subTask(Messages.bind(Messages.deletingProcessInstances, getProcessLabel(process)));
+                while (!allInstancesDeleted) {
+                    try {
+
+                        long nbDeletedProcessInstances = processApi.deleteProcessInstances(processDefinitionId, startIndex, maxResults);
+                        allInstancesDeleted = nbDeletedProcessInstances < maxResults;
+                    } catch (DeletionException e) {
+                        if (e instanceof ProcessInstanceHierarchicalDeletionException) {
+                            long blockingProcessId = ((ProcessInstanceHierarchicalDeletionException) e).getProcessInstanceId();
+                            processApi.deleteProcessInstance(blockingProcessId);
+                        } else {
+                            throw e;
                         }
                     }
                 }
+                allInstancesDeleted = false;
+                while (!allInstancesDeleted) {
+                    long nbDeletedProcessInstances = processApi.deleteArchivedProcessInstances(processDefinitionId, startIndex, maxResults);
+                    allInstancesDeleted = nbDeletedProcessInstances < maxResults;
+                }
+                monitor.subTask(Messages.bind(Messages.deletingProcessDefinition, getProcessLabel(process)));
+                processApi.deleteProcessDefinition(processDefinitionId);
             }
+        } catch (ProcessDefinitionNotFoundException e) {
+            // Skip
         } finally {
             if (session != null) {
                 BOSEngineManager.getInstance().logoutDefaultTenant(session);

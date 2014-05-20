@@ -620,6 +620,11 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
         super.dispose();
         if (dependencyJob != null) {
             dependencyJob.cancel();
+            try {
+                dependencyJob.join();
+            } catch (InterruptedException e) {
+                BonitaStudioLog.error(e);
+            }
         }
         if (groovyViewer != null) {
             groovyViewer.dispose();
