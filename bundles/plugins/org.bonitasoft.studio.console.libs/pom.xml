@@ -189,7 +189,6 @@
 								<artifactItem>
 									<groupId>org.bonitasoft.console</groupId>
 									<artifactId>bonita-home</artifactId>
-									<classifier>full</classifier>
 									<version>${bundle.version}</version>
 									<type>zip</type>
 								</artifactItem>
