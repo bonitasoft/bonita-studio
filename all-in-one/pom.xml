@@ -11,9 +11,16 @@
 
 	<groupId>org.bonitasoft.studio</groupId>
 	<artifactId>all-in-one</artifactId>
+	<version>6.3.0-SNAPSHOT</version>
 	<packaging>eclipse-repository</packaging>
 
-
+	<dependencies>
+		<dependency>
+			<groupId>ant-contrib</groupId>
+			<artifactId>ant-contrib</artifactId>
+			<version>1.0b3</version>
+		</dependency>
+	</dependencies>
 
 	<properties>
 		<product.short.name>BonitaBPMCommunity</product.short.name>
@@ -65,7 +72,7 @@
 			</plugin>
 
 
-			<!--all-in-one assembly with all platforms -->
+			<!-- all-in-one assembly with all platforms -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-assembly-plugin</artifactId>
@@ -97,7 +104,7 @@
 				</executions>
 			</plugin>
 
-			<!-- Create a proper bundles.info for all-in-one -->
+			<!--  Create a proper bundles.info for all-in-one-->
 			<plugin>
 				<groupId>org.eclipse.tycho.extras</groupId>
 				<artifactId>tycho-eclipserun-plugin</artifactId>
@@ -131,7 +138,7 @@
 						</goals>
 					</execution>
 				</executions>
-			</plugin>
+			</plugin> 
 
 		</plugins>
 	</build>
@@ -147,11 +154,11 @@
 			<build>
 				<plugins>
 					<!-- Build installers for each platform -->
-					<plugin>
+				 	<plugin>
 						<groupId>org.codehaus.mojo</groupId>
 						<artifactId>exec-maven-plugin</artifactId>
 						<executions>
-							<execution>
+							 <execution>
 								<id>linux-x86</id>
 								<phase>install</phase>
 								<configuration>
@@ -206,7 +213,7 @@
 								<goals>
 									<goal>exec</goal>
 								</goals>
-							</execution>
+							</execution> 
 							<execution>
 								<id>win-x86</id>
 								<phase>install</phase>
@@ -354,7 +361,7 @@
 									<goal>run</goal>
 								</goals>
 							</execution>
-							<execution>
+							 <execution>
 								<id>windows x86_64 installer file</id>
 								<phase>prepare-package</phase>
 								<configuration>
@@ -384,23 +391,24 @@
 								</goals>
 								<configuration>
 									<tasks>
-										<mkdir
-											dir="${project.build.directory}/products/${productId}/win32/win32/x86/tmp" />
-										<get src="${jre.url}/${jre.winx86.url}.zip"
-											dest="${project.build.directory}/products/${productId}/win32/win32/x86/tmp" />
-										<unzip
-											src="${project.build.directory}/products/${productId}/win32/win32/x86/tmp/${jre.winx86.url}.zip"
-											dest="${project.build.directory}/products/${productId}/win32/win32/x86/tmp" />
-										<patternset>
-											<include name="jre/" />
-										</patternset>
+										<taskdef name="if" classname="${if.task}"
+											classpathref="maven.runtime.classpath" />
+										<available property="jre.present" file="${user.home}/${jre.winx86.url}" />
+										<if>
+											<not>
+												<isset property="jre.present" />
+											</not>
+											<then>
+												<get src="${jre.url}/${jre.winx86.url}.zip" dest="${user.home}"  verbose="true"/>
+												<unzip src="${user.home}/${jre.winx86.url}.zip" dest="${user.home}"/>
+		
+												<delete file="${user.home}/${jre.winx86.url}.zip" />
+											</then>
+										</if>
 										<copy
 											todir="${project.build.directory}/products/${productId}/win32/win32/x86/jre">
-											<fileset
-												dir="${project.build.directory}/products/${productId}/win32/win32/x86/tmp/${jre.winx86.url}/jre" />
+											<fileset dir="${user.home}/${jre.winx86.url}/jre" />
 										</copy>
-										<delete
-											dir="${project.build.directory}/products/${productId}/win32/win32/x86/tmp" />
 									</tasks>
 								</configuration>
 							</execution>
@@ -412,26 +420,27 @@
 								</goals>
 								<configuration>
 									<tasks>
-										<mkdir
-											dir="${project.build.directory}/products/${productId}/win32/win32/x86_64/tmp" />
-										<get src="${jre.url}/${jre.winx86.x64.url}.zip"
-											dest="${project.build.directory}/products/${productId}/win32/win32/x86_64/tmp" />
-										<unzip
-											src="${project.build.directory}/products/${productId}/win32/win32/x86_64/tmp/${jre.winx86.x64.url}.zip"
-											dest="${project.build.directory}/products/${productId}/win32/win32/x86_64/tmp" />
-										<patternset>
-											<include name="jre/" />
-										</patternset>
+										<taskdef name="if" classname="${if.task}"
+											classpathref="maven.runtime.classpath" />
+										<available property="jre.present" file="${user.home}/${jre.winx86.x64.url}" />
+										<if>
+											<not>
+												<isset property="jre.present" />
+											</not>
+											<then>
+												<get src="${jre.url}/${jre.winx86.x64.url}.zip" dest="${user.home}"  verbose="true"/>
+												<unzip src="${user.home}/${jre.winx86.x64.url}.zip" dest="${user.home}"/>
+		
+												<delete file="${user.home}/${jre.winx86.x64.url}.zip" />
+											</then>
+										</if>
 										<copy
 											todir="${project.build.directory}/products/${productId}/win32/win32/x86_64/jre">
-											<fileset
-												dir="${project.build.directory}/products/${productId}/win32/win32/x86_64/tmp/${jre.winx86.x64.url}/jre" />
+											<fileset dir="${user.home}/${jre.winx86.x64.url}/jre" />
 										</copy>
-										<delete
-											dir="${project.build.directory}/products/${productId}/win32/win32/x86_64/tmp" />
 									</tasks>
 								</configuration>
-							</execution>
+							</execution> 
 							<execution>
 								<id>jre-linux-x86</id>
 								<phase>package</phase>
@@ -440,54 +449,56 @@
 								</goals>
 								<configuration>
 									<tasks>
-										<mkdir
-											dir="${project.build.directory}/products/${productId}/linux/gtk/x86/tmp" />
-										<get src="${jre.url}/${jre.linuxx86.url}.zip"
-											dest="${project.build.directory}/products/${productId}/linux/gtk/x86/tmp" />
-										<unzip
-											src="${project.build.directory}/products/${productId}/linux/gtk/x86/tmp/${jre.linuxx86.url}.zip"
-											dest="${project.build.directory}/products/${productId}/linux/gtk/x86/tmp" />
-										<patternset>
-											<include name="jre/" />
-										</patternset>
+										<taskdef name="if" classname="${if.task}"
+											classpathref="maven.runtime.classpath" />
+										<available property="jre.present" file="${user.home}/${jre.linuxx86.url}" />
+										<if>
+											<not>
+												<isset property="jre.present" />
+											</not>
+											<then>
+												<get src="${jre.url}/${jre.linuxx86.url}.zip" dest="${user.home}"  />
+												<unzip src="${user.home}/${jre.linuxx86.url}.zip" dest="${user.home}"/>
+		
+												<delete file="${user.home}/${jre.linuxx86.url}.zip" />
+											</then>
+										</if>
 										<copy
 											todir="${project.build.directory}/products/${productId}/linux/gtk/x86/jre">
-											<fileset
-												dir="${project.build.directory}/products/${productId}/linux/gtk/x86/tmp/${jre.linuxx86.url}/jre" />
+											<fileset dir="${user.home}/${jre.linuxx86.url}/jre" />
 										</copy>
-										<delete
-											dir="${project.build.directory}/products/${productId}/linux/gtk/x86/tmp" />
 									</tasks>
 								</configuration>
-							</execution>
+							</execution> 
 							<execution>
-								<id>jre-linux-x86-x64</id>
+								<id>jre-linux-x86-64</id>
 								<phase>package</phase>
 								<goals>
 									<goal>run</goal>
 								</goals>
 								<configuration>
 									<tasks>
-										<mkdir
-											dir="${project.build.directory}/products/${productId}/linux/gtk/x86_64/tmp" />
-										<get src="${jre.url}/${jre.linuxx86.x64.url}.zip"
-											dest="${project.build.directory}/products/${productId}/linux/gtk/x86_64/tmp" />
-										<unzip
-											src="${project.build.directory}/products/${productId}/linux/gtk/x86_64/tmp/${jre.linuxx86.x64.url}.zip"
-											dest="${project.build.directory}/products/${productId}/linux/gtk/x86_64/tmp" />
-										<patternset>
-											<include name="jre/" />
-										</patternset>
+										<taskdef name="if" classname="${if.task}"
+											classpathref="maven.runtime.classpath" />
+										<available property="jre.present" file="${user.home}/${jre.linuxx86.x64.url}" />
+										<if>
+											<not>
+												<isset property="jre.present" />
+											</not>
+											<then>
+												<get src="${jre.url}/${jre.linuxx86.x64.url}.zip" dest="${user.home}"  />
+												<unzip src="${user.home}/${jre.linuxx86.x64.url}.zip" dest="${user.home}"/>
+		
+												<delete file="${user.home}/${jre.linuxx86.x64.url}.zip" />
+											</then>
+										</if>
 										<copy
 											todir="${project.build.directory}/products/${productId}/linux/gtk/x86_64/jre">
-											<fileset
-												dir="${project.build.directory}/products/${productId}/linux/gtk/x86_64/tmp/${jre.linuxx86.x64.url}/jre" />
+											<fileset dir="${user.home}/${jre.linuxx86.x64.url}/jre" />
 										</copy>
-										<delete
-											dir="${project.build.directory}/products/${productId}/linux/gtk/x86_64/tmp" />
 									</tasks>
 								</configuration>
-							</execution>
+							</execution> 
 							<execution>
 								<id>jre-osx-x86</id>
 								<phase>package</phase>
@@ -496,23 +507,24 @@
 								</goals>
 								<configuration>
 									<tasks>
-										<mkdir
-											dir="${project.build.directory}/products/${productId}/macosx/cocoa/x86/tmp" />
-										<get src="${jre.url}/${jre.osx.url}.zip"
-											dest="${project.build.directory}/products/${productId}/macosx/cocoa/x86/tmp" />
-										<unzip
-											src="${project.build.directory}/products/${productId}/macosx/cocoa/x86/tmp/${jre.osx.url}.zip"
-											dest="${project.build.directory}/products/${productId}/macosx/cocoa/x86/tmp" />
-										<patternset>
-											<include name="jre/" />
-										</patternset>
+										<taskdef name="if" classname="${if.task}"
+											classpathref="maven.runtime.classpath" />
+										<available property="jre.present" file="${user.home}/${jre.osx.url}" />
+										<if>
+											<not>
+												<isset property="jre.present" />
+											</not>
+											<then>
+												<get src="${jre.url}/${jre.osx.url}.zip" dest="${user.home}" />
+												<unzip src="${user.home}/${jre.osx.url}.zip" dest="${user.home}"/>
+		
+												<delete file="${user.home}/${jre.osx.url}.zip" />
+											</then>
+										</if>
 										<copy
 											todir="${project.build.directory}/products/${productId}/macosx/cocoa/x86/jre">
-											<fileset
-												dir="${project.build.directory}/products/${productId}/macosx/cocoa/x86/tmp/${jre.osx.url}/jre" />
+											<fileset dir="${user.home}/${jre.osx.url}/jre" />
 										</copy>
-										<delete
-											dir="${project.build.directory}/products/${productId}/macosx/cocoa/x86/tmp" />
 									</tasks>
 								</configuration>
 							</execution>
@@ -524,26 +536,27 @@
 								</goals>
 								<configuration>
 									<tasks>
-										<mkdir
-											dir="${project.build.directory}/products/${productId}/macosx/cocoa/x86_64/tmp" />
-										<get src="${jre.url}/${jre.osx.url}.zip"
-											dest="${project.build.directory}/products/${productId}/macosx/cocoa/x86_64/tmp" />
-										<unzip
-											src="${project.build.directory}/products/${productId}/macosx/cocoa/x86_64/tmp/${jre.osx.url}.zip"
-											dest="${project.build.directory}/products/${productId}/macosx/cocoa/x86_64/tmp" />
-										<patternset>
-											<include name="jre/" />
-										</patternset>
+										<taskdef name="if" classname="${if.task}"
+											classpathref="maven.runtime.classpath" />
+										<available property="jre.present" file="${user.home}/${jre.osx.url}" />
+										<if>
+											<not>
+												<isset property="jre.present" />
+											</not>
+											<then>
+												<get src="${jre.url}/${jre.osx.url}.zip" dest="${user.home}"/>
+												<unzip src="${user.home}/${jre.osx.url}.zip" dest="${user.home}"/>
+		
+												<delete file="${user.home}/${jre.osx.url}.zip" />
+											</then>
+										</if>
 										<copy
 											todir="${project.build.directory}/products/${productId}/macosx/cocoa/x86_64/jre">
-											<fileset
-												dir="${project.build.directory}/products/${productId}/macosx/cocoa/x86_64/tmp/${jre.osx.url}/jre" />
+											<fileset dir="${user.home}/${jre.osx.url}/jre" />
 										</copy>
-										<delete
-											dir="${project.build.directory}/products/${productId}/macosx/cocoa/x86_64/tmp" />
 									</tasks>
 								</configuration>
-							</execution>
+							</execution> 	 		 	 			 	 			 		 	
 						</executions>
 					</plugin>
 				</plugins>
