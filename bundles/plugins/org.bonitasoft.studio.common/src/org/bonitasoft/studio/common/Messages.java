@@ -338,5 +338,12 @@ public class Messages extends NLS {
 	public static String removeTitle;
 	public static String delete;
 	public static String nameCantHaveAWhitespace;
-    public static String emptyListExpressionName;
+	public static String emptyListExpressionName;
+	public static String referenceTreeViewerTitle;
+	public static String dataListViewerTitle;
+	public static String searchIndexListViewerTitle;
+	public static String parameterListTitle;
+	public static String widgetListViewerTitle;
+	public static String outlineDialogRefactoringText;
+	public static String removalConfirmationDialogTitle;
 }

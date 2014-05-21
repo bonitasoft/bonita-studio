@@ -142,7 +142,7 @@ public class RefactorWidgetOperation extends AbstractRefactorOperation {
 
     @Override
     protected String getOldValueName() {
-        return "field_"+widget.getName();
+        return WidgetHelper.FIELD_PREFIX+widget.getName();
     }
 
     @Override
@@ -152,7 +152,7 @@ public class RefactorWidgetOperation extends AbstractRefactorOperation {
 
     @Override
     protected String getNewValueName() {
-        return "field_"+newName;
+        return WidgetHelper.FIELD_PREFIX+newName;
     }
 
 }

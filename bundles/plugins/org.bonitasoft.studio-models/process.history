@@ -8084,5 +8084,8 @@
       </changes>
     </changes>
   </releases>
+  <releases date="2014-05-12T13:36:39.611+0200" label="6.3.1-001">
+    <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.custom.migration.expression.CleanReferenceMigration"/>
+  </releases>
   <releases/>
 </history:History>

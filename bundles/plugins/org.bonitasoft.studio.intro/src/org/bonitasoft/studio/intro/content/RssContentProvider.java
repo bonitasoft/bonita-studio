@@ -21,6 +21,7 @@ import java.io.File;
 import java.io.PrintWriter;
 import java.net.URL;
 import java.text.DateFormat;
+import java.util.Date;
 import java.util.Locale;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -132,10 +133,13 @@ public class RssContentProvider implements IIntroXHTMLContentProvider {
         a.setAttribute("class", "rssLink");
         li.appendChild(a);
         {
-            Element dateSpan = dom.createElement("span");
-            dateSpan.setAttribute("class", "rssPubDate");
-            dateSpan.appendChild(dom.createTextNode(dateInstance.format(syndEntry.getPublishedDate()) + " - "));
-            a.appendChild(dateSpan);
+        	final Date publishedDate = syndEntry.getPublishedDate();
+        	if(publishedDate != null){
+        		Element dateSpan = dom.createElement("span");
+        		dateSpan.setAttribute("class", "rssPubDate");
+        		dateSpan.appendChild(dom.createTextNode(dateInstance.format(publishedDate) + " - "));
+        		a.appendChild(dateSpan);
+        	}
         }
         {
             Element titleSpan = dom.createElement("span");

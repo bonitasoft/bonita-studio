@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="BonitaBPM" uid="org.bonitasoft.studio.product" id="org.bonitasoft.studio.product" application="org.bonitasoft.studio.application.application" version="6.3.0.qualifier" useFeatures="true" includeLaunchers="true">
+<product name="BonitaBPM" uid="org.bonitasoft.studio.product" id="org.bonitasoft.studio.product" application="org.bonitasoft.studio.application.application" version="6.3.1.qualifier" useFeatures="true" includeLaunchers="true">
 
    <configIni use="default">
    </configIni>
@@ -9,7 +9,7 @@
    <launcherArgs>
       <programArgs>--launcher.XXMaxPermSize512m -groovy.compiler.level 18 -clearPersistedState</programArgs>
       <vmArgs>-Dosgi.requiredJavaVersion=1.6 -Dfile.encoding=UTF8 -Xmx512m -Xms128m -XX:MaxPermSize=256m</vmArgs>
-      <vmArgsLin>-Dorg.eclipse.swt.browser.DefaultType=webkit -Djava.endorsed.dirs=endorsed</vmArgsLin>
+      <vmArgsLin>-Dorg.eclipse.swt.browser.UseWebKitGTK=False -Dorg.eclipse.swt.browser.DefaultType=mozilla -Djava.endorsed.dirs=endorsed</vmArgsLin>
       <vmArgsMac>-Xdock:name=BonitaBPM -XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts -Dorg.eclipse.swt.browser.DefaultType=webkit -Djava.endorsed.dirs=../../../endorsed</vmArgsMac>
       <vmArgsWin>-Dgreclipse.nonlocking=true -Djava.endorsed.dirs=endorsed</vmArgsWin>
    </launcherArgs>

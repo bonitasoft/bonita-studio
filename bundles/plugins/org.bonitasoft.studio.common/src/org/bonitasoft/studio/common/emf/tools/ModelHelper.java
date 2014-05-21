@@ -69,6 +69,7 @@ import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.ReceiveTask;
 import org.bonitasoft.studio.model.process.ScriptTask;
+import org.bonitasoft.studio.model.process.SearchIndex;
 import org.bonitasoft.studio.model.process.SendTask;
 import org.bonitasoft.studio.model.process.SequenceFlow;
 import org.bonitasoft.studio.model.process.ServiceTask;
@@ -1972,4 +1973,22 @@ public class ModelHelper {
         return null;
     }
 
+    
+	public static boolean isObjectIsReferencedInExpression(Expression expr, Object elementToDisplay){
+		for (EObject referencedElement:expr.getReferencedElements()){
+			if (referencedElement instanceof Parameter && elementToDisplay instanceof Parameter && ((Parameter)referencedElement).getName().equals(((Parameter)elementToDisplay).getName())){
+				return true;
+			}
+			
+			if (referencedElement instanceof SearchIndex && elementToDisplay instanceof SearchIndex && ((SearchIndex)referencedElement).getName().getName().equals(((SearchIndex)elementToDisplay).getName().getName())){
+				return true;
+			}
+
+			if (referencedElement instanceof Element && elementToDisplay instanceof Element && ((Element)referencedElement).getName().equals(((Element)elementToDisplay).getName())){
+				return true;
+			}
+		}
+		return false;
+	}
+	
 }

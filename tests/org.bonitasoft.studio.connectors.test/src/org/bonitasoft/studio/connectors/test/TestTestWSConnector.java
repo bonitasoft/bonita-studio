@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2011 BonitaSoft S.A.
- * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2011-2014 Bonitasoft S.A.
+ * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -34,8 +34,8 @@ public class TestTestWSConnector extends SWTBotGefTestCase {
 	
 	public void testTestWSConnector() throws IOException{
 		/*Import process*/
-		bot.waitUntil(Conditions.shellIsActive("Bonita Studio"));
-		SWTBotTestUtil.importProcessWIthPathFromClass(bot, "WS_Without_Introspect--1.0.bar", "Bonita", "WS_Without_Introspect (1.0)", this.getClass(), false);
+		bot.waitUntil(Conditions.shellIsActive("Bonita BPM"));
+		SWTBotTestUtil.importProcessWIthPathFromClass(bot, "WS_Without_Introspect--1.0.bar", "Bonita 6.x", "WS_Without_Introspect (1.0)", this.getClass(), false);
 		SWTBotGefEditor gefEditor = bot.gefEditor("WS_Without_Introspect (1.0)");
 		/*Select step on which there is the connector to test*/
 		gefEditor.getEditPart("Step1").parent().select();

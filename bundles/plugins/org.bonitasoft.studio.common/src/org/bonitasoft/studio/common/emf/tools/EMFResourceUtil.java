@@ -53,7 +53,7 @@ public class EMFResourceUtil {
     public String[] getFeatureValuesFromEObjectId(String xmiId, String... featureNames) throws FeatureNotFoundException{
         Scanner scanner = null;
         try {
-            scanner = new Scanner(eResourceFile);
+            scanner = new Scanner(eResourceFile, "UTF-8");
             List<String> values = new ArrayList<String>();
             while(scanner.hasNextLine()) {
                 String line = scanner.nextLine();
@@ -91,7 +91,7 @@ public class EMFResourceUtil {
     public String[] getFeatureValuesFromEObjectId(String xmiId, EStructuralFeature... features) {
         Scanner scanner = null;
         try {
-            scanner = new Scanner(eResourceFile);
+            scanner = new Scanner(eResourceFile, "UTF-8");
             List<String> values = new ArrayList<String>();
             String xmiIdPattern = toXMIIdPattern(xmiId);
             while(scanner.hasNextLine()) {
@@ -134,7 +134,7 @@ public class EMFResourceUtil {
         Scanner scanner = null;
         Map<String, String[]> featureValuesByObjectId = new HashMap<String, String[]>();
         try {
-            scanner = new Scanner(eResourceFile);
+            scanner = new Scanner(eResourceFile, "UTF-8");
             String xmiTypePattern = toXMITypePattern(xmiType);
             String xsiTypePattern = toXSITypePattern(xmiType);
             String tagTypePattern = toTagTypePattern(xmiType);
@@ -206,7 +206,7 @@ public class EMFResourceUtil {
     public String[] getEObectIfFromEObjectType(String xmiType) throws FeatureNotFoundException {
         Scanner scanner = null;
         try {
-            scanner = new Scanner(eResourceFile);
+            scanner = new Scanner(eResourceFile, "UTF-8");
             List<String> values = new ArrayList<String>();
             String xmiTypePattern = toXMITypePattern(xmiType);
             String xsiTypePattern = toXSITypePattern(xmiType);
