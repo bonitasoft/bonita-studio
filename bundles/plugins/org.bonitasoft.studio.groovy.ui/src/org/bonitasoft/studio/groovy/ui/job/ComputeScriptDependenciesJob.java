@@ -64,6 +64,9 @@ public class ComputeScriptDependenciesJob extends Job {
 
     @Override
     protected IStatus run(final IProgressMonitor monitor) {
+        if (groovyCompilationUnit == null || !groovyCompilationUnit.exists()) {
+            return Status.CANCEL_STATUS;
+        }
         String expression = "";
         try {
             expression = groovyCompilationUnit.getSource();
