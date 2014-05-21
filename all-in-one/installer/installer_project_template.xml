@@ -108,7 +108,7 @@
 		</showQuestion>
 		<throwError>
 			<ruleList>
-				<text></text>
+				<text>"installation cancelled"</text>
 				<compareText text="${continue}" logic="does_not_equal"
 					value="yes" />
 			</ruleList>
