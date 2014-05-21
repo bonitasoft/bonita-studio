@@ -91,8 +91,6 @@
 			<selectionOrder>newest</selectionOrder>
 			<abortOnError>0</abortOnError>
 			<showMessageOnError>0</showMessageOnError>
-			<customErrorMessage>${msg(java.version.error.message)} @os_arch@ bits
-			</customErrorMessage>
 			<validVersionList>
 				<validVersion>
 					<bitness>@os_arch@</bitness>
@@ -110,8 +108,8 @@
 			<variable>continue</variable>
 		</showQuestion>
 		<throwError>
-			<ruleList>
-				<text>installation cancelled"</text>
+			<text>installation cancelled</text>
+			<ruleList>	
 				<compareText>
 					<text>${continue}</text>
 					<logic>does_not_equal</logic>
