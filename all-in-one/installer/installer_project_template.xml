@@ -12,8 +12,7 @@
 	<allowLanguageSelection>1</allowLanguageSelection>
 	<wmImage>@titlebar.image@</wmImage>
 	<windowsExecutableIcon>@windows.ico@</windowsExecutableIcon>
-	<osxApplicationBundleIcon>@mac.installer.icns@
-	</osxApplicationBundleIcon>
+	<osxApplicationBundleIcon>@mac.installer.icns@</osxApplicationBundleIcon>
 	<slideShowLoop>1</slideShowLoop>
 	<slideShowTiming>8</slideShowTiming>
 	<slideShowImageList>
@@ -136,8 +135,7 @@
 		</setInstallerVariable>
 	</preInstallationActionList>
 	<postInstallationActionList>
-		<setInstallerVariable name="ini_file"
-			value="${installdir}/configuration/config.ini" persist="1" />
+		<setInstallerVariable name="ini_file" value="${installdir}/configuration/config.ini" persist="1" />
 		<iniFileSet>
 			<file>${ini_file}</file>
 			<section>Language</section>
@@ -191,16 +189,14 @@
 				</programTest>
 			</conditionRuleList>
 			<elseActionList>
-				<setInstallerVariable name="desktop_path"
-					value="${installdir}" />
+				<setInstallerVariable name="desktop_path" value="${installdir}" />
 			</elseActionList>
 		</if>
 
 		<if>
 			<actionList>
 				<writeFile>
-					<path>${desktop_path}/@product.short.name@-${product_version}.desktop
-					</path>
+					<path>${desktop_path}/@product.short.name@-${product_version}.desktop</path>
 					<encoding>utf-8</encoding>
 					<text>
 						[Desktop Entry]
@@ -215,8 +211,7 @@
 						Type=Application
 					</text>
 				</writeFile>
-				<changePermissions permissions="0755"
-					files="${desktop_path}/@product.short.name@-${product_version}.desktop" />
+				<changePermissions permissions="0755" files="${desktop_path}/@product.short.name@-${product_version}.desktop" />
 			</actionList>
 			<conditionRuleList>
 				<platformTest>
@@ -297,8 +292,7 @@
 				</platformTest>
 			</ruleList>
 			<program>open</program>
-			<programArguments>"${installdir}/@mac.shortcut.name@" &amp;
-			</programArguments>
+			<programArguments>"${installdir}/@mac.shortcut.name@" &amp;</programArguments>
 			<progressText>${msg(launch)} ${product_fullname}</progressText>
 		</runProgram>
 		<runProgram>
@@ -323,8 +317,7 @@
 		</runProgram>
 		<launchBrowser>
 			<show>0</show>
-			<url>http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=126&amp;bos_redirect_product=bos&amp;bos_version=${product_version}&amp;os=${platform_name}&amp;arch=@os_arch@&amp;edition=community
-			</url>
+			<url>http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=126&amp;bos_redirect_product=bos&amp;bos_version=${product_version}&amp;os=${platform_name}&amp;arch=@os_arch@&amp;edition=community</url>
 		</launchBrowser>
 	</finalPageActionList>
 
@@ -456,13 +449,8 @@
 						</runProgram>
 						<runProgram>
 							<program>${java_executable}</program>
-							<programArguments>-Xmx512m -XX:MaxPermSize=512m
-								-XstartOnFirstThread -jar
-								"${installdir}/plugins/org.eclipse.equinox.launcher_1.3.0.v20130327-1440.jar"
-								-product org.bonitasoft.studio.initializer -data
-								"${installdir}/workspace" -noSplash</programArguments>
-							<progressText>${msg(initializing.progressMessage)}
-								${product_fullname}...</progressText>
+							<programArguments>-Xmx512m -XX:MaxPermSize=512m -XstartOnFirstThread -jar "${installdir}/plugins/org.eclipse.equinox.launcher_1.3.0.v20130327-1440.jar" -product org.bonitasoft.studio.initializer -data "${installdir}/workspace" -noSplash</programArguments>
+							<progressText>${msg(initializing.progressMessage)} ${product_fullname}...</progressText>
 							<ruleList>
 								<isFalse>
 									<value>${retrieveWorksapce}</value>
@@ -511,8 +499,7 @@
 				<findFile>
 					<baseDirectory>${Oldworkspace}</baseDirectory>
 					<showMessageOnError>1</showMessageOnError>
-					<customErrorMessage>${msg(workspace.location.validation.error)}
-					</customErrorMessage>
+					<customErrorMessage>${msg(workspace.location.validation.error)}</customErrorMessage>
 					<pattern>workspace</pattern>
 					<variable>workspaceFound</variable>
 				</findFile>
@@ -525,14 +512,8 @@
 					<actionList>
 						<runProgram>
 							<program>${java_executable}</program>
-							<programArguments>-Xmx512m -XX:MaxPermSize=512m -jar
-								"${installdir}/plugins/org.eclipse.equinox.launcher_1.3.0.v20130327-1440.jar"
-								-product org.bonitasoft.studio.workspaceRecovery -application
-								org.bonitasoft.studio.application.WorkspaceRecovery -data
-								"${Oldworkspace}/workspace/" -newWorkspaceLocation
-								"${installdir}/workspace" -noSplash</programArguments>
-							<progressText>${msg(workspace.recovery.progressMessage)}
-							</progressText>
+							<programArguments>-Xmx512m -XX:MaxPermSize=512m -jar "${installdir}/plugins/org.eclipse.equinox.launcher_1.3.0.v20130327-1440.jar" -product org.bonitasoft.studio.workspaceRecovery -application org.bonitasoft.studio.application.WorkspaceRecovery -data "${Oldworkspace}/workspace/" -newWorkspaceLocation "${installdir}/workspace" -noSplash</programArguments>
+							<progressText>${msg(workspace.recovery.progressMessage)} </progressText>
 							<ruleList>
 								<platformTest>
 									<negate>1</negate>
@@ -545,13 +526,8 @@
 						</runProgram>
 						<runProgram>
 							<program>${java_executable}</program>
-							<programArguments>-Xmx512m -XX:MaxPermSize=512m -jar
-								"${installdir}/plugins/org.eclipse.equinox.launcher_1.3.0.v20130327-1440.jar"
-								-product org.bonitasoft.studio.initializer -application
-								org.bonitasoft.studio.application.InitializerApplication -data
-								"${installdir}/workspace" -noSplash</programArguments>
-							<progressText>${msg(initializing.progressMessage)}
-								${product_fullname}...</progressText>
+							<programArguments>-Xmx512m -XX:MaxPermSize=512m -jar "${installdir}/plugins/org.eclipse.equinox.launcher_1.3.0.v20130327-1440.jar" -product org.bonitasoft.studio.initializer -application org.bonitasoft.studio.application.InitializerApplication -data "${installdir}/workspace" -noSplash</programArguments>
+							<progressText>${msg(initializing.progressMessage)} ${product_fullname}...</progressText>
 							<ruleList>
 								<platformTest>
 									<negate>1</negate>
@@ -561,15 +537,8 @@
 						</runProgram>
 						<runProgram>
 							<program>${java_executable}</program>
-							<programArguments>-Xmx512m -XX:MaxPermSize=512m
-								-XstartOnFirstThread -jar
-								"${installdir}/plugins/org.eclipse.equinox.launcher_1.3.0.v20130327-1440.jar"
-								-product org.bonitasoft.studio.workspaceRecovery -application
-								org.bonitasoft.studio.application.WorkspaceRecovery -data
-								"${Oldworkspace}/workspace/" -newWorkspaceLocation
-								"${installdir}/workspace" -noSplash</programArguments>
-							<progressText>${msg(workspace.recovery.progressMessage)}
-							</progressText>
+							<programArguments>-Xmx512m -XX:MaxPermSize=512m -XstartOnFirstThread -jar "${installdir}/plugins/org.eclipse.equinox.launcher_1.3.0.v20130327-1440.jar" -product org.bonitasoft.studio.workspaceRecovery -application org.bonitasoft.studio.application.WorkspaceRecovery -data "${Oldworkspace}/workspace/" -newWorkspaceLocation "${installdir}/workspace" -noSplash</programArguments>
+							<progressText>${msg(workspace.recovery.progressMessage)}</progressText>
 							<ruleList>
 								<platformTest>
 									<type>osx</type>
@@ -582,14 +551,8 @@
 						<runProgram>
 							<program>${java_executable}</program>
 							<!-- Change bundle version when Equinox version change -->
-							<programArguments>-Xmx512m -XX:MaxPermSize=512m
-								-XstartOnFirstThread -jar
-								"${installdir}/plugins/org.eclipse.equinox.launcher_1.3.0.v20130327-1440.jar"
-								-product org.bonitasoft.studio.initializer -application
-								org.bonitasoft.studio.application.InitializerApplication -data
-								"${installdir}/workspace" -noSplash</programArguments>
-							<progressText>${msg(initializing.progressMessage)}
-								${product_fullname}...</progressText>
+							<programArguments>-Xmx512m -XX:MaxPermSize=512m -XstartOnFirstThread -jar "${installdir}/plugins/org.eclipse.equinox.launcher_1.3.0.v20130327-1440.jar" -product org.bonitasoft.studio.initializer -application org.bonitasoft.studio.application.InitializerApplication -data "${installdir}/workspace" -noSplash</programArguments>
+							<progressText>${msg(initializing.progressMessage)} ${product_fullname}...</progressText>
 							<ruleList>
 								<platformTest>
 									<type>osx</type>
@@ -605,8 +568,7 @@
 			<description>Installer.Parameter.installdir.description</description>
 			<explanation>Installer.Parameter.installdir.explanation</explanation>
 			<value></value>
-			<default>${platform_install_prefix}/@product.short.name@-${product_version}
-			</default>
+			<default>${platform_install_prefix}/@product.short.name@-${product_version}</default>
 			<allowEmptyValue>0</allowEmptyValue>
 			<ask>yes</ask>
 			<cliOptionName>prefix</cliOptionName>
@@ -645,9 +607,7 @@
 						</findFile>
 						<runProgram>
 							<program>${java_executable}</program>
-							<programArguments>-cp "${generateKeyjar}"
-								org.bonitasoft.security.generateKey.GenerateKeyDev -noPrompt
-								-output=${installDir}/license/requestKey.txt</programArguments>
+							<programArguments>-cp "${generateKeyjar}" org.bonitasoft.security.generateKey.GenerateKeyDev -noPrompt -output=${installDir}/license/requestKey.txt</programArguments>
 							<progressText>Generate request key</progressText>
 						</runProgram>
 						<readFile>
@@ -678,13 +638,11 @@
 								<fileExists>
 									<path>${installLicense}</path>
 								</fileExists>
-								<regExMatch logic="does_not_match" pattern=".*\.(lic)$"
-									text="${installLicense}" />
+								<regExMatch logic="does_not_match" pattern=".*\.(lic)$" text="${installLicense}" />
 							</ruleList>
 						</throwError>
 						<copyFile>
-							<customErrorMessage>${msg(install.license.error)}
-							</customErrorMessage>
+							<customErrorMessage>${msg(install.license.error)}</customErrorMessage>
 							<destination>${installdir}</destination>
 							<origin>${installLicense}</origin>
 							<ruleList>
