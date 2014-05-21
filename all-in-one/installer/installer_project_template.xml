@@ -80,11 +80,15 @@
 		</setInstallerVariable>
 	</preShowHelpActionList>
 	<preInstallationActionList>
+		<setInstallerVariable>
+			<name>continue</name>
+			<value>yes</value>
+		</setInstallerVariable>
 		<autodetectJava>
 			<promptUser>0</promptUser>
 			<selectionOrder>newest</selectionOrder>
-			<abortOnError>1</abortOnError>
-			<showMessageOnError>1</showMessageOnError>
+			<abortOnError>0</abortOnError>
+			<showMessageOnError>0</showMessageOnError>
 			<customErrorMessage>${msg(java.version.error.message)} @os_arch@ bits</customErrorMessage>
 			<validVersionList>
 				<validVersion>
@@ -98,6 +102,20 @@
 		<setInstallerVariable>
 			<!-- Set default path to C: on Windows -->
 			<name>installdir</name>
+		<showQuestion>
+			<ruleList>
+				<isFalse value="${java_autodetected}" />
+			</ruleList>
+			<text>${msg(java.version.error.message)} @os_arch@ bits</text>
+			<variable>continue</variable>
+		</showQuestion>
+		<throwError>
+			<ruleList>
+				<text></text>
+				<compareText text="${continue}" logic="does_not_equal"
+					value="yes" />
+			</ruleList>
+		</throwError>
 			<value>${env(SYSTEMDRIVE)}/@product.short.name@-${product_version}</value>
 			<ruleList>
 				<platformTest type="windows" />
