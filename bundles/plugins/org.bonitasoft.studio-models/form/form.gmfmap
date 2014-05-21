@@ -650,7 +650,7 @@
               xsi:type="ecore:EReference"
               href="../form.ecore#//Widget/afterEventExpression"/>
           <value
-              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;empty_list&quot;);&#xD;&#xA;exp.setType(org.bonitasoft.studio.common.ExpressionConstants.SCRIPT_TYPE);&#xD;&#xA;exp.setContent(&quot;[]&quot;);&#xD;&#xA;exp.setReturnType(java.util.List.class.getName());&#xD;&#xA;&#xA;return exp ;"
+              body="return org.bonitasoft.studio.common.emf.tools.ExpressionHelper.createEmptyListGroovyScriptExpression();"
               language="java"/>
         </initializers>
         <initializers
@@ -1024,7 +1024,7 @@
               xsi:type="ecore:EReference"
               href="../form.ecore#//Widget/afterEventExpression"/>
           <value
-              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;empty_list&quot;);&#xD;&#xA;exp.setType(org.bonitasoft.studio.common.ExpressionConstants.SCRIPT_TYPE);&#xD;&#xA;exp.setContent(&quot;[]&quot;);&#xD;&#xA;exp.setReturnType(java.util.List.class.getName());&#xD;&#xD;&#xA;return exp ;"
+              body="return org.bonitasoft.studio.common.emf.tools.ExpressionHelper.createEmptyListGroovyScriptExpression();"
               language="java"/>
         </initializers>
         <initializers
@@ -1220,7 +1220,7 @@
               xsi:type="ecore:EReference"
               href="../form.ecore#//Widget/afterEventExpression"/>
           <value
-              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;empty_list&quot;);&#xD;&#xA;exp.setType(org.bonitasoft.studio.common.ExpressionConstants.SCRIPT_TYPE);&#xD;&#xA;exp.setContent(&quot;[]&quot;);&#xD;&#xA;exp.setReturnType(java.util.List.class.getName());&#xD;&#xA;&#xA;return exp ;"
+              body="return org.bonitasoft.studio.common.emf.tools.ExpressionHelper.createEmptyListGroovyScriptExpression();"
               language="java"/>
         </initializers>
         <initializers
@@ -1416,7 +1416,7 @@
               xsi:type="ecore:EReference"
               href="../form.ecore#//Widget/afterEventExpression"/>
           <value
-              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;empty_list&quot;);&#xD;&#xA;exp.setType(org.bonitasoft.studio.common.ExpressionConstants.SCRIPT_TYPE);&#xD;&#xA;exp.setContent(&quot;[]&quot;);&#xD;&#xA;exp.setReturnType(java.util.List.class.getName());&#xD;&#xA;exp.setReturnType(java.util.Collection.class.getName());&#xD;&#xA;return exp ;"
+              body="return org.bonitasoft.studio.common.emf.tools.ExpressionHelper.createEmptyListGroovyScriptExpression();"
               language="java"/>
         </initializers>
         <initializers
@@ -2548,6 +2548,15 @@
               body="org.bonitasoft.studio.model.expression.Operation action = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createOperation() ;&#xD;&#xA;                org.bonitasoft.studio.model.expression.Operator op = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createOperator() ;&#xD;&#xA;                op.setType(org.bonitasoft.studio.common.ExpressionConstants.ASSIGNMENT_OPERATOR) ;&#xD;&#xA;                op.setExpression(&quot;=&quot;) ;&#xD;&#xA;                action.setOperator(op) ;&#xD;&#xA;&#xD;&#xA;                org.bonitasoft.studio.model.expression.Expression variableExp = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createExpression() ;&#xD;&#xA;                org.bonitasoft.studio.model.expression.Expression actionExp = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createExpression() ;&#xD;&#xA;                action.setLeftOperand(variableExp) ;&#xD;&#xA;                action.setRightOperand(actionExp) ;&#xD;&#xA;return action;"
               language="java"/>
         </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Group/iterator"/>
+          <value
+              body="org.bonitasoft.studio.model.form.GroupIterator iterator = org.bonitasoft.studio.model.form.FormFactory.eINSTANCE.createGroupIterator();&#xA;iterator.setName(&quot;&quot;);&#xA;iterator.setClassName(Object.class.getName());&#xA;return iterator;"
+              language="java"/>
+        </initializers>
       </domainInitializer>
       <diagramNode
           href="form.gmfgraph#Group"/>
@@ -3210,7 +3219,7 @@
               xsi:type="ecore:EReference"
               href="../form.ecore#//Widget/afterEventExpression"/>
           <value
-              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;empty_list&quot;);&#xD;&#xA;exp.setType(org.bonitasoft.studio.common.ExpressionConstants.SCRIPT_TYPE);&#xD;&#xA;exp.setContent(&quot;[]&quot;);&#xD;&#xA;exp.setReturnType(java.util.List.class.getName());&#xD;&#xA;return exp ;"
+              body="return org.bonitasoft.studio.common.emf.tools.ExpressionHelper.createEmptyListGroovyScriptExpression();"
               language="java"/>
         </initializers>
         <initializers

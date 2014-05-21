@@ -5,14 +5,14 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
+ * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.condition.ui.expression;
 
@@ -103,362 +103,387 @@ import com.google.inject.Injector;
  */
 public class ComparisonExpressionEditor extends SelectionAwareExpressionEditor implements IExpressionEditor {
 
-	private ComboViewer typeCombo;
-	private Button automaticResolutionButton;
-	protected Button removeDependencyButton;
-	private Section dependencySection;
-	private TableViewer dependenciesViewer;
-	private Button addDependencyButton;
-	@SuppressWarnings("restriction")
-	private EmbeddedEditor comparisonEditor;
-	private EObject context;
-	private ComposedAdapterFactory adapterFactory;
-	private AdapterFactoryLabelProvider adapterLabelProvider;
-	private Expression inputExpression;
-	private XtextResource resource;
-	private Resource eResource;
-	private boolean isPageFlowContext=false;
+    private ComboViewer typeCombo;
 
-	public ComparisonExpressionEditor(Resource eResource, EObject context) {
-		this.context = context;
-		this.eResource = eResource;
-		adapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
-		adapterLabelProvider  = new AdapterFactoryLabelProvider(adapterFactory) ;
-	}
+    private Button automaticResolutionButton;
 
-	/* (non-Javadoc)
-	 * @see org.bonitasoft.studio.expression.editor.provider.IExpressionEditor#createExpressionEditor(org.eclipse.swt.widgets.Composite)
-	 */
-	@Override
-	public Control createExpressionEditor(Composite parent) {
-		final Composite mainComposite =new Composite(parent,SWT.NONE);
-		mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).create());
-		mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true,true).create());
-		createHeader(mainComposite);
-		createComparisonEditor(mainComposite);
-		createDependanciesResolutionComposite(mainComposite);
-		createReturnTypeComposite(mainComposite);
-		return mainComposite;
-	}
+    protected Button removeDependencyButton;
 
-	protected void createHeader(Composite parent){
-		Composite header = new Composite(parent,SWT.NONE);
-		header.setLayout(GridLayoutFactory.fillDefaults().create());
-		header.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
-		final Label autocompleteMessage = new Label(header,SWT.WRAP);
-		autocompleteMessage.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-		autocompleteMessage.setText(Messages.autocompleteMessage);
-		autocompleteMessage.setFont(BonitaStudioFontRegistry.getItalicFont());
-		final Label supportedOperators = new Label(header,SWT.WRAP);
-		supportedOperators.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-		supportedOperators.setText(Messages.comparisonSupportedOperators);
-		supportedOperators.setFont(BonitaStudioFontRegistry.getItalicFont());
+    private Section dependencySection;
 
-	}
+    private TableViewer dependenciesViewer;
 
-	@SuppressWarnings("restriction")
-	protected void createComparisonEditor(Composite parent){
-		IEditedResourceProvider resourceProvider = new IEditedResourceProvider() {
-			@Override
-			public XtextResource createResource() {
-				try {
-					final Injector injector = ConditionModelActivator.getInstance().getInjector(ConditionModelActivator.ORG_BONITASOFT_STUDIO_CONDITION_CONDITIONMODEL);
-					final XtextResourceSetProvider xtextResourceSetProvider = injector.getInstance(XtextResourceSetProvider.class);
-					final ResourceSet resourceSet = xtextResourceSetProvider.get(RepositoryManager.getInstance().getCurrentRepository().getProject());
-					resource = (XtextResource) resourceSet.createResource(URI.createURI("somefile.cmodel"));
-					resource.setValidationDisabled(false);
-					final ConditionModelGlobalScopeProvider globalScopeProvider = injector.getInstance(ConditionModelGlobalScopeProvider.class);
-					final List<String> accessibleObjects = new ArrayList<String>();
-					for(Data d : ModelHelper.getAccessibleData(context)){
-						accessibleObjects.add(ModelHelper.getEObjectID(d));
-					}
-					for(Parameter p : ModelHelper.getParentProcess(context).getParameters()){
-						accessibleObjects.add(ModelHelper.getEObjectID(p));
-					}
-					globalScopeProvider.setAccessibleEObjects(accessibleObjects);
-					return (XtextResource) resource;
-				} catch (Exception e) {
-					BonitaStudioLog.error(e, ExpressionEditorPlugin.PLUGIN_ID);
-					return null;
-				}
-			}
-		};
-		ConditionModelActivator activator = ConditionModelActivator.getInstance();
-		Injector injector =  activator.getInjector(ConditionModelActivator.ORG_BONITASOFT_STUDIO_CONDITION_CONDITIONMODEL);
-		EmbeddedEditorFactory factory = injector.getInstance(EmbeddedEditorFactory.class);
+    private Button addDependencyButton;
 
-		final Builder buildEditor = factory.newEditor(resourceProvider);
-		comparisonEditor = buildEditor.withParent(parent);
-		comparisonEditor.createPartialEditor(true);
-		comparisonEditor.getViewer().getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-		comparisonEditor.getViewer().addTextListener(new ITextListener() {
+    @SuppressWarnings("restriction")
+    private EmbeddedEditor comparisonEditor;
 
-			@Override
-			public void textChanged(TextEvent event) {
-				comparisonEditor.getViewer().getControl().notifyListeners(SWT.Modify, new Event());
-			}
-		});
-	}
+    private EObject context;
 
-	protected void createDependanciesResolutionComposite(Composite parent){
-		final Composite dependanciesComposite = new Composite(parent,SWT.NONE);
-		dependanciesComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).align(SWT.FILL, SWT.CENTER).create()) ;
-		dependanciesComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(0, 0).create());
+    private ComposedAdapterFactory adapterFactory;
 
-		automaticResolutionButton = new Button(dependanciesComposite, SWT.CHECK) ;
-		automaticResolutionButton.setText(Messages.automaticResolution) ;
-		automaticResolutionButton.setLayoutData(GridDataFactory.fillDefaults().grab(true,false).span(2, 1).create()) ;
-		automaticResolutionButton.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				if(automaticResolutionButton.getSelection()){
-					removeDependencyButton.setEnabled(false) ;
-					updateDependencies();
-				}
-				dependencySection.setExpanded(!automaticResolutionButton.getSelection());
-			}
-		}) ;
+    private AdapterFactoryLabelProvider adapterLabelProvider;
 
+    private Expression inputExpression;
 
-		dependencySection = new Section(dependanciesComposite,Section.NO_TITLE);
-		dependencySection.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).span(2, 1).create());
-		dependencySection.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
+    private XtextResource resource;
 
+    private Resource eResource;
 
-		Composite dependenciesComposite = new Composite(dependencySection, SWT.NONE) ;
-		dependenciesComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
-		dependenciesComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(0, 0).create()) ;
+    private boolean isPageFlowContext = false;
 
-		dependenciesViewer = new TableViewer(dependenciesComposite, SWT.BORDER | SWT.V_SCROLL | SWT.MULTI) ;
-		dependenciesViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 40).create());
-		dependenciesViewer.setContentProvider(new ArrayContentProvider()) ;
-		dependenciesViewer.setLabelProvider(adapterLabelProvider) ;
-		dependenciesViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+    public ComparisonExpressionEditor(Resource eResource, EObject context) {
+        this.context = context;
+        this.eResource = eResource;
+        adapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
+        adapterLabelProvider = new AdapterFactoryLabelProvider(adapterFactory);
+    }
 
-			@Override
-			public void selectionChanged(SelectionChangedEvent event) {
-				if(!event.getSelection().isEmpty() && !automaticResolutionButton.getSelection()){
-					removeDependencyButton.setEnabled(true) ;
-				}
-			}
-		}) ;
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.expression.editor.provider.IExpressionEditor#createExpressionEditor(org.eclipse.swt.widgets.Composite)
+     */
+    @Override
+    public Control createExpressionEditor(Composite parent, EMFDataBindingContext ctx) {
+        final Composite mainComposite = new Composite(parent, SWT.NONE);
+        mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).create());
+        mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        createHeader(mainComposite);
+        createComparisonEditor(mainComposite);
+        createDependanciesResolutionComposite(mainComposite);
+        createReturnTypeComposite(mainComposite);
+        return mainComposite;
+    }
 
-		Composite addRemoveComposite = new Composite(dependenciesComposite, SWT.NONE) ;
-		addRemoveComposite.setLayoutData(GridDataFactory.fillDefaults().create()) ;
-		addRemoveComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).spacing(0, 0).create()) ;
+    protected void createHeader(Composite parent) {
+        Composite header = new Composite(parent, SWT.NONE);
+        header.setLayout(GridLayoutFactory.fillDefaults().create());
+        header.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+        final Label autocompleteMessage = new Label(header, SWT.WRAP);
+        autocompleteMessage.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        autocompleteMessage.setText(Messages.autocompleteMessage);
+        autocompleteMessage.setFont(BonitaStudioFontRegistry.getItalicFont());
+        final Label supportedOperators = new Label(header, SWT.WRAP);
+        supportedOperators.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        supportedOperators.setText(Messages.comparisonSupportedOperators);
+        supportedOperators.setFont(BonitaStudioFontRegistry.getItalicFont());
 
-		addDependencyButton = new Button(addRemoveComposite, SWT.FLAT) ;
-		addDependencyButton.setText(Messages.add) ;
-		addDependencyButton.setLayoutData(GridDataFactory.fillDefaults().create()) ;
+    }
 
+    @SuppressWarnings("restriction")
+    protected void createComparisonEditor(Composite parent) {
+        IEditedResourceProvider resourceProvider = new IEditedResourceProvider() {
 
-		removeDependencyButton = new Button(addRemoveComposite, SWT.FLAT) ;
-		removeDependencyButton.setText(Messages.remove) ;
-		removeDependencyButton.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				for(Object sel : ((IStructuredSelection)dependenciesViewer.getSelection()).toList()){
-					inputExpression.getReferencedElements().remove(sel) ;
-				}
-			}
-		}) ;
-		removeDependencyButton.setEnabled(false) ;
-		removeDependencyButton.setLayoutData(GridDataFactory.fillDefaults().create()) ;
+            @Override
+            public XtextResource createResource() {
+                try {
+                    final Injector injector = ConditionModelActivator.getInstance().getInjector(
+                            ConditionModelActivator.ORG_BONITASOFT_STUDIO_CONDITION_CONDITIONMODEL);
+                    final XtextResourceSetProvider xtextResourceSetProvider = injector.getInstance(XtextResourceSetProvider.class);
+                    final ResourceSet resourceSet = xtextResourceSetProvider.get(RepositoryManager.getInstance().getCurrentRepository().getProject());
+                    resource = (XtextResource) resourceSet.createResource(URI.createURI("somefile.cmodel"));
+                    resource.setValidationDisabled(false);
+                    final ConditionModelGlobalScopeProvider globalScopeProvider = injector.getInstance(ConditionModelGlobalScopeProvider.class);
+                    final List<String> accessibleObjects = new ArrayList<String>();
+                    for (Data d : ModelHelper.getAccessibleData(context)) {
+                        accessibleObjects.add(ModelHelper.getEObjectID(d));
+                    }
+                    for (Parameter p : ModelHelper.getParentProcess(context).getParameters()) {
+                        accessibleObjects.add(ModelHelper.getEObjectID(p));
+                    }
+                    globalScopeProvider.setAccessibleEObjects(accessibleObjects);
+                    return (XtextResource) resource;
+                } catch (Exception e) {
+                    BonitaStudioLog.error(e, ExpressionEditorPlugin.PLUGIN_ID);
+                    return null;
+                }
+            }
+        };
+        ConditionModelActivator activator = ConditionModelActivator.getInstance();
+        Injector injector = activator.getInjector(ConditionModelActivator.ORG_BONITASOFT_STUDIO_CONDITION_CONDITIONMODEL);
+        EmbeddedEditorFactory factory = injector.getInstance(EmbeddedEditorFactory.class);
 
-		dependencySection.setClient(dependenciesComposite);
-		automaticResolutionButton.setSelection(true);
+        final Builder buildEditor = factory.newEditor(resourceProvider);
+        comparisonEditor = buildEditor.withParent(parent);
+        comparisonEditor.createPartialEditor(true);
+        comparisonEditor.getViewer().getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        comparisonEditor.getViewer().addTextListener(new ITextListener() {
 
-	}
+            @Override
+            public void textChanged(TextEvent event) {
+                comparisonEditor.getViewer().getControl().notifyListeners(SWT.Modify, new Event());
+            }
+        });
+    }
 
-	protected void updateDependencies() {
-		inputExpression.getReferencedElements().clear();
-		final Injector injector = ConditionModelActivator.getInstance().getInjector(ConditionModelActivator.ORG_BONITASOFT_STUDIO_CONDITION_CONDITIONMODEL);
-		final IResourceValidator xtextResourceChecker =	injector.getInstance(IResourceValidator.class);
-		final List<Issue> issues = xtextResourceChecker.validate(resource, CheckMode.NORMAL_AND_FAST, null);
-		if(issues.isEmpty()){//Validation is OK
-			Operation_Compare compareOp = (Operation_Compare) resource.getContents().get(0);
-			if(compareOp != null){
-				List<Expression_ProcessRef> references = ModelHelper.getAllItemsOfType(compareOp, ConditionModelPackage.Literals.EXPRESSION_PROCESS_REF);
-				for(Expression_ProcessRef ref : references){
-					EObject dep = getResolvedDependency(ref);
-					inputExpression.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(dep));
-				}
-			}
-		}
-	}
+    protected void createDependanciesResolutionComposite(Composite parent) {
+        final Composite dependanciesComposite = new Composite(parent, SWT.NONE);
+        dependanciesComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).align(SWT.FILL, SWT.CENTER).create());
+        dependanciesComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(0, 0).create());
 
-	/**
-	 * @param ref
-	 * @return
-	 */
-	private EObject getResolvedDependency(Expression_ProcessRef ref) {
-		EObject dep = resolveProxy(ref.getValue());
-		List<EObject> orignalDep = ModelHelper.getAllItemsOfType( ModelHelper.getMainProcess(context), dep.eClass());
-		for(EObject d : orignalDep){
-			if(EcoreUtil.equals(dep, d)){
-				dep = d;
-				break;
-			}
-		}
-		return dep;
-	}
+        automaticResolutionButton = new Button(dependanciesComposite, SWT.CHECK);
+        automaticResolutionButton.setText(Messages.automaticResolution);
+        automaticResolutionButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 1).create());
+        automaticResolutionButton.addSelectionListener(new SelectionAdapter() {
 
-	private EObject resolveProxy(EObject ref) {
-		ResourceSet rSet = null;
-		if(ref.eIsProxy()){
-			rSet = eResource.getResourceSet();
-		}
-		EObject dep = EcoreUtil2.resolve(ref, rSet);
-		if(rSet != null){
-			rSet.getResources().remove(ref.eResource());
-		}
-		return dep;
-	}
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                if (automaticResolutionButton.getSelection()) {
+                    removeDependencyButton.setEnabled(false);
+                    updateDependencies();
+                }
+                dependencySection.setExpanded(!automaticResolutionButton.getSelection());
+            }
+        });
 
-	protected void createReturnTypeComposite(Composite parent){
-		final Composite returnTypeComposite = new Composite(parent,SWT.NONE);
-		returnTypeComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
-		returnTypeComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).align(SWT.FILL,SWT.BOTTOM).create());
+        dependencySection = new Section(dependanciesComposite, Section.NO_TITLE);
+        dependencySection.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).span(2, 1).create());
+        dependencySection.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
 
-		Label typeLabel = new Label(returnTypeComposite, SWT.NONE) ;
-		typeLabel.setText(Messages.returnType) ;
+        Composite dependenciesComposite = new Composite(dependencySection, SWT.NONE);
+        dependenciesComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+        dependenciesComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(0, 0).create());
 
-		typeCombo = new ComboViewer(returnTypeComposite, SWT.BORDER | SWT.READ_ONLY) ;
-		typeCombo.getCombo().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
-		typeCombo.setContentProvider(new ExpressionReturnTypeContentProvider()) ;
-		typeCombo.setLabelProvider(new ConstantTypeLabelProvider()) ;
-		typeCombo.setInput(new Object()) ;
-	}
+        dependenciesViewer = new TableViewer(dependenciesComposite, SWT.BORDER | SWT.V_SCROLL | SWT.MULTI);
+        dependenciesViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 40).create());
+        dependenciesViewer.setContentProvider(new ArrayContentProvider());
+        dependenciesViewer.setLabelProvider(adapterLabelProvider);
+        dependenciesViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 
+            @Override
+            public void selectionChanged(SelectionChangedEvent event) {
+                if (!event.getSelection().isEmpty() && !automaticResolutionButton.getSelection()) {
+                    removeDependencyButton.setEnabled(true);
+                }
+            }
+        });
 
-	/* (non-Javadoc)
-	 * @see org.bonitasoft.studio.expression.editor.provider.IExpressionEditor#bindExpression(org.eclipse.emf.databinding.EMFDataBindingContext, org.eclipse.emf.ecore.EObject, org.bonitasoft.studio.model.expression.Expression, org.eclipse.jface.viewers.ViewerFilter[])
-	 */
-	@Override
-	public void bindExpression(EMFDataBindingContext dataBindingContext,
-			EObject context, Expression inputExpression,
-			ViewerFilter[] viewerTypeFilters,ExpressionViewer expressionViewer) {
-		this.inputExpression = inputExpression;
-		final IObservableValue contentModelObservable = EMFObservables.observeValue(inputExpression, ExpressionPackage.Literals.EXPRESSION__CONTENT) ;
-		final IObservableValue nameModelObservable = EMFObservables.observeValue(inputExpression, ExpressionPackage.Literals.EXPRESSION__NAME) ;
-		final IObservableValue dependenciesModelObservable = EMFObservables.observeValue(inputExpression, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS) ;
-		final IObservableValue autoDepsModelObservable = EMFObservables.observeValue(inputExpression, ExpressionPackage.Literals.EXPRESSION__AUTOMATIC_DEPENDENCIES) ;
-		final IObservableValue returnTypeModelObservable = EMFObservables.observeValue(inputExpression, ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE) ;
-		final ISWTObservableValue observeText = SWTObservables.observeText(comparisonEditor.getViewer().getControl(),SWT.Modify);
-		dataBindingContext.bindValue(observeText, contentModelObservable) ;
-		observeText.addValueChangeListener(new IValueChangeListener() {
-			
-			@Override
-			public void handleValueChange(ValueChangeEvent event) {
-				if(ComparisonExpressionEditor.this.inputExpression.isAutomaticDependencies()){
-					updateDependencies();
-				}
-			}
-		});
-		dataBindingContext.bindValue(observeText, nameModelObservable) ;
-		dataBindingContext.bindValue(ViewersObservables.observeInput(dependenciesViewer), dependenciesModelObservable) ;
+        Composite addRemoveComposite = new Composite(dependenciesComposite, SWT.NONE);
+        addRemoveComposite.setLayoutData(GridDataFactory.fillDefaults().create());
+        addRemoveComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).spacing(0, 0).create());
 
-		UpdateValueStrategy opposite = new UpdateValueStrategy() ;
-		opposite.setConverter(new Converter(Boolean.class,Boolean.class) {
+        addDependencyButton = new Button(addRemoveComposite, SWT.FLAT);
+        addDependencyButton.setText(Messages.add);
+        addDependencyButton.setLayoutData(GridDataFactory.fillDefaults().create());
 
-			@Override
-			public Object convert(Object fromObject) {
-				return !((Boolean)fromObject);
-			}
-		}) ;
+        removeDependencyButton = new Button(addRemoveComposite, SWT.FLAT);
+        removeDependencyButton.setText(Messages.remove);
+        removeDependencyButton.addSelectionListener(new SelectionAdapter() {
 
-		dataBindingContext.bindValue(SWTObservables.observeSelection(automaticResolutionButton), autoDepsModelObservable) ;
-		dataBindingContext.bindValue(SWTObservables.observeSelection(automaticResolutionButton), SWTObservables.observeEnabled(addDependencyButton),opposite,new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER)) ;
-		dependencySection.setExpanded(!automaticResolutionButton.getSelection());
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                for (Object sel : ((IStructuredSelection) dependenciesViewer.getSelection()).toList()) {
+                    inputExpression.getReferencedElements().remove(sel);
+                }
+            }
+        });
+        removeDependencyButton.setEnabled(false);
+        removeDependencyButton.setLayoutData(GridDataFactory.fillDefaults().create());
 
-		addDependencyButton.setEnabled(!inputExpression.isAutomaticDependencies()) ;
-		ControlDecorationSupport.create(dataBindingContext.bindValue(ViewersObservables.observeSingleSelection(typeCombo), returnTypeModelObservable),SWT.LEFT) ;
-		typeCombo.getCombo().setEnabled(!inputExpression.isReturnTypeFixed()) ;
+        dependencySection.setClient(dependenciesComposite);
+        automaticResolutionButton.setSelection(true);
 
-		final ExpressionContentProvider provider = new ExpressionContentProvider() ;
-		provider.setContext(context);
+    }
 
-		final Set<Expression> filteredExpressions = new HashSet<Expression>() ;
-		Expression[] expressions = provider.getExpressions();
-		EObject input =  provider.getContext() ;
-		if(expressions != null){
-			filteredExpressions.addAll(Arrays.asList(expressions)) ;
-			if(input != null && viewerTypeFilters != null){
-				for(Expression exp : expressions) {
-					for(ViewerFilter filter : viewerTypeFilters){
-						if(filter != null && !filter.select(comparisonEditor.getViewer(), input, exp)){
-							filteredExpressions.remove(exp) ;
-						}
-					}
-				}
-			}
-		}
+    protected void updateDependencies() {
+        inputExpression.getReferencedElements().clear();
+        final Injector injector = ConditionModelActivator.getInstance().getInjector(ConditionModelActivator.ORG_BONITASOFT_STUDIO_CONDITION_CONDITIONMODEL);
+        final IResourceValidator xtextResourceChecker = injector.getInstance(IResourceValidator.class);
+        final List<Issue> issues = xtextResourceChecker.validate(resource, CheckMode.NORMAL_AND_FAST, null);
+        if (issues.isEmpty()) {// Validation is OK
+            Operation_Compare compareOp = (Operation_Compare) resource.getContents().get(0);
+            if (compareOp != null) {
+                List<Expression_ProcessRef> references = ModelHelper.getAllItemsOfType(compareOp, ConditionModelPackage.Literals.EXPRESSION_PROCESS_REF);
+                for (Expression_ProcessRef ref : references) {
+                    EObject dep = getResolvedDependency(ref);
+                    inputExpression.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(dep));
+                }
+            }
+        }
+    }
 
-		addDependencyButton.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				SelectDependencyDialog dialog =	new SelectDependencyDialog(Display.getDefault().getActiveShell(),filteredExpressions, ComparisonExpressionEditor.this.inputExpression.getReferencedElements()) ;
-				dialog.open()  ;
-			}
-		}) ;
-	}
+    /**
+     * @param ref
+     * @return
+     */
+    private EObject getResolvedDependency(Expression_ProcessRef ref) {
+        EObject dep = resolveProxy(ref.getValue());
+        List<EObject> orignalDep = ModelHelper.getAllItemsOfType(ModelHelper.getMainProcess(context), dep.eClass());
+        for (EObject d : orignalDep) {
+            if (EcoreUtil.equals(dep, d)) {
+                dep = d;
+                break;
+            }
+        }
+        return dep;
+    }
 
-	/* (non-Javadoc)
-	 * @see org.bonitasoft.studio.expression.editor.provider.IExpressionEditor#canFinish()
-	 */
-	@Override
-	public boolean canFinish() {
-		return true;
-	}
+    private EObject resolveProxy(EObject ref) {
+        ResourceSet rSet = null;
+        if (ref.eIsProxy()) {
+            rSet = eResource.getResourceSet();
+        }
+        EObject dep = EcoreUtil2.resolve(ref, rSet);
+        if (rSet != null) {
+            rSet.getResources().remove(ref.eResource());
+        }
+        return dep;
+    }
 
-	/* (non-Javadoc)
-	 * @see org.bonitasoft.studio.expression.editor.provider.IExpressionEditor#dispose()
-	 */
-	@Override
-	public void dispose() {
+    protected void createReturnTypeComposite(Composite parent) {
+        final Composite returnTypeComposite = new Composite(parent, SWT.NONE);
+        returnTypeComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
+        returnTypeComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).align(SWT.FILL, SWT.BOTTOM).create());
 
+        Label typeLabel = new Label(returnTypeComposite, SWT.NONE);
+        typeLabel.setText(Messages.returnType);
 
-	}
+        typeCombo = new ComboViewer(returnTypeComposite, SWT.BORDER | SWT.READ_ONLY);
+        typeCombo.getCombo().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+        typeCombo.setContentProvider(new ExpressionReturnTypeContentProvider());
+        typeCombo.setLabelProvider(new ConstantTypeLabelProvider());
+        typeCombo.setInput(new Object());
+    }
 
-	/* (non-Javadoc)
-	 * @see org.bonitasoft.studio.expression.editor.provider.IExpressionEditor#okPressed()
-	 */
-	@Override
-	public void okPressed() {
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.expression.editor.provider.IExpressionEditor#bindExpression(org.eclipse.emf.databinding.EMFDataBindingContext,
+     * org.eclipse.emf.ecore.EObject, org.bonitasoft.studio.model.expression.Expression, org.eclipse.jface.viewers.ViewerFilter[])
+     */
+    @Override
+    public void bindExpression(EMFDataBindingContext dataBindingContext,
+            EObject context, Expression inputExpression,
+            ViewerFilter[] viewerTypeFilters, ExpressionViewer expressionViewer) {
+        this.inputExpression = inputExpression;
+        final IObservableValue contentModelObservable = EMFObservables.observeValue(inputExpression, ExpressionPackage.Literals.EXPRESSION__CONTENT);
+        final IObservableValue nameModelObservable = EMFObservables.observeValue(inputExpression, ExpressionPackage.Literals.EXPRESSION__NAME);
+        final IObservableValue dependenciesModelObservable = EMFObservables.observeValue(inputExpression,
+                ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS);
+        final IObservableValue autoDepsModelObservable = EMFObservables.observeValue(inputExpression,
+                ExpressionPackage.Literals.EXPRESSION__AUTOMATIC_DEPENDENCIES);
+        final IObservableValue returnTypeModelObservable = EMFObservables.observeValue(inputExpression, ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE);
+        final ISWTObservableValue observeText = SWTObservables.observeText(comparisonEditor.getViewer().getControl(), SWT.Modify);
+        dataBindingContext.bindValue(observeText, contentModelObservable);
+        observeText.addValueChangeListener(new IValueChangeListener() {
 
-	}
+            @Override
+            public void handleValueChange(ValueChangeEvent event) {
+                if (ComparisonExpressionEditor.this.inputExpression.isAutomaticDependencies()) {
+                    updateDependencies();
+                }
+            }
+        });
+        dataBindingContext.bindValue(observeText, nameModelObservable);
+        dataBindingContext.bindValue(ViewersObservables.observeInput(dependenciesViewer), dependenciesModelObservable);
 
-	@Override
-	public Control getTextControl() {
-		return comparisonEditor.getViewer().getTextWidget();
-	}
+        UpdateValueStrategy opposite = new UpdateValueStrategy();
+        opposite.setConverter(new Converter(Boolean.class, Boolean.class) {
 
-	@Override
-	public boolean isPageFlowContext() {
+            @Override
+            public Object convert(Object fromObject) {
+                return !((Boolean) fromObject);
+            }
+        });
 
-		return isPageFlowContext;
-	}
+        dataBindingContext.bindValue(SWTObservables.observeSelection(automaticResolutionButton), autoDepsModelObservable);
+        dataBindingContext.bindValue(SWTObservables.observeSelection(automaticResolutionButton), SWTObservables.observeEnabled(addDependencyButton), opposite,
+                new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER));
+        dependencySection.setExpanded(!automaticResolutionButton.getSelection());
 
-	@Override
-	public void setIsPageFlowContext(boolean isPageFlowContext) {
-		this.isPageFlowContext=isPageFlowContext;
+        addDependencyButton.setEnabled(!inputExpression.isAutomaticDependencies());
+        ControlDecorationSupport
+                .create(dataBindingContext.bindValue(ViewersObservables.observeSingleSelection(typeCombo), returnTypeModelObservable), SWT.LEFT);
+        typeCombo.getCombo().setEnabled(!inputExpression.isReturnTypeFixed());
 
-	}
+        final ExpressionContentProvider provider = new ExpressionContentProvider();
+        provider.setContext(context);
 
-	/* (non-Javadoc)
-	 * @see org.bonitasoft.studio.common.IBonitaVariableContext#isOverViewContext()
-	 */
-	@Override
-	public boolean isOverViewContext() {
-		return false;
-	}
+        final Set<Expression> filteredExpressions = new HashSet<Expression>();
+        Expression[] expressions = provider.getExpressions();
+        EObject input = provider.getContext();
+        if (expressions != null) {
+            filteredExpressions.addAll(Arrays.asList(expressions));
+            if (input != null && viewerTypeFilters != null) {
+                for (Expression exp : expressions) {
+                    for (ViewerFilter filter : viewerTypeFilters) {
+                        if (filter != null && !filter.select(comparisonEditor.getViewer(), input, exp)) {
+                            filteredExpressions.remove(exp);
+                        }
+                    }
+                }
+            }
+        }
 
-	/* (non-Javadoc)
-	 * @see org.bonitasoft.studio.common.IBonitaVariableContext#setIsOverviewContext(boolean)
-	 */
-	@Override
-	public void setIsOverviewContext(boolean isOverviewContext) {
-	}
+        addDependencyButton.addSelectionListener(new SelectionAdapter() {
 
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                SelectDependencyDialog dialog = new SelectDependencyDialog(Display.getDefault().getActiveShell(), filteredExpressions,
+                        ComparisonExpressionEditor.this.inputExpression.getReferencedElements());
+                dialog.open();
+            }
+        });
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.expression.editor.provider.IExpressionEditor#canFinish()
+     */
+    @Override
+    public boolean canFinish() {
+        return true;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.expression.editor.provider.IExpressionEditor#dispose()
+     */
+    @Override
+    public void dispose() {
+
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.expression.editor.provider.IExpressionEditor#okPressed()
+     */
+    @Override
+    public void okPressed() {
+
+    }
+
+    @Override
+    public Control getTextControl() {
+        return comparisonEditor.getViewer().getTextWidget();
+    }
+
+    @Override
+    public boolean isPageFlowContext() {
+
+        return isPageFlowContext;
+    }
+
+    @Override
+    public void setIsPageFlowContext(boolean isPageFlowContext) {
+        this.isPageFlowContext = isPageFlowContext;
+
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.common.IBonitaVariableContext#isOverViewContext()
+     */
+    @Override
+    public boolean isOverViewContext() {
+        return false;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.common.IBonitaVariableContext#setIsOverviewContext(boolean)
+     */
+    @Override
+    public void setIsOverviewContext(boolean isOverviewContext) {
+    }
 
 }

@@ -17,21 +17,20 @@
  */
 package org.bonitasoft.studio.tests;
 
-import java.util.HashMap;
+import java.util.Collections;
 
 import junit.framework.TestCase;
 
 import org.bonitasoft.studio.diagram.custom.commands.NewDiagramCommandHandler;
 import org.bonitasoft.studio.diagram.form.custom.commands.CreateFormCommand;
+import org.bonitasoft.studio.diagram.form.custom.model.WidgetMapping;
 import org.bonitasoft.studio.model.form.Form;
-import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.diagram.form.part.FormDiagramEditor;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditor;
 import org.bonitasoft.studio.properties.sections.forms.FormsUtils;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.ui.PlatformUI;
 
@@ -45,7 +44,7 @@ public class TestBugSave extends TestCase {
         new NewDiagramCommandHandler().execute(null);
         ProcessDiagramEditor processEditor = (ProcessDiagramEditor)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
         MainProcess mainProcess = (MainProcess)processEditor.getDiagramEditPart().resolveSemanticElement();
-        CreateFormCommand formCommand = new CreateFormCommand(mainProcess,ProcessPackage.Literals.PAGE_FLOW__FORM,"form", "", new HashMap<EObject, Widget>(), processEditor.getEditingDomain());
+        CreateFormCommand formCommand = new CreateFormCommand(mainProcess,ProcessPackage.Literals.PAGE_FLOW__FORM,"form", "", Collections.<WidgetMapping>emptyList(), processEditor.getEditingDomain());
         formCommand.execute(new NullProgressMonitor(), null);
         Form createdForm = (Form) formCommand.getCommandResult().getReturnValue();
 		FormsUtils.createDiagram(createdForm, processEditor.getEditingDomain(), mainProcess);

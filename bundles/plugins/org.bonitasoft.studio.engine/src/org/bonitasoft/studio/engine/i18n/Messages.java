@@ -87,6 +87,9 @@ public class Messages extends NLS {
 	public static String noInitiatorDefinedTitle;
 	public static String noInitiatorDefinedMessage;
 	public static String dontaskagain;
+    public static String configure;
+    public static String processEnableFailedTitle;
+    public static String processEnableFailedMessage;
     
     static {
         NLS.initializeMessages("messages", Messages.class); //$NON-NLS-1$

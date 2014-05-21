@@ -72,6 +72,10 @@ public class OrganizationFactoryImpl extends EFactoryImpl implements Organizatio
 	public EObject create(EClass eClass) {
 		switch (eClass.getClassifierID()) {
 			case OrganizationPackage.CONTACT_DATA: return createContactData();
+			case OrganizationPackage.CUSTOM_USER_INFO_DEFINITION: return createCustomUserInfoDefinition();
+			case OrganizationPackage.CUSTOM_USER_INFO_DEFINITIONS: return createCustomUserInfoDefinitions();
+			case OrganizationPackage.CUSTOM_USER_INFO_VALUE: return createCustomUserInfoValue();
+			case OrganizationPackage.CUSTOM_USER_INFO_VALUES_TYPE: return createCustomUserInfoValuesType();
 			case OrganizationPackage.DOCUMENT_ROOT: return createDocumentRoot();
 			case OrganizationPackage.GROUP: return createGroup();
 			case OrganizationPackage.GROUPS: return createGroups();
@@ -98,6 +102,46 @@ public class OrganizationFactoryImpl extends EFactoryImpl implements Organizatio
 	public ContactData createContactData() {
 		ContactDataImpl contactData = new ContactDataImpl();
 		return contactData;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public CustomUserInfoDefinition createCustomUserInfoDefinition() {
+		CustomUserInfoDefinitionImpl customUserInfoDefinition = new CustomUserInfoDefinitionImpl();
+		return customUserInfoDefinition;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public CustomUserInfoDefinitions createCustomUserInfoDefinitions() {
+		CustomUserInfoDefinitionsImpl customUserInfoDefinitions = new CustomUserInfoDefinitionsImpl();
+		return customUserInfoDefinitions;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public CustomUserInfoValue createCustomUserInfoValue() {
+		CustomUserInfoValueImpl customUserInfoValue = new CustomUserInfoValueImpl();
+		return customUserInfoValue;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public CustomUserInfoValuesType createCustomUserInfoValuesType() {
+		CustomUserInfoValuesTypeImpl customUserInfoValuesType = new CustomUserInfoValuesTypeImpl();
+		return customUserInfoValuesType;
 	}
 
 	/**
@@ -162,15 +206,15 @@ public class OrganizationFactoryImpl extends EFactoryImpl implements Organizatio
 
 	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    public MetaDatasType createMetaDatasType() {
+	public MetaDatasType createMetaDatasType() {
 		MetaDatasTypeImpl metaDatasType = new MetaDatasTypeImpl();
 		return metaDatasType;
 	}
 
-    /**
+	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated

@@ -18,6 +18,10 @@
 package org.bonitasoft.studio.actors.model.organization.impl;
 
 import org.bonitasoft.studio.actors.model.organization.ContactData;
+import org.bonitasoft.studio.actors.model.organization.CustomUserInfoDefinition;
+import org.bonitasoft.studio.actors.model.organization.CustomUserInfoDefinitions;
+import org.bonitasoft.studio.actors.model.organization.CustomUserInfoValue;
+import org.bonitasoft.studio.actors.model.organization.CustomUserInfoValuesType;
 import org.bonitasoft.studio.actors.model.organization.DocumentRoot;
 import org.bonitasoft.studio.actors.model.organization.Group;
 import org.bonitasoft.studio.actors.model.organization.Groups;
@@ -56,6 +60,34 @@ public class OrganizationPackageImpl extends EPackageImpl implements Organizatio
 	 * @generated
 	 */
 	private EClass contactDataEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass customUserInfoDefinitionEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass customUserInfoDefinitionsEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass customUserInfoValueEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass customUserInfoValuesTypeEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -101,12 +133,12 @@ public class OrganizationPackageImpl extends EPackageImpl implements Organizatio
 
 	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    private EClass metaDatasTypeEClass = null;
+	private EClass metaDatasTypeEClass = null;
 
-    /**
+	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -334,6 +366,96 @@ public class OrganizationPackageImpl extends EPackageImpl implements Organizatio
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EClass getCustomUserInfoDefinition() {
+		return customUserInfoDefinitionEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getCustomUserInfoDefinition_Name() {
+		return (EAttribute)customUserInfoDefinitionEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getCustomUserInfoDefinition_Description() {
+		return (EAttribute)customUserInfoDefinitionEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getCustomUserInfoDefinitions() {
+		return customUserInfoDefinitionsEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getCustomUserInfoDefinitions_CustomUserInfoDefinition() {
+		return (EReference)customUserInfoDefinitionsEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getCustomUserInfoValue() {
+		return customUserInfoValueEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getCustomUserInfoValue_Name() {
+		return (EAttribute)customUserInfoValueEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getCustomUserInfoValue_Value() {
+		return (EAttribute)customUserInfoValueEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getCustomUserInfoValuesType() {
+		return customUserInfoValuesTypeEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getCustomUserInfoValuesType_CustomUserInfoValue() {
+		return (EReference)customUserInfoValuesTypeEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getDocumentRoot() {
 		return documentRootEClass;
 	}
@@ -502,23 +624,23 @@ public class OrganizationPackageImpl extends EPackageImpl implements Organizatio
 
 	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    public EAttribute getMembership_AssignedBy() {
+	public EAttribute getMembership_AssignedBy() {
 		return (EAttribute)membershipEClass.getEStructuralFeatures().get(4);
 	}
 
-    /**
+	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    public EAttribute getMembership_AssignedDate() {
+	public EAttribute getMembership_AssignedDate() {
 		return (EAttribute)membershipEClass.getEStructuralFeatures().get(5);
 	}
 
-    /**
+	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -565,23 +687,23 @@ public class OrganizationPackageImpl extends EPackageImpl implements Organizatio
 
 	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    public EClass getMetaDatasType() {
+	public EClass getMetaDatasType() {
 		return metaDatasTypeEClass;
 	}
 
-    /**
+	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    public EReference getMetaDatasType_MetaData() {
+	public EReference getMetaDatasType_MetaData() {
 		return (EReference)metaDatasTypeEClass.getEStructuralFeatures().get(0);
 	}
 
-    /**
+	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -595,7 +717,7 @@ public class OrganizationPackageImpl extends EPackageImpl implements Organizatio
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getOrganization_Users() {
+	public EReference getOrganization_CustomUserInfoDefinitions() {
 		return (EReference)organizationEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -604,16 +726,7 @@ public class OrganizationPackageImpl extends EPackageImpl implements Organizatio
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getOrganization_Groups() {
-		return (EReference)organizationEClass.getEStructuralFeatures().get(2);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getOrganization_Roles() {
+	public EReference getOrganization_Users() {
 		return (EReference)organizationEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -622,29 +735,47 @@ public class OrganizationPackageImpl extends EPackageImpl implements Organizatio
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getOrganization_Memberships() {
+	public EReference getOrganization_Roles() {
+		return (EReference)organizationEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getOrganization_Groups() {
 		return (EReference)organizationEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    public EAttribute getOrganization_Name() {
-		return (EAttribute)organizationEClass.getEStructuralFeatures().get(4);
+	public EReference getOrganization_Memberships() {
+		return (EReference)organizationEClass.getEStructuralFeatures().get(4);
 	}
 
-    /**
+	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    public EAttribute getOrganization_Description() {
+	public EAttribute getOrganization_Name() {
 		return (EAttribute)organizationEClass.getEStructuralFeatures().get(5);
 	}
 
-    /**
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getOrganization_Description() {
+		return (EAttribute)organizationEClass.getEStructuralFeatures().get(6);
+	}
+
+	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -730,15 +861,6 @@ public class OrganizationPackageImpl extends EPackageImpl implements Organizatio
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getUser_Password() {
-		return (EReference)userEClass.getEStructuralFeatures().get(12);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public EAttribute getUser_FirstName() {
 		return (EAttribute)userEClass.getEStructuralFeatures().get(0);
 	}
@@ -817,14 +939,14 @@ public class OrganizationPackageImpl extends EPackageImpl implements Organizatio
 
 	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    public EReference getUser_MetaDatas() {
+	public EReference getUser_MetaDatas() {
 		return (EReference)userEClass.getEStructuralFeatures().get(9);
 	}
 
-    /**
+	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -840,6 +962,24 @@ public class OrganizationPackageImpl extends EPackageImpl implements Organizatio
 	 */
 	public EAttribute getUser_Enabled() {
 		return (EAttribute)userEClass.getEStructuralFeatures().get(11);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getUser_CustomUserInfoValues() {
+		return (EReference)userEClass.getEStructuralFeatures().get(12);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getUser_Password() {
+		return (EReference)userEClass.getEStructuralFeatures().get(13);
 	}
 
 	/**
@@ -929,6 +1069,20 @@ public class OrganizationPackageImpl extends EPackageImpl implements Organizatio
 		createEAttribute(contactDataEClass, CONTACT_DATA__COUNTRY);
 		createEAttribute(contactDataEClass, CONTACT_DATA__WEBSITE);
 
+		customUserInfoDefinitionEClass = createEClass(CUSTOM_USER_INFO_DEFINITION);
+		createEAttribute(customUserInfoDefinitionEClass, CUSTOM_USER_INFO_DEFINITION__NAME);
+		createEAttribute(customUserInfoDefinitionEClass, CUSTOM_USER_INFO_DEFINITION__DESCRIPTION);
+
+		customUserInfoDefinitionsEClass = createEClass(CUSTOM_USER_INFO_DEFINITIONS);
+		createEReference(customUserInfoDefinitionsEClass, CUSTOM_USER_INFO_DEFINITIONS__CUSTOM_USER_INFO_DEFINITION);
+
+		customUserInfoValueEClass = createEClass(CUSTOM_USER_INFO_VALUE);
+		createEAttribute(customUserInfoValueEClass, CUSTOM_USER_INFO_VALUE__NAME);
+		createEAttribute(customUserInfoValueEClass, CUSTOM_USER_INFO_VALUE__VALUE);
+
+		customUserInfoValuesTypeEClass = createEClass(CUSTOM_USER_INFO_VALUES_TYPE);
+		createEReference(customUserInfoValuesTypeEClass, CUSTOM_USER_INFO_VALUES_TYPE__CUSTOM_USER_INFO_VALUE);
+
 		documentRootEClass = createEClass(DOCUMENT_ROOT);
 		createEAttribute(documentRootEClass, DOCUMENT_ROOT__MIXED);
 		createEReference(documentRootEClass, DOCUMENT_ROOT__XMLNS_PREFIX_MAP);
@@ -965,6 +1119,7 @@ public class OrganizationPackageImpl extends EPackageImpl implements Organizatio
 		createEReference(metaDatasTypeEClass, META_DATAS_TYPE__META_DATA);
 
 		organizationEClass = createEClass(ORGANIZATION);
+		createEReference(organizationEClass, ORGANIZATION__CUSTOM_USER_INFO_DEFINITIONS);
 		createEReference(organizationEClass, ORGANIZATION__USERS);
 		createEReference(organizationEClass, ORGANIZATION__ROLES);
 		createEReference(organizationEClass, ORGANIZATION__GROUPS);
@@ -995,6 +1150,7 @@ public class OrganizationPackageImpl extends EPackageImpl implements Organizatio
 		createEReference(userEClass, USER__META_DATAS);
 		createEAttribute(userEClass, USER__USER_NAME);
 		createEAttribute(userEClass, USER__ENABLED);
+		createEReference(userEClass, USER__CUSTOM_USER_INFO_VALUES);
 		createEReference(userEClass, USER__PASSWORD);
 
 		usersEClass = createEClass(USERS);
@@ -1052,6 +1208,20 @@ public class OrganizationPackageImpl extends EPackageImpl implements Organizatio
 		initEAttribute(getContactData_Country(), theXMLTypePackage.getString(), "country", null, 0, 1, ContactData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getContactData_Website(), theXMLTypePackage.getString(), "website", null, 0, 1, ContactData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
+		initEClass(customUserInfoDefinitionEClass, CustomUserInfoDefinition.class, "CustomUserInfoDefinition", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getCustomUserInfoDefinition_Name(), theXMLTypePackage.getString(), "name", null, 1, 1, CustomUserInfoDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getCustomUserInfoDefinition_Description(), theXMLTypePackage.getString(), "description", null, 0, 1, CustomUserInfoDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(customUserInfoDefinitionsEClass, CustomUserInfoDefinitions.class, "CustomUserInfoDefinitions", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getCustomUserInfoDefinitions_CustomUserInfoDefinition(), this.getCustomUserInfoDefinition(), null, "customUserInfoDefinition", null, 0, -1, CustomUserInfoDefinitions.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(customUserInfoValueEClass, CustomUserInfoValue.class, "CustomUserInfoValue", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getCustomUserInfoValue_Name(), theXMLTypePackage.getString(), "name", null, 1, 1, CustomUserInfoValue.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getCustomUserInfoValue_Value(), theXMLTypePackage.getString(), "value", null, 1, 1, CustomUserInfoValue.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(customUserInfoValuesTypeEClass, CustomUserInfoValuesType.class, "CustomUserInfoValuesType", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getCustomUserInfoValuesType_CustomUserInfoValue(), this.getCustomUserInfoValue(), null, "customUserInfoValue", null, 0, -1, CustomUserInfoValuesType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
 		initEClass(documentRootEClass, DocumentRoot.class, "DocumentRoot", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getDocumentRoot_Mixed(), ecorePackage.getEFeatureMapEntry(), "mixed", null, 0, -1, null, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getDocumentRoot_XMLNSPrefixMap(), ecorePackage.getEStringToStringMapEntry(), null, "xMLNSPrefixMap", null, 0, -1, null, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -1088,6 +1258,7 @@ public class OrganizationPackageImpl extends EPackageImpl implements Organizatio
 		initEReference(getMetaDatasType_MetaData(), this.getMetadata(), null, "metaData", null, 0, -1, MetaDatasType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(organizationEClass, Organization.class, "Organization", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getOrganization_CustomUserInfoDefinitions(), this.getCustomUserInfoDefinitions(), null, "customUserInfoDefinitions", null, 0, 1, Organization.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getOrganization_Users(), this.getUsers(), null, "users", null, 0, 1, Organization.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getOrganization_Roles(), this.getRoles(), null, "roles", null, 0, 1, Organization.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getOrganization_Groups(), this.getGroups(), null, "groups", null, 0, 1, Organization.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -1118,6 +1289,7 @@ public class OrganizationPackageImpl extends EPackageImpl implements Organizatio
 		initEReference(getUser_MetaDatas(), this.getMetaDatasType(), null, "metaDatas", null, 0, 1, User.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getUser_UserName(), theXMLTypePackage.getString(), "userName", null, 1, 1, User.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getUser_Enabled(), theXMLTypePackage.getBoolean(), "enabled", null, 0, 1, User.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getUser_CustomUserInfoValues(), this.getCustomUserInfoValuesType(), null, "customUserInfoValues", null, 0, 1, User.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getUser_Password(), this.getPasswordType(), null, "password", null, 1, 1, User.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(usersEClass, Users.class, "Users", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -1233,6 +1405,76 @@ public class OrganizationPackageImpl extends EPackageImpl implements Organizatio
 		   new String[] {
 			 "kind", "element",
 			 "name", "website"
+		   });		
+		addAnnotation
+		  (customUserInfoDefinitionEClass, 
+		   source, 
+		   new String[] {
+			 "name", "CustomUserInfoDefinition",
+			 "kind", "elementOnly"
+		   });		
+		addAnnotation
+		  (getCustomUserInfoDefinition_Name(), 
+		   source, 
+		   new String[] {
+			 "kind", "element",
+			 "name", "name"
+		   });		
+		addAnnotation
+		  (getCustomUserInfoDefinition_Description(), 
+		   source, 
+		   new String[] {
+			 "kind", "element",
+			 "name", "description"
+		   });		
+		addAnnotation
+		  (customUserInfoDefinitionsEClass, 
+		   source, 
+		   new String[] {
+			 "name", "CustomUserInfoDefinitions",
+			 "kind", "elementOnly"
+		   });		
+		addAnnotation
+		  (getCustomUserInfoDefinitions_CustomUserInfoDefinition(), 
+		   source, 
+		   new String[] {
+			 "kind", "element",
+			 "name", "customUserInfoDefinition"
+		   });		
+		addAnnotation
+		  (customUserInfoValueEClass, 
+		   source, 
+		   new String[] {
+			 "name", "CustomUserInfoValue",
+			 "kind", "elementOnly"
+		   });		
+		addAnnotation
+		  (getCustomUserInfoValue_Name(), 
+		   source, 
+		   new String[] {
+			 "kind", "element",
+			 "name", "name"
+		   });		
+		addAnnotation
+		  (getCustomUserInfoValue_Value(), 
+		   source, 
+		   new String[] {
+			 "kind", "element",
+			 "name", "value"
+		   });		
+		addAnnotation
+		  (customUserInfoValuesTypeEClass, 
+		   source, 
+		   new String[] {
+			 "name", "customUserInfoValues_._type",
+			 "kind", "elementOnly"
+		   });		
+		addAnnotation
+		  (getCustomUserInfoValuesType_CustomUserInfoValue(), 
+		   source, 
+		   new String[] {
+			 "kind", "element",
+			 "name", "customUserInfoValue"
 		   });		
 		addAnnotation
 		  (documentRootEClass, 
@@ -1439,6 +1681,13 @@ public class OrganizationPackageImpl extends EPackageImpl implements Organizatio
 			 "kind", "elementOnly"
 		   });		
 		addAnnotation
+		  (getOrganization_CustomUserInfoDefinitions(), 
+		   source, 
+		   new String[] {
+			 "kind", "element",
+			 "name", "customUserInfoDefinitions"
+		   });		
+		addAnnotation
 		  (getOrganization_Users(), 
 		   source, 
 		   new String[] {
@@ -1614,6 +1863,13 @@ public class OrganizationPackageImpl extends EPackageImpl implements Organizatio
 			 "name", "enabled"
 		   });		
 		addAnnotation
+		  (getUser_CustomUserInfoValues(), 
+		   source, 
+		   new String[] {
+			 "kind", "element",
+			 "name", "customUserInfoValues"
+		   });		
+		addAnnotation
 		  (getUser_Password(), 
 		   source, 
 		   new String[] {
@@ -1647,6 +1903,13 @@ public class OrganizationPackageImpl extends EPackageImpl implements Organizatio
 		   new String[] {
 			 "name", ":0",
 			 "kind", "simple"
+		   });		
+		addAnnotation
+		  (getPasswordType_Encrypted(), 
+		   source, 
+		   new String[] {
+			 "kind", "attribute",
+			 "name", "encrypted"
 		   });
 	}
 

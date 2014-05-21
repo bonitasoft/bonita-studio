@@ -17,8 +17,6 @@
  */
 package org.bonitasoft.studio.actors.model.organization;
 
-import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -41,6 +39,7 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link org.bonitasoft.studio.actors.model.organization.User#getMetaDatas <em>Meta Datas</em>}</li>
  *   <li>{@link org.bonitasoft.studio.actors.model.organization.User#getUserName <em>User Name</em>}</li>
  *   <li>{@link org.bonitasoft.studio.actors.model.organization.User#isEnabled <em>Enabled</em>}</li>
+ *   <li>{@link org.bonitasoft.studio.actors.model.organization.User#getCustomUserInfoValues <em>Custom User Info Values</em>}</li>
  *   <li>{@link org.bonitasoft.studio.actors.model.organization.User#getPassword <em>Password</em>}</li>
  * </ul>
  * </p>
@@ -50,33 +49,6 @@ import org.eclipse.emf.ecore.EObject;
  * @generated
  */
 public interface User extends EObject {
-	/**
-	 * Returns the value of the '<em><b>Password</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Password</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Password</em>' containment reference.
-	 * @see #setPassword(PasswordType)
-	 * @see org.bonitasoft.studio.actors.model.organization.OrganizationPackage#getUser_Password()
-	 * @model containment="true" required="true"
-	 *        extendedMetaData="kind='element' name='password'"
-	 * @generated
-	 */
-	PasswordType getPassword();
-
-	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.actors.model.organization.User#getPassword <em>Password</em>}' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Password</em>' containment reference.
-	 * @see #getPassword()
-	 * @generated
-	 */
-	void setPassword(PasswordType value);
-
 	/**
 	 * Returns the value of the '<em><b>First Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
@@ -323,11 +295,11 @@ public interface User extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Meta Datas</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
-     * <p>
-     * If the meaning of the '<em>Meta Datas</em>' containment reference isn't clear,
-     * there really should be more of a description here...
-     * </p>
-     * <!-- end-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Meta Datas</em>' containment reference isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Meta Datas</em>' containment reference.
 	 * @see #setMetaDatas(MetaDatasType)
 	 * @see org.bonitasoft.studio.actors.model.organization.OrganizationPackage#getUser_MetaDatas()
@@ -335,19 +307,19 @@ public interface User extends EObject {
 	 *        extendedMetaData="kind='element' name='metaDatas'"
 	 * @generated
 	 */
-    MetaDatasType getMetaDatas();
+	MetaDatasType getMetaDatas();
 
-    /**
+	/**
 	 * Sets the value of the '{@link org.bonitasoft.studio.actors.model.organization.User#getMetaDatas <em>Meta Datas</em>}' containment reference.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Meta Datas</em>' containment reference.
 	 * @see #getMetaDatas()
 	 * @generated
 	 */
-    void setMetaDatas(MetaDatasType value);
+	void setMetaDatas(MetaDatasType value);
 
-    /**
+	/**
 	 * Returns the value of the '<em><b>User Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <p>
@@ -427,5 +399,59 @@ public interface User extends EObject {
 	 * @generated
 	 */
 	boolean isSetEnabled();
+
+	/**
+	 * Returns the value of the '<em><b>Custom User Info Values</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Custom User Info Values</em>' containment reference isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Custom User Info Values</em>' containment reference.
+	 * @see #setCustomUserInfoValues(CustomUserInfoValuesType)
+	 * @see org.bonitasoft.studio.actors.model.organization.OrganizationPackage#getUser_CustomUserInfoValues()
+	 * @model containment="true"
+	 *        extendedMetaData="kind='element' name='customUserInfoValues'"
+	 * @generated
+	 */
+	CustomUserInfoValuesType getCustomUserInfoValues();
+
+	/**
+	 * Sets the value of the '{@link org.bonitasoft.studio.actors.model.organization.User#getCustomUserInfoValues <em>Custom User Info Values</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Custom User Info Values</em>' containment reference.
+	 * @see #getCustomUserInfoValues()
+	 * @generated
+	 */
+	void setCustomUserInfoValues(CustomUserInfoValuesType value);
+
+	/**
+	 * Returns the value of the '<em><b>Password</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Password</em>' containment reference isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Password</em>' containment reference.
+	 * @see #setPassword(PasswordType)
+	 * @see org.bonitasoft.studio.actors.model.organization.OrganizationPackage#getUser_Password()
+	 * @model containment="true" required="true"
+	 *        extendedMetaData="kind='element' name='password'"
+	 * @generated
+	 */
+	PasswordType getPassword();
+
+	/**
+	 * Sets the value of the '{@link org.bonitasoft.studio.actors.model.organization.User#getPassword <em>Password</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Password</em>' containment reference.
+	 * @see #getPassword()
+	 * @generated
+	 */
+	void setPassword(PasswordType value);
 
 } // User

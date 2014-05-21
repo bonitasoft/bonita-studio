@@ -26,7 +26,6 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.Properties;
 
-import org.bonitasoft.console.common.server.preferences.constants.WebBonitaConstantsUtils;
 import org.bonitasoft.engine.util.APITypeManager;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -59,13 +58,6 @@ public class BonitaHomeUtil {
 		return getBonitaHome().getAbsolutePath() + File.separator + "external"
 				+ File.separator + "security" + File.separator
 				+ "jaas-standard.cfg";
-	}
-
-	public static String getWebFormsTmpFolder() throws IOException {
-		return getBonitaHome().getAbsolutePath()
-				+ WebBonitaConstantsUtils.getInstance(1).getFormsWorkFolder()
-				+ File.separator + "client" + File.separator + "work"
-				+ File.separator + "web" + File.separator + "forms";
 	}
 
 	public static String getServerConfFolder() {

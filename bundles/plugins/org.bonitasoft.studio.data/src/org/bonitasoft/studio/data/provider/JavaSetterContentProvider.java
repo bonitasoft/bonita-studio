@@ -74,7 +74,7 @@ public class JavaSetterContentProvider implements ITreeContentProvider {
      */
     @Override
     public Object[] getElements(Object inputElement) {
-        if(inputElement instanceof String ){
+        if(inputElement instanceof String){
             IType type = null ;
             try {
                 type = RepositoryManager.getInstance().getCurrentRepository().getJavaProject().findType(inputElement.toString());

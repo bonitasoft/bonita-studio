@@ -94,10 +94,13 @@ public class DocumentFileStore extends AbstractFileStore implements IRepositoryF
 
 
     }
-
+    
+    /* (non-Javadoc)
+     * @see org.bonitasoft.studio.common.repository.filestore.AbstractFileStore#getResource()
+     */
     @Override
     public IFile getResource() {
-        return getParentStore().getResource().getFile(getName());
+        return (IFile) super.getResource();
     }
 
 }

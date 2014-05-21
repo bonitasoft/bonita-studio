@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Properties for the form editor
 Bundle-SymbolicName: org.bonitasoft.studio.diagram.form.properties;singleton:=true
-Bundle-Version: 6.3.0.qualifier
+Bundle-Version: 6.3.1.qualifier
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.ui.views.properties.tabbed,
@@ -38,7 +38,8 @@ Require-Bundle: org.eclipse.ui,
  org.bonitasoft.studio.diagram.custom;bundle-version="1.0.0",
  org.junit;bundle-version="4.11.0";resolution:=optional,
  assertj-core;bundle-version="1.5.0";resolution:=optional,
- org.bonitasoft.studio.model.assertions;bundle-version="6.3.0";resolution:=optional
+ org.bonitasoft.studio.model.assertions;bundle-version="6.3.0";resolution:=optional,
+ org.bonitasoft.studio.refactoring;bundle-version="6.3.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Localization: plugin
@@ -53,5 +54,6 @@ Export-Package: org.bonitasoft.studio.form.properties.i18n;
  org.bonitasoft.studio.properties.form.sections.actions,
  org.bonitasoft.studio.properties.form.sections.actions.contributions,
  org.bonitasoft.studio.properties.form.sections.appearance,
- org.bonitasoft.studio.properties.form.sections.appearance.contributions
+ org.bonitasoft.studio.properties.form.sections.appearance.contributions,
+ org.bonitasoft.studio.properties.form.sections.general.contributions
 Import-Package: org.bonitasoft.engine.bpm.document

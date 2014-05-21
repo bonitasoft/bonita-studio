@@ -69,14 +69,16 @@ public class GroovyReferenceValidator implements IValidator {
 			}
 		}
 		if (forceLowerCaseFirst && !value.toString().isEmpty()) {
-			char charAt = value.toString().charAt(0);
-            if (Character.isUpperCase(charAt) || !Character.isLetter(charAt)) {
-				return ValidationStatus.error(Messages.nameMustStartWithLowerCase);
+			final char firstChar = value.toString().charAt(0);
+			if (Character.isUpperCase(firstChar)) {
+				return ValidationStatus.error(Messages.bind(Messages.nameMustStartWithLowerCase,value.toString()));
 			}
 		}
 		if (!value.toString().isEmpty()) {
 			if (value.toString().contains(" ")) {
 				return ValidationStatus.error(Messages.bind(Messages.nameCantHaveAWhitespace,value.toString()));
+			} else if(Character.isDigit(value.toString().charAt(0))){
+				return ValidationStatus.error(Messages.bind(Messages.nameMustStartWithLowerCase,value.toString()));
 			}
 		}
 

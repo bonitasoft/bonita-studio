@@ -46,6 +46,42 @@ public interface OrganizationFactory extends EFactory {
 	ContactData createContactData();
 
 	/**
+	 * Returns a new object of class '<em>Custom User Info Definition</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Custom User Info Definition</em>'.
+	 * @generated
+	 */
+	CustomUserInfoDefinition createCustomUserInfoDefinition();
+
+	/**
+	 * Returns a new object of class '<em>Custom User Info Definitions</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Custom User Info Definitions</em>'.
+	 * @generated
+	 */
+	CustomUserInfoDefinitions createCustomUserInfoDefinitions();
+
+	/**
+	 * Returns a new object of class '<em>Custom User Info Value</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Custom User Info Value</em>'.
+	 * @generated
+	 */
+	CustomUserInfoValue createCustomUserInfoValue();
+
+	/**
+	 * Returns a new object of class '<em>Custom User Info Values Type</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Custom User Info Values Type</em>'.
+	 * @generated
+	 */
+	CustomUserInfoValuesType createCustomUserInfoValuesType();
+
+	/**
 	 * Returns a new object of class '<em>Document Root</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -102,13 +138,13 @@ public interface OrganizationFactory extends EFactory {
 	/**
 	 * Returns a new object of class '<em>Meta Datas Type</em>'.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @return a new object of class '<em>Meta Datas Type</em>'.
 	 * @generated
 	 */
-    MetaDatasType createMetaDatasType();
+	MetaDatasType createMetaDatasType();
 
-    /**
+	/**
 	 * Returns a new object of class '<em>Organization</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

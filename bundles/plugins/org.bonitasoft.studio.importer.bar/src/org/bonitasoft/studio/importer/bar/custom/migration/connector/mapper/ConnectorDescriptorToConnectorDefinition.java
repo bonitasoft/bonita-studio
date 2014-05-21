@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2012 BonitaSoft S.A.
- * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2012-2014 Bonitasoft S.A.
+ * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -45,6 +45,7 @@ import org.bonitasoft.engine.connector.AbstractConnector;
 import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.ProjectUtil;
+import org.bonitasoft.studio.common.dialog.WarningMessageDialogRunnable;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.ClassGenerator;
@@ -80,7 +81,6 @@ import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.ISourceRange;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.swt.widgets.Display;
 import org.ow2.bonita.connector.core.ConnectorDescription;
@@ -477,7 +477,7 @@ public class ConnectorDescriptorToConnectorDefinition {
     protected void addInputs(final ConnectorDefinition connectorDefinition) {
         for(Setter setter : v5Descriptor.getInputs()){
             String defaultValue = null;
-            final String name = toInputName(setter);		
+            final String name = toInputName(setter);
             final String isRequired = setter.getRequired();
             final Object[] parameters = setter.getParameters();
             final String inputType = getInputType(setter.getParameters());
@@ -620,10 +620,10 @@ public class ConnectorDescriptorToConnectorDefinition {
 
     private boolean isSupportedIconExtension(String iconName){
         if (iconName.matches(".*\\.jpg|.*\\.jpeg|.*\\.gif|.*\\.png|.*\\.bmp")){
-            return true;
+            return Boolean.TRUE;
         } else {
-            MessageDialog.openWarning(Display.getCurrent().getActiveShell(), Messages.warningImageFormat, Messages.bind(Messages.warningImageFormatMessage,iconName));
-            return false;
+			Display.getDefault().syncExec(new WarningMessageDialogRunnable(Messages.warningImageFormat, Messages.bind(Messages.warningImageFormatMessage,iconName)));
+            return Boolean.FALSE;
         }
     }
 

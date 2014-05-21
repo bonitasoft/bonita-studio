@@ -6,12 +6,11 @@
 	<parent>
 		<groupId>org.bonitasoft.studio</groupId>
 		<artifactId>bundles</artifactId>
-		<version>6.3.0-SNAPSHOT</version>
+		<version>6.3.1-SNAPSHOT</version>
 	</parent>
 	<name>Bonita BPM Studio Community Plugins</name>
 	<groupId>org.bonitasoft.studio.bundles</groupId>
 	<artifactId>plugins</artifactId>
-	<version>6.3.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 
@@ -59,6 +58,7 @@
 		<module>org.bonitasoft.studio.intro</module>
 		<module>org.bonitasoft.studio.jpdl</module>
 		<module>org.bonitasoft.studio.model.edit.custom</module>
+		<module>org.bonitasoft.studio.refactoring</module>
 		<module>org.bonitasoft.studio.pics</module>
 		<module>org.bonitasoft.studio.pics.bonitasoft</module>
 		<module>org.bonitasoft.studio.preferences</module>

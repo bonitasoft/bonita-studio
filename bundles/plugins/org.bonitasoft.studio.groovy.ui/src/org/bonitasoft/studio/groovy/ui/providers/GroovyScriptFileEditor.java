@@ -5,14 +5,14 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
+ * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.groovy.ui.providers;
 
@@ -41,65 +41,70 @@ import org.eclipse.swt.widgets.Event;
 
 /**
  * @author Romain Bioteau
- *
+ * 
  */
 public class GroovyScriptFileEditor extends GroovyScriptExpressionEditor implements IExpressionEditor {
 
+    public static final String CONTEXT_DATA_KEY = "context";
 
-	public static final String CONTEXT_DATA_KEY = "context";
-	public static final String BONITA_KEYWORDS_DATA_KEY = "bonita.keywords";
-	public static final String PROCESS_VARIABLES_DATA_KEY = "process.variables";
+    public static final String BONITA_KEYWORDS_DATA_KEY = "bonita.keywords";
 
-	public GroovyScriptFileEditor(){
-		super();
-	}
-	/* (non-Javadoc)
-	 * @see org.bonitasoft.studio.expression.editor.provider.IExpressionEditor#createExpressionEditor(org.eclipse.swt.widgets.Composite)
-	 */
-	@Override
-	public Control createExpressionEditor(Composite parent) {
-		createDataChooserArea(parent);
-		mainComposite = new Composite(parent,SWT.NONE) ;
-		mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 300).create()) ;
-		mainComposite.setLayout(new FillLayout(SWT.VERTICAL)) ;
-		createGroovyEditor(parent);
-		return mainComposite;
-	}
+    public static final String PROCESS_VARIABLES_DATA_KEY = "process.variables";
 
+    public GroovyScriptFileEditor() {
+        super();
+    }
 
-	@Override
-	public boolean canFinish() {
-		return true;
-	}
-	
-	@Override
-	protected void createDataChooserArea(Composite composite) {
-		
-	}
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.expression.editor.provider.IExpressionEditor#createExpressionEditor(org.eclipse.swt.widgets.Composite)
+     */
+    @Override
+    public Control createExpressionEditor(Composite parent, EMFDataBindingContext ctx) {
+        createDataChooserArea(parent);
+        mainComposite = new Composite(parent, SWT.NONE);
+        mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 300).create());
+        mainComposite.setLayout(new FillLayout(SWT.VERTICAL));
+        createGroovyEditor(parent);
+        return mainComposite;
+    }
 
-	@Override
-	public void bindExpression(EMFDataBindingContext dataBindingContext,final EObject context, Expression inputExpression,ViewerFilter[] filters,ExpressionViewer expressionViewer) {
-		this.inputExpression = inputExpression ;
-		this.context = context ;
+    @Override
+    public boolean canFinish() {
+        return true;
+    }
 
-		IObservableValue contentModelObservable = EMFObservables.observeValue(inputExpression, ExpressionPackage.Literals.EXPRESSION__CONTENT) ;
+    @Override
+    protected void createDataChooserArea(Composite composite) {
 
-		groovyViewer.getDocument().set(inputExpression.getContent()) ;
-		IExpressionNatureProvider natureProvider = null;
-		if(expressionViewer != null){
-			natureProvider = expressionViewer.getExpressionNatureProvider();
-		}
-		groovyViewer.setContext(context,filters,natureProvider) ;
-		groovyViewer.getSourceViewer().getTextWidget().setData(BONITA_KEYWORDS_DATA_KEY, null);
-		groovyViewer.getSourceViewer().getTextWidget().setData(PROCESS_VARIABLES_DATA_KEY, null);
-		groovyViewer.getSourceViewer().getTextWidget().setData(CONTEXT_DATA_KEY, null);
-		dataBindingContext.bindValue(SWTObservables.observeText(sourceViewer.getTextWidget(),SWT.Modify), contentModelObservable,new UpdateValueStrategy().setAfterGetValidator(new InputLengthValidator("", GroovyViewer.MAX_SCRIPT_LENGTH)), null) ;
-		sourceViewer.addTextListener(new ITextListener() {
-			@Override
-			public void textChanged(TextEvent event) {
-				sourceViewer.getTextWidget().notifyListeners(SWT.Modify, new Event()) ;
-			}
-		}) ;
-	}
+    }
+
+    @Override
+    public void bindExpression(EMFDataBindingContext dataBindingContext, final EObject context, Expression inputExpression, ViewerFilter[] filters,
+            ExpressionViewer expressionViewer) {
+        this.inputExpression = inputExpression;
+        this.context = context;
+
+        IObservableValue contentModelObservable = EMFObservables.observeValue(inputExpression, ExpressionPackage.Literals.EXPRESSION__CONTENT);
+
+        groovyViewer.getDocument().set(inputExpression.getContent());
+        IExpressionNatureProvider natureProvider = null;
+        if (expressionViewer != null) {
+            natureProvider = expressionViewer.getExpressionNatureProvider();
+        }
+        groovyViewer.setContext(context, filters, natureProvider);
+        groovyViewer.getSourceViewer().getTextWidget().setData(BONITA_KEYWORDS_DATA_KEY, null);
+        groovyViewer.getSourceViewer().getTextWidget().setData(PROCESS_VARIABLES_DATA_KEY, null);
+        groovyViewer.getSourceViewer().getTextWidget().setData(CONTEXT_DATA_KEY, null);
+        dataBindingContext.bindValue(SWTObservables.observeText(sourceViewer.getTextWidget(), SWT.Modify), contentModelObservable,
+                new UpdateValueStrategy().setAfterGetValidator(new InputLengthValidator("", GroovyViewer.MAX_SCRIPT_LENGTH)), null);
+        sourceViewer.addTextListener(new ITextListener() {
+
+            @Override
+            public void textChanged(TextEvent event) {
+                sourceViewer.getTextWidget().notifyListeners(SWT.Modify, new Event());
+            }
+        });
+    }
 
 }

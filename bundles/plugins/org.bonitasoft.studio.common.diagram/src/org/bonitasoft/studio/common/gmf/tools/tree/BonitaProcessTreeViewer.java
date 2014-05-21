@@ -61,18 +61,7 @@ public class BonitaProcessTreeViewer extends BonitaTreeViewer {
 
 	@Override
 	protected void handleTreeSelection(Tree tree) {
-		TreeItem[] ties = tree.getSelection();
-		List<Object> newSelection = new ArrayList<Object>() ;
-		for (int i = 0; i < ties.length; i++){
-			final Object tieData = ties[i].getData();
-			if(tieData instanceof EObject){
-				EObject elem =	(EObject) tieData ;
-				IGraphicalEditPart foundEp = findEditPartFor(elem);
-				if(foundEp!= null){
-					newSelection.add(foundEp);
-				}
-			}
-		}
+		List<Object> newSelection = retrieveEditPartOfSelectElementInTree(tree);
 		diagramEditPart.getViewer().deselectAll()  ;
 		if(!newSelection.isEmpty()){
 			DiagramEditor editor = (DiagramEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor() ;
@@ -87,6 +76,23 @@ public class BonitaProcessTreeViewer extends BonitaTreeViewer {
 		}
 
 	}
+
+	private List<Object> retrieveEditPartOfSelectElementInTree(Tree tree) {
+		TreeItem[] ties = tree.getSelection();
+		List<Object> newSelection = new ArrayList<Object>() ;
+		for (int i = 0; i < ties.length; i++){
+			final Object tieData = ties[i].getData();
+			if(tieData instanceof EObject){
+				EObject elem =	(EObject) tieData ;
+				IGraphicalEditPart foundEp = findEditPartFor(elem);
+				if(foundEp!= null){
+					newSelection.add(foundEp);
+				}
+			}
+		}
+		return newSelection;
+	}
+	
 	@Override
 	protected IGraphicalEditPart findEditPartFor(EObject elem) {
 		IGraphicalEditPart ep = null;
@@ -120,8 +126,8 @@ public class BonitaProcessTreeViewer extends BonitaTreeViewer {
 
 	@Override
 	protected void handlTreeDoubleClick() {
-		if(!treeViewer.getViewer().getSelection().isEmpty()){
-			EObject element =  (EObject) ((IStructuredSelection) treeViewer.getViewer().getSelection()).getFirstElement() ;
+		if(!filteredTree.getViewer().getSelection().isEmpty()){
+			EObject element =  (EObject) ((IStructuredSelection) filteredTree.getViewer().getSelection()).getFirstElement() ;
 			if(element.eClass().getEPackage().getName().equals(FormPackage.eINSTANCE.getName())){
 				while (element != null && !(element instanceof Form)) {
 					element  = element.eContainer() ;
@@ -129,30 +135,34 @@ public class BonitaProcessTreeViewer extends BonitaTreeViewer {
 			}
 
 			if(element instanceof Form){
-				Diagram diag = ModelHelper.getDiagramFor(element,null);
-
-				/*
-				 * need to get the URI after save because the name can change as it is
-				 * synchronized with the MainProcess name
-				 */
-				URI uri = EcoreUtil.getURI(diag);
-
-				/* open the form editor */
-				DiagramEditor editor = (DiagramEditor) EditorService.getInstance().openEditor(new URIEditorInput(uri, ((Element) element).getName()));
-				editor.getDiagramEditPart().getViewer().deselectAll();
-				EObject elem = (EObject)((IStructuredSelection) treeViewer.getViewer().getSelection()).getFirstElement() ;
-				Element selectedElem = null ;
-				if(elem instanceof Validator || elem instanceof Expression){
-					selectedElem = (Element) elem.eContainer() ;
-				}else{
-					selectedElem = (Element) elem ;
-				}
-				IGraphicalEditPart ep = GMFTools.findEditPart(editor.getDiagramEditPart(), selectedElem) ;
-				editor.getDiagramEditPart().getViewer().select(ep) ;
-				editor.getDiagramEditPart().getViewer().setSelection(new StructuredSelection(ep)) ;
-				BonitaFormTreeSelectionProvider.getInstance().fireSelectionChanged(ep, elem) ;
+				openFormEditor((Form) element);
 			}
 		}
+	}
+
+	private void openFormEditor(Form element) {
+		Diagram diag = ModelHelper.getDiagramFor(element,null);
+
+		/*
+		 * need to get the URI after save because the name can change as it is
+		 * synchronized with the MainProcess name
+		 */
+		URI uri = EcoreUtil.getURI(diag);
+
+		/* open the form editor */
+		DiagramEditor editor = (DiagramEditor) EditorService.getInstance().openEditor(new URIEditorInput(uri, ((Element) element).getName()));
+		editor.getDiagramEditPart().getViewer().deselectAll();
+		EObject elem = (EObject)((IStructuredSelection) filteredTree.getViewer().getSelection()).getFirstElement() ;
+		Element selectedElem = null ;
+		if(elem instanceof Validator || elem instanceof Expression){
+			selectedElem = (Element) elem.eContainer() ;
+		}else{
+			selectedElem = (Element) elem ;
+		}
+		IGraphicalEditPart ep = GMFTools.findEditPart(editor.getDiagramEditPart(), selectedElem) ;
+		editor.getDiagramEditPart().getViewer().select(ep) ;
+		editor.getDiagramEditPart().getViewer().setSelection(new StructuredSelection(ep)) ;
+		BonitaFormTreeSelectionProvider.getInstance().fireSelectionChanged(ep, elem) ;
 	}
 
 }

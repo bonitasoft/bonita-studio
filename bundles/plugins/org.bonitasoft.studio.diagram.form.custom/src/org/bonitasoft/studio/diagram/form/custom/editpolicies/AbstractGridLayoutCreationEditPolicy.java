@@ -65,7 +65,7 @@ public abstract class AbstractGridLayoutCreationEditPolicy extends CreationEditP
 		/*get the absolute location and considering the margin*/
 		Point point = request.getLocation().getCopy().translate(getLayoutOrigin().getNegated());
 		AbstractGridLayer layer = getGridLayer(part);
-		FiguresHelper.translateToAbsolute(layer, point);
+		translateToAbsolute(point, layer);
 
 		/*need to check that it is not the f****ing bad location (negative,negative) 
 		 * and we are not at the first creation (which is programmatic and so have (-1,-1)*/
@@ -114,18 +114,26 @@ public abstract class AbstractGridLayoutCreationEditPolicy extends CreationEditP
 			columnTemp = insertPosition.x;
 
 
-			if(lineTemp + 1 > layer.getNumLine()){
-				cc.compose(new AddRowCommand((FormEditPart) getHost(), lineTemp)) ;
-			}else if(columnTemp +1 > layer.getNumColumn()){
-				cc.compose(new AddColumnCommand((FormEditPart) getHost(), columnTemp)) ;
-			}else if(columnTemp == 0 && !canAdd){
-				cc.compose(new AddColumnCommand((FormEditPart) getHost(), columnTemp)) ;
+			if (part instanceof FormEditPart) {
+				if (lineTemp + 1 > layer.getNumLine()) {
+					cc.compose(new AddRowCommand((FormEditPart) part, lineTemp));
+				} else if (columnTemp + 1 > layer.getNumColumn()) {
+					cc.compose(new AddColumnCommand((FormEditPart) part,
+							columnTemp));
+				} else if (columnTemp == 0 && !canAdd) {
+					cc.compose(new AddColumnCommand((FormEditPart) part,
+							columnTemp));
+				}
 			}
-
 			CreateCommand createCommand = createGridLayoutCreateCommand(editingDomain, descriptor, (View) (getHost().getModel()),lineTemp, columnTemp);
 			cc.compose(createCommand);
 		}
 		return new ICommandProxy(cc.reduce());
+	}
+
+
+	protected void translateToAbsolute(Point point, AbstractGridLayer layer) {
+		FiguresHelper.translateToAbsolute(layer, point);
 	}
 
 

@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: org.bonitasoft.studio.expressions.test
 Bundle-SymbolicName: org.bonitasoft.studio.expressions.test;singleton:=true
-Bundle-Version: 6.3.0.qualifier
+Bundle-Version: 6.3.1.qualifier
 Bundle-Activator: org.bonitasoft.studio.expressions.test.Activator
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.swtbot.eclipse.gef.finder;bundle-version="2.0.5",
@@ -21,6 +21,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.bonitasoft.studio.engine;bundle-version="1.0.0",
  org.bonitasoft.studio.expression.editor;bundle-version="1.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Export-Package: org.bonitasoft.expressions.test;uses:="org.eclipse.swtbot.eclipse.gef.finder,org.osgi.framework"
+Export-Package: org.bonitasoft.expressions.test;uses:="org.eclipse.swt
+ bot.eclipse.gef.finder,org.osgi.framework"
 Bundle-Vendor: BonitaSoft S.A.
 Import-Package: org.bonitasoft.engine.expression

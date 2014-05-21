@@ -5,14 +5,14 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
+ * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.data.provider;
 
@@ -67,254 +67,262 @@ import org.eclipse.swt.widgets.Text;
  * 
  */
 public class DocumentExpressionEditor extends SelectionAwareExpressionEditor
-implements IExpressionEditor {
+        implements IExpressionEditor {
 
-	private TableViewer viewer;
-	private GridLayout gridLayout;
-	private Expression editorInputExpression;
-	private Composite mainComposite;
-	private Text typeText;
-	private IObservableValue returnTypeObservable = null;
-	private boolean isPageFlowContext=false;
+    private TableViewer viewer;
 
-	@Override
-	public Control createExpressionEditor(Composite parent) {
-		mainComposite = new Composite(parent, SWT.NONE);
-		mainComposite.setLayoutData(GridDataFactory.fillDefaults()
-				.grab(true, true).create());
-		gridLayout = new GridLayout(1, false);
-		mainComposite.setLayout(gridLayout);
+    private GridLayout gridLayout;
 
-		viewer = new TableViewer(mainComposite, SWT.FULL_SELECTION | SWT.BORDER
-				| SWT.SINGLE | SWT.V_SCROLL);
+    private Expression editorInputExpression;
 
-		TableLayout layout = new TableLayout();
-		layout.addColumnData(new ColumnWeightData(100, false));
-		viewer.getTable().setLayout(layout);
-		viewer.getTable().setLayoutData(
-				GridDataFactory.fillDefaults().grab(true, true).create());
+    private Composite mainComposite;
 
-		TableViewerColumn columnViewer = new TableViewerColumn(viewer, SWT.NONE);
-		TableColumn column = columnViewer.getColumn();
-		column.setText(Messages.name);
+    private Text typeText;
 
-		TableColumnSorter sorter = new TableColumnSorter(viewer);
-		sorter.setColumn(column);
+    private IObservableValue returnTypeObservable = null;
 
-		viewer.getTable().setHeaderVisible(true);
-		viewer.setContentProvider(new ArrayContentProvider());
-		viewer.setLabelProvider( new AdapterFactoryLabelProvider(new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE)){
+    private boolean isPageFlowContext = false;
 
-			@Override
-			public String getColumnText(Object object, int columnIndex) {
-				if(object instanceof Document){
-					return ((Document) object).getName();
-				}
-				return super.getColumnText(object, columnIndex);
-			}
-		});
+    @Override
+    public Control createExpressionEditor(Composite parent, EMFDataBindingContext ctx) {
+        mainComposite = new Composite(parent, SWT.NONE);
+        mainComposite.setLayoutData(GridDataFactory.fillDefaults()
+                .grab(true, true).create());
+        gridLayout = new GridLayout(1, false);
+        mainComposite.setLayout(gridLayout);
 
-		viewer.addPostSelectionChangedListener(new ISelectionChangedListener() {
+        viewer = new TableViewer(mainComposite, SWT.FULL_SELECTION | SWT.BORDER
+                | SWT.SINGLE | SWT.V_SCROLL);
 
-			@Override
-			public void selectionChanged(SelectionChangedEvent event) {
-				if (!event.getSelection().isEmpty()) {
-					DocumentExpressionEditor.this.fireSelectionChanged();
-				}
-			}
-		});
+        TableLayout layout = new TableLayout();
+        layout.addColumnData(new ColumnWeightData(100, false));
+        viewer.getTable().setLayout(layout);
+        viewer.getTable().setLayoutData(
+                GridDataFactory.fillDefaults().grab(true, true).create());
 
-		createReturnTypeComposite(parent);
+        TableViewerColumn columnViewer = new TableViewerColumn(viewer, SWT.NONE);
+        TableColumn column = columnViewer.getColumn();
+        column.setText(Messages.name);
 
-		return mainComposite;
-	}
+        TableColumnSorter sorter = new TableColumnSorter(viewer);
+        sorter.setColumn(column);
 
-	protected void createReturnTypeComposite(Composite parent) {
-		Composite typeComposite = new Composite(parent, SWT.NONE);
-		typeComposite.setLayoutData(GridDataFactory.fillDefaults()
-				.grab(true, false).create());
-		GridLayout gl = new GridLayout(2, false);
-		gl.marginWidth = 0;
-		gl.marginHeight = 0;
-		typeComposite.setLayout(gl);
+        viewer.getTable().setHeaderVisible(true);
+        viewer.setContentProvider(new ArrayContentProvider());
+        viewer.setLabelProvider(new AdapterFactoryLabelProvider(new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE)) {
 
-		Label typeLabel = new Label(typeComposite, SWT.NONE);
-		typeLabel.setText(Messages.returnType);
-		typeLabel.setLayoutData(GridDataFactory.fillDefaults()
-				.align(SWT.FILL, SWT.CENTER).create());
+            @Override
+            public String getColumnText(Object object, int columnIndex) {
+                if (object instanceof Document) {
+                    return ((Document) object).getName();
+                }
+                return super.getColumnText(object, columnIndex);
+            }
+        });
 
-		typeText = new Text(typeComposite, SWT.BORDER | SWT.READ_ONLY);
-		typeText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false)
-				.align(SWT.FILL, SWT.CENTER).indent(10, 0).create());
-	}
+        viewer.addPostSelectionChangedListener(new ISelectionChangedListener() {
 
-	private void fillViewerDocument(EObject context, ViewerFilter[] filters) {
-		Set<Document> input = new HashSet<Document>();
-		IExpressionProvider provider = ExpressionEditorService.getInstance().getExpressionProvider(ExpressionConstants.DOCUMENT_REF_TYPE);
-		final Set<Expression> expressions = provider.getExpressions(context);
-		for (Expression e1 : expressions) {
-			input.add((Document) e1.getReferencedElements().get(0));
-		}
-		if(editorInputExpression.isReturnTypeFixed() && !editorInputExpression.getReturnType().equals(String.class.getName())){
-			input.clear();
-		}
-		viewer.setInput(input);
-	}
+            @Override
+            public void selectionChanged(SelectionChangedEvent event) {
+                if (!event.getSelection().isEmpty()) {
+                    DocumentExpressionEditor.this.fireSelectionChanged();
+                }
+            }
+        });
 
-	@Override
-	public void bindExpression(EMFDataBindingContext dataBindingContext,
-			EObject context, Expression inputExpression, ViewerFilter[] filters,ExpressionViewer expressionViewer) {
-		editorInputExpression = inputExpression;
-		fillViewerDocument(context, filters);
+        createReturnTypeComposite(parent);
 
-		IObservableValue contentObservable = EMFObservables
-				.observeValue(inputExpression,
-						ExpressionPackage.Literals.EXPRESSION__CONTENT);
-		IObservableValue nameObservable = EMFObservables.observeValue(
-				inputExpression, ExpressionPackage.Literals.EXPRESSION__NAME);
-		returnTypeObservable = EMFObservables.observeValue(inputExpression,
-				ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE);
-		IObservableValue referenceObservable = EMFObservables.observeValue(
-				inputExpression,
-				ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS);
+        return mainComposite;
+    }
 
-		UpdateValueStrategy selectionToName = new UpdateValueStrategy();
-		IConverter nameConverter = new Converter(Data.class, String.class) {
+    protected void createReturnTypeComposite(Composite parent) {
+        Composite typeComposite = new Composite(parent, SWT.NONE);
+        typeComposite.setLayoutData(GridDataFactory.fillDefaults()
+                .grab(true, false).create());
+        GridLayout gl = new GridLayout(2, false);
+        gl.marginWidth = 0;
+        gl.marginHeight = 0;
+        typeComposite.setLayout(gl);
 
-			@Override
-			public Object convert(Object data) {
-				return ((Data) data).getName();
-			}
+        Label typeLabel = new Label(typeComposite, SWT.NONE);
+        typeLabel.setText(Messages.returnType);
+        typeLabel.setLayoutData(GridDataFactory.fillDefaults()
+                .align(SWT.FILL, SWT.CENTER).create());
 
-		};
-		selectionToName.setConverter(nameConverter);
+        typeText = new Text(typeComposite, SWT.BORDER | SWT.READ_ONLY);
+        typeText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false)
+                .align(SWT.FILL, SWT.CENTER).indent(10, 0).create());
+    }
 
-		UpdateValueStrategy selectionToContent = new UpdateValueStrategy();
-		IConverter contentConverter = new Converter(Data.class, String.class) {
+    private void fillViewerDocument(EObject context, ViewerFilter[] filters) {
+        Set<Document> input = new HashSet<Document>();
+        IExpressionProvider provider = ExpressionEditorService.getInstance().getExpressionProvider(ExpressionConstants.DOCUMENT_REF_TYPE);
+        final Set<Expression> expressions = provider.getExpressions(context);
+        for (Expression e1 : expressions) {
+            input.add((Document) e1.getReferencedElements().get(0));
+        }
+        if (editorInputExpression.isReturnTypeFixed() && !editorInputExpression.getReturnType().equals(String.class.getName())) {
+            input.clear();
+        }
+        viewer.setInput(input);
+    }
 
-			@Override
-			public Object convert(Object document) {
-				return ((Document) document).getName();
-			}
+    @Override
+    public void bindExpression(EMFDataBindingContext dataBindingContext,
+            EObject context, Expression inputExpression, ViewerFilter[] filters, ExpressionViewer expressionViewer) {
+        editorInputExpression = inputExpression;
+        fillViewerDocument(context, filters);
 
-		};
-		selectionToContent.setConverter(contentConverter);
+        IObservableValue contentObservable = EMFObservables
+                .observeValue(inputExpression,
+                        ExpressionPackage.Literals.EXPRESSION__CONTENT);
+        IObservableValue nameObservable = EMFObservables.observeValue(
+                inputExpression, ExpressionPackage.Literals.EXPRESSION__NAME);
+        returnTypeObservable = EMFObservables.observeValue(inputExpression,
+                ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE);
+        IObservableValue referenceObservable = EMFObservables.observeValue(
+                inputExpression,
+                ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS);
 
-		UpdateValueStrategy selectionToReturnType = new UpdateValueStrategy();
-		IConverter returnTypeConverter = new Converter(Document.class, String.class) {
+        UpdateValueStrategy selectionToName = new UpdateValueStrategy();
+        IConverter nameConverter = new Converter(Data.class, String.class) {
 
-			@Override
-			public Object convert(Object data) {
-				return String.class.getName();
-			}
+            @Override
+            public Object convert(Object data) {
+                return ((Data) data).getName();
+            }
 
-		};
-		selectionToReturnType.setConverter(returnTypeConverter);
+        };
+        selectionToName.setConverter(nameConverter);
 
-		UpdateValueStrategy selectionToReferencedData = new UpdateValueStrategy();
-		IConverter referenceConverter = new Converter(Document.class, List.class) {
+        UpdateValueStrategy selectionToContent = new UpdateValueStrategy();
+        IConverter contentConverter = new Converter(Data.class, String.class) {
 
-			@Override
-			public Object convert(Object document) {
-				if (document != null) {
-					return Collections.singletonList(document);
-				} else {
-					return Collections.emptyList();
-				}
-			}
+            @Override
+            public Object convert(Object document) {
+                return ((Document) document).getName();
+            }
 
-		};
-		selectionToReferencedData.setConverter(referenceConverter);
+        };
+        selectionToContent.setConverter(contentConverter);
 
-		UpdateValueStrategy referencedDataToSelection = new UpdateValueStrategy();
-		IConverter referencetoDataConverter = new Converter(List.class,
-				Document.class) {
+        UpdateValueStrategy selectionToReturnType = new UpdateValueStrategy();
+        IConverter returnTypeConverter = new Converter(Document.class, String.class) {
 
-			@Override
-			public Object convert(Object dataList) {
-				Document d = ((List<Document>) dataList).get(0);
-				Collection<Document> inputDocs = (Collection<Document>) viewer
-						.getInput();
-				for (Document doc : inputDocs) {
-					if (doc.getName().equals(d.getName())) {
-						return doc;
-					}
-				}
-				return null;
-			}
+            @Override
+            public Object convert(Object data) {
+                return String.class.getName();
+            }
 
-		};
-		referencedDataToSelection.setConverter(referencetoDataConverter);
+        };
+        selectionToReturnType.setConverter(returnTypeConverter);
 
-		dataBindingContext.bindValue(ViewersObservables
-				.observeSingleSelection(viewer), nameObservable,
-				selectionToName, new UpdateValueStrategy(
-						UpdateValueStrategy.POLICY_NEVER));
-		dataBindingContext.bindValue(ViewersObservables
-				.observeSingleSelection(viewer), contentObservable,
-				selectionToContent, new UpdateValueStrategy(
-						UpdateValueStrategy.POLICY_NEVER));
-		dataBindingContext.bindValue(
-				ViewersObservables.observeSingleSelection(viewer),
-				returnTypeObservable, selectionToReturnType,
-				new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER));
-		dataBindingContext.bindValue(
-				ViewersObservables.observeSingleSelection(viewer),
-				referenceObservable, selectionToReferencedData,
-				referencedDataToSelection);
-		dataBindingContext.bindValue(
-				SWTObservables.observeText(typeText, SWT.Modify),
-				returnTypeObservable);
-	}
+        UpdateValueStrategy selectionToReferencedData = new UpdateValueStrategy();
+        IConverter referenceConverter = new Converter(Document.class, List.class) {
 
-	@Override
-	public boolean canFinish() {
-		return !viewer.getSelection().isEmpty();
-	}
+            @Override
+            public Object convert(Object document) {
+                if (document != null) {
+                    return Collections.singletonList(document);
+                } else {
+                    return Collections.emptyList();
+                }
+            }
 
-	@Override
-	public void okPressed() {
-		if (!editorInputExpression.getContent().equals(
-				editorInputExpression.getName())) {
-			editorInputExpression.setName(editorInputExpression.getContent());
-		}
-	}
+        };
+        selectionToReferencedData.setConverter(referenceConverter);
 
-	@Override
-	public Control getTextControl() {
-		return null;
-	}
+        UpdateValueStrategy referencedDataToSelection = new UpdateValueStrategy();
+        IConverter referencetoDataConverter = new Converter(List.class,
+                Document.class) {
 
-	@Override
-	public void dispose() {
-		super.dispose();
-		if (returnTypeObservable != null) {
-			returnTypeObservable.dispose();
-		}
-	}
+            @Override
+            public Object convert(Object dataList) {
+                Document d = ((List<Document>) dataList).get(0);
+                Collection<Document> inputDocs = (Collection<Document>) viewer
+                        .getInput();
+                for (Document doc : inputDocs) {
+                    if (doc.getName().equals(d.getName())) {
+                        return doc;
+                    }
+                }
+                return null;
+            }
 
-	@Override
-	public boolean isPageFlowContext() {
-		return isPageFlowContext;
-	}
+        };
+        referencedDataToSelection.setConverter(referencetoDataConverter);
 
-	@Override
-	public void setIsPageFlowContext(boolean isPageFlowContext) {
-		this.isPageFlowContext=isPageFlowContext;
-	}
+        dataBindingContext.bindValue(ViewersObservables
+                .observeSingleSelection(viewer), nameObservable,
+                selectionToName, new UpdateValueStrategy(
+                        UpdateValueStrategy.POLICY_NEVER));
+        dataBindingContext.bindValue(ViewersObservables
+                .observeSingleSelection(viewer), contentObservable,
+                selectionToContent, new UpdateValueStrategy(
+                        UpdateValueStrategy.POLICY_NEVER));
+        dataBindingContext.bindValue(
+                ViewersObservables.observeSingleSelection(viewer),
+                returnTypeObservable, selectionToReturnType,
+                new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER));
+        dataBindingContext.bindValue(
+                ViewersObservables.observeSingleSelection(viewer),
+                referenceObservable, selectionToReferencedData,
+                referencedDataToSelection);
+        dataBindingContext.bindValue(
+                SWTObservables.observeText(typeText, SWT.Modify),
+                returnTypeObservable);
+    }
 
-	/* (non-Javadoc)
-	 * @see org.bonitasoft.studio.common.IBonitaVariableContext#isOverViewContext()
-	 */
-	@Override
-	public boolean isOverViewContext() {
-		return false;
-	}
+    @Override
+    public boolean canFinish() {
+        return !viewer.getSelection().isEmpty();
+    }
 
-	/* (non-Javadoc)
-	 * @see org.bonitasoft.studio.common.IBonitaVariableContext#setIsOverviewContext(boolean)
-	 */
-	@Override
-	public void setIsOverviewContext(boolean isOverviewContext) {		
-	}
+    @Override
+    public void okPressed() {
+        if (!editorInputExpression.getContent().equals(
+                editorInputExpression.getName())) {
+            editorInputExpression.setName(editorInputExpression.getContent());
+        }
+    }
+
+    @Override
+    public Control getTextControl() {
+        return null;
+    }
+
+    @Override
+    public void dispose() {
+        super.dispose();
+        if (returnTypeObservable != null) {
+            returnTypeObservable.dispose();
+        }
+    }
+
+    @Override
+    public boolean isPageFlowContext() {
+        return isPageFlowContext;
+    }
+
+    @Override
+    public void setIsPageFlowContext(boolean isPageFlowContext) {
+        this.isPageFlowContext = isPageFlowContext;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.common.IBonitaVariableContext#isOverViewContext()
+     */
+    @Override
+    public boolean isOverViewContext() {
+        return false;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.common.IBonitaVariableContext#setIsOverviewContext(boolean)
+     */
+    @Override
+    public void setIsOverviewContext(boolean isOverviewContext) {
+    }
 }

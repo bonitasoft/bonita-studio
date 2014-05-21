@@ -68,6 +68,11 @@ public abstract class AbstractFileStore implements IRepositoryFileStore, IFileSt
 	}
 
 	@Override
+    public IResource getResource() {
+        return getParentStore().getResource().getFile(getName());
+    }
+	
+	@Override
 	public String getDisplayName() {
 		if(getName().indexOf(".") != -1){
 			String name = getName().substring(0, getName().lastIndexOf(".")) ;

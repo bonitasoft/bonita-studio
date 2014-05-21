@@ -17,8 +17,10 @@
 package org.bonitasoft.studio.validation.constraints.process;
 
 import static org.fest.assertions.Assertions.assertThat;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -27,6 +29,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.bonitasoft.studio.actors.repository.ActorFilterDefRepositoryStore;
+import org.bonitasoft.studio.connector.model.definition.AbstractDefFileStore;
+import org.bonitasoft.studio.connector.model.definition.AbstractDefinitionRepositoryStore;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinitionFactory;
 import org.bonitasoft.studio.connector.model.definition.Input;
@@ -76,6 +80,8 @@ public class ConnectorDefinitionAndConfigurationInputConsistencyConstraintTest {
 	@Mock
 	private ActorFilterDefRepositoryStore actorFilterDefStore;
 
+    private AbstractDefFileStore abstractFileStore;
+
 
 	/**
 	 * @throws java.lang.Exception
@@ -87,6 +93,9 @@ public class ConnectorDefinitionAndConfigurationInputConsistencyConstraintTest {
 		when(context.createFailureStatus(anyObject())).thenReturn(new Status(IStatus.ERROR, "unknown", ""));
 		doReturn(connectorDefStore).when(constraintUnderTest).getConnectorDefinitionRepositoryStore();
 		doReturn(actorFilterDefStore).when(constraintUnderTest).getActorFilterDefinitionStore();
+		abstractFileStore = mock(AbstractDefFileStore.class);
+		when(abstractFileStore.isReadOnly()).thenReturn(false);
+		doReturn(abstractFileStore).when(constraintUnderTest).getDefFileStore(any(AbstractDefinitionRepositoryStore.class), any(ConnectorDefinition.class));
 	}
 
 	/**

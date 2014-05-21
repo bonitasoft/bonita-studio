@@ -5,14 +5,14 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
+ * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.expression.editor.constant;
 
@@ -47,139 +47,148 @@ import org.eclipse.swt.widgets.Text;
 
 /**
  * @author Romain Bioteau
- *
+ * 
  */
 public class ConstantExpressionEditor extends SelectionAwareExpressionEditor implements IExpressionEditor {
 
-	private Text valueText;
-	private ComboViewer typeCombo;
-	private Expression inputExpression;
-	private boolean isPageFlowContext=false;
+    private Text valueText;
 
-	@Override
-	public Control createExpressionEditor(Composite parent) {
-		return createExpressionEditor(parent, false);
-	}
+    private ComboViewer typeCombo;
 
-	@Override
-	public Control createExpressionEditor(Composite parent,boolean isPassword) {
-		Composite mainComposite = new Composite(parent, SWT.NONE) ;
-		mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create()) ;
+    private Expression inputExpression;
 
-		mainComposite.setLayout(new GridLayout(2, false)) ;
+    private boolean isPageFlowContext = false;
 
-		Label valueLabel = new Label(mainComposite, SWT.NONE) ;
-		valueLabel.setText(Messages.value) ;
-		if(isPassword){
-			valueText = new Text(mainComposite, SWT.BORDER | SWT.PASSWORD) ;
-		}else{
-			valueText = new Text(mainComposite, SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL) ;
-		}
-		
-		valueText.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(300, 80).create()) ;
+    @Override
+    public Control createExpressionEditor(Composite parent, EMFDataBindingContext ctx) {
+        return createExpressionEditor(parent, ctx, false);
+    }
 
-		Label typeLabel = new Label(mainComposite, SWT.NONE) ;
-		typeLabel.setText(Messages.returnType) ;
+    @Override
+    public Control createExpressionEditor(Composite parent, EMFDataBindingContext ctx, boolean isPassword) {
+        Composite mainComposite = new Composite(parent, SWT.NONE);
+        mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
-		typeCombo = new ComboViewer(mainComposite, SWT.BORDER | SWT.READ_ONLY) ;
-		typeCombo.getCombo().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
-		typeCombo.setContentProvider(new IStructuredContentProvider() {
+        mainComposite.setLayout(new GridLayout(2, false));
 
-			@Override
-			public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {	}
+        Label valueLabel = new Label(mainComposite, SWT.NONE);
+        valueLabel.setText(Messages.value);
+        if (isPassword) {
+            valueText = new Text(mainComposite, SWT.BORDER | SWT.PASSWORD);
+        } else {
+            valueText = new Text(mainComposite, SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
+        }
 
-			@Override
-			public void dispose() {}
+        valueText.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(300, 80).create());
 
-			@Override
-			public Object[] getElements(Object inputElement) {
-				return new String[]{
-						String.class.getName()
-						,Boolean.class.getName()
-						,Long.class.getName()
-						,Float.class.getName()
-						,Double.class.getName()
-						,Integer.class.getName()
-				};
-			}
-		}) ;
+        Label typeLabel = new Label(mainComposite, SWT.NONE);
+        typeLabel.setText(Messages.returnType);
 
-		typeCombo.setLabelProvider(new ConstantTypeLabelProvider()) ;
-		typeCombo.setInput(new Object()) ;
+        typeCombo = new ComboViewer(mainComposite, SWT.BORDER | SWT.READ_ONLY);
+        typeCombo.getCombo().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+        typeCombo.setContentProvider(new IStructuredContentProvider() {
 
-		return mainComposite;
-	}
+            @Override
+            public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+            }
 
-	@Override
-	public void bindExpression(EMFDataBindingContext dataBindingContext,EObject context,Expression inputExpression,ViewerFilter[] filters,ExpressionViewer expressionViewer) {
-		this.inputExpression = inputExpression ;
-		IObservableValue contentModelObservable = EMFObservables.observeValue(inputExpression, ExpressionPackage.Literals.EXPRESSION__CONTENT) ;
-		IObservableValue returnTypeModelObservable = EMFObservables.observeValue(inputExpression, ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE) ;
+            @Override
+            public void dispose() {
+            }
 
-		dataBindingContext.bindValue(SWTObservables.observeText(valueText,SWT.Modify), contentModelObservable) ;
-		UpdateValueStrategy targetToModel = new UpdateValueStrategy();
-		targetToModel.setAfterConvertValidator(new IValidator() {
+            @Override
+            public Object[] getElements(Object inputElement) {
+                return new String[] {
+                        String.class.getName()
+                        , Boolean.class.getName()
+                        , Long.class.getName()
+                        , Float.class.getName()
+                        , Double.class.getName()
+                        , Integer.class.getName()
+                };
+            }
+        });
 
-			@Override
-			public IStatus validate(Object value) {
-				if(value == null || value.toString().isEmpty()){
-					return ValidationStatus.error(Messages.returnTypeIsMandatory);
-				}
-				return ValidationStatus.ok();
-			}
-		});
-		ControlDecorationSupport.create(dataBindingContext.bindValue(ViewersObservables.observeSingleSelection(typeCombo), returnTypeModelObservable,targetToModel,null),SWT.LEFT) ;
-		typeCombo.getCombo().setEnabled(!inputExpression.isReturnTypeFixed()) ;
+        typeCombo.setLabelProvider(new ConstantTypeLabelProvider());
+        typeCombo.setInput(new Object());
 
-	}
+        return mainComposite;
+    }
 
-	/* (non-Javadoc)
-	 * @see org.bonitasoft.studio.expression.editor.provider.IExpressionEditor#canFinish()
-	 */
-	 @Override
-	 public boolean canFinish() {
-		 return typeCombo != null && !typeCombo.getCombo().isDisposed() && typeCombo.getCombo().getText() != null && !typeCombo.getCombo().getText().isEmpty();
-	}
+    @Override
+    public void bindExpression(EMFDataBindingContext dataBindingContext, EObject context, Expression inputExpression, ViewerFilter[] filters,
+            ExpressionViewer expressionViewer) {
+        this.inputExpression = inputExpression;
+        IObservableValue contentModelObservable = EMFObservables.observeValue(inputExpression, ExpressionPackage.Literals.EXPRESSION__CONTENT);
+        IObservableValue returnTypeModelObservable = EMFObservables.observeValue(inputExpression, ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE);
 
-	@Override
-	public void okPressed() {
-		final String expressionContent = inputExpression.getContent();
-		if(expressionContent != null  && !expressionContent.equals(inputExpression.getName())){
-			inputExpression.setName(expressionContent) ;
-		}
-	}
+        dataBindingContext.bindValue(SWTObservables.observeText(valueText, SWT.Modify), contentModelObservable);
+        UpdateValueStrategy targetToModel = new UpdateValueStrategy();
+        targetToModel.setAfterConvertValidator(new IValidator() {
 
-	@Override
-	public Control getTextControl() {
-		return valueText;
-	}
+            @Override
+            public IStatus validate(Object value) {
+                if (value == null || value.toString().isEmpty()) {
+                    return ValidationStatus.error(Messages.returnTypeIsMandatory);
+                }
+                return ValidationStatus.ok();
+            }
+        });
+        ControlDecorationSupport.create(
+                dataBindingContext.bindValue(ViewersObservables.observeSingleSelection(typeCombo), returnTypeModelObservable, targetToModel, null), SWT.LEFT);
+        typeCombo.getCombo().setEnabled(!inputExpression.isReturnTypeFixed());
 
-	@Override
-	public boolean isPageFlowContext() {
-		
-		return isPageFlowContext;
-	}
+    }
 
-	@Override
-	public void setIsPageFlowContext(boolean isPageFlowContext) {
-		this.isPageFlowContext=isPageFlowContext;
-		
-	}
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.expression.editor.provider.IExpressionEditor#canFinish()
+     */
+    @Override
+    public boolean canFinish() {
+        return typeCombo != null && !typeCombo.getCombo().isDisposed() && typeCombo.getCombo().getText() != null && !typeCombo.getCombo().getText().isEmpty();
+    }
 
-	/* (non-Javadoc)
-	 * @see org.bonitasoft.studio.common.IBonitaVariableContext#isOverViewContext()
-	 */
-	@Override
-	public boolean isOverViewContext() {
-		return false;
-	}
+    @Override
+    public void okPressed() {
+        final String expressionContent = inputExpression.getContent();
+        if (expressionContent != null && !expressionContent.equals(inputExpression.getName())) {
+            inputExpression.setName(expressionContent);
+        }
+    }
 
-	/* (non-Javadoc)
-	 * @see org.bonitasoft.studio.common.IBonitaVariableContext#setIsOverviewContext(boolean)
-	 */
-	@Override
-	public void setIsOverviewContext(boolean isOverviewContext) {
-	}
+    @Override
+    public Control getTextControl() {
+        return valueText;
+    }
 
+    @Override
+    public boolean isPageFlowContext() {
+
+        return isPageFlowContext;
+    }
+
+    @Override
+    public void setIsPageFlowContext(boolean isPageFlowContext) {
+        this.isPageFlowContext = isPageFlowContext;
+
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.common.IBonitaVariableContext#isOverViewContext()
+     */
+    @Override
+    public boolean isOverViewContext() {
+        return false;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.common.IBonitaVariableContext#setIsOverviewContext(boolean)
+     */
+    @Override
+    public void setIsOverviewContext(boolean isOverviewContext) {
+    }
 
 }

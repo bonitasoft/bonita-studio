@@ -34,7 +34,7 @@ import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.eclipse.core.runtime.FileLocator;
 
 /**
- * @author Aurélie Zara
+ * @author Aurï¿½lie Zara
  *
  */
 
@@ -119,6 +119,28 @@ public class TestImportOrganization extends  TestCase{
 		}
 		assertNull(id+" was imported",fStore);
 	}
+	
+
+	
+	public void testImportOldOrganization() throws Exception{
+		final OrganizationRepositoryStore organizationStore = (OrganizationRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(OrganizationRepositoryStore.class);
+		String organizationName="oldOrganizationTest.xml";
+		URL archiveURL = TestImportOrganization.class.getResource(organizationName);
+		assertNotNull("filePath should not be null",archiveURL.getPath());
+		FileInputStream fis = null ;
+		String id =	null;
+		final File toImport = new File(FileLocator.toFileURL(archiveURL).getFile());
+		assertTrue("organization to import does not exist",toImport.exists());
+		fis = new FileInputStream(toImport);
+		id  = toImport.getName() ;
+		IRepositoryFileStore fStore = organizationStore.importInputStream(id, fis) ;
+		if(fis != null){
+			fis.close() ;	
+		}
+		assertNotNull(id+" was imported",fStore);
+	}
+
+	
 	
 	protected void tearDown(){}
 

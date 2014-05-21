@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Common code for all Bonita plugins
 Bundle-SymbolicName: org.bonitasoft.studio.common;singleton:=true
-Bundle-Version: 6.3.0.qualifier
+Bundle-Version: 6.3.1.qualifier
 Bundle-Activator: org.bonitasoft.studio.common.Activator
 Bundle-Vendor: BonitaSoft S.A.
 Require-Bundle: org.eclipse.core.runtime,
@@ -40,38 +40,34 @@ Require-Bundle: org.eclipse.core.runtime,
  org.mockito;bundle-version="1.9.5";resolution:=optional,
  org.eclipse.compare;bundle-version="3.5.202",
  assertj-core;bundle-version="1.5.0";resolution:=optional,
- org.bonitasoft.studio.model.assertions;bundle-version="6.3.0";resolution:=optional
+ org.bonitasoft.studio.model.assertions;bundle-version="6.3.0";resolution:=optional,
+ org.codehaus.groovy.eclipse.core,
+ org.codehaus.groovy;bundle-version="1.8.6",
+ org.eclipse.jdt.groovy.core,
+ org.codehaus.groovy.eclipse.codeassist.completion,
+ org.eclipse.xtext.ui
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
-Import-Package: org.bonitasoft.console.common.server.preferences.constants,
- org.bonitasoft.engine.bpm.bar,
+Import-Package: org.bonitasoft.engine.bpm.bar,
  org.bonitasoft.engine.bpm.connector,
  org.bonitasoft.engine.bpm.document,
  org.bonitasoft.engine.expression,
  org.bonitasoft.engine.operation,
+ org.bonitasoft.engine.session,
  org.bonitasoft.engine.util,
  org.bonitasoft.forms.client.model
-Export-Package: org.bonitasoft.studio.common,
- org.bonitasoft.studio.common.api,
- org.bonitasoft.studio.common.databinding,
- org.bonitasoft.studio.common.databinding.converter,
- org.bonitasoft.studio.common.dialog,
- org.bonitasoft.studio.common.editingdomain,
- org.bonitasoft.studio.common.editor,
- org.bonitasoft.studio.common.emf.tools,
- org.bonitasoft.studio.common.exporter,
- org.bonitasoft.studio.common.extension,
- org.bonitasoft.studio.common.gmfgraph,
- org.bonitasoft.studio.common.jface,
- org.bonitasoft.studio.common.jface.databinding,
- org.bonitasoft.studio.common.jface.databinding.observables,
- org.bonitasoft.studio.common.jface.databinding.validator,
- org.bonitasoft.studio.common.log,
- org.bonitasoft.studio.common.perspectives,
- org.bonitasoft.studio.common.platform.tools,
- org.bonitasoft.studio.common.properties,
- org.bonitasoft.studio.common.refactoring,
- org.bonitasoft.studio.common.views,
- org.bonitasoft.studio.common.widgets
+Export-Package: org.bonitasoft.studio.common,org.bonitasoft.studio.com
+ mon.api,org.bonitasoft.studio.common.databinding,org.bonitasoft.studi
+ o.common.databinding.converter,org.bonitasoft.studio.common.dialog,or
+ g.bonitasoft.studio.common.editingdomain,org.bonitasoft.studio.common
+ .editor,org.bonitasoft.studio.common.emf.tools,org.bonitasoft.studio.
+ common.exporter,org.bonitasoft.studio.common.extension,org.bonitasoft
+ .studio.common.gmfgraph,org.bonitasoft.studio.common.jface,org.bonita
+ soft.studio.common.jface.databinding,org.bonitasoft.studio.common.jfa
+ ce.databinding.observables,org.bonitasoft.studio.common.jface.databin
+ ding.validator,org.bonitasoft.studio.common.log,org.bonitasoft.studio
+ .common.perspectives,org.bonitasoft.studio.common.platform.tools,org.
+ bonitasoft.studio.common.properties,org.bonitasoft.studio.common.view
+ s,org.bonitasoft.studio.common.widgets
 Bundle-ClassPath: .,
  lib/imgscalr-lib-3.2.jar

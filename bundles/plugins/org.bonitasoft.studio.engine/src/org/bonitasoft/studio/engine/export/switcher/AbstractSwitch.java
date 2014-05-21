@@ -100,21 +100,17 @@ public abstract class AbstractSwitch extends ProcessSwitch<Element> {
                         }
                     }
                 }
-                for(Operation outputOpeartion : connector.getOutputs()){
+                for(Operation outputOperation : connector.getOutputs()){
                     String inputType = null ;
-                    if(!outputOpeartion.getOperator().getInputTypes().isEmpty()){
-                        inputType = outputOpeartion.getOperator().getInputTypes().get(0) ;
+                    if(!outputOperation.getOperator().getInputTypes().isEmpty()){
+                        inputType = outputOperation.getOperator().getInputTypes().get(0) ;
                     }
-                    if(outputOpeartion.getLeftOperand() != null
-                            && outputOpeartion.getLeftOperand().getContent() != null
-                            && !outputOpeartion.getLeftOperand().getContent().isEmpty()
-                            && outputOpeartion.getRightOperand() != null
-                            && outputOpeartion.getRightOperand().getContent() != null){
-                        connectorBuilder.addOutput(
-                                EngineExpressionUtil.createLeftOperand(outputOpeartion.getLeftOperand()),
-                                OperatorType.valueOf(outputOpeartion.getOperator().getType()),
-                                outputOpeartion.getOperator().getExpression(),inputType,
-                                EngineExpressionUtil.createExpression(outputOpeartion.getRightOperand())) ;
+                    if(outputOperation.getLeftOperand() != null
+                            && outputOperation.getLeftOperand().getContent() != null
+                            && !outputOperation.getLeftOperand().getContent().isEmpty()
+                            && outputOperation.getRightOperand() != null
+                            && outputOperation.getRightOperand().getContent() != null){
+                        connectorBuilder.addOutput(EngineExpressionUtil.createOperation(outputOperation)) ;
                     }
                 }
             }
@@ -147,7 +143,7 @@ public abstract class AbstractSwitch extends ProcessSwitch<Element> {
             if(!data.isMultiple()){
                 final ProcessSwitch<DataDefinitionBuilder> dataSwitch = getDataSwitch(dataContainerBuilder, data, expr) ;
                 final DataDefinitionBuilder dataBuilder =  dataSwitch.doSwitch(data.getDataType());
-                if(data.isTransient()){
+                if(data.isTransient() && dataBuilder != null){
                     dataBuilder.isTransient();
                 }
             }else{
@@ -155,7 +151,7 @@ public abstract class AbstractSwitch extends ProcessSwitch<Element> {
                     expr = EngineExpressionUtil.createEmptyListExpression();
                 }
                 final DataDefinitionBuilder dataBuilder = dataContainerBuilder.addData(data.getName(), Collection.class.getName(), expr);
-                if(data.isTransient()){
+                if(data.isTransient() && dataBuilder != null){
                     dataBuilder.isTransient();
                 }
             }
@@ -173,5 +169,6 @@ public abstract class AbstractSwitch extends ProcessSwitch<Element> {
             builder.addDescription(description) ;
         }
     }
+
 
 }

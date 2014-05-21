@@ -87,6 +87,22 @@ public class OrganizationAdapterFactory extends AdapterFactoryImpl {
 				return createContactDataAdapter();
 			}
 			@Override
+			public Adapter caseCustomUserInfoDefinition(CustomUserInfoDefinition object) {
+				return createCustomUserInfoDefinitionAdapter();
+			}
+			@Override
+			public Adapter caseCustomUserInfoDefinitions(CustomUserInfoDefinitions object) {
+				return createCustomUserInfoDefinitionsAdapter();
+			}
+			@Override
+			public Adapter caseCustomUserInfoValue(CustomUserInfoValue object) {
+				return createCustomUserInfoValueAdapter();
+			}
+			@Override
+			public Adapter caseCustomUserInfoValuesType(CustomUserInfoValuesType object) {
+				return createCustomUserInfoValuesTypeAdapter();
+			}
+			@Override
 			public Adapter caseDocumentRoot(DocumentRoot object) {
 				return createDocumentRootAdapter();
 			}
@@ -169,6 +185,62 @@ public class OrganizationAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createContactDataAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.bonitasoft.studio.actors.model.organization.CustomUserInfoDefinition <em>Custom User Info Definition</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.bonitasoft.studio.actors.model.organization.CustomUserInfoDefinition
+	 * @generated
+	 */
+	public Adapter createCustomUserInfoDefinitionAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.bonitasoft.studio.actors.model.organization.CustomUserInfoDefinitions <em>Custom User Info Definitions</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.bonitasoft.studio.actors.model.organization.CustomUserInfoDefinitions
+	 * @generated
+	 */
+	public Adapter createCustomUserInfoDefinitionsAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.bonitasoft.studio.actors.model.organization.CustomUserInfoValue <em>Custom User Info Value</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.bonitasoft.studio.actors.model.organization.CustomUserInfoValue
+	 * @generated
+	 */
+	public Adapter createCustomUserInfoValueAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.bonitasoft.studio.actors.model.organization.CustomUserInfoValuesType <em>Custom User Info Values Type</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.bonitasoft.studio.actors.model.organization.CustomUserInfoValuesType
+	 * @generated
+	 */
+	public Adapter createCustomUserInfoValuesTypeAdapter() {
 		return null;
 	}
 
@@ -259,18 +331,18 @@ public class OrganizationAdapterFactory extends AdapterFactoryImpl {
 	/**
 	 * Creates a new adapter for an object of class '{@link org.bonitasoft.studio.actors.model.organization.MetaDatasType <em>Meta Datas Type</em>}'.
 	 * <!-- begin-user-doc -->
-     * This default implementation returns null so that we can easily ignore cases;
-     * it's useful to ignore a case when inheritance will catch all the cases anyway.
-     * <!-- end-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
 	 * @return the new adapter.
 	 * @see org.bonitasoft.studio.actors.model.organization.MetaDatasType
 	 * @generated
 	 */
-    public Adapter createMetaDatasTypeAdapter() {
+	public Adapter createMetaDatasTypeAdapter() {
 		return null;
 	}
 
-    /**
+	/**
 	 * Creates a new adapter for an object of class '{@link org.bonitasoft.studio.actors.model.organization.Organization <em>Organization</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;

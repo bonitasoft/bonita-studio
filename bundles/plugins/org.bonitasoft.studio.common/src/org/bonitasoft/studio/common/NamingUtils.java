@@ -55,6 +55,7 @@ import org.bonitasoft.studio.model.process.ThrowLinkEvent;
 import org.bonitasoft.studio.model.process.TimerEvent;
 import org.bonitasoft.studio.model.process.ViewPageFlow;
 import org.bonitasoft.studio.model.process.provider.ProcessItemProviderAdapterFactory;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClass;
@@ -877,5 +878,26 @@ public class NamingUtils {
 	public static String eClassToBusinessObjectId(EClass eClass) {
 		return eClass.getEPackage().getName()+"."+eClass.getName();
 	}
+
+
+    public static String getSimpleName(String qualifiedName) {
+        Assert.isNotNull(qualifiedName);
+        String simpleName = qualifiedName;
+        if(simpleName.contains(".")){
+            String[] split = simpleName.split("\\.");
+            simpleName = split[split.length-1];
+        }
+        return simpleName;
+    }
+
+
+    public static String getPackageName(String qualifiedName) {
+        Assert.isNotNull(qualifiedName);
+        String packageName = "";
+        if(qualifiedName.contains(".")){
+            packageName = qualifiedName.substring(0,qualifiedName.lastIndexOf("."));
+        }
+        return packageName;
+    }
 
 }

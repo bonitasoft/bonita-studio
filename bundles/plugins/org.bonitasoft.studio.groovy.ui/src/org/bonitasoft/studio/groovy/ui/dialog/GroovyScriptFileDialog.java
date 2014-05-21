@@ -5,14 +5,14 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
+ * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.groovy.ui.dialog;
 
@@ -33,15 +33,14 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
-
 /**
  * @author Romain Bioteau
- *
+ * 
  */
 public class GroovyScriptFileDialog extends EditExpressionDialog {
 
     public GroovyScriptFileDialog(Shell parentShell, Expression inputExpression, EObject context, EditingDomain domain, ViewerFilter[] viewerTypeFilters) {
-        super(parentShell, false, inputExpression, context, domain, viewerTypeFilters,null);
+        super(parentShell, false, inputExpression, context, domain, viewerTypeFilters, null);
         if (isResizable()) {
             setShellStyle(SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL | SWT.MAX | SWT.RESIZE
                     | getDefaultOrientation());
@@ -54,10 +53,9 @@ public class GroovyScriptFileDialog extends EditExpressionDialog {
     @Override
     protected Control createDialogArea(Composite parent) {
         Control c = super.createDialogArea(parent);
-        showContent(ExpressionConstants.SCRIPT_TYPE) ;
+        showContent(ExpressionConstants.SCRIPT_TYPE);
         return c;
     }
-
 
     @Override
     protected void createExpressionTypePanel(Composite parentForm) {
@@ -67,30 +65,29 @@ public class GroovyScriptFileDialog extends EditExpressionDialog {
     @Override
     protected void showContent(String type) {
         currentExpressionEditor = new GroovyScriptFileEditor();
-        if(currentExpressionEditor != null){
-            currentExpressionEditor.createExpressionEditor(contentComposite) ;
-            contentComposite.layout(true, true) ;
-            if(helpControl != null){
+        if (currentExpressionEditor != null) {
+            if (dataBindingContext != null) {
+                dataBindingContext.dispose();
+            }
+            dataBindingContext = new EMFDataBindingContext();
+            currentExpressionEditor.createExpressionEditor(contentComposite, dataBindingContext);
+            contentComposite.layout(true, true);
+            if (helpControl != null) {
                 helpControl.setVisible(currentExpressionEditor.provideDialogTray());
-                if(getTray() != null){
+                if (getTray() != null) {
                     closeTray();
                 }
             }
-            if(dataBindingContext != null){
-                dataBindingContext.dispose() ;
-            }
-            dataBindingContext = new EMFDataBindingContext() ;
-
-            UpdateValueStrategy selectionToExpressionType  = new UpdateValueStrategy() ;
-            IConverter convert = new Converter(IExpressionProvider.class,String.class) {
+            UpdateValueStrategy selectionToExpressionType = new UpdateValueStrategy();
+            IConverter convert = new Converter(IExpressionProvider.class, String.class) {
 
                 @Override
                 public Object convert(Object arg0) {
-                    return ((IExpressionProvider)arg0).getExpressionType();
+                    return ((IExpressionProvider) arg0).getExpressionType();
                 }
             };
-            selectionToExpressionType.setConverter(convert) ;
-            currentExpressionEditor.bindExpression(dataBindingContext,context,inputExpression,viewerTypeFilters,null) ;
+            selectionToExpressionType.setConverter(convert);
+            currentExpressionEditor.bindExpression(dataBindingContext, context, inputExpression, viewerTypeFilters, null);
         }
     }
 

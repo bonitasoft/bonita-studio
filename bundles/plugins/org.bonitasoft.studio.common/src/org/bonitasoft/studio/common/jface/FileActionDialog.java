@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012 BonitaSoft S.A.
+ * Copyright (C) 2012-2014 Bonitasoft S.A.
  * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,6 +19,7 @@ package org.bonitasoft.studio.common.jface;
 import java.util.concurrent.CancellationException;
 
 import org.bonitasoft.studio.common.Messages;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 
@@ -170,8 +171,9 @@ public class FileActionDialog {
 
 					@Override
 					public void run() {
-						answer = MessageDialog.openQuestion(Display.getDefault().getActiveShell(), Messages.deleteConfirmationTitle,
-								message);
+                  	  	String[] buttonLabels = {Messages.delete,IDialogConstants.CANCEL_LABEL};
+                  	  	MessageDialog dialog = new MessageDialog(Display.getDefault().getActiveShell(), Messages.deleteConfirmationTitle, null, message, MessageDialog.QUESTION,buttonLabels , 0);
+                        answer = dialog.open() == 0;
 					}
 				}) ;
 				return answer ;

@@ -3,13 +3,13 @@
 <plugin>
    <extension-point id="org.bonitasoft.studio.engine.kpityperesolver" name="org.bonitasoft.studio.engine.kpityperesolver" schema="schema/org.bonitasoft.studio.engine.kpityperesolver.exsd"/>
    <extension-point id="preEngineAction" name="preEngineAction" schema="schema/preEngineAction.exsd"/>
+   <extension-point id="postEngineAction" name="preEngineAction" schema="schema/postEngineAction.exsd"/>
    <extension-point id="bonitaWebServerManager" name="bonitaWebServerManager" schema="schema/bonitaWebServerManager.exsd"/>
    <extension-point id="org.bonitasoft.studio.engine.processDefinitionExporter" name="org.bonitasoft.studio.engine.processDefinitionExporter" schema="schema/org.bonitasoft.studio.engine.processDefinitionExporter.exsd"/>
    <extension-point id="bonitaEngineManager" name="bonitaEngineManager" schema="schema/bonitaEngineManager.exsd"/>
   <extension
         point="org.eclipse.ui.commands">
         <command
-            defaultHandler="org.bonitasoft.studio.engine.command.RunProcessCommand"
             id="org.bonitasoft.studio.engine.runCommand"
             name="%runProcessCommand">
            <commandParameter
@@ -159,6 +159,15 @@
      <handler
            class="org.bonitasoft.studio.engine.command.ExportAsBarFileHandler"
            commandId="org.bonitasoft.studio.engine.exportAsBarCommand">
+        <activeWhen>
+           <reference
+                 definitionId="isABonitaProduct">
+           </reference>
+        </activeWhen>
+     </handler>
+     <handler
+           class="org.bonitasoft.studio.engine.command.RunProcessCommand"
+           commandId="org.bonitasoft.studio.engine.runCommand">
         <activeWhen>
            <reference
                  definitionId="isABonitaProduct">

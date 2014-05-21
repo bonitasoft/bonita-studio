@@ -2,23 +2,19 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.bonitasoft.studio.exporter;singleton:=true
-Bundle-Version: 6.3.0.qualifier
+Bundle-Version: 6.3.1.qualifier
 Bundle-ClassPath: .,
- lib/jericho-html-3.2.jar
+ lib/jericho-html-3.1.jar
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Export-Package: net.htmlparser.jericho,
- org.bonitasoft.studio.exporter,
- org.bonitasoft.studio.exporter.application,
- org.bonitasoft.studio.exporter.application.service,
- org.bonitasoft.studio.exporter.bpmn.transfo;x-friends:="org.bonitasoft.studio.exporter.tests",
- org.bonitasoft.studio.exporter.extension,
- org.bonitasoft.studio.exporter.form,
- org.bonitasoft.studio.exporter.handler,
- org.bonitasoft.studio.exporter.preview,
- org.bonitasoft.studio.exporter.runtime,
- org.w3._1999.xhtml
+Export-Package: net.htmlparser.jericho,org.bonitasoft.studio.exporter,
+ org.bonitasoft.studio.exporter.application,org.bonitasoft.studio.expo
+ rter.application.service,org.bonitasoft.studio.exporter.bpmn.transfo;
+ x-friends:="org.bonitasoft.studio.exporter.tests",org.bonitasoft.stud
+ io.exporter.extension,org.bonitasoft.studio.exporter.form,org.bonitas
+ oft.studio.exporter.handler,org.bonitasoft.studio.exporter.preview,or
+ g.bonitasoft.studio.exporter.runtime,org.w3._1999.xhtml
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.ecore.xmi;visibility:=reexport,
  org.eclipse.ui,
@@ -53,11 +49,11 @@ Require-Bundle: org.eclipse.core.runtime,
  org.mockito;bundle-version="1.9.5";resolution:=optional
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: org.bonitasoft.studio.exporter.Activator
-Import-Package: org.bonitasoft.console.common.server.preferences.properties,
- org.bonitasoft.engine.bpm,
+Import-Package: org.bonitasoft.engine.bpm,
  org.bonitasoft.engine.bpm.bar,
  org.bonitasoft.engine.bpm.process,
  org.bonitasoft.engine.expression,
+ org.bonitasoft.engine.operation,
  org.bonitasoft.forms.client.model,
  org.bonitasoft.forms.server.accessor,
  org.bonitasoft.forms.server.builder,

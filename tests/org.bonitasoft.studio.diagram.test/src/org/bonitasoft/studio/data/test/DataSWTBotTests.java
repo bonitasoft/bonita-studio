@@ -46,6 +46,7 @@ import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditor;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
 import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
 import org.junit.Assert;
 import org.junit.Test;
@@ -107,7 +108,9 @@ public class DataSWTBotTests extends SWTBotGefTestCase {
         bot.button(Messages.updateData).click();
         bot.text().setText("newName");
         bot.comboBox().setSelection("Integer");
+        SWTBotShell editVarShell = bot.activeShell();
         bot.button(IDialogConstants.OK_LABEL).click();
+        bot.waitUntil(Conditions.shellCloses(editVarShell));
 
         bot.menu("Diagram").menu("Save").click();
 

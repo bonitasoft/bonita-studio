@@ -5,14 +5,14 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
+ * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.properties.form.sections.actions.contributions;
 
@@ -54,124 +54,127 @@ import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
  */
 public class OutputSectionContribution implements IExtensibleGridPropertySectionContribution {
 
-	protected Widget element;
-	protected TransactionalEditingDomain editingDomain;
-	protected EMFDataBindingContext dataBinding;
-	private OperationViewer operationViewer;
-	
-	public void createControl(Composite composite, TabbedPropertySheetWidgetFactory widgetFactory, ExtensibleGridPropertySection extensibleGridPropertySection) {
-		composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
-		composite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).create());
+    protected Widget element;
 
-		AvailableExpressionTypeFilter expressionFilter =  new AvailableExpressionTypeFilter(new String[]{
-				ExpressionConstants.CONSTANT_TYPE,
-				ExpressionConstants.VARIABLE_TYPE,
-				ExpressionConstants.SCRIPT_TYPE,
-				ExpressionConstants.PARAMETER_TYPE,
-				ExpressionConstants.FORM_FIELD_TYPE,
-				ExpressionConstants.DOCUMENT_TYPE
-		}) ;
+    protected TransactionalEditingDomain editingDomain;
 
-		AvailableExpressionTypeFilter storageExpressionFilter =  new AvailableExpressionTypeFilter(new String[]{
-				ExpressionConstants.VARIABLE_TYPE,
-				ExpressionConstants.DOCUMENT_REF_TYPE
-		}) ;
+    protected EMFDataBindingContext dataBinding;
 
-		operationViewer = new OperationViewer(composite, widgetFactory,getEditingDomain(), expressionFilter, storageExpressionFilter) ;
-		operationViewer.setStorageExpressionNatureProvider(new DataExpressionNatureProviderForFormOutput());
-		operationViewer.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
+    private OperationViewer operationViewer;
 
-		bindWidgets();
+    public void createControl(Composite composite, TabbedPropertySheetWidgetFactory widgetFactory, ExtensibleGridPropertySection extensibleGridPropertySection) {
+        composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+        composite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).create());
 
-	}
+        AvailableExpressionTypeFilter expressionFilter = new AvailableExpressionTypeFilter(new String[] {
+                ExpressionConstants.CONSTANT_TYPE,
+                ExpressionConstants.VARIABLE_TYPE,
+                ExpressionConstants.SCRIPT_TYPE,
+                ExpressionConstants.PARAMETER_TYPE,
+                ExpressionConstants.FORM_FIELD_TYPE,
+                ExpressionConstants.QUERY_TYPE,
+                ExpressionConstants.DOCUMENT_TYPE
+        });
 
+        AvailableExpressionTypeFilter storageExpressionFilter = new AvailableExpressionTypeFilter(new String[] {
+                ExpressionConstants.VARIABLE_TYPE,
+                ExpressionConstants.DOCUMENT_REF_TYPE
+        });
 
+        operationViewer = new OperationViewer(composite, widgetFactory, getEditingDomain(), expressionFilter, storageExpressionFilter);
+        operationViewer.setStorageExpressionNatureProvider(new DataExpressionNatureProviderForFormOutput());
+        operationViewer.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
-	protected TransactionalEditingDomain getEditingDomain() {
-		return editingDomain;
-	}
+        bindWidgets();
 
-	protected void bindWidgets() {
-		
-		if(operationViewer != null && !operationViewer.isDisposed()){
-			if(dataBinding != null){
-				dataBinding.dispose();
-			}
-			dataBinding = new EMFDataBindingContext();
-			operationViewer.setContext(dataBinding) ;
-			Operation action = element.getAction() ;
-			if(action == null){
-				action = ExpressionFactory.eINSTANCE.createOperation() ;
-				Operator op = ExpressionFactory.eINSTANCE.createOperator() ;
-				op.setType(ExpressionConstants.ASSIGNMENT_OPERATOR) ;
-				op.setExpression("=") ;
-				action.setOperator(op) ;
+    }
 
-				Expression variableExp = ExpressionFactory.eINSTANCE.createExpression() ;
-				Expression actionExp = ExpressionFactory.eINSTANCE.createExpression() ;
-				action.setLeftOperand(variableExp) ;
-				action.setRightOperand(actionExp) ;
-				editingDomain.getCommandStack().execute(SetCommand.create(editingDomain, element, FormPackage.Literals.WIDGET__ACTION, action));
-			}
-			operationViewer.setEditingDomain(getEditingDomain()) ;
-			operationViewer.setEObject(element) ;
-			UpdateValueStrategy strategy = new UpdateValueStrategy();
-			strategy.setConverter(new Converter(Boolean.class,Boolean.class){
-				public Object convert(Object fromObject) {
-					return !((Boolean)fromObject).booleanValue();
-				}
-			});
-		
-			dataBinding.bindValue(SWTObservables.observeVisible(ExtensibleGridPropertySection.getLabelCompositeOf(operationViewer.getParent())), EMFEditObservables.observeValue(getEditingDomain(), element, FormPackage.Literals.WIDGET__READ_ONLY),strategy,strategy);
-			dataBinding.bindValue(SWTObservables.observeVisible(operationViewer.getParent()), EMFEditObservables.observeValue(getEditingDomain(), element, FormPackage.Literals.WIDGET__READ_ONLY),strategy,strategy);
-			if(element instanceof FileWidget){
-				dataBinding.bindValue(SWTObservables.observeVisible(ExtensibleGridPropertySection.getLabelCompositeOf(operationViewer.getParent())), EMFEditObservables.observeValue(getEditingDomain(), element, FormPackage.Literals.FILE_WIDGET__DOWNLOAD_ONLY),strategy,strategy);
-				dataBinding.bindValue(SWTObservables.observeVisible(operationViewer.getParent()), EMFEditObservables.observeValue(getEditingDomain(), element, FormPackage.Literals.FILE_WIDGET__DOWNLOAD_ONLY),strategy,strategy);
-			}
-		}
-	}
+    protected TransactionalEditingDomain getEditingDomain() {
+        return editingDomain;
+    }
 
+    protected void bindWidgets() {
 
-	public void dispose() {
-		if(dataBinding!= null){
-			dataBinding.dispose();
-		}
-		if(operationViewer != null){
-			operationViewer.dispose() ;
-		}
-	}
+        if (operationViewer != null && !operationViewer.isDisposed()) {
+            if (dataBinding != null) {
+                dataBinding.dispose();
+            }
+            dataBinding = new EMFDataBindingContext();
+            operationViewer.setContext(dataBinding);
+            Operation action = element.getAction();
+            if (action == null) {
+                action = ExpressionFactory.eINSTANCE.createOperation();
+                Operator op = ExpressionFactory.eINSTANCE.createOperator();
+                op.setType(ExpressionConstants.ASSIGNMENT_OPERATOR);
+                op.setExpression("=");
+                action.setOperator(op);
 
-	public String getLabel() {
-		return Messages.outputOperation;
-	}
+                Expression variableExp = ExpressionFactory.eINSTANCE.createExpression();
+                Expression actionExp = ExpressionFactory.eINSTANCE.createExpression();
+                action.setLeftOperand(variableExp);
+                action.setRightOperand(actionExp);
+                editingDomain.getCommandStack().execute(SetCommand.create(editingDomain, element, FormPackage.Literals.WIDGET__ACTION, action));
+            }
+            operationViewer.setEditingDomain(getEditingDomain());
+            operationViewer.setEObject(element);
+            UpdateValueStrategy strategy = new UpdateValueStrategy();
+            strategy.setConverter(new Converter(Boolean.class, Boolean.class) {
 
-	public boolean isRelevantFor(EObject eObject) {
-		if(eObject instanceof FormField && ! ModelHelper.isInDuplicatedGrp(eObject)){
-			Form form = ModelHelper.getForm((Widget) eObject);
-			return !(form instanceof ViewForm);
-		}else{
-			return false;
-		}
+                public Object convert(Object fromObject) {
+                    return !((Boolean) fromObject).booleanValue();
+                }
+            });
 
-	}
+            dataBinding.bindValue(SWTObservables.observeVisible(ExtensibleGridPropertySection.getLabelCompositeOf(operationViewer.getParent())),
+                    EMFEditObservables.observeValue(getEditingDomain(), element, FormPackage.Literals.WIDGET__READ_ONLY), strategy, strategy);
+            dataBinding.bindValue(SWTObservables.observeVisible(operationViewer.getParent()),
+                    EMFEditObservables.observeValue(getEditingDomain(), element, FormPackage.Literals.WIDGET__READ_ONLY), strategy, strategy);
+            if (element instanceof FileWidget) {
+                dataBinding.bindValue(SWTObservables.observeVisible(ExtensibleGridPropertySection.getLabelCompositeOf(operationViewer.getParent())),
+                        EMFEditObservables.observeValue(getEditingDomain(), element, FormPackage.Literals.FILE_WIDGET__DOWNLOAD_ONLY), strategy, strategy);
+                dataBinding.bindValue(SWTObservables.observeVisible(operationViewer.getParent()),
+                        EMFEditObservables.observeValue(getEditingDomain(), element, FormPackage.Literals.FILE_WIDGET__DOWNLOAD_ONLY), strategy, strategy);
+            }
+        }
+    }
 
+    public void dispose() {
+        if (dataBinding != null) {
+            dataBinding.dispose();
+        }
+        if (operationViewer != null) {
+            operationViewer.dispose();
+        }
+    }
 
-	public void setEObject(EObject object) {
-		element = (Widget) object;
-	}
+    public String getLabel() {
+        return Messages.outputOperation;
+    }
 
-	public void setEditingDomain(TransactionalEditingDomain editingDomain) {
-		this.editingDomain = editingDomain;
-	}
+    public boolean isRelevantFor(EObject eObject) {
+        if (eObject instanceof FormField && !ModelHelper.isInDuplicatedGrp(eObject)) {
+            Form form = ModelHelper.getForm((Widget) eObject);
+            return !(form instanceof ViewForm);
+        } else {
+            return false;
+        }
 
-	public void setSelection(ISelection selection) {
+    }
 
-	}
+    public void setEObject(EObject object) {
+        element = (Widget) object;
+    }
 
+    public void setEditingDomain(TransactionalEditingDomain editingDomain) {
+        this.editingDomain = editingDomain;
+    }
 
+    public void setSelection(ISelection selection) {
 
-	public void refresh() {
+    }
 
-	}
+    public void refresh() {
+
+    }
 
 }

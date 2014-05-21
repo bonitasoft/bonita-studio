@@ -111,7 +111,7 @@ public class MigrationStatusView extends ViewPart implements ISelectionListener,
 	private String searchQuery;
 	private ToggleLinkingAction linkAction;
 	private Text descripitonText;
-	private CheckboxLabelProvider checkBoxLabelProvider;
+	private ReviewStatusCheckboxLabelProvider checkBoxLabelProvider;
 
 	@Override
 	public void createPartControl(Composite parent) {
@@ -267,7 +267,7 @@ public class MigrationStatusView extends ViewPart implements ISelectionListener,
 
 
 		tableViewer = new TableViewer(tableComposite,SWT.SINGLE | SWT.BORDER | SWT.FULL_SELECTION) ;
-		checkBoxLabelProvider  = new CheckboxLabelProvider(tableViewer.getControl());
+		checkBoxLabelProvider  = new ReviewStatusCheckboxLabelProvider(tableViewer.getControl());
 		tableViewer.getTable().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(400, SWT.DEFAULT).create());
 		tableViewer.getTable().setHeaderVisible(true);
 		tableViewer.getTable().setLinesVisible(true);

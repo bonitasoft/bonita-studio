@@ -5,14 +5,14 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
+ * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.importer.bar.processor;
 
@@ -96,154 +96,180 @@ import org.eclipse.ui.PlatformUI;
 import org.ow2.bonita.connector.core.Connector;
 import org.ow2.bonita.connector.core.ConnectorDescription;
 
-
 /**
  * @author Romain Bioteau
- *
+ * 
  */
 public class EdaptBarToProcProcessor extends ToProcProcessor {
 
     private static final String ATTACHMENTS_FOLDER = "attachments";
-    private static final Set<String> SUPPORTED_VERSIONS = new HashSet<String>() ;
-    static{
+
+    private static final Set<String> SUPPORTED_VERSIONS = new HashSet<String>();
+    static {
         SUPPORTED_VERSIONS.add("5.9");
         SUPPORTED_VERSIONS.add("5.10");
     }
+
     private static final String MIGRATION_HISTORY_PATH = "models/v60/process.history";
+
     private static final String FORMS_LIBS = "forms/lib";
+
     private static final String VALIDATORS = "validators";
+
     private static final String LIBS = "libs/";
+
     private static final String CONNECTORS = "connectors/";
+
     private List<Change> additionalChanges = new ArrayList<Change>();
+
     private File migratedProc;
+
     private BOSMigrator migrator;
+
     private List<String> connectorsJars = new ArrayList<String>();
+
     private List<File> toDelete = new ArrayList<File>();
+
     private boolean continueImport = true;
 
-    public EdaptBarToProcProcessor(){
-        final URI migratorURI = URI.createPlatformPluginURI("/" + BarImporterPlugin.getDefault().getBundle().getSymbolicName() + "/" + MIGRATION_HISTORY_PATH, true);
+    public EdaptBarToProcProcessor() {
+        final URI migratorURI = URI.createPlatformPluginURI("/" + BarImporterPlugin.getDefault().getBundle().getSymbolicName() + "/" + MIGRATION_HISTORY_PATH,
+                true);
         try {
-            migrator =  new BOSMigrator(migratorURI, new BundleClassLoader(BarImporterPlugin.getDefault().getBundle()));
+            migrator = new BOSMigrator(migratorURI, new BundleClassLoader(BarImporterPlugin.getDefault().getBundle()));
         } catch (MigrationException e) {
-            BonitaStudioLog.error(e,BarImporterPlugin.PLUGIN_ID);
+            BonitaStudioLog.error(e, BarImporterPlugin.PLUGIN_ID);
         }
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see org.bonitasoft.studio.importer.ToProcProcessor#createDiagram(java.net.URL, org.eclipse.core.runtime.IProgressMonitor)
      */
     @Override
     public File createDiagram(URL sourceFileURL, IProgressMonitor progressMonitor) throws Exception {
-        if(!FileActionDialog.getDisablePopup() && displayMigrationWarningPopup()){
+        if (!FileActionDialog.getDisablePopup() && displayMigrationWarningPopup()) {
             Display.getDefault().syncExec(new Runnable() {
 
                 @Override
                 public void run() {
                     final WizardDialog dialog = new WizardDialog(Display.getDefault().getActiveShell(), new MigrationWarningWizard());
-                    int result =  dialog.open();
-                    if(result != Dialog.OK){
+                    int result = dialog.open();
+                    if (result != Dialog.OK) {
                         continueImport = false;
                     }
                 }
             });
 
         }
-        if(!continueImport){
+        if (!continueImport) {
             return null;
         }
-        final File archiveFile = new File(URI.decode(sourceFileURL.getFile())) ;
-        final File barProcFile = getProcFormBar(archiveFile);
+        final File archiveFile = new File(URI.decode(sourceFileURL.getFile()));
+        final File barProcFile = BarReaderUtil.getProcFormBar(archiveFile);
 
-        importAttachment(archiveFile,progressMonitor);
-        importCustomConnectors(archiveFile,progressMonitor);
-        importProcessJarDependencies(archiveFile,progressMonitor);
-        importFormJarDependencies(archiveFile,progressMonitor);
-        importApplicationResources(archiveFile,progressMonitor);
+        importAttachment(archiveFile, progressMonitor);
+        importCustomConnectors(archiveFile, progressMonitor);
+        importProcessJarDependencies(archiveFile, progressMonitor);
+        importFormJarDependencies(archiveFile, progressMonitor);
+        importApplicationResources(archiveFile, progressMonitor);
 
-        final Resource resource =  new XMLResourceFactoryImpl().createResource(URI.createFileURI(barProcFile.getAbsolutePath()));
-        if(resource == null){
-            throw new Exception("Failed to create an EMF resource for "+barProcFile.getName());
+        final Resource resource = new XMLResourceFactoryImpl().createResource(URI.createFileURI(barProcFile.getAbsolutePath()));
+        if (resource == null) {
+            throw new Exception("Failed to create an EMF resource for " + barProcFile.getName());
         }
-        
+
         EMFResourceUtil emfResourceUtil = new EMFResourceUtil(barProcFile);
-        Map<String, String[]> featureValueFromEObjectType = emfResourceUtil.getFeatureValueFromEObjectType("process:MainProcess", ProcessPackage.Literals.MAIN_PROCESS__BONITA_MODEL_VERSION);
-        if(featureValueFromEObjectType.size() != 1){
-            throw new Exception("Failed to create an EMF resource for "+barProcFile.getName());
+        Map<String, String[]> featureValueFromEObjectType = emfResourceUtil.getFeatureValueFromEObjectType("process:MainProcess",
+                ProcessPackage.Literals.MAIN_PROCESS__BONITA_MODEL_VERSION);
+        if (featureValueFromEObjectType.size() != 1) {
+            throw new Exception("Failed to create an EMF resource for " + barProcFile.getName());
         }
         String[] next = featureValueFromEObjectType.values().iterator().next();
         String sourceVersion = next[0];
-               
-        if(sourceVersion == null || !SUPPORTED_VERSIONS.contains(sourceVersion.toString())){
-            throw new IncompatibleVersionException((String) sourceVersion,SUPPORTED_VERSIONS.toString());
+
+        if (sourceVersion == null || !SUPPORTED_VERSIONS.contains(sourceVersion.toString())) {
+            throw new IncompatibleVersionException((String) sourceVersion, SUPPORTED_VERSIONS.toString());
         }
         final URI resourceURI = resource.getURI();
         final Release release = migrator.getRelease(0);
-        performMigration(migrator, resourceURI, release,progressMonitor);//Migrate from 5.9 to 6.0-Alpha
+        performMigration(migrator, resourceURI, release, progressMonitor);// Migrate from 5.9 to 6.0-Alpha
 
-        //Migrate from 6.0-Alpha to current release
+        // Migrate from 6.0-Alpha to current release
         DiagramRepositoryStore store = (DiagramRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
         String nsURI = ReleaseUtils.getNamespaceURI(resourceURI);
         Migrator nextMigrator = store.getMigrator(nsURI);
         nextMigrator.setLevel(ValidationLevel.RELEASE);
         nextMigrator.migrateAndSave(
-                Collections.singletonList(resourceURI),getAlphaRelease(nextMigrator),
+                Collections.singletonList(resourceURI), getAlphaRelease(nextMigrator),
                 null, Repository.NULL_PROGRESS_MONITOR);
-        addMigrationReport(migrator,resourceURI,(String) sourceVersion,progressMonitor);
+        addMigrationReport(migrator, resourceURI, (String) sourceVersion, progressMonitor);
         DeadlineMigrationStore.clearDeadlines();
 
         migratedProc = barProcFile;
         return barProcFile;
     }
 
-
-    private void importCustomConnectors(File archiveFile,IProgressMonitor progressMonitor) throws Exception {
+    private void importCustomConnectors(File archiveFile, IProgressMonitor progressMonitor) throws Exception {
         connectorsJars.clear();
         final ZipFile zipfile = new ZipFile(archiveFile);
         Enumeration<?> enumEntries = zipfile.entries();
         ZipEntry zipEntry = null;
-        while (enumEntries.hasMoreElements()){
-            zipEntry=(ZipEntry)enumEntries.nextElement();
-            File currentFile = new File (zipEntry.getName());
-            if (!zipEntry.isDirectory() && (zipEntry.getName().startsWith(CONNECTORS) || zipEntry.getName().startsWith(LIBS)) && zipEntry.getName().endsWith(".jar") ){
-                proceedCustomConnector(currentFile.getName(),zipfile.getInputStream(zipEntry),archiveFile);
+        while (enumEntries.hasMoreElements()) {
+            zipEntry = (ZipEntry) enumEntries.nextElement();
+            File currentFile = new File(zipEntry.getName());
+            if (!zipEntry.isDirectory() && (zipEntry.getName().startsWith(CONNECTORS) || zipEntry.getName().startsWith(LIBS))
+                    && zipEntry.getName().endsWith(".jar")) {
+                FileActionDialog.activateYesNoToAll();
+                try {
+                    proceedCustomConnector(currentFile.getName(), zipfile.getInputStream(zipEntry), archiveFile);
+                } finally {
+                    FileActionDialog.deactivateYesNoToAll();
+                }
             }
         }
         zipfile.close();
     }
 
-    private void proceedCustomConnector(String fileName,InputStream inputStream, File archiveFile) throws Exception {
-        final File tmpConnectorJarFile = new File(ProjectUtil.getBonitaStudioWorkFolder(),fileName);
-        if(tmpConnectorJarFile.exists()){
+    private void proceedCustomConnector(String fileName, InputStream inputStream, File archiveFile) throws Exception {
+        final File tmpConnectorJarFile = new File(ProjectUtil.getBonitaStudioWorkFolder(), fileName);
+        if (tmpConnectorJarFile.exists()) {
             tmpConnectorJarFile.delete();
         }
         FileOutputStream fos = null;
-        try{
+        try {
             fos = new FileOutputStream(tmpConnectorJarFile);
             FileUtil.copy(inputStream, fos);
-        }finally{
-            if(fos != null){
+        } finally {
+            if (fos != null) {
                 fos.close();
             }
         }
-        final URLClassLoader customURLClassLoader = createBarClassloader(archiveFile,tmpConnectorJarFile);
-        String connectorClassname = findCustomConnectorClassName(tmpConnectorJarFile);
-        if(connectorClassname != null){
+        final URLClassLoader customURLClassLoader = createBarClassloader(archiveFile, tmpConnectorJarFile);
+
+        BonitaStudioLog.debug("Searching for custom connector in " + tmpConnectorJarFile.getName() + "...", BarImporterPlugin.PLUGIN_ID);
+
+        String connectorClassname = BarReaderUtil.findCustomConnectorClassName(tmpConnectorJarFile);
+        if (connectorClassname != null) {
+            BonitaStudioLog
+                    .debug("Custom connector " + connectorClassname + " has been found in " + tmpConnectorJarFile.getName(), BarImporterPlugin.PLUGIN_ID);
             connectorsJars.add(tmpConnectorJarFile.getName());
             Class<? extends Connector> instanceClass = (Class<? extends Connector>) customURLClassLoader.loadClass(connectorClassname);
-            try{
-                final ConnectorDescription descriptor = new ConnectorDescription(instanceClass,Locale.ENGLISH);
-                final ConnectorDescriptorToConnectorDefinition cdtocd = new ConnectorDescriptorToConnectorDefinition(descriptor,tmpConnectorJarFile);
+            try {
+                final ConnectorDescription descriptor = new ConnectorDescription(instanceClass, Locale.ENGLISH);
+                final ConnectorDescriptorToConnectorDefinition cdtocd = new ConnectorDescriptorToConnectorDefinition(descriptor, tmpConnectorJarFile);
                 cdtocd.importConnectorDefinitionResources();
                 cdtocd.createConnectorDefinition();
                 cdtocd.createConnectorImplementation();
                 additionalChanges.add(cdtocd.createReportChange());
-            }catch(NoClassDefFoundError e){
-                additionalChanges.add(createImportFailureReport(connectorClassname,e));
+            } catch (NoClassDefFoundError e) {
+                additionalChanges.add(createImportFailureReport(connectorClassname, e));
             }
+        } else {
+            BonitaStudioLog.debug("No custom connector found in:" + tmpConnectorJarFile.getName(), BarImporterPlugin.PLUGIN_ID);
         }
-        if(!toDelete.isEmpty()){
-            for(File f : toDelete){
+        if (!toDelete.isEmpty()) {
+            for (File f : toDelete) {
                 f.delete();
             }
         }
@@ -252,8 +278,9 @@ public class EdaptBarToProcProcessor extends ToProcProcessor {
 
     /***
      * Create an URLClassloader with all jar inside the archive file
+     * 
      * @param archiveFile
-     * @param tmpConnectorJarFile 
+     * @param tmpConnectorJarFile
      * @return
      * @throws MalformedURLException
      * @throws ZipException
@@ -261,7 +288,7 @@ public class EdaptBarToProcProcessor extends ToProcProcessor {
      * @throws FileNotFoundException
      */
     protected URLClassLoader createBarClassloader(File archiveFile, File tmpConnectorJarFile) throws MalformedURLException,
-    ZipException, IOException, FileNotFoundException {
+            ZipException, IOException, FileNotFoundException {
         List<URL> urls = new ArrayList<URL>();
         urls.add(tmpConnectorJarFile.toURI().toURL());
         Enumeration<URL> urlEnum = BarImporterPlugin.getDefault().getBundle().findEntries("lib/", "*.jar", true);
@@ -272,14 +299,14 @@ public class EdaptBarToProcProcessor extends ToProcProcessor {
         final ZipFile zipfile = new ZipFile(archiveFile);
         Enumeration<?> enumEntries = zipfile.entries();
         ZipEntry zipEntry = null;
-        while (enumEntries.hasMoreElements()){
-            zipEntry=(ZipEntry)enumEntries.nextElement();
-            if (!zipEntry.isDirectory() && zipEntry.getName().endsWith(".jar") ){
+        while (enumEntries.hasMoreElements()) {
+            zipEntry = (ZipEntry) enumEntries.nextElement();
+            if (!zipEntry.isDirectory() && zipEntry.getName().endsWith(".jar")) {
                 InputStream is = zipfile.getInputStream(zipEntry);
-                File tmpJar = new File(ProjectUtil.getBonitaStudioWorkFolder(),System.currentTimeMillis()+".jar");
+                File tmpJar = new File(ProjectUtil.getBonitaStudioWorkFolder(), System.currentTimeMillis() + ".jar");
                 tmpJar.createNewFile();
                 FileOutputStream os = new FileOutputStream(tmpJar);
-                FileUtil.copy(is,os);
+                FileUtil.copy(is, os);
                 is.close();
                 os.close();
                 urls.add(tmpJar.toURI().toURL());
@@ -288,48 +315,24 @@ public class EdaptBarToProcProcessor extends ToProcProcessor {
         }
         zipfile.close();
 
-        final URLClassLoader customURLClassLoader = new URLClassLoader(urls.toArray(new URL[urls.size()]),getClass().getClassLoader());
+        final URLClassLoader customURLClassLoader = new URLClassLoader(urls.toArray(new URL[urls.size()]), getClass().getClassLoader());
         return customURLClassLoader;
     }
 
-    private Change createImportFailureReport(String connectorClassname,Throwable e) {
+    private Change createImportFailureReport(String connectorClassname, Throwable e) {
         Change change = MigrationReportFactory.eINSTANCE.createChange();
         change.setElementName(connectorClassname);
         change.setElementType(Messages.customConnector);
         change.setElementUUID("");
-        change.setDescription(Messages.bind(Messages.customConnectorMigrationFailureDescription,e.getMessage()));
+        change.setDescription(Messages.bind(Messages.customConnectorMigrationFailureDescription, e.getMessage()));
         change.setPropertyName(Messages.development);
         change.setStatus(IStatus.ERROR);
         return change;
     }
 
-    private String findCustomConnectorClassName(File archiveFile) throws ZipException, IOException {
-        final ZipFile zipfile = new ZipFile(archiveFile);
-        Enumeration<?> enumEntries = zipfile.entries();
-        ZipEntry zipEntry = null;
-        String className = null;
-        String startWith = null;
-        while (enumEntries.hasMoreElements()){
-            zipEntry=(ZipEntry)enumEntries.nextElement();
-            if (!zipEntry.isDirectory() && zipEntry.getName().endsWith(".class") ){
-                startWith =	zipEntry.toString().replace(".class","");
-                className = zipEntry.toString().replace("/", ".").replace(".class","");
-                Enumeration<? extends ZipEntry> newEntries = zipfile.entries();
-                while (newEntries.hasMoreElements()){
-                    ZipEntry newEntry = (ZipEntry)newEntries.nextElement();
-                    if (!newEntry.isDirectory() && newEntry.toString().endsWith(startWith+".properties") ){
-                        return className;
-                    }
-                }
-            }
-        }
-
-        return null;
-    }
-
     private Release getAlphaRelease(Migrator nextMigrator) {
-        for(Release r : nextMigrator.getReleases()){
-            if(r.getLabel().equals(ProductVersion.VERSION_6_0_0_ALPHA)){
+        for (Release r : nextMigrator.getReleases()) {
+            if (r.getLabel().equals(ProductVersion.VERSION_6_0_0_ALPHA)) {
                 return r;
             }
         }
@@ -339,29 +342,28 @@ public class EdaptBarToProcProcessor extends ToProcProcessor {
     /**
      * @throws MigrationException
      */
-    protected void addMigrationReport(final BOSMigrator migrator,URI resourceURI,final String sourceRelease,IProgressMonitor monitor) throws MigrationException {
+    protected void addMigrationReport(final BOSMigrator migrator, URI resourceURI, final String sourceRelease, IProgressMonitor monitor)
+            throws MigrationException {
         final TransactionalEditingDomain editingDomain = GMFEditingDomainFactory.INSTANCE.createEditingDomain();
         final Resource resource = editingDomain.getResourceSet().createResource(resourceURI);
         try {
             resource.load(Collections.EMPTY_MAP);
             AbstractEMFOperation emfOperation = new AbstractEMFOperation(editingDomain, "Update report") {
 
-
-
                 @Override
                 protected IStatus doExecute(IProgressMonitor monitor, IAdaptable info)
                         throws ExecutionException {
                     final Report report = migrator.getReport();
                     String diagramName = "";
-                    for(EObject root : resource.getContents()){
-                        if(root instanceof MainProcess){
-                            diagramName = ((MainProcess) root).getName()+"--"+((MainProcess) root).getVersion();
+                    for (EObject root : resource.getContents()) {
+                        if (root instanceof MainProcess) {
+                            diagramName = ((MainProcess) root).getName() + "--" + ((MainProcess) root).getVersion();
                             ((MainProcess) root).setBonitaModelVersion(ModelVersion.CURRENT_VERSION);
                             ((MainProcess) root).setBonitaVersion(ProductVersion.CURRENT_VERSION);
                             ((MainProcess) root).setConfigId(ConfigurationIdProvider.getConfigurationIdProvider().getConfigurationId((MainProcess) root));
                         }
                     }
-                    report.setName(Messages.bind(Messages.migrationReportOf,diagramName));
+                    report.setName(Messages.bind(Messages.migrationReportOf, diagramName));
                     report.setSourceRelease(sourceRelease);
                     report.setTargetRelease(ProductVersion.CURRENT_VERSION);
                     report.getChanges().addAll(additionalChanges);
@@ -384,7 +386,7 @@ public class EdaptBarToProcProcessor extends ToProcProcessor {
         }
     }
 
-    protected Change addReportChange(String elementName,String elementType,String elementUUID,String description,String propertyName, int status){
+    protected Change addReportChange(String elementName, String elementType, String elementUUID, String description, String propertyName, int status) {
         Change change = MigrationReportFactory.eINSTANCE.createChange();
         change.setElementName(elementName);
         change.setElementType(elementType);
@@ -396,16 +398,17 @@ public class EdaptBarToProcProcessor extends ToProcProcessor {
         return change;
     }
 
-    private void importApplicationResources(File archiveFile,IProgressMonitor progressMonitor) {
+    private void importApplicationResources(File archiveFile, IProgressMonitor progressMonitor) {
         File tmpBar = new File(ProjectUtil.getBonitaStudioWorkFolder(), "tmpBar");
-        try{
+        try {
             PlatformUtil.unzipZipFiles(archiveFile, tmpBar, progressMonitor);
-        }catch(Exception e){
+        } catch (Exception e) {
             BonitaStudioLog.error(e);
         }
         File resourceFile = FileUtil.findDirectory(tmpBar, "studio-templates");
         if (resourceFile != null) {
-            ApplicationResourceRepositoryStore store = (ApplicationResourceRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ApplicationResourceRepositoryStore.class);
+            ApplicationResourceRepositoryStore store = (ApplicationResourceRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(
+                    ApplicationResourceRepositoryStore.class);
             File toCopy = null;
             for (File f : resourceFile.listFiles()) {
                 String webTemplateId = f.getName();
@@ -415,7 +418,7 @@ public class EdaptBarToProcProcessor extends ToProcProcessor {
                 }
 
                 toCopy = f;
-                if(toCopy.exists()){
+                if (toCopy.exists()) {
                     PlatformUtil.copyResource(webTemplateArtifact.getResource().getLocation().toFile(), toCopy, progressMonitor);
                 }
             }
@@ -423,42 +426,41 @@ public class EdaptBarToProcProcessor extends ToProcProcessor {
         }
     }
 
-    private void importFormJarDependencies(File archiveFile,IProgressMonitor monitor) throws ZipException, IOException {
-        final DependencyRepositoryStore store = (DependencyRepositoryStore)RepositoryManager.getInstance().getRepositoryStore(DependencyRepositoryStore.class);
+    private void importFormJarDependencies(File archiveFile, IProgressMonitor monitor) throws ZipException, IOException {
+        final DependencyRepositoryStore store = (DependencyRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DependencyRepositoryStore.class);
         final ZipFile zipfile = new ZipFile(archiveFile);
         Enumeration<?> enumEntries = zipfile.entries();
         ZipEntry zipEntry = null;
-        while (enumEntries.hasMoreElements()){
-            zipEntry=(ZipEntry)enumEntries.nextElement();
-            File currentFile = new File (zipEntry.getName());
-            if (!zipEntry.isDirectory() && zipEntry.getName().contains(FORMS_LIBS) && zipEntry.getName().endsWith(".jar") ){
+        while (enumEntries.hasMoreElements()) {
+            zipEntry = (ZipEntry) enumEntries.nextElement();
+            File currentFile = new File(zipEntry.getName());
+            if (!zipEntry.isDirectory() && zipEntry.getName().contains(FORMS_LIBS) && zipEntry.getName().endsWith(".jar")) {
                 store.importInputStream(currentFile.getName(), zipfile.getInputStream(zipEntry));
             }
-            if (!zipEntry.isDirectory() && zipEntry.getName().contains(VALIDATORS) && zipEntry.getName().endsWith(".jar") ){
-                if(store.getChild(currentFile.getName()) == null){
+            if (!zipEntry.isDirectory() && zipEntry.getName().contains(VALIDATORS) && zipEntry.getName().endsWith(".jar")) {
+                if (store.getChild(currentFile.getName()) == null) {
                     store.importInputStream(currentFile.getName(), zipfile.getInputStream(zipEntry));
                 }
-                importValidatorSource(currentFile,monitor);
+                importValidatorSource(currentFile, monitor);
             }
         }
         zipfile.close();
     }
 
-
-    private void importValidatorSource(File currentFile,IProgressMonitor monitor) {
+    private void importValidatorSource(File currentFile, IProgressMonitor monitor) {
         // TODO Import validator sources in repository
     }
 
-    private void importProcessJarDependencies(File archiveFile,IProgressMonitor monitor) throws ZipException, IOException {
-        final DependencyRepositoryStore store = (DependencyRepositoryStore)RepositoryManager.getInstance().getRepositoryStore(DependencyRepositoryStore.class);
+    private void importProcessJarDependencies(File archiveFile, IProgressMonitor monitor) throws ZipException, IOException {
+        final DependencyRepositoryStore store = (DependencyRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DependencyRepositoryStore.class);
         final ZipFile zipfile = new ZipFile(archiveFile);
         Enumeration<?> enumEntries = zipfile.entries();
         ZipEntry zipEntry = null;
-        while (enumEntries.hasMoreElements()){
-            zipEntry=(ZipEntry)enumEntries.nextElement();
-            File currentFile = new File (zipEntry.getName());
-            if (!zipEntry.isDirectory() && zipEntry.getName().contains(LIBS) && zipEntry.getName().endsWith(".jar") ){
-                if(!connectorsJars.contains(currentFile.getName()) && store.getChild(currentFile.getName()) == null){
+        while (enumEntries.hasMoreElements()) {
+            zipEntry = (ZipEntry) enumEntries.nextElement();
+            File currentFile = new File(zipEntry.getName());
+            if (!zipEntry.isDirectory() && zipEntry.getName().contains(LIBS) && zipEntry.getName().endsWith(".jar")) {
+                if (!connectorsJars.contains(currentFile.getName()) && store.getChild(currentFile.getName()) == null) {
                     store.importInputStream(currentFile.getName(), zipfile.getInputStream(zipEntry));
                 }
             }
@@ -471,71 +473,36 @@ public class EdaptBarToProcProcessor extends ToProcProcessor {
         return store.getBoolean(BarImporterPreferenceConstants.DISPLAY_MIGRATION_WARNING);
     }
 
-    private void importAttachment(File archiveFile,IProgressMonitor monitor) throws IOException{
-        final DocumentRepositoryStore store = (DocumentRepositoryStore)RepositoryManager.getInstance().getRepositoryStore(DocumentRepositoryStore.class);
-        ZipFile zipfile=new ZipFile(archiveFile);
+    private void importAttachment(File archiveFile, IProgressMonitor monitor) throws IOException {
+        final DocumentRepositoryStore store = (DocumentRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DocumentRepositoryStore.class);
+        ZipFile zipfile = new ZipFile(archiveFile);
         Enumeration<?> enumEntries = zipfile.entries();
         ZipEntry zipEntry = null;
-        while (enumEntries.hasMoreElements()){
-            zipEntry=(ZipEntry)enumEntries.nextElement();
-            File currentFile = new File (zipEntry.getName());
-            if (!zipEntry.isDirectory() && zipEntry.getName().contains(ATTACHMENTS_FOLDER)){
+        while (enumEntries.hasMoreElements()) {
+            zipEntry = (ZipEntry) enumEntries.nextElement();
+            File currentFile = new File(zipEntry.getName());
+            if (!zipEntry.isDirectory() && zipEntry.getName().contains(ATTACHMENTS_FOLDER)) {
                 store.importInputStream(currentFile.getName(), zipfile.getInputStream(zipEntry));
             }
 
         }
         zipfile.close();
     }
-
-
-    private File getProcFormBar(File archiveFile) throws Exception {
-        ZipInputStream zin = null;
-        FileOutputStream out = null;
-        try{
-            zin = new ZipInputStream(new FileInputStream(archiveFile));
-            ZipEntry zipEntry = zin.getNextEntry();
-            while (zipEntry != null && !zipEntry.getName().endsWith(".proc")) {
-                zipEntry = zin.getNextEntry();
-            }
-            if (zipEntry == null) {
-                throw new FileNotFoundException(Messages.bind(Messages.invalidArchiveStructure, archiveFile.getName()));
-            }
-            String entryName = zipEntry.getName();
-            if(entryName.indexOf("/") != -1){
-                entryName.substring(entryName.lastIndexOf("/"));
-            }
-            final File tempFile = new File(ProjectUtil.getBonitaStudioWorkFolder(), entryName) ;
-            byte[] buf = new byte[1024];
-            tempFile.delete();
-            int len;
-            out = new FileOutputStream(tempFile);
-            while ((len = zin.read(buf)) > 0) {
-                out.write(buf, 0, len);
-            }
-            return tempFile;
-        }finally{
-            if(zin != null){
-                zin.close();
-            }
-            if(out != null){
-                out.close();
-            }
-        }
-
-    }
-
-    /* (non-Javadoc)
+    
+    /*
+     * (non-Javadoc)
      * @see org.bonitasoft.studio.importer.ToProcProcessor#getResources()
      */
     @Override
     public List<File> getResources() {
-        if(migratedProc != null){
+        if (migratedProc != null) {
             return Collections.singletonList(migratedProc);
         }
         return null;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see org.bonitasoft.studio.importer.ToProcProcessor#getExtension()
      */
     @Override
@@ -543,8 +510,7 @@ public class EdaptBarToProcProcessor extends ToProcProcessor {
         return ".bar";
     }
 
-
-    private void performMigration(final BOSMigrator migrator,final URI resourceURI, final Release release,IProgressMonitor monitor) throws MigrationException {
+    private void performMigration(final BOSMigrator migrator, final URI resourceURI, final Release release, IProgressMonitor monitor) throws MigrationException {
         migrator.setLevel(ValidationLevel.RELEASE);
         migrator.migrateAndSave(
                 Collections.singletonList(resourceURI), release,

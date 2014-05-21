@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2012 BonitaSoft S.A.
- * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2012-2014 BonitaSoft S.A.
+ * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -234,8 +234,55 @@ public class DiagramFileStore extends EMFFileStore implements IRepositoryFileSto
 
     @Override
     protected IWorkbenchPart doOpen() {
-        final MainProcess newProcess = getContent() ;
-        IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+    	IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+        closeEditorIfAlreadyOpened(activePage);
+        IEditorPart part = null;
+        try {
+            part = IDE.openEditor(activePage,getParentStore().getResource().getFile(getName()),true);
+            if(part instanceof DiagramEditor){
+                final DiagramEditor editor = (DiagramEditor) part;
+                MainProcess diagram = (MainProcess) editor.getDiagramEditPart().resolveSemanticElement() ;
+                diagram.eAdapters().add(new PoolNotificationListener());
+                if(isReadOnly()){
+                    editor.getDiagramEditPart().disableEditMode() ;
+                    Display.getDefault().syncExec(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            MessageDialog.openInformation(Display.getDefault().getActiveShell(), Messages.readOnlyFileTitle, Messages.readOnlyFileWarning);
+                        }
+                    });
+                }
+                registerListeners(diagram, editor.getEditingDomain()) ;
+                IGraphicalEditPart editPart = editor.getDiagramEditPart().getChildBySemanticHint(PoolEditPart.VISUAL_ID+"");
+                if(editPart != null) {
+                    editor.getDiagramEditPart().getViewer().select(editPart);
+                }
+
+                handleMigrationReportIfPresent(activePage);
+                editor.setFocus(); //refresh coolbar button
+                return editor;
+            }
+        } catch (PartInitException e) {
+            BonitaStudioLog.error(e) ;
+        }
+        return part ;
+    }
+
+	private void handleMigrationReportIfPresent(IWorkbenchPage activePage)
+			throws PartInitException {
+		if(hasMigrationReport()){
+		    activePage.showView("org.bonitasoft.studio.migration.view");
+		} else {
+		    final IViewPart migrationView = activePage.findView("org.bonitasoft.studio.migration.view");
+		    if(migrationView != null){
+		        PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().hideView(migrationView);
+		    }
+		}
+	}
+
+	private void closeEditorIfAlreadyOpened(IWorkbenchPage activePage) {
+		final MainProcess newProcess = getContent() ;
         for (IEditorReference editor : activePage.getEditorReferences()) {
             IEditorPart simpleEditor = editor.getEditor(true);
             if (simpleEditor instanceof DiagramEditor) {
@@ -260,44 +307,7 @@ public class DiagramFileStore extends EMFFileStore implements IRepositoryFileSto
                 }
             }
         }
-        IEditorPart part = null;
-        try {
-            part = IDE.openEditor(activePage,getParentStore().getResource().getFile(getName()),true);
-            if(part instanceof DiagramEditor){
-                final DiagramEditor editor = (DiagramEditor) part;
-                MainProcess diagram = (MainProcess) editor.getDiagramEditPart().resolveSemanticElement() ;
-                if(isReadOnly()){
-                    editor.getDiagramEditPart().disableEditMode() ;
-                    Display.getDefault().syncExec(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            MessageDialog.openInformation(Display.getDefault().getActiveShell(), Messages.readOnlyFileTitle, Messages.readOnlyFileWarning);
-                        }
-                    });
-                }
-                registerListeners(diagram, editor.getEditingDomain()) ;
-                IGraphicalEditPart editPart = editor.getDiagramEditPart().getChildBySemanticHint(PoolEditPart.VISUAL_ID+"");
-                if(editPart != null) {
-                    editor.getDiagramEditPart().getViewer().select(editPart);
-                }
-
-                if(hasMigrationReport()){
-                    activePage.showView("org.bonitasoft.studio.migration.view");
-                } else {
-                    final IViewPart migrationView = activePage.findView("org.bonitasoft.studio.migration.view");
-                    if(migrationView != null){
-                        PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().hideView(migrationView);
-                    }
-                }
-                editor.setFocus(); //refresh coolbar button
-                return editor;
-            }
-        } catch (PartInitException e) {
-            BonitaStudioLog.error(e) ;
-        }
-        return part ;
-    }
+	}
 
     @Override
     protected void doClose() {

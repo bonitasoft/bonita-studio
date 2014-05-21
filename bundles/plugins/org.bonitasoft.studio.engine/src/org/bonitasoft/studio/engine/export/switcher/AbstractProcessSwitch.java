@@ -45,5 +45,9 @@ public class AbstractProcessSwitch extends AbstractSwitch {
         addKPIBinding(builder, object);
         return object;
     }
+    
+    public ProcessDefinitionBuilder getProcessBuilder(){
+    	return builder;
+    }
 
 }

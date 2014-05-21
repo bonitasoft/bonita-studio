@@ -286,25 +286,57 @@ float: left
 #open-process a {
 	background-image: url(../images/open.png);
  }
+ 
+#open-process-disabled a, #open-process-disabled a:link, #open-process-disabled a:active, #open-process-disabled a:visited, #open-process-disabled a:hover {
+	background-image: url(../images/open_disabled.png);
+	color: #D5D5D5;
+ }
 	
 #import-process a {
 	background-image: url(../images/import.png);
 }
 
-#actions ul, #recently-modified ul, #example ul, #run ul, #documentation ul, #training ul, #forums ul, #articles ul, #resources ul {
+#actions ul,
+#recently-modified ul,
+#example ul,
+#run ul,
+#video ul,
+#documentation ul,
+#training ul,
+#forums ul,
+#articles ul,
+#resources ul {
 	padding-left:16px;
 }
 
-#actions li, #recently-modified li, #example li, #run li, #documentation li, #training li, #forums li, #articles li, #resources li {
+#actions li,
+#recently-modified li,
+#example li,
+#run li,
+#video li,
+#documentation li,
+#training li,
+#forums li,
+#articles li,
+#resources li {
 	padding-left: 3px;
 	list-style-type:none;
 }
 
-#recently-modified li, #example li, #run li, #documentation li, #forums li {
+#recently-modified li,
+#example li,
+#run li,
+#video li,
+#documentation li,
+#forums li {
 	line-height: 21px;
 }
 
-#documentation li, #training li, #articles li, #resources li {
+#video li,
+#documentation li,
+#training li,
+#articles li,
+#resources li {
 	line-height: 18px;
 	padding-top: 3px;
 	padding-bottom: 2px;
@@ -318,7 +350,16 @@ float: left
 	background-position: 2px 3px;
 }
 
-#actions li a, #recently-modified li a, #example li a, #run li a, #documentation li a, #training li a, #forums li a, #articles li a, #resources li a {
+#actions li a,
+#recently-modified li a,
+#example li a,
+#run li a,
+#video li a,
+#documentation li a,
+#training li a,
+#forums li a,
+#articles li a,
+#resources li a {
 	background-repeat:no-repeat;
 	padding-left: 30px;
 	display:block;
@@ -327,27 +368,71 @@ float: left
 	padding: 0px 0px 0px 28px !important;
 }
 
-#recently-modified li a, #example li a, #run li a, #documentation li a, #training li a, #forums li a, #articles li a, #resources li a {
+#recently-modified li a,
+#example li a,
+#run li a,
+#video li a,
+#documentation li a,
+#training li a,
+#forums li a,
+#articles li a,
+#resources li a {
 	color: #000000;
 	background-image: url(../images/puce.png);
 	background-position: 6px 3px;
 }
 
-#actions li a:hover, #recently-modified li a:hover, #example li a:hover, #run li a:hover, #documentation li a:hover, #training li a:hover, #forums li a:hover, #articles li a:hover, #resources li a:hover {
+#actions li a:hover,
+#recently-modified li a:hover,
+#example li a:hover,
+#run li a:hover,
+#video li a:hover,
+#documentation li a:hover,
+#training li a:hover,
+#forums li a:hover,
+#articles li a:hover,
+#resources li a:hover {
 	color: #000000;
 	background-color: #DADADA;
 	display:block;
 }
 
-#actions li a:visited, #recently-modified li a:visited, #example li a:visited, #run li a:visited, #documentation li a:visited, #training li a:visited, #forums li a:visited, #articles li a:visited, #resources li a:visited {
-	color: #000000;
+#actions li a:visited,
+#recently-modified li a:visited,
+#example li a:visited,
+#run li a:visited,
+#video li a:visited,
+#documentation li a:visited,
+#training li a:visited,
+#forums li a:visited,
+#articles li a:visited,
+#resources li a:visited {
+	color: #000000
 }
 
-#actions li a:active, #recently-modified li a:active, #example li a:active, #run li a:active, #documentation li a:active, #training li a:active, #forums li a:active, #articles li a:active, #resources li a:active {
+#actions li a:active,
+#recently-modified li a:active,
+#example li a:active,
+#run li a:active,
+#video li a:active,
+#documentation li a:active,
+#training li a:active,
+#forums li a:active,
+#articles li a:active,
+#resources li a:active {
 	color: #e31917;
 }
 
-#actions li a:link, #recently-modified li a:link, #example li a:link, #run li a:link, #documentation li a:link, #training li a:link, #forums li a:link, #articles li  a:link, #resources li a:link {
+#actions li a:link,
+#recently-modified li a:link,
+#example li a:link,
+#run li a:link,
+#video li a:link,
+#documentation li a:link,
+#training li a:link,
+#forums li a:link,
+#articles li  a:link,
+#resources li a:link {
 	color: #000000;
 }
 

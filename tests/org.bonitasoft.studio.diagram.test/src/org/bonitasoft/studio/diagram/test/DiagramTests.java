@@ -59,6 +59,7 @@ import org.eclipse.swtbot.swt.finder.waits.Conditions;
 import org.eclipse.swtbot.swt.finder.waits.ICondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotButton;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotCheckBox;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
@@ -231,15 +232,19 @@ public class DiagramTests extends SWTBotGefTestCase {
 					}
 				}
 
-				// remove 2 of 3 variables in the form
-				for (int j = 0; j < 3; j++) {
-					if (j != itmp) {
-						bot.checkBox(j).deselect();
-					}
+				// add 1 variable in the form
+				if(itmp == 0){
+					bot.tree().getTreeItem("varText").check();
+				}else if(itmp == 1){
+					bot.tree().getTreeItem("varInteger").check();
+				}else{
+					bot.tree().getTreeItem("varBoolean").check();
 				}
-				// last shell "Add form..."
+			
+		
+				SWTBotShell activeShell = bot.activeShell();
 				bot.button(IDialogConstants.FINISH_LABEL).click();
-
+				bot.waitUntil(Conditions.shellCloses(activeShell));
 				// add script to conver to an integer on "Step3"
 				if(nametask.equals("Step2")){
 					SWTBotGefEditor formEditor = bot.gefEditor(bot.activeEditor().getTitle());
@@ -289,6 +294,7 @@ public class DiagramTests extends SWTBotGefTestCase {
 			//second shell "Add form..."
 			bot.button(IDialogConstants.NEXT_LABEL).click();
 		}
+		bot.checkBox("Select all").select();
 
 		// last shell "Add form..."
 		bot.button(IDialogConstants.FINISH_LABEL).click();

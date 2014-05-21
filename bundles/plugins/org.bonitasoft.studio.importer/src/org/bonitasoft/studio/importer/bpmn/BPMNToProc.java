@@ -1380,7 +1380,7 @@ public class BPMNToProc extends ToProcProcessor {
 				processBonitaConnector(name, id, tServiceTask, operationRefName);
 			} else if("##WebService".equals(tServiceTask.getImplementation())){
 				// TODO: handle default implem for web services as Service tasks
-				builder.addConnector(id, name, "webservices", "1.0", ConnectorEvent.ON_FINISH, true);
+				builder.addConnector(id, name, "webservice", "1.0.0", ConnectorEvent.ON_FINISH, true);
 			}
 		}
 	}
@@ -1659,7 +1659,8 @@ public class BPMNToProc extends ToProcProcessor {
 			populateSignalEvent(flowNode);
 		} else if (eventType == EventType.TIMER_BOUNDARY
 				|| eventType == EventType.INTERMEDIATE_CATCH_TIMER
-				|| eventType == EventType.START_TIMER) {
+				|| eventType == EventType.START_TIMER
+				|| eventType == EventType.NON_INTERRUPTING_TIMER_BOUNDARY) {
 			populateTimerEvent(flowNode);
 		} else if (eventType == EventType.INTERMEDIATE_THROW_LINK) {
 			populateThrowLinkEvent(flowNode);

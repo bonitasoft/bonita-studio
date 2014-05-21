@@ -21,13 +21,12 @@ import static org.bonitasoft.studio.data.i18n.Messages.addData;
 import static org.bonitasoft.studio.data.i18n.Messages.classLabel;
 import static org.bonitasoft.studio.data.i18n.Messages.datatypeLabel;
 import static org.bonitasoft.studio.data.i18n.Messages.defaultValueLabel;
-import static org.bonitasoft.studio.data.i18n.Messages.deleteDataDialogTitle;
+import static org.bonitasoft.studio.common.Messages.removalConfirmationDialogTitle;
 import static org.bonitasoft.studio.data.i18n.Messages.name;
 import static org.bonitasoft.studio.data.i18n.Messages.newVariable;
 import static org.bonitasoft.studio.form.properties.i18n.Messages.Action_InitialValue;
 import static org.bonitasoft.studio.form.properties.i18n.Messages.formFieldType;
 import static org.bonitasoft.studio.properties.i18n.Messages.addFormTitle;
-import junit.framework.Assert;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
@@ -49,9 +48,11 @@ import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditPart;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditor;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
 import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -160,8 +161,10 @@ public class TestMultiInstantiation extends SWTBotGefTestCase implements SWTBotC
         // Add a new Form
         bot.button("Add...").click();
         bot.waitUntil(Conditions.shellIsActive(addFormTitle));
+        bot.checkBox("Select all").select();
+        SWTBotShell activeShell = bot.activeShell();
         bot.button(IDialogConstants.FINISH_LABEL).click();
-
+        bot.waitUntil(Conditions.shellCloses(activeShell));
 
         gmfEditor = bot.gefEditor("Step1");
 
@@ -452,7 +455,7 @@ public class TestMultiInstantiation extends SWTBotGefTestCase implements SWTBotC
         SWTBotTable table = bot.table();
         table.select("vip -- java.util.List -- Default value: vipScript");
         bot.button("Remove").click();
-        bot.waitUntil(Conditions.shellIsActive(deleteDataDialogTitle));
+        bot.waitUntil(Conditions.shellIsActive(removalConfirmationDialogTitle));
         bot.button(IDialogConstants.OK_LABEL).click();
 
 
@@ -466,7 +469,7 @@ public class TestMultiInstantiation extends SWTBotGefTestCase implements SWTBotC
         table = bot.table();
         table.select("vipName -- Text");
         bot.button("Remove").click();
-        bot.waitUntil(Conditions.shellIsActive(deleteDataDialogTitle));
+        bot.waitUntil(Conditions.shellIsActive(removalConfirmationDialogTitle));
         bot.button(IDialogConstants.OK_LABEL).click();
 
 

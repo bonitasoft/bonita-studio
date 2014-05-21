@@ -17,11 +17,9 @@
  */
 package org.bonitasoft.studio.actors.model.organization.impl;
 
-import java.util.Collection;
-
 import org.bonitasoft.studio.actors.model.organization.ContactData;
+import org.bonitasoft.studio.actors.model.organization.CustomUserInfoValuesType;
 import org.bonitasoft.studio.actors.model.organization.MetaDatasType;
-import org.bonitasoft.studio.actors.model.organization.Metadata;
 import org.bonitasoft.studio.actors.model.organization.OrganizationPackage;
 import org.bonitasoft.studio.actors.model.organization.PasswordType;
 import org.bonitasoft.studio.actors.model.organization.User;
@@ -29,16 +27,11 @@ import org.bonitasoft.studio.actors.model.organization.User;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 
-import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
-
-import org.eclipse.emf.ecore.util.EObjectContainmentEList;
-import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
  * <!-- begin-user-doc -->
@@ -59,6 +52,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *   <li>{@link org.bonitasoft.studio.actors.model.organization.impl.UserImpl#getMetaDatas <em>Meta Datas</em>}</li>
  *   <li>{@link org.bonitasoft.studio.actors.model.organization.impl.UserImpl#getUserName <em>User Name</em>}</li>
  *   <li>{@link org.bonitasoft.studio.actors.model.organization.impl.UserImpl#isEnabled <em>Enabled</em>}</li>
+ *   <li>{@link org.bonitasoft.studio.actors.model.organization.impl.UserImpl#getCustomUserInfoValues <em>Custom User Info Values</em>}</li>
  *   <li>{@link org.bonitasoft.studio.actors.model.organization.impl.UserImpl#getPassword <em>Password</em>}</li>
  * </ul>
  * </p>
@@ -229,14 +223,14 @@ public class UserImpl extends EObjectImpl implements User {
 	/**
 	 * The cached value of the '{@link #getMetaDatas() <em>Meta Datas</em>}' containment reference.
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @see #getMetaDatas()
 	 * @generated
 	 * @ordered
 	 */
-    protected MetaDatasType metaDatas;
+	protected MetaDatasType metaDatas;
 
-    /**
+	/**
 	 * The default value of the '{@link #getUserName() <em>User Name</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -286,6 +280,16 @@ public class UserImpl extends EObjectImpl implements User {
 	protected boolean enabledESet;
 
 	/**
+	 * The cached value of the '{@link #getCustomUserInfoValues() <em>Custom User Info Values</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getCustomUserInfoValues()
+	 * @generated
+	 * @ordered
+	 */
+	protected CustomUserInfoValuesType customUserInfoValues;
+
+	/**
 	 * The cached value of the '{@link #getPassword() <em>Password</em>}' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -312,49 +316,6 @@ public class UserImpl extends EObjectImpl implements User {
 	@Override
 	protected EClass eStaticClass() {
 		return OrganizationPackage.Literals.USER;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public PasswordType getPassword() {
-		return password;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public NotificationChain basicSetPassword(PasswordType newPassword, NotificationChain msgs) {
-		PasswordType oldPassword = password;
-		password = newPassword;
-		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, OrganizationPackage.USER__PASSWORD, oldPassword, newPassword);
-			if (msgs == null) msgs = notification; else msgs.add(notification);
-		}
-		return msgs;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setPassword(PasswordType newPassword) {
-		if (newPassword != password) {
-			NotificationChain msgs = null;
-			if (password != null)
-				msgs = ((InternalEObject)password).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - OrganizationPackage.USER__PASSWORD, null, msgs);
-			if (newPassword != null)
-				msgs = ((InternalEObject)newPassword).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - OrganizationPackage.USER__PASSWORD, null, msgs);
-			msgs = basicSetPassword(newPassword, msgs);
-			if (msgs != null) msgs.dispatch();
-		}
-		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, OrganizationPackage.USER__PASSWORD, newPassword, newPassword));
 	}
 
 	/**
@@ -592,19 +553,19 @@ public class UserImpl extends EObjectImpl implements User {
 
 	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    public MetaDatasType getMetaDatas() {
+	public MetaDatasType getMetaDatas() {
 		return metaDatas;
 	}
 
-    /**
+	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    public NotificationChain basicSetMetaDatas(MetaDatasType newMetaDatas, NotificationChain msgs) {
+	public NotificationChain basicSetMetaDatas(MetaDatasType newMetaDatas, NotificationChain msgs) {
 		MetaDatasType oldMetaDatas = metaDatas;
 		metaDatas = newMetaDatas;
 		if (eNotificationRequired()) {
@@ -614,12 +575,12 @@ public class UserImpl extends EObjectImpl implements User {
 		return msgs;
 	}
 
-    /**
+	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-    public void setMetaDatas(MetaDatasType newMetaDatas) {
+	public void setMetaDatas(MetaDatasType newMetaDatas) {
 		if (newMetaDatas != metaDatas) {
 			NotificationChain msgs = null;
 			if (metaDatas != null)
@@ -633,7 +594,7 @@ public class UserImpl extends EObjectImpl implements User {
 			eNotify(new ENotificationImpl(this, Notification.SET, OrganizationPackage.USER__META_DATAS, newMetaDatas, newMetaDatas));
 	}
 
-    /**
+	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -705,6 +666,92 @@ public class UserImpl extends EObjectImpl implements User {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public CustomUserInfoValuesType getCustomUserInfoValues() {
+		return customUserInfoValues;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NotificationChain basicSetCustomUserInfoValues(CustomUserInfoValuesType newCustomUserInfoValues, NotificationChain msgs) {
+		CustomUserInfoValuesType oldCustomUserInfoValues = customUserInfoValues;
+		customUserInfoValues = newCustomUserInfoValues;
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, OrganizationPackage.USER__CUSTOM_USER_INFO_VALUES, oldCustomUserInfoValues, newCustomUserInfoValues);
+			if (msgs == null) msgs = notification; else msgs.add(notification);
+		}
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setCustomUserInfoValues(CustomUserInfoValuesType newCustomUserInfoValues) {
+		if (newCustomUserInfoValues != customUserInfoValues) {
+			NotificationChain msgs = null;
+			if (customUserInfoValues != null)
+				msgs = ((InternalEObject)customUserInfoValues).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - OrganizationPackage.USER__CUSTOM_USER_INFO_VALUES, null, msgs);
+			if (newCustomUserInfoValues != null)
+				msgs = ((InternalEObject)newCustomUserInfoValues).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - OrganizationPackage.USER__CUSTOM_USER_INFO_VALUES, null, msgs);
+			msgs = basicSetCustomUserInfoValues(newCustomUserInfoValues, msgs);
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, OrganizationPackage.USER__CUSTOM_USER_INFO_VALUES, newCustomUserInfoValues, newCustomUserInfoValues));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public PasswordType getPassword() {
+		return password;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NotificationChain basicSetPassword(PasswordType newPassword, NotificationChain msgs) {
+		PasswordType oldPassword = password;
+		password = newPassword;
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, OrganizationPackage.USER__PASSWORD, oldPassword, newPassword);
+			if (msgs == null) msgs = notification; else msgs.add(notification);
+		}
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setPassword(PasswordType newPassword) {
+		if (newPassword != password) {
+			NotificationChain msgs = null;
+			if (password != null)
+				msgs = ((InternalEObject)password).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - OrganizationPackage.USER__PASSWORD, null, msgs);
+			if (newPassword != null)
+				msgs = ((InternalEObject)newPassword).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - OrganizationPackage.USER__PASSWORD, null, msgs);
+			msgs = basicSetPassword(newPassword, msgs);
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, OrganizationPackage.USER__PASSWORD, newPassword, newPassword));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
@@ -714,6 +761,8 @@ public class UserImpl extends EObjectImpl implements User {
 				return basicSetProfessionalData(null, msgs);
 			case OrganizationPackage.USER__META_DATAS:
 				return basicSetMetaDatas(null, msgs);
+			case OrganizationPackage.USER__CUSTOM_USER_INFO_VALUES:
+				return basicSetCustomUserInfoValues(null, msgs);
 			case OrganizationPackage.USER__PASSWORD:
 				return basicSetPassword(null, msgs);
 		}
@@ -752,6 +801,8 @@ public class UserImpl extends EObjectImpl implements User {
 				return getUserName();
 			case OrganizationPackage.USER__ENABLED:
 				return isEnabled();
+			case OrganizationPackage.USER__CUSTOM_USER_INFO_VALUES:
+				return getCustomUserInfoValues();
 			case OrganizationPackage.USER__PASSWORD:
 				return getPassword();
 		}
@@ -763,7 +814,6 @@ public class UserImpl extends EObjectImpl implements User {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
@@ -802,6 +852,9 @@ public class UserImpl extends EObjectImpl implements User {
 				return;
 			case OrganizationPackage.USER__ENABLED:
 				setEnabled((Boolean)newValue);
+				return;
+			case OrganizationPackage.USER__CUSTOM_USER_INFO_VALUES:
+				setCustomUserInfoValues((CustomUserInfoValuesType)newValue);
 				return;
 			case OrganizationPackage.USER__PASSWORD:
 				setPassword((PasswordType)newValue);
@@ -854,6 +907,9 @@ public class UserImpl extends EObjectImpl implements User {
 			case OrganizationPackage.USER__ENABLED:
 				unsetEnabled();
 				return;
+			case OrganizationPackage.USER__CUSTOM_USER_INFO_VALUES:
+				setCustomUserInfoValues((CustomUserInfoValuesType)null);
+				return;
 			case OrganizationPackage.USER__PASSWORD:
 				setPassword((PasswordType)null);
 				return;
@@ -893,6 +949,8 @@ public class UserImpl extends EObjectImpl implements User {
 				return USER_NAME_EDEFAULT == null ? userName != null : !USER_NAME_EDEFAULT.equals(userName);
 			case OrganizationPackage.USER__ENABLED:
 				return isSetEnabled();
+			case OrganizationPackage.USER__CUSTOM_USER_INFO_VALUES:
+				return customUserInfoValues != null;
 			case OrganizationPackage.USER__PASSWORD:
 				return password != null;
 		}

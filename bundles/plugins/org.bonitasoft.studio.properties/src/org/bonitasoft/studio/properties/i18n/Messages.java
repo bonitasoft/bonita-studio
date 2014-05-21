@@ -444,6 +444,12 @@ public class Messages extends NLS {
 	public static String warningDisplayLabelMaxLength;
 
 	public static String expressionCantBeEmpty;
+
+	public static String wiget;
+
+	public static String mandatory;
+
+	public static String readOnly;
 	
 	static {
 		// initialize resource bundle
