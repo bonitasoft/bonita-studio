@@ -99,9 +99,6 @@
 				</validVersion>
 			</validVersionList>
 		</autodetectJava>
-		<setInstallerVariable>
-			<!-- Set default path to C: on Windows -->
-			<name>installdir</name>
 		<showQuestion>
 			<ruleList>
 				<isFalse value="${java_autodetected}" />
@@ -116,6 +113,9 @@
 					value="yes" />
 			</ruleList>
 		</throwError>
+		<setInstallerVariable>
+			<!-- Set default path to C: on Windows -->
+			<name>installdir</name>
 			<value>${env(SYSTEMDRIVE)}/@product.short.name@-${product_version}</value>
 			<ruleList>
 				<platformTest type="windows" />
