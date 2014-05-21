@@ -253,8 +253,7 @@
 				</copyFile>
 				<runProgram>
 					<program>genisoimage</program>
-					<programArguments>-D -V Setup -no-pad -r -apple -o
-						@bitrock.output@/${dmgName} ${tempDir}/output
+					<programArguments>-D -V Setup -no-pad -r -apple -o @bitrock.output@/${dmgName} ${tempDir}/output
 					</programArguments>
 				</runProgram>
 				<deleteFile>
@@ -431,12 +430,8 @@
 					<actionList>
 						<runProgram>
 							<program>${java_executable}</program>
-							<programArguments>-Xmx512m -XX:MaxPermSize=512m -jar
-								"${installdir}/plugins/org.eclipse.equinox.launcher_1.3.0.v20130327-1440.jar"
-								-product org.bonitasoft.studio.initializer -data
-								"${installdir}/workspace" -noSplash</programArguments>
-							<progressText>${msg(initializing.progressMessage)}
-								${product_fullname}...</progressText>
+							<programArguments>-Xmx512m -XX:MaxPermSize=512m -jar "${installdir}/plugins/org.eclipse.equinox.launcher_1.3.0.v20130327-1440.jar" -product org.bonitasoft.studio.initializer -data "${installdir}/workspace" -noSplash</programArguments>
+							<progressText>${msg(initializing.progressMessage)} ${product_fullname}...</progressText>
 							<ruleList>
 								<isFalse>
 									<value>${retrieveWorksapce}</value>
