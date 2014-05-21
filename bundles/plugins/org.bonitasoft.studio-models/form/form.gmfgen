@@ -8286,7 +8286,7 @@
       iD="org.bonitasoft.studio.diagram.form"
       name="Bonita Form editor"
       provider="BonitaSoft S.A."
-      version="6.3.1.qualifier"
+      version="6.4.0.qualifier"
       activatorClassName="FormDiagramEditorPlugin">
     <requiredPlugins>org.eclipse.gmf.tooling.runtime</requiredPlugins>
     <requiredPlugins>org.eclipse.draw2d</requiredPlugins>
