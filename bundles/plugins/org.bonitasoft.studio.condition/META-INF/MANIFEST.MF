@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: org.bonitasoft.studio.condition
 Bundle-Vendor: BonitaSoft S.A.
-Bundle-Version: 6.3.0.qualifier
+Bundle-Version: 6.4.0.qualifier
 Bundle-SymbolicName: org.bonitasoft.studio.condition; singleton:=true
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.eclipse.xtext;visibility:=reexport,
@@ -30,16 +30,12 @@ Require-Bundle: org.eclipse.xtext;visibility:=reexport,
 Import-Package: org.apache.log4j,
  org.eclipse.xtext.xbase.lib
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
-Export-Package: org.bonitasoft.studio.condition,
- org.bonitasoft.studio.condition.services,
- org.bonitasoft.studio.condition.conditionModel,
- org.bonitasoft.studio.condition.conditionModel.impl,
- org.bonitasoft.studio.condition.conditionModel.util,
- org.bonitasoft.studio.condition.serializer,
- org.bonitasoft.studio.condition.parser.antlr,
- org.bonitasoft.studio.condition.parser.antlr.internal,
- org.bonitasoft.studio.condition.validation,
- org.bonitasoft.studio.condition.scoping,
- org.bonitasoft.studio.condition.generator,
- org.bonitasoft.studio.condition.formatting
+Export-Package: org.bonitasoft.studio.condition,org.bonitasoft.studio.
+ condition.services,org.bonitasoft.studio.condition.conditionModel,org
+ .bonitasoft.studio.condition.conditionModel.impl,org.bonitasoft.studi
+ o.condition.conditionModel.util,org.bonitasoft.studio.condition.seria
+ lizer,org.bonitasoft.studio.condition.parser.antlr,org.bonitasoft.stu
+ dio.condition.parser.antlr.internal,org.bonitasoft.studio.condition.v
+ alidation,org.bonitasoft.studio.condition.scoping,org.bonitasoft.stud
+ io.condition.generator,org.bonitasoft.studio.condition.formatting
 

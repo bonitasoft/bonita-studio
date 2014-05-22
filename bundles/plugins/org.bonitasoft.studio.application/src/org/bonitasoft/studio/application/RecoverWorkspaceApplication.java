@@ -36,7 +36,7 @@ public class RecoverWorkspaceApplication implements IApplication {
 	 */
 	@Override
 	public Object start(IApplicationContext context) throws Exception {
-		Map argument = context.getArguments() ;
+		Map<?,?> argument = context.getArguments() ;
 		Object args = argument.get(IApplicationContext.APPLICATION_ARGS) ;
 		String newWorkspaceLocation = null ;
 		if(args != null && args instanceof String[]){

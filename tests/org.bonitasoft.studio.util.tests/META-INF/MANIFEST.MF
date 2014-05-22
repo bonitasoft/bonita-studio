@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Tests
 Bundle-SymbolicName: org.bonitasoft.studio.util.tests
-Bundle-Version: 6.3.0.qualifier
+Bundle-Version: 6.4.0.qualifier
 Bundle-Vendor: BonitaSoft S.A.
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.junit,
@@ -22,11 +22,9 @@ Require-Bundle: org.junit,
  org.bonitasoft.studio.diagram.custom;bundle-version="1.0.0",
  org.eclipse.swtbot.eclipse.gef.finder;bundle-version="2.0.5",
  org.apache.log4j;bundle-version="1.2.15"
-Export-Package: org.bonitasoft.studio.console.test.util,
- org.bonitasoft.studio.tests.utils.wizards,
- org.bonitasoft.studio.util.test,
- org.bonitasoft.studio.util.test.async,
- org.bonitasoft.studio.util.test.file
+Export-Package: org.bonitasoft.studio.console.test.util,org.bonitasoft
+ .studio.tests.utils.wizards,org.bonitasoft.studio.util.test,org.bonit
+ asoft.studio.util.test.async,org.bonitasoft.studio.util.test.file
 Import-Package: org.bonitasoft.engine.api,
  org.bonitasoft.engine.bpm,
  org.bonitasoft.engine.bpm.flownode,

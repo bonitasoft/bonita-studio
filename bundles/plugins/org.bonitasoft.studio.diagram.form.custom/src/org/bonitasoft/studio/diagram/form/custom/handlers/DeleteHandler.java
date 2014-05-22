@@ -47,6 +47,8 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressService;
 
+import static org.bonitasoft.studio.common.Messages.removalConfirmationDialogTitle;
+
 /**
  * @author Aurelien Pupier
  */
@@ -65,7 +67,7 @@ public class DeleteHandler extends AbstractHandler {
                         List<Object> widgetSelected = new ArrayList<Object>();
                         widgetSelected.add(semanticElement);
                         OutlineDialog dialog = new OutlineDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-                                Messages.deleteFormFieldDialogTitle, Display.getCurrent().getSystemImage(SWT.ICON_WARNING), Messages.bind(
+                        		removalConfirmationDialogTitle, Display.getCurrent().getSystemImage(SWT.ICON_WARNING), Messages.bind(
                                         Messages.askConfirmationForDeleting, ((Element) semanticElement).getName()), MessageDialog.CONFIRM, buttonList, 1,
                                 widgetSelected);
                         int ok = 0;

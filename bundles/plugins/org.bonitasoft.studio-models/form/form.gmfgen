@@ -8286,7 +8286,7 @@
       iD="org.bonitasoft.studio.diagram.form"
       name="Bonita Form editor"
       provider="BonitaSoft S.A."
-      version="6.3.0.qualifier"
+      version="6.4.0.qualifier"
       activatorClassName="FormDiagramEditorPlugin">
     <requiredPlugins>org.eclipse.gmf.tooling.runtime</requiredPlugins>
     <requiredPlugins>org.eclipse.draw2d</requiredPlugins>
@@ -8729,7 +8729,7 @@
       <expressions
           body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"/>
       <expressions
-          body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;empty_list&quot;);&#xD;&#xA;exp.setType(org.bonitasoft.studio.common.ExpressionConstants.SCRIPT_TYPE);&#xD;&#xA;exp.setContent(&quot;[]&quot;);&#xD;&#xA;exp.setReturnType(java.util.List.class.getName());&#xD;&#xA;&#xA;return exp ;"/>
+          body="return org.bonitasoft.studio.common.emf.tools.ExpressionHelper.createEmptyListGroovyScriptExpression();"/>
       <expressions
           body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"/>
       <expressions
@@ -8801,7 +8801,7 @@
       <expressions
           body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"/>
       <expressions
-          body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;empty_list&quot;);&#xD;&#xA;exp.setType(org.bonitasoft.studio.common.ExpressionConstants.SCRIPT_TYPE);&#xD;&#xA;exp.setContent(&quot;[]&quot;);&#xD;&#xA;exp.setReturnType(java.util.List.class.getName());&#xD;&#xD;&#xA;return exp ;"/>
+          body="return org.bonitasoft.studio.common.emf.tools.ExpressionHelper.createEmptyListGroovyScriptExpression();"/>
       <expressions
           body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"/>
       <expressions
@@ -8839,7 +8839,7 @@
       <expressions
           body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"/>
       <expressions
-          body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;empty_list&quot;);&#xD;&#xA;exp.setType(org.bonitasoft.studio.common.ExpressionConstants.SCRIPT_TYPE);&#xD;&#xA;exp.setContent(&quot;[]&quot;);&#xD;&#xA;exp.setReturnType(java.util.List.class.getName());&#xD;&#xA;&#xA;return exp ;"/>
+          body="return org.bonitasoft.studio.common.emf.tools.ExpressionHelper.createEmptyListGroovyScriptExpression();"/>
       <expressions
           body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"/>
       <expressions
@@ -8877,7 +8877,7 @@
       <expressions
           body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"/>
       <expressions
-          body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;empty_list&quot;);&#xD;&#xA;exp.setType(org.bonitasoft.studio.common.ExpressionConstants.SCRIPT_TYPE);&#xD;&#xA;exp.setContent(&quot;[]&quot;);&#xD;&#xA;exp.setReturnType(java.util.List.class.getName());&#xD;&#xA;exp.setReturnType(java.util.Collection.class.getName());&#xD;&#xA;return exp ;"/>
+          body="return org.bonitasoft.studio.common.emf.tools.ExpressionHelper.createEmptyListGroovyScriptExpression();"/>
       <expressions
           body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"/>
       <expressions
@@ -9147,7 +9147,7 @@
       <expressions
           body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"/>
       <expressions
-          body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;empty_list&quot;);&#xD;&#xA;exp.setType(org.bonitasoft.studio.common.ExpressionConstants.SCRIPT_TYPE);&#xD;&#xA;exp.setContent(&quot;[]&quot;);&#xD;&#xA;exp.setReturnType(java.util.List.class.getName());&#xD;&#xA;return exp ;"/>
+          body="return org.bonitasoft.studio.common.emf.tools.ExpressionHelper.createEmptyListGroovyScriptExpression();"/>
       <expressions
           body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"/>
       <expressions

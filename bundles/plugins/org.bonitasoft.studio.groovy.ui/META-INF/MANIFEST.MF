@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Ui for Groovy Plugin
 Bundle-SymbolicName: org.bonitasoft.studio.groovy.ui;singleton:=true
-Bundle-Version: 6.3.0.qualifier
+Bundle-Version: 6.4.0.qualifier
 Bundle-Activator: org.bonitasoft.studio.groovy.ui.Activator
 Bundle-Vendor: BonitaSoft S.A.
 Bundle-Localization: plugin
@@ -61,16 +61,11 @@ Import-Package: org.bonitasoft.engine.api,
  org.bonitasoft.forms.server.validator,
  org.bonitasoft.studio.dependencies.ui.dialog,
  org.eclipse.ui.part
-Export-Package: org.bonitasoft.studio.groovy.ui;
-  x-friends:="org.bonitasoft.studio.tests.ex,
-   org.bonitasoft.studio.tests,
-   org.bonitasoft.groovy.tests,
-   org.bonitasoft.studio.repository.tests.ex",
- org.bonitasoft.studio.groovy.ui.contentassist,
- org.bonitasoft.studio.groovy.ui.dialog,
- org.bonitasoft.studio.groovy.ui.handler,
- org.bonitasoft.studio.groovy.ui.providers,
- org.bonitasoft.studio.groovy.ui.viewer,
- org.bonitasoft.studio.groovy.ui.widgets,
- org.bonitasoft.studio.groovy.ui.widgets.pojo,
- org.bonitasoft.studio.groovy.ui.wizard
+Export-Package: org.bonitasoft.studio.groovy.ui; x-friends:="org.bonit
+ asoft.studio.tests.ex,  org.bonitasoft.studio.tests,  org.bonitasoft.
+ groovy.tests,  org.bonitasoft.studio.repository.tests.ex",org.bonitas
+ oft.studio.groovy.ui.contentassist,org.bonitasoft.studio.groovy.ui.di
+ alog,org.bonitasoft.studio.groovy.ui.handler,org.bonitasoft.studio.gr
+ oovy.ui.providers,org.bonitasoft.studio.groovy.ui.viewer,org.bonitaso
+ ft.studio.groovy.ui.widgets,org.bonitasoft.studio.groovy.ui.widgets.p
+ ojo,org.bonitasoft.studio.groovy.ui.wizard

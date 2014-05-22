@@ -124,7 +124,8 @@
     <genClasses ecoreClass="expression.ecore#//Operation">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference expression.ecore#//Operation/leftOperand"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference expression.ecore#//Operation/operator"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference expression.ecore#//Operation/rightOperand"/>
+      <genFeatures notify="false" children="true" createChild="false" propertyCategory=""
+          propertyDescription="" propertySortChoices="true" ecoreFeature="ecore:EReference expression.ecore#//Operation/rightOperand"/>
     </genClasses>
     <genClasses ecoreClass="expression.ecore#//Operator">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute expression.ecore#//Operator/type"/>

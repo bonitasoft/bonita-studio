@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Bonita Form Editor customization classes
 Bundle-SymbolicName: org.bonitasoft.studio.diagram.form.custom;singleton:=true
-Bundle-Version: 6.3.0.qualifier
+Bundle-Version: 6.4.0.qualifier
 Bundle-Vendor: BonitaSoft S.A.
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
@@ -26,13 +26,12 @@ Require-Bundle: org.eclipse.ui,
  org.junit;bundle-version="4.11.0";resolution:=optional
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Export-Package: org.bonitasoft.studio.diagram.form.custom.clipboard,
- org.bonitasoft.studio.diagram.form.custom.commands,
- org.bonitasoft.studio.diagram.form.custom.editpolicies,
- org.bonitasoft.studio.diagram.form.custom.model,
- org.bonitasoft.studio.diagram.form.custom.part,
- org.bonitasoft.studio.diagram.form.custom.parts,
- org.bonitasoft.studio.diagram.form.custom.providers
+Export-Package: org.bonitasoft.studio.diagram.form.custom.clipboard,or
+ g.bonitasoft.studio.diagram.form.custom.commands,org.bonitasoft.studi
+ o.diagram.form.custom.editpolicies,org.bonitasoft.studio.diagram.form
+ .custom.model,org.bonitasoft.studio.diagram.form.custom.part,org.boni
+ tasoft.studio.diagram.form.custom.parts,org.bonitasoft.studio.diagram
+ .form.custom.providers
 Bundle-Activator: org.bonitasoft.studio.diagram.form.custom.Activator
 Import-Package: org.bonitasoft.engine.bpm.document
 

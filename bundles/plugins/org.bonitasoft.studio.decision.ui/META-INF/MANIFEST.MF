@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Decision Tables
 Bundle-SymbolicName: org.bonitasoft.studio.decision.ui;singleton:=true
-Bundle-Version: 6.3.0.qualifier
+Bundle-Version: 6.4.0.qualifier
 Bundle-Activator: org.bonitasoft.studio.decision.ui.Activator
 Bundle-Vendor: BonitaSoft S.A.
 Require-Bundle: org.eclipse.core.runtime,
@@ -23,7 +23,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.bonitasoft.studio.expression.editor;bundle-version="1.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
-Export-Package: org.bonitasoft.studio.decision.ui,
- org.bonitasoft.studio.decision.ui.condition
+Export-Package: org.bonitasoft.studio.decision.ui,org.bonitasoft.studi
+ o.decision.ui.condition
 Import-Package: org.bonitasoft.studio.condition.ui.expression,
  org.eclipse.emf.databinding

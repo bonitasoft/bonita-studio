@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Bonita Studio Groovy Editor
 Bundle-SymbolicName: org.bonitasoft.studio.groovy;singleton:=true
-Bundle-Version: 6.3.0.qualifier
+Bundle-Version: 6.4.0.qualifier
 Bundle-Activator: org.bonitasoft.studio.groovy.GroovyPlugin
 Bundle-Vendor: BonitaSoft S.A.
 Require-Bundle: org.eclipse.ui,
@@ -43,7 +43,6 @@ Import-Package: org.bonitasoft.engine.api,
  org.eclipse.jdt.core,
  org.eclipse.ui.part
 Bundle-ActivationPolicy: lazy
-Export-Package: org.bonitasoft.studio.groovy,
- org.bonitasoft.studio.groovy.library,
- org.bonitasoft.studio.groovy.provider,
- org.bonitasoft.studio.groovy.repository
+Export-Package: org.bonitasoft.studio.groovy,org.bonitasoft.studio.gro
+ ovy.library,org.bonitasoft.studio.groovy.provider,org.bonitasoft.stud
+ io.groovy.repository

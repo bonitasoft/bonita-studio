@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Simulation UI Plugin
 Bundle-SymbolicName: org.bonitasoft.studio.simulation;singleton:=true
-Bundle-Version: 6.3.0.qualifier
+Bundle-Version: 6.4.0.qualifier
 Bundle-Vendor: BonitaSoft S.A.
 Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
@@ -37,13 +37,11 @@ Require-Bundle: org.eclipse.core.runtime,
  org.bonitasoft.studio.common.repository,
  org.bonitasoft.studio.groovy.ui,
  org.bonitasoft.studio.expression.editor;bundle-version="1.0.0"
-Export-Package: org.bonitasoft.studio.simulation,
- org.bonitasoft.studio.simulation.commands,
- org.bonitasoft.studio.simulation.engine,
- org.bonitasoft.studio.simulation.i18n,
- org.bonitasoft.studio.simulation.properties.contributions,
- org.bonitasoft.studio.simulation.repository,
- org.bonitasoft.studio.simulation.wizards
+Export-Package: org.bonitasoft.studio.simulation,org.bonitasoft.studio
+ .simulation.commands,org.bonitasoft.studio.simulation.engine,org.boni
+ tasoft.studio.simulation.i18n,org.bonitasoft.studio.simulation.proper
+ ties.contributions,org.bonitasoft.studio.simulation.repository,org.bo
+ nitasoft.studio.simulation.wizards
 Bundle-Activator: org.bonitasoft.studio.simulation.SimulationPlugin
 Bundle-ActivationPolicy: lazy
 Import-Package: org.bonitasoft.simulation.engine,

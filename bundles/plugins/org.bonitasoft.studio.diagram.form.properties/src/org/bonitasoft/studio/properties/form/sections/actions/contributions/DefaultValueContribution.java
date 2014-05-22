@@ -71,7 +71,7 @@ public class DefaultValueContribution implements IExtensibleGridPropertySectionC
         if(widget instanceof RadioFormField ||widget instanceof  ComboFormField ||widget instanceof  SelectFormField){
             defaultExpressionViewer.setMessage(Messages.data_tooltip_text,IStatus.INFO);
         }else{
-            defaultExpressionViewer.setMessage(Messages.data_tooltip_listonly,IStatus.INFO);
+            defaultExpressionViewer.setMessage(Messages.data_tooltip_list,IStatus.INFO);
         }
         defaultExpressionViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 

@@ -31,8 +31,10 @@ import org.bonitasoft.engine.bpm.connector.ConnectorEvent;
 import org.bonitasoft.studio.common.DataTypeLabels;
 import org.bonitasoft.studio.common.DataUtil;
 import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.common.ModelVersion;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.Pair;
+import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.gmf.tools.GMFTools;
@@ -239,8 +241,8 @@ public class ProcBuilder implements IProcBuilder {
 					    diagramModel.setName(name) ;
 					}
 					diagramModel.setVersion(version) ;
-					diagramModel.setBonitaModelVersion("5.5") ;
-					diagramModel.setBonitaVersion("5.5") ;
+					diagramModel.setBonitaModelVersion(ModelVersion.CURRENT_VERSION) ;
+					diagramModel.setBonitaVersion(ProductVersion.CURRENT_VERSION) ;
 					ModelHelper.addDataTypes(diagramModel);
 					diagram.setElement(diagramModel);
 				}
@@ -781,7 +783,7 @@ public class ProcBuilder implements IProcBuilder {
 
 		Node newNode = (Node) viewDescriptor.getAdapter(Node.class);
 		if(newNode == null){
-			throw new ProcBuilderException("New elment not created") ;
+			throw new ProcBuilderException("New element not created") ;
 		}
 		currentView =  newNode;
 		Element createdElement = (Element) newNode.getElement();
@@ -1226,6 +1228,7 @@ public class ProcBuilder implements IProcBuilder {
 		id = NamingUtils.convertToId(id) ;
 		Element createdElement = null ;
 		if(eventType == EventType.TIMER_BOUNDARY
+				|| eventType == EventType.NON_INTERRUPTING_TIMER_BOUNDARY
 				|| eventType == EventType.MESSAGE_BOUNDARY
 				|| eventType == EventType.ERROR_BOUNDARY
 				|| eventType == EventType.SIGNAL_BOUNDARY){

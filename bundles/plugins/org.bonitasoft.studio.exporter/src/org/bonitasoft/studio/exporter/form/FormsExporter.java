@@ -489,21 +489,34 @@ public class FormsExporter {
 
     }
 
-	protected void addExpressionDependency(final IFormBuilder builder,
-			final org.bonitasoft.engine.expression.Expression expression)
-            throws InvalidFormDefinitionException {
-		for (final org.bonitasoft.engine.expression.Expression dependency : expression
-				.getDependencies()) {
-			builder.addDependentExpression(
-					dependency.getName(),
-					dependency.getContent(),
-					dependency.getExpressionType(),
-					dependency.getReturnType(),
-					(dependency.getInterpreter() != null && !dependency
-							.getInterpreter().isEmpty()) ? dependency
-							.getInterpreter() : null);
-        }
+    protected void addExpressionDependency(final IFormBuilder builder, final org.bonitasoft.engine.expression.Expression expression)
+    				throws InvalidFormDefinitionException {
+    	boolean isSameLevelThanPrevious = true;
+    	final List<org.bonitasoft.engine.expression.Expression> dependencies = expression.getDependencies();
+    	if(!dependencies.isEmpty()){
+    		for (final org.bonitasoft.engine.expression.Expression dependency : dependencies) {
+    			builder.addDependentExpression(
+    					dependency.getName(),
+    					dependency.getContent(),
+    					dependency.getExpressionType(),
+    					dependency.getReturnType(),
+    					getExpressionInterpreter(dependency),
+    					!isSameLevelThanPrevious);
+    			isSameLevelThanPrevious = false;
+    			if(!dependency.getDependencies().isEmpty()){
+    				addExpressionDependency(builder, dependency);
+    			}
+    		}
+    		builder.endExpressionDependencies();
+    	}
     }
+
+	private String getExpressionInterpreter(
+			final org.bonitasoft.engine.expression.Expression dependency) {
+		return (dependency.getInterpreter() != null && !dependency
+				.getInterpreter().isEmpty()) ? dependency
+				.getInterpreter() : null;
+	}
 
     /**
      * @param pageflow
