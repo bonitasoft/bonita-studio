@@ -422,7 +422,7 @@ ${msg(retrieve.workspace.message.warning)}
 			<postShowPageActionList>
 				<setInstallerVariable>
 					<name>java_executable</name>
-					<value>${installdir}/jre/bin/javaw.exe</value>
+					<value>${installdir}/jre/bin/java.exe</value>
 					<ruleList>
 						<isFalse value="${java_autodetected}" />
 					</ruleList>
