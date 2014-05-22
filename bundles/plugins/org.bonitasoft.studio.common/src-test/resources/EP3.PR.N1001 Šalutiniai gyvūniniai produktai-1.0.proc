@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:decision="http://www.bonitasoft.org/ns/studio/process/decision" xmlns:expression="http://www.bonitasoft.org/ns/studio/expression" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.2/notation" xmlns:process="http://www.bonitasoft.org/ns/studio/process" xsi:schemaLocation="http://www.bonitasoft.org/ns/studio/process/decision http://www.bonitasoft.org/ns/studio/process#//decision">
-  <process:MainProcess xmi:id="_5CIyYKXvEeOHX5ykhwuMLg" name="MyDiagram" author="Romain" bonitaVersion="6.3.0" bonitaModelVersion="6.3.0-001" configId="ACED00057400194D794469616772616D362E332E302D303031362E332E307370">
-    <elements xmi:type="process:Pool" xmi:id="_5NaOQKXvEeOHX5ykhwuMLg" name="Pool" welcomePageInternal="false" basedOnLookAndFeel="Default Application">
+  <process:MainProcess xmi:id="_5CIyYKXvEeOHX5ykhwuMLg" name="EP3.PR.N1001 Šalutiniai gyvūniniai produktai" author="Romain" bonitaVersion="6.3.0" bonitaModelVersion="6.3.0-001" configId="ACED00057400194D794469616772616D362E332E302D303031362E332E307370">
+    <elements xmi:type="process:Pool" xmi:id="_5NaOQKXvEeOHX5ykhwuMLg" name="Poolū" welcomePageInternal="false" basedOnLookAndFeel="Default Application">
       <elements xmi:type="process:Lane" xmi:id="_5jSXoKXvEeOHX5ykhwuMLg" name="Employee lane" actor="_5iuW8KXvEeOHX5ykhwuMLg">
-        <elements xmi:type="process:Task" xmi:id="_5l4YoKXvEeOHX5ykhwuMLg" name="Step1" incoming="_50y-YKXvEeOHX5ykhwuMLg" overrideActorsOfTheLane="false">
+        <elements xmi:type="process:Task" xmi:id="_5l4YoKXvEeOHX5ykhwuMLg" name="Step1ū" incoming="_50y-YKXvEeOHX5ykhwuMLg" overrideActorsOfTheLane="false">
           <viewPageFlowRedirectionURL xmi:type="expression:Expression" xmi:id="_5mKsgKXvEeOHX5ykhwuMLg" name="" content="" returnTypeFixed="true"/>
           <dynamicLabel xmi:type="expression:Expression" xmi:id="_5mKFcaXvEeOHX5ykhwuMLg" name="" content="" returnTypeFixed="true"/>
           <dynamicDescription xmi:type="expression:Expression" xmi:id="_5mKFcKXvEeOHX5ykhwuMLg" name="" content="" returnTypeFixed="true"/>
@@ -126,7 +126,7 @@
     <datatypes xmi:type="process:XMLType" xmi:id="_5CIyaKXvEeOHX5ykhwuMLg" name="XML"/>
     <datatypes xmi:type="process:BusinessObjectType" xmi:id="_5CIyaaXvEeOHX5ykhwuMLg" name="Business_Object"/>
   </process:MainProcess>
-  <notation:Diagram xmi:id="_5CIyaqXvEeOHX5ykhwuMLg" type="Process" element="_5CIyYKXvEeOHX5ykhwuMLg" name="MyDiagram" measurementUnit="Pixel">
+  <notation:Diagram xmi:id="_5CIyaqXvEeOHX5ykhwuMLg" type="Process" element="_5CIyYKXvEeOHX5ykhwuMLg" name="EP3.PR.N1001 Šalutiniai gyvūniniai produktai" measurementUnit="Pixel">
     <children xmi:type="notation:Node" xmi:id="_5X0ugKXvEeOHX5ykhwuMLg" type="2007" element="_5NaOQKXvEeOHX5ykhwuMLg">
       <children xmi:type="notation:DecorationNode" xmi:id="_5X18oKXvEeOHX5ykhwuMLg" type="5008"/>
       <children xmi:type="notation:DecorationNode" xmi:id="_5X18oaXvEeOHX5ykhwuMLg" type="7001">
