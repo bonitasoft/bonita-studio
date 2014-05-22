@@ -105,8 +105,7 @@
 			<text>${msg(java.version.error.message)} @os_arch@ bits</text>
 			<variable>continue</variable>
 		</showQuestion>
-		<throwError>
-			<text>installation cancelled</text>
+		<exit>
 			<ruleList>	
 				<compareText>
 					<text>${continue}</text>
@@ -114,7 +113,7 @@
 					<value>yes</value>
 				</compareText>
 			</ruleList>
-		</throwError>
+		</exit>
 		<setInstallerVariable>
 			<!-- Set default path to C: on Windows -->
 			<name>installdir</name>
