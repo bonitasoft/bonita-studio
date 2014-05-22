@@ -116,13 +116,6 @@
 			</ruleList>
 		</throwError>
 		<setInstallerVariable>
-			<name>java_executable</name>
-			<value>${installdir}/jre/bin/javaw.exe</value>
-			<ruleList>
-				<isFalse value="${java_autodetected}" />
-			</ruleList>
-		</setInstallerVariable>
-		<setInstallerVariable>
 			<!-- Set default path to C: on Windows -->
 			<name>installdir</name>
 			<value>${env(SYSTEMDRIVE)}/@product.short.name@-${product_version}</value>
@@ -426,7 +419,14 @@ ${msg(retrieve.workspace.message.warning)}
                     <value>true</value>
                 </option>
             </optionList>
-            <postShowPageActionList>
+			<postShowPageActionList>
+				<setInstallerVariable>
+					<name>java_executable</name>
+					<value>${installdir}/jre/bin/javaw.exe</value>
+					<ruleList>
+						<isFalse value="${java_autodetected}" />
+					</ruleList>
+				</setInstallerVariable>
                 <showProgressDialog>
                     <title>${msg(workspace.setup)}</title>
                     <height>100</height>
