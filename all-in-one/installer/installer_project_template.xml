@@ -102,7 +102,8 @@
 			<ruleList>
 				<isFalse value="${java_autodetected}" />
 			</ruleList>
-			<text>${msg(java.version.error.message)} @os_arch@ bits</text>
+			<title>${msg(java.version.title)}</title>
+			<text>${msg(java.version.message)}</text>
 			<variable>continue</variable>
 		</showQuestion>
 		<exit>
