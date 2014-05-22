@@ -76,6 +76,9 @@ public interface IRepository extends IFileStoreChangeListener {
     IRepositoryStore<? extends IRepositoryFileStore> getRepositoryStore(IResource resource);
 
     boolean isBuildEnable() ;
+    
+    void disableBuild();
+    void enableBuild();
 
     IJavaProject getJavaProject();
 

@@ -49,9 +49,9 @@ public class UpdateRSSContribution implements IPreStartupContribution {
 
         private final String url;
 
-        private final Class currentClass;
+        private final Class<?> currentClass;
 
-        public UpdateRSSThread(String xmlName, String url, Class currentClass) {
+        public UpdateRSSThread(String xmlName, String url, Class<?> currentClass) {
             super();
             this.xmlName = xmlName;
             this.url = url;
@@ -138,10 +138,12 @@ public class UpdateRSSContribution implements IPreStartupContribution {
      */
     @Override
     public void execute() {
-        new UpdateRSSThread("resources", "http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=63", getClass()).start();
-        new UpdateRSSThread("news", "http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=61", getClass()).start();
-        new UpdateRSSThread("training", "http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=62", getClass()).start();
-        new UpdateRSSThread("videos", "http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=151", getClass()).start();
+        new UpdateRSSThread("6-3-community", "http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=163", getClass()).start();
+        new UpdateRSSThread("6-3-blogs", "http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=152", getClass()).start();
+        new UpdateRSSThread("6-3-documentation", "http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=158", getClass()).start();
+        new UpdateRSSThread("6-3-examples-community", "http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=159", getClass()).start();
+        new UpdateRSSThread("6-3-training", "http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=153", getClass()).start();
+        new UpdateRSSThread("6-3-videos", "http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=154", getClass()).start();
     }
 
     /*

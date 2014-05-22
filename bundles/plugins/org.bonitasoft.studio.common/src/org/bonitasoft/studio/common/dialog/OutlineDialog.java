@@ -128,7 +128,7 @@ public class OutlineDialog extends MessageDialog{
 
 	private void createMessageInformation(Composite mainComposite) {
 			Label information = new Label(mainComposite, SWT.NONE);
-			information.setText("Here are the references found for the data.");
+			information.setText(Messages.bind(Messages.outlineDialogRefactoringText, getElementNameListHeader().toLowerCase()));
 			
 	}
 
