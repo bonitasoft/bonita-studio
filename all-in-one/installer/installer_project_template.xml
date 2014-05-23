@@ -425,6 +425,20 @@ ${msg(retrieve.workspace.message.warning)}
 					<value>${installdir}/jre/bin/java.exe</value>
 					<ruleList>
 						<isFalse value="${java_autodetected}" />
+						<platformTest>
+							<type>windows</type>
+						</platformTest>
+					</ruleList>
+				</setInstallerVariable>
+				<setInstallerVariable>
+					<name>java_executable</name>
+					<value>${installdir}/jre/bin/java</value>
+					<ruleList>
+						<isFalse value="${java_autodetected}" />
+						<platformTest>
+							<negate>1</negate>
+							<type>windows</type>
+						</platformTest>
 					</ruleList>
 				</setInstallerVariable>
                 <showProgressDialog>
