@@ -140,7 +140,7 @@ public class UpdateRSSContribution implements IPreStartupContribution {
     public void execute() {
         new UpdateRSSThread("6-3-community", "http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=163", getClass()).start();
         new UpdateRSSThread("6-3-blogs", "http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=152", getClass()).start();
-        new UpdateRSSThread("6-3-documentation", "http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=62", getClass()).start();
+        new UpdateRSSThread("6-3-documentation", "http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=158", getClass()).start();
         new UpdateRSSThread("6-3-examples-community", "http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=159", getClass()).start();
         new UpdateRSSThread("6-3-training", "http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=153", getClass()).start();
         new UpdateRSSThread("6-3-videos", "http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=154", getClass()).start();

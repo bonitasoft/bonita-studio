@@ -11,28 +11,28 @@
        <author>Julien Espitallier</author>
        <category>Community</category>
        <title>Questions and Answers</title>
-       <link>http://community.bonitasoft.com/answers</link>
+       <link>http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&amp;class=org.bonitasoft.studio.intro.actions.OpenInExternalBrowserIntroAction&amp;url=http://community.bonitasoft.com/answers</link>
        <description></description>
     </item>
 	<item>
        <author>Julien Espitallier</author>
        <category>Community</category>
        <title>Shared Projects</title>
-       <link>http://community.bonitasoft.com/project</link>
+       <link>http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&amp;class=org.bonitasoft.studio.intro.actions.OpenInExternalBrowserIntroAction&amp;url=http://community.bonitasoft.com/project</link>
        <description></description>
     </item>
     <item>
        <author>Julien Espitallier</author>
        <category>Community</category>
        <title>Translate in your language</title>
-       <link>http://community.bonitasoft.com/project</link>
+       <link>http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&amp;class=org.bonitasoft.studio.intro.actions.OpenInExternalBrowserIntroAction&amp;url=http://translate.bonitasoft.org/</link>
        <description></description>
     </item>
      <item>
        <author>Julien Espitallier</author>
        <category>Community</category>
        <title>Report an Issue</title>
-       <link>https://bonita.atlassian.net/</link>
+       <link>http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&amp;class=org.bonitasoft.studio.intro.actions.OpenInExternalBrowserIntroAction&amp;url=https://bonita.atlassian.net/</link>
        <description></description>
     </item>
    </channel>
