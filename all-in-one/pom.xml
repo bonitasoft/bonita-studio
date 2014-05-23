@@ -521,7 +521,7 @@
 											</then>
 										</if>
 										<copy
-											todir="${project.build.directory}/products/${productId}/macosx/cocoa/x86/jre">
+											todir="${project.build.directory}/products/${productId}/macosx/cocoa/x86/jre/Contents/Home/jre">
 											<fileset dir="${user.home}/${jre.osx.url}/jre" />
 										</copy>
 									</tasks>
@@ -550,7 +550,7 @@
 											</then>
 										</if>
 										<copy
-											todir="${project.build.directory}/products/${productId}/macosx/cocoa/x86_64/jre">
+											todir="${project.build.directory}/products/${productId}/macosx/cocoa/x86_64/jre/Contents/Home/jre">
 											<fileset dir="${user.home}/${jre.osx.url}/jre" />
 										</copy>
 									</tasks>
