@@ -216,6 +216,17 @@
 				</platformTest>
 			</conditionRuleList>
 		</if>
+		<if>
+			<actionList>
+				<changePermissions permissions="0755" files="${installdir}/jre/bin/java"/>
+			</actionList>
+			<conditionRuleList>
+				<platformTest>
+					<negate>1</negate>
+					<type>windows</type>
+				</platformTest>
+			</conditionRuleList>
+		</if>
 	</postInstallationActionList>
 		<postBuildActionList>
 	<actionGroup>
