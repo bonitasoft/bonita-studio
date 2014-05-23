@@ -18,6 +18,8 @@
 package org.bonitasoft.studio.refactoring.core;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.Messages;
@@ -44,38 +46,25 @@ import org.eclipse.ui.IWorkbenchWindowActionDelegate;
  * @author Romain Bioteau
  */
 
-public abstract class AbstractScriptExpressionRefactoringAction implements IWorkbenchWindowActionDelegate {
+public abstract class AbstractScriptExpressionRefactoringAction<T extends  RefactorPair<?, ?>> implements IWorkbenchWindowActionDelegate {
 
     private List<Expression> scriptExpressions;
-
     private CompoundCommand compoundCommand;
-
     private EditingDomain domain;
-
     private List<Expression> refactoredScriptExpression;
-
     private boolean askConfirmation = false;
-
     private boolean cancelled;
-
     private RefactoringOperationType operationType;
+	protected List<T> pairsToRefactor;
 
-    private String oldName;
-
-    private String newName;
-
-    private EObject newValue;
-
-    public AbstractScriptExpressionRefactoringAction(EObject newValue, String oldName, String newName, List<Expression> scriptExpressions,
+    public AbstractScriptExpressionRefactoringAction(List<T> pairsToRefactor, List<Expression> scriptExpressions,
             List<Expression> refactoredScriptExpression, CompoundCommand compoundCommand,
             EditingDomain domain, RefactoringOperationType operationType) {
         this.scriptExpressions = scriptExpressions;
         this.refactoredScriptExpression = refactoredScriptExpression;
         this.compoundCommand = compoundCommand;
         this.operationType = operationType;
-        this.oldName = oldName;
-        this.newName = newName;
-        this.newValue = newValue;
+        this.pairsToRefactor = pairsToRefactor;
     }
 
     @Override
@@ -109,8 +98,14 @@ public abstract class AbstractScriptExpressionRefactoringAction implements IWork
         config.setLeftLabel(Messages.currentScript);
         config.setRightLabel(Messages.refactoredScript);
         config.setProperty(CompareConfiguration.USE_OUTLINE_VIEW, true);
-        return new BonitaCompareEditorInput(config, scriptExpressions, refactoredScriptExpression, operationType, oldName,
-                newName);
+        String oldNames = "";
+        String newNames = "";
+        for(RefactorPair<?, ?> pairRefactor : pairsToRefactor){
+        	oldNames += oldNames.isEmpty() ? pairRefactor.getOldValueName():","+pairRefactor.getOldValueName();
+        	newNames += newNames.isEmpty() ? pairRefactor.getNewValueName():","+pairRefactor.getNewValueName();
+        }
+        return new BonitaCompareEditorInput(config, scriptExpressions, refactoredScriptExpression, operationType, oldNames,
+                newNames);
     }
 
     public void setCancelled(boolean cancelled) {
@@ -131,27 +126,25 @@ public abstract class AbstractScriptExpressionRefactoringAction implements IWork
             }
 
             if (operationType == RefactoringOperationType.REMOVE) {
-                EObject reference = getReferencedObjectInScriptsOperation(originalExpression);
-                if (reference != null) {
+                Map<EObject,EObject> references = getReferencedObjectInScriptsOperation(originalExpression);
+                for(EObject reference : references.keySet()){
                     compoundCommand.append(RemoveCommand.create(domain, originalExpression, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS,
                             reference));
                 }
             }
             if (operationType == RefactoringOperationType.UPDATE) {
-                EObject referencedObject = getReferencedObjectInScriptsOperation(originalExpression);
-                compoundCommand.append(RemoveCommand.create(domain, originalExpression, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS,
-                        referencedObject));
-                compoundCommand.append(AddCommand.create(domain, originalExpression, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS,
-                        ExpressionHelper.createDependencyFromEObject(getNewValue())));
+                Map<EObject,EObject> referencedObjects = getReferencedObjectInScriptsOperation(originalExpression);
+                for(Entry<EObject,EObject> referencedObject : referencedObjects.entrySet()){
+                	compoundCommand.append(RemoveCommand.create(domain, originalExpression, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS,
+                			referencedObject.getKey()));
+                	compoundCommand.append(AddCommand.create(domain, originalExpression, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS,
+                			ExpressionHelper.createDependencyFromEObject(referencedObject.getValue())));
+                }
             }
         }
     }
 
-    public EObject getNewValue() {
-        return newValue;
-    }
-
-    protected abstract EObject getReferencedObjectInScriptsOperation(Expression expr);
+    protected abstract Map<EObject,EObject> getReferencedObjectInScriptsOperation(Expression expr);
 
     public boolean isCancelled() {
         return cancelled;
@@ -177,14 +170,6 @@ public abstract class AbstractScriptExpressionRefactoringAction implements IWork
 
     public boolean askConfirmation() {
         return askConfirmation;
-    }
-
-    public String getOldName() {
-        return oldName;
-    }
-
-    public String getNewName() {
-        return newName;
     }
 
     public void setEditingDomain(EditingDomain domain) {
