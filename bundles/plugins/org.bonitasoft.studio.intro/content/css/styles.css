@@ -441,16 +441,9 @@ div.caption p {
 	list-style-type:none;
 }
 
-#recently-modified li,
-#example li,
-#run li,
-#documentation li,
-#forums li {
-	line-height: 21px;
-}
-
 #news li,
-
+#example li,
+#forums li,
 #documentation li,
 #video li,
 #training li,
@@ -459,13 +452,14 @@ div.caption p {
 	line-height: 18px;
 	padding-top: 3px;
 	padding-bottom: 2px;
+	
 }
 
 
 #actions li a {
 	display: block;
 	background-position: top;
-	background-repeat: no-repeat
+	background-repeat: no-repeat;
 }
 
 #news li a,
@@ -480,10 +474,10 @@ div.caption p {
 #resources li a {
 	background-repeat:no-repeat;
 	display:block;
-//	width:315px;
+/*	width:315px;*/
 	margin: 0 20 0 0 !important;
 	padding: 0px 0px 0px 22px !important;
-//	margin-right: -10px;
+/*	margin-right: -10px;*/
 }
 
 #news li a,
@@ -555,7 +549,10 @@ div.caption p {
 
 #news li span.rssDesc,
 #resources li span.rssDesc,
+#documentation li span.rssDesc,
+#forums li span.rssDesc,
 #video li span.rssDesc,
+#example li span.rssDesc,
 #training li span.rssDesc {
 	padding-left: 30px;
 	font-size: 11px;
@@ -564,14 +561,20 @@ div.caption p {
 
 #news li span.rssDesc,
 #resources li span.rssDesc,
+#documentation li span.rssDesc,
+#forums li span.rssDesc,
 #video li span.rssDesc,
+#example li span.rssDesc,
 #training li span.rssDesc {
 	display:none;
 }
 
 #news li span.rssPubDate,
 #resources li span.rssPubDate,
+#documentation li span.rssPubDate,
+#forums li span.rssPubDate,
 #video li span.rssPubDate,
+#example li span.rssPubDate,
 #training li span.rssPubDate {
 	font-size: 11px;
 }
