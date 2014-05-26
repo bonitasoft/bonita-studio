@@ -81,6 +81,7 @@ public class OperatorSelectionDialog extends Dialog implements ISelectionChanged
         operatorTypeList.add(ExpressionConstants.XPATH_UPDATE_OPERATOR);
         operatorTypeList.add(ExpressionConstants.SET_DOCUMENT_OPERATOR);
         operatorTypeList.add(ExpressionConstants.CREATE_BUSINESS_DATA_OPERATOR);
+        operatorTypeList.add(ExpressionConstants.DELETION_OPERATOR);
     }
 
     protected OperatorSelectionDialog(Shell parentShell, Operation operation) {
@@ -132,7 +133,7 @@ public class OperatorSelectionDialog extends Dialog implements ISelectionChanged
         final ComboViewer operatorViewer = new ComboViewer(mainComposite, SWT.READ_ONLY | SWT.BORDER);
         operatorViewer.getCombo().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
-        operatorViewer.setContentProvider(new ArrayContentProvider());
+        operatorViewer.setContentProvider(ArrayContentProvider.getInstance());
         operatorViewer.setLabelProvider(new OperatorLabelProvider());
         operatorViewer.addFilter(new ViewerFilter() {
 
@@ -143,7 +144,7 @@ public class OperatorSelectionDialog extends Dialog implements ISelectionChanged
                     EObject data = exp.getReferencedElements().get(0);
                     if (data instanceof BusinessObjectData) {
                         return element.equals(ExpressionConstants.ASSIGNMENT_OPERATOR) || element.equals(ExpressionConstants.CREATE_BUSINESS_DATA_OPERATOR)
-                                || element.equals(ExpressionConstants.JAVA_METHOD_OPERATOR);
+                                || element.equals(ExpressionConstants.JAVA_METHOD_OPERATOR) || element.equals(ExpressionConstants.DELETION_OPERATOR);
                     } else if (data instanceof JavaObjectData) {
                         return element.equals(ExpressionConstants.ASSIGNMENT_OPERATOR) || element.equals(ExpressionConstants.JAVA_METHOD_OPERATOR);
                     } else if (data instanceof XMLData) {

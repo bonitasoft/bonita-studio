@@ -32,6 +32,7 @@ import org.bonitasoft.studio.model.expression.Operation;
 import org.bonitasoft.studio.model.expression.Operator;
 import org.bonitasoft.studio.model.form.FormPackage;
 import org.bonitasoft.studio.model.form.Widget;
+import org.bonitasoft.studio.model.process.BusinessObjectData;
 import org.bonitasoft.studio.model.process.Lane;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.conversion.Converter;
@@ -182,7 +183,7 @@ public class OperationViewer extends Composite implements IBonitaVariableContext
             operationReturnTypeValidator.setDataExpression(action.getLeftOperand());
             operationReturnTypeValidator.setInputExpression(action.getRightOperand());
 
-            IObservableValue leftOperandObservableValue = EMFEditObservables.observeValue(editingDomain, action,
+            final IObservableValue leftOperandObservableValue = EMFEditObservables.observeValue(editingDomain, action,
                     ExpressionPackage.Literals.OPERATION__LEFT_OPERAND);
             UpdateValueStrategy targetToModel = new UpdateValueStrategy();
             targetToModel.setConverter(new Converter(Expression.class, Expression.class) {
@@ -197,6 +198,20 @@ public class OperationViewer extends Composite implements IBonitaVariableContext
                     return null;
                 }
             });
+            storageViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+
+                @Override
+                public void selectionChanged(SelectionChangedEvent event) {
+                    Object value = ((IStructuredSelection) event.getSelection()).getFirstElement();
+                    if (value instanceof Expression) {
+                        boolean isLeftOperandABusinessData = !((Expression) value).getReferencedElements().isEmpty()
+                                && ((Expression) value).getReferencedElements().get(0) instanceof BusinessObjectData;
+                        actionExpression.getControl().setVisible(
+                                !ExpressionConstants.DELETION_OPERATOR.equals(action.getOperator().getType()) || !isLeftOperandABusinessData);
+                    }
+                }
+            });
+
             context.bindValue(ViewersObservables.observeSingleSelection(storageViewer), leftOperandObservableValue, targetToModel, null);
 
             storageViewer.addExpressionValidator(ExpressionConstants.VARIABLE_TYPE, new TransientDataValidator());
@@ -226,6 +241,12 @@ public class OperationViewer extends Composite implements IBonitaVariableContext
                     && !action.getOperator().getExpression().isEmpty()) {
                 operatorTooltip.setText(action.getOperator().getExpression());
             }
+
+            boolean isLeftOperandABusinessData = operation != null && operation.getLeftOperand() != null
+                    && !operation.getLeftOperand().getReferencedElements().isEmpty()
+                    && operation.getLeftOperand().getReferencedElements().get(0) instanceof BusinessObjectData;
+            actionExpression.getControl().setVisible(
+                    !ExpressionConstants.DELETION_OPERATOR.equals(action.getOperator().getType()) || !isLeftOperandABusinessData);
 
             IObservableValue value = EMFEditObservables.observeValue(editingDomain, actionExp, ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE);
             value.addChangeListener(new IChangeListener() {
@@ -333,6 +354,7 @@ public class OperationViewer extends Composite implements IBonitaVariableContext
                         operatorTooltip.setText(newOperator.getExpression());
                     }
                     actionExpression.validate();
+                    actionExpression.getControl().setVisible(!newOperator.getType().equals(ExpressionConstants.DELETION_OPERATOR));
                     operatorLabel.getParent().layout(true, true);
                 }
             }
@@ -371,6 +393,7 @@ public class OperationViewer extends Composite implements IBonitaVariableContext
                         }
                         operatorLink.setText("<A>" + labelProvider.getText(op) + "</A>");
                         actionExpression.validate();
+                        actionExpression.getControl().setVisible(true);
                         operatorLink.getParent().layout(true, true);
                     }
                 }

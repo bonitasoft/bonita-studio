@@ -557,8 +557,10 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
             public Object convert(Object input) {
                 if ((Boolean) input) {
                     previousExpressionType = typeObservable.getValue();
-                    typeObservable.setValue(ExpressionConstants.SCRIPT_TYPE);
-                    interpreterObservable.setValue(ExpressionConstants.GROOVY);
+                    if (!previousExpressionType.equals(ExpressionConstants.QUERY_TYPE)) {
+                        typeObservable.setValue(ExpressionConstants.SCRIPT_TYPE);
+                        interpreterObservable.setValue(ExpressionConstants.GROOVY);
+                    }
                     defaultValueViewer.refresh();
                     return multipleReturnType;
                 } else {

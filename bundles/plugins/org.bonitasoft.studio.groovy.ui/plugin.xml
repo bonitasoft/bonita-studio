@@ -26,20 +26,6 @@
       </comboElementsProvider>
    </extension>
    <extension
-         point="org.bonitasoft.studio.groovy.ui.textordataFactory">
-      <textOrDataContribution
-            class="org.bonitasoft.studio.groovy.ui.providers.TextOrDataFactory"
-            name="Text Or Data Factory">
-      </textOrDataContribution>
-   </extension>
-   <extension
-         point="org.bonitasoft.studio.groovy.ui.textordataFactory">
-      <textOrDataContribution
-            class="org.bonitasoft.studio.groovy.ui.providers.TextOrDataTextAreaFactory"
-            name="Text Or Data Text area Factory">
-      </textOrDataContribution>
-   </extension>
-   <extension
          point="org.eclipse.ui.menus">
       <menuContribution
             locationURI="menu:org.bonitasoft.studio.development?after=org.bonitasoft.studio.validator.menu">
