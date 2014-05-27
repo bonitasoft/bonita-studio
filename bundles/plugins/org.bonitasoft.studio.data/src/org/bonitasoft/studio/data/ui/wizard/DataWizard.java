@@ -205,6 +205,8 @@ public class DataWizard extends Wizard implements IBonitaVariableContext {
         final RefactorDataOperation op = new RefactorDataOperation(RefactoringOperationType.UPDATE);
         op.setEditingDomain(editingDomain);
         op.setContainer(process);
+        op.setDirectDataContainer(container);
+        op.setDataContainmentFeature(dataContainmentFeature);
         op.setNewData(workingCopy);
         op.setOldData(originalData);
         op.setAskConfirmation(true);

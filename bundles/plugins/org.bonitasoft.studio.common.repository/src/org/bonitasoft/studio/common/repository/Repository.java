@@ -643,7 +643,7 @@ public class Repository implements IRepository {
         final ExportBosArchiveOperation operation = new ExportBosArchiveOperation();
         operation.setDestinationPath(fileName);
         Set<IResource> allResources = new HashSet<IResource>();
-        for (IRepositoryStore store : getAllExportableStores()) {
+        for (IRepositoryStore<?> store : getAllExportableStores()) {
             allResources.add(store.getResource());
         }
         operation.setResources(allResources);
