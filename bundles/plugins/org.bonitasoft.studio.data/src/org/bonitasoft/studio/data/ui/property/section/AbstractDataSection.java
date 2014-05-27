@@ -157,16 +157,16 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
         dataTableViewer.getTable().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(200, 100).create());
         dataTableViewer.setSorter(new ViewerSorter());
         dataTableViewer.addDoubleClickListener(this);
-		ObservableListContentProvider contentProvider = new ObservableListContentProvider();
-		dataTableViewer.setContentProvider(contentProvider);
-		
-		// create the label provider including monitoring 
-		// of the changes of the labels
-		IObservableSet knownElements = contentProvider.getKnownElements();
-		IObservableMap[] labelMaps = EMFObservables.observeMaps(knownElements, new EStructuralFeature[]{ProcessPackage.Literals.ELEMENT__NAME,ProcessPackage.Literals.DATA__DATA_TYPE});
-		dataTableViewer.setLabelProvider(new DataStyledTreeLabelProvider(labelMaps));
-		
-		
+        ObservableListContentProvider contentProvider = new ObservableListContentProvider();
+        dataTableViewer.setContentProvider(contentProvider);
+
+        // create the label provider including monitoring
+        // of the changes of the labels
+        IObservableSet knownElements = contentProvider.getKnownElements();
+        IObservableMap[] labelMaps = EMFObservables.observeMaps(knownElements, new EStructuralFeature[] { ProcessPackage.Literals.ELEMENT__NAME,
+                ProcessPackage.Literals.DATA__DATA_TYPE });
+        dataTableViewer.setLabelProvider(new DataStyledTreeLabelProvider(labelMaps));
+
     }
 
     public TableViewer getDataTableViewer() {
@@ -216,6 +216,8 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
                 op.setContainer(ModelHelper.getParentProcess(eObject));
                 op.setEditingDomain(getEditingDomain());
                 op.setOldData((Data) d);
+                op.setDirectDataContainer(getEObject());
+                op.setDataContainmentFeature(getDataFeature());
                 op.setAskConfirmation(true);
                 try {
                     if (op.canExecute()) {
@@ -356,8 +358,8 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
         context = new EMFDataBindingContext();
         if (getEObject() != null) {
             if (dataTableViewer != null) {
-				IObservableList dataObservableList = EMFEditObservables.observeList(getEditingDomain(), getEObject(),getDataFeature());
-				dataTableViewer.setInput(dataObservableList);
+                IObservableList dataObservableList = EMFEditObservables.observeList(getEditingDomain(), getEObject(), getDataFeature());
+                dataTableViewer.setInput(dataObservableList);
                 final UpdateValueStrategy enableStrategy = new UpdateValueStrategy();
                 enableStrategy.setConverter(new Converter(Data.class, Boolean.class) {
 

@@ -17,7 +17,9 @@
 package org.bonitasoft.studio.groovy.ui.providers;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -30,13 +32,14 @@ import org.bonitasoft.studio.common.jface.databinding.observables.DocumentObserv
 import org.bonitasoft.studio.common.jface.databinding.validator.InputLengthValidator;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.dependencies.ui.dialog.ManageConnectorJarDialog;
+import org.bonitasoft.studio.expression.editor.ExpressionEditorService;
 import org.bonitasoft.studio.expression.editor.provider.ExpressionContentProvider;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionEditor;
+import org.bonitasoft.studio.expression.editor.provider.IExpressionProvider;
 import org.bonitasoft.studio.expression.editor.provider.SelectionAwareExpressionEditor;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.expression.editor.viewer.SelectDependencyDialog;
 import org.bonitasoft.studio.groovy.GroovyPlugin;
-import org.bonitasoft.studio.groovy.GroovyUtil;
 import org.bonitasoft.studio.groovy.ScriptVariable;
 import org.bonitasoft.studio.groovy.ui.Messages;
 import org.bonitasoft.studio.groovy.ui.dialog.BonitaVariableLabelProvider;
@@ -197,9 +200,9 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
         final ScriptVariable e1sv = ((ScriptVariable) e1);
         final ScriptVariable e2sv = ((ScriptVariable) e2);
         if (e1sv.getCategory() == null) {
-            return -1;
-        } else if (e2sv.getCategory() == null) {
             return 1;
+        } else if (e2sv.getCategory() == null) {
+            return -1;
         } else {
             if (e1sv.getCategory().equals(e2sv.getCategory())) {
                 return e1sv.getName().compareToIgnoreCase(e2sv.getName());
@@ -462,7 +465,7 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
         inputExpression.setInterpreter(ExpressionConstants.GROOVY);
 
         groovyViewer.setContext(context, filters, viewer.getExpressionNatureProvider());
-        nodes = groovyViewer.getFieldNodes();
+        nodes = new ArrayList<ScriptVariable>(groovyViewer.getFieldNodes());
 
         if (context == null && nodes == null) {
             dataCombo.add(Messages.noProcessVariableAvailable);
@@ -481,8 +484,7 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
                 dataCombo.getTableCombo().setEnabled(false);
             }
         }
-
-        bonitaDataCombo.setInput(GroovyUtil.getBonitaVariables(context, filters, isPageFlowContext));
+        bonitaDataCombo.setInput(groovyViewer.getProvidedVariables(context, filters));
         bonitaDataCombo.setSelection(new StructuredSelection(ProcessVariableContentProvider.SELECT_ENTRY));
 
         dataBindingContext.bindValue(ViewersObservables.observeInput(dependenciesViewer), dependenciesModelObservable);
@@ -505,7 +507,7 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
 
         dependencyJob = new ComputeScriptDependenciesJob(groovyViewer.getGroovyCompilationUnit());
         dependencyJob.setContext(context);
-        this.nodes.addAll(GroovyUtil.getBonitaVariables(context, filters, isPageFlowContext));
+        this.nodes.addAll(groovyViewer.getProvidedVariables(context, filters));
         dependencyJob.setNodes(nodes);
 
         final InputLengthValidator lenghtValidator = new InputLengthValidator("", GroovyViewer.MAX_SCRIPT_LENGTH);
@@ -616,11 +618,16 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
     @Override
     public void dispose() {
         super.dispose();
-        if (groovyViewer != null) {
-            groovyViewer.dispose();
-        }
         if (dependencyJob != null) {
             dependencyJob.cancel();
+            try {
+                dependencyJob.join();
+            } catch (InterruptedException e) {
+                BonitaStudioLog.error(e);
+            }
+        }
+        if (groovyViewer != null) {
+            groovyViewer.dispose();
         }
     }
 
