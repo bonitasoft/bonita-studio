@@ -87,6 +87,7 @@ public class ImportBosArchiveOperation {
         Assert.isTrue(archive.exists());
         fileStoresToOpen.clear();
         try {
+        	currentRepository.disableBuild();
             IContainer container = createTempProject(archive, monitor);
             final Map<String, IRepositoryStore<? extends IRepositoryFileStore>> repositoryMap = new HashMap<String, IRepositoryStore<? extends IRepositoryFileStore>>();
 
@@ -135,11 +136,15 @@ public class ImportBosArchiveOperation {
                 }
             }
             FileActionDialog.deactivateYesNoToAll();
+            currentRepository.enableBuild();
             currentRepository.refresh(Repository.NULL_PROGRESS_MONITOR);
             currentRepository.notifyFileStoreEvent(new FileStoreChangeEvent(EventType.POST_IMPORT, null));
         } catch (Exception e) {
             BonitaStudioLog.error(e);
         } finally {
+        	if(!currentRepository.isBuildEnable()){
+        		currentRepository.enableBuild();
+        	}
             cleanTmpProject();
         }
         return status;
