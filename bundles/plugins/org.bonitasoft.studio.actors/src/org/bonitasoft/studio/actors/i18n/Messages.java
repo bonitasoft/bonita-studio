@@ -26,6 +26,7 @@ public class Messages extends NLS {
 
     private static final String BUNDLE_NAME = "messages";
 
+
     static {
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);
     }
@@ -245,7 +246,24 @@ public class Messages extends NLS {
 	public static String importSuccessfulMsg;
 	public static String importFailedTitle;
 	public static String importFailedMsg;
-
+	public static String customUserInfoName;
+	public static String customUserInfoDescription;
+	public static String customUserInfoDefinitionNotEmpty;
+	public static String customUserInfoDefinitionAlreadyExist;
+	public static String customUserInformationAddWindowTitle;
+	public static String defaultInformationGroupTitle;
+	public static String defaultInformationGroupGeneralDataTableTitle;
+	public static String defaultInformationGroupBusinessCardTableTitle;
+	public static String defaultInformationGroupPersonalTableTitle;
+	public static String defaultInformationGroupMembershipsTableTitle;
+	public static String defaultInformationGroupMembershipsTableText;
+	public static String otherInformationGroupAddButton;
+	public static String otherInformationGroupRemoveButton;
+	public static String otherInformationGroupTitle;
+	public static String otherInformationGroupRemoveDialogTitle;
+	public static String otherInformationGroupRemoveDialogText;
+	public static String customUserInfoDefinitionNoWhiteSpaceAtStartOrEnd;
+	public static String customUserInfoDefinitionNameTooLong;
 
 
 }

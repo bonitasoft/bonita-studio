@@ -69,7 +69,7 @@ public abstract class AbstractOrganizationWizardPage extends WizardPage implemen
 
     protected AbstractOrganizationWizardPage(String pageName) {
         super(pageName);
-        context = new EMFDataBindingContext() ;
+        
     }
 
     @Override
@@ -88,7 +88,7 @@ public abstract class AbstractOrganizationWizardPage extends WizardPage implemen
      */
     @Override
     public void createControl(Composite parent) {
-    	
+    	context = new EMFDataBindingContext() ;
     	mainComposite = addUsersComposite(parent);
         setControl(mainComposite) ;
     }
@@ -248,9 +248,6 @@ public abstract class AbstractOrganizationWizardPage extends WizardPage implemen
         return organization  ;
     }
 
-	protected Widget initTab(Composite parent) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+
 
 }

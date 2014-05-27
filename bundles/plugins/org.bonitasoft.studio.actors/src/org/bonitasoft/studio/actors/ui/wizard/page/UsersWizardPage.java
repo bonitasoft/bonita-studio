@@ -25,11 +25,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.bonitasoft.engine.identity.CustomUserInfo;
 import org.bonitasoft.studio.actors.i18n.Messages;
 import org.bonitasoft.studio.actors.model.organization.CustomUserInfoDefinition;
+import org.bonitasoft.studio.actors.model.organization.CustomUserInfoDefinitions;
 import org.bonitasoft.studio.actors.model.organization.CustomUserInfoValue;
-import org.bonitasoft.studio.actors.model.organization.CustomUserInfoValuesType;
 import org.bonitasoft.studio.actors.model.organization.Membership;
 import org.bonitasoft.studio.actors.model.organization.MetaDatasType;
 import org.bonitasoft.studio.actors.model.organization.Metadata;
@@ -47,6 +46,7 @@ import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValida
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.conversion.Converter;
+import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.IValueChangeListener;
 import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
@@ -58,10 +58,12 @@ import org.eclipse.emf.common.util.ECollections;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
+import org.eclipse.emf.databinding.EMFProperties;
 import org.eclipse.emf.databinding.EObjectObservableValue;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.jface.databinding.fieldassist.ControlDecorationSupport;
 import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IInputValidator;
 import org.eclipse.jface.dialogs.InputDialog;
@@ -69,7 +71,9 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -80,6 +84,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
@@ -89,13 +95,13 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.swt.widgets.Widget;
 
 
 /**
@@ -113,10 +119,12 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 
 	private final Map<EAttribute, Control> personalWidgetMap = new HashMap<EAttribute, Control>();
 	private final Map<EAttribute, Control> professionalWidgetMap = new HashMap<EAttribute, Control>();
-	private final Map<Metadata, Control> metadataWidgetMap = new HashMap<Metadata, Control>();
-	private final Map<CustomUserInfoValue, Control> userCustomInfoWidgetMap = new HashMap<CustomUserInfoValue, Control>();
 	private final Map<EAttribute, Control> generalWidgetMap = new HashMap<EAttribute, Control>() ;
 	private final Map<Membership, Map<EAttribute,Control>> membershipWidgetMap = new HashMap<Membership, Map<EAttribute,Control>>();
+	private final Map<CustomUserInfoValue,  Control> customUserInfoWidgetMap = new HashMap<CustomUserInfoValue, Control>();
+
+	CustomUserInfoDefinitions infoDefinitions;
+
 	private TabItem generalTab;
 	private TabItem personalTab;
 	private TabItem profesionnalTab;
@@ -130,9 +138,11 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 	private TabItem otherTab;
 	private TabItem infoTab;
 
+	TableViewer otherInfoTable;
+	private IObservableList customUserInfoObservableList;
 
 
-	private int incr =0;
+	//	private int incr =0;
 
 	public UsersWizardPage() {
 		super(UsersWizardPage.class.getName());
@@ -196,6 +206,13 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 		super.setOrganization(organization);
 		if(organization != null && getViewer() != null){
 			getViewer().setInput(userList) ;
+			if(otherInfoTable != null){
+				if(organization.getCustomUserInfoDefinitions() == null){
+					organization.setCustomUserInfoDefinitions(OrganizationFactory.eINSTANCE.createCustomUserInfoDefinitions());
+				}
+				customUserInfoObservableList = EMFProperties.list(OrganizationPackage.Literals.CUSTOM_USER_INFO_DEFINITIONS__CUSTOM_USER_INFO_DEFINITION).observe(organization.getCustomUserInfoDefinitions());
+				otherInfoTable.setInput(customUserInfoObservableList);
+			}
 		}
 	}
 
@@ -351,13 +368,17 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 				}
 			}
 
-			for(Entry<Metadata, Control> entry : metadataWidgetMap.entrySet()){
-				Metadata metadata = entry.getKey() ;
-				Control control =  entry.getValue() ;
+
+			for(Entry<CustomUserInfoValue,  Control> entry : customUserInfoWidgetMap.entrySet()){
+				final CustomUserInfoValue customInfo = entry.getKey();
+				final Control control = entry.getValue();
+
 				if(!control.isDisposed()){
-					context.bindValue(SWTObservables.observeText(control,SWT.Modify), EMFObservables.observeValue(metadata, OrganizationPackage.Literals.METADATA__VALUE)) ;
+					context.bindValue(SWTObservables.observeText(control,SWT.Modify), EMFObservables.observeValue(customInfo, OrganizationPackage.Literals.CUSTOM_USER_INFO_VALUE__VALUE)) ;
 				}
+
 			}
+
 
 			for(Entry<Membership, Map<EAttribute,Control>> entry : membershipWidgetMap.entrySet()){
 				final Membership membership = entry.getKey() ;
@@ -425,8 +446,8 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 						ControlDecorationSupport.create(context.bindValue(SWTObservables.observeSelection(control), EMFObservables.observeValue(membership, attributre),selectionStrategy,modelStrategy),SWT.LEFT) ;
 					}
 				}
-
 			}
+
 			pageSupport = WizardPageSupportWithoutMessages.create(this, context);
 		}else{
 			setControlEnabled(getInfoGroup(), false) ;
@@ -524,7 +545,7 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 
 				else if(item.equals(otherTab)){
 					final ScrolledComposite sc = createScrolledComposite();
-					control = createOtherControl(sc,userCustomInfoWidgetMap);
+					control = createOtherControl(sc,customUserInfoWidgetMap);
 					sc.setContent(control);
 					otherTab.setControl(sc) ;
 				}
@@ -588,61 +609,27 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 		otherInfoComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create()) ;
 		otherInfoComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(10, 10).equalWidth(false).create()) ;
 
+		User selectedUser = (User) ((StructuredSelection) getViewer().getSelection()).getFirstElement() ;
+		if(selectedUser != null){
 
-		if(organization.getCustomUserInfoDefinitions()!=null){
-			List<String> defListName = new ArrayList<String>();
-			List<CustomUserInfoDefinition> listCustoInfo = organization.getCustomUserInfoDefinitions().getCustomUserInfoDefinition();
-			for(CustomUserInfoDefinition def : listCustoInfo){
-				defListName.add(def.getName());
+			if(selectedUser.getCustomUserInfoValues() == null){
+				selectedUser.setCustomUserInfoValues(OrganizationFactory.eINSTANCE.createCustomUserInfoValuesType()) ;
 			}
 
+			for(CustomUserInfoValue infoValue : selectedUser.getCustomUserInfoValues().getCustomUserInfoValue()){
 
-
-			User selectedUser = (User) ((StructuredSelection) getViewer().getSelection()).getFirstElement() ;
-			if(selectedUser != null){
-				if(selectedUser.getCustomUserInfoValues() == null){
-					selectedUser.setCustomUserInfoValues(OrganizationFactory.eINSTANCE.createCustomUserInfoValuesType()) ;
-				}
-				Map<String, String> userInfoValueMap = new HashMap<String, String>();
-
-				List<CustomUserInfoValue> listCustoInfoOfUser = selectedUser.getCustomUserInfoValues().getCustomUserInfoValue();
-
-				for( CustomUserInfoValue customUserInfoValue : listCustoInfoOfUser){
-					userInfoValueMap.put(customUserInfoValue.getName(), customUserInfoValue.getValue());
-				}
-
-
-				for(final String customInfo : defListName){
-
-					Label label = new Label(otherInfoComposite, SWT.NONE) ;
-					label.setLayoutData(GridDataFactory.swtDefaults().align(SWT.END,SWT.CENTER).create()) ;
-					label.setText(customInfo) ;
-
-					Text text = new Text(otherInfoComposite, SWT.BORDER) ;
-					text.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
-
-					if(userInfoValueMap.keySet().contains(customInfo)){
-						text.setText(userInfoValueMap.get(customInfo));
-						for( CustomUserInfoValue customUserInfoValue : listCustoInfoOfUser){
-							if(customUserInfoValue.getName().equals(customInfo)){
-								widgetMap.put(customUserInfoValue, text) ;
-							}
-						}
-					}
-				}
+				Label labelName = new Label(otherInfoComposite, SWT.LEFT);
+				labelName.setText(infoValue.getName());
+				Text textValue = new Text(otherInfoComposite, SWT.BORDER);
+				textValue.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+				widgetMap.put(infoValue, textValue);
 			}
-
-
 		}
 
-
 		// LINK
-
 		Link addInfoLink = new Link(otherInfoComposite, SWT.NONE);
 		addInfoLink.setText("<A>"+"Manage information"+"</A>");
 		addInfoLink.addSelectionListener(new SelectionAdapter() {
-
-
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				tabFolder.setSelection(infoTab);
@@ -728,9 +715,6 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 						}
 					}
 				}) ;
-
-
-
 			}
 		}
 
@@ -755,106 +739,6 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 		Event ev = new Event() ;
 		ev.item = tab.getSelection()[0] ;
 		tab.notifyListeners(SWT.Selection, ev) ;
-	}
-
-	protected Control createMetadataControl(Composite parent, Map<Metadata, Control> widgetMap) {
-		if( widgetMap == null){
-			widgetMap = new HashMap<Metadata, Control>() ;
-		}else{
-			widgetMap.clear() ;
-		}
-
-
-		Composite detailsInfoComposite = new Composite(parent, SWT.NONE) ;
-		detailsInfoComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create()) ;
-		detailsInfoComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(3).margins(5, 5).equalWidth(false).create()) ;
-
-		User selectedUser = (User) ((StructuredSelection) getViewer().getSelection()).getFirstElement() ;
-		if(selectedUser != null){
-			if(selectedUser.getMetaDatas() == null){
-				selectedUser.setMetaDatas(OrganizationFactory.eINSTANCE.createMetaDatasType()) ;
-			}
-			for(final Metadata metadata : selectedUser.getMetaDatas().getMetaData()){
-				Label label = new Label(detailsInfoComposite, SWT.NONE) ;
-				label.setLayoutData(GridDataFactory.swtDefaults().align(SWT.END,SWT.CENTER).create()) ;
-				label.setText(metadata.getName()) ;
-
-				Text text = new Text(detailsInfoComposite, SWT.BORDER) ;
-				text.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
-				widgetMap.put(metadata, text) ;
-
-				Button removeMetadataButton = new Button(detailsInfoComposite, SWT.FLAT) ;
-				removeMetadataButton.setImage(Pics.getImage("delete.png")) ;
-				removeMetadataButton.setToolTipText(Messages.delete) ;
-				removeMetadataButton.setLayoutData(GridDataFactory.swtDefaults().create()) ;
-				removeMetadataButton.addSelectionListener(new SelectionAdapter() {
-					@Override
-					public void widgetSelected(SelectionEvent e) {
-						if(MessageDialog.openQuestion(Display.getDefault().getActiveShell(),Messages.deleteMetadataTitle , Messages.deleteMetadataMsg)){
-							for(User u : userList){
-								List<Metadata> toRemove = new ArrayList<Metadata>() ;
-								for(Metadata m : u.getMetaDatas().getMetaData()){
-									if(m.getName().equals(metadata.getName())){
-										toRemove.add(m) ;
-									}
-								}
-								u.getMetaDatas().getMetaData().removeAll(toRemove) ;
-							}
-
-
-							Event ev = new Event() ;
-							ev.item = tab.getSelection()[0] ;
-							tab.notifyListeners(SWT.Selection, ev) ;
-						}
-					}
-				}) ;
-			}
-		}
-
-		Button addMetadataButton = new Button(detailsInfoComposite, SWT.PUSH) ;
-		addMetadataButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(3, 1).align(SWT.END, SWT.CENTER).create()) ;
-		addMetadataButton.setText(Messages.addMetadata) ;
-		addMetadataButton.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				addMetadataAction() ;
-			}
-		}) ;
-
-		return detailsInfoComposite ;
-	}
-
-	protected void addMetadataAction() {
-		InputDialog dialog = new InputDialog(Display.getDefault().getActiveShell(), Messages.addMetadata, Messages.metadataName, null, new IInputValidator() {
-
-			@Override
-			public String isValid(String input) {
-				User u = (User) ((IStructuredSelection) getViewer().getSelection()).getFirstElement() ;
-				if(u.getMetaDatas() == null){
-					u.setMetaDatas(OrganizationFactory.eINSTANCE.createMetaDatasType()) ;
-				}
-				for(Metadata m : u.getMetaDatas().getMetaData()){
-					if(m.getName().equals(input)){
-						return Messages.bind(Messages.metadataAlreadyExists,input) ;
-					}
-				}
-				return null;
-			}
-		}) ;
-
-		if(dialog.open() == Dialog.OK){
-			for(User u : userList){
-				Metadata metadata = OrganizationFactory.eINSTANCE.createMetadata() ;
-				metadata.setName(dialog.getValue()) ;
-				if(u.getMetaDatas() == null){
-					u.setMetaDatas(OrganizationFactory.eINSTANCE.createMetaDatasType());
-				}
-				u.getMetaDatas().getMetaData().add(metadata) ;
-			}
-			Event ev = new Event() ;
-			ev.item = tab.getSelection()[0] ;
-			tab.notifyListeners(SWT.Selection, ev) ;
-		}
 	}
 
 	protected Control createInfoControl(Composite parent, Map<EAttribute, Control> widgetMap) {
@@ -1044,18 +928,11 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 		User user = OrganizationFactory.eINSTANCE.createUser() ;
 		user.setUserName(generateUsername()) ;
 		user.setPassword(createPassword(DEFAULT_USER_PASSWORD));
-		user.setMetaDatas( OrganizationFactory.eINSTANCE.createMetaDatasType());
-		if(!userList.isEmpty()){
-			final MetaDatasType metaDatas = userList.get(0).getMetaDatas();
-			if(metaDatas != null){
-				for(Metadata m : metaDatas.getMetaData()){
-					if(m!=null){
-						Metadata metadata = OrganizationFactory.eINSTANCE.createMetadata() ;
-						metadata.setName(m.getName()) ;
-						user.getMetaDatas().getMetaData().add(metadata) ;
-					}
-				}
-			}
+		user.setCustomUserInfoValues(OrganizationFactory.eINSTANCE.createCustomUserInfoValuesType());
+		for(CustomUserInfoDefinition definitions : organization.getCustomUserInfoDefinitions().getCustomUserInfoDefinition()){
+			CustomUserInfoValue newValue = OrganizationFactory.eINSTANCE.createCustomUserInfoValue();
+			newValue.setName(definitions.getName());
+			user.getCustomUserInfoValues().getCustomUserInfoValue().add(newValue);
 		}
 
 		userList.add(user) ;
@@ -1146,7 +1023,7 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 
 		// Group Default Information
 		Group defaultGroup = new Group(infoCompo, SWT.BORDER | SWT.FILL);
-		setDefaultGroup(defaultGroup);
+		setDefaultUserInformationGroup(defaultGroup);
 
 
 
@@ -1160,97 +1037,170 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 	}
 
 	protected void setOtherGroup(Group otherGroup) {
-		otherGroup.setText("Other information");
+
+		otherGroup.setText(Messages.otherInformationGroupTitle);
 		otherGroup.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 		otherGroup.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(10, 10).equalWidth(false).create()) ;
 
-		Table otherInfoTable = new Table(otherGroup, SWT.BORDER | SWT.TOP);
-		otherInfoTable.setLinesVisible(true);
-		otherInfoTable.setHeaderVisible(true);
-
-
-		TableColumn nameColumn = new TableColumn(otherInfoTable, SWT.NONE | SWT.TOP);
-		nameColumn.setText("Name"+" *");
-
-		TableColumn descColumn = new TableColumn(otherInfoTable, SWT.NONE | SWT.TOP);
-		descColumn.setText("Description");		
-
-
-		otherInfoTable.getColumn (0).pack();
-		otherInfoTable.getColumn (1).pack();
-
-
-		Composite buttons = new Composite(otherGroup, SWT.NONE);
-		buttons.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+		// BUTTONS
+		Composite buttons = new Composite(otherGroup, SWT.NONE | SWT.TOP);
+		buttons.setLayoutData(GridDataFactory.fillDefaults().indent(0, 20).create());
 		buttons.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(5,5).equalWidth(true).create()) ;
-
-		Button addOtherInfoButton = new Button(buttons, SWT.PUSH);
-		addOtherInfoButton.setText("Add");
-
+		
+		GridData gridDataButton = GridDataFactory.fillDefaults().grab(true, false).create();
+		
+		// ADD BUTTON
+		Button addOtherInfoButton = new Button(buttons, SWT.PUSH );
+		addOtherInfoButton.setLayoutData(gridDataButton);
+		addOtherInfoButton.setText(Messages.otherInformationGroupAddButton);
 		addOtherInfoButton.addSelectionListener(new SelectionAdapter() {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-
-				CustomUserInfoDefinition newInfo = OrganizationFactory.eINSTANCE.createCustomUserInfoDefinition();
-//				newInfo.setName("Custom_"+incr);
-//				newInfo.setDescription("This is my "+(incr++)+" description.");
-				if(organization.getCustomUserInfoDefinitions()==null){
-					organization.setCustomUserInfoDefinitions(OrganizationFactory.eINSTANCE.createCustomUserInfoDefinitions());
-
-					organization.getCustomUserInfoDefinitions();
-				}
-//				organization.getCustomUserInfoDefinitions().getCustomUserInfoDefinition().add(newInfo);
-
-
+				addCustomUserInfoDefinitionAction();
 			}
-
 		});
 
-		Button addRemoveInfoButton = new Button(buttons, SWT.PUSH);
-		addRemoveInfoButton.setText("Remove");
+		
+		Button removeInfoButton = new Button(buttons, SWT.PUSH );
+		removeInfoButton.setLayoutData(gridDataButton);
+		removeInfoButton.setText(Messages.otherInformationGroupRemoveButton);
+		removeInfoButton.addListener(SWT.Selection, new Listener() {
 
+			@Override
+			public void handleEvent(Event arg0) {
+				List<CustomUserInfoDefinition> definitions = ((IStructuredSelection) otherInfoTable.getSelection()).toList();
+				String listDef = "";
+				for(CustomUserInfoDefinition def : definitions){
+					listDef = listDef + def.getName() + "\n";
+				}
+				if(MessageDialog.openQuestion(Display.getDefault().getActiveShell(),Messages.otherInformationGroupRemoveDialogTitle ,Messages.bind(Messages.otherInformationGroupRemoveDialogText,listDef))){
+
+					customUserInfoObservableList.removeAll(definitions);
+					for(User user : organization.getUsers().getUser()){
+						List<CustomUserInfoValue> toRemove = new ArrayList<CustomUserInfoValue>();
+						for(CustomUserInfoDefinition def : definitions){
+							for(CustomUserInfoValue v : user.getCustomUserInfoValues().getCustomUserInfoValue()){
+								if(v.getName().equals(def.getName())){
+									toRemove.add(v);
+								}
+							}
+						}
+						user.getCustomUserInfoValues().getCustomUserInfoValue().removeAll(toRemove);
+					}
+				}
+			}
+		});
+		
+		
+		// TABLE VIEWER Custom User Definitions
+		otherInfoTable = new TableViewer(otherGroup, SWT.H_SCROLL | 
+			      SWT.V_SCROLL | 
+			      SWT.FULL_SELECTION | 
+			      SWT.BORDER | SWT.MULTI);
+		otherInfoTable.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+		otherInfoTable.getTable().setHeaderVisible(true);
+		otherInfoTable.setContentProvider(new ObservableListContentProvider()) ;
+
+
+		TableViewerColumn nameColumn = new TableViewerColumn(otherInfoTable, SWT.NONE);
+		nameColumn.getColumn().setText(Messages.customUserInfoName+" *") ;
+		nameColumn.getColumn().setWidth(100);
+		
+		nameColumn.setLabelProvider(new ColumnLabelProvider(){
+			@Override
+			public String getText(Object element) {
+				return ((CustomUserInfoDefinition)element).getName();
+			}
+		});
+
+		TableViewerColumn descriptionColumn = new TableViewerColumn(otherInfoTable, SWT.NONE);
+		descriptionColumn.getColumn().setText(Messages.customUserInfoDescription) ;
+		descriptionColumn.getColumn().setWidth(100);
+		descriptionColumn.setLabelProvider(new ColumnLabelProvider(){
+			@Override
+			public String getText(Object element) {
+				return ((CustomUserInfoDefinition)element).getDescription();
+			}
+		});
 
 	}
 
-	protected void setDefaultGroup(Group defaultGroup) {
-
-		defaultGroup.setText("Default information");
-		defaultGroup.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-		defaultGroup.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(10, 10).create()) ;
+	public void addCustomUserInfoDefinitionAction() {
 
 
-		Composite tables = new Composite(defaultGroup, SWT.NONE);
+		List<String> existingCustomUserInfoNames = new ArrayList<String>();
+		if(organization.getCustomUserInfoDefinitions() == null){
+			organization.setCustomUserInfoDefinitions(OrganizationFactory.eINSTANCE.createCustomUserInfoDefinitions());
+		}
+		for( CustomUserInfoDefinition custom : organization.getCustomUserInfoDefinitions().getCustomUserInfoDefinition()){
+			existingCustomUserInfoNames.add(custom.getName().toLowerCase());
+		}
+
+		AddCustomUserInfoDialog dialog = new AddCustomUserInfoDialog(Display.getCurrent().getActiveShell(), existingCustomUserInfoNames);
+
+		if (dialog.open() == Dialog.OK) {
+
+			String customUserInfoName = dialog.getCustomUserInfoName();
+			String customUserInfoDescription = dialog.getCustomUserInfoDescription();
+
+			// add new CustomUserInfoDefinition
+			CustomUserInfoDefinition customUserInfo = OrganizationFactory.eINSTANCE.createCustomUserInfoDefinition() ;
+			customUserInfo.setName(customUserInfoName);
+			customUserInfo.setDescription(customUserInfoDescription);
+			customUserInfoObservableList.add(customUserInfo);
+
+
+			// add this new CustomUserInfo as a a CustomUserInfoValue for the User
+			for(User user : organization.getUsers().getUser()){
+				CustomUserInfoValue newCustomUserInfoValueType = OrganizationFactory.eINSTANCE.createCustomUserInfoValue();
+				newCustomUserInfoValueType.setName(customUserInfoName);
+				newCustomUserInfoValueType.setValue("");
+
+				if(user.getCustomUserInfoValues()==null){
+					user.setCustomUserInfoValues(OrganizationFactory.eINSTANCE.createCustomUserInfoValuesType());
+				}
+				user.getCustomUserInfoValues().getCustomUserInfoValue().add(newCustomUserInfoValueType);
+			}
+		}
+	}
+
+	protected void setDefaultUserInformationGroup(Group defaultGroup) {
+
+		defaultGroup.setText(Messages.defaultInformationGroupTitle);
+		defaultGroup.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).create()) ;
+
+		Composite tables = new Composite(defaultGroup, SWT.FILL);
+		tables.setLayout(GridLayoutFactory.fillDefaults().numColumns(3).equalWidth(true).margins(5, 5).create());
 		tables.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-		tables.setLayout(GridLayoutFactory.fillDefaults().numColumns(3).margins(5,5).equalWidth(true).create()) ;
-
-
-
+		
 
 		// GENERAL DATA
-		Table generalDataTable = new Table(tables, SWT.BORDER);
+		Table generalDataTable = new Table(tables, SWT.BORDER );
+//		generalDataTable.setLayout(GridLayoutFactory.fillDefaults().create());
+		generalDataTable.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 		generalDataTable.setLinesVisible(true);
 		generalDataTable.setHeaderVisible(true);
 
 		String[] generalDataTitles = getGeneralDataItems();
-		TableColumn generalData = new TableColumn(generalDataTable, SWT.NONE | SWT.TOP);
-		generalData.setText("General data");
+		TableColumn generalData = new TableColumn(generalDataTable, SWT.NONE );
+		generalData.setText(Messages.defaultInformationGroupGeneralDataTableTitle);
 
 		for (int i = 0; i < generalDataTitles.length; i++) {
-			TableItem item = new TableItem(generalDataTable, SWT.NONE);
+			TableItem item = new TableItem(generalDataTable, SWT.NONE| SWT.FILL);
 			item.setText(generalDataTitles[i]);
 		}
 		generalDataTable.getColumn (0).pack();
 
 
 		// BUSINESS CARD
-		Table businessCardTable = new Table(tables, SWT.BORDER | SWT.TOP);
+		Table businessCardTable = new Table(tables, SWT.BORDER );
 		businessCardTable.setLinesVisible(true);
 		businessCardTable.setHeaderVisible(true);
 
 		String[] businessCardTitles = getBusinessCardItems();
 		TableColumn businessCardColumn = new TableColumn(businessCardTable, SWT.NONE);
-		businessCardColumn.setText("Business card");
+		businessCardColumn.setText(Messages.defaultInformationGroupBusinessCardTableTitle);
 
 		for (int i = 0; i < businessCardTitles.length; i++) {
 			TableItem item = new TableItem(businessCardTable, SWT.NONE);
@@ -1260,13 +1210,14 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 
 
 		// PERSONAL 
-		Table personnalTable = new Table(tables, SWT.BORDER | SWT.TOP);
+		Table personnalTable = new Table(tables, SWT.BORDER );
+		personnalTable.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 		personnalTable.setLinesVisible(true);
 		personnalTable.setHeaderVisible(true);
 
 		String[] personalTitles = getPersonalItems();
 		TableColumn personalColumn = new TableColumn(personnalTable, SWT.NONE);
-		personalColumn.setText("Personal");
+		personalColumn.setText(Messages.defaultInformationGroupPersonalTableTitle);
 
 		for (int i = 0; i < personalTitles.length; i++) {
 			TableItem item = new TableItem(personnalTable, SWT.NONE);
@@ -1276,16 +1227,20 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 
 
 
+		Composite memberships = new Composite(defaultGroup, SWT.FILL);
+		memberships.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(5, 5).create());
+		memberships.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+		
 		// MEMBERSHIP TABLE
-		Table membershipTable = new Table(defaultGroup, SWT.BORDER | SWT.FILL);
+		Table membershipTable = new Table(memberships, SWT.BORDER | SWT.FILL);
 		membershipTable.setLinesVisible(true);
 		membershipTable.setHeaderVisible(true);
 
-		TableColumn membershipColumn = new TableColumn(membershipTable, SWT.NONE);
-		membershipColumn.setText("Memberships");
+		TableColumn membershipColumn = new TableColumn(membershipTable, SWT.NONE| SWT.FILL);
+		membershipColumn.setText(Messages.defaultInformationGroupMembershipsTableTitle);
 
 		TableItem descriptionMembership = new TableItem(membershipTable, SWT.NONE);
-		descriptionMembership.setText("Combinations of groups and roles the user belongs to");
+		descriptionMembership.setText(Messages.defaultInformationGroupMembershipsTableText);
 		membershipTable.getColumn(0).pack();
 	}
 
