@@ -28,13 +28,13 @@ import org.eclipse.swt.widgets.Display;
  * @author Maxence Raoux
  * 
  */
-public class ProposalListener implements IProposalListener {
+public class CreateVariableProposalListener implements IProposalListener {
 
     private boolean isPageFlowContext = false;
 
     private EStructuralFeature feature;
 
-    public ProposalListener() {
+    public CreateVariableProposalListener() {
     }
 
     @Override

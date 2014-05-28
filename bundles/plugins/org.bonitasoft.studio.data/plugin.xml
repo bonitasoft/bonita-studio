@@ -56,7 +56,7 @@
          point="org.bonitasoft.studio.expression.proposalListener">
       <proposalListner
             name="%createDataLabel"
-            providerClass="org.bonitasoft.studio.data.ui.wizard.ProposalListener"
+            providerClass="org.bonitasoft.studio.data.ui.wizard.CreateVariableProposalListener"
             type="TYPE_VARIABLE">
       </proposalListner>
    </extension>
