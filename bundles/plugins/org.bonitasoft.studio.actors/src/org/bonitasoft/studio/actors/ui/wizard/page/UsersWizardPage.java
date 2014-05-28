@@ -40,7 +40,6 @@ import org.bonitasoft.studio.actors.ui.editingsupport.CustomUserInformationDefin
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.databinding.WrappingValidator;
 import org.bonitasoft.studio.common.jface.TableColumnSorter;
-import org.bonitasoft.studio.common.jface.databinding.WizardPageSupportWithoutMessages;
 import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.core.databinding.UpdateValueStrategy;
@@ -1122,8 +1121,6 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 	}
 
 	public void addCustomUserInfoDefinitionAction() {
-
-
 		Set<String> existingCustomUserInfoNames = new HashSet<String>();
 		if(organization.getCustomUserInfoDefinitions() == null){
 			organization.setCustomUserInfoDefinitions(OrganizationFactory.eINSTANCE.createCustomUserInfoDefinitions());
@@ -1161,17 +1158,20 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 	}
 
 	protected void setDefaultUserInformationGroup(Group defaultGroup) {
-
 		defaultGroup.setText(Messages.defaultInformationGroupTitle);
 		defaultGroup.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).create()) ;
 
 		Composite tables = new Composite(defaultGroup, SWT.FILL);
 		tables.setLayout(GridLayoutFactory.fillDefaults().numColumns(3).equalWidth(true).margins(5, 5).create());
 		tables.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-		
 
-		// GENERAL DATA
-		
+		createGeneralDataTable(tables);
+		createBusinessCardTable(tables);
+		createPersonalDataTable(tables);
+		createMembershipsTable(defaultGroup);
+	}
+
+	private void createGeneralDataTable(Composite tables) {
 		Composite generalDataTableComposite =  new Composite(tables, SWT.NONE);
 		generalDataTableComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).create());
 		generalDataTableComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
@@ -1181,22 +1181,20 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 		generalDataTable.setLinesVisible(true);
 		generalDataTable.setHeaderVisible(true);
 
-		String[] generalDataTitles = getGeneralDataItems();
+		String[] generalDataItems = getGeneralDataItems();
 		TableColumn generalData = new TableColumn(generalDataTable, SWT.NONE );
 		generalData.setText(Messages.defaultInformationGroupGeneralDataTableTitle);
+		generalData.setResizable(false);
 
-		for (int i = 0; i < generalDataTitles.length; i++) {
+		for (int i = 0; i < generalDataItems.length; i++) {
 			TableItem item = new TableItem(generalDataTable, SWT.NONE| SWT.FILL);
-			item.setText(generalDataTitles[i]);
+			item.setText(generalDataItems[i]);
 		}
 		
-//		addTableColumLayout(generalDataTable);
-		
-		generalDataTable.getColumn (0).pack();
+		addTableColumLayout(generalDataTable);
+	}
 
-
-		// BUSINESS CARD
-		
+	private void createBusinessCardTable(Composite tables) {
 		Composite businessCardTableComposite =  new Composite(tables, SWT.NONE);
 		businessCardTableComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).create());
 		businessCardTableComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
@@ -1208,17 +1206,16 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 		String[] businessCardTitles = getBusinessCardItems();
 		TableColumn businessCardColumn = new TableColumn(businessCardTable, SWT.NONE);
 		businessCardColumn.setText(Messages.defaultInformationGroupBusinessCardTableTitle);
+		businessCardColumn.setResizable(false);
 
 		for (int i = 0; i < businessCardTitles.length; i++) {
 			TableItem item = new TableItem(businessCardTable, SWT.NONE);
 			item.setText(businessCardTitles[i]);
 		}
-//		addTAbleColumLayout(businessCardTable);
-		businessCardTable.getColumn(0).pack();
+		addTableColumLayout(businessCardTable);
+	}
 
-
-		// PERSONAL 
-		
+	private void createPersonalDataTable(Composite tables) {
 		Composite personalTableComposite =  new Composite(tables, SWT.NONE);
 		personalTableComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).create());
 		personalTableComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
@@ -1231,38 +1228,37 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 		String[] personalTitles = getPersonalItems();
 		TableColumn personalColumn = new TableColumn(personnalTable, SWT.NONE);
 		personalColumn.setText(Messages.defaultInformationGroupPersonalTableTitle);
+		personalColumn.setResizable(false);
 
 		for (int i = 0; i < personalTitles.length; i++) {
 			TableItem item = new TableItem(personnalTable, SWT.NONE);
 			item.setText(personalTitles[i]);
 		}
-//		addTableColumLayout(personnalTable);
-		personnalTable.getColumn(0).pack();
+		addTableColumLayout(personnalTable);
+	}
 
-
-
+	private void createMembershipsTable(Group defaultGroup) {
 		Composite memberships = new Composite(defaultGroup, SWT.FILL);
 		memberships.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(5, 5).create());
 		memberships.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 		
-		// MEMBERSHIP TABLE
 		Table membershipTable = new Table(memberships, SWT.BORDER | SWT.FILL);
 		membershipTable.setLinesVisible(true);
 		membershipTable.setHeaderVisible(true);
 
 		TableColumn membershipColumn = new TableColumn(membershipTable, SWT.NONE| SWT.FILL);
 		membershipColumn.setText(Messages.defaultInformationGroupMembershipsTableTitle);
-
+		membershipColumn.setResizable(false);
+		
 		TableItem descriptionMembership = new TableItem(membershipTable, SWT.NONE);
 		descriptionMembership.setText(Messages.defaultInformationGroupMembershipsTableText);
 		addTableColumLayout(membershipTable);
-		membershipTable.getColumn(0).pack();
 	}
 
 	private void addTableColumLayout(Table table) {
 		TableColumnLayout tcLayout = new TableColumnLayout();
 		tcLayout.setColumnData(table.getColumn(0), new ColumnWeightData(1));
-//		table.setLayout(tcLayout);
+		table.getParent().setLayout(tcLayout);
 	}
 
 	protected String[] getGeneralDataItems() {
