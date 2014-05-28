@@ -4,3 +4,4 @@ bin
 screenshots
 .pmd
 *.hprof
+.settings/

@@ -264,6 +264,9 @@ public class Messages extends NLS {
 	public static String otherInformationGroupRemoveDialogText;
 	public static String customUserInfoDefinitionNoWhiteSpaceAtStartOrEnd;
 	public static String customUserInfoDefinitionNameTooLong;
+	public static String customUserInformationTabTitle;
+	public static String other;
+	public static String listOfUsersTabTitle;
 
 
 }

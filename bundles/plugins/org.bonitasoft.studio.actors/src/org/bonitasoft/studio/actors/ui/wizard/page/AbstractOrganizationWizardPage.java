@@ -23,8 +23,8 @@ import org.bonitasoft.studio.actors.model.organization.Membership;
 import org.bonitasoft.studio.actors.model.organization.Organization;
 import org.bonitasoft.studio.actors.model.organization.Role;
 import org.bonitasoft.studio.actors.model.organization.User;
-import org.bonitasoft.studio.common.jface.databinding.WizardPageSupportWithoutMessages;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
+import org.eclipse.jface.databinding.wizard.WizardPageSupport;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -46,7 +46,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.swt.widgets.Widget;
 
 /**
  * @author Romain Bioteau
@@ -63,7 +62,7 @@ public abstract class AbstractOrganizationWizardPage extends WizardPage implemen
     protected List<User> userList;
     protected List<Role> roleList;
     protected EMFDataBindingContext context;
-    protected WizardPageSupportWithoutMessages pageSupport;
+    protected WizardPageSupport pageSupport;
     protected TabFolder tabFolder;
     protected Composite mainComposite;
 
@@ -125,7 +124,7 @@ public abstract class AbstractOrganizationWizardPage extends WizardPage implemen
 
         configureInfoGroup(infoGroup) ;
 
-        pageSupport = WizardPageSupportWithoutMessages.create(this, context) ;
+        pageSupport = WizardPageSupport.create(this, context) ;
 		return mainComposite;
 	}
 

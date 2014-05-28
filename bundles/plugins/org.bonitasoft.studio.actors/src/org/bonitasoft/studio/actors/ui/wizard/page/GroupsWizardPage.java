@@ -43,6 +43,7 @@ import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.databinding.EObjectObservableValue;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.wizard.WizardPageSupport;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -231,7 +232,7 @@ public class GroupsWizardPage extends AbstractOrganizationWizardPage {
 			addSubGroupButton.setEnabled(false);
 			setControlEnabled(getInfoGroup(), false) ;
 		}
-		pageSupport = WizardPageSupportWithoutMessages.create(this, context) ;
+		pageSupport = WizardPageSupport.create(this, context) ;
 	}
 
 	protected void handleGroupParentPathChange(ValueChangeEvent event) {

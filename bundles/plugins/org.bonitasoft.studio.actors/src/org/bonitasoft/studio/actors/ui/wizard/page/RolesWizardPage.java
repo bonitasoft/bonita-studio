@@ -43,6 +43,7 @@ import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.databinding.EObjectObservableValue;
 import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.wizard.WizardPageSupport;
 import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -231,7 +232,7 @@ public class RolesWizardPage extends AbstractOrganizationWizardPage {
             roleNameText.setText("") ;
             setControlEnabled(getInfoGroup(), false) ;
         }
-        pageSupport = WizardPageSupportWithoutMessages.create(this, context) ;
+        pageSupport = WizardPageSupport.create(this, context) ;
     }
 
 

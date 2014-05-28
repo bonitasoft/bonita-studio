@@ -30,14 +30,13 @@ import org.bonitasoft.studio.actors.model.organization.CustomUserInfoDefinition;
 import org.bonitasoft.studio.actors.model.organization.CustomUserInfoDefinitions;
 import org.bonitasoft.studio.actors.model.organization.CustomUserInfoValue;
 import org.bonitasoft.studio.actors.model.organization.Membership;
-import org.bonitasoft.studio.actors.model.organization.MetaDatasType;
-import org.bonitasoft.studio.actors.model.organization.Metadata;
 import org.bonitasoft.studio.actors.model.organization.Organization;
 import org.bonitasoft.studio.actors.model.organization.OrganizationFactory;
 import org.bonitasoft.studio.actors.model.organization.OrganizationPackage;
 import org.bonitasoft.studio.actors.model.organization.PasswordType;
 import org.bonitasoft.studio.actors.model.organization.Role;
 import org.bonitasoft.studio.actors.model.organization.User;
+import org.bonitasoft.studio.actors.ui.editingsupport.CustomUserInformationDefinitionNameEditingSupport;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.databinding.WrappingValidator;
 import org.bonitasoft.studio.common.jface.TableColumnSorter;
@@ -64,16 +63,15 @@ import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.jface.databinding.fieldassist.ControlDecorationSupport;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
+import org.eclipse.jface.databinding.wizard.WizardPageSupport;
 import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.dialogs.IInputValidator;
-import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
-import org.eclipse.jface.viewers.CellEditor;
+import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
-import org.eclipse.jface.viewers.EditingSupport;
+import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -85,7 +83,6 @@ import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
@@ -448,7 +445,7 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 				}
 			}
 
-			pageSupport = WizardPageSupportWithoutMessages.create(this, context);
+			pageSupport = WizardPageSupport.create(this, context);
 		}else{
 			setControlEnabled(getInfoGroup(), false) ;
 		}
@@ -576,7 +573,7 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 		profesionnalTab.setText(Messages.professionalData) ;
 
 		otherTab = new TabItem(tab, SWT.NONE);
-		otherTab.setText("Other");
+		otherTab.setText(Messages.other);
 
 
 		getViewer().setSelection(new StructuredSelection()) ;
@@ -1003,14 +1000,14 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 
 
 		TabItem userTab = new TabItem(tabFolder, SWT.NONE);
-		userTab.setText("User");
+		userTab.setText(Messages.listOfUsersTabTitle);
 		userTab.setControl(mainComposite);
 
 
 		Composite compo = addInformationComposite();
 
 		infoTab = new TabItem(tabFolder, SWT.NONE);
-		infoTab.setText("Info");
+		infoTab.setText(Messages.customUserInformationTabTitle);
 		infoTab.setControl(compo);
 
 	}
@@ -1022,14 +1019,14 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 		infoCompo.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(10, 10).equalWidth(false).create()) ;
 
 		// Group Default Information
-		Group defaultGroup = new Group(infoCompo, SWT.BORDER | SWT.FILL);
+		Group defaultGroup = new Group(infoCompo,  SWT.FILL);
 		setDefaultUserInformationGroup(defaultGroup);
 
 
 
 
 		// Group Other informations
-		Group otherGroup = new Group(infoCompo, SWT.BORDER | SWT.FILL);
+		Group otherGroup = new Group(infoCompo,  SWT.FILL);
 		setOtherGroup(otherGroup);
 
 
@@ -1094,10 +1091,8 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 		
 		
 		// TABLE VIEWER Custom User Definitions
-		otherInfoTable = new TableViewer(otherGroup, SWT.H_SCROLL | 
-			      SWT.V_SCROLL | 
-			      SWT.FULL_SELECTION | 
-			      SWT.BORDER | SWT.MULTI);
+		otherInfoTable = new TableViewer(otherGroup, 	SWT.H_SCROLL 		| SWT.V_SCROLL	| 
+														SWT.FULL_SELECTION 	| SWT.BORDER 	| SWT.MULTI);
 		otherInfoTable.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 		otherInfoTable.getTable().setHeaderVisible(true);
 		otherInfoTable.setContentProvider(new ObservableListContentProvider()) ;
@@ -1106,7 +1101,7 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 		TableViewerColumn nameColumn = new TableViewerColumn(otherInfoTable, SWT.NONE);
 		nameColumn.getColumn().setText(Messages.customUserInfoName+" *") ;
 		nameColumn.getColumn().setWidth(100);
-		
+		nameColumn.setEditingSupport(new CustomUserInformationDefinitionNameEditingSupport(nameColumn.getViewer(), context));
 		nameColumn.setLabelProvider(new ColumnLabelProvider(){
 			@Override
 			public String getText(Object element) {
@@ -1129,7 +1124,7 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 	public void addCustomUserInfoDefinitionAction() {
 
 
-		List<String> existingCustomUserInfoNames = new ArrayList<String>();
+		Set<String> existingCustomUserInfoNames = new HashSet<String>();
 		if(organization.getCustomUserInfoDefinitions() == null){
 			organization.setCustomUserInfoDefinitions(OrganizationFactory.eINSTANCE.createCustomUserInfoDefinitions());
 		}
@@ -1176,8 +1171,12 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 		
 
 		// GENERAL DATA
-		Table generalDataTable = new Table(tables, SWT.BORDER );
-//		generalDataTable.setLayout(GridLayoutFactory.fillDefaults().create());
+		
+		Composite generalDataTableComposite =  new Composite(tables, SWT.NONE);
+		generalDataTableComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).create());
+		generalDataTableComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+		
+		Table generalDataTable = new Table(generalDataTableComposite, SWT.BORDER );
 		generalDataTable.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 		generalDataTable.setLinesVisible(true);
 		generalDataTable.setHeaderVisible(true);
@@ -1190,11 +1189,19 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 			TableItem item = new TableItem(generalDataTable, SWT.NONE| SWT.FILL);
 			item.setText(generalDataTitles[i]);
 		}
+		
+//		addTableColumLayout(generalDataTable);
+		
 		generalDataTable.getColumn (0).pack();
 
 
 		// BUSINESS CARD
-		Table businessCardTable = new Table(tables, SWT.BORDER );
+		
+		Composite businessCardTableComposite =  new Composite(tables, SWT.NONE);
+		businessCardTableComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).create());
+		businessCardTableComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+		
+		Table businessCardTable = new Table(businessCardTableComposite, SWT.BORDER );
 		businessCardTable.setLinesVisible(true);
 		businessCardTable.setHeaderVisible(true);
 
@@ -1206,11 +1213,17 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 			TableItem item = new TableItem(businessCardTable, SWT.NONE);
 			item.setText(businessCardTitles[i]);
 		}
+//		addTAbleColumLayout(businessCardTable);
 		businessCardTable.getColumn(0).pack();
 
 
 		// PERSONAL 
-		Table personnalTable = new Table(tables, SWT.BORDER );
+		
+		Composite personalTableComposite =  new Composite(tables, SWT.NONE);
+		personalTableComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).create());
+		personalTableComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+		
+		Table personnalTable = new Table(personalTableComposite, SWT.BORDER );
 		personnalTable.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 		personnalTable.setLinesVisible(true);
 		personnalTable.setHeaderVisible(true);
@@ -1223,6 +1236,7 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 			TableItem item = new TableItem(personnalTable, SWT.NONE);
 			item.setText(personalTitles[i]);
 		}
+//		addTableColumLayout(personnalTable);
 		personnalTable.getColumn(0).pack();
 
 
@@ -1241,7 +1255,14 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 
 		TableItem descriptionMembership = new TableItem(membershipTable, SWT.NONE);
 		descriptionMembership.setText(Messages.defaultInformationGroupMembershipsTableText);
+		addTableColumLayout(membershipTable);
 		membershipTable.getColumn(0).pack();
+	}
+
+	private void addTableColumLayout(Table table) {
+		TableColumnLayout tcLayout = new TableColumnLayout();
+		tcLayout.setColumnData(table.getColumn(0), new ColumnWeightData(1));
+//		table.setLayout(tcLayout);
 	}
 
 	protected String[] getGeneralDataItems() {
