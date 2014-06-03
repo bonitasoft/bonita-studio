@@ -16,7 +16,9 @@
  */
 package org.bonitasoft.studio.refactoring.core;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.form.Widget;
@@ -28,11 +30,11 @@ import org.eclipse.emf.edit.domain.EditingDomain;
  * @author Romain Bioteau
  * 
  */
-public class WidgetScriptExpressionRefactoringAction extends AbstractScriptExpressionRefactoringAction {
+public class WidgetScriptExpressionRefactoringAction extends AbstractScriptExpressionRefactoringAction<WidgetRefactorPair> {
 
-    public WidgetScriptExpressionRefactoringAction(EObject newValue, String oldName, String newName, List<Expression> groovyScriptExpressions,
+    public WidgetScriptExpressionRefactoringAction(List<WidgetRefactorPair> pairsToRefactor, List<Expression> groovyScriptExpressions,
             List<Expression> updatedGroovyScriptExpressions, CompoundCommand cc, EditingDomain domain, RefactoringOperationType operationKind) {
-        super(newValue, oldName, newName, groovyScriptExpressions, updatedGroovyScriptExpressions, cc, domain, operationKind);
+        super(pairsToRefactor, groovyScriptExpressions, updatedGroovyScriptExpressions, cc, domain, operationKind);
     }
 
     /*
@@ -41,15 +43,18 @@ public class WidgetScriptExpressionRefactoringAction extends AbstractScriptExpre
      * Expression)
      */
     @Override
-    protected EObject getReferencedObjectInScriptsOperation(Expression expr) {
-        for (EObject reference : expr.getReferencedElements()) {
-            if (reference instanceof Widget) {
-                if (("field_"+((Widget) reference).getName()).equals(getOldName())) {
-                    return reference;
-                }
-            }
-        }
-        return null;
+    protected Map<EObject, EObject> getReferencedObjectInScriptsOperation(Expression expr) {
+    	Map<EObject, EObject> res = new HashMap<EObject, EObject>();
+    	for (EObject reference : expr.getReferencedElements()) {
+    		for(WidgetRefactorPair pairToRefactor : pairsToRefactor){
+    			if (reference instanceof Widget) {
+    				if (("field_"+((Widget) reference).getName()).equals(pairToRefactor.getOldValueName())) {
+    					res.put(reference, pairToRefactor.getNewValue());
+    				}
+    			}
+    		}
+    	}
+        return res;
     }
 
 }

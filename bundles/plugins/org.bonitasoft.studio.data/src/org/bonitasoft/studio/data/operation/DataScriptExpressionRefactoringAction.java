@@ -1,9 +1,24 @@
 /**
+ * Copyright (C) 2014 Bonitasoft S.A.
+ * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2.0 of the License, or
+ * (at your option) any later version.
  * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.data.operation;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.process.Data;
@@ -17,11 +32,11 @@ import org.eclipse.emf.edit.domain.EditingDomain;
  * @author Romain Bioteau
  * 
  */
-public class DataScriptExpressionRefactoringAction extends AbstractScriptExpressionRefactoringAction {
+public class DataScriptExpressionRefactoringAction extends AbstractScriptExpressionRefactoringAction<DataRefactorPair> {
 
-    public DataScriptExpressionRefactoringAction(EObject newValue, String oldName, String newName, List<Expression> scriptExpressions,
+    public DataScriptExpressionRefactoringAction(List<DataRefactorPair> pairsToRefactor, List<Expression> scriptExpressions,
             List<Expression> updatedGroovyScriptExpressions, CompoundCommand cc, EditingDomain domain, RefactoringOperationType operationKind) {
-        super(newValue, oldName, newName, scriptExpressions, updatedGroovyScriptExpressions, cc, domain, operationKind);
+        super(pairsToRefactor, scriptExpressions, updatedGroovyScriptExpressions, cc, domain, operationKind);
     }
 
     /*
@@ -31,13 +46,16 @@ public class DataScriptExpressionRefactoringAction extends AbstractScriptExpress
      * expression.Expression)
      */
     @Override
-    protected EObject getReferencedObjectInScriptsOperation(Expression expr) {
-        for (EObject object : expr.getReferencedElements()) {
-            if (object instanceof Data && ((Data) object).getName().equals(getOldName())) {
-                return object;
-            }
-        }
-        return null;
+    protected Map<EObject, EObject> getReferencedObjectInScriptsOperation(Expression expr) {
+    	Map<EObject, EObject> res = new HashMap<EObject, EObject>();
+    	for (EObject object : expr.getReferencedElements()) {
+    		for(DataRefactorPair pairToRefactor : pairsToRefactor){
+    			if (object instanceof Data && ((Data) object).getName().equals(pairToRefactor.getOldValueName())) {
+    				res.put(object, pairToRefactor.getNewValue());
+    			}
+    		}
+    	}
+    	return res;
     }
 
 }

@@ -140,6 +140,8 @@ public class Messages extends NLS {
 
     public static String transientDataWarning;
 
+    public static String deleteOperatorLabel;
+
     private Messages() {
         // Do not instantiate
     }
