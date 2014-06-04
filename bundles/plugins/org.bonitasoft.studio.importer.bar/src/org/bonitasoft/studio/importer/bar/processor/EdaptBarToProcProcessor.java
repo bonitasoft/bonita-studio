@@ -17,7 +17,6 @@
 package org.bonitasoft.studio.importer.bar.processor;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -36,7 +35,6 @@ import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
-import java.util.zip.ZipInputStream;
 
 import org.bonitasoft.studio.common.ConfigurationIdProvider;
 import org.bonitasoft.studio.common.FileUtil;
@@ -215,19 +213,19 @@ public class EdaptBarToProcProcessor extends ToProcProcessor {
         final ZipFile zipfile = new ZipFile(archiveFile);
         Enumeration<?> enumEntries = zipfile.entries();
         ZipEntry zipEntry = null;
+        FileActionDialog.activateYesNoToAll();
         while (enumEntries.hasMoreElements()) {
             zipEntry = (ZipEntry) enumEntries.nextElement();
             File currentFile = new File(zipEntry.getName());
             if (!zipEntry.isDirectory() && (zipEntry.getName().startsWith(CONNECTORS) || zipEntry.getName().startsWith(LIBS))
                     && zipEntry.getName().endsWith(".jar")) {
-                FileActionDialog.activateYesNoToAll();
                 try {
                     proceedCustomConnector(currentFile.getName(), zipfile.getInputStream(zipEntry), archiveFile);
                 } finally {
-                    FileActionDialog.deactivateYesNoToAll();
                 }
             }
         }
+        FileActionDialog.deactivateYesNoToAll();
         zipfile.close();
     }
 
@@ -249,24 +247,26 @@ public class EdaptBarToProcProcessor extends ToProcProcessor {
 
         BonitaStudioLog.debug("Searching for custom connector in " + tmpConnectorJarFile.getName() + "...", BarImporterPlugin.PLUGIN_ID);
 
-        String connectorClassname = BarReaderUtil.findCustomConnectorClassName(tmpConnectorJarFile);
-        if (connectorClassname != null) {
-            BonitaStudioLog
-                    .debug("Custom connector " + connectorClassname + " has been found in " + tmpConnectorJarFile.getName(), BarImporterPlugin.PLUGIN_ID);
-            connectorsJars.add(tmpConnectorJarFile.getName());
-            Class<? extends Connector> instanceClass = (Class<? extends Connector>) customURLClassLoader.loadClass(connectorClassname);
-            try {
-                final ConnectorDescription descriptor = new ConnectorDescription(instanceClass, Locale.ENGLISH);
-                final ConnectorDescriptorToConnectorDefinition cdtocd = new ConnectorDescriptorToConnectorDefinition(descriptor, tmpConnectorJarFile);
-                cdtocd.importConnectorDefinitionResources();
-                cdtocd.createConnectorDefinition();
-                cdtocd.createConnectorImplementation();
-                additionalChanges.add(cdtocd.createReportChange());
-            } catch (NoClassDefFoundError e) {
-                additionalChanges.add(createImportFailureReport(connectorClassname, e));
-            }
+        List<String> connectorClassnames = BarReaderUtil.findCustomConnectorClassName(tmpConnectorJarFile);
+        if(connectorClassnames.isEmpty()){
+        	BonitaStudioLog.debug("No custom connector found in:" + tmpConnectorJarFile.getName(), BarImporterPlugin.PLUGIN_ID);
         } else {
-            BonitaStudioLog.debug("No custom connector found in:" + tmpConnectorJarFile.getName(), BarImporterPlugin.PLUGIN_ID);
+        	for(String connectorClassname : connectorClassnames){
+        		BonitaStudioLog
+        		.debug("Custom connector " + connectorClassname + " has been found in " + tmpConnectorJarFile.getName(), BarImporterPlugin.PLUGIN_ID);
+        		connectorsJars.add(tmpConnectorJarFile.getName());
+        		Class<? extends Connector> instanceClass = (Class<? extends Connector>) customURLClassLoader.loadClass(connectorClassname);
+        		try {
+        			final ConnectorDescription descriptor = new ConnectorDescription(instanceClass, Locale.ENGLISH);
+        			final ConnectorDescriptorToConnectorDefinition cdtocd = new ConnectorDescriptorToConnectorDefinition(descriptor, tmpConnectorJarFile);
+        			cdtocd.importConnectorDefinitionResources();
+        			cdtocd.createConnectorDefinition();
+        			cdtocd.createConnectorImplementation();
+        			additionalChanges.add(cdtocd.createReportChange());
+        		} catch (NoClassDefFoundError e) {
+        			additionalChanges.add(createImportFailureReport(connectorClassname, e));
+        		}
+        	}
         }
         if (!toDelete.isEmpty()) {
             for (File f : toDelete) {
@@ -314,6 +314,8 @@ public class EdaptBarToProcProcessor extends ToProcProcessor {
             }
         }
         zipfile.close();
+        
+        //TODO: also add bonita and all its dependencies, but they should already be there with getClass().getClassLoader()?
 
         final URLClassLoader customURLClassLoader = new URLClassLoader(urls.toArray(new URL[urls.size()]), getClass().getClassLoader());
         return customURLClassLoader;
