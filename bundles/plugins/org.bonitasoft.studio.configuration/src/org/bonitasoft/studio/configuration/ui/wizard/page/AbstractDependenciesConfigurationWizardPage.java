@@ -5,14 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.configuration.ui.wizard.page;
 
@@ -43,6 +41,7 @@ import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
@@ -81,15 +80,15 @@ import org.eclipse.ui.views.properties.tabbed.ITabDescriptor;
 
 /**
  * @author Romain Bioteau
- *
  */
-public abstract class AbstractDependenciesConfigurationWizardPage extends WizardPage implements IProcessConfigurationWizardPage, ICheckStateListener, ICheckStateProvider {
+public abstract class AbstractDependenciesConfigurationWizardPage extends WizardPage implements IProcessConfigurationWizardPage, ICheckStateListener,
+        ICheckStateProvider {
 
     /**
      * Label provider for the ListViewer.
      */
     class TabbedPropertySheetPageLabelProvider
-    extends LabelProvider {
+            extends LabelProvider {
 
         @Override
         public String getText(Object element) {
@@ -99,7 +98,6 @@ public abstract class AbstractDependenciesConfigurationWizardPage extends Wizard
             return null;
         }
     }
-
 
     private CheckboxTreeViewer treeViewer;
     private Configuration configuration;
@@ -111,301 +109,303 @@ public abstract class AbstractDependenciesConfigurationWizardPage extends Wizard
         super(pageId);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
      */
     @Override
     public void createControl(Composite parent) {
         final Composite tabComposite = new Composite(parent, SWT.NONE);
-        tabComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create()) ;
-        tabComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).create()) ;
+        tabComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        tabComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).create());
 
-        final Label descriptionLabel = new Label(tabComposite,SWT.WRAP);
+        final Label descriptionLabel = new Label(tabComposite, SWT.WRAP);
         descriptionLabel.setText(getDescription());
         descriptionLabel.setLayoutData(GridDataFactory.swtDefaults().grab(true, false).create());
 
-        final TabFolder tabFolder = new TabFolder(tabComposite,SWT.TOP) ;
-        tabFolder.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create()) ;
+        final TabFolder tabFolder = new TabFolder(tabComposite, SWT.TOP);
+        tabFolder.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         tabFolder.addSelectionListener(new SelectionAdapter() {
+
             @Override
             public void widgetSelected(SelectionEvent e) {
-                if(treeViewer != null){
-                    treeViewer.refresh() ;
+                if (treeViewer != null) {
+                    treeViewer.refresh();
                 }
-                if(rawViewer != null){
-                    rawViewer.refresh() ;
+                if (rawViewer != null) {
+                    rawViewer.refresh();
                 }
             }
-        }) ;
+        });
 
-        TabItem treeClasspathItem = new TabItem(tabFolder, SWT.NONE) ;
-        treeClasspathItem.setText(Messages.hiearachical) ;
-        treeClasspathItem.setControl(createTreeClasspathControl(tabFolder)) ;
+        TabItem treeClasspathItem = new TabItem(tabFolder, SWT.NONE);
+        treeClasspathItem.setText(Messages.hiearachical);
+        treeClasspathItem.setControl(createTreeClasspathControl(tabFolder));
 
-        TabItem rawClasspathItem = new TabItem(tabFolder, SWT.NONE) ;
-        rawClasspathItem.setText(Messages.raw) ;
-        rawClasspathItem.setControl(createRawClasspathControl(tabFolder)) ;
+        TabItem rawClasspathItem = new TabItem(tabFolder, SWT.NONE);
+        rawClasspathItem.setText(Messages.raw);
+        rawClasspathItem.setControl(createRawClasspathControl(tabFolder));
 
-        setControl(tabComposite) ;
+        setControl(tabComposite);
     }
 
     protected Control createRawClasspathControl(TabFolder parent) {
 
         final Composite mainComposite = new Composite(parent, SWT.NONE);
-        mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create()) ;
-        mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).extendedMargins(10, 10, 10, 10).create()) ;
+        mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).extendedMargins(10, 10, 10, 10).create());
 
-        final Label rawViewDesc = new Label(mainComposite, SWT.WRAP) ;
-        rawViewDesc.setText(Messages.rawViewDesc) ;
-        rawViewDesc.setLayoutData(GridDataFactory.fillDefaults().create()) ;
+        final Label rawViewDesc = new Label(mainComposite, SWT.WRAP);
+        rawViewDesc.setText(Messages.rawViewDesc);
+        rawViewDesc.setLayoutData(GridDataFactory.fillDefaults().create());
 
-        final Text searchBox = new Text(mainComposite, SWT.SEARCH | SWT.CANCEL | SWT.ICON_SEARCH | SWT.ICON_CANCEL) ;
-        searchBox.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
+        final Text searchBox = new Text(mainComposite, SWT.SEARCH | SWT.CANCEL | SWT.ICON_SEARCH | SWT.ICON_CANCEL);
+        searchBox.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
-        rawViewer = new TableViewer(mainComposite, SWT.BORDER | SWT.FULL_SELECTION) ;
-        rawViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create()) ;
-        rawViewer.getTable().setHeaderVisible(true) ;
-        rawViewer.getTable().setLinesVisible(true) ;
-        TableLayout tableLayout = new TableLayout() ;
-        tableLayout.addColumnData(new ColumnWeightData(60)) ;
-        tableLayout.addColumnData(new ColumnWeightData(40)) ;
-        rawViewer.getTable().setLayout(tableLayout) ;
+        rawViewer = new TableViewer(mainComposite, SWT.BORDER | SWT.FULL_SELECTION);
+        rawViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        rawViewer.getTable().setHeaderVisible(true);
+        rawViewer.getTable().setLinesVisible(true);
+        TableLayout tableLayout = new TableLayout();
+        tableLayout.addColumnData(new ColumnWeightData(3));
+        tableLayout.addColumnData(new ColumnWeightData(2));
+        rawViewer.getTable().setLayout(tableLayout);
         rawViewer.addFilter(new ViewerFilter() {
 
             @Override
             public boolean select(Viewer viewer, Object parentElement, Object element) {
-                String searchQuery = searchBox.getText() ;
-                if(searchQuery == null || searchQuery.isEmpty()
-                        || (((Fragment)element).getValue() != null && ((Fragment)element).getValue().toLowerCase().contains(searchQuery.toLowerCase()))){
-                    return true ;
+                String searchQuery = searchBox.getText();
+                if (searchQuery == null || searchQuery.isEmpty()
+                        || (((Fragment) element).getValue() != null && ((Fragment) element).getValue().toLowerCase().contains(searchQuery.toLowerCase()))) {
+                    return true;
                 }
-                return false ;
+                return false;
             }
-        }) ;
+        });
         searchBox.addModifyListener(new ModifyListener() {
 
             @Override
             public void modifyText(ModifyEvent e) {
-                rawViewer.refresh() ;
+                rawViewer.refresh();
             }
-        }) ;
+        });
 
+        TableViewerColumn jarColumn = new TableViewerColumn(rawViewer, SWT.NONE);
+        jarColumn.getColumn().setText(Messages.jarName);
+        jarColumn.setLabelProvider(new ColumnLabelProvider() {
 
-
-        TableViewerColumn jarColumn = new TableViewerColumn(rawViewer,SWT.NONE) ;
-        jarColumn.getColumn().setText(Messages.jarName) ;
-        jarColumn.setLabelProvider(new ColumnLabelProvider(){
             @Override
             public String getText(Object element) {
-                return ((Fragment)element).getValue();
+                return ((Fragment) element).getValue();
             }
 
             @Override
             public Image getImage(Object element) {
-                return Pics.getImage("jar.gif",ConfigurationPlugin.getDefault());
+                return Pics.getImage("jar.gif", ConfigurationPlugin.getDefault());
             }
-        }) ;
+        });
 
-        new TableColumnSorter(rawViewer).setColumn(jarColumn.getColumn()) ;
+        new TableColumnSorter(rawViewer).setColumn(jarColumn.getColumn());
 
-        TableViewerColumn dependencyColumn = new TableViewerColumn(rawViewer,SWT.NONE) ;
-        dependencyColumn.getColumn().setText(Messages.inculdedBy) ;
-        dependencyColumn.setLabelProvider(new ColumnLabelProvider(){
+        TableViewerColumn dependencyColumn = new TableViewerColumn(rawViewer, SWT.NONE);
+        dependencyColumn.getColumn().setText(Messages.inculdedBy);
+        dependencyColumn.setLabelProvider(new ColumnLabelProvider() {
 
-            private final FragmentTypeLabelProvider fragmentTypeLabelProvider = new FragmentTypeLabelProvider() ;
+            private final FragmentTypeLabelProvider fragmentTypeLabelProvider = new FragmentTypeLabelProvider();
 
             @Override
             public String getText(Object element) {
-                String value = ((Fragment) element).getValue() ;
-                List<FragmentContainer> fragmentContainers = (List<FragmentContainer>) getViewerInput(configuration) ;
-                List<Fragment> fragment =  new ArrayList<Fragment>() ;
-                for(FragmentContainer fc : fragmentContainers){
-                    fragment.addAll((Collection<? extends Fragment>) ModelHelper.getAllItemsOfType(fc, ConfigurationPackage.Literals.FRAGMENT)) ;
+                String value = ((Fragment) element).getValue();
+                List<FragmentContainer> fragmentContainers = (List<FragmentContainer>) getViewerInput(configuration);
+                List<Fragment> fragment = new ArrayList<Fragment>();
+                for (FragmentContainer fc : fragmentContainers) {
+                    fragment.addAll((Collection<? extends Fragment>) ModelHelper.getAllItemsOfType(fc, ConfigurationPackage.Literals.FRAGMENT));
                 }
-                Set<FragmentContainer> containers = new HashSet<FragmentContainer>() ;
-                for(Fragment f : fragment){
-                    if(f.getValue().equals(value)){
-                        FragmentContainer container = (FragmentContainer) ((EObject) f).eContainer() ;
-                        containers.add(container) ;
+                Set<FragmentContainer> containers = new HashSet<FragmentContainer>();
+                for (Fragment f : fragment) {
+                    if (f.getValue().equals(value)) {
+                        FragmentContainer container = (FragmentContainer) ((EObject) f).eContainer();
+                        containers.add(container);
                     }
                 }
 
-                StringBuilder sb = new StringBuilder() ;
-                for(FragmentContainer dep: containers){
-                    sb.append(fragmentTypeLabelProvider.getText(dep)) ;
-                    sb.append(", ") ;
+                StringBuilder sb = new StringBuilder();
+                for (FragmentContainer dep : containers) {
+                    sb.append(fragmentTypeLabelProvider.getText(dep));
+                    sb.append(", ");
                 }
-                sb.delete(sb.length() - 2, sb.length()) ;
-                return sb.toString() ;
+                sb.delete(sb.length() - 2, sb.length());
+                return sb.toString();
             }
-        }) ;
+        });
 
-        return mainComposite ;
+        return mainComposite;
     }
 
     protected Control createTreeClasspathControl(TabFolder parent) {
 
         final Composite mainComposite = new Composite(parent, SWT.NONE);
-        mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create()) ;
-        mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).extendedMargins(10, 10, 10, 10).create()) ;
+        mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).extendedMargins(10, 10, 10, 10).create());
 
-        final Label hierarchicalViewDesc = new Label(mainComposite, SWT.WRAP) ;
-        hierarchicalViewDesc.setText(Messages.hiearachicalViewDesc) ;
-        hierarchicalViewDesc.setLayoutData(GridDataFactory.fillDefaults().span(2, 1).create()) ;
+        final Label hierarchicalViewDesc = new Label(mainComposite, SWT.WRAP);
+        hierarchicalViewDesc.setText(Messages.hiearachicalViewDesc);
+        hierarchicalViewDesc.setLayoutData(GridDataFactory.fillDefaults().span(2, 1).create());
 
-        treeViewer = new CheckboxTreeViewer(mainComposite, SWT.BORDER | SWT.FULL_SELECTION) ;
-        treeViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create()) ;
-        ILabelDecorator missingDependenciesDecorator = new MissingDependenciesDecorator(getDependencyRepositoryStore()) ;
-        treeViewer.getTree().setLinesVisible(true) ;
-        treeViewer.setLabelProvider(new DecoratingLabelProvider(new DependenciesTreeLabelProvider(),missingDependenciesDecorator)) ;
-        treeViewer.setCheckStateProvider(this) ;
-        treeViewer.addCheckStateListener(this) ;
+        treeViewer = new CheckboxTreeViewer(mainComposite, SWT.BORDER | SWT.FULL_SELECTION);
+        treeViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        ILabelDecorator missingDependenciesDecorator = new MissingDependenciesDecorator(getDependencyRepositoryStore());
+        treeViewer.getTree().setLinesVisible(true);
+        treeViewer.setLabelProvider(new DecoratingLabelProvider(new DependenciesTreeLabelProvider(), missingDependenciesDecorator));
+        treeViewer.setCheckStateProvider(this);
+        treeViewer.addCheckStateListener(this);
         treeViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 
             @Override
             public void selectionChanged(SelectionChangedEvent arg0) {
-                updateButtons() ;
+                updateButtons();
             }
-        }) ;
+        });
 
-        final Composite buttonComposite = new Composite(mainComposite, SWT.NONE) ;
-        buttonComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false,true).create()) ;
-        buttonComposite.setLayout(GridLayoutFactory.fillDefaults().margins(0,0).spacing(0,3).create()) ;
+        final Composite buttonComposite = new Composite(mainComposite, SWT.NONE);
+        buttonComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).create());
+        buttonComposite.setLayout(GridLayoutFactory.fillDefaults().margins(0, 0).spacing(0, 3).create());
 
-        addJarButton = new Button(buttonComposite, SWT.FLAT) ;
-        addJarButton.setLayoutData(GridDataFactory.fillDefaults().hint(85, SWT.DEFAULT).create()) ;
-        addJarButton.setText(Messages.add) ;
+        addJarButton = new Button(buttonComposite, SWT.FLAT);
+        addJarButton.setLayoutData(GridDataFactory.fillDefaults().hint(IDialogConstants.BUTTON_WIDTH, SWT.DEFAULT).create());
+        addJarButton.setText(Messages.add);
         addJarButton.addSelectionListener(new SelectionAdapter() {
+
             @Override
             public void widgetSelected(SelectionEvent e) {
-                final SelectJarsDialog dialog = new SelectJarsDialog(Display.getDefault().getActiveShell()) ;
-                if(dialog.open() == Dialog.OK){
-                    Object selection = ((IStructuredSelection) treeViewer.getSelection()).getFirstElement() ;
-                    FragmentContainer fc = null ;
-                    if(selection instanceof FragmentContainer){
-                        fc = (FragmentContainer) selection ;
-                    }else if(selection instanceof Fragment){
-                        fc = (FragmentContainer) ((Fragment) selection).eContainer() ;
+                final SelectJarsDialog dialog = new SelectJarsDialog(Display.getDefault().getActiveShell());
+                if (dialog.open() == Dialog.OK) {
+                    Object selection = ((IStructuredSelection) treeViewer.getSelection()).getFirstElement();
+                    FragmentContainer fc = null;
+                    if (selection instanceof FragmentContainer) {
+                        fc = (FragmentContainer) selection;
+                    } else if (selection instanceof Fragment) {
+                        fc = (FragmentContainer) ((Fragment) selection).eContainer();
                     }
-                    for(IRepositoryFileStore file : dialog.getSelectedJars()){
-                        String jarName = file.getName() ;
-                        boolean exists = false ;
-                        for(Fragment f : fc.getFragments()){
-                            if(f.getValue().equals(jarName)){
-                                exists = true ;
-                                break ;
+                    for (IRepositoryFileStore file : dialog.getSelectedJars()) {
+                        String jarName = file.getName();
+                        boolean exists = false;
+                        for (Fragment f : fc.getFragments()) {
+                            if (f.getValue().equals(jarName)) {
+                                exists = true;
+                                break;
                             }
                         }
-                        if(!exists){
-                            Fragment f = ConfigurationFactory.eINSTANCE.createFragment() ;
-                            f.setExported(true) ;
-                            f.setValue(jarName) ;
-                            f.setType(FragmentTypes.JAR) ;
-                            f.setKey(jarName) ;
-                            fc.getFragments().add(f) ;
+                        if (!exists) {
+                            Fragment f = ConfigurationFactory.eINSTANCE.createFragment();
+                            f.setExported(true);
+                            f.setValue(jarName);
+                            f.setType(FragmentTypes.JAR);
+                            f.setKey(jarName);
+                            fc.getFragments().add(f);
                         }
                     }
-                    treeViewer.refresh() ;
+                    treeViewer.refresh();
                 }
             }
-        }) ;
+        });
 
-        removeJarButton = new Button(buttonComposite, SWT.FLAT) ;
-        removeJarButton.setLayoutData(GridDataFactory.fillDefaults().hint(85, SWT.DEFAULT).create()) ;
-        removeJarButton.setText(Messages.remove) ;
+        removeJarButton = new Button(buttonComposite, SWT.FLAT);
+        removeJarButton.setLayoutData(GridDataFactory.fillDefaults().hint(IDialogConstants.BUTTON_WIDTH, SWT.DEFAULT).create());
+        removeJarButton.setText(Messages.remove);
         removeJarButton.addSelectionListener(new SelectionAdapter() {
+
             @Override
             public void widgetSelected(SelectionEvent e) {
-                Fragment selection = (Fragment) ((IStructuredSelection) treeViewer.getSelection()).getFirstElement() ;
-                FragmentContainer fc =  (FragmentContainer) selection.eContainer() ;
-                fc.getFragments().remove(selection) ;
-                treeViewer.refresh() ;
+                Fragment selection = (Fragment) ((IStructuredSelection) treeViewer.getSelection()).getFirstElement();
+                FragmentContainer fc = (FragmentContainer) selection.eContainer();
+                fc.getFragments().remove(selection);
+                treeViewer.refresh();
             }
-        }) ;
+        });
 
-        return mainComposite ;
+        return mainComposite;
     }
 
     protected DependencyRepositoryStore getDependencyRepositoryStore() {
-		return (DependencyRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DependencyRepositoryStore.class);
-	}
+        return (DependencyRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DependencyRepositoryStore.class);
+    }
 
-	/* (non-Javadoc)
-     * @see org.bonitasoft.studio.configuration.extension.IProcessConfigurationWizardPage#updatePage(org.bonitasoft.studio.model.process.AbstractProcess, org.bonitasoft.studio.model.configuration.Configuration)
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.configuration.extension.IProcessConfigurationWizardPage#updatePage(org.bonitasoft.studio.model.process.AbstractProcess,
+     * org.bonitasoft.studio.model.configuration.Configuration)
      */
     @Override
     public void updatePage(AbstractProcess process, Configuration configuration) {
-        if(process != null && configuration != null && treeViewer != null && !treeViewer.getTree().isDisposed()){
-            this.configuration = configuration ;
-            treeViewer.setContentProvider(new TreeDependenciesContentProvider()) ;
-            treeViewer.setInput(getViewerInput(configuration)) ;
-            treeViewer.expandAll() ;
+        if (process != null && configuration != null && treeViewer != null && !treeViewer.getTree().isDisposed()) {
+            this.configuration = configuration;
+            treeViewer.setContentProvider(new TreeDependenciesContentProvider());
+            treeViewer.setInput(getViewerInput(configuration));
+            treeViewer.expandAll();
 
-            rawViewer.setContentProvider(new RawDependenciesContentProvider()) ;
-            rawViewer.setInput(getViewerInput(configuration)) ;
+            rawViewer.setContentProvider(new RawDependenciesContentProvider());
+            rawViewer.setInput(getViewerInput(configuration));
 
-            addJarButton.setEnabled(false) ;
-            removeJarButton.setEnabled(false) ;
+            addJarButton.setEnabled(false);
+            removeJarButton.setEnabled(false);
         }
     }
 
-
-    protected abstract Object getViewerInput(Configuration configuration) ;
-
+    protected abstract Object getViewerInput(Configuration configuration);
 
     @Override
     public void checkStateChanged(CheckStateChangedEvent event) {
-        Object element = event.getElement() ;
-        if(element instanceof Fragment){
-            ((Fragment) element).setExported(event.getChecked()) ;
+        Object element = event.getElement();
+        if (element instanceof Fragment) {
+            ((Fragment) element).setExported(event.getChecked());
         }
-        if(element instanceof FragmentContainer){
-            updateChildrenState((FragmentContainer) element,event.getChecked()) ;
+        if (element instanceof FragmentContainer) {
+            updateChildrenState((FragmentContainer) element, event.getChecked());
         }
-        updateParentSate(element) ;
+        updateParentSate(element);
 
-        getContainer().updateMessage() ;
+        getContainer().updateMessage();
     }
 
-
     private void updateChildrenState(FragmentContainer element, boolean isChecked) {
-        treeViewer.setGrayChecked(element,false);
-        treeViewer.setChecked(element, isChecked) ;
-        applyOnChildren(element, isChecked) ;
+        treeViewer.setGrayChecked(element, false);
+        treeViewer.setChecked(element, isChecked);
+        applyOnChildren(element, isChecked);
     }
 
     private void updateParentSate(Object element) {
-        FragmentContainer parent = null ;
-        if(element instanceof FragmentContainer){
-            parent = ((FragmentContainer) element).getParent() ;
-        }else if(element instanceof Fragment){
-            parent = (FragmentContainer) ((Fragment) element).eContainer() ;
+        FragmentContainer parent = null;
+        if (element instanceof FragmentContainer) {
+            parent = ((FragmentContainer) element).getParent();
+        } else if (element instanceof Fragment) {
+            parent = (FragmentContainer) ((Fragment) element).eContainer();
         }
 
-        if( parent != null ){
-            boolean isChecked = isChecked(parent) ;
-            if(isChecked){
-                treeViewer.setGrayChecked(parent,false);
-                treeViewer.setChecked(parent,isChecked);
-            }else{
+        if (parent != null) {
+            boolean isChecked = isChecked(parent);
+            if (isChecked) {
+                treeViewer.setGrayChecked(parent, false);
+                treeViewer.setChecked(parent, isChecked);
+            } else {
                 treeViewer.setGrayChecked(parent, isGrayed(parent));
             }
-            updateParentSate(parent) ;
+            updateParentSate(parent);
         }
     }
 
     protected void applyOnChildren(FragmentContainer element, boolean checked) {
-        Set<Object> result = new HashSet<Object>() ;
-        getAllChildren(element, result) ;
-        Object[] children = result.toArray() ;
-        if(children.length == 0){
-            treeViewer.setChecked(element, false) ;
-        }else{
-            for(Object child :  children){
-                if(child instanceof Fragment){
-                    ((Fragment) child).setExported(checked) ;
+        Set<Object> result = new HashSet<Object>();
+        getAllChildren(element, result);
+        Object[] children = result.toArray();
+        if (children.length == 0) {
+            treeViewer.setChecked(element, false);
+        } else {
+            for (Object child : children) {
+                if (child instanceof Fragment) {
+                    ((Fragment) child).setExported(checked);
                 }
-                treeViewer.setChecked(child, checked) ;
+                treeViewer.setChecked(child, checked);
             }
         }
 
@@ -413,88 +413,86 @@ public abstract class AbstractDependenciesConfigurationWizardPage extends Wizard
 
     @Override
     public boolean isChecked(Object element) {
-        if(element instanceof Fragment){
-            return ((Fragment) element).isExported() ;
-        }else if(element instanceof FragmentContainer){
-            Set<Object> result = new HashSet<Object>() ;
-            getAllChildren((FragmentContainer) element, result) ;
-            for(Object child : result){
-                if(!isChecked(child)){
+        if (element instanceof Fragment) {
+            return ((Fragment) element).isExported();
+        } else if (element instanceof FragmentContainer) {
+            Set<Object> result = new HashSet<Object>();
+            getAllChildren((FragmentContainer) element, result);
+            for (Object child : result) {
+                if (!isChecked(child)) {
                     return false;
                 }
             }
 
-            return !result.isEmpty() ;
+            return !result.isEmpty();
         }
 
-        return false ;
+        return false;
     }
 
     @Override
     public boolean isGrayed(Object element) {
-        if(element instanceof Fragment){
-            return false ;
-        }else if(element instanceof FragmentContainer){
-            Set<Object> result = new HashSet<Object>() ;
-            getAllChildren((FragmentContainer) element,result) ;
-            Object[] children = result.toArray() ;
-            boolean isGrayed = false ;
-            boolean isSelected = false ;
-            if(children.length == 0){
-                return false ;
+        if (element instanceof Fragment) {
+            return false;
+        } else if (element instanceof FragmentContainer) {
+            Set<Object> result = new HashSet<Object>();
+            getAllChildren((FragmentContainer) element, result);
+            Object[] children = result.toArray();
+            boolean isGrayed = false;
+            boolean isSelected = false;
+            if (children.length == 0) {
+                return false;
             }
-            isGrayed =  isChecked(children[0]) ;
-            for(Object child :  children){
-                isSelected = isChecked(child) ;
-                if(isSelected != isGrayed){
-                    treeViewer.setGrayChecked(element, true) ;
-                    return true ;
+            isGrayed = isChecked(children[0]);
+            for (Object child : children) {
+                isSelected = isChecked(child);
+                if (isSelected != isGrayed) {
+                    treeViewer.setGrayChecked(element, true);
+                    return true;
                 }
             }
             return false;
         }
-        return false ;
+        return false;
     }
-
 
     private void getAllChildren(FragmentContainer element, Set<Object> result) {
-        for(Fragment f : element.getFragments()){
-            result.add(f) ;
+        for (Fragment f : element.getFragments()) {
+            result.add(f);
         }
-        for(FragmentContainer fc : element.getChildren()){
-            result.add(fc) ;
-            getAllChildren(fc, result) ;
+        for (FragmentContainer fc : element.getChildren()) {
+            result.add(fc);
+            getAllChildren(fc, result);
         }
     }
 
-
-    protected void updateButtons(){
-        Object selection = ((IStructuredSelection) treeViewer.getSelection()).getFirstElement() ;
-        if(addJarButton != null && !addJarButton.isDisposed()){
-            if(selection instanceof Fragment){
-                FragmentContainer fc = (FragmentContainer) ((Fragment) selection).eContainer() ;
-                addJarButton.setEnabled(fc.getId().equals(FragmentTypes.OTHER)) ;
-            }else if(selection instanceof FragmentContainer){
-                addJarButton.setEnabled(((FragmentContainer) selection).getId().equals(FragmentTypes.OTHER)) ;
-            }else{
-                addJarButton.setEnabled(false) ;
+    protected void updateButtons() {
+        Object selection = ((IStructuredSelection) treeViewer.getSelection()).getFirstElement();
+        if (addJarButton != null && !addJarButton.isDisposed()) {
+            if (selection instanceof Fragment) {
+                FragmentContainer fc = (FragmentContainer) ((Fragment) selection).eContainer();
+                addJarButton.setEnabled(fc.getId().equals(FragmentTypes.OTHER));
+            } else if (selection instanceof FragmentContainer) {
+                addJarButton.setEnabled(((FragmentContainer) selection).getId().equals(FragmentTypes.OTHER));
+            } else {
+                addJarButton.setEnabled(false);
             }
         }
 
-        if(removeJarButton != null && !removeJarButton.isDisposed()){
-            if(selection instanceof Fragment){
-                FragmentContainer fc = (FragmentContainer) ((Fragment) selection).eContainer() ;
-                removeJarButton.setEnabled(fc.getId().equals(FragmentTypes.OTHER)) ;
-            }else{
-                removeJarButton.setEnabled(false) ;
+        if (removeJarButton != null && !removeJarButton.isDisposed()) {
+            if (selection instanceof Fragment) {
+                FragmentContainer fc = (FragmentContainer) ((Fragment) selection).eContainer();
+                removeJarButton.setEnabled(fc.getId().equals(FragmentTypes.OTHER));
+            } else {
+                removeJarButton.setEnabled(false);
             }
         }
 
     }
 
     protected EStructuralFeature getContainingFeature(EObject f) {
-        if(f.eContainer() != null){
-            if(f.eContainer().eContainer() != null){
+        if (f.eContainer() != null) {
+            if (f.eContainer().eContainer() != null) {
                 return ((Fragment) f).eContainer().eContainer().eContainingFeature();
             }
         }
