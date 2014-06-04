@@ -24,6 +24,7 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -501,22 +502,35 @@ public class ConnectorDescriptorToConnectorDefinition {
 
     protected void addOutputs(final ConnectorDefinition connectorDefinition) {
         for(Getter getter : v5Descriptor.getOutputs()){
-            String name = getter.getName();
-            if(name.startsWith("get")){
-                name = name.substring(3);
-            }
-            name = name.substring(0, 1).toLowerCase() +name.substring(1);
+            String name = retrieveOutputName(getter);
             final Output connectorOutput = ConnectorDefinitionFactory.eINSTANCE.createOutput();
             connectorOutput.setName(name);
             final Type outputType = v5Descriptor.getOutputType(getter.getName());
-            if( outputType instanceof Class){
+            if(outputType instanceof Class){
                 connectorOutput.setType(((Class<?>)outputType).getName());
                 connectorDefinition.getOutput().add(connectorOutput);
-            }else{
+            }else if(outputType instanceof ParameterizedType){
+            	final Type rawType = ((ParameterizedType) outputType).getRawType();
+            	if(rawType instanceof Class){
+            		connectorOutput.setType(((Class<?>) rawType).getName());
+            		connectorDefinition.getOutput().add(connectorOutput);
+            	} else {
+            		BonitaStudioLog.warning("Unknown connector output type "+outputType.toString()+ " with Raw type:"+rawType.toString(), BarImporterPlugin.PLUGIN_ID);
+            	}
+            } else {
                 BonitaStudioLog.warning("Unknown connector output type "+outputType.toString(), BarImporterPlugin.PLUGIN_ID);
             }
         }
     }
+
+	private String retrieveOutputName(Getter getter) {
+		String name = getter.getName();
+		if(name.startsWith("get")){
+		    name = name.substring(3);
+		}
+		name = name.substring(0, 1).toLowerCase() +name.substring(1);
+		return name;
+	}
 
     private String getInputType(Object[] parameters) {
         if(parameters != null && parameters.length == 1){

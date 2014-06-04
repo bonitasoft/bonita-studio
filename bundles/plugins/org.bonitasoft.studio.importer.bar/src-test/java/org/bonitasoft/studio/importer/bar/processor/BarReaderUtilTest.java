@@ -16,8 +16,15 @@
  */
 package org.bonitasoft.studio.importer.bar.processor;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.List;
 import java.util.zip.ZipException;
 
 import org.junit.Test;
@@ -33,5 +40,28 @@ public class BarReaderUtilTest {
 		final File emptyFile = File.createTempFile("testEmptyFile", "");
 		BarReaderUtil.findCustomConnectorClassName(emptyFile);
 		emptyFile.delete();
+	}
+	
+	@Test
+	public void findSeveralConnectorClassName() throws IOException {
+		final File zipFile = getZipFileToTest();
+	
+		List<String> foundCustomConnectorClassName = BarReaderUtil.findCustomConnectorClassName(zipFile);
+		assertThat(foundCustomConnectorClassName).containsExactly("name1", "name2");
+	}
+
+	private File getZipFileToTest() throws IOException, FileNotFoundException {
+		InputStream inputStream = BarReaderUtilTest.class.getClassLoader().getResourceAsStream("zipWithSeveralPropertyFile.zip");
+		final File zipFile = File.createTempFile("zipWithSeveralPropertyFile", "zip");
+		OutputStream outputStream = new FileOutputStream(zipFile);
+		
+		int read = 0;
+		byte[] bytes = new byte[1024];
+ 
+		while ((read = inputStream.read(bytes)) != -1) {
+			outputStream.write(bytes, 0, read);
+		}
+		outputStream.close();
+		return zipFile;
 	}
 }

@@ -21,7 +21,9 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
@@ -37,7 +39,8 @@ import org.bonitasoft.studio.importer.bar.i18n.Messages;
  */
 public class BarReaderUtil {
 
-    static String findCustomConnectorClassName(File archiveFile) throws ZipException, IOException {
+    static List<String> findCustomConnectorClassName(File archiveFile) throws ZipException, IOException {
+    	List<String> res = new ArrayList<String>();
         ZipFile zipfile = null;
         try {
         	try {
@@ -59,7 +62,7 @@ public class BarReaderUtil {
                     while (newEntries.hasMoreElements()) {
                         ZipEntry newEntry = (ZipEntry) newEntries.nextElement();
                         if (!newEntry.isDirectory() && newEntry.toString().endsWith(startWith + ".properties")) {
-                            return className;
+                        	res.add(className);
                         }
                     }
                 }
@@ -70,7 +73,7 @@ public class BarReaderUtil {
             }
         }
 
-        return null;
+        return res;
     }
 	
     static File getProcFormBar(File archiveFile) throws Exception {
