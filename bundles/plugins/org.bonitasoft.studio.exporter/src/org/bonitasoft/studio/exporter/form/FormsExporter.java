@@ -476,7 +476,7 @@ public class FormsExporter {
         if (expression instanceof Expression) {
             Expression exp = (Expression) expression;
             String type = exp.getType();
-            if (ExpressionConstants.VARIABLE_TYPE.equals(type)) {
+            if (ExpressionConstants.VARIABLE_TYPE.equals(type) && !exp.getReferencedElements().isEmpty()) {
                 final Data data = (Data) exp.getReferencedElements().get(0);
                 final String ds = data.getDatasourceId();
                 if (DatasourceConstants.PAGEFLOW_DATASOURCE.equals(ds)) {
@@ -1522,7 +1522,7 @@ public class FormsExporter {
 
     /**
      * @param builder
-     *            , Widget widget
+     *        , Widget widget
      * @throws InvalidFormDefinitionException
      */
     protected void addParentProperties(final IFormBuilder builder,
