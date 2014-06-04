@@ -7,6 +7,7 @@ package org.bonitasoft.studio.actors.ui.wizard.page;
 import java.util.Set;
 
 import org.bonitasoft.studio.actors.i18n.Messages;
+import org.bonitasoft.studio.actors.model.organization.Organization;
 import org.bonitasoft.studio.actors.validator.CustomerUserInformationDefinitionNameValidator;
 import org.bonitasoft.studio.common.jface.databinding.DialogSupport;
 import org.eclipse.core.databinding.Binding;
@@ -48,6 +49,7 @@ public class AddCustomUserInfoDialog extends Dialog {
 
 	private Text customInfoDefinitionText;
 	
+	Organization orga;
 	
 
 	protected AddCustomUserInfoDialog(Shell parentShell) {
@@ -107,7 +109,7 @@ public class AddCustomUserInfoDialog extends Dialog {
 		customInfoDefinitionText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).indent(10, 0).create()) ;
 		customInfoDefinitionText.setToolTipText(customInfoDefinitionText.getText());
 
-		bindName();
+		bindName(orga);
 
 		DialogSupport.create(this, context);
 		
@@ -115,10 +117,10 @@ public class AddCustomUserInfoDialog extends Dialog {
 	}
 
 
-	protected void bindName() {
+	protected void bindName(Organization orga) {
 		UpdateValueStrategy uvsName = new UpdateValueStrategy();
 		
-		CustomerUserInformationDefinitionNameValidator nameValidator = new CustomerUserInformationDefinitionNameValidator(existingNames);
+		CustomerUserInformationDefinitionNameValidator nameValidator = new CustomerUserInformationDefinitionNameValidator(orga);
 		uvsName.setBeforeSetValidator(nameValidator);
 		
 		ISWTObservableValue observeText = SWTObservables.observeText(customInfoNameText, SWT.Modify);

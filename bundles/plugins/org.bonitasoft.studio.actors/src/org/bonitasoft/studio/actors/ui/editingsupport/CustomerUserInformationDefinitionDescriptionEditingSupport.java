@@ -17,9 +17,8 @@
 package org.bonitasoft.studio.actors.ui.editingsupport;
 
 import java.util.HashSet;
-import java.util.Set;
 
-import org.bonitasoft.studio.actors.model.organization.Organization;
+import org.bonitasoft.studio.actors.validator.CustomerUserInformationDefinitionDescriptionValidator;
 import org.bonitasoft.studio.actors.validator.CustomerUserInformationDefinitionNameValidator;
 import org.bonitasoft.studio.common.jface.ColumnViewerUpdateListener;
 import org.eclipse.core.databinding.Binding;
@@ -27,10 +26,8 @@ import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.beans.PojoObservables;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
-import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.viewers.ObservableValueEditingSupport;
-import org.eclipse.jface.text.link.LinkedModeUI.ExitFlags;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.TextCellEditor;
@@ -43,52 +40,50 @@ import org.eclipse.swt.widgets.Text;
  * @author Florine Boudin
  *
  */
-public class CustomUserInformationDefinitionNameEditingSupport extends ObservableValueEditingSupport {
+public class CustomerUserInformationDefinitionDescriptionEditingSupport extends ObservableValueEditingSupport {
 
 	private DataBindingContext dbc;
-	private Organization organization;
-	/**
-	 * @param viewer
-	 * @param dbc
-	 */
-	public CustomUserInformationDefinitionNameEditingSupport(ColumnViewer viewer, DataBindingContext dbc) {
+
+	public CustomerUserInformationDefinitionDescriptionEditingSupport(
+			ColumnViewer viewer, DataBindingContext dbc) {
 		super(viewer, dbc);
 		this.dbc = dbc;
 	}
 
-
-
-	public void setOrganization(Organization organization) {
-		this.organization = organization;
-	}
-
-
-
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.databinding.viewers.ObservableValueEditingSupport#doCreateCellEditorObservable(org.eclipse.jface.viewers.CellEditor)
+	 */
 	@Override
 	protected IObservableValue doCreateCellEditorObservable(CellEditor cellEditor) {
-		return SWTObservables.observeText(cellEditor.getControl(), SWT.Modify);
+        return SWTObservables.observeText(cellEditor.getControl(), SWT.Modify);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.databinding.viewers.ObservableValueEditingSupport#doCreateElementObservable(java.lang.Object, org.eclipse.jface.viewers.ViewerCell)
+	 */
 	@Override
-	protected IObservableValue doCreateElementObservable(Object element, ViewerCell viewerCell) {
-		IObservableValue observeValue = PojoObservables.observeValue(element, "name");
-		observeValue.addValueChangeListener(new ColumnViewerUpdateListener(getViewer(), element));
-		return observeValue;
+	protected IObservableValue doCreateElementObservable(Object element, ViewerCell arg1) {
+        IObservableValue observeValue = PojoObservables.observeValue(element, "description");
+        observeValue.addValueChangeListener(new ColumnViewerUpdateListener(getViewer(), element));
+        return observeValue;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.viewers.EditingSupport#getCellEditor(java.lang.Object)
+	 */
 	@Override
-	protected CellEditor getCellEditor(Object element) {
-		TextCellEditor textCellEditor = new TextCellEditor((Composite) getViewer().getControl());
-		Text textControl = (Text) textCellEditor.getControl();
-		textControl.setTextLimit(50);
-		return textCellEditor;
+	protected CellEditor getCellEditor(Object arg0) {
+        TextCellEditor textCellEditor = new TextCellEditor((Composite) getViewer().getControl());
+        Text textControl = (Text) textCellEditor.getControl();
+        textControl.setTextLimit(255);
+        return textCellEditor;
 	}
 
 	@Override
 	protected Binding createBinding(IObservableValue target, IObservableValue model) {
-		UpdateValueStrategy targetToModel = new UpdateValueStrategy();
-		targetToModel.setAfterGetValidator(new CustomerUserInformationDefinitionNameValidator(organization));
-		return dbc.bindValue(target, model, targetToModel, null);
-	}
-
+        UpdateValueStrategy targetToModel = new UpdateValueStrategy();
+        targetToModel.setAfterGetValidator(new CustomerUserInformationDefinitionDescriptionValidator());
+        return dbc.bindValue(target, model, targetToModel, null);
+    }
+	
 }

@@ -26,11 +26,12 @@ import org.bonitasoft.studio.actors.model.organization.Membership;
 import org.bonitasoft.studio.actors.model.organization.Organization;
 import org.bonitasoft.studio.actors.model.organization.OrganizationFactory;
 import org.bonitasoft.studio.actors.model.organization.OrganizationPackage;
+import org.bonitasoft.studio.actors.validator.DisplayNameValidator;
 import org.bonitasoft.studio.common.NamingUtils;
-import org.bonitasoft.studio.common.databinding.WrappingValidator;
-import org.bonitasoft.studio.common.jface.databinding.WizardPageSupportWithoutMessages;
+import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.UpdateValueStrategy;
-import org.eclipse.core.databinding.conversion.Converter;
+import org.eclipse.core.databinding.beans.PojoObservables;
+import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.IValueChangeListener;
 import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
@@ -38,12 +39,13 @@ import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
-import org.eclipse.emf.databinding.EObjectObservableValue;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.jface.databinding.fieldassist.ControlDecorationSupport;
+import org.eclipse.jface.databinding.fieldassist.ControlDecorationUpdater;
 import org.eclipse.jface.databinding.swt.SWTObservables;
-import org.eclipse.jface.databinding.wizard.WizardPageSupport;
+import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
+import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -75,15 +77,11 @@ import org.eclipse.ui.dialogs.PatternFilter;
 public class GroupsWizardPage extends AbstractOrganizationWizardPage {
 
 
-	private Text groupNameText;
-	private Text displayNamedText;
-	private Text groupDescriptionText;
-
 	private final List<Membership> groupMemberShips = new ArrayList<Membership>();
-	private Text pathText;
 	private Button addSubGroupButton;
-	private WrappingValidator groupNameValidator;
-
+	private IViewerObservableValue groupSingleSelectionObservable;
+	private String groupPath ;
+	private IObservableValue groupPathObserveValue;
 
 	public GroupsWizardPage() {
 		super(GroupsWizardPage.class.getName());
@@ -99,6 +97,33 @@ public class GroupsWizardPage extends AbstractOrganizationWizardPage {
 		fileredTree.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).minSize(200, 200).create()) ;
 		fileredTree.getViewer().setContentProvider(new GroupContentProvider()) ;
 		fileredTree.forceFocus() ;
+
+		groupSingleSelectionObservable = ViewersObservables.observeSingleSelection(fileredTree.getViewer());
+		groupSingleSelectionObservable.addValueChangeListener(new IValueChangeListener() {
+
+			@Override
+			public void handleValueChange(ValueChangeEvent event) {
+				groupMemberShips.clear() ;
+				org.bonitasoft.studio.actors.model.organization.Group selectedGroup = (org.bonitasoft.studio.actors.model.organization.Group) event.diff.getNewValue();
+				if(selectedGroup != null){
+					setControlEnabled(getInfoGroup(), true) ;
+					groupPathObserveValue.setValue(GroupContentProvider.getGroupPath(selectedGroup));
+					for(Membership m : membershipList){
+						if(selectedGroup.getName() != null && selectedGroup.getName().equals(m.getGroupName())
+								&& ((selectedGroup.getParentPath() != null && selectedGroup.getParentPath().equals(m.getGroupParentPath()) || (selectedGroup.getParentPath() == null && m.getGroupParentPath() == null)))){
+							groupMemberShips.add(m) ;
+						}
+					}
+					addSubGroupButton.setEnabled(true);
+				}else{
+					addSubGroupButton.setEnabled(false);
+					setControlEnabled(getInfoGroup(), false) ;
+				}
+
+			}
+		});
+
+
 		return fileredTree.getViewer();
 	}
 
@@ -133,157 +158,79 @@ public class GroupsWizardPage extends AbstractOrganizationWizardPage {
 
 	@Override
 	public void selectionChanged(SelectionChangedEvent event) {
-		refreshBinding((org.bonitasoft.studio.actors.model.organization.Group) ((IStructuredSelection) event.getSelection()).getFirstElement()) ;
-	}
-
-	private void refreshBinding(final org.bonitasoft.studio.actors.model.organization.Group selectedGroup) {
-		if(context != null){
-			context.dispose() ;
-		}
-		if(pageSupport != null){
-			pageSupport.dispose() ;
-		}
-		context = new EMFDataBindingContext() ;
-
-		groupMemberShips.clear() ;
-		if(selectedGroup != null){
-			setControlEnabled(getInfoGroup(), true) ;
-
-			for(Membership m : membershipList){
-				if(selectedGroup.getName() != null && selectedGroup.getName().equals(m.getGroupName())
-						&& ((selectedGroup.getParentPath() != null && selectedGroup.getParentPath().equals(m.getGroupParentPath()) || (selectedGroup.getParentPath() == null && m.getGroupParentPath() == null)))){
-					groupMemberShips.add(m) ;
-				}
-			}
-
-			IObservableValue groupNameValue = EMFObservables.observeValue(selectedGroup, OrganizationPackage.Literals.GROUP__NAME) ;
-			groupNameValue.addValueChangeListener(new IValueChangeListener() {
-
-				@Override
-				public void handleValueChange(ValueChangeEvent event) {
-					handleGroupNameChange(event);
-				}
-			}) ;
-
-			IObservableValue groupParentPathValue = EMFObservables.observeValue(selectedGroup, OrganizationPackage.Literals.GROUP__PARENT_PATH) ;
-			groupParentPathValue.addValueChangeListener(new IValueChangeListener() {
-
-				@Override
-				public void handleValueChange(ValueChangeEvent event) {
-					handleGroupParentPathChange(event);
-				}
-			}) ;
-
-			UpdateValueStrategy strategy = new UpdateValueStrategy() ;
-			groupNameValidator.setValidator(new IValidator() {
-
-				@Override
-				public IStatus validate(Object value) {
-					if(value.toString().isEmpty()){
-						return ValidationStatus.error(Messages.nameIsEmpty) ;
-					}
-					if(value.toString().contains("/")){
-						return ValidationStatus.error(Messages.illegalCharacter) ;
-					}
-					for(org.bonitasoft.studio.actors.model.organization.Group g : groupList){
-						if(!g.equals(selectedGroup)){
-							if(g.getName().equals(value)
-									&&  ((g.getParentPath() != null && g.getParentPath().equals(selectedGroup.getParentPath()))
-											|| (g.getParentPath() == null && selectedGroup.getParentPath() == null))){
-								return ValidationStatus.error(Messages.groupNameAlreadyExistsForLevel) ;
-							}
-						}
-					}
-					return Status.OK_STATUS;
-				}
-			});
-			strategy.setAfterGetValidator(groupNameValidator);
-			IObservableValue descriptionValue = EMFObservables.observeValue(selectedGroup,  OrganizationPackage.Literals.GROUP__DESCRIPTION) ;
-			IObservableValue displayNameValue = EMFObservables.observeValue(selectedGroup,  OrganizationPackage.Literals.GROUP__DISPLAY_NAME) ;
-
-			context.bindValue(SWTObservables.observeText(groupNameText,SWT.Modify),groupNameValue,strategy,new UpdateValueStrategy()) ;
-			context.bindValue(SWTObservables.observeDelayedValue(500,SWTObservables.observeText(groupDescriptionText,SWT.Modify)),descriptionValue) ;
-			UpdateValueStrategy startegy = new UpdateValueStrategy();
-			startegy.setConverter(new Converter(String.class,String.class){
-
-				@Override
-				public Object convert(Object from) {
-					Display.getDefault().asyncExec(new Runnable() {
-
-						@Override
-						public void run() {
-							getViewer().refresh(selectedGroup);
-						}
-					});
-
-					return from;
-				}
-
-			});
-			context.bindValue(SWTObservables.observeText(displayNamedText,SWT.Modify), displayNameValue,startegy,null) ;
-
-			pathText.setText(GroupContentProvider.getGroupPath(selectedGroup)) ;
-			addSubGroupButton.setEnabled(true);
-		}else{
-			displayNamedText.setText("") ;
-			groupDescriptionText.setText("") ;
-			groupNameText.setText("") ;
-			pathText.setText("") ;
-			addSubGroupButton.setEnabled(false);
-			setControlEnabled(getInfoGroup(), false) ;
-		}
-		pageSupport = WizardPageSupport.create(this, context) ;
 	}
 
 	protected void handleGroupParentPathChange(ValueChangeEvent event) {
-		org.bonitasoft.studio.actors.model.organization.Group group = (org.bonitasoft.studio.actors.model.organization.Group) ((EObjectObservableValue)event.getObservable()).getObserved();
+		org.bonitasoft.studio.actors.model.organization.Group group = (org.bonitasoft.studio.actors.model.organization.Group) groupSingleSelectionObservable.getValue();
 		org.bonitasoft.studio.actors.model.organization.Group oldGroup = EcoreUtil.copy(group) ;
-		oldGroup.setParentPath(event.diff.getOldValue().toString()) ;
-		for(Membership m : membershipList){
-			if(m.getGroupName().equals(group.getName()) && m.getGroupParentPath().equals(oldGroup.getParentPath())){
-				m.setGroupParentPath(group.getParentPath());
+
+		Object oldValue = event.diff.getOldValue();
+		if(oldValue != null){
+			oldGroup.setParentPath(oldValue.toString()) ;
+			for(Membership m : membershipList){
+				if(m.getGroupName().equals(group.getName()) && m.getGroupParentPath().equals(oldGroup.getParentPath())){
+					m.setGroupParentPath(group.getParentPath());
+				}
 			}
 		}
 	}
 
 
-	protected void handleGroupNameChange(ValueChangeEvent event) {
-		org.bonitasoft.studio.actors.model.organization.Group group = (org.bonitasoft.studio.actors.model.organization.Group) ((EObjectObservableValue)event.getObservable()).getObserved();
+	protected void handleGroupNameChange(ValueChangeEvent event,IObservableValue pathObservableValue) {
+		org.bonitasoft.studio.actors.model.organization.Group group = (org.bonitasoft.studio.actors.model.organization.Group) groupSingleSelectionObservable.getValue();
 		org.bonitasoft.studio.actors.model.organization.Group oldGroup = EcoreUtil.copy(group) ;
-		oldGroup.setName(event.diff.getOldValue().toString()) ;
-		ITreeContentProvider provider = (ITreeContentProvider) getViewer().getContentProvider() ;
-		String oldPath = GroupContentProvider.getGroupPath(oldGroup) + GroupContentProvider.GROUP_SEPARATOR ;
-		String newPath = GroupContentProvider.getGroupPath(group) + GroupContentProvider.GROUP_SEPARATOR ;
+		Object oldValue = event.diff.getOldValue();
+		if(oldValue != null){
+			oldGroup.setName(oldValue.toString()) ;
+			ITreeContentProvider provider = (ITreeContentProvider) getViewer().getContentProvider() ;
+			String oldPath = GroupContentProvider.getGroupPath(oldGroup) + GroupContentProvider.GROUP_SEPARATOR ;
+			String newPath = GroupContentProvider.getGroupPath(group) + GroupContentProvider.GROUP_SEPARATOR ;
 
-		if(provider != null && provider.hasChildren(oldGroup)){
-			for(Object child : provider.getChildren(oldGroup)){
-				org.bonitasoft.studio.actors.model.organization.Group childGroup = (org.bonitasoft.studio.actors.model.organization.Group) child ;
-				updateParentPath(childGroup, oldPath, newPath, provider) ;
-				String parent = childGroup.getParentPath() + GroupContentProvider.GROUP_SEPARATOR ;
-				String path = parent.replace(oldPath, newPath) ;
-				if(path.endsWith(GroupContentProvider.GROUP_SEPARATOR )){
-					path = path.substring(0, path.length() -1) ;
-				}
-				if(path.equals(GroupContentProvider.GROUP_SEPARATOR)){
-					childGroup.setParentPath(null) ;
-				}else{
-					childGroup.setParentPath(path) ;
-				}
+			if(provider != null && provider.hasChildren(oldGroup)){
+				for(Object child : provider.getChildren(oldGroup)){
+					org.bonitasoft.studio.actors.model.organization.Group childGroup = (org.bonitasoft.studio.actors.model.organization.Group) child ;
+					updateParentPath(childGroup, oldPath, newPath, provider) ;
+					String parent = childGroup.getParentPath() + GroupContentProvider.GROUP_SEPARATOR ;
+					String path = parent.replace(oldPath, newPath) ;
+					if(path.endsWith(GroupContentProvider.GROUP_SEPARATOR )){
+						path = path.substring(0, path.length() -1) ;
+					}
+					if(path.equals(GroupContentProvider.GROUP_SEPARATOR)){
+						childGroup.setParentPath(null) ;
+					}else{
+						childGroup.setParentPath(path) ;
+					}
 
+				}
 			}
-		}
-		if(getViewer() != null && !getViewer().getControl().isDisposed()){
-			getViewer().refresh(group) ;
-		}
-		if(pathText != null && !pathText.isDisposed()){
-			pathText.setText(GroupContentProvider.getGroupPath(group)) ;
-		}
-		for(Membership m : groupMemberShips){
-			m.setGroupName(group.getName()) ;
+			if(getViewer() != null && !getViewer().getControl().isDisposed()){
+				getViewer().refresh(group) ;
+			}
+
+			pathObservableValue.setValue(GroupContentProvider.getGroupPath(group)) ;
+
+			for(Membership m : groupMemberShips){
+				m.setGroupName(group.getName()) ;
+			}
 		}
 	}
 
 
+
+	private void handleGroupDisplayName(ValueChangeEvent event) {
+		org.bonitasoft.studio.actors.model.organization.Group group = (org.bonitasoft.studio.actors.model.organization.Group) groupSingleSelectionObservable.getValue();
+		org.bonitasoft.studio.actors.model.organization.Group oldGroup = EcoreUtil.copy(group) ;
+		Object oldValue = event.diff.getOldValue();
+		if(oldValue != null){
+			oldGroup.setDisplayName(oldValue.toString()) ;
+			
+			if(getViewer() != null && !getViewer().getControl().isDisposed()){
+				getViewer().refresh(group) ;
+			}
+		}
+		
+	}
+	
 	private void updateParentPath(org.bonitasoft.studio.actors.model.organization.Group group,String pathToReplace,String newPath,ITreeContentProvider provider) {
 		if(provider.hasChildren(group)){
 			for(Object child : provider.getChildren(group)){
@@ -304,44 +251,142 @@ public class GroupsWizardPage extends AbstractOrganizationWizardPage {
 
 	@Override
 	protected void configureInfoGroup(Group group) {
-		group.setText(Messages.groupInfo) ;
-		group.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(15, 5).spacing(5, 2).create()) ;
+		group.setText(Messages.details) ;
+		group.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(15, 5).spacing(10,5).create()) ;
 
-		Label roleName = new Label(group, SWT.NONE) ;
-		roleName.setLayoutData(GridDataFactory.fillDefaults().align(SWT.BEGINNING,SWT.CENTER).create()) ;
-		roleName.setText(Messages.name) ;
+		createNameField(group);
 
-		groupNameText = new Text(group, SWT.BORDER) ;
-		groupNameText.setMessage(Messages.groupIdExample);
-		groupNameText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).minSize(130, SWT.DEFAULT).create()) ;
-		final ControlDecoration decoration =  new ControlDecoration(groupNameText,SWT.LEFT);
-		groupNameValidator = new WrappingValidator(decoration, null,false,true);
+		createDisplayNameField(group);
 
+		createPathField(group);
+
+		createDescriptionField(group);
+
+		getViewer().setSelection(new StructuredSelection()) ;
+		setControlEnabled(getInfoGroup(), false);
+	}
+
+
+	private void createDescriptionField(Group group) {
+		Label descriptionLabel = new Label(group, SWT.NONE) ;
+		descriptionLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END,SWT.FILL).create()) ;
+		descriptionLabel.setText(Messages.description) ;
+
+		Text groupDescriptionText = new Text(group, SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL) ;
+		groupDescriptionText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT, 80).create()) ;
+
+		IObservableValue groupDescriptionValue = EMFObservables.observeDetailValue(Realm.getDefault(), groupSingleSelectionObservable, OrganizationPackage.Literals.GROUP__DESCRIPTION);
+		context.bindValue(SWTObservables.observeText(groupDescriptionText,SWT.Modify), groupDescriptionValue);
+	}
+
+
+	private void createDisplayNameField(Group group) {
 		Label displayNameLabel = new Label(group, SWT.NONE) ;
-		displayNameLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.BEGINNING,SWT.CENTER).create()) ;
+		displayNameLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END,SWT.CENTER).create()) ;
 		displayNameLabel.setText(Messages.displayName) ;
 
-		displayNamedText = new Text(group, SWT.BORDER) ;
+		Text displayNamedText = new Text(group, SWT.BORDER) ;
 		displayNamedText.setMessage(Messages.groupNameExample);
 		displayNamedText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
 
+		UpdateValueStrategy displayNameStrategy = new UpdateValueStrategy();
+		displayNameStrategy.setAfterGetValidator(new DisplayNameValidator());
+
+		IObservableValue displayNameValue = EMFObservables.observeDetailValue(Realm.getDefault(), groupSingleSelectionObservable, OrganizationPackage.Literals.GROUP__DISPLAY_NAME);
+		Binding binding = context.bindValue(SWTObservables.observeText(displayNamedText,SWT.Modify), displayNameValue, displayNameStrategy, null) ;
+		ControlDecorationSupport.create(binding, SWT.LEFT);
+		
+		displayNameValue.addValueChangeListener(new IValueChangeListener() {
+			
+			@Override
+			public void handleValueChange(ValueChangeEvent event) {
+				handleGroupDisplayName(event);
+				
+			}
+
+		});
+
+	}
+
+
+	private void createPathField(Group group) {
 		Label pathLabel = new Label(group, SWT.NONE) ;
-		pathLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.BEGINNING,SWT.CENTER).create()) ;
+		pathLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END,SWT.CENTER).create()) ;
 		pathLabel.setText(Messages.groupPath) ;
 
-		pathText = new Text(group, SWT.BORDER | SWT.READ_ONLY) ;
+		Text pathText = new Text(group, SWT.BORDER | SWT.READ_ONLY) ;
 		pathText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
 
-		Label descriptionLabel = new Label(group, SWT.NONE) ;
-		descriptionLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.BEGINNING,SWT.FILL).create()) ;
-		descriptionLabel.setText(Messages.description) ;
+		IObservableValue groupParentPathValue = EMFObservables.observeDetailValue(Realm.getDefault(),groupSingleSelectionObservable, OrganizationPackage.Literals.GROUP__PARENT_PATH) ;
+		groupParentPathValue.addValueChangeListener(new IValueChangeListener() {
 
-		groupDescriptionText = new Text(group, SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL) ;
-		groupDescriptionText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT, 80).create()) ;
+			@Override
+			public void handleValueChange(ValueChangeEvent event) {
+				handleGroupParentPathChange(event);
+			}
+		}) ;
+
+		context.bindValue(SWTObservables.observeText(pathText, SWT.Modify), groupPathObserveValue);
+	}
 
 
-		getViewer().setSelection(new StructuredSelection()) ;
-		refreshBinding(null) ;
+	private void createNameField(Group group) {
+		Label groupNameLabel = new Label(group, SWT.NONE) ;
+		groupNameLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END,SWT.CENTER).create()) ;
+		groupNameLabel.setText(Messages.name+" *") ;
+
+		Text groupNameText = new Text(group, SWT.BORDER) ;
+		groupNameText.setMessage(Messages.groupIdExample);
+		groupNameText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).minSize(130, SWT.DEFAULT).create()) ;
+
+		IObservableValue groupNameValue =  EMFObservables.observeDetailValue(Realm.getDefault(), groupSingleSelectionObservable, OrganizationPackage.Literals.GROUP__NAME);
+		groupPathObserveValue = PojoObservables.observeValue(this, "groupPath");
+		groupNameValue.addValueChangeListener(new IValueChangeListener() {
+
+			@Override
+			public void handleValueChange(ValueChangeEvent event) {
+				handleGroupNameChange(event,groupPathObserveValue);
+			}
+		}) ;
+
+		UpdateValueStrategy strategy = new UpdateValueStrategy() ;
+		strategy.setAfterGetValidator(new IValidator() {
+
+			@Override
+			public IStatus validate(Object value) {
+				if(value.toString().isEmpty()){
+					return ValidationStatus.error(Messages.nameIsEmpty) ;
+				}
+				if(value.toString().length()>NAME_SIZE){
+					return ValidationStatus.error(Messages.nameLimitSize);
+				}
+				if(value.toString().contains("/")){
+					return ValidationStatus.error(Messages.illegalCharacter) ;
+				}
+				for(org.bonitasoft.studio.actors.model.organization.Group g : groupList){
+					org.bonitasoft.studio.actors.model.organization.Group selectedGroup = (org.bonitasoft.studio.actors.model.organization.Group) groupSingleSelectionObservable.getValue();
+					if(!g.equals(selectedGroup)){
+						if(g.getName().equals(value)
+								&&  ((g.getParentPath() != null && g.getParentPath().equals(selectedGroup.getParentPath()))
+										|| (g.getParentPath() == null && selectedGroup.getParentPath() == null))){
+							return ValidationStatus.error(Messages.groupNameAlreadyExistsForLevel) ;
+						}
+					}
+				}
+				return Status.OK_STATUS;
+			}
+		});
+
+		Binding binding = context.bindValue(SWTObservables.observeText(groupNameText,SWT.Modify),groupNameValue,strategy,null);
+		ControlDecorationSupport.create(binding, SWT.LEFT,group,new ControlDecorationUpdater(){
+			@Override
+			protected void update(ControlDecoration decoration, IStatus status) {
+				if(groupSingleSelectionObservable.getValue() != null){
+					super.update(decoration, status);
+				}
+				
+			}
+		});
 	}
 
 	@Override
@@ -397,13 +442,11 @@ public class GroupsWizardPage extends AbstractOrganizationWizardPage {
 			}else{
 				group.setParentPath(parentGoup.getParentPath() + GroupContentProvider.GROUP_SEPARATOR + parentGoup.getName()) ;
 			}
-
 		}
 		groupList.add(group) ;
 		getViewer().setInput(groupList) ;
 		((TreeViewer) getViewer()).expandAll() ;
 		getViewer().setSelection(new StructuredSelection(group)) ;
-
 	}
 
 	private String generateGroupname() {
@@ -449,6 +492,16 @@ public class GroupsWizardPage extends AbstractOrganizationWizardPage {
 	@Override
 	protected boolean viewerSelect(Object element, String searchQuery) {
 		return false ;
+	}
+
+
+	public String getGroupPath() {
+		return groupPath;
+	}
+
+
+	public void setGroupPath(String groupPath) {
+		this.groupPath = groupPath;
 	}
 
 

@@ -27,7 +27,9 @@ import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.jface.databinding.wizard.WizardPageSupport;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredViewer;
@@ -45,6 +47,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.TabFolder;
+import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 
 /**
@@ -53,6 +57,10 @@ import org.eclipse.swt.widgets.Text;
  */
 public abstract class AbstractOrganizationWizardPage extends WizardPage implements ISelectionChangedListener{
 
+	final int NAME_SIZE=50;
+	final int PASSWORD_SIZE=60;
+	
+	
     private StructuredViewer viewer;
     private Group infoGroup;
     private String searchQuery;
@@ -88,18 +96,18 @@ public abstract class AbstractOrganizationWizardPage extends WizardPage implemen
     @Override
     public void createControl(Composite parent) {
     	context = new EMFDataBindingContext() ;
-    	mainComposite = addUsersComposite(parent);
+    	mainComposite = doCreateControl(parent);
         setControl(mainComposite) ;
     }
 
-	protected Composite addUsersComposite(Composite parent) {
+	protected Composite doCreateControl(Composite parent) {
 		Composite mainComposite = new Composite(parent, SWT.NONE);
         mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create()) ;
         mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(3).margins(10, 10).equalWidth(false).create()) ;
-
+        
         Composite buttonComposite = new Composite(mainComposite, SWT.NONE) ;
-        buttonComposite.setLayoutData(GridDataFactory.fillDefaults().create()) ;
-        buttonComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).equalWidth(true).margins(0, 0).spacing(0, 2).create()) ;
+        buttonComposite.setLayoutData(GridDataFactory.fillDefaults().indent(0, 30).create()) ;
+        buttonComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).equalWidth(true).spacing(0, 2).create()) ;
 
         final Button removeButton = createButtons(buttonComposite);
 
@@ -169,10 +177,15 @@ public abstract class AbstractOrganizationWizardPage extends WizardPage implemen
         searchBox.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
         searchBox.setMessage(Messages.search) ;
 
-        final TableViewer tableViewer = new TableViewer(viewerComposite, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL );
-        tableViewer.getTable().setLayoutData(GridDataFactory.fillDefaults().grab(true,true).hint(SWT.DEFAULT,270).create()) ;
-        tableViewer.getTable().setLinesVisible(true);
-        tableViewer.getTable().setHeaderVisible(true);
+        Composite tableViewerComposite = new Composite(viewerComposite, SWT.NONE);
+        tableViewerComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).create());
+        tableViewerComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        
+        final TableViewer tableViewer = new TableViewer(tableViewerComposite, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL );
+        Table table = tableViewer.getTable();
+		table.setLayoutData(GridDataFactory.fillDefaults().grab(true,true).hint(SWT.DEFAULT,270).create()) ;
+        table.setLinesVisible(true);
+        table.setHeaderVisible(true);
         tableViewer.setContentProvider(new ArrayContentProvider()) ;
         tableViewer.addFilter(new ViewerFilter() {
 
@@ -181,6 +194,8 @@ public abstract class AbstractOrganizationWizardPage extends WizardPage implemen
                 return viewerSelect(element,searchQuery) ;
             }
         }) ;
+        
+
 
         searchBox.addModifyListener(new ModifyListener() {
 
@@ -247,6 +262,12 @@ public abstract class AbstractOrganizationWizardPage extends WizardPage implemen
         return organization  ;
     }
 
-
+	protected void addTableColumLayout(Table table) {
+		TableColumnLayout tcLayout = new TableColumnLayout();
+		for(TableColumn col : table.getColumns()){
+			tcLayout.setColumnData(col, new ColumnWeightData(1));
+		}
+		table.getParent().setLayout(tcLayout);
+	}
 
 }
