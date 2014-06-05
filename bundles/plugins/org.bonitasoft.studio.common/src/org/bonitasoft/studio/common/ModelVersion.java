@@ -5,20 +5,17 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.common;
 
 /**
  * @author Romain Bioteau
- *
  */
 public class ModelVersion {
 
@@ -47,25 +44,25 @@ public class ModelVersion {
     public static final String VERSION_6_3_0_001 = "6.3.0-001";
     public static final String VERSION_6_3_0_002 = "6.3.0-002";
     public static final String VERSION_6_3_1_001 = "6.3.1-001";
-    public static final String CURRENT_VERSION = VERSION_6_3_1_001;
+    public static final String VERSION_6_3_2_001 = "6.3.2-001";
+    public static final String CURRENT_VERSION = VERSION_6_3_2_001;
 
-
-    public static boolean sameVersion(String version){
+    public static boolean sameVersion(String version) {
         return CURRENT_VERSION.equals(version);
 
     }
 
-    public static boolean sameMinorVersion(String version){
-        if(version == null){
-            return false ;
+    public static boolean sameMinorVersion(String version) {
+        if (version == null) {
+            return false;
         }
-        String minor =  CURRENT_VERSION.substring(0, CURRENT_VERSION.lastIndexOf(".")) ;
+        String minor = CURRENT_VERSION.substring(0, CURRENT_VERSION.lastIndexOf("."));
         String[] split = version.split("\\.");
-        String testedVersion = version ;
-        if(split.length > 2){
-            testedVersion = split[0] + "." + split[1] ;
+        String testedVersion = version;
+        if (split.length > 2) {
+            testedVersion = split[0] + "." + split[1];
         }
-        return minor.equals(testedVersion) ;
+        return minor.equals(testedVersion);
     }
 
 }
