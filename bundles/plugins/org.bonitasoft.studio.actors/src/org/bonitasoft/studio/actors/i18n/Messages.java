@@ -245,6 +245,8 @@ public class Messages extends NLS {
 	public static String importSuccessfulMsg;
 	public static String importFailedTitle;
 	public static String importFailedMsg;
+    public static String actorFilterWizardTitle;
+    public static String actorFilterWizardMessage;
 
 
 
