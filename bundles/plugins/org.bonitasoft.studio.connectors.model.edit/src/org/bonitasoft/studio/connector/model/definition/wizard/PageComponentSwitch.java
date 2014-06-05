@@ -311,8 +311,13 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> im
         final Input input = getConnectorInput(object.getInputName()) ;
         final ConnectorParameter parameter = getConnectorParameter(object.getInputName(),object,input) ;
         if(parameter != null){
-            createFieldLabel(composite,SWT.CENTER,object.getId(),input.isMandatory()) ;
+            new Label(composite, SWT.NONE);
+            String label = getLabel(object.getId()) ;
+            if(input.isMandatory()){
+                label = label + " *" ;
+            }
             final CheckBoxExpressionViewer viewer = new CheckBoxExpressionViewer(composite, SWT.BORDER, ConnectorConfigurationPackage.Literals.CONNECTOR_PARAMETER__EXPRESSION);
+            viewer.getCheckboxControl().setText(label);
             viewer.setIsPageFlowContext(isPageFlowContext);
             viewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
             viewer.setContext(container);

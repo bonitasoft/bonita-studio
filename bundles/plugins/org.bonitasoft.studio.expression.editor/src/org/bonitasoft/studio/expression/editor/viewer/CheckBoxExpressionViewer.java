@@ -29,18 +29,14 @@ import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
-import org.eclipse.emf.databinding.EMFProperties;
 import org.eclipse.emf.databinding.edit.EMFEditObservables;
-import org.eclipse.emf.databinding.edit.EMFEditProperties;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.jface.databinding.swt.SWTObservables;
-import org.eclipse.jface.databinding.viewers.ViewerProperties;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -68,7 +64,7 @@ public class CheckBoxExpressionViewer extends ExpressionViewer implements Expres
 	@Override
 	protected void createControl(Composite composite, int style, TabbedPropertySheetWidgetFactory widgetFactory) {
 		mc = new MagicComposite(composite, SWT.INHERIT_DEFAULT);
-		mc.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(0, 0).create());
+		mc.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).spacing(0, 0).create());
 
 		if(widgetFactory != null){
 			checkBoxControl = widgetFactory.createButton(mc,"", SWT.CHECK) ;
@@ -99,6 +95,7 @@ public class CheckBoxExpressionViewer extends ExpressionViewer implements Expres
 	private void createSwitchEditorControl(TabbedPropertySheetWidgetFactory widgetFactory) {
 		((GridLayout) control.getLayout()).numColumns++;
 		final Link switchControl = new Link(mc, SWT.NONE);
+		switchControl.setLayoutData(GridDataFactory.fillDefaults().indent(15, 0).create());
 		switchControl.setText(Messages.switchEditor);
 		switchControl.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -134,6 +131,10 @@ public class CheckBoxExpressionViewer extends ExpressionViewer implements Expres
 	public Control getControl() {
 		return mc;
 	}
+	
+    public Button getCheckboxControl() {
+        return checkBoxControl;
+    }
 
 	@Override
 	protected void bindExpression() {
