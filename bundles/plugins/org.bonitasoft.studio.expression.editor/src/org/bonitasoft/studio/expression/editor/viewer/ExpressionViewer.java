@@ -56,6 +56,8 @@ import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.model.form.Duplicable;
 import org.bonitasoft.studio.model.form.TextFormField;
 import org.bonitasoft.studio.model.form.Widget;
+import org.bonitasoft.studio.model.process.Element;
+import org.bonitasoft.studio.model.process.SearchIndex;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.refactoring.core.AbstractRefactorOperation;
@@ -134,51 +136,28 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
         IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContext {
 
     protected Composite control;
-
     private Text textControl;
-
     protected ToolItem editControl;
-
     private AutoCompletionField autoCompletion;
-
     protected EMFDataBindingContext internalDataBindingContext;
-
     protected EditingDomain editingDomain;
-
     protected Expression selectedExpression;
-
     protected final Set<ViewerFilter> filters;
-
     private String example;
-
     private ControlDecoration messageDecoration;
-
     private boolean disposeDomain = false;
-
     protected String mandatoryFieldName;
-
     private ControlDecoration typeDecoration;
-
     private boolean editing = false;
-
     private EObject context;
-
     private final List<ISelectionChangedListener> expressionEditorListener = new ArrayList<ISelectionChangedListener>();
-
     private boolean withConnector = false;
-
     private List<IExpressionValidationListener> validationListeners = new ArrayList<IExpressionValidationListener>();
-
     private ToolItem eraseControl;
-
     private boolean isPageFlowContext = false;
-
     private boolean isOverviewContext = false;
-
     private AbstractRefactorOperation operation;
-
     private AbstractRefactorOperation removeOperation;
-
     protected final DisposeListener disposeListener = new DisposeListener() {
 
         @Override
@@ -188,27 +167,16 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
     };
 
     private final EReference expressionReference;
-
     protected IExpressionNatureProvider expressionNatureProvider = new ExpressionContentProvider();
-
     protected DataBindingContext externalDataBindingContext;
-
     protected Binding expressionBinding;
-
     private final Map<Integer, String> messages = new HashMap<Integer, String>();
-
     private ToolBar toolbar;
-
     private List<IExpressionToolbarContribution> toolbarContributions = new ArrayList<IExpressionToolbarContribution>();
-
     private Map<String, IExpressionValidator> validatorsForType = new HashMap<String, IExpressionValidator>();
-
     protected boolean isPassword;
-
     private DefaultToolTip textTooltip;
-
     private IExpressionProposalLabelProvider expressionProposalLableProvider;
-
     private ContentAssistText contentAssistText;
 
     public ExpressionViewer(Composite composite, int style, EReference expressionReference) {
@@ -1268,29 +1236,32 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 
     }
 
-    public void setRefactorOperationToExecuteWhenUpdatingContent(AbstractRefactorOperation operation) {
+    public void setRefactorOperationToExecuteWhenUpdatingContent(AbstractRefactorOperation<?,?,?> operation) {
         this.operation = operation;
     }
 
     private boolean executeOperation(String newValue) {
         boolean hasBeenExecuted = false;
         if (operation != null) {
-            operation.setNewValueName(newValue);
-            IProgressService service = PlatformUI.getWorkbench().getProgressService();
-            try {
-                service.busyCursorWhile(operation);
-                hasBeenExecuted = true;
-            } catch (InvocationTargetException e) {
-                BonitaStudioLog.error(e);
-            } catch (InterruptedException e) {
-                BonitaStudioLog.error(e);
-            }
-
+        	Object oldValue = getInput();
+        	if((oldValue instanceof Element && !newValue.equals(((Element)getInput()).getName()))
+        			|| (oldValue instanceof SearchIndex && !newValue.equals(((SearchIndex)getInput()).getName().getName()))){
+        		operation.addItemToRefactor(newValue, getInput());
+        		IProgressService service = PlatformUI.getWorkbench().getProgressService();
+        		try {
+        			service.busyCursorWhile(operation);
+        			hasBeenExecuted = true;
+        		} catch (InvocationTargetException e) {
+        			BonitaStudioLog.error(e);
+        		} catch (InterruptedException e) {
+        			BonitaStudioLog.error(e);
+        		}
+        	}
         }
         return hasBeenExecuted;
     }
 
-    public void setRemoveOperation(AbstractRefactorOperation removeOperation) {
+    public void setRemoveOperation(AbstractRefactorOperation<?,?,?> removeOperation) {
         this.removeOperation = removeOperation;
     }
 

@@ -65,13 +65,10 @@ import org.junit.Test;
 public class TestDataRefactor {
 
     private Data processData;
-
+    private Data processData2;
     private Data localData;
-
     private RefactorDataOperation refactorDataOperation;
-
     private Pool process;
-
     private EditingDomain editingDomain;
 
     @Test
@@ -89,7 +86,7 @@ public class TestDataRefactor {
 
         processData.setName(newDataName);
 
-        assertEquals("There are too many datas. The old one migth not be removed.", 1, process.getData().size());
+        assertEquals("There are too many datas. The old one migth not be removed.", 2, process.getData().size());
         assertEquals("Data name has not been updated correctly in multinstantiation", newDataName, multiInstantiation.getCollectionDataToMultiInstantiate()
                 .getName());
         assertEquals("Data name has not been updated correctly in multinstantiation", newDataName, multiInstantiation.getListDataContainingOutputResults()
@@ -112,7 +109,7 @@ public class TestDataRefactor {
 
         localData.setName(newDataName);
 
-        assertEquals("There are too many datas. The old one migth not be removed.", 1, process.getData().size());
+        assertEquals("There are too many datas. The old one migth not be removed.", 2, process.getData().size());
         assertEquals("Data name has not been updated correctly in multinstantiation", newDataName, multiInstantiation.getInputData().getName());
         assertEquals("Data name has not been updated correctly in multinstantiation", newDataName, multiInstantiation.getOutputData().getName());
 
@@ -137,7 +134,7 @@ public class TestDataRefactor {
         process.getElements().add(activity);
 
         refactorDataOperation.run(new NullProgressMonitor());
-        assertEquals("There are too many datas. The old one migth not be removed.", 1, process.getData().size());
+        assertEquals("There are too many datas. The old one migth not be removed.", 2, process.getData().size());
         assertEquals("Data name has not been updated correctly in expression", newDataName,
                 ((Element) variableExpression.getReferencedElements().get(0)).getName());
         assertEquals("Data name has not been updated correctly in expression", newDataName, variableExpression.getName());
@@ -175,7 +172,7 @@ public class TestDataRefactor {
 		final String initialDataName = processData.getName();
 		
 		refactorDataOperation.run(new NullProgressMonitor());
-        assertEquals("There are too many datas. The old one might not be removed.", 1, process.getData().size());
+        assertEquals("There are too many datas. The old one might not be removed.", 2, process.getData().size());
         assertEquals("Data has not been renamed", newDataName, process.getData().get(0).getName());
         assertEquals("Data name has not been updated correctly in expression", newDataName,
                 ((Element) variableExpression.getReferencedElements().get(0)).getName());
@@ -187,7 +184,7 @@ public class TestDataRefactor {
         
         editingDomain.getCommandStack().undo();
         
-        assertEquals("There are too many datas. The old one might not be removed.", 1, process.getData().size());
+        assertEquals("There are too many datas. The old one might not be removed.", 2, process.getData().size());
         assertEquals("Data has not been renamed after undo", initialDataName, process.getData().get(0).getName());
         assertEquals("Data name has not been updated correctly in expression", initialDataName,
                 ((Element) variableExpression.getReferencedElements().get(0)).getName());
@@ -247,11 +244,23 @@ public class TestDataRefactor {
     public void testDeleteData() throws InvocationTargetException, InterruptedException{
     	AbstractProcess process = initTestForGlobalDataRefactor(null);
     	refactorDataOperation.run(new NullProgressMonitor());
+    	assertEquals("The data has not been removed", 1, process.getData().size());
+    	
+    	 editingDomain.getCommandStack().undo();
+    	 
+    	 assertEquals("The data has not been set back after undo", 2, process.getData().size());
+    }
+    
+    @Test
+    public void testDeleteSeveralData() throws InvocationTargetException, InterruptedException{
+    	AbstractProcess process = initTestForGlobalDataRefactor(null);
+    	refactorDataOperation.addItemToRefactor(null, processData2);
+    	refactorDataOperation.run(new NullProgressMonitor());
     	assertEquals("The data has not been removed", 0, process.getData().size());
     	
     	 editingDomain.getCommandStack().undo();
     	 
-    	 assertEquals("The data has not been set back after undo", 1, process.getData().size());
+    	 assertEquals("The data has not been set back after undo", 2, process.getData().size());
     }
     
     @Test
@@ -281,13 +290,162 @@ public class TestDataRefactor {
 		process.getElements().add(activity);
     
     	refactorDataOperation.run(new NullProgressMonitor());
-    	assertEquals("The data has not been removed", 0, process.getData().size());
+    	assertEquals("The data has not been removed", 1, process.getData().size());
     	assertEquals("Referenced Data has been removed from script", 0, scriptUsingData.getReferencedElements().size());
     	
     	 editingDomain.getCommandStack().undo();
-    	 assertEquals("The data has not been readded on undo", 1, process.getData().size());
+    	 assertEquals("The data has not been readded on undo", 2, process.getData().size());
     	 assertEquals("Referenced Data has been removed from script", 1, scriptUsingData.getReferencedElements().size());
     }
+    
+    @Test
+    public void testDeleteSeveralDataWithReferenceInScript() throws InvocationTargetException, InterruptedException{
+    	AbstractProcess process = initTestForGlobalDataRefactor(null);
+    	
+        Activity activity = (Activity) process.getElements().get(0);
+        Operation operationWithScriptUsingData = ExpressionFactory.eINSTANCE.createOperation();
+        Operator assignOperator = ExpressionFactory.eINSTANCE.createOperator();
+        assignOperator.setType(ExpressionConstants.ASSIGNMENT_OPERATOR);
+		operationWithScriptUsingData.setOperator(assignOperator);
+		Expression scriptUsingData = ExpressionFactory.eINSTANCE.createExpression();
+		scriptUsingData.setType(ExpressionConstants.SCRIPT_TYPE);
+		scriptUsingData.setName("scriptUsingTwoData");
+		scriptUsingData.setContent(processData.getName()+"+"+processData2.getName());
+		scriptUsingData.getReferencedElements().add(EcoreUtil.copy(processData));
+		scriptUsingData.getReferencedElements().add(EcoreUtil.copy(processData2));
+		scriptUsingData.setReturnType(DataUtil.getTechnicalTypeFor(processData));
+		operationWithScriptUsingData.setRightOperand(scriptUsingData);
+		activity.getOperations().add(operationWithScriptUsingData);
+		process.getElements().add(activity);
+		
+		refactorDataOperation.addItemToRefactor(null, processData2);
+    
+    	refactorDataOperation.run(new NullProgressMonitor());
+    	assertEquals("The data has not been removed", 0, process.getData().size());
+    	assertEquals("Referenced Data has been removed from script", 0, scriptUsingData.getReferencedElements().size());
+    	//TODO: when handled, check that the script has removed both data from the script
+    	
+    	 editingDomain.getCommandStack().undo();
+    	 assertEquals("The data has not been readded on undo", 2, process.getData().size());
+    	 assertEquals("Referenced Data has been removed from script", 2, scriptUsingData.getReferencedElements().size());
+    }
+    
+    @Test
+    public void testDeleteDataWithReferenceInScriptAndOperations() throws InvocationTargetException, InterruptedException{
+    	AbstractProcess process = initTestForGlobalDataRefactor(null);
+    	
+        Activity activity = (Activity) process.getElements().get(0);
+        Operation operationWithScriptUsingData = ExpressionFactory.eINSTANCE.createOperation();
+        Operator assignOperator = ExpressionFactory.eINSTANCE.createOperator();
+        assignOperator.setType(ExpressionConstants.ASSIGNMENT_OPERATOR);
+		operationWithScriptUsingData.setOperator(assignOperator);
+        final Expression variableExpression = ExpressionFactory.eINSTANCE.createExpression();
+        variableExpression.setType(ExpressionConstants.VARIABLE_TYPE);
+        variableExpression.setName(processData.getName());
+        variableExpression.setContent(processData.getName());
+        variableExpression.getReferencedElements().add(EcoreUtil.copy(processData));
+        variableExpression.setReturnType(DataUtil.getTechnicalTypeFor(processData));
+		operationWithScriptUsingData.setLeftOperand(variableExpression);
+		Expression scriptUsingData = ExpressionFactory.eINSTANCE.createExpression();
+		scriptUsingData.setType(ExpressionConstants.SCRIPT_TYPE);
+		scriptUsingData.setName("scriptUsingASingleData");
+		scriptUsingData.setContent(processData.getName());
+		scriptUsingData.getReferencedElements().add(EcoreUtil.copy(processData));
+		scriptUsingData.setReturnType(DataUtil.getTechnicalTypeFor(processData));
+		operationWithScriptUsingData.setRightOperand(scriptUsingData);
+		activity.getOperations().add(operationWithScriptUsingData);
+		process.getElements().add(activity);
+		    
+    	refactorDataOperation.run(new NullProgressMonitor());
+    	assertEquals("The data has not been removed", 1, process.getData().size());
+    	assertEquals("Referenced Data has been removed from script", 0, scriptUsingData.getReferencedElements().size());
+    	assertEquals("Referenced Data has been removed from Operations", 0, variableExpression.getReferencedElements().size());
+    	
+    	
+    	 editingDomain.getCommandStack().undo();
+    	 assertEquals("The data has not been readded on undo", 2, process.getData().size());
+    	 assertEquals("Referenced Data has been removed from script", 1, scriptUsingData.getReferencedElements().size());
+    	 assertEquals("Referenced Data has been removed from Operations", 1, variableExpression.getReferencedElements().size());
+    }
+    
+    @Test
+    public void testDeleteSeveralDataWithReferenceInScriptAndOperations() throws InvocationTargetException, InterruptedException{
+    	AbstractProcess process = initTestForGlobalDataRefactor(null);
+    	
+        Activity activity = (Activity) process.getElements().get(0);
+        Operation operationWithScriptUsingData = ExpressionFactory.eINSTANCE.createOperation();
+        Operator assignOperator = ExpressionFactory.eINSTANCE.createOperator();
+        assignOperator.setType(ExpressionConstants.ASSIGNMENT_OPERATOR);
+		operationWithScriptUsingData.setOperator(assignOperator);
+        final Expression variableExpression = ExpressionFactory.eINSTANCE.createExpression();
+        variableExpression.setType(ExpressionConstants.VARIABLE_TYPE);
+        variableExpression.setName(processData.getName());
+        variableExpression.setContent(processData.getName());
+        variableExpression.getReferencedElements().add(EcoreUtil.copy(processData));
+        variableExpression.setReturnType(DataUtil.getTechnicalTypeFor(processData));
+		operationWithScriptUsingData.setLeftOperand(variableExpression);
+		Expression scriptUsingData = ExpressionFactory.eINSTANCE.createExpression();
+		scriptUsingData.setType(ExpressionConstants.SCRIPT_TYPE);
+		scriptUsingData.setName("scriptUsingTwoData");
+		scriptUsingData.setContent(processData.getName()+"+"+processData2.getName());
+		scriptUsingData.getReferencedElements().add(EcoreUtil.copy(processData));
+		scriptUsingData.getReferencedElements().add(EcoreUtil.copy(processData2));
+		scriptUsingData.setReturnType(DataUtil.getTechnicalTypeFor(processData));
+		operationWithScriptUsingData.setRightOperand(scriptUsingData);
+		activity.getOperations().add(operationWithScriptUsingData);
+		process.getElements().add(activity);
+		
+		refactorDataOperation.addItemToRefactor(null, processData2);
+    
+    	refactorDataOperation.run(new NullProgressMonitor());
+    	assertEquals("The data has not been removed", 0, process.getData().size());
+    	assertEquals("Referenced Data has been removed from script", 0, scriptUsingData.getReferencedElements().size());
+    	assertEquals("Referenced Data has been removed from Operations", 0, variableExpression.getReferencedElements().size());
+    	//TODO: when handled, check that the script has removed both data from the script
+    	
+    	 editingDomain.getCommandStack().undo();
+    	 assertEquals("The data has not been readded on undo", 2, process.getData().size());
+    	 assertEquals("Referenced Data has been removed from script", 2, scriptUsingData.getReferencedElements().size());
+    	 assertEquals("Referenced Data has been removed from Operations", 1, variableExpression.getReferencedElements().size());
+    }
+    
+    @Test
+    public void testDeleteSeveralDataWithReferenceInOperations() throws InvocationTargetException, InterruptedException{
+    	AbstractProcess process = initTestForGlobalDataRefactor(null);
+
+    	final Expression variableExpression = addOperationOnFirstActivity(process, processData);
+    	final Expression variableExpression2 = addOperationOnFirstActivity(process, processData2);
+
+    	refactorDataOperation.addItemToRefactor(null, processData2);
+
+    	refactorDataOperation.run(new NullProgressMonitor());
+    	assertEquals("The data has not been removed", 0, process.getData().size());
+    	assertEquals("Referenced Data has been removed from Operations", 0, variableExpression.getReferencedElements().size());
+    	assertEquals("Referenced Data has been removed from Operations", 0, variableExpression2.getReferencedElements().size());
+
+    	editingDomain.getCommandStack().undo();
+    	assertEquals("The data has not been readded on undo", 2, process.getData().size());
+    	assertEquals("Referenced Data has been removed from Operations", 1, variableExpression.getReferencedElements().size());
+    	assertEquals("Referenced Data has been removed from Operations", 1, variableExpression2.getReferencedElements().size());
+    }
+
+	private Expression addOperationOnFirstActivity(AbstractProcess process, Data data) {
+		Activity activity = (Activity) process.getElements().get(0);
+        Operation operationWithScriptUsingData = ExpressionFactory.eINSTANCE.createOperation();
+        Operator assignOperator = ExpressionFactory.eINSTANCE.createOperator();
+        assignOperator.setType(ExpressionConstants.ASSIGNMENT_OPERATOR);
+		operationWithScriptUsingData.setOperator(assignOperator);
+        final Expression variableExpression = ExpressionFactory.eINSTANCE.createExpression();
+        variableExpression.setType(ExpressionConstants.VARIABLE_TYPE);
+        variableExpression.setName(data.getName());
+        variableExpression.setContent(data.getName());
+        variableExpression.getReferencedElements().add(EcoreUtil.copy(data));
+        variableExpression.setReturnType(DataUtil.getTechnicalTypeFor(data));
+		operationWithScriptUsingData.setLeftOperand(variableExpression);
+		activity.getOperations().add(operationWithScriptUsingData);
+		process.getElements().add(activity);
+		return variableExpression;
+	}
     
     @Test
     public void testDeleteDataWithReferenceInCondition() throws InvocationTargetException, InterruptedException{
@@ -296,11 +454,11 @@ public class TestDataRefactor {
     	Expression conditionExpression = createSequenceFlowWithConditionExpression(process);
     	
     	refactorDataOperation.run(new NullProgressMonitor());
-    	assertEquals("The data has not been removed", 0, process.getData().size());
+    	assertEquals("The data has not been removed", 1, process.getData().size());
     	assertEquals("Referenced Data has been removed from script", 0, conditionExpression.getReferencedElements().size());
     	
    	 	editingDomain.getCommandStack().undo();
-   	 	assertEquals("The data has not been readded on undo", 1, process.getData().size());
+   	 	assertEquals("The data has not been readded on undo", 2, process.getData().size());
    	 	assertEquals("Referenced Data has been removed from script", 1, conditionExpression.getReferencedElements().size());
     }
     
@@ -312,10 +470,10 @@ public class TestDataRefactor {
     	final String initialDataName = processData.getName();
     	
     	refactorDataOperation.run(new NullProgressMonitor());
-    	assertEquals("The data has not been removed", 0, process.getData().size());
+    	assertEquals("The data has not been removed", 1, process.getData().size());
     	
     	editingDomain.getCommandStack().undo();
-    	assertEquals("The data has not been readded on undo", 1, process.getData().size());
+    	assertEquals("The data has not been readded on undo", 2, process.getData().size());
    	 	assertEquals("Referenced Data has been removed from script", 1, patternExpr.getReferencedElements().size());
    	 	assertEquals("Pattern expression", "${"+initialDataName+"}", patternExpr.getContent());
     }
@@ -329,13 +487,13 @@ public class TestDataRefactor {
     	final String initialDataName = processData.getName();
     	
     	refactorDataOperation.run(new NullProgressMonitor());
-    	assertEquals("The data has n been duplicated", 1, process.getData().size());
+    	assertEquals("The data has n been duplicated", 2, process.getData().size());
    	 	assertEquals("Referenced Data has been removed from script", 1, patternExpr.getReferencedElements().size());
    	 	assertEquals("Referenced Data has not been renamed", newDataName, ((Data)patternExpr.getReferencedElements().get(0)).getName());
    	 	assertEquals("Pattern expression", "${"+newDataName+"}", patternExpr.getContent());
     	
     	editingDomain.getCommandStack().undo();
-    	assertEquals("The data has not been readded on undo", 1, process.getData().size());
+    	assertEquals("The data has not been readded on undo", 2, process.getData().size());
    	 	assertEquals("Referenced Data has been removed from script", 1, patternExpr.getReferencedElements().size());
    	 	assertEquals("Pattern expression", "${"+initialDataName+"}", patternExpr.getContent());
     }
@@ -368,13 +526,13 @@ public class TestDataRefactor {
     	final String initialDataName = processData.getName();
     	
     	refactorDataOperation.run(new NullProgressMonitor());
-    	assertEquals("The old data might not have been updated", 1, process.getData().size());
+    	assertEquals("The old data might not have been updated", 2, process.getData().size());
     	assertEquals("The data has not been renamed in condition", newDataName+" == \"plop\"",conditionExpression.getContent());
     	assertEquals("The data has not been removed from dependency", newDataName,((Data)conditionExpression.getReferencedElements().get(0)).getName());
     	
     	editingDomain.getCommandStack().undo();
     	
-    	assertEquals("The old data might not have been updated", 1, process.getData().size());
+    	assertEquals("The old data might not have been updated", 2, process.getData().size());
     	assertEquals("The data has not been renamed in condition", initialDataName+" == \"plop\"",conditionExpression.getContent());
     	assertEquals("The data dependency has not been back on undo", initialDataName,((Data)conditionExpression.getReferencedElements().get(0)).getName());
     }
@@ -427,6 +585,12 @@ public class TestDataRefactor {
             processData.setName("globalData");
             processData.setDataType(ModelHelper.getDataTypeForID(mainProcess, DataTypeLabels.stringDataType));
             process.getData().add(processData);
+            
+            processData2 = ProcessFactory.eINSTANCE.createData();
+            processData2.setDatasourceId("BOS");
+            processData2.setName("globalData2");
+            processData2.setDataType(ModelHelper.getDataTypeForID(mainProcess, DataTypeLabels.stringDataType));
+            process.getData().add(processData2);
 
             final Activity activity = ProcessFactory.eINSTANCE.createActivity();
             localData = ProcessFactory.eINSTANCE.createData();
@@ -463,10 +627,11 @@ public class TestDataRefactor {
         	refactorDataOperation = new RefactorDataOperation(RefactoringOperationType.REMOVE);
         }
         refactorDataOperation.setContainer(process);
-        refactorDataOperation.setOldData(dataToRefactor);
         if(newDataName != null){
         	final Data newProcessData = createNewProcessData(newDataName, ModelHelper.getDataTypeForID(process, newDataType), dataToRefactor);
-        	refactorDataOperation.setNewData(newProcessData);
+        	refactorDataOperation.addItemToRefactor(newProcessData, dataToRefactor);
+        } else {
+        	refactorDataOperation.addItemToRefactor(null, dataToRefactor);
         }
         editingDomain = createEditingDomain();
         refactorDataOperation.setEditingDomain(editingDomain);

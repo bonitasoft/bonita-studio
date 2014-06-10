@@ -209,28 +209,26 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
                 SWT.ICON_WARNING), createMessage(structuredSelection), MessageDialog.CONFIRM, buttonList, 1, structuredSelection.toList());
         if (dialog.open() == Dialog.OK) {
             IProgressService service = PlatformUI.getWorkbench().getProgressService();
-            CompoundCommand cc = new CompoundCommand("Remove list of data");
+            RefactorDataOperation op = new RefactorDataOperation(RefactoringOperationType.REMOVE);
             for (Object d : structuredSelection.toList()) {
-                RefactorDataOperation op = new RefactorDataOperation(RefactoringOperationType.REMOVE);
-                op.setCompoundCommand(cc);
                 op.setContainer(ModelHelper.getParentProcess(eObject));
                 op.setEditingDomain(getEditingDomain());
-                op.setOldData((Data) d);
+                op.addItemToRefactor(null, (Data) d);
                 op.setDirectDataContainer(getEObject());
                 op.setDataContainmentFeature(getDataFeature());
                 op.setAskConfirmation(true);
-                try {
-                    if (op.canExecute()) {
-                        service.run(true, false, op);
-                        if (!op.isCancelled()) {
-                            getEditingDomain().getCommandStack().execute(DeleteCommand.create(getEditingDomain(), d));
-                        }
-                    }
-                } catch (InvocationTargetException e) {
-                    BonitaStudioLog.error(e, DataPlugin.PLUGIN_ID);
-                } catch (InterruptedException e) {
-                    BonitaStudioLog.error(e, DataPlugin.PLUGIN_ID);
-                }
+            }
+            try {
+            	if (op.canExecute()) {
+            		service.run(true, false, op);
+//                        if (!op.isCancelled()) {
+//                            getEditingDomain().getCommandStack().execute(DeleteCommand.create(getEditingDomain(), d));
+//                        }
+            	}
+            } catch (InvocationTargetException e) {
+            	BonitaStudioLog.error(e, DataPlugin.PLUGIN_ID);
+            } catch (InterruptedException e) {
+            	BonitaStudioLog.error(e, DataPlugin.PLUGIN_ID);
             }
             try {
                 RepositoryManager.getInstance().getCurrentRepository().getProject()

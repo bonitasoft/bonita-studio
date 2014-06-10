@@ -19,8 +19,10 @@ package org.bonitasoft.studio.refactoring.core;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -52,23 +54,15 @@ import org.eclipse.text.edits.MultiTextEdit;
  * @author Romain Bioteau
  * 
  */
-public abstract class AbstractRefactorOperation implements IRunnableWithProgress {
-
-    public static final String EMPTY_VALUE = "     ";
+public abstract class AbstractRefactorOperation<Y,Z,T extends RefactorPair<Y,Z>> implements IRunnableWithProgress {
 
     protected EditingDomain domain;
-
     protected CompoundCommand compoundCommand;
-
     private boolean canExecute = true;
-
     private boolean isCancelled = false;
-
     protected RefactoringOperationType operationType;
-
     private boolean askConfirmation;
-
-    protected String newValue;
+    protected List<T> pairsToRefactor = new ArrayList<T>();
 
     public AbstractRefactorOperation(RefactoringOperationType operationType) {
         this.operationType = operationType;
@@ -78,7 +72,7 @@ public abstract class AbstractRefactorOperation implements IRunnableWithProgress
     public final void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
         Assert.isNotNull(domain);
         if (compoundCommand == null) {
-            compoundCommand = new CompoundCommand();
+            compoundCommand = new CompoundCommand("Refactor Operation");
         }
         if (monitor == null) {
             monitor = new NullProgressMonitor();
@@ -98,37 +92,49 @@ public abstract class AbstractRefactorOperation implements IRunnableWithProgress
     protected abstract void doExecute(IProgressMonitor monitor);
 
     protected void updateReferencesInScripts() {
-        List<Expression> scriptExpressions = ModelHelper.findAllScriptAndConditionsExpressionWithReferencedElement(getContainer(), getOldValue());
-        List<Expression> refactoredScriptExpression = performRefactoringForAllScripts(getOldValueName(), getNewValueName(), scriptExpressions);
-        if (!scriptExpressions.isEmpty() && !getOldValueName().equals(getNewValueName())) {
-            AbstractScriptExpressionRefactoringAction action = getScriptExpressionRefactoringAction(getNewValue(), getOldValueName(), getNewValueName(),
-                    scriptExpressions, refactoredScriptExpression, compoundCommand, domain, operationType);
-            if (action != null) {
-                action.setEditingDomain(domain);
-                action.setAskConfirmation(askConfirmation());
-                action.run(null);
-                setCanExecute(!action.isCancelled());
-                setCancelled(action.isCancelled());
-            } else {
-                setCanExecute(true);
-            }
-        } else {
-            setCanExecute(true);
-        }
+    	Set<Expression> scriptExpressionsSetToRefactor = new HashSet<Expression>();
+    	for(RefactorPair<Y,Z> pairRefactor : pairsToRefactor){
+    		final Z oldValue = pairRefactor.getOldValue();
+    		if(oldValue instanceof EObject){
+    			scriptExpressionsSetToRefactor.addAll(ModelHelper.findAllScriptAndConditionsExpressionWithReferencedElement(getContainer(oldValue), (EObject) oldValue));
+    		}
+    	}
+    	List<Expression> scripExpressionsToRefactor = new ArrayList<Expression>(scriptExpressionsSetToRefactor);
+    	List<Expression> refactoredScriptExpression = performRefactoringForAllScripts(scripExpressionsToRefactor);
+    	if (!scripExpressionsToRefactor.isEmpty()) {
+    			//TODO: improve in order to filter only the data refactored AND with references
+    			AbstractScriptExpressionRefactoringAction<T> action = getScriptExpressionRefactoringAction(pairsToRefactor,
+    					scripExpressionsToRefactor, refactoredScriptExpression, compoundCommand, domain, operationType);
+    			if (action != null) {
+    				action.setEditingDomain(domain);
+    				action.setAskConfirmation(askConfirmation());
+    				action.run(null);
+    				setCanExecute(!action.isCancelled());
+    				setCancelled(action.isCancelled());
+    			} else {
+    				setCanExecute(true);
+    			}
+    	} else {
+    		setCanExecute(true);
+    	}
     }
 
-    protected abstract AbstractScriptExpressionRefactoringAction getScriptExpressionRefactoringAction(EObject newValue, String oldName, String newName,
+    protected abstract AbstractScriptExpressionRefactoringAction<T> getScriptExpressionRefactoringAction(List<T> pairsToRefactor,
             List<Expression> scriptExpressions,
             List<Expression> refactoredScriptExpression, CompoundCommand compoundCommand, EditingDomain domain, RefactoringOperationType operationType);
 
-    protected List<Expression> performRefactoringForAllScripts(String elementNameToUpdate, String newName, List<Expression> groovyScriptExpressions) {
+    protected List<Expression> performRefactoringForAllScripts(List<Expression> groovyScriptExpressions) {
         List<Expression> newExpressions = new ArrayList<Expression>(groovyScriptExpressions.size());
         for (Expression expr : groovyScriptExpressions) {
             Expression newExpr = EcoreUtil.copy(expr);
             if (ExpressionConstants.SCRIPT_TYPE.equals(expr.getType())) {
-                newExpr.setContent(performGroovyRefactoring(elementNameToUpdate, newName, expr.getContent()));
+                newExpr.setContent(performGroovyRefactoring(expr.getContent()));
             } else {
-                newExpr.setContent(performTextReplacement(elementNameToUpdate, newName, expr.getContent()));
+                String textRefactored = expr.getContent();
+                for(RefactorPair<Y, Z> pairToRefactor : pairsToRefactor){
+                	textRefactored = performTextReplacement(pairToRefactor.getOldValueName(), pairToRefactor.getNewValueName(), textRefactored);
+                }
+				newExpr.setContent(textRefactored);
             }
             newExpressions.add(newExpr);
         }
@@ -170,7 +176,7 @@ public abstract class AbstractRefactorOperation implements IRunnableWithProgress
         return buf.toString();
     }
 
-    private String performGroovyRefactoring(String elementToRefactorName, String newElementName, String script) {
+    private String performGroovyRefactoring(String script) {
         final ProvidedGroovyRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(ProvidedGroovyRepositoryStore.class);
         GroovyFileStore tmpGroovyFileStore = store.createRepositoryFileStore("script" + System.currentTimeMillis() + ".groovy");
         tmpGroovyFileStore.save(script);
@@ -186,7 +192,9 @@ public abstract class AbstractRefactorOperation implements IRunnableWithProgress
         if (astNode != null) {
             ProcessVariableRenamer variableRenamer = new ProcessVariableRenamer();
             Map<String, String> variableToRename = new HashMap<String, String>();
-            variableToRename.put(elementToRefactorName, newElementName);
+            for(RefactorPair<Y,Z> pairToRefactor : pairsToRefactor){
+            	variableToRename.put(pairToRefactor.getOldValueName(), pairToRefactor.getNewValueName());
+            }
             MultiTextEdit rename = variableRenamer.rename(astNode, variableToRename);
             if (rename.getChildrenSize() > 0) {
                 Document document = new Document(script);
@@ -208,6 +216,11 @@ public abstract class AbstractRefactorOperation implements IRunnableWithProgress
         this.domain = domain;
     }
 
+    /**
+     * if you are using it surely means that you are doing things in several transactions
+     * and it is bad as it breaks undo/redo
+     */
+    @Deprecated ()
     public void setCompoundCommand(CompoundCommand compoundCommand) {
         this.compoundCommand = compoundCommand;
     }
@@ -227,20 +240,14 @@ public abstract class AbstractRefactorOperation implements IRunnableWithProgress
     protected void setCanExecute(boolean canExecute) {
         this.canExecute = canExecute;
     }
+    
+	public void addItemToRefactor(Y newItem, Z oldItem) {
+		 pairsToRefactor.add(createRefactorPair(newItem, oldItem));
+	}
+	
+	protected abstract T createRefactorPair(Y newItem, Z oldItem);
 
-    public void setNewValueName(String newValue) {
-        this.newValue = newValue;
-    }
-
-    protected abstract EObject getContainer();
-
-    protected abstract EObject getOldValue();
-
-    protected abstract String getOldValueName();
-
-    protected abstract EObject getNewValue();
-
-    protected abstract String getNewValueName();
+    protected abstract EObject getContainer(Z oldValue);
 
     public boolean isCancelled() {
         return isCancelled;
