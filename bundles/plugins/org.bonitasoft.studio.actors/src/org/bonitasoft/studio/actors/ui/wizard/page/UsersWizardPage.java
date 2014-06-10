@@ -17,7 +17,6 @@
 package org.bonitasoft.studio.actors.ui.wizard.page;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -173,6 +172,7 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 				if(selectedUser.getProfessionalData() == null){
 					selectedUser.setProfessionalData(OrganizationFactory.eINSTANCE.createContactData());
 				}
+				
 			}
 		});
 
@@ -481,7 +481,8 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 							}
 						});
 					}
-					ControlDecorationSupport.create(context.bindValue(SWTObservables.observeSelection(control), EMFObservables.observeValue(membership, attributre),selectionStrategy,modelStrategy),SWT.LEFT) ;
+					Binding binding = context.bindValue(SWTObservables.observeSelection(control), EMFObservables.observeValue(membership, attributre),selectionStrategy,modelStrategy);
+					ControlDecorationSupport.create(binding,SWT.LEFT);
 				}
 			}
 		}
@@ -622,11 +623,13 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 				User currentUser = (User) userSingleSelectionObservable.getValue();
 				if(userList != null){
 					WritableList users = new WritableList();
+					users.add("");
 					for(User u : userList){
 						if(!u.equals(currentUser)){
 							users.add(u.getUserName()) ;
 						}
 					}
+					
 					managerNameComboViewer.setInput(users);
 					if(currentUser.getManager() != null){
 						managerNameComboViewer.setSelection(new StructuredSelection(currentUser.getManager()));
@@ -635,8 +638,10 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 				}
 			}
 		});
+		
+		IObservableValue managerValue = EMFObservables.observeDetailValue(Realm.getDefault(), userSingleSelectionObservable, OrganizationPackage.Literals.USER__MANAGER);
 
-		context.bindValue(ViewersObservables.observeSingleSelection(managerNameComboViewer), EMFObservables.observeDetailValue(Realm.getDefault(), userSingleSelectionObservable, OrganizationPackage.Literals.USER__MANAGER));
+		context.bindValue(ViewersObservables.observeSingleSelection(managerNameComboViewer),managerValue );
 
 	}
 
@@ -1734,6 +1739,7 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 				Messages.countryLabel};
 		return titles;
 	}
+
 
 
 }

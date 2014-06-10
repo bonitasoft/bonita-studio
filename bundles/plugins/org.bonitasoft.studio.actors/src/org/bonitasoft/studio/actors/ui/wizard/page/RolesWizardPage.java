@@ -73,314 +73,318 @@ public class RolesWizardPage extends AbstractOrganizationWizardPage {
 
 
 
-	private final List<Membership> roleMemberShips = new ArrayList<Membership>();
-	private IViewerObservableValue roleSingleSelectionObservable;
+    private final List<Membership> roleMemberShips = new ArrayList<Membership>();
+    private IViewerObservableValue roleSingleSelectionObservable;
 
-	public RolesWizardPage() {
-		super(RolesWizardPage.class.getName());
-		setTitle(Messages.displayRolesPageTitle) ;
-		setDescription(Messages.displayRolesPageDesc) ;
-	}
+    public RolesWizardPage() {
+        super(RolesWizardPage.class.getName());
+        setTitle(Messages.displayRolesPageTitle) ;
+        setDescription(Messages.displayRolesPageDesc) ;
+    }
 
-	@Override
-	protected void configureViewer(StructuredViewer viewer) {
+    @Override
+    protected void configureViewer(final StructuredViewer viewer) {
 
-		TableViewer roleTableViewer = (TableViewer) viewer;
-		Table table = roleTableViewer.getTable();
+        final TableViewer roleTableViewer = (TableViewer) viewer;
+        final Table table = roleTableViewer.getTable();
 
-		roleSingleSelectionObservable = ViewersObservables.observeSingleSelection(getViewer());
-		roleSingleSelectionObservable.addValueChangeListener(new IValueChangeListener() {
+        roleSingleSelectionObservable = ViewersObservables.observeSingleSelection(getViewer());
+        roleSingleSelectionObservable.addValueChangeListener(new IValueChangeListener() {
 
-			@Override
-			public void handleValueChange(ValueChangeEvent event) {
-				Role selectedRole = (Role) event.diff.getNewValue();
-				boolean isSelectedRole = selectedRole != null;
-				setControlEnabled(getInfoGroup(), isSelectedRole) ;
-			}
-		});
-
-		
-
-		addNameColumn(roleTableViewer);
-
-		addDisplayNameColumn(roleTableViewer);
-
-		addDescriptionColumn(roleTableViewer);
-
-		addTableColumLayout(table);
-
-		if(roleList!= null && getViewer() != null){
-			getViewer().setInput(roleList) ;
-		}
-		
-		
-	}
-
-	private void addDescriptionColumn(TableViewer tViewer) {
-		TableViewerColumn column = new TableViewerColumn(tViewer, SWT.FILL) ;
-		column.getColumn().setText(Messages.description);
-		column.setLabelProvider(new ColumnLabelProvider(){
-			@Override
-			public String getText(Object element) {
-				return ((Role)element).getDescription();
-			}
-		});
-
-		column.getColumn().setWidth(90);
-		column.getColumn().setMoveable(false);
-		column.getColumn().setResizable(true);
-	}
-
-	private void addDisplayNameColumn(TableViewer tViewer) {
-		TableViewerColumn column = new TableViewerColumn(tViewer, SWT.FILL) ;
-		column.getColumn().setText(Messages.displayName);
-		column.setLabelProvider(new ColumnLabelProvider(){
-			@Override
-			public String getText(Object element) {
-				return ((Role)element).getDisplayName();
-			}
-		});
-
-		column.getColumn().setWidth(90);
-		column.getColumn().setMoveable(false);
-		column.getColumn().setResizable(true);
-	}
-
-	private void addNameColumn(TableViewer tViewer) {
-		TableViewerColumn column = new TableViewerColumn(tViewer, SWT.FILL) ;
-		TableColumn nameColumn = column.getColumn() ;
-		column.getColumn().setText(Messages.roleName);
-		column.setLabelProvider(new ColumnLabelProvider(){
-			@Override
-			public String getText(Object element) {
-				return ((Role)element).getName();
-			}
-		});
-
-		column.getColumn().setWidth(90);
-		column.getColumn().setMoveable(false);
-		column.getColumn().setResizable(true);
-
-		TableColumnSorter sorter = new TableColumnSorter(tViewer) ;
-		sorter.setColumn(nameColumn) ;
-	}
-
-	@Override
-	public void setOrganization(Organization organization) {
-		super.setOrganization(organization);
-		if(organization != null && getViewer() != null){
-			getViewer().setInput(roleList) ;
-		}
-	}
-
-	@Override
-	public void selectionChanged(SelectionChangedEvent event) {
-	}
+            @Override
+            public void handleValueChange(final ValueChangeEvent event) {
+                final Role selectedRole = (Role) event.diff.getNewValue();
+                final boolean isSelectedRole = selectedRole != null;
+                setControlEnabled(getInfoGroup(), isSelectedRole) ;
+            }
+        });
 
 
 
-	@Override
-	protected void configureInfoGroup(Group group) {
+        addNameColumn(roleTableViewer);
 
-		group.setText(Messages.details) ;
-		group.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(15, 5).spacing(10, 5).create()) ;
+        addDisplayNameColumn(roleTableViewer);
 
-		createNameField(group);
+        addDescriptionColumn(roleTableViewer);
 
-		createDisplayNameField(group);
+        addTableColumLayout(table);
 
-		createDescriptionField(group);
-		
-		setControlEnabled(getInfoGroup(), false);
-	}
-
-	private void createDescriptionField(Group group) {
-		Label descriptionLabel = new Label(group, SWT.NONE) ;
-		descriptionLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END,SWT.FILL).create()) ;
-		descriptionLabel.setText(Messages.description) ;
-
-		Text roleDescriptionText = new Text(group, SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL) ;
-		roleDescriptionText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT, 80).create()) ;
-		roleDescriptionText.setMessage(Messages.descriptionHint) ;
-		roleDescriptionText.setTextLimit(255);
-
-		IObservableValue roleDescriptionValue = EMFObservables.observeDetailValue(Realm.getDefault(), roleSingleSelectionObservable, OrganizationPackage.Literals.ROLE__DESCRIPTION);
-		context.bindValue(SWTObservables.observeText(roleDescriptionText, SWT.Modify), roleDescriptionValue);
-		roleDescriptionValue.addValueChangeListener(new IValueChangeListener() {
-
-			@Override
-			public void handleValueChange(ValueChangeEvent event) {
-				handleRoleDescriptionChange(event);
-			}
-		});
-	}
-
-	private void createDisplayNameField(Group group) {
-		Label displayNameLabel = new Label(group, SWT.NONE) ;
-		displayNameLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END,SWT.CENTER).create()) ;
-		displayNameLabel.setText(Messages.displayName) ;
-
-		Text displayNamedText = new Text(group, SWT.BORDER) ;
-		displayNamedText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
+        if(roleList!= null && getViewer() != null){
+            getViewer().setInput(roleList) ;
+        }
 
 
-		UpdateValueStrategy roleDisplayNameStrategy = new UpdateValueStrategy();
-		roleDisplayNameStrategy.setAfterGetValidator(new DisplayNameValidator());
+    }
 
-		IObservableValue roleDisplayNameValue = EMFObservables.observeDetailValue(Realm.getDefault(), roleSingleSelectionObservable, OrganizationPackage.Literals.ROLE__DISPLAY_NAME);
-		Binding binding =context.bindValue(SWTObservables.observeText(displayNamedText, SWT.Modify), roleDisplayNameValue,roleDisplayNameStrategy,null);
-		ControlDecorationSupport.create(binding, SWT.LEFT);
-		
-		roleDisplayNameValue.addValueChangeListener(new IValueChangeListener() {
-			
-			@Override
-			public void handleValueChange(ValueChangeEvent arg0) {
-				handleRoleDisplayNameChange(arg0);
-				
-			}
-		});
-	}
+    private void addDescriptionColumn(final TableViewer tViewer) {
+        final TableViewerColumn column = new TableViewerColumn(tViewer, SWT.FILL) ;
+        column.getColumn().setText(Messages.description);
+        column.setLabelProvider(new ColumnLabelProvider(){
+            @Override
+            public String getText(final Object element) {
+                return ((Role)element).getDescription();
+            }
+        });
 
-	private void createNameField(Group group) {
-		Label roleName = new Label(group, SWT.NONE) ;
-		roleName.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END,SWT.CENTER).create()) ;
-		roleName.setText(Messages.name+" *") ;
+        column.getColumn().setWidth(90);
+        column.getColumn().setMoveable(false);
+        column.getColumn().setResizable(true);
+    }
 
-		Text roleNameText = new Text(group, SWT.BORDER) ;
-		roleNameText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).minSize(130, SWT.DEFAULT).create()) ;
+    private void addDisplayNameColumn(final TableViewer tViewer) {
+        final TableViewerColumn column = new TableViewerColumn(tViewer, SWT.FILL) ;
+        column.getColumn().setText(Messages.displayName);
+        column.setLabelProvider(new ColumnLabelProvider(){
+            @Override
+            public String getText(final Object element) {
+                return ((Role)element).getDisplayName();
+            }
+        });
 
-		UpdateValueStrategy roleNameStrategy = new UpdateValueStrategy();
-		roleNameStrategy.setAfterGetValidator(new IValidator() {
+        column.getColumn().setWidth(90);
+        column.getColumn().setMoveable(false);
+        column.getColumn().setResizable(true);
+    }
 
-			@Override
-			public IStatus validate(Object value) {
-				if(value.toString().isEmpty()){
-					return ValidationStatus.error(Messages.nameIsEmpty) ;
-				}
-				if(value.toString().length()>NAME_SIZE){
-					return ValidationStatus.error(Messages.nameLimitSize) ;
-				}
+    private void addNameColumn(final TableViewer tViewer) {
+        final TableViewerColumn column = new TableViewerColumn(tViewer, SWT.FILL) ;
+        final TableColumn nameColumn = column.getColumn() ;
+        column.getColumn().setText(Messages.roleName);
+        column.setLabelProvider(new ColumnLabelProvider(){
+            @Override
+            public String getText(final Object element) {
+                return ((Role)element).getName();
+            }
+        });
 
-				for(Role role : roleList){
-					if(!role.equals(roleSingleSelectionObservable.getValue())){
-						if(role.getName().equals(value)){
-							return ValidationStatus.error(Messages.roleNameAlreadyExists) ;
-						}
-					}
-				}
-				return Status.OK_STATUS;
-			}
-		});
+        column.getColumn().setWidth(90);
+        column.getColumn().setMoveable(false);
+        column.getColumn().setResizable(true);
 
-		IObservableValue roleNameValue = EMFObservables.observeDetailValue(Realm.getDefault(), roleSingleSelectionObservable, OrganizationPackage.Literals.ROLE__NAME);
-		Binding binding = context.bindValue(SWTObservables.observeText(roleNameText, SWT.Modify), roleNameValue, roleNameStrategy,null);
-		ControlDecorationSupport.create(binding, SWT.LEFT, group, new ControlDecorationUpdater(){
-			@Override
-			protected void update(ControlDecoration decoration, IStatus status) {
-				if(roleSingleSelectionObservable.getValue() !=null){
-					super.update(decoration, status);
-				}
-			}
-		});
-		roleNameValue.addValueChangeListener(new IValueChangeListener() {
+        final TableColumnSorter sorter = new TableColumnSorter(tViewer) ;
+        sorter.setColumn(nameColumn) ;
+    }
 
-			@Override
-			public void handleValueChange(ValueChangeEvent event) {
-				handleRoleNameChange(event);
-			}
-		});
-	}
+    @Override
+    public void setOrganization(final Organization organization) {
+        super.setOrganization(organization);
+        if(organization != null && getViewer() != null){
+            getViewer().setInput(roleList) ;
+        }
+    }
+
+    @Override
+    public void selectionChanged(final SelectionChangedEvent event) {
+    }
 
 
-	private void handleRoleNameChange(ValueChangeEvent event) {
-		Role role = (Role) roleSingleSelectionObservable.getValue();
-		Role oldRole = EcoreUtil.copy(role);
-		Object oldValue = event.diff.getOldValue();
-		if(oldValue!=null){
-			oldRole.setName(oldValue.toString());
-			for(Membership m : membershipList){
-				if(oldRole.getName() != null && oldRole.getName().equals(m.getRoleName())){
-					roleMemberShips.add(m) ;
-				}
-			}
 
-			if(getViewer() != null && !getViewer().getControl().isDisposed()){
-				getViewer().refresh(role) ;
-			}
+    @Override
+    protected void configureInfoGroup(final Group group) {
 
-			String newRoleName = role.getName();
-			for(Membership m : roleMemberShips){
-				m.setRoleName(newRoleName) ;
-			}
-		}
-	}
+        group.setText(Messages.details) ;
+        group.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(15, 5).spacing(10, 5).create()) ;
 
-	private void handleRoleDescriptionChange(ValueChangeEvent event) {
-		Role role = (Role) roleSingleSelectionObservable.getValue();
-		Role oldRole = EcoreUtil.copy(role);
-		Object oldValue = event.diff.getOldValue();
-		if(oldValue!=null){
-			oldRole.setName(oldValue.toString());
+        createNameField(group);
 
-			if(getViewer() != null && !getViewer().getControl().isDisposed()){
-				getViewer().refresh(role) ;
-			}
-		}
-	}
-	
-	private void handleRoleDisplayNameChange(ValueChangeEvent event) {
-		Role role = (Role) roleSingleSelectionObservable.getValue();
-		Role oldRole = EcoreUtil.copy(role);
-		Object oldValue = event.diff.getOldValue();
-		if(oldValue!=null){
-			oldRole.setDisplayName(oldValue.toString());
+        createDisplayNameField(group);
 
-			if(getViewer() != null && !getViewer().getControl().isDisposed()){
-				getViewer().refresh(role) ;
-			}
-		}
-	}
+        createDescriptionField(group);
 
-	@Override
-	protected void addButtonSelected() {
-		Role role = OrganizationFactory.eINSTANCE.createRole() ;
-		role.setName(generateRolename()) ;
-		role.setDisplayName(role.getName()) ;
-		roleList.add(role) ;
-		getViewer().setInput(roleList) ;
-		getViewer().setSelection(new StructuredSelection(role)) ;
-	}
+        setControlEnabled(getInfoGroup(), false);
+    }
 
-	private String generateRolename() {
-		Set<String> names = new HashSet<String>() ;
-		for(Role r : roleList){
-			names.add(r.getName()) ;
-		}
+    private void createDescriptionField(final Group group) {
+        final Label descriptionLabel = new Label(group, SWT.NONE) ;
+        descriptionLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END,SWT.FILL).create()) ;
+        descriptionLabel.setText(Messages.description) ;
 
-		return NamingUtils.generateNewName(names, Messages.defaultRoleName);
-	}
+        final Text roleDescriptionText = new Text(group, SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL) ;
+        roleDescriptionText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT, 80).create()) ;
+        roleDescriptionText.setMessage(Messages.descriptionHint) ;
+        roleDescriptionText.setTextLimit(255);
 
-	@Override
-	protected void removeButtonSelected() {
-		for(Object sel :  ((IStructuredSelection) getViewer().getSelection()).toList()){
-			if(sel instanceof Role){
-				roleList.remove(sel) ;
-			}
-		}
-		getViewer().setInput(roleList) ;
-		selectionChanged(new SelectionChangedEvent(getViewer(),new StructuredSelection())) ;
-	}
+        final IObservableValue roleDescriptionValue = EMFObservables.observeDetailValue(Realm.getDefault(), roleSingleSelectionObservable, OrganizationPackage.Literals.ROLE__DESCRIPTION);
+        context.bindValue(SWTObservables.observeText(roleDescriptionText, SWT.Modify), roleDescriptionValue);
+        roleDescriptionValue.addValueChangeListener(new IValueChangeListener() {
 
-	@Override
-	protected boolean viewerSelect(Object element, String searchQuery) {
-		if(searchQuery == null || searchQuery.isEmpty()
-				|| (((Role)element).getName() != null && ((Role)element).getName().toLowerCase().contains(searchQuery.toLowerCase()))
-				|| (((Role)element).getDisplayName() != null && ((Role)element).getDisplayName().toLowerCase().contains(searchQuery.toLowerCase()))
-				|| (((Role)element).getDescription() != null && ((Role)element).getDescription().toLowerCase().contains(searchQuery.toLowerCase()))){
-			return true ;
-		}
-		return false ;
-	}
+            @Override
+            public void handleValueChange(final ValueChangeEvent event) {
+                handleRoleDescriptionChange(event);
+            }
+        });
+    }
 
+    private void createDisplayNameField(final Group group) {
+        final Label displayNameLabel = new Label(group, SWT.NONE) ;
+        displayNameLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END,SWT.CENTER).create()) ;
+        displayNameLabel.setText(Messages.displayName) ;
+
+        final Text displayNamedText = new Text(group, SWT.BORDER) ;
+        displayNamedText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
+
+
+        final UpdateValueStrategy roleDisplayNameStrategy = new UpdateValueStrategy();
+        roleDisplayNameStrategy.setAfterGetValidator(new DisplayNameValidator());
+
+        final IObservableValue roleDisplayNameValue = EMFObservables.observeDetailValue(Realm.getDefault(), roleSingleSelectionObservable, OrganizationPackage.Literals.ROLE__DISPLAY_NAME);
+        final Binding binding =context.bindValue(SWTObservables.observeText(displayNamedText, SWT.Modify), roleDisplayNameValue,roleDisplayNameStrategy,null);
+        ControlDecorationSupport.create(binding, SWT.LEFT);
+
+        roleDisplayNameValue.addValueChangeListener(new IValueChangeListener() {
+
+            @Override
+            public void handleValueChange(final ValueChangeEvent arg0) {
+                handleRoleDisplayNameChange(arg0);
+
+            }
+        });
+    }
+
+    private void createNameField(final Group group) {
+        final Label roleName = new Label(group, SWT.NONE) ;
+        roleName.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END,SWT.CENTER).create()) ;
+        roleName.setText(Messages.name+" *") ;
+
+        final Text roleNameText = new Text(group, SWT.BORDER) ;
+        roleNameText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).minSize(130, SWT.DEFAULT).create()) ;
+
+        final UpdateValueStrategy roleNameStrategy = new UpdateValueStrategy();
+        roleNameStrategy.setAfterGetValidator(new IValidator() {
+
+            @Override
+            public IStatus validate(final Object value) {
+                if(value.toString().isEmpty()){
+                    return ValidationStatus.error(Messages.nameIsEmpty) ;
+                }
+                if(value.toString().length()>NAME_SIZE){
+                    return ValidationStatus.error(Messages.nameLimitSize) ;
+                }
+
+                for(final Role role : roleList){
+                    if(!role.equals(roleSingleSelectionObservable.getValue())){
+                        if(role.getName().equals(value)){
+                            return ValidationStatus.error(Messages.roleNameAlreadyExists) ;
+                        }
+                    }
+                }
+                return Status.OK_STATUS;
+            }
+        });
+
+        final IObservableValue roleNameValue = EMFObservables.observeDetailValue(Realm.getDefault(), roleSingleSelectionObservable, OrganizationPackage.Literals.ROLE__NAME);
+        final Binding binding = context.bindValue(SWTObservables.observeText(roleNameText, SWT.Modify), roleNameValue, roleNameStrategy,null);
+        ControlDecorationSupport.create(binding, SWT.LEFT, group, new ControlDecorationUpdater(){
+            @Override
+            protected void update(final ControlDecoration decoration, final IStatus status) {
+                if(roleSingleSelectionObservable.getValue() !=null){
+                    super.update(decoration, status);
+                }
+            }
+        });
+        roleNameValue.addValueChangeListener(new IValueChangeListener() {
+
+            @Override
+            public void handleValueChange(final ValueChangeEvent event) {
+                handleRoleNameChange(event);
+            }
+        });
+    }
+
+
+    private void handleRoleNameChange(final ValueChangeEvent event) {
+        final Role role = (Role) roleSingleSelectionObservable.getValue();
+        final Role oldRole = EcoreUtil.copy(role);
+        final Object oldValue = event.diff.getOldValue();
+        if(oldValue!=null){
+            oldRole.setName(oldValue.toString());
+            for(final Membership m : membershipList){
+                if(oldRole.getName() != null && oldRole.getName().equals(m.getRoleName())){
+                    roleMemberShips.add(m) ;
+                }
+            }
+
+            if(getViewer() != null && !getViewer().getControl().isDisposed()){
+                getViewer().refresh(role) ;
+            }
+
+            final String newRoleName = role.getName();
+            for(final Membership m : roleMemberShips){
+                m.setRoleName(newRoleName) ;
+            }
+        }
+    }
+
+    private void handleRoleDescriptionChange(final ValueChangeEvent event) {
+        final Role role = (Role) roleSingleSelectionObservable.getValue();
+        final Role oldRole = EcoreUtil.copy(role);
+        final Object oldValue = event.diff.getOldValue();
+        if(oldValue!=null){
+            oldRole.setName(oldValue.toString());
+
+            if(getViewer() != null && !getViewer().getControl().isDisposed()){
+                getViewer().refresh(role) ;
+            }
+        }
+    }
+
+    private void handleRoleDisplayNameChange(final ValueChangeEvent event) {
+        final Role role = (Role) roleSingleSelectionObservable.getValue();
+        final Role oldRole = EcoreUtil.copy(role);
+        final Object oldValue = event.diff.getOldValue();
+        if(oldValue!=null){
+            oldRole.setDisplayName(oldValue.toString());
+
+            if(getViewer() != null && !getViewer().getControl().isDisposed()){
+                getViewer().refresh(role) ;
+            }
+        }
+    }
+
+    @Override
+    protected void addButtonSelected() {
+        final Role role = OrganizationFactory.eINSTANCE.createRole() ;
+        role.setName(generateRolename()) ;
+        role.setDisplayName(role.getName()) ;
+        roleList.add(role) ;
+        getViewer().setInput(roleList) ;
+        getViewer().setSelection(new StructuredSelection(role)) ;
+    }
+
+    private String generateRolename() {
+        final Set<String> names = new HashSet<String>() ;
+        for(final Role r : roleList){
+            names.add(r.getName()) ;
+        }
+
+        return NamingUtils.generateNewName(names, Messages.defaultRoleName);
+    }
+
+    @Override
+    protected void removeButtonSelected() {
+        for(final Object sel :  ((IStructuredSelection) getViewer().getSelection()).toList()){
+            if(sel instanceof Role){
+                roleList.remove(sel) ;
+            }
+        }
+        getViewer().setInput(roleList) ;
+        selectionChanged(new SelectionChangedEvent(getViewer(),new StructuredSelection())) ;
+    }
+
+    @Override
+    protected boolean viewerSelect(final Object element, final String searchQuery) {
+        if(searchQuery == null || searchQuery.isEmpty()
+                || ((Role)element).getName() != null && ((Role)element).getName().toLowerCase().contains(searchQuery.toLowerCase())
+                || ((Role)element).getDisplayName() != null && ((Role)element).getDisplayName().toLowerCase().contains(searchQuery.toLowerCase())
+                || ((Role)element).getDescription() != null && ((Role)element).getDescription().toLowerCase().contains(searchQuery.toLowerCase())){
+            return true ;
+        }
+        return false ;
+    }
+
+    @Override
+    public boolean isPageComplete() {
+        return super.isPageComplete() || roleSingleSelectionObservable.getValue() == null;
+    }
 
 }
