@@ -32,45 +32,46 @@ import org.eclipse.core.runtime.IStatus;
  */
 public class CustomerUserInformationDefinitionNameValidator implements IValidator {
 
-	
-	
-	Organization organization;
-	Set<String> exisingNames=new HashSet<String>();
-	
-	
-	public CustomerUserInformationDefinitionNameValidator(Organization organization) {
-		this.organization=organization;
-		
-		if(organization!=null && organization.getCustomUserInfoDefinitions()!=null && organization.getCustomUserInfoDefinitions().getCustomUserInfoDefinition()!=null ){
-			for(CustomUserInfoDefinition def : organization.getCustomUserInfoDefinitions().getCustomUserInfoDefinition()){
-				exisingNames.add(def.getName().toLowerCase());
-			}
-		}
-	}
 
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.core.databinding.validation.IValidator#validate(java.lang.Object)
-	 */
-	@Override
-	public IStatus validate(Object value) {
-		if(value==null){
-			return ValidationStatus.error(Messages.customUserInfoDefinitionNotEmpty);
-		}
-		String text = value.toString();
-		if(text== null || text.trim().isEmpty()){
-			return ValidationStatus.error(Messages.customUserInfoDefinitionNotEmpty);
-		}
-		if(text.startsWith(" ") || text.endsWith(" ")){
-			return ValidationStatus.error(Messages.customUserInfoDefinitionNoWhiteSpaceAtStartOrEnd);
-		}
-		if(exisingNames.contains(text.toLowerCase())){
-			return ValidationStatus.error(Messages.customUserInfoDefinitionAlreadyExist);
-		}
-		if(text.length()>50){
-			return ValidationStatus.error(Messages.customUserInfoDefinitionNameTooLong);
-		}				
-		return ValidationStatus.ok();
-	}
+
+    Organization organization;
+    Set<String> exisingNames=new HashSet<String>();
+
+
+    public CustomerUserInformationDefinitionNameValidator(final Organization organization) {
+        this.organization=organization;
+
+        if (organization != null && organization.getCustomUserInfoDefinitions() != null
+                && organization.getCustomUserInfoDefinitions().getCustomUserInfoDefinition() != null) {
+            for (final CustomUserInfoDefinition def : organization.getCustomUserInfoDefinitions().getCustomUserInfoDefinition()) {
+                exisingNames.add(def.getName().toLowerCase());
+            }
+        }
+    }
+
+
+    /* (non-Javadoc)
+     * @see org.eclipse.core.databinding.validation.IValidator#validate(java.lang.Object)
+     */
+    @Override
+    public IStatus validate(final Object value) {
+        if(value==null){
+            return ValidationStatus.error(Messages.customUserInfoDefinitionNotEmpty);
+        }
+        final String text = value.toString();
+        if(text== null || text.trim().isEmpty()){
+            return ValidationStatus.error(Messages.customUserInfoDefinitionNotEmpty);
+        }
+        if(text.startsWith(" ") || text.endsWith(" ")){
+            return ValidationStatus.error(Messages.customUserInfoDefinitionNoWhiteSpaceAtStartOrEnd);
+        }
+        if(exisingNames.contains(text.toLowerCase())){
+            return ValidationStatus.error(Messages.customUserInfoDefinitionAlreadyExist);
+        }
+        if(text.length()>50){
+            return ValidationStatus.error(Messages.customUserInfoDefinitionNameTooLong);
+        }
+        return ValidationStatus.ok();
+    }
 
 }

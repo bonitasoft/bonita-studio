@@ -21,7 +21,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 
 import org.bonitasoft.studio.actors.i18n.Messages;
@@ -123,8 +122,6 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
     //private final Map<EAttribute, Control> personalWidgetMap = new HashMap<EAttribute, Control>();
     private final Map<EAttribute, Control> professionalWidgetMap = new HashMap<EAttribute, Control>();
     private final Map<EAttribute, Control> generalWidgetMap = new HashMap<EAttribute, Control>() ;
-    private final Map<Membership, Map<EAttribute,Control[]>> membershipWidgetMap = new HashMap<Membership, Map<EAttribute,Control[]>>();
-    private final Map<CustomUserInfoValue,  Control[]> customUserInfoWidgetMap = new HashMap<CustomUserInfoValue, Control[]>();
 
     CustomUserInfoDefinitions infoDefinitions;
 
@@ -144,6 +141,7 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
     private TabItem userTab;
     private Composite labelComposite;
     private ComboViewer managerNameComboViewer;
+    private SelectionAdapter selectionAdapter;
 
 
     public UsersWizardPage() {
@@ -173,6 +171,25 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 
                 if(selectedUser.getProfessionalData() == null){
                     selectedUser.setProfessionalData(OrganizationFactory.eINSTANCE.createContactData());
+                }
+
+                final TabItem item = tab.getSelection()[0];
+                if (item.equals(memberShipTab)) {
+                    for (final Control c : tab.getChildren()) {
+                        c.dispose();
+                    }
+                    final ScrolledComposite sc = createScrolledComposite();
+                    final Control control = createMembershipControl(sc);
+                    sc.setContent(control);
+                    memberShipTab.setControl(sc);
+                } else if (item.equals(customTab)) {
+                    for (final Control c : tab.getChildren()) {
+                        c.dispose();
+                    }
+                    final ScrolledComposite sc = createScrolledComposite();
+                    final Control control = createOtherControl(sc);
+                    sc.setContent(control);
+                    customTab.setControl(sc);
                 }
 
             }
@@ -263,9 +280,8 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
                         //                        }
                         if(getViewer() != null && !getViewer().getControl().isDisposed()){
                             getViewer().refresh(infoTab) ;
-                            getViewer().refresh(customTab);
+                            //                            getViewer().refresh(customTab);
                         }
-
                     }
                 });
             }
@@ -382,9 +398,6 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
         //				}
         //			}
 
-        if(selectedUser.getPersonalData() == null){
-            selectedUser.setPersonalData(OrganizationFactory.eINSTANCE.createContactData()) ;
-        }
 
         //			for(Entry<EAttribute, Control> entry : personalWidgetMap.entrySet()){
         //				EAttribute attributre = entry.getKey() ;
@@ -395,100 +408,97 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
         //				}
         //			}
 
-        if(selectedUser.getProfessionalData() == null){
-            selectedUser.setProfessionalData(OrganizationFactory.eINSTANCE.createContactData()) ;
-        }
 
 
 
-        for(final Entry<EAttribute, Control> entry : professionalWidgetMap.entrySet()){
-            final EAttribute attributre = entry.getKey() ;
-            final Control control =  entry.getValue() ;
-            if(!control.isDisposed()){
-                context.bindValue(SWTObservables.observeText(control,SWT.Modify), EMFObservables.observeValue(selectedUser.getProfessionalData(), attributre)) ;
-            }
-        }
+        //        for(final Entry<EAttribute, Control> entry : professionalWidgetMap.entrySet()){
+        //            final EAttribute attributre = entry.getKey() ;
+        //            final Control control =  entry.getValue() ;
+        //            if(!control.isDisposed()){
+        //                context.bindValue(SWTObservables.observeText(control,SWT.Modify), EMFObservables.observeValue(selectedUser.getProfessionalData(), attributre)) ;
+        //            }
+        //        }
 
 
-        for(final Entry<CustomUserInfoValue,  Control[]> entry : customUserInfoWidgetMap.entrySet()){
-            final CustomUserInfoValue customInfo = entry.getKey();
-            final Control control = entry.getValue()[1];
+        //        for(final Entry<CustomUserInfoValue,  Control[]> entry : customUserInfoWidgetMap.entrySet()){
+        //            final CustomUserInfoValue customInfo = entry.getKey();
+        //            final Control control = entry.getValue()[1];
+        //
+        //            if(!control.isDisposed()){
+        //                context.bindValue(SWTObservables.observeText(control,SWT.Modify), EMFObservables.observeValue(customInfo, OrganizationPackage.Literals.CUSTOM_USER_INFO_VALUE__VALUE)) ;
+        //            }
+        //
+        //        }
 
-            if(!control.isDisposed()){
-                context.bindValue(SWTObservables.observeText(control,SWT.Modify), EMFObservables.observeValue(customInfo, OrganizationPackage.Literals.CUSTOM_USER_INFO_VALUE__VALUE)) ;
-            }
 
-        }
-
-
-        for(final Entry<Membership, Map<EAttribute,Control[]>> entry : membershipWidgetMap.entrySet()){
-            final Membership membership = entry.getKey() ;
-            final Map<EAttribute,Control[]> controls =  entry.getValue() ;
-            for(final Entry<EAttribute, Control[]> e : controls.entrySet()){
-                final EAttribute attributre = e.getKey() ;
-                final Control control = e.getValue()[1] ;
-                if(!control.isDisposed()){
-                    final UpdateValueStrategy selectionStrategy = new UpdateValueStrategy() ;
-
-                    selectionStrategy.setAfterConvertValidator(new IValidator() {
-
-                        @Override
-                        public IStatus validate(final Object value) {
-                            if(value == null || value.toString().isEmpty()){
-                                return ValidationStatus.error(Messages.emtpyMembershipValue) ;
-                            }
-                            return Status.OK_STATUS;
-                        }
-                    }) ;
-                    if(attributre.equals(OrganizationPackage.Literals.MEMBERSHIP__GROUP_NAME)){
-                        selectionStrategy.setConverter(new Converter(String.class,String.class) {
-
-                            @Override
-                            public Object convert(final Object from) {
-                                final String path = (String) from ;
-                                if(!path.isEmpty()){
-                                    final String parentPath = path.substring(0, path.lastIndexOf(GroupContentProvider.GROUP_SEPARATOR)) ;
-                                    final String groupName = path.substring(path.lastIndexOf(GroupContentProvider.GROUP_SEPARATOR)+1,path.length()) ;
-                                    if(parentPath.isEmpty()){
-                                        membership.setGroupParentPath(null) ;
-                                    }else{
-                                        membership.setGroupParentPath(parentPath) ;
-                                    }
-                                    return groupName;
-                                }else{
-                                    return "";
-                                }
-
-                            }
-                        });
-
-                    }
-                    UpdateValueStrategy modelStrategy = null;
-                    if(attributre.equals(OrganizationPackage.Literals.MEMBERSHIP__GROUP_NAME)){
-                        modelStrategy =  new UpdateValueStrategy();
-                        modelStrategy.setConverter(new Converter(String.class,String.class) {
-                            @Override
-                            public Object convert(final Object from) {
-                                if(membership.getGroupParentPath() != null && !membership.getGroupParentPath().isEmpty()){
-                                    String parentPath =  membership.getGroupParentPath() ;
-                                    if(!membership.getGroupParentPath().endsWith(GroupContentProvider.GROUP_SEPARATOR)){
-                                        parentPath = parentPath + GroupContentProvider.GROUP_SEPARATOR ;
-                                    }
-                                    final String path = parentPath + from ;
-                                    return path ;
-                                }else if(from!= null && !from.toString().isEmpty()){
-                                    return GroupContentProvider.GROUP_SEPARATOR  + membership.getGroupName() ;
-                                }else{
-                                    return "";
-                                }
-                            }
-                        });
-                    }
-                    final Binding binding = context.bindValue(SWTObservables.observeSelection(control), EMFObservables.observeValue(membership, attributre),selectionStrategy,modelStrategy);
-                    ControlDecorationSupport.create(binding,SWT.LEFT);
-                }
-            }
-        }
+        //        for(final Entry<Membership, Map<EAttribute,Control[]>> entry : membershipWidgetMap.entrySet()){
+        //            final Membership membership = entry.getKey() ;
+        //            final Map<EAttribute,Control[]> controls =  entry.getValue() ;
+        //            for(final Entry<EAttribute, Control[]> e : controls.entrySet()){
+        //                final EAttribute attributre = e.getKey() ;
+        //                final Control control = e.getValue()[1] ;
+        //                if(!control.isDisposed()){
+        //                    final UpdateValueStrategy selectionStrategy = new UpdateValueStrategy() ;
+        //
+        //                    selectionStrategy.setAfterConvertValidator(new IValidator() {
+        //
+        //                        @Override
+        //                        public IStatus validate(final Object value) {
+        //                            if(value == null || value.toString().isEmpty()){
+        //                                return ValidationStatus.error(Messages.emtpyMembershipValue) ;
+        //                            }
+        //                            return Status.OK_STATUS;
+        //                        }
+        //                    }) ;
+        //                    if(attributre.equals(OrganizationPackage.Literals.MEMBERSHIP__GROUP_NAME)){
+        //                        selectionStrategy.setConverter(new Converter(String.class,String.class) {
+        //
+        //                            @Override
+        //                            public Object convert(final Object from) {
+        //                                final String path = (String) from ;
+        //                                if(!path.isEmpty()){
+        //                                    final String parentPath = path.substring(0, path.lastIndexOf(GroupContentProvider.GROUP_SEPARATOR)) ;
+        //                                    final String groupName = path.substring(path.lastIndexOf(GroupContentProvider.GROUP_SEPARATOR)+1,path.length()) ;
+        //                                    if(parentPath.isEmpty()){
+        //                                        membership.setGroupParentPath(null) ;
+        //                                    }else{
+        //                                        membership.setGroupParentPath(parentPath) ;
+        //                                    }
+        //                                    return groupName;
+        //                                }else{
+        //                                    return "";
+        //                                }
+        //
+        //                            }
+        //                        });
+        //
+        //                    }
+        //                    UpdateValueStrategy modelStrategy = null;
+        //                    if(attributre.equals(OrganizationPackage.Literals.MEMBERSHIP__GROUP_NAME)){
+        //                        modelStrategy =  new UpdateValueStrategy();
+        //                        modelStrategy.setConverter(new Converter(String.class,String.class) {
+        //                            @Override
+        //                            public Object convert(final Object from) {
+        //                                if(membership.getGroupParentPath() != null && !membership.getGroupParentPath().isEmpty()){
+        //                                    String parentPath =  membership.getGroupParentPath() ;
+        //                                    if(!membership.getGroupParentPath().endsWith(GroupContentProvider.GROUP_SEPARATOR)){
+        //                                        parentPath = parentPath + GroupContentProvider.GROUP_SEPARATOR ;
+        //                                    }
+        //                                    final String path = parentPath + from ;
+        //                                    return path ;
+        //                                }else if(from!= null && !from.toString().isEmpty()){
+        //                                    return GroupContentProvider.GROUP_SEPARATOR  + membership.getGroupName() ;
+        //                                }else{
+        //                                    return "";
+        //                                }
+        //                            }
+        //                        });
+        //                    }
+        //                    final Binding binding = context.bindValue(SWTObservables.observeSelection(control), EMFObservables.observeValue(membership, attributre),selectionStrategy,modelStrategy);
+        //                    ControlDecorationSupport.create(binding,SWT.LEFT);
+        //                }
+        //            }
+        //        }
 
         //			pageSupport = WizardPageSupport.create(this, context);
         //		}else{
@@ -498,13 +508,13 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 
     }
 
-    private void updateDelegueeMembership(final String oldUserName,final String newUserName) {
-        for(final Membership m : membershipList){
-            if(oldUserName.equals(m.getUserName())){
-                m.setUserName(newUserName) ;
-            }
-        }
-    }
+    //    private void updateDelegueeMembership(final String oldUserName,final String newUserName) {
+    //        for(final Membership m : membershipList){
+    //            if(oldUserName.equals(m.getUserName())){
+    //                m.setUserName(newUserName) ;
+    //            }
+    //        }
+    //    }
 
     @Override
     protected void configureInfoGroup(final Group group) {
@@ -525,7 +535,7 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
         tab.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).span(2, 1).create()) ;
         tab.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).create()) ;
 
-        tab.addSelectionListener(new SelectionAdapter() {
+        selectionAdapter = new SelectionAdapter() {
 
             @Override
             public void widgetSelected(final SelectionEvent e) {
@@ -559,35 +569,23 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 
                 else if(item.equals(memberShipTab)){
                     final ScrolledComposite sc = createScrolledComposite();
-                    control = createMembershipControl(sc,membershipWidgetMap);
+                    control = createMembershipControl(sc);
                     sc.setContent(control);
                     memberShipTab.setControl(sc) ;
                 }
 
                 else if(item.equals(customTab)){
                     final ScrolledComposite sc = createScrolledComposite();
-                    control = createOtherControl(sc,customUserInfoWidgetMap);
+                    control = createOtherControl(sc);
                     sc.setContent(control);
                     customTab.setControl(sc) ;
                 }
 
                 getInfoGroup().layout(true, true) ;
-
-                //				userSingleSelectionObservable.addValueChangeListener(new IValueChangeListener() {
-                //
-                //					@Override
-                //					public void handleValueChange(ValueChangeEvent arg0) {
-                //						if(Arrays.asList(tab.getSelection()).contains(memberShipTab)){
-                //							Event event = new Event();
-                //							event.item = memberShipTab;
-                //							tab.notifyListeners(SWT.Selection, event);
-                //						}
-                //
-                //					}
-                //				});
-
             }
-        }) ;
+        };
+
+        tab.addSelectionListener(selectionAdapter);
 
         generalTab = new TabItem(tab, SWT.NONE) ;
         generalTab.setText(Messages.general) ;
@@ -655,8 +653,6 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
                 ((User) userSingleSelectionObservable.getValue()).setManager(selectedManager);
             }
         });
-
-
     }
 
     private void createPasswordField(final Composite rightColumnComposite) {
@@ -800,14 +796,7 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
     }
 
 
-    protected Control createOtherControl(final Composite parent,Map<CustomUserInfoValue, Control[]> widgetMap) {
-
-        if( widgetMap == null){
-            widgetMap = new HashMap<CustomUserInfoValue, Control[]>() ;
-        }else{
-            widgetMap.clear() ;
-        }
-
+    protected Control createOtherControl(final Composite parent) {
 
         final Composite otherInfoComposite = new Composite(parent, SWT.NONE);
         otherInfoComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create()) ;
@@ -834,9 +823,9 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 
                 final Text textValue = new Text(otherInfoComposite, SWT.BORDER);
                 textValue.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+                context.bindValue(SWTObservables.observeText(textValue, SWT.Modify),
+                        EMFObservables.observeValue(infoValue, OrganizationPackage.Literals.CUSTOM_USER_INFO_VALUE__VALUE));
 
-                final Control[] controls = new Control[]{labelName, textValue};
-                widgetMap.put(infoValue, controls);
             }
         }
 
@@ -847,6 +836,7 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
             @Override
             public void widgetSelected(final SelectionEvent e) {
                 tabFolder.setSelection(infoTab);
+                getViewer().refresh(infoTab);
             }
 
         });
@@ -854,8 +844,7 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
         return otherInfoComposite;
     }
 
-    protected Control createMembershipControl(final Composite parent,final Map<Membership, Map<EAttribute,Control[]>> widgetMap) {
-        widgetMap.clear() ;
+    protected Control createMembershipControl(final Composite parent) {
 
         final Composite detailsInfoComposite = new Composite(parent, SWT.NONE) ;
         detailsInfoComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create()) ;
@@ -1386,6 +1375,19 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
         tabFolder = new TabFolder(parent, SWT.NONE);
         tabFolder.setLayout(GridLayoutFactory.fillDefaults().create());
         tabFolder.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        tabFolder.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(final SelectionEvent e) {
+                final TabItem item = (TabItem) e.item;
+                if (item.equals(userTab)) {
+                    final ScrolledComposite sc = createScrolledComposite();
+                    final Control control = createOtherControl(sc);
+                    sc.setContent(control);
+                    customTab.setControl(sc);
+                }
+            }
+        });
 
         super.createControl(tabFolder);
 

@@ -16,10 +16,9 @@
  */
 package org.bonitasoft.studio.actors.ui.editingsupport;
 
-import java.util.HashSet;
-import java.util.Set;
-
+import org.bonitasoft.studio.actors.model.organization.CustomUserInfoValue;
 import org.bonitasoft.studio.actors.model.organization.Organization;
+import org.bonitasoft.studio.actors.model.organization.User;
 import org.bonitasoft.studio.actors.validator.CustomerUserInformationDefinitionNameValidator;
 import org.bonitasoft.studio.common.jface.ColumnViewerUpdateListener;
 import org.eclipse.core.databinding.Binding;
@@ -27,10 +26,10 @@ import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.beans.PojoObservables;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
-import org.eclipse.emf.databinding.EMFDataBindingContext;
+import org.eclipse.core.databinding.observable.value.IValueChangeListener;
+import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.viewers.ObservableValueEditingSupport;
-import org.eclipse.jface.text.link.LinkedModeUI.ExitFlags;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.TextCellEditor;
@@ -45,50 +44,71 @@ import org.eclipse.swt.widgets.Text;
  */
 public class CustomUserInformationDefinitionNameEditingSupport extends ObservableValueEditingSupport {
 
-	private DataBindingContext dbc;
-	private Organization organization;
-	/**
-	 * @param viewer
-	 * @param dbc
-	 */
-	public CustomUserInformationDefinitionNameEditingSupport(ColumnViewer viewer, DataBindingContext dbc) {
-		super(viewer, dbc);
-		this.dbc = dbc;
-	}
+    private final DataBindingContext dbc;
+    private Organization organization;
+    /**
+     * @param viewer
+     * @param dbc
+     */
+    public CustomUserInformationDefinitionNameEditingSupport(final ColumnViewer viewer, final DataBindingContext dbc) {
+        super(viewer, dbc);
+        this.dbc = dbc;
+    }
 
 
 
-	public void setOrganization(Organization organization) {
-		this.organization = organization;
-	}
+    public void setOrganization(final Organization organization) {
+        this.organization = organization;
+    }
 
 
 
-	@Override
-	protected IObservableValue doCreateCellEditorObservable(CellEditor cellEditor) {
-		return SWTObservables.observeText(cellEditor.getControl(), SWT.Modify);
-	}
+    @Override
+    protected IObservableValue doCreateCellEditorObservable(final CellEditor cellEditor) {
+        return SWTObservables.observeText(cellEditor.getControl(), SWT.Modify);
+    }
 
-	@Override
-	protected IObservableValue doCreateElementObservable(Object element, ViewerCell viewerCell) {
-		IObservableValue observeValue = PojoObservables.observeValue(element, "name");
-		observeValue.addValueChangeListener(new ColumnViewerUpdateListener(getViewer(), element));
-		return observeValue;
-	}
+    @Override
+    protected IObservableValue doCreateElementObservable(final Object element, final ViewerCell viewerCell) {
+        final IObservableValue observeValue = PojoObservables.observeValue(element, "name");
+        observeValue.addValueChangeListener(new ColumnViewerUpdateListener(getViewer(), element));
+        observeValue.addValueChangeListener(new IValueChangeListener() {
 
-	@Override
-	protected CellEditor getCellEditor(Object element) {
-		TextCellEditor textCellEditor = new TextCellEditor((Composite) getViewer().getControl());
-		Text textControl = (Text) textCellEditor.getControl();
-		textControl.setTextLimit(50);
-		return textCellEditor;
-	}
+            @Override
+            public void handleValueChange(final ValueChangeEvent event) {
+                final String oldInformationName = (String) event.diff.getOldValue();
+                final String newInformationName = (String) event.diff.getNewValue();
+                for(final User user : organization.getUsers().getUser()){
+                    updateCustomUserInformationName(user, oldInformationName, newInformationName);
+                }
+            }
 
-	@Override
-	protected Binding createBinding(IObservableValue target, IObservableValue model) {
-		UpdateValueStrategy targetToModel = new UpdateValueStrategy();
-		targetToModel.setAfterGetValidator(new CustomerUserInformationDefinitionNameValidator(organization));
-		return dbc.bindValue(target, model, targetToModel, null);
-	}
+        });
+        return observeValue;
+    }
+
+    @Override
+    protected CellEditor getCellEditor(final Object element) {
+        final TextCellEditor textCellEditor = new TextCellEditor((Composite) getViewer().getControl());
+        final Text textControl = (Text) textCellEditor.getControl();
+        textControl.setTextLimit(50);
+        return textCellEditor;
+    }
+
+    @Override
+    protected Binding createBinding(final IObservableValue target, final IObservableValue model) {
+        final UpdateValueStrategy targetToModel = new UpdateValueStrategy();
+        targetToModel.setAfterGetValidator(new CustomerUserInformationDefinitionNameValidator(organization));
+        return dbc.bindValue(target, model, targetToModel, null);
+    }
+
+
+    private void updateCustomUserInformationName(final User user, final String oldInformationName, final String newInformationName) {
+        for (final CustomUserInfoValue infoValue : user.getCustomUserInfoValues().getCustomUserInfoValue()) {
+            if (infoValue.getName().equals(oldInformationName)) {
+                infoValue.setName(newInformationName);
+            }
+        }
+    }
 
 }
