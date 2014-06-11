@@ -14,6 +14,7 @@
 package org.bonitasoft.studio.actors.ui.wizard.connector;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.bonitasoft.studio.actors.model.organization.CustomUserInfoDefinition;
@@ -22,54 +23,48 @@ import org.bonitasoft.studio.actors.model.organization.Organization;
 import org.bonitasoft.studio.actors.repository.OrganizationFileStore;
 import org.bonitasoft.studio.actors.repository.OrganizationRepositoryStore;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
-import org.bonitasoft.studio.expression.editor.provider.IExpressionNatureProvider;
+import org.bonitasoft.studio.expression.editor.provider.ExpressionContentProvider;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.ecore.EObject;
 
 
 /**
  * @author Elias Ricken de Medeiros
  *
  */
-public class CustomUserInfoNameExpressionProvider implements IExpressionNatureProvider {
-    
-    
-    private OrganizationRepositoryStore store;
-    private String activeOrgFileName;
+public class CustomUserInfoNameExpressionProvider extends ExpressionContentProvider {
 
-    public CustomUserInfoNameExpressionProvider(OrganizationRepositoryStore store, String activeOrgFileName) {
+
+    private final OrganizationRepositoryStore store;
+    private final String activeOrgFileName;
+
+    public CustomUserInfoNameExpressionProvider(final OrganizationRepositoryStore store, final String activeOrgFileName) {
         this.store = store;
         this.activeOrgFileName = activeOrgFileName;
     }
-    
-    @Override
-    public void setContext(EObject context) {
-        
-    }
-    
+
     @Override
     public Expression[] getExpressions() {
-        OrganizationFileStore organizationFileStore = store.getChild(activeOrgFileName);
-        Organization organization = organizationFileStore.getContent();
-        CustomUserInfoDefinitions infoDefContainer = organization.getCustomUserInfoDefinitions();
-        return getExpressions(infoDefContainer);
+        final OrganizationFileStore organizationFileStore = store.getChild(activeOrgFileName);
+        final Organization organization = organizationFileStore.getContent();
+        final CustomUserInfoDefinitions infoDefContainer = organization.getCustomUserInfoDefinitions();
+        final Expression[] inheritedExpressions = super.getExpressions();
+        return getExpressions(infoDefContainer, inheritedExpressions);
     }
 
-    private Expression[] getExpressions(CustomUserInfoDefinitions infoDefContainer) {
-        List<Expression> exprList = new ArrayList<Expression>();
+    private Expression[] getExpressions(final CustomUserInfoDefinitions infoDefContainer, final Expression[] inheritedExpressions) {
+        final List<Expression> exprList = new ArrayList<Expression>();
         if(infoDefContainer != null) {
-            EList<CustomUserInfoDefinition> infoDefElements = infoDefContainer.getCustomUserInfoDefinition();
-            for (CustomUserInfoDefinition infoDefinition : infoDefElements) {
+            final EList<CustomUserInfoDefinition> infoDefElements = infoDefContainer.getCustomUserInfoDefinition();
+            for (final CustomUserInfoDefinition infoDefinition : infoDefElements) {
                 exprList.add(ExpressionHelper.createConstantExpression(infoDefinition.getName(), String.class.getName()));
             }
         }
+        if (inheritedExpressions != null) {
+            final List<Expression> currentExpressions = Arrays.asList(inheritedExpressions);
+            exprList.addAll(currentExpressions);
+        }
         return exprList.toArray(new Expression[exprList.size()]);
-    }
-    
-    @Override
-    public EObject getContext() {
-        return null;
     }
 
 }

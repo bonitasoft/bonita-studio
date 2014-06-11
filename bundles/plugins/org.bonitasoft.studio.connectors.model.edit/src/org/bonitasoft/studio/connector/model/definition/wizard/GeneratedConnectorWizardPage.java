@@ -33,18 +33,18 @@ import org.eclipse.ui.forms.widgets.Section;
  */
 public class GeneratedConnectorWizardPage extends AbstractConnectorConfigurationWizardPage {
 
-	private PageComponentSwitch componentSwitch;
+    private PageComponentSwitch componentSwitch;
 
-	public GeneratedConnectorWizardPage(String pageName){
-		super(pageName);
-	}
-	
-	public GeneratedConnectorWizardPage(){
-		super();
-	}
+    public GeneratedConnectorWizardPage(final String pageName){
+        super(pageName);
+    }
+
+    public GeneratedConnectorWizardPage(){
+        super();
+    }
 
     @Override
-    public Control doCreateControl(final Composite parent,EMFDataBindingContext context) {
+    public Control doCreateControl(final Composite parent,final EMFDataBindingContext context) {
         final Composite mainComposite = new Composite(parent, SWT.NONE) ;
         mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).spacing(0, 0).create());
@@ -55,37 +55,39 @@ public class GeneratedConnectorWizardPage extends AbstractConnectorConfiguration
         final Page page = getPage() ;
         final PageComponentSwitch componentSwitch = getPageComponentSwitch(context, pageComposite) ;
         componentSwitch.setIsPageFlowContext(isPageFlowContext());
-        for(Component component : page.getWidget()){
+        for(final Component component : page.getWidget()){
             componentSwitch.doSwitch(component) ;
         }
-        for(Section section : componentSwitch.getSectionsToExpand()){
+        for(final Section section : componentSwitch.getSectionsToExpand()){
             section.setExpanded(true) ;
         }
         return mainComposite ;
     }
 
-	protected PageComponentSwitch getPageComponentSwitch(
-			EMFDataBindingContext context, final Composite pageComposite) {
-		if(componentSwitch == null){
-			componentSwitch = new PageComponentSwitch(getContainer(),pageComposite,getElementContainer(),getDefinition(),getConfiguration(),context,getMessageProvider(),getExpressionTypeFilter());
-		}
-		return componentSwitch;
-	}
+    protected PageComponentSwitch getPageComponentSwitch(
+            final EMFDataBindingContext context, final Composite pageComposite) {
+        if(componentSwitch == null){
+            final PageComponentSwitchBuilder builder = new PageComponentSwitchBuilder(getElementContainer(), getDefinition(), getConfiguration(), context,
+                    getMessageProvider(), getExpressionTypeFilter());
+            componentSwitch = new PageComponentSwitch(getContainer(), pageComposite, builder);
+        }
+        return componentSwitch;
+    }
 
-	/* (non-Javadoc)
-	 * @see org.bonitasoft.studio.common.IBonitaVariableContext#isOverViewContext()
-	 */
-	@Override
-	public boolean isOverViewContext() {
-		return false;
-	}
+    /* (non-Javadoc)
+     * @see org.bonitasoft.studio.common.IBonitaVariableContext#isOverViewContext()
+     */
+    @Override
+    public boolean isOverViewContext() {
+        return false;
+    }
 
-	/* (non-Javadoc)
-	 * @see org.bonitasoft.studio.common.IBonitaVariableContext#setIsOverviewContext(boolean)
-	 */
-	@Override
-	public void setIsOverviewContext(boolean isOverviewContext) {
-	}
+    /* (non-Javadoc)
+     * @see org.bonitasoft.studio.common.IBonitaVariableContext#setIsOverviewContext(boolean)
+     */
+    @Override
+    public void setIsOverviewContext(final boolean isOverviewContext) {
+    }
 
 
 }
