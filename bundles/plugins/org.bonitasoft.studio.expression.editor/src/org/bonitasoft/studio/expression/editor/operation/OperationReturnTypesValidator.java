@@ -82,17 +82,17 @@ public class OperationReturnTypesValidator implements IExpressionValidator {
                         if (status != null) {
                             return status;
                         }
+                    } else if (ExpressionConstants.DELETION_OPERATOR.equals(operatorType)) {
+                        IStatus status = validateDeletionOperation(expression,
+                                expressionName, operation);
+                        if (status != null) {
+                            return status;
+                        }
                     } else if (ExpressionConstants.ASSIGNMENT_OPERATOR.equals(operatorType)) {
                         if (ExpressionConstants.DOCUMENT_REF_TYPE.equals(dataExpression.getType())) {
                             return ValidationStatus.error(Messages.bind(Messages.incompatibleExpressionTypeForOperator,
                                     typeLabelProvider.getText(dataExpression.getType()), operatorLabelProvider.getText(operation.getOperator())));
                         }
-                        // if(ExpressionConstants.VARIABLE_TYPE.equals(dataExpression.getType())
-                        // && (!dataExpression.getReferencedElements().isEmpty() && dataExpression.getReferencedElements().get(0) instanceof
-                        // BusinessObjectData)){
-                        // return
-                        // ValidationStatus.error(Messages.bind(Messages.businessDataNotCompatibleForOperator,operatorLabelProvider.getText(operation.getOperator())));
-                        // }
                     }
                     if (ExpressionConstants.MESSAGE_ID_TYPE.equals(operation.getRightOperand().getType())) {
                         return ValidationStatus.ok();
@@ -158,6 +158,14 @@ public class OperationReturnTypesValidator implements IExpressionValidator {
             }
         }
         return ValidationStatus.ok();
+    }
+
+    protected IStatus validateDeletionOperation(Expression expression, String expressionName, Operation operation) {
+        if (!dataExpression.getReferencedElements().isEmpty() && !(dataExpression.getReferencedElements().get(0) instanceof BusinessObjectData)) {
+            return ValidationStatus.error(Messages.bind(Messages.incompatibleExpressionTypeForOperator, typeLabelProvider.getText(dataExpression.getType()),
+                    operatorLabelProvider.getText(operation.getOperator())));
+        }
+        return null;
     }
 
     protected IStatus validateCreateBusinessDataOperation(Expression expression,

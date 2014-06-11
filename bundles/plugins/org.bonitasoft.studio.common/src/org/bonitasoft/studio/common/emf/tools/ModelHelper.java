@@ -970,8 +970,8 @@ public class ModelHelper {
         }
     }
 
-    public static List<Expression> findAllScriptAndConditionsExpressionWithReferencedElement(EObject container, EObject element) {
-        List<Expression> result = new ArrayList<Expression>();
+    public static Set<Expression> findAllScriptAndConditionsExpressionWithReferencedElement(EObject container, EObject element) {
+        Set<Expression> result = new HashSet<Expression>();
         for (EObject o : ModelHelper.getAllItemsOfType(container, ExpressionPackage.Literals.EXPRESSION)) {
             Expression expr = (Expression) o;
             if (ExpressionConstants.SCRIPT_TYPE.equals(expr.getType()) || ExpressionConstants.CONDITION_TYPE.equals(expr.getType())

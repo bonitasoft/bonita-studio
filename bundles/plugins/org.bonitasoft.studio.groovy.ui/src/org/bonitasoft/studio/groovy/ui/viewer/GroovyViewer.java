@@ -33,9 +33,11 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationRepositoryStore;
+import org.bonitasoft.studio.expression.editor.ExpressionEditorService;
 import org.bonitasoft.studio.expression.editor.provider.ExpressionContentProvider;
 import org.bonitasoft.studio.expression.editor.provider.ICustomExpressionNatureProvider;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionNatureProvider;
+import org.bonitasoft.studio.expression.editor.provider.IExpressionProvider;
 import org.bonitasoft.studio.groovy.GroovyUtil;
 import org.bonitasoft.studio.groovy.ScriptVariable;
 import org.bonitasoft.studio.groovy.repository.GroovyFileStore;
@@ -201,7 +203,7 @@ public class GroovyViewer {
         });
         enableContextAssitShortcut();
 
-        getSourceViewer().getTextWidget().setData(BONITA_KEYWORDS_DATA_KEY, GroovyUtil.getBonitaKeyWords(null, null, isPageFlowContext));
+        getSourceViewer().getTextWidget().setData(BONITA_KEYWORDS_DATA_KEY, getProvidedVariables(null, null));
         getSourceViewer().getDocument().addDocumentListener(new IDocumentListener() {
 
             private Object previousContent;
@@ -355,8 +357,8 @@ public class GroovyViewer {
 
         // Add context in TextWidget to access it in content assist
         getSourceViewer().getTextWidget().setData(PROCESS_VARIABLES_DATA_KEY, nodes);
-        final List<String> bonitaKeyWords = GroovyUtil.getBonitaKeyWords(context, filters, isPageFlowContext);
-        getSourceViewer().getTextWidget().setData(BONITA_KEYWORDS_DATA_KEY, bonitaKeyWords);
+        List<ScriptVariable> providedVariables = getProvidedVariables(context, filters);
+        getSourceViewer().getTextWidget().setData(BONITA_KEYWORDS_DATA_KEY, providedVariables);
         getSourceViewer().getTextWidget().setData(CONTEXT_DATA_KEY, context);
 
         knowVariables = new HashSet<String>();
@@ -365,9 +367,24 @@ public class GroovyViewer {
                 knowVariables.add(n.getName());
             }
         }
-        knowVariables.addAll(bonitaKeyWords);
-
+        if (providedVariables != null) {
+            for (final ScriptVariable n : providedVariables) {
+                knowVariables.add(n.getName());
+            }
+        }
         contextInitialized = true;
+    }
+
+    public List<ScriptVariable> getProvidedVariables(final EObject context, final ViewerFilter[] filters) {
+        final List<ScriptVariable> providedScriptVariable = GroovyUtil.getBonitaVariables(context, filters, isPageFlowContext);
+        IExpressionProvider daoExpressionProvider = ExpressionEditorService.getInstance().getExpressionProvider(ExpressionConstants.DAO_TYPE);
+        if (daoExpressionProvider != null) {
+            for (Expression e : daoExpressionProvider.getExpressions(null)) {
+                ScriptVariable scriptVariable = new ScriptVariable(e.getName(), e.getReturnType());
+                providedScriptVariable.add(scriptVariable);
+            }
+        }
+        return providedScriptVariable;
     }
 
     public List<ScriptVariable> getFieldNodes() {

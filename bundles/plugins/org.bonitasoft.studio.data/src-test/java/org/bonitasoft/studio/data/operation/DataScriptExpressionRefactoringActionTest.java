@@ -18,7 +18,10 @@ package org.bonitasoft.studio.data.operation;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
@@ -40,13 +43,19 @@ import org.junit.Test;
 public class DataScriptExpressionRefactoringActionTest {
 
     private DataScriptExpressionRefactoringAction refactoringAction;
-
+    
+    private Data oldData;
+    
     /**
      * @throws java.lang.Exception
      */
     @Before
     public void setUp() throws Exception {
-        refactoringAction = new DataScriptExpressionRefactoringAction(ProcessFactory.eINSTANCE.createData(), "myData", "",
+    	List<DataRefactorPair> pairsToRefactor = new ArrayList<DataRefactorPair>();
+    	oldData = ProcessFactory.eINSTANCE.createData();
+    	oldData.setName("myData");
+		pairsToRefactor.add(new DataRefactorPair(oldData, oldData));
+        refactoringAction = new DataScriptExpressionRefactoringAction(pairsToRefactor,
                 Collections.<Expression> emptyList(),
                 Collections.<Expression> emptyList(),
                 new CompoundCommand(), null,
@@ -69,8 +78,8 @@ public class DataScriptExpressionRefactoringActionTest {
         parameter.setName("myData");
         expr.getReferencedElements().add(parameter);
         expr.getReferencedElements().add(createData);
-        EObject eObject = refactoringAction.getReferencedObjectInScriptsOperation(expr);
-        assertThat(eObject).isNotNull().isEqualTo(createData);
+        Map<EObject,EObject> eObject = refactoringAction.getReferencedObjectInScriptsOperation(expr);
+        assertThat(eObject).isNotEmpty().containsEntry(createData, oldData);
 
     }
 }

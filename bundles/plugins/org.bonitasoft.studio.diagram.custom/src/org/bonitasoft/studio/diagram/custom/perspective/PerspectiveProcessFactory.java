@@ -91,11 +91,14 @@ public class PerspectiveProcessFactory extends AbstractPerspectiveFactory {
 	}
 
 	protected boolean isOngoingMigration(ProcessDiagramEditor processDiagramEditor) {
-		final Resource resource = processDiagramEditor.getDiagramEditPart().resolveSemanticElement().eResource();
-		if(resource != null){
-			for(EObject root : resource.getContents()){
-				if(root instanceof Report){
-					return true;
+		EObject element  =  processDiagramEditor.getDiagramEditPart().resolveSemanticElement();
+		if (element !=null){
+			final Resource resource =element.eResource();
+			if(resource != null){
+				for(EObject root : resource.getContents()){
+					if(root instanceof Report){
+						return true;
+					}
 				}
 			}
 		}

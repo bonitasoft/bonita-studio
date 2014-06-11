@@ -102,8 +102,7 @@ public class RefactorDataOperationTest {
         refacorDataOperation.setAskConfirmation(false);// Skip UI
         refacorDataOperation.setEditingDomain(domain);
         refacorDataOperation.setContainer(parentProcess);
-        refacorDataOperation.setOldData(myData);
-        refacorDataOperation.setNewData(newData);
+        refacorDataOperation.addItemToRefactor(newData, myData);
         refacorDataOperation.run(null);
         ExpressionAssert.assertThat(leftOperand).hasName(newData.getName());
         ExpressionAssert.assertThat(rightOperand).hasContent("hello ${" + newData.getName() + "}");

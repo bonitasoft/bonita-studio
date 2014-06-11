@@ -352,35 +352,35 @@
 								<artifactItem>
 									<groupId>org.bonitasoft.connectors</groupId>
 									<artifactId>bonita-connector-salesforce-createsobject-impl</artifactId>
-									<version>1.0.12</version>
+									<version>1.0.13</version>
 									<classifier>connector</classifier>
 									<type>zip</type>
 								</artifactItem>
 								<artifactItem>
 									<groupId>org.bonitasoft.connectors</groupId>
 									<artifactId>bonita-connector-salesforce-deletesobjects-impl</artifactId>
-									<version>1.0.12</version>
+									<version>1.0.13</version>
 									<classifier>connector</classifier>
 									<type>zip</type>
 								</artifactItem>
 								<artifactItem>
 									<groupId>org.bonitasoft.connectors</groupId>
 									<artifactId>bonita-connector-salesforce-retrievesobjects-impl</artifactId>
-									<version>1.0.12</version>
+									<version>1.0.13</version>
 									<classifier>connector</classifier>
 									<type>zip</type>
 								</artifactItem>
 								<artifactItem>
 									<groupId>org.bonitasoft.connectors</groupId>
 									<artifactId>bonita-connector-salesforce-querysobjects-impl</artifactId>
-									<version>1.0.12</version>
+									<version>1.0.14</version>
 									<classifier>connector</classifier>
 									<type>zip</type>
 								</artifactItem>
 								<artifactItem>
 									<groupId>org.bonitasoft.connectors</groupId>
 									<artifactId>bonita-connector-salesforce-updatesobject-impl</artifactId>
-									<version>1.0.12</version>
+									<version>1.0.13</version>
 									<classifier>connector</classifier>
 									<type>zip</type>
 								</artifactItem>

@@ -12,7 +12,7 @@
        <author>Julien Espitallier</author>
        <category>Training</category>
        <title>Advanced Integration - Remote (Spanish)</title>
-       <link>http://www.bonitasoft.com/be-part-of-it/training/2303201404281400-advanced-integration-remote-spanish</link>
+       <link>http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&amp;class=org.bonitasoft.studio.intro.actions.OpenInExternalBrowserIntroAction&amp;url=http://www.bonitasoft.com/be-part-of-it/training/2303201404281400-advanced-integration-remote-spanish</link>
        <description></description>
     </item>
 	<item>
@@ -20,7 +20,7 @@
        <author>Jeremy Lipp</author>
        <category>Training</category>
        <title>Business Process Application... (English)</title>
-       <link>http://www.bonitasoft.com/be-part-of-it/training/2302201405050900-business-process-application-development-remote-english</link>
+       <link>http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&amp;class=org.bonitasoft.studio.intro.actions.OpenInExternalBrowserIntroAction&amp;url=http://www.bonitasoft.com/be-part-of-it/training/2302201405050900-business-process-application-development-remote-english</link>
        <description></description>
     </item>
 	<item>
@@ -28,7 +28,7 @@
        <author>Jeremy Lipp</author>
        <category>Training</category>
        <title>Process Modeling - On BS... (French)</title>
-       <link>http://www.bonitasoft.com/be-part-of-it/training/2101201405050930-process-modeling-bs-premises-french</link>
+       <link>http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&amp;class=org.bonitasoft.studio.intro.actions.OpenInExternalBrowserIntroAction&amp;url=http://www.bonitasoft.com/be-part-of-it/training/2101201405050930-process-modeling-bs-premises-french</link>
        <description></description>
     </item>
 	<item>
@@ -36,7 +36,7 @@
        <author>Jeremy Lipp</author>
        <category>Training</category>
        <title>Administration Training... (English)</title>
-       <link>http://www.bonitasoft.com/be-part-of-it/training/2302201405050930-administration-training-remote-english</link>
+       <link>http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&amp;class=org.bonitasoft.studio.intro.actions.OpenInExternalBrowserIntroAction&amp;url=http://www.bonitasoft.com/be-part-of-it/training/2302201405050930-administration-training-remote-english</link>
        <description></description>
     </item>
 	</channel>
