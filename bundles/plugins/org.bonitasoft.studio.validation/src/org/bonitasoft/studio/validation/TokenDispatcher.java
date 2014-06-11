@@ -127,6 +127,7 @@ public class TokenDispatcher {
 
 	protected SequenceFlow getFirstIncomingSequenceFlow(TargetElement sourceFlowElement) {
 		TargetElement tagetElement = sourceFlowElement;
+		SequenceFlow incomingFlow = null;
 		if(sourceFlowElement instanceof CatchLinkEvent){
 			tagetElement = ((CatchLinkEvent) sourceFlowElement).getFrom().get(0);
 		}
@@ -142,11 +143,14 @@ public class TokenDispatcher {
 					//							}
 					//						}
 					//					}
-					return (SequenceFlow) c;
+					incomingFlow = (SequenceFlow)c;
+					if (incomingFlow.getPathToken()!=null && !incomingFlow.getPathToken().isEmpty()){
+						return incomingFlow;
+				}
 				}
 			}
 		}
-		return null;
+		return incomingFlow;
 	}
 
 
