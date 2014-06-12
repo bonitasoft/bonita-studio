@@ -74,7 +74,7 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> im
 
     private final Composite parent;
     private final java.util.List<Section> sections = new ArrayList<Section>() ;
-    private final IWizardContainer iWizardContainer;
+    protected final IWizardContainer iWizardContainer;
     private boolean isPageFlowContext = false;
     protected final PageComponentSwitchBuilder componentBuilder;
 
@@ -115,7 +115,7 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> im
         final Composite client = new Composite(section, SWT.NONE) ;
         client.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create()) ;
         client.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(0, 0).spacing(5, 2).create()) ;
-        final PageComponentSwitch groupSwitch = new PageComponentSwitch(iWizardContainer, client, componentBuilder);
+        final PageComponentSwitch groupSwitch = createGroupPageComponentSwitch(client);
         for(final Component component : object.getWidget()){
             groupSwitch.doSwitch(component) ;
         }
@@ -142,6 +142,10 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> im
         }) ;
 
         return object;
+    }
+	
+	protected PageComponentSwitch createGroupPageComponentSwitch(final Composite client) {
+        return new PageComponentSwitch(iWizardContainer, client, componentBuilder);
     }
 
 
@@ -193,19 +197,19 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> im
     protected Composite createRadioGroupControl(final Composite composite, final RadioGroup object) {
         return componentBuilder.createRadioGroupControl(composite, object);
 
-    }
+            }
 
     protected PatternExpressionViewer createTextAreaControl(final Composite composite, final TextArea object) {
         return componentBuilder.createTextAreaControl(composite, object);
-    }
+            }
 
     protected CheckBoxExpressionViewer createCheckboxControl(final Composite composite, final Checkbox object) {
         return componentBuilder.createCheckboxControl(composite, object);
-    }
+                    }
 
     protected String getLabel(final String inputName) {
         return componentBuilder.getLabel(inputName);
-    }
+        }
 
     protected ExpressionViewer createTextControl(final Composite composite, final Text object) {
         return componentBuilder.createTextControl(composite, object);
@@ -213,11 +217,11 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> im
 
     protected ExpressionViewer createScriptEditorControl(final Composite composite, final ScriptEditor object) {
         return componentBuilder.createScriptEditorControl(composite, object);
-    }
+            }
 
     protected ExpressionCollectionViewer createArrayControl(final Composite composite, final Array object) {
         return componentBuilder.createArrayControl(composite, object);
-    }
+            }
 
     protected Section createGroupControl(final Composite composite, final Group object) {
         return componentBuilder.createGroupControl(composite, object);
@@ -225,12 +229,12 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> im
 
     protected ExpressionCollectionViewer createListControl(final Composite composite, final List object) {
         return componentBuilder.createListControl(composite, object);
-    }
+            }
 
     protected void createDescriptionDecorator(final Composite composite,
             final Label labelField, final String desc) {
         componentBuilder.createDescriptionDecorator(composite, labelField, desc);
-    }
+        }
 
     protected ExpressionViewer createPasswordControl(final Composite composite, final Password object) {
         return componentBuilder.createPasswordControl(composite, object);
@@ -238,19 +242,19 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> im
 
     protected Combo createSelectControl(final Composite composite, final Select object) {
         return componentBuilder.createSelectControl(composite, object);
-    }
+                }
 
     protected Input getConnectorInput(final String inputName) {
         return componentBuilder.getConnectorInput(inputName);
-    }
+                }
 
     protected Label createFieldLabel(final Composite composite,final int verticalAlignment, final String id, final boolean isMandatory) {
         return componentBuilder.createFieldLabel(composite, verticalAlignment, id, isMandatory);
-    }
+            }
 
     protected ConnectorParameter getConnectorParameter(final String inputName, final WidgetComponent object, final Input input) {
         return componentBuilder.getConnectorParameter(inputName, object, input);
-    }
+            }
 
 
     protected AbstractExpression createExpression(final WidgetComponent widget,final Input input) {

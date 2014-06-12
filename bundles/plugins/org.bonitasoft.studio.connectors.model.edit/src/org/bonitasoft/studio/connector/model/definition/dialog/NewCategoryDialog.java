@@ -75,6 +75,7 @@ public class NewCategoryDialog extends Dialog {
         super(parentShell);
         category = ConnectorDefinitionFactory.eINSTANCE.createCategory();
         this.existingCatIds=existingCatIds;
+       
     }
 
     @Override
@@ -100,10 +101,12 @@ public class NewCategoryDialog extends Dialog {
                 if(value == null || value.toString().isEmpty()){
                     return ValidationStatus.error(Messages.idIsEmpty) ;
                 }
-
-                if(existingCatIds.contains(value.toString().toLowerCase())){
-                    return  ValidationStatus.error(Messages.idAlreadyExists) ;
+                Object[] ids =existingCatIds.toArray();
+               for (Object existingId : ids){
+            	   if (existingId.toString().equalsIgnoreCase(value.toString())){
+            		   return  ValidationStatus.error(Messages.idAlreadyExists) ;
                 }
+               }
                 return Status.OK_STATUS;
             }
         }) ;
@@ -226,4 +229,7 @@ public class NewCategoryDialog extends Dialog {
     public void setDisplayName(String displayName) {
         this.displayName = displayName;
     }
+    
+ 
+    
 }
