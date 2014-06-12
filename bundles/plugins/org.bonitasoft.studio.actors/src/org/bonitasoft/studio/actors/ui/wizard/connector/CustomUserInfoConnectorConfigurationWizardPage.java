@@ -40,7 +40,7 @@ import org.eclipse.swt.widgets.Label;
  */
 public class CustomUserInfoConnectorConfigurationWizardPage extends AbstractConnectorConfigurationWizardPage {
 
-    private static final int LABEL_WIDTH = 160;
+    private static final int LABEL_WIDTH = 200;
 
     public CustomUserInfoConnectorConfigurationWizardPage() {
         super(CustomUserInfoConnectorConfigurationWizardPage.class.getName());
