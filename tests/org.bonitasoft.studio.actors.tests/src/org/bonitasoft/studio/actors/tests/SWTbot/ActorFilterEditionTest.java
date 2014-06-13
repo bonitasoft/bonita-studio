@@ -23,6 +23,7 @@ import org.bonitasoft.studio.connector.model.definition.Category;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.wizard.ConnectorDefinitionTreeLabelProvider;
 import org.bonitasoft.studio.connector.model.i18n.DefinitionResourceProvider;
+import org.bonitasoft.studio.util.test.conditions.SelectNodeUnder;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
 import org.eclipse.swtbot.swt.finder.SWTBot;
@@ -39,36 +40,6 @@ import org.junit.runner.RunWith;
 
 @RunWith(SWTBotJunit4ClassRunner.class)
 public class ActorFilterEditionTest extends SWTBotGefTestCase {
-
-    private static final class SelectNodeUnder implements ICondition {
-
-        private final String parentNode;
-        private final String subNodeLabel;
-        private final SWTBot bot;
-
-        private SelectNodeUnder(final SWTBot bot, final String subNodeLabel, final String parentNode) {
-            this.bot = bot;
-            this.parentNode = parentNode;
-            this.subNodeLabel = subNodeLabel;
-        }
-
-        @Override
-        public boolean test() throws Exception {
-            System.out.println("SelectNodeUnder.test");
-            bot.tree().select(parentNode).expandNode(parentNode).select(subNodeLabel);
-            return bot.tree().selectionCount() > 0;
-        }
-
-        @Override
-        public void init(final SWTBot bot) {
-
-        }
-
-        @Override
-        public String getFailureMessage() {
-            return "Cannot select tree item";
-        }
-    }
 
     public void createActorFilterDefinition(final String id, final String version) {
         SWTBotActorFilterUtil.activateActorFilterDefinitionShell(bot);
