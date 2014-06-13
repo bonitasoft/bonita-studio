@@ -143,7 +143,7 @@ public abstract class AbstractDefinitionSelectionImpementationWizardPage extends
         final Group descriptionGroup = new Group(mainComposite, SWT.NONE);
         descriptionGroup.setText(Messages.description);
         descriptionGroup.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(10, 10).create());
-        descriptionGroup.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 1).hint(SWT.DEFAULT, 50).create());
+        descriptionGroup.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT, 70).span(2, 1).create());
 
         final Label descriptionLabel = new Label(descriptionGroup, SWT.WRAP);
         descriptionLabel.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
