@@ -88,7 +88,7 @@ public class PageComponentSwitchBuilder {
 
     protected DefinitionResourceProvider messageProvider;
 
-    private final boolean isPageFlowContext = false;
+    private boolean isPageFlowContext = false;
 
     protected EObject container;
 
@@ -653,6 +653,15 @@ public class PageComponentSwitchBuilder {
             return combo;
         }
         return null;
+    }
+
+    public boolean isPageFlowContext() {
+        return isPageFlowContext;
+    }
+
+    public void setIsPageFlowContext(final boolean isPageFlowContext) {
+        this.isPageFlowContext = isPageFlowContext;
+
     }
 
 }
