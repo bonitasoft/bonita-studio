@@ -143,22 +143,24 @@ public class OrganizationCreationTest extends SWTBotGefTestCase {
             final List<String[]> memberShip) {
         bot.button(Messages.add).click();
         bot.tabItem(Messages.general).activate();
+
         bot.textWithLabel(Messages.userName + " *").setText(username);
         //bot.sleep(1000);
         if(manager != null && !manager.isEmpty()){
             bot.comboBoxWithLabel(Messages.manager).setSelection(manager);
         }
-        bot.textWithLabel(Messages.firstName).setText(firstName);
-        bot.textWithLabel(Messages.lastName).setText(lastName);
+        bot.textWithLabel(Messages.firstName).typeText(firstName);
+        bot.textWithLabel(Messages.lastName).typeText(lastName);
         bot.tabItem(Messages.membership + " *").activate();
         for (int i = 0; i < memberShip.size(); i++) {
-            bot.button(Messages.addMembership).click();
+            if (i > 0) {
+                bot.button(Messages.addMembership).click();
+            }
             bot.comboBoxWithLabel("Group", i * 2).setSelection(
                     memberShip.get(i)[0]);
             bot.comboBoxWithLabel("Role", i * 2).setSelection(
                     memberShip.get(i)[1]);
         }
-        //bot.sleep(1000);
     }
 
     private void synchronizeOrganization(final String organizationName,final String username) {
@@ -166,7 +168,7 @@ public class OrganizationCreationTest extends SWTBotGefTestCase {
         bot.table().select(organizationName);
         bot.button(IDialogConstants.NEXT_LABEL).click();
         if (username!=null){
-            bot.textWithLabel(Messages.userName + " *").setText(username);
+            bot.textWithLabel(Messages.userName).setText(username);
         }
         bot.button(Messages.synchronize).click();
         bot.waitUntil(Conditions.shellIsActive(Messages.synchronizeInformationTitle),
@@ -192,7 +194,7 @@ public class OrganizationCreationTest extends SWTBotGefTestCase {
         System.out.println("Table size = "+ table.columnCount()+" x "+table.rowCount());
 
         // Set Description of the new Organisation
-        final int idxBonita = table.indexOf("ACME  (active)", 0);
+        final int idxBonita = table.indexOf("ACME  (" + Messages.active + ")", 0);
         Assert.assertTrue("Error: No ACME found in the table", idxBonita!=-1);
 
         // go to the next shell
@@ -234,7 +236,7 @@ public class OrganizationCreationTest extends SWTBotGefTestCase {
 
 
         bot.tabItem(Messages.membership + " *").activate();
-        bot.button(Messages.addMembership).click();
+        //bot.button(Messages.addMembership).click();
         bot.comboBoxWithLabel("Group").setSelection("/acme");
         bot.comboBoxWithLabel("Role").setSelection("member");
 
