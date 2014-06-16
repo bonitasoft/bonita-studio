@@ -250,6 +250,7 @@ public class Messages extends NLS {
     public static String cuiManagementMsg;
     public static String cuiFilterActorRelatedMsg;
     public static String assignOnlyIfOneUser;
+    public static String typeValueToFilter;
 
 
 }

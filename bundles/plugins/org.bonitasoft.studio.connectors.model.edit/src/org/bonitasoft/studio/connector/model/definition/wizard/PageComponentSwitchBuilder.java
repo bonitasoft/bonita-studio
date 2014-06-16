@@ -63,6 +63,7 @@ import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -119,13 +120,14 @@ public class PageComponentSwitchBuilder {
         this.labelWidth = labelWidth;
     }
 
-    public ExpressionViewer createTextControl(final Composite composite, final Text object, final IExpressionNatureProvider expressionProvider) {
+    public ExpressionViewer createTextControl(final Composite composite, final Text object, final IExpressionNatureProvider expressionProvider,
+            final LabelProvider autoCompletionLabelProvider) {
         final Input input = getConnectorInput(object.getInputName());
         if (input != null) {
             final ConnectorParameter parameter = getConnectorParameter(object.getInputName(), object, input);
             if (parameter != null) {
                 createFieldLabel(composite, SWT.CENTER, object.getId(), input.isMandatory());
-                return buildExpressionViewer(composite, object, expressionProvider, input, parameter);
+                return buildExpressionViewer(composite, object, expressionProvider, input, parameter, autoCompletionLabelProvider);
             }
         } else {
             //Should we create a label to warn final user?
@@ -135,12 +137,15 @@ public class PageComponentSwitchBuilder {
     }
 
     private ExpressionViewer buildExpressionViewer(final Composite composite, final Text object, final IExpressionNatureProvider expressionProvider,
-            final Input input, final ConnectorParameter parameter) {
+            final Input input, final ConnectorParameter parameter, final LabelProvider autoCompletionLabelProvider) {
         final ExpressionViewer viewer = new ExpressionViewer(composite, SWT.BORDER,
                 ConnectorConfigurationPackage.Literals.CONNECTOR_PARAMETER__EXPRESSION);
         viewer.setIsPageFlowContext(isPageFlowContext);
         viewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         viewer.setContext(container);
+        if (autoCompletionLabelProvider != null) {
+            viewer.setAutocomplitionLabelProvider(autoCompletionLabelProvider);
+        }
         handleExpressionProvider(expressionProvider, viewer);
         handleMandatory(object, input, viewer);
         handleDocumentsOption(object, viewer);
@@ -181,7 +186,7 @@ public class PageComponentSwitchBuilder {
     }
 
     public ExpressionViewer createTextControl(final Composite composite, final Text object) {
-        return createTextControl(composite, object, null);
+        return createTextControl(composite, object, null, null);
     }
 
     protected Input getConnectorInput(final String inputName) {

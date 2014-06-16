@@ -23,6 +23,7 @@ import org.bonitasoft.studio.connector.model.definition.Text;
 import org.bonitasoft.studio.connector.model.definition.wizard.AbstractConnectorConfigurationWizardPage;
 import org.bonitasoft.studio.connector.model.definition.wizard.PageComponentSwitchBuilder;
 import org.bonitasoft.studio.expression.editor.viewer.CheckBoxExpressionViewer;
+import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
@@ -71,7 +72,8 @@ public class CustomUserInfoConnectorConfigurationWizardPage extends AbstractConn
         createCustomExpressionViewerWithCustomInfo(componentSwitchBuilder, cuiComposite, cuiNameInput);
 
         final Composite valueComposite = createComposite(cuiComposite, 2, 0);
-        componentSwitchBuilder.createTextControl(valueComposite, cuiValueInput);
+        final ExpressionViewer valueViewer = componentSwitchBuilder.createTextControl(valueComposite, cuiValueInput);
+        valueViewer.setMessage(Messages.typeValueToFilter, IStatus.INFO);
         componentSwitchBuilder.createCheckboxControl(valueComposite, cuiPartialMatchInput);
 
         final CheckBoxExpressionViewer viewer = componentSwitchBuilder.createCheckboxControl(pageComposite, automaticAssignInput);
@@ -103,7 +105,8 @@ public class CustomUserInfoConnectorConfigurationWizardPage extends AbstractConn
             final Text object) {
         final OrganizationRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(OrganizationRepositoryStore.class);
         final String fileName = getCurrentOrganizationFileName();
-        componentSwitchBuilder.createTextControl(composite, object, new CustomUserInfoNameExpressionProvider(store, fileName));
+        componentSwitchBuilder.createTextControl(composite, object, new CustomUserInfoNameExpressionProvider(store, fileName),
+                new CustomUserInfoLabelProvider());
     }
 
     private String getCurrentOrganizationFileName() {
