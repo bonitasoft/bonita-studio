@@ -83,7 +83,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
@@ -110,6 +109,7 @@ import org.eclipse.swt.widgets.Text;
 public class UsersWizardPage extends AbstractOrganizationWizardPage {
 
 
+    private static final int CUSTOM_USER_DEFINITION_VALUE_LIMIT_SIZE = 255;
     private static final String DEFAULT_USER_PASSWORD = "bpm";
     private static final int MIN_SC_WIDTH = 426;
     private static final int MIN_SC_HEIGHT = 268;
@@ -561,8 +561,8 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
      */
     private ScrolledComposite createScrolledComposite() {
         final ScrolledComposite sc = new ScrolledComposite(tab, SWT.V_SCROLL);
-        sc.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).create());
-        sc.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 200).create()) ;
+        sc.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(5, 5).create());
+        sc.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, SWT.DEFAULT).create()) ;
         sc.setMinSize(MIN_SC_WIDTH, MIN_SC_HEIGHT);
         sc.setExpandHorizontal(true);
         sc.setExpandVertical(true);
@@ -593,15 +593,28 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
             for(final CustomUserInfoValue infoValue : selectedUser.getCustomUserInfoValues().getCustomUserInfoValue()){
 
 
+                final UpdateValueStrategy strategy = new UpdateValueStrategy();
+                strategy.setAfterGetValidator(new IValidator() {
 
-                final Label labelName = new Label(otherInfoComposite, SWT.LEFT);
+                    @Override
+                    public IStatus validate(final Object arg0) {
+                        final String value = (String) arg0;
+                        if (value.length() > CUSTOM_USER_DEFINITION_VALUE_LIMIT_SIZE) {
+                            return ValidationStatus.error(Messages.customUserInfoValueLimitSize);
+                        }
+                        return ValidationStatus.ok();
+                    }
+                });
+
+                final Label labelName = new Label(otherInfoComposite, SWT.LEFT | SWT.WRAP);
+                labelName.setLayoutData(GridDataFactory.fillDefaults().hint(25, SWT.DEFAULT).create());
                 labelName.setText(infoValue.getName());
 
                 final Text textValue = new Text(otherInfoComposite, SWT.BORDER);
                 textValue.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
                 context.bindValue(SWTObservables.observeText(textValue, SWT.Modify),
-                        EMFObservables.observeValue(infoValue, OrganizationPackage.Literals.CUSTOM_USER_INFO_VALUE__VALUE));
+                        EMFObservables.observeValue(infoValue, OrganizationPackage.Literals.CUSTOM_USER_INFO_VALUE__VALUE), strategy, null);
 
             }
         }
@@ -1172,22 +1185,7 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 
         final Label labelCustomUserInfo = new Label(labelComposite, SWT.WRAP );
         labelCustomUserInfo.setText(Messages.labelExplicationCustomUserInformation);
-
-        final GridData labelData = new GridData();
-        labelData.horizontalAlignment = SWT.FILL;
-        final Rectangle rect = Display.getCurrent().getClientArea();
-        labelData.widthHint = rect.width / 4;
-        labelCustomUserInfo.setLayoutData(labelData);
-
-        labelComposite.addListener(SWT.Resize, new Listener() {
-
-            @Override
-            public void handleEvent(final Event arg0) {
-                final Rectangle bounds = labelComposite.getBounds();
-                labelData.widthHint = bounds.width;
-            }
-        });
-
+        labelCustomUserInfo.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
         final Composite groupComposite = new Composite(infoCompo, SWT.NONE);
         groupComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
@@ -1326,7 +1324,7 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
     public void addCustomUserInfoDefinitionAction() {
 
 
-        final String customUserInfoName = NamingUtils.generateNewNameCaseInsensitive(getLowerCaseExistingCustomerUserInfoNAme(), Messages.defaultCustomUserInformationName);
+        final String customUserInfoName = NamingUtils.generateNewNameCaseInsensitive(getLowerCaseExistingCustomerUserInfoName(), Messages.defaultCustomUserInformationName);
         final String customUserInfoDescription = "";
 
         // add new CustomUserInfoDefinition
@@ -1349,7 +1347,7 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
         }
     }
 
-    private Set<String> getLowerCaseExistingCustomerUserInfoNAme() {
+    private Set<String> getLowerCaseExistingCustomerUserInfoName() {
         final Set<String> existingCustomUserInfoNames = new HashSet<String>();
         if(organization!=null){
             if(organization.getCustomUserInfoDefinitions() == null){

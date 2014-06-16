@@ -44,6 +44,7 @@ import org.eclipse.swt.widgets.Text;
  */
 public class CustomUserInformationDefinitionNameEditingSupport extends ObservableValueEditingSupport {
 
+    private static final int CUSTOM_USER_DEFINITION_NAME_SIZE = 75;
     private final DataBindingContext dbc;
     private Organization organization;
     /**
@@ -91,7 +92,7 @@ public class CustomUserInformationDefinitionNameEditingSupport extends Observabl
     protected CellEditor getCellEditor(final Object element) {
         final TextCellEditor textCellEditor = new TextCellEditor((Composite) getViewer().getControl());
         final Text textControl = (Text) textCellEditor.getControl();
-        textControl.setTextLimit(50);
+        textControl.setTextLimit(CUSTOM_USER_DEFINITION_NAME_SIZE);
         return textCellEditor;
     }
 
