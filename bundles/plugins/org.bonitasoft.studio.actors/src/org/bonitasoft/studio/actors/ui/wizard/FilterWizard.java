@@ -29,6 +29,7 @@ import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.IConnectorDefinitionContainer;
 import org.bonitasoft.studio.connector.model.definition.IDefinitionRepositoryStore;
+import org.bonitasoft.studio.connector.model.definition.wizard.SelectNameAndDescWizardPage;
 import org.bonitasoft.studio.connector.model.i18n.DefinitionResourceProvider;
 import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementation;
 import org.bonitasoft.studio.connector.model.implementation.wizard.AbstractDefinitionSelectionImpementationWizardPage;
@@ -39,6 +40,7 @@ import org.bonitasoft.studio.model.process.Connector;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.jface.wizard.IWizardPage;
 
 /**
  * @author Romain Bioteau
@@ -93,4 +95,20 @@ public class FilterWizard extends ConnectorWizard implements IConnectorDefinitio
 	protected AbstractDefinitionSelectionImpementationWizardPage getSelectionPage(Connector connectorWorkingCopy, DefinitionResourceProvider resourceProvider) {
 		return new SelectAdvancedFilterDefinitionWizardPage(connectorWorkingCopy, Collections.<ConnectorImplementation>emptyList(), definitions, Messages.selectFilterDefinitionTitle, Messages.selectFilterDefinitionDesc, resourceProvider);
 	}
+	
+	@Override
+	public IWizardPage getNextPage(IWizardPage page) {
+	    IWizardPage p = super.getNextPage(page);
+	    if(p instanceof SelectNameAndDescWizardPage){
+	        ConnectorDefinition def = selectionPage.getSelectedConnectorDefinition();
+	        String connectorDefinitionLabel = messageProvider.getConnectorDefinitionLabel(def);
+	        if (connectorDefinitionLabel == null && def != null) {
+	            connectorDefinitionLabel = def.getId();
+	        }
+	        p.setTitle(Messages.bind(Messages.filterWizardTitle,connectorDefinitionLabel,connectorWorkingCopy.getDefinitionVersion()));
+	        p.setDescription(Messages.filterWizardMessage);
+	    }
+	    return p;
+	}
+
 }
