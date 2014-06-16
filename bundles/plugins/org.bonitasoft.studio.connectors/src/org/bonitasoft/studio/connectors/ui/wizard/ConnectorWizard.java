@@ -245,7 +245,11 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
             selectionPage = getSelectionPage(connectorWorkingCopy, messageProvider);
             addPage(selectionPage);
         }
-        addNameAndDescriptionPage();
+        IWizardPage nameAndDescriptionPage = getNameAndDescriptionPage();
+        if(nameAndDescriptionPage != null){
+            addPage(nameAndDescriptionPage);
+        }
+
         if (editMode) {
             final IDefinitionRepositoryStore definitionStore = getDefinitionStore();
             final ConnectorDefinition definition = definitionStore.getDefinition(connectorWorkingCopy.getDefinitionId(),
@@ -320,13 +324,13 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
                 Messages.selectConnectorDefinitionTitle, Messages.selectConnectorDefinitionDesc, resourceProvider);
     }
 
-    protected void addNameAndDescriptionPage() {
+    protected IWizardPage getNameAndDescriptionPage() {
         if (useEvents) {
             namePage = new SelectEventConnectorNameAndDescWizardPage(container, connectorWorkingCopy, originalConnector, featureToCheckForUniqueID);
         } else {
             namePage = new SelectNameAndDescWizardPage(container, connectorWorkingCopy, originalConnector, featureToCheckForUniqueID);
         }
-        addPage(namePage);
+        return namePage;
     }
 
     protected void setUseEvents(boolean useEvents) {

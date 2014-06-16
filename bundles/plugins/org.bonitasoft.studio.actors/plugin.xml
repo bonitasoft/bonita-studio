@@ -308,5 +308,17 @@
              class="org.bonitasoft.studio.actors.action.PublishActiveOrganizationAction">
        </action>
     </extension>
+    <extension
+          point="org.bonitasoft.studio.connectors.connectorWizard">
+       <connectorWizard
+             DefinitionId="custom-user-info"
+             priority="5"
+             useDefaultGeneratedPages="false"
+             useDefaultOutputPage="true">
+          <configurationPage
+                page="org.bonitasoft.studio.actors.ui.wizard.connector.CustomUserInfoConnectorConfigurationWizardPage">
+          </configurationPage>
+       </connectorWizard>
+    </extension>
 
 </plugin>
