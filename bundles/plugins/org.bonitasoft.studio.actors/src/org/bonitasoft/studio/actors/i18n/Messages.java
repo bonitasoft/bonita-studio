@@ -243,6 +243,13 @@ public class Messages extends NLS {
     public static String importSuccessfulMsg;
     public static String importFailedTitle;
     public static String importFailedMsg;
+
+    public static String filterWizardTitle;
+    public static String filterWizardMessage;
+    public static String cuiManagementMsg;
+    public static String cuiFilterActorRelatedMsg;
+    public static String assignOnlyIfOneUser;
+    public static String typeValueToFilter;
     public static String customUserInfoName;
     public static String customUserInfoDescription;
     public static String customUserInfoDefinitionNotEmpty;
