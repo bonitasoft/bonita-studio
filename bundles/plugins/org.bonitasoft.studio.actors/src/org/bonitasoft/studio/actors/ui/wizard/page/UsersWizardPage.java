@@ -1511,6 +1511,9 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
         return titles;
     }
 
-
+    @Override
+    public boolean isPageComplete() {
+        return super.isPageComplete() || userSingleSelectionObservable.getValue() == null;
+    }
 
 }
