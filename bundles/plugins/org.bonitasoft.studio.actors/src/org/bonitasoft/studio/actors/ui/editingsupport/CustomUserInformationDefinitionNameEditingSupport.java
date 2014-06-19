@@ -47,12 +47,15 @@ public class CustomUserInformationDefinitionNameEditingSupport extends Observabl
     private static final int CUSTOM_USER_DEFINITION_NAME_SIZE = 75;
     private final DataBindingContext dbc;
     private Organization organization;
+    final ColumnViewer viewer;
+
     /**
      * @param viewer
      * @param dbc
      */
     public CustomUserInformationDefinitionNameEditingSupport(final ColumnViewer viewer, final DataBindingContext dbc) {
         super(viewer, dbc);
+        this.viewer = viewer;
         this.dbc = dbc;
     }
 
@@ -99,7 +102,7 @@ public class CustomUserInformationDefinitionNameEditingSupport extends Observabl
     @Override
     protected Binding createBinding(final IObservableValue target, final IObservableValue model) {
         final UpdateValueStrategy targetToModel = new UpdateValueStrategy();
-        targetToModel.setAfterGetValidator(new CustomerUserInformationDefinitionNameValidator(organization));
+        targetToModel.setAfterGetValidator(new CustomerUserInformationDefinitionNameValidator(organization, viewer));
         return dbc.bindValue(target, model, targetToModel, null);
     }
 

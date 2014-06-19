@@ -25,6 +25,8 @@ import org.bonitasoft.studio.actors.model.organization.Organization;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.viewers.ColumnViewer;
+import org.eclipse.jface.viewers.StructuredSelection;
 
 /**
  * @author florine
@@ -38,13 +40,18 @@ public class CustomerUserInformationDefinitionNameValidator implements IValidato
     Set<String> exisingNames=new HashSet<String>();
 
 
-    public CustomerUserInformationDefinitionNameValidator(final Organization organization) {
+    public CustomerUserInformationDefinitionNameValidator(final Organization organization, final ColumnViewer viewer) {
         this.organization=organization;
+        final StructuredSelection structuredSelection = (StructuredSelection) viewer.getSelection();
+        final CustomUserInfoDefinition selectedCustomUserDef = (CustomUserInfoDefinition) structuredSelection.getFirstElement();
+        final String selectedDefinitionName = selectedCustomUserDef.getName();
 
         if (organization != null && organization.getCustomUserInfoDefinitions() != null
                 && organization.getCustomUserInfoDefinitions().getCustomUserInfoDefinition() != null) {
             for (final CustomUserInfoDefinition def : organization.getCustomUserInfoDefinitions().getCustomUserInfoDefinition()) {
-                exisingNames.add(def.getName().toLowerCase());
+                if (!def.getName().equalsIgnoreCase(selectedDefinitionName)) {
+                    exisingNames.add(def.getName().toLowerCase());
+                }
             }
         }
     }
