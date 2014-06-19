@@ -47,6 +47,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.TabFolder;
+import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
@@ -97,7 +98,7 @@ public abstract class AbstractOrganizationWizardPage extends WizardPage implemen
     public void createControl(final Composite parent) {
         context = new EMFDataBindingContext() ;
         mainComposite = doCreateControl(parent);
-        setControl(mainComposite) ;
+        setControl(mainComposite);
     }
 
     protected Composite doCreateControl(final Composite parent) {
@@ -238,6 +239,19 @@ public abstract class AbstractOrganizationWizardPage extends WizardPage implemen
     }
 
     protected void setControlEnabled(final Control control,final boolean enabled){
+        if(control instanceof TabFolder){
+            for(final TabItem item :  ((TabFolder) control).getItems()){
+                final Control tabControl = item.getControl();
+                if (tabControl != null) {
+                    tabControl.setEnabled(enabled);
+                    if (tabControl instanceof Composite) {
+                        setControlEnabled(tabControl, enabled);
+                    }
+                }
+            }
+            return;
+        }
+
         if(control instanceof Composite){
             for(final Control c :  ((Composite) control).getChildren()){
                 c.setEnabled(enabled) ;
@@ -245,16 +259,13 @@ public abstract class AbstractOrganizationWizardPage extends WizardPage implemen
                     setControlEnabled(c, enabled) ;
                 }
             }
-        }else if(control instanceof TabFolder){
-            for(final Control c :  ((TabFolder) control).getChildren()){
-                c.setEnabled(enabled) ;
-                if(c instanceof Composite){
-                    setControlEnabled(c, enabled) ;
-                }
-            }
-        }else{
-            control.setEnabled(enabled) ;
+            return;
         }
+
+
+
+        control.setEnabled(enabled);
+
     }
 
     public void setOrganization(final Organization organization){

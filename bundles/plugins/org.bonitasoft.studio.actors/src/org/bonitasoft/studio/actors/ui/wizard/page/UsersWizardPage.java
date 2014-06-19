@@ -33,6 +33,7 @@ import org.bonitasoft.studio.actors.model.organization.PasswordType;
 import org.bonitasoft.studio.actors.model.organization.User;
 import org.bonitasoft.studio.actors.ui.editingsupport.CustomUserInformationDefinitionNameEditingSupport;
 import org.bonitasoft.studio.actors.ui.editingsupport.CustomerUserInformationDefinitionDescriptionEditingSupport;
+import org.bonitasoft.studio.actors.validator.UserEmptyInputValidator;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.jface.TableColumnSorter;
 import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
@@ -83,6 +84,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
@@ -170,19 +172,13 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
                     for (final Control c : tab.getChildren()) {
                         c.dispose();
                     }
-                    final ScrolledComposite sc = createScrolledComposite();
-                    final Control control = createMembershipControl(sc);
-                    sc.setContent(control);
-                    memberShipTab.setControl(sc);
+                    refreshMembershipTab();
                 } else
                     if (item.equals(customTab)) {
                         for (final Control c : tab.getChildren()) {
                             c.dispose();
                         }
-                        final ScrolledComposite sc = createScrolledComposite();
-                        final Control control = createOtherControl(sc);
-                        sc.setContent(control);
-                        customTab.setControl(sc);
+                        refreshCustomTab();
                     }
 
             }
@@ -286,9 +282,9 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
     protected void configureInfoGroup(final Group group) {
         group.setText(Messages.details) ;
 
-        final Composite detailsComposite = new Composite(group, SWT.NONE) ;
-        detailsComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).span(2,1).create()) ;
-        detailsComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).spacing(0, 2).margins(15, 5).equalWidth(false).create()) ;
+        final Composite detailsComposite = new Composite(group, SWT.NONE);
+        detailsComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 1).create());
+        detailsComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).spacing(0, 2).margins(15, 5).equalWidth(false).create());
 
         createUserNameField(detailsComposite);
 
@@ -298,7 +294,7 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 
 
         tab = new TabFolder(group, SWT.NONE) ;
-        tab.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).span(2, 1).create()) ;
+        tab.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).span(2, 1).create());
         tab.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).create()) ;
 
         selectionAdapter = new SelectionAdapter() {
@@ -315,6 +311,8 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
                 if(item.equals(generalTab)){
                     final ScrolledComposite sc = createScrolledComposite();
                     control = createGeneralControl(sc);
+                    updatedScrolMinSize(control, sc);
+
                     sc.setContent(control);
 
                     generalTab.setControl(sc) ;
@@ -323,12 +321,16 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
                 }else if(item.equals(personalTab)){
                     final ScrolledComposite sc = createScrolledComposite();
                     control=createContactInfoControl(sc, OrganizationPackage.Literals.USER__PERSONAL_DATA);
+                    updatedScrolMinSize(control, sc);
+
                     sc.setContent(control);
                     personalTab.setControl(sc) ;
 
                 }else if(item.equals(professionnalTab)){
                     final ScrolledComposite sc = createScrolledComposite();
                     control = createContactInfoControl(sc, OrganizationPackage.Literals.USER__PROFESSIONAL_DATA);
+                    updatedScrolMinSize(control, sc);
+
                     sc.setContent(control);
                     professionnalTab.setControl(sc) ;
                 }
@@ -336,6 +338,7 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
                 else if(item.equals(memberShipTab)){
                     final ScrolledComposite sc = createScrolledComposite();
                     control = createMembershipControl(sc);
+                    updatedScrolMinSize(control, sc);
                     sc.setContent(control);
                     memberShipTab.setControl(sc) ;
                 }
@@ -343,12 +346,14 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
                 else if(item.equals(customTab)){
                     final ScrolledComposite sc = createScrolledComposite();
                     control = createOtherControl(sc);
+                    updatedScrolMinSize(control, sc);
                     sc.setContent(control);
+
                     customTab.setControl(sc) ;
                 }
-
                 getInfoGroup().layout(true, true) ;
             }
+
         };
 
         tab.addSelectionListener(selectionAdapter);
@@ -357,18 +362,27 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
         generalTab.setText(Messages.general) ;
 
         memberShipTab = new TabItem(tab, SWT.SCROLL_LINE);
-        memberShipTab.setText(Messages.membership+" *") ;
+        memberShipTab.setText(Messages.membership + " *");
 
-        personalTab = new TabItem(tab, SWT.NONE) ;
-        personalTab.setText(Messages.personalData) ;
+        personalTab = new TabItem(tab, SWT.NONE);
+        personalTab.setText(Messages.personalData);
 
-        professionnalTab = new TabItem(tab, SWT.NONE) ;
-        professionnalTab.setText(Messages.professionalData) ;
+        professionnalTab = new TabItem(tab, SWT.NONE);
+        professionnalTab.setText(Messages.professionalData);
 
         customTab = new TabItem(tab, SWT.SCROLL_LINE);
         customTab.setText(Messages.other);
 
+        tab.setSelection(generalTab);
+
         setControlEnabled(getInfoGroup(), false);
+
+        refreshGeneralTab();
+    }
+
+    private void updatedScrolMinSize(final Control control, final ScrolledComposite sc) {
+        final Point point = control.computeSize(SWT.DEFAULT, SWT.DEFAULT);
+        sc.setMinSize(new Point(point.x, point.y));
     }
 
     private void createManagerCombo(final Composite rightColumnComposite) {
@@ -428,7 +442,7 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
         passwordText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).indent(5, 0).create()) ;
 
         final UpdateValueStrategy mandatoryStrategy = new UpdateValueStrategy();
-        mandatoryStrategy.setAfterGetValidator(new EmptyInputValidator(Messages.password));
+        mandatoryStrategy.setAfterGetValidator(new UserEmptyInputValidator(Messages.password, userSingleSelectionObservable));
 
         final IObservableValue userPasswordObservableValue = EMFObservables.observeDetailValue(Realm.getDefault(), userSingleSelectionObservable, OrganizationPackage.Literals.USER__PASSWORD);
 
@@ -460,8 +474,10 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 
             @Override
             public Object convert(final Object from) {
-                final User user = (User) userSingleSelectionObservable.getValue();
-                updateDelegueeMembership(user.getUserName(), from.toString());
+                if (userSingleSelectionObservable != null && userSingleSelectionObservable.getValue() != null) {
+                    final User user = (User) userSingleSelectionObservable.getValue();
+                    updateDelegueeMembership(user.getUserName(), from.toString());
+                }
                 return from;
             }
         });
@@ -469,8 +485,13 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 
             @Override
             public IStatus validate(final Object value) {
-                if(value.toString().isEmpty()){
-                    return ValidationStatus.error(Messages.nameIsEmpty) ;
+
+                if (isNotUserSelected()) {
+                    return Status.OK_STATUS;
+                }
+
+                if (value.toString().isEmpty()) {
+                    return ValidationStatus.error(Messages.userNameIsEmpty);
                 }
 
                 if(value.toString().length()>NAME_SIZE){
@@ -478,10 +499,10 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
                 }
 
                 final User currentUser = (User) userSingleSelectionObservable.getValue();
-                for(final User u : userList){
-                    if(!u.equals(currentUser)){
-                        if(u.getUserName().equals(value)){
-                            return ValidationStatus.error(Messages.userNameAlreadyExists) ;
+                for (final User u : userList) {
+                    if (!u.equals(currentUser)) {
+                        if (u.getUserName().equals(value)) {
+                            return ValidationStatus.error(Messages.userNameAlreadyExists);
                         }
                     }
                 }
@@ -562,8 +583,7 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
     private ScrolledComposite createScrolledComposite() {
         final ScrolledComposite sc = new ScrolledComposite(tab, SWT.V_SCROLL);
         sc.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(5, 5).create());
-        sc.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, SWT.DEFAULT).create()) ;
-        sc.setMinSize(MIN_SC_WIDTH, MIN_SC_HEIGHT);
+        sc.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, SWT.DEFAULT).create());
         sc.setExpandHorizontal(true);
         sc.setExpandVertical(true);
         return sc;
@@ -573,8 +593,8 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
     protected Control createOtherControl(final Composite parent) {
 
         final Composite otherInfoComposite = new Composite(parent, SWT.NONE);
-        otherInfoComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create()) ;
-        otherInfoComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(10, 10).equalWidth(false).create()) ;
+        otherInfoComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(5, 5).equalWidth(false).create());
+        otherInfoComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, SWT.DEFAULT).create());
 
 
         final User selectedUser = (User) userSingleSelectionObservable.getValue() ;
@@ -607,7 +627,7 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
                 });
 
                 final Label labelName = new Label(otherInfoComposite, SWT.LEFT | SWT.WRAP);
-                labelName.setLayoutData(GridDataFactory.fillDefaults().hint(25, SWT.DEFAULT).create());
+                labelName.setLayoutData(GridDataFactory.fillDefaults().hint(150, SWT.DEFAULT).create());
                 labelName.setText(infoValue.getName());
 
                 final Text textValue = new Text(otherInfoComposite, SWT.BORDER);
@@ -630,6 +650,7 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
             }
 
         });
+        addInfoLink.setLayoutData(GridDataFactory.fillDefaults().span(2, 1).grab(true, false).create());
 
         return otherInfoComposite;
     }
@@ -1145,6 +1166,7 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
         });
 
         super.createControl(tabFolder);
+        super.setControl(tabFolder);
 
         userTab = new TabItem(tabFolder, SWT.NONE);
         userTab.setText(Messages.listOfUsersTabTitle);
@@ -1161,13 +1183,26 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
     private void refreshCustomTab() {
         final ScrolledComposite sc = createScrolledComposite();
         final Control control = createOtherControl(sc);
+        updatedScrolMinSize(control, sc);
         sc.setContent(control);
         customTab.setControl(sc);
     }
 
+    private void refreshGeneralTab() {
+        final ScrolledComposite sc = createScrolledComposite();
+        final Control control = createGeneralControl(sc);
+        updatedScrolMinSize(control, sc);
+
+        sc.setContent(control);
+        generalTab.setControl(sc);
+    }
+
     private void refreshMembershipTab() {
         final ScrolledComposite sc = createScrolledComposite();
+
         final Control control = createMembershipControl(sc);
+        updatedScrolMinSize(control, sc);
+
         sc.setContent(control);
         memberShipTab.setControl(sc);
     }
@@ -1189,7 +1224,7 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 
         final Composite groupComposite = new Composite(infoCompo, SWT.NONE);
         groupComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        groupComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).spacing(10,0).equalWidth(false).create()) ;
+        groupComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).spacing(10, 0).equalWidth(true).create());
 
         // Group Default Information
         final Group defaultGroup = new Group(groupComposite,  SWT.FILL);
@@ -1515,5 +1550,7 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
     public boolean isPageComplete() {
         return super.isPageComplete() || userSingleSelectionObservable.getValue() == null;
     }
-
+    private boolean isNotUserSelected() {
+        return userSingleSelectionObservable == null || userSingleSelectionObservable.getValue() == null;
+    }
 }

@@ -279,6 +279,7 @@ public class Messages extends NLS {
     public static String displayNameLimitSize;
     public static String labelExplicationCustomUserInformation;
     public static String customUserInfoValueLimitSize;
+    public static String userNameIsEmpty;
 
 
 }
