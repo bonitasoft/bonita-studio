@@ -17,6 +17,7 @@
 package org.bonitasoft.studio.actors.ui.wizard.page;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -53,6 +54,8 @@ import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.emf.common.util.ECollections;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.databinding.EMFProperties;
 import org.eclipse.emf.ecore.EAttribute;
@@ -345,7 +348,7 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 
                 else if(item.equals(customTab)){
                     final ScrolledComposite sc = createScrolledComposite();
-                    control = createOtherControl(sc);
+                    control = createCustomControl(sc);
                     updatedScrolMinSize(control, sc);
                     sc.setContent(control);
 
@@ -590,7 +593,7 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
     }
 
 
-    protected Control createOtherControl(final Composite parent) {
+    protected Control createCustomControl(final Composite parent) {
 
         final Composite otherInfoComposite = new Composite(parent, SWT.NONE);
         otherInfoComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(5, 5).equalWidth(false).create());
@@ -610,7 +613,8 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
             final IObservableList customUserInfoListValue = EMFObservables.observeDetailList(Realm.getDefault(), customUserInfoValuesValue,
                     OrganizationPackage.Literals.CUSTOM_USER_INFO_VALUES_TYPE__CUSTOM_USER_INFO_VALUE);
 
-            for(final CustomUserInfoValue infoValue : selectedUser.getCustomUserInfoValues().getCustomUserInfoValue()){
+            final EList<CustomUserInfoValue> customUserInfoValueList = sortCustomUserInfoValues(selectedUser);
+            for (final CustomUserInfoValue infoValue : customUserInfoValueList) {
 
 
                 final UpdateValueStrategy strategy = new UpdateValueStrategy();
@@ -653,6 +657,18 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
         addInfoLink.setLayoutData(GridDataFactory.fillDefaults().span(2, 1).grab(true, false).create());
 
         return otherInfoComposite;
+    }
+
+    private EList<CustomUserInfoValue> sortCustomUserInfoValues(final User selectedUser) {
+        final EList<CustomUserInfoValue> customUserInfoValueList = selectedUser.getCustomUserInfoValues().getCustomUserInfoValue();
+        ECollections.sort(customUserInfoValueList, new Comparator<CustomUserInfoValue>() {
+
+            @Override
+            public int compare(final CustomUserInfoValue o1, final CustomUserInfoValue o2) {
+                return o1.getName().compareToIgnoreCase(o2.getName());
+            }
+        });
+        return customUserInfoValueList;
     }
 
     protected Control createMembershipControl(final Composite parent) {
@@ -1182,7 +1198,7 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 
     private void refreshCustomTab() {
         final ScrolledComposite sc = createScrolledComposite();
-        final Control control = createOtherControl(sc);
+        final Control control = createCustomControl(sc);
         updatedScrolMinSize(control, sc);
         sc.setContent(control);
         customTab.setControl(sc);
@@ -1328,6 +1344,8 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 
 
         final TableViewerColumn nameColumn = new TableViewerColumn(customUserInfoTable, SWT.NONE);
+        final TableColumnSorter sorter = new TableColumnSorter(customUserInfoTable);
+        sorter.setColumn(nameColumn.getColumn());
         nameColumn.getColumn().setText(Messages.customUserInfoName+" *") ;
         nameColumn.getColumn().setWidth(100);
         customUserInformationDefinitionNameEditingSupport = new CustomUserInformationDefinitionNameEditingSupport(nameColumn.getViewer(), context);
@@ -1367,6 +1385,7 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
         customUserInfo.setName(customUserInfoName);
         customUserInfo.setDescription(customUserInfoDescription);
         customUserInfoObservableList.add(customUserInfo);
+        customUserInfoTable.setSelection(new StructuredSelection(customUserInfo));
 
 
         // add this new CustomUserInfo as a a CustomUserInfoValue for the User

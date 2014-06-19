@@ -25,6 +25,8 @@ import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.beans.PojoObservables;
+import org.eclipse.core.databinding.observable.DisposeEvent;
+import org.eclipse.core.databinding.observable.IDisposeListener;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.IValueChangeListener;
 import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
@@ -87,6 +89,16 @@ public class CustomUserInformationDefinitionNameEditingSupport extends Observabl
                 }
             }
 
+        });
+
+        //sort the table after a modification
+        observeValue.addDisposeListener(new IDisposeListener() {
+
+            @Override
+            public void handleDispose(final DisposeEvent arg0) {
+                viewer.refresh();
+
+            }
         });
         return observeValue;
     }
