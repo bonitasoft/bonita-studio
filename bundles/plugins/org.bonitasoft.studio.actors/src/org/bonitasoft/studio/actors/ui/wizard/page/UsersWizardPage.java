@@ -33,6 +33,7 @@ import org.bonitasoft.studio.actors.model.organization.PasswordType;
 import org.bonitasoft.studio.actors.model.organization.User;
 import org.bonitasoft.studio.actors.ui.editingsupport.CustomUserInformationDefinitionNameEditingSupport;
 import org.bonitasoft.studio.actors.ui.editingsupport.CustomerUserInformationDefinitionDescriptionEditingSupport;
+import org.bonitasoft.studio.actors.validator.UserEmptyInputValidator;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.jface.TableColumnSorter;
 import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
@@ -441,7 +442,7 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
         passwordText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).indent(5, 0).create()) ;
 
         final UpdateValueStrategy mandatoryStrategy = new UpdateValueStrategy();
-        mandatoryStrategy.setAfterGetValidator(new EmptyInputValidator(Messages.password));
+        mandatoryStrategy.setAfterGetValidator(new UserEmptyInputValidator(Messages.password, userSingleSelectionObservable));
 
         final IObservableValue userPasswordObservableValue = EMFObservables.observeDetailValue(Realm.getDefault(), userSingleSelectionObservable, OrganizationPackage.Literals.USER__PASSWORD);
 
@@ -473,8 +474,10 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 
             @Override
             public Object convert(final Object from) {
-                final User user = (User) userSingleSelectionObservable.getValue();
-                updateDelegueeMembership(user.getUserName(), from.toString());
+                if (userSingleSelectionObservable != null && userSingleSelectionObservable.getValue() != null) {
+                    final User user = (User) userSingleSelectionObservable.getValue();
+                    updateDelegueeMembership(user.getUserName(), from.toString());
+                }
                 return from;
             }
         });
@@ -482,8 +485,13 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 
             @Override
             public IStatus validate(final Object value) {
-                if(value.toString().isEmpty()){
-                    return ValidationStatus.error(Messages.nameIsEmpty) ;
+
+                if (isNotUserSelected()) {
+                    return Status.OK_STATUS;
+                }
+
+                if (value.toString().isEmpty()) {
+                    return ValidationStatus.error(Messages.userNameIsEmpty);
                 }
 
                 if(value.toString().length()>NAME_SIZE){
@@ -491,10 +499,10 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
                 }
 
                 final User currentUser = (User) userSingleSelectionObservable.getValue();
-                for(final User u : userList){
-                    if(!u.equals(currentUser)){
-                        if(u.getUserName().equals(value)){
-                            return ValidationStatus.error(Messages.userNameAlreadyExists) ;
+                for (final User u : userList) {
+                    if (!u.equals(currentUser)) {
+                        if (u.getUserName().equals(value)) {
+                            return ValidationStatus.error(Messages.userNameAlreadyExists);
                         }
                     }
                 }
@@ -1216,7 +1224,7 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 
         final Composite groupComposite = new Composite(infoCompo, SWT.NONE);
         groupComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        groupComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).spacing(10,0).equalWidth(false).create()) ;
+        groupComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).spacing(10, 0).equalWidth(true).create());
 
         // Group Default Information
         final Group defaultGroup = new Group(groupComposite,  SWT.FILL);
@@ -1539,5 +1547,7 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
     }
 
 
-
+    private boolean isNotUserSelected() {
+        return userSingleSelectionObservable == null || userSingleSelectionObservable.getValue() == null;
+    }
 }
