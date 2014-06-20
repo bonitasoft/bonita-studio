@@ -166,11 +166,13 @@ public class GroupsWizardPage extends AbstractOrganizationWizardPage {
 
         final Object oldValue = event.diff.getOldValue();
         if(oldValue != null){
-            oldGroup.setParentPath(oldValue.toString()) ;
-            for(final Membership m : membershipList){
-                if (m.getGroupName() != null && m.getGroupName().equals(group.getName()) && m.getGroupParentPath() != null
-                        && m.getGroupParentPath().equals(oldGroup.getParentPath())) {
-                    m.setGroupParentPath(group.getParentPath());
+            if (oldGroup != null) {
+                oldGroup.setParentPath(oldValue.toString()) ;
+                for(final Membership m : membershipList){
+                    if (m.getGroupName() != null && m.getGroupName().equals(group.getName()) && m.getGroupParentPath() != null
+                            && m.getGroupParentPath().equals(oldGroup.getParentPath())) {
+                        m.setGroupParentPath(group.getParentPath());
+                    }
                 }
             }
         }
@@ -182,36 +184,40 @@ public class GroupsWizardPage extends AbstractOrganizationWizardPage {
         final org.bonitasoft.studio.actors.model.organization.Group oldGroup = EcoreUtil.copy(group) ;
         final Object oldValue = event.diff.getOldValue();
         if(oldValue != null){
-            oldGroup.setName(oldValue.toString()) ;
-            final ITreeContentProvider provider = (ITreeContentProvider) getViewer().getContentProvider() ;
-            final String oldPath = GroupContentProvider.getGroupPath(oldGroup) + GroupContentProvider.GROUP_SEPARATOR ;
-            final String newPath = GroupContentProvider.getGroupPath(group) + GroupContentProvider.GROUP_SEPARATOR ;
+            if (oldGroup != null) {
+                oldGroup.setName(oldValue.toString()) ;
+                final ITreeContentProvider provider = (ITreeContentProvider) getViewer().getContentProvider() ;
+                final String oldPath = GroupContentProvider.getGroupPath(oldGroup) + GroupContentProvider.GROUP_SEPARATOR ;
+                final String newPath = GroupContentProvider.getGroupPath(group) + GroupContentProvider.GROUP_SEPARATOR ;
 
-            if(provider != null && provider.hasChildren(oldGroup)){
-                for(final Object child : provider.getChildren(oldGroup)){
-                    final org.bonitasoft.studio.actors.model.organization.Group childGroup = (org.bonitasoft.studio.actors.model.organization.Group) child ;
-                    updateParentPath(childGroup, oldPath, newPath, provider) ;
-                    final String parent = childGroup.getParentPath() + GroupContentProvider.GROUP_SEPARATOR ;
-                    String path = parent.replace(oldPath, newPath) ;
-                    if(path.endsWith(GroupContentProvider.GROUP_SEPARATOR )){
-                        path = path.substring(0, path.length() -1) ;
-                    }
-                    if(path.equals(GroupContentProvider.GROUP_SEPARATOR)){
-                        childGroup.setParentPath(null) ;
-                    }else{
-                        childGroup.setParentPath(path) ;
-                    }
+                if(provider != null && provider.hasChildren(oldGroup)){
+                    for(final Object child : provider.getChildren(oldGroup)){
+                        final org.bonitasoft.studio.actors.model.organization.Group childGroup = (org.bonitasoft.studio.actors.model.organization.Group) child ;
+                        updateParentPath(childGroup, oldPath, newPath, provider) ;
+                        final String parent = childGroup.getParentPath() + GroupContentProvider.GROUP_SEPARATOR ;
+                        String path = parent.replace(oldPath, newPath) ;
+                        if(path.endsWith(GroupContentProvider.GROUP_SEPARATOR )){
+                            path = path.substring(0, path.length() -1) ;
+                        }
+                        if(path.equals(GroupContentProvider.GROUP_SEPARATOR)){
+                            childGroup.setParentPath(null) ;
+                        }else{
+                            childGroup.setParentPath(path) ;
+                        }
 
+                    }
                 }
             }
-            if(getViewer() != null && !getViewer().getControl().isDisposed()){
-                getViewer().refresh(group) ;
-            }
+            if (group != null) {
+                if(getViewer() != null && !getViewer().getControl().isDisposed()){
+                    getViewer().refresh(group) ;
+                }
 
-            pathObservableValue.setValue(GroupContentProvider.getGroupPath(group)) ;
+                pathObservableValue.setValue(GroupContentProvider.getGroupPath(group)) ;
 
-            for(final Membership m : groupMemberShips){
-                m.setGroupName(group.getName()) ;
+                for(final Membership m : groupMemberShips){
+                    m.setGroupName(group.getName()) ;
+                }
             }
         }
     }
@@ -223,7 +229,9 @@ public class GroupsWizardPage extends AbstractOrganizationWizardPage {
         final org.bonitasoft.studio.actors.model.organization.Group oldGroup = EcoreUtil.copy(group) ;
         final Object oldValue = event.diff.getOldValue();
         if(oldValue != null){
-            oldGroup.setDisplayName(oldValue.toString()) ;
+            if (oldGroup != null) {
+                oldGroup.setDisplayName(oldValue.toString());
+            }
 
             if(getViewer() != null && !getViewer().getControl().isDisposed()){
                 getViewer().refresh(group) ;
