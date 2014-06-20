@@ -1111,6 +1111,7 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
         for(final CustomUserInfoDefinition definitions : organization.getCustomUserInfoDefinitions().getCustomUserInfoDefinition()){
             final CustomUserInfoValue newValue = OrganizationFactory.eINSTANCE.createCustomUserInfoValue();
             newValue.setName(definitions.getName());
+            newValue.setValue("");
             user.getCustomUserInfoValues().getCustomUserInfoValue().add(newValue);
         }
 
