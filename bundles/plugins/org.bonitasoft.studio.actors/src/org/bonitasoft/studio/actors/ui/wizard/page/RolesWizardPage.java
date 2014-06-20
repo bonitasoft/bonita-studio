@@ -297,20 +297,24 @@ public class RolesWizardPage extends AbstractOrganizationWizardPage {
         final Role oldRole = EcoreUtil.copy(role);
         final Object oldValue = event.diff.getOldValue();
         if(oldValue!=null){
-            oldRole.setName(oldValue.toString());
-            for(final Membership m : membershipList){
-                if(oldRole.getName() != null && oldRole.getName().equals(m.getRoleName())){
-                    roleMemberShips.add(m) ;
+            if (oldRole != null) {
+                oldRole.setName(oldValue.toString());
+                for(final Membership m : membershipList){
+                    if(oldRole.getName() != null && oldRole.getName().equals(m.getRoleName())){
+                        roleMemberShips.add(m) ;
+                    }
                 }
             }
 
-            if(getViewer() != null && !getViewer().getControl().isDisposed()){
-                getViewer().refresh(role) ;
-            }
+            if (role != null) {
+                if(getViewer() != null && !getViewer().getControl().isDisposed()){
+                    getViewer().refresh(role) ;
+                }
 
-            final String newRoleName = role.getName();
-            for(final Membership m : roleMemberShips){
-                m.setRoleName(newRoleName) ;
+                final String newRoleName = role.getName();
+                for(final Membership m : roleMemberShips){
+                    m.setRoleName(newRoleName) ;
+                }
             }
         }
     }
@@ -333,7 +337,9 @@ public class RolesWizardPage extends AbstractOrganizationWizardPage {
         final Role oldRole = EcoreUtil.copy(role);
         final Object oldValue = event.diff.getOldValue();
         if(oldValue!=null){
-            oldRole.setDisplayName(oldValue.toString());
+            if (oldRole != null) {
+                oldRole.setDisplayName(oldValue.toString());
+            }
 
             if(getViewer() != null && !getViewer().getControl().isDisposed()){
                 getViewer().refresh(role) ;
