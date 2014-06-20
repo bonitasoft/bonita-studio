@@ -162,12 +162,14 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
                 final boolean isAUserSelected = selectedUser !=null;
                 setControlEnabled(getInfoGroup(), isAUserSelected);
 
-                if(selectedUser.getPersonalData() == null){
-                    selectedUser.setPersonalData(OrganizationFactory.eINSTANCE.createContactData());
-                }
+                if (isAUserSelected) {
+                    if(selectedUser.getPersonalData() == null){
+                        selectedUser.setPersonalData(OrganizationFactory.eINSTANCE.createContactData());
+                    }
 
-                if(selectedUser.getProfessionalData() == null){
-                    selectedUser.setProfessionalData(OrganizationFactory.eINSTANCE.createContactData());
+                    if(selectedUser.getProfessionalData() == null){
+                        selectedUser.setProfessionalData(OrganizationFactory.eINSTANCE.createContactData());
+                    }
                 }
 
                 final TabItem item = tab.getSelection()[0];
@@ -413,7 +415,7 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
                     }
 
                     managerNameComboViewer.setInput(users);
-                    if (currentUser.getManager() != null) {
+                    if (currentUser != null && currentUser.getManager() != null) {
                         managerNameComboViewer.setSelection(new StructuredSelection(currentUser.getManager()));
                     } else {
                         managerNameComboViewer.setSelection(new StructuredSelection(""));
@@ -431,7 +433,10 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
                 if (!eventObject.isEmpty()) {
                     selectedManager = eventObject;
                 }
-                ((User) userSingleSelectionObservable.getValue()).setManager(selectedManager);
+                final User selectedUser = (User) userSingleSelectionObservable.getValue();
+                if (selectedUser != null) {
+                    selectedUser.setManager(selectedManager);
+                }
             }
         });
     }
@@ -573,7 +578,9 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
         final User oldUser = EcoreUtil.copy(user);
         final Object oldValue = event.diff.getOldValue();
         if (oldValue != null) {
-            oldUser.setUserName(oldValue.toString());
+            if (oldUser != null) {
+                oldUser.setUserName(oldValue.toString());
+            }
             if (getViewer() != null && !getViewer().getControl().isDisposed()) {
                 getViewer().refresh(user);
             }
