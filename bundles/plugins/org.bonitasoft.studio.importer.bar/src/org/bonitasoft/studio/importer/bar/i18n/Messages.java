@@ -264,6 +264,8 @@ public class Messages extends NLS {
 
     public static String removeCustomConnectorMigrationDescription;
 
+    public static String migratingCustomConnector;
+
     static {
         initializeMessages("messages", Messages.class); //$NON-NLS-1$
     }
