@@ -57,7 +57,7 @@ public class ManageOrganizationWizardPage extends WizardPage implements ISelecti
     private Button removeButton;
     private final List<Organization> organizations;
 
-    public ManageOrganizationWizardPage(List<Organization> organizationsWorkingCopy) {
+    public ManageOrganizationWizardPage(final List<Organization> organizationsWorkingCopy) {
         super(ManageOrganizationWizardPage.class.getName());
         setTitle(Messages.manageOrganizationTitle) ;
         setDescription(Messages.manageOrganizationDesc) ;
@@ -68,14 +68,16 @@ public class ManageOrganizationWizardPage extends WizardPage implements ISelecti
      * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
      */
     @Override
-    public void createControl(Composite parent) {
-        Composite mainComposite = new Composite(parent, SWT.NONE) ;
+    public void createControl(final Composite parent) {
+        final Composite mainComposite = new Composite(parent, SWT.NONE) ;
         mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create()) ;
         mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(10, 10).create()) ;
 
+        createButtons(mainComposite);
+
         viewer = new TableViewer(mainComposite,SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI) ;
         viewer.getTable().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).minSize(SWT.DEFAULT, 200).create());
-        TableLayout layout = new TableLayout() ;
+        final TableLayout layout = new TableLayout() ;
         layout.addColumnData(new ColumnWeightData(30)) ;
         layout.addColumnData(new ColumnWeightData(70)) ;
         viewer.getTable().setLayout(layout);
@@ -94,7 +96,7 @@ public class ManageOrganizationWizardPage extends WizardPage implements ISelecti
         column.setEditingSupport(new OrganizationDescriptionEditingSupport(viewer)) ;
         column.setLabelProvider(new ColumnLabelProvider(){
             @Override
-            public String getText(Object element) {
+            public String getText(final Object element) {
                 return ((Organization)element).getDescription();
             }
         });
@@ -102,34 +104,33 @@ public class ManageOrganizationWizardPage extends WizardPage implements ISelecti
         viewer.setInput(organizations) ;
         viewer.addSelectionChangedListener(this) ;
 
-        createButtons(mainComposite) ;
-        
+
         setControl(mainComposite) ;
     }
 
-    protected void createButtons(Composite parent) {
+    protected void createButtons(final Composite parent) {
         final Composite buttonComposite = new Composite(parent,SWT.NONE) ;
         buttonComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).spacing(0, 3).create()) ;
-        buttonComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).create()) ;
+        buttonComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).indent(0, 25).create());
 
         createAddButton(buttonComposite);
         createRemoveButton(buttonComposite);
-        
+
         updateButtons();
     }
 
-	private void createRemoveButton(final Composite buttonComposite) {
-		removeButton = new Button(buttonComposite, SWT.FLAT) ;
+    private void createRemoveButton(final Composite buttonComposite) {
+        removeButton = new Button(buttonComposite, SWT.FLAT) ;
         removeButton.setText(Messages.remove) ;
         removeButton.setLayoutData(GridDataFactory.fillDefaults().grab(true,false).create()) ;
         removeButton.addSelectionListener(new SelectionAdapter() {
             @Override
-            public void widgetSelected(SelectionEvent e) {
-                List<?> list = ((IStructuredSelection) viewer.getSelection()).toList();
+            public void widgetSelected(final SelectionEvent e) {
+                final List<?> list = ((IStructuredSelection) viewer.getSelection()).toList();
                 if(list.size() > 1){
                     FileActionDialog.activateYesNoToAll() ;
                 }
-                for(Object sel : list){
+                for(final Object sel : list){
                     if(FileActionDialog.confirmDeletionQuestion(((Organization)sel).getName())){
                         organizations.remove(sel) ;
                     }
@@ -138,16 +139,16 @@ public class ManageOrganizationWizardPage extends WizardPage implements ISelecti
                 viewer.setInput(organizations) ;
             }
         }) ;
-	}
+    }
 
-	private void createAddButton(final Composite buttonComposite) {
-		final Button addButton = new Button(buttonComposite, SWT.FLAT) ;
+    private void createAddButton(final Composite buttonComposite) {
+        final Button addButton = new Button(buttonComposite, SWT.FLAT) ;
         addButton.setText(Messages.add) ;
         addButton.setLayoutData(GridDataFactory.fillDefaults().grab(true,false).create()) ;
         addButton.addSelectionListener(new SelectionAdapter() {
             @Override
-            public void widgetSelected(SelectionEvent e) {
-                Organization organization = OrganizationFactory.eINSTANCE.createOrganization() ;
+            public void widgetSelected(final SelectionEvent e) {
+                final Organization organization = OrganizationFactory.eINSTANCE.createOrganization() ;
                 organization.setName(generateOrganizationName()) ;
                 organization.setGroups(OrganizationFactory.eINSTANCE.createGroups()) ;
                 organization.setUsers(OrganizationFactory.eINSTANCE.createUsers()) ;
@@ -158,11 +159,11 @@ public class ManageOrganizationWizardPage extends WizardPage implements ISelecti
                 viewer.setSelection(new StructuredSelection(organization));
             }
         }) ;
-	}
+    }
 
     private String generateOrganizationName() {
-        Set<String> names = new HashSet<String>() ;
-        for(Organization a : organizations){
+        final Set<String> names = new HashSet<String>() ;
+        for(final Organization a : organizations){
             names.add(a.getName()) ;
         }
         return NamingUtils.generateNewName(names,Messages.defaultOrganizationName) ;
@@ -175,7 +176,7 @@ public class ManageOrganizationWizardPage extends WizardPage implements ISelecti
     }
 
     @Override
-    public void selectionChanged(SelectionChangedEvent event) {
+    public void selectionChanged(final SelectionChangedEvent event) {
         updateButtons() ;
         getContainer().updateButtons() ;
     }
