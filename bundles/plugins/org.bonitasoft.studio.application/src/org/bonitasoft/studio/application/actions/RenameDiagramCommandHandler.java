@@ -62,6 +62,7 @@ public class RenameDiagramCommandHandler extends AbstractHandler {
             renameDiagramOperation.setDiagramToDuplicate(newProcess);
             renameDiagramOperation.setNewDiagramName(nameDialog.getDiagramName());
             renameDiagramOperation.setNewDiagramVersion(nameDialog.getDiagramVersion());
+            renameDiagramOperation.setPoolsRenamed(nameDialog.getPools());
             renameDiagramOperation.setSaveAfterRename(false);
             final IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
             try {
@@ -71,18 +72,7 @@ public class RenameDiagramCommandHandler extends AbstractHandler {
             } catch (final InterruptedException e1) {
                 throw new ExecutionException(e1.getMessage(), e1);
             }
-            //            try{
-            //                final ICommandService service = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class) ;
-            //                final org.eclipse.core.commands.Command c = service.getCommand("org.eclipse.ui.file.save") ;
-            //                if(c.isEnabled()){
-            //                    final Boolean askForRename = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().getBoolean(BonitaPreferenceConstants.ASK_RENAME_ON_FIRST_SAVE);
-            //                    BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().setValue(BonitaPreferenceConstants.ASK_RENAME_ON_FIRST_SAVE, false);
-            //                    c.executeWithChecks(new ExecutionEvent()) ;
-            //                    BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().setValue(BonitaPreferenceConstants.ASK_RENAME_ON_FIRST_SAVE, askForRename);
-            //                }
-            //            }catch (final Exception e) {
-            //                BonitaStudioLog.error(e) ;
-            //            }
+
         }
         return null;
     }
