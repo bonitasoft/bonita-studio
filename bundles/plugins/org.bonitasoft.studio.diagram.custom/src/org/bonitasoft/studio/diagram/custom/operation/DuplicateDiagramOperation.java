@@ -66,6 +66,7 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil.Copier;
 import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCommand;
 import org.eclipse.gmf.runtime.emf.core.GMFEditingDomainFactory;
@@ -91,6 +92,45 @@ public class DuplicateDiagramOperation implements IRunnableWithProgress {
         Assert.isNotNull(diagramVersion);
         Assert.isNotNull(diagramName);
         monitor.beginTask(Messages.duplicatingDiagram, IProgressMonitor.UNKNOWN);
+
+
+        final String oldName = diagram.getName();
+        final String oldVersion = diagram.getVersion();
+        MainProcess newDiagram = diagram;
+        if (!(oldName.equals(diagramName) && oldVersion.equals(diagramVersion))) {
+            newDiagram = copyDiagram();
+        }
+
+        final TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(newDiagram);
+        for (final ProcessesNameVersion pnv : pools) {
+            final AbstractProcess fromPool = pnv.getAbstractProcess();
+            final String fromPoolName = fromPool.getName();
+            final String fromPoolVersion = fromPool.getVersion();
+            /* Find corresponding element in the duplicated model */
+            for (final Element element : newDiagram.getElements()) {
+                if (element instanceof AbstractProcess) {
+                    if (element.getName().equals(fromPoolName)
+                            && ((AbstractProcess) element).getVersion().equals(fromPoolVersion)) {
+                        changeProcessNameAndVersion((AbstractProcess) element, editingDomain, pnv.getNewName(), pnv.getNewVersion());
+                        break;
+                    }
+                }
+            }
+
+        }
+
+        try {
+            if (newDiagram.eResource() != null) {
+                newDiagram.eResource().save(Collections.EMPTY_MAP);
+            }
+        } catch (final IOException e) {
+            BonitaStudioLog.error(e);
+        }
+
+
+    }
+
+    private MainProcess copyDiagram() {
         final DiagramRepositoryStore diagramStore = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
 
         final Copier copier = new Copier(true, false);
@@ -134,31 +174,8 @@ public class DuplicateDiagramOperation implements IRunnableWithProgress {
         } catch (final ExecutionException e1) {
             BonitaStudioLog.error(e1);
         }
-
-        for (final ProcessesNameVersion pnv : pools) {
-            final AbstractProcess fromPool = pnv.getAbstractProcess();
-            final String fromPoolName = fromPool.getName();
-            final String fromPoolVersion = fromPool.getVersion();
-            /* Find corresponding element in the duplicated model */
-            for (final Element element : newDiagram.getElements()) {
-                if (element instanceof AbstractProcess) {
-                    if (element.getName().equals(fromPoolName)
-                            && ((AbstractProcess) element).getVersion().equals(fromPoolVersion)) {
-                        changeProcessNameAndVersion((AbstractProcess) element, createEditingDomain, pnv.getNewName(), pnv.getNewVersion());
-                        break;
-                    }
-                }
-            }
-
-        }
-
-        try {
-            newDiagram.eResource().save(Collections.EMPTY_MAP);
-        } catch (final IOException e) {
-            BonitaStudioLog.error(e);
-        }
-
         duplicateConfigurations(diagram, newDiagram);
+        return newDiagram;
     }
 
     private void duplicateConfigurations(final MainProcess sourceDiagram, final MainProcess newDiagram) {
@@ -417,7 +434,7 @@ public class DuplicateDiagramOperation implements IRunnableWithProgress {
             final String newProcessVersion) {
         editingDomain.getCommandStack().execute(SetCommand.create(editingDomain, process, ProcessPackage.Literals.ELEMENT__NAME, newProcessLabel));
         editingDomain.getCommandStack()
-                .execute(SetCommand.create(editingDomain, process, ProcessPackage.Literals.ABSTRACT_PROCESS__VERSION, newProcessVersion));
+        .execute(SetCommand.create(editingDomain, process, ProcessPackage.Literals.ABSTRACT_PROCESS__VERSION, newProcessVersion));
 
         try {
             process.eResource().save(Collections.EMPTY_MAP);

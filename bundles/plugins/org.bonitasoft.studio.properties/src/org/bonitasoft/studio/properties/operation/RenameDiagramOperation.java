@@ -74,6 +74,7 @@ public class RenameDiagramOperation implements IRunnableWithProgress {
 
         final String oldName = diagram.getName();
         final String oldVersion = diagram.getVersion();
+
         final String partName = editor.getPartName();
         final DiagramRepositoryStore diagramStore = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
 
@@ -89,9 +90,12 @@ public class RenameDiagramOperation implements IRunnableWithProgress {
             save();
         }
 
-        final DiagramFileStore diagramFileStore = diagramStore.getDiagram(oldName, oldVersion);
-        diagramFileStore.getOpenedEditor().doSave(Repository.NULL_PROGRESS_MONITOR);
-        diagramFileStore.delete();
+        if (!(oldName.equals(diagramName) && oldVersion.equals(diagramVersion))) {
+            final DiagramFileStore diagramFileStore = diagramStore.getDiagram(oldName, oldVersion);
+            diagramFileStore.getOpenedEditor().doSave(Repository.NULL_PROGRESS_MONITOR);
+            diagramFileStore.delete();
+        }
+
         final DiagramFileStore fStore = diagramStore.getDiagram(diagramName, diagramVersion);
         IWorkbenchPart partToActivate = fStore.open();
         final MainProcess mainProcess = fStore.getContent();
