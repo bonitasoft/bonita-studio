@@ -22,12 +22,17 @@ import org.bonitasoft.studio.common.OpenNameAndVersionForDiagramDialog.Processes
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.diagram.custom.operation.DuplicateDiagramOperation;
+import org.bonitasoft.studio.diagram.custom.repository.ApplicationResourceRepositoryStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
+import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationRepositoryStore;
 import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.form.FormPackage;
 import org.bonitasoft.studio.model.process.MainProcess;
+import org.bonitasoft.studio.model.process.Pool;
+import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.properties.i18n.Messages;
 import org.bonitasoft.studio.properties.sections.forms.FormsUtils;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -93,7 +98,25 @@ public class RenameDiagramOperation implements IRunnableWithProgress {
         if (!(oldName.equals(diagramName) && oldVersion.equals(diagramVersion))) {
             final DiagramFileStore diagramFileStore = diagramStore.getDiagram(oldName, oldVersion);
             diagramFileStore.getOpenedEditor().doSave(Repository.NULL_PROGRESS_MONITOR);
+
+            final List<Pool> allPools = ModelHelper.getAllItemsOfType(diagram, ProcessPackage.Literals.POOL);
+
+            final ApplicationResourceRepositoryStore resourceStore = RepositoryManager.getInstance().getRepositoryStore(
+                    ApplicationResourceRepositoryStore.class);
+            final ProcessConfigurationRepositoryStore confStore = RepositoryManager.getInstance().getRepositoryStore(
+                    ProcessConfigurationRepositoryStore.class);
+            for (final Pool p : allPools) {
+                IRepositoryFileStore fileStore = resourceStore.getChild(ModelHelper.getEObjectID(p));
+                if (fileStore != null) {
+                    fileStore.delete();
+                }
+                fileStore = confStore.getChild(ModelHelper.getEObjectID(p) + "." + ProcessConfigurationRepositoryStore.CONF_EXT);
+                if (fileStore != null) {
+                    fileStore.delete();
+                }
+            }
             diagramFileStore.delete();
+
         }
 
         final DiagramFileStore fStore = diagramStore.getDiagram(diagramName, diagramVersion);
