@@ -78,7 +78,9 @@ public class GroovyCompilationOnScriptExpressionConstraint  extends AbstractLive
     private IStatus evaluateExpression(final IValidationContext context,final EObject eObj) {
         final Expression expression = (Expression) eObj;
         final String scriptText = expression.getContent();
-
+        if (scriptText == null || scriptText.isEmpty()) {
+            return context.createSuccessStatus();
+        }
         final IJavaProject javaProject = RepositoryManager.getInstance().getCurrentRepository().getJavaProject();
         final GroovySnippetCompiler compiler = new GroovySnippetCompiler(new GroovyProjectFacade(javaProject));
         final CompilationResult result = compiler.compileForErrors(scriptText, null);
