@@ -299,9 +299,10 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
         } else {
             buttonComposite = new Composite(parent, SWT.NONE);
         }
+        buttonComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, false).align(SWT.LEFT, SWT.TOP).create());
 
         final RowLayout rl = new RowLayout(SWT.VERTICAL);
-        rl.spacing = 5;
+        rl.spacing = 3;
         rl.fill = true;
         buttonComposite.setLayout(rl);
         fillButtonComposite(parent,widgetFactory, buttonComposite);
@@ -593,7 +594,7 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
         if (widgetFactory != null) {
             final Label separator = widgetFactory.createSeparator(buttonComposite,
                     SWT.SEPARATOR | SWT.HORIZONTAL);
-            separator.setLayoutData(new RowData(2, 20));
+            separator.setLayoutData(new RowData(1, 10));
         }
 
         if (widgetFactory != null) {
