@@ -40,11 +40,11 @@ import org.eclipse.ui.texteditor.ITextEditor;
  */
 public class BonitaGroovyConfiguration extends GroovyConfiguration {
 
-	public BonitaGroovyConfiguration(final GroovyColorManager colorManager, final IPreferenceStore preferenceSource, final ITextEditor editor) {
-	    super(colorManager, preferenceSource, editor);
+    public BonitaGroovyConfiguration(final GroovyColorManager colorManager, final IPreferenceStore preferenceSource, final ITextEditor editor) {
+        super(colorManager, preferenceSource, editor);
     }
 
-    
+
     @SuppressWarnings("unchecked")
     @Override
     public IContentAssistant getContentAssistant(final ISourceViewer sourceViewer) {
@@ -64,18 +64,18 @@ public class BonitaGroovyConfiguration extends GroovyConfiguration {
                     && !category.getId().equals("org.eclipse.jdt.ui.javaNoTypeProposalCategory")
                     && !category.getId().equals("org.eclipse.jdt.ui.javaAllProposalCategory")
                     && !category.getId().equals("org.eclipse.mylyn.java.ui.javaAllProposalCategory")
-                    && !category.getId().equals("org.eclipse.jdt.ui.templateProposalCategory")
-                    && !category.getId().equals("org.eclipse.jdt.ui.defaultProposalCategory")
+                    /* && !category.getId().equals("org.eclipse.jdt.ui.templateProposalCategory") */
+                    /* && !category.getId().equals("org.eclipse.jdt.ui.defaultProposalCategory") */
                     && !category.getId().equals("org.eclipse.jdt.ui.textProposalCategory")
                     && !category.getId().equals("org.eclipse.jdt.ui.swtProposalCategory")
                     && !category.getId().equals("org.eclipse.jst.ws.jaxws.ui.jaxwsProposalComputer")
                     && !category.getId().equals("org.eclipse.pde.api.tools.ui.apitools_proposal_category")) {
                 newCategories.add(category);
-           }
+            }
         }
-        
+
         ReflectionUtils.setPrivateField(ContentAssistProcessor.class, "fCategories", processor, newCategories);
         return assistant;
-    }	
-	
+    }
+
 }
