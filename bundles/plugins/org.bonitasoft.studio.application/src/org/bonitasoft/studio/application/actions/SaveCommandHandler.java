@@ -27,12 +27,10 @@ import java.util.Set;
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.OpenNameAndVersionForDiagramDialog;
-import org.bonitasoft.studio.common.OpenNameAndVersionForDiagramDialog.ProcessesNameVersion;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.diagram.custom.refactoring.ProcessNamingTools;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.model.form.Form;
@@ -42,6 +40,7 @@ import org.bonitasoft.studio.model.process.diagram.form.part.FormDiagramEditor;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditor;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
+import org.bonitasoft.studio.properties.operation.RenameDiagramOperation;
 import org.bonitasoft.studio.properties.sections.forms.FormsUtils;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -50,8 +49,6 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
-import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
-import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.parts.DiagramDocumentEditor;
@@ -87,22 +84,22 @@ public class SaveCommandHandler extends SaveHandler {
     }
 
     @Override
-    public Object execute(ExecutionEvent event) {
+    public Object execute(final ExecutionEvent event) {
         if(isDirty()){
             final IEditorPart editorPart = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
             if(editorPart instanceof DiagramEditor){
-                IProgressService service = PlatformUI.getWorkbench().getProgressService();
+                final IProgressService service = PlatformUI.getWorkbench().getProgressService();
                 try {
                     service.run(false,false,new IRunnableWithProgress() {
 
                         @Override
-                        public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+                        public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
                             doSaveDiagram((DiagramEditor) editorPart);
                         }
                     });
-                } catch (InvocationTargetException e) {
+                } catch (final InvocationTargetException e) {
                     return null;
-                } catch (InterruptedException e) {
+                } catch (final InterruptedException e) {
                     return null;
                 }
 
@@ -114,19 +111,19 @@ public class SaveCommandHandler extends SaveHandler {
         return null;
     }
 
-    protected void doSaveDiagram(DiagramEditor editorPart) {
+    protected void doSaveDiagram(final DiagramEditor editorPart) {
         String formName = null;
         boolean changed = false;
-        DiagramRepositoryStore diagramStore = (DiagramRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class) ;
-        MainProcess proc = findProc(editorPart);
+        final DiagramRepositoryStore diagramStore = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class) ;
+        final MainProcess proc = findProc(editorPart);
         DiagramFileStore oldArtifact = null;
-        List<DiagramDocumentEditor> editorsWithSameResourceSet = new ArrayList<DiagramDocumentEditor>();
+        final List<DiagramDocumentEditor> editorsWithSameResourceSet = new ArrayList<DiagramDocumentEditor>();
         if (nameOrVersionChanged(proc)) {
             IEditorReference[] editorReferences;
             editorReferences = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getEditorReferences();
-            IEditorInput editorInput = editorPart.getEditorInput();
-            ResourceSet resourceSet = proc.eResource().getResourceSet();
-            IEditorPart editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+            final IEditorInput editorInput = editorPart.getEditorInput();
+            final ResourceSet resourceSet = proc.eResource().getResourceSet();
+            final IEditorPart editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
             if(editor instanceof FormDiagramEditor){
                 editorsWithSameResourceSet.add((DiagramDocumentEditor) editor);
                 formName = ((FormDiagramEditor)editor).getPartName();
@@ -138,24 +135,24 @@ public class SaveCommandHandler extends SaveHandler {
         }
 
         try {
-            IEditorPart editorToSave = editorPart;
+            final IEditorPart editorToSave = editorPart;
             if(changed &&  oldArtifact!= null){
                 editorToSave.doSave(Repository.NULL_PROGRESS_MONITOR);
                 ((DiagramDocumentEditor)editorToSave).close(true);
-                Set<String> formIds = new HashSet<String>();
-                for (DiagramDocumentEditor diagramDocumentEditor : editorsWithSameResourceSet) {
+                final Set<String> formIds = new HashSet<String>();
+                for (final DiagramDocumentEditor diagramDocumentEditor : editorsWithSameResourceSet) {
                     formIds.add(ModelHelper.getEObjectID(diagramDocumentEditor.getDiagramEditPart().resolveSemanticElement()));
                     diagramDocumentEditor.close(true);
                 }
                 oldArtifact.rename(NamingUtils.toDiagramFilename(proc)) ;
-                IWorkbenchPart newEditorOfDiagram = oldArtifact.open();
+                final IWorkbenchPart newEditorOfDiagram = oldArtifact.open();
 
-                List<EObject> forms = openDiagramsForFormsId(oldArtifact, formIds);
+                final List<EObject> forms = openDiagramsForFormsId(oldArtifact, formIds);
                 PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().bringToTop(newEditorOfDiagram);
                 openFormDiagramWithNameIfInList(formName, forms);
             }else{
-                EObject root = ((DiagramEditor)editorPart).getDiagramEditPart().resolveSemanticElement();
-                Resource res = root.eResource();
+                final EObject root = editorPart.getDiagramEditPart().resolveSemanticElement();
+                final Resource res = root.eResource();
                 if(res != null){
                     final String procFile = URI.decode(res.getURI().lastSegment());
                     final DiagramFileStore fileStore =diagramStore.getChild(procFile);
@@ -168,15 +165,15 @@ public class SaveCommandHandler extends SaveHandler {
 
 
             }
-        } catch (Exception ex) {
+        } catch (final Exception ex) {
             BonitaStudioLog.error(ex);
         }
     }
 
-    private void openFormDiagramWithNameIfInList(String formName,
-            List<EObject> forms) {
+    private void openFormDiagramWithNameIfInList(final String formName,
+            final List<EObject> forms) {
         if(formName!=null){
-            for (EObject form:forms){
+            for (final EObject form:forms){
                 if(form instanceof Form && ((Form)form).getName().equals(formName)){
                     FormsUtils.openDiagram((Form)form, null);
                     break;
@@ -185,12 +182,12 @@ public class SaveCommandHandler extends SaveHandler {
         }
     }
 
-    private List<EObject> openDiagramsForFormsId(DiagramFileStore oldArtifact,
-            Set<String> formIds) {
-        MainProcess diagram =  oldArtifact.getContent();
-        List<EObject> forms=ModelHelper.getAllItemsOfType(diagram, FormPackage.Literals.FORM);
-        for (EObject form:forms){
-            String id = ModelHelper.getEObjectID(form);
+    private List<EObject> openDiagramsForFormsId(final DiagramFileStore oldArtifact,
+            final Set<String> formIds) {
+        final MainProcess diagram =  oldArtifact.getContent();
+        final List<EObject> forms=ModelHelper.getAllItemsOfType(diagram, FormPackage.Literals.FORM);
+        for (final EObject form:forms){
+            final String id = ModelHelper.getEObjectID(form);
             if (formIds.contains(id)){
                 //TODO: find a way to just open the diagram without bringing them to top and make the UI blinking
                 FormsUtils.openDiagram((Form)form, null);
@@ -199,37 +196,37 @@ public class SaveCommandHandler extends SaveHandler {
         return forms;
     }
 
-    private MainProcess findProc(IEditorPart editorPart) {
+    private MainProcess findProc(final IEditorPart editorPart) {
         MainProcess proc = null ;
         if(editorPart instanceof ProcessDiagramEditor){
-            DiagramEditPart diagram = ((ProcessDiagramEditor) editorPart).getDiagramEditPart();
+            final DiagramEditPart diagram = ((ProcessDiagramEditor) editorPart).getDiagramEditPart();
             proc = (MainProcess) diagram.resolveSemanticElement() ;
         }else if(editorPart instanceof FormDiagramEditor){
-            DiagramEditPart formDiagram = ((DiagramDocumentEditor)editorPart).getDiagramEditPart();
-            Form form = (Form) formDiagram.resolveSemanticElement();
+            final DiagramEditPart formDiagram = ((DiagramDocumentEditor)editorPart).getDiagramEditPart();
+            final Form form = (Form) formDiagram.resolveSemanticElement();
             proc = ModelHelper.getMainProcess(form.eContainer()) ;
         }
         return proc;
     }
 
     private void maintainListOfEditorsWithSameResourceSet(
-            List<DiagramDocumentEditor> editorsWithSameResourceSet,
-            IEditorReference[] editorReferences, IEditorInput editorInput,
-            ResourceSet resourceSet) {
-        for (IEditorReference editorRef : editorReferences) {
+            final List<DiagramDocumentEditor> editorsWithSameResourceSet,
+            final IEditorReference[] editorReferences, final IEditorInput editorInput,
+            final ResourceSet resourceSet) {
+        for (final IEditorReference editorRef : editorReferences) {
             try {
-                IEditorInput currentEditorInput = editorRef.getEditorInput();
+                final IEditorInput currentEditorInput = editorRef.getEditorInput();
                 if (currentEditorInput != editorInput) {
-                    IEditorPart openEditor = editorRef.getEditor(false);
+                    final IEditorPart openEditor = editorRef.getEditor(false);
                     if (openEditor instanceof DiagramDocumentEditor) {
-                        DiagramDocumentEditor openDiagramEditor = (DiagramDocumentEditor) openEditor;
-                        ResourceSet diagramResourceSet = openDiagramEditor.getEditingDomain().getResourceSet();
+                        final DiagramDocumentEditor openDiagramEditor = (DiagramDocumentEditor) openEditor;
+                        final ResourceSet diagramResourceSet = openDiagramEditor.getEditingDomain().getResourceSet();
                         if (diagramResourceSet == resourceSet) {
                             editorsWithSameResourceSet.add(openDiagramEditor);
                         }
                     }
                 }
-            } catch (Exception ex) {
+            } catch (final Exception ex) {
                 BonitaStudioLog.error(ex);
             }
         }
@@ -238,17 +235,17 @@ public class SaveCommandHandler extends SaveHandler {
      * @param proc
      * @return
      */
-    protected boolean nameOrVersionChanged(MainProcess proc) {
-        MainProcess originalProcess = getOldProcess(proc);
+    protected boolean nameOrVersionChanged(final MainProcess proc) {
+        final MainProcess originalProcess = getOldProcess(proc);
         if(originalProcess.getAuthor() == null && BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().getBoolean(BonitaPreferenceConstants.ASK_RENAME_ON_FIRST_SAVE)){
-            DiagramRepositoryStore diagramStore = (DiagramRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
+            final DiagramRepositoryStore diagramStore = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
             final OpenNameAndVersionForDiagramDialog nameDialog = new OpenNameAndVersionForDiagramDialog(Display.getDefault().getActiveShell(),proc,diagramStore){
 
                 private boolean askRename = true;
 
                 @Override
-                protected void createButtonsForButtonBar(Composite parent) {
-                    GridData gridData = (GridData) parent.getLayoutData();
+                protected void createButtonsForButtonBar(final Composite parent) {
+                    final GridData gridData = (GridData) parent.getLayoutData();
                     gridData.horizontalAlignment = SWT.FILL;
                     ((GridLayout) parent.getLayout()).numColumns++;
                     ((GridLayout) parent.getLayout()).makeColumnsEqualWidth = false;
@@ -259,25 +256,34 @@ public class SaveCommandHandler extends SaveHandler {
 
 
                         @Override
-                        public void widgetSelected(SelectionEvent e) {
+                        public void widgetSelected(final SelectionEvent e) {
                             askRename = !askAgainButton.getSelection();
                         }
                     });
                     createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL,
                             true).addSelectionListener(new SelectionAdapter() {
                                 @Override
-                                public void widgetSelected(SelectionEvent e) {
+                                public void widgetSelected(final SelectionEvent e) {
                                     BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().setValue(BonitaPreferenceConstants.ASK_RENAME_ON_FIRST_SAVE,askRename);
                                 }
                             });
                 }
             };
             if(nameDialog.open() == Dialog.OK) {
-                EditingDomain domain = AdapterFactoryEditingDomain.getEditingDomainFor(proc);
-                final ProcessNamingTools tool = new ProcessNamingTools(domain);
-                tool.changeProcessNameAndVersion(proc, nameDialog.getDiagramName(), nameDialog.getDiagramVersion());
-                for(ProcessesNameVersion pnv : nameDialog.getPools()){
-                    tool.changeProcessNameAndVersion(pnv.getAbstractProcess(), pnv.getNewName(), pnv.getNewVersion());
+                final RenameDiagramOperation renameDiagramOperation = new RenameDiagramOperation();
+                renameDiagramOperation.setEditor((DiagramEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor());
+                renameDiagramOperation.setDiagramToDuplicate(proc);
+                renameDiagramOperation.setNewDiagramName(nameDialog.getDiagramName());
+                renameDiagramOperation.setNewDiagramVersion(nameDialog.getDiagramVersion());
+                renameDiagramOperation.setPoolsRenamed(nameDialog.getPools());
+                renameDiagramOperation.setSaveAfterRename(false);
+                final IProgressService service = PlatformUI.getWorkbench().getProgressService();
+                try {
+                    service.run(false, false, renameDiagramOperation);
+                } catch (final InvocationTargetException e) {
+                    BonitaStudioLog.error(e);
+                } catch (final InterruptedException e) {
+                    BonitaStudioLog.error(e);
                 }
             }
 
@@ -285,23 +291,23 @@ public class SaveCommandHandler extends SaveHandler {
         return ! (originalProcess.getName().equals(proc.getName()) && originalProcess.getVersion().equals(proc.getVersion()));
     }
 
-    private MainProcess getOldProcess(MainProcess proc) {
-        URI resourceUri = proc.eResource().getURI();
-        ResourceSet set = new ResourceSetImpl();
-        Resource resource = set.getResource(resourceUri, true);
-        MainProcess originalProcess = (MainProcess) resource.getContents().get(0);
+    private MainProcess getOldProcess(final MainProcess proc) {
+        final URI resourceUri = proc.eResource().getURI();
+        final ResourceSet set = new ResourceSetImpl();
+        final Resource resource = set.getResource(resourceUri, true);
+        final MainProcess originalProcess = (MainProcess) resource.getContents().get(0);
         return originalProcess;
     }
 
     @Override
     public boolean isEnabled() {
-        boolean res = super.isEnabled() || isDirty() ;
+        final boolean res = super.isEnabled() || isDirty() ;
         return res ;
     }
 
 
     protected boolean isDirty() {
-        IEditorPart part = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor() ;
+        final IEditorPart part = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor() ;
         return  part != null &&  part.isDirty();
     }
 

@@ -822,6 +822,21 @@ public class NamingUtils {
 		}
 		return defaultName+cpt;
 	}
+	
+
+	/**
+	 * 
+	 * @param existingNames must ba a list in lowerCase
+	 * @param defaultName
+	 * @return
+	 */
+	public static String generateNewNameCaseInsensitive(Set<String> existingNames, String defaultName) {
+		int cpt = 1 ;
+		while(existingNames.contains((defaultName+cpt).toLowerCase())){
+			cpt++;
+		}
+		return defaultName+cpt;
+	}
 
 	public static String toConnectorDefinitionFilename(String definitionId,String defVersion, boolean inculdeExtension) {
 		if(!inculdeExtension){

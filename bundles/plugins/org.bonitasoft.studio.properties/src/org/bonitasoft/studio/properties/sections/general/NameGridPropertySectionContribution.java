@@ -1,22 +1,20 @@
 /**
  * Copyright (C) 2009 BonitaSoft S.A.
  * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
- *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.properties.sections.general;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,6 +44,7 @@ import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.SequenceFlow;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.LaneEditPart;
 import org.bonitasoft.studio.properties.i18n.Messages;
+import org.bonitasoft.studio.properties.operation.RenameDiagramOperation;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.observable.value.IValueChangeListener;
@@ -70,6 +69,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
+import org.eclipse.ui.progress.IProgressService;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 
 /**
@@ -78,220 +78,234 @@ import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
  */
 public class NameGridPropertySectionContribution extends AbstractNamePropertySectionContribution {
 
+    protected ISWTObservableValue observable;
+    private UpdateValueStrategy labelModelToTargetUpdate;
+    private UpdateValueStrategy labelTargetToModelUpdate;
+    private boolean bindingInitialized = false;
+    private ProcessNamingTools processNamingTools;
 
-	protected ISWTObservableValue observable;
-	private UpdateValueStrategy labelModelToTargetUpdate;
-	private UpdateValueStrategy labelTargetToModelUpdate;
-	private boolean bindingInitialized = false;
-	private ProcessNamingTools processNamingTools ;
-	
-	private final NotificationListener updateMessage =new NotificationListener() {
+    private final NotificationListener updateMessage = new NotificationListener() {
 
-		@Override
-		public void notifyChanged(Notification notification) {
-			List<AbstractCatchMessageEvent> messages = ModelHelper.getAllItemsOfType(element, ProcessPackage.eINSTANCE.getAbstractCatchMessageEvent()) ;
-			for(AbstractCatchMessageEvent m : messages){
-				String eventName = m.getEvent() ;
-				final Message event = ModelHelper.findEvent(ModelHelper.getMainProcess(element), eventName);
-				if(event != null){
-					editingDomain.getCommandStack().execute(SetCommand.create(editingDomain, event, ProcessPackage.Literals.MESSAGE__TARGET_PROCESS_EXPRESSION, ExpressionHelper.createConstantExpression(element.getName(), String.class.getName()))) ;
-				}
-			}
-		}
-	};
+        @Override
+        public void notifyChanged(final Notification notification) {
+            final List<AbstractCatchMessageEvent> messages = ModelHelper.getAllItemsOfType(element, ProcessPackage.eINSTANCE.getAbstractCatchMessageEvent());
+            for (final AbstractCatchMessageEvent m : messages) {
+                final String eventName = m.getEvent();
+                final Message event = ModelHelper.findEvent(ModelHelper.getMainProcess(element), eventName);
+                if (event != null) {
+                    editingDomain.getCommandStack().execute(
+                            SetCommand.create(editingDomain, event, ProcessPackage.Literals.MESSAGE__TARGET_PROCESS_EXPRESSION,
+                                    ExpressionHelper.createConstantExpression(element.getName(), String.class.getName())));
+                }
+            }
+        }
+    };
 
-	private final DiagramRepositoryStore diagramStore;
+    private final DiagramRepositoryStore diagramStore;
 
-	/**
-	 * @param tabbedPropertySheetPage
-	 * @param extensibleGridPropertySection
-	 */
-	public NameGridPropertySectionContribution(TabbedPropertySheetPage tabbedPropertySheetPage,
-			ExtensibleGridPropertySection extensibleGridPropertySection) {
-		super(tabbedPropertySheetPage, extensibleGridPropertySection);
-		diagramStore = (DiagramRepositoryStore) RepositoryManager.getInstance().getCurrentRepository().getRepositoryStore(DiagramRepositoryStore.class) ;
-	}
+    /**
+     * @param tabbedPropertySheetPage
+     * @param extensibleGridPropertySection
+     */
+    public NameGridPropertySectionContribution(final TabbedPropertySheetPage tabbedPropertySheetPage,
+            final ExtensibleGridPropertySection extensibleGridPropertySection) {
+        super(tabbedPropertySheetPage, extensibleGridPropertySection);
+        diagramStore = (DiagramRepositoryStore) RepositoryManager.getInstance().getCurrentRepository().getRepositoryStore(DiagramRepositoryStore.class);
+    }
 
+    protected void updateEvents(final Element element) {
+        for (final AbstractCatchMessageEvent ev : ModelHelper.getAllCatchEvent(ModelHelper.getMainProcess(element))) {
+            final Message eventObject = ModelHelper.findEvent(element, ev.getEvent());
+            if (eventObject != null) {
+                editingDomain.getCommandStack().execute(
+                        new SetCommand(editingDomain, eventObject, ProcessPackage.Literals.MESSAGE__TARGET_PROCESS_EXPRESSION, ExpressionHelper
+                                .createConstantExpression(element.getName(), String.class.getName())));
+            }
+        }
 
-	protected void updateEvents(Element element) {
-		for(AbstractCatchMessageEvent ev :  ModelHelper.getAllCatchEvent(ModelHelper.getMainProcess(element))){
-			Message eventObject = ModelHelper.findEvent(element, ev.getEvent());
-			if(eventObject != null){
-				editingDomain.getCommandStack().execute(new SetCommand(editingDomain, eventObject, ProcessPackage.Literals.MESSAGE__TARGET_PROCESS_EXPRESSION, ExpressionHelper.createConstantExpression(element.getName(), String.class.getName())));
-			}
-		}
+    }
 
-	}
+    /*
+     * (non-Javadoc)
+     * @seeorg.bonitasoft.studio.properties.sections.general.
+     * IExtenstibleGridPropertySectionContribution#getLabel()
+     */
+    @Override
+    public String getLabel() {
+        return Messages.GeneralSection_Name;
+    }
 
+    /*
+     * (non-Javadoc)
+     * @seeorg.bonitasoft.studio.properties.sections.general.
+     * IExtenstibleGridPropertySectionContribution
+     * #setEObject(org.eclipse.emf.ecore.EObject)
+     */
+    @Override
+    public void setEObject(final EObject object) {
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @seeorg.bonitasoft.studio.properties.sections.general.
-	 * IExtenstibleGridPropertySectionContribution#getLabel()
-	 */
-	@Override
-	public String getLabel() {
-		return Messages.GeneralSection_Name;
-	}
+        if (object instanceof Lane) {
+            element = ModelHelper.getParentProcess(object);
+        } else {
+            element = (Element) object;
+        }
 
+        if (element instanceof MainProcess) {
+            updateBindings();
+        }
 
+        if (element instanceof Pool) {
+            activateNameListener();
+        }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @seeorg.bonitasoft.studio.properties.sections.general.
-	 * IExtenstibleGridPropertySectionContribution
-	 * #setEObject(org.eclipse.emf.ecore.EObject)
-	 */
-	@Override
-	public void setEObject(EObject object) {
+    }
 
-		if (object instanceof Lane) {
-			element = ModelHelper.getParentProcess(object);
-		} else {
-			element = (Element) object;
-		}
+    protected void activateNameListener() {
+        if (editingDomain != null) {
+            DiagramEventBroker.getInstance(editingDomain).addNotificationListener(element, ProcessPackage.eINSTANCE.getElement_Name(), updateMessage);
+        }
+    }
 
-		if(element instanceof MainProcess){
-			updateBindings();
-		}
+    /*
+     * (non-Javadoc)
+     * @seeorg.bonitasoft.studio.properties.sections.general.
+     * IExtenstibleGridPropertySectionContribution
+     * #setSelection(org.eclipse.jface.viewers.ISelection)
+     */
+    @Override
+    public void setSelection(final ISelection selection) {
+        if (((StructuredSelection) selection).getFirstElement() instanceof LaneEditPart) {
+            this.selection = new StructuredSelection(
+                    ((LaneEditPart) ((StructuredSelection) selection)
+                            .getFirstElement()).getParent());
+        }
+        this.selection = selection;
+    }
 
-		if(element instanceof Pool){
-			activateNameListener();
-		}
+    @Override
+    public void setEditingDomain(final TransactionalEditingDomain editingDomain) {
+        super.setEditingDomain(editingDomain);
+        processNamingTools = new ProcessNamingTools(editingDomain);
+    }
 
-	}
+    private void updateBindings() {
+        if (bindingInitialized) {
+            if (text != null && !text.isDisposed()) {
+                final int start = text.getSelection().x;
+                context.dispose();
+                context = new EMFDataBindingContext();
+                context.bindValue(observable, EMFEditObservables.observeValue(editingDomain, element, ProcessPackage.Literals.ELEMENT__NAME),
+                        labelTargetToModelUpdate, labelModelToTargetUpdate);
+                text.setSelection(start);
+            }
+        }
 
+    }
 
-	protected void activateNameListener() {
-		if(editingDomain != null){
-			DiagramEventBroker.getInstance(editingDomain).addNotificationListener(element,ProcessPackage.eINSTANCE.getElement_Name(),updateMessage);
-		}
-	}
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution#dispose()
+     */
+    @Override
+    public void dispose() {
+        super.dispose();
+        if (element instanceof Pool) {
+            deactivateNameListener();
+        }
+    }
 
+    protected void deactivateNameListener() {
+        if (editingDomain != null) {
+            DiagramEventBroker.getInstance(editingDomain).removeNotificationListener(element, ProcessPackage.eINSTANCE.getElement_Name(), updateMessage);
+        }
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @seeorg.bonitasoft.studio.properties.sections.general.
-	 * IExtenstibleGridPropertySectionContribution
-	 * #setSelection(org.eclipse.jface.viewers.ISelection)
-	 */
-	@Override
-	public void setSelection(ISelection selection) {
-		if (((StructuredSelection) selection).getFirstElement() instanceof LaneEditPart) {
-			this.selection = new StructuredSelection(
-					((LaneEditPart) ((StructuredSelection) selection)
-							.getFirstElement()).getParent());
-		}
-		this.selection = selection;
-	}
-	
-	@Override
-	public void setEditingDomain(TransactionalEditingDomain editingDomain) {
-		super.setEditingDomain(editingDomain);
-		processNamingTools = new ProcessNamingTools(editingDomain);
-	}
+    @Override
+    protected void createBinding(final EMFDataBindingContext context) {
+        labelTargetToModelUpdate = new UpdateValueStrategy();
 
-	private void updateBindings() {
-		if(bindingInitialized){
-			if(text != null && !text.isDisposed()){
-				int start = text.getSelection().x  ;
-				context.dispose() ;
-				context = new EMFDataBindingContext();
-				context.bindValue(observable, EMFEditObservables.observeValue(editingDomain, element, ProcessPackage.Literals.ELEMENT__NAME),labelTargetToModelUpdate,labelModelToTargetUpdate);
-				text.setSelection(start);
-			}
-		}
+        labelTargetToModelUpdate.setAfterGetValidator(new UTF8InputValidator(Messages.name));
+        final List<IValidator> validators = new ArrayList<IValidator>();
+        validators.add(new InputLengthValidator(Messages.name, element instanceof SequenceFlow ? 0 : 1, 50));
+        final MultiValidator multiValidation = new MultiValidator(validators);
+        labelTargetToModelUpdate.setBeforeSetValidator(multiValidation);
+        labelTargetToModelUpdate.setAfterConvertValidator(new SpecialCharactersValidator());
 
-	}
+        observable = SWTObservables.observeDelayedValue(400, SWTObservables.observeText(text, SWT.Modify));
+        observable.addValueChangeListener(new IValueChangeListener() {
 
-	/* (non-Javadoc)
-	 * @see org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution#dispose()
-	 */
-	@Override
-	public void dispose() {
-		super.dispose();
-		if(element instanceof Pool){
-			deactivateNameListener();
-		}
-	}
+            @Override
+            public void handleValueChange(final ValueChangeEvent event) {
+                updatePropertyTabTitle();
+            }
+        });
 
-	protected void deactivateNameListener() {
-		if(editingDomain != null ){
-			DiagramEventBroker.getInstance(editingDomain).removeNotificationListener(element,ProcessPackage.eINSTANCE.getElement_Name(),updateMessage);
-		}
-	}
+        ControlDecorationSupport.create(context.bindValue(observable,
+                EMFEditObservables.observeValue(editingDomain, element, ProcessPackage.Literals.ELEMENT__NAME), labelTargetToModelUpdate, null), SWT.LEFT);
+        bindingInitialized = true;
+    }
 
+    @Override
+    protected void editProcessNameAndVersion() {
+        if (element instanceof Pool) {
+            final MainProcess diagram = ModelHelper.getMainProcess(element);
+            final OpenNameAndVersionDialog dialog1 = new OpenNameAndVersionDialog(Display.getDefault().getActiveShell(), diagram, element.getName(),
+                    ((Pool) element).getVersion(), diagramStore);
+            if (dialog1.open() == Dialog.OK) {
+                final String oldPoolName = element.getName();
+                final String newPoolName = dialog1.getDiagramName();
+                final String oldVersion = ((Pool) element).getVersion();
+                final String newVersion = dialog1.getDiagramVersion();
+                processNamingTools.proceedForPools(element, newPoolName, oldPoolName, oldVersion, newVersion);
+            }
 
-	@Override
-	protected void createBinding(EMFDataBindingContext context) {
-		labelTargetToModelUpdate = new UpdateValueStrategy();
-		
-		labelTargetToModelUpdate.setAfterGetValidator(new UTF8InputValidator(Messages.name)) ;
-		List<IValidator> validators = new ArrayList<IValidator>();
-		validators.add(new InputLengthValidator(Messages.name,element instanceof SequenceFlow ? 0 : 1,50));
-		MultiValidator multiValidation = new MultiValidator(validators);
-		labelTargetToModelUpdate.setBeforeSetValidator(multiValidation) ;
-		labelTargetToModelUpdate.setAfterConvertValidator(new SpecialCharactersValidator());
+        } else {
+            final MainProcess diagram = ModelHelper.getMainProcess(element);
+            final OpenNameAndVersionForDiagramDialog nameDialog = new OpenNameAndVersionForDiagramDialog(Display.getDefault().getActiveShell(), diagram,
+                    diagramStore);
+            if (nameDialog.open() == Dialog.OK) {
+                final DiagramEditor editor = (DiagramEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+                final MainProcess newProcess = (MainProcess) editor.getDiagramEditPart().resolveSemanticElement();
+                editingDomain.getCommandStack().execute(
+                        SetCommand.create(editingDomain, newProcess, ProcessPackage.Literals.ABSTRACT_PROCESS__AUTHOR,
+                                System.getProperty("user.name", "Unknown")));
 
-		observable = SWTObservables.observeDelayedValue(400, SWTObservables.observeText(text, SWT.Modify));
-		observable.addValueChangeListener(new IValueChangeListener() {
-
-			@Override
-			public void handleValueChange(ValueChangeEvent event) {
-				updatePropertyTabTitle();
-			}
-		});
-
-		ControlDecorationSupport.create(context.bindValue(observable, EMFEditObservables.observeValue(editingDomain, element, ProcessPackage.Literals.ELEMENT__NAME),labelTargetToModelUpdate,null),SWT.LEFT);
-		bindingInitialized = true ;
-	}
-
-	@Override
-	protected void editProcessNameAndVersion() {
-		if(element instanceof Pool){
-			MainProcess diagram = ModelHelper.getMainProcess(element);
-			final OpenNameAndVersionDialog dialog1 = new OpenNameAndVersionDialog(Display.getDefault().getActiveShell(),diagram,element.getName(), ((Pool) element).getVersion(),diagramStore) ;
-			if(dialog1.open() == Dialog.OK ) {
-				String oldPoolName = element.getName() ;
-				final String newPoolName = dialog1.getDiagramName() ;
-				final String oldVersion = ((Pool) element).getVersion() ;
-				final String newVersion = dialog1.getDiagramVersion() ;
-				processNamingTools.proceedForPools(element,newPoolName,oldPoolName,oldVersion,newVersion);
-			}
-
-		}else{
-			MainProcess diagram = ModelHelper.getMainProcess(element);
-			final OpenNameAndVersionForDiagramDialog nameDialog = new OpenNameAndVersionForDiagramDialog(Display.getDefault().getActiveShell(),diagram,diagramStore) ;
-			if(nameDialog.open() == Dialog.OK ) {
-				DiagramEditor editor = (DiagramEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor() ;
-				MainProcess newProcess   = (MainProcess) editor.getDiagramEditPart().resolveSemanticElement() ;
-				editingDomain.getCommandStack().execute(SetCommand.create(editingDomain, newProcess, ProcessPackage.Literals.ABSTRACT_PROCESS__AUTHOR, System.getProperty("user.name", "Unknown")));
-				editor.doSave(Repository.NULL_PROGRESS_MONITOR);
-				
-				processNamingTools.changeProcessNameAndVersion(newProcess, nameDialog.getDiagramName(), nameDialog.getDiagramVersion());
-				for(ProcessesNameVersion pnv : nameDialog.getPools()){
-					processNamingTools.changeProcessNameAndVersion(pnv.getAbstractProcess(), pnv.getNewName(), pnv.getNewVersion());
-				}
-				
-				try{
-					ICommandService service = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class) ;
-					org.eclipse.core.commands.Command c = service.getCommand("org.eclipse.ui.file.save") ;
-					if(c.isEnabled()){
-						c.executeWithChecks(new ExecutionEvent()) ;
-					}
-				}catch (Exception e) {
-					BonitaStudioLog.error(e) ;
-				}
-
-			}
-		}
-	}
-
-	
-	
+                final String oldName = newProcess.getName();
+                final String oldVersion = newProcess.getVersion();
+                if (oldName.equals(nameDialog.getDiagramName()) && oldVersion.equals(nameDialog.getDiagramVersion())) {
+                    editor.doSave(Repository.NULL_PROGRESS_MONITOR);
+                    processNamingTools.changeProcessNameAndVersion(newProcess, nameDialog.getDiagramName(), nameDialog.getDiagramVersion());
+                    for (final ProcessesNameVersion pnv : nameDialog.getPools()) {
+                        processNamingTools.changeProcessNameAndVersion(pnv.getAbstractProcess(), pnv.getNewName(), pnv.getNewVersion());
+                    }
+                    try {
+                        final ICommandService service = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
+                        final org.eclipse.core.commands.Command c = service.getCommand("org.eclipse.ui.file.save");
+                        if (c.isEnabled()) {
+                            c.executeWithChecks(new ExecutionEvent());
+                        }
+                    } catch (final Exception e) {
+                        BonitaStudioLog.error(e);
+                    }
+                } else {
+                    final RenameDiagramOperation renameDiagramOperation = new RenameDiagramOperation();
+                    renameDiagramOperation.setDiagramToDuplicate(newProcess);
+                    renameDiagramOperation.setNewDiagramName(nameDialog.getDiagramName());
+                    renameDiagramOperation.setNewDiagramVersion(nameDialog.getDiagramVersion());
+                    renameDiagramOperation.setPoolsRenamed(nameDialog.getPools());
+                    renameDiagramOperation.setEditor(editor);
+                    final IProgressService service = PlatformUI.getWorkbench().getProgressService();
+                    try {
+                        service.run(false, false, renameDiagramOperation);
+                    } catch (final InvocationTargetException e) {
+                        BonitaStudioLog.error(e);
+                    } catch (final InterruptedException e) {
+                        BonitaStudioLog.error(e);
+                    }
+                }
+            }
+        }
+    }
 
 
 }

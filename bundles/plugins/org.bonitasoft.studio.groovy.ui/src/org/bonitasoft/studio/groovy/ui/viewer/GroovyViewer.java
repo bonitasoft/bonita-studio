@@ -54,6 +54,7 @@ import org.codehaus.groovy.eclipse.codeassist.requestor.CompletionNodeFinder;
 import org.codehaus.groovy.eclipse.codeassist.requestor.ContentAssistContext;
 import org.codehaus.groovy.eclipse.core.preferences.PreferenceConstants;
 import org.codehaus.groovy.eclipse.refactoring.actions.FormatKind;
+import org.codehaus.groovy.eclipse.refactoring.actions.OrganizeGroovyImportsAction;
 import org.codehaus.jdt.groovy.model.GroovyCompilationUnit;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -126,21 +127,21 @@ public class GroovyViewer {
         this(mainComposite, null);
     }
 
-    public GroovyViewer(final Composite mainComposite, boolean isPageFlowContext) {
+    public GroovyViewer(final Composite mainComposite, final boolean isPageFlowContext) {
         this(mainComposite, null, isPageFlowContext);
     }
 
-    public GroovyViewer(final Composite mainComposite, final IEditorInput input, boolean isPageFlowContext) {
+    public GroovyViewer(final Composite mainComposite, final IEditorInput input, final boolean isPageFlowContext) {
         this(mainComposite, input);
         this.isPageFlowContext = isPageFlowContext;
     }
 
     public GroovyViewer(final Composite mainComposite, final IEditorInput input) {
-        IPreferenceStore groovyStore = org.codehaus.groovy.eclipse.GroovyPlugin.getDefault().getPreferenceStore();
+        final IPreferenceStore groovyStore = org.codehaus.groovy.eclipse.GroovyPlugin.getDefault().getPreferenceStore();
         groovyStore.setDefault(PreferenceConstants.GROOVY_SEMANTIC_HIGHLIGHTING, false);
         groovyStore.setValue(PreferenceConstants.GROOVY_SEMANTIC_HIGHLIGHTING, false);
         if (input == null) {
-            final ProvidedGroovyRepositoryStore store = (ProvidedGroovyRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(
+            final ProvidedGroovyRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(
                     ProvidedGroovyRepositoryStore.class);
             tmpGroovyFileStore = store.createRepositoryFileStore("script" + System.currentTimeMillis() + ".groovy");
             tmpGroovyFileStore.save("");
@@ -185,7 +186,11 @@ public class GroovyViewer {
                     final TextOperationAction action = new TextOperationAction(
                             ResourceBundle.getBundle("org.eclipse.ui.texteditor.ConstructedEditorMessages"), "Editor.Redo.", editor, ITextOperationTarget.REDO); //$NON-NLS-1$ //$NON-NLS-2$
                     action.run();
+                } else if (e.stateMask == (SWT.CTRL | SWT.SHIFT) && e.keyCode == 'o') {
+                    final OrganizeGroovyImportsAction action = new OrganizeGroovyImportsAction(editor);
+                    action.run();
                 }
+
             }
 
             @Override
@@ -209,7 +214,7 @@ public class GroovyViewer {
             private Object previousContent;
 
             @Override
-            public void documentChanged(DocumentEvent event) {
+            public void documentChanged(final DocumentEvent event) {
                 if (contextInitialized) {
                     final String currentContent = event.getText();
                     if (!isComputing && !currentContent.equals(previousContent)) {
@@ -218,7 +223,7 @@ public class GroovyViewer {
                         final IAnnotationModel model = getSourceViewer().getAnnotationModel();
                         final List<ScriptVariable> emptyList = Collections.emptyList();
                         final Map<String, Serializable> result = TestGroovyScriptUtil.createVariablesMap(getGroovyCompilationUnit(), emptyList);
-                        Map<String, Position> declaredVariables = getAllDeclaredVariablesInScript();
+                        final Map<String, Position> declaredVariables = getAllDeclaredVariablesInScript();
 
                         final Iterator<?> it = model.getAnnotationIterator();
                         while (it.hasNext()) {
@@ -230,12 +235,12 @@ public class GroovyViewer {
                                 createWarningAnnotation(entry.getKey());
                             }
                         }
-                        for (String declaredVariable : declaredVariables.keySet()) {
+                        for (final String declaredVariable : declaredVariables.keySet()) {
                             if (knowVariables.contains(declaredVariable)) {
                                 model.addAnnotation(
                                         new Annotation(JavaMarkerAnnotation.WARNING_ANNOTATION_TYPE, false, Messages.bind(
                                                 Messages.warningAssigningAVariableWithSameNameAsProcessVariable, declaredVariable)),
-                                        declaredVariables.get(declaredVariable));
+                                                declaredVariables.get(declaredVariable));
                             }
                         }
                         isComputing = false;
@@ -244,14 +249,14 @@ public class GroovyViewer {
             }
 
             @Override
-            public void documentAboutToBeChanged(DocumentEvent event) {
+            public void documentAboutToBeChanged(final DocumentEvent event) {
 
             }
         });
         mainComposite.getShell().addDisposeListener(new DisposeListener() {
 
             @Override
-            public void widgetDisposed(DisposeEvent e) {
+            public void widgetDisposed(final DisposeEvent e) {
                 dispose();
             }
         });
@@ -273,11 +278,11 @@ public class GroovyViewer {
     }
 
     protected Map<String, Position> getAllDeclaredVariablesInScript() {
-        Map<String, Position> declaredVariables = new HashMap<String, Position>();
-        GroovyCompilationUnit groovyCompilationUnit = getGroovyCompilationUnit();
+        final Map<String, Position> declaredVariables = new HashMap<String, Position>();
+        final GroovyCompilationUnit groovyCompilationUnit = getGroovyCompilationUnit();
         if (groovyCompilationUnit != null) {
-            CompletionNodeFinder finder = new CompletionNodeFinder(0, 0, 0, "", ""); //$NON-NLS-1$ //$NON-NLS-2$
-            ContentAssistContext assistContext = finder.findContentAssistContext(groovyCompilationUnit);
+            final CompletionNodeFinder finder = new CompletionNodeFinder(0, 0, 0, "", ""); //$NON-NLS-1$ //$NON-NLS-2$
+            final ContentAssistContext assistContext = finder.findContentAssistContext(groovyCompilationUnit);
 
             org.codehaus.groovy.ast.ASTNode astNode = null;
             if (assistContext != null) {
@@ -285,9 +290,9 @@ public class GroovyViewer {
             }
 
             if (astNode instanceof BlockStatement) {
-                Iterator<Variable> declaredVariablesIterator = ((BlockStatement) astNode).getVariableScope().getDeclaredVariablesIterator();
+                final Iterator<Variable> declaredVariablesIterator = ((BlockStatement) astNode).getVariableScope().getDeclaredVariablesIterator();
                 while (declaredVariablesIterator.hasNext()) {
-                    Variable variable = (Variable) declaredVariablesIterator.next();
+                    final Variable variable = declaredVariablesIterator.next();
                     declaredVariables.put(variable.getName(), new Position(variable.getType().getStart()));
                 }
             }
@@ -308,7 +313,7 @@ public class GroovyViewer {
         getSourceViewer().getTextWidget().setLayoutData(layoutData);
     }
 
-    public void setContext(final EObject context, final ViewerFilter[] filters, IExpressionNatureProvider expressionProvider) {
+    public void setContext(final EObject context, final ViewerFilter[] filters, final IExpressionNatureProvider expressionProvider) {
         nodes = new ArrayList<ScriptVariable>();
 
         IExpressionNatureProvider provider = expressionProvider;
@@ -337,7 +342,7 @@ public class GroovyViewer {
             final ScriptVariable v = GroovyUtil.createScriptVariable(e, context);
             if (context != null && ExpressionConstants.PARAMETER_TYPE.equals(e.getType())) {
                 final AbstractProcess proc = ModelHelper.getParentProcess(context);
-                final ProcessConfigurationRepositoryStore store = (ProcessConfigurationRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(
+                final ProcessConfigurationRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(
                         ProcessConfigurationRepositoryStore.class);
                 final ProcessConfigurationFileStore fileStore = store.getChild(ModelHelper.getEObjectID(proc) + "."
                         + ProcessConfigurationRepositoryStore.CONF_EXT);
@@ -357,7 +362,7 @@ public class GroovyViewer {
 
         // Add context in TextWidget to access it in content assist
         getSourceViewer().getTextWidget().setData(PROCESS_VARIABLES_DATA_KEY, nodes);
-        List<ScriptVariable> providedVariables = getProvidedVariables(context, filters);
+        final List<ScriptVariable> providedVariables = getProvidedVariables(context, filters);
         getSourceViewer().getTextWidget().setData(BONITA_KEYWORDS_DATA_KEY, providedVariables);
         getSourceViewer().getTextWidget().setData(CONTEXT_DATA_KEY, context);
 
@@ -377,10 +382,10 @@ public class GroovyViewer {
 
     public List<ScriptVariable> getProvidedVariables(final EObject context, final ViewerFilter[] filters) {
         final List<ScriptVariable> providedScriptVariable = GroovyUtil.getBonitaVariables(context, filters, isPageFlowContext);
-        IExpressionProvider daoExpressionProvider = ExpressionEditorService.getInstance().getExpressionProvider(ExpressionConstants.DAO_TYPE);
+        final IExpressionProvider daoExpressionProvider = ExpressionEditorService.getInstance().getExpressionProvider(ExpressionConstants.DAO_TYPE);
         if (daoExpressionProvider != null) {
-            for (Expression e : daoExpressionProvider.getExpressions(null)) {
-                ScriptVariable scriptVariable = new ScriptVariable(e.getName(), e.getReturnType());
+            for (final Expression e : daoExpressionProvider.getExpressions(null)) {
+                final ScriptVariable scriptVariable = new ScriptVariable(e.getName(), e.getReturnType());
                 providedScriptVariable.add(scriptVariable);
             }
         }
@@ -441,13 +446,13 @@ public class GroovyViewer {
         }
     }
 
-    private boolean isInAStringExpression(String name, IRegion index, String expression) {
+    private boolean isInAStringExpression(final String name, final IRegion index, final String expression) {
         if (index.getOffset() > 0) {
             int nbStringChars1 = 0;
             int nbStringChars2 = 0;
 
             for (int i = 0; i < index.getOffset(); i++) {
-                char c = expression.charAt(i);
+                final char c = expression.charAt(i);
                 if ('"' == c) {
                     nbStringChars1++;
                 } else if ('\'' == c) {

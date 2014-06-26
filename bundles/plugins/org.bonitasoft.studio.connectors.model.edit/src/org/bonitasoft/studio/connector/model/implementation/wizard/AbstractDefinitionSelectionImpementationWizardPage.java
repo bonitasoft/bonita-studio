@@ -69,344 +69,344 @@ import org.eclipse.swt.widgets.Label;
  */
 public abstract class AbstractDefinitionSelectionImpementationWizardPage extends NewTypeWizardPage implements ISelectionChangedListener {
 
-	protected ConnectorImplementation implementation;
-	protected ConnectorDefinition selectedDefinition;
-	protected EMFDataBindingContext context;
-	protected UpdateValueStrategy defIdStrategy;
-	protected UpdateValueStrategy defModelStrategy;
-	protected ComboViewer versionCombo;
-	protected TreeExplorer explorer;
-	private WizardPageSupport pageSupport;
-	private Boolean checkOnlyCustom;
-	private Button onlyCustomCheckbox;
-	private final DefinitionResourceProvider messageProvider;
-	protected final List<ConnectorDefinition> definitions;
-	private ViewerFilter customConnectorFilter = new ViewerFilter() {
+    protected ConnectorImplementation implementation;
+    protected ConnectorDefinition selectedDefinition;
+    protected EMFDataBindingContext context;
+    protected UpdateValueStrategy defIdStrategy;
+    protected UpdateValueStrategy defModelStrategy;
+    protected ComboViewer versionCombo;
+    protected TreeExplorer explorer;
+    private WizardPageSupport pageSupport;
+    private final Boolean checkOnlyCustom;
+    private Button onlyCustomCheckbox;
+    private final DefinitionResourceProvider messageProvider;
+    protected final List<ConnectorDefinition> definitions;
+    private final ViewerFilter customConnectorFilter = new ViewerFilter() {
 
-		@Override
-		public boolean select(Viewer viewer, Object parentElement, Object element) {
-			if(element instanceof ConnectorDefinition){
-				final Resource eResource = ((ConnectorDefinition) element).eResource();
-				if(eResource != null){
-					IPath rootPath = ResourcesPlugin.getWorkspace().getRoot().getLocation();
-					return rootPath.isPrefixOf(Path.fromOSString(eResource.getURI().toFileString()));
-				}
-			}
-			return false;
-		}
-	};
+        @Override
+        public boolean select(final Viewer viewer, final Object parentElement, final Object element) {
+            if(element instanceof ConnectorDefinition){
+                final Resource eResource = ((ConnectorDefinition) element).eResource();
+                if(eResource != null){
+                    final IPath rootPath = ResourcesPlugin.getWorkspace().getRoot().getLocation();
+                    return rootPath.isPrefixOf(Path.fromOSString(eResource.getURI().toFileString()));
+                }
+            }
+            return false;
+        }
+    };
 
-	public AbstractDefinitionSelectionImpementationWizardPage(ConnectorImplementation implementation,List<ConnectorImplementation> existingImpl,List<ConnectorDefinition> definitions,String pageTitle,String pageDescription,DefinitionResourceProvider messageProvider) {
-		super(true,AbstractDefinitionSelectionImpementationWizardPage.class.getName());
-		setTitle(pageTitle);
-		setDescription(pageDescription);
-		this.implementation = implementation;
-		this.messageProvider = messageProvider ;
-		this.definitions = definitions ;
-		checkOnlyCustom = implementation.getDefinitionId() == null;
-	}
+    public AbstractDefinitionSelectionImpementationWizardPage(final ConnectorImplementation implementation,final List<ConnectorImplementation> existingImpl,final List<ConnectorDefinition> definitions,final String pageTitle,final String pageDescription,final DefinitionResourceProvider messageProvider) {
+        super(true,AbstractDefinitionSelectionImpementationWizardPage.class.getName());
+        setTitle(pageTitle);
+        setDescription(pageDescription);
+        this.implementation = implementation;
+        this.messageProvider = messageProvider ;
+        this.definitions = definitions ;
+        checkOnlyCustom = implementation.getDefinitionId() == null;
+    }
 
-	public AbstractDefinitionSelectionImpementationWizardPage(List<ConnectorImplementation> existingImpl,List<ConnectorDefinition> definitions,String pageTitle,String pageDescription,DefinitionResourceProvider messageProvider) {
-		super(true,AbstractDefinitionSelectionImpementationWizardPage.class.getName());
-		setTitle(pageTitle);
-		setDescription(pageDescription);
-		this.messageProvider = messageProvider ;
-		this.definitions = definitions ;
-		checkOnlyCustom = false;
-	}
+    public AbstractDefinitionSelectionImpementationWizardPage(final List<ConnectorImplementation> existingImpl,final List<ConnectorDefinition> definitions,final String pageTitle,final String pageDescription,final DefinitionResourceProvider messageProvider) {
+        super(true,AbstractDefinitionSelectionImpementationWizardPage.class.getName());
+        setTitle(pageTitle);
+        setDescription(pageDescription);
+        this.messageProvider = messageProvider ;
+        this.definitions = definitions ;
+        checkOnlyCustom = false;
+    }
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
-	 */
-	@Override
-	public void createControl(Composite parent) {
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
+     */
+    @Override
+    public void createControl(final Composite parent) {
 
-		context = new EMFDataBindingContext() ;
+        context = new EMFDataBindingContext() ;
 
-		Composite mainComposite = new Composite(parent, SWT.NONE);
-		mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(10, 10).create());
+        final Composite mainComposite = new Composite(parent, SWT.NONE);
+        mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(10, 10).create());
 
-		explorer = createTreeExplorer(mainComposite);
+        explorer = createTreeExplorer(mainComposite);
 
-		final Label definitionVersionLabel = new Label(mainComposite, SWT.NONE);
-		definitionVersionLabel.setText(Messages.definitionVersion);
-		definitionVersionLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).create()) ;
+        final Label definitionVersionLabel = new Label(mainComposite, SWT.NONE);
+        definitionVersionLabel.setText(Messages.definitionVersion);
+        definitionVersionLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).create()) ;
 
-		versionCombo = new ComboViewer(mainComposite, SWT.READ_ONLY | SWT.BORDER);
-		versionCombo.getCombo().setLayoutData(GridDataFactory.fillDefaults().create()) ;
-		versionCombo.setContentProvider(new ArrayContentProvider());
-		versionCombo.setLabelProvider(new LabelProvider());
-		versionCombo.getCombo().setEnabled(false);
-		versionCombo.setSorter(new ViewerSorter());
-
-
-		final Group descriptionGroup = new Group(mainComposite, SWT.NONE);
-		descriptionGroup.setText(Messages.description);
-		descriptionGroup.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(10, 10).create());
-		descriptionGroup.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 1).create()) ;
-
-		final Label descriptionLabel = new Label(descriptionGroup, SWT.WRAP);
-		descriptionLabel.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-
-		explorer.getRightTableViewer().addSelectionChangedListener(new ISelectionChangedListener() {
-
-			@Override
-			public void selectionChanged(SelectionChangedEvent event) {
-				Object sel = ((IStructuredSelection)event.getSelection()).getFirstElement();
-				if(sel instanceof ConnectorDefinition){
-					final String defId = ((ConnectorDefinition)sel).getId();
-					List<String> versions = new ArrayList<String>();
-					for(ConnectorDefinition def : definitions){
-						if(defId.equals(def.getId())){
-							versions.add(def.getVersion());
-						}
-					}
-					versionCombo.setInput(versions);
-					String version = null;
-					if(implementation!=null){
-						version = implementation.getDefinitionVersion() ;
-					}
-					if(version != null && versions.contains(version)){
-						versionCombo.setSelection(new StructuredSelection(version));
-					}else{
-						versionCombo.setSelection(new StructuredSelection(versionCombo.getCombo().getItem(versionCombo.getCombo().getItemCount()-1)));
-					}
-
-					versionCombo.getCombo().setEnabled(versions.size() > 1);
-					if(versions.size() == 1){
-						for(ConnectorDefinition def : definitions){
-							if(defId.equals(def.getId())){
-								descriptionLabel.setText(messageProvider.getConnectorDefinitionDescription(def));	
-								descriptionGroup.layout(true);
-								break;
-							}
-						}
-
-					}
-				}else{
-					versionCombo.setInput(Collections.emptyList());
-					descriptionLabel.setText("");	
-					descriptionGroup.layout(true);
-				}
-
-			}
-		});
+        versionCombo = new ComboViewer(mainComposite, SWT.READ_ONLY | SWT.BORDER);
+        versionCombo.getCombo().setLayoutData(GridDataFactory.fillDefaults().create()) ;
+        versionCombo.setContentProvider(new ArrayContentProvider());
+        versionCombo.setLabelProvider(new LabelProvider());
+        versionCombo.getCombo().setEnabled(false);
+        versionCombo.setSorter(new ViewerSorter());
 
 
-		versionCombo.addSelectionChangedListener(new ISelectionChangedListener() {
+        final Group descriptionGroup = new Group(mainComposite, SWT.NONE);
+        descriptionGroup.setText(Messages.description);
+        descriptionGroup.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(10, 10).create());
+        descriptionGroup.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT, 70).span(2, 1).create());
 
-			@Override
-			public void selectionChanged(SelectionChangedEvent event) {
-				Object sel = ((IStructuredSelection)explorer.getRightTableViewer().getSelection()).getFirstElement();
-				if(sel instanceof ConnectorDefinition){
-					final String defId = ((ConnectorDefinition)sel).getId();
-					final String version = (String) ((IStructuredSelection)event.getSelection()).getFirstElement();
-					if(defId != null && version != null){
-						for(ConnectorDefinition def : definitions){
-							if(defId.equals(def.getId()) && version.equals(def.getVersion())){
-								descriptionLabel.setText(messageProvider.getConnectorDefinitionDescription(def));	
-								descriptionGroup.layout(true);
-								break;
-							}
-						}
-					}
-				}else{
-					descriptionLabel.setText("");
-					descriptionGroup.layout(true);
-				}
-			}
-		});
+        final Label descriptionLabel = new Label(descriptionGroup, SWT.WRAP);
+        descriptionLabel.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
-		defIdStrategy = new UpdateValueStrategy() ;
-		defIdStrategy.setConverter(new Converter(ConnectorDefinition.class,String.class){
+        explorer.getRightTableViewer().addSelectionChangedListener(new ISelectionChangedListener() {
 
-			@Override
-			public Object convert(Object from) {
-				if(from instanceof ConnectorDefinition){
-					return ((ConnectorDefinition) from).getId() ;
-				}
-				return null;
-			}
+            @Override
+            public void selectionChanged(final SelectionChangedEvent event) {
+                final Object sel = ((IStructuredSelection)event.getSelection()).getFirstElement();
+                if(sel instanceof ConnectorDefinition){
+                    final String defId = ((ConnectorDefinition)sel).getId();
+                    final List<String> versions = new ArrayList<String>();
+                    for(final ConnectorDefinition def : definitions){
+                        if(defId.equals(def.getId())){
+                            versions.add(def.getVersion());
+                        }
+                    }
+                    versionCombo.setInput(versions);
+                    String version = null;
+                    if(implementation!=null){
+                        version = implementation.getDefinitionVersion() ;
+                    }
+                    if(version != null && versions.contains(version)){
+                        versionCombo.setSelection(new StructuredSelection(version));
+                    }else{
+                        versionCombo.setSelection(new StructuredSelection(versionCombo.getCombo().getItem(versionCombo.getCombo().getItemCount()-1)));
+                    }
 
-		}) ;
-		defIdStrategy.setBeforeSetValidator(new IValidator() {
+                    versionCombo.getCombo().setEnabled(versions.size() > 1);
+                    if(versions.size() == 1){
+                        for(final ConnectorDefinition def : definitions){
+                            if(defId.equals(def.getId())){
+                                descriptionLabel.setText(messageProvider.getConnectorDefinitionDescription(def));
+                                descriptionGroup.layout(true);
+                                break;
+                            }
+                        }
 
-			@Override
-			public IStatus validate(Object value) {
-//				if(value == null || value.toString().isEmpty()){
-//					return ValidationStatus.error(Messages.missingDefinition) ;
-//				}
-				return Status.OK_STATUS;
-			}
-		}) ;
+                    }
+                }else{
+                    versionCombo.setInput(Collections.emptyList());
+                    descriptionLabel.setText("");
+                    descriptionGroup.layout(true);
+                }
+
+            }
+        });
 
 
-		defModelStrategy = new UpdateValueStrategy() ;
-		defModelStrategy.setConverter(new Converter(String.class,ConnectorDefinition.class){
+        versionCombo.addSelectionChangedListener(new ISelectionChangedListener() {
 
-			@Override
-			public Object convert(Object from) {
-				if(from instanceof String){
-					return getConnectorDefinitionFromId((String) from);
-				}
-				return null;
-			}
+            @Override
+            public void selectionChanged(final SelectionChangedEvent event) {
+                final Object sel = ((IStructuredSelection)explorer.getRightTableViewer().getSelection()).getFirstElement();
+                if(sel instanceof ConnectorDefinition){
+                    final String defId = ((ConnectorDefinition)sel).getId();
+                    final String version = (String) ((IStructuredSelection)event.getSelection()).getFirstElement();
+                    if(defId != null && version != null){
+                        for(final ConnectorDefinition def : definitions){
+                            if(defId.equals(def.getId()) && version.equals(def.getVersion())){
+                                descriptionLabel.setText(messageProvider.getConnectorDefinitionDescription(def));
+                                descriptionGroup.layout(true);
+                                break;
+                            }
+                        }
+                    }
+                }else{
+                    descriptionLabel.setText("");
+                    descriptionGroup.layout(true);
+                }
+            }
+        });
 
-		}) ;
-		updateOnlyCustomCheckbox();
-		bindValue();
-	
+        defIdStrategy = new UpdateValueStrategy() ;
+        defIdStrategy.setConverter(new Converter(ConnectorDefinition.class,String.class){
 
-		setControl(mainComposite);
-	}
-	
-	@SuppressWarnings("unchecked")
-	protected ConnectorDefinition getConnectorDefinitionFromId(String definitionId) {
-		List<Object> definitions = (List<Object>) explorer.getRightTableViewer().getInput();
-		for(Object c : definitions){
-			if(c instanceof ConnectorDefinition && ((ConnectorDefinition)c).getId().equals(definitionId)){
-				return (ConnectorDefinition) c;
-			}
-		}
-		return null;
-	}
+            @Override
+            public Object convert(final Object from) {
+                if(from instanceof ConnectorDefinition){
+                    return ((ConnectorDefinition) from).getId() ;
+                }
+                return null;
+            }
 
-	protected TreeExplorer createTreeExplorer(Composite mainComposite) {
-		final TreeExplorer explorer = new TreeExplorer(mainComposite, SWT.NONE);
-		explorer.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 290).span(2, 1).create());
+        }) ;
+        defIdStrategy.setBeforeSetValidator(new IValidator() {
 
-		final Composite additionalComposite = explorer.getAdditionalComposite();
-		additionalComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, false).create());
-		onlyCustomCheckbox = new Button(additionalComposite,SWT.CHECK);
-		onlyCustomCheckbox.setText(Messages.onlyCustomConnector);
-		onlyCustomCheckbox.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
-		onlyCustomCheckbox.setSelection(checkOnlyCustom);
+            @Override
+            public IStatus validate(final Object value) {
+                //				if(value == null || value.toString().isEmpty()){
+                //					return ValidationStatus.error(Messages.missingDefinition) ;
+                //				}
+                return Status.OK_STATUS;
+            }
+        }) ;
 
-		final ITreeContentProvider contentProvider = getContentProvider();
-		final ITreeContentProvider customContentProvider = getCustomContentProvider();
-		explorer.setContentProvider(customContentProvider);
-		explorer.setLabelProvider(new ConnectorDefinitionExplorerLabelProvider(messageProvider));
-		explorer.addRightTreeFilter(customConnectorFilter);
-		explorer.addLeftTreeFilter(new ViewerFilter() {
 
-			@Override
-			public boolean select(Viewer viewer, Object parentElement, Object element) {
-				if (AbstractUniqueDefinitionContentProvider.ROOT.equals(element)){
-					return true;
-				}
-				if (element instanceof Category){
-					if(!((ITreeContentProvider)((ContentViewer) viewer).getContentProvider()).hasChildren(element)){
-						return false;
-					}
-					for(Object c : ((ITreeContentProvider)((ContentViewer) viewer).getContentProvider()).getChildren(element)){
-						if(c instanceof ConnectorDefinition){
-							return true;
-						}else{
-							if(select(viewer, element, c)){
-								return true;
-							}
-						}
-					}
-				}else if(element instanceof ConnectorDefinition){
-					return false;
+        defModelStrategy = new UpdateValueStrategy() ;
+        defModelStrategy.setConverter(new Converter(String.class,ConnectorDefinition.class){
 
-				}
-				return false;
-			}
-		});
+            @Override
+            public Object convert(final Object from) {
+                if(from instanceof String){
+                    return getConnectorDefinitionFromId((String) from);
+                }
+                return null;
+            }
 
-		explorer.addRightTreeFilter(new ViewerFilter() {
+        }) ;
+        updateOnlyCustomCheckbox();
+        bindValue();
 
-			@Override
-			public boolean select(Viewer viewer, Object parentElement, Object element) {
-				return element instanceof ConnectorDefinition;
-			}
-		});
-		explorer.setLeftHeader(Messages.categoriesLabel);
-		explorer.setRightHeader(Messages.connectorDefinition);
-		explorer.setInput(new Object());
-		explorer.geLeftTreeViewer().setExpandedElements(new Object[]{AbstractUniqueDefinitionContentProvider.ROOT});
-		onlyCustomCheckbox.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				updateOnlyCustomCheckbox();
-			}
-		});
-		Object[] rootElement = contentProvider.getElements(new Object());
-		List<Object> flattenTree = new ArrayList<Object>();
-		getFlattenTree(flattenTree,rootElement,contentProvider);
-		explorer.getRightTableViewer().setInput(flattenTree);
-		return explorer;
-	}
 
-	private void updateOnlyCustomCheckbox(){
-		final ITreeContentProvider customContentProvider = getCustomContentProvider();
-		final ITreeContentProvider contentProvider = getContentProvider();
-		if(onlyCustomCheckbox.getSelection()){
-			explorer.setContentProvider(customContentProvider);
-			explorer.addRightTreeFilter(customConnectorFilter);
-		}else{
-			explorer.setContentProvider(contentProvider);
-			explorer.removeRightTreeFilter(customConnectorFilter);
-		}
-		explorer.setInput(new Object());
-		explorer.geLeftTreeViewer().setExpandedElements(new Object[]{AbstractUniqueDefinitionContentProvider.ROOT});
-	}
+        setControl(mainComposite);
+    }
 
-	private void getFlattenTree(List<Object> flattenTree, Object[] rootElement,ITreeContentProvider contentProvider) {
-		for(Object element : rootElement){
-			flattenTree.add(element);
-			if(contentProvider.hasChildren(element)){
-				getChildrenFlattenTree(flattenTree, element, contentProvider);
-			}
-		}
+    @SuppressWarnings("unchecked")
+    protected ConnectorDefinition getConnectorDefinitionFromId(final String definitionId) {
+        final List<Object> definitions = (List<Object>) explorer.getRightTableViewer().getInput();
+        for(final Object c : definitions){
+            if(c instanceof ConnectorDefinition && ((ConnectorDefinition)c).getId().equals(definitionId)){
+                return (ConnectorDefinition) c;
+            }
+        }
+        return null;
+    }
 
-	}
+    protected TreeExplorer createTreeExplorer(final Composite mainComposite) {
+        final TreeExplorer explorer = new TreeExplorer(mainComposite, SWT.NONE);
+        explorer.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 290).span(2, 1).create());
 
-	private void getChildrenFlattenTree(List<Object> flattenTree,Object parentElement, ITreeContentProvider contentProvider) {
-		for(Object element : contentProvider.getChildren(parentElement)){
-			flattenTree.add(element);
-			if(contentProvider.hasChildren(element)){
-				getChildrenFlattenTree(flattenTree, element, contentProvider);
-			}
-		}
-	}
+        final Composite additionalComposite = explorer.getAdditionalComposite();
+        additionalComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, false).create());
+        onlyCustomCheckbox = new Button(additionalComposite,SWT.CHECK);
+        onlyCustomCheckbox.setText(Messages.onlyCustomConnector);
+        onlyCustomCheckbox.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+        onlyCustomCheckbox.setSelection(checkOnlyCustom);
 
-	protected abstract ITreeContentProvider getContentProvider();
+        final ITreeContentProvider contentProvider = getContentProvider();
+        final ITreeContentProvider customContentProvider = getCustomContentProvider();
+        explorer.setContentProvider(customContentProvider);
+        explorer.setLabelProvider(new ConnectorDefinitionExplorerLabelProvider(messageProvider));
+        explorer.addRightTreeFilter(customConnectorFilter);
+        explorer.addLeftTreeFilter(new ViewerFilter() {
 
-	@Override
-	public void setVisible(boolean visible){
-		super.setVisible(visible);
-		if(visible && pageSupport == null){
-			pageSupport =  WizardPageSupport.create(this, context) ;
-		}
-	}
+            @Override
+            public boolean select(final Viewer viewer, final Object parentElement, final Object element) {
+                if (AbstractUniqueDefinitionContentProvider.ROOT.equals(element)){
+                    return true;
+                }
+                if (element instanceof Category){
+                    if(!((ITreeContentProvider)((ContentViewer) viewer).getContentProvider()).hasChildren(element)){
+                        return false;
+                    }
+                    for(final Object c : ((ITreeContentProvider)((ContentViewer) viewer).getContentProvider()).getChildren(element)){
+                        if(c instanceof ConnectorDefinition){
+                            return true;
+                        }else{
+                            if(select(viewer, element, c)){
+                                return true;
+                            }
+                        }
+                    }
+                }else if(element instanceof ConnectorDefinition){
+                    return false;
 
-	@Override
-	public void dispose() {
-		super.dispose();
-		if(pageSupport != null){
-			pageSupport.dispose() ;
-		}
-		if(context != null){
-			context.dispose() ;
-		}
-	}
+                }
+                return false;
+            }
+        });
 
-	@Override
-	public void selectionChanged(SelectionChangedEvent event) {
+        explorer.addRightTreeFilter(new ViewerFilter() {
 
-	}
+            @Override
+            public boolean select(final Viewer viewer, final Object parentElement, final Object element) {
+                return element instanceof ConnectorDefinition;
+            }
+        });
+        explorer.setLeftHeader(Messages.categoriesLabel);
+        explorer.setRightHeader(Messages.connectorDefinition);
+        explorer.setInput(new Object());
+        explorer.geLeftTreeViewer().setExpandedElements(new Object[]{AbstractUniqueDefinitionContentProvider.ROOT});
+        onlyCustomCheckbox.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(final SelectionEvent e) {
+                updateOnlyCustomCheckbox();
+            }
+        });
+        final Object[] rootElement = contentProvider.getElements(new Object());
+        final List<Object> flattenTree = new ArrayList<Object>();
+        getFlattenTree(flattenTree,rootElement,contentProvider);
+        explorer.getRightTableViewer().setInput(flattenTree);
+        return explorer;
+    }
 
-	protected abstract ITreeContentProvider getCustomContentProvider();
+    private void updateOnlyCustomCheckbox(){
+        final ITreeContentProvider customContentProvider = getCustomContentProvider();
+        final ITreeContentProvider contentProvider = getContentProvider();
+        if(onlyCustomCheckbox.getSelection()){
+            explorer.setContentProvider(customContentProvider);
+            explorer.addRightTreeFilter(customConnectorFilter);
+        }else{
+            explorer.setContentProvider(contentProvider);
+            explorer.removeRightTreeFilter(customConnectorFilter);
+        }
+        explorer.setInput(new Object());
+        explorer.geLeftTreeViewer().setExpandedElements(new Object[]{AbstractUniqueDefinitionContentProvider.ROOT});
+    }
 
-	protected abstract void bindValue();
+    private void getFlattenTree(final List<Object> flattenTree, final Object[] rootElement,final ITreeContentProvider contentProvider) {
+        for(final Object element : rootElement){
+            flattenTree.add(element);
+            if(contentProvider.hasChildren(element)){
+                getChildrenFlattenTree(flattenTree, element, contentProvider);
+            }
+        }
 
-	public void setSelectedConnectorDefinition(ConnectorDefinition selectedDefinition){
-		this.selectedDefinition = selectedDefinition;
-	}
+    }
 
-	public ConnectorDefinition getSelectedConnectorDefinition(){
-		return selectedDefinition;
-	}
+    private void getChildrenFlattenTree(final List<Object> flattenTree,final Object parentElement, final ITreeContentProvider contentProvider) {
+        for(final Object element : contentProvider.getChildren(parentElement)){
+            flattenTree.add(element);
+            if(contentProvider.hasChildren(element)){
+                getChildrenFlattenTree(flattenTree, element, contentProvider);
+            }
+        }
+    }
+
+    protected abstract ITreeContentProvider getContentProvider();
+
+    @Override
+    public void setVisible(final boolean visible){
+        super.setVisible(visible);
+        if(visible && pageSupport == null){
+            pageSupport =  WizardPageSupport.create(this, context) ;
+        }
+    }
+
+    @Override
+    public void dispose() {
+        super.dispose();
+        if(pageSupport != null){
+            pageSupport.dispose() ;
+        }
+        if(context != null){
+            context.dispose() ;
+        }
+    }
+
+    @Override
+    public void selectionChanged(final SelectionChangedEvent event) {
+
+    }
+
+    protected abstract ITreeContentProvider getCustomContentProvider();
+
+    protected abstract void bindValue();
+
+    public void setSelectedConnectorDefinition(final ConnectorDefinition selectedDefinition){
+        this.selectedDefinition = selectedDefinition;
+    }
+
+    public ConnectorDefinition getSelectedConnectorDefinition(){
+        return selectedDefinition;
+    }
 }

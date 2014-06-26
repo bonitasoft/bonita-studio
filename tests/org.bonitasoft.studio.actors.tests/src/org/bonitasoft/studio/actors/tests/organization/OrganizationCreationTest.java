@@ -23,7 +23,6 @@ import java.util.List;
 import org.bonitasoft.studio.actors.i18n.Messages;
 import org.bonitasoft.studio.actors.model.organization.Group;
 import org.bonitasoft.studio.actors.model.organization.Organization;
-import org.bonitasoft.studio.actors.model.organization.User;
 import org.bonitasoft.studio.actors.repository.OrganizationFileStore;
 import org.bonitasoft.studio.actors.repository.OrganizationRepositoryStore;
 import org.bonitasoft.studio.actors.tests.SWTbot.SWTBotActorFilterUtil;
@@ -82,11 +81,11 @@ public class OrganizationCreationTest extends SWTBotGefTestCase {
         bot.button(Messages.add).click();
         bot.button(Messages.add).click();
         bot.button(IDialogConstants.NEXT_LABEL).click();
-        String user1 = Messages.defaultUserName+1;
-        String user2 = Messages.defaultUserName+2;
-        String user3 = Messages.defaultUserName+3;
+        final String user1 = Messages.defaultUserName+1;
+        final String user2 = Messages.defaultUserName+2;
+        final String user3 = Messages.defaultUserName+3;
         addNewUSer(user1,firstName1, lastName1,"", membershipList1);
-        SWTBotTable table = bot.table();
+        final SWTBotTable table = bot.table();
         assertEquals("First Name " + firstName1 + " in table should be edited",
                 firstName1, table.cell(0, Messages.firstName));
         assertEquals("Last Name " + lastName1 + " in table should be edited",
@@ -115,23 +114,23 @@ public class OrganizationCreationTest extends SWTBotGefTestCase {
 
         bot.waitUntil(Conditions.widgetIsEnabled(bot.button(IDialogConstants.FINISH_LABEL)),10000);
         bot.button(IDialogConstants.FINISH_LABEL).click();
-       
+
         bot.waitUntil(Conditions.shellCloses(shell));
 
-        OrganizationRepositoryStore store = (OrganizationRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(OrganizationRepositoryStore.class);
-        OrganizationFileStore fileStore = store.getChild(organizationName+"."+OrganizationRepositoryStore.ORGANIZATION_EXT);
-        Organization orga = fileStore.getContent();
+        final OrganizationRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(OrganizationRepositoryStore.class);
+        final OrganizationFileStore fileStore = store.getChild(organizationName+"."+OrganizationRepositoryStore.ORGANIZATION_EXT);
+        final Organization orga = fileStore.getContent();
         assertNotNull(orga);
         int nbRootGroup = 0 ;
-        for(Group g : orga.getGroups().getGroup()){
+        for(final Group g : orga.getGroups().getGroup()){
             if(g.getParentPath() == null){
                 nbRootGroup++;
             }
         }
         assertEquals("There should be two root groups",2, nbRootGroup);
-//        for(User u : orga.getUsers().getUser()){
-//            assertNotNull(u.getMetaDatas());
-//        }
+        //        for(User u : orga.getUsers().getUser()){
+        //            assertNotNull(u.getMetaDatas());
+        //        }
 
 
         synchronizeOrganization(organizationName,user1);
@@ -140,34 +139,36 @@ public class OrganizationCreationTest extends SWTBotGefTestCase {
 
     }
 
-    private void addNewUSer(String username,String firstName, String lastName,String manager,
-            List<String[]> memberShip) {
+    private void addNewUSer(final String username,final String firstName, final String lastName,final String manager,
+            final List<String[]> memberShip) {
         bot.button(Messages.add).click();
         bot.tabItem(Messages.general).activate();
-        bot.textWithLabel(Messages.userName).setText(username);
+
+        bot.textWithLabel(Messages.userName + " *").setText(username);
         //bot.sleep(1000);
         if(manager != null && !manager.isEmpty()){
             bot.comboBoxWithLabel(Messages.manager).setSelection(manager);
         }
-        bot.textWithLabel(Messages.firstName).setText(firstName);
-        bot.textWithLabel(Messages.lastName).setText(lastName);
-        bot.tabItem(Messages.membership).activate();
+        bot.textWithLabel(Messages.firstName).typeText(firstName);
+        bot.textWithLabel(Messages.lastName).typeText(lastName);
+        bot.tabItem(Messages.membership + " *").activate();
         for (int i = 0; i < memberShip.size(); i++) {
-            bot.button(Messages.addMembership).click();
+            if (i > 0) {
+                bot.button(Messages.addMembership).click();
+            }
             bot.comboBoxWithLabel("Group", i * 2).setSelection(
                     memberShip.get(i)[0]);
             bot.comboBoxWithLabel("Role", i * 2).setSelection(
                     memberShip.get(i)[1]);
         }
-        //bot.sleep(1000);
     }
 
-    private void synchronizeOrganization(String organizationName,String username) {
+    private void synchronizeOrganization(final String organizationName,final String username) {
         SWTBotActorFilterUtil.activateSynchronizeOrganizationWizard(bot);
         bot.table().select(organizationName);
         bot.button(IDialogConstants.NEXT_LABEL).click();
         if (username!=null){
-        	bot.textWithLabel(Messages.userName).setText(username);
+            bot.textWithLabel(Messages.userName).setText(username);
         }
         bot.button(Messages.synchronize).click();
         bot.waitUntil(Conditions.shellIsActive(Messages.synchronizeInformationTitle),
@@ -193,7 +194,7 @@ public class OrganizationCreationTest extends SWTBotGefTestCase {
         System.out.println("Table size = "+ table.columnCount()+" x "+table.rowCount());
 
         // Set Description of the new Organisation
-        int idxBonita = table.indexOf("ACME  (active)", 0);
+        final int idxBonita = table.indexOf("ACME  (" + Messages.active + ")", 0);
         Assert.assertTrue("Error: No ACME found in the table", idxBonita!=-1);
 
         // go to the next shell
@@ -210,17 +211,17 @@ public class OrganizationCreationTest extends SWTBotGefTestCase {
         table = bot.table();
         Assert.assertNotNull("Error: No user table found", table);
 
-        int nbUsers = table.rowCount();
+        final int nbUsers = table.rowCount();
 
         //add new user Elton John
-        SWTBotButton addButton = bot.button("Add");
+        final SWTBotButton addButton = bot.button("Add");
 
         addButton.click();
 
         Assert.assertEquals("Error : wrong number of added users", nbUsers+1, table.rowCount());
 
-        bot.textWithLabel(Messages.userName).setText("elton.john");
-        bot.textWithLabel(Messages.password).setText("bpm");
+        bot.textWithLabel(Messages.userName + " *").setText("elton.john");
+        bot.textWithLabel(Messages.password + " *").setText("bpm");
 
 
         bot.comboBoxWithLabel(Messages.manager).setSelection("william.jobs");
@@ -234,8 +235,8 @@ public class OrganizationCreationTest extends SWTBotGefTestCase {
         Assert.assertEquals("Error: Last name user is not setted","John", bot.textWithLabel(Messages.lastName).getText());
 
 
-        bot.tabItem(Messages.membership).activate();
-        bot.button(Messages.addMembership).click();
+        bot.tabItem(Messages.membership + " *").activate();
+        //bot.button(Messages.addMembership).click();
         bot.comboBoxWithLabel("Group").setSelection("/acme");
         bot.comboBoxWithLabel("Role").setSelection("member");
 
