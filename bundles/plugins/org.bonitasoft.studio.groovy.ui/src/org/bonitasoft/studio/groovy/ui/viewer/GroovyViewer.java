@@ -60,6 +60,8 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jdt.internal.corext.util.JavaModelUtil;
 import org.eclipse.jdt.internal.ui.javaeditor.JavaMarkerAnnotation;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.BadLocationException;
@@ -68,8 +70,10 @@ import org.eclipse.jface.text.FindReplaceDocumentAdapter;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentListener;
 import org.eclipse.jface.text.IRegion;
+import org.eclipse.jface.text.ITextListener;
 import org.eclipse.jface.text.ITextOperationTarget;
 import org.eclipse.jface.text.Position;
+import org.eclipse.jface.text.TextEvent;
 import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.jface.text.source.ISourceViewer;
@@ -151,15 +155,35 @@ public class GroovyViewer {
 
         editor = new BonitaGroovyEditor(GroovyPlugin.getDefault().getPreferenceStore());
         try {
+
             editor.getDocumentProvider().connect(input);
             editor.init(new DummyEditorSite(mainComposite.getShell(), editor), this.input);
             editor.createPartControl(mainComposite);
             editor.createJavaSourceViewerConfiguration();
+
         } catch (final Exception e1) {
             BonitaStudioLog.error(e1);
         }
 
         getSourceViewer().getTextWidget().setTextLimit(MAX_SCRIPT_LENGTH);
+        getSourceViewer().addTextListener(new ITextListener() {
+
+            private boolean isReconciling;
+
+            @Override
+            public void textChanged(final TextEvent event) {
+                if (!isReconciling) {
+                    isReconciling = true;
+                    try {
+                        JavaModelUtil.reconcile(editor.getGroovyCompilationUnit());
+                    } catch (final JavaModelException e) {
+
+                    } finally {
+                        isReconciling = false;
+                    }
+                }
+            }
+        });
 
         // Set up content assist in the viewer
         triggerAssistantHandler = new AbstractHandler() {
