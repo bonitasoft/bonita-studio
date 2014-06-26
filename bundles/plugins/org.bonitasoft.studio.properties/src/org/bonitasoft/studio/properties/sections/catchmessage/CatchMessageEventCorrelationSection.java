@@ -43,6 +43,7 @@ import org.bonitasoft.studio.properties.i18n.Messages;
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.edit.command.AddCommand;
 import org.eclipse.emf.edit.command.SetCommand;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ISelection;
@@ -121,22 +122,23 @@ AbstractBonitaDescriptionSection {
         final Button autoFillButton = aTabbedPropertySheetPage
                 .getWidgetFactory()
                 .createButton(parent, Messages.autoFillMessageContent, SWT.FLAT);
+        autoFillButton.setLayoutData(GridDataFactory.swtDefaults().indent(65, 0).hint(IDialogConstants.BUTTON_WIDTH, SWT.DEFAULT).create());
         autoFillButton.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(final SelectionEvent e) {
                 super.widgetSelected(e);
                 BusyIndicator.showWhile(Display.getDefault(), new Runnable() {
-					
-					@Override
-					public void run() {
-						  createCorrelationKeyValueLinesIfNeeded();
-					}
-				});
-              
+
+                    @Override
+                    public void run() {
+                        createCorrelationKeyValueLinesIfNeeded();
+                    }
+                });
+
             }
 
-			protected void createCorrelationKeyValueLinesIfNeeded() {
-				final MessageFlow incomingMessag = getCatchMessageEvent().getIncomingMessag();
+            protected void createCorrelationKeyValueLinesIfNeeded() {
+                final MessageFlow incomingMessag = getCatchMessageEvent().getIncomingMessag();
                 if (incomingMessag != null) {
                     final Message message = ModelHelper.findEvent(
                             getCatchMessageEvent(), incomingMessag.getName());
@@ -154,8 +156,8 @@ AbstractBonitaDescriptionSection {
                                         for (final ListExpression correlationAssociationLineTargetMessage : correlationAssociationTargetMessage.getExpressions()) {
                                             final Expression correlationKeyTargetMessage = correlationAssociationLineTargetMessage.getExpressions().get(0);
                                             if (correlationKeySourceMessageName != null
-                                            		&& correlationKeyTargetMessage != null
-                                            		&& correlationKeySourceMessageName.equals(correlationKeyTargetMessage.getName())) {
+                                                    && correlationKeyTargetMessage != null
+                                                    && correlationKeySourceMessageName.equals(correlationKeyTargetMessage.getName())) {
                                                 alreadyExists = true;
                                                 break;
                                             }
@@ -172,7 +174,7 @@ AbstractBonitaDescriptionSection {
                     }
 
                 }
-			}
+            }
 
             protected void createCorrelationKeyValueLineFor(
                     final String correlationKeySourceMessageName) {
