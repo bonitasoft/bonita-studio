@@ -299,7 +299,7 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
         } else {
             buttonComposite = new Composite(parent, SWT.NONE);
         }
-        buttonComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, false).align(SWT.LEFT, SWT.TOP).create());
+        buttonComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, false).align(SWT.FILL, SWT.TOP).create());
 
         final RowLayout rl = new RowLayout(SWT.VERTICAL);
         rl.spacing = 3;
