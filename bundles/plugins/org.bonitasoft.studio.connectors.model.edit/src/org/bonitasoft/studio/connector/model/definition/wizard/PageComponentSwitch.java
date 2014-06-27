@@ -100,9 +100,9 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> im
     protected IWizardContainer iWizardContainer;
     private boolean isPageFlowContext = false;
 
-    public PageComponentSwitch(IWizardContainer iWizardContainer, Composite parent, EObject container, ConnectorDefinition definition,
-            ConnectorConfiguration connectorConfiguration, EMFDataBindingContext context, DefinitionResourceProvider messageProvider,
-            AvailableExpressionTypeFilter connectorExpressionContentTypeFilter) {
+    public PageComponentSwitch(final IWizardContainer iWizardContainer, final Composite parent, final EObject container, final ConnectorDefinition definition,
+            final ConnectorConfiguration connectorConfiguration, final EMFDataBindingContext context, final DefinitionResourceProvider messageProvider,
+            final AvailableExpressionTypeFilter connectorExpressionContentTypeFilter) {
         this.parent = parent;
         this.context = context;
         this.connectorConfiguration = connectorConfiguration;
@@ -114,36 +114,36 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> im
     }
 
     @Override
-    public Component caseArray(Array object) {
+    public Component caseArray(final Array object) {
         createArrayControl(parent, object);
         return object;
     }
 
     @Override
-    public Component caseCheckbox(Checkbox object) {
+    public Component caseCheckbox(final Checkbox object) {
         createCheckboxControl(parent, object);
         return object;
     }
 
     @Override
-    public Component caseScriptEditor(ScriptEditor object) {
+    public Component caseScriptEditor(final ScriptEditor object) {
         createScriptEditorControl(parent, object);
         return object;
     }
 
     @Override
-    public Component caseGroup(Group object) {
+    public Component caseGroup(final Group object) {
         final Section section = createGroupControl(parent, object);
         final Composite client = new Composite(section, SWT.NONE);
         client.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         client.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(0, 0).spacing(5, 2).create());
         final PageComponentSwitch groupSwitch = createGroupPageComponentSwitch(client);
-        for (Component component : object.getWidget()) {
+        for (final Component component : object.getWidget()) {
             groupSwitch.doSwitch(component);
         }
 
         section.setClient(client);
-        java.util.List<Section> sectionsToExpand = groupSwitch.getSectionsToExpand();
+        final java.util.List<Section> sectionsToExpand = groupSwitch.getSectionsToExpand();
         sections.addAll(sectionsToExpand);
         if (!object.isOptional() && object.isSetOptional()) {
             sections.add(section);
@@ -151,14 +151,14 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> im
         section.addExpansionListener(new IExpansionListener() {
 
             @Override
-            public void expansionStateChanging(ExpansionEvent event) {
+            public void expansionStateChanging(final ExpansionEvent event) {
             }
 
             @Override
-            public void expansionStateChanged(ExpansionEvent event) {
-                Shell shell = section.getShell();
-                Point defaultSize = shell.getSize();
-                Point size = shell.computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
+            public void expansionStateChanged(final ExpansionEvent event) {
+                final Shell shell = section.getShell();
+                final Point defaultSize = shell.getSize();
+                final Point size = shell.computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
                 shell.setSize(defaultSize.x, size.y);
                 shell.layout(true, true);
             }
@@ -177,42 +177,42 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> im
     }
 
     @Override
-    public Component caseList(List object) {
+    public Component caseList(final List object) {
         createListControl(parent, object);
         return object;
     }
 
     @Override
-    public Component casePassword(Password object) {
+    public Component casePassword(final Password object) {
         createPasswordControl(parent, object);
         return object;
     }
 
     @Override
-    public Component caseSelect(Select object) {
+    public Component caseSelect(final Select object) {
         createSelectControl(parent, object);
         return object;
     }
 
     @Override
-    public Component caseText(Text object) {
+    public Component caseText(final Text object) {
         createTextControl(parent, object);
         return object;
     }
 
     @Override
-    public Component caseRadioGroup(RadioGroup object) {
+    public Component caseRadioGroup(final RadioGroup object) {
         createRadioGroupControl(parent, object);
         return object;
     }
 
     @Override
-    public Component caseTextArea(TextArea object) {
+    public Component caseTextArea(final TextArea object) {
         createTextAreaControl(parent, object);
         return object;
     }
 
-    protected Composite createRadioGroupControl(Composite composite, RadioGroup object) {
+    protected Composite createRadioGroupControl(final Composite composite, final RadioGroup object) {
         final Input input = getConnectorInput(object.getInputName());
         final ConnectorParameter parameter = getConnectorParameter(object.getInputName(), object, input);
 
@@ -223,7 +223,7 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> im
             } else {
                 label = createFieldLabel(composite, SWT.TOP, object.getId(), input.isMandatory());
             }
-            String desc = messageProvider.getFieldDescription(definition, object.getId());
+            final String desc = messageProvider.getFieldDescription(definition, object.getId());
             if (desc != null && !desc.isEmpty()) {
                 label.setToolTipText(desc);
             }
@@ -235,11 +235,11 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> im
             } else {
                 radioCompoiste.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).create());
             }
-            String defaultSelection = input.getDefaultValue();
+            final String defaultSelection = input.getDefaultValue();
 
             ((Expression) parameter.getExpression()).setType(ExpressionConstants.CONSTANT_TYPE);
             ((Expression) parameter.getExpression()).setReturnType(input.getType());
-            String content = ((Expression) parameter.getExpression()).getContent();
+            final String content = ((Expression) parameter.getExpression()).getContent();
             for (final String choice : object.getChoices()) {
                 final Button radioButton = new Button(radioCompoiste, SWT.RADIO);
                 radioButton.setText(choice);
@@ -247,7 +247,7 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> im
                 radioButton.addSelectionListener(new SelectionAdapter() {
 
                     @Override
-                    public void widgetSelected(SelectionEvent e) {
+                    public void widgetSelected(final SelectionEvent e) {
                         if (radioButton.getSelection()) {
                             ((Expression) parameter.getExpression()).setContent(choice);
                             ((Expression) parameter.getExpression()).setName(choice);
@@ -262,7 +262,7 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> im
 
             }
             if (defaultSelection == null) {
-                Button button = (Button) radioCompoiste.getChildren()[0];
+                final Button button = (Button) radioCompoiste.getChildren()[0];
                 button.setSelection(true);
             }
             return radioCompoiste;
@@ -271,7 +271,7 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> im
 
     }
 
-    protected PatternExpressionViewer createTextAreaControl(Composite composite, TextArea object) {
+    protected PatternExpressionViewer createTextAreaControl(final Composite composite, final TextArea object) {
         final Input input = getConnectorInput(object.getInputName());
         final ConnectorParameter parameter = getConnectorParameter(object.getInputName(), object, input);
 
@@ -282,14 +282,14 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> im
             viewer.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(400, SWT.DEFAULT).create());
             viewer.addFilter(connectorExpressionContentTypeFilter);
 
-            Expression exp = (Expression) parameter.getExpression();
-            String desc = messageProvider.getFieldDescription(definition, object.getId());
+            final Expression exp = (Expression) parameter.getExpression();
+            final String desc = messageProvider.getFieldDescription(definition, object.getId());
             if (desc != null && !desc.isEmpty()) {
                 viewer.setHint(desc);
             }
             viewer.setContextInput(container);
 
-            UpdateValueStrategy startegy = new UpdateValueStrategy();
+            final UpdateValueStrategy startegy = new UpdateValueStrategy();
             if (input.isMandatory()) {
                 startegy.setAfterConvertValidator(new EmptyInputValidator(getLabel(object.getId())));
             }
@@ -304,13 +304,17 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> im
         return null;
     }
 
-    protected CheckBoxExpressionViewer createCheckboxControl(Composite composite, Checkbox object) {
-        final Input input = getConnectorInput(object.getInputName());
-        final ConnectorParameter parameter = getConnectorParameter(object.getInputName(), object, input);
-        if (parameter != null) {
-            createFieldLabel(composite, SWT.CENTER, object.getId(), input.isMandatory());
-            final CheckBoxExpressionViewer viewer = new CheckBoxExpressionViewer(composite, SWT.BORDER,
-                    ConnectorConfigurationPackage.Literals.CONNECTOR_PARAMETER__EXPRESSION);
+    protected CheckBoxExpressionViewer createCheckboxControl(final Composite composite, final Checkbox object) {
+        final Input input = getConnectorInput(object.getInputName()) ;
+        final ConnectorParameter parameter = getConnectorParameter(object.getInputName(),object,input) ;
+        if(parameter != null){
+            new Label(composite, SWT.NONE);
+            String label = getLabel(object.getId()) ;
+            if(input.isMandatory()){
+                label = label + " *" ;
+            }
+            final CheckBoxExpressionViewer viewer = new CheckBoxExpressionViewer(composite, SWT.BORDER, ConnectorConfigurationPackage.Literals.CONNECTOR_PARAMETER__EXPRESSION);
+            viewer.getCheckboxControl().setText(label);
             viewer.setIsPageFlowContext(isPageFlowContext);
             viewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
             viewer.setContext(container);
@@ -319,12 +323,12 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> im
             }
             viewer.addFilter(connectorExpressionContentTypeFilter);
             viewer.setInput(parameter);
-            String desc = messageProvider.getFieldDescription(definition, object.getId());
+            final String desc = messageProvider.getFieldDescription(definition, object.getId());
             if (desc != null && !desc.isEmpty()) {
                 viewer.setMessage(desc, IStatus.INFO);
             }
             if (((Expression) parameter.getExpression()).getName() == null) {
-                Expression falseExp = ((Expression) parameter.getExpression());
+                final Expression falseExp = (Expression) parameter.getExpression();
                 falseExp.setContent(Boolean.FALSE.toString());
                 falseExp.setName(Boolean.FALSE.toString());
                 falseExp.setContent(Boolean.FALSE.toString());
@@ -337,7 +341,7 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> im
         return null;
     }
 
-    protected String getLabel(String inputName) {
+    protected String getLabel(final String inputName) {
         String label = messageProvider.getFieldLabel(definition, inputName);
         if (label == null) {
             label = "";
@@ -346,7 +350,7 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> im
         return label;
     }
 
-    protected ExpressionViewer createTextControl(Composite composite, final Text object) {
+    protected ExpressionViewer createTextControl(final Composite composite, final Text object) {
         final Input input = getConnectorInput(object.getInputName());
         if (input != null) {
             final ConnectorParameter parameter = getConnectorParameter(object.getInputName(), object, input);
@@ -362,14 +366,14 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> im
                 }
 
                 if (object.isShowDocuments()) {
-                    Set<String> contentTypes = new HashSet<String>(connectorExpressionContentTypeFilter.getContentTypes());
+                    final Set<String> contentTypes = new HashSet<String>(connectorExpressionContentTypeFilter.getContentTypes());
                     contentTypes.add(ExpressionConstants.DOCUMENT_REF_TYPE);
                     viewer.addFilter(new AvailableExpressionTypeFilter(contentTypes.toArray(new String[contentTypes.size()])));
                 } else {
                     viewer.addFilter(connectorExpressionContentTypeFilter);
                 }
                 viewer.setInput(parameter);
-                String desc = messageProvider.getFieldDescription(definition, object.getId());
+                final String desc = messageProvider.getFieldDescription(definition, object.getId());
                 if (desc != null && !desc.isEmpty()) {
                     viewer.setMessage(desc, IStatus.INFO);
                 }
@@ -384,7 +388,7 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> im
         return null;
     }
 
-    protected ExpressionViewer createScriptEditorControl(Composite composite, ScriptEditor object) {
+    protected ExpressionViewer createScriptEditorControl(final Composite composite, final ScriptEditor object) {
         final Input input = getConnectorInput(object.getInputName());
         final ConnectorParameter parameter = getConnectorParameter(object.getInputName(), object, input);
 
@@ -400,7 +404,7 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> im
             }
             viewer.addFilter(connectorExpressionContentTypeFilter);
             viewer.setInput(parameter);
-            String desc = messageProvider.getFieldDescription(definition, object.getId());
+            final String desc = messageProvider.getFieldDescription(definition, object.getId());
             if (desc != null && !desc.isEmpty()) {
                 viewer.setMessage(desc, IStatus.INFO);
             }
@@ -411,13 +415,13 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> im
         return null;
     }
 
-    protected ExpressionCollectionViewer createArrayControl(Composite composite, final Array object) {
+    protected ExpressionCollectionViewer createArrayControl(final Composite composite, final Array object) {
         final Input input = getConnectorInput(object.getInputName());
         final ConnectorParameter parameter = getConnectorParameter(object.getInputName(), object, input);
 
         if (parameter != null) {
-            Label labelField = createFieldLabel(composite, SWT.TOP, object.getId(), input.isMandatory());
-            String desc = messageProvider.getFieldDescription(definition, object.getId());
+            final Label labelField = createFieldLabel(composite, SWT.TOP, object.getId(), input.isMandatory());
+            final String desc = messageProvider.getFieldDescription(definition, object.getId());
             if (desc != null && !desc.isEmpty()) {
                 createDescriptionDecorator(composite, labelField, desc);
             }
@@ -465,20 +469,20 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> im
         return null;
     }
 
-    protected Section createGroupControl(Composite composite, Group object) {
+    protected Section createGroupControl(final Composite composite, final Group object) {
         final Section groupSection = new Section(composite, Section.NO_TITLE_FOCUS_BOX | Section.TWISTIE | Section.CLIENT_INDENT);
         groupSection.setText(getLabel(object.getId()));
         groupSection.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 1).create());
         return groupSection;
     }
 
-    protected ExpressionCollectionViewer createListControl(Composite composite, final List object) {
+    protected ExpressionCollectionViewer createListControl(final Composite composite, final List object) {
         final Input input = getConnectorInput(object.getInputName());
         final ConnectorParameter parameter = getConnectorParameter(object.getInputName(), object, input);
 
         if (parameter != null) {
-            Label labelField = createFieldLabel(composite, SWT.TOP, object.getId(), input.isMandatory());
-            String desc = messageProvider.getFieldDescription(definition, object.getId());
+            final Label labelField = createFieldLabel(composite, SWT.TOP, object.getId(), input.isMandatory());
+            final String desc = messageProvider.getFieldDescription(definition, object.getId());
             if (desc != null && !desc.isEmpty()) {
                 createDescriptionDecorator(composite, labelField, desc);
             }
@@ -492,7 +496,7 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> im
             }
 
             if (object.isShowDocuments()) {
-                Set<String> contentTypes = new HashSet<String>(connectorExpressionContentTypeFilter.getContentTypes());
+                final Set<String> contentTypes = new HashSet<String>(connectorExpressionContentTypeFilter.getContentTypes());
                 contentTypes.add(ExpressionConstants.DOCUMENT_REF_TYPE);
                 viewer.addFilter(new AvailableExpressionTypeFilter(contentTypes.toArray(new String[contentTypes.size()])));
             } else {
@@ -532,9 +536,9 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> im
 
     }
 
-    protected void createDescriptionDecorator(Composite composite,
-            Label labelField, String desc) {
-        ControlDecoration descriptionDecoration = new ControlDecoration(labelField, SWT.RIGHT, composite);
+    protected void createDescriptionDecorator(final Composite composite,
+            final Label labelField, final String desc) {
+        final ControlDecoration descriptionDecoration = new ControlDecoration(labelField, SWT.RIGHT, composite);
         descriptionDecoration.setMarginWidth(0);
         descriptionDecoration.setImage(PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_INFO_TSK));
         descriptionDecoration.setDescriptionText(desc);
@@ -543,7 +547,7 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> im
         descriptionDecoration.show();
     }
 
-    protected ExpressionViewer createPasswordControl(Composite composite, Password object) {
+    protected ExpressionViewer createPasswordControl(final Composite composite, final Password object) {
         final Input input = getConnectorInput(object.getInputName());
         final ConnectorParameter parameter = getConnectorParameter(object.getInputName(), object, input);
 
@@ -559,7 +563,7 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> im
             }
             viewer.addFilter(connectorExpressionContentTypeFilter);
             viewer.setInput(parameter);
-            String desc = messageProvider.getFieldDescription(definition, object.getId());
+            final String desc = messageProvider.getFieldDescription(definition, object.getId());
             if (desc != null && !desc.isEmpty()) {
                 viewer.setMessage(desc, IStatus.INFO);
             }
@@ -570,7 +574,7 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> im
         return null;
     }
 
-    protected Combo createSelectControl(Composite composite, Select object) {
+    protected Combo createSelectControl(final Composite composite, final Select object) {
         final Input input = getConnectorInput(object.getInputName());
         final ConnectorParameter parameter = getConnectorParameter(object.getInputName(), object, input);
 
@@ -580,15 +584,15 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> im
             combo.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
             final AbstractExpression inputExpression = parameter.getExpression();
-            for (String item : object.getItems()) {
+            for (final String item : object.getItems()) {
                 combo.add(item);
             }
             context.bindValue(SWTObservables.observeText(combo), EMFObservables.observeValue(inputExpression, ExpressionPackage.Literals.EXPRESSION__NAME));
             context.bindValue(SWTObservables.observeText(combo), EMFObservables.observeValue(inputExpression, ExpressionPackage.Literals.EXPRESSION__CONTENT));
 
             if (combo.getText() == null || combo.getText().isEmpty()) {
-                String defaultValue = input.getDefaultValue();
-                for (String item : combo.getItems()) {
+                final String defaultValue = input.getDefaultValue();
+                for (final String item : combo.getItems()) {
                     if (defaultValue != null && item.equals(defaultValue)) {
                         combo.setText(defaultValue);
                     }
@@ -602,7 +606,7 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> im
                 }
             }
 
-            String desc = messageProvider.getFieldDescription(definition, object.getId());
+            final String desc = messageProvider.getFieldDescription(definition, object.getId());
             if (desc != null && !desc.isEmpty()) {
                 combo.setToolTipText(desc);
             }
@@ -614,8 +618,8 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> im
         return null;
     }
 
-    protected Input getConnectorInput(String inputName) {
-        for (Input input : definition.getInput()) {
+    protected Input getConnectorInput(final String inputName) {
+        for (final Input input : definition.getInput()) {
             if (input.getName().equals(inputName)) {
                 return input;
             }
@@ -623,7 +627,7 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> im
         return null;
     }
 
-    protected Label createFieldLabel(Composite composite, int verticalAlignment, String id, boolean isMandatory) {
+    protected Label createFieldLabel(final Composite composite, final int verticalAlignment, final String id, final boolean isMandatory) {
         final Label fieldLabel = new Label(composite, SWT.NONE);
         if (id != null) {
             String label = getLabel(id);
@@ -636,14 +640,14 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> im
         return fieldLabel;
     }
 
-    protected ConnectorParameter getConnectorParameter(String inputName, WidgetComponent object, Input input) {
-        for (ConnectorParameter param : connectorConfiguration.getParameters()) {
+    protected ConnectorParameter getConnectorParameter(final String inputName, final WidgetComponent object, final Input input) {
+        for (final ConnectorParameter param : connectorConfiguration.getParameters()) {
             if (param.getKey().equals(inputName)) {
                 if (param.getExpression() == null) {
                     param.setExpression(createExpression(object, input));
                 } else {
                     if (param.getExpression() instanceof Expression) {
-                        Expression exp = (Expression) param.getExpression();
+                        final Expression exp = (Expression) param.getExpression();
                         if (!input.getType().equals(exp.getReturnType())) {
                             exp.setReturnType(input.getType());
                         }
@@ -662,8 +666,8 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> im
         return parameter;
     }
 
-    protected AbstractExpression createExpression(WidgetComponent widget, Input input) {
-        String inputClassName = input.getType();
+    protected AbstractExpression createExpression(final WidgetComponent widget, final Input input) {
+        final String inputClassName = input.getType();
         if (widget instanceof Array) {
             final TableExpression expression = ExpressionFactory.eINSTANCE.createTableExpression();
             return expression;
@@ -693,7 +697,7 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> im
     }
 
     @Override
-    public void setIsPageFlowContext(boolean isPageFlowContext) {
+    public void setIsPageFlowContext(final boolean isPageFlowContext) {
         this.isPageFlowContext = isPageFlowContext;
 
     }
@@ -712,6 +716,6 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> im
      * @see org.bonitasoft.studio.common.IBonitaVariableContext#setIsOverviewContext(boolean)
      */
     @Override
-    public void setIsOverviewContext(boolean isOverviewContext) {
+    public void setIsOverviewContext(final boolean isOverviewContext) {
     }
 }
