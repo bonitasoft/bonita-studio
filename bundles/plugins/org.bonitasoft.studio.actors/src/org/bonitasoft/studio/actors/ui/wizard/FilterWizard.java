@@ -105,8 +105,8 @@ public class FilterWizard extends ConnectorWizard implements IConnectorDefinitio
 	        if (connectorDefinitionLabel == null && def != null) {
 	            connectorDefinitionLabel = def.getId();
 	        }
-	        p.setTitle(Messages.bind(Messages.actorFilterWizardTitle,connectorDefinitionLabel,connectorWorkingCopy.getDefinitionVersion()));
-	        p.setDescription(Messages.actorFilterWizardMessage);
+	        p.setTitle(Messages.bind(Messages.filterWizardTitle,connectorDefinitionLabel,connectorWorkingCopy.getDefinitionVersion()));
+	        p.setDescription(Messages.filterWizardMessage);
 	    }
 	    return p;
 	}

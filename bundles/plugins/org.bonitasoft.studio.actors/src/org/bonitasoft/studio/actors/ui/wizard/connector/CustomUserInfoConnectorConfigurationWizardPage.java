@@ -13,30 +13,25 @@
  **/
 package org.bonitasoft.studio.actors.ui.wizard.connector;
 
+import org.bonitasoft.studio.actors.i18n.Messages;
 import org.bonitasoft.studio.actors.preference.ActorsPreferenceConstants;
 import org.bonitasoft.studio.actors.repository.OrganizationRepositoryStore;
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.connector.model.definition.Component;
-import org.bonitasoft.studio.connector.model.definition.Input;
+import org.bonitasoft.studio.connector.model.definition.Checkbox;
 import org.bonitasoft.studio.connector.model.definition.Page;
 import org.bonitasoft.studio.connector.model.definition.Text;
 import org.bonitasoft.studio.connector.model.definition.wizard.AbstractConnectorConfigurationWizardPage;
-import org.bonitasoft.studio.connector.model.definition.wizard.PageComponentSwitch;
-import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
-import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfigurationPackage;
-import org.bonitasoft.studio.model.connectorconfiguration.ConnectorParameter;
+import org.bonitasoft.studio.connector.model.definition.wizard.PageComponentSwitchBuilder;
+import org.bonitasoft.studio.expression.editor.viewer.CheckBoxExpressionViewer;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
-import org.eclipse.emf.databinding.EMFObservables;
-import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.ui.forms.widgets.Section;
 
 
 /**
@@ -45,90 +40,90 @@ import org.eclipse.ui.forms.widgets.Section;
  */
 public class CustomUserInfoConnectorConfigurationWizardPage extends AbstractConnectorConfigurationWizardPage {
 
-    private PageComponentSwitch componentSwitch;
+    private static final int LABEL_WIDTH = 160;
 
     public CustomUserInfoConnectorConfigurationWizardPage() {
         super(CustomUserInfoConnectorConfigurationWizardPage.class.getName());
     }
 
     @Override
-    protected Control doCreateControl(Composite parent, EMFDataBindingContext context) {
-        final Composite mainComposite = new Composite(parent, SWT.NONE) ;
-        mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
-        mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).spacing(0, 0).create());
+    protected Control doCreateControl(final Composite parent, final EMFDataBindingContext context) {
+        // get inputs
+        final Page page = getPage();
+        final Text cuiNameInput = (Text) page.getWidget().get(0);
+        final Text cuiValueInput = (Text) page.getWidget().get(1);
+        final Checkbox cuiPartialMatchInput = (Checkbox) page.getWidget().get(2);
+        final Checkbox automaticAssignInput = (Checkbox) page.getWidget().get(3);
 
-        final Composite pageComposite = new Composite(mainComposite, SWT.NONE) ;
-        pageComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(10, 10).spacing(3, 10).create());
-        pageComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        final Page page = getPage() ;
-        final PageComponentSwitch componentSwitch = getPageComponentSwitch(context, pageComposite) ;
-        componentSwitch.setIsPageFlowContext(isPageFlowContext());
-        for(Component component : page.getWidget()){
-            if(component.getId().equals("customUserInfoName")){
-                createCustomExpressionViewerWithCustomInfo(pageComposite,(Text) component,context);
-            }else{
-                componentSwitch.doSwitch(component) ;
-            }
-        }
-        for(Section section : componentSwitch.getSectionsToExpand()){
-            section.setExpanded(true) ;
-        }
+        return buildUserFilterComposite(parent, context, cuiNameInput, cuiValueInput, cuiPartialMatchInput, automaticAssignInput);
+    }
+
+    private Control buildUserFilterComposite(final Composite parent, final EMFDataBindingContext context, final Text cuiNameInput, final Text cuiValueInput,
+            final Checkbox cuiPartialMatchInput, final Checkbox automaticAssignInput) {
+        final Composite mainComposite = createMainComposite(parent);
+        addMessages(mainComposite);
+
+        final Composite pageComposite = createInputsComposite(mainComposite);
+        final Composite cuiComposite = createComposite(pageComposite, 2, 20);
+
+        final PageComponentSwitchBuilder componentSwitchBuilder = new PageComponentSwitchBuilder(getElementContainer(), getDefinition(),
+                getConfiguration(), context, getMessageProvider(), getExpressionTypeFilter(), LABEL_WIDTH);
+        createCustomExpressionViewerWithCustomInfo(componentSwitchBuilder, cuiComposite, cuiNameInput);
+
+        final Composite valueComposite = createComposite(cuiComposite, 2, 0);
+        componentSwitchBuilder.createTextControl(valueComposite, cuiValueInput);
+        componentSwitchBuilder.createCheckboxControl(valueComposite, cuiPartialMatchInput);
+
+        final CheckBoxExpressionViewer viewer = componentSwitchBuilder.createCheckboxControl(pageComposite, automaticAssignInput);
+        viewer.setMessage(Messages.assignOnlyIfOneUser, IStatus.INFO);
+
         return mainComposite ;
     }
 
-    private void createCustomExpressionViewerWithCustomInfo(Composite composite, Text object, EMFDataBindingContext context) {
-        final Input input = getInput(object.getInputName()) ;
-        if(input != null){
-            final ConnectorParameter parameter = getConnectorParameter(input) ;
-            if(parameter != null){
-                final Label fieldLabel = new Label(composite, SWT.NONE);
-                if(object.getId() != null){
-                    String label = getLabel(object.getId()) ;
-                    if(input.isMandatory()){
-                        label = label + " *" ;
-                    }
-                    fieldLabel.setText(label) ;
-                }
-                fieldLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).create()) ;
-
-                final ExpressionViewer viewer = new ExpressionViewer(composite,SWT.BORDER, ConnectorConfigurationPackage.Literals.CONNECTOR_PARAMETER__EXPRESSION) ;
-                viewer.setIsPageFlowContext(false);
-                viewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
-                OrganizationRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(OrganizationRepositoryStore.class);
-                String activeOrganization = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().getString(ActorsPreferenceConstants.DEFAULT_ORGANIZATION) ;
-                String fileName = activeOrganization + "." + OrganizationRepositoryStore.ORGANIZATION_EXT;
-                viewer.setExpressionNatureProvider(new CustomUserInfoNameExpressionProvider(store, fileName));
-                viewer.setContext(getElementContainer());
-                if(input.isMandatory()){
-                    viewer.setMandatoryField(getLabel(object.getId()),context) ;
-                }
-
-                viewer.addFilter(getExpressionTypeFilter());
-                viewer.setInput(parameter) ;
-                context.bindValue(ViewersObservables.observeSingleSelection(viewer), EMFObservables.observeValue(parameter, ConnectorConfigurationPackage.Literals.CONNECTOR_PARAMETER__EXPRESSION));
-            }
-        } else {
-            //Should we create a label to warn final user?
-            BonitaStudioLog.log("WARNING: No input found with name "+object.getInputName());
-        }
+    private Composite createInputsComposite(final Composite mainComposite) {
+        final Composite pageComposite = new Composite(mainComposite, SWT.NONE) ;
+        pageComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(10, 10).spacing(3, 60).create());
+        pageComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        return pageComposite;
     }
 
-    protected String getLabel(String inputName) {
-        String label =  getMessageProvider().getFieldLabel(getDefinition(), inputName) ;
-        if(label == null){
-            label = "" ;
-        }
-
-        return label ;
+    private Composite createMainComposite(final Composite parent) {
+        final Composite mainComposite = new Composite(parent, SWT.NONE) ;
+        mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+        mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).spacing(0, 20).create());
+        return mainComposite;
     }
 
-    protected PageComponentSwitch getPageComponentSwitch(
-            EMFDataBindingContext context, final Composite pageComposite) {
-        if(componentSwitch == null){
-            componentSwitch = new PageComponentSwitch(getContainer(),pageComposite,getElementContainer(),getDefinition(),getConfiguration(),context,getMessageProvider(),getExpressionTypeFilter());
-        }
-        return componentSwitch;
+    private void addMessages(final Composite mainComposite) {
+        addLabel(mainComposite, Messages.cuiManagementMsg);
+        addLabel(mainComposite, Messages.cuiFilterActorRelatedMsg);
     }
 
+    private void createCustomExpressionViewerWithCustomInfo(final PageComponentSwitchBuilder componentSwitchBuilder, final Composite composite,
+            final Text object) {
+        final OrganizationRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(OrganizationRepositoryStore.class);
+        final String fileName = getCurrentOrganizationFileName();
+        componentSwitchBuilder.createTextControl(composite, object, new CustomUserInfoNameExpressionProvider(store, fileName));
+    }
+
+    private String getCurrentOrganizationFileName() {
+        final String activeOrganization = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
+                .getString(ActorsPreferenceConstants.DEFAULT_ORGANIZATION);
+        final String fileName = activeOrganization + "." + OrganizationRepositoryStore.ORGANIZATION_EXT;
+        return fileName;
+    }
+
+    private void addLabel(final Composite composite, final String label) {
+        final Label fieldLabel = new Label(composite, SWT.WRAP);
+        fieldLabel.setText(label);
+        fieldLabel.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+    }
+
+    private Composite createComposite(final Composite parent, final int nbColumns, final int vSpacing) {
+        final Composite composite = new Composite(parent, SWT.INHERIT_DEFAULT);
+        composite.setLayout(GridLayoutFactory.fillDefaults().numColumns(nbColumns).margins(0, 0).spacing(3, vSpacing).create());
+        composite.setLayoutData(GridDataFactory.fillDefaults().grab(false, false).span(2, 1).create());
+        return composite;
+    }
 
 }
