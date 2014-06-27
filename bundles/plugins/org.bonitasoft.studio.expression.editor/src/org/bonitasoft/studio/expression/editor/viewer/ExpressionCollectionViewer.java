@@ -303,6 +303,7 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
 
         final RowLayout rl = new RowLayout(SWT.VERTICAL);
         rl.spacing = 3;
+        rl.marginLeft = 15;
         rl.fill = true;
         buttonComposite.setLayout(rl);
         fillButtonComposite(parent,widgetFactory, buttonComposite);

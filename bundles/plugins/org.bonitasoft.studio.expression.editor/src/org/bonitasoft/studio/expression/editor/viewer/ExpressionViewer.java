@@ -172,7 +172,7 @@ IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContex
     protected DataBindingContext externalDataBindingContext;
     protected Binding expressionBinding;
     private final Map<Integer, String> messages = new HashMap<Integer, String>();
-    private ToolBar toolbar;
+    protected ToolBar toolbar;
     private final List<IExpressionToolbarContribution> toolbarContributions = new ArrayList<IExpressionToolbarContribution>();
     private final Map<String, IExpressionValidator> validatorsForType = new HashMap<String, IExpressionValidator>();
     protected boolean isPassword;
