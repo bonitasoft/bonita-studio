@@ -106,6 +106,7 @@ import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.ViewerFilter;
@@ -1299,6 +1300,11 @@ IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContex
     @Override
     public void setIsOverviewContext(final boolean isOverviewContext) {
         this.isOverviewContext = isOverviewContext;
+
+    }
+
+    public void setAutocomplitionLabelProvider(final LabelProvider labelProvider) {
+        getContentAssistText().getAutocompletion().setLabelProvider(labelProvider);
 
     }
 

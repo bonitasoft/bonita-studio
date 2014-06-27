@@ -24,56 +24,62 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.fieldassist.ContentProposalAdapter;
 import org.eclipse.jface.fieldassist.IContentProposalListener;
 import org.eclipse.jface.fieldassist.IControlContentAdapter;
+import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.widgets.Control;
 
 public class AutoCompletionField  {
 
-	private final ExpressionProposalProvider contentProposalProvider;
-	private final BonitaContentProposalAdapter contentProposalAdapter;
+    private final ExpressionProposalProvider contentProposalProvider;
+    private final BonitaContentProposalAdapter contentProposalAdapter;
 
-	public AutoCompletionField(final Control control, final IControlContentAdapter controlContentAdapter,
-			final IExpressionProposalLabelProvider proposalLabelProvider) {
+    public AutoCompletionField(final Control control, final IControlContentAdapter controlContentAdapter,
+            final IExpressionProposalLabelProvider proposalLabelProvider) {
 
-		contentProposalProvider = new ExpressionProposalProvider(proposalLabelProvider);
-		contentProposalProvider.setFiltering(true);
-		contentProposalAdapter = new BonitaContentProposalAdapter(control, controlContentAdapter, contentProposalProvider,null, null);
-		contentProposalAdapter.setLabelProvider(new ExpressionLabelProvider() {
-			@Override
-			public String getText(Object expression) {
-				return ((ExpressionProposal) expression).getLabel();
-			}
-		});
-		contentProposalAdapter.setPropagateKeys(true);
-		contentProposalAdapter.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
-	}
+        contentProposalProvider = new ExpressionProposalProvider(proposalLabelProvider);
+        contentProposalProvider.setFiltering(true);
+        contentProposalAdapter = new BonitaContentProposalAdapter(control, controlContentAdapter, contentProposalProvider, null, null);
+        contentProposalAdapter.setLabelProvider(new ExpressionLabelProvider() {
 
-	public void setExpressionProposalLabelProvider(IExpressionProposalLabelProvider labelProvider) {
-		contentProposalProvider.setLabelProvider(labelProvider);
-		// contentProposalAdapter.setContentProposalProvider(contentProposalProvider);
-	}
+            @Override
+            public String getText(final Object expression) {
+                return ((ExpressionProposal) expression).getLabel();
+            }
+        });
+        contentProposalAdapter.setPropagateKeys(true);
+        contentProposalAdapter.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
+    }
 
-	public void addExpressionProposalListener(IContentProposalListener listener) {
-		contentProposalAdapter.addContentProposalListener(listener);
-	}
+    public void setExpressionProposalLabelProvider(final IExpressionProposalLabelProvider labelProvider) {
+        contentProposalProvider.setLabelProvider(labelProvider);
+        // contentProposalAdapter.setContentProposalProvider(contentProposalProvider);
+    }
 
-	public void setProposals(final Expression[] proposals) {
-		contentProposalProvider.setProposals(proposals);
-	}
+    public void addExpressionProposalListener(final IContentProposalListener listener) {
+        contentProposalAdapter.addContentProposalListener(listener);
+    }
 
-	public ExpressionProposalProvider getContentProposalProvider() {
-		return contentProposalProvider;
-	}
+    public void setProposals(final Expression[] proposals) {
+        contentProposalProvider.setProposals(proposals);
+    }
 
-	public BonitaContentProposalAdapter getContentProposalAdapter() {
-		return contentProposalAdapter;
-	}
+    public ExpressionProposalProvider getContentProposalProvider() {
+        return contentProposalProvider;
+    }
 
-	public void setContext(EObject context) {
-		contentProposalAdapter.setContext(context);
-	}
+    public BonitaContentProposalAdapter getContentProposalAdapter() {
+        return contentProposalAdapter;
+    }
 
-	public void setFilteredExpressionType(ArrayList<String> filteredExpressionType) {
-		contentProposalAdapter.setFilteredExpressionType(filteredExpressionType);
-	}
+    public void setContext(final EObject context) {
+        contentProposalAdapter.setContext(context);
+    }
+
+    public void setFilteredExpressionType(final ArrayList<String> filteredExpressionType) {
+        contentProposalAdapter.setFilteredExpressionType(filteredExpressionType);
+    }
+
+    public void setLabelProvider(final LabelProvider labelProvider) {
+        contentProposalAdapter.setLabelProvider(labelProvider);
+    }
 
 }

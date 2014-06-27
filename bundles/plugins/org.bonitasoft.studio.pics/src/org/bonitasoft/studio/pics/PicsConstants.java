@@ -270,32 +270,34 @@ public class PicsConstants {
     public static String clear = "clear.png";
 
     public static String enveloppe = "enveloppe.png";
-    
+
+    public static String customUserInfo = "actors_mapping.png";
+
     public static String coolbar_configure_48 = "coolbar/48/configure.png";
     public static String coolbar_configure_disabled_48 = "coolbar/48/configure_disabled.png";
     public static String coolbar_configure_16 = "coolbar/24/configure.png";
     public static String coolbar_configure_disabled_16 = "coolbar/24/configure_disabled.png";
-    
+
     public static String coolbar_copy_48 = "coolbar/48/copy.png";
     public static String coolbar_copy_disabled_48 = "coolbar/48/copy_disabled.png";
     public static String coolbar_copy_16 = "coolbar/24/copy.png";
     public static String coolbar_copy_disabled_16 = "coolbar/24/copy_disabled.png";
-    
+
     public static String coolbar_debug_48 = "coolbar/48/debug.png";
     public static String coolbar_debug_disabled_48 = "coolbar/48/debug_disabled.png";
     public static String coolbar_debug_16 = "coolbar/24/debug.png";
     public static String coolbar_debug_disabled_16 = "coolbar/24/debug_disabled.png";
-    
+
     public static String coolbar_export_48 = "coolbar/48/export.png";
     public static String coolbar_export_disabled_48 = "coolbar/48/export_disabled.png";
     public static String coolbar_export_16 = "coolbar/24/export.png";
     public static String coolbar_export_disabled_16 = "coolbar/24/export_disabled.png";
-    
+
     public static String coolbar_guidance_48 = "coolbar/48/guidance.png";
     public static String coolbar_guidance_disabled_48 = "coolbar/48/guidance_disabled.png";
     public static String coolbar_guidance_16 = "coolbar/24/guidance.png";
     public static String coolbar_guidance_disabled_16 = "coolbar/24/guidance_disabled.png";
-    
+
     public static String coolbar_help_48 = "coolbar/48/help.png";
     public static String coolbar_help_disabled_48 = "coolbar/48/help_disabled.png";
     public static String coolbar_help_16 = "coolbar/24/help.png";
@@ -305,62 +307,62 @@ public class PicsConstants {
     public static String coolbar_import_disabled_48 = "coolbar/48/import_disabled.png";
     public static String coolbar_import_16 = "coolbar/24/import.png";
     public static String coolbar_import_disabled_16 = "coolbar/24/import_disabled.png";
-    
+
     public static String coolbar_new_48 = "coolbar/48/new.png";
     public static String coolbar_new_disabled_48 = "coolbar/48/new_disabled.png";
     public static String coolbar_new_16 = "coolbar/24/new.png";
     public static String coolbar_new_disabled_16 = "coolbar/24/new_disabled.png";
-    
+
     public static String coolbar_open_48 = "coolbar/48/open.png";
     public static String coolbar_open_disabled_48 = "coolbar/48/open_disabled.png";
     public static String coolbar_open_16 = "coolbar/24/open.png";
     public static String coolbar_open_disabled_16 = "coolbar/24/open_disabled.png";
-    
+
     public static String coolbar_paste_48 = "coolbar/48/paste.png";
     public static String coolbar_paste_disabled_48 = "coolbar/48/paste_disabled.png";
     public static String coolbar_paste_16 = "coolbar/24/paste.png";
     public static String coolbar_paste_disabled_16 = "coolbar/24/paste_disabled.png";
-    
+
     public static String coolbar_portal_48 = "coolbar/48/portal.png";
     public static String coolbar_portal_disabled_48 = "coolbar/48/portal_disabled.png";
     public static String coolbar_portal_16 = "coolbar/24/portal.png";
     public static String coolbar_portal_disabled_16 = "coolbar/24/portal_disabled.png";
-    
+
     public static String coolbar_preferences_48 = "coolbar/48/preferences.png";
     public static String coolbar_preferences_disabled_48 = "coolbar/48/preferences_disabled.png";
     public static String coolbar_preferences_16 = "coolbar/24/preferences.png";
     public static String coolbar_preferences_disabled_16 = "coolbar/24/preferences_disabled.png";
-    
+
     public static String coolbar_preview_48 = "coolbar/48/preview.png";
     public static String coolbar_preview_disabled_48 = "coolbar/48/preview_disabled.png";
     public static String coolbar_preview_16 = "coolbar/24/preview.png";
     public static String coolbar_preview_disabled_16 = "coolbar/24/preview_disabled.png";
-    
+
     public static String coolbar_print_48 = "coolbar/48/print.png";
     public static String coolbar_print_disabled_48 = "coolbar/48/print_disabled.png";
     public static String coolbar_print_16 = "coolbar/24/print.png";
     public static String coolbar_print_disabled_16 = "coolbar/24/print_disabled.png";
-    
+
     public static String coolbar_profile_48 = "coolbar/48/profile.png";
     public static String coolbar_profile_disabled_48 = "coolbar/48/profile_disabled.png";
     public static String coolbar_profile_16 = "coolbar/24/profile.png";
     public static String coolbar_profile_disabled_16 = "coolbar/24/profile_disabled.png";
-    
+
     public static String coolbar_run_48 = "coolbar/48/run.png";
     public static String coolbar_run_disabled_48 = "coolbar/48/run_disabled.png";
     public static String coolbar_run_16 = "coolbar/24/run.png";
     public static String coolbar_run_disabled_16 = "coolbar/24/run_disabled.png";
-    
+
     public static String coolbar_save_48 = "coolbar/48/save.png";
     public static String coolbar_save_disabled_48 = "coolbar/48/save_disabled.png";
     public static String coolbar_save_16 = "coolbar/24/save.png";
     public static String coolbar_save_disabled_16 = "coolbar/24/save_disabled.png";
-    
+
     public static String coolbar_welcome_48 = "coolbar/48/welcome.png";
     public static String coolbar_welcome_disabled_48 = "coolbar/48/welcome_disabled.png";
     public static String coolbar_welcome_16 = "coolbar/24/welcome.png";
     public static String coolbar_welcome_disabled_16 = "coolbar/24/welcome_disabled.png";
 
-    
+
 
 }
