@@ -233,7 +233,7 @@ public abstract class AbstractFormsSection extends AbstractBonitaDescriptionSect
         tree.getViewer().addDoubleClickListener(new IDoubleClickListener() {
             @Override
             public void doubleClick(final DoubleClickEvent event) {
-                editFormInTree(tree);
+                editFormInTree();
             }
         });
 
@@ -391,7 +391,7 @@ public abstract class AbstractFormsSection extends AbstractBonitaDescriptionSect
         editButton.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(final SelectionEvent e) {
-                editFormInTree(tree);
+                editFormInTree();
             }
         });
         editButton.setEnabled(false);
@@ -513,12 +513,14 @@ public abstract class AbstractFormsSection extends AbstractBonitaDescriptionSect
     /**
      * @param tree
      */
-    private void editFormInTree(final FilteredTree tree) {
-        final ITreeSelection iTreeSelection = (ITreeSelection) tree.getViewer().getSelection();
-        if (tree != null && iTreeSelection.size() > 0) {
-            final Object selection = iTreeSelection.getFirstElement();
-            if (selection instanceof Form) {
-                FormsUtils.openDiagram((Form) selection,getEditingDomain());
+    private void editFormInTree() {
+        if (tree != null && !tree.isDisposed()) {
+            final ITreeSelection iTreeSelection = (ITreeSelection) tree.getViewer().getSelection();
+            if (tree != null && iTreeSelection.size() > 0) {
+                final Object selection = iTreeSelection.getFirstElement();
+                if (selection instanceof Form) {
+                    FormsUtils.openDiagram((Form) selection, getEditingDomain());
+                }
             }
         }
     }
