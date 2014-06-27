@@ -182,9 +182,9 @@ public class RepositoryManager {
         if(repository == null){
             repository = createRepository(repositoryName) ;
         }
-        if (!repository.getProject().exists()) {
-            repository.create();
-        }
+        // if (!repository.getProject().exists()) {
+        repository.create();
+        //}
         repository.open();
         preferenceStore.setValue(RepositoryPreferenceConstant.CURRENT_REPOSITORY,repositoryName) ;
     }
