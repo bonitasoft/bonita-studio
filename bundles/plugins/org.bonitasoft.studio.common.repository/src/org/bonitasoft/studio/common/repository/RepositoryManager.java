@@ -89,7 +89,7 @@ public class RepositoryManager {
 
     }
 
-    private IRepository createRepository(final String name) {
+    public IRepository createRepository(final String name) {
         try {
             final IRepository repository = (IRepository) repositoryImplementationElement.createExecutableExtension(CLASS) ;
             repository.createRepository(name) ;
