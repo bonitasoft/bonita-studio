@@ -79,7 +79,6 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -125,7 +124,8 @@ public abstract class AbstractFormsSection extends AbstractBonitaDescriptionSect
         radioComposite = createRadioButtons(mainComposite);
 
         contentComposite = new MagicComposite(mainComposite, SWT.NONE);
-        contentComposite.setLayout(new RowLayout());
+        contentComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).create());
+        contentComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         contentComposite.setBackground(mainComposite.getBackground());
 
         pageFlowComposite = createPageFlowComposite(contentComposite);
@@ -137,6 +137,7 @@ public abstract class AbstractFormsSection extends AbstractBonitaDescriptionSect
      */
     protected Composite createPageFlowComposite(final Composite parent) {
         final Composite mainComposite = getWidgetFactory().createComposite(parent, SWT.NONE);
+        mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).create());
 
         final Composite pageFlowComposite = getWidgetFactory().createComposite(mainComposite, SWT.NONE);
@@ -232,7 +233,7 @@ public abstract class AbstractFormsSection extends AbstractBonitaDescriptionSect
         tree.getViewer().addDoubleClickListener(new IDoubleClickListener() {
             @Override
             public void doubleClick(final DoubleClickEvent event) {
-                editFormInTree(tree);
+                editFormInTree();
             }
         });
 
@@ -353,7 +354,7 @@ public abstract class AbstractFormsSection extends AbstractBonitaDescriptionSect
      * @return
      */
     public static GridData createPageFlowTreeGridData() {
-        return GridDataFactory.fillDefaults().grab(true, true).hint(300, PropertySectionUtil.LIST_HEIGHT).create();
+        return GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, PropertySectionUtil.LIST_HEIGHT).create();
     }
 
     /**
@@ -390,7 +391,7 @@ public abstract class AbstractFormsSection extends AbstractBonitaDescriptionSect
         editButton.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(final SelectionEvent e) {
-                editFormInTree(tree);
+                editFormInTree();
             }
         });
         editButton.setEnabled(false);
@@ -512,12 +513,14 @@ public abstract class AbstractFormsSection extends AbstractBonitaDescriptionSect
     /**
      * @param tree
      */
-    private void editFormInTree(final FilteredTree tree) {
-        final ITreeSelection iTreeSelection = (ITreeSelection) tree.getViewer().getSelection();
-        if (tree != null && iTreeSelection.size() > 0) {
-            final Object selection = iTreeSelection.getFirstElement();
-            if (selection instanceof Form) {
-                FormsUtils.openDiagram((Form) selection,getEditingDomain());
+    private void editFormInTree() {
+        if (tree != null && !tree.isDisposed()) {
+            final ITreeSelection iTreeSelection = (ITreeSelection) tree.getViewer().getSelection();
+            if (tree != null && iTreeSelection.size() > 0) {
+                final Object selection = iTreeSelection.getFirstElement();
+                if (selection instanceof Form) {
+                    FormsUtils.openDiagram((Form) selection, getEditingDomain());
+                }
             }
         }
     }
