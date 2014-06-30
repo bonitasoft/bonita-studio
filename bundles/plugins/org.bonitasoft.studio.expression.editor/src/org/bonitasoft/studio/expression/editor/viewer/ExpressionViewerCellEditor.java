@@ -24,6 +24,7 @@ import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.jface.fieldassist.ControlDecoration;
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.ISelection;
@@ -64,12 +65,12 @@ public class ExpressionViewerCellEditor extends CellEditor {
 
     private ControlDecoration deleteRow;
 
-    private SelectionListener removeRowListener;
+    private final SelectionListener removeRowListener;
 
-    private Composite parent;
+    private final Composite parent;
 
-    public ExpressionViewerCellEditor(ColumnViewer columnViewer,
-            Composite parent, EditingDomain editingDomain, int colIndex, SelectionListener removeRowListener) {
+    public ExpressionViewerCellEditor(final ColumnViewer columnViewer,
+            final Composite parent, final EditingDomain editingDomain, final int colIndex, final SelectionListener removeRowListener) {
         super(parent);
         this.editingDomain = editingDomain;
         viewer.setEditingDomain(editingDomain);
@@ -79,14 +80,15 @@ public class ExpressionViewerCellEditor extends CellEditor {
         this.parent = parent;
     }
 
-    private void createRemoveRowDecorator(final Composite parent, SelectionListener removeRowListener) {
+    private void createRemoveRowDecorator(final Composite parent, final SelectionListener removeRowListener) {
         deleteRow = new ControlDecoration(parent.getParent(), SWT.LEFT | SWT.TOP) {
 
-            protected org.eclipse.swt.graphics.Rectangle getDecorationRectangle(Control targetControl) {
-                Rectangle r = super.getDecorationRectangle(targetControl);
+            @Override
+            protected org.eclipse.swt.graphics.Rectangle getDecorationRectangle(final Control targetControl) {
+                final Rectangle r = super.getDecorationRectangle(targetControl);
                 if (ExpressionViewerCellEditor.this.getControl() != null && ExpressionViewerCellEditor.this.getControl().getBounds() != null) {
                     final Rectangle bounds = ExpressionViewerCellEditor.this.getControl().getBounds();
-                    Point p = new Point(0, bounds.y);
+                    final Point p = new Point(0, bounds.y);
                     int y = p.y;
 
                     int headerOffeset = 0;
@@ -97,8 +99,8 @@ public class ExpressionViewerCellEditor extends CellEditor {
                     }
                     y = y + headerOffeset;
 
-                    Point newPoint = ((Table) parent).getVerticalBar().getSize();
-                    r.y = r.y + (y % newPoint.y);
+                    final Point newPoint = ((Table) parent).getVerticalBar().getSize();
+                    r.y = r.y + y % newPoint.y;
                     r.width = r.width + 10;
                     return r;
                 }
@@ -136,10 +138,11 @@ public class ExpressionViewerCellEditor extends CellEditor {
         viewer = new CellExpressionViewer(parent, SWT.NONE, null, editingDomain, null);
 
         final Text text = viewer.getTextControl();
+        text.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(20, SWT.DEFAULT).create());
         text.addSelectionListener(new SelectionAdapter() {
 
             @Override
-            public void widgetDefaultSelected(SelectionEvent e) {
+            public void widgetDefaultSelected(final SelectionEvent e) {
                 handleDefaultSelection(e);
             }
         });
@@ -148,12 +151,12 @@ public class ExpressionViewerCellEditor extends CellEditor {
 
             // hook key pressed - see PR 14201
             @Override
-            public void keyPressed(KeyEvent e) {
+            public void keyPressed(final KeyEvent e) {
                 keyReleaseOccured(e);
 
                 // as a result of processing the above call, clients may have
                 // disposed this cell editor
-                if ((getControl() == null) || getControl().isDisposed()) {
+                if (getControl() == null || getControl().isDisposed()) {
                     return;
                 }
             }
@@ -161,7 +164,7 @@ public class ExpressionViewerCellEditor extends CellEditor {
         text.addTraverseListener(new TraverseListener() {
 
             @Override
-            public void keyTraversed(TraverseEvent e) {
+            public void keyTraversed(final TraverseEvent e) {
                 if (e.detail == SWT.TRAVERSE_ESCAPE
                         || e.detail == SWT.TRAVERSE_RETURN) {
                     e.doit = false;
@@ -173,7 +176,7 @@ public class ExpressionViewerCellEditor extends CellEditor {
         focusListener = new Listener() {
 
             @Override
-            public void handleEvent(Event e) {
+            public void handleEvent(final Event e) {
                 if (e.widget != null) {
                     final Composite widgetParentOFEvent = ((Control) e.widget).getParent();
                     if (viewerControl != null
@@ -204,7 +207,7 @@ public class ExpressionViewerCellEditor extends CellEditor {
      */
     @Override
     protected Object doGetValue() {
-        Expression exp = (Expression) ((IStructuredSelection) viewer
+        final Expression exp = (Expression) ((IStructuredSelection) viewer
                 .getSelection()).getFirstElement();
         return exp;
     }
@@ -230,7 +233,7 @@ public class ExpressionViewerCellEditor extends CellEditor {
      * @see org.eclipse.jface.viewers.CellEditor#doSetValue(java.lang.Object)
      */
     @Override
-    protected void doSetValue(Object value) {
+    protected void doSetValue(final Object value) {
         Expression exp = (Expression) ((IStructuredSelection) viewer
                 .getSelection()).getFirstElement();
         if (exp == null && value instanceof Expression) {
@@ -241,11 +244,11 @@ public class ExpressionViewerCellEditor extends CellEditor {
         }
     }
 
-    public void setInput(Object input) {
+    public void setInput(final Object input) {
         viewer.setInput(input);
     }
 
-    public void setSelection(ISelection selection) {
+    public void setSelection(final ISelection selection) {
         viewer.setSelection(selection);
     }
 
@@ -289,27 +292,27 @@ public class ExpressionViewerCellEditor extends CellEditor {
      * 
      * @since 3.0
      */
-    protected void handleDefaultSelection(SelectionEvent event) {
+    protected void handleDefaultSelection(final SelectionEvent event) {
         // same with enter-key handling code in keyReleaseOccured(e);
         fireApplyEditorValue();
         deactivate();
     }
 
-    public void addFilter(ViewerFilter filter) {
+    public void addFilter(final ViewerFilter filter) {
         viewer.addFilter(filter);
     }
 
-    public void setContext(EObject context) {
+    public void setContext(final EObject context) {
         viewer.setContext(context);
     }
 
     public void setExpressionNatureProvider(
-            IExpressionNatureProvider expressionNatureProvider) {
+            final IExpressionNatureProvider expressionNatureProvider) {
         viewer.setExpressionNatureProvider(expressionNatureProvider);
     }
 
     public void setExpressionProposalLableProvider(
-            IExpressionProposalLabelProvider expressionProposalLabelProvider) {
+            final IExpressionProposalLabelProvider expressionProposalLabelProvider) {
         viewer.setExpressionProposalLableProvider(expressionProposalLabelProvider);
     }
 
