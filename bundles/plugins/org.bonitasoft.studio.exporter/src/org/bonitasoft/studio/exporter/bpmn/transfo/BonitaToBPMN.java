@@ -808,14 +808,16 @@ public class BonitaToBPMN implements IBonitaTransformer {
 
                     edge.setId(ModelHelper.getEObjectID(editPart.getNotationView()));
                     bpmnPlane.getDiagramElement().add(edge);
-                    if(bonitaFlow instanceof SequenceFlow && source instanceof TGateway){
-                        if(bonitaFlow.isIsDefault()){
+                    if (bonitaFlow.isIsDefault()) {
+                        if (bonitaFlow instanceof SequenceFlow) {
                             if(source instanceof TInclusiveGateway){
                                 ((TInclusiveGateway) source).setDefault(bpmnFlow.getId());
                             } else if(source instanceof TExclusiveGateway){
                                 ((TExclusiveGateway) source).setDefault(bpmnFlow.getId());
                             } else if(source instanceof TComplexGateway){
                                 ((TComplexGateway) source).setDefault(bpmnFlow.getId());
+                            } else if (source instanceof TActivity) {
+                                ((TActivity) source).setDefault(bpmnFlow.getId());
                             }
                         }
                     }
