@@ -156,6 +156,7 @@ public class DuplicateDiagramOperation implements IRunnableWithProgress {
                         protected CommandResult doExecuteWithResult(final IProgressMonitor arg0, final IAdaptable arg1) throws ExecutionException {
                             try {
                                 changePathAndCopyResources(diagram, newDiagram, createEditingDomain, copier);
+                                newDiagram.eResource().save(ProcessDiagramEditorUtil.getSaveOptions());
                             } catch (final IOException e) {
                                 BonitaStudioLog.error(e);
                                 return CommandResult.newErrorCommandResult(e);
