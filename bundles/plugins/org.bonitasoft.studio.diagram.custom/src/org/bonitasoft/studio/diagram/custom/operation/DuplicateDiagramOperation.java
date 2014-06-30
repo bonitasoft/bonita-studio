@@ -53,6 +53,7 @@ import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.ResourceFile;
 import org.bonitasoft.studio.model.process.ResourceFolder;
+import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditorUtil;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.operations.OperationHistoryFactory;
 import org.eclipse.core.resources.IFile;
@@ -119,14 +120,15 @@ public class DuplicateDiagramOperation implements IRunnableWithProgress {
 
         }
 
-        try {
-            if (newDiagram.eResource() != null) {
-                newDiagram.eResource().save(Collections.EMPTY_MAP);
+        if (!pools.isEmpty()) {
+            try {
+                if (newDiagram.eResource() != null) {
+                    newDiagram.eResource().save(Collections.EMPTY_MAP);
+                }
+            } catch (final IOException e) {
+                BonitaStudioLog.error(e);
             }
-        } catch (final IOException e) {
-            BonitaStudioLog.error(e);
         }
-
 
     }
 
@@ -155,6 +157,7 @@ public class DuplicateDiagramOperation implements IRunnableWithProgress {
                         protected CommandResult doExecuteWithResult(final IProgressMonitor arg0, final IAdaptable arg1) throws ExecutionException {
                             try {
                                 changePathAndCopyResources(diagram, newDiagram, createEditingDomain, copier);
+                                newDiagram.eResource().save(ProcessDiagramEditorUtil.getSaveOptions());
                             } catch (final IOException e) {
                                 BonitaStudioLog.error(e);
                                 return CommandResult.newErrorCommandResult(e);
