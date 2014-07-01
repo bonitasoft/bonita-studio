@@ -18,6 +18,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.OpenNameAndVersionForDiagramDialog.ProcessesNameVersion;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.repository.Repository;
@@ -119,7 +120,7 @@ public class RenameDiagramOperation implements IRunnableWithProgress {
 
         }
 
-        final DiagramFileStore fStore = diagramStore.getDiagram(diagramName, diagramVersion);
+        final DiagramFileStore fStore = diagramStore.getChild(NamingUtils.toDiagramFilename(diagramName, diagramVersion));
         IWorkbenchPart partToActivate = fStore.open();
         final MainProcess mainProcess = fStore.getContent();
         for (final Form form : forms) {
