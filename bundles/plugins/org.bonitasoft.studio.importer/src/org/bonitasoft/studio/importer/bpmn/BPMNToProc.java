@@ -1051,43 +1051,48 @@ public class BPMNToProc extends ToProcProcessor {
         }
     }
 
-    private boolean isSequenceFlowDefault(final TSequenceFlow sequenceFlow,
-            final String sequenceFlowID) {
+    private boolean isSequenceFlowDefault(final TSequenceFlow sequenceFlow, final String sequenceFlowID) {
         boolean isDefault = false;
-        final String sourceRef = sequenceFlow.getSourceRef();
-        if (sourceRef != null && sourceRef.length() != 0) {
-            for (final TProcess tProcess : bpmnProcess) {
-                for (final TFlowElement tFlowElement : tProcess.getFlowElement()) {
-                    if (sourceRef.equals(tFlowElement.getId())) {
-                        if (tFlowElement instanceof TInclusiveGateway) {
-                            if (sequenceFlowID.equals(
-                                    ((TInclusiveGateway) tFlowElement)
-                                    .getDefault())) {
-                                isDefault = true;
+        if (sequenceFlowID != null) {
+            final String sourceRef = sequenceFlow.getSourceRef();
+            if (sourceRef != null && sourceRef.length() != 0) {
+                for (final TProcess tProcess : bpmnProcess) {
+                    for (final TFlowElement tFlowElement : tProcess.getFlowElement()) {
+                        if (sourceRef.equals(tFlowElement.getId())) {
+                            if (tFlowElement instanceof TInclusiveGateway) {
+                                if (sequenceFlowID.equals(
+                                        ((TInclusiveGateway) tFlowElement)
+                                        .getDefault())) {
+                                    isDefault = true;
+                                }
+                            } else if (tFlowElement instanceof TExclusiveGateway) {
+                                if (sequenceFlowID.equals(
+                                        ((TExclusiveGateway) tFlowElement)
+                                        .getDefault())) {
+                                    isDefault = true;
+                                }
+                            } else if (tFlowElement instanceof TComplexGateway) {
+                                if (sequenceFlowID.equals(
+                                        ((TComplexGateway) tFlowElement)
+                                        .getDefault())) {
+                                    isDefault = true;
+                                }
+                            } else if (tFlowElement instanceof TActivity) {
+                                if (sequenceFlowID.equals(
+                                        ((TActivity) tFlowElement)
+                                        .getDefault())) {
+                                    isDefault = true;
+                                }
                             }
-                        } else if (tFlowElement instanceof TExclusiveGateway) {
-                            if (sequenceFlowID.equals(
-                                    ((TExclusiveGateway) tFlowElement)
-                                    .getDefault())) {
-                                isDefault = true;
-                            }
-                        } else if (tFlowElement instanceof TComplexGateway) {
-                            if (sequenceFlowID.equals(
-                                    ((TComplexGateway) tFlowElement)
-                                    .getDefault())) {
-                                isDefault = true;
-                            }
-                        } else if (tFlowElement instanceof TActivity) {
-                            if (sequenceFlowID.equals(
-                                    ((TActivity) tFlowElement)
-                                    .getDefault())) {
-                                isDefault = true;
-                            }
+                            break;
                         }
-                        break;
                     }
                 }
             }
+        } else {
+            final String sourceRef = sequenceFlow.getSourceRef() != null ? sequenceFlow.getSourceRef() : "<Unspecified source>";
+            final String targetRef = sequenceFlow.getTargetRef() != null ? sequenceFlow.getTargetRef() : "<Unspecified Target>";
+            BonitaStudioLog.log("The model is not clean. There is a missing id on a SequenceFlow from " + sourceRef + "to " + targetRef);
         }
         return isDefault;
     }
