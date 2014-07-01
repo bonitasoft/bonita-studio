@@ -82,6 +82,7 @@ public class DuplicateDiagramOperation implements IRunnableWithProgress {
     private String diagramVersion;
     private String diagramName;
     private List<ProcessesNameVersion> pools = new ArrayList<ProcessesNameVersion>();
+    private final DiagramRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
 
     /*
      * (non-Javadoc)
@@ -119,17 +120,15 @@ public class DuplicateDiagramOperation implements IRunnableWithProgress {
             }
 
         }
-
         if (!pools.isEmpty()) {
             try {
                 if (newDiagram.eResource() != null) {
-                    newDiagram.eResource().save(Collections.EMPTY_MAP);
+                    newDiagram.eResource().save(ProcessDiagramEditorUtil.getSaveOptions());
                 }
             } catch (final IOException e) {
                 BonitaStudioLog.error(e);
             }
         }
-
     }
 
     private MainProcess copyDiagram() {
