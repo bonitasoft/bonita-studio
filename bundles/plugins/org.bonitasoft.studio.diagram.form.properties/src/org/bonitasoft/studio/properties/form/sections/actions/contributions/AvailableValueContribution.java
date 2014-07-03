@@ -21,11 +21,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection;
-import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.form.properties.i18n.Messages;
 import org.bonitasoft.studio.model.expression.Expression;
@@ -64,27 +62,22 @@ public class AvailableValueContribution extends InitialValueContribution {
     private final Map<String,Data> datas = new HashMap<String, Data>();
 
     @Override
-    public void createControl(final Composite composite, TabbedPropertySheetWidgetFactory widgetFactory,ExtensibleGridPropertySection extensibleGridPropertySection) {
+    public void createControl(final Composite composite, final TabbedPropertySheetWidgetFactory widgetFactory,final ExtensibleGridPropertySection extensibleGridPropertySection) {
 
-        List<Data> dataList = ModelHelper.getAccessibleData(widget,ProcessPackage.eINSTANCE.getEnumType());
-        for (Data data : dataList) {
+        final List<Data> dataList = ModelHelper.getAccessibleData(widget,ProcessPackage.eINSTANCE.getEnumType());
+        for (final Data data : dataList) {
             datas.put(data.getName(),data);
         }
         super.createControl(composite, widgetFactory, extensibleGridPropertySection);
     }
 
     @Override
-    protected void doCreateControl(TabbedPropertySheetWidgetFactory widgetFactory) {
+    protected void doCreateControl(final TabbedPropertySheetWidgetFactory widgetFactory) {
         /*Create combo for availavle value*/
         composite.setLayout(new GridLayout(3, false));
         expressionViewer = new ExpressionViewer(composite,SWT.BORDER,widgetFactory,editingDomain, FormPackage.Literals.WIDGET__INPUT_EXPRESSION, true) ;
-       
-        expressionViewer.addFilter(new AvailableExpressionTypeFilter(new String[]{
-    			ExpressionConstants.CONSTANT_TYPE,
-    			ExpressionConstants.PARAMETER_TYPE,
-    			ExpressionConstants.VARIABLE_TYPE,
-    			ExpressionConstants.SCRIPT_TYPE
-        }));
+
+        expressionViewer.addFilter(getExpressionViewerFilter());
         expressionViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         if(widget instanceof SuggestBox){
             expressionViewer.setMessage(Messages.data_tooltip_list+" ("+Messages.mapUnsupported+")",IStatus.INFO);
@@ -98,7 +91,7 @@ public class AvailableValueContribution extends InitialValueContribution {
         generateButton.setImage(Pics.getImage("filenew.png"));
         generateButton.addSelectionListener(new SelectionAdapter() {
             @Override
-            public void widgetSelected(SelectionEvent e) {
+            public void widgetSelected(final SelectionEvent e) {
                 generateScript();
             }
         });
@@ -108,11 +101,11 @@ public class AvailableValueContribution extends InitialValueContribution {
     }
 
     protected void generateScript() {
-        ElementListSelectionDialog d = new ElementListSelectionDialog(Display.getDefault().getActiveShell(),new LabelProvider(){
+        final ElementListSelectionDialog d = new ElementListSelectionDialog(Display.getDefault().getActiveShell(),new LabelProvider(){
             @Override
-            public String getText(Object element) {
-                String name =  ((EnumType)element).getName();
-                String doc =  ((EnumType)element).getDocumentation();
+            public String getText(final Object element) {
+                final String name =  ((EnumType)element).getName();
+                final String doc =  ((EnumType)element).getDocumentation();
                 String label = name ;
                 if(doc != null && !doc.isEmpty()){
                     label = label + " -- " + doc ;
@@ -122,8 +115,8 @@ public class AvailableValueContribution extends InitialValueContribution {
         });
         d.setTitle(Messages.selectListOfOptions);
         d.setMessage(Messages.selectListOfOptions);
-        MainProcess prc = ModelHelper.getMainProcess(widget);
-        List<EnumType> selectedElements = ModelHelper.getAllUserDatatype(prc);
+        final MainProcess prc = ModelHelper.getMainProcess(widget);
+        final List<EnumType> selectedElements = ModelHelper.getAllUserDatatype(prc);
         d.setAllowDuplicates(false);
         d.setEmptyListMessage(Messages.noListOfOptionsAvailable);
         d.setEmptySelectionMessage(Messages.noListOfOptionSelected);
@@ -137,7 +130,7 @@ public class AvailableValueContribution extends InitialValueContribution {
     }
 
     @Override
-    public boolean isRelevantFor(EObject eObject) {
+    public boolean isRelevantFor(final EObject eObject) {
         return eObject instanceof MultipleValuatedFormField;
     }
 
