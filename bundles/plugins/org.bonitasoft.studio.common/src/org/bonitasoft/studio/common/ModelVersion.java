@@ -45,19 +45,20 @@ public class ModelVersion {
     public static final String VERSION_6_3_0_002 = "6.3.0-002";
     public static final String VERSION_6_3_1_001 = "6.3.1-001";
     public static final String VERSION_6_3_2_001 = "6.3.2-001";
-    public static final String CURRENT_VERSION = VERSION_6_3_2_001;
+    public static final String VERSION_6_3_3_001 = "6.3.3-001";
+    public static final String CURRENT_VERSION = VERSION_6_3_3_001;
 
-    public static boolean sameVersion(String version) {
+    public static boolean sameVersion(final String version) {
         return CURRENT_VERSION.equals(version);
 
     }
 
-    public static boolean sameMinorVersion(String version) {
+    public static boolean sameMinorVersion(final String version) {
         if (version == null) {
             return false;
         }
-        String minor = CURRENT_VERSION.substring(0, CURRENT_VERSION.lastIndexOf("."));
-        String[] split = version.split("\\.");
+        final String minor = CURRENT_VERSION.substring(0, CURRENT_VERSION.lastIndexOf("."));
+        final String[] split = version.split("\\.");
         String testedVersion = version;
         if (split.length > 2) {
             testedVersion = split[0] + "." + split[1];
