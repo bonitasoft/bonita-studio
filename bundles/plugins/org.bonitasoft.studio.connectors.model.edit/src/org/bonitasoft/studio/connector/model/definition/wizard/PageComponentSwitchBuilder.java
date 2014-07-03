@@ -18,6 +18,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.common.jface.BonitaStudioFontRegistry;
 import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.connector.model.definition.Array;
@@ -512,8 +513,17 @@ public class PageComponentSwitchBuilder {
     }
 
     public Section createGroupControl(final Composite composite, final Group object) {
-        final Section groupSection = new Section(composite, Section.NO_TITLE_FOCUS_BOX | Section.TWISTIE | Section.CLIENT_INDENT);
+        final String desc = messageProvider.getFieldDescription(definition, object.getId());
+        int style = Section.NO_TITLE_FOCUS_BOX | Section.TWISTIE | Section.CLIENT_INDENT;
+        if (desc != null && !desc.isEmpty()) {
+            style = style | Section.DESCRIPTION;
+        }
+        final Section groupSection = new Section(composite, style);
         groupSection.setText(getLabel(object.getId()));
+        groupSection.setFont(BonitaStudioFontRegistry.getBoldFont());
+        if (desc != null && !desc.isEmpty()) {
+            groupSection.setDescription(desc);
+        }
         groupSection.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 1).create());
         return groupSection;
     }
