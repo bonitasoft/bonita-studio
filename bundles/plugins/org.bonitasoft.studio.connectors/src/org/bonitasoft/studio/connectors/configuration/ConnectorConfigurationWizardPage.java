@@ -97,8 +97,8 @@ public class ConnectorConfigurationWizardPage extends WizardPage implements IPro
         super(ConnectorConfigurationWizardPage.class.getName());
         setTitle(Messages.connectors) ;
         setDescription(Messages.connectorsConfigurationDescription) ;
-        defStore = (IDefinitionRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class) ;
-        implStore = (IImplementationRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorImplRepositoryStore.class) ;
+        defStore = RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class) ;
+        implStore = RepositoryManager.getInstance().getRepositoryStore(ConnectorImplRepositoryStore.class) ;
         resourceProvider= DefinitionResourceProvider.getInstance((IRepositoryStore<? extends IRepositoryFileStore>) defStore, ConnectorPlugin.getDefault().getBundle()) ;
     }
 
@@ -106,7 +106,7 @@ public class ConnectorConfigurationWizardPage extends WizardPage implements IPro
      * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
      */
     @Override
-    public void createControl(Composite parent) {
+    public void createControl(final Composite parent) {
         final Composite mainComposite = new Composite(parent, SWT.NONE);
         mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create()) ;
         mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create()) ;
@@ -115,37 +115,16 @@ public class ConnectorConfigurationWizardPage extends WizardPage implements IPro
         descriptionLabel.setText(getDescription());
         descriptionLabel.setLayoutData(GridDataFactory.swtDefaults().grab(true, false).span(2, 1).create());
 
-        viewer = new TableViewer(mainComposite, SWT.BORDER | SWT.FULL_SELECTION | SWT.SINGLE) ;
-        viewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create()) ;
-        viewer.setContentProvider(getContentProvider()) ;
-        viewer.getTable().setHeaderVisible(true) ;
-        viewer.getTable().setLinesVisible(true) ;
-        viewer.addSelectionChangedListener(this) ;
-        TableLayout tableLayout = new TableLayout() ;
-        tableLayout.addColumnData(new ColumnWeightData(50)) ;
-        tableLayout.addColumnData(new ColumnWeightData(50)) ;
-        viewer.getTable().setLayout(tableLayout) ;
-
-        TableViewerColumn columnDefViewer = new TableViewerColumn(viewer,SWT.NONE) ;
-        columnDefViewer.setLabelProvider(new DefinitionLabelProvider(resourceProvider,defStore)) ;
-        TableColumn column = columnDefViewer.getColumn()  ;
-        column.setText(Messages.definition) ;
-
-        TableViewerColumn columnImplIdViewer = new TableViewerColumn(viewer,SWT.NONE) ;
-        columnImplIdViewer.setLabelProvider(new ImplementationLabelProvider(implStore)) ;
-        column = columnImplIdViewer.getColumn()  ;
-        column.setText(Messages.implementation) ;
-
         final Composite buttonComposite = new Composite(mainComposite, SWT.NONE) ;
-        buttonComposite.setLayoutData(GridDataFactory.swtDefaults().align(SWT.FILL, SWT.TOP).create()) ;
-        buttonComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).create()) ;
+        buttonComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).indent(0, 25).create());
+        buttonComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).spacing(0, 3).create());
 
         selectImplementationButton = new Button(buttonComposite, SWT.FLAT) ;
         selectImplementationButton.setLayoutData(GridDataFactory.fillDefaults().grab(true,false).create()) ;
         selectImplementationButton.setText(Messages.selectImplementation) ;
         selectImplementationButton.addSelectionListener(new SelectionAdapter() {
             @Override
-            public void widgetSelected(SelectionEvent e) {
+            public void widgetSelected(final SelectionEvent e) {
                 openImplementationSelection() ;
             }
         }) ;
@@ -155,12 +134,31 @@ public class ConnectorConfigurationWizardPage extends WizardPage implements IPro
         clearImplementationButton.setText(Messages.clear) ;
         clearImplementationButton.addSelectionListener(new SelectionAdapter() {
             @Override
-            public void widgetSelected(SelectionEvent e) {
+            public void widgetSelected(final SelectionEvent e) {
                 clearImplementation();
             }
-
-
         }) ;
+
+        viewer = new TableViewer(mainComposite, SWT.BORDER | SWT.FULL_SELECTION | SWT.SINGLE);
+        viewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        viewer.setContentProvider(getContentProvider());
+        viewer.getTable().setHeaderVisible(true);
+        viewer.getTable().setLinesVisible(true);
+        viewer.addSelectionChangedListener(this);
+        final TableLayout tableLayout = new TableLayout();
+        tableLayout.addColumnData(new ColumnWeightData(50));
+        tableLayout.addColumnData(new ColumnWeightData(50));
+        viewer.getTable().setLayout(tableLayout);
+
+        final TableViewerColumn columnDefViewer = new TableViewerColumn(viewer, SWT.NONE);
+        columnDefViewer.setLabelProvider(new DefinitionLabelProvider(resourceProvider, defStore));
+        TableColumn column = columnDefViewer.getColumn();
+        column.setText(Messages.definition);
+
+        final TableViewerColumn columnImplIdViewer = new TableViewerColumn(viewer, SWT.NONE);
+        columnImplIdViewer.setLabelProvider(new ImplementationLabelProvider(implStore));
+        column = columnImplIdViewer.getColumn();
+        column.setText(Messages.implementation);
 
         setControl(mainComposite) ;
     }
@@ -170,12 +168,12 @@ public class ConnectorConfigurationWizardPage extends WizardPage implements IPro
     }
 
     protected void openImplementationSelection() {
-        DefinitionMapping connectorAssociation = (DefinitionMapping) ((IStructuredSelection) viewer.getSelection()).getFirstElement() ;
-        SelectConnectorImplementationWizard wizard = new SelectConnectorImplementationWizard(connectorAssociation) ;
-        WizardDialog dialog = new WizardDialog(Display.getDefault().getActiveShell(),wizard ) ;
+        final DefinitionMapping connectorAssociation = (DefinitionMapping) ((IStructuredSelection) viewer.getSelection()).getFirstElement() ;
+        final SelectConnectorImplementationWizard wizard = new SelectConnectorImplementationWizard(connectorAssociation) ;
+        final WizardDialog dialog = new WizardDialog(Display.getDefault().getActiveShell(),wizard ) ;
         if(dialog.open() == Dialog.OK){
-            ConnectorImplementation impl =  wizard.getConnectorImplementation() ;
-            DefinitionMapping association = (DefinitionMapping) ((IStructuredSelection) viewer.getSelection()).getFirstElement() ;
+            final ConnectorImplementation impl =  wizard.getConnectorImplementation() ;
+            final DefinitionMapping association = (DefinitionMapping) ((IStructuredSelection) viewer.getSelection()).getFirstElement() ;
             association.setImplementationId(impl.getImplementationId()) ;
             association.setImplementationVersion(impl.getImplementationVersion()) ;
 
@@ -192,13 +190,13 @@ public class ConnectorConfigurationWizardPage extends WizardPage implements IPro
                 adapterFactory.addAdapterFactory(new ProcessAdapterFactory()) ;
 
                 // command stack that will notify this editor as commands are executed
-                BasicCommandStack commandStack = new BasicCommandStack();
+                final BasicCommandStack commandStack = new BasicCommandStack();
 
                 // Create the editing domain with our adapterFactory and command stack.
                 editingDomain = new AdapterFactoryEditingDomain(adapterFactory,commandStack, new HashMap<Resource, Boolean>());
                 editingDomain.getResourceSet().getResourceFactoryRegistry().getExtensionToFactoryMap().put("conf", new ConfigurationResourceFactoryImpl()) ;
             }
-            CompoundCommand cc = new CompoundCommand() ;
+            final CompoundCommand cc = new CompoundCommand() ;
             CONNECTORS_CONFIGURATION_SYNCHRONIZER.updateConnectorDependencies(configuration, association, impl, cc, editingDomain,false) ;
             editingDomain.getCommandStack().execute(cc) ;
             if(dispose){
@@ -211,8 +209,8 @@ public class ConnectorConfigurationWizardPage extends WizardPage implements IPro
     }
 
     protected void clearImplementation() {
-        DefinitionMapping connectorAssociation = (DefinitionMapping) ((IStructuredSelection) viewer.getSelection()).getFirstElement() ;
-        String implId = NamingUtils.toConnectorImplementationFilename(connectorAssociation.getImplementationId(), connectorAssociation.getImplementationVersion(), false) ;
+        final DefinitionMapping connectorAssociation = (DefinitionMapping) ((IStructuredSelection) viewer.getSelection()).getFirstElement() ;
+        final String implId = NamingUtils.toConnectorImplementationFilename(connectorAssociation.getImplementationId(), connectorAssociation.getImplementationVersion(), false) ;
         connectorAssociation.setImplementationId(null) ;
         connectorAssociation.setImplementationVersion(null) ;
 
@@ -229,13 +227,13 @@ public class ConnectorConfigurationWizardPage extends WizardPage implements IPro
             adapterFactory.addAdapterFactory(new ProcessAdapterFactory()) ;
 
             // command stack that will notify this editor as commands are executed
-            BasicCommandStack commandStack = new BasicCommandStack();
+            final BasicCommandStack commandStack = new BasicCommandStack();
 
             // Create the editing domain with our adapterFactory and command stack.
             editingDomain = new AdapterFactoryEditingDomain(adapterFactory,commandStack, new HashMap<Resource, Boolean>());
             editingDomain.getResourceSet().getResourceFactoryRegistry().getExtensionToFactoryMap().put("conf", new ConfigurationResourceFactoryImpl()) ;
         }
-        CompoundCommand cc = new CompoundCommand() ;
+        final CompoundCommand cc = new CompoundCommand() ;
         CONNECTORS_CONFIGURATION_SYNCHRONIZER.removeConnectorDependencies(configuration, implId, cc, editingDomain) ;
         editingDomain.getCommandStack().execute(cc) ;
         if(dispose){
@@ -250,7 +248,7 @@ public class ConnectorConfigurationWizardPage extends WizardPage implements IPro
      * @see org.bonitasoft.studio.configuration.extension.IProcessConfigurationWizardPage#updatePage(org.bonitasoft.studio.model.process.AbstractProcess, org.bonitasoft.studio.model.configuration.Configuration)
      */
     @Override
-    public void updatePage(AbstractProcess process, Configuration configuration) {
+    public void updatePage(final AbstractProcess process, final Configuration configuration) {
         if(process != null && configuration != null && viewer != null && !viewer.getControl().isDisposed()){
             this.configuration = configuration ;
             viewer.setInput(configuration) ;
@@ -263,16 +261,16 @@ public class ConnectorConfigurationWizardPage extends WizardPage implements IPro
      * @see org.bonitasoft.studio.configuration.extension.IProcessConfigurationWizardPage#isConfigurationPageValid()
      */
     @Override
-    public String isConfigurationPageValid(Configuration conf) {
+    public String isConfigurationPageValid(final Configuration conf) {
         if(viewer != null && viewer.getInput() != null){
-            for(Object element : ((IStructuredContentProvider) viewer.getContentProvider()).getElements(viewer.getInput())){
-                DefinitionMapping association = (DefinitionMapping) element ;
-                String implementationId = association.getImplementationId();
-                String implementationVersion = association.getImplementationVersion();
+            for(final Object element : ((IStructuredContentProvider) viewer.getContentProvider()).getElements(viewer.getInput())){
+                final DefinitionMapping association = (DefinitionMapping) element ;
+                final String implementationId = association.getImplementationId();
+                final String implementationVersion = association.getImplementationVersion();
                 if(implementationId == null || implementationVersion == null){
                     return Messages.bind(Messages.invalidImplementationFor, association.getDefinitionId()) ;
                 }
-                ConnectorImplementation impl = implStore.getImplementation(implementationId,implementationVersion) ;
+                final ConnectorImplementation impl = implStore.getImplementation(implementationId,implementationVersion) ;
                 if(impl == null){
                     return Messages.bind(Messages.implementationNotFound, implementationId +" ("+implementationVersion+")") ;
                 }
@@ -293,7 +291,7 @@ public class ConnectorConfigurationWizardPage extends WizardPage implements IPro
 
 
     @Override
-    public void selectionChanged(SelectionChangedEvent event) {
+    public void selectionChanged(final SelectionChangedEvent event) {
         if(selectImplementationButton != null && !selectImplementationButton.isDisposed()){
             selectImplementationButton.setEnabled(!viewer.getSelection().isEmpty()) ;
         }
@@ -305,16 +303,16 @@ public class ConnectorConfigurationWizardPage extends WizardPage implements IPro
     protected void checkImplementationDependencies(final ConnectorImplementation implementation) {
         if(!implementation.getJarDependencies().getJarDependency().isEmpty()){
             try {
-                IProgressService service =  PlatformUI.getWorkbench().getProgressService() ;
+                final IProgressService service =  PlatformUI.getWorkbench().getProgressService() ;
                 service.run(true, false, new IRunnableWithProgress() {
 
                     @Override
-                    public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+                    public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
                         monitor.beginTask(Messages.addingImplementationDependencies, IProgressMonitor.UNKNOWN) ;
-                        DependencyRepositoryStore depStore = (DependencyRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DependencyRepositoryStore.class) ;
-                        for(String jarName : implementation.getJarDependencies().getJarDependency()){
+                        final DependencyRepositoryStore depStore = RepositoryManager.getInstance().getRepositoryStore(DependencyRepositoryStore.class) ;
+                        for(final String jarName : implementation.getJarDependencies().getJarDependency()){
                             if( depStore.getChild(jarName) == null){
-                                InputStream is = resourceProvider.getDependencyInputStream(jarName) ;
+                                final InputStream is = resourceProvider.getDependencyInputStream(jarName) ;
                                 if(is != null){
                                     depStore.importInputStream(jarName, is) ;
                                 }
@@ -322,7 +320,7 @@ public class ConnectorConfigurationWizardPage extends WizardPage implements IPro
                         }
                     }
                 }) ;
-            } catch (Exception e){
+            } catch (final Exception e){
                 BonitaStudioLog.error(e) ;
             }
         }

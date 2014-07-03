@@ -26,6 +26,7 @@ public class Messages extends NLS {
 
     private static final String BUNDLE_NAME = "messages";
 
+
     static {
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);
     }
@@ -35,7 +36,6 @@ public class Messages extends NLS {
     public static String displayUsersPageDesc;
     public static String firstName;
     public static String lastName;
-    public static String userInfo;
     public static String delete;
     public static String userTitle;
     public static String titleHint;
@@ -92,13 +92,11 @@ public class Messages extends NLS {
     public static String defaultRoleName;
     public static String displayRolesPageTitle;
     public static String displayRolesPageDesc;
-    public static String roleInfo;
     public static String manager;
     public static String defaultGroupName;
     public static String deleteGroupMsg;
     public static String deleteGroupTitle;
     public static String displayName;
-    public static String groupInfo;
     public static String displayGroupsPageTitle;
     public static String displayGroupsPageDesc;
     public static String groupNameAlreadyExistsForLevel;
@@ -251,6 +249,36 @@ public class Messages extends NLS {
     public static String cuiFilterActorRelatedMsg;
     public static String assignOnlyIfOneUser;
     public static String typeValueToFilter;
+    public static String customUserInfoName;
+    public static String customUserInfoDescription;
+    public static String customUserInfoDefinitionNotEmpty;
+    public static String customUserInfoDefinitionAlreadyExist;
+    public static String customUserInformationAddWindowTitle;
+    public static String defaultInformationGroupTitle;
+    public static String defaultInformationGroupGeneralDataTableTitle;
+    public static String defaultInformationGroupBusinessCardTableTitle;
+    public static String defaultInformationGroupPersonalTableTitle;
+    public static String defaultInformationGroupMembershipsTableTitle;
+    public static String defaultInformationGroupMembershipsTableText;
+    public static String otherInformationGroupAddButton;
+    public static String otherInformationGroupRemoveButton;
+    public static String otherInformationGroupTitle;
+    public static String otherInformationGroupRemoveDialogTitle;
+    public static String otherInformationGroupRemoveDialogText;
+    public static String customUserInfoDefinitionNoWhiteSpaceAtStartOrEnd;
+    public static String customUserInfoDefinitionNameTooLong;
+    public static String customUserInformationTabTitle;
+    public static String other;
+    public static String listOfUsersTabTitle;
+    public static String customUserInfoOtherTabLink;
+    public static String otherInformationGroupRemoveDialogTextWarning;
+    public static String defaultCustomUserInformationName;
+    public static String details;
+    public static String nameLimitSize;
+    public static String displayNameLimitSize;
+    public static String labelExplicationCustomUserInformation;
+    public static String customUserInfoValueLimitSize;
+    public static String userNameIsEmpty;
 
 
 }

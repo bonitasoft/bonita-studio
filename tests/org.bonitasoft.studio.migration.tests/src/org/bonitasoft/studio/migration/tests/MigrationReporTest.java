@@ -75,7 +75,8 @@ public class MigrationReporTest extends SWTBotGefTestCase {
         bot.waitUntil(Conditions.shellIsActive(Messages.completeImport));
         bot.checkBox().deselect();
         bot.button(IDialogConstants.OK_LABEL).click();
-
+        bot.waitUntil(Conditions.shellIsActive(org.bonitasoft.studio.common.Messages.validationFailedTitle));
+        bot.button(IDialogConstants.OK_LABEL).click();
         assertEquals("Invalid perspective for process without migration report", "org.bonitasoft.studio.perspective.process",
                 BonitaPerspectivesUtils.getPerspectiveId(bot.activeEditor().getReference().getEditor(false)));
         EObject mainProcess = (EObject) bot.gefEditor(bot.activeEditor().getTitle()).mainEditPart().part().getModel();

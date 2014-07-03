@@ -23,6 +23,7 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 
 /**
  * @author Romain Bioteau
@@ -30,15 +31,22 @@ import org.eclipse.swt.widgets.Display;
  */
 public class ManageOrganizationHandler extends AbstractHandler {
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
-	 */
-	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException {
-		Wizard newWizard = new ManageOrganizationWizard() ;
-		WizardDialog dialog = new WizardDialog(Display.getDefault().getActiveShell(), newWizard) ;
-		dialog.open() ;
-		return null;
-	}
+    /* (non-Javadoc)
+     * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
+     */
+    @Override
+    public Object execute(final ExecutionEvent event) throws ExecutionException {
+        final Wizard newWizard = new ManageOrganizationWizard() ;
+        final WizardDialog dialog = new WizardDialog(Display.getDefault().getActiveShell(), newWizard) {
+
+            @Override
+            protected void configureShell(final Shell newShell) {
+                super.configureShell(newShell);
+                newShell.setSize(1000, 800);
+            }
+        };
+        dialog.open() ;
+        return null;
+    }
 
 }

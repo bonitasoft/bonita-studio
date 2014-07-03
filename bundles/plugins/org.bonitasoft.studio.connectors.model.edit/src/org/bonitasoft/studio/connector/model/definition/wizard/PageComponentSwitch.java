@@ -5,12 +5,14 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
+ *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.connector.model.definition.wizard;
 
@@ -62,8 +64,10 @@ import org.eclipse.ui.forms.events.IExpansionListener;
 import org.eclipse.ui.forms.widgets.Section;
 
 
+
 /**
  * @author Romain Bioteau
+ *
  */
 public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> implements IBonitaVariableContext {
 
@@ -134,7 +138,7 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> im
                 shell.setSize(defaultSize.x, size.y) ;
                 shell.layout(true, true) ;
             }
-        });
+        }) ;
 
         return object;
     }
@@ -145,7 +149,7 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> im
 
 
     public java.util.List<Section> getSectionsToExpand() {
-        return sections;
+        return sections  ;
     }
 
     @Override
@@ -270,10 +274,10 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> im
             if(widget instanceof ScriptEditor){
                 expression.setType(ExpressionConstants.SCRIPT_TYPE);
                 expression.setInterpreter(((ScriptEditor) widget).getInterpreter());
-            } else if (widget instanceof TextArea) {
+            }else if(widget instanceof TextArea){
                 expression.setType(ExpressionConstants.PATTERN_TYPE);
             }
-            return expression;
+            return expression ;
         }
     }
 
@@ -287,8 +291,7 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> im
         componentBuilder.setIsPageFlowContext(isPageFlowContext);
     }
 
-    /*
-     * (non-Javadoc)
+    /* (non-Javadoc)
      * @see org.bonitasoft.studio.common.IBonitaVariableContext#isOverViewContext()
      */
     @Override
@@ -296,8 +299,7 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> im
         return false;
     }
 
-    /*
-     * (non-Javadoc)
+    /* (non-Javadoc)
      * @see org.bonitasoft.studio.common.IBonitaVariableContext#setIsOverviewContext(boolean)
      */
     @Override

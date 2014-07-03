@@ -43,7 +43,7 @@ public class GeneratedConnectorWizardPage extends AbstractConnectorConfiguration
 
     @Override
     public Control doCreateControl(final Composite parent, final EMFDataBindingContext context) {
-        final Composite mainComposite = new Composite(parent, SWT.NONE);
+        final Composite mainComposite = new Composite(parent, SWT.NONE) ;
         mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).spacing(0, 0).create());
 
@@ -81,8 +81,7 @@ public class GeneratedConnectorWizardPage extends AbstractConnectorConfiguration
         return false;
     }
 
-    /*
-     * (non-Javadoc)
+    /* (non-Javadoc)
      * @see org.bonitasoft.studio.common.IBonitaVariableContext#setIsOverviewContext(boolean)
      */
     @Override
