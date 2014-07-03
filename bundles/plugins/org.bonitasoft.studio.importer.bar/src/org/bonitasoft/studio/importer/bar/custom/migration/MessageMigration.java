@@ -37,9 +37,9 @@ import org.eclipse.emf.edapt.migration.Model;
  */
 public class MessageMigration extends ReportCustomMigration {
 
-    private final Map<String, String> targetProcessNameConditions = new HashMap<String,String>();
-    private final Map<String, String> targetElementNameConditions = new HashMap<String,String>();
-    private final Map<String, List<Instance>> messageContents = new HashMap<String,List<Instance>>();
+    private final Map<String, String> targetProcessNameConditions = new HashMap<String, String>();
+    private final Map<String, String> targetElementNameConditions = new HashMap<String, String>();
+    private final Map<String, List<Instance>> messageContents = new HashMap<String, List<Instance>>();
 
     @Override
     public void migrateBefore(final Model model, final Metamodel metamodel)
@@ -50,7 +50,19 @@ public class MessageMigration extends ReportCustomMigration {
             final List<Instance> data = message.get("data");
             final List<Instance> content = new ArrayList<Instance>();
             for(final Instance d : data){
-                final Instance expression = ((Instance) d.get("defaultValue")).copy();
+                final Instance expInstance = (Instance) d.get("defaultValue");
+
+                final Instance expression = expInstance.copy();
+
+                List<Instance> dependencies = expression.get("referencedElements");
+                for (final Instance dep : dependencies) {
+                    model.delete(dep);
+                }
+                dependencies = expInstance.get("referencedElements");
+                for (final Instance dep : dependencies) {
+                    expression.add("referencedElements", dep.copy());
+                }
+
                 expression.set("returnTypeFixed", false);
                 content.add(expression);
                 model.delete(d);
@@ -103,45 +115,50 @@ public class MessageMigration extends ReportCustomMigration {
         }
     }
 
+
     @Override
     public void migrateAfter(final Model model, final Metamodel metamodel)
             throws MigrationException {
         for(final Instance message : model.getAllInstances("process.Message")){
             setMessageContent(message, model);
-            setTargetProcessExpression(message,model);
-            setTargetElementExpression(message,model);
+            setTargetProcessExpression(message, model);
+            setTargetElementExpression(message, model);
         }
     }
 
     private void setMessageContent(final Instance message,final Model model) {
         final Instance tableExpression = model.newInstance("expression.TableExpression");
-        if(messageContents.containsKey(message.getUuid())){
+        if (messageContents.containsKey(message.getUuid())) {
             final List<Instance> content = messageContents.get(message.getUuid());
             for(final Instance expression : content){
                 final Instance rowExpression = model.newInstance("expression.ListExpression");
-                final Instance keyExpression = StringToExpressionConverter.createExpressionInstance(model, expression.get("name")+"Key", expression.get("name")+"Key", String.class.getName(),ExpressionConstants.CONSTANT_TYPE,true);
+                final Instance keyExpression = StringToExpressionConverter.createExpressionInstance(model, expression.get("name") + "Key",
+                        expression.get("name") + "Key", String.class.getName(), ExpressionConstants.CONSTANT_TYPE, true);
                 rowExpression.add("expressions", keyExpression);
                 rowExpression.add("expressions", expression);
                 tableExpression.add("expressions", rowExpression);
             }
             message.set("messageContent", tableExpression);
-            addReportChange((String) message.get("name"),message.getType().getEClass().getName(), message.getUuid(),Messages.messageContentMigrationDescription, Messages.messagesProperty, IStatus.WARNING);
-        }else{
+            addReportChange((String) message.get("name"), message.getType().getEClass().getName(), message.getUuid(),
+                    Messages.messageContentMigrationDescription, Messages.messagesProperty, IStatus.WARNING);
+        } else {
             message.set("messageContent", tableExpression);
         }
     }
 
     private void setTargetProcessExpression(final Instance message, final Model model) {
         Instance expression = null;
-        if(targetProcessNameConditions.containsKey(message.getUuid())){
-            final StringToExpressionConverter converter = getConverter(model,getScope(message));
+        if (targetProcessNameConditions.containsKey(message.getUuid())) {
+            final StringToExpressionConverter converter = getConverter(model, getScope(message));
             final String script = targetProcessNameConditions.get(message.getUuid());
             expression = converter.parse(script, String.class.getName(), true);
-            if(ExpressionConstants.SCRIPT_TYPE.equals(expression.get("type"))){
+            if (ExpressionConstants.SCRIPT_TYPE.equals(expression.get("type"))) {
                 expression.set("name", "targetProcessScript");
             }
-            addReportChange((String) message.get("name"),message.getType().getEClass().getName(), message.getUuid(),Messages.targetProcessNameMigrationDescription, Messages.messagesProperty, ExpressionConstants.SCRIPT_TYPE.equals(expression.get("type")) ? IStatus.WARNING : IStatus.OK);
-        }else{
+            addReportChange((String) message.get("name"), message.getType().getEClass().getName(), message.getUuid(),
+                    Messages.targetProcessNameMigrationDescription, Messages.messagesProperty, ExpressionConstants.SCRIPT_TYPE.equals(expression.get("type"))
+                    ? IStatus.WARNING : IStatus.OK);
+        } else {
             expression = StringToExpressionConverter.createExpressionInstance(model, "", "", String.class.getName(), ExpressionConstants.CONSTANT_TYPE, true);
         }
         message.set("targetProcessExpression", expression);
@@ -151,15 +168,17 @@ public class MessageMigration extends ReportCustomMigration {
 
     private void setTargetElementExpression(final Instance message, final Model model) {
         Instance expression = null;
-        if(targetElementNameConditions.containsKey(message.getUuid())){
-            final StringToExpressionConverter converter = getConverter(model,getScope(message));
+        if (targetElementNameConditions.containsKey(message.getUuid())) {
+            final StringToExpressionConverter converter = getConverter(model, getScope(message));
             final String url = targetElementNameConditions.get(message.getUuid());
             expression = converter.parse(url, String.class.getName(), true);
-            if(ExpressionConstants.SCRIPT_TYPE.equals(expression.get("type"))){
+            if (ExpressionConstants.SCRIPT_TYPE.equals(expression.get("type"))) {
                 expression.set("name", "targetElementScriptScript");
             }
-            addReportChange((String) message.get("name"),message.getType().getEClass().getName(), message.getUuid(),Messages.targetElementNameMigrationDescription, Messages.messagesProperty, ExpressionConstants.SCRIPT_TYPE.equals(expression.get("type")) ? IStatus.WARNING : IStatus.OK);
-        }else{
+            addReportChange((String) message.get("name"), message.getType().getEClass().getName(), message.getUuid(),
+                    Messages.targetElementNameMigrationDescription, Messages.messagesProperty, ExpressionConstants.SCRIPT_TYPE.equals(expression.get("type"))
+                    ? IStatus.WARNING : IStatus.OK);
+        } else {
             expression = StringToExpressionConverter.createExpressionInstance(model, "", "", String.class.getName(), ExpressionConstants.CONSTANT_TYPE, true);
         }
         message.set("targetElementExpression", expression);

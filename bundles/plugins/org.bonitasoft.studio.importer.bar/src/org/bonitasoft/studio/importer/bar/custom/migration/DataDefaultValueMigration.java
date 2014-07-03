@@ -39,78 +39,78 @@ import org.eclipse.emf.edapt.migration.Model;
  */
 public class DataDefaultValueMigration extends ReportCustomMigration {
 
-	private Map<String, String> dataDefaultValue = new HashMap<String,String>();
+    private final Map<String, String> dataDefaultValue = new HashMap<String,String>();
 
-	@Override
-	public void migrateBefore(Model model, Metamodel metamodel)
-			throws MigrationException {
-		for(Instance data : model.getAllInstances("process.Data")){
-			final String script = data.get("defaultValue");
-			data.set("defaultValue", null);
-			if(script != null && !script.trim().isEmpty()){
-				dataDefaultValue.put(data.getUuid(), script);
-			}
-		}
-	}
+    @Override
+    public void migrateBefore(final Model model, final Metamodel metamodel)
+            throws MigrationException {
+        for(final Instance data : model.getAllInstances("process.Data")){
+            final String script = data.get("defaultValue");
+            data.set("defaultValue", null);
+            if(script != null && !script.trim().isEmpty()){
+                dataDefaultValue.put(data.getUuid(), script);
+            }
+        }
+    }
 
-	@Override
-	public void migrateAfter(Model model, Metamodel metamodel)
-			throws MigrationException {
-		for(Instance data : model.getAllInstances("process.Data")){
-			if(!data.instanceOf("process.AttachmentData")){
-				final StringToExpressionConverter converter = getConverter(model,getScope(data));
-				final String uuid = data.getUuid();
-				final String defaultValue = dataDefaultValue.get(uuid);
-				Instance expression = null;
-				if(defaultValue != null){
-					final String returnType = StringToExpressionConverter.getDataReturnType(data);
-					expression = converter.parse(defaultValue, returnType, false);
-					String expressionType = expression.get("type");
-					if(ExpressionConstants.SCRIPT_TYPE.equals(expressionType)){
-						expression.set("name",data.get("name")+"DefaultValueScript");
-						List<Instance> dependencies =  expression.get("referencedElements");
-						boolean invalidDependency = false ;
-						for(Instance dependency : dependencies){
-							if(dependency.instanceOf("process.Data")){
-								List<Instance> containerData = data.getContainer().get("data");
-								for(Instance dataInstance : containerData){
-									if(dataInstance.get("name").equals(dependency.get("name"))){
-										invalidDependency = true;
-										addReportChange((String) data.get("name"), ProcessPackage.Literals.DATA.getName(), uuid, Messages.dataDefaultValueWithOtherDataDependencyMigrationDescription, Messages.dataDefaultValueProperty, IStatus.ERROR);
-									}
-								}
-							}
-						}
-						if(!invalidDependency){
-							addReportChange((String) data.get("name"), ProcessPackage.Literals.DATA.getName(), uuid, Messages.dataDefaultValueMigrationDescription, Messages.dataDefaultValueProperty, IStatus.WARNING);
-						}
-					}else if(ExpressionConstants.VARIABLE_TYPE.equals(expressionType)){
-						if(data.getContainer().instanceOf("process.AbstractProcess")){
-							expression.set("type",ExpressionConstants.CONSTANT_TYPE);
-							addReportChange((String) data.get("name"), ProcessPackage.Literals.DATA.getName(), uuid, Messages.dataDefaultValueWithOtherDataDependencyMigrationDescription, Messages.dataDefaultValueProperty, IStatus.ERROR);
-						}
-					}else{
-						addReportChange((String) data.get("name"), ProcessPackage.Literals.DATA.getName(), uuid, Messages.dataDefaultValueMigrationDescription, Messages.dataDefaultValueProperty, IStatus.OK);
-					}
-				}else{
-					expression = StringToExpressionConverter.createExpressionInstance(model, "", "", String.class.getName(), ExpressionConstants.CONSTANT_TYPE, false);
-				}
-				data.set("defaultValue", expression);
-				data.set("datasourceId", getDatasource(data));
-			}
-		}
-	}
+    @Override
+    public void migrateAfter(final Model model, final Metamodel metamodel)
+            throws MigrationException {
+        for(final Instance data : model.getAllInstances("process.Data")){
+            if(!data.instanceOf("process.AttachmentData")){
+                final String uuid = data.getUuid();
+                Instance expression = null;
+                if (dataDefaultValue.containsKey(uuid)) {
+                    final String defaultValue = dataDefaultValue.get(uuid);
+                    final StringToExpressionConverter converter = getConverter(model, getScope(data));
+                    final String returnType = StringToExpressionConverter.getDataReturnType(data);
+                    expression = converter.parse(defaultValue, returnType, false);
+                    final String expressionType = expression.get("type");
+                    if(ExpressionConstants.SCRIPT_TYPE.equals(expressionType)){
+                        expression.set("name",data.get("name")+"DefaultValueScript");
+                        final List<Instance> dependencies =  expression.get("referencedElements");
+                        boolean invalidDependency = false ;
+                        for(final Instance dependency : dependencies){
+                            if(dependency.instanceOf("process.Data")){
+                                final List<Instance> containerData = data.getContainer().get("data");
+                                for(final Instance dataInstance : containerData){
+                                    if(dataInstance.get("name").equals(dependency.get("name"))){
+                                        invalidDependency = true;
+                                        addReportChange((String) data.get("name"), ProcessPackage.Literals.DATA.getName(), uuid, Messages.dataDefaultValueWithOtherDataDependencyMigrationDescription, Messages.dataDefaultValueProperty, IStatus.ERROR);
+                                    }
+                                }
+                            }
+                        }
+                        if(!invalidDependency){
+                            addReportChange((String) data.get("name"), ProcessPackage.Literals.DATA.getName(), uuid, Messages.dataDefaultValueMigrationDescription, Messages.dataDefaultValueProperty, IStatus.WARNING);
+                        }
+                    }else if(ExpressionConstants.VARIABLE_TYPE.equals(expressionType)){
+                        if(data.getContainer().instanceOf("process.AbstractProcess")){
+                            expression.set("type",ExpressionConstants.CONSTANT_TYPE);
+                            addReportChange((String) data.get("name"), ProcessPackage.Literals.DATA.getName(), uuid, Messages.dataDefaultValueWithOtherDataDependencyMigrationDescription, Messages.dataDefaultValueProperty, IStatus.ERROR);
+                        }
+                    }else{
+                        addReportChange((String) data.get("name"), ProcessPackage.Literals.DATA.getName(), uuid, Messages.dataDefaultValueMigrationDescription, Messages.dataDefaultValueProperty, IStatus.OK);
+                    }
+                }else{
+                    expression = StringToExpressionConverter.createExpressionInstance(model, "", "", String.class.getName(), ExpressionConstants.CONSTANT_TYPE, false);
+                }
+                data.set("defaultValue", expression);
+                data.set("datasourceId", getDatasource(data));
+            }
+        }
+    }
 
-	private String getDatasource(Instance data) {
-		EReference feature = data.getContainerReference();
-		if(feature.equals(ProcessPackage.Literals.PAGE_FLOW__TRANSIENT_DATA)
-				|| feature.equals(ProcessPackage.Literals.RECAP_FLOW__RECAP_TRANSIENT_DATA)
-				|| feature.equals(ProcessPackage.Literals.VIEW_PAGE_FLOW__VIEW_TRANSIENT_DATA)){
-			return DatasourceConstants.PAGEFLOW_DATASOURCE ;
-		}else if(data.get("transient")){
-			return DatasourceConstants.IN_MEMORY_DATASOURCE;
-		}else{
-			return DatasourceConstants.BOS_DATASOURCE ;
-		}
-	}
+    private String getDatasource(final Instance data) {
+        final EReference feature = data.getContainerReference();
+        if(feature.equals(ProcessPackage.Literals.PAGE_FLOW__TRANSIENT_DATA)
+                || feature.equals(ProcessPackage.Literals.RECAP_FLOW__RECAP_TRANSIENT_DATA)
+                || feature.equals(ProcessPackage.Literals.VIEW_PAGE_FLOW__VIEW_TRANSIENT_DATA)){
+            return DatasourceConstants.PAGEFLOW_DATASOURCE ;
+        }else if(data.get("transient")){
+            return DatasourceConstants.IN_MEMORY_DATASOURCE;
+        }else{
+            return DatasourceConstants.BOS_DATASOURCE ;
+        }
+    }
 }
