@@ -471,7 +471,7 @@ public class PlatformUtil {
                         || arg.equals("org.bonitasoft.studio.application.WorkspaceRecovery")
                         || arg.equals("org.bonitasoft.studio.initializer")
                         || arg.equals("org.bonitasoft.studio.workspaceRecovery")
-                        || arg.equals("org.bonitasoft.studio.workspaceAPI ")) {
+                        || arg.equals("org.bonitasoft.studio.workspaceAPI")) {
                     return true;
                 }
             }
