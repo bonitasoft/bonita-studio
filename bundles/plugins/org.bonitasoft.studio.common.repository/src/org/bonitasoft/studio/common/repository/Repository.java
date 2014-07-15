@@ -202,6 +202,7 @@ public class Repository implements IRepository {
     public void open() {
         try {
             if (!project.isOpen()) {
+                BonitaStudioLog.log("Opening project: " + project.getName());
                 project.open(NULL_PROGRESS_MONITOR);
                 final JavaProject jProject = (JavaProject) project.getNature(JavaCore.NATURE_ID);
                 if (jProject != null) {
@@ -210,7 +211,6 @@ public class Repository implements IRepository {
                     }
                     new ClasspathValidation(jProject).validate();
                 }
-
             }
         } catch (final CoreException e) {
             BonitaStudioLog.error(e);
