@@ -15,6 +15,7 @@
 package org.bonitasoft.studio.util.test.conditions;
 import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.waits.ICondition;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 
 
 public class SelectNodeUnder implements ICondition {
@@ -30,7 +31,8 @@ public class SelectNodeUnder implements ICondition {
     }
 
     public boolean test() throws Exception {
-        System.out.println("SelectNodeUnder.test");
+        System.out.println("SelectNodeUnder.test" + parentNode + " --> " + subNodeLabel);
+        bot.tree().unselect();
         bot.tree().select(parentNode).expandNode(parentNode).select(subNodeLabel);
         return bot.tree().selectionCount() > 0;
     }
@@ -40,6 +42,11 @@ public class SelectNodeUnder implements ICondition {
     }
 
     public String getFailureMessage() {
-        return "Cannot select tree item " + parentNode + " --> " + subNodeLabel;
+        final StringBuilder sb = new StringBuilder();
+        final SWTBotTreeItem[] allItems = bot.tree().getAllItems();
+        for (final SWTBotTreeItem swtBotTreeItem : allItems) {
+            sb.append(swtBotTreeItem.getText()).append("///");
+        }
+        return "Cannot select tree item " + parentNode + " --> " + subNodeLabel + " in :\n" + sb.toString();
     }
 }
