@@ -24,6 +24,7 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -73,6 +74,7 @@ import org.bonitasoft.studio.migration.model.report.Change;
 import org.bonitasoft.studio.migration.model.report.MigrationReportFactory;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jdt.core.Flags;
 import org.eclipse.jdt.core.ICompilationUnit;
@@ -113,23 +115,30 @@ public class ConnectorDescriptorToConnectorDefinition {
     private static final String DEFAULT_PACKAGE = "com.mycompany.connector.";
 
 
-    private ConnectorDescription v5Descriptor;
-    private File tmpConnectorJarFile;
+    private final ConnectorDescription v5Descriptor;
+    private final File tmpConnectorJarFile;
+    private IProgressMonitor monitor;
 
     public ConnectorDescriptorToConnectorDefinition(
-            ConnectorDescription descriptor, File tmpConnectorJarFile) {
+            final ConnectorDescription descriptor, final File tmpConnectorJarFile, final IProgressMonitor progressMonitor) {
         Assert.isNotNull(descriptor);
-        this.v5Descriptor = descriptor;
+        v5Descriptor = descriptor;
         this.tmpConnectorJarFile = tmpConnectorJarFile;
+        monitor = progressMonitor;
+        if (monitor == null) {
+            monitor = Repository.NULL_PROGRESS_MONITOR;
+        }
+
     }
 
     public void createConnectorDefinition() throws IOException{
         final String connectorId = v5Descriptor.getId();
         final String connectorVersion = BASE_VERSION;
+        monitor.subTask(Messages.bind(Messages.migratingCustomConnector, connectorId));
         final List<org.ow2.bonita.connector.core.desc.Category> v5Categories = v5Descriptor.getCategories();
-        final ConnectorDefRepositoryStore store = (ConnectorDefRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class);
-        ConnectorDefFileStore connectorDefStore = store.getChild(NamingUtils.toConnectorDefinitionFilename(connectorId, connectorVersion, true));
-        if ((connectorDefStore !=null)){
+        final ConnectorDefRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class);
+        final ConnectorDefFileStore connectorDefStore = store.getChild(NamingUtils.toConnectorDefinitionFilename(connectorId, connectorVersion, true));
+        if (connectorDefStore !=null){
             if (FileActionDialog.overwriteQuestion(connectorDefStore.getName())){
                 initConnectorDefinition(connectorId, connectorVersion, v5Categories,
                         store);
@@ -161,13 +170,11 @@ public class ConnectorDescriptorToConnectorDefinition {
 
         final ConnectorDefFileStore file = store.createRepositoryFileStore(NamingUtils.toConnectorDefinitionFilename(connectorId, connectorVersion, true));
         file.save(connectorDefinition);
-        store.getResourceProvider().loadDefinitionsCategories(Repository.NULL_PROGRESS_MONITOR);
     }
 
     public void createConnectorImplementation() throws Exception{
         final ConnectorImplementation connectorImplementation = ConnectorImplementationFactory.eINSTANCE.createConnectorImplementation();
         final String implementationId =  v5Descriptor.getId() +"-impl";
-
         connectorImplementation.setImplementationId(implementationId);
         connectorImplementation.setImplementationVersion(BASE_VERSION);
         connectorImplementation.setDefinitionVersion(BASE_VERSION);
@@ -177,8 +184,8 @@ public class ConnectorDescriptorToConnectorDefinition {
         connectorImplementation.setImplementationClassname(getNewImplementationClassName());
         connectorImplementation.setJarDependencies(ConnectorImplementationFactory.eINSTANCE.createJarDependencies());
 
-        final ConnectorDefRepositoryStore defStore = (ConnectorDefRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class);
-        final ConnectorSourceRepositoryStore sourceStore = (ConnectorSourceRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorSourceRepositoryStore.class);
+        final ConnectorDefRepositoryStore defStore = RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class);
+        final ConnectorSourceRepositoryStore sourceStore = RepositoryManager.getInstance().getRepositoryStore(ConnectorSourceRepositoryStore.class);
         final ConnectorDefinition definition = ((IDefinitionRepositoryStore) defStore).getDefinition(connectorImplementation.getDefinitionId(),connectorImplementation.getDefinitionVersion()) ;
         Display.getDefault().syncExec(new Runnable() {
 
@@ -186,15 +193,15 @@ public class ConnectorDescriptorToConnectorDefinition {
             public void run() {
                 try {
                     ClassGenerator.generateConnectorImplementationAbstractClass(connectorImplementation,definition,AbstractConnector.class.getName(),sourceStore, Repository.NULL_PROGRESS_MONITOR) ;
-                } catch (Exception e) {
+                } catch (final Exception e) {
                     BonitaStudioLog.error(e);
-                    throw new RuntimeException(e); 
+                    throw new RuntimeException(e);
                 }
             }
         });
 
 
-        IType classType = RepositoryManager.getInstance().getCurrentRepository().getJavaProject().findType(connectorImplementation.getImplementationClassname()) ;
+        final IType classType = RepositoryManager.getInstance().getCurrentRepository().getJavaProject().findType(connectorImplementation.getImplementationClassname()) ;
         if(classType != null){
             if (FileActionDialog.overwriteQuestion(classType.getParent().getElementName())) {
                 classType.getCompilationUnit().delete(true, Repository.NULL_PROGRESS_MONITOR);
@@ -206,7 +213,7 @@ public class ConnectorDescriptorToConnectorDefinition {
                     sourceStore, definition);
         }
 
-        final ConnectorImplRepositoryStore store = (ConnectorImplRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorImplRepositoryStore.class);
+        final ConnectorImplRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(ConnectorImplRepositoryStore.class);
         final ConnectorImplFileStore file = store.createRepositoryFileStore(NamingUtils.toConnectorImplementationFilename(implementationId, BASE_VERSION, true));
         file.save(connectorImplementation);
     }
@@ -222,9 +229,9 @@ public class ConnectorDescriptorToConnectorDefinition {
             public void run() {
                 try {
                     ClassGenerator.generateConnectorImplementationClass(connectorImplementation,definition,sourceStore, Repository.NULL_PROGRESS_MONITOR) ;
-                } catch (Exception e) {
+                } catch (final Exception e) {
                     BonitaStudioLog.error(e);
-                    throw new RuntimeException(e); 
+                    throw new RuntimeException(e);
                 }
             }
         });
@@ -239,9 +246,9 @@ public class ConnectorDescriptorToConnectorDefinition {
         return name+"Impl";
     }
 
-    protected Map<String,String> mergeSourceFile(String implementationClassname,ConnectorSourceRepositoryStore sourceStore) throws ZipException, IOException, CoreException {
+    protected Map<String,String> mergeSourceFile(final String implementationClassname,final ConnectorSourceRepositoryStore sourceStore) throws ZipException, IOException, CoreException {
         final ZipFile zipfile = new ZipFile(tmpConnectorJarFile);
-        Enumeration<?> enumEntries = zipfile.entries();
+        final Enumeration<?> enumEntries = zipfile.entries();
         ZipEntry zipEntry = null;
         boolean sourceImported = false;
         while (enumEntries.hasMoreElements()){
@@ -255,34 +262,34 @@ public class ConnectorDescriptorToConnectorDefinition {
         zipfile.close();
         if(sourceImported){
             RepositoryManager.getInstance().getCurrentRepository().refresh(Repository.NULL_PROGRESS_MONITOR);
-            IJavaProject project = RepositoryManager.getInstance().getCurrentRepository().getJavaProject();
-            IType originalImplType = project.findType(implementationClassname);
-            IType implType = project.findType(getNewImplementationClassName());
+            final IJavaProject project = RepositoryManager.getInstance().getCurrentRepository().getJavaProject();
+            final IType originalImplType = project.findType(implementationClassname);
+            final IType implType = project.findType(getNewImplementationClassName());
             if(originalImplType != null && implType != null){
-                org.eclipse.jface.text.Document doc = new org.eclipse.jface.text.Document();
-                for(IMethod method : originalImplType.getMethods()){
+                final org.eclipse.jface.text.Document doc = new org.eclipse.jface.text.Document();
+                for(final IMethod method : originalImplType.getMethods()){
                     if(!isGetter(method) && !isSetter(method)){
                         if(!method.getElementName().equals("executeConnector")){
                             try{
                                 if(!method.isReadOnly()){
                                     method.copy(implType, null, null, false, Repository.NULL_PROGRESS_MONITOR);
                                 }
-                            }catch(CoreException e){
+                            }catch(final CoreException e){
                                 BonitaStudioLog.error(e);
                             }
                         }
                     }
                 }
-                for(IMethod method : originalImplType.getMethods()){
+                for(final IMethod method : originalImplType.getMethods()){
                     if(!isGetter(method) && !isSetter(method)){
                         if(method.getElementName().equals("executeConnector")){
-                            IMethod executeMethod = implType.getMethod("executeBusinessLogic", new String[0]);
-                            ISourceRange range = executeMethod.getSourceRange();
-                            String toAdd = MIGRATION_COMMENT + method.getSource().substring(method.getSource().indexOf("{")+1, method.getSource().length()-1);
+                            final IMethod executeMethod = implType.getMethod("executeBusinessLogic", new String[0]);
+                            final ISourceRange range = executeMethod.getSourceRange();
+                            final String toAdd = MIGRATION_COMMENT + method.getSource().substring(method.getSource().indexOf("{")+1, method.getSource().length()-1);
                             doc.set(implType.getCompilationUnit().getSource());
                             try {
                                 doc.replace(range.getOffset()+range.getLength()-1,0,toAdd);
-                            } catch (BadLocationException e) {
+                            } catch (final BadLocationException e) {
                                 BonitaStudioLog.error(e);
                             }
 
@@ -301,17 +308,17 @@ public class ConnectorDescriptorToConnectorDefinition {
                         }
                     }
                 }
-                ICompilationUnit compilationUnit = originalImplType.getCompilationUnit();
+                final ICompilationUnit compilationUnit = originalImplType.getCompilationUnit();
                 if(compilationUnit != null){
                     compilationUnit.delete(true, Repository.NULL_PROGRESS_MONITOR);
                 }
-                RepositoryManager.getInstance().getCurrentRepository().refresh(Repository.NULL_PROGRESS_MONITOR);
+                //RepositoryManager.getInstance().getCurrentRepository().refresh(Repository.NULL_PROGRESS_MONITOR);
             }
         }
         return Collections.emptyMap();
     }
 
-    protected boolean isGetter(IMethod method) throws JavaModelException {
+    protected boolean isGetter(final IMethod method) throws JavaModelException {
         return method.getElementName().startsWith("get")
                 && method.getParameters().length == 0
                 && method.getReturnType() != null
@@ -320,7 +327,7 @@ public class ConnectorDescriptorToConnectorDefinition {
                 && !Flags.isStatic(method.getFlags());
     }
 
-    protected boolean isSetter(IMethod method) throws JavaModelException {
+    protected boolean isSetter(final IMethod method) throws JavaModelException {
         return method.getElementName().startsWith("set")
                 && method.getParameters().length == 1
                 && method.getReturnType() != null
@@ -329,25 +336,25 @@ public class ConnectorDescriptorToConnectorDefinition {
                 && !Flags.isStatic(method.getFlags());
     }
 
-    private void addPages(ConnectorDefinition connectorDefinition) {
-        for(String pageId : v5Descriptor.getPages()){
+    private void addPages(final ConnectorDefinition connectorDefinition) {
+        for(final String pageId : v5Descriptor.getPages()){
             final Page page = createPage(pageId);
             connectorDefinition.getPage().add(page);
         }
     }
 
-    protected Page createPage(String pageId) {
+    protected Page createPage(final String pageId) {
         final Page page = ConnectorDefinitionFactory.eINSTANCE.createPage();
         page.setId(pageId);
 
-        for(Component component : v5Descriptor.getAllPageInputs(pageId)){
+        for(final Component component : v5Descriptor.getAllPageInputs(pageId)){
             page.getWidget().add(createWidget(component));
         }
         return  page;
     }
 
     protected org.bonitasoft.studio.connector.model.definition.Component createWidget(
-            Component component) {
+            final Component component) {
         org.bonitasoft.studio.connector.model.definition.Component widget = null;
         if(component instanceof Password){
             widget = createPasswordWidget((Password)component);
@@ -367,7 +374,7 @@ public class ConnectorDescriptorToConnectorDefinition {
             widget = createTextAreaWidget((Textarea)component);
         }else if(component instanceof Group){
             widget = createGroupWidget((Group)component);
-            for(WidgetComponent wc : ((Group) component).getWidgets()){
+            for(final WidgetComponent wc : ((Group) component).getWidgets()){
                 ((org.bonitasoft.studio.connector.model.definition.Group)widget).getWidget().add(createWidget(wc));
             }
         }
@@ -375,7 +382,7 @@ public class ConnectorDescriptorToConnectorDefinition {
     }
 
 
-    private String toInputName(Setter setter) {
+    private String toInputName(final Setter setter) {
         String name = setter.getSetterName();
         if(name.startsWith("set")){
             name = name.substring(3);
@@ -386,7 +393,7 @@ public class ConnectorDescriptorToConnectorDefinition {
 
 
     protected org.bonitasoft.studio.connector.model.definition.Component createGroupWidget(
-            Group component) {
+            final Group component) {
         final org.bonitasoft.studio.connector.model.definition.Group group = ConnectorDefinitionFactory.eINSTANCE.createGroup();
         group.setId(component.getLabelId());
         group.setOptional(component.isOptional());
@@ -394,7 +401,7 @@ public class ConnectorDescriptorToConnectorDefinition {
     }
 
     protected org.bonitasoft.studio.connector.model.definition.Component createTextAreaWidget(
-            Textarea component) {
+            final Textarea component) {
         final TextArea textArea = ConnectorDefinitionFactory.eINSTANCE.createTextArea();
         textArea.setId(component.getLabelId());
         textArea.setInputName(toInputName(component.getSetter()));
@@ -404,7 +411,7 @@ public class ConnectorDescriptorToConnectorDefinition {
 
 
     protected org.bonitasoft.studio.connector.model.definition.Component createPasswordWidget(
-            Password component) {
+            final Password component) {
         final org.bonitasoft.studio.connector.model.definition.Password text = ConnectorDefinitionFactory.eINSTANCE.createPassword();
         text.setId(component.getLabelId());
         text.setInputName(toInputName(component.getSetter()));
@@ -412,7 +419,7 @@ public class ConnectorDescriptorToConnectorDefinition {
     }
 
     protected org.bonitasoft.studio.connector.model.definition.Component createListWidget(
-            SimpleList component) {
+            final SimpleList component) {
         final org.bonitasoft.studio.connector.model.definition.List list = ConnectorDefinitionFactory.eINSTANCE.createList();
         list.setId(component.getLabelId());
         list.setInputName(toInputName(component.getSetter()));
@@ -420,7 +427,7 @@ public class ConnectorDescriptorToConnectorDefinition {
     }
 
     protected org.bonitasoft.studio.connector.model.definition.Component createTableWidget(
-            Array component) {
+            final Array component) {
         final org.bonitasoft.studio.connector.model.definition.Array array = ConnectorDefinitionFactory.eINSTANCE.createArray();
         array.setId(component.getLabelId());
         array.setInputName(toInputName(component.getSetter()));
@@ -428,21 +435,21 @@ public class ConnectorDescriptorToConnectorDefinition {
         array.setRows(BigInteger.valueOf(component.getRows()));
         array.setFixedCols(component.isFixedCols());
         array.setFixedRows(component.isFixedRows());
-        for(String caption : component.getColsCaptions()){
+        for(final String caption : component.getColsCaptions()){
             array.getColsCaption().add(caption);
         }
         return array;
     }
 
     protected org.bonitasoft.studio.connector.model.definition.Component createSelectWidget(
-            Select component) {
+            final Select component) {
         final org.bonitasoft.studio.connector.model.definition.Select select = ConnectorDefinitionFactory.eINSTANCE.createSelect();
         select.setId(component.getLabelId());
         select.setInputName(toInputName(component.getSetter()));
         if(component.getTop() != null){
             select.getItems().add(component.getTop().getValue());
         }
-        for(String item : component.getValues().values()){
+        for(final String item : component.getValues().values()){
             if(!select.getItems().contains(item)){
                 select.getItems().add(item);
             }
@@ -453,7 +460,7 @@ public class ConnectorDescriptorToConnectorDefinition {
     }
 
     protected org.bonitasoft.studio.connector.model.definition.Component createCheckboxWidget(
-            Checkbox component) {
+            final Checkbox component) {
         final org.bonitasoft.studio.connector.model.definition.Checkbox checkbox = ConnectorDefinitionFactory.eINSTANCE.createCheckbox();
         checkbox.setId(component.getLabelId());
         checkbox.setInputName(toInputName(component.getSetter()));
@@ -461,11 +468,11 @@ public class ConnectorDescriptorToConnectorDefinition {
     }
 
     protected org.bonitasoft.studio.connector.model.definition.Component createTextWidget(
-            Text component) {
+            final Text component) {
         final org.bonitasoft.studio.connector.model.definition.Text text = ConnectorDefinitionFactory.eINSTANCE.createText();
         text.setId(component.getLabelId());
         text.setInputName(toInputName(component.getSetter()));
-        Object[] param = component.getSetter().getParameters();
+        final Object[] param = component.getSetter().getParameters();
         if(param != null && param.length == 1){
             if(param[0] instanceof AttachmentInstance){
                 text.setShowDocuments(true);
@@ -475,7 +482,7 @@ public class ConnectorDescriptorToConnectorDefinition {
     }
 
     protected void addInputs(final ConnectorDefinition connectorDefinition) {
-        for(Setter setter : v5Descriptor.getInputs()){
+        for(final Setter setter : v5Descriptor.getInputs()){
             String defaultValue = null;
             final String name = toInputName(setter);
             final String isRequired = setter.getRequired();
@@ -500,27 +507,40 @@ public class ConnectorDescriptorToConnectorDefinition {
     }
 
     protected void addOutputs(final ConnectorDefinition connectorDefinition) {
-        for(Getter getter : v5Descriptor.getOutputs()){
-            String name = getter.getName();
-            if(name.startsWith("get")){
-                name = name.substring(3);
-            }
-            name = name.substring(0, 1).toLowerCase() +name.substring(1);
+        for(final Getter getter : v5Descriptor.getOutputs()){
+            final String name = retrieveOutputName(getter);
             final Output connectorOutput = ConnectorDefinitionFactory.eINSTANCE.createOutput();
             connectorOutput.setName(name);
             final Type outputType = v5Descriptor.getOutputType(getter.getName());
-            if( outputType instanceof Class){
+            if(outputType instanceof Class){
                 connectorOutput.setType(((Class<?>)outputType).getName());
                 connectorDefinition.getOutput().add(connectorOutput);
-            }else{
+            }else if(outputType instanceof ParameterizedType){
+                final Type rawType = ((ParameterizedType) outputType).getRawType();
+                if(rawType instanceof Class){
+                    connectorOutput.setType(((Class<?>) rawType).getName());
+                    connectorDefinition.getOutput().add(connectorOutput);
+                } else {
+                    BonitaStudioLog.warning("Unknown connector output type "+outputType.toString()+ " with Raw type:"+rawType.toString(), BarImporterPlugin.PLUGIN_ID);
+                }
+            } else {
                 BonitaStudioLog.warning("Unknown connector output type "+outputType.toString(), BarImporterPlugin.PLUGIN_ID);
             }
         }
     }
 
-    private String getInputType(Object[] parameters) {
+    private String retrieveOutputName(final Getter getter) {
+        String name = getter.getName();
+        if(name.startsWith("get")){
+            name = name.substring(3);
+        }
+        name = name.substring(0, 1).toLowerCase() +name.substring(1);
+        return name;
+    }
+
+    private String getInputType(final Object[] parameters) {
         if(parameters != null && parameters.length == 1){
-            Object object = parameters[0];
+            final Object object = parameters[0];
             if(object instanceof String){
                 return String.class.getName();
             }else if(object instanceof Long){
@@ -542,15 +562,15 @@ public class ConnectorDescriptorToConnectorDefinition {
 
     protected List<Category> createCategories(
             final List<org.ow2.bonita.connector.core.desc.Category> v5Categories) throws IOException {
-        final ConnectorDefRepositoryStore store = (ConnectorDefRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class);
+        final ConnectorDefRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class);
         final DefinitionResourceProvider resourceProvider = store.getResourceProvider();
         final Set<String> allCategories = resourceProvider.getProvidedCategoriesIds();
         allCategories.addAll(resourceProvider.getUserCategoriesIds());
-        List<Category> categories = new ArrayList<Category>();
-        for(org.ow2.bonita.connector.core.desc.Category c : v5Categories){
+        final List<Category> categories = new ArrayList<Category>();
+        for(final org.ow2.bonita.connector.core.desc.Category c : v5Categories){
             final String catId = c.getName();
             if(containsIgnoreCase(catId,allCategories)){
-                for(Category cat : resourceProvider.getAllCategories()){
+                for(final Category cat : resourceProvider.getAllCategories()){
                     if(cat.getId().equalsIgnoreCase(catId)){
                         categories.add(cat);
                         allCategories.add(catId);
@@ -564,8 +584,8 @@ public class ConnectorDescriptorToConnectorDefinition {
     }
 
 
-    private boolean containsIgnoreCase(String id,Set<String> l){
-        for (String s:l){
+    private boolean containsIgnoreCase(final String id,final Set<String> l){
+        for (final String s:l){
             if (s.equalsIgnoreCase(id)){
                 return true;
             }
@@ -574,8 +594,8 @@ public class ConnectorDescriptorToConnectorDefinition {
     }
 
     private Category createCategory(
-            org.ow2.bonita.connector.core.desc.Category c) throws IOException {
-        final ConnectorDefRepositoryStore store = (ConnectorDefRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class);
+            final org.ow2.bonita.connector.core.desc.Category c) throws IOException {
+        final ConnectorDefRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class);
         final Category category = ConnectorDefinitionFactory.eINSTANCE.createCategory();
         category.setId(c.getName());
         if(c.getIconPath() != null && !c.getIconPath().isEmpty()){
@@ -584,8 +604,8 @@ public class ConnectorDescriptorToConnectorDefinition {
             if(iconInputstream !=  null){
                 BufferedImage image = ImageIO.read(iconInputstream) ;
                 image = FileUtil.resizeImage(image,16) ;
-                File createTempFile = File.createTempFile("icon", ".png");
-                FileOutputStream resizedStream = new FileOutputStream(createTempFile);
+                final File createTempFile = File.createTempFile("icon", ".png");
+                final FileOutputStream resizedStream = new FileOutputStream(createTempFile);
                 ImageIO.write(image, "PNG", resizedStream) ;
                 resizedStream.close();
                 iconInputstream.close();
@@ -598,15 +618,15 @@ public class ConnectorDescriptorToConnectorDefinition {
     }
 
     public void importConnectorDefinitionResources() throws ZipException, IOException {
-        final ConnectorDefRepositoryStore store = (ConnectorDefRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class);
+        final ConnectorDefRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class);
         if(v5Descriptor.getIconPath() != null && !v5Descriptor.getIconPath().isEmpty() ){
             InputStream iconInputStream = v5Descriptor.getIcon();
             final String iconName = getIconName(v5Descriptor.getIconPath());
             if(iconInputStream != null && isSupportedIconExtension(iconName)){
                 BufferedImage image = ImageIO.read(iconInputStream) ;
                 image = FileUtil.resizeImage(image,16) ;
-                File createTempFile = File.createTempFile("icon", ".png");
-                FileOutputStream resizedStream = new FileOutputStream(createTempFile);
+                final File createTempFile = File.createTempFile("icon", ".png");
+                final FileOutputStream resizedStream = new FileOutputStream(createTempFile);
                 ImageIO.write(image, "PNG", resizedStream) ;
                 resizedStream.close();
                 iconInputStream.close();
@@ -618,45 +638,51 @@ public class ConnectorDescriptorToConnectorDefinition {
         importI18NFiles();
     }
 
-    private boolean isSupportedIconExtension(String iconName){
+    private boolean isSupportedIconExtension(final String iconName){
         if (iconName.matches(".*\\.jpg|.*\\.jpeg|.*\\.gif|.*\\.png|.*\\.bmp")){
             return Boolean.TRUE;
         } else {
-			Display.getDefault().syncExec(new WarningMessageDialogRunnable(Messages.warningImageFormat, Messages.bind(Messages.warningImageFormatMessage,iconName)));
+            Display.getDefault().syncExec(new WarningMessageDialogRunnable(Messages.warningImageFormat, Messages.bind(Messages.warningImageFormatMessage,iconName)));
             return Boolean.FALSE;
         }
     }
 
     protected void importI18NFiles() throws ZipException, IOException {
-        final ConnectorDefRepositoryStore store = (ConnectorDefRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class);
+        final ConnectorDefRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class);
         final ZipFile zipfile = new ZipFile(tmpConnectorJarFile);
-        Enumeration<?> enumEntries = zipfile.entries();
+        final Enumeration<?> enumEntries = zipfile.entries();
         ZipEntry zipEntry = null;
         while (enumEntries.hasMoreElements()){
             zipEntry=(ZipEntry)enumEntries.nextElement();
-            File currentFile = new File (zipEntry.getName());
+            final File currentFile = new File (zipEntry.getName());
             if (!zipEntry.isDirectory() && zipEntry.getName().endsWith(".properties") ){
                 String name = currentFile.getName();
                 String locale = "";
                 if(name.indexOf("_") != -1){
                     locale = name.substring(name.lastIndexOf("_"),name.lastIndexOf("."));
+                    name = name.substring(0, name.lastIndexOf("_"));
                 }
-                name = NamingUtils.toConnectorDefinitionFilename(v5Descriptor.getId(), BASE_VERSION, false)+locale+".properties";
-                InputStream stream = transformPropertiesFile(name,zipfile.getInputStream(zipEntry));
-                store.importInputStream(name, stream);
+                if (name.endsWith(".properties")) {
+                    name = name.substring(0, name.lastIndexOf("."));
+                }
+                if (name.equals(v5Descriptor.getId())) {
+                    name = NamingUtils.toConnectorDefinitionFilename(v5Descriptor.getId(), BASE_VERSION, false)+locale+".properties";
+                    final InputStream stream = transformPropertiesFile(name,zipfile.getInputStream(zipEntry));
+                    store.importInputStream(name, stream);
+                }
             }
         }
         zipfile.close();
     }
 
-    private InputStream transformPropertiesFile(String fileName,InputStream inputStream) throws IOException {
+    private InputStream transformPropertiesFile(final String fileName,final InputStream inputStream) throws IOException {
         FileOutputStream out = null;
         final File file = new File(ProjectUtil.getBonitaStudioWorkFolder(), fileName);
         try{
             final Properties p = new Properties();
             p.load(inputStream);
             final Set<Object> keySet = new HashSet<Object>(p.keySet());
-            for(Object key : keySet){
+            for(final Object key : keySet){
                 if(key.equals(CONNECTOR_ID)){
                     p.put(DefinitionResourceProvider.connectorDefinition, p.get(key));
                     p.remove(key);
@@ -664,13 +690,13 @@ public class ConnectorDescriptorToConnectorDefinition {
                     p.put(DefinitionResourceProvider.connectorDefinitionDescription, p.get(key));
                     p.remove(key);
                 }
-                for(org.ow2.bonita.connector.core.desc.Category c : v5Descriptor.getCategories()){
+                for(final org.ow2.bonita.connector.core.desc.Category c : v5Descriptor.getCategories()){
                     if(key.equals(c.getName())){
                         p.put(c.getName()+"."+DefinitionResourceProvider.category, p.get(key));
                         p.remove(key);
                     }
                 }
-                for(String pageId : v5Descriptor.getPages()){
+                for(final String pageId : v5Descriptor.getPages()){
                     if(key.equals(pageId)){
                         p.put(pageId+"."+DefinitionResourceProvider.pageTilte, p.get(key));
                         p.remove(key);
@@ -695,7 +721,7 @@ public class ConnectorDescriptorToConnectorDefinition {
         return new FileInputStream(file);
     }
 
-    protected String getIconName(String iconPath) {
+    protected String getIconName(final String iconPath) {
         String iconName = iconPath;
         if(iconName.indexOf("/") != -1){
             iconName = iconName.substring(iconName.lastIndexOf("/")+1, iconName.length());
@@ -704,7 +730,7 @@ public class ConnectorDescriptorToConnectorDefinition {
     }
 
     public Change createReportChange() {
-        Change change = MigrationReportFactory.eINSTANCE.createChange();
+        final Change change = MigrationReportFactory.eINSTANCE.createChange();
         change.setElementName(v5Descriptor.getId());
         change.setElementType(Messages.customConnector);
         change.setElementUUID("");

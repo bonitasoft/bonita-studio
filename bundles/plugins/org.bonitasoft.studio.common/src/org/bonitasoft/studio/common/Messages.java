@@ -346,4 +346,9 @@ public class Messages extends NLS {
 	public static String widgetListViewerTitle;
 	public static String outlineDialogRefactoringText;
 	public static String removalConfirmationDialogTitle;
+	
+	public static String errorValidationMessage;
+	public static String errorValidationContinueAnywayMessage;
+	public static String validationFailedTitle;
+	
 }

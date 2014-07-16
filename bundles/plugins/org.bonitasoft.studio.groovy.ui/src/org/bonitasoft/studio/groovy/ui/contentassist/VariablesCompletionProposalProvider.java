@@ -24,6 +24,7 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.groovy.ScriptVariable;
 import org.bonitasoft.studio.groovy.ui.viewer.GroovyViewer;
 import org.codehaus.groovy.ast.expr.VariableExpression;
+import org.codehaus.groovy.eclipse.codeassist.completions.GroovyJavaGuessingCompletionProposal;
 import org.codehaus.groovy.eclipse.codeassist.requestor.ContentAssistContext;
 import org.codehaus.groovy.eclipse.codeassist.requestor.GroovyCompletionProposalComputer;
 import org.codehaus.jdt.groovy.model.GroovyCompilationUnit;
@@ -51,7 +52,6 @@ public class VariablesCompletionProposalProvider implements IJavaCompletionPropo
     public void sessionStarted() {
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public List<ICompletionProposal> computeCompletionProposals(final ContentAssistInvocationContext context, final IProgressMonitor monitor) {
         final List<ICompletionProposal> list = new ArrayList<ICompletionProposal>();
@@ -59,8 +59,7 @@ public class VariablesCompletionProposalProvider implements IJavaCompletionPropo
             final ICompilationUnit unit = ((JavaContentAssistInvocationContext) context).getCompilationUnit();
             if (unit instanceof GroovyCompilationUnit) {
                 final ITextViewer viewer = context.getViewer();
-                final List<ScriptVariable> nodes = (List<ScriptVariable>) viewer.getTextWidget().getData(GroovyViewer.PROCESS_VARIABLES_DATA_KEY);
-                final List<String> keyWords = (List<String>) viewer.getTextWidget().getData(GroovyViewer.BONITA_KEYWORDS_DATA_KEY);
+                final List<ScriptVariable> variables = getScriptVariables(viewer);
                 if (((GroovyCompilationUnit) unit).getModuleNode() == null) {
                     return Collections.emptyList();
                 }
@@ -71,12 +70,15 @@ public class VariablesCompletionProposalProvider implements IJavaCompletionPropo
                 CharSequence prefix = null;
                 try {
                     prefix = context.computeIdentifierPrefix();
+                    if (prefix.toString().isEmpty()) {
+                        return list;
+                    }
                 } catch (final BadLocationException e) {
                     BonitaStudioLog.error(e);
                 }
                 Set<String> addedProposal = new HashSet<String>();
-                if (nodes != null) {
-                    for (final ScriptVariable f : nodes) {
+                if (variables != null) {
+                    for (final ScriptVariable f : variables) {
                         final String name = f.getName();
                         final String typeName = f.getType();
                         if (assistContext.completionNode instanceof VariableExpression) {
@@ -85,19 +87,7 @@ public class VariablesCompletionProposalProvider implements IJavaCompletionPropo
                             }
                         }
                         if (name.startsWith(prefix.toString())) {
-                        	addedProposal.add(name);
-                            list.add(getProposalFor(context, fLabelProvider, prefix,  name, typeName));
-                        }
-                    }
-                }
-                if(keyWords != null){
-                    for (final String name : keyWords) {
-                        if (!addedProposal.contains(name) && name.startsWith(prefix.toString())) {
-                            final Class<?> typeForKeyWord = BonitaSyntaxHighlighting.getTypeForKeyWord(name);
-                            String typeName = null;
-                            if (typeForKeyWord != null) {
-                                typeName = typeForKeyWord.getName();
-                            }
+                            addedProposal.add(name);
                             list.add(getProposalFor(context, fLabelProvider, prefix, name, typeName));
                         }
                     }
@@ -108,45 +98,39 @@ public class VariablesCompletionProposalProvider implements IJavaCompletionPropo
         return Collections.emptyList();
     }
 
-    private JavaCompletionProposal getProposalFor(final ContentAssistInvocationContext context,
+    @SuppressWarnings("unchecked")
+    private List<ScriptVariable> getScriptVariables(final ITextViewer viewer) {
+        final List<ScriptVariable> result = new ArrayList<ScriptVariable>();
+        final List<ScriptVariable> nodes = (List<ScriptVariable>) viewer.getTextWidget().getData(GroovyViewer.PROCESS_VARIABLES_DATA_KEY);
+        if (nodes != null) {
+            result.addAll(nodes);
+        }
+        final List<ScriptVariable> providedScriptVariables = (List<ScriptVariable>) viewer.getTextWidget().getData(
+                GroovyViewer.BONITA_KEYWORDS_DATA_KEY);
+        if (providedScriptVariables != null) {
+            result.addAll(providedScriptVariables);
+        }
+        return result;
+    }
+
+    private ICompletionProposal getProposalFor(final ContentAssistInvocationContext context,
             final CompletionProposalLabelProvider fLabelProvider, final CharSequence prefix, final String name, final String typeName) {
-        final CompletionProposal proposal= CompletionProposal.create(CompletionProposal.FIELD_REF, context.getInvocationOffset());
+        final CompletionProposal proposal = CompletionProposal.create(CompletionProposal.FIELD_REF, context.getInvocationOffset());
         proposal.setCompletion(name.substring(prefix.length()).toCharArray());
         proposal.setName(name.toCharArray());
         proposal.setFlags(Flags.AccPublic);
         proposal.setReplaceRange(context.getInvocationOffset(), context.getInvocationOffset());
-        //        Class type = BonitaSyntaxHighlighting.getTypeForKeyWord(keyWord) ;
-        if(typeName != null){
+        if (typeName != null) {
             proposal.setSignature(Signature.createTypeSignature(typeName, true).toCharArray());
         }
-        String completion= String.valueOf(proposal.getCompletion());
-        int start= proposal.getReplaceStart();
-        int end= proposal.getReplaceEnd();
+        String completion = String.valueOf(proposal.getCompletion());
+        int start = proposal.getReplaceStart();
+        int end = proposal.getReplaceEnd();
         int length = end - start;
 
-        StyledString label= fLabelProvider.createStyledLabel(proposal);
+        StyledString label = fLabelProvider.createStyledLabel(proposal);
         final Image image = JavaPlugin.getImageDescriptorRegistry().get(fLabelProvider.createImageDescriptor(proposal));
-        return  new JavaCompletionProposal(completion, start, length, image, label, 100,false);
-
-        //        final CompletionProposal proposal = CompletionProposal.create(CompletionProposal.FIELD_REF, context.getInvocationOffset());
-        //        proposal.setCompletion(name.toCharArray());
-        //        proposal.setName(name.toCharArray());
-        //        proposal.setFlags(Flags.AccPublic);
-        //        proposal.setReplaceRange(context.getInvocationOffset() - prefix.length(), context.getInvocationOffset() + name.length() - prefix.length());
-        //        if (typeName != null) {
-        //            proposal.setSignature(Signature.createTypeSignature(typeName, true).toCharArray());
-        //        }
-        //        final String completion = String.valueOf(proposal.getCompletion());
-        //        final int start = proposal.getReplaceStart();
-        //        final int end = proposal.getReplaceEnd();
-        //        final int length = end - start;
-        //
-        //        final StyledString label = fLabelProvider.createStyledLabel(proposal);
-        //
-        //        final BonitaConstantsCompletionProposal javaProposal = new BonitaConstantsCompletionProposal(
-        //                ((JavaContentAssistInvocationContext) context).getCompilationUnit(), completion, start, length, image, label, 1000, false,
-        //                (JavaContentAssistInvocationContext) context);
-        //        return javaProposal;
+        return new JavaCompletionProposal(completion, start, length, image, label, 100, false);
     }
 
     @Override

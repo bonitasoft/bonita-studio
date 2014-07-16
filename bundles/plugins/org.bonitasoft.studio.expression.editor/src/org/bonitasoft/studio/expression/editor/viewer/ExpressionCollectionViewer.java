@@ -66,7 +66,6 @@ import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.layout.RowLayout;
@@ -77,7 +76,6 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
@@ -121,15 +119,15 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
     private boolean isPageFlowContext = false;
     private final SelectionAdapter removeRowListener = new SelectionAdapter() {
         @Override
-        public void widgetSelected(SelectionEvent event) {
+        public void widgetSelected(final SelectionEvent event) {
             super.widgetSelected(event);
             if (viewer != null && viewer.getSelection() != null
                     && !viewer.getSelection().isEmpty()) {
-                int indexRowToRemove = viewer.getTable()
+                final int indexRowToRemove = viewer.getTable()
                         .getSelectionIndex();
                 removeRow(indexRowToRemove);
             }
-            for (Listener l : listeners) {
+            for (final Listener l : listeners) {
                 l.handleEvent(new Event());
             }
         }
@@ -139,42 +137,42 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
     private String mandatoryLabel;
     private Binding bindValue;
 
-    public void setEditingDomain(EditingDomain editingDomain) {
+    public void setEditingDomain(final EditingDomain editingDomain) {
         this.editingDomain = editingDomain;
-        for (ExpressionCollectionEditingSupport ece : editingSupports) {
+        for (final ExpressionCollectionEditingSupport ece : editingSupports) {
             ece.setEditingDomain(editingDomain);
         }
     }
 
-    public ExpressionCollectionViewer(Composite composite, int nbRow,
-            boolean fixedRow, int nbCol, boolean fixedCol,
-            List<String> colCaptions,
-            TabbedPropertySheetWidgetFactory widgetFactory,
-            EditingDomain editingDomain, boolean allowSwitchTableMode,
-            boolean allowRowSort) {
+    public ExpressionCollectionViewer(final Composite composite, final int nbRow,
+            final boolean fixedRow, final int nbCol, final boolean fixedCol,
+            final List<String> colCaptions,
+            final TabbedPropertySheetWidgetFactory widgetFactory,
+            final EditingDomain editingDomain, final boolean allowSwitchTableMode,
+            final boolean allowRowSort) {
         this(composite, nbRow, fixedRow, nbCol, fixedCol, colCaptions, widgetFactory,
                 editingDomain, allowSwitchTableMode, allowRowSort,false);
     }
 
-    public ExpressionCollectionViewer(Composite composite, int nbRow,
-            boolean fixedRow, int nbCol, boolean fixedCol,
-            List<String> colCaptions, boolean allowSwitchTableMode,
-            boolean allowRowSort) {
+    public ExpressionCollectionViewer(final Composite composite, final int nbRow,
+            final boolean fixedRow, final int nbCol, final boolean fixedCol,
+            final List<String> colCaptions, final boolean allowSwitchTableMode,
+            final boolean allowRowSort) {
         this(composite, nbRow, fixedRow, nbCol, fixedCol, colCaptions, null,
                 null, allowSwitchTableMode, allowRowSort);
     }
 
-    public ExpressionCollectionViewer(Composite composite) {
+    public ExpressionCollectionViewer(final Composite composite) {
         this(composite, 0, false, 1, true, null, null, null, true, false);
     }
 
 
-    public ExpressionCollectionViewer(Composite composite, int nbRow,
-            boolean fixedRow, int nbCol, boolean fixedCol,
-            List<String> colCaptions,
-            TabbedPropertySheetWidgetFactory widgetFactory,
-            EditingDomain editingDomain, boolean allowSwitchTableMode,
-            boolean allowRowSort,boolean withConnectors) {
+    public ExpressionCollectionViewer(final Composite composite, final int nbRow,
+            final boolean fixedRow, final int nbCol, final boolean fixedCol,
+            final List<String> colCaptions,
+            final TabbedPropertySheetWidgetFactory widgetFactory,
+            final EditingDomain editingDomain, final boolean allowSwitchTableMode,
+            final boolean allowRowSort,final boolean withConnectors) {
         this.editingDomain = editingDomain;
         captions = colCaptions;
         minNbRow = nbRow;
@@ -187,16 +185,16 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
         this.allowSwitchTableMode = allowSwitchTableMode;
         this.allowRowSort = allowRowSort;
         this.withConnectors  = withConnectors;
-        this.lineTableCreator = new LineTableCreator();
+        lineTableCreator = new LineTableCreator();
         createComposite(composite, widgetFactory);
     }
 
-    public void setLineTableCreator(LineTableCreator lineTableCreator){
+    public void setLineTableCreator(final LineTableCreator lineTableCreator){
         this.lineTableCreator = lineTableCreator;
     }
 
-    private void createComposite(Composite parent,
-            TabbedPropertySheetWidgetFactory widgetFactory) {
+    private void createComposite(final Composite parent,
+            final TabbedPropertySheetWidgetFactory widgetFactory) {
 
         mainComposite = new MagicComposite(parent, SWT.NONE);
         if (widgetFactory != null) {
@@ -205,46 +203,6 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
 
         mainComposite.setLayout(GridLayoutFactory.fillDefaults().margins(0, 0).create());
 
-        createTableViewerComposite(widgetFactory);
-        createButtonComposite(widgetFactory);
-
-        if (allowSwitchTableMode) {
-            createSwitchModeLink(widgetFactory);
-        }
-
-        viewer.getTable().addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                super.widgetSelected(e);
-                updateButtons();
-                for (Listener l : listeners) {
-                    l.handleEvent(new Event());
-                }
-            }
-        });
-        viewer.getTable().addMouseListener(new MouseListener() {
-
-            @Override
-            public void mouseUp(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mouseDown(MouseEvent e) {
-                posClickX = e.x;
-            }
-
-            @Override
-            public void mouseDoubleClick(MouseEvent e) {
-
-            }
-        });
-
-        updateButtons();
-    }
-
-    protected void createTableViewerComposite(
-            TabbedPropertySheetWidgetFactory widgetFactory) {
         if (widgetFactory != null) {
             viewerComposite = widgetFactory.createComposite(mainComposite,
                     SWT.NONE);
@@ -252,10 +210,51 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
             viewerComposite = new Composite(mainComposite, SWT.NONE);
         }
 
-        viewerComposite.setLayoutData(GridDataFactory.fillDefaults().indent(12, 0).grab(true, true).create());
+        viewerComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         viewerComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(0, 0).create());
-        Table table = new Table(viewerComposite, SWT.BORDER| SWT.FULL_SELECTION);
-        viewer = new TableViewer(table);
+
+        createButtonComposite(viewerComposite, widgetFactory);
+        createTableViewerComposite(viewerComposite, widgetFactory);
+
+
+        if (allowSwitchTableMode) {
+            createSwitchModeLink(widgetFactory);
+        }
+
+        viewer.getTable().addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(final SelectionEvent e) {
+                super.widgetSelected(e);
+                updateButtons();
+                for (final Listener l : listeners) {
+                    l.handleEvent(new Event());
+                }
+            }
+        });
+        viewer.getTable().addMouseListener(new MouseListener() {
+
+            @Override
+            public void mouseUp(final MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseDown(final MouseEvent e) {
+                posClickX = e.x;
+            }
+
+            @Override
+            public void mouseDoubleClick(final MouseEvent e) {
+
+            }
+        });
+
+        updateButtons();
+    }
+
+    protected void createTableViewerComposite(final Composite parent,
+            final TabbedPropertySheetWidgetFactory widgetFactory) {
+        viewer = new TableViewer(parent, SWT.BORDER | SWT.FULL_SELECTION);
         viewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 70).create());
         viewer.getTable().setLinesVisible(true);
         viewer.getTable().setHeaderVisible(captions != null && !captions.isEmpty());
@@ -268,14 +267,14 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
         }
         viewer.getTable().addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseDown(MouseEvent e) {
+            public void mouseDown(final MouseEvent e) {
                 if(minNbRow == 0 || getNbRows() < minNbRow){
-                    Point point = new Point(e.x,e.y);
-                    TableItem item = viewer.getTable().getItem(point);
+                    final Point point = new Point(e.x,e.y);
+                    final TableItem item = viewer.getTable().getItem(point);
                     int currentWidth = 0;
                     int colIndex = 0;
                     for(int i = 0; i<viewer.getTable().getColumns().length ; i++){
-                        TableColumn c = viewer.getTable().getColumns()[i];
+                        final TableColumn c = viewer.getTable().getColumns()[i];
                         if(point.x >= currentWidth && point.x  < currentWidth + c.getWidth()){
                             colIndex = i;
                             break;
@@ -291,53 +290,43 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
 
     }
 
-    protected void createButtonComposite(
-            TabbedPropertySheetWidgetFactory widgetFactory) {
+    protected void createButtonComposite(final Composite parent,
+            final TabbedPropertySheetWidgetFactory widgetFactory) {
         Composite buttonComposite = null;
         if (widgetFactory != null) {
-            buttonComposite = widgetFactory.createComposite(viewerComposite,
+            buttonComposite = widgetFactory.createComposite(parent,
                     SWT.NONE);
         } else {
-            buttonComposite = new Composite(viewerComposite, SWT.NONE);
+            buttonComposite = new Composite(parent, SWT.NONE);
         }
+        buttonComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, false).align(SWT.FILL, SWT.TOP).create());
 
-        RowLayout rl = new RowLayout();
-        rl.spacing = 5;
+        final RowLayout rl = new RowLayout(SWT.VERTICAL);
+        rl.spacing = 3;
+        rl.marginLeft = 15;
         rl.fill = true;
-        rl.type = SWT.VERTICAL;
         buttonComposite.setLayout(rl);
-        fillButtonComposite(widgetFactory, buttonComposite);
+        fillButtonComposite(parent,widgetFactory, buttonComposite);
     }
 
-    protected void fillButtonComposite(
-            TabbedPropertySheetWidgetFactory widgetFactory,
-            Composite buttonComposite) {
+    protected void fillButtonComposite(final Composite parent,
+            final TabbedPropertySheetWidgetFactory widgetFactory,
+            final Composite buttonComposite) {
         if (!fixedRow) {
             createRowbuttons(widgetFactory, buttonComposite);
-        } else {
-            Composite filler = new Composite(viewerComposite, SWT.NONE);
-            filler.setLayoutData(new GridData(0, 0));
         }
 
         if (!fixedCol) {
             createColButtons(widgetFactory, buttonComposite);
-        } else {
-            Composite filler = new Composite(viewerComposite, SWT.NONE);
-            filler.setLayoutData(new GridData(0, 0));
         }
 
         if (allowRowSort) {
             createRowSortButtons(widgetFactory, buttonComposite);
         }
-
-        if (fixedCol && !fixedRow) {
-            Composite filler = new Composite(viewerComposite, SWT.NONE);
-            filler.setLayoutData(new GridData(0, 0));
-        }
     }
 
     private void createSwitchModeLink(
-            TabbedPropertySheetWidgetFactory widgetFactory) {
+            final TabbedPropertySheetWidgetFactory widgetFactory) {
         if (widgetFactory != null) {
             expressionComposite = widgetFactory.createComposite(mainComposite,
                     SWT.NONE);
@@ -362,13 +351,13 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
         }
         switchTableModeLink.addSelectionListener(new SelectionAdapter() {
             @Override
-            public void widgetSelected(SelectionEvent arg0) {
+            public void widgetSelected(final SelectionEvent arg0) {
                 switchTableMode();
             }
         });
     }
 
-    private void initializeTableOrExpression(boolean isTableMode) {
+    private void initializeTableOrExpression(final boolean isTableMode) {
         this.isTableMode = isTableMode;
         if (isTableMode) {
             if (allowSwitchTableMode) {
@@ -400,7 +389,7 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
             @Override
             protected IStatus validate() {
                 if(isTableMode()){
-                    AbstractExpression expression = getValue();
+                    final AbstractExpression expression = getValue();
                     if(expression instanceof ListExpression){
                         listValue.getValue();
                         if(listExpression.getExpressions() == null || listExpression.getExpressions().isEmpty()){
@@ -421,7 +410,7 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
             @Override
             protected IStatus validate() {
                 if(isTableMode()){
-                    AbstractExpression expression = getValue();
+                    final AbstractExpression expression = getValue();
                     if(expression instanceof TableExpression){
                         tableValue.getValue();
                         if(tableExpression.getExpressions() == null || tableExpression.getExpressions().isEmpty()){
@@ -435,8 +424,8 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
     }
 
     private void createRowSortButtons(
-            TabbedPropertySheetWidgetFactory widgetFactory,
-            Composite buttonComposite) {
+            final TabbedPropertySheetWidgetFactory widgetFactory,
+            final Composite buttonComposite) {
         if (widgetFactory != null) {
             upRowSortButton = widgetFactory.createButton(buttonComposite,
                     Messages.upRowSort, SWT.FLAT);
@@ -446,15 +435,15 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
         }
         upRowSortButton.addSelectionListener(new SelectionAdapter() {
             @Override
-            public void widgetSelected(SelectionEvent e) {
+            public void widgetSelected(final SelectionEvent e) {
                 super.widgetSelected(e);
                 if (viewer != null && viewer.getSelection() != null
                         && !viewer.getSelection().isEmpty()) {
-                    int indexRowToMoveUp = viewer.getTable()
+                    final int indexRowToMoveUp = viewer.getTable()
                             .getSelectionIndex();
                     moveUpRow(indexRowToMoveUp);
                 }
-                for (Listener l : listeners) {
+                for (final Listener l : listeners) {
                     l.handleEvent(new Event());
                 }
 
@@ -470,15 +459,15 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
         }
         downRowSortButton.addSelectionListener(new SelectionAdapter() {
             @Override
-            public void widgetSelected(SelectionEvent e) {
+            public void widgetSelected(final SelectionEvent e) {
                 super.widgetSelected(e);
                 if (viewer != null && viewer.getSelection() != null
                         && !viewer.getSelection().isEmpty()) {
-                    int indexRowToMoveDown = viewer.getTable()
+                    final int indexRowToMoveDown = viewer.getTable()
                             .getSelectionIndex();
                     moveDownRow(indexRowToMoveDown);
                 }
-                for (Listener l : listeners) {
+                for (final Listener l : listeners) {
                     l.handleEvent(new Event());
                 }
             }
@@ -486,39 +475,39 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
 
     }
 
-    protected void moveUpRow(int indexRowToMoveUp) {
+    protected void moveUpRow(final int indexRowToMoveUp) {
         if (indexRowToMoveUp > 0) {
-            int targetIndex = indexRowToMoveUp - 1;
+            final int targetIndex = indexRowToMoveUp - 1;
             moveRowFromTo(indexRowToMoveUp, targetIndex);
         }
     }
 
-    protected void moveDownRow(int indexRowToMoveUp) {
+    protected void moveDownRow(final int indexRowToMoveUp) {
         if (indexRowToMoveUp < getNbRows()) {
-            int targetIndex = indexRowToMoveUp + 1;
+            final int targetIndex = indexRowToMoveUp + 1;
             moveRowFromTo(indexRowToMoveUp, targetIndex);
         }
     }
 
-    protected void moveRowFromTo(int indexRowToMoveUp, int targetIndex) {
-        AbstractExpression expression = (AbstractExpression) viewer.getInput();
+    protected void moveRowFromTo(final int indexRowToMoveUp, final int targetIndex) {
+        final AbstractExpression expression = (AbstractExpression) viewer.getInput();
         if (editingDomain == null) {
             editingDomain = TransactionUtil.getEditingDomain(expression);
         }
         if (editingDomain != null) {
             if (expression instanceof ListExpression) {
-                Expression expressionToMoveUp = ((ListExpression) expression)
+                final Expression expressionToMoveUp = ((ListExpression) expression)
                         .getExpressions().get(indexRowToMoveUp);
-                Command moveCommand = MoveCommand
+                final Command moveCommand = MoveCommand
                         .create(editingDomain,
                                 expression,
                                 ExpressionPackage.Literals.LIST_EXPRESSION__EXPRESSIONS,
                                 expressionToMoveUp, targetIndex);
                 editingDomain.getCommandStack().execute(moveCommand);
             } else if (expression instanceof TableExpression) {
-                ListExpression expressionToMoveUp = ((TableExpression) expression)
+                final ListExpression expressionToMoveUp = ((TableExpression) expression)
                         .getExpressions().get(indexRowToMoveUp);
-                Command moveCommand = MoveCommand
+                final Command moveCommand = MoveCommand
                         .create(editingDomain,
                                 expression,
                                 ExpressionPackage.Literals.TABLE_EXPRESSION__EXPRESSIONS,
@@ -539,7 +528,7 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
     }
 
     protected void addRow(final int colIndexToEdit) {
-        Object expressionInput = viewer.getInput();
+        final Object expressionInput = viewer.getInput();
         AbstractExpression newExpression = null;
         if (expressionInput instanceof ListExpression) {
             newExpression = addElementInListExpression(expressionInput);
@@ -551,16 +540,16 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
         putCursorOnNewElement(colIndexToEdit, newExpression);
     }
 
-    private AbstractExpression addElementInListExpression(Object expressionInput) {
+    private AbstractExpression addElementInListExpression(final Object expressionInput) {
         AbstractExpression newExpression;
         newExpression = ExpressionFactory.eINSTANCE.createExpression();
         ((ListExpression) expressionInput).getExpressions().add((Expression) newExpression);
         return newExpression;
     }
 
-    private AbstractExpression addLineInTableExpression(Object expressionInput) {
+    private AbstractExpression addLineInTableExpression(final Object expressionInput) {
         AbstractExpression newExpression;
-        ListExpression rowExp = createListExpressionForNewLineInTable();
+        final ListExpression rowExp = createListExpressionForNewLineInTable();
         if (editingDomain == null) {
             editingDomain = TransactionUtil.getEditingDomain(expressionInput);
         }
@@ -584,7 +573,7 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
         return lineTableCreator.createListExpressionForNewLineInTable(Math.max(getNbCols(), minNbCol));
     }
 
-    private void putCursorOnNewElement(final int colIndexToEdit, AbstractExpression newExpression) {
+    private void putCursorOnNewElement(final int colIndexToEdit, final AbstractExpression newExpression) {
         final AbstractExpression expressionToEdit= newExpression;
         Display.getDefault().asyncExec(new Runnable() {
 
@@ -601,12 +590,12 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
     }
 
     private void createColButtons(
-            TabbedPropertySheetWidgetFactory widgetFactory,
-            Composite buttonComposite) {
+            final TabbedPropertySheetWidgetFactory widgetFactory,
+            final Composite buttonComposite) {
         if (widgetFactory != null) {
-            Label separator = widgetFactory.createSeparator(buttonComposite,
+            final Label separator = widgetFactory.createSeparator(buttonComposite,
                     SWT.SEPARATOR | SWT.HORIZONTAL);
-            separator.setLayoutData(new RowData(2, 20));
+            separator.setLayoutData(new RowData(1, 10));
         }
 
         if (widgetFactory != null) {
@@ -618,11 +607,11 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
         }
         addColumnButton.addListener(SWT.Selection, new Listener() {
             @Override
-            public void handleEvent(Event event) {
+            public void handleEvent(final Event event) {
                 if(!viewerFilters.isEmpty()){
                     viewerFilters.add(viewerFilters.get(viewerFilters.size()-1));
                 }
-                Expression newExp = addColumn(getNbCols());
+                final Expression newExp = addColumn(getNbCols());
                 refresh();
                 viewer.editElement(newExp, getNbCols() - 1);
             }
@@ -637,13 +626,13 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
         }
         removeColButton.addListener(SWT.Selection, new Listener() {
             @Override
-            public void handleEvent(Event event) {
+            public void handleEvent(final Event event) {
                 if (viewer != null && viewer.getSelection() != null
                         && !viewer.getSelection().isEmpty()) {
-                    int indexColumnToRemove = posClickX / viewer.getTable().getColumns()[0].getWidth();
+                    final int indexColumnToRemove = posClickX / viewer.getTable().getColumns()[0].getWidth();
                     removeColumn(indexColumnToRemove);
                 }
-                for (Listener l : listeners) {
+                for (final Listener l : listeners) {
                     l.handleEvent(new Event());
                 }
             }
@@ -651,8 +640,8 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
     }
 
     private void createRowbuttons(
-            TabbedPropertySheetWidgetFactory widgetFactory,
-            Composite buttonComposite) {
+            final TabbedPropertySheetWidgetFactory widgetFactory,
+            final Composite buttonComposite) {
         if (widgetFactory != null) {
             addRowButton = widgetFactory.createButton(buttonComposite,
                     Messages.addRow, SWT.FLAT);
@@ -663,7 +652,7 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
 
         addRowButton.addSelectionListener(new SelectionAdapter() {
             @Override
-            public void widgetSelected(SelectionEvent e) {
+            public void widgetSelected(final SelectionEvent e) {
                 addRow(0);
             }
 
@@ -689,7 +678,7 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
 
     private void updateColumns() {
         editingSupports.clear();
-        for (TableColumn c : viewer.getTable().getColumns()) {
+        for (final TableColumn c : viewer.getTable().getColumns()) {
             c.dispose();
         }
         if (getNbRows() > 0) {
@@ -699,17 +688,17 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
         }
     }
 
-    protected void updateTableOrExpressionMode(boolean isTableMode) {
+    protected void updateTableOrExpressionMode(final boolean isTableMode) {
         initializeTableOrExpression(isTableMode);
-        Point defaultSize = mainComposite.getSize();
-        Point size = mainComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
+        final Point defaultSize = mainComposite.getSize();
+        final Point size = mainComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
         mainComposite.setSize(defaultSize.x, size.y);
         mainComposite.layout(true, true);
 
-        for (Listener listener : listeners) {
+        for (final Listener listener : listeners) {
             listener.handleEvent(null);
         }
-        for (IExpressionModeListener l : modeListeners) {
+        for (final IExpressionModeListener l : modeListeners) {
             if (isTableMode) {
                 l.useTable();
             } else {
@@ -718,8 +707,8 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
         }
     }
 
-    protected void addColumnToViewer(int index) {
-        TableViewerColumn column = new TableViewerColumn(viewer, SWT.FILL);
+    protected void addColumnToViewer(final int index) {
+        final TableViewerColumn column = new TableViewerColumn(viewer, SWT.FILL);
 
         if (captions != null && captions.size() > index
                 && captions.get(index) != null) {
@@ -732,13 +721,13 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
             editingSupport.setInput(context);
         }
         if (viewerFilters != null && viewerFilters.size() > index) {
-            ViewerFilter filter = viewerFilters.get(index);
+            final ViewerFilter filter = viewerFilters.get(index);
             if (filter != null) {
                 editingSupport.addFilter(filter);
             }
             if (viewerExprProviders != null
                     && viewerExprProviders.size() > index) {
-                IExpressionNatureProvider provider = viewerExprProviders
+                final IExpressionNatureProvider provider = viewerExprProviders
                         .get(index);
                 if (provider != null) {
                     editingSupport.setExpressionNatureProvider(provider);
@@ -749,9 +738,9 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
         column.setEditingSupport(editingSupport);
         column.setLabelProvider(new ExpressionColumnLabelProvider(index));
 
-        int weight = (int) (((float) 1 / (float) viewer.getTable()
-                .getColumnCount()) * 100);
-        TableLayout layout = new TableLayout();
+        final int weight = (int) ((float) 1 / (float) viewer.getTable()
+                .getColumnCount() * 100);
+        final TableLayout layout = new TableLayout();
         for (int i = 0; i < viewer.getTable().getColumns().length; i++) {
             layout.addColumnData(new ColumnWeightData(weight));
         }
@@ -760,17 +749,17 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
         refresh();
     }
 
-    private Expression addColumn(int index) {
-        TableExpression tableExpression = (TableExpression) viewer.getInput();
-        EList<ListExpression> expressions = tableExpression.getExpressions();
+    private Expression addColumn(final int index) {
+        final TableExpression tableExpression = (TableExpression) viewer.getInput();
+        final EList<ListExpression> expressions = tableExpression.getExpressions();
         Expression exp = null;
         if (editingDomain == null) {
             editingDomain = TransactionUtil.getEditingDomain(expressions);
         }
         if (editingDomain != null) {
-            CompoundCommand cc = new CompoundCommand("Add column at index "
+            final CompoundCommand cc = new CompoundCommand("Add column at index "
                     + index);
-            for (ListExpression listExpression : expressions) {
+            for (final ListExpression listExpression : expressions) {
                 exp = ExpressionFactory.eINSTANCE.createExpression();
                 cc.append(AddCommand
                         .create(editingDomain,
@@ -780,9 +769,9 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
             }
             editingDomain.getCommandStack().execute(cc);
         } else {
-            for (ListExpression listExpression : expressions) {
+            for (final ListExpression listExpression : expressions) {
                 exp = ExpressionFactory.eINSTANCE.createExpression();
-                EList<Expression> subListExpression = listExpression
+                final EList<Expression> subListExpression = listExpression
                         .getExpressions();
                 subListExpression.add(exp);
             }
@@ -792,20 +781,20 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
         return exp;
     }
 
-    private void removeColumn(int indexColumnToRemove) {
-        TableExpression tableExpression = (TableExpression) viewer.getInput();
-        EList<ListExpression> expressions = tableExpression.getExpressions();
+    private void removeColumn(final int indexColumnToRemove) {
+        final TableExpression tableExpression = (TableExpression) viewer.getInput();
+        final EList<ListExpression> expressions = tableExpression.getExpressions();
         if (editingDomain == null) {
             editingDomain = TransactionUtil.getEditingDomain(expressions);
         }
         if (editingDomain != null) {
-            CompoundCommand cc = new CompoundCommand(
+            final CompoundCommand cc = new CompoundCommand(
                     "Remove column of a TableExpression");
-            for (ListExpression listExpression : expressions) {
+            for (final ListExpression listExpression : expressions) {
                 if(indexColumnToRemove < listExpression.getExpressions().size()){
-                    Expression expressionToRemove = listExpression.getExpressions()
+                    final Expression expressionToRemove = listExpression.getExpressions()
                             .get(indexColumnToRemove);
-                    Command removeCommand = RemoveCommand
+                    final Command removeCommand = RemoveCommand
                             .create(editingDomain,
                                     listExpression,
                                     ExpressionPackage.Literals.LIST_EXPRESSION__EXPRESSIONS,
@@ -815,7 +804,7 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
             }
             editingDomain.getCommandStack().execute(cc);
         } else {
-            for (ListExpression listExpression : expressions) {
+            for (final ListExpression listExpression : expressions) {
                 listExpression.getExpressions().remove(indexColumnToRemove);
             }
         }
@@ -824,14 +813,14 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
         refresh();
     }
 
-    private void removeRow(int indexRowToRemove) {
-        AbstractExpression expression = (AbstractExpression) viewer.getInput();
+    private void removeRow(final int indexRowToRemove) {
+        final AbstractExpression expression = (AbstractExpression) viewer.getInput();
         if (editingDomain == null) {
             editingDomain = TransactionUtil.getEditingDomain(expression);
         }
         if (editingDomain != null) {
             if (expression instanceof ListExpression) {
-                Expression expressionToRemove = ((ListExpression) expression)
+                final Expression expressionToRemove = ((ListExpression) expression)
                         .getExpressions().get(indexRowToRemove);
                 editingDomain
                 .getCommandStack()
@@ -842,9 +831,9 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
                                 ExpressionPackage.Literals.LIST_EXPRESSION__EXPRESSIONS,
                                 expressionToRemove));
             } else if (expression instanceof TableExpression) {
-                ListExpression expressionToRemove = ((TableExpression) expression)
+                final ListExpression expressionToRemove = ((TableExpression) expression)
                         .getExpressions().get(indexRowToRemove);
-                Command removeCommand = RemoveCommand
+                final Command removeCommand = RemoveCommand
                         .create(editingDomain,
                                 expression,
                                 ExpressionPackage.Literals.TABLE_EXPRESSION__EXPRESSIONS,
@@ -926,7 +915,7 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
     /**
      * @param gridData
      */
-    public void setLayoutData(Object layoutData) {
+    public void setLayoutData(final Object layoutData) {
         mainComposite.setLayoutData(layoutData);
         refresh();
     }
@@ -934,7 +923,7 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
     /**
      * @param listener
      */
-    public void addModifyListener(Listener listener) {
+    public void addModifyListener(final Listener listener) {
         listeners.add(listener);
         if (expressionEditor != null) {
             expressionEditor.getTextControl().addListener(SWT.Modify, listener);
@@ -951,7 +940,7 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
 
     public boolean isEmpty() {
         if (isTableMode) {
-            AbstractExpression value = getValue();
+            final AbstractExpression value = getValue();
             if (value instanceof ListExpression) {
                 return ((ListExpression) value).getExpressions().isEmpty();
             } else if (value instanceof TableExpression) {
@@ -959,7 +948,7 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
             }
             return true;
         } else {
-            AbstractExpression value = getValue();
+            final AbstractExpression value = getValue();
             if (value instanceof Expression) {
                 return ((Expression) value).getContent() == null
                         || ((Expression) value).getContent().isEmpty();
@@ -969,7 +958,7 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
     }
 
 
-    public void setSelection(AbstractExpression input) {
+    public void setSelection(final AbstractExpression input) {
         if(validationContext != null){
             if(bindValue != null){
                 validationContext.removeBinding(bindValue);
@@ -1003,13 +992,13 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
                 }else{
                     observeValue = EMFObservables.observeValue(input, ExpressionPackage.Literals.TABLE_EXPRESSION__EXPRESSIONS);
                 }
-                UpdateValueStrategy strategy = new UpdateValueStrategy();
+                final UpdateValueStrategy strategy = new UpdateValueStrategy();
                 strategy.setAfterGetValidator(new IValidator() {
 
                     @Override
-                    public IStatus validate(Object value) {
+                    public IStatus validate(final Object value) {
                         if(isTableMode()){
-                            AbstractExpression expression = getValue();
+                            final AbstractExpression expression = getValue();
                             if(expression instanceof ListExpression){
                                 if(((ListExpression) expression).getExpressions() == null || ((ListExpression) expression).getExpressions().isEmpty()){
                                     return ValidationStatus.error(Messages.bind(Messages.AtLeastOneRowShouldBeAddedFor,mandatoryLabel));
@@ -1030,7 +1019,7 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
     }
 
 
-    public void addFilter(ViewerFilter viewerFilter) {
+    public void addFilter(final ViewerFilter viewerFilter) {
         viewerFilters.add(viewerFilter);
         if (expressionEditor != null) {
             expressionEditor.addFilter(viewerFilter);
@@ -1038,29 +1027,29 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
     }
 
 
-    public void removeFilter(ViewerFilter viewerFilter) {
+    public void removeFilter(final ViewerFilter viewerFilter) {
         viewerFilters.remove(viewerFilter);
         if (expressionEditor != null) {
             expressionEditor.removeFilter(viewerFilter);
         }
     }
 
-    public void setInput(Object input) {
+    public void setInput(final Object input) {
         context = input;
         if(expressionEditor != null){
             expressionEditor.setInput(context);
         }
-        for (ExpressionCollectionEditingSupport es : editingSupports) {
+        for (final ExpressionCollectionEditingSupport es : editingSupports) {
             es.setInput(context);
             if(viewerFilters.size() > editingSupports.indexOf(es)  ){
-                ViewerFilter filter = viewerFilters.get(editingSupports.indexOf(es));
+                final ViewerFilter filter = viewerFilters.get(editingSupports.indexOf(es));
                 if(filter != null){
                     es.addFilter(filter);
                 }
 
             }
             if(viewerExprProviders.size() > editingSupports.indexOf(es)  ){
-                IExpressionNatureProvider natureProvider = viewerExprProviders.get(editingSupports.indexOf(es));
+                final IExpressionNatureProvider natureProvider = viewerExprProviders.get(editingSupports.indexOf(es));
                 if(natureProvider != null){
                     es.setExpressionNatureProvider(natureProvider);
                 }
@@ -1071,11 +1060,11 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
     }
 
 
-    public void addExpressionModeListener(IExpressionModeListener listener) {
+    public void addExpressionModeListener(final IExpressionModeListener listener) {
         modeListeners.add(listener);
     }
 
-    public void removeExpressionModeListener(IExpressionModeListener listener) {
+    public void removeExpressionModeListener(final IExpressionModeListener listener) {
         modeListeners.remove(listener);
     }
 
@@ -1084,10 +1073,10 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
         return addRowButton;
     }
 
-    public void setViewerFilters(List<ViewerFilter> viewerFilters) {
+    public void setViewerFilters(final List<ViewerFilter> viewerFilters) {
         this.viewerFilters = viewerFilters;
         if(expressionEditor != null){
-            for(ViewerFilter filter : viewerFilters){
+            for(final ViewerFilter filter : viewerFilters){
                 expressionEditor.addFilter(filter);
             }
         }
@@ -1098,12 +1087,12 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
     }
 
     private int getNbCols() {
-        Object input = viewer.getInput();
+        final Object input = viewer.getInput();
         if (input != null) {
             if (input instanceof ListExpression) {
                 return 1;
             } else {
-                EList<ListExpression> expressions = ((TableExpression) input)
+                final EList<ListExpression> expressions = ((TableExpression) input)
                         .getExpressions();
                 return expressions.isEmpty() ? 0 : expressions.get(0)
                         .getExpressions().size();
@@ -1114,7 +1103,7 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
     }
 
     private int getNbRows() {
-        Object input = viewer.getInput();
+        final Object input = viewer.getInput();
         if (input != null) {
             if (input instanceof TableExpression) {
                 return ((TableExpression) input).getExpressions().size();
@@ -1126,19 +1115,19 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
         }
     }
 
-    public void setAddRowLabel(String addCorrelation) {
+    public void setAddRowLabel(final String addCorrelation) {
         if(addRowButton != null){
             addRowButton.setText(addCorrelation);
         }
     }
 
-    public void setRemoveRowLabel(String removeCorrelation) {
+    public void setRemoveRowLabel(final String removeCorrelation) {
         if(removeRowButton != null){
             removeRowButton.setText(removeCorrelation);
-        } 
+        }
     }
 
-    public void addExpressionNatureProvider(IExpressionNatureProvider expressionNatureProvider) {
+    public void addExpressionNatureProvider(final IExpressionNatureProvider expressionNatureProvider) {
         viewerExprProviders.add(expressionNatureProvider);
         if(editingSupports != null && !editingSupports.isEmpty()){
             for(int i = 0 ; i< editingSupports.size() ;i++){
@@ -1149,7 +1138,7 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
         }
     }
 
-    public void removeExpressionNatureProvider(int index){
+    public void removeExpressionNatureProvider(final int index){
         if(editingSupports != null && !editingSupports.isEmpty()){
             if(index < editingSupports.size()){
                 editingSupports.get(index).setExpressionNatureProvider(null);
@@ -1160,7 +1149,7 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
         }
     }
 
-    public void setExpressionProposalLableProvider(int colIndex,IExpressionProposalLabelProvider expressionProposalLabelProvider) {
+    public void setExpressionProposalLableProvider(final int colIndex,final IExpressionProposalLabelProvider expressionProposalLabelProvider) {
         if(editingSupports != null && !editingSupports.isEmpty()){
             if(colIndex >= 0 && colIndex < editingSupports.size()){
                 editingSupports.get(colIndex).setExpressionProposalLableProvider(expressionProposalLabelProvider);
@@ -1174,7 +1163,7 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
     }
 
     @Override
-    public void setIsPageFlowContext(boolean isPageFlowContext) {
+    public void setIsPageFlowContext(final boolean isPageFlowContext) {
         this.isPageFlowContext = isPageFlowContext;
     }
 
@@ -1192,13 +1181,13 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
      * @see org.bonitasoft.studio.common.IBonitaVariableContext#setIsOverviewContext(boolean)
      */
     @Override
-    public void setIsOverviewContext(boolean isOverviewContext) {
+    public void setIsOverviewContext(final boolean isOverviewContext) {
     }
 
-    public void setMandatoryField(final String label, EMFDataBindingContext context) {
+    public void setMandatoryField(final String label, final EMFDataBindingContext context) {
         expressionEditor.setMandatoryField(label, context);
-        this.mandatoryLabel = label;
-        this.validationContext = context;
+        mandatoryLabel = label;
+        validationContext = context;
 
     }
 

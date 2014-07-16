@@ -51,19 +51,16 @@ import org.eclipse.emf.edit.domain.EditingDomain;
  * @author Romain Bioteau
  * 
  */
-public class RefactorDataOperation extends AbstractRefactorOperation {
-
+public class RefactorDataOperation extends AbstractRefactorOperation<Data,Data,DataRefactorPair> {
     private AbstractProcess parentProcess;
+    
+    //private DataRefactorPair pairToRefactor = null;
 
-    private Data newData;
+	private boolean updateDataReferences = false;
 
-    private Data oldData;
+    private EStructuralFeature dataContainmentFeature;
 
-    private boolean updateDataReferences = false;
-
-	private EStructuralFeature dataContainmentFeature;
-
-	private EObject directContainer;
+    private EObject directContainer;
 
     public RefactorDataOperation(RefactoringOperationType operationType) {
         super(operationType);
@@ -72,184 +69,178 @@ public class RefactorDataOperation extends AbstractRefactorOperation {
     @Override
     protected void doExecute(IProgressMonitor monitor) {
         Assert.isNotNull(parentProcess);
-        Assert.isNotNull(oldData);
-        monitor.beginTask(Messages.refactoringData, IProgressMonitor.UNKNOWN);
-        if (newData != null) {
-            updateDataReferenceInVariableExpressions(compoundCommand);
-            updateDataReferenceInExpressions(compoundCommand);
-            if (updateDataReferences) {
-                updateDataReferenceInMultinstanciation(compoundCommand);
-                List<?> dataList = (List<?>) parentProcess.eGet(dataContainmentFeature);
-                int index = dataList.indexOf(oldData);
-                compoundCommand.append(RemoveCommand.create(domain, directContainer, dataContainmentFeature, oldData));
-                compoundCommand.append(AddCommand.create(domain, directContainer, dataContainmentFeature, newData, index));
-            } else {
-            	for (EStructuralFeature feature : oldData.eClass().getEAllStructuralFeatures()) {
-            		compoundCommand.append(SetCommand.create(domain, oldData, feature, newData.eGet(feature)));
-            	}
-            }
-        } else {
-            removeAllDataReferences(compoundCommand);
+        CompoundCommand deleteCommands = new CompoundCommand("Compound commands conating all delete operations to do at last step");
+        for(DataRefactorPair pairToRefactor : pairsToRefactor){
+        	Assert.isNotNull(pairToRefactor.getOldValue());
+        	monitor.beginTask(Messages.refactoringData, IProgressMonitor.UNKNOWN);
+        	if (pairToRefactor.getNewValue() != null) {
+        		updateDataReferenceInVariableExpressions(compoundCommand);
+        		updateDataReferenceInExpressions(compoundCommand);
+        		if (updateDataReferences) {
+        			updateDataReferenceInMultinstanciation(compoundCommand);
+        			List<?> dataList = (List<?>) parentProcess.eGet(dataContainmentFeature);
+        			int index = dataList.indexOf(pairToRefactor.getOldValue());
+        			compoundCommand.append(RemoveCommand.create(domain, directContainer, dataContainmentFeature, pairToRefactor.getOldValue()));
+        			compoundCommand.append(AddCommand.create(domain, directContainer, dataContainmentFeature, pairToRefactor.getNewValue(), index));
+        		} else {
+        			for (EStructuralFeature feature : pairToRefactor.getOldValue().eClass().getEAllStructuralFeatures()) {
+        				compoundCommand.append(SetCommand.create(domain, pairToRefactor.getOldValue(), feature, pairToRefactor.getNewValue().eGet(feature)));
+        			}
+        		}
+        	} else {
+        		removeAllDataReferences(compoundCommand, pairToRefactor);
+        	}
+        	if(RefactoringOperationType.REMOVE.equals(operationType)){
+        		deleteCommands.append(DeleteCommand.create(domain, pairToRefactor.getOldValue()));
+        	}
         }
-        if(RefactoringOperationType.REMOVE.equals(operationType)){
-        	compoundCommand.append(DeleteCommand.create(domain, oldData));
-        }
+        compoundCommand.appendIfCanExecute(deleteCommands);
     }
 
     private void updateDataReferenceInExpressions(CompoundCommand finalCommand) {
         List<Expression> expressions = ModelHelper.getAllItemsOfType(parentProcess, ExpressionPackage.Literals.EXPRESSION);
         for (Expression exp : expressions) {
             if (!ExpressionConstants.SCRIPT_TYPE.equals(exp.getType())
-            		&& !ExpressionConstants.PATTERN_TYPE.equals(exp.getType())
-            		&& !ExpressionConstants.CONDITION_TYPE.equals(exp.getType())) {
+                    && !ExpressionConstants.PATTERN_TYPE.equals(exp.getType())
+                    && !ExpressionConstants.CONDITION_TYPE.equals(exp.getType())) {
                 for (EObject dependency : exp.getReferencedElements()) {
-                    if (dependency instanceof Data) {
-                        if (((Data) dependency).getName().equals(oldData.getName())) {
-                            finalCommand.append(RemoveCommand.create(domain, exp, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS, dependency));
-                            finalCommand.append(AddCommand.create(domain, exp, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS,
-                                    ExpressionHelper.createDependencyFromEObject(newData)));
-                        }
-                    }
+                	if (dependency instanceof Data) {
+                		for(DataRefactorPair  pairToRefactor : pairsToRefactor){
+                			if (((Data) dependency).getName().equals(pairToRefactor.getOldValue().getName())) {
+                				finalCommand.append(RemoveCommand.create(domain, exp, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS, dependency));
+                				finalCommand.append(AddCommand.create(domain, exp, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS,
+                						ExpressionHelper.createDependencyFromEObject(pairToRefactor.getNewValue())));
+                			}
+                		}
+                	}
                 }
             }
         }
     }
 
-    private void removeAllDataReferences(CompoundCommand cc) {
-        List<Expression> expressions = null;
-        if (oldData.eContainer() instanceof Pool) {
-            expressions = ModelHelper.getAllItemsOfType(parentProcess, ExpressionPackage.Literals.EXPRESSION);
-        } else {
-            expressions = ModelHelper.getAllItemsOfType(oldData.eContainer(), ExpressionPackage.Literals.EXPRESSION);
-        }
-        for (Expression exp : expressions) {
-            if (ExpressionConstants.VARIABLE_TYPE.equals(exp.getType()) && exp.getName().equals(oldData.getName())) {
-                // update name and content
-                cc.append(SetCommand.create(domain, exp, ExpressionPackage.Literals.EXPRESSION__NAME, ""));
-                cc.append(SetCommand.create(domain, exp, ExpressionPackage.Literals.EXPRESSION__CONTENT, ""));
-                // update return type
-                cc.append(SetCommand.create(domain, exp, ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE, String.class.getName()));
-                cc.append(SetCommand.create(domain, exp, ExpressionPackage.Literals.EXPRESSION__TYPE, ExpressionConstants.CONSTANT_TYPE));
-                // update referenced data
-                cc.append(RemoveCommand.create(domain, exp, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS, exp.getReferencedElements()));
-            }
-        }
+    private void removeAllDataReferences(CompoundCommand cc, DataRefactorPair pairToRefactor) {
+    	List<Expression> expressions = retrieveExpressionsInTheContainer(pairToRefactor);
+    	for (Expression exp : expressions) {
+    		if (ExpressionConstants.VARIABLE_TYPE.equals(exp.getType()) && exp.getName().equals(pairToRefactor.getOldValue().getName())) {
+    			// update name and content
+    			cc.append(SetCommand.create(domain, exp, ExpressionPackage.Literals.EXPRESSION__NAME, ""));
+    			cc.append(SetCommand.create(domain, exp, ExpressionPackage.Literals.EXPRESSION__CONTENT, ""));
+    			// update return type
+    			cc.append(SetCommand.create(domain, exp, ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE, String.class.getName()));
+    			cc.append(SetCommand.create(domain, exp, ExpressionPackage.Literals.EXPRESSION__TYPE, ExpressionConstants.CONSTANT_TYPE));
+    			// update referenced data
+    			cc.append(RemoveCommand.create(domain, exp, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS, exp.getReferencedElements()));
+    		}
+    	}
     }
+
+	private List<Expression> retrieveExpressionsInTheContainer(
+			DataRefactorPair pairToRefactor) {
+		List<Expression> expressions = null;
+    	if (pairToRefactor.getOldValue().eContainer() instanceof Pool) {
+    		expressions = ModelHelper.getAllItemsOfType(parentProcess, ExpressionPackage.Literals.EXPRESSION);
+    	} else {
+    		expressions = ModelHelper.getAllItemsOfType(pairToRefactor.getOldValue().eContainer(), ExpressionPackage.Literals.EXPRESSION);
+    	}
+		return expressions;
+	}
 
     protected void updateDataInListsOfData(CompoundCommand cc) {
         List<Data> data = ModelHelper.getAllItemsOfType(parentProcess, ProcessPackage.Literals.DATA);
-        for (Data d : data) {
-            if (!d.equals(newData) && d.getName().equals(oldData.getName())) {
-                Data copy = EcoreUtil.copy(newData);
-                EObject container = d.eContainer();
-                EReference eContainmentFeature = d.eContainmentFeature();
-                if (container != null && container.eGet(eContainmentFeature) instanceof Collection<?>) {
-                    List<?> dataList = (List<?>) container.eGet(eContainmentFeature);
-                    int index = dataList.indexOf(d);
-                    cc.append(RemoveCommand.create(domain, container, eContainmentFeature, d));
-                    cc.append(AddCommand.create(domain, container, eContainmentFeature, copy, index));
-                } else if (container != null && container.eGet(eContainmentFeature) instanceof Data) {
-                    cc.append(SetCommand.create(domain, container, eContainmentFeature, copy));
-                }
-            }
+        for(DataRefactorPair pairToRefactor : pairsToRefactor){
+        	for (Data d : data) {
+        		if (!d.equals(pairToRefactor.getNewValue()) && d.getName().equals(pairToRefactor.getOldValue().getName())) {
+        			Data copy = EcoreUtil.copy(pairToRefactor.getNewValue());
+        			EObject container = d.eContainer();
+        			EReference eContainmentFeature = d.eContainmentFeature();
+        			if (container != null && container.eGet(eContainmentFeature) instanceof Collection<?>) {
+        				List<?> dataList = (List<?>) container.eGet(eContainmentFeature);
+        				int index = dataList.indexOf(d);
+        				cc.append(RemoveCommand.create(domain, container, eContainmentFeature, d));
+        				cc.append(AddCommand.create(domain, container, eContainmentFeature, copy, index));
+        			} else if (container != null && container.eGet(eContainmentFeature) instanceof Data) {
+        				cc.append(SetCommand.create(domain, container, eContainmentFeature, copy));
+        			}
+        		}
+        	}
         }
     }
 
     protected void updateDataReferenceInVariableExpressions(CompoundCommand cc) {
         List<Expression> expressions = ModelHelper.getAllItemsOfType(parentProcess, ExpressionPackage.Literals.EXPRESSION);
-        for (Expression exp : expressions) {
-            if (ExpressionConstants.VARIABLE_TYPE.equals(exp.getType()) && exp.getName().equals(oldData.getName())) {
-                // update name and content
-                cc.append(SetCommand.create(domain, exp, ExpressionPackage.Literals.EXPRESSION__NAME, newData.getName()));
-                cc.append(SetCommand.create(domain, exp, ExpressionPackage.Literals.EXPRESSION__CONTENT, newData.getName()));
-                // update return type
-                cc.append(SetCommand.create(domain, exp, ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE, DataUtil.getTechnicalTypeFor(newData)));
-            }
+        for(DataRefactorPair pairToRefactor : pairsToRefactor){
+        	for (Expression exp : expressions) {
+        		if (ExpressionConstants.VARIABLE_TYPE.equals(exp.getType()) && exp.getName().equals(pairToRefactor.getOldValue().getName())) {
+        			// update name and content
+        			cc.append(SetCommand.create(domain, exp, ExpressionPackage.Literals.EXPRESSION__NAME, pairToRefactor.getNewValue().getName()));
+        			cc.append(SetCommand.create(domain, exp, ExpressionPackage.Literals.EXPRESSION__CONTENT, pairToRefactor.getNewValue().getName()));
+        			// update return type
+        			cc.append(SetCommand.create(domain, exp, ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE, DataUtil.getTechnicalTypeFor(pairToRefactor.getNewValue())));
+        		}
+        	}
         }
     }
 
     protected void updateDataReferenceInMultinstanciation(CompoundCommand cc) {
-        List<MultiInstantiation> multiInstanciations = ModelHelper.getAllItemsOfType(parentProcess, ProcessPackage.Literals.MULTI_INSTANTIATION);
-        for (MultiInstantiation multiInstantiation : multiInstanciations) {
-            final Data inputData = multiInstantiation.getInputData();
-            if (inputData != null && inputData.equals(oldData)) {
-                cc.append(SetCommand.create(domain, multiInstantiation, ProcessPackage.Literals.MULTI_INSTANTIATION__INPUT_DATA, newData));
-            }
-            final Data outputData = multiInstantiation.getOutputData();
-            if (outputData != null && outputData.equals(oldData)) {
-                cc.append(SetCommand.create(domain, multiInstantiation, ProcessPackage.Literals.MULTI_INSTANTIATION__OUTPUT_DATA, newData));
-            }
-            final Data collectionToMultiinstanciateData = multiInstantiation.getCollectionDataToMultiInstantiate();
-            if (collectionToMultiinstanciateData != null && collectionToMultiinstanciateData.equals(oldData)) {
-                cc.append(SetCommand.create(domain, multiInstantiation, ProcessPackage.Literals.MULTI_INSTANTIATION__COLLECTION_DATA_TO_MULTI_INSTANTIATE,
-                        newData));
-            }
-            final Data listDataContainingOutputResults = multiInstantiation.getListDataContainingOutputResults();
-            if (listDataContainingOutputResults != null && listDataContainingOutputResults.equals(oldData)) {
-                cc.append(SetCommand.create(domain, multiInstantiation, ProcessPackage.Literals.MULTI_INSTANTIATION__LIST_DATA_CONTAINING_OUTPUT_RESULTS,
-                        newData));
-            }
-        }
+    	List<MultiInstantiation> multiInstanciations = ModelHelper.getAllItemsOfType(parentProcess, ProcessPackage.Literals.MULTI_INSTANTIATION);
+    	for(DataRefactorPair pairToRefactor : pairsToRefactor){
+    		for (MultiInstantiation multiInstantiation : multiInstanciations) {
+    			final Data inputData = multiInstantiation.getInputData();
+    			if (inputData != null && inputData.equals(pairToRefactor.getOldValue())) {
+    				cc.append(SetCommand.create(domain, multiInstantiation, ProcessPackage.Literals.MULTI_INSTANTIATION__INPUT_DATA, pairToRefactor.getNewValue()));
+    			}
+    			final Data outputData = multiInstantiation.getOutputData();
+    			if (outputData != null && outputData.equals(pairToRefactor.getOldValue())) {
+    				cc.append(SetCommand.create(domain, multiInstantiation, ProcessPackage.Literals.MULTI_INSTANTIATION__OUTPUT_DATA, pairToRefactor.getNewValue()));
+    			}
+    			final Data collectionToMultiinstanciateData = multiInstantiation.getCollectionDataToMultiInstantiate();
+    			if (collectionToMultiinstanciateData != null && collectionToMultiinstanciateData.equals(pairToRefactor.getOldValue())) {
+    				cc.append(SetCommand.create(domain, multiInstantiation, ProcessPackage.Literals.MULTI_INSTANTIATION__COLLECTION_DATA_TO_MULTI_INSTANTIATE,
+    						pairToRefactor.getNewValue()));
+    			}
+    			final Data listDataContainingOutputResults = multiInstantiation.getListDataContainingOutputResults();
+    			if (listDataContainingOutputResults != null && listDataContainingOutputResults.equals(pairToRefactor.getOldValue())) {
+    				cc.append(SetCommand.create(domain, multiInstantiation, ProcessPackage.Literals.MULTI_INSTANTIATION__LIST_DATA_CONTAINING_OUTPUT_RESULTS,
+    						pairToRefactor.getNewValue()));
+    			}
+    		}
+    	}
     }
 
     public void setContainer(AbstractProcess parentProcess) {
         this.parentProcess = parentProcess;
     }
+    
 
-    public void setNewData(Data newData) {
-        this.newData = newData;
-    }
-
-    public void setOldData(Data oldData) {
-        this.oldData = oldData;
-    }
 
     public void setUpdateDataReferences(boolean updateDataReferences) {
         this.updateDataReferences = updateDataReferences;
     }
 
     @Override
-    protected AbstractScriptExpressionRefactoringAction getScriptExpressionRefactoringAction(EObject newValue, String oldName, String newName,
+    protected AbstractScriptExpressionRefactoringAction<DataRefactorPair> getScriptExpressionRefactoringAction(List<DataRefactorPair> pairsToRefactor,
             List<Expression> scriptExpressions, List<Expression> refactoredScriptExpression, CompoundCommand compoundCommand, EditingDomain domain,
             RefactoringOperationType operationType) {
-        return new DataScriptExpressionRefactoringAction(newValue, oldName, newName, scriptExpressions, refactoredScriptExpression, compoundCommand, domain,
+        return new DataScriptExpressionRefactoringAction(pairsToRefactor, scriptExpressions, refactoredScriptExpression, compoundCommand, domain,
                 operationType);
     }
 
     @Override
-    protected EObject getContainer() {
+    protected EObject getContainer(Data oldValue) {
         return parentProcess;
     }
 
-    @Override
-    protected EObject getOldValue() {
-        return oldData;
+    public void setDataContainmentFeature(EStructuralFeature dataContainmentFeature) {
+        this.dataContainmentFeature = dataContainmentFeature;
     }
 
-    @Override
-    protected String getOldValueName() {
-        return oldData.getName();
+    public void setDirectDataContainer(EObject container) {
+        this.directContainer = container;
     }
 
-    @Override
-    protected EObject getNewValue() {
-        return newData;
-    }
-
-    @Override
-    protected String getNewValueName() {
-        if (newData != null) {
-            return newData.getName();
-        }
-        return EMPTY_VALUE;
-    }
-
-	public void setDataContainmentFeature(EStructuralFeature dataContainmentFeature) {
-		this.dataContainmentFeature = dataContainmentFeature;
-	}
-
-	public void setDirectDataContainer(EObject container) {
-		this.directContainer = container;
+	@Override
+	protected DataRefactorPair createRefactorPair(Data newItem, Data oldItem) {
+		return new DataRefactorPair(newItem, oldItem);
 	}
 
 }

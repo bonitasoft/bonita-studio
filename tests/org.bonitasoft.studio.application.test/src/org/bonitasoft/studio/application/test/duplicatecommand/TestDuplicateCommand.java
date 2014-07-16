@@ -19,16 +19,15 @@ package org.bonitasoft.studio.application.test.duplicatecommand;
 
 import java.io.File;
 import java.net.URL;
-import java.util.ArrayList;
 
 import junit.framework.TestCase;
 
-import org.bonitasoft.studio.application.actions.SaveProcessAsCommand;
-import org.bonitasoft.studio.common.OpenNameAndVersionForDiagramDialog.ProcessesNameVersion;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.operation.ImportBosArchiveOperation;
 import org.bonitasoft.studio.diagram.custom.commands.NewDiagramCommandHandler;
+import org.bonitasoft.studio.diagram.custom.operation.DuplicateDiagramOperation;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.diagram.custom.repository.WebTemplatesUtil;
@@ -50,7 +49,7 @@ public class TestDuplicateCommand extends TestCase {
 
     private static DiagramFileStore paDuplicated;
 
-    private final DiagramRepositoryStore diagramStore = (DiagramRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(
+    private final DiagramRepositoryStore diagramStore = RepositoryManager.getInstance().getRepositoryStore(
             DiagramRepositoryStore.class);
 
     /**
@@ -61,11 +60,18 @@ public class TestDuplicateCommand extends TestCase {
 
         final NewDiagramCommandHandler npch = new NewDiagramCommandHandler();
         npch.execute(null);
-        DiagramFileStore pa = npch.getNewDiagramFileStore();
+        final DiagramFileStore pa = npch.getNewDiagramFileStore();
         pa.save(pa.getOpenedEditor());
         final String newProcessLabel = pa.getContent().getName() + "duplicatedInTest";
-        new SaveProcessAsCommand().duplicate(pa.getContent(), newProcessLabel, pa.getContent().getVersion(), new ArrayList<ProcessesNameVersion>());
-        DiagramFileStore paDuplicated = diagramStore.getDiagram(newProcessLabel, pa.getContent().getVersion());
+
+        final DuplicateDiagramOperation op = new DuplicateDiagramOperation();
+        final MainProcess diagram = pa.getContent();
+        op.setDiagramToDuplicate(diagram);
+        op.setNewDiagramName(newProcessLabel);
+        op.setNewDiagramVersion(diagram.getVersion());
+        op.run(Repository.NULL_PROGRESS_MONITOR);
+
+        final DiagramFileStore paDuplicated = diagramStore.getDiagram(newProcessLabel, pa.getContent().getVersion());
         assertTrue("Process Artifact not created after duplication", paDuplicated != null);
         assertEquals("Process Name has not been updated correctlty", newProcessLabel, paDuplicated.getContent().getName());
     }
@@ -75,11 +81,18 @@ public class TestDuplicateCommand extends TestCase {
 
         final NewDiagramCommandHandler npch = new NewDiagramCommandHandler();
         npch.execute(null);
-        DiagramFileStore pa = npch.getNewDiagramFileStore();
+        final DiagramFileStore pa = npch.getNewDiagramFileStore();
 
         final String newProcessVersion = pa.getContent().getVersion() + ".2";
-        new SaveProcessAsCommand().duplicate(pa.getContent(), pa.getContent().getName(), newProcessVersion, new ArrayList<ProcessesNameVersion>());
-        DiagramFileStore paDuplicated = diagramStore.getDiagram(pa.getContent().getName(), newProcessVersion);
+
+        final DuplicateDiagramOperation op = new DuplicateDiagramOperation();
+        final MainProcess diagram = pa.getContent();
+        op.setDiagramToDuplicate(diagram);
+        op.setNewDiagramName(diagram.getName());
+        op.setNewDiagramVersion(newProcessVersion);
+        op.run(Repository.NULL_PROGRESS_MONITOR);
+
+        final DiagramFileStore paDuplicated = diagramStore.getDiagram(pa.getContent().getName(), newProcessVersion);
         assertTrue("Process Artifact not created after duplication", paDuplicated != null);
         assertEquals("Version has not been updated correctly", newProcessVersion, paDuplicated.getContent().getVersion());
     }
@@ -93,18 +106,24 @@ public class TestDuplicateCommand extends TestCase {
     public void setUp() throws Exception {
         PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().saveAllEditors(false);
         PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeAllEditors(false);
-        DiagramRepositoryStore drs = (DiagramRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
+        final DiagramRepositoryStore drs = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
         if (initialPa == null) {
             /* import the process for the test */
-            ImportBosArchiveOperation op = new ImportBosArchiveOperation();
-            URL fileURL1 = FileLocator.toFileURL(TestDuplicateCommand.class.getResource("TestDuplicateWithWebTemplates-1.0.bos")); //$NON-NLS-1$
+            final ImportBosArchiveOperation op = new ImportBosArchiveOperation();
+            final URL fileURL1 = FileLocator.toFileURL(TestDuplicateCommand.class.getResource("TestDuplicateWithWebTemplates-1.0.bos")); //$NON-NLS-1$
             op.setArchiveFile(FileLocator.toFileURL(fileURL1).getFile());
             op.setCurrentRepository(RepositoryManager.getInstance().getCurrentRepository());
             op.run(new NullProgressMonitor());
             initialPa = drs.getChild("MyDiagram2-1.0.proc");
             final MainProcess mainProcess = initialPa.getContent();
             final String newProcessVersion = mainProcess.getVersion() + ".2";
-            new SaveProcessAsCommand().duplicate(mainProcess, mainProcess.getName(), newProcessVersion, new ArrayList<ProcessesNameVersion>());
+
+            final DuplicateDiagramOperation dupOp = new DuplicateDiagramOperation();
+            dupOp.setDiagramToDuplicate(mainProcess);
+            dupOp.setNewDiagramName(mainProcess.getName());
+            dupOp.setNewDiagramVersion(newProcessVersion);
+            dupOp.run(Repository.NULL_PROGRESS_MONITOR);
+
             paDuplicated = diagramStore.getDiagram(mainProcess.getName(), newProcessVersion);
         }
     }
@@ -118,13 +137,13 @@ public class TestDuplicateCommand extends TestCase {
     public void testDuplicateCommandWithConfirmationTemplate() throws Exception {
         assertTrue("Process Artifact not created after duplication", paDuplicated != null);
 
-        AbstractProcess oldAp = ModelHelper.getAllProcesses(initialPa.getContent()).get(0);
-        String oldPath = oldAp.getConfirmationTemplate().getPath();
-        File oldPathFile = WebTemplatesUtil.getFile(oldPath);
+        final AbstractProcess oldAp = ModelHelper.getAllProcesses(initialPa.getContent()).get(0);
+        final String oldPath = oldAp.getConfirmationTemplate().getPath();
+        final File oldPathFile = WebTemplatesUtil.getFile(oldPath);
 
-        AbstractProcess ap = ModelHelper.getAllProcesses(paDuplicated.getContent()).get(0);
-        String newPath = ap.getConfirmationTemplate().getPath();
-        File newPathFile = WebTemplatesUtil.getFile(newPath);
+        final AbstractProcess ap = ModelHelper.getAllProcesses(paDuplicated.getContent()).get(0);
+        final String newPath = ap.getConfirmationTemplate().getPath();
+        final File newPathFile = WebTemplatesUtil.getFile(newPath);
 
         assertNotNull("Confirmation template not duplicated", newPathFile);
         assertTrue("Confirmation template not duplicated", newPathFile.exists());
@@ -136,13 +155,13 @@ public class TestDuplicateCommand extends TestCase {
     public void testDuplicateCommandWithLoginPage() throws Exception {
         assertTrue("Process Artifact not created after duplication", paDuplicated != null);
 
-        AbstractProcess oldAp = ModelHelper.getAllProcesses(initialPa.getContent()).get(0);
-        String oldPath = oldAp.getLogInPage().getPath();
-        File oldPathFile = WebTemplatesUtil.getFile(oldPath);
+        final AbstractProcess oldAp = ModelHelper.getAllProcesses(initialPa.getContent()).get(0);
+        final String oldPath = oldAp.getLogInPage().getPath();
+        final File oldPathFile = WebTemplatesUtil.getFile(oldPath);
 
-        AbstractProcess ap = ModelHelper.getAllProcesses(paDuplicated.getContent()).get(0);
-        String newPath = ap.getLogInPage().getPath();
-        File newPathFile = WebTemplatesUtil.getFile(newPath);
+        final AbstractProcess ap = ModelHelper.getAllProcesses(paDuplicated.getContent()).get(0);
+        final String newPath = ap.getLogInPage().getPath();
+        final File newPathFile = WebTemplatesUtil.getFile(newPath);
 
         assertNotNull("Login page not duplicated", newPathFile);
         assertTrue("Login page not duplicated", newPathFile.exists());
@@ -153,10 +172,10 @@ public class TestDuplicateCommand extends TestCase {
     public void testDuplicateCommandWithResourceFolder() throws Exception {
         assertTrue("Process Artifact not created after duplication", paDuplicated != null);
 
-        AbstractProcess oldAp = ModelHelper.getAllProcesses(initialPa.getContent()).get(0);
+        final AbstractProcess oldAp = ModelHelper.getAllProcesses(initialPa.getContent()).get(0);
         final EList<ResourceFolder> resourceFolders = oldAp.getResourceFolders();
         String oldPath = "";
-        for (ResourceFolder resourceFolder : resourceFolders) {
+        for (final ResourceFolder resourceFolder : resourceFolders) {
             final String path = resourceFolder.getPath();
             if (path.contains("final")) {
                 oldPath = path;
@@ -164,19 +183,19 @@ public class TestDuplicateCommand extends TestCase {
             }
         }
         assertFalse("final folder should exist in resources in bos archive", oldPath.isEmpty());
-        File oldPathFile = WebTemplatesUtil.getFile(oldPath);
+        final File oldPathFile = WebTemplatesUtil.getFile(oldPath);
 
-        AbstractProcess ap = ModelHelper.getAllProcesses(paDuplicated.getContent()).get(0);
+        final AbstractProcess ap = ModelHelper.getAllProcesses(paDuplicated.getContent()).get(0);
         final EList<ResourceFolder> resourceFolders2 = ap.getResourceFolders();
         String newPath = "";
-        for (ResourceFolder resourceFolder : resourceFolders2) {
+        for (final ResourceFolder resourceFolder : resourceFolders2) {
             final String path = resourceFolder.getPath();
             if (path.contains("final")) {
                 newPath = path;
                 break;
             }
         }
-        File newPathFile = WebTemplatesUtil.getFile(newPath);
+        final File newPathFile = WebTemplatesUtil.getFile(newPath);
 
         assertNotNull("Resource folder not duplicated", newPathFile);
         assertTrue("Resource folder not duplicated", newPathFile.exists());

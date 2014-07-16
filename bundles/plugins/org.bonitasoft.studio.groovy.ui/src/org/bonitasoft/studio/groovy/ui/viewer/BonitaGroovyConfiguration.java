@@ -40,43 +40,42 @@ import org.eclipse.ui.texteditor.ITextEditor;
  */
 public class BonitaGroovyConfiguration extends GroovyConfiguration {
 
-	public BonitaGroovyConfiguration(GroovyColorManager colorManager, IPreferenceStore preferenceSource, ITextEditor editor) {
-	    super(colorManager, preferenceSource, editor);
+    public BonitaGroovyConfiguration(final GroovyColorManager colorManager, final IPreferenceStore preferenceSource, final ITextEditor editor) {
+        super(colorManager, preferenceSource, editor);
     }
 
-    
+
     @SuppressWarnings("unchecked")
     @Override
-    public IContentAssistant getContentAssistant(ISourceViewer sourceViewer) {
-        ContentAssistant assistant = (ContentAssistant) super.getContentAssistant(sourceViewer);
+    public IContentAssistant getContentAssistant(final ISourceViewer sourceViewer) {
+        final ContentAssistant assistant = (ContentAssistant) super.getContentAssistant(sourceViewer);
         assistant.enableAutoActivation(true) ;
         assistant.setStatusLineVisible(false) ;
-        
-        ContentAssistProcessor stringProcessor= new JavaCompletionProcessor(getEditor(), assistant, GroovyPartitionScanner.GROOVY_MULTILINE_STRINGS);
+        final ContentAssistProcessor stringProcessor= new JavaCompletionProcessor(getEditor(), assistant, GroovyPartitionScanner.GROOVY_MULTILINE_STRINGS);
         assistant.setContentAssistProcessor(stringProcessor, GroovyPartitionScanner.GROOVY_MULTILINE_STRINGS);
 
         // remove Java content assist processor category
         // do a list copy so as not to disturb globally shared list.
-        IContentAssistProcessor processor = assistant.getContentAssistProcessor(IDocument.DEFAULT_CONTENT_TYPE);
-        List<CompletionProposalCategory> categories = (List<CompletionProposalCategory>) ReflectionUtils.getPrivateField(ContentAssistProcessor.class, "fCategories", processor);
-        List<CompletionProposalCategory> newCategories = new ArrayList<CompletionProposalCategory>();
-        for (CompletionProposalCategory category : categories) {
+        final IContentAssistProcessor processor = assistant.getContentAssistProcessor(IDocument.DEFAULT_CONTENT_TYPE);
+        final List<CompletionProposalCategory> categories = (List<CompletionProposalCategory>) ReflectionUtils.getPrivateField(ContentAssistProcessor.class, "fCategories", processor);
+        final List<CompletionProposalCategory> newCategories = new ArrayList<CompletionProposalCategory>();
+        for (final CompletionProposalCategory category : categories) {
             if (!category.getId().equals("org.eclipse.jdt.ui.javaTypeProposalCategory")
                     && !category.getId().equals("org.eclipse.jdt.ui.javaNoTypeProposalCategory")
                     && !category.getId().equals("org.eclipse.jdt.ui.javaAllProposalCategory")
                     && !category.getId().equals("org.eclipse.mylyn.java.ui.javaAllProposalCategory")
-                    && !category.getId().equals("org.eclipse.jdt.ui.templateProposalCategory")
-                    && !category.getId().equals("org.eclipse.jdt.ui.defaultProposalCategory")
+                    /* && !category.getId().equals("org.eclipse.jdt.ui.templateProposalCategory") */
+                    /* && !category.getId().equals("org.eclipse.jdt.ui.defaultProposalCategory") */
                     && !category.getId().equals("org.eclipse.jdt.ui.textProposalCategory")
                     && !category.getId().equals("org.eclipse.jdt.ui.swtProposalCategory")
                     && !category.getId().equals("org.eclipse.jst.ws.jaxws.ui.jaxwsProposalComputer")
                     && !category.getId().equals("org.eclipse.pde.api.tools.ui.apitools_proposal_category")) {
                 newCategories.add(category);
-           }
+            }
         }
-        
+
         ReflectionUtils.setPrivateField(ContentAssistProcessor.class, "fCategories", processor, newCategories);
         return assistant;
-    }	
-	
+    }
+
 }

@@ -124,7 +124,7 @@ public class Repository implements IRepository {
     }
 
     @Override
-    public void createRepository(String repositoryName) {
+    public void createRepository(final String repositoryName) {
         name = repositoryName;
         project = ResourcesPlugin.getWorkspace().getRoot().getProject(repositoryName);
     }
@@ -132,30 +132,36 @@ public class Repository implements IRepository {
     @Override
     public void create() {
         try {
-            long init = System.currentTimeMillis();
+            final long init = System.currentTimeMillis();
             if (BonitaStudioLog.isLoggable(IStatus.OK)) {
                 BonitaStudioLog.debug("Creating repository " + project.getName() + "...", CommonRepositoryPlugin.PLUGIN_ID);
             }
-            if (!project.exists()) {
+            final boolean projectExists = project.exists();
+            if (!projectExists) {
                 project.create(NULL_PROGRESS_MONITOR);
             }
             disableBuild();
             open();
-            initializeProject(project);
+            if (!projectExists) {
+                initializeProject(project);
+
+            }
             initRepositoryStores();
-            initClasspath(project);
+            if (!projectExists) {
+                initClasspath(project);
+            }
             enableBuild();
             try {
                 getProject().build(IncrementalProjectBuilder.FULL_BUILD, NULL_PROGRESS_MONITOR);
-            } catch (CoreException e) {
+            } catch (final CoreException e) {
                 BonitaStudioLog.error(e, CommonRepositoryPlugin.PLUGIN_ID);
             }
             if (BonitaStudioLog.isLoggable(IStatus.OK)) {
-                long duration = System.currentTimeMillis() - init;
+                final long duration = System.currentTimeMillis() - init;
                 BonitaStudioLog.debug("Repository " + project.getName() + " created in " + DateUtil.getDisplayDuration(duration),
                         CommonRepositoryPlugin.PLUGIN_ID);
             }
-        } catch (Exception e) {
+        } catch (final Exception e) {
             BonitaStudioLog.error(e);
         }
     }
@@ -197,7 +203,7 @@ public class Repository implements IRepository {
         try {
             if (!project.isOpen()) {
                 project.open(NULL_PROGRESS_MONITOR);
-                JavaProject jProject = (JavaProject) project.getNature(JavaCore.NATURE_ID);
+                final JavaProject jProject = (JavaProject) project.getNature(JavaCore.NATURE_ID);
                 if (jProject != null) {
                     if (!jProject.isOpen()) {
                         jProject.open(NULL_PROGRESS_MONITOR);
@@ -206,7 +212,7 @@ public class Repository implements IRepository {
                 }
 
             }
-        } catch (CoreException e) {
+        } catch (final CoreException e) {
             BonitaStudioLog.error(e);
         }
     }
@@ -222,7 +228,7 @@ public class Repository implements IRepository {
             if (project.isOpen()) {
                 project.close(NULL_PROGRESS_MONITOR);
             }
-        } catch (CoreException e) {
+        } catch (final CoreException e) {
             BonitaStudioLog.error(e);
         }
         if (stores != null) {
@@ -237,17 +243,17 @@ public class Repository implements IRepository {
             stores = new TreeMap<Class<?>, IRepositoryStore<? extends IRepositoryFileStore>>(new Comparator<Class<?>>() {
 
                 @Override
-                public int compare(Class<?> o1, Class<?> o2) {
+                public int compare(final Class<?> o1, final Class<?> o2) {
                     return o1.getName().compareTo(o2.getName());
                 }
 
             });
-            IConfigurationElement[] elements = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(REPOSITORY_STORE_EXTENSION_POINT_ID);
-            for (IConfigurationElement configuration : elements) {
+            final IConfigurationElement[] elements = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(REPOSITORY_STORE_EXTENSION_POINT_ID);
+            for (final IConfigurationElement configuration : elements) {
                 try {
                     final IRepositoryStore<? extends IRepositoryFileStore> store = createRepositoryStore(configuration);
                     stores.put(store.getClass(), store);
-                } catch (CoreException e) {
+                } catch (final CoreException e) {
                     BonitaStudioLog.error(e);
                 }
             }
@@ -255,7 +261,7 @@ public class Repository implements IRepository {
     }
 
     protected IRepositoryStore<? extends IRepositoryFileStore> createRepositoryStore(
-            IConfigurationElement configuration) throws CoreException {
+            final IConfigurationElement configuration) throws CoreException {
         final IRepositoryStore<? extends IRepositoryFileStore> store = (IRepositoryStore<?>) configuration.createExecutableExtension(CLASS);
         monitorSubtask(Messages.bind(Messages.creatingStore, store.getDisplayName()));
         store.createRepositoryStore(this);
@@ -263,43 +269,45 @@ public class Repository implements IRepository {
         return store;
     }
 
+    @Override
     public void enableBuild() {
         Job.getJobManager().wakeUp(ResourcesPlugin.FAMILY_AUTO_BUILD);
-        IWorkspace workspace = ResourcesPlugin.getWorkspace();
-        IWorkspaceDescription desc = workspace.getDescription();
+        final IWorkspace workspace = ResourcesPlugin.getWorkspace();
+        final IWorkspaceDescription desc = workspace.getDescription();
         if (!desc.isAutoBuilding()) {
-            boolean enableAutobuild = PlatformUI.isWorkbenchRunning();
+            final boolean enableAutobuild = PlatformUI.isWorkbenchRunning();
             desc.setAutoBuilding(enableAutobuild);
             try {
                 workspace.setDescription(desc);
-            } catch (CoreException e) {
+            } catch (final CoreException e) {
                 BonitaStudioLog.error(e, CommonRepositoryPlugin.PLUGIN_ID);
             }
             RepositoryManager.getInstance().getPreferenceStore().setValue(RepositoryPreferenceConstant.BUILD_ENABLE, enableAutobuild);
         }
     }
 
+    @Override
     public void disableBuild() {
-        IWorkspace workspace = ResourcesPlugin.getWorkspace();
-        IWorkspaceDescription desc = workspace.getDescription();
+        final IWorkspace workspace = ResourcesPlugin.getWorkspace();
+        final IWorkspaceDescription desc = workspace.getDescription();
         if (desc.isAutoBuilding()) {
             desc.setAutoBuilding(false);
             try {
                 workspace.setDescription(desc);
-            } catch (CoreException e) {
+            } catch (final CoreException e) {
                 BonitaStudioLog.error(e, CommonRepositoryPlugin.PLUGIN_ID);
             }
             RepositoryManager.getInstance().getPreferenceStore().setValue(RepositoryPreferenceConstant.BUILD_ENABLE, false);
         }
     }
 
-    protected void initializeProject(IProject project) throws CoreException, JavaModelException {
+    protected void initializeProject(final IProject project) throws CoreException, JavaModelException {
         /* create the project only one time, it is called by each repository which is part of it */
         createProjectDescriptor(project);
         createJavaProject(project);
     }
 
-    protected void createJavaProject(IProject project) {
+    protected void createJavaProject(final IProject project) {
         monitorSubtask(Messages.initializingJavaProject);
         final IJavaProject javaProject = JavaCore.create(project);
         javaProject.setOption(JavaCore.COMPILER_COMPLIANCE, JavaCore.VERSION_1_6);
@@ -313,12 +321,13 @@ public class Repository implements IRepository {
     protected void createProjectDescriptor(final IProject project) throws CoreException {
         final IProjectDescription descriptor = project.getDescription();
         descriptor.setComment(ProductVersion.CURRENT_VERSION);
-        String[] natures = descriptor.getNatureIds();
-        List<String> existingNatures = Arrays.asList(natures);
-        Set<String> additionalNatures = getNatures();
-        Set<String> notExistingNature = new HashSet<String>();
-        for (String natureId : additionalNatures) {
+        final String[] natures = descriptor.getNatureIds();
+        final List<String> existingNatures = Arrays.asList(natures);
+        final Set<String> additionalNatures = getNatures();
+        final Set<String> notExistingNature = new HashSet<String>();
+        for (final String natureId : additionalNatures) {
             @SuppressWarnings("restriction")
+            final
             Object naturDesc = ((Workspace) ResourcesPlugin.getWorkspace()).getNatureManager().getNatureDescriptor(natureId);
             if (naturDesc == null) {
                 notExistingNature.add(natureId);
@@ -331,8 +340,8 @@ public class Repository implements IRepository {
         }
         additionalNatures.removeAll(notExistingNature);
 
-        String[] arryOfNatures = additionalNatures.toArray(new String[] {});
-        String[] newNatures = new String[natures.length + arryOfNatures.length];
+        final String[] arryOfNatures = additionalNatures.toArray(new String[] {});
+        final String[] newNatures = new String[natures.length + arryOfNatures.length];
         System.arraycopy(natures, 0, newNatures, 0, natures.length);
         for (int i = natures.length; i < natures.length + arryOfNatures.length; i++) {
             newNatures[i] = arryOfNatures[i - natures.length];
@@ -345,7 +354,7 @@ public class Repository implements IRepository {
             public void run() {
                 try {
                     project.setDescription(descriptor, null);
-                } catch (CoreException e) {
+                } catch (final CoreException e) {
                     throw new RuntimeException(e);
                 }
             }
@@ -353,16 +362,16 @@ public class Repository implements IRepository {
 
     }
 
-    protected void addBuilders(IProjectDescription desc) {
-        ICommand[] existingCommands = desc.getBuildSpec();
-        Map<String, ICommand> existingBuilders = new HashMap<String, ICommand>();
-        for (ICommand builder : existingCommands) {
+    protected void addBuilders(final IProjectDescription desc) {
+        final ICommand[] existingCommands = desc.getBuildSpec();
+        final Map<String, ICommand> existingBuilders = new HashMap<String, ICommand>();
+        for (final ICommand builder : existingCommands) {
             existingBuilders.put(builder.getBuilderName(), builder);
         }
-        for (String builderId : getBuilders()) {
+        for (final String builderId : getBuilders()) {
             if (!existingBuilders.containsKey(builderId)) {
                 // add builder to project
-                ICommand command = desc.newCommand();
+                final ICommand command = desc.newCommand();
                 command.setBuilderName(builderId);
                 existingBuilders.put(builderId, command);
             }
@@ -388,7 +397,7 @@ public class Repository implements IRepository {
         return project.findMember(".classpath") != null;
     }
 
-    protected void initClasspath(IProject extensionsProject) throws CoreException {
+    protected void initClasspath(final IProject extensionsProject) throws CoreException {
         monitorSubtask(Messages.initializingProjectClasspath);
         createProjectManifest(extensionsProject);
 
@@ -397,9 +406,9 @@ public class Repository implements IRepository {
 
         try {
             addSpecificEntriesForDevMode(entries);
-        } catch (MalformedURLException e) {
+        } catch (final MalformedURLException e) {
             throw new RuntimeException(e);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw new RuntimeException(e);
         }
         javaProject.setRawClasspath(entries.toArray(new IClasspathEntry[entries.size()]), true, Repository.NULL_PROGRESS_MONITOR);
@@ -441,7 +450,7 @@ public class Repository implements IRepository {
 
     @SuppressWarnings("rawtypes")
     protected List<IClasspathEntry> addClasspathEntries() {
-        List<IClasspathEntry> entries = new ArrayList<IClasspathEntry>();
+        final List<IClasspathEntry> entries = new ArrayList<IClasspathEntry>();
         // SET Java container
         entries.add(JavaCore.newContainerEntry(new Path("repositoryDependencies"), true)); //$NON-NLS-1$
         entries.add(JavaCore.newContainerEntry(JavaRuntime.newJREContainerPath(JavaRuntime.getExecutionEnvironmentsManager().getEnvironment("JavaSE-1.6"))));
@@ -449,9 +458,9 @@ public class Repository implements IRepository {
         entries.add(JavaCore.newContainerEntry(new Path("GROOVY_SUPPORT"), true)); //$NON-NLS-1$
 
         // Add src folders in classpath
-        for (IRepositoryStore repository : getAllStores()) {
+        for (final IRepositoryStore repository : getAllStores()) {
             if (repository instanceof SourceRepositoryStore) {
-                IClasspathEntry newSourceEntry = JavaCore.newSourceEntry(repository.getResource().getFullPath());
+                final IClasspathEntry newSourceEntry = JavaCore.newSourceEntry(repository.getResource().getFullPath());
                 if (!entries.contains(newSourceEntry)) {
                     entries.add(newSourceEntry);
                 }
@@ -461,15 +470,15 @@ public class Repository implements IRepository {
     }
 
     @SuppressWarnings("restriction")
-    protected void createProjectManifest(IProject extensionsProject) throws CoreException {
-        IFolder metaInf = project.getFolder("META-INF"); //$NON-NLS-1$
+    protected void createProjectManifest(final IProject extensionsProject) throws CoreException {
+        final IFolder metaInf = project.getFolder("META-INF"); //$NON-NLS-1$
         if (!metaInf.exists()) {
             metaInf.create(false, true, null);
         }
-        IFile projectManifest = extensionsProject.getFolder("META-INF").getFile("MANIFEST.MF"); //$NON-NLS-1$
-        InputStream is = Repository.class.getResourceAsStream("MANIFEST.MF.template");
-        BundleClassLoader cl = (BundleClassLoader) BusinessArchive.class.getClassLoader();
-        InputStream is2 = FileUtil.replaceStringInFile(is, "XXX_ENGINE_BUNDLE_XXX", cl.getBundle().getSymbolicName());
+        final IFile projectManifest = extensionsProject.getFolder("META-INF").getFile("MANIFEST.MF"); //$NON-NLS-1$
+        final InputStream is = Repository.class.getResourceAsStream("MANIFEST.MF.template");
+        final BundleClassLoader cl = (BundleClassLoader) BusinessArchive.class.getClassLoader();
+        final InputStream is2 = FileUtil.replaceStringInFile(is, "XXX_ENGINE_BUNDLE_XXX", cl.getBundle().getSymbolicName());
         if (!projectManifest.exists()) {
             projectManifest.create(is2, false, null);
         } else {
@@ -487,24 +496,24 @@ public class Repository implements IRepository {
                 if (!getProject().isSynchronized(IResource.DEPTH_INFINITE)) {
                     getProject().refreshLocal(IResource.DEPTH_INFINITE, monitor);
                 }
-                IJavaProject javaProject = getJavaProject();
+                final IJavaProject javaProject = getJavaProject();
                 if (javaProject != null) {
                     refreshClasspath(javaProject, null, monitor);
                     getProject().build(IncrementalProjectBuilder.INCREMENTAL_BUILD, monitor);
 
                 }
-            } catch (Exception ex) {
+            } catch (final Exception ex) {
                 BonitaStudioLog.error(ex);
             }
         }
     }
 
-    protected void refreshClasspath(IJavaProject javaProject, List<CPListElement> classPathElementList,
-            IProgressMonitor monitor) throws JavaModelException, CoreException {
-        JavaModelManager manager = JavaModelManager.getJavaModelManager();
+    protected void refreshClasspath(final IJavaProject javaProject, List<CPListElement> classPathElementList,
+            final IProgressMonitor monitor) throws JavaModelException, CoreException {
+        final JavaModelManager manager = JavaModelManager.getJavaModelManager();
         manager.getJavaModel().refreshExternalArchives(null, Repository.NULL_PROGRESS_MONITOR);
         if (classPathElementList == null) {
-            CPListElement[] existingCPElement = CPListElement.createFromExisting(javaProject);
+            final CPListElement[] existingCPElement = CPListElement.createFromExisting(javaProject);
             classPathElementList = Arrays.asList(existingCPElement);
         }
         BuildPathsBlock.flush(classPathElementList, javaProject.getOutputLocation(), javaProject, null, monitor);
@@ -519,9 +528,9 @@ public class Repository implements IRepository {
     public IJavaProject getJavaProject() {
         if (getProject() != null && getProject().isAccessible()) {
             try {
-                IJavaProject project = (IJavaProject) getProject().getNature(JavaCore.NATURE_ID);
+                final IJavaProject project = (IJavaProject) getProject().getNature(JavaCore.NATURE_ID);
                 return project;
-            } catch (CoreException ex) {
+            } catch (final CoreException ex) {
                 BonitaStudioLog.error(ex);
                 return null;
             }
@@ -541,13 +550,13 @@ public class Repository implements IRepository {
             if (CommonRepositoryPlugin.getCurrentRepository().equals(getName())) {
                 RepositoryManager.getInstance().setRepository(RepositoryPreferenceConstant.DEFAULT_REPOSITORY_NAME);
             }
-        } catch (CoreException e) {
+        } catch (final CoreException e) {
             BonitaStudioLog.error(e);
         }
     }
 
     @Override
-    public IRepositoryStore<? extends IRepositoryFileStore> getRepositoryStore(Class<?> repositoryStoreClass) {
+    public IRepositoryStore<? extends IRepositoryFileStore> getRepositoryStore(final Class<?> repositoryStoreClass) {
         if (stores == null || stores.isEmpty()) {
             initRepositoryStores();
             enableBuild();
@@ -561,26 +570,26 @@ public class Repository implements IRepository {
         if (project.isOpen()) {
             try {
                 return project.getDescription().getComment();
-            } catch (CoreException e) {
+            } catch (final CoreException e) {
                 BonitaStudioLog.error(e);
             }
         } else {
-            File projectFile = new File(project.getLocation().toFile(), ".project");
+            final File projectFile = new File(project.getLocation().toFile(), ".project");
             if (projectFile.exists()) {
                 FileInputStream fis = null;
                 try {
                     fis = new FileInputStream(projectFile);
-                    InputSource source = new InputSource(fis);
-                    ProjectDescriptionReader reader = new ProjectDescriptionReader();
-                    IProjectDescription desc = reader.read(source);
+                    final InputSource source = new InputSource(fis);
+                    final ProjectDescriptionReader reader = new ProjectDescriptionReader();
+                    final IProjectDescription desc = reader.read(source);
                     return desc.getComment();
-                } catch (FileNotFoundException e) {
+                } catch (final FileNotFoundException e) {
                     BonitaStudioLog.error(e);
                 } finally {
                     if (fis != null) {
                         try {
                             fis.close();
-                        } catch (IOException e) {
+                        } catch (final IOException e) {
                             BonitaStudioLog.error(e);
                         }
                     }
@@ -596,15 +605,15 @@ public class Repository implements IRepository {
             initRepositoryStores();
             enableBuild();
         }
-        List<IRepositoryStore<? extends IRepositoryFileStore>> result = new ArrayList<IRepositoryStore<? extends IRepositoryFileStore>>(stores.values());
+        final List<IRepositoryStore<? extends IRepositoryFileStore>> result = new ArrayList<IRepositoryStore<? extends IRepositoryFileStore>>(stores.values());
         Collections.sort(result, new RepositoryStoreComparator());
         return result;
     }
 
     @Override
     public List<IRepositoryStore<? extends IRepositoryFileStore>> getAllSharedStores() {
-        List<IRepositoryStore<? extends IRepositoryFileStore>> result = new ArrayList<IRepositoryStore<? extends IRepositoryFileStore>>();
-        for (IRepositoryStore<? extends IRepositoryFileStore> sotre : getAllStores()) {
+        final List<IRepositoryStore<? extends IRepositoryFileStore>> result = new ArrayList<IRepositoryStore<? extends IRepositoryFileStore>>();
+        for (final IRepositoryStore<? extends IRepositoryFileStore> sotre : getAllStores()) {
             if (sotre.isShared()) {
                 result.add(sotre);
             }
@@ -628,8 +637,8 @@ public class Repository implements IRepository {
     }
 
     @Override
-    public void importFromArchive(final File archiveFile, boolean askOverwrite) {
-        boolean disableConfirmation = FileActionDialog.getDisablePopup();
+    public void importFromArchive(final File archiveFile, final boolean askOverwrite) {
+        final boolean disableConfirmation = FileActionDialog.getDisablePopup();
         FileActionDialog.setDisablePopup(!askOverwrite);
         final ImportBosArchiveOperation operation = new ImportBosArchiveOperation();
         operation.setArchiveFile(archiveFile.getAbsolutePath());
@@ -642,8 +651,8 @@ public class Repository implements IRepository {
     public void exportToArchive(final String fileName) {
         final ExportBosArchiveOperation operation = new ExportBosArchiveOperation();
         operation.setDestinationPath(fileName);
-        Set<IResource> allResources = new HashSet<IResource>();
-        for (IRepositoryStore store : getAllExportableStores()) {
+        final Set<IResource> allResources = new HashSet<IResource>();
+        for (final IRepositoryStore<?> store : getAllExportableStores()) {
             allResources.add(store.getResource());
         }
         operation.setResources(allResources);
@@ -651,9 +660,9 @@ public class Repository implements IRepository {
     }
 
     @Override
-    public IRepositoryFileStore getFileStore(IResource resource) {
-        for (IRepositoryStore<? extends IRepositoryFileStore> store : getAllStores()) {
-            IRepositoryFileStore file = store.getChild(resource.getName());
+    public IRepositoryFileStore getFileStore(final IResource resource) {
+        for (final IRepositoryStore<? extends IRepositoryFileStore> store : getAllStores()) {
+            final IRepositoryFileStore file = store.getChild(resource.getName());
             if (file != null) {
                 return file;
             }
@@ -662,10 +671,10 @@ public class Repository implements IRepository {
     }
 
     @Override
-    public IRepositoryStore<? extends IRepositoryFileStore> getRepositoryStore(IResource resource) {
-        for (IRepositoryStore<? extends IRepositoryFileStore> store : getAllStores()) {
+    public IRepositoryStore<? extends IRepositoryFileStore> getRepositoryStore(final IResource resource) {
+        for (final IRepositoryStore<? extends IRepositoryFileStore> store : getAllStores()) {
             if (resource instanceof IFile) {
-                IResource storeResource = store.getResource();
+                final IResource storeResource = store.getResource();
                 IResource parent = resource.getParent();
                 while (parent != null && !storeResource.equals(parent)) {
                     parent = parent.getParent();
@@ -683,14 +692,14 @@ public class Repository implements IRepository {
     }
 
     @Override
-    public void notifyFileStoreEvent(FileStoreChangeEvent event) {
+    public void notifyFileStoreEvent(final FileStoreChangeEvent event) {
         // NO BEHAVIOR
     }
 
     @Override
     public List<IRepositoryStore<? extends IRepositoryFileStore>> getAllShareableStores() {
-        List<IRepositoryStore<? extends IRepositoryFileStore>> result = new ArrayList<IRepositoryStore<? extends IRepositoryFileStore>>();
-        for (IRepositoryStore<? extends IRepositoryFileStore> store : getAllStores()) {
+        final List<IRepositoryStore<? extends IRepositoryFileStore>> result = new ArrayList<IRepositoryStore<? extends IRepositoryFileStore>>();
+        for (final IRepositoryStore<? extends IRepositoryFileStore> store : getAllStores()) {
             if (store.canBeShared()) {
                 result.add(store);
             }
@@ -712,11 +721,11 @@ public class Repository implements IRepository {
             Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD, NULL_PROGRESS_MONITOR);
             Job.getJobManager().join(ResourcesPlugin.FAMILY_MANUAL_BUILD, NULL_PROGRESS_MONITOR);
 
-            IProject project = getProject();
-            String workspacePath = project.getLocation().toFile().getParent();
-            String outputPath = workspacePath + getJavaProject().getOutputLocation().toString();
+            final IProject project = getProject();
+            final String workspacePath = project.getLocation().toFile().getParent();
+            final String outputPath = workspacePath + getJavaProject().getOutputLocation().toString();
             jars.add(new File(outputPath).toURI().toURL());
-            for (IClasspathEntry entry : getJavaProject().getRawClasspath()) {
+            for (final IClasspathEntry entry : getJavaProject().getRawClasspath()) {
                 if (entry.getEntryKind() == IClasspathEntry.CPE_LIBRARY) {
                     File jar = entry.getPath().toFile();
                     if (!jar.exists()) { // jar location relative to project
@@ -725,7 +734,7 @@ public class Repository implements IRepository {
                     jars.add(jar.toURI().toURL());
                 }
             }
-        } catch (Exception e) {
+        } catch (final Exception e) {
             BonitaStudioLog.error(e);
         }
 
@@ -734,8 +743,8 @@ public class Repository implements IRepository {
 
     @Override
     public List<IRepositoryStore<? extends IRepositoryFileStore>> getAllExportableStores() {
-        List<IRepositoryStore<? extends IRepositoryFileStore>> result = new ArrayList<IRepositoryStore<? extends IRepositoryFileStore>>();
-        for (IRepositoryStore<? extends IRepositoryFileStore> store : getAllStores()) {
+        final List<IRepositoryStore<? extends IRepositoryFileStore>> result = new ArrayList<IRepositoryStore<? extends IRepositoryFileStore>>();
+        for (final IRepositoryStore<? extends IRepositoryFileStore> store : getAllStores()) {
             if (store.canBeExported()) {
                 result.add(store);
             }
@@ -745,17 +754,17 @@ public class Repository implements IRepository {
     }
 
     @Override
-    public IRepositoryFileStore asRepositoryFileStore(IFile res) {
+    public IRepositoryFileStore asRepositoryFileStore(final IFile res) {
         final IPath projectRelativePath = res.getProjectRelativePath();
         if (projectRelativePath.segmentCount() > 0) {
-            IPath path = projectRelativePath.removeFirstSegments(0);
+            final IPath path = projectRelativePath.removeFirstSegments(0);
             if (path.segmentCount() > 1) {
-                String repoName = path.segments()[0];
-                IFile file = getProject().getFile(path);
+                final String repoName = path.segments()[0];
+                final IFile file = getProject().getFile(path);
                 if (file.exists()) {
-                    for (IRepositoryStore<?> store : getAllStores()) {
+                    for (final IRepositoryStore<?> store : getAllStores()) {
                         if (belongToRepositoryStore(store, file)) {
-                            IRepositoryFileStore fileStore = store.createRepositoryFileStore(file.getName());
+                            final IRepositoryFileStore fileStore = store.createRepositoryFileStore(file.getName());
                             if (fileStore != null && fileStore.getParentStore().getName().startsWith(repoName)) {
                                 return fileStore;
                             }
@@ -768,7 +777,7 @@ public class Repository implements IRepository {
         return null;
     }
 
-    private boolean belongToRepositoryStore(IRepositoryStore<?> store, IFile file) {
+    private boolean belongToRepositoryStore(final IRepositoryStore<?> store, final IFile file) {
         final IFolder parentFolder = store.getResource();
         if (parentFolder == null) {
             return false;
@@ -783,28 +792,28 @@ public class Repository implements IRepository {
     @Override
     public void migrate() throws CoreException, MigrationException {
         Assert.isNotNull(project);
-        for (IRepositoryStore<?> store : getAllStores()) {
+        for (final IRepositoryStore<?> store : getAllStores()) {
             store.migrate();
         }
         createProjectDescriptor(project);
-        IFile classpathFile = project.getFile(".classpath");
+        final IFile classpathFile = project.getFile(".classpath");
         if (classpathFile.exists()) {
             classpathFile.delete(true, false, NULL_PROGRESS_MONITOR);
         }
         initClasspath(project);
     }
 
-    public void setProgressMonitor(IProgressMonitor monitor) {
+    public void setProgressMonitor(final IProgressMonitor monitor) {
         this.monitor = monitor;
     }
 
-    protected void monitorWorked(int work) {
+    protected void monitorWorked(final int work) {
         if (monitor != null) {
             monitor.worked(work);
         }
     }
 
-    protected void monitorSubtask(String subtask) {
+    protected void monitorSubtask(final String subtask) {
         if (monitor != null && subtask != null) {
             monitor.subTask(subtask);
         }

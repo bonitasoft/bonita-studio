@@ -359,15 +359,6 @@
                style="push">
          </command>
       </menuContribution>
-      <menuContribution
-            allPopups="false"
-            locationURI="menu:org.bonitasoft.studio.processusMenu?after=org.bonitasoft.studio.diagram.command.openDiagram">
-         <command
-               commandId="org.bonitasoft.studio.diagram.custom.rename"
-               label="%renameLabel"
-               style="push">
-         </command>
-      </menuContribution>
    </extension>
    <extension
          point="org.eclipse.ui.commands">
@@ -413,11 +404,6 @@
             defaultHandler="org.bonitasoft.studio.diagram.custom.commands.OpenDiagramCommandHandler"
             id="org.bonitasoft.studio.diagram.command.openDiagram"
             name="Open diagram">
-      </command>
-      <command
-            defaultHandler="org.bonitasoft.studio.diagram.custom.handlers.RenameDiagramCommandHandler"
-            id="org.bonitasoft.studio.diagram.custom.rename"
-            name="Rename diagram">
       </command>
 
    </extension>

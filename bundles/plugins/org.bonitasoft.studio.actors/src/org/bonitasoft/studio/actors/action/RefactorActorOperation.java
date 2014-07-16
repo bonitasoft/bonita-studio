@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2012 BonitaSoft S.A.
- * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2012-2014 Bonitasoft S.A.
+ * Bonitasoft, 31 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package org.bonitasoft.studio.actors.action;
 
 import java.util.ArrayList;
@@ -47,19 +46,14 @@ import org.eclipse.emf.edit.domain.EditingDomain;
  * @author Aurelie Zara
  * @author Romain Bioteau
  */
-public class RefactorActorOperation extends AbstractRefactorOperation {
+public class RefactorActorOperation extends AbstractRefactorOperation<String, Actor, ActorRefactorPair> {
 
     private AbstractProcess process;
-
-    private Actor actor;
-
-    private String newValue;
 
     public RefactorActorOperation(AbstractProcess process, Actor actor, String newValue) {
         super(RefactoringOperationType.UPDATE);
         this.process = process;
-        this.actor = actor;
-        this.newValue = newValue;
+        addItemToRefactor(newValue, actor);
     }
 
     @Override
@@ -83,52 +77,40 @@ public class RefactorActorOperation extends AbstractRefactorOperation {
         configurations.addAll(process.getConfigurations());
 
         CompoundCommand cc = new CompoundCommand();
-        for (Configuration configuration : configurations) {
-            if (configuration.getActorMappings() != null) {
-                List<ActorMapping> actorMappings = configuration.getActorMappings().getActorMapping();
-                for (ActorMapping actorMapping : actorMappings) {
-                    if (actorMapping.getName().equals(actor.getName())) {
-                        cc.append(SetCommand.create(domain, actorMapping, ActorMappingPackage.Literals.ACTOR_MAPPING__NAME, getNewValueName()));
-                    }
-                }
-                if (localeConfiguration != null) {
-                    cc.append(new SaveConfigurationEMFCommand(file, localConfigurationCopy, localeConfiguration));
-                }
-            }
+        for(ActorRefactorPair pairToRefactor : pairsToRefactor){
+        	Actor actor = (Actor) pairToRefactor.getOldValue();
+        	for (Configuration configuration : configurations) {
+        		if (configuration.getActorMappings() != null) {
+        			List<ActorMapping> actorMappings = configuration.getActorMappings().getActorMapping();
+        			for (ActorMapping actorMapping : actorMappings) {
+        				if (actorMapping.getName().equals(actor.getName())) {
+        					cc.append(SetCommand.create(domain, actorMapping, ActorMappingPackage.Literals.ACTOR_MAPPING__NAME, pairToRefactor.getNewValueName()));
+        				}
+        			}
+        			if (localeConfiguration != null) {
+        				cc.append(new SaveConfigurationEMFCommand(file, localConfigurationCopy, localeConfiguration));
+        			}
+        		}
+        	}
+        	cc.append(SetCommand.create(domain, actor, ProcessPackage.Literals.ELEMENT__NAME, pairToRefactor.getNewValueName()));
         }
-        cc.append(SetCommand.create(domain, actor, ProcessPackage.Literals.ELEMENT__NAME, getNewValueName()));
     }
 
     @Override
-    protected AbstractScriptExpressionRefactoringAction getScriptExpressionRefactoringAction(EObject newValue, String oldName, String newName,
+    protected AbstractScriptExpressionRefactoringAction<ActorRefactorPair> getScriptExpressionRefactoringAction(List<ActorRefactorPair> pairsToRefactor,
             List<Expression> scriptExpressions, List<Expression> refactoredScriptExpression, CompoundCommand compoundCommand, EditingDomain domain,
             RefactoringOperationType operationType) {
         return null;
     }
 
     @Override
-    protected EObject getContainer() {
+    protected EObject getContainer(Actor oldValue) {
         return null;
     }
 
-    @Override
-    protected EObject getOldValue() {
-        return actor;
-    }
-
-    @Override
-    protected String getOldValueName() {
-        return actor.getName();
-    }
-
-    @Override
-    protected EObject getNewValue() {
-        return null;
-    }
-
-    @Override
-    protected String getNewValueName() {
-        return newValue;
-    }
+	@Override
+	protected ActorRefactorPair createRefactorPair(String newItem, Actor oldItem) {
+		return new ActorRefactorPair(newItem, oldItem);
+	}
 
 }

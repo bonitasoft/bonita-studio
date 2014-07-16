@@ -55,7 +55,7 @@ public class SynchronizeOrganizationWizard extends Wizard {
     private Organization activeOrganization;
 
     public SynchronizeOrganizationWizard(){
-    	setWindowTitle(Messages.synchronizeOrganizationTitle);
+        setWindowTitle(Messages.synchronizeOrganizationTitle);
         setDefaultPageImageDescriptor(Pics.getWizban()) ;
         setForcePreviousAndNextButtons(false) ;
         setNeedsProgressMonitor(true) ;
@@ -65,17 +65,17 @@ public class SynchronizeOrganizationWizard extends Wizard {
     public void addPages() {
         page = new SynchronizeOrganizationWizardPage() ;
         userPage = new DefaultUserOrganizationWizardPage() ;
-        IPreferenceStore prefStore = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore() ;
+        final IPreferenceStore prefStore = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore() ;
         userPage.setUser(prefStore.getString(BonitaPreferenceConstants.USER_NAME));
-       // userPage.setPassword(prefStore.getString(BonitaPreferenceConstants.USER_PASSWORD));
+        // userPage.setPassword(prefStore.getString(BonitaPreferenceConstants.USER_PASSWORD));
         addPage(page) ;
         addPage(userPage) ;
     }
 
     @Override
-    public IWizardPage getNextPage(IWizardPage page) {
+    public IWizardPage getNextPage(final IWizardPage page) {
         if(page instanceof SynchronizeOrganizationWizardPage){
-        	activeOrganization = (Organization) ((SynchronizeOrganizationWizardPage)page).getFileStore().getContent();
+            activeOrganization = (Organization) ((SynchronizeOrganizationWizardPage)page).getFileStore().getContent();
             userPage.setOrganization(activeOrganization) ;
             return userPage ;
         }else{
@@ -92,45 +92,46 @@ public class SynchronizeOrganizationWizard extends Wizard {
             getContainer().run(true, false, new IRunnableWithProgress() {
 
                 @Override
-                public void run(IProgressMonitor maonitor) throws InvocationTargetException,InterruptedException {
+                public void run(final IProgressMonitor maonitor) throws InvocationTargetException,InterruptedException {
                     maonitor.beginTask(Messages.synchronizingOrganization, IProgressMonitor.UNKNOWN) ;
 
-                    IPreferenceStore prefStore = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore() ;
-                    String userName = userPage.getUser();
+                    final IPreferenceStore prefStore = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore() ;
+                    final String userName = userPage.getUser();
                     String password = null;
                     if (activeOrganization!=null){
-                    	
-                    	for (User user:activeOrganization.getUsers().getUser()){
-                    		if (user.getUserName().equals(userPage.getUser())){
-                    			password = user.getPassword().getValue();
-                    		}
-                    	}
+
+                        for (final User user:activeOrganization.getUsers().getUser()){
+                            if (user.getUserName().equals(userPage.getUser())){
+                                password = user.getPassword().getValue();
+                            }
+                        }
                     }
                     prefStore.setValue(BonitaPreferenceConstants.USER_NAME,userName);
                     prefStore.setValue(BonitaPreferenceConstants.USER_PASSWORD,password);
 
-                    IRepositoryFileStore artifact = getFileStore() ;
-                    ICommandService service = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class) ;
-                    IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService(IHandlerService.class) ;
-    				Command cmd = service.getCommand("org.bonitasoft.studio.engine.installOrganization") ;
-    				try {
-    					Parameterization p = new Parameterization(cmd.getParameter("artifact"), artifact.getName());
-    					handlerService.executeCommand(new ParameterizedCommand(cmd, new Parameterization[]{p}), null);
-    					 prefStore.setValue(ActorsPreferenceConstants.DEFAULT_ORGANIZATION, artifact.getDisplayName()) ;
-    				} catch (Exception e) {
-    					BonitaStudioLog.error(e);
-    				}
-                    
+                    final IRepositoryFileStore artifact = getFileStore() ;
+                    final ICommandService service = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class) ;
+                    final IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService(IHandlerService.class) ;
+                    final Command cmd = service.getCommand("org.bonitasoft.studio.engine.installOrganization") ;
+                    try {
+                        final Parameterization p = new Parameterization(cmd.getParameter("artifact"), artifact.getName());
+                        handlerService.executeCommand(new ParameterizedCommand(cmd, new Parameterization[]{p}), null);
+                        prefStore.setValue(ActorsPreferenceConstants.DEFAULT_ORGANIZATION, artifact.getDisplayName()) ;
+                    } catch (final Exception e) {
+                        throw new InvocationTargetException(e);
+                    }
+
                     final String organizationName = artifact.getDisplayName();
                     Display.getDefault().syncExec( new Runnable() {
-						public void run() {
-							 MessageDialog.openInformation(Display.getDefault().getActiveShell(), Messages.synchronizeInformationTitle,Messages.bind(Messages.synchronizeOrganizationSuccessMsg, organizationName));
-						}
-					});
-                
+                        @Override
+                        public void run() {
+                            MessageDialog.openInformation(Display.getDefault().getActiveShell(), Messages.synchronizeInformationTitle,Messages.bind(Messages.synchronizeOrganizationSuccessMsg, organizationName));
+                        }
+                    });
+
                 }
             }) ;
-        } catch (Exception e) {
+        } catch (final Exception e) {
             BonitaStudioLog.error(e) ;
             return false ;
         }

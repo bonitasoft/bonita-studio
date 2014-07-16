@@ -176,8 +176,12 @@ public class Messages extends NLS {
 
     public static String overviewFormCantHaveSubmitButton;
 
-	public static String inconsistentLeftOperand;
-    
+    public static String inconsistentLeftOperand;
+
+    public static String defaultGroovyMethodImportMissing;
+
+    public static String invalidDependencyAssignement;
+
     static {
         // initialize resource bundle
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

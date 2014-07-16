@@ -70,7 +70,6 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -92,31 +91,10 @@ import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
  */
 public class ResourcePropertySection extends AbstractBonitaDescriptionSection implements SWTBotConstants{
 
-
-
     private TreeViewer tv;
-    private final SelectionListener radioListener = new SelectionListener() {
-
-        @Override
-        public void widgetSelected(SelectionEvent e) {
-            if (e.getSource().equals(internal)) {
-                changeWelcome.setEnabled(true);
-            } else {
-                changeWelcome.setEnabled(false);
-            }
-            getEditingDomain().getCommandStack().execute(
-                    new SetCommand(getEditingDomain(), resourceContainer, ProcessPackage.Literals.PROCESS_APPLICATION__WELCOME_PAGE_INTERNAL, internal
-                            .getSelection()));
-        }
-
-        @Override
-        public void widgetDefaultSelected(SelectionEvent e) {
-        }
-    };
     private Text loginPath;
     private Button changeLogin;
     private Button editLogin;
-    private Button internal;
     private Text welcomePath;
     private Button changeWelcome;
     private Button editWelcome;
@@ -124,17 +102,17 @@ public class ResourcePropertySection extends AbstractBonitaDescriptionSection im
     private final Listener browseButtonListener = new Listener() {
 
         @Override
-        public void handleEvent(Event event) {
+        public void handleEvent(final Event event) {
             Text textField = null;
             if(event.widget.equals(changeWelcome)) {
                 textField = welcomePath;
             } else {
                 textField = loginPath;
             }
-            FileDialog fd = new FileDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), SWT.OPEN);
+            final FileDialog fd = new FileDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), SWT.OPEN);
             fd.setFilterExtensions(event.widget.equals(changeLogin) ? new String[] { "*.jsp" } : new String[] { "*.html", "*.htm", "*.*" });
             if (textField.getText() != null) {
-                File temp = new File(textField.getText());
+                final File temp = new File(textField.getText());
                 if (temp.exists()) {
                     fd.setFilterPath(temp.getAbsolutePath());
                 }
@@ -142,8 +120,8 @@ public class ResourcePropertySection extends AbstractBonitaDescriptionSection im
 
             String res = fd.open();
             if (res != null) {
-                final ApplicationResourceRepositoryStore resourceStore = (ApplicationResourceRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ApplicationResourceRepositoryStore.class) ;
-                String processUUID = ModelHelper.getEObjectID(resourceContainer) ;
+                final ApplicationResourceRepositoryStore resourceStore = RepositoryManager.getInstance().getRepositoryStore(ApplicationResourceRepositoryStore.class) ;
+                final String processUUID = ModelHelper.getEObjectID(resourceContainer) ;
                 ApplicationResourceFileStore artifact = (ApplicationResourceFileStore) resourceStore.getChild(processUUID) ;
                 if (artifact == null) {
                     artifact = (ApplicationResourceFileStore) resourceStore.createRepositoryFileStore(processUUID) ;
@@ -152,7 +130,7 @@ public class ResourcePropertySection extends AbstractBonitaDescriptionSection im
                     res = artifact.setWelcomePage(res);
                     textField.setText(res);
 
-                    AssociatedFile af = ProcessFactory.eINSTANCE.createAssociatedFile();
+                    final AssociatedFile af = ProcessFactory.eINSTANCE.createAssociatedFile();
                     af.setPath(res);
                     getEditingDomain().getCommandStack().execute(
                             new SetCommand(getEditingDomain(), resourceContainer, ProcessPackage.Literals.PROCESS_APPLICATION__WELCOME_PAGE, af));
@@ -160,7 +138,7 @@ public class ResourcePropertySection extends AbstractBonitaDescriptionSection im
                     res = artifact.setLoginPage(res);
                     textField.setText(res);
 
-                    AssociatedFile af = ProcessFactory.eINSTANCE.createAssociatedFile();
+                    final AssociatedFile af = ProcessFactory.eINSTANCE.createAssociatedFile();
                     af.setPath(res);
                     getEditingDomain().getCommandStack().execute(
                             new SetCommand(getEditingDomain(), resourceContainer, ProcessPackage.Literals.PROCESS_APPLICATION__LOG_IN_PAGE, af));
@@ -169,26 +147,6 @@ public class ResourcePropertySection extends AbstractBonitaDescriptionSection im
         }
     };
 
-    private final ModifyListener modifyListener = new ModifyListener() {
-
-        @Override
-        public void modifyText(ModifyEvent e) {
-            if (((AbstractProcess) resourceContainer).getWelcomePage() == null) {
-
-                AssociatedFile af = ProcessFactory.eINSTANCE.createAssociatedFile();
-                af.setPath(welcomePath.getText() != null ? welcomePath.getText() : "");
-                getEditingDomain().getCommandStack().execute(
-                        new SetCommand(getEditingDomain(), resourceContainer, ProcessPackage.Literals.PROCESS_APPLICATION__WELCOME_PAGE, af));
-
-            } else {
-                getEditingDomain().getCommandStack().execute(
-                        new SetCommand(getEditingDomain(), ((AbstractProcess) resourceContainer).getWelcomePage(), ProcessPackage.Literals.ASSOCIATED_FILE__PATH,
-                                welcomePath.getText() != null ? welcomePath.getText() : ""));
-
-            }
-
-        }
-    };
     private final SelectionAdapter editButtonListener = new SelectionAdapter() {
         /*
          * (non-Javadoc)
@@ -198,7 +156,7 @@ public class ResourcePropertySection extends AbstractBonitaDescriptionSection im
          * .swt.events.SelectionEvent)
          */
         @Override
-        public void widgetSelected(SelectionEvent e) {
+        public void widgetSelected(final SelectionEvent e) {
             String path;
             Text text = null;
             if (e.widget.equals(editWelcome)) {
@@ -208,11 +166,11 @@ public class ResourcePropertySection extends AbstractBonitaDescriptionSection im
             }
             if (text != null) {
                 path = text.getText();
-                File file = WebTemplatesUtil.getFile(path);
+                final File file = WebTemplatesUtil.getFile(path);
                 if (file != null && file.exists() && !file.isDirectory()) {
-                    URI uri = file.toURI();
+                    final URI uri = file.toURI();
                     try {
-                        URL url = uri.toURL();
+                        final URL url = uri.toURL();
                         url.toString();
                         url.toURI();
                         try {//workaround for 2353
@@ -223,12 +181,12 @@ public class ResourcePropertySection extends AbstractBonitaDescriptionSection im
                                 IDE.openEditor(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage(), url.toURI(), IDE.getEditorDescriptor(file.getName())
                                         .getId(), true);
                             }
-                        } catch (PartInitException e1) {
+                        } catch (final PartInitException e1) {
                             BonitaStudioLog.error(e1);
                         }
-                    } catch (MalformedURLException e2) {
+                    } catch (final MalformedURLException e2) {
                         BonitaStudioLog.error(e2);
-                    } catch (URISyntaxException e4) {
+                    } catch (final URISyntaxException e4) {
                         BonitaStudioLog.error(e4);
                     }
                 }
@@ -240,17 +198,17 @@ public class ResourcePropertySection extends AbstractBonitaDescriptionSection im
     private Button editFile;
 
     @Override
-    public void createControls(Composite parent,
-            TabbedPropertySheetPage aTabbedPropertySheetPage) {
+    public void createControls(final Composite parent,
+            final TabbedPropertySheetPage aTabbedPropertySheetPage) {
         super.createControls(parent, aTabbedPropertySheetPage);
-        Composite mainComposite = getWidgetFactory().createComposite(parent, SWT.NONE);
-        GridLayout layout = new GridLayout(3, false);
+        final Composite mainComposite = getWidgetFactory().createComposite(parent, SWT.NONE);
+        final GridLayout layout = new GridLayout(3, false);
         mainComposite.setLayout(layout);
         mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true,true).create());
-        createTree(mainComposite);
         createButtons(mainComposite);
+        createTree(mainComposite);
         updateButtons() ;
-        Composite templates = createRightPanel(mainComposite);
+        final Composite templates = createRightPanel(mainComposite);
         //createWelcomePage(templates);
         createLoginPage(templates);
     }
@@ -267,22 +225,22 @@ public class ResourcePropertySection extends AbstractBonitaDescriptionSection im
     }
 
 
-    private Composite createRightPanel(Composite parent) {
-        Composite templates = getWidgetFactory().createComposite(parent);
+    private Composite createRightPanel(final Composite parent) {
+        final Composite templates = getWidgetFactory().createComposite(parent);
         templates.setLayout(new GridLayout(5, false));
-        GridData gridD = new GridData(SWT.FILL, SWT.TOP, true, false, 1, 3);
+        final GridData gridD = new GridData(SWT.FILL, SWT.TOP, true, false, 1, 3);
         templates.setLayoutData(gridD);
         gridD.widthHint = 200;
         return templates;
 
     }
 
-    private void createTree(Composite parent) {
+    private void createTree(final Composite parent) {
 
         // Create the tree viewer to display the file tree
         tv = new TreeViewer(parent);
         tv.getTree().setData(SWTBOT_WIDGET_ID_KEY, APPLICATION_RESOURCES_TREE_ID);
-        GridData treeGridData = new GridData(GridData.FILL, GridData.FILL, false, false, 1, 5);
+        final GridData treeGridData = new GridData(GridData.FILL, GridData.FILL, false, false, 1, 5);
         treeGridData.heightHint = 127;
         treeGridData.widthHint = 227;
 
@@ -295,12 +253,12 @@ public class ResourcePropertySection extends AbstractBonitaDescriptionSection im
 
         tv.addSelectionChangedListener(new ISelectionChangedListener() {
             @Override
-            public void selectionChanged(SelectionChangedEvent event) {
+            public void selectionChanged(final SelectionChangedEvent event) {
                 updateButtons();
                 if (!event.getSelection().isEmpty() && event.getSelection() instanceof IStructuredSelection) {
                     boolean disable = false;
                     boolean enableEdit = false;
-                    for (Object el : ((IStructuredSelection) event.getSelection()).toArray()) {
+                    for (final Object el : ((IStructuredSelection) event.getSelection()).toArray()) {
                         if (!(el instanceof ResourceFolder || el instanceof IResource)) {
                             if(el instanceof File || el instanceof ResourceFile){
                                 if(!WebTemplatesUtil.isInUserTemplate(el)){
@@ -317,7 +275,7 @@ public class ResourcePropertySection extends AbstractBonitaDescriptionSection im
                             break;
                         }
                     }
-                
+
                     editFile.setEnabled(enableEdit) ;
                 }
             }
@@ -325,23 +283,23 @@ public class ResourcePropertySection extends AbstractBonitaDescriptionSection im
         tv.getTree().setFocus();
     }
 
-    private void createButtons(Composite parent) {
-        Composite buttonsComposite = getWidgetFactory().createPlainComposite(parent, SWT.NONE);
+    private void createButtons(final Composite parent) {
+        final Composite buttonsComposite = getWidgetFactory().createPlainComposite(parent, SWT.NONE);
         buttonsComposite.setLayout(new FillLayout(SWT.VERTICAL));
         buttonsComposite.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false, 1, 2));
 
         // add a resource folder in the tree
-        Button addFolder = getWidgetFactory().createButton(buttonsComposite, Messages.Folder, SWT.FLAT);
+        final Button addFolder = getWidgetFactory().createButton(buttonsComposite, Messages.Folder, SWT.FLAT);
         addFolder.addSelectionListener(new SelectionAdapter() {
 
             @Override
-            public void widgetSelected(SelectionEvent e) {
+            public void widgetSelected(final SelectionEvent e) {
                 // FileFolderSelectionDialog ffd;
 
-                DirectoryDialog fd = new DirectoryDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), SWT.OPEN);
-                String res = fd.open();
+                final DirectoryDialog fd = new DirectoryDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), SWT.OPEN);
+                final String res = fd.open();
                 if (res != null && !containsPath(resourceContainer, res)) {
-                    Object element = ((IStructuredSelection) tv.getSelection()).getFirstElement();
+                    final Object element = ((IStructuredSelection) tv.getSelection()).getFirstElement();
                     Object parentFolder = null;
                     if(element instanceof ResourceFolder){
                         if(WebTemplatesUtil.isInUserTemplate(element)){
@@ -352,11 +310,11 @@ public class ResourcePropertySection extends AbstractBonitaDescriptionSection im
                             parentFolder = element;
                         }
                     }
-                    Object af = WebTemplatesUtil.putResourcesInProcessTemplate(res, parentFolder, getEditingDomain(), (AbstractProcess) resourceContainer);
+                    final Object af = WebTemplatesUtil.putResourcesInProcessTemplate(res, parentFolder, getEditingDomain(), (AbstractProcess) resourceContainer);
                     if(parentFolder == null){
-                        final ApplicationResourceRepositoryStore resourceStore = (ApplicationResourceRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ApplicationResourceRepositoryStore.class) ;
-                        String processUUID = ModelHelper.getEObjectID(resourceContainer) ;
-                        ApplicationResourceFileStore artifact = (ApplicationResourceFileStore) resourceStore.getChild(processUUID) ;
+                        final ApplicationResourceRepositoryStore resourceStore = RepositoryManager.getInstance().getRepositoryStore(ApplicationResourceRepositoryStore.class) ;
+                        final String processUUID = ModelHelper.getEObjectID(resourceContainer) ;
+                        final ApplicationResourceFileStore artifact = (ApplicationResourceFileStore) resourceStore.getChild(processUUID) ;
                         if (artifact != null && af !=null) {
                             tv.add(ResourceTreeContentProvider.RESOURCES_CATEGORY, af);
                         }
@@ -369,15 +327,15 @@ public class ResourcePropertySection extends AbstractBonitaDescriptionSection im
         });
 
         // add files at the root
-        Button addFiles = getWidgetFactory().createButton(buttonsComposite, Messages.File, SWT.FLAT);
+        final Button addFiles = getWidgetFactory().createButton(buttonsComposite, Messages.File, SWT.FLAT);
         addFiles.addSelectionListener(new SelectionAdapter() {
 
             @Override
-            public void widgetSelected(SelectionEvent e) {
-                FileDialog fd = new FileDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), SWT.OPEN | SWT.MULTI);
-                String res = fd.open();
+            public void widgetSelected(final SelectionEvent e) {
+                final FileDialog fd = new FileDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), SWT.OPEN | SWT.MULTI);
+                final String res = fd.open();
                 if (res != null) {
-                    Object element = ((IStructuredSelection) tv.getSelection()).getFirstElement();
+                    final Object element = ((IStructuredSelection) tv.getSelection()).getFirstElement();
                     Object parentFolder = null;
                     if(element instanceof ResourceFolder){
                         if(WebTemplatesUtil.isInUserTemplate(element)){
@@ -390,17 +348,17 @@ public class ResourcePropertySection extends AbstractBonitaDescriptionSection im
                     }
                     // ((FileTreeContentProvider)tv.getContentProvider()).setRootPath(res);
                     File temp = null;
-                    String[] fileNames = fd.getFileNames();
+                    final String[] fileNames = fd.getFileNames();
                     for (int i = 0; i < fileNames.length; i++) {
                         temp = new File(fd.getFilterPath() + File.separatorChar + fileNames[i]);
                         if (!containsPath(resourceContainer, temp.getAbsolutePath())) {
 
                             // copy it in the process template directory
-                            Object af = WebTemplatesUtil.putResourcesInProcessTemplate(res, parentFolder, getEditingDomain(), (AbstractProcess) resourceContainer);
+                            final Object af = WebTemplatesUtil.putResourcesInProcessTemplate(res, parentFolder, getEditingDomain(), (AbstractProcess) resourceContainer);
                             if(parentFolder == null){
-                                final ApplicationResourceRepositoryStore resourceStore = (ApplicationResourceRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ApplicationResourceRepositoryStore.class) ;
-                                String processUUID = ModelHelper.getEObjectID(resourceContainer) ;
-                                ApplicationResourceFileStore artifact = (ApplicationResourceFileStore) resourceStore.getChild(processUUID) ;
+                                final ApplicationResourceRepositoryStore resourceStore = RepositoryManager.getInstance().getRepositoryStore(ApplicationResourceRepositoryStore.class) ;
+                                final String processUUID = ModelHelper.getEObjectID(resourceContainer) ;
+                                final ApplicationResourceFileStore artifact = (ApplicationResourceFileStore) resourceStore.getChild(processUUID) ;
                                 if (artifact != null) {
                                     tv.add(ResourceTreeContentProvider.RESOURCES_CATEGORY, af);
                                 }
@@ -418,23 +376,23 @@ public class ResourcePropertySection extends AbstractBonitaDescriptionSection im
         editFile.addSelectionListener(new SelectionAdapter() {
 
             @Override
-            public void widgetSelected(SelectionEvent e) {
-                Iterator<?> it = ((ITreeSelection) tv.getSelection()).iterator();
+            public void widgetSelected(final SelectionEvent e) {
+                final Iterator<?> it = ((ITreeSelection) tv.getSelection()).iterator();
                 Object temp;
                 while (it.hasNext()) {
                     temp = it.next();
                     File file = null;
                     if (temp instanceof ResourceFile) {
-                        String path = ((ResourceFile) temp).getPath();
+                        final String path = ((ResourceFile) temp).getPath();
                         if(WebTemplatesUtil.isInUserTemplate(path)){
                             file = WebTemplatesUtil.getFile(path);
                         }
 
                     } else if (temp instanceof IResource) {
-                        IProject project = ((IResource) temp).getProject();
-                        final ApplicationResourceRepositoryStore resourceStore = (ApplicationResourceRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ApplicationResourceRepositoryStore.class) ;
+                        final IProject project = ((IResource) temp).getProject();
+                        final ApplicationResourceRepositoryStore resourceStore = RepositoryManager.getInstance().getRepositoryStore(ApplicationResourceRepositoryStore.class) ;
                         if(project.equals(resourceStore.getResource().getProject())){
-                            String path = ((IResource)temp).getProjectRelativePath().toString();
+                            final String path = ((IResource)temp).getProjectRelativePath().toString();
                             if(WebTemplatesUtil.isInUserTemplate(path)){
                                 file = WebTemplatesUtil.getFile(path);
 
@@ -446,7 +404,7 @@ public class ResourcePropertySection extends AbstractBonitaDescriptionSection im
                         }
                     }
                     if(file != null && file.exists() && !file.isDirectory()){
-                        URI uri = file.toURI();
+                        final URI uri = file.toURI();
                         try {
                             if(file.getName().endsWith(".htm")||file.getName().endsWith(".html") ||file.getName().endsWith(".js") ){//FIXME use IFile to determine content type
                                 IDE.openEditor(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage(), uri, IDE.getEditorDescriptor("test.txt")////$NON-NLS-1$
@@ -455,7 +413,7 @@ public class ResourcePropertySection extends AbstractBonitaDescriptionSection im
                                 IDE.openEditor(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage(), uri, IDE.getEditorDescriptor(file.getName())
                                         .getId(), true);
                             }
-                        } catch (PartInitException e1) {
+                        } catch (final PartInitException e1) {
                             BonitaStudioLog.error(e1);
                         }
                     }
@@ -468,27 +426,27 @@ public class ResourcePropertySection extends AbstractBonitaDescriptionSection im
         removeFolder.addSelectionListener(new SelectionAdapter() {
 
             @Override
-            public void widgetSelected(SelectionEvent e) {
+            public void widgetSelected(final SelectionEvent e) {
                 if(!MessageDialog.openConfirm(removeFolder.getShell(), Messages.confirmDeleteFile_title, Messages.confirmDeleteFile_msg)){
                     return;
                 }
-                Iterator<?> it = ((ITreeSelection) tv.getSelection()).iterator();
+                final Iterator<?> it = ((ITreeSelection) tv.getSelection()).iterator();
                 Object temp;
                 Object toRemove = null;
-                final ApplicationResourceRepositoryStore resourceStore = (ApplicationResourceRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ApplicationResourceRepositoryStore.class) ;
+                final ApplicationResourceRepositoryStore resourceStore = RepositoryManager.getInstance().getRepositoryStore(ApplicationResourceRepositoryStore.class) ;
                 final String processUUID = ModelHelper.getEObjectID(getAbstractProcess()) ;
                 while (it.hasNext()) {
                     temp = it.next();
                     if (temp instanceof String && !containsPath(resourceContainer, (String) temp)) {
                         toRemove = temp;
                         if (WebTemplatesUtil.isInUserTemplate(toRemove)) {
-                            ApplicationResourceFileStore file = (ApplicationResourceFileStore) resourceStore.getChild(processUUID) ;
+                            final ApplicationResourceFileStore file = (ApplicationResourceFileStore) resourceStore.getChild(processUUID) ;
                             file.removeResource((String) toRemove);
                         }
                     } else if (temp instanceof ResourceFolder) {
                         toRemove = temp;
                         if (WebTemplatesUtil.isInUserTemplate(toRemove)) {
-                            ApplicationResourceFileStore file = (ApplicationResourceFileStore) resourceStore.getChild(processUUID) ;
+                            final ApplicationResourceFileStore file = (ApplicationResourceFileStore) resourceStore.getChild(processUUID) ;
                             file.removeResource(((ResourceFolder) toRemove).getPath());
                         }
                         getEditingDomain().getCommandStack().execute(
@@ -497,14 +455,14 @@ public class ResourcePropertySection extends AbstractBonitaDescriptionSection im
                     } else if (temp instanceof ResourceFile) {
                         toRemove = temp;
                         if (WebTemplatesUtil.isInUserTemplate(toRemove)) {
-                            ApplicationResourceFileStore file = (ApplicationResourceFileStore) resourceStore.getChild(processUUID) ;
+                            final ApplicationResourceFileStore file = (ApplicationResourceFileStore) resourceStore.getChild(processUUID) ;
                             file.removeResource(((ResourceFile) toRemove).getPath());
                         }
                         getEditingDomain().getCommandStack().execute(
                                 new RemoveCommand(getEditingDomain(), resourceContainer, ProcessPackage.Literals.RESOURCE_CONTAINER__RESOURCE_FILES, toRemove));
 
                     } else if (temp instanceof IResource) {
-                        ApplicationResourceFileStore file = (ApplicationResourceFileStore) resourceStore.getChild(processUUID) ;
+                        final ApplicationResourceFileStore file = (ApplicationResourceFileStore) resourceStore.getChild(processUUID) ;
                         file.removeResource((IResource) temp);
                         tv.remove(temp);
                     } else if (temp instanceof File) {
@@ -527,16 +485,16 @@ public class ResourcePropertySection extends AbstractBonitaDescriptionSection im
     /**
      * @param templates
      */
-    private void createLoginPage(Composite templates) {
+    private void createLoginPage(final Composite templates) {
         Button download;
         // ---------------- login page
 
-        CLabel loginLabel = getWidgetFactory().createCLabel(templates, Messages.ResourceSection_LoginPage, SWT.CENTER);
+        final CLabel loginLabel = getWidgetFactory().createCLabel(templates, Messages.ResourceSection_LoginPage, SWT.CENTER);
         loginLabel.setLayoutData(new GridData(GridData.BEGINNING, GridData.FILL, true, false, 4, 1));
 
-        Composite pathComposite = getWidgetFactory().createComposite(templates, SWT.NONE);
+        final Composite pathComposite = getWidgetFactory().createComposite(templates, SWT.NONE);
         pathComposite.setLayoutData(GridDataFactory.fillDefaults().span(5, 1).grab(true, false).create());
-        GridLayout layout2 = new GridLayout(5,false);
+        final GridLayout layout2 = new GridLayout(5,false);
         layout2.marginWidth = 2;
         layout2.marginHeight = 0;
         pathComposite.setLayout(layout2);
@@ -545,13 +503,13 @@ public class ResourcePropertySection extends AbstractBonitaDescriptionSection im
         loginPath.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, true, false, 1, 1));
         loginPath.setEditable(false);
 
-        Button clear = getWidgetFactory().createButton(pathComposite,"", SWT.FLAT);//$NON-NLS-1$
+        final Button clear = getWidgetFactory().createButton(pathComposite,"", SWT.FLAT);//$NON-NLS-1$
         clear.setLayoutData(new GridData(GridData.FILL, GridData.FILL, false, false, 1, 1));
         clear.setImage(Pics.getImage(PicsConstants.remove));
         clear.addSelectionListener(new SelectionAdapter() {
 
             @Override
-            public void widgetSelected(SelectionEvent e) {
+            public void widgetSelected(final SelectionEvent e) {
                 loginPath.setText("");
                 getEditingDomain().getCommandStack().execute(
                         new SetCommand(getEditingDomain(), resourceContainer, ProcessPackage.Literals.PROCESS_APPLICATION__LOG_IN_PAGE, null));
@@ -568,8 +526,8 @@ public class ResourcePropertySection extends AbstractBonitaDescriptionSection im
         loginPath.addModifyListener(new ModifyListener() {
 
             @Override
-            public void modifyText(ModifyEvent e) {
-                String path = loginPath.getText();
+            public void modifyText(final ModifyEvent e) {
+                final String path = loginPath.getText();
                 editLogin.setEnabled(isEditable(path));
             }
         });
@@ -578,7 +536,7 @@ public class ResourcePropertySection extends AbstractBonitaDescriptionSection im
         download.setLayoutData(new GridData(GridData.END, GridData.FILL, false, false, 1, 1));
         download.addSelectionListener(new SelectionAdapter() {
             @Override
-            public void widgetSelected(SelectionEvent e) {
+            public void widgetSelected(final SelectionEvent e) {
                 downloadDefaultTemplate("login.jsp", "application/");
             }
         });
@@ -590,9 +548,9 @@ public class ResourcePropertySection extends AbstractBonitaDescriptionSection im
      * @param path
      * @return
      */
-    protected boolean isEditable(String path) {
+    protected boolean isEditable(final String path) {
         if(path != null && path.length()>0){
-            File file = WebTemplatesUtil.getFile(path);
+            final File file = WebTemplatesUtil.getFile(path);
             if (file != null && file.exists() && !file.isDirectory()) {
                 return true;
             }
@@ -601,7 +559,7 @@ public class ResourcePropertySection extends AbstractBonitaDescriptionSection im
     }
 
     @Override
-    protected void setEObject(EObject object) {
+    protected void setEObject(final EObject object) {
         super.setEObject(object);
 
 
@@ -614,16 +572,16 @@ public class ResourcePropertySection extends AbstractBonitaDescriptionSection im
             }
 
             // reload login.jsp
-            AssociatedFile loginJsp = ((AbstractProcess) resourceContainer).getLogInPage();
+            final AssociatedFile loginJsp = ((AbstractProcess) resourceContainer).getLogInPage();
             if (loginJsp != null) {
                 loginPath.setText(loginJsp.getPath());
             } else {
                 loginPath.setText("");
             }
             // reload resources folder+files
-            ArrayList<AssociatedFile> toRemoveFolders = new ArrayList<AssociatedFile>();
-            ArrayList<AssociatedFile> toRemoveFiles = new ArrayList<AssociatedFile>();
-            CompoundCommand cc = new CompoundCommand();
+            final ArrayList<AssociatedFile> toRemoveFolders = new ArrayList<AssociatedFile>();
+            final ArrayList<AssociatedFile> toRemoveFiles = new ArrayList<AssociatedFile>();
+            final CompoundCommand cc = new CompoundCommand();
             if (toRemoveFolders.size() > 0) {
                 cc.append(new RemoveCommand(getEditingDomain(), resourceContainer, ProcessPackage.Literals.RESOURCE_CONTAINER__RESOURCE_FOLDERS, toRemoveFolders));
             }
@@ -650,12 +608,12 @@ public class ResourcePropertySection extends AbstractBonitaDescriptionSection im
      * @param path
      *            path in bonita-app.war
      */
-    public static void downloadDefaultTemplate(String name, String path) {
-        FileDialog fd = new FileDialog(Display.getCurrent().getActiveShell(), SWT.SAVE);
+    public static void downloadDefaultTemplate(final String name, final String path) {
+        final FileDialog fd = new FileDialog(Display.getCurrent().getActiveShell(), SWT.SAVE);
         fd.setFileName(name);
-        String outFile = fd.open();
+        final String outFile = fd.open();
         if(outFile != null){
-            File template = new File(outFile);
+            final File template = new File(outFile);
             template.delete();
             try {
                 template.createNewFile();
@@ -665,14 +623,14 @@ public class ResourcePropertySection extends AbstractBonitaDescriptionSection im
                 // edit it in the java/html editor?
                 // IDE.openEditor(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage(),
                 // ifile,BonitaJavaEditor.ID);
-            } catch (IOException e) {
+            } catch (final IOException e) {
                 BonitaStudioLog.error(e);
             }
         }
     }
 
     protected AbstractProcess getAbstractProcess() {
-        EObject eo = getEObject();
+        final EObject eo = getEObject();
         if (eo instanceof AbstractProcess) {
             return (AbstractProcess) eo;
         } else {
@@ -685,13 +643,13 @@ public class ResourcePropertySection extends AbstractBonitaDescriptionSection im
      * @param res
      * @return
      */
-    protected boolean containsPath(ResourceContainer resourceContainer2, String res) {
-        for (ResourceFolder folder : resourceContainer2.getResourceFolders()) {
+    protected boolean containsPath(final ResourceContainer resourceContainer2, final String res) {
+        for (final ResourceFolder folder : resourceContainer2.getResourceFolders()) {
             if (folder.getPath() != null && folder.getPath().equals(res)) {
                 return true;
             }
         }
-        for (ResourceFile file : resourceContainer2.getResourceFiles()) {
+        for (final ResourceFile file : resourceContainer2.getResourceFiles()) {
             if (file.getPath() != null && file.getPath().equals(res)) {
                 return true;
             }

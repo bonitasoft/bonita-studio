@@ -80,13 +80,9 @@ public class EditConnectorConfigurationWizard extends ConnectorWizard {
         return super.getNextPage(page);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.connectors.ui.wizard.ConnectorWizard#addNameAndDescriptionPage()
-     */
     @Override
-    protected void addNameAndDescriptionPage() {
-
+    protected IWizardPage getNameAndDescriptionPage() {
+        return null;
     }
 
     /*

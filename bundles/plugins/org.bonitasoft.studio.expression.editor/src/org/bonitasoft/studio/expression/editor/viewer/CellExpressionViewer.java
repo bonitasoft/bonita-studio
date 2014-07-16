@@ -17,7 +17,8 @@
  */
 package org.bonitasoft.studio.expression.editor.viewer;
 
-import org.bonitasoft.studio.expression.editor.i18n.Messages;
+import org.bonitasoft.studio.pics.Pics;
+import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.jface.fieldassist.IContentProposal;
@@ -27,9 +28,9 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 
 /**
@@ -42,25 +43,24 @@ public class CellExpressionViewer extends ExpressionViewer {
 
     private ColumnViewer columnViewer;
 
-    public CellExpressionViewer(Composite composite, int style,
-            TabbedPropertySheetWidgetFactory widgetFactory,
-            EditingDomain editingDomain, EReference expressionReference) {
+    public CellExpressionViewer(final Composite composite, final int style,
+            final TabbedPropertySheetWidgetFactory widgetFactory,
+            final EditingDomain editingDomain, final EReference expressionReference) {
         super(composite, style, widgetFactory, editingDomain, expressionReference);
     }
 
     @Override
-    protected void createToolbar(int style, TabbedPropertySheetWidgetFactory widgetFactory) {
-        final Link editControl = new Link(control, SWT.NO_FOCUS);
-        editControl.setText("<A>" + Messages.editAndContinue + "</A>");
-        editControl.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
-        editControl.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(false, false).create());
-        control.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
+    protected void createToolbar(final int style, final TabbedPropertySheetWidgetFactory widgetFactory) {
+        toolbar = new ToolBar(control, SWT.FLAT | SWT.NO_FOCUS);
+        toolbar.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(false, false).create());
+        final ToolItem editControl = new ToolItem(toolbar, SWT.FLAT);
+        editControl.setImage(Pics.getImage(PicsConstants.edit));
         editControl.setData(SWTBOT_WIDGET_ID_KEY, SWTBOT_ID_EDITBUTTON);
         editControl.addDisposeListener(disposeListener);
         editControl.addSelectionListener(new SelectionAdapter() {
 
             @Override
-            public void widgetSelected(SelectionEvent e) {
+            public void widgetSelected(final SelectionEvent e) {
                 editDialog = CellExpressionViewer.this.createEditDialog();
                 openEditDialog(editDialog);
             }
@@ -68,18 +68,18 @@ public class CellExpressionViewer extends ExpressionViewer {
     }
 
     @Override
-    public void proposalAccepted(IContentProposal proposal) {
+    public void proposalAccepted(final IContentProposal proposal) {
         super.proposalAccepted(proposal);
         columnViewer.getControl().getParent().setFocus();
     }
 
     @Override
-    protected void openEditDialog(EditExpressionDialog dialog) {
+    protected void openEditDialog(final EditExpressionDialog dialog) {
         super.openEditDialog(dialog);
         columnViewer.refresh(null);
     }
 
-    public void setColumnViewer(ColumnViewer columnViewer) {
+    public void setColumnViewer(final ColumnViewer columnViewer) {
         this.columnViewer = columnViewer;
     }
 

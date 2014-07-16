@@ -11,21 +11,21 @@
        <author>Julien Espitallier</author>
        <category>Documentation</category>
        <title>Getting Started</title>
-       <link>http://documentation.bonitasoft.com/getting-started</link>
+       <link>http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&amp;class=org.bonitasoft.studio.intro.actions.OpenInExternalBrowserIntroAction&amp;url=http://documentation.bonitasoft.com/getting-started</link>
        <description></description>
     </item>
 	<item>
        <author>Julien Espitallier</author>
        <category>Documentation</category>
        <title>Bonita BPM Overview</title>
-       <link>http://documentation.bonitasoft.com/bonita-bpm-overview</link>
+       <link>http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&amp;class=org.bonitasoft.studio.intro.actions.OpenInExternalBrowserIntroAction&amp;url=http://documentation.bonitasoft.com/bonita-bpm-overview</link>
        <description></description>
     </item>
    	<item>
        <author>Julien Espitallier</author>
        <category>Documentation</category>
        <title>New Features in Bonita BPM</title>
-       <link>http://documentation.bonitasoft.com/new-features-bonita-bpm-60</link>
+       <link>http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&amp;class=org.bonitasoft.studio.intro.actions.OpenInExternalBrowserIntroAction&amp;url=http://documentation.bonitasoft.com/new-features-bonita-bpm-60</link>
        <description></description>
     </item>
    </channel>

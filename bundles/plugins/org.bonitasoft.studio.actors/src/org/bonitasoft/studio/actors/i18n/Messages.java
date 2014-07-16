@@ -26,6 +26,7 @@ public class Messages extends NLS {
 
     private static final String BUNDLE_NAME = "messages";
 
+
     static {
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);
     }
@@ -35,7 +36,6 @@ public class Messages extends NLS {
     public static String displayUsersPageDesc;
     public static String firstName;
     public static String lastName;
-    public static String userInfo;
     public static String delete;
     public static String userTitle;
     public static String titleHint;
@@ -92,13 +92,11 @@ public class Messages extends NLS {
     public static String defaultRoleName;
     public static String displayRolesPageTitle;
     public static String displayRolesPageDesc;
-    public static String roleInfo;
     public static String manager;
     public static String defaultGroupName;
     public static String deleteGroupMsg;
     public static String deleteGroupTitle;
     public static String displayName;
-    public static String groupInfo;
     public static String displayGroupsPageTitle;
     public static String displayGroupsPageDesc;
     public static String groupNameAlreadyExistsForLevel;
@@ -214,38 +212,73 @@ public class Messages extends NLS {
     public static String deleteActorsTitle;
     public static String deleteActorsTitleMessage;
     public static String managerCycleDetected;
-	public static String initiatorExplanation;
-	public static String nameTooLong;
-	public static String descTooLong;
-	public static String active;
-	public static String importOrganizationFailedTitle;
-	public static String importOrganizationFailedMessage;
-	public static String importOrganizationSuccessfullTitle;
-	public static String importOrganizationSuccessfullMessage;
-	public static String errorSelectionGroups;
-	public static String actorDescriptionLane;
-	public static String actorDescriptionTask;
-	public static String exportActorFilterTitle;
-	public static String addActor;
-	public static String initiator;
-	public static String newActor;
-	public static String actorWizardPageTitle;
-	public static String organizationHasBeenModifiedTitle;
-	public static String organizationHasBeenModifiedMessage;
-	public static String doNotDisplayAgain;
-	public static String userDoesntExistAnymoreTitle;
-	public static String userDoesntExistAnymore;
-	public static String UserDoesntExistError;
-	public static String updateActorReferences;
-	public static String refactoringActorMappings;
-	public static String noActorDefinedAtLaneLevel;
-	public static String importOrganizationCancelledMessage;
-	public static String importOrganizationCancelledTitle;
-	public static String importSuccessfulTitle;
-	public static String importSuccessfulMsg;
-	public static String importFailedTitle;
-	public static String importFailedMsg;
-
+    public static String initiatorExplanation;
+    public static String nameTooLong;
+    public static String descTooLong;
+    public static String active;
+    public static String importOrganizationFailedTitle;
+    public static String importOrganizationFailedMessage;
+    public static String importOrganizationSuccessfullTitle;
+    public static String importOrganizationSuccessfullMessage;
+    public static String errorSelectionGroups;
+    public static String actorDescriptionLane;
+    public static String actorDescriptionTask;
+    public static String exportActorFilterTitle;
+    public static String addActor;
+    public static String initiator;
+    public static String newActor;
+    public static String actorWizardPageTitle;
+    public static String organizationHasBeenModifiedTitle;
+    public static String organizationHasBeenModifiedMessage;
+    public static String doNotDisplayAgain;
+    public static String userDoesntExistAnymoreTitle;
+    public static String userDoesntExistAnymore;
+    public static String UserDoesntExistError;
+    public static String updateActorReferences;
+    public static String refactoringActorMappings;
+    public static String noActorDefinedAtLaneLevel;
+    public static String importOrganizationCancelledMessage;
+    public static String importOrganizationCancelledTitle;
+    public static String importSuccessfulTitle;
+    public static String importSuccessfulMsg;
+    public static String importFailedTitle;
+    public static String importFailedMsg;
+    public static String filterWizardTitle;
+    public static String filterWizardMessage;
+    public static String cuiManagementMsg;
+    public static String cuiFilterActorRelatedMsg;
+    public static String assignOnlyIfOneUser;
+    public static String typeValueToFilter;
+    public static String customUserInfoName;
+    public static String customUserInfoDescription;
+    public static String customUserInfoDefinitionNotEmpty;
+    public static String customUserInfoDefinitionAlreadyExist;
+    public static String customUserInformationAddWindowTitle;
+    public static String defaultInformationGroupTitle;
+    public static String defaultInformationGroupGeneralDataTableTitle;
+    public static String defaultInformationGroupBusinessCardTableTitle;
+    public static String defaultInformationGroupPersonalTableTitle;
+    public static String defaultInformationGroupMembershipsTableTitle;
+    public static String defaultInformationGroupMembershipsTableText;
+    public static String otherInformationGroupAddButton;
+    public static String otherInformationGroupRemoveButton;
+    public static String otherInformationGroupTitle;
+    public static String otherInformationGroupRemoveDialogTitle;
+    public static String otherInformationGroupRemoveDialogText;
+    public static String customUserInfoDefinitionNoWhiteSpaceAtStartOrEnd;
+    public static String customUserInfoDefinitionNameTooLong;
+    public static String customUserInformationTabTitle;
+    public static String other;
+    public static String listOfUsersTabTitle;
+    public static String customUserInfoOtherTabLink;
+    public static String otherInformationGroupRemoveDialogTextWarning;
+    public static String defaultCustomUserInformationName;
+    public static String details;
+    public static String nameLimitSize;
+    public static String displayNameLimitSize;
+    public static String labelExplicationCustomUserInformation;
+    public static String customUserInfoValueLimitSize;
+    public static String userNameIsEmpty;
 
 
 }

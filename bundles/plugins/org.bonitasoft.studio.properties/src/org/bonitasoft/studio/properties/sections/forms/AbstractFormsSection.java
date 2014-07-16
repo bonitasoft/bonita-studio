@@ -51,7 +51,9 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.edit.command.MoveCommand;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
@@ -75,10 +77,8 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -115,8 +115,8 @@ public abstract class AbstractFormsSection extends AbstractBonitaDescriptionSect
 
 
     @Override
-    public void createControls(Composite parent,
-            TabbedPropertySheetPage aTabbedPropertySheetPage) {
+    public void createControls(final Composite parent,
+            final TabbedPropertySheetPage aTabbedPropertySheetPage) {
         super.createControls(parent, aTabbedPropertySheetPage);
         mainComposite = getWidgetFactory().createComposite(parent);
         mainComposite.setLayout(new GridLayout(1, false));
@@ -124,7 +124,8 @@ public abstract class AbstractFormsSection extends AbstractBonitaDescriptionSect
         radioComposite = createRadioButtons(mainComposite);
 
         contentComposite = new MagicComposite(mainComposite, SWT.NONE);
-        contentComposite.setLayout(new RowLayout());
+        contentComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).create());
+        contentComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         contentComposite.setBackground(mainComposite.getBackground());
 
         pageFlowComposite = createPageFlowComposite(contentComposite);
@@ -134,12 +135,18 @@ public abstract class AbstractFormsSection extends AbstractBonitaDescriptionSect
     /**
      * 
      */
-    protected Composite createPageFlowComposite(Composite parent) {
-        Composite pageFlowComposite = getWidgetFactory().createComposite(parent, SWT.NONE);
-        pageFlowComposite.setLayout(new GridLayout(4, false));
-        tree = createFilteredTree(pageFlowComposite);
+    protected Composite createPageFlowComposite(final Composite parent) {
+        final Composite mainComposite = getWidgetFactory().createComposite(parent, SWT.NONE);
+        mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).create());
+
+        final Composite pageFlowComposite = getWidgetFactory().createComposite(mainComposite, SWT.NONE);
+        pageFlowComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        pageFlowComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(10, 10).create());
+
         createButtons(pageFlowComposite, tree);
-        return pageFlowComposite;
+        tree = createFilteredTree(pageFlowComposite);
+        return mainComposite;
     }
 
     /**
@@ -148,7 +155,7 @@ public abstract class AbstractFormsSection extends AbstractBonitaDescriptionSect
      * @override
      * 
      */
-    protected Composite createRadioButtons(Composite mainComposite) {
+    protected Composite createRadioButtons(final Composite mainComposite) {
         return null;
     }
 
@@ -159,7 +166,7 @@ public abstract class AbstractFormsSection extends AbstractBonitaDescriptionSect
 
     private void createTableBinding() {
         if(getEObject() != null){
-            EMFListFeatureTreeContentProvider contentProvider = new EMFListFeatureTreeContentProvider(getPageFlowFormFeature());
+            final EMFListFeatureTreeContentProvider contentProvider = new EMFListFeatureTreeContentProvider(getPageFlowFormFeature());
             tree.getViewer().setContentProvider(contentProvider);
 
 
@@ -170,15 +177,15 @@ public abstract class AbstractFormsSection extends AbstractBonitaDescriptionSect
                 observeFormListName.dispose();
             }
 
-            TreeViewer viewer = tree.getViewer();
-            IEMFEditListProperty list = EMFEditProperties.list(getEditingDomain(), getPageFlowFormFeature());
+            final TreeViewer viewer = tree.getViewer();
+            final IEMFEditListProperty list = EMFEditProperties.list(getEditingDomain(), getPageFlowFormFeature());
             observeFormList = list.observe(getEObject());
             observeFormListName = list.values(ProcessPackage.Literals.ELEMENT__NAME).observe(getEObject());
 
             formListener = new IChangeListener() {
 
                 @Override
-                public void handleChange(ChangeEvent event) {
+                public void handleChange(final ChangeEvent event) {
                     refreshFormTree();
                 }
             };
@@ -210,7 +217,7 @@ public abstract class AbstractFormsSection extends AbstractBonitaDescriptionSect
         }
     }
 
-    protected FilteredTree createFilteredTree(Composite mainComposite) {
+    protected FilteredTree createFilteredTree(final Composite mainComposite) {
         tree = new FilteredTree(mainComposite, SWT.BORDER | SWT.MULTI, new PatternFilter(), true);
         tree.getViewer().getTree().setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY,SWTBotConstants.APPLICATION_SECTION_FORMS_SELECTION_TREE);
         getWidgetFactory().adapt(tree, false, false) ;
@@ -219,28 +226,28 @@ public abstract class AbstractFormsSection extends AbstractBonitaDescriptionSect
         tree.getViewer().setLabelProvider(new FormLabelProvider());
         tree.getViewer().addSelectionChangedListener(new ISelectionChangedListener() {
             @Override
-            public void selectionChanged(SelectionChangedEvent event) {
+            public void selectionChanged(final SelectionChangedEvent event) {
                 updateButtons();
             }
         });
         tree.getViewer().addDoubleClickListener(new IDoubleClickListener() {
             @Override
-            public void doubleClick(DoubleClickEvent event) {
-                editFormInTree(tree);
+            public void doubleClick(final DoubleClickEvent event) {
+                editFormInTree();
             }
         });
 
         // would be better to transfer the form
-        Transfer[] types = new Transfer[] { TextTransfer.getInstance() };
+        final Transfer[] types = new Transfer[] { TextTransfer.getInstance() };
 
         final DragSource source = new DragSource(tree.getViewer().getTree(), SWT.Move);
         source.setTransfer(types);
         final Form[] dragSourceForm = new Form[1];
         source.addDragListener(new DragSourceListener() {
             @Override
-            public void dragStart(DragSourceEvent event) {
+            public void dragStart(final DragSourceEvent event) {
 
-                Form selection = (Form) ((IStructuredSelection) tree.getViewer().getSelection()).getFirstElement();
+                final Form selection = (Form) ((IStructuredSelection) tree.getViewer().getSelection()).getFirstElement();
                 if (selection != null) {
                     event.doit = true;
                     dragSourceForm[0] = selection;
@@ -250,15 +257,15 @@ public abstract class AbstractFormsSection extends AbstractBonitaDescriptionSect
             };
 
             @Override
-            public void dragSetData(DragSourceEvent event) {
+            public void dragSetData(final DragSourceEvent event) {
                 // put the index here
-                String index = "" + ((List<?>) pageFlow.eGet(getPageFlowFormFeature()) //$NON-NLS-1$
+                final String index = "" + ((List<?>) pageFlow.eGet(getPageFlowFormFeature()) //$NON-NLS-1$
                         ).indexOf(dragSourceForm[0]);
                 event.data = index;
             }
 
             @Override
-            public void dragFinished(DragSourceEvent event) {
+            public void dragFinished(final DragSourceEvent event) {
                 if (event.detail == DND.DROP_MOVE) {
                     // nothing to do
 
@@ -266,16 +273,16 @@ public abstract class AbstractFormsSection extends AbstractBonitaDescriptionSect
             }
         });
 
-        DropTarget target = new DropTarget(tree.getViewer().getTree(), DND.DROP_MOVE);
+        final DropTarget target = new DropTarget(tree.getViewer().getTree(), DND.DROP_MOVE);
         target.setTransfer(types);
         target.addDropListener(new DropTargetAdapter() {
             @Override
-            public void dragOver(DropTargetEvent event) {
+            public void dragOver(final DropTargetEvent event) {
                 event.feedback = DND.FEEDBACK_EXPAND | DND.FEEDBACK_SCROLL;
                 if (event.item != null) {
-                    TreeItem item = (TreeItem) event.item;
-                    Point pt = Display.getCurrent().map(null, tree.getViewer().getTree(), event.x, event.y);
-                    Rectangle bounds = item.getBounds();
+                    final TreeItem item = (TreeItem) event.item;
+                    final Point pt = Display.getCurrent().map(null, tree.getViewer().getTree(), event.x, event.y);
+                    final Rectangle bounds = item.getBounds();
                     if (pt.y < bounds.y + bounds.height / 2) {
                         event.feedback |= DND.FEEDBACK_INSERT_BEFORE;
                     } else {
@@ -285,21 +292,21 @@ public abstract class AbstractFormsSection extends AbstractBonitaDescriptionSect
             }
 
             @Override
-            public void drop(DropTargetEvent event) {
+            public void drop(final DropTargetEvent event) {
                 if (event.data == null) {
                     event.detail = DND.DROP_NONE;
                     return;
                 }
-                String movedForm = (String) event.data;
+                final String movedForm = (String) event.data;
                 if (event.item == null) {
 
                 } else {
-                    TreeItem item = (TreeItem) event.item;
-                    Point pt = Display.getCurrent().map(null, tree.getViewer().getTree(), event.x, event.y);
-                    Rectangle bounds = item.getBounds();
-                    TreeItem parent = item.getParentItem();
+                    final TreeItem item = (TreeItem) event.item;
+                    final Point pt = Display.getCurrent().map(null, tree.getViewer().getTree(), event.x, event.y);
+                    final Rectangle bounds = item.getBounds();
+                    final TreeItem parent = item.getParentItem();
                     if (parent != null) {
-                        TreeItem[] items = parent.getItems();
+                        final TreeItem[] items = parent.getItems();
                         int index = 0;
                         for (int i = 0; i < items.length; i++) {
                             if (items[i] == item) {
@@ -314,7 +321,7 @@ public abstract class AbstractFormsSection extends AbstractBonitaDescriptionSect
                         }
 
                     } else {
-                        TreeItem[] items = tree.getViewer().getTree().getItems();
+                        final TreeItem[] items = tree.getViewer().getTree().getItems();
                         int index = 0;
                         for (int i = 0; i < items.length; i++) {
                             if (items[i] == item) {
@@ -332,8 +339,8 @@ public abstract class AbstractFormsSection extends AbstractBonitaDescriptionSect
                 }
             }
 
-            private void moveForm(String from, EStructuralFeature feature, int to) {
-                Integer fromInt = Integer.valueOf(from);
+            private void moveForm(final String from, final EStructuralFeature feature, final int to) {
+                final Integer fromInt = Integer.valueOf(from);
                 getEditingDomain().getCommandStack().execute(
                         new MoveCommand(getEditingDomain(), (EList<?>) pageFlow.eGet(feature), ((List<?>) pageFlow.eGet(feature)).get(fromInt),
                                 to > fromInt ? to - 1 : to));
@@ -347,16 +354,16 @@ public abstract class AbstractFormsSection extends AbstractBonitaDescriptionSect
      * @return
      */
     public static GridData createPageFlowTreeGridData() {
-        return GridDataFactory.fillDefaults().grab(true, true).hint(300, PropertySectionUtil.LIST_HEIGHT).create();
+        return GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, PropertySectionUtil.LIST_HEIGHT).create();
     }
 
     /**
      * @param mainComposite
      * @param consultationFilteredTree2
      */
-    private void createButtons(Composite mainComposite, FilteredTree tree) {
-        Composite buttonsComposite = getWidgetFactory().createPlainComposite(mainComposite, SWT.NONE);
-        buttonsComposite.setLayout(new FillLayout(SWT.VERTICAL));
+    private void createButtons(final Composite mainComposite, final FilteredTree tree) {
+        final Composite buttonsComposite = getWidgetFactory().createPlainComposite(mainComposite, SWT.NONE);
+        buttonsComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).spacing(0, 3).create());
         createAddFormButton(buttonsComposite, getPageFlowFormFeature());
         editButton = createEditFormButton(buttonsComposite, tree);
         upButton = createUpFormButton(buttonsComposite, tree);
@@ -364,12 +371,13 @@ public abstract class AbstractFormsSection extends AbstractBonitaDescriptionSect
         removeButton = createRemoveFormButton(buttonsComposite, tree);
     }
 
-    protected Button createAddFormButton(Composite buttonsComposite, final EStructuralFeature feature) {
-        Button addButton = getWidgetFactory().createButton(buttonsComposite, Messages.addForm, SWT.FLAT);
+    protected Button createAddFormButton(final Composite buttonsComposite, final EStructuralFeature feature) {
+        final Button addButton = getWidgetFactory().createButton(buttonsComposite, Messages.addForm, SWT.FLAT);
+        addButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(IDialogConstants.BUTTON_WIDTH, SWT.DEFAULT).create());
         addButton.addListener(SWT.Selection, new Listener() {
 
             @Override
-            public void handleEvent(Event event) {
+            public void handleEvent(final Event event) {
                 new WizardDialog(AbstractFormsSection.this.getPart().getSite().getShell(), new SelectFormWizard(getPageFlow(), feature, getEditingDomain())).open();
                 tree.getViewer().refresh();
             }
@@ -377,27 +385,29 @@ public abstract class AbstractFormsSection extends AbstractBonitaDescriptionSect
         return addButton;
     }
 
-    private Button createEditFormButton(Composite buttonsComposite, final FilteredTree tree) {
-        Button editButton = getWidgetFactory().createButton(buttonsComposite, Messages.editForm, SWT.FLAT);
+    private Button createEditFormButton(final Composite buttonsComposite, final FilteredTree tree) {
+        final Button editButton = getWidgetFactory().createButton(buttonsComposite, Messages.editForm, SWT.FLAT);
+        editButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(IDialogConstants.BUTTON_WIDTH, SWT.DEFAULT).create());
         editButton.addSelectionListener(new SelectionAdapter() {
             @Override
-            public void widgetSelected(SelectionEvent e) {
-                editFormInTree(tree);
+            public void widgetSelected(final SelectionEvent e) {
+                editFormInTree();
             }
         });
         editButton.setEnabled(false);
         return editButton;
     }
 
-    private Button createDownFormButton(Composite buttonsComposite, final FilteredTree tree) {
+    private Button createDownFormButton(final Composite buttonsComposite, final FilteredTree tree) {
         downButton = getWidgetFactory().createButton(buttonsComposite, Messages.formDown, SWT.FLAT);
+        downButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(IDialogConstants.BUTTON_WIDTH, SWT.DEFAULT).create());
         downButton.addListener(SWT.Selection, new Listener() {
             @Override
-            public void handleEvent(Event event) {
+            public void handleEvent(final Event event) {
                 if (tree != null && ((ITreeSelection) tree.getViewer().getSelection()).size() > 0) {
-                    Form form = (Form) ((ITreeSelection) tree.getViewer().getSelection()).getFirstElement();
-                    EList<Form> list = (EList<Form>) pageFlow.eGet(getPageFlowFormFeature());
-                    int indexOf = list.indexOf(form);
+                    final Form form = (Form) ((ITreeSelection) tree.getViewer().getSelection()).getFirstElement();
+                    final EList<Form> list = (EList<Form>) pageFlow.eGet(getPageFlowFormFeature());
+                    final int indexOf = list.indexOf(form);
                     if (indexOf < list.size() - 1) {
                         list.move(indexOf + 1, form);
                     }
@@ -410,14 +420,15 @@ public abstract class AbstractFormsSection extends AbstractBonitaDescriptionSect
 
     }
 
-    private Button createUpFormButton(Composite buttonsComposite, final FilteredTree tree) {
+    private Button createUpFormButton(final Composite buttonsComposite, final FilteredTree tree) {
         upButton = getWidgetFactory().createButton(buttonsComposite, Messages.formUp, SWT.FLAT);
+        upButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(IDialogConstants.BUTTON_WIDTH, SWT.DEFAULT).create());
         upButton.addListener(SWT.Selection, new Listener() {
             @Override
-            public void handleEvent(Event event) {
-                Form form = (Form) ((ITreeSelection) tree.getViewer().getSelection()).getFirstElement();
-                EList<Form> list = (EList<Form>) pageFlow.eGet(getPageFlowFormFeature());
-                int indexOf = list.indexOf(form);
+            public void handleEvent(final Event event) {
+                final Form form = (Form) ((ITreeSelection) tree.getViewer().getSelection()).getFirstElement();
+                final EList<Form> list = (EList<Form>) pageFlow.eGet(getPageFlowFormFeature());
+                final int indexOf = list.indexOf(form);
                 if (indexOf > 0) {
                     list.move(indexOf - 1, form);
                 }
@@ -429,15 +440,16 @@ public abstract class AbstractFormsSection extends AbstractBonitaDescriptionSect
     }
 
 
-    private Button createRemoveFormButton(Composite buttonsComposite, final FilteredTree tree) {
-        Button removeButton = getWidgetFactory().createButton(buttonsComposite, Messages.removeForm, SWT.FLAT);
+    private Button createRemoveFormButton(final Composite buttonsComposite, final FilteredTree tree) {
+        final Button removeButton = getWidgetFactory().createButton(buttonsComposite, Messages.removeForm, SWT.FLAT);
+        removeButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(IDialogConstants.BUTTON_WIDTH, SWT.DEFAULT).create());
         removeButton.addListener(SWT.Selection, new Listener() {
 
             @Override
-            public void handleEvent(Event event) {
-                ArrayList<Form> toRemove = new ArrayList<Form>();
+            public void handleEvent(final Event event) {
+                final ArrayList<Form> toRemove = new ArrayList<Form>();
                 Object temp = null;
-                Iterator<?> it = ((ITreeSelection) tree.getViewer().getSelection()).iterator();
+                final Iterator<?> it = ((ITreeSelection) tree.getViewer().getSelection()).iterator();
                 while (it.hasNext()) {
                     temp = it.next();
                     if (temp instanceof Form) {
@@ -448,7 +460,7 @@ public abstract class AbstractFormsSection extends AbstractBonitaDescriptionSect
                     try {
                         OperationHistoryFactory.getOperationHistory().execute(new RemoveFormCommand(getEditingDomain(), pageFlow, toRemove, tree.getViewer()),
                                 new NullProgressMonitor(), null);
-                    } catch (ExecutionException e) {
+                    } catch (final ExecutionException e) {
                         BonitaStudioLog.error(e);
                     }
                 }
@@ -474,8 +486,8 @@ public abstract class AbstractFormsSection extends AbstractBonitaDescriptionSect
      * org.eclipse.jface.viewers.ISelection)
      */
     @Override
-    public void setInput(IWorkbenchPart part, ISelection selection) {
-        ISelection old = getSelection();
+    public void setInput(final IWorkbenchPart part, final ISelection selection) {
+        final ISelection old = getSelection();
         super.setInput(part, selection);
         if(old == getSelection()){
             return ;
@@ -501,23 +513,25 @@ public abstract class AbstractFormsSection extends AbstractBonitaDescriptionSect
     /**
      * @param tree
      */
-    private void editFormInTree(FilteredTree tree) {
-        final ITreeSelection iTreeSelection = (ITreeSelection) tree.getViewer().getSelection();
-		if (tree != null && iTreeSelection.size() > 0) {
-            Object selection = iTreeSelection.getFirstElement();
-            if (selection instanceof Form) {
-                FormsUtils.openDiagram((Form) selection,getEditingDomain());
+    private void editFormInTree() {
+        if (tree != null && !tree.isDisposed()) {
+            final ITreeSelection iTreeSelection = (ITreeSelection) tree.getViewer().getSelection();
+            if (tree != null && iTreeSelection.size() > 0) {
+                final Object selection = iTreeSelection.getFirstElement();
+                if (selection instanceof Form) {
+                    FormsUtils.openDiagram((Form) selection, getEditingDomain());
+                }
             }
         }
     }
 
     private void updateButtons() {
         final TreeViewer viewer = tree.getViewer();
-		ITreeSelection selection = (ITreeSelection) viewer.getSelection();
+        final ITreeSelection selection = (ITreeSelection) viewer.getSelection();
         removeButton.setEnabled(selection.size() > 0);
         final boolean isOnlyOneElementSelected = selection.size() == 1;
-		final boolean hasMoreThanOneItemInTheList = viewer.getTree().getItems().length > 1;
-		upButton.setEnabled(isOnlyOneElementSelected && hasMoreThanOneItemInTheList);
+        final boolean hasMoreThanOneItemInTheList = viewer.getTree().getItems().length > 1;
+        upButton.setEnabled(isOnlyOneElementSelected && hasMoreThanOneItemInTheList);
         downButton.setEnabled(isOnlyOneElementSelected && hasMoreThanOneItemInTheList);
         editButton.setEnabled(isOnlyOneElementSelected);
     }
@@ -535,7 +549,7 @@ public abstract class AbstractFormsSection extends AbstractBonitaDescriptionSect
     /**
      * 
      */
-    protected void showOrHideComposite(Composite target, boolean visible) {
+    protected void showOrHideComposite(final Composite target, final boolean visible) {
         target.setVisible(visible);
         target.setData(MagicComposite.HIDDEN, !visible);
         refresh();

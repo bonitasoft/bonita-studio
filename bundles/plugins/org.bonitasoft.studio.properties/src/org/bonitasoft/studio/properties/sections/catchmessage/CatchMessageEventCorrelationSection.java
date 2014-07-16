@@ -18,9 +18,7 @@
 package org.bonitasoft.studio.properties.sections.catchmessage;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
@@ -42,13 +40,10 @@ import org.bonitasoft.studio.model.process.Message;
 import org.bonitasoft.studio.model.process.MessageFlow;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.properties.i18n.Messages;
-import org.eclipse.core.databinding.validation.IValidator;
-import org.eclipse.core.databinding.validation.ValidationStatus;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.command.Command;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.command.AddCommand;
 import org.eclipse.emf.edit.command.SetCommand;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ISelection;
@@ -61,8 +56,6 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 
@@ -78,16 +71,16 @@ AbstractBonitaDescriptionSection {
     private ExpressionCollectionViewer ecv;
 
     @Override
-    public void createControls(Composite parent,
-            TabbedPropertySheetPage aTabbedPropertySheetPage) {
+    public void createControls(final Composite parent,
+            final TabbedPropertySheetPage aTabbedPropertySheetPage) {
         super.createControls(parent, aTabbedPropertySheetPage);
         this.aTabbedPropertySheetPage = aTabbedPropertySheetPage;
         doCreateControls(parent);
     }
 
-    private void doCreateControls(Composite parent) {
+    private void doCreateControls(final Composite parent) {
 
-        Composite mainComposite = aTabbedPropertySheetPage.getWidgetFactory()
+        final Composite mainComposite = aTabbedPropertySheetPage.getWidgetFactory()
                 .createComposite(parent);
         mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1)
                 .extendedMargins(15, 5, 15, 10).create());
@@ -100,25 +93,15 @@ AbstractBonitaDescriptionSection {
                 .hint(100, SWT.DEFAULT).create());
         ecv.setAddRowLabel(Messages.AddCorrelation);
         ecv.setRemoveRowLabel(Messages.removeCorrelation);
-        IExpressionNatureProvider provider = new CorrelationIdNatureProvider();
+        final IExpressionNatureProvider provider = new CorrelationIdNatureProvider();
         provider.setContext(getCatchMessageEvent());
         ecv.addExpressionNatureProvider(provider);
-
-        ecv.addModifyListener(new Listener() {
-
-            @Override
-            public void handleEvent(Event event) {
-                validateCorrelationKeys();
-
-            }
-
-        });
-        List<ViewerFilter> filters = new ArrayList<ViewerFilter>(1);
+        final List<ViewerFilter> filters = new ArrayList<ViewerFilter>(1);
         filters.add(new ViewerFilter() {
 
             @Override
-            public boolean select(Viewer viewer, Object parentElement,
-                    Object element) {
+            public boolean select(final Viewer viewer, final Object parentElement,
+                    final Object element) {
                 if (element instanceof Expression) {
                     return ExpressionConstants.CONSTANT_TYPE
                             .equals(((Expression) element).getType());
@@ -135,45 +118,46 @@ AbstractBonitaDescriptionSection {
         refresh();
     }
 
-    private void createAutoFillButton(Composite parent) {
-        Button autoFillButton = aTabbedPropertySheetPage
+    private void createAutoFillButton(final Composite parent) {
+        final Button autoFillButton = aTabbedPropertySheetPage
                 .getWidgetFactory()
                 .createButton(parent, Messages.autoFillMessageContent, SWT.FLAT);
+        autoFillButton.setLayoutData(GridDataFactory.swtDefaults().indent(65, 0).hint(IDialogConstants.BUTTON_WIDTH, SWT.DEFAULT).create());
         autoFillButton.addSelectionListener(new SelectionAdapter() {
             @Override
-            public void widgetSelected(SelectionEvent e) {
+            public void widgetSelected(final SelectionEvent e) {
                 super.widgetSelected(e);
                 BusyIndicator.showWhile(Display.getDefault(), new Runnable() {
-					
-					@Override
-					public void run() {
-						  createCorrelationKeyValueLinesIfNeeded();
-					}
-				});
-              
+
+                    @Override
+                    public void run() {
+                        createCorrelationKeyValueLinesIfNeeded();
+                    }
+                });
+
             }
 
-			protected void createCorrelationKeyValueLinesIfNeeded() {
-				MessageFlow incomingMessag = getCatchMessageEvent().getIncomingMessag();
+            protected void createCorrelationKeyValueLinesIfNeeded() {
+                final MessageFlow incomingMessag = getCatchMessageEvent().getIncomingMessag();
                 if (incomingMessag != null) {
                     final Message message = ModelHelper.findEvent(
                             getCatchMessageEvent(), incomingMessag.getName());
                     if (message != null) {
-                        Correlation correlation = message.getCorrelation();
+                        final Correlation correlation = message.getCorrelation();
                         if (!CorrelationTypeActive.INACTIVE.equals(correlation.getCorrelationType())) {
-                            TableExpression correlationAssociationSourceMessage = correlation.getCorrelationAssociation();
-                            for (ListExpression correlationAssociationLineSourceMessage : correlationAssociationSourceMessage.getExpressions()) {
-                                Expression correlationKeySourceMessage = correlationAssociationLineSourceMessage.getExpressions().get(0);
-                                TableExpression correlationAssociationTargetMessage = getCatchMessageEvent().getCorrelation();
+                            final TableExpression correlationAssociationSourceMessage = correlation.getCorrelationAssociation();
+                            for (final ListExpression correlationAssociationLineSourceMessage : correlationAssociationSourceMessage.getExpressions()) {
+                                final Expression correlationKeySourceMessage = correlationAssociationLineSourceMessage.getExpressions().get(0);
+                                final TableExpression correlationAssociationTargetMessage = getCatchMessageEvent().getCorrelation();
                                 if (correlationAssociationTargetMessage != null) {
                                     boolean alreadyExists = false;
-                                    String correlationKeySourceMessageName = correlationKeySourceMessage.getName();
+                                    final String correlationKeySourceMessageName = correlationKeySourceMessage.getName();
                                     if(correlationKeySourceMessageName != null){
-                                        for (ListExpression correlationAssociationLineTargetMessage : correlationAssociationTargetMessage.getExpressions()) {
-                                            Expression correlationKeyTargetMessage = correlationAssociationLineTargetMessage.getExpressions().get(0);
+                                        for (final ListExpression correlationAssociationLineTargetMessage : correlationAssociationTargetMessage.getExpressions()) {
+                                            final Expression correlationKeyTargetMessage = correlationAssociationLineTargetMessage.getExpressions().get(0);
                                             if (correlationKeySourceMessageName != null
-                                            		&& correlationKeyTargetMessage != null
-                                            		&& correlationKeySourceMessageName.equals(correlationKeyTargetMessage.getName())) {
+                                                    && correlationKeyTargetMessage != null
+                                                    && correlationKeySourceMessageName.equals(correlationKeyTargetMessage.getName())) {
                                                 alreadyExists = true;
                                                 break;
                                             }
@@ -190,13 +174,13 @@ AbstractBonitaDescriptionSection {
                     }
 
                 }
-			}
+            }
 
             protected void createCorrelationKeyValueLineFor(
-                    String correlationKeySourceMessageName) {
-                ListExpression keyValueCorrelationExpressionToAdd = ExpressionFactory.eINSTANCE
+                    final String correlationKeySourceMessageName) {
+                final ListExpression keyValueCorrelationExpressionToAdd = ExpressionFactory.eINSTANCE
                         .createListExpression();
-                Expression correlationKeyToAdd = ExpressionFactory.eINSTANCE
+                final Expression correlationKeyToAdd = ExpressionFactory.eINSTANCE
                         .createExpression();
                 correlationKeyToAdd.setContent(correlationKeySourceMessageName);
                 correlationKeyToAdd.setName(correlationKeySourceMessageName);
@@ -206,11 +190,11 @@ AbstractBonitaDescriptionSection {
                         correlationKeyToAdd);
 
                 /* Search if there is a data with an equivalent name */
-                List<Data> accessibleData = ModelHelper
+                final List<Data> accessibleData = ModelHelper
                         .getAccessibleData(getCatchMessageEvent());
-                for (Data data : accessibleData) {
+                for (final Data data : accessibleData) {
                     if (correlationKeySourceMessageName.equals(data.getName())) {
-                        Expression correlationValueToAdd = ExpressionFactory.eINSTANCE
+                        final Expression correlationValueToAdd = ExpressionFactory.eINSTANCE
                                 .createExpression();
                         correlationValueToAdd.setContent(data.getName());
                         correlationValueToAdd.setName(data.getName());
@@ -220,7 +204,7 @@ AbstractBonitaDescriptionSection {
                         keyValueCorrelationExpressionToAdd.getExpressions() .add(correlationValueToAdd);
                     }
                 }
-                Command addCommand = AddCommand
+                final Command addCommand = AddCommand
                         .create(getEditingDomain(),
                                 getCatchMessageEvent().getCorrelation(),
                                 ExpressionPackage.Literals.TABLE_EXPRESSION__EXPRESSIONS,
@@ -235,7 +219,7 @@ AbstractBonitaDescriptionSection {
     }
 
     @Override
-    public void setInput(IWorkbenchPart part, ISelection selection) {
+    public void setInput(final IWorkbenchPart part, final ISelection selection) {
         super.setInput(part, selection);
         if (ecv != null && getEObject() != null) {
             ecv.setInput(getEObject());
@@ -258,83 +242,6 @@ AbstractBonitaDescriptionSection {
             ecv.setEditingDomain(getEditingDomain());
             ecv.refresh();
         }
-    }
-
-    protected void validateCorrelationKeys() {
-        //TODO add validation to context
-        IValidator validator = new IValidator() {
-
-            @Override
-            public IStatus validate(Object arg0) {
-                if ((arg0 != null)
-                        && (arg0 instanceof AbstractCatchMessageEvent)) {
-                    TableExpression table = null;
-                    if (ecv.getViewer().getInput() instanceof TableExpression) {
-                        table = (TableExpression) ecv.getViewer().getInput();
-                    }
-                    if (table != null) {
-                        AbstractCatchMessageEvent messageEvent = (AbstractCatchMessageEvent) arg0;
-                        MessageFlow incomingMessag = messageEvent
-                                .getIncomingMessag();
-                        Set<String> correlationKeys = new HashSet<String>();
-                        TableExpression throwCorrelations = null;
-                        if (incomingMessag != null) {
-                            final Message message = ModelHelper.findEvent(
-                                    messageEvent, incomingMessag.getName());
-                            if (message != null) {
-                                throwCorrelations = message.getCorrelation()
-                                        .getCorrelationAssociation();
-                                for (ListExpression row : throwCorrelations
-                                        .getExpressions()) {
-                                    List<org.bonitasoft.studio.model.expression.Expression> col = row
-                                            .getExpressions();
-                                    if (col.size() == 2) {
-                                        correlationKeys.add(col.get(0)
-                                                .getName());
-                                    }
-                                }
-                                for (ListExpression row : table
-                                        .getExpressions()) {
-                                    List<org.bonitasoft.studio.model.expression.Expression> col = row
-                                            .getExpressions();
-                                    if (col.size() == 2) {
-                                        Expression expr = col.get(0);
-                                        if (expr != null
-                                                && expr.getName() != null
-                                                && !expr.getName().isEmpty()
-                                                && ExpressionConstants.CONSTANT_TYPE
-                                                .equals(expr.getType())) {
-                                            if (!correlationKeys.contains(expr
-                                                    .getName())) {
-                                                return ValidationStatus
-                                                        .warning(Messages
-                                                                .bind(Messages.messageContentIdExistenceWarning,
-                                                                        expr.getName(),
-                                                                        "correlation"));
-                                            }
-                                        } else {
-                                            if (expr != null
-                                                    && expr.getName() != null
-                                                    && !expr.getName()
-                                                    .isEmpty()) {
-                                                return (ValidationStatus
-                                                        .warning(Messages.throwMessageExpressionTypeWarning));
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        } else {
-                            return ValidationStatus
-                                    .warning(Messages.NoIncomingMessageWarning);
-                        }
-                    }
-                }
-                return ValidationStatus.OK_STATUS;
-            }
-
-        };
-        //	IStatus status = validator.validate(getCatchMessageEvent());
     }
 
     @Override
