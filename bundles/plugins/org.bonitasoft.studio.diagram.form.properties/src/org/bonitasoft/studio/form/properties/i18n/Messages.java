@@ -174,7 +174,6 @@ public class Messages extends NLS {
     public static String maxItems_hint;
 
     public static String injectWidgetIf;
-    public static String data_tooltip_listonly;
     public static String imageIsAURL;
     public static String asynchronousLabel;
     public static String refreshDelay;

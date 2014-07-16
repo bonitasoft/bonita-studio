@@ -175,7 +175,7 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
 
     protected Button createRemoveDataButton(final Composite parent) {
         final Button removeButton = getWidgetFactory().createButton(parent, Messages.removeData, SWT.FLAT);
-        removeButton.setLayoutData(GridDataFactory.fillDefaults().hint(IDialogConstants.BUTTON_WIDTH, SWT.DEFAULT).create());
+        removeButton.setLayoutData(GridDataFactory.fillDefaults().minSize(IDialogConstants.BUTTON_WIDTH, SWT.DEFAULT).create());
         removeButton.addListener(SWT.Selection, new Listener() {
 
             @Override
@@ -239,7 +239,7 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
 
     protected Button createMoveDataButton(final Composite parent) {
         final Button moveData = getWidgetFactory().createButton(parent, Messages.moveData, SWT.FLAT);
-        moveData.setLayoutData(GridDataFactory.fillDefaults().hint(IDialogConstants.BUTTON_WIDTH, SWT.DEFAULT).create());
+        moveData.setLayoutData(GridDataFactory.fillDefaults().minSize(IDialogConstants.BUTTON_WIDTH, SWT.DEFAULT).create());
         moveData.setToolTipText(Messages.moveData_tooltip);
         moveData.addSelectionListener(new SelectionAdapter() {
 
@@ -280,7 +280,7 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
 
     protected void createAddDataButton(final Composite parent) {
         final Button addDataButton = getWidgetFactory().createButton(parent, Messages.addData, SWT.FLAT);
-        addDataButton.setLayoutData(GridDataFactory.fillDefaults().hint(IDialogConstants.BUTTON_WIDTH, SWT.DEFAULT).create());
+        addDataButton.setLayoutData(GridDataFactory.fillDefaults().minSize(IDialogConstants.BUTTON_WIDTH, SWT.DEFAULT).create());
         addDataButton.addSelectionListener(new SelectionAdapter() {
 
             @Override
@@ -302,7 +302,7 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
 
     protected Button createEditDataButton(final Composite parent) {
         final Button updateButton = getWidgetFactory().createButton(parent, Messages.updateData, SWT.FLAT);
-        updateButton.setLayoutData(GridDataFactory.fillDefaults().hint(IDialogConstants.BUTTON_WIDTH, SWT.DEFAULT).create());
+        updateButton.setLayoutData(GridDataFactory.fillDefaults().minSize(IDialogConstants.BUTTON_WIDTH, SWT.DEFAULT).create());
         updateButton.addListener(SWT.Selection, new Listener() {
 
             @Override

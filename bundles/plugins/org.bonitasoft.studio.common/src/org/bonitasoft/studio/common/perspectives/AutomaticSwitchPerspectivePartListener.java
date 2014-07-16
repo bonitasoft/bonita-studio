@@ -29,71 +29,71 @@ import org.eclipse.ui.internal.e4.compatibility.CompatibilityEditor;
 public final class AutomaticSwitchPerspectivePartListener implements IPartListener {
 
 
-	private boolean isSwitching;
+    private boolean isSwitching;
 
-	@Override
-	public void partActivated(MPart part) {
-//		if(!isSwitching){
-//			isSwitching = true;
-//			try{
-//				if (part.getElementId().equals("org.eclipse.e4.ui.compatibility.editor")) {
-//					String activePerspective = getActivePerspectiveId(part);
-//					final String id = BonitaPerspectivesUtils.getPerspectiveId(((CompatibilityEditor) part.getObject()).getEditor());
-//					if (id != null && !id.equals(activePerspective)) {
-//						BonitaPerspectivesUtils.switchToPerspective(id);
-//					}
-//				}
-//			}finally{
-//				isSwitching = false;
-//			}
-//		}
-	}
+    @Override
+    public void partActivated(final MPart part) {
+        //		if(!isSwitching){
+        //			isSwitching = true;
+        //			try{
+        //				if (part.getElementId().equals("org.eclipse.e4.ui.compatibility.editor")) {
+        //					String activePerspective = getActivePerspectiveId(part);
+        //					final String id = BonitaPerspectivesUtils.getPerspectiveId(((CompatibilityEditor) part.getObject()).getEditor());
+        //					if (id != null && !id.equals(activePerspective)) {
+        //						BonitaPerspectivesUtils.switchToPerspective(id);
+        //					}
+        //				}
+        //			}finally{
+        //				isSwitching = false;
+        //			}
+        //		}
+    }
 
-	@Override
-	public void partBroughtToTop(MPart part) {
+    @Override
+    public void partBroughtToTop(final MPart part) {
 
-	}
+    }
 
-	@Override
-	public void partDeactivated(MPart part) {
+    @Override
+    public void partDeactivated(final MPart part) {
 
-	}
+    }
 
-	@Override
-	public void partHidden(MPart part) {
+    @Override
+    public void partHidden(final MPart part) {
 
-	}
+    }
 
-	@Override
-	public void partVisible(MPart part) {
-		if(!isSwitching){
-			isSwitching = true;
-			try{
-				if (part.getElementId().equals("org.eclipse.e4.ui.compatibility.editor")) {
-					if(PlatformUtil.isIntroOpen()){
-						PlatformUtil.closeIntro();
-					}
-					String activePerspective = getActivePerspectiveId(part);
-					String id = BonitaPerspectivesUtils.getPerspectiveId(((CompatibilityEditor) part.getObject()).getEditor());
-					if (id != null && !id.equals(activePerspective)) {
-						BonitaPerspectivesUtils.switchToPerspective(id);
-					}
-				}
-			}finally{
-				isSwitching = false;
-			}
-		}
-	}
+    @Override
+    public void partVisible(final MPart part) {
+        if(!isSwitching){
+            isSwitching = true;
+            try{
+                if (part.getElementId().equals("org.eclipse.e4.ui.compatibility.editor")) {
+                    if(PlatformUtil.isIntroOpen()){
+                        PlatformUtil.closeIntro();
+                    }
+                    final String activePerspective = getActivePerspectiveId(part);
+                    final String id = BonitaPerspectivesUtils.getPerspectiveId(((CompatibilityEditor) part.getObject()).getEditor());
+                    if (id != null && !id.equals(activePerspective)) {
+                        BonitaPerspectivesUtils.switchToPerspective(id);
+                    }
+                }
+            }finally{
+                isSwitching = false;
+            }
+        }
+    }
 
-	protected String getActivePerspectiveId(MPart part) {
-		EModelService service =	part.getContext().get(EModelService.class);
-		MWindow window = service.getTopLevelWindowFor(part);
-		MPerspectiveStack pStack =  (MPerspectiveStack) service.find("PerspectiveStack", window);
-		MPerspective selectedElement = pStack.getSelectedElement();
-		String activePerspective =null;
-		if(selectedElement != null){
-			activePerspective = selectedElement.getElementId();
-		}
-		return activePerspective;
-	}
+    protected String getActivePerspectiveId(final MPart part) {
+        final EModelService service =	part.getContext().get(EModelService.class);
+        final MWindow window = service.getTopLevelWindowFor(part);
+        final MPerspectiveStack pStack =  (MPerspectiveStack) service.find("PerspectiveStack", window);
+        final MPerspective selectedElement = pStack.getSelectedElement();
+        String activePerspective =null;
+        if(selectedElement != null){
+            activePerspective = selectedElement.getElementId();
+        }
+        return activePerspective;
+    }
 }
