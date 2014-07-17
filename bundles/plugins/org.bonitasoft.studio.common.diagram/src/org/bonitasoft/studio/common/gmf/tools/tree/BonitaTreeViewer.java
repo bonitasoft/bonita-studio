@@ -69,8 +69,8 @@ public abstract class BonitaTreeViewer extends AbstractEditPartViewer implements
 
     private static final class SearchPatternFilter extends PatternFilter {
 		@Override
-		protected boolean isLeafMatch(org.eclipse.jface.viewers.Viewer viewer, Object element) {
-		    String labelText = ((ILabelProvider) ((StructuredViewer) viewer).getLabelProvider()).getText(element);
+		protected boolean isLeafMatch(final org.eclipse.jface.viewers.Viewer viewer, final Object element) {
+		    final String labelText = ((ILabelProvider) ((StructuredViewer) viewer).getLabelProvider()).getText(element);
 
 		    if(labelText == null) {
 		        return false;
@@ -78,8 +78,8 @@ public abstract class BonitaTreeViewer extends AbstractEditPartViewer implements
 		    if(wordMatches(labelText)){
 		        return true ;
 		    }else{
-		        for(EAttribute attribute : ((EObject) element).eClass().getEAllAttributes()){
-		            Object value = ((EObject) element).eGet(attribute) ;
+		        for(final EAttribute attribute : ((EObject) element).eClass().getEAllAttributes()){
+		            final Object value = ((EObject) element).eGet(attribute) ;
 		            if( value != null && attribute.getEType().getName().equals("EString") && wordMatches(value.toString())){
 		                return true ;
 		            }
@@ -97,7 +97,7 @@ public abstract class BonitaTreeViewer extends AbstractEditPartViewer implements
     private final AdapterFactoryLabelProvider adapterFactoryLabelProvider = new AdapterFactoryLabelProvider(adapterFactory){
 
         @Override
-        public String getText(Object object) {
+        public String getText(final Object object) {
             final EStructuralFeature eContainingFeature = ((EObject)object).eContainingFeature();
 			if(eContainingFeature != null && eContainingFeature.equals(ProcessPackage.eINSTANCE.getAssignable_Filters())){
                 return "Filter "+((Element) object).getName() ;
@@ -118,7 +118,7 @@ public abstract class BonitaTreeViewer extends AbstractEditPartViewer implements
      * Constructs a TreeViewer with the default root editpart.
      */
     public BonitaTreeViewer() {
-        RootTreeEditPart rep = new RootTreeEditPart();
+        final RootTreeEditPart rep = new RootTreeEditPart();
         setRootEditPart(rep);
     }
 
@@ -132,7 +132,7 @@ public abstract class BonitaTreeViewer extends AbstractEditPartViewer implements
      * @return the control
      */
     @Override
-    public Control createControl(Composite parent) {
+    public Control createControl(final Composite parent) {
         parent.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
         final Composite mainComposite = new Composite(parent, SWT.BORDER);
         mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
@@ -147,7 +147,8 @@ public abstract class BonitaTreeViewer extends AbstractEditPartViewer implements
 
         treeViewer.getTree().addListener(SWT.MouseDoubleClick, new Listener() {
 
-            public void handleEvent(Event event) {
+            @Override
+            public void handleEvent(final Event event) {
                 handlTreeDoubleClick();
             }
 
@@ -159,7 +160,7 @@ public abstract class BonitaTreeViewer extends AbstractEditPartViewer implements
 
 
 	private TreeViewer createFilteredTree(final Composite mainComposite) {
-		PatternFilter filter = new SearchPatternFilter() ;
+		final PatternFilter filter = new SearchPatternFilter() ;
         filter.setIncludeLeadingWildcard(true) ;
         filteredTree = new FilteredTree(mainComposite, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL,filter,true);
         final TreeViewer treeViewer = filteredTree.getViewer();
@@ -184,24 +185,24 @@ public abstract class BonitaTreeViewer extends AbstractEditPartViewer implements
     public void setDiagramEditPart(final DiagramEditPart diagramEditPart){
         this.diagramEditPart = diagramEditPart ;
         if(filteredTree != null){
-            EObject resolveSemanticElement = ((IGraphicalEditPart) diagramEditPart).resolveSemanticElement();
+            final EObject resolveSemanticElement = ((IGraphicalEditPart) diagramEditPart).resolveSemanticElement();
 			filteredTree.getViewer().setInput(resolveSemanticElement) ;
 			diagramEditPart.getViewer().addSelectionChangedListener(new ISelectionChangedListener() {
 				
 				@Override
-				public void selectionChanged(SelectionChangedEvent event) {
+				public void selectionChanged(final SelectionChangedEvent event) {
 					if (!filteredTree.isDisposed()) {
 						filteredTree.getViewer().refresh();
 						final EditPartViewer viewer = diagramEditPart.getViewer();
 						if(viewer != null){
-							IStructuredSelection selection= (IStructuredSelection) viewer.getSelection();
-							Object ep = selection.getFirstElement();
+							final IStructuredSelection selection= (IStructuredSelection) viewer.getSelection();
+							final Object ep = selection.getFirstElement();
 							if (ep instanceof IGraphicalEditPart){
-								EObject element = ((IGraphicalEditPart) ep).resolveSemanticElement();
+								final EObject element = ((IGraphicalEditPart) ep).resolveSemanticElement();
 								if (element !=null){
-									Object selected = ((IStructuredSelection) filteredTree.getViewer().getSelection()).getFirstElement();
+									final Object selected = ((IStructuredSelection) filteredTree.getViewer().getSelection()).getFirstElement();
 									if(selected != null && selected instanceof EObject){
-										IGraphicalEditPart foundEP = findEditPartFor((EObject) selected);
+										final IGraphicalEditPart foundEP = findEditPartFor((EObject) selected);
 										if(!foundEP.equals(ep)){
 											filteredTree.getViewer().setSelection(new StructuredSelection(element));
 										}
@@ -221,9 +222,10 @@ public abstract class BonitaTreeViewer extends AbstractEditPartViewer implements
      * @see org.eclipse.gef.EditPartViewer#findObjectAtExcluding(Point,
      *      Collection, EditPartViewer.Conditional)
      */
+    @Override
     @SuppressWarnings("rawtypes")
-    public EditPart findObjectAtExcluding(Point pt, Collection exclude,
-            Conditional condition) {
+    public EditPart findObjectAtExcluding(final Point pt, final Collection exclude,
+            final Conditional condition) {
         return null;
     }
 
@@ -249,20 +251,10 @@ public abstract class BonitaTreeViewer extends AbstractEditPartViewer implements
         filteredTree.getViewer().addSelectionChangedListener(new ISelectionChangedListener() {
 			
 			@Override
-			public void selectionChanged(SelectionChangedEvent event) {
+			public void selectionChanged(final SelectionChangedEvent event) {
 				  handleTreeSelection(tree);
 			}
 		});
-//        tree.addSelectionListener(new SelectionListener() {
-//            public void widgetSelected(SelectionEvent e) {
-//           //     handleTreeSelection(tree);
-//            }
-//
-//
-//            public void widgetDefaultSelected(SelectionEvent e) {
-//                widgetSelected(e);
-//            }
-//        });
         super.hookControl();
     }
 
@@ -276,7 +268,7 @@ public abstract class BonitaTreeViewer extends AbstractEditPartViewer implements
      * @see org.eclipse.gef.ui.parts.AbstractEditPartViewer#reveal(org.eclipse.gef.EditPart)
      */
     @Override
-    public void reveal(EditPart part) {}
+    public void reveal(final EditPart part) {}
 
     /**
      * Unhooks a control so that it can be reset. This method deactivates the
@@ -301,15 +293,15 @@ public abstract class BonitaTreeViewer extends AbstractEditPartViewer implements
         super.unhookControl();
     }
 
-    protected void scrollDiagram(IGraphicalEditPart ep) {
-        org.eclipse.draw2d.geometry.Rectangle bounds = ep.getFigure().getBounds().getCopy();
+    protected void scrollDiagram(final IGraphicalEditPart ep) {
+        final org.eclipse.draw2d.geometry.Rectangle bounds = ep.getFigure().getBounds().getCopy();
         //Get the absolute coordinate
-        IFigure referenceFigure = ep.getFigure() ;
+        final IFigure referenceFigure = ep.getFigure() ;
         referenceFigure.translateToAbsolute(bounds) ;
         IFigure parentFigure = referenceFigure.getParent();
         while( parentFigure != null  ) {
             if(parentFigure instanceof Viewport) {
-                Viewport viewport = (Viewport)parentFigure;
+                final Viewport viewport = (Viewport)parentFigure;
                 bounds.translate(
                         viewport.getHorizontalRangeModel().getValue(),
                         viewport.getVerticalRangeModel().getValue());
@@ -319,18 +311,18 @@ public abstract class BonitaTreeViewer extends AbstractEditPartViewer implements
                 parentFigure = parentFigure.getParent();
             }
         }
-        Point loc = bounds.getLocation() ;
-        Scrollable f = diagramEditPart.getScrollableControl() ;
-        ((FigureCanvas)f).scrollTo(loc.x - (f.getBounds().width /2) , loc.y - (f.getBounds().height /2)) ;
+        final Point loc = bounds.getLocation() ;
+        final Scrollable f = diagramEditPart.getScrollableControl() ;
+        ((FigureCanvas)f).scrollTo(loc.x - f.getBounds().width /2 , loc.y - f.getBounds().height /2) ;
     }
 
     @Override
-    public void setRootEditPart(RootEditPart editpart) {
+    public void setRootEditPart(final RootEditPart editpart) {
         //super.setRootEditPart(editpart);
     }
 
     @Override
-    public void setContents(EditPart editpart) {
+    public void setContents(final EditPart editpart) {
 
     }
 
