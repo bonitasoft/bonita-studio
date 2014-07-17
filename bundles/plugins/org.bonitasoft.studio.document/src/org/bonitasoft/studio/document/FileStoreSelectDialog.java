@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.properties.sections.document;
+package org.bonitasoft.studio.document;
 
 import static org.bonitasoft.studio.common.Messages.bonitaPortalModuleName;
 
@@ -31,7 +31,7 @@ import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.provider.FileStoreLabelProvider;
 import org.bonitasoft.studio.common.repository.store.AbstractRepositoryStore;
-import org.bonitasoft.studio.properties.i18n.Messages;
+import org.bonitasoft.studio.document.i18n.Messages;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -69,32 +69,32 @@ public abstract class FileStoreSelectDialog extends Dialog {
     private Button removeButton;
     private AbstractFileStore selected;
 
-    public FileStoreSelectDialog(Shell parentShell) {
+    public FileStoreSelectDialog(final Shell parentShell) {
         super(parentShell);
     }
 
-    public FileStoreSelectDialog(IShellProvider parentShell) {
+    public FileStoreSelectDialog(final IShellProvider parentShell) {
         super(parentShell);
     }
 
     @Override
-    protected void configureShell(Shell newShell) {
+    protected void configureShell(final Shell newShell) {
         super.configureShell(newShell);
         newShell.setText(getDialogTitle());
     }
 
     @Override
-    protected Control createContents(Composite parent) {
+    protected Control createContents(final Composite parent) {
         final Control createContents = super.createContents(parent);
         fileStoreListViewer.setSelection(new StructuredSelection());
         return createContents;
     }
 
     @Override
-    protected Control createDialogArea(Composite parent) {
+    protected Control createDialogArea(final Composite parent) {
         final Control dialogArea = super.createDialogArea(parent);
 
-        Composite mainComposite = new Composite((Composite) dialogArea, SWT.NONE);
+        final Composite mainComposite = new Composite((Composite) dialogArea, SWT.NONE);
         mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
         mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         createDescription(mainComposite);
@@ -104,14 +104,14 @@ public abstract class FileStoreSelectDialog extends Dialog {
         return dialogArea;
     }
 
-    private void createDescription(Composite mainComposite) {
-        Label descriptionLabel = new Label(mainComposite, SWT.NONE);
+    private void createDescription(final Composite mainComposite) {
+        final Label descriptionLabel = new Label(mainComposite, SWT.NONE);
         descriptionLabel.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2,1).create());
         descriptionLabel.setText(Messages.bind(Messages.selectDocumentDescription, new Object[]{bonitaPortalModuleName}));
     }
 
-    private void createList(Composite mainComposite) {
-        Composite listComposite = new Composite(mainComposite, SWT.NONE);
+    private void createList(final Composite mainComposite) {
+        final Composite listComposite = new Composite(mainComposite, SWT.NONE);
         listComposite.setLayout(GridLayoutFactory.fillDefaults().create());
         listComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         final Text fileStoreListFilter = new Text(listComposite, SWT.BORDER | SWT.SEARCH | SWT.ICON_SEARCH | SWT.ICON_CANCEL);
@@ -122,7 +122,7 @@ public abstract class FileStoreSelectDialog extends Dialog {
             private ViewerFilter filter;
 
             @Override
-            public void modifyText(ModifyEvent e) {
+            public void modifyText(final ModifyEvent e) {
                 final String textForFiltering = fileStoreListFilter.getText();
                 if(filter != null){
                     fileStoreListViewer.removeFilter(filter);
@@ -132,7 +132,7 @@ public abstract class FileStoreSelectDialog extends Dialog {
                     filter = new ViewerFilter() {
 
                         @Override
-                        public boolean select(Viewer viewer, Object parentElement, Object element) {
+                        public boolean select(final Viewer viewer, final Object parentElement, final Object element) {
                             return ((AbstractFileStore)element).getName().contains(textForFiltering);
                         }
                     };
@@ -145,12 +145,12 @@ public abstract class FileStoreSelectDialog extends Dialog {
         fileStoreListViewer.getList().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 300).create());
         fileStoreListViewer.setContentProvider(new ArrayContentProvider());
         fileStoreListViewer.setLabelProvider(new FileStoreLabelProvider());
-        IRepositoryStore<?> ars = (IRepositoryStore<?>) RepositoryManager.getInstance().getRepositoryStore(getRepositoryStoreClass());
+        final IRepositoryStore<?> ars = (IRepositoryStore<?>) RepositoryManager.getInstance().getRepositoryStore(getRepositoryStoreClass());
         fileStoreListViewer.setInput(ars.getChildren());
         fileStoreListViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 
             @Override
-            public void selectionChanged(SelectionChangedEvent event) {
+            public void selectionChanged(final SelectionChangedEvent event) {
                 final boolean empty = event.getSelection().isEmpty();
                 getButton(IDialogConstants.OK_ID).setEnabled(!empty);
                 removeButton.setEnabled(!empty);
@@ -160,9 +160,9 @@ public abstract class FileStoreSelectDialog extends Dialog {
         fileStoreListViewer.getList().setFocus();
     }
 
-    private void createButtons(Composite mainComposite) {
-        Composite buttonComposite = new Composite(mainComposite, SWT.NONE);
-        RowLayout rowLayout = new RowLayout(SWT.VERTICAL);
+    private void createButtons(final Composite mainComposite) {
+        final Composite buttonComposite = new Composite(mainComposite, SWT.NONE);
+        final RowLayout rowLayout = new RowLayout(SWT.VERTICAL);
         rowLayout.fill = true;
         buttonComposite.setLayout(rowLayout);
         createAddButton(buttonComposite);
@@ -170,32 +170,32 @@ public abstract class FileStoreSelectDialog extends Dialog {
 
     }
 
-    private void createAddButton(Composite buttonComposite) {
-        Button addButton = new Button(buttonComposite, SWT.FLAT);
+    private void createAddButton(final Composite buttonComposite) {
+        final Button addButton = new Button(buttonComposite, SWT.FLAT);
         addButton.setText(Messages.importEtc);
         addButton.addSelectionListener(new SelectionAdapter() {
 
             @Override
-            public void widgetSelected(SelectionEvent e) {
-                FileDialog fileDialog = new FileDialog(getShell());
-                String fileDialogResult = fileDialog.open();
+            public void widgetSelected(final SelectionEvent e) {
+                final FileDialog fileDialog = new FileDialog(getShell());
+                final String fileDialogResult = fileDialog.open();
                 if(fileDialogResult != null){
-                    AbstractRepositoryStore<IRepositoryFileStore> ars = (AbstractRepositoryStore<IRepositoryFileStore>)RepositoryManager.getInstance().getRepositoryStore(getRepositoryStoreClass());
-                    File newFile = new File(fileDialogResult);
+                    final AbstractRepositoryStore<IRepositoryFileStore> ars = (AbstractRepositoryStore<IRepositoryFileStore>)RepositoryManager.getInstance().getRepositoryStore(getRepositoryStoreClass());
+                    final File newFile = new File(fileDialogResult);
                     FileInputStream inputStream = null;
                     try {
                         inputStream = new FileInputStream(newFile);
-                        IRepositoryFileStore fileStoreCreated = ars.importInputStream(newFile.getName(), inputStream);
+                        final IRepositoryFileStore fileStoreCreated = ars.importInputStream(newFile.getName(), inputStream);
                         fileStoreListViewer.setInput(ars.getChildren());
                         fileStoreListViewer.setSelection(new StructuredSelection(fileStoreCreated));
                         fileStoreListViewer.refresh();
-                    } catch (FileNotFoundException e1) {
+                    } catch (final FileNotFoundException e1) {
                         BonitaStudioLog.error(e1);
                     } finally {
                         if(inputStream != null){
                             try {
                                 inputStream.close();
-                            } catch (IOException e1) {
+                            } catch (final IOException e1) {
                                 BonitaStudioLog.error(e1);
                             }
                         }
@@ -206,15 +206,15 @@ public abstract class FileStoreSelectDialog extends Dialog {
         });
     }
 
-    private void createRemoveButton(Composite buttonComposite) {
+    private void createRemoveButton(final Composite buttonComposite) {
         removeButton = new Button(buttonComposite, SWT.FLAT);
         removeButton.setText(Messages.remove);
         removeButton.addSelectionListener(new SelectionAdapter() {
             @Override
-            public void widgetSelected(SelectionEvent e) {
+            public void widgetSelected(final SelectionEvent e) {
                 super.widgetSelected(e);
                 ((IRepositoryFileStore) ((StructuredSelection) fileStoreListViewer.getSelection()).getFirstElement()).delete();
-                AbstractRepositoryStore<IRepositoryFileStore> ars = (AbstractRepositoryStore<IRepositoryFileStore>)RepositoryManager.getInstance().getRepositoryStore(getRepositoryStoreClass());
+                final AbstractRepositoryStore<IRepositoryFileStore> ars = (AbstractRepositoryStore<IRepositoryFileStore>)RepositoryManager.getInstance().getRepositoryStore(getRepositoryStoreClass());
                 fileStoreListViewer.setInput(ars.getChildren());
             }
         });

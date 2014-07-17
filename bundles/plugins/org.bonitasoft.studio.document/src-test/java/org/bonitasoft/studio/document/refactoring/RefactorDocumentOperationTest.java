@@ -1,0 +1,203 @@
+/**
+ * Copyright (C) 2014 BonitaSoft S.A.
+ * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2.0 of the License, or
+ * (at your option) any later version.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+package org.bonitasoft.studio.document.refactoring;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
+
+import java.lang.reflect.InvocationTargetException;
+
+import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
+import org.bonitasoft.studio.model.expression.Expression;
+import org.bonitasoft.studio.model.expression.ExpressionFactory;
+import org.bonitasoft.studio.model.expression.Operation;
+import org.bonitasoft.studio.model.expression.assertions.ExpressionAssert;
+import org.bonitasoft.studio.model.process.Document;
+import org.bonitasoft.studio.model.process.Pool;
+import org.bonitasoft.studio.model.process.ProcessFactory;
+import org.bonitasoft.studio.model.process.Task;
+import org.bonitasoft.studio.model.process.util.ProcessAdapterFactory;
+import org.bonitasoft.studio.refactoring.core.RefactoringOperationType;
+import org.eclipse.emf.common.command.BasicCommandStack;
+import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
+import org.junit.Before;
+import org.junit.Test;
+
+public class RefactorDocumentOperationTest {
+
+    private AdapterFactoryEditingDomain domain;
+    private Pool parentProcess;
+    private Operation operation;
+    private Expression leftOperand;
+    private Document document;
+
+    @Before
+    public void setUp() throws Exception {
+        domain = new AdapterFactoryEditingDomain(new ProcessAdapterFactory(), new BasicCommandStack());
+        parentProcess = ProcessFactory.eINSTANCE.createPool();
+        document = ProcessFactory.eINSTANCE.createDocument();
+        document.setName("docName");
+        document.setMimeType(ExpressionHelper.createConstantExpression("octet/stream", String.class.getName()));
+        parentProcess.getDocuments().add(document);
+    }
+
+    private void createTaskWithOperationWithLeftOperandOfType(final String documentType) {
+        final Task task = ProcessFactory.eINSTANCE.createTask();
+        operation = ExpressionFactory.eINSTANCE.createOperation();
+        createLeftOperandWithType(documentType);
+        operation.setLeftOperand(leftOperand);
+        task.getOperations().add(operation);
+        parentProcess.getElements().add(task);
+    }
+
+    private void createLeftOperandWithType(final String documentType) {
+        leftOperand = ExpressionFactory.eINSTANCE.createExpression();
+        leftOperand.setName(document.getName());
+        leftOperand.setContent(document.getName());
+        if (ExpressionConstants.DOCUMENT_TYPE.equals(documentType)) {
+            leftOperand.setType(documentType);
+            leftOperand.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(document));
+        } else {
+            leftOperand.setType(documentType);
+        }
+    }
+
+    @Test
+    public void testDocumentUpdatedWhenRenamingDocument() throws InvocationTargetException, InterruptedException {
+        createTaskWithOperationWithLeftOperandOfType(ExpressionConstants.DOCUMENT_TYPE);
+        final Document updatedDocument = ProcessFactory.eINSTANCE.createDocument();
+        updatedDocument.setName("docNameUpdated");
+        updatedDocument.setMimeType(ExpressionHelper.createConstantExpression("octet/stream", String.class.getName()));
+        final RefactorDocumentOperation rdo = new RefactorDocumentOperation(RefactoringOperationType.UPDATE);
+        rdo.addItemToRefactor(updatedDocument, document);
+        rdo.setEditingDomain(domain);
+        rdo.setAskConfirmation(false);
+        rdo.run(null);
+
+        assertThat(parentProcess.getDocuments()).hasSize(1);
+        assertEquals(parentProcess.getDocuments().get(0).getName(), "docNameUpdated");
+        ExpressionAssert.assertThat(leftOperand).hasName(updatedDocument.getName());
+    }
+
+    /**
+     * Case of File Widget initial value
+     * 
+     * @throws InvocationTargetException
+     * @throws InterruptedException
+     */
+    @Test
+    public void testDocumentRefUpdatedWhenRenamingDocument() throws InvocationTargetException, InterruptedException {
+        createTaskWithOperationWithLeftOperandOfType(ExpressionConstants.DOCUMENT_REF_TYPE);
+        final Document updatedDocument = ProcessFactory.eINSTANCE.createDocument();
+        updatedDocument.setName("docNameUpdated");
+        updatedDocument.setMimeType(ExpressionHelper.createConstantExpression("octet/stream", String.class.getName()));
+        final RefactorDocumentOperation rdo = new RefactorDocumentOperation(RefactoringOperationType.UPDATE);
+        rdo.addItemToRefactor(updatedDocument, document);
+        rdo.setEditingDomain(domain);
+        rdo.setAskConfirmation(false);
+        rdo.run(null);
+
+        assertThat(parentProcess.getDocuments()).hasSize(1);
+        assertEquals(parentProcess.getDocuments().get(0).getName(), "docNameUpdated");
+        ExpressionAssert.assertThat(leftOperand).hasName(updatedDocument.getName());
+    }
+
+    /**
+     * Case of some Operations
+     * 
+     * @throws InvocationTargetException
+     * @throws InterruptedException
+     */
+    @Test
+    public void testDocumentStringWhenRenamingDocument() throws InvocationTargetException, InterruptedException {
+        createTaskWithOperationWithLeftOperandOfType(ExpressionConstants.CONSTANT_TYPE);
+        final Document updatedDocument = ProcessFactory.eINSTANCE.createDocument();
+        updatedDocument.setName("docNameUpdated");
+        updatedDocument.setMimeType(ExpressionHelper.createConstantExpression("octet/stream", String.class.getName()));
+        final RefactorDocumentOperation rdo = new RefactorDocumentOperation(RefactoringOperationType.UPDATE);
+        rdo.addItemToRefactor(updatedDocument, document);
+        rdo.setEditingDomain(domain);
+        rdo.setAskConfirmation(false);
+        rdo.run(null);
+
+        assertThat(parentProcess.getDocuments()).hasSize(1);
+        assertEquals(parentProcess.getDocuments().get(0).getName(), "docNameUpdated");
+        ExpressionAssert.assertThat(leftOperand).hasName(updatedDocument.getName());
+    }
+
+    @Test
+    public void testMIMETypeUpdatedWhenEdited() throws InvocationTargetException, InterruptedException {
+        createTaskWithOperationWithLeftOperandOfType(ExpressionConstants.DOCUMENT_TYPE);
+        final Document updatedDocument = ProcessFactory.eINSTANCE.createDocument();
+        updatedDocument.setName("docName");
+        updatedDocument.setMimeType(ExpressionHelper.createConstantExpression("pdf", String.class.getName()));
+        final RefactorDocumentOperation rdo = new RefactorDocumentOperation(RefactoringOperationType.UPDATE);
+        rdo.addItemToRefactor(updatedDocument, document);
+        rdo.setEditingDomain(domain);
+        rdo.setAskConfirmation(false);
+        rdo.run(null);
+
+        assertThat(parentProcess.getDocuments()).hasSize(1);
+        assertEquals(parentProcess.getDocuments().get(0).getMimeType().getName(), "pdf");
+        ExpressionAssert.assertThat(leftOperand).hasName(updatedDocument.getName());
+    }
+
+    @Test
+    public void testDocumentExpressionUpdatedWhenRenamingDocument() throws InvocationTargetException, InterruptedException {
+        createTaskWithOperationWithLeftOperandOfType(ExpressionConstants.DOCUMENT_TYPE);
+        final Document updatedDocument = ProcessFactory.eINSTANCE.createDocument();
+        updatedDocument.setName("docNameUpdated");
+        updatedDocument.setMimeType(ExpressionHelper.createConstantExpression("octet/stream", String.class.getName()));
+        final RefactorDocumentOperation rdo = new RefactorDocumentOperation(RefactoringOperationType.UPDATE);
+        rdo.addItemToRefactor(updatedDocument, document);
+        rdo.setEditingDomain(domain);
+        rdo.setAskConfirmation(false);
+        rdo.run(null);
+
+        ExpressionAssert.assertThat(leftOperand).hasName(updatedDocument.getName());
+
+    }
+
+    @Test
+    public void testPatternExpressionWhenRenamingDocument() throws InvocationTargetException, InterruptedException {
+        createTaskWithOperationWithLeftOperandOfType(ExpressionConstants.DOCUMENT_TYPE);
+        final Expression rightOperand = ExpressionFactory.eINSTANCE.createExpression();
+        rightOperand.setName("ManipulateDocument");
+        rightOperand.setContent("hello ${" + document.getName() + "}");
+        rightOperand.setType(ExpressionConstants.PATTERN_TYPE);
+        rightOperand.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(document));
+        operation.setRightOperand(rightOperand);
+        final Document updatedDocument = ProcessFactory.eINSTANCE.createDocument();
+        updatedDocument.setName("docNameUpdated");
+        updatedDocument.setMimeType(ExpressionHelper.createConstantExpression("octet/stream", String.class.getName()));
+        final RefactorDocumentOperation rdo = new RefactorDocumentOperation(RefactoringOperationType.UPDATE);
+        rdo.addItemToRefactor(updatedDocument, document);
+        rdo.setEditingDomain(domain);
+        rdo.setAskConfirmation(false);
+        rdo.run(null);
+
+        ExpressionAssert.assertThat(leftOperand).hasName(updatedDocument.getName());
+        ExpressionAssert.assertThat(rightOperand).hasContent("hello ${" + updatedDocument.getName() + "}");
+        final EList<EObject> referencedElements = rightOperand.getReferencedElements();
+        assertThat(referencedElements).hasSize(1);
+        final EObject dep = referencedElements.get(0);
+        assertThat(dep).isInstanceOf(Document.class);
+        assertThat(((Document) dep).getName()).isEqualTo(updatedDocument.getName());
+    }
+
+}
