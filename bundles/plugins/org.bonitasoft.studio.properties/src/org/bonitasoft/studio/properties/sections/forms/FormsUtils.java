@@ -88,11 +88,11 @@ public class FormsUtils {
     };
 
 
-    public static void duplicateForm(Element pageFlow, TransactionalEditingDomain editingDomain, EStructuralFeature feature, Form baseForm, String id, String formDesc) {
+    public static void duplicateForm(final Element pageFlow, final TransactionalEditingDomain editingDomain, final EStructuralFeature feature, final Form baseForm, final String id, final String formDesc) {
         try {
             OperationHistoryFactory.getOperationHistory().execute(new DuplicateFormCommand(pageFlow, feature, baseForm, id, formDesc, editingDomain),
                     Repository.NULL_PROGRESS_MONITOR, null);
-        } catch (ExecutionException e) {
+        } catch (final ExecutionException e) {
             BonitaStudioLog.error(e);
         }
     }
@@ -105,8 +105,8 @@ public class FormsUtils {
      * @return created diagram
      */
     public static void createDiagram(final Form form, final TransactionalEditingDomain editingDomain, final Element pageFlow) {
-        List<IFile> list = new ArrayList<IFile>();
-        for (Resource resource : editingDomain.getResourceSet().getResources()) {
+        final List<IFile> list = new ArrayList<IFile>();
+        for (final Resource resource : editingDomain.getResourceSet().getResources()) {
             if (resource.getURI().isPlatform()) {
                 list.add(ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(resource.getURI().toPlatformString(true))));
             } else {
@@ -114,10 +114,10 @@ public class FormsUtils {
             }
         }
 
-        AbstractTransactionalCommand command = new AbstractTransactionalCommand(editingDomain, "", list) { //$NON-NLS-1$
+        final AbstractTransactionalCommand command = new AbstractTransactionalCommand(editingDomain, "", list) { //$NON-NLS-1$
 
             @Override
-            protected CommandResult doExecuteWithResult(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
+            protected CommandResult doExecuteWithResult(final IProgressMonitor monitor, final IAdaptable info) throws ExecutionException {
                 final Diagram diagram = ViewService.createDiagram(form, FormEditPart.MODEL_ID, FormDiagramEditorPlugin.DIAGRAM_PREFERENCES_HINT);
                 final Resource resource =  getEditingDomain().getResourceSet().getResource(form.eResource().getURI(), false);
                 resource.getContents().add(diagram);
@@ -130,7 +130,7 @@ public class FormsUtils {
 
         try {
             OperationHistoryFactory.getOperationHistory().execute(command, null, null);
-        } catch (ExecutionException e) {
+        } catch (final ExecutionException e) {
             FormDiagramEditorPlugin.getInstance().logError("Unable to create model and diagram", e); //$NON-NLS-1$
         }
     }
@@ -141,40 +141,40 @@ public class FormsUtils {
      * @param form
      *            the form to open
      */
-    public static DiagramEditor openDiagram(Form form,EditingDomain domain) {
+    public static DiagramEditor openDiagram(final Form form,final EditingDomain domain) {
 
         /* get the Diagram element related to the form in the resource */
-        Diagram diag = ModelHelper.getDiagramFor(form,domain);
+        final Diagram diag = ModelHelper.getDiagramFor(form,domain);
 
         /*
          * need to get the URI after save because the name can change as it is
          * synchronized with the MainProcess name
          */
-        URI uri = EcoreUtil.getURI(diag);
+        final URI uri = EcoreUtil.getURI(diag);
 
         /* open the form editor */
-        FormDiagramEditor formEditor = (FormDiagramEditor) EditorService.getInstance().openEditor(new URIEditorInput(uri, form.getName()));
+        final FormDiagramEditor formEditor = (FormDiagramEditor) EditorService.getInstance().openEditor(new URIEditorInput(uri, form.getName()));
         formEditor.getDiagramGraphicalViewer().select(formEditor.getDiagramEditPart());
-        EObject parent = form.eContainer();
+        final EObject parent = form.eContainer();
         if(parent instanceof PageFlow){
             parent.eAdapters().add(new FormRemovedAdapter(form, formEditor));
         }
-        EList<Adapter> eAdapters = form.eAdapters();
+        final EList<Adapter> eAdapters = form.eAdapters();
         boolean alreadyHere = false;
-        for (Adapter adapter : eAdapters) {
+        for (final Adapter adapter : eAdapters) {
             if(adapter instanceof WidgetAddedOrRemoved){
                 alreadyHere = true;
                 break;
             }
         }
         if(!alreadyHere){
-            WidgetAddedOrRemoved adapterImpl = new WidgetAddedOrRemoved(form);
+            final WidgetAddedOrRemoved adapterImpl = new WidgetAddedOrRemoved(form);
             eAdapters.add(adapterImpl);
         }
-        MainProcess mainProcess = ModelHelper.getMainProcess(form);
+        final MainProcess mainProcess = ModelHelper.getMainProcess(form);
 
-        DiagramRepositoryStore diagramStore = (DiagramRepositoryStore) RepositoryManager.getInstance().getCurrentRepository().getRepositoryStore(DiagramRepositoryStore.class) ;
-        IRepositoryFileStore file = diagramStore.getChild(NamingUtils.toDiagramFilename(mainProcess)) ;
+        final DiagramRepositoryStore diagramStore = (DiagramRepositoryStore) RepositoryManager.getInstance().getCurrentRepository().getRepositoryStore(DiagramRepositoryStore.class) ;
+        final IRepositoryFileStore file = diagramStore.getChild(NamingUtils.toDiagramFilename(mainProcess)) ;
         if (file.isReadOnly()) {
             formEditor.getDiagramEditPart().disableEditMode();
         }
@@ -186,14 +186,14 @@ public class FormsUtils {
      * @param srcName
      * @param name
      */
-    public static void changeIdInTemplate(Form form, String oldId, String newId) {
-        HtmlTemplateGenerator generator = ((HtmlTemplateGenerator) ExporterService.getInstance().getExporterService(SERVICE_TYPE.HtmlTemplateGenerator));
-        File file = WebTemplatesUtil.getFile(form.getHtmlTemplate().getPath());
+    public static void changeIdInTemplate(final Form form, final String oldId, final String newId) {
+        final HtmlTemplateGenerator generator = (HtmlTemplateGenerator) ExporterService.getInstance().getExporterService(SERVICE_TYPE.HtmlTemplateGenerator);
+        final File file = WebTemplatesUtil.getFile(form.getHtmlTemplate().getPath());
         FileInputStream fis;
         try {
             fis = new FileInputStream(file);
-            File tempFile = File.createTempFile("tempForm", ".html");
-            FileWriter fileWriter = new FileWriter(tempFile);
+            final File tempFile = File.createTempFile("tempForm", ".html");
+            final FileWriter fileWriter = new FileWriter(tempFile);
             generator.changeDivId(oldId, newId, fis, fileWriter);
             fis.close();
             fileWriter.close();

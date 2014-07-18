@@ -373,7 +373,7 @@ public abstract class AbstractFormsSection extends AbstractBonitaDescriptionSect
 
     protected Button createAddFormButton(final Composite buttonsComposite, final EStructuralFeature feature) {
         final Button addButton = getWidgetFactory().createButton(buttonsComposite, Messages.addForm, SWT.FLAT);
-        addButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(IDialogConstants.BUTTON_WIDTH, SWT.DEFAULT).create());
+        addButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).minSize(IDialogConstants.BUTTON_WIDTH, SWT.DEFAULT).create());
         addButton.addListener(SWT.Selection, new Listener() {
 
             @Override
@@ -387,7 +387,7 @@ public abstract class AbstractFormsSection extends AbstractBonitaDescriptionSect
 
     private Button createEditFormButton(final Composite buttonsComposite, final FilteredTree tree) {
         final Button editButton = getWidgetFactory().createButton(buttonsComposite, Messages.editForm, SWT.FLAT);
-        editButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(IDialogConstants.BUTTON_WIDTH, SWT.DEFAULT).create());
+        editButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).minSize(IDialogConstants.BUTTON_WIDTH, SWT.DEFAULT).create());
         editButton.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(final SelectionEvent e) {
@@ -400,7 +400,7 @@ public abstract class AbstractFormsSection extends AbstractBonitaDescriptionSect
 
     private Button createDownFormButton(final Composite buttonsComposite, final FilteredTree tree) {
         downButton = getWidgetFactory().createButton(buttonsComposite, Messages.formDown, SWT.FLAT);
-        downButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(IDialogConstants.BUTTON_WIDTH, SWT.DEFAULT).create());
+        downButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).minSize(IDialogConstants.BUTTON_WIDTH, SWT.DEFAULT).create());
         downButton.addListener(SWT.Selection, new Listener() {
             @Override
             public void handleEvent(final Event event) {
@@ -422,7 +422,7 @@ public abstract class AbstractFormsSection extends AbstractBonitaDescriptionSect
 
     private Button createUpFormButton(final Composite buttonsComposite, final FilteredTree tree) {
         upButton = getWidgetFactory().createButton(buttonsComposite, Messages.formUp, SWT.FLAT);
-        upButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(IDialogConstants.BUTTON_WIDTH, SWT.DEFAULT).create());
+        upButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).minSize(IDialogConstants.BUTTON_WIDTH, SWT.DEFAULT).create());
         upButton.addListener(SWT.Selection, new Listener() {
             @Override
             public void handleEvent(final Event event) {
@@ -442,7 +442,7 @@ public abstract class AbstractFormsSection extends AbstractBonitaDescriptionSect
 
     private Button createRemoveFormButton(final Composite buttonsComposite, final FilteredTree tree) {
         final Button removeButton = getWidgetFactory().createButton(buttonsComposite, Messages.removeForm, SWT.FLAT);
-        removeButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(IDialogConstants.BUTTON_WIDTH, SWT.DEFAULT).create());
+        removeButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).minSize(IDialogConstants.BUTTON_WIDTH, SWT.DEFAULT).create());
         removeButton.addListener(SWT.Selection, new Listener() {
 
             @Override
