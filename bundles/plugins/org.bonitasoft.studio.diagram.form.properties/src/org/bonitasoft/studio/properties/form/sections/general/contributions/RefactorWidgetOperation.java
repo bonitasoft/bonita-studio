@@ -35,6 +35,7 @@ import org.bonitasoft.studio.properties.sections.forms.FormsUtils;
 import org.bonitasoft.studio.refactoring.core.AbstractRefactorOperation;
 import org.bonitasoft.studio.refactoring.core.AbstractScriptExpressionRefactoringAction;
 import org.bonitasoft.studio.refactoring.core.RefactoringOperationType;
+import org.bonitasoft.studio.refactoring.core.WidgetRefactorPair;
 import org.bonitasoft.studio.refactoring.core.WidgetScriptExpressionRefactoringAction;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.command.CompoundCommand;
@@ -49,110 +50,92 @@ import org.eclipse.emf.edit.domain.EditingDomain;
  * @author Romain Bioteau
  * 
  */
-public class RefactorWidgetOperation extends AbstractRefactorOperation {
+public class RefactorWidgetOperation extends AbstractRefactorOperation<Widget, Widget, WidgetRefactorPair> {
 
-    private final Widget widget;
-
-    private final String newName;
-
-    private Widget widgetCopy;
 
     public RefactorWidgetOperation(Widget widget, String newName) {
         super(RefactoringOperationType.UPDATE);
-        this.widget = widget;
-        this.newName = newName;
-        this.widgetCopy = (Widget) FormFactory.eINSTANCE.create(widget.eClass());
+        Widget widgetCopy = (Widget) FormFactory.eINSTANCE.create(widget.eClass());
         widgetCopy.setName(newName);
+        addItemToRefactor(widgetCopy, widget);
 
     }
 
     @Override
     protected void doExecute(IProgressMonitor monitor) {
         monitor.beginTask(Messages.updatingWidgetReferences, IProgressMonitor.UNKNOWN);
-        final List<Expression> expressions = ModelHelper.getAllItemsOfType(ModelHelper.getPageFlow(widget), ExpressionPackage.Literals.EXPRESSION);
-        List<Expression> expressionsList = new ArrayList<Expression>();
-        for (Expression exp : expressions) {
-            if (!ModelHelper.isAExpressionReferencedElement(exp)) {
-                expressionsList.add(exp);
-            }
-        }
-
         if (compoundCommand == null) {
-            compoundCommand = new CompoundCommand();
+        	compoundCommand = new CompoundCommand();
         }
-        compoundCommand.append(SetCommand.create(domain, widget, ProcessPackage.Literals.ELEMENT__NAME, newName));
-        for (Expression exp : expressionsList) {
-            String fieldExpressionName = exp.getName();
-            String oldExpressionName = WidgetHelper.FIELD_PREFIX + widget.getName();
-            if (ExpressionConstants.FORM_FIELD_TYPE.equals(exp.getType()) && fieldExpressionName.equals(oldExpressionName)) {
-                // update name and content
-                compoundCommand.append(SetCommand.create(domain, exp, ExpressionPackage.Literals.EXPRESSION__NAME, WidgetHelper.FIELD_PREFIX
-                        + newName));
-                compoundCommand.append(SetCommand.create(domain, exp, ExpressionPackage.Literals.EXPRESSION__CONTENT, WidgetHelper.FIELD_PREFIX
-                        + newName));
-                compoundCommand.append(RemoveCommand.create(domain, exp, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS,
-                        exp.getReferencedElements()));
-                compoundCommand.append(AddCommand.create(domain, exp, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS,
-                        ExpressionHelper.createDependencyFromEObject(widgetCopy)));
-            }
-        }
-        
-        if (widget.eContainer() instanceof Form && ModelHelper.formIsCustomized((Form) widget.eContainer())) {
-            final String srcName = widget.getName();
- 
-            compoundCommand.append(SetCommand.create(domain, widget, ProcessPackage.eINSTANCE.getElement_Name(), NamingUtils.convertToId(newName)));
-            
-            compoundCommand.append(new AbstractOverrideableCommand(domain, "Change Id in template") {
-				
-				@Override
-				public void doUndo() {
-					FormsUtils.changeIdInTemplate((Form)widget.eContainer(), newName, srcName);
-				}
-				
-				@Override
-				public void doRedo() {
-					FormsUtils.changeIdInTemplate((Form)widget.eContainer(), srcName, newName);					
-				}
-				
-				@Override
-				public void doExecute() {
-					FormsUtils.changeIdInTemplate((Form)widget.eContainer(), srcName, newName);
-				}
-			});
+        for(WidgetRefactorPair pairToRefactor : pairsToRefactor){
+        	final Widget widget = pairToRefactor.getOldValue();
+        	final String newName = pairToRefactor.getNewValueName();
+        	final List<Expression> expressions = ModelHelper.getAllItemsOfType(ModelHelper.getPageFlow(widget), ExpressionPackage.Literals.EXPRESSION);
+        	List<Expression> expressionsList = new ArrayList<Expression>();
+        	for (Expression exp : expressions) {
+        		if (!ModelHelper.isAExpressionReferencedElement(exp)) {
+        			expressionsList.add(exp);
+        		}
+        	}
+        	compoundCommand.append(SetCommand.create(domain, widget, ProcessPackage.Literals.ELEMENT__NAME, pairToRefactor.getNewValue().getName()));
+        	for (Expression exp : expressionsList) {
+        		String fieldExpressionName = exp.getName();
+        		String oldExpressionName = WidgetHelper.FIELD_PREFIX + widget.getName();
+        		if (ExpressionConstants.FORM_FIELD_TYPE.equals(exp.getType()) && fieldExpressionName.equals(oldExpressionName)) {
+        			// update name and content
+        			compoundCommand.append(SetCommand.create(domain, exp, ExpressionPackage.Literals.EXPRESSION__NAME, WidgetHelper.FIELD_PREFIX
+        					+ newName));
+        			compoundCommand.append(SetCommand.create(domain, exp, ExpressionPackage.Literals.EXPRESSION__CONTENT, WidgetHelper.FIELD_PREFIX
+        					+ newName));
+        			compoundCommand.append(RemoveCommand.create(domain, exp, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS,
+        					exp.getReferencedElements()));
+        			compoundCommand.append(AddCommand.create(domain, exp, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS,
+        					ExpressionHelper.createDependencyFromEObject(pairToRefactor.getNewValue())));
+        		}
+        	}
+
+        	if (widget.eContainer() instanceof Form && ModelHelper.formIsCustomized((Form) widget.eContainer())) {
+        		final String srcName = widget.getName();
+
+        		compoundCommand.append(SetCommand.create(domain, widget, ProcessPackage.eINSTANCE.getElement_Name(), NamingUtils.convertToId(newName)));
+
+        		compoundCommand.append(new AbstractOverrideableCommand(domain, "Change Id in template") {
+
+        			@Override
+        			public void doUndo() {
+        				FormsUtils.changeIdInTemplate((Form)widget.eContainer(), newName, srcName);
+        			}
+
+        			@Override
+        			public void doRedo() {
+        				FormsUtils.changeIdInTemplate((Form)widget.eContainer(), srcName, newName);					
+        			}
+
+        			@Override
+        			public void doExecute() {
+        				FormsUtils.changeIdInTemplate((Form)widget.eContainer(), srcName, newName);
+        			}
+        		});
+        	}
         }
     }
 
     @Override
-    protected AbstractScriptExpressionRefactoringAction getScriptExpressionRefactoringAction(EObject newValue, String oldName, String newName,
+    protected AbstractScriptExpressionRefactoringAction<WidgetRefactorPair> getScriptExpressionRefactoringAction(List<WidgetRefactorPair> pairsToRefactor,
             List<Expression> scriptExpressions, List<Expression> refactoredScriptExpression, CompoundCommand compoundCommand, EditingDomain domain,
             RefactoringOperationType operationType) {
-        return new WidgetScriptExpressionRefactoringAction(newValue, oldName, newName, scriptExpressions, refactoredScriptExpression, compoundCommand, domain,
+        return new WidgetScriptExpressionRefactoringAction(pairsToRefactor, scriptExpressions, refactoredScriptExpression, compoundCommand, domain,
                 operationType);
     }
 
     @Override
-    protected EObject getContainer() {
+    protected EObject getContainer(Widget widget) {
         return ModelHelper.getPageFlow(widget);
     }
 
-    @Override
-    protected EObject getOldValue() {
-        return widget;
-    }
-
-    @Override
-    protected String getOldValueName() {
-        return WidgetHelper.FIELD_PREFIX+widget.getName();
-    }
-
-    @Override
-    protected EObject getNewValue() {
-        return widgetCopy;
-    }
-
-    @Override
-    protected String getNewValueName() {
-        return WidgetHelper.FIELD_PREFIX+newName;
-    }
+	@Override
+	protected WidgetRefactorPair createRefactorPair(Widget newItem,	Widget oldItem) {
+		return new WidgetRefactorPair(newItem, oldItem);
+	}
 
 }

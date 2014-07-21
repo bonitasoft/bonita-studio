@@ -75,11 +75,11 @@ public class ImportBosArchiveOperation {
 
     private Set<String> resourceToOpen;
 
-    private List<IRepositoryFileStore> fileStoresToOpen = new ArrayList<IRepositoryFileStore>();
+    private final List<IRepositoryFileStore> fileStoresToOpen = new ArrayList<IRepositoryFileStore>();
 
     private IRepository currentRepository;
 
-    public IStatus run(IProgressMonitor monitor) {
+    public IStatus run(final IProgressMonitor monitor) {
         status = Status.OK_STATUS;
         Assert.isNotNull(archiveFile);
         Assert.isNotNull(currentRepository);
@@ -87,7 +87,8 @@ public class ImportBosArchiveOperation {
         Assert.isTrue(archive.exists());
         fileStoresToOpen.clear();
         try {
-            IContainer container = createTempProject(archive, monitor);
+            currentRepository.disableBuild();
+            final IContainer container = createTempProject(archive, monitor);
             final Map<String, IRepositoryStore<? extends IRepositoryFileStore>> repositoryMap = new HashMap<String, IRepositoryStore<? extends IRepositoryFileStore>>();
 
             currentRepository.notifyFileStoreEvent(new FileStoreChangeEvent(EventType.PRE_IMPORT, null));
@@ -95,11 +96,11 @@ public class ImportBosArchiveOperation {
 
             FileActionDialog.activateYesNoToAll();
 
-            for (IRepositoryStore<? extends IRepositoryFileStore> repository : allRepositories) {
+            for (final IRepositoryStore<? extends IRepositoryFileStore> repository : allRepositories) {
                 repositoryMap.put(repository.getName(), repository);
             }
 
-            IContainer rootContainer = getRootContainer(container, repositoryMap);
+            final IContainer rootContainer = getRootContainer(container, repositoryMap);
             if (rootContainer == null) {
                 return new Status(IStatus.ERROR, CommonRepositoryPlugin.PLUGIN_ID, Messages.bind(Messages.invalidArchive, new Object[] { bosProductName }));
             }
@@ -129,34 +130,38 @@ public class ImportBosArchiveOperation {
                                 importRepositoryStore(pair, monitor);
                             }
                         }
-                    } catch (Exception e) {
+                    } catch (final Exception e) {
                         BonitaStudioLog.error(e);
                     }
                 }
             }
             FileActionDialog.deactivateYesNoToAll();
+            currentRepository.enableBuild();
             currentRepository.refresh(Repository.NULL_PROGRESS_MONITOR);
             currentRepository.notifyFileStoreEvent(new FileStoreChangeEvent(EventType.POST_IMPORT, null));
-        } catch (Exception e) {
+        } catch (final Exception e) {
             BonitaStudioLog.error(e);
         } finally {
+            if(!currentRepository.isBuildEnable()){
+                currentRepository.enableBuild();
+            }
             cleanTmpProject();
         }
         return status;
     }
 
-    public void setCurrentRepository(IRepository currentRepository) {
+    public void setCurrentRepository(final IRepository currentRepository) {
         this.currentRepository = currentRepository;
     }
 
     protected IContainer getRootContainer(
             IContainer container,
             final Map<String, IRepositoryStore<? extends IRepositoryFileStore>> repositoryMap)
-            throws CoreException {
+                    throws CoreException {
         boolean isValid = false;
         while (container != null && !isValid) {
             IResource lastVisited = null;
-            for (IResource r : container.members(IResource.FOLDER)) {
+            for (final IResource r : container.members(IResource.FOLDER)) {
                 if (repositoryMap.get(r.getName()) != null) {
                     isValid = true;
                     break;
@@ -179,7 +184,7 @@ public class ImportBosArchiveOperation {
     }
 
     public void openFilesToOpen() {
-        for (IRepositoryFileStore f : fileStoresToOpen) {
+        for (final IRepositoryFileStore f : fileStoresToOpen) {
             f.open();
         }
     }
@@ -188,13 +193,13 @@ public class ImportBosArchiveOperation {
         return fileStoresToOpen;
     }
 
-    protected void importRepositoryStore(Pair<IRepositoryStore<? extends IRepositoryFileStore>, IFolder> pair, IProgressMonitor monitor)
+    protected void importRepositoryStore(final Pair<IRepositoryStore<? extends IRepositoryFileStore>, IFolder> pair, final IProgressMonitor monitor)
             throws CoreException {
-        IFolder storeFolder = pair.getSecond();
-        IRepositoryStore<? extends IRepositoryFileStore> repository = pair.getFirst();
-        for (IResource child : storeFolder.members()) {
+        final IFolder storeFolder = pair.getSecond();
+        final IRepositoryStore<? extends IRepositoryFileStore> repository = pair.getFirst();
+        for (final IResource child : storeFolder.members()) {
             final String filename = child.getName();
-            final boolean openAfterImport = (resourceToOpen != null && resourceToOpen.contains(filename))
+            final boolean openAfterImport = resourceToOpen != null && resourceToOpen.contains(filename)
                     || resourceToOpen == null;
             final IRepositoryFileStore fileStore = repository.importIResource(filename, child);
             if (fileStore != null && openAfterImport) {
@@ -203,48 +208,55 @@ public class ImportBosArchiveOperation {
         }
     }
 
-    private void updateResourcesToOpenList(IContainer container) {
-        Properties manifestProperties = getManifestInfo(container);
+    private void updateResourcesToOpenList(final IContainer container) {
+        final Properties manifestProperties = getManifestInfo(container);
         if (manifestProperties != null) {
             final String version = manifestProperties.getProperty(ExportBosArchiveOperation.VERSION);
             if (!ProductVersion.canBeImported(version)) {
                 cleanTmpProject();
-                MessageDialog.openError(Display.getDefault().getActiveShell(), Messages.importErrorTitle,
-                        Messages.bind(Messages.incompatibleProductVersion, ProductVersion.CURRENT_VERSION, version));
+                Display.getDefault().syncExec(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        MessageDialog.openError(Display.getDefault().getActiveShell(), Messages.importErrorTitle,
+                                Messages.bind(Messages.incompatibleProductVersion, ProductVersion.CURRENT_VERSION, version));
+                    }
+                });
+
                 throw new RuntimeException(Messages.bind(Messages.incompatibleProductVersion, ProductVersion.CURRENT_VERSION, version));
             }
-            String toOpen = manifestProperties.getProperty(ExportBosArchiveOperation.TO_OPEN);
+            final String toOpen = manifestProperties.getProperty(ExportBosArchiveOperation.TO_OPEN);
             if (toOpen != null) {
-                String[] array = toOpen.split(",");
+                final String[] array = toOpen.split(",");
                 resourceToOpen = new HashSet<String>(Arrays.asList(array));
             }
         }
     }
 
     protected void cleanTmpProject() {
-        IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-        IProject container = root.getProject(TMP_IMPORT_PROJECT);
+        final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+        final IProject container = root.getProject(TMP_IMPORT_PROJECT);
         if (container.exists()) {
             try {
                 container.close(Repository.NULL_PROGRESS_MONITOR);
                 container.refreshLocal(IResource.DEPTH_ZERO, Repository.NULL_PROGRESS_MONITOR);
                 container.delete(true, true, Repository.NULL_PROGRESS_MONITOR);
                 container.refreshLocal(IResource.DEPTH_ZERO, Repository.NULL_PROGRESS_MONITOR);
-            } catch (CoreException e) {
+            } catch (final CoreException e) {
                 BonitaStudioLog.error(e);
             }
         }
     }
 
-    protected IContainer createTempProject(final File archive, IProgressMonitor monitor) throws CoreException {
-        IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-        IProject container = root.getProject(TMP_IMPORT_PROJECT);
+    protected IContainer createTempProject(final File archive, final IProgressMonitor monitor) throws CoreException {
+        final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+        final IProject container = root.getProject(TMP_IMPORT_PROJECT);
         if (container.exists()) {
             try {
                 container.refreshLocal(IResource.DEPTH_ZERO, Repository.NULL_PROGRESS_MONITOR);
                 container.delete(true, true, Repository.NULL_PROGRESS_MONITOR);
                 container.refreshLocal(IResource.DEPTH_ZERO, Repository.NULL_PROGRESS_MONITOR);
-            } catch (CoreException e) {
+            } catch (final CoreException e) {
                 BonitaStudioLog.error(e);
             }
         }
@@ -252,7 +264,7 @@ public class ImportBosArchiveOperation {
         container.open(Repository.NULL_PROGRESS_MONITOR);
         try {
             PlatformUtil.unzipZipFiles(archive, container.getLocation().toFile(), Repository.NULL_PROGRESS_MONITOR);
-        } catch (Exception e) {
+        } catch (final Exception e) {
             BonitaStudioLog.error(e);
             Display.getDefault().syncExec(new Runnable() {
 
@@ -268,22 +280,22 @@ public class ImportBosArchiveOperation {
         return container;
     }
 
-    protected Properties getManifestInfo(IContainer container) {
-        IFile file = container.getFile(Path.fromOSString(ExportBosArchiveOperation.BOS_ARCHIVE_MANIFEST));
+    protected Properties getManifestInfo(final IContainer container) {
+        final IFile file = container.getFile(Path.fromOSString(ExportBosArchiveOperation.BOS_ARCHIVE_MANIFEST));
         if (file.exists()) {
             final Properties p = new Properties();
             InputStream contents = null;
             try {
                 contents = file.getContents();
                 p.load(contents);
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 BonitaStudioLog.error(e);
                 return null;
             } finally {
                 if (contents != null) {
                     try {
                         contents.close();
-                    } catch (IOException e) {
+                    } catch (final IOException e) {
                         BonitaStudioLog.error(e);
                     }
                 }
@@ -294,7 +306,7 @@ public class ImportBosArchiveOperation {
     }
 
     private Pair<IRepositoryStore<? extends IRepositoryFileStore>, IFolder> findRepository(
-            Map<String, IRepositoryStore<? extends IRepositoryFileStore>> map, IFolder folder) {
+            final Map<String, IRepositoryStore<? extends IRepositoryFileStore>> map, final IFolder folder) {
         final String path = folder.getProjectRelativePath().removeFirstSegments(1).toOSString();
         final IRepositoryStore<? extends IRepositoryFileStore> store = map.get(path);
         if (store != null) {
@@ -308,7 +320,7 @@ public class ImportBosArchiveOperation {
         return status;
     }
 
-    public void setArchiveFile(String archiveFile) {
+    public void setArchiveFile(final String archiveFile) {
         this.archiveFile = archiveFile;
     }
 }

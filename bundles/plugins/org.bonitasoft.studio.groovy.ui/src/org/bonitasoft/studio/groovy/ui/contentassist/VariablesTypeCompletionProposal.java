@@ -22,11 +22,20 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.groovy.ScriptVariable;
 import org.bonitasoft.studio.groovy.ui.viewer.GroovyViewer;
+import org.codehaus.groovy.ast.ClassHelper;
+import org.codehaus.groovy.ast.ClassNode;
+import org.codehaus.groovy.ast.MethodNode;
+import org.codehaus.groovy.ast.Parameter;
 import org.codehaus.groovy.ast.expr.VariableExpression;
+import org.codehaus.groovy.eclipse.codeassist.ProposalUtils;
+import org.codehaus.groovy.eclipse.codeassist.completions.GroovyJavaGuessingCompletionProposal;
+import org.codehaus.groovy.eclipse.codeassist.processors.GroovyCompletionProposal;
+import org.codehaus.groovy.eclipse.codeassist.proposals.ProposalFormattingOptions;
 import org.codehaus.groovy.eclipse.codeassist.requestor.ContentAssistContext;
 import org.codehaus.groovy.eclipse.codeassist.requestor.GroovyCompletionProposalComputer;
 import org.codehaus.jdt.groovy.model.GroovyCompilationUnit;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jdt.core.CompletionContext;
 import org.eclipse.jdt.core.CompletionProposal;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaProject;
@@ -34,7 +43,8 @@ import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.Signature;
-import org.eclipse.jdt.internal.ui.text.java.JavaMethodCompletionProposal;
+import org.eclipse.jdt.groovy.core.util.ReflectionUtils;
+import org.eclipse.jdt.internal.codeassist.InternalCompletionContext;
 import org.eclipse.jdt.ui.text.java.ContentAssistInvocationContext;
 import org.eclipse.jdt.ui.text.java.IJavaCompletionProposalComputer;
 import org.eclipse.jdt.ui.text.java.JavaContentAssistInvocationContext;
@@ -49,139 +59,138 @@ import org.eclipse.jface.text.contentassist.IContextInformation;
  */
 public class VariablesTypeCompletionProposal implements IJavaCompletionProposalComputer {
 
-	private IJavaProject javaProject;
+    private IJavaProject javaProject;
 
-	public VariablesTypeCompletionProposal() {
+    public VariablesTypeCompletionProposal() {
 
-	}
+    }
 
-	@Override
-	public void sessionStarted() {
-		javaProject = RepositoryManager.getInstance().getCurrentRepository().getJavaProject();
+    @Override
+    public void sessionStarted() {
+        javaProject = RepositoryManager.getInstance().getCurrentRepository().getJavaProject();
 
-	}
+    }
 
-	@Override
-	public List<ICompletionProposal> computeCompletionProposals(final ContentAssistInvocationContext context, final IProgressMonitor monitor) {
-		final List<ICompletionProposal> list = new ArrayList<ICompletionProposal>();
-		if (context instanceof JavaContentAssistInvocationContext) {
-			final ICompilationUnit unit = ((JavaContentAssistInvocationContext) context).getCompilationUnit();
-			if (unit instanceof GroovyCompilationUnit) {
-				final ITextViewer viewer = context.getViewer();
-				final List<ScriptVariable> nodes = (List<ScriptVariable>) viewer.getTextWidget().getData(GroovyViewer.PROCESS_VARIABLES_DATA_KEY);
-				final List<String> keyWords = (List<String>) viewer.getTextWidget().getData(GroovyViewer.BONITA_KEYWORDS_DATA_KEY);
-				if (((GroovyCompilationUnit) unit).getModuleNode() == null) {
-					return Collections.emptyList();
-				}
-				final ContentAssistContext assistContext = new GroovyCompletionProposalComputer().createContentAssistContext((GroovyCompilationUnit) unit,
-						context.getInvocationOffset(), context.getDocument());
-				CharSequence prefix = null;
-				try {
-					prefix = context.computeIdentifierPrefix();
-				} catch (final BadLocationException e) {
-					BonitaStudioLog.error(e);
-				}
+    @Override
+    public List<ICompletionProposal> computeCompletionProposals(final ContentAssistInvocationContext context, final IProgressMonitor monitor) {
+        final List<ICompletionProposal> list = new ArrayList<ICompletionProposal>();
+        if (context instanceof JavaContentAssistInvocationContext) {
+            CompletionContext coreContext = ((JavaContentAssistInvocationContext) context).getCoreContext();
+            if (coreContext != null && !coreContext.isExtended()) {
+                // must use reflection to set the fields
+                ReflectionUtils.setPrivateField(InternalCompletionContext.class, "isExtended", coreContext, true);
+            }
+            final ICompilationUnit unit = ((JavaContentAssistInvocationContext) context).getCompilationUnit();
+            if (unit instanceof GroovyCompilationUnit) {
+                final ITextViewer viewer = context.getViewer();
+                final List<ScriptVariable> scriptVariables = getScriptVariables(viewer);
+                if (((GroovyCompilationUnit) unit).getModuleNode() == null) {
+                    return Collections.emptyList();
+                }
+                final ContentAssistContext assistContext = new GroovyCompletionProposalComputer().createContentAssistContext((GroovyCompilationUnit) unit,
+                        context.getInvocationOffset(), context.getDocument());
+                CharSequence prefix = null;
+                try {
+                    prefix = context.computeIdentifierPrefix();
+                } catch (final BadLocationException e) {
+                    BonitaStudioLog.error(e);
+                }
 
-				if (assistContext != null && assistContext.completionNode instanceof VariableExpression) {
-					try {
-						final VariableExpression expr = (VariableExpression) assistContext.completionNode;
-						if (nodes != null) {
-							for (final ScriptVariable f : nodes) {
-								if (expr.getName().equals(f.getName())) {
-									final IType type = javaProject.findType(f.getType());
-									for (final IMethod m : type.getMethods()) {
-										if (m.getElementName().startsWith(prefix.toString())) {
-											final CompletionProposal proposal = CompletionProposal.create(CompletionProposal.METHOD_REF,
-													context.getInvocationOffset());
-											proposal.setName(m.getElementName().toCharArray());
-											proposal.setCompletion(m.getElementName().substring(prefix.length()).toCharArray());
-											proposal.setFlags(m.getFlags());
+                if (assistContext != null && assistContext.completionNode instanceof VariableExpression) {
+                    try {
+                        final VariableExpression expr = (VariableExpression) assistContext.completionNode;
+                        if (scriptVariables != null) {
+                            for (final ScriptVariable f : scriptVariables) {
+                                if (expr.getName().equals(f.getName())) {
+                                    final IType type = javaProject.findType(f.getType());
+                                    for (final IMethod m : type.getMethods()) {
+                                        if (m.getElementName().startsWith(prefix.toString())) {
+                                            final GroovyCompletionProposal proposal = new GroovyCompletionProposal(CompletionProposal.METHOD_REF,
+                                                    context.getInvocationOffset());
+                                            proposal.setName(m.getElementName().toCharArray());
+                                            proposal.setCompletion(m.getElementName().substring(prefix.length()).toCharArray());
+                                            proposal.setFlags(m.getFlags());
 
-											if (prefix.length() == m.getElementName().length()) {
-												proposal.setReplaceRange(context.getInvocationOffset(), context.getInvocationOffset());
-												proposal.setReceiverRange(0, 0);
-											} else {
-												proposal.setReplaceRange(context.getInvocationOffset() - prefix.length(), context.getInvocationOffset());
-												proposal.setReceiverRange(prefix.length(), prefix.length());
-											}
+                                            if (prefix.length() == m.getElementName().length()) {
+                                                proposal.setReplaceRange(context.getInvocationOffset(), context.getInvocationOffset());
+                                                proposal.setReceiverRange(0, 0);
+                                            } else {
+                                                proposal.setReplaceRange(context.getInvocationOffset() - prefix.length(), context.getInvocationOffset());
+                                                proposal.setReceiverRange(prefix.length(), prefix.length());
+                                            }
 
-											final char[][] parameters = new char[m.getParameterNames().length][256];
-											for (int i = 0; i < m.getParameterNames().length; i++) {
-												parameters[i] = m.getParameterNames()[i].toCharArray();
-											}
+                                            final char[][] parametersArray = new char[m.getParameterNames().length][256];
+                                            final List<Parameter> parameters = new ArrayList<Parameter>();
+                                            for (int i = 0; i < m.getParameterNames().length; i++) {
+                                                parametersArray[i] = m.getParameterNames()[i].toCharArray();
+                                                parameters.add(new Parameter(ClassHelper.make(Signature
+                                                        .getSignatureSimpleName(m.getParameterTypes()[i])), m.getParameterNames()[i]));
+                                            }
 
-											proposal.setParameterNames(parameters);
-											proposal.setDeclarationSignature(Signature.createTypeSignature(m.getDeclaringType().getElementName(), true)
-													.toCharArray());
-											proposal.setSignature(Signature.createMethodSignature(m.getParameterTypes(), m.getReturnType()).toCharArray());
-											list.add(new JavaMethodCompletionProposal(proposal, (JavaContentAssistInvocationContext) context));
-										}
-									}
-								}
-							}
-						}
-						if(keyWords != null){
-							for (final String keyWord : keyWords) {
-								if (expr.getName().equals(keyWord)) {
-									final IType type = javaProject.findType(BonitaSyntaxHighlighting.getTypeForKeyWord(keyWord).getName());
-									for (final IMethod m : type.getMethods()) {
-										if (m.getElementName().startsWith(prefix.toString())) {
-											final CompletionProposal proposal = CompletionProposal.create(CompletionProposal.METHOD_REF,
-													context.getInvocationOffset());
-											proposal.setName(m.getElementName().toCharArray());
-											proposal.setCompletion(m.getElementName().substring(prefix.length()).toCharArray());
-											proposal.setFlags(m.getFlags());
-											proposal.getCompletion();
+                                            ClassNode classNode = ClassHelper.make(m.getDeclaringType()
+                                                    .getFullyQualifiedName());
+                                            proposal.setDeclarationSignature(ProposalUtils.createTypeSignature(classNode));
+                                            proposal.setParameterNames(parametersArray);
+                                            if (m.getDeclaringType().getFullyQualifiedName().equals(f.getType())) {
+                                                proposal.setRelevance(100);
+                                            }
 
-											if (prefix.length() == m.getElementName().length()) {
-												proposal.setReplaceRange(context.getInvocationOffset(), context.getInvocationOffset());
-												proposal.setReceiverRange(0, 0);
-											} else {
-												proposal.setReplaceRange(context.getInvocationOffset() - prefix.length(), context.getInvocationOffset());
-												proposal.setReceiverRange(prefix.length(), prefix.length());
-											}
+                                            MethodNode methodNode = new MethodNode(m.getElementName(), m.getFlags(), ClassHelper.make(Signature
+                                                    .getSignatureSimpleName(m.getReturnType())),
+                                                    parameters.toArray(new Parameter[parameters.size()]), new ClassNode[0], null);
+                                            char[] methodSignature = ProposalUtils.createMethodSignature(methodNode);
+                                            proposal.setSignature(methodSignature);
 
-											final char[][] parameters = new char[m.getParameterNames().length][256];
-											for (int i = 0; i < m.getParameterNames().length; i++) {
-												parameters[i] = m.getParameterNames()[i].toCharArray();
-											}
+                                            GroovyJavaGuessingCompletionProposal groovyProposal = GroovyJavaGuessingCompletionProposal.createProposal(proposal,
+                                                    (JavaContentAssistInvocationContext) context, true, "Groovy", ProposalFormattingOptions.newFromOptions());
+                                            if (groovyProposal != null) {
+                                                list.add(groovyProposal);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    } catch (final JavaModelException e) {
+                        BonitaStudioLog.error(e);
+                    }
+                }
+            }
 
-											proposal.setParameterNames(parameters);
-											proposal.setDeclarationSignature(Signature.createTypeSignature(m.getDeclaringType().getElementName(), true)
-													.toCharArray());
-											proposal.setSignature(Signature.createMethodSignature(m.getParameterTypes(), m.getReturnType()).toCharArray());
-											list.add(new JavaMethodCompletionProposal(proposal, (JavaContentAssistInvocationContext) context));
-										}
-									}
-								}
-							}
-						}
-					} catch (final JavaModelException e) {
-						BonitaStudioLog.error(e);
-					}
+            return list;
+        }
 
-				}
-			}
+        return Collections.emptyList();
+    }
 
-			return list;
-		}
+    @SuppressWarnings("unchecked")
+    private List<ScriptVariable> getScriptVariables(final ITextViewer viewer) {
+        final List<ScriptVariable> result = new ArrayList<ScriptVariable>();
+        final List<ScriptVariable> nodes = (List<ScriptVariable>) viewer.getTextWidget().getData(GroovyViewer.PROCESS_VARIABLES_DATA_KEY);
+        if (nodes != null) {
+            result.addAll(nodes);
+        }
+        final List<ScriptVariable> providedScriptVariables = (List<ScriptVariable>) viewer.getTextWidget().getData(
+                GroovyViewer.BONITA_KEYWORDS_DATA_KEY);
+        if (providedScriptVariables != null) {
+            result.addAll(providedScriptVariables);
+        }
+        return result;
+    }
 
-		return Collections.emptyList();
-	}
+    @Override
+    public List<IContextInformation> computeContextInformation(final ContentAssistInvocationContext context, final IProgressMonitor monitor) {
+        return null;
+    }
 
-	@Override
-	public List<IContextInformation> computeContextInformation(final ContentAssistInvocationContext context, final IProgressMonitor monitor) {
-		return null;
-	}
+    @Override
+    public String getErrorMessage() {
+        return null;
+    }
 
-	@Override
-	public String getErrorMessage() {
-		return null;
-	}
+    @Override
+    public void sessionEnded() {
 
-	@Override
-	public void sessionEnded() {
-
-	}
+    }
 
 }

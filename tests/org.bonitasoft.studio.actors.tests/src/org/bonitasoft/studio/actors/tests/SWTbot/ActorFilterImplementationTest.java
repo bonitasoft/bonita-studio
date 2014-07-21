@@ -3,19 +3,16 @@ package org.bonitasoft.studio.actors.tests.SWTbot;
 /*
  * Copyright (C) 2012 BonitaSoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
- *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 import org.bonitasoft.studio.actors.repository.ActorFilterDefRepositoryStore;
 import org.bonitasoft.studio.actors.repository.ActorFilterImplRepositoryStore;
@@ -50,27 +47,27 @@ import org.junit.runner.RunWith;
  */
 
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class ActorFilterImplementationTest extends SWTBotGefTestCase implements SWTBotConstants{
+public class ActorFilterImplementationTest extends SWTBotGefTestCase implements SWTBotConstants {
 
-	protected void selectDefinition(final String definition) {
-		bot.treeWithId(SWTBOT_ID_EXPLORER_LEFT_TREE).select(0);
+    protected void selectDefinition(final String definition) {
+        bot.treeWithId(SWTBOT_ID_EXPLORER_LEFT_TREE).select(0);
         bot.waitUntil(new ICondition() {
-			
-			public boolean test() throws Exception {
-				return  bot.tableWithId(SWTBOT_ID_EXPLORER_RIGHT_TABLE).rowCount() > 0;
-			}
-			
-			public void init(SWTBot bot) {
-			}
-			
-			public String getFailureMessage() {
-				return "No items found in right table of connector explorer";
-			}
-		});
+
+            public boolean test() throws Exception {
+                return bot.tableWithId(SWTBOT_ID_EXPLORER_RIGHT_TABLE).rowCount() > 0;
+            }
+
+            public void init(SWTBot bot) {
+            }
+
+            public String getFailureMessage() {
+                return "No items found in right table of connector explorer";
+            }
+        });
         bot.tableWithId(SWTBOT_ID_EXPLORER_RIGHT_TABLE).select(definition);
         bot.button(IDialogConstants.NEXT_LABEL).click();
-	}
-	
+    }
+
     @Before
     public void createDefinition() {
         final String id = "testEdit";
@@ -93,7 +90,7 @@ public class ActorFilterImplementationTest extends SWTBotGefTestCase implements 
     @Test
     public void createactorFilterImplementation() throws Exception {
         // TODO add dependancies test
-    	final int nbEditorsBefore = bot.editors().size();
+        final int nbEditorsBefore = bot.editors().size();
         final String id = "testImplementation";
         final String definition = "testEdit";
         final String className = "MyactorFilterImpl";
@@ -105,7 +102,7 @@ public class ActorFilterImplementationTest extends SWTBotGefTestCase implements 
         bot.textWithLabel("Implementation id *").setText(id);
         bot.textWithLabel("Class name *").setText(className);
         bot.textWithLabel("Package *").setText(packageName);
-        bot.waitUntil(Conditions.widgetIsEnabled(bot.button(IDialogConstants.FINISH_LABEL)),5000);
+        bot.waitUntil(Conditions.widgetIsEnabled(bot.button(IDialogConstants.FINISH_LABEL)), 5000);
         bot.button(IDialogConstants.FINISH_LABEL).click();
         ActorFilterImplRepositoryStore store = (ActorFilterImplRepositoryStore) RepositoryManager
                 .getInstance().getRepositoryStore(
@@ -119,7 +116,7 @@ public class ActorFilterImplementationTest extends SWTBotGefTestCase implements 
         bot.waitUntil(new ICondition() {
 
             public boolean test() throws Exception {
-                return nbEditorsBefore +1 == bot.editors().size();
+                return nbEditorsBefore + 1 == bot.editors().size();
             }
 
             public void init(SWTBot bot) {
@@ -129,7 +126,7 @@ public class ActorFilterImplementationTest extends SWTBotGefTestCase implements 
                 return "Editor for implementation has not been opened.";
             }
         }, 30000);
-        Job.getJobManager().join(ResourcesPlugin.FAMILY_MANUAL_BUILD, Repository.NULL_PROGRESS_MONITOR); 
+        Job.getJobManager().join(ResourcesPlugin.FAMILY_MANUAL_BUILD, Repository.NULL_PROGRESS_MONITOR);
         Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD, Repository.NULL_PROGRESS_MONITOR);
         bot.sleep(1000);
         int length = bot.activeEditor().toTextEditor().getText().length();
@@ -169,7 +166,7 @@ public class ActorFilterImplementationTest extends SWTBotGefTestCase implements 
         bot.textWithLabel("Implementation id *").setText(id);
         bot.textWithLabel("Class name *").setText(className);
         bot.textWithLabel("Package *").setText(packageName);
-        bot.waitUntil(Conditions.widgetIsEnabled(bot.button(IDialogConstants.FINISH_LABEL)),5000);
+        bot.waitUntil(Conditions.widgetIsEnabled(bot.button(IDialogConstants.FINISH_LABEL)), 5000);
         bot.button(IDialogConstants.FINISH_LABEL).click();
 
         bot.waitUntil(new ICondition() {
@@ -250,7 +247,7 @@ public class ActorFilterImplementationTest extends SWTBotGefTestCase implements 
         bot.textWithLabel("Implementation id *").setText(id);
         bot.textWithLabel("Class name *").setText(className);
         bot.textWithLabel("Package *").setText(packageName);
-        bot.waitUntil(Conditions.widgetIsEnabled(bot.button(IDialogConstants.FINISH_LABEL)),5000);
+        bot.waitUntil(Conditions.widgetIsEnabled(bot.button(IDialogConstants.FINISH_LABEL)), 5000);
         bot.button(IDialogConstants.FINISH_LABEL).click();
         bot.waitUntil(new ICondition() {
 
@@ -296,25 +293,22 @@ public class ActorFilterImplementationTest extends SWTBotGefTestCase implements 
         removeImplementation(id);
     }
 
-
-
-
-    private void removeImplementation(String implId){
+    private void removeImplementation(String implId) {
         ActorFilterImplRepositoryStore store = (ActorFilterImplRepositoryStore) RepositoryManager
                 .getInstance().getRepositoryStore(ActorFilterImplRepositoryStore.class);
-        ConnectorImplementation impl=store.getImplementation(implId,"1.0.0");
-        String fileName = impl.eResource().getURI().lastSegment() ;
-        IRepositoryFileStore file = store.getChild(fileName) ;
-        if(FileActionDialog.confirmDeletionQuestion(fileName)){
-            file.delete() ;
-            String className = impl.getImplementationClassname() ;
-            IRepositoryFileStore sourceFile = store.getChild(className) ;
-            String abstarctClassName = ClassGenerator.getAbstractClassName(className) ;
-            IRepositoryFileStore abstractFile =store.getChild(abstarctClassName) ;
-            if(sourceFile != null && FileActionDialog.confirmDeletionQuestion(sourceFile.getName())){
-                sourceFile.delete() ;
-                if(abstractFile != null ){
-                    abstractFile.delete() ;
+        ConnectorImplementation impl = store.getImplementation(implId, "1.0.0");
+        String fileName = impl.eResource().getURI().lastSegment();
+        IRepositoryFileStore file = store.getChild(fileName);
+        if (FileActionDialog.confirmDeletionQuestion(fileName)) {
+            file.delete();
+            String className = impl.getImplementationClassname();
+            IRepositoryFileStore sourceFile = store.getChild(className);
+            String abstarctClassName = ClassGenerator.getAbstractClassName(className);
+            IRepositoryFileStore abstractFile = store.getChild(abstarctClassName);
+            if (sourceFile != null && FileActionDialog.confirmDeletionQuestion(sourceFile.getName())) {
+                sourceFile.delete();
+                if (abstractFile != null) {
+                    abstractFile.delete();
                 }
             }
         }
@@ -331,30 +325,30 @@ public class ActorFilterImplementationTest extends SWTBotGefTestCase implements 
         assertNotNull(file);
         file.delete();
         bot.closeAllEditors();
-        bot.waitUntil(new ICondition(){
+        bot.waitUntil(new ICondition() {
 
-			@Override
-			public boolean test() throws Exception {
-				return bot.editors().isEmpty();
-			}
+            @Override
+            public boolean test() throws Exception {
+                return bot.editors().isEmpty();
+            }
 
-			@Override
-			public void init(SWTBot bot) {
-				
-			}
+            @Override
+            public void init(SWTBot bot) {
 
-			@Override
-			public String getFailureMessage() {
-				return "Editors remaining after test";
-			}
-        	
-        });
+            }
+
+            @Override
+            public String getFailureMessage() {
+                return "Editors remaining after test";
+            }
+
+        }, 10000, 1000);
     }
-    
-    private void containsError(StyleRange[] styles){
-    	for (StyleRange style:styles){
-    		assertFalse("actor filter impl contains errors at offset:"+style.start,style.underline);
-    	}
+
+    private void containsError(StyleRange[] styles) {
+        for (StyleRange style : styles) {
+            assertFalse("actor filter impl contains errors at offset:" + style.start, style.underline);
+        }
     }
 
 }

@@ -19,6 +19,7 @@ package org.bonitasoft.studio.actors.tests;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -52,15 +53,15 @@ public class TestProvidedActorFilterDefinitionAndImplementation extends TestCase
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        connectorDefStore = (ActorFilterDefRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ActorFilterDefRepositoryStore.class);
-        connectorImplStore = (ActorFilterImplRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ActorFilterImplRepositoryStore.class);
+        connectorDefStore = RepositoryManager.getInstance().getRepositoryStore(ActorFilterDefRepositoryStore.class);
+        connectorImplStore = RepositoryManager.getInstance().getRepositoryStore(ActorFilterImplRepositoryStore.class);
         connectorResourceProvider = DefinitionResourceProvider.getInstance(connectorDefStore, ActorsPlugin.getDefault().getBundle());
     }
 
     public void testProvidedActorFilterDefinitionsSanity() throws Exception {
-        StringBuilder testReport = new StringBuilder("testProvidedActorFilterDefinitionsSanity report:");
-        for(ConnectorDefinition definition : connectorDefStore.getDefinitions()){
-            String resourceName = definition.eResource().getURI().lastSegment();
+        final StringBuilder testReport = new StringBuilder("testProvidedActorFilterDefinitionsSanity report:");
+        for(final ConnectorDefinition definition : connectorDefStore.getDefinitions()){
+            final String resourceName = definition.eResource().getURI().lastSegment();
             if(connectorDefStore.getChild(resourceName).isReadOnly()){
                 if(!(definition.getId() != null && !definition.getId().isEmpty())){
                     testReport.append("\n");
@@ -78,21 +79,17 @@ public class TestProvidedActorFilterDefinitionAndImplementation extends TestCase
                 }
 
                 if(!(definition.getIcon() != null && !definition.getIcon().isEmpty())){
-                	if(!"single-user-1.0.0.def".equals(resourceName)
-                			&& !"same-task-user-1.0.0.def".equals(resourceName)
-                			&& !"user-manager-1.0.0.def".equals(resourceName) ){
-                		testReport.append("\n");
-                		testReport.append("Missing definition icon for "+resourceName);
-                	}
+                    if(!isKnownMissingIcon(resourceName)){
+                        testReport.append("\n");
+                        testReport.append("Missing definition icon for "+resourceName);
+                    }
                 }
 
                 if(connectorResourceProvider.getDefinitionIcon(definition) == null){
-                	if(!"single-user-1.0.0.def".equals(resourceName)
-                			&& !"same-task-user-1.0.0.def".equals(resourceName)
-                			&& !"user-manager-1.0.0.def".equals(resourceName) ){
-                		testReport.append("\n");
-                		testReport.append("Missing definition icon file for "+resourceName);
-                	}
+                    if(!isKnownMissingIcon(resourceName)){
+                        testReport.append("\n");
+                        testReport.append("Missing definition icon file for "+resourceName);
+                    }
                 }
 
                 if(definition.getCategory().isEmpty()){
@@ -100,18 +97,18 @@ public class TestProvidedActorFilterDefinitionAndImplementation extends TestCase
                     testReport.append("The definition should belong to at least one category for "+resourceName);
                 }
 
-                List<String> inputs = new ArrayList<String>();
-                for(Input in : definition.getInput()){
+                final List<String> inputs = new ArrayList<String>();
+                for(final Input in : definition.getInput()){
                     inputs.add(in.getName());
                 }
-                for(String inputName : inputs){
+                for(final String inputName : inputs){
                     if(Collections.frequency(inputs, inputName) != 1){
                         testReport.append("\n");
                         testReport.append("Input "+inputName+" is duplicated in "+resourceName);
                     }
                 }
-                List<String> bindInputs = new ArrayList<String>();
-                for(Page p : definition.getPage()){
+                final List<String> bindInputs = new ArrayList<String>();
+                for(final Page p : definition.getPage()){
 
                     if(!(p.getId() != null && !p.getId().isEmpty())){
                         testReport.append("\n");
@@ -131,12 +128,12 @@ public class TestProvidedActorFilterDefinitionAndImplementation extends TestCase
                         testReport.append("Invalid page description for "+p.getId()+" in "+resourceName);
                     }
 
-                    for(Component component : p.getWidget()){
+                    for(final Component component : p.getWidget()){
                         parsePageWidget(component,bindInputs, resourceName,definition,testReport);
                     }
                 }
 
-                for(String inputName : inputs){
+                for(final String inputName : inputs){
                     final int frequency = Collections.frequency(bindInputs,inputName);
                     if(frequency == 0){
                         testReport.append("\n");
@@ -148,11 +145,11 @@ public class TestProvidedActorFilterDefinitionAndImplementation extends TestCase
                     }
                 }
 
-                List<String> outputs = new ArrayList<String>();
-                for(Output out : definition.getOutput()){
+                final List<String> outputs = new ArrayList<String>();
+                for(final Output out : definition.getOutput()){
                     outputs.add(out.getName());
                 }
-                for(String outputName : outputs){
+                for(final String outputName : outputs){
                     if(Collections.frequency(outputs, outputName) != 1){
                         testReport.append("\n");
                         testReport.append("Output "+outputName+" is duplicated in "+resourceName);
@@ -165,7 +162,16 @@ public class TestProvidedActorFilterDefinitionAndImplementation extends TestCase
         }
     }
 
-    private void parsePageWidget(Component component, List<String> bindInputs,String resourceName,ConnectorDefinition def, StringBuilder testReport) {
+    private boolean isKnownMissingIcon(final String filterName) {
+        final List<String> knownFiltersWithoutIcon = getKnownFiltersWithoutIcon();
+        return knownFiltersWithoutIcon.contains(filterName);
+    }
+
+    private List<String> getKnownFiltersWithoutIcon() {
+        return Arrays.asList("single-user-1.0.0.def", "same-task-user-1.0.0.def", "user-manager-1.0.0.def", "custom-user-info-1.0.0.def");
+    }
+
+    private void parsePageWidget(final Component component, final List<String> bindInputs,final String resourceName,final ConnectorDefinition def, final StringBuilder testReport) {
         if(component instanceof Group){
             if(!(component.getId() != null && !component.getId().isEmpty())){
                 testReport.append("\n");
@@ -177,7 +183,7 @@ public class TestProvidedActorFilterDefinitionAndImplementation extends TestCase
                 testReport.append("\n");
                 testReport.append("The widget "+component.getId()+" has no label in "+resourceName);
             }
-            for(Component widget : ((Group)component).getWidget()){
+            for(final Component widget : ((Group)component).getWidget()){
                 parsePageWidget(widget, bindInputs,resourceName,def,testReport);
             }
         }else if(component instanceof WidgetComponent){
@@ -195,10 +201,10 @@ public class TestProvidedActorFilterDefinitionAndImplementation extends TestCase
     }
 
     public void testProvidedActorFilterImplementationsSanity() throws Exception {
-        StringBuilder testReport = new StringBuilder("testProvidedActorFilterImplementationsSanity report:");
-        List<ConnectorDefinition> definitions = connectorDefStore.getDefinitions();
-        for(ConnectorImplementation implementation : connectorImplStore.getImplementations()){
-            String resourceName = implementation.eResource().getURI().lastSegment();
+        final StringBuilder testReport = new StringBuilder("testProvidedActorFilterImplementationsSanity report:");
+        final List<ConnectorDefinition> definitions = connectorDefStore.getDefinitions();
+        for(final ConnectorImplementation implementation : connectorImplStore.getImplementations()){
+            final String resourceName = implementation.eResource().getURI().lastSegment();
             if(connectorImplStore.getChild(resourceName).isReadOnly()){
                 if(implementation.getImplementationId() == null || implementation.getImplementationId().isEmpty()){
                     testReport.append("\n");
@@ -237,7 +243,7 @@ public class TestProvidedActorFilterDefinitionAndImplementation extends TestCase
                     testReport.append("Missing jar dependencies for "+resourceName);
                 }
 
-                for(String jarName : implementation.getJarDependencies().getJarDependency() ){
+                for(final String jarName : implementation.getJarDependencies().getJarDependency() ){
                     final InputStream stream = connectorResourceProvider.getDependencyInputStream(jarName);
                     if(stream == null){
                         testReport.append("\n");

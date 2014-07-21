@@ -5,14 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.configuration.ui.wizard;
 
@@ -30,7 +28,6 @@ import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManag
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
-import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.configuration.ConfigurationSynchronizer;
 import org.bonitasoft.studio.configuration.extension.IProcessConfigurationWizardPage;
 import org.bonitasoft.studio.configuration.i18n.Messages;
@@ -71,7 +68,6 @@ import org.eclipse.ui.progress.IProgressService;
 
 /**
  * @author Romain Bioteau
- *
  */
 public class ConfigurationWizard extends Wizard {
 
@@ -84,12 +80,12 @@ public class ConfigurationWizard extends Wizard {
     private Configuration configurationWorkingCopy;
     private String configurationName;
     private ComposedAdapterFactory adapterFactory;
-    private final IRepositoryStore processConfStore;
+    private final ProcessConfigurationRepositoryStore processConfStore;
 
     public ConfigurationWizard() {
-        super() ;
-        setDefaultPageImageDescriptor(Pics.getWizban()) ;
-        processConfStore = RepositoryManager.getInstance().getCurrentRepository().getRepositoryStore(ProcessConfigurationRepositoryStore.class) ;
+        super();
+        setDefaultPageImageDescriptor(Pics.getWizban());
+        processConfStore = RepositoryManager.getInstance().getRepositoryStore(ProcessConfigurationRepositoryStore.class);
     }
 
     @Override
@@ -97,113 +93,112 @@ public class ConfigurationWizard extends Wizard {
         return false;
     }
 
-    public ConfigurationWizard(MainProcess diagram,AbstractProcess selectedProcess,String configurationName) {
-        this() ;
+    public ConfigurationWizard(MainProcess diagram, AbstractProcess selectedProcess, String configurationName) {
+        this();
         Assert.isNotNull(selectedProcess);
         Assert.isNotNull(configurationName);
         Assert.isNotNull(diagram);
-        this.diagram = diagram ;
-        this.configurationName = configurationName ;
-        setProcess(selectedProcess) ;
-        String processName = selectedProcess.getName() +" ("+selectedProcess.getVersion()+")";
-        setWindowTitle(Messages.bind(Messages.configurationTitle,configurationName,processName)) ;
+        this.diagram = diagram;
+        this.configurationName = configurationName;
+        setProcess(selectedProcess);
+        String processName = selectedProcess.getName() + " (" + selectedProcess.getVersion() + ")";
+        setWindowTitle(Messages.bind(Messages.configurationTitle, configurationName, processName));
     }
 
     @Override
     public void addPages() {
         IConfigurationElement[] elems = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(CONFIGURATION_WIZARD_PAGE_ID);
-        List<IConfigurationElement> elements = sortByPriority(elems) ;
-        for(IConfigurationElement e :elements){
+        List<IConfigurationElement> elements = sortByPriority(elems);
+        for (IConfigurationElement e : elements) {
             try {
-                IProcessConfigurationWizardPage page =  (IProcessConfigurationWizardPage) e.createExecutableExtension(CLASS_ATTRIBUTE) ;
-                addPage(page) ;
-            } catch (Exception e1){
-                BonitaStudioLog.error(e1) ;
+                IProcessConfigurationWizardPage page = (IProcessConfigurationWizardPage) e.createExecutableExtension(CLASS_ATTRIBUTE);
+                addPage(page);
+            } catch (Exception e1) {
+                BonitaStudioLog.error(e1);
             }
         }
-        addPage(new ProcessDependenciesConfigurationWizardPage()) ;
-        addPage(new ApplicationDependenciesConfigurationWizardPage()) ;
-        addPage(new RunConfigurationWizardPage()) ;
+        addPage(new ProcessDependenciesConfigurationWizardPage());
+        addPage(new ApplicationDependenciesConfigurationWizardPage());
+        addPage(new RunConfigurationWizardPage());
     }
 
-
-
     private List<IConfigurationElement> sortByPriority(IConfigurationElement[] elems) {
-        List<IConfigurationElement> sortedConfigElems = new ArrayList<IConfigurationElement>() ;
-        for(IConfigurationElement elem : elems){
-            sortedConfigElems.add(elem) ;
+        List<IConfigurationElement> sortedConfigElems = new ArrayList<IConfigurationElement>();
+        for (IConfigurationElement elem : elems) {
+            sortedConfigElems.add(elem);
         }
 
         Collections.sort(sortedConfigElems, new Comparator<IConfigurationElement>() {
 
             @Override
             public int compare(IConfigurationElement e1, IConfigurationElement e2) {
-                int	p1 = 0;
-                int p2 = 0 ;
-                try{
+                int p1 = 0;
+                int p2 = 0;
+                try {
                     p1 = Integer.parseInt(e1.getAttribute(PRIORITY_ATTRIBUTE));
-                }catch (NumberFormatException e) {
-                    p1 = 0 ;
+                } catch (NumberFormatException e) {
+                    p1 = 0;
                 }
-                try{
+                try {
                     p2 = Integer.parseInt(e2.getAttribute(PRIORITY_ATTRIBUTE));
-                }catch (NumberFormatException e) {
-                    p2 = 0 ;
+                } catch (NumberFormatException e) {
+                    p2 = 0;
                 }
-                return  p1 -p2; //Lowest Priority first
+                return p1 - p2; //Lowest Priority first
             }
 
-        }) ;
+        });
 
-        return sortedConfigElems ;
+        return sortedConfigElems;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see org.eclipse.jface.wizard.Wizard#performFinish()
      */
     @Override
     public boolean performFinish() {
-        applyChanges() ;
+        applyChanges();
         return true;
     }
 
-    public void applyChanges(){
-        Configuration configuration = getConfigurationCopy() ;
-        if(process != null && configuration != null){
-            String id = ModelHelper.getEObjectID(process) ;
-            if(configurationName.equals(ConfigurationPreferenceConstants.LOCAL_CONFIGURAITON)){
-                String fileName = id+".conf";
-                IRepositoryFileStore file = processConfStore.getChild(fileName) ;
-                if(file == null){
-                    file = processConfStore.createRepositoryFileStore(fileName) ;
+    public void applyChanges() {
+        Configuration configuration = getConfigurationCopy();
+        if (process != null && configuration != null) {
+            String id = ModelHelper.getEObjectID(process);
+            if (configurationName.equals(ConfigurationPreferenceConstants.LOCAL_CONFIGURAITON)) {
+                String fileName = id + ".conf";
+                IRepositoryFileStore file = processConfStore.getChild(fileName);
+                if (file == null) {
+                    file = processConfStore.createRepositoryFileStore(fileName);
                 }
                 try {
-                    file.save(configuration) ;
+                    file.save(configuration);
                 } catch (Exception e) {
-                    BonitaStudioLog.error(e) ;
+                    BonitaStudioLog.error(e);
                 }
-            }else{
-                EditingDomain editingDomain = TransactionUtil.getEditingDomain(process) ;
-                boolean dispose = false ;
-                if(editingDomain == null){
-                    dispose = true ;
-                    editingDomain =  initializeEditingDomain() ;
+            } else {
+                EditingDomain editingDomain = TransactionUtil.getEditingDomain(process);
+                boolean dispose = false;
+                if (editingDomain == null) {
+                    dispose = true;
+                    editingDomain = initializeEditingDomain();
                 }
-                CompoundCommand cc = new CompoundCommand() ;
-                for(Configuration conf : process.getConfigurations()){
-                    if(conf.getName().equals(configuration.getName())){
-                        cc.append(RemoveCommand.create(editingDomain, process, ProcessPackage.Literals.ABSTRACT_PROCESS__CONFIGURATIONS, conf)) ;
-                        break ;
+                CompoundCommand cc = new CompoundCommand();
+                for (Configuration conf : process.getConfigurations()) {
+                    if (conf.getName().equals(configuration.getName())) {
+                        cc.append(RemoveCommand.create(editingDomain, process, ProcessPackage.Literals.ABSTRACT_PROCESS__CONFIGURATIONS, conf));
+                        break;
                     }
                 }
-                cc.append(AddCommand.create(editingDomain, process, ProcessPackage.Literals.ABSTRACT_PROCESS__CONFIGURATIONS, EcoreUtil.copy(configuration))) ;
-                editingDomain.getCommandStack().execute(cc) ;
-                if(dispose){
-                    adapterFactory.dispose() ;
+                cc.append(AddCommand.create(editingDomain, process, ProcessPackage.Literals.ABSTRACT_PROCESS__CONFIGURATIONS, EcoreUtil.copy(configuration)));
+                editingDomain.getCommandStack().execute(cc);
+                if (dispose) {
+                    adapterFactory.dispose();
                     try {
-                        process.eResource().save(Collections.EMPTY_MAP) ;
+                        process.eResource().save(Collections.EMPTY_MAP);
                     } catch (IOException e) {
-                        BonitaStudioLog.error(e) ;
+                        BonitaStudioLog.error(e);
                     }
                 }
             }
@@ -215,16 +210,16 @@ public class ConfigurationWizard extends Wizard {
         adapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
         adapterFactory.addAdapterFactory(new ResourceItemProviderAdapterFactory());
         adapterFactory.addAdapterFactory(new ReflectiveItemProviderAdapterFactory());
-        adapterFactory.addAdapterFactory(new ConfigurationAdapterFactory()) ;
-        adapterFactory.addAdapterFactory(new ProcessAdapterFactory()) ;
+        adapterFactory.addAdapterFactory(new ConfigurationAdapterFactory());
+        adapterFactory.addAdapterFactory(new ProcessAdapterFactory());
 
         // command stack that will notify this editor as commands are executed
         BasicCommandStack commandStack = new BasicCommandStack();
 
         // Create the editing domain with our adapterFactory and command stack.
-        AdapterFactoryEditingDomain editingDomain = new AdapterFactoryEditingDomain(adapterFactory,commandStack, new HashMap<Resource, Boolean>());
-        editingDomain.getResourceSet().getResourceFactoryRegistry().getExtensionToFactoryMap().put("conf", new ConfigurationResourceFactoryImpl()) ;
-        return editingDomain ;
+        AdapterFactoryEditingDomain editingDomain = new AdapterFactoryEditingDomain(adapterFactory, commandStack, new HashMap<Resource, Boolean>());
+        editingDomain.getResourceSet().getResourceFactoryRegistry().getExtensionToFactoryMap().put("conf", new ConfigurationResourceFactoryImpl());
+        return editingDomain;
     }
 
     public AbstractProcess getProcess() {
@@ -232,26 +227,26 @@ public class ConfigurationWizard extends Wizard {
     }
 
     public void setProcess(final AbstractProcess process) {
-        this.process = process ;
-        final Configuration configuration = getConfigurationFromProcess(process,configurationName) ;
-        if(configuration != null){
-        	IProgressService service = PlatformUI.getWorkbench().getProgressService();
-        	try {
-				service.run(true, false, new IRunnableWithProgress() {
-					
-					@Override
-					public void run(IProgressMonitor monitor) throws InvocationTargetException,
-							InterruptedException {
-						new ConfigurationSynchronizer(process, configuration).synchronize(monitor) ;
-					}
-				});
-			} catch (InvocationTargetException e) {
-				BonitaStudioLog.error(e);
-			} catch (InterruptedException e) {
-				BonitaStudioLog.error(e);
-			}
-        	
-            configurationWorkingCopy = EcoreUtil.copy(configuration) ;
+        this.process = process;
+        final Configuration configuration = getConfigurationFromProcess(process, configurationName);
+        if (configuration != null) {
+            IProgressService service = PlatformUI.getWorkbench().getProgressService();
+            try {
+                service.run(true, false, new IRunnableWithProgress() {
+
+                    @Override
+                    public void run(IProgressMonitor monitor) throws InvocationTargetException,
+                            InterruptedException {
+                        new ConfigurationSynchronizer(process, configuration).synchronize(monitor);
+                    }
+                });
+            } catch (InvocationTargetException e) {
+                BonitaStudioLog.error(e);
+            } catch (InterruptedException e) {
+                BonitaStudioLog.error(e);
+            }
+
+            configurationWorkingCopy = EcoreUtil.copy(configuration);
         }
     }
 
@@ -260,9 +255,9 @@ public class ConfigurationWizard extends Wizard {
     }
 
     public void updatePages() {
-        for(IWizardPage page : getPages()){
-            if(page instanceof IProcessConfigurationWizardPage){
-                ((IProcessConfigurationWizardPage) page).updatePage(process,configurationWorkingCopy) ;
+        for (IWizardPage page : getPages()) {
+            if (page instanceof IProcessConfigurationWizardPage) {
+                ((IProcessConfigurationWizardPage) page).updatePage(process, configurationWorkingCopy);
             }
         }
     }
@@ -272,47 +267,46 @@ public class ConfigurationWizard extends Wizard {
         if (getPageCount() == 0) {
             return null;
         }
-        for(IWizardPage page : getPages()){
-            if(page instanceof IProcessConfigurationWizardPage){
-                if(configurationWorkingCopy != null && ((IProcessConfigurationWizardPage) page).isConfigurationPageValid(configurationWorkingCopy) != null){
-                    return page ;
+        for (IWizardPage page : getPages()) {
+            if (page instanceof IProcessConfigurationWizardPage) {
+                if (configurationWorkingCopy != null && ((IProcessConfigurationWizardPage) page).isConfigurationPageValid(configurationWorkingCopy) != null) {
+                    return page;
                 }
             }
         }
-        return super.getStartingPage() ;
+        return super.getStartingPage();
     }
 
     private Configuration getConfigurationFromProcess(AbstractProcess process, String confName) {
-        String id = ModelHelper.getEObjectID(getProcess()) ;
-        Configuration configuration = null ;
-        if(ConfigurationPreferenceConstants.LOCAL_CONFIGURAITON.equals(confName)){
-            final IRepositoryFileStore file = processConfStore.getChild(id+".conf") ;
-            if(file != null){
-                configuration = (Configuration) file.getContent() ;
-            }else{
+        String id = ModelHelper.getEObjectID(getProcess());
+        Configuration configuration = null;
+        if (ConfigurationPreferenceConstants.LOCAL_CONFIGURAITON.equals(confName)) {
+            final IRepositoryFileStore file = processConfStore.getChild(id + ".conf");
+            if (file != null) {
+                configuration = (Configuration) file.getContent();
+            } else {
                 configuration = ConfigurationFactory.eINSTANCE.createConfiguration();
-                configuration.setName(ConfigurationPreferenceConstants.LOCAL_CONFIGURAITON) ;
+                configuration.setName(ConfigurationPreferenceConstants.LOCAL_CONFIGURAITON);
                 configuration.setVersion(ModelVersion.CURRENT_VERSION);
             }
-        }else if(process != null){
-            for(Configuration conf : process.getConfigurations()){
-                if(conf.getName().equals(confName)){
-                    configuration = conf ;
-                    break ;
+        } else if (process != null) {
+            for (Configuration conf : process.getConfigurations()) {
+                if (conf.getName().equals(confName)) {
+                    configuration = conf;
+                    break;
                 }
             }
-            if(configuration == null){
-                configuration = ConfigurationFactory.eINSTANCE.createConfiguration() ;
-                configuration.setName(confName) ;
+            if (configuration == null) {
+                configuration = ConfigurationFactory.eINSTANCE.createConfiguration();
+                configuration.setName(confName);
                 configuration.setVersion(ModelVersion.CURRENT_VERSION);
             }
         }
-        return configuration ;
+        return configuration;
     }
 
     public Configuration getConfigurationCopy() {
         return configurationWorkingCopy;
     }
-
 
 }

@@ -264,6 +264,14 @@ public class Messages extends NLS {
 
     public static String removeCustomConnectorMigrationDescription;
 
+    public static String migratingCustomConnector;
+
+	public static String groovyForNameWarningDescription;
+
+	public static String propertyName;
+
+	public static String groovyForNameWarningPropertyName;
+
     static {
         initializeMessages("messages", Messages.class); //$NON-NLS-1$
     }

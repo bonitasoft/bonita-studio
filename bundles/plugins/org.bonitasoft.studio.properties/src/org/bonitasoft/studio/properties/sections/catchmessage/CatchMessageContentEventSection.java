@@ -42,7 +42,6 @@ import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.command.AddCommand;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -70,7 +69,7 @@ public class CatchMessageContentEventSection extends AbstractBonitaDescriptionSe
 
 
 	@Override
-	public void createControls(Composite parent, TabbedPropertySheetPage aTabbedPropertySheetPage) {
+	public void createControls(final Composite parent, final TabbedPropertySheetPage aTabbedPropertySheetPage) {
 		super.createControls(parent, aTabbedPropertySheetPage);
 		mainComposite = getWidgetFactory().createComposite(parent);
 		mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).extendedMargins(15, 25, 15, 10).create());
@@ -83,16 +82,16 @@ public class CatchMessageContentEventSection extends AbstractBonitaDescriptionSe
 		alc.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
 	}
 
-	private void createAutoFillButton(TabbedPropertySheetPage aTabbedPropertySheetPage) {
-		Button autoFillButton = aTabbedPropertySheetPage.getWidgetFactory().createButton(mainComposite, Messages.autoFillMessageContent, SWT.FLAT);
+	private void createAutoFillButton(final TabbedPropertySheetPage aTabbedPropertySheetPage) {
+		final Button autoFillButton = aTabbedPropertySheetPage.getWidgetFactory().createButton(mainComposite, Messages.autoFillMessageContent, SWT.FLAT);
 		autoFillButton.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e) {
+			public void widgetSelected(final SelectionEvent e) {
 				BusyIndicator.showWhile(Display.getDefault(), new Runnable() {
 					
 					@Override
 					public void run() {
-						MessageFlow incomingMessag = getCatchMessageEvent().getIncomingMessag();
+						final MessageFlow incomingMessag = getCatchMessageEvent().getIncomingMessag();
 						if(incomingMessag != null){
 							final Message message = ModelHelper.findEvent(getCatchMessageEvent(), incomingMessag.getName());
 							if(message != null){
@@ -104,11 +103,11 @@ public class CatchMessageContentEventSection extends AbstractBonitaDescriptionSe
 					}
 
 					private void mapContentForMessage(final Message message) {
-						TableExpression throwMessageContent = message.getMessageContent();
-						for (ListExpression row : throwMessageContent.getExpressions()) {
-							List<org.bonitasoft.studio.model.expression.Expression> col =  row.getExpressions() ;
+						final TableExpression throwMessageContent = message.getMessageContent();
+						for (final ListExpression row : throwMessageContent.getExpressions()) {
+							final List<org.bonitasoft.studio.model.expression.Expression> col =  row.getExpressions() ;
 							if (col.size()==2){
-								String throwMessageContentExpressionName = col.get(0).getName();
+								final String throwMessageContentExpressionName = col.get(0).getName();
 								if(throwMessageContentExpressionName != null){
 									if(!isMappingAlreadyExists(throwMessageContentExpressionName)){
 										createNewMessageContentLine(throwMessageContentExpressionName);
@@ -118,10 +117,10 @@ public class CatchMessageContentEventSection extends AbstractBonitaDescriptionSe
 						}
 					}
 
-					private boolean isMappingAlreadyExists(String throwMessageContentExpressionName) {
-						EList<Operation> catchMessageContents = getCatchMessageEvent().getMessageContent();
-						for (Operation messageContent : catchMessageContents) {
-							Expression actionExpression = messageContent.getRightOperand();
+					private boolean isMappingAlreadyExists(final String throwMessageContentExpressionName) {
+						final EList<Operation> catchMessageContents = getCatchMessageEvent().getMessageContent();
+						for (final Operation messageContent : catchMessageContents) {
+							final Expression actionExpression = messageContent.getRightOperand();
 							if(actionExpression != null
 									&& throwMessageContentExpressionName.equals(actionExpression.getName())){
 								return true;
@@ -134,13 +133,13 @@ public class CatchMessageContentEventSection extends AbstractBonitaDescriptionSe
 
 			}
 
-			private void createNewMessageContentLine(String throwMessageContentExpressionName) {
+			private void createNewMessageContentLine(final String throwMessageContentExpressionName) {
 				/*add it if not*/
-				Operation newActionMessageContent = ExpressionFactory.eINSTANCE.createOperation();
-				Operator assignment = ExpressionFactory.eINSTANCE.createOperator();
+				final Operation newActionMessageContent = ExpressionFactory.eINSTANCE.createOperation();
+				final Operator assignment = ExpressionFactory.eINSTANCE.createOperator();
 				assignment.setType(ExpressionConstants.ASSIGNMENT_OPERATOR) ;
 				newActionMessageContent.setOperator(assignment) ;
-				Expression createExpression = ExpressionFactory.eINSTANCE.createExpression();
+				final Expression createExpression = ExpressionFactory.eINSTANCE.createExpression();
 				createExpression.setName(throwMessageContentExpressionName);
 				createExpression.setContent(throwMessageContentExpressionName);
 				createExpression.setReturnType(String.class.getName());
@@ -150,10 +149,10 @@ public class CatchMessageContentEventSection extends AbstractBonitaDescriptionSe
 
 				/*check if there is a data with the same name,
 				 * if yes, assign it*/
-				List<Data> accessibleData = ModelHelper.getAccessibleData(getCatchMessageEvent());
-				for (Data data : accessibleData) {
+				final List<Data> accessibleData = ModelHelper.getAccessibleData(getCatchMessageEvent());
+				for (final Data data : accessibleData) {
 					if(throwMessageContentExpressionName.equals(data.getName())){
-						Expression dataExpression = ExpressionFactory.eINSTANCE.createExpression();
+						final Expression dataExpression = ExpressionFactory.eINSTANCE.createExpression();
 						dataExpression.setName(data.getName());
 						dataExpression.setContent(data.getName());
 						dataExpression.setReturnType(org.bonitasoft.studio.common.DataUtil.getTechnicalTypeFor(data));
@@ -163,16 +162,16 @@ public class CatchMessageContentEventSection extends AbstractBonitaDescriptionSe
 					}
 				}
 
-				Command addCommand = AddCommand.create(getEditingDomain(), getCatchMessageEvent(), ProcessPackage.Literals.ABSTRACT_CATCH_MESSAGE_EVENT__MESSAGE_CONTENT, newActionMessageContent);
+				final Command addCommand = AddCommand.create(getEditingDomain(), getCatchMessageEvent(), ProcessPackage.Literals.ABSTRACT_CATCH_MESSAGE_EVENT__MESSAGE_CONTENT, newActionMessageContent);
 				getEditingDomain().getCommandStack().execute(addCommand);
 			}
 		});
 	}
 
 	@Override
-	public void setInput(IWorkbenchPart part, ISelection selection) {
+	public void setInput(final IWorkbenchPart part, final ISelection selection) {
 		super.setInput(part, selection);
-		if(lastEObject == null || (lastEObject != null && !lastEObject.equals(getEObject()))){
+		if(lastEObject == null || lastEObject != null && !lastEObject.equals(getEObject())){
 			lastEObject = getEObject();
 			refreshUI();
 		}

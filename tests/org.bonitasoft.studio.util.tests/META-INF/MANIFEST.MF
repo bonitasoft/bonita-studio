@@ -24,7 +24,8 @@ Require-Bundle: org.junit,
  org.apache.log4j;bundle-version="1.2.15"
 Export-Package: org.bonitasoft.studio.console.test.util,org.bonitasoft
  .studio.tests.utils.wizards,org.bonitasoft.studio.util.test,org.bonit
- asoft.studio.util.test.async,org.bonitasoft.studio.util.test.file
+ asoft.studio.util.test.async,org.bonitasoft.studio.util.test.conditio
+ ns,org.bonitasoft.studio.util.test.file
 Import-Package: org.bonitasoft.engine.api,
  org.bonitasoft.engine.bpm,
  org.bonitasoft.engine.bpm.flownode,

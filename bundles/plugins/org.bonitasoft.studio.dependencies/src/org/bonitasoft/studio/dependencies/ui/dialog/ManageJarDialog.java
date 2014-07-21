@@ -49,7 +49,6 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -69,52 +68,57 @@ public class ManageJarDialog extends Dialog {
 
     protected DataBindingContext context;
     private ViewerFilter searchFilter;
+    private Text searchText;
 
-    public ManageJarDialog(Shell parentShell) {
+    public ManageJarDialog(final Shell parentShell) {
         super(parentShell);
         libStore = RepositoryManager.getInstance().getRepositoryStore(DependencyRepositoryStore.class) ;
     }
 
     @Override
-    protected void configureShell(Shell newShell) {
+    protected void configureShell(final Shell newShell) {
         super.configureShell(newShell);
         newShell.setText(Messages.manageJarTitle) ;
     }
 
     @Override
-    protected Control createDialogArea(Composite parent) {
+    protected Control createDialogArea(final Composite parent) {
         context = new DataBindingContext() ;
-        Composite composite = (Composite) super.createDialogArea(parent);
+        final Composite composite = (Composite) super.createDialogArea(parent);
         composite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(15, 15).create());
+        new Label(composite, SWT.NONE); //dummy
+        createSearchText(composite);
+        createLeftButtonPanel(composite);
         createTree(composite);
-        createRightButtonPanel(composite);
         return composite;
     }
 
-    protected void createRightButtonPanel(Composite composite) {
-        Composite rightPanel = new Composite(composite, composite.getStyle());
-        final RowLayout rowLayout = new RowLayout(SWT.VERTICAL);
-        rowLayout.fill =true;
-		rightPanel.setLayout(rowLayout);
-        addImportJarButton(rightPanel);
-        addRemoveJarButton(rightPanel);
+
+
+    protected void createLeftButtonPanel(final Composite composite) {
+        final Composite leftPanel = new Composite(composite, composite.getStyle());
+        leftPanel.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+        leftPanel.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).spacing(0, 3).create());
+        addImportJarButton(leftPanel);
+        addRemoveJarButton(leftPanel);
     }
 
-    protected void addRemoveJarButton(Composite rightPanel) {
+    protected void addRemoveJarButton(final Composite rightPanel) {
         removeButton = new Button(rightPanel, SWT.FLAT);
+        removeButton.setLayoutData(GridDataFactory.fillDefaults().create());
         removeButton.setText(Messages.removeJar);
         removeButton.setEnabled(false);
         removeButton.addSelectionListener(new SelectionAdapter() {
             @Override
-            public void widgetSelected(SelectionEvent e) {
+            public void widgetSelected(final SelectionEvent e) {
                 final IStructuredSelection selection = (IStructuredSelection) tableViewer.getSelection();
-                IRunnableWithProgress runnable = new IRunnableWithProgress(){
+                final IRunnableWithProgress runnable = new IRunnableWithProgress(){
 
                     @Override
-                    public void run(IProgressMonitor monitor)
+                    public void run(final IProgressMonitor monitor)
                             throws InvocationTargetException, InterruptedException {
                         monitor.beginTask(Messages.beginToRemoveJars, selection.size());
-                        for(Object selected :selection.toList()){
+                        for(final Object selected :selection.toList()){
                             if (monitor.isCanceled()) {
                                 return;
                             }
@@ -123,26 +127,25 @@ public class ManageJarDialog extends Dialog {
                                     monitor.worked(1);
                                     monitor.setTaskName(Messages.removingJar + " : "+ ((IRepositoryFileStore) selected).getName());
                                     ((IRepositoryFileStore) selected).delete() ;
-                                } catch (Exception e1) {
+                                } catch (final Exception e1) {
                                     BonitaStudioLog.error(e1);
                                 }
                             }
                         }
                     }
-
                 };
 
                 try {
                     new ProgressMonitorDialog(getShell()).run(true, true, runnable);
-                } catch (InvocationTargetException e1) {
+                } catch (final InvocationTargetException e1) {
                     BonitaStudioLog.error(e1);
-                } catch (InterruptedException e2) {
+                } catch (final InterruptedException e2) {
                     BonitaStudioLog.error(e2);
                 }
                 /*Due to some file handle issue and lock on windows we need to warn user if the jars are not correctly deleted*/
                 if(Platform.getOS().equals(Platform.OS_WIN32)){
                     boolean shouldRestart = false;
-                    for(Object selected :selection.toList()){
+                    for(final Object selected :selection.toList()){
                         if(selected instanceof IRepositoryFileStore){
                             if(((IRepositoryFileStore) selected).getResource().exists()){
                                 shouldRestart = true;
@@ -164,15 +167,16 @@ public class ManageJarDialog extends Dialog {
 
     }
 
-    protected void addImportJarButton(Composite rightPanel) {
-        Button addButton = new Button(rightPanel, SWT.FLAT);
+    protected void addImportJarButton(final Composite rightPanel) {
+        final Button addButton = new Button(rightPanel, SWT.FLAT);
+        addButton.setLayoutData(GridDataFactory.fillDefaults().create());
         addButton.setText(Messages.importJar);
         addButton.addSelectionListener(new SelectionAdapter() {
             @Override
-            public void widgetSelected(SelectionEvent e) {
+            public void widgetSelected(final SelectionEvent e) {
                 try {
                     new AddJarsHandler().execute(null);
-                } catch (ExecutionException e1) {
+                } catch (final ExecutionException e1) {
                     BonitaStudioLog.error(e1);
                 }
                 /*Refresh viewer*/
@@ -181,56 +185,59 @@ public class ManageJarDialog extends Dialog {
         });
     }
 
-    protected void createTree(Composite composite) {
-        final Text searchText = new Text(composite,SWT.SEARCH | SWT.ICON_SEARCH | SWT.BORDER | SWT.CANCEL) ;
-        searchText.setMessage(Messages.search) ;
-        searchText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
-
-        searchFilter = new ViewerFilter() {
-
-            @Override
-            public boolean select(Viewer arg0, Object arg1, Object element) {
-                if(!searchText.getText().isEmpty()){
-                    String searchQuery = searchText.getText().toLowerCase() ;
-                    IRepositoryFileStore file = (IRepositoryFileStore) element ;
-                    return file.getName().toLowerCase().contains(searchQuery) ;
-                }
-                return true;
-            }
-        };
-
-        new Label(composite,SWT.NONE) ; //FILLER
+    protected void createTree(final Composite composite) {
 
         tableViewer = new TableViewer(composite, SWT.MULTI | SWT.BORDER | SWT.FULL_SELECTION);
         tableViewer.getTable().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(300, 300).create());
         tableViewer.setContentProvider(new ArrayContentProvider());
-        tableViewer.addFilter(searchFilter)  ;
+        tableViewer.addFilter(searchFilter);
         tableViewer.setLabelProvider(new FileStoreLabelProvider());
         tableViewer.setInput(libStore.getChildren());
 
         tableViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 
             @Override
-            public void selectionChanged(SelectionChangedEvent arg0) {
+            public void selectionChanged(final SelectionChangedEvent arg0) {
                 if(removeButton != null){
                     removeButton.setEnabled(!tableViewer.getSelection().isEmpty());
                 }
             }
         });
 
+
+
+    }
+
+    private void createSearchText(final Composite composite) {
+        searchText = new Text(composite, SWT.SEARCH | SWT.ICON_SEARCH | SWT.BORDER | SWT.CANCEL);
+        searchText.setMessage(Messages.search);
+        searchText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+
+        searchFilter = new ViewerFilter() {
+
+            @Override
+            public boolean select(final Viewer arg0, final Object arg1, final Object element) {
+                if (!searchText.getText().isEmpty()) {
+                    final String searchQuery = searchText.getText().toLowerCase();
+                    final IRepositoryFileStore file = (IRepositoryFileStore) element;
+                    return file.getName().toLowerCase().contains(searchQuery);
+                }
+                return true;
+            }
+        };
+
         searchText.addModifyListener(new ModifyListener() {
 
             @Override
-            public void modifyText(ModifyEvent e) {
-                tableViewer.refresh() ;
+            public void modifyText(final ModifyEvent e) {
+                tableViewer.refresh();
             }
-        }) ;
-
+        });
     }
 
     @Override
     public boolean close() {
-        boolean returnValue = super.close();
+        final boolean returnValue = super.close();
         if (returnValue) {
             tableViewer.getTable().dispose();
         }

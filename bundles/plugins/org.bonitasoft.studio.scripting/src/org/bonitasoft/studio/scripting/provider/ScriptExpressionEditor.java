@@ -286,13 +286,13 @@ public class ScriptExpressionEditor extends SelectionAwareExpressionEditor imple
 
     @Override
     public void dispose() {
-        super.dispose();
         if (editor != null) {
             editor.dispose();
         }
         if (returnTypeModelObservable != null) {
             returnTypeModelObservable.dispose();
         }
+        super.dispose();
     }
 
     @Override

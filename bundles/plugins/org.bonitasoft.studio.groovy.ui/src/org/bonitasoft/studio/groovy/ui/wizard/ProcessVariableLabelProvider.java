@@ -6,14 +6,14 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
+ * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 package org.bonitasoft.studio.groovy.ui.wizard;
@@ -35,93 +35,93 @@ import org.eclipse.swt.graphics.Image;
 
 /**
  * @author Romain Bioteau
- *
+ * 
  */
-public class ProcessVariableLabelProvider extends LabelProvider implements ITableLabelProvider,ITableFontProvider,ITableColorProvider {
+public class ProcessVariableLabelProvider extends LabelProvider implements ITableLabelProvider, ITableFontProvider, ITableColorProvider {
 
-	ExpressionTypeLabelProvider labelProvider;
-	
-	public ProcessVariableLabelProvider(){
-		labelProvider = new ExpressionTypeLabelProvider();
-	}
-	
+    ExpressionTypeLabelProvider labelProvider;
+
+    public ProcessVariableLabelProvider() {
+        labelProvider = new ExpressionTypeLabelProvider();
+    }
+
     @Override
     public String getText(Object element) {
         if (element.equals(ProcessVariableContentProvider.SELECT_ENTRY)) {
             return Messages.SelectProcessVariableLabel;
         }
-        if (element instanceof String){
-        	IExpressionProvider provider = ExpressionEditorService.getInstance().getExpressionProvider((String)element);
-        	return labelProvider.getText(provider);
+        if (element instanceof String) {
+            IExpressionProvider provider = ExpressionEditorService.getInstance().getExpressionProvider((String) element);
+            return labelProvider.getText(provider);
         }
-        if(element instanceof ScriptVariable){
+        if (element instanceof ScriptVariable) {
             final ScriptVariable node = (ScriptVariable) element;
-            return node.getName()+" : "+node.getType();
+            return node.getName() + " : " + node.getType();
         }
         return super.getText(element);
     }
 
-	@Override
-	public Image getColumnImage(Object element, int columnIndex) {
-		if (element instanceof ScriptVariable){
-			ScriptVariable variable = (ScriptVariable)element;
-			String category = variable.getCategory();
-			if(category.endsWith(ExpressionConstants.VARIABLE_TYPE)){
-				category = ExpressionConstants.VARIABLE_TYPE;
-			}
-			IExpressionProvider provider = ExpressionEditorService.getInstance().getExpressionProvider(category);
-			return labelProvider.getImage(provider);
-		}
-		return null;
-	}
+    @Override
+    public Image getColumnImage(Object element, int columnIndex) {
+        if (element instanceof ScriptVariable) {
+            ScriptVariable variable = (ScriptVariable) element;
+            String category = variable.getCategory();
+            if (category != null) {
+                if (category.endsWith(ExpressionConstants.VARIABLE_TYPE)) {
+                    category = ExpressionConstants.VARIABLE_TYPE;
+                }
+                IExpressionProvider provider = ExpressionEditorService.getInstance().getExpressionProvider(category);
+                return labelProvider.getImage(provider);
+            }
+        }
+        return null;
+    }
 
-	@Override
-	public String getColumnText(Object element, int columnIndex) {
+    @Override
+    public String getColumnText(Object element, int columnIndex) {
 
-		if (element.equals(ProcessVariableContentProvider.SELECT_ENTRY)) {
-	            return Messages.SelectProcessVariableLabel;
-	        }
-	        if (element instanceof String){
-	        	IExpressionProvider provider = ExpressionEditorService.getInstance().getExpressionProvider((String)element);
-	        	String text = labelProvider.getText(provider);
-	        	if(text != null && !text.isEmpty()){
-	        		return text;
-	        	}else{
-	        		return labelProvider.getText(element.toString());
-	        	}
-	        }
-	        if(element instanceof ScriptVariable){
-	            final ScriptVariable node = (ScriptVariable) element;
-	            return node.getName()+" : "+node.getType();
-	        }
-	        return super.getText(element);
-	}
+        if (element.equals(ProcessVariableContentProvider.SELECT_ENTRY)) {
+            return Messages.SelectProcessVariableLabel;
+        }
+        if (element instanceof String) {
+            IExpressionProvider provider = ExpressionEditorService.getInstance().getExpressionProvider((String) element);
+            String text = labelProvider.getText(provider);
+            if (text != null && !text.isEmpty()) {
+                return text;
+            } else {
+                return labelProvider.getText(element.toString());
+            }
+        }
+        if (element instanceof ScriptVariable) {
+            final ScriptVariable node = (ScriptVariable) element;
+            return node.getName() + " : " + node.getType();
+        }
+        return super.getText(element);
+    }
 
-	@Override
-	public Font getFont(Object element, int columnIndex) {
-		if (element instanceof String ){
-			return BonitaStudioFontRegistry.getActiveFont();
-			//return null;
-		}
-		return null;
-	}
+    @Override
+    public Font getFont(Object element, int columnIndex) {
+        if (element instanceof String) {
+            return BonitaStudioFontRegistry.getActiveFont();
+            // return null;
+        }
+        return null;
+    }
 
-	@Override
-	public Color getForeground(Object element, int columnIndex) {
-		//Display display = Display.getCurrent();
-		//return display.getSystemColor(SWT.COLOR_LIST_SELECTION);
-		return null;
-	}
+    @Override
+    public Color getForeground(Object element, int columnIndex) {
+        // Display display = Display.getCurrent();
+        // return display.getSystemColor(SWT.COLOR_LIST_SELECTION);
+        return null;
+    }
 
-	@Override
-	public Color getBackground(Object element, int columnIndex) {
-		//if (element instanceof String){
-		//	Display display = Display.getCurrent();
-		//	return display.getSystemColor(SWT.COLOR_WIDGET_BACKGROUND);
-		//}
-		return null;
-	}
-
-
+    @Override
+    public Color getBackground(Object element, int columnIndex) {
+        // if (element instanceof String){
+        // Display display = Display.getCurrent();
+        // return display.getSystemColor(SWT.COLOR_WIDGET_BACKGROUND);
+        // }
+        return null;
+    }
 
 }

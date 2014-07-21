@@ -1,16 +1,14 @@
 /**
- * Copyright (C) 2012 BonitaSoft S.A.
+ * Copyright (C) 2012-2014 BonitaSoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -21,6 +19,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.Collection;
 import java.util.HashMap;
@@ -31,14 +30,19 @@ import org.bonitasoft.engine.api.ProcessAPI;
 import org.bonitasoft.engine.bpm.flownode.ActivityInstanceCriterion;
 import org.bonitasoft.engine.bpm.flownode.HumanTaskInstance;
 import org.bonitasoft.engine.bpm.flownode.TaskInstance;
+import org.bonitasoft.engine.bpm.process.ProcessActivationException;
 import org.bonitasoft.engine.bpm.process.ProcessDefinition;
+import org.bonitasoft.engine.bpm.process.ProcessDefinitionNotFoundException;
+import org.bonitasoft.engine.bpm.process.ProcessExecutionException;
 import org.bonitasoft.engine.exception.BonitaHomeNotSetException;
+import org.bonitasoft.engine.exception.SearchException;
 import org.bonitasoft.engine.exception.ServerAPIException;
 import org.bonitasoft.engine.exception.UnknownAPITypeException;
 import org.bonitasoft.engine.platform.LoginException;
 import org.bonitasoft.engine.search.SearchOptions;
 import org.bonitasoft.engine.search.SearchOptionsBuilder;
 import org.bonitasoft.engine.session.APISession;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
@@ -49,6 +53,7 @@ import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.util.test.EngineAPIUtil;
 import org.bonitasoft.studio.util.test.async.TestAsyncThread;
 import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.junit.After;
@@ -62,7 +67,6 @@ import org.junit.Test;
 public class TestConditions {
 
     private HumanTaskInstance newTask;
-
     private APISession session;
 
     @Before
@@ -78,31 +82,22 @@ public class TestConditions {
     @Test
     public void testConditions() throws Exception {
         final ProcessAPI processApi = BOSEngineManager.getInstance().getProcessAPI(session);
-        ImportBosArchiveOperation op = new ImportBosArchiveOperation();
-        URL fileURL1 = FileLocator.toFileURL(TestConditions.class.getResource("testConditions-2.0.bos")); //$NON-NLS-1$
-        op.setArchiveFile(FileLocator.toFileURL(fileURL1).getFile());
-        op.setCurrentRepository(RepositoryManager.getInstance().getCurrentRepository());
-        op.run(new NullProgressMonitor());
-        for (IRepositoryFileStore f : op.getFileStoresToOpen()) {
-            f.open();
-        }
-        MainProcess mainProcess = (MainProcess) op.getFileStoresToOpen().get(0).getContent();
+        final MainProcess mainProcess = importProcessToTest();
+        final List<HumanTaskInstance> tasks = getPendingTasks(processApi);
+        runProcess(mainProcess);
+        final ProcessDefinition processDef = startDeployedProcess(processApi);
 
-        final SearchOptions searchOptions = new SearchOptionsBuilder(0, 10).done();
-        final List<HumanTaskInstance> tasks = processApi.searchPendingTasksForUser(session.getUserId(), searchOptions).getResult();
+        final boolean evaluateAsync = isNewTaskCreated(tasks, processDef);
 
-        final RunProcessCommand runProcessCommand = new RunProcessCommand(true);
-        Map<String, Object> param = new HashMap<String, Object>();
-        param.put(RunProcessCommand.PROCESS, mainProcess.getElements().get(0));
-        ExecutionEvent ee = new ExecutionEvent(null, param, null, null);
-        runProcessCommand.execute(ee);
+        final String errorMessageDetailled = computeClearErrorMessageIfNoNewTaskFound(processApi, processDef, evaluateAsync);
+        assertTrue("a new task should have started for Pool3 task:\n" + errorMessageDetailled, evaluateAsync);
+        assertNotNull("a new task should have started", newTask);
+        assertEquals("This task does not belong to new process", processDef.getId(), newTask.getProcessDefinitionId());
+        assertEquals("the current task should be Step3", "Step3", newTask.getName());
+    }
 
-        long processId = processApi.getProcessDefinitionId("Pool3", "1.0");
-        final ProcessDefinition processDef = processApi.getProcessDefinition(processId);
-        assertNotNull(processDef);
-        processApi.startProcess(processId);
-
-        boolean evaluateAsync = new TestAsyncThread(30, 1000) {
+    private boolean isNewTaskCreated(final List<HumanTaskInstance> tasks, final ProcessDefinition processDef) throws Exception {
+        final boolean evaluateAsync = new TestAsyncThread(30, 1000) {
 
             @Override
             public boolean isTestGreen() throws Exception {
@@ -110,21 +105,66 @@ public class TestConditions {
                 return newTask != null;
             }
         }.evaluate();
+        return evaluateAsync;
+    }
 
+    private String computeClearErrorMessageIfNoNewTaskFound(final ProcessAPI processApi, final ProcessDefinition processDef, final boolean evaluateAsync) {
         String errorMessageDetailled = "";
         if (!evaluateAsync) {
             final Collection<HumanTaskInstance> actualTask = processApi.getPendingHumanTaskInstances(session.getUserId(), 0, 20,
                     ActivityInstanceCriterion.DEFAULT);
             errorMessageDetailled += "\n processUUID searched: " + processDef.getId();
-            for (TaskInstance taskInstance : actualTask) {
+            for (final TaskInstance taskInstance : actualTask) {
                 errorMessageDetailled += "\n" + taskInstance.getParentProcessInstanceId();
             }
-
         }
-        assertTrue("a new task should have started for Pool3 task:\n" + errorMessageDetailled, evaluateAsync);
-        assertNotNull("a new task should have started", newTask);
-        assertEquals("This task does not belong to new process", processDef.getId(), newTask.getProcessDefinitionId());
-        assertEquals("the current task should be Step3", "Step3", newTask.getName());
+        return errorMessageDetailled;
+    }
 
+    private ProcessDefinition startDeployedProcess(final ProcessAPI processApi) throws ProcessDefinitionNotFoundException, ProcessActivationException,
+            ProcessExecutionException, InterruptedException {
+        final long processId = processApi.getProcessDefinitionId("Pool3", "1.0");
+        int i = 0;
+        ProcessDefinition processDef = null;
+        while (processDef == null || i > 10) {
+            try {
+                processDef = processApi.getProcessDefinition(processId);
+            } catch (final ProcessDefinitionNotFoundException pdnf) {
+                i++;
+                BonitaStudioLog.log("Failed Attempt " + i + " to retrieve Process def with id" + processId);
+                BonitaStudioLog.error(pdnf);
+                Thread.sleep(100);
+            }
+        }
+        assertNotNull("Process definition not found", processDef);
+        processApi.startProcess(processId);
+        return processDef;
+    }
+
+    private void runProcess(final MainProcess mainProcess) throws ExecutionException {
+        final RunProcessCommand runProcessCommand = new RunProcessCommand(true);
+        final Map<String, Object> param = new HashMap<String, Object>();
+        param.put(RunProcessCommand.PROCESS, mainProcess.getElements().get(0));
+        final ExecutionEvent ee = new ExecutionEvent(null, param, null, null);
+        runProcessCommand.execute(ee);
+    }
+
+    private List<HumanTaskInstance> getPendingTasks(final ProcessAPI processApi) throws SearchException {
+        final SearchOptions searchOptions = new SearchOptionsBuilder(0, 10).done();
+        final List<HumanTaskInstance> tasks = processApi.searchPendingTasksForUser(session.getUserId(), searchOptions).getResult();
+        return tasks;
+    }
+
+    private MainProcess importProcessToTest() throws IOException {
+        final ImportBosArchiveOperation op = new ImportBosArchiveOperation();
+        final URL fileURL1 = FileLocator.toFileURL(TestConditions.class.getResource("testConditions-2.0.bos")); //$NON-NLS-1$
+        op.setArchiveFile(FileLocator.toFileURL(fileURL1).getFile());
+        op.setCurrentRepository(RepositoryManager.getInstance().getCurrentRepository());
+        op.run(new NullProgressMonitor());
+        for (final IRepositoryFileStore f : op.getFileStoresToOpen()) {
+            f.open();
+        }
+        final MainProcess mainProcess = (MainProcess) op.getFileStoresToOpen().get(0).getContent();
+        return mainProcess;
     }
 }

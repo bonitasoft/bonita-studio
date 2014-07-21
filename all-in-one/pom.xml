@@ -13,10 +13,25 @@
 	<artifactId>all-in-one</artifactId>
 	<packaging>eclipse-repository</packaging>
 
+	<dependencies>
+		<dependency>
+			<groupId>ant-contrib</groupId>
+			<artifactId>ant-contrib</artifactId>
+			<version>1.0b3</version>
+		</dependency>
+	</dependencies>
+
 	<properties>
 		<product.short.name>BonitaBPMCommunity</product.short.name>
 		<repositoryId>studio-repository</repositoryId>
 		<productId>org.bonitasoft.studio.product</productId>
+		<if.task>net.sf.antcontrib.logic.IfTask</if.task>
+		<jre.url>http://repositories.rd.lan/tools/studio-tools</jre.url>
+		<jre.winx86.url>jre1.7.0_55-windows</jre.winx86.url>
+		<jre.winx86.x64.url>jre1.7.0_55-windows-x64</jre.winx86.x64.url>
+		<jre.linuxx86.url>jre1.7.0_55-linux</jre.linuxx86.url>
+		<jre.linuxx86.x64.url>jre1.7.0_55-linux-x64</jre.linuxx86.x64.url>
+		<jre.osx.url>jre1.7.0_55-osx</jre.osx.url>
 	</properties>
 
 	<build>
@@ -25,10 +40,13 @@
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>tycho-p2-repository-plugin</artifactId>
 				<version>${tychoVersion}</version>
+
 				<configuration>
 					<includeAllDependencies>true</includeAllDependencies>
 					<finalName>${repositoryId}-${project.version}</finalName>
+
 				</configuration>
+
 			</plugin>
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
@@ -53,7 +71,7 @@
 			</plugin>
 
 
-			<!--all-in-one assembly with all platforms -->
+			<!-- all-in-one assembly with all platforms -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-assembly-plugin</artifactId>
@@ -85,7 +103,7 @@
 				</executions>
 			</plugin>
 
-			<!-- Create a proper bundles.info for all-in-one -->
+			<!--  Create a proper bundles.info for all-in-one-->
 			<plugin>
 				<groupId>org.eclipse.tycho.extras</groupId>
 				<artifactId>tycho-eclipserun-plugin</artifactId>
@@ -116,7 +134,8 @@
 						</goals>
 					</execution>
 				</executions>
-			</plugin>
+			</plugin> 
+
 		</plugins>
 	</build>
 
@@ -131,11 +150,11 @@
 			<build>
 				<plugins>
 					<!-- Build installers for each platform -->
-					<plugin>
+				 	<plugin>
 						<groupId>org.codehaus.mojo</groupId>
 						<artifactId>exec-maven-plugin</artifactId>
 						<executions>
-							<execution>
+							 <execution>
 								<id>linux-x86</id>
 								<phase>install</phase>
 								<configuration>
@@ -190,7 +209,7 @@
 								<goals>
 									<goal>exec</goal>
 								</goals>
-							</execution>
+							</execution> 
 							<execution>
 								<id>win-x86</id>
 								<phase>install</phase>
@@ -338,7 +357,7 @@
 									<goal>run</goal>
 								</goals>
 							</execution>
-							<execution>
+							 <execution>
 								<id>windows x86_64 installer file</id>
 								<phase>prepare-package</phase>
 								<configuration>
@@ -360,9 +379,182 @@
 									<goal>run</goal>
 								</goals>
 							</execution>
+							<execution>
+								<id>jre-win-x86</id>
+								<phase>package</phase>
+								<goals>
+									<goal>run</goal>
+								</goals>
+								<configuration>
+									<tasks>
+										<taskdef name="if" classname="${if.task}"
+											classpathref="maven.runtime.classpath" />
+										<available property="jre.present" file="${user.home}/${jre.winx86.url}" />
+										<if>
+											<not>
+												<isset property="jre.present" />
+											</not>
+											<then>
+												<get src="${jre.url}/${jre.winx86.url}.zip" dest="${user.home}"  verbose="true"/>
+												<unzip src="${user.home}/${jre.winx86.url}.zip" dest="${user.home}"/>
+		
+												<delete file="${user.home}/${jre.winx86.url}.zip" />
+											</then>
+										</if>
+										<copy
+											todir="${project.build.directory}/products/${productId}/win32/win32/x86/jre">
+											<fileset dir="${user.home}/${jre.winx86.url}/jre" />
+										</copy>
+									</tasks>
+								</configuration>
+							</execution>
+							<execution>
+								<id>jre-win-x86-x64</id>
+								<phase>package</phase>
+								<goals>
+									<goal>run</goal>
+								</goals>
+								<configuration>
+									<tasks>
+										<taskdef name="if" classname="${if.task}"
+											classpathref="maven.runtime.classpath" />
+										<available property="jre.present" file="${user.home}/${jre.winx86.x64.url}" />
+										<if>
+											<not>
+												<isset property="jre.present" />
+											</not>
+											<then>
+												<get src="${jre.url}/${jre.winx86.x64.url}.zip" dest="${user.home}"  verbose="true"/>
+												<unzip src="${user.home}/${jre.winx86.x64.url}.zip" dest="${user.home}"/>
+		
+												<delete file="${user.home}/${jre.winx86.x64.url}.zip" />
+											</then>
+										</if>
+										<copy
+											todir="${project.build.directory}/products/${productId}/win32/win32/x86_64/jre">
+											<fileset dir="${user.home}/${jre.winx86.x64.url}/jre" />
+										</copy>
+									</tasks>
+								</configuration>
+							</execution> 
+							<execution>
+								<id>jre-linux-x86</id>
+								<phase>package</phase>
+								<goals>
+									<goal>run</goal>
+								</goals>
+								<configuration>
+									<tasks>
+										<taskdef name="if" classname="${if.task}"
+											classpathref="maven.runtime.classpath" />
+										<available property="jre.present" file="${user.home}/${jre.linuxx86.url}" />
+										<if>
+											<not>
+												<isset property="jre.present" />
+											</not>
+											<then>
+												<get src="${jre.url}/${jre.linuxx86.url}.zip" dest="${user.home}"  />
+												<unzip src="${user.home}/${jre.linuxx86.url}.zip" dest="${user.home}"/>
+		
+												<delete file="${user.home}/${jre.linuxx86.url}.zip" />
+											</then>
+										</if>
+										<copy
+											todir="${project.build.directory}/products/${productId}/linux/gtk/x86/jre">
+											<fileset dir="${user.home}/${jre.linuxx86.url}/jre" />
+										</copy>
+									</tasks>
+								</configuration>
+							</execution> 
+							<execution>
+								<id>jre-linux-x86-64</id>
+								<phase>package</phase>
+								<goals>
+									<goal>run</goal>
+								</goals>
+								<configuration>
+									<tasks>
+										<taskdef name="if" classname="${if.task}"
+											classpathref="maven.runtime.classpath" />
+										<available property="jre.present" file="${user.home}/${jre.linuxx86.x64.url}" />
+										<if>
+											<not>
+												<isset property="jre.present" />
+											</not>
+											<then>
+												<get src="${jre.url}/${jre.linuxx86.x64.url}.zip" dest="${user.home}"  />
+												<unzip src="${user.home}/${jre.linuxx86.x64.url}.zip" dest="${user.home}"/>
+		
+												<delete file="${user.home}/${jre.linuxx86.x64.url}.zip" />
+											</then>
+										</if>
+										<copy
+											todir="${project.build.directory}/products/${productId}/linux/gtk/x86_64/jre">
+											<fileset dir="${user.home}/${jre.linuxx86.x64.url}/jre" />
+										</copy>
+									</tasks>
+								</configuration>
+							</execution> 
+							<execution>
+								<id>jre-osx-x86</id>
+								<phase>package</phase>
+								<goals>
+									<goal>run</goal>
+								</goals>
+								<configuration>
+									<tasks>
+										<taskdef name="if" classname="${if.task}"
+											classpathref="maven.runtime.classpath" />
+										<available property="jre.present" file="${user.home}/${jre.osx.url}" />
+										<if>
+											<not>
+												<isset property="jre.present" />
+											</not>
+											<then>
+												<get src="${jre.url}/${jre.osx.url}.zip" dest="${user.home}" />
+												<unzip src="${user.home}/${jre.osx.url}.zip" dest="${user.home}"/>
+		
+												<delete file="${user.home}/${jre.osx.url}.zip" />
+											</then>
+										</if>
+										<copy
+											todir="${project.build.directory}/products/${productId}/macosx/cocoa/x86/jre/Contents/Home/jre">
+											<fileset dir="${user.home}/${jre.osx.url}/jre" />
+										</copy>
+									</tasks>
+								</configuration>
+							</execution>
+							<execution>
+								<id>jre-osx-x86-x64</id>
+								<phase>package</phase>
+								<goals>
+									<goal>run</goal>
+								</goals>
+								<configuration>
+									<tasks>
+										<taskdef name="if" classname="${if.task}"
+											classpathref="maven.runtime.classpath" />
+										<available property="jre.present" file="${user.home}/${jre.osx.url}" />
+										<if>
+											<not>
+												<isset property="jre.present" />
+											</not>
+											<then>
+												<get src="${jre.url}/${jre.osx.url}.zip" dest="${user.home}"/>
+												<unzip src="${user.home}/${jre.osx.url}.zip" dest="${user.home}"/>
+		
+												<delete file="${user.home}/${jre.osx.url}.zip" />
+											</then>
+										</if>
+										<copy
+											todir="${project.build.directory}/products/${productId}/macosx/cocoa/x86_64/jre/Contents/Home/jre">
+											<fileset dir="${user.home}/${jre.osx.url}/jre" />
+										</copy>
+									</tasks>
+								</configuration>
+							</execution> 	 		 	 			 	 			 		 	
 						</executions>
 					</plugin>
-
 				</plugins>
 			</build>
 		</profile>

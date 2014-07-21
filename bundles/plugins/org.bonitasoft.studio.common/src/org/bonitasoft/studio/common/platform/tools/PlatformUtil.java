@@ -94,7 +94,7 @@ public class PlatformUtil {
     public static void closeIntro() {
         final IWorkbench workbench = PlatformUI.getWorkbench();
         if (workbench != null) {
-            Display display = workbench.getDisplay();
+            final Display display = workbench.getDisplay();
             display.syncExec(new Runnable() {
 
                 @Override
@@ -132,7 +132,7 @@ public class PlatformUtil {
     public static void openIntroIfNoOtherEditorOpen() {
         final IWorkbench workbench = PlatformUI.getWorkbench();
         if (workbench != null) {
-            Display display = workbench.getDisplay();
+            final Display display = workbench.getDisplay();
             display.syncExec(new Runnable() {
 
                 @Override
@@ -161,13 +161,13 @@ public class PlatformUtil {
     public static void openIntro() {
         final IWorkbench workbench = PlatformUI.getWorkbench();
         if (workbench != null) {
-            Display display = workbench.getDisplay();
+            final Display display = workbench.getDisplay();
             display.syncExec(new Runnable() {
 
                 @SuppressWarnings("restriction")
                 @Override
                 public void run() {
-                    IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
+                    final IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
                     final IIntroManager introManager = workbench.getIntroManager();
                     final IntroModelRoot model = IntroPlugin.getDefault().getIntroModelRoot();
                     if (model != null
@@ -466,11 +466,12 @@ public class PlatformUtil {
 
     public static boolean isHeadless() {
         if (Platform.getCommandLineArgs().length > 1) {
-            for (String arg : Platform.getCommandLineArgs()) {
+            for (final String arg : Platform.getCommandLineArgs()) {
                 if (arg.equals("org.bonitasoft.studio.application.InitializerApplication")
                         || arg.equals("org.bonitasoft.studio.application.WorkspaceRecovery")
                         || arg.equals("org.bonitasoft.studio.initializer")
-                        || arg.equals("org.bonitasoft.studio.workspaceRecovery")) {
+                        || arg.equals("org.bonitasoft.studio.workspaceRecovery")
+                        || arg.equals("org.bonitasoft.studio.workspaceAPI")) {
                     return true;
                 }
             }
@@ -479,22 +480,22 @@ public class PlatformUtil {
     }
 
     public static Properties getStudioGlobalProperties() {
-        File res = new File(ResourcesPlugin.getWorkspace().getRoot().getLocation().toFile(), "studio.properties");
+        final File res = new File(ResourcesPlugin.getWorkspace().getRoot().getLocation().toFile(), "studio.properties");
         if (res.exists()) {
             try {
-                InputStream is = new FileInputStream(res);
-                Properties properties = new Properties();
+                final InputStream is = new FileInputStream(res);
+                final Properties properties = new Properties();
                 properties.load(is);
                 is.close();
                 return properties;
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 BonitaStudioLog.error(e);
             }
         }
         return null;
     }
 
-    public static boolean isABonitaProduct(String id) {
+    public static boolean isABonitaProduct(final String id) {
         if (id != null) {
             return id.equals("org.bonitasoft.studio.product") || id.equals("org.bonitasoft.studioEx.product") || id.equals("org.bonitasoft.talendBPM.product");
         }
@@ -506,7 +507,7 @@ public class PlatformUtil {
         if (window != null) {
             final IWorkbenchPage activePage = window.getActivePage();
             if (activePage != null) {
-                for (IViewReference vr : activePage.getViewReferences()) {
+                for (final IViewReference vr : activePage.getViewReferences()) {
                     if (vr.getId().equals("org.eclipse.ui.internal.introview")) {
                         return true;
                     }
@@ -529,13 +530,13 @@ public class PlatformUtil {
         return false;
     }
 
-    public static IEditorReference getOpenEditor(String editorName) {
+    public static IEditorReference getOpenEditor(final String editorName) {
         IEditorReference openEditor = null;
         if (PlatformUI.isWorkbenchRunning()) {
             final IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
             if (activePage != null) {
                 final IEditorReference[] editors = activePage.getEditorReferences();
-                for (IEditorReference iEditorReference : editors) {
+                for (final IEditorReference iEditorReference : editors) {
                     if (iEditorReference.getName().equals(editorName)) {
                         openEditor = iEditorReference;
                         break;
@@ -546,14 +547,14 @@ public class PlatformUtil {
         return openEditor;
     }
 
-    public static void swtichToOpenedEditor(IEditorReference openEditor) {
+    public static void swtichToOpenedEditor(final IEditorReference openEditor) {
         if (isIntroOpen()) {
             closeIntro();
         }
         PlatformUI.getWorkbench().getActiveWorkbenchWindow().setActivePage(openEditor.getPage());
         try {
             openEditor.getPage().openEditor(openEditor.getEditorInput(), openEditor.getId());
-        } catch (PartInitException e) {
+        } catch (final PartInitException e) {
             e.printStackTrace();
         }
     }
