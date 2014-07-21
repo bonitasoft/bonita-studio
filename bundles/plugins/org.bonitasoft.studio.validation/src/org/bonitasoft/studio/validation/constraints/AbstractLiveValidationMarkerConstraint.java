@@ -37,6 +37,7 @@ import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditor;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditorPlugin;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditorUtil;
 import org.bonitasoft.studio.model.process.diagram.providers.ProcessMarkerNavigationProvider;
+import org.bonitasoft.studio.validation.ValidationPlugin;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
@@ -70,215 +71,219 @@ import org.eclipse.ui.PlatformUI;
  */
 public abstract class AbstractLiveValidationMarkerConstraint extends AbstractModelConstraint {
 
-	private static final String CONSTRAINT_ID = "constraintId";
+    private static final String CONSTRAINT_ID = "constraintId";
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.emf.validation.AbstractModelConstraint#validate(org.eclipse.emf.validation.IValidationContext)
-	 */
-	@Override
-	public final IStatus validate(IValidationContext ctx) {
-		IStatus status = null ;
-		final EMFEventType eType = ctx.getEventType();
-		final EStructuralFeature featureTriggered = ctx.getFeature();
-		if(featureTriggered != null && featureTriggered.equals(NotationPackage.Literals.VIEW__ELEMENT)){
-			EObject eobject = (EObject) ctx.getFeatureNewValue();
-			if(eobject != null){
-				MainProcess mainProc = ModelHelper.getMainProcess(eobject);
-				if(mainProc!= null && !mainProc.isEnableValidation()){
-					return Status.OK_STATUS;
-				}
-			}
-		}
-		EObject target = ctx.getTarget();
-		if(isAExpressionReferencedElement(target)){
-			return ctx.createSuccessStatus();
-		}
-		if (eType != EMFEventType.NULL) { //LIVE
-			status = performLiveValidation(ctx);
-			updateValidationMarkersOnDiagram(status, ctx);
-		}else{ //Batch
-			status = performBatchValidation(ctx);
-		}
+    /* (non-Javadoc)
+     * @see org.eclipse.emf.validation.AbstractModelConstraint#validate(org.eclipse.emf.validation.IValidationContext)
+     */
+    @Override
+    public final IStatus validate(final IValidationContext ctx) {
+        IStatus status = null ;
+        final EMFEventType eType = ctx.getEventType();
+        final EStructuralFeature featureTriggered = ctx.getFeature();
+        if(featureTriggered != null && featureTriggered.equals(NotationPackage.Literals.VIEW__ELEMENT)){
+            final EObject eobject = (EObject) ctx.getFeatureNewValue();
+            if(eobject != null){
+                final MainProcess mainProc = ModelHelper.getMainProcess(eobject);
+                if(mainProc!= null && !mainProc.isEnableValidation()){
+                    return Status.OK_STATUS;
+                }
+            }
+        }
+        final EObject target = ctx.getTarget();
+        if(isAExpressionReferencedElement(target)){
+            return ctx.createSuccessStatus();
+        }
+        if (eType != EMFEventType.NULL) { //LIVE
+            status = performLiveValidation(ctx);
+            updateValidationMarkersOnDiagram(status, ctx);
+        }else{ //Batch
+            status = performBatchValidation(ctx);
+        }
 
-		return status;
-	}
+        return status;
+    }
 
-	protected boolean isAExpressionReferencedElement(EObject target) {
-		if(target != null){
-			EObject current = target;
-			EReference ref = current.eContainmentFeature();
-			while (ref != null && !ref.equals(ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS)) {
-				current = current.eContainer();
-				ref = current.eContainmentFeature();
-			}
-			return ref != null;
-		}
-		return false;
-	}
+    protected boolean isAExpressionReferencedElement(final EObject target) {
+        if(target != null){
+            EObject current = target;
+            EReference ref = current.eContainmentFeature();
+            while (ref != null && !ref.equals(ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS)) {
+                current = current.eContainer();
+                ref = current.eContainmentFeature();
+            }
+            return ref != null;
+        }
+        return false;
+    }
 
-	
-	private void updateValidationMarkersOnDiagram(IStatus status,IValidationContext context) {
-		if(PlatformUI.isWorkbenchRunning() &&  PlatformUI.getWorkbench()
-				.getActiveWorkbenchWindow() != null &&  PlatformUI.getWorkbench()
-						.getActiveWorkbenchWindow().getActivePage() != null){
-			IEditorPart editorPart = PlatformUI.getWorkbench()
-					.getActiveWorkbenchWindow().getActivePage()
-					.getActiveEditor();
 
-			if (editorPart instanceof DiagramEditor) {
-				EObject validatedObject  = context.getTarget();
-				if(status instanceof IConstraintStatus){
-					validatedObject = ((IConstraintStatus) status).getTarget();
-				}
-				if(validatedObject == null){
-					return;
-				}
-				View view = null ;
-				if(validatedObject instanceof View){
-					view = (View) validatedObject;
-				}else{
-					view = getViewFor((DiagramEditor) editorPart,validatedObject);
-				}
-				if(view == null ){
-					return ;
-				}
-				String viewId = ViewUtil.getIdStr(view);
+    private void updateValidationMarkersOnDiagram(final IStatus status,final IValidationContext context) {
+        if(PlatformUI.isWorkbenchRunning() &&  PlatformUI.getWorkbench()
+                .getActiveWorkbenchWindow() != null &&  PlatformUI.getWorkbench()
+                .getActiveWorkbenchWindow().getActivePage() != null){
+            final IEditorPart editorPart = PlatformUI.getWorkbench()
+                    .getActiveWorkbenchWindow().getActivePage()
+                    .getActiveEditor();
 
-				final DiagramEditPart diagramEditPart = ((DiagramEditor) editorPart).getDiagramEditPart();
-				IFile target = diagramEditPart.getDiagramView().eResource() != null ? WorkspaceSynchronizer.getFile(diagramEditPart.getDiagramView().eResource()) : null;
-				if (target != null) {
-					try {
-						for(IMarker marker : target.findMarkers(getMarkerType((DiagramEditor) editorPart), false, IResource.DEPTH_ZERO)){
-							String elementId = (String) marker.getAttribute(org.eclipse.gmf.runtime.common.ui.resources.IMarker.ELEMENT_ID);
-							String constraintId = (String) marker.getAttribute(CONSTRAINT_ID);
-							if(elementId != null && elementId.equals(viewId) && getConstraintId().equals(constraintId)){
-								marker.delete();
-							}
-						}
-					} catch (CoreException e) {
-						BonitaStudioLog.error(e);
-					}
-				}
+            if (editorPart instanceof DiagramEditor) {
+                EObject validatedObject  = context.getTarget();
+                if(status instanceof IConstraintStatus){
+                    validatedObject = ((IConstraintStatus) status).getTarget();
+                }
+                if(validatedObject == null){
+                    return;
+                }
+                View view = null ;
+                if(validatedObject instanceof View){
+                    view = (View) validatedObject;
+                }else{
+                    view = getViewFor((DiagramEditor) editorPart,validatedObject);
+                }
+                if(view == null ){
+                    return ;
+                }
+                final String viewId = ViewUtil.getIdStr(view);
 
-				// create problem markers on the appropriate resources
-				if(status != null && !status.isOK()){
-					createMarkers(target,(IStatus) status, diagramEditPart,(DiagramEditor) editorPart);
-				}
-			}
-		}
-	}
+                final DiagramEditPart diagramEditPart = ((DiagramEditor) editorPart).getDiagramEditPart();
+                if (diagramEditPart == null) {
+                    BonitaStudioLog.error("DiagramEditPart is null. Ignoring validation marker update.", ValidationPlugin.PLUGIN_ID);
+                    return;
+                }
+                final IFile target = diagramEditPart.getDiagramView().eResource() != null ? WorkspaceSynchronizer.getFile(diagramEditPart.getDiagramView().eResource()) : null;
+                if (target != null) {
+                    try {
+                        for(final IMarker marker : target.findMarkers(getMarkerType((DiagramEditor) editorPart), false, IResource.DEPTH_ZERO)){
+                            final String elementId = (String) marker.getAttribute(org.eclipse.gmf.runtime.common.ui.resources.IMarker.ELEMENT_ID);
+                            final String constraintId = (String) marker.getAttribute(CONSTRAINT_ID);
+                            if(elementId != null && elementId.equals(viewId) && getConstraintId().equals(constraintId)){
+                                marker.delete();
+                            }
+                        }
+                    } catch (final CoreException e) {
+                        BonitaStudioLog.error(e);
+                    }
+                }
 
-	protected abstract IStatus performLiveValidation(IValidationContext context);
+                // create problem markers on the appropriate resources
+                if(status != null && !status.isOK()){
+                    createMarkers(target,status, diagramEditPart,(DiagramEditor) editorPart);
+                }
+            }
+        }
+    }
 
-	protected abstract IStatus performBatchValidation(IValidationContext context);
+    protected abstract IStatus performLiveValidation(IValidationContext context);
 
-	protected String getMarkerType(DiagramEditor editor){
-		if(editor instanceof ProcessDiagramEditor){
-			return ProcessMarkerNavigationProvider.MARKER_TYPE;
-		}else if (editor instanceof FormDiagramEditor){
-			return org.bonitasoft.studio.model.process.diagram.form.providers.ProcessMarkerNavigationProvider.MARKER_TYPE;
-		}
-		return null;
-	}
+    protected abstract IStatus performBatchValidation(IValidationContext context);
 
-	protected abstract String getConstraintId();
+    protected String getMarkerType(final DiagramEditor editor){
+        if(editor instanceof ProcessDiagramEditor){
+            return ProcessMarkerNavigationProvider.MARKER_TYPE;
+        }else if (editor instanceof FormDiagramEditor){
+            return org.bonitasoft.studio.model.process.diagram.form.providers.ProcessMarkerNavigationProvider.MARKER_TYPE;
+        }
+        return null;
+    }
 
-	private View getViewFor(DiagramEditor editor,EObject validatedObject) {
-		if(editor instanceof ProcessDiagramEditor){
-			if(!(validatedObject instanceof FlowElement 
-					|| validatedObject instanceof BoundaryEvent 
-					|| validatedObject instanceof Container 
-					|| validatedObject instanceof Connection)){
-				validatedObject = ModelHelper.getParentFlowElement(validatedObject);
-			}
-		}else if(editor instanceof FormDiagramEditor){
-			if(!(validatedObject instanceof Widget 
-					|| validatedObject instanceof Form)){
-				EObject result = ModelHelper.getParentWidget(validatedObject);
-				if(result == null){
-					result = ModelHelper.getParentForm(validatedObject);
-				}
-				validatedObject = result;
-			}
-		}
-		for(Object ep : editor.getDiagramGraphicalViewer().getEditPartRegistry().values()){
-			if(!(ep instanceof ITextAwareEditPart) && !(ep instanceof ShapeCompartmentEditPart) && ep instanceof IGraphicalEditPart && ((IGraphicalEditPart)ep).resolveSemanticElement() != null &&  ((IGraphicalEditPart)ep).resolveSemanticElement().equals(validatedObject)){
-				return ((IGraphicalEditPart)ep).getNotationView();
-			}
-		}
-		return null ;
-	}
+    protected abstract String getConstraintId();
 
-	private void createMarkers(IFile target, IStatus validationStatus,
-			DiagramEditPart diagramEditPart,DiagramEditor editor) {
-		if (validationStatus.isOK()) {
-			return;
-		}
-		final IStatus rootStatus = validationStatus;
-		List allStatuses = new ArrayList();
-		ProcessDiagramEditorUtil.LazyElement2ViewMap element2ViewMap = new ProcessDiagramEditorUtil.LazyElement2ViewMap(
-				diagramEditPart.getDiagramView(), collectTargetElements(
-						rootStatus, new HashSet<EObject>(), allStatuses));
-		for (Iterator it = allStatuses.iterator(); it.hasNext();) {
-			IConstraintStatus nextStatus = (IConstraintStatus) it.next();
-			EObject targetEObject = nextStatus.getTarget();
-			View view = null ;
-			if(targetEObject instanceof View){
-				view = (View) targetEObject;
-			}else{
-				view = ProcessDiagramEditorUtil.findView(diagramEditPart,
-						targetEObject, element2ViewMap);
-			}
-			addMarker(editor,diagramEditPart.getViewer(), target,ViewUtil.getIdStr(view), EMFCoreUtil.getQualifiedName(
-					nextStatus.getTarget(), true), nextStatus.getMessage(),
-					nextStatus.getSeverity());
-		}
-	}
+    private View getViewFor(final DiagramEditor editor,EObject validatedObject) {
+        if(editor instanceof ProcessDiagramEditor){
+            if(!(validatedObject instanceof FlowElement
+                    || validatedObject instanceof BoundaryEvent
+                    || validatedObject instanceof Container
+                    || validatedObject instanceof Connection)){
+                validatedObject = ModelHelper.getParentFlowElement(validatedObject);
+            }
+        }else if(editor instanceof FormDiagramEditor){
+            if(!(validatedObject instanceof Widget
+                    || validatedObject instanceof Form)){
+                EObject result = ModelHelper.getParentWidget(validatedObject);
+                if(result == null){
+                    result = ModelHelper.getParentForm(validatedObject);
+                }
+                validatedObject = result;
+            }
+        }
+        for(final Object ep : editor.getDiagramGraphicalViewer().getEditPartRegistry().values()){
+            if(!(ep instanceof ITextAwareEditPart) && !(ep instanceof ShapeCompartmentEditPart) && ep instanceof IGraphicalEditPart && ((IGraphicalEditPart)ep).resolveSemanticElement() != null &&  ((IGraphicalEditPart)ep).resolveSemanticElement().equals(validatedObject)){
+                return ((IGraphicalEditPart)ep).getNotationView();
+            }
+        }
+        return null ;
+    }
 
-	private static Set<EObject> collectTargetElements(IStatus status,
-			Set<EObject> targetElementCollector, List allConstraintStatuses) {
-		if (status instanceof IConstraintStatus) {
-			targetElementCollector
-			.add(((IConstraintStatus) status).getTarget());
-			allConstraintStatuses.add(status);
-		}
-		if (status.isMultiStatus()) {
-			IStatus[] children = status.getChildren();
-			for (int i = 0; i < children.length; i++) {
-				collectTargetElements(children[i], targetElementCollector,
-						allConstraintStatuses);
-			}
-		}
-		return targetElementCollector;
-	}
+    private void createMarkers(final IFile target, final IStatus validationStatus,
+            final DiagramEditPart diagramEditPart,final DiagramEditor editor) {
+        if (validationStatus.isOK()) {
+            return;
+        }
+        final IStatus rootStatus = validationStatus;
+        final List allStatuses = new ArrayList();
+        final ProcessDiagramEditorUtil.LazyElement2ViewMap element2ViewMap = new ProcessDiagramEditorUtil.LazyElement2ViewMap(
+                diagramEditPart.getDiagramView(), collectTargetElements(
+                        rootStatus, new HashSet<EObject>(), allStatuses));
+        for (final Iterator it = allStatuses.iterator(); it.hasNext();) {
+            final IConstraintStatus nextStatus = (IConstraintStatus) it.next();
+            final EObject targetEObject = nextStatus.getTarget();
+            View view = null ;
+            if(targetEObject instanceof View){
+                view = (View) targetEObject;
+            }else{
+                view = ProcessDiagramEditorUtil.findView(diagramEditPart,
+                        targetEObject, element2ViewMap);
+            }
+            addMarker(editor,diagramEditPart.getViewer(), target,ViewUtil.getIdStr(view), EMFCoreUtil.getQualifiedName(
+                    nextStatus.getTarget(), true), nextStatus.getMessage(),
+                    nextStatus.getSeverity());
+        }
+    }
 
-	private void addMarker(DiagramEditor editor,EditPartViewer viewer, IFile target,
-			String elementId, String location, String message,
-			int statusSeverity) {
-		if (target == null) {
-			return;
-		}
-		IMarker marker = null;
-		try {
-			marker = target.createMarker(getMarkerType(editor));
-			marker.setAttribute(IMarker.MESSAGE, message);
-			marker.setAttribute(IMarker.LOCATION, location);
-			marker.setAttribute(
-					org.eclipse.gmf.runtime.common.ui.resources.IMarker.ELEMENT_ID,
-					elementId);
-			marker.setAttribute(CONSTRAINT_ID,getConstraintId());
-			int markerSeverity = IMarker.SEVERITY_INFO;
-			if (statusSeverity == IStatus.WARNING) {
-				markerSeverity = IMarker.SEVERITY_WARNING;
-			} else if (statusSeverity == IStatus.ERROR
-					|| statusSeverity == IStatus.CANCEL) {
-				markerSeverity = IMarker.SEVERITY_ERROR;
-			}
-			marker.setAttribute(IMarker.SEVERITY, markerSeverity);
-		} catch (CoreException e) {
-			ProcessDiagramEditorPlugin.getInstance().logError(
-					"Failed to create validation marker", e); //$NON-NLS-1$
-		}
-	}
+    private static Set<EObject> collectTargetElements(final IStatus status,
+            final Set<EObject> targetElementCollector, final List allConstraintStatuses) {
+        if (status instanceof IConstraintStatus) {
+            targetElementCollector
+            .add(((IConstraintStatus) status).getTarget());
+            allConstraintStatuses.add(status);
+        }
+        if (status.isMultiStatus()) {
+            final IStatus[] children = status.getChildren();
+            for (int i = 0; i < children.length; i++) {
+                collectTargetElements(children[i], targetElementCollector,
+                        allConstraintStatuses);
+            }
+        }
+        return targetElementCollector;
+    }
+
+    private void addMarker(final DiagramEditor editor,final EditPartViewer viewer, final IFile target,
+            final String elementId, final String location, final String message,
+            final int statusSeverity) {
+        if (target == null) {
+            return;
+        }
+        IMarker marker = null;
+        try {
+            marker = target.createMarker(getMarkerType(editor));
+            marker.setAttribute(IMarker.MESSAGE, message);
+            marker.setAttribute(IMarker.LOCATION, location);
+            marker.setAttribute(
+                    org.eclipse.gmf.runtime.common.ui.resources.IMarker.ELEMENT_ID,
+                    elementId);
+            marker.setAttribute(CONSTRAINT_ID,getConstraintId());
+            int markerSeverity = IMarker.SEVERITY_INFO;
+            if (statusSeverity == IStatus.WARNING) {
+                markerSeverity = IMarker.SEVERITY_WARNING;
+            } else if (statusSeverity == IStatus.ERROR
+                    || statusSeverity == IStatus.CANCEL) {
+                markerSeverity = IMarker.SEVERITY_ERROR;
+            }
+            marker.setAttribute(IMarker.SEVERITY, markerSeverity);
+        } catch (final CoreException e) {
+            ProcessDiagramEditorPlugin.getInstance().logError(
+                    "Failed to create validation marker", e); //$NON-NLS-1$
+        }
+    }
 
 }
