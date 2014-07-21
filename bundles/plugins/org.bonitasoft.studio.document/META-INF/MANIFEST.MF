@@ -32,4 +32,5 @@ Require-Bundle: org.eclipse.ui,
 Bundle-Localization: plugin
 Import-Package: org.bonitasoft.studio.common
 Export-Package: org.bonitasoft.studio.document,
+ org.bonitasoft.studio.document.refactoring,
  org.bonitasoft.studio.document.ui
