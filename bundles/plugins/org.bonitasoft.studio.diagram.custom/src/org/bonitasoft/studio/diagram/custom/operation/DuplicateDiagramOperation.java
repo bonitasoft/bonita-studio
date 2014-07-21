@@ -82,7 +82,6 @@ public class DuplicateDiagramOperation implements IRunnableWithProgress {
     private String diagramVersion;
     private String diagramName;
     private List<ProcessesNameVersion> pools = new ArrayList<ProcessesNameVersion>();
-    private final DiagramRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
 
     /*
      * (non-Javadoc)
@@ -104,6 +103,11 @@ public class DuplicateDiagramOperation implements IRunnableWithProgress {
         }
 
         final TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(newDiagram);
+        editingDomain.getCommandStack().execute(
+                SetCommand.create(editingDomain, newDiagram, ProcessPackage.Literals.ABSTRACT_PROCESS__AUTHOR,
+                        System.getProperty("user.name", "Unknown")));
+
+        boolean poolRenamed = false;
         for (final ProcessesNameVersion pnv : pools) {
             final AbstractProcess fromPool = pnv.getAbstractProcess();
             final String fromPoolName = fromPool.getName();
@@ -111,16 +115,17 @@ public class DuplicateDiagramOperation implements IRunnableWithProgress {
             /* Find corresponding element in the duplicated model */
             for (final Element element : newDiagram.getElements()) {
                 if (element instanceof AbstractProcess) {
-                    if (element.getName().equals(fromPoolName)
-                            && ((AbstractProcess) element).getVersion().equals(fromPoolVersion)) {
+                    if (!element.getName().equals(fromPoolName)
+                            || !((AbstractProcess) element).getVersion().equals(fromPoolVersion)) {
                         changeProcessNameAndVersion((AbstractProcess) element, editingDomain, pnv.getNewName(), pnv.getNewVersion());
+                        poolRenamed = true;
                         break;
                     }
                 }
             }
 
         }
-        if (!pools.isEmpty()) {
+        if (poolRenamed) {
             try {
                 if (newDiagram.eResource() != null) {
                     newDiagram.eResource().save(ProcessDiagramEditorUtil.getSaveOptions());
