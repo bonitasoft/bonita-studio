@@ -87,6 +87,7 @@ public class DocumentWizard extends Wizard {
             final RefactorDocumentOperation refactorDocumentOperation = new RefactorDocumentOperation(RefactoringOperationType.UPDATE);
             refactorDocumentOperation.setEditingDomain(editingDomain);
             refactorDocumentOperation.addItemToRefactor(documentWorkingCopy, document);
+            refactorDocumentOperation.setAskConfirmation(true);
             try {
                 getContainer().run(false, false, refactorDocumentOperation);
             } catch (final InvocationTargetException e) {

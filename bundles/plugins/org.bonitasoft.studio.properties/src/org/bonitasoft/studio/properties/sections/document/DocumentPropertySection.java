@@ -219,6 +219,7 @@ public class DocumentPropertySection extends AbstractBonitaDescriptionSection {
             private RefactorDocumentOperation createDeleteRefactorOperation(final Iterator<Document> selection) {
                 final RefactorDocumentOperation rdo = new RefactorDocumentOperation(RefactoringOperationType.REMOVE);
                 rdo.setEditingDomain(getEditingDomain());
+                rdo.setAskConfirmation(true);
                 while (selection.hasNext()) {
                     rdo.addItemToRefactor(null, selection.next());
                 }
