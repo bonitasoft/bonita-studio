@@ -57,6 +57,7 @@ import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.jface.wizard.WizardSelectionPage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.TreeEditor;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -66,6 +67,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.TreeItem;
 
 /**
  * 
@@ -89,45 +91,45 @@ public class SelectGeneratedWidgetsWizardPage extends WizardSelectionPage implem
 
     private List<? extends WidgetMapping> widgetMappingList;
 
-    public SelectGeneratedWidgetsWizardPage(String defautFormName, List<EObject> inputElements) {
+    public SelectGeneratedWidgetsWizardPage(final String defautFormName, final List<EObject> inputElements) {
         super(SelectGeneratedWidgetsWizardPage.class.getName());
         setFormName(defautFormName);
         this.inputElements = inputElements;
     }
 
     @Override
-    public void createControl(Composite parent) {
+    public void createControl(final Composite parent) {
         databindingContext = new DataBindingContext();
         // main composite
-        Composite composite = new Composite(parent, SWT.NONE);
+        final Composite composite = new Composite(parent, SWT.NONE);
         composite.setLayout(new GridLayout(1, false));
 
         // ----- TOP
-        Composite topComposite = new Composite(composite, SWT.NONE);
+        final Composite topComposite = new Composite(composite, SWT.NONE);
         topComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).spacing(10, 5).create());
         topComposite.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
 
-        Label nameLabel = new Label(topComposite, SWT.LEFT);
+        final Label nameLabel = new Label(topComposite, SWT.LEFT);
         nameLabel.setLayoutData(GridDataFactory.swtDefaults().align(SWT.END, SWT.CENTER).create());
         nameLabel.setText(Messages.GeneralSection_Name);
 
         final Text nameText = new Text(topComposite, SWT.BORDER);
 
         nameText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
-        UpdateValueStrategy stratetgy = new UpdateValueStrategy();
+        final UpdateValueStrategy stratetgy = new UpdateValueStrategy();
         stratetgy.setBeforeSetValidator(new InputLengthValidator(Messages.name, 50));
-        ISWTObservableValue observeText = SWTObservables.observeText(nameText, SWT.Modify);
+        final ISWTObservableValue observeText = SWTObservables.observeText(nameText, SWT.Modify);
         observeText.addValueChangeListener(new IValueChangeListener() {
 
             @Override
-            public void handleValueChange(ValueChangeEvent event) {
+            public void handleValueChange(final ValueChangeEvent event) {
                 getContainer().updateButtons();
             }
         });
         databindingContext.bindValue(observeText, PojoProperties.value("formName").observe(this), stratetgy, null);
 
         // ------------ Description
-        Label descLabel = new Label(topComposite, SWT.LEFT);
+        final Label descLabel = new Label(topComposite, SWT.LEFT);
         descLabel.setLayoutData(GridDataFactory.swtDefaults().align(SWT.END, SWT.TOP).create());
         descLabel.setText(Messages.GeneralSection_Description);
 
@@ -138,7 +140,7 @@ public class SelectGeneratedWidgetsWizardPage extends WizardSelectionPage implem
         if (hasWidgetToGenerated()) {
             createWidgetSelectionGroup(composite);
         } else {
-            Label title = new Label(composite, SWT.CENTER);
+            final Label title = new Label(composite, SWT.CENTER);
             title.setText(Messages.createForm_noData);
         }
 
@@ -146,15 +148,15 @@ public class SelectGeneratedWidgetsWizardPage extends WizardSelectionPage implem
         setControl(composite);
     }
 
-    protected void createWidgetSelectionGroup(Composite composite) {
-        Group parentGroup = createWidgetGroup(composite);
-        Composite treeContainerComposite = createTreeContainer(parentGroup);
+    protected void createWidgetSelectionGroup(final Composite composite) {
+        final Group parentGroup = createWidgetGroup(composite);
+        final Composite treeContainerComposite = createTreeContainer(parentGroup);
         widgetMappingList = asWidgetMappingList(inputElements);
         createProcessDataMappingTreeViewer(treeContainerComposite, widgetMappingList);
     }
 
     protected CheckboxTreeViewer createProcessDataMappingTreeViewer(
-            Composite treeContainerComposite, final List<? extends WidgetMapping> input) {
+            final Composite treeContainerComposite, final List<? extends WidgetMapping> input) {
 
         final Button selectAllCheckbox = new Button(treeContainerComposite, SWT.CHECK);
         selectAllCheckbox.setText(Messages.selectAll);
@@ -165,39 +167,40 @@ public class SelectGeneratedWidgetsWizardPage extends WizardSelectionPage implem
         treeViewer.setContentProvider(new WidgetMappingTreeContentProvider());
         treeViewer.addCheckStateListener(this);
 
-        TreeViewerColumn nameTreeViewerColumn = new TreeViewerColumn(treeViewer, SWT.FILL);
+        final TreeViewerColumn nameTreeViewerColumn = new TreeViewerColumn(treeViewer, SWT.FILL);
         nameTreeViewerColumn.getColumn().setText(Messages.name);
         nameTreeViewerColumn.getColumn().setWidth(250);
         nameTreeViewerColumn.setLabelProvider(createNameColumnLabelProvider());
 
-        TreeViewerColumn widgetTreeViewerColumn = new TreeViewerColumn(treeViewer, SWT.FILL);
+        final TreeViewerColumn widgetTreeViewerColumn = new TreeViewerColumn(treeViewer, SWT.FILL);
         widgetTreeViewerColumn.getColumn().setText(Messages.wiget);
         widgetTreeViewerColumn.getColumn().setWidth(200);
+
         final WidgetTypeEditingSupport widgetTypeEditingSupport = createWidgetTypeEditingSupport(treeViewer);
         widgetTreeViewerColumn.setLabelProvider(new CellLabelProvider() {
 
             @Override
-            public void update(ViewerCell cell) {
-                WidgetMapping mapping = (WidgetMapping) cell.getElement();
-                Widget element = ((WidgetMapping) cell.getElement()).getWidgetType();
+            public void update(final ViewerCell cell) {
+                final WidgetMapping mapping = (WidgetMapping) cell.getElement();
+                final Widget element = ((WidgetMapping) cell.getElement()).getWidgetType();
                 cell.setText(widgetTypeEditingSupport.getText(element.eClass(), mapping));
             }
         });
-        widgetTreeViewerColumn.setEditingSupport(widgetTypeEditingSupport);
+        //        widgetTreeViewerColumn.setEditingSupport(widgetTypeEditingSupport);
 
-        TreeViewerColumn mandatoryTreeViewerColumn = new TreeViewerColumn(treeViewer, SWT.CENTER);
+        final TreeViewerColumn mandatoryTreeViewerColumn = new TreeViewerColumn(treeViewer, SWT.CENTER);
         mandatoryTreeViewerColumn.getColumn().setText(Messages.mandatory);
         mandatoryTreeViewerColumn.getColumn().setWidth(90);
         mandatoryTreeViewerColumn.setLabelProvider(new MandatoryCheckboxLabelProvider(treeViewer.getControl()));
         mandatoryTreeViewerColumn.setEditingSupport(createMandatoryEditingSupport(treeViewer));
 
-        TreeViewerColumn readOnlyTreeViewerColumn = new TreeViewerColumn(treeViewer, SWT.CENTER);
+        final TreeViewerColumn readOnlyTreeViewerColumn = new TreeViewerColumn(treeViewer, SWT.CENTER);
         readOnlyTreeViewerColumn.getColumn().setText(Messages.readOnly);
         readOnlyTreeViewerColumn.getColumn().setWidth(90);
         readOnlyTreeViewerColumn.setLabelProvider(new ReadOnlyCheckboxLabelProvider(treeViewer.getControl()));
         readOnlyTreeViewerColumn.setEditingSupport(createReadOnlyEditingSupport(treeViewer));
 
-        WritableValue dataAndDocumentList = new WritableValue();
+        final WritableValue dataAndDocumentList = new WritableValue();
         dataAndDocumentList.setValue(input);
         databindingContext.bindValue(ViewersObservables.observeInput(treeViewer), dataAndDocumentList);
 
@@ -205,9 +208,9 @@ public class SelectGeneratedWidgetsWizardPage extends WizardSelectionPage implem
         observeCheckedElements.addSetChangeListener(new ISetChangeListener() {
 
             @Override
-            public void handleSetChange(SetChangeEvent event) {
+            public void handleSetChange(final SetChangeEvent event) {
                 updateGeneratedMappings(event);
-                List<WidgetMapping> allMappings = new ArrayList<WidgetMapping>();
+                final List<WidgetMapping> allMappings = new ArrayList<WidgetMapping>();
                 fillAllMappings(allMappings, input);
                 selectAllCheckbox.setSelection(event.getObservableSet().size() == allMappings.size());
             }
@@ -220,24 +223,38 @@ public class SelectGeneratedWidgetsWizardPage extends WizardSelectionPage implem
              * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
              */
             @Override
-            public void widgetSelected(SelectionEvent e) {
+            public void widgetSelected(final SelectionEvent e) {
                 if (selectAllCheckbox.getSelection()) {
-                    for (WidgetMapping mapping : input) {
+                    for (final WidgetMapping mapping : input) {
                         treeViewer.setSubtreeChecked(mapping, true);
                         setMappingEnabledRecursivly(mapping, true);
                     }
                 } else {
-                    for (WidgetMapping mapping : input) {
+                    for (final WidgetMapping mapping : input) {
                         treeViewer.setSubtreeChecked(mapping, false);
                         setMappingEnabledRecursivly(mapping, false);
                     }
                 }
             }
         });
+
         if (treeViewer.getSelection().isEmpty()) {
             treeViewer.getTree().select(treeViewer.getTree().getItem(0));
         }
+        treeViewer.expandAll();
+        createWidgetTypeEditors(treeViewer, widgetTypeEditingSupport, treeViewer.getTree().getItems());
         return treeViewer;
+    }
+
+    private void createWidgetTypeEditors(final CheckboxTreeViewer treeViewer, final WidgetTypeEditingSupport widgetTypeEditingSupport,
+            final TreeItem[] treeItems) {
+        for (final TreeItem ti : treeItems) {
+            final TreeEditor editor = new TreeEditor(treeViewer.getTree());
+            editor.grabHorizontal = true;
+            editor.horizontalAlignment = SWT.FILL;
+            editor.setEditor(widgetTypeEditingSupport.createControl(ti.getData()), ti, 1);
+            createWidgetTypeEditors(treeViewer, widgetTypeEditingSupport, ti.getItems());
+        }
     }
 
     /*
@@ -245,15 +262,15 @@ public class SelectGeneratedWidgetsWizardPage extends WizardSelectionPage implem
      * @see org.eclipse.jface.viewers.ICheckStateListener#checkStateChanged(org.eclipse.jface.viewers.CheckStateChangedEvent)
      */
     @Override
-    public void checkStateChanged(CheckStateChangedEvent event) {
-        WidgetMapping mapping = (WidgetMapping) event.getElement();
+    public void checkStateChanged(final CheckStateChangedEvent event) {
+        final WidgetMapping mapping = (WidgetMapping) event.getElement();
 
         // SELECT/DESELECT ALL CHILDREN
         ((CheckboxTreeViewer) event.getSource()).setSubtreeChecked(mapping, event.getChecked());
 
         // DESELECT PARENT IF NO CHILD SELECTED
         if (!event.getChecked() && mapping.getParent() != null) {
-            for (WidgetMapping m : mapping.getParent().getChildren()) {
+            for (final WidgetMapping m : mapping.getParent().getChildren()) {
                 if (((CheckboxTreeViewer) event.getSource()).getChecked(m)) {
                     return;
                 }
@@ -263,30 +280,30 @@ public class SelectGeneratedWidgetsWizardPage extends WizardSelectionPage implem
         }
     }
 
-    protected void fillAllMappings(List<WidgetMapping> allMappings,
-            List<? extends WidgetMapping> mappings) {
+    protected void fillAllMappings(final List<WidgetMapping> allMappings,
+            final List<? extends WidgetMapping> mappings) {
         allMappings.addAll(mappings);
-        for (WidgetMapping child : mappings) {
+        for (final WidgetMapping child : mappings) {
             fillAllMappings(allMappings, child.getChildren());
         }
     }
 
-    protected void updateGeneratedMappings(SetChangeEvent event) {
-        for (Object added : event.diff.getAdditions()) {
+    protected void updateGeneratedMappings(final SetChangeEvent event) {
+        for (final Object added : event.diff.getAdditions()) {
             if (added instanceof WidgetMapping) {
                 setMappingEnabledRecursivly((WidgetMapping) added, true);
             }
         }
-        for (Object removed : event.diff.getRemovals()) {
+        for (final Object removed : event.diff.getRemovals()) {
             if (removed instanceof WidgetMapping) {
                 setMappingEnabledRecursivly((WidgetMapping) removed, false);
             }
         }
     }
 
-    protected void setMappingEnabledRecursivly(WidgetMapping mapping, boolean isGenerated) {
+    protected void setMappingEnabledRecursivly(final WidgetMapping mapping, final boolean isGenerated) {
         mapping.setGenerated(isGenerated);
-        for (WidgetMapping m : mapping.getChildren()) {
+        for (final WidgetMapping m : mapping.getChildren()) {
             setMappingEnabledRecursivly(m, isGenerated);
         }
     }
@@ -295,8 +312,8 @@ public class SelectGeneratedWidgetsWizardPage extends WizardSelectionPage implem
         return new CellLabelProvider() {
 
             @Override
-            public void update(ViewerCell cell) {
-                Object element = ((WidgetMapping) cell.getElement()).getModelElement();
+            public void update(final ViewerCell cell) {
+                final Object element = ((WidgetMapping) cell.getElement()).getModelElement();
                 if (element instanceof Element) {
                     cell.setText(((Element) element).getName());
                 }
@@ -305,24 +322,24 @@ public class SelectGeneratedWidgetsWizardPage extends WizardSelectionPage implem
     }
 
     protected EditingSupport createMandatoryEditingSupport(
-            ColumnViewer columnViewerViewer) {
+            final ColumnViewer columnViewerViewer) {
         return new MandatoryEditingSupport(columnViewerViewer);
     }
 
     protected WidgetTypeEditingSupport createWidgetTypeEditingSupport(
-            ColumnViewer columnViewerViewer) {
+            final ColumnViewer columnViewerViewer) {
         return new WidgetTypeEditingSupport(columnViewerViewer);
     }
 
     protected EditingSupport createReadOnlyEditingSupport(
-            ColumnViewer columnViewerViewer) {
+            final ColumnViewer columnViewerViewer) {
         return new ReadOnlyEditingSupport(columnViewerViewer);
     }
 
-    protected List<? extends WidgetMapping> asWidgetMappingList(Collection<? extends EObject> elements) {
-        ArrayList<WidgetMapping> result = new ArrayList<WidgetMapping>();
-        for (EObject e : elements) {
-            WidgetMapping mappingForModelElement = createMappingForModelElement(e);
+    protected List<? extends WidgetMapping> asWidgetMappingList(final Collection<? extends EObject> elements) {
+        final ArrayList<WidgetMapping> result = new ArrayList<WidgetMapping>();
+        for (final EObject e : elements) {
+            final WidgetMapping mappingForModelElement = createMappingForModelElement(e);
             if (mappingForModelElement != null) {
                 result.add(mappingForModelElement);
             }
@@ -330,19 +347,19 @@ public class SelectGeneratedWidgetsWizardPage extends WizardSelectionPage implem
         return result;
     }
 
-    protected WidgetMapping createMappingForModelElement(EObject modelElement) {
+    protected WidgetMapping createMappingForModelElement(final EObject modelElement) {
         return new WidgetMapping(modelElement);
     }
 
-    protected Composite createTreeContainer(Composite parent) {
+    protected Composite createTreeContainer(final Composite parent) {
         final Composite container = new Composite(parent, SWT.NONE);
         container.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(10, 10).create());
         container.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         return container;
     }
 
-    protected Group createWidgetGroup(Composite composite) {
-        Group datasGrp = new Group(composite, SWT.NONE);
+    protected Group createWidgetGroup(final Composite composite) {
+        final Group datasGrp = new Group(composite, SWT.NONE);
         datasGrp.setText(Messages.FormsSection_wizardVarsGroup_Title);
         datasGrp.setToolTipText(Messages.FormsSection_wizardVarsGroup_Tooltip);
         datasGrp.setLayout(new GridLayout(1, false));
@@ -359,20 +376,20 @@ public class SelectGeneratedWidgetsWizardPage extends WizardSelectionPage implem
         return formName;
     }
 
-    public void setFormName(String name) {
-        this.formName = name;
+    public void setFormName(final String name) {
+        formName = name;
     }
 
     public String getFormDescription() {
         return formDescription;
     }
 
-    public void setFormDescription(String description) {
-        this.formDescription = description;
+    public void setFormDescription(final String description) {
+        formDescription = description;
     }
 
     public List<? extends WidgetMapping> getWidgetMappings() {
-        List<WidgetMapping> result = new ArrayList<WidgetMapping>();
+        final List<WidgetMapping> result = new ArrayList<WidgetMapping>();
         if (widgetMappingList != null) {
             result.addAll(widgetMappingList);
         }
