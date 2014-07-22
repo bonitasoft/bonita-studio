@@ -156,6 +156,7 @@ public class DocumentPropertySection extends AbstractBonitaDescriptionSection {
     private void createEditButton(final Composite buttonComposite) {
         editButton = getWidgetFactory().createButton(buttonComposite, Messages.Edit, SWT.FLAT);
         editButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(85, SWT.DEFAULT).create());
+        editButton.setEnabled(false);
         editButton.addSelectionListener(new SelectionAdapter() {
 
             @Override
@@ -191,6 +192,7 @@ public class DocumentPropertySection extends AbstractBonitaDescriptionSection {
     private void createRemoveButton(final Composite buttonComposite) {
         removeButton = getWidgetFactory().createButton(buttonComposite, Messages.Remove, SWT.FLAT);
         removeButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(85, SWT.DEFAULT).create());
+        removeButton.setEnabled(false);
         removeButton.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(final SelectionEvent e) {
