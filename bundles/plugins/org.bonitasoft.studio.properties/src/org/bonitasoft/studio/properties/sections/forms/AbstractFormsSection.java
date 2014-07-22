@@ -18,7 +18,6 @@
 package org.bonitasoft.studio.properties.sections.forms;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.bonitasoft.studio.common.jface.EMFListFeatureTreeContentProvider;
@@ -365,10 +364,10 @@ public abstract class AbstractFormsSection extends AbstractBonitaDescriptionSect
         final Composite buttonsComposite = getWidgetFactory().createPlainComposite(mainComposite, SWT.NONE);
         buttonsComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).spacing(0, 3).create());
         createAddFormButton(buttonsComposite, getPageFlowFormFeature());
-        editButton = createEditFormButton(buttonsComposite, tree);
-        upButton = createUpFormButton(buttonsComposite, tree);
-        downButton = createDownFormButton(buttonsComposite, tree);
-        removeButton = createRemoveFormButton(buttonsComposite, tree);
+        editButton = createEditFormButton(buttonsComposite);
+        upButton = createUpFormButton(buttonsComposite);
+        downButton = createDownFormButton(buttonsComposite);
+        removeButton = createRemoveFormButton(buttonsComposite);
     }
 
     protected Button createAddFormButton(final Composite buttonsComposite, final EStructuralFeature feature) {
@@ -385,7 +384,7 @@ public abstract class AbstractFormsSection extends AbstractBonitaDescriptionSect
         return addButton;
     }
 
-    private Button createEditFormButton(final Composite buttonsComposite, final FilteredTree tree) {
+    private Button createEditFormButton(final Composite buttonsComposite) {
         final Button editButton = getWidgetFactory().createButton(buttonsComposite, Messages.editForm, SWT.FLAT);
         editButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).minSize(IDialogConstants.BUTTON_WIDTH, SWT.DEFAULT).create());
         editButton.addSelectionListener(new SelectionAdapter() {
@@ -398,7 +397,7 @@ public abstract class AbstractFormsSection extends AbstractBonitaDescriptionSect
         return editButton;
     }
 
-    private Button createDownFormButton(final Composite buttonsComposite, final FilteredTree tree) {
+    private Button createDownFormButton(final Composite buttonsComposite) {
         downButton = getWidgetFactory().createButton(buttonsComposite, Messages.formDown, SWT.FLAT);
         downButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).minSize(IDialogConstants.BUTTON_WIDTH, SWT.DEFAULT).create());
         downButton.addListener(SWT.Selection, new Listener() {
@@ -420,7 +419,7 @@ public abstract class AbstractFormsSection extends AbstractBonitaDescriptionSect
 
     }
 
-    private Button createUpFormButton(final Composite buttonsComposite, final FilteredTree tree) {
+    private Button createUpFormButton(final Composite buttonsComposite) {
         upButton = getWidgetFactory().createButton(buttonsComposite, Messages.formUp, SWT.FLAT);
         upButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).minSize(IDialogConstants.BUTTON_WIDTH, SWT.DEFAULT).create());
         upButton.addListener(SWT.Selection, new Listener() {
@@ -440,34 +439,35 @@ public abstract class AbstractFormsSection extends AbstractBonitaDescriptionSect
     }
 
 
-    private Button createRemoveFormButton(final Composite buttonsComposite, final FilteredTree tree) {
+    private Button createRemoveFormButton(final Composite buttonsComposite) {
         final Button removeButton = getWidgetFactory().createButton(buttonsComposite, Messages.removeForm, SWT.FLAT);
         removeButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).minSize(IDialogConstants.BUTTON_WIDTH, SWT.DEFAULT).create());
-        removeButton.addListener(SWT.Selection, new Listener() {
+        removeButton.addSelectionListener(new SelectionAdapter() {
 
             @Override
-            public void handleEvent(final Event event) {
-                final ArrayList<Form> toRemove = new ArrayList<Form>();
-                Object temp = null;
-                final Iterator<?> it = ((ITreeSelection) tree.getViewer().getSelection()).iterator();
-                while (it.hasNext()) {
-                    temp = it.next();
-                    if (temp instanceof Form) {
-                        toRemove.add((Form) temp);
+            public void widgetSelected(final SelectionEvent e) {
+                if (tree != null) {
+                    final TreeViewer viewer = tree.getViewer();
+                    final ISelection iSelection = viewer.getSelection();
+                    final ArrayList<Form> toRemove = new ArrayList<Form>();
+                    for (final Object selectedElement : ((IStructuredSelection) iSelection).toList()) {
+                        if (selectedElement instanceof Form) {
+                            toRemove.add((Form) selectedElement);
+                        }
                     }
-                }
-                if (toRemove.size() > 0) {
-                    try {
-                        OperationHistoryFactory.getOperationHistory().execute(new RemoveFormCommand(getEditingDomain(), pageFlow, toRemove, tree.getViewer()),
-                                new NullProgressMonitor(), null);
-                    } catch (final ExecutionException e) {
-                        BonitaStudioLog.error(e);
+                    if (toRemove.size() > 0) {
+                        try {
+                            OperationHistoryFactory.getOperationHistory().execute(new RemoveFormCommand(getEditingDomain(), pageFlow, toRemove, viewer),
+                                    new NullProgressMonitor(), null);
+                        } catch (final ExecutionException e1) {
+                            BonitaStudioLog.error(e1);
+                        }
                     }
+                    // Listeners should be best:
+                    viewer.refresh();
                 }
-                // Listeners should be best:
-                tree.getViewer().refresh();
-                //refresh();
             }
+
         });
         removeButton.setEnabled(false);
         return removeButton;
