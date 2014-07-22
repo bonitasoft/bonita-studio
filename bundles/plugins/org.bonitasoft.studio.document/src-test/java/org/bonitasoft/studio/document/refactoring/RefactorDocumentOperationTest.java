@@ -21,6 +21,7 @@ import java.lang.reflect.InvocationTargetException;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
+import org.bonitasoft.studio.model.edit.custom.process.CustomProcessItemProviderAdapterFactory;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.expression.Operation;
@@ -29,13 +30,13 @@ import org.bonitasoft.studio.model.process.Document;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.Task;
-import org.bonitasoft.studio.model.process.util.ProcessAdapterFactory;
 import org.bonitasoft.studio.refactoring.core.RefactoringOperationType;
 import org.eclipse.emf.common.command.BasicCommandStack;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class RefactorDocumentOperationTest {
@@ -45,13 +46,14 @@ public class RefactorDocumentOperationTest {
     private Operation operation;
     private Expression leftOperand;
     private Document document;
+    final String initialDocName = "docName";
 
     @Before
     public void setUp() throws Exception {
-        domain = new AdapterFactoryEditingDomain(new ProcessAdapterFactory(), new BasicCommandStack());
+        domain = new AdapterFactoryEditingDomain(new CustomProcessItemProviderAdapterFactory(), new BasicCommandStack());
         parentProcess = ProcessFactory.eINSTANCE.createPool();
         document = ProcessFactory.eINSTANCE.createDocument();
-        document.setName("docName");
+        document.setName(initialDocName);
         document.setMimeType(ExpressionHelper.createConstantExpression("octet/stream", String.class.getName()));
         parentProcess.getDocuments().add(document);
     }
@@ -92,6 +94,46 @@ public class RefactorDocumentOperationTest {
         assertThat(parentProcess.getDocuments()).hasSize(1);
         assertEquals(parentProcess.getDocuments().get(0).getName(), "docNameUpdated");
         ExpressionAssert.assertThat(leftOperand).hasName(updatedDocument.getName());
+
+        domain.getCommandStack().undo();
+        assertThat(parentProcess.getDocuments()).hasSize(1);
+        assertEquals(parentProcess.getDocuments().get(0).getName(), initialDocName);
+        ExpressionAssert.assertThat(leftOperand).hasName(initialDocName);
+    }
+
+    @Test
+    public void testDeleteDocumentBasic() throws InvocationTargetException, InterruptedException {
+        final RefactorDocumentOperation rdo = new RefactorDocumentOperation(RefactoringOperationType.REMOVE);
+        rdo.addItemToRefactor(null, document);
+        rdo.setEditingDomain(domain);
+        rdo.setAskConfirmation(false);
+        rdo.run(null);
+
+        assertThat(parentProcess.getDocuments()).hasSize(0);
+
+        domain.getCommandStack().undo();
+        assertThat(parentProcess.getDocuments()).hasSize(1);
+    }
+
+    @Test
+    public void testDeleteSeveralDocumentBasic() throws InvocationTargetException, InterruptedException {
+
+        final Document secondDocument = ProcessFactory.eINSTANCE.createDocument();
+        secondDocument.setName("secondDocument");
+        secondDocument.setMimeType(ExpressionHelper.createConstantExpression("octet/stream", String.class.getName()));
+        parentProcess.getDocuments().add(secondDocument);
+
+        final RefactorDocumentOperation rdo = new RefactorDocumentOperation(RefactoringOperationType.REMOVE);
+        rdo.addItemToRefactor(null, document);
+        rdo.addItemToRefactor(null, secondDocument);
+        rdo.setEditingDomain(domain);
+        rdo.setAskConfirmation(false);
+        rdo.run(null);
+
+        assertThat(parentProcess.getDocuments()).hasSize(0);
+
+        domain.getCommandStack().undo();
+        assertThat(parentProcess.getDocuments()).hasSize(2);
     }
 
     /**
@@ -118,6 +160,31 @@ public class RefactorDocumentOperationTest {
     }
 
     /**
+     * Case of File Widget initial value
+     * 
+     * @throws InvocationTargetException
+     * @throws InterruptedException
+     */
+    @Test
+    @Ignore("Not yet implemented complete refactor of delete action")
+    public void testDocumentRefUpdatedWhenDeletingDocument() throws InvocationTargetException, InterruptedException {
+        createTaskWithOperationWithLeftOperandOfType(ExpressionConstants.DOCUMENT_REF_TYPE);
+        final RefactorDocumentOperation rdo = new RefactorDocumentOperation(RefactoringOperationType.UPDATE);
+        rdo.addItemToRefactor(null, document);
+        rdo.setEditingDomain(domain);
+        rdo.setAskConfirmation(false);
+        rdo.run(null);
+
+        assertThat(parentProcess.getDocuments()).hasSize(0);
+        ExpressionAssert.assertThat(leftOperand).hasType(ExpressionConstants.CONSTANT_TYPE);
+        ExpressionAssert.assertThat(leftOperand).hasNoReferencedElements();
+
+        domain.getCommandStack().undo();
+        assertThat(parentProcess.getDocuments()).hasSize(1);
+        ExpressionAssert.assertThat(leftOperand).hasContent(document.getName());
+    }
+
+    /**
      * Case of some Operations
      * 
      * @throws InvocationTargetException
@@ -138,6 +205,31 @@ public class RefactorDocumentOperationTest {
         assertThat(parentProcess.getDocuments()).hasSize(1);
         assertEquals(parentProcess.getDocuments().get(0).getName(), "docNameUpdated");
         ExpressionAssert.assertThat(leftOperand).hasName(updatedDocument.getName());
+    }
+
+    /**
+     * Case of some Operations
+     * 
+     * @throws InvocationTargetException
+     * @throws InterruptedException
+     */
+    @Test
+    @Ignore("Not yet implemented complete refactor of delete action")
+    public void testDocumentStringWhenDeletingDocument() throws InvocationTargetException, InterruptedException {
+        createTaskWithOperationWithLeftOperandOfType(ExpressionConstants.CONSTANT_TYPE);
+
+        final RefactorDocumentOperation rdo = new RefactorDocumentOperation(RefactoringOperationType.REMOVE);
+        rdo.addItemToRefactor(null, document);
+        rdo.setEditingDomain(domain);
+        rdo.setAskConfirmation(false);
+        rdo.run(null);
+
+        assertThat(parentProcess.getDocuments()).hasSize(0);
+        ExpressionAssert.assertThat(leftOperand).hasNoReferencedElements();
+
+        domain.getCommandStack().undo();
+        assertThat(parentProcess.getDocuments()).hasSize(1);
+        ExpressionAssert.assertThat(leftOperand).hasReferencedElements(document);
     }
 
     @Test

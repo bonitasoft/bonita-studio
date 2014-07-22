@@ -14,23 +14,26 @@
  */
 package org.bonitasoft.studio.properties.sections.document;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.CustomWizardDialog;
 import org.bonitasoft.studio.common.jface.ElementForIdLabelProvider;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection;
+import org.bonitasoft.studio.document.refactoring.RefactorDocumentOperation;
 import org.bonitasoft.studio.document.ui.DocumentWizard;
 import org.bonitasoft.studio.model.process.Document;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.properties.i18n.Messages;
+import org.bonitasoft.studio.refactoring.core.RefactoringOperationType;
 import org.eclipse.core.databinding.observable.list.IObservableList;
-import org.eclipse.emf.common.command.CompoundCommand;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.edit.EMFEditProperties;
-import org.eclipse.emf.edit.command.DeleteCommand;
 import org.eclipse.jface.databinding.swt.WidgetProperties;
 import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
 import org.eclipse.jface.dialogs.Dialog;
@@ -194,15 +197,30 @@ public class DocumentPropertySection extends AbstractBonitaDescriptionSection {
                 super.widgetSelected(e);
                 final Iterator<Document> selection = ((IStructuredSelection) documentListViewer.getSelection()).iterator();
                 if (selection.hasNext()) {
-                    final CompoundCommand cc = new CompoundCommand("Remove Documents");
-                    while (selection.hasNext()) {
-                        final Document documentToRemove = selection.next();
-                        cc.append(DeleteCommand.create(getEditingDomain(), documentToRemove));
-                    }
-                    getEditingDomain().getCommandStack().execute(cc);
+                    final RefactorDocumentOperation rdo = createDeleteRefactorOperation(selection);
+                    executeDeleteReactorOperation(rdo);
                     documentListViewer.refresh();
                     documentListViewer.setSelection(new StructuredSelection());
                 }
+            }
+
+            private void executeDeleteReactorOperation(final RefactorDocumentOperation rdo) {
+                try {
+                    rdo.run(new NullProgressMonitor());
+                } catch (final InvocationTargetException e1) {
+                    BonitaStudioLog.error(e1);
+                } catch (final InterruptedException e1) {
+                    BonitaStudioLog.error(e1);
+                }
+            }
+
+            private RefactorDocumentOperation createDeleteRefactorOperation(final Iterator<Document> selection) {
+                final RefactorDocumentOperation rdo = new RefactorDocumentOperation(RefactoringOperationType.REMOVE);
+                rdo.setEditingDomain(getEditingDomain());
+                while (selection.hasNext()) {
+                    rdo.addItemToRefactor(null, selection.next());
+                }
+                return rdo;
             }
         });
     }

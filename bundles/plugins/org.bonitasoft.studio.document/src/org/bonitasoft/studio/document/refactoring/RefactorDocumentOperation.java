@@ -29,6 +29,7 @@ import org.bonitasoft.studio.refactoring.core.RefactoringOperationType;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.edit.command.AddCommand;
+import org.eclipse.emf.edit.command.DeleteCommand;
 import org.eclipse.emf.edit.command.RemoveCommand;
 import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.edit.domain.EditingDomain;
@@ -41,36 +42,71 @@ public class RefactorDocumentOperation extends AbstractRefactorOperation<Documen
 
     @Override
     protected void doExecute(final IProgressMonitor monitor) {
-        updateDocumentInDocumentExpressions(compoundCommand);
+        final CompoundCommand deleteCommands = new CompoundCommand("Compound commands containing all delete operations to do at last step");
         for (final DocumentRefactorPair pairToRefactor : pairsToRefactor) {
-            final Pool container = getContainer(pairToRefactor.getOldValue());
-            final List<Document> documents = container.getDocuments();
-            final int index = documents.indexOf(pairToRefactor.getOldValue());
-            compoundCommand.append(RemoveCommand.create(domain, container, ProcessPackage.Literals.POOL__DOCUMENTS, pairToRefactor.getOldValue()));
-            compoundCommand.append(AddCommand.create(domain, container, ProcessPackage.Literals.POOL__DOCUMENTS, pairToRefactor.getNewValue(), index));
+            if (pairToRefactor.getNewValue() != null) {
+                updateDocumentInDocumentExpressions(compoundCommand, pairToRefactor);
+                final Pool container = getContainer(pairToRefactor.getOldValue());
+                final List<Document> documents = container.getDocuments();
+                final int index = documents.indexOf(pairToRefactor.getOldValue());
+                compoundCommand.append(RemoveCommand.create(domain, container, ProcessPackage.Literals.POOL__DOCUMENTS, pairToRefactor.getOldValue()));
+                compoundCommand.append(AddCommand.create(domain, container, ProcessPackage.Literals.POOL__DOCUMENTS, pairToRefactor.getNewValue(), index));
+            } else {
+                removeAllDocumentReferences(compoundCommand, pairToRefactor);
+                deleteCommands.append(DeleteCommand.create(domain, pairToRefactor.getOldValue()));
+            }
         }
+        //TODO: Why The delete command is not executable???
+        compoundCommand.appendIfCanExecute(deleteCommands);
     }
 
-    protected void updateDocumentInDocumentExpressions(final CompoundCommand cc) {
-        for (final DocumentRefactorPair pairToRefactor : pairsToRefactor) {
+    protected void updateDocumentInDocumentExpressions(final CompoundCommand cc, final DocumentRefactorPair pairToRefactor) {
+        if (pairToRefactor.getNewValue() != null) {
             final List<Expression> expressions = ModelHelper.getAllItemsOfType(getContainer(pairToRefactor.getOldValue()),
                     ExpressionPackage.Literals.EXPRESSION);
             for (final Expression exp : expressions) {
-                if ((ExpressionConstants.DOCUMENT_TYPE.equals(exp.getType())
-                        || ExpressionConstants.CONSTANT_TYPE.equals(exp.getType())
-                        || ExpressionConstants.DOCUMENT_REF_TYPE.equals(exp.getType()))
-                        && exp.getName() != null
-                        && exp.getName()
-                        .equals(
-                                pairToRefactor
-                                .getOldValue()
-                                .getName())) {
+                if (isMatchingExpression(pairToRefactor, exp)) {
                     // update name and content
                     cc.append(SetCommand.create(domain, exp, ExpressionPackage.Literals.EXPRESSION__NAME, pairToRefactor.getNewValue().getName()));
                     cc.append(SetCommand.create(domain, exp, ExpressionPackage.Literals.EXPRESSION__CONTENT, pairToRefactor.getNewValue().getName()));
                 }
             }
+        } else {
+            removeAllDocumentReferences(compoundCommand, pairToRefactor);
         }
+    }
+
+    private boolean isMatchingExpression(final DocumentRefactorPair pairToRefactor, final Expression exp) {
+        return (ExpressionConstants.DOCUMENT_TYPE.equals(exp.getType())
+                || ExpressionConstants.CONSTANT_TYPE.equals(exp.getType())
+                || ExpressionConstants.DOCUMENT_REF_TYPE.equals(exp.getType()))
+                && exp.getName() != null
+                && exp.getName()
+                .equals(
+                        pairToRefactor
+                        .getOldValue()
+                        .getName());
+    }
+
+    private void removeAllDocumentReferences(final CompoundCommand cc, final DocumentRefactorPair pairToRefactor) {
+        final List<Expression> expressions = retrieveExpressionsInTheContainer(pairToRefactor);
+        for (final Expression exp : expressions) {
+            if (ExpressionConstants.VARIABLE_TYPE.equals(exp.getType()) && exp.getName().equals(pairToRefactor.getOldValue().getName())) {
+                // update name and content
+                cc.append(SetCommand.create(domain, exp, ExpressionPackage.Literals.EXPRESSION__NAME, ""));
+                cc.append(SetCommand.create(domain, exp, ExpressionPackage.Literals.EXPRESSION__CONTENT, ""));
+                // update return type
+                cc.append(SetCommand.create(domain, exp, ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE, String.class.getName()));
+                cc.append(SetCommand.create(domain, exp, ExpressionPackage.Literals.EXPRESSION__TYPE, ExpressionConstants.CONSTANT_TYPE));
+                // update referenced data
+                cc.append(RemoveCommand.create(domain, exp, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS, exp.getReferencedElements()));
+            }
+        }
+    }
+
+    private List<Expression> retrieveExpressionsInTheContainer(final DocumentRefactorPair pairToRefactor) {
+        final List<Expression> expressions = ModelHelper.getAllItemsOfType(getContainer(pairToRefactor.getOldValue()), ExpressionPackage.Literals.EXPRESSION);
+        return expressions;
     }
 
     @Override
