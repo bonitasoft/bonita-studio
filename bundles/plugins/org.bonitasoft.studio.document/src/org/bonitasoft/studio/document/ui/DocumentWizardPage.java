@@ -238,7 +238,7 @@ public class DocumentWizardPage extends WizardPage {
                 Messages.name, 50));
         targetToModel.setBeforeSetValidator(new GroovyReferenceValidator(
                 Messages.name, false));
-        targetToModel.setAfterConvertValidator(new DocumentNameValidator(context));
+        targetToModel.setAfterConvertValidator(new DocumentNameValidator(context, document != null ? document.getName() : null));
 
         final IObservableValue nameObserved = EMFObservables.observeValue(
                 document, ProcessPackage.Literals.ELEMENT__NAME);
@@ -278,11 +278,13 @@ public class DocumentWizardPage extends WizardPage {
         emfDataBindingContext.bindValue(
                 SWTObservables.observeSelection(externalCheckbox),
                 externalTypeObserved, new UpdateValueStrategy() {
+
                     @Override
                     public Object convert(final Object value) {
                         return super.convert(!(Boolean) value);
                     }
                 }, new UpdateValueStrategy() {
+
                     @Override
                     public Object convert(final Object value) {
                         return super.convert(!(Boolean) value);
@@ -292,30 +294,34 @@ public class DocumentWizardPage extends WizardPage {
         emfDataBindingContext.bindValue(SWTObservables
                 .observeEnabled(documentUrlViewer.getTextControl()),
                 externalTypeObserved, new UpdateValueStrategy() {
-            @Override
-            public Object convert(final Object value) {
-                return super.convert(!(Boolean) value);
-            }
-        }, new UpdateValueStrategy() {
-            @Override
-            public Object convert(final Object value) {
-                return super.convert(!(Boolean) value);
-            }
-        });
+
+                    @Override
+                    public Object convert(final Object value) {
+                        return super.convert(!(Boolean) value);
+                    }
+                }, new UpdateValueStrategy() {
+
+                    @Override
+                    public Object convert(final Object value) {
+                        return super.convert(!(Boolean) value);
+                    }
+                });
         emfDataBindingContext.bindValue(SWTObservables.observeEnabled(documentUrlViewer.getButtonControl()),
                 externalTypeObserved,
                 new UpdateValueStrategy() {
-            @Override
-            public Object convert(final Object value) {
-                return super.convert(!(Boolean) value);
-            }
-        },
-        new UpdateValueStrategy() {
-            @Override
-            public Object convert(final Object value) {
-                return super.convert(!(Boolean) value);
-            }
-        });
+
+                    @Override
+                    public Object convert(final Object value) {
+                        return super.convert(!(Boolean) value);
+                    }
+                },
+                new UpdateValueStrategy() {
+
+                    @Override
+                    public Object convert(final Object value) {
+                        return super.convert(!(Boolean) value);
+                    }
+                });
 
         emfDataBindingContext.bindValue(
                 SWTObservables.observeEnabled(documentTextId),
