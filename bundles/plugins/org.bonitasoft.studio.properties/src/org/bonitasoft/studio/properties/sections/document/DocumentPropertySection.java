@@ -34,7 +34,6 @@ import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.edit.EMFEditProperties;
-import org.eclipse.jface.databinding.swt.WidgetProperties;
 import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -166,6 +165,8 @@ public class DocumentPropertySection extends AbstractBonitaDescriptionSection {
                 final DocumentWizard documentWizard = new DocumentWizard(getEObject(), selectedDocument);
                 final Dialog dialog = new CustomWizardDialog(Display.getDefault().getActiveShell(), documentWizard);
                 dialog.open();
+                documentListViewer.refresh();
+                documentListViewer.setSelection(new StructuredSelection(documentWizard.getDocument()));
             }
         });
 
@@ -236,12 +237,7 @@ public class DocumentPropertySection extends AbstractBonitaDescriptionSection {
     }
 
     protected void bindList() {
-        final IObservableList documentsListObserved = EMFEditProperties.list(
-                getEditingDomain(), ProcessPackage.Literals.POOL__DOCUMENTS)
-                .observe(getPool());
-        emfDataBindingContext.bindList(
-                WidgetProperties.items().observe(documentListViewer.getList()),
-                documentsListObserved);
+        final IObservableList documentsListObserved = EMFEditProperties.list(getEditingDomain(), ProcessPackage.Literals.POOL__DOCUMENTS).observe(getPool());
         documentListViewer.setInput(documentsListObserved);
     }
 
