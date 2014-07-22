@@ -56,7 +56,6 @@ public class RefactorDocumentOperation extends AbstractRefactorOperation<Documen
                 deleteCommands.append(DeleteCommand.create(domain, pairToRefactor.getOldValue()));
             }
         }
-        //TODO: Why The delete command is not executable???
         compoundCommand.appendIfCanExecute(deleteCommands);
     }
 
@@ -65,7 +64,7 @@ public class RefactorDocumentOperation extends AbstractRefactorOperation<Documen
             final List<Expression> expressions = ModelHelper.getAllItemsOfType(getContainer(pairToRefactor.getOldValue()),
                     ExpressionPackage.Literals.EXPRESSION);
             for (final Expression exp : expressions) {
-                if (isMatchingExpression(pairToRefactor, exp)) {
+                if (isMatchingDocumentExpression(pairToRefactor, exp)) {
                     // update name and content
                     cc.append(SetCommand.create(domain, exp, ExpressionPackage.Literals.EXPRESSION__NAME, pairToRefactor.getNewValue().getName()));
                     cc.append(SetCommand.create(domain, exp, ExpressionPackage.Literals.EXPRESSION__CONTENT, pairToRefactor.getNewValue().getName()));
@@ -76,7 +75,7 @@ public class RefactorDocumentOperation extends AbstractRefactorOperation<Documen
         }
     }
 
-    private boolean isMatchingExpression(final DocumentRefactorPair pairToRefactor, final Expression exp) {
+    private boolean isMatchingDocumentExpression(final DocumentRefactorPair pairToRefactor, final Expression exp) {
         return (ExpressionConstants.DOCUMENT_TYPE.equals(exp.getType())
                 || ExpressionConstants.CONSTANT_TYPE.equals(exp.getType())
                 || ExpressionConstants.DOCUMENT_REF_TYPE.equals(exp.getType()))
@@ -91,14 +90,14 @@ public class RefactorDocumentOperation extends AbstractRefactorOperation<Documen
     private void removeAllDocumentReferences(final CompoundCommand cc, final DocumentRefactorPair pairToRefactor) {
         final List<Expression> expressions = retrieveExpressionsInTheContainer(pairToRefactor);
         for (final Expression exp : expressions) {
-            if (ExpressionConstants.VARIABLE_TYPE.equals(exp.getType()) && exp.getName().equals(pairToRefactor.getOldValue().getName())) {
+            if (isMatchingDocumentExpression(pairToRefactor, exp)) {
                 // update name and content
                 cc.append(SetCommand.create(domain, exp, ExpressionPackage.Literals.EXPRESSION__NAME, ""));
                 cc.append(SetCommand.create(domain, exp, ExpressionPackage.Literals.EXPRESSION__CONTENT, ""));
                 // update return type
                 cc.append(SetCommand.create(domain, exp, ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE, String.class.getName()));
                 cc.append(SetCommand.create(domain, exp, ExpressionPackage.Literals.EXPRESSION__TYPE, ExpressionConstants.CONSTANT_TYPE));
-                // update referenced data
+                // update referenced document
                 cc.append(RemoveCommand.create(domain, exp, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS, exp.getReferencedElements()));
             }
         }

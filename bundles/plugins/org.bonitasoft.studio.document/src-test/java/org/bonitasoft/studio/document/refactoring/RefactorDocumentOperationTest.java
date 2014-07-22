@@ -36,7 +36,6 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class RefactorDocumentOperationTest {
@@ -46,14 +45,14 @@ public class RefactorDocumentOperationTest {
     private Operation operation;
     private Expression leftOperand;
     private Document document;
-    final String initialDocName = "docName";
+    private static String INITIAL_DOC_NAME = "docName";
 
     @Before
     public void setUp() throws Exception {
         domain = new AdapterFactoryEditingDomain(new CustomProcessItemProviderAdapterFactory(), new BasicCommandStack());
         parentProcess = ProcessFactory.eINSTANCE.createPool();
         document = ProcessFactory.eINSTANCE.createDocument();
-        document.setName(initialDocName);
+        document.setName(INITIAL_DOC_NAME);
         document.setMimeType(ExpressionHelper.createConstantExpression("octet/stream", String.class.getName()));
         parentProcess.getDocuments().add(document);
     }
@@ -97,8 +96,27 @@ public class RefactorDocumentOperationTest {
 
         domain.getCommandStack().undo();
         assertThat(parentProcess.getDocuments()).hasSize(1);
-        assertEquals(parentProcess.getDocuments().get(0).getName(), initialDocName);
-        ExpressionAssert.assertThat(leftOperand).hasName(initialDocName);
+        assertEquals(parentProcess.getDocuments().get(0).getName(), INITIAL_DOC_NAME);
+        ExpressionAssert.assertThat(leftOperand).hasName(INITIAL_DOC_NAME);
+    }
+
+    @Test
+    public void testDocumentUpdatedWhenDeletingDocument() throws InvocationTargetException, InterruptedException {
+        createTaskWithOperationWithLeftOperandOfType(ExpressionConstants.DOCUMENT_TYPE);
+        final RefactorDocumentOperation rdo = new RefactorDocumentOperation(RefactoringOperationType.REMOVE);
+        rdo.addItemToRefactor(null, document);
+        rdo.setEditingDomain(domain);
+        rdo.setAskConfirmation(false);
+        rdo.run(null);
+
+        assertThat(parentProcess.getDocuments()).hasSize(0);
+        ExpressionAssert.assertThat(leftOperand).hasName("");
+        ExpressionAssert.assertThat(leftOperand).hasType(ExpressionConstants.CONSTANT_TYPE);
+
+        domain.getCommandStack().undo();
+        assertThat(parentProcess.getDocuments()).hasSize(1);
+        assertEquals(parentProcess.getDocuments().get(0).getName(), INITIAL_DOC_NAME);
+        ExpressionAssert.assertThat(leftOperand).hasName(INITIAL_DOC_NAME);
     }
 
     @Test
@@ -166,7 +184,6 @@ public class RefactorDocumentOperationTest {
      * @throws InterruptedException
      */
     @Test
-    @Ignore("Not yet implemented complete refactor of delete action")
     public void testDocumentRefUpdatedWhenDeletingDocument() throws InvocationTargetException, InterruptedException {
         createTaskWithOperationWithLeftOperandOfType(ExpressionConstants.DOCUMENT_REF_TYPE);
         final RefactorDocumentOperation rdo = new RefactorDocumentOperation(RefactoringOperationType.UPDATE);
@@ -177,11 +194,12 @@ public class RefactorDocumentOperationTest {
 
         assertThat(parentProcess.getDocuments()).hasSize(0);
         ExpressionAssert.assertThat(leftOperand).hasType(ExpressionConstants.CONSTANT_TYPE);
+        ExpressionAssert.assertThat(leftOperand).hasContent("");
         ExpressionAssert.assertThat(leftOperand).hasNoReferencedElements();
 
         domain.getCommandStack().undo();
         assertThat(parentProcess.getDocuments()).hasSize(1);
-        ExpressionAssert.assertThat(leftOperand).hasContent(document.getName());
+        ExpressionAssert.assertThat(leftOperand).hasContent(INITIAL_DOC_NAME);
     }
 
     /**
@@ -214,7 +232,6 @@ public class RefactorDocumentOperationTest {
      * @throws InterruptedException
      */
     @Test
-    @Ignore("Not yet implemented complete refactor of delete action")
     public void testDocumentStringWhenDeletingDocument() throws InvocationTargetException, InterruptedException {
         createTaskWithOperationWithLeftOperandOfType(ExpressionConstants.CONSTANT_TYPE);
 
@@ -226,10 +243,11 @@ public class RefactorDocumentOperationTest {
 
         assertThat(parentProcess.getDocuments()).hasSize(0);
         ExpressionAssert.assertThat(leftOperand).hasNoReferencedElements();
+        ExpressionAssert.assertThat(leftOperand).hasContent("");
 
         domain.getCommandStack().undo();
         assertThat(parentProcess.getDocuments()).hasSize(1);
-        ExpressionAssert.assertThat(leftOperand).hasReferencedElements(document);
+        ExpressionAssert.assertThat(leftOperand).hasContent(INITIAL_DOC_NAME);
     }
 
     @Test
