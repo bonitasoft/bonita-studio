@@ -14,12 +14,9 @@
  */
 package org.bonitasoft.studio.document.ui;
 
-import static org.bonitasoft.studio.common.Messages.bosProductName;
-
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.jface.databinding.validator.GroovyReferenceValidator;
 import org.bonitasoft.studio.common.jface.databinding.validator.InputLengthValidator;
-import org.bonitasoft.studio.common.widgets.MagicComposite;
 import org.bonitasoft.studio.document.DocumentNameValidator;
 import org.bonitasoft.studio.document.SelectDocumentInBonitaStudioRepository;
 import org.bonitasoft.studio.document.i18n.Messages;
@@ -86,20 +83,28 @@ public class DocumentWizardPage extends WizardPage {
     protected static final String NONE = "none";
     protected static final String EXTERNAL = "multi";
     protected static final String INTERNAL = "loop";
+
+    protected static final String LINK = "link";
+    protected static final String FIELD = "field";
+
     private Composite externalCompo;
     private Composite internalCompo;
     private Composite noneCompo;
     private Composite propertiesComposite;
-    private Composite mymeTypeComposition;
+    private Composite mimeTypeComposition;
     private Link hideLink;
     private Composite manageLinkComposition;
+    private StackLayout mimeStack;
+    private Composite mimeCompo;
+    private Label mimeTypeLabel;
+    private ControlDecoration cd;
 
 
     public DocumentWizardPage(final EObject context,final Document document){
         super(DocumentWizardPage.class.getName());
         this.context = context;
         this.document = document;
-        setTitle(Messages.bind(Messages.documentWizardPageTitle,getCurrentContextName()));
+        setTitle(Messages.bind(Messages.documentWizardPageTitle, getCurrentContextName()));
         setDescription(Messages.newDocumentWizardDescription);
         emfDataBindingContext = new EMFDataBindingContext();
         setPageComplete(false);
@@ -136,12 +141,27 @@ public class DocumentWizardPage extends WizardPage {
         createDocumentDescriptionField(detailsComposite);
         createDocumentInitialValuefields(detailsComposite);
 
-        
-        
-        createDocumentMimeTypeField(detailsComposite);
-        createDocumentManageMimeTypeLink(detailsComposite);
+        createMimeType(detailsComposite);
 
-        //createDocumentTypeCheckbox(detailsComposite);
+        updateMimeTypeStack(FIELD);
+    }
+
+    private void createMimeType(final Composite detailsComposite) {
+
+        mimeTypeLabel = new Label(detailsComposite, SWT.NONE);
+        mimeTypeLabel.setText(Messages.mimeType);
+        mimeTypeLabel.setAlignment(SWT.CENTER);
+        cd = new ControlDecoration(mimeTypeLabel, SWT.RIGHT);
+        cd.setImage(Pics.getImage(PicsConstants.hint));
+        cd.setDescriptionText(Messages.explanationMimeTypeDocument);
+
+        mimeCompo = new Composite(detailsComposite, SWT.NONE);
+        mimeCompo.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).create());
+        mimeCompo.setLayoutData(GridDataFactory.fillDefaults().create());
+        mimeStack = new StackLayout();
+        mimeCompo.setLayout(mimeStack);
+        createDocumentMimeTypeField(mimeCompo);
+        createDocumentManageMimeTypeLink(mimeCompo);
     }
 
     private void createDocumentNameField(final Composite detailsComposite) {
@@ -161,37 +181,27 @@ public class DocumentWizardPage extends WizardPage {
     }
 
     private void createDocumentMimeTypeField(final Composite detailsComposite) {
-        final Label mimeTypeLabel = new Label(detailsComposite, SWT.NONE);
-        mimeTypeLabel.setText(Messages.mimeType);
 
-        mymeTypeComposition = new Composite(detailsComposite, SWT.NONE);
-        mymeTypeComposition.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
-        mymeTypeComposition.setLayoutData(GridDataFactory.fillDefaults().create());
 
-        documentMimeTypeViewer = new ExpressionViewer(mymeTypeComposition,
+        mimeTypeComposition = new Composite(detailsComposite, SWT.NONE);
+        mimeTypeComposition.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
+        mimeTypeComposition.setLayoutData(GridDataFactory.fillDefaults().create());
+
+        documentMimeTypeViewer = new ExpressionViewer(mimeTypeComposition,
                 SWT.BORDER, ProcessPackage.Literals.DOCUMENT__MIME_TYPE);
         documentMimeTypeViewer.addFilter(new AvailableExpressionTypeFilter(new String[] { ExpressionConstants.CONSTANT_TYPE }));
         documentMimeTypeViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         documentMimeTypeViewer.getTextControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         documentMimeTypeViewer.setExample(Messages.hintMimeTypeDocument);
-        final ControlDecoration cd = new ControlDecoration(mimeTypeLabel, SWT.RIGHT);
 
-        cd.setImage(Pics.getImage(PicsConstants.hint));
-        cd.setDescriptionText(Messages.explanationMimeTypeDocument);
 
-        hideLink = new Link(mymeTypeComposition, SWT.NONE);
+        hideLink = new Link(mimeTypeComposition, SWT.NONE);
         hideLink.setText("<A>Hide</A>");
         hideLink.addSelectionListener(new SelectionAdapter() {
 
             @Override
             public void widgetSelected(final SelectionEvent e) {
-                manageLinkComposition.setData(MagicComposite.HIDDEN, false);
-                manageLinkComposition.setVisible(true);
-
-                mymeTypeComposition.setData(MagicComposite.HIDDEN, true);
-                mymeTypeComposition.setVisible(false);
-                mimeTypeLabel.setVisible(false);
-                cd.hide();
+                updateMimeTypeStack(LINK);
             }
         });
 
@@ -199,22 +209,17 @@ public class DocumentWizardPage extends WizardPage {
 
     private void createDocumentManageMimeTypeLink(final Composite detailsComposite) {
 
-        new Composite(detailsComposite, SWT.NONE);
         manageLinkComposition = new Composite(detailsComposite, SWT.NONE);
+        manageLinkComposition.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).create());
+        manageLinkComposition.setLayoutData(GridDataFactory.fillDefaults().create());
 
         final Link manageLink = new Link(manageLinkComposition, SWT.NONE);
         manageLink.setText("<A>Manage MIME type</A>");
-        manageLink.setVisible(false);
-
         manageLink.addSelectionListener(new SelectionAdapter() {
 
             @Override
             public void widgetSelected(final SelectionEvent arg0) {
-                manageLinkComposition.setData(MagicComposite.HIDDEN, true);
-                manageLinkComposition.setVisible(false);
-
-                mymeTypeComposition.setData(MagicComposite.HIDDEN, false);
-                mymeTypeComposition.setVisible(true);
+                updateMimeTypeStack(FIELD);
             }
         });
     }
@@ -251,7 +256,7 @@ public class DocumentWizardPage extends WizardPage {
         documentTextId.setText("");
         documentTextId.setLayoutData(GridDataFactory.fillDefaults()
                 .grab(true, false).create());
-        ;
+
         browseButton = new Button(browseWithTextComposite, SWT.FLAT);
         browseButton.setText(Messages.Browse);
         browseButton.addSelectionListener(new SelectionAdapter() {
@@ -430,8 +435,6 @@ public class DocumentWizardPage extends WizardPage {
 
         emfDataBindingContext.bindValue(documentTypeObservableValue, PojoObservables.observeValue(document, "documentType"));
 
-        //------
-
         final IObservableValue documentInternalIDObserved = EMFObservables.observeValue(document,
                 ProcessPackage.Literals.DOCUMENT__DEFAULT_VALUE_ID_OF_DOCUMENT_STORE);
 
@@ -441,63 +444,6 @@ public class DocumentWizardPage extends WizardPage {
                         .observeText(documentTextId, SWT.Modify)),
                         documentInternalIDObserved);
 
-        final IObservableValue externalTypeObserved = EMFObservables.observeValue(
-                document,
-                ProcessPackage.Literals.DOCUMENT__IS_INTERNAL);
-        emfDataBindingContext.bindValue(
-                SWTObservables.observeSelection(externalCheckbox),
-                externalTypeObserved, new UpdateValueStrategy() {
-
-                    @Override
-                    public Object convert(final Object value) {
-                        return super.convert(!(Boolean) value);
-                    }
-                }, new UpdateValueStrategy() {
-
-                    @Override
-                    public Object convert(final Object value) {
-                        return super.convert(!(Boolean) value);
-                    }
-                });
-
-        emfDataBindingContext.bindValue(SWTObservables
-                .observeEnabled(documentUrlViewer.getTextControl()),
-                externalTypeObserved, new UpdateValueStrategy() {
-
-                    @Override
-                    public Object convert(final Object value) {
-                        return super.convert(!(Boolean) value);
-                    }
-                }, new UpdateValueStrategy() {
-
-                    @Override
-                    public Object convert(final Object value) {
-                        return super.convert(!(Boolean) value);
-                    }
-                });
-        emfDataBindingContext.bindValue(SWTObservables.observeEnabled(documentUrlViewer.getButtonControl()),
-                externalTypeObserved,
-                new UpdateValueStrategy() {
-
-                    @Override
-                    public Object convert(final Object value) {
-                        return super.convert(!(Boolean) value);
-                    }
-                },
-                new UpdateValueStrategy() {
-
-                    @Override
-                    public Object convert(final Object value) {
-                        return super.convert(!(Boolean) value);
-                    }
-                });
-
-        emfDataBindingContext.bindValue(
-                SWTObservables.observeEnabled(documentTextId),
-                internalTypeObserved);
-        emfDataBindingContext.bindValue(
-                SWTObservables.observeEnabled(browseButton),
-                internalTypeObserved);
     }
 
     protected void resetDatabindingContext() {
@@ -538,4 +484,16 @@ public class DocumentWizardPage extends WizardPage {
         propertiesComposite.layout();
     }
 
+    protected void updateMimeTypeStack(final String type) {
+        if (type.equals(LINK)) {
+            mimeStack.topControl = manageLinkComposition;
+            mimeTypeLabel.setVisible(false);
+            cd.hide();
+        } else if (type.equals(FIELD)) {
+            mimeStack.topControl = mimeTypeComposition;
+            mimeTypeLabel.setVisible(true);
+            cd.show();
+        }
+        mimeCompo.layout();
+    }
 }

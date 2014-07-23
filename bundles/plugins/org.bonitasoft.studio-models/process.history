@@ -461,12 +461,12 @@
             referenceValue="process.ecore#//Element"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#//Document" referenceName="eStructuralFeatures"
-          element="#//@releases.15/@changes.0/@changes.1/@changes.0/@element">
-        <changes xsi:type="history:Set" element="#//@releases.15/@changes.0/@changes.1/@changes.0/@element"
+          element="#//@releases.15/@changes.0/@changes.2/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.15/@changes.0/@changes.2/@changes.0/@element"
             featureName="name" dataValue="isInternal"/>
-        <changes xsi:type="history:Set" element="#//@releases.15/@changes.0/@changes.1/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.15/@changes.0/@changes.2/@changes.0/@element"
             featureName="defaultValueLiteral" dataValue="false"/>
-        <changes xsi:type="history:Set" element="#//@releases.15/@changes.0/@changes.1/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.15/@changes.0/@changes.2/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#//Document" referenceName="eStructuralFeatures"
@@ -8094,13 +8094,25 @@
     <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.custom.migration.connector.UpdateCMISConnectorVersionCustomMigration"/>
   </releases>
   <releases date="2014-07-22T11:48:39.611+0200" label="6.4.0-001">
-    <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.custom.document.DocumentTypeMigration">
+    <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.custom.migration.document.DocumentTypeMigration">
       <changes xsi:type="history:OperationChange">
         <changes xsi:type="history:Create" target="process.ecore#/" referenceName="eClassifiers"
-            element="process.ecore#//DocumentType">
-          <changes xsi:type="history:Set" element="process.ecore#//DocumentType" featureName="name"
-              dataValue="DocumentType"/>
-        </changes>
+            element="process.ecore#//DocumentType"/>
+        <changes xsi:type="history:Set" element="process.ecore#//DocumentType" featureName="name"
+            dataValue="DocumentType"/>
+        <operation name="createEnumeration">
+          <parameters name="ePackage">
+            <referenceValue element="process.ecore#/"/>
+          </parameters>
+          <parameters name="name">
+            <dataValue>DocumentType</dataValue>
+          </parameters>
+          <parameters name="literals"/>
+        </operation>
+      </changes>
+      <changes xsi:type="history:CompositeChange">
+        <changes xsi:type="history:Create" target="process.ecore#//DocumentType" referenceName="eLiterals"
+            element="process.ecore#//DocumentType/NONE"/>
         <changes xsi:type="history:Set" element="process.ecore#//DocumentType/NONE"
             featureName="name" dataValue="NONE"/>
         <changes xsi:type="history:Create" target="process.ecore#//DocumentType" referenceName="eLiterals"
@@ -8115,17 +8127,6 @@
             featureName="name" dataValue="EXTERNAL"/>
         <changes xsi:type="history:Set" element="process.ecore#//DocumentType/EXTERNAL"
             featureName="value" dataValue="2" oldDataValue="0"/>
-        <changes xsi:type="history:Create" target="process.ecore#//DocumentType" referenceName="eLiterals"
-            element="process.ecore#//DocumentType/NONE"/>
-        <operation name="createEnumeration">
-          <parameters name="ePackage">
-            <referenceValue element="process.ecore#/"/>
-          </parameters>
-          <parameters name="name">
-            <dataValue>DocumentType</dataValue>
-          </parameters>
-          <parameters name="literals"/>
-        </operation>
       </changes>
       <changes xsi:type="history:OperationChange">
         <changes xsi:type="history:Delete" target="process.ecore#//Document" referenceName="eStructuralFeatures">
@@ -8134,7 +8135,7 @@
         </changes>
         <operation name="deleteFeature2">
           <parameters name="feature">
-            <referenceValue element="#//@releases.15/@changes.0/@changes.1/@changes.0/@element"/>
+            <referenceValue element="#//@releases.15/@changes.0/@changes.2/@changes.0/@element"/>
           </parameters>
         </operation>
       </changes>
