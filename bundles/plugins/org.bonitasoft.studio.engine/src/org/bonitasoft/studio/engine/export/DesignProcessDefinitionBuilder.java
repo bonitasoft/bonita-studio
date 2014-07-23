@@ -49,163 +49,167 @@ import org.eclipse.emf.ecore.EObject;
  */
 public class DesignProcessDefinitionBuilder {
 
-	private final Set<String> definedAuthorities;
-	private final Set<Data> definedData;
-	private final Set<LinkEvent> definedLink;
-	private Set<EObject> eObjectNotExported;
+    private final Set<String> definedAuthorities;
+    private final Set<Data> definedData;
+    private final Set<LinkEvent> definedLink;
+    private Set<EObject> eObjectNotExported;
 
-	public DesignProcessDefinitionBuilder() {
-		definedAuthorities = new HashSet<String>();
-		definedData = new HashSet<Data>();
-		definedLink = new HashSet<LinkEvent>();
-		eObjectNotExported = new HashSet<EObject>();
-	}
-
-
-	public Set<EObject> geteObjectNotExported() {
-		return eObjectNotExported;
-	}
+    public DesignProcessDefinitionBuilder() {
+        definedAuthorities = new HashSet<String>();
+        definedData = new HashSet<Data>();
+        definedLink = new HashSet<LinkEvent>();
+        eObjectNotExported = new HashSet<EObject>();
+    }
 
 
-	public void seteObjectNotExported(Set<EObject> eObjectNotExported) {
-		this.eObjectNotExported = eObjectNotExported;
-	}
+    public Set<EObject> geteObjectNotExported() {
+        return eObjectNotExported;
+    }
+
+
+    public void seteObjectNotExported(final Set<EObject> eObjectNotExported) {
+        this.eObjectNotExported = eObjectNotExported;
+    }
 
 
 
 
-	/**
-	 * can be called on a MainProcess
-	 * 
-	 * @param studioProcess
-	 * @return
-	 * @throws BonitaExportException
-	 * @throws InvalidProcessDefinitionException
-	 */
-	public List<DesignProcessDefinition> createProcessDefinition(final AbstractProcess studioProcess) throws InvalidProcessDefinitionException {
-		final List<DesignProcessDefinition> res = new ArrayList<DesignProcessDefinition>();
+    /**
+     * can be called on a MainProcess
+     *
+     * @param studioProcess
+     * @return
+     * @throws BonitaExportException
+     * @throws InvalidProcessDefinitionException
+     */
+    public List<DesignProcessDefinition> createProcessDefinition(final AbstractProcess studioProcess) throws InvalidProcessDefinitionException {
+        final List<DesignProcessDefinition> res = new ArrayList<DesignProcessDefinition>();
 
-		final DesignProcessDefinition def = createDefinition(studioProcess);
-		if (null != def) {
-			res.add(def);
-			reset();
-		}
+        final DesignProcessDefinition def = createDefinition(studioProcess);
+        if (null != def) {
+            res.add(def);
+            reset();
+        }
 
-		if (studioProcess instanceof MainProcess) {
-			for (Element item : studioProcess.getElements()) {
-				if (item instanceof AbstractProcess) {
-					res.addAll(createProcessDefinition((AbstractProcess) item));
-				}
-			}
-		}
+        if (studioProcess instanceof MainProcess) {
+            for (final Element item : studioProcess.getElements()) {
+                if (item instanceof AbstractProcess) {
+                    res.addAll(createProcessDefinition((AbstractProcess) item));
+                }
+            }
+        }
 
-		return res;
-	}
+        return res;
+    }
 
-	private void reset() {
-		definedAuthorities.clear();
-		definedData.clear();
-		definedLink.clear();
-	}
+    private void reset() {
+        definedAuthorities.clear();
+        definedData.clear();
+        definedLink.clear();
+    }
 
-	/**
-	 * Must be called on a single process
-	 * 
-	 * @param process
-	 * @return
-	 * @throws BonitaExportException
-	 * @throws InvalidProcessDefinitionException
-	 */
-	public DesignProcessDefinition createDefinition(final AbstractProcess process) throws InvalidProcessDefinitionException {
-		final ProcessDefinitionBuilder processBuilder = createProcessDefinitionBuilderInstance(process);
-		String decription = process.getDocumentation();
-		if(decription != null){
-			processBuilder.addDescription(decription);
-			processBuilder.addDisplayDescription(decription);
-		}
-		AbstractProcessSwitch processSwitch = createProcessSwitch(processBuilder) ;
-		processSwitch.doSwitch(process) ;
+    /**
+     * Must be called on a single process
+     *
+     * @param process
+     * @return
+     * @throws BonitaExportException
+     * @throws InvalidProcessDefinitionException
+     */
+    public DesignProcessDefinition createDefinition(final AbstractProcess process) throws InvalidProcessDefinitionException {
+        final ProcessDefinitionBuilder processBuilder = createProcessDefinitionBuilderInstance(process);
+        final String decription = process.getDocumentation();
+        if(decription != null){
+            processBuilder.addDescription(decription);
+            processBuilder.addDisplayDescription(decription);
+        }
+        final AbstractProcessSwitch processSwitch = createProcessSwitch(processBuilder) ;
+        processSwitch.doSwitch(process) ;
 
-		processDocuments(process, processBuilder);
-		processFlowElements(process, processBuilder);
-		processSequenceFlows(process, processBuilder);
+        processDocuments(process, processBuilder);
+        processFlowElements(process, processBuilder);
+        processSequenceFlows(process, processBuilder);
 
-		return processBuilder.done();
-	}
-
-
-	protected ProcessDefinitionBuilder createProcessDefinitionBuilderInstance(final AbstractProcess process) {
-		return new ProcessDefinitionBuilder().createNewInstance(process.getName(), process.getVersion());
-	}
-
-	protected AbstractProcessSwitch createProcessSwitch(ProcessDefinitionBuilder processBuilder) {
-		return new AbstractProcessSwitch(processBuilder, eObjectNotExported);
-	}
-
-	protected void processFlowElements(final AbstractProcess process,
-			final ProcessDefinitionBuilder processBuilder) {
-		List<FlowElement> flowElements = ModelHelper.getAllItemsOfType(process, ProcessPackage.Literals.FLOW_ELEMENT);
-		final FlowElementSwitch flowElementSwitch = createFlowElementSwitch(processBuilder) ;
-		for (FlowElement flowElement : flowElements) {
-			if(!eObjectNotExported.contains(flowElement) && !ModelHelper.isInEvenementialSubProcessPool(flowElement)){
-				flowElementSwitch.doSwitch(flowElement);
-			}
-		}
-		List<SubProcessEvent> elements = ModelHelper.getAllItemsOfType(process, ProcessPackage.Literals.SUB_PROCESS_EVENT);
-		for (SubProcessEvent flowElement : elements) {
-			if(!eObjectNotExported.contains(flowElement)){
-				flowElementSwitch.doSwitch(flowElement);
-			}
-		}
-	}
+        return processBuilder.done();
+    }
 
 
-	protected FlowElementSwitch createFlowElementSwitch(
-			final ProcessDefinitionBuilder processBuilder) {
-		return new FlowElementSwitch(processBuilder, eObjectNotExported);
-	}
+    protected ProcessDefinitionBuilder createProcessDefinitionBuilderInstance(final AbstractProcess process) {
+        return new ProcessDefinitionBuilder().createNewInstance(process.getName(), process.getVersion());
+    }
 
-	protected void processSequenceFlows(final AbstractProcess process,
-			final ProcessDefinitionBuilder processBuilder) {
-		List<SourceElement> sourceElements = ModelHelper.getAllItemsOfType(process, ProcessPackage.Literals.SOURCE_ELEMENT);
-		SequenceFlowSwitch sequenceFlowSwitch = new SequenceFlowSwitch(processBuilder) ;
-		for (SourceElement sourceElement : sourceElements) {
-			for (Connection connection : sourceElement.getOutgoing()) {
-				if(!ModelHelper.isInEvenementialSubProcessPool(connection.getSource())){
-					sequenceFlowSwitch.doSwitch(connection);
-				}
-			}
-		}
-	}
+    protected AbstractProcessSwitch createProcessSwitch(final ProcessDefinitionBuilder processBuilder) {
+        return new AbstractProcessSwitch(processBuilder, eObjectNotExported);
+    }
 
-	protected void processDocuments(final AbstractProcess process, final ProcessDefinitionBuilder processBuilder) {
-		if(process instanceof Pool){
-			List<Document> documents = ((Pool) process).getDocuments();
-			for (Document document : documents) {
-				if(hasADefaultValue(document)){
-					final DocumentDefinitionBuilder documentBuilder = processBuilder.addDocumentDefinition(document.getName());
-					documentBuilder.addDescription(document.getDocumentation());
-					final Expression mimeType = document.getMimeType();
-					if(mimeType != null){
-						documentBuilder.addMimeType(mimeType.getContent());
-					}
-					if(document.isIsInternal()){
-						documentBuilder.addFile(document.getDefaultValueIdOfDocumentStore());
-						documentBuilder.addContentFileName(document.getDefaultValueIdOfDocumentStore());
-					} else {
-						final Expression url = document.getUrl();
-						if(url != null){
-							documentBuilder.addUrl(url.getContent());
-						}
-					}
-				}
-			}
-		}
-	}
+    protected void processFlowElements(final AbstractProcess process,
+            final ProcessDefinitionBuilder processBuilder) {
+        final List<FlowElement> flowElements = ModelHelper.getAllItemsOfType(process, ProcessPackage.Literals.FLOW_ELEMENT);
+        final FlowElementSwitch flowElementSwitch = createFlowElementSwitch(processBuilder) ;
+        for (final FlowElement flowElement : flowElements) {
+            if(!eObjectNotExported.contains(flowElement) && !ModelHelper.isInEvenementialSubProcessPool(flowElement)){
+                flowElementSwitch.doSwitch(flowElement);
+            }
+        }
+        final List<SubProcessEvent> elements = ModelHelper.getAllItemsOfType(process, ProcessPackage.Literals.SUB_PROCESS_EVENT);
+        for (final SubProcessEvent flowElement : elements) {
+            if(!eObjectNotExported.contains(flowElement)){
+                flowElementSwitch.doSwitch(flowElement);
+            }
+        }
+    }
 
 
-	private boolean hasADefaultValue(Document document) {
-		return !((document.isIsInternal() && (document.getDefaultValueIdOfDocumentStore() == null || document.getDefaultValueIdOfDocumentStore().isEmpty())) 
-				|| (!document.isIsInternal() && (document.getUrl() == null || document.getUrl().getContent() == null || document.getUrl().getContent().isEmpty())));
-	}
+    protected FlowElementSwitch createFlowElementSwitch(
+            final ProcessDefinitionBuilder processBuilder) {
+        return new FlowElementSwitch(processBuilder, eObjectNotExported);
+    }
+
+    protected void processSequenceFlows(final AbstractProcess process,
+            final ProcessDefinitionBuilder processBuilder) {
+        final List<SourceElement> sourceElements = ModelHelper.getAllItemsOfType(process, ProcessPackage.Literals.SOURCE_ELEMENT);
+        final SequenceFlowSwitch sequenceFlowSwitch = new SequenceFlowSwitch(processBuilder) ;
+        for (final SourceElement sourceElement : sourceElements) {
+            for (final Connection connection : sourceElement.getOutgoing()) {
+                if(!ModelHelper.isInEvenementialSubProcessPool(connection.getSource())){
+                    sequenceFlowSwitch.doSwitch(connection);
+                }
+            }
+        }
+    }
+
+    protected void processDocuments(final AbstractProcess process, final ProcessDefinitionBuilder processBuilder) {
+        if(process instanceof Pool){
+            final List<Document> documents = ((Pool) process).getDocuments();
+            for (final Document document : documents) {
+                if(hasADefaultValue(document)){
+                    final DocumentDefinitionBuilder documentBuilder = processBuilder.addDocumentDefinition(document.getName());
+                    documentBuilder.addDescription(document.getDocumentation());
+                    final Expression mimeType = document.getMimeType();
+                    if(mimeType != null){
+                        documentBuilder.addMimeType(mimeType.getContent());
+                    }
+                    if(document.getDocumentType().equals(org.bonitasoft.studio.model.process.DocumentType.INTERNAL)){
+                        documentBuilder.addFile(document.getDefaultValueIdOfDocumentStore());
+                        documentBuilder.addContentFileName(document.getDefaultValueIdOfDocumentStore());
+                    } else if (document.getDocumentType().equals(org.bonitasoft.studio.model.process.DocumentType.EXTERNAL)) {
+                        final Expression url = document.getUrl();
+                        if(url != null){
+                            documentBuilder.addUrl(url.getContent());
+                        }
+                    }else{
+                        // CASE NONE
+                    }
+                }
+            }
+        }
+    }
+
+
+    private boolean hasADefaultValue(final Document document) {
+        return !((document.getDocumentType().equals(org.bonitasoft.studio.model.process.DocumentType.INTERNAL) && (document.getDefaultValueIdOfDocumentStore() == null || document
+                .getDefaultValueIdOfDocumentStore().isEmpty()))
+                || (!document.getDocumentType().equals(org.bonitasoft.studio.model.process.DocumentType.EXTERNAL) && (document.getUrl() == null
+                || document.getUrl().getContent() == null || document.getUrl().getContent().isEmpty())));
+    }
 }

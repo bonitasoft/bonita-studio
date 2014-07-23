@@ -204,12 +204,12 @@
   <eClassifiers xsi:type="ecore:EClass" name="Document" eSuperTypes="#//Element">
     <eStructuralFeatures xsi:type="ecore:EReference" name="mimeType" eType="ecore:EClass expression.ecore#//Expression"
         containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="isInternal" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
-        defaultValueLiteral="false"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="url" eType="ecore:EClass expression.ecore#//Expression"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="defaultValueIdOfDocumentStore"
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="documentType" lowerBound="1"
+        eType="#//DocumentType" defaultValueLiteral="0"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="DoubleType" eSuperTypes="#//DataType"/>
   <eClassifiers xsi:type="ecore:EClass" name="EndErrorEvent" eSuperTypes="#//Event #//ErrorEvent"/>
@@ -563,6 +563,11 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="XMLType" eSuperTypes="#//DataType"/>
   <eClassifiers xsi:type="ecore:EClass" name="XORGateway" eSuperTypes="#//Gateway"/>
+  <eClassifiers xsi:type="ecore:EEnum" name="DocumentType">
+    <eLiterals name="NONE"/>
+    <eLiterals name="INTERNAL" value="1"/>
+    <eLiterals name="EXTERNAL" value="2"/>
+  </eClassifiers>
   <eSubpackages name="decision" nsURI="http://www.bonitasoft.org/ns/studio/process/decision"
       nsPrefix="decision">
     <eClassifiers xsi:type="ecore:EClass" name="DecisionTable">

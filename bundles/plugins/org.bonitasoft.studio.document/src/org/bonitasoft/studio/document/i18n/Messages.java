@@ -43,6 +43,16 @@ public class Messages extends NLS {
     public static String error_documentAllreadyexist;
     public static String explanationMimeTypeDocument;
 
+    public static String initialValueLabel;
+    public static String initialValueButtonNone;
+    public static String initialValueButtonInternal;
+    public static String initialValueButtonInternalToolTip;
+    public static String initialValueButtonExternal;
+    public static String initialValueButtonExternalToolTip;
+
+    public static String documentExternalLabel;
+    public static String documentInternalLabel;
+
     static {
         // initialize resource bundle
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

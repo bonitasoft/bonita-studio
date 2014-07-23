@@ -19,6 +19,7 @@ import static org.bonitasoft.studio.common.Messages.bosProductName;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.jface.databinding.validator.GroovyReferenceValidator;
 import org.bonitasoft.studio.common.jface.databinding.validator.InputLengthValidator;
+import org.bonitasoft.studio.common.widgets.MagicComposite;
 import org.bonitasoft.studio.document.DocumentNameValidator;
 import org.bonitasoft.studio.document.SelectDocumentInBonitaStudioRepository;
 import org.bonitasoft.studio.document.i18n.Messages;
@@ -26,12 +27,15 @@ import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFil
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.expression.editor.viewer.ObservableExpressionContentProvider;
 import org.bonitasoft.studio.model.process.Document;
+import org.bonitasoft.studio.model.process.DocumentType;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.databinding.UpdateValueStrategy;
+import org.eclipse.core.databinding.beans.PojoObservables;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.core.databinding.observable.value.SelectObservableValue;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.ecore.EObject;
@@ -45,11 +49,15 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 
@@ -64,11 +72,27 @@ public class DocumentWizardPage extends WizardPage {
     private ExpressionViewer documentMimeTypeViewer;
     private Text documentTextId;
     private Button browseButton;
-    private Button externalCheckbox;
+    //    private Button externalCheckbox;
     private Composite detailsComposite;
     private EMFDataBindingContext emfDataBindingContext;
     private ControlDecorationSupport decorationSupport;
     private WizardPageSupport pageSupport;
+
+    private Button radioButtonExternal;
+    private Button radioButtonInternal;
+    private Button radioButtonNone;
+    private StackLayout stack;
+
+    protected static final String NONE = "none";
+    protected static final String EXTERNAL = "multi";
+    protected static final String INTERNAL = "loop";
+    private Composite externalCompo;
+    private Composite internalCompo;
+    private Composite noneCompo;
+    private Composite propertiesComposite;
+    private Composite mymeTypeComposition;
+    private Link hideLink;
+    private Composite manageLinkComposition;
 
 
     public DocumentWizardPage(final EObject context,final Document document){
@@ -110,8 +134,14 @@ public class DocumentWizardPage extends WizardPage {
         detailsComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         createDocumentNameField(detailsComposite);
         createDocumentDescriptionField(detailsComposite);
+        createDocumentInitialValuefields(detailsComposite);
+
+        
+        
         createDocumentMimeTypeField(detailsComposite);
-        createDocumentTypeCheckbox(detailsComposite);
+        createDocumentManageMimeTypeLink(detailsComposite);
+
+        //createDocumentTypeCheckbox(detailsComposite);
     }
 
     private void createDocumentNameField(final Composite detailsComposite) {
@@ -131,51 +161,68 @@ public class DocumentWizardPage extends WizardPage {
     }
 
     private void createDocumentMimeTypeField(final Composite detailsComposite) {
-        final Label mimeTypeLabel = new Label(detailsComposite,SWT.NONE);
+        final Label mimeTypeLabel = new Label(detailsComposite, SWT.NONE);
         mimeTypeLabel.setText(Messages.mimeType);
 
-        documentMimeTypeViewer = new ExpressionViewer(detailsComposite,
+        mymeTypeComposition = new Composite(detailsComposite, SWT.NONE);
+        mymeTypeComposition.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
+        mymeTypeComposition.setLayoutData(GridDataFactory.fillDefaults().create());
+
+        documentMimeTypeViewer = new ExpressionViewer(mymeTypeComposition,
                 SWT.BORDER, ProcessPackage.Literals.DOCUMENT__MIME_TYPE);
         documentMimeTypeViewer.addFilter(new AvailableExpressionTypeFilter(new String[] { ExpressionConstants.CONSTANT_TYPE }));
         documentMimeTypeViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         documentMimeTypeViewer.getTextControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         documentMimeTypeViewer.setExample(Messages.hintMimeTypeDocument);
         final ControlDecoration cd = new ControlDecoration(mimeTypeLabel, SWT.RIGHT);
+
         cd.setImage(Pics.getImage(PicsConstants.hint));
         cd.setDescriptionText(Messages.explanationMimeTypeDocument);
+
+        hideLink = new Link(mymeTypeComposition, SWT.NONE);
+        hideLink.setText("<A>Hide</A>");
+        hideLink.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(final SelectionEvent e) {
+                manageLinkComposition.setData(MagicComposite.HIDDEN, false);
+                manageLinkComposition.setVisible(true);
+
+                mymeTypeComposition.setData(MagicComposite.HIDDEN, true);
+                mymeTypeComposition.setVisible(false);
+                mimeTypeLabel.setVisible(false);
+                cd.hide();
+            }
+        });
+
     }
 
-    private void createDocumentTypeCheckbox(final Composite detailsComposite) {
-        final Composite documentTypeComposite = new Composite(
-                detailsComposite,SWT.NONE);
-        documentTypeComposite.setLayout(GridLayoutFactory.fillDefaults()
-                .numColumns(2).spacing(10, 5).create());
-        documentTypeComposite.setLayoutData(GridDataFactory.fillDefaults()
-                .span(2, 2).grab(true, true).create());
-        externalCheckbox = new Button(
-                documentTypeComposite,  SWT.RADIO);
-        externalCheckbox.setText(Messages.External);
-        final ControlDecoration controlDecorationForExternal = new ControlDecoration(
-                externalCheckbox, SWT.RIGHT);
-        controlDecorationForExternal
-        .setImage(Pics.getImage(PicsConstants.hint));
-        controlDecorationForExternal
-        .setDescriptionText(Messages.explanationExternalDocument);
-        createDocumentURL(documentTypeComposite);
-        internalCheckbox = new Button(
-                documentTypeComposite,  SWT.RADIO);
-        internalCheckbox.setText(Messages.Internal);
-        final ControlDecoration controlDecorationForInternal = new ControlDecoration(
-                internalCheckbox, SWT.RIGHT);
-        controlDecorationForInternal
-        .setImage(Pics.getImage(PicsConstants.hint));
-        controlDecorationForInternal.setDescriptionText(Messages.bind(
-                Messages.explanationInternalDocument,
-                new Object[] { bosProductName }));
-        createDocumentBrowse(documentTypeComposite);
+    private void createDocumentManageMimeTypeLink(final Composite detailsComposite) {
+
+        new Composite(detailsComposite, SWT.NONE);
+        manageLinkComposition = new Composite(detailsComposite, SWT.NONE);
+
+        final Link manageLink = new Link(manageLinkComposition, SWT.NONE);
+        manageLink.setText("<A>Manage MIME type</A>");
+        manageLink.setVisible(false);
+
+        manageLink.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(final SelectionEvent arg0) {
+                manageLinkComposition.setData(MagicComposite.HIDDEN, true);
+                manageLinkComposition.setVisible(false);
+
+                mymeTypeComposition.setData(MagicComposite.HIDDEN, false);
+                mymeTypeComposition.setVisible(true);
+            }
+        });
     }
 
     private void createDocumentURL(final Composite slaveComposite) {
+        final Label documentURLLabel = new Label(slaveComposite, SWT.NONE);
+        documentURLLabel.setText("URL");
+
         documentUrlViewer = new ExpressionViewer(slaveComposite, SWT.BORDER,
                 ProcessPackage.Literals.DOCUMENT__URL);
         documentUrlViewer.addFilter(new AvailableExpressionTypeFilter(
@@ -187,9 +234,13 @@ public class DocumentWizardPage extends WizardPage {
         documentUrlViewer.setExample(Messages.hintExternalUrl);
         documentUrlViewer
         .setContentProvider(new ObservableExpressionContentProvider());
+
     }
 
     private void createDocumentBrowse(final Composite slaveComposite) {
+        final Label documentBrowserLabel = new Label(slaveComposite, SWT.NONE);
+        documentBrowserLabel.setText("File");
+
         final Composite browseWithTextComposite =new Composite(
                 slaveComposite,SWT.NONE);
         browseWithTextComposite.setLayout(GridLayoutFactory.fillDefaults()
@@ -216,6 +267,113 @@ public class DocumentWizardPage extends WizardPage {
                             .getSelectedDocument().getDisplayName());
                 }
             }
+        });
+    }
+
+    private void createDocumentInitialValuefields(final Composite parent) {
+
+        final Label radioButtonLabel = new Label(parent, SWT.NONE);
+        radioButtonLabel.setText(Messages.initialValueLabel);
+
+        createRadioButtonComposition(parent);
+
+        new Composite(parent, SWT.NONE);
+
+        propertiesComposite = new Composite(parent, SWT.NONE);
+        propertiesComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+        stack = new StackLayout();
+        propertiesComposite.setLayout(stack);
+
+        noneCompo = new Composite(propertiesComposite, SWT.NONE);
+
+        createInternalComposition(propertiesComposite);
+
+        createExternalComposition(propertiesComposite);
+
+        if (document.getDocumentType().equals(DocumentType.NONE)) {
+            updateStack(NONE);
+        } else if (document.getDocumentType().equals(DocumentType.INTERNAL)) {
+            updateStack(INTERNAL);
+        } else {
+            updateStack(EXTERNAL);
+        }
+
+    }
+
+    private void createExternalComposition(final Composite propertiesComposite) {
+        externalCompo = new Composite(propertiesComposite, SWT.NONE);
+        externalCompo.setLayout(new GridLayout(2, false));
+        externalCompo.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        createDocumentURL(externalCompo);
+    }
+
+    private void createInternalComposition(final Composite propertiesComposite) {
+        internalCompo = new Composite(propertiesComposite, SWT.NONE);
+        internalCompo.setLayout(new GridLayout(2, false));
+        internalCompo.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        createDocumentBrowse(internalCompo);
+    }
+
+    private void createRadioButtonComposition(final Composite parent) {
+        final Composite compo = new Composite(parent, SWT.NONE);
+        compo.setLayout(GridLayoutFactory.fillDefaults().numColumns(4).spacing(20, 0).create());
+        compo.setLayoutData(GridDataFactory.fillDefaults().create());
+
+        radioButtonNone = new Button(compo, SWT.RADIO);
+        radioButtonNone.setText(Messages.initialValueButtonNone);
+        radioButtonNone.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(final SelectionEvent e) {
+                super.widgetSelected(e);
+                if(radioButtonNone.getSelection()){
+                    radioButtonExternal.setSelection(false);
+                    radioButtonInternal.setSelection(false);
+                    updateStack(NONE);
+                }
+            }
+
+        });
+
+        radioButtonInternal = new Button(compo, SWT.RADIO);
+        radioButtonInternal.setText(Messages.initialValueButtonInternal);
+        final ControlDecoration infoBonita = new ControlDecoration(radioButtonInternal, SWT.RIGHT);
+        infoBonita.show();
+        infoBonita.setImage(Pics.getImage(PicsConstants.hint));
+        infoBonita.setDescriptionText(Messages.initialValueButtonInternalToolTip);
+        radioButtonInternal.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(final SelectionEvent e) {
+                super.widgetSelected(e);
+                if (radioButtonInternal.getSelection()) {
+                    radioButtonNone.setSelection(false);
+                    radioButtonExternal.setSelection(false);
+                    updateStack(INTERNAL);
+                }
+            }
+
+        });
+
+
+        radioButtonExternal = new Button(compo, SWT.RADIO);
+        radioButtonExternal.setText(Messages.initialValueButtonExternal);
+        final ControlDecoration infoExternal = new ControlDecoration(radioButtonExternal, SWT.RIGHT);
+        infoExternal.show();
+        infoExternal.setImage(Pics.getImage(PicsConstants.hint));
+        infoExternal.setDescriptionText(Messages.initialValueButtonExternalToolTip);
+        radioButtonExternal.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(final SelectionEvent e) {
+                super.widgetSelected(e);
+                if (radioButtonExternal.getSelection()) {
+                    radioButtonNone.setSelection(false);
+                    radioButtonInternal.setSelection(false);
+                    updateStack(EXTERNAL);
+                }
+            }
+
         });
     }
 
@@ -256,12 +414,23 @@ public class DocumentWizardPage extends WizardPage {
                         documentDescriptionText, SWT.Modify)),
                         descriptionObserved);
 
-        final IObservableValue internalTypeObserved = EMFObservables.observeValue(
-                document,
-                ProcessPackage.Literals.DOCUMENT__IS_INTERNAL);
-        emfDataBindingContext.bindValue(
-                SWTObservables.observeSelection(internalCheckbox),
-                internalTypeObserved);
+        final SelectObservableValue documentTypeObservableValue = new SelectObservableValue(ProcessPackage.DOCUMENT_TYPE);
+
+        // NONE
+        final IObservableValue btnDocumentTypeNone = SWTObservables.observeSelection(radioButtonNone);
+        documentTypeObservableValue.addOption(DocumentType.NONE, btnDocumentTypeNone);
+
+        // EXTERNAL
+        final IObservableValue btnDocumentTypeExternal = SWTObservables.observeSelection(radioButtonExternal);
+        documentTypeObservableValue.addOption(DocumentType.EXTERNAL, btnDocumentTypeExternal);
+
+        // INTERNAL
+        final IObservableValue btnDocumentTypeInternal = SWTObservables.observeSelection(radioButtonInternal);
+        documentTypeObservableValue.addOption(DocumentType.INTERNAL, btnDocumentTypeInternal);
+
+        emfDataBindingContext.bindValue(documentTypeObservableValue, PojoObservables.observeValue(document, "documentType"));
+
+        //------
 
         final IObservableValue documentInternalIDObserved = EMFObservables.observeValue(document,
                 ProcessPackage.Literals.DOCUMENT__DEFAULT_VALUE_ID_OF_DOCUMENT_STORE);
@@ -356,6 +525,17 @@ public class DocumentWizardPage extends WizardPage {
             emfDataBindingContext = null;
         }
         super.dispose();
+    }
+
+    protected void updateStack(final String type) {
+        if (type.equals(NONE)) {
+            stack.topControl = noneCompo;
+        } else if (type.equals(EXTERNAL)) {
+            stack.topControl = externalCompo;
+        } else if (type.equals(INTERNAL)) {
+            stack.topControl = internalCompo;
+        }
+        propertiesComposite.layout();
     }
 
 }
