@@ -105,8 +105,9 @@ public class DuplicateDiagramOperation implements IRunnableWithProgress {
 
         final TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(newDiagram);
         for (final ProcessesNameVersion pnv : pools) {
-            final String fromPoolName = pnv.getNewName();
-            final String fromPoolVersion = pnv.getNewVersion();
+            final AbstractProcess fromPool = pnv.getAbstractProcess();
+            final String fromPoolName = fromPool.getName();
+            final String fromPoolVersion = fromPool.getVersion();
             /* Find corresponding element in the duplicated model */
             for (final Element element : newDiagram.getElements()) {
                 if (element instanceof AbstractProcess) {
