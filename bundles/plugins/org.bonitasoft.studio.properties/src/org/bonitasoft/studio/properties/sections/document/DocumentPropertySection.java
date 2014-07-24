@@ -27,7 +27,6 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection;
 import org.bonitasoft.studio.document.refactoring.RefactorDocumentOperation;
 import org.bonitasoft.studio.document.ui.DocumentWizard;
-import org.bonitasoft.studio.model.parameter.Parameter;
 import org.bonitasoft.studio.model.process.Document;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.Pool;
@@ -72,7 +71,7 @@ import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 
 /**
  * @author Aurelien Pupier
- * 
+ *
  */
 public class DocumentPropertySection extends AbstractBonitaDescriptionSection implements ISelectionChangedListener, IDoubleClickListener {
 
@@ -169,7 +168,7 @@ public class DocumentPropertySection extends AbstractBonitaDescriptionSection im
 
     }
 
-    
+
     private void createAddButton(final Composite buttonComposite) {
         final Button addButton = getWidgetFactory().createButton(buttonComposite, Messages.AddSimple, SWT.FLAT);
         addButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(85, SWT.DEFAULT).create());
@@ -196,15 +195,15 @@ public class DocumentPropertySection extends AbstractBonitaDescriptionSection im
             @Override
             public void widgetSelected(final SelectionEvent e) {
                 super.widgetSelected(e);
-                int ok=0;
+                final int ok=0;
                 if (ok==openOutlineDialog((IStructuredSelection) documentListViewer.getSelection())){
-                final Iterator<Document> selection = ((IStructuredSelection) documentListViewer.getSelection()).iterator();
-                if (selection.hasNext()) {
-                    final RefactorDocumentOperation rdo = createDeleteRefactorOperation(selection);
-                    executeDeleteReactorOperation(rdo);
-                    documentListViewer.refresh();
-                    documentListViewer.setSelection(new StructuredSelection());
-                }
+                    final Iterator<Document> selection = ((IStructuredSelection) documentListViewer.getSelection()).iterator();
+                    if (selection.hasNext()) {
+                        final RefactorDocumentOperation rdo = createDeleteRefactorOperation(selection);
+                        executeDeleteReactorOperation(rdo);
+                        documentListViewer.refresh();
+                        documentListViewer.setSelection(new StructuredSelection());
+                    }
                 }
             }
 
@@ -266,32 +265,32 @@ public class DocumentPropertySection extends AbstractBonitaDescriptionSection im
         return Messages.documentPropertySectionDescription;
     }
 
-	@Override
-	public void doubleClick(DoubleClickEvent arg0) {
-		editDocumentAction();
-		
-	}
+    @Override
+    public void doubleClick(final DoubleClickEvent arg0) {
+        editDocumentAction();
 
-	@Override
-	public void selectionChanged(SelectionChangedEvent event) {
-		  final StructuredSelection listSelection = (StructuredSelection) event.getSelection();
-          removeButton.setEnabled(!listSelection.isEmpty());
-          editButton.setEnabled(listSelection.size() == 1);
-		
-	}
+    }
 
-	private void editDocumentAction() {
-		final Document selectedDocument = (Document) ((IStructuredSelection) documentListViewer.getSelection()).getFirstElement();
-		final DocumentWizard documentWizard = new DocumentWizard(getEObject(), selectedDocument);
-		final Dialog dialog = new CustomWizardDialog(Display.getDefault().getActiveShell(), documentWizard);
-		dialog.open();
-		documentListViewer.refresh();
-		documentListViewer.setSelection(new StructuredSelection(documentWizard.getDocument()));
-	}
-	
-	private int openOutlineDialog(final IStructuredSelection selection){
-		StringBuilder sb = new StringBuilder();
-        for (Object selectionElement : selection.toList()) {
+    @Override
+    public void selectionChanged(final SelectionChangedEvent event) {
+        final StructuredSelection listSelection = (StructuredSelection) event.getSelection();
+        removeButton.setEnabled(!listSelection.isEmpty());
+        editButton.setEnabled(listSelection.size() == 1);
+
+    }
+
+    private void editDocumentAction() {
+        final Document selectedDocument = (Document) ((IStructuredSelection) documentListViewer.getSelection()).getFirstElement();
+        final DocumentWizard documentWizard = new DocumentWizard(getEObject(), selectedDocument, true);
+        final Dialog dialog = new CustomWizardDialog(Display.getDefault().getActiveShell(), documentWizard);
+        dialog.open();
+        documentListViewer.refresh();
+        documentListViewer.setSelection(new StructuredSelection(documentWizard.getDocument()));
+    }
+
+    private int openOutlineDialog(final IStructuredSelection selection){
+        final StringBuilder sb = new StringBuilder();
+        for (final Object selectionElement : selection.toList()) {
             if (selectionElement instanceof Document) {
                 sb.append(((Document) selectionElement).getName() + "\n");
             }
@@ -299,11 +298,11 @@ public class DocumentPropertySection extends AbstractBonitaDescriptionSection im
         if (sb.length() > 0) {
             sb.delete(sb.length() - 1, sb.length());
         }
-        String[] buttonList = { IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL };
-        java.util.List<Object> selectionList = ((IStructuredSelection) documentListViewer.getSelection()).toList();
-		  OutlineDialog dialog = new OutlineDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), removalConfirmationDialogTitle, Display
-                  .getCurrent().getSystemImage(SWT.ICON_WARNING), NLS.bind(Messages.areYouSureMessage, sb.toString()), MessageDialog.CONFIRM, buttonList,
-                  1, selectionList);
-		return dialog.open();
-	}
+        final String[] buttonList = { IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL };
+        final java.util.List<Object> selectionList = ((IStructuredSelection) documentListViewer.getSelection()).toList();
+        final OutlineDialog dialog = new OutlineDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), removalConfirmationDialogTitle, Display
+                .getCurrent().getSystemImage(SWT.ICON_WARNING), NLS.bind(Messages.areYouSureMessage, sb.toString()), MessageDialog.CONFIRM, buttonList,
+                1, selectionList);
+        return dialog.open();
+    }
 }
