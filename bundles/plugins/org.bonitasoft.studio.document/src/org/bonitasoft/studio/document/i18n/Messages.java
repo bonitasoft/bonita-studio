@@ -56,6 +56,9 @@ public class Messages extends NLS {
     public static String editDocumentTitle;
     public static String editDocumentDescription;
 
+    public static String hideMimeType;
+    public static String manageMimeType;
+
     static {
         // initialize resource bundle
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

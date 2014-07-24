@@ -143,12 +143,13 @@ public class DocumentWizardPage extends WizardPage {
 
         createMimeType(detailsComposite);
 
-        updateMimeTypeStack(FIELD);
+        updateMimeTypeStack(LINK);
     }
 
     private void createMimeType(final Composite detailsComposite) {
 
         mimeTypeLabel = new Label(detailsComposite, SWT.NONE);
+        mimeTypeLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).create());
         mimeTypeLabel.setText(Messages.mimeType);
         mimeTypeLabel.setAlignment(SWT.CENTER);
         cd = new ControlDecoration(mimeTypeLabel, SWT.RIGHT);
@@ -167,13 +168,15 @@ public class DocumentWizardPage extends WizardPage {
     private void createDocumentNameField(final Composite detailsComposite) {
         final Label nameLabel = new Label(detailsComposite, SWT.NONE);
         nameLabel.setText(Messages.name);
+        nameLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).create());
         documentNameText = new Text(detailsComposite, SWT.BORDER);
         documentNameText.setText("");
         documentNameText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
     }
 
     private void createDocumentDescriptionField(final Composite detailsComposite) {
-        final Label description = new Label(detailsComposite,SWT.NONE);
+        final Label description = new Label(detailsComposite, SWT.NONE);
+        description.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.TOP).create());
         description.setText(Messages.description);
         documentDescriptionText = new Text(detailsComposite, SWT.BORDER | SWT.V_SCROLL);
         documentDescriptionText.setText("");
@@ -196,7 +199,7 @@ public class DocumentWizardPage extends WizardPage {
 
 
         hideLink = new Link(mimeTypeComposition, SWT.NONE);
-        hideLink.setText("<A>Hide</A>");
+        hideLink.setText("<A>" + Messages.hideMimeType + "</A>");
         hideLink.addSelectionListener(new SelectionAdapter() {
 
             @Override
@@ -214,7 +217,7 @@ public class DocumentWizardPage extends WizardPage {
         manageLinkComposition.setLayoutData(GridDataFactory.fillDefaults().create());
 
         final Link manageLink = new Link(manageLinkComposition, SWT.NONE);
-        manageLink.setText("<A>Manage MIME type</A>");
+        manageLink.setText("<A>" + Messages.manageMimeType + "</A>");
         manageLink.addSelectionListener(new SelectionAdapter() {
 
             @Override
@@ -226,7 +229,7 @@ public class DocumentWizardPage extends WizardPage {
 
     private void createDocumentURL(final Composite slaveComposite) {
         final Label documentURLLabel = new Label(slaveComposite, SWT.NONE);
-        documentURLLabel.setText("URL");
+        documentURLLabel.setText(Messages.documentExternalLabel);
 
         documentUrlViewer = new ExpressionViewer(slaveComposite, SWT.BORDER,
                 ProcessPackage.Literals.DOCUMENT__URL);
@@ -244,7 +247,7 @@ public class DocumentWizardPage extends WizardPage {
 
     private void createDocumentBrowse(final Composite slaveComposite) {
         final Label documentBrowserLabel = new Label(slaveComposite, SWT.NONE);
-        documentBrowserLabel.setText("File");
+        documentBrowserLabel.setText(Messages.documentInternalLabel);
 
         final Composite browseWithTextComposite =new Composite(
                 slaveComposite,SWT.NONE);
@@ -279,7 +282,7 @@ public class DocumentWizardPage extends WizardPage {
 
         final Label radioButtonLabel = new Label(parent, SWT.NONE);
         radioButtonLabel.setText(Messages.initialValueLabel);
-
+        radioButtonLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).create());
         createRadioButtonComposition(parent);
 
         new Composite(parent, SWT.NONE);
