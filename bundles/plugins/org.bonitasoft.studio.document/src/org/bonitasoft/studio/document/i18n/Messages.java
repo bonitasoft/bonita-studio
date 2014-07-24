@@ -53,6 +53,9 @@ public class Messages extends NLS {
     public static String documentExternalLabel;
     public static String documentInternalLabel;
 
+    public static String editDocumentTitle;
+    public static String editDocumentDescription;
+
     static {
         // initialize resource bundle
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

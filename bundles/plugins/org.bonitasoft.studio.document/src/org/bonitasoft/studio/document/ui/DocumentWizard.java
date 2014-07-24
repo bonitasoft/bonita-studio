@@ -46,6 +46,7 @@ public class DocumentWizard extends Wizard {
     private final EObject context;
     private final Document document;
     private final Document documentWorkingCopy;
+    private final boolean editMode;
 
     public DocumentWizard(final EObject context){
         super();
@@ -60,20 +61,30 @@ public class DocumentWizard extends Wizard {
         urlExpression.setReturnTypeFixed(true);
         documentWorkingCopy.setUrl(urlExpression);
         document = null;
+        editMode = false;
     }
 
-    public DocumentWizard(final EObject context, final Document document) {
+    public DocumentWizard(final EObject context, final Document document, final boolean editMode) {
         super();
         this.context = context;
         setWindowTitle(Messages.newDocument);
         setDefaultPageImageDescriptor(Pics.getWizban());
         this.document = document;
         documentWorkingCopy = EcoreUtil.copy(document);
+        this.editMode = editMode;
     }
 
     @Override
     public void addPages() {
-        addPage(new DocumentWizardPage(context, documentWorkingCopy));
+
+        final DocumentWizardPage page = new DocumentWizardPage(context, documentWorkingCopy);
+
+        if (editMode) {
+            page.setDescription(Messages.editDocumentTitle);
+            page.setTitle(Messages.editDocumentDescription);
+        }
+        addPage(page);
+
     }
 
     @Override
