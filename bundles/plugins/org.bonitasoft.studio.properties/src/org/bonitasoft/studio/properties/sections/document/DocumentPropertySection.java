@@ -39,6 +39,8 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -65,7 +67,7 @@ import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
  * @author Aurelien Pupier
  * 
  */
-public class DocumentPropertySection extends AbstractBonitaDescriptionSection {
+public class DocumentPropertySection extends AbstractBonitaDescriptionSection implements ISelectionChangedListener, IDoubleClickListener {
 
     private ListViewer documentListViewer;
     private EMFDataBindingContext emfDataBindingContext;
@@ -131,15 +133,8 @@ public class DocumentPropertySection extends AbstractBonitaDescriptionSection {
         final ListViewer documentListViewer = new ListViewer(list);
         documentListViewer.setLabelProvider(new ElementForIdLabelProvider());
         documentListViewer.setContentProvider(new ObservableListContentProvider());
-        documentListViewer.addSelectionChangedListener(new ISelectionChangedListener() {
-
-            @Override
-            public void selectionChanged(final SelectionChangedEvent event) {
-                final StructuredSelection listSelection = (StructuredSelection) event.getSelection();
-                removeButton.setEnabled(!listSelection.isEmpty());
-                editButton.setEnabled(listSelection.size() == 1);
-            }
-        });
+        documentListViewer.addDoubleClickListener(this);
+        documentListViewer.addSelectionChangedListener(this);
         return documentListViewer;
     }
 
@@ -161,17 +156,13 @@ public class DocumentPropertySection extends AbstractBonitaDescriptionSection {
             @Override
             public void widgetSelected(final SelectionEvent e) {
                 super.widgetSelected(e);
-                final Document selectedDocument = (Document) ((IStructuredSelection) documentListViewer.getSelection()).getFirstElement();
-                final DocumentWizard documentWizard = new DocumentWizard(getEObject(), selectedDocument);
-                final Dialog dialog = new CustomWizardDialog(Display.getDefault().getActiveShell(), documentWizard);
-                dialog.open();
-                documentListViewer.refresh();
-                documentListViewer.setSelection(new StructuredSelection(documentWizard.getDocument()));
+                editDocumentAction();
             }
         });
 
     }
 
+    
     private void createAddButton(final Composite buttonComposite) {
         final Button addButton = getWidgetFactory().createButton(buttonComposite, Messages.AddSimple, SWT.FLAT);
         addButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(85, SWT.DEFAULT).create());
@@ -264,4 +255,27 @@ public class DocumentPropertySection extends AbstractBonitaDescriptionSection {
     public String getSectionDescription() {
         return Messages.documentPropertySectionDescription;
     }
+
+	@Override
+	public void doubleClick(DoubleClickEvent arg0) {
+		editDocumentAction();
+		
+	}
+
+	@Override
+	public void selectionChanged(SelectionChangedEvent event) {
+		  final StructuredSelection listSelection = (StructuredSelection) event.getSelection();
+          removeButton.setEnabled(!listSelection.isEmpty());
+          editButton.setEnabled(listSelection.size() == 1);
+		
+	}
+
+	private void editDocumentAction() {
+		final Document selectedDocument = (Document) ((IStructuredSelection) documentListViewer.getSelection()).getFirstElement();
+		final DocumentWizard documentWizard = new DocumentWizard(getEObject(), selectedDocument);
+		final Dialog dialog = new CustomWizardDialog(Display.getDefault().getActiveShell(), documentWizard);
+		dialog.open();
+		documentListViewer.refresh();
+		documentListViewer.setSelection(new StructuredSelection(documentWizard.getDocument()));
+	}
 }
