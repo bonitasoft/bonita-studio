@@ -109,16 +109,19 @@ public class DuplicateDiagramOperation implements IRunnableWithProgress {
 
         boolean poolRenamed = false;
         for (final ProcessesNameVersion pnv : pools) {
-            final String fromPoolName = pnv.getNewName();
-            final String fromPoolVersion = pnv.getNewVersion();
+            final AbstractProcess fromPool = pnv.getAbstractProcess();
+            final String fromPoolName = fromPool.getName();
+            final String fromPoolVersion = fromPool.getVersion();
             /* Find corresponding element in the duplicated model */
             for (final Element element : newDiagram.getElements()) {
                 if (element instanceof AbstractProcess) {
-                    if (!element.getName().equals(fromPoolName)
-                            || !((AbstractProcess) element).getVersion().equals(fromPoolVersion)) {
-                        changeProcessNameAndVersion((AbstractProcess) element, editingDomain, pnv.getNewName(), pnv.getNewVersion());
-                        poolRenamed = true;
-                        break;
+                    if (element.getName().equals(fromPoolName)
+                            && ((AbstractProcess) element).getVersion().equals(fromPoolVersion)) {
+                        if (!pnv.getNewName().equals(fromPoolName) || !pnv.getNewVersion().equals(fromPoolVersion)) {
+                            changeProcessNameAndVersion((AbstractProcess) element, editingDomain, pnv.getNewName(), pnv.getNewVersion());
+                            poolRenamed = true;
+                            break;
+                        }
                     }
                 }
             }
