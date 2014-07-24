@@ -453,6 +453,8 @@ public class Messages extends NLS {
 
     public static String renamingDiagram;
 
+	public static String areYouSureMessage;
+
     static {
         // initialize resource bundle
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

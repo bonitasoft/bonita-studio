@@ -14,9 +14,12 @@
  */
 package org.bonitasoft.studio.properties.sections.document;
 
+import static org.bonitasoft.studio.common.Messages.removalConfirmationDialogTitle;
+
 import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
 
+import org.bonitasoft.studio.common.dialog.OutlineDialog;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.CustomWizardDialog;
 import org.bonitasoft.studio.common.jface.ElementForIdLabelProvider;
@@ -24,6 +27,7 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection;
 import org.bonitasoft.studio.document.refactoring.RefactorDocumentOperation;
 import org.bonitasoft.studio.document.ui.DocumentWizard;
+import org.bonitasoft.studio.model.parameter.Parameter;
 import org.bonitasoft.studio.model.process.Document;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.Pool;
@@ -37,6 +41,7 @@ import org.eclipse.emf.databinding.edit.EMFEditProperties;
 import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.DoubleClickEvent;
@@ -49,6 +54,7 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -60,6 +66,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.WorkbenchMessages;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 
@@ -189,12 +196,15 @@ public class DocumentPropertySection extends AbstractBonitaDescriptionSection im
             @Override
             public void widgetSelected(final SelectionEvent e) {
                 super.widgetSelected(e);
+                int ok=0;
+                if (ok==openOutlineDialog((IStructuredSelection) documentListViewer.getSelection())){
                 final Iterator<Document> selection = ((IStructuredSelection) documentListViewer.getSelection()).iterator();
                 if (selection.hasNext()) {
                     final RefactorDocumentOperation rdo = createDeleteRefactorOperation(selection);
                     executeDeleteReactorOperation(rdo);
                     documentListViewer.refresh();
                     documentListViewer.setSelection(new StructuredSelection());
+                }
                 }
             }
 
@@ -277,5 +287,23 @@ public class DocumentPropertySection extends AbstractBonitaDescriptionSection im
 		dialog.open();
 		documentListViewer.refresh();
 		documentListViewer.setSelection(new StructuredSelection(documentWizard.getDocument()));
+	}
+	
+	private int openOutlineDialog(final IStructuredSelection selection){
+		StringBuilder sb = new StringBuilder();
+        for (Object selectionElement : selection.toList()) {
+            if (selectionElement instanceof Document) {
+                sb.append(((Document) selectionElement).getName() + "\n");
+            }
+        }
+        if (sb.length() > 0) {
+            sb.delete(sb.length() - 1, sb.length());
+        }
+        String[] buttonList = { IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL };
+        java.util.List<Object> selectionList = ((IStructuredSelection) documentListViewer.getSelection()).toList();
+		  OutlineDialog dialog = new OutlineDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), removalConfirmationDialogTitle, Display
+                  .getCurrent().getSystemImage(SWT.ICON_WARNING), NLS.bind(Messages.areYouSureMessage, sb.toString()), MessageDialog.CONFIRM, buttonList,
+                  1, selectionList);
+		return dialog.open();
 	}
 }
