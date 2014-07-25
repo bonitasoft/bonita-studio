@@ -31,7 +31,12 @@ import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.ComboBoxCellEditor;
 import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CCombo;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 
 /**
@@ -40,85 +45,109 @@ import org.eclipse.swt.widgets.Display;
  */
 public class WidgetTypeEditingSupport extends EditingSupport {
 
-	private HashMap<String, EClass> widgetTypesByNames;
+    private final HashMap<String, EClass> widgetTypesByNames;
 
-	/**
-	 * @param viewer
-	 */
-	public WidgetTypeEditingSupport(ColumnViewer viewer) {
-		super(viewer);
-		widgetTypesByNames = new HashMap<String,EClass>();
-	}
+    /**
+     * @param viewer
+     */
+    public WidgetTypeEditingSupport(final ColumnViewer viewer) {
+        super(viewer);
+        widgetTypesByNames = new HashMap<String,EClass>();
+    }
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.viewers.EditingSupport#getCellEditor(java.lang.Object)
-	 */
-	@Override
-	protected CellEditor getCellEditor(Object element) {
-		return new ComboBoxCellEditor((Composite) getViewer().getControl(), getItemsFor(element), SWT.READ_ONLY);
-	}
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.viewers.EditingSupport#getCellEditor(java.lang.Object)
+     */
+    @Override
+    protected CellEditor getCellEditor(final Object element) {
+        return new ComboBoxCellEditor((Composite) getViewer().getControl(), getItemsFor(element), SWT.READ_ONLY | SWT.NO_FOCUS) {
+
+            @Override
+            protected void doSetValue(final Object value) {
+                super.doSetValue(value);
+                final CCombo combo = (CCombo) getControl();
+                combo.setSelection(new Point(0, 0));
+            }
+        };
+    }
+
+    public Control createControl(final Object element) {
+        final CCombo combo = new CCombo((Composite) getViewer().getControl(), SWT.READ_ONLY);
+        combo.setEditable(false);
+        combo.setItems(getItemsFor(element));
+        final String value = NamingUtils.getFormPaletteText(false, ((WidgetMapping) element).getWidgetType().eClass());
+        combo.setText(value);
+        combo.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(final SelectionEvent e) {
+                setValue(element, combo.getText());
+            }
+
+        });
+        return combo;
+    }
+
+    protected String[] getItemsFor(final Object element) {
+        if(element instanceof WidgetMapping){
+            final WidgetMapping mapping = (WidgetMapping) element;
+            final List<String> widgetNames = new ArrayList<String>();
+            for(final EClass widgetType : mapping.getCompatibleWidgetTypes()){
+                final String text = getText(widgetType,mapping);
+                widgetTypesByNames.put(text,widgetType);
+                widgetNames.add(text);
+            }
+            return widgetNames.toArray(new String[widgetNames.size()]);
+        }
+        return new String[0];
+    }
+
+    public String getText(final EClass widgetType, final WidgetMapping mapping) {
+        return NamingUtils.getFormPaletteText(false, widgetType);
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.viewers.EditingSupport#canEdit(java.lang.Object)
+     */
+    @Override
+    protected boolean canEdit(final Object element) {
+        if(element instanceof WidgetMapping){
+            return getItemsFor(element).length > 1;
+        }
+        return false;
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.viewers.EditingSupport#getValue(java.lang.Object)
+     */
+    @Override
+    protected Object getValue(final Object element) {
+        return Arrays.asList(getItemsFor(element)).indexOf(NamingUtils.getFormPaletteText(false,((WidgetMapping)element).getWidgetType().eClass()));
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.viewers.EditingSupport#setValue(java.lang.Object, java.lang.Object)
+     */
+    @Override
+    protected void setValue(final Object element, final Object value) {
+        final EClass widgetEClass = getEClassByWidgetName(value.toString());
+        ((WidgetMapping)element).setWidgetType(createWidgetFor(widgetEClass));
+        Display.getDefault().asyncExec(new Runnable() {
+
+            @Override
+            public void run() {
+                getViewer().refresh();
+            }
+        }) ;
+    }
 
 
-	protected String[] getItemsFor(Object element) {
-		if(element instanceof WidgetMapping){
-			WidgetMapping mapping = (WidgetMapping) element;
-			List<String> widgetNames = new ArrayList<String>();
-			for(EClass widgetType : mapping.getCompatibleWidgetTypes()){
-				String text = getText(widgetType,mapping);
-				widgetTypesByNames.put(text,widgetType);
-				widgetNames.add(text);
-			}
-			return widgetNames.toArray(new String[widgetNames.size()]);
-		}
-		return new String[0];
-	}
+    protected EClass getEClassByWidgetName(final String widgetName) {
+        return widgetTypesByNames.get(widgetName);
+    }
 
-	public String getText(EClass widgetType, WidgetMapping mapping) {
-		return NamingUtils.getFormPaletteText(false, widgetType);
-	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.viewers.EditingSupport#canEdit(java.lang.Object)
-	 */
-	@Override
-	protected boolean canEdit(Object element) {
-		if(element instanceof WidgetMapping){
-			return getItemsFor(element).length > 1;
-		}
-		return false;
-	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.viewers.EditingSupport#getValue(java.lang.Object)
-	 */
-	@Override
-	protected Object getValue(Object element) {
-		return Arrays.asList(getItemsFor(element)).indexOf(NamingUtils.getFormPaletteText(false,((WidgetMapping)element).getWidgetType().eClass()));
-	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.viewers.EditingSupport#setValue(java.lang.Object, java.lang.Object)
-	 */
-	@Override
-	protected void setValue(Object element, Object value) {
-		EClass widgetEClass = getEClassByWidgetName(getItemsFor(element)[(Integer)value]);
-		((WidgetMapping)element).setWidgetType(createWidgetFor(widgetEClass));
-		Display.getDefault().asyncExec(new Runnable() {
-
-			@Override
-			public void run() {
-				getViewer().refresh();		
-			}
-		}) ;
-	}
-
-
-	protected EClass getEClassByWidgetName(String widgetName) {
-		return widgetTypesByNames.get(widgetName);
-	}
-
-	protected Widget createWidgetFor(EClass widgetEClass) {
-		return (Widget) FormFactory.eINSTANCE.create(widgetEClass);
-	}
+    protected Widget createWidgetFor(final EClass widgetEClass) {
+        return (Widget) FormFactory.eINSTANCE.create(widgetEClass);
+    }
 
 }
