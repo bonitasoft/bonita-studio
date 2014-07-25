@@ -18,6 +18,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.OpenNameAndVersionForDiagramDialog.ProcessesNameVersion;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.repository.Repository;
@@ -116,24 +117,22 @@ public class RenameDiagramOperation implements IRunnableWithProgress {
                 }
             }
             diagramFileStore.delete();
-
-        }
-
-        final DiagramFileStore fStore = diagramStore.getDiagram(diagramName, diagramVersion);
-        IWorkbenchPart partToActivate = fStore.open();
-        final MainProcess mainProcess = fStore.getContent();
-        for (final Form form : forms) {
-            final List<Form> allItemsOfTypeForms = ModelHelper.getAllItemsOfType(mainProcess, FormPackage.Literals.FORM);
-            for (final Form f : allItemsOfTypeForms) {
-                if (EcoreUtil.equals(form, f)) {
-                    final DiagramEditor ed = FormsUtils.openDiagram(f, AdapterFactoryEditingDomain.getEditingDomainFor(f));
-                    if (partName.equals(ed.getTitle())) {
-                        partToActivate = ed;
+            final DiagramFileStore fStore = diagramStore.getChild(NamingUtils.toDiagramFilename(diagramName, diagramVersion));
+            IWorkbenchPart partToActivate = fStore.open();
+            final MainProcess mainProcess = fStore.getContent();
+            for (final Form form : forms) {
+                final List<Form> allItemsOfTypeForms = ModelHelper.getAllItemsOfType(mainProcess, FormPackage.Literals.FORM);
+                for (final Form f : allItemsOfTypeForms) {
+                    if (EcoreUtil.equals(form, f)) {
+                        final DiagramEditor ed = FormsUtils.openDiagram(f, AdapterFactoryEditingDomain.getEditingDomainFor(f));
+                        if (partName.equals(ed.getTitle())) {
+                            partToActivate = ed;
+                        }
                     }
                 }
             }
+            partToActivate.getSite().getPage().activate(partToActivate);
         }
-        partToActivate.getSite().getPage().activate(partToActivate);
     }
 
 
