@@ -167,7 +167,7 @@ public class DocumentWizardPage extends WizardPage {
 
     private void createDocumentNameField(final Composite detailsComposite) {
         final Label nameLabel = new Label(detailsComposite, SWT.NONE);
-        nameLabel.setText(Messages.name);
+        nameLabel.setText(Messages.name + " *");
         nameLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).create());
         documentNameText = new Text(detailsComposite, SWT.BORDER);
         documentNameText.setText("");
@@ -229,7 +229,7 @@ public class DocumentWizardPage extends WizardPage {
 
     private void createDocumentURL(final Composite slaveComposite) {
         final Label documentURLLabel = new Label(slaveComposite, SWT.NONE);
-        documentURLLabel.setText(Messages.documentExternalLabel);
+        documentURLLabel.setText(Messages.documentExternalLabel + " *");
 
         documentUrlViewer = new ExpressionViewer(slaveComposite, SWT.BORDER,
                 ProcessPackage.Literals.DOCUMENT__URL);
@@ -247,7 +247,7 @@ public class DocumentWizardPage extends WizardPage {
 
     private void createDocumentBrowse(final Composite slaveComposite) {
         final Label documentBrowserLabel = new Label(slaveComposite, SWT.NONE);
-        documentBrowserLabel.setText(Messages.documentInternalLabel);
+        documentBrowserLabel.setText(Messages.documentInternalLabel + " *");
 
         final Composite browseWithTextComposite =new Composite(
                 slaveComposite,SWT.NONE);
@@ -258,7 +258,7 @@ public class DocumentWizardPage extends WizardPage {
         documentTextId = new Text(browseWithTextComposite,SWT.BORDER);
         documentTextId.setText("");
         documentTextId.setLayoutData(GridDataFactory.fillDefaults()
-                .grab(true, false).create());
+                .grab(true, false).indent(10, 0).create());
 
         browseButton = new Button(browseWithTextComposite, SWT.FLAT);
         browseButton.setText(Messages.Browse);
@@ -441,6 +441,8 @@ public class DocumentWizardPage extends WizardPage {
         final IObservableValue documentInternalIDObserved = EMFObservables.observeValue(document,
                 ProcessPackage.Literals.DOCUMENT__DEFAULT_VALUE_ID_OF_DOCUMENT_STORE);
 
+
+
         emfDataBindingContext
         .bindValue(
                 SWTObservables.observeDelayedValue(500, SWTObservables
@@ -499,4 +501,5 @@ public class DocumentWizardPage extends WizardPage {
         }
         mimeCompo.layout();
     }
+
 }

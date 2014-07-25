@@ -61,6 +61,9 @@ public class Messages extends NLS {
 
     public static String editDocument;
 
+    public static String documentInitialContentInternalErrorMessage;
+    public static String documentInitialContentExternalErrorMessage;
+
     static {
         // initialize resource bundle
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);
