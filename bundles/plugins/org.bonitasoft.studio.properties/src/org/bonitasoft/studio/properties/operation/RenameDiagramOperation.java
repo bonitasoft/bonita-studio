@@ -117,9 +117,6 @@ public class RenameDiagramOperation implements IRunnableWithProgress {
                 }
             }
             diagramFileStore.delete();
-
-        }
-
         final DiagramFileStore fStore = diagramStore.getChild(NamingUtils.toDiagramFilename(diagramName, diagramVersion));
         IWorkbenchPart partToActivate = fStore.open();
         final MainProcess mainProcess = fStore.getContent();
@@ -135,6 +132,7 @@ public class RenameDiagramOperation implements IRunnableWithProgress {
             }
         }
         partToActivate.getSite().getPage().activate(partToActivate);
+    }
     }
 
 
