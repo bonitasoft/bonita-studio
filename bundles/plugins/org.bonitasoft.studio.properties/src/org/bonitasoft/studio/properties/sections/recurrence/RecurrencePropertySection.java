@@ -174,6 +174,7 @@ public class RecurrencePropertySection extends EObjectSelectionProviderSection i
                         .getEngineConstantName() }));
         loopConditionExpressionViewer.addFilter(new StepDataViewerFilter());
 
+        context.bindValue(ViewersObservables.observeInput(loopConditionExpressionViewer), getEObjectMasterObservable());
         context.bindValue(ViewersObservables.observeSingleSelection(loopConditionExpressionViewer), CustomEMFEditObservables.observeDetailValue(
                 Realm.getDefault(), getEObjectMasterObservable(), ProcessPackage.Literals.MULTI_INSTANTIABLE__LOOP_CONDITION));
 
@@ -190,6 +191,7 @@ public class RecurrencePropertySection extends EObjectSelectionProviderSection i
         maximumLoopExpressionViewer.setMessage(Messages.optionalLabel, IStatus.INFO);
         maximumLoopExpressionViewer.addFilter(new StepDataViewerFilter());
 
+        context.bindValue(ViewersObservables.observeInput(maximumLoopExpressionViewer), getEObjectMasterObservable());
         context.bindValue(ViewersObservables.observeSingleSelection(maximumLoopExpressionViewer), CustomEMFEditObservables.observeDetailValue(
                 Realm.getDefault(), getEObjectMasterObservable(), ProcessPackage.Literals.MULTI_INSTANTIABLE__LOOP_MAXIMUM));
 
