@@ -46,10 +46,10 @@ public class UpdateCMISConnectorVersionCustomMigration extends CustomMigration {
             final String defVersion = connectorInstance.get("definitionVersion");
             if (isProvidedCMISConnectorDef(defId)) {
                 if(defVersion.equals("1.0.0")) {
-                    connectorInstance.set("definitionVersion", "2.0.0");
+                    connectorInstance.set("definitionVersion", "2.0.1");
                     final Instance connectorConfigInstance = connectorInstance.get("configuration");
                     if (connectorConfigInstance != null) {
-                        connectorConfigInstance.set("version", "2.0.0");
+                        connectorConfigInstance.set("version", "2.0.1");
                         if (isWebserviceBinding(connectorConfigInstance) && isSupportedURLExpression(connectorConfigInstance)) {
                             addServiceURL(connectorConfigInstance, model, WEBSERVICES_OBJECT_SERVICE,
                                     createURLValueExpression(model, connectorConfigInstance, OBJECT_SERVICE_WSDL));
