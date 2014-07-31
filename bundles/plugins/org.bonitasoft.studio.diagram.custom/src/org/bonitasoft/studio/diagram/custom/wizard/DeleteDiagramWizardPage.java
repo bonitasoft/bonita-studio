@@ -16,11 +16,11 @@
  */
 package org.bonitasoft.studio.diagram.custom.wizard;
 
-import java.util.List;
-
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.diagram.custom.Messages;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
+import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.emf.ecore.EObject;
@@ -40,6 +40,8 @@ import org.eclipse.ui.PlatformUI;
  */
 public class DeleteDiagramWizardPage extends AbstractManageDiagramWizardPage {
 
+    private final DiagramRepositoryStore diagramStore;
+
     /**
      * @param pageName
      */
@@ -48,6 +50,7 @@ public class DeleteDiagramWizardPage extends AbstractManageDiagramWizardPage {
         setTitle(pageName);
         setDescription(Messages.DeleteDiagramWizardPage_desc);
         setImageDescriptor(Pics.getWizban());
+        diagramStore = (DiagramRepositoryStore) RepositoryManager.getInstance().getCurrentRepository().getRepositoryStore(DiagramRepositoryStore.class);
     }
 
     /*
@@ -60,17 +63,17 @@ public class DeleteDiagramWizardPage extends AbstractManageDiagramWizardPage {
         final Composite blank = new Composite(getMainComposite(), SWT.NONE);
         blank.setLayoutData(new GridData(SWT.DEFAULT, 40));
         getDiagramTree().getViewer().setInput(new Object());
-        selectCurrentDiagram();
         setWorkspaceThingsEnabled(true);
         setControl(getMainComposite());
+        selectCurrentDiagram();
     }
 
 
     private void selectCurrentDiagram() {
-        final List<DiagramFileStore> diagrams = getDiagrams();
         final MainProcess currentProc = getDiagramInEditor();
-        for (final DiagramFileStore diagram : diagrams) {
-            if (diagram.getContent().equals(currentProc)) {
+        if (currentProc != null) {
+            final DiagramFileStore diagram = diagramStore.getDiagram(currentProc.getName(), currentProc.getVersion());
+            if (diagram != null) {
                 getDiagramTree().getViewer().setSelection(new StructuredSelection(diagram));
             }
         }
