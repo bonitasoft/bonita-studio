@@ -108,6 +108,14 @@
                   style="push">
             </command>
             <command
+                  commandId="org.bonitasoft.studio.diagram.command.deleteDiagram"
+                  disabledIcon="icons/menuIcons/open_disabled.png"
+                  hoverIcon="icons/menuIcons/open_hover.png"
+                  icon="icons/menuIcons/open.png"
+                  label="%deleteProcess_label"
+                  style="push">
+            </command>
+            <command
                   commandId="org.bonitasoft.studio.application.command.rename"
                   label="%renameLabel"
                   style="push">
