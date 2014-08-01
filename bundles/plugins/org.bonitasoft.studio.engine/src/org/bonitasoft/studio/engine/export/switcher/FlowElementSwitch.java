@@ -667,7 +667,7 @@ public class FlowElementSwitch extends AbstractSwitch {
                 break;
             case PARALLEL:
             case SEQUENTIAL:
-                addMultiInstantiation(taskBuilder, activity);
+                configureMultiInstantiation(taskBuilder, activity);
                 break;
             default:
                 break;
@@ -768,7 +768,7 @@ public class FlowElementSwitch extends AbstractSwitch {
                 EngineExpressionUtil.createExpression(multiInstantiable.getLoopMaximum()));
     }
 
-    protected void addMultiInstantiation(final ActivityDefinitionBuilder taskBuilder, final MultiInstantiable activity) {
+    protected void configureMultiInstantiation(final ActivityDefinitionBuilder taskBuilder, final MultiInstantiable activity) {
         final Expression completionCondition = activity.getCompletionCondition();
         if (activity.isUseCardinality()) {
             final Expression cardinality = activity.getCardinalityExpression();
@@ -787,9 +787,9 @@ public class FlowElementSwitch extends AbstractSwitch {
             final Expression iteratorExpression = activity.getIteratorExpression();
             if (ExpressionConstants.MULTIINSTANCE_ITERATOR_TYPE.equals(iteratorExpression.getType())
                     && iteratorExpression.getName() != null
-                    && iteratorExpression.getName().isEmpty()
+                    && !iteratorExpression.getName().isEmpty()
                     && activity instanceof DataAware) {
-                taskBuilder.addData(iteratorExpression.getName(), iteratorExpression.getReturnType(), null);
+                addDataForMultiInstanceIterator(taskBuilder, iteratorExpression, collectionDataToMultiInstantiate);
             }
             if (collectionDataToMultiInstantiate != null) {
                 final MultiInstanceLoopCharacteristicsBuilder multiInstanceBuilder = taskBuilder.addMultiInstance(
@@ -816,6 +816,11 @@ public class FlowElementSwitch extends AbstractSwitch {
             }
         }
 
+    }
+
+    protected void addDataForMultiInstanceIterator(final ActivityDefinitionBuilder taskBuilder, final Expression iteratorExpression,
+            final Data collectionDataToMultiInstantiate) {
+        taskBuilder.addData(iteratorExpression.getName(), iteratorExpression.getReturnType(), null);
     }
 
 }

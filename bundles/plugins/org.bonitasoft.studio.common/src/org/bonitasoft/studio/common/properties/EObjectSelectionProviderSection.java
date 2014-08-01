@@ -19,8 +19,11 @@ package org.bonitasoft.studio.common.properties;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.model.process.Pool;
 import org.eclipse.core.databinding.beans.PojoObservables;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.viewers.ISelection;
@@ -42,12 +45,21 @@ public abstract class EObjectSelectionProviderSection extends AbstractBonitaDesc
     private final List<ISelectionChangedListener> listeners = new ArrayList<ISelectionChangedListener>();
     private IObservableValue selectionObservable;
     private IObservableValue editingDomainObservable;
+    private IObservableValue containerObservable;
+    private Pool poolContainer;
 
-    protected IObservableValue getEObjectMasterObservable() {
+    protected IObservableValue getEObjectObservable() {
         if (selectionObservable == null) {
             selectionObservable = ViewersObservables.observeSingleSelection(this);
         }
         return selectionObservable;
+    }
+
+    protected IObservableValue getPoolObservable() {
+        if (containerObservable == null) {
+            containerObservable = PojoObservables.observeValue(this, "poolContainer");
+        }
+        return containerObservable;
     }
 
     protected IObservableValue getEditingDomainObservable() {
@@ -92,7 +104,17 @@ public abstract class EObjectSelectionProviderSection extends AbstractBonitaDesc
     @Override
     public void setInput(final IWorkbenchPart part, final ISelection selection) {
         super.setInput(part, selection);
-        setSelection(new StructuredSelection(((IGraphicalEditPart) ((IStructuredSelection) selection).getFirstElement()).resolveSemanticElement()));
+        final EObject semanticElement = ((IGraphicalEditPart) ((IStructuredSelection) selection).getFirstElement()).resolveSemanticElement();
+        setSelection(new StructuredSelection(semanticElement));
+        setPoolContainer((Pool) ModelHelper.getParentProcess(semanticElement));
+    }
+
+    public Pool getPoolContainer() {
+        return poolContainer;
+    }
+
+    public void setPoolContainer(final Pool poolContainer) {
+        this.poolContainer = poolContainer;
     }
 
 }

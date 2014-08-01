@@ -552,6 +552,10 @@ public class GroovyUtil {
             final ScriptVariable scriptVariable = createScriptVariable(widget);
             scriptVariable.setCategory(org.bonitasoft.studio.common.ExpressionConstants.FORM_FIELD_TYPE);
             return scriptVariable;
+        } else if (org.bonitasoft.studio.common.ExpressionConstants.MULTIINSTANCE_ITERATOR_TYPE.equals(e.getType())) {
+            final ScriptVariable scriptVariable = new ScriptVariable(e.getName(), e.getReturnType());
+            scriptVariable.setCategory("step" + org.bonitasoft.studio.common.ExpressionConstants.VARIABLE_TYPE);
+            return scriptVariable;
         } else if (org.bonitasoft.studio.common.ExpressionConstants.VARIABLE_TYPE.equals(e.getType())) {
             final Data data = (Data) e.getReferencedElements().get(0);
             final ScriptVariable scriptVariable = createScriptVariable(data);

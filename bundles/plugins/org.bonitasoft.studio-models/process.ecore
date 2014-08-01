@@ -318,7 +318,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="loopMaximum" eType="ecore:EClass expression.ecore#//Expression"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="useCardinality" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
-        defaultValueLiteral="true"/>
+        defaultValueLiteral="false"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="cardinalityExpression"
         eType="ecore:EClass expression.ecore#//Expression" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="collectionDataToMultiInstantiate"
@@ -330,6 +330,8 @@
         eType="#//Data"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="completionCondition" eType="ecore:EClass expression.ecore#//Expression"
         containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="storeOutput" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
+        defaultValueLiteral="false"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="NonInterruptingBoundaryTimerEvent" eSuperTypes="#//BoundaryTimerEvent"/>
   <eClassifiers xsi:type="ecore:EClass" name="OperationContainer">

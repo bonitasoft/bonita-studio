@@ -340,7 +340,7 @@
               xsi:type="ecore:EReference"
               href="process.ecore#//MultiInstantiable/iteratorExpression"/>
           <value
-              body="return org.bonitasoft.studio.common.emf.tools.ExpressionHelper.createExpression(&quot;&quot;,&quot;&quot;,org.bonitasoft.studio.common.ExpressionConstants.MULTIINSTANCE_ITERATOR_TYPE,Object.class.getName(),false);"
+              body="return org.bonitasoft.studio.common.emf.tools.ExpressionHelper.createExpression(&quot;multiInstanceIterator&quot;,&quot;multiInstanceIterator&quot;,org.bonitasoft.studio.common.ExpressionConstants.MULTIINSTANCE_ITERATOR_TYPE,Object.class.getName(),false);"
               language="java"/>
         </initializers>
       </domainInitializer>
@@ -646,7 +646,7 @@
               xsi:type="ecore:EReference"
               href="process.ecore#//MultiInstantiable/iteratorExpression"/>
           <value
-              body="return org.bonitasoft.studio.common.emf.tools.ExpressionHelper.createExpression(&quot;&quot;,&quot;&quot;,org.bonitasoft.studio.common.ExpressionConstants.MULTIINSTANCE_ITERATOR_TYPE,Object.class.getName(),false);"
+              body="return org.bonitasoft.studio.common.emf.tools.ExpressionHelper.createExpression(&quot;multiInstanceIterator&quot;,&quot;multiInstanceIterator&quot;,org.bonitasoft.studio.common.ExpressionConstants.MULTIINSTANCE_ITERATOR_TYPE,Object.class.getName(),false);"
               language="java"/>
         </initializers>
       </domainInitializer>
@@ -1129,7 +1129,7 @@
               xsi:type="ecore:EReference"
               href="process.ecore#//MultiInstantiable/iteratorExpression"/>
           <value
-              body="return org.bonitasoft.studio.common.emf.tools.ExpressionHelper.createExpression(&quot;&quot;,&quot;&quot;,org.bonitasoft.studio.common.ExpressionConstants.MULTIINSTANCE_ITERATOR_TYPE,Object.class.getName(),false);"
+              body="return org.bonitasoft.studio.common.emf.tools.ExpressionHelper.createExpression(&quot;multiInstanceIterator&quot;,&quot;multiInstanceIterator&quot;,org.bonitasoft.studio.common.ExpressionConstants.MULTIINSTANCE_ITERATOR_TYPE,Object.class.getName(),false);"
               language="java"/>
         </initializers>
       </domainInitializer>
@@ -1279,7 +1279,7 @@
               xsi:type="ecore:EReference"
               href="process.ecore#//MultiInstantiable/iteratorExpression"/>
           <value
-              body="return org.bonitasoft.studio.common.emf.tools.ExpressionHelper.createExpression(&quot;&quot;,&quot;&quot;,org.bonitasoft.studio.common.ExpressionConstants.MULTIINSTANCE_ITERATOR_TYPE,Object.class.getName(),false);"
+              body="return org.bonitasoft.studio.common.emf.tools.ExpressionHelper.createExpression(&quot;multiInstanceIterator&quot;,&quot;multiInstanceIterator&quot;,org.bonitasoft.studio.common.ExpressionConstants.MULTIINSTANCE_ITERATOR_TYPE,Object.class.getName(),false);"
               language="java"/>
         </initializers>
       </domainInitializer>
@@ -1394,7 +1394,7 @@
               xsi:type="ecore:EReference"
               href="process.ecore#//MultiInstantiable/iteratorExpression"/>
           <value
-              body="return org.bonitasoft.studio.common.emf.tools.ExpressionHelper.createExpression(&quot;&quot;,&quot;&quot;,org.bonitasoft.studio.common.ExpressionConstants.MULTIINSTANCE_ITERATOR_TYPE,Object.class.getName(),false);"
+              body="return org.bonitasoft.studio.common.emf.tools.ExpressionHelper.createExpression(&quot;multiInstanceIterator&quot;,&quot;multiInstanceIterator&quot;,org.bonitasoft.studio.common.ExpressionConstants.MULTIINSTANCE_ITERATOR_TYPE,Object.class.getName(),false);"
               language="java"/>
         </initializers>
       </domainInitializer>
@@ -1544,7 +1544,7 @@
               xsi:type="ecore:EReference"
               href="process.ecore#//MultiInstantiable/iteratorExpression"/>
           <value
-              body="return org.bonitasoft.studio.common.emf.tools.ExpressionHelper.createExpression(&quot;&quot;,&quot;&quot;,org.bonitasoft.studio.common.ExpressionConstants.MULTIINSTANCE_ITERATOR_TYPE,Object.class.getName(),false);"
+              body="return org.bonitasoft.studio.common.emf.tools.ExpressionHelper.createExpression(&quot;multiInstanceIterator&quot;,&quot;multiInstanceIterator&quot;,org.bonitasoft.studio.common.ExpressionConstants.MULTIINSTANCE_ITERATOR_TYPE,Object.class.getName(),false);"
               language="java"/>
         </initializers>
       </domainInitializer>
@@ -1843,7 +1843,7 @@
               xsi:type="ecore:EReference"
               href="process.ecore#//MultiInstantiable/iteratorExpression"/>
           <value
-              body="return org.bonitasoft.studio.common.emf.tools.ExpressionHelper.createExpression(&quot;&quot;,&quot;&quot;,org.bonitasoft.studio.common.ExpressionConstants.MULTIINSTANCE_ITERATOR_TYPE,Object.class.getName(),false);"
+              body="return org.bonitasoft.studio.common.emf.tools.ExpressionHelper.createExpression(&quot;multiInstanceIterator&quot;,&quot;multiInstanceIterator&quot;,org.bonitasoft.studio.common.ExpressionConstants.MULTIINSTANCE_ITERATOR_TYPE,Object.class.getName(),false);"
               language="java"/>
         </initializers>
       </domainInitializer>

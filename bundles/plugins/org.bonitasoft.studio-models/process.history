@@ -8523,6 +8523,37 @@
           </parameters>
         </operation>
       </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Create" target="process.ecore#//MultiInstantiable"
+            referenceName="eStructuralFeatures" element="process.ecore#//MultiInstantiable/storeOutput">
+          <changes xsi:type="history:Set" element="process.ecore#//MultiInstantiable/storeOutput"
+              featureName="name" dataValue="storeOutput"/>
+          <changes xsi:type="history:Set" element="process.ecore#//MultiInstantiable/storeOutput"
+              featureName="defaultValueLiteral" dataValue="false"/>
+          <changes xsi:type="history:Set" element="process.ecore#//MultiInstantiable/storeOutput"
+              featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+        </changes>
+        <operation name="newAttribute">
+          <parameters name="eClass">
+            <referenceValue element="process.ecore#//MultiInstantiable"/>
+          </parameters>
+          <parameters name="name">
+            <dataValue>storeOutput</dataValue>
+          </parameters>
+          <parameters name="type">
+            <referenceValue element="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+          </parameters>
+          <parameters name="lowerBound">
+            <dataValue>0</dataValue>
+          </parameters>
+          <parameters name="upperBound">
+            <dataValue>1</dataValue>
+          </parameters>
+          <parameters name="defaultValue">
+            <dataValue>false</dataValue>
+          </parameters>
+        </operation>
+      </changes>
     </changes>
     <changes xsi:type="history:CompositeChange">
       <changes xsi:type="history:Set" element="process.ecore#//PageFlow/entryPageFlowType"
@@ -8537,6 +8568,8 @@
           featureName="defaultValueLiteral" dataValue="CONSTANT" oldDataValue="0"/>
       <changes xsi:type="history:Set" element="simulation.ecore#//SimulationNumberRange/repartitionType"
           featureName="defaultValueLiteral" dataValue="CONSTANT" oldDataValue="0"/>
+      <changes xsi:type="history:Set" element="process.ecore#//MultiInstantiable/useCardinality"
+          featureName="defaultValueLiteral" dataValue="false" oldDataValue="true"/>
     </changes>
   </releases>
   <releases/>

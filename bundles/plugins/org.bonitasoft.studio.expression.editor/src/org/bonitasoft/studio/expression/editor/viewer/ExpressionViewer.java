@@ -176,10 +176,32 @@ IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContex
     private ContentAssistText contentAssistText;
     private ISelection selection;
 
+    public ExpressionViewer(final Composite composite, final int style, final TabbedPropertySheetWidgetFactory widgetFactory) {
+        this(composite, style, widgetFactory, null);
+    }
+
+    public ExpressionViewer(final Composite composite, final int style) {
+        this(composite, style, null, null);
+    }
+
+    /**
+     * @deprecated use ExpressionViewer(final Composite composite, final int style) instead
+     * @param composite
+     * @param style
+     * @param expressionReference
+     */
+    @Deprecated
     public ExpressionViewer(final Composite composite, final int style, final EReference expressionReference) {
         this(composite, style, null, null, expressionReference);
     }
 
+    /**
+     * @deprecated use ExpressionViewer(final Composite composite, final int style,, final TabbedPropertySheetWidgetFactory widgetFactory) instead
+     * @param composite
+     * @param style
+     * @param expressionReference
+     */
+    @Deprecated
     public ExpressionViewer(final Composite composite, final int style, final TabbedPropertySheetWidgetFactory widgetFactory,
             final EReference expressionReference) {
         this(composite, style, widgetFactory, null, expressionReference);
@@ -437,7 +459,11 @@ IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContex
     }
 
     protected EditingDomain getEditingDomain() {
-        return TransactionUtil.getEditingDomain(getSelectedExpression());
+        final Expression selectedExpression = getSelectedExpression();
+        if (selectedExpression != null && selectedExpression.eResource() != null) {
+            return TransactionUtil.getEditingDomain(selectedExpression);
+        }
+        return null;
     }
 
     protected EditExpressionDialog createEditDialog() {
@@ -503,24 +529,25 @@ IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContex
         if (!selection.equals(this.selection)) {
             this.selection = selection;
             final Expression selectedExpression = getSelectedExpression();
-            bindExpression();
-            fireSelectionChanged(new SelectionChangedEvent(this, selection));
-            for (final IExpressionToolbarContribution contribution : toolbarContributions) {
-                contribution.setExpression(selectedExpression);
+            if (selectedExpression != null) {
+                bindExpression();
+                fireSelectionChanged(new SelectionChangedEvent(this, selection));
+                for (final IExpressionToolbarContribution contribution : toolbarContributions) {
+                    contribution.setExpression(selectedExpression);
+                }
+                if (ExpressionConstants.CONDITION_TYPE.equals(selectedExpression.getType())) {
+                    autoCompletion.getContentProposalAdapter().setEnabled(false);
+                    autoCompletion.getContentProposalAdapter().setProposalAcceptanceStyle(
+                            ContentProposalAdapter.PROPOSAL_INSERT);
+                } else {
+                    autoCompletion.getContentProposalAdapter().setEnabled(true);
+                    autoCompletion.getContentProposalAdapter().setProposalAcceptanceStyle(
+                            ContentProposalAdapter.PROPOSAL_REPLACE);
+                }
+                validate();
+                refresh();
             }
-            if (ExpressionConstants.CONDITION_TYPE.equals(selectedExpression.getType())) {
-                autoCompletion.getContentProposalAdapter().setEnabled(false);
-                autoCompletion.getContentProposalAdapter().setProposalAcceptanceStyle(
-                        ContentProposalAdapter.PROPOSAL_INSERT);
-            } else {
-                autoCompletion.getContentProposalAdapter().setEnabled(true);
-                autoCompletion.getContentProposalAdapter().setProposalAcceptanceStyle(
-                        ContentProposalAdapter.PROPOSAL_REPLACE);
-            }
-            validate();
-            refresh();
         }
-
     }
 
     protected void updateSelection(final Expression expression) {

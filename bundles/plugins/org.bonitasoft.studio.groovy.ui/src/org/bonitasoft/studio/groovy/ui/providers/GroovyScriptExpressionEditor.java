@@ -5,12 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -19,7 +19,6 @@ package org.bonitasoft.studio.groovy.ui.providers;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -32,10 +31,8 @@ import org.bonitasoft.studio.common.jface.databinding.observables.DocumentObserv
 import org.bonitasoft.studio.common.jface.databinding.validator.InputLengthValidator;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.dependencies.ui.dialog.ManageConnectorJarDialog;
-import org.bonitasoft.studio.expression.editor.ExpressionEditorService;
 import org.bonitasoft.studio.expression.editor.provider.ExpressionContentProvider;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionEditor;
-import org.bonitasoft.studio.expression.editor.provider.IExpressionProvider;
 import org.bonitasoft.studio.expression.editor.provider.SelectionAwareExpressionEditor;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.expression.editor.viewer.SelectDependencyDialog;
@@ -97,7 +94,7 @@ import org.eclipse.ui.forms.widgets.Section;
 
 /**
  * @author Romain Bioteau
- * 
+ *
  */
 public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor implements IExpressionEditor, IBonitaVariableContext {
 
@@ -140,7 +137,7 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
     private final ViewerSorter comboSorter = new ViewerSorter() {
 
         @Override
-        public int compare(Viewer viewer, Object e1, Object e2) {
+        public int compare(final Viewer viewer, final Object e1, final Object e2) {
             return comboSorterFunction(e1, e2);
         }
     };
@@ -152,7 +149,7 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
         adapterLabelProvider = new AdapterFactoryLabelProvider(adapterFactory);
     }
 
-    public int comboSorterFunction(Object e1, Object e2) {
+    public int comboSorterFunction(final Object e1, final Object e2) {
         if (e1 instanceof ScriptVariable && e2 instanceof ScriptVariable) {
             return compareScriptVariables(e1, e2);
         } else if (e1 instanceof String && e2 instanceof ScriptVariable) {
@@ -160,7 +157,7 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
         } else if (e1 instanceof ScriptVariable && e2 instanceof String) {
             return compareScriptVariableAndLabel(e1, e2);
         } else if (e1 instanceof String && e2 instanceof String) {
-            return (e1.toString()).compareTo(e2.toString());
+            return e1.toString().compareTo(e2.toString());
         } else if (e1.equals(ProcessVariableContentProvider.SELECT_ENTRY)) {
             return -1;
         } else if (e2.equals(ProcessVariableContentProvider.SELECT_ENTRY)) {
@@ -170,7 +167,7 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
         }
     }
 
-    private int compareScriptVariableAndLabel(Object e1, Object e2) {
+    private int compareScriptVariableAndLabel(final Object e1, final Object e2) {
         final String e1Category = ((ScriptVariable) e1).getCategory();
         if (e1Category != null) {
             if (e1Category.equalsIgnoreCase(e2.toString())) {
@@ -183,22 +180,22 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
         }
     }
 
-    private int compareLabelAndScriptVariable(Object e1, Object e2) {
+    private int compareLabelAndScriptVariable(final Object e1, final Object e2) {
         final String e2Category = ((ScriptVariable) e2).getCategory();
         if (e2Category != null) {
-            if ((e1.toString()).equalsIgnoreCase(e2Category)) {
+            if (e1.toString().equalsIgnoreCase(e2Category)) {
                 return -1;
             } else {
-                return (e1.toString()).compareTo(e2Category);
+                return e1.toString().compareTo(e2Category);
             }
         } else {
             return -1;
         }
     }
 
-    private int compareScriptVariables(Object e1, Object e2) {
-        final ScriptVariable e1sv = ((ScriptVariable) e1);
-        final ScriptVariable e2sv = ((ScriptVariable) e2);
+    private int compareScriptVariables(final Object e1, final Object e2) {
+        final ScriptVariable e1sv = (ScriptVariable) e1;
+        final ScriptVariable e2sv = (ScriptVariable) e2;
         if (e1sv.getCategory() == null) {
             return 1;
         } else if (e2sv.getCategory() == null) {
@@ -218,7 +215,7 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
      * createExpressionEditor(org.eclipse.swt.widgets.Composite)
      */
     @Override
-    public Control createExpressionEditor(Composite parent, EMFDataBindingContext ctx) {
+    public Control createExpressionEditor(final Composite parent, final EMFDataBindingContext ctx) {
 
         createDataChooserArea(parent);
 
@@ -232,7 +229,7 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
         return mainComposite;
     }
 
-    protected void createDataChooserArea(Composite composite) {
+    protected void createDataChooserArea(final Composite composite) {
 
         final Composite combosComposite = new Composite(composite, SWT.NONE);
         combosComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).equalWidth(true).create());
@@ -256,26 +253,26 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
         bonitaDataCombo.addSelectionChangedListener(new ISelectionChangedListener() {
 
             @Override
-            public void selectionChanged(SelectionChangedEvent event) {
-                Object selected = ((IStructuredSelection) bonitaDataCombo.getSelection()).getFirstElement();
+            public void selectionChanged(final SelectionChangedEvent event) {
+                final Object selected = ((IStructuredSelection) bonitaDataCombo.getSelection()).getFirstElement();
                 if (selected == null || selected.equals(ProcessVariableContentProvider.SELECT_ENTRY)) {
                     return;
                 }
-                ScriptVariable f = (ScriptVariable) selected;
-                StyledText control = groovyViewer.getSourceViewer().getTextWidget();
+                final ScriptVariable f = (ScriptVariable) selected;
+                final StyledText control = groovyViewer.getSourceViewer().getTextWidget();
                 try {
-                    int offset = control.getCaretOffset();
-                    String before = document.get(0, offset);
+                    final int offset = control.getCaretOffset();
+                    final String before = document.get(0, offset);
                     if (offset == document.get().length()) {
                         document.set(before + f.getName());
                     } else {
-                        String after = document.get().substring(offset, document.get().length());
+                        final String after = document.get().substring(offset, document.get().length());
                         document.set(before + f.getName() + after);
                     }
                     control.setCaretOffset(offset + f.getName().length());
                     control.setFocus();
                     bonitaDataCombo.setSelection(new StructuredSelection(ProcessVariableContentProvider.SELECT_ENTRY));
-                } catch (Exception e1) {
+                } catch (final Exception e1) {
                     GroovyPlugin.logError(e1);
                 }
             }
@@ -284,23 +281,23 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
         dataCombo.addSelectionChangedListener(new ISelectionChangedListener() {
 
             @Override
-            public void selectionChanged(SelectionChangedEvent event) {
-                Object selected = ((IStructuredSelection) dataCombo.getSelection()).getFirstElement();
+            public void selectionChanged(final SelectionChangedEvent event) {
+                final Object selected = ((IStructuredSelection) dataCombo.getSelection()).getFirstElement();
                 if (selected != null) {
                     if (selected.equals(ProcessVariableContentProvider.SELECT_ENTRY)) {
                         return;
                     }
                     if (!(selected instanceof String)) {
 
-                        ScriptVariable f = (ScriptVariable) selected;
-                        StyledText control = groovyViewer.getSourceViewer().getTextWidget();
+                        final ScriptVariable f = (ScriptVariable) selected;
+                        final StyledText control = groovyViewer.getSourceViewer().getTextWidget();
                         try {
-                            int offset = control.getCaretOffset();
-                            String before = document.get(0, offset);
+                            final int offset = control.getCaretOffset();
+                            final String before = document.get(0, offset);
                             if (offset == document.get().length()) {
                                 document.set(before + f.getName());
                             } else {
-                                String after = document.get().substring(offset, document.get().length());
+                                final String after = document.get().substring(offset, document.get().length());
                                 document.set(before + f.getName() + after);
                             }
 
@@ -309,14 +306,14 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
 
                             dataCombo.getTableCombo().setText(""); //$NON-NLS-1$
                             dataCombo.setSelection(new StructuredSelection(ProcessVariableContentProvider.SELECT_ENTRY));
-                        } catch (Exception e1) {
+                        } catch (final Exception e1) {
                             GroovyPlugin.logError(e1);
                         }
                     } else {
                         try {
                             dataCombo.getTableCombo().setText(""); //$NON-NLS-1$
                             dataCombo.setSelection(new StructuredSelection(ProcessVariableContentProvider.SELECT_ENTRY));
-                        } catch (Exception e1) {
+                        } catch (final Exception e1) {
                             GroovyPlugin.logError(e1);
                         }
                     }
@@ -327,7 +324,7 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
 
     }
 
-    protected void createDependencyViewer(Composite parent) {
+    protected void createDependencyViewer(final Composite parent) {
 
         final Composite mainComposite = new Composite(parent, SWT.NONE);
         mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
@@ -339,7 +336,7 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
         automaticResolutionButton.addSelectionListener(new SelectionAdapter() {
 
             @Override
-            public void widgetSelected(SelectionEvent e) {
+            public void widgetSelected(final SelectionEvent e) {
                 if (automaticResolutionButton.getSelection()) {
                     removeDependencyButton.setEnabled(false);
                     dependencyJob.schedule();
@@ -352,7 +349,7 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
         depndencySection.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).span(2, 1).create());
         depndencySection.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
 
-        Composite dependenciesComposite = new Composite(depndencySection, SWT.NONE);
+        final Composite dependenciesComposite = new Composite(depndencySection, SWT.NONE);
         dependenciesComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         dependenciesComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(0, 0).create());
 
@@ -360,11 +357,11 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
         dependenciesViewer.getControl().setLayoutData(
                 GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 40).create());
         dependenciesViewer.setContentProvider(new ArrayContentProvider());
-        dependenciesViewer.setLabelProvider(adapterLabelProvider);
+        dependenciesViewer.setLabelProvider(new DependencyLabelProvider(adapterLabelProvider));
         dependenciesViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 
             @Override
-            public void selectionChanged(SelectionChangedEvent event) {
+            public void selectionChanged(final SelectionChangedEvent event) {
                 if (!event.getSelection().isEmpty() && !automaticResolutionButton.getSelection()) {
                     removeDependencyButton.setEnabled(true);
                 }
@@ -372,7 +369,7 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
             }
         });
 
-        Composite addRemoveComposite = new Composite(dependenciesComposite, SWT.NONE);
+        final Composite addRemoveComposite = new Composite(dependenciesComposite, SWT.NONE);
         addRemoveComposite.setLayoutData(GridDataFactory.fillDefaults().create());
         addRemoveComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).spacing(0, 0).create());
 
@@ -385,8 +382,8 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
         removeDependencyButton.addSelectionListener(new SelectionAdapter() {
 
             @Override
-            public void widgetSelected(SelectionEvent e) {
-                for (Object sel : ((IStructuredSelection) dependenciesViewer.getSelection()).toList()) {
+            public void widgetSelected(final SelectionEvent e) {
+                for (final Object sel : ((IStructuredSelection) dependenciesViewer.getSelection()).toList()) {
                     inputExpression.getReferencedElements().remove(sel);
                 }
             }
@@ -397,7 +394,7 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
         depndencySection.setClient(dependenciesComposite);
     }
 
-    protected void createGroovyEditor(Composite parent) {
+    protected void createGroovyEditor(final Composite parent) {
 
         groovyViewer = new GroovyViewer(mainComposite, isPageFlowContext);
         groovyViewer.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 300).create());
@@ -414,18 +411,18 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
         testButton.addSelectionListener(new SelectionAdapter() {
 
             @Override
-            public void widgetSelected(SelectionEvent e) {
+            public void widgetSelected(final SelectionEvent e) {
                 final Map<String, Serializable> variables = TestGroovyScriptUtil.createVariablesMap(
                         groovyViewer.getGroovyCompilationUnit(), nodes);
 
                 if (variables.isEmpty()) {
-                    ManageConnectorJarDialog mcjd = new ManageConnectorJarDialog(Display.getDefault().getActiveShell());
-                    int retCode = mcjd.open();
+                    final ManageConnectorJarDialog mcjd = new ManageConnectorJarDialog(Display.getDefault().getActiveShell());
+                    final int retCode = mcjd.open();
                     if (retCode == Window.OK) {
                         try {
                             TestGroovyScriptUtil.evaluateExpression(groovyViewer.getGroovyCompilationUnit().getSource(),
                                     inputExpression.getReturnType(), Collections.EMPTY_MAP, mcjd.getSelectedJars());
-                        } catch (JavaModelException e1) {
+                        } catch (final JavaModelException e1) {
                             BonitaStudioLog.error(e1);
                         }
                     }
@@ -451,14 +448,14 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
     }
 
     @Override
-    public void bindExpression(EMFDataBindingContext dataBindingContext, final EObject context, Expression inputExpression,
-            ViewerFilter[] filters, final ExpressionViewer viewer) {
+    public void bindExpression(final EMFDataBindingContext dataBindingContext, final EObject context, final Expression inputExpression,
+            final ViewerFilter[] filters, final ExpressionViewer viewer) {
         this.inputExpression = inputExpression;
         this.context = context;
 
-        IObservableValue dependenciesModelObservable = EMFObservables.observeValue(inputExpression,
+        final IObservableValue dependenciesModelObservable = EMFObservables.observeValue(inputExpression,
                 ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS);
-        IObservableValue autoDepsModelObservable = EMFObservables.observeValue(inputExpression,
+        final IObservableValue autoDepsModelObservable = EMFObservables.observeValue(inputExpression,
                 ExpressionPackage.Literals.EXPRESSION__AUTOMATIC_DEPENDENCIES);
 
         inputExpression.setType(ExpressionConstants.SCRIPT_TYPE);
@@ -489,11 +486,11 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
 
         dataBindingContext.bindValue(ViewersObservables.observeInput(dependenciesViewer), dependenciesModelObservable);
 
-        UpdateValueStrategy opposite = new UpdateValueStrategy();
+        final UpdateValueStrategy opposite = new UpdateValueStrategy();
         opposite.setConverter(new Converter(Boolean.class, Boolean.class) {
 
             @Override
-            public Object convert(Object fromObject) {
+            public Object convert(final Object fromObject) {
                 return !((Boolean) fromObject);
             }
         });
@@ -507,7 +504,7 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
 
         dependencyJob = new ComputeScriptDependenciesJob(groovyViewer.getGroovyCompilationUnit());
         dependencyJob.setContext(context);
-        this.nodes.addAll(groovyViewer.getProvidedVariables(context, filters));
+        nodes.addAll(groovyViewer.getProvidedVariables(context, filters));
         dependencyJob.setNodes(nodes);
 
         final InputLengthValidator lenghtValidator = new InputLengthValidator("", GroovyViewer.MAX_SCRIPT_LENGTH);
@@ -519,7 +516,7 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
         sourceViewer.getDocument().addDocumentListener(new IDocumentListener() {
 
             @Override
-            public void documentChanged(DocumentEvent event) {
+            public void documentChanged(final DocumentEvent event) {
                 final String text = event.getDocument().get();
                 if (lenghtValidator.validate(text).isOK()) {
                     GroovyScriptExpressionEditor.this.inputExpression.setContent(text);
@@ -531,28 +528,28 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
             }
 
             @Override
-            public void documentAboutToBeChanged(DocumentEvent event) {
+            public void documentAboutToBeChanged(final DocumentEvent event) {
             }
         });
 
         dependencyJob.addJobChangeListener(new IJobChangeListener() {
 
             @Override
-            public void sleeping(IJobChangeEvent event) {
+            public void sleeping(final IJobChangeEvent event) {
             }
 
             @Override
-            public void scheduled(IJobChangeEvent event) {
+            public void scheduled(final IJobChangeEvent event) {
             }
 
             @Override
-            public void running(IJobChangeEvent event) {
+            public void running(final IJobChangeEvent event) {
             }
 
             @Override
-            public void done(IJobChangeEvent event) {
+            public void done(final IJobChangeEvent event) {
                 if (dependencyJob != null && GroovyScriptExpressionEditor.this.inputExpression.isAutomaticDependencies()) {
-                    List<EObject> deps = dependencyJob.getDependencies(document.get());
+                    final List<EObject> deps = dependencyJob.getDependencies(document.get());
                     GroovyScriptExpressionEditor.this.inputExpression.getReferencedElements().clear();
                     if (deps != null && !deps.isEmpty()) {
                         GroovyScriptExpressionEditor.this.inputExpression.getReferencedElements().addAll(deps);
@@ -561,11 +558,11 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
             }
 
             @Override
-            public void awake(IJobChangeEvent event) {
+            public void awake(final IJobChangeEvent event) {
             }
 
             @Override
-            public void aboutToRun(IJobChangeEvent event) {
+            public void aboutToRun(final IJobChangeEvent event) {
             }
 
         });
@@ -574,13 +571,13 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
         provider.setContext(context);
 
         final Set<Expression> filteredExpressions = new HashSet<Expression>();
-        Expression[] expressions = provider.getExpressions();
-        EObject input = provider.getContext();
+        final Expression[] expressions = provider.getExpressions();
+        final EObject input = provider.getContext();
         if (expressions != null) {
             filteredExpressions.addAll(Arrays.asList(expressions));
             if (input != null && filters != null) {
-                for (Expression exp : expressions) {
-                    for (ViewerFilter filter : filters) {
+                for (final Expression exp : expressions) {
+                    for (final ViewerFilter filter : filters) {
                         if (filter != null && !filter.select(groovyViewer.getSourceViewer(), input, exp)) {
                             filteredExpressions.remove(exp);
                         }
@@ -592,8 +589,8 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
         addDependencyButton.addSelectionListener(new SelectionAdapter() {
 
             @Override
-            public void widgetSelected(SelectionEvent e) {
-                SelectDependencyDialog dialog = new SelectDependencyDialog(Display.getDefault().getActiveShell(),
+            public void widgetSelected(final SelectionEvent e) {
+                final SelectDependencyDialog dialog = new SelectDependencyDialog(Display.getDefault().getActiveShell(),
                         filteredExpressions, GroovyScriptExpressionEditor.this.inputExpression.getReferencedElements());
                 dialog.open();
             }
@@ -603,7 +600,7 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
         evaluateStrategy.setConverter(new Converter(String.class, Boolean.class) {
 
             @Override
-            public Object convert(Object fromObject) {
+            public Object convert(final Object fromObject) {
                 if (fromObject == null || fromObject.toString().isEmpty()) {
                     return false;
                 }
@@ -622,7 +619,7 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
             dependencyJob.cancel();
             try {
                 dependencyJob.join();
-            } catch (InterruptedException e) {
+            } catch (final InterruptedException e) {
                 BonitaStudioLog.error(e);
             }
         }
@@ -638,7 +635,7 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
             dependencyJob.schedule();
             try {
                 dependencyJob.join();
-            } catch (InterruptedException e) {
+            } catch (final InterruptedException e) {
                 BonitaStudioLog.error(e);
             }
         }
@@ -670,7 +667,7 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
     }
 
     @Override
-    public void setIsPageFlowContext(boolean isPageFlowContext) {
+    public void setIsPageFlowContext(final boolean isPageFlowContext) {
         this.isPageFlowContext = isPageFlowContext;
 
     }
@@ -689,6 +686,6 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
      * @see org.bonitasoft.studio.common.IBonitaVariableContext#setIsOverviewContext(boolean)
      */
     @Override
-    public void setIsOverviewContext(boolean isOverviewContext) {
+    public void setIsOverviewContext(final boolean isOverviewContext) {
     }
 }

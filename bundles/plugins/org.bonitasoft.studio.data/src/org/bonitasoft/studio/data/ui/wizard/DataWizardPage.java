@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.AbstractCollection;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
@@ -593,12 +594,15 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
             public IStatus validate(final Object value) {
                 /* Search to check at the same level and under */
                 for (final EStructuralFeature featureToCheck : featureToCheckForUniqueID) {
-                    for (final Object object : (List<?>) container.eGet(featureToCheck)) {
-                        if (object instanceof Data) {
-                            final Data otherData = (Data) object;
-                            final Data originalData = ((DataWizard) getWizard()).getOriginalData();
-                            if (!otherData.equals(originalData) && value.toString().toLowerCase().equals(otherData.getName().toLowerCase())) {
-                                return new Status(IStatus.ERROR, DataPlugin.PLUGIN_ID, Messages.dataAlreadyExist);
+                    final Object eGet = container.eGet(featureToCheck);
+                    if (eGet instanceof Collection) {
+                        for (final Object object : (List<?>) eGet) {
+                            if (object instanceof Data) {
+                                final Data otherData = (Data) object;
+                                final Data originalData = ((DataWizard) getWizard()).getOriginalData();
+                                if (!otherData.equals(originalData) && value.toString().toLowerCase().equals(otherData.getName().toLowerCase())) {
+                                    return new Status(IStatus.ERROR, DataPlugin.PLUGIN_ID, Messages.dataAlreadyExist);
+                                }
                             }
                         }
                     }

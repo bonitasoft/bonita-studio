@@ -10349,7 +10349,7 @@
       <expressions
           body="return org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;,Boolean.class.getName(),true);"/>
       <expressions
-          body="return org.bonitasoft.studio.common.emf.tools.ExpressionHelper.createExpression(&quot;&quot;,&quot;&quot;,org.bonitasoft.studio.common.ExpressionConstants.MULTIINSTANCE_ITERATOR_TYPE,Object.class.getName(),false);"/>
+          body="return org.bonitasoft.studio.common.emf.tools.ExpressionHelper.createExpression(&quot;multiInstanceIterator&quot;,&quot;multiInstanceIterator&quot;,org.bonitasoft.studio.common.ExpressionConstants.MULTIINSTANCE_ITERATOR_TYPE,Object.class.getName(),false);"/>
       <expressions
           body="return org.bonitasoft.studio.common.NamingUtils.getInstance(self).generateName(self, self);"/>
       <expressions
@@ -10383,7 +10383,7 @@
       <expressions
           body="return org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;,Boolean.class.getName(),true);"/>
       <expressions
-          body="return org.bonitasoft.studio.common.emf.tools.ExpressionHelper.createExpression(&quot;&quot;,&quot;&quot;,org.bonitasoft.studio.common.ExpressionConstants.MULTIINSTANCE_ITERATOR_TYPE,Object.class.getName(),false);"/>
+          body="return org.bonitasoft.studio.common.emf.tools.ExpressionHelper.createExpression(&quot;multiInstanceIterator&quot;,&quot;multiInstanceIterator&quot;,org.bonitasoft.studio.common.ExpressionConstants.MULTIINSTANCE_ITERATOR_TYPE,Object.class.getName(),false);"/>
       <expressions
           body="return org.bonitasoft.studio.common.NamingUtils.getInstance(self).generateName(self, self);"/>
       <expressions
@@ -10415,7 +10415,7 @@
       <expressions
           body="return org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;,Boolean.class.getName(),true);"/>
       <expressions
-          body="return org.bonitasoft.studio.common.emf.tools.ExpressionHelper.createExpression(&quot;&quot;,&quot;&quot;,org.bonitasoft.studio.common.ExpressionConstants.MULTIINSTANCE_ITERATOR_TYPE,Object.class.getName(),false);"/>
+          body="return org.bonitasoft.studio.common.emf.tools.ExpressionHelper.createExpression(&quot;multiInstanceIterator&quot;,&quot;multiInstanceIterator&quot;,org.bonitasoft.studio.common.ExpressionConstants.MULTIINSTANCE_ITERATOR_TYPE,Object.class.getName(),false);"/>
       <expressions
           body="return org.bonitasoft.studio.common.NamingUtils.getInstance(self).generateName(self, self);"/>
       <expressions
@@ -10437,7 +10437,7 @@
       <expressions
           body="return org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;,Boolean.class.getName(),true);"/>
       <expressions
-          body="return org.bonitasoft.studio.common.emf.tools.ExpressionHelper.createExpression(&quot;&quot;,&quot;&quot;,org.bonitasoft.studio.common.ExpressionConstants.MULTIINSTANCE_ITERATOR_TYPE,Object.class.getName(),false);"/>
+          body="return org.bonitasoft.studio.common.emf.tools.ExpressionHelper.createExpression(&quot;multiInstanceIterator&quot;,&quot;multiInstanceIterator&quot;,org.bonitasoft.studio.common.ExpressionConstants.MULTIINSTANCE_ITERATOR_TYPE,Object.class.getName(),false);"/>
       <expressions
           body="return org.bonitasoft.studio.common.NamingUtils.getInstance(self).generateName(self, self);"/>
       <expressions
@@ -10457,7 +10457,7 @@
       <expressions
           body="return org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;,Boolean.class.getName(),true);"/>
       <expressions
-          body="return org.bonitasoft.studio.common.emf.tools.ExpressionHelper.createExpression(&quot;&quot;,&quot;&quot;,org.bonitasoft.studio.common.ExpressionConstants.MULTIINSTANCE_ITERATOR_TYPE,Object.class.getName(),false);"/>
+          body="return org.bonitasoft.studio.common.emf.tools.ExpressionHelper.createExpression(&quot;multiInstanceIterator&quot;,&quot;multiInstanceIterator&quot;,org.bonitasoft.studio.common.ExpressionConstants.MULTIINSTANCE_ITERATOR_TYPE,Object.class.getName(),false);"/>
       <expressions
           body="return org.bonitasoft.studio.common.NamingUtils.getInstance(self).generateName(self, self);"/>
       <expressions
@@ -10479,7 +10479,7 @@
       <expressions
           body="return org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;,Boolean.class.getName(),true);"/>
       <expressions
-          body="return org.bonitasoft.studio.common.emf.tools.ExpressionHelper.createExpression(&quot;&quot;,&quot;&quot;,org.bonitasoft.studio.common.ExpressionConstants.MULTIINSTANCE_ITERATOR_TYPE,Object.class.getName(),false);"/>
+          body="return org.bonitasoft.studio.common.emf.tools.ExpressionHelper.createExpression(&quot;multiInstanceIterator&quot;,&quot;multiInstanceIterator&quot;,org.bonitasoft.studio.common.ExpressionConstants.MULTIINSTANCE_ITERATOR_TYPE,Object.class.getName(),false);"/>
       <expressions
           body="return org.bonitasoft.studio.common.NamingUtils.getInstance(self).generateName(self, self);"/>
       <expressions
@@ -10513,7 +10513,7 @@
       <expressions
           body="return org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;,Boolean.class.getName(),true);"/>
       <expressions
-          body="return org.bonitasoft.studio.common.emf.tools.ExpressionHelper.createExpression(&quot;&quot;,&quot;&quot;,org.bonitasoft.studio.common.ExpressionConstants.MULTIINSTANCE_ITERATOR_TYPE,Object.class.getName(),false);"/>
+          body="return org.bonitasoft.studio.common.emf.tools.ExpressionHelper.createExpression(&quot;multiInstanceIterator&quot;,&quot;multiInstanceIterator&quot;,org.bonitasoft.studio.common.ExpressionConstants.MULTIINSTANCE_ITERATOR_TYPE,Object.class.getName(),false);"/>
       <expressions
           body="return org.bonitasoft.studio.common.NamingUtils.getInstance(self).generateName(self, self);"/>
       <expressions

@@ -459,6 +459,27 @@ public class Messages extends NLS {
 
     public static String sequentialMultinstantition;
 
+    public static String dataBasedInstanceLabel;
+
+    public static String definedNumberOfInstanceLabel;
+
+    public static String input;
+
+    public static String output;
+
+    public static String numberOfInstancesToCreate;
+
+    public static String inputList;
+
+    public static String outputList;
+
+    public static String instanceData;
+
+    public static String outputData;
+
+    public static String storeOutputResult;
+
+    public static String type;
     static {
         // initialize resource bundle
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

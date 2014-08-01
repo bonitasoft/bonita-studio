@@ -48,6 +48,7 @@ public class MultiInstanceMigrator {
 
     public MultiInstanceMigrator(final Instance sourceInstance) {
         this.sourceInstance = sourceInstance;
+
     }
 
     public void save(final Model model, final Metamodel metamodel) {
@@ -79,6 +80,7 @@ public class MultiInstanceMigrator {
         targetInstance.set("outputData", outputData);
         targetInstance.set("listDataContainingOutputResults", listDataContainingOutputResults);
         targetInstance.set("completionCondition", completionCondition);
+        targetInstance.set("storeOutput", listDataContainingOutputResults != null || outputData != null);
     }
 
     private Instance getOutputList() {
@@ -110,14 +112,14 @@ public class MultiInstanceMigrator {
         if (multiInstantiationInstance != null && multiInstantiationInstance.get("inputData") != null) {
             final Instance dataInstance = multiInstantiationInstance.get("inputData");
             final String dataName = (String) dataInstance.get("name");
-            final Instance dep = createVariableDependencyInstance(model, dataInstance);
-            final Instance exp = StringToExpressionConverter.createExpressionInstanceWithDependency(model,
+            final Instance iteratorExpression = StringToExpressionConverter.createExpressionInstance(model,
                     dataName, dataName, StringToExpressionConverter.getDataReturnType(dataInstance),
-                    ExpressionConstants.VARIABLE_TYPE, false, dep);
-            model.delete(dep);
-            return exp;
+                    ExpressionConstants.MULTIINSTANCE_ITERATOR_TYPE, false);
+            model.delete(dataInstance);
+            return iteratorExpression;
         }
-        return StringToExpressionConverter.createExpressionInstance(model, "", "", Object.class.getName(), ExpressionConstants.MULTIINSTANCE_ITERATOR_TYPE,
+        return StringToExpressionConverter.createExpressionInstance(model, "multiInstanceIterator", "multiInstanceIterator", Object.class.getName(),
+                ExpressionConstants.MULTIINSTANCE_ITERATOR_TYPE,
                 false);
     }
 
@@ -223,15 +225,4 @@ public class MultiInstanceMigrator {
         return isLoop != null && isLoop;
     }
 
-    private Instance createVariableDependencyInstance(final Model model, final Instance dataInstance) {
-        final Instance copy = dataInstance.copy();
-        if (copy.instanceOf("process.Data")) {
-            final Object defaultValue = copy.get("defaultValue");
-            if (defaultValue != null && defaultValue instanceof Instance && ((Instance) defaultValue).instanceOf("expression.Expression")) {
-                model.delete((Instance) defaultValue);
-                copy.set("defaultValue", null);
-            }
-        }
-        return copy;
-    }
 }
