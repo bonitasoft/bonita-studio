@@ -24,7 +24,6 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.groovy.ScriptVariable;
 import org.bonitasoft.studio.groovy.ui.viewer.GroovyViewer;
 import org.codehaus.groovy.ast.expr.VariableExpression;
-import org.codehaus.groovy.eclipse.codeassist.completions.GroovyJavaGuessingCompletionProposal;
 import org.codehaus.groovy.eclipse.codeassist.requestor.ContentAssistContext;
 import org.codehaus.groovy.eclipse.codeassist.requestor.GroovyCompletionProposalComputer;
 import org.codehaus.jdt.groovy.model.GroovyCompilationUnit;
@@ -76,12 +75,12 @@ public class VariablesCompletionProposalProvider implements IJavaCompletionPropo
                 } catch (final BadLocationException e) {
                     BonitaStudioLog.error(e);
                 }
-                Set<String> addedProposal = new HashSet<String>();
+                final Set<String> addedProposal = new HashSet<String>();
                 if (variables != null) {
                     for (final ScriptVariable f : variables) {
                         final String name = f.getName();
                         final String typeName = f.getType();
-                        if (assistContext.completionNode instanceof VariableExpression) {
+                        if (assistContext != null && assistContext.completionNode instanceof VariableExpression) {
                             if (assistContext.completionNode.getText() != null && assistContext.completionNode.getText().equals(name)) {
                                 return Collections.emptyList();
                             }
@@ -123,12 +122,12 @@ public class VariablesCompletionProposalProvider implements IJavaCompletionPropo
         if (typeName != null) {
             proposal.setSignature(Signature.createTypeSignature(typeName, true).toCharArray());
         }
-        String completion = String.valueOf(proposal.getCompletion());
-        int start = proposal.getReplaceStart();
-        int end = proposal.getReplaceEnd();
-        int length = end - start;
+        final String completion = String.valueOf(proposal.getCompletion());
+        final int start = proposal.getReplaceStart();
+        final int end = proposal.getReplaceEnd();
+        final int length = end - start;
 
-        StyledString label = fLabelProvider.createStyledLabel(proposal);
+        final StyledString label = fLabelProvider.createStyledLabel(proposal);
         final Image image = JavaPlugin.getImageDescriptorRegistry().get(fLabelProvider.createImageDescriptor(proposal));
         return new JavaCompletionProposal(completion, start, length, image, label, 100, false);
     }

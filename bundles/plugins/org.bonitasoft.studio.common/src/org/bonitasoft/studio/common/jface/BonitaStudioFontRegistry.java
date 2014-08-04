@@ -41,7 +41,7 @@ public class BonitaStudioFontRegistry {
     }
 
     public static Font getHighlightedFont() {
-        FontData[] data = Display.getDefault().getSystemFont().getFontData();
+        final FontData[] data = Display.getDefault().getSystemFont().getFontData();
         int height = 8;
         if (data.length > 0 && data[0].height > 0) {
             height = (int) data[0].height;
@@ -82,14 +82,14 @@ public class BonitaStudioFontRegistry {
      *         the font with style and size + cache it into font registry
      * 
      */
-    private static Font getFont(String fontID, int size, int style) {
+    private static Font getFont(final String fontID, final int size, final int style) {
         if (fontRegistry == null) {
             fontRegistry = JFaceResources.getFontRegistry();
         }
         if (fontRegistry.hasValueFor(fontID)) {
             return fontRegistry.get(fontID);
         } else {
-            FontData fd = new FontData(fontID, size, style);
+            final FontData fd = new FontData(fontID, size, style);
             fontRegistry.put(fontID, new FontData[] { fd });
             return fontRegistry.get(fontID);
         }
@@ -97,6 +97,10 @@ public class BonitaStudioFontRegistry {
 
     public static Font getItalicFont() {
         return getFont("italic_font", 9, SWT.ITALIC);
+    }
+
+    public static Font getBoldFont() {
+        return getFont("bold_font", 9, SWT.BOLD);
     }
 
 }

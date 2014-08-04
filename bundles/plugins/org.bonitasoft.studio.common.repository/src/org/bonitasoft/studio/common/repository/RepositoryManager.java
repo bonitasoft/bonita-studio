@@ -89,7 +89,7 @@ public class RepositoryManager {
 
     }
 
-    private IRepository createRepository(final String name) {
+    public IRepository createRepository(final String name) {
         try {
             final IRepository repository = (IRepository) repositoryImplementationElement.createExecutableExtension(CLASS) ;
             repository.createRepository(name) ;
@@ -182,9 +182,9 @@ public class RepositoryManager {
         if(repository == null){
             repository = createRepository(repositoryName) ;
         }
-        if (!repository.getProject().exists()) {
-            repository.create();
-        }
+        BonitaStudioLog.log("Creating repository: " + repositoryName);
+        repository.create();
+        BonitaStudioLog.log("Opening repository: " + repositoryName);
         repository.open();
         preferenceStore.setValue(RepositoryPreferenceConstant.CURRENT_REPOSITORY,repositoryName) ;
     }

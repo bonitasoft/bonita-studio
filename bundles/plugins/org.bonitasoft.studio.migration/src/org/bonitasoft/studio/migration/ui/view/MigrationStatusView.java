@@ -18,8 +18,15 @@
 package org.bonitasoft.studio.migration.ui.view;
 
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
+import org.bonitasoft.studio.common.ProcessesValidationAction;
+import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.jface.TableColumnSorter;
+import org.bonitasoft.studio.common.jface.ValidationDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.perspectives.BonitaPerspectivesUtils;
 import org.bonitasoft.studio.migration.MigrationPlugin;
@@ -32,8 +39,14 @@ import org.bonitasoft.studio.migration.ui.action.HideReviewedAction;
 import org.bonitasoft.studio.migration.ui.action.HideValidStatusAction;
 import org.bonitasoft.studio.migration.ui.action.ToggleLinkingAction;
 import org.bonitasoft.studio.migration.ui.wizard.MigrationWarningWizard;
+import org.bonitasoft.studio.model.process.AbstractProcess;
+import org.bonitasoft.studio.model.process.MainProcess;
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.Parameterization;
+import org.eclipse.core.commands.ParameterizedCommand;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.edit.command.SetCommand;
@@ -90,11 +103,15 @@ import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.ISelectionService;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
+import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.views.properties.IPropertySheetPage;
 
@@ -207,8 +224,13 @@ public class MigrationStatusView extends ViewPart implements ISelectionListener,
 						"toggleStateForImportExportStatus");
 				if(IDialogConstants.OK_ID== mdwt.getReturnCode()){
 					if(mdwt.getToggleState()){
-						exportAction.run();
+						exportAction.run();	
 					}
+					IEditorPart editorPart = getSite().getPage().getActiveEditor();
+					List<AbstractProcess> processes = getProcesses(editorPart);
+					ProcessesValidationAction validation = new ProcessesValidationAction(processes);
+					validation.performValidation();
+					validation.displayOkSeeMoreDetailsDialog();
 					try {
 						clearMigrationReport(true);
 					} catch (IOException e1) {
@@ -223,6 +245,9 @@ public class MigrationStatusView extends ViewPart implements ISelectionListener,
 			}
 		});
 	}
+	
+	
+	
 
 	private void clearMigrationReport(boolean save) throws IOException{
 		final IEditorPart editorPart = (IEditorPart) tableViewer.getInput();
@@ -588,6 +613,16 @@ public class MigrationStatusView extends ViewPart implements ISelectionListener,
 		return null;
 	}
 
+	private List<AbstractProcess> getProcesses(IEditorPart editorPart){
+		if(editorPart instanceof DiagramEditor){
+			DiagramEditor diagramEditor = (DiagramEditor)editorPart;
+			MainProcess diagram = (MainProcess)diagramEditor.getDiagramEditPart().resolveSemanticElement();
+			List<AbstractProcess> procs = ModelHelper.getAllProcesses(diagram);
+		return procs;
+		}
+		return null;
+	}
+	
 	@SuppressWarnings("rawtypes")
 	@Override
 	public Object getAdapter(Class adapter) {
