@@ -5,16 +5,16 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.engine.export.switcher;
+
+import java.util.Collection;
 
 import org.bonitasoft.engine.bpm.process.impl.DataDefinitionBuilder;
 import org.bonitasoft.engine.bpm.process.impl.FlowElementBuilder;
@@ -33,83 +33,115 @@ import org.bonitasoft.studio.model.process.StringType;
 import org.bonitasoft.studio.model.process.XMLType;
 import org.bonitasoft.studio.model.process.util.ProcessSwitch;
 
-
 /**
  * @author Romain Bioteau
- *
  */
 public class DataSwitch extends ProcessSwitch<DataDefinitionBuilder> {
 
     private final Data data;
     private final FlowElementBuilder builder;
-	private final Expression expr;
+    private final Expression expr;
 
-    public DataSwitch(Data data, Expression defaultValue,FlowElementBuilder flowElementBuilder){
-        builder = flowElementBuilder ;
-        this.data = data ;
-        expr = defaultValue ;
+    public DataSwitch(Data data, Expression defaultValue, FlowElementBuilder flowElementBuilder) {
+        builder = flowElementBuilder;
+        this.data = data;
+        expr = defaultValue;
     }
 
     public Expression getDefaultValueExpression() {
-		return expr;
-	}
-    
-    public Data getData() {
-		return data;
-	}
+        return expr;
+    }
 
-	public FlowElementBuilder getBuilder() {
-		return builder;
-	}
-    
+    public Data getData() {
+        return data;
+    }
+
+    public FlowElementBuilder getBuilder() {
+        return builder;
+    }
+
     @Override
     public DataDefinitionBuilder caseStringType(final StringType type) {
-    	return builder.addLongTextData(data.getName(), expr);
+        if (data.isMultiple()) {
+            return addCollectionData(data.getName(), expr);
+        }
+        return builder.addLongTextData(data.getName(), expr);
+    }
+
+    protected DataDefinitionBuilder addCollectionData(String name, Expression expr2) {
+        return builder.addData(data.getName(), Collection.class.getName(), expr);
     }
 
     @Override
     public DataDefinitionBuilder caseLongType(LongType object) {
+        if (data.isMultiple()) {
+            return addCollectionData(data.getName(), expr);
+        }
         return builder.addLongData(data.getName(), expr);
     }
 
     @Override
     public DataDefinitionBuilder caseDoubleType(DoubleType object) {
+        if (data.isMultiple()) {
+            return addCollectionData(data.getName(), expr);
+        }
         return builder.addDoubleData(data.getName(), expr);
     }
 
     @Override
     public DataDefinitionBuilder caseIntegerType(final IntegerType type) {
-        return  builder.addIntegerData(data.getName(), expr);
+        if (data.isMultiple()) {
+            return addCollectionData(data.getName(), expr);
+        }
+        return builder.addIntegerData(data.getName(), expr);
     }
 
     @Override
     public DataDefinitionBuilder caseBooleanType(final BooleanType type) {
+        if (data.isMultiple()) {
+            return addCollectionData(data.getName(), expr);
+        }
         return builder.addBooleanData(data.getName(), expr);
     }
 
     @Override
     public DataDefinitionBuilder caseFloatType(final FloatType type) {
-        return  builder.addDoubleData(data.getName(), expr);
+        if (data.isMultiple()) {
+            return addCollectionData(data.getName(), expr);
+        }
+        return builder.addDoubleData(data.getName(), expr);
     }
 
     @Override
     public DataDefinitionBuilder caseEnumType(final EnumType type) {
+        if (data.isMultiple()) {
+            return addCollectionData(data.getName(), expr);
+        }
         return builder.addShortTextData(data.getName(), expr);
     }
 
     @Override
     public DataDefinitionBuilder caseJavaType(final JavaType type) {
-        return  builder.addData(data.getName(), ((JavaObjectData)data).getClassName(), expr) ;
+        if (data.isMultiple()) {
+            return addCollectionData(data.getName(), expr);
+        }
+        return builder.addData(data.getName(), ((JavaObjectData) data).getClassName(), expr);
     }
 
     @Override
     public DataDefinitionBuilder caseXMLType(final XMLType type) {
+        if (data.isMultiple()) {
+            return addCollectionData(data.getName(), expr);
+        }
         return builder.addXMLData(data.getName(), expr);
     }
 
     @Override
     public DataDefinitionBuilder caseDateType(final DateType type) {
-        return  builder.addDateData(data.getName(), expr);
+        if (data.isMultiple()) {
+            return addCollectionData(data.getName(), expr);
+        }
+        return builder.addDateData(data.getName(), expr);
     }
 
 }
