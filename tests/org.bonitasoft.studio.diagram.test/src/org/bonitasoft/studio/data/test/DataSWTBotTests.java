@@ -226,6 +226,7 @@ public class DataSWTBotTests extends SWTBotGefTestCase {
         bot.button(IDialogConstants.FINISH_LABEL).click();
         SWTBotTestUtil.waitUntilBonitaBPmShellIsActive(bot);
         bot.menu("Diagram").menu("Save").click();
+        SWTBotTestUtil.waitUntilBonitaBPmShellIsActive(bot);
     }
 
     @Test
