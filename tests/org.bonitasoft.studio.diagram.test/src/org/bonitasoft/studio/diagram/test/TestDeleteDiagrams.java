@@ -17,21 +17,25 @@
 package org.bonitasoft.studio.diagram.test;
 
 import org.bonitasoft.studio.common.jface.FileActionDialog;
+import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.diagram.custom.Messages;
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
+import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.utils.TableCollection;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 /**
  * @author aurelie zara
  */
-public class TestDeleteDiagrams extends SWTBotGefTestCase {
+@RunWith(SWTBotJunit4ClassRunner.class)
+public class TestDeleteDiagrams extends SWTBotGefTestCase implements SWTBotConstants {
 
     private final int nbDiagrams = 4;
     // Before and After
