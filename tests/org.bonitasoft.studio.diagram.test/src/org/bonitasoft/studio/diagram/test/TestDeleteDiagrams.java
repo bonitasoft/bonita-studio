@@ -24,8 +24,10 @@ import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
+import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.utils.TableCollection;
+import org.eclipse.swtbot.swt.finder.waits.ICondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotMenu;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
@@ -103,8 +105,23 @@ public class TestDeleteDiagrams extends SWTBotGefTestCase {
 
         bot.waitUntil(Conditions.shellIsActive(Messages.confirmProcessDeleteTitle));
         bot.button(IDialogConstants.YES_LABEL).click();
+        bot.waitUntil(new ICondition() {
 
-        assertEquals("editors have not been closed after deleted diagrams", nbEditors - 3, bot.editors().size());
+            public boolean test() throws Exception {
+                // TODO Auto-generated method stub
+                return (nbEditors - 3) == bot.editors().size();
+            }
+
+            public void init(final SWTBot bot) {
+                // TODO Auto-generated method stub
+
+            }
+
+            public String getFailureMessage() {
+                // TODO Auto-generated method stub
+                return "editors have not been closed after deleted diagrams";
+            }
+        }, 40000, 100);
 
         assertEquals("deleted diagrams are still in repository", nbDiagramsInRepository + 1, diagramStore.getChildren().size());
 
