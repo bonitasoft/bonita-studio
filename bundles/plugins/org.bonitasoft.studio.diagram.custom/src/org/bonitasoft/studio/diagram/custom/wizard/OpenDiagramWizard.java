@@ -31,8 +31,6 @@ import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.jface.wizard.IWizard;
-import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
@@ -42,7 +40,7 @@ import org.eclipse.ui.PlatformUI;
  * @author Mickael Istria
  *
  */
-public class OpenDiagramWizard extends Wizard implements IWizard {
+public class OpenDiagramWizard extends AbstractManageDiagramWizard {
 
     private OpenDiagramWizardPage page;
 
@@ -69,18 +67,19 @@ public class OpenDiagramWizard extends Wizard implements IWizard {
         try {
             getContainer().run(false, false, new IRunnableWithProgress(){
 
-                public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+                @Override
+                public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
                     monitor.beginTask(Messages.openingDiagramProgressText, IProgressMonitor.UNKNOWN) ;
-                    List<DiagramFileStore> files = page.getDiagrams();
-                    List<DiagramFileStore> dirtyFiles = new ArrayList<DiagramFileStore>(0);
+                    final List<DiagramFileStore> files = page.getDiagrams();
+                    final List<DiagramFileStore> dirtyFiles = new ArrayList<DiagramFileStore>(0);
 
-                    Map<DiagramFileStore, Boolean> filesToOpen= new HashMap<DiagramFileStore, Boolean>();
-                    StringBuilder stringBuilder = new StringBuilder(files.size()==1?"":"\n");
+                    final Map<DiagramFileStore, Boolean> filesToOpen= new HashMap<DiagramFileStore, Boolean>();
+                    final StringBuilder stringBuilder = new StringBuilder(files.size()==1?"":"\n");
 
                     // get dirtyEditor and list of processes related to them
-                    for (DiagramFileStore file : files) {
+                    for (final DiagramFileStore file : files) {
                         filesToOpen.put(file, true);
-                        for(IEditorPart editor : PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getDirtyEditors()){
+                        for(final IEditorPart editor : PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getDirtyEditors()){
                             if(editor.getEditorInput().getName().equals(file.getName())){
                                 dirtyFiles.add(file);
                                 stringBuilder.append(file.getName());
@@ -92,20 +91,20 @@ public class OpenDiagramWizard extends Wizard implements IWizard {
                     // case of dirty diagrams
                     if (!dirtyFiles.isEmpty() && !MessageDialog.openQuestion(page.getShell(), Messages.confirmProcessOverrideTitle,
                             NLS.bind(Messages.confirmProcessOverrideMessage,stringBuilder.toString()))) {
-                        for(DiagramFileStore file : dirtyFiles){
+                        for(final DiagramFileStore file : dirtyFiles){
                             filesToOpen.put(file, false);
                         }
                     }
 
                     // Open closed, already open, not dirty diagrams, for dirty ones, depending on openQuestion called before
-                    for(DiagramFileStore file : files){
+                    for(final DiagramFileStore file : files){
                         if(filesToOpen.get(file)){
-            				final IEditorReference openEditor = PlatformUtil.getOpenEditor(file.getName());
-            				if(openEditor!=null){
-            					PlatformUtil.swtichToOpenedEditor(openEditor);
-            				} else {
-            					file.open();
-            				}
+                            final IEditorReference openEditor = PlatformUtil.getOpenEditor(file.getName());
+                            if(openEditor!=null){
+                                PlatformUtil.swtichToOpenedEditor(openEditor);
+                            } else {
+                                file.open();
+                            }
                         }
                     }
 
@@ -113,7 +112,7 @@ public class OpenDiagramWizard extends Wizard implements IWizard {
                 }
 
             });
-        } catch (Exception e) {
+        } catch (final Exception e) {
             BonitaStudioLog.error(e) ;
         }
 
