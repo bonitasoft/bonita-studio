@@ -17,14 +17,18 @@
 package org.bonitasoft.studio.diagram.test;
 
 import org.bonitasoft.studio.common.jface.FileActionDialog;
-import org.bonitasoft.studio.common.jface.SWTBotConstants;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.diagram.custom.Messages;
+import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.utils.TableCollection;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotMenu;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -35,7 +39,7 @@ import org.junit.runner.RunWith;
  * @author aurelie zara
  */
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class TestDeleteDiagrams extends SWTBotGefTestCase implements SWTBotConstants {
+public class TestDeleteDiagrams extends SWTBotGefTestCase {
 
     private final int nbDiagrams = 4;
     // Before and After
@@ -49,31 +53,62 @@ public class TestDeleteDiagrams extends SWTBotGefTestCase implements SWTBotConst
 
     @AfterClass
     public static void tearDownAfterClass() {
-
         FileActionDialog.setDisablePopup(disablePopup);
     }
 
-    @Override
+
     @After
+    @Override
     public void tearDown() {
         bot.saveAllEditors();
     }
+
+
+
     @Test
     public void testDeleteDiagrams() {
+
+        final DiagramRepositoryStore diagramStore = (DiagramRepositoryStore) RepositoryManager.getInstance().getCurrentRepository()
+                .getRepositoryStore(DiagramRepositoryStore.class);
+
+        final int nbDiagramsInRepository = diagramStore.getChildren().size();
+
+        final SWTBotMenu diagramMenu = bot.menu("Diagram");
+
+
         for (int i = 0; i < nbDiagrams; i++) {
             SWTBotTestUtil.createNewDiagram(bot);
+            bot.waitUntil(Conditions.widgetIsEnabled(diagramMenu), 40000);
         }
+        final int nbEditors = bot.editors().size();
         final String currentDiagramName = bot.activeEditor().getTitle();
         bot.waitUntil(Conditions.widgetIsEnabled(bot.menu("Diagram")), 10000);
         bot.menu("Diagram").menu("Delete...").click();
         bot.waitUntil(Conditions.shellIsActive(Messages.DeleteDiagramWizardPage_title), 10000);
+
         final SWTBotTree tree = bot.tree();
-        assertEquals("the list of diagrams should contain 4 items", nbDiagrams, tree.getAllItems().length);
+        assertEquals("the list of diagrams should contain 4 items", nbDiagramsInRepository + nbDiagrams, tree.getAllItems().length);
+
         final TableCollection selection = tree.selection();
         assertEquals("only " + currentDiagramName + " should be selected in the tree viewer", 1, selection.rowCount());
         assertEquals("diagram " + currentDiagramName + " should be selected", currentDiagramName, selection.get(0, 0));
-        tree.select(tree.cell(1, 0), tree.cell(2, 0), tree.cell(3, 0));
+
+        final SWTBotTreeItem firstSwtBotTreeItem = tree.getAllItems()[1];
+        final SWTBotTreeItem secondSwtBotTreeItem = tree.getAllItems()[2];
+        final SWTBotTreeItem thirdSwtBotTreeItem = tree.getAllItems()[3];
+
+        tree.select(firstSwtBotTreeItem, secondSwtBotTreeItem, thirdSwtBotTreeItem);
+
         bot.button(Messages.removeProcessLabel).click();
+
+        bot.waitUntil(Conditions.shellIsActive(Messages.confirmProcessDeleteTitle));
+        bot.button(IDialogConstants.YES_LABEL).click();
+
+        assertEquals("editors have not been closed after deleted diagrams", nbEditors - 3, bot.editors().size());
+
+        assertEquals("deleted diagrams are still in repository", nbDiagramsInRepository + 1, diagramStore.getChildren().size());
+
+
     }
 
 }
