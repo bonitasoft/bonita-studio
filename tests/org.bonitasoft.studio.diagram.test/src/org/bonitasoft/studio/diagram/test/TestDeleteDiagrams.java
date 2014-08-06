@@ -16,6 +16,9 @@
  */
 package org.bonitasoft.studio.diagram.test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.diagram.custom.Messages;
@@ -30,7 +33,6 @@ import org.eclipse.swtbot.swt.finder.utils.TableCollection;
 import org.eclipse.swtbot.swt.finder.waits.ICondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotMenu;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -76,12 +78,14 @@ public class TestDeleteDiagrams extends SWTBotGefTestCase {
         final int nbDiagramsInRepository = diagramStore.getChildren().size();
 
         final SWTBotMenu diagramMenu = bot.menu("Diagram");
-
-
+        final List<String> newDiagramsName = new ArrayList<String>();
         for (int i = 0; i < nbDiagrams; i++) {
             SWTBotTestUtil.createNewDiagram(bot);
             bot.waitUntil(Conditions.widgetIsEnabled(diagramMenu), 40000);
+            newDiagramsName.add(bot.activeEditor().getTitle());
         }
+        assertEquals("4 diagrams should have been created", nbDiagrams, newDiagramsName.size());
+
         final int nbEditors = bot.editors().size();
         final String currentDiagramName = bot.activeEditor().getTitle();
         bot.waitUntil(Conditions.widgetIsEnabled(bot.menu("Diagram")), 10000);
@@ -95,11 +99,11 @@ public class TestDeleteDiagrams extends SWTBotGefTestCase {
         assertEquals("only " + currentDiagramName + " should be selected in the tree viewer", 1, selection.rowCount());
         assertEquals("diagram " + currentDiagramName + " should be selected", currentDiagramName, selection.get(0, 0));
 
-        final SWTBotTreeItem firstSwtBotTreeItem = tree.getAllItems()[1];
-        final SWTBotTreeItem secondSwtBotTreeItem = tree.getAllItems()[2];
-        final SWTBotTreeItem thirdSwtBotTreeItem = tree.getAllItems()[3];
+        //   final SWTBotTreeItem firstSwtBotTreeItem = tree.getAllItems()[1];
+        //   final SWTBotTreeItem secondSwtBotTreeItem = tree.getAllItems()[2];
+        //   final SWTBotTreeItem thirdSwtBotTreeItem = tree.getAllItems()[3];
 
-        tree.select(firstSwtBotTreeItem, secondSwtBotTreeItem, thirdSwtBotTreeItem);
+        tree.select(newDiagramsName.get(1), newDiagramsName.get(2), newDiagramsName.get(3));
 
         bot.button(Messages.removeProcessLabel).click();
 
@@ -108,17 +112,15 @@ public class TestDeleteDiagrams extends SWTBotGefTestCase {
         bot.waitUntil(new ICondition() {
 
             public boolean test() throws Exception {
-                // TODO Auto-generated method stub
                 return (nbEditors - 3) == bot.editors().size();
             }
 
             public void init(final SWTBot bot) {
-                // TODO Auto-generated method stub
+
 
             }
 
             public String getFailureMessage() {
-                // TODO Auto-generated method stub
                 return "editors have not been closed after deleted diagrams";
             }
         }, 40000, 100);
