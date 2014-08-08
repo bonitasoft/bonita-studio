@@ -94,10 +94,11 @@ import org.eclipse.jdt.internal.core.JavaProject;
 import org.eclipse.jdt.internal.ui.wizards.buildpaths.BuildPathsBlock;
 import org.eclipse.jdt.internal.ui.wizards.buildpaths.CPListElement;
 import org.eclipse.jdt.launching.JavaRuntime;
-import org.eclipse.osgi.framework.adaptor.BundleClassLoader;
+import org.eclipse.osgi.internal.loader.EquinoxClassLoader;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
+import org.osgi.framework.BundleReference;
 import org.xml.sax.InputSource;
 
 /**
@@ -477,7 +478,7 @@ public class Repository implements IRepository {
         }
         final IFile projectManifest = extensionsProject.getFolder("META-INF").getFile("MANIFEST.MF"); //$NON-NLS-1$
         final InputStream is = Repository.class.getResourceAsStream("MANIFEST.MF.template");
-        final BundleClassLoader cl = (BundleClassLoader) BusinessArchive.class.getClassLoader();
+        final BundleReference cl = (BundleReference) BusinessArchive.class.getClassLoader();
         final InputStream is2 = FileUtil.replaceStringInFile(is, "XXX_ENGINE_BUNDLE_XXX", cl.getBundle().getSymbolicName());
         if (!projectManifest.exists()) {
             projectManifest.create(is2, false, null);
