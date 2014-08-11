@@ -1,19 +1,16 @@
 /**
- * Copyright (C) 2009 BonitaSoft S.A.
- * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
- * 
+ * Copyright (C) 2009-2014 BonitaSoft S.A.
+ * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 package org.bonitasoft.studio.engine.command;
@@ -45,61 +42,61 @@ import org.eclipse.ui.progress.IProgressService;
  */
 public class ResetEngineCommand extends AbstractHandler {
 
-	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException {
+    @Override
+    public Object execute(final ExecutionEvent event) throws ExecutionException {
 
-		IProgressService progressManager = PlatformUI.getWorkbench().getProgressService() ;
-		IRunnableWithProgress runnable = new IRunnableWithProgress(){
+        final IProgressService progressManager = PlatformUI.getWorkbench().getProgressService() ;
+        final IRunnableWithProgress runnable = new IRunnableWithProgress(){
 
 
-			@Override
-			public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-				monitor.beginTask(Messages.resetingEngine, IProgressMonitor.UNKNOWN);
-				APISession session = null;
-				try {
-					session = BOSEngineManager.getInstance().loginDefaultTenant(monitor);
-				} catch (Exception e1) {
-					BonitaStudioLog.error(e1, EnginePlugin.PLUGIN_ID);
-				}
-				if(session == null){
-					return;
-				}
-				try {
-					ProcessManagementAPI processManagementAPI = BOSEngineManager.getInstance().getProcessAPI(session);
-					int nbProcess = (int) processManagementAPI.getNumberOfProcessDeploymentInfos() ;
-					if(nbProcess > 0){
-						List<ProcessDeploymentInfo> processes = processManagementAPI.getProcessDeploymentInfos(0,nbProcess , ProcessDeploymentInfoCriterion.DEFAULT) ;
-						List<Long> processIds = new ArrayList<Long>() ;
-						for(ProcessDeploymentInfo info : processes){
-							processIds.add(info.getProcessId()) ;
-						}
-						for(Long id: processIds){
-							processManagementAPI.disableAndDelete(id);
-						}
+            @Override
+            public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+                monitor.beginTask(Messages.resetingEngine, IProgressMonitor.UNKNOWN);
+                APISession session = null;
+                try {
+                    session = BOSEngineManager.getInstance().loginDefaultTenant(monitor);
+                } catch (final Exception e1) {
+                    BonitaStudioLog.error(e1, EnginePlugin.PLUGIN_ID);
+                }
+                if(session == null){
+                    return;
+                }
+                try {
+                    final ProcessManagementAPI processManagementAPI = BOSEngineManager.getInstance().getProcessAPI(session);
+                    final int nbProcess = (int) processManagementAPI.getNumberOfProcessDeploymentInfos() ;
+                    if(nbProcess > 0){
+                        final List<ProcessDeploymentInfo> processes = processManagementAPI.getProcessDeploymentInfos(0,nbProcess , ProcessDeploymentInfoCriterion.DEFAULT) ;
+                        final List<Long> processIds = new ArrayList<Long>() ;
+                        for(final ProcessDeploymentInfo info : processes){
+                            processIds.add(info.getProcessId()) ;
+                        }
+                        for(final Long id: processIds){
+                            processManagementAPI.disableAndDeleteProcessDefinition(id);
+                        }
 
-					}
-				} catch (Exception e) {
-					throw new InvocationTargetException(e);
-				}finally{
-					if(BOSEngineManager.getInstance() != null){
-						BOSEngineManager.getInstance().logoutDefaultTenant(session) ;
-					}
-				}
+                    }
+                } catch (final Exception e) {
+                    throw new InvocationTargetException(e);
+                }finally{
+                    if(BOSEngineManager.getInstance() != null){
+                        BOSEngineManager.getInstance().logoutDefaultTenant(session) ;
+                    }
+                }
 
-				BOSWebServerManager.getInstance().resetServer(monitor);
+                BOSWebServerManager.getInstance().resetServer(monitor);
 
-				monitor.done();
+                monitor.done();
 
-			}
-		};
+            }
+        };
 
-		try {
-			progressManager.run(true, false, runnable);
-		} catch (Exception e) {
-			BonitaStudioLog.error(e);
-		}
-		return null;
-	}
+        try {
+            progressManager.run(true, false, runnable);
+        } catch (final Exception e) {
+            BonitaStudioLog.error(e);
+        }
+        return null;
+    }
 
 
 }

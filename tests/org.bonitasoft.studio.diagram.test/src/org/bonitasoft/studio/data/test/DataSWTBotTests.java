@@ -66,12 +66,12 @@ public class DataSWTBotTests extends SWTBotGefTestCase {
     @Test
     public void testCreateData() throws Exception {
         SWTBotTestUtil.createNewDiagram(bot);
-        SWTBotEditor botEditor = bot.activeEditor();
-        SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
+        final SWTBotEditor botEditor = bot.activeEditor();
+        final SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
 
-        IGraphicalEditPart part = (IGraphicalEditPart)gmfEditor.mainEditPart().part();
-        MainProcess model = (MainProcess)part.resolveSemanticElement();
-        Pool pool = (Pool)model.getElements().get(0);
+        final IGraphicalEditPart part = (IGraphicalEditPart)gmfEditor.mainEditPart().part();
+        final MainProcess model = (MainProcess)part.resolveSemanticElement();
+        final Pool pool = (Pool)model.getElements().get(0);
 
         gmfEditor.getEditPart(pool.getName()).parent().select();
         bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL).show();
@@ -88,12 +88,12 @@ public class DataSWTBotTests extends SWTBotGefTestCase {
     public void testEditData() throws Exception {
         SWTBotTestUtil.importProcessWIthPathFromClass(bot, "ProcessWithData_1_0.bos", "Bonita 6.x", "ProcessWithData", this.getClass(), false);
 
-        SWTBotEditor botEditor = bot.activeEditor();
-        SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
+        final SWTBotEditor botEditor = bot.activeEditor();
+        final SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
 
-        IGraphicalEditPart part = (IGraphicalEditPart)gmfEditor.mainEditPart().part();
-        MainProcess model = (MainProcess)part.resolveSemanticElement();
-        Pool pool = (Pool)model.getElements().get(0);
+        final IGraphicalEditPart part = (IGraphicalEditPart)gmfEditor.mainEditPart().part();
+        final MainProcess model = (MainProcess)part.resolveSemanticElement();
+        final Pool pool = (Pool)model.getElements().get(0);
 
         gmfEditor.getEditPart(pool.getName()).parent().select();
 
@@ -108,7 +108,7 @@ public class DataSWTBotTests extends SWTBotGefTestCase {
         bot.button(Messages.updateData).click();
         bot.text().setText("newName");
         bot.comboBox().setSelection("Integer");
-        SWTBotShell editVarShell = bot.activeShell();
+        final SWTBotShell editVarShell = bot.activeShell();
         bot.button(IDialogConstants.OK_LABEL).click();
         bot.waitUntil(Conditions.shellCloses(editVarShell));
 
@@ -128,25 +128,26 @@ public class DataSWTBotTests extends SWTBotGefTestCase {
 
         SWTBotTestUtil.createNewDiagram(bot);
 
-        SWTBotEditor botEditor = bot.activeEditor();
-        SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
+        final SWTBotEditor botEditor = bot.activeEditor();
+        final SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
 
-        IGraphicalEditPart part = (IGraphicalEditPart)gmfEditor.mainEditPart().part();
-        MainProcess model = (MainProcess)part.resolveSemanticElement();
-        Pool pool = (Pool)model.getElements().get(0);
+        final IGraphicalEditPart part = (IGraphicalEditPart)gmfEditor.mainEditPart().part();
+        final MainProcess model = (MainProcess)part.resolveSemanticElement();
+        final Pool pool = (Pool)model.getElements().get(0);
 
         gmfEditor.getEditPart(pool.getName()).parent().select();
 
         addDataOnSelectedElementWithName("newData");
         addDataOnSelectedElementWithName("dataToNotBeRemoved");
 
-        int nbData = pool.getData().size();
-        Data firstData = pool.getData().get(0);
+        final int nbData = pool.getData().size();
+        final Data firstData = pool.getData().get(0);
         bot.table().select(firstData.getName()+" -- "+firstData.getDataType().getName());
         // button("Remove")
         bot.button(Messages.removeData).click();
         bot.button(IDialogConstants.OK_LABEL).click();
 
+        SWTBotTestUtil.waitUntilBonitaBPmShellIsActive(bot);
         bot.menu("Diagram").menu("Save").click();
 
         assertEquals("data not removed",nbData -1, pool.getData().size());
@@ -157,35 +158,36 @@ public class DataSWTBotTests extends SWTBotGefTestCase {
 
     @Test
     public void testMoveData() throws Exception {
-        Pool pool = createProcessWithData();
-        Lane lane = (Lane)pool.getElements().get(0);
-        SWTBotEditor botEditor = bot.activeEditor();
-        SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
+        final Pool pool = createProcessWithData();
+        final Lane lane = (Lane)pool.getElements().get(0);
+        final SWTBotEditor botEditor = bot.activeEditor();
+        final SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
 
-        SWTBotGefEditPart parent = gmfEditor.getEditPart("Step1").parent();
+        final SWTBotGefEditPart parent = gmfEditor.getEditPart("Step1").parent();
         final Activity step = (Activity) ((IGraphicalEditPart) parent.part()).resolveSemanticElement();
-        SWTBotGefEditPart poolPart = gmfEditor.getEditPart(pool.getName()).parent();
+        final SWTBotGefEditPart poolPart = gmfEditor.getEditPart(pool.getName()).parent();
         poolPart.select();
         poolPart.click();
         addDataOnSelectedElementWithName("dataToMove");
-        int nbPoolData = pool.getData().size();
+        final int nbPoolData = pool.getData().size();
         final int nbStepData = step.getData().size();
         bot.table().select("dataToMove -- Text");
         // button("Move...")
         bot.button(Messages.moveData).click();
         bot.tree().getTreeItem("Pool "+pool.getName()).getNode("Lane "+lane.getName()).select("Task Step1");
         bot.button(IDialogConstants.FINISH_LABEL).click();
+        SWTBotTestUtil.waitUntilBonitaBPmShellIsActive(bot);
         bot.menu("Diagram").menu("Save").click();
         bot.waitUntil(new DefaultCondition() {
-			
-			public boolean test() throws Exception {
-				return nbStepData +1 == step.getData().size();
-			}
-			
-			public String getFailureMessage() {
-				return "data not removed";
-			}
-		});
+
+            public boolean test() throws Exception {
+                return nbStepData +1 == step.getData().size();
+            }
+
+            public String getFailureMessage() {
+                return "data not removed";
+            }
+        });
         assertEquals("data not added",nbPoolData -1, pool.getData().size());
         bot.menu("Diagram").menu("Close").click();
     }
@@ -193,16 +195,16 @@ public class DataSWTBotTests extends SWTBotGefTestCase {
 
     private Pool createProcessWithData() {
         SWTBotTestUtil.createNewDiagram(bot);
-        SWTBotEditor botEditor = bot.activeEditor();
-        SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
+        final SWTBotEditor botEditor = bot.activeEditor();
+        final SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
 
 
-        IGraphicalEditPart part = (IGraphicalEditPart)gmfEditor.mainEditPart().part();
-        MainProcess model = (MainProcess)part.resolveSemanticElement();
-        Pool pool = (Pool)model.getElements().get(0);
+        final IGraphicalEditPart part = (IGraphicalEditPart)gmfEditor.mainEditPart().part();
+        final MainProcess model = (MainProcess)part.resolveSemanticElement();
+        final Pool pool = (Pool)model.getElements().get(0);
 
         gmfEditor.getEditPart(pool.getName()).parent().select();
-        String dataName = "newData";
+        final String dataName = "newData";
         addDataOnSelectedElementWithName(dataName);
         return pool;
     }
@@ -211,7 +213,7 @@ public class DataSWTBotTests extends SWTBotGefTestCase {
      * 
      * @param dataName
      */
-    private void addDataOnSelectedElementWithName(String dataName) {
+    private void addDataOnSelectedElementWithName(final String dataName) {
         bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL).show();
         SWTBotTestUtil.selectTabbedPropertyView(bot, "Data");
 
@@ -222,18 +224,20 @@ public class DataSWTBotTests extends SWTBotGefTestCase {
         bot.textWithLabel(Messages.name+" *").setText(dataName);
         bot.waitUntil(Conditions.widgetIsEnabled(bot.button(IDialogConstants.FINISH_LABEL)));
         bot.button(IDialogConstants.FINISH_LABEL).click();
+        SWTBotTestUtil.waitUntilBonitaBPmShellIsActive(bot);
         bot.menu("Diagram").menu("Save").click();
+        SWTBotTestUtil.waitUntilBonitaBPmShellIsActive(bot);
     }
 
     @Test
     public void testDataDefaultValueReturnType() throws Exception {
         SWTBotTestUtil.createNewDiagram(bot);
-        SWTBotEditor botEditor = bot.activeEditor();
-        SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
+        final SWTBotEditor botEditor = bot.activeEditor();
+        final SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
 
-        IGraphicalEditPart part = (IGraphicalEditPart)gmfEditor.mainEditPart().part();
-        MainProcess model = (MainProcess)part.resolveSemanticElement();
-        Pool pool = (Pool)model.getElements().get(0);
+        final IGraphicalEditPart part = (IGraphicalEditPart)gmfEditor.mainEditPart().part();
+        final MainProcess model = (MainProcess)part.resolveSemanticElement();
+        final Pool pool = (Pool)model.getElements().get(0);
 
         gmfEditor.getEditPart(pool.getName()).parent().select();
         bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL).show();
@@ -268,115 +272,116 @@ public class DataSWTBotTests extends SWTBotGefTestCase {
 
         bot.waitUntil(Conditions.widgetIsEnabled(bot.button(IDialogConstants.FINISH_LABEL)));
         bot.button(IDialogConstants.FINISH_LABEL).click();
+        SWTBotTestUtil.waitUntilBonitaBPmShellIsActive(bot);
         bot.menu("Diagram").menu("Save").click();
 
 
         bot.menu("Diagram").menu("Close").click();
     }
-    
+
     @Test
     public void testDatacantBeInitializeByItself(){
-    	SWTBotTestUtil.createNewDiagram(bot);
-    	SWTBotTestUtil.changeDiagramName(bot, "Step1", "DataInit");
-    	SWTBotEditor botEditor = bot.activeEditor();
-    	SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
-    	AbstractProcess proc = ModelHelper.getParentProcess(((IGraphicalEditPart)gmfEditor.getEditPart("Step1").part()).resolveSemanticElement());
+        SWTBotTestUtil.createNewDiagram(bot);
+        SWTBotTestUtil.changeDiagramName(bot, "Step1", "DataInit");
+        final SWTBotEditor botEditor = bot.activeEditor();
+        final SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
+        final AbstractProcess proc = ModelHelper.getParentProcess(((IGraphicalEditPart)gmfEditor.getEditPart("Step1").part()).resolveSemanticElement());
 
-    	List<String> step1DataList = new ArrayList<String>(2);
-    	step1DataList.add("varS1_1"+" -- "+"Text");
-    	step1DataList.add("varS1_2"+" -- "+"Integer");
-    	List<String> step2DataList = new ArrayList<String>(2);
-    	step2DataList.add("varS2_1"+" -- "+"Text");
-    	step2DataList.add("varS2_2"+" -- "+"Integer");
-    	List<String> procDataList  = new ArrayList<String>(2);
-    	procDataList.add("procVar_1"+" -- "+"Text");
-    	procDataList.add("procVar_2"+" -- "+"Integer");
+        final List<String> step1DataList = new ArrayList<String>(2);
+        step1DataList.add("varS1_1"+" -- "+"Text");
+        step1DataList.add("varS1_2"+" -- "+"Integer");
+        final List<String> step2DataList = new ArrayList<String>(2);
+        step2DataList.add("varS2_1"+" -- "+"Text");
+        step2DataList.add("varS2_2"+" -- "+"Integer");
+        final List<String> procDataList  = new ArrayList<String>(2);
+        procDataList.add("procVar_1"+" -- "+"Text");
+        procDataList.add("procVar_2"+" -- "+"Integer");
 
-    	// add data to Process
-    	gmfEditor.getEditPart(proc.getName());
-    	getDataSection( bot );
-    	bot.button("Add...").click();
-    	SWTBotTestUtil.addNewData(bot, "procVar_1", "Text", false, null);
-    	bot.button("Add...").click();
-    	SWTBotTestUtil.addNewData(bot, "procVar_2", "Integer", false, null);
+        // add data to Process
+        gmfEditor.getEditPart(proc.getName());
+        getDataSection( bot );
+        bot.button("Add...").click();
+        SWTBotTestUtil.addNewData(bot, "procVar_1", "Text", false, null);
+        bot.button("Add...").click();
+        SWTBotTestUtil.addNewData(bot, "procVar_2", "Integer", false, null);
 
-    	SWTBotTestUtil.selectTaskFromSelectedElementAndDragIt(gmfEditor, "Step1", new Point(400, 100));
+        SWTBotTestUtil.selectTaskFromSelectedElementAndDragIt(gmfEditor, "Step1", new Point(400, 100));
 
-    	// set data on step1 Task
-    	gmfEditor.getEditPart("Step1").click();
-    	getDataSection( bot );
-    	bot.button("Add...").click();
-    	SWTBotTestUtil.addNewData(bot, "varS1_1", "Text", false, null);
-    	bot.button("Add...").click();
-    	SWTBotTestUtil.addNewData(bot, "varS1_2", "Integer", false, null);
+        // set data on step1 Task
+        gmfEditor.getEditPart("Step1").click();
+        getDataSection( bot );
+        bot.button("Add...").click();
+        SWTBotTestUtil.addNewData(bot, "varS1_1", "Text", false, null);
+        bot.button("Add...").click();
+        SWTBotTestUtil.addNewData(bot, "varS1_2", "Integer", false, null);
 
-    	// set data on step2 Task
-    	gmfEditor.getEditPart("Step2").click();
-    	getDataSection( bot );
-    	bot.button("Add...").click();
-    	SWTBotTestUtil.addNewData(bot, "varS2_1", "Text", false, null);
-    	bot.button("Add...").click();
-    	SWTBotTestUtil.addNewData(bot, "varS2_2", "Integer", false, null);
-    	bot.menu("Diagram").menu("Save").click();
+        // set data on step2 Task
+        gmfEditor.getEditPart("Step2").click();
+        getDataSection( bot );
+        bot.button("Add...").click();
+        SWTBotTestUtil.addNewData(bot, "varS2_1", "Text", false, null);
+        bot.button("Add...").click();
+        SWTBotTestUtil.addNewData(bot, "varS2_2", "Integer", false, null);
+        bot.menu("Diagram").menu("Save").click();
 
-    	// check only process variables are available in tasks data edit expression
-    	gmfEditor.getEditPart("Step1").click();
-    	getDataSection( bot );
-    	SWTBotTable dataTable = bot.table();
-    	
-    	// Test on var varS1_2
-    	dataTable.select("varS1_1"+" -- "+"Text");
-    	bot.button("Edit...").click();
-    	bot.waitUntil(Conditions.shellIsActive("Edit variable"));
-    	bot.toolbarButtonWithId(ExpressionViewer.SWTBOT_ID_EDITBUTTON, 0).click();
-    	bot.waitUntil(Conditions.shellIsActive(editExpression));
-    	bot.tableWithLabel(expressionTypeLabel).select("Variable");
-    	SWTBotTable tableVar = bot.table(1);
-		Assert.assertFalse("Error: Task data can't be initialized by itself", tableVar.containsItem("varS1_1"+" -- "+"Text"));
-		Assert.assertFalse("Error: Task data can't be initialized by a sibling task data", tableVar.containsItem("varS1_2"+" -- "+"Integer"));
-    	for(int j=0;j<2;j++){
-    		Assert.assertFalse("Error: Task data can't be initialized by task data", tableVar.containsItem(step2DataList.get(j)));
-    		Assert.assertTrue("Error: Task data sould be initialized by Process data", tableVar.containsItem(procDataList.get(j)));
-    	}
-    	bot.button(IDialogConstants.CANCEL_LABEL).click();
-    	bot.button(IDialogConstants.CANCEL_LABEL).click();
+        // check only process variables are available in tasks data edit expression
+        gmfEditor.getEditPart("Step1").click();
+        getDataSection( bot );
+        final SWTBotTable dataTable = bot.table();
 
-    	
-    	// Test on var varS1_2
-    	dataTable.select("varS1_2"+" -- "+"Integer");
-    	bot.button("Edit...").click();
-    	bot.waitUntil(Conditions.shellIsActive("Edit variable"));
-    	bot.toolbarButtonWithId(ExpressionViewer.SWTBOT_ID_EDITBUTTON, 0).click();
-    	bot.waitUntil(Conditions.shellIsActive(editExpression));
-    	bot.tableWithLabel(expressionTypeLabel).select("Variable");
-    	tableVar = bot.table(1);
-		Assert.assertFalse("Error: Task data can't be initialized by itself", tableVar.containsItem("varS1_2"+" -- "+"Integer"));
-		Assert.assertFalse("Error: Task data can't be initialized by a sibling task data", tableVar.containsItem("varS1_1"+" -- "+"Text"));
-    	for(int j=0;j<2;j++){
-    		Assert.assertFalse("Error: Task data can't be initialized by task data", tableVar.containsItem(step2DataList.get(j)));
-    		Assert.assertTrue("Error: Task data sould be initialized by Process data", tableVar.containsItem(procDataList.get(j)));
-    	}
-    	bot.button(IDialogConstants.CANCEL_LABEL).click();
-    	bot.button(IDialogConstants.CANCEL_LABEL).click();
+        // Test on var varS1_2
+        dataTable.select("varS1_1"+" -- "+"Text");
+        bot.button("Edit...").click();
+        bot.waitUntil(Conditions.shellIsActive("Edit variable"));
+        bot.toolbarButtonWithId(ExpressionViewer.SWTBOT_ID_EDITBUTTON, 0).click();
+        bot.waitUntil(Conditions.shellIsActive(editExpression));
+        bot.tableWithLabel(expressionTypeLabel).select("Variable");
+        SWTBotTable tableVar = bot.table(1);
+        Assert.assertFalse("Error: Task data can't be initialized by itself", tableVar.containsItem("varS1_1"+" -- "+"Text"));
+        Assert.assertFalse("Error: Task data can't be initialized by a sibling task data", tableVar.containsItem("varS1_2"+" -- "+"Integer"));
+        for(int j=0;j<2;j++){
+            Assert.assertFalse("Error: Task data can't be initialized by task data", tableVar.containsItem(step2DataList.get(j)));
+            Assert.assertTrue("Error: Task data sould be initialized by Process data", tableVar.containsItem(procDataList.get(j)));
+        }
+        bot.button(IDialogConstants.CANCEL_LABEL).click();
+        bot.button(IDialogConstants.CANCEL_LABEL).click();
+
+
+        // Test on var varS1_2
+        dataTable.select("varS1_2"+" -- "+"Integer");
+        bot.button("Edit...").click();
+        bot.waitUntil(Conditions.shellIsActive("Edit variable"));
+        bot.toolbarButtonWithId(ExpressionViewer.SWTBOT_ID_EDITBUTTON, 0).click();
+        bot.waitUntil(Conditions.shellIsActive(editExpression));
+        bot.tableWithLabel(expressionTypeLabel).select("Variable");
+        tableVar = bot.table(1);
+        Assert.assertFalse("Error: Task data can't be initialized by itself", tableVar.containsItem("varS1_2"+" -- "+"Integer"));
+        Assert.assertFalse("Error: Task data can't be initialized by a sibling task data", tableVar.containsItem("varS1_1"+" -- "+"Text"));
+        for(int j=0;j<2;j++){
+            Assert.assertFalse("Error: Task data can't be initialized by task data", tableVar.containsItem(step2DataList.get(j)));
+            Assert.assertTrue("Error: Task data sould be initialized by Process data", tableVar.containsItem(procDataList.get(j)));
+        }
+        bot.button(IDialogConstants.CANCEL_LABEL).click();
+        bot.button(IDialogConstants.CANCEL_LABEL).click();
 
     }
-    
+
     @Test
     public void testCreateDataWithExistingId(){
-    	//Add the data myData on pool
-    	String dataName = "myData";
-    	String dataName1 = "myData1";
-    	
-    	SWTBotTestUtil.createNewDiagram(bot);
-        SWTBotEditor botEditor = bot.activeEditor();
-        SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
-        String diagramTitle=botEditor.getTitle();
+        //Add the data myData on pool
+        final String dataName = "myData";
+        final String dataName1 = "myData1";
+
+        SWTBotTestUtil.createNewDiagram(bot);
+        final SWTBotEditor botEditor = bot.activeEditor();
+        final SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
+        final String diagramTitle=botEditor.getTitle();
         getDataSection(bot);
         bot.button(Messages.addData).click();
         bot.textWithLabel(Messages.name+" *").setText(dataName);
         assertTrue("finish button should be enabled",bot.button(IDialogConstants.FINISH_LABEL).isEnabled());
         bot.button(IDialogConstants.FINISH_LABEL).click();
-        
+
         //try to add a data myData on step
         SWTBotTestUtil.selectEventOnProcess(bot, gmfEditor, "Step1");
         getDataSection(bot);
@@ -386,9 +391,9 @@ public class DataSWTBotTests extends SWTBotGefTestCase {
         bot.textWithLabel(Messages.name+" *").setText(dataName1);
         assertTrue("finish button should be enabled",bot.button(IDialogConstants.FINISH_LABEL).isEnabled());
         bot.button(IDialogConstants.FINISH_LABEL).click();
-        
-      
-        
+
+
+
         //add a second task and add a data named myData1
         bot.editorByTitle(diagramTitle).show();
         bot.editorByTitle(diagramTitle).setFocus();
@@ -398,10 +403,10 @@ public class DataSWTBotTests extends SWTBotGefTestCase {
         bot.textWithLabel(Messages.name+" *").setText(dataName1);
         assertTrue("finish button should be enabled",bot.button(IDialogConstants.FINISH_LABEL).isEnabled());
         bot.button(IDialogConstants.FINISH_LABEL).click();
-        
+
     }
-    
-    public static void getDataSection(SWTGefBot bot ){
+
+    public static void getDataSection(final SWTGefBot bot ){
         bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL).show();
         bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL).setFocus();
         SWTBotTestUtil.selectTabbedPropertyView(bot, "Data");

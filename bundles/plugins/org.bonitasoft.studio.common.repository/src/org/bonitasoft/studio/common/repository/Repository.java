@@ -210,6 +210,9 @@ public class Repository implements IRepository {
                         jProject.open(NULL_PROGRESS_MONITOR);
                     }
                     new ClasspathValidation(jProject).validate();
+                } else {
+                    BonitaStudioLog.log("Cannot retrieve the JavaProject Nature from the project: " + project.getName());
+                    project.open(NULL_PROGRESS_MONITOR);//Open anyway
                 }
             }
         } catch (final CoreException e) {
@@ -326,6 +329,7 @@ public class Repository implements IRepository {
         final Set<String> additionalNatures = getNatures();
         final Set<String> notExistingNature = new HashSet<String>();
         for (final String natureId : additionalNatures) {
+            BonitaStudioLog.log("Plan to add Project Nature " + natureId);
             @SuppressWarnings("restriction")
             final
             Object naturDesc = ((Workspace) ResourcesPlugin.getWorkspace()).getNatureManager().getNatureDescriptor(natureId);
@@ -353,6 +357,7 @@ public class Repository implements IRepository {
             @Override
             public void run() {
                 try {
+                    BonitaStudioLog.log("Setting Project Descritor with natures:" + descriptor.getNatureIds());
                     project.setDescription(descriptor, null);
                 } catch (final CoreException e) {
                     throw new RuntimeException(e);
