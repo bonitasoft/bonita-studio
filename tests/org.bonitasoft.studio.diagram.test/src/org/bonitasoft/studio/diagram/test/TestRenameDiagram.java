@@ -25,7 +25,9 @@ import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditor;
+import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
+import org.eclipse.swtbot.swt.finder.waits.ICondition;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -79,7 +81,21 @@ public class TestRenameDiagram extends SWTBotGefTestCase {
         bot.textWithLabel(org.bonitasoft.studio.common.Messages.name, 0).setText(newName);
 
         bot.button(IDialogConstants.OK_LABEL).click();
-        assertEquals(newName +" (1.0)", bot.activeEditor().getTitle());
+        final String editorTitle = newName + " (1.0)";
+        bot.waitUntil(new ICondition() {
+
+            public boolean test() throws Exception {
+                return editorTitle.equals(bot.activeEditor().getTitle());
+            }
+
+            public void init(final SWTBot bot) {
+            }
+
+            public String getFailureMessage() {
+                return "The editor title (" + bot.activeEditor().getTitle() + ") doesn't match the new name of the diagram " + editorTitle + "\n" +
+                        "Please attach Studio log from .metadata/.logs folder on [BS-9265]";
+            }
+        });
         assertFalse("Editor is dirty", bot.activeEditor().isDirty());
 
         //Disable dialog

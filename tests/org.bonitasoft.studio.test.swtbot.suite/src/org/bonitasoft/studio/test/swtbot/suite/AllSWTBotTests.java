@@ -27,6 +27,7 @@ import org.bonitasoft.studio.connectors.test.swtbot.TestLoadSaveConnectorConfigu
 import org.bonitasoft.studio.connectors.test.swtbot.TestTextAreaInConnectorWizard;
 import org.bonitasoft.studio.diagram.test.DiagramTests;
 import org.bonitasoft.studio.diagram.test.FormsDiagramTests;
+import org.bonitasoft.studio.diagram.test.TestDeleteDiagrams;
 import org.bonitasoft.studio.diagram.test.TestDeleteTaskWithForm;
 import org.bonitasoft.studio.diagram.test.TestOpenDiagram;
 import org.bonitasoft.studio.diagram.test.TestRenameDiagram;
@@ -83,6 +84,7 @@ import org.junit.runners.Suite;
     TestConditionExpression.class,
     TestConfigurationDialog.class,
     OrganizationCreationTest.class,
+        TestDeleteDiagrams.class,
     ActorDefinitionTranslationsTest.class,
     ActorFilterDefinitionTest.class,
     ActorFilterDefinitionWizardPageTest.class,
@@ -91,12 +93,12 @@ import org.junit.runners.Suite;
     SWTBotActorFilterExportTests.class,
     ConnectorEditionTest.class,
     ConnectorDefinitionWizardPageTest.class,
-	  ConnectorImplementationTest.class,
+    ConnectorImplementationTest.class,
     TestTextAreaInConnectorWizard.class,
     SWTBotConnectorExportTests.class,
     SWTBotConnectorDefinitionTest.class,
     TestDecisionTable.class,
-	  TestThrowCatchMessage.class,
+    TestThrowCatchMessage.class,
     TestWebPurchase.class,
     TestAddValidatorToProcessAndRun.class,
     FormsDiagramTests.class,
@@ -125,12 +127,12 @@ public class AllSWTBotTests {
 
     @AfterClass
     public static void tearDown() {
-        for(IConfigurationElement elem : BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements("org.bonitasoft.studio.tests.heapdump")){
+        for(final IConfigurationElement elem : BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements("org.bonitasoft.studio.tests.heapdump")){
             IHeapDumper dumper;
             try {
                 dumper = (IHeapDumper) elem.createExecutableExtension("class");
                 dumper.dumpHeap(AllSWTBotTests.class.getSimpleName()+".hprof", false);
-            } catch (CoreException e) {
+            } catch (final CoreException e) {
                 BonitaStudioLog.error(e);
             }
         }
