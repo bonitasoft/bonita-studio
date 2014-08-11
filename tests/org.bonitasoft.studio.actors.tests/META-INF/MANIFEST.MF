@@ -22,6 +22,7 @@ Require-Bundle: org.bonitasoft.studio.common;bundle-version="1.0.0",
  org.bonitasoft.studio.connectors;bundle-version="1.0.0",
  org.apache.log4j;bundle-version="1.2.15",
  org.junit,
- org.bonitasoft.studio.dependencies
+ org.bonitasoft.studio.dependencies,
+ org.bonitasoft.studio.test.swtbot.util
 
 
