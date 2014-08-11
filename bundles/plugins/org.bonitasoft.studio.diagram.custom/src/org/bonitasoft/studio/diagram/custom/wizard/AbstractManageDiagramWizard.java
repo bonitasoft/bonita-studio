@@ -96,7 +96,6 @@ public abstract class AbstractManageDiagramWizard extends Wizard implements IWiz
      */
     @Override
     public boolean performFinish() {
-        // TODO Auto-generated method stub
         return false;
     }
 
