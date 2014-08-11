@@ -8094,5 +8094,8 @@
     <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.custom.migration.connector.UpdateCMISConnectorVersionCustomMigration"/>
     <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.custom.migration.connector.UpdateAlfrescoMigrationConnectorVersionTo110"/>
   </releases>
+  <releases date="2014-08-06T11:48:39.611+0200" label="Release 6.3.4-001">
+    <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.custom.migration.connector.UpdateAlfrescoMigrationConnectorVersionTo113"/>
+  </releases>
   <releases/>
 </history:History>
