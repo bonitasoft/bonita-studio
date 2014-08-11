@@ -53,7 +53,6 @@ import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.engine.export.EngineExpressionUtil;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorParameter;
-import org.bonitasoft.studio.model.expression.AbstractExpression;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ListExpression;
 import org.bonitasoft.studio.model.expression.Operation;
@@ -113,27 +112,27 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
  */
 public class FlowElementSwitch extends AbstractSwitch {
 
-    private FlowElementBuilder builder;
+    private final FlowElementBuilder builder;
 
-    public FlowElementSwitch(FlowElementBuilder processBuilder, Set<EObject> eObjectNotExported) {
+    public FlowElementSwitch(final FlowElementBuilder processBuilder, final Set<EObject> eObjectNotExported) {
         super(eObjectNotExported);
-        this.builder = processBuilder;
+        builder = processBuilder;
     }
 
     @Override
-    public Element caseSubProcessEvent(SubProcessEvent subProcessEvent) {
+    public Element caseSubProcessEvent(final SubProcessEvent subProcessEvent) {
         final SubProcessDefinitionBuilder subProcessBuilder = builder.addSubProcess(subProcessEvent.getName(), true).getSubProcessBuilder();
         final FlowElementSwitch subProcessSwitch = new FlowElementSwitch(subProcessBuilder, eObjectNotExported);
-        List<FlowElement> flowElements = ModelHelper.getAllItemsOfType(subProcessEvent, ProcessPackage.Literals.FLOW_ELEMENT);
-        for (FlowElement flowElement : flowElements) {
+        final List<FlowElement> flowElements = ModelHelper.getAllItemsOfType(subProcessEvent, ProcessPackage.Literals.FLOW_ELEMENT);
+        for (final FlowElement flowElement : flowElements) {
             if (!eObjectNotExported.contains(flowElement)) {
                 subProcessSwitch.doSwitch(flowElement);
             }
         }
-        List<SourceElement> sourceElements = ModelHelper.getAllItemsOfType(subProcessEvent, ProcessPackage.Literals.SOURCE_ELEMENT);
-        SequenceFlowSwitch sequenceFlowSwitch = new SequenceFlowSwitch(subProcessBuilder);
-        for (SourceElement sourceElement : sourceElements) {
-            for (Connection connection : sourceElement.getOutgoing()) {
+        final List<SourceElement> sourceElements = ModelHelper.getAllItemsOfType(subProcessEvent, ProcessPackage.Literals.SOURCE_ELEMENT);
+        final SequenceFlowSwitch sequenceFlowSwitch = new SequenceFlowSwitch(subProcessBuilder);
+        for (final SourceElement sourceElement : sourceElements) {
+            for (final Connection connection : sourceElement.getOutgoing()) {
                 sequenceFlowSwitch.doSwitch(connection);
             }
         }
@@ -142,27 +141,27 @@ public class FlowElementSwitch extends AbstractSwitch {
 
     @Override
     public Activity caseActivity(final Activity activity) {
-        AutomaticTaskDefinitionBuilder taskBuilder =  builder.addAutomaticTask(activity.getName());
+        final AutomaticTaskDefinitionBuilder taskBuilder =  builder.addAutomaticTask(activity.getName());
         handleCommonActivity(activity, taskBuilder);
         return activity;
     }
 
     @Override
-    public Element caseSendTask(SendTask senTask) {
+    public Element caseSendTask(final SendTask senTask) {
         org.bonitasoft.engine.expression.Expression targetProcess = null;
         Message message = null;
         if (!senTask.getEvents().isEmpty()) {
             message = senTask.getEvents().get(0);
-            targetProcess =	EngineExpressionUtil.createExpression((AbstractExpression)  message.getTargetProcessExpression());
+            targetProcess =	EngineExpressionUtil.createExpression(message.getTargetProcessExpression());
         }
         final SendTaskDefinitionBuilder taskBuilder = ((ProcessDefinitionBuilder) builder).addSendTask(senTask.getName(), message.getName(), targetProcess);
         if (message != null) {
-            taskBuilder.setTargetFlowNode(EngineExpressionUtil.createExpression((AbstractExpression)  message.getTargetElementExpression()));
+            taskBuilder.setTargetFlowNode(EngineExpressionUtil.createExpression(message.getTargetElementExpression()));
             if (message.getMessageContent() != null) {
-                for (ListExpression row : message.getMessageContent().getExpressions()) {
-                    List<org.bonitasoft.studio.model.expression.Expression> col = row.getExpressions();
-                    org.bonitasoft.studio.model.expression.Expression idExp = col.get(0);
-                    org.bonitasoft.studio.model.expression.Expression messageContentExp = col.get(1);
+                for (final ListExpression row : message.getMessageContent().getExpressions()) {
+                    final List<org.bonitasoft.studio.model.expression.Expression> col = row.getExpressions();
+                    final org.bonitasoft.studio.model.expression.Expression idExp = col.get(0);
+                    final org.bonitasoft.studio.model.expression.Expression messageContentExp = col.get(1);
                     if (col.size() == 2) {
                         if (idExp.getContent() != null
                                 && !idExp.getContent().isEmpty()
@@ -175,11 +174,11 @@ public class FlowElementSwitch extends AbstractSwitch {
                 }
             }
             if (message.getCorrelation() != null) {
-                for (ListExpression row : message.getCorrelation().getCorrelationAssociation().getExpressions()) {
-                    List<org.bonitasoft.studio.model.expression.Expression> col = row.getExpressions();
+                for (final ListExpression row : message.getCorrelation().getCorrelationAssociation().getExpressions()) {
+                    final List<org.bonitasoft.studio.model.expression.Expression> col = row.getExpressions();
                     if (col.size() == 2) {
-                        org.bonitasoft.studio.model.expression.Expression correlationKeyExp = col.get(0);
-                        org.bonitasoft.studio.model.expression.Expression valueExpression = col.get(1);
+                        final org.bonitasoft.studio.model.expression.Expression correlationKeyExp = col.get(0);
+                        final org.bonitasoft.studio.model.expression.Expression valueExpression = col.get(1);
                         if (correlationKeyExp.getContent() != null
                                 && !correlationKeyExp.getContent().isEmpty()
                                 && valueExpression.getContent() != null
@@ -196,19 +195,19 @@ public class FlowElementSwitch extends AbstractSwitch {
     }
 
     @Override
-    public Element caseReceiveTask(ReceiveTask receiveTask) {
-        String messageName = receiveTask.getEvent();
+    public Element caseReceiveTask(final ReceiveTask receiveTask) {
+        final String messageName = receiveTask.getEvent();
         final ReceiveTaskDefinitionBuilder taskBuilder = builder.addReceiveTask(receiveTask.getName(), messageName);
         if (messageName != null) {
-            for (Operation operation : receiveTask.getMessageContent()) {
+            for (final Operation operation : receiveTask.getMessageContent()) {
                 taskBuilder.addMessageOperation(EngineExpressionUtil.createOperationForMessageContent(operation));
-            }	
+            }
             if (receiveTask.getCorrelation() != null) {
-                for (ListExpression row : receiveTask.getCorrelation().getExpressions()) {
-                    List<org.bonitasoft.studio.model.expression.Expression> col = row.getExpressions();
+                for (final ListExpression row : receiveTask.getCorrelation().getExpressions()) {
+                    final List<org.bonitasoft.studio.model.expression.Expression> col = row.getExpressions();
                     if (col.size() == 2) {
-                        org.bonitasoft.studio.model.expression.Expression correlationKeyExp = col.get(0);
-                        org.bonitasoft.studio.model.expression.Expression valueExpression = col.get(1);
+                        final org.bonitasoft.studio.model.expression.Expression correlationKeyExp = col.get(0);
+                        final org.bonitasoft.studio.model.expression.Expression valueExpression = col.get(1);
                         if (correlationKeyExp.getContent() != null
                                 && !correlationKeyExp.getContent().isEmpty()
                                 && valueExpression.getContent() != null
@@ -225,11 +224,11 @@ public class FlowElementSwitch extends AbstractSwitch {
     }
 
     @Override
-    public FlowElement caseStartMessageEvent(StartMessageEvent object) {
-        StartEventDefinitionBuilder eventBuilder = builder.addStartEvent(object.getName());
-        String message = object.getEvent();
+    public FlowElement caseStartMessageEvent(final StartMessageEvent object) {
+        final StartEventDefinitionBuilder eventBuilder = builder.addStartEvent(object.getName());
+        final String message = object.getEvent();
         if (message != null) {
-            CatchMessageEventTriggerDefinitionBuilder triggerBuilder = eventBuilder.addMessageEventTrigger(message);
+            final CatchMessageEventTriggerDefinitionBuilder triggerBuilder = eventBuilder.addMessageEventTrigger(message);
             addMessageContent(object, triggerBuilder);
             if (ModelHelper.isInEvenementialSubProcessPool(object)) {
                 addMessageCorrelation(object, triggerBuilder);
@@ -240,11 +239,11 @@ public class FlowElementSwitch extends AbstractSwitch {
     }
 
     @Override
-    public FlowElement caseIntermediateCatchMessageEvent(IntermediateCatchMessageEvent object) {
-        IntermediateCatchEventDefinitionBuilder eventBuilder = builder.addIntermediateCatchEvent(object.getName());
-        String message = object.getEvent();
+    public FlowElement caseIntermediateCatchMessageEvent(final IntermediateCatchMessageEvent object) {
+        final IntermediateCatchEventDefinitionBuilder eventBuilder = builder.addIntermediateCatchEvent(object.getName());
+        final String message = object.getEvent();
         if (message != null) {
-            CatchMessageEventTriggerDefinitionBuilder triggerBuilder = eventBuilder.addMessageEventTrigger(message);
+            final CatchMessageEventTriggerDefinitionBuilder triggerBuilder = eventBuilder.addMessageEventTrigger(message);
             addMessageContent(object, triggerBuilder);
             addMessageCorrelation(object, triggerBuilder);
         }
@@ -252,19 +251,19 @@ public class FlowElementSwitch extends AbstractSwitch {
         return object;
     }
 
-    private void addMessageContent(AbstractCatchMessageEvent messageEvent, CatchMessageEventTriggerDefinitionBuilder triggerBuilder) {
-        for (Operation operation : messageEvent.getMessageContent()) {
+    private void addMessageContent(final AbstractCatchMessageEvent messageEvent, final CatchMessageEventTriggerDefinitionBuilder triggerBuilder) {
+        for (final Operation operation : messageEvent.getMessageContent()) {
             triggerBuilder.addOperation(EngineExpressionUtil.createOperationForMessageContent(operation));
-        }	
+        }
     }
 
-    protected void addMessageCorrelation(AbstractCatchMessageEvent messageEvent, CatchMessageEventTriggerDefinitionBuilder triggerBuilder) {
+    protected void addMessageCorrelation(final AbstractCatchMessageEvent messageEvent, final CatchMessageEventTriggerDefinitionBuilder triggerBuilder) {
         if (messageEvent.getCorrelation() != null) {
-            for (ListExpression row : messageEvent.getCorrelation().getExpressions()) {
-                List<org.bonitasoft.studio.model.expression.Expression> col = row.getExpressions();
+            for (final ListExpression row : messageEvent.getCorrelation().getExpressions()) {
+                final List<org.bonitasoft.studio.model.expression.Expression> col = row.getExpressions();
                 if (col.size() == 2) {
-                    org.bonitasoft.studio.model.expression.Expression correlationKeyExp = col.get(0);
-                    org.bonitasoft.studio.model.expression.Expression valueExpression = col.get(1);
+                    final org.bonitasoft.studio.model.expression.Expression correlationKeyExp = col.get(0);
+                    final org.bonitasoft.studio.model.expression.Expression valueExpression = col.get(1);
                     if (correlationKeyExp.getContent() != null
                             && !correlationKeyExp.getContent().isEmpty()
                             && valueExpression.getContent() != null
@@ -278,10 +277,10 @@ public class FlowElementSwitch extends AbstractSwitch {
     }
 
     @Override
-    public FlowElement caseIntermediateThrowMessageEvent(IntermediateThrowMessageEvent object) {
-        IntermediateThrowEventDefinitionBuilder eventBuilder = builder.addIntermediateThrowEvent(object.getName());
-        for (Message message : object.getEvents()) {
-            ThrowMessageEventTriggerBuilder triggerBuilder = eventBuilder.addMessageEventTrigger(message.getName(),
+    public FlowElement caseIntermediateThrowMessageEvent(final IntermediateThrowMessageEvent object) {
+        final IntermediateThrowEventDefinitionBuilder eventBuilder = builder.addIntermediateThrowEvent(object.getName());
+        for (final Message message : object.getEvents()) {
+            final ThrowMessageEventTriggerBuilder triggerBuilder = eventBuilder.addMessageEventTrigger(message.getName(),
                     EngineExpressionUtil.createExpression(message.getTargetProcessExpression()),
                     EngineExpressionUtil.createExpression(message.getTargetElementExpression()));
             if (message.getMessageContent() != null) {
@@ -296,13 +295,13 @@ public class FlowElementSwitch extends AbstractSwitch {
         return object;
     }
 
-    protected void addThrowMessageCorrelation(Message message,
-            ThrowMessageEventTriggerBuilder triggerBuilder) {
-        for (ListExpression row : message.getCorrelation().getCorrelationAssociation().getExpressions()) {
-            List<org.bonitasoft.studio.model.expression.Expression> col = row.getExpressions();
+    protected void addThrowMessageCorrelation(final Message message,
+            final ThrowMessageEventTriggerBuilder triggerBuilder) {
+        for (final ListExpression row : message.getCorrelation().getCorrelationAssociation().getExpressions()) {
+            final List<org.bonitasoft.studio.model.expression.Expression> col = row.getExpressions();
             if (col.size() == 2) {
-                org.bonitasoft.studio.model.expression.Expression correlationKeyExp = col.get(0);
-                org.bonitasoft.studio.model.expression.Expression valueExpression = col.get(1);
+                final org.bonitasoft.studio.model.expression.Expression correlationKeyExp = col.get(0);
+                final org.bonitasoft.studio.model.expression.Expression valueExpression = col.get(1);
                 if (correlationKeyExp.getContent() != null
                         && !correlationKeyExp.getContent().isEmpty()
                         && valueExpression.getContent() != null
@@ -314,12 +313,12 @@ public class FlowElementSwitch extends AbstractSwitch {
         }
     }
 
-    protected void addThrowMessageContent(Message message,
-            ThrowMessageEventTriggerBuilder triggerBuilder) {
-        for (ListExpression row : message.getMessageContent().getExpressions()) {
-            List<org.bonitasoft.studio.model.expression.Expression> col = row.getExpressions();
-            org.bonitasoft.studio.model.expression.Expression idExp = col.get(0);
-            org.bonitasoft.studio.model.expression.Expression messageContentExp = col.get(1);
+    protected void addThrowMessageContent(final Message message,
+            final ThrowMessageEventTriggerBuilder triggerBuilder) {
+        for (final ListExpression row : message.getMessageContent().getExpressions()) {
+            final List<org.bonitasoft.studio.model.expression.Expression> col = row.getExpressions();
+            final org.bonitasoft.studio.model.expression.Expression idExp = col.get(0);
+            final org.bonitasoft.studio.model.expression.Expression messageContentExp = col.get(1);
             if (col.size() == 2) {
                 if (idExp.getContent() != null
                         && !idExp.getContent().isEmpty()
@@ -333,18 +332,18 @@ public class FlowElementSwitch extends AbstractSwitch {
     }
 
     @Override
-    public FlowElement caseEndMessageEvent(EndMessageEvent object) {
-        EndEventDefinitionBuilder eventBuilder = builder.addEndEvent(object.getName());
-        for (Message message : object.getEvents()) {
-            ThrowMessageEventTriggerBuilder triggerBuilder = eventBuilder.addMessageEventTrigger(message.getName(),
+    public FlowElement caseEndMessageEvent(final EndMessageEvent object) {
+        final EndEventDefinitionBuilder eventBuilder = builder.addEndEvent(object.getName());
+        for (final Message message : object.getEvents()) {
+            final ThrowMessageEventTriggerBuilder triggerBuilder = eventBuilder.addMessageEventTrigger(message.getName(),
                     EngineExpressionUtil.createExpression(message.getTargetProcessExpression()),
                     EngineExpressionUtil.createExpression(message.getTargetElementExpression()));
             if (message.getMessageContent() != null) {
-                for (ListExpression row : message.getMessageContent().getExpressions()) {
-                    List<org.bonitasoft.studio.model.expression.Expression> col = row.getExpressions();
+                for (final ListExpression row : message.getMessageContent().getExpressions()) {
+                    final List<org.bonitasoft.studio.model.expression.Expression> col = row.getExpressions();
                     if (col.size() == 2) {
-                        org.bonitasoft.studio.model.expression.Expression idExp = col.get(0);
-                        org.bonitasoft.studio.model.expression.Expression messageContentExp = col.get(1);
+                        final org.bonitasoft.studio.model.expression.Expression idExp = col.get(0);
+                        final org.bonitasoft.studio.model.expression.Expression messageContentExp = col.get(1);
                         if (idExp.getContent() != null
                                 && !idExp.getContent().isEmpty()
                                 && messageContentExp.getContent() != null
@@ -365,9 +364,9 @@ public class FlowElementSwitch extends AbstractSwitch {
     }
 
     @Override
-    public Element caseStartSignalEvent(StartSignalEvent object) {
-        StartEventDefinitionBuilder eventBuilder = builder.addStartEvent(object.getName());
-        String signal = object.getSignalCode();
+    public Element caseStartSignalEvent(final StartSignalEvent object) {
+        final StartEventDefinitionBuilder eventBuilder = builder.addStartEvent(object.getName());
+        final String signal = object.getSignalCode();
         if (signal != null) {
             eventBuilder.addSignalEventTrigger(signal);
         }
@@ -376,9 +375,9 @@ public class FlowElementSwitch extends AbstractSwitch {
     }
 
     @Override
-    public EndSignalEvent caseEndSignalEvent(EndSignalEvent object) {
-        EndEventDefinitionBuilder eventBuilder = builder.addEndEvent(object.getName());
-        String signalCode = object.getSignalCode();
+    public EndSignalEvent caseEndSignalEvent(final EndSignalEvent object) {
+        final EndEventDefinitionBuilder eventBuilder = builder.addEndEvent(object.getName());
+        final String signalCode = object.getSignalCode();
         if (signalCode != null) {
             eventBuilder.addSignalEventTrigger(signalCode);
         }
@@ -387,9 +386,9 @@ public class FlowElementSwitch extends AbstractSwitch {
     }
 
     @Override
-    public IntermediateCatchSignalEvent caseIntermediateCatchSignalEvent(IntermediateCatchSignalEvent object) {
-        IntermediateCatchEventDefinitionBuilder eventBuilder = builder.addIntermediateCatchEvent(object.getName());
-        String signal = object.getSignalCode();
+    public IntermediateCatchSignalEvent caseIntermediateCatchSignalEvent(final IntermediateCatchSignalEvent object) {
+        final IntermediateCatchEventDefinitionBuilder eventBuilder = builder.addIntermediateCatchEvent(object.getName());
+        final String signal = object.getSignalCode();
         if (signal != null) {
             eventBuilder.addSignalEventTrigger(signal);
         }
@@ -398,9 +397,9 @@ public class FlowElementSwitch extends AbstractSwitch {
     }
 
     @Override
-    public IntermediateThrowSignalEvent caseIntermediateThrowSignalEvent(IntermediateThrowSignalEvent object) {
-        IntermediateThrowEventDefinitionBuilder eventBuilder = builder.addIntermediateThrowEvent(object.getName());
-        String signal = object.getSignalCode();
+    public IntermediateThrowSignalEvent caseIntermediateThrowSignalEvent(final IntermediateThrowSignalEvent object) {
+        final IntermediateThrowEventDefinitionBuilder eventBuilder = builder.addIntermediateThrowEvent(object.getName());
+        final String signal = object.getSignalCode();
         if (signal != null) {
             eventBuilder.addSignalEventTrigger(signal);
         }
@@ -409,7 +408,7 @@ public class FlowElementSwitch extends AbstractSwitch {
     }
 
     @Override
-    public CallActivity caseCallActivity(CallActivity object) {
+    public CallActivity caseCallActivity(final CallActivity object) {
         Expression version = object.getCalledActivityVersion();
         if (version == null || version.getContent() == null || version.getContent().trim().isEmpty()) {
             version = null; // latest version will be used by the engine
@@ -417,7 +416,7 @@ public class FlowElementSwitch extends AbstractSwitch {
         final CallActivityBuilder activityBuilder = builder.addCallActivity(object.getName(),
                 EngineExpressionUtil.createExpression(object.getCalledActivityName()),
                 EngineExpressionUtil.createExpression(version));
-        for (InputMapping mapping : object.getInputMappings()) {
+        for (final InputMapping mapping : object.getInputMappings()) {
             final OperationBuilder opBuilder = new OperationBuilder();
             opBuilder.createNewInstance();
             opBuilder.setRightOperand(EngineExpressionUtil.createVariableExpression(mapping.getProcessSource()));
@@ -430,7 +429,7 @@ public class FlowElementSwitch extends AbstractSwitch {
             activityBuilder.addDataInputOperation(opBuilder.done());
         }
 
-        for (OutputMapping mapping : object.getOutputMappings()) {
+        for (final OutputMapping mapping : object.getOutputMappings()) {
             final OperationBuilder opBuilder = new OperationBuilder();
             opBuilder.createNewInstance();
             final Data d = EcoreUtil.copy(mapping.getProcessTarget());
@@ -449,7 +448,7 @@ public class FlowElementSwitch extends AbstractSwitch {
         return object;
     }
 
-    private String getLeftOperandTypeForData(Data data) {
+    private String getLeftOperandTypeForData(final Data data) {
         if (data instanceof BusinessObjectData) {
             return LeftOperand.TYPE_BUSINESS_DATA;
         }
@@ -477,6 +476,12 @@ public class FlowElementSwitch extends AbstractSwitch {
             }
         }
 
+        addUserFilterToTask(task, actor, filter);
+        return task;
+    }
+
+    void addUserFilterToTask(final Task task, final String actor, final ActorFilter filter) {
+
         final UserTaskDefinitionBuilder taskBuilder = builder.addUserTask(task.getName(), actor);
         handleCommonActivity(task, taskBuilder);
         taskBuilder.addPriority(TaskPriority.values()[task.getPriority()].name());
@@ -484,26 +489,32 @@ public class FlowElementSwitch extends AbstractSwitch {
         if (filter != null) {
             final UserFilterDefinitionBuilder filterBuilder = taskBuilder.addUserFilter(filter.getName(), filter.getDefinitionId(),
                     filter.getDefinitionVersion());
-            for (ConnectorParameter parameter : filter.getConfiguration().getParameters()) {
-                filterBuilder.addInput(parameter.getKey(), EngineExpressionUtil.createExpression(parameter.getExpression()));
+            for (final ConnectorParameter parameter : filter.getConfiguration().getParameters()) {
+                addInputIfExpressionValid(filterBuilder, parameter);
             }
         }
-        return task;
+    }
+
+    void addInputIfExpressionValid(final UserFilterDefinitionBuilder filterBuilder, final ConnectorParameter parameter) {
+        final Expression expression = (Expression) parameter.getExpression();
+        if ((expression.getName() != null && !expression.getName().isEmpty()) && !(expression.getContent() == null || expression.getContent().isEmpty())) {
+            filterBuilder.addInput(parameter.getKey(), EngineExpressionUtil.createExpression(parameter.getExpression()));
+        }
     }
 
     @Override
     public StartEvent caseStartEvent(final StartEvent startEvent) {
-        StartEventDefinitionBuilder eventBuilder = builder.addStartEvent(startEvent.getName());
+        final StartEventDefinitionBuilder eventBuilder = builder.addStartEvent(startEvent.getName());
         addDescription(eventBuilder, startEvent.getDocumentation());
         return startEvent;
     }
 
     @Override
     public FlowElement caseStartTimerEvent(final StartTimerEvent startTimer) {
-        StartEventDefinitionBuilder startTimerBuilder = builder.addStartEvent(startTimer.getName());
+        final StartEventDefinitionBuilder startTimerBuilder = builder.addStartEvent(startTimer.getName());
         final org.bonitasoft.engine.expression.Expression startConditionExpression = EngineExpressionUtil.createExpression(startTimer.getCondition());
         if (ModelHelper.isInEvenementialSubProcessPool(startTimer)) {
-            TimerType timerType = getTimerType(startTimer);
+            final TimerType timerType = getTimerType(startTimer);
             if (timerType != null) {
                 startTimerBuilder.addTimerEventTriggerDefinition(timerType, startConditionExpression);
             }
@@ -526,10 +537,10 @@ public class FlowElementSwitch extends AbstractSwitch {
     }
 
     @Override
-    public FlowElement caseIntermediateCatchTimerEvent(IntermediateCatchTimerEvent timer) {
-        IntermediateCatchEventDefinitionBuilder timerBuilder = builder.addIntermediateCatchEvent(timer.getName());
+    public FlowElement caseIntermediateCatchTimerEvent(final IntermediateCatchTimerEvent timer) {
+        final IntermediateCatchEventDefinitionBuilder timerBuilder = builder.addIntermediateCatchEvent(timer.getName());
 
-        TimerType timerType = getTimerType(timer);
+        final TimerType timerType = getTimerType(timer);
         if (timerType != null) {
             timerBuilder.addTimerEventTriggerDefinition(timerType, EngineExpressionUtil.createExpression(timer.getCondition()));
         }
@@ -537,7 +548,7 @@ public class FlowElementSwitch extends AbstractSwitch {
         return timer;
     }
 
-    private TimerType getTimerType(AbstractTimerEvent timer) {
+    private TimerType getTimerType(final AbstractTimerEvent timer) {
         if (TimerUtil.isDuration(timer)) {
             return TimerType.DURATION;
         } else {
@@ -548,7 +559,7 @@ public class FlowElementSwitch extends AbstractSwitch {
                 } else if (Date.class.getName().equals(timerConditionReturnType)) {
                     return TimerType.DATE;
                 }
-            } catch (ClassNotFoundException e) {
+            } catch (final ClassNotFoundException e) {
                 BonitaStudioLog.error(e);
             }
         }
@@ -565,16 +576,16 @@ public class FlowElementSwitch extends AbstractSwitch {
     }
 
     @Override
-    public Element caseStartErrorEvent(StartErrorEvent startErrorEvent) {
-        StartEventDefinitionBuilder eventBuilder = builder.addStartEvent(startErrorEvent.getName());
+    public Element caseStartErrorEvent(final StartErrorEvent startErrorEvent) {
+        final StartEventDefinitionBuilder eventBuilder = builder.addStartEvent(startErrorEvent.getName());
         eventBuilder.addErrorEventTrigger(startErrorEvent.getErrorCode());
         addDescription(eventBuilder, startErrorEvent.getDocumentation());
         return startErrorEvent;
     }
 
     @Override
-    public Element caseEndErrorEvent(EndErrorEvent endErrorEvent) {
-        EndEventDefinitionBuilder eventBuilder = builder.addEndEvent(endErrorEvent.getName());
+    public Element caseEndErrorEvent(final EndErrorEvent endErrorEvent) {
+        final EndEventDefinitionBuilder eventBuilder = builder.addEndEvent(endErrorEvent.getName());
         eventBuilder.addErrorEventTrigger(endErrorEvent.getErrorCode());
         addDescription(eventBuilder, endErrorEvent.getDocumentation());
         return endErrorEvent;
@@ -582,7 +593,7 @@ public class FlowElementSwitch extends AbstractSwitch {
 
     @Override
     public FlowElement caseEndTerminatedEvent(final EndTerminatedEvent endTerminatedEvent) {
-        EndEventDefinitionBuilder eventBuilder = builder.addEndEvent(endTerminatedEvent.getName());
+        final EndEventDefinitionBuilder eventBuilder = builder.addEndEvent(endTerminatedEvent.getName());
         eventBuilder.addTerminateEventTrigger();
         addDescription(eventBuilder, endTerminatedEvent.getDocumentation());
         return endTerminatedEvent;
@@ -616,7 +627,7 @@ public class FlowElementSwitch extends AbstractSwitch {
         return gateway;
     }
 
-    protected void handleCommonActivity(final Activity activity, ActivityDefinitionBuilder taskBuilder) {
+    protected void handleCommonActivity(final Activity activity, final ActivityDefinitionBuilder taskBuilder) {
         addData(taskBuilder, activity);
         addOperation(taskBuilder, activity);
         addLoop(taskBuilder, activity);
@@ -631,9 +642,9 @@ public class FlowElementSwitch extends AbstractSwitch {
         addDescription(taskBuilder, activity.getDocumentation());
     }
 
-    private void addBoundaryEvents(ActivityDefinitionBuilder taskBuilder, Activity activity) {
-        for (BoundaryEvent boundaryEvent : activity.getBoundaryIntermediateEvents()) {
-            BoundaryEventDefinitionBuilder boundaryEventBuilder = taskBuilder.addBoundaryEvent(boundaryEvent.getName(),
+    private void addBoundaryEvents(final ActivityDefinitionBuilder taskBuilder, final Activity activity) {
+        for (final BoundaryEvent boundaryEvent : activity.getBoundaryIntermediateEvents()) {
+            final BoundaryEventDefinitionBuilder boundaryEventBuilder = taskBuilder.addBoundaryEvent(boundaryEvent.getName(),
                     !(boundaryEvent instanceof NonInterruptingBoundaryTimerEvent));
             if (boundaryEvent instanceof IntermediateErrorCatchEvent) {
                 String errorCode = ((IntermediateErrorCatchEvent) boundaryEvent).getErrorCode();
@@ -642,11 +653,11 @@ public class FlowElementSwitch extends AbstractSwitch {
                 }
                 boundaryEventBuilder.addErrorEventTrigger(errorCode);
             } else if (boundaryEvent instanceof BoundaryMessageEvent) {
-                CatchMessageEventTriggerDefinitionBuilder catchMessageEventTriggerDefinitionBuilder = boundaryEventBuilder
+                final CatchMessageEventTriggerDefinitionBuilder catchMessageEventTriggerDefinitionBuilder = boundaryEventBuilder
                         .addMessageEventTrigger(((BoundaryMessageEvent) boundaryEvent).getEvent());
                 addMessageContent((BoundaryMessageEvent) boundaryEvent, catchMessageEventTriggerDefinitionBuilder);
             } else if (boundaryEvent instanceof BoundaryTimerEvent) {
-                TimerType timerType = getTimerType((BoundaryTimerEvent) boundaryEvent);
+                final TimerType timerType = getTimerType((BoundaryTimerEvent) boundaryEvent);
                 if (timerType != null) {
                     boundaryEventBuilder.addTimerEventTriggerDefinition(timerType,
                             EngineExpressionUtil.createExpression(((AbstractTimerEvent) boundaryEvent).getCondition()));
@@ -654,17 +665,17 @@ public class FlowElementSwitch extends AbstractSwitch {
             } else if (boundaryEvent instanceof BoundarySignalEvent) {
                 boundaryEventBuilder.addSignalEventTrigger(((BoundarySignalEvent) boundaryEvent).getSignalCode());
             }
-        }		
+        }
     }
 
-    protected void addMultiInstantiation(ActivityDefinitionBuilder taskBuilder, final Activity activity) {
+    protected void addMultiInstantiation(final ActivityDefinitionBuilder taskBuilder, final Activity activity) {
         if (activity.isIsMultiInstance()) {
             final MultiInstantiation multiInstantiation = activity.getMultiInstantiation();
             final Expression completionCondition = multiInstantiation.getCompletionCondition();
             if (multiInstantiation.isUseCardinality()) {
                 final Expression cardinality = multiInstantiation.getCardinality();
                 if (cardinality != null && cardinality.getContent() != null && !cardinality.getContent().isEmpty()) {
-                    MultiInstanceLoopCharacteristicsBuilder multiInstanceBuilder = taskBuilder.addMultiInstance(multiInstantiation.isSequential(),
+                    final MultiInstanceLoopCharacteristicsBuilder multiInstanceBuilder = taskBuilder.addMultiInstance(multiInstantiation.isSequential(),
                             EngineExpressionUtil.createExpression(cardinality));
                     if (completionCondition != null
                             && completionCondition.getContent() != null
@@ -675,7 +686,7 @@ public class FlowElementSwitch extends AbstractSwitch {
             } else {
                 final Data collectionDataToMultiInstantiate = multiInstantiation.getCollectionDataToMultiInstantiate();
                 if (collectionDataToMultiInstantiate != null) {
-                    MultiInstanceLoopCharacteristicsBuilder multiInstanceBuilder = taskBuilder.addMultiInstance(multiInstantiation.isSequential(),
+                    final MultiInstanceLoopCharacteristicsBuilder multiInstanceBuilder = taskBuilder.addMultiInstance(multiInstantiation.isSequential(),
                             collectionDataToMultiInstantiate.getName());
                     if (completionCondition != null
                             && completionCondition.getContent() != null
@@ -690,7 +701,7 @@ public class FlowElementSwitch extends AbstractSwitch {
                     if (outputData != null) {
                         multiInstanceBuilder.addDataOutputItemRef(outputData.getName());
                     }
-                    Data listDataContainingOutputResults = multiInstantiation.getListDataContainingOutputResults();
+                    final Data listDataContainingOutputResults = multiInstantiation.getListDataContainingOutputResults();
                     if (listDataContainingOutputResults != null) {
                         multiInstanceBuilder.addLoopDataOutputRef(listDataContainingOutputResults.getName());
                     }
@@ -700,61 +711,61 @@ public class FlowElementSwitch extends AbstractSwitch {
         }
     }
 
-    protected void addExpectedDuration(UserTaskDefinitionBuilder taskBuilder, Task task) {
+    protected void addExpectedDuration(final UserTaskDefinitionBuilder taskBuilder, final Task task) {
         final String duration = task.getDuration();
         if (duration != null && !duration.isEmpty()) {
             try {
                 taskBuilder.addExpectedDuration(Long.parseLong(duration));
-            } catch (NumberFormatException e) {
+            } catch (final NumberFormatException e) {
                 BonitaStudioLog.error(e);
             }
         }
     }
 
-    protected void addDisplayDescription(ActivityDefinitionBuilder builder, FlowElement flowElement) {
-        org.bonitasoft.engine.expression.Expression exp = EngineExpressionUtil.createExpression(flowElement.getDynamicDescription());
+    protected void addDisplayDescription(final ActivityDefinitionBuilder builder, final FlowElement flowElement) {
+        final org.bonitasoft.engine.expression.Expression exp = EngineExpressionUtil.createExpression(flowElement.getDynamicDescription());
         if (exp != null) {
             builder.addDisplayDescription(exp);
         }
     }
 
-    protected void addDisplayDescriptionAfterCompletion(ActivityDefinitionBuilder builder, FlowElement flowElement) {
-        org.bonitasoft.engine.expression.Expression exp = EngineExpressionUtil.createExpression(flowElement.getStepSummary());
+    protected void addDisplayDescriptionAfterCompletion(final ActivityDefinitionBuilder builder, final FlowElement flowElement) {
+        final org.bonitasoft.engine.expression.Expression exp = EngineExpressionUtil.createExpression(flowElement.getStepSummary());
         if (exp != null) {
             builder.addDisplayDescriptionAfterCompletion(exp);
         }
     }
 
-    protected void addDisplayTitle(ActivityDefinitionBuilder builder, FlowElement flowElement) {
-        org.bonitasoft.engine.expression.Expression exp = EngineExpressionUtil.createExpression(flowElement.getDynamicLabel());
+    protected void addDisplayTitle(final ActivityDefinitionBuilder builder, final FlowElement flowElement) {
+        final org.bonitasoft.engine.expression.Expression exp = EngineExpressionUtil.createExpression(flowElement.getDynamicLabel());
         if (exp != null) {
             builder.addDisplayName(exp);
         }
     }
-    
-    protected void addDisplayDescription(GatewayDefinitionBuilder builder, FlowElement flowElement) {
-        org.bonitasoft.engine.expression.Expression exp = EngineExpressionUtil.createExpression(flowElement.getDynamicDescription());
+
+    protected void addDisplayDescription(final GatewayDefinitionBuilder builder, final FlowElement flowElement) {
+        final org.bonitasoft.engine.expression.Expression exp = EngineExpressionUtil.createExpression(flowElement.getDynamicDescription());
         if (exp != null) {
             builder.addDisplayDescription(exp);
         }
     }
 
-    protected void addDisplayTitle(GatewayDefinitionBuilder builder, FlowElement flowElement) {
-        org.bonitasoft.engine.expression.Expression exp = EngineExpressionUtil.createExpression(flowElement.getDynamicLabel());
+    protected void addDisplayTitle(final GatewayDefinitionBuilder builder, final FlowElement flowElement) {
+        final org.bonitasoft.engine.expression.Expression exp = EngineExpressionUtil.createExpression(flowElement.getDynamicLabel());
         if (exp != null) {
             builder.addDisplayName(exp);
         }
     }
 
-    protected void addDisplayDescriptionAfterCompletion(GatewayDefinitionBuilder builder, FlowElement flowElement) {
-        org.bonitasoft.engine.expression.Expression exp = EngineExpressionUtil.createExpression(flowElement.getStepSummary());
+    protected void addDisplayDescriptionAfterCompletion(final GatewayDefinitionBuilder builder, final FlowElement flowElement) {
+        final org.bonitasoft.engine.expression.Expression exp = EngineExpressionUtil.createExpression(flowElement.getStepSummary());
         if (exp != null) {
             builder.addDisplayDescriptionAfterCompletion(exp);
         }
     }
 
-    protected void addOperation(ActivityDefinitionBuilder builder,OperationContainer activity) {
-        for(Operation operation : activity.getOperations()){
+    protected void addOperation(final ActivityDefinitionBuilder builder,final OperationContainer activity) {
+        for(final Operation operation : activity.getOperations()){
             if (operation.getLeftOperand() != null
                     && operation.getLeftOperand().getContent() != null
                     && operation.getRightOperand() != null
@@ -773,7 +784,7 @@ public class FlowElementSwitch extends AbstractSwitch {
                         searchIndexList = pool.getSearchIndexes();
                     }
                     int idx = 1;
-                    for (SearchIndex searchIdx : searchIndexList) {
+                    for (final SearchIndex searchIdx : searchIndexList) {
                         // get the related searchIndex to set the operation
                         if(searchIdx.getName().getContent().equals(operation.getLeftOperand().getName())){
                             builder.addOperation(EngineExpressionUtil.createOperation(operation, EngineExpressionUtil.createLeftOperandIndex(idx)));
@@ -788,7 +799,7 @@ public class FlowElementSwitch extends AbstractSwitch {
         }
     }
 
-    protected void addLoop(ActivityDefinitionBuilder builder, Activity activity) {
+    protected void addLoop(final ActivityDefinitionBuilder builder, final Activity activity) {
         if (activity.getIsLoop()) {
             if (activity.getLoopCondition() != null) {
                 builder.addLoop(activity.getTestBefore(), EngineExpressionUtil.createExpression(activity.getLoopCondition()),
