@@ -2675,6 +2675,14 @@
 <plugin id="org.eclipse.ui.forms.nl_pt_BR"/>
 <plugin id="org.eclipse.ui.forms.source" version="3.6.100.v20140422-1825"/>
 <plugin id="org.eclipse.ui.ide" version="3.10.0.v20140521-1937"/>
+<plugin id="org.eclipse.ui.ide.application"/>
+<plugin id="org.eclipse.ui.ide.application.nl_de"/>
+<plugin id="org.eclipse.ui.ide.application.nl_es"/>
+<plugin id="org.eclipse.ui.ide.application.nl_fr"/>
+<plugin id="org.eclipse.ui.ide.application.nl_it"/>
+<plugin id="org.eclipse.ui.ide.application.nl_ja"/>
+<plugin id="org.eclipse.ui.ide.application.nl_pt_BR"/>
+<plugin id="org.eclipse.ui.ide.application.source"/>
 <plugin id="org.eclipse.ui.ide.nl_de"/>
 <plugin id="org.eclipse.ui.ide.nl_es"/>
 <plugin id="org.eclipse.ui.ide.nl_fr"/>
@@ -2714,6 +2722,14 @@
 <plugin id="org.eclipse.ui.navigator.resources.nl_pt_BR"/>
 <plugin id="org.eclipse.ui.navigator.resources.source" version="3.4.700.v20140407-1004"/>
 <plugin id="org.eclipse.ui.navigator.source" version="3.5.400.v20140210-1835"/>
+<plugin id="org.eclipse.ui.net"/>
+<plugin id="org.eclipse.ui.net.nl_de"/>
+<plugin id="org.eclipse.ui.net.nl_es"/>
+<plugin id="org.eclipse.ui.net.nl_fr"/>
+<plugin id="org.eclipse.ui.net.nl_it"/>
+<plugin id="org.eclipse.ui.net.nl_ja"/>
+<plugin id="org.eclipse.ui.net.nl_pt_BR"/>
+<plugin id="org.eclipse.ui.net.source"/>
 <plugin id="org.eclipse.ui.nl_de"/>
 <plugin id="org.eclipse.ui.nl_es"/>
 <plugin id="org.eclipse.ui.nl_fr"/>
