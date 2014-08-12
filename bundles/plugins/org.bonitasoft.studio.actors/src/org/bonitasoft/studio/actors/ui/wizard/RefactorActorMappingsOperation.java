@@ -46,15 +46,22 @@ import org.bonitasoft.studio.model.actormapping.Users;
 import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.emf.compare.diff.metamodel.DiffElement;
-import org.eclipse.emf.compare.diff.metamodel.DiffModel;
-import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
-import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeLeftTarget;
-import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeRightTarget;
-import org.eclipse.emf.compare.diff.metamodel.UpdateAttribute;
-import org.eclipse.emf.compare.diff.service.DiffService;
-import org.eclipse.emf.compare.match.metamodel.MatchModel;
-import org.eclipse.emf.compare.match.service.MatchService;
+import org.eclipse.emf.common.util.TreeIterator;
+import org.eclipse.emf.compare.AttributeChange;
+import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.EMFCompare;
+import org.eclipse.emf.compare.match.DefaultComparisonFactory;
+import org.eclipse.emf.compare.match.DefaultEqualityHelperFactory;
+import org.eclipse.emf.compare.match.DefaultMatchEngine;
+import org.eclipse.emf.compare.match.IComparisonFactory;
+import org.eclipse.emf.compare.match.IMatchEngine;
+import org.eclipse.emf.compare.match.eobject.IEObjectMatcher;
+import org.eclipse.emf.compare.postprocessor.IPostProcessor;
+import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
+import org.eclipse.emf.compare.scope.DefaultComparisonScope;
+import org.eclipse.emf.compare.scope.IComparisonScope;
+import org.eclipse.emf.compare.utils.UseIdentifiers;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -86,37 +93,53 @@ public class RefactorActorMappingsOperation implements IRunnableWithProgress {
 		ProcessConfigurationRepositoryStore confStore = (ProcessConfigurationRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ProcessConfigurationRepositoryStore.class);
 		DiagramRepositoryStore diagramStore = (DiagramRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
 		List<ActorMappingsType> actorMappings = getAllActorMappings(confStore, diagramStore);
-
-		// Matching model elements
-		MatchModel match = MatchService.doMatch(newOrganization,oldOrganization, Collections.<String, Object> emptyMap());
-		// Computing differences
-		DiffModel diff = DiffService.doDiff(match, false);
+		
+		IComparisonScope scope = new DefaultComparisonScope(newOrganization.eResource().getResourceSet(), oldOrganization.eResource().getResourceSet(), null);
+		
+		IEObjectMatcher matcher = DefaultMatchEngine.createDefaultEObjectMatcher(UseIdentifiers.NEVER);
+		IComparisonFactory comparisonFactory = new DefaultComparisonFactory(new DefaultEqualityHelperFactory());
+		IMatchEngine matchEngine = new DefaultMatchEngine(matcher, comparisonFactory);
+	    IMatchEngine.Factory.Registry matchEngineRegistry = EMFCompareRCPPlugin.getDefault().getMatchEngineFactoryRegistry();
+	    IPostProcessor.Descriptor.Registry<String> postProcessorRegistry = EMFCompareRCPPlugin.getDefault().getPostProcessorRegistry();
+		EMFCompare comparator = EMFCompare.builder()
+	                                           .setMatchEngineFactoryRegistry(matchEngineRegistry)
+	                                           .setPostProcessorRegistry(postProcessorRegistry)
+	                                           .build();
+		
+		Comparison comparison = comparator.compare(scope);
+		
 		// Merges all differences from model1 to model2
-		List<DiffElement> differences = new ArrayList<DiffElement>(diff.getOwnedElements());
-		for(DiffElement difference : differences){
-			List<UpdateAttribute> updatedAttributes = ModelHelper.getAllItemsOfType(difference, DiffPackage.Literals.UPDATE_ATTRIBUTE);
-			for(UpdateAttribute updatedAttribute : updatedAttributes){
-				EObject oldElement = updatedAttribute.getRightElement();
-				EObject newElement = updatedAttribute.getLeftElement();
-				if(updatedAttribute.getAttribute().equals(OrganizationPackage.Literals.GROUP__NAME)){
-					refactorGroup((Group)oldElement,(Group)newElement,actorMappings);
-					refactorMembership((Group)oldElement,(Group)newElement,actorMappings);
-				}else if(updatedAttribute.getAttribute().equals(OrganizationPackage.Literals.ROLE__NAME)){
-					refactorRole((Role)oldElement,(Role)newElement,actorMappings);
-					refactorMembership((Role)oldElement,(Role)newElement,actorMappings);
-				}else if(updatedAttribute.getAttribute().equals(OrganizationPackage.Literals.USER__USER_NAME)){
-					refactorUsername((User)oldElement,(User)newElement,actorMappings);
-				}else if(updatedAttribute.getAttribute().equals(OrganizationPackage.Literals.MEMBERSHIP__USER_NAME)){
-					refactorUsername((org.bonitasoft.studio.actors.model.organization.Membership)oldElement,(org.bonitasoft.studio.actors.model.organization.Membership)newElement,actorMappings);
-				}else if(updatedAttribute.getAttribute().equals(OrganizationPackage.Literals.MEMBERSHIP__GROUP_NAME)){
-					refactorGroup((org.bonitasoft.studio.actors.model.organization.Membership)oldElement,(org.bonitasoft.studio.actors.model.organization.Membership)newElement,actorMappings);
-				}else if(updatedAttribute.getAttribute().equals(OrganizationPackage.Literals.GROUP__PARENT_PATH)){
-					refactorGroup((Group)oldElement,(Group)newElement,actorMappings);
-					refactorMembership((Group)oldElement,(Group)newElement,actorMappings);
-				}else if(updatedAttribute.getAttribute().equals(OrganizationPackage.Literals.MEMBERSHIP__GROUP_PARENT_PATH)){
-					refactorGroup((org.bonitasoft.studio.actors.model.organization.Membership)oldElement,(org.bonitasoft.studio.actors.model.organization.Membership)newElement,actorMappings);
+		List<Diff> differences = comparison.getDifferences();
+		for(Diff difference : differences){
+			TreeIterator<EObject> eAllContents = difference.eAllContents();
+			while (eAllContents.hasNext()) {
+				EObject eObject = (EObject) eAllContents.next();
+				if(eObject instanceof AttributeChange){
+					AttributeChange updatedAttribute = (AttributeChange) eObject;
+					EObject oldElement = updatedAttribute.getValue();
+					EObject newElement = updatedAttribute.getSource();
+					if(updatedAttribute.getAttribute().equals(OrganizationPackage.Literals.GROUP__NAME)){
+						refactorGroup((Group)oldElement,(Group)newElement,actorMappings);
+						refactorMembership((Group)oldElement,(Group)newElement,actorMappings);
+					}else if(updatedAttribute.getAttribute().equals(OrganizationPackage.Literals.ROLE__NAME)){
+						refactorRole((Role)oldElement,(Role)newElement,actorMappings);
+						refactorMembership((Role)oldElement,(Role)newElement,actorMappings);
+					}else if(updatedAttribute.getAttribute().equals(OrganizationPackage.Literals.USER__USER_NAME)){
+						refactorUsername((User)oldElement,(User)newElement,actorMappings);
+					}else if(updatedAttribute.getAttribute().equals(OrganizationPackage.Literals.MEMBERSHIP__USER_NAME)){
+						refactorUsername((org.bonitasoft.studio.actors.model.organization.Membership)oldElement,(org.bonitasoft.studio.actors.model.organization.Membership)newElement,actorMappings);
+					}else if(updatedAttribute.getAttribute().equals(OrganizationPackage.Literals.MEMBERSHIP__GROUP_NAME)){
+						refactorGroup((org.bonitasoft.studio.actors.model.organization.Membership)oldElement,(org.bonitasoft.studio.actors.model.organization.Membership)newElement,actorMappings);
+					}else if(updatedAttribute.getAttribute().equals(OrganizationPackage.Literals.GROUP__PARENT_PATH)){
+						refactorGroup((Group)oldElement,(Group)newElement,actorMappings);
+						refactorMembership((Group)oldElement,(Group)newElement,actorMappings);
+					}else if(updatedAttribute.getAttribute().equals(OrganizationPackage.Literals.MEMBERSHIP__GROUP_PARENT_PATH)){
+						refactorGroup((org.bonitasoft.studio.actors.model.organization.Membership)oldElement,(org.bonitasoft.studio.actors.model.organization.Membership)newElement,actorMappings);
+					}
 				}
+				
 			}
+
 			List<ModelElementChangeLeftTarget> newElementChange = ModelHelper.getAllItemsOfType(difference, DiffPackage.Literals.MODEL_ELEMENT_CHANGE_LEFT_TARGET);
 			List<ModelElementChangeRightTarget> oldElementChange = ModelHelper.getAllItemsOfType(difference, DiffPackage.Literals.MODEL_ELEMENT_CHANGE_RIGHT_TARGET);
 			if(!newElementChange.isEmpty() && !oldElementChange.isEmpty()){
