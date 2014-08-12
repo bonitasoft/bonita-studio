@@ -405,6 +405,11 @@
             id="org.bonitasoft.studio.diagram.command.openDiagram"
             name="Open diagram">
       </command>
+      <command
+            defaultHandler="org.bonitasoft.studio.diagram.custom.commands.DeleteDiagramCommandHandler"
+            id="org.bonitasoft.studio.diagram.command.deleteDiagram"
+            name="Delete diagram">
+      </command>
 
    </extension>
    <extension

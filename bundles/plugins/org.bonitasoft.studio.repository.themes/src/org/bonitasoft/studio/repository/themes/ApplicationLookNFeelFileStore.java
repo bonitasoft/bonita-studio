@@ -41,7 +41,7 @@ public class ApplicationLookNFeelFileStore extends LookNFeelFileStore {
 	protected static final String APPLICATION_FOLDER = "application";
 	private static final String PROCESS_TEMPLATE = "process.html";
 	private static final String GLOBAL_PAGE_TEMPLATE = "page.html";
-	private static final String CONFIRMATION_TEMPLATE = "confirmation.html";
+	private static final String CONFIRMATION_TEMPLATE = "confirm.html";
 	private static final String ERROR_TEMPLATE = "error.html";
 	private static final String WELCOME = "welcome.html";
 	private static final String LOGIN_PAGE = "login.jsp";
@@ -142,8 +142,9 @@ public class ApplicationLookNFeelFileStore extends LookNFeelFileStore {
 			return CONFIRMATION_TEMPLATE;
 		case LOGIN_PAGE:
 			return LOGIN_PAGE;
+		default:
+			return null;
 		}
-		return null;
 	}
 
 	/**
@@ -159,8 +160,7 @@ public class ApplicationLookNFeelFileStore extends LookNFeelFileStore {
 		return false;
 	}
 
-	public void setTemplate(TemplateType type, InputStream inputStream)
-			throws CoreException {
+	public void setTemplate(TemplateType type, InputStream inputStream) throws CoreException {
 		File template = getTemplate(type);
 		if (template != null) {
 			if (!template.exists()) {
