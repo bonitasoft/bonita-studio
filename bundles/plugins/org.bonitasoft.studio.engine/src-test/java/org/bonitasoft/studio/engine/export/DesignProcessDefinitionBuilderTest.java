@@ -15,14 +15,25 @@
 package org.bonitasoft.studio.engine.export;
 
 import static org.fest.assertions.Assertions.assertThat;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
+import org.bonitasoft.engine.bpm.process.impl.DocumentDefinitionBuilder;
+import org.bonitasoft.engine.bpm.process.impl.ProcessDefinitionBuilder;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.process.Document;
 import org.bonitasoft.studio.model.process.DocumentType;
+import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.runners.MockitoJUnitRunner;
 
+@RunWith(MockitoJUnitRunner.class)
 public class DesignProcessDefinitionBuilderTest {
 
     @Test
@@ -80,6 +91,58 @@ public class DesignProcessDefinitionBuilderTest {
         assertThat(builder.hasADefaultValue(document))
         .as("Document type External with id but no url set should not have a default value")
         .isFalse();
+    }
+
+    @Mock
+    private ProcessDefinitionBuilder processDefinitionBuilder;
+
+    @Mock
+    private DocumentDefinitionBuilder docDefinitionBuilder;
+
+    @Test
+    public void testMimeTypeAddedIfThereIsADefaultValue() {
+        final DesignProcessDefinitionBuilder builder = new DesignProcessDefinitionBuilder();
+        when(processDefinitionBuilder.addDocumentDefinition(anyString())).thenReturn(docDefinitionBuilder);
+
+        final Pool process = ProcessFactory.eINSTANCE.createPool();
+        final Document document = createBasicDocument();
+        document.setDocumentType(DocumentType.EXTERNAL);
+        final Expression urlExpression = ExpressionFactory.eINSTANCE.createExpression();
+        document.setUrl(urlExpression);
+        urlExpression.setName("testName");
+        urlExpression.setContent("testContent");
+        document.setUrl(urlExpression);
+        final Expression mimeType = ExpressionFactory.eINSTANCE.createExpression();
+        mimeType.setName("mimeTypeTest");
+        mimeType.setName("octet/stream");
+        document.setMimeType(mimeType);
+        process.getDocuments().add(document);
+
+        builder.processDocuments(process, processDefinitionBuilder);
+
+        verify(docDefinitionBuilder).addMimeType(anyString());
+    }
+
+    @Test
+    public void testMimeTypeNotAddedIfThereIsNoDefaultValue() {
+        final DesignProcessDefinitionBuilder builder = new DesignProcessDefinitionBuilder();
+        when(processDefinitionBuilder.addDocumentDefinition(anyString())).thenReturn(docDefinitionBuilder);
+
+        // Create a process with a document with a not valid Initial Content
+        final Pool process = ProcessFactory.eINSTANCE.createPool();
+        final Document document = createBasicDocument();
+        document.setDocumentType(DocumentType.EXTERNAL);
+        final Expression urlExpression = ExpressionFactory.eINSTANCE.createExpression();
+        document.setUrl(urlExpression);
+        final Expression mimeType = ExpressionFactory.eINSTANCE.createExpression();
+        mimeType.setName("mimeTypeTest");
+        mimeType.setName("octet/stream");
+        document.setMimeType(mimeType);
+        process.getDocuments().add(document);
+
+        builder.processDocuments(process, processDefinitionBuilder);
+
+        verify(docDefinitionBuilder, Mockito.never()).addMimeType(anyString());
     }
 
     private Document createBasicDocument() {

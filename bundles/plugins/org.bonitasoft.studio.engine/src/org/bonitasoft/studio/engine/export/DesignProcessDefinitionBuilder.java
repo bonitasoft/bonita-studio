@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2009-2012 BonitaSoft S.A.
+ * Copyright (C) 2009-2014 Bonitasoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -172,7 +172,7 @@ public class DesignProcessDefinitionBuilder {
         }
     }
 
-    protected void processDocuments(final AbstractProcess process, final ProcessDefinitionBuilder processBuilder) {
+    void processDocuments(final AbstractProcess process, final ProcessDefinitionBuilder processBuilder) {
         if (process instanceof Pool) {
             final List<Document> documents = ((Pool) process).getDocuments();
             for (final Document document : documents) {
