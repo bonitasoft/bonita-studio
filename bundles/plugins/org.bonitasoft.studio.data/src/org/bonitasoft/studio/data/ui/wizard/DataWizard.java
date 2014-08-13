@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -50,7 +48,6 @@ import org.eclipse.xtext.ui.XtextProjectHelper;
 
 /**
  * @author Romain Bioteau
- * 
  */
 public class DataWizard extends Wizard implements IBonitaVariableContext {
 
@@ -62,7 +59,7 @@ public class DataWizard extends Wizard implements IBonitaVariableContext {
 
     private Data originalData;
 
-    private Set<EStructuralFeature> featureToCheckForUniqueID;
+    private final Set<EStructuralFeature> featureToCheckForUniqueID;
 
     private EStructuralFeature dataContainmentFeature;
 
@@ -72,15 +69,15 @@ public class DataWizard extends Wizard implements IBonitaVariableContext {
 
     private String fixedReturnType;
 
-    private TransactionalEditingDomain editingDomain;
+    private final TransactionalEditingDomain editingDomain;
 
     private boolean isPageFlowContext = false;
 
     private boolean isOverviewContext = false;
 
-    public DataWizard(TransactionalEditingDomain editingDomain, EObject container, EStructuralFeature dataContainmentFeature,
-            Set<EStructuralFeature> featureToCheckForUniqueID,
-            boolean showAutogenerateForm) {
+    public DataWizard(final TransactionalEditingDomain editingDomain, final EObject container, final EStructuralFeature dataContainmentFeature,
+            final Set<EStructuralFeature> featureToCheckForUniqueID,
+            final boolean showAutogenerateForm) {
         initDataWizard(dataContainmentFeature, showAutogenerateForm);
         this.editingDomain = editingDomain;
         this.container = container;
@@ -92,9 +89,9 @@ public class DataWizard extends Wizard implements IBonitaVariableContext {
         setWindowTitle(Messages.newVariable);
     }
 
-    public DataWizard(TransactionalEditingDomain editingDomain, EObject container, EStructuralFeature dataContainmentFeature,
-            Set<EStructuralFeature> featureToCheckForUniqueID,
-            boolean showAutogenerateForm, String fixedReturnType) {
+    public DataWizard(final TransactionalEditingDomain editingDomain, final EObject container, final EStructuralFeature dataContainmentFeature,
+            final Set<EStructuralFeature> featureToCheckForUniqueID,
+            final boolean showAutogenerateForm, final String fixedReturnType) {
         initDataWizard(dataContainmentFeature, showAutogenerateForm);
         this.editingDomain = editingDomain;
         this.container = container;
@@ -107,8 +104,8 @@ public class DataWizard extends Wizard implements IBonitaVariableContext {
         setWindowTitle(Messages.newVariable);
     }
 
-    public DataWizard(TransactionalEditingDomain editingDomain, Data data, EStructuralFeature dataContainmentFeature,
-            Set<EStructuralFeature> featureToCheckForUniqueID, boolean showAutogenerateForm) {
+    public DataWizard(final TransactionalEditingDomain editingDomain, final Data data, final EStructuralFeature dataContainmentFeature,
+            final Set<EStructuralFeature> featureToCheckForUniqueID, final boolean showAutogenerateForm) {
         initDataWizard(dataContainmentFeature, showAutogenerateForm);
         Assert.isNotNull(data);
         this.editingDomain = editingDomain;
@@ -121,7 +118,7 @@ public class DataWizard extends Wizard implements IBonitaVariableContext {
         setWindowTitle(Messages.editVariable);
     }
 
-    private void initDataWizard(EStructuralFeature dataContainmentFeature, boolean showAutogenerateForm) {
+    private void initDataWizard(final EStructuralFeature dataContainmentFeature, final boolean showAutogenerateForm) {
         setDefaultPageImageDescriptor(Pics.getWizban());
         this.dataContainmentFeature = dataContainmentFeature;// the default add data on this feature
         this.showAutogenerateForm = showAutogenerateForm;
@@ -145,7 +142,7 @@ public class DataWizard extends Wizard implements IBonitaVariableContext {
             }
             return page;
         } else {
-            boolean isOnActivity = container instanceof Activity;
+            final boolean isOnActivity = container instanceof Activity;
             page = new DataWizardPage(dataWorkingCopy, container, true, true, isOnActivity, showAutogenerateForm, featureToCheckForUniqueID, fixedReturnType);
             page.setIsPageFlowContext(isPageFlowContext);
             page.setIsOverviewContext(isOverviewContext);
@@ -163,7 +160,7 @@ public class DataWizard extends Wizard implements IBonitaVariableContext {
      */
     @Override
     public boolean performFinish() {
-        Data workingCopy = getWorkingCopy();
+        final Data workingCopy = getWorkingCopy();
         setDatasourceId(workingCopy, dataContainmentFeature);
         if (editMode) {
             final RefactorDataOperation op = createRefactorOperation(editingDomain, workingCopy);
@@ -172,10 +169,10 @@ public class DataWizard extends Wizard implements IBonitaVariableContext {
             if (op.canExecute()) {
                 try {
                     getContainer().run(true, false, op);
-                } catch (InvocationTargetException e) {
+                } catch (final InvocationTargetException e) {
                     BonitaStudioLog.error(e);
                     return false;
-                } catch (InterruptedException e) {
+                } catch (final InterruptedException e) {
                     BonitaStudioLog.error(e);
                     return false;
                 }
@@ -195,13 +192,13 @@ public class DataWizard extends Wizard implements IBonitaVariableContext {
         try {
             RepositoryManager.getInstance().getCurrentRepository().getProject()
                     .build(IncrementalProjectBuilder.FULL_BUILD, XtextProjectHelper.BUILDER_ID, Collections.<String, String> emptyMap(), null);
-        } catch (CoreException e) {
+        } catch (final CoreException e) {
             BonitaStudioLog.error(e, DataPlugin.PLUGIN_ID);
         }
     }
 
-    protected RefactorDataOperation createRefactorOperation(final TransactionalEditingDomain editingDomain, Data workingCopy) {
-        AbstractProcess process = ModelHelper.getParentProcess(container);
+    protected RefactorDataOperation createRefactorOperation(final TransactionalEditingDomain editingDomain, final Data workingCopy) {
+        final AbstractProcess process = ModelHelper.getParentProcess(container);
         final RefactorDataOperation op = new RefactorDataOperation(RefactoringOperationType.UPDATE);
         op.setEditingDomain(editingDomain);
         op.setContainer(process);
@@ -216,7 +213,7 @@ public class DataWizard extends Wizard implements IBonitaVariableContext {
         return page.getWorkingCopy();
     }
 
-    private void setDatasourceId(Data workingCopy, EStructuralFeature feature) {
+    private void setDatasourceId(final Data workingCopy, final EStructuralFeature feature) {
         if (feature.equals(ProcessPackage.Literals.PAGE_FLOW__TRANSIENT_DATA)
                 || feature.equals(ProcessPackage.Literals.RECAP_FLOW__RECAP_TRANSIENT_DATA)
                 || feature.equals(ProcessPackage.Literals.VIEW_PAGE_FLOW__VIEW_TRANSIENT_DATA)) {
@@ -238,7 +235,7 @@ public class DataWizard extends Wizard implements IBonitaVariableContext {
     }
 
     @Override
-    public void setIsPageFlowContext(boolean isPageFlowContext) {
+    public void setIsPageFlowContext(final boolean isPageFlowContext) {
         this.isPageFlowContext = isPageFlowContext;
 
     }
@@ -257,7 +254,7 @@ public class DataWizard extends Wizard implements IBonitaVariableContext {
      * @see org.bonitasoft.studio.common.IBonitaVariableContext#setIsOverviewContext(boolean)
      */
     @Override
-    public void setIsOverviewContext(boolean isOverviewContext) {
+    public void setIsOverviewContext(final boolean isOverviewContext) {
         this.isOverviewContext = isOverviewContext;
 
     }

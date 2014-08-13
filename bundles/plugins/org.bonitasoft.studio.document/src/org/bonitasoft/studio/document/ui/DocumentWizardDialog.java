@@ -14,16 +14,26 @@
  */
 package org.bonitasoft.studio.document.ui;
 
+import org.bonitasoft.studio.common.jface.dialog.FinishAndAddCustomWizardDialog;
 import org.bonitasoft.studio.document.i18n.Messages;
-import org.eclipse.jface.wizard.IWizard;
-import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
 
-public class DocumentWizardDialog extends WizardDialog {
+public class DocumentWizardDialog extends FinishAndAddCustomWizardDialog {
 
-    public DocumentWizardDialog(final Shell parentShell, final IWizard newWizard) {
-        super(parentShell, newWizard);
+    public DocumentWizardDialog(final Shell parentShell, final DocumentWizard newWizard, final boolean withFinishAndAddButton) {
+        super(parentShell, newWizard, withFinishAndAddButton);
         setTitle(Messages.newDocument);
+    }
+
+    @Override
+    protected void actionOnFinishAndAdd() {
+        final DocumentWizardDialog documentWizardDialog = new DocumentWizardDialog(getParentShell(), new DocumentWizard(getWizard().getContext()), true);
+        documentWizardDialog.open();
+    }
+
+    @Override
+    protected DocumentWizard getWizard() {
+        return (DocumentWizard) super.getWizard();
     }
 
 }

@@ -24,23 +24,25 @@ import org.eclipse.swt.widgets.Display;
 
 public class DocumentProposalListener implements IProposalListener {
 
-    private boolean isPageFlowContext=false;
+    private boolean isPageFlowContext = false;
 
     @Override
     public String handleEvent(final EObject context, final String fixedReturnType) {
         Assert.isNotNull(context);
         final DocumentWizard documentWizard = new DocumentWizard(context);
-        final DocumentWizardDialog documentWizardDialog = new DocumentWizardDialog(Display.getCurrent().getActiveShell().getParent().getShell(),documentWizard);
-        if (documentWizardDialog.open()==Dialog.OK){
-            final Document document=documentWizard.getDocument();
-            if (document!=null){
+        final Dialog documentWizardDialog = new DocumentWizardDialog(Display.getCurrent().getActiveShell().getParent().getShell(),
+                documentWizard, false);
+        if (documentWizardDialog.open() == Dialog.OK) {
+            final Document document = documentWizard.getDocument();
+            if (document != null) {
                 return document.getName();
             }
         }
         return null;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see org.bonitasoft.studio.common.IBonitaVariableContext#isPageFlowContext()
      */
     @Override
@@ -48,23 +50,26 @@ public class DocumentProposalListener implements IProposalListener {
         return isPageFlowContext;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see org.bonitasoft.studio.common.IBonitaVariableContext#setIsPageFlowContext(boolean)
      */
     @Override
     public void setIsPageFlowContext(final boolean isPageFlowContext) {
-        this.isPageFlowContext=isPageFlowContext;
+        this.isPageFlowContext = isPageFlowContext;
 
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see org.bonitasoft.studio.expression.editor.provider.IProposalListener#setEStructuralFeature(org.eclipse.emf.ecore.EStructuralFeature)
      */
     @Override
     public void setEStructuralFeature(final EStructuralFeature feature) {
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see org.bonitasoft.studio.common.IBonitaVariableContext#isOverViewContext()
      */
     @Override
@@ -72,7 +77,8 @@ public class DocumentProposalListener implements IProposalListener {
         return false;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see org.bonitasoft.studio.common.IBonitaVariableContext#setIsOverviewContext(boolean)
      */
     @Override

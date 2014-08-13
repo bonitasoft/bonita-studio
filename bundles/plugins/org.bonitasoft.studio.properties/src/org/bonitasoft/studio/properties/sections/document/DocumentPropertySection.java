@@ -27,6 +27,7 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection;
 import org.bonitasoft.studio.document.refactoring.RefactorDocumentOperation;
 import org.bonitasoft.studio.document.ui.DocumentWizard;
+import org.bonitasoft.studio.document.ui.DocumentWizardDialog;
 import org.bonitasoft.studio.model.process.Document;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.Pool;
@@ -71,7 +72,6 @@ import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 
 /**
  * @author Aurelien Pupier
- *
  */
 public class DocumentPropertySection extends AbstractBonitaDescriptionSection implements ISelectionChangedListener, IDoubleClickListener {
 
@@ -79,7 +79,6 @@ public class DocumentPropertySection extends AbstractBonitaDescriptionSection im
     private EMFDataBindingContext emfDataBindingContext;
     private Button removeButton;
     private Button editButton;
-
 
     public DocumentPropertySection() {
         // keep it for reflective instantiation by Eclipse
@@ -168,17 +167,17 @@ public class DocumentPropertySection extends AbstractBonitaDescriptionSection im
 
     }
 
-
     private void createAddButton(final Composite buttonComposite) {
         final Button addButton = getWidgetFactory().createButton(buttonComposite, Messages.AddSimple, SWT.FLAT);
         addButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(85, SWT.DEFAULT).create());
         addButton.addSelectionListener(new SelectionAdapter() {
+
             @Override
             public void widgetSelected(final SelectionEvent e) {
                 super.widgetSelected(e);
 
                 final DocumentWizard documentWizard = new DocumentWizard(getEObject());
-                final Dialog dialog = new CustomWizardDialog(Display.getDefault().getActiveShell(), documentWizard);
+                final Dialog dialog = new DocumentWizardDialog(Display.getDefault().getActiveShell(), documentWizard, true);
                 if (IDialogConstants.OK_ID == dialog.open()) {
                     final Document newDocument = documentWizard.getDocument();
                     documentListViewer.setSelection(new StructuredSelection(newDocument));
@@ -192,11 +191,12 @@ public class DocumentPropertySection extends AbstractBonitaDescriptionSection im
         removeButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(85, SWT.DEFAULT).create());
         removeButton.setEnabled(false);
         removeButton.addSelectionListener(new SelectionAdapter() {
+
             @Override
             public void widgetSelected(final SelectionEvent e) {
                 super.widgetSelected(e);
-                final int ok=0;
-                if (ok==openOutlineDialog((IStructuredSelection) documentListViewer.getSelection())){
+                final int ok = 0;
+                if (ok == openOutlineDialog((IStructuredSelection) documentListViewer.getSelection())) {
                     final Iterator<Document> selection = ((IStructuredSelection) documentListViewer.getSelection()).iterator();
                     if (selection.hasNext()) {
                         final RefactorDocumentOperation rdo = createDeleteRefactorOperation(selection);
@@ -288,7 +288,7 @@ public class DocumentPropertySection extends AbstractBonitaDescriptionSection im
         documentListViewer.setSelection(new StructuredSelection(documentWizard.getDocument()));
     }
 
-    private int openOutlineDialog(final IStructuredSelection selection){
+    private int openOutlineDialog(final IStructuredSelection selection) {
         final StringBuilder sb = new StringBuilder();
         for (final Object selectionElement : selection.toList()) {
             if (selectionElement instanceof Document) {

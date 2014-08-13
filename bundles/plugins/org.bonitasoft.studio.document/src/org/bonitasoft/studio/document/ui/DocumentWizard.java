@@ -14,7 +14,6 @@
  */
 package org.bonitasoft.studio.document.ui;
 
-
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
 
@@ -43,14 +42,14 @@ import org.eclipse.xtext.ui.XtextProjectHelper;
 
 public class DocumentWizard extends Wizard {
 
-    private final EObject context;
     private final Document document;
     private final Document documentWorkingCopy;
     private final boolean editMode;
+    private final EObject context;
 
-    public DocumentWizard(final EObject context){
+    public DocumentWizard(final EObject context) {
         super();
-        this.context=context;
+        this.context = context;
         setWindowTitle(Messages.newDocument);
         setDefaultPageImageDescriptor(Pics.getWizban());
         documentWorkingCopy = ProcessFactory.eINSTANCE.createDocument();
@@ -119,15 +118,18 @@ public class DocumentWizard extends Wizard {
     private void refreshProject() {
         try {
             RepositoryManager.getInstance().getCurrentRepository().getProject()
-            .build(IncrementalProjectBuilder.FULL_BUILD, XtextProjectHelper.BUILDER_ID, Collections.<String, String> emptyMap(), null);
+                    .build(IncrementalProjectBuilder.FULL_BUILD, XtextProjectHelper.BUILDER_ID, Collections.<String, String> emptyMap(), null);
         } catch (final CoreException e1) {
             BonitaStudioLog.error(e1, DocumentPlugin.PLUGIN_ID);
         }
     }
 
-
-    public Document getDocument(){
+    public Document getDocument() {
         return documentWorkingCopy;
+    }
+
+    public EObject getContext() {
+        return context;
     }
 
 }
