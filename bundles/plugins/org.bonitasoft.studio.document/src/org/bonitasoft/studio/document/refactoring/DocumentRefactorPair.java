@@ -17,7 +17,6 @@ package org.bonitasoft.studio.document.refactoring;
 import org.bonitasoft.studio.model.process.Document;
 import org.bonitasoft.studio.refactoring.core.RefactorPair;
 
-
 public class DocumentRefactorPair extends RefactorPair<Document, Document> {
 
     public DocumentRefactorPair(final Document newValue, final Document oldValue) {
@@ -36,5 +35,10 @@ public class DocumentRefactorPair extends RefactorPair<Document, Document> {
         } else {
             return super.getNewValueName();
         }
+    }
+
+    @Override
+    public boolean canBeContainedInScript() {
+        return false;
     }
 }
