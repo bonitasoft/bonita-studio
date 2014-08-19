@@ -473,6 +473,7 @@ public class TestMultiInstantiation extends SWTBotGefTestCase implements SWTBotC
         bot.button("Remove").click();
         bot.waitUntil(Conditions.shellIsActive(removalConfirmationDialogTitle));
         bot.button(IDialogConstants.OK_LABEL).click();
+        SWTBotTestUtil.waitUntilBonitaBPmShellIsActive(bot);
 
 
         assertNull("Error: Input Collection is still referenced in the MultiInstantiation Model after being removed.", task.getMultiInstantiation().getCollectionDataToMultiInstantiate());
