@@ -66,28 +66,29 @@ public class DocumentWizard extends Wizard {
     public DocumentWizard(final EObject context, final Document document, final boolean editMode) {
         super();
         this.context = context;
-        if (editMode) {
-            setWindowTitle(Messages.editDocument);
-        } else {
-            setWindowTitle(Messages.newDocument);
-        }
+        setWindowTitle(editMode);
         setDefaultPageImageDescriptor(Pics.getWizban());
         this.document = document;
         documentWorkingCopy = EcoreUtil.copy(document);
         this.editMode = editMode;
     }
 
+    private void setWindowTitle(final boolean editMode) {
+        if (editMode) {
+            setWindowTitle(Messages.editDocument);
+        } else {
+            setWindowTitle(Messages.newDocument);
+        }
+    }
+
     @Override
     public void addPages() {
-
         final DocumentWizardPage page = new DocumentWizardPage(context, documentWorkingCopy);
-
         if (editMode) {
             page.setDescription(Messages.editDocumentDescription);
             page.setTitle(Messages.editDocumentTitle);
         }
         addPage(page);
-
     }
 
     @Override
@@ -97,22 +98,34 @@ public class DocumentWizard extends Wizard {
         if (document == null) {
             editingDomain.getCommandStack().execute(new AddCommand(editingDomain, pool.getDocuments(), documentWorkingCopy));
         } else {
-            //TODO: handle edit case
-            final RefactorDocumentOperation refactorDocumentOperation = new RefactorDocumentOperation(RefactoringOperationType.UPDATE);
-            refactorDocumentOperation.setEditingDomain(editingDomain);
-            refactorDocumentOperation.addItemToRefactor(documentWorkingCopy, document);
-            refactorDocumentOperation.setAskConfirmation(true);
-            try {
-                getContainer().run(false, false, refactorDocumentOperation);
-            } catch (final InvocationTargetException e) {
-                BonitaStudioLog.error(e);
-            } catch (final InterruptedException e) {
-                BonitaStudioLog.error(e);
+            final boolean cancelled = performFinishOnEdition(editingDomain);
+            if (cancelled) {
+                return false;
             }
         }
 
         refreshProject();
         return true;
+    }
+
+    private boolean performFinishOnEdition(final TransactionalEditingDomain editingDomain) {
+        final RefactorDocumentOperation refactorDocumentOperation = createRefactorOperation(editingDomain);
+        try {
+            getContainer().run(false, false, refactorDocumentOperation);
+        } catch (final InvocationTargetException e) {
+            BonitaStudioLog.error(e);
+        } catch (final InterruptedException e) {
+            BonitaStudioLog.error(e);
+        }
+        return refactorDocumentOperation.isCancelled();
+    }
+
+    private RefactorDocumentOperation createRefactorOperation(final TransactionalEditingDomain editingDomain) {
+        final RefactorDocumentOperation refactorDocumentOperation = new RefactorDocumentOperation(RefactoringOperationType.UPDATE);
+        refactorDocumentOperation.setEditingDomain(editingDomain);
+        refactorDocumentOperation.addItemToRefactor(documentWorkingCopy, document);
+        refactorDocumentOperation.setAskConfirmation(true);
+        return refactorDocumentOperation;
     }
 
     private void refreshProject() {
