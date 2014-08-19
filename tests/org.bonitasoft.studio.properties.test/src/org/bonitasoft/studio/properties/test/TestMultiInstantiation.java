@@ -280,6 +280,7 @@ public class TestMultiInstantiation extends SWTBotGefTestCase implements SWTBotC
         SWTBotTestUtil.setScriptExpression( bot,"removeUser", expressionScript, "java.util.List");
 
         bot.menu("Diagram").menu("Save").click();
+        SWTBotTestUtil.waitUntilBonitaBPmShellIsActive(bot);
         bot.menu("Diagram").menu("Close").click();
 
 
@@ -365,6 +366,7 @@ public class TestMultiInstantiation extends SWTBotGefTestCase implements SWTBotC
 
 
         bot.menu("Diagram").menu("Save").click();
+        SWTBotTestUtil.waitUntilBonitaBPmShellIsActive(bot);
         bot.menu("Diagram").menu("Close").click();
     }
 
@@ -494,6 +496,7 @@ public class TestMultiInstantiation extends SWTBotGefTestCase implements SWTBotC
 
 
         bot.menu("Diagram").menu("Save").click();
+        SWTBotTestUtil.waitUntilBonitaBPmShellIsActive(bot);
         bot.menu("Diagram").menu("Close").click();
     }
     /**
