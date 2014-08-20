@@ -417,8 +417,6 @@ public class DocumentWizardPage extends WizardPage {
 
         addMultiValidator();
 
-        WizardPageSupport.create(this, emfDataBindingContext);
-
     }
 
     private void addMultiValidator() {
