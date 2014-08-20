@@ -35,7 +35,9 @@ import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.beans.PojoObservables;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.core.databinding.observable.value.IValueChangeListener;
 import org.eclipse.core.databinding.observable.value.SelectObservableValue;
+import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
 import org.eclipse.core.databinding.validation.MultiValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
@@ -480,7 +482,6 @@ public class DocumentWizardPage extends WizardPage {
 
             @Override
             public void setInputExpression(final Expression inputExpression) {
-                System.out.println();
             }
 
             @Override
@@ -543,15 +544,21 @@ public class DocumentWizardPage extends WizardPage {
     private void bindDocumentType() {
         final SelectObservableValue documentTypeObservableValue = new SelectObservableValue(ProcessPackage.DOCUMENT_TYPE);
 
-        final UpdateValueStrategy uvs = new UpdateValueStrategy();
-
-        uvs.setBeforeSetValidator(externalValidator);
-
         btnDocumentTypeNone = SWTObservables.observeSelection(radioButtonNone);
         documentTypeObservableValue.addOption(DocumentType.NONE, btnDocumentTypeNone);
 
         btnDocumentTypeExternal = SWTObservables.observeSelection(radioButtonExternal);
         documentTypeObservableValue.addOption(DocumentType.EXTERNAL, btnDocumentTypeExternal);
+        documentTypeObservableValue.addValueChangeListener(new IValueChangeListener() {
+
+            @Override
+            public void handleValueChange(final ValueChangeEvent arg0) {
+                if (arg0.diff.getNewValue().equals(DocumentType.EXTERNAL)) {
+                    document.setDocumentType(DocumentType.EXTERNAL);
+                }
+                documentUrlViewer.validate();
+            }
+        });
 
         btnDocumentTypeInternal = SWTObservables.observeSelection(radioButtonInternal);
         documentTypeObservableValue.addOption(DocumentType.INTERNAL, btnDocumentTypeInternal);
