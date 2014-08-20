@@ -282,7 +282,7 @@ public class DocumentPropertySection extends AbstractBonitaDescriptionSection im
     private void editDocumentAction() {
         final Document selectedDocument = (Document) ((IStructuredSelection) documentListViewer.getSelection()).getFirstElement();
         final DocumentWizard documentWizard = new DocumentWizard(getEObject(), selectedDocument, true);
-        final Dialog dialog = new CustomWizardDialog(Display.getDefault().getActiveShell(), documentWizard);
+        final Dialog dialog = new CustomWizardDialog(Display.getDefault().getActiveShell(), documentWizard, IDialogConstants.OK_LABEL);
         dialog.open();
         documentListViewer.refresh();
         documentListViewer.setSelection(new StructuredSelection(documentWizard.getDocument()));
