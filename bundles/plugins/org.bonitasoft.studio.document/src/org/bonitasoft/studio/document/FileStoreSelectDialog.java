@@ -45,7 +45,6 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -93,8 +92,8 @@ public abstract class FileStoreSelectDialog extends Dialog {
         mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
         mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         createDescription(mainComposite);
-        createList(mainComposite);
         createButtons(mainComposite);
+        createList(mainComposite);
 
         return dialogArea;
     }
@@ -159,9 +158,8 @@ public abstract class FileStoreSelectDialog extends Dialog {
 
     private void createButtons(final Composite mainComposite) {
         final Composite buttonComposite = new Composite(mainComposite, SWT.NONE);
-        final RowLayout rowLayout = new RowLayout(SWT.VERTICAL);
-        rowLayout.fill = true;
-        buttonComposite.setLayout(rowLayout);
+        buttonComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, false).create());
+        buttonComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 35).create());
         createAddButton(buttonComposite);
         createRemoveButton(buttonComposite);
 
@@ -169,6 +167,7 @@ public abstract class FileStoreSelectDialog extends Dialog {
 
     private void createAddButton(final Composite buttonComposite) {
         final Button addButton = new Button(buttonComposite, SWT.FLAT);
+        addButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         addButton.setText(Messages.importEtc);
         addButton.addSelectionListener(new SelectionAdapter() {
 
@@ -205,6 +204,7 @@ public abstract class FileStoreSelectDialog extends Dialog {
 
     private void createRemoveButton(final Composite buttonComposite) {
         removeButton = new Button(buttonComposite, SWT.FLAT);
+        removeButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         removeButton.setText(Messages.remove);
         removeButton.addSelectionListener(new SelectionAdapter() {
             @Override

@@ -41,6 +41,8 @@ public class Messages extends NLS {
     public static String selectDocumentDialogTitle;
     public static String error_empty;
     public static String error_documentAllreadyexist;
+    public static String error_documentURLEmpty;
+    public static String error_documentDefaultIDEmpty;
     public static String explanationMimeTypeDocument;
 
     public static String initialValueLabel;
@@ -63,6 +65,10 @@ public class Messages extends NLS {
 
     public static String documentInitialContentInternalErrorMessage;
     public static String documentInitialContentExternalErrorMessage;
+
+    public static String createAndNewButton;
+
+
 
     static {
         // initialize resource bundle

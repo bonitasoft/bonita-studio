@@ -338,6 +338,7 @@ public class Messages extends NLS {
     public static String emptyListExpressionName;
     public static String referenceTreeViewerTitle;
     public static String dataListViewerTitle;
+    public static String documentListViewerTitle;
     public static String searchIndexListViewerTitle;
     public static String parameterListTitle;
     public static String widgetListViewerTitle;
