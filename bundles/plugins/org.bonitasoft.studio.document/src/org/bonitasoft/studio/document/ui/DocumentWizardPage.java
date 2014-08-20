@@ -470,6 +470,7 @@ public class DocumentWizardPage extends WizardPage {
 
                 if (!out.equals(ValidationStatus.ok())) {
                     setErrorMessage(externalValidator.validate(document).getMessage());
+                    setPageComplete(false);
                     return out;
                 } else {
                     setErrorMessage(null);
@@ -479,6 +480,7 @@ public class DocumentWizardPage extends WizardPage {
 
             @Override
             public void setInputExpression(final Expression inputExpression) {
+                System.out.println();
             }
 
             @Override
