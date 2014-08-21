@@ -33,6 +33,9 @@ public abstract class FinishAndAddCustomWizardDialog extends CustomWizardDialog 
         this.withFinishAndAddButton = withFinishAndAddButton;
     }
 
+    public FinishAndAddCustomWizardDialog(final Shell parentShell, final IWizard newWizard, final String finishLabel) {
+        super(parentShell, newWizard, finishLabel);
+    }
     @Override
     protected void createButtonsForButtonBar(final Composite parent) {
         super.createButtonsForButtonBar(parent);
