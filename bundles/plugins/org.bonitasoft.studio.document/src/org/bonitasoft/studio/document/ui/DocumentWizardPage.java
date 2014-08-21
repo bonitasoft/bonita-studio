@@ -466,15 +466,24 @@ public class DocumentWizardPage extends WizardPage {
 
             @Override
             public IStatus validate(final Object arg0) {
+
+
                 final IStatus out = externalValidator.validate(document);
 
+                final String actualErrorMessage = getErrorMessage();
                 if (!out.equals(ValidationStatus.ok())) {
-                    setErrorMessage(externalValidator.validate(document).getMessage());
+                    if (actualErrorMessage == null) {
+                        setErrorMessage(out.getMessage());
+                    }
                     setPageComplete(false);
                     return out;
                 } else {
-                    setErrorMessage(null);
-                    setPageComplete(true);
+                    if (actualErrorMessage != null && !actualErrorMessage.equals(Messages.error_documentURLEmpty)) {
+                        setPageComplete(false);
+                    } else {
+                        setErrorMessage(null);
+                        setPageComplete(true);
+                    }
                     return ValidationStatus.ok();
                 }
             }
