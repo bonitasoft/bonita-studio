@@ -474,6 +474,7 @@ public class DocumentWizardPage extends WizardPage {
                     return out;
                 } else {
                     setErrorMessage(null);
+                    setPageComplete(true);
                     return ValidationStatus.ok();
                 }
             }
