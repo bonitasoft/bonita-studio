@@ -76,7 +76,6 @@ public class DocumentWizardPage extends WizardPage {
     private ExpressionViewer documentMimeTypeViewer;
     private Text documentTextId;
     private Button browseButton;
-    //    private Button externalCheckbox;
     private Composite detailsComposite;
     private EMFDataBindingContext emfDataBindingContext;
     private WizardPageSupport pageSupport;
@@ -417,9 +416,12 @@ public class DocumentWizardPage extends WizardPage {
 
         addMultiValidator();
 
+        setErrorMessage(null);
+
     }
 
     private void addMultiValidator() {
+        final String originalName = document.getName();
         final MultiValidator multiValidator = new MultiValidator() {
 
             @Override
@@ -430,9 +432,15 @@ public class DocumentWizardPage extends WizardPage {
                     defaultID = documentInternalIDObserved.getValue().toString();
                 }
                 final String url = ((Expression) (externalInitialContentObserveWidget.getValue())).getContent();
+                final String name = nameObserved.getValue().toString();
 
                 final Boolean externalBtn = (Boolean) btnDocumentTypeExternal.getValue();
                 final Boolean internalBtn = (Boolean) btnDocumentTypeInternal.getValue();
+
+                final DocumentNameValidator nameValidator = new DocumentNameValidator(context, originalName);
+                if (!nameValidator.validate(name).isOK()) {
+                    return nameValidator.validate(name);
+                }
 
                 if (externalBtn && url.isEmpty()) {
                     return ValidationStatus.error(Messages.error_documentURLEmpty);
