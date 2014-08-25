@@ -43,14 +43,13 @@ AbstractModelerPropertySection {
     private TabbedPropertySheetWidgetFactory widgetFactory;
 
 
-
     @Override
     public void refresh(){
         super.refresh();
 
-        String description = getSectionDescription();
+        final String description = getSectionDescription();
         if(tabbedPropertySheetPage != null){
-            ITabDescriptor tab = tabbedPropertySheetPage.getSelectedTab();
+            final ITabDescriptor tab = tabbedPropertySheetPage.getSelectedTab();
             if(tab != null && section != null){
                 section.setText(tab.getLabel() + " "+Messages.descriptionTitle);
             }
@@ -63,7 +62,7 @@ AbstractModelerPropertySection {
 
 
     @Override
-    public void createControls(Composite parent,TabbedPropertySheetPage aTabbedPropertySheetPage){
+    public void createControls(final Composite parent,final TabbedPropertySheetPage aTabbedPropertySheetPage){
         super.createControls(parent, aTabbedPropertySheetPage);
         parent.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).create());
         tabbedPropertySheetPage=aTabbedPropertySheetPage;
@@ -73,17 +72,17 @@ AbstractModelerPropertySection {
         widgetFactory = tabbedPropertySheetPage.getWidgetFactory();
         section =widgetFactory.createSection(composite, Section.DESCRIPTION | Section.TITLE_BAR |Section.TWISTIE | Section.NO_TITLE_FOCUS_BOX);
         section.setLayoutData(GridDataFactory.swtDefaults().align(SWT.FILL, SWT.TOP).grab(true, false).create());
-        Composite client = widgetFactory.createComposite(section, SWT.NONE);
+        final Composite client = widgetFactory.createComposite(section, SWT.NONE);
         client.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0,0).create());
         client.setLayoutData(GridDataFactory.swtDefaults().align(SWT.FILL, SWT.TOP).grab(true, false).create());
-        Label c = new Label(client, SWT.SEPARATOR | SWT.HORIZONTAL);
+        final Label c = new Label(client, SWT.SEPARATOR | SWT.HORIZONTAL);
         c.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).indent(0,0).create());
         c.setVisible(false);
         c.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_BLUE));
         section.setClient(client);
 
-        String description = getSectionDescription();
-        ITabDescriptor tab = tabbedPropertySheetPage.getSelectedTab();
+        final String description = getSectionDescription();
+        final ITabDescriptor tab = tabbedPropertySheetPage.getSelectedTab();
         if(tab != null){
             section.setText(tab.getLabel() + " "+Messages.descriptionTitle);
         }
@@ -103,8 +102,6 @@ AbstractModelerPropertySection {
 
 
     public abstract String getSectionDescription();
-
-
 
 
 }
