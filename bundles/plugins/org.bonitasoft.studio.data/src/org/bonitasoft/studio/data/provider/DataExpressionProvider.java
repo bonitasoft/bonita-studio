@@ -22,6 +22,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.bonitasoft.studio.common.DataTypeLabels;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
@@ -43,9 +44,7 @@ import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.MultiInstantiable;
 import org.bonitasoft.studio.model.process.PageFlow;
 import org.bonitasoft.studio.model.process.ProcessFactory;
-import org.bonitasoft.studio.model.process.StringType;
 import org.bonitasoft.studio.model.process.ViewPageFlow;
-import org.bonitasoft.studio.model.process.util.ProcessSwitch;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.emf.ecore.EObject;
@@ -106,7 +105,7 @@ public class DataExpressionProvider implements IExpressionProvider {
             if (iteratorExpression != null
                     && iteratorExpression.getName() != null
                     && !iteratorExpression.getName().isEmpty()) {
-                final Data d = dataFromIteratorExpression(iteratorExpression);
+                final Data d = dataFromIteratorExpression((MultiInstantiable) parentFlowElement, iteratorExpression);
                 result.add(createExpression(d));
             }
         }
@@ -114,14 +113,14 @@ public class DataExpressionProvider implements IExpressionProvider {
         return result;
     }
 
-    private Data dataFromIteratorExpression(final Expression iteratorExpression) {
+    private Data dataFromIteratorExpression(final MultiInstantiable parentFlowElement, final Expression iteratorExpression) {
         final String returnType = iteratorExpression.getReturnType();
         Data d = null;
         if (returnType != null) {
-            final DataType dt = getDataTypeFrom(returnType, iteratorExpression);
+            final DataType dt = getDataTypeFrom(returnType, iteratorExpression, parentFlowElement);
             if (dt instanceof BusinessObjectType) {
                 d = ProcessFactory.eINSTANCE.createBusinessObjectData();
-                ((BusinessObjectData) d).setClassName(returnType);
+                ((JavaObjectData) d).setClassName(returnType);
             } else if (dt instanceof JavaType) {
                 d = ProcessFactory.eINSTANCE.createJavaObjectData();
                 ((JavaObjectData) d).setClassName(returnType);
@@ -134,54 +133,25 @@ public class DataExpressionProvider implements IExpressionProvider {
         return d;
     }
 
-    private DataType getDataTypeFrom(final String returnType, final Expression iteratorExpression) {
+    private DataType getDataTypeFrom(final String returnType, final Expression iteratorExpression, final MultiInstantiable parentFlowElement) {
         final MainProcess diagram = ModelHelper.getMainProcess(iteratorExpression);
-        for (final DataType dt : diagram.getDatatypes()) {
-            return new ProcessSwitch<DataType>() {
-
-                @Override
-                public DataType caseStringType(final StringType object) {
-                    return object;
-                }
-
-                @Override
-                public DataType caseBooleanType(final org.bonitasoft.studio.model.process.BooleanType object) {
-                    return object;
-                }
-
-                @Override
-                public DataType caseFloatType(final org.bonitasoft.studio.model.process.FloatType object) {
-                    return object;
-                }
-
-                @Override
-                public DataType caseLongType(final org.bonitasoft.studio.model.process.LongType object) {
-                    return object;
-                }
-
-                @Override
-                public DataType caseDoubleType(final org.bonitasoft.studio.model.process.DoubleType object) {
-                    return object;
-                }
-
-                @Override
-                public DataType caseIntegerType(final org.bonitasoft.studio.model.process.IntegerType object) {
-                    return object;
-                }
-
-                @Override
-                public DataType caseBusinessObjectType(final BusinessObjectType object) {
-                    return object;
-                }
-
-                @Override
-                public DataType caseJavaType(final JavaType object) {
-                    return object;
-                }
-
-            }.doSwitch(dt);
+        if (returnType.equals(Boolean.class.getName())) {
+            return ModelHelper.getDataTypeForID(diagram, DataTypeLabels.booleanDataType);
+        } else if (returnType.equals(String.class.getName())) {
+            return ModelHelper.getDataTypeForID(diagram, DataTypeLabels.stringDataType);
+        } else if (returnType.equals(Float.class.getName())) {
+            return ModelHelper.getDataTypeForID(diagram, DataTypeLabels.floatDataType);
+        } else if (returnType.equals(Double.class.getName())) {
+            return ModelHelper.getDataTypeForID(diagram, DataTypeLabels.doubleDataType);
+        } else if (returnType.equals(Long.class.getName())) {
+            return ModelHelper.getDataTypeForID(diagram, DataTypeLabels.longDataType);
+        } else if (returnType.equals(Integer.class.getName())) {
+            return ModelHelper.getDataTypeForID(diagram, DataTypeLabels.integerDataType);
+        } else if (parentFlowElement.getCollectionDataToMultiInstantiate() instanceof BusinessObjectData) {
+            return ModelHelper.getDataTypeForID(diagram, DataTypeLabels.businessObjectType);
+        } else {
+            return ModelHelper.getDataTypeForID(diagram, DataTypeLabels.javaDataType);
         }
-        return null;
     }
 
     protected List<Data> getDataInForm(final Form form, final EObject formContainer) {

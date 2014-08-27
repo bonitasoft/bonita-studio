@@ -16,6 +16,7 @@
  */
 package org.bonitasoft.studio.properties.sections.recurrence;
 
+import org.bonitasoft.studio.common.DataUtil;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.databinding.CustomEMFEditObservables;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
@@ -33,6 +34,7 @@ import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Activity;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.MultiInstanceType;
+import org.bonitasoft.studio.model.process.MultiInstantiable;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
@@ -54,6 +56,7 @@ import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.search.IJavaSearchConstants;
@@ -82,10 +85,8 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
@@ -138,6 +139,7 @@ public class RecurrencePropertySection extends EObjectSelectionProviderSection i
 
     private EMFDataBindingContext context;
 
+    private ISWTObservableValue returnTypeComboTextObservable;
 
     /* (non-Javadoc)
      * @see org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection#getSectionDescription()
@@ -330,7 +332,7 @@ public class RecurrencePropertySection extends EObjectSelectionProviderSection i
         dataContent.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         dataContent.setLayout(GridLayoutFactory.fillDefaults().numColumns(3).create());
 
-        createInputGroup(widgetFactory, dataContent);
+        createInputForDataGroup(widgetFactory, dataContent);
 
         final Composite imageComposite = widgetFactory.createPlainComposite(dataContent, SWT.NONE);
         imageComposite.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(false, true).indent(0, 20).create());
@@ -395,7 +397,7 @@ public class RecurrencePropertySection extends EObjectSelectionProviderSection i
                 observeStoreOutputSelection);
     }
 
-    private void createInputGroup(final TabbedPropertySheetWidgetFactory widgetFactory, final Composite dataContent) {
+    private void createInputForDataGroup(final TabbedPropertySheetWidgetFactory widgetFactory, final Composite dataContent) {
         final Group inputGroup = widgetFactory.createGroup(dataContent, Messages.input);
         inputGroup.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         inputGroup.setLayout(GridLayoutFactory.fillDefaults().numColumns(3).spacing(5, 3).create());
@@ -412,8 +414,35 @@ public class RecurrencePropertySection extends EObjectSelectionProviderSection i
         eObjectToDataList.setConverter(eObjectToListObservable);
 
         context.bindValue(ViewersObservables.observeInput(inputListComboViewer), getEObjectObservable(), null, eObjectToDataList);
-        context.bindValue(ViewersObservables.observeSingleSelection(inputListComboViewer), CustomEMFEditObservables.observeDetailValue(Realm.getDefault(),
-                getEObjectObservable(), ProcessPackage.Literals.MULTI_INSTANTIABLE__COLLECTION_DATA_TO_MULTI_INSTANTIATE));
+        final IObservableValue observeInputCollectionValue = CustomEMFEditObservables.observeDetailValue(Realm.getDefault(),
+                getEObjectObservable(), ProcessPackage.Literals.MULTI_INSTANTIABLE__COLLECTION_DATA_TO_MULTI_INSTANTIATE);
+        context.bindValue(ViewersObservables.observeSingleSelection(inputListComboViewer), observeInputCollectionValue);
+
+        observeInputCollectionValue.addValueChangeListener(new IValueChangeListener() {
+
+            private MultiInstantiable currentInstantiable;
+
+            @Override
+            public void handleValueChange(final ValueChangeEvent event) {
+                final Object data = event.diff.getNewValue();
+                if (data instanceof Data) {
+                    if (((Data) data).isMultiple()) {
+                        final Data copy = EcoreUtil.copy((Data) data);
+                        copy.setMultiple(false);
+                        final String currentReturnType = (String) returnTypeComboTextObservable.getValue();
+                        final String technicalTypeFor = DataUtil.getTechnicalTypeFor(copy);
+                        if (currentInstantiable == null || currentInstantiable.equals(getEObjectObservable().getValue())) {
+                            if (!technicalTypeFor.equals(currentReturnType)) {
+                                returnTypeComboTextObservable.setValue(technicalTypeFor);
+                            }
+                        }
+
+                    }
+                    currentInstantiable = (MultiInstantiable) getEObjectObservable().getValue();
+                }
+
+            }
+        });
 
         final Label label = widgetFactory.createLabel(inputGroup, "");
         label.setImage(Pics.getImage("icon-arrow-down.png"));
@@ -423,6 +452,26 @@ public class RecurrencePropertySection extends EObjectSelectionProviderSection i
         instanceDatalabel.setLayoutData(GridDataFactory.swtDefaults().align(SWT.RIGHT, SWT.CENTER).create());
 
         createReturnTypeCombo(widgetFactory, inputGroup);
+    }
+
+    private void createInputForCardinalityGroup(final TabbedPropertySheetWidgetFactory widgetFactory, final Composite dataContent) {
+        final Group inputGroup = widgetFactory.createGroup(dataContent, Messages.input);
+        inputGroup.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        inputGroup.setLayout(GridLayoutFactory.fillDefaults().numColumns(3).spacing(5, 3).create());
+
+        final Label label = widgetFactory.createLabel(inputGroup, Messages.numberOfInstancesToCreate, SWT.NONE);
+        label.setLayoutData(GridDataFactory.swtDefaults().align(SWT.RIGHT, SWT.CENTER).create());
+        final ExpressionViewer cardinalityExpression = new ExpressionViewer(inputGroup, SWT.BORDER, widgetFactory);
+        cardinalityExpression.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 1).create());
+        cardinalityExpression.addFilter(new AvailableExpressionTypeFilter(new String[] { ExpressionConstants.CONSTANT_TYPE,
+                ExpressionConstants.VARIABLE_TYPE,
+                ExpressionConstants.PARAMETER_TYPE,
+                ExpressionConstants.SCRIPT_TYPE }));
+        cardinalityExpression.setMessage(Messages.multiInstance_useCardinalityDescription, IStatus.INFO);
+
+        context.bindValue(ViewersObservables.observeInput(cardinalityExpression), getEObjectObservable());
+        context.bindValue(ViewersObservables.observeSingleSelection(cardinalityExpression), CustomEMFEditObservables.observeDetailValue(Realm.getDefault(),
+                getEObjectObservable(), ProcessPackage.Literals.MULTI_INSTANTIABLE__CARDINALITY_EXPRESSION));
     }
 
     protected void createReturnTypeCombo(final TabbedPropertySheetWidgetFactory widgetFactory, final Composite parent) {
@@ -531,15 +580,15 @@ public class RecurrencePropertySection extends EObjectSelectionProviderSection i
             }
         });
 
-        final ISWTObservableValue observeSelection = SWTObservables.observeText(returnTypeCombo.getCombo());
-        context.bindValue(observeSelection, iteratorObservable, updateIteratorReturnTypeTarget, updateIteratorReturnTypeModel);
+        returnTypeComboTextObservable = SWTObservables.observeText(returnTypeCombo.getCombo());
+        context.bindValue(returnTypeComboTextObservable, iteratorObservable, updateIteratorReturnTypeTarget, updateIteratorReturnTypeModel);
 
-        browseClassesButton.addListener(SWT.Selection, new Listener() {
+        browseClassesButton.addSelectionListener(new SelectionAdapter() {
 
             @Override
-            public void handleEvent(final Event event) {
+            public void widgetSelected(final SelectionEvent e) {
                 final String typeName = openClassSelectionDialog();
-                observeSelection.setValue(typeName);
+                returnTypeComboTextObservable.setValue(typeName);
             }
         });
     }
@@ -591,20 +640,16 @@ public class RecurrencePropertySection extends EObjectSelectionProviderSection i
     private Composite createCardinalityContent(final Composite dataContainerComposite, final TabbedPropertySheetWidgetFactory widgetFactory) {
         final Composite cardinalityContent = widgetFactory.createPlainComposite(dataContainerComposite, SWT.NONE);
         cardinalityContent.setLayout(GridLayoutFactory.fillDefaults().numColumns(3).create());
-        final Label label = widgetFactory.createLabel(cardinalityContent, Messages.numberOfInstancesToCreate, SWT.NONE);
-        label.setLayoutData(GridDataFactory.swtDefaults().align(SWT.RIGHT, SWT.CENTER).create());
-        final ExpressionViewer cardinalityExpression = new ExpressionViewer(cardinalityContent, SWT.BORDER, widgetFactory);
-        cardinalityExpression.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 1).create());
-        cardinalityExpression.addFilter(new AvailableExpressionTypeFilter(new String[] { ExpressionConstants.CONSTANT_TYPE,
-                ExpressionConstants.VARIABLE_TYPE,
-                ExpressionConstants.PARAMETER_TYPE,
-                ExpressionConstants.SCRIPT_TYPE }));
-        cardinalityExpression.setMessage(Messages.multiInstance_useCardinalityDescription, IStatus.INFO);
+        createInputForCardinalityGroup(widgetFactory, cardinalityContent);
 
-        context.bindValue(ViewersObservables.observeInput(cardinalityExpression), getEObjectObservable());
-        context.bindValue(ViewersObservables.observeSingleSelection(cardinalityExpression), CustomEMFEditObservables.observeDetailValue(Realm.getDefault(),
-                getEObjectObservable(), ProcessPackage.Literals.MULTI_INSTANTIABLE__CARDINALITY_EXPRESSION));
+        final Composite imageComposite = widgetFactory.createPlainComposite(cardinalityContent, SWT.NONE);
+        imageComposite.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(false, true).indent(0, 20).create());
+        imageComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(3).margins(0, 0).spacing(0, 0).create());
+        widgetFactory.createLabel(imageComposite, "").setImage(Pics.getImage("icon-arrow-right.png"));
+        widgetFactory.createLabel(imageComposite, "").setImage(Pics.getImage("task_group.png"));
+        widgetFactory.createLabel(imageComposite, "").setImage(Pics.getImage("icon-arrow-right.png"));
 
+        createOutputGroup(widgetFactory, cardinalityContent);
         createCompletionConditionViewer(widgetFactory, cardinalityContent);
 
         return cardinalityContent;

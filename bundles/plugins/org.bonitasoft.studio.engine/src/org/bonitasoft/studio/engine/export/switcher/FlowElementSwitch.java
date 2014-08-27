@@ -781,6 +781,16 @@ public class FlowElementSwitch extends AbstractSwitch {
                         && !completionCondition.getContent().isEmpty()) {
                     multiInstanceBuilder.addCompletionCondition(EngineExpressionUtil.createExpression(completionCondition));
                 }
+                if (activity.isStoreOutput()) {
+                    final Data outputData = activity.getOutputData();
+                    if (outputData != null) {
+                        multiInstanceBuilder.addDataOutputItemRef(outputData.getName());
+                    }
+                    final Data listDataContainingOutputResults = activity.getListDataContainingOutputResults();
+                    if (listDataContainingOutputResults != null) {
+                        multiInstanceBuilder.addLoopDataOutputRef(listDataContainingOutputResults.getName());
+                    }
+                }
             }
         } else {
             final Data collectionDataToMultiInstantiate = activity.getCollectionDataToMultiInstantiate();
@@ -801,21 +811,21 @@ public class FlowElementSwitch extends AbstractSwitch {
                     multiInstanceBuilder.addCompletionCondition(EngineExpressionUtil.createExpression(completionCondition));
                 }
 
-
                 if (iteratorExpression != null && iteratorExpression.getName() != null && !iteratorExpression.getName().isEmpty()) {
                     multiInstanceBuilder.addDataInputItemRef(iteratorExpression.getName());
                 }
-                final Data outputData = activity.getOutputData();
-                if (outputData != null) {
-                    multiInstanceBuilder.addDataOutputItemRef(outputData.getName());
-                }
-                final Data listDataContainingOutputResults = activity.getListDataContainingOutputResults();
-                if (listDataContainingOutputResults != null) {
-                    multiInstanceBuilder.addLoopDataOutputRef(listDataContainingOutputResults.getName());
+                if (activity.isStoreOutput()) {
+                    final Data outputData = activity.getOutputData();
+                    if (outputData != null) {
+                        multiInstanceBuilder.addDataOutputItemRef(outputData.getName());
+                    }
+                    final Data listDataContainingOutputResults = activity.getListDataContainingOutputResults();
+                    if (listDataContainingOutputResults != null) {
+                        multiInstanceBuilder.addLoopDataOutputRef(listDataContainingOutputResults.getName());
+                    }
                 }
             }
         }
-
     }
 
     protected void addDataForMultiInstanceIterator(final ActivityDefinitionBuilder taskBuilder, final Expression iteratorExpression,
