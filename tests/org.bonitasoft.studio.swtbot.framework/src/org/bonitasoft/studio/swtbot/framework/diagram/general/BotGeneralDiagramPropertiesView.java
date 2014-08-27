@@ -16,7 +16,6 @@ import org.bonitasoft.studio.swtbot.framework.diagram.general.connectors.BotConn
 import org.bonitasoft.studio.swtbot.framework.diagram.general.data.BotDataPropertySection;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.general.BotGeneralPropertySection;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.lane.BotLanePropertySection;
-import org.bonitasoft.studio.swtbot.framework.diagram.general.parameters.BotParametersPropertySection;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.pool.BotPoolPropertySection;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 
@@ -96,20 +95,6 @@ public class BotGeneralDiagramPropertiesView extends BotBase {
         return new BotConnectorsPropertySection(bot);
     }
 
-    public void selectBAMTab() {
-        BotQAUtil.selectTabbedPropertyView(bot, "BAM");
-        //TODO:
-    }
-
-    /**
-     * Select the parameters tab.
-     *
-     * @return
-     */
-    public BotParametersPropertySection selectParametersTab() {
-        BotQAUtil.selectTabbedPropertyView(bot, "Parameters");
-        return new BotParametersPropertySection(bot);
-    }
 
     public void selectDocumentsTab() {
         BotQAUtil.selectTabbedPropertyView(bot, "Documents");
