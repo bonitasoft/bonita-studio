@@ -478,6 +478,12 @@ public class FlowElementSwitch extends AbstractSwitch {
             }
         }
 
+        addUserFilterToTask(task, actor, filter);
+        return task;
+    }
+
+    void addUserFilterToTask(final Task task, final String actor, final ActorFilter filter) {
+
         final UserTaskDefinitionBuilder taskBuilder = builder.addUserTask(task.getName(), actor);
         handleCommonActivity(task, taskBuilder);
         taskBuilder.addPriority(TaskPriority.values()[task.getPriority()].name());
@@ -486,10 +492,16 @@ public class FlowElementSwitch extends AbstractSwitch {
             final UserFilterDefinitionBuilder filterBuilder = taskBuilder.addUserFilter(filter.getName(), filter.getDefinitionId(),
                     filter.getDefinitionVersion());
             for (final ConnectorParameter parameter : filter.getConfiguration().getParameters()) {
-                filterBuilder.addInput(parameter.getKey(), EngineExpressionUtil.createExpression(parameter.getExpression()));
+                addInputIfExpressionValid(filterBuilder, parameter);
             }
         }
-        return task;
+    }
+
+    void addInputIfExpressionValid(final UserFilterDefinitionBuilder filterBuilder, final ConnectorParameter parameter) {
+        final Expression expression = (Expression) parameter.getExpression();
+        if (expression.getName() != null && !expression.getName().isEmpty() && !(expression.getContent() == null || expression.getContent().isEmpty())) {
+            filterBuilder.addInput(parameter.getKey(), EngineExpressionUtil.createExpression(parameter.getExpression()));
+        }
     }
 
     @Override
@@ -763,6 +775,7 @@ public class FlowElementSwitch extends AbstractSwitch {
         }
     }
 
+
     protected void addStandardLoop(final ActivityDefinitionBuilder builder, final MultiInstantiable multiInstantiable) {
         builder.addLoop(multiInstantiable.getTestBefore(), EngineExpressionUtil.createExpression(multiInstantiable.getLoopCondition()),
                 EngineExpressionUtil.createExpression(multiInstantiable.getLoopMaximum()));
@@ -824,6 +837,7 @@ public class FlowElementSwitch extends AbstractSwitch {
                         multiInstanceBuilder.addLoopDataOutputRef(listDataContainingOutputResults.getName());
                     }
                 }
+
             }
         }
     }

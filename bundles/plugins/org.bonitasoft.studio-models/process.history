@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <?xml version="1.0" encoding="UTF-8"?>
 <history:History xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:history="http://www.eclipse.org/emf/edapt/history/0.3">
@@ -8093,6 +8094,9 @@
   <releases date="2014-07-02T11:48:39.611+0200" label="6.3.3-001">
     <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.custom.migration.connector.UpdateCMISConnectorVersionCustomMigration"/>
     <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.custom.migration.connector.UpdateAlfrescoMigrationConnectorVersionTo110"/>
+  </releases>
+  <releases date="2014-08-06T11:48:39.611+0200" label="Release 6.3.4-001">
+    <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.custom.migration.connector.UpdateAlfrescoMigrationConnectorVersionTo113"/>
   </releases>
   <releases date="2014-07-30T11:48:39.611+0200" label="6.4.0-001">
     <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.custom.migration.multiinstance.MultiInstanceCustomMigration">

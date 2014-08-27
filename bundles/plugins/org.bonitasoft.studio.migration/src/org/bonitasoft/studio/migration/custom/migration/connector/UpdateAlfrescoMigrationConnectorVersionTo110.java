@@ -14,44 +14,15 @@
  */
 package org.bonitasoft.studio.migration.custom.migration.connector;
 
-import org.eclipse.emf.edapt.migration.CustomMigration;
-import org.eclipse.emf.edapt.migration.Instance;
-import org.eclipse.emf.edapt.migration.Metamodel;
-import org.eclipse.emf.edapt.migration.MigrationException;
-import org.eclipse.emf.edapt.migration.Model;
-
-
-public class UpdateAlfrescoMigrationConnectorVersionTo110 extends CustomMigration {
+public class UpdateAlfrescoMigrationConnectorVersionTo110 extends UpdateAlfrescoMigrationConnectorVersion {
 
     @Override
-    public void migrateAfter(final Model model, final Metamodel metamodel) throws MigrationException {
-        for (final Instance connectorInstance : model.getAllInstances("process.Connector")) {
-            final String defId = connectorInstance.get("definitionId");
-            if (isProvidedAlfrescoConnectorDef(defId)) {
-                updateVersion(connectorInstance);
-            }
-        }
+    protected String getNewDefinitionVersion() {
+        return "1.1.0";
     }
 
-    private void updateVersion(final Instance connectorInstance) {
-        final String defVersion = connectorInstance.get("definitionVersion");
-        if (defVersion.equals("1.0.0")) {
-            connectorInstance.set("definitionVersion", "1.1.0");
-            final Instance connectorConfigInstance = connectorInstance.get("configuration");
-            if (connectorConfigInstance != null) {
-                connectorConfigInstance.set("version", "1.1.0");
-            }
-        }
-    }
-
-    private boolean isProvidedAlfrescoConnectorDef(final String defId) {
-        return defId.equals("Alfresco34CreateFolderByPath") ||
-                defId.equals("Alfresco34DeleteFileByPath") ||
-                defId.equals("Alfresco34DeleteItemById") ||
-                defId.equals("Alfresco34UploadFileByPath") ||
-                defId.equals("Alfresco42CreateFolderByPath") ||
-                defId.equals("Alfresco42DeleteFileByPath") ||
-                defId.equals("Alfresco42DeleteItemById") ||
-                defId.equals("Alfresco42UploadFileByPath");
+    @Override
+    protected String getOldDefinitionVersion() {
+        return "1.0.0";
     }
 }
