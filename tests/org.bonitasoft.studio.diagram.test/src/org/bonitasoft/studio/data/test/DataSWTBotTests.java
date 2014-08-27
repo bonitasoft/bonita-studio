@@ -118,6 +118,7 @@ public class DataSWTBotTests extends SWTBotGefTestCase {
         assertTrue("wrong rename",firstData.getName().equals("newName"));
         assertTrue("wrong change type",firstData.getDataType() instanceof IntegerType);
 
+        SWTBotTestUtil.waitUntilBonitaBPmShellIsActive(bot);
         bot.menu("Diagram").menu("Close").click();
     }
 
@@ -153,6 +154,7 @@ public class DataSWTBotTests extends SWTBotGefTestCase {
         assertEquals("data not removed",nbData -1, pool.getData().size());
         assertFalse("the wrong data was removed",firstData.equals(pool.getData().get(0)));
 
+        SWTBotTestUtil.waitUntilBonitaBPmShellIsActive(bot);
         bot.menu("Diagram").menu("Close").click();
     }
 
@@ -189,6 +191,7 @@ public class DataSWTBotTests extends SWTBotGefTestCase {
             }
         });
         assertEquals("data not added",nbPoolData -1, pool.getData().size());
+        SWTBotTestUtil.waitUntilBonitaBPmShellIsActive(bot);
         bot.menu("Diagram").menu("Close").click();
     }
 
@@ -275,7 +278,7 @@ public class DataSWTBotTests extends SWTBotGefTestCase {
         SWTBotTestUtil.waitUntilBonitaBPmShellIsActive(bot);
         bot.menu("Diagram").menu("Save").click();
 
-
+        SWTBotTestUtil.waitUntilBonitaBPmShellIsActive(bot);
         bot.menu("Diagram").menu("Close").click();
     }
 
