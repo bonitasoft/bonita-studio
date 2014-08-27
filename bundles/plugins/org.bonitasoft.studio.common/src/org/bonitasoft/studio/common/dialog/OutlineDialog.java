@@ -139,16 +139,25 @@ public class OutlineDialog extends MessageDialog{
 
         final StringBuilder sBuilder = new StringBuilder(Messages.endWarningMessage);
         sBuilder.append(' ');
-        sBuilder.append(((Element) elementToDisplay.get(0)).getName());
+        sBuilder.append(getElementToDisplayName(elementToDisplay.get(0)));
+
         for (int i = 1; i < elementToDisplay.size(); i++) {
-            final Element elem = (Element) elementToDisplay.get(i);
+            final Object elem = elementToDisplay.get(i);
             sBuilder.append(", ");
-            sBuilder.append(elem.getName());
+            sBuilder.append(getElementToDisplayName(elem));
         }
         sBuilder.append(".");
 
         warningMessage.setText(sBuilder.toString());
 
+    }
+
+    private String getElementToDisplayName(final Object elementToDisplay) {
+        if (elementToDisplay instanceof Parameter) {
+            return ((Parameter) elementToDisplay).getName();
+        } else {
+            return ((Element) elementToDisplay).getName();
+        }
     }
 
     private void createMessageInformation(final Composite mainComposite) {

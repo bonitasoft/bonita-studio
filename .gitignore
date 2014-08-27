@@ -5,3 +5,6 @@ screenshots
 .pmd
 *.hprof
 .settings/
+
+*.orig
+*.tmp

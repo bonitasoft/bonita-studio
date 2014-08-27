@@ -14,15 +14,17 @@
  */
 package org.bonitasoft.studio.migration.custom.migration.connector;
 
-public class UpdateAlfrescoMigrationConnectorVersionTo110 extends UpdateAlfrescoMigrationConnectorVersion {
+
+
+public class UpdateAlfrescoMigrationConnectorVersionTo113 extends UpdateAlfrescoMigrationConnectorVersion {
 
     @Override
     protected String getNewDefinitionVersion() {
-        return "1.1.0";
+        return "1.1.3";
     }
 
     @Override
     protected String getOldDefinitionVersion() {
-        return "1.0.0";
+        return "1.1.0";
     }
 }
