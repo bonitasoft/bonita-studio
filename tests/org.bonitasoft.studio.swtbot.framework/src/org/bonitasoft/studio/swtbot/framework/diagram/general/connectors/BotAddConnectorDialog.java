@@ -123,7 +123,7 @@ public class BotAddConnectorDialog extends BotWizardDialog {
         return edit(pIndex);
     }
 
-    private BotExpressionEditorDialog edit(final int pIndex) {
+    protected BotExpressionEditorDialog edit(final int pIndex) {
         bot.toolbarButtonWithId(ExpressionViewer.SWTBOT_ID_EDITBUTTON, pIndex).click();
         return new BotExpressionEditorDialog(bot);
     }

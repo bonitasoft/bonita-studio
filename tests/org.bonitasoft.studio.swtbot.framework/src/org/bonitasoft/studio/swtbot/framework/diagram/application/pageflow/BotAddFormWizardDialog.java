@@ -49,7 +49,6 @@ public class BotAddFormWizardDialog extends BotWizardDialog {
      * Select Process data tab.
      */
     public BotProcessDataMappingPanel selectProcessDataTab() {
-        bot.tabItem(org.bonitasoft.studio.properties.ex.Messages.processData).activate();
         return new BotProcessDataMappingPanel(bot);
     }
 
