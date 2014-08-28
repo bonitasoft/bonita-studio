@@ -1,9 +1,8 @@
 package org.bonitasoft.studio.diagram.test;
 
-import static org.bonitasoft.studio.diagram.custom.Messages.confirmProcessDeleteTitle;
-import static org.bonitasoft.studio.diagram.custom.Messages.openProcessWizardPage_title;
-import static org.bonitasoft.studio.diagram.custom.Messages.removeProcessLabel;
-
+import static org.bonitasoft.studio.diagram.custom.i18n.Messages.confirmProcessDeleteTitle;
+import static org.bonitasoft.studio.diagram.custom.i18n.Messages.openProcessWizardPage_title;
+import static org.bonitasoft.studio.diagram.custom.i18n.Messages.removeProcessLabel;
 import static org.bonitasoft.studio.properties.i18n.Messages.activityType_serviceTask;
 import static org.bonitasoft.studio.properties.i18n.Messages.activityType;
 

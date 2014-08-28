@@ -10,7 +10,7 @@ package org.bonitasoft.studio.swtbot.framework.diagram.general.data;
 
 import org.bonitasoft.studio.data.i18n.Messages;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
-import org.bonitasoft.studio.swtbot.framework.BotWizardDialog;
+import org.bonitasoft.studio.swtbot.framework.AbstractBotWizardPage;
 import org.bonitasoft.studio.swtbot.framework.expression.BotExpressionEditorDialog;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
@@ -21,7 +21,7 @@ import org.eclipse.swtbot.swt.finder.widgets.SWTBotCheckBox;
  *
  * @author Joachim Segala
  */
-public class BotAddDataDialog extends BotWizardDialog {
+public class BotAddDataDialog extends AbstractBotWizardPage {
 
     public BotAddDataDialog(final SWTGefBot bot) {
         super(bot);

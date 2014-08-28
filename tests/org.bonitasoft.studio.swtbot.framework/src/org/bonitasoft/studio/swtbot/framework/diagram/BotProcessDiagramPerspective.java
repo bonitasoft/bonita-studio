@@ -8,6 +8,7 @@
  *******************************************************************************/
 package org.bonitasoft.studio.swtbot.framework.diagram;
 
+import org.bonitasoft.studio.model.process.diagram.form.part.FormDiagramEditor;
 import org.bonitasoft.studio.swtbot.framework.BotBase;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.form.BotFormDiagramPropertiesViewFolder;
 import org.bonitasoft.studio.swtbot.framework.draw.BotGefFormDiagramEditor;
@@ -15,6 +16,7 @@ import org.bonitasoft.studio.swtbot.framework.draw.BotGefProcessDiagramEditor;
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
+import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 
 /**
  * Process diagram perspective.
@@ -22,6 +24,8 @@ import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
  * @author Joachim Segala
  */
 public class BotProcessDiagramPerspective extends BotBase {
+
+    public static String FORM_EX_ID = "org.bonitasoft.studio.diagram.form.custom.ex.part.FormDiagramEditorEx";
 
     public BotProcessDiagramPerspective(final SWTGefBot bot) {
         super(bot);
@@ -40,7 +44,7 @@ public class BotProcessDiagramPerspective extends BotBase {
         return new BotProcessDiagramPropertiesViewFolder(bot);
     }
 
-    public BotGefProcessDiagramEditor drawDiagram() {
+    public BotGefProcessDiagramEditor activeProcessDiagramEditor() {
         return new BotGefProcessDiagramEditor(bot);
     }
 
@@ -55,8 +59,21 @@ public class BotProcessDiagramPerspective extends BotBase {
         return new BotFormDiagramPropertiesViewFolder(bot);
     }
 
-    public BotGefFormDiagramEditor drawForm() {
-        bot.sleep(1000);
+    public BotGefFormDiagramEditor activeFormDiagramEditor() {
+        bot.waitUntil(new DefaultCondition() {
+
+            @Override
+            public boolean test() throws Exception {
+                final String id = BotProcessDiagramPerspective.this.bot.activeEditor().getReference().getId();
+                return FormDiagramEditor.ID.equals(id) || FORM_EX_ID.equals(id);
+            }
+
+            @Override
+            public String getFailureMessage() {
+                return "No active form editor";
+            }
+        });
         return new BotGefFormDiagramEditor(bot);
     }
+
 }

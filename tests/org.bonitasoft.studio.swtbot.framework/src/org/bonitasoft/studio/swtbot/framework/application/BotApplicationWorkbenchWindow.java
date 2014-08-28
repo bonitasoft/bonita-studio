@@ -8,20 +8,21 @@
  *******************************************************************************/
 package org.bonitasoft.studio.swtbot.framework.application;
 
-import org.bonitasoft.studio.swtbot.framework.BotBase;
+import org.bonitasoft.studio.swtbot.framework.application.menu.AbstractBotMenu;
 import org.bonitasoft.studio.swtbot.framework.diagram.BotProcessDiagramPerspective;
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.SWTBot;
+import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.eclipse.swtbot.swt.finder.waits.ICondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotMenu;
 
 /**
  * Application workbench.
- * 
+ *
  * @author Joachim Segala
  */
-public class BotApplicationWorkbenchWindow extends BotBase {
+public class BotApplicationWorkbenchWindow extends AbstractBotMenu {
 
     public BotApplicationWorkbenchWindow(final SWTGefBot bot) {
         super(bot);
@@ -52,5 +53,28 @@ public class BotApplicationWorkbenchWindow extends BotBase {
         System.out.println("Time to create a new diagram: " + String.valueOf(System.currentTimeMillis() - timebeforeCreatenewDiagram));
 
         return new BotProcessDiagramPerspective(bot);
+    }
+
+    public BotOpenDiagramDialog open() {
+        bot.toolbarButton("Open").click();
+        bot.waitUntil(Conditions.shellIsActive("Open an existing diagram"));
+        return new BotOpenDiagramDialog(bot);
+    }
+
+    public BotApplicationWorkbenchWindow save() {
+        bot.toolbarButton("Save").click();
+        bot.waitUntil(new DefaultCondition() {
+
+            @Override
+            public boolean test() throws Exception {
+                return !BotApplicationWorkbenchWindow.this.bot.activeEditor().isDirty();
+            }
+
+            @Override
+            public String getFailureMessage() {
+                return "The save took too much time";
+            }
+        });
+        return this;
     }
 }

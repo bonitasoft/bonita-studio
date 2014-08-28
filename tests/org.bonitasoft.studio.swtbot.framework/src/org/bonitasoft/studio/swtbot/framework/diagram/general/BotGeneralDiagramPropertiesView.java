@@ -101,10 +101,6 @@ public class BotGeneralDiagramPropertiesView extends BotBase {
         //TODO:
     }
 
-    public void selectSearchTab() {
-        BotQAUtil.selectTabbedPropertyView(bot, "Search");
-        //TODO:
-    }
 
     public void selectOperationTab() {
         BotQAUtil.selectTabbedPropertyView(bot, "Operation");

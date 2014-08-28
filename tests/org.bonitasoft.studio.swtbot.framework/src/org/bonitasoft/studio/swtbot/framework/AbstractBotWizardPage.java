@@ -18,9 +18,9 @@ import org.eclipse.swtbot.swt.finder.waits.Conditions;
  *
  * @author Joachim Segala
  */
-public class BotWizardDialog extends BotDialog {
+public abstract class AbstractBotWizardPage extends BotDialog {
 
-    public BotWizardDialog(final SWTGefBot bot) {
+    public AbstractBotWizardPage(final SWTGefBot bot) {
         super(bot);
     }
 
@@ -35,9 +35,15 @@ public class BotWizardDialog extends BotDialog {
     /**
      * Click on next.
      */
-    public BotWizardDialog next() {
+    public AbstractBotWizardPage next() {
         bot.waitUntil(Conditions.widgetIsEnabled(bot.button(IDialogConstants.NEXT_LABEL)), 5000);
         bot.button(IDialogConstants.NEXT_LABEL).click();
+        return this;
+    }
+
+    public AbstractBotWizardPage back() {
+        bot.waitUntil(Conditions.widgetIsEnabled(bot.button(IDialogConstants.BACK_LABEL)), 5000);
+        bot.button(IDialogConstants.BACK_LABEL).click();
         return this;
     }
 
@@ -48,5 +54,14 @@ public class BotWizardDialog extends BotDialog {
             return false;
         }
         return bot.button(IDialogConstants.NEXT_LABEL).isEnabled();
+    }
+
+    public boolean canFlipToPreviousPage() {
+        try {
+            bot.button(IDialogConstants.BACK_LABEL);
+        } catch (final WidgetNotFoundException e) {
+            return false;
+        }
+        return bot.button(IDialogConstants.BACK_LABEL).isEnabled();
     }
 }

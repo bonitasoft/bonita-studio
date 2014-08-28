@@ -9,7 +9,7 @@
 package org.bonitasoft.studio.swtbot.framework.diagram.application.pageflow;
 
 import org.bonitasoft.studio.properties.i18n.Messages;
-import org.bonitasoft.studio.swtbot.framework.BotWizardDialog;
+import org.bonitasoft.studio.swtbot.framework.AbstractBotWizardPage;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
 
@@ -18,7 +18,7 @@ import org.eclipse.swtbot.swt.finder.waits.Conditions;
  *
  * @author Joachim Segala
  */
-public class BotAddFormWizardDialog extends BotWizardDialog {
+public class BotAddFormWizardDialog extends AbstractBotWizardPage {
 
     public BotAddFormWizardDialog(final SWTGefBot bot) {
         super(bot);
