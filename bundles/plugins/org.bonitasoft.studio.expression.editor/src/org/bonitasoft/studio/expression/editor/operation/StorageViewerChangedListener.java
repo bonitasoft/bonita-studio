@@ -33,13 +33,16 @@ class StorageViewerChangedListener implements ISelectionChangedListener {
 
     @Override
     public void selectionChanged(final SelectionChangedEvent event) {
-        final Expression selectedExpression = (Expression) ((IStructuredSelection) event.getSelection()).getFirstElement();
+        final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+        final Expression selectedExpression = (Expression) selection.getFirstElement();
         if (selectedExpression != null) {
             operationViewer.getOperationReturnTypeValidator().setDataExpression(action.getLeftOperand());
             operationViewer.getActionExpression().validate();
             refreshOperatorLink();
+            operationViewer.refreshActionExpressionTooltip(selectedExpression);
         }
     }
+
 
     private void refreshOperatorLink() {
         final Link operatorLink = operationViewer.getOperatorLink();
@@ -47,5 +50,6 @@ class StorageViewerChangedListener implements ISelectionChangedListener {
             operatorLink.getParent().layout(true, true);
         }
     }
+
 
 }

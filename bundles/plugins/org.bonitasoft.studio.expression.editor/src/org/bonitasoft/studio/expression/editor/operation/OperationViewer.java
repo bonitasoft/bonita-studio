@@ -32,7 +32,9 @@ import org.bonitasoft.studio.model.expression.Operator;
 import org.bonitasoft.studio.model.form.FormPackage;
 import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.process.BusinessObjectData;
+import org.bonitasoft.studio.model.process.Document;
 import org.bonitasoft.studio.model.process.Lane;
+import org.bonitasoft.studio.model.process.Task;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.observable.ChangeEvent;
@@ -40,6 +42,7 @@ import org.eclipse.core.databinding.observable.IChangeListener;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.IValueChangeListener;
 import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
@@ -68,7 +71,9 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Link;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 
@@ -206,13 +211,24 @@ public class OperationViewer extends Composite implements IBonitaVariableContext
                     final boolean isLeftOperandABusinessData = isExpressionReferenceABusinessData((Expression) value);
                     getActionExpression().getControl().setVisible(
                             !ExpressionConstants.DELETION_OPERATOR.equals(action.getOperator().getType()) || !isLeftOperandABusinessData);
+                    refreshActionExpressionTooltip((Expression) value);
                 }
             }
+
         });
+
 
         context.bindValue(ViewersObservables.observeSingleSelection(storageViewer), leftOperandObservableValue, targetToModel, null);
         storageViewer.addExpressionValidator(ExpressionConstants.VARIABLE_TYPE, new TransientDataValidator());
         storageViewer.addSelectionChangedListener(new StorageViewerChangedListener(this, action));
+        storageViewer.getEraseControl().addListener(SWT.ALL, new Listener() {
+
+            @Override
+            public void handleEvent(final Event arg0) {
+                getActionExpression().removeMessages(IStatus.INFO);
+
+            }
+        });
     }
 
     private void bindActionExpression(final Operation action) {
@@ -551,4 +567,31 @@ public class OperationViewer extends Composite implements IBonitaVariableContext
             return false;
         }
     }
+
+    public static boolean isExpressionReferenceADocument(final Expression value) {
+        if (value != null) {
+            final EList<EObject> referencedElements = value.getReferencedElements();
+            return !referencedElements.isEmpty()
+                    && referencedElements.get(0) instanceof Document;
+        } else {
+            return false;
+        }
+    }
+
+    public void refreshActionExpressionTooltip(final Expression value) {
+        final boolean isLeftOperandADocument = isExpressionReferenceADocument(value);
+
+        if (isLeftOperandADocument && !value.getName().isEmpty()) {
+
+            if (operation != null && operation.eContainer() instanceof Task) {
+                getActionExpression().setMessage(Messages.messageOperationWithDocumentInTask, IStatus.INFO);
+            } else {
+                getActionExpression().setMessage(Messages.messageOperationWithDocumentInForm, IStatus.INFO);
+            }
+        } else {
+            getActionExpression().removeMessages(IStatus.INFO);
+        }
+        getActionExpression().validate();
+    }
+
 }

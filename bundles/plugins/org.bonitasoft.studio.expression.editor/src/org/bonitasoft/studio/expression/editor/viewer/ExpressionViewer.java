@@ -1088,6 +1088,7 @@ IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContex
     }
 
     public void setMessage(final String message, final int messageKind) {
+
         if (IStatus.OK == messageKind) {
             messages.remove(IStatus.ERROR);
             messages.remove(IStatus.WARNING);
@@ -1100,6 +1101,17 @@ IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContex
                 messages.remove(IStatus.WARNING);
             }
             messages.put(messageKind, message);
+        }
+        refresh();
+    }
+
+    public void removeMessages(final int messageKind) {
+        if (messageKind == IStatus.INFO) {
+            messages.remove(IStatus.INFO);
+        } else if (messageKind == IStatus.ERROR) {
+            messages.remove(IStatus.ERROR);
+        } else if (messageKind == IStatus.WARNING) {
+            messages.remove(IStatus.WARNING);
         }
         refresh();
     }
