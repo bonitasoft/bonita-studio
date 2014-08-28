@@ -8,8 +8,10 @@
  *******************************************************************************/
 package org.bonitasoft.studio.swtbot.framework;
 
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
+import org.eclipse.swtbot.swt.finder.exceptions.WidgetNotFoundException;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
 
 /**
@@ -37,6 +39,22 @@ public class BotDialog extends BotBase {
     public void cancel() {
         bot.waitUntil(Conditions.widgetIsEnabled(bot.button(IDialogConstants.CANCEL_LABEL)));
         bot.button(IDialogConstants.CANCEL_LABEL).click();
+    }
+
+    /**
+     * Return true if the message is found in the dialog.
+     * 
+     * @param pMessage
+     * @return
+     */
+    protected boolean isErrorMessage(final String pMessage) {
+        try {
+            bot.text(" " + pMessage);
+            return true;
+        } catch (final WidgetNotFoundException e) {
+            BonitaStudioLog.warning(pMessage + " error message not found.", this.getClass().getName());
+            return false;
+        }
     }
 
 }
