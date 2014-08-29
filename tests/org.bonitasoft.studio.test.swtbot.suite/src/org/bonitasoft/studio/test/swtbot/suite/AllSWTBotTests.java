@@ -41,7 +41,7 @@ import org.bonitasoft.studio.tests.IHeapDumper;
 import org.bonitasoft.studio.tests.bug.TestBugsSWTBot;
 import org.bonitasoft.studio.tests.data.TestData;
 import org.bonitasoft.studio.tests.debug.TestDebugFeature;
-import org.bonitasoft.studio.tests.pagetemplate.TestPageTemplate;
+import org.bonitasoft.studio.tests.pagetemplate.PageTemplateEditionIT;
 import org.bonitasoft.studio.tests.processzoo.examples.TestWebPurchase;
 import org.bonitasoft.studio.util.test.BonitaTestSuite;
 import org.bonitasoft.studio.validators.test.swtbot.TestAddValidatorToProcessAndRun;
@@ -102,7 +102,7 @@ import org.junit.runners.Suite;
     TestWebPurchase.class,
     TestAddValidatorToProcessAndRun.class,
     FormsDiagramTests.class,
-    TestPageTemplate.class,
+    PageTemplateEditionIT.class,
     TestData.class,
     TestUndoRedoStackLimit.class,
     TestOpenDiagram.class,

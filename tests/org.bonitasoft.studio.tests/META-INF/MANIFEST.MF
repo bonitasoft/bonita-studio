@@ -63,7 +63,8 @@ Require-Bundle: org.junit;bundle-version="4.8.2",
  org.bonitasoft.studio.debug;bundle-version="6.0.0",
  org.bonitasoft.studio.diagram.form.custom,
  org.eclipse.emf.common.ui,
- org.bonitasoft.studio.refactoring;bundle-version="6.3.0"
+ org.bonitasoft.studio.refactoring;bundle-version="6.3.0",
+ org.bonitasoft.studio.swtbot.framework;bundle-version="6.4.0"
 Export-Package: org.bonitasoft.studio.tests,org.bonitasoft.studio.test
  s.api,org.bonitasoft.studio.tests.attachment,org.bonitasoft.studio.te
  sts.bug,org.bonitasoft.studio.tests.conditions,org.bonitasoft.studio.

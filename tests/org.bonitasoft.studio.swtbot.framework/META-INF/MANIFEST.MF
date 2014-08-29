@@ -25,6 +25,7 @@ Import-Package: org.bonitasoft.studio.connector.model.i18n,
  org.bonitasoft.studio.properties.i18n
 Export-Package: org.bonitasoft.studio.swtbot.framework,
  org.bonitasoft.studio.swtbot.framework.application,
+ org.bonitasoft.studio.swtbot.framework.application.editor,
  org.bonitasoft.studio.swtbot.framework.application.menu,
  org.bonitasoft.studio.swtbot.framework.diagram,
  org.bonitasoft.studio.swtbot.framework.diagram.application,
