@@ -30,6 +30,6 @@ public abstract class BotWidget {
         this.bot = bot;
     }
 
-    public abstract AbstractSWTBot<?> getSWTBotTree();
+    public abstract AbstractSWTBot<?> getSWTBotWidget();
 
 }
