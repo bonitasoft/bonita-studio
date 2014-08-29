@@ -8,12 +8,17 @@
  *******************************************************************************/
 package org.bonitasoft.studio.swtbot.framework.composite;
 
+import java.util.List;
+
+import org.bonitasoft.studio.expression.editor.operation.OperationViewer;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.swtbot.framework.BotBase;
 import org.bonitasoft.studio.swtbot.framework.expression.BotExpressionEditorDialog;
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
+import org.eclipse.swtbot.eclipse.gef.finder.matchers.IsInstanceOf;
 import org.eclipse.swtbot.swt.finder.SWTBot;
+import org.hamcrest.Matcher;
 
 /**
  * One operation row.
@@ -24,9 +29,11 @@ public class BotOperationComposite extends BotBase {
 
     private final SWTBot localBot;
 
-    public BotOperationComposite(final SWTGefBot bot, final SWTBot localBot) {
+    public BotOperationComposite(final SWTGefBot bot, final int pIndex) {
         super(bot);
-        this.localBot = localBot;
+        final Matcher<OperationViewer> matcher = new IsInstanceOf<OperationViewer>(OperationViewer.class);
+        final List<OperationViewer> composites = bot.getFinder().findControls(matcher);
+        localBot = new SWTBot(composites.get(pIndex));
     }
 
     public void selectLeftOperand(final String pName, final String pType) {

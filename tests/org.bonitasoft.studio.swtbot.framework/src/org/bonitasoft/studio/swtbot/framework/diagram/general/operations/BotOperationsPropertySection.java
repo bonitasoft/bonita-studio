@@ -8,16 +8,10 @@
  *******************************************************************************/
 package org.bonitasoft.studio.swtbot.framework.diagram.general.operations;
 
-import java.util.List;
-
 import org.bonitasoft.studio.expression.editor.i18n.Messages;
-import org.bonitasoft.studio.expression.editor.operation.OperationViewer;
 import org.bonitasoft.studio.swtbot.framework.BotBase;
 import org.bonitasoft.studio.swtbot.framework.composite.BotOperationComposite;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
-import org.eclipse.swtbot.eclipse.gef.finder.matchers.IsInstanceOf;
-import org.eclipse.swtbot.swt.finder.SWTBot;
-import org.hamcrest.Matcher;
 
 /**
  * Operation property section.
@@ -35,9 +29,6 @@ public class BotOperationsPropertySection extends BotBase {
     }
 
     public BotOperationComposite getOperation(final int pIndex) {
-        final Matcher<OperationViewer> matcher = new IsInstanceOf<OperationViewer>(OperationViewer.class);
-        final List<OperationViewer> composites = bot.getFinder().findControls(matcher);
-        final SWTBot localBot = new SWTBot(composites.get(pIndex));
-        return new BotOperationComposite(bot, localBot);
+        return new BotOperationComposite(bot, pIndex);
     }
 }
