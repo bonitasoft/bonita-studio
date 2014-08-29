@@ -17,6 +17,7 @@ import org.bonitasoft.studio.swtbot.framework.diagram.general.data.BotDataProper
 import org.bonitasoft.studio.swtbot.framework.diagram.general.general.BotGeneralPropertySection;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.lane.BotLanePropertySection;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.pool.BotPoolPropertySection;
+import org.bonitasoft.studio.swtbot.framework.diagram.general.recurrence.BotReccurencePropertySection;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 
 /**
@@ -95,6 +96,10 @@ public class BotGeneralDiagramPropertiesView extends BotBase {
         return new BotConnectorsPropertySection(bot);
     }
 
+    public BotReccurencePropertySection selectRecurrenceTab() {
+        BotQAUtil.selectTabbedPropertyView(bot, "Iteration");
+        return new BotReccurencePropertySection(bot);
+    }
 
     public void selectDocumentsTab() {
         BotQAUtil.selectTabbedPropertyView(bot, "Documents");
