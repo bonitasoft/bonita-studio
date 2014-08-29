@@ -6,7 +6,7 @@
  * BonitaSoft, 32 rue Gustave Eiffel 38000 Grenoble
  * or BonitaSoft US, 51 Federal Street, Suite 305, San Francisco, CA 94107
  *******************************************************************************/
-package org.bonitasoft.studio.swtbot.framework.diagram.general.operations;
+package org.bonitasoft.studio.swtbot.framework.composite;
 
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.swtbot.framework.BotBase;

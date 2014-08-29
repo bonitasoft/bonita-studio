@@ -13,6 +13,7 @@ import java.util.List;
 import org.bonitasoft.studio.expression.editor.i18n.Messages;
 import org.bonitasoft.studio.expression.editor.operation.OperationViewer;
 import org.bonitasoft.studio.swtbot.framework.BotBase;
+import org.bonitasoft.studio.swtbot.framework.composite.BotOperationComposite;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.eclipse.gef.finder.matchers.IsInstanceOf;
 import org.eclipse.swtbot.swt.finder.SWTBot;
