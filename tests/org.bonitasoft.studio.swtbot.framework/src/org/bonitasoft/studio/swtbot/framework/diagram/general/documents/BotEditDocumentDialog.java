@@ -21,6 +21,10 @@ public class BotEditDocumentDialog extends BotAddDocumentDialog {
 
     public BotEditDocumentDialog(final SWTGefBot bot) {
         super(bot);
+    }
+
+    @Override
+    protected void waitShell() {
         bot.waitUntil(Conditions.shellIsActive(Messages.editDocument));
         bot.shell(Messages.editDocument);
     }

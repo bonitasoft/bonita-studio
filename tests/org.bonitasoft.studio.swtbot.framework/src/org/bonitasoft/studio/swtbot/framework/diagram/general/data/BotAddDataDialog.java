@@ -25,6 +25,10 @@ public class BotAddDataDialog extends BotWizardDialog {
 
     public BotAddDataDialog(final SWTGefBot bot) {
         super(bot);
+    }
+
+    @Override
+    protected void waitShell() {
         bot.waitUntil(Conditions.shellIsActive(Messages.newVariable));
         bot.shell(Messages.newVariable);
     }

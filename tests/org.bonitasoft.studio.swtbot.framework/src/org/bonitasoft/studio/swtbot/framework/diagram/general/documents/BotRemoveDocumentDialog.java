@@ -22,6 +22,10 @@ public class BotRemoveDocumentDialog extends BotDialog {
 
     public BotRemoveDocumentDialog(final SWTGefBot bot) {
         super(bot);
+    }
+
+    @Override
+    protected void waitShell() {
         bot.waitUntil(Conditions.shellIsActive(Messages.removalConfirmationDialogTitle));
         bot.shell(Messages.removalConfirmationDialogTitle);
     }

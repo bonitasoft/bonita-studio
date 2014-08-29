@@ -29,6 +29,10 @@ public class BotAddConnectorDialog extends BotWizardDialog {
 
     public BotAddConnectorDialog(final SWTGefBot bot) {
         super(bot);
+    }
+
+    @Override
+    protected void waitShell() {
         bot.waitUntil(Conditions.shellIsActive(Messages.connectors));
         bot.shell(Messages.connectors);
     }

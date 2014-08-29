@@ -22,6 +22,10 @@ public class BotAddFormWizardDialog extends BotWizardDialog {
 
     public BotAddFormWizardDialog(final SWTGefBot bot) {
         super(bot);
+    }
+
+    @Override
+    protected void waitShell() {
         bot.waitUntil(Conditions.shellIsActive(Messages.addFormTitle));
         bot.shell(Messages.addFormTitle);
     }
