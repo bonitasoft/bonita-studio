@@ -132,7 +132,7 @@ public class MultiInstantiationIT extends SWTBotGefTestCase implements SWTBotCon
                 .selectRecurrenceTab();
 
         iterationTabBot.selectSequentialType();
-        MultiInstantiableAssert.assertThat(multiInstantiable).hasType(MultiInstanceType.SEQUENTIAL).isUseCardinality();
+        MultiInstantiableAssert.assertThat(multiInstantiable).hasType(MultiInstanceType.SEQUENTIAL);
         final BotMultiInstanceTypeStackPanel botParallelType = iterationTabBot.selectParallelType();
         MultiInstantiableAssert.assertThat(multiInstantiable).hasType(MultiInstanceType.PARALLEL);
         final BotNumberBasedStackPanel botNumberBasedStackPanel = botParallelType.definedNumberOfInstances();
@@ -201,7 +201,7 @@ public class MultiInstantiationIT extends SWTBotGefTestCase implements SWTBotCon
 
         botProcessDiagramPerspective.activeFormDiagramEditor().selectWidget("Nb Tickets");
         botProcessDiagramPerspective.getFormPropertiesPart().selectGeneralTab().selectGeneralTab().setFieldType("Text field")
-                .setDisplayName("Nbr de Tickets à reserver");
+        .setDisplayName("Nbr de Tickets à reserver");
 
         final BotDataPropertySection dataPropertySection = botProcessDiagramPerspective.getFormPropertiesPart().selectGeneralTab().selectDataTab();
         dataPropertySection.editInitialValue().selectConstantType().setValue("0").ok();
