@@ -122,7 +122,7 @@ public class MultiInstantiationIT extends SWTBotGefTestCase implements SWTBotCon
     }
 
     @Test
-    public void testParallelMultiInstantiation() {
+    public void testMultiInstantiationUI() {
         final BotProcessDiagramPerspective botProcessDiagramPerspective = new BotApplicationWorkbenchWindow(bot).createNewDiagram();
         final MultiInstantiable multiInstantiable = (MultiInstantiable) botProcessDiagramPerspective.activeProcessDiagramEditor().selectElement("Step1")
                 .getSelectedSemanticElement();
@@ -131,7 +131,10 @@ public class MultiInstantiationIT extends SWTBotGefTestCase implements SWTBotCon
                 .selectGeneralTab()
                 .selectRecurrenceTab();
 
+        iterationTabBot.selectSequentialType();
+        MultiInstantiableAssert.assertThat(multiInstantiable).hasType(MultiInstanceType.SEQUENTIAL).isUseCardinality();
         final BotMultiInstanceTypeStackPanel botParallelType = iterationTabBot.selectParallelType();
+        MultiInstantiableAssert.assertThat(multiInstantiable).hasType(MultiInstanceType.PARALLEL);
         final BotNumberBasedStackPanel botNumberBasedStackPanel = botParallelType.definedNumberOfInstances();
         botNumberBasedStackPanel.editNumberOfInstances().selectConstantType().setValue("8").ok();
         botNumberBasedStackPanel.editEarlyCompletionCondition().selectScriptTab().setName("completion").setScriptContent("true").ok();
@@ -198,7 +201,7 @@ public class MultiInstantiationIT extends SWTBotGefTestCase implements SWTBotCon
 
         botProcessDiagramPerspective.activeFormDiagramEditor().selectWidget("Nb Tickets");
         botProcessDiagramPerspective.getFormPropertiesPart().selectGeneralTab().selectGeneralTab().setFieldType("Text field")
-        .setDisplayName("Nbr de Tickets à reserver");
+                .setDisplayName("Nbr de Tickets à reserver");
 
         final BotDataPropertySection dataPropertySection = botProcessDiagramPerspective.getFormPropertiesPart().selectGeneralTab().selectDataTab();
         dataPropertySection.editInitialValue().selectConstantType().setValue("0").ok();
