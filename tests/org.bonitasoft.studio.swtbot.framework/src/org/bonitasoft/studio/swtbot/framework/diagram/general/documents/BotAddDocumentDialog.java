@@ -29,7 +29,7 @@ public class BotAddDocumentDialog extends BotWizardDialog {
     protected void waitShell() {
         bot.waitUntil(Conditions.shellIsActive(Messages.newDocument));
         bot.shell(Messages.newDocument);
-    };
+    }
 
     /**
      * Set name of document.

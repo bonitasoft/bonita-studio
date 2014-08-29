@@ -58,7 +58,7 @@ public class BotDataPropertySection extends BotBase {
     }
 
     public BotDataPropertySection selectOutputVariable(final String variableName, final String returnType) {
-        SWTBotTestUtil.setOutputStorageExpressionByName(bot, variableName, returnType, 1);
+        SWTBotTestUtil.selectExpressionProposal(bot, variableName, returnType, 1);
         return this;
     }
 

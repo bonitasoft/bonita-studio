@@ -17,6 +17,7 @@ import org.bonitasoft.studio.swtbot.framework.diagram.general.data.BotDataProper
 import org.bonitasoft.studio.swtbot.framework.diagram.general.documents.BotDocumentsPropertySection;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.general.BotGeneralPropertySection;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.lane.BotLanePropertySection;
+import org.bonitasoft.studio.swtbot.framework.diagram.general.operations.BotOperationsPropertySection;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.pool.BotPoolPropertySection;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 
@@ -97,6 +98,11 @@ public class BotGeneralDiagramPropertiesView extends BotBase {
     }
 
 
+    /**
+     * Select the documents tab.
+     * 
+     * @return
+     */
     public BotDocumentsPropertySection selectDocumentsTab() {
         BotQAUtil.selectTabbedPropertyView(bot, "Documents");
         return new BotDocumentsPropertySection(bot);
@@ -107,8 +113,13 @@ public class BotGeneralDiagramPropertiesView extends BotBase {
         //TODO:
     }
 
-    public void selectOperationTab() {
-        BotQAUtil.selectTabbedPropertyView(bot, "Operation");
-        //TODO:
+    /**
+     * Select the operations tab.
+     * 
+     * @return
+     */
+    public BotOperationsPropertySection selectOperationTab() {
+        BotQAUtil.selectTabbedPropertyView(bot, "Operations");
+        return new BotOperationsPropertySection(bot);
     }
 }

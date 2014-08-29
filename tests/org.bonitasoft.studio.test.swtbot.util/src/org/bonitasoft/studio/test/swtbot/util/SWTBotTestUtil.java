@@ -974,7 +974,7 @@ public class SWTBotTestUtil implements SWTBotConstants{
 
     }
 
-    public static void setOutputStorageExpressionByName(final SWTBot bot,final String storageExpressionName,final String returnType, final int index) {
+    public static void selectExpressionProposal(final SWTBot bot,final String storageExpressionName,final String returnType, final int index) {
         bot.toolbarButtonWithId(SWTBOT_ID_EXPRESSIONVIEWER_DROPDOWN,index).click();
         final SWTBot proposalBot = bot.shellWithId(SWTBOT_ID_EXPRESSIONVIEWER_PROPOSAL_SHELL).bot();
         final SWTBotTable proposalTAble = proposalBot.tableWithId(SWTBOT_ID_EXPRESSIONVIEWER_PROPOSAL_TABLE);

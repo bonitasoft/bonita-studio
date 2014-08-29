@@ -274,7 +274,7 @@ public class TestMultiInstantiation extends SWTBotGefTestCase implements SWTBotC
         bot.button("Add").click();
 
      
-        SWTBotTestUtil.setOutputStorageExpressionByName(bot,"vip","java.util.List",0);
+        SWTBotTestUtil.selectExpressionProposal(bot,"vip","java.util.List",0);
         bot.toolbarButtonWithId(ExpressionViewer.SWTBOT_ID_EDITBUTTON, 0).click();
         String expressionScript = "List vipList = new ArrayList(vip)\nvipList.remove(vipName)\nreturn vipList";
         SWTBotTestUtil.setScriptExpression( bot,"removeUser", expressionScript, "java.util.List");
@@ -527,7 +527,7 @@ public class TestMultiInstantiation extends SWTBotGefTestCase implements SWTBotC
             bot.textWithLabel(Action_InitialValue).setText(initValue);
         }
         if(outputOperation!=null){
-        	SWTBotTestUtil.setOutputStorageExpressionByName(bot, outputOperation,outputOperationType, outputViewerIndex);
+        	SWTBotTestUtil.selectExpressionProposal(bot, outputOperation,outputOperationType, outputViewerIndex);
         }
     }
 
