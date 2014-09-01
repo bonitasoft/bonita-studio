@@ -40,13 +40,6 @@ public class ReadOnlyExpressionViewerTest {
     @Mock
     private ReadOnlyExpressionViewer roew;
 
-    //    @Test
-    //    public void testSideModificationOnProposalAccepted() {
-    //        final CompoundCommand cc = new CompoundCommand();
-    //        roew.sideModificationOnProposalAccepted(cc, copy);
-    //        fail("Not yet implemented");
-    //    }
-
     @Test
     public void testGetNewOperatorTypeForAssignmentToDocument() {
         final String currentOperatorType = ExpressionConstants.ASSIGNMENT_OPERATOR;
