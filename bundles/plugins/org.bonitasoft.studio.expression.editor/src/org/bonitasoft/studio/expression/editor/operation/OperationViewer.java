@@ -217,7 +217,6 @@ public class OperationViewer extends Composite implements IBonitaVariableContext
 
         });
 
-
         context.bindValue(ViewersObservables.observeSingleSelection(storageViewer), leftOperandObservableValue, targetToModel, null);
         storageViewer.addExpressionValidator(ExpressionConstants.VARIABLE_TYPE, new TransientDataValidator());
         storageViewer.addSelectionChangedListener(new StorageViewerChangedListener(this, action));
@@ -241,11 +240,11 @@ public class OperationViewer extends Composite implements IBonitaVariableContext
         final IObservableValue actionExpressionObservableValue = EMFEditProperties
                 .value(getEditingDomain(),
                         ExpressionPackage.Literals.OPERATION__RIGHT_OPERAND)
-                        .observe(action);
+                .observe(action);
         final IObservableValue returnTypeExpressionObservableValue = EMFEditProperties
                 .value(getEditingDomain(),
                         ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE)
-                        .observe(action.getRightOperand());
+                .observe(action.getRightOperand());
         context.bindValue(
                 ViewerProperties.singleSelection().observe(getActionExpression()),
                 actionExpressionObservableValue);
@@ -330,17 +329,28 @@ public class OperationViewer extends Composite implements IBonitaVariableContext
                 final Operation action = getOperation();
                 final OperatorSelectionDialog dialog = new OperatorSelectionDialog(Display.getDefault().getActiveShell(), action);
                 if (dialog.open() == Dialog.OK) {
-                    final Operator newOperator = dialog.getOperator();
-                    if (getEditingDomain() == null) {
-                        action.setOperator(newOperator);
-                    } else {
-                        getEditingDomain().getCommandStack().execute(
-                                SetCommand.create(getEditingDomain(), action, ExpressionPackage.Literals.OPERATION__OPERATOR, newOperator));
-                    }
+                    final Operator newOperator = updateModelOperator(action, dialog);
                     getActionExpression().validate();
                     getActionExpression().getControl().setVisible(!newOperator.getType().equals(ExpressionConstants.DELETION_OPERATOR));
+                    operatorLabel.update();
                     operatorLabel.getParent().layout(true, true);
                 }
+            }
+
+            private Operator updateModelOperator(final Operation action, final OperatorSelectionDialog dialog) {
+                final Operator newOperator = dialog.getOperator();
+                if (getEditingDomain() == null) {
+                    action.setOperator(newOperator);
+                } else {
+                    final CompoundCommand cc = new CompoundCommand("Update Operator");
+                    final Operator operator = action.getOperator();
+                    cc.append(SetCommand.create(getEditingDomain(), operator, ExpressionPackage.Literals.OPERATOR__EXPRESSION,
+                            newOperator.getExpression()));
+                    cc.append(SetCommand.create(getEditingDomain(), operator, ExpressionPackage.Literals.OPERATOR__TYPE, newOperator.getType()));
+                    cc.append(SetCommand.create(getEditingDomain(), operator, ExpressionPackage.Literals.OPERATOR__INPUT_TYPES, newOperator.getInputTypes()));
+                    getEditingDomain().getCommandStack().execute(cc);
+                }
+                return newOperator;
             }
         });
 
