@@ -148,7 +148,8 @@ public class BotAddDocumentDialog extends BotWizardDialog {
      * @return
      */
     public boolean isErrorMessageNameEmpty() {
-        return isErrorMessage(Messages.error_empty);
+        //FIXME: hard coded value.
+        return isErrorMessage("Name is mandatory");
     }
 
     /**
