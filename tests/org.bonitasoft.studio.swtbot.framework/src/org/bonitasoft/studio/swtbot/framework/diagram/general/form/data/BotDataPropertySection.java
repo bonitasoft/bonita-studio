@@ -11,6 +11,7 @@ package org.bonitasoft.studio.swtbot.framework.diagram.general.form.data;
 
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.swtbot.framework.BotBase;
+import org.bonitasoft.studio.swtbot.framework.composite.BotOperationComposite;
 import org.bonitasoft.studio.swtbot.framework.expression.BotExpressionEditorDialog;
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -57,13 +58,38 @@ public class BotDataPropertySection extends BotBase {
         return this;
     }
 
+    /**
+     * Select output variable.
+     * 
+     * @deprecated use {@link #getOutputOperation()}
+     * @param variableName
+     * @param returnType
+     * @return
+     */
+    @Deprecated
     public BotDataPropertySection selectOutputVariable(final String variableName, final String returnType) {
         SWTBotTestUtil.selectExpressionProposal(bot, variableName, returnType, 1);
         return this;
     }
 
+    /**
+     * Edit output expression.
+     * 
+     * @deprecated use {@link #getOutputOperation()}
+     * @return
+     */
+    @Deprecated
     public BotExpressionEditorDialog editOutputOperationExpression() {
         bot.toolbarButtonWithId(SWTBotConstants.SWTBOT_ID_EDITBUTTON, 1).click();
         return new BotExpressionEditorDialog(bot);
+    }
+
+    /**
+     * Get the output operation.
+     * 
+     * @return
+     */
+    public BotOperationComposite getOutputOperation() {
+        return new BotOperationComposite(bot, 0);
     }
 }
