@@ -37,7 +37,7 @@ public class DocumentNameValidator implements IValidator {
     public DocumentNameValidator(final EObject context, final String currentName) {
         this.context=context;
         this.currentName = currentName;
-        groovyValidator = new GroovyReferenceValidator(Messages.name, false);
+        groovyValidator = new GroovyReferenceValidator(Messages.name, true);
     }
 
     @Override

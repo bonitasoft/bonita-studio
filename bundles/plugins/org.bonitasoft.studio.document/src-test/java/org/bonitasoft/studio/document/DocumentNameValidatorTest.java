@@ -18,6 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
 import org.bonitasoft.studio.common.jface.databinding.validator.GroovyReferenceValidator;
 import org.bonitasoft.studio.document.i18n.Messages;
 import org.bonitasoft.studio.model.process.Document;
@@ -69,7 +70,7 @@ public class DocumentNameValidatorTest {
         final DocumentNameValidator documentNameValidator = new DocumentNameValidator(pool, null);
         final IStatus status = documentNameValidator.validate("");
         assertFalse("The validation status should not be ok.\n" + status, status.isOK());
-        assertThat(status.getMessage()).isEqualTo(new GroovyReferenceValidator("").validate("Name").getMessage());
+        assertThat(status.getMessage()).isEqualTo(new EmptyInputValidator("Name").validate("").getMessage());
     }
 
     @Before
