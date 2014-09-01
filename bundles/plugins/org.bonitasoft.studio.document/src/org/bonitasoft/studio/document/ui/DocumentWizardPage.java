@@ -85,10 +85,6 @@ public class DocumentWizardPage extends WizardPage {
     private Button radioButtonNone;
     private StackLayout stack;
 
-    protected static final String NONE = "none";
-    protected static final String EXTERNAL = "external";
-    protected static final String INTERNAL = "internal";
-
     protected static final String LINK = "link";
     protected static final String FIELD = "field";
 
@@ -157,7 +153,11 @@ public class DocumentWizardPage extends WizardPage {
 
         createMimeType(detailsComposite);
 
-        updateMimeTypeStack(LINK);
+        if (document.getMimeType() == null || document.getMimeType().getContent() == null || document.getMimeType().getContent().isEmpty()) {
+            updateMimeTypeStack(LINK);
+        } else {
+            updateMimeTypeStack(FIELD);
+        }
     }
 
     private void createMimeType(final Composite detailsComposite) {
@@ -314,11 +314,11 @@ public class DocumentWizardPage extends WizardPage {
         createExternalComposition(propertiesComposite);
 
         if (document.getDocumentType().equals(DocumentType.NONE)) {
-            updateStack(NONE);
+            updateStack(DocumentType.NONE);
         } else if (document.getDocumentType().equals(DocumentType.INTERNAL)) {
-            updateStack(INTERNAL);
+            updateStack(DocumentType.INTERNAL);
         } else {
-            updateStack(EXTERNAL);
+            updateStack(DocumentType.EXTERNAL);
         }
 
     }
@@ -352,7 +352,7 @@ public class DocumentWizardPage extends WizardPage {
                 if(radioButtonNone.getSelection()){
                     radioButtonExternal.setSelection(false);
                     radioButtonInternal.setSelection(false);
-                    updateStack(NONE);
+                    updateStack(DocumentType.NONE);
                 }
             }
 
@@ -372,7 +372,7 @@ public class DocumentWizardPage extends WizardPage {
                 if (radioButtonInternal.getSelection()) {
                     radioButtonNone.setSelection(false);
                     radioButtonExternal.setSelection(false);
-                    updateStack(INTERNAL);
+                    updateStack(DocumentType.INTERNAL);
                 }
             }
 
@@ -393,7 +393,7 @@ public class DocumentWizardPage extends WizardPage {
                 if (radioButtonExternal.getSelection()) {
                     radioButtonNone.setSelection(false);
                     radioButtonInternal.setSelection(false);
-                    updateStack(EXTERNAL);
+                    updateStack(DocumentType.EXTERNAL);
                 }
             }
 
@@ -612,12 +612,12 @@ public class DocumentWizardPage extends WizardPage {
         super.dispose();
     }
 
-    protected void updateStack(final String type) {
-        if (type.equals(NONE)) {
+    protected void updateStack(final DocumentType docType) {
+        if (docType.equals(DocumentType.NONE)) {
             stack.topControl = noneCompo;
-        } else if (type.equals(EXTERNAL)) {
+        } else if (docType.equals(DocumentType.EXTERNAL)) {
             stack.topControl = externalCompo;
-        } else if (type.equals(INTERNAL)) {
+        } else if (docType.equals(DocumentType.INTERNAL)) {
             stack.topControl = internalCompo;
         }
         propertiesComposite.layout();
@@ -635,7 +635,5 @@ public class DocumentWizardPage extends WizardPage {
         }
         mimeCompo.layout();
     }
-
-
 
 }
