@@ -546,7 +546,7 @@ public class DocumentWizardPage extends WizardPage {
         targetToModel.setAfterGetValidator(new InputLengthValidator(
                 Messages.name, 50));
         targetToModel.setBeforeSetValidator(new GroovyReferenceValidator(
-                Messages.name, false));
+                Messages.name, true));
         targetToModel.setAfterConvertValidator(new DocumentNameValidator(context, document != null ? document.getName() : null));
         nameObserved = EMFObservables.observeValue(document, ProcessPackage.Literals.ELEMENT__NAME);
         emfDataBindingContext.bindValue(

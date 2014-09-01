@@ -26,7 +26,7 @@ import org.eclipse.emf.ecore.EObject;
 
 /**
  * @author Maxence Raoux
- * 
+ *
  */
 public class DocumentNameValidator implements IValidator {
 
@@ -42,11 +42,6 @@ public class DocumentNameValidator implements IValidator {
 
     @Override
     public IStatus validate(final Object value) {
-        if (value instanceof String){
-            if (value.toString().isEmpty()){
-                return ValidationStatus.error(Messages.error_empty);
-            }
-        }
         final IStatus groovyValidationStatus = groovyValidator.validate(value);
         if(!groovyValidationStatus.isOK()){
             return groovyValidationStatus;

@@ -39,7 +39,6 @@ public class Messages extends NLS {
     public static String importEtc;
     public static String remove;
     public static String selectDocumentDialogTitle;
-    public static String error_empty;
     public static String error_documentAllreadyexist;
     public static String error_documentURLEmpty;
     public static String error_documentDefaultIDEmpty;

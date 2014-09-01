@@ -69,7 +69,7 @@ public class DocumentNameValidatorTest {
         final DocumentNameValidator documentNameValidator = new DocumentNameValidator(pool, null);
         final IStatus status = documentNameValidator.validate("");
         assertFalse("The validation status should not be ok.\n" + status, status.isOK());
-        assertThat(status.getMessage()).isEqualTo(Messages.error_empty);
+        assertThat(status.getMessage()).isEqualTo(new GroovyReferenceValidator("").validate("Name").getMessage());
     }
 
     @Before
