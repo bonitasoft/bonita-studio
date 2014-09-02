@@ -313,6 +313,8 @@ IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContex
                             ExpressionPackage.Literals.EXPRESSION__NAME, ""));
                     cc.append(SetCommand.create(editingDomain, selectedExpression,
                             ExpressionPackage.Literals.EXPRESSION__CONTENT, ""));
+                    cc.append(SetCommand.create(editingDomain, selectedExpression,
+                            ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE, String.class.getName()));
                     cc.append(RemoveCommand.create(editingDomain, selectedExpression,
                             ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS,
                             selectedExpression.getReferencedElements()));
@@ -328,6 +330,7 @@ IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContex
                     selectedExpression.setContent("");
                     selectedExpression.getReferencedElements().clear();
                     selectedExpression.getConnectors().clear();
+                    selectedExpression.setReturnType(String.class.getName());
                 }
             }
         });
