@@ -84,14 +84,14 @@ public class ReadOnlyExpressionViewerTest {
     public void testGetNewOperatorTypeForSearchIndexToVariable() {
         final String currentOperatorType = ExpressionConstants.ASSIGNMENT_OPERATOR;
         final String newStorageType = ExpressionConstants.SEARCH_INDEX_TYPE;
-        testGetNewOperatorTypeFor(currentOperatorType, newStorageType, null);
+        testGetNewOperatorTypeFor(currentOperatorType, newStorageType, currentOperatorType);
     }
 
     @Test
     public void testGetNewOperatorTypeForTransientVarToVariable() {
         final String currentOperatorType = ExpressionConstants.ASSIGNMENT_OPERATOR;
         final String newStorageType = ExpressionConstants.TRANSIENT_VARIABLE_TYPE;
-        testGetNewOperatorTypeFor(currentOperatorType, newStorageType, null);
+        testGetNewOperatorTypeFor(currentOperatorType, newStorageType, currentOperatorType);
     }
 
     @Test
@@ -106,21 +106,21 @@ public class ReadOnlyExpressionViewerTest {
     public void testGetNewOperatorTypeForSetDocumentToDocument() {
         final String currentOperatorType = ExpressionConstants.SET_DOCUMENT_OPERATOR;
         final String newStorageType = ExpressionConstants.DOCUMENT_REF_TYPE;
-        testGetNewOperatorTypeFor(currentOperatorType, newStorageType, null);
+        testGetNewOperatorTypeFor(currentOperatorType, newStorageType, currentOperatorType);
     }
 
     @Test
     public void testGetNewOperatorTypeForBDJavaSetterToBD() {
         final String currentOperatorType = ExpressionConstants.BUSINESS_DATA_JAVA_SETTER_OPERATOR;
         final String newStorageType = ExpressionConstants.BUSINESS_DATA_TYPE;
-        testGetNewOperatorTypeFor(currentOperatorType, newStorageType, null);
+        testGetNewOperatorTypeFor(currentOperatorType, newStorageType, currentOperatorType);
     }
 
     @Test
     public void testGetNewOperatorTypeForBDCretaeToBD() {
         final String currentOperatorType = ExpressionConstants.CREATE_BUSINESS_DATA_OPERATOR;
         final String newStorageType = ExpressionConstants.BUSINESS_DATA_TYPE;
-        testGetNewOperatorTypeFor(currentOperatorType, newStorageType, null);
+        testGetNewOperatorTypeFor(currentOperatorType, newStorageType, currentOperatorType);
     }
 
     private void testGetNewOperatorTypeFor(final String currentOperatorType, final String newStorageType, final String expectedOperator) {
@@ -138,6 +138,20 @@ public class ReadOnlyExpressionViewerTest {
 
     @Test
     public void testUpdateRightOperandWithDocument() {
+        doCallRealMethod().when(roew).updateRightOperand(any(CompoundCommand.class), any(Operation.class), any(String.class));
+
+        final Operation operation = ExpressionFactory.eINSTANCE.createOperation();
+        final Expression oldRightOperand = ExpressionFactory.eINSTANCE.createExpression();
+        operation.setRightOperand(oldRightOperand);
+        final Expression leftOperand = ExpressionFactory.eINSTANCE.createExpression();
+        operation.setLeftOperand(leftOperand);
+        roew.updateRightOperand(new CompoundCommand(), operation, ExpressionConstants.SET_DOCUMENT_OPERATOR);
+
+        verify(roew).appendCommandToSetReturnType(any(CompoundCommand.class), any(Expression.class), eq(DocumentValue.class.getName()));
+    }
+
+    @Test
+    public void testUpdateRightOperandWithDocumentFromDocumentAndClearedExpression() {
         doCallRealMethod().when(roew).updateRightOperand(any(CompoundCommand.class), any(Operation.class), any(String.class));
 
         final Operation operation = ExpressionFactory.eINSTANCE.createOperation();

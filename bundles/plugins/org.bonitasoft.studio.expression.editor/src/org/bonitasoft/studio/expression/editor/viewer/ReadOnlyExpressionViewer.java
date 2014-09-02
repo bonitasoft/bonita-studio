@@ -141,7 +141,7 @@ public class ReadOnlyExpressionViewer extends ExpressionViewer {
     }
 
     /**
-     * Override In order to update Operator and Retrun type of Right Operand if we are updating Left Operand of an Operation
+     * Override In order to update Operator and Return type of Right Operand if we are updating Left Operand of an Operation
      */
     @Override
     protected void sideModificationOnProposalAccepted(final CompoundCommand cc, final Expression copy) {
@@ -154,25 +154,23 @@ public class ReadOnlyExpressionViewer extends ExpressionViewer {
             if (ExpressionPackage.Literals.OPERATION__LEFT_OPERAND.equals(getExpressionReference())) {
                 final Operator operator = ((Operation) parent).getOperator();
                 final String newOperatorType = updateOperatorType(cc, operator, copy);
-                if (newOperatorType != null) {
-                    updateRightOperand(cc, ((Operation) parent), newOperatorType);
-                }
+                updateRightOperand(cc, ((Operation) parent), newOperatorType);
             }
         }
     }
 
     private String updateOperatorType(final CompoundCommand cc, final Operator operator, final Expression storageExpression) {
-        final String operatorType = getNewOperatorTypeFor(operator, storageExpression);
-        if (operatorType != null) {
+        final String newOperatorType = getNewOperatorTypeFor(operator, storageExpression);
+        if (!operator.getType().equals(newOperatorType)) {
             cc.append(SetCommand.create(editingDomain, operator, ExpressionPackage.Literals.OPERATOR__TYPE,
-                    operatorType));
+                    newOperatorType));
         }
-        return operatorType;
+        return newOperatorType;
     }
 
     protected String getNewOperatorTypeFor(final Operator currentOperator, final Expression newStorageExpression) {
-        String newOperatorType = null;
         final String currentOperatorType = currentOperator.getType();
+        String newOperatorType = currentOperatorType;
         final String storageExpressionType = newStorageExpression.getType();
         if (ExpressionConstants.DOCUMENT_REF_TYPE.equals(storageExpressionType)) {
             if (!isDocumentOperator(currentOperatorType)) {
@@ -204,7 +202,7 @@ public class ReadOnlyExpressionViewer extends ExpressionViewer {
     protected void updateRightOperand(final CompoundCommand cc, final Operation action, final String newOperatorType) {
         final Expression right = action.getRightOperand();
         final Expression left = action.getLeftOperand();
-        if (left != null && right != null && newOperatorType != null) {
+        if (left != null && right != null) {
             if (ExpressionConstants.ASSIGNMENT_OPERATOR.equals(newOperatorType)
                     && !left.getReturnType().equals(right.getReturnType())) {
                 if (ExpressionConstants.CONSTANT_TYPE.equals(right.getType())
