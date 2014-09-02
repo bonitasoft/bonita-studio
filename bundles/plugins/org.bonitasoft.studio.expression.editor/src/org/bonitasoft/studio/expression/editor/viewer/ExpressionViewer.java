@@ -27,6 +27,7 @@ import java.util.TreeSet;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.IBonitaVariableContext;
+import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.WidgetHelper;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
@@ -79,7 +80,6 @@ import org.eclipse.emf.databinding.edit.EMFEditProperties;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.emf.edit.command.RemoveCommand;
 import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
@@ -306,31 +306,13 @@ IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContex
             private void clearExpression(final String type) {
                 if (editingDomain != null) {
 
-                    final CompoundCommand cc = new CompoundCommand();
-                    cc.append(SetCommand.create(editingDomain, selectedExpression,
-                            ExpressionPackage.Literals.EXPRESSION__TYPE, type));
-                    cc.append(SetCommand.create(editingDomain, selectedExpression,
-                            ExpressionPackage.Literals.EXPRESSION__NAME, ""));
-                    cc.append(SetCommand.create(editingDomain, selectedExpression,
-                            ExpressionPackage.Literals.EXPRESSION__CONTENT, ""));
-                    cc.append(SetCommand.create(editingDomain, selectedExpression,
-                            ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE, String.class.getName()));
-                    cc.append(RemoveCommand.create(editingDomain, selectedExpression,
-                            ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS,
-                            selectedExpression.getReferencedElements()));
-                    cc.append(RemoveCommand.create(editingDomain, selectedExpression,
-                            ExpressionPackage.Literals.EXPRESSION__CONNECTORS, selectedExpression.getConnectors()));
+                    final CompoundCommand cc = ExpressionHelper.clearExpression(selectedExpression, type, editingDomain);
                     final boolean hasBeenExecuted = executeRemoveOperation(cc);
                     if (!hasBeenExecuted) {
                         editingDomain.getCommandStack().execute(cc);
                     }
                 } else {
-                    selectedExpression.setType(type);
-                    selectedExpression.setName("");
-                    selectedExpression.setContent("");
-                    selectedExpression.getReferencedElements().clear();
-                    selectedExpression.getConnectors().clear();
-                    selectedExpression.setReturnType(String.class.getName());
+                    ExpressionHelper.clearExpression(selectedExpression);
                 }
             }
         });

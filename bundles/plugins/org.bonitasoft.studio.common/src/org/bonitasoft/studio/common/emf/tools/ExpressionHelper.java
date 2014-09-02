@@ -23,6 +23,7 @@ import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.Messages;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
+import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.model.expression.Operation;
 import org.bonitasoft.studio.model.expression.Operator;
 import org.bonitasoft.studio.model.form.Duplicable;
@@ -34,8 +35,12 @@ import org.bonitasoft.studio.model.process.EnumType;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.SearchIndex;
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.emf.edit.command.RemoveCommand;
+import org.eclipse.emf.edit.command.SetCommand;
+import org.eclipse.emf.edit.domain.EditingDomain;
 
 
 /**
@@ -48,13 +53,13 @@ public class ExpressionHelper {
     protected static final String EMPTY_LIST_CONTENT = "[]";
 
 
-    public static Expression createExpressionFromEnumType(EnumType type){
+    public static Expression createExpressionFromEnumType(final EnumType type){
         final Expression generatedExp = ExpressionFactory.eINSTANCE.createExpression();
         generatedExp.setInterpreter(ExpressionConstants.GROOVY);
         generatedExp.setType(ExpressionConstants.SCRIPT_TYPE);
         generatedExp.setName(type.getName() + " values");
         final StringBuilder script = new StringBuilder("[");
-        for(String lit : type.getLiterals()){
+        for(final String lit : type.getLiterals()){
             script.append("\""+lit+"\"");
             script.append(",");
         }
@@ -67,7 +72,7 @@ public class ExpressionHelper {
         return generatedExp;
     }
 
-    public static Expression createGroovyScriptExpression(String expressionContent,String returnType) {
+    public static Expression createGroovyScriptExpression(final String expressionContent,final String returnType) {
         final Expression exp = ExpressionFactory.eINSTANCE.createExpression();
         exp.setName("ExpressionForEvaluation");
         exp.setInterpreter(ExpressionConstants.GROOVY);
@@ -77,7 +82,7 @@ public class ExpressionHelper {
         return  exp;
     }
 
-    public static Expression createExpressionFromDocument(Document document) {
+    public static Expression createExpressionFromDocument(final Document document) {
         final Expression exp = ExpressionFactory.eINSTANCE.createExpression();
         exp.setName(document.getName());
         exp.setType(ExpressionConstants.CONSTANT_TYPE);
@@ -86,19 +91,19 @@ public class ExpressionHelper {
         return  exp;
     }
 
-    public static Operation createDocumentOperation(String targetDocName, Widget widget) {
-        Operation action = ExpressionFactory.eINSTANCE.createOperation() ;
-        Operator assignment = ExpressionFactory.eINSTANCE.createOperator();
+    public static Operation createDocumentOperation(final String targetDocName, final Widget widget) {
+        final Operation action = ExpressionFactory.eINSTANCE.createOperation() ;
+        final Operator assignment = ExpressionFactory.eINSTANCE.createOperator();
         assignment.setType(ExpressionConstants.SET_DOCUMENT_OPERATOR) ;
         action.setOperator(assignment) ;
-        Expression storageExpression = ExpressionFactory.eINSTANCE.createExpression();
+        final Expression storageExpression = ExpressionFactory.eINSTANCE.createExpression();
         storageExpression.setContent(targetDocName) ;
         storageExpression.setName(targetDocName) ;
         storageExpression.setType(ExpressionConstants.CONSTANT_TYPE) ;
         storageExpression.setReturnType(ExpressionConstants.DOCUMENT_VALUE_RETURN_TYPE) ;
         action.setLeftOperand(storageExpression) ;
 
-        Expression actionExpression = ExpressionFactory.eINSTANCE.createExpression();
+        final Expression actionExpression = ExpressionFactory.eINSTANCE.createExpression();
         actionExpression.setContent(WidgetHelper.FIELD_PREFIX+widget.getName()) ;
         actionExpression.setName(WidgetHelper.FIELD_PREFIX+widget.getName()) ;
         actionExpression.setType(ExpressionConstants.FORM_FIELD_TYPE) ;
@@ -108,7 +113,7 @@ public class ExpressionHelper {
         return action;
     }
 
-    public static Expression createConstantExpression(String content, String returnClassName) {
+    public static Expression createConstantExpression(final String content, final String returnClassName) {
         final Expression exp = ExpressionFactory.eINSTANCE.createExpression();
         exp.setType(ExpressionConstants.CONSTANT_TYPE);
         exp.setName(content);
@@ -117,7 +122,7 @@ public class ExpressionHelper {
         return  exp;
     }
 
-    public static Expression createConstantExpression(String name,String content, String returnClassName) {
+    public static Expression createConstantExpression(final String name,final String content, final String returnClassName) {
         final Expression exp = ExpressionFactory.eINSTANCE.createExpression();
         exp.setType(ExpressionConstants.CONSTANT_TYPE);
         exp.setName(name);
@@ -126,9 +131,9 @@ public class ExpressionHelper {
         return  exp;
     }
 
-    public static EObject createDependencyFromEObject(EObject dependency) {
+    public static EObject createDependencyFromEObject(final EObject dependency) {
         if(dependency instanceof Widget){
-            Widget widgetDependency = (Widget) FormFactory.eINSTANCE.create(dependency.eClass());
+            final Widget widgetDependency = (Widget) FormFactory.eINSTANCE.create(dependency.eClass());
             widgetDependency.setName(((Widget) dependency).getName());
             widgetDependency.setReturnTypeModifier(((Widget) dependency).getReturnTypeModifier());
             if(dependency instanceof Duplicable){
@@ -137,20 +142,20 @@ public class ExpressionHelper {
             return widgetDependency;
         }
         if(dependency instanceof Data){
-            Data dataDependency = (Data) EcoreUtil.copy(dependency);
+            final Data dataDependency = (Data) EcoreUtil.copy(dependency);
             dataDependency.setDefaultValue(null);
             return dataDependency;
         }
         if(dependency instanceof Document){
-            Document documentDependency = (Document) ProcessFactory.eINSTANCE.create(dependency.eClass());
+            final Document documentDependency = (Document) ProcessFactory.eINSTANCE.create(dependency.eClass());
             documentDependency.setName(((Document) dependency).getName());
             return documentDependency;
         }
         if(dependency instanceof SearchIndex){
-            SearchIndex searchIndexDependency = (SearchIndex) ProcessFactory.eINSTANCE.create(dependency.eClass());
-            Expression name = ((SearchIndex) dependency).getName();
+            final SearchIndex searchIndexDependency = (SearchIndex) ProcessFactory.eINSTANCE.create(dependency.eClass());
+            final Expression name = ((SearchIndex) dependency).getName();
             if(name != null){
-                Expression nameExpression = EcoreUtil.copy(name);
+                final Expression nameExpression = EcoreUtil.copy(name);
                 nameExpression.getReferencedElements().clear();
                 searchIndexDependency.setName(nameExpression);
             }
@@ -159,17 +164,41 @@ public class ExpressionHelper {
         return EcoreUtil.copy(dependency);
     }
 
-    public static void clearExpression(Expression expr) {
+    public static CompoundCommand clearExpression(final Expression expr, final String type, final EditingDomain editingDomain) {
+        if (editingDomain != null) {
+            final CompoundCommand cc = new CompoundCommand();
+            cc.append(SetCommand.create(editingDomain, expr,
+                    ExpressionPackage.Literals.EXPRESSION__TYPE, type));
+            cc.append(SetCommand.create(editingDomain, expr,
+                    ExpressionPackage.Literals.EXPRESSION__NAME, ""));
+            cc.append(SetCommand.create(editingDomain, expr,
+                    ExpressionPackage.Literals.EXPRESSION__CONTENT, ""));
+            cc.append(SetCommand.create(editingDomain, expr,
+                    ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE, String.class.getName()));
+            cc.append(RemoveCommand.create(editingDomain, expr,
+                    ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS,
+                    expr.getReferencedElements()));
+            cc.append(RemoveCommand.create(editingDomain, expr,
+                    ExpressionPackage.Literals.EXPRESSION__CONNECTORS, expr.getConnectors()));
+            return cc;
+        }else{
+            clearExpression(expr);
+            return null;
+        }
+    }
+
+    public static void clearExpression(final Expression expr) {
         Assert.isLegal(expr!=null, "Expression cannot be null.");
         expr.setName("");
         expr.setContent("");
         expr.setType(ExpressionConstants.CONSTANT_TYPE);
         expr.getReferencedElements().clear();
+        expr.setReturnType(String.class.getName());
     }
 
 
     public static Expression createEmptyListGroovyScriptExpression() {
-        Expression expression = ExpressionFactory.eINSTANCE.createExpression();
+        final Expression expression = ExpressionFactory.eINSTANCE.createExpression();
         expression.setType(ExpressionConstants.SCRIPT_TYPE);
         expression.setInterpreter(ExpressionConstants.GROOVY);
         expression.setReturnType(Collection.class.getName());
