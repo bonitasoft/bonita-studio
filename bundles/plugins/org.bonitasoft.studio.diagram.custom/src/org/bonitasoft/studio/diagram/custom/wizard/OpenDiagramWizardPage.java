@@ -17,7 +17,7 @@
  */
 package org.bonitasoft.studio.diagram.custom.wizard;
 
-import org.bonitasoft.studio.diagram.custom.Messages;
+import org.bonitasoft.studio.diagram.custom.i18n.Messages;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;

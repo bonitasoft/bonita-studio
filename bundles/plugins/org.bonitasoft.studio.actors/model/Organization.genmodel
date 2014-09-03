@@ -78,6 +78,7 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Organization.ecore#//Organization/memberships"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Organization.ecore#//Organization/name"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Organization.ecore#//Organization/description"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Organization.ecore#//Organization/modelVersion"/>
     </genClasses>
     <genClasses ecoreClass="Organization.ecore#//Role">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Organization.ecore#//Role/displayName"/>
@@ -102,8 +103,8 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Organization.ecore#//User/metaDatas"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Organization.ecore#//User/userName"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Organization.ecore#//User/enabled"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Organization.ecore#//User/customUserInfoValues"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Organization.ecore#//User/password"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Organization.ecore#//User/customUserInfoValues"/>
     </genClasses>
     <genClasses ecoreClass="Organization.ecore#//Users">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Organization.ecore#//Users/user"/>

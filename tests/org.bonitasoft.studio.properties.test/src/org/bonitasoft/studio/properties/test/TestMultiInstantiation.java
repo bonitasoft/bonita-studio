@@ -95,7 +95,7 @@ public class TestMultiInstantiation extends SWTBotGefTestCase implements SWTBotC
     }
 
     final String defaultEmployeeActor = "Employee actor";
-    final String defaultEmployeeActorDefinition = org.bonitasoft.studio.diagram.custom.Messages.initiatorDescription;
+    final String defaultEmployeeActorDefinition = org.bonitasoft.studio.diagram.custom.i18n.Messages.initiatorDescription;
 
 
     final String loopMultiInstanceSection = "Iteration";

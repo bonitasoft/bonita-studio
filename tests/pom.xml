@@ -15,6 +15,7 @@
 	<packaging>pom</packaging>
 
 	<modules>
+        <module>org.bonitasoft.studio.swtbot.framework</module>
 		<module>org.bonitasoft.studio.jre.extension</module>
 		<module>org.bonitasoft.studio.actors.tests</module>
 		<module>org.bonitasoft.studio.application.test</module>

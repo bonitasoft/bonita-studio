@@ -31,7 +31,7 @@ import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.store.AbstractEMFRepositoryStore;
-import org.bonitasoft.studio.diagram.custom.Messages;
+import org.bonitasoft.studio.diagram.custom.i18n.Messages;
 import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.model.configuration.util.ConfigurationAdapterFactory;
 import org.bonitasoft.studio.model.process.AbstractProcess;

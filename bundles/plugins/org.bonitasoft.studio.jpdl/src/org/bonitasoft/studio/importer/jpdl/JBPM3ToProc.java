@@ -100,18 +100,18 @@ public class JBPM3ToProc extends ToProcProcessor {
      * @see org.bonitasoft.studio.importer.ToProcProcessor#createDiagram(org.eclipse.emf.common.util.URI, org.eclipse.emf.common.util.URI, org.eclipse.core.runtime.IProgressMonitor)
      */
     @Override
-    public File createDiagram(URL sourceURL, IProgressMonitor progressMonitor) throws Exception {
+    public File createDiagram(final URL sourceURL, final IProgressMonitor progressMonitor) throws Exception {
         progressMonitor.beginTask(Messages.importFromJBPM, IProgressMonitor.UNKNOWN);
         URI sourceJBPMUri = URI.createURI(sourceURL.toURI().toString()) ;
-        URI gpdFileName = sourceJBPMUri.trimSegments(1).appendSegment("gpd.xml");
+        final URI gpdFileName = sourceJBPMUri.trimSegments(1).appendSegment("gpd.xml");
 
         // copy files
-        File tmpDir = new File(ProjectUtil.getBonitaStudioWorkFolder(), "importJBPMtemp");
+        final File tmpDir = new File(ProjectUtil.getBonitaStudioWorkFolder(), "importJBPMtemp");
         tmpDir.mkdirs();
 
-        File processDefFile = new File(tmpDir, "processdefinition.xml");
-        InputStream is = FileLocator.toFileURL(new java.net.URI(sourceJBPMUri.toString()).toURL()).openStream();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+        final File processDefFile = new File(tmpDir, "processdefinition.xml");
+        final InputStream is = FileLocator.toFileURL(new java.net.URI(sourceJBPMUri.toString()).toURL()).openStream();
+        final BufferedReader reader = new BufferedReader(new InputStreamReader(is));
         FileOutputStream out = new FileOutputStream(processDefFile);
         String line = null;
         while ((line = reader.readLine()) != null) {
@@ -122,9 +122,9 @@ public class JBPM3ToProc extends ToProcProcessor {
         is.close();
         out.close();
 
-        File gpdFileTmp = new File(tmpDir, "gpd.xml");
+        final File gpdFileTmp = new File(tmpDir, "gpd.xml");
         out = new FileOutputStream(gpdFileTmp);
-        InputStream src = new java.net.URL(gpdFileName.toString()).openStream();
+        final InputStream src = new java.net.URL(gpdFileName.toString()).openStream();
         FileUtil.copy(src, out);
         src.close();
         out.close();
@@ -135,8 +135,8 @@ public class JBPM3ToProc extends ToProcProcessor {
 
 
         // parse resource
-        Resource resource = new jpdl32ResourceFactoryImpl().createResource(sourceJBPMUri);
-        Map<String, String> options = new HashMap<String, String>();
+        final Resource resource = new jpdl32ResourceFactoryImpl().createResource(sourceJBPMUri);
+        final Map<String, String> options = new HashMap<String, String>();
         options.put(jpdl32ResourceImpl.NO_NAMESPACE_SCHEMA_LOCATION, Boolean.TRUE.toString());
         resource.load(options);
         final DocumentRoot docRoot = (DocumentRoot) resource.getContents().get(0);
@@ -147,13 +147,13 @@ public class JBPM3ToProc extends ToProcProcessor {
         // parse GPD
         try {
 
-            URI gpd = gpdFileName; // TODO test
-            URL gpdUrl = FileLocator.toFileURL(new URL(gpd.toString()));
-            File gpdFile = new File(gpdUrl.getFile());
+            final URI gpd = gpdFileName; // TODO test
+            final URL gpdUrl = FileLocator.toFileURL(new URL(gpd.toString()));
+            final File gpdFile = new File(gpdUrl.getFile());
             if (gpdFile.exists()) {
                 populateLocationMap(gpdFile);
             }
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             BonitaStudioLog.log("Could not use gpd for " + sourceJBPMUri.toString());
         }
         progressMonitor.worked(1);
@@ -168,8 +168,8 @@ public class JBPM3ToProc extends ToProcProcessor {
             tmpDir.delete();
             builder.done() ;
             return result;
-        } catch (Throwable t){
-            BonitaStudioLog.error(t);
+        } catch (final Exception e) {
+            BonitaStudioLog.error(e);
         }
         return null ;
 
@@ -178,14 +178,14 @@ public class JBPM3ToProc extends ToProcProcessor {
     /**
      * @param gpdFile
      */
-    private void populateLocationMap(File gpdFile) {
+    private void populateLocationMap(final File gpdFile) {
         try {
-            XMLReader reader = XMLReaderFactory.createXMLReader();
-            FileInputStream fis = new FileInputStream(gpdFile);
+            final XMLReader reader = XMLReaderFactory.createXMLReader();
+            final FileInputStream fis = new FileInputStream(gpdFile);
             reader.setContentHandler(new DefaultHandler() {
                 @Override
-                public void startElement(String namespaceURI, String localName,
-                        String qualifiedName, Attributes atts) throws SAXException {
+                public void startElement(final String namespaceURI, final String localName,
+                        final String qualifiedName, final Attributes atts) throws SAXException {
 
                     // Locations and sizes are mirrored to read diagram from left to right
                     if (localName.equals("root-container") || localName.equals("process-diagram")) {
@@ -193,10 +193,10 @@ public class JBPM3ToProc extends ToProcProcessor {
                         poolSize.x = Integer.parseInt(atts.getValue("height"))+ 50;//50 for margin
                         poolSize.y = Integer.parseInt(atts.getValue("width")) + 50;//50 for margin
                     } else if (localName.equals("node")) {
-                        Point nodeLocation = new Point();
+                        final Point nodeLocation = new Point();
                         nodeLocation.x = Integer.parseInt(atts.getValue("y")) +50;//50 for margin
                         nodeLocation.y = poolSize.x - Integer.parseInt(atts.getValue("x"))+ 50;//30 for margin
-                        String nodeName = atts.getValue("name");
+                        final String nodeName = atts.getValue("name");
                         locations.put(nodeName, nodeLocation);
                     }
 
@@ -204,7 +204,7 @@ public class JBPM3ToProc extends ToProcProcessor {
             });
             reader.parse(new InputSource(fis));
             fis.close();
-        } catch (Exception ex) {
+        } catch (final Exception ex) {
             BonitaStudioLog.error(ex);
         }
     }
@@ -218,9 +218,9 @@ public class JBPM3ToProc extends ToProcProcessor {
      * @param diagram
      * @throws ProcBuilderException
      */
-    protected void importFromJBPM(ProcessDefinitionType processDef) throws ProcBuilderException {
+    protected void importFromJBPM(final ProcessDefinitionType processDef) throws ProcBuilderException {
 
-        String processDefNameConvertedInId = NamingUtils.convertToId(processDef.getName());
+        final String processDefNameConvertedInId = NamingUtils.convertToId(processDef.getName());
         builder.addPool(processDefNameConvertedInId, processDef.getName(), "1.0", new Point(0,0), new Dimension(poolSize.x, poolSize.y));
 
 
@@ -236,35 +236,35 @@ public class JBPM3ToProc extends ToProcProcessor {
          * -SuperStateType
          */
 
-        for (SwimlaneType swimlane : processDef.getSwimlane()) {
-            AssignmentType assignment = swimlane.getAssignment();
+        for (final SwimlaneType swimlane : processDef.getSwimlane()) {
+            final AssignmentType assignment = swimlane.getAssignment();
             if(assignment != null){
-                String groupId = createGroupIdFromAssignment(assignment);
+                final String groupId = createGroupIdFromAssignment(assignment);
                 groups.put(swimlane.getName(), groupId);
             }
         }
 
-        for (StartStateType jpdl : processDef.getStartState()) {
-            String jpdlName = jpdl.getName();
-            String idFromJpdl = NamingUtils.convertToId(jpdlName);
+        for (final StartStateType jpdl : processDef.getStartState()) {
+            final String jpdlName = jpdl.getName();
+            final String idFromJpdl = NamingUtils.convertToId(jpdlName);
             builder.addEvent(idFromJpdl, jpdlName, locations.get(jpdlName), null, EventType.START);
             builder.addDescription(toBonitaString(jpdl.getDescription()));
 
-            for (TransitionType jpdlTransition : jpdl.getTransition()) {
+            for (final TransitionType jpdlTransition : jpdl.getTransition()) {
                 transitions.add(new TransitionDesc(idFromJpdl, jpdlTransition));
             }
         }
-        for (TaskNodeType jpdl : processDef.getTaskNode()) {
-            String jpdlName = jpdl.getName();
-            String idFromJpdl = NamingUtils.convertToId(jpdlName);
+        for (final TaskNodeType jpdl : processDef.getTaskNode()) {
+            final String jpdlName = jpdl.getName();
+            final String idFromJpdl = NamingUtils.convertToId(jpdlName);
             builder.addTask(idFromJpdl, jpdlName, locations.get(jpdlName), null, org.bonitasoft.studio.importer.builder.IProcBuilder.TaskType.HUMAN);
-            for (TaskType task : jpdl.getTask()) {
-                for (AssignmentType assignment : task.getAssignment()) {
-                    String groupId = createGroupIdFromAssignment(assignment);
+            for (final TaskType task : jpdl.getTask()) {
+                for (final AssignmentType assignment : task.getAssignment()) {
+                    final String groupId = createGroupIdFromAssignment(assignment);
                     builder.addAssignableActor(groupId);
                 }
                 if (task.getSwimlane() != null && task.getSwimlane().trim().length() > 0) {
-                    String groupId = groups.get(task.getSwimlane());
+                    final String groupId = groups.get(task.getSwimlane());
                     if(groupId != null){
                         builder.addAssignableActor(groupId);
                     }
@@ -272,73 +272,73 @@ public class JBPM3ToProc extends ToProcProcessor {
             }
 
             builder.addDescription(toBonitaString(jpdl.getDescription()));
-            for (TransitionType jpdlTransition : jpdl.getTransition()) {
+            for (final TransitionType jpdlTransition : jpdl.getTransition()) {
                 transitions.add(new TransitionDesc(idFromJpdl, jpdlTransition));
             }
         }
-        for (DecisionType jpdl : processDef.getDecision()) {
+        for (final DecisionType jpdl : processDef.getDecision()) {
 
-            String jpdlName = jpdl.getName();
-            String idFromJpdl = NamingUtils.convertToId(jpdlName);
+            final String jpdlName = jpdl.getName();
+            final String idFromJpdl = NamingUtils.convertToId(jpdlName);
             builder.addGateway(idFromJpdl, jpdlName, locations.get(jpdlName), null, GatewayType.XOR);
             builder.addDescription(toBonitaString(jpdl.getDescription()));
-            for (TransitionType jpdlTransition : jpdl.getTransition()) {
+            for (final TransitionType jpdlTransition : jpdl.getTransition()) {
                 transitions.add(new TransitionDesc(idFromJpdl, jpdlTransition));
             }
         }
-        for (ForkType jpdl : processDef.getFork()) {
-            String jpdlName = jpdl.getName();
-            String idFromJpdl = NamingUtils.convertToId(jpdlName);
+        for (final ForkType jpdl : processDef.getFork()) {
+            final String jpdlName = jpdl.getName();
+            final String idFromJpdl = NamingUtils.convertToId(jpdlName);
             builder.addGateway(idFromJpdl, jpdlName, locations.get(jpdlName), null, GatewayType.AND);
             builder.addDescription(toBonitaString(jpdl.getDescription()));
-            for (TransitionType jpdlTransition : jpdl.getTransition()) {
+            for (final TransitionType jpdlTransition : jpdl.getTransition()) {
                 transitions.add(new TransitionDesc(idFromJpdl, jpdlTransition));
             }
         }
-        for (JoinType jpdl : processDef.getJoin()) {
-            String jpdlName = jpdl.getName();
-            String idFromJpdl = NamingUtils.convertToId(jpdlName);
+        for (final JoinType jpdl : processDef.getJoin()) {
+            final String jpdlName = jpdl.getName();
+            final String idFromJpdl = NamingUtils.convertToId(jpdlName);
             builder.addGateway(idFromJpdl, jpdlName, locations.get(jpdlName), null, GatewayType.AND);
             builder.addDescription(toBonitaString(jpdl.getDescription()));
-            for (TransitionType jpdlTransition : jpdl.getTransition()) {
+            for (final TransitionType jpdlTransition : jpdl.getTransition()) {
                 transitions.add(new TransitionDesc(idFromJpdl, jpdlTransition));
             }
         }
-        for (StateType jpdl : processDef.getState()) {
-            String jpdlName = jpdl.getName();
-            String idFromJpdl = NamingUtils.convertToId(jpdlName);
+        for (final StateType jpdl : processDef.getState()) {
+            final String jpdlName = jpdl.getName();
+            final String idFromJpdl = NamingUtils.convertToId(jpdlName);
             builder.addTask(idFromJpdl, jpdlName, locations.get(jpdlName), null, org.bonitasoft.studio.importer.builder.IProcBuilder.TaskType.ABSTRACT);
             builder.addDescription(toBonitaString(jpdl.getDescription()));
-            for (TransitionType jpdlTransition : jpdl.getTransition()) {
+            for (final TransitionType jpdlTransition : jpdl.getTransition()) {
                 transitions.add(new TransitionDesc(idFromJpdl, jpdlTransition));
             }
         }
-        for (NodeType jpdl : processDef.getNode()) {
-            String jpdlName = jpdl.getName();
-            String idFromJpdl = NamingUtils.convertToId(jpdlName);
+        for (final NodeType jpdl : processDef.getNode()) {
+            final String jpdlName = jpdl.getName();
+            final String idFromJpdl = NamingUtils.convertToId(jpdlName);
             builder.addTask(idFromJpdl, jpdlName, locations.get(jpdlName), null, org.bonitasoft.studio.importer.builder.IProcBuilder.TaskType.SERVICE);
             builder.addDescription(toBonitaString(jpdl.getDescription()));
-            for (TransitionType jpdlTransition : jpdl.getTransition()) {
+            for (final TransitionType jpdlTransition : jpdl.getTransition()) {
                 transitions.add(new TransitionDesc(idFromJpdl, jpdlTransition));
             }
 
             // Copy-pasted because no inheritance in jPDL Ecore
-            MailType jpdlMail = jpdl.getMail();
+            final MailType jpdlMail = jpdl.getMail();
             if (jpdlMail != null) {
                 builder.addConnector(MAIL_CONNECTOR_ID, MAIL_CONNECTOR_ID, MAIL_CONNECTOR_ID,"1.0", ConnectorEvent.ON_FINISH, false);
-                String mailTo = jpdlMail.getTo();
+                final String mailTo = jpdlMail.getTo();
                 if (mailTo != null && mailTo.trim().length() > 0) {
                     builder.addConnectorParameter(MAIL_CONNECTOR_TO, toBonitaString(mailTo));
                 } else if (jpdlMail.getActors() != null && jpdlMail.getActors().trim().length() > 0) {
                     builder.addConnectorParameter(MAIL_CONNECTOR_TO, toBonitaString(jpdlMail.getActors()));
                 }
-                EList<String> mailSubject = jpdlMail.getSubject();
+                final EList<String> mailSubject = jpdlMail.getSubject();
                 if (mailSubject != null && mailSubject.size() > 0) {
                     builder.addConnectorParameter(MAIL_CONNECTOR_SUBJECT, toBonitaString(mailSubject));
                 } else if (jpdlMail.getSubject1() != null && jpdlMail.getSubject1().trim().length() > 0) {
                     builder.addConnectorParameter(MAIL_CONNECTOR_SUBJECT, toBonitaString(jpdlMail.getSubject1()));
                 }
-                EList<String> mailText = jpdlMail.getText();
+                final EList<String> mailText = jpdlMail.getText();
                 if (mailText != null && mailText.size() > 0) {
                     builder.addConnectorParameter(MAIL_CONNECTOR_BODY, toBonitaString(mailText));
                 } else if (jpdlMail.getText1() != null && jpdlMail.getText1().trim().length() > 0) {
@@ -346,29 +346,29 @@ public class JBPM3ToProc extends ToProcProcessor {
                 }
             }
         }
-        for (MailNodeType jpdl : processDef.getMailNode()) {
-            String jpdlName = jpdl.getName();
-            String idFromJpdl = NamingUtils.convertToId(jpdlName);
+        for (final MailNodeType jpdl : processDef.getMailNode()) {
+            final String jpdlName = jpdl.getName();
+            final String idFromJpdl = NamingUtils.convertToId(jpdlName);
             builder.addTask(idFromJpdl, jpdlName, locations.get(jpdlName), null, org.bonitasoft.studio.importer.builder.IProcBuilder.TaskType.SERVICE);
             builder.addDescription(toBonitaString(jpdl.getDescription()));
-            for (TransitionType jpdlTransition : jpdl.getTransition()) {
+            for (final TransitionType jpdlTransition : jpdl.getTransition()) {
                 transitions.add(new TransitionDesc(idFromJpdl, jpdlTransition));
             }
 
             builder.addConnector(MAIL_CONNECTOR_ID, MAIL_CONNECTOR_ID, MAIL_CONNECTOR_ID,"1.0", ConnectorEvent.ON_FINISH, false);
-            String mailTo = jpdl.getTo();
+            final String mailTo = jpdl.getTo();
             if (mailTo != null && mailTo.trim().length() > 0) {
                 builder.addConnectorParameter(MAIL_CONNECTOR_TO, toBonitaString(mailTo));
             } else if (jpdl.getActors() != null && jpdl.getActors().trim().length() > 0) {
                 builder.addConnectorParameter(MAIL_CONNECTOR_TO, toBonitaString(jpdl.getActors()));
             }
-            EList<String> mailSubject = jpdl.getSubject();
+            final EList<String> mailSubject = jpdl.getSubject();
             if (mailSubject != null && mailSubject.size() > 0) {
                 builder.addConnectorParameter(MAIL_CONNECTOR_SUBJECT, toBonitaString(mailSubject));
             } else if (jpdl.getSubject1() != null && jpdl.getSubject1().trim().length() > 0) {
                 builder.addConnectorParameter(MAIL_CONNECTOR_SUBJECT, toBonitaString(jpdl.getSubject1()));
             }
-            EList<String> mailText = jpdl.getText();
+            final EList<String> mailText = jpdl.getText();
             if (mailText != null && mailText.size() > 0) {
                 builder.addConnectorParameter(MAIL_CONNECTOR_BODY, toBonitaString(mailText));
             } else if (jpdl.getText1() != null && jpdl.getText1().trim().length() > 0) {
@@ -376,34 +376,34 @@ public class JBPM3ToProc extends ToProcProcessor {
             }
         }
 
-        for (ProcessStateType jpdl : processDef.getProcessState()) {
-            String jpdlName = jpdl.getName();
-            String idFromJpdl = NamingUtils.convertToId(jpdlName);
+        for (final ProcessStateType jpdl : processDef.getProcessState()) {
+            final String jpdlName = jpdl.getName();
+            final String idFromJpdl = NamingUtils.convertToId(jpdlName);
             builder.addTask(idFromJpdl, jpdlName, locations.get(jpdlName), null, org.bonitasoft.studio.importer.builder.IProcBuilder.TaskType.CALL_ACTIVITY);
             builder.addDescription(toBonitaString(jpdl.getDescription()));
-            for (TransitionType jpdlTransition : jpdl.getTransition()) {
+            for (final TransitionType jpdlTransition : jpdl.getTransition()) {
                 transitions.add(new TransitionDesc(idFromJpdl, jpdlTransition));
             }
 
-            for(VariableType jpdlVariableType : jpdl.getVariable()){
+            for(final VariableType jpdlVariableType : jpdl.getVariable()){
                 builder.addData(jpdlVariableType.getName(), jpdlVariableType.getName(), null, false, DataType.STRING);
             }
 
             if (jpdl.getSubProcess() != null && jpdl.getSubProcess().size() > 0) {
-                SubProcessType subProcessType = jpdl.getSubProcess().get(0);
+                final SubProcessType subProcessType = jpdl.getSubProcess().get(0);
                 builder.addCallActivityTargetProcess(NamingUtils.convertToId(subProcessType.getName()), subProcessType.getVersion().toString());
             }
             //TODO: manage data mapping
         }
-        for (EndStateType jpdl : processDef.getEndState()) {
-            String jpdlName = jpdl.getName();
-            String idFromJpdl = NamingUtils.convertToId(jpdlName);
+        for (final EndStateType jpdl : processDef.getEndState()) {
+            final String jpdlName = jpdl.getName();
+            final String idFromJpdl = NamingUtils.convertToId(jpdlName);
             builder.addEvent(idFromJpdl, jpdlName, locations.get(jpdlName), null, EventType.END);
             builder.addDescription(toBonitaString(jpdl.getDescription()));
         }
 
         // Transitions
-        for (TransitionDesc transition : transitions) {
+        for (final TransitionDesc transition : transitions) {
             builder.addSequenceFlow(transition.getName(), transition.getSource(), transition.getTo(), false,null,null, null);
             if(transition.getCondition() != null && !transition.getCondition().isEmpty()){
                 builder.addSequenceFlowCondition(transition.getCondition(), ExpressionConstants.GROOVY, ExpressionConstants.SCRIPT_TYPE);
@@ -416,7 +416,7 @@ public class JBPM3ToProc extends ToProcProcessor {
      * @param to
      * @return
      */
-    private String toBonitaString(String src) {
+    private String toBonitaString(final String src) {
         return src.replace("#{", "${");
     }
 
@@ -426,29 +426,29 @@ public class JBPM3ToProc extends ToProcProcessor {
      * 		the group of the assignment or null if the assignment is null
      * @throws ProcBuilderException
      */
-    private String createGroupIdFromAssignment(AssignmentType assignment) throws ProcBuilderException {
+    private String createGroupIdFromAssignment(final AssignmentType assignment) throws ProcBuilderException {
         if (assignment != null) {
-            String class_ = assignment.getClass_();
+            final String class_ = assignment.getClass_();
             if (class_ != null && !class_.trim().isEmpty()) {
                 builder.addActor(JBPM3_ASSIGNMENT_TO_BONITA_ROLE_RESOLVER, "");
                 return JBPM3_ASSIGNMENT_TO_BONITA_ROLE_RESOLVER;
             } else {
-                String actorId = assignment.getActorId();
+                final String actorId = assignment.getActorId();
                 if (actorId != null && !actorId.trim().isEmpty()) {
                     builder.addActor(actorId, "") ;
                     ///builder.addConnectorParameter(USER_LIST_ROLE_RESOLVER_PARAM, actorId);
                     return  actorId;
                 } else {
-                    String expression = assignment.getExpression();
+                    final String expression = assignment.getExpression();
                     if (expression != null && !expression.trim().isEmpty()) {
-                        String expressionId = NamingUtils.convertToId(toBonitaString(expression));
+                        final String expressionId = NamingUtils.convertToId(toBonitaString(expression));
                         builder.addActor(expression, "") ;
                         //    builder.addConnectorParameter(USER_LIST_ROLE_RESOLVER_PARAM, toBonitaString(expression));
                         return toBonitaString(expressionId);
                     } else {
-                        String pooledActors = assignment.getPooledActors();
+                        final String pooledActors = assignment.getPooledActors();
                         if (pooledActors != null && !pooledActors.trim().isEmpty()) {
-                            String pooledActorsId = pooledActors;
+                            final String pooledActorsId = pooledActors;
                             builder.addActor(pooledActors, "") ;
                             return pooledActorsId;
                         }
@@ -464,9 +464,9 @@ public class JBPM3ToProc extends ToProcProcessor {
      * @param description
      * @return
      */
-    private String toBonitaString(EList<String> description) {
-        StringBuilder res = new StringBuilder();
-        for (String desc : description) {
+    private String toBonitaString(final EList<String> description) {
+        final StringBuilder res = new StringBuilder();
+        for (final String desc : description) {
             res.append(desc);
             res.append('\n');
         }
