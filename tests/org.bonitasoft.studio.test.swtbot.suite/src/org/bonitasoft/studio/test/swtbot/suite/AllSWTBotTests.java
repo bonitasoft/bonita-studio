@@ -39,7 +39,6 @@ import org.bonitasoft.studio.properties.test.TestDecisionTable;
 import org.bonitasoft.studio.properties.test.TestThrowCatchMessage;
 import org.bonitasoft.studio.tests.IHeapDumper;
 import org.bonitasoft.studio.tests.bug.TestBugsSWTBot;
-import org.bonitasoft.studio.tests.data.TestData;
 import org.bonitasoft.studio.tests.debug.TestDebugFeature;
 import org.bonitasoft.studio.tests.pagetemplate.PageTemplateEditionIT;
 import org.bonitasoft.studio.tests.processzoo.examples.TestWebPurchase;
@@ -84,7 +83,7 @@ import org.junit.runners.Suite;
     TestConditionExpression.class,
     TestConfigurationDialog.class,
     OrganizationCreationTest.class,
-        TestDeleteDiagrams.class,
+    TestDeleteDiagrams.class,
     ActorDefinitionTranslationsTest.class,
     ActorFilterDefinitionTest.class,
     ActorFilterDefinitionWizardPageTest.class,
@@ -103,7 +102,6 @@ import org.junit.runners.Suite;
     TestAddValidatorToProcessAndRun.class,
     FormsDiagramTests.class,
     PageTemplateEditionIT.class,
-    TestData.class,
     TestUndoRedoStackLimit.class,
     TestOpenDiagram.class,
     TestDeleteTaskWithForm.class,

@@ -20,15 +20,22 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CancellationException;
 
 import org.bonitasoft.studio.actors.ActorsPlugin;
 import org.bonitasoft.studio.actors.i18n.Messages;
+import org.bonitasoft.studio.actors.model.organization.DocumentRoot;
 import org.bonitasoft.studio.actors.model.organization.Organization;
+import org.bonitasoft.studio.actors.model.organization.OrganizationFactory;
 import org.bonitasoft.studio.actors.model.organization.util.OrganizationAdapterFactory;
 import org.bonitasoft.studio.actors.model.organization.util.OrganizationResourceFactoryImpl;
+import org.bonitasoft.studio.actors.model.organization.util.OrganizationResourceImpl;
+import org.bonitasoft.studio.actors.model.organization.util.OrganizationXMLProcessor;
 import org.bonitasoft.studio.actors.ui.wizard.page.OrganizationUserValidator;
 import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.ProjectUtil;
@@ -42,9 +49,14 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.emf.ecore.xmi.XMLResource;
+import org.eclipse.emf.ecore.xmi.impl.XMLResourceImpl;
 import org.eclipse.emf.edapt.history.Release;
 import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.emf.edapt.migration.execution.Migrator;
+import org.eclipse.emf.edapt.migration.execution.ValidationLevel;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.swt.graphics.Image;
 
@@ -54,138 +66,172 @@ import org.eclipse.swt.graphics.Image;
  */
 public class OrganizationRepositoryStore extends AbstractEMFRepositoryStore<OrganizationFileStore> {
 
-	private static final String NAMESPACE_6_3_0 = "xmlns:organization=\"http://documentation.bonitasoft.com/organization-xml-schema\"";
-	private static final String NAMESPACE_6_0_0_BETA_016 = "xmlns:organization=\"http://www.bonitasoft.org/ns/organization/6.0.0-beta-016\"";
-	private static final String STORE_NAME = "organizations";
-	public static final String ORGANIZATION_EXT = "organization";
-	private static final Set<String> extensions = new HashSet<String>() ;
-	static{
-		extensions.add(ORGANIZATION_EXT) ;
-	}
+    private static final String NAMESPACE_6_3_0 = "xmlns:organization=\"http://documentation.bonitasoft.com/organization-xml-schema\"";
+    private static final String NAMESPACE_6_0_0_BETA_016 = "xmlns:organization=\"http://www.bonitasoft.org/ns/organization/6.0.0-beta-016\"";
+    private static final String STORE_NAME = "organizations";
+    public static final String ORGANIZATION_EXT = "organization";
+    private static final Set<String> extensions = new HashSet<String>() ;
+    static{
+        extensions.add(ORGANIZATION_EXT) ;
+    }
 
-	/* (non-Javadoc)
-	 * @see org.bonitasoft.studio.common.repository.model.IRepositoryStore#createRepositoryFileStore(java.lang.String)
-	 */
-	@Override
-	public OrganizationFileStore createRepositoryFileStore(String fileName) {
-		return new OrganizationFileStore(fileName, this);
-	}
+    /* (non-Javadoc)
+     * @see org.bonitasoft.studio.common.repository.model.IRepositoryStore#createRepositoryFileStore(java.lang.String)
+     */
+    @Override
+    public OrganizationFileStore createRepositoryFileStore(final String fileName) {
+        return new OrganizationFileStore(fileName, this);
+    }
 
-	/* (non-Javadoc)
-	 * @see org.bonitasoft.studio.common.repository.model.IRepositoryStore#getName()
-	 */
-	@Override
-	public String getName() {
-		return STORE_NAME;
-	}
+    /* (non-Javadoc)
+     * @see org.bonitasoft.studio.common.repository.model.IRepositoryStore#getName()
+     */
+    @Override
+    public String getName() {
+        return STORE_NAME;
+    }
 
-	/* (non-Javadoc)
-	 * @see org.bonitasoft.studio.common.repository.model.IRepositoryStore#getDisplayName()
-	 */
-	@Override
-	public String getDisplayName() {
-		return Messages.organizations;
-	}
+    /* (non-Javadoc)
+     * @see org.bonitasoft.studio.common.repository.model.IRepositoryStore#getDisplayName()
+     */
+    @Override
+    public String getDisplayName() {
+        return Messages.organizations;
+    }
 
-	/* (non-Javadoc)
-	 * @see org.bonitasoft.studio.common.repository.model.IRepositoryStore#getIcon()
-	 */
-	@Override
-	public Image getIcon() {
-		return Pics.getImage("organization.png",ActorsPlugin.getDefault());
-	}
+    /* (non-Javadoc)
+     * @see org.bonitasoft.studio.common.repository.model.IRepositoryStore#getIcon()
+     */
+    @Override
+    public Image getIcon() {
+        return Pics.getImage("organization.png",ActorsPlugin.getDefault());
+    }
 
-	/* (non-Javadoc)
-	 * @see org.bonitasoft.studio.common.repository.model.IRepositoryStore#getCompatibleExtensions()
-	 */
-	@Override
-	public Set<String> getCompatibleExtensions() {
-		return extensions;
-	}
+    /* (non-Javadoc)
+     * @see org.bonitasoft.studio.common.repository.model.IRepositoryStore#getCompatibleExtensions()
+     */
+    @Override
+    public Set<String> getCompatibleExtensions() {
+        return extensions;
+    }
 
-	@Override
-	protected OrganizationFileStore doImportInputStream(String fileName,InputStream inputStream) {
-		String newFileName = fileName.replace(".xml", "."+ORGANIZATION_EXT) ;
-		final IFile file = getResource().getFile(newFileName);
-		OrganizationFileStore fileStore = null;
-		try{
-			if(file.exists()){
-				if(FileActionDialog.overwriteQuestion(newFileName)){
-					file.setContents(inputStream, true, false, Repository.NULL_PROGRESS_MONITOR);
-				}else{
-					inputStream.close();
-				}
-			} else {
-				file.create(inputStream, true, Repository.NULL_PROGRESS_MONITOR);
-			}
-			fileStore = createRepositoryFileStore(newFileName);
-			if(file != null && fileStore != null){
-				Organization orga = fileStore.getContent() ;
-				if(orga != null && (orga.getName() == null || orga.getName().isEmpty())){
-					orga.setName(newFileName.substring(0,newFileName.length()-ORGANIZATION_EXT.length() - 1)) ;
-					IStatus status = new OrganizationUserValidator().validate(orga);
-					if(status.isOK()){
-						fileStore.save(orga) ;
-					}else{
-						fileStore.delete();
-						throw new CancellationException(status.getMessage());
-					}
-				}
+    @Override
+    protected OrganizationFileStore doImportInputStream(final String fileName,final InputStream inputStream) {
+        final String newFileName = fileName.replace(".xml", "."+ORGANIZATION_EXT) ;
+        final IFile file = getResource().getFile(newFileName);
+        OrganizationFileStore fileStore = null;
+        try{
+            if(file.exists()){
+                if(FileActionDialog.overwriteQuestion(newFileName)){
+                    file.setContents(inputStream, true, false, Repository.NULL_PROGRESS_MONITOR);
+                }else{
+                    inputStream.close();
+                }
+            } else {
+                file.create(inputStream, true, Repository.NULL_PROGRESS_MONITOR);
+            }
+            fileStore = createRepositoryFileStore(newFileName);
+            if(file != null && fileStore != null){
+                final Organization orga = fileStore.getContent() ;
+                if(orga != null && (orga.getName() == null || orga.getName().isEmpty())){
+                    orga.setName(newFileName.substring(0,newFileName.length()-ORGANIZATION_EXT.length() - 1)) ;
+                    final IStatus status = new OrganizationUserValidator().validate(orga);
+                    if(status.isOK()){
+                        fileStore.save(orga) ;
+                    }else{
+                        fileStore.delete();
+                        throw new CancellationException(status.getMessage());
+                    }
+                }
 
-			}
-		}catch(Exception e){
-			if(e instanceof CancellationException){
-				throw (CancellationException)e;
-			}
-			BonitaStudioLog.error(e) ;
-			return null;
-		}
-		return fileStore ;
-	}
+            }
+        }catch(final Exception e){
+            if(e instanceof CancellationException){
+                throw (CancellationException)e;
+            }
+            BonitaStudioLog.error(e) ;
+            return null;
+        }
+        return fileStore ;
+    }
 
-	@Override
-	protected void addAdapterFactory(ComposedAdapterFactory adapterFactory) {
-		adapterFactory.addAdapterFactory(new OrganizationAdapterFactory()) ;
-	}
+    @Override
+    protected void addAdapterFactory(final ComposedAdapterFactory adapterFactory) {
+        adapterFactory.addAdapterFactory(new OrganizationAdapterFactory()) ;
+    }
 
-	@Override
-	protected Resource getTmpEMFResource(String fileName,InputStream inputStream) {
-		FileOutputStream fos = null;
-		File tmpFile = null ;
-		try{
-			fileName = fileName.replaceAll(".xml", ".organization");
-			tmpFile = File.createTempFile("tmp", fileName, ProjectUtil.getBonitaStudioWorkFolder());
-			fos = new FileOutputStream(tmpFile);
-			FileUtil.copy(inputStream, fos);
-			final Resource resource = new OrganizationResourceFactoryImpl().createResource(URI.createFileURI(tmpFile.getAbsolutePath()));
-			return resource;
-		}catch (Exception e) {
-			BonitaStudioLog.error(e, CommonRepositoryPlugin.PLUGIN_ID);
-		}finally{
-			if(fos != null){
-				try {
-					fos.close();
-				} catch (IOException e) {
-					BonitaStudioLog.error(e,CommonRepositoryPlugin.PLUGIN_ID);
-				}
-			}
-			if(inputStream != null){
-				try{
-					inputStream.close();
-				} catch (IOException e) {
-					BonitaStudioLog.error(e,CommonRepositoryPlugin.PLUGIN_ID);
-				}
-			}
-		}
+    @Override
+    protected Resource getTmpEMFResource(String fileName,final InputStream inputStream) {
+        FileOutputStream fos = null;
+        File tmpFile = null ;
+        try{
+            fileName = fileName.replaceAll(".xml", ".organization");
+            tmpFile = File.createTempFile("tmp", fileName, ProjectUtil.getBonitaStudioWorkFolder());
+            fos = new FileOutputStream(tmpFile);
+            FileUtil.copy(inputStream, fos);
+            final Resource resource = new OrganizationResourceFactoryImpl().createResource(URI.createFileURI(tmpFile.getAbsolutePath()));
+            return resource;
+        }catch (final Exception e) {
+            BonitaStudioLog.error(e, CommonRepositoryPlugin.PLUGIN_ID);
+        }finally{
+            if(fos != null){
+                try {
+                    fos.close();
+                } catch (final IOException e) {
+                    BonitaStudioLog.error(e,CommonRepositoryPlugin.PLUGIN_ID);
+                }
+            }
+            if(inputStream != null){
+                try{
+                    inputStream.close();
+                } catch (final IOException e) {
+                    BonitaStudioLog.error(e,CommonRepositoryPlugin.PLUGIN_ID);
+                }
+            }
+        }
 
-		return null;
-	}
+        return null;
+    }
 
 
-	@Override
-	protected void performMigration(Migrator migrator, URI resourceURI , Release release) throws MigrationException {
-			FileUtil.replaceStringInFile(new File(resourceURI.toFileString()),  NAMESPACE_6_0_0_BETA_016,  NAMESPACE_6_3_0);
-	}
+    @Override
+    protected void performMigration(final Migrator migrator, final URI resourceURI , final Release release) throws MigrationException {
+        migrator.setLevel(ValidationLevel.RELEASE);
+        final ResourceSet rSet = migrator.migrateAndLoad(
+                Collections.singletonList(resourceURI), release,
+                null, Repository.NULL_PROGRESS_MONITOR);
+        if (!rSet.getResources().isEmpty()) {
+            FileOutputStream fos = null;
+            try {
+                final OrganizationResourceImpl r = (OrganizationResourceImpl) rSet.getResources().get(0);
+                final Resource resource = new XMLResourceImpl(resourceURI);
+                final DocumentRoot root = OrganizationFactory.eINSTANCE.createDocumentRoot();
+                final Organization orga = EcoreUtil.copy(((DocumentRoot) r.getContents().get(0)).getOrganization());
+                //                List<PasswordType> passwords = ModelHelper.getAllItemsOfType(orga, OrganizationPackage.Literals.PASSWORD_TYPE);
+                //                for(PasswordType p : passwords){
+                //                    p.setEncrypted(p.isEncrypted());
+                //                }
+                root.setOrganization(orga);
+                resource.getContents().add(root);
+                final Map<String, String> options = new HashMap<String, String>();
+                options.put(XMLResource.OPTION_ENCODING, "UTF-8");
+                options.put(XMLResource.OPTION_XML_VERSION, "1.0");
+                final File target = new File(resourceURI.toFileString());
+                fos = new FileOutputStream(target);
+                new OrganizationXMLProcessor().save(fos, resource, options);
+            } catch (final Exception e) {
+                BonitaStudioLog.error(e, ActorsPlugin.PLUGIN_ID);
+            } finally {
+                if (fos != null) {
+                    try {
+                        fos.close();
+                    } catch (final IOException e) {
+                        BonitaStudioLog.error(e, ActorsPlugin.PLUGIN_ID);
+                    }
+                }
+            }
+        }
+    }
 
 
 }

@@ -1,5 +1,16 @@
 /**
- * 
+ * Copyright (C) 2009-2012 BonitaSoft S.A.
+ * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2.0 of the License, or
+ * (at your option) any later version.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.common.emf.tools;
 
@@ -18,71 +29,84 @@ import org.bonitasoft.studio.model.form.util.FormSwitch;
  */
 public class WidgetHelper {
 
-	public static final String FIELD_PREFIX = "field_";
+    public static final String FIELD_PREFIX = "field_";
 
-	public static String getAssociatedReturnType(Widget widget){
-		if(widget instanceof  Duplicable && ((Duplicable) widget).isDuplicate()){
-			return List.class.getName();
-		}
-		return new FormSwitch<String>(){
+    public static String getAssociatedReturnType(final Widget widget){
+        if(widget instanceof  Duplicable && ((Duplicable) widget).isDuplicate()){
+            return List.class.getName();
+        }
+        return new FormSwitch<String>(){
 
-			public String caseTextFormField(org.bonitasoft.studio.model.form.TextFormField object) {
-				if(object.getReturnTypeModifier() == null){
-					return String.class.getName();
-				}
-				return object.getReturnTypeModifier();
-			}
-			
-			public String caseFileWidget(org.bonitasoft.studio.model.form.FileWidget object) {
-				return DocumentValue.class.getName();
-			}
+            @Override
+            public String caseTextFormField(final org.bonitasoft.studio.model.form.TextFormField object) {
+                if(object.getReturnTypeModifier() == null){
+                    return String.class.getName();
+                }
+                return object.getReturnTypeModifier();
+            }
 
-			public String caseGroup(org.bonitasoft.studio.model.form.Group object) {
-				return Map.class.getName();
-			}
+            @Override
+            public String caseFileWidget(final org.bonitasoft.studio.model.form.FileWidget object) {
+                return DocumentValue.class.getName();
+            }
 
-			public String caseSuggestBox(org.bonitasoft.studio.model.form.SuggestBox object) {
-				return String.class.getName();
-			}
+            @Override
+            public String caseGroup(final org.bonitasoft.studio.model.form.Group object) {
+                return Map.class.getName();
+            }
 
-			public String caseDurationFormField(org.bonitasoft.studio.model.form.DurationFormField object) {
-				return Long.class.getName();
-			}
+            @Override
+            public String caseSuggestBox(final org.bonitasoft.studio.model.form.SuggestBox object) {
+                return String.class.getName();
+            }
 
-			public String caseAbstractTable(org.bonitasoft.studio.model.form.AbstractTable object) {
-				return List.class.getName();
-			}
+            @Override
+            public String caseDurationFormField(final org.bonitasoft.studio.model.form.DurationFormField object) {
+                return Long.class.getName();
+            }
 
-			public String caseDateFormField(org.bonitasoft.studio.model.form.DateFormField object) {
-				return Date.class.getName();
-			}
+            @Override
+            public String caseAbstractTable(final org.bonitasoft.studio.model.form.AbstractTable object) {
+                return List.class.getName();
+            }
 
-			public String caseCheckBoxSingleFormField(org.bonitasoft.studio.model.form.CheckBoxSingleFormField object) {
-				return Boolean.class.getName();
-			}
+            @Override
+            public String caseDateFormField(final org.bonitasoft.studio.model.form.DateFormField object) {
+                return Date.class.getName();
+            }
 
-			public String caseNextFormButton(org.bonitasoft.studio.model.form.NextFormButton object) {
-				return Boolean.class.getName();
-			}
+            @Override
+            public String caseCheckBoxSingleFormField(final org.bonitasoft.studio.model.form.CheckBoxSingleFormField object) {
+                return Boolean.class.getName();
+            }
 
-			public String caseSelectFormField(org.bonitasoft.studio.model.form.SelectFormField object) {
-				return String.class.getName();
-			}
+            @Override
+            public String caseNextFormButton(final org.bonitasoft.studio.model.form.NextFormButton object) {
+                return Boolean.class.getName();
+            }
 
-			public String caseRadioFormField(org.bonitasoft.studio.model.form.RadioFormField object) {
-				return String.class.getName();
-			}
+            @Override
+            public String caseSelectFormField(final org.bonitasoft.studio.model.form.SelectFormField object) {
+                return String.class.getName();
+            }
 
-			public String caseMultipleValuatedFormField(org.bonitasoft.studio.model.form.MultipleValuatedFormField object) {
-				return List.class.getName();
-			}
+            @Override
+            public String caseRadioFormField(final org.bonitasoft.studio.model.form.RadioFormField object) {
+                return String.class.getName();
+            }
 
-			public String caseWidget(Widget object) {
-				return String.class.getName();
-			}
+            @Override
+            public String caseMultipleValuatedFormField(final org.bonitasoft.studio.model.form.MultipleValuatedFormField object) {
+                return List.class.getName();
+            }
 
-		}.doSwitch(widget);
+            @Override
+            public String caseWidget(final Widget object) {
+                return String.class.getName();
+            }
 
-	}
+        }.doSwitch(widget);
+
+    }
 
 }

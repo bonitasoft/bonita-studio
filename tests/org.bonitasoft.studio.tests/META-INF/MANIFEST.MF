@@ -88,4 +88,5 @@ Import-Package: org.bonitasoft.engine.api,
  org.bonitasoft.engine.platform,
  org.bonitasoft.engine.search,
  org.bonitasoft.engine.session,
+ org.bonitasoft.studio.expression.editor.i18n,
  org.bonitasoft.studio.expression.editor.viewer

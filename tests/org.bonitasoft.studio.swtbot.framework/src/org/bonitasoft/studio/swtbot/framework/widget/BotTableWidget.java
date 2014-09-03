@@ -61,4 +61,8 @@ public class BotTableWidget extends BotWidget {
         };
     }
 
+    public boolean containsItem(final String item) {
+        return getSWTBotWidget().containsItem(item);
+    }
+
 }

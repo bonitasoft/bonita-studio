@@ -21,19 +21,17 @@ import org.eclipse.swtbot.swt.finder.widgets.SWTBotCheckBox;
  *
  * @author Joachim Segala
  */
-public class BotAddDataDialog extends AbstractBotWizardPage {
+public class AbstractBotDataWizardPage extends AbstractBotWizardPage {
 
-    public BotAddDataDialog(final SWTGefBot bot) {
+    public AbstractBotDataWizardPage(final SWTGefBot bot) {
         super(bot);
-        bot.waitUntil(Conditions.shellIsActive(Messages.newVariable));
-        bot.shell(Messages.newVariable);
     }
 
     /**
      * Set name of data.
      * @param pName
      */
-    public BotAddDataDialog setName(final String pName) {
+    public AbstractBotDataWizardPage setName(final String pName) {
         bot.textWithLabel(Messages.name + " *").setText(pName);
         return this;
     }
@@ -42,7 +40,7 @@ public class BotAddDataDialog extends AbstractBotWizardPage {
      * Set description of data.
      * @param pDescription
      */
-    public BotAddDataDialog setDescription(final String pDescription) {
+    public AbstractBotDataWizardPage setDescription(final String pDescription) {
         bot.textWithLabel(Messages.dataDescriptionLabel).setText(pDescription);
         return this;
     }
@@ -51,12 +49,12 @@ public class BotAddDataDialog extends AbstractBotWizardPage {
      * Set type of data.
      * @param pType
      */
-    public BotAddDataDialog setType(final String pType) {
+    public AbstractBotDataWizardPage setType(final String pType) {
         bot.comboBoxWithLabel(Messages.datatypeLabel).setSelection(pType);
         return this;
     }
 
-    public BotAddDataDialog setClassname(final String pClass) {
+    public AbstractBotDataWizardPage setClassname(final String pClass) {
         bot.textWithLabel(Messages.classLabel).setText(pClass);
         return this;
     }
@@ -66,7 +64,7 @@ public class BotAddDataDialog extends AbstractBotWizardPage {
         return new BotExpressionEditorDialog(bot);
     }
 
-    public BotAddDataDialog setAutoGenerateForm(final boolean pAutoGenerate) {
+    public AbstractBotDataWizardPage setAutoGenerateForm(final boolean pAutoGenerate) {
         final SWTBotCheckBox cb = bot.checkBox("Auto-generate form");
         if (cb.isChecked() && !pAutoGenerate) {
             cb.deselect();
@@ -75,4 +73,11 @@ public class BotAddDataDialog extends AbstractBotWizardPage {
         }
         return this;
     }
+
+    public AbstractBotDataWizardPage finishAndAdd() {
+        bot.waitUntil(Conditions.widgetIsEnabled(bot.button(Messages.createAndNewButton)), 5000);
+        bot.button(Messages.createAndNewButton).click();
+        return this;
+    }
+
 }

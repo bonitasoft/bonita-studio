@@ -10,6 +10,7 @@ package org.bonitasoft.studio.swtbot.framework.draw;
 
 import java.util.List;
 
+import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.swtbot.framework.BotBase;
 import org.bonitasoft.studio.swtbot.framework.exception.EmptyDiagramSelectionException;
 import org.bonitasoft.studio.swtbot.framework.exception.SemanticElementNotFoundException;
@@ -20,6 +21,7 @@ import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditPart;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditor;
+import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.junit.Assert;
 
 /**
@@ -47,8 +49,42 @@ public class BotGefBaseEditor extends BotBase {
         final SWTBotGefEditPart element = gmfEditor.getEditPart(pName);
         Assert.assertNotNull("Error: Element not found : \'" + pName + "\'.", element);
         element.click();
-        bot.sleep(100);
+        bot.waitUntil(new DefaultCondition() {
+
+            @Override
+            public boolean test() throws Exception {
+                for (final SWTBotGefEditPart ep : gmfEditor.selectedEditParts()) {
+                    EditPart part = ep.part();
+                    while (!(part instanceof IGraphicalEditPart)) {
+                        part = part.getParent();
+                    }
+                    if (part != null) {
+                        final EObject resolveSemanticElement = ((IGraphicalEditPart) part).resolveSemanticElement();
+                        if (isElementWithName(pName, resolveSemanticElement)) {
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            }
+
+
+
+            @Override
+            public String getFailureMessage() {
+                return "Failed to select " + pName;
+            }
+        });
         return this;
+    }
+
+    protected boolean isElementWithName(final String pName, final EObject resolveSemanticElement) {
+        if (resolveSemanticElement instanceof Element) {
+            if (((Element) resolveSemanticElement).getName().equals(pName)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public SWTBotGefEditor getGmfEditor() {

@@ -12,10 +12,11 @@ import org.bonitasoft.studio.properties.i18n.Messages;
 import org.bonitasoft.studio.swtbot.framework.BotBase;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotCheckBox;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotText;
 
 /**
  * General property section.
- * 
+ *
  * @author Joachim Segala
  */
 public class BotGeneralPropertySection extends BotBase {
@@ -25,9 +26,13 @@ public class BotGeneralPropertySection extends BotBase {
     }
 
     public void setName(final String pName) {
-        bot.textWithLabel(Messages.name).setText(pName);
-        //FIXME: replace with wait until
-        bot.sleep(1000);
+        final SWTBotText textWithLabel = bot.textWithLabel(Messages.name);
+        if (textWithLabel.isEnabled()) {
+            textWithLabel.setText(pName);
+        } else {
+
+        }
+        bot.sleep(500);
     }
 
     /**
@@ -36,7 +41,7 @@ public class BotGeneralPropertySection extends BotBase {
 
     /**
      * Set the type of the task.
-     * 
+     *
      * @param pType
      */
     public void setTaskType(final String pType) {
@@ -49,7 +54,7 @@ public class BotGeneralPropertySection extends BotBase {
 
     /**
      * Set the type of the gateway.
-     * 
+     *
      * @param pType
      */
     public void setGatewayType(final String pType) {
@@ -62,7 +67,7 @@ public class BotGeneralPropertySection extends BotBase {
 
     /**
      * Check/Uncheck "Default flow".
-     * 
+     *
      * @param pIsDefaultFlow
      */
     public void setIsDefaultFlow(final boolean pIsDefaultFlow) {

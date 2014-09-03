@@ -9,32 +9,19 @@
 package org.bonitasoft.studio.swtbot.framework.diagram.general.data;
 
 import org.bonitasoft.studio.data.i18n.Messages;
-import org.bonitasoft.studio.swtbot.framework.BotBase;
-import org.bonitasoft.studio.swtbot.framework.widget.BotTableWidget;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
+import org.eclipse.swtbot.swt.finder.waits.Conditions;
 
 /**
- * Data property section.
+ * Add data dialog.
  *
  * @author Joachim Segala
  */
-public class BotDataPropertySection extends BotBase {
+public class BotAddDataWizardPage extends AbstractBotDataWizardPage {
 
-    public BotDataPropertySection(final SWTGefBot bot) {
+    public BotAddDataWizardPage(final SWTGefBot bot) {
         super(bot);
-    }
-
-    public BotAddDataWizardPage addData() {
-        bot.button(Messages.addData).click();
-        return new BotAddDataWizardPage(bot);
-    }
-
-    public BotTableWidget dataList() {
-        return new BotTableWidget(bot.table());
-    }
-
-    public BotEditDataWizardPage edit() {
-        bot.button(org.bonitasoft.studio.common.Messages.edit).click();
-        return new BotEditDataWizardPage(bot);
+        bot.waitUntil(Conditions.shellIsActive(Messages.newVariable));
+        bot.shell(Messages.newVariable);
     }
 }
