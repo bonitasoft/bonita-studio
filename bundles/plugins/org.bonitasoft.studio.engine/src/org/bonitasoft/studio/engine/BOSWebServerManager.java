@@ -258,7 +258,7 @@ public class BOSWebServerManager {
     private void connectWithRetries() {
         int loginTry = 0;
         APISession session = null;
-        while (loginTry < MAX_LOGGING_TRY) {
+        while (session == null && loginTry < MAX_LOGGING_TRY) {
             try {
                 session = BOSEngineManager.getInstance().getLoginAPI().login(BOSEngineManager.BONITA_TECHNICAL_USER, BOSEngineManager.BONITA_TECHNICAL_USER);
             } catch (final Exception e) {
