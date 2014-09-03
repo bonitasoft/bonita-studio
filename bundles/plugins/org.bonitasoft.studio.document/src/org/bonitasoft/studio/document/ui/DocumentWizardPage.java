@@ -108,6 +108,7 @@ public class DocumentWizardPage extends WizardPage {
     private IObservableValue btnDocumentTypeInternal;
     private IObservableValue externalInitialContentObserveWidget;
 
+    final private int URL_SIZE_MAX = 1024;
 
     public DocumentWizardPage(final EObject context,final Document document){
         super(DocumentWizardPage.class.getName());
@@ -117,7 +118,7 @@ public class DocumentWizardPage extends WizardPage {
         setDescription(Messages.newDocumentWizardDescription);
         emfDataBindingContext = new EMFDataBindingContext();
         setPageComplete(false);
-        externalValidator = new DocumentInitialContentValidator();
+        externalValidator = new DocumentInitialContentValidator(URL_SIZE_MAX);
     }
 
     @Override

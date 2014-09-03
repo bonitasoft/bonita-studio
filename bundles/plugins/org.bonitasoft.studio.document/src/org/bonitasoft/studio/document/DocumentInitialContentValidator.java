@@ -27,8 +27,10 @@ import org.eclipse.core.runtime.IStatus;
  */
 public class DocumentInitialContentValidator implements IValidator {
 
+    int maxLenght;
 
-    public DocumentInitialContentValidator() {
+    public DocumentInitialContentValidator(final int maxLenght) {
+        this.maxLenght = maxLenght;
     }
 
     @Override
@@ -44,6 +46,11 @@ public class DocumentInitialContentValidator implements IValidator {
                 && (document.getDefaultValueIdOfDocumentStore() == null || document.getDefaultValueIdOfDocumentStore().isEmpty())) {
             return ValidationStatus.error(Messages.error_documentDefaultIDEmpty);
         }
+
+        if (document.getUrl() != null && document.getUrl().getContent().length() > maxLenght) {
+            return ValidationStatus.error(Messages.bind(Messages.error_documentURLTooLong, maxLenght));
+        }
+
         return ValidationStatus.ok();
 
     }
