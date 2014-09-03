@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -35,7 +33,6 @@ import org.eclipse.emf.edit.domain.EditingDomain;
 
 /**
  * @author Romain Bioteau
- *
  */
 public class OperationReturnTypesValidator implements IExpressionValidator {
 
@@ -121,42 +118,50 @@ public class OperationReturnTypesValidator implements IExpressionValidator {
                 }
 
                 if (ExpressionConstants.CONSTANT_TYPE.equals(expression.getType())) {
-                    final String returnType = expression.getReturnType();
-                    if (expressionContent != null && !expressionContent.isEmpty()) {
-                        if (Integer.class.getName().equals(returnType)) {
-                            try {
-                                Integer.valueOf(expressionContent);
-                            } catch (final NumberFormatException e) {
-                                return ValidationStatus.warning(Messages.bind(Messages.expressionValueNotCompatibleWithReturnType, expressionContent,
-                                        returnType));
-                            }
-                        } else if (Double.class.getName().equals(returnType)) {
-                            try {
-                                Double.valueOf(expressionContent);
-                            } catch (final NumberFormatException e) {
-                                return ValidationStatus.warning(Messages.bind(Messages.expressionValueNotCompatibleWithReturnType, expressionContent,
-                                        returnType));
-                            }
-                        } else if (Float.class.getName().equals(returnType)) {
-                            try {
-                                Float.valueOf(expressionContent);
-                            } catch (final NumberFormatException e) {
-                                return ValidationStatus.warning(Messages.bind(Messages.expressionValueNotCompatibleWithReturnType, expressionContent,
-                                        returnType));
-                            }
-                        } else if (Long.class.getName().equals(returnType)) {
-                            try {
-                                Long.valueOf(expressionContent);
-                            } catch (final NumberFormatException e) {
-                                return ValidationStatus.warning(Messages.bind(Messages.expressionValueNotCompatibleWithReturnType, expressionContent,
-                                        returnType));
-                            }
-                        }
+                    final IStatus status = validateConstantContentWithReturnType(expression, expressionContent);
+                    if (status != null) {
+                        return status;
                     }
                 }
             }
         }
         return ValidationStatus.ok();
+    }
+
+    private IStatus validateConstantContentWithReturnType(final Expression expression, final String expressionContent) {
+        final String returnType = expression.getReturnType();
+        if (expressionContent != null && !expressionContent.isEmpty()) {
+            if (Integer.class.getName().equals(returnType)) {
+                try {
+                    Integer.valueOf(expressionContent);
+                } catch (final NumberFormatException e) {
+                    return ValidationStatus.warning(Messages.bind(Messages.expressionValueNotCompatibleWithReturnType, expressionContent,
+                            returnType));
+                }
+            } else if (Double.class.getName().equals(returnType)) {
+                try {
+                    Double.valueOf(expressionContent);
+                } catch (final NumberFormatException e) {
+                    return ValidationStatus.warning(Messages.bind(Messages.expressionValueNotCompatibleWithReturnType, expressionContent,
+                            returnType));
+                }
+            } else if (Float.class.getName().equals(returnType)) {
+                try {
+                    Float.valueOf(expressionContent);
+                } catch (final NumberFormatException e) {
+                    return ValidationStatus.warning(Messages.bind(Messages.expressionValueNotCompatibleWithReturnType, expressionContent,
+                            returnType));
+                }
+            } else if (Long.class.getName().equals(returnType)) {
+                try {
+                    Long.valueOf(expressionContent);
+                } catch (final NumberFormatException e) {
+                    return ValidationStatus.warning(Messages.bind(Messages.expressionValueNotCompatibleWithReturnType, expressionContent,
+                            returnType));
+                }
+            }
+        }
+        return null;
     }
 
     protected IStatus validateDeletionOperation(final Expression expression, final String expressionName, final Operation operation) {
@@ -231,7 +236,7 @@ public class OperationReturnTypesValidator implements IExpressionValidator {
 
                 if (!isTask) {
                     return ValidationStatus.warning(Messages.incompatibleType + " " + Messages.messageOperationWithDocumentInForm);
-                }else{
+                } else {
                     return ValidationStatus.warning(Messages.incompatibleType + " " + Messages.messageOperationWithDocumentInTask);
                 }
             } else {
