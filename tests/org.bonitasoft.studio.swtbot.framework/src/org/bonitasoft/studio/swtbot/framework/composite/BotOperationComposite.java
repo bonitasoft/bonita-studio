@@ -22,7 +22,7 @@ import org.hamcrest.Matcher;
 
 /**
  * One operation row.
- * 
+ *
  * @author Joachim Segala
  */
 public class BotOperationComposite extends BotBase {
@@ -47,6 +47,15 @@ public class BotOperationComposite extends BotBase {
     public BotExpressionEditorDialog editRightOperand() {
         localBot.toolbarButtonWithId(ExpressionViewer.SWTBOT_ID_EDITBUTTON, 0).click();
         return new BotExpressionEditorDialog(bot);
+    }
+
+    public String getSelectedOperator() {
+        return localBot.link().getText().replace("<A>", "").replace("</A>", "");
+    }
+
+    public BotSelectOperatorDialog editOperator() {
+        localBot.link().click();
+        return new BotSelectOperatorDialog(bot);
     }
 
 }

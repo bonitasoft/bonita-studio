@@ -62,7 +62,7 @@ public class BotGefBaseEditor extends BotBase {
         }
         final SWTBotGefEditPart swtBotGefEditPart = selectedEditParts.get(0);
         EditPart part = swtBotGefEditPart.part();
-        while (!(part instanceof IGraphicalEditPart)) {
+        while (part != null && !(part instanceof IGraphicalEditPart)) {
             part = part.getParent();
         }
         if (part == null) {

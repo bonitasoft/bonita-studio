@@ -18,9 +18,11 @@ package org.bonitasoft.studio.common.emf.tools;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.bonitasoft.studio.model.expression.assertions.ExpressionAssert.assertThat;
+import static org.mockito.Matchers.any;
 
 import java.util.Collection;
 
+import org.bonitasoft.engine.bpm.document.DocumentValue;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.Messages;
 import org.bonitasoft.studio.model.expression.Expression;
@@ -33,6 +35,7 @@ import org.bonitasoft.studio.model.process.DataType;
 import org.bonitasoft.studio.model.process.JavaObjectData;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.edit.domain.EditingDomain;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -62,7 +65,7 @@ public class ExpressionHelperTest {
      */
     @Test
     public void shouldCreateDependencyFromEObject_CopyDataAndRemoveDefaultValue() throws Exception {
-        JavaObjectData myData = ProcessFactory.eINSTANCE.createJavaObjectData();
+        final JavaObjectData myData = ProcessFactory.eINSTANCE.createJavaObjectData();
         myData.setName("dataName");
         myData.setDatasourceId("datasourceId");
         myData.setClassName("org.bonita.test.MyClass");
@@ -71,10 +74,10 @@ public class ExpressionHelperTest {
         myData.setMultiple(true);
         myData.setDocumentation("some doc");
         myData.setDefaultValue(ExpressionFactory.eINSTANCE.createExpression());
-        DataType dataType = ProcessFactory.eINSTANCE.createJavaType();
+        final DataType dataType = ProcessFactory.eINSTANCE.createJavaType();
         myData.setDataType(dataType);
 
-        EObject dependencyFromEObject = ExpressionHelper.createDependencyFromEObject(myData);
+        final EObject dependencyFromEObject = ExpressionHelper.createDependencyFromEObject(myData);
 
         assertThat(dependencyFromEObject).isNotNull().isNotSameAs(myData).isInstanceOf(JavaObjectData.class);
         assertThat(((JavaObjectData)dependencyFromEObject).getName()).isEqualTo(myData.getName());
@@ -89,12 +92,12 @@ public class ExpressionHelperTest {
 
     @Test
     public void shouldCreateDependencyFromEObject_CopyWidgetWithName() throws Exception {
-        Widget widget = FormFactory.eINSTANCE.createDateFormField();
+        final Widget widget = FormFactory.eINSTANCE.createDateFormField();
         widget.setName("myWidget");
         widget.setDisplayLabel(ExpressionFactory.eINSTANCE.createExpression());
         widget.setInputExpression(ExpressionFactory.eINSTANCE.createExpression());
 
-        EObject dependencyFromEObject = ExpressionHelper.createDependencyFromEObject(widget);
+        final EObject dependencyFromEObject = ExpressionHelper.createDependencyFromEObject(widget);
         assertThat(dependencyFromEObject).isNotNull().isNotSameAs(widget).isInstanceOf(DateFormField.class);
         assertThat(((Widget)dependencyFromEObject).getName()).isEqualTo(widget.getName());
         assertThat(((Widget)dependencyFromEObject).getDisplayLabel()).isNull();
@@ -103,28 +106,29 @@ public class ExpressionHelperTest {
 
     @Test
     public void shouldCreateDependencyFromEObject_CopyWidgetReturnTypeModifier() throws Exception {
-        Widget widget = FormFactory.eINSTANCE.createTextFormField();
+        final Widget widget = FormFactory.eINSTANCE.createTextFormField();
         widget.setReturnTypeModifier(Integer.class.getName());
 
-        EObject dependencyFromEObject = ExpressionHelper.createDependencyFromEObject(widget);
+        final EObject dependencyFromEObject = ExpressionHelper.createDependencyFromEObject(widget);
         assertThat(((Widget)dependencyFromEObject).getReturnTypeModifier()).isEqualTo(Integer.class.getName());
     }
 
     @Test
     public void shouldCreateDependencyFromEObject_CopyWidgetDuplicateValue() throws Exception {
-        Widget widget = FormFactory.eINSTANCE.createTextFormField();
+        final Widget widget = FormFactory.eINSTANCE.createTextFormField();
         ((Duplicable) widget).setDuplicate(true);
 
-        EObject dependencyFromEObject = ExpressionHelper.createDependencyFromEObject(widget);
+        final EObject dependencyFromEObject = ExpressionHelper.createDependencyFromEObject(widget);
         assertThat(((Duplicable)dependencyFromEObject).isDuplicate()).isTrue();
     }
 
     @Test
     public void shouldClearExpression_SetEmptyExpression() throws Exception {
-        Expression expression = ExpressionFactory.eINSTANCE.createExpression();
+        final Expression expression = ExpressionFactory.eINSTANCE.createExpression();
         expression.setName("Toto");
         expression.setContent("Titi2014");
         expression.setType(ExpressionConstants.SCRIPT_TYPE);
+        expression.setReturnType(DocumentValue.class.getName());
         expression.getReferencedElements().add(ProcessFactory.eINSTANCE.createData());
 
 
@@ -133,6 +137,24 @@ public class ExpressionHelperTest {
         assertThat(expression.getContent()).isEmpty();
         assertThat(expression.getType()).isEqualTo(ExpressionConstants.CONSTANT_TYPE);
         assertThat(expression.getReferencedElements()).isEmpty();
+        assertThat(expression.getReturnType()).isEqualTo(String.class.getName());
+    }
+
+    @Test
+    public void shouldClearExpressionWithEditingDomain_SetEmptyExpression() throws Exception {
+        final Expression expression = ExpressionFactory.eINSTANCE.createExpression();
+        expression.setName("Toto");
+        expression.setContent("Titi2014");
+        expression.setType(ExpressionConstants.SCRIPT_TYPE);
+        expression.setReturnType(DocumentValue.class.getName());
+        expression.getReferencedElements().add(ProcessFactory.eINSTANCE.createData());
+
+        ExpressionHelper.clearExpression(expression, any(String.class), any(EditingDomain.class));
+        assertThat(expression.getName()).isEmpty();
+        assertThat(expression.getContent()).isEmpty();
+        assertThat(expression.getType()).isEqualTo(ExpressionConstants.CONSTANT_TYPE);
+        assertThat(expression.getReferencedElements()).isEmpty();
+        assertThat(expression.getReturnType()).isEqualTo(String.class.getName());
     }
 
     @Test(expected=IllegalArgumentException.class)
@@ -142,7 +164,7 @@ public class ExpressionHelperTest {
 
     @Test
     public void shouldCreateEmptyListGroovyScriptExpression_ReturnAValidEmptyListExpression() throws Exception {
-        Expression expression = ExpressionHelper.createEmptyListGroovyScriptExpression();
+        final Expression expression = ExpressionHelper.createEmptyListGroovyScriptExpression();
         assertThat(expression).hasContent("[]").
         hasInterpreter(ExpressionConstants.GROOVY).
         hasType(ExpressionConstants.SCRIPT_TYPE).

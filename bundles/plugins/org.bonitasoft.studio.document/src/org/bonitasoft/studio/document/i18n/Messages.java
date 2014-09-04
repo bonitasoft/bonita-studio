@@ -41,6 +41,7 @@ public class Messages extends NLS {
     public static String selectDocumentDialogTitle;
     public static String error_documentAllreadyexist;
     public static String error_documentURLEmpty;
+    public static String error_documentURLTooLong;
     public static String error_documentDefaultIDEmpty;
     public static String explanationMimeTypeDocument;
 

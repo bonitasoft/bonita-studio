@@ -1,16 +1,14 @@
 /**
- * Copyright (C) 2012 BonitaSoft S.A.
- * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2012-2014 BonitaSoft S.A.
+ * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -58,7 +56,6 @@ import org.eclipse.ui.forms.widgets.Section;
 
 /**
  * @author Romain Bioteau
- * 
  */
 public class OperatorSelectionDialog extends Dialog implements ISelectionChangedListener {
 
@@ -84,7 +81,7 @@ public class OperatorSelectionDialog extends Dialog implements ISelectionChanged
         operatorTypeList.add(ExpressionConstants.DELETION_OPERATOR);
     }
 
-    protected OperatorSelectionDialog(Shell parentShell, Operation operation) {
+    protected OperatorSelectionDialog(final Shell parentShell, final Operation operation) {
         super(parentShell);
         this.operation = operation;
         operator = EcoreUtil.copy(operation.getOperator());
@@ -95,11 +92,12 @@ public class OperatorSelectionDialog extends Dialog implements ISelectionChanged
     private void initializeOperatorEditors() {
         if (operatorEditors == null) {
             operatorEditors = new ArrayList<IOperatorEditor>();
-            for (IConfigurationElement elem : BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(OPERATOR_EDITOR_CONTRIBUTION_ID)) {
+            for (final IConfigurationElement elem : BonitaStudioExtensionRegistryManager.getInstance()
+                    .getConfigurationElements(OPERATOR_EDITOR_CONTRIBUTION_ID)) {
                 try {
-                    IOperatorEditor editor = (IOperatorEditor) elem.createExecutableExtension("class");
+                    final IOperatorEditor editor = (IOperatorEditor) elem.createExecutableExtension("class");
                     operatorEditors.add(editor);
-                } catch (Exception e) {
+                } catch (final Exception e) {
                     BonitaStudioLog.error(e);
                 }
             }
@@ -107,8 +105,14 @@ public class OperatorSelectionDialog extends Dialog implements ISelectionChanged
     }
 
     @Override
+    protected void configureShell(final Shell newShell) {
+        super.configureShell(newShell);
+        newShell.setText(Messages.dialogTitleSelectOperator);
+    }
+
+    @Override
     public boolean close() {
-        boolean closed = super.close();
+        final boolean closed = super.close();
         if (closed) {
             if (context != null) {
                 context.dispose();
@@ -117,13 +121,13 @@ public class OperatorSelectionDialog extends Dialog implements ISelectionChanged
         return closed;
     }
 
-    protected boolean isSupportedType(Expression exp) {
-        String type = exp.getType();
+    protected boolean isSupportedType(final Expression exp) {
+        final String type = exp.getType();
         return ExpressionConstants.VARIABLE_TYPE.equals(type);
     }
 
     @Override
-    protected Control createDialogArea(Composite parent) {
+    protected Control createDialogArea(final Composite parent) {
         final Composite mainComposite = new Composite(parent, SWT.NONE);
         mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(300, SWT.DEFAULT).create());
         mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(10, 10).create());
@@ -138,10 +142,10 @@ public class OperatorSelectionDialog extends Dialog implements ISelectionChanged
         operatorViewer.addFilter(new ViewerFilter() {
 
             @Override
-            public boolean select(Viewer viewer, Object parentElement, Object element) {
-                Expression exp = operation.getLeftOperand();
+            public boolean select(final Viewer viewer, final Object parentElement, final Object element) {
+                final Expression exp = operation.getLeftOperand();
                 if (exp != null && !exp.getReferencedElements().isEmpty() && isSupportedType(exp)) {
-                    EObject data = exp.getReferencedElements().get(0);
+                    final EObject data = exp.getReferencedElements().get(0);
                     if (data instanceof BusinessObjectData) {
                         return element.equals(ExpressionConstants.ASSIGNMENT_OPERATOR) || element.equals(ExpressionConstants.CREATE_BUSINESS_DATA_OPERATOR)
                                 || element.equals(ExpressionConstants.JAVA_METHOD_OPERATOR) || element.equals(ExpressionConstants.DELETION_OPERATOR);
@@ -165,8 +169,8 @@ public class OperatorSelectionDialog extends Dialog implements ISelectionChanged
         section = new Section(mainComposite, Section.NO_TITLE);
         section.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 1).create());
 
-        Expression exp = operation.getLeftOperand();
-        for (IOperatorEditor opEditor : operatorEditors) {
+        final Expression exp = operation.getLeftOperand();
+        for (final IOperatorEditor opEditor : operatorEditors) {
             if (!opEditor.appliesTo(exp) && opEditor.appliesTo(operator.getType())) {
                 operator.setType(ExpressionConstants.ASSIGNMENT_OPERATOR);
             }
@@ -180,7 +184,7 @@ public class OperatorSelectionDialog extends Dialog implements ISelectionChanged
         return mainComposite;
     }
 
-    protected void enableOKButton(boolean enabled) {
+    protected void enableOKButton(final boolean enabled) {
         final Button button = getButton(OK);
         if (button != null) {
             button.setEnabled(enabled);
@@ -192,9 +196,9 @@ public class OperatorSelectionDialog extends Dialog implements ISelectionChanged
     }
 
     @Override
-    public void selectionChanged(SelectionChangedEvent event) {
-        Expression exp = operation.getLeftOperand();
-        String operatorType = (String) ((IStructuredSelection) event.getSelection()).getFirstElement();
+    public void selectionChanged(final SelectionChangedEvent event) {
+        final Expression exp = operation.getLeftOperand();
+        final String operatorType = (String) ((IStructuredSelection) event.getSelection()).getFirstElement();
         createOperatorEditorFor(section, operatorType, operator, exp);
         if (ExpressionConstants.CREATE_BUSINESS_DATA_OPERATOR.equals(operator.getType()) || ExpressionConstants.ASSIGNMENT_OPERATOR.equals(operator.getType())) {
             enableOKButton(true);
@@ -203,14 +207,14 @@ public class OperatorSelectionDialog extends Dialog implements ISelectionChanged
     }
 
     private void relayout() {
-        Shell shell = section.getShell();
-        Point defaultSize = shell.getSize();
-        Point size = shell.computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
+        final Shell shell = section.getShell();
+        final Point defaultSize = shell.getSize();
+        final Point size = shell.computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
         shell.setSize(defaultSize.x, size.y);
         shell.layout(true, true);
     }
 
-    protected void createOperatorEditorFor(Section parentSection, String operatorType, Operator operator, Expression sourceExpression) {
+    protected void createOperatorEditorFor(final Section parentSection, final String operatorType, final Operator operator, final Expression sourceExpression) {
         Composite client = null;
         boolean expand = false;
         if (parentSection.getClient() != null) {
@@ -223,7 +227,7 @@ public class OperatorSelectionDialog extends Dialog implements ISelectionChanged
                 editor.addSelectionChangedListener(new ISelectionChangedListener() {
 
                     @Override
-                    public void selectionChanged(SelectionChangedEvent event) {
+                    public void selectionChanged(final SelectionChangedEvent event) {
                         enableOKButton(editor.canFinish());
                     }
                 });
