@@ -49,6 +49,11 @@
 	<build>
 		<pluginManagement>
 			<plugins>
+                <plugin>
+                    <groupId>org.bonitasoft.studio.maven.plugin</groupId>
+                    <artifactId>set-image-version-plugin</artifactId>
+                    <version>1.0.0</version>
+                </plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
