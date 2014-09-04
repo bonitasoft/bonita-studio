@@ -15,6 +15,7 @@
 package org.bonitasoft.studio.tests.document;
 
 import org.assertj.core.api.Assertions;
+import org.bonitasoft.engine.bpm.document.DocumentValue;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.expression.editor.operation.OperatorLabelProvider;
 import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
@@ -25,6 +26,7 @@ import org.bonitasoft.studio.swtbot.framework.diagram.general.documents.BotAddDo
 import org.bonitasoft.studio.swtbot.framework.diagram.general.documents.BotDocumentsPropertySection;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.documents.BotRemoveDocumentDialog;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.operations.BotOperationsPropertySection;
+import org.bonitasoft.studio.swtbot.framework.expression.BotExpressionEditorDialog;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.junit.Test;
@@ -99,6 +101,12 @@ public class TestDocument extends SWTBotGefTestCase {
         botOperationComposite.selectLeftOperand("doc1", String.class.getName());
         final String expectedOperator = new OperatorLabelProvider().getText(ExpressionConstants.SET_DOCUMENT_OPERATOR);
         Assertions.assertThat(botOperationComposite.getSelectedOperator()).isEqualTo(expectedOperator);
+
+        final BotExpressionEditorDialog editRightOperand = botOperationComposite.editRightOperand();
+        Assertions.assertThat(editRightOperand.selectScriptTab().getReturnType()).isEqualTo(DocumentValue.class.getName());
+
+        editRightOperand.cancel();
+
     }
 
     private BotDocumentsPropertySection createDiagramAndGoToDocumentSection() {
