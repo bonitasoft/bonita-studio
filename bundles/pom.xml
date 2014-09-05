@@ -14,7 +14,6 @@
 
 
 	<modules>
-        <module>set-image-version-plugin</module>
 		<module>plugins</module>
 		<module>features</module>
 	</modules>
