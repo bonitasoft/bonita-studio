@@ -108,7 +108,7 @@ public class DocumentWizardPage extends WizardPage {
     private IObservableValue btnDocumentTypeInternal;
     private IObservableValue externalInitialContentObserveWidget;
 
-    final private int URL_SIZE_MAX = 1024;
+    final private int URL_SIZE_MAX = 1023;
 
     public DocumentWizardPage(final EObject context,final Document document){
         super(DocumentWizardPage.class.getName());
@@ -447,6 +447,10 @@ public class DocumentWizardPage extends WizardPage {
                     return ValidationStatus.error(Messages.error_documentURLEmpty);
                 }
 
+                if (externalBtn && url.length() > URL_SIZE_MAX) {
+                    return ValidationStatus.error(Messages.bind(Messages.error_documentURLTooLong, URL_SIZE_MAX + 1));
+                }
+
                 if (internalBtn && (defaultID == null || defaultID.isEmpty())) {
                     return ValidationStatus.error(Messages.error_documentDefaultIDEmpty);
                 }
@@ -481,13 +485,13 @@ public class DocumentWizardPage extends WizardPage {
 
                 final String actualErrorMessage = getErrorMessage();
                 if (!out.equals(ValidationStatus.ok())) {
-                    if (actualErrorMessage == null) {
-                        setErrorMessage(out.getMessage());
-                    }
+                    setErrorMessage(out.getMessage());
                     setPageComplete(false);
                     return out;
                 } else {
-                    if (actualErrorMessage != null && !actualErrorMessage.equals(Messages.error_documentURLEmpty)) {
+                    if (actualErrorMessage != null
+                            && !(actualErrorMessage.equals(Messages.error_documentURLEmpty)
+                                    || actualErrorMessage.equals(Messages.bind(Messages.error_documentURLTooLong, URL_SIZE_MAX + 1)))) {
                         setPageComplete(false);
                     } else {
                         setErrorMessage(null);
