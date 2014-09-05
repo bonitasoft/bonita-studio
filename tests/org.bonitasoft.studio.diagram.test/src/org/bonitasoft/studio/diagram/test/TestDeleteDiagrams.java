@@ -21,7 +21,7 @@ import java.util.List;
 
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.diagram.custom.Messages;
+import org.bonitasoft.studio.diagram.custom.i18n.Messages;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
 import org.eclipse.jface.dialogs.IDialogConstants;

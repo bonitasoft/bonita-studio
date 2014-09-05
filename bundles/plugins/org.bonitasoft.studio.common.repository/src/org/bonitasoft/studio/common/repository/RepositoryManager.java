@@ -182,9 +182,7 @@ public class RepositoryManager {
         if(repository == null){
             repository = createRepository(repositoryName) ;
         }
-        BonitaStudioLog.log("Creating repository: " + repositoryName);
         repository.create();
-        BonitaStudioLog.log("Opening repository: " + repositoryName);
         repository.open();
         preferenceStore.setValue(RepositoryPreferenceConstant.CURRENT_REPOSITORY,repositoryName) ;
     }

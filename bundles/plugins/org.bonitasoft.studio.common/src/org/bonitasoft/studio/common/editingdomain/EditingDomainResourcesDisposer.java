@@ -39,114 +39,114 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.FileEditorInput;
 
 /**
- * 
+ *
  * Utility that allow to unload resource set if it's not in use
- * 
+ *
  * @author Baptiste Mesta
  *
  */
 public class EditingDomainResourcesDisposer {
 
-	private static Resource getDiagramResource(ResourceSet resourceSet, IEditorInput editorInput) {
-		Resource diagramResource = null;
-		if (editorInput instanceof URIEditorInput) {
-			URI resourceURI = ((URIEditorInput) editorInput).getURI().trimFragment();
-			diagramResource = resourceSet.getResource(resourceURI, false);
-		} else if (editorInput instanceof FileEditorInput) {
-			URI resourceURI = URI.createPlatformResourceURI(((FileEditorInput) editorInput).getFile().getFullPath().toString(), true);
-			diagramResource = resourceSet.getResource(resourceURI, false);
-		} else if (editorInput instanceof IDiagramEditorInput) {
-			Diagram diagram = ((IDiagramEditorInput) editorInput).getDiagram();
-			diagramResource = diagram.eResource();
-		}
-		return diagramResource;
-	}
+    private static Resource getDiagramResource(final ResourceSet resourceSet, final IEditorInput editorInput) {
+        Resource diagramResource = null;
+        if (editorInput instanceof URIEditorInput) {
+            final URI resourceURI = ((URIEditorInput) editorInput).getURI().trimFragment();
+            diagramResource = resourceSet.getResource(resourceURI, false);
+        } else if (editorInput instanceof FileEditorInput) {
+            final URI resourceURI = URI.createPlatformResourceURI(((FileEditorInput) editorInput).getFile().getFullPath().toString(), true);
+            diagramResource = resourceSet.getResource(resourceURI, false);
+        } else if (editorInput instanceof IDiagramEditorInput) {
+            final Diagram diagram = ((IDiagramEditorInput) editorInput).getDiagram();
+            diagramResource = diagram.eResource();
+        }
+        return diagramResource;
+    }
 
-	/**
-	 * called to dispose the resource set when closing the editor in parameter.
-	 * The resource set will be unloaded only if it's not in use
-	 * @param resourceSet
-	 * @param editorInput
-	 */
-	public static void disposeEditorInput(ResourceSet resourceSet, IEditorInput editorInput) {
-		EList<Resource> allResources = resourceSet.getResources();
-		List<Resource> resourcesToDispose = new ArrayList<Resource>(allResources);
-		IEditorReference[] editorReferences;
-		if(PlatformUI.isWorkbenchRunning()){
-			final IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-			if(activePage != null){
-				editorReferences = activePage.getEditorReferences();
-			} else {
-				return;
-			}
-		}else{
-			return;
-		}
-		for (IEditorReference editorRef : editorReferences) {
-			try {
-				IEditorInput currentEditorInput = editorRef.getEditorInput();
-				if (currentEditorInput != editorInput) {
-					IEditorPart openEditor = editorRef.getEditor(false);
-					if (openEditor instanceof DiagramEditor) {
-						DiagramEditor openDiagramEditor = (DiagramEditor) openEditor;
-						ResourceSet diagramResourceSet = openDiagramEditor.getEditingDomain().getResourceSet();
-						if (diagramResourceSet == resourceSet) {
-							Resource diagramResource = getDiagramResource(diagramResourceSet, currentEditorInput);
-							if(diagramResource != null){
-								resourcesToDispose.remove(diagramResource);
-								Collection<?> imports = EMFCoreUtil.getImports(diagramResource);
-								resourcesToDispose.removeAll(imports);
-							}
-						}
-					}
-				}
-			} catch (Exception e) {
-				BonitaStudioLog.error(e);
-			}
-		}
-		for (Resource resource : resourcesToDispose) {
-			try {
-				resource.unload();
-				allResources.remove(resource);
-			} catch (Throwable t) {
-				BonitaStudioLog.error(t);
-			}
-		}
-	}
+    /**
+     * called to dispose the resource set when closing the editor in parameter.
+     * The resource set will be unloaded only if it's not in use
+     * @param resourceSet
+     * @param editorInput
+     */
+    public static void disposeEditorInput(final ResourceSet resourceSet, final IEditorInput editorInput) {
+        final EList<Resource> allResources = resourceSet.getResources();
+        final List<Resource> resourcesToDispose = new ArrayList<Resource>(allResources);
+        IEditorReference[] editorReferences;
+        if(PlatformUI.isWorkbenchRunning()){
+            final IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+            if(activePage != null){
+                editorReferences = activePage.getEditorReferences();
+            } else {
+                return;
+            }
+        }else{
+            return;
+        }
+        for (final IEditorReference editorRef : editorReferences) {
+            try {
+                final IEditorInput currentEditorInput = editorRef.getEditorInput();
+                if (currentEditorInput != editorInput) {
+                    final IEditorPart openEditor = editorRef.getEditor(false);
+                    if (openEditor instanceof DiagramEditor) {
+                        final DiagramEditor openDiagramEditor = (DiagramEditor) openEditor;
+                        final ResourceSet diagramResourceSet = openDiagramEditor.getEditingDomain().getResourceSet();
+                        if (diagramResourceSet == resourceSet) {
+                            final Resource diagramResource = getDiagramResource(diagramResourceSet, currentEditorInput);
+                            if(diagramResource != null){
+                                resourcesToDispose.remove(diagramResource);
+                                final Collection<?> imports = EMFCoreUtil.getImports(diagramResource);
+                                resourcesToDispose.removeAll(imports);
+                            }
+                        }
+                    }
+                }
+            } catch (final Exception e) {
+                BonitaStudioLog.error(e);
+            }
+        }
+        for (final Resource resource : resourcesToDispose) {
+            try {
+                resource.unload();
+                allResources.remove(resource);
+            } catch (final Exception t) {
+                BonitaStudioLog.error(t);
+            }
+        }
+    }
 
 
-	/**
-	 * called to dispose the resource set when closing the editor in parameter.
-	 * The resource set will be unloaded only if it's not in use
-	 * @param resourceSet
-	 * @param editorInput
-	 */
-	public static boolean isResourceUsedElseWhere(ResourceSet resourceSet, IEditorInput editorInput) {
-		IEditorReference[] editorReferences;
-		if(PlatformUI.isWorkbenchRunning()){
-			editorReferences = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getEditorReferences();
-		}else{
-			return false;
-		}
-		for (IEditorReference editorRef : editorReferences) {
-			try {
-				IEditorInput currentEditorInput = editorRef.getEditorInput();
-				if (currentEditorInput != editorInput) {
-					IEditorPart openEditor = editorRef.getEditor(false);
-					if (openEditor instanceof DiagramEditor) {
-						DiagramEditor openDiagramEditor = (DiagramEditor) openEditor;
-						ResourceSet diagramResourceSet = openDiagramEditor.getEditingDomain().getResourceSet();
-						if (diagramResourceSet == resourceSet) {
-							return true;
-						}
-					}
-				}
-			} catch (Exception e) {
-				BonitaStudioLog.error(e);
-			}
-		}
-		return false;
-	}
+    /**
+     * called to dispose the resource set when closing the editor in parameter.
+     * The resource set will be unloaded only if it's not in use
+     * @param resourceSet
+     * @param editorInput
+     */
+    public static boolean isResourceUsedElseWhere(final ResourceSet resourceSet, final IEditorInput editorInput) {
+        IEditorReference[] editorReferences;
+        if(PlatformUI.isWorkbenchRunning()){
+            editorReferences = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getEditorReferences();
+        }else{
+            return false;
+        }
+        for (final IEditorReference editorRef : editorReferences) {
+            try {
+                final IEditorInput currentEditorInput = editorRef.getEditorInput();
+                if (currentEditorInput != editorInput) {
+                    final IEditorPart openEditor = editorRef.getEditor(false);
+                    if (openEditor instanceof DiagramEditor) {
+                        final DiagramEditor openDiagramEditor = (DiagramEditor) openEditor;
+                        final ResourceSet diagramResourceSet = openDiagramEditor.getEditingDomain().getResourceSet();
+                        if (diagramResourceSet == resourceSet) {
+                            return true;
+                        }
+                    }
+                }
+            } catch (final Exception e) {
+                BonitaStudioLog.error(e);
+            }
+        }
+        return false;
+    }
 
 
 }

@@ -81,7 +81,7 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
     private final class PreShutdownStudio implements IRunnableWithProgress {
 
         @Override
-        public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+        public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
             monitor.beginTask(Messages.shuttingDown, IProgressMonitor.UNKNOWN);
             Job.getJobManager().cancel(StartEngineJob.FAMILY);
             executePreShutdownContribution();
@@ -91,13 +91,13 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
         }
 
         private void executePreShutdownContribution() {
-            IConfigurationElement[] elements = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(
+            final IConfigurationElement[] elements = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(
                     "org.bonitasoft.studio.application.preshutdown"); //$NON-NLS-1$
             IPreShutdownContribution contrib = null;
-            for (IConfigurationElement elem : elements) {
+            for (final IConfigurationElement elem : elements) {
                 try {
                     contrib = (IPreShutdownContribution) elem.createExecutableExtension("class"); //$NON-NLS-1$
-                } catch (CoreException e) {
+                } catch (final CoreException e) {
                     BonitaStudioLog.error(e);
                 }
                 contrib.execute();
@@ -110,12 +110,12 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
     private IProgressMonitor monitor;
 
     @Override
-    public WorkbenchWindowAdvisor createWorkbenchWindowAdvisor(IWorkbenchWindowConfigurer configurer) {
+    public WorkbenchWindowAdvisor createWorkbenchWindowAdvisor(final IWorkbenchWindowConfigurer configurer) {
         return new BonitaStudioWorkbenchWindowAdvisor(configurer);
     }
 
     @Override
-    public void initialize(IWorkbenchConfigurer configurer) {
+    public void initialize(final IWorkbenchConfigurer configurer) {
         super.initialize(configurer);
         configurer.setSaveAndRestore(true);
     }
@@ -140,7 +140,7 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
         try {
             SplashHandlerFactory.findSplashHandlerFor(Platform.getProduct());
             monitor = BOSSplashHandler.getMonitor();
-        } catch (Exception e) {
+        } catch (final Exception e) {
             BonitaStudioLog.error(e);
         }
         if (monitor == null) {
@@ -154,7 +154,7 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
         disableInternalWebBrowser();
         checkCurrentRepository();
 
-        List<IConfigurationElement> sortedConfigElems = retrievePreStartupContribution();
+        final List<IConfigurationElement> sortedConfigElems = retrievePreStartupContribution();
         sortConfigurationElementsByPriority(sortedConfigElems);
         executeConfigurationElement(sortedConfigElems);
 
@@ -166,13 +166,13 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
     }
 
     private void checkCurrentRepository() {
-        String current = CommonRepositoryPlugin.getDefault().getPreferenceStore().getString(RepositoryPreferenceConstant.CURRENT_REPOSITORY);
-        IRepository repository = RepositoryManager.getInstance().getCurrentRepository();
+        final String current = CommonRepositoryPlugin.getDefault().getPreferenceStore().getString(RepositoryPreferenceConstant.CURRENT_REPOSITORY);
+        final IRepository repository = RepositoryManager.getInstance().getCurrentRepository();
         if (repository.getProject().exists() && !RepositoryPreferenceConstant.DEFAULT_REPOSITORY_NAME.equals(repository.getName())) {
             if (!repository.getProject().isOpen()) {
                 repository.open();
             }
-            String version = repository.getVersion();
+            final String version = repository.getVersion();
             if (!ProductVersion.sameMinorVersion(version)) {
                 MessageDialog.openWarning(
                         Display.getDefault().getActiveShell(),
@@ -185,21 +185,21 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
     }
 
     private List<IConfigurationElement> retrievePreStartupContribution() {
-        IConfigurationElement[] elems = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(
+        final IConfigurationElement[] elems = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(
                 "org.bonitasoft.studio.application.prestartup"); //$NON-NLS-1$
-        List<IConfigurationElement> sortedConfigElems = new ArrayList<IConfigurationElement>();
-        for (IConfigurationElement elem : elems) {
+        final List<IConfigurationElement> sortedConfigElems = new ArrayList<IConfigurationElement>();
+        for (final IConfigurationElement elem : elems) {
             sortedConfigElems.add(elem);
         }
         return sortedConfigElems;
     }
 
-    private void executeConfigurationElement(List<IConfigurationElement> sortedConfigElems) {
+    private void executeConfigurationElement(final List<IConfigurationElement> sortedConfigElems) {
         IPreStartupContribution preStartupcontrib = null;
-        for (IConfigurationElement elem : sortedConfigElems) {
+        for (final IConfigurationElement elem : sortedConfigElems) {
             try {
                 preStartupcontrib = (IPreStartupContribution) elem.createExecutableExtension("class"); //$NON-NLS-1$
-            } catch (CoreException e) {
+            } catch (final CoreException e) {
                 BonitaStudioLog.error(e);
             }
             try {
@@ -207,7 +207,7 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
                     preStartupcontrib.execute();
                     monitor.worked(1);
                 }
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 BonitaStudioLog.error(e);
                 System.exit(-1);
             }
@@ -216,21 +216,21 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
     }
 
     private void sortConfigurationElementsByPriority(
-            List<IConfigurationElement> sortedConfigElems) {
+            final List<IConfigurationElement> sortedConfigElems) {
         Collections.sort(sortedConfigElems, new Comparator<IConfigurationElement>() {
 
             @Override
-            public int compare(IConfigurationElement e1, IConfigurationElement e2) {
+            public int compare(final IConfigurationElement e1, final IConfigurationElement e2) {
                 int p1 = 0;
                 int p2 = 0;
                 try {
                     p1 = Integer.parseInt(e1.getAttribute(PRIORITY));
-                } catch (NumberFormatException e) {
+                } catch (final NumberFormatException e) {
                     p1 = 0;
                 }
                 try {
                     p2 = Integer.parseInt(e2.getAttribute(PRIORITY));
-                } catch (NumberFormatException e) {
+                } catch (final NumberFormatException e) {
                     p2 = 0;
                 }
                 return p1 - p2; // Lowest Priority first
@@ -240,14 +240,14 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
     }
 
     private void initializeBonitaRepositories() {
-        IWorkspaceRunnable workspaceOperation = new IWorkspaceRunnable() {
+        final IWorkspaceRunnable workspaceOperation = new IWorkspaceRunnable() {
 
             @Override
             public void run(final IProgressMonitor monitor) throws CoreException {
                 monitor.worked(1);
                 FileUtil.deleteDir(ProjectUtil.getBonitaStudioWorkFolder());
                 monitor.worked(1);
-                Repository repository = (Repository) RepositoryManager.getInstance().getCurrentRepository();
+                final Repository repository = (Repository) RepositoryManager.getInstance().getCurrentRepository();
                 repository.setProgressMonitor(monitor);
 
                 monitor.worked(1);
@@ -260,19 +260,19 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
         };
         try {
             workspaceOperation.run(monitor);
-        } catch (CoreException e3) {
+        } catch (final CoreException e3) {
             BonitaStudioLog.error(e3);
         }
     }
 
     private void executeContributions() {
-        IConfigurationElement[] elements = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(
+        final IConfigurationElement[] elements = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(
                 "org.bonitasoft.studio.common.repository.postinitrepository"); //$NON-NLS-1$
         IPostInitRepositoryJobContribution contrib = null;
-        for (IConfigurationElement elem : elements) {
+        for (final IConfigurationElement elem : elements) {
             try {
                 contrib = (IPostInitRepositoryJobContribution) elem.createExecutableExtension("class"); //$NON-NLS-1$
-            } catch (CoreException e) {
+            } catch (final CoreException e) {
                 BonitaStudioLog.error(e);
             }
             contrib.execute();
@@ -283,7 +283,7 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
      * Disconnect from the core workspace.
      */
     @SuppressWarnings("restriction")
-    private void disconnectFromWorkspace(IProgressMonitor monitor) {
+    private void disconnectFromWorkspace(final IProgressMonitor monitor) {
         // save the workspace
         final MultiStatus status = new MultiStatus(
                 IDEWorkbenchPlugin.IDE_WORKBENCH, 1,
@@ -295,26 +295,28 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
             final boolean applyPolicy = ResourcesPlugin.getWorkspace()
                     .getDescription().isApplyFileStatePolicy();
 
-            IRunnableWithProgress runnable = new IRunnableWithProgress() {
+            final IRunnableWithProgress runnable = new IRunnableWithProgress() {
 
-                public void run(IProgressMonitor monitor) {
+                @Override
+                public void run(final IProgressMonitor monitor) {
                     try {
-                        if (applyPolicy)
+                        if (applyPolicy) {
                             status.merge(((Workspace) ResourcesPlugin
                                     .getWorkspace()).save(true, true, monitor));
-                    } catch (CoreException e) {
+                        }
+                    } catch (final CoreException e) {
                         status.merge(e.getStatus());
                     }
                 }
             };
             p.run(true, false, runnable);
-        } catch (InvocationTargetException e) {
+        } catch (final InvocationTargetException e) {
             status
                     .merge(new Status(IStatus.ERROR,
                             IDEWorkbenchPlugin.IDE_WORKBENCH, 1,
                             IDEWorkbenchMessages.InternalError, e
                                     .getTargetException()));
-        } catch (InterruptedException e) {
+        } catch (final InterruptedException e) {
             status.merge(new Status(IStatus.ERROR,
                     IDEWorkbenchPlugin.IDE_WORKBENCH, 1,
                     IDEWorkbenchMessages.InternalError, e));
@@ -329,7 +331,7 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
     }
 
     protected void disableInternalWebBrowser() {
-        String noRegister = System.getProperty("bonita.noregister"); //$NON-NLS-1$
+        final String noRegister = System.getProperty("bonita.noregister"); //$NON-NLS-1$
         if (noRegister == null || !noRegister.equals("1")) {
             WebBrowserUtil.isInternalBrowserOperational = false;
         }
@@ -339,22 +341,22 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
         if (PlatformUtil.isHeadless()) {
             return;
         }
-        StartEngineJob job = new StartEngineJob("Starting BOS Engine");
+        final StartEngineJob job = new StartEngineJob("Starting BOS Engine");
         job.setPriority(Job.DECORATE);
         job.setUser(false);
         job.schedule();
     }
 
     private void openStartupDialog() {
-        String noRegister = System.getProperty("bonita.noregister"); //$NON-NLS-1$
+        final String noRegister = System.getProperty("bonita.noregister"); //$NON-NLS-1$
         if (noRegister == null || !noRegister.equals("1")) { //$NON-NLS-1$
-            IConfigurationElement[] elements = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(
+            final IConfigurationElement[] elements = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(
                     "org.bonitasoft.studio.common.startupDialog"); //$NON-NLS-1$
             IPostStartupContribution contrib = null;
-            for (IConfigurationElement elem : elements) {
+            for (final IConfigurationElement elem : elements) {
                 try {
                     contrib = (IPostStartupContribution) elem.createExecutableExtension("class"); //$NON-NLS-1$
-                } catch (CoreException e) {
+                } catch (final CoreException e) {
                     BonitaStudioLog.error(e);
                 }
                 contrib.execute();
@@ -371,19 +373,19 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
     @Override
     public boolean preShutdown() {
         Job.getJobManager().cancel(StartEngineJob.FAMILY);
-        boolean returnValue = super.preShutdown();
+        final boolean returnValue = super.preShutdown();
         if (returnValue) {
             try {
                 if (PlatformUI.isWorkbenchRunning() && PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null
                         && PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage() != null) {
-                    boolean closeEditor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeAllEditors(true);
+                    final boolean closeEditor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeAllEditors(true);
                     if (closeEditor) {
                         PlatformUI.getWorkbench().getProgressService().run(true, false, new PreShutdownStudio());
                         PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeAllPerspectives(false, true);
                     }
                     return closeEditor;
                 }
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 BonitaStudioLog.error(e);
             }
         }
@@ -391,23 +393,23 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
     }
 
     private void sendUserInfo() {
-        String noRegister = System.getProperty("bonita.noregister"); //$NON-NLS-1$
+        final String noRegister = System.getProperty("bonita.noregister"); //$NON-NLS-1$
         if (noRegister == null || !noRegister.equals("1")) { //$NON-NLS-1$
 
-            IPreferenceStore prefStore = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore();
-            int ok = prefStore.getInt(BonitaRegistration.BONITA_USER_REGISTERED);
+            final IPreferenceStore prefStore = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore();
+            final int ok = prefStore.getInt(BonitaRegistration.BONITA_USER_REGISTERED);
             int nbTry = prefStore.getInt(BonitaRegistration.BONITA_USER_REGISTER_TRY);
-            int infoSent = prefStore.getInt(BonitaRegistration.BONITA_INFO_SENT);
+            final int infoSent = prefStore.getInt(BonitaRegistration.BONITA_INFO_SENT);
             if (nbTry <= BonitaRegistration.BONITA_USER_REGISTER_MAXTRY) {
                 if (ok != 1) {
 
-                    IConfigurationElement[] elements = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(
+                    final IConfigurationElement[] elements = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(
                             "org.bonitasoft.studio.application.registration"); //$NON-NLS-1$
                     IPostStartupContribution contrib = null;
-                    for (IConfigurationElement elem : elements) {
+                    for (final IConfigurationElement elem : elements) {
                         try {
                             contrib = (IPostStartupContribution) elem.createExecutableExtension("class"); //$NON-NLS-1$
-                        } catch (CoreException e) {
+                        } catch (final CoreException e) {
                             BonitaStudioLog.error(e);
                         }
                         if (contrib != null) {
@@ -434,19 +436,19 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
 
     @Override
     public void earlyStartup() {
-        IConfigurationElement[] elements = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(
+        final IConfigurationElement[] elements = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(
                 "org.bonitasoft.studio.common.poststartup"); //$NON-NLS-1$
         IPostStartupContribution contrib = null;
-        for (IConfigurationElement elem : elements) {
+        for (final IConfigurationElement elem : elements) {
             try {
                 contrib = (IPostStartupContribution) elem.createExecutableExtension("class"); //$NON-NLS-1$
-            } catch (CoreException e) {
+            } catch (final CoreException e) {
                 BonitaStudioLog.error(e);
             }
             contrib.execute();
         }
 
-        long startupDuration = System.currentTimeMillis() - BonitaStudioApplication.START_TIME;
+        final long startupDuration = System.currentTimeMillis() - BonitaStudioApplication.START_TIME;
         BonitaStudioLog.info("Startup duration : " + DateUtil.getDisplayDuration(startupDuration), ApplicationPlugin.PLUGIN_ID);
     }
     
