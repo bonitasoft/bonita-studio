@@ -24,10 +24,6 @@
 		</pluginRepository>
 	</pluginRepositories>
 
-    <modules>
-        <module>set-image-version-plugin</module>
-    </modules>
-
 	<build>
 		<plugins>
 
