@@ -36,7 +36,7 @@ public class BotDialog extends BotBase {
      * Click on Cancel.
      */
     public void cancel() {
-        bot.waitUntil(Conditions.waitForWidget(WidgetMatcherFactory.withMnemonic(IDialogConstants.CANCEL_LABEL)));
+        bot.waitUntil(Conditions.waitForWidget(WidgetMatcherFactory.withMnemonic(IDialogConstants.CANCEL_LABEL)), 10000, 100);
         bot.waitUntil(Conditions.widgetIsEnabled(bot.button(IDialogConstants.CANCEL_LABEL)));
         bot.button(IDialogConstants.CANCEL_LABEL).click();
     }
