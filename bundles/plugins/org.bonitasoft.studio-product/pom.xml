@@ -15,8 +15,8 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>org.bonitasoft.studio.maven.plugin</groupId>
-                <artifactId>set-image-version-plugin</artifactId>
+               <groupId>org.bonitasoft.maven</groupId>
+                <artifactId>image-overlay-plugin</artifactId>
                 <configuration>
                     <baseImgPath>${basedir}/splash_without_version.bmp</baseImgPath>
                     <outputImagePath>${basedir}/splash.bmp</outputImagePath>

@@ -50,8 +50,8 @@
 		<pluginManagement>
 			<plugins>
                 <plugin>
-                    <groupId>org.bonitasoft.studio.maven.plugin</groupId>
-                    <artifactId>set-image-version-plugin</artifactId>
+                    <groupId>org.bonitasoft.maven</groupId>
+                    <artifactId>image-overlay-plugin</artifactId>
                     <version>1.0.0</version>
                 </plugin>
 				<plugin>
