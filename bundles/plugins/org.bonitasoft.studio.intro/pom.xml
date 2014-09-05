@@ -14,8 +14,8 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>org.bonitasoft.studio.maven.plugin</groupId>
-                <artifactId>set-image-version-plugin</artifactId>
+                <groupId>org.bonitasoft.maven</groupId>
+                <artifactId>image-overlay-plugin</artifactId>
                 <executions>
                     <execution>
                         <id>welcome-community</id>
