@@ -26,13 +26,9 @@ import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.model.expression.Operation;
 import org.bonitasoft.studio.model.expression.Operator;
-import org.bonitasoft.studio.model.process.BusinessObjectData;
-import org.bonitasoft.studio.model.process.JavaObjectData;
-import org.bonitasoft.studio.model.process.XMLData;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.dialogs.Dialog;
@@ -43,8 +39,6 @@ import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Button;
@@ -121,11 +115,6 @@ public class OperatorSelectionDialog extends Dialog implements ISelectionChanged
         return closed;
     }
 
-    protected boolean isSupportedType(final Expression exp) {
-        final String type = exp.getType();
-        return ExpressionConstants.VARIABLE_TYPE.equals(type);
-    }
-
     @Override
     protected Control createDialogArea(final Composite parent) {
         final Composite mainComposite = new Composite(parent, SWT.NONE);
@@ -139,30 +128,7 @@ public class OperatorSelectionDialog extends Dialog implements ISelectionChanged
 
         operatorViewer.setContentProvider(ArrayContentProvider.getInstance());
         operatorViewer.setLabelProvider(new OperatorLabelProvider());
-        operatorViewer.addFilter(new ViewerFilter() {
-
-            @Override
-            public boolean select(final Viewer viewer, final Object parentElement, final Object element) {
-                final Expression exp = operation.getLeftOperand();
-                if (exp != null && !exp.getReferencedElements().isEmpty() && isSupportedType(exp)) {
-                    final EObject data = exp.getReferencedElements().get(0);
-                    if (data instanceof BusinessObjectData) {
-                        return element.equals(ExpressionConstants.ASSIGNMENT_OPERATOR) || element.equals(ExpressionConstants.CREATE_BUSINESS_DATA_OPERATOR)
-                                || element.equals(ExpressionConstants.JAVA_METHOD_OPERATOR) || element.equals(ExpressionConstants.DELETION_OPERATOR);
-                    } else if (data instanceof JavaObjectData) {
-                        return element.equals(ExpressionConstants.ASSIGNMENT_OPERATOR) || element.equals(ExpressionConstants.JAVA_METHOD_OPERATOR);
-                    } else if (data instanceof XMLData) {
-                        return element.equals(ExpressionConstants.ASSIGNMENT_OPERATOR) || element.equals(ExpressionConstants.XPATH_UPDATE_OPERATOR);
-                    } else {
-                        return element.equals(ExpressionConstants.ASSIGNMENT_OPERATOR);
-                    }
-                } else if (exp != null && !exp.getReferencedElements().isEmpty() && ExpressionConstants.DOCUMENT_REF_TYPE.equals(exp.getType())) {
-                    return element.equals(ExpressionConstants.SET_DOCUMENT_OPERATOR);
-                }
-                return element.equals(ExpressionConstants.ASSIGNMENT_OPERATOR);
-            }
-
-        });
+        operatorViewer.addFilter(new OperatorViewerFilter(operation));
 
         operatorViewer.setInput(operatorTypeList);
 
