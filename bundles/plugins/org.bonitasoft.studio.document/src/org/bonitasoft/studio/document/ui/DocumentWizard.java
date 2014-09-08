@@ -16,6 +16,7 @@ package org.bonitasoft.studio.document.ui;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
+import java.util.List;
 
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
@@ -59,6 +60,10 @@ public class DocumentWizard extends Wizard {
         final Expression urlExpression = ExpressionHelper.createConstantExpression("", String.class.getName());
         urlExpression.setReturnTypeFixed(true);
         documentWorkingCopy.setUrl(urlExpression);
+        final Expression multipleInitialContentExpression = ExpressionHelper.createConstantExpression("", List.class.getName());
+        multipleInitialContentExpression.setReturnTypeFixed(true);
+        documentWorkingCopy.setInitialMultipleContent(multipleInitialContentExpression);
+
         document = null;
         editMode = false;
     }
@@ -131,7 +136,7 @@ public class DocumentWizard extends Wizard {
     private void refreshProject() {
         try {
             RepositoryManager.getInstance().getCurrentRepository().getProject()
-                    .build(IncrementalProjectBuilder.FULL_BUILD, XtextProjectHelper.BUILDER_ID, Collections.<String, String> emptyMap(), null);
+            .build(IncrementalProjectBuilder.FULL_BUILD, XtextProjectHelper.BUILDER_ID, Collections.<String, String> emptyMap(), null);
         } catch (final CoreException e1) {
             BonitaStudioLog.error(e1, DocumentPlugin.PLUGIN_ID);
         }

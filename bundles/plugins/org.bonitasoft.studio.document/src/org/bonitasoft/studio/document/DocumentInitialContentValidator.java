@@ -38,18 +38,28 @@ public class DocumentInitialContentValidator implements IValidator {
 
         final Document document = (Document) value;
 
-        if (document.getDocumentType().equals(DocumentType.EXTERNAL) && (document.getUrl() == null || document.getUrl().getContent().isEmpty())) {
-            return ValidationStatus.error(Messages.error_documentURLEmpty);
-        }
+        if (document.isMultiple()) {
 
-        if (document.getDocumentType().equals(DocumentType.EXTERNAL) && document.getUrl() != null && document.getUrl().getContent().length() > maxLenght) {
-            return ValidationStatus.error(Messages.bind(Messages.error_documentURLTooLong, maxLenght + 1));
-        }
+            if (document.getInitialMultipleContent() == null
+                    || document.getInitialMultipleContent().getContent() == null
+                    || document.getInitialMultipleContent().getContent().isEmpty()) {
+                return ValidationStatus.error(Messages.error_documentInitialContentsEmpty);
+            }
+
+        } else {
+            if (document.getDocumentType().equals(DocumentType.EXTERNAL) && (document.getUrl() == null || document.getUrl().getContent().isEmpty())) {
+                return ValidationStatus.error(Messages.error_documentURLEmpty);
+            }
+
+            if (document.getDocumentType().equals(DocumentType.EXTERNAL) && document.getUrl() != null && document.getUrl().getContent().length() > maxLenght) {
+                return ValidationStatus.error(Messages.bind(Messages.error_documentURLTooLong, maxLenght + 1));
+            }
 
 
-        if (document.getDocumentType().equals(DocumentType.INTERNAL)
-                && (document.getDefaultValueIdOfDocumentStore() == null || document.getDefaultValueIdOfDocumentStore().isEmpty())) {
-            return ValidationStatus.error(Messages.error_documentDefaultIDEmpty);
+            if (document.getDocumentType().equals(DocumentType.INTERNAL)
+                    && (document.getDefaultValueIdOfDocumentStore() == null || document.getDefaultValueIdOfDocumentStore().isEmpty())) {
+                return ValidationStatus.error(Messages.error_documentDefaultIDEmpty);
+            }
         }
 
         return ValidationStatus.ok();

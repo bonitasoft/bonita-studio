@@ -24,6 +24,7 @@ import org.bonitasoft.studio.document.i18n.Messages;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionValidator;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
+import org.bonitasoft.studio.expression.editor.viewer.GroovyOnlyExpressionViewer;
 import org.bonitasoft.studio.expression.editor.viewer.ObservableExpressionContentProvider;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.process.Document;
@@ -32,12 +33,13 @@ import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
+import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.UpdateValueStrategy;
-import org.eclipse.core.databinding.beans.PojoObservables;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.IValueChangeListener;
 import org.eclipse.core.databinding.observable.value.SelectObservableValue;
 import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
+import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.MultiValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
@@ -45,7 +47,10 @@ import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.domain.EditingDomain;
+import org.eclipse.jface.databinding.fieldassist.ControlDecorationSupport;
+import org.eclipse.jface.databinding.swt.ISWTObservableValue;
 import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
 import org.eclipse.jface.databinding.viewers.ViewerProperties;
 import org.eclipse.jface.databinding.wizard.WizardPageSupport;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -100,15 +105,27 @@ public class DocumentWizardPage extends WizardPage {
     private Label mimeTypeLabel;
     private ControlDecoration cd;
     private final DocumentInitialContentValidator externalValidator;
-    private IObservableValue nameObserved;
-    private IObservableValue documentInternalIDObserved;
-    private IObservableValue externalUrlObserved;
+    private IObservableValue documentNameObserved;
     private IObservableValue btnDocumentTypeNone;
     private IObservableValue btnDocumentTypeExternal;
     private IObservableValue btnDocumentTypeInternal;
     private IObservableValue externalInitialContentObserveWidget;
 
     final private int URL_SIZE_MAX = 1023;
+    private Button radioButtonMultiple;
+    private Button radioButtonSingle;
+    private Composite SMComposite;
+    private StackLayout singleMultiplestack;
+    private Composite singleComposite;
+    private Composite multipleComposite;
+    private ISWTObservableValue btnDocumentSingle;
+    private ISWTObservableValue btnDocumentMultiple;
+    private Link manageLink;
+    private GroovyOnlyExpressionViewer multipleInitialContentExpressionViewer;
+    private IObservableValue multipleInitialContentObserved;
+    private IViewerObservableValue multipleInitialContentObservedWidget;
+    private ISWTObservableValue documentInternalIDObservedWidget;
+    private ISWTObservableValue documentNameObservedWidget;
 
     public DocumentWizardPage(final EObject context,final Document document){
         super(DocumentWizardPage.class.getName());
@@ -150,15 +167,9 @@ public class DocumentWizardPage extends WizardPage {
         detailsComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         createDocumentNameField(detailsComposite);
         createDocumentDescriptionField(detailsComposite);
-        createDocumentInitialValuefields(detailsComposite);
 
-        createMimeType(detailsComposite);
+        createDocumentSingleMultipleComposition(detailsComposite);
 
-        if (document.getMimeType() == null || document.getMimeType().getContent() == null || document.getMimeType().getContent().isEmpty()) {
-            updateMimeTypeStack(LINK);
-        } else {
-            updateMimeTypeStack(FIELD);
-        }
     }
 
     private void createMimeType(final Composite detailsComposite) {
@@ -232,7 +243,7 @@ public class DocumentWizardPage extends WizardPage {
         manageLinkComposition.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).create());
         manageLinkComposition.setLayoutData(GridDataFactory.fillDefaults().create());
 
-        final Link manageLink = new Link(manageLinkComposition, SWT.NONE);
+        manageLink = new Link(manageLinkComposition, SWT.NONE);
         manageLink.setText("<A>" + Messages.manageMimeType + "</A>");
         manageLink.addSelectionListener(new SelectionAdapter() {
 
@@ -258,6 +269,7 @@ public class DocumentWizardPage extends WizardPage {
         documentUrlViewer.setExample(Messages.hintExternalUrl);
         documentUrlViewer
         .setContentProvider(new ObservableExpressionContentProvider());
+        documentUrlViewer.setInput(document);
 
     }
 
@@ -294,11 +306,109 @@ public class DocumentWizardPage extends WizardPage {
         });
     }
 
-    private void createDocumentInitialValuefields(final Composite parent) {
+    private void createDocumentSingleMultipleComposition(final Composite parent) {
+
+        // dummy for label
+        new Composite(parent, SWT.NONE);
+
+        createMultipleRadioButtonComposition(parent);
+
+        SMComposite = new Composite(parent, SWT.NONE);
+        SMComposite.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, true).span(2, 1).create());
+        singleMultiplestack = new StackLayout();
+        SMComposite.setLayout(singleMultiplestack);
+
+        createSingleComposition(SMComposite);
+        createMultipleComposition(SMComposite);
+
+        createMimeType(parent);
+        if (document.getMimeType() == null || document.getMimeType().getContent() == null || document.getMimeType().getContent().isEmpty()) {
+            updateMimeTypeStack(LINK);
+        } else {
+            updateMimeTypeStack(FIELD);
+        }
+
+        updateSingleMultipleStack(document.isMultiple());
+
+    }
+
+    private void createSingleComposition(final Composite parent) {
+
+        singleComposite = new Composite(parent, SWT.NONE);
+        singleComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+        singleComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
+
+        createDocumentInitialSingleContent(singleComposite);
+
+    }
+
+    private void createMultipleComposition(final Composite parent) {
+
+        multipleComposite = new Composite(parent, SWT.NONE);
+        multipleComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+        multipleComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
+
+        createDocumentInitialMultipleContent(multipleComposite);
+    }
+
+    private void createMultipleRadioButtonComposition(final Composite parent) {
+        final Composite compo = new Composite(parent, SWT.NONE);
+        compo.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).spacing(20, 0).create());
+        compo.setLayoutData(GridDataFactory.fillDefaults().indent(0, 25).create());
+
+        radioButtonSingle = new Button(compo, SWT.RADIO);
+        radioButtonSingle.setText(Messages.radioButtonSingle);
+        radioButtonSingle.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(final SelectionEvent e) {
+                super.widgetSelected(e);
+                if (radioButtonSingle.getSelection()) {
+                    radioButtonMultiple.setSelection(false);
+                    updateSingleMultipleStack(false);
+                }
+            }
+        });
+
+        radioButtonMultiple = new Button(compo, SWT.RADIO);
+        radioButtonMultiple.setText(Messages.radioButtonMultiple);
+        final ControlDecoration infoBonita = new ControlDecoration(radioButtonMultiple, SWT.RIGHT);
+        infoBonita.show();
+        infoBonita.setImage(Pics.getImage(PicsConstants.hint));
+        infoBonita.setDescriptionText(Messages.radioButtonMultipleToolTip);
+        radioButtonMultiple.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(final SelectionEvent e) {
+                super.widgetSelected(e);
+                if (radioButtonMultiple.getSelection()) {
+                    radioButtonSingle.setSelection(false);
+                    updateSingleMultipleStack(true);
+                }
+            }
+        });
+    }
+
+    private void createDocumentInitialMultipleContent(final Composite parent) {
+
+        final Label initialContentsLabel = new Label(parent, SWT.NONE);
+        initialContentsLabel.setText(Messages.multipleInitialContentsLabel);
+        initialContentsLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.TOP).indent(0, 5).create());
+
+        multipleInitialContentExpressionViewer = new GroovyOnlyExpressionViewer(parent, SWT.READ_ONLY | SWT.BORDER,
+                ProcessPackage.Literals.DOCUMENT__INITIAL_MULTIPLE_CONTENT);
+
+        multipleInitialContentExpressionViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+
+        multipleInitialContentExpressionViewer.setInput(document);
+    }
+
+
+    private void createDocumentInitialSingleContent(final Composite parent) {
 
         final Label radioButtonLabel = new Label(parent, SWT.NONE);
         radioButtonLabel.setText(Messages.initialValueLabel);
-        radioButtonLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).indent(0, 25).create());
+        radioButtonLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.TOP).indent(0, 5).create());
         createRadioButtonComposition(parent);
 
         new Composite(parent, SWT.NONE);
@@ -341,7 +451,7 @@ public class DocumentWizardPage extends WizardPage {
     private void createRadioButtonComposition(final Composite parent) {
         final Composite compo = new Composite(parent, SWT.NONE);
         compo.setLayout(GridLayoutFactory.fillDefaults().numColumns(4).spacing(20, 0).create());
-        compo.setLayoutData(GridDataFactory.fillDefaults().indent(0, 25).create());
+        compo.setLayoutData(GridDataFactory.fillDefaults().create());
 
         radioButtonNone = new Button(compo, SWT.RADIO);
         radioButtonNone.setText(Messages.initialValueButtonNone);
@@ -354,6 +464,7 @@ public class DocumentWizardPage extends WizardPage {
                     radioButtonExternal.setSelection(false);
                     radioButtonInternal.setSelection(false);
                     updateStack(DocumentType.NONE);
+                    updateMimeTypeEnabled(false);
                 }
             }
 
@@ -374,6 +485,7 @@ public class DocumentWizardPage extends WizardPage {
                     radioButtonNone.setSelection(false);
                     radioButtonExternal.setSelection(false);
                     updateStack(DocumentType.INTERNAL);
+                    updateMimeTypeEnabled(true);
                 }
             }
 
@@ -395,6 +507,7 @@ public class DocumentWizardPage extends WizardPage {
                     radioButtonNone.setSelection(false);
                     radioButtonInternal.setSelection(false);
                     updateStack(DocumentType.EXTERNAL);
+                    updateMimeTypeEnabled(true);
                 }
             }
 
@@ -403,17 +516,21 @@ public class DocumentWizardPage extends WizardPage {
 
     protected void bindDetails() {
 
-        bindDocumentURL();
-
-        bindDocumentMIMEType();
-
         bindDocumentName();
 
         bindDocumentDescription();
 
+        bindDocumentSingleMultipleRadioButton();
+
+        bindDocumentURL();
+
+        bindDocumentMIMEType();
+
         bindDocumentType();
 
         bindDocumentDefaultValueID();
+
+        bindDocumentMultipleInitialContent();
 
         addMultiValidator();
 
@@ -428,33 +545,42 @@ public class DocumentWizardPage extends WizardPage {
             @Override
             public IStatus validate() {
 
-                String defaultID = null;
-                if (documentInternalIDObserved.getValue() != null) {
-                    defaultID = documentInternalIDObserved.getValue().toString();
-                }
-                final String url = ((Expression) (externalInitialContentObserveWidget.getValue())).getContent();
-                final String name = nameObserved.getValue().toString();
-
-                final Boolean externalBtn = (Boolean) btnDocumentTypeExternal.getValue();
-                final Boolean internalBtn = (Boolean) btnDocumentTypeInternal.getValue();
+                // check name
+                final String name = documentNameObservedWidget.getValue().toString();
 
                 final DocumentNameValidator nameValidator = new DocumentNameValidator(context, originalName);
                 if (!nameValidator.validate(name).isOK()) {
                     return nameValidator.validate(name);
                 }
 
-                if (externalBtn && url.isEmpty()) {
-                    return ValidationStatus.error(Messages.error_documentURLEmpty);
-                }
+                final Boolean singleBtn = (Boolean) btnDocumentSingle.getValue();
 
-                if (externalBtn && url.length() > URL_SIZE_MAX) {
-                    return ValidationStatus.error(Messages.bind(Messages.error_documentURLTooLong, URL_SIZE_MAX + 1));
-                }
+                if (singleBtn) {
 
-                if (internalBtn && (defaultID == null || defaultID.isEmpty())) {
-                    return ValidationStatus.error(Messages.error_documentDefaultIDEmpty);
-                }
+                    String defaultSingleID = null;
+                    if (documentInternalIDObservedWidget.getValue() != null) {
+                        defaultSingleID = documentInternalIDObservedWidget.getValue().toString();
+                    }
 
+                    final Boolean externalBtn = (Boolean) btnDocumentTypeExternal.getValue();
+                    final Boolean internalBtn = (Boolean) btnDocumentTypeInternal.getValue();
+
+                    // check external (URL)
+                    final String url = ((Expression) externalInitialContentObserveWidget.getValue()).getContent();
+
+                    if (externalBtn && url.isEmpty()) {
+                        return ValidationStatus.error(Messages.error_documentURLEmpty);
+                    }
+
+                    if (externalBtn && url.length() > URL_SIZE_MAX) {
+                        return ValidationStatus.error(Messages.bind(Messages.error_documentURLTooLong, URL_SIZE_MAX + 1));
+                    }
+
+                    // check internal
+                    if (internalBtn && (defaultSingleID == null || defaultSingleID.isEmpty())) {
+                        return ValidationStatus.error(Messages.error_documentDefaultIDEmpty);
+                    }
+                }
                 return ValidationStatus.ok();
             }
         };
@@ -464,12 +590,41 @@ public class DocumentWizardPage extends WizardPage {
 
     private void bindDocumentDefaultValueID() {
 
-        documentInternalIDObserved = EMFObservables.observeValue(document,
+        final IObservableValue documentInternalIDObserved = EMFObservables.observeValue(document,
                 ProcessPackage.Literals.DOCUMENT__DEFAULT_VALUE_ID_OF_DOCUMENT_STORE);
 
+        final UpdateValueStrategy uvsInternal = new UpdateValueStrategy();
+        uvsInternal.setAfterGetValidator(new IValidator() {
+
+            @Override
+            public IStatus validate(final Object arg0) {
+                if (!document.isMultiple()
+                        && document.getDocumentType().equals(DocumentType.INTERNAL)
+                        && (arg0 == null || ((String) arg0).isEmpty())) {
+                    return ValidationStatus.error(Messages.error_documentDefaultIDEmpty);
+                }
+                return ValidationStatus.ok();
+            }
+        });
+
+        documentInternalIDObservedWidget = SWTObservables.observeDelayedValue(500, SWTObservables.observeText(documentTextId, SWT.Modify));
+        final Binding binding = emfDataBindingContext.bindValue(
+                documentInternalIDObservedWidget,
+                documentInternalIDObserved,
+                uvsInternal,
+                null);
+
+        ControlDecorationSupport.create(binding, SWT.LEFT);
+    }
+
+    private void bindDocumentMultipleInitialContent() {
+
+        multipleInitialContentObserved = EMFObservables.observeValue(document, ProcessPackage.Literals.DOCUMENT__INITIAL_MULTIPLE_CONTENT);
+        multipleInitialContentObservedWidget = ViewerProperties.singleSelection().observe(multipleInitialContentExpressionViewer);
         emfDataBindingContext.bindValue(
-                SWTObservables.observeDelayedValue(500, SWTObservables.observeText(documentTextId, SWT.Modify)),
-                documentInternalIDObserved);
+                multipleInitialContentObservedWidget,
+                multipleInitialContentObserved);
+
 
     }
 
@@ -479,7 +634,6 @@ public class DocumentWizardPage extends WizardPage {
 
             @Override
             public IStatus validate(final Object arg0) {
-
 
                 final IStatus out = externalValidator.validate(document);
 
@@ -514,14 +668,12 @@ public class DocumentWizardPage extends WizardPage {
             }
         });
 
-        externalUrlObserved = EMFObservables.observeValue(document, ProcessPackage.Literals.DOCUMENT__URL);
+        final IObservableValue externalUrlObserved = EMFObservables.observeValue(document, ProcessPackage.Literals.DOCUMENT__URL);
 
         externalInitialContentObserveWidget = ViewerProperties.singleSelection().observeDelayed(500, documentUrlViewer);
-        emfDataBindingContext.bindValue(
-                externalInitialContentObserveWidget,
-                externalUrlObserved);
+        emfDataBindingContext.bindValue(externalInitialContentObserveWidget, externalUrlObserved);
 
-        documentUrlViewer.setInput(document);
+
     }
 
     private void bindDocumentMIMEType() {
@@ -553,12 +705,29 @@ public class DocumentWizardPage extends WizardPage {
         targetToModel.setBeforeSetValidator(new GroovyReferenceValidator(
                 Messages.name, true));
         targetToModel.setAfterConvertValidator(new DocumentNameValidator(context, document != null ? document.getName() : null));
-        nameObserved = EMFObservables.observeValue(document, ProcessPackage.Literals.ELEMENT__NAME);
+        documentNameObserved = EMFObservables.observeValue(document, ProcessPackage.Literals.ELEMENT__NAME);
+        documentNameObservedWidget = SWTObservables
+                .observeDelayedValue(500, SWTObservables.observeText(documentNameText, SWT.Modify));
         emfDataBindingContext.bindValue(
-                SWTObservables.observeDelayedValue(500, SWTObservables.observeText(documentNameText, SWT.Modify)),
-                nameObserved,
+                documentNameObservedWidget,
+                documentNameObserved,
                 targetToModel,
                 null);
+
+    }
+
+    private void bindDocumentSingleMultipleRadioButton() {
+        final SelectObservableValue isMultipleObservableValue = new SelectObservableValue(ProcessPackage.DOCUMENT__MULTIPLE);
+
+        btnDocumentSingle = SWTObservables.observeSelection(radioButtonSingle);
+        isMultipleObservableValue.addOption(false, btnDocumentSingle);
+
+        btnDocumentMultiple = SWTObservables.observeSelection(radioButtonMultiple);
+        isMultipleObservableValue.addOption(true, btnDocumentMultiple);
+
+        emfDataBindingContext.bindValue(
+                isMultipleObservableValue,
+                EMFObservables.observeValue(document, ProcessPackage.Literals.DOCUMENT__MULTIPLE));
 
     }
 
@@ -567,6 +736,16 @@ public class DocumentWizardPage extends WizardPage {
 
         btnDocumentTypeNone = SWTObservables.observeSelection(radioButtonNone);
         documentTypeObservableValue.addOption(DocumentType.NONE, btnDocumentTypeNone);
+        documentTypeObservableValue.addValueChangeListener(new IValueChangeListener() {
+
+            @Override
+            public void handleValueChange(final ValueChangeEvent arg0) {
+                if (arg0.diff.getNewValue().equals(DocumentType.NONE)) {
+                    document.setDocumentType(DocumentType.NONE);
+                }
+                documentUrlViewer.validate();
+            }
+        });
 
         btnDocumentTypeExternal = SWTObservables.observeSelection(radioButtonExternal);
         documentTypeObservableValue.addOption(DocumentType.EXTERNAL, btnDocumentTypeExternal);
@@ -583,18 +762,21 @@ public class DocumentWizardPage extends WizardPage {
 
         btnDocumentTypeInternal = SWTObservables.observeSelection(radioButtonInternal);
         documentTypeObservableValue.addOption(DocumentType.INTERNAL, btnDocumentTypeInternal);
+        documentTypeObservableValue.addValueChangeListener(new IValueChangeListener() {
+
+            @Override
+            public void handleValueChange(final ValueChangeEvent arg0) {
+                if (arg0.diff.getNewValue().equals(DocumentType.INTERNAL)) {
+                    document.setDocumentType(DocumentType.INTERNAL);
+                }
+                documentUrlViewer.validate();
+            }
+        });
 
         emfDataBindingContext.bindValue(
                 documentTypeObservableValue,
-                PojoObservables.observeValue(document, "documentType"));
+                EMFObservables.observeValue(document, ProcessPackage.Literals.DOCUMENT__DOCUMENT_TYPE));
 
-    }
-
-    protected void resetDatabindingContext() {
-        if (emfDataBindingContext != null) {
-            emfDataBindingContext.dispose();
-        }
-        emfDataBindingContext = new EMFDataBindingContext();
     }
 
     public  EObject getContext(){
@@ -639,6 +821,26 @@ public class DocumentWizardPage extends WizardPage {
             cd.show();
         }
         mimeCompo.layout();
+    }
+
+
+    protected void updateSingleMultipleStack(final boolean isMultiple) {
+        if (isMultiple) {
+            singleMultiplestack.topControl = multipleComposite;
+            updateMimeTypeEnabled(false);
+        } else {
+            singleMultiplestack.topControl = singleComposite;
+            updateMimeTypeEnabled(!document.getDocumentType().equals(DocumentType.NONE));
+        }
+        SMComposite.layout();
+    }
+
+    private void updateMimeTypeEnabled(final boolean isEnabled) {
+        mimeTypeLabel.setEnabled(isEnabled);
+        mimeCompo.setEnabled(isEnabled);
+        manageLink.setEnabled(isEnabled);
+        hideLink.setEnabled(isEnabled);
+        documentMimeTypeViewer.getTextControl().setEnabled(isEnabled);
     }
 
 }

@@ -68,6 +68,18 @@ public class Messages extends NLS {
 
     public static String createAndNewButton;
 
+    public static String documentCanBeMultipleLabel;
+    public static String documentCanBeMultipleToolTip;
+
+    public static String initialMultipleContent;
+
+    public static String error_documentInitialContentsEmpty;
+
+    public static String multipleInitialContentsLabel;
+
+    public static String radioButtonMultiple;
+    public static String radioButtonMultipleToolTip;
+    public static String radioButtonSingle;
 
 
     static {

@@ -8178,5 +8178,8 @@
       </changes>
     </changes>
   </releases>
-  <releases/>
+  <releases>
+    <changes xsi:type="history:Set" element="process.ecore#//Document/initialMultipleContent"
+        featureName="containment" dataValue="true" oldDataValue="false"/>
+  </releases>
 </history:History>
