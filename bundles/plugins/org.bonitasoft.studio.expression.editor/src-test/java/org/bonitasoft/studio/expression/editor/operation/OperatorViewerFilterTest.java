@@ -17,11 +17,13 @@ package org.bonitasoft.studio.expression.editor.operation;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.expression.Operation;
 import org.bonitasoft.studio.model.process.Document;
 import org.bonitasoft.studio.model.process.JavaObjectData;
+import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.XMLData;
 import org.junit.Test;
@@ -88,10 +90,14 @@ public class OperatorViewerFilterTest {
 
     @Test
     public void testOperatorOnListDocument() {
+        final Pool pool = ProcessFactory.eINSTANCE.createPool();
+        final Document document = ProcessFactory.eINSTANCE.createDocument();
+        document.setMultiple(true);
+        document.setName("testDocument");
+        pool.getDocuments().add(document);
         final Operation operation = ExpressionFactory.eINSTANCE.createOperation();
         final Expression leftOperand = ExpressionFactory.eINSTANCE.createExpression();
-        final Document documentReferenced = ProcessFactory.eINSTANCE.createDocument();
-        documentReferenced.setMultiple(true);
+        final Document documentReferenced = (Document) ExpressionHelper.createDependencyFromEObject(document);
         leftOperand.setType(ExpressionConstants.DOCUMENT_REF_TYPE);
         leftOperand.getReferencedElements().add(documentReferenced);
         operation.setLeftOperand(leftOperand);

@@ -44,6 +44,7 @@ final class OperatorViewerFilter extends ViewerFilter {
         } else if (isDocumentType(exp)) {
             final EObject referencedDocument = exp.getReferencedElements().get(0);
             if (referencedDocument instanceof Document) {
+
                 if (((Document) referencedDocument).isMultiple()) {
                     return ExpressionConstants.SET_LIST_DOCUMENT_OPERATOR.equals(element);
                 } else {
