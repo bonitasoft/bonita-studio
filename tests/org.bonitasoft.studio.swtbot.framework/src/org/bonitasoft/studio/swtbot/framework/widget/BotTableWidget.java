@@ -18,35 +18,30 @@ package org.bonitasoft.studio.swtbot.framework.widget;
 
 import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.eclipse.swtbot.swt.finder.waits.ICondition;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
 
 
 /**
  * @author Romain Bioteau
  *
  */
-public class BotTreeWidget extends BotWidget {
+public class BotTableWidget extends BotWidget {
 
-    public BotTreeWidget(final SWTBotTree swtBotTree) {
+    public BotTableWidget(final SWTBotTable swtBotTree) {
         super(swtBotTree);
     }
 
     @Override
-    public SWTBotTree getSWTBotWidget() {
-        return (SWTBotTree) bot;
+    public SWTBotTable getSWTBotWidget() {
+        return (SWTBotTable) bot;
     }
 
-    public BotTreeWidget selectAll() {
-        getSWTBotWidget().select(getSWTBotWidget().getAllItems());
-        return this;
-    }
-
-    public BotTreeWidget select(final int indexInTree) {
+    public BotTableWidget select(final int indexInTree) {
         getSWTBotWidget().select(indexInTree);
         return this;
     }
 
-    public BotTreeWidget select(final String... items) {
+    public BotTableWidget select(final String... items) {
         getSWTBotWidget().select(items);
         return this;
     }
@@ -56,14 +51,18 @@ public class BotTreeWidget extends BotWidget {
 
             @Override
             public boolean test() throws Exception {
-                return getSWTBotWidget().getAllItems().length == 0;
+                return getSWTBotWidget().rowCount() == 0;
             }
 
             @Override
             public String getFailureMessage() {
-                return "Tree is not empty";
+                return "Table is not empty";
             }
         };
+    }
+
+    public boolean containsItem(final String item) {
+        return getSWTBotWidget().containsItem(item);
     }
 
 }

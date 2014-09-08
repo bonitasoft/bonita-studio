@@ -10,6 +10,7 @@ package org.bonitasoft.studio.swtbot.framework;
 
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
+import org.eclipse.swtbot.swt.finder.matchers.WidgetMatcherFactory;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
 
 /**
@@ -19,8 +20,15 @@ import org.eclipse.swtbot.swt.finder.waits.Conditions;
  */
 public class BotDialog extends BotBase {
 
+    private String dialogTitle;
+
     public BotDialog(final SWTGefBot bot) {
         super(bot);
+    }
+
+    public BotDialog(final SWTGefBot bot, final String title) {
+        super(bot);
+        dialogTitle = title;
     }
 
     /**
@@ -35,8 +43,16 @@ public class BotDialog extends BotBase {
      * Click on Cancel.
      */
     public void cancel() {
+        if(dialogTitle != null && !dialogTitle.isEmpty()){
+            bot.waitUntil(Conditions.waitForWidget(WidgetMatcherFactory.withMnemonic(IDialogConstants.CANCEL_LABEL), bot.shell(dialogTitle).widget), 10000, 100);
+        }
+
         bot.waitUntil(Conditions.widgetIsEnabled(bot.button(IDialogConstants.CANCEL_LABEL)));
         bot.button(IDialogConstants.CANCEL_LABEL).click();
+    }
+
+    protected String getDialogTitle() {
+        return dialogTitle;
     }
 
 }

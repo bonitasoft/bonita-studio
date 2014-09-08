@@ -17,6 +17,7 @@
 package org.bonitasoft.studio.swtbot.framework.expression;
 
 import org.bonitasoft.studio.swtbot.framework.exception.ReadOnlyWidgetException;
+import org.bonitasoft.studio.swtbot.framework.widget.BotTableWidget;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 
 
@@ -43,6 +44,10 @@ public class BotVariableExpressionEditor extends AbstractBotExpressionEditor {
     @Override
     public AbstractBotExpressionEditor setReturnType(final String returnType) {
         throw new ReadOnlyWidgetException();
+    }
+
+    public BotTableWidget variableList() {
+        return new BotTableWidget(bot.table(1));
     }
 
 }

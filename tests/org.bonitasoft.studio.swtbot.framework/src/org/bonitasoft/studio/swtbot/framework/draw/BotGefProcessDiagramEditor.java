@@ -403,4 +403,9 @@ public class BotGefProcessDiagramEditor extends BotGefBaseEditor {
         return descendants;
     }
 
+    public BotGefProcessDiagramEditor selectDiagram() {
+        gmfEditor.mainEditPart().select();
+        return this;
+    }
+
 }

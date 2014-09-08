@@ -62,7 +62,7 @@ import org.junit.Test;
  * @author Aurelien Pupier
  *
  */
-public class TestDataRefactor {
+public class DataRefactorIT {
 
     private Data processData;
     private Data processData2;
@@ -299,7 +299,7 @@ public class TestDataRefactor {
         final Expression scriptUsingData = ExpressionFactory.eINSTANCE.createExpression();
         scriptUsingData.setType(ExpressionConstants.SCRIPT_TYPE);
         scriptUsingData.setName("scriptUsingTwoData");
-        scriptUsingData.setContent(processData.getName()+"+"+processData2.getName());
+        scriptUsingData.setContent(processData.getName() + "+" + processData2.getName());
         scriptUsingData.getReferencedElements().add(EcoreUtil.copy(processData));
         scriptUsingData.getReferencedElements().add(EcoreUtil.copy(processData2));
         scriptUsingData.setReturnType(DataUtil.getTechnicalTypeFor(processData));
@@ -350,7 +350,6 @@ public class TestDataRefactor {
         assertEquals("Referenced Data has been removed from script", 0, scriptUsingData.getReferencedElements().size());
         assertEquals("Referenced Data has been removed from Operations", 0, variableExpression.getReferencedElements().size());
 
-
         editingDomain.getCommandStack().undo();
         assertEquals("The data has not been readded on undo", 2, process.getData().size());
         assertEquals("Referenced Data has been removed from script", 1, scriptUsingData.getReferencedElements().size());
@@ -376,7 +375,7 @@ public class TestDataRefactor {
         final Expression scriptUsingData = ExpressionFactory.eINSTANCE.createExpression();
         scriptUsingData.setType(ExpressionConstants.SCRIPT_TYPE);
         scriptUsingData.setName("scriptUsingTwoData");
-        scriptUsingData.setContent(processData.getName()+"+"+processData2.getName());
+        scriptUsingData.setContent(processData.getName() + "+" + processData2.getName());
         scriptUsingData.getReferencedElements().add(EcoreUtil.copy(processData));
         scriptUsingData.getReferencedElements().add(EcoreUtil.copy(processData2));
         scriptUsingData.setReturnType(DataUtil.getTechnicalTypeFor(processData));
@@ -464,7 +463,7 @@ public class TestDataRefactor {
         editingDomain.getCommandStack().undo();
         assertEquals("The data has not been readded on undo", 2, process.getData().size());
         assertEquals("Referenced Data has been removed from script", 1, patternExpr.getReferencedElements().size());
-        assertEquals("Pattern expression", "${"+initialDataName+"}", patternExpr.getContent());
+        assertEquals("Pattern expression", "${" + initialDataName + "}", patternExpr.getContent());
     }
 
     @Test
@@ -478,13 +477,13 @@ public class TestDataRefactor {
         refactorDataOperation.run(new NullProgressMonitor());
         assertEquals("The data has n been duplicated", 2, process.getData().size());
         assertEquals("Referenced Data has been removed from script", 1, patternExpr.getReferencedElements().size());
-        assertEquals("Referenced Data has not been renamed", newDataName, ((Data)patternExpr.getReferencedElements().get(0)).getName());
-        assertEquals("Pattern expression", "${"+newDataName+"}", patternExpr.getContent());
+        assertEquals("Referenced Data has not been renamed", newDataName, ((Data) patternExpr.getReferencedElements().get(0)).getName());
+        assertEquals("Pattern expression", "${" + newDataName + "}", patternExpr.getContent());
 
         editingDomain.getCommandStack().undo();
         assertEquals("The data has not been readded on undo", 2, process.getData().size());
         assertEquals("Referenced Data has been removed from script", 1, patternExpr.getReferencedElements().size());
-        assertEquals("Pattern expression", "${"+initialDataName+"}", patternExpr.getContent());
+        assertEquals("Pattern expression", "${" + initialDataName + "}", patternExpr.getContent());
     }
 
     private Expression createConnectorWithPatternExpression(final AbstractProcess process) {
@@ -495,7 +494,7 @@ public class TestDataRefactor {
         final Expression patternExpr = ExpressionFactory.eINSTANCE.createExpression();
         patternExpr.setType(ExpressionConstants.PATTERN_TYPE);
         patternExpr.setName(processData.getName());
-        patternExpr.setContent("${"+processData.getName()+"}");
+        patternExpr.setContent("${" + processData.getName() + "}");
         patternExpr.getReferencedElements().add(EcoreUtil.copy(processData));
         patternExpr.setReturnType(DataUtil.getTechnicalTypeFor(processData));
         connectorParameter.setExpression(patternExpr);
@@ -516,14 +515,14 @@ public class TestDataRefactor {
 
         refactorDataOperation.run(new NullProgressMonitor());
         assertEquals("The old data might not have been updated", 2, process.getData().size());
-        assertEquals("The data has not been renamed in condition", newDataName+" == \"plop\"",conditionExpression.getContent());
-        assertEquals("The data has not been removed from dependency", newDataName,((Data)conditionExpression.getReferencedElements().get(0)).getName());
+        assertEquals("The data has not been renamed in condition", newDataName + " == \"plop\"", conditionExpression.getContent());
+        assertEquals("The data has not been removed from dependency", newDataName, ((Data) conditionExpression.getReferencedElements().get(0)).getName());
 
         editingDomain.getCommandStack().undo();
 
         assertEquals("The old data might not have been updated", 2, process.getData().size());
-        assertEquals("The data has not been renamed in condition", initialDataName+" == \"plop\"",conditionExpression.getContent());
-        assertEquals("The data dependency has not been back on undo", initialDataName,((Data)conditionExpression.getReferencedElements().get(0)).getName());
+        assertEquals("The data has not been renamed in condition", initialDataName + " == \"plop\"", conditionExpression.getContent());
+        assertEquals("The data dependency has not been back on undo", initialDataName, ((Data) conditionExpression.getReferencedElements().get(0)).getName());
     }
 
     private Expression createSequenceFlowWithConditionExpression(
@@ -532,7 +531,7 @@ public class TestDataRefactor {
         sequenceFlow.setConditionType(SequenceFlowConditionType.EXPRESSION);
         final Expression conditionExpression = ExpressionFactory.eINSTANCE.createExpression();
         conditionExpression.setType(ExpressionConstants.CONDITION_TYPE);
-        conditionExpression.setContent(processData.getName()+" == \"plop\"");
+        conditionExpression.setContent(processData.getName() + " == \"plop\"");
         conditionExpression.setName("conditionExpression");
         conditionExpression.getReferencedElements().add(EcoreUtil.copy(processData));
         sequenceFlow.setCondition(conditionExpression);
@@ -600,7 +599,7 @@ public class TestDataRefactor {
         return initTestForDataRefactor(newDataName,processData);
     }
 
-    private AbstractProcess initTestForDataRefactor(final String newDataName,	final Data dataToRefactor) {
+    private AbstractProcess initTestForDataRefactor(final String newDataName, final Data dataToRefactor) {
         return initTestForDataRefactor(newDataName, dataToRefactor.getDataType().getName(), dataToRefactor);
     }
 

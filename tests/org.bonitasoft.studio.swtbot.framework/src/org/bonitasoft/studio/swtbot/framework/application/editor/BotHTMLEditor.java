@@ -14,22 +14,27 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.swtbot.framework.widget;
+package org.bonitasoft.studio.swtbot.framework.application.editor;
 
-import org.eclipse.swtbot.swt.finder.widgets.AbstractSWTBot;
+import org.bonitasoft.studio.swtbot.framework.BotBase;
+import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
+
 
 /**
  * @author Romain Bioteau
  *
  */
-public abstract class BotWidget {
+public class BotHTMLEditor extends BotBase {
 
-    protected AbstractSWTBot<?> bot;
-
-    public BotWidget(final AbstractSWTBot<?> bot) {
-        this.bot = bot;
+    public BotHTMLEditor(final SWTGefBot bot) {
+        super(bot);
     }
 
-    public abstract AbstractSWTBot<?> getSWTBotWidget();
+    public String getEditorContent() {
+        return bot.activeEditor().toTextEditor().getText();
+    }
 
+    public void close() {
+        bot.activeEditor().close();
+    }
 }

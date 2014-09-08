@@ -39,20 +39,20 @@ import org.eclipse.emf.ecore.EObject;
  */
 public interface CustomUserInfoValuesType extends EObject {
 	/**
-	 * Returns the value of the '<em><b>Custom User Info Value</b></em>' containment reference list.
-	 * The list contents are of type {@link org.bonitasoft.studio.actors.model.organization.CustomUserInfoValue}.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Custom User Info Value</b></em>' containment reference list.
+     * The list contents are of type {@link org.bonitasoft.studio.actors.model.organization.CustomUserInfoValue}.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Custom User Info Value</em>' containment reference list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Custom User Info Value</em>' containment reference list.
-	 * @see org.bonitasoft.studio.actors.model.organization.OrganizationPackage#getCustomUserInfoValuesType_CustomUserInfoValue()
-	 * @model containment="true"
-	 *        extendedMetaData="kind='element' name='customUserInfoValue'"
-	 * @generated
-	 */
+     * @return the value of the '<em>Custom User Info Value</em>' containment reference list.
+     * @see org.bonitasoft.studio.actors.model.organization.OrganizationPackage#getCustomUserInfoValuesType_CustomUserInfoValue()
+     * @model containment="true"
+     *        extendedMetaData="kind='element' name='customUserInfoValue'"
+     * @generated
+     */
 	EList<CustomUserInfoValue> getCustomUserInfoValue();
 
 } // CustomUserInfoValuesType
