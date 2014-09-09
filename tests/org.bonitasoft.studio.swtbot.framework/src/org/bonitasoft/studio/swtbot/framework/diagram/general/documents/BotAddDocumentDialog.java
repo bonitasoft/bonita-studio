@@ -9,8 +9,11 @@
 package org.bonitasoft.studio.swtbot.framework.diagram.general.documents;
 
 import org.bonitasoft.studio.document.i18n.Messages;
+import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.swtbot.framework.BotWizardDialog;
 import org.bonitasoft.studio.swtbot.framework.StudioAPIUtil;
+import org.bonitasoft.studio.swtbot.framework.expression.BotExpressionEditorDialog;
+import org.bonitasoft.studio.swtbot.framework.expression.BotScriptExpressionEditor;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
 
@@ -47,6 +50,17 @@ public class BotAddDocumentDialog extends BotWizardDialog {
      */
     public void setDescription(final String pDescription) {
         bot.textWithLabel(Messages.description).setText(pDescription);
+    }
+
+    /**
+     * SINGLE CONTENT
+     */
+
+    /**
+     * Choose "Single" radio button
+     */
+    public void chooseSingleContent() {
+        bot.radio(Messages.radioButtonSingle).click();
     }
 
     /**
@@ -94,8 +108,35 @@ public class BotAddDocumentDialog extends BotWizardDialog {
     }
 
     /**
+     * MULTIPLE CONTENT
+     */
+
+    /**
+     * Choose "Multiple" radio button
+     */
+    public void chooseMultileContent() {
+        bot.radio(Messages.radioButtonMultiple).click();
+    }
+
+
+    /**
      * MIME TYPE.
      */
+
+    /**
+     * Set Initial Contents script of a multiple document
+     * 
+     * @param scriptName
+     * @param initialContentsScript
+     */
+    public void setInitialContents(final String scriptName, final String initialContentsScript) {
+        bot.toolbarButtonWithId(ExpressionViewer.SWTBOT_ID_EDITBUTTON, 0).click();
+        final BotExpressionEditorDialog expressionDialog = new BotExpressionEditorDialog(bot);
+        final BotScriptExpressionEditor scriptEditor = new BotScriptExpressionEditor(bot, expressionDialog);
+        scriptEditor.setName(scriptName);
+        scriptEditor.setScriptContent(initialContentsScript);
+        scriptEditor.ok();
+    }
 
     /**
      * Manage MIME type.

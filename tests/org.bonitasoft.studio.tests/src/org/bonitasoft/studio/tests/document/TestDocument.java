@@ -58,6 +58,25 @@ public class TestDocument extends SWTBotGefTestCase {
     }
 
     @Test
+    public void testAddEditDeleteMultipleDocument() {
+        final BotDocumentsPropertySection botDocumentsPropertySection = createDiagramAndGoToDocumentSection();
+        BotAddDocumentDialog botAddDocumentDialog = botDocumentsPropertySection.addDocument();
+        botAddDocumentDialog.setName("doc11");
+        botAddDocumentDialog.chooseMultileContent();
+        botAddDocumentDialog.finish();
+
+        //Edit
+        botAddDocumentDialog = botDocumentsPropertySection.editDocument("doc11");
+        botAddDocumentDialog.setName("doc11Edited");
+        botAddDocumentDialog.setInitialContents("anEmptyScript", "[]");
+        botAddDocumentDialog.ok();
+
+        //Delete
+        final BotRemoveDocumentDialog botRemoveDocumentDialog = botDocumentsPropertySection.removeDocument("doc11Edited");
+        botRemoveDocumentDialog.ok();
+    }
+
+    @Test
     public void testErrorMessages() {
         final BotDocumentsPropertySection botDocumentsPropertySection = createDiagramAndGoToDocumentSection();
         BotAddDocumentDialog botAddDocumentDialog = botDocumentsPropertySection.addDocument();
