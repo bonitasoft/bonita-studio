@@ -36,10 +36,10 @@ import org.bonitasoft.studio.swtbot.framework.diagram.general.actors.BotActorDef
 import org.bonitasoft.studio.swtbot.framework.diagram.general.data.BotAddDataWizardPage;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.form.data.BotDataPropertySection;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.form.general.BotGeneralPropertySection;
-import org.bonitasoft.studio.swtbot.framework.diagram.general.recurrence.BotMultiInstanceTypeStackPanel;
-import org.bonitasoft.studio.swtbot.framework.diagram.general.recurrence.BotNumberBasedStackPanel;
-import org.bonitasoft.studio.swtbot.framework.diagram.general.recurrence.BotReccurencePropertySection;
-import org.bonitasoft.studio.swtbot.framework.diagram.general.recurrence.BotStandardLoopTypeStackPanel;
+import org.bonitasoft.studio.swtbot.framework.diagram.general.iteration.BotMultiInstanceTypeStackPanel;
+import org.bonitasoft.studio.swtbot.framework.diagram.general.iteration.BotNumberBasedStackPanel;
+import org.bonitasoft.studio.swtbot.framework.diagram.general.iteration.BotReccurencePropertySection;
+import org.bonitasoft.studio.swtbot.framework.diagram.general.iteration.BotStandardLoopTypeStackPanel;
 import org.bonitasoft.studio.swtbot.framework.draw.BotGefProcessDiagramEditor;
 import org.bonitasoft.studio.swtbot.framework.expression.BotConstantExpressionEditor;
 import org.bonitasoft.studio.swtbot.framework.expression.BotExpressionEditorDialog;

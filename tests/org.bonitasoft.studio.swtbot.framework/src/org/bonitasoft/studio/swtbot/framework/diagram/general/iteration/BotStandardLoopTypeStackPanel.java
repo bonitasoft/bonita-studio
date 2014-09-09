@@ -14,9 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.swtbot.framework.diagram.general.recurrence;
+package org.bonitasoft.studio.swtbot.framework.diagram.general.iteration;
 
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
+import org.bonitasoft.studio.properties.i18n.Messages;
+import org.bonitasoft.studio.swtbot.framework.BotBase;
 import org.bonitasoft.studio.swtbot.framework.expression.BotExpressionEditorDialog;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 
@@ -25,19 +27,28 @@ import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
  * @author Romain Bioteau
  *
  */
-public class BotNumberBasedStackPanel extends AbstractBotInputOutputStackPanel {
+public class BotStandardLoopTypeStackPanel extends BotBase {
 
-    public BotNumberBasedStackPanel(final SWTGefBot bot) {
+    public BotStandardLoopTypeStackPanel(final SWTGefBot bot) {
         super(bot);
     }
 
-    public BotExpressionEditorDialog editNumberOfInstances() {
+    public BotStandardLoopTypeStackPanel testAfter() {
+        bot.radio(Messages.testAfterLabel).click();
+        return this;
+    }
+
+    public BotStandardLoopTypeStackPanel testBefore() {
+        bot.radio(Messages.testBeforeLabel).click();
+        return this;
+    }
+
+    public BotExpressionEditorDialog editLoopConditionExpression() {
         bot.toolbarButtonWithId(SWTBotConstants.SWTBOT_ID_EDITBUTTON, 0).click();
         return new BotExpressionEditorDialog(bot);
     }
 
-    @Override
-    public BotExpressionEditorDialog editEarlyCompletionCondition() {
+    public BotExpressionEditorDialog editMaximumLoopExpression() {
         bot.toolbarButtonWithId(SWTBotConstants.SWTBOT_ID_EDITBUTTON, 1).click();
         return new BotExpressionEditorDialog(bot);
     }

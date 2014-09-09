@@ -16,9 +16,9 @@ import org.bonitasoft.studio.swtbot.framework.diagram.general.connectors.BotConn
 import org.bonitasoft.studio.swtbot.framework.diagram.general.data.BotDataPropertySection;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.general.BotDiagramPropertySection;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.general.BotGeneralPropertySection;
+import org.bonitasoft.studio.swtbot.framework.diagram.general.iteration.BotReccurencePropertySection;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.lane.BotLanePropertySection;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.pool.BotPoolPropertySection;
-import org.bonitasoft.studio.swtbot.framework.diagram.general.recurrence.BotReccurencePropertySection;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 
 /**

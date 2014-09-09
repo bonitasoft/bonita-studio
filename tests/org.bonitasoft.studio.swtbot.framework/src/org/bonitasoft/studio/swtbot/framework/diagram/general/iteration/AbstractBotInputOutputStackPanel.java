@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.swtbot.framework.diagram.general.recurrence;
+package org.bonitasoft.studio.swtbot.framework.diagram.general.iteration;
 
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.properties.i18n.Messages;
@@ -27,30 +27,29 @@ import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
  * @author Romain Bioteau
  *
  */
-public class BotStandardLoopTypeStackPanel extends BotBase {
+public abstract class AbstractBotInputOutputStackPanel extends BotBase {
 
-    public BotStandardLoopTypeStackPanel(final SWTGefBot bot) {
+    public AbstractBotInputOutputStackPanel(final SWTGefBot bot) {
         super(bot);
     }
 
-    public BotStandardLoopTypeStackPanel testAfter() {
-        bot.radio(Messages.testAfterLabel).click();
+    public AbstractBotInputOutputStackPanel storeOutputResult() {
+        bot.checkBox(Messages.storeOutputResult).click();
         return this;
     }
 
-    public BotStandardLoopTypeStackPanel testBefore() {
-        bot.radio(Messages.testBeforeLabel).click();
+    public AbstractBotInputOutputStackPanel selectResultDataForEachInstance(final String dataName) {
+        bot.comboBoxWithLabelInGroup(Messages.outputData, Messages.output).setSelection(dataName);
         return this;
     }
 
-    public BotExpressionEditorDialog editLoopConditionExpression() {
+    public AbstractBotInputOutputStackPanel selectListOfAppenedResults(final String listDataName) {
+        bot.comboBoxWithLabelInGroup(Messages.outputList, Messages.output).setSelection(listDataName);
+        return this;
+    }
+
+    public BotExpressionEditorDialog editEarlyCompletionCondition() {
         bot.toolbarButtonWithId(SWTBotConstants.SWTBOT_ID_EDITBUTTON, 0).click();
         return new BotExpressionEditorDialog(bot);
     }
-
-    public BotExpressionEditorDialog editMaximumLoopExpression() {
-        bot.toolbarButtonWithId(SWTBotConstants.SWTBOT_ID_EDITBUTTON, 1).click();
-        return new BotExpressionEditorDialog(bot);
-    }
-
 }

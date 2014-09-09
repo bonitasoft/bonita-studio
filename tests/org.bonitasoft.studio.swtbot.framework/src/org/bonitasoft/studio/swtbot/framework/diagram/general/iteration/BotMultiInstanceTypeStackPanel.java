@@ -14,9 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.swtbot.framework.diagram.general.recurrence;
+package org.bonitasoft.studio.swtbot.framework.diagram.general.iteration;
 
 import org.bonitasoft.studio.properties.i18n.Messages;
+import org.bonitasoft.studio.swtbot.framework.BotBase;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 
 
@@ -24,26 +25,20 @@ import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
  * @author Romain Bioteau
  *
  */
-public class BotDataBasedStackPanel extends AbstractBotInputOutputStackPanel {
+public class BotMultiInstanceTypeStackPanel extends BotBase {
 
-    public BotDataBasedStackPanel(final SWTGefBot bot) {
+    public BotMultiInstanceTypeStackPanel(final SWTGefBot bot) {
         super(bot);
     }
 
-
-    public BotDataBasedStackPanel selectListGeneratingInstances(final String listDataName) {
-        bot.comboBoxWithLabelInGroup(Messages.inputList, Messages.input).setSelection(listDataName);
-        return this;
+    public BotDataBasedStackPanel listOfData() {
+        bot.radio(Messages.dataBasedInstanceLabel).click();
+        return new BotDataBasedStackPanel(bot);
     }
 
-    public BotDataBasedStackPanel setIteratorName(final String iteratorName) {
-        bot.textWithLabelInGroup(Messages.instanceData + " *", Messages.input).setText(iteratorName);
-        return this;
-    }
-
-    public BotDataBasedStackPanel setIteratorReturnType(final String returnType) {
-        bot.textWithLabelInGroup(Messages.type + " *", Messages.input).setText(returnType);
-        return this;
+    public BotNumberBasedStackPanel definedNumberOfInstances() {
+        bot.radio(Messages.definedNumberOfInstanceLabel).click();
+        return new BotNumberBasedStackPanel(bot);
     }
 
 }

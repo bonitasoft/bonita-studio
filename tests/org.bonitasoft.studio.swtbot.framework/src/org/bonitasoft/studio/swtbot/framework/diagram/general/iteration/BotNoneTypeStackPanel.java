@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.swtbot.framework.diagram.general.recurrence;
+package org.bonitasoft.studio.swtbot.framework.diagram.general.iteration;
 
 import org.bonitasoft.studio.swtbot.framework.BotBase;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
