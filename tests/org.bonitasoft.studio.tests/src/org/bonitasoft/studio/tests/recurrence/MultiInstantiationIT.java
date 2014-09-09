@@ -33,7 +33,7 @@ import org.bonitasoft.studio.swtbot.framework.diagram.BotProcessDiagramPerspecti
 import org.bonitasoft.studio.swtbot.framework.diagram.application.pageflow.BotAddFormWizardDialog;
 import org.bonitasoft.studio.swtbot.framework.diagram.application.pageflow.BotPageflowPropertySection;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.actors.BotActorDefinitionPropertySection;
-import org.bonitasoft.studio.swtbot.framework.diagram.general.data.BotAddDataDialog;
+import org.bonitasoft.studio.swtbot.framework.diagram.general.data.BotAddDataWizardPage;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.form.data.BotDataPropertySection;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.form.general.BotGeneralPropertySection;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.recurrence.BotMultiInstanceTypeStackPanel;
@@ -157,7 +157,7 @@ public class MultiInstantiationIT extends SWTBotGefTestCase implements SWTBotCon
         final AbstractProcess proc = ModelHelper.getParentProcess(multiInstantiable);
         drawDiagram.selectElement(proc.getName());
 
-        BotAddDataDialog addDataBot = botProcessDiagramPerspective.getDiagramPropertiesPart().selectGeneralTab().selectDataTab()
+        BotAddDataWizardPage addDataBot = botProcessDiagramPerspective.getDiagramPropertiesPart().selectGeneralTab().selectDataTab()
                 .addData();
         BotExpressionEditorDialog botExpressionEditorDialog = addDataBot.setName("nbTicketsAvailable").setType("Integer").editDefaultValueExpression();
         botExpressionEditorDialog.selectConstantType().setValue("20").ok();
