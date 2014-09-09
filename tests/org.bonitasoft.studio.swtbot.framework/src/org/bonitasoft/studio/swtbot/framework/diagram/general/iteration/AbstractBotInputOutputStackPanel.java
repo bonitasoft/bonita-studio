@@ -21,6 +21,7 @@ import org.bonitasoft.studio.properties.i18n.Messages;
 import org.bonitasoft.studio.swtbot.framework.BotBase;
 import org.bonitasoft.studio.swtbot.framework.expression.BotExpressionEditorDialog;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotCheckBox;
 
 
 /**
@@ -33,8 +34,13 @@ public abstract class AbstractBotInputOutputStackPanel extends BotBase {
         super(bot);
     }
 
-    public AbstractBotInputOutputStackPanel storeOutputResult() {
-        bot.checkBox(Messages.storeOutputResult).click();
+    public AbstractBotInputOutputStackPanel setStoreOutputResult(final boolean storeOutputResult) {
+        final SWTBotCheckBox checkBox = bot.checkBox(Messages.storeOutputResult);
+        if (storeOutputResult) {
+            checkBox.select();
+        } else {
+            checkBox.deselect();
+        }
         return this;
     }
 

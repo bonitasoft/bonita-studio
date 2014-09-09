@@ -14,10 +14,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.swtbot.framework.expression;
+package org.bonitasoft.studio.swtbot.framework.diagram.general.operations;
 
+import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.expression.editor.i18n.Messages;
 import org.bonitasoft.studio.swtbot.framework.BotBase;
+import org.bonitasoft.studio.swtbot.framework.expression.BotExpressionEditorDialog;
+import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 
 
@@ -25,26 +28,25 @@ import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
  * @author Romain Bioteau
  *
  */
-public abstract class AbstractBotExpressionEditor extends BotBase {
+public class BotOperationsPropertySection extends BotBase {
 
-    private final BotExpressionEditorDialog botExpressionEditorDialog;
-
-    public AbstractBotExpressionEditor(final SWTGefBot bot, final BotExpressionEditorDialog botExpressionEditorDialog) {
+    public BotOperationsPropertySection(final SWTGefBot bot) {
         super(bot);
-        this.botExpressionEditorDialog = botExpressionEditorDialog;
     }
 
-    public AbstractBotExpressionEditor setReturnType(final String returnType) {
-        bot.comboBoxWithLabel(Messages.returnType).setText(returnType);
+    public BotOperationsPropertySection add() {
+        bot.button(Messages.addAction).click();
         return this;
     }
 
-    public void ok() {
-        botExpressionEditorDialog.ok();
+    public BotOperationsPropertySection selectOutputVariable(final String variableName, final String returnType, final int operationIndex) {
+        SWTBotTestUtil.setOutputStorageExpressionByName(bot, variableName, returnType, operationIndex);
+        return this;
     }
 
-    public void cancel() {
-        botExpressionEditorDialog.cancel();
+    public BotExpressionEditorDialog editActionExpression(final int operationIndex) {
+        bot.toolbarButtonWithId(SWTBotConstants.SWTBOT_ID_EDITBUTTON, operationIndex).click();
+        return new BotExpressionEditorDialog(bot);
     }
 
 }

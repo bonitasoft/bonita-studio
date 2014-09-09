@@ -18,6 +18,7 @@ import org.bonitasoft.studio.swtbot.framework.diagram.general.general.BotDiagram
 import org.bonitasoft.studio.swtbot.framework.diagram.general.general.BotGeneralPropertySection;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.iteration.BotReccurencePropertySection;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.lane.BotLanePropertySection;
+import org.bonitasoft.studio.swtbot.framework.diagram.general.operations.BotOperationsPropertySection;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.pool.BotPoolPropertySection;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 
@@ -102,7 +103,7 @@ public class BotGeneralDiagramPropertiesView extends BotBase {
         return new BotConnectorsPropertySection(bot);
     }
 
-    public BotReccurencePropertySection selectRecurrenceTab() {
+    public BotReccurencePropertySection selectIterationTab() {
         BotQAUtil.selectTabbedPropertyView(bot, "Iteration");
         return new BotReccurencePropertySection(bot);
     }
@@ -113,9 +114,9 @@ public class BotGeneralDiagramPropertiesView extends BotBase {
     }
 
 
-    public void selectOperationTab() {
-        BotQAUtil.selectTabbedPropertyView(bot, "Operation");
-        //TODO:
+    public BotOperationsPropertySection selectOperationTab() {
+        BotQAUtil.selectTabbedPropertyView(bot, "Operations");
+        return new BotOperationsPropertySection(bot);
     }
 
 }

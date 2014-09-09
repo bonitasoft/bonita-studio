@@ -17,6 +17,8 @@
  */
 package org.bonitasoft.studio.tests.recurrence;
 
+import java.util.List;
+
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
@@ -28,6 +30,7 @@ import org.bonitasoft.studio.model.process.MultiInstantiable;
 import org.bonitasoft.studio.model.process.assertions.MultiInstantiableAssert;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
+import org.bonitasoft.studio.properties.i18n.Messages;
 import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
 import org.bonitasoft.studio.swtbot.framework.diagram.BotProcessDiagramPerspective;
 import org.bonitasoft.studio.swtbot.framework.diagram.application.pageflow.BotAddFormWizardDialog;
@@ -36,10 +39,12 @@ import org.bonitasoft.studio.swtbot.framework.diagram.general.actors.BotActorDef
 import org.bonitasoft.studio.swtbot.framework.diagram.general.data.BotAddDataWizardPage;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.form.data.BotDataPropertySection;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.form.general.BotGeneralPropertySection;
+import org.bonitasoft.studio.swtbot.framework.diagram.general.iteration.BotDataBasedStackPanel;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.iteration.BotMultiInstanceTypeStackPanel;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.iteration.BotNumberBasedStackPanel;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.iteration.BotReccurencePropertySection;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.iteration.BotStandardLoopTypeStackPanel;
+import org.bonitasoft.studio.swtbot.framework.diagram.general.operations.BotOperationsPropertySection;
 import org.bonitasoft.studio.swtbot.framework.draw.BotGefProcessDiagramEditor;
 import org.bonitasoft.studio.swtbot.framework.expression.BotConstantExpressionEditor;
 import org.bonitasoft.studio.swtbot.framework.expression.BotExpressionEditorDialog;
@@ -49,9 +54,8 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
 import org.junit.After;
-import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 
@@ -60,25 +64,13 @@ import org.junit.Test;
  */
 public class MultiInstantiationIT extends SWTBotGefTestCase implements SWTBotConstants {
 
-    private static boolean disablePopup;
-
-    @BeforeClass
-    public static void setUpBeforeClass() {
-        disablePopup = FileActionDialog.getDisablePopup();
-        FileActionDialog.setDisablePopup(true);
-    }
-
-
-    @AfterClass
-    public static void tearDownAfterClass() {
-        FileActionDialog.setDisablePopup(disablePopup);
-    }
-
-
+    private boolean disablePopup;
 
     @Override
     @Before
     public void setUp() {
+        disablePopup = FileActionDialog.getDisablePopup();
+        FileActionDialog.setDisablePopup(true);
         BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().setValue(BonitaPreferenceConstants.ASK_RENAME_ON_FIRST_SAVE, false);
     }
 
@@ -86,6 +78,8 @@ public class MultiInstantiationIT extends SWTBotGefTestCase implements SWTBotCon
     @After
     public void tearDown() {
         bot.saveAllEditors();
+        bot.closeAllEditors();
+        FileActionDialog.setDisablePopup(disablePopup);
     }
 
     @Test
@@ -96,7 +90,7 @@ public class MultiInstantiationIT extends SWTBotGefTestCase implements SWTBotCon
         final BotReccurencePropertySection iterationTabBot = botProcessDiagramPerspective
                 .getDiagramPropertiesPart()
                 .selectGeneralTab()
-                .selectRecurrenceTab();
+                .selectIterationTab();
 
         final BotStandardLoopTypeStackPanel botStandardLoopType = iterationTabBot.selectStandardLoopType();
         botStandardLoopType.testAfter();
@@ -129,7 +123,7 @@ public class MultiInstantiationIT extends SWTBotGefTestCase implements SWTBotCon
         final BotReccurencePropertySection iterationTabBot = botProcessDiagramPerspective
                 .getDiagramPropertiesPart()
                 .selectGeneralTab()
-                .selectRecurrenceTab();
+                .selectIterationTab();
 
         iterationTabBot.selectSequentialType();
         MultiInstantiableAssert.assertThat(multiInstantiable).hasType(MultiInstanceType.SEQUENTIAL);
@@ -171,7 +165,7 @@ public class MultiInstantiationIT extends SWTBotGefTestCase implements SWTBotCon
         drawDiagram.selectElement("Step1");
         botProcessDiagramPerspective.getDiagramPropertiesPart().selectGeneralTab().selectActorAssignementTab().useBelowActor().selectActor("Employee actor");
         final BotNumberBasedStackPanel botNumberBasedStackPanel = botProcessDiagramPerspective.getDiagramPropertiesPart().selectGeneralTab()
-                .selectRecurrenceTab().selectParallelType().definedNumberOfInstances();
+                .selectIterationTab().selectParallelType().definedNumberOfInstances();
         botNumberBasedStackPanel.editNumberOfInstances().selectConstantType().setValue("15").ok();
         botNumberBasedStackPanel.editEarlyCompletionCondition().selectScriptTab().setName("isThereTickets").setScriptContent("nbTicketsAvailable == 0").ok();
 
@@ -215,4 +209,242 @@ public class MultiInstantiationIT extends SWTBotGefTestCase implements SWTBotCon
         assertTrue(status.getMessage(), status.isOK());
     }
 
+    @Test
+    public void testMultiInstanceEraseButton() {
+        // create Diagram
+        final BotApplicationWorkbenchWindow botApplicationWorkbenchWindow = new BotApplicationWorkbenchWindow(bot);
+        final BotProcessDiagramPerspective botProcessDiagramPerspective = botApplicationWorkbenchWindow.createNewDiagram();
+        final BotGefProcessDiagramEditor drawDiagram = botProcessDiagramPerspective.activeProcessDiagramEditor();
+        final MultiInstantiable multiInstantiable = (MultiInstantiable) drawDiagram.selectElement("Step1").getSelectedSemanticElement();
+        final AbstractProcess proc = ModelHelper.getParentProcess(multiInstantiable);
+        drawDiagram.selectElement(proc.getName());
+
+        BotAddDataWizardPage addDataBot = botProcessDiagramPerspective.getDiagramPropertiesPart().selectGeneralTab().selectDataTab()
+                .addData();
+        final BotExpressionEditorDialog botExpressionEditorDialog = addDataBot.setName("vip").setType("Java Object").setClassname("java.util.List")
+                .editDefaultValueExpression();
+        botExpressionEditorDialog.selectScriptTab().setName("vipScript").setScriptContent("[\"Armelle\",\"Ben\",\"Cedric\",\"Damien\"]")
+        .setReturnType("java.util.List").ok();
+        addDataBot.finish();
+
+        botApplicationWorkbenchWindow.save();
+
+        // Add MultiInstance on The human Task
+        drawDiagram.selectElement("Step1");
+        addDataBot = botProcessDiagramPerspective.getDiagramPropertiesPart().selectGeneralTab().selectDataTab()
+                .addData();
+        addDataBot.setName("vipName").setType("Text").finish();
+
+        botApplicationWorkbenchWindow.save();
+
+        final BotReccurencePropertySection iterationTab = botProcessDiagramPerspective.getDiagramPropertiesPart().selectGeneralTab()
+                .selectIterationTab();
+
+        // select the multi-instantiate radio buton
+        final BotDataBasedStackPanel botDataBasedStackPanel = iterationTab.selectParallelType().listOfData();
+        // set collection
+        botDataBasedStackPanel.selectListGeneratingInstances("vip -- java.util.List");
+        // set Input Data
+        botDataBasedStackPanel.setIteratorName("vipName").setIteratorReturnType(String.class.getName());
+        // set ouput data
+        botDataBasedStackPanel.setStoreOutputResult(true).selectResultDataForEachInstance("vipName -- Text");
+        // set output results
+        botDataBasedStackPanel.setStoreOutputResult(true).selectListOfAppenedResults("vip -- java.util.List");
+
+        // erase collection
+        Assert.assertTrue(bot.toolbarButtonWithTooltip(Messages.clearSelection, 0).isEnabled());
+        bot.toolbarButtonWithTooltip(Messages.clearSelection, 0).click();
+        Assert.assertTrue("Error: Collection is not erased !", bot.comboBox(0).getText().isEmpty());
+
+        // erase ouput Data
+        Assert.assertTrue(bot.toolbarButtonWithTooltip(Messages.clearSelection, 1).isEnabled());
+        bot.toolbarButtonWithTooltip(Messages.clearSelection, 1).click();
+        Assert.assertTrue("Error: Output Data is not erased !", bot.comboBox(2).getText().isEmpty());
+
+        // erase output Collection
+        Assert.assertTrue(bot.toolbarButtonWithTooltip(Messages.clearSelection, 2).isEnabled());
+        bot.toolbarButtonWithTooltip(Messages.clearSelection, 2).click();
+        Assert.assertTrue("Error: Output Collection is not erased !", bot.comboBox(3).getText().isEmpty());
+
+        bot.menu("Diagram").menu("Save").click();
+        SWTBotTestUtil.waitUntilBonitaBPmShellIsActive(bot);
+        bot.menu("Diagram").menu("Close").click();
+    }
+
+    @Test
+    public void testMultiInstanceUpdateComboBoxAfterDataRemoved() {
+        // create Diagram
+        final BotApplicationWorkbenchWindow botApplicationWorkbenchWindow = new BotApplicationWorkbenchWindow(bot);
+        final BotProcessDiagramPerspective botProcessDiagramPerspective = botApplicationWorkbenchWindow.createNewDiagram();
+        final BotGefProcessDiagramEditor drawDiagram = botProcessDiagramPerspective.activeProcessDiagramEditor();
+        final MultiInstantiable multiInstantiable = (MultiInstantiable) drawDiagram.selectElement("Step1").getSelectedSemanticElement();
+        final AbstractProcess proc = ModelHelper.getParentProcess(multiInstantiable);
+        drawDiagram.selectElement(proc.getName());
+
+        BotAddDataWizardPage addDataBot = botProcessDiagramPerspective.getDiagramPropertiesPart().selectGeneralTab().selectDataTab()
+                .addData();
+        final BotExpressionEditorDialog botExpressionEditorDialog = addDataBot.setName("vip").setType("Java Object").setClassname("java.util.List")
+                .editDefaultValueExpression();
+        botExpressionEditorDialog.selectScriptTab().setName("vipScript").setScriptContent("[\"Armelle\",\"Ben\",\"Cedric\",\"Damien\"]")
+        .setReturnType("java.util.List").ok();
+        addDataBot = (BotAddDataWizardPage) addDataBot.finishAndAdd();
+        addDataBot.setName("vip2").setType("Java Object").setClassname("java.util.List")
+        .editDefaultValueExpression();
+        botExpressionEditorDialog.selectScriptTab().setName("vipScript").setScriptContent("[\"A\",\"B\",\"C\",\"D\"]").ok();
+        addDataBot.finish();
+
+
+        botApplicationWorkbenchWindow.save();
+
+        // Add MultiInstance on The human Task
+        drawDiagram.selectElement("Step1");
+        addDataBot = botProcessDiagramPerspective.getDiagramPropertiesPart().selectGeneralTab().selectDataTab()
+                .addData();
+        addDataBot = (BotAddDataWizardPage) addDataBot.setName("vipName").setType("Text").finishAndAdd();
+        addDataBot.setName("nbTickets").setType("Integer").editDefaultValueExpression().selectConstantType().setValue("0").ok();
+        addDataBot.finish();
+
+        botApplicationWorkbenchWindow.save();
+
+        // Set properties of Multi-Instance
+        final BotReccurencePropertySection iterationTab = botProcessDiagramPerspective.getDiagramPropertiesPart().selectGeneralTab()
+                .selectIterationTab();
+
+        // select the multi-instantiate radio buton
+        final BotDataBasedStackPanel botDataBasedStackPanel = iterationTab.selectParallelType().listOfData();
+        // set collection
+        botDataBasedStackPanel.selectListGeneratingInstances("vip -- java.util.List");
+        // set Input Data
+        botDataBasedStackPanel.setIteratorName("vipName").setIteratorReturnType(String.class.getName());
+        // set ouput data
+        botDataBasedStackPanel.setStoreOutputResult(true).selectResultDataForEachInstance("vipName -- Text");
+        // set output results
+        botDataBasedStackPanel.selectListOfAppenedResults("vip -- java.util.List");
+
+        // Check references of input collection, input data, outputdata and output result exist
+        assertNotNull("Error: Input Collection used in the MultiInstantiation is not referenced in the Model.",
+                multiInstantiable.getCollectionDataToMultiInstantiate());
+        assertNotNull("Error: Input Data used in the MultiInstantiation is not referenced in the Model.", multiInstantiable.getIteratorExpression());
+        assertTrue(multiInstantiable.getIteratorExpression().getName().equals("vipName"));
+        assertNotNull("Error: Output Data used in the MultiInstantiation is not referenced in the Model.", multiInstantiable.getOutputData());
+        assertNotNull("Error: Output Result used in the MultiInstantiation is not referenced in the Model.",
+                multiInstantiable.getListDataContainingOutputResults());
+
+        // remove vip collection and vipName Text
+        drawDiagram.selectElement(proc.getName());
+        org.bonitasoft.studio.swtbot.framework.diagram.general.data.BotDataPropertySection selectDataTab = botProcessDiagramPerspective
+                .getDiagramPropertiesPart().selectGeneralTab().selectDataTab();
+        botProcessDiagramPerspective.getDiagramPropertiesPart().selectGeneralTab().selectDataTab().dataList()
+        .select("vip -- java.util.List -- Default value: vipScript");
+        selectDataTab.remove();
+
+        // Check empty comboBox in MultiInstance
+        drawDiagram.selectElement("Step1");
+        selectDataTab = botProcessDiagramPerspective
+                .getDiagramPropertiesPart().selectGeneralTab().selectDataTab();
+        botProcessDiagramPerspective.getDiagramPropertiesPart().selectGeneralTab().selectDataTab().dataList()
+        .select("vipName -- Text");
+        selectDataTab.remove();
+        SWTBotTestUtil.waitUntilBonitaBPmShellIsActive(bot);
+
+        assertNull("Error: Input Collection is still referenced in the MultiInstantiation Model after being removed.",
+                multiInstantiable.getCollectionDataToMultiInstantiate());
+        assertTrue(multiInstantiable.getIteratorExpression().getName().equals("vipName"));
+        assertNull("Error: Output Data is still referenced in the MultiInstantiation Model after being removed.", multiInstantiable.getOutputData());
+        assertNull("Error: Output Result is still referenced in the MultiInstantiation Model after being removed.",
+                multiInstantiable.getListDataContainingOutputResults());
+
+        botProcessDiagramPerspective
+        .getDiagramPropertiesPart().selectGeneralTab().selectIterationTab();
+        // check Collection empty
+        Assert.assertTrue("Error: Collection is not empty !", bot.comboBox(0).getText().isEmpty());
+
+        // check ouput Data empty
+        Assert.assertTrue("Error: Output Data is not empty !", bot.comboBox(2).getText().isEmpty());
+
+        // check output Collection empty
+        Assert.assertTrue("Error: Output Collection is not empty !", bot.comboBox(3).getText().isEmpty());
+
+        botApplicationWorkbenchWindow.save();
+        SWTBotTestUtil.waitUntilBonitaBPmShellIsActive(bot);
+    }
+
+    @Test
+    public void testMultiInstanceCollection() {
+        final BotApplicationWorkbenchWindow botApplicationWorkbenchWindow = new BotApplicationWorkbenchWindow(bot);
+        final BotProcessDiagramPerspective botProcessDiagramPerspective = botApplicationWorkbenchWindow.createNewDiagram();
+        final BotGefProcessDiagramEditor drawDiagram = botProcessDiagramPerspective.activeProcessDiagramEditor();
+        final MultiInstantiable multiInstantiable = (MultiInstantiable) drawDiagram.selectElement("Step1").getSelectedSemanticElement();
+        final AbstractProcess proc = ModelHelper.getParentProcess(multiInstantiable);
+        drawDiagram.selectElement(proc.getName());
+
+        BotAddDataWizardPage addDataBot = botProcessDiagramPerspective.getDiagramPropertiesPart().selectGeneralTab().selectDataTab()
+                .addData();
+        BotExpressionEditorDialog botExpressionEditorDialog = addDataBot.setName("nbTicketsAvailable").setType("Integer").editDefaultValueExpression();
+        botExpressionEditorDialog.selectConstantType().setValue("20").ok();
+        addDataBot = (BotAddDataWizardPage) addDataBot.finishAndAdd();
+        botExpressionEditorDialog = addDataBot.setName("vip").setType("Java Object").setClassname("java.util.List")
+                .editDefaultValueExpression();
+        botExpressionEditorDialog.selectScriptTab().setName("vipScript").setScriptContent("[\"Armelle\",\"Ben\",\"Cedric\",\"Damien\"]")
+        .setReturnType("java.util.List").ok();
+        addDataBot = (BotAddDataWizardPage) addDataBot.finishAndAdd();
+        addDataBot.setName("alreadyVip").setType("Java Object").setClassname("java.util.List")
+        .editDefaultValueExpression();
+        botExpressionEditorDialog.selectScriptTab().setName("vipScript").setScriptContent("[null]")
+        .setReturnType("java.util.List").ok();
+        addDataBot.finish();
+
+        final BotActorDefinitionPropertySection botActorDefinitionPropertySection = botProcessDiagramPerspective.getDiagramPropertiesPart().selectGeneralTab()
+                .selectActorsDefinitionTab();
+        botActorDefinitionPropertySection.selectActor("Employee actor").setSetAsInitiator();
+
+
+        drawDiagram.selectElement("Step1");
+        botProcessDiagramPerspective.getDiagramPropertiesPart().selectGeneralTab().selectActorAssignementTab().useBelowActor().selectActor("Employee actor");
+
+
+        addDataBot = botProcessDiagramPerspective.getDiagramPropertiesPart().selectGeneralTab().selectDataTab()
+                .addData();
+        botExpressionEditorDialog = addDataBot.setName("nbTickets").setType("Integer").editDefaultValueExpression();
+        botExpressionEditorDialog.selectConstantType().setValue("0").ok();
+        addDataBot = (BotAddDataWizardPage) addDataBot.finishAndAdd();
+
+        addDataBot.setName("vipName").setType("Text").finish();
+
+        botApplicationWorkbenchWindow.save();
+
+
+        // Set properties of Multi-Instance
+        // Set properties of Multi-Instance
+        final BotReccurencePropertySection iterationTab = botProcessDiagramPerspective.getDiagramPropertiesPart().selectGeneralTab()
+                .selectIterationTab();
+
+        // select the multi-instantiate radio buton
+        final BotDataBasedStackPanel botDataBasedStackPanel = iterationTab.selectParallelType().listOfData();
+        // set collection
+        botDataBasedStackPanel.selectListGeneratingInstances("vip -- java.util.List");
+        // set Input Data
+        botDataBasedStackPanel.setIteratorName("vipName").setIteratorReturnType(String.class.getName());
+        // set ouput data
+        botDataBasedStackPanel.setStoreOutputResult(true).selectResultDataForEachInstance("vipName -- Text");
+        // set output results
+        botDataBasedStackPanel.selectListOfAppenedResults("alreadyVip -- java.util.List");
+
+
+        // Edit the Completion condition
+        botDataBasedStackPanel.editEarlyCompletionCondition().selectScriptTab().setName("isOK").setScriptContent("(vip.isEmpty())||(nbTicketsAvailable==0)")
+        .ok();
+
+        // Add operation to update the number of available tickets
+        final BotOperationsPropertySection operationTab = botProcessDiagramPerspective.getDiagramPropertiesPart().selectGeneralTab().selectOperationTab();
+        operationTab.add();
+        operationTab.selectOutputVariable("vip", "java.util.List", 0);
+        operationTab.editActionExpression(0).selectScriptTab().setName("removeUser")
+        .setScriptContent("List vipList = new ArrayList(vip)\nvipList.remove(vipName)\nreturn vipList")
+        .setReturnType(List.class.getName())
+        .ok();
+
+        botApplicationWorkbenchWindow.save();
+        SWTBotTestUtil.waitUntilBonitaBPmShellIsActive(bot);
+    }
 }

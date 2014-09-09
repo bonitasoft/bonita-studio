@@ -32,7 +32,7 @@ public class BotDataBasedStackPanel extends AbstractBotInputOutputStackPanel {
 
 
     public BotDataBasedStackPanel selectListGeneratingInstances(final String listDataName) {
-        bot.comboBoxWithLabelInGroup(Messages.inputList, Messages.input).setSelection(listDataName);
+        bot.comboBoxWithLabelInGroup(Messages.inputList + " *", Messages.input).setSelection(listDataName);
         return this;
     }
 
@@ -42,7 +42,7 @@ public class BotDataBasedStackPanel extends AbstractBotInputOutputStackPanel {
     }
 
     public BotDataBasedStackPanel setIteratorReturnType(final String returnType) {
-        bot.textWithLabelInGroup(Messages.type + " *", Messages.input).setText(returnType);
+        bot.comboBoxWithLabelInGroup(Messages.type + " *", Messages.input).setText(returnType);
         return this;
     }
 
