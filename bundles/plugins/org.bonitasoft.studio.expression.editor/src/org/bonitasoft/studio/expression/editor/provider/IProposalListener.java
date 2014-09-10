@@ -14,12 +14,14 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 
 /**
  * @author Maxence Raoux
- * 
+ *
  */
 public interface IProposalListener extends IBonitaVariableContext {
 
-	public String handleEvent(EObject context, String fixedReturnType);
+    public String handleEvent(EObject context, String fixedReturnType);
 
-	public void setEStructuralFeature(EStructuralFeature feature);
+    public void setEStructuralFeature(EStructuralFeature feature);
+
+    public boolean isRelevant(EObject context);
 }
 

@@ -35,8 +35,12 @@ public class ListDataFilter extends ViewerFilter {
      */
     @Override
     public boolean select(final Viewer viewer, final Object parentElement, final Object element) {
-        final Data data = (Data) element;
-        return DataUtil.getTechnicalTypeFor(data).equals(List.class.getName());
+        if (element instanceof Data) {
+            final Data data = (Data) element;
+
+            return DataUtil.getTechnicalTypeFor(data).equals(List.class.getName());
+        }
+        return true;
     }
 
 }

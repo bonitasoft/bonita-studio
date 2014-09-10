@@ -47,6 +47,8 @@ public class DataLabelProvider extends ObservableMapLabelProvider {
             }else{
                 return ((Data)element).getName();
             }
+        } else if (element != null) {
+            return element.toString();
         }
         return super.getText(element);
     }
