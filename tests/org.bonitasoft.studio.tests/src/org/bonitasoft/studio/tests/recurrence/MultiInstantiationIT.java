@@ -243,7 +243,7 @@ public class MultiInstantiationIT extends SWTBotGefTestCase implements SWTBotCon
         // select the multi-instantiate radio buton
         final BotDataBasedStackPanel botDataBasedStackPanel = iterationTab.selectParallelType().listOfData();
         // set collection
-        botDataBasedStackPanel.selectListGeneratingInstances("vip -- java.util.List");
+        botDataBasedStackPanel.selectInputListVariable("vip -- java.util.List");
         // set Input Data
         botDataBasedStackPanel.setIteratorName("vipName").setIteratorReturnType(String.class.getName());
         // set ouput data
@@ -313,7 +313,7 @@ public class MultiInstantiationIT extends SWTBotGefTestCase implements SWTBotCon
         // select the multi-instantiate radio buton
         final BotDataBasedStackPanel botDataBasedStackPanel = iterationTab.selectParallelType().listOfData();
         // set collection
-        botDataBasedStackPanel.selectListGeneratingInstances("vip -- java.util.List");
+        botDataBasedStackPanel.selectInputListVariable("vip -- java.util.List");
         // set Input Data
         botDataBasedStackPanel.setIteratorName("vipName").setIteratorReturnType(String.class.getName());
         // set ouput data
@@ -422,7 +422,7 @@ public class MultiInstantiationIT extends SWTBotGefTestCase implements SWTBotCon
         // select the multi-instantiate radio buton
         final BotDataBasedStackPanel botDataBasedStackPanel = iterationTab.selectParallelType().listOfData();
         // set collection
-        botDataBasedStackPanel.selectListGeneratingInstances("vip -- java.util.List");
+        botDataBasedStackPanel.selectInputListVariable("vip -- java.util.List");
         // set Input Data
         botDataBasedStackPanel.setIteratorName("vipName").setIteratorReturnType(String.class.getName());
         // set ouput data

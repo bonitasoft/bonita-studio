@@ -40,7 +40,7 @@ public class BotOperationsPropertySection extends BotBase {
     }
 
     public BotOperationsPropertySection selectOutputVariable(final String variableName, final String returnType, final int operationIndex) {
-        SWTBotTestUtil.setOutputStorageExpressionByName(bot, variableName, returnType, operationIndex);
+        SWTBotTestUtil.setOutputStorageExpressionByName(bot, variableName, returnType, operationIndex * 2);
         return this;
     }
 

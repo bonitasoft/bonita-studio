@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.properties.sections.recurrence;
+package org.bonitasoft.studio.properties.sections.iteration;
 
 import org.bonitasoft.studio.common.DataUtil;
 import org.bonitasoft.studio.common.ExpressionConstants;
@@ -67,6 +67,7 @@ import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -404,6 +405,12 @@ public class RecurrencePropertySection extends EObjectSelectionProviderSection i
 
         final Label inputListlabel = widgetFactory.createLabel(inputGroup, Messages.inputList + " *");
         inputListlabel.setLayoutData(GridDataFactory.swtDefaults().align(SWT.RIGHT, SWT.CENTER).create());
+
+        final ControlDecoration inputListlabelDecoration = new ControlDecoration(inputListlabel, SWT.RIGHT);
+        inputListlabelDecoration.setMarginWidth(-3);
+        inputListlabelDecoration.setDescriptionText(Messages.inputListHint);
+        inputListlabelDecoration.setImage(Pics.getImage(PicsConstants.hint));
+
         final ComboViewer inputListComboViewer = createComboViewer(widgetFactory, inputGroup);
         inputListComboViewer.getControl().setLayoutData(
                 GridDataFactory.fillDefaults().grab(true, false).hint(200, SWT.DEFAULT).indent(5, 0).create());
@@ -427,10 +434,8 @@ public class RecurrencePropertySection extends EObjectSelectionProviderSection i
                 final Object data = event.diff.getNewValue();
                 if (data instanceof Data) {
                     if (((Data) data).isMultiple()) {
-                        final Data copy = EcoreUtil.copy((Data) data);
-                        copy.setMultiple(false);
+                        final String technicalTypeFor = getQualifiedNameFromMultipleData((Data) data);
                         final String currentReturnType = (String) returnTypeComboTextObservable.getValue();
-                        final String technicalTypeFor = DataUtil.getTechnicalTypeFor(copy);
                         if (currentInstantiable == null || currentInstantiable.equals(getEObjectObservable().getValue())) {
                             if (!technicalTypeFor.equals(currentReturnType)) {
                                 returnTypeComboTextObservable.setValue(technicalTypeFor);
@@ -442,14 +447,20 @@ public class RecurrencePropertySection extends EObjectSelectionProviderSection i
                 }
 
             }
+
         });
 
         final Label label = widgetFactory.createLabel(inputGroup, "");
         label.setImage(Pics.getImage("icon-arrow-down.png"));
         label.setLayoutData(GridDataFactory.fillDefaults().span(3, 1).align(SWT.CENTER, SWT.CENTER).create());
 
-        final Label instanceDatalabel = widgetFactory.createLabel(inputGroup, Messages.instanceData + " *");
-        instanceDatalabel.setLayoutData(GridDataFactory.swtDefaults().align(SWT.RIGHT, SWT.CENTER).create());
+        final Label ieratorLabel = widgetFactory.createLabel(inputGroup, Messages.iterator + " *");
+        ieratorLabel.setLayoutData(GridDataFactory.swtDefaults().align(SWT.RIGHT, SWT.CENTER).create());
+
+        final ControlDecoration ieratorLabelDecoration = new ControlDecoration(ieratorLabel, SWT.RIGHT);
+        ieratorLabelDecoration.setDescriptionText(Messages.iteratorHint);
+        ieratorLabelDecoration.setImage(Pics.getImage(PicsConstants.hint));
+        ieratorLabelDecoration.setMarginWidth(-3);
 
         createReturnTypeCombo(widgetFactory, inputGroup);
     }
@@ -476,7 +487,7 @@ public class RecurrencePropertySection extends EObjectSelectionProviderSection i
 
     protected void createReturnTypeCombo(final TabbedPropertySheetWidgetFactory widgetFactory, final Composite parent) {
         final Composite iteratorComposite = widgetFactory.createPlainComposite(parent, SWT.NONE);
-        iteratorComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 1).create());
+        iteratorComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 1).indent(6, 0).create());
         iteratorComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(4).extendedMargins(0, 10, 0, 0).create());
 
         final Text instanceDataNameText = widgetFactory.createText(iteratorComposite, "", SWT.BORDER);
@@ -518,12 +529,16 @@ public class RecurrencePropertySection extends EObjectSelectionProviderSection i
 
         context.bindValue(observeinstanceDataNameText, iteratorObservable, updateIteratorNameTarget, updateIteratorNameModel);
 
-        final Label instanceDataTypeLabel = widgetFactory.createLabel(iteratorComposite, Messages.type + " *");
-        instanceDataTypeLabel.setLayoutData(GridDataFactory.swtDefaults().align(SWT.RIGHT, SWT.CENTER).create());
+        final Label iteratorTypeLabel = widgetFactory.createLabel(iteratorComposite, Messages.type + " *");
+        iteratorTypeLabel.setLayoutData(GridDataFactory.swtDefaults().align(SWT.RIGHT, SWT.CENTER).create());
 
+        final ControlDecoration ieratorTypeDecoration = new ControlDecoration(iteratorTypeLabel, SWT.RIGHT);
+        ieratorTypeDecoration.setDescriptionText(Messages.typeHint);
+        ieratorTypeDecoration.setImage(Pics.getImage(PicsConstants.hint));
+        ieratorTypeDecoration.setMarginWidth(-3);
 
         final ComboViewer returnTypeCombo = new ComboViewer(new Combo(iteratorComposite, SWT.BORDER));
-        returnTypeCombo.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).align(SWT.FILL, SWT.CENTER).create());
+        returnTypeCombo.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).align(SWT.FILL, SWT.CENTER).indent(5, 0).create());
         returnTypeCombo.setContentProvider(new ExpressionReturnTypeContentProvider());
         returnTypeCombo.setLabelProvider(new LabelProvider());
         returnTypeCombo.setSorter(new ViewerSorter() {
@@ -544,9 +559,9 @@ public class RecurrencePropertySection extends EObjectSelectionProviderSection i
 
             @Override
             public Object convert(final Object from) {
-                final Expression exp = (Expression) from;
-                if (exp != null) {
-                    return exp.getReturnType();
+                final MultiInstantiable instantiable = (MultiInstantiable) getEObjectObservable().getValue();
+                if (instantiable instanceof MultiInstantiable && instantiable.getCollectionDataToMultiInstantiate() != null) {
+                    return getQualifiedNameFromMultipleData(instantiable.getCollectionDataToMultiInstantiate());
                 }
                 return new Object();
             }
@@ -694,6 +709,16 @@ public class RecurrencePropertySection extends EObjectSelectionProviderSection i
             context.dispose();
         }
         super.dispose();
+    }
+
+    private String getQualifiedNameFromMultipleData(final Data data) {
+        if (data.isMultiple()) {
+            final Data copy = EcoreUtil.copy(data);
+            copy.setMultiple(false);
+            final String technicalTypeFor = DataUtil.getTechnicalTypeFor(copy);
+            return technicalTypeFor;
+        }
+        return Object.class.getName();
     }
 
 

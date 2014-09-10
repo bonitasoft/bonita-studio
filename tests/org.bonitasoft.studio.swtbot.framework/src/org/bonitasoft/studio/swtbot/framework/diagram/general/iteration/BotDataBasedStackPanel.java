@@ -31,13 +31,13 @@ public class BotDataBasedStackPanel extends AbstractBotInputOutputStackPanel {
     }
 
 
-    public BotDataBasedStackPanel selectListGeneratingInstances(final String listDataName) {
+    public BotDataBasedStackPanel selectInputListVariable(final String listDataName) {
         bot.comboBoxWithLabelInGroup(Messages.inputList + " *", Messages.input).setSelection(listDataName);
         return this;
     }
 
     public BotDataBasedStackPanel setIteratorName(final String iteratorName) {
-        bot.textWithLabelInGroup(Messages.instanceData + " *", Messages.input).setText(iteratorName);
+        bot.textWithLabelInGroup(Messages.iterator + " *", Messages.input).setText(iteratorName);
         return this;
     }
 

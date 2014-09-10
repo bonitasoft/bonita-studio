@@ -41,11 +41,14 @@ public class DataLabelProvider extends ObservableMapLabelProvider {
 
     @Override
     public String getText(final Object element) {
-        if(((Data)element).getDataType() != null){
-            return ((Data)element).getName() + " -- " + getTypeLabel((Data)element); //$NON-NLS-1$
-        }else{
-            return ((Data)element).getName();
+        if(element instanceof Data){
+            if(((Data)element).getDataType() != null){
+                return ((Data)element).getName() + " -- " + getTypeLabel((Data)element); //$NON-NLS-1$
+            }else{
+                return ((Data)element).getName();
+            }
         }
+        return super.getText(element);
     }
 
     /**

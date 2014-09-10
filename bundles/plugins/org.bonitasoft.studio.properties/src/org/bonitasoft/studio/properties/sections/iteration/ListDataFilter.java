@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.properties.sections.recurrence;
+package org.bonitasoft.studio.properties.sections.iteration;
 
 import java.util.List;
 
