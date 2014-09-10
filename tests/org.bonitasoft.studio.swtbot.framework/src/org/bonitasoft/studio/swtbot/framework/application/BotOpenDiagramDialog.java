@@ -16,6 +16,7 @@
  */
 package org.bonitasoft.studio.swtbot.framework.application;
 
+import static org.bonitasoft.studio.application.i18n.Messages.OpenProcessButtonLabel;
 import static org.bonitasoft.studio.diagram.custom.i18n.Messages.openProcessWizardPage_title;
 
 import org.bonitasoft.studio.swtbot.framework.BotDialog;
@@ -60,7 +61,7 @@ public class BotOpenDiagramDialog extends BotDialog {
     }
 
     public BotProcessDiagramPerspective open() {
-        bot.button("Open").click();
+        bot.button(OpenProcessButtonLabel).click();
         return new BotProcessDiagramPerspective(bot);
     }
 

@@ -13,30 +13,14 @@ import org.bonitasoft.studio.swtbot.framework.widget.BotTreeWidget;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 
 public class TestOpenDiagram extends SWTBotGefTestCase {
 
     private boolean askRename;
-    // Before and After
-    private static boolean disablePopup;
-
-    @BeforeClass
-    public static void setUpBeforeClass() {
-        disablePopup = FileActionDialog.getDisablePopup();
-        FileActionDialog.setDisablePopup(true);
-    }
-
-
-    @AfterClass
-    public static void tearDownAfterClass() {
-        FileActionDialog.setDisablePopup(disablePopup);
-    }
-
+    private boolean disablePopup;
 
 
     @Override
@@ -44,12 +28,15 @@ public class TestOpenDiagram extends SWTBotGefTestCase {
     public void tearDown() throws Exception {
         bot.saveAllEditors();
         BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().setValue(BonitaPreferenceConstants.ASK_RENAME_ON_FIRST_SAVE, askRename);
+        FileActionDialog.setDisablePopup(disablePopup);
     }
 
     @Before
     @Override
     public void setUp() throws Exception {
         super.setUp();
+        disablePopup = FileActionDialog.getDisablePopup();
+        FileActionDialog.setDisablePopup(true);
         askRename = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().getBoolean(BonitaPreferenceConstants.ASK_RENAME_ON_FIRST_SAVE);
         BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().setValue(BonitaPreferenceConstants.ASK_RENAME_ON_FIRST_SAVE, false);
     }
