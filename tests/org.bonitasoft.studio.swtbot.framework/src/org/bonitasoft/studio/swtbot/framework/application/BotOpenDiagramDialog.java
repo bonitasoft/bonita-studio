@@ -16,6 +16,7 @@
  */
 package org.bonitasoft.studio.swtbot.framework.application;
 
+import static org.bonitasoft.studio.application.i18n.Messages.OpenProcessButtonLabel;
 import static org.bonitasoft.studio.diagram.custom.i18n.Messages.openProcessWizardPage_title;
 
 import org.bonitasoft.studio.swtbot.framework.BotDialog;
@@ -33,7 +34,7 @@ import org.eclipse.swtbot.swt.finder.waits.Conditions;
 public class BotOpenDiagramDialog extends BotDialog {
 
     public BotOpenDiagramDialog(final SWTGefBot bot) {
-        super(bot);
+        super(bot, openProcessWizardPage_title);
     }
 
     public BotOpenDiagramDialog searchDiagram(final String searchText) {
@@ -55,12 +56,12 @@ public class BotOpenDiagramDialog extends BotDialog {
         bot.button(org.bonitasoft.studio.diagram.custom.i18n.Messages.removeProcessLabel).click();
         bot.waitUntil(Conditions.shellIsActive(org.bonitasoft.studio.diagram.custom.i18n.Messages.confirmProcessDeleteTitle));
         bot.button(IDialogConstants.YES_LABEL).click();
-        bot.waitUntil(Conditions.shellIsActive(openProcessWizardPage_title));
+        bot.waitUntil(Conditions.shellIsActive(getDialogTitle()));
         return this;
     }
 
     public BotProcessDiagramPerspective open() {
-        bot.button("Open").click();
+        bot.button(OpenProcessButtonLabel).click();
         return new BotProcessDiagramPerspective(bot);
     }
 
