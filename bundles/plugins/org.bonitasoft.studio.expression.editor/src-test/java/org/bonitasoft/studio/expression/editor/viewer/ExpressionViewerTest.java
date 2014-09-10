@@ -24,7 +24,6 @@ import java.util.List;
 
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.model.expression.Expression;
-import org.eclipse.emf.ecore.EReference;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -58,7 +57,7 @@ public class ExpressionViewerTest {
      */
     @Before
     public void setUp() throws Exception {
-        PowerMockito.suppress(PowerMockito.constructor(ExpressionViewer.class, Composite.class, Integer.class, EReference.class));
+        PowerMockito.suppress(PowerMockito.constructor(ExpressionViewer.class, Composite.class, Integer.class));
         when(parent.getDisplay()).thenReturn(fakeDisplay);
         expressionViewer = new ExpressionViewer(parent, SWT.BORDER);
 
