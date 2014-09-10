@@ -2,7 +2,7 @@
 <?pde version="3.5"?>
 
 
-<product name="BOS Test Product" uid="org.bonitasoft.studio.test.product" version="6.3.5.qualifier" useFeatures="true" includeLaunchers="true">
+<product name="BOS Test Product" uid="org.bonitasoft.studio.test.product" version="6.3.6.qualifier" useFeatures="true" includeLaunchers="true">
 
 
    <configIni use="default">
