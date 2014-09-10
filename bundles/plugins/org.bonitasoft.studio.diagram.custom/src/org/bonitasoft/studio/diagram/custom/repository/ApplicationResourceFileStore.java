@@ -31,7 +31,7 @@ import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.diagram.custom.Activator;
-import org.bonitasoft.studio.diagram.custom.Messages;
+import org.bonitasoft.studio.diagram.custom.i18n.Messages;
 import org.bonitasoft.studio.model.process.AssociatedFile;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.ResourceFolder;

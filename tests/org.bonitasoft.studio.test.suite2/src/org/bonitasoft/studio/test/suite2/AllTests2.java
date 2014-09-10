@@ -47,7 +47,7 @@ import org.bonitasoft.studio.tests.IHeapDumper;
 import org.bonitasoft.studio.tests.api.TestBonitaAPI;
 import org.bonitasoft.studio.tests.bug.TestBugs;
 import org.bonitasoft.studio.tests.connectors.TestDatabaseConnectorResulset;
-import org.bonitasoft.studio.tests.data.TestDataRefactor;
+import org.bonitasoft.studio.tests.data.DataRefactorIT;
 import org.bonitasoft.studio.tests.form.TestCommands;
 import org.bonitasoft.studio.tests.perspectives.TestAutomaticSwitchPerspective;
 import org.bonitasoft.studio.tests.processzoo.TestProcessZoo;
@@ -98,7 +98,7 @@ import org.junit.runners.Suite;
     BPMNImportExportTest.class,
     BPMNDataExportImportTest.class,
     BPMNSequenceFlowConditionExportImportTest.class,
-    TestDataRefactor.class,
+    DataRefactorIT.class,
     TestBonitaAPI.class,
     TestNonInterruptingBoundaryTimerEvent.class,
     TestUserFilterMatchingEngineVersion.class,

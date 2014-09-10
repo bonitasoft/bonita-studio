@@ -18,6 +18,8 @@ import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.connector.model.definition.Category;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
+import org.bonitasoft.studio.connector.model.definition.provider.ConnectorEditPlugin;
+import org.bonitasoft.studio.connector.model.definition.wizard.AbstractDefinitionWizard;
 import org.bonitasoft.studio.connector.model.definition.wizard.ConnectorDefinitionTreeLabelProvider;
 import org.bonitasoft.studio.connector.model.i18n.DefinitionResourceProvider;
 import org.bonitasoft.studio.connector.model.i18n.Messages;
@@ -28,12 +30,13 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 /**
  * @author Aurélie Zara
- * 
+ *
  */
 @RunWith(SWTBotJunit4ClassRunner.class)
 public class ConnectorEditionTest extends SWTBotGefTestCase {
@@ -53,6 +56,14 @@ public class ConnectorEditionTest extends SWTBotGefTestCase {
             bot.button(IDialogConstants.YES_LABEL).click();
         }
         bot.button(IDialogConstants.CANCEL_LABEL).click();
+    }
+
+    @Before
+    @Override
+    public void setUp() throws Exception {
+        super.setUp();
+        FileActionDialog.setDisablePopup(true);
+        ConnectorEditPlugin.getPlugin().getPreferenceStore().setValue(AbstractDefinitionWizard.HIDE_CONNECTOR_DEFINITION_CHANGE_WARNING, true);
     }
 
     @Test

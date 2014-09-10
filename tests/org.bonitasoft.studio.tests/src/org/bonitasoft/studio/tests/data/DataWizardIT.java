@@ -15,13 +15,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.data.test;
+package org.bonitasoft.studio.tests.data;
 
-import static org.bonitasoft.studio.expression.editor.i18n.Messages.editExpression;
-import static org.bonitasoft.studio.expression.editor.i18n.Messages.expressionTypeLabel;
-
-import java.util.ArrayList;
-import java.util.List;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.bonitasoft.studio.common.DataTypeLabels;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
@@ -34,8 +30,19 @@ import org.bonitasoft.studio.model.process.IntegerType;
 import org.bonitasoft.studio.model.process.Lane;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.Pool;
+import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
+import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
+import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
+import org.bonitasoft.studio.swtbot.framework.diagram.BotProcessDiagramPerspective;
+import org.bonitasoft.studio.swtbot.framework.diagram.BotProcessDiagramPropertiesViewFolder;
+import org.bonitasoft.studio.swtbot.framework.diagram.general.data.BotAddDataWizardPage;
+import org.bonitasoft.studio.swtbot.framework.diagram.general.data.BotDataPropertySection;
+import org.bonitasoft.studio.swtbot.framework.diagram.general.data.BotEditDataWizardPage;
+import org.bonitasoft.studio.swtbot.framework.expression.BotExpressionEditorDialog;
+import org.bonitasoft.studio.swtbot.framework.widget.BotTableWidget;
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
-import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.draw2d.PositionConstants;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
@@ -47,8 +54,8 @@ import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
 import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
-import org.junit.Assert;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -57,8 +64,25 @@ import org.junit.runner.RunWith;
  *
  */
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class DataSWTBotTests extends SWTBotGefTestCase {
+public class DataWizardIT extends SWTBotGefTestCase {
 
+
+    private boolean askRename;
+
+    @Before
+    @Override
+    public void setUp() throws Exception {
+        super.setUp();
+        askRename = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().getBoolean(BonitaPreferenceConstants.ASK_RENAME_ON_FIRST_SAVE);
+        BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().setValue(BonitaPreferenceConstants.ASK_RENAME_ON_FIRST_SAVE, false);
+    }
+
+    @After
+    @Override
+    public void tearDown() throws Exception {
+        super.tearDown();
+        BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().setValue(BonitaPreferenceConstants.ASK_RENAME_ON_FIRST_SAVE, askRename);
+    }
 
     /**
      * @throws Exception
@@ -118,6 +142,7 @@ public class DataSWTBotTests extends SWTBotGefTestCase {
         assertTrue("wrong rename",firstData.getName().equals("newName"));
         assertTrue("wrong change type",firstData.getDataType() instanceof IntegerType);
 
+        SWTBotTestUtil.waitUntilBonitaBPmShellIsActive(bot);
         bot.menu("Diagram").menu("Close").click();
     }
 
@@ -153,6 +178,7 @@ public class DataSWTBotTests extends SWTBotGefTestCase {
         assertEquals("data not removed",nbData -1, pool.getData().size());
         assertFalse("the wrong data was removed",firstData.equals(pool.getData().get(0)));
 
+        SWTBotTestUtil.waitUntilBonitaBPmShellIsActive(bot);
         bot.menu("Diagram").menu("Close").click();
     }
 
@@ -189,6 +215,7 @@ public class DataSWTBotTests extends SWTBotGefTestCase {
             }
         });
         assertEquals("data not added",nbPoolData -1, pool.getData().size());
+        SWTBotTestUtil.waitUntilBonitaBPmShellIsActive(bot);
         bot.menu("Diagram").menu("Close").click();
     }
 
@@ -210,7 +237,7 @@ public class DataSWTBotTests extends SWTBotGefTestCase {
     }
 
     /**Add a Text Data
-     * 
+     *
      * @param dataName
      */
     private void addDataOnSelectedElementWithName(final String dataName) {
@@ -275,95 +302,121 @@ public class DataSWTBotTests extends SWTBotGefTestCase {
         SWTBotTestUtil.waitUntilBonitaBPmShellIsActive(bot);
         bot.menu("Diagram").menu("Save").click();
 
-
+        SWTBotTestUtil.waitUntilBonitaBPmShellIsActive(bot);
         bot.menu("Diagram").menu("Close").click();
     }
 
     @Test
     public void testDatacantBeInitializeByItself(){
-        SWTBotTestUtil.createNewDiagram(bot);
-        SWTBotTestUtil.changeDiagramName(bot, "Step1", "DataInit");
-        final SWTBotEditor botEditor = bot.activeEditor();
-        final SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
-        final AbstractProcess proc = ModelHelper.getParentProcess(((IGraphicalEditPart)gmfEditor.getEditPart("Step1").part()).resolveSemanticElement());
+        final BotApplicationWorkbenchWindow botApplicationWorkbenchWindow = new BotApplicationWorkbenchWindow(bot);
+        final BotProcessDiagramPerspective diagramPerspective = botApplicationWorkbenchWindow.createNewDiagram();
+        diagramPerspective.activeProcessDiagramEditor().selectDiagram();
+        diagramPerspective.getDiagramPropertiesPart().selectGeneralTab().selectDiagramTab().setName("DataInit");
 
-        final List<String> step1DataList = new ArrayList<String>(2);
-        step1DataList.add("varS1_1"+" -- "+"Text");
-        step1DataList.add("varS1_2"+" -- "+"Integer");
-        final List<String> step2DataList = new ArrayList<String>(2);
-        step2DataList.add("varS2_1"+" -- "+"Text");
-        step2DataList.add("varS2_2"+" -- "+"Integer");
-        final List<String> procDataList  = new ArrayList<String>(2);
-        procDataList.add("procVar_1"+" -- "+"Text");
-        procDataList.add("procVar_2"+" -- "+"Integer");
+        final EObject selectedSemanticElement = diagramPerspective.activeProcessDiagramEditor().selectElement("Step1").getSelectedSemanticElement();
+        final AbstractProcess proc = ModelHelper.getParentProcess(selectedSemanticElement);
 
         // add data to Process
-        gmfEditor.getEditPart(proc.getName());
-        getDataSection( bot );
-        bot.button("Add...").click();
-        SWTBotTestUtil.addNewData(bot, "procVar_1", "Text", false, null);
-        bot.button("Add...").click();
-        SWTBotTestUtil.addNewData(bot, "procVar_2", "Integer", false, null);
+        diagramPerspective.activeProcessDiagramEditor().selectElement(proc.getName());
+        BotDataPropertySection botDataPropertySection = diagramPerspective.getDiagramPropertiesPart().selectGeneralTab().selectDataTab();
+        BotAddDataWizardPage addData = botDataPropertySection.addData();
+        addData.setName("procVar_1").setType("Text").finishAndAdd().setName("procVar_2").setType("Integer").finish();
 
-        SWTBotTestUtil.selectTaskFromSelectedElementAndDragIt(gmfEditor, "Step1", new Point(400, 100));
+        diagramPerspective.activeProcessDiagramEditor().addElementAfter("Step1", SWTBotTestUtil.CONTEXTUALPALETTE_STEP, PositionConstants.EAST);
 
         // set data on step1 Task
-        gmfEditor.getEditPart("Step1").click();
-        getDataSection( bot );
-        bot.button("Add...").click();
-        SWTBotTestUtil.addNewData(bot, "varS1_1", "Text", false, null);
-        bot.button("Add...").click();
-        SWTBotTestUtil.addNewData(bot, "varS1_2", "Integer", false, null);
+        diagramPerspective.activeProcessDiagramEditor().selectElement("Step1");
+        botDataPropertySection = diagramPerspective.getDiagramPropertiesPart().selectGeneralTab().selectDataTab();
+        addData = botDataPropertySection.addData();
+        addData.setName("varS1_1").setType("Text").finishAndAdd().setName("varS1_2").setType("Integer").finish();
 
         // set data on step2 Task
-        gmfEditor.getEditPart("Step2").click();
-        getDataSection( bot );
-        bot.button("Add...").click();
-        SWTBotTestUtil.addNewData(bot, "varS2_1", "Text", false, null);
-        bot.button("Add...").click();
-        SWTBotTestUtil.addNewData(bot, "varS2_2", "Integer", false, null);
-        bot.menu("Diagram").menu("Save").click();
+        diagramPerspective.activeProcessDiagramEditor().selectElement("Step2");
+        botDataPropertySection = diagramPerspective.getDiagramPropertiesPart().selectGeneralTab().selectDataTab();
+        addData = botDataPropertySection.addData();
+        addData.setName("varS2_1").setType("Text").finishAndAdd().setName("varS2_2").setType("Integer").finish();
+        botApplicationWorkbenchWindow.save();
 
         // check only process variables are available in tasks data edit expression
-        gmfEditor.getEditPart("Step1").click();
-        getDataSection( bot );
-        final SWTBotTable dataTable = bot.table();
+        diagramPerspective.activeProcessDiagramEditor().selectElement("Step1");
+        botDataPropertySection = diagramPerspective.getDiagramPropertiesPart().selectGeneralTab().selectDataTab();
+
+        // Test on var varS1_1
+        botDataPropertySection.dataList().select("varS1_1" + " -- " + "Text");
+        BotEditDataWizardPage editDataWizardPage = botDataPropertySection.edit();
+        BotExpressionEditorDialog editDefaultValueExpression = editDataWizardPage.editDefaultValueExpression();
+        BotTableWidget variableList = editDefaultValueExpression.selectVariableTab().variableList();
+
+        assertThat(variableList.containsItem("varS1_1" + " -- " + "Text")).overridingErrorMessage("Error: Task data can't be initialized by itself").isFalse();
+        assertThat(variableList.containsItem("varS1_2" + " -- " + "Integer")).overridingErrorMessage(
+                "Error: Task data can't be initialized by a sibling task data").isFalse();
+
+        assertThat(variableList.containsItem("varS2_1" + " -- " + "Text")).overridingErrorMessage(
+                "Error: Task data can't be initialized by task data").isFalse();
+        assertThat(variableList.containsItem("varS2_2" + " -- " + "Integer")).overridingErrorMessage(
+                "Error: Task data can't be initialized by task data").isFalse();
+
+        assertThat(variableList.containsItem("procVar_1" + " -- " + "Text")).overridingErrorMessage(
+                "Error:  Task data sould be initialized by Process data",variableList.getSWTBotWidget().rowCount()).isTrue();
+        assertThat(variableList.containsItem("procVar_2" + " -- " + "Integer")).overridingErrorMessage(
+                "Error:  Task data sould be initialized by Process data", variableList.getSWTBotWidget().rowCount()).isTrue();
+
+        editDefaultValueExpression.cancel();
+        editDataWizardPage.cancel();
 
         // Test on var varS1_2
-        dataTable.select("varS1_1"+" -- "+"Text");
-        bot.button("Edit...").click();
-        bot.waitUntil(Conditions.shellIsActive("Edit variable"));
-        bot.toolbarButtonWithId(ExpressionViewer.SWTBOT_ID_EDITBUTTON, 0).click();
-        bot.waitUntil(Conditions.shellIsActive(editExpression));
-        bot.tableWithLabel(expressionTypeLabel).select("Variable");
-        SWTBotTable tableVar = bot.table(1);
-        Assert.assertFalse("Error: Task data can't be initialized by itself", tableVar.containsItem("varS1_1"+" -- "+"Text"));
-        Assert.assertFalse("Error: Task data can't be initialized by a sibling task data", tableVar.containsItem("varS1_2"+" -- "+"Integer"));
-        for(int j=0;j<2;j++){
-            Assert.assertFalse("Error: Task data can't be initialized by task data", tableVar.containsItem(step2DataList.get(j)));
-            Assert.assertTrue("Error: Task data sould be initialized by Process data", tableVar.containsItem(procDataList.get(j)));
+        botDataPropertySection.dataList().select("varS1_2" + " -- " + "Integer");
+        editDataWizardPage = botDataPropertySection.edit();
+        editDefaultValueExpression = editDataWizardPage.editDefaultValueExpression();
+        variableList = editDefaultValueExpression.selectVariableTab().variableList();
+
+        assertThat(variableList.containsItem("varS1_2" + " -- " + "Integer")).overridingErrorMessage(
+                "Error: Task data can't be initialized by itself").isFalse();
+        assertThat(variableList.containsItem("varS1_1" + " -- " + "Text")).overridingErrorMessage(
+                "Error: Task data can't be initialized by a sibling task data").isFalse();
+
+        assertThat(variableList.containsItem("varS2_1" + " -- " + "Text")).overridingErrorMessage(
+                "Error: Task data can't be initialized by task data").isFalse();
+        assertThat(variableList.containsItem("procVar_1" + " -- " + "Text")).overridingErrorMessage(
+                "Error:  Task data sould be initialized by Process data").isTrue();
+
+        assertThat(variableList.containsItem("varS2_2" + " -- " + "Integer")).overridingErrorMessage(
+                "Error: Task data can't be initialized by task data").isFalse();
+        assertThat(variableList.containsItem("procVar_2" + " -- " + "Integer")).overridingErrorMessage(
+                "Error:  Task data sould be initialized by Process data").isTrue();
+
+        bot.button(IDialogConstants.CANCEL_LABEL).click();
+        bot.button(IDialogConstants.CANCEL_LABEL).click();
+    }
+
+    @Test
+    public void testMaxLengthDescription() {
+        final BotApplicationWorkbenchWindow botApplicationWorkbenchWindow = new BotApplicationWorkbenchWindow(bot);
+        final BotProcessDiagramPerspective diagramPerspective = botApplicationWorkbenchWindow.createNewDiagram();
+        final BotProcessDiagramPropertiesViewFolder diagramPropertiesPart = diagramPerspective.getDiagramPropertiesPart();
+        final BotDataPropertySection dataTab = diagramPropertiesPart.selectGeneralTab().selectDataTab();
+
+        final BotAddDataWizardPage addDataDialog = dataTab.addData();
+
+        addDataDialog.setName("MyName");
+        assertThat(bot.button(IDialogConstants.FINISH_LABEL).isEnabled()).isFalse().overridingErrorMessage(
+                "We shouldn't be able to create a data with an Uppercase as first charater");
+        addDataDialog.setName("myName");
+        String text270 = "";
+        for (int i = 0; i < 270; i++) {
+            text270 += "a";
         }
-        bot.button(IDialogConstants.CANCEL_LABEL).click();
-        bot.button(IDialogConstants.CANCEL_LABEL).click();
-
-
-        // Test on var varS1_2
-        dataTable.select("varS1_2"+" -- "+"Integer");
-        bot.button("Edit...").click();
-        bot.waitUntil(Conditions.shellIsActive("Edit variable"));
-        bot.toolbarButtonWithId(ExpressionViewer.SWTBOT_ID_EDITBUTTON, 0).click();
-        bot.waitUntil(Conditions.shellIsActive(editExpression));
-        bot.tableWithLabel(expressionTypeLabel).select("Variable");
-        tableVar = bot.table(1);
-        Assert.assertFalse("Error: Task data can't be initialized by itself", tableVar.containsItem("varS1_2"+" -- "+"Integer"));
-        Assert.assertFalse("Error: Task data can't be initialized by a sibling task data", tableVar.containsItem("varS1_1"+" -- "+"Text"));
-        for(int j=0;j<2;j++){
-            Assert.assertFalse("Error: Task data can't be initialized by task data", tableVar.containsItem(step2DataList.get(j)));
-            Assert.assertTrue("Error: Task data sould be initialized by Process data", tableVar.containsItem(procDataList.get(j)));
+        addDataDialog.setDescription(text270);
+        assertThat(bot.button(IDialogConstants.FINISH_LABEL).isEnabled()).isFalse().overridingErrorMessage(
+                "We shouldn't be able to put more than 255 characters");
+        String text255 = "";
+        for (int i = 0; i < 254; i++) {
+            text255 += "b";
         }
+        addDataDialog.setDescription(text255);
+        assertThat(bot.button(IDialogConstants.FINISH_LABEL).isEnabled()).isTrue().overridingErrorMessage(
+                "We should be able to put at least 254 characters");
         bot.button(IDialogConstants.CANCEL_LABEL).click();
-        bot.button(IDialogConstants.CANCEL_LABEL).click();
-
     }
 
     @Test
@@ -371,39 +424,34 @@ public class DataSWTBotTests extends SWTBotGefTestCase {
         //Add the data myData on pool
         final String dataName = "myData";
         final String dataName1 = "myData1";
+        final BotApplicationWorkbenchWindow botApplicationWorkbenchWindow = new BotApplicationWorkbenchWindow(bot);
+        final BotProcessDiagramPerspective diagramPerspective = botApplicationWorkbenchWindow.createNewDiagram();
+        final BotProcessDiagramPropertiesViewFolder diagramPropertiesPart = diagramPerspective.getDiagramPropertiesPart();
+        final BotDataPropertySection dataTab = diagramPropertiesPart.selectGeneralTab().selectDataTab();
 
-        SWTBotTestUtil.createNewDiagram(bot);
-        final SWTBotEditor botEditor = bot.activeEditor();
-        final SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
-        final String diagramTitle=botEditor.getTitle();
-        getDataSection(bot);
-        bot.button(Messages.addData).click();
-        bot.textWithLabel(Messages.name+" *").setText(dataName);
-        assertTrue("finish button should be enabled",bot.button(IDialogConstants.FINISH_LABEL).isEnabled());
-        bot.button(IDialogConstants.FINISH_LABEL).click();
+        BotAddDataWizardPage addDataDialog = dataTab.addData();
+
+        addDataDialog.setName(dataName);
+        assertThat(bot.button(IDialogConstants.FINISH_LABEL).isEnabled()).isTrue();
+        addDataDialog.finish();
+
 
         //try to add a data myData on step
-        SWTBotTestUtil.selectEventOnProcess(bot, gmfEditor, "Step1");
-        getDataSection(bot);
-        bot.button(Messages.addData).click();
-        bot.textWithLabel(Messages.name+" *").setText(dataName);
-        assertFalse("finish button should be enabled",bot.button(IDialogConstants.FINISH_LABEL).isEnabled());
-        bot.textWithLabel(Messages.name+" *").setText(dataName1);
-        assertTrue("finish button should be enabled",bot.button(IDialogConstants.FINISH_LABEL).isEnabled());
-        bot.button(IDialogConstants.FINISH_LABEL).click();
-
+        diagramPerspective.activeProcessDiagramEditor().selectElement("Step1");
+        addDataDialog = dataTab.addData();
+        addDataDialog.setName(dataName);
+        assertThat(bot.button(IDialogConstants.FINISH_LABEL).isEnabled()).isFalse();
+        addDataDialog.setName(dataName1);
+        assertThat(bot.button(IDialogConstants.FINISH_LABEL).isEnabled()).isTrue();
+        addDataDialog.finish();
 
 
         //add a second task and add a data named myData1
-        bot.editorByTitle(diagramTitle).show();
-        bot.editorByTitle(diagramTitle).setFocus();
-        SWTBotTestUtil.selectElementInContextualPaletteAndDragIt(gmfEditor, "Step1",SWTBotTestUtil.CONTEXTUALPALETTE_STEP,new Point(550,180));
-        getDataSection(bot);
-        bot.button(Messages.addData).click();
-        bot.textWithLabel(Messages.name+" *").setText(dataName1);
-        assertTrue("finish button should be enabled",bot.button(IDialogConstants.FINISH_LABEL).isEnabled());
-        bot.button(IDialogConstants.FINISH_LABEL).click();
-
+        diagramPerspective.activeProcessDiagramEditor().addElement("Step1", "Human", PositionConstants.EAST);
+        addDataDialog = dataTab.addData();
+        addDataDialog.setName(dataName1);
+        assertThat(bot.button(IDialogConstants.FINISH_LABEL).isEnabled()).isTrue();
+        addDataDialog.finish();
     }
 
     public static void getDataSection(final SWTGefBot bot ){
@@ -411,5 +459,6 @@ public class DataSWTBotTests extends SWTBotGefTestCase {
         bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL).setFocus();
         SWTBotTestUtil.selectTabbedPropertyView(bot, "Data");
     }
+
 
 }

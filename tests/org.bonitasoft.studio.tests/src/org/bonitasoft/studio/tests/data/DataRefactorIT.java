@@ -62,7 +62,7 @@ import org.junit.Test;
  * @author Aurelien Pupier
  * 
  */
-public class TestDataRefactor {
+public class DataRefactorIT {
 
     private Data processData;
     private Data processData2;

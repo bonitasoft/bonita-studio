@@ -95,7 +95,7 @@ public class TestMultiInstantiation extends SWTBotGefTestCase implements SWTBotC
     }
 
     final String defaultEmployeeActor = "Employee actor";
-    final String defaultEmployeeActorDefinition = org.bonitasoft.studio.diagram.custom.Messages.initiatorDescription;
+    final String defaultEmployeeActorDefinition = org.bonitasoft.studio.diagram.custom.i18n.Messages.initiatorDescription;
 
 
     final String loopMultiInstanceSection = "Iteration";
@@ -280,6 +280,7 @@ public class TestMultiInstantiation extends SWTBotGefTestCase implements SWTBotC
         SWTBotTestUtil.setScriptExpression( bot,"removeUser", expressionScript, "java.util.List");
 
         bot.menu("Diagram").menu("Save").click();
+        SWTBotTestUtil.waitUntilBonitaBPmShellIsActive(bot);
         bot.menu("Diagram").menu("Close").click();
 
 
@@ -365,6 +366,7 @@ public class TestMultiInstantiation extends SWTBotGefTestCase implements SWTBotC
 
 
         bot.menu("Diagram").menu("Save").click();
+        SWTBotTestUtil.waitUntilBonitaBPmShellIsActive(bot);
         bot.menu("Diagram").menu("Close").click();
     }
 
@@ -471,6 +473,7 @@ public class TestMultiInstantiation extends SWTBotGefTestCase implements SWTBotC
         bot.button("Remove").click();
         bot.waitUntil(Conditions.shellIsActive(removalConfirmationDialogTitle));
         bot.button(IDialogConstants.OK_LABEL).click();
+        SWTBotTestUtil.waitUntilBonitaBPmShellIsActive(bot);
 
 
         assertNull("Error: Input Collection is still referenced in the MultiInstantiation Model after being removed.", task.getMultiInstantiation().getCollectionDataToMultiInstantiate());
@@ -494,6 +497,7 @@ public class TestMultiInstantiation extends SWTBotGefTestCase implements SWTBotC
 
 
         bot.menu("Diagram").menu("Save").click();
+        SWTBotTestUtil.waitUntilBonitaBPmShellIsActive(bot);
         bot.menu("Diagram").menu("Close").click();
     }
     /**
