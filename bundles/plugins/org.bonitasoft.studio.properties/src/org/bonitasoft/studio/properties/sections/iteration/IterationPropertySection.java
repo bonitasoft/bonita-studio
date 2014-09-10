@@ -107,7 +107,7 @@ import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
  * @author Romain Bioteau
  *
  */
-public class RecurrencePropertySection extends EObjectSelectionProviderSection implements ISelectionProvider {
+public class IterationPropertySection extends EObjectSelectionProviderSection implements ISelectionProvider {
 
     /**
      * @author Aurelien
@@ -577,7 +577,6 @@ public class RecurrencePropertySection extends EObjectSelectionProviderSection i
                 ExpressionConstants.VARIABLE_TYPE,
                 ExpressionConstants.PARAMETER_TYPE,
                 ExpressionConstants.SCRIPT_TYPE }));
-        cardinalityExpression.setMessage(Messages.multiInstance_useCardinalityDescription, IStatus.INFO);
 
         context.bindValue(ViewersObservables.observeInput(cardinalityExpression), getEObjectObservable());
         context.bindValue(ViewersObservables.observeSingleSelection(cardinalityExpression), CustomEMFEditObservables.observeDetailValue(Realm.getDefault(),
