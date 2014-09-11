@@ -34,8 +34,47 @@
 		<jre.osx.url>jre1.7.0_55-osx</jre.osx.url>
 	</properties>
 
+
 	<build>
 		<plugins>
+            <plugin>
+               <groupId>org.bonitasoft.maven</groupId>
+                <artifactId>image-overlay-plugin</artifactId>
+                <executions>
+                    <execution>
+                       <id>topRightVersion</id>
+                       <configuration>
+                            <baseImgPath>${basedir}/installer/images/topRight_without_version.png</baseImgPath>
+                            <outputImagePath>${basedir}/installer/images/logo-installer.png</outputImagePath>
+                            <outputImageFormat>png</outputImageFormat>
+                            <xLocation>52</xLocation>
+                            <yLocation>44</yLocation>
+                            <fontSize>14</fontSize>
+                            <color>55738c</color>
+                            <versionLabel>${project.version}</versionLabel>
+                          </configuration>
+                        <goals>
+                            <goal>create-image</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                       <id>splashVersion</id>
+                       <configuration>
+                            <baseImgPath>${basedir}/installer/images/splash_without_version.png</baseImgPath>
+                            <outputImagePath>${basedir}/installer/images/splash.png</outputImagePath>
+                            <outputImageFormat>png</outputImageFormat>
+                            <xLocation>208</xLocation>
+                            <yLocation>133</yLocation>
+                            <fontSize>25</fontSize>
+                            <versionLabel>${project.version}</versionLabel>
+                          </configuration>
+                        <goals>
+                            <goal>create-image</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+           
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>tycho-p2-repository-plugin</artifactId>
@@ -71,7 +110,7 @@
 			</plugin>
 
 
-			<!-- all-in-one assembly with all platforms -->
+            <!-- all-in-one assembly with all platforms  -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-assembly-plugin</artifactId>
@@ -103,7 +142,7 @@
 				</executions>
 			</plugin>
 
-			<!--  Create a proper bundles.info for all-in-one-->
+            <!-- Create a proper bundles.info for all-in-one -->
 			<plugin>
 				<groupId>org.eclipse.tycho.extras</groupId>
 				<artifactId>tycho-eclipserun-plugin</artifactId>
@@ -136,7 +175,7 @@
 				</executions>
 			</plugin> 
 
-		</plugins>
+ 		</plugins> 
 	</build>
 
 	<profiles>
