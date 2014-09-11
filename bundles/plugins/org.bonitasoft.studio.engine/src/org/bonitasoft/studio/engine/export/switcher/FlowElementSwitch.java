@@ -47,6 +47,7 @@ import org.bonitasoft.engine.operation.LeftOperand;
 import org.bonitasoft.engine.operation.LeftOperandBuilder;
 import org.bonitasoft.engine.operation.OperationBuilder;
 import org.bonitasoft.engine.operation.OperatorType;
+import org.bonitasoft.studio.common.DataUtil;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.TimerUtil;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
@@ -844,7 +845,16 @@ public class FlowElementSwitch extends AbstractSwitch {
 
     protected void addDataForMultiInstanceIterator(final ActivityDefinitionBuilder taskBuilder, final Expression iteratorExpression,
             final Data collectionDataToMultiInstantiate) {
-        taskBuilder.addData(iteratorExpression.getName(), iteratorExpression.getReturnType(), null);
+        final FlowElement parentFlowElement = ModelHelper.getParentFlowElement(iteratorExpression);
+        boolean dataAlreadyExists = false;
+        for (final Data d : ((DataAware) parentFlowElement).getData()) {
+            if (d.getName().equals(iteratorExpression.getName()) && DataUtil.getTechnicalTypeFor(d).equals(iteratorExpression.getReturnType())) {
+                dataAlreadyExists = true;
+            }
+        }
+        if (!dataAlreadyExists) {
+            taskBuilder.addData(iteratorExpression.getName(), iteratorExpression.getReturnType(), null);
+        }
     }
 
 }

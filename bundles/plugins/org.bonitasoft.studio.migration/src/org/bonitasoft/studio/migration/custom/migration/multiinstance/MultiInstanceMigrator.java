@@ -115,7 +115,7 @@ public class MultiInstanceMigrator {
             final Instance iteratorExpression = StringToExpressionConverter.createExpressionInstance(model,
                     dataName, dataName, StringToExpressionConverter.getDataReturnType(dataInstance),
                     ExpressionConstants.MULTIINSTANCE_ITERATOR_TYPE, false);
-            model.delete(dataInstance);
+            // model.delete(dataInstance);
             return iteratorExpression;
         }
         return StringToExpressionConverter.createExpressionInstance(model, "multiInstanceIterator", "multiInstanceIterator", Object.class.getName(),
