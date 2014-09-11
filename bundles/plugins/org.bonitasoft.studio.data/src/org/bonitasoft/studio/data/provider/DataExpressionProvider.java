@@ -113,7 +113,7 @@ public class DataExpressionProvider implements IExpressionProvider {
         return result;
     }
 
-    private Data dataFromIteratorExpression(final MultiInstantiable parentFlowElement, final Expression iteratorExpression) {
+    public static Data dataFromIteratorExpression(final MultiInstantiable parentFlowElement, final Expression iteratorExpression) {
         final String returnType = iteratorExpression.getReturnType();
         Data d = null;
         if (returnType != null) {
@@ -133,7 +133,7 @@ public class DataExpressionProvider implements IExpressionProvider {
         return d;
     }
 
-    private DataType getDataTypeFrom(final String returnType, final Expression iteratorExpression, final MultiInstantiable parentFlowElement) {
+    private static DataType getDataTypeFrom(final String returnType, final Expression iteratorExpression, final MultiInstantiable parentFlowElement) {
         final MainProcess diagram = ModelHelper.getMainProcess(iteratorExpression);
         if (returnType.equals(Boolean.class.getName())) {
             return ModelHelper.getDataTypeForID(diagram, DataTypeLabels.booleanDataType);

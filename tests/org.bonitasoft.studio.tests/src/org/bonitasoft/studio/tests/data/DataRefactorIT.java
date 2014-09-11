@@ -106,9 +106,7 @@ public class DataRefactorIT {
         localData.setName(newDataName);
 
         assertEquals("There are too many datas. The old one migth not be removed.", 2, process.getData().size());
-        assertEquals("Data name has not been updated correctly in multinstantiation", newDataName, activity.getIteratorExpression().getName());
         assertEquals("Data name has not been updated correctly in multinstantiation", newDataName, activity.getOutputData().getName());
-
     }
 
     @Test
