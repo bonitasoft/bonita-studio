@@ -38,11 +38,13 @@ public class BotDataBasedStackPanel extends AbstractBotInputOutputStackPanel {
 
     public BotDataBasedStackPanel setIteratorName(final String iteratorName) {
         bot.textWithLabelInGroup(Messages.iterator + " *", Messages.input).setText(iteratorName);
+        bot.sleep(200); //Delayed Observable
         return this;
     }
 
     public BotDataBasedStackPanel setIteratorReturnType(final String returnType) {
         bot.comboBoxWithLabelInGroup(Messages.type + " *", Messages.input).setText(returnType);
+        bot.sleep(200); //Delayed Observable
         return this;
     }
 

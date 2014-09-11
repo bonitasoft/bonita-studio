@@ -325,7 +325,7 @@ public class MultiInstantiationIT extends SWTBotGefTestCase implements SWTBotCon
         assertNotNull("Error: Input Collection used in the MultiInstantiation is not referenced in the Model.",
                 multiInstantiable.getCollectionDataToMultiInstantiate());
         assertNotNull("Error: Input Data used in the MultiInstantiation is not referenced in the Model.", multiInstantiable.getIteratorExpression());
-        assertTrue(multiInstantiable.getIteratorExpression().getName().equals("vipName"));
+        assertEquals("vipName", multiInstantiable.getIteratorExpression().getName());
         assertNotNull("Error: Output Data used in the MultiInstantiation is not referenced in the Model.", multiInstantiable.getOutputData());
         assertNotNull("Error: Output Result used in the MultiInstantiation is not referenced in the Model.",
                 multiInstantiable.getListDataContainingOutputResults());
