@@ -84,7 +84,9 @@ public class RefactorDataOperation extends AbstractRefactorOperation<Data,Data,D
                     compoundCommand.append(AddCommand.create(domain, directContainer, dataContainmentFeature, pairToRefactor.getNewValue(), index));
                 } else {
                     for (final EStructuralFeature feature : pairToRefactor.getOldValue().eClass().getEAllStructuralFeatures()) {
-                        compoundCommand.append(SetCommand.create(domain, pairToRefactor.getOldValue(), feature, pairToRefactor.getNewValue().eGet(feature)));
+                        if (pairToRefactor.getNewValue().eClass().getEAllStructuralFeatures().contains(feature)) {
+                            compoundCommand.append(SetCommand.create(domain, pairToRefactor.getOldValue(), feature, pairToRefactor.getNewValue().eGet(feature)));
+                        }
                     }
                 }
             } else {
