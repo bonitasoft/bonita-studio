@@ -82,7 +82,8 @@ public class SelectFormWizard extends Wizard {
             for (final Data currentData : allData) {
                 final EClass eClassData = currentData.getDataType().eClass();
                 if(!ProcessPackage.eINSTANCE.getJavaType().isSuperTypeOf(eClassData)
-                        && !ProcessPackage.eINSTANCE.getXMLType().isSuperTypeOf(eClassData)) {
+                        && !ProcessPackage.eINSTANCE.getXMLType().isSuperTypeOf(eClassData)
+                        && !(ProcessPackage.eINSTANCE.getBusinessObjectType().isSuperTypeOf(eClassData) && currentData.isMultiple())) {
                     elements.add(currentData);
                 }
             }
