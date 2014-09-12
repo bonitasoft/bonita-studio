@@ -5,12 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -24,7 +24,6 @@ import java.util.List;
 
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.model.expression.Expression;
-import org.eclipse.emf.ecore.EReference;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -39,7 +38,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 /**
  * @author Romain Bioteau
- * 
+ *
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(ExpressionViewer.class)
@@ -58,9 +57,9 @@ public class ExpressionViewerTest {
      */
     @Before
     public void setUp() throws Exception {
-        PowerMockito.suppress(PowerMockito.constructor(ExpressionViewer.class, Composite.class, Integer.class, EReference.class));
+        PowerMockito.suppress(PowerMockito.constructor(ExpressionViewer.class, Composite.class, Integer.class));
         when(parent.getDisplay()).thenReturn(fakeDisplay);
-        expressionViewer = new ExpressionViewer(parent, SWT.BORDER, null);
+        expressionViewer = new ExpressionViewer(parent, SWT.BORDER);
 
     }
 
@@ -73,29 +72,29 @@ public class ExpressionViewerTest {
 
     @Test
     public void shoudCompatibleReturnType_ReturnTrueForExpressionsWithSameReturnTypes() throws Exception {
-        Expression constantBooleanExpression = ExpressionHelper.createConstantExpression("true", Boolean.class.getName());
-        Expression groovyBooleanExpression = ExpressionHelper.createGroovyScriptExpression("return 1==1", Boolean.class.getName());
+        final Expression constantBooleanExpression = ExpressionHelper.createConstantExpression("true", Boolean.class.getName());
+        final Expression groovyBooleanExpression = ExpressionHelper.createGroovyScriptExpression("return 1==1", Boolean.class.getName());
         assertThat(expressionViewer.compatibleReturnTypes(constantBooleanExpression, groovyBooleanExpression)).isTrue();
     }
 
     @Test
     public void shoudCompatibleReturnType_ReturnTrueIfCurrentExpressionsIsAssignableReturnType() throws Exception {
-        Expression collectionExpression = ExpressionHelper.createConstantExpression("true", Collection.class.getName());
-        Expression groovyListExpression = ExpressionHelper.createGroovyScriptExpression("[1,2]", List.class.getName());
+        final Expression collectionExpression = ExpressionHelper.createConstantExpression("true", Collection.class.getName());
+        final Expression groovyListExpression = ExpressionHelper.createGroovyScriptExpression("[1,2]", List.class.getName());
         assertThat(expressionViewer.compatibleReturnTypes(collectionExpression, groovyListExpression)).isTrue();
     }
 
     @Test
     public void shoudCompatibleReturnType_ReturnFalseIfCurrentExpressionsIsNotAssignableReturnType() throws Exception {
-        Expression collectionExpression = ExpressionHelper.createConstantExpression("true", Collection.class.getName());
-        Expression groovyListExpression = ExpressionHelper.createGroovyScriptExpression("[1,2]", List.class.getName());
+        final Expression collectionExpression = ExpressionHelper.createConstantExpression("true", Collection.class.getName());
+        final Expression groovyListExpression = ExpressionHelper.createGroovyScriptExpression("[1,2]", List.class.getName());
         assertThat(expressionViewer.compatibleReturnTypes(groovyListExpression, collectionExpression)).isFalse();
     }
 
     @Test
     public void shoudCompatibleReturnType_ReturnTrueIfOneOfEvaluatedTypeIsUnknown() throws Exception {
-        Expression customTypeExpression = ExpressionHelper.createConstantExpression("true", "org.bonitasoft.test.MyType");
-        Expression stringExpression = ExpressionHelper.createGroovyScriptExpression("[1,2]", String.class.getName());
+        final Expression customTypeExpression = ExpressionHelper.createConstantExpression("true", "org.bonitasoft.test.MyType");
+        final Expression stringExpression = ExpressionHelper.createGroovyScriptExpression("[1,2]", String.class.getName());
         assertThat(expressionViewer.compatibleReturnTypes(stringExpression, customTypeExpression)).isTrue();
     }
 

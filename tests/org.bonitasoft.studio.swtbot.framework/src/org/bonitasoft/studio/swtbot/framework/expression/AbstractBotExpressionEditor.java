@@ -35,7 +35,7 @@ public abstract class AbstractBotExpressionEditor extends BotBase {
     }
 
     public AbstractBotExpressionEditor setReturnType(final String returnType) {
-        bot.comboBoxWithLabel(Messages.returnType).setSelection(returnType);
+        bot.comboBoxWithLabel(Messages.returnType).setText(returnType);
         return this;
     }
 

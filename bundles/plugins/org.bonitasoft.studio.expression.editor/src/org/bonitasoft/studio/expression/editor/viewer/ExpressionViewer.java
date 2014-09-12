@@ -1,17 +1,17 @@
 /**
  * Copyright (C) 2012 BonitaSoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -30,6 +30,7 @@ import java.util.TreeSet;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.IBonitaVariableContext;
+import org.bonitasoft.studio.common.databinding.CustomEMFEditObservables;
 import org.bonitasoft.studio.common.emf.tools.WidgetHelper;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
@@ -65,6 +66,7 @@ import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.conversion.Converter;
+import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.IValueChangeListener;
 import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
@@ -77,20 +79,17 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
-import org.eclipse.emf.databinding.EMFProperties;
-import org.eclipse.emf.databinding.edit.EMFEditProperties;
+import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.command.RemoveCommand;
 import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.edit.domain.EditingDomain;
-import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
-import org.eclipse.emf.workspace.WorkspaceEditingDomainFactory;
 import org.eclipse.jface.databinding.swt.ISWTObservableValue;
 import org.eclipse.jface.databinding.swt.SWTObservables;
-import org.eclipse.jface.databinding.viewers.ViewerProperties;
+import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.fieldassist.ContentProposalAdapter;
@@ -131,7 +130,7 @@ import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 
 /**
  * @author Romain Bioteau
- * 
+ *
  */
 public class ExpressionViewer extends ContentViewer implements ExpressionConstants, SWTBotConstants,
 IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContext {
@@ -140,16 +139,13 @@ IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContex
     private Text textControl;
     protected ToolItem editControl;
     private AutoCompletionField autoCompletion;
-    protected EMFDataBindingContext internalDataBindingContext;
-    protected EditingDomain editingDomain;
-    protected Expression selectedExpression;
+    protected EMFDataBindingContext internalDataBindingContext = new EMFDataBindingContext();
     protected final Set<ViewerFilter> filters;
     private String example;
     private ControlDecoration messageDecoration;
-    private boolean disposeDomain = false;
     protected String mandatoryFieldName;
     private ControlDecoration typeDecoration;
-    private boolean editing = false;
+    //private final boolean editing = false;
     private EObject context;
     private final List<ISelectionChangedListener> expressionEditorListener = new ArrayList<ISelectionChangedListener>();
     private boolean withConnector = false;
@@ -167,7 +163,6 @@ IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContex
         }
     };
 
-    private final EReference expressionReference;
     protected IExpressionNatureProvider expressionNatureProvider = new ExpressionContentProvider();
     protected DataBindingContext externalDataBindingContext;
     protected Binding expressionBinding;
@@ -179,26 +174,67 @@ IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContex
     private DefaultToolTip textTooltip;
     private IExpressionProposalLabelProvider expressionProposalLableProvider;
     private ContentAssistText contentAssistText;
+    private ISelection selection;
 
+    public ExpressionViewer(final Composite composite, final int style, final TabbedPropertySheetWidgetFactory widgetFactory) {
+        this(composite, style, widgetFactory, null);
+    }
+
+    public ExpressionViewer(final Composite composite, final int style) {
+        this(composite, style, null, null);
+    }
+
+    /**
+     * @deprecated use ExpressionViewer(final Composite composite, final int style) instead
+     * @param composite
+     * @param style
+     * @param expressionReference
+     */
+    @Deprecated
     public ExpressionViewer(final Composite composite, final int style, final EReference expressionReference) {
         this(composite, style, null, null, expressionReference);
     }
 
+    /**
+     * @deprecated use ExpressionViewer(final Composite composite, final int style,, final TabbedPropertySheetWidgetFactory widgetFactory) instead
+     * @param composite
+     * @param style
+     * @param expressionReference
+     */
+    @Deprecated
     public ExpressionViewer(final Composite composite, final int style, final TabbedPropertySheetWidgetFactory widgetFactory,
             final EReference expressionReference) {
         this(composite, style, widgetFactory, null, expressionReference);
     }
 
+    /**
+     * @deprecated Editing domain is retrieve in the input EObject
+     * @param composite
+     * @param style
+     * @param widgetFactory
+     * @param editingDomain
+     * @param expressionReference
+     */
+    @Deprecated
     public ExpressionViewer(final Composite composite, final int style, final TabbedPropertySheetWidgetFactory widgetFactory,
             final EditingDomain editingDomain, final EReference expressionReference) {
         this(composite, style, widgetFactory, editingDomain, expressionReference, false);
 
     }
 
+    /**
+     * @deprecated Editing domain is retrieve in the input EObject
+     * @param composite
+     * @param style
+     * @param widgetFactory
+     * @param editingDomain
+     * @param expressionReference
+     * @param withConnector
+     */
+    @Deprecated
     public ExpressionViewer(final Composite composite, final int style, final TabbedPropertySheetWidgetFactory widgetFactory,
             final EditingDomain editingDomain, final EReference expressionReference, final boolean withConnector) {
-        this.editingDomain = editingDomain;
-        this.expressionReference = expressionReference;
+        Assert.isNotNull(composite, "composite");
         filters = new HashSet<ViewerFilter>();
         this.withConnector = withConnector;
         createControl(composite, style, widgetFactory);
@@ -261,6 +297,7 @@ IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContex
             @Override
             public void handleEvent(final Event event) {
                 boolean connectorEdit = false;
+                final Expression selectedExpression = getSelectedExpression();
                 if (tb != null && withConnector && selectedExpression != null && ExpressionConstants.CONNECTOR_TYPE.equals(selectedExpression.getType())) {
                     for (final ToolItem ti : tb.getItems()) {
                         final Object data = ti.getData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY);
@@ -292,6 +329,7 @@ IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContex
 
             @Override
             public void handleEvent(final Event event) {
+                final Expression selectedExpression = getSelectedExpression();
                 String type = selectedExpression.getType();
                 if (ExpressionConstants.SCRIPT_TYPE.equals(type)) {
                     if (!MessageDialog.openConfirm(Display.getDefault().getActiveShell(), Messages.cleanExpressionTitle,
@@ -302,6 +340,7 @@ IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContex
                 if (!ExpressionConstants.CONDITION_TYPE.equals(type)) {
                     type = ExpressionConstants.CONSTANT_TYPE;
                 }
+                final EditingDomain editingDomain = getEditingDomain();
                 if (editingDomain != null) {
 
                     final CompoundCommand cc = new CompoundCommand();
@@ -399,9 +438,10 @@ IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContex
             final Expression newExpression = dialog.getExpression();
             executeOperation(newExpression.getName());
             updateSelection(newExpression);
-            setSelection(new StructuredSelection(selectedExpression));
+            //    setSelection(new StructuredSelection(selectedExpression));
+            final Expression selectedExpression = getSelectedExpression();
+            final EditingDomain editingDomain = getEditingDomain();
             if (editingDomain == null) {
-
                 selectedExpression.setReturnType(newExpression.getReturnType());
                 selectedExpression.setType(newExpression.getType());
             } else {
@@ -416,6 +456,14 @@ IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContex
             refresh();
             fireExpressionEditorChanged(new SelectionChangedEvent(this, new StructuredSelection(selectedExpression)));
         }
+    }
+
+    protected EditingDomain getEditingDomain() {
+        final Expression selectedExpression = getSelectedExpression();
+        if (selectedExpression != null && selectedExpression.eResource() != null) {
+            return TransactionUtil.getEditingDomain(selectedExpression);
+        }
+        return null;
     }
 
     protected EditExpressionDialog createEditDialog() {
@@ -435,8 +483,8 @@ IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContex
     }
 
     protected EditExpressionDialog createEditDialog(final EObject editInput) {
-        return new EditExpressionDialog(control.getShell(), isPassword, EcoreUtil.copy(selectedExpression), editInput,
-                editingDomain, filters.toArray(new ViewerFilter[filters.size()]), this);
+        return new EditExpressionDialog(control.getShell(), isPassword, EcoreUtil.copy(getSelectedExpression()), editInput,
+                getEditingDomain(), filters.toArray(new ViewerFilter[filters.size()]), this);
     }
 
     protected void fireExpressionEditorChanged(final SelectionChangedEvent selectionChangedEvent) {
@@ -457,11 +505,7 @@ IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContex
 
     @Override
     public ISelection getSelection() {
-        if (selectedExpression != null) {
-            return new StructuredSelection(selectedExpression);
-        } else {
-            return new StructuredSelection();
-        }
+        return selection != null ? selection : new StructuredSelection();
     }
 
     public BonitaContentProposalAdapter getContentProposal() {
@@ -470,8 +514,8 @@ IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContex
 
     @Override
     public void refresh() {
-        if (selectedExpression != null) {
-            internalRefresh(selectedExpression);
+        if (!getSelection().isEmpty()) {
+            internalRefresh();
         }
     }
 
@@ -481,17 +525,13 @@ IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContex
 
     @Override
     public void setSelection(final ISelection selection, final boolean reveal) {
-
-        if (selection instanceof IStructuredSelection) {
-            final Object sel = ((IStructuredSelection) selection).getFirstElement();
-            if (sel instanceof Expression) {
-                selectedExpression = (Expression) sel;
+        Assert.isLegal(selection instanceof IStructuredSelection);
+        if (!selection.equals(this.selection)) {
+            this.selection = selection;
+            final Expression selectedExpression = getSelectedExpression();
+            if (selectedExpression != null) {
                 bindExpression();
-                if (editingDomain == null) {
-                    editingDomain = TransactionUtil.getEditingDomain(selectedExpression);
-                }
-                final StructuredSelection selection2 = new StructuredSelection(selectedExpression);
-                fireSelectionChanged(new SelectionChangedEvent(this, selection2));
+                fireSelectionChanged(new SelectionChangedEvent(this, selection));
                 for (final IExpressionToolbarContribution contribution : toolbarContributions) {
                     contribution.setExpression(selectedExpression);
                 }
@@ -506,16 +546,12 @@ IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContex
                 }
                 validate();
                 refresh();
-            } else {
-                selectedExpression = null;
             }
         }
-        editing = false;
-
     }
 
     protected void updateSelection(final Expression expression) {
-        new ExpressionSynchronizer(editingDomain, expression, selectedExpression).synchronize();
+        new ExpressionSynchronizer(getEditingDomain(), expression, getSelectedExpression()).synchronize();
         refresh();
     }
 
@@ -524,18 +560,10 @@ IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContex
         if (input instanceof IObservableValue) {
             input = ((IObservableValue) input).getValue();
         }
-        if (input != null && input instanceof EObject && expressionReference != null) {
-            selectedExpression = (Expression) ((EObject) input).eGet(expressionReference);
-        } else {
-            // FIXME: it might be
-            // org.eclipse.emf.ecore.util.EObjectContainmentEList
+        if (input != null) {
+            manageNatureProviderAndAutocompletionProposal(input);
         }
-        if (editingDomain == null) {
-            if (input != null && input instanceof EObject) {
-                editingDomain = TransactionUtil.getEditingDomain(input);
-            }
-        }
-        manageNatureProviderAndAutocompletionProposal(input);
+
     }
 
     public void manageNatureProviderAndAutocompletionProposal(final Object input) {
@@ -546,6 +574,7 @@ IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContex
                 expressionNatureProvider.setContext(context);
             }
         }
+        final Expression selectedExpression = getSelectedExpression();
         if (selectedExpression != null && ExpressionConstants.CONDITION_TYPE.equals(selectedExpression.getType())) {
             setProposalsFiltering(false);
             autoCompletion.getContentProposalAdapter().setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_INSERT);
@@ -566,6 +595,10 @@ IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContex
         else {
             contentAssistText.setProposalEnabled(true);
         }
+    }
+
+    protected Expression getSelectedExpression() {
+        return (Expression) ((IStructuredSelection) getSelection()).getFirstElement();
     }
 
     private ArrayList<String> getFilteredExpressionType() {
@@ -639,6 +672,7 @@ IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContex
                             toRemove.add(exp);
                         }
                     }
+                    final Expression selectedExpression = getSelectedExpression();
                     if (selectedExpression != null
                             && !ExpressionConstants.CONDITION_TYPE.equals(selectedExpression.getType())) {
                         if (selectedExpression != null && selectedExpression.isReturnTypeFixed()
@@ -681,28 +715,10 @@ IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContex
             externalDataBindingContext.removeBinding(expressionBinding);
             expressionBinding.dispose();
         }
-        if (internalDataBindingContext != null) {
-            internalDataBindingContext.dispose();
-        }
-        internalDataBindingContext = new EMFDataBindingContext();
 
-        IObservableValue nameObservable = null;
-        if (editingDomain != null) {
-            nameObservable = EMFEditProperties.value(editingDomain, ExpressionPackage.Literals.EXPRESSION__NAME)
-                    .observeDetail(ViewerProperties.singleSelection().observe(this));
-        } else {
-            nameObservable = EMFProperties.value(ExpressionPackage.Literals.EXPRESSION__NAME).observeDetail(
-                    ViewerProperties.singleSelection().observe(this));
-        }
 
-        IObservableValue typeObservable = null;
-        if (editingDomain != null) {
-            typeObservable = EMFEditProperties.value(editingDomain, ExpressionPackage.Literals.EXPRESSION__TYPE)
-                    .observeDetail(ViewerProperties.singleSelection().observe(this));
-        } else {
-            typeObservable = EMFProperties.value(ExpressionPackage.Literals.EXPRESSION__TYPE).observeDetail(
-                    ViewerProperties.singleSelection().observe(this));
-        }
+        final IObservableValue nameObservable = getExpressionNameObservable();
+        final IObservableValue typeObservable = getExpressionTypeObservable();
 
         final UpdateValueStrategy targetToModelNameStrategy = new UpdateValueStrategy();
         if (mandatoryFieldName != null) {
@@ -712,6 +728,8 @@ IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContex
 
             @Override
             public IStatus validate(final Object value) {
+                final Expression selectedExpression = getSelectedExpression();
+                final EditingDomain editingDomain = getEditingDomain();
                 IExpressionValidator validator = null;
                 if (selectedExpression != null) {
                     validator = validatorsForType.get(selectedExpression.getType());
@@ -772,12 +790,43 @@ IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContex
 
             @Override
             public void handleValueChange(final ValueChangeEvent arg0) {
-                fireSelectionChanged(new SelectionChangedEvent(ExpressionViewer.this, getSelection()));
+                validate();
+                refresh();
             }
         });
         if (externalDataBindingContext != null) {
             externalDataBindingContext.addBinding(expressionBinding);
         }
+    }
+
+    protected IObservableValue getExpressionNameObservable() {
+        IObservableValue nameObservable;
+        final EditingDomain editingDomain = getEditingDomain();
+        if (editingDomain != null) {
+            nameObservable = CustomEMFEditObservables.observeDetailValue(Realm.getDefault(), getSelectedExpressionObservable(),
+                    ExpressionPackage.Literals.EXPRESSION__NAME);
+        } else {
+            nameObservable = EMFObservables.observeDetailValue(Realm.getDefault(), getSelectedExpressionObservable(),
+                    ExpressionPackage.Literals.EXPRESSION__NAME);
+        }
+        return nameObservable;
+    }
+
+    protected IObservableValue getExpressionTypeObservable() {
+        IObservableValue nameObservable;
+        final EditingDomain editingDomain = getEditingDomain();
+        if (editingDomain != null) {
+            nameObservable = CustomEMFEditObservables.observeDetailValue(Realm.getDefault(), getSelectedExpressionObservable(),
+                    ExpressionPackage.Literals.EXPRESSION__TYPE);
+        } else {
+            nameObservable = EMFObservables.observeDetailValue(Realm.getDefault(), getSelectedExpressionObservable(),
+                    ExpressionPackage.Literals.EXPRESSION__TYPE);
+        }
+        return nameObservable;
+    }
+
+    private IObservableValue getSelectedExpressionObservable() {
+        return ViewersObservables.observeSingleSelection(this);
     }
 
     protected void bindEditableText(final IObservableValue typeObservable) {
@@ -814,7 +863,9 @@ IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContex
     }
 
     protected void updateContent(final String newContent) {
+        final Expression selectedExpression = getSelectedExpression();
         if (newContent != null && !newContent.equals(selectedExpression.getContent())) {
+            final EditingDomain editingDomain = getEditingDomain();
             if (editingDomain != null) {
                 editingDomain.getCommandStack().execute(
                         SetCommand.create(editingDomain, selectedExpression, ExpressionPackage.Literals.EXPRESSION__CONTENT,
@@ -826,7 +877,9 @@ IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContex
     }
 
     protected void updateContentType(final String newContentType) {
+        final Expression selectedExpression = getSelectedExpression();
         if (!newContentType.equals(selectedExpression.getType())) {
+            final EditingDomain editingDomain = getEditingDomain();
             if (editingDomain != null) {
                 editingDomain.getCommandStack().execute(
                         SetCommand.create(editingDomain, selectedExpression, ExpressionPackage.Literals.EXPRESSION__TYPE,
@@ -839,7 +892,9 @@ IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContex
     }
 
     private void updateInterpreter(final String newContentType) {
+        final Expression selectedExpression = getSelectedExpression();
         if (!ExpressionConstants.SCRIPT_TYPE.equals(newContentType)) {
+            final EditingDomain editingDomain = getEditingDomain();
             if (editingDomain != null) {
                 editingDomain.getCommandStack().execute(
                         SetCommand.create(editingDomain, selectedExpression,
@@ -851,6 +906,7 @@ IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContex
     }
 
     protected String getContentFromInput(final String input) {
+        final Expression selectedExpression = getSelectedExpression();
         final String selectedExpressionType = selectedExpression.getType();
         if (ExpressionConstants.SCRIPT_TYPE.equals(selectedExpressionType)
                 || ExpressionConstants.PATTERN_TYPE.equals(selectedExpressionType)
@@ -881,6 +937,7 @@ IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContex
     }
 
     protected String getContentTypeFromInput(final String input) {
+        final Expression selectedExpression = getSelectedExpression();
         Assert.isNotNull(selectedExpression);
         String expressionType = selectedExpression.getType();
         if (CONSTANT_TYPE.equals(expressionType)) {
@@ -931,32 +988,29 @@ IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContex
         return expressionType;
     }
 
-    protected void internalRefresh(final Object element) {
+    protected void internalRefresh() {
         final Control composite = getControl();
         if (!composite.isDisposed()) {
+            final Expression selectedExpression = getSelectedExpression();
             final ILabelProvider labelProvider = (ILabelProvider) getLabelProvider();
             final Image icon = getLabelProviderImage(labelProvider, selectedExpression);
             final ExpressionTypeLabelProvider expTypeProvider = new ExpressionTypeLabelProvider();
             final String desc = expTypeProvider.getText(selectedExpression.getType());
             typeDecoration.setImage(icon);
             typeDecoration.setDescriptionText(desc);
-            if (!editing) {
-                if (selectedExpression.getName() == null || selectedExpression.getName().isEmpty()) {
-                    if (!ExpressionConstants.CONDITION_TYPE.equals(selectedExpression.getType())) {
-                        if (typeDecoration.isVisible()) {
-                            typeDecoration.hide();
-                        }
+            if (selectedExpression.getName() == null || selectedExpression.getName().isEmpty()) {
+                if (!ExpressionConstants.CONDITION_TYPE.equals(selectedExpression.getType())) {
+                    if (typeDecoration.isVisible()) {
+                        typeDecoration.hide();
                     }
-                } else {
-                    if (!typeDecoration.isVisible()) {
-                        typeDecoration.show();
-                    }
+                }
+            } else {
+                if (!typeDecoration.isVisible()) {
+                    typeDecoration.show();
                 }
             }
             refreshMessageDecoration();
-
         }
-
     }
 
     private void refreshMessageDecoration() {
@@ -1084,11 +1138,11 @@ IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContex
 
     @Override
     protected void handleDispose(final DisposeEvent event) {
-        if (disposeDomain) {
-            WorkspaceEditingDomainFactory.INSTANCE.unmapResourceSet((TransactionalEditingDomain) editingDomain);
-            editingDomain = null;
-            disposeDomain = false;
-        }
+        //        if (disposeDomain) {
+        //            WorkspaceEditingDomainFactory.INSTANCE.unmapResourceSet((TransactionalEditingDomain) editingDomain);
+        //            editingDomain = null;
+        //            disposeDomain = false;
+        //        }
         if (expressionBinding != null && externalDataBindingContext != null) {
             externalDataBindingContext.removeBinding(expressionBinding);
             expressionBinding.dispose();
@@ -1101,7 +1155,7 @@ IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContex
     }
 
     public void setEditingDomain(final EditingDomain editingDomain) {
-        this.editingDomain = editingDomain;
+        // this.editingDomain = editingDomain;
     }
 
     public void setMandatoryField(final String fieldName, final DataBindingContext dbc) {
@@ -1111,10 +1165,6 @@ IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContex
 
     public void addExpressionEditorChangedListener(final ISelectionChangedListener iSelectionChangedListener) {
         expressionEditorListener.add(iSelectionChangedListener);
-    }
-
-    public EReference getExpressionReference() {
-        return expressionReference;
     }
 
     public void setContext(final EObject context) {
@@ -1180,6 +1230,7 @@ IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContex
     public void proposalAccepted(final IContentProposal proposal) {
         final int proposalAcceptanceStyle = autoCompletion.getContentProposalAdapter().getProposalAcceptanceStyle();
         if (proposalAcceptanceStyle == ContentProposalAdapter.PROPOSAL_REPLACE) {
+            final Expression selectedExpression = getSelectedExpression();
             final ExpressionProposal prop = (ExpressionProposal) proposal;
             final Expression copy = EcoreUtil.copy((Expression) prop.getExpression());
             copy.setReturnTypeFixed(selectedExpression.isReturnTypeFixed());

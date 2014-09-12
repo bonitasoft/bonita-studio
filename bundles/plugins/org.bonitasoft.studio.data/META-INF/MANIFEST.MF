@@ -42,12 +42,17 @@ Require-Bundle: org.eclipse.ui,
  org.bonitasoft.studio.refactoring;bundle-version="6.3.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
-Export-Package: org.bonitasoft.studio.data.attachment.repository,org.b
- onitasoft.studio.data.i18n; x-friends:="org.bonitasoft.studio.diagram
- .test,  org.bonitasoft.studio.tests,  org.bonitasoft.studio.propertie
- s.test,  org.bonitasoft.studio.test.swtbot.util",org.bonitasoft.studi
- o.data.operation,org.bonitasoft.studio.data.provider,org.bonitasoft.s
- tudio.data.ui.property.section,org.bonitasoft.studio.data.util
+Export-Package: org.bonitasoft.studio.data.attachment.repository,
+ org.bonitasoft.studio.data.i18n;
+  x-friends:="org.bonitasoft.studio.diagram.test,
+   org.bonitasoft.studio.tests,
+   org.bonitasoft.studio.properties.test,
+   org.bonitasoft.studio.test.swtbot.util,
+   org.bonitasoft.studio.swtbot.framework",
+ org.bonitasoft.studio.data.operation,
+ org.bonitasoft.studio.data.provider,
+ org.bonitasoft.studio.data.ui.property.section,
+ org.bonitasoft.studio.data.util
 Import-Package: org.bonitasoft.engine.bpm.bar,
  org.bonitasoft.engine.bpm.document
  

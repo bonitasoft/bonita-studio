@@ -70,7 +70,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 /**
- * 
+ *
  * @author Romain Bioteau
  */
 public class ConnectorSection extends AbstractBonitaDescriptionSection implements IDoubleClickListener, ISelectionChangedListener {
@@ -84,7 +84,7 @@ public class ConnectorSection extends AbstractBonitaDescriptionSection implement
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.bonitasoft.studio.properties.sections.data.DataSection#createControls
      * (org.eclipse.swt.widgets.Composite,
@@ -329,7 +329,7 @@ public class ConnectorSection extends AbstractBonitaDescriptionSection implement
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.gmf.runtime.diagram.ui.properties.sections.
      * AbstractModelerPropertySection#setEObject(org.eclipse.emf.ecore.EObject)
      */
@@ -341,7 +341,7 @@ public class ConnectorSection extends AbstractBonitaDescriptionSection implement
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.gmf.runtime.diagram.ui.properties.sections.
      * AbstractModelerPropertySection#getEObject()
      */
