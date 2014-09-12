@@ -79,6 +79,7 @@ public class TestBug1640 extends SWTBotGefTestCase {
 
 		// Create 2nd process
 		SWTBotTestUtil.createNewDiagram(bot);
+		SWTBotTestUtil.waitUntilBonitaBPmShellIsActive(bot);
 		bot.menu("Diagram").click().menu("Save").click();
 		editor = bot.gefEditor(bot.editors().get(0).getTitle());
 		assertTrue(!editor.isDirty());

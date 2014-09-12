@@ -43,224 +43,224 @@ import org.eclipse.emf.ecore.impl.EObjectImpl;
  */
 public class PasswordTypeImpl extends EObjectImpl implements PasswordType {
 	/**
-	 * The default value of the '{@link #getValue() <em>Value</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The default value of the '{@link #getValue() <em>Value</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getValue()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getValue()
+     * @generated
+     * @ordered
+     */
 	protected static final String VALUE_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getValue() <em>Value</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getValue() <em>Value</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getValue()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getValue()
+     * @generated
+     * @ordered
+     */
 	protected String value = VALUE_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #isEncrypted() <em>Encrypted</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The default value of the '{@link #isEncrypted() <em>Encrypted</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #isEncrypted()
-	 * @generated
-	 * @ordered
-	 */
-	protected static final boolean ENCRYPTED_EDEFAULT = false;
+     * @see #isEncrypted()
+     * @generated
+     * @ordered
+     */
+	protected static final boolean ENCRYPTED_EDEFAULT = true;
 
 	/**
-	 * The cached value of the '{@link #isEncrypted() <em>Encrypted</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #isEncrypted() <em>Encrypted</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #isEncrypted()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #isEncrypted()
+     * @generated
+     * @ordered
+     */
 	protected boolean encrypted = ENCRYPTED_EDEFAULT;
 
 	/**
-	 * This is true if the Encrypted attribute has been set.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	protected boolean encryptedESet;
+     * This is true if the Encrypted attribute has been set.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    protected boolean encryptedESet;
 
-	/**
-	 * <!-- begin-user-doc -->
+    /**
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected PasswordTypeImpl() {
-		super();
-	}
+        super();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	protected EClass eStaticClass() {
-		return OrganizationPackage.Literals.PASSWORD_TYPE;
-	}
+        return OrganizationPackage.Literals.PASSWORD_TYPE;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	public String getValue() {
-		return value;
-	}
+        return value;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	public void setValue(String newValue) {
-		String oldValue = value;
-		value = newValue;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, OrganizationPackage.PASSWORD_TYPE__VALUE, oldValue, value));
-	}
+        String oldValue = value;
+        value = newValue;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, OrganizationPackage.PASSWORD_TYPE__VALUE, oldValue, value));
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	public boolean isEncrypted() {
-		return encrypted;
-	}
+        return encrypted;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	public void setEncrypted(boolean newEncrypted) {
-		boolean oldEncrypted = encrypted;
-		encrypted = newEncrypted;
-		boolean oldEncryptedESet = encryptedESet;
-		encryptedESet = true;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, OrganizationPackage.PASSWORD_TYPE__ENCRYPTED, oldEncrypted, encrypted, !oldEncryptedESet));
-	}
+        boolean oldEncrypted = encrypted;
+        encrypted = newEncrypted;
+        boolean oldEncryptedESet = encryptedESet;
+        encryptedESet = true;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, OrganizationPackage.PASSWORD_TYPE__ENCRYPTED, oldEncrypted, encrypted, !oldEncryptedESet));
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void unsetEncrypted() {
-		boolean oldEncrypted = encrypted;
-		boolean oldEncryptedESet = encryptedESet;
-		encrypted = ENCRYPTED_EDEFAULT;
-		encryptedESet = false;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.UNSET, OrganizationPackage.PASSWORD_TYPE__ENCRYPTED, oldEncrypted, ENCRYPTED_EDEFAULT, oldEncryptedESet));
-	}
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public void unsetEncrypted() {
+        boolean oldEncrypted = encrypted;
+        boolean oldEncryptedESet = encryptedESet;
+        encrypted = ENCRYPTED_EDEFAULT;
+        encryptedESet = false;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.UNSET, OrganizationPackage.PASSWORD_TYPE__ENCRYPTED, oldEncrypted, ENCRYPTED_EDEFAULT, oldEncryptedESet));
+    }
 
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public boolean isSetEncrypted() {
-		return encryptedESet;
-	}
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public boolean isSetEncrypted() {
+        return encryptedESet;
+    }
 
-	/**
-	 * <!-- begin-user-doc -->
+    /**
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
-		switch (featureID) {
-			case OrganizationPackage.PASSWORD_TYPE__VALUE:
-				return getValue();
-			case OrganizationPackage.PASSWORD_TYPE__ENCRYPTED:
-				return isEncrypted();
-		}
-		return super.eGet(featureID, resolve, coreType);
-	}
+        switch (featureID) {
+            case OrganizationPackage.PASSWORD_TYPE__VALUE:
+                return getValue();
+            case OrganizationPackage.PASSWORD_TYPE__ENCRYPTED:
+                return isEncrypted();
+        }
+        return super.eGet(featureID, resolve, coreType);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void eSet(int featureID, Object newValue) {
-		switch (featureID) {
-			case OrganizationPackage.PASSWORD_TYPE__VALUE:
-				setValue((String)newValue);
-				return;
-			case OrganizationPackage.PASSWORD_TYPE__ENCRYPTED:
-				setEncrypted((Boolean)newValue);
-				return;
-		}
-		super.eSet(featureID, newValue);
-	}
+        switch (featureID) {
+            case OrganizationPackage.PASSWORD_TYPE__VALUE:
+                setValue((String)newValue);
+                return;
+            case OrganizationPackage.PASSWORD_TYPE__ENCRYPTED:
+                setEncrypted((Boolean)newValue);
+                return;
+        }
+        super.eSet(featureID, newValue);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void eUnset(int featureID) {
-		switch (featureID) {
-			case OrganizationPackage.PASSWORD_TYPE__VALUE:
-				setValue(VALUE_EDEFAULT);
-				return;
-			case OrganizationPackage.PASSWORD_TYPE__ENCRYPTED:
-				unsetEncrypted();
-				return;
-		}
-		super.eUnset(featureID);
-	}
+        switch (featureID) {
+            case OrganizationPackage.PASSWORD_TYPE__VALUE:
+                setValue(VALUE_EDEFAULT);
+                return;
+            case OrganizationPackage.PASSWORD_TYPE__ENCRYPTED:
+                unsetEncrypted();
+                return;
+        }
+        super.eUnset(featureID);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public boolean eIsSet(int featureID) {
-		switch (featureID) {
-			case OrganizationPackage.PASSWORD_TYPE__VALUE:
-				return VALUE_EDEFAULT == null ? value != null : !VALUE_EDEFAULT.equals(value);
-			case OrganizationPackage.PASSWORD_TYPE__ENCRYPTED:
-				return isSetEncrypted();
-		}
-		return super.eIsSet(featureID);
-	}
+        switch (featureID) {
+            case OrganizationPackage.PASSWORD_TYPE__VALUE:
+                return VALUE_EDEFAULT == null ? value != null : !VALUE_EDEFAULT.equals(value);
+            case OrganizationPackage.PASSWORD_TYPE__ENCRYPTED:
+                return isSetEncrypted();
+        }
+        return super.eIsSet(featureID);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public String toString() {
-		if (eIsProxy()) return super.toString();
+        if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (value: ");
-		result.append(value);
-		result.append(", encrypted: ");
-		if (encryptedESet) result.append(encrypted); else result.append("<unset>");
-		result.append(')');
-		return result.toString();
-	}
+        StringBuffer result = new StringBuffer(super.toString());
+        result.append(" (value: ");
+        result.append(value);
+        result.append(", encrypted: ");
+        if (encryptedESet) result.append(encrypted); else result.append("<unset>");
+        result.append(')');
+        return result.toString();
+    }
 
 } //PasswordTypeImpl

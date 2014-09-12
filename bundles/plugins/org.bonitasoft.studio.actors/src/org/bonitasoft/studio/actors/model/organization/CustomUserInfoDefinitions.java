@@ -39,20 +39,20 @@ import org.eclipse.emf.ecore.EObject;
  */
 public interface CustomUserInfoDefinitions extends EObject {
 	/**
-	 * Returns the value of the '<em><b>Custom User Info Definition</b></em>' containment reference list.
-	 * The list contents are of type {@link org.bonitasoft.studio.actors.model.organization.CustomUserInfoDefinition}.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Custom User Info Definition</b></em>' containment reference list.
+     * The list contents are of type {@link org.bonitasoft.studio.actors.model.organization.CustomUserInfoDefinition}.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Custom User Info Definition</em>' containment reference list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Custom User Info Definition</em>' containment reference list.
-	 * @see org.bonitasoft.studio.actors.model.organization.OrganizationPackage#getCustomUserInfoDefinitions_CustomUserInfoDefinition()
-	 * @model containment="true"
-	 *        extendedMetaData="kind='element' name='customUserInfoDefinition'"
-	 * @generated
-	 */
+     * @return the value of the '<em>Custom User Info Definition</em>' containment reference list.
+     * @see org.bonitasoft.studio.actors.model.organization.OrganizationPackage#getCustomUserInfoDefinitions_CustomUserInfoDefinition()
+     * @model containment="true"
+     *        extendedMetaData="kind='element' name='customUserInfoDefinition'"
+     * @generated
+     */
 	EList<CustomUserInfoDefinition> getCustomUserInfoDefinition();
 
 } // CustomUserInfoDefinitions

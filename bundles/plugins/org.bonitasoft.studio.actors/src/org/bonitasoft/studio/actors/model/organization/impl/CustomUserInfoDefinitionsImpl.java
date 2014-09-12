@@ -50,118 +50,118 @@ import org.eclipse.emf.ecore.util.InternalEList;
  */
 public class CustomUserInfoDefinitionsImpl extends EObjectImpl implements CustomUserInfoDefinitions {
 	/**
-	 * The cached value of the '{@link #getCustomUserInfoDefinition() <em>Custom User Info Definition</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getCustomUserInfoDefinition() <em>Custom User Info Definition</em>}' containment reference list.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getCustomUserInfoDefinition()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getCustomUserInfoDefinition()
+     * @generated
+     * @ordered
+     */
 	protected EList<CustomUserInfoDefinition> customUserInfoDefinition;
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected CustomUserInfoDefinitionsImpl() {
-		super();
-	}
+        super();
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	protected EClass eStaticClass() {
-		return OrganizationPackage.Literals.CUSTOM_USER_INFO_DEFINITIONS;
-	}
+        return OrganizationPackage.Literals.CUSTOM_USER_INFO_DEFINITIONS;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	public EList<CustomUserInfoDefinition> getCustomUserInfoDefinition() {
-		if (customUserInfoDefinition == null) {
-			customUserInfoDefinition = new EObjectContainmentEList<CustomUserInfoDefinition>(CustomUserInfoDefinition.class, this, OrganizationPackage.CUSTOM_USER_INFO_DEFINITIONS__CUSTOM_USER_INFO_DEFINITION);
-		}
-		return customUserInfoDefinition;
-	}
+        if (customUserInfoDefinition == null) {
+            customUserInfoDefinition = new EObjectContainmentEList<CustomUserInfoDefinition>(CustomUserInfoDefinition.class, this, OrganizationPackage.CUSTOM_USER_INFO_DEFINITIONS__CUSTOM_USER_INFO_DEFINITION);
+        }
+        return customUserInfoDefinition;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
-		switch (featureID) {
-			case OrganizationPackage.CUSTOM_USER_INFO_DEFINITIONS__CUSTOM_USER_INFO_DEFINITION:
-				return ((InternalEList<?>)getCustomUserInfoDefinition()).basicRemove(otherEnd, msgs);
-		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
-	}
+        switch (featureID) {
+            case OrganizationPackage.CUSTOM_USER_INFO_DEFINITIONS__CUSTOM_USER_INFO_DEFINITION:
+                return ((InternalEList<?>)getCustomUserInfoDefinition()).basicRemove(otherEnd, msgs);
+        }
+        return super.eInverseRemove(otherEnd, featureID, msgs);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
-		switch (featureID) {
-			case OrganizationPackage.CUSTOM_USER_INFO_DEFINITIONS__CUSTOM_USER_INFO_DEFINITION:
-				return getCustomUserInfoDefinition();
-		}
-		return super.eGet(featureID, resolve, coreType);
-	}
+        switch (featureID) {
+            case OrganizationPackage.CUSTOM_USER_INFO_DEFINITIONS__CUSTOM_USER_INFO_DEFINITION:
+                return getCustomUserInfoDefinition();
+        }
+        return super.eGet(featureID, resolve, coreType);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
-		switch (featureID) {
-			case OrganizationPackage.CUSTOM_USER_INFO_DEFINITIONS__CUSTOM_USER_INFO_DEFINITION:
-				getCustomUserInfoDefinition().clear();
-				getCustomUserInfoDefinition().addAll((Collection<? extends CustomUserInfoDefinition>)newValue);
-				return;
-		}
-		super.eSet(featureID, newValue);
-	}
+        switch (featureID) {
+            case OrganizationPackage.CUSTOM_USER_INFO_DEFINITIONS__CUSTOM_USER_INFO_DEFINITION:
+                getCustomUserInfoDefinition().clear();
+                getCustomUserInfoDefinition().addAll((Collection<? extends CustomUserInfoDefinition>)newValue);
+                return;
+        }
+        super.eSet(featureID, newValue);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void eUnset(int featureID) {
-		switch (featureID) {
-			case OrganizationPackage.CUSTOM_USER_INFO_DEFINITIONS__CUSTOM_USER_INFO_DEFINITION:
-				getCustomUserInfoDefinition().clear();
-				return;
-		}
-		super.eUnset(featureID);
-	}
+        switch (featureID) {
+            case OrganizationPackage.CUSTOM_USER_INFO_DEFINITIONS__CUSTOM_USER_INFO_DEFINITION:
+                getCustomUserInfoDefinition().clear();
+                return;
+        }
+        super.eUnset(featureID);
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public boolean eIsSet(int featureID) {
-		switch (featureID) {
-			case OrganizationPackage.CUSTOM_USER_INFO_DEFINITIONS__CUSTOM_USER_INFO_DEFINITION:
-				return customUserInfoDefinition != null && !customUserInfoDefinition.isEmpty();
-		}
-		return super.eIsSet(featureID);
-	}
+        switch (featureID) {
+            case OrganizationPackage.CUSTOM_USER_INFO_DEFINITIONS__CUSTOM_USER_INFO_DEFINITION:
+                return customUserInfoDefinition != null && !customUserInfoDefinition.isEmpty();
+        }
+        return super.eIsSet(featureID);
+    }
 
 } //CustomUserInfoDefinitionsImpl

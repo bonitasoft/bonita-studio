@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012 BonitaSoft S.A.
+ * Copyright (C) 2012-2014 BonitaSoft S.A.
  * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,34 +19,8 @@ package org.bonitasoft.studio.common;
  */
 public class ModelVersion {
 
-    public static final String VERSION_5_0_PREVIEW = "5.0.preview";
-    public static final String VERSION_5_0_M4 = "5.0.M4";
-    public static final String VERSION_5_0_M5 = "5.0.M5";
-    public static final String VERSION_5_0_RC1 = "5.0.RC1";
-    public static final String VERSION_5_0 = "5.0";
-    public static final String VERSION_5_1_M1 = "5.1.M1";
-    public static final String VERSION_5_1 = "5.1";
-    public static final String VERSION_5_2 = "5.2";
-    public static final String VERSION_5_3 = "5.3";
-    public static final String VERSION_5_4 = "5.4";
-    public static final String VERSION_5_5 = "5.5";
-    public static final String VERSION_5_6 = "5.6";
-    public static final String VERSION_6_0 = "6.0";
     public static final String VERSION_6_0_0_ALPHA = "6.0.0-Alpha";
-    public static final String VERSION_6_0_0_BETA = "6.0.0-Beta";
-    public static final String VERSION_6_0_0_GA_001 = "6.0.0-ga-001";
-    public static final String VERSION_6_0_0_GA_002 = "6.0.0-ga-002";
-    public static final String VERSION_6_0_0_GA_003 = "6.0.0-ga-003";
-    public static final String VERSION_6_0_0_GA_004 = "6.0.0-ga-004";
-    public static final String VERSION_6_0_0_GA_005 = "6.0.0-ga-005";
-    public static final String VERSION_6_0_1_001 = "6.0.1-001";
-    public static final String VERSION_6_1_1_001 = "6.1.1-001";
-    public static final String VERSION_6_3_0_001 = "6.3.0-001";
-    public static final String VERSION_6_3_0_002 = "6.3.0-002";
-    public static final String VERSION_6_3_1_001 = "6.3.1-001";
-    public static final String VERSION_6_3_2_001 = "6.3.2-001";
-    public static final String VERSION_6_3_3_001 = "6.3.3-001";
-    public static final String CURRENT_VERSION = VERSION_6_3_3_001;
+    public static final String CURRENT_VERSION = "6.3.4-001";
 
     public static boolean sameVersion(final String version) {
         return CURRENT_VERSION.equals(version);
