@@ -54,6 +54,22 @@ public class DiagramRepositoryStoreMigrationTest {
 
 	}
 
+	@Test
+	public void testReleaseVersionHistoryHaveCorrectFormat() {
+		final DiagramRepositoryStore store = RepositoryManager.getInstance()
+				.getRepositoryStore(DiagramRepositoryStore.class);
+		final Migrator migrator = store.initializeMigrator();
+
+		final String pattern = "(\\d+)\\.(\\d+)\\.(\\d+)-.*";
+
+		for (final Release release : migrator.getReleases()) {
+			final String releaseLabel = release.getLabel();
+			assertThat(releaseLabel).startsWith("6.");
+			assertThat(releaseLabel.matches(pattern)).isTrue();
+		}
+
+	}
+
 	public Release getLatestRelease(final Migrator migrator) {
 		final List<Release> releases = migrator.getReleases();
 		return releases.get(releases.size() - 1);
