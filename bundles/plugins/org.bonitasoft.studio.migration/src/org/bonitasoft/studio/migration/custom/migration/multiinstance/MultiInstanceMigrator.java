@@ -73,6 +73,7 @@ public class MultiInstanceMigrator {
         targetInstance.set("testBefore", testBefore);
         targetInstance.set("loopCondition", loopCondition);
         targetInstance.set("loopMaximum", loopMaximum);
+        targetInstance.set("useCardinality", !useCardinality);
         targetInstance.set("useCardinality", useCardinality);
         targetInstance.set("cardinalityExpression", cardinalityExpression);
         targetInstance.set("collectionDataToMultiInstantiate", collectionDataToMultiInstantiate);
@@ -162,7 +163,7 @@ public class MultiInstanceMigrator {
         if (multiInstantiationInstance != null) {
             return multiInstantiationInstance.get("useCardinality");
         }
-        return false;
+        return true;//default is true
     }
 
     private Instance getLoopMaximum(final Model model) {
@@ -213,7 +214,7 @@ public class MultiInstanceMigrator {
     }
 
     private Boolean isMultiInstantiated() {
-        return sourceInstance.get("isMultiInstance");
+        return (Boolean) sourceInstance.get("isMultiInstance") && sourceInstance.get("multiInstantiation") != null;
     }
 
     private boolean isSequentialMultiInstantiation(){

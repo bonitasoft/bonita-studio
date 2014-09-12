@@ -8289,7 +8289,7 @@
           <changes xsi:type="history:Set" element="process.ecore#//MultiInstantiable/useCardinality"
               featureName="name" dataValue="useCardinality"/>
           <changes xsi:type="history:Set" element="process.ecore#//MultiInstantiable/useCardinality"
-              featureName="defaultValueLiteral" dataValue="true"/>
+              featureName="defaultValueLiteral" dataValue="false"/>
           <changes xsi:type="history:Set" element="process.ecore#//MultiInstantiable/useCardinality"
               featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
         </changes>
