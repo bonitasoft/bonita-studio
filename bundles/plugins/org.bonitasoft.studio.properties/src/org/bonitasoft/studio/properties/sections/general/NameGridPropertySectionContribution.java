@@ -294,6 +294,7 @@ public class NameGridPropertySectionContribution extends AbstractNamePropertySec
                     renameDiagramOperation.setNewDiagramVersion(nameDialog.getDiagramVersion());
                     renameDiagramOperation.setPoolsRenamed(nameDialog.getPools());
                     renameDiagramOperation.setEditor(editor);
+//                    renameDiagramOperation.setSaveAfterRename(false);
                     final IProgressService service = PlatformUI.getWorkbench().getProgressService();
                     try {
                         service.run(false, false, renameDiagramOperation);

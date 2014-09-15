@@ -28,9 +28,11 @@ import org.bonitasoft.studio.common.jface.databinding.validator.UTF8InputValidat
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.MainProcess;
+import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
-import org.eclipse.core.databinding.beans.PojoObservables;
+import org.eclipse.core.databinding.beans.PojoProperties;
+import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.MultiValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
@@ -138,65 +140,32 @@ public class OpenNameAndVersionForDiagramDialog extends OpenNameAndVersionDialog
         pnvCompo.setLayout(GridLayoutFactory.fillDefaults().equalWidth(false).numColumns(4).create());
         pnvCompo.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
-        final Label poolLabel = new Label(pnvCompo, SWT.NONE);
-        poolLabel.setText(Messages.name);
-        final Text nameText = new Text(pnvCompo, SWT.BORDER);
-        nameText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(200, SWT.DEFAULT).create());
+        final Label poolNameLabel = new Label(pnvCompo, SWT.NONE);
+        poolNameLabel.setText(Messages.name);
+        final Text poolNameText = new Text(pnvCompo, SWT.BORDER);
+        poolNameText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(200, SWT.DEFAULT).create());
 
-        final UpdateValueStrategy nameTargetToModel = new UpdateValueStrategy();
-        final EmptyInputValidator emptyValidator = new EmptyInputValidator(Messages.name);
-        final InputLengthValidator lenghtValidator = new InputLengthValidator(Messages.name,50);
+        final ISWTObservableValue observePoolNameText = SWTObservables.observeText(poolNameText, SWT.Modify);
 
-        nameTargetToModel.setAfterGetValidator(new IValidator() {
-
-            @Override
-            public IStatus validate(final Object value) {
-                IStatus status = emptyValidator.validate(value);
-                if(status.isOK()){
-                    status = lenghtValidator.validate(value);
-                }
-                return status;
-            }
-        });
-        nameTargetToModel.setBeforeSetValidator(new UTF8InputValidator(Messages.name));
-        ControlDecorationSupport.create(dbc.bindValue(SWTObservables.observeText(nameText, SWT.Modify),
-                PojoObservables.observeValue(pnv, "newName"), nameTargetToModel, null), SWT.LEFT);
+        bindPoolName(pnv, dbc, observePoolNameText);
 
         final Label poolVersion = new Label(pnvCompo, SWT.NONE);
         poolVersion.setText(Messages.version);
-        final Text versionText = new Text(pnvCompo, SWT.BORDER);
-        versionText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(100, SWT.DEFAULT).create());
+        final Text poolVersionText = new Text(pnvCompo, SWT.BORDER);
+        poolVersionText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(100, SWT.DEFAULT).create());
 
-        final UpdateValueStrategy versionTargetToModel = new UpdateValueStrategy();
-        final EmptyInputValidator verisonEmptyValidator = new EmptyInputValidator(Messages.version);
-        final InputLengthValidator versionLenghtValidator = new InputLengthValidator(Messages.version,50);
-        versionTargetToModel.setAfterGetValidator(new IValidator() {
-            @Override
-            public IStatus validate(final Object value) {
-                IStatus status = verisonEmptyValidator.validate(value);
-                if(status.isOK()){
-                    status = versionLenghtValidator.validate(value);
-                }
-                return status;
-            }
-        });
+        final ISWTObservableValue observePoolVersionText = SWTObservables.observeText(poolVersionText, SWT.Modify);
 
-        versionTargetToModel.setBeforeSetValidator(new UTF8InputValidator(Messages.version));
-        ControlDecorationSupport
-                .create(dbc.bindValue(SWTObservables.observeText(versionText, SWT.Modify), PojoObservables.observeValue(pnv, "newVersion"),
-                        versionTargetToModel, null), SWT.LEFT);
+        bindPoolVersion(pnv, dbc, observePoolVersionText);
 
-
-        final ISWTObservableValue observeNameText = SWTObservables.observeText(nameText, SWT.Modify);
-        final ISWTObservableValue observeVersionText = SWTObservables.observeText(versionText, SWT.Modify);
         final MultiValidator caseValidator = new MultiValidator() {
             @Override
             protected IStatus validate() {
-                final String name = observeNameText.getValue().toString();
-                final String version = observeVersionText.getValue().toString();
+                final String poolName = observePoolNameText.getValue().toString();
+                final String poolVersion = observePoolVersionText.getValue().toString();
                 int countNewProcessWithSameName = 0;
                 for (final ProcessesNameVersion pool : pools){
-                    if (name.equals(pool.newName) && version.equals(pool.newVersion)) {
+                    if (poolName.equals(pool.newName) && poolVersion.equals(pool.newVersion)) {
                         countNewProcessWithSameName ++;
                     }
                 }
@@ -205,7 +174,7 @@ public class OpenNameAndVersionForDiagramDialog extends OpenNameAndVersionDialog
                 }
                 int countOldProcessWithSameName = 0;
                 for (final ProcessesNameVersion pool : pools){
-                    if (name.equals(pool.getAbstractProcess().getName()) && version.equals(pool.getAbstractProcess().getVersion())) {
+                    if (poolName.equals(pool.getAbstractProcess().getName()) && poolVersion.equals(pool.getAbstractProcess().getVersion())) {
                         countOldProcessWithSameName ++;
                     }
                 }
@@ -217,7 +186,7 @@ public class OpenNameAndVersionForDiagramDialog extends OpenNameAndVersionDialog
                     }
                 }
                 for (final AbstractProcess process : processes) {
-                    if (name.equals(process.getName()) && version.equals(process.getVersion())) {
+                    if (poolName.equals(process.getName()) && poolVersion.equals(process.getVersion())) {
                         return ValidationStatus.error(Messages.bind(Messages.differentCaseSameNameError, typeLabel));
                     }
                 }
@@ -229,14 +198,64 @@ public class OpenNameAndVersionForDiagramDialog extends OpenNameAndVersionDialog
         ControlDecorationSupport.create(caseValidator, SWT.LEFT);
     }
 
+    private void bindPoolVersion(final ProcessesNameVersion pnv, final DataBindingContext dbc, final ISWTObservableValue observePoolVersionText) {
+        final UpdateValueStrategy poolVersionTargetToModel = new UpdateValueStrategy();
+        final EmptyInputValidator poolVersionEmptyValidator = new EmptyInputValidator(Messages.version);
+        final InputLengthValidator poolVersionLenghtValidator = new InputLengthValidator(Messages.version,50);
+        poolVersionTargetToModel.setAfterGetValidator(new IValidator() {
+            @Override
+            public IStatus validate(final Object value) {
+                IStatus status = poolVersionEmptyValidator.validate(value);
+                if(status.isOK()){
+                    status = poolVersionLenghtValidator.validate(value);
+                }
+                return status;
+            }
+        });
+
+        poolVersionTargetToModel.setBeforeSetValidator(new UTF8InputValidator(Messages.version));
+        final IObservableValue observePoolVersionValue = PojoProperties.value("newVersion").observe(pnv);
+        final Binding bindPoolVersionValue = dbc.bindValue(observePoolVersionText,
+                observePoolVersionValue,
+                poolVersionTargetToModel,
+                null);
+        ControlDecorationSupport.create(bindPoolVersionValue, SWT.LEFT);
+    }
+
+    private void bindPoolName(final ProcessesNameVersion pnv, final DataBindingContext dbc, final ISWTObservableValue observePoolNameText) {
+        final UpdateValueStrategy poolNameTargetToModel = new UpdateValueStrategy();
+        final EmptyInputValidator poolNameEmptyValidator = new EmptyInputValidator(Messages.name);
+        final InputLengthValidator poolNamelenghtValidator = new InputLengthValidator(Messages.name,50);
+
+        poolNameTargetToModel.setAfterGetValidator(new IValidator() {
+
+            @Override
+            public IStatus validate(final Object value) {
+                IStatus status = poolNameEmptyValidator.validate(value);
+                if(status.isOK()){
+                    status = poolNamelenghtValidator.validate(value);
+                }
+                return status;
+            }
+        });
+        poolNameTargetToModel.setBeforeSetValidator(new UTF8InputValidator(Messages.name));
+
+        final IObservableValue observePoolNameValue = PojoProperties.value("newName").observe(pnv);
+        final Binding bindPoolNameValue = dbc.bindValue(observePoolNameText,
+                observePoolNameValue,
+                poolNameTargetToModel,
+                null);
+        ControlDecorationSupport.create(bindPoolNameValue, SWT.LEFT);
+    }
+
     protected void createProcessesNameAndVersion(final Composite res, final DataBindingContext dbc) {
-        final Group parent = new Group(res, SWT.NONE);
-        parent.setLayoutData(GridDataFactory.fillDefaults().span(2, 1).grab(true, false).create());
-        parent.setLayout(GridLayoutFactory.fillDefaults().margins(10, 10).create());
-        parent.setText(Messages.pools);
+        final Group poolGroup = new Group(res, SWT.NONE);
+        poolGroup.setLayoutData(GridDataFactory.fillDefaults().span(2, 1).grab(true, false).create());
+        poolGroup.setLayout(GridLayoutFactory.fillDefaults().margins(10, 10).create());
+        poolGroup.setText(Messages.pools);
 
         for(final ProcessesNameVersion pnv : pools){
-            createPNVComposite(parent, pnv, dbc);
+            createPNVComposite(poolGroup, pnv, dbc);
         }
     }
 
