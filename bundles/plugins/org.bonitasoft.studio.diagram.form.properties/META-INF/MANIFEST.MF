@@ -44,14 +44,17 @@ Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Localization: plugin
 Bundle-Vendor: BonitaSoft S.A.
-Export-Package: org.bonitasoft.studio.form.properties.i18n; x-friends:
- ="org.bonitasoft.studio.properties.test,  org.bonitasoft.studio.confi
- guration.test,  org.bonitasoft.studio.tests.ex,  org.bonitasoft.studi
- o.diagram.test",org.bonitasoft.studio.properties.form.filters,org.bon
- itasoft.studio.properties.form.provider,org.bonitasoft.studio.propert
- ies.form.sections.actions,org.bonitasoft.studio.properties.form.secti
- ons.actions.contributions,org.bonitasoft.studio.properties.form.secti
- ons.appearance,org.bonitasoft.studio.properties.form.sections.appeara
- nce.contributions,org.bonitasoft.studio.properties.form.sections.gene
- ral.contributions
+Export-Package: org.bonitasoft.studio.form.properties.i18n;
+  x-friends:="org.bonitasoft.studio.configuration.test,
+   org.bonitasoft.studio.diagram.test,
+   org.bonitasoft.studio.properties.test,
+   org.bonitasoft.studio.tests.ex,
+   org.bonitasoft.studio.tests",
+ org.bonitasoft.studio.properties.form.filters,
+ org.bonitasoft.studio.properties.form.provider,
+ org.bonitasoft.studio.properties.form.sections.actions,
+ org.bonitasoft.studio.properties.form.sections.actions.contributions,
+ org.bonitasoft.studio.properties.form.sections.appearance,
+ org.bonitasoft.studio.properties.form.sections.appearance.contributions,
+ org.bonitasoft.studio.properties.form.sections.general.contributions
 Import-Package: org.bonitasoft.engine.bpm.document
