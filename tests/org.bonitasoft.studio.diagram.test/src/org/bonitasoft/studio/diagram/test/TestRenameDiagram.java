@@ -114,6 +114,7 @@ public class TestRenameDiagram extends SWTBotGefTestCase {
 
         SWTBotTestUtil.createNewDiagram(bot);
         bot.menu("Diagram").menu("Save").click();
+        bot.waitWhile(Conditions.shellIsActive("Progress Information"));
         assertFalse(bot.activeShell().getText().equals(org.bonitasoft.studio.common.Messages.openNameAndVersionDialogTitle));
         assertFalse("Editor is dirty", bot.activeEditor().isDirty());
     }
