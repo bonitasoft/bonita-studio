@@ -42,6 +42,7 @@ import org.bonitasoft.studio.expression.editor.autocompletion.BonitaContentPropo
 import org.bonitasoft.studio.expression.editor.autocompletion.ExpressionProposal;
 import org.bonitasoft.studio.expression.editor.autocompletion.IBonitaContentProposalListener2;
 import org.bonitasoft.studio.expression.editor.autocompletion.IExpressionProposalLabelProvider;
+import org.bonitasoft.studio.expression.editor.filter.ExpressionReturnTypeFilter;
 import org.bonitasoft.studio.expression.editor.i18n.Messages;
 import org.bonitasoft.studio.expression.editor.provider.ExpressionComparator;
 import org.bonitasoft.studio.expression.editor.provider.ExpressionContentProvider;
@@ -692,18 +693,7 @@ IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContex
     protected boolean compatibleReturnTypes(final Expression currentExpression, final Expression targetExpression) {
         final String currentReturnType = currentExpression.getReturnType();
         final String targetReturnType = targetExpression.getReturnType();
-        if (currentReturnType.equals(targetReturnType)) {
-            return true;
-        }
-        try {
-            final Class<?> currentReturnTypeClass = Class.forName(currentReturnType);
-            final Class<?> targetReturnTypeClass = Class.forName(targetReturnType);
-            return currentReturnTypeClass.isAssignableFrom(targetReturnTypeClass);
-        } catch (final ClassNotFoundException e) {
-            BonitaStudioLog.debug("Failed to determine the compatibility between " + targetReturnType + " and "
-                    + currentReturnType, ExpressionEditorPlugin.PLUGIN_ID);
-        }
-        return true;
+        return new ExpressionReturnTypeFilter().compatibleReturnTypes(currentReturnType, targetReturnType);
     }
 
     protected Set<ViewerFilter> getFilters() {
