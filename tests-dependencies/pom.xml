@@ -17,6 +17,7 @@
 
 	<modules>
 		<module>org.mockito</module>
+        <module>cucumber-jvm</module>
 		<module>org.powermock</module>
 		<module>assertj-core</module>
 		<module>org.fest-util</module>
