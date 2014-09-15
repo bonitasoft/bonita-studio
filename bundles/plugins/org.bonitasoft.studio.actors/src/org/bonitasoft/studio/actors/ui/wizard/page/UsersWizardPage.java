@@ -550,39 +550,45 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 
     private void handleFirstNameChange(final ValueChangeEvent event) {
         final User user = (User) userSingleSelectionObservable.getValue();
-        final User oldUser = EcoreUtil.copy(user);
-        final Object oldValue = event.diff.getOldValue();
-        if(oldValue!=null){
-            oldUser.setFirstName(oldValue.toString());
+        if (user != null) {
+            final User oldUser = EcoreUtil.copy(user);
+            final Object oldValue = event.diff.getOldValue();
+            if (oldValue != null) {
+                oldUser.setFirstName(oldValue.toString());
 
-            if(getViewer() != null && !getViewer().getControl().isDisposed()){
-                getViewer().refresh(user) ;
+                if(getViewer() != null && !getViewer().getControl().isDisposed()){
+                    getViewer().refresh(user) ;
+                }
             }
         }
     }
 
     private void handleLastNameChange(final ValueChangeEvent event) {
         final User user = (User) userSingleSelectionObservable.getValue();
-        final User oldUser = EcoreUtil.copy(user);
-        final Object oldValue = event.diff.getOldValue();
-        if(oldValue!=null){
-            oldUser.setLastName(oldValue.toString());
-            if(getViewer() != null && !getViewer().getControl().isDisposed()){
-                getViewer().refresh(user) ;
+        if (user != null) {
+            final User oldUser = EcoreUtil.copy(user);
+            final Object oldValue = event.diff.getOldValue();
+            if(oldValue!=null){
+                oldUser.setLastName(oldValue.toString());
+                if(getViewer() != null && !getViewer().getControl().isDisposed()){
+                    getViewer().refresh(user) ;
+                }
             }
         }
     }
 
     private void handleUserNameChange(final ValueChangeEvent event) {
         final User user = (User) userSingleSelectionObservable.getValue();
-        final User oldUser = EcoreUtil.copy(user);
-        final Object oldValue = event.diff.getOldValue();
-        if (oldValue != null) {
-            if (oldUser != null) {
-                oldUser.setUserName(oldValue.toString());
-            }
-            if (getViewer() != null && !getViewer().getControl().isDisposed()) {
-                getViewer().refresh(user);
+        if (user != null) {
+            final User oldUser = EcoreUtil.copy(user);
+            final Object oldValue = event.diff.getOldValue();
+            if (oldValue != null) {
+                if (oldUser != null) {
+                    oldUser.setUserName(oldValue.toString());
+                }
+                if (getViewer() != null && !getViewer().getControl().isDisposed()) {
+                    getViewer().refresh(user);
+                }
             }
         }
     }
