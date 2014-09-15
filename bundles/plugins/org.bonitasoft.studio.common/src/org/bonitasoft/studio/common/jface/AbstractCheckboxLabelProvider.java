@@ -5,18 +5,17 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.common.jface;
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.StyledCellLabelProvider;
@@ -33,7 +32,6 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.TreeItem;
-import org.eclipse.swt.widgets.Widget;
 
 public abstract class AbstractCheckboxLabelProvider extends StyledCellLabelProvider implements ILabelProvider {
 
@@ -45,7 +43,7 @@ public abstract class AbstractCheckboxLabelProvider extends StyledCellLabelProvi
 
     protected static final String DISABLED_UNCHECKED_KEY = "uncheckKeyDisabled";
 
-    public AbstractCheckboxLabelProvider(Control control) {
+    public AbstractCheckboxLabelProvider(final Control control) {
         if (control != null) {
             if (JFaceResources.getImageRegistry().getDescriptor(UNCHECK_KEY) == null) {
                 JFaceResources.getImageRegistry().put(UNCHECK_KEY,
@@ -71,7 +69,7 @@ public abstract class AbstractCheckboxLabelProvider extends StyledCellLabelProvi
      * @see org.eclipse.jface.viewers.ILabelProvider#getImage(java.lang.Object)
      */
     @Override
-    public Image getImage(Object element) {
+    public Image getImage(final Object element) {
         if (isSelected(element)) {
             if (isEnabled(element)) {
                 return JFaceResources.getImage(CHECKED_KEY);
@@ -88,37 +86,32 @@ public abstract class AbstractCheckboxLabelProvider extends StyledCellLabelProvi
      * @see org.eclipse.jface.viewers.ILabelProvider#getText(java.lang.Object)
      */
     @Override
-    public String getText(Object element) {
+    public String getText(final Object element) {
         return ((Boolean) isSelected(element)).toString();
     }
 
     protected abstract boolean isSelected(Object element);
 
-    protected boolean isEnabled(Object element) {
+    protected boolean isEnabled(final Object element) {
         return true;
     }
 
-    private Image makeShot(Control control, boolean type, boolean enabled) {
+    private Image makeShot(final Control control, final boolean type, final boolean enabled) {
         // Hopefully no platform uses exactly this color because we'll make
         // it transparent in the image.
-        Color greenScreen = new Color(control.getDisplay(), 222, 223, 224);
+        final Color greenScreen = new Color(control.getDisplay(), 222, 223, 224);
 
-        Shell shell = new Shell(control.getShell(), SWT.NO_TRIM);
-        shell.setVisible(false);
-        shell.setLocation(0, 0);
+        final Shell shell = new Shell(control.getShell(), SWT.NO_TRIM);
+
         // otherwise we have a default gray color
         shell.setBackground(greenScreen);
 
-        Button button = new Button(shell, SWT.CHECK);
+        final Button button = new Button(shell, SWT.CHECK);
         button.setBackground(greenScreen);
         button.setSelection(type);
-        if (!enabled) {
-            button.setEnabled(false);
-        }
-
         // otherwise an image is located in a corner
         button.setLocation(1, 1);
-        Point bsize = button.computeSize(SWT.DEFAULT, SWT.DEFAULT);
+        final Point bsize = button.computeSize(SWT.DEFAULT, SWT.DEFAULT);
 
         // otherwise an image is stretched by width
         bsize.x = Math.max(bsize.x - 1, bsize.y - 1);
@@ -127,45 +120,56 @@ public abstract class AbstractCheckboxLabelProvider extends StyledCellLabelProvi
         shell.setSize(bsize);
 
         shell.open();
-        GC gc = new GC(shell);
-        Image image = new Image(control.getDisplay(), bsize.x, bsize.y);
+        final GC gc = new GC(shell);
+        final Image image = new Image(control.getDisplay(), bsize.x, bsize.y);
         gc.copyArea(image, 0, 0);
         gc.dispose();
         shell.close();
 
-        ImageData imageData = image.getImageData();
-        imageData.transparentPixel = imageData.palette.getPixel(greenScreen
-                .getRGB());
+        final ImageData imageData = image.getImageData();
+        imageData.transparentPixel = imageData.palette.getPixel(greenScreen.getRGB());
 
         return new Image(control.getDisplay(), imageData);
     }
 
     @Override
-    protected void paint(Event event, Object element) {
-        super.paint(event, element);
-        Image image = getImage(element);
-        if (image == null) {
-            return;
-        }
-        Widget item = event.item;
-        Rectangle bounds = null;
-        if (item instanceof TreeItem) {
-            bounds = ((TreeItem) item).getBounds(event.index);
-        } else if (item instanceof TableItem) {
-            bounds = ((TableItem) item).getBounds(event.index);
-        }
-        Rectangle imgBounds = image.getBounds();
-        bounds.width /= 2;
-        bounds.width -= imgBounds.width / 2;
-        bounds.height /= 2;
-        bounds.height -= imgBounds.height / 2;
+    protected void paint(final Event event, final Object element) {
 
-        int x = bounds.width > 0 ? bounds.x + bounds.width : bounds.x;
-        int y = bounds.height > 0 ? bounds.y + bounds.height : bounds.y;
-        if (!Platform.OS_WIN32.equals(Platform.getOS())) {
-            y = y - 3;
+        final Image img = getImage(element);
+
+        if (img != null) {
+            Rectangle bounds;
+
+            if (event.item instanceof TableItem) {
+                bounds = ((TableItem) event.item).getBounds(event.index);
+            } else {
+                bounds = ((TreeItem) event.item).getBounds(event.index);
+            }
+
+            final Rectangle imgBounds = img.getBounds();
+            bounds.width /= 2;
+            bounds.width -= imgBounds.width / 2;
+            bounds.height /= 2;
+            bounds.height -= imgBounds.height / 2;
+
+            final int x = bounds.width > 0 ? bounds.x + bounds.width : bounds.x;
+            final int y = bounds.height > 0 ? bounds.y + bounds.height : bounds.y;
+
+            if (SWT.getPlatform().equals("carbon")) {
+                event.gc.drawImage(img, x + 2, y - 1);
+            } else {
+                event.gc.drawImage(img, x, y - 1);
+            }
+
         }
-        event.gc.drawImage(image, x, y);
+
+
+    }
+
+
+    @Override
+    protected void measure(final Event event, final Object element) {
+        event.height = getImage(element).getBounds().height;
     }
 
 }

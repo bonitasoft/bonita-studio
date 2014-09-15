@@ -343,6 +343,15 @@
               body="return org.bonitasoft.studio.common.emf.tools.ExpressionHelper.createExpression(&quot;multiInstanceIterator&quot;,&quot;multiInstanceIterator&quot;,org.bonitasoft.studio.common.ExpressionConstants.MULTIINSTANCE_ITERATOR_TYPE,Object.class.getName(),false);"
               language="java"/>
         </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//Task/contract"/>
+          <value
+              body="return org.bonitasoft.studio.model.process.ProcessFactory.eINSTANCE.createContract();"
+              language="java"/>
+        </initializers>
       </domainInitializer>
       <labelMappings
           xsi:type="gmfmap:FeatureLabelMapping">

@@ -1,4 +1,4 @@
-package org.bonitasoft.studio.data;
+package org.bonitasoft.studio.contract;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
@@ -6,18 +6,18 @@ import org.osgi.framework.BundleContext;
 /**
  * The activator class controls the plug-in life cycle
  */
-public class DataPlugin extends AbstractUIPlugin {
+public class ContractPlugin extends AbstractUIPlugin {
 
     // The plug-in ID
-    public static final String PLUGIN_ID = "org.bonitasoft.studio.data"; //$NON-NLS-1$
+    public static final String PLUGIN_ID = "org.bonitasoft.studio.contract"; //$NON-NLS-1$
 
     // The shared instance
-    private static DataPlugin plugin;
+    private static ContractPlugin plugin;
 
     /**
      * The constructor
      */
-    public DataPlugin() {
+    public ContractPlugin() {
     }
 
     /*
@@ -45,7 +45,7 @@ public class DataPlugin extends AbstractUIPlugin {
      *
      * @return the shared instance
      */
-    public static DataPlugin getDefault() {
+    public static ContractPlugin getDefault() {
         return plugin;
     }
 

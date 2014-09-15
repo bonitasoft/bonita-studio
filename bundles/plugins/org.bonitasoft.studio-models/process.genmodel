@@ -422,6 +422,14 @@
       <genEnumLiterals ecoreEnumLiteral="process.ecore#//ConsultationPageFlowType/PAGEFLOW"/>
       <genEnumLiterals ecoreEnumLiteral="process.ecore#//ConsultationPageFlowType/REDIRECTION"/>
     </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="process.ecore#//ContractInputType">
+      <genEnumLiterals ecoreEnumLiteral="process.ecore#//ContractInputType/TEXT"/>
+      <genEnumLiterals ecoreEnumLiteral="process.ecore#//ContractInputType/INTEGER"/>
+      <genEnumLiterals ecoreEnumLiteral="process.ecore#//ContractInputType/DECIMAL"/>
+      <genEnumLiterals ecoreEnumLiteral="process.ecore#//ContractInputType/BOOLEAN"/>
+      <genEnumLiterals ecoreEnumLiteral="process.ecore#//ContractInputType/DATE"/>
+      <genEnumLiterals ecoreEnumLiteral="process.ecore#//ContractInputType/COMPLEX"/>
+    </genEnums>
     <genEnums typeSafeEnumCompatible="false" ecoreEnum="process.ecore#//CorrelationTypeActive">
       <genEnumLiterals ecoreEnumLiteral="process.ecore#//CorrelationTypeActive/INACTIVE"/>
       <genEnumLiterals ecoreEnumLiteral="process.ecore#//CorrelationTypeActive/KEYS"/>
@@ -550,6 +558,25 @@
     </genClasses>
     <genClasses ecoreClass="process.ecore#//Container">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//Container/elements"/>
+    </genClasses>
+    <genClasses ecoreClass="process.ecore#//Contract">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//Contract/inputs"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//Contract/constraints"/>
+    </genClasses>
+    <genClasses ecoreClass="process.ecore#//ContractInput">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//ContractInput/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//ContractInput/type"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//ContractInput/description"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//ContractInput/multiple"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//ContractInput/mandatory"/>
+    </genClasses>
+    <genClasses ecoreClass="process.ecore#//ContractConstraint">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//ContractConstraint/expression"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//ContractConstraint/errorMessage"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//ContractConstraint/inputNames"/>
+    </genClasses>
+    <genClasses ecoreClass="process.ecore#//ContractComplexInput">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//ContractComplexInput/inputs"/>
     </genClasses>
     <genClasses ecoreClass="process.ecore#//Correlation">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//Correlation/correlationType"/>
@@ -767,6 +794,7 @@
     <genClasses ecoreClass="process.ecore#//Task">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//Task/overrideActorsOfTheLane"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//Task/priority"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//Task/contract"/>
     </genClasses>
     <genClasses ecoreClass="process.ecore#//TextAnnotation">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//TextAnnotation/text"/>
