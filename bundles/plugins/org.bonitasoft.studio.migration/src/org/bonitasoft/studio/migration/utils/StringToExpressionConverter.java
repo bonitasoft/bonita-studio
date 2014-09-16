@@ -384,6 +384,7 @@ public class StringToExpressionConverter {
 	 * @return if a referenced elements has been added
 	 */
 	public boolean resolveDataDependencies(final Instance expression) {
+		boolean hasAdded = false;
 		String currentDataName = expression.get("content");
 		if (currentDataName == null) {
 			currentDataName = expression.get("name");
@@ -405,13 +406,13 @@ public class StringToExpressionConverter {
 								dependencyInstance)) {
 							expression.add("referencedElements",
 									dependencyInstance);
-							return true;
+							hasAdded = true;
 						}
 					}
 				}
 			}
 		}
-		return false;
+		return hasAdded;
 	}
 
 	private boolean isValidSuffix(final String currentDataName,
