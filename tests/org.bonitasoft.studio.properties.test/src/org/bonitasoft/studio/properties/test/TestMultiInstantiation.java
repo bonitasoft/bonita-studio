@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2011 BonitaSoft S.A.
- * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2011-2014 BonitaSoft S.A.
+ * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,11 +17,11 @@
  */
 package org.bonitasoft.studio.properties.test;
 
+import static org.bonitasoft.studio.common.Messages.removalConfirmationDialogTitle;
 import static org.bonitasoft.studio.data.i18n.Messages.addData;
 import static org.bonitasoft.studio.data.i18n.Messages.classLabel;
 import static org.bonitasoft.studio.data.i18n.Messages.datatypeLabel;
 import static org.bonitasoft.studio.data.i18n.Messages.defaultValueLabel;
-import static org.bonitasoft.studio.common.Messages.removalConfirmationDialogTitle;
 import static org.bonitasoft.studio.data.i18n.Messages.name;
 import static org.bonitasoft.studio.data.i18n.Messages.newVariable;
 import static org.bonitasoft.studio.form.properties.i18n.Messages.Action_InitialValue;
@@ -79,15 +79,15 @@ public class TestMultiInstantiation extends SWTBotGefTestCase implements SWTBotC
     public static void tearDownAfterClass() {
         FileActionDialog.setDisablePopup(disablePopup);
     }
-    
-   
+
+
 
     @Override
     @Before
     public void setUp() {
     	 BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().setValue(BonitaPreferenceConstants.ASK_RENAME_ON_FIRST_SAVE, false);
     }
-    
+
     @Override
     @After
     public void tearDown() {
@@ -102,17 +102,17 @@ public class TestMultiInstantiation extends SWTBotGefTestCase implements SWTBotC
 
     /** Test the Cardinality case of multiInstance Task
      * @throws ExecutionException
-     * 
+     *
      */
     @Test
     public void testMultiInstanceCardinality() throws ExecutionException  {
 
         // create Diagram
         SWTBotTestUtil.createNewDiagram(bot);
-        SWTBotEditor botEditor = bot.activeEditor();
+        final SWTBotEditor botEditor = bot.activeEditor();
         SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
 
-        AbstractProcess proc = ModelHelper.getParentProcess(((IGraphicalEditPart)gmfEditor.getEditPart("Step1").part()).resolveSemanticElement());
+        final AbstractProcess proc = ModelHelper.getParentProcess(((IGraphicalEditPart)gmfEditor.getEditPart("Step1").part()).resolveSemanticElement());
         gmfEditor.getEditPart(proc.getName()).click();
 
         bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL).show();
@@ -125,7 +125,7 @@ public class TestMultiInstantiation extends SWTBotGefTestCase implements SWTBotC
 
         gmfEditor.getEditPart("Step1").click();
 
-        SWTBotView propertyBot =  bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL);
+        final SWTBotView propertyBot =  bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL);
         propertyBot.show();
         propertyBot.setFocus();
 
@@ -161,8 +161,9 @@ public class TestMultiInstantiation extends SWTBotGefTestCase implements SWTBotC
         // Add a new Form
         bot.button("Add...").click();
         bot.waitUntil(Conditions.shellIsActive(addFormTitle));
+		bot.tabItem("Process data").activate();
         bot.checkBox("Select all").select();
-        SWTBotShell activeShell = bot.activeShell();
+        final SWTBotShell activeShell = bot.activeShell();
         bot.button(IDialogConstants.FINISH_LABEL).click();
         bot.waitUntil(Conditions.shellCloses(activeShell));
 
@@ -175,29 +176,31 @@ public class TestMultiInstantiation extends SWTBotGefTestCase implements SWTBotC
 
 
         // configure the nbTickets widget to a text field
-        setWidgetProperties(gmfEditor,  "Nb Tickets",  "Nbr de Tickets à reserver", "Text field", "0",  1, "nbTickets","java.lang.Integer");
+		setWidgetProperties(gmfEditor, "Nb Tickets",
+				"Nbr de Tickets à reserver", "Text field", "0", 1, "nbTickets",
+				"java.lang.Integer");
         bot.toolbarButtonWithId(ExpressionViewer.SWTBOT_ID_EDITBUTTON, 1).click();
         SWTBotTestUtil.setScriptExpression( bot, "nbTickets",  "Integer.valueOf(field_nbTickets1)",  "java.lang.Integer" );
 
         // Save the form
         bot.saveAllEditors();
-        IStatus status = SWTBotTestUtil.selectAndRunFirstPoolFound(bot);
+        final IStatus status = SWTBotTestUtil.selectAndRunFirstPoolFound(bot);
         assertTrue(status.getMessage(),status.isOK());
     }
 
     /** Test the Collection case of multiInstance Task
-     * 
+     *
      */
     @Test
     public void testMultiInstanceCollection()  {
 
         // create Diagram
         SWTBotTestUtil.createNewDiagram(bot);
-        SWTBotEditor botEditor = bot.activeEditor();
-        SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
+        final SWTBotEditor botEditor = bot.activeEditor();
+        final SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
 
         // get the pool
-        AbstractProcess proc = ModelHelper.getParentProcess(((IGraphicalEditPart)gmfEditor.getEditPart("Step1").part()).resolveSemanticElement());
+        final AbstractProcess proc = ModelHelper.getParentProcess(((IGraphicalEditPart)gmfEditor.getEditPart("Step1").part()).resolveSemanticElement());
         gmfEditor.getEditPart(proc.getName()).click();
 
         // set the actor
@@ -225,7 +228,7 @@ public class TestMultiInstantiation extends SWTBotGefTestCase implements SWTBotC
         // Add MultiInstance on The human Task
         gmfEditor.getEditPart("Step1").click();
 
-        SWTBotView propertyBot =  bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL);
+        final SWTBotView propertyBot =  bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL);
         propertyBot.show();
         propertyBot.setFocus();
 
@@ -273,21 +276,17 @@ public class TestMultiInstantiation extends SWTBotGefTestCase implements SWTBotC
         SWTBotTestUtil.selectTabbedPropertyView(bot, "Operations");
         bot.button("Add").click();
 
-     
+
         SWTBotTestUtil.setOutputStorageExpressionByName(bot,"vip","java.util.List",0);
         bot.toolbarButtonWithId(ExpressionViewer.SWTBOT_ID_EDITBUTTON, 0).click();
-        String expressionScript = "List vipList = new ArrayList(vip)\nvipList.remove(vipName)\nreturn vipList";
+        final String expressionScript = "List vipList = new ArrayList(vip)\nvipList.remove(vipName)\nreturn vipList";
         SWTBotTestUtil.setScriptExpression( bot,"removeUser", expressionScript, "java.util.List");
 
-        bot.menu("Diagram").menu("Save").click();
-        SWTBotTestUtil.waitUntilBonitaBPmShellIsActive(bot);
-        bot.menu("Diagram").menu("Close").click();
-
-
+		bot.activeEditor().saveAndClose();
     }
 
     /** Test the erase possibility in comboBox in Collection case of MultiInstance
-     * 
+     *
      */
     @Test
     public void testMultiInstanceEraseButton()  {
@@ -295,11 +294,11 @@ public class TestMultiInstantiation extends SWTBotGefTestCase implements SWTBotC
 
         // create Diagram
         SWTBotTestUtil.createNewDiagram(bot);
-        SWTBotEditor botEditor = bot.activeEditor();
-        SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
+        final SWTBotEditor botEditor = bot.activeEditor();
+        final SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
 
         // get the pool
-        AbstractProcess proc = ModelHelper.getParentProcess(((IGraphicalEditPart)gmfEditor.getEditPart("Step1").part()).resolveSemanticElement());
+        final AbstractProcess proc = ModelHelper.getParentProcess(((IGraphicalEditPart)gmfEditor.getEditPart("Step1").part()).resolveSemanticElement());
         gmfEditor.getEditPart(proc.getName()).click();
 
         addJavaObjectData("vip", null, "java.util.List");
@@ -314,7 +313,7 @@ public class TestMultiInstantiation extends SWTBotGefTestCase implements SWTBotC
         // Add MultiInstance on The human Task
         gmfEditor.getEditPart("Step1").click();
 
-        SWTBotView propertyBot =  bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL);
+        final SWTBotView propertyBot =  bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL);
         propertyBot.show();
         propertyBot.setFocus();
 
@@ -364,14 +363,11 @@ public class TestMultiInstantiation extends SWTBotGefTestCase implements SWTBotC
         bot.toolbarButtonWithTooltip(Messages.clearSelection, 3).click();
         Assert.assertTrue("Error: Output Collection is not erased !",bot.comboBox(3).getText().isEmpty());
 
-
-        bot.menu("Diagram").menu("Save").click();
-        SWTBotTestUtil.waitUntilBonitaBPmShellIsActive(bot);
-        bot.menu("Diagram").menu("Close").click();
+		bot.activeEditor().saveAndClose();
     }
 
     /** Test the erase possibility in comboBox in Collection case of MultiInstance
-     * 
+     *
      */
     @Test
     public void testMultiInstanceUpdateComboBoxAfterDataRemoved()  {
@@ -379,12 +375,12 @@ public class TestMultiInstantiation extends SWTBotGefTestCase implements SWTBotC
 
         // create Diagram
         SWTBotTestUtil.createNewDiagram(bot);
-        SWTBotEditor botEditor = bot.activeEditor();
-        SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
+        final SWTBotEditor botEditor = bot.activeEditor();
+        final SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
 
         // get the pool
         final SWTBotGefEditPart editPart = gmfEditor.getEditPart("Step1");
-        AbstractProcess proc = ModelHelper.getParentProcess(((IGraphicalEditPart)editPart.part()).resolveSemanticElement());
+        final AbstractProcess proc = ModelHelper.getParentProcess(((IGraphicalEditPart)editPart.part()).resolveSemanticElement());
         gmfEditor.getEditPart(proc.getName()).click();
 
         addJavaObjectData("vip", null, "java.util.List");
@@ -405,10 +401,10 @@ public class TestMultiInstantiation extends SWTBotGefTestCase implements SWTBotC
 
         // Add MultiInstance on The human Task
         editPart.click();
-        IGraphicalEditPart ep = (IGraphicalEditPart) editPart.part();
-        Task task = (Task) ep.resolveSemanticElement();
+        final IGraphicalEditPart ep = (IGraphicalEditPart) editPart.part();
+        final Task task = (Task) ep.resolveSemanticElement();
 
-        SWTBotView propertyBot =  bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL);
+        final SWTBotView propertyBot =  bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL);
         propertyBot.show();
         propertyBot.setFocus();
 
@@ -496,12 +492,10 @@ public class TestMultiInstantiation extends SWTBotGefTestCase implements SWTBotC
         Assert.assertTrue("Error: Output Collection is not empty !",bot.comboBox(3).getText().isEmpty());
 
 
-        bot.menu("Diagram").menu("Save").click();
-        SWTBotTestUtil.waitUntilBonitaBPmShellIsActive(bot);
-        bot.menu("Diagram").menu("Close").click();
+		bot.activeEditor().saveAndClose();
     }
     /**
-     * 
+     *
      * @param gmfEditor
      * @param widgetName
      * @param widgetLabel
@@ -509,8 +503,8 @@ public class TestMultiInstantiation extends SWTBotGefTestCase implements SWTBotC
      * @param initValue
      * @param outputOperation
      */
-    private void setWidgetProperties(SWTBotGefEditor gmfEditor, String widgetName, String widgetLabel, String widgetFieldType,
-            String initValue, int outputViewerIndex,String outputOperation,String outputOperationType) {
+    private void setWidgetProperties(final SWTBotGefEditor gmfEditor, final String widgetName, final String widgetLabel, final String widgetFieldType,
+            final String initValue, final int outputViewerIndex,final String outputOperation,final String outputOperationType) {
 
         gmfEditor.getEditPart(widgetName).click();
         bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_FORM_GENERAL).show();
@@ -534,39 +528,39 @@ public class TestMultiInstantiation extends SWTBotGefTestCase implements SWTBotC
 
 
     /**
-     * 
+     *
      * @param scriptName
      * @param expression
      */
-    public void setScriptBooleanExpression( String scriptName, String expression ){
+    public void setScriptBooleanExpression( final String scriptName, final String expression ){
         SWTBotTestUtil.setScriptExpression( bot, scriptName,  expression, null );
     }
 
     /**
-     * 
+     *
      * @param dataName
      * @param defaultValue
      */
-    public void addIntegerData(String dataName, String defaultValue){
+    public void addIntegerData(final String dataName, final String defaultValue){
         addData( dataName,  defaultValue, "Integer");
     }
 
     /**
-     * 
+     *
      * @param dataName
      * @param defaultValue
      */
-    public void addTextData(String dataName, String defaultValue){
+    public void addTextData(final String dataName, final String defaultValue){
         addData( dataName,  defaultValue, "Text");
     }
 
     /**
-     * 
+     *
      * @param dataName
      * @param defaultValue
      * @param classType
      */
-    public void addJavaObjectData(String dataName, String defaultValue, String classType){
+    public void addJavaObjectData(final String dataName, final String defaultValue, final String classType){
         bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL).show();
 
         // DATA
@@ -584,12 +578,12 @@ public class TestMultiInstantiation extends SWTBotGefTestCase implements SWTBotC
     }
 
     /**
-     * 
+     *
      * @param dataName
      * @param defaultValue
      * @param dataType
      */
-    public void addData(String dataName, String defaultValue, String dataType){
+    public void addData(final String dataName, final String defaultValue, final String dataType){
         bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL).show();
 
         // DATA
