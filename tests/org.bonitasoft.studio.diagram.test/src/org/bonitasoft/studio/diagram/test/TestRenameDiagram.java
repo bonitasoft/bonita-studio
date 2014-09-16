@@ -143,4 +143,20 @@ public class TestRenameDiagram extends SWTBotGefTestCase {
     }
 
 
+    @Test
+    public void testRenameDiagramOnce() throws Exception {
+
+        final boolean tmpDisablePopup = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
+                .getDefaultBoolean(BonitaPreferenceConstants.ASK_RENAME_ON_FIRST_SAVE);
+        BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().setValue(BonitaPreferenceConstants.ASK_RENAME_ON_FIRST_SAVE, true);
+
+        SWTBotTestUtil.createNewDiagram(bot);
+        SWTBotTestUtil.changeDiagramName(bot, "NewDiagramName");
+
+        // TimeOUt if a the pop up has been reopened (see BS-9819)
+        bot.waitWhile(Conditions.shellIsActive(org.bonitasoft.studio.common.Messages.openNameAndVersionDialogTitle));
+
+        BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().setValue(BonitaPreferenceConstants.ASK_RENAME_ON_FIRST_SAVE, tmpDisablePopup);
+    }
+
 }

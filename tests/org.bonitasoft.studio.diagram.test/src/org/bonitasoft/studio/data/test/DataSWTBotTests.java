@@ -285,7 +285,7 @@ public class DataSWTBotTests extends SWTBotGefTestCase {
     @Test
     public void testDatacantBeInitializeByItself(){
         SWTBotTestUtil.createNewDiagram(bot);
-        SWTBotTestUtil.changeDiagramName(bot, "Step1", "DataInit");
+        SWTBotTestUtil.changeDiagramName(bot, "DataInit");
         final SWTBotEditor botEditor = bot.activeEditor();
         final SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
         final AbstractProcess proc = ModelHelper.getParentProcess(((IGraphicalEditPart)gmfEditor.getEditPart("Step1").part()).resolveSemanticElement());

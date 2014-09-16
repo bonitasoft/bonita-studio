@@ -3,9 +3,8 @@ package org.bonitasoft.studio.diagram.test;
 import static org.bonitasoft.studio.diagram.custom.Messages.confirmProcessDeleteTitle;
 import static org.bonitasoft.studio.diagram.custom.Messages.openProcessWizardPage_title;
 import static org.bonitasoft.studio.diagram.custom.Messages.removeProcessLabel;
-
-import static org.bonitasoft.studio.properties.i18n.Messages.activityType_serviceTask;
 import static org.bonitasoft.studio.properties.i18n.Messages.activityType;
+import static org.bonitasoft.studio.properties.i18n.Messages.activityType_serviceTask;
 
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
@@ -56,60 +55,60 @@ public class TestOpenDiagram extends SWTBotGefTestCase {
     @Test
     public void testDeleteDiagramWhenEditorIsDirty(){
 
-    	// editor
-    	SWTBotTestUtil.createNewDiagram(bot);
-    	SWTBotTestUtil.changeDiagramName(bot, "Step1", "OpenDiagramDelete1");
+        // editor
+        SWTBotTestUtil.createNewDiagram(bot);
+        SWTBotTestUtil.changeDiagramName(bot, "OpenDiagramDelete1");
 
-    	// set editor dirty
-    	SWTBotEditor botEditor = bot.activeEditor();
-    	SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
+        // set editor dirty
+        final SWTBotEditor botEditor = bot.activeEditor();
+        final SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
 
-    	gmfEditor.getEditPart("Step1").click();
-    	SWTBotView generalView = bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL);
+        gmfEditor.getEditPart("Step1").click();
+        final SWTBotView generalView = bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL);
 
-    	generalView.show();
-    	generalView.setFocus();
+        generalView.show();
+        generalView.setFocus();
 
-    	SWTBotTestUtil.selectTabbedPropertyView(bot, "General");
-    	bot.comboBoxWithLabel(activityType).setSelection(activityType_serviceTask);
-    	
-    	
-    	bot.toolbarButton(Messages.OpenProcessButtonLabel).click();
-    	bot.waitUntil(Conditions.shellIsActive(openProcessWizardPage_title));
-    	
-    	
-    	SWTBotTree tree = bot.tree();
-    	SWTBotButton cancelButton = bot.button(IDialogConstants.CANCEL_LABEL);
+        SWTBotTestUtil.selectTabbedPropertyView(bot, "General");
+        bot.comboBoxWithLabel(activityType).setSelection(activityType_serviceTask);
 
-    	
-    	Assert.assertTrue("Error: no item in the table of Open Diagram Shell", tree.hasItems());
-    	int nbItems = tree.rowCount();
 
-    	String diagramName = "OpenDiagramDelete1"+" (1.0)";
-    	try{
-    		SWTBotTreeItem item = tree.getTreeItem(diagramName);
-    		item.select();
-    		
-    	}catch(WidgetNotFoundException e){
-        	Assert.assertTrue("Error: diagram OpenDiagramDelete1 not found in the table of Open Diagram Shell", false);
-    	}
-    	
-    	
-    	bot.button(removeProcessLabel).click();
-    	
-    	bot.waitUntil(Conditions.shellIsActive(confirmProcessDeleteTitle));
-    	bot.button(IDialogConstants.YES_LABEL).click();
-    	
-    	bot.waitUntil(Conditions.shellIsActive(openProcessWizardPage_title));
-    	Assert.assertEquals("Error", nbItems-1, tree.rowCount());
-    	
-    	cancelButton.click();
-    	
-    	
-    	for(SWTBotEditor editor : bot.editors()){
-    		Assert.assertFalse("Error: Editor "+diagramName+" should not be in the tree.",editor.getTitle().equals(diagramName));
-    	}
-    	
+        bot.toolbarButton(Messages.OpenProcessButtonLabel).click();
+        bot.waitUntil(Conditions.shellIsActive(openProcessWizardPage_title));
+
+
+        final SWTBotTree tree = bot.tree();
+        final SWTBotButton cancelButton = bot.button(IDialogConstants.CANCEL_LABEL);
+
+
+        Assert.assertTrue("Error: no item in the table of Open Diagram Shell", tree.hasItems());
+        final int nbItems = tree.rowCount();
+
+        final String diagramName = "OpenDiagramDelete1"+" (1.0)";
+        try{
+            final SWTBotTreeItem item = tree.getTreeItem(diagramName);
+            item.select();
+
+        }catch(final WidgetNotFoundException e){
+            Assert.assertTrue("Error: diagram OpenDiagramDelete1 not found in the table of Open Diagram Shell", false);
+        }
+
+
+        bot.button(removeProcessLabel).click();
+
+        bot.waitUntil(Conditions.shellIsActive(confirmProcessDeleteTitle));
+        bot.button(IDialogConstants.YES_LABEL).click();
+
+        bot.waitUntil(Conditions.shellIsActive(openProcessWizardPage_title));
+        Assert.assertEquals("Error", nbItems-1, tree.rowCount());
+
+        cancelButton.click();
+
+
+        for(final SWTBotEditor editor : bot.editors()){
+            Assert.assertFalse("Error: Editor "+diagramName+" should not be in the tree.",editor.getTitle().equals(diagramName));
+        }
+
     }
 
 

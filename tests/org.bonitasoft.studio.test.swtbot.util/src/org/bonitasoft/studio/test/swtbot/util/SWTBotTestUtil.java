@@ -554,9 +554,9 @@ public class SWTBotTestUtil implements SWTBotConstants{
      * 
      * @param bot
      * @param taskName
-     * @param newName
+     * @param newDiagramName
      */
-    public static void changeDiagramName(final SWTGefBot bot, final String taskName, final String newName){
+    public static void changeDiagramName(final SWTGefBot bot, final String newDiagramName) {
 
         final SWTBotEditor botEditor = bot.activeEditor();
         final SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
@@ -571,14 +571,14 @@ public class SWTBotTestUtil implements SWTBotConstants{
         bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL).setFocus();
 
         selectTabbedPropertyView(bot, "Diagram");
-        bot.waitUntil(Conditions.widgetIsEnabled(bot.button("Edit...")));
-        bot.button("Edit...").click();
+        bot.waitUntil(Conditions.widgetIsEnabled(bot.button(org.bonitasoft.studio.common.Messages.edit)));
+        bot.button(org.bonitasoft.studio.common.Messages.edit).click();
 
 
         // Open new Shell
         bot.waitUntil(Conditions.shellIsActive(org.bonitasoft.studio.common.Messages.openNameAndVersionDialogTitle));
 
-        bot.textWithLabel(org.bonitasoft.studio.common.Messages.name,0).setText(newName);
+        bot.textWithLabel(org.bonitasoft.studio.common.Messages.name,0).setText(newDiagramName);
         bot.button(IDialogConstants.OK_LABEL).click();
 
     }
