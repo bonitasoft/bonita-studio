@@ -161,7 +161,6 @@ public class TestMultiInstantiation extends SWTBotGefTestCase implements SWTBotC
         // Add a new Form
         bot.button("Add...").click();
         bot.waitUntil(Conditions.shellIsActive(addFormTitle));
-		bot.tabItem("Process data").activate();
         bot.checkBox("Select all").select();
         final SWTBotShell activeShell = bot.activeShell();
         bot.button(IDialogConstants.FINISH_LABEL).click();
