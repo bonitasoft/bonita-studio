@@ -79,6 +79,7 @@ import org.eclipse.wst.server.core.ServerPort;
  * Provides all methods to manage Tomcat server in BonitaStudio.
  *
  * @author Romain Bioteau
+ * @author Celine Souchet
  */
 public class BOSWebServerManager {
 
@@ -88,9 +89,9 @@ public class BOSWebServerManager {
 
     protected static final String WEBSERVERMANAGER_EXTENSION_D = "org.bonitasoft.studio.engine.bonitaWebServerManager";
 
-    protected static final String TOMCAT_SERVER_TYPE = "org.eclipse.jst.server.tomcat.60";
+    protected static final String TOMCAT_SERVER_TYPE = "org.eclipse.jst.server.tomcat.70";
 
-    protected static final String TOMCAT_RUNTIME_TYPE = "org.eclipse.jst.server.tomcat.runtime.60";
+    protected static final String TOMCAT_RUNTIME_TYPE = "org.eclipse.jst.server.tomcat.runtime.70";
 
     protected static int WATCHDOG_PORT = 6969;
 
