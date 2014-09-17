@@ -36,5 +36,10 @@ public class Messages extends NLS {
     public static String multiple;
     public static String add;
     public static String remove;
+    public static String savedInto;
+    public static String description;
+    public static String automaticMappingTooltip;
+    public static String constraints;
+    public static String none;
 
 }

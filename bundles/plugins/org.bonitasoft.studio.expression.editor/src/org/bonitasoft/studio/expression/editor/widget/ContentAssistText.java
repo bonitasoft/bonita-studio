@@ -53,14 +53,14 @@ import org.eclipse.swt.widgets.ToolItem;
 public class ContentAssistText extends Composite implements SWTBotConstants {
 
 
-	private Text textControl;
-	private AutoCompletionField autoCompletion;
+	private final Text textControl;
+	private final AutoCompletionField autoCompletion;
 	private boolean drawBorder = true;
-	private ToolBar tb;
+	private final ToolBar tb;
 	private boolean isReadOnly = false;
-	private List<IBonitaContentProposalListener2> contentAssistListerners = new ArrayList<IBonitaContentProposalListener2>();
+	private final List<IBonitaContentProposalListener2> contentAssistListerners = new ArrayList<IBonitaContentProposalListener2>();
 	
-	public ContentAssistText(Composite parent, IExpressionProposalLabelProvider contentProposalLabelProvider, int style) {
+	public ContentAssistText(final Composite parent, final IExpressionProposalLabelProvider contentProposalLabelProvider, int style) {
 		super(parent, SWT.NONE);
 		Point margins = new Point(3, 3);
 		if ((style & SWT.BORDER) == 0){
@@ -86,7 +86,7 @@ public class ContentAssistText extends Composite implements SWTBotConstants {
 		textControl.addFocusListener(new FocusListener() {
 
 			@Override
-			public void focusLost(FocusEvent e) {
+			public void focusLost(final FocusEvent e) {
 				if(textControl.equals(e.widget)){
 					Display.getDefault().asyncExec(new Runnable() {
 
@@ -94,12 +94,6 @@ public class ContentAssistText extends Composite implements SWTBotConstants {
 						public void run() {
 							if(!ContentAssistText.this.isDisposed()){
 								ContentAssistText.this.redraw();
-								//Useless after e4 migration ? Has an invalid behavior during swtbot tests
-//								if(!autoCompletion.getContentProposalAdapter().hasProposalPopupFocus()){
-//									if(autoCompletion.getContentProposalAdapter().isProposalPopupOpen()){
-//										autoCompletion.getContentProposalAdapter().closeProposalPopup();
-//									}
-//								}
 							}
 						}
 					});
@@ -108,7 +102,7 @@ public class ContentAssistText extends Composite implements SWTBotConstants {
 			}
 
 			@Override
-			public void focusGained(FocusEvent e) {
+			public void focusGained(final FocusEvent e) {
 				if(textControl.equals(e.widget)){
 					Display.getDefault().asyncExec(new Runnable() {
 
@@ -135,10 +129,11 @@ public class ContentAssistText extends Composite implements SWTBotConstants {
 		ti.addSelectionListener(new SelectionAdapter() {
 
 			@Override
-			public void widgetSelected(SelectionEvent e) {
+			public void widgetSelected(final SelectionEvent e) {
 				setFocus();
 				BusyIndicator.showWhile(getShell().getDisplay(), new Runnable() {
-					public void run() {
+					@Override
+                    public void run() {
 						fireOpenProposalEvent();
 						if(autoCompletion.getContentProposalAdapter().isProposalPopupOpen()){
 							autoCompletion.getContentProposalAdapter().closeProposalPopup();
@@ -152,7 +147,7 @@ public class ContentAssistText extends Composite implements SWTBotConstants {
 		addPaintListener(new PaintListener() {
 
 			@Override
-			public void paintControl(PaintEvent e) {
+			public void paintControl(final PaintEvent e) {
 				if(drawBorder){
 					paintControlBorder(e);
 				}
@@ -161,7 +156,7 @@ public class ContentAssistText extends Composite implements SWTBotConstants {
 		autoCompletion = new AutoCompletionField(textControl, new TextContentAdapter(), contentProposalLabelProvider) ;
 	}
 	
-	public void setProposalEnabled(Boolean proposalEnabled){
+	public void setProposalEnabled(final Boolean proposalEnabled){
 		if(!proposalEnabled){
 			tb.setEnabled(false);
 		} else {
@@ -170,20 +165,20 @@ public class ContentAssistText extends Composite implements SWTBotConstants {
 	}
 	
 	protected void fireOpenProposalEvent() {
-		for(IBonitaContentProposalListener2 listener : contentAssistListerners){
+		for(final IBonitaContentProposalListener2 listener : contentAssistListerners){
 			listener.proposalPopupOpened(autoCompletion.getContentProposalAdapter());
 		}
 	}
 
-	protected void paintControlBorder(PaintEvent e) {
-		GC gc = e.gc;
-		Display display = e.display ;
+	protected void paintControlBorder(final PaintEvent e) {
+		final GC gc = e.gc;
+		final Display display = e.display ;
 		if(display!= null && gc != null && !gc.isDisposed()){
-			Control focused = display.getFocusControl() ;
-			GC parentGC  = gc;
+			final Control focused = display.getFocusControl() ;
+			final GC parentGC  = gc;
 			parentGC.setAdvanced(true);
-			Rectangle r = ContentAssistText.this.getBounds();
-			if(focused == null || (focused.getParent() != null && !focused.getParent().equals(ContentAssistText.this))){
+			final Rectangle r = ContentAssistText.this.getBounds();
+			if(focused == null || focused.getParent() != null && !focused.getParent().equals(ContentAssistText.this)){
 				parentGC.setForeground(display.getSystemColor(SWT.COLOR_GRAY));
 			}else{
 				parentGC.setForeground(display.getSystemColor(SWT.COLOR_WIDGET_BORDER));
@@ -205,7 +200,7 @@ public class ContentAssistText extends Composite implements SWTBotConstants {
 		return tb;
 	}
 
-	public void addContentAssistListener(IBonitaContentProposalListener2 listener) {
+	public void addContentAssistListener(final IBonitaContentProposalListener2 listener) {
 		contentAssistListerners.add(listener);
 	}
 

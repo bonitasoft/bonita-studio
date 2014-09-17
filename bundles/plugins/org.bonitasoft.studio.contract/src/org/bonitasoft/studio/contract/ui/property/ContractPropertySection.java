@@ -16,16 +16,19 @@
  */
 package org.bonitasoft.studio.contract.ui.property;
 
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
-
-import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.databinding.CustomEMFEditObservables;
 import org.bonitasoft.studio.common.properties.EObjectSelectionProviderSection;
 import org.bonitasoft.studio.contract.i18n.Messages;
+import org.bonitasoft.studio.contract.ui.property.edit.CheckboxPropertyEditingSupport;
+import org.bonitasoft.studio.contract.ui.property.edit.ConstraintColumnLabelProvider;
+import org.bonitasoft.studio.contract.ui.property.edit.ConstraintPropertyEditingSupport;
+import org.bonitasoft.studio.contract.ui.property.edit.InputMappingPropertyEditingSupport;
+import org.bonitasoft.studio.contract.ui.property.edit.InputMappingProposal;
+import org.bonitasoft.studio.contract.ui.property.edit.InputNamePropertyEditingSupport;
 import org.bonitasoft.studio.model.process.ContractInput;
+import org.bonitasoft.studio.model.process.ContractInputMapping;
 import org.bonitasoft.studio.model.process.ContractInputType;
+import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.eclipse.core.databinding.observable.Realm;
@@ -34,12 +37,12 @@ import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
-import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
+import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
-import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -49,6 +52,7 @@ import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.TableColumn;
@@ -66,6 +70,7 @@ public class ContractPropertySection extends EObjectSelectionProviderSection {
     private EMFDataBindingContext context;
     private ComposedAdapterFactory composedAdapterFactory;
     private AdapterFactoryContentProvider propertySourceProvider;
+    private AdapterFactoryLabelProvider adapterFactoryLabelProvider;
 
     @Override
     public String getSectionDescription() {
@@ -79,7 +84,7 @@ public class ContractPropertySection extends EObjectSelectionProviderSection {
         composedAdapterFactory =
                 new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
         propertySourceProvider = new AdapterFactoryContentProvider(composedAdapterFactory);
-
+        adapterFactoryLabelProvider = new AdapterFactoryLabelProvider(composedAdapterFactory);
         final Composite mainComposite = getWidgetFactory().createComposite(parent);
         mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).extendedMargins(15, 15, 10, 5).create());
@@ -89,25 +94,28 @@ public class ContractPropertySection extends EObjectSelectionProviderSection {
 
     protected void addInput(final TableViewer inputsTableViewer) {
         final IObservableList input = (IObservableList) inputsTableViewer.getInput();
-        input.add(createDefaultInput(input));
+        final ContractInput defaultInput = createDefaultInput(input);
+        input.add(defaultInput);
+        inputsTableViewer.editElement(defaultInput, 0);
     }
 
     private ContractInput createDefaultInput(final IObservableList input) {
         final ContractInput contractInput = ProcessFactory.eINSTANCE.createContractInput();
-        contractInput.setName(NamingUtils.generateNewName(getInputNames(input), "input"));
+        //  contractInput.setName(NamingUtils.generateNewName(getInputNames(input), "input"));
         contractInput.setType(ContractInputType.TEXT);
+        contractInput.setMapping(ProcessFactory.eINSTANCE.createContractInputMapping());
         return contractInput;
     }
 
-    private Set<String> getInputNames(final IObservableList input) {
-        final Set<String> inputNames = new HashSet<String>();
-        final Iterator<?> iterator = input.iterator();
-        while (iterator.hasNext()) {
-            final ContractInput contractInput = (ContractInput) iterator.next();
-            inputNames.add(contractInput.getName());
-        }
-        return inputNames;
-    }
+    //    private Set<String> getInputNames(final IObservableList input) {
+    //        final Set<String> inputNames = new HashSet<String>();
+    //        final Iterator<?> iterator = input.iterator();
+    //        while (iterator.hasNext()) {
+    //            final ContractInput contractInput = (ContractInput) iterator.next();
+    //            inputNames.add(contractInput.getName());
+    //        }
+    //        return inputNames;
+    //    }
 
     private void createContractInputTable(final Composite parent) {
         final Composite buttonsComposite = getWidgetFactory().createComposite(parent);
@@ -130,19 +138,23 @@ public class ContractPropertySection extends EObjectSelectionProviderSection {
 
         ColumnViewerToolTipSupport.enableFor(inputsTableViewer);
 
-        final IViewerObservableValue observeInputSelection = ViewersObservables.observeSingleSelection(inputsTableViewer);
-
         final TableLayout tableLayout = new TableLayout();
-        tableLayout.addColumnData(new ColumnWeightData(4));
-        tableLayout.addColumnData(new ColumnWeightData(4));
+        tableLayout.addColumnData(new ColumnWeightData(3));
         tableLayout.addColumnData(new ColumnWeightData(1));
         tableLayout.addColumnData(new ColumnWeightData(1));
+        tableLayout.addColumnData(new ColumnWeightData(1));
+        tableLayout.addColumnData(new ColumnWeightData(3));
+        tableLayout.addColumnData(new ColumnWeightData(1));
+        tableLayout.addColumnData(new ColumnWeightData(5));
         inputsTableViewer.getTable().setLayout(tableLayout);
 
         createInputNameColumn(inputsTableViewer);
-        createInputTypeColumn(inputsTableViewer, observeInputSelection);
+        createInputTypeColumn(inputsTableViewer);
         createMultipleColumn(inputsTableViewer);
         createMandatoryColumn(inputsTableViewer);
+        createMappingColumn(inputsTableViewer);
+        createConstraintColumn(inputsTableViewer);
+        createInputDescriptionColumn(inputsTableViewer);
 
         final IObservableValue observeContractValue = CustomEMFEditObservables.observeDetailValue(Realm.getDefault(), getEObjectObservable(),
                 ProcessPackage.Literals.TASK__CONTRACT);
@@ -177,24 +189,88 @@ public class ContractPropertySection extends EObjectSelectionProviderSection {
     protected void createInputNameColumn(final TableViewer viewer) {
         final TableViewerColumn nameColumnViewer = new TableViewerColumn(viewer, SWT.FILL);
         final TableColumn column = nameColumnViewer.getColumn();
-        column.setText(Messages.name);
-        nameColumnViewer.setLabelProvider(new PropertyColumnLabelProvider(propertySourceProvider, "name"));
-        nameColumnViewer.setEditingSupport(new PropertyEditingSupport(viewer, propertySourceProvider, "name") {
+        column.setText(Messages.name + " *");
+        nameColumnViewer.setLabelProvider(new PropertyColumnLabelProvider(propertySourceProvider, "name") {
 
             @Override
-            protected void setValue(final Object object, final Object value) {
-                super.setValue(object, value);
-                viewer.update(object, null);
+            public Image getImage(final Object object) {
+                return null;
+            }
+        });
+        nameColumnViewer.setEditingSupport(new InputNamePropertyEditingSupport(propertySourceProvider, viewer));
+    }
+
+    protected void createInputDescriptionColumn(final TableViewer viewer) {
+        final TableViewerColumn descriptionColumnViewer = new TableViewerColumn(viewer, SWT.FILL);
+        final TableColumn column = descriptionColumnViewer.getColumn();
+        column.setText(Messages.description);
+        descriptionColumnViewer.setLabelProvider(new PropertyColumnLabelProvider(propertySourceProvider, "description") {
+
+            @Override
+            public Image getImage(final Object object) {
+                return null;
+            }
+        });
+        descriptionColumnViewer.setEditingSupport(new PropertyEditingSupport(viewer, propertySourceProvider, "description") {
+
+            @Override
+            protected void setValue(final Object element, final Object value) {
+                super.setValue(element, value);
+                getViewer().update(element, null);
             }
         });
     }
 
-    protected void createInputTypeColumn(final TableViewer viewer,
-            final IViewerObservableValue fieldSingSelectionObervableValue) {
+    protected void createMappingColumn(final TableViewer viewer) {
+        final TableViewerColumn mappingColumnViewer = new TableViewerColumn(viewer, SWT.FILL);
+        final TableColumn column = mappingColumnViewer.getColumn();
+        column.setText(Messages.savedInto);
+        mappingColumnViewer.setLabelProvider(new ColumnLabelProvider(){
+
+            @Override
+            public String getText(final Object element) {
+                if (element instanceof ContractInput) {
+                    final ContractInputMapping mapping = ((ContractInput) element).getMapping();
+                    return new InputMappingProposal(mapping).getContent();
+                }
+                return null;
+            }
+
+            @Override
+            public Image getImage(final Object element) {
+                if (element instanceof ContractInput) {
+                    final ContractInputMapping mapping = ((ContractInput) element).getMapping();
+                    final Data data = mapping.getData();
+                    if (data == null) {
+                        return null;
+                    }
+                    return adapterFactoryLabelProvider.getImage(data);
+                }
+                return null;
+            }
+        });
+        mappingColumnViewer.setEditingSupport(new InputMappingPropertyEditingSupport(propertySourceProvider, viewer));
+    }
+
+    protected void createConstraintColumn(final TableViewer viewer) {
+        final TableViewerColumn constraintColumnViewer = new TableViewerColumn(viewer, SWT.FILL);
+        final TableColumn column = constraintColumnViewer.getColumn();
+        column.setText(Messages.constraints);
+        constraintColumnViewer.setLabelProvider(new ConstraintColumnLabelProvider());
+        constraintColumnViewer.setEditingSupport(new ConstraintPropertyEditingSupport(viewer));
+    }
+
+    protected void createInputTypeColumn(final TableViewer viewer) {
         final TableViewerColumn typeColumnViewer = new TableViewerColumn(viewer, SWT.FILL);
         final TableColumn column = typeColumnViewer.getColumn();
         column.setText(Messages.type);
-        typeColumnViewer.setLabelProvider(new PropertyColumnLabelProvider(propertySourceProvider, "type"));
+        typeColumnViewer.setLabelProvider(new PropertyColumnLabelProvider(propertySourceProvider, "type") {
+
+            @Override
+            public Image getImage(final Object object) {
+                return null;
+            }
+        });
         typeColumnViewer.setEditingSupport(new PropertyEditingSupport(viewer, propertySourceProvider, "type") {
 
             @Override
@@ -225,6 +301,9 @@ public class ContractPropertySection extends EObjectSelectionProviderSection {
     @Override
     public void dispose() {
         super.dispose();
+        if (adapterFactoryLabelProvider != null) {
+            adapterFactoryLabelProvider.dispose();
+        }
         if (propertySourceProvider != null) {
             propertySourceProvider.dispose();
         }
