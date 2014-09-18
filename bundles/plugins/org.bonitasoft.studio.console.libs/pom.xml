@@ -17,7 +17,7 @@
 		<bonita.home.dir>${basedir}/bonita</bonita.home.dir>
 		<javadoc.dir>${basedir}/javadoc</javadoc.dir>
 		<lib.dir>lib</lib.dir>
-		<tomcat.version>6.0.37</tomcat.version>
+		<tomcat.version>7.0.55</tomcat.version>
 	</properties>
 
 	<dependencies>
