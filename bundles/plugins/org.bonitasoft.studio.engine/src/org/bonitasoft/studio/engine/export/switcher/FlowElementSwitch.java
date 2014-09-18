@@ -68,6 +68,7 @@ import org.bonitasoft.studio.model.process.BoundaryTimerEvent;
 import org.bonitasoft.studio.model.process.BusinessObjectData;
 import org.bonitasoft.studio.model.process.CallActivity;
 import org.bonitasoft.studio.model.process.Connection;
+import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.Correlation;
 import org.bonitasoft.studio.model.process.CorrelationTypeActive;
 import org.bonitasoft.studio.model.process.Data;
@@ -479,16 +480,20 @@ public class FlowElementSwitch extends AbstractSwitch {
             }
         }
 
-        addUserFilterToTask(task, actor, filter);
-        return task;
-    }
-
-    void addUserFilterToTask(final Task task, final String actor, final ActorFilter filter) {
-
         final UserTaskDefinitionBuilder taskBuilder = builder.addUserTask(task.getName(), actor);
         handleCommonActivity(task, taskBuilder);
         taskBuilder.addPriority(TaskPriority.values()[task.getPriority()].name());
         addExpectedDuration(taskBuilder, task);
+        addUserFilterToTask(taskBuilder, actor, filter);
+        addContract(taskBuilder, task.getContract());
+        return task;
+    }
+
+    protected void addContract(final UserTaskDefinitionBuilder taskBuilder, final Contract contract) {
+
+    }
+
+    protected void addUserFilterToTask(final UserTaskDefinitionBuilder taskBuilder, final String actor, final ActorFilter filter) {
         if (filter != null) {
             final UserFilterDefinitionBuilder filterBuilder = taskBuilder.addUserFilter(filter.getName(), filter.getDefinitionId(),
                     filter.getDefinitionVersion());
