@@ -172,7 +172,7 @@ public class SWTBotTestUtil implements SWTBotConstants{
         UIThreadRunnable.syncExec(new VoidResult() {
             /*
              * (non-Javadoc)
-             * 
+             *
              * @see org.eclipse.swtbot.swt.finder.results.VoidResult#run()
              */
             @Override
@@ -315,7 +315,11 @@ public class SWTBotTestUtil implements SWTBotConstants{
         if (laneName==null){
             tree.expandNode(poolName).select(eventName);
         } else {
-            tree.expandNode(laneName).click();
+            tree.expandNode(poolName).expandNode(laneName);
+            //tree.expandNode(laneName);
+            if (eventName != null) {
+                tree.getTreeItem(eventName);
+            }
         }
     }
 
@@ -400,7 +404,7 @@ public class SWTBotTestUtil implements SWTBotConstants{
     }
 
     /**
-     * 
+     *
      * @param gmfEditor
      * @param selectedElementName
      * @param dropLocation
@@ -410,7 +414,7 @@ public class SWTBotTestUtil implements SWTBotConstants{
     }
 
     /**
-     * 
+     *
      * @param gmfEditor
      * @param selectedElementName
      * @param dropLocation
@@ -551,7 +555,7 @@ public class SWTBotTestUtil implements SWTBotConstants{
 
 
     /**
-     * 
+     *
      * @param bot
      * @param taskName
      * @param newDiagramName
@@ -742,7 +746,7 @@ public class SWTBotTestUtil implements SWTBotConstants{
     }
 
     /**
-     * 
+     *
      * @param scriptName
      * @param expression
      * @param returnTypeOfScript
@@ -762,7 +766,7 @@ public class SWTBotTestUtil implements SWTBotConstants{
     }
 
     /**
-     * 
+     *
      * @param bot
      * @param variableName
      */
@@ -784,7 +788,7 @@ public class SWTBotTestUtil implements SWTBotConstants{
     }
 
     /** Select an actor in a Human task in the list of Process Actor
-     * 
+     *
      * @param bot
      * @param actor
      */
@@ -798,7 +802,7 @@ public class SWTBotTestUtil implements SWTBotConstants{
     }
 
     /** Select an actor and define it as an initiator
-     * 
+     *
      * @param bot
      * @param actor
      */
@@ -814,7 +818,7 @@ public class SWTBotTestUtil implements SWTBotConstants{
     }
 
     /** Wait for the shell with its title name with the default timeout
-     * 
+     *
      * @param bot
      * @param shellTitle
      */
@@ -849,7 +853,7 @@ public class SWTBotTestUtil implements SWTBotConstants{
     }
 
     /**
-     * 
+     *
      * @param bot
      */
     public static void editScriptConnector(final SWTGefBot bot, final String scriptName, final String scriptText){
@@ -857,7 +861,7 @@ public class SWTBotTestUtil implements SWTBotConstants{
     }
 
     /**
-     * 
+     *
      * @param bot
      */
     public static void editScriptConnector(final SWTGefBot bot, final String scriptName, final String scriptText, final String scriptDescription ){
@@ -887,7 +891,7 @@ public class SWTBotTestUtil implements SWTBotConstants{
     }
 
     /** Set the connector type and the select the connector specified in the parameters
-     * 
+     *
      * @param bot
      * @param connectorType
      * @param connectorTool
