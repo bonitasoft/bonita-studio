@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.contract.ui.property.edit;
+package org.bonitasoft.studio.contract.ui.property.edit.proposal;
 
 import org.bonitasoft.studio.data.ui.property.section.DataLabelProvider;
 import org.bonitasoft.studio.model.process.BusinessObjectData;
@@ -61,9 +61,9 @@ public class InputMappingProposal implements IContentProposal {
                 paramName = Character.toLowerCase(paramName.charAt(0)) + paramName.substring(1);
                 return data.getName() + "." + paramName + " -- " + setterParamType;
             }
-            return data.getName() + "--" + DataLabelProvider.getTypeLabel(data);
+            return data.getName() + " -- " + DataLabelProvider.getTypeLabel(data);
         } else if (data != null) {
-            return data.getName() + "--" + DataLabelProvider.getTypeLabel(data);
+            return data.getName() + " -- " + DataLabelProvider.getTypeLabel(data);
         } else {
             return null;
         }

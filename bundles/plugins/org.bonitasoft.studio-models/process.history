@@ -8682,15 +8682,6 @@
         <changes xsi:type="history:Set" element="process.ecore#//ContractInputType/DATE"
             featureName="value" dataValue="4" oldDataValue="0"/>
       </changes>
-      <changes xsi:type="history:Create" target="process.ecore#//ContractInputType"
-          referenceName="eLiterals" element="process.ecore#//ContractInputType/COMPLEX">
-        <changes xsi:type="history:Set" element="process.ecore#//ContractInputType/COMPLEX"
-            featureName="name" dataValue="COMPLEX"/>
-        <changes xsi:type="history:Set" element="process.ecore#//ContractInputType/COMPLEX"
-            featureName="literal" dataValue="COMPLEX"/>
-        <changes xsi:type="history:Set" element="process.ecore#//ContractInputType/COMPLEX"
-            featureName="value" dataValue="5" oldDataValue="0"/>
-      </changes>
       <operation name="createEnumeration">
         <parameters name="ePackage">
           <referenceValue element="process.ecore#/"/>
@@ -9043,8 +9034,6 @@
         <parameters name="opposite"/>
       </operation>
     </changes>
-  </releases>
-  <releases>
     <changes xsi:type="history:OperationChange">
       <changes xsi:type="history:Create" target="process.ecore#//ContractInput" referenceName="eStructuralFeatures"
           element="process.ecore#//ContractInput/multiple">
@@ -9249,4 +9238,5 @@
       </operation>
     </changes>
   </releases>
+  <releases/>
 </history:History>

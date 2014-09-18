@@ -16,6 +16,7 @@
  */
 package org.bonitasoft.studio.contract.ui.property.edit;
 
+import org.bonitasoft.studio.contract.ui.property.edit.proposal.InputMappingProposal;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ContractInputMapping;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;

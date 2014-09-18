@@ -428,7 +428,6 @@
       <genEnumLiterals ecoreEnumLiteral="process.ecore#//ContractInputType/DECIMAL"/>
       <genEnumLiterals ecoreEnumLiteral="process.ecore#//ContractInputType/BOOLEAN"/>
       <genEnumLiterals ecoreEnumLiteral="process.ecore#//ContractInputType/DATE"/>
-      <genEnumLiterals ecoreEnumLiteral="process.ecore#//ContractInputType/COMPLEX"/>
     </genEnums>
     <genEnums typeSafeEnumCompatible="false" ecoreEnum="process.ecore#//CorrelationTypeActive">
       <genEnumLiterals ecoreEnumLiteral="process.ecore#//CorrelationTypeActive/INACTIVE"/>

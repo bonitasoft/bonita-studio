@@ -14,14 +14,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.contract.ui.property.edit;
+package org.bonitasoft.studio.contract.ui.property.edit.proposal;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
+import org.bonitasoft.studio.common.DataUtil;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
@@ -43,39 +47,82 @@ import org.eclipse.jface.fieldassist.IContentProposalProvider;
  * @author Romain Bioteau
  *
  */
+@SuppressWarnings("restriction")
 public class InputMappingProposalProvider implements IContentProposalProvider {
 
     private final ContractInput contractInput;
     private final Map<String, IContentProposal> proposals = new HashMap<String, IContentProposal>();
+    private List<Data> accessibleData;
+    private static Set<String> compatibleTypes;
+    static{
+        compatibleTypes = new HashSet<String>();
+        compatibleTypes.add(String.class.getName());
+        compatibleTypes.add(Integer.class.getName());
+        compatibleTypes.add(Double.class.getName());
+        compatibleTypes.add(Long.class.getName());
+        compatibleTypes.add(Float.class.getName());
+        compatibleTypes.add(Boolean.class.getName());
+        compatibleTypes.add(Date.class.getName());
+    }
+    private static Map<String, String> primitiveToObjectTypes;
+    static {
+        primitiveToObjectTypes = new HashMap<String, String>();
+        primitiveToObjectTypes.put("int", Integer.class.getName());
+        primitiveToObjectTypes.put("boolean", Boolean.class.getName());
+        primitiveToObjectTypes.put("long", Long.class.getName());
+        primitiveToObjectTypes.put("double", Double.class.getName());
+        primitiveToObjectTypes.put("float", Float.class.getName());
+        primitiveToObjectTypes.put("short", Short.class.getName());
+        primitiveToObjectTypes.put("byte", Byte.class.getName());
+        primitiveToObjectTypes.put("E", Object.class.getName());
+        primitiveToObjectTypes.put("V", Object.class.getName());
+    }
 
     public InputMappingProposalProvider(final ContractInput contractInput) {
         this.contractInput = contractInput;
-        initializeVariableScope();
     }
 
     private void initializeVariableScope() {
-        final List<Data> accessibleData = ModelHelper.getAccessibleData(contractInput);
-        for(final Data d : accessibleData){
-            proposals.put(d.getName(), new InputMappingProposal(d));
-            if (d instanceof JavaObjectData) {
-                final String className = ((JavaObjectData) d).getClassName();
-                final IType javaType = getType(className);
-                final Object[] setters = new JavaSetterContentProvider().getElements(javaType);
-                if (setters != null) {
-                    for (final Object m : setters) {
-                        if (m instanceof IMethod && ((IMethod) m).getElementName().startsWith("set")) {
-                            final InputMappingProposal inputMappingProposal = new InputMappingProposal(d, ((IMethod) m).getElementName(), toJavaType((IMethod) m));
-                            proposals.put(inputMappingProposal.getContent(), inputMappingProposal);
+        if (accessibleData == null) {
+            accessibleData = getDataInScope();
+            for(final Data d : accessibleData){
+                if (isCompatibleType(DataUtil.getTechnicalTypeFor(d))) {
+                    proposals.put(d.getName(), new InputMappingProposal(d));
+                }
+                if (d instanceof JavaObjectData) {
+                    final String className = ((JavaObjectData) d).getClassName();
+                    final IType javaType = getType(className);
+                    final Object[] setters = getSetters(javaType);
+                    if (setters != null) {
+                        for (final Object m : setters) {
+                            if (m instanceof IMethod && ((IMethod) m).getElementName().startsWith("set")) {
+                                final String inputType = toJavaType((IMethod) m);
+                                if (isCompatibleType(inputType)) {
+                                    final InputMappingProposal inputMappingProposal = new InputMappingProposal(d, ((IMethod) m).getElementName(), inputType);
+                                    proposals.put(inputMappingProposal.getContent(), inputMappingProposal);
+                                }
+                            }
                         }
                     }
                 }
             }
-
         }
     }
 
+    protected Object[] getSetters(final IType javaType) {
+        return new JavaSetterContentProvider().getElements(javaType);
+    }
+
+    protected List<Data> getDataInScope() {
+        return ModelHelper.getAccessibleData(contractInput);
+    }
+
+    private boolean isCompatibleType(final String inputType) {
+        return compatibleTypes.contains(inputType);
+    }
+
     @SuppressWarnings("restriction")
-    private String toJavaType(final IMethod method) {
+    protected String toJavaType(final IMethod method) {
         String qualifiedType = Object.class.getName();
         try {
             qualifiedType = JavaModelUtil.getResolvedTypeName(Signature.getTypeErasure(method.getParameterTypes()[0]), method.getDeclaringType());
@@ -84,24 +131,8 @@ public class InputMappingProposalProvider implements IContentProposalProvider {
         } catch (final IllegalArgumentException e) {
             BonitaStudioLog.error(e);
         }
-        if("int".equals(qualifiedType)){
-            qualifiedType = Integer.class.getName();
-        }else if("boolean".equals(qualifiedType)){
-            qualifiedType = Boolean.class.getName();
-        }else if("long".equals(qualifiedType)){
-            qualifiedType = Long.class.getName();
-        }else if("float".equals(qualifiedType)){
-            qualifiedType = Float.class.getName();
-        }else if("double".equals(qualifiedType)){
-            qualifiedType = Double.class.getName();
-        }else if("short".equals(qualifiedType)){
-            qualifiedType = Short.class.getName();
-        }else if("byte".equals(qualifiedType)){
-            qualifiedType = Byte.class.getName();
-        }else if("E".equals(qualifiedType)){
-            qualifiedType = Object.class.getName();
-        }else if("V".equals(qualifiedType)){
-            qualifiedType = Object.class.getName();
+        if (primitiveToObjectTypes.containsKey(qualifiedType)) {
+            qualifiedType = primitiveToObjectTypes.get(qualifiedType);
         }
         return qualifiedType;
     }
@@ -125,10 +156,11 @@ public class InputMappingProposalProvider implements IContentProposalProvider {
      */
     @Override
     public IContentProposal[] getProposals(final String contents, final int position) {
+        initializeVariableScope();
         final List<IContentProposal> result = new ArrayList<IContentProposal>();
         for (final Entry<String, IContentProposal> entry : proposals.entrySet()) {
             final String text = entry.getKey();
-            if (text != null && text.length() >= contents.length() && text.substring(0, contents.length()).equalsIgnoreCase(contents)) {
+            if (text.length() >= contents.length() && text.substring(0, contents.length()).equalsIgnoreCase(contents)) {
                 result.add(entry.getValue());
             }
         }

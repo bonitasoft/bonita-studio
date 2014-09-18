@@ -23,8 +23,8 @@ import org.bonitasoft.studio.contract.ui.property.edit.CheckboxPropertyEditingSu
 import org.bonitasoft.studio.contract.ui.property.edit.ConstraintColumnLabelProvider;
 import org.bonitasoft.studio.contract.ui.property.edit.ConstraintPropertyEditingSupport;
 import org.bonitasoft.studio.contract.ui.property.edit.InputMappingPropertyEditingSupport;
-import org.bonitasoft.studio.contract.ui.property.edit.InputMappingProposal;
 import org.bonitasoft.studio.contract.ui.property.edit.InputNamePropertyEditingSupport;
+import org.bonitasoft.studio.contract.ui.property.edit.proposal.InputMappingProposal;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ContractInputMapping;
 import org.bonitasoft.studio.model.process.ContractInputType;

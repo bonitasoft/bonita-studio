@@ -181,7 +181,6 @@
     <eLiterals name="DECIMAL" value="2"/>
     <eLiterals name="BOOLEAN" value="3"/>
     <eLiterals name="DATE" value="4"/>
-    <eLiterals name="COMPLEX" value="5"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ContractComplexInput" eSuperTypes="#//ContractInput">
     <eStructuralFeatures xsi:type="ecore:EReference" name="inputs" upperBound="-1"

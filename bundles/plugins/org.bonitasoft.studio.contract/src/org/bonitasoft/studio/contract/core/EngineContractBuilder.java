@@ -21,7 +21,6 @@ import org.bonitasoft.engine.bpm.process.impl.UserTaskDefinitionBuilder;
 import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractConstraint;
 import org.bonitasoft.studio.model.process.ContractInput;
-import org.bonitasoft.studio.model.process.ContractInputType;
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -44,12 +43,8 @@ public class EngineContractBuilder {
 
         final ContractDefinitionBuilder contractBuilder = taskBuilder.addContract();
         for (final ContractInput input : contract.getInputs()) {
-            if (input.getType() == ContractInputType.COMPLEX) {
-                throw new RuntimeException("Complex type not implemented yet");
-            } else {
                 contractBuilder.addSimpleInput(input.getName(), org.bonitasoft.engine.bpm.contract.Type.valueOf(input.getType().getName()),
                         input.getDescription());
-            }
         }
         for (final ContractConstraint constraint : contract.getConstraints()) {
             contractBuilder.addRule("constraint" + contract.getConstraints().indexOf(constraint),

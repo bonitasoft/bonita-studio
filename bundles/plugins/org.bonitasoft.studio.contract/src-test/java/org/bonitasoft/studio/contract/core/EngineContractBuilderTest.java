@@ -94,14 +94,6 @@ public class EngineContractBuilderTest {
         verify(contractDefBuilder).addSimpleInput("isMarried", Type.BOOLEAN, null);
     }
 
-    @Test(expected = RuntimeException.class)
-    public void should_build_throw_a_RuntimeException_for_contract_with_complex_input() throws Exception {
-        addInput(aContract, "employee", ContractInputType.COMPLEX, null);
-        engineContractBuilder.setContract(aContract);
-        engineContractBuilder.build();
-    }
-
-
     private ContractInput addInput(final Contract contract, final String inputName, final ContractInputType type, final String description) {
         final ContractInput contractInput = ProcessFactory.eINSTANCE.createContractInput();
         contractInput.setName(inputName);

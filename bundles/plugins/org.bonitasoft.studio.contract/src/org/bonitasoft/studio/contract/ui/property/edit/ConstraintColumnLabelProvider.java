@@ -40,7 +40,7 @@ public class ConstraintColumnLabelProvider extends ColumnLabelProvider {
             }
             return String.valueOf(nbConstraintForInput);
         }
-        return super.getText(element);
+        return null;
     }
 
 }

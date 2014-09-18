@@ -16,7 +16,8 @@ Require-Bundle: org.eclipse.core.runtime;bundle-version="3.9.0",
  org.eclipse.jdt.core,
  org.bonitasoft.studio.common.repository;bundle-version="6.4.0",
  org.bonitasoft.studio.data,
- org.eclipse.jdt.ui
+ org.eclipse.jdt.ui,
+ org.bonitasoft.studio.model.edit
 Bundle-Activator: org.bonitasoft.studio.contract.ContractPlugin
 Bundle-ActivationPolicy: lazy
 Export-Package: org.bonitasoft.studio.contract.core
