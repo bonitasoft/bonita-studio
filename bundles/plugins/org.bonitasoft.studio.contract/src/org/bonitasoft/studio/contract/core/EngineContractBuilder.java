@@ -43,8 +43,11 @@ public class EngineContractBuilder {
 
         final ContractDefinitionBuilder contractBuilder = taskBuilder.addContract();
         for (final ContractInput input : contract.getInputs()) {
-                contractBuilder.addSimpleInput(input.getName(), org.bonitasoft.engine.bpm.contract.Type.valueOf(input.getType().getName()),
-                        input.getDescription());
+            contractBuilder.addSimpleInput(input.getName(), org.bonitasoft.engine.bpm.contract.Type.valueOf(input.getType().getName()),
+                    input.getDescription());
+            //            if (input.isMandatory()) {
+            //                contractBuilder.addMandatoryRule()
+            //            }
         }
         for (final ContractConstraint constraint : contract.getConstraints()) {
             contractBuilder.addRule("constraint" + contract.getConstraints().indexOf(constraint),
