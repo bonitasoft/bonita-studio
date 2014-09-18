@@ -5,12 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -34,29 +34,31 @@ import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 
 /**
  * @author Romain Bioteau
- * 
+ *
  */
 public class OperationsPropertySection extends AbstractBonitaDescriptionSection {
 
     protected OperationsComposite operationComposite;
 
-    protected TabbedPropertySheetPage tabbedPropertySheetPage;
-
     private Object lastEObject;
 
     @Override
-    public void createControls(Composite parent, TabbedPropertySheetPage aTabbedPropertySheetPage) {
+    public void createControls(final Composite parent, final TabbedPropertySheetPage aTabbedPropertySheetPage) {
         super.createControls(parent, aTabbedPropertySheetPage);
-        tabbedPropertySheetPage = aTabbedPropertySheetPage;
-        final Composite mainComposite = getWidgetFactory().createComposite(super.composite);
+
+    }
+
+    @Override
+    protected void createContent(final Composite parent) {
+        final Composite mainComposite = getWidgetFactory().createComposite(parent);
         mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(15, 15).create());
         mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         operationComposite = createActionLinesComposite(mainComposite);
         operationComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
     }
 
-    protected OperationsComposite createActionLinesComposite(Composite parent) {
-        AvailableExpressionTypeFilter actionFilter = new AvailableExpressionTypeFilter(new String[] {
+    protected OperationsComposite createActionLinesComposite(final Composite parent) {
+        final AvailableExpressionTypeFilter actionFilter = new AvailableExpressionTypeFilter(new String[] {
                 ExpressionConstants.CONSTANT_TYPE,
                 ExpressionConstants.VARIABLE_TYPE,
                 ExpressionConstants.SCRIPT_TYPE,
@@ -65,19 +67,19 @@ public class OperationsPropertySection extends AbstractBonitaDescriptionSection 
                 ExpressionConstants.QUERY_TYPE
         });
 
-        AvailableExpressionTypeFilter dataFilter = new AvailableExpressionTypeFilter(new String[] {
+        final AvailableExpressionTypeFilter dataFilter = new AvailableExpressionTypeFilter(new String[] {
                 ExpressionConstants.VARIABLE_TYPE,
                 ExpressionConstants.SEARCH_INDEX_TYPE,
                 ExpressionConstants.DOCUMENT_REF_TYPE
         });
 
-        return new PropertyOperationsComposite(tabbedPropertySheetPage, parent, actionFilter, dataFilter);
+        return new PropertyOperationsComposite(getTabbedPropertySheetPage(), parent, actionFilter, dataFilter);
     }
 
     @Override
-    public void setInput(IWorkbenchPart part, ISelection selection) {
+    public void setInput(final IWorkbenchPart part, final ISelection selection) {
         super.setInput(part, selection);
-        if (lastEObject == null || (lastEObject != null && !lastEObject.equals(getEObject()))) {
+        if (lastEObject == null || lastEObject != null && !lastEObject.equals(getEObject())) {
             lastEObject = getEObject();
             operationComposite.setEObject(getEObject());
             if (lastEObject instanceof ReceiveTask) {

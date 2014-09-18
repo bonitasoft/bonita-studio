@@ -54,7 +54,6 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 
 /**
  * @author Aurelien Pupier
@@ -62,136 +61,138 @@ import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
  */
 public class CatchMessageContentEventSection extends AbstractBonitaDescriptionSection {
 
-	private OperationsComposite alc;
-	private Composite mainComposite;
-	MessageContentExpressionValidator validator;
-	private EObject lastEObject;
+    private OperationsComposite alc;
+    private Composite mainComposite;
+    MessageContentExpressionValidator validator;
+    private EObject lastEObject;
 
 
-	@Override
-	public void createControls(final Composite parent, final TabbedPropertySheetPage aTabbedPropertySheetPage) {
-		super.createControls(parent, aTabbedPropertySheetPage);
-		mainComposite = getWidgetFactory().createComposite(parent);
-		mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).extendedMargins(15, 25, 15, 10).create());
-		mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-		createAutoFillButton(aTabbedPropertySheetPage);
-		validator= new MessageContentExpressionValidator();
-		alc = new PropertyOperationsComposite(aTabbedPropertySheetPage,mainComposite,new AvailableExpressionTypeFilter(new String[]{ExpressionConstants.CONSTANT_TYPE,ExpressionConstants.MESSAGE_ID_TYPE}), new AvailableExpressionTypeFilter(new String[]{ExpressionConstants.VARIABLE_TYPE}));
-		alc.addActionExpressionValidator(ExpressionConstants.MESSAGE_ID_TYPE, validator);
-		alc.addActionExpressionValidator(ExpressionConstants.CONSTANT_TYPE, validator);
-		alc.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
-	}
 
-	private void createAutoFillButton(final TabbedPropertySheetPage aTabbedPropertySheetPage) {
-		final Button autoFillButton = aTabbedPropertySheetPage.getWidgetFactory().createButton(mainComposite, Messages.autoFillMessageContent, SWT.FLAT);
-		autoFillButton.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(final SelectionEvent e) {
-				BusyIndicator.showWhile(Display.getDefault(), new Runnable() {
-					
-					@Override
-					public void run() {
-						final MessageFlow incomingMessag = getCatchMessageEvent().getIncomingMessag();
-						if(incomingMessag != null){
-							final Message message = ModelHelper.findEvent(getCatchMessageEvent(), incomingMessag.getName());
-							if(message != null){
-								mapContentForMessage(message);
-								/*refresh UI*/
-								refreshUI();
-							}
-						}
-					}
+    private void createAutoFillButton() {
+        final Button autoFillButton = getWidgetFactory().createButton(mainComposite, Messages.autoFillMessageContent, SWT.FLAT);
+        autoFillButton.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(final SelectionEvent e) {
+                BusyIndicator.showWhile(Display.getDefault(), new Runnable() {
 
-					private void mapContentForMessage(final Message message) {
-						final TableExpression throwMessageContent = message.getMessageContent();
-						for (final ListExpression row : throwMessageContent.getExpressions()) {
-							final List<org.bonitasoft.studio.model.expression.Expression> col =  row.getExpressions() ;
-							if (col.size()==2){
-								final String throwMessageContentExpressionName = col.get(0).getName();
-								if(throwMessageContentExpressionName != null){
-									if(!isMappingAlreadyExists(throwMessageContentExpressionName)){
-										createNewMessageContentLine(throwMessageContentExpressionName);
-									}
-								}
-							}
-						}
-					}
+                    @Override
+                    public void run() {
+                        final MessageFlow incomingMessag = getCatchMessageEvent().getIncomingMessag();
+                        if(incomingMessag != null){
+                            final Message message = ModelHelper.findEvent(getCatchMessageEvent(), incomingMessag.getName());
+                            if(message != null){
+                                mapContentForMessage(message);
+                                /*refresh UI*/
+                                refreshUI();
+                            }
+                        }
+                    }
 
-					private boolean isMappingAlreadyExists(final String throwMessageContentExpressionName) {
-						final EList<Operation> catchMessageContents = getCatchMessageEvent().getMessageContent();
-						for (final Operation messageContent : catchMessageContents) {
-							final Expression actionExpression = messageContent.getRightOperand();
-							if(actionExpression != null
-									&& throwMessageContentExpressionName.equals(actionExpression.getName())){
-								return true;
-							}
-						}
-						return false;
-					}
-				});
-				
+                    private void mapContentForMessage(final Message message) {
+                        final TableExpression throwMessageContent = message.getMessageContent();
+                        for (final ListExpression row : throwMessageContent.getExpressions()) {
+                            final List<org.bonitasoft.studio.model.expression.Expression> col =  row.getExpressions() ;
+                            if (col.size()==2){
+                                final String throwMessageContentExpressionName = col.get(0).getName();
+                                if(throwMessageContentExpressionName != null){
+                                    if(!isMappingAlreadyExists(throwMessageContentExpressionName)){
+                                        createNewMessageContentLine(throwMessageContentExpressionName);
+                                    }
+                                }
+                            }
+                        }
+                    }
 
-			}
-
-			private void createNewMessageContentLine(final String throwMessageContentExpressionName) {
-				/*add it if not*/
-				final Operation newActionMessageContent = ExpressionFactory.eINSTANCE.createOperation();
-				final Operator assignment = ExpressionFactory.eINSTANCE.createOperator();
-				assignment.setType(ExpressionConstants.ASSIGNMENT_OPERATOR) ;
-				newActionMessageContent.setOperator(assignment) ;
-				final Expression createExpression = ExpressionFactory.eINSTANCE.createExpression();
-				createExpression.setName(throwMessageContentExpressionName);
-				createExpression.setContent(throwMessageContentExpressionName);
-				createExpression.setReturnType(String.class.getName());
-				createExpression.setType(ExpressionConstants.MESSAGE_ID_TYPE) ;
-				newActionMessageContent.setRightOperand(createExpression);
+                    private boolean isMappingAlreadyExists(final String throwMessageContentExpressionName) {
+                        final EList<Operation> catchMessageContents = getCatchMessageEvent().getMessageContent();
+                        for (final Operation messageContent : catchMessageContents) {
+                            final Expression actionExpression = messageContent.getRightOperand();
+                            if(actionExpression != null
+                                    && throwMessageContentExpressionName.equals(actionExpression.getName())){
+                                return true;
+                            }
+                        }
+                        return false;
+                    }
+                });
 
 
-				/*check if there is a data with the same name,
-				 * if yes, assign it*/
-				final List<Data> accessibleData = ModelHelper.getAccessibleData(getCatchMessageEvent());
-				for (final Data data : accessibleData) {
-					if(throwMessageContentExpressionName.equals(data.getName())){
-						final Expression dataExpression = ExpressionFactory.eINSTANCE.createExpression();
-						dataExpression.setName(data.getName());
-						dataExpression.setContent(data.getName());
-						dataExpression.setReturnType(org.bonitasoft.studio.common.DataUtil.getTechnicalTypeFor(data));
-						dataExpression.setType(ExpressionConstants.VARIABLE_TYPE);
-						dataExpression.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(data));
-						newActionMessageContent.setLeftOperand(dataExpression);
-					}
-				}
+            }
 
-				final Command addCommand = AddCommand.create(getEditingDomain(), getCatchMessageEvent(), ProcessPackage.Literals.ABSTRACT_CATCH_MESSAGE_EVENT__MESSAGE_CONTENT, newActionMessageContent);
-				getEditingDomain().getCommandStack().execute(addCommand);
-			}
-		});
-	}
+            private void createNewMessageContentLine(final String throwMessageContentExpressionName) {
+                /*add it if not*/
+                final Operation newActionMessageContent = ExpressionFactory.eINSTANCE.createOperation();
+                final Operator assignment = ExpressionFactory.eINSTANCE.createOperator();
+                assignment.setType(ExpressionConstants.ASSIGNMENT_OPERATOR) ;
+                newActionMessageContent.setOperator(assignment) ;
+                final Expression createExpression = ExpressionFactory.eINSTANCE.createExpression();
+                createExpression.setName(throwMessageContentExpressionName);
+                createExpression.setContent(throwMessageContentExpressionName);
+                createExpression.setReturnType(String.class.getName());
+                createExpression.setType(ExpressionConstants.MESSAGE_ID_TYPE) ;
+                newActionMessageContent.setRightOperand(createExpression);
 
-	@Override
-	public void setInput(final IWorkbenchPart part, final ISelection selection) {
-		super.setInput(part, selection);
-		if(lastEObject == null || lastEObject != null && !lastEObject.equals(getEObject())){
-			lastEObject = getEObject();
-			refreshUI();
-		}
-	}
-	
-	private void refreshUI() {
-		validator.setCatchMessageEvent(getCatchMessageEvent());
-		alc.setEObject(getCatchMessageEvent());
-		alc.setContext(new EMFDataBindingContext());
-		alc.removeLinesUI();
-		alc.fillTable();
-		alc.refresh();
-	}
 
-	private AbstractCatchMessageEvent getCatchMessageEvent(){
-		return (AbstractCatchMessageEvent)getEObject();
-	}
+                /*check if there is a data with the same name,
+                 * if yes, assign it*/
+                final List<Data> accessibleData = ModelHelper.getAccessibleData(getCatchMessageEvent());
+                for (final Data data : accessibleData) {
+                    if(throwMessageContentExpressionName.equals(data.getName())){
+                        final Expression dataExpression = ExpressionFactory.eINSTANCE.createExpression();
+                        dataExpression.setName(data.getName());
+                        dataExpression.setContent(data.getName());
+                        dataExpression.setReturnType(org.bonitasoft.studio.common.DataUtil.getTechnicalTypeFor(data));
+                        dataExpression.setType(ExpressionConstants.VARIABLE_TYPE);
+                        dataExpression.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(data));
+                        newActionMessageContent.setLeftOperand(dataExpression);
+                    }
+                }
 
-	@Override
-	public String getSectionDescription() {
-		return Messages.catchMessageContentEventSectionDescription;
-	}
+                final Command addCommand = AddCommand.create(getEditingDomain(), getCatchMessageEvent(), ProcessPackage.Literals.ABSTRACT_CATCH_MESSAGE_EVENT__MESSAGE_CONTENT, newActionMessageContent);
+                getEditingDomain().getCommandStack().execute(addCommand);
+            }
+        });
+    }
+
+    @Override
+    public void setInput(final IWorkbenchPart part, final ISelection selection) {
+        super.setInput(part, selection);
+        if(lastEObject == null || lastEObject != null && !lastEObject.equals(getEObject())){
+            lastEObject = getEObject();
+            refreshUI();
+        }
+    }
+
+    private void refreshUI() {
+        validator.setCatchMessageEvent(getCatchMessageEvent());
+        alc.setEObject(getCatchMessageEvent());
+        alc.setContext(new EMFDataBindingContext());
+        alc.removeLinesUI();
+        alc.fillTable();
+        alc.refresh();
+    }
+
+    private AbstractCatchMessageEvent getCatchMessageEvent(){
+        return (AbstractCatchMessageEvent)getEObject();
+    }
+
+    @Override
+    public String getSectionDescription() {
+        return Messages.catchMessageContentEventSectionDescription;
+    }
+
+    @Override
+    protected void createContent(final Composite parent) {
+        mainComposite = getWidgetFactory().createComposite(parent);
+        mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).extendedMargins(15, 25, 15, 10).create());
+        mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        createAutoFillButton();
+        validator = new MessageContentExpressionValidator();
+        alc = new PropertyOperationsComposite(getTabbedPropertySheetPage(), mainComposite, new AvailableExpressionTypeFilter(new String[] {
+                ExpressionConstants.CONSTANT_TYPE, ExpressionConstants.MESSAGE_ID_TYPE }), new AvailableExpressionTypeFilter(
+                        new String[] { ExpressionConstants.VARIABLE_TYPE }));
+        alc.addActionExpressionValidator(ExpressionConstants.MESSAGE_ID_TYPE, validator);
+        alc.addActionExpressionValidator(ExpressionConstants.CONSTANT_TYPE, validator);
+        alc.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+    }
 }

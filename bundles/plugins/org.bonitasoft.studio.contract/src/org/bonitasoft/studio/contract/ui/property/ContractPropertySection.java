@@ -58,7 +58,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.views.properties.PropertyColumnLabelProvider;
 import org.eclipse.ui.views.properties.PropertyEditingSupport;
-import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 
 
 /**
@@ -78,8 +77,7 @@ public class ContractPropertySection extends EObjectSelectionProviderSection {
     }
 
     @Override
-    public void createControls(final Composite parent, final TabbedPropertySheetPage aTabbedPropertySheetPage) {
-        super.createControls(parent, aTabbedPropertySheetPage);
+    protected void createContent(final Composite parent) {
         context = new EMFDataBindingContext();
         composedAdapterFactory =
                 new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
@@ -101,21 +99,11 @@ public class ContractPropertySection extends EObjectSelectionProviderSection {
 
     private ContractInput createDefaultInput(final IObservableList input) {
         final ContractInput contractInput = ProcessFactory.eINSTANCE.createContractInput();
-        //  contractInput.setName(NamingUtils.generateNewName(getInputNames(input), "input"));
         contractInput.setType(ContractInputType.TEXT);
         contractInput.setMapping(ProcessFactory.eINSTANCE.createContractInputMapping());
         return contractInput;
     }
 
-    //    private Set<String> getInputNames(final IObservableList input) {
-    //        final Set<String> inputNames = new HashSet<String>();
-    //        final Iterator<?> iterator = input.iterator();
-    //        while (iterator.hasNext()) {
-    //            final ContractInput contractInput = (ContractInput) iterator.next();
-    //            inputNames.add(contractInput.getName());
-    //        }
-    //        return inputNames;
-    //    }
 
     private void createContractInputTable(final Composite parent) {
         final Composite buttonsComposite = getWidgetFactory().createComposite(parent);

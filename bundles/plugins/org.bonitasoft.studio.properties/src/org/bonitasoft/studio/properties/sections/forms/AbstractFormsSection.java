@@ -87,7 +87,6 @@ import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.dialogs.FilteredTree;
 import org.eclipse.ui.dialogs.PatternFilter;
-import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 
 /**
  * @author Aurelien Pupier
@@ -110,16 +109,12 @@ public abstract class AbstractFormsSection extends AbstractBonitaDescriptionSect
     private IObservableList observeFormList;
     private IChangeListener formListener;
     private IObservableList observeFormListName;
-    protected TabbedPropertySheetPage aTabbedPropertySheetPage;
-
 
     @Override
-    public void createControls(final Composite parent,
-            final TabbedPropertySheetPage aTabbedPropertySheetPage) {
-        super.createControls(parent, aTabbedPropertySheetPage);
+    protected void createContent(final Composite parent) {
         mainComposite = getWidgetFactory().createComposite(parent);
+        mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         mainComposite.setLayout(new GridLayout(1, false));
-        this.aTabbedPropertySheetPage = aTabbedPropertySheetPage;
         radioComposite = createRadioButtons(mainComposite);
 
         contentComposite = new MagicComposite(mainComposite, SWT.NONE);
@@ -128,11 +123,9 @@ public abstract class AbstractFormsSection extends AbstractBonitaDescriptionSect
         contentComposite.setBackground(mainComposite.getBackground());
 
         pageFlowComposite = createPageFlowComposite(contentComposite);
-
     }
-
     /**
-     * 
+     *
      */
     protected Composite createPageFlowComposite(final Composite parent) {
         final Composite mainComposite = getWidgetFactory().createComposite(parent, SWT.NONE);
@@ -152,7 +145,7 @@ public abstract class AbstractFormsSection extends AbstractBonitaDescriptionSect
      * To be overriden when necessary
      * @param mainComposite
      * @override
-     * 
+     *
      */
     protected Composite createRadioButtons(final Composite mainComposite) {
         return null;
@@ -480,7 +473,7 @@ public abstract class AbstractFormsSection extends AbstractBonitaDescriptionSect
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.gmf.runtime.diagram.ui.properties.sections.
      * AbstractModelerPropertySection#setInput(org.eclipse.ui.IWorkbenchPart,
      * org.eclipse.jface.viewers.ISelection)
@@ -537,7 +530,7 @@ public abstract class AbstractFormsSection extends AbstractBonitaDescriptionSect
     }
 
     /**
-     * 
+     *
      */
     protected void hideAllContentComposite() {
         if (pageFlowComposite != null) {
@@ -547,7 +540,7 @@ public abstract class AbstractFormsSection extends AbstractBonitaDescriptionSect
     }
 
     /**
-     * 
+     *
      */
     protected void showOrHideComposite(final Composite target, final boolean visible) {
         target.setVisible(visible);

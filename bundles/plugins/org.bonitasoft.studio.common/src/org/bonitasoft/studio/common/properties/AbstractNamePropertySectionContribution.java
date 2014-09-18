@@ -18,7 +18,6 @@
 package org.bonitasoft.studio.common.properties;
 
 import org.bonitasoft.studio.common.Messages;
-import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.process.Element;
