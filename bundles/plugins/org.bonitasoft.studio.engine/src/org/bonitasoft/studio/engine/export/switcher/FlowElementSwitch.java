@@ -52,6 +52,7 @@ import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.TimerUtil;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.contract.core.EngineContractBuilder;
 import org.bonitasoft.studio.engine.export.EngineExpressionUtil;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorParameter;
 import org.bonitasoft.studio.model.expression.Expression;
@@ -490,7 +491,14 @@ public class FlowElementSwitch extends AbstractSwitch {
     }
 
     protected void addContract(final UserTaskDefinitionBuilder taskBuilder, final Contract contract) {
+        final EngineContractBuilder contractBuilder = createEngineContractBuilder();
+        contractBuilder.setContract(contract);
+        contractBuilder.setEngineBuilder(taskBuilder);
+        contractBuilder.build();
+    }
 
+    protected EngineContractBuilder createEngineContractBuilder() {
+        return new EngineContractBuilder();
     }
 
     protected void addUserFilterToTask(final UserTaskDefinitionBuilder taskBuilder, final String actor, final ActorFilter filter) {

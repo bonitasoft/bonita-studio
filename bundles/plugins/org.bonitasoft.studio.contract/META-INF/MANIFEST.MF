@@ -19,3 +19,6 @@ Require-Bundle: org.eclipse.core.runtime;bundle-version="3.9.0",
  org.eclipse.jdt.ui
 Bundle-Activator: org.bonitasoft.studio.contract.ContractPlugin
 Bundle-ActivationPolicy: lazy
+Export-Package: org.bonitasoft.studio.contract.core
+Import-Package: org.bonitasoft.engine.bpm.contract,
+ org.bonitasoft.engine.bpm.process.impl
