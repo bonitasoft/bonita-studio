@@ -50,7 +50,7 @@ public class TestOpenDiagram extends SWTBotGefTestCase {
         botProcessDiagramPerspective.getDiagramPropertiesPart().selectGeneralTab().selectDiagramTab().setName("OpenDiagramDelete1");
 
 
-        // set editor dirty
+    	// set editor dirty
         botProcessDiagramPerspective.activeProcessDiagramEditor().selectElement("Step1");
         botProcessDiagramPerspective.getDiagramPropertiesPart().selectGeneralTab().selectGeneralTab().setTaskType(activityType_serviceTask);
 
@@ -64,13 +64,19 @@ public class TestOpenDiagram extends SWTBotGefTestCase {
         openDialog.delete();
 
         assertThat(diagramList.getSWTBotWidget().rowCount()).isEqualTo(nbItems - 1);
-
+    	
         openDialog.cancel();
-
+    	
+        final SWTBotTree tree = bot.tree();
+        final SWTBotButton cancelButton = bot.button(IDialogConstants.CANCEL_LABEL);
+        final int nbItems = tree.rowCount();
+        final String diagramName = "OpenDiagramDelete1"+" (1.0)";
+            final SWTBotTreeItem item = tree.getTreeItem(diagramName);
+        }catch(final WidgetNotFoundException e){
         for(final SWTBotEditor editor : bot.editors()){
             assertThat(editor.getTitle().equals(diagramName)).overridingErrorMessage("Error: Editor " + diagramName + " should not be in the tree.").isFalse();
-        }
-
+    	}
+    	
     }
 
 

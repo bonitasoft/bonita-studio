@@ -550,6 +550,7 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 
     private void handleFirstNameChange(final ValueChangeEvent event) {
         final User user = (User) userSingleSelectionObservable.getValue();
+        if (user != null) {
         final User oldUser = EcoreUtil.copy(user);
         final Object oldValue = event.diff.getOldValue();
         if (oldValue != null && oldUser != null) {
@@ -560,9 +561,11 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
             }
         }
     }
+    }
 
     private void handleLastNameChange(final ValueChangeEvent event) {
         final User user = (User) userSingleSelectionObservable.getValue();
+        if (user != null) {
         final User oldUser = EcoreUtil.copy(user);
         final Object oldValue = event.diff.getOldValue();
         if(oldValue!=null){
@@ -572,9 +575,11 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
             }
         }
     }
+    }
 
     private void handleUserNameChange(final ValueChangeEvent event) {
         final User user = (User) userSingleSelectionObservable.getValue();
+        if (user != null) {
         final User oldUser = EcoreUtil.copy(user);
         final Object oldValue = event.diff.getOldValue();
         if (oldValue != null) {
@@ -585,6 +590,7 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
                 getViewer().refresh(user);
             }
         }
+    }
     }
 
     /**
