@@ -31,6 +31,7 @@ import org.bonitasoft.studio.model.process.Data;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
+import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jface.bindings.keys.KeyStroke;
 import org.eclipse.jface.bindings.keys.ParseException;
 import org.eclipse.jface.fieldassist.ContentProposalAdapter;
@@ -51,8 +52,12 @@ import org.eclipse.ui.views.properties.PropertyEditingSupport;
 public class InputNamePropertyEditingSupport extends PropertyEditingSupport {
 
 
-    public InputNamePropertyEditingSupport(final AdapterFactoryContentProvider propertySourceProvider, final TableViewer viewer) {
+    private final AdapterFactoryLabelProvider adapterFactoryLabelProvider;
+
+    public InputNamePropertyEditingSupport(final AdapterFactoryContentProvider propertySourceProvider, final TableViewer viewer,
+            final AdapterFactoryLabelProvider adapterFactoryLabelProvider) {
         super(viewer, propertySourceProvider, "name");
+        this.adapterFactoryLabelProvider = adapterFactoryLabelProvider;
     }
 
     @Override
@@ -83,8 +88,7 @@ public class InputNamePropertyEditingSupport extends PropertyEditingSupport {
         final ContentProposalAdapter contentProposalAdapter = new ContentProposalAdapter(textControl, new TextContentAdapter(),
                 new InputMappingProposalProvider((ContractInput) element), keyStroke,
                 null);
-        contentProposalAdapter.setLabelProvider(new InputMappingProposalLabelProvider(((AdapterFactoryContentProvider) propertySourceProvider)
-                .getAdapterFactory()));
+        contentProposalAdapter.setLabelProvider(new InputMappingProposalLabelProvider(adapterFactoryLabelProvider));
         contentProposalAdapter.addContentProposalListener(new IContentProposalListener() {
 
             @Override

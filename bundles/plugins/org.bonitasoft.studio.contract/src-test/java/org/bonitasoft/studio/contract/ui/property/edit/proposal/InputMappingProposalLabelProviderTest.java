@@ -17,31 +17,39 @@
 package org.bonitasoft.studio.contract.ui.property.edit.proposal;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.verify;
 
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.DataType;
 import org.bonitasoft.studio.model.process.ProcessFactory;
-import org.bonitasoft.studio.model.process.provider.ProcessItemProviderAdapterFactory;
+import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
 
 /**
  * @author Romain Bioteau
  *
  */
+@RunWith(MockitoJUnitRunner.class)
 public class InputMappingProposalLabelProviderTest {
 
     private InputMappingProposalLabelProvider inputMappingProposalLabelProvider;
+
+    @Mock
+    private AdapterFactoryLabelProvider adapterFactoryLabelProvider;
 
     /**
      * @throws java.lang.Exception
      */
     @Before
     public void setUp() throws Exception {
-        inputMappingProposalLabelProvider = new InputMappingProposalLabelProvider(new ProcessItemProviderAdapterFactory());
+        inputMappingProposalLabelProvider = new InputMappingProposalLabelProvider(adapterFactoryLabelProvider);
     }
 
     /**
@@ -73,13 +81,14 @@ public class InputMappingProposalLabelProviderTest {
         assertThat(inputMappingProposalLabelProvider.getText(proposal)).isEqualTo(proposal.getLabel());
     }
 
-    //    @Test
-    //    public void should_getImage_returns_data_image() throws Exception {
-    //        final Data data = ProcessFactory.eINSTANCE.createData();
-    //        data.setName("myData");
-    //        final DataType dt = ProcessFactory.eINSTANCE.createStringType();
-    //        data.setDataType(dt);
-    //        final InputMappingProposal proposal = new InputMappingProposal(data);
-    //        assertThat(inputMappingProposalLabelProvider.getImage(proposal)).isNotNull();
-    //    }
+    @Test
+    public void should_getImage_returns_data_image() throws Exception {
+        final Data data = ProcessFactory.eINSTANCE.createData();
+        data.setName("myData");
+        final DataType dt = ProcessFactory.eINSTANCE.createStringType();
+        data.setDataType(dt);
+        final InputMappingProposal proposal = new InputMappingProposal(data);
+        inputMappingProposalLabelProvider.getImage(proposal);
+        verify(adapterFactoryLabelProvider).getImage(proposal.getData());
+    }
 }

@@ -1,14 +1,16 @@
 package org.bonitasoft.studio.contract.ui.property.edit.proposal;
 
-import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
+import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 
 
-public class InputMappingProposalLabelProvider extends AdapterFactoryLabelProvider {
+public class InputMappingProposalLabelProvider extends LabelProvider {
 
-    public InputMappingProposalLabelProvider(final AdapterFactory adapterFactory) {
-        super(adapterFactory);
+    private final AdapterFactoryLabelProvider adapterFactoryLabelProvider;
+
+    public InputMappingProposalLabelProvider(final AdapterFactoryLabelProvider adapterFactoryLabelProvider) {
+        this.adapterFactoryLabelProvider = adapterFactoryLabelProvider;
     }
 
     @Override
@@ -22,7 +24,7 @@ public class InputMappingProposalLabelProvider extends AdapterFactoryLabelProvid
     @Override
     public Image getImage(final Object object) {
         if (object instanceof InputMappingProposal) {
-            return super.getImage(((InputMappingProposal) object).getData());
+            return adapterFactoryLabelProvider.getImage(((InputMappingProposal) object).getData());
         }
         return null;
     }

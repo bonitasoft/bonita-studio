@@ -185,7 +185,7 @@ public class ContractPropertySection extends EObjectSelectionProviderSection {
                 return null;
             }
         });
-        nameColumnViewer.setEditingSupport(new InputNamePropertyEditingSupport(propertySourceProvider, viewer));
+        nameColumnViewer.setEditingSupport(new InputNamePropertyEditingSupport(propertySourceProvider, viewer, adapterFactoryLabelProvider));
     }
 
     protected void createInputDescriptionColumn(final TableViewer viewer) {

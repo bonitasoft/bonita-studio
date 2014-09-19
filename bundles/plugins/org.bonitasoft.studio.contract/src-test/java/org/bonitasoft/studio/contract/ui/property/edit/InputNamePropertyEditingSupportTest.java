@@ -27,6 +27,7 @@ import org.bonitasoft.studio.model.process.JavaObjectData;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.provider.ProcessItemProviderAdapterFactory;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
+import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.junit.After;
 import org.junit.Before;
@@ -50,13 +51,16 @@ public class InputNamePropertyEditingSupportTest {
 
     private AdapterFactoryContentProvider propertySourceProvider;
 
+    @Mock
+    private AdapterFactoryLabelProvider adapterFactoryLabelProvider;
+
     /**
      * @throws java.lang.Exception
      */
     @Before
     public void setUp() throws Exception {
         propertySourceProvider = new AdapterFactoryContentProvider(new ProcessItemProviderAdapterFactory());
-        propertyEditingSupport = new InputNamePropertyEditingSupport(propertySourceProvider, viewer);
+        propertyEditingSupport = new InputNamePropertyEditingSupport(propertySourceProvider, viewer, adapterFactoryLabelProvider);
     }
 
     /**
