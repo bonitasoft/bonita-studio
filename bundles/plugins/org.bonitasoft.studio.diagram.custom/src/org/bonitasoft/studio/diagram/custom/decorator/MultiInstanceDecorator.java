@@ -1,7 +1,7 @@
 /**
  * Copyright (C) 2009 BonitaSoft S.A.
  * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -35,82 +35,81 @@ import org.eclipse.gmf.runtime.notation.Size;
  *
  */
 public abstract class MultiInstanceDecorator extends AbstractBonitaDecorator {
-	
-	
-	public MultiInstanceDecorator(IDecoratorTarget decoratorTarget, ActivityDecoratorProvider activityDecoratorProvider) {
-		super(decoratorTarget);
-	}
 
-	@Override
-	protected void activateDiagramEventBroker(EObject node,
-			TransactionalEditingDomain domain, EObject model) {
-		DiagramEventBroker.getInstance(domain).addNotificationListener(node,ProcessPackage.eINSTANCE.getContainer_Elements(),notificationListener);
-		DiagramEventBroker.getInstance(domain).addNotificationListener(node,ProcessPackage.eINSTANCE.getActivity_MultiInstantiation(),notificationListener);
-		DiagramEventBroker.getInstance(domain).addNotificationListener(node,ProcessPackage.eINSTANCE.getActivity_MultiInstantiation(),notificationListener);
-	}
 
-	@Override
-	protected void deactivateDiagramEventBroker(IGraphicalEditPart gep) {
-		DiagramEventBroker.getInstance(gep.getEditingDomain()).removeNotificationListener(gep.resolveSemanticElement(),ProcessPackage.eINSTANCE.getContainer_Elements(), notificationListener);
-		DiagramEventBroker.getInstance(gep.getEditingDomain()).removeNotificationListener(gep.resolveSemanticElement(),ProcessPackage.eINSTANCE.getActivity_MultiInstantiation(), notificationListener);
-		DiagramEventBroker.getInstance(gep.getEditingDomain()).removeNotificationListener(gep.resolveSemanticElement(),ProcessPackage.eINSTANCE.getMultiInstantiation_Sequential(), notificationListener);
-		DiagramEventBroker.getInstance(gep.getEditingDomain()).removeNotificationListener(gep.resolveSemanticElement(),ProcessPackage.eINSTANCE.getActivity_IsMultiInstance(), notificationListener);		
-	}
+    public MultiInstanceDecorator(final IDecoratorTarget decoratorTarget, final ActivityDecoratorProvider activityDecoratorProvider) {
+        super(decoratorTarget);
+    }
 
-	@Override
-	protected abstract DecoratorSVGFigure getImageDecorator();
-	
+    @Override
+    protected void activateDiagramEventBroker(final EObject node,
+            final TransactionalEditingDomain domain, final EObject model) {
+        DiagramEventBroker.getInstance(domain).addNotificationListener(node,ProcessPackage.eINSTANCE.getContainer_Elements(),notificationListener);
+        DiagramEventBroker.getInstance(domain).addNotificationListener(node, ProcessPackage.eINSTANCE.getMultiInstantiable_Type(), notificationListener);
+    }
 
-	@Override
-	protected Direction getDirection() {
-		return IDecoratorTarget.Direction.SOUTH;
-	}
+    @Override
+    protected void deactivateDiagramEventBroker(final IGraphicalEditPart gep) {
+        DiagramEventBroker.getInstance(gep.getEditingDomain()).removeNotificationListener(gep.resolveSemanticElement(),ProcessPackage.eINSTANCE.getContainer_Elements(), notificationListener);
+        DiagramEventBroker.getInstance(gep.getEditingDomain()).removeNotificationListener(gep.resolveSemanticElement(),
+                ProcessPackage.eINSTANCE.getMultiInstantiable_Type(), notificationListener);
+    }
 
-	@Override
-	protected boolean isAppearing(EObject activity) {
-		return isMultinstantiaded(activity);
-	}
+    @Override
+    protected abstract DecoratorSVGFigure getImageDecorator();
 
-	protected boolean isMultinstantiaded(EObject activity) {
-		return activity instanceof Activity && ((Activity)activity).getMultiInstantiation() != null &&  ((Activity)activity).isIsMultiInstance()  && !(activity instanceof CallActivity);
-	}
-	
-	@Override
-	public void refresh() {
-		IGraphicalEditPart node = (IGraphicalEditPart) ActivityDecoratorProvider.getDecoratorTargetNode(getDecoratorTarget());
 
-		//BUGFIX : NullPointerException if Root is null 
-		if(node != null && node.getRoot() != null ){
-			final Activity activity= (Activity) node.getAdapter(Activity.class);
-			if (activity != null) {
-				if (activity.getMultiInstantiation() != null){
-					DiagramEventBroker.getInstance(node.getEditingDomain()).addNotificationListener(activity,ProcessPackage.eINSTANCE.getActivity_IsMultiInstance(),notificationListener);
-					DiagramEventBroker.getInstance(node.getEditingDomain()).addNotificationListener(activity.getMultiInstantiation(),ProcessPackage.eINSTANCE.getMultiInstantiation_Sequential(),notificationListener); 
-				}else{
-					DiagramEventBroker.getInstance(node.getEditingDomain()).removeNotificationListener(activity,ProcessPackage.eINSTANCE.getActivity_IsMultiInstance(),notificationListener); 
-				}
-			}
-		}
-		super.refresh();
-	}
-	
-	@Override
-	protected int getDelta(Node view) {
-		
-		int delta = -1 ;
-		if(view != null){
-			int height = ((Size)view.getLayoutConstraint()).getHeight() ; 
-			if(height != 0){
-				delta = - (height / 25) ; 
-				if(delta > -1 ){
-					delta = -1 ;
-				}
-			}else{
-				delta = - 1 ; 
-			}
+    @Override
+    protected Direction getDirection() {
+        return IDecoratorTarget.Direction.SOUTH;
+    }
 
-		}
-		return delta;
-	}
-	
+    @Override
+    protected boolean isAppearing(final EObject activity) {
+        return isMultinstantiaded(activity);
+    }
+
+    protected boolean isMultinstantiaded(final EObject activity) {
+        return activity instanceof Activity && !(activity instanceof CallActivity);
+    }
+
+    //    @Override
+    //    public void refresh() {
+    //        //   final IGraphicalEditPart node = (IGraphicalEditPart) ActivityDecoratorProvider.getDecoratorTargetNode(getDecoratorTarget());
+    //
+    //        //        //BUGFIX : NullPointerException if Root is null
+    //        //        if(node != null && node.getRoot() != null ){
+    //        //            final Activity activity= (Activity) node.getAdapter(Activity.class);
+    //        //            if (activity != null) {
+    //        //                if (activity.getMultiInstantiation() != null){
+    //        //                    DiagramEventBroker.getInstance(node.getEditingDomain()).addNotificationListener(activity,
+    //        //                            ProcessPackage.eINSTANCE.getMultiInstantiable_Type(), notificationListener);
+    //        //                }else{
+    //        //                    DiagramEventBroker.getInstance(node.getEditingDomain()).removeNotificationListener(activity,
+    //        //                            ProcessPackage.eINSTANCE.getMultiInstantiable_Type(), notificationListener);
+    //        //                }
+    //        //            }
+    //        //        }
+    //        super.refresh();
+    //    }
+
+    @Override
+    protected int getDelta(final Node view) {
+
+        int delta = -1 ;
+        if(view != null){
+            final int height = ((Size)view.getLayoutConstraint()).getHeight() ;
+            if(height != 0){
+                delta = - (height / 25) ;
+                if(delta > -1 ){
+                    delta = -1 ;
+                }
+            }else{
+                delta = - 1 ;
+            }
+
+        }
+        return delta;
+    }
+
 }

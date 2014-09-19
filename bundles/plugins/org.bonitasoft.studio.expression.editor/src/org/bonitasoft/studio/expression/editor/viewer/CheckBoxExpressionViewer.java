@@ -19,16 +19,12 @@ import org.bonitasoft.studio.common.widgets.MagicComposite;
 import org.bonitasoft.studio.expression.editor.i18n.Messages;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
-import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.emf.databinding.EMFDataBindingContext;
-import org.eclipse.emf.databinding.EMFObservables;
-import org.eclipse.emf.databinding.edit.EMFEditObservables;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -36,7 +32,6 @@ import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -172,17 +167,7 @@ public class CheckBoxExpressionViewer extends ExpressionViewer implements Expres
                 externalDataBindingContext.removeBinding(expressionBinding);
                 expressionBinding.dispose();
             }
-            if (internalDataBindingContext != null) {
-                internalDataBindingContext.dispose();
-            }
-            internalDataBindingContext = new EMFDataBindingContext();
-            IObservableValue nameObservable = null;
-            if (editingDomain != null) {
-                nameObservable = EMFEditObservables.observeValue(editingDomain, selectedExpression, ExpressionPackage.Literals.EXPRESSION__NAME);
-            } else {
-                nameObservable = EMFObservables.observeValue(selectedExpression, ExpressionPackage.Literals.EXPRESSION__NAME);
-            }
-
+            final IObservableValue nameObservable = getExpressionNameObservable();
             final UpdateValueStrategy targetToModelNameStrategy = new UpdateValueStrategy();
             targetToModelNameStrategy.setConverter(new Converter(Boolean.class, String.class) {
 
@@ -220,8 +205,8 @@ public class CheckBoxExpressionViewer extends ExpressionViewer implements Expres
     }
 
     @Override
-    protected void internalRefresh(final Object element) {
-        super.internalRefresh(element);
+    protected void internalRefresh() {
+        super.internalRefresh();
         final String description = getMessage(IStatus.INFO);
         if (description != null) {
             checkBoxControl.setToolTipText(description);
@@ -230,19 +215,20 @@ public class CheckBoxExpressionViewer extends ExpressionViewer implements Expres
 
     @Override
     public void setSelection(final ISelection selection) {
-        final Expression exp = (Expression) ((IStructuredSelection) getSelection()).getFirstElement();
-        if (ExpressionConstants.CONSTANT_TYPE.equals(exp.getType())) {
-            if (!checkBoxControl.isVisible()) {
-                switchToCheckBoxMode();
-                mc.layout(true, true);
-            }
-        } else {
-            if (!control.isVisible()) {
-                switchToExpressionMode();
-                mc.layout(true, true);
+        final Expression exp = getSelectedExpression();
+        if (exp != null) {
+            if (ExpressionConstants.CONSTANT_TYPE.equals(exp.getType())) {
+                if (!checkBoxControl.isVisible()) {
+                    switchToCheckBoxMode();
+                    mc.layout(true, true);
+                }
+            } else {
+                if (!control.isVisible()) {
+                    switchToExpressionMode();
+                    mc.layout(true, true);
+                }
             }
         }
-        super.setSelection(selection);
 
     }
 

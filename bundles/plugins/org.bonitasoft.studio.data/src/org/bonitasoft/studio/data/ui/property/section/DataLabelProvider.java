@@ -19,37 +19,46 @@ package org.bonitasoft.studio.data.ui.property.section;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.JavaObjectData;
-import org.eclipse.jface.viewers.ILabelProvider;
-import org.eclipse.jface.viewers.ILabelProviderListener;
+import org.eclipse.core.databinding.observable.map.IObservableMap;
+import org.eclipse.jface.databinding.viewers.ObservableMapLabelProvider;
 import org.eclipse.swt.graphics.Image;
 
 /**
- * 
+ *
  * @author mistria
  *
  */
-public class DataLabelProvider implements ILabelProvider {
+public class DataLabelProvider extends ObservableMapLabelProvider {
+
+    public DataLabelProvider(final IObservableMap[] attributeMaps) {
+        super(attributeMaps);
+    }
 
     @Override
-    public Image getImage(Object element) {
+    public Image getImage(final Object element) {
         return null;
     }
 
     @Override
-    public String getText(Object element) {
-        if(((Data)element).getDataType() != null){
-            return ((Data)element).getName() + " -- " + getTypeLabel((Data)element); //$NON-NLS-1$
-        }else{
-            return ((Data)element).getName();
+    public String getText(final Object element) {
+        if(element instanceof Data){
+            if(((Data)element).getDataType() != null){
+                return ((Data)element).getName() + " -- " + getTypeLabel((Data)element); //$NON-NLS-1$
+            }else{
+                return ((Data)element).getName();
+            }
+        } else if (element != null) {
+            return element.toString();
         }
+        return super.getText(element);
     }
 
     /**
      * @param element
      * @return
      */
-    private String getTypeLabel(Data element) {
-        StringBuilder builder = new StringBuilder();
+    private String getTypeLabel(final Data element) {
+        final StringBuilder builder = new StringBuilder();
         if (element.isMultiple()) {
             builder.append("Multiple<"); //$NON-NLS-1$
         };
@@ -64,21 +73,7 @@ public class DataLabelProvider implements ILabelProvider {
         return builder.toString();
     }
 
-    @Override
-    public void addListener(ILabelProviderListener listener) {
-    }
 
-    @Override
-    public void dispose() {
-    }
 
-    @Override
-    public boolean isLabelProperty(Object element, String property) {
-        return false;
-    }
-
-    @Override
-    public void removeListener(ILabelProviderListener listener) {
-    }
 
 }
