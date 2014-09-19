@@ -740,54 +740,54 @@
             featureName="eOpposite" referenceValue="process.ecore#//MessageFlow/target"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#/" referenceName="eClassifiers"
-          element="process.ecore#//MultiInstantiation">
-        <changes xsi:type="history:Set" element="process.ecore#//MultiInstantiation"
+          element="#//@releases.16/@changes.0/@changes.17/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.16/@changes.0/@changes.17/@changes.0/@element"
             featureName="name" dataValue="MultiInstantiation"/>
       </changes>
-      <changes xsi:type="history:Create" target="process.ecore#//MultiInstantiation"
-          referenceName="eStructuralFeatures" element="process.ecore#//MultiInstantiation/useCardinality">
-        <changes xsi:type="history:Set" element="process.ecore#//MultiInstantiation/useCardinality"
+      <changes xsi:type="history:Create" target="#//@releases.16/@changes.0/@changes.17/@changes.0/@element"
+          referenceName="eStructuralFeatures" element="#//@releases.16/@changes.0/@changes.17/@changes.0/@element/useCardinality">
+        <changes xsi:type="history:Set" element="#//@releases.16/@changes.0/@changes.17/@changes.0/@element/useCardinality"
             featureName="name" dataValue="useCardinality"/>
-        <changes xsi:type="history:Set" element="process.ecore#//MultiInstantiation/useCardinality"
+        <changes xsi:type="history:Set" element="#//@releases.16/@changes.0/@changes.17/@changes.0/@element/useCardinality"
             featureName="defaultValueLiteral" dataValue="true"/>
-        <changes xsi:type="history:Set" element="process.ecore#//MultiInstantiation/useCardinality"
+        <changes xsi:type="history:Set" element="#//@releases.16/@changes.0/@changes.17/@changes.0/@element/useCardinality"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
       </changes>
-      <changes xsi:type="history:Create" target="process.ecore#//MultiInstantiation"
-          referenceName="eStructuralFeatures" element="process.ecore#//MultiInstantiation/collectionDataToMultiInstantiate">
-        <changes xsi:type="history:Set" element="process.ecore#//MultiInstantiation/collectionDataToMultiInstantiate"
+      <changes xsi:type="history:Create" target="#//@releases.16/@changes.0/@changes.17/@changes.0/@element"
+          referenceName="eStructuralFeatures" element="#//@releases.16/@changes.0/@changes.17/@changes.0/@element/collectionDataToMultiInstantiate">
+        <changes xsi:type="history:Set" element="#//@releases.16/@changes.0/@changes.17/@changes.0/@element/collectionDataToMultiInstantiate"
             featureName="name" dataValue="collectionDataToMultiInstantiate"/>
-        <changes xsi:type="history:Set" element="process.ecore#//MultiInstantiation/collectionDataToMultiInstantiate"
+        <changes xsi:type="history:Set" element="#//@releases.16/@changes.0/@changes.17/@changes.0/@element/collectionDataToMultiInstantiate"
             featureName="eType" referenceValue="process.ecore#//Data"/>
       </changes>
-      <changes xsi:type="history:Create" target="process.ecore#//MultiInstantiation"
-          referenceName="eStructuralFeatures" element="process.ecore#//MultiInstantiation/inputData">
-        <changes xsi:type="history:Set" element="process.ecore#//MultiInstantiation/inputData"
+      <changes xsi:type="history:Create" target="#//@releases.16/@changes.0/@changes.17/@changes.0/@element"
+          referenceName="eStructuralFeatures" element="#//@releases.16/@changes.0/@changes.17/@changes.0/@element/inputData">
+        <changes xsi:type="history:Set" element="#//@releases.16/@changes.0/@changes.17/@changes.0/@element/inputData"
             featureName="name" dataValue="inputData"/>
-        <changes xsi:type="history:Set" element="process.ecore#//MultiInstantiation/inputData"
+        <changes xsi:type="history:Set" element="#//@releases.16/@changes.0/@changes.17/@changes.0/@element/inputData"
             featureName="eType" referenceValue="process.ecore#//Data"/>
       </changes>
-      <changes xsi:type="history:Create" target="process.ecore#//MultiInstantiation"
-          referenceName="eStructuralFeatures" element="process.ecore#//MultiInstantiation/outputData">
-        <changes xsi:type="history:Set" element="process.ecore#//MultiInstantiation/outputData"
+      <changes xsi:type="history:Create" target="#//@releases.16/@changes.0/@changes.17/@changes.0/@element"
+          referenceName="eStructuralFeatures" element="#//@releases.16/@changes.0/@changes.17/@changes.0/@element/outputData">
+        <changes xsi:type="history:Set" element="#//@releases.16/@changes.0/@changes.17/@changes.0/@element/outputData"
             featureName="name" dataValue="outputData"/>
-        <changes xsi:type="history:Set" element="process.ecore#//MultiInstantiation/outputData"
+        <changes xsi:type="history:Set" element="#//@releases.16/@changes.0/@changes.17/@changes.0/@element/outputData"
             featureName="eType" referenceValue="process.ecore#//Data"/>
       </changes>
-      <changes xsi:type="history:Create" target="process.ecore#//MultiInstantiation"
-          referenceName="eStructuralFeatures" element="process.ecore#//MultiInstantiation/listDataContainingOutputResults">
-        <changes xsi:type="history:Set" element="process.ecore#//MultiInstantiation/listDataContainingOutputResults"
+      <changes xsi:type="history:Create" target="#//@releases.16/@changes.0/@changes.17/@changes.0/@element"
+          referenceName="eStructuralFeatures" element="#//@releases.16/@changes.0/@changes.17/@changes.0/@element/listDataContainingOutputResults">
+        <changes xsi:type="history:Set" element="#//@releases.16/@changes.0/@changes.17/@changes.0/@element/listDataContainingOutputResults"
             featureName="name" dataValue="listDataContainingOutputResults"/>
-        <changes xsi:type="history:Set" element="process.ecore#//MultiInstantiation/listDataContainingOutputResults"
+        <changes xsi:type="history:Set" element="#//@releases.16/@changes.0/@changes.17/@changes.0/@element/listDataContainingOutputResults"
             featureName="eType" referenceValue="process.ecore#//Data"/>
       </changes>
-      <changes xsi:type="history:Create" target="process.ecore#//MultiInstantiation"
-          referenceName="eStructuralFeatures" element="process.ecore#//MultiInstantiation/sequential">
-        <changes xsi:type="history:Set" element="process.ecore#//MultiInstantiation/sequential"
+      <changes xsi:type="history:Create" target="#//@releases.16/@changes.0/@changes.17/@changes.0/@element"
+          referenceName="eStructuralFeatures" element="#//@releases.16/@changes.0/@changes.17/@changes.0/@element/sequential">
+        <changes xsi:type="history:Set" element="#//@releases.16/@changes.0/@changes.17/@changes.0/@element/sequential"
             featureName="name" dataValue="sequential"/>
-        <changes xsi:type="history:Set" element="process.ecore#//MultiInstantiation/sequential"
+        <changes xsi:type="history:Set" element="#//@releases.16/@changes.0/@changes.17/@changes.0/@element/sequential"
             featureName="defaultValueLiteral" dataValue="false"/>
-        <changes xsi:type="history:Set" element="process.ecore#//MultiInstantiation/sequential"
+        <changes xsi:type="history:Set" element="#//@releases.16/@changes.0/@changes.17/@changes.0/@element/sequential"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#/" referenceName="eClassifiers"
@@ -2119,30 +2119,30 @@
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#//Activity" referenceName="eStructuralFeatures"
-          element="process.ecore#//Activity/multiInstantiation">
-        <changes xsi:type="history:Set" element="process.ecore#//Activity/multiInstantiation"
+          element="#//@releases.16/@changes.0/@changes.4/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.16/@changes.0/@changes.4/@changes.0/@element"
             featureName="name" dataValue="multiInstantiation"/>
-        <changes xsi:type="history:Set" element="process.ecore#//Activity/multiInstantiation"
+        <changes xsi:type="history:Set" element="#//@releases.16/@changes.0/@changes.4/@changes.0/@element"
             featureName="containment" dataValue="true" oldDataValue="false"/>
-        <changes xsi:type="history:Set" element="process.ecore#//Activity/multiInstantiation"
-            featureName="eType" referenceValue="process.ecore#//MultiInstantiation"/>
+        <changes xsi:type="history:Set" element="#//@releases.16/@changes.0/@changes.4/@changes.0/@element"
+            featureName="eType" referenceValue="#//@releases.16/@changes.0/@changes.17/@changes.0/@element"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#//Activity" referenceName="eStructuralFeatures"
-          element="process.ecore#//Activity/isLoop">
-        <changes xsi:type="history:Set" element="process.ecore#//Activity/isLoop"
+          element="#//@releases.16/@changes.0/@changes.5/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.16/@changes.0/@changes.5/@changes.0/@element"
             featureName="name" dataValue="isLoop"/>
-        <changes xsi:type="history:Set" element="process.ecore#//Activity/isLoop"
+        <changes xsi:type="history:Set" element="#//@releases.16/@changes.0/@changes.5/@changes.0/@element"
             featureName="defaultValueLiteral" dataValue="false"/>
-        <changes xsi:type="history:Set" element="process.ecore#//Activity/isLoop"
+        <changes xsi:type="history:Set" element="#//@releases.16/@changes.0/@changes.5/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EBooleanObject"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#//Activity" referenceName="eStructuralFeatures"
-          element="process.ecore#//Activity/testBefore">
-        <changes xsi:type="history:Set" element="process.ecore#//Activity/testBefore"
+          element="process.ecore#//MultiInstantiable/testBefore">
+        <changes xsi:type="history:Set" element="process.ecore#//MultiInstantiable/testBefore"
             featureName="name" dataValue="testBefore"/>
-        <changes xsi:type="history:Set" element="process.ecore#//Activity/testBefore"
+        <changes xsi:type="history:Set" element="process.ecore#//MultiInstantiable/testBefore"
             featureName="defaultValueLiteral" dataValue="false"/>
-        <changes xsi:type="history:Set" element="process.ecore#//Activity/testBefore"
+        <changes xsi:type="history:Set" element="process.ecore#//MultiInstantiable/testBefore"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EBooleanObject"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#//Activity" referenceName="eStructuralFeatures"
@@ -2157,10 +2157,10 @@
             featureName="eType" referenceValue="process.ecore#//BoundaryEvent"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#//Activity" referenceName="eStructuralFeatures"
-          element="process.ecore#//Activity/isMultiInstance">
-        <changes xsi:type="history:Set" element="process.ecore#//Activity/isMultiInstance"
+          element="#//@releases.16/@changes.0/@changes.9/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.16/@changes.0/@changes.9/@changes.0/@element"
             featureName="name" dataValue="isMultiInstance"/>
-        <changes xsi:type="history:Set" element="process.ecore#//Activity/isMultiInstance"
+        <changes xsi:type="history:Set" element="#//@releases.16/@changes.0/@changes.9/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#/" referenceName="eClassifiers"
@@ -6135,21 +6135,21 @@
             featureName="eType" referenceValue="expression.ecore#//Expression"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#//Activity" referenceName="eStructuralFeatures"
-          element="process.ecore#//Activity/loopCondition">
-        <changes xsi:type="history:Set" element="process.ecore#//Activity/loopCondition"
+          element="process.ecore#//MultiInstantiable/loopCondition">
+        <changes xsi:type="history:Set" element="process.ecore#//MultiInstantiable/loopCondition"
             featureName="name" dataValue="loopCondition"/>
-        <changes xsi:type="history:Set" element="process.ecore#//Activity/loopCondition"
+        <changes xsi:type="history:Set" element="process.ecore#//MultiInstantiable/loopCondition"
             featureName="containment" dataValue="true" oldDataValue="false"/>
-        <changes xsi:type="history:Set" element="process.ecore#//Activity/loopCondition"
+        <changes xsi:type="history:Set" element="process.ecore#//MultiInstantiable/loopCondition"
             featureName="eType" referenceValue="expression.ecore#//Expression"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#//Activity" referenceName="eStructuralFeatures"
-          element="process.ecore#//Activity/loopMaximum">
-        <changes xsi:type="history:Set" element="process.ecore#//Activity/loopMaximum"
+          element="process.ecore#//MultiInstantiable/loopMaximum">
+        <changes xsi:type="history:Set" element="process.ecore#//MultiInstantiable/loopMaximum"
             featureName="name" dataValue="loopMaximum"/>
-        <changes xsi:type="history:Set" element="process.ecore#//Activity/loopMaximum"
+        <changes xsi:type="history:Set" element="process.ecore#//MultiInstantiable/loopMaximum"
             featureName="containment" dataValue="true" oldDataValue="false"/>
-        <changes xsi:type="history:Set" element="process.ecore#//Activity/loopMaximum"
+        <changes xsi:type="history:Set" element="process.ecore#//MultiInstantiable/loopMaximum"
             featureName="eType" referenceValue="expression.ecore#//Expression"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#//CallActivity" referenceName="eStructuralFeatures"
@@ -6242,22 +6242,22 @@
         <changes xsi:type="history:Set" element="process.ecore#//Message/targetElementExpression"
             featureName="eType" referenceValue="expression.ecore#//Expression"/>
       </changes>
-      <changes xsi:type="history:Create" target="process.ecore#//MultiInstantiation"
-          referenceName="eStructuralFeatures" element="process.ecore#//MultiInstantiation/cardinality">
-        <changes xsi:type="history:Set" element="process.ecore#//MultiInstantiation/cardinality"
+      <changes xsi:type="history:Create" target="#//@releases.16/@changes.0/@changes.17/@changes.0/@element"
+          referenceName="eStructuralFeatures" element="#//@releases.16/@changes.0/@changes.17/@changes.0/@element/cardinality">
+        <changes xsi:type="history:Set" element="#//@releases.16/@changes.0/@changes.17/@changes.0/@element/cardinality"
             featureName="name" dataValue="cardinality"/>
-        <changes xsi:type="history:Set" element="process.ecore#//MultiInstantiation/cardinality"
+        <changes xsi:type="history:Set" element="#//@releases.16/@changes.0/@changes.17/@changes.0/@element/cardinality"
             featureName="containment" dataValue="true" oldDataValue="false"/>
-        <changes xsi:type="history:Set" element="process.ecore#//MultiInstantiation/cardinality"
+        <changes xsi:type="history:Set" element="#//@releases.16/@changes.0/@changes.17/@changes.0/@element/cardinality"
             featureName="eType" referenceValue="expression.ecore#//Expression"/>
       </changes>
-      <changes xsi:type="history:Create" target="process.ecore#//MultiInstantiation"
-          referenceName="eStructuralFeatures" element="process.ecore#//MultiInstantiation/completionCondition">
-        <changes xsi:type="history:Set" element="process.ecore#//MultiInstantiation/completionCondition"
+      <changes xsi:type="history:Create" target="#//@releases.16/@changes.0/@changes.17/@changes.0/@element"
+          referenceName="eStructuralFeatures" element="#//@releases.16/@changes.0/@changes.17/@changes.0/@element/completionCondition">
+        <changes xsi:type="history:Set" element="#//@releases.16/@changes.0/@changes.17/@changes.0/@element/completionCondition"
             featureName="name" dataValue="completionCondition"/>
-        <changes xsi:type="history:Set" element="process.ecore#//MultiInstantiation/completionCondition"
+        <changes xsi:type="history:Set" element="#//@releases.16/@changes.0/@changes.17/@changes.0/@element/completionCondition"
             featureName="containment" dataValue="true" oldDataValue="false"/>
-        <changes xsi:type="history:Set" element="process.ecore#//MultiInstantiation/completionCondition"
+        <changes xsi:type="history:Set" element="#//@releases.16/@changes.0/@changes.17/@changes.0/@element/completionCondition"
             featureName="eType" referenceValue="expression.ecore#//Expression"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#//PageFlow" referenceName="eStructuralFeatures"
@@ -8094,8 +8094,486 @@
     <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.custom.migration.connector.UpdateCMISConnectorVersionCustomMigration"/>
     <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.custom.migration.connector.UpdateAlfrescoMigrationConnectorVersionTo110"/>
   </releases>
-  <releases date="2014-08-06T11:48:39.611+0200" label="Release 6.3.4-001">
+  <releases date="2014-08-06T11:48:39.611+0200" label="6.3.4-001">
     <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.custom.migration.connector.UpdateAlfrescoMigrationConnectorVersionTo113"/>
+  </releases>
+  <releases date="2014-07-30T11:48:39.611+0200" label="6.4.0-001">
+    <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.custom.migration.multiinstance.MultiInstanceCustomMigration">
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Create" target="process.ecore#/" referenceName="eClassifiers"
+            element="process.ecore#//MultiInstantiable">
+          <changes xsi:type="history:Set" element="process.ecore#//MultiInstantiable"
+              featureName="name" dataValue="MultiInstantiable"/>
+          <changes xsi:type="history:Set" element="process.ecore#//MultiInstantiable"
+              featureName="abstract" dataValue="true" oldDataValue="false"/>
+        </changes>
+        <operation name="newClass">
+          <parameters name="ePackage">
+            <referenceValue element="process.ecore#/"/>
+          </parameters>
+          <parameters name="name">
+            <dataValue>MultiInstantiable</dataValue>
+          </parameters>
+          <parameters name="superClasses"/>
+          <parameters name="abstr">
+            <dataValue>true</dataValue>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:CompositeChange">
+        <changes xsi:type="history:Add" element="process.ecore#//Activity" featureName="eSuperTypes"
+            referenceValue="process.ecore#//MultiInstantiable"/>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Create" target="process.ecore#/" referenceName="eClassifiers"
+            element="process.ecore#//MultiInstanceType">
+          <changes xsi:type="history:Set" element="process.ecore#//MultiInstanceType"
+              featureName="name" dataValue="MultiInstanceType"/>
+        </changes>
+        <changes xsi:type="history:Create" target="process.ecore#//MultiInstanceType"
+            referenceName="eLiterals" element="process.ecore#//MultiInstanceType/NONE">
+          <changes xsi:type="history:Set" element="process.ecore#//MultiInstanceType/NONE"
+              featureName="name" dataValue="NONE"/>
+          <changes xsi:type="history:Set" element="process.ecore#//MultiInstanceType/NONE"
+              featureName="literal" dataValue="NONE"/>
+        </changes>
+        <changes xsi:type="history:Create" target="process.ecore#//MultiInstanceType"
+            referenceName="eLiterals" element="process.ecore#//MultiInstanceType/STANDARD">
+          <changes xsi:type="history:Set" element="process.ecore#//MultiInstanceType/STANDARD"
+              featureName="name" dataValue="STANDARD"/>
+          <changes xsi:type="history:Set" element="process.ecore#//MultiInstanceType/STANDARD"
+              featureName="literal" dataValue="STANDARD"/>
+          <changes xsi:type="history:Set" element="process.ecore#//MultiInstanceType/STANDARD"
+              featureName="value" dataValue="1" oldDataValue="0"/>
+        </changes>
+        <changes xsi:type="history:Create" target="process.ecore#//MultiInstanceType"
+            referenceName="eLiterals" element="process.ecore#//MultiInstanceType/PARALLEL">
+          <changes xsi:type="history:Set" element="process.ecore#//MultiInstanceType/PARALLEL"
+              featureName="name" dataValue="PARALLEL"/>
+          <changes xsi:type="history:Set" element="process.ecore#//MultiInstanceType/PARALLEL"
+              featureName="literal" dataValue="PARALLEL"/>
+          <changes xsi:type="history:Set" element="process.ecore#//MultiInstanceType/PARALLEL"
+              featureName="value" dataValue="2" oldDataValue="0"/>
+        </changes>
+        <changes xsi:type="history:Create" target="process.ecore#//MultiInstanceType"
+            referenceName="eLiterals" element="process.ecore#//MultiInstanceType/SEQUENTIAL">
+          <changes xsi:type="history:Set" element="process.ecore#//MultiInstanceType/SEQUENTIAL"
+              featureName="name" dataValue="SEQUENTIAL"/>
+          <changes xsi:type="history:Set" element="process.ecore#//MultiInstanceType/SEQUENTIAL"
+              featureName="literal" dataValue="SEQUENTIAL"/>
+          <changes xsi:type="history:Set" element="process.ecore#//MultiInstanceType/SEQUENTIAL"
+              featureName="value" dataValue="3" oldDataValue="0"/>
+        </changes>
+        <operation name="createEnumeration">
+          <parameters name="ePackage">
+            <referenceValue element="process.ecore#/"/>
+          </parameters>
+          <parameters name="name">
+            <dataValue>MultiInstanceType</dataValue>
+          </parameters>
+          <parameters name="literals">
+            <dataValue>NONE</dataValue>
+            <dataValue>STANDARD</dataValue>
+            <dataValue>PARALLEL</dataValue>
+            <dataValue>SEQUENTIAL</dataValue>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Create" target="process.ecore#//MultiInstantiable"
+            referenceName="eStructuralFeatures" element="process.ecore#//MultiInstantiable/type">
+          <changes xsi:type="history:Set" element="process.ecore#//MultiInstantiable/type"
+              featureName="name" dataValue="type"/>
+          <changes xsi:type="history:Set" element="process.ecore#//MultiInstantiable/type"
+              featureName="lowerBound" dataValue="1" oldDataValue="0"/>
+          <changes xsi:type="history:Set" element="process.ecore#//MultiInstantiable/type"
+              featureName="defaultValueLiteral" dataValue="NONE"/>
+          <changes xsi:type="history:Set" element="process.ecore#//MultiInstantiable/type"
+              featureName="eType" referenceValue="process.ecore#//MultiInstanceType"/>
+        </changes>
+        <operation name="newAttribute">
+          <parameters name="eClass">
+            <referenceValue element="process.ecore#//MultiInstantiable"/>
+          </parameters>
+          <parameters name="name">
+            <dataValue>type</dataValue>
+          </parameters>
+          <parameters name="type">
+            <referenceValue element="process.ecore#//MultiInstanceType"/>
+          </parameters>
+          <parameters name="lowerBound">
+            <dataValue>1</dataValue>
+          </parameters>
+          <parameters name="upperBound">
+            <dataValue>1</dataValue>
+          </parameters>
+          <parameters name="defaultValue">
+            <dataValue>NONE</dataValue>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Delete" target="process.ecore#//Activity" referenceName="eStructuralFeatures">
+          <element xsi:type="ecore:EReference" name="multiInstantiation" eType="#//@releases.16/@changes.0/@changes.17/@changes.0/@element"
+              containment="true"/>
+        </changes>
+        <operation name="deleteFeature2">
+          <parameters name="feature">
+            <referenceValue element="#//@releases.16/@changes.0/@changes.4/@changes.0/@element"/>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Delete" target="process.ecore#//Activity" referenceName="eStructuralFeatures">
+          <element xsi:type="ecore:EAttribute" name="isLoop" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBooleanObject"
+              defaultValueLiteral="false"/>
+        </changes>
+        <operation name="deleteFeature2">
+          <parameters name="feature">
+            <referenceValue element="#//@releases.16/@changes.0/@changes.5/@changes.0/@element"/>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Move" target="process.ecore#//MultiInstantiable"
+            referenceName="eStructuralFeatures" element="process.ecore#//MultiInstantiable/testBefore"
+            source="process.ecore#//Activity"/>
+        <operation name="pullFeature">
+          <parameters name="features">
+            <referenceValue element="process.ecore#//MultiInstantiable/testBefore"/>
+          </parameters>
+          <parameters name="targetClass">
+            <referenceValue element="process.ecore#//MultiInstantiable"/>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Move" target="process.ecore#//MultiInstantiable"
+            referenceName="eStructuralFeatures" element="process.ecore#//MultiInstantiable/loopCondition"
+            source="process.ecore#//Activity"/>
+        <operation name="pullFeature">
+          <parameters name="features">
+            <referenceValue element="process.ecore#//MultiInstantiable/loopCondition"/>
+          </parameters>
+          <parameters name="targetClass">
+            <referenceValue element="process.ecore#//MultiInstantiable"/>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Move" target="process.ecore#//MultiInstantiable"
+            referenceName="eStructuralFeatures" element="process.ecore#//MultiInstantiable/loopMaximum"
+            source="process.ecore#//Activity"/>
+        <operation name="pullFeature">
+          <parameters name="features">
+            <referenceValue element="process.ecore#//MultiInstantiable/loopMaximum"/>
+          </parameters>
+          <parameters name="targetClass">
+            <referenceValue element="process.ecore#//MultiInstantiable"/>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Delete" target="process.ecore#//Activity" referenceName="eStructuralFeatures">
+          <element xsi:type="ecore:EAttribute" name="isMultiInstance" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+        </changes>
+        <operation name="deleteFeature2">
+          <parameters name="feature">
+            <referenceValue element="#//@releases.16/@changes.0/@changes.9/@changes.0/@element"/>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Create" target="process.ecore#//MultiInstantiable"
+            referenceName="eStructuralFeatures" element="process.ecore#//MultiInstantiable/useCardinality">
+          <changes xsi:type="history:Set" element="process.ecore#//MultiInstantiable/useCardinality"
+              featureName="name" dataValue="useCardinality"/>
+          <changes xsi:type="history:Set" element="process.ecore#//MultiInstantiable/useCardinality"
+              featureName="defaultValueLiteral" dataValue="false"/>
+          <changes xsi:type="history:Set" element="process.ecore#//MultiInstantiable/useCardinality"
+              featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+        </changes>
+        <operation name="newAttribute">
+          <parameters name="eClass">
+            <referenceValue element="process.ecore#//MultiInstantiable"/>
+          </parameters>
+          <parameters name="name">
+            <dataValue>useCardinality</dataValue>
+          </parameters>
+          <parameters name="type">
+            <referenceValue element="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+          </parameters>
+          <parameters name="lowerBound">
+            <dataValue>0</dataValue>
+          </parameters>
+          <parameters name="upperBound">
+            <dataValue>1</dataValue>
+          </parameters>
+          <parameters name="defaultValue">
+            <dataValue>true</dataValue>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Create" target="process.ecore#//MultiInstantiable"
+            referenceName="eStructuralFeatures" element="process.ecore#//MultiInstantiable/cardinalityExpression">
+          <changes xsi:type="history:Set" element="process.ecore#//MultiInstantiable/cardinalityExpression"
+              featureName="name" dataValue="cardinalityExpression"/>
+          <changes xsi:type="history:Set" element="process.ecore#//MultiInstantiable/cardinalityExpression"
+              featureName="containment" dataValue="true" oldDataValue="false"/>
+          <changes xsi:type="history:Set" element="process.ecore#//MultiInstantiable/cardinalityExpression"
+              featureName="eType" referenceValue="expression.ecore#//Expression"/>
+        </changes>
+        <operation name="newReference">
+          <parameters name="eClass">
+            <referenceValue element="process.ecore#//MultiInstantiable"/>
+          </parameters>
+          <parameters name="name">
+            <dataValue>cardinalityExpression</dataValue>
+          </parameters>
+          <parameters name="type">
+            <referenceValue element="expression.ecore#//Expression"/>
+          </parameters>
+          <parameters name="lowerBound">
+            <dataValue>0</dataValue>
+          </parameters>
+          <parameters name="upperBound">
+            <dataValue>1</dataValue>
+          </parameters>
+          <parameters name="containment">
+            <dataValue>true</dataValue>
+          </parameters>
+          <parameters name="opposite"/>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Create" target="process.ecore#//MultiInstantiable"
+            referenceName="eStructuralFeatures" element="process.ecore#//MultiInstantiable/collectionDataToMultiInstantiate">
+          <changes xsi:type="history:Set" element="process.ecore#//MultiInstantiable/collectionDataToMultiInstantiate"
+              featureName="name" dataValue="collectionDataToMultiInstantiate"/>
+          <changes xsi:type="history:Set" element="process.ecore#//MultiInstantiable/collectionDataToMultiInstantiate"
+              featureName="eType" referenceValue="process.ecore#//Data"/>
+        </changes>
+        <operation name="newReference">
+          <parameters name="eClass">
+            <referenceValue element="process.ecore#//MultiInstantiable"/>
+          </parameters>
+          <parameters name="name">
+            <dataValue>collectionDataToMultiInstantiate</dataValue>
+          </parameters>
+          <parameters name="type">
+            <referenceValue element="process.ecore#//Data"/>
+          </parameters>
+          <parameters name="lowerBound">
+            <dataValue>0</dataValue>
+          </parameters>
+          <parameters name="upperBound">
+            <dataValue>1</dataValue>
+          </parameters>
+          <parameters name="containment">
+            <dataValue>false</dataValue>
+          </parameters>
+          <parameters name="opposite"/>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Create" target="process.ecore#//MultiInstantiable"
+            referenceName="eStructuralFeatures" element="process.ecore#//MultiInstantiable/iteratorExpression">
+          <changes xsi:type="history:Set" element="process.ecore#//MultiInstantiable/iteratorExpression"
+              featureName="name" dataValue="iteratorExpression"/>
+          <changes xsi:type="history:Set" element="process.ecore#//MultiInstantiable/iteratorExpression"
+              featureName="containment" dataValue="true" oldDataValue="false"/>
+          <changes xsi:type="history:Set" element="process.ecore#//MultiInstantiable/iteratorExpression"
+              featureName="eType" referenceValue="expression.ecore#//Expression"/>
+        </changes>
+        <operation name="newReference">
+          <parameters name="eClass">
+            <referenceValue element="process.ecore#//MultiInstantiable"/>
+          </parameters>
+          <parameters name="name">
+            <dataValue>iteratorExpression</dataValue>
+          </parameters>
+          <parameters name="type">
+            <referenceValue element="expression.ecore#//Expression"/>
+          </parameters>
+          <parameters name="lowerBound">
+            <dataValue>0</dataValue>
+          </parameters>
+          <parameters name="upperBound">
+            <dataValue>1</dataValue>
+          </parameters>
+          <parameters name="containment">
+            <dataValue>true</dataValue>
+          </parameters>
+          <parameters name="opposite"/>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Create" target="process.ecore#//MultiInstantiable"
+            referenceName="eStructuralFeatures" element="process.ecore#//MultiInstantiable/outputData">
+          <changes xsi:type="history:Set" element="process.ecore#//MultiInstantiable/outputData"
+              featureName="name" dataValue="outputData"/>
+          <changes xsi:type="history:Set" element="process.ecore#//MultiInstantiable/outputData"
+              featureName="eType" referenceValue="process.ecore#//Data"/>
+        </changes>
+        <operation name="newReference">
+          <parameters name="eClass">
+            <referenceValue element="process.ecore#//MultiInstantiable"/>
+          </parameters>
+          <parameters name="name">
+            <dataValue>outputData</dataValue>
+          </parameters>
+          <parameters name="type">
+            <referenceValue element="process.ecore#//Data"/>
+          </parameters>
+          <parameters name="lowerBound">
+            <dataValue>0</dataValue>
+          </parameters>
+          <parameters name="upperBound">
+            <dataValue>1</dataValue>
+          </parameters>
+          <parameters name="containment">
+            <dataValue>false</dataValue>
+          </parameters>
+          <parameters name="opposite"/>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Create" target="process.ecore#//MultiInstantiable"
+            referenceName="eStructuralFeatures" element="process.ecore#//MultiInstantiable/listDataContainingOutputResults">
+          <changes xsi:type="history:Set" element="process.ecore#//MultiInstantiable/listDataContainingOutputResults"
+              featureName="name" dataValue="listDataContainingOutputResults"/>
+          <changes xsi:type="history:Set" element="process.ecore#//MultiInstantiable/listDataContainingOutputResults"
+              featureName="eType" referenceValue="process.ecore#//Data"/>
+        </changes>
+        <operation name="newReference">
+          <parameters name="eClass">
+            <referenceValue element="process.ecore#//MultiInstantiable"/>
+          </parameters>
+          <parameters name="name">
+            <dataValue>listDataContainingOutputResults</dataValue>
+          </parameters>
+          <parameters name="type">
+            <referenceValue element="process.ecore#//Data"/>
+          </parameters>
+          <parameters name="lowerBound">
+            <dataValue>0</dataValue>
+          </parameters>
+          <parameters name="upperBound">
+            <dataValue>1</dataValue>
+          </parameters>
+          <parameters name="containment">
+            <dataValue>false</dataValue>
+          </parameters>
+          <parameters name="opposite"/>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Create" target="process.ecore#//MultiInstantiable"
+            referenceName="eStructuralFeatures" element="process.ecore#//MultiInstantiable/completionCondition">
+          <changes xsi:type="history:Set" element="process.ecore#//MultiInstantiable/completionCondition"
+              featureName="name" dataValue="completionCondition"/>
+          <changes xsi:type="history:Set" element="process.ecore#//MultiInstantiable/completionCondition"
+              featureName="containment" dataValue="true" oldDataValue="false"/>
+          <changes xsi:type="history:Set" element="process.ecore#//MultiInstantiable/completionCondition"
+              featureName="eType" referenceValue="expression.ecore#//Expression"/>
+        </changes>
+        <operation name="newReference">
+          <parameters name="eClass">
+            <referenceValue element="process.ecore#//MultiInstantiable"/>
+          </parameters>
+          <parameters name="name">
+            <dataValue>completionCondition</dataValue>
+          </parameters>
+          <parameters name="type">
+            <referenceValue element="expression.ecore#//Expression"/>
+          </parameters>
+          <parameters name="lowerBound">
+            <dataValue>0</dataValue>
+          </parameters>
+          <parameters name="upperBound">
+            <dataValue>1</dataValue>
+          </parameters>
+          <parameters name="containment">
+            <dataValue>true</dataValue>
+          </parameters>
+          <parameters name="opposite"/>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Delete" target="process.ecore#/" referenceName="eClassifiers">
+          <element xsi:type="ecore:EClass" name="MultiInstantiation">
+            <eStructuralFeatures xsi:type="ecore:EAttribute" name="useCardinality"
+                eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
+                defaultValueLiteral="true"/>
+            <eStructuralFeatures xsi:type="ecore:EReference" name="cardinality" eType="ecore:EClass expression.ecore#//Expression"
+                containment="true"/>
+            <eStructuralFeatures xsi:type="ecore:EReference" name="collectionDataToMultiInstantiate"
+                eType="ecore:EClass process.ecore#//Data"/>
+            <eStructuralFeatures xsi:type="ecore:EReference" name="inputData" eType="ecore:EClass process.ecore#//Data"/>
+            <eStructuralFeatures xsi:type="ecore:EReference" name="outputData" eType="ecore:EClass process.ecore#//Data"/>
+            <eStructuralFeatures xsi:type="ecore:EReference" name="listDataContainingOutputResults"
+                eType="ecore:EClass process.ecore#//Data"/>
+            <eStructuralFeatures xsi:type="ecore:EReference" name="completionCondition"
+                eType="ecore:EClass expression.ecore#//Expression" containment="true"/>
+            <eStructuralFeatures xsi:type="ecore:EAttribute" name="sequential" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
+                defaultValueLiteral="false"/>
+          </element>
+        </changes>
+        <operation name="deleteClass">
+          <parameters name="eClass">
+            <referenceValue element="#//@releases.16/@changes.0/@changes.17/@changes.0/@element"/>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Create" target="process.ecore#//MultiInstantiable"
+            referenceName="eStructuralFeatures" element="process.ecore#//MultiInstantiable/storeOutput">
+          <changes xsi:type="history:Set" element="process.ecore#//MultiInstantiable/storeOutput"
+              featureName="name" dataValue="storeOutput"/>
+          <changes xsi:type="history:Set" element="process.ecore#//MultiInstantiable/storeOutput"
+              featureName="defaultValueLiteral" dataValue="false"/>
+          <changes xsi:type="history:Set" element="process.ecore#//MultiInstantiable/storeOutput"
+              featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+        </changes>
+        <operation name="newAttribute">
+          <parameters name="eClass">
+            <referenceValue element="process.ecore#//MultiInstantiable"/>
+          </parameters>
+          <parameters name="name">
+            <dataValue>storeOutput</dataValue>
+          </parameters>
+          <parameters name="type">
+            <referenceValue element="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+          </parameters>
+          <parameters name="lowerBound">
+            <dataValue>0</dataValue>
+          </parameters>
+          <parameters name="upperBound">
+            <dataValue>1</dataValue>
+          </parameters>
+          <parameters name="defaultValue">
+            <dataValue>false</dataValue>
+          </parameters>
+        </operation>
+      </changes>
+    </changes>
+    <changes xsi:type="history:CompositeChange">
+      <changes xsi:type="history:Set" element="process.ecore#//PageFlow/entryPageFlowType"
+          featureName="defaultValueLiteral" dataValue="PAGEFLOW" oldDataValue=""/>
+      <changes xsi:type="history:Set" element="process.ecore#//RecapFlow/recapPageFlowType"
+          featureName="defaultValueLiteral" dataValue="PAGEFLOW" oldDataValue=""/>
+      <changes xsi:type="history:Set" element="process.ecore#//SequenceFlow/conditionType"
+          featureName="defaultValueLiteral" dataValue="EXPRESSION" oldDataValue="GROOVY_EXPRESSION"/>
+      <changes xsi:type="history:Set" element="process.ecore#//ViewPageFlow/viewPageFlowType"
+          featureName="defaultValueLiteral" dataValue="PAGEFLOW" oldDataValue=""/>
+      <changes xsi:type="history:Set" element="simulation.ecore#//InjectionPeriod/repartition"
+          featureName="defaultValueLiteral" dataValue="CONSTANT" oldDataValue="0"/>
+      <changes xsi:type="history:Set" element="simulation.ecore#//SimulationNumberRange/repartitionType"
+          featureName="defaultValueLiteral" dataValue="CONSTANT" oldDataValue="0"/>
+      <changes xsi:type="history:Set" element="process.ecore#//MultiInstantiable/useCardinality"
+          featureName="defaultValueLiteral" dataValue="false" oldDataValue="true"/>
+    </changes>
   </releases>
   <releases/>
 </history:History>

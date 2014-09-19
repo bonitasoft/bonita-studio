@@ -77,7 +77,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="nbInstances" lowerBound="1"
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt" defaultValueLiteral="1"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="repartition" lowerBound="1"
-        eType="#//RepartitionType" defaultValueLiteral="0"/>
+        eType="#//RepartitionType" defaultValueLiteral="CONSTANT"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="RepartitionType">
     <eLiterals name="CONSTANT" literal="CONSTANT"/>
@@ -109,7 +109,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="probability" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"
         defaultValueLiteral="1"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="repartitionType" lowerBound="1"
-        eType="#//RepartitionType" defaultValueLiteral="0"/>
+        eType="#//RepartitionType" defaultValueLiteral="CONSTANT"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SimulationDataContainer" abstract="true"
       interface="true">

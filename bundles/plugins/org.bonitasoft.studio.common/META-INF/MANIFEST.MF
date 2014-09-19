@@ -45,7 +45,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.codehaus.groovy;bundle-version="1.8.6",
  org.eclipse.jdt.groovy.core,
  org.codehaus.groovy.eclipse.codeassist.completion,
- org.eclipse.xtext.ui
+ org.eclipse.xtext.ui,
+ org.eclipse.core.databinding.beans;bundle-version="1.2.200"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Import-Package: org.bonitasoft.engine.bpm.bar,

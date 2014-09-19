@@ -5,12 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -68,7 +68,7 @@ import org.eclipse.swt.widgets.ToolItem;
 
 /**
  * @author Romain Bioteau
- * 
+ *
  */
 public class EditExpressionDialog extends TrayDialog implements IBonitaVariableContext {
 
@@ -90,14 +90,14 @@ public class EditExpressionDialog extends TrayDialog implements IBonitaVariableC
 
     protected final ViewerFilter[] viewerTypeFilters;
 
-    private boolean isPassword;
+    private final boolean isPassword;
 
     private boolean isPageFlowContext;
 
     private final Listener openTrayListener = new Listener() {
 
         @Override
-        public void handleEvent(Event event) {
+        public void handleEvent(final Event event) {
             if (getShell() != null
                     && currentExpressionEditor != null
                     && currentExpressionEditor.provideDialogTray()
@@ -113,17 +113,17 @@ public class EditExpressionDialog extends TrayDialog implements IBonitaVariableC
 
     protected Control helpControl;
 
-    private ExpressionViewer expressionViewer;
+    private final ExpressionViewer expressionViewer;
 
     @Override
-    public void openTray(DialogTray tray) throws IllegalStateException, UnsupportedOperationException {
+    public void openTray(final DialogTray tray) throws IllegalStateException, UnsupportedOperationException {
         super.openTray(tray);
         getShell().removeListener(SWT.Move, getShell().getListeners(SWT.Move)[0]);
         getShell().removeListener(SWT.Resize, getShell().getListeners(SWT.Resize)[0]);
     }
 
-    protected EditExpressionDialog(Shell parentShell, boolean isPassword, Expression inputExpression, EObject context, EditingDomain domain,
-            ViewerFilter[] viewerTypeFilters, ExpressionViewer expressionViewer) {
+    protected EditExpressionDialog(final Shell parentShell, final boolean isPassword, final Expression inputExpression, final EObject context, final EditingDomain domain,
+            final ViewerFilter[] viewerTypeFilters, final ExpressionViewer expressionViewer) {
         super(parentShell);
         this.inputExpression = inputExpression;
         if (this.inputExpression == null) {
@@ -156,7 +156,7 @@ public class EditExpressionDialog extends TrayDialog implements IBonitaVariableC
                 expressionType = ExpressionConstants.SCRIPT_TYPE;
             }
         }
-        IExpressionProvider currentProvider = ExpressionEditorService.getInstance().getExpressionProvider(expressionType);
+        final IExpressionProvider currentProvider = ExpressionEditorService.getInstance().getExpressionProvider(expressionType);
         if (currentProvider != null && expressionTypeViewer != null) {
             expressionTypeViewer.setSelection(new StructuredSelection(currentProvider));
         }
@@ -164,7 +164,7 @@ public class EditExpressionDialog extends TrayDialog implements IBonitaVariableC
         getShell().layout(true, true);
     }
 
-    private boolean isSupportedConstantType(String returnType) {
+    private boolean isSupportedConstantType(final String returnType) {
         return returnType.equals(String.class.getName()) ||
                 returnType.equals(Boolean.class.getName()) ||
                 returnType.equals(Double.class.getName()) ||
@@ -174,7 +174,7 @@ public class EditExpressionDialog extends TrayDialog implements IBonitaVariableC
     }
 
     @Override
-    protected void configureShell(Shell newShell) {
+    protected void configureShell(final Shell newShell) {
         super.configureShell(newShell);
         newShell.setText(Messages.editExpression);
     }
@@ -185,8 +185,8 @@ public class EditExpressionDialog extends TrayDialog implements IBonitaVariableC
     }
 
     @Override
-    protected Control createDialogArea(Composite parent) {
-        Composite composite = (Composite) super.createDialogArea(parent);
+    protected Control createDialogArea(final Composite parent) {
+        final Composite composite = (Composite) super.createDialogArea(parent);
 
         composite.setLayout(new GridLayout(2, false));
         composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
@@ -197,18 +197,18 @@ public class EditExpressionDialog extends TrayDialog implements IBonitaVariableC
         return composite;
     }
 
-    protected void createExpressionContentPanel(Composite parentForm) {
+    protected void createExpressionContentPanel(final Composite parentForm) {
         contentComposite = new Composite(parentForm, SWT.NONE);
         contentComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         contentComposite.setLayout(new GridLayout(1, false));
     }
 
-    protected void createExpressionTypePanel(Composite parentForm) {
-        Composite parentComposite = new Composite(parentForm, SWT.NONE);
+    protected void createExpressionTypePanel(final Composite parentForm) {
+        final Composite parentComposite = new Composite(parentForm, SWT.NONE);
         parentComposite.setLayoutData(GridDataFactory.swtDefaults().align(SWT.BEGINNING, SWT.FILL).grab(false, true).create());
         parentComposite.setLayout(new GridLayout(1, false));
 
-        Label expressionTypeLabel = new Label(parentComposite, SWT.NONE);
+        final Label expressionTypeLabel = new Label(parentComposite, SWT.NONE);
         expressionTypeLabel.setText(Messages.expressionTypeLabel);
         expressionTypeLabel.setLayoutData(GridDataFactory.swtDefaults().grab(true, false).create());
 
@@ -220,9 +220,9 @@ public class EditExpressionDialog extends TrayDialog implements IBonitaVariableC
         expressionTypeViewer.setSorter(new ViewerSorter() {
 
             @Override
-            public int compare(Viewer viewer, Object e1, Object e2) {
-                IExpressionProvider p1 = (IExpressionProvider) e1;
-                IExpressionProvider p2 = (IExpressionProvider) e2;
+            public int compare(final Viewer viewer, final Object e1, final Object e2) {
+                final IExpressionProvider p1 = (IExpressionProvider) e1;
+                final IExpressionProvider p2 = (IExpressionProvider) e2;
                 return p1.getTypeLabel().compareTo(p2.getTypeLabel());
             }
         });
@@ -234,11 +234,11 @@ public class EditExpressionDialog extends TrayDialog implements IBonitaVariableC
         expressionTypeViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 
             @Override
-            public void selectionChanged(SelectionChangedEvent event) {
+            public void selectionChanged(final SelectionChangedEvent event) {
                 if (!event.getSelection().equals(oldSelection)) {
                     oldSelection = event.getSelection();
                     expressionTypeChanged(event.getSelection());
-                    Button okButton = getButton(OK);
+                    final Button okButton = getButton(OK);
                     if (okButton != null && !okButton.isDisposed() && currentExpressionEditor != null) {
                         okButton.setEnabled(currentExpressionEditor.canFinish());
                     } else if (currentExpressionEditor == null) {
@@ -251,7 +251,7 @@ public class EditExpressionDialog extends TrayDialog implements IBonitaVariableC
         expressionTypeViewer.addPostSelectionChangedListener(new ISelectionChangedListener() {
 
             @Override
-            public void selectionChanged(SelectionChangedEvent event) {
+            public void selectionChanged(final SelectionChangedEvent event) {
                 getShell().layout(true, true);
             }
         });
@@ -262,7 +262,7 @@ public class EditExpressionDialog extends TrayDialog implements IBonitaVariableC
         return true;
     }
 
-    protected void expressionTypeChanged(ISelection selection) {
+    protected void expressionTypeChanged(final ISelection selection) {
         if (!selection.isEmpty()) {
             final IExpressionProvider provider = (IExpressionProvider) ((StructuredSelection) selection).getFirstElement();
             BusyIndicator.showWhile(Display.getDefault(), new Runnable() {
@@ -277,7 +277,7 @@ public class EditExpressionDialog extends TrayDialog implements IBonitaVariableC
     }
 
     @Override
-    protected Button createButton(Composite parent, int id, String label, boolean defaultButton) {
+    protected Button createButton(final Composite parent, final int id, final String label, final boolean defaultButton) {
         final Button button = super.createButton(parent, id, label, defaultButton);
         if (id == OK) {
             if (currentExpressionEditor != null) {
@@ -288,12 +288,12 @@ public class EditExpressionDialog extends TrayDialog implements IBonitaVariableC
 
     }
 
-    protected void showContent(String type) {
-        IExpressionProvider provider = ExpressionEditorService.getInstance().getExpressionProvider(type);
+    protected void showContent(final String type) {
+        final IExpressionProvider provider = ExpressionEditorService.getInstance().getExpressionProvider(type);
 
         Assert.isNotNull(provider);
 
-        for (Control c : contentComposite.getChildren()) {
+        for (final Control c : contentComposite.getChildren()) {
             c.dispose();
         }
 
@@ -311,10 +311,9 @@ public class EditExpressionDialog extends TrayDialog implements IBonitaVariableC
             currentExpressionEditor.createExpressionEditor(contentComposite, dataBindingContext, isPassword);
             contentComposite.layout(true, true);
             if (helpControl != null) {
-                // helpControl.setVisible(currentExpressionEditor.provideDialogTray());
                 helpControl.setVisible(false);
                 if (currentExpressionEditor.provideDialogTray()) {
-                    ToolItem item = ((ToolBar) helpControl).getItem(0);
+                    final ToolItem item = ((ToolBar) helpControl).getItem(0);
                     item.setSelection(true);
                     openTrayListener.handleEvent(new Event());
                 } else if (getTray() != null) {
@@ -322,11 +321,11 @@ public class EditExpressionDialog extends TrayDialog implements IBonitaVariableC
                 }
             }
 
-            UpdateValueStrategy selectionToExpressionType = new UpdateValueStrategy();
-            IConverter convert = new Converter(IExpressionProvider.class, String.class) {
+            final UpdateValueStrategy selectionToExpressionType = new UpdateValueStrategy();
+            final IConverter convert = new Converter(IExpressionProvider.class, String.class) {
 
                 @Override
-                public Object convert(Object arg0) {
+                public Object convert(final Object arg0) {
                     return ((IExpressionProvider) arg0).getExpressionType();
                 }
             };
@@ -341,8 +340,8 @@ public class EditExpressionDialog extends TrayDialog implements IBonitaVariableC
             currentExpressionEditor.addListener(new Listener() {
 
                 @Override
-                public void handleEvent(Event event) {
-                    Button okButton = getButton(OK);
+                public void handleEvent(final Event event) {
+                    final Button okButton = getButton(OK);
                     if (okButton != null && !okButton.isDisposed()) {
                         okButton.setEnabled(currentExpressionEditor.canFinish());
                     }
@@ -383,12 +382,12 @@ public class EditExpressionDialog extends TrayDialog implements IBonitaVariableC
     }
 
     @Override
-    protected Control createHelpControl(Composite parent) {
+    protected Control createHelpControl(final Composite parent) {
         helpControl = super.createHelpControl(parent);
-        ToolItem item = ((ToolBar) helpControl).getItem(0);
-        Listener[] listeners = item.getListeners(SWT.Selection);
+        final ToolItem item = ((ToolBar) helpControl).getItem(0);
+        final Listener[] listeners = item.getListeners(SWT.Selection);
         if (listeners.length > 0) {
-            for (Listener l : listeners) {
+            for (final Listener l : listeners) {
                 item.removeListener(SWT.Selection, l);
             }
         }
@@ -411,7 +410,7 @@ public class EditExpressionDialog extends TrayDialog implements IBonitaVariableC
     }
 
     @Override
-    public void setIsPageFlowContext(boolean isPageFlowContext) {
+    public void setIsPageFlowContext(final boolean isPageFlowContext) {
         this.isPageFlowContext = isPageFlowContext;
         if (currentExpressionEditor != null) {
             currentExpressionEditor.setIsPageFlowContext(isPageFlowContext);
@@ -433,7 +432,7 @@ public class EditExpressionDialog extends TrayDialog implements IBonitaVariableC
      * @see org.bonitasoft.studio.common.IBonitaVariableContext#setIsOverviewContext(boolean)
      */
     @Override
-    public void setIsOverviewContext(boolean isOverviewContext) {
+    public void setIsOverviewContext(final boolean isOverviewContext) {
     }
 
 }

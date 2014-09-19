@@ -6,7 +6,7 @@
     dynamicTemplates="true" redirection="" forceOverwrite="true" modelName="Process"
     editPluginClass="org.bonitasoft.studio.model.edit.ProcessEditPlugin" nonNLSMarkers="true"
     importerID="org.eclipse.emf.importer.ecore" complianceLevel="6.0" copyrightFields="false"
-    editPluginID="org.bonitasoft.studio.model.edit" language="">
+    editPluginID="org.bonitasoft.studio.model.edit" runtimeVersion="2.9" language="">
   <foreignModel>ActorMapping.ecore</foreignModel>
   <foreignModel>configuration.ecore</foreignModel>
   <foreignModel>connector-configuration.ecore</foreignModel>
@@ -438,6 +438,12 @@
       <genEnumLiterals ecoreEnumLiteral="process.ecore#//GatewayType/COMPLEX"/>
       <genEnumLiterals ecoreEnumLiteral="process.ecore#//GatewayType/AND"/>
     </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="process.ecore#//MultiInstanceType">
+      <genEnumLiterals ecoreEnumLiteral="process.ecore#//MultiInstanceType/NONE"/>
+      <genEnumLiterals ecoreEnumLiteral="process.ecore#//MultiInstanceType/STANDARD"/>
+      <genEnumLiterals ecoreEnumLiteral="process.ecore#//MultiInstanceType/PARALLEL"/>
+      <genEnumLiterals ecoreEnumLiteral="process.ecore#//MultiInstanceType/SEQUENTIAL"/>
+    </genEnums>
     <genEnums typeSafeEnumCompatible="false" ecoreEnum="process.ecore#//SequenceFlowConditionType">
       <genEnumLiterals ecoreEnumLiteral="process.ecore#//SequenceFlowConditionType/EXPRESSION"/>
       <genEnumLiterals ecoreEnumLiteral="process.ecore#//SequenceFlowConditionType/DECISION_TABLE"/>
@@ -484,13 +490,7 @@
     </genClasses>
     <genClasses ecoreClass="process.ecore#//Activity">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//Activity/duration"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//Activity/multiInstantiation"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//Activity/isLoop"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//Activity/testBefore"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//Activity/BoundaryIntermediateEvents"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EReference process.ecore#//Activity/loopCondition"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EReference process.ecore#//Activity/loopMaximum"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//Activity/isMultiInstance"/>
     </genClasses>
     <genClasses ecoreClass="process.ecore#//Actor">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//Actor/initiator"/>
@@ -647,15 +647,19 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference process.ecore#//MessageFlow/source"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference process.ecore#//MessageFlow/target"/>
     </genClasses>
-    <genClasses ecoreClass="process.ecore#//MultiInstantiation">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//MultiInstantiation/useCardinality"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//MultiInstantiation/cardinality"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference process.ecore#//MultiInstantiation/collectionDataToMultiInstantiate"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference process.ecore#//MultiInstantiation/inputData"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference process.ecore#//MultiInstantiation/outputData"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference process.ecore#//MultiInstantiation/listDataContainingOutputResults"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//MultiInstantiation/completionCondition"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//MultiInstantiation/sequential"/>
+    <genClasses image="false" ecoreClass="process.ecore#//MultiInstantiable">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//MultiInstantiable/type"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//MultiInstantiable/testBefore"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//MultiInstantiable/loopCondition"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//MultiInstantiable/loopMaximum"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//MultiInstantiable/useCardinality"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//MultiInstantiable/cardinalityExpression"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference process.ecore#//MultiInstantiable/collectionDataToMultiInstantiate"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//MultiInstantiable/iteratorExpression"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference process.ecore#//MultiInstantiable/outputData"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference process.ecore#//MultiInstantiable/listDataContainingOutputResults"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//MultiInstantiable/completionCondition"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//MultiInstantiable/storeOutput"/>
     </genClasses>
     <genClasses ecoreClass="process.ecore#//NonInterruptingBoundaryTimerEvent"/>
     <genClasses ecoreClass="process.ecore#//OperationContainer">

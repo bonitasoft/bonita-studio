@@ -25,7 +25,6 @@ import org.bonitasoft.studio.groovy.tests.TestBonitaGroovyEditorDialog;
 import org.bonitasoft.studio.migration.tests.MigrationReporTest;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
-import org.bonitasoft.studio.properties.test.TestMultiInstantiation;
 import org.bonitasoft.studio.properties.test.TestResources;
 import org.bonitasoft.studio.repository.test.swtbot.TestExportBosArchive;
 import org.bonitasoft.studio.tests.IHeapDumper;
@@ -35,6 +34,7 @@ import org.bonitasoft.studio.tests.dialog.OpenNameAndVersionForDiagramDialogTest
 import org.bonitasoft.studio.tests.dialog.TestDuplicate;
 import org.bonitasoft.studio.tests.draw2d.TestLifeCycleWidget;
 import org.bonitasoft.studio.tests.form.TestBug1682;
+import org.bonitasoft.studio.tests.iteration.MultiInstantiationIT;
 import org.bonitasoft.studio.tests.timer.TestTimer;
 import org.bonitasoft.studio.util.test.BonitaTestSuite;
 import org.bonitasoft.studio.validators.test.swtbot.TestCreateValidatorWizard;
@@ -85,7 +85,7 @@ import org.junit.runners.Suite;
     TestCreateValidatorWizard.class,
     TestLifeCycleWidget.class,
     TestConnectorExpression.class,
-    TestMultiInstantiation.class,
+    MultiInstantiationIT.class,
     BPMNConnectorExportImportTest.class,
     BPMNGatewayExportImportTest.class,
     BPMNEventSubProcessExportImportTest.class,

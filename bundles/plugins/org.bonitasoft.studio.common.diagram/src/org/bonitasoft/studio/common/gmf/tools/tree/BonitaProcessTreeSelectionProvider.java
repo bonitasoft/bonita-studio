@@ -34,7 +34,6 @@ import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.Document;
 import org.bonitasoft.studio.model.process.FlowElement;
 import org.bonitasoft.studio.model.process.Lane;
-import org.bonitasoft.studio.model.process.MultiInstantiation;
 import org.bonitasoft.studio.model.process.PageFlowTransition;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
@@ -73,13 +72,13 @@ public class BonitaProcessTreeSelectionProvider {
         return INSTANCE ;
     }
 
-    public void fireSelectionChanged(IGraphicalEditPart ep ,EObject element){
+    public void fireSelectionChanged(final IGraphicalEditPart ep ,final EObject element){
         TabbedPropertySheetPage page;
         try {
             page = getTabbedPropertySheetPage(element,ep);
             if(page != null){
                 page.setSelectedTab(getTabIdForElement(element)) ;
-                for(ISection s : page.getCurrentTab().getSections()){
+                for(final ISection s : page.getCurrentTab().getSections()){
                     if(s instanceof PropertySectionWithTabs){
                         if(isTransientData(element)){
                             ((PropertySectionWithTabs)s).setSelectedTab(1) ;
@@ -89,13 +88,13 @@ public class BonitaProcessTreeSelectionProvider {
                     }
                 }
             }
-        } catch (PartInitException e) {
+        } catch (final PartInitException e) {
             BonitaStudioLog.error(e) ;
         }
     }
 
-    private String getTabIdForElement(EObject element) {
-        if(element instanceof FlowElement || element instanceof Connection || (element instanceof AbstractProcess && !(element instanceof Pool))){
+    private String getTabIdForElement(final EObject element) {
+        if(element instanceof FlowElement || element instanceof Connection || element instanceof AbstractProcess && !(element instanceof Pool)){
             return "tab.general" ;
         }else if(element instanceof Pool){
             return "tab.pool" ;
@@ -109,12 +108,11 @@ public class BonitaProcessTreeSelectionProvider {
             }
         }else if(element instanceof ResourceFile || element instanceof ResourceFolder){
             return "tab.resource" ;
-        }else if((element instanceof Connector || element instanceof ConnectorParameter) && !(element.eContainingFeature().equals(ProcessPackage.eINSTANCE.getAssignable_Filters())) &&  !(element instanceof MultiInstantiation) && !(element.eContainer() instanceof MultiInstantiation)){
+        } else if ((element instanceof Connector || element instanceof ConnectorParameter)
+                && !element.eContainingFeature().equals(ProcessPackage.eINSTANCE.getAssignable_Filters())) {
             return "tab.connectors" ;
         }else if(element instanceof Actor || element.eContainingFeature().equals(ProcessPackage.eINSTANCE.getAssignable_Filters())){
             return "tab.actors" ;
-        }else if(element instanceof MultiInstantiation || (element instanceof Connector && element.eContainer() instanceof MultiInstantiation)){
-            return "tab.loop" ;
         }else if(element instanceof Data){
             if(isTransientData(element)){
                 if(element.eContainingFeature().equals(ProcessPackage.eINSTANCE.getRecapFlow_RecapTransientData())){
@@ -128,7 +126,7 @@ public class BonitaProcessTreeSelectionProvider {
                 return "tab.data" ;
             }
         } else if(element instanceof Parameter){
-        	return "tab.parameter";
+            return "tab.parameter";
         } else if(element instanceof AbstractKPIBinding){
             return "tab.kpi" ;
         }else if(element instanceof ViewForm){
@@ -148,23 +146,23 @@ public class BonitaProcessTreeSelectionProvider {
                 return "tab.forms" ;
             }
         } else if(element instanceof Document){
-        	return "tab.document";
+            return "tab.document";
         } else if(element instanceof SearchIndex){
-        	return "tab.index";
+            return "tab.index";
         }
         return "tab.general";
     }
 
-    private TabbedPropertySheetPage getTabbedPropertySheetPage(EObject element,IGraphicalEditPart ep) throws PartInitException {
+    private TabbedPropertySheetPage getTabbedPropertySheetPage(final EObject element,final IGraphicalEditPart ep) throws PartInitException {
         IViewPart viewPart = null ;
-        boolean inApplicationView = displayApplicationTab(element);
-        for(IViewReference vr : PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getViewReferences() ){
-        	IWorkbenchPart part = vr.getPart(true);
-			TabbedPropertySheetPage propertyPage =  (TabbedPropertySheetPage) part.getAdapter(TabbedPropertySheetPage.class);
-    		if(propertyPage != null){
-    			propertyPage.selectionChanged(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor(), new StructuredSelection(ep)) ;
-    		}
-        	if(inApplicationView){
+        final boolean inApplicationView = displayApplicationTab(element);
+        for(final IViewReference vr : PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getViewReferences() ){
+            final IWorkbenchPart part = vr.getPart(true);
+            final TabbedPropertySheetPage propertyPage =  (TabbedPropertySheetPage) part.getAdapter(TabbedPropertySheetPage.class);
+            if(propertyPage != null){
+                propertyPage.selectionChanged(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor(), new StructuredSelection(ep)) ;
+            }
+            if(inApplicationView){
                 if(vr.getId().equals("org.bonitasoft.studio.views.properties.application")){
                     viewPart = (IViewPart) part;
                 }
@@ -181,12 +179,12 @@ public class BonitaProcessTreeSelectionProvider {
         return null;
     }
 
-    private boolean displayApplicationTab(EObject element) {
+    private boolean displayApplicationTab(final EObject element) {
         return element.eClass().getEPackage().getName().equals(FormPackage.eINSTANCE.getName())
-                || (element instanceof Data && isTransientData(element)) || element instanceof PageFlowTransition || element instanceof AssociatedFile || element instanceof ResourceFolder || element instanceof ResourceFile;
+                || element instanceof Data && isTransientData(element) || element instanceof PageFlowTransition || element instanceof AssociatedFile || element instanceof ResourceFolder || element instanceof ResourceFile;
     }
 
-    private boolean isTransientData(EObject element) {
+    private boolean isTransientData(final EObject element) {
         return element.eContainingFeature().equals(ProcessPackage.eINSTANCE.getRecapFlow_RecapTransientData()) ||
                 element.eContainingFeature().equals(ProcessPackage.eINSTANCE.getViewPageFlow_ViewTransientData()) ||
                 element.eContainingFeature().equals(ProcessPackage.eINSTANCE.getPageFlow_TransientData()) ;
