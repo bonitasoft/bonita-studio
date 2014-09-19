@@ -492,9 +492,11 @@ public class FlowElementSwitch extends AbstractSwitch {
 
     protected void addContract(final UserTaskDefinitionBuilder taskBuilder, final Contract contract) {
         final EngineContractBuilder contractBuilder = createEngineContractBuilder();
-        contractBuilder.setContract(contract);
-        contractBuilder.setEngineBuilder(taskBuilder);
-        contractBuilder.build();
+        if (contract != null) {
+            contractBuilder.setContract(contract);
+            contractBuilder.setEngineBuilder(taskBuilder);
+            contractBuilder.build();
+        }
     }
 
     protected EngineContractBuilder createEngineContractBuilder() {
