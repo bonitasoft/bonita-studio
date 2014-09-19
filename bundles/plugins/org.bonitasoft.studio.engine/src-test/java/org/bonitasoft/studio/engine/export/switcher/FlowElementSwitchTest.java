@@ -121,4 +121,10 @@ public class FlowElementSwitchTest {
         verify(engineContractBuilder).setEngineBuilder(taskBuilder);
         verify(engineContractBuilder).build();
     }
+
+    @Test
+    public void should_not_addContract_build_an_engine_contract() throws Exception {
+        flowElementSwitch.addContract(taskBuilder, null);
+        verify(engineContractBuilder, never()).build();
+    }
 }
