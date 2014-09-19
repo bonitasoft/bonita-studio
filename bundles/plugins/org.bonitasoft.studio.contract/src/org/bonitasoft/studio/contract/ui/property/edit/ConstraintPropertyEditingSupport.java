@@ -17,6 +17,7 @@
 package org.bonitasoft.studio.contract.ui.property.edit;
 
 import org.bonitasoft.studio.contract.core.ContractConstraintUtil;
+import org.bonitasoft.studio.contract.i18n.Messages;
 import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -63,9 +64,9 @@ public class ConstraintPropertyEditingSupport extends EditingSupport {
                 protected Button createButton(final Composite parent) {
                     final Button editButton = super.createButton(parent);
                     if (ContractConstraintUtil.getConstraintsForInput(contract, contractInput).isEmpty()) {
-                        editButton.setText("Add...");
+                        editButton.setText(Messages.addConstraint);
                     } else {
-                        editButton.setText("Edit...");
+                        editButton.setText(Messages.editConstraint);
                     }
                     return editButton;
                 }
@@ -83,7 +84,7 @@ public class ConstraintPropertyEditingSupport extends EditingSupport {
 
     @Override
     protected boolean canEdit(final Object element) {
-        return true;
+        return element instanceof ContractInput;
     }
 
 }

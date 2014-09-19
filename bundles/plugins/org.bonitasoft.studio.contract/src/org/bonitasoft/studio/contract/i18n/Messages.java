@@ -41,5 +41,7 @@ public class Messages extends NLS {
     public static String automaticMappingTooltip;
     public static String constraints;
     public static String none;
+    public static String addConstraint;
+    public static String editConstraint;
 
 }

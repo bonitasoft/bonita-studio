@@ -21,6 +21,7 @@ import org.eclipse.gmf.runtime.diagram.ui.properties.sections.AbstractModelerPro
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.forms.IMessageManager;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.views.properties.tabbed.ITabDescriptor;
@@ -86,6 +87,10 @@ public abstract class AbstractBonitaDescriptionSection extends AbstractModelerPr
         if (section!=null){
             section.dispose();
         }
+    }
+
+    protected IMessageManager getMessageManager() {
+        return form.getMessageManager();
     }
 
 

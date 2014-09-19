@@ -23,21 +23,24 @@ import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.DialogCellEditor;
+import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.views.properties.IPropertySource;
-import org.eclipse.ui.views.properties.PropertyEditingSupport;
 
 /**
  * @author Romain Bioteau
  *
  */
-public class InputMappingPropertyEditingSupport extends PropertyEditingSupport {
+public class InputMappingPropertyEditingSupport extends EditingSupport {
+
+    private final AdapterFactoryContentProvider propertySourceProvider;
 
     public InputMappingPropertyEditingSupport(final AdapterFactoryContentProvider propertySourceProvider, final TableViewer viewer) {
-        super(viewer, propertySourceProvider, "name");
+        super(viewer);
+        this.propertySourceProvider = propertySourceProvider;
     }
 
     @Override
@@ -76,6 +79,11 @@ public class InputMappingPropertyEditingSupport extends PropertyEditingSupport {
             return cellEditor;
         }
         return null;
+    }
+
+    @Override
+    protected boolean canEdit(final Object element) {
+        return element instanceof ContractInput;
     }
 
 }

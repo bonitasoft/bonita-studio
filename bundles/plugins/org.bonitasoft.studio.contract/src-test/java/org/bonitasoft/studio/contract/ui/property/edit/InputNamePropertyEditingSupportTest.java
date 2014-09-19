@@ -19,6 +19,7 @@ package org.bonitasoft.studio.contract.ui.property.edit;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 
+import org.bonitasoft.studio.contract.core.ContractDefinitionValidator;
 import org.bonitasoft.studio.contract.ui.property.edit.proposal.InputMappingProposal;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ContractInputType;
@@ -29,6 +30,7 @@ import org.bonitasoft.studio.model.process.provider.ProcessItemProviderAdapterFa
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.ui.forms.IMessageManager;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -54,13 +56,17 @@ public class InputNamePropertyEditingSupportTest {
     @Mock
     private AdapterFactoryLabelProvider adapterFactoryLabelProvider;
 
+    @Mock
+    private IMessageManager iMessageManager;
+
     /**
      * @throws java.lang.Exception
      */
     @Before
     public void setUp() throws Exception {
         propertySourceProvider = new AdapterFactoryContentProvider(new ProcessItemProviderAdapterFactory());
-        propertyEditingSupport = new InputNamePropertyEditingSupport(propertySourceProvider, viewer, adapterFactoryLabelProvider);
+        propertyEditingSupport = new InputNamePropertyEditingSupport(propertySourceProvider, viewer, adapterFactoryLabelProvider,
+                new ContractDefinitionValidator());
     }
 
     /**

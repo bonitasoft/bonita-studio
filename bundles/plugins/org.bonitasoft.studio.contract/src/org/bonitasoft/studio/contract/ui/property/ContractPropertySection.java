@@ -18,6 +18,7 @@ package org.bonitasoft.studio.contract.ui.property;
 
 import org.bonitasoft.studio.common.databinding.CustomEMFEditObservables;
 import org.bonitasoft.studio.common.properties.EObjectSelectionProviderSection;
+import org.bonitasoft.studio.contract.core.ContractDefinitionValidator;
 import org.bonitasoft.studio.contract.i18n.Messages;
 import org.bonitasoft.studio.contract.ui.property.edit.CheckboxPropertyEditingSupport;
 import org.bonitasoft.studio.contract.ui.property.edit.ConstraintColumnLabelProvider;
@@ -25,6 +26,7 @@ import org.bonitasoft.studio.contract.ui.property.edit.ConstraintPropertyEditing
 import org.bonitasoft.studio.contract.ui.property.edit.InputMappingPropertyEditingSupport;
 import org.bonitasoft.studio.contract.ui.property.edit.InputNamePropertyEditingSupport;
 import org.bonitasoft.studio.contract.ui.property.edit.proposal.InputMappingProposal;
+import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ContractInputMapping;
 import org.bonitasoft.studio.model.process.ContractInputType;
@@ -34,6 +36,8 @@ import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.core.databinding.observable.value.IValueChangeListener;
+import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
@@ -165,12 +169,27 @@ public class ContractPropertySection extends EObjectSelectionProviderSection {
                 removeInput(inputsTableViewer);
             }
         });
+        observeContractValue.addValueChangeListener(new IValueChangeListener() {
 
+            @Override
+            public void handleValueChange(final ValueChangeEvent event) {
+                validate((Contract) event.diff.getNewValue());
+            }
+        });
+        inputsTableViewer.getTable().setFocus();
+    }
+
+    protected void validate(final Contract contract) {
+        final ContractDefinitionValidator definitionValidator = new ContractDefinitionValidator(getMessageManager());
+        definitionValidator.validate(contract);
     }
 
     protected void removeInput(final TableViewer viewer) {
         final IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
         final IObservableList input = (IObservableList) viewer.getInput();
+        for (final Object o : selection.toList()) {
+            getMessageManager().removeMessage(o);
+        }
         input.removeAll(selection.toList());
     }
 
@@ -185,7 +204,9 @@ public class ContractPropertySection extends EObjectSelectionProviderSection {
                 return null;
             }
         });
-        nameColumnViewer.setEditingSupport(new InputNamePropertyEditingSupport(propertySourceProvider, viewer, adapterFactoryLabelProvider));
+        nameColumnViewer
+                .setEditingSupport(new InputNamePropertyEditingSupport(propertySourceProvider, viewer, adapterFactoryLabelProvider,
+                        new ContractDefinitionValidator(getMessageManager())));
     }
 
     protected void createInputDescriptionColumn(final TableViewer viewer) {

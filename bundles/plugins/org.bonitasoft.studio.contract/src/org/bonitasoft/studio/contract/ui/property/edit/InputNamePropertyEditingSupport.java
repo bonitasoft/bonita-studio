@@ -20,6 +20,7 @@ import java.util.Date;
 
 import org.bonitasoft.studio.common.DataUtil;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.contract.core.ContractDefinitionValidator;
 import org.bonitasoft.studio.contract.i18n.Messages;
 import org.bonitasoft.studio.contract.ui.property.edit.proposal.InputMappingProposal;
 import org.bonitasoft.studio.contract.ui.property.edit.proposal.InputMappingProposalLabelProvider;
@@ -29,6 +30,7 @@ import org.bonitasoft.studio.model.process.ContractInputMapping;
 import org.bonitasoft.studio.model.process.ContractInputType;
 import org.bonitasoft.studio.model.process.Data;
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
@@ -39,6 +41,7 @@ import org.eclipse.jface.fieldassist.IContentProposal;
 import org.eclipse.jface.fieldassist.IContentProposalListener;
 import org.eclipse.jface.fieldassist.TextContentAdapter;
 import org.eclipse.jface.viewers.CellEditor;
+import org.eclipse.jface.viewers.ICellEditorValidator;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.widgets.Text;
@@ -49,15 +52,18 @@ import org.eclipse.ui.views.properties.PropertyEditingSupport;
  * @author Romain Bioteau
  *
  */
-public class InputNamePropertyEditingSupport extends PropertyEditingSupport {
+public class InputNamePropertyEditingSupport extends PropertyEditingSupport implements ICellEditorValidator {
 
 
+    private Object currentElement;
     private final AdapterFactoryLabelProvider adapterFactoryLabelProvider;
+    private final ContractDefinitionValidator contractDefinitionValidator;
 
     public InputNamePropertyEditingSupport(final AdapterFactoryContentProvider propertySourceProvider, final TableViewer viewer,
-            final AdapterFactoryLabelProvider adapterFactoryLabelProvider) {
+            final AdapterFactoryLabelProvider adapterFactoryLabelProvider, final ContractDefinitionValidator contractDefinitionValidator) {
         super(viewer, propertySourceProvider, "name");
         this.adapterFactoryLabelProvider = adapterFactoryLabelProvider;
+        this.contractDefinitionValidator = contractDefinitionValidator;
     }
 
     @Override
@@ -70,7 +76,9 @@ public class InputNamePropertyEditingSupport extends PropertyEditingSupport {
     protected CellEditor getCellEditor(final Object element) {
         if (element instanceof ContractInput) {
             final TextCellEditor cellEditor = (TextCellEditor) super.getCellEditor(element);
+            currentElement = element;
             attachContentAssist(element, cellEditor);
+            cellEditor.setValidator(this);
             return cellEditor;
         }
         return null;
@@ -143,5 +151,15 @@ public class InputNamePropertyEditingSupport extends PropertyEditingSupport {
             throw new RuntimeException("Invalid input type");
         }
     }
+
+    @Override
+    public String isValid(final Object value) {
+        final IStatus status = contractDefinitionValidator.validateInputName((ContractInput) currentElement, (String) value);
+        if (!status.isOK()) {
+            return status.getMessage();
+        }
+        return null;
+    }
+
 
 }
