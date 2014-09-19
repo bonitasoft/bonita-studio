@@ -30,6 +30,8 @@ import org.bonitasoft.studio.model.process.Actor;
 import org.bonitasoft.studio.model.process.AssociatedFile;
 import org.bonitasoft.studio.model.process.Connection;
 import org.bonitasoft.studio.model.process.Connector;
+import org.bonitasoft.studio.model.process.Contract;
+import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.Document;
 import org.bonitasoft.studio.model.process.FlowElement;
@@ -149,6 +151,8 @@ public class BonitaProcessTreeSelectionProvider {
             return "tab.document";
         } else if(element instanceof SearchIndex){
             return "tab.index";
+        } else if (element instanceof Contract || element instanceof ContractInput) {
+            return "tab.contract";
         }
         return "tab.general";
     }
