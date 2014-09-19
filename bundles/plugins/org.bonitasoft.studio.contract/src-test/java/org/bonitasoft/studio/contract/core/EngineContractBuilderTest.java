@@ -126,4 +126,15 @@ public class EngineContractBuilderTest {
         verify(contractDefBuilder).addRule("constraint0", "name.length < 50", "name is too long", nameInput.getName());
     }
 
+    @Test
+    public void should_build_create_a_contract_with_mandatory_constraint() throws Exception {
+        final ContractInput nameInput = addInput(aContract, "name", ContractInputType.TEXT, "name of an employee");
+        nameInput.setMandatory(true);
+        engineContractBuilder.setContract(aContract);
+        engineContractBuilder.build();
+        verify(taskBuilder).addContract();
+        verify(contractDefBuilder).addSimpleInput("name", Type.TEXT, "name of an employee");
+        verify(contractDefBuilder).addMandatoryRule("name");
+    }
+
 }
