@@ -33,6 +33,8 @@ import org.bonitasoft.studio.model.process.ContractInputType;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.eclipse.core.databinding.UpdateValueStrategy;
+import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
@@ -42,7 +44,9 @@ import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
+import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
+import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -112,7 +116,7 @@ public class ContractPropertySection extends EObjectSelectionProviderSection {
     private void createContractInputTable(final Composite parent) {
         final Composite buttonsComposite = getWidgetFactory().createComposite(parent);
         buttonsComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).align(SWT.FILL, SWT.TOP).create());
-        buttonsComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).spacing(0, 3).create());
+        buttonsComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).spacing(0, 3).extendedMargins(0, 0, 25, 0).create());
 
         final Button addButton = getWidgetFactory().createButton(buttonsComposite, Messages.add, SWT.PUSH);
         addButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).minSize(IDialogConstants.BUTTON_WIDTH, SWT.DEFAULT).create());
@@ -122,7 +126,7 @@ public class ContractPropertySection extends EObjectSelectionProviderSection {
         removeButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).minSize(IDialogConstants.BUTTON_WIDTH, SWT.DEFAULT).create());
 
 
-        final TableViewer inputsTableViewer = new TableViewer(getWidgetFactory().createTable(parent, SWT.BORDER | SWT.FULL_SELECTION | SWT.SINGLE));
+        final TableViewer inputsTableViewer = new TableViewer(getWidgetFactory().createTable(parent, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI));
         inputsTableViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(500, 180).create());
         inputsTableViewer.getTable().setHeaderVisible(true);
         final ObservableListContentProvider observableListContentProvider = new ObservableListContentProvider();
@@ -176,6 +180,18 @@ public class ContractPropertySection extends EObjectSelectionProviderSection {
                 validate((Contract) event.diff.getNewValue());
             }
         });
+
+
+        final UpdateValueStrategy modelStrategy = new UpdateValueStrategy();
+        modelStrategy.setConverter(new Converter(Object.class,Boolean.class) {
+
+            @Override
+            public Object convert(final Object from) {
+                return from != null;
+            }
+        });
+        context.bindValue(SWTObservables.observeEnabled(removeButton), ViewersObservables.observeSingleSelection(inputsTableViewer),new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER),modelStrategy);
+
         inputsTableViewer.getTable().setFocus();
     }
 
@@ -203,10 +219,11 @@ public class ContractPropertySection extends EObjectSelectionProviderSection {
             public Image getImage(final Object object) {
                 return null;
             }
+
         });
         nameColumnViewer
-                .setEditingSupport(new InputNamePropertyEditingSupport(propertySourceProvider, viewer, adapterFactoryLabelProvider,
-                        new ContractDefinitionValidator(getMessageManager())));
+        .setEditingSupport(new InputNamePropertyEditingSupport(propertySourceProvider, viewer, adapterFactoryLabelProvider,
+                new ContractDefinitionValidator(getMessageManager())));
     }
 
     protected void createInputDescriptionColumn(final TableViewer viewer) {

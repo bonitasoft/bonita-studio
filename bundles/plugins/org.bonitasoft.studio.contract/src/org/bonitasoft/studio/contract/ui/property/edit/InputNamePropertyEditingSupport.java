@@ -19,6 +19,7 @@ package org.bonitasoft.studio.contract.ui.property.edit;
 import java.util.Date;
 
 import org.bonitasoft.studio.common.DataUtil;
+import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.contract.core.ContractDefinitionValidator;
 import org.bonitasoft.studio.contract.i18n.Messages;
@@ -29,8 +30,9 @@ import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ContractInputMapping;
 import org.bonitasoft.studio.model.process.ContractInputType;
 import org.bonitasoft.studio.model.process.Data;
+import org.bonitasoft.studio.pics.Pics;
+import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
@@ -41,9 +43,15 @@ import org.eclipse.jface.fieldassist.IContentProposal;
 import org.eclipse.jface.fieldassist.IContentProposalListener;
 import org.eclipse.jface.fieldassist.TextContentAdapter;
 import org.eclipse.jface.viewers.CellEditor;
+import org.eclipse.jface.viewers.ICellEditorListener;
 import org.eclipse.jface.viewers.ICellEditorValidator;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TextCellEditor;
+import org.eclipse.jface.window.DefaultToolTip;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ControlEvent;
+import org.eclipse.swt.events.ControlListener;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.ui.views.properties.PropertyEditingSupport;
@@ -52,12 +60,15 @@ import org.eclipse.ui.views.properties.PropertyEditingSupport;
  * @author Romain Bioteau
  *
  */
-public class InputNamePropertyEditingSupport extends PropertyEditingSupport implements ICellEditorValidator {
+public class InputNamePropertyEditingSupport extends PropertyEditingSupport implements ICellEditorValidator, ICellEditorListener {
 
 
     private Object currentElement;
     private final AdapterFactoryLabelProvider adapterFactoryLabelProvider;
     private final ContractDefinitionValidator contractDefinitionValidator;
+    private DefaultToolTip toolTip;
+    private boolean validate = false;
+    private Object cuurentValue;
 
     public InputNamePropertyEditingSupport(final AdapterFactoryContentProvider propertySourceProvider, final TableViewer viewer,
             final AdapterFactoryLabelProvider adapterFactoryLabelProvider, final ContractDefinitionValidator contractDefinitionValidator) {
@@ -75,18 +86,42 @@ public class InputNamePropertyEditingSupport extends PropertyEditingSupport impl
     @Override
     protected CellEditor getCellEditor(final Object element) {
         if (element instanceof ContractInput) {
+            validate = false;
             final TextCellEditor cellEditor = (TextCellEditor) super.getCellEditor(element);
             currentElement = element;
             attachContentAssist(element, cellEditor);
+            createTooltip(cellEditor);
             cellEditor.setValidator(this);
+            cellEditor.addListener(this);
+            cellEditor.getControl().addControlListener(new ControlListener() {
+
+                @Override
+                public void controlResized(final ControlEvent arg0) {
+
+                }
+
+                @Override
+                public void controlMoved(final ControlEvent event) {
+                    toolTip.show(new Point(0, 20));
+
+                }
+            });
             return cellEditor;
         }
         return null;
     }
 
+    private void createTooltip(final TextCellEditor cellEditor) {
+        toolTip = new DefaultToolTip(cellEditor.getControl(), SWT.ICON_INFORMATION, true);
+        toolTip.setText(Messages.automaticMappingTooltip);
+        toolTip.setImage(Pics.getImage(PicsConstants.hint));
+        toolTip.setHideDelay(10000);
+        toolTip.setHideOnMouseDown(false);
+    }
+
     protected void attachContentAssist(final Object element, final TextCellEditor cellEditor) {
         final Text textControl = (Text) cellEditor.getControl();
-        textControl.setToolTipText(Messages.automaticMappingTooltip);
+        textControl.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, SWTBotConstants.SWTBOT_ID_INPUT_NAME_TEXTEDITOR);
         KeyStroke keyStroke = null;
         try {
             keyStroke = KeyStroke.getInstance("Ctrl+Space");
@@ -154,12 +189,28 @@ public class InputNamePropertyEditingSupport extends PropertyEditingSupport impl
 
     @Override
     public String isValid(final Object value) {
-        final IStatus status = contractDefinitionValidator.validateInputName((ContractInput) currentElement, (String) value);
-        if (!status.isOK()) {
-            return status.getMessage();
+        if (validate || getValue(currentElement) != null) {
+            contractDefinitionValidator.validateInputName((ContractInput) currentElement, (String) value);
         }
+        cuurentValue = value;
         return null;
     }
 
+    @Override
+    public void applyEditorValue() {
+        toolTip.hide();
+        validate = true;
+        isValid(cuurentValue);
+    }
+
+    @Override
+    public void cancelEditor() {
+        toolTip.hide();
+    }
+
+    @Override
+    public void editorValueChanged(final boolean oldValidState, final boolean newValidState) {
+        validate = oldValidState || newValidState;
+    }
 
 }

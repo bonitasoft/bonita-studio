@@ -43,14 +43,11 @@ public abstract class AbstractBonitaDescriptionSection extends AbstractModelerPr
     public void refresh(){
         super.refresh();
         if(tabbedPropertySheetPage != null){
-            final ITabDescriptor tab = tabbedPropertySheetPage.getSelectedTab();
-            if (tab != null && form != null) {
-                form.setText(tab.getLabel()/* + " " + Messages.descriptionTitle */);
+            if (form != null) {
+                form.setText(getSectionTitle());
             }
         }
     }
-
-
 
     @Override
     public void createControls(final Composite parent, final TabbedPropertySheetPage aTabbedPropertySheetPage) {
@@ -59,8 +56,6 @@ public abstract class AbstractBonitaDescriptionSection extends AbstractModelerPr
         tabbedPropertySheetPage=aTabbedPropertySheetPage;
         final TabbedPropertySheetWidgetFactory widgetFactory = tabbedPropertySheetPage.getWidgetFactory();
         form = widgetFactory.createForm(parent);
-
-        //  widgetFactory.decorateFormHeading(form);
         form.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).create());
         form.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         form.getBody().setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).create());
@@ -69,11 +64,7 @@ public abstract class AbstractBonitaDescriptionSection extends AbstractModelerPr
         form.getToolBarManager().add(new TogglePropertyHelpContributionItem(widgetFactory, form, getSectionDescription()));
         form.getToolBarManager().update(true);
 
-
-        final ITabDescriptor tab = tabbedPropertySheetPage.getSelectedTab();
-        if(tab != null){
-            form.setText(tab.getLabel()/* + " " + Messages.descriptionTitle */);
-        }
+        form.setText(getSectionTitle());
 
         createContent(form.getBody());
         form.update();
@@ -96,6 +87,14 @@ public abstract class AbstractBonitaDescriptionSection extends AbstractModelerPr
 
     public TabbedPropertySheetPage getTabbedPropertySheetPage() {
         return tabbedPropertySheetPage;
+    }
+
+    public String getSectionTitle() {
+        final ITabDescriptor tab = tabbedPropertySheetPage.getSelectedTab();
+        if (tab != null) {
+            return tab.getLabel();
+        }
+        return "";
     }
 
     public abstract String getSectionDescription();

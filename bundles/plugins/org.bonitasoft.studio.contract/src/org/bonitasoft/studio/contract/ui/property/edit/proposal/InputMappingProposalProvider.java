@@ -121,7 +121,6 @@ public class InputMappingProposalProvider implements IContentProposalProvider {
         return compatibleTypes.contains(inputType);
     }
 
-    @SuppressWarnings("restriction")
     protected String toJavaType(final IMethod method) {
         String qualifiedType = Object.class.getName();
         try {

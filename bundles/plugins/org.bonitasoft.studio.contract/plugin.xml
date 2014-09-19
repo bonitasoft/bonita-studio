@@ -6,10 +6,10 @@
       <propertyTabs
             contributorId="org.bonitasoft.studio.diagram">
          <propertyTab
-               afterTab="tab.actors"
+               afterTab="tab.lane"
                category="domain"
-               id="tab.contract"
-               label="%tab.contract.label">
+               id="tab.inputs"
+               label="%tab.inputs.label">
          </propertyTab>
       </propertyTabs>
    </extension>
@@ -21,8 +21,8 @@
                class="org.bonitasoft.studio.contract.ui.property.ContractPropertySection"
                enablesFor="1"
                filter="org.bonitasoft.studio.contract.ui.property.TaskFilter"
-               id="ContractSection"
-               tab="tab.contract"
+               id="InputsSection"
+               tab="tab.inputs"
                viewID="org.bonitasoft.studio.views.properties.process.general">
          </propertySection>
       </propertySections>

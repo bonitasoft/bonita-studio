@@ -17,9 +17,11 @@ Require-Bundle: org.eclipse.core.runtime;bundle-version="3.9.0",
  org.bonitasoft.studio.common.repository;bundle-version="6.4.0",
  org.bonitasoft.studio.data,
  org.eclipse.jdt.ui,
- org.bonitasoft.studio.model.edit
+ org.bonitasoft.studio.model.edit,
+ org.bonitasoft.studio.pics;bundle-version="6.4.0"
 Bundle-Activator: org.bonitasoft.studio.contract.ContractPlugin
 Bundle-ActivationPolicy: lazy
-Export-Package: org.bonitasoft.studio.contract.core
+Export-Package: org.bonitasoft.studio.contract.core,
+ org.bonitasoft.studio.contract.i18n;x-friends:="org.bonitasoft.studio.swtbot.framework"
 Import-Package: org.bonitasoft.engine.bpm.contract,
  org.bonitasoft.engine.bpm.process.impl
