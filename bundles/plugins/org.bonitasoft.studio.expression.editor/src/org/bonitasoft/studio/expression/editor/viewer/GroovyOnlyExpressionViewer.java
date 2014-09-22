@@ -29,20 +29,21 @@ import org.eclipse.swt.widgets.Composite;
  */
 public class GroovyOnlyExpressionViewer extends ExpressionViewer {
 
-	public GroovyOnlyExpressionViewer(Composite composite, int style,EReference expressionReference) {
-		super(composite, style, expressionReference);
-		getContentAssistText().getToolbar().getItem(0).setEnabled(false);
-		
-	}
+    public GroovyOnlyExpressionViewer(final Composite composite, final int style,final EReference expressionReference) {
+        super(composite, style, expressionReference);
+        getContentAssistText().getToolbar().getItem(0).setEnabled(false);
 
-	@Override
-	protected EditExpressionDialog createEditDialog(EObject editInput) {
-		return new GroovyOnlyEditExpressionDialog(control.getShell(),isPassword,EcoreUtil.copy(selectedExpression),editInput,editingDomain, filters.toArray(new ViewerFilter[filters.size()]),this);
-	}
-	
-	@Override
-	protected String getContentTypeFromInput(String input) {
-		return ExpressionConstants.SCRIPT_TYPE;
-	}
-	
+    }
+
+    @Override
+    protected EditExpressionDialog createEditDialog(final EObject editInput) {
+        return new GroovyOnlyEditExpressionDialog(control.getShell(), isPassword, EcoreUtil.copy(getSelectedExpression()), editInput, getEditingDomain(),
+                filters.toArray(new ViewerFilter[filters.size()]), this);
+    }
+
+    @Override
+    protected String getContentTypeFromInput(final String input) {
+        return ExpressionConstants.SCRIPT_TYPE;
+    }
+
 }

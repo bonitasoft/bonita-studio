@@ -5,12 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -28,13 +28,13 @@ import org.eclipse.jface.viewers.ViewerFilter;
 
 /**
  * @author Romain Bioteau
- * 
+ *
  */
 public class AvailableExpressionTypeFilter extends ViewerFilter {
 
     private final Set<String> contentTypes;
 
-    public AvailableExpressionTypeFilter(String[] contentTypes) {
+    public AvailableExpressionTypeFilter(final String[] contentTypes) {
         this.contentTypes = new HashSet<String>(Arrays.asList(contentTypes));
     }
 
@@ -43,11 +43,11 @@ public class AvailableExpressionTypeFilter extends ViewerFilter {
      * @see org.eclipse.jface.viewers.ViewerFilter#select(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
      */
     @Override
-    public boolean select(Viewer viewer, Object context, Object element) {
-        if (this.contentTypes.contains(ExpressionConstants.VARIABLE_TYPE)) {
-            this.contentTypes.add(ExpressionConstants.JAVA_TYPE);
-            this.contentTypes.add(ExpressionConstants.XPATH_TYPE);
-
+    public boolean select(final Viewer viewer, final Object context, final Object element) {
+        if (contentTypes.contains(ExpressionConstants.VARIABLE_TYPE)) {
+            contentTypes.add(ExpressionConstants.JAVA_TYPE);
+            contentTypes.add(ExpressionConstants.XPATH_TYPE);
+            contentTypes.add(ExpressionConstants.MULTIINSTANCE_ITERATOR_TYPE);
         }
         if (element instanceof Expression) {
             return contentTypes.contains(((Expression) element).getType());

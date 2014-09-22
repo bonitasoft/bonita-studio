@@ -139,8 +139,7 @@ public class PageComponentSwitchBuilder {
 
     private ExpressionViewer buildExpressionViewer(final Composite composite, final Text object, final IExpressionNatureProvider expressionProvider,
             final Input input, final ConnectorParameter parameter, final LabelProvider autoCompletionLabelProvider) {
-        final ExpressionViewer viewer = new ExpressionViewer(composite, SWT.BORDER,
-                ConnectorConfigurationPackage.Literals.CONNECTOR_PARAMETER__EXPRESSION);
+        final ExpressionViewer viewer = new ExpressionViewer(composite, SWT.BORDER);
         viewer.setIsPageFlowContext(isPageFlowContext);
         viewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         viewer.setContext(container);
@@ -606,8 +605,7 @@ public class PageComponentSwitchBuilder {
 
         if (parameter != null) {
             createFieldLabel(composite, SWT.CENTER, object.getId(), input.isMandatory());
-            final ExpressionViewer viewer = new ExpressionViewer(composite, SWT.BORDER | SWT.PASSWORD,
-                    ConnectorConfigurationPackage.Literals.CONNECTOR_PARAMETER__EXPRESSION);
+            final ExpressionViewer viewer = new ExpressionViewer(composite, SWT.BORDER | SWT.PASSWORD);
             viewer.setIsPageFlowContext(isPageFlowContext);
             viewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
             viewer.setContext(container);
