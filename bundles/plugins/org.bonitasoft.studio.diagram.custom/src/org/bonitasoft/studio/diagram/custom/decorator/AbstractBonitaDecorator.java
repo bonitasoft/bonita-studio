@@ -1,7 +1,7 @@
 /**
  * Copyright (C) 2010 BonitaSoft S.A.
  * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -33,6 +33,7 @@ import org.eclipse.gmf.runtime.diagram.ui.editpolicies.DecorationEditPolicy.Deco
 import org.eclipse.gmf.runtime.diagram.ui.services.decorator.IDecoration;
 import org.eclipse.gmf.runtime.diagram.ui.services.decorator.IDecoratorTarget;
 import org.eclipse.gmf.runtime.diagram.ui.services.decorator.IDecoratorTarget.Direction;
+import org.eclipse.gmf.runtime.notation.LayoutConstraint;
 import org.eclipse.gmf.runtime.notation.Node;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.Size;
@@ -56,18 +57,18 @@ public abstract class AbstractBonitaDecorator implements IBonitaDecorator {
     /**
      * Creates a new <code>AbstractDecorator</code> for the decorator target
      * passed in.
-     * 
+     *
      * @param decoratorTarget
      *            the object to be decorated
      */
-    public AbstractBonitaDecorator(IDecoratorTarget decoratorTarget) {
+    public AbstractBonitaDecorator(final IDecoratorTarget decoratorTarget) {
         this.decoratorTarget = decoratorTarget;
 
     }
 
     /**
      * Gets the object to be decorated.
-     * 
+     *
      * @return Returns the object to be decorated
      */
     protected IDecoratorTarget getDecoratorTarget() {
@@ -85,13 +86,14 @@ public abstract class AbstractBonitaDecorator implements IBonitaDecorator {
      * @param decoration
      *            The decoration to set.
      */
-    public void setDecoration(IDecoration decoration) {
+    public void setDecoration(final IDecoration decoration) {
         this.decoration = decoration;
     }
 
     /**
      * Removes the decoration if it exists and sets it to null.
      */
+    @Override
     public void removeDecoration() {
         if (decoration != null) {
             decoratorTarget.removeDecoration(decoration);
@@ -104,9 +106,10 @@ public abstract class AbstractBonitaDecorator implements IBonitaDecorator {
      * Creates the appropriate review decoration if all the criteria is
      * satisfied by the view passed in.
      */
+    @Override
     public void refresh() {
 
-        GraphicalEditPart node = ActivityDecoratorProvider.getDecoratorTargetNode(getDecoratorTarget());
+        final GraphicalEditPart node = ActivityDecoratorProvider.getDecoratorTargetNode(getDecoratorTarget());
 
         //BUGFIX : NullPointerException if Root is null
         if(node != null && node.getRoot() != null ){
@@ -115,8 +118,8 @@ public abstract class AbstractBonitaDecorator implements IBonitaDecorator {
             if (activity != null) {
                 removeDecoration();
                 if(isAppearing(activity)) {
-                    Node view =(Node) ((DecoratorTarget) getDecoratorTarget()).getAdapter(Node.class) ;
-                    IFigure figure = getImageDecorator();
+                    final Node view =(Node) ((DecoratorTarget) getDecoratorTarget()).getAdapter(Node.class) ;
+                    final IFigure figure = getImageDecorator();
                     setDecoration(getDecoratorTarget().addShapeDecoration(figure, getDirection(), getDelta(view), false));
                 }
             }
@@ -141,9 +144,9 @@ public abstract class AbstractBonitaDecorator implements IBonitaDecorator {
      * @param fig
      * @return
      */
-    protected int getDelta(Node view){
+    protected int getDelta(final Node view){
         if(getDecoratorTarget().getAdapter(EditPart.class) instanceof IGraphicalEditPart){
-            IGraphicalEditPart ep = (IGraphicalEditPart) getDecoratorTarget().getAdapter(EditPart.class) ;
+            final IGraphicalEditPart ep = (IGraphicalEditPart) getDecoratorTarget().getAdapter(EditPart.class) ;
             if(ep.resolveSemanticElement() instanceof SubProcessEvent){
                 return -5 ;
             }
@@ -151,14 +154,17 @@ public abstract class AbstractBonitaDecorator implements IBonitaDecorator {
 
         int delta = -5 ;
         if(view != null){
-            int width = ((Size)view.getLayoutConstraint()).getWidth() ;
-            if(width != 0){
-                delta = - (width / 15) ;
-                if(delta > -5){
-                    delta = -5 ;
+            final LayoutConstraint layoutConstraint = view.getLayoutConstraint();
+            if (layoutConstraint instanceof Size) {
+                final int width = ((Size)layoutConstraint).getWidth() ;
+                if(width != 0){
+                    delta = - (width / 15) ;
+                    if(delta > -5){
+                        delta = -5 ;
+                    }
+                }else{
+                    delta = - 5 ;
                 }
-            }else{
-                delta = - 5 ;
             }
 
         }
@@ -172,7 +178,8 @@ public abstract class AbstractBonitaDecorator implements IBonitaDecorator {
         /* (non-Javadoc)
          * @see org.eclipse.gmf.runtime.diagram.core.listener.NotificationListener#notifyChanged(org.eclipse.emf.common.notify.Notification)
          */
-        public void notifyChanged(Notification notification) {
+        @Override
+        public void notifyChanged(final Notification notification) {
             refresh();
         }
     };
@@ -180,10 +187,11 @@ public abstract class AbstractBonitaDecorator implements IBonitaDecorator {
     /**
      * Adds decoration if applicable.
      */
+    @Override
     public void activate() {
 
-        EObject node = (EObject)getDecoratorTarget().getAdapter(EObject.class);
-        IGraphicalEditPart gep = (IGraphicalEditPart)getDecoratorTarget().getAdapter(IGraphicalEditPart.class);
+        final EObject node = (EObject)getDecoratorTarget().getAdapter(EObject.class);
+        final IGraphicalEditPart gep = (IGraphicalEditPart)getDecoratorTarget().getAdapter(IGraphicalEditPart.class);
         assert node != null;
         assert gep != null;
         if(node != null){
@@ -200,10 +208,11 @@ public abstract class AbstractBonitaDecorator implements IBonitaDecorator {
     /**
      * Removes the decoration.
      */
+    @Override
     public void deactivate() {
         removeDecoration();
         if(decoratorTarget != null){
-            IGraphicalEditPart gep = (IGraphicalEditPart)decoratorTarget.getAdapter(IGraphicalEditPart.class);
+            final IGraphicalEditPart gep = (IGraphicalEditPart)decoratorTarget.getAdapter(IGraphicalEditPart.class);
             assert gep != null;
 
             DiagramEventBroker.getInstance(gep.getEditingDomain()).removeNotificationListener(gep.getNotationView(),NotationPackage.eINSTANCE.getSize_Width(),notificationListener);
@@ -215,8 +224,8 @@ public abstract class AbstractBonitaDecorator implements IBonitaDecorator {
         }
     }
 
-    protected IFigure updateColor(Color foergroundColor , Color backgroundColor){
-        CustomSVGFigure figure = getImageDecorator() ;
+    protected IFigure updateColor(final Color foergroundColor , final Color backgroundColor){
+        final CustomSVGFigure figure = getImageDecorator() ;
         figure.setColor(foergroundColor, backgroundColor) ;
         return figure ;
     }

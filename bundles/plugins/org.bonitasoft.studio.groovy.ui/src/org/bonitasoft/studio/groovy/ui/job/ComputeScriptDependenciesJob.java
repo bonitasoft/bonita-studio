@@ -54,7 +54,7 @@ public class ComputeScriptDependenciesJob extends Job {
 
     private EObject context;
 
-    private GroovyCompilationUnit groovyCompilationUnit;
+    private final GroovyCompilationUnit groovyCompilationUnit;
 
     public ComputeScriptDependenciesJob(final GroovyCompilationUnit groovyCompilationUnit) {
         super(ComputeScriptDependenciesJob.class.getName());
@@ -70,23 +70,23 @@ public class ComputeScriptDependenciesJob extends Job {
         String expression = "";
         try {
             expression = groovyCompilationUnit.getSource();
-        } catch (JavaModelException e) {
+        } catch (final JavaModelException e) {
             return new Status(Status.ERROR, Activator.PLUGIN_ID, e.getMessage(), e);
         }
         if (cache.get(expression) == null) {
-            CompletionNodeFinder finder = new CompletionNodeFinder(0, 0, 0, "", ""); //$NON-NLS-1$ //$NON-NLS-2$
-            ContentAssistContext assistContext = finder.findContentAssistContext(groovyCompilationUnit);
+            final CompletionNodeFinder finder = new CompletionNodeFinder(0, 0, 0, "", ""); //$NON-NLS-1$ //$NON-NLS-2$
+            final ContentAssistContext assistContext = finder.findContentAssistContext(groovyCompilationUnit);
 
             org.codehaus.groovy.ast.ASTNode astNode = null;
             if (assistContext != null) {
                 astNode = assistContext.containingCodeBlock;
             }
             if (astNode instanceof BlockStatement) {
-                BlockStatement blockStatement = (BlockStatement) astNode;
-                Set<String> referencedVariable = new HashSet<String>();
-                Iterator<Variable> referencedClassVariablesIterator = blockStatement.getVariableScope().getReferencedClassVariablesIterator();
+                final BlockStatement blockStatement = (BlockStatement) astNode;
+                final Set<String> referencedVariable = new HashSet<String>();
+                final Iterator<Variable> referencedClassVariablesIterator = blockStatement.getVariableScope().getReferencedClassVariablesIterator();
                 while (referencedClassVariablesIterator.hasNext()) {
-                    Variable variable = (Variable) referencedClassVariablesIterator.next();
+                    final Variable variable = referencedClassVariablesIterator.next();
                     for (final ScriptVariable f : nodes) {
                         if (f.getName().equals(variable.getName())) {
                             referencedVariable.add(variable.getName());
@@ -116,11 +116,16 @@ public class ComputeScriptDependenciesJob extends Job {
                 deps.add(EcoreUtil.copy(daoExpression));
                 continue variablesloop;
             }
-            for (IExpressionProvider provider : ExpressionEditorService.getInstance().getExpressionProviders()) {
+            for (final IExpressionProvider provider : ExpressionEditorService.getInstance().getExpressionProviders()) {
                 if (provider.isRelevantFor(context)) {
-                    for (Expression exp : provider.getExpressions(context)) {
-                        if (exp.getName().equals(name) && !exp.getReferencedElements().isEmpty()) {
-                            deps.add(ExpressionHelper.createDependencyFromEObject(exp.getReferencedElements().get(0)));
+                    for (final Expression exp : provider.getExpressions(context)) {
+                        if (exp.getName().equals(name)) {
+                            if (!exp.getReferencedElements().isEmpty()) {
+                                deps.add(ExpressionHelper.createDependencyFromEObject(exp.getReferencedElements().get(0)));
+                            } else if (ExpressionConstants.MULTIINSTANCE_ITERATOR_TYPE.equals(exp.getType())) {
+                                deps.add(EcoreUtil.copy(exp));
+                            }
+
                             continue variablesloop;
                         }
                     }
@@ -129,12 +134,12 @@ public class ComputeScriptDependenciesJob extends Job {
         }
     }
 
-    private Expression getDAOExpression(String name) {
-        IExpressionProvider daoExpressionProvider = ExpressionEditorService.getInstance().getExpressionProvider(ExpressionConstants.DAO_TYPE);
+    private Expression getDAOExpression(final String name) {
+        final IExpressionProvider daoExpressionProvider = ExpressionEditorService.getInstance().getExpressionProvider(ExpressionConstants.DAO_TYPE);
         if (daoExpressionProvider == null) {
             return null;
         }
-        for (Expression exp : daoExpressionProvider.getExpressions(context)) {
+        for (final Expression exp : daoExpressionProvider.getExpressions(context)) {
             if (exp.getName().equals(name)) {
                 return exp;
             }

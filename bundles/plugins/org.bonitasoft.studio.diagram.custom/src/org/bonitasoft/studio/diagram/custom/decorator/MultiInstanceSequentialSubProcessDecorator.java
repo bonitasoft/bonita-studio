@@ -1,7 +1,7 @@
 /**
  * Copyright (C) 2012 BonitaSoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -20,6 +20,7 @@ package org.bonitasoft.studio.diagram.custom.decorator;
 import org.bonitasoft.studio.common.diagram.tools.FiguresHelper;
 import org.bonitasoft.studio.common.figures.DecoratorSVGFigure;
 import org.bonitasoft.studio.model.process.Activity;
+import org.bonitasoft.studio.model.process.MultiInstanceType;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gmf.runtime.diagram.ui.services.decorator.IDecoratorTarget;
 
@@ -29,19 +30,19 @@ import org.eclipse.gmf.runtime.diagram.ui.services.decorator.IDecoratorTarget;
  */
 public class MultiInstanceSequentialSubProcessDecorator extends	MultiInstanceSubprocessDecorator {
 
-	public MultiInstanceSequentialSubProcessDecorator(IDecoratorTarget decoratorTarget, ActivityDecoratorProvider activityDecoratorProvider) {
-		super(decoratorTarget, activityDecoratorProvider);
-	}
-	
-	@Override
-	protected DecoratorSVGFigure getImageDecorator() {
-		DecoratorSVGFigure figure = FiguresHelper.getDecoratorFigure(FiguresHelper.MULTI_SEQUENTIAL_SUB_DECORATOR) ;
-		figure.setSize(32, 16) ;
-		return figure ;
-	}
-	
-	@Override
-	protected boolean isAppearing(EObject activity) {
-		return super.isAppearing(activity) && ((Activity)activity).getMultiInstantiation().isSequential();
-	}
+    public MultiInstanceSequentialSubProcessDecorator(final IDecoratorTarget decoratorTarget, final ActivityDecoratorProvider activityDecoratorProvider) {
+        super(decoratorTarget, activityDecoratorProvider);
+    }
+
+    @Override
+    protected DecoratorSVGFigure getImageDecorator() {
+        final DecoratorSVGFigure figure = FiguresHelper.getDecoratorFigure(FiguresHelper.MULTI_SEQUENTIAL_SUB_DECORATOR) ;
+        figure.setSize(32, 16) ;
+        return figure ;
+    }
+
+    @Override
+    protected boolean isAppearing(final EObject activity) {
+        return super.isAppearing(activity) && ((Activity) activity).getType() == MultiInstanceType.SEQUENTIAL;
+    }
 }

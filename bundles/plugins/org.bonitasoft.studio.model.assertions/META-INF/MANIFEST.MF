@@ -5,6 +5,7 @@ Bundle-SymbolicName: org.bonitasoft.studio.model.assertions
 Bundle-Version: 6.4.0.qualifier
 Bundle-Vendor: BonitaSoft S.A.
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Export-Package: org.bonitasoft.studio.model.expression.assertions
+Export-Package: org.bonitasoft.studio.model.expression.assertions,
+ org.bonitasoft.studio.model.process.assertions
 Require-Bundle: assertj-core,
  org.bonitasoft.studio.model

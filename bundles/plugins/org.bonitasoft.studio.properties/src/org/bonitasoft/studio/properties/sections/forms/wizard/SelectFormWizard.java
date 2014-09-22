@@ -24,12 +24,15 @@ import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.data.provider.DataExpressionProvider;
 import org.bonitasoft.studio.diagram.form.custom.commands.CreateFormCommand;
 import org.bonitasoft.studio.diagram.form.custom.model.WidgetMapping;
 import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.Element;
+import org.bonitasoft.studio.model.process.MultiInstanceType;
+import org.bonitasoft.studio.model.process.MultiInstantiable;
 import org.bonitasoft.studio.model.process.PageFlow;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
@@ -47,115 +50,131 @@ import org.eclipse.jface.wizard.Wizard;
 public class SelectFormWizard extends Wizard {
 
 
-	protected Element pageFlow;
-	protected TransactionalEditingDomain editingDomain;
-	protected EStructuralFeature feature;
+    protected Element pageFlow;
+    protected TransactionalEditingDomain editingDomain;
+    protected EStructuralFeature feature;
 
-	public SelectFormWizard(Element element, EStructuralFeature feature, TransactionalEditingDomain editingDomain) {
-		pageFlow = element;
-		this.editingDomain = editingDomain;
-		this.feature = feature;
-		setWindowTitle(Messages.addFormTitle);
-		setDefaultPageImageDescriptor(Pics.getWizban());
-	}
+    public SelectFormWizard(final Element element, final EStructuralFeature feature, final TransactionalEditingDomain editingDomain) {
+        pageFlow = element;
+        this.editingDomain = editingDomain;
+        this.feature = feature;
+        setWindowTitle(Messages.addFormTitle);
+        setDefaultPageImageDescriptor(Pics.getWizban());
+    }
 
-	@Override
-	public void addPages() {
-		SelectGeneratedWidgetsWizardPage selectGeneratedWidgetsWizardPage = createSelectGeneratedWidgetsWizardPage(generateDefaultFormName(),getAccessibleModelElements());
-		addPage(selectGeneratedWidgetsWizardPage);
-	}
+    @Override
+    public void addPages() {
+        final SelectGeneratedWidgetsWizardPage selectGeneratedWidgetsWizardPage = createSelectGeneratedWidgetsWizardPage(generateDefaultFormName(),getAccessibleModelElements());
+        addPage(selectGeneratedWidgetsWizardPage);
+    }
 
-	protected SelectGeneratedWidgetsWizardPage createSelectGeneratedWidgetsWizardPage(String defaultFormName, List<EObject> inputElements) {
-		SelectGeneratedWidgetsWizardPage page = new SelectGeneratedWidgetsWizardPage(defaultFormName,inputElements);
-		page.setTitle(Messages.createForm_title);
-		page.setDescription(Messages.createForm_desc);
-		return page;
-	}
+    protected SelectGeneratedWidgetsWizardPage createSelectGeneratedWidgetsWizardPage(final String defaultFormName, final List<EObject> inputElements) {
+        final SelectGeneratedWidgetsWizardPage page = new SelectGeneratedWidgetsWizardPage(defaultFormName,inputElements);
+        page.setTitle(Messages.createForm_title);
+        page.setDescription(Messages.createForm_desc);
+        return page;
+    }
 
-	protected List<EObject> getAccessibleModelElements() {
-		List<EObject> elements = new ArrayList<EObject>();
-		if(pageFlow instanceof PageFlow){
-			List<Data> allData = ModelHelper.getAccessibleDataInFormsWithNoRestriction(pageFlow, feature);
-			for (Data currentData : allData) {
-				EClass eClassData = currentData.getDataType().eClass();
-				if(!ProcessPackage.eINSTANCE.getJavaType().isSuperTypeOf(eClassData)
-						&& !ProcessPackage.eINSTANCE.getXMLType().isSuperTypeOf(eClassData)) {
-					elements.add(currentData);
-				}
-			}
-		}
-		final AbstractProcess parentProcess = ModelHelper.getParentProcess(pageFlow);
-		if(parentProcess instanceof Pool){
-			elements.addAll(((Pool) parentProcess).getDocuments());
-		}
+    protected List<EObject> getAccessibleModelElements() {
+        final List<EObject> elements = new ArrayList<EObject>();
+        if(pageFlow instanceof PageFlow){
+            final List<Data> allData = ModelHelper.getAccessibleDataInFormsWithNoRestriction(pageFlow, feature);
+            for (final Data currentData : allData) {
+                final EClass eClassData = currentData.getDataType().eClass();
+                if(!ProcessPackage.eINSTANCE.getJavaType().isSuperTypeOf(eClassData)
+                        && !ProcessPackage.eINSTANCE.getXMLType().isSuperTypeOf(eClassData)
+                        && !(ProcessPackage.eINSTANCE.getBusinessObjectType().isSuperTypeOf(eClassData) && currentData.isMultiple())) {
+                    elements.add(currentData);
+                }
+            }
+            if (pageFlow instanceof MultiInstantiable) {
+                if (isDataMultiInstantiated((MultiInstantiable) pageFlow)) {
+                    final Data dataFromIteratorExpression = DataExpressionProvider.dataFromIteratorExpression((MultiInstantiable) pageFlow,
+                            ((MultiInstantiable) pageFlow).getIteratorExpression());
+                    if (!ProcessPackage.eINSTANCE.getJavaType().isSuperTypeOf(dataFromIteratorExpression.getDataType().eClass())
+                            && !ProcessPackage.eINSTANCE.getXMLType().isSuperTypeOf(dataFromIteratorExpression.getDataType().eClass())) {
+                        elements.add(dataFromIteratorExpression);
+                    }
+                }
+            }
+        }
+        final AbstractProcess parentProcess = ModelHelper.getParentProcess(pageFlow);
+        if(parentProcess instanceof Pool){
+            elements.addAll(((Pool) parentProcess).getDocuments());
+        }
 
-		return elements;
-	}
+        return elements;
+    }
 
-	protected String generateDefaultFormName() {
-		String baseName = pageFlow.getName();
-		int i = ((List<?>) pageFlow.eGet(feature)).size();
-		for (Iterator<?> iterator = ((List<?>) pageFlow.eGet(feature)).iterator(); iterator.hasNext();) {
-			Form form = (Form) iterator.next();
-			if(! form.getName().equals(baseName+i)){
-				return baseName+(i<=0?"":"_"+i);
-			}
+    protected boolean isDataMultiInstantiated(final MultiInstantiable element) {
+        return (element.getType() == MultiInstanceType.PARALLEL || element.getType() == MultiInstanceType.SEQUENTIAL) && !element.isUseCardinality()
+                && element.getIteratorExpression() != null && element.getIteratorExpression().getContent() != null;
+    }
 
-		}
-		return baseName+(i<=0?"":"_"+i);
-	}
+    protected String generateDefaultFormName() {
+        final String baseName = pageFlow.getName();
+        final int i = ((List<?>) pageFlow.eGet(feature)).size();
+        for (final Iterator<?> iterator = ((List<?>) pageFlow.eGet(feature)).iterator(); iterator.hasNext();) {
+            final Form form = (Form) iterator.next();
+            if(! form.getName().equals(baseName+i)){
+                return baseName+(i<=0?"":"_"+i);
+            }
 
-	@Override
-	public boolean performFinish() {
-		return createForm();
-	}
+        }
+        return baseName+(i<=0?"":"_"+i);
+    }
 
-	protected boolean createForm() {
-		SelectGeneratedWidgetsWizardPage selectGeneratedWidgetsWizardPage = getSelectGeneratedWidgetsWizardPage();
-		String name = selectGeneratedWidgetsWizardPage.getFormName();
-		selectGeneratedWidgetsWizardPage.setMessage(null);
-		boolean allreadyExists = false;
-		for (Iterator<?> iterator = ((List<?>)pageFlow.eGet(feature)).iterator(); iterator.hasNext();) {
-			Form form = (Form) iterator.next();
-			allreadyExists = form.getName().equals(NamingUtils.toJavaIdentifier(name,true));
-			if (allreadyExists) {
-				selectGeneratedWidgetsWizardPage.setMessage(Messages.error_allreadyExists, IMessageProvider.ERROR);
-				return false;
-			}
-		}
-		if (name.length() == 0) {
-			selectGeneratedWidgetsWizardPage.setMessage(Messages.error_empty, IMessageProvider.ERROR);
-			return false;
-		}
-		List<? extends WidgetMapping> widgesMappings = selectGeneratedWidgetsWizardPage.getWidgetMappings();
-		CreateFormCommand createFormCmd = getCreateFormCommand(name, widgesMappings);
-		try {
-			createFormCmd.execute(Repository.NULL_PROGRESS_MONITOR, null);
-		} catch (ExecutionException e) {
-			BonitaStudioLog.error(e);
-		}
-		Form createdForm = (Form) createFormCmd.getCommandResult().getReturnValue();
-		FormsUtils.createDiagram(createdForm, editingDomain, pageFlow);
-		return FormsUtils.openDiagram(createdForm, editingDomain) != null;
-	}
+    @Override
+    public boolean performFinish() {
+        return createForm();
+    }
 
-	protected SelectGeneratedWidgetsWizardPage getSelectGeneratedWidgetsWizardPage() {
-		return SelectGeneratedWidgetsWizardPage.class.cast(getPage(SelectGeneratedWidgetsWizardPage.class.getName()));
-	}
+    protected boolean createForm() {
+        final SelectGeneratedWidgetsWizardPage selectGeneratedWidgetsWizardPage = getSelectGeneratedWidgetsWizardPage();
+        final String name = selectGeneratedWidgetsWizardPage.getFormName();
+        selectGeneratedWidgetsWizardPage.setMessage(null);
+        boolean allreadyExists = false;
+        for (final Iterator<?> iterator = ((List<?>)pageFlow.eGet(feature)).iterator(); iterator.hasNext();) {
+            final Form form = (Form) iterator.next();
+            allreadyExists = form.getName().equals(NamingUtils.toJavaIdentifier(name,true));
+            if (allreadyExists) {
+                selectGeneratedWidgetsWizardPage.setMessage(Messages.error_allreadyExists, IMessageProvider.ERROR);
+                return false;
+            }
+        }
+        if (name.length() == 0) {
+            selectGeneratedWidgetsWizardPage.setMessage(Messages.error_empty, IMessageProvider.ERROR);
+            return false;
+        }
+        final List<? extends WidgetMapping> widgesMappings = selectGeneratedWidgetsWizardPage.getWidgetMappings();
+        final CreateFormCommand createFormCmd = getCreateFormCommand(name, widgesMappings);
+        try {
+            createFormCmd.execute(Repository.NULL_PROGRESS_MONITOR, null);
+        } catch (final ExecutionException e) {
+            BonitaStudioLog.error(e);
+        }
+        final Form createdForm = (Form) createFormCmd.getCommandResult().getReturnValue();
+        FormsUtils.createDiagram(createdForm, editingDomain, pageFlow);
+        return FormsUtils.openDiagram(createdForm, editingDomain) != null;
+    }
 
-	protected CreateFormCommand getCreateFormCommand(String name,
-			List<? extends WidgetMapping> widgesMappings) {
-		if(widgesMappings == null){
-			return new CreateFormCommand(pageFlow, feature, name, getSelectGeneratedWidgetsWizardPage().getFormDescription(), editingDomain);
-		}else{
-			return new CreateFormCommand(pageFlow, feature, name, getSelectGeneratedWidgetsWizardPage().getFormDescription(), widgesMappings, editingDomain);
-		}
-	}
+    protected SelectGeneratedWidgetsWizardPage getSelectGeneratedWidgetsWizardPage() {
+        return SelectGeneratedWidgetsWizardPage.class.cast(getPage(SelectGeneratedWidgetsWizardPage.class.getName()));
+    }
 
-	@Override
-	public boolean canFinish() {
-		return getSelectGeneratedWidgetsWizardPage().isPageComplete();
+    protected CreateFormCommand getCreateFormCommand(final String name,
+            final List<? extends WidgetMapping> widgesMappings) {
+        if(widgesMappings == null){
+            return new CreateFormCommand(pageFlow, feature, name, getSelectGeneratedWidgetsWizardPage().getFormDescription(), editingDomain);
+        }else{
+            return new CreateFormCommand(pageFlow, feature, name, getSelectGeneratedWidgetsWizardPage().getFormDescription(), widgesMappings, editingDomain);
+        }
+    }
 
-	}
+    @Override
+    public boolean canFinish() {
+        return getSelectGeneratedWidgetsWizardPage().isPageComplete();
+
+    }
 
 }

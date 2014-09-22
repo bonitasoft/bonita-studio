@@ -31,14 +31,13 @@ public class ExpressionReturnTypeContentProvider implements IStructuredContentPr
     }
 
     @Override
-    public void inputChanged(Viewer arg0, Object arg1, Object arg2) {
-        // TODO Auto-generated method stub
+    public void inputChanged(final Viewer arg0, final Object arg1, final Object arg2) {
 
     }
 
     @Override
-    public Object[] getElements(Object input) {
-        String[] javaDefaultTypes = new String[]{
+    public Object[] getElements(final Object input) {
+        final String[] javaDefaultTypes = new String[]{
                 String.class.getName()
                 ,Boolean.class.getName()
                 ,Long.class.getName()
@@ -48,7 +47,7 @@ public class ExpressionReturnTypeContentProvider implements IStructuredContentPr
                 ,Date.class.getName()
                 ,Object.class.getName()
         };
-        Set<String> types = new HashSet<String>(Arrays.asList(javaDefaultTypes)) ;
+        final Set<String> types = new HashSet<String>(Arrays.asList(javaDefaultTypes)) ;
 
         if(input != null && input instanceof String){
             types.add((String) input) ;

@@ -615,6 +615,9 @@ public class EngineExpressionUtil {
         if(ExpressionConstants.GROUP_ITERATOR_TYPE.equals(type)){
             return ExpressionConstants.FORM_FIELD_TYPE;
         }
+        if (ExpressionConstants.MULTIINSTANCE_ITERATOR_TYPE.equals(type)) {
+            return ExpressionConstants.VARIABLE_TYPE;
+        }
         if (ExpressionConstants.VARIABLE_TYPE.equals(type) && !expression.getReferencedElements().isEmpty()) {
             final Data data = (Data) expression.getReferencedElements().get(0);
             final String ds = data.getDatasourceId();
