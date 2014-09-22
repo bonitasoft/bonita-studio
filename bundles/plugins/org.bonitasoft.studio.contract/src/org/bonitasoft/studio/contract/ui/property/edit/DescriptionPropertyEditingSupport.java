@@ -49,6 +49,7 @@ public class DescriptionPropertyEditingSupport extends PropertyEditingSupport im
     @Override
     protected CellEditor getCellEditor(final Object object) {
         final CellEditor cellEditor = super.getCellEditor(object);
+        currentElement = object;
         cellEditor.setValidator(this);
         return cellEditor;
     }

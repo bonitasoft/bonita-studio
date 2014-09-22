@@ -62,11 +62,13 @@ public abstract class AbstractBonitaDescriptionSection extends AbstractModelerPr
         form.getBody().setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).create());
         form.getBody().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         form.setToolBarVerticalAlignment(SWT.CENTER);
-        form.getToolBarManager().add(new TogglePropertyHelpContributionItem(widgetFactory, form, getSectionDescription()));
+        final TogglePropertyHelpContributionItem togglePropertyHelpContributionItem = new TogglePropertyHelpContributionItem(widgetFactory, form,
+                getSectionDescription());
+        form.getToolBarManager().add(togglePropertyHelpContributionItem);
         form.getToolBarManager().update(true);
 
         form.setText(getSectionTitle());
-
+        form.getMenuManager().add(togglePropertyHelpContributionItem);
         createContent(form.getBody());
         form.update();
     }

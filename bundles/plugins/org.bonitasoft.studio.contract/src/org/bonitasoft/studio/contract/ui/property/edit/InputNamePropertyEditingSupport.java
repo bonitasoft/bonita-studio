@@ -31,8 +31,6 @@ import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ContractInputMapping;
 import org.bonitasoft.studio.model.process.ContractInputType;
 import org.bonitasoft.studio.model.process.Data;
-import org.bonitasoft.studio.pics.Pics;
-import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -41,6 +39,9 @@ import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jface.bindings.keys.KeyStroke;
 import org.eclipse.jface.bindings.keys.ParseException;
 import org.eclipse.jface.fieldassist.ContentProposalAdapter;
+import org.eclipse.jface.fieldassist.ControlDecoration;
+import org.eclipse.jface.fieldassist.FieldDecoration;
+import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
 import org.eclipse.jface.fieldassist.IContentProposal;
 import org.eclipse.jface.fieldassist.IContentProposalListener;
 import org.eclipse.jface.fieldassist.TextContentAdapter;
@@ -49,7 +50,6 @@ import org.eclipse.jface.viewers.ICellEditorListener;
 import org.eclipse.jface.viewers.ICellEditorValidator;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TextCellEditor;
-import org.eclipse.jface.window.DefaultToolTip;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ControlListener;
@@ -68,7 +68,6 @@ public class InputNamePropertyEditingSupport extends PropertyEditingSupport impl
     private EObject currentElement;
     private final AdapterFactoryLabelProvider adapterFactoryLabelProvider;
     private final ContractDefinitionValidator contractDefinitionValidator;
-    private DefaultToolTip toolTip;
     private boolean validate = false;
     private Object currentValue;
 
@@ -95,33 +94,43 @@ public class InputNamePropertyEditingSupport extends PropertyEditingSupport impl
             final TextCellEditor cellEditor = (TextCellEditor) super.getCellEditor(element);
             currentElement = (EObject) element;
             attachContentAssist(element, cellEditor);
-            createTooltip(cellEditor);
+            attachControlDecorator(cellEditor);
             cellEditor.setValidator(this);
             cellEditor.addListener(this);
-            cellEditor.getControl().addControlListener(new ControlListener() {
 
-                @Override
-                public void controlResized(final ControlEvent arg0) {
-
-                }
-
-                @Override
-                public void controlMoved(final ControlEvent event) {
-                    toolTip.show(new Point(0, 20));
-
-                }
-            });
             return cellEditor;
         }
         return null;
     }
 
-    private void createTooltip(final TextCellEditor cellEditor) {
-        toolTip = new DefaultToolTip(cellEditor.getControl(), SWT.ICON_INFORMATION, true);
-        toolTip.setText(Messages.automaticMappingTooltip);
-        toolTip.setImage(Pics.getImage(PicsConstants.hint));
-        toolTip.setHideDelay(10000);
-        toolTip.setHideOnMouseDown(false);
+    protected void attachControlDecorator(final TextCellEditor cellEditor) {
+        final FieldDecoration fieldDecoration = FieldDecorationRegistry.getDefault().getFieldDecoration(FieldDecorationRegistry.DEC_CONTENT_PROPOSAL);
+        final ControlDecoration controlDecoration = new ControlDecoration(cellEditor.getControl(), SWT.TOP | SWT.LEFT);
+        controlDecoration.setImage(fieldDecoration.getImage());
+        controlDecoration.setDescriptionText(Messages.automaticMappingTooltip);
+        controlDecoration.setMarginWidth(0);
+        cellEditor.getControl().addControlListener(new ControlListener() {
+
+            @Override
+            public void controlResized(final ControlEvent arg0) {
+
+            }
+
+            @Override
+            public void controlMoved(final ControlEvent event) {
+                if (cellEditor.getControl().equals(event.widget)) {
+                    final Text editor = (Text) event.widget;
+                    final Point location = editor.getLocation();
+
+                    if (location.x != 10) {
+                        final int offset = 10 - location.x;
+                        editor.setLocation(10, location.y);
+                        editor.setSize(editor.getSize().x - offset, editor.getSize().y);
+                    }
+                }
+
+            }
+        });
     }
 
     protected void attachContentAssist(final Object element, final TextCellEditor cellEditor) {
@@ -203,14 +212,12 @@ public class InputNamePropertyEditingSupport extends PropertyEditingSupport impl
 
     @Override
     public void applyEditorValue() {
-        toolTip.hide();
         validate = true;
         isValid(currentValue);
     }
 
     @Override
     public void cancelEditor() {
-        toolTip.hide();
     }
 
     @Override

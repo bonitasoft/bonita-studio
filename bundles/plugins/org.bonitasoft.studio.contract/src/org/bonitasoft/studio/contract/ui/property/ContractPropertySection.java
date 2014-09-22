@@ -25,8 +25,10 @@ import org.bonitasoft.studio.contract.i18n.Messages;
 import org.bonitasoft.studio.contract.ui.property.edit.CheckboxPropertyEditingSupport;
 import org.bonitasoft.studio.contract.ui.property.edit.ConstraintColumnLabelProvider;
 import org.bonitasoft.studio.contract.ui.property.edit.ConstraintPropertyEditingSupport;
+import org.bonitasoft.studio.contract.ui.property.edit.DescriptionCellLabelProvider;
 import org.bonitasoft.studio.contract.ui.property.edit.DescriptionPropertyEditingSupport;
 import org.bonitasoft.studio.contract.ui.property.edit.InputMappingPropertyEditingSupport;
+import org.bonitasoft.studio.contract.ui.property.edit.InputNameCellLabelProvider;
 import org.bonitasoft.studio.contract.ui.property.edit.InputNamePropertyEditingSupport;
 import org.bonitasoft.studio.contract.ui.property.edit.proposal.InputMappingProposal;
 import org.bonitasoft.studio.model.process.Contract;
@@ -322,34 +324,15 @@ public class ContractPropertySection extends EObjectSelectionProviderSection {
         final TableViewerColumn nameColumnViewer = new TableViewerColumn(viewer, SWT.FILL);
         final TableColumn column = nameColumnViewer.getColumn();
         column.setText(Messages.name + " *");
-        nameColumnViewer.setLabelProvider(new PropertyColumnLabelProvider(propertySourceProvider, "name") {
-
-            @Override
-            public Image getImage(final Object object) {
-                return null;
-            }
-
-        });
-        nameColumnViewer
-        .setEditingSupport(new InputNamePropertyEditingSupport(propertySourceProvider, viewer, adapterFactoryLabelProvider, contractValidator));
+        nameColumnViewer.setLabelProvider(new InputNameCellLabelProvider(propertySourceProvider, contractValidator));
+        nameColumnViewer.setEditingSupport(new InputNamePropertyEditingSupport(propertySourceProvider, viewer, adapterFactoryLabelProvider, contractValidator));
     }
 
     protected void createInputDescriptionColumn(final TableViewer viewer) {
         final TableViewerColumn descriptionColumnViewer = new TableViewerColumn(viewer, SWT.FILL);
         final TableColumn column = descriptionColumnViewer.getColumn();
         column.setText(Messages.description);
-        descriptionColumnViewer.setLabelProvider(new PropertyColumnLabelProvider(propertySourceProvider, "description") {
-
-            @Override
-            public Image getImage(final Object object) {
-                return null;
-            }
-
-            @Override
-            public String getToolTipText(final Object element) {
-                return ((ContractInput) element).getDescription();
-            }
-        });
+        descriptionColumnViewer.setLabelProvider(new DescriptionCellLabelProvider(propertySourceProvider, contractValidator));
         descriptionColumnViewer.setEditingSupport(new DescriptionPropertyEditingSupport(viewer, propertySourceProvider, contractValidator));
     }
 

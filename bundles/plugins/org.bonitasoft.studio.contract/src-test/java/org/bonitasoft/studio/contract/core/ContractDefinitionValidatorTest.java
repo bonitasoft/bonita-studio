@@ -153,7 +153,7 @@ public class ContractDefinitionValidatorTest {
         final IStatus status = validator.validate(contract);
         assertThat(status.isOK()).isFalse();
         assertThat(status).isInstanceOf(MultiStatus.class);
-        assertThat(((MultiStatus) status).getChildren()).hasSize(9).extracting("severity")
+        assertThat(((MultiStatus) status).getChildren()).hasSize(8).extracting("severity")
         .containsOnly(IStatus.ERROR, IStatus.ERROR, IStatus.ERROR, IStatus.OK, IStatus.OK, IStatus.OK, IStatus.OK, IStatus.OK, IStatus.OK);
     }
 

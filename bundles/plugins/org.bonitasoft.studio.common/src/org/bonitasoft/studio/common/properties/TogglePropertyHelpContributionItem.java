@@ -27,6 +27,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.CoolBar;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.forms.widgets.Form;
@@ -42,6 +43,7 @@ public class TogglePropertyHelpContributionItem implements IContributionItem {
     private final String helpContent;
     private final Form form;
     private final FormToolkit toolkit;
+    private Label decriptionLabel;
 
     public TogglePropertyHelpContributionItem(final FormToolkit toolkit, final Form form, final String helpContent) {
         this.helpContent = helpContent;
@@ -113,32 +115,49 @@ public class TogglePropertyHelpContributionItem implements IContributionItem {
 
     }
 
+    protected void toggleHelp() {
+        if (decriptionLabel != null) {
+            decriptionLabel.dispose();
+            form.setHeadClient(null);
+            decriptionLabel = null;
+        } else {
+            decriptionLabel = toolkit.createLabel(form.getHead(), helpContent, SWT.WRAP);
+            form.setHeadClient(decriptionLabel);
+        }
+        form.getParent().getParent().layout(true, true);
+    }
+
     @Override
     public void fill(final ToolBar toolbar, final int arg1) {
         final ToolItem toolItem = new ToolItem(toolbar, SWT.LEFT | SWT.PUSH | SWT.NO_FOCUS);
+        toolItem.setToolTipText("Display/hide help");
         toolItem.setImage(JFaceResources.getImage(Dialog.DLG_IMG_HELP));
         toolItem.addSelectionListener(new SelectionAdapter() {
 
-            private Label decriptionLabel;
+
 
             @Override
             public void widgetSelected(final SelectionEvent e) {
-                if (decriptionLabel != null) {
-                    decriptionLabel.dispose();
-                    form.setHeadClient(null);
-                    decriptionLabel = null;
-                } else {
-                    decriptionLabel = toolkit.createLabel(form.getHead(), helpContent, SWT.WRAP);
-                    form.setHeadClient(decriptionLabel);
-                }
-                form.getParent().getParent().layout(true, true);
+                toggleHelp();
             }
+
+
         });
     }
 
     @Override
-    public void fill(final Menu arg0, final int arg1) {
+    public void fill(final Menu parent, final int index) {
+        final MenuItem menuItem = new MenuItem(parent, SWT.CHECK);
+        menuItem.setText("Display/hide help");
+        menuItem.setImage(JFaceResources.getImage(Dialog.DLG_IMG_HELP));
+        menuItem.addSelectionListener(new SelectionAdapter() {
 
+            @Override
+            public void widgetSelected(final SelectionEvent e) {
+                toggleHelp();
+            };
+        });
+        menuItem.setSelection(decriptionLabel != null);
     }
 
     @Override
