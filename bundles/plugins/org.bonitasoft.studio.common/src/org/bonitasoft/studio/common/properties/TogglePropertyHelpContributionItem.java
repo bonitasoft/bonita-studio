@@ -115,7 +115,7 @@ public class TogglePropertyHelpContributionItem implements IContributionItem {
 
     @Override
     public void fill(final ToolBar toolbar, final int arg1) {
-        final ToolItem toolItem = new ToolItem(toolbar, SWT.PUSH | SWT.NO_FOCUS);
+        final ToolItem toolItem = new ToolItem(toolbar, SWT.LEFT | SWT.PUSH | SWT.NO_FOCUS);
         toolItem.setImage(JFaceResources.getImage(Dialog.DLG_IMG_HELP));
         toolItem.addSelectionListener(new SelectionAdapter() {
 

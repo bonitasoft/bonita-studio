@@ -85,10 +85,9 @@ public class ContractDefinitionValidator {
         final MultiStatus status = new MultiStatus(ContractPlugin.PLUGIN_ID, IStatus.OK, "", null);
         if (contract != null) {
             final Set<String> result = new HashSet<String>();
-
             final Set<String> duplicated = new HashSet<String>();
             for (final ContractInput in : contract.getInputs()) {
-                if (!result.add(in.getName())) {
+                if (in.getName() != null && !in.getName().isEmpty() && !result.add(in.getName())) {
                     duplicated.add(in.getName());
                 }
             }

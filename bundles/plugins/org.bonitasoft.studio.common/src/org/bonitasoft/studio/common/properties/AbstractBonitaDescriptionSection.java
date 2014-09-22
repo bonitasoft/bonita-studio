@@ -20,6 +20,7 @@ package org.bonitasoft.studio.common.properties;
 import org.eclipse.gmf.runtime.diagram.ui.properties.sections.AbstractModelerPropertySection;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.IMessageManager;
 import org.eclipse.ui.forms.widgets.Form;
@@ -60,7 +61,7 @@ public abstract class AbstractBonitaDescriptionSection extends AbstractModelerPr
         form.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         form.getBody().setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).create());
         form.getBody().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-
+        form.setToolBarVerticalAlignment(SWT.CENTER);
         form.getToolBarManager().add(new TogglePropertyHelpContributionItem(widgetFactory, form, getSectionDescription()));
         form.getToolBarManager().update(true);
 
