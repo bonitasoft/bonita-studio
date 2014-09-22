@@ -43,5 +43,8 @@ public class Messages extends NLS {
     public static String none;
     public static String addConstraint;
     public static String editConstraint;
+    public static String inputSuffix;
+    public static String duplicatedInputNames;
+    public static String contractInputs;
 
 }

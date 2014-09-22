@@ -23,6 +23,7 @@ import org.bonitasoft.studio.contract.i18n.Messages;
 import org.bonitasoft.studio.contract.ui.property.edit.CheckboxPropertyEditingSupport;
 import org.bonitasoft.studio.contract.ui.property.edit.ConstraintColumnLabelProvider;
 import org.bonitasoft.studio.contract.ui.property.edit.ConstraintPropertyEditingSupport;
+import org.bonitasoft.studio.contract.ui.property.edit.DescriptionPropertyEditingSupport;
 import org.bonitasoft.studio.contract.ui.property.edit.InputMappingPropertyEditingSupport;
 import org.bonitasoft.studio.contract.ui.property.edit.InputNamePropertyEditingSupport;
 import org.bonitasoft.studio.contract.ui.property.edit.proposal.InputMappingProposal;
@@ -78,6 +79,8 @@ public class ContractPropertySection extends EObjectSelectionProviderSection {
     private ComposedAdapterFactory composedAdapterFactory;
     private AdapterFactoryContentProvider propertySourceProvider;
     private AdapterFactoryLabelProvider adapterFactoryLabelProvider;
+    private ContractDefinitionValidator contractValidator;
+    private IObservableValue observeContractValue;
 
     @Override
     public String getSectionDescription() {
@@ -85,7 +88,15 @@ public class ContractPropertySection extends EObjectSelectionProviderSection {
     }
 
     @Override
+    public String getSectionTitle() {
+        return Messages.contractInputs;
+    }
+
+    @Override
     protected void createContent(final Composite parent) {
+        contractValidator = new ContractDefinitionValidator(
+                getMessageManager());
+
         context = new EMFDataBindingContext();
         composedAdapterFactory =
                 new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
@@ -152,7 +163,7 @@ public class ContractPropertySection extends EObjectSelectionProviderSection {
         createConstraintColumn(inputsTableViewer);
         createInputDescriptionColumn(inputsTableViewer);
 
-        final IObservableValue observeContractValue = CustomEMFEditObservables.observeDetailValue(Realm.getDefault(), getEObjectObservable(),
+        observeContractValue = CustomEMFEditObservables.observeDetailValue(Realm.getDefault(), getEObjectObservable(),
                 ProcessPackage.Literals.TASK__CONTRACT);
         final IObservableList observeContractInputDetailList = CustomEMFEditObservables.observeDetailList(Realm.getDefault(), observeContractValue,
                 ProcessPackage.Literals.CONTRACT__INPUTS);
@@ -204,9 +215,10 @@ public class ContractPropertySection extends EObjectSelectionProviderSection {
         final IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
         final IObservableList input = (IObservableList) viewer.getInput();
         for (final Object o : selection.toList()) {
-            getMessageManager().removeMessage(o);
+            contractValidator.clearMessages(o);
         }
         input.removeAll(selection.toList());
+        contractValidator.validateDuplicatedInputs((Contract) observeContractValue.getValue());
     }
 
     protected void createInputNameColumn(final TableViewer viewer) {
@@ -222,8 +234,7 @@ public class ContractPropertySection extends EObjectSelectionProviderSection {
 
         });
         nameColumnViewer
-        .setEditingSupport(new InputNamePropertyEditingSupport(propertySourceProvider, viewer, adapterFactoryLabelProvider,
-                new ContractDefinitionValidator(getMessageManager())));
+        .setEditingSupport(new InputNamePropertyEditingSupport(propertySourceProvider, viewer, adapterFactoryLabelProvider, contractValidator));
     }
 
     protected void createInputDescriptionColumn(final TableViewer viewer) {
@@ -237,14 +248,7 @@ public class ContractPropertySection extends EObjectSelectionProviderSection {
                 return null;
             }
         });
-        descriptionColumnViewer.setEditingSupport(new PropertyEditingSupport(viewer, propertySourceProvider, "description") {
-
-            @Override
-            protected void setValue(final Object element, final Object value) {
-                super.setValue(element, value);
-                getViewer().update(element, null);
-            }
-        });
+        descriptionColumnViewer.setEditingSupport(new DescriptionPropertyEditingSupport(viewer, propertySourceProvider, contractValidator));
     }
 
     protected void createMappingColumn(final TableViewer viewer) {

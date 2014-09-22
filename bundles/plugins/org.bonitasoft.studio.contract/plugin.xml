@@ -8,8 +8,8 @@
          <propertyTab
                afterTab="tab.lane"
                category="domain"
-               id="tab.inputs"
-               label="%tab.inputs.label">
+               id="tab.contract"
+               label="%tab.contract.label">
          </propertyTab>
       </propertyTabs>
    </extension>
@@ -22,7 +22,7 @@
                enablesFor="1"
                filter="org.bonitasoft.studio.contract.ui.property.TaskFilter"
                id="InputsSection"
-               tab="tab.inputs"
+               tab="tab.contract"
                viewID="org.bonitasoft.studio.views.properties.process.general">
          </propertySection>
       </propertySections>

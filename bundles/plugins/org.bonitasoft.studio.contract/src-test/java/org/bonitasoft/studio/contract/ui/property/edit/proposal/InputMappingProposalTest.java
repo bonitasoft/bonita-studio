@@ -126,9 +126,48 @@ public class InputMappingProposalTest {
     }
 
     @Test
+    public void should_getInputContent_returns_dataInputName_for_simple_data() throws Exception {
+        final Data data = ProcessFactory.eINSTANCE.createData();
+        data.setName("myData");
+        final DataType dt = ProcessFactory.eINSTANCE.createStringType();
+        dt.setName(Messages.StringType);
+        data.setDataType(dt);
+        proposal = new InputMappingProposal(data);
+        assertThat(proposal.getInputContent()).isEqualTo("myData" + org.bonitasoft.studio.contract.i18n.Messages.inputSuffix);
+    }
+
+    @Test
+    public void should_getInputContent_returns_dataInputName_for_business_object_data() throws Exception {
+        final JavaObjectData data = ProcessFactory.eINSTANCE.createBusinessObjectData();
+        data.setName("myData");
+        final DataType dt = ProcessFactory.eINSTANCE.createBusinessObjectType();
+        data.setClassName("com.test.Employee");
+        data.setDataType(dt);
+        proposal = new InputMappingProposal(data, null, null);
+        assertThat(proposal.getInputContent()).isEqualTo("myData" + org.bonitasoft.studio.contract.i18n.Messages.inputSuffix);
+    }
+
+    @Test
+    public void should_getInputContent_returns_dataInputName_and_field_for_java_data() throws Exception {
+        final JavaObjectData data = ProcessFactory.eINSTANCE.createJavaObjectData();
+        data.setName("myData");
+        final DataType dt = ProcessFactory.eINSTANCE.createStringType();
+        dt.setName(Messages.StringType);
+        data.setDataType(dt);
+        proposal = new InputMappingProposal(data, "setName", String.class.getName());
+        assertThat(proposal.getInputContent()).isEqualTo("myDataName" + org.bonitasoft.studio.contract.i18n.Messages.inputSuffix);
+    }
+
+    @Test
     public void should_get_content_returns_null() throws Exception {
         proposal = new InputMappingProposal((Data) null);
         assertThat(proposal.getContent()).isNull();
+    }
+
+    @Test
+    public void should_get_input_content_returns_null() throws Exception {
+        proposal = new InputMappingProposal((Data) null);
+        assertThat(proposal.getInputContent()).isNull();
     }
 
     @Test

@@ -16,6 +16,7 @@
  */
 package org.bonitasoft.studio.contract.ui.property.edit.proposal;
 
+import org.bonitasoft.studio.contract.i18n.Messages;
 import org.bonitasoft.studio.data.ui.property.section.DataLabelProvider;
 import org.bonitasoft.studio.model.process.BusinessObjectData;
 import org.bonitasoft.studio.model.process.ContractInputMapping;
@@ -73,17 +74,40 @@ public class InputMappingProposal implements IContentProposal {
     @Override
     public String getContent() {
         if (data instanceof BusinessObjectData || data instanceof JavaObjectData) {
-            if (setterName != null) {
-                String paramName = setterName.substring(3);
-                paramName = Character.toLowerCase(paramName.charAt(0)) + paramName.substring(1);
-                return data.getName() + "." + paramName;
-            }
-            return data.getName();
+            return toDataNameWithField();
         } else if (data != null) {
             return data.getName();
         } else {
             return null;
         }
+    }
+
+    public String getInputContent() {
+        if (data instanceof BusinessObjectData || data instanceof JavaObjectData) {
+            return toValidIdentifierNameWithField();
+        } else if (data != null) {
+            return data.getName() + Messages.inputSuffix;
+        } else {
+            return null;
+        }
+    }
+
+    protected String toDataNameWithField() {
+        if (setterName != null) {
+            String paramName = setterName.substring(3);
+            paramName = Character.toLowerCase(paramName.charAt(0)) + paramName.substring(1);
+            return data.getName() + "." + paramName;
+        }
+        return data.getName();
+    }
+
+    protected String toValidIdentifierNameWithField() {
+        if (setterName != null) {
+            String paramName = setterName.substring(3);
+            paramName = Character.toUpperCase(paramName.charAt(0)) + paramName.substring(1);
+            return data.getName() + paramName + Messages.inputSuffix;
+        }
+        return data.getName() + Messages.inputSuffix;
     }
 
     public String getSetterName() {

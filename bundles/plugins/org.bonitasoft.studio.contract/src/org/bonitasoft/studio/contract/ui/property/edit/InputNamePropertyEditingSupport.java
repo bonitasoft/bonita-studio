@@ -26,6 +26,7 @@ import org.bonitasoft.studio.contract.i18n.Messages;
 import org.bonitasoft.studio.contract.ui.property.edit.proposal.InputMappingProposal;
 import org.bonitasoft.studio.contract.ui.property.edit.proposal.InputMappingProposalLabelProvider;
 import org.bonitasoft.studio.contract.ui.property.edit.proposal.InputMappingProposalProvider;
+import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ContractInputMapping;
 import org.bonitasoft.studio.model.process.ContractInputType;
@@ -33,6 +34,7 @@ import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
@@ -63,12 +65,12 @@ import org.eclipse.ui.views.properties.PropertyEditingSupport;
 public class InputNamePropertyEditingSupport extends PropertyEditingSupport implements ICellEditorValidator, ICellEditorListener {
 
 
-    private Object currentElement;
+    private EObject currentElement;
     private final AdapterFactoryLabelProvider adapterFactoryLabelProvider;
     private final ContractDefinitionValidator contractDefinitionValidator;
     private DefaultToolTip toolTip;
     private boolean validate = false;
-    private Object cuurentValue;
+    private Object currentValue;
 
     public InputNamePropertyEditingSupport(final AdapterFactoryContentProvider propertySourceProvider, final TableViewer viewer,
             final AdapterFactoryLabelProvider adapterFactoryLabelProvider, final ContractDefinitionValidator contractDefinitionValidator) {
@@ -80,6 +82,9 @@ public class InputNamePropertyEditingSupport extends PropertyEditingSupport impl
     @Override
     protected void setValue(final Object element, final Object value) {
         super.setValue(element, value);
+        if (element instanceof ContractInput) {
+            contractDefinitionValidator.validateDuplicatedInputs((Contract) ((ContractInput) element).eContainer());
+        }
         getViewer().update(element, null);
     }
 
@@ -88,7 +93,7 @@ public class InputNamePropertyEditingSupport extends PropertyEditingSupport impl
         if (element instanceof ContractInput) {
             validate = false;
             final TextCellEditor cellEditor = (TextCellEditor) super.getCellEditor(element);
-            currentElement = element;
+            currentElement = (EObject) element;
             attachContentAssist(element, cellEditor);
             createTooltip(cellEditor);
             cellEditor.setValidator(this);
@@ -192,7 +197,7 @@ public class InputNamePropertyEditingSupport extends PropertyEditingSupport impl
         if (validate || getValue(currentElement) != null) {
             contractDefinitionValidator.validateInputName((ContractInput) currentElement, (String) value);
         }
-        cuurentValue = value;
+        currentValue = value;
         return null;
     }
 
@@ -200,7 +205,7 @@ public class InputNamePropertyEditingSupport extends PropertyEditingSupport impl
     public void applyEditorValue() {
         toolTip.hide();
         validate = true;
-        isValid(cuurentValue);
+        isValid(currentValue);
     }
 
     @Override
