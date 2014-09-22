@@ -143,7 +143,7 @@ public class InputNamePropertyEditingSupport extends PropertyEditingSupport impl
             public void proposalAccepted(final IContentProposal acceptedProposal) {
                 if (acceptedProposal instanceof InputMappingProposal) {
                     final IPropertySource inputPropertySource = propertySourceProvider.getPropertySource(element);
-                    final String name = ((InputMappingProposal) acceptedProposal).getContent();
+                    final String name = ((InputMappingProposal) acceptedProposal).getInputContent();
                     setValue(element, name);
                     textControl.setText(name);
                     inputPropertySource.setPropertyValue("type", getType((InputMappingProposal) acceptedProposal));
