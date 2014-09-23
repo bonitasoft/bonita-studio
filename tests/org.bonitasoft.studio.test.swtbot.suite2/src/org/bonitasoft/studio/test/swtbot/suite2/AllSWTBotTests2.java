@@ -29,6 +29,7 @@ import org.bonitasoft.studio.properties.test.TestResources;
 import org.bonitasoft.studio.repository.test.swtbot.TestExportBosArchive;
 import org.bonitasoft.studio.tests.IHeapDumper;
 import org.bonitasoft.studio.tests.attachment.TestRunWithDocument;
+import org.bonitasoft.studio.tests.contract.ContractIT;
 import org.bonitasoft.studio.tests.data.DataWizardIT;
 import org.bonitasoft.studio.tests.dialog.OpenNameAndVersionForDiagramDialogTest;
 import org.bonitasoft.studio.tests.dialog.TestDuplicate;
@@ -98,7 +99,8 @@ import org.junit.runners.Suite;
     MigrationReporTest.class,
     TestTimer.class,
     TestBonitaGroovyEditorDialog.class,
-    TestProcessDependencies.class
+        TestProcessDependencies.class,
+        ContractIT.class
 })
 public class AllSWTBotTests2 {
 
