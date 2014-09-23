@@ -23,6 +23,7 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
 import org.bonitasoft.studio.contract.core.ContractDefinitionValidator;
+import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.eclipse.ui.views.properties.IPropertySourceProvider;
@@ -78,14 +79,44 @@ public class InputNameCellLabelProviderTest {
     }
 
     @Test
-    public void should_getToolTipText_returns_error_message() throws Exception {
+    public void should_getToolTipText_returns_error_message_for_empty_name() throws Exception {
         final ContractInput input = ProcessFactory.eINSTANCE.createContractInput();
         input.setName("");
         assertThat(inputNameCellLabelProvider.getToolTipText(input)).isNotEmpty().contains(org.bonitasoft.studio.common.Messages.emptyField);
     }
 
     @Test
-    public void should_getBackgroundColor_returns_red_color() throws Exception {
+    public void should_getBackgroundColor_returns_red_color_for_duplicated_name() throws Exception {
+        final Contract c = ProcessFactory.eINSTANCE.createContract();
+        final ContractInput input = ProcessFactory.eINSTANCE.createContractInput();
+        input.setName("nameInput");
+        final ContractInput input2 = ProcessFactory.eINSTANCE.createContractInput();
+        input2.setName("nameInput");
+        c.getInputs().add(input);
+        c.getInputs().add(input2);
+        inputNameCellLabelProvider.getBackground(input);
+        verify(inputNameCellLabelProvider).getErrorBackgroundColor();
+    }
+
+    @Test
+    public void should_getBackgroundColor_returns_standard_color_if_other_duplicated_name() throws Exception {
+        final Contract c = ProcessFactory.eINSTANCE.createContract();
+        final ContractInput input = ProcessFactory.eINSTANCE.createContractInput();
+        input.setName("nameInput");
+        final ContractInput input2 = ProcessFactory.eINSTANCE.createContractInput();
+        input2.setName("nameInput");
+        final ContractInput input3 = ProcessFactory.eINSTANCE.createContractInput();
+        input3.setName("otherInput");
+        c.getInputs().add(input);
+        c.getInputs().add(input2);
+        c.getInputs().add(input3);
+        inputNameCellLabelProvider.getBackground(input3);
+        verify((PropertyColumnLabelProvider) inputNameCellLabelProvider).getBackground(input3);
+        verify(inputNameCellLabelProvider, never()).getErrorBackgroundColor();
+    }
+
+    @Test
+    public void should_getBackgroundColor_returns_red_color_for_empty_name() throws Exception {
         final ContractInput input = ProcessFactory.eINSTANCE.createContractInput();
         input.setName("");
         inputNameCellLabelProvider.getBackground(input);

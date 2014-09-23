@@ -46,7 +46,10 @@ public class InputMappingPropertyEditingSupport extends EditingSupport {
     @Override
     protected Object getValue(final Object element) {
         if (element instanceof ContractInput) {
-            return new InputMappingProposal(((ContractInput) element).getMapping()).getContent();
+            final ContractInputMapping mapping = ((ContractInput) element).getMapping();
+            if (mapping != null) {
+                return new InputMappingProposal(mapping).getContent();
+            }
         }
         return null;
     }
@@ -55,14 +58,14 @@ public class InputMappingPropertyEditingSupport extends EditingSupport {
     protected void setValue(final Object element, final Object value) {
         if (element instanceof ContractInput) {
             final ContractInputMapping mapping = ((ContractInput) element).getMapping();
-            final IPropertySource propertySource = propertySourceProvider.getPropertySource(mapping);
             if (value instanceof ContractInputMapping) {
+                final IPropertySource propertySource = propertySourceProvider.getPropertySource(mapping);
                 propertySource.setPropertyValue("data", ((ContractInputMapping) value).getData());
                 propertySource.setPropertyValue("setterName", ((ContractInputMapping) value).getSetterName());
                 propertySource.setPropertyValue("setterParamType", ((ContractInputMapping) value).getSetterParamType());
             }
+            getViewer().update(element, null);
         }
-        getViewer().update(element, null);
     }
 
     @Override

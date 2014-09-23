@@ -70,7 +70,6 @@ public class InputNameCellLabelProvider extends PropertyColumnLabelProvider {
                     return getErrorBackgroundColor();
                 }
             }
-            return super.getBackground(element);
         }
         return super.getBackground(element);
     }

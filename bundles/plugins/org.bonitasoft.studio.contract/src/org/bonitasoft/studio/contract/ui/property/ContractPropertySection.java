@@ -23,8 +23,6 @@ import org.bonitasoft.studio.common.properties.EObjectSelectionProviderSection;
 import org.bonitasoft.studio.contract.core.ContractDefinitionValidator;
 import org.bonitasoft.studio.contract.i18n.Messages;
 import org.bonitasoft.studio.contract.ui.property.edit.CheckboxPropertyEditingSupport;
-import org.bonitasoft.studio.contract.ui.property.edit.ConstraintColumnLabelProvider;
-import org.bonitasoft.studio.contract.ui.property.edit.ConstraintPropertyEditingSupport;
 import org.bonitasoft.studio.contract.ui.property.edit.DescriptionCellLabelProvider;
 import org.bonitasoft.studio.contract.ui.property.edit.DescriptionPropertyEditingSupport;
 import org.bonitasoft.studio.contract.ui.property.edit.InputMappingPropertyEditingSupport;
@@ -365,14 +363,6 @@ public class ContractPropertySection extends EObjectSelectionProviderSection {
             }
         });
         mappingColumnViewer.setEditingSupport(new InputMappingPropertyEditingSupport(propertySourceProvider, viewer));
-    }
-
-    protected void createConstraintColumn(final TableViewer viewer) {
-        final TableViewerColumn constraintColumnViewer = new TableViewerColumn(viewer, SWT.FILL);
-        final TableColumn column = constraintColumnViewer.getColumn();
-        column.setText(Messages.constraints);
-        constraintColumnViewer.setLabelProvider(new ConstraintColumnLabelProvider());
-        constraintColumnViewer.setEditingSupport(new ConstraintPropertyEditingSupport(viewer));
     }
 
     protected void createInputTypeColumn(final TableViewer viewer) {

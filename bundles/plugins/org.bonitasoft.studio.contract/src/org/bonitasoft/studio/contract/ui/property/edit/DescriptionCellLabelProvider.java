@@ -63,8 +63,12 @@ public class DescriptionCellLabelProvider extends PropertyColumnLabelProvider {
         if (status.isOK()) {
             return super.getBackground(element);
         } else {
-            return Display.getCurrent().getSystemColor(SWT.COLOR_RED);
+            return getErrorBackgroundColor();
         }
+    }
+
+    protected Color getErrorBackgroundColor() {
+        return Display.getCurrent().getSystemColor(SWT.COLOR_RED);
     }
 
 
