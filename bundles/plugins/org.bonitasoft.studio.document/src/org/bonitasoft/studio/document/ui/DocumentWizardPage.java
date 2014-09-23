@@ -133,13 +133,13 @@ public class DocumentWizardPage extends WizardPage {
         this.document = document;
         setTitle(Messages.bind(Messages.documentWizardPageTitle, getCurrentContextName()));
         setDescription(Messages.newDocumentWizardDescription);
-        emfDataBindingContext = new EMFDataBindingContext();
         setPageComplete(false);
         externalValidator = new DocumentInitialContentValidator(URL_SIZE_MAX);
     }
 
     @Override
     public void createControl(final Composite parent) {
+        emfDataBindingContext = createDatabindingContext();
         final Composite mainComposite = new Composite(parent, SWT.NONE);
         mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(7, 7).create());
@@ -149,7 +149,7 @@ public class DocumentWizardPage extends WizardPage {
         setControl(mainComposite);
     }
 
-    private String getCurrentContextName(){
+    private String getCurrentContextName() {
         String name = "---";
         EObject container = context;
         while (!(container instanceof Pool) && container.eContainer()!=null) {
@@ -219,7 +219,7 @@ public class DocumentWizardPage extends WizardPage {
 
         documentMimeTypeViewer = new ExpressionViewer(mimeTypeComposition,
                 SWT.BORDER, ProcessPackage.Literals.DOCUMENT__MIME_TYPE);
-        documentMimeTypeViewer.addFilter(new AvailableExpressionTypeFilter(new String[] { ExpressionConstants.CONSTANT_TYPE }));
+        documentMimeTypeViewer.addFilter(getConstantTypeOnlyExpressionViewerFilter());
         documentMimeTypeViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         documentMimeTypeViewer.getTextControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         documentMimeTypeViewer.setExample(Messages.hintMimeTypeDocument);
@@ -260,8 +260,7 @@ public class DocumentWizardPage extends WizardPage {
 
         documentUrlViewer = new ExpressionViewer(slaveComposite, SWT.BORDER,
                 ProcessPackage.Literals.DOCUMENT__URL);
-        documentUrlViewer.addFilter(new AvailableExpressionTypeFilter(
-                new String[] { ExpressionConstants.CONSTANT_TYPE }));
+        documentUrlViewer.addFilter(getConstantTypeOnlyExpressionViewerFilter());
         documentUrlViewer.getControl().setLayoutData(
                 GridDataFactory.fillDefaults().grab(true, false).create());
         documentUrlViewer.getTextControl().setLayoutData(
@@ -841,6 +840,16 @@ public class DocumentWizardPage extends WizardPage {
         manageLink.setEnabled(isEnabled);
         hideLink.setEnabled(isEnabled);
         documentMimeTypeViewer.getTextControl().setEnabled(isEnabled);
+    }
+
+    private EMFDataBindingContext createDatabindingContext() {
+        return new EMFDataBindingContext();
+    }
+
+
+    protected AvailableExpressionTypeFilter getConstantTypeOnlyExpressionViewerFilter() {
+        return new AvailableExpressionTypeFilter(
+                new String[] { ExpressionConstants.CONSTANT_TYPE });
     }
 
 }
