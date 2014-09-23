@@ -505,9 +505,13 @@ public class IterationPropertySection extends EObjectSelectionProviderSection im
                     }
                     if (value != null) {
                         final String newVariableName = ((IProposalListener) selection).handleEvent(value, null);
-                        final IObservableList observeList = EMFObservables.observeList(value, ProcessPackage.Literals.DATA_AWARE__DATA);
-                        inputListComboViewer.setInput(observeList);
-                        inputListComboViewer.setSelection(new StructuredSelection(getDataFromName(newVariableName, observeList)));
+                        if (newVariableName != null) {
+                            final IObservableList observeList = EMFObservables.observeList(value, ProcessPackage.Literals.DATA_AWARE__DATA);
+                            inputListComboViewer.setInput(observeList);
+                            inputListComboViewer.setSelection(new StructuredSelection(getDataFromName(newVariableName, observeList)));
+                        }
+                    }else{
+                        inputListComboViewer.setSelection(new StructuredSelection());
                     }
 
                 }
