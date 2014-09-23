@@ -16,6 +16,7 @@
  */
 package org.bonitasoft.studio.common.properties;
 
+import org.bonitasoft.studio.common.Messages;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IContributionManager;
 import org.eclipse.jface.dialogs.Dialog;
@@ -130,7 +131,7 @@ public class TogglePropertyHelpContributionItem implements IContributionItem {
     @Override
     public void fill(final ToolBar toolbar, final int arg1) {
         final ToolItem toolItem = new ToolItem(toolbar, SWT.LEFT | SWT.PUSH | SWT.NO_FOCUS);
-        toolItem.setToolTipText("Display/hide help");
+        toolItem.setToolTipText(Messages.showHelp);
         toolItem.setImage(JFaceResources.getImage(Dialog.DLG_IMG_HELP));
         toolItem.addSelectionListener(new SelectionAdapter() {
 
@@ -148,8 +149,7 @@ public class TogglePropertyHelpContributionItem implements IContributionItem {
     @Override
     public void fill(final Menu parent, final int index) {
         final MenuItem menuItem = new MenuItem(parent, SWT.CHECK);
-        menuItem.setText("Display/hide help");
-        menuItem.setImage(JFaceResources.getImage(Dialog.DLG_IMG_HELP));
+        menuItem.setText(Messages.showHelp);
         menuItem.addSelectionListener(new SelectionAdapter() {
 
             @Override

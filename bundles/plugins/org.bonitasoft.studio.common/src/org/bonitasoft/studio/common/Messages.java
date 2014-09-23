@@ -352,5 +352,6 @@ public class Messages extends NLS {
     public static String validationFailedTitle;
     public static String endWarningMessage;
     public static String createVariable;
+    public static String showHelp;
 
 }
