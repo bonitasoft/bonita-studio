@@ -63,16 +63,20 @@ public class InputNameCellLabelProvider extends PropertyColumnLabelProvider {
         final IStatus status = validator.validateInputName((ContractInput) element, name);
         final IStatus duplicateStatus = validator.validateDuplicatedInputs((Contract) ((ContractInput) element).eContainer());
         if (!status.isOK()) {
-            return Display.getCurrent().getSystemColor(SWT.COLOR_RED);
+            return getErrorBackgroundColor();
         } else if (!duplicateStatus.isOK()) {
             for (final IStatus c : duplicateStatus.getChildren()) {
                 if (c.getMessage().equals(name)) {
-                    return Display.getCurrent().getSystemColor(SWT.COLOR_RED);
+                    return getErrorBackgroundColor();
                 }
             }
             return super.getBackground(element);
         }
         return super.getBackground(element);
+    }
+
+    protected Color getErrorBackgroundColor() {
+        return Display.getCurrent().getSystemColor(SWT.COLOR_RED);
     }
 
 

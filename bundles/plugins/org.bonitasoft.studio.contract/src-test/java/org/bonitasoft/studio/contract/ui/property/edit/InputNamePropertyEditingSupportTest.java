@@ -81,7 +81,7 @@ public class InputNamePropertyEditingSupportTest {
         final ContractInput input = ProcessFactory.eINSTANCE.createContractInput();
         propertyEditingSupport.setValue(input, "age");
         assertThat(input.getName()).isEqualTo("age");
-        verify(viewer).update(input, null);
+        verify(viewer).refresh(true);
     }
 
     @Test
