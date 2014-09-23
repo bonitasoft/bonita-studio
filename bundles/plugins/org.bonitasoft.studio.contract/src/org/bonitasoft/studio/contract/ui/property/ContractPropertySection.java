@@ -80,6 +80,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.views.properties.PropertyColumnLabelProvider;
 import org.eclipse.ui.views.properties.PropertyEditingSupport;
 
@@ -215,6 +216,9 @@ public class ContractPropertySection extends EObjectSelectionProviderSection {
                                 addInput(inputsTableViewer);
                             }
                             nextCell = currentSelectedCell.getNeighbor(ViewerCell.BELOW, false);
+                            if (nextCell != null) {
+                                inputsTableViewer.getTable().setSelection((TableItem) nextCell.getViewerRow().getItem());
+                            }
                             return nextCell;
                         }
                         break;
@@ -222,6 +226,7 @@ public class ContractPropertySection extends EObjectSelectionProviderSection {
                         if(currentSelectedCell != null){
                             final ViewerCell aboveCell = currentSelectedCell.getNeighbor(ViewerCell.ABOVE, false);
                             removeInput(inputsTableViewer);
+                            inputsTableViewer.getTable().setSelection((TableItem) aboveCell.getViewerRow().getItem());
                             return aboveCell;
                         }
                         break;
