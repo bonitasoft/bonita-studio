@@ -36,8 +36,8 @@ public class BotContractInputRow extends BotBase {
     private static final int MULTIPLE_COLUMN = 2;
     private static final int MANDATORY_COLUMN = 3;
     private static final int MAPPING_COLUMN = 4;
-    private static final int CONSTRAINT_COLUMN = 5;
-    private static final int DESCRIPTION_COLUMN = 6;
+    //private static final int CONSTRAINT_COLUMN = 5;
+    private static final int DESCRIPTION_COLUMN = 5;
 
     public BotContractInputRow(final SWTGefBot bot, final int row) {
         super(bot);
