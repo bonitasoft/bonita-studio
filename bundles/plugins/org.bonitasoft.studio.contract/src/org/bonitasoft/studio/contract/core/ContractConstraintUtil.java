@@ -41,8 +41,9 @@ public class ContractConstraintUtil {
         return result;
     }
 
-    public static ContractConstraint createConstraint(final String expression, final String errorMessage, final ContractInput... inputs) {
+    public static ContractConstraint createConstraint(final String name, final String expression, final String errorMessage, final ContractInput... inputs) {
         final ContractConstraint c = ProcessFactory.eINSTANCE.createContractConstraint();
+        c.setName(name);
         c.setExpression(expression);
         c.setErrorMessage(errorMessage);
         for (final ContractInput input : inputs) {

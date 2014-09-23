@@ -53,6 +53,7 @@ import org.bonitasoft.studio.common.TimerUtil;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.contract.core.EngineContractBuilder;
+import org.bonitasoft.studio.contract.core.exception.ContractCreationException;
 import org.bonitasoft.studio.engine.export.EngineExpressionUtil;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorParameter;
 import org.bonitasoft.studio.model.expression.Expression;
@@ -482,15 +483,20 @@ public class FlowElementSwitch extends AbstractSwitch {
         }
 
         final UserTaskDefinitionBuilder taskBuilder = builder.addUserTask(task.getName(), actor);
-        handleCommonActivity(task, taskBuilder);
         taskBuilder.addPriority(TaskPriority.values()[task.getPriority()].name());
         addExpectedDuration(taskBuilder, task);
         addUserFilterToTask(taskBuilder, actor, filter);
-        addContract(taskBuilder, task.getContract());
+        try {
+            addContract(taskBuilder, task.getContract());
+        } catch (final ContractCreationException e) {
+            throw new RuntimeException("Failed to export contract definition for " + task.getName(), e);
+        }
+
+        handleCommonActivity(task, taskBuilder);
         return task;
     }
 
-    protected void addContract(final UserTaskDefinitionBuilder taskBuilder, final Contract contract) {
+    protected void addContract(final UserTaskDefinitionBuilder taskBuilder, final Contract contract) throws ContractCreationException {
         final EngineContractBuilder contractBuilder = createEngineContractBuilder();
         if (contract != null) {
             contractBuilder.setContract(contract);

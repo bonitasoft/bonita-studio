@@ -9238,6 +9238,35 @@
           </parameters>
         </operation>
       </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Create" target="process.ecore#//ContractConstraint"
+            referenceName="eStructuralFeatures" element="process.ecore#//ContractConstraint/name">
+          <changes xsi:type="history:Set" element="process.ecore#//ContractConstraint/name"
+              featureName="name" dataValue="name"/>
+          <changes xsi:type="history:Set" element="process.ecore#//ContractConstraint/name"
+              featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        </changes>
+        <operation name="newAttribute">
+          <parameters name="eClass">
+            <referenceValue element="process.ecore#//ContractConstraint"/>
+          </parameters>
+          <parameters name="name">
+            <dataValue>name</dataValue>
+          </parameters>
+          <parameters name="type">
+            <referenceValue element="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+          </parameters>
+          <parameters name="lowerBound">
+            <dataValue>0</dataValue>
+          </parameters>
+          <parameters name="upperBound">
+            <dataValue>1</dataValue>
+          </parameters>
+          <parameters name="defaultValue">
+            <dataValue xsi:nil="true"/>
+          </parameters>
+        </operation>
+      </changes>
     </changes>
   </releases>
   <releases/>

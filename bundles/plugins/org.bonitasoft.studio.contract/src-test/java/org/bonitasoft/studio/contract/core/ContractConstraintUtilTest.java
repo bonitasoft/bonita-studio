@@ -63,9 +63,9 @@ public class ContractConstraintUtilTest {
 
     @Test
     public void should_retrieve_constraints_for_the_given_input() throws Exception {
-        final ContractConstraint c1 = ContractConstraintUtil.createConstraint("age > 18", "Must be an adult", ageInput);
-        final ContractConstraint c2 = ContractConstraintUtil.createConstraint("name.lenght < 300", "Name is too long", nameInput);
-        final ContractConstraint c3 = ContractConstraintUtil.createConstraint("!name.isEmpty() && age != 0", "Consistent input", nameInput, ageInput);
+        final ContractConstraint c1 = ContractConstraintUtil.createConstraint("c1", "age > 18", "Must be an adult", ageInput);
+        final ContractConstraint c2 = ContractConstraintUtil.createConstraint("c2", "name.lenght < 300", "Name is too long", nameInput);
+        final ContractConstraint c3 = ContractConstraintUtil.createConstraint("c3", "!name.isEmpty() && age != 0", "Consistent input", nameInput, ageInput);
         contract.getConstraints().add(c1);
         contract.getConstraints().add(c2);
         contract.getConstraints().add(c3);

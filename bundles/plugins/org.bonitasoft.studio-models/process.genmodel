@@ -566,6 +566,7 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//ContractConstraint/expression"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//ContractConstraint/errorMessage"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//ContractConstraint/inputNames"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//ContractConstraint/name"/>
     </genClasses>
     <genClasses ecoreClass="process.ecore#//ContractInput">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//ContractInput/name"/>

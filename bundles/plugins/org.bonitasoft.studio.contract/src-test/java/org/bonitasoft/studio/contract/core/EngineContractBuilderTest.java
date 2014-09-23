@@ -22,9 +22,13 @@ import static org.mockito.Mockito.when;
 import org.bonitasoft.engine.bpm.contract.Type;
 import org.bonitasoft.engine.bpm.process.impl.ContractDefinitionBuilder;
 import org.bonitasoft.engine.bpm.process.impl.UserTaskDefinitionBuilder;
+import org.bonitasoft.studio.common.Messages;
 import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractInput;
+import org.bonitasoft.studio.model.process.ContractInputMapping;
 import org.bonitasoft.studio.model.process.ContractInputType;
+import org.bonitasoft.studio.model.process.Data;
+import org.bonitasoft.studio.model.process.DataType;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.eclipse.core.runtime.AssertionFailedException;
 import org.junit.After;
@@ -119,18 +123,37 @@ public class EngineContractBuilderTest {
     public void should_build_create_a_contract_with_constraint() throws Exception {
         final ContractInput nameInput = addInput(aContract, "name", ContractInputType.TEXT, "name of an employee");
         nameInput.setMandatory(false);
-        aContract.getConstraints().add(ContractConstraintUtil.createConstraint("name.length < 50", "name is too long", nameInput));
+        aContract.getConstraints().add(ContractConstraintUtil.createConstraint("myConstraint", "name.length < 50", "name is too long", nameInput));
         engineContractBuilder.setContract(aContract);
         engineContractBuilder.build();
         verify(taskBuilder).addContract();
         verify(contractDefBuilder).addSimpleInput("name", Type.TEXT, "name of an employee");
-        verify(contractDefBuilder).addConstraint("constraint0", "name.length < 50", "name is too long", nameInput.getName());
+        verify(contractDefBuilder).addConstraint("myConstraint", "name.length < 50", "name is too long", nameInput.getName());
     }
 
     @Test
     public void should_build_create_a_contract_with_mandatory_constraint() throws Exception {
         final ContractInput nameInput = addInput(aContract, "name", ContractInputType.TEXT, "name of an employee");
         nameInput.setMandatory(true);
+        engineContractBuilder.setContract(aContract);
+        engineContractBuilder.build();
+        verify(taskBuilder).addContract();
+        verify(contractDefBuilder).addSimpleInput("name", Type.TEXT, "name of an employee");
+        verify(contractDefBuilder).addMandatoryConstraint("name");
+    }
+
+    @Test
+    public void should_build_create_operation_for_input_mapping() throws Exception {
+        final ContractInput nameInput = addInput(aContract, "name", ContractInputType.TEXT, "name of an employee");
+        nameInput.setMandatory(true);
+        final ContractInputMapping mapping = ProcessFactory.eINSTANCE.createContractInputMapping();
+        final Data textData = ProcessFactory.eINSTANCE.createData();
+        final DataType textDt = ProcessFactory.eINSTANCE.createStringType();
+        textDt.setName(Messages.StringType);
+        textData.setDataType(textDt);
+        textData.setName("employeeName");
+        mapping.setData(textData);
+        nameInput.setMapping(mapping);
         engineContractBuilder.setContract(aContract);
         engineContractBuilder.build();
         verify(taskBuilder).addContract();

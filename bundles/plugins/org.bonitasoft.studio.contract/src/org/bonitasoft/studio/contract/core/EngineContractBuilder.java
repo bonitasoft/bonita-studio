@@ -16,8 +16,12 @@
  */
 package org.bonitasoft.studio.contract.core;
 
+import org.bonitasoft.engine.bpm.process.impl.ActivityDefinitionBuilder;
 import org.bonitasoft.engine.bpm.process.impl.ContractDefinitionBuilder;
 import org.bonitasoft.engine.bpm.process.impl.UserTaskDefinitionBuilder;
+import org.bonitasoft.engine.operation.Operation;
+import org.bonitasoft.studio.contract.core.exception.ContractCreationException;
+import org.bonitasoft.studio.contract.core.exception.OperationCreationException;
 import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractConstraint;
 import org.bonitasoft.studio.model.process.ContractInput;
@@ -31,13 +35,15 @@ public class EngineContractBuilder {
 
     private UserTaskDefinitionBuilder taskBuilder;
     private Contract contract;
+    private ActivityDefinitionBuilder activityDefinitionBuilder;
+    private final ContractMappingFactory contractMappingBuilder;
 
 
     public EngineContractBuilder() {
-
+        contractMappingBuilder = new ContractMappingFactory();
     }
 
-    public void build() {
+    public void build() throws ContractCreationException {
         Assert.isNotNull(taskBuilder);
         Assert.isNotNull(contract);
 
@@ -48,9 +54,18 @@ public class EngineContractBuilder {
             if (input.isMandatory()) {
                 contractBuilder.addMandatoryConstraint(input.getName());
             }
+            if (isMapped(input)) {
+                try {
+                    final Operation storageOperation = contractMappingBuilder.createOperation(input.getMapping());
+                    activityDefinitionBuilder.addOperation(storageOperation);
+                } catch (final OperationCreationException e) {
+                    throw new ContractCreationException("Failed to create mapping operation for input " + input.getName(), e);
+                }
+
+            }
         }
         for (final ContractConstraint constraint : contract.getConstraints()) {
-            contractBuilder.addConstraint("constraint" + contract.getConstraints().indexOf(constraint),
+            contractBuilder.addConstraint(constraint.getName(),
                     constraint.getExpression(),
                     constraint.getErrorMessage(),
                     constraint.getInputNames().toArray(new String[constraint.getInputNames().size()]));
@@ -58,8 +73,13 @@ public class EngineContractBuilder {
 
     }
 
+    private boolean isMapped(final ContractInput input) {
+        return input != null && input.getMapping() != null && input.getMapping().getData() != null;
+    }
+
     public void setEngineBuilder(final UserTaskDefinitionBuilder builder) {
         taskBuilder = builder;
+        activityDefinitionBuilder = builder;
     }
 
     public void setContract(final Contract contract) {
