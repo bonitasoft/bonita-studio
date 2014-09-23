@@ -979,6 +979,22 @@
                      class="Operation">
                </target>
             </constraint>
+            <constraint
+                  class="org.bonitasoft.studio.validation.constraints.process.ContractConstraint"
+                  id="org.bonitasoft.studio.validation.constraints.contract"
+                  isEnabledByDefault="true"
+                  lang="java"
+                  mode="Batch"
+                  name="Contract definition constraint"
+                  severity="ERROR"
+                  statusCode="1">
+               <message>
+                  {0}
+               </message>
+               <target
+                     class="Task">
+               </target>
+            </constraint>
          </constraints>
          <package
                namespaceUri="http://www.bonitasoft.org/ns/studio/process">

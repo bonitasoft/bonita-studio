@@ -21,6 +21,7 @@ import org.bonitasoft.studio.contract.core.ContractDefinitionValidator;
 import org.bonitasoft.studio.model.process.Task;
 import org.bonitasoft.studio.model.process.diagram.providers.ProcessMarkerNavigationProvider;
 import org.bonitasoft.studio.validation.constraints.AbstractLiveValidationMarkerConstraint;
+import org.bonitasoft.studio.validation.i18n.Messages;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.validation.IValidationContext;
@@ -50,23 +51,7 @@ public class ContractConstraint extends AbstractLiveValidationMarkerConstraint {
         if (eObj instanceof Task) {
             final IStatus status = validator.validate(((Task) eObj).getContract());
             if (!status.isOK()) {
-                final StringBuilder errorMessage = new StringBuilder();
-                if(status.isMultiStatus()){
-                    for (final IStatus iStatus : status.getChildren()) {
-                        if (!iStatus.isOK()) {
-                            if (!errorMessage.toString().contains(iStatus.getMessage())) {
-                                errorMessage.append(iStatus.getMessage());
-                                errorMessage.append(", ");
-                            }
-                        }
-                    }
-                    if (errorMessage.length() > 0) {
-                        errorMessage.delete(errorMessage.length() - 2, errorMessage.length());
-                    }
-                }else{
-                    errorMessage.append(status.getMessage());
-                }
-                return ctx.createFailureStatus(errorMessage.toString());
+                return ctx.createFailureStatus(Messages.bind(Messages.invalidContractDefinition, ((Task) eObj).getName()));
             }
         }
         return ctx.createSuccessStatus();
