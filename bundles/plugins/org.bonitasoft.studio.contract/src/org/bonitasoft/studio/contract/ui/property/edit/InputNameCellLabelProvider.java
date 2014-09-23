@@ -17,6 +17,7 @@
 package org.bonitasoft.studio.contract.ui.property.edit;
 
 import org.bonitasoft.studio.contract.core.ContractDefinitionValidator;
+import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.swt.SWT;
@@ -60,11 +61,18 @@ public class InputNameCellLabelProvider extends PropertyColumnLabelProvider {
     public Color getBackground(final Object element) {
         final String name = ((ContractInput) element).getName();
         final IStatus status = validator.validateInputName((ContractInput) element, name);
-        if (status.isOK()) {
-            return super.getBackground(element);
-        } else {
+        final IStatus duplicateStatus = validator.validateDuplicatedInputs((Contract) ((ContractInput) element).eContainer());
+        if (!status.isOK()) {
             return Display.getCurrent().getSystemColor(SWT.COLOR_RED);
+        } else if (!duplicateStatus.isOK()) {
+            for (final IStatus c : duplicateStatus.getChildren()) {
+                if (c.getMessage().equals(name)) {
+                    return Display.getCurrent().getSystemColor(SWT.COLOR_RED);
+                }
+            }
+            return super.getBackground(element);
         }
+        return super.getBackground(element);
     }
 
 

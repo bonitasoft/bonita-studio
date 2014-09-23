@@ -84,7 +84,7 @@ public class InputNamePropertyEditingSupport extends PropertyEditingSupport impl
         if (element instanceof ContractInput) {
             contractDefinitionValidator.validateDuplicatedInputs((Contract) ((ContractInput) element).eContainer());
         }
-        getViewer().update(element, null);
+        getViewer().refresh(true);
     }
 
     @Override
