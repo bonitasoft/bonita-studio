@@ -82,7 +82,7 @@ public class InputNameCellLabelProviderTest {
     public void should_getToolTipText_returns_error_message_for_empty_name() throws Exception {
         final ContractInput input = ProcessFactory.eINSTANCE.createContractInput();
         input.setName("");
-        assertThat(inputNameCellLabelProvider.getToolTipText(input)).isNotEmpty().contains(org.bonitasoft.studio.common.Messages.emptyField);
+        assertThat(inputNameCellLabelProvider.getToolTipText(input)).isNotEmpty();
     }
 
     @Test

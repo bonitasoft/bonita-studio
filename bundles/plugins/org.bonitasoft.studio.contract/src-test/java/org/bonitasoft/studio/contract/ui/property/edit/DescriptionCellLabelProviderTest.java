@@ -58,7 +58,7 @@ public class DescriptionCellLabelProviderTest {
         final ContractInput input = ProcessFactory.eINSTANCE.createContractInput();
         input.setName("name");
         input.setDescription("too longggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg");
-        assertThat(descriptionCellLabelProvider.getToolTipText(input)).isNotEmpty().contains(org.bonitasoft.studio.common.Messages.fieldIsTooLong);
+        assertThat(descriptionCellLabelProvider.getToolTipText(input)).isNotEmpty();
     }
 
 
