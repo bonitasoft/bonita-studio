@@ -109,6 +109,9 @@ public abstract class AbstractCheckboxLabelProvider extends StyledCellLabelProvi
         final Button button = new Button(shell, SWT.CHECK);
         button.setBackground(greenScreen);
         button.setSelection(type);
+        if (!enabled) {
+            button.setEnabled(false);
+        }
         // otherwise an image is located in a corner
         button.setLocation(1, 1);
         final Point bsize = button.computeSize(SWT.DEFAULT, SWT.DEFAULT);
