@@ -322,7 +322,7 @@ public class ContractPropertySection extends EObjectSelectionProviderSection {
         final TableViewerColumn nameColumnViewer = new TableViewerColumn(viewer, SWT.FILL);
         final TableColumn column = nameColumnViewer.getColumn();
         column.setText(Messages.name + " *");
-        nameColumnViewer.setLabelProvider(new InputNameCellLabelProvider(propertySourceProvider, contractValidator));
+        nameColumnViewer.setLabelProvider(new InputNameCellLabelProvider(viewer, propertySourceProvider));
         nameColumnViewer.setEditingSupport(new InputNamePropertyEditingSupport(propertySourceProvider, viewer, adapterFactoryLabelProvider, contractValidator));
     }
 
@@ -330,7 +330,7 @@ public class ContractPropertySection extends EObjectSelectionProviderSection {
         final TableViewerColumn descriptionColumnViewer = new TableViewerColumn(viewer, SWT.FILL);
         final TableColumn column = descriptionColumnViewer.getColumn();
         column.setText(Messages.description);
-        descriptionColumnViewer.setLabelProvider(new DescriptionCellLabelProvider(propertySourceProvider, contractValidator));
+        descriptionColumnViewer.setLabelProvider(new DescriptionCellLabelProvider(viewer, propertySourceProvider));
         descriptionColumnViewer.setEditingSupport(new DescriptionPropertyEditingSupport(viewer, propertySourceProvider, contractValidator));
     }
 

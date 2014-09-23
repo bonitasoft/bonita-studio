@@ -19,6 +19,7 @@ package org.bonitasoft.studio.contract.ui.property.edit;
 import org.bonitasoft.studio.contract.core.ContractDefinitionValidator;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
@@ -34,10 +35,12 @@ import org.eclipse.ui.views.properties.PropertyColumnLabelProvider;
 public class DescriptionCellLabelProvider extends PropertyColumnLabelProvider {
 
     private final ContractDefinitionValidator validator;
+    private final TableViewer viewer;
 
-    public DescriptionCellLabelProvider(final IPropertySourceProvider propertySourceProvider, final ContractDefinitionValidator validator) {
+    public DescriptionCellLabelProvider(final TableViewer viewer,final IPropertySourceProvider propertySourceProvider) {
         super(propertySourceProvider, "description");
-        this.validator = validator;
+        validator = new ContractDefinitionValidator();
+        this.viewer = viewer;
     }
 
     @Override
@@ -49,7 +52,7 @@ public class DescriptionCellLabelProvider extends PropertyColumnLabelProvider {
     public String getToolTipText(final Object element) {
         final String description = ((ContractInput) element).getDescription();
         final IStatus status = validator.validateInputDescription((ContractInput) element, description);
-        if (status.isOK()) {
+        if (viewer.isCellEditorActive() || status.isOK()) {
             return description;
         } else {
             return status.getMessage();

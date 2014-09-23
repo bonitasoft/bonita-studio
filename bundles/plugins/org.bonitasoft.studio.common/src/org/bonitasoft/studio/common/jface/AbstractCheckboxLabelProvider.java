@@ -16,6 +16,7 @@
  */
 package org.bonitasoft.studio.common.jface;
 
+import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.StyledCellLabelProvider;
@@ -39,26 +40,27 @@ public abstract class AbstractCheckboxLabelProvider extends StyledCellLabelProvi
 
     protected static final String UNCHECK_KEY = "uncheckKey";// NON-NLS-1
 
-    protected static final String DISABLED_CHECKED_KEY = "checkedKeyDisabled";
+    protected static final String DISABLED_CHECKED_KEY = "checkedKeyDisabled";// NON-NLS-1
 
-    protected static final String DISABLED_UNCHECKED_KEY = "uncheckKeyDisabled";
+    protected static final String DISABLED_UNCHECKED_KEY = "uncheckKeyDisabled";// NON-NLS-1
 
     public AbstractCheckboxLabelProvider(final Control control) {
         if (control != null) {
-            if (JFaceResources.getImageRegistry().getDescriptor(UNCHECK_KEY) == null) {
-                JFaceResources.getImageRegistry().put(UNCHECK_KEY,
+            final ImageRegistry imageRegistry = JFaceResources.getImageRegistry();
+            if (imageRegistry.getDescriptor(UNCHECK_KEY) == null) {
+                imageRegistry.put(UNCHECK_KEY,
                         makeShot(control, false, true));
             }
-            if (JFaceResources.getImageRegistry().getDescriptor(CHECKED_KEY) == null) {
-                JFaceResources.getImageRegistry().put(CHECKED_KEY,
+            if (imageRegistry.getDescriptor(CHECKED_KEY) == null) {
+                imageRegistry.put(CHECKED_KEY,
                         makeShot(control, true, true));
             }
-            if (JFaceResources.getImageRegistry().getDescriptor(DISABLED_CHECKED_KEY) == null) {
-                JFaceResources.getImageRegistry().put(DISABLED_CHECKED_KEY,
+            if (imageRegistry.getDescriptor(DISABLED_CHECKED_KEY) == null) {
+                imageRegistry.put(DISABLED_CHECKED_KEY,
                         makeShot(control, true, false));
             }
-            if (JFaceResources.getImageRegistry().getDescriptor(DISABLED_UNCHECKED_KEY) == null) {
-                JFaceResources.getImageRegistry().put(DISABLED_UNCHECKED_KEY,
+            if (imageRegistry.getDescriptor(DISABLED_UNCHECKED_KEY) == null) {
+                imageRegistry.put(DISABLED_UNCHECKED_KEY,
                         makeShot(control, false, false));
             }
         }

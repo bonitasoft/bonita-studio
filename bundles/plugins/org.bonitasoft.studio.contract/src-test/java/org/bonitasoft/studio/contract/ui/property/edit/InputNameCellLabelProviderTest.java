@@ -21,11 +21,12 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-import org.bonitasoft.studio.contract.core.ContractDefinitionValidator;
 import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ProcessFactory;
+import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.ui.views.properties.IPropertySourceProvider;
 import org.eclipse.ui.views.properties.PropertyColumnLabelProvider;
 import org.junit.After;
@@ -48,13 +49,15 @@ public class InputNameCellLabelProviderTest {
 
     private InputNameCellLabelProvider inputNameCellLabelProvider;
 
+    @Mock
+    private TableViewer viewer;
 
     /**
      * @throws java.lang.Exception
      */
     @Before
     public void setUp() throws Exception {
-        inputNameCellLabelProvider = spy(new InputNameCellLabelProvider(propertySourceLabelProvider, new ContractDefinitionValidator()));
+        inputNameCellLabelProvider = spy(new InputNameCellLabelProvider(viewer, propertySourceLabelProvider));
         doReturn(null).when(inputNameCellLabelProvider).getErrorBackgroundColor();
     }
 
@@ -72,9 +75,17 @@ public class InputNameCellLabelProviderTest {
     }
 
     @Test
-    public void should_getToolTipText_returns_null() throws Exception {
+    public void should_getToolTipText_returns_null_if_no_error() throws Exception {
         final ContractInput input = ProcessFactory.eINSTANCE.createContractInput();
         input.setName("name");
+        assertThat(inputNameCellLabelProvider.getToolTipText(input)).isNull();
+    }
+
+    @Test
+    public void should_getToolTipText_returns_null_if_error_but_activeEditor() throws Exception {
+        when(viewer.isCellEditorActive()).thenReturn(true);
+        final ContractInput input = ProcessFactory.eINSTANCE.createContractInput();
+        input.setName("");
         assertThat(inputNameCellLabelProvider.getToolTipText(input)).isNull();
     }
 
