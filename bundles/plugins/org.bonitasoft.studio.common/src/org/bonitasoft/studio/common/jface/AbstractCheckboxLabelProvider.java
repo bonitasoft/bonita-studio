@@ -41,9 +41,9 @@ public abstract class AbstractCheckboxLabelProvider extends StyledCellLabelProvi
 
     protected static final String UNCHECK_KEY = "uncheckKey";// NON-NLS-1
 
-    protected static final String DISABLED_CHECKED_KEY = "checkedKeyDisabled";
+    protected static final String DISABLED_CHECKED_KEY = "checkedKeyDisabled";// NON-NLS-1
 
-    protected static final String DISABLED_UNCHECKED_KEY = "uncheckKeyDisabled";
+    protected static final String DISABLED_UNCHECKED_KEY = "uncheckKeyDisabled";// NON-NLS-1
 
     public AbstractCheckboxLabelProvider() {
         if (JFaceResources.getImageRegistry().getDescriptor(UNCHECK_KEY) == null) {
@@ -141,30 +141,41 @@ public abstract class AbstractCheckboxLabelProvider extends StyledCellLabelProvi
 
     @Override
     protected void paint(final Event event, final Object element) {
-        super.paint(event, element);
-        final Image image = getImage(element);
-        if (image == null) {
-            return;
-        }
-        final Widget item = event.item;
-        Rectangle bounds = null;
-        if (item instanceof TreeItem) {
-            bounds = ((TreeItem) item).getBounds(event.index);
-        } else if (item instanceof TableItem) {
-            bounds = ((TableItem) item).getBounds(event.index);
-        }
-        final Rectangle imgBounds = image.getBounds();
-        bounds.width /= 2;
-        bounds.width -= imgBounds.width / 2;
-        bounds.height /= 2;
-        bounds.height -= imgBounds.height / 2;
 
-        final int x = bounds.width > 0 ? bounds.x + bounds.width : bounds.x;
-        int y = bounds.height > 0 ? bounds.y + bounds.height : bounds.y;
-        if (!Platform.OS_WIN32.equals(Platform.getOS())) {
-            y = y - 3;
+        final Image img = getImage(element);
+
+        if (img != null) {
+            Rectangle bounds;
+
+            if (event.item instanceof TableItem) {
+                bounds = ((TableItem) event.item).getBounds(event.index);
+            } else {
+                bounds = ((TreeItem) event.item).getBounds(event.index);
+            }
+
+            final Rectangle imgBounds = img.getBounds();
+            bounds.width /= 2;
+            bounds.width -= imgBounds.width / 2;
+            bounds.height /= 2;
+            bounds.height -= imgBounds.height / 2;
+
+            final int x = bounds.width > 0 ? bounds.x + bounds.width : bounds.x;
+            final int y = bounds.height > 0 ? bounds.y + bounds.height : bounds.y;
+
+            if (SWT.getPlatform().equals("carbon")) {
+                event.gc.drawImage(img, x + 2, y - 1);
+            } else {
+                event.gc.drawImage(img, x, y - 1);
+            }
+
         }
-        event.gc.drawImage(image, x, y);
+
+
     }
 
+
+    @Override
+    protected void measure(final Event event, final Object element) {
+        event.height = getImage(element).getBounds().height;
+    }
 }
