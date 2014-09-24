@@ -72,7 +72,7 @@ public class ConfirmationPropertySection extends AbstractBonitaDescriptionSectio
     protected SelectionListener widgetClickedListener = new SelectionListener() {
 
         @Override
-        public void widgetSelected(SelectionEvent e) {
+        public void widgetSelected(final SelectionEvent e) {
 
             if (e.getSource().equals(confirmationPath) || e.getSource().equals(changeConfirmation)) {
                 selectConfirmPageTemplate();
@@ -80,25 +80,25 @@ public class ConfirmationPropertySection extends AbstractBonitaDescriptionSectio
         }
 
         /**
-         * 
+         *
          */
         private void selectConfirmPageTemplate() {
             Text textField = null;
             textField = confirmationPath;
 
-            FileDialog fd = new FileDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), SWT.OPEN);
+            final FileDialog fd = new FileDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), SWT.OPEN);
             fd.setFilterExtensions(new String[] { "*.html", "*.htm", "*.*" }); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
             if (textField.getText() != null) {
-                File temp = new File(textField.getText());
+                final File temp = new File(textField.getText());
                 if (temp.exists()) {
                     fd.setFilterPath(temp.getParent());
                 }
             }
             String res = fd.open();
             if (res != null) {
-                ApplicationResourceRepositoryStore resourceStore = (ApplicationResourceRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ApplicationResourceRepositoryStore.class) ;
-                AbstractProcess process = ModelHelper.getParentProcess(getEObject()) ;
-                String processUUID = ModelHelper.getEObjectID(process) ;
+                final ApplicationResourceRepositoryStore resourceStore = RepositoryManager.getInstance().getRepositoryStore(ApplicationResourceRepositoryStore.class) ;
+                final AbstractProcess process = ModelHelper.getParentProcess(getEObject()) ;
+                final String processUUID = ModelHelper.getEObjectID(process) ;
                 ApplicationResourceFileStore artifact = (ApplicationResourceFileStore) resourceStore.getChild(processUUID);
                 if (artifact == null) {
                     artifact = (ApplicationResourceFileStore) resourceStore.createRepositoryFileStore(processUUID);
@@ -106,7 +106,7 @@ public class ConfirmationPropertySection extends AbstractBonitaDescriptionSectio
                 res = artifact.setConfirmationTemplate(res, getPageFlow());
                 textField.setText(res);
 
-                AssociatedFile af = ProcessFactory.eINSTANCE.createAssociatedFile();
+                final AssociatedFile af = ProcessFactory.eINSTANCE.createAssociatedFile();
                 af.setPath(res);
 
                 getEditingDomain().getCommandStack().execute(
@@ -116,7 +116,7 @@ public class ConfirmationPropertySection extends AbstractBonitaDescriptionSectio
         }
 
         @Override
-        public void widgetDefaultSelected(SelectionEvent e) {
+        public void widgetDefaultSelected(final SelectionEvent e) {
 
         }
     };
@@ -124,36 +124,36 @@ public class ConfirmationPropertySection extends AbstractBonitaDescriptionSectio
     private PageFlow pageFlow;
 
     @Override
-    public void createControls(Composite parent, TabbedPropertySheetPage aTabbedPropertySheetPage) {
+    public void createControls(final Composite parent, final TabbedPropertySheetPage aTabbedPropertySheetPage) {
         super.createControls(parent, aTabbedPropertySheetPage);
-        Composite composite = getWidgetFactory().createComposite(parent);
+        final Composite composite = getWidgetFactory().createComposite(parent);
         composite.setLayout(new GridLayout());
         composite.setLayoutData(GridDataFactory.fillDefaults().create());
         createConfPanel(composite);
     }
 
-    protected void createConfPanel(Composite parent) {
-        Composite confPanel = getWidgetFactory().createComposite(parent, SWT.NONE);
+    protected void createConfPanel(final Composite parent) {
+        final Composite confPanel = getWidgetFactory().createComposite(parent, SWT.NONE);
         confPanel.setLayout(new GridLayout(1, false));
         confPanel.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
         createTemplate(confPanel);
 
     }
 
-    private void createTemplate(Composite parent) {
-        Composite templates = getWidgetFactory().createComposite(parent);
+    private void createTemplate(final Composite parent) {
+        final Composite templates = getWidgetFactory().createComposite(parent);
         templates.setLayout(new GridLayout(4, false));
-        GridData gridD = new GridData(SWT.FILL, SWT.TOP, true, false, 1, 2);
+        final GridData gridD = new GridData(SWT.FILL, SWT.TOP, true, false, 1, 2);
         templates.setLayoutData(gridD);
         gridD.widthHint = 200;
-        CLabel confirmationLabel = getWidgetFactory().createCLabel(templates, Messages.FormsSection_ConfirmationTemplate, SWT.CENTER);
+        final CLabel confirmationLabel = getWidgetFactory().createCLabel(templates, Messages.FormsSection_ConfirmationTemplate, SWT.CENTER);
         confirmationLabel.setLayoutData(new GridData(GridData.BEGINNING, GridData.FILL, true, false, 1, 1));
         // download template
-        Button download = getWidgetFactory().createButton(templates, Messages.Download, SWT.FLAT);
+        final Button download = getWidgetFactory().createButton(templates, Messages.Download, SWT.FLAT);
         download.setLayoutData(new GridData(GridData.END, GridData.FILL, false, false, 1, 1));
         download.addSelectionListener(new SelectionAdapter() {
             @Override
-            public void widgetSelected(SelectionEvent e) {
+            public void widgetSelected(final SelectionEvent e) {
                 ResourcePropertySection.downloadDefaultTemplate("bonita_default_confirm.html", "WEB-INF/classes/html/");
             }
         });
@@ -163,12 +163,12 @@ public class ConfirmationPropertySection extends AbstractBonitaDescriptionSectio
         changeConfirmation.addSelectionListener(widgetClickedListener);
 
         // clear
-        Button clear2 = getWidgetFactory().createButton(templates, Messages.Clear, SWT.FLAT);
+        final Button clear2 = getWidgetFactory().createButton(templates, Messages.Clear, SWT.FLAT);
         clear2.setLayoutData(new GridData(GridData.END, GridData.FILL, false, false, 1, 1));
         clear2.addSelectionListener(new SelectionListener() {
 
             @Override
-            public void widgetSelected(SelectionEvent e) {
+            public void widgetSelected(final SelectionEvent e) {
                 confirmationPath.setText(""); //$NON-NLS-1$
                 getEditingDomain().getCommandStack().execute(
                         new SetCommand(getEditingDomain(), eObject, ProcessPackage.Literals.PAGE_FLOW__CONFIRMATION_TEMPLATE, null));
@@ -176,7 +176,7 @@ public class ConfirmationPropertySection extends AbstractBonitaDescriptionSectio
             }
 
             @Override
-            public void widgetDefaultSelected(SelectionEvent e) {
+            public void widgetDefaultSelected(final SelectionEvent e) {
 
             }
         });
@@ -187,7 +187,7 @@ public class ConfirmationPropertySection extends AbstractBonitaDescriptionSectio
         confirmationPath.setEditable(false);
         confirmationPath.setToolTipText(Messages.confirmationPathTooltip);
 
-        Label confirmationMessageLabel = getWidgetFactory().createLabel(templates, Messages.confirmationMessage);
+        final Label confirmationMessageLabel = getWidgetFactory().createLabel(templates, Messages.confirmationMessage);
         confirmationMessageLabel.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, false, 4, 1));
         confirmationMessage = new ExpressionViewer(templates, SWT.BORDER, getWidgetFactory(), getEditingDomain(), ProcessPackage.Literals.PAGE_FLOW__CONFIRMATION_MESSAGE);
         confirmationMessage.getControl().setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, false, 4, 1));
@@ -200,7 +200,7 @@ public class ConfirmationPropertySection extends AbstractBonitaDescriptionSectio
     }
 
     @Override
-    public void setInput(IWorkbenchPart part, ISelection selection) {
+    public void setInput(final IWorkbenchPart part, final ISelection selection) {
         super.setInput(part, selection);
         PageFlow tempPageFlow = null;
         if (getEObject() instanceof Lane) {
@@ -218,7 +218,7 @@ public class ConfirmationPropertySection extends AbstractBonitaDescriptionSectio
         }
 
         confirmationPath.removeSelectionListener(widgetClickedListener);
-        AssociatedFile confTemplate = getPageFlow().getConfirmationTemplate();
+        final AssociatedFile confTemplate = getPageFlow().getConfirmationTemplate();
         confirmationPath.setText(confTemplate != null ? confTemplate.getPath() : ""); //$NON-NLS-1$
         confirmationPath.addSelectionListener(widgetClickedListener);
 
@@ -236,27 +236,20 @@ public class ConfirmationPropertySection extends AbstractBonitaDescriptionSectio
     }
 
     private void refreshConfirmationEnablement() {
-        PageFlow pageFlow = getPageFlow();
-        EList<Form> formList = pageFlow.getForm();
+        final PageFlow pageFlow = getPageFlow();
+        final EList<Form> formList = pageFlow.getForm();
         boolean containsViewForm = false;
         if (pageFlow instanceof ViewPageFlow) {
             containsViewForm = ((ViewPageFlow) pageFlow).getViewForm().isEmpty();
         }
         if (pageFlow instanceof AbstractProcess) {
-            AbstractProcess process = (AbstractProcess) pageFlow;
-            confirmationMessage.getTextControl().setEnabled(!formList.isEmpty()
-                    || !containsViewForm
-                    || !process.getRecapForms().isEmpty()
-                    || EntryPageFlowType.REDIRECT.equals(pageFlow.getEntryPageFlowType()));
-            confirmationMessage.getButtonControl().setEnabled(!formList.isEmpty()
+            final AbstractProcess process = (AbstractProcess) pageFlow;
+            confirmationMessage.getControl().setEnabled(!formList.isEmpty()
                     || !containsViewForm
                     || !process.getRecapForms().isEmpty()
                     || EntryPageFlowType.REDIRECT.equals(pageFlow.getEntryPageFlowType()));
         } else {
-            confirmationMessage.getTextControl().setEnabled(!formList.isEmpty()
-                    || !containsViewForm
-                    || EntryPageFlowType.REDIRECT.equals(pageFlow.getEntryPageFlowType()));
-            confirmationMessage.getButtonControl().setEnabled(!formList.isEmpty()
+            confirmationMessage.getControl().setEnabled(!formList.isEmpty()
                     || !containsViewForm
                     || EntryPageFlowType.REDIRECT.equals(pageFlow.getEntryPageFlowType()));
         }
