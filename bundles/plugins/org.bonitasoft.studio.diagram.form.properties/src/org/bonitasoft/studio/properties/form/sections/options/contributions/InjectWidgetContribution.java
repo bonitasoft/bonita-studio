@@ -55,7 +55,7 @@ public class InjectWidgetContribution extends AbstractPropertySectionContributio
 	/* (non-Javadoc)
 	 * @see org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution#isRelevantFor(org.eclipse.emf.ecore.EObject)
 	 */
-	public boolean isRelevantFor(EObject eObject) {
+	public boolean isRelevantFor(final EObject eObject) {
 		return eObject instanceof Widget;
 	}
 
@@ -76,7 +76,7 @@ public class InjectWidgetContribution extends AbstractPropertySectionContributio
 	/* (non-Javadoc)
 	 * @see org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution#createControl(org.eclipse.swt.widgets.Composite, org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory, org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection)
 	 */
-	public void createControl(Composite composite, TabbedPropertySheetWidgetFactory widgetFactory, ExtensibleGridPropertySection extensibleGridPropertySection) {
+	public void createControl(final Composite composite, final TabbedPropertySheetWidgetFactory widgetFactory, final ExtensibleGridPropertySection extensibleGridPropertySection) {
 		composite.setLayout(new GridLayout(2, false));
 		composite.setLayoutData(GridDataFactory.fillDefaults().grab(true,false).create()) ;
 		checkbox = widgetFactory.createButton(composite, "", SWT.CHECK);
@@ -95,12 +95,6 @@ public class InjectWidgetContribution extends AbstractPropertySectionContributio
 
 			context.bindValue(widgetValuePropertySelection.observe(checkbox),EMFEditProperties.value(editingDomain, FormPackage.Literals.WIDGET__INJECT_WIDGET_CONDITION).observe(getEObject()));
 			context.bindValue(WidgetProperties.enabled().observe(expressionViewer.getControl()),EMFEditProperties.value(editingDomain, FormPackage.Literals.WIDGET__INJECT_WIDGET_CONDITION).observe(getEObject()),
-					never,
-					null);
-			context.bindValue(WidgetProperties.enabled().observe(expressionViewer.getTextControl()),EMFEditProperties.value(editingDomain, FormPackage.Literals.WIDGET__INJECT_WIDGET_CONDITION).observe(getEObject()),
-					never,
-					null);
-			context.bindValue(WidgetProperties.enabled().observe(expressionViewer.getButtonControl()),EMFEditProperties.value(editingDomain, FormPackage.Literals.WIDGET__INJECT_WIDGET_CONDITION).observe(getEObject()),
 					never,
 					null);
 		}

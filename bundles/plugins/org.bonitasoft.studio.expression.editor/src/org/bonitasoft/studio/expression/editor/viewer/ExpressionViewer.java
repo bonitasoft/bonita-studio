@@ -192,7 +192,6 @@ IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContex
     public ExpressionViewer(final Composite composite, final int style, final TabbedPropertySheetWidgetFactory widgetFactory,
             final EditingDomain editingDomain, final EReference expressionReference) {
         this(composite, style, widgetFactory, editingDomain, expressionReference, false);
-
     }
 
     public ExpressionViewer(final Composite composite, final int style, final TabbedPropertySheetWidgetFactory widgetFactory,
@@ -207,16 +206,33 @@ IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContex
     }
 
     protected void createControl(final Composite composite, final int style, final TabbedPropertySheetWidgetFactory widgetFactory) {
+        control = new Composite(composite, SWT.INHERIT_DEFAULT) {
+
+            @Override
+            public void setEnabled(final boolean enabled) {
+                super.setEnabled(enabled);
+                updateEnablement(enabled);
+            }
+        };
         if (widgetFactory != null) {
-            control = widgetFactory.createComposite(composite, SWT.INHERIT_DEFAULT);
-        } else {
-            control = new Composite(composite, SWT.INHERIT_DEFAULT);
+            widgetFactory.adapt(control);
         }
         control.addDisposeListener(disposeListener);
         control.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(0, 0).spacing(0, 0).create());
         createTextControl(style, widgetFactory);
         createToolbar(style, widgetFactory);
 
+    }
+
+    protected void updateEnablement(final boolean enabled) {
+        textControl.setEnabled(enabled);
+        contentAssistText.setProposalEnabled(enabled);
+        toolbar.setEnabled(enabled);
+        if (enabled) {
+            typeDecoration.show();
+        } else {
+            typeDecoration.hide();
+        }
     }
 
     protected void createToolbar(final int style, final TabbedPropertySheetWidgetFactory widgetFactory) {
