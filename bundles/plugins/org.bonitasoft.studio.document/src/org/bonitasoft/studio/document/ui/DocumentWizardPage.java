@@ -248,6 +248,11 @@ public class DocumentWizardPage extends WizardPage {
                 SWT.BORDER, reference);
     }
 
+    protected GroovyOnlyExpressionViewer createExpressionViewerWitrhGroovyScriptOnly(final Composite parent) {
+        return new GroovyOnlyExpressionViewer(parent, SWT.READ_ONLY | SWT.BORDER,
+                ProcessPackage.Literals.DOCUMENT__INITIAL_MULTIPLE_CONTENT);
+    }
+
     private void createDocumentManageMimeTypeLink(final Composite detailsComposite) {
 
         manageLinkComposition = new Composite(detailsComposite, SWT.NONE);
@@ -354,6 +359,10 @@ public class DocumentWizardPage extends WizardPage {
         multipleComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         multipleComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
 
+        final Label initialContentsLabel = new Label(multipleComposite, SWT.NONE);
+        initialContentsLabel.setText(Messages.multipleInitialContentsLabel);
+        initialContentsLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.TOP).indent(0, 5).create());
+
         createDocumentInitialMultipleContent(multipleComposite);
     }
 
@@ -395,17 +404,9 @@ public class DocumentWizardPage extends WizardPage {
         });
     }
 
-    private void createDocumentInitialMultipleContent(final Composite parent) {
-
-        final Label initialContentsLabel = new Label(parent, SWT.NONE);
-        initialContentsLabel.setText(Messages.multipleInitialContentsLabel);
-        initialContentsLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.TOP).indent(0, 5).create());
-
-        multipleInitialContentExpressionViewer = new GroovyOnlyExpressionViewer(parent, SWT.READ_ONLY | SWT.BORDER,
-                ProcessPackage.Literals.DOCUMENT__INITIAL_MULTIPLE_CONTENT);
-
+    protected void createDocumentInitialMultipleContent(final Composite parent) {
+        multipleInitialContentExpressionViewer = createExpressionViewerWitrhGroovyScriptOnly(parent);
         multipleInitialContentExpressionViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
-
         multipleInitialContentExpressionViewer.setInput(document);
     }
 
