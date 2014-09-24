@@ -1,4 +1,4 @@
-/**
+**
  * Copyright (C) 2014 Bonitasoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
@@ -17,12 +17,10 @@ package org.bonitasoft.studio.document.ui;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.jface.databinding.validator.GroovyReferenceValidator;
 import org.bonitasoft.studio.common.jface.databinding.validator.InputLengthValidator;
-import org.bonitasoft.studio.document.DocumentInitialContentValidator;
 import org.bonitasoft.studio.document.DocumentNameValidator;
 import org.bonitasoft.studio.document.SelectDocumentInBonitaStudioRepository;
 import org.bonitasoft.studio.document.i18n.Messages;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
-import org.bonitasoft.studio.expression.editor.provider.IExpressionValidator;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.expression.editor.viewer.ObservableExpressionContentProvider;
 import org.bonitasoft.studio.model.expression.Expression;
@@ -35,16 +33,14 @@ import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.beans.PojoObservables;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
-import org.eclipse.core.databinding.observable.value.IValueChangeListener;
 import org.eclipse.core.databinding.observable.value.SelectObservableValue;
-import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
-import org.eclipse.core.databinding.validation.MultiValidator;
+import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.edit.domain.EditingDomain;
+import org.eclipse.jface.databinding.fieldassist.ControlDecorationSupport;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.viewers.ViewerProperties;
 import org.eclipse.jface.databinding.wizard.WizardPageSupport;
@@ -72,18 +68,25 @@ public class DocumentWizardPage extends WizardPage {
     private final Document document;
     private Text documentNameText;
     private Text documentDescriptionText;
+    private Button internalCheckbox;
     private ExpressionViewer documentUrlViewer;
     private ExpressionViewer documentMimeTypeViewer;
     private Text documentTextId;
     private Button browseButton;
+    //  private Button externalCheckbox;
     private Composite detailsComposite;
     private EMFDataBindingContext emfDataBindingContext;
+    private ControlDecorationSupport decorationSupport;
     private WizardPageSupport pageSupport;
 
     private Button radioButtonExternal;
     private Button radioButtonInternal;
     private Button radioButtonNone;
     private StackLayout stack;
+
+    protected static final String NONE = "none";
+    protected static final String EXTERNAL = "multi";
+    protected static final String INTERNAL = "loop";
 
     protected static final String LINK = "link";
     protected static final String FIELD = "field";
@@ -99,16 +102,8 @@ public class DocumentWizardPage extends WizardPage {
     private Composite mimeCompo;
     private Label mimeTypeLabel;
     private ControlDecoration cd;
-    private final DocumentInitialContentValidator externalValidator;
-    private IObservableValue nameObserved;
-    private IObservableValue documentInternalIDObserved;
-    private IObservableValue externalUrlObserved;
-    private IObservableValue btnDocumentTypeNone;
-    private IObservableValue btnDocumentTypeExternal;
-    private IObservableValue btnDocumentTypeInternal;
-    private IObservableValue externalInitialContentObserveWidget;
+    private IValidator emptyFieldsValidator;
 
-    final private int URL_SIZE_MAX = 1023;
 
     public DocumentWizardPage(final EObject context,final Document document){
         super(DocumentWizardPage.class.getName());
@@ -118,7 +113,6 @@ public class DocumentWizardPage extends WizardPage {
         setDescription(Messages.newDocumentWizardDescription);
         emfDataBindingContext = new EMFDataBindingContext();
         setPageComplete(false);
-        externalValidator = new DocumentInitialContentValidator(URL_SIZE_MAX);
     }
 
     @Override
@@ -154,11 +148,7 @@ public class DocumentWizardPage extends WizardPage {
 
         createMimeType(detailsComposite);
 
-        if (document.getMimeType() == null || document.getMimeType().getContent() == null || document.getMimeType().getContent().isEmpty()) {
-            updateMimeTypeStack(LINK);
-        } else {
-            updateMimeTypeStack(FIELD);
-        }
+        updateMimeTypeStack(LINK);
     }
 
     private void createMimeType(final Composite detailsComposite) {
@@ -193,7 +183,6 @@ public class DocumentWizardPage extends WizardPage {
         final Label description = new Label(detailsComposite, SWT.NONE);
         description.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.TOP).create());
         description.setText(Messages.description);
-
         documentDescriptionText = new Text(detailsComposite, SWT.BORDER | SWT.V_SCROLL);
         documentDescriptionText.setText("");
         documentDescriptionText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT, 60).create());
@@ -298,7 +287,7 @@ public class DocumentWizardPage extends WizardPage {
 
         final Label radioButtonLabel = new Label(parent, SWT.NONE);
         radioButtonLabel.setText(Messages.initialValueLabel);
-        radioButtonLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).indent(0, 25).create());
+        radioButtonLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).create());
         createRadioButtonComposition(parent);
 
         new Composite(parent, SWT.NONE);
@@ -315,11 +304,11 @@ public class DocumentWizardPage extends WizardPage {
         createExternalComposition(propertiesComposite);
 
         if (document.getDocumentType().equals(DocumentType.NONE)) {
-            updateStack(DocumentType.NONE);
+            updateStack(NONE);
         } else if (document.getDocumentType().equals(DocumentType.INTERNAL)) {
-            updateStack(DocumentType.INTERNAL);
+            updateStack(INTERNAL);
         } else {
-            updateStack(DocumentType.EXTERNAL);
+            updateStack(EXTERNAL);
         }
 
     }
@@ -341,7 +330,7 @@ public class DocumentWizardPage extends WizardPage {
     private void createRadioButtonComposition(final Composite parent) {
         final Composite compo = new Composite(parent, SWT.NONE);
         compo.setLayout(GridLayoutFactory.fillDefaults().numColumns(4).spacing(20, 0).create());
-        compo.setLayoutData(GridDataFactory.fillDefaults().indent(0, 25).create());
+        compo.setLayoutData(GridDataFactory.fillDefaults().create());
 
         radioButtonNone = new Button(compo, SWT.RADIO);
         radioButtonNone.setText(Messages.initialValueButtonNone);
@@ -353,7 +342,7 @@ public class DocumentWizardPage extends WizardPage {
                 if(radioButtonNone.getSelection()){
                     radioButtonExternal.setSelection(false);
                     radioButtonInternal.setSelection(false);
-                    updateStack(DocumentType.NONE);
+                    updateStack(NONE);
                 }
             }
 
@@ -373,7 +362,7 @@ public class DocumentWizardPage extends WizardPage {
                 if (radioButtonInternal.getSelection()) {
                     radioButtonNone.setSelection(false);
                     radioButtonExternal.setSelection(false);
-                    updateStack(DocumentType.INTERNAL);
+                    updateStack(INTERNAL);
                 }
             }
 
@@ -394,7 +383,7 @@ public class DocumentWizardPage extends WizardPage {
                 if (radioButtonExternal.getSelection()) {
                     radioButtonNone.setSelection(false);
                     radioButtonInternal.setSelection(false);
-                    updateStack(DocumentType.EXTERNAL);
+                    updateStack(EXTERNAL);
                 }
             }
 
@@ -402,139 +391,36 @@ public class DocumentWizardPage extends WizardPage {
     }
 
     protected void bindDetails() {
-
-        bindDocumentURL();
-
-        bindDocumentMIMEType();
-
-        bindDocumentName();
-
-        bindDocumentDescription();
-
-        bindDocumentType();
-
-        bindDocumentDefaultValueID();
-
-        addMultiValidator();
-
-        setErrorMessage(null);
-
-    }
-
-    private void addMultiValidator() {
-        final String originalName = document.getName();
-        final MultiValidator multiValidator = new MultiValidator() {
-
-            @Override
-            public IStatus validate() {
-
-                String defaultID = null;
-                if (documentInternalIDObserved.getValue() != null) {
-                    defaultID = documentInternalIDObserved.getValue().toString();
-                }
-                final String url = ((Expression) (externalInitialContentObserveWidget.getValue())).getContent();
-                final String name = nameObserved.getValue().toString();
-
-                final Boolean externalBtn = (Boolean) btnDocumentTypeExternal.getValue();
-                final Boolean internalBtn = (Boolean) btnDocumentTypeInternal.getValue();
-
-                final DocumentNameValidator nameValidator = new DocumentNameValidator(context, originalName);
-                if (!nameValidator.validate(name).isOK()) {
-                    return nameValidator.validate(name);
-                }
-
-                if (externalBtn && url.isEmpty()) {
-                    return ValidationStatus.error(Messages.error_documentURLEmpty);
-                }
-
-                if (externalBtn && url.length() > URL_SIZE_MAX) {
-                    return ValidationStatus.error(Messages.bind(Messages.error_documentURLTooLong, URL_SIZE_MAX + 1));
-                }
-
-                if (internalBtn && (defaultID == null || defaultID.isEmpty())) {
-                    return ValidationStatus.error(Messages.error_documentDefaultIDEmpty);
-                }
-
-                return ValidationStatus.ok();
-            }
-        };
-
-        emfDataBindingContext.addValidationStatusProvider(multiValidator);
-    }
-
-    private void bindDocumentDefaultValueID() {
-
-        documentInternalIDObserved = EMFObservables.observeValue(document,
-                ProcessPackage.Literals.DOCUMENT__DEFAULT_VALUE_ID_OF_DOCUMENT_STORE);
-
-        emfDataBindingContext.bindValue(
-                SWTObservables.observeDelayedValue(500, SWTObservables.observeText(documentTextId, SWT.Modify)),
-                documentInternalIDObserved);
-
-    }
-
-    private void bindDocumentURL() {
-
-        documentUrlViewer.addExpressionValidator(ExpressionConstants.ALL_TYPES, new IExpressionValidator() {
-
-            @Override
-            public IStatus validate(final Object arg0) {
-
-
-                final IStatus out = externalValidator.validate(document);
-
-                final String actualErrorMessage = getErrorMessage();
-                if (!out.equals(ValidationStatus.ok())) {
-                    setErrorMessage(out.getMessage());
-                    setPageComplete(false);
-                    return out;
-                } else {
-                    if (actualErrorMessage != null
-                            && !(actualErrorMessage.equals(Messages.error_documentURLEmpty)
-                                    || actualErrorMessage.equals(Messages.bind(Messages.error_documentURLTooLong, URL_SIZE_MAX + 1)))) {
-                        setPageComplete(false);
-                    } else {
-                        setErrorMessage(null);
-                        setPageComplete(true);
-                    }
-                    return ValidationStatus.ok();
-                }
-            }
-
-            @Override
-            public void setInputExpression(final Expression inputExpression) {
-            }
-
-            @Override
-            public void setDomain(final EditingDomain domain) {
-            }
-
-            @Override
-            public void setContext(final EObject context) {
-            }
-        });
-
-        externalUrlObserved = EMFObservables.observeValue(document, ProcessPackage.Literals.DOCUMENT__URL);
-
-        externalInitialContentObserveWidget = ViewerProperties.singleSelection().observeDelayed(500, documentUrlViewer);
-        emfDataBindingContext.bindValue(
-                externalInitialContentObserveWidget,
-                externalUrlObserved);
-
+        emptyFieldsValidator = getEmptyURLValidator();
+        final UpdateValueStrategy externalUrlModelToTarget = new UpdateValueStrategy();
+        externalUrlModelToTarget.setBeforeSetValidator(emptyFieldsValidator);
+        final IObservableValue externalUrlObserved = EMFObservables.observeValue(
+                document, ProcessPackage.Literals.DOCUMENT__URL);
+        emfDataBindingContext.bindValue(ViewerProperties.singleSelection()
+                .observe(documentUrlViewer), externalUrlObserved, externalUrlModelToTarget, null);
         documentUrlViewer.setInput(document);
-    }
-
-    private void bindDocumentMIMEType() {
         final IObservableValue mimeTypeObserved = EMFObservables.observeValue(document,
                 ProcessPackage.Literals.DOCUMENT__MIME_TYPE);
 
-        emfDataBindingContext.bindValue(
-                ViewerProperties.singleSelection().observe(documentMimeTypeViewer),
-                mimeTypeObserved);
+        emfDataBindingContext.bindValue(ViewerProperties.singleSelection()
+                .observe(documentMimeTypeViewer), mimeTypeObserved);
         documentMimeTypeViewer.setInput(document);
-    }
+        final UpdateValueStrategy targetToModel = new UpdateValueStrategy();
 
-    private void bindDocumentDescription() {
+        targetToModel.setAfterGetValidator(new InputLengthValidator(
+                Messages.name, 50));
+        targetToModel.setBeforeSetValidator(new GroovyReferenceValidator(
+                Messages.name, false));
+        targetToModel.setAfterConvertValidator(new DocumentNameValidator(context, document != null ? document.getName() : null));
+
+        final IObservableValue nameObserved = EMFObservables.observeValue(
+                document, ProcessPackage.Literals.ELEMENT__NAME);
+        emfDataBindingContext.bindValue(
+                SWTObservables.observeDelayedValue(500, SWTObservables.observeText(documentNameText, SWT.Modify)),
+                nameObserved,
+                targetToModel,
+                null);
+
         final IObservableValue descriptionObserved = EMFObservables.observeValue(
                 document,
                 ProcessPackage.Literals.ELEMENT__DOCUMENTATION);
@@ -542,51 +428,33 @@ public class DocumentWizardPage extends WizardPage {
                 .observeDelayedValue(500, SWTObservables.observeText(
                         documentDescriptionText, SWT.Modify)),
                         descriptionObserved);
-    }
 
-    private void bindDocumentName() {
-
-        final UpdateValueStrategy targetToModel = new UpdateValueStrategy();
-
-        targetToModel.setAfterGetValidator(new InputLengthValidator(
-                Messages.name, 50));
-        targetToModel.setBeforeSetValidator(new GroovyReferenceValidator(
-                Messages.name, true));
-        targetToModel.setAfterConvertValidator(new DocumentNameValidator(context, document != null ? document.getName() : null));
-        nameObserved = EMFObservables.observeValue(document, ProcessPackage.Literals.ELEMENT__NAME);
-        emfDataBindingContext.bindValue(
-                SWTObservables.observeDelayedValue(500, SWTObservables.observeText(documentNameText, SWT.Modify)),
-                nameObserved,
-                targetToModel,
-                null);
-
-    }
-
-    private void bindDocumentType() {
         final SelectObservableValue documentTypeObservableValue = new SelectObservableValue(ProcessPackage.DOCUMENT_TYPE);
 
-        btnDocumentTypeNone = SWTObservables.observeSelection(radioButtonNone);
+        // NONE
+        final IObservableValue btnDocumentTypeNone = SWTObservables.observeSelection(radioButtonNone);
         documentTypeObservableValue.addOption(DocumentType.NONE, btnDocumentTypeNone);
 
-        btnDocumentTypeExternal = SWTObservables.observeSelection(radioButtonExternal);
+        // EXTERNAL
+        final IObservableValue btnDocumentTypeExternal = SWTObservables.observeSelection(radioButtonExternal);
         documentTypeObservableValue.addOption(DocumentType.EXTERNAL, btnDocumentTypeExternal);
-        documentTypeObservableValue.addValueChangeListener(new IValueChangeListener() {
 
-            @Override
-            public void handleValueChange(final ValueChangeEvent arg0) {
-                if (arg0.diff.getNewValue().equals(DocumentType.EXTERNAL)) {
-                    document.setDocumentType(DocumentType.EXTERNAL);
-                }
-                documentUrlViewer.validate();
-            }
-        });
-
-        btnDocumentTypeInternal = SWTObservables.observeSelection(radioButtonInternal);
+        // INTERNAL
+        final IObservableValue btnDocumentTypeInternal = SWTObservables.observeSelection(radioButtonInternal);
         documentTypeObservableValue.addOption(DocumentType.INTERNAL, btnDocumentTypeInternal);
 
-        emfDataBindingContext.bindValue(
-                documentTypeObservableValue,
-                PojoObservables.observeValue(document, "documentType"));
+        emfDataBindingContext.bindValue(documentTypeObservableValue, PojoObservables.observeValue(document, "documentType"), externalUrlModelToTarget, null);
+
+        final IObservableValue documentInternalIDObserved = EMFObservables.observeValue(document,
+                ProcessPackage.Literals.DOCUMENT__DEFAULT_VALUE_ID_OF_DOCUMENT_STORE);
+
+
+
+        emfDataBindingContext
+        .bindValue(
+                SWTObservables.observeDelayedValue(500, SWTObservables
+                        .observeText(documentTextId, SWT.Modify)),
+                        documentInternalIDObserved);
 
     }
 
@@ -617,12 +485,12 @@ public class DocumentWizardPage extends WizardPage {
         super.dispose();
     }
 
-    protected void updateStack(final DocumentType docType) {
-        if (docType.equals(DocumentType.NONE)) {
+    protected void updateStack(final String type) {
+        if (type.equals(NONE)) {
             stack.topControl = noneCompo;
-        } else if (docType.equals(DocumentType.EXTERNAL)) {
+        } else if (type.equals(EXTERNAL)) {
             stack.topControl = externalCompo;
-        } else if (docType.equals(DocumentType.INTERNAL)) {
+        } else if (type.equals(INTERNAL)) {
             stack.topControl = internalCompo;
         }
         propertiesComposite.layout();
@@ -640,5 +508,31 @@ public class DocumentWizardPage extends WizardPage {
         }
         mimeCompo.layout();
     }
+
+
+    private IValidator getEmptyURLValidator() {
+
+        return new IValidator() {
+
+            @Override
+            public IStatus validate(final Object arg0) {
+                if (DocumentType.EXTERNAL.equals(arg0)) {
+                    final Expression expr = ((Document) documentUrlViewer.getInput()).getUrl();
+                    if (expr.getContent()==null || expr.getContent().isEmpty()){
+                        return ValidationStatus.error(Messages.bind(Messages.emptyDocumentFieldError, Messages.documentExternalLabel));
+                    }
+                } else {
+                    if (DocumentType.INTERNAL.equals(arg0)) {
+                        // final Expression expr = ((Document) documentMimeTypeViewer.getInput()).getMimeType();
+                        if (documentTextId.getText() == null || documentTextId.getText().isEmpty()) {
+                            return ValidationStatus.error(Messages.bind(Messages.emptyDocumentFieldError, Messages.documentInternalLabel));
+                        }
+                    }
+                }
+                return ValidationStatus.ok();
+            }
+        };
+    }
+}
 
 }
