@@ -45,25 +45,29 @@ import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.dialogs.FilteredTree;
-import org.eclipse.ui.dialogs.PatternFilter;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.internal.WorkbenchMessages;
 
 public class SelectConnectorDefinitionWizardPage extends WizardPage implements ISelectionChangedListener,IDoubleClickListener {
 
-    private FilteredTree filterTree;
+    private TreeViewer treeViewer;
     protected Connector connector;
     private final Connector connectorWorkingCopy;
     private EMFDataBindingContext context;
     private WizardPageSupport pageSupport;
     private final DefinitionResourceProvider messageProvider;
 
-    public SelectConnectorDefinitionWizardPage(Connector connectorWorkingCopy,DefinitionResourceProvider messageProvider) {
+    public SelectConnectorDefinitionWizardPage(final Connector connectorWorkingCopy,final DefinitionResourceProvider messageProvider) {
         super(SelectConnectorDefinitionWizardPage.class.getName());
         setTitle(Messages.selectConnectorDefinitionTitle);
         setDescription(Messages.selectConnectorDefinitionDesc);
@@ -73,50 +77,86 @@ public class SelectConnectorDefinitionWizardPage extends WizardPage implements I
 
 
     @Override
-    public void createControl(Composite parent) {
-        Composite composite = new Composite(parent, SWT.NONE);
+    public void createControl(final Composite parent) {
+        context = new EMFDataBindingContext();
+
+        final Composite composite = new Composite(parent, SWT.NONE);
         composite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).extendedMargins(10, 10, 10, 0).create());
-        filterTree = new FilteredTree(composite, SWT.SINGLE | SWT.BORDER, new PatternFilter(), true);
-        filterTree.setLayoutData(GridDataFactory.fillDefaults().grab(true,true).create()) ;
-        filterTree.getViewer().setContentProvider(getContentProvider());
-        filterTree.getViewer().setLabelProvider(new ConnectorDefinitionTreeLabelProvider(messageProvider));
-        filterTree.getViewer().addSelectionChangedListener(this) ;
-        filterTree.getViewer().addDoubleClickListener(this) ;
-        filterTree.getViewer().addFilter(new ViewerFilter() {
+
+        final Composite treeComposite = new Composite(composite, SWT.NONE);
+        treeComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).spacing(5, 2).create());
+        treeComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+
+        final Text searchText = new Text(treeComposite, SWT.SEARCH | SWT.CANCEL);
+        searchText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+        searchText.setMessage(WorkbenchMessages.FilteredTree_FilterMessage);
+        searchText.addModifyListener(new ModifyListener() {
 
             @Override
-            public boolean select(Viewer arg0, Object arg1, Object element) {
+            public void modifyText(final ModifyEvent arg0) {
+                Display.getDefault().asyncExec(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        if (treeViewer != null && !treeViewer.getTree().isDisposed()) {
+                            treeViewer.refresh();
+                        }
+                    }
+                });
+
+            }
+        });
+
+
+        treeViewer = new TreeViewer(treeComposite, SWT.SINGLE | SWT.BORDER);
+        treeViewer.getTree().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        treeViewer.setContentProvider(getContentProvider());
+        treeViewer.setLabelProvider(new ConnectorDefinitionTreeLabelProvider(messageProvider));
+        treeViewer.addSelectionChangedListener(this);
+        treeViewer.addDoubleClickListener(this);
+        treeViewer.addFilter(new ViewerFilter() {
+
+            @Override
+            public boolean select(final Viewer viewer, final Object parentElement, final Object element) {
                 if (element instanceof Category){
-            		if(!((ITreeContentProvider)((ContentViewer) arg0).getContentProvider()).hasChildren(element)){
-            			return false;
-            		}
-            		for(Object c : ((ITreeContentProvider)((ContentViewer) arg0).getContentProvider()).getChildren(element)){
-            			if(c instanceof ConnectorDefinition){
-            				return true;
-            			}else{
-            				if(select(arg0, element, c)){
-            					return true;
-            				}
-            			}
-            		}
-            	}else if(element instanceof ConnectorDefinition){
-            		return true;
-    
-    			}
-                
+                    final ITreeContentProvider iTreeContentProvider = (ITreeContentProvider)((ContentViewer) viewer).getContentProvider();
+                    if(!iTreeContentProvider.hasChildren(element)){
+                        return false;
+                    }
+                    for(final Object c : iTreeContentProvider.getChildren(element)){
+                        if(c instanceof ConnectorDefinition){
+                            return selectDefinition(searchText, (ConnectorDefinition) c);
+                        }else{
+                            if(select(viewer, element, c)){
+                                return true;
+                            }
+                        }
+                    }
+                }else if(element instanceof ConnectorDefinition){
+                    return selectDefinition(searchText, (ConnectorDefinition) element);
+                }
                 return false;
             }
+
+            private boolean selectDefinition(final Text searchText, final ConnectorDefinition element) {
+                if (searchText == null || searchText.isDisposed() || searchText.getText().isEmpty()) {
+                    return true;
+                }
+                final String text = searchText.getText();
+                final String connectorDefinitionLabel = messageProvider.getConnectorDefinitionLabel(element);
+                if(connectorDefinitionLabel != null){
+                    return connectorDefinitionLabel.contains(text);
+                }else{
+                    return element.getId().contains(text) || element.getVersion().contains(text);
+                }
+
+            }
         }) ;
-        filterTree.getViewer().setInput(new Object());
-        filterTree.setFocus();
-        // Workaround for FilteredTree first expand
-        // See Eclipse bug 299528
+        treeViewer.setInput(new Object());
 
-        context = new EMFDataBindingContext() ;
-
-        IValidator selectionValidator = new IValidator() {
+        final IValidator selectionValidator = new IValidator() {
             @Override
-            public IStatus validate(Object value) {
+            public IStatus validate(final Object value) {
                 if(value == null || value instanceof Category){
                     return new Status(IStatus.ERROR,ConnectorPlugin.PLUGIN_ID, Messages.selectAConnectorDefWarning);
                 }
@@ -124,12 +164,12 @@ public class SelectConnectorDefinitionWizardPage extends WizardPage implements I
             }
         } ;
 
-        UpdateValueStrategy idStrategy = new UpdateValueStrategy() ;
+        final UpdateValueStrategy idStrategy = new UpdateValueStrategy() ;
         idStrategy.setBeforeSetValidator(selectionValidator) ;
         idStrategy.setConverter(new Converter(ConnectorDefinition.class,String.class) {
 
             @Override
-            public Object convert(Object from) {
+            public Object convert(final Object from) {
                 if(from instanceof ConnectorDefinition){
                     return ((ConnectorDefinition) from).getId() ;
                 }
@@ -137,12 +177,12 @@ public class SelectConnectorDefinitionWizardPage extends WizardPage implements I
             }
         }) ;
 
-        UpdateValueStrategy versionStrategy = new UpdateValueStrategy() ;
+        final UpdateValueStrategy versionStrategy = new UpdateValueStrategy() ;
         versionStrategy.setBeforeSetValidator(selectionValidator) ;
         versionStrategy.setConverter(new Converter(ConnectorDefinition.class,String.class) {
 
             @Override
-            public Object convert(Object from) {
+            public Object convert(final Object from) {
                 if(from instanceof ConnectorDefinition){
                     return ((ConnectorDefinition) from).getVersion() ;
                 }
@@ -150,10 +190,15 @@ public class SelectConnectorDefinitionWizardPage extends WizardPage implements I
             }
         }) ;
 
-        context.bindValue(ViewersObservables.observeSingleSelection(filterTree.getViewer()), EMFObservables.observeValue(connectorWorkingCopy, ProcessPackage.Literals.CONNECTOR__DEFINITION_ID),idStrategy,null)  ;
-        context.bindValue(ViewersObservables.observeSingleSelection(filterTree.getViewer()), EMFObservables.observeValue(connectorWorkingCopy, ProcessPackage.Literals.CONNECTOR__DEFINITION_VERSION),versionStrategy,null)  ;
-        context.bindValue(ViewersObservables.observeSingleSelection(filterTree.getViewer()), EMFObservables.observeValue(connectorWorkingCopy.getConfiguration(), ConnectorConfigurationPackage.Literals.CONNECTOR_CONFIGURATION__DEFINITION_ID),idStrategy,null)  ;
-        context.bindValue(ViewersObservables.observeSingleSelection(filterTree.getViewer()), EMFObservables.observeValue(connectorWorkingCopy.getConfiguration(), ConnectorConfigurationPackage.Literals.CONNECTOR_CONFIGURATION__VERSION),versionStrategy,null)  ;
+        context.bindValue(ViewersObservables.observeSingleSelection(treeViewer),
+                EMFObservables.observeValue(connectorWorkingCopy, ProcessPackage.Literals.CONNECTOR__DEFINITION_ID), idStrategy, null);
+        context.bindValue(ViewersObservables.observeSingleSelection(treeViewer),
+                EMFObservables.observeValue(connectorWorkingCopy, ProcessPackage.Literals.CONNECTOR__DEFINITION_VERSION), versionStrategy, null);
+        context.bindValue(ViewersObservables.observeSingleSelection(treeViewer), EMFObservables.observeValue(connectorWorkingCopy.getConfiguration(),
+                ConnectorConfigurationPackage.Literals.CONNECTOR_CONFIGURATION__DEFINITION_ID), idStrategy, null);
+        context.bindValue(ViewersObservables.observeSingleSelection(treeViewer),
+                EMFObservables.observeValue(connectorWorkingCopy.getConfiguration(), ConnectorConfigurationPackage.Literals.CONNECTOR_CONFIGURATION__VERSION),
+                versionStrategy, null);
 
         pageSupport = WizardPageSupport.create(this, context) ;
         setControl(composite);
@@ -176,20 +221,20 @@ public class SelectConnectorDefinitionWizardPage extends WizardPage implements I
     }
 
     protected void refresh(){
-        if(filterTree != null && !filterTree.isDisposed()){
-            filterTree.getViewer().setContentProvider(getContentProvider()) ;
-            filterTree.getViewer().setInput(new Object()) ;
+        if (treeViewer != null && treeViewer.getTree() != null && !treeViewer.getTree().isDisposed()) {
+            treeViewer.setContentProvider(getContentProvider());
+            treeViewer.setInput(new Object());
         }
     }
 
     @Override
     public boolean canFlipToNextPage() {
-        return ((IStructuredSelection) filterTree.getViewer().getSelection()).getFirstElement() instanceof ConnectorDefinition ;
+        return ((IStructuredSelection) treeViewer.getSelection()).getFirstElement() instanceof ConnectorDefinition;
     }
 
 
     public ConnectorDefinition getSelectedDefinition() {
-        Object selection = ((IStructuredSelection) filterTree.getViewer().getSelection()).getFirstElement();
+        final Object selection = ((IStructuredSelection) treeViewer.getSelection()).getFirstElement();
         if(selection instanceof ConnectorDefinition){
             return (ConnectorDefinition) selection;
         }
@@ -198,16 +243,16 @@ public class SelectConnectorDefinitionWizardPage extends WizardPage implements I
 
 
     @Override
-    public void selectionChanged(SelectionChangedEvent event) {
+    public void selectionChanged(final SelectionChangedEvent event) {
         //Intend to be override
     }
 
 
     @Override
-    public void doubleClick(DoubleClickEvent event) {
-        Object selection =  ((IStructuredSelection) event.getSelection()).getFirstElement() ;
+    public void doubleClick(final DoubleClickEvent event) {
+        final Object selection =  ((IStructuredSelection) event.getSelection()).getFirstElement() ;
         if(selection instanceof Category){
-            filterTree.getViewer().expandToLevel(selection, 1) ;
+            treeViewer.expandToLevel(selection, 1);
         }else if(selection instanceof ConnectorDefinition){
             if(getNextPage() != null){
                 getContainer().showPage(getNextPage());

@@ -14,8 +14,9 @@ import org.bonitasoft.studio.swtbot.framework.diagram.general.actors.BotActorAss
 import org.bonitasoft.studio.swtbot.framework.diagram.general.actors.BotActorDefinitionPropertySection;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.connectors.BotConnectorsPropertySection;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.data.BotDataPropertySection;
-import org.bonitasoft.studio.swtbot.framework.diagram.general.documents.BotDocumentsPropertySection;
+import org.bonitasoft.studio.swtbot.framework.diagram.general.general.BotDiagramPropertySection;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.general.BotGeneralPropertySection;
+import org.bonitasoft.studio.swtbot.framework.diagram.general.iteration.BotReccurencePropertySection;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.lane.BotLanePropertySection;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.operations.BotOperationsPropertySection;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.pool.BotPoolPropertySection;
@@ -40,6 +41,11 @@ public class BotGeneralDiagramPropertiesView extends BotBase {
     public BotGeneralPropertySection selectGeneralTab() {
         BotQAUtil.selectTabbedPropertyView(bot, "General");
         return new BotGeneralPropertySection(bot);
+    }
+
+    public BotDiagramPropertySection selectDiagramTab() {
+        BotQAUtil.selectTabbedPropertyView(bot, "Diagram");
+        return new BotDiagramPropertySection(bot);
     }
 
     public void selectPortalTab() {
@@ -97,29 +103,20 @@ public class BotGeneralDiagramPropertiesView extends BotBase {
         return new BotConnectorsPropertySection(bot);
     }
 
+    public BotReccurencePropertySection selectIterationTab() {
+        BotQAUtil.selectTabbedPropertyView(bot, "Iteration");
+        return new BotReccurencePropertySection(bot);
+    }
 
-    /**
-     * Select the documents tab.
-     * 
-     * @return
-     */
-    public BotDocumentsPropertySection selectDocumentsTab() {
+    public void selectDocumentsTab() {
         BotQAUtil.selectTabbedPropertyView(bot, "Documents");
         return new BotDocumentsPropertySection(bot);
     }
 
-    public void selectSearchTab() {
-        BotQAUtil.selectTabbedPropertyView(bot, "Search");
-        //TODO:
-    }
 
-    /**
-     * Select the operations tab.
-     * 
-     * @return
-     */
     public BotOperationsPropertySection selectOperationTab() {
         BotQAUtil.selectTabbedPropertyView(bot, "Operations");
         return new BotOperationsPropertySection(bot);
     }
+
 }

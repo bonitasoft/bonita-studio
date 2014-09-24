@@ -42,22 +42,11 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="condition" eType="ecore:EClass expression.ecore#//Expression"
         containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Activity" eSuperTypes="#//FlowElement #//ConnectableElement #//OperationContainer">
+  <eClassifiers xsi:type="ecore:EClass" name="Activity" eSuperTypes="#//FlowElement #//ConnectableElement #//OperationContainer #//MultiInstantiable">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="duration" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
         defaultValueLiteral="3600000"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="multiInstantiation" eType="#//MultiInstantiation"
-        containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="isLoop" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBooleanObject"
-        defaultValueLiteral="false"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="testBefore" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBooleanObject"
-        defaultValueLiteral="false"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="BoundaryIntermediateEvents"
         upperBound="-1" eType="#//BoundaryEvent" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="loopCondition" eType="ecore:EClass expression.ecore#//Expression"
-        containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="loopMaximum" eType="ecore:EClass expression.ecore#//Expression"
-        containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="isMultiInstance" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Actor" eSuperTypes="#//Element">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="initiator" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
@@ -313,20 +302,35 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="target" lowerBound="1"
         eType="#//AbstractCatchMessageEvent" eOpposite="#//AbstractCatchMessageEvent/incomingMessag"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="MultiInstantiation">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="useCardinality" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
-        defaultValueLiteral="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="cardinality" eType="ecore:EClass expression.ecore#//Expression"
+  <eClassifiers xsi:type="ecore:EEnum" name="MultiInstanceType">
+    <eLiterals name="NONE"/>
+    <eLiterals name="STANDARD" value="1"/>
+    <eLiterals name="PARALLEL" value="2"/>
+    <eLiterals name="SEQUENTIAL" value="3"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="MultiInstantiable" abstract="true">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" lowerBound="1" eType="#//MultiInstanceType"
+        defaultValueLiteral="NONE"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="testBefore" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBooleanObject"
+        defaultValueLiteral="false"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="loopCondition" eType="ecore:EClass expression.ecore#//Expression"
         containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="loopMaximum" eType="ecore:EClass expression.ecore#//Expression"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="useCardinality" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
+        defaultValueLiteral="false"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="cardinalityExpression"
+        eType="ecore:EClass expression.ecore#//Expression" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="collectionDataToMultiInstantiate"
         eType="#//Data"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="inputData" eType="#//Data"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="iteratorExpression" eType="ecore:EClass expression.ecore#//Expression"
+        containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="outputData" eType="#//Data"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="listDataContainingOutputResults"
         eType="#//Data"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="completionCondition" eType="ecore:EClass expression.ecore#//Expression"
         containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="sequential" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="storeOutput" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
         defaultValueLiteral="false"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="NonInterruptingBoundaryTimerEvent" eSuperTypes="#//BoundaryTimerEvent"/>
@@ -356,7 +360,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="entryRedirectionURL" eType="ecore:EClass expression.ecore#//Expression"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="entryPageFlowType" eType="#//EntryPageFlowType"
-        defaultValueLiteral=""/>
+        defaultValueLiteral="PAGEFLOW"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="entryRedirectionActions"
         upperBound="-1" eType="ecore:EClass expression.ecore#//Operation" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="transmitURLAsParameter"
@@ -409,7 +413,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="recapFlowConnectors" upperBound="-1"
         eType="#//Connector" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="recapPageFlowType" eType="#//ConsultationPageFlowType"
-        defaultValueLiteral=""/>
+        defaultValueLiteral="PAGEFLOW"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="recapPageFlowRedirectionURL"
         eType="ecore:EClass expression.ecore#//Expression" containment="true"/>
   </eClassifiers>
@@ -451,7 +455,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="isDefault" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
         defaultValueLiteral="false"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="conditionType" eType="#//SequenceFlowConditionType"
-        defaultValueLiteral="GROOVY_EXPRESSION"/>
+        defaultValueLiteral="EXPRESSION"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="decisionTable" lowerBound="1"
         eType="#//decision/DecisionTable" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="condition" eType="ecore:EClass expression.ecore#//Expression"
@@ -553,7 +557,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="viewPageFlowConnectors"
         upperBound="-1" eType="#//Connector" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="viewPageFlowType" eType="#//ConsultationPageFlowType"
-        defaultValueLiteral=""/>
+        defaultValueLiteral="PAGEFLOW"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="viewPageFlowRedirectionURL"
         eType="ecore:EClass expression.ecore#//Expression" containment="true"/>
   </eClassifiers>

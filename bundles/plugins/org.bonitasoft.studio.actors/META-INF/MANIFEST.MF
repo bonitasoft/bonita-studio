@@ -7,13 +7,17 @@ Bundle-ClassPath: .
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Export-Package: org.bonitasoft.studio.actors,org.bonitasoft.studio.act
- ors.i18n;x-friends:="org.bonitasoft.studio.actors.tests,org.bonitasof
- t.studio.test.swtbot.util,org.bonitasoft.studio.tests",org.bonitasoft
- .studio.actors.model.organization,org.bonitasoft.studio.actors.model.
- organization.impl,org.bonitasoft.studio.actors.model.organization.uti
- l,org.bonitasoft.studio.actors.preference,org.bonitasoft.studio.actor
- s.repository,org.bonitasoft.studio.actors.ui.wizard.page
+Export-Package: org.bonitasoft.studio.actors,
+ org.bonitasoft.studio.actors.i18n;
+  x-friends:="org.bonitasoft.studio.actors.tests,
+   org.bonitasoft.studio.test.swtbot.util,
+   org.bonitasoft.studio.tests",
+ org.bonitasoft.studio.actors.model.organization,
+ org.bonitasoft.studio.actors.model.organization.impl,
+ org.bonitasoft.studio.actors.model.organization.util,
+ org.bonitasoft.studio.actors.preference,
+ org.bonitasoft.studio.actors.repository,
+ org.bonitasoft.studio.actors.ui.wizard.page
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui,
  org.eclipse.emf.ecore;visibility:=reexport,

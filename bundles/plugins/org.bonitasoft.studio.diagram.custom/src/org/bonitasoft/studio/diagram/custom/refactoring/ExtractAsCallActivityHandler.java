@@ -17,7 +17,7 @@
  */
 package org.bonitasoft.studio.diagram.custom.refactoring;
 
-import org.bonitasoft.studio.diagram.custom.Messages;
+import org.bonitasoft.studio.diagram.custom.i18n.Messages;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;

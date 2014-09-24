@@ -17,6 +17,7 @@ package org.bonitasoft.studio.data.ui.wizard;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.bonitasoft.studio.data.i18n.Messages;
 import org.bonitasoft.studio.expression.editor.provider.IProposalListener;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Activity;
@@ -28,18 +29,17 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 
 /**
  * @author Maxence Raoux
+ *
  */
 public class CreateVariableProposalListener implements IProposalListener {
 
     private boolean isPageFlowContext = false;
 
     private EStructuralFeature feature;
-
-    public CreateVariableProposalListener() {
-    }
 
     @Override
     public String handleEvent(EObject context, final String fixedReturnType) {
@@ -54,8 +54,12 @@ public class CreateVariableProposalListener implements IProposalListener {
         res.add(feature);
         final DataWizard newWizard = new DataWizard(TransactionUtil.getEditingDomain(context), context, feature, res, true, fixedReturnType);
         newWizard.setIsPageFlowContext(isPageFlowContext);
-        final DataWizardDialog wizardDialog = new DataWizardDialog(
-                Display.getCurrent().getActiveShell().getParent().getShell(),
+        Shell activeShell = Display
+                .getDefault().getActiveShell();
+        if (activeShell.getParent() != null) {
+            activeShell = activeShell.getParent().getShell();
+        }
+        final DataWizardDialog wizardDialog = new DataWizardDialog(activeShell,
                 newWizard, null);
         if (wizardDialog.open() == Dialog.OK) {
             final EObject obj = newWizard.getWorkingCopy();
@@ -69,6 +73,11 @@ public class CreateVariableProposalListener implements IProposalListener {
 
         return null;
 
+    }
+
+    @Override
+    public String toString() {
+        return Messages.createVariable;
     }
 
     /*
@@ -115,6 +124,11 @@ public class CreateVariableProposalListener implements IProposalListener {
      */
     @Override
     public void setIsOverviewContext(final boolean isOverviewContext) {
+    }
+
+    @Override
+    public boolean isRelevant(final EObject context) {
+        return true;
     }
 
 }

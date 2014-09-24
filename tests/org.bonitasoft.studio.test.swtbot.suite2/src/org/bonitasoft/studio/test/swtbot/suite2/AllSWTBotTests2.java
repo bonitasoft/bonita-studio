@@ -8,7 +8,6 @@ import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManag
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.configuration.test.swtbot.TestProcessDependencies;
-import org.bonitasoft.studio.data.test.DataSWTBotTests;
 import org.bonitasoft.studio.diagram.test.NewRunTest;
 import org.bonitasoft.studio.diagram.test.SharedEditingDomainTests;
 import org.bonitasoft.studio.diagram.test.TestBoundariesCreation;
@@ -26,15 +25,16 @@ import org.bonitasoft.studio.groovy.tests.TestBonitaGroovyEditorDialog;
 import org.bonitasoft.studio.migration.tests.MigrationReporTest;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
-import org.bonitasoft.studio.properties.test.TestMultiInstantiation;
 import org.bonitasoft.studio.properties.test.TestResources;
 import org.bonitasoft.studio.repository.test.swtbot.TestExportBosArchive;
 import org.bonitasoft.studio.tests.IHeapDumper;
+import org.bonitasoft.studio.tests.data.DataWizardIT;
 import org.bonitasoft.studio.tests.dialog.OpenNameAndVersionForDiagramDialogTest;
 import org.bonitasoft.studio.tests.dialog.TestDuplicate;
 import org.bonitasoft.studio.tests.document.TestRunWithDocument;
 import org.bonitasoft.studio.tests.draw2d.TestLifeCycleWidget;
 import org.bonitasoft.studio.tests.form.TestBug1682;
+import org.bonitasoft.studio.tests.iteration.MultiInstantiationIT;
 import org.bonitasoft.studio.tests.timer.TestTimer;
 import org.bonitasoft.studio.util.test.BonitaTestSuite;
 import org.bonitasoft.studio.validators.test.swtbot.TestCreateValidatorWizard;
@@ -71,7 +71,7 @@ import org.junit.runners.Suite;
     TestBug1640.class,
     NewRunTest.class,
     TestBug1682.class,
-    DataSWTBotTests.class,
+    DataWizardIT.class,
     TestConvertToMessage.class,
     ExtractAsSubprocessTest.class,
     BPMNExportTests.class,
@@ -85,7 +85,7 @@ import org.junit.runners.Suite;
     TestCreateValidatorWizard.class,
     TestLifeCycleWidget.class,
     TestConnectorExpression.class,
-    TestMultiInstantiation.class,
+    MultiInstantiationIT.class,
     BPMNConnectorExportImportTest.class,
     BPMNGatewayExportImportTest.class,
     BPMNEventSubProcessExportImportTest.class,
@@ -96,8 +96,8 @@ import org.junit.runners.Suite;
     TestSave.class,
     TestMoveBetweenLane.class,
     MigrationReporTest.class,
-	TestTimer.class,
-	TestBonitaGroovyEditorDialog.class,
+    TestTimer.class,
+    TestBonitaGroovyEditorDialog.class,
     TestProcessDependencies.class
 })
 public class AllSWTBotTests2 {
@@ -112,12 +112,12 @@ public class AllSWTBotTests2 {
     }
     @AfterClass
     public static void tearDown() {
-        for(IConfigurationElement elem : BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements("org.bonitasoft.studio.tests.heapdump")){
+        for(final IConfigurationElement elem : BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements("org.bonitasoft.studio.tests.heapdump")){
             IHeapDumper dumper;
             try {
                 dumper = (IHeapDumper) elem.createExecutableExtension("class");
                 dumper.dumpHeap(AllSWTBotTests2.class.getSimpleName()+".hprof", false);
-            } catch (CoreException e) {
+            } catch (final CoreException e) {
                 BonitaStudioLog.error(e);
             }
         }

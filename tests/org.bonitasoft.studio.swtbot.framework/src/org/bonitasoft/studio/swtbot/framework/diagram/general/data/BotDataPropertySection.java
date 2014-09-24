@@ -10,11 +10,14 @@ package org.bonitasoft.studio.swtbot.framework.diagram.general.data;
 
 import org.bonitasoft.studio.data.i18n.Messages;
 import org.bonitasoft.studio.swtbot.framework.BotBase;
+import org.bonitasoft.studio.swtbot.framework.widget.BotTableWidget;
+import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 
 /**
  * Data property section.
- * 
+ *
  * @author Joachim Segala
  */
 public class BotDataPropertySection extends BotBase {
@@ -23,8 +26,24 @@ public class BotDataPropertySection extends BotBase {
         super(bot);
     }
 
-    public BotAddDataDialog addData() {
+    public BotAddDataWizardPage addData() {
         bot.button(Messages.addData).click();
-        return new BotAddDataDialog(bot);
+        return new BotAddDataWizardPage(bot);
+    }
+
+    public BotTableWidget dataList() {
+        return new BotTableWidget(bot.table());
+    }
+
+    public BotEditDataWizardPage edit() {
+        bot.button(org.bonitasoft.studio.common.Messages.edit).click();
+        return new BotEditDataWizardPage(bot);
+    }
+
+    public BotDataPropertySection remove() {
+        bot.button(Messages.removeData).click();
+        bot.waitUntil(Conditions.shellIsActive(org.bonitasoft.studio.common.Messages.removalConfirmationDialogTitle));
+        bot.button(IDialogConstants.OK_LABEL).click();
+        return this;
     }
 }

@@ -17,19 +17,14 @@
  */
 package org.bonitasoft.studio.validation.constraints.process;
 
-import javax.naming.Context;
-
 import org.bonitasoft.studio.model.process.Activity;
-import org.bonitasoft.studio.model.process.InclusiveGateway;
-import org.bonitasoft.studio.model.process.MultiInstantiation;
-import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.studio.model.process.MultiInstanceType;
+import org.bonitasoft.studio.model.process.MultiInstantiable;
 import org.bonitasoft.studio.model.process.diagram.providers.ProcessMarkerNavigationProvider;
 import org.bonitasoft.studio.validation.constraints.AbstractLiveValidationMarkerConstraint;
 import org.bonitasoft.studio.validation.i18n.Messages;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.emf.validation.AbstractModelConstraint;
 import org.eclipse.emf.validation.IValidationContext;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 
@@ -39,48 +34,41 @@ import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
  */
 public class MultiInstanceConstraintOutput extends AbstractLiveValidationMarkerConstraint {
 
-	@Override
-	protected IStatus performLiveValidation(IValidationContext context) {
-		EStructuralFeature feature = context.getFeature();
-        if(feature.equals(ProcessPackage.Literals.ACTIVITY)){
-        	final Activity mi = (Activity) context;
-        	if(mi.isIsMultiInstance()){
-        	validateMultiInstantiation(context, mi);
-        	}
-        }	
-		return context.createSuccessStatus();
-	}
+    @Override
+    protected IStatus performLiveValidation(final IValidationContext context) {
+        return context.createSuccessStatus();
+    }
 
-	
-	private IStatus validateMultiInstantiation (IValidationContext ctx, Activity act){
-		MultiInstantiation mult = act.getMultiInstantiation();
-		if(mult!=null && !mult.isUseCardinality() && mult.getOutputData() != null && mult.getListDataContainingOutputResults()==null){
-        	return ctx.createFailureStatus(new Object[] {Messages.Validation_MultiInstantiationOutputData});
-		}
-		
-		return ctx.createSuccessStatus();
-	}
-	@Override
-	protected IStatus performBatchValidation(IValidationContext context) {
-		EObject eObj = context.getTarget();
-		if (eObj instanceof Activity) {
-			Activity act = (Activity) eObj;
-			if(act.isIsMultiInstance()){
-				return validateMultiInstantiation(context, act);
-			}
-		}
-		return context.createSuccessStatus();
-	}
+
+    private IStatus validateMultiInstantiation(final IValidationContext ctx, final MultiInstantiable multiInstantiable) {
+        if (!multiInstantiable.isUseCardinality() && multiInstantiable.getOutputData() != null
+                && multiInstantiable.getListDataContainingOutputResults() == null) {
+            return ctx.createFailureStatus(new Object[] {Messages.Validation_MultiInstantiationOutputData});
+        }
+
+        return ctx.createSuccessStatus();
+    }
+    @Override
+    protected IStatus performBatchValidation(final IValidationContext context) {
+        final EObject eObj = context.getTarget();
+        if (eObj instanceof Activity) {
+            final Activity act = (Activity) eObj;
+            if (act.getType() == MultiInstanceType.PARALLEL || act.getType() == MultiInstanceType.SEQUENTIAL) {
+                return validateMultiInstantiation(context, act);
+            }
+        }
+        return context.createSuccessStatus();
+    }
 
     @Override
-    protected String getMarkerType(DiagramEditor editor) {
+    protected String getMarkerType(final DiagramEditor editor) {
         return ProcessMarkerNavigationProvider.MARKER_TYPE;
     }
 
     @Override
-	protected String getConstraintId() {
-		return "org.bonitasoft.studio.validation.multiInstanceOutput";
-	}
+    protected String getConstraintId() {
+        return "org.bonitasoft.studio.validation.multiInstanceOutput";
+    }
 
 
 

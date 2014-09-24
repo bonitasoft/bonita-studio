@@ -10,6 +10,7 @@ package org.bonitasoft.studio.swtbot.framework.draw;
 
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditPart;
+import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 
 /**
  * Gef form diagram editor.
@@ -26,23 +27,48 @@ public class BotGefFormDiagramEditor extends BotGefBaseEditor {
         super(bot);
     }
 
-    public void addWidget(final String pWidget, final int pColumn, final int pRow) {
+    public BotGefFormDiagramEditor addWidget(final String pWidget, final int pColumn, final int pRow) {
         gmfEditor.click(200, 200);
         gmfEditor.activateTool(pWidget);
         gmfEditor.click(pColumn * COLUMN_SIZE, pRow * ROW_SIZE);
+        return this;
     }
 
-    public void moveWidget(final String pWidget, final int pColumn, final int pRow) {
+    public BotGefFormDiagramEditor moveWidget(final String pWidget, final int pColumn, final int pRow) {
         gmfEditor.drag(pWidget, pColumn * COLUMN_SIZE, pRow * ROW_SIZE);
+        return this;
     }
 
-    public void selectWidget(final int pColumn, final int pRow) {
+    public BotGefFormDiagramEditor selectWidget(final int pColumn, final int pRow) {
         gmfEditor.click(pColumn * COLUMN_SIZE, pRow * ROW_SIZE);
+        return this;
     }
 
-    public SWTBotGefEditPart selectWidget(final String pWidgetName) {
+    public BotGefFormDiagramEditor selectWidget(final String pWidgetName) {
         final SWTBotGefEditPart gefEditPart = gmfEditor.getEditPart(pWidgetName).parent().select();
         bot.sleep(100);
-        return gefEditPart;
+        return this;
+    }
+
+    public BotGefFormDiagramEditor save() {
+        bot.toolbarButton("Save").click();
+        bot.waitUntil(new DefaultCondition() {
+
+            @Override
+            public boolean test() throws Exception {
+                return !BotGefFormDiagramEditor.this.bot.activeEditor().isDirty();
+            }
+
+            @Override
+            public String getFailureMessage() {
+                return "Editor is still dirty after the save.";
+            }
+        });
+        return this;
+    }
+
+    public BotGefFormDiagramEditor selectForm() {
+        gmfEditor.mainEditPart().select();
+        return this;
     }
 }

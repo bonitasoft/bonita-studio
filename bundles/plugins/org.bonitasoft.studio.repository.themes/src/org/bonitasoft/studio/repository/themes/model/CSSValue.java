@@ -28,83 +28,93 @@ import org.bonitasoft.studio.repository.themes.helper.CSSUtil;
  */
 public class CSSValue  implements CSSPropertyConstants,Cloneable{
 
-	private String rawValue ;
-	
-	public CSSValue(String value){
-		this.rawValue = value ;
-	}
-	
-	public String getRawValue(){
-		return rawValue ;
-	}
-	
-	/**
-	 * It seems that we can't use this, it doesn't handle the case: 45 px (see BorderCSSValue to have a working sample)
-	 * @param value
-	 * @param attribute
-	 * @return
-	 */
-	@Deprecated
-	protected boolean isWidth(String value,String attribute) {	
-		if(value.endsWith(PX_UNIT) 
-				|| value.endsWith(EM_UNIT)
-				|| value.endsWith(EX_UNIT) 
-				|| value.endsWith(PC_UNIT)
-				|| value.endsWith(IN_UNIT)
-				|| value.endsWith(CM_UNIT) 
-				|| value.endsWith(MM_UNIT)
-				|| value.endsWith(PT_UNIT)
-				|| value.endsWith(PERCENT_UNIT)){
-			return true ;
-		}
-		List<String> values = Arrays.asList(CSSUtil.getAvailableValuesFor(attribute)) ;
-		if(values.contains(value)){
-			return true ;
-		}
-		return false;
-	}
-	
-	protected boolean isBorderStyle(String value,String attribute) {
-		List<String> values = Arrays.asList(CSSUtil.getAvailableValuesFor(attribute)) ;
-		if(values.contains(value)){
-			return true ;
-		}
-		return false;
-	}
-	
-	/**
-	 * It seems that we can't use this, it doesn't handle the case: 45 px (see BorderCSSValue to have a working sample)
-	 * @param value
-	 * @param attribute
-	 * @return
-	 */
-	@Deprecated
-	protected boolean isColor(String value) {
-		if(CSSUtil.getCSSColors().keySet().contains(value)){
-			return true ;
-		}
-		if(value.startsWith("#")
-				|| value.startsWith("rgb(")){
-			return true ;
-		}
-		return false;
-	}
-	
-	@Override
-	public String toString() {
-		return getRawValue();
-	}
-	
-	@Override
-	public boolean equals(Object obj) {
-		if(obj instanceof CSSValue){
-			return this.toString().equals(obj.toString()) ;
-		}
-		return super.equals(obj);
-	}
-	
-	@Override
-	protected Object clone() throws CloneNotSupportedException {
-		return new CSSValue(getRawValue());
-	}
+    private final String rawValue ;
+
+    public CSSValue(final String value){
+        rawValue = value ;
+    }
+
+    public String getRawValue(){
+        return rawValue ;
+    }
+
+    /**
+     * It seems that we can't use this, it doesn't handle the case: 45 px (see BorderCSSValue to have a working sample)
+     * @param value
+     * @param attribute
+     * @return
+     */
+    @Deprecated
+    protected boolean isWidth(final String value,final String attribute) {
+        if(value.endsWith(PX_UNIT)
+                || value.endsWith(EM_UNIT)
+                || value.endsWith(EX_UNIT)
+                || value.endsWith(PC_UNIT)
+                || value.endsWith(IN_UNIT)
+                || value.endsWith(CM_UNIT)
+                || value.endsWith(MM_UNIT)
+                || value.endsWith(PT_UNIT)
+                || value.endsWith(PERCENT_UNIT)){
+            return true ;
+        }
+        final List<String> values = Arrays.asList(CSSUtil.getAvailableValuesFor(attribute)) ;
+        if(values.contains(value)){
+            return true ;
+        }
+        return false;
+    }
+
+    protected boolean isBorderStyle(final String value,final String attribute) {
+        final List<String> values = Arrays.asList(CSSUtil.getAvailableValuesFor(attribute)) ;
+        if(values.contains(value)){
+            return true ;
+        }
+        return false;
+    }
+
+    /**
+     * It seems that we can't use this, it doesn't handle the case: 45 px (see BorderCSSValue to have a working sample)
+     * @param value
+     * @param attribute
+     * @return
+     */
+    @Deprecated
+    protected boolean isColor(final String value) {
+        if(CSSUtil.getCSSColors().keySet().contains(value)){
+            return true ;
+        }
+        if(value.startsWith("#")
+                || value.startsWith("rgb(")){
+            return true ;
+        }
+        return false;
+    }
+
+    @Override
+    public String toString() {
+        return getRawValue();
+    }
+
+
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + (rawValue == null ? 0 : rawValue.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (obj instanceof CSSValue) {
+            return toString().equals(obj.toString());
+        }
+        return super.equals(obj);
+    }
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return new CSSValue(getRawValue());
+    }
 }

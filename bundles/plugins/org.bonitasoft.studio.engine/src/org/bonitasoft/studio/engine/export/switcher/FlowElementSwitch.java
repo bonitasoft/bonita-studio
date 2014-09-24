@@ -47,6 +47,7 @@ import org.bonitasoft.engine.operation.LeftOperand;
 import org.bonitasoft.engine.operation.LeftOperandBuilder;
 import org.bonitasoft.engine.operation.OperationBuilder;
 import org.bonitasoft.engine.operation.OperatorType;
+import org.bonitasoft.studio.common.DataUtil;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.TimerUtil;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
@@ -70,6 +71,7 @@ import org.bonitasoft.studio.model.process.Connection;
 import org.bonitasoft.studio.model.process.Correlation;
 import org.bonitasoft.studio.model.process.CorrelationTypeActive;
 import org.bonitasoft.studio.model.process.Data;
+import org.bonitasoft.studio.model.process.DataAware;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.EndErrorEvent;
 import org.bonitasoft.studio.model.process.EndEvent;
@@ -86,7 +88,8 @@ import org.bonitasoft.studio.model.process.IntermediateThrowMessageEvent;
 import org.bonitasoft.studio.model.process.IntermediateThrowSignalEvent;
 import org.bonitasoft.studio.model.process.Lane;
 import org.bonitasoft.studio.model.process.Message;
-import org.bonitasoft.studio.model.process.MultiInstantiation;
+import org.bonitasoft.studio.model.process.MultiInstanceType;
+import org.bonitasoft.studio.model.process.MultiInstantiable;
 import org.bonitasoft.studio.model.process.NonInterruptingBoundaryTimerEvent;
 import org.bonitasoft.studio.model.process.OperationContainer;
 import org.bonitasoft.studio.model.process.OutputMapping;
@@ -497,7 +500,7 @@ public class FlowElementSwitch extends AbstractSwitch {
 
     void addInputIfExpressionValid(final UserFilterDefinitionBuilder filterBuilder, final ConnectorParameter parameter) {
         final Expression expression = (Expression) parameter.getExpression();
-        if ((expression.getName() != null && !expression.getName().isEmpty()) && !(expression.getContent() == null || expression.getContent().isEmpty())) {
+        if (expression.getName() != null && !expression.getName().isEmpty() && !(expression.getContent() == null || expression.getContent().isEmpty())) {
             filterBuilder.addInput(parameter.getKey(), EngineExpressionUtil.createExpression(parameter.getExpression()));
         }
     }
@@ -630,7 +633,6 @@ public class FlowElementSwitch extends AbstractSwitch {
     protected void handleCommonActivity(final Activity activity, final ActivityDefinitionBuilder taskBuilder) {
         addData(taskBuilder, activity);
         addOperation(taskBuilder, activity);
-        addLoop(taskBuilder, activity);
         addConnector(taskBuilder, activity);
         addKPIBinding(taskBuilder, activity);
         addDisplayTitle(taskBuilder, activity);
@@ -669,47 +671,22 @@ public class FlowElementSwitch extends AbstractSwitch {
     }
 
     protected void addMultiInstantiation(final ActivityDefinitionBuilder taskBuilder, final Activity activity) {
-        if (activity.isIsMultiInstance()) {
-            final MultiInstantiation multiInstantiation = activity.getMultiInstantiation();
-            final Expression completionCondition = multiInstantiation.getCompletionCondition();
-            if (multiInstantiation.isUseCardinality()) {
-                final Expression cardinality = multiInstantiation.getCardinality();
-                if (cardinality != null && cardinality.getContent() != null && !cardinality.getContent().isEmpty()) {
-                    final MultiInstanceLoopCharacteristicsBuilder multiInstanceBuilder = taskBuilder.addMultiInstance(multiInstantiation.isSequential(),
-                            EngineExpressionUtil.createExpression(cardinality));
-                    if (completionCondition != null
-                            && completionCondition.getContent() != null
-                            && !completionCondition.getContent().isEmpty()) {
-                        multiInstanceBuilder.addCompletionCondition(EngineExpressionUtil.createExpression(completionCondition));
-                    }
-                }
-            } else {
-                final Data collectionDataToMultiInstantiate = multiInstantiation.getCollectionDataToMultiInstantiate();
-                if (collectionDataToMultiInstantiate != null) {
-                    final MultiInstanceLoopCharacteristicsBuilder multiInstanceBuilder = taskBuilder.addMultiInstance(multiInstantiation.isSequential(),
-                            collectionDataToMultiInstantiate.getName());
-                    if (completionCondition != null
-                            && completionCondition.getContent() != null
-                            && !completionCondition.getContent().isEmpty()) {
-                        multiInstanceBuilder.addCompletionCondition(EngineExpressionUtil.createExpression(completionCondition));
-                    }
-                    final Data inputData = multiInstantiation.getInputData();
-                    if (inputData != null) {
-                        multiInstanceBuilder.addDataInputItemRef(inputData.getName());
-                    }
-                    final Data outputData = multiInstantiation.getOutputData();
-                    if (outputData != null) {
-                        multiInstanceBuilder.addDataOutputItemRef(outputData.getName());
-                    }
-                    final Data listDataContainingOutputResults = multiInstantiation.getListDataContainingOutputResults();
-                    if (listDataContainingOutputResults != null) {
-                        multiInstanceBuilder.addLoopDataOutputRef(listDataContainingOutputResults.getName());
-                    }
-                }
-            }
-
+        final MultiInstanceType multiInstanceType = activity.getType();
+        switch (multiInstanceType) {
+            case NONE:
+                break;
+            case STANDARD:
+                addStandardLoop(taskBuilder, activity);
+                break;
+            case PARALLEL:
+            case SEQUENTIAL:
+                configureMultiInstantiation(taskBuilder, activity);
+                break;
+            default:
+                break;
         }
     }
+
 
     protected void addExpectedDuration(final UserTaskDefinitionBuilder taskBuilder, final Task task) {
         final String duration = task.getDuration();
@@ -799,12 +776,84 @@ public class FlowElementSwitch extends AbstractSwitch {
         }
     }
 
-    protected void addLoop(final ActivityDefinitionBuilder builder, final Activity activity) {
-        if (activity.getIsLoop()) {
-            if (activity.getLoopCondition() != null) {
-                builder.addLoop(activity.getTestBefore(), EngineExpressionUtil.createExpression(activity.getLoopCondition()),
-                        EngineExpressionUtil.createExpression(activity.getLoopMaximum()));
+
+    protected void addStandardLoop(final ActivityDefinitionBuilder builder, final MultiInstantiable multiInstantiable) {
+        builder.addLoop(multiInstantiable.getTestBefore(), EngineExpressionUtil.createExpression(multiInstantiable.getLoopCondition()),
+                EngineExpressionUtil.createExpression(multiInstantiable.getLoopMaximum()));
+    }
+
+    protected void configureMultiInstantiation(final ActivityDefinitionBuilder taskBuilder, final MultiInstantiable activity) {
+        final Expression completionCondition = activity.getCompletionCondition();
+        if (activity.isUseCardinality()) {
+            final Expression cardinality = activity.getCardinalityExpression();
+            if (cardinality != null && cardinality.getContent() != null && !cardinality.getContent().isEmpty()) {
+                final MultiInstanceLoopCharacteristicsBuilder multiInstanceBuilder = taskBuilder.addMultiInstance(
+                        activity.getType() == MultiInstanceType.SEQUENTIAL,
+                        EngineExpressionUtil.createExpression(cardinality));
+                if (completionCondition != null
+                        && completionCondition.getContent() != null
+                        && !completionCondition.getContent().isEmpty()) {
+                    multiInstanceBuilder.addCompletionCondition(EngineExpressionUtil.createExpression(completionCondition));
+                }
+                if (activity.isStoreOutput()) {
+                    final Data outputData = activity.getOutputData();
+                    if (outputData != null) {
+                        multiInstanceBuilder.addDataOutputItemRef(outputData.getName());
+                    }
+                    final Data listDataContainingOutputResults = activity.getListDataContainingOutputResults();
+                    if (listDataContainingOutputResults != null) {
+                        multiInstanceBuilder.addLoopDataOutputRef(listDataContainingOutputResults.getName());
+                    }
+                }
             }
+        } else {
+            final Data collectionDataToMultiInstantiate = activity.getCollectionDataToMultiInstantiate();
+            final Expression iteratorExpression = activity.getIteratorExpression();
+            if (ExpressionConstants.MULTIINSTANCE_ITERATOR_TYPE.equals(iteratorExpression.getType())
+                    && iteratorExpression.getName() != null
+                    && !iteratorExpression.getName().isEmpty()
+                    && activity instanceof DataAware) {
+                addDataForMultiInstanceIterator(taskBuilder, iteratorExpression, collectionDataToMultiInstantiate);
+            }
+            if (collectionDataToMultiInstantiate != null) {
+                final MultiInstanceLoopCharacteristicsBuilder multiInstanceBuilder = taskBuilder.addMultiInstance(
+                        activity.getType() == MultiInstanceType.SEQUENTIAL,
+                        collectionDataToMultiInstantiate.getName());
+                if (completionCondition != null
+                        && completionCondition.getContent() != null
+                        && !completionCondition.getContent().isEmpty()) {
+                    multiInstanceBuilder.addCompletionCondition(EngineExpressionUtil.createExpression(completionCondition));
+                }
+
+                if (iteratorExpression != null && iteratorExpression.getName() != null && !iteratorExpression.getName().isEmpty()) {
+                    multiInstanceBuilder.addDataInputItemRef(iteratorExpression.getName());
+                }
+                if (activity.isStoreOutput()) {
+                    final Data outputData = activity.getOutputData();
+                    if (outputData != null) {
+                        multiInstanceBuilder.addDataOutputItemRef(outputData.getName());
+                    }
+                    final Data listDataContainingOutputResults = activity.getListDataContainingOutputResults();
+                    if (listDataContainingOutputResults != null) {
+                        multiInstanceBuilder.addLoopDataOutputRef(listDataContainingOutputResults.getName());
+                    }
+                }
+
+            }
+        }
+    }
+
+    protected void addDataForMultiInstanceIterator(final ActivityDefinitionBuilder taskBuilder, final Expression iteratorExpression,
+            final Data collectionDataToMultiInstantiate) {
+        final FlowElement parentFlowElement = ModelHelper.getParentFlowElement(iteratorExpression);
+        boolean dataAlreadyExists = false;
+        for (final Data d : ((DataAware) parentFlowElement).getData()) {
+            if (d.getName().equals(iteratorExpression.getName()) && DataUtil.getTechnicalTypeFor(d).equals(iteratorExpression.getReturnType())) {
+                dataAlreadyExists = true;
+            }
+        }
+        if (!dataAlreadyExists) {
+            taskBuilder.addData(iteratorExpression.getName(), iteratorExpression.getReturnType(), null);
         }
     }
 

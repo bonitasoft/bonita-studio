@@ -5,12 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -102,7 +102,7 @@ import org.xml.sax.InputSource;
 
 /**
  * @author Romain Bioteau
- * 
+ *
  */
 public class Repository implements IRepository {
 
@@ -147,9 +147,8 @@ public class Repository implements IRepository {
 
             }
             initRepositoryStores();
-            if (!projectExists) {
-                initClasspath(project);
-            }
+            refreshClasspath(project);
+
             enableBuild();
             try {
                 getProject().build(IncrementalProjectBuilder.FULL_BUILD, NULL_PROGRESS_MONITOR);
@@ -402,7 +401,7 @@ public class Repository implements IRepository {
         return project.findMember(".classpath") != null;
     }
 
-    protected void initClasspath(final IProject extensionsProject) throws CoreException {
+    protected void refreshClasspath(final IProject extensionsProject) throws CoreException {
         monitorSubtask(Messages.initializingProjectClasspath);
         createProjectManifest(extensionsProject);
 
@@ -416,6 +415,7 @@ public class Repository implements IRepository {
         } catch (final IOException e) {
             throw new RuntimeException(e);
         }
+        BonitaStudioLog.debug("Updating build path...", CommonRepositoryPlugin.PLUGIN_ID);
         javaProject.setRawClasspath(entries.toArray(new IClasspathEntry[entries.size()]), true, Repository.NULL_PROGRESS_MONITOR);
         monitorWorked(1);
     }
@@ -719,7 +719,7 @@ public class Repository implements IRepository {
         final List<URL> jars = new ArrayList<URL>();
         try {
             if (!classpathExists()) {
-                initClasspath(getProject());
+                refreshClasspath(getProject());
             }
 
             // Synchronize with build jobs
@@ -805,7 +805,7 @@ public class Repository implements IRepository {
         if (classpathFile.exists()) {
             classpathFile.delete(true, false, NULL_PROGRESS_MONITOR);
         }
-        initClasspath(project);
+        refreshClasspath(project);
     }
 
     public void setProgressMonitor(final IProgressMonitor monitor) {
