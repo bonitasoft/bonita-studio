@@ -20,8 +20,8 @@ import org.eclipse.swtbot.swt.finder.waits.Conditions;
  */
 public abstract class BotWizardDialog extends BotDialog {
 
-    public BotWizardDialog(final SWTGefBot bot) {
-        super(bot);
+    public BotWizardDialog(final SWTGefBot bot, final String dialogTitle) {
+        super(bot, dialogTitle);
     }
 
     /**

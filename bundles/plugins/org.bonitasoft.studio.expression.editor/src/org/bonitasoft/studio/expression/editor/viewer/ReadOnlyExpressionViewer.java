@@ -151,7 +151,8 @@ public class ReadOnlyExpressionViewer extends ExpressionViewer {
             parent = expressionNatureProvider.getContext();
         }
         if (parent instanceof Operation) {
-            if (ExpressionPackage.Literals.OPERATION__LEFT_OPERAND.equals(getExpressionReference())) {
+            final Expression selectedExpression = getSelectedExpression();
+            if (selectedExpression != null && ExpressionPackage.Literals.OPERATION__LEFT_OPERAND.equals(selectedExpression.eContainingFeature())) {
                 final Operator operator = ((Operation) parent).getOperator();
                 final String newOperatorType = updateOperatorType(cc, operator, copy);
                 updateRightOperand(cc, ((Operation) parent), newOperatorType);
@@ -162,7 +163,7 @@ public class ReadOnlyExpressionViewer extends ExpressionViewer {
     private String updateOperatorType(final CompoundCommand cc, final Operator operator, final Expression storageExpression) {
         final String newOperatorType = getNewOperatorTypeFor(operator, storageExpression);
         if (!operator.getType().equals(newOperatorType)) {
-            cc.append(SetCommand.create(editingDomain, operator, ExpressionPackage.Literals.OPERATOR__TYPE,
+            cc.append(SetCommand.create(getEditingDomain(), operator, ExpressionPackage.Literals.OPERATOR__TYPE,
                     newOperatorType));
         }
         return newOperatorType;
@@ -227,14 +228,14 @@ public class ReadOnlyExpressionViewer extends ExpressionViewer {
 
     protected void appendCommandToScriptType(final CompoundCommand cc, final Expression right) {
         cc.append(
-                SetCommand.create(editingDomain, right, ExpressionPackage.Literals.EXPRESSION__TYPE, ExpressionConstants.SCRIPT_TYPE));
+                SetCommand.create(getEditingDomain(), right, ExpressionPackage.Literals.EXPRESSION__TYPE, ExpressionConstants.SCRIPT_TYPE));
         cc.append(
-                SetCommand.create(editingDomain, right, ExpressionPackage.Literals.EXPRESSION__INTERPRETER, ExpressionConstants.GROOVY));
+                SetCommand.create(getEditingDomain(), right, ExpressionPackage.Literals.EXPRESSION__INTERPRETER, ExpressionConstants.GROOVY));
     }
 
     protected void appendCommandToSetReturnType(final CompoundCommand cc, final Expression right, final String newReturnType) {
         cc.append(
-                SetCommand.create(editingDomain, right, ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE, newReturnType));
+                SetCommand.create(getEditingDomain(), right, ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE, newReturnType));
     }
 
     private boolean isPrimitiveType(final String returnType) {

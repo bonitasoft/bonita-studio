@@ -15,6 +15,7 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Widget;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
+import org.eclipse.swtbot.swt.finder.exceptions.WidgetNotFoundException;
 import org.eclipse.swtbot.swt.finder.matchers.WidgetMatcherFactory;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
 import org.eclipse.swtbot.swt.finder.waits.WaitForObjectCondition;
@@ -27,15 +28,12 @@ import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
  */
 public class BotDialog extends BotBase {
 
-    private String dialogTitle;
+    private final String dialogTitle;
 
-    public BotDialog(final SWTGefBot bot) {
+    public BotDialog(final SWTGefBot bot, final String dialogTitle) {
         super(bot);
-    }
-
-    public BotDialog(final SWTGefBot bot, final String title) {
-        super(bot);
-        dialogTitle = title;
+        this.dialogTitle = dialogTitle;
+        bot.waitUntil(Conditions.shellIsActive(dialogTitle));
     }
 
     /**
@@ -50,10 +48,11 @@ public class BotDialog extends BotBase {
      * Click on Cancel.
      */
     public void cancel() {
-        if(dialogTitle != null && !dialogTitle.isEmpty()){
+        if (dialogTitle != null && !dialogTitle.isEmpty()) {
             final SWTBotShell shell = bot.shell(dialogTitle);
             shell.setFocus();
-            final WaitForObjectCondition<Widget> waitForWidgetCondition = Conditions.waitForWidget(WidgetMatcherFactory.withMnemonic(IDialogConstants.CANCEL_LABEL), shell.widget);
+            final WaitForObjectCondition<Widget> waitForWidgetCondition = Conditions.waitForWidget(
+                    WidgetMatcherFactory.withMnemonic(IDialogConstants.CANCEL_LABEL), shell.widget);
             bot.waitUntil(waitForWidgetCondition, 10000, 100);
             final List<Widget> allMatches = waitForWidgetCondition.getAllMatches();
             if (!allMatches.isEmpty()) {
@@ -84,9 +83,9 @@ public class BotDialog extends BotBase {
         return dialogTitle;
     }
 
- /**
+    /**
      * Return true if the message is found in the dialog.
-     * 
+     *
      * @param pMessage
      * @return
      */

@@ -85,4 +85,9 @@ public class DocumentProposalListener implements IProposalListener {
     public void setIsOverviewContext(final boolean isOverviewContext) {
     }
 
+    @Override
+    public boolean isRelevant(final EObject context) {
+        return true;
+    }
+
 }

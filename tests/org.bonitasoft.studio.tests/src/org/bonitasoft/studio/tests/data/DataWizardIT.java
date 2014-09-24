@@ -37,7 +37,7 @@ import org.bonitasoft.studio.swtbot.framework.diagram.BotProcessDiagramPerspecti
 import org.bonitasoft.studio.swtbot.framework.diagram.BotProcessDiagramPropertiesViewFolder;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.data.BotAddDataWizardPage;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.data.BotDataPropertySection;
-import org.bonitasoft.studio.swtbot.framework.diagram.general.data.BotEditDataWizardPage;
+import org.bonitasoft.studio.swtbot.framework.diagram.general.data.BotEditDataDialog;
 import org.bonitasoft.studio.swtbot.framework.expression.BotExpressionEditorDialog;
 import org.bonitasoft.studio.swtbot.framework.widget.BotTableWidget;
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
@@ -343,7 +343,7 @@ public class DataWizardIT extends SWTBotGefTestCase {
 
         // Test on var varS1_1
         botDataPropertySection.dataList().select("varS1_1" + " -- " + "Text");
-        BotEditDataWizardPage editDataWizardPage = botDataPropertySection.edit();
+        BotEditDataDialog editDataWizardPage = botDataPropertySection.edit();
         BotExpressionEditorDialog editDefaultValueExpression = editDataWizardPage.editDefaultValueExpression();
         BotTableWidget variableList = editDefaultValueExpression.selectVariableTab().variableList();
 

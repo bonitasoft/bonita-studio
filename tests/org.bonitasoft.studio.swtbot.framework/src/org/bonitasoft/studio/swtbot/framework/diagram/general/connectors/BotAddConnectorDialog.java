@@ -28,13 +28,7 @@ import org.eclipse.swtbot.swt.finder.widgets.SWTBotText;
 public class BotAddConnectorDialog extends BotWizardDialog {
 
     public BotAddConnectorDialog(final SWTGefBot bot) {
-        super(bot);
-    }
-
-    @Override
-    protected void waitShell() {
-        bot.waitUntil(Conditions.shellIsActive(Messages.connectors));
-        bot.shell(Messages.connectors);
+        super(bot, Messages.connectors);
     }
 
     //public void selectConnectorCategory(final String pCategory) {
@@ -169,7 +163,6 @@ public class BotAddConnectorDialog extends BotWizardDialog {
         bot.button(IDialogConstants.NEXT_LABEL).click();
         return this;
     }
-
 
     /**
      * Switch editor for the query

@@ -10,28 +10,21 @@ package org.bonitasoft.studio.swtbot.framework.diagram.general.documents;
 
 import org.bonitasoft.studio.document.i18n.Messages;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
-import org.eclipse.swtbot.swt.finder.waits.Conditions;
 
 /**
  * Edit document dialog.
- * 
+ *
  * @author Joachim Segala
  */
 public class BotEditDocumentDialog extends BotAddDocumentDialog {
 
     public BotEditDocumentDialog(final SWTGefBot bot) {
-        super(bot);
-    }
-
-    @Override
-    protected void waitShell() {
-        bot.waitUntil(Conditions.shellIsActive(Messages.editDocument));
-        bot.shell(Messages.editDocument);
+        super(bot, Messages.editDocument);
     }
 
     /**
      * Get the document name.
-     * 
+     *
      * @return
      */
     public String getName() {
@@ -40,7 +33,7 @@ public class BotEditDocumentDialog extends BotAddDocumentDialog {
 
     /**
      * Get the document desciption.
-     * 
+     *
      * @return
      */
     public String getDescription() {

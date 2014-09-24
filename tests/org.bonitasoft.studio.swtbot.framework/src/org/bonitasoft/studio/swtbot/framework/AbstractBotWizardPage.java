@@ -18,7 +18,7 @@ import org.eclipse.swtbot.swt.finder.waits.Conditions;
  *
  * @author Joachim Segala
  */
-public abstract class AbstractBotWizardPage extends BotDialog {
+public abstract class AbstractBotWizardPage extends BotBase {
 
     public AbstractBotWizardPage(final SWTGefBot bot) {
         super(bot);
