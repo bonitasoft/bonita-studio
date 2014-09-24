@@ -22,20 +22,14 @@ import org.bonitasoft.studio.model.form.FileWidget;
 import org.bonitasoft.studio.model.form.FormField;
 import org.bonitasoft.studio.model.form.Group;
 import org.bonitasoft.studio.model.form.Widget;
-import org.eclipse.swt.widgets.Control;
 
 public class ReadOnlyCheckboxLabelProvider extends AbstractCheckboxLabelProvider {
-
-
-	public ReadOnlyCheckboxLabelProvider(Control control) {
-		super(control);
-	}
 
 	/* (non-Javadoc)
 	 * @see org.bonitasoft.studio.common.jface.AbstractCheckboxLabelProvider#isSelected(java.lang.Object)
 	 */
 	@Override
-	protected boolean isSelected(Object element) {
+	protected boolean isSelected(final Object element) {
 		if(element instanceof WidgetMapping){
 			return ((WidgetMapping) element).isReadOnly();
 		}
@@ -46,8 +40,8 @@ public class ReadOnlyCheckboxLabelProvider extends AbstractCheckboxLabelProvider
 	 * @see org.bonitasoft.studio.common.jface.AbstractCheckboxLabelProvider#isEnabled(java.lang.Object)
 	 */
 	@Override
-	protected boolean isEnabled(Object element) {
-		Widget widget = ((WidgetMapping) element).getWidgetType();
+	protected boolean isEnabled(final Object element) {
+		final Widget widget = ((WidgetMapping) element).getWidgetType();
 		return (widget instanceof FormField || widget instanceof Group) && !(widget instanceof FileWidget);
 	}
 	

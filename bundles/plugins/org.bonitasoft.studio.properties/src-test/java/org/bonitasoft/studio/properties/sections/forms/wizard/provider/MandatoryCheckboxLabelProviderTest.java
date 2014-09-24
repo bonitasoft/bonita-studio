@@ -21,7 +21,6 @@ import static org.fest.assertions.Assertions.assertThat;
 import org.bonitasoft.studio.diagram.form.custom.model.WidgetMapping;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.ProcessFactory;
-import org.bonitasoft.studio.properties.sections.forms.wizard.provider.MandatoryCheckboxLabelProvider;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,42 +31,42 @@ import org.junit.Test;
  */
 public class MandatoryCheckboxLabelProviderTest {
 
-	private MandatoryCheckboxLabelProvider mandatoryCheckboxLabelProvider;
+    private MandatoryCheckboxLabelProvider mandatoryCheckboxLabelProvider;
 
-	/**
-	 * @throws java.lang.Exception
-	 */
-	@Before
-	public void setUp() throws Exception {
-		mandatoryCheckboxLabelProvider = new MandatoryCheckboxLabelProvider(null);
-	}
+    /**
+     * @throws java.lang.Exception
+     */
+    @Before
+    public void setUp() throws Exception {
+        mandatoryCheckboxLabelProvider = new MandatoryCheckboxLabelProvider();
+    }
 
-	/**
-	 * @throws java.lang.Exception
-	 */
-	@After
-	public void tearDown() throws Exception {
-	}
+    /**
+     * @throws java.lang.Exception
+     */
+    @After
+    public void tearDown() throws Exception {
+    }
 
-	
-	@Test
-	public void shouldIsSelected_ReturnTrue() throws Exception {
-		Data data = ProcessFactory.eINSTANCE.createData();
-		data.setDataType(ProcessFactory.eINSTANCE.createBooleanType());
-		WidgetMapping mapping = new WidgetMapping(data);
-		mapping.setMandatory(true);
-		assertThat(mandatoryCheckboxLabelProvider.isSelected(mapping)).isTrue();
-	}
-	
-	@Test
-	public void shouldIsSelected_ReturnFalse() throws Exception {
-		Data data = ProcessFactory.eINSTANCE.createData();
-		data.setDataType(ProcessFactory.eINSTANCE.createBooleanType());
-		WidgetMapping mapping = new WidgetMapping(data);
-		mapping.setMandatory(false);
-		assertThat(mandatoryCheckboxLabelProvider.isSelected(mapping)).isFalse();
-		assertThat(mandatoryCheckboxLabelProvider.isSelected(new Object())).isFalse();
-		assertThat(mandatoryCheckboxLabelProvider.isSelected(null)).isFalse();
-	}
+
+    @Test
+    public void shouldIsSelected_ReturnTrue() throws Exception {
+        final Data data = ProcessFactory.eINSTANCE.createData();
+        data.setDataType(ProcessFactory.eINSTANCE.createBooleanType());
+        final WidgetMapping mapping = new WidgetMapping(data);
+        mapping.setMandatory(true);
+        assertThat(mandatoryCheckboxLabelProvider.isSelected(mapping)).isTrue();
+    }
+
+    @Test
+    public void shouldIsSelected_ReturnFalse() throws Exception {
+        final Data data = ProcessFactory.eINSTANCE.createData();
+        data.setDataType(ProcessFactory.eINSTANCE.createBooleanType());
+        final WidgetMapping mapping = new WidgetMapping(data);
+        mapping.setMandatory(false);
+        assertThat(mandatoryCheckboxLabelProvider.isSelected(mapping)).isFalse();
+        assertThat(mandatoryCheckboxLabelProvider.isSelected(new Object())).isFalse();
+        assertThat(mandatoryCheckboxLabelProvider.isSelected(null)).isFalse();
+    }
 
 }
