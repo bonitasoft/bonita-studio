@@ -45,7 +45,32 @@ public abstract class AbstractCheckboxLabelProvider extends StyledCellLabelProvi
 
     protected static final String DISABLED_UNCHECKED_KEY = "uncheckKeyDisabled";// NON-NLS-1
 
-    public AbstractCheckboxLabelProvider() {
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.jface.viewers.ILabelProvider#getImage(java.lang.Object)
+     */
+    @Override
+    public Image getImage(final Object element) {
+        if (isSelected(element)) {
+            if (isEnabled(element)) {
+                return getCheckboxImage(CHECKED_KEY);
+            } else {
+                return getCheckboxImage(DISABLED_CHECKED_KEY);
+            }
+
+        }
+        return isEnabled(element) ? getCheckboxImage(UNCHECK_KEY) : getCheckboxImage(DISABLED_UNCHECKED_KEY);
+    }
+
+    protected Image getCheckboxImage(final String key) {
+        final Image image = JFaceResources.getImage(key);
+        if (image == null) {
+            loadImages();
+        }
+        return JFaceResources.getImage(key);
+    }
+
+    protected void loadImages() {
         if (JFaceResources.getImageRegistry().getDescriptor(UNCHECK_KEY) == null) {
             JFaceResources.getImageRegistry().put(UNCHECK_KEY,
                     makeShot(false, true));
@@ -62,23 +87,6 @@ public abstract class AbstractCheckboxLabelProvider extends StyledCellLabelProvi
             JFaceResources.getImageRegistry().put(DISABLED_UNCHECKED_KEY,
                     makeShot(false, false));
         }
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jface.viewers.ILabelProvider#getImage(java.lang.Object)
-     */
-    @Override
-    public Image getImage(final Object element) {
-        if (isSelected(element)) {
-            if (isEnabled(element)) {
-                return JFaceResources.getImage(CHECKED_KEY);
-            } else {
-                return JFaceResources.getImage(DISABLED_CHECKED_KEY);
-            }
-
-        }
-        return isEnabled(element) ? JFaceResources.getImage(UNCHECK_KEY) : JFaceResources.getImage(DISABLED_UNCHECKED_KEY);
     }
 
     /*
