@@ -29,9 +29,8 @@ public class DocumentProposalListener implements IProposalListener {
     @Override
     public String handleEvent(final EObject context, final String fixedReturnType) {
         Assert.isNotNull(context);
-        final DocumentWizard documentWizard = new DocumentWizard(context);
-        final Dialog documentWizardDialog = new DocumentWizardDialog(Display.getCurrent().getActiveShell().getParent().getShell(),
-                documentWizard, false);
+        final DocumentWizard documentWizard = createDocumentWizard(context);
+        final Dialog documentWizardDialog = createDocumentWizardDialog(documentWizard);
         if (documentWizardDialog.open() == Dialog.OK) {
             final Document document = documentWizard.getDocument();
             if (document != null) {
@@ -39,6 +38,15 @@ public class DocumentProposalListener implements IProposalListener {
             }
         }
         return null;
+    }
+
+    protected DocumentWizard createDocumentWizard(final EObject context) {
+        return new DocumentWizard(context);
+    }
+
+    protected DocumentWizardDialog createDocumentWizardDialog(final DocumentWizard documentWizard) {
+        return new DocumentWizardDialog(Display.getCurrent().getActiveShell().getParent().getShell(),
+                documentWizard, false);
     }
 
     /*
