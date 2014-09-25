@@ -21,6 +21,8 @@ import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+import java.util.List;
+
 import org.bonitasoft.engine.bpm.document.DocumentValue;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
@@ -28,6 +30,8 @@ import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.expression.Operation;
 import org.bonitasoft.studio.model.expression.Operator;
+import org.bonitasoft.studio.model.process.Document;
+import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -46,6 +50,26 @@ public class ReadOnlyExpressionViewerTest {
         final String newStorageType = ExpressionConstants.DOCUMENT_REF_TYPE;
         final String expectedOperator = ExpressionConstants.SET_DOCUMENT_OPERATOR;
         testGetNewOperatorTypeFor(currentOperatorType, newStorageType, expectedOperator);
+    }
+
+    @Test
+    public void testGetNewOperatorTypeForAssignmentToDocumentList() {
+        final String currentOperatorType = ExpressionConstants.ASSIGNMENT_OPERATOR;
+        final String newStorageType = ExpressionConstants.DOCUMENT_REF_TYPE;
+        final String expectedOperator = ExpressionConstants.SET_LIST_DOCUMENT_OPERATOR;
+        doCallRealMethod().when(roew).getNewOperatorTypeFor(any(Operator.class), any(Expression.class));
+
+        final Operator currentOperator = ExpressionFactory.eINSTANCE.createOperator();
+        currentOperator.setType(currentOperatorType);
+        final Expression newStorageExpression = ExpressionFactory.eINSTANCE.createExpression();
+        newStorageExpression.setType(newStorageType);
+        final Document documentReferenced = ProcessFactory.eINSTANCE.createDocument();
+        documentReferenced.setMultiple(true);
+        newStorageExpression.getReferencedElements().add(documentReferenced);
+
+        final String newOperatorType = roew.getNewOperatorTypeFor(currentOperator, newStorageExpression);
+
+        assertThat(newOperatorType).isEqualTo(expectedOperator);
     }
 
     @Test
@@ -130,6 +154,10 @@ public class ReadOnlyExpressionViewerTest {
         currentOperator.setType(currentOperatorType);
         final Expression newStorageExpression = ExpressionFactory.eINSTANCE.createExpression();
         newStorageExpression.setType(newStorageType);
+        if (ExpressionConstants.DOCUMENT_REF_TYPE.equals(newStorageType)) {
+            final Document documentReferenced = ProcessFactory.eINSTANCE.createDocument();
+            newStorageExpression.getReferencedElements().add(documentReferenced);
+        }
 
         final String newOperatorType = roew.getNewOperatorTypeFor(currentOperator, newStorageExpression);
 
@@ -148,6 +176,23 @@ public class ReadOnlyExpressionViewerTest {
         roew.updateRightOperand(new CompoundCommand(), operation, ExpressionConstants.SET_DOCUMENT_OPERATOR);
 
         verify(roew).appendCommandToSetReturnType(any(CompoundCommand.class), any(Expression.class), eq(DocumentValue.class.getName()));
+    }
+
+    @Test
+    public void testUpdateRightOperandWithDocumentMultiple() {
+        doCallRealMethod().when(roew).updateRightOperand(any(CompoundCommand.class), any(Operation.class), any(String.class));
+
+        final Operation operation = ExpressionFactory.eINSTANCE.createOperation();
+        final Expression oldRightOperand = ExpressionFactory.eINSTANCE.createExpression();
+        operation.setRightOperand(oldRightOperand);
+        final Expression leftOperand = ExpressionFactory.eINSTANCE.createExpression();
+        final Document documentReferenced = ProcessFactory.eINSTANCE.createDocument();
+        documentReferenced.setMultiple(true);
+        leftOperand.getReferencedElements().add(documentReferenced);
+        operation.setLeftOperand(leftOperand);
+        roew.updateRightOperand(new CompoundCommand(), operation, ExpressionConstants.SET_LIST_DOCUMENT_OPERATOR);
+
+        verify(roew).appendCommandToSetReturnType(any(CompoundCommand.class), any(Expression.class), eq(List.class.getName()));
     }
 
     @Test

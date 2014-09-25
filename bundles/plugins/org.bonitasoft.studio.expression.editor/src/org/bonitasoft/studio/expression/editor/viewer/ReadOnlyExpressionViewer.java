@@ -15,6 +15,7 @@
 package org.bonitasoft.studio.expression.editor.viewer;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.bonitasoft.engine.bpm.document.DocumentValue;
@@ -31,6 +32,7 @@ import org.bonitasoft.studio.model.expression.Operation;
 import org.bonitasoft.studio.model.expression.Operator;
 import org.bonitasoft.studio.model.process.Connector;
 import org.bonitasoft.studio.model.process.Data;
+import org.bonitasoft.studio.model.process.Document;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.runtime.CoreException;
@@ -173,23 +175,32 @@ public class ReadOnlyExpressionViewer extends ExpressionViewer {
         String newOperatorType = currentOperatorType;
         final String storageExpressionType = newStorageExpression.getType();
         if (ExpressionConstants.DOCUMENT_REF_TYPE.equals(storageExpressionType)) {
-            if (!isDocumentOperator(currentOperatorType)) {
+            final Document documentReferenced = (Document) newStorageExpression.getReferencedElements().get(0);
+            if (!documentReferenced.isMultiple() && !isDocumentSimpleOperator(currentOperatorType)) {
                 newOperatorType = ExpressionConstants.SET_DOCUMENT_OPERATOR;
+            } else if (documentReferenced.isMultiple() && !isDocumentMultipleOperator(currentOperatorType)) {
+                newOperatorType = ExpressionConstants.SET_LIST_DOCUMENT_OPERATOR;
             }
         } else if (ExpressionConstants.BUSINESS_DATA_TYPE.equals(storageExpressionType)) {
             if (!isBusinessDataOperator(currentOperatorType)) {
                 newOperatorType = ExpressionConstants.BUSINESS_DATA_JAVA_SETTER_OPERATOR;
             }
         } else {
-            if (isDocumentOperator(currentOperatorType) || isBusinessDataOperator(currentOperatorType)) {
+            if (isDocumentSimpleOperator(currentOperatorType)
+                    || isDocumentMultipleOperator(currentOperatorType)
+                    || isBusinessDataOperator(currentOperatorType)) {
                 newOperatorType = ExpressionConstants.ASSIGNMENT_OPERATOR;
             }
         }
         return newOperatorType;
     }
 
-    private boolean isDocumentOperator(final String currentOperatorType) {
+    private boolean isDocumentSimpleOperator(final String currentOperatorType) {
         return ExpressionConstants.SET_DOCUMENT_OPERATOR.equals(currentOperatorType);
+    }
+
+    private boolean isDocumentMultipleOperator(final String currentOperatorType) {
+        return ExpressionConstants.SET_LIST_DOCUMENT_OPERATOR.equals(currentOperatorType);
     }
 
     private boolean isBusinessDataOperator(final String currentOperatorType) {
@@ -214,15 +225,28 @@ public class ReadOnlyExpressionViewer extends ExpressionViewer {
             } else if (canSwitchToDocumentValueWithGroovyScript(newOperatorType, right)) {
                 appendCommandToSetReturnType(cc, right, DocumentValue.class.getName());
                 appendCommandToScriptType(cc, right);
+            } else if (canSwitchToListWithGroovyScript(newOperatorType, right)) {
+                appendCommandToSetReturnType(cc, right, List.class.getName());
+                appendCommandToScriptType(cc, right);
             }
         }
     }
 
+    private boolean canSwitchToListWithGroovyScript(final String newOperatorType, final Expression right) {
+        return isDocumentMultipleOperator(newOperatorType)
+                && !List.class.getName().equals(right.getReturnType())
+                && isExpressionEmpty(right);
+    }
+
     private boolean canSwitchToDocumentValueWithGroovyScript(final String newOperatorType, final Expression right) {
-        return isDocumentOperator(newOperatorType)
+        return isDocumentSimpleOperator(newOperatorType)
                 && !DocumentValue.class.getName().equals(right.getReturnType())
-                && (right.getName() == null
-                || right.getName().isEmpty() && right.getContent() == null || right.getContent().isEmpty());
+                && isExpressionEmpty(right);
+    }
+
+    private boolean isExpressionEmpty(final Expression right) {
+        return right.getName() == null
+                || right.getName().isEmpty() && right.getContent() == null || right.getContent().isEmpty();
     }
 
     protected void appendCommandToScriptType(final CompoundCommand cc, final Expression right) {
