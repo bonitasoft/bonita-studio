@@ -370,7 +370,7 @@ public class FormsExporter {
 
     /**
      * Add all the Task on the tag activities.
-     * 
+     *
      * @param studioProcess
      * @param builder
      * @throws InvalidFormDefinitionException
@@ -400,7 +400,7 @@ public class FormsExporter {
 
     /**
      * This add a task in the forms.xml, the tag for it is activity...
-     * 
+     *
      * @param task
      * @param builder
      * @throws InvalidFormDefinitionException
@@ -852,7 +852,7 @@ public class FormsExporter {
 
     /**
      * Add each widget
-     * 
+     *
      * @param f
      * @param builder
      * @throws InvalidFormDefinitionException
@@ -1327,7 +1327,7 @@ public class FormsExporter {
 
     /**
      * add the horizontal header of the table
-     * 
+     *
      * @param table
      * @param builder
      * @throws InvalidFormDefinitionException
@@ -1407,7 +1407,7 @@ public class FormsExporter {
 
     /**
      * add the vertical header of the table
-     * 
+     *
      * @param table
      * @param builder
      * @throws InvalidFormDefinitionException
@@ -1447,7 +1447,7 @@ public class FormsExporter {
 
     /**
      * add the available values of the table
-     * 
+     *
      * @param table
      * @param builder
      * @throws InvalidFormDefinitionException
@@ -1554,7 +1554,7 @@ public class FormsExporter {
 
     /**
      * add the initial value of the table
-     * 
+     *
      * @param widget
      * @param builder
      * @throws InvalidFormDefinitionException
@@ -1888,7 +1888,7 @@ public class FormsExporter {
      * The initial value for SingleValuatedFormField is the value returned by
      * the input Groovy Script. In case of MultipleValuatedField, it is the
      * defaultValue.
-     * 
+     *
      * @param widget
      * @param builder
      * @throws InvalidFormDefinitionException
@@ -1927,7 +1927,7 @@ public class FormsExporter {
 
     /**
      * Set available values for multiplevaluated widget.
-     * 
+     *
      * @param widget
      * @param builder
      * @throws InvalidFormDefinitionException
@@ -2150,7 +2150,7 @@ public class FormsExporter {
 
     /**
      * Add all form page relative to a studio process.
-     * 
+     *
      * @param entryPageFlow
      * @param builder
      * @throws InvalidFormDefinitionException
