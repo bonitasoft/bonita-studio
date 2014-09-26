@@ -1,4 +1,4 @@
-/**
+**
  * Copyright (C) 2014 Bonitasoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
@@ -535,3 +535,4 @@ public class DocumentWizardPage extends WizardPage {
     }
 }
 
+}
