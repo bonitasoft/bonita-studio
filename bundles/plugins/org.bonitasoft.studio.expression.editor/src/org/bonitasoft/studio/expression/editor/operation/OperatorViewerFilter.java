@@ -28,7 +28,7 @@ import org.eclipse.jface.viewers.ViewerFilter;
 /**
  * @author Aurelien Pupier
  */
-final class OperatorViewerFilter extends ViewerFilter {
+public final class OperatorViewerFilter extends ViewerFilter {
 
     private final Operation operation;
 
