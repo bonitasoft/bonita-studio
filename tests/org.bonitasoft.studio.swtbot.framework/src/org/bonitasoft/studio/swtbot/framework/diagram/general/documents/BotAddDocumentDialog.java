@@ -11,6 +11,7 @@ package org.bonitasoft.studio.swtbot.framework.diagram.general.documents;
 import org.bonitasoft.studio.document.i18n.Messages;
 import org.bonitasoft.studio.swtbot.framework.BotWizardDialog;
 import org.bonitasoft.studio.swtbot.framework.StudioAPIUtil;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 
 /**
@@ -156,5 +157,17 @@ public class BotAddDocumentDialog extends BotWizardDialog {
      */
     public boolean isErrorMessageAlreadyExist() {
         return isErrorMessage(Messages.error_documentAllreadyexist);
+    }
+
+    /**
+     * BUTTON BEHAVIOR
+     */
+
+    public boolean isFinishEnabled() {
+        return bot.button(IDialogConstants.FINISH_LABEL).isEnabled();
+    }
+
+    public boolean isFinishAndAddEnabled() {
+        return bot.button(org.bonitasoft.studio.common.Messages.createAndNewButton).isEnabled();
     }
 }

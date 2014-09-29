@@ -66,9 +66,6 @@ public class Messages extends NLS {
     public static String documentInitialContentInternalErrorMessage;
     public static String documentInitialContentExternalErrorMessage;
 
-    public static String createAndNewButton;
-
-
 
     static {
         // initialize resource bundle

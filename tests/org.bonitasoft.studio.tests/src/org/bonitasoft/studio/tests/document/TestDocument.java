@@ -84,6 +84,65 @@ public class TestDocument extends SWTBotGefTestCase {
     }
 
     @Test
+    public void testErrorMessagesBehavior() {
+        final BotDocumentsPropertySection botDocumentsPropertySection = createDiagramAndGoToDocumentSection();
+        final BotAddDocumentDialog botAddDocumentDialog = botDocumentsPropertySection.addDocument();
+
+        // Open Dialog
+        assertNoErrorMessage(botAddDocumentDialog);
+        Assertions.assertThat(botAddDocumentDialog.isFinishEnabled()).isFalse();
+        Assertions.assertThat(botAddDocumentDialog.isFinishAndAddEnabled()).isFalse();
+
+        // internal Content
+        botAddDocumentDialog.chooseInternalInitialContent();
+        assertErrorMessageAndFinishDisabled(botAddDocumentDialog, botAddDocumentDialog.isErrorMessageNameEmpty());
+
+        // Name
+        botAddDocumentDialog.setName("document1");
+        assertErrorMessageAndFinishDisabled(botAddDocumentDialog, botAddDocumentDialog.isErrorMessageFile());
+
+        // None
+        botAddDocumentDialog.chooseNoneInitialContent();
+        assertNoErrorMessage(botAddDocumentDialog, true);
+
+        // External Content
+        botAddDocumentDialog.chooseExternalInitialContent();
+        assertErrorMessageAndFinishDisabled(botAddDocumentDialog, botAddDocumentDialog.isErrorMessageUrl());
+        botAddDocumentDialog.setURL("http://internet.com/logo.jpg");
+        bot.sleep(500); // wait the 500ms delay
+        assertNoErrorMessage(botAddDocumentDialog, true);
+
+        // Internal Content
+        botAddDocumentDialog.chooseInternalInitialContent();
+        assertErrorMessageAndFinishDisabled(botAddDocumentDialog, botAddDocumentDialog.isErrorMessageFile());
+        botAddDocumentDialog.setFile("toto.txt");
+        assertNoErrorMessage(botAddDocumentDialog, true);
+
+        botAddDocumentDialog.finish();
+    }
+
+    private void assertErrorMessageAndFinishDisabled(final BotAddDocumentDialog botAddDocumentDialog, final boolean errorMessageShowed) {
+        Assertions.assertThat(errorMessageShowed).isTrue();
+        Assertions.assertThat(botAddDocumentDialog.isFinishEnabled()).isFalse();
+        Assertions.assertThat(botAddDocumentDialog.isFinishAndAddEnabled()).isFalse();
+    }
+
+    private void assertNoErrorMessage(final BotAddDocumentDialog botAddDocumentDialog) {
+        assertNoErrorMessage(botAddDocumentDialog, false);
+    }
+
+    private void assertNoErrorMessage(final BotAddDocumentDialog botAddDocumentDialog, final boolean checkFinishButtons) {
+        Assertions.assertThat(botAddDocumentDialog.isErrorMessageUrl()).isFalse();
+        Assertions.assertThat(botAddDocumentDialog.isErrorMessageAlreadyExist()).isFalse();
+        Assertions.assertThat(botAddDocumentDialog.isErrorMessageFile()).isFalse();
+        Assertions.assertThat(botAddDocumentDialog.isErrorMessageNameEmpty()).isFalse();
+        if (checkFinishButtons) {
+            Assertions.assertThat(botAddDocumentDialog.isFinishEnabled()).isTrue();
+            Assertions.assertThat(botAddDocumentDialog.isFinishAndAddEnabled()).isTrue();
+        }
+    }
+
+    @Test
     public void testDocumentOperationSwitch() {
         final BotApplicationWorkbenchWindow botApplicationWorkbenchWindow = new BotApplicationWorkbenchWindow(bot);
         final BotProcessDiagramPerspective botProcessDiagramPerspective = botApplicationWorkbenchWindow.createNewDiagram();
