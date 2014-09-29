@@ -71,19 +71,23 @@ public class RefactorDocumentOperation extends AbstractRefactorOperation<Documen
                     // update name and content
                     cc.append(SetCommand.create(domain, exp, ExpressionPackage.Literals.EXPRESSION__NAME, newValue.getName()));
                     cc.append(SetCommand.create(domain, exp, ExpressionPackage.Literals.EXPRESSION__CONTENT, newValue.getName()));
-                    for (final EObject dependency : exp.getReferencedElements()) {
-                        if (dependency instanceof Document) {
-                            if (((Document) dependency).getName().equals(pairToRefactor.getOldValueName())) {
-                                cc.append(RemoveCommand.create(domain, exp, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS, dependency));
-                                cc.append(AddCommand.create(domain, exp, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS,
-                                        ExpressionHelper.createDependencyFromEObject(pairToRefactor.getNewValue())));
-                            }
-                        }
-                    }
+                    updateDependencies(cc, pairToRefactor, exp);
                 }
             }
         } else {
             removeAllDocumentReferences(compoundCommand, pairToRefactor);
+        }
+    }
+
+    private void updateDependencies(final CompoundCommand cc, final DocumentRefactorPair pairToRefactor, final Expression exp) {
+        for (final EObject dependency : exp.getReferencedElements()) {
+            if (dependency instanceof Document) {
+                if (((Document) dependency).getName().equals(pairToRefactor.getOldValueName())) {
+                    cc.append(RemoveCommand.create(domain, exp, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS, dependency));
+                    cc.append(AddCommand.create(domain, exp, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS,
+                            ExpressionHelper.createDependencyFromEObject(pairToRefactor.getNewValue())));
+                }
+            }
         }
     }
 
