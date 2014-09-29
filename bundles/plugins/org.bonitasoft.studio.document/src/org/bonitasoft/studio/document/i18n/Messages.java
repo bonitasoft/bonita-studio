@@ -61,8 +61,6 @@ public class Messages extends NLS {
     public static String hideMimeType;
     public static String manageMimeType;
 
-
-    public static String emptyDocumentFieldError;
     public static String editDocument;
 
     public static String documentInitialContentInternalErrorMessage;

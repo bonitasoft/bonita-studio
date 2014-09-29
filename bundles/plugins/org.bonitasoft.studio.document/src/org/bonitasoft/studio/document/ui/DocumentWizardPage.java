@@ -206,8 +206,7 @@ public class DocumentWizardPage extends WizardPage {
         mimeTypeComposition.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
         mimeTypeComposition.setLayoutData(GridDataFactory.fillDefaults().create());
 
-        documentMimeTypeViewer = new ExpressionViewer(mimeTypeComposition,
-                SWT.BORDER, ProcessPackage.Literals.DOCUMENT__MIME_TYPE);
+        documentMimeTypeViewer = new ExpressionViewer(mimeTypeComposition, SWT.BORDER);
         documentMimeTypeViewer.addFilter(new AvailableExpressionTypeFilter(new String[] { ExpressionConstants.CONSTANT_TYPE }));
         documentMimeTypeViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         documentMimeTypeViewer.getTextControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
@@ -247,8 +246,7 @@ public class DocumentWizardPage extends WizardPage {
         final Label documentURLLabel = new Label(slaveComposite, SWT.NONE);
         documentURLLabel.setText(Messages.documentExternalLabel + " *");
 
-        documentUrlViewer = new ExpressionViewer(slaveComposite, SWT.BORDER,
-                ProcessPackage.Literals.DOCUMENT__URL);
+        documentUrlViewer = new ExpressionViewer(slaveComposite, SWT.BORDER);
         documentUrlViewer.addFilter(new AvailableExpressionTypeFilter(
                 new String[] { ExpressionConstants.CONSTANT_TYPE }));
         documentUrlViewer.getControl().setLayoutData(
@@ -432,7 +430,7 @@ public class DocumentWizardPage extends WizardPage {
                 if (documentInternalIDObserved.getValue() != null) {
                     defaultID = documentInternalIDObserved.getValue().toString();
                 }
-                final String url = ((Expression) (externalInitialContentObserveWidget.getValue())).getContent();
+                final String url = ((Expression) externalInitialContentObserveWidget.getValue()).getContent();
                 final String name = nameObserved.getValue().toString();
 
                 final Boolean externalBtn = (Boolean) btnDocumentTypeExternal.getValue();
