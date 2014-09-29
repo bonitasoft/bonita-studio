@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012 BonitaSoft S.A.
+ * Copyright (C) 2012-2014 BonitaSoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -13,6 +13,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.expression.editor.operation;
+
+import java.util.List;
 
 import org.bonitasoft.engine.bpm.document.DocumentValue;
 import org.bonitasoft.studio.common.ExpressionConstants;
@@ -63,26 +65,26 @@ public class OperationReturnTypesValidator implements IExpressionValidator {
                 if (operation != null && needValidation(operation)) {
                     final String operatorType = operation.getOperator().getType();
                     if (ExpressionConstants.JAVA_METHOD_OPERATOR.equals(operatorType)) {
-                        return validateJavaMethodOperation(expression,
-                                expressionName, operation);
+                        return validateJavaMethodOperation(expression, expressionName, operation);
                     } else if (ExpressionConstants.XPATH_UPDATE_OPERATOR.equals(operatorType)) {
-                        return validateXPathOperation(expression,
-                                expressionName, operation);
+                        return validateXPathOperation(expression, expressionName, operation);
                     } else if (ExpressionConstants.SET_DOCUMENT_OPERATOR.equals(operatorType)) {
-                        final IStatus status = validateSetDocumentOperation(expression,
-                                expressionName, operation);
+                        final IStatus status = validateSetDocumentOperation(expression, expressionName, operation);
+                        if (status != null) {
+                            return status;
+                        }
+                    } else if (ExpressionConstants.SET_LIST_DOCUMENT_OPERATOR.equals(operatorType)) {
+                        final IStatus status = validateSetListDocumentOperation(expression, expressionName, operation);
                         if (status != null) {
                             return status;
                         }
                     } else if (ExpressionConstants.CREATE_BUSINESS_DATA_OPERATOR.equals(operatorType)) {
-                        final IStatus status = validateCreateBusinessDataOperation(expression,
-                                expressionName, operation);
+                        final IStatus status = validateCreateBusinessDataOperation(expression, expressionName, operation);
                         if (status != null) {
                             return status;
                         }
                     } else if (ExpressionConstants.DELETION_OPERATOR.equals(operatorType)) {
-                        final IStatus status = validateDeletionOperation(expression,
-                                expressionName, operation);
+                        final IStatus status = validateDeletionOperation(expression, expressionName, operation);
                         if (status != null) {
                             return status;
                         }
@@ -124,6 +126,23 @@ public class OperationReturnTypesValidator implements IExpressionValidator {
                     }
                 }
             }
+        }
+        return ValidationStatus.ok();
+    }
+
+    private IStatus validateSetListDocumentOperation(final Expression expression, final String expressionName, final Operation operation) {
+        final String returnType = expression.getReturnType();
+        try {
+            if (!List.class.getName().equals(returnType)
+                    && !List.class.isAssignableFrom(Class.forName(returnType))) {
+                return ValidationStatus.warning(Messages.bind(
+                        Messages.invalidReturnTypeBetween, dataExpression.getName(),
+                        expressionName));
+            }
+        } catch (final ClassNotFoundException e) {
+            return ValidationStatus.warning(Messages.bind(
+                    Messages.invalidReturnTypeFor,
+                    expressionName));
         }
         return ValidationStatus.ok();
     }
@@ -220,8 +239,7 @@ public class OperationReturnTypesValidator implements IExpressionValidator {
         return expressionName;
     }
 
-    protected IStatus validateSetDocumentOperation(final Expression expression,
-            final String expressionName, final Operation operation) {
+    protected IStatus validateSetDocumentOperation(final Expression expression, final String expressionName, final Operation operation) {
 
         final boolean isTask = (operation.eContainer() instanceof Task);
 

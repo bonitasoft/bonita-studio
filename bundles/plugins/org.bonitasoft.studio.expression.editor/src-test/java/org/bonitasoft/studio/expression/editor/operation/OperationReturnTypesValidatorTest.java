@@ -14,6 +14,9 @@
  */
 package org.bonitasoft.studio.expression.editor.operation;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.assertj.core.api.Assertions;
 import org.bonitasoft.engine.bpm.document.DocumentValue;
 import org.bonitasoft.studio.common.ExpressionConstants;
@@ -105,6 +108,60 @@ public class OperationReturnTypesValidatorTest {
         final Expression dataExpression = ExpressionHelper.createConstantExpression("doc", String.class.getName());
         validator.setDataExpression(dataExpression);
         final Expression expr = ExpressionHelper.createGroovyScriptExpression("", DocumentValue.class.getName());
+        operation.setLeftOperand(dataExpression);
+        operation.setRightOperand(expr);
+
+        final IStatus status = validator.validate(expr);
+
+        Assertions.assertThat(status.isOK()).isTrue();
+    }
+
+    @Test
+    public void testValidateSetDocumentListOperationInValid() {
+        final OperationReturnTypesValidator validator = new OperationReturnTypesValidator();
+        final Operation operation = ExpressionFactory.eINSTANCE.createOperation();
+        final Operator operator = ExpressionFactory.eINSTANCE.createOperator();
+        operator.setType(ExpressionConstants.SET_LIST_DOCUMENT_OPERATOR);
+        operation.setOperator(operator);
+        final Expression dataExpression = ExpressionHelper.createConstantExpression("doc", String.class.getName());
+        validator.setDataExpression(dataExpression);
+        final Expression expr = ExpressionHelper.createGroovyScriptExpression("doc", DocumentValue.class.getName());
+        operation.setLeftOperand(dataExpression);
+        operation.setRightOperand(expr);
+
+        final IStatus status = validator.validate(expr);
+
+        Assertions.assertThat(status.isOK()).isFalse();
+    }
+
+    @Test
+    public void testValidateSetDocumentListOperationValid() {
+        final OperationReturnTypesValidator validator = new OperationReturnTypesValidator();
+        final Operation operation = ExpressionFactory.eINSTANCE.createOperation();
+        final Operator operator = ExpressionFactory.eINSTANCE.createOperator();
+        operator.setType(ExpressionConstants.SET_LIST_DOCUMENT_OPERATOR);
+        operation.setOperator(operator);
+        final Expression dataExpression = ExpressionHelper.createConstantExpression("doc", String.class.getName());
+        validator.setDataExpression(dataExpression);
+        final Expression expr = ExpressionHelper.createGroovyScriptExpression("polop", List.class.getName());
+        operation.setLeftOperand(dataExpression);
+        operation.setRightOperand(expr);
+
+        final IStatus status = validator.validate(expr);
+
+        Assertions.assertThat(status.isOK()).isTrue();
+    }
+
+    @Test
+    public void testValidateSetDocumentListOperationValidWithArraylist() {
+        final OperationReturnTypesValidator validator = new OperationReturnTypesValidator();
+        final Operation operation = ExpressionFactory.eINSTANCE.createOperation();
+        final Operator operator = ExpressionFactory.eINSTANCE.createOperator();
+        operator.setType(ExpressionConstants.SET_LIST_DOCUMENT_OPERATOR);
+        operation.setOperator(operator);
+        final Expression dataExpression = ExpressionHelper.createConstantExpression("doc", String.class.getName());
+        validator.setDataExpression(dataExpression);
+        final Expression expr = ExpressionHelper.createGroovyScriptExpression("plop", ArrayList.class.getName());
         operation.setLeftOperand(dataExpression);
         operation.setRightOperand(expr);
 
