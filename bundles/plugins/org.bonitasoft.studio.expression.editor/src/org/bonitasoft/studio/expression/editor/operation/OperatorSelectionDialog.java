@@ -71,6 +71,7 @@ public class OperatorSelectionDialog extends Dialog implements ISelectionChanged
         operatorTypeList.add(ExpressionConstants.JAVA_METHOD_OPERATOR);
         operatorTypeList.add(ExpressionConstants.XPATH_UPDATE_OPERATOR);
         operatorTypeList.add(ExpressionConstants.SET_DOCUMENT_OPERATOR);
+        operatorTypeList.add(ExpressionConstants.SET_LIST_DOCUMENT_OPERATOR);
         operatorTypeList.add(ExpressionConstants.CREATE_BUSINESS_DATA_OPERATOR);
         operatorTypeList.add(ExpressionConstants.DELETION_OPERATOR);
     }

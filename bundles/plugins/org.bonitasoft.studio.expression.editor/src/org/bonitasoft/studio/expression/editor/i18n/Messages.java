@@ -146,6 +146,7 @@ public class Messages extends NLS {
     public static String incompatibleType;
 
     public static String dialogTitleSelectOperator;
+    public static String setDocumentListOperator;
 
     private Messages() {
         // Do not instantiate
