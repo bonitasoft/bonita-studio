@@ -156,7 +156,7 @@ public class RefactorDocumentOperationTest {
 
     /**
      * Case of File Widget initial value
-     * 
+     *
      * @throws InvocationTargetException
      * @throws InterruptedException
      */
@@ -179,7 +179,7 @@ public class RefactorDocumentOperationTest {
 
     /**
      * Case of File Widget initial value
-     * 
+     *
      * @throws InvocationTargetException
      * @throws InterruptedException
      */
@@ -204,7 +204,7 @@ public class RefactorDocumentOperationTest {
 
     /**
      * Case of some Operations
-     * 
+     *
      * @throws InvocationTargetException
      * @throws InterruptedException
      */
@@ -227,7 +227,7 @@ public class RefactorDocumentOperationTest {
 
     /**
      * Case of some Operations
-     * 
+     *
      * @throws InvocationTargetException
      * @throws InterruptedException
      */
@@ -308,6 +308,24 @@ public class RefactorDocumentOperationTest {
         final EObject dep = referencedElements.get(0);
         assertThat(dep).isInstanceOf(Document.class);
         assertThat(((Document) dep).getName()).isEqualTo(updatedDocument.getName());
+    }
+
+    @Test
+    public void testMultiplicityUpdatedInReference() throws InvocationTargetException, InterruptedException {
+        createTaskWithOperationWithLeftOperandOfType(ExpressionConstants.DOCUMENT_TYPE);
+        final Document documentMultiple = ProcessFactory.eINSTANCE.createDocument();
+        documentMultiple.setName(INITIAL_DOC_NAME);
+        documentMultiple.setMimeType(ExpressionHelper.createConstantExpression("octet/stream", String.class.getName()));
+        documentMultiple.setMultiple(true);
+
+        final RefactorDocumentOperation rdo = new RefactorDocumentOperation(RefactoringOperationType.UPDATE);
+        rdo.addItemToRefactor(documentMultiple, document);
+        rdo.setEditingDomain(domain);
+        rdo.setAskConfirmation(false);
+        rdo.run(null);
+
+        final Document referencedDocument = (Document) operation.getLeftOperand().getReferencedElements().get(0);
+        assertThat(referencedDocument.isMultiple()).isTrue();
     }
 
 }

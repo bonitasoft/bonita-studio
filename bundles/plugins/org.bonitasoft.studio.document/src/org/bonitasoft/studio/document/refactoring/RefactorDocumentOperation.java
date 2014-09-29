@@ -17,6 +17,7 @@ package org.bonitasoft.studio.document.refactoring;
 import java.util.List;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
@@ -28,6 +29,7 @@ import org.bonitasoft.studio.refactoring.core.AbstractScriptExpressionRefactorin
 import org.bonitasoft.studio.refactoring.core.RefactoringOperationType;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.command.CompoundCommand;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.command.AddCommand;
 import org.eclipse.emf.edit.command.DeleteCommand;
 import org.eclipse.emf.edit.command.RemoveCommand;
@@ -60,14 +62,24 @@ public class RefactorDocumentOperation extends AbstractRefactorOperation<Documen
     }
 
     protected void updateDocumentInDocumentExpressions(final CompoundCommand cc, final DocumentRefactorPair pairToRefactor) {
-        if (pairToRefactor.getNewValue() != null) {
+        final Document newValue = pairToRefactor.getNewValue();
+        if (newValue != null) {
             final List<Expression> expressions = ModelHelper.getAllItemsOfType(getContainer(pairToRefactor.getOldValue()),
                     ExpressionPackage.Literals.EXPRESSION);
             for (final Expression exp : expressions) {
                 if (isMatchingDocumentExpression(pairToRefactor, exp)) {
                     // update name and content
-                    cc.append(SetCommand.create(domain, exp, ExpressionPackage.Literals.EXPRESSION__NAME, pairToRefactor.getNewValue().getName()));
-                    cc.append(SetCommand.create(domain, exp, ExpressionPackage.Literals.EXPRESSION__CONTENT, pairToRefactor.getNewValue().getName()));
+                    cc.append(SetCommand.create(domain, exp, ExpressionPackage.Literals.EXPRESSION__NAME, newValue.getName()));
+                    cc.append(SetCommand.create(domain, exp, ExpressionPackage.Literals.EXPRESSION__CONTENT, newValue.getName()));
+                    for (final EObject dependency : exp.getReferencedElements()) {
+                        if (dependency instanceof Document) {
+                            if (((Document) dependency).getName().equals(pairToRefactor.getOldValueName())) {
+                                cc.append(RemoveCommand.create(domain, exp, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS, dependency));
+                                cc.append(AddCommand.create(domain, exp, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS,
+                                        ExpressionHelper.createDependencyFromEObject(pairToRefactor.getNewValue())));
+                            }
+                        }
+                    }
                 }
             }
         } else {
