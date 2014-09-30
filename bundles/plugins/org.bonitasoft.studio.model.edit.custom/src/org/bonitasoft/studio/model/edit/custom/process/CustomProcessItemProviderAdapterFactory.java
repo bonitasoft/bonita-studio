@@ -17,7 +17,6 @@
  */
 package org.bonitasoft.studio.model.edit.custom.process;
 
-import org.bonitasoft.studio.model.process.provider.JavaObjectDataItemProvider;
 import org.bonitasoft.studio.model.process.provider.ProcessItemProviderAdapterFactory;
 import org.eclipse.emf.common.notify.Adapter;
 
@@ -36,17 +35,6 @@ public class CustomProcessItemProviderAdapterFactory extends ProcessItemProvider
 
         return connectorItemProvider;
     }
-
-
-    @Override
-    public Adapter createMultiInstantiationAdapter() {
-        if (multiInstantiationItemProvider == null) {
-            multiInstantiationItemProvider = new CustomMultiInstantiationItemProvider(this);
-        }
-
-        return multiInstantiationItemProvider;
-    }
-
 
     @Override
     public Adapter createDataAdapter() {

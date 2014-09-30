@@ -103,7 +103,7 @@ public class AddSimulationDataWizardPage extends WizardPage {
     private final SelectionListener updateButtonSelectionListener = new SelectionAdapter() {
 
         @Override
-        public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+        public void widgetSelected(final org.eclipse.swt.events.SelectionEvent e) {
             if(	getContainer().getCurrentPage()!= null){
                 getContainer().updateButtons();
             }
@@ -140,7 +140,7 @@ public class AddSimulationDataWizardPage extends WizardPage {
      * @param container
      * @param simulationData
      */
-    public AddSimulationDataWizardPage(SimulationDataContainer element, SimulationData simulationData) {
+    public AddSimulationDataWizardPage(final SimulationDataContainer element, final SimulationData simulationData) {
         super("add simulation data");
         this.element = element;
         data = simulationData;
@@ -163,12 +163,12 @@ public class AddSimulationDataWizardPage extends WizardPage {
                 probabilityOfTrue = ((SimulationBoolean) data).getProbabilityOfTrue();
             }
             if(data instanceof SimulationNumberData){
-                for(SimulationNumberRange range:((SimulationNumberData) data).getRanges()){
+                for(final SimulationNumberRange range:((SimulationNumberData) data).getRanges()){
                     ranges.add(EcoreUtil.copy(range));
                 }
             }
             if(data instanceof SimulationLiteralData){
-                for(SimulationLiteral literal:((SimulationLiteralData) data).getLiterals()){
+                for(final SimulationLiteral literal:((SimulationLiteralData) data).getLiterals()){
                     literals.add(EcoreUtil.copy(literal));
                 }
             }
@@ -189,7 +189,7 @@ public class AddSimulationDataWizardPage extends WizardPage {
      * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
      */
     @Override
-    public void createControl(Composite parent) {
+    public void createControl(final Composite parent) {
         final Composite composite = new Composite(parent, SWT.NONE);
 
         context = new DataBindingContext();
@@ -205,20 +205,20 @@ public class AddSimulationDataWizardPage extends WizardPage {
         configStackComposite.setLayout(sLayout);
         configStackComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).span(2, 1).hint(SWT.DEFAULT,200).create()) ;
 
-        Composite booleanComposite = createBooleanConfigurationComposite(configStackComposite);
+        final Composite booleanComposite = createBooleanConfigurationComposite(configStackComposite);
         configCompositeMap.put(SimulationPackage.eINSTANCE.getSimulationBoolean(),booleanComposite);
 
-        Composite literalsComposite = createLiteralsConfigurationComposite(configStackComposite);
+        final Composite literalsComposite = createLiteralsConfigurationComposite(configStackComposite);
         configCompositeMap.put(SimulationPackage.eINSTANCE.getSimulationLiteralData(),literalsComposite);
 
 
-        Composite numberComposite = createNumberConfigurationComposite(configStackComposite);
+        final Composite numberComposite = createNumberConfigurationComposite(configStackComposite);
         configCompositeMap.put(SimulationPackage.eINSTANCE.getSimulationNumberData(),numberComposite);
 
         context.bindValue(SWTObservables.observeVisible(configStackComposite), SWTObservables.observeSelection(isExpressionBased),null,new UpdateValueStrategy().setConverter(new org.eclipse.core.databinding.conversion.Converter(Boolean.class,Boolean.class) {
 
             @Override
-            public Object convert(Object fromObject) {
+            public Object convert(final Object fromObject) {
                 return !((Boolean)fromObject);
             }
         }));
@@ -244,9 +244,9 @@ public class AddSimulationDataWizardPage extends WizardPage {
         scrolledComposite.setLayout(new FillLayout());
         final Composite typeComposite = new Composite(scrolledComposite, SWT.NONE);
         typeComposite.setLayout(new GridLayout(1, false));
-        DynamicAddRemoveLineComposite literalsComposite = new DynamicAddRemoveLineComposite(typeComposite,SWT.NONE) {
+        final DynamicAddRemoveLineComposite literalsComposite = new DynamicAddRemoveLineComposite(typeComposite,SWT.NONE) {
             @Override
-            protected void lineRemoved(int i) {
+            protected void lineRemoved(final int i) {
                 ranges.remove(i);
 
                 getShell().pack(true) ;
@@ -262,7 +262,7 @@ public class AddSimulationDataWizardPage extends WizardPage {
                 }
             }
             @Override
-            protected void lineAdded(int i) {
+            protected void lineAdded(final int i) {
                 getShell().pack(true) ;
                 getShell().layout(true, true) ;
 
@@ -277,8 +277,8 @@ public class AddSimulationDataWizardPage extends WizardPage {
             }
 
             @Override
-            protected Button createAddButton(Composite parent) {
-                Button button = new Button(parent, SWT.FLAT);
+            protected Button createAddButton(final Composite parent) {
+                final Button button = new Button(parent, SWT.FLAT);
                 button.setText(Messages.addARange);
                 return button;
             }
@@ -291,7 +291,7 @@ public class AddSimulationDataWizardPage extends WizardPage {
                 return scrolledComposite;
             }
             @Override
-            protected Control createLineComposite(Composite parent, Object object) {
+            protected Control createLineComposite(final Composite parent, final Object object) {
                 SimulationNumberRange range;
                 if(object == null){
                     range = SimulationFactory.eINSTANCE.createSimulationNumberRange();
@@ -299,38 +299,38 @@ public class AddSimulationDataWizardPage extends WizardPage {
                 }else{
                     range = (SimulationNumberRange) object;
                 }
-                Composite composite = new Composite(parent, SWT.NONE);
+                final Composite composite = new Composite(parent, SWT.NONE);
                 composite.setLayout(new GridLayout(6, false));
                 //min
-                Label minLabel = new Label(composite, SWT.NONE);
+                final Label minLabel = new Label(composite, SWT.NONE);
                 minLabel.setText(Messages.AddSimulationDataWizardPage_min);
-                Text minText = new Text(composite, SWT.BORDER);
+                final Text minText = new Text(composite, SWT.BORDER);
                 minText.setLayoutData(GridDataFactory.swtDefaults().align(SWT.FILL, SWT.CENTER).hint(100, SWT.DEFAULT).create());
-                ControlDecoration minControlDecoration = new ControlDecoration(minText, SWT.LEFT|SWT.TOP);
+                final ControlDecoration minControlDecoration = new ControlDecoration(minText, SWT.LEFT|SWT.TOP);
                 FieldDecoration fieldDecoration = FieldDecorationRegistry.getDefault()
                         .getFieldDecoration(FieldDecorationRegistry.DEC_ERROR);
                 minControlDecoration.setImage(fieldDecoration.getImage());
                 minControlDecoration.setDescriptionText(Messages.mustBeANumber);
                 //max
-                Label maxLiteral = new Label(composite, SWT.NONE);
+                final Label maxLiteral = new Label(composite, SWT.NONE);
                 maxLiteral.setText(Messages.AddSimulationDataWizardPage_max);
-                Text maxText = new Text(composite, SWT.BORDER);
+                final Text maxText = new Text(composite, SWT.BORDER);
                 maxText.setLayoutData(GridDataFactory.swtDefaults().align(SWT.FILL, SWT.CENTER).hint(100, SWT.DEFAULT).create());
-                ControlDecoration maxControlDecoration = new ControlDecoration(maxText, SWT.LEFT|SWT.TOP);
+                final ControlDecoration maxControlDecoration = new ControlDecoration(maxText, SWT.LEFT|SWT.TOP);
                 fieldDecoration = FieldDecorationRegistry.getDefault()
                         .getFieldDecoration(FieldDecorationRegistry.DEC_ERROR);
                 maxControlDecoration.setImage(fieldDecoration.getImage());
                 maxControlDecoration.setDescriptionText(Messages.mustBeANumber);
                 //proba
-                Label probaLabel = new Label(composite, SWT.NONE);
+                final Label probaLabel = new Label(composite, SWT.NONE);
                 probaLabel.setText(Messages.AddSimulationDataWizardPage_probability);
-                Text probaText = new Text(composite, SWT.BORDER);
+                final Text probaText = new Text(composite, SWT.BORDER);
                 probaText.setLayoutData(GridDataFactory.swtDefaults().align(SWT.FILL, SWT.CENTER).hint(40, SWT.DEFAULT).create());
-//                ControlDecoration controlDecoration = new ControlDecoration(probaText, SWT.LEFT|SWT.TOP);
-//                fieldDecoration = FieldDecorationRegistry.getDefault()
-//                        .getFieldDecoration(FieldDecorationRegistry.DEC_ERROR);
-//                controlDecoration.setImage(fieldDecoration.getImage());
-//                controlDecoration.setDescriptionText(Messages.mustBeAPercentage);
+                //                ControlDecoration controlDecoration = new ControlDecoration(probaText, SWT.LEFT|SWT.TOP);
+                //                fieldDecoration = FieldDecorationRegistry.getDefault()
+                //                        .getFieldDecoration(FieldDecorationRegistry.DEC_ERROR);
+                //                controlDecoration.setImage(fieldDecoration.getImage());
+                //                controlDecoration.setDescriptionText(Messages.mustBeAPercentage);
                 //repartitionType
 
                 //				Label repartitionLabel = new Label(composite, SWT.NONE);
@@ -353,10 +353,10 @@ public class AddSimulationDataWizardPage extends WizardPage {
                         new UpdateValueStrategy().setConverter(StringToNumberConverter.toLong(false))
                         .setAfterGetValidator(new WrappingValidator(maxControlDecoration,new StringToLongValidator(StringToNumberConverter.toLong(false))))
                         ,new UpdateValueStrategy().setConverter(NumberToStringConverter.fromLong(false)));
-                UpdateValueStrategy targetToModel = new UpdateValueStrategy();
+                final UpdateValueStrategy targetToModel = new UpdateValueStrategy();
                 targetToModel.setConverter(StringToNumberConverter.toDouble(BonitaNumberFormat.getPercentInstance(),true));
                 targetToModel.setAfterGetValidator(new ProbabilityValidator(new StringToDoubleValidator(StringToNumberConverter.toDouble(BonitaNumberFormat.getPercentInstance(),false))));
-                Binding provider = context.bindValue(SWTObservables.observeText(probaText, SWT.Modify),EMFObservables.observeValue(range, SimulationPackage.Literals.SIMULATION_NUMBER_RANGE__PROBABILITY),
+                final Binding provider = context.bindValue(SWTObservables.observeText(probaText, SWT.Modify),EMFObservables.observeValue(range, SimulationPackage.Literals.SIMULATION_NUMBER_RANGE__PROBABILITY),
                         targetToModel
                         ,new UpdateValueStrategy().setConverter(NumberToStringConverter.fromDouble(BonitaNumberFormat.getPercentInstance(),false)));
                 //context.bindValue(ViewersObservables.observeSingleSelection(comboViewer), EMFObservables.observeValue(range, SimulationPackage.Literals.SIMULATION_NUMBER_RANGE__REPARTITION_TYPE));
@@ -369,7 +369,7 @@ public class AddSimulationDataWizardPage extends WizardPage {
                 return composite;
             }
         };
-        for (SimulationNumberRange range : ranges) {
+        for (final SimulationNumberRange range : ranges) {
             literalsComposite.addLine(range);
         }
         literalsComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
@@ -393,9 +393,9 @@ public class AddSimulationDataWizardPage extends WizardPage {
 
         final Composite typeComposite = new Composite(scrolledComposite, SWT.NONE);
         typeComposite.setLayout(new GridLayout(1, false));
-        DynamicAddRemoveLineComposite literalsComposite = new DynamicAddRemoveLineComposite(typeComposite,SWT.NONE) {
+        final DynamicAddRemoveLineComposite literalsComposite = new DynamicAddRemoveLineComposite(typeComposite,SWT.NONE) {
             @Override
-            protected void lineRemoved(int i) {
+            protected void lineRemoved(final int i) {
                 literals.remove(i);
 
                 getShell().pack(true) ;
@@ -410,7 +410,7 @@ public class AddSimulationDataWizardPage extends WizardPage {
                 getContainer().updateButtons();
             }
             @Override
-            protected void lineAdded(int i){
+            protected void lineAdded(final int i){
 
                 getShell().pack(true) ;
                 getShell().layout(true, true) ;
@@ -427,8 +427,8 @@ public class AddSimulationDataWizardPage extends WizardPage {
             }
 
             @Override
-            protected Button createAddButton(Composite parent) {
-                Button button = new Button(parent, SWT.FLAT);
+            protected Button createAddButton(final Composite parent) {
+                final Button button = new Button(parent, SWT.FLAT);
                 button.setText(Messages.addALiteral);
                 return button;
             }
@@ -442,8 +442,8 @@ public class AddSimulationDataWizardPage extends WizardPage {
                 return scrolledComposite;
             }
             @SuppressWarnings("restriction")
-			@Override
-            protected Control createLineComposite(Composite parent, Object object) {
+            @Override
+            protected Control createLineComposite(final Composite parent, final Object object) {
                 SimulationLiteral literal;
                 if(object == null){
                     literal = SimulationFactory.eINSTANCE.createSimulationLiteral();
@@ -451,35 +451,35 @@ public class AddSimulationDataWizardPage extends WizardPage {
                 }else{
                     literal = (SimulationLiteral) object;
                 }
-                Composite composite = new Composite(parent, SWT.NONE);
+                final Composite composite = new Composite(parent, SWT.NONE);
                 composite.setLayout(new GridLayout(4, false));
-                Label literalLabel = new Label(composite, SWT.NONE);
+                final Label literalLabel = new Label(composite, SWT.NONE);
                 literalLabel.setText(Messages.dataNameLabel);
-                Text literalText = new Text(composite, SWT.BORDER);
+                final Text literalText = new Text(composite, SWT.BORDER);
                 literalText.setLayoutData(GridDataFactory.swtDefaults().align(SWT.FILL, SWT.CENTER).grab(false, false).hint(200, SWT.DEFAULT).create());
                 //literalText.addModifyListener(updateButtonModifyListener) ;
-                Label probaLabel = new Label(composite, SWT.NONE);
+                final Label probaLabel = new Label(composite, SWT.NONE);
                 probaLabel.setText(Messages.AddSimulationDataWizardPage_probability);
-                Text probaText = new Text(composite, SWT.BORDER);
+                final Text probaText = new Text(composite, SWT.BORDER);
                 probaText.setLayoutData(GridDataFactory.swtDefaults().align(SWT.FILL, SWT.CENTER).grab(false, false).hint(60,SWT.DEFAULT).create());
-//                ControlDecoration controlDecoration = new ControlDecoration(probaText, SWT.LEFT|SWT.TOP);
-//                FieldDecoration fieldDecoration = FieldDecorationRegistry.getDefault()
-//                        .getFieldDecoration(FieldDecorationRegistry.DEC_ERROR);
-//                controlDecoration.setImage(fieldDecoration.getImage());
-//                controlDecoration.setDescriptionText(Messages.mustBeAPercentage);
+                //                ControlDecoration controlDecoration = new ControlDecoration(probaText, SWT.LEFT|SWT.TOP);
+                //                FieldDecoration fieldDecoration = FieldDecorationRegistry.getDefault()
+                //                        .getFieldDecoration(FieldDecorationRegistry.DEC_ERROR);
+                //                controlDecoration.setImage(fieldDecoration.getImage());
+                //                controlDecoration.setDescriptionText(Messages.mustBeAPercentage);
                 context.bindValue(SWTObservables.observeText(literalText, SWT.Modify),EMFObservables.observeValue(literal, SimulationPackage.Literals.SIMULATION_LITERAL__VALUE));
-                UpdateValueStrategy targetToModel = new UpdateValueStrategy();
+                final UpdateValueStrategy targetToModel = new UpdateValueStrategy();
                 targetToModel.setConverter(StringToNumberConverter.toDouble(BonitaNumberFormat.getPercentInstance(),true));
                 targetToModel.setAfterGetValidator(new ProbabilityValidator(new StringToDoubleValidator(StringToNumberConverter.toDouble(BonitaNumberFormat.getPercentInstance(),false))));
-                Binding provider= context.bindValue(SWTObservables.observeText(probaText, SWT.Modify),EMFObservables.observeValue(literal, SimulationPackage.Literals.SIMULATION_LITERAL__PROBABILITY),
-                       targetToModel
+                final Binding provider= context.bindValue(SWTObservables.observeText(probaText, SWT.Modify),EMFObservables.observeValue(literal, SimulationPackage.Literals.SIMULATION_LITERAL__PROBABILITY),
+                        targetToModel
                         ,new UpdateValueStrategy().setConverter(NumberToStringConverter.fromDouble(BonitaNumberFormat.getPercentInstance(),false)));
 
                 ControlDecorationSupport.create(provider, SWT.TOP | SWT.LEFT);
                 probaText.addModifyListener(new ModifyListener() {
 
                     @Override
-                    public void modifyText(ModifyEvent e) {
+                    public void modifyText(final ModifyEvent e) {
                         if(	getContainer().getCurrentPage()!= null){
                             getContainer().updateButtons();
                         }
@@ -489,7 +489,7 @@ public class AddSimulationDataWizardPage extends WizardPage {
                 return composite;
             }
         };
-        for (SimulationLiteral literal : literals) {
+        for (final SimulationLiteral literal : literals) {
             literalsComposite.addLine(literal);
         }
         literalsComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
@@ -506,50 +506,50 @@ public class AddSimulationDataWizardPage extends WizardPage {
      * @param composite
      * @return
      */
-    private Composite createBooleanConfigurationComposite(Composite composite) {
+    private Composite createBooleanConfigurationComposite(final Composite composite) {
 
-        Composite booleanComposite = new Composite(composite, SWT.NONE);
+        final Composite booleanComposite = new Composite(composite, SWT.NONE);
         booleanComposite.setLayout(new GridLayout(2, false));
-        Label nameLabel = new Label(booleanComposite, SWT.NONE);
+        final Label nameLabel = new Label(booleanComposite, SWT.NONE);
         nameLabel.setText(Messages.AddSimulationDataWizardPage_ProbabilityOfTrueLabel);
-        Text labelText = new Text(booleanComposite, SWT.BORDER);
+        final Text labelText = new Text(booleanComposite, SWT.BORDER);
         labelText.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
-//        ControlDecoration controlDecoration = new ControlDecoration(labelText, SWT.LEFT|SWT.TOP);
-//        FieldDecoration fieldDecoration = FieldDecorationRegistry.getDefault()
-//                .getFieldDecoration(FieldDecorationRegistry.DEC_ERROR);
-//        controlDecoration.setImage(fieldDecoration.getImage());
-//        controlDecoration.setDescriptionText(Messages.mustBeAPercentage);
-        UpdateValueStrategy targetToModel = new UpdateValueStrategy();
+        //        ControlDecoration controlDecoration = new ControlDecoration(labelText, SWT.LEFT|SWT.TOP);
+        //        FieldDecoration fieldDecoration = FieldDecorationRegistry.getDefault()
+        //                .getFieldDecoration(FieldDecorationRegistry.DEC_ERROR);
+        //        controlDecoration.setImage(fieldDecoration.getImage());
+        //        controlDecoration.setDescriptionText(Messages.mustBeAPercentage);
+        final UpdateValueStrategy targetToModel = new UpdateValueStrategy();
         targetToModel.setConverter(StringToNumberConverter.toDouble(BonitaNumberFormat.getPercentInstance(),true));
         targetToModel.setAfterGetValidator(new ProbabilityValidator(new StringToDoubleValidator(StringToNumberConverter.toDouble(BonitaNumberFormat.getPercentInstance(),false))));
-        
-        Binding provider=context.bindValue(SWTObservables.observeText(labelText,
+
+        final Binding provider=context.bindValue(SWTObservables.observeText(labelText,
                 SWT.Modify), PojoObservables.observeValue(this, "probabilityOfTrue"),
-               targetToModel
+                targetToModel
                 ,new UpdateValueStrategy().setConverter(NumberToStringConverter.fromDouble(BonitaNumberFormat.getPercentInstance(),true)));
 
         ControlDecorationSupport.create(provider, SWT.TOP | SWT.LEFT);
         return booleanComposite;
     }
 
-    private void createNameAndDescription(Composite composite) {
-        Label nameLabel = new Label(composite, SWT.NONE);
+    private void createNameAndDescription(final Composite composite) {
+        final Label nameLabel = new Label(composite, SWT.NONE);
         nameLabel.setText(Messages.dataNameLabel);
         final Text labelText = new Text(composite, SWT.BORDER);
         labelText.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
 
-        MultiValidator multiValidator = new MultiValidator();
+        final MultiValidator multiValidator = new MultiValidator();
         // Add an validator so that age can only be a number
         multiValidator.addValidator(new IValidator() {
 
             Set<String> existingDataNames = null;
 
             @Override
-            public IStatus validate(Object arg0) {
+            public IStatus validate(final Object arg0) {
                 if(existingDataNames == null){
                     existingDataNames = new HashSet<String>();
                     if(element != null){
-                        for(SimulationData simuData : element.getSimulationData()){
+                        for(final SimulationData simuData : element.getSimulationData()){
                             existingDataNames.add(simuData.getName());
                         }
                     }
@@ -564,19 +564,19 @@ public class AddSimulationDataWizardPage extends WizardPage {
 
         });
         multiValidator.addValidator(new GroovyReferenceValidator(Messages.name, true, true));
-        UpdateValueStrategy strategy = new UpdateValueStrategy();
+        final UpdateValueStrategy strategy = new UpdateValueStrategy();
         strategy.setBeforeSetValidator(multiValidator);
 
-        Binding bindingDataName = context.bindValue(SWTObservables.observeText(labelText,
+        final Binding bindingDataName = context.bindValue(SWTObservables.observeText(labelText,
                 SWT.Modify), PojoObservables.observeValue(this, "dataName"), strategy, null);
 
         ControlDecorationSupport.create(bindingDataName, SWT.TOP | SWT.LEFT);
         //labelText.addModifyListener(updateButtonModifyListener) ;
 
-        Label isExpressionLabel = new Label(composite, SWT.NONE);
+        final Label isExpressionLabel = new Label(composite, SWT.NONE);
         isExpressionLabel.setText(Messages.BasedOn);
 
-        Composite radioBasedComposite = new Composite(composite,SWT.NONE);
+        final Composite radioBasedComposite = new Composite(composite,SWT.NONE);
         radioBasedComposite.setLayout(new GridLayout(2, true));
 
         isExpressionBased = new Button(radioBasedComposite, SWT.RADIO);
@@ -589,20 +589,20 @@ public class AddSimulationDataWizardPage extends WizardPage {
         context.bindValue(SWTObservables.observeSelection(isOtherBased),  PojoObservables.observeValue(this, "expressionBased"),
                 new UpdateValueStrategy().setConverter(new Converter(Boolean.class,Boolean.class) {
                     @Override
-                    public Object convert(Object fromObject) {
+                    public Object convert(final Object fromObject) {
                         return !(Boolean)fromObject;
                     }
                 }),new UpdateValueStrategy().setConverter(new Converter(Boolean.class,Boolean.class) {
                     @Override
-                    public Object convert(Object fromObject) {
+                    public Object convert(final Object fromObject) {
                         return !(Boolean)fromObject;
                     }
                 }));
 
-        Label expressionLabel = new Label(composite, SWT.NONE);
+        final Label expressionLabel = new Label(composite, SWT.NONE);
         expressionLabel.setText(Messages.Expression);
 
-        ExpressionViewer expressionViewer = new ExpressionViewer(composite, SWT.BORDER, null);//FIXME: Expressionviewer
+        final ExpressionViewer expressionViewer = new ExpressionViewer(composite, SWT.BORDER);
         expressionViewer.getControl().setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
         if(element != null){
             expressionViewer.setInput(element);
@@ -624,12 +624,12 @@ public class AddSimulationDataWizardPage extends WizardPage {
 
 
     /**
-     * 
+     *
      * @param composite
      * @return the 3rd column composite
      */
-    private void createTypeCombo(Composite composite) {
-        Label datatypeLabel = new Label(composite, SWT.NONE);
+    private void createTypeCombo(final Composite composite) {
+        final Label datatypeLabel = new Label(composite, SWT.NONE);
         datatypeLabel.setText(Messages.datatypeLabel);
 
 
@@ -637,7 +637,7 @@ public class AddSimulationDataWizardPage extends WizardPage {
         datatypeCombo.setContentProvider(ArrayContentProvider.getInstance());
         datatypeCombo.setLabelProvider(new LabelProvider(){
             @Override
-            public String getText(Object element) {
+            public String getText(final Object element) {
                 if(element.equals(SimulationPackage.eINSTANCE.getSimulationBoolean())){
                     return Messages.SimulationBoolean;
                 }
@@ -669,7 +669,7 @@ public class AddSimulationDataWizardPage extends WizardPage {
         datatypeCombo.addSelectionChangedListener(new ISelectionChangedListener() {
 
             @Override
-            public void selectionChanged(SelectionChangedEvent event) {
+            public void selectionChanged(final SelectionChangedEvent event) {
                 dataClass = (EClass)((IStructuredSelection) datatypeCombo.getSelection()).getFirstElement();
                 changeDataConfigurationComposite(dataClass);
                 setPageComplete(isPageComplete()) ;
@@ -687,10 +687,10 @@ public class AddSimulationDataWizardPage extends WizardPage {
             if(SimulationPackage.eINSTANCE.getSimulationLiteralData().equals(dataClass)){
                 double total = 0 ;
                 boolean emptyValue = false ;
-                for(SimulationLiteral l : getLiterals()){
+                for(final SimulationLiteral l : getLiterals()){
                     total = total + l.getProbability() ;
                     final String simuValue = l.getValue();
-					if(simuValue == null || simuValue.trim().length() == 0 ){
+                    if(simuValue == null || simuValue.trim().length() == 0 ){
                         emptyValue = true ;
                     }
                 }
@@ -705,14 +705,14 @@ public class AddSimulationDataWizardPage extends WizardPage {
 
             }else if(dataClass.equals(SimulationPackage.eINSTANCE.getSimulationNumberData())){
                 double total = 0 ;
-                for(SimulationNumberRange l : getRanges()){
+                for(final SimulationNumberRange l : getRanges()){
                     total = total + l.getProbability() ;
                 }
                 if(total != 1.0){
                     setErrorMessage(Messages.AddSimulationDataWizardPage_Error_Proba) ;
                     return false ;
                 }
-                for(SimulationNumberRange l : getRanges()){
+                for(final SimulationNumberRange l : getRanges()){
                     if(l.getMin() >= l.getMax()){
                         setErrorMessage(Messages.AddSimulationDataWizardPage_Error_MinMax) ;
                         return false ;
@@ -726,7 +726,7 @@ public class AddSimulationDataWizardPage extends WizardPage {
     /**
      * @param dataClass2
      */
-    protected void changeDataConfigurationComposite(EClass dataClass2) {
+    protected void changeDataConfigurationComposite(final EClass dataClass2) {
         sLayout.topControl = configCompositeMap.get(dataClass2);
 
         configStackComposite.layout();
@@ -737,7 +737,7 @@ public class AddSimulationDataWizardPage extends WizardPage {
      * @return
      */
     private List<EClass> getAvailableDataTypes() {
-        ArrayList<EClass> list = new ArrayList<EClass>();
+        final ArrayList<EClass> list = new ArrayList<EClass>();
         list.add(SimulationPackage.eINSTANCE.getSimulationBoolean());
         list.add(SimulationPackage.eINSTANCE.getSimulationLiteralData());
         list.add(SimulationPackage.eINSTANCE.getSimulationNumberData());
@@ -758,7 +758,7 @@ public class AddSimulationDataWizardPage extends WizardPage {
     /**
      * @param dataName the dataName to set
      */
-    public void setDataName(String dataName) {
+    public void setDataName(final String dataName) {
         this.dataName = dataName;
     }
 
@@ -772,7 +772,7 @@ public class AddSimulationDataWizardPage extends WizardPage {
     /**
      * @param dataDescription the dataDescription to set
      */
-    public void setDataDescription(String dataDescription) {
+    public void setDataDescription(final String dataDescription) {
         this.dataDescription = dataDescription;
     }
 
@@ -786,7 +786,7 @@ public class AddSimulationDataWizardPage extends WizardPage {
     /**
      * @param probabilityOfTrue the probabilityOfTrue to set
      */
-    public void setProbabilityOfTrue(double probabilityOfTrue) {
+    public void setProbabilityOfTrue(final double probabilityOfTrue) {
         this.probabilityOfTrue = probabilityOfTrue;
     }
 
@@ -826,7 +826,7 @@ public class AddSimulationDataWizardPage extends WizardPage {
     /**
      * @param expressionBased the expressionBased to set
      */
-    public void setExpressionBased(boolean expressionBased) {
+    public void setExpressionBased(final boolean expressionBased) {
         this.expressionBased = expressionBased;
     }
 
@@ -836,7 +836,7 @@ public class AddSimulationDataWizardPage extends WizardPage {
     public boolean isExpressionBased() {
         return expressionBased;
     }
-    
-  
+
+
 
 }

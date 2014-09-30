@@ -14,6 +14,7 @@ import org.bonitasoft.studio.swtbot.framework.BotWizardDialog;
 import org.bonitasoft.studio.swtbot.framework.StudioAPIUtil;
 import org.bonitasoft.studio.swtbot.framework.expression.BotExpressionEditorDialog;
 import org.bonitasoft.studio.swtbot.framework.expression.BotScriptExpressionEditor;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
 
@@ -25,7 +26,11 @@ import org.eclipse.swtbot.swt.finder.waits.Conditions;
 public class BotAddDocumentDialog extends BotWizardDialog {
 
     public BotAddDocumentDialog(final SWTGefBot bot) {
-        super(bot);
+        super(bot, Messages.newDocument);
+    }
+
+    protected BotAddDocumentDialog(final SWTGefBot bot, final String dialogTitle) {
+        super(bot, dialogTitle);
     }
 
     @Override
@@ -200,5 +205,17 @@ public class BotAddDocumentDialog extends BotWizardDialog {
      */
     public boolean isErrorMessageAlreadyExist() {
         return isErrorMessage(Messages.error_documentAllreadyexist);
+    }
+
+    /**
+     * BUTTON BEHAVIOR
+     */
+
+    public boolean isFinishEnabled() {
+        return bot.button(IDialogConstants.FINISH_LABEL).isEnabled();
+    }
+
+    public boolean isFinishAndAddEnabled() {
+        return bot.button(org.bonitasoft.studio.common.Messages.createAndNewButton).isEnabled();
     }
 }

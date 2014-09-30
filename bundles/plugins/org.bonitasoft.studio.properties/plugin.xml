@@ -191,7 +191,7 @@
               viewID="org.bonitasoft.studio.views.properties.process.general">
         </propertySection>
         <propertySection
-              class="org.bonitasoft.studio.properties.sections.loop.LoopSection"
+              class="org.bonitasoft.studio.properties.sections.iteration.IterationPropertySection"
               enablesFor="1"
               filter="org.bonitasoft.studio.properties.filters.ActivityFilter"
               id="LoopSection"

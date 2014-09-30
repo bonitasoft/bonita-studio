@@ -801,7 +801,7 @@
                   class="org.bonitasoft.studio.validation.constraints.process.MultiInstanceConstraintOutput"
                   id="org.bonitasoft.studio.validation.constraints.outputIteration"
                   lang="java"
-                  mode="Live"
+                  mode="Batch"
                   name="outputdataMultiInstanceCollection"
                   severity="WARNING"
                   statusCode="1">
@@ -815,7 +815,7 @@
                   class="org.bonitasoft.studio.validation.constraints.process.MultiInstanceConstraintInput"
                   id="org.bonitasoft.studio.validation.constraints.inputIteration"
                   lang="java"
-                  mode="Live"
+                  mode="Batch"
                   name="inputdataMultiInstanceCollection"
                   severity="WARNING"
                   statusCode="1">

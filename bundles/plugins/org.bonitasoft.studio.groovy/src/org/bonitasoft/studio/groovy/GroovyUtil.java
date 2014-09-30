@@ -49,6 +49,7 @@ import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.DataAware;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.JavaObjectData;
+import org.bonitasoft.studio.model.process.MultiInstanceType;
 import org.bonitasoft.studio.model.process.PageFlow;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.RecapFlow;
@@ -154,18 +155,18 @@ public class GroovyUtil {
         while (currentObject != null) {
             if (isInEntryPageFlow && currentObject instanceof PageFlow) {
                 pageFlowTransientData
-                        .addAll((List<Data>) currentObject
-                                .eGet(ProcessPackage.Literals.PAGE_FLOW__TRANSIENT_DATA));
+                .addAll((List<Data>) currentObject
+                        .eGet(ProcessPackage.Literals.PAGE_FLOW__TRANSIENT_DATA));
             }
             if (isInViewPageFlow && currentObject instanceof ViewPageFlow) {
                 pageFlowTransientData
-                        .addAll((List<Data>) currentObject
-                                .eGet(ProcessPackage.Literals.VIEW_PAGE_FLOW__VIEW_TRANSIENT_DATA));
+                .addAll((List<Data>) currentObject
+                        .eGet(ProcessPackage.Literals.VIEW_PAGE_FLOW__VIEW_TRANSIENT_DATA));
             }
             if (isInOverviewPageFlow && currentObject instanceof RecapFlow) {
                 pageFlowTransientData
-                        .addAll((List<Data>) currentObject
-                                .eGet(ProcessPackage.Literals.RECAP_FLOW__RECAP_TRANSIENT_DATA));
+                .addAll((List<Data>) currentObject
+                        .eGet(ProcessPackage.Literals.RECAP_FLOW__RECAP_TRANSIENT_DATA));
             }
             currentObject = (Element) currentObject.eContainer();
         }
@@ -233,11 +234,11 @@ public class GroovyUtil {
     }
 
     private static List<ExpressionConstants> getBonitaConstantsFor(
-            EObject context, ViewerFilter[] filters, boolean isPageFlowContext) {
+            EObject context, final ViewerFilter[] filters, final boolean isPageFlowContext) {
         final List<ExpressionConstants> result = new ArrayList<ExpressionConstants>();
         DisplayEngineExpressionWithName engineFilter = null;
         if (filters != null) {
-            for (ViewerFilter f : filters) {
+            for (final ViewerFilter f : filters) {
                 if (f instanceof DisplayEngineExpressionWithName) {
                     engineFilter = (DisplayEngineExpressionWithName) f;
                 }
@@ -257,7 +258,7 @@ public class GroovyUtil {
             result.add(ExpressionConstants.LOGGED_USER_ID);
         }
         if (context instanceof Activity) {
-            if (((Activity) context).isIsMultiInstance()) {
+            if (((Activity) context).getType() == MultiInstanceType.PARALLEL || ((Activity) context).getType() == MultiInstanceType.SEQUENTIAL) {
                 if (engineFilter != null) {
                     if (engineFilter.select(null, null, ExpressionConstants.NUMBER_OF_ACTIVE_INSTANCES.getEngineConstantName())) {
                         result.add(ExpressionConstants.NUMBER_OF_ACTIVE_INSTANCES);
@@ -272,7 +273,7 @@ public class GroovyUtil {
                         result.add(ExpressionConstants.NUMBER_OF_INSTANCES);
                     }
                 }
-            } else if (((Activity) context).getIsLoop()) {
+            } else if (((Activity) context).getType() == MultiInstanceType.STANDARD) {
                 if (engineFilter != null && engineFilter.select(null, null, ExpressionConstants.LOOP_COUNTER.getEngineConstantName())) {
                     result.add(ExpressionConstants.LOOP_COUNTER);
                 }
@@ -297,14 +298,14 @@ public class GroovyUtil {
         return result;
     }
 
-    public static List<String> getBonitaKeyWords(final EObject context, final ViewerFilter[] filters, boolean isPageFlowContext) {
+    public static List<String> getBonitaKeyWords(final EObject context, final ViewerFilter[] filters, final boolean isPageFlowContext) {
         final List<ExpressionConstants> bonitaConstantsFor = getBonitaConstantsFor(context, filters, isPageFlowContext);
         final ArrayList<String> result = new ArrayList<String>(
                 bonitaConstantsFor.size());
         for (final ExpressionConstants expressionConstants : bonitaConstantsFor) {
             result.add(expressionConstants.getEngineConstantName());
         }
-        Form form = ModelHelper.getParentForm(context);
+        final Form form = ModelHelper.getParentForm(context);
         if (form != null) {
             result.add(IFormExpressionsAPI.USER_LOCALE);
         }
@@ -316,14 +317,14 @@ public class GroovyUtil {
     }
 
     private static void addBonitaVariables(final List<ScriptVariable> result,
-            final EObject element, ViewerFilter[] filters, boolean isPageFlowContext) {
+            final EObject element, final ViewerFilter[] filters, final boolean isPageFlowContext) {
         final List<ExpressionConstants> bonitaConstantsFor = getBonitaConstantsFor(element, filters, isPageFlowContext);
         for (final ExpressionConstants expressionConstants : bonitaConstantsFor) {
-            ScriptVariable scriptVariable = new ScriptVariable(expressionConstants.getEngineConstantName(),
+            final ScriptVariable scriptVariable = new ScriptVariable(expressionConstants.getEngineConstantName(),
                     getEngineExpressionReturnType(expressionConstants.getEngineConstantName()));
             result.add(scriptVariable);
         }
-        Form form = ModelHelper.getParentForm(element);
+        final Form form = ModelHelper.getParentForm(element);
 
         if (form != null) {
             result.add(new ScriptVariable(IFormExpressionsAPI.USER_LOCALE, Locale.class.getName()));
@@ -381,7 +382,7 @@ public class GroovyUtil {
         }
     }
 
-    public static List<ScriptVariable> getBonitaVariables(final EObject element, ViewerFilter[] filters, boolean isPageFlowContext) {
+    public static List<ScriptVariable> getBonitaVariables(final EObject element, final ViewerFilter[] filters, final boolean isPageFlowContext) {
         final List<ScriptVariable> result = new ArrayList<ScriptVariable>();
         addBonitaVariables(result, element, filters, isPageFlowContext);
         return result;
@@ -389,7 +390,7 @@ public class GroovyUtil {
 
     /**
      * Helper method to retrieve the constant field of Custom Groovy Type
-     * 
+     *
      * @param className
      * @return list of String (the values)
      */
@@ -544,20 +545,24 @@ public class GroovyUtil {
         return new ScriptVariable(p.getName(), p.getTypeClassname());
     }
 
-    public static ScriptVariable createScriptVariable(final Expression e, EObject context) {
+    public static ScriptVariable createScriptVariable(final Expression e, final EObject context) {
         if (org.bonitasoft.studio.common.ExpressionConstants.FORM_FIELD_TYPE
                 .equals(e.getType())) {
             final Widget widget = (Widget) e.getReferencedElements().get(0);
-            ScriptVariable scriptVariable = createScriptVariable(widget);
+            final ScriptVariable scriptVariable = createScriptVariable(widget);
             scriptVariable.setCategory(org.bonitasoft.studio.common.ExpressionConstants.FORM_FIELD_TYPE);
+            return scriptVariable;
+        } else if (org.bonitasoft.studio.common.ExpressionConstants.MULTIINSTANCE_ITERATOR_TYPE.equals(e.getType())) {
+            final ScriptVariable scriptVariable = new ScriptVariable(e.getName(), e.getReturnType());
+            scriptVariable.setCategory("step" + org.bonitasoft.studio.common.ExpressionConstants.VARIABLE_TYPE);
             return scriptVariable;
         } else if (org.bonitasoft.studio.common.ExpressionConstants.VARIABLE_TYPE.equals(e.getType())) {
             final Data data = (Data) e.getReferencedElements().get(0);
-            ScriptVariable scriptVariable = createScriptVariable(data);
-            AbstractProcess parentProcess = ModelHelper.getParentProcess(context);
+            final ScriptVariable scriptVariable = createScriptVariable(data);
+            final AbstractProcess parentProcess = ModelHelper.getParentProcess(context);
             boolean isProcessData = false;
             if (parentProcess != null) {
-                for (Data d : parentProcess.getData()) {
+                for (final Data d : parentProcess.getData()) {
                     if (d.getName().equals(data.getName())) {
                         isProcessData = true;
                         break;
@@ -567,11 +572,11 @@ public class GroovyUtil {
                     scriptVariable.setCategory("process" + org.bonitasoft.studio.common.ExpressionConstants.VARIABLE_TYPE);
                 } else {
                     boolean isAPageflowData = false;
-                    Form f = ModelHelper.getParentForm(context);
+                    final Form f = ModelHelper.getParentForm(context);
                     if (f != null && f.eContainer() instanceof PageFlow) {
-                        PageFlow flow = (PageFlow) f.eContainer();
+                        final PageFlow flow = (PageFlow) f.eContainer();
 
-                        for (Data d : flow.getTransientData()) {
+                        for (final Data d : flow.getTransientData()) {
                             if (d.getName().equals(data.getName())) {
                                 isAPageflowData = true;
                                 break;
@@ -593,56 +598,56 @@ public class GroovyUtil {
                 .equals(e.getType())) {
             final Parameter parameter = (Parameter) e.getReferencedElements()
                     .get(0);
-            ScriptVariable scriptVariable = createScriptVariable(parameter);
+            final ScriptVariable scriptVariable = createScriptVariable(parameter);
             scriptVariable.setCategory(org.bonitasoft.studio.common.ExpressionConstants.PARAMETER_TYPE);
             return scriptVariable;
         } else if (org.bonitasoft.studio.common.ExpressionConstants.CONNECTOR_OUTPUT_TYPE
                 .equals(e.getType())) {
             final Output output = (Output) e.getReferencedElements().get(0);
-            ScriptVariable scriptVariable = createScriptVariable(output);
+            final ScriptVariable scriptVariable = createScriptVariable(output);
             scriptVariable.setCategory(org.bonitasoft.studio.common.ExpressionConstants.CONNECTOR_OUTPUT_TYPE);
             return scriptVariable;
         } else if (org.bonitasoft.studio.common.ExpressionConstants.SIMULATION_VARIABLE_TYPE
                 .equals(e.getType())) {
             final SimulationData data = (SimulationData) e
                     .getReferencedElements().get(0);
-            ScriptVariable scriptVariable = createScriptVariable(data);
+            final ScriptVariable scriptVariable = createScriptVariable(data);
             scriptVariable.setCategory(org.bonitasoft.studio.common.ExpressionConstants.SIMULATION_VARIABLE_TYPE);
             return scriptVariable;
         } else if (org.bonitasoft.studio.common.ExpressionConstants.ENGINE_CONSTANT_TYPE
                 .equals(e.getType())) {
-            ScriptVariable scriptVariable = new ScriptVariable(e.getContent(), getEngineExpressionReturnType(e.getName()));
+            final ScriptVariable scriptVariable = new ScriptVariable(e.getContent(), getEngineExpressionReturnType(e.getName()));
             scriptVariable.setCategory(org.bonitasoft.studio.common.ExpressionConstants.ENGINE_CONSTANT_TYPE);
             return scriptVariable;
         } else if (org.bonitasoft.studio.common.ExpressionConstants.DOCUMENT_TYPE.equals(e.getType())) {
-            ScriptVariable scriptVariable = new ScriptVariable(e.getContent(), e.getReturnType());
+            final ScriptVariable scriptVariable = new ScriptVariable(e.getContent(), e.getReturnType());
             scriptVariable.setCategory(org.bonitasoft.studio.common.ExpressionConstants.DOCUMENT_TYPE);
             return scriptVariable;
         } else if (org.bonitasoft.studio.common.ExpressionConstants.DOCUMENT_REF_TYPE.equals(e.getType())) {
-            ScriptVariable scriptVariable = new ScriptVariable(e.getContent(), e.getReturnType());
+            final ScriptVariable scriptVariable = new ScriptVariable(e.getContent(), e.getReturnType());
             scriptVariable.setCategory(org.bonitasoft.studio.common.ExpressionConstants.DOCUMENT_REF_TYPE);
             return scriptVariable;
         } else if (org.bonitasoft.studio.common.ExpressionConstants.GROUP_ITERATOR_TYPE.equals(e.getType())) {
-            ScriptVariable scriptVariable = new ScriptVariable(e.getContent(), e.getReturnType());
+            final ScriptVariable scriptVariable = new ScriptVariable(e.getContent(), e.getReturnType());
             scriptVariable.setCategory(org.bonitasoft.studio.common.ExpressionConstants.GROUP_ITERATOR_TYPE);
             return scriptVariable;
         } else if (org.bonitasoft.studio.common.ExpressionConstants.DAO_TYPE.equals(e.getType())) {
-            ScriptVariable scriptVariable = new ScriptVariable(e.getContent(), e.getReturnType());
+            final ScriptVariable scriptVariable = new ScriptVariable(e.getContent(), e.getReturnType());
             scriptVariable.setCategory(org.bonitasoft.studio.common.ExpressionConstants.DAO_TYPE);
             return scriptVariable;
         }
         return null;
     }
 
-    private static String getEngineExpressionReturnType(String name) {
-        for (ExpressionConstants exp : ExpressionConstants.values()) {
+    private static String getEngineExpressionReturnType(final String name) {
+        for (final ExpressionConstants exp : ExpressionConstants.values()) {
             if (name.equals(exp.getEngineConstantName())) {
                 if ("apiAccessor".equals(name)) {
                     try {
                         final String apiAccessorExtClassName = "com.bonitasoft.engine.api.APIAccessor";
                         ProjectUtil.getConsoleLibsBundle().loadClass(apiAccessorExtClassName);
                         return apiAccessorExtClassName;
-                    } catch (Exception e) {
+                    } catch (final Exception e) {
                         return exp.getReturnType();
                     }
                 } else {

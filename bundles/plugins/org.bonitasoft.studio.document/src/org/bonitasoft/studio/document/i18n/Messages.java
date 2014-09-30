@@ -66,11 +66,6 @@ public class Messages extends NLS {
     public static String documentInitialContentInternalErrorMessage;
     public static String documentInitialContentExternalErrorMessage;
 
-    public static String createAndNewButton;
-
-    public static String documentCanBeMultipleLabel;
-    public static String documentCanBeMultipleToolTip;
-
     public static String initialMultipleContent;
 
     public static String error_documentInitialContentsEmpty;

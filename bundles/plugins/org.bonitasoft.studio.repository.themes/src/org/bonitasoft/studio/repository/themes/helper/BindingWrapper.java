@@ -23,63 +23,72 @@ import java.util.TreeSet;
 import org.bonitasoft.theme.model.Binding;
 
 /**
- * 
+ *
  * @author Romain Bioteau
  *
  */
 public class BindingWrapper implements Comparable<BindingWrapper>{
 
-	private Binding binding ;
-	private Map<String,Object> cssProperties ;
+    private Binding binding ;
+    private Map<String,Object> cssProperties ;
 
-	public BindingWrapper(Binding binding, Map<String,Object> cssProperties){
-		this.binding  = binding ;
-		this.cssProperties = cssProperties ;
-	}
+    public BindingWrapper(final Binding binding, final Map<String,Object> cssProperties){
+        this.binding  = binding ;
+        this.cssProperties = cssProperties ;
+    }
 
-	public Binding getBinding() {
-		return binding;
-	}
+    public Binding getBinding() {
+        return binding;
+    }
 
-	public void setBinding(Binding binding) {
-		this.binding = binding;
-	}
+    public void setBinding(final Binding binding) {
+        this.binding = binding;
+    }
 
-	public Map<String, Object> getCssProperties() {
-		return cssProperties;
-	}
+    public Map<String, Object> getCssProperties() {
+        return cssProperties;
+    }
 
-	public void setCssProperties(Map<String, Object> cssProperties) {
-		this.cssProperties = cssProperties;
-	}
+    public void setCssProperties(final Map<String, Object> cssProperties) {
+        this.cssProperties = cssProperties;
+    }
 
-	@Override
-	public String toString() {
-		StringBuilder sb = new StringBuilder() ;
-		if(cssProperties != null){
-			TreeSet<String> keys = new TreeSet<String>(cssProperties.keySet()) ;
-			for(String key : keys){
-				if(cssProperties.get(key) != null){
-					sb.append(key +":"+cssProperties.get(key).toString()) ;
-				}else{
-					sb.append(key +":"+cssProperties.get(key)) ;
-				}
-			}
-		}
-		return binding.toString()+","+sb.toString();
-	}
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder() ;
+        if(cssProperties != null){
+            final TreeSet<String> keys = new TreeSet<String>(cssProperties.keySet()) ;
+            for(final String key : keys){
+                if(cssProperties.get(key) != null){
+                    sb.append(key +":"+cssProperties.get(key).toString()) ;
+                }else{
+                    sb.append(key +":"+cssProperties.get(key)) ;
+                }
+            }
+        }
+        return binding.toString()+","+sb.toString();
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if(obj instanceof BindingWrapper){
-			return toString().equals(obj.toString()) ;
-		}
-		return super.equals(obj);
-	}
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + (binding == null ? 0 : binding.hashCode());
+        result = prime * result + (cssProperties == null ? 0 : cssProperties.hashCode());
+        return result;
+    }
 
-	@Override
-	public int compareTo(BindingWrapper o) {
-		return this.getBinding().getName().compareTo(o.getBinding().getName());
-	}
+    @Override
+    public boolean equals(final Object obj) {
+        if(obj instanceof BindingWrapper){
+            return toString().equals(obj.toString()) ;
+        }
+        return super.equals(obj);
+    }
+
+    @Override
+    public int compareTo(final BindingWrapper o) {
+        return getBinding().getName().compareTo(o.getBinding().getName());
+    }
 
 }

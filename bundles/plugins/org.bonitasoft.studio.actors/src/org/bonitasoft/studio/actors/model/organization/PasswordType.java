@@ -38,84 +38,85 @@ import org.eclipse.emf.ecore.EObject;
  */
 public interface PasswordType extends EObject {
 	/**
-	 * Returns the value of the '<em><b>Value</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Value</b></em>' attribute.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Value</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Value</em>' attribute.
-	 * @see #setValue(String)
-	 * @see org.bonitasoft.studio.actors.model.organization.OrganizationPackage#getPasswordType_Value()
-	 * @model dataType="org.eclipse.emf.ecore.xml.type.String"
-	 *        extendedMetaData="name=':0' kind='simple'"
-	 * @generated
-	 */
+     * @return the value of the '<em>Value</em>' attribute.
+     * @see #setValue(String)
+     * @see org.bonitasoft.studio.actors.model.organization.OrganizationPackage#getPasswordType_Value()
+     * @model dataType="org.eclipse.emf.ecore.xml.type.String"
+     *        extendedMetaData="kind='simple' name=':0'"
+     * @generated
+     */
 	String getValue();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.actors.model.organization.PasswordType#getValue <em>Value</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.actors.model.organization.PasswordType#getValue <em>Value</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Value</em>' attribute.
-	 * @see #getValue()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Value</em>' attribute.
+     * @see #getValue()
+     * @generated
+     */
 	void setValue(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Encrypted</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Encrypted</b></em>' attribute.
+     * The default value is <code>"true"</code>.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Encrypted</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Encrypted</em>' attribute.
-	 * @see #isSetEncrypted()
-	 * @see #unsetEncrypted()
-	 * @see #setEncrypted(boolean)
-	 * @see org.bonitasoft.studio.actors.model.organization.OrganizationPackage#getPasswordType_Encrypted()
-	 * @model unsettable="true" dataType="org.eclipse.emf.ecore.xml.type.Boolean" required="true"
-	 *        extendedMetaData="kind='attribute' name='encrypted'"
-	 * @generated
-	 */
+     * @return the value of the '<em>Encrypted</em>' attribute.
+     * @see #isSetEncrypted()
+     * @see #unsetEncrypted()
+     * @see #setEncrypted(boolean)
+     * @see org.bonitasoft.studio.actors.model.organization.OrganizationPackage#getPasswordType_Encrypted()
+     * @model default="true" unsettable="true" dataType="org.eclipse.emf.ecore.xml.type.Boolean" required="true"
+     *        extendedMetaData="kind='attribute' name='encrypted'"
+     * @generated
+     */
 	boolean isEncrypted();
 
 	/**
-	 * Sets the value of the '{@link org.bonitasoft.studio.actors.model.organization.PasswordType#isEncrypted <em>Encrypted</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.bonitasoft.studio.actors.model.organization.PasswordType#isEncrypted <em>Encrypted</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Encrypted</em>' attribute.
-	 * @see #isSetEncrypted()
-	 * @see #unsetEncrypted()
-	 * @see #isEncrypted()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Encrypted</em>' attribute.
+     * @see #isSetEncrypted()
+     * @see #unsetEncrypted()
+     * @see #isEncrypted()
+     * @generated
+     */
 	void setEncrypted(boolean value);
 
-	/**
-	 * Unsets the value of the '{@link org.bonitasoft.studio.actors.model.organization.PasswordType#isEncrypted <em>Encrypted</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #isSetEncrypted()
-	 * @see #isEncrypted()
-	 * @see #setEncrypted(boolean)
-	 * @generated
-	 */
-	void unsetEncrypted();
+    /**
+     * Unsets the value of the '{@link org.bonitasoft.studio.actors.model.organization.PasswordType#isEncrypted <em>Encrypted</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #isSetEncrypted()
+     * @see #isEncrypted()
+     * @see #setEncrypted(boolean)
+     * @generated
+     */
+    void unsetEncrypted();
 
-	/**
-	 * Returns whether the value of the '{@link org.bonitasoft.studio.actors.model.organization.PasswordType#isEncrypted <em>Encrypted</em>}' attribute is set.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return whether the value of the '<em>Encrypted</em>' attribute is set.
-	 * @see #unsetEncrypted()
-	 * @see #isEncrypted()
-	 * @see #setEncrypted(boolean)
-	 * @generated
-	 */
-	boolean isSetEncrypted();
+    /**
+     * Returns whether the value of the '{@link org.bonitasoft.studio.actors.model.organization.PasswordType#isEncrypted <em>Encrypted</em>}' attribute is set.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return whether the value of the '<em>Encrypted</em>' attribute is set.
+     * @see #unsetEncrypted()
+     * @see #isEncrypted()
+     * @see #setEncrypted(boolean)
+     * @generated
+     */
+    boolean isSetEncrypted();
 
 } // PasswordType

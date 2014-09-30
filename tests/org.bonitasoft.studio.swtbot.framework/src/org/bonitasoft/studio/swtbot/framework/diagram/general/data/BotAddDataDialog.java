@@ -13,7 +13,6 @@ import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.swtbot.framework.BotWizardDialog;
 import org.bonitasoft.studio.swtbot.framework.expression.BotExpressionEditorDialog;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
-import org.eclipse.swtbot.swt.finder.waits.Conditions;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotCheckBox;
 
 /**
@@ -24,17 +23,16 @@ import org.eclipse.swtbot.swt.finder.widgets.SWTBotCheckBox;
 public class BotAddDataDialog extends BotWizardDialog {
 
     public BotAddDataDialog(final SWTGefBot bot) {
-        super(bot);
+        super(bot, Messages.newVariable);
     }
 
-    @Override
-    protected void waitShell() {
-        bot.waitUntil(Conditions.shellIsActive(Messages.newVariable));
-        bot.shell(Messages.newVariable);
+    protected BotAddDataDialog(final SWTGefBot bot, final String dialogTitle) {
+        super(bot, dialogTitle);
     }
 
     /**
      * Set name of data.
+     *
      * @param pName
      */
     public BotAddDataDialog setName(final String pName) {
@@ -44,6 +42,7 @@ public class BotAddDataDialog extends BotWizardDialog {
 
     /**
      * Set description of data.
+     *
      * @param pDescription
      */
     public BotAddDataDialog setDescription(final String pDescription) {
@@ -53,6 +52,7 @@ public class BotAddDataDialog extends BotWizardDialog {
 
     /**
      * Set type of data.
+     *
      * @param pType
      */
     public BotAddDataDialog setType(final String pType) {

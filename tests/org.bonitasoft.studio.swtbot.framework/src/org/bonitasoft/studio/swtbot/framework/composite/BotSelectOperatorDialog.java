@@ -20,7 +20,6 @@ import java.util.List;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.expression.editor.i18n.Messages;
 import org.bonitasoft.studio.swtbot.framework.BotDialog;
-import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 
 /**
@@ -29,12 +28,7 @@ import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 public class BotSelectOperatorDialog extends BotDialog {
 
     public BotSelectOperatorDialog(final SWTGefBot bot) {
-        super(bot);
-    }
-
-    @Override
-    protected void waitShell() {
-        bot.waitUntil(Conditions.shellIsActive(Messages.dialogTitleSelectOperator));
+        super(bot, Messages.dialogTitleSelectOperator);
     }
 
     public List<String> getAvailableOperators() {

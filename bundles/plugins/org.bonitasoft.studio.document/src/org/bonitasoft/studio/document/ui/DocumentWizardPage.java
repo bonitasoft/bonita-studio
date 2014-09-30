@@ -592,6 +592,7 @@ public class DocumentWizardPage extends WizardPage {
                         return ValidationStatus.error(Messages.error_documentDefaultIDEmpty);
                     }
                 }
+
                 return ValidationStatus.ok();
             }
         };
@@ -645,6 +646,7 @@ public class DocumentWizardPage extends WizardPage {
 
             @Override
             public IStatus validate(final Object arg0) {
+
 
                 final IStatus out = externalValidator.validate(document);
 

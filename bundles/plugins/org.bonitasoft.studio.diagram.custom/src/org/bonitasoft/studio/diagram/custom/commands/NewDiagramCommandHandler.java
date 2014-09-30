@@ -31,7 +31,7 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
-import org.bonitasoft.studio.diagram.custom.Messages;
+import org.bonitasoft.studio.diagram.custom.i18n.Messages;
 import org.bonitasoft.studio.diagram.custom.repository.ApplicationResourceFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.ApplicationResourceRepositoryStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
@@ -132,7 +132,7 @@ public class NewDiagramCommandHandler extends AbstractHandler {
 
 					diagramIdentifier = getNewProcessIdentifier(diagramStore);
 					monitor.worked(1*SCALE);
-					diagramName =  NamingUtils.convertToId(org.bonitasoft.studio.diagram.custom.Messages.newFilePrefix + diagramIdentifier)  ;
+					diagramName =  NamingUtils.convertToId(org.bonitasoft.studio.diagram.custom.i18n.Messages.newFilePrefix + diagramIdentifier)  ;
 					monitor.worked(1*SCALE);
 					String uniqueFileName = NamingUtils.toDiagramFilename(diagramName ,BASE_VERSION) ;
 					monitor.worked(1*SCALE);

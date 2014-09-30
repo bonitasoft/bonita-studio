@@ -17,6 +17,7 @@ package org.bonitasoft.studio.common.emf.tools;
 import java.util.Collection;
 import java.util.List;
 
+import org.bonitasoft.studio.common.DataUtil;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.Messages;
 import org.bonitasoft.studio.model.expression.Expression;
@@ -215,6 +216,26 @@ public class ExpressionHelper {
         expression.setReturnType(Collection.class.getName());
         expression.setName(EMPTY_LIST_NAME);
         expression.setContent(EMPTY_LIST_CONTENT);
+        return expression;
+    }
+
+    public static Expression createVariableExpression(final Data data) {
+        final Expression expression = ExpressionFactory.eINSTANCE.createExpression();
+        expression.setType(ExpressionConstants.VARIABLE_TYPE);
+        expression.setReturnType(DataUtil.getTechnicalTypeFor(data));
+        expression.setName(data.getName());
+        expression.setContent(data.getName());
+        expression.getReferencedElements().add(createDependencyFromEObject(data));
+        return expression;
+    }
+
+    public static Expression createExpression(final String name, final String content, final String type, final String returnType, final boolean fixedReturnType) {
+        final Expression expression = ExpressionFactory.eINSTANCE.createExpression();
+        expression.setType(type);
+        expression.setReturnType(returnType);
+        expression.setReturnTypeFixed(true);
+        expression.setName(name);
+        expression.setContent(content);
         return expression;
     }
 
