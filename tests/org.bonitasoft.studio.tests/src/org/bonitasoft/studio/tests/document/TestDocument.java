@@ -171,7 +171,7 @@ public class TestDocument extends SWTBotGefTestCase {
         botAddDocumentDialog.setName("doc1");
         botAddDocumentDialog.finish();
 
-        botProcessDiagramPerspective.drawDiagram().selectElement("Step1");
+        botProcessDiagramPerspective.activeProcessDiagramEditor().selectElement("Step1");
 
         final BotOperationsPropertySection botOperationsPropertySection = botProcessDiagramPropertiesViewFolder.selectGeneralTab().selectOperationTab();
         botOperationsPropertySection.addOperation();

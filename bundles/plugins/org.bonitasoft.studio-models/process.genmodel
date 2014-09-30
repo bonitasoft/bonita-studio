@@ -582,6 +582,8 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//Document/url"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//Document/defaultValueIdOfDocumentStore"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//Document/documentType"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//Document/multiple"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//Document/initialMultipleContent"/>
     </genClasses>
     <genClasses ecoreClass="process.ecore#//DoubleType"/>
     <genClasses ecoreClass="process.ecore#//EndErrorEvent"/>

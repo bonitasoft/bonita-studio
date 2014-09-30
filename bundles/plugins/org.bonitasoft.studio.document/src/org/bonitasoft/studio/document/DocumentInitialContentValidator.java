@@ -53,8 +53,8 @@ public class DocumentInitialContentValidator implements IValidator {
             }
 
             if (document.getDocumentType().equals(DocumentType.EXTERNAL) && document.getUrl() != null && document.getUrl().getContent() != null
-                    && document.getUrl().getContent().length() > maxLength) {
-                return ValidationStatus.error(Messages.bind(Messages.error_documentURLTooLong, maxLength + 1));
+                    && document.getUrl().getContent().length() > maxLenght) {
+                return ValidationStatus.error(Messages.bind(Messages.error_documentURLTooLong, maxLenght + 1));
             }
 
 

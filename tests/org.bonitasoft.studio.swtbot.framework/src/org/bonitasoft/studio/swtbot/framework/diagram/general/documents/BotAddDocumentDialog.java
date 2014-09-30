@@ -16,7 +16,6 @@ import org.bonitasoft.studio.swtbot.framework.expression.BotExpressionEditorDial
 import org.bonitasoft.studio.swtbot.framework.expression.BotScriptExpressionEditor;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
-import org.eclipse.swtbot.swt.finder.waits.Conditions;
 
 /**
  * Add document dialog.
@@ -31,12 +30,6 @@ public class BotAddDocumentDialog extends BotWizardDialog {
 
     protected BotAddDocumentDialog(final SWTGefBot bot, final String dialogTitle) {
         super(bot, dialogTitle);
-    }
-
-    @Override
-    protected void waitShell() {
-        bot.waitUntil(Conditions.shellIsActive(Messages.newDocument));
-        bot.shell(Messages.newDocument);
     }
 
     /**

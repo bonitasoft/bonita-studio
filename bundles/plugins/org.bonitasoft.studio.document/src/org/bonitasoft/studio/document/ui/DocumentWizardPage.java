@@ -244,8 +244,7 @@ public class DocumentWizardPage extends WizardPage {
     }
 
     protected ExpressionViewer createExpressionViewer(final Composite parent, final EReference reference) {
-        return new ExpressionViewer(parent,
-                SWT.BORDER, reference);
+        return new ExpressionViewer(parent, SWT.BORDER);
     }
 
     protected GroovyOnlyExpressionViewer createExpressionViewerWitrhGroovyScriptOnly(final Composite parent) {
