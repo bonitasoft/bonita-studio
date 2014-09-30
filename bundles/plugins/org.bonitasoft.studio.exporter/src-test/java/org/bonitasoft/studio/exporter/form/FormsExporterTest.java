@@ -3,6 +3,7 @@
  */
 package org.bonitasoft.studio.exporter.form;
 
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 
@@ -21,6 +22,7 @@ import org.bonitasoft.studio.model.process.Document;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -83,18 +85,15 @@ public class FormsExporterTest {
 
     @Test
     public void should_AddFileWidgetInputType_All() throws InvalidFormDefinitionException {
-        final FileWidget fileWidget = FormFactory.eINSTANCE.createFileWidget();
-        fileWidget.setInputType(FileWidgetInputType.DOCUMENT);
+        final FileWidget fileWidget = createFileWidget(FileWidgetInputType.DOCUMENT);
         formExporter.addDocumentInitialValue(fileWidget, formBuilder);
         verify(formBuilder).addFileWidgetInputType(org.bonitasoft.forms.client.model.FileWidgetInputType.ALL);
     }
 
     @Test
     public void should_addFileWidgetInitialValueExpression_whenTypeIsDocument() throws InvalidFormDefinitionException {
-        final FileWidget fileWidget = FormFactory.eINSTANCE.createFileWidget();
-        fileWidget.setInputType(FileWidgetInputType.DOCUMENT);
-        final Document document = ProcessFactory.eINSTANCE.createDocument();
-        document.setName("myBonitaDocument");
+        final FileWidget fileWidget = createFileWidget(FileWidgetInputType.DOCUMENT);
+        final Document document = createDocument("myBonitaDocument", false);
         final Expression documentExpr = ExpressionFactory.eINSTANCE.createExpression();
         documentExpr.setContent(document.getName());
         fileWidget.setInputExpression(documentExpr);
@@ -104,8 +103,7 @@ public class FormsExporterTest {
 
     @Test
     public void should_addFileWidgetInitialValueExpression_whenTypeIsURL() throws InvalidFormDefinitionException {
-        final FileWidget fileWidget = FormFactory.eINSTANCE.createFileWidget();
-        fileWidget.setInputType(FileWidgetInputType.URL);
+        final FileWidget fileWidget = createFileWidget(FileWidgetInputType.URL);
         final Expression documentExpr = ExpressionFactory.eINSTANCE.createExpression();
         documentExpr.setContent("http://www.bonitasoft.com");
         fileWidget.setInputExpression(documentExpr);
@@ -113,7 +111,33 @@ public class FormsExporterTest {
         verify(formExporter).addInitialValueExpression(formBuilder, documentExpr);
     }
 
+    @Test
+    @Ignore
+    public void should_addDocumentListBehavior() throws InvalidFormDefinitionException {
+        final FileWidget fileWidget = createFileWidget(FileWidgetInputType.DOCUMENT);
+        final Document document = createDocument("myBonitaDocument", true);
+        final Expression documentExpr = ExpressionFactory.eINSTANCE.createExpression();
+        documentExpr.setContent(document.getName());
+        fileWidget.setInputExpression(documentExpr);
+        formExporter.addDocumentInitialValue(fileWidget, formBuilder);
+        //uncomment next line
+        //  verify(formExporter).addDocumentListBehavior(document.isMultiple());
+        fail();
+    }
 
+    private Document createDocument(final String name, final boolean isMultiple) {
+        final Document document = ProcessFactory.eINSTANCE.createDocument();
+        document.setName(name);
+        document.setMultiple(isMultiple);
+        return document;
+    }
+
+    private FileWidget createFileWidget(final FileWidgetInputType type) {
+        final FileWidget fileWidget = FormFactory.eINSTANCE.createFileWidget();
+        fileWidget.setInputType(FileWidgetInputType.DOCUMENT);
+        return fileWidget;
+
+    }
 
     private Operation createOperation(final String leftOpreand, final String rightOperand,final String operatorType) {
         final Operation operation = ExpressionFactory.eINSTANCE.createOperation();
