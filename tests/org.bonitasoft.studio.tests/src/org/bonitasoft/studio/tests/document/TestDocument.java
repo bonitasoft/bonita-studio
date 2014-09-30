@@ -27,6 +27,7 @@ import org.bonitasoft.studio.swtbot.framework.diagram.general.documents.BotDocum
 import org.bonitasoft.studio.swtbot.framework.diagram.general.documents.BotRemoveDocumentDialog;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.operations.BotOperationsPropertySection;
 import org.bonitasoft.studio.swtbot.framework.expression.BotExpressionEditorDialog;
+import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.junit.Test;
@@ -62,7 +63,7 @@ public class TestDocument extends SWTBotGefTestCase {
         final BotDocumentsPropertySection botDocumentsPropertySection = createDiagramAndGoToDocumentSection();
         BotAddDocumentDialog botAddDocumentDialog = botDocumentsPropertySection.addDocument();
         botAddDocumentDialog.setName("doc11");
-        botAddDocumentDialog.chooseMultileContent();
+        botAddDocumentDialog.chooseMultipleContent();
         botAddDocumentDialog.finish();
 
         //Edit
@@ -194,5 +195,60 @@ public class TestDocument extends SWTBotGefTestCase {
         final BotDocumentsPropertySection botDocumentsPropertySection = botProcessDiagramPropertiesViewFolder.selectGeneralTab().selectDocumentsTab();
         return botDocumentsPropertySection;
     }
+
+
+    @Test
+    public void testErrorMessageAndButtonBehaviorForMultipleDocument() throws Exception {
+        SWTBotTestUtil.pressEnter();
+
+        final BotDocumentsPropertySection botDocumentsPropertySection = createDiagramAndGoToDocumentSection();
+        final BotAddDocumentDialog botAddDocumentDialog = botDocumentsPropertySection.addDocument();
+
+        botAddDocumentDialog.chooseMultipleContent();
+        //        assertErrorMessageAndFinishDisabled(botAddDocumentDialog, botAddDocumentDialog.isErrorMessageNameEmpty());
+
+        botAddDocumentDialog.chooseSingleContent();
+        //        assertErrorMessageAndFinishDisabled(botAddDocumentDialog, botAddDocumentDialog.isErrorMessageNameEmpty());
+
+        botAddDocumentDialog.setName("newDoc1");
+        //        assertNoErrorMessage(botAddDocumentDialog);
+        Assertions.assertThat(botAddDocumentDialog.isMymeTypeFieldEnabled()).isFalse();
+
+        // INTERNAL
+        botAddDocumentDialog.chooseInternalInitialContent();
+        //        assertErrorMessageAndFinishDisabled(botAddDocumentDialog, botAddDocumentDialog.isErrorMessageFile());
+        Assertions.assertThat(botAddDocumentDialog.isMymeTypeFieldEnabled()).isTrue();
+
+        botAddDocumentDialog.chooseMultipleContent();
+        //        assertNoErrorMessage(botAddDocumentDialog);
+        Assertions.assertThat(botAddDocumentDialog.isMymeTypeFieldEnabled()).isFalse();
+
+        botAddDocumentDialog.chooseSingleContent();
+        //        assertErrorMessageAndFinishDisabled(botAddDocumentDialog, botAddDocumentDialog.isErrorMessageFile());
+        Assertions.assertThat(botAddDocumentDialog.isMymeTypeFieldEnabled()).isTrue();
+
+        // EXTERNAL
+        botAddDocumentDialog.chooseExternalInitialContent();;
+        //        assertErrorMessageAndFinishDisabled(botAddDocumentDialog, botAddDocumentDialog.isErrorMessageUrl());
+        Assertions.assertThat(botAddDocumentDialog.isMymeTypeFieldEnabled()).isTrue();
+
+        botAddDocumentDialog.chooseMultipleContent();
+        //        assertNoErrorMessage(botAddDocumentDialog);
+        Assertions.assertThat(botAddDocumentDialog.isMymeTypeFieldEnabled()).isFalse();
+
+        botAddDocumentDialog.chooseSingleContent();
+        //        assertErrorMessageAndFinishDisabled(botAddDocumentDialog, botAddDocumentDialog.isErrorMessageUrl());
+        Assertions.assertThat(botAddDocumentDialog.isMymeTypeFieldEnabled()).isTrue();
+
+        // NONE
+        botAddDocumentDialog.chooseNoneInitialContent();
+        Assertions.assertThat(botAddDocumentDialog.isMymeTypeFieldEnabled()).isFalse();
+
+        botAddDocumentDialog.finish();
+
+
+
+    }
+
 
 }

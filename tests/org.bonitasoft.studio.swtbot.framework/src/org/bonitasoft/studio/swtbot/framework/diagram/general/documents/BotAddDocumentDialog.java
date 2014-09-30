@@ -112,7 +112,7 @@ public class BotAddDocumentDialog extends BotWizardDialog {
     /**
      * Choose "Multiple" radio button
      */
-    public void chooseMultileContent() {
+    public void chooseMultipleContent() {
         bot.radio(Messages.radioButtonMultiple).click();
     }
 
@@ -144,7 +144,7 @@ public class BotAddDocumentDialog extends BotWizardDialog {
     }
 
     /**
-     * Hide MIME type filed.
+     * Hide MIME type field.
      */
     public void hideMimeTypeField() {
         bot.link("<A>" + Messages.hideMimeType + "</A>").click();
@@ -159,6 +159,13 @@ public class BotAddDocumentDialog extends BotWizardDialog {
         bot.textWithLabel(Messages.mimeType).setText(pMimeType);
     }
 
+    /**
+     * Is MIME Type field
+     */
+
+    public boolean isMymeTypeFieldEnabled() {
+        return bot.link("<A>" + Messages.manageMimeType + "</A>").isEnabled();
+    }
     /**
      * VALIDATION
      */
