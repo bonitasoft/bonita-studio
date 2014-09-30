@@ -42,9 +42,9 @@ public class OperatorConsistencyConstraint extends AbstractLiveValidationMarkerC
                 && operator != null
                 && !filter.select(null, null, operator.getType())) {
             return context.createFailureStatus(
-                    Messages.bind("The operator \"{0}\" is not compatible with the type of left operand \"{1}\".",
+                    Messages.bind(Messages.validation_OperatorConsistency,
                             new String[] { labelProvider.getText(operator),
-                                    leftOperand.getName() }));
+                            leftOperand.getName() }));
         }
         return context.createSuccessStatus();
     }
