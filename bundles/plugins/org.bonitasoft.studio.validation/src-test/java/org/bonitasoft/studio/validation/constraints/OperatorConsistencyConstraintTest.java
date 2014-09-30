@@ -77,6 +77,7 @@ public class OperatorConsistencyConstraintTest {
         operation.setOperator(operator);
         final Expression leftOperand = ExpressionFactory.eINSTANCE.createExpression();
         leftOperand.setType(ExpressionConstants.DOCUMENT_REF_TYPE);
+        leftOperand.setName("doc");
         final Document documentReferenced = ProcessFactory.eINSTANCE.createDocument();
         documentReferenced.setMultiple(isMultiple);
         leftOperand.getReferencedElements().add(documentReferenced);
