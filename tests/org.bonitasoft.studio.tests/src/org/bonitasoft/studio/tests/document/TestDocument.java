@@ -205,39 +205,39 @@ public class TestDocument extends SWTBotGefTestCase {
         final BotAddDocumentDialog botAddDocumentDialog = botDocumentsPropertySection.addDocument();
 
         botAddDocumentDialog.chooseMultipleContent();
-        //        assertErrorMessageAndFinishDisabled(botAddDocumentDialog, botAddDocumentDialog.isErrorMessageNameEmpty());
+        assertErrorMessageAndFinishDisabled(botAddDocumentDialog, botAddDocumentDialog.isErrorMessageNameEmpty());
 
         botAddDocumentDialog.chooseSingleContent();
-        //        assertErrorMessageAndFinishDisabled(botAddDocumentDialog, botAddDocumentDialog.isErrorMessageNameEmpty());
+        assertErrorMessageAndFinishDisabled(botAddDocumentDialog, botAddDocumentDialog.isErrorMessageNameEmpty());
 
         botAddDocumentDialog.setName("newDoc1");
-        //        assertNoErrorMessage(botAddDocumentDialog);
+        assertNoErrorMessage(botAddDocumentDialog);
         Assertions.assertThat(botAddDocumentDialog.isMymeTypeFieldEnabled()).isFalse();
 
         // INTERNAL
         botAddDocumentDialog.chooseInternalInitialContent();
-        //        assertErrorMessageAndFinishDisabled(botAddDocumentDialog, botAddDocumentDialog.isErrorMessageFile());
+        assertErrorMessageAndFinishDisabled(botAddDocumentDialog, botAddDocumentDialog.isErrorMessageFile());
         Assertions.assertThat(botAddDocumentDialog.isMymeTypeFieldEnabled()).isTrue();
 
         botAddDocumentDialog.chooseMultipleContent();
-        //        assertNoErrorMessage(botAddDocumentDialog);
+        assertNoErrorMessage(botAddDocumentDialog);
         Assertions.assertThat(botAddDocumentDialog.isMymeTypeFieldEnabled()).isFalse();
 
         botAddDocumentDialog.chooseSingleContent();
-        //        assertErrorMessageAndFinishDisabled(botAddDocumentDialog, botAddDocumentDialog.isErrorMessageFile());
+        assertErrorMessageAndFinishDisabled(botAddDocumentDialog, botAddDocumentDialog.isErrorMessageFile());
         Assertions.assertThat(botAddDocumentDialog.isMymeTypeFieldEnabled()).isTrue();
 
         // EXTERNAL
         botAddDocumentDialog.chooseExternalInitialContent();;
-        //        assertErrorMessageAndFinishDisabled(botAddDocumentDialog, botAddDocumentDialog.isErrorMessageUrl());
+        assertErrorMessageAndFinishDisabled(botAddDocumentDialog, botAddDocumentDialog.isErrorMessageUrl());
         Assertions.assertThat(botAddDocumentDialog.isMymeTypeFieldEnabled()).isTrue();
 
         botAddDocumentDialog.chooseMultipleContent();
-        //        assertNoErrorMessage(botAddDocumentDialog);
+        assertNoErrorMessage(botAddDocumentDialog);
         Assertions.assertThat(botAddDocumentDialog.isMymeTypeFieldEnabled()).isFalse();
 
         botAddDocumentDialog.chooseSingleContent();
-        //        assertErrorMessageAndFinishDisabled(botAddDocumentDialog, botAddDocumentDialog.isErrorMessageUrl());
+        assertErrorMessageAndFinishDisabled(botAddDocumentDialog, botAddDocumentDialog.isErrorMessageUrl());
         Assertions.assertThat(botAddDocumentDialog.isMymeTypeFieldEnabled()).isTrue();
 
         // NONE
