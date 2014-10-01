@@ -239,4 +239,42 @@ public class EngineExpressionUtilTest {
         operation.setOperator(op);
         assertThat(EngineExpressionUtil.getEngineOperator(operation).name()).isEqualTo(ExpressionConstants.ASSIGNMENT_OPERATOR);//TODO: [BS-9610] change it if a specific operation is created in the Engine
     }
+
+    @Test
+    public void shouldGetEngineLeftOperandType_Return_DocumentList() throws Exception {
+        final Document document = ProcessFactory.eINSTANCE.createDocument();
+        document.setName("docName");
+        document.setMultiple(true);
+        final Operation operation = ExpressionFactory.eINSTANCE.createOperation();
+        final org.bonitasoft.studio.model.expression.Expression documentExpression = ExpressionFactory.eINSTANCE.createExpression();
+        documentExpression.setContent("docName");
+        documentExpression.setType(ExpressionConstants.DOCUMENT_TYPE);
+        documentExpression.getReferencedElements().add(document);
+        operation.setLeftOperand(documentExpression);
+        final Operator op = ExpressionFactory.eINSTANCE.createOperator();
+        op.setType(ExpressionConstants.SET_LIST_DOCUMENT_OPERATOR);
+        operation.setOperator(op);
+        assertThat(EngineExpressionUtil.getLeftOperandType(documentExpression, false)).isEqualTo(ExpressionConstants.LEFT_OPERAND_DOCUMENT_LIST);
+    }
+
+    @Test
+    public void shouldGetEngineLeftOperandType_Return_DocumentSimple() throws Exception {
+        final Document document = ProcessFactory.eINSTANCE.createDocument();
+        document.setName("docName");
+        final Operation operation = ExpressionFactory.eINSTANCE.createOperation();
+        final org.bonitasoft.studio.model.expression.Expression documentExpression = ExpressionFactory.eINSTANCE.createExpression();
+        documentExpression.setContent("docName");
+        documentExpression.setType(ExpressionConstants.DOCUMENT_TYPE);
+        documentExpression.getReferencedElements().add(document);
+        operation.setLeftOperand(documentExpression);
+        final Operator op = ExpressionFactory.eINSTANCE.createOperator();
+        op.setType(ExpressionConstants.SET_LIST_DOCUMENT_OPERATOR);
+        operation.setOperator(op);
+        assertThat(EngineExpressionUtil.getLeftOperandType(documentExpression, false)).isEqualTo(ExpressionConstants.LEFT_OPERAND_DOCUMENT);
+    }
+
+    @Test
+    public void shouldGetEngineLeftOperandType_Return_External() throws Exception {
+        assertThat(EngineExpressionUtil.getLeftOperandType(null, true)).isEqualTo(ExpressionConstants.LEFT_OPERAND_EXTERNAL_DATA);
+    }
 }

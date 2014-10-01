@@ -632,7 +632,7 @@ public class FormsExporter {
         final ActionType actionType = getActionTypeFromStudioOperatorType(action
                 .getOperator().getType());
         final String variableName = action.getLeftOperand().getContent();
-        final String variableType = EngineExpressionUtil.getVariableType(
+        final String variableType = EngineExpressionUtil.getLeftOperandType(
                 action.getLeftOperand(), false);
         final String operator = action.getOperator().getExpression();
         final EList<String> inputTypes = action.getOperator().getInputTypes();
