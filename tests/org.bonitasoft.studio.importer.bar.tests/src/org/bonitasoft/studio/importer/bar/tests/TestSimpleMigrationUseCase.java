@@ -79,559 +79,560 @@ import org.junit.Test;
 public class TestSimpleMigrationUseCase {
 
 
-	private static boolean disablepopup;
+    private static boolean disablepopup;
 
-	@BeforeClass
-	public static void disablePopup(){
-		disablepopup = FileActionDialog.getDisablePopup();
-		FileActionDialog.setDisablePopup(true);
-	}
+    @BeforeClass
+    public static void disablePopup(){
+        disablepopup = FileActionDialog.getDisablePopup();
+        FileActionDialog.setDisablePopup(true);
+    }
 
-	@AfterClass
-	public static void resetdisablePopup(){
-		FileActionDialog.setDisablePopup(disablepopup);
-	}
+    @AfterClass
+    public static void resetdisablePopup(){
+        FileActionDialog.setDisablePopup(disablepopup);
+    }
 
 
-	@Test
-	public void testDatatypesMigration() throws Exception{
-		final URL url = TestSimpleMigrationUseCase.class.getResource("AllDatatypes--1.0.bar");
-		final File migratedProc =  BarImporterTestUtil.migrateBar(url);
-		assertNotNull("Fail to migrate bar file", migratedProc);
-		assertNotNull("Fail to migrate bar file", migratedProc.exists());
-		final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
-		final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
+    @Test
+    public void testDatatypesMigration() throws Exception{
+        final URL url = TestSimpleMigrationUseCase.class.getResource("AllDatatypes--1.0.bar");
+        final File migratedProc =  BarImporterTestUtil.migrateBar(url);
+        assertNotNull("Fail to migrate bar file", migratedProc);
+        assertNotNull("Fail to migrate bar file", migratedProc.exists());
+        final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
+        final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
 
-		final List<DataType> datatypes =  ModelHelper.getAllItemsOfType(mainProc, ProcessPackage.Literals.DATA_TYPE);
-		assertEquals("Invalid number of datatypes", 10, datatypes.size()); //9 provided + 1 enum
-		final DataTypeSwitch typesSwitch = new DataTypeSwitch(datatypes);
-		typesSwitch.testDatatypesConsistency();
-	}
+        final List<DataType> datatypes =  ModelHelper.getAllItemsOfType(mainProc, ProcessPackage.Literals.DATA_TYPE);
+        assertEquals("Invalid number of datatypes", 10, datatypes.size()); //9 provided + 1 enum
+        final DataTypeSwitch typesSwitch = new DataTypeSwitch(datatypes);
+        typesSwitch.testDatatypesConsistency();
+    }
 
-	@Test
-	public void testCallActivityMigration() throws Exception{
-		final URL url = TestSimpleMigrationUseCase.class.getResource("Simple_Call_Activity--1.0.bar");
-		final File migratedProc =  BarImporterTestUtil.migrateBar(url);
-		assertNotNull("Fail to migrate bar file", migratedProc);
-		assertNotNull("Fail to migrate bar file", migratedProc.exists());
-		final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
-		final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
-		assertEquals("Call Activity is missing",1, ModelHelper.getAllItemsOfType(mainProc, ProcessPackage.Literals.CALL_ACTIVITY).size());
-		BarImporterTestUtil.assertViewsAreConsistent(resource);
-	}
+    @Test
+    public void testCallActivityMigration() throws Exception{
+        final URL url = TestSimpleMigrationUseCase.class.getResource("Simple_Call_Activity--1.0.bar");
+        final File migratedProc =  BarImporterTestUtil.migrateBar(url);
+        assertNotNull("Fail to migrate bar file", migratedProc);
+        assertNotNull("Fail to migrate bar file", migratedProc.exists());
+        final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
+        final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
+        assertEquals("Call Activity is missing",1, ModelHelper.getAllItemsOfType(mainProc, ProcessPackage.Literals.CALL_ACTIVITY).size());
+        BarImporterTestUtil.assertViewsAreConsistent(resource);
+    }
 
-	@Test
-	public void testDataDefaultValueMigration() throws Exception{
-		final URL url = TestSimpleMigrationUseCase.class.getResource("DefaultValueMigrationUseCase--1.0.bar");
-		final File migratedProc =  BarImporterTestUtil.migrateBar(url);
-		assertNotNull("Fail to migrate bar file", migratedProc);
-		assertNotNull("Fail to migrate bar file", migratedProc.exists());
-		final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
-		final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
-		List<Expression> expressions = ModelHelper.getAllItemsOfType(mainProc, ExpressionPackage.Literals.EXPRESSION);
-		int nbVariableExpression = 0;
-		int nbScriptExpression = 0;
-		int nbConstantExpression = 0;
-		for(Expression exp : expressions){
-			if(ExpressionConstants.VARIABLE_TYPE.equals(exp.getType()) && !ModelHelper.isAnExpressionCopy((Expression) exp)){
-				nbVariableExpression++;
-			}
-			if(ExpressionConstants.SCRIPT_TYPE.equals(exp.getType())){
-				nbScriptExpression++;
-			}
-			if(ExpressionConstants.CONSTANT_TYPE.equals(exp.getType()) && exp.getContent() != null && !exp.getContent().isEmpty()){
-				nbConstantExpression++;
-			}
-		}
-		assertEquals("Invalid number of variable expression",3, nbVariableExpression);
-		assertEquals("Invalid number of script expression",3, nbScriptExpression);
-		assertEquals("Invalid number of constant expression",3, nbConstantExpression);
-		BarImporterTestUtil.assertViewsAreConsistent(resource);
-	}
+    @Test
+    public void testDataDefaultValueMigration() throws Exception{
+        final URL url = TestSimpleMigrationUseCase.class.getResource("DefaultValueMigrationUseCase--1.0.bar");
+        final File migratedProc =  BarImporterTestUtil.migrateBar(url);
+        assertNotNull("Fail to migrate bar file", migratedProc);
+        assertNotNull("Fail to migrate bar file", migratedProc.exists());
+        final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
+        final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
+        final List<Expression> expressions = ModelHelper.getAllItemsOfType(mainProc, ExpressionPackage.Literals.EXPRESSION);
+        int nbVariableExpression = 0;
+        int nbScriptExpression = 0;
+        int nbConstantExpression = 0;
+        for(final Expression exp : expressions){
+            if(ExpressionConstants.VARIABLE_TYPE.equals(exp.getType()) && !ModelHelper.isAnExpressionCopy(exp)){
+                nbVariableExpression++;
+            }
+            if(ExpressionConstants.SCRIPT_TYPE.equals(exp.getType())){
+                nbScriptExpression++;
+            }
+            if(ExpressionConstants.CONSTANT_TYPE.equals(exp.getType()) && exp.getContent() != null && !exp.getContent().isEmpty()){
+                nbConstantExpression++;
+            }
+        }
+        assertEquals("Invalid number of variable expression",3, nbVariableExpression);
+        assertEquals("Invalid number of script expression",3, nbScriptExpression);
+        assertEquals("Invalid number of constant expression",3, nbConstantExpression);
+        BarImporterTestUtil.assertViewsAreConsistent(resource);
+    }
 
-	@Test
-	public void testSequenceFlowConditionMigration() throws Exception{
-		final URL url = TestSimpleMigrationUseCase.class.getResource("SequenceFlowCondition_MigrationUseCase--1.0.bar");
-		final File migratedProc =  BarImporterTestUtil.migrateBar(url);
-		assertNotNull("Fail to migrate bar file", migratedProc);
-		assertNotNull("Fail to migrate bar file", migratedProc.exists());
-		final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
-		final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
-		List<Expression> expressions = ModelHelper.getAllItemsOfType(mainProc, ExpressionPackage.Literals.EXPRESSION);
-		int nbVariableExpression = 0;
-		int nbScriptExpression = 0;
-		for(Expression exp : expressions){
-			if(ExpressionConstants.VARIABLE_TYPE.equals(exp.getType())){
-				nbVariableExpression++;
-			}
-			if(ExpressionConstants.SCRIPT_TYPE.equals(exp.getType())){
-				nbScriptExpression++;
-			}
-		}
-		assertEquals("Invalid number of variable expression",1, nbVariableExpression);
-		assertEquals("Invalid number of script expression",1, nbScriptExpression);
-		BarImporterTestUtil.assertViewsAreConsistent(resource);
-	}
+    @Test
+    public void testSequenceFlowConditionMigration() throws Exception{
+        final URL url = TestSimpleMigrationUseCase.class.getResource("SequenceFlowCondition_MigrationUseCase--1.0.bar");
+        final File migratedProc =  BarImporterTestUtil.migrateBar(url);
+        assertNotNull("Fail to migrate bar file", migratedProc);
+        assertNotNull("Fail to migrate bar file", migratedProc.exists());
+        final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
+        final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
+        final List<Expression> expressions = ModelHelper.getAllItemsOfType(mainProc, ExpressionPackage.Literals.EXPRESSION);
+        int nbVariableExpression = 0;
+        int nbScriptExpression = 0;
+        for(final Expression exp : expressions){
+            if(ExpressionConstants.VARIABLE_TYPE.equals(exp.getType())){
+                nbVariableExpression++;
+            }
+            if(ExpressionConstants.SCRIPT_TYPE.equals(exp.getType())){
+                nbScriptExpression++;
+            }
+        }
+        assertEquals("Invalid number of variable expression",1, nbVariableExpression);
+        assertEquals("Invalid number of script expression",1, nbScriptExpression);
+        BarImporterTestUtil.assertViewsAreConsistent(resource);
+    }
 
-	@Test
-	public void testRemoveDeadlineMigration() throws Exception{
-		final URL url = TestSimpleMigrationUseCase.class.getResource("DeadlineMigrationUseCase--1.0.bar");
-		final File migratedProc =  BarImporterTestUtil.migrateBar(url);
-		assertNotNull("Fail to migrate bar file", migratedProc);
-		assertNotNull("Fail to migrate bar file", migratedProc.exists());
-		final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
-		BarImporterTestUtil.assertViewsAreConsistent(resource);
-		final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
-		List<NonInterruptingBoundaryTimerEvent> boundaryEvents = ModelHelper.getAllItemsOfType(mainProc, ProcessPackage.Literals.NON_INTERRUPTING_BOUNDARY_TIMER_EVENT);
-		assertEquals("There should be non interrupting boundary events",2,boundaryEvents.size());
-	}
+    @Test
+    public void testRemoveDeadlineMigration() throws Exception{
+        final URL url = TestSimpleMigrationUseCase.class.getResource("DeadlineMigrationUseCase--1.0.bar");
+        final File migratedProc =  BarImporterTestUtil.migrateBar(url);
+        assertNotNull("Fail to migrate bar file", migratedProc);
+        assertNotNull("Fail to migrate bar file", migratedProc.exists());
+        final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
+        BarImporterTestUtil.assertViewsAreConsistent(resource);
+        final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
+        final List<NonInterruptingBoundaryTimerEvent> boundaryEvents = ModelHelper.getAllItemsOfType(mainProc, ProcessPackage.Literals.NON_INTERRUPTING_BOUNDARY_TIMER_EVENT);
+        assertEquals("There should be non interrupting boundary events",2,boundaryEvents.size());
+    }
 
-	@Test
-	public void testPageflowTransitionConditionMigration() throws Exception{
-		final URL url = TestSimpleMigrationUseCase.class.getResource("PageFlowTransitionMigrationUseCase--1.0.bar");
-		final File migratedProc =  BarImporterTestUtil.migrateBar(url);
-		assertNotNull("Fail to migrate bar file", migratedProc);
-		assertNotNull("Fail to migrate bar file", migratedProc.exists());
-		final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
-		BarImporterTestUtil.assertViewsAreConsistent(resource);
-	}
+    @Test
+    public void testPageflowTransitionConditionMigration() throws Exception{
+        final URL url = TestSimpleMigrationUseCase.class.getResource("PageFlowTransitionMigrationUseCase--1.0.bar");
+        final File migratedProc =  BarImporterTestUtil.migrateBar(url);
+        assertNotNull("Fail to migrate bar file", migratedProc);
+        assertNotNull("Fail to migrate bar file", migratedProc.exists());
+        final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
+        BarImporterTestUtil.assertViewsAreConsistent(resource);
+    }
 
-	@Test
-	public void testPageflowRedirectionMigration() throws Exception{
-		final URL url = TestSimpleMigrationUseCase.class.getResource("PageFlowMigrationUseCase--1.0.bar");
-		final File migratedProc =  BarImporterTestUtil.migrateBar(url);
-		assertNotNull("Fail to migrate bar file", migratedProc);
-		assertNotNull("Fail to migrate bar file", migratedProc.exists());
-		final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
-		BarImporterTestUtil.assertViewsAreConsistent(resource);
-	}
+    @Test
+    public void testPageflowRedirectionMigration() throws Exception{
+        final URL url = TestSimpleMigrationUseCase.class.getResource("PageFlowMigrationUseCase--1.0.bar");
+        final File migratedProc =  BarImporterTestUtil.migrateBar(url);
+        assertNotNull("Fail to migrate bar file", migratedProc);
+        assertNotNull("Fail to migrate bar file", migratedProc.exists());
+        final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
+        BarImporterTestUtil.assertViewsAreConsistent(resource);
+    }
 
-	@Test
-	public void testRemoveConnectorsMigration() throws Exception{
-		final URL url = TestSimpleMigrationUseCase.class.getResource("RemoveConnectorMigrationUseCase--1.0.bar");
-		final File migratedProc =  BarImporterTestUtil.migrateBar(url);
-		assertNotNull("Fail to migrate bar file", migratedProc);
-		assertNotNull("Fail to migrate bar file", migratedProc.exists());
-		final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
-		final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
-		List<Connector> connectors = ModelHelper.getAllItemsOfType(mainProc, ProcessPackage.Literals.CONNECTOR);
-		assertTrue("There should be no connector",connectors.isEmpty());
-		BarImporterTestUtil.assertViewsAreConsistent(resource);
-	}
+    @Test
+    public void testRemoveConnectorsMigration() throws Exception{
+        final URL url = TestSimpleMigrationUseCase.class.getResource("RemoveConnectorMigrationUseCase--1.0.bar");
+        final File migratedProc =  BarImporterTestUtil.migrateBar(url);
+        assertNotNull("Fail to migrate bar file", migratedProc);
+        assertNotNull("Fail to migrate bar file", migratedProc.exists());
+        final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
+        final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
+        final List<Connector> connectors = ModelHelper.getAllItemsOfType(mainProc, ProcessPackage.Literals.CONNECTOR);
+        assertTrue("There should be no connector",connectors.isEmpty());
+        BarImporterTestUtil.assertViewsAreConsistent(resource);
+    }
 
-	@Test
-	public void testIterationMigration() throws Exception{
-		final URL url = TestSimpleMigrationUseCase.class.getResource("IterationMigrationUseCase--1.0.bar");
-		final File migratedProc =  BarImporterTestUtil.migrateBar(url);
-		assertNotNull("Fail to migrate bar file", migratedProc);
-		assertNotNull("Fail to migrate bar file", migratedProc.exists());
-		final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
-		final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
-		List<Expression> expressions = ModelHelper.getAllItemsOfType(mainProc, ExpressionPackage.Literals.EXPRESSION);
-		int nbVariableExpression = 0;
-		int nbScriptExpression = 0;
-		int nbConstantExpression = 0;
-		for(Expression exp : expressions){
-			if(ExpressionConstants.VARIABLE_TYPE.equals(exp.getType())){
-				nbVariableExpression++;
-			}
-			if(ExpressionConstants.SCRIPT_TYPE.equals(exp.getType())){
-				nbScriptExpression++;
-			}
-			if(ExpressionConstants.CONSTANT_TYPE.equals(exp.getType()) && exp.getContent() != null && !exp.getContent().isEmpty()){
-				nbConstantExpression++;
-			}
-		}
-		assertEquals("Invalid number of variable expression",1, nbVariableExpression);
-		assertEquals("Invalid number of script expression",2, nbScriptExpression);
-		assertEquals("Invalid number of constant expression",4, nbConstantExpression);
-		BarImporterTestUtil.assertViewsAreConsistent(resource);
-	}
+    @Test
+    public void testIterationMigration() throws Exception{
+        final URL url = TestSimpleMigrationUseCase.class.getResource("IterationMigrationUseCase--1.0.bar");
+        final File migratedProc =  BarImporterTestUtil.migrateBar(url);
+        assertNotNull("Fail to migrate bar file", migratedProc);
+        assertNotNull("Fail to migrate bar file", migratedProc.exists());
+        final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
+        final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
+        final List<Expression> expressions = ModelHelper.getAllItemsOfType(mainProc, ExpressionPackage.Literals.EXPRESSION);
+        int nbVariableExpression = 0;
+        int nbScriptExpression = 0;
+        int nbConstantExpression = 0;
+        for(final Expression exp : expressions){
+            if(ExpressionConstants.VARIABLE_TYPE.equals(exp.getType())){
+                nbVariableExpression++;
+            }
+            if(ExpressionConstants.SCRIPT_TYPE.equals(exp.getType())){
+                nbScriptExpression++;
+            }
+            if(ExpressionConstants.CONSTANT_TYPE.equals(exp.getType()) && exp.getContent() != null && !exp.getContent().isEmpty()){
+                nbConstantExpression++;
+            }
+        }
+        assertEquals("Invalid number of variable expression",1, nbVariableExpression);
+        assertEquals("Invalid number of script expression",2, nbScriptExpression);
+        assertEquals("Invalid number of constant expression",4, nbConstantExpression);
+        BarImporterTestUtil.assertViewsAreConsistent(resource);
+    }
 
-	@Test
-	public void testPortalLabelMigration() throws Exception{
-		final URL url = TestSimpleMigrationUseCase.class.getResource("PortalLabelMigrationUseCase--1.0.bar");
-		final File migratedProc =  BarImporterTestUtil.migrateBar(url);
-		assertNotNull("Fail to migrate bar file", migratedProc);
-		assertNotNull("Fail to migrate bar file", migratedProc.exists());
-		final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
-		final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
-		List<Expression> expressions = ModelHelper.getAllItemsOfType(mainProc, ExpressionPackage.Literals.EXPRESSION);
-		int nbVariableExpression = 0;
-		int nbScriptExpression = 0;
-		int nbConstantExpression = 0;
-		for(Expression exp : expressions){
-			if(ExpressionConstants.VARIABLE_TYPE.equals(exp.getType())){
-				nbVariableExpression++;
-			}
-			if(ExpressionConstants.SCRIPT_TYPE.equals(exp.getType())){
-				nbScriptExpression++;
-			}
-			if(ExpressionConstants.CONSTANT_TYPE.equals(exp.getType()) && exp.getContent() != null && !exp.getContent().isEmpty()){
-				nbConstantExpression++;
-			}
-		}
-		assertEquals("Invalid number of variable expression",1, nbVariableExpression);
-		assertEquals("Invalid number of script expression",1, nbScriptExpression);
-		assertEquals("Invalid number of constant expression",3, nbConstantExpression);
-		BarImporterTestUtil.assertViewsAreConsistent(resource);
-	}
+    @Test
+    public void testPortalLabelMigration() throws Exception{
+        final URL url = TestSimpleMigrationUseCase.class.getResource("PortalLabelMigrationUseCase--1.0.bar");
+        final File migratedProc =  BarImporterTestUtil.migrateBar(url);
+        assertNotNull("Fail to migrate bar file", migratedProc);
+        assertNotNull("Fail to migrate bar file", migratedProc.exists());
+        final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
+        final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
+        final List<Expression> expressions = ModelHelper.getAllItemsOfType(mainProc, ExpressionPackage.Literals.EXPRESSION);
+        int nbVariableExpression = 0;
+        int nbScriptExpression = 0;
+        int nbConstantExpression = 0;
+        for(final Expression exp : expressions){
+            if(ExpressionConstants.VARIABLE_TYPE.equals(exp.getType())){
+                nbVariableExpression++;
+            }
+            if(ExpressionConstants.SCRIPT_TYPE.equals(exp.getType())){
+                nbScriptExpression++;
+            }
+            if(ExpressionConstants.CONSTANT_TYPE.equals(exp.getType()) && exp.getContent() != null && !exp.getContent().isEmpty()){
+                nbConstantExpression++;
+            }
+        }
+        assertEquals("Invalid number of variable expression",1, nbVariableExpression);
+        assertEquals("Invalid number of script expression",1, nbScriptExpression);
+        assertEquals("Invalid number of constant expression",3, nbConstantExpression);
+        BarImporterTestUtil.assertViewsAreConsistent(resource);
+    }
 
-	@Test
-	public void testMessageContentMigration() throws Exception{
-		final URL url = TestSimpleMigrationUseCase.class.getResource("MessageMigrationUseCase--1.0.bar");
-		final File migratedProc =  BarImporterTestUtil.migrateBar(url);
-		assertNotNull("Fail to migrate bar file", migratedProc);
-		assertNotNull("Fail to migrate bar file", migratedProc.exists());
-		final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
-		final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
-		List<Message> messages = ModelHelper.getAllItemsOfType(mainProc, ProcessPackage.Literals.MESSAGE);
-		for(Message message : messages){
-			assertFalse("Message content should not be empty",message.getMessageContent().getExpressions().isEmpty());
-			assertFalse("Message target processs hould not be empty",message.getTargetProcessExpression().getContent().isEmpty());
-			assertFalse("Message target element should not be empty",message.getTargetElementExpression().getContent().isEmpty());
-		}
-		BarImporterTestUtil.assertViewsAreConsistent(resource);
-	}
+    @Test
+    public void testMessageContentMigration() throws Exception{
+        final URL url = TestSimpleMigrationUseCase.class.getResource("MessageMigrationUseCase--1.0.bar");
+        final File migratedProc =  BarImporterTestUtil.migrateBar(url);
+        assertNotNull("Fail to migrate bar file", migratedProc);
+        assertNotNull("Fail to migrate bar file", migratedProc.exists());
+        final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
+        final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
+        final List<Message> messages = ModelHelper.getAllItemsOfType(mainProc, ProcessPackage.Literals.MESSAGE);
+        for(final Message message : messages){
+            assertFalse("Message content should not be empty",message.getMessageContent().getExpressions().isEmpty());
+            assertFalse("Message target processs hould not be empty",message.getTargetProcessExpression().getContent().isEmpty());
+            assertFalse("Message target element should not be empty",message.getTargetElementExpression().getContent().isEmpty());
+        }
+        BarImporterTestUtil.assertViewsAreConsistent(resource);
+    }
 
-	@Test
-	public void testMessageCorrelationMigration() throws Exception{
-		final URL url = TestSimpleMigrationUseCase.class.getResource("MessageCorrelationMigrationUseCase--1.0.bar");
-		final File migratedProc =  BarImporterTestUtil.migrateBar(url);
-		assertNotNull("Fail to migrate bar file", migratedProc);
-		assertNotNull("Fail to migrate bar file", migratedProc.exists());
-		final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
-		final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
-		List<Message> messages = ModelHelper.getAllItemsOfType(mainProc, ProcessPackage.Literals.MESSAGE);
-		List<EObject> startMessageEventList = ModelHelper.getAllItemsOfType(mainProc, ProcessPackage.Literals.START_MESSAGE_EVENT);
-		for(Message message : messages){
-			assertFalse("Message content should not be empty",message.getMessageContent().getExpressions().isEmpty());
-			assertFalse("Message target processs hould not be empty",message.getTargetProcessExpression().getContent().isEmpty());
-			assertFalse("Message target element should not be empty",message.getTargetElementExpression().getContent().isEmpty());
-			Expression target = message.getTargetElementExpression();
+    @Test
+    public void testMessageCorrelationMigration() throws Exception{
+        final URL url = TestSimpleMigrationUseCase.class.getResource("MessageCorrelationMigrationUseCase--1.0.bar");
+        final File migratedProc =  BarImporterTestUtil.migrateBar(url);
+        assertNotNull("Fail to migrate bar file", migratedProc);
+        assertNotNull("Fail to migrate bar file", migratedProc.exists());
+        final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
+        final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
+        final List<Message> messages = ModelHelper.getAllItemsOfType(mainProc, ProcessPackage.Literals.MESSAGE);
+        final List<EObject> startMessageEventList = ModelHelper.getAllItemsOfType(mainProc, ProcessPackage.Literals.START_MESSAGE_EVENT);
+        for(final Message message : messages){
+            assertFalse("Message content should not be empty",message.getMessageContent().getExpressions().isEmpty());
+            assertFalse("Message target processs hould not be empty",message.getTargetProcessExpression().getContent().isEmpty());
+            assertFalse("Message target element should not be empty",message.getTargetElementExpression().getContent().isEmpty());
+            final Expression target = message.getTargetElementExpression();
 
-			if (isTargetIsStartMessageEvent(startMessageEventList, target.getName())) {
-				assertEquals("Invalid correlation type",CorrelationTypeActive.INACTIVE,message.getCorrelation().getCorrelationType());
-			} else {
-				assertEquals("Invalid correlation type",CorrelationTypeActive.KEYS,message.getCorrelation().getCorrelationType());
-			}
-			assertFalse("Invalid correlation association",message.getCorrelation().getCorrelationAssociation().getExpressions().isEmpty());
-		}
-		List<AbstractCatchMessageEvent> catchMessages = ModelHelper.getAllItemsOfType(mainProc, ProcessPackage.Literals.ABSTRACT_CATCH_MESSAGE_EVENT);
-		for(AbstractCatchMessageEvent message : catchMessages){
-			if (!(message instanceof StartMessageEvent)){
-				assertFalse("Invalid correlation association",message.getCorrelation().getExpressions().isEmpty());
-			}
-			else {
-				assertTrue("startMessageEvent should not contain correlation Keis", message.getCorrelation()==null);
-			}
-		}
-		BarImporterTestUtil.assertViewsAreConsistent(resource);
-	}
+            if (isTargetIsStartMessageEvent(startMessageEventList, target.getName())) {
+                assertEquals("Invalid correlation type",CorrelationTypeActive.INACTIVE,message.getCorrelation().getCorrelationType());
+            } else {
+                assertEquals("Invalid correlation type",CorrelationTypeActive.KEYS,message.getCorrelation().getCorrelationType());
+            }
+            assertFalse("Invalid correlation association",message.getCorrelation().getCorrelationAssociation().getExpressions().isEmpty());
+        }
+        final List<AbstractCatchMessageEvent> catchMessages = ModelHelper.getAllItemsOfType(mainProc, ProcessPackage.Literals.ABSTRACT_CATCH_MESSAGE_EVENT);
+        for(final AbstractCatchMessageEvent message : catchMessages){
+            if (!(message instanceof StartMessageEvent)){
+                assertFalse("Invalid correlation association",message.getCorrelation().getExpressions().isEmpty());
+            }
+            else {
+                assertTrue("startMessageEvent should not contain correlation Keis", message.getCorrelation()==null);
+            }
+        }
+        BarImporterTestUtil.assertViewsAreConsistent(resource);
+    }
 
-	private boolean isTargetIsStartMessageEvent(List<EObject> allStartMessagesEvent, String name){
-		for (EObject messageEvent:allStartMessagesEvent){
-			StartMessageEvent sme = (StartMessageEvent)messageEvent;
-			if (sme.getName().equals(name)){
-				return true;
-			}
-		}
-		return false;
-	}
+    private boolean isTargetIsStartMessageEvent(final List<EObject> allStartMessagesEvent, final String name){
+        for (final EObject messageEvent:allStartMessagesEvent){
+            final StartMessageEvent sme = (StartMessageEvent)messageEvent;
+            if (sme.getName().equals(name)){
+                return true;
+            }
+        }
+        return false;
+    }
 
-	@Test
-	public void testTimerConditionMigration() throws Exception{
-		final URL url = TestSimpleMigrationUseCase.class.getResource("TimerConditionMigration--1.0.bar");
-		final File migratedProc =  BarImporterTestUtil.migrateBar(url);
-		assertNotNull("Fail to migrate bar file", migratedProc);
-		assertNotNull("Fail to migrate bar file", migratedProc.exists());
-		final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
-		final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
-		List<AbstractTimerEvent> timers = ModelHelper.getAllItemsOfType(mainProc, ProcessPackage.Literals.ABSTRACT_TIMER_EVENT);
-		for(AbstractTimerEvent timer : timers){
-			assertNotNull("Timer condition should not be empty",timer.getCondition());	
-		}
-		BarImporterTestUtil.assertViewsAreConsistent(resource);
-	}
+    @Test
+    public void testTimerConditionMigration() throws Exception{
+        final URL url = TestSimpleMigrationUseCase.class.getResource("TimerConditionMigration--1.0.bar");
+        final File migratedProc =  BarImporterTestUtil.migrateBar(url);
+        assertNotNull("Fail to migrate bar file", migratedProc);
+        assertNotNull("Fail to migrate bar file", migratedProc.exists());
+        final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
+        final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
+        final List<AbstractTimerEvent> timers = ModelHelper.getAllItemsOfType(mainProc, ProcessPackage.Literals.ABSTRACT_TIMER_EVENT);
+        for(final AbstractTimerEvent timer : timers){
+            assertNotNull("Timer condition should not be empty",timer.getCondition());
+        }
+        BarImporterTestUtil.assertViewsAreConsistent(resource);
+    }
 
-	@Test
-	public void testAssignableMigration() throws Exception{
-		final URL url = TestSimpleMigrationUseCase.class.getResource("AssignableMigrationUseCase--1.0.bar");
-		final File migratedProc =  BarImporterTestUtil.migrateBar(url);
-		assertNotNull("Fail to migrate bar file", migratedProc);
-		assertNotNull("Fail to migrate bar file", migratedProc.exists());
-		final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
-		final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
-		List<ActorFilter> connectors = ModelHelper.getAllItemsOfType(mainProc, ProcessPackage.Literals.ACTOR_FILTER);
-		assertTrue("There should be no actor filter",connectors.isEmpty());
-		BarImporterTestUtil.assertViewsAreConsistent(resource);
-	}
+    @Test
+    public void testAssignableMigration() throws Exception{
+        final URL url = TestSimpleMigrationUseCase.class.getResource("AssignableMigrationUseCase--1.0.bar");
+        final File migratedProc =  BarImporterTestUtil.migrateBar(url);
+        assertNotNull("Fail to migrate bar file", migratedProc);
+        assertNotNull("Fail to migrate bar file", migratedProc.exists());
+        final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
+        final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
+        final List<ActorFilter> connectors = ModelHelper.getAllItemsOfType(mainProc, ProcessPackage.Literals.ACTOR_FILTER);
+        assertTrue("There should be no actor filter",connectors.isEmpty());
+        BarImporterTestUtil.assertViewsAreConsistent(resource);
+    }
 
-	@Test
-	public void testFormActionsMigration() throws Exception{
-		final URL url = TestSimpleMigrationUseCase.class.getResource("FormActionsMigrationUseCase--1.0.bar");
-		final File migratedProc =  BarImporterTestUtil.migrateBar(url);
-		assertNotNull("Fail to migrate bar file", migratedProc);
-		assertNotNull("Fail to migrate bar file", migratedProc.exists());
-		final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
-		final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
-		List<Form> forms = ModelHelper.getAllItemsOfType(mainProc, FormPackage.Literals.FORM);
-		for(Form form : forms){
-			assertFalse("Form actions are missing",form.getActions().isEmpty());
-		}
-		BarImporterTestUtil.assertViewsAreConsistent(resource);
-	}
+    @Test
+    public void testFormActionsMigration() throws Exception{
+        final URL url = TestSimpleMigrationUseCase.class.getResource("FormActionsMigrationUseCase--1.0.bar");
+        final File migratedProc =  BarImporterTestUtil.migrateBar(url);
+        assertNotNull("Fail to migrate bar file", migratedProc);
+        assertNotNull("Fail to migrate bar file", migratedProc.exists());
+        final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
+        final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
+        final List<Form> forms = ModelHelper.getAllItemsOfType(mainProc, FormPackage.Literals.FORM);
+        for(final Form form : forms){
+            assertFalse("Form actions are missing",form.getActions().isEmpty());
+        }
+        BarImporterTestUtil.assertViewsAreConsistent(resource);
+    }
 
-	@Test
-	public void testWidgetMigration() throws Exception{
-		final URL url = TestSimpleMigrationUseCase.class.getResource("WidgetMigrationUseCase--1.0.bar");
-		final File migratedProc =  BarImporterTestUtil.migrateBar(url);
-		assertNotNull("Fail to migrate bar file", migratedProc);
-		assertNotNull("Fail to migrate bar file", migratedProc.exists());
-		final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
-		final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
-		List<Widget> widgets = ModelHelper.getAllItemsOfType(mainProc, FormPackage.Literals.WIDGET);
-		for(Widget widget : widgets){
-			if(!(widget.eContainer() instanceof Expression)){
-				if(!(widget instanceof FormButton)){
-					assertNotNull("Widget action is missing",widget.getAction());
-					assertNotNull("Widget action is missing",widget.getAction().getLeftOperand());
-					assertNotNull("Widget action is missing",widget.getAction().getRightOperand());
-				}
-			}
-		}
-		BarImporterTestUtil.assertViewsAreConsistent(resource);
-	}
+    @Test
+    public void testWidgetMigration() throws Exception{
+        final URL url = TestSimpleMigrationUseCase.class.getResource("WidgetMigrationUseCase--1.0.bar");
+        final File migratedProc =  BarImporterTestUtil.migrateBar(url);
+        assertNotNull("Fail to migrate bar file", migratedProc);
+        assertNotNull("Fail to migrate bar file", migratedProc.exists());
+        final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
+        final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
+        final List<Widget> widgets = ModelHelper.getAllItemsOfType(mainProc, FormPackage.Literals.WIDGET);
+        for(final Widget widget : widgets){
+            if(!(widget.eContainer() instanceof Expression)){
+                if(!(widget instanceof FormButton)){
+                    assertNotNull("Widget action is missing",widget.getAction());
+                    assertNotNull("Widget action is missing",widget.getAction().getLeftOperand());
+                    assertNotNull("Widget action is missing",widget.getAction().getRightOperand());
+                }
+            }
+        }
+        BarImporterTestUtil.assertViewsAreConsistent(resource);
+    }
 
-	@Test
-	public void testFormFieldMigration() throws Exception{
-		final URL url = TestSimpleMigrationUseCase.class.getResource("FormFieldMigrationUseCase--1.0.bar");
-		final File migratedProc =  BarImporterTestUtil.migrateBar(url);
-		assertNotNull("Fail to migrate bar file", migratedProc);
-		assertNotNull("Fail to migrate bar file", migratedProc.exists());
-		final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
-		final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
-		List<FormField> widgets = ModelHelper.getAllItemsOfType(mainProc, FormPackage.Literals.FORM_FIELD);
-		for(FormField widget : widgets){
-			if(!(widget.eContainer() instanceof Expression)){
-				if(!(widget instanceof FormButton)){
-					assertNotNull("Widget example message is missing",widget.getExampleMessage());
-					assertNotNull("Widget after event expresion is missing",widget.getAfterEventExpression());
-				}
-			}
-		}
-		BarImporterTestUtil.assertViewsAreConsistent(resource);
-	}
+    @Test
+    public void testFormFieldMigration() throws Exception{
+        final URL url = TestSimpleMigrationUseCase.class.getResource("FormFieldMigrationUseCase--1.0.bar");
+        final File migratedProc =  BarImporterTestUtil.migrateBar(url);
+        assertNotNull("Fail to migrate bar file", migratedProc);
+        assertNotNull("Fail to migrate bar file", migratedProc.exists());
+        final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
+        final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
+        final List<FormField> widgets = ModelHelper.getAllItemsOfType(mainProc, FormPackage.Literals.FORM_FIELD);
+        for(final FormField widget : widgets){
+            if(!(widget.eContainer() instanceof Expression)){
+                if(!(widget instanceof FormButton)){
+                    assertNotNull("Widget example message is missing",widget.getExampleMessage());
+                    assertNotNull("Widget after event expresion is missing",widget.getAfterEventExpression());
+                }
+            }
+        }
+        BarImporterTestUtil.assertViewsAreConsistent(resource);
+    }
 
-	@Test
-	public void testSubmitButtonActionsMigration() throws Exception{
-		final URL url = TestSimpleMigrationUseCase.class.getResource("SubmitButtonActionMigrationUseCase--1.0.bar");
-		final File migratedProc =  BarImporterTestUtil.migrateBar(url);
-		assertNotNull("Fail to migrate bar file", migratedProc);
-		assertNotNull("Fail to migrate bar file", migratedProc.exists());
-		final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
-		final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
-		List<SubmitFormButton> buttons = ModelHelper.getAllItemsOfType(mainProc, FormPackage.Literals.SUBMIT_FORM_BUTTON);
-		for(SubmitFormButton button : buttons){
-			assertFalse("Button actions are missing",button.getActions().isEmpty());
-		}
-		BarImporterTestUtil.assertViewsAreConsistent(resource);
-	}
+    @Test
+    public void testSubmitButtonActionsMigration() throws Exception{
+        final URL url = TestSimpleMigrationUseCase.class.getResource("SubmitButtonActionMigrationUseCase--1.0.bar");
+        final File migratedProc =  BarImporterTestUtil.migrateBar(url);
+        assertNotNull("Fail to migrate bar file", migratedProc);
+        assertNotNull("Fail to migrate bar file", migratedProc.exists());
+        final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
+        final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
+        final List<SubmitFormButton> buttons = ModelHelper.getAllItemsOfType(mainProc, FormPackage.Literals.SUBMIT_FORM_BUTTON);
+        for(final SubmitFormButton button : buttons){
+            assertFalse("Button actions are missing",button.getActions().isEmpty());
+        }
+        BarImporterTestUtil.assertViewsAreConsistent(resource);
+    }
 
-	@Test
-	public void testValidatorMigration() throws Exception{
-		final URL url = TestSimpleMigrationUseCase.class.getResource("ValidatorMigrationUseCase--1.0.bar");
-		final File migratedProc =  BarImporterTestUtil.migrateBar(url);
-		assertNotNull("Fail to migrate bar file", migratedProc);
-		assertNotNull("Fail to migrate bar file", migratedProc.exists());
-		final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
-		final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
-		List<Validator> validators = ModelHelper.getAllItemsOfType(mainProc, FormPackage.Literals.VALIDATOR);
-		RepositoryManager.getInstance().getCurrentRepository().refresh(Repository.NULL_PROGRESS_MONITOR);
-		final IJavaProject project = RepositoryManager.getInstance().getCurrentRepository().getJavaProject();
-		final ValidatorDescriptorRepositoryStore validatorDescriptorStore = (ValidatorDescriptorRepositoryStore)RepositoryManager.getInstance().getRepositoryStore(ValidatorDescriptorRepositoryStore.class);
-		for(Validator validator : validators){
-			if(!(ModelHelper.getParentWidget(validator).eContainer() instanceof Expression)){
-				assertNotNull("Validator error message is missing",validator.getDisplayName());
-				assertNotNull("Validator parameter is missing",validator.getParameter());
-				assertNotNull("Validator class not found in classpath",project.findType(validator.getValidatorClass()));
-				final ValidatorDescriptor validatorDescriptor = validatorDescriptorStore.getValidatorDescriptor(validator.getValidatorClass());
-				assertNotNull("Validator descriptor is missing",validatorDescriptor);
-				final ValidatorDescriptorFileStore filseSotre = (ValidatorDescriptorFileStore) validatorDescriptorStore.getChild(validatorDescriptor.getName()+"."+ValidatorDescriptorRepositoryStore.VALIDATOR_EXT);
-				assertNotNull("Validator descriptor file store is missing",filseSotre);
-			}
-		}
+    @Test
+    public void testValidatorMigration() throws Exception{
+        final URL url = TestSimpleMigrationUseCase.class.getResource("ValidatorMigrationUseCase--1.0.bar");
+        final File migratedProc =  BarImporterTestUtil.migrateBar(url);
+        assertNotNull("Fail to migrate bar file", migratedProc);
+        assertNotNull("Fail to migrate bar file", migratedProc.exists());
+        final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
+        final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
+        final List<Validator> validators = ModelHelper.getAllItemsOfType(mainProc, FormPackage.Literals.VALIDATOR);
+        RepositoryManager.getInstance().getCurrentRepository().refresh(Repository.NULL_PROGRESS_MONITOR);
+        final IJavaProject project = RepositoryManager.getInstance().getCurrentRepository().getJavaProject();
+        final ValidatorDescriptorRepositoryStore validatorDescriptorStore = RepositoryManager.getInstance().getRepositoryStore(ValidatorDescriptorRepositoryStore.class);
+        for(final Validator validator : validators){
+            if(!(ModelHelper.getParentWidget(validator).eContainer() instanceof Expression)){
+                assertNotNull("Validator error message is missing",validator.getDisplayName());
+                assertNotNull("Validator parameter is missing",validator.getParameter());
+                assertNotNull("Validator class not found in classpath",project.findType(validator.getValidatorClass()));
+                final ValidatorDescriptor validatorDescriptor = validatorDescriptorStore.getValidatorDescriptor(validator.getValidatorClass());
+                assertNotNull("Validator descriptor is missing",validatorDescriptor);
+                final ValidatorDescriptorFileStore filseSotre = (ValidatorDescriptorFileStore) validatorDescriptorStore.getChild(validatorDescriptor.getName()+"."+ValidatorDescriptorRepositoryStore.VALIDATOR_EXT);
+                assertNotNull("Validator descriptor file store is missing",filseSotre);
+            }
+        }
 
-		BarImporterTestUtil.assertViewsAreConsistent(resource);
-	}
+        BarImporterTestUtil.assertViewsAreConsistent(resource);
+    }
 
-	@Test
-	public void testFileAndImageWidgetMigration() throws Exception{
-		final URL url = TestSimpleMigrationUseCase.class.getResource("FileAndImageWidgetMigrationUseCase--1.0.bar");
-		final File migratedProc =  BarImporterTestUtil.migrateBar(url);
-		assertNotNull("Fail to migrate bar file", migratedProc);
-		assertNotNull("Fail to migrate bar file", migratedProc.exists());
-		final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
-		final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
-		List<FileWidget> fileWidgets = ModelHelper.getAllItemsOfType(mainProc, FormPackage.Literals.FILE_WIDGET);
-		for(FileWidget fileWidget : fileWidgets){
-			if(!(ModelHelper.getParentWidget(fileWidget).eContainer() instanceof Expression)){
-				assertEquals("File widget input type is invalid", FileWidgetInputType.DOCUMENT, fileWidget.getInputType());
-				assertNotNull("File widget document is not set",fileWidget.getDocument());
-			}
-		}
-		List<ImageWidget> imageWidgets = ModelHelper.getAllItemsOfType(mainProc, FormPackage.Literals.IMAGE_WIDGET);
-		for(ImageWidget imageWidget : imageWidgets){
-			if(!(ModelHelper.getParentWidget(imageWidget).eContainer() instanceof Expression)){
-				if(imageWidget.isIsADocument()){
-					assertNotNull("File widget document is not set",imageWidget.getDocument());
-				}else{
-					assertNotNull("File widget document is not set",imageWidget.getImgPath().getContent());
-				}
-			}
-		}
+    @Test
+    public void testFileAndImageWidgetMigration() throws Exception{
+        final URL url = TestSimpleMigrationUseCase.class.getResource("FileAndImageWidgetMigrationUseCase--1.0.bar");
+        final File migratedProc =  BarImporterTestUtil.migrateBar(url);
+        assertNotNull("Fail to migrate bar file", migratedProc);
+        assertNotNull("Fail to migrate bar file", migratedProc.exists());
+        final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
+        final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
+        final List<FileWidget> fileWidgets = ModelHelper.getAllItemsOfType(mainProc, FormPackage.Literals.FILE_WIDGET);
+        for(final FileWidget fileWidget : fileWidgets){
+            if(!(ModelHelper.getParentWidget(fileWidget).eContainer() instanceof Expression)){
+                assertEquals("File widget input type is invalid", FileWidgetInputType.DOCUMENT, fileWidget.getInputType());
+                assertNotNull("File widget document is not set",fileWidget.getDocument());
+                assertEquals("File widget input type is invalid", ExpressionConstants.DOCUMENT_REF_TYPE, fileWidget.getInputExpression().getType());
+            }
+        }
+        final List<ImageWidget> imageWidgets = ModelHelper.getAllItemsOfType(mainProc, FormPackage.Literals.IMAGE_WIDGET);
+        for(final ImageWidget imageWidget : imageWidgets){
+            if(!(ModelHelper.getParentWidget(imageWidget).eContainer() instanceof Expression)){
+                if(imageWidget.isIsADocument()){
+                    assertNotNull("File widget document is not set",imageWidget.getDocument());
+                }else{
+                    assertNotNull("File widget document is not set",imageWidget.getImgPath().getContent());
+                }
+            }
+        }
 
-		BarImporterTestUtil.assertViewsAreConsistent(resource);
-	}
+        BarImporterTestUtil.assertViewsAreConsistent(resource);
+    }
 
-	@Test
-	public void testDuplicableMigration() throws Exception{
-		final URL url = TestSimpleMigrationUseCase.class.getResource("DuplicableMigrationUseCase--1.0.bar");
-		final File migratedProc =  BarImporterTestUtil.migrateBar(url);
-		assertNotNull("Fail to migrate bar file", migratedProc);
-		assertNotNull("Fail to migrate bar file", migratedProc.exists());
-		final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
-		final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
-		List<Duplicable> duplicables = ModelHelper.getAllItemsOfType(mainProc, FormPackage.Literals.DUPLICABLE);
-		for(Duplicable duplicable : duplicables){
-			if(!(ModelHelper.getParentWidget(duplicable).eContainer() instanceof Expression)){
-				assertNotNull("Duplicable widget label for add is not set",duplicable.getDisplayLabelForAdd().getContent());
-				assertNotNull("Duplicable widget label for remove is not set",duplicable.getDisplayLabelForRemove().getContent());
-				assertNotNull("Duplicable widget tooltip for add is not set",duplicable.getTooltipForAdd().getContent());
-				assertNotNull("Duplicable widget tooltip for remove is not set",duplicable.getTooltipForRemove().getContent());
-				assertNotNull("Duplicable widget max duplication is not set",duplicable.getMaxNumberOfDuplication().getContent());
-				assertNotNull("Duplicable widget min duplication  is not set",duplicable.getMinNumberOfDuplication().getContent());
-			}
-		}
-		BarImporterTestUtil.assertViewsAreConsistent(resource);
-	}
+    @Test
+    public void testDuplicableMigration() throws Exception{
+        final URL url = TestSimpleMigrationUseCase.class.getResource("DuplicableMigrationUseCase--1.0.bar");
+        final File migratedProc =  BarImporterTestUtil.migrateBar(url);
+        assertNotNull("Fail to migrate bar file", migratedProc);
+        assertNotNull("Fail to migrate bar file", migratedProc.exists());
+        final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
+        final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
+        final List<Duplicable> duplicables = ModelHelper.getAllItemsOfType(mainProc, FormPackage.Literals.DUPLICABLE);
+        for(final Duplicable duplicable : duplicables){
+            if(!(ModelHelper.getParentWidget(duplicable).eContainer() instanceof Expression)){
+                assertNotNull("Duplicable widget label for add is not set",duplicable.getDisplayLabelForAdd().getContent());
+                assertNotNull("Duplicable widget label for remove is not set",duplicable.getDisplayLabelForRemove().getContent());
+                assertNotNull("Duplicable widget tooltip for add is not set",duplicable.getTooltipForAdd().getContent());
+                assertNotNull("Duplicable widget tooltip for remove is not set",duplicable.getTooltipForRemove().getContent());
+                assertNotNull("Duplicable widget max duplication is not set",duplicable.getMaxNumberOfDuplication().getContent());
+                assertNotNull("Duplicable widget min duplication  is not set",duplicable.getMinNumberOfDuplication().getContent());
+            }
+        }
+        BarImporterTestUtil.assertViewsAreConsistent(resource);
+    }
 
-	@Test
-	public void testMandatoryFieldsMigration() throws Exception{
-		final URL url = TestSimpleMigrationUseCase.class.getResource("MandatoryFieldsMigraitonUseCase--1.0.bar");
-		final File migratedProc =  BarImporterTestUtil.migrateBar(url);
-		assertNotNull("Fail to migrate bar file", migratedProc);
-		assertNotNull("Fail to migrate bar file", migratedProc.exists());
-		final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
-		final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
-		List<MandatoryFieldsCustomization> fields = ModelHelper.getAllItemsOfType(mainProc, FormPackage.Literals.MANDATORY_FIELDS_CUSTOMIZATION);
-		for(MandatoryFieldsCustomization field : fields){
-			if(ModelHelper.getParentWidget(field) != null && !(ModelHelper.getParentWidget(field).eContainer() instanceof Expression)){
-				assertNotNull("Mandatory label is not set",field.getMandatoryLabel().getContent());
-				assertNotNull("Mandatory symbol is not set",field.getMandatorySymbol().getContent());
-			}
-		}
-		BarImporterTestUtil.assertViewsAreConsistent(resource);
-	}
+    @Test
+    public void testMandatoryFieldsMigration() throws Exception{
+        final URL url = TestSimpleMigrationUseCase.class.getResource("MandatoryFieldsMigraitonUseCase--1.0.bar");
+        final File migratedProc =  BarImporterTestUtil.migrateBar(url);
+        assertNotNull("Fail to migrate bar file", migratedProc);
+        assertNotNull("Fail to migrate bar file", migratedProc.exists());
+        final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
+        final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
+        final List<MandatoryFieldsCustomization> fields = ModelHelper.getAllItemsOfType(mainProc, FormPackage.Literals.MANDATORY_FIELDS_CUSTOMIZATION);
+        for(final MandatoryFieldsCustomization field : fields){
+            if(ModelHelper.getParentWidget(field) != null && !(ModelHelper.getParentWidget(field).eContainer() instanceof Expression)){
+                assertNotNull("Mandatory label is not set",field.getMandatoryLabel().getContent());
+                assertNotNull("Mandatory symbol is not set",field.getMandatorySymbol().getContent());
+            }
+        }
+        BarImporterTestUtil.assertViewsAreConsistent(resource);
+    }
 
-	@Test
-	public void testTableMigration() throws Exception{
-		final URL url = TestSimpleMigrationUseCase.class.getResource("TableMigrationUseCase--1.0.bar");
-		final File migratedProc =  BarImporterTestUtil.migrateBar(url);
-		assertNotNull("Fail to migrate bar file", migratedProc);
-		assertNotNull("Fail to migrate bar file", migratedProc.exists());
-		final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
-		final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
-		List<AbstractTable> fields = ModelHelper.getAllItemsOfType(mainProc, FormPackage.Literals.ABSTRACT_TABLE);
-		for(AbstractTable field : fields){
-			if( !(ModelHelper.getParentWidget(field).eContainer() instanceof Expression)){
-				assertNotNull("Table content is not set",field.getTableExpression());
-				assertNotNull("Horizontal header is not set",field.getHorizontalHeaderExpression());
-				assertNotNull("Vertical header is not set",field.getVerticalHeaderExpression());
-			}
-		}
-		BarImporterTestUtil.assertViewsAreConsistent(resource);
-	}
+    @Test
+    public void testTableMigration() throws Exception{
+        final URL url = TestSimpleMigrationUseCase.class.getResource("TableMigrationUseCase--1.0.bar");
+        final File migratedProc =  BarImporterTestUtil.migrateBar(url);
+        assertNotNull("Fail to migrate bar file", migratedProc);
+        assertNotNull("Fail to migrate bar file", migratedProc.exists());
+        final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
+        final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
+        final List<AbstractTable> fields = ModelHelper.getAllItemsOfType(mainProc, FormPackage.Literals.ABSTRACT_TABLE);
+        for(final AbstractTable field : fields){
+            if( !(ModelHelper.getParentWidget(field).eContainer() instanceof Expression)){
+                assertNotNull("Table content is not set",field.getTableExpression());
+                assertNotNull("Horizontal header is not set",field.getHorizontalHeaderExpression());
+                assertNotNull("Vertical header is not set",field.getVerticalHeaderExpression());
+            }
+        }
+        BarImporterTestUtil.assertViewsAreConsistent(resource);
+    }
 
-	@Test
-	public void testKPIMigration() throws Exception{
-		final URL url = TestSimpleMigrationUseCase.class.getResource("KPIMigrationUseCase--1.0.bar");
-		final File migratedProc =  BarImporterTestUtil.migrateBar(url);
-		assertNotNull("Fail to migrate bar file", migratedProc);
-		assertNotNull("Fail to migrate bar file", migratedProc.exists());
-		final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
-		final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
-		List<AbstractKPIBinding> fields = ModelHelper.getAllItemsOfType(mainProc, KpiPackage.Literals.ABSTRACT_KPI_BINDING);
-		assertTrue("KPI should be deleted",fields.isEmpty());
-		BarImporterTestUtil.assertViewsAreConsistent(resource);
-	}
+    @Test
+    public void testKPIMigration() throws Exception{
+        final URL url = TestSimpleMigrationUseCase.class.getResource("KPIMigrationUseCase--1.0.bar");
+        final File migratedProc =  BarImporterTestUtil.migrateBar(url);
+        assertNotNull("Fail to migrate bar file", migratedProc);
+        assertNotNull("Fail to migrate bar file", migratedProc.exists());
+        final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
+        final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
+        final List<AbstractKPIBinding> fields = ModelHelper.getAllItemsOfType(mainProc, KpiPackage.Literals.ABSTRACT_KPI_BINDING);
+        assertTrue("KPI should be deleted",fields.isEmpty());
+        BarImporterTestUtil.assertViewsAreConsistent(resource);
+    }
 
-	@Test
-	public void testSimulationDataMigration() throws Exception{
-		final URL url = TestSimpleMigrationUseCase.class.getResource("SImulationDataMigrationUseCase--1.0.bar");
-		final File migratedProc =  BarImporterTestUtil.migrateBar(url);
-		assertNotNull("Fail to migrate bar file", migratedProc);
-		assertNotNull("Fail to migrate bar file", migratedProc.exists());
-		final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
-		final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
-		List<SimulationData> data = ModelHelper.getAllItemsOfType(mainProc, SimulationPackage.Literals.SIMULATION_DATA);
-		for(SimulationData d : data){
-			assertNotNull("Missing expression on simulation data", d.getExpression());
-		}
-		BarImporterTestUtil.assertViewsAreConsistent(resource);
-	}
+    @Test
+    public void testSimulationDataMigration() throws Exception{
+        final URL url = TestSimpleMigrationUseCase.class.getResource("SImulationDataMigrationUseCase--1.0.bar");
+        final File migratedProc =  BarImporterTestUtil.migrateBar(url);
+        assertNotNull("Fail to migrate bar file", migratedProc);
+        assertNotNull("Fail to migrate bar file", migratedProc.exists());
+        final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
+        final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
+        final List<SimulationData> data = ModelHelper.getAllItemsOfType(mainProc, SimulationPackage.Literals.SIMULATION_DATA);
+        for(final SimulationData d : data){
+            assertNotNull("Missing expression on simulation data", d.getExpression());
+        }
+        BarImporterTestUtil.assertViewsAreConsistent(resource);
+    }
 
-	@Test
-	public void testSendTaskMigration() throws Exception{
-		final URL url = TestSimpleMigrationUseCase.class.getResource("TestSendTaskMigration--1.0.bar");
-		final File migratedProc =  BarImporterTestUtil.migrateBar(url);
-		assertNotNull("Fail to migrate bar file", migratedProc);
-		assertNotNull("Fail to migrate bar file", migratedProc.exists());
-		final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
-		final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
-		List<AbstractKPIBinding> messages = ModelHelper.getAllItemsOfType(mainProc, ProcessPackage.Literals.MESSAGE);
-		assertTrue("Send Task should have one message only",messages.size() == 1);
-		BarImporterTestUtil.assertViewsAreConsistent(resource);
-	}
+    @Test
+    public void testSendTaskMigration() throws Exception{
+        final URL url = TestSimpleMigrationUseCase.class.getResource("TestSendTaskMigration--1.0.bar");
+        final File migratedProc =  BarImporterTestUtil.migrateBar(url);
+        assertNotNull("Fail to migrate bar file", migratedProc);
+        assertNotNull("Fail to migrate bar file", migratedProc.exists());
+        final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
+        final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
+        final List<AbstractKPIBinding> messages = ModelHelper.getAllItemsOfType(mainProc, ProcessPackage.Literals.MESSAGE);
+        assertTrue("Send Task should have one message only",messages.size() == 1);
+        BarImporterTestUtil.assertViewsAreConsistent(resource);
+    }
 
-	@Test
-	public void testConnectorIgnoreErrorMigration() throws Exception{
-		final URL url = TestSimpleMigrationUseCase.class.getResource("TestConnectorIgnoreErrorMigration--1.0.bar");
-		final File migratedProc =  BarImporterTestUtil.migrateBar(url);
-		assertNotNull("Fail to migrate bar file", migratedProc);
-		assertNotNull("Fail to migrate bar file", migratedProc.exists());
-		final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
+    @Test
+    public void testConnectorIgnoreErrorMigration() throws Exception{
+        final URL url = TestSimpleMigrationUseCase.class.getResource("TestConnectorIgnoreErrorMigration--1.0.bar");
+        final File migratedProc =  BarImporterTestUtil.migrateBar(url);
+        assertNotNull("Fail to migrate bar file", migratedProc);
+        assertNotNull("Fail to migrate bar file", migratedProc.exists());
+        final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
 
-		final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
-		List<Connector> connectors = ModelHelper.getAllItemsOfType(mainProc, ProcessPackage.Literals.CONNECTOR);
-		for(Connector c : connectors){
-			String name = c.getName();
-			if(name.equals("ignoreError")){
-				assertTrue(c.isIgnoreErrors());
-			}else if(name.equals("putInFailedState")){
-				assertFalse(c.isIgnoreErrors());
-			}else if(name.equals("throwEvent")){
-				assertFalse(c.isIgnoreErrors());
-				assertTrue(c.isThrowErrorEvent());
-			}
-		}
-	}
+        final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
+        final List<Connector> connectors = ModelHelper.getAllItemsOfType(mainProc, ProcessPackage.Literals.CONNECTOR);
+        for(final Connector c : connectors){
+            final String name = c.getName();
+            if(name.equals("ignoreError")){
+                assertTrue(c.isIgnoreErrors());
+            }else if(name.equals("putInFailedState")){
+                assertFalse(c.isIgnoreErrors());
+            }else if(name.equals("throwEvent")){
+                assertFalse(c.isIgnoreErrors());
+                assertTrue(c.isThrowErrorEvent());
+            }
+        }
+    }
 
-	@Test
-	public void testDescriptionMaxLenghtMigration() throws Exception{
-		final URL url = TestSimpleMigrationUseCase.class.getResource("MigrationDefect1--1.0.bar");
-		final File migratedProc =  BarImporterTestUtil.migrateBar(url);
-		assertNotNull("Fail to migrate bar file", migratedProc);
-		assertNotNull("Fail to migrate bar file", migratedProc.exists());
-		final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
+    @Test
+    public void testDescriptionMaxLenghtMigration() throws Exception{
+        final URL url = TestSimpleMigrationUseCase.class.getResource("MigrationDefect1--1.0.bar");
+        final File migratedProc =  BarImporterTestUtil.migrateBar(url);
+        assertNotNull("Fail to migrate bar file", migratedProc);
+        assertNotNull("Fail to migrate bar file", migratedProc.exists());
+        final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
 
-		final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
-		List<Element> elements = ModelHelper.getAllItemsOfType(mainProc, ProcessPackage.Literals.ELEMENT);
-		for(Element e : elements){
-			String documentation = e.getDocumentation();
-			assertTrue(documentation.length() < 255);
-		}
+        final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
+        final List<Element> elements = ModelHelper.getAllItemsOfType(mainProc, ProcessPackage.Literals.ELEMENT);
+        for(final Element e : elements){
+            final String documentation = e.getDocumentation();
+            assertTrue(documentation.length() < 255);
+        }
 
-	}
+    }
 
 }
