@@ -8574,6 +8574,7 @@
       <changes xsi:type="history:Set" element="process.ecore#//MultiInstantiable/useCardinality"
           featureName="defaultValueLiteral" dataValue="false" oldDataValue="true"/>
     </changes>
+    <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.custom.migration.connector.UpdateTalendConnectorVersionTo101"/>
   </releases>
   <releases/>
 </history:History>

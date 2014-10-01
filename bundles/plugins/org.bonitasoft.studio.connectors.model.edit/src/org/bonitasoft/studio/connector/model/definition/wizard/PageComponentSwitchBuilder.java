@@ -253,6 +253,9 @@ public class PageComponentSwitchBuilder {
                 } else {
                     if (param.getExpression() instanceof Expression) {
                         final Expression exp = (Expression) param.getExpression();
+                        if (!exp.isReturnTypeFixed()) {
+                            exp.setReturnTypeFixed(true);
+                        }
                         if (!input.getType().equals(exp.getReturnType())) {
                             exp.setReturnType(input.getType());
                         }
@@ -500,6 +503,8 @@ public class PageComponentSwitchBuilder {
                     AbstractExpression expression = parameter.getExpression();
                     if (!(expression instanceof Expression)) {
                         expression = ExpressionFactory.eINSTANCE.createExpression();
+                        ((Expression) expression).setReturnType(input.getType());
+                        ((Expression) expression).setReturnTypeFixed(true);
                         parameter.setExpression(expression);
                     }
                     viewer.setSelection(expression);
@@ -576,6 +581,8 @@ public class PageComponentSwitchBuilder {
                     AbstractExpression expression = parameter.getExpression();
                     if (!(expression instanceof Expression)) {
                         expression = ExpressionFactory.eINSTANCE.createExpression();
+                        ((Expression) expression).setReturnType(input.getType());
+                        ((Expression) expression).setReturnTypeFixed(true);
                         parameter.setExpression(expression);
                     }
                     viewer.setSelection(expression);

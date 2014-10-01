@@ -15,29 +15,23 @@
 package org.bonitasoft.studio.migration.custom.migration.connector;
 
 
-public abstract class UpdateAlfrescoMigrationConnectorVersion extends UpdateConnectorVersionMigration {
 
-    public UpdateAlfrescoMigrationConnectorVersion() {
-        super();
+public class UpdateTalendConnectorVersionTo101 extends UpdateConnectorVersionMigration {
+
+    private static final String TALEND_JOB_DEFINITION_ID = "talend-job-launcher";
+
+    @Override
+    protected String getNewDefinitionVersion() {
+        return "1.0.1";
     }
 
+    @Override
+    protected String getOldDefinitionVersion() {
+        return "1.0.0";
+    }
 
     @Override
     protected boolean isProvidedAlfrescoConnectorDef(final String defId) {
-        return defId.equals("Alfresco34CreateFolderByPath") ||
-                defId.equals("Alfresco34DeleteFileByPath") ||
-                defId.equals("Alfresco34DeleteItemById") ||
-                defId.equals("Alfresco34UploadFileByPath") ||
-                defId.equals("Alfresco42CreateFolderByPath") ||
-                defId.equals("Alfresco42DeleteFileByPath") ||
-                defId.equals("Alfresco42DeleteItemById") ||
-                defId.equals("Alfresco42UploadFileByPath");
+        return defId.equals(TALEND_JOB_DEFINITION_ID);
     }
-
-    @Override
-    protected abstract String getNewDefinitionVersion();
-
-    @Override
-    protected abstract String getOldDefinitionVersion();
-
 }
