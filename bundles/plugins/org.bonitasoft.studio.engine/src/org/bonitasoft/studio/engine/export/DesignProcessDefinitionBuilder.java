@@ -22,6 +22,7 @@ import java.util.Set;
 import org.bonitasoft.engine.bpm.process.DesignProcessDefinition;
 import org.bonitasoft.engine.bpm.process.InvalidProcessDefinitionException;
 import org.bonitasoft.engine.bpm.process.impl.DocumentDefinitionBuilder;
+import org.bonitasoft.engine.bpm.process.impl.DocumentListDefinitionBuilder;
 import org.bonitasoft.engine.bpm.process.impl.ProcessDefinitionBuilder;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.engine.export.switcher.AbstractProcessSwitch;
@@ -176,17 +177,35 @@ public class DesignProcessDefinitionBuilder {
         if (process instanceof Pool) {
             final List<Document> documents = ((Pool) process).getDocuments();
             for (final Document document : documents) {
-                if (hasADefaultValue(document)) {
-                    final DocumentDefinitionBuilder documentBuilder = processBuilder.addDocumentDefinition(document.getName());
-                    documentBuilder.addDescription(document.getDocumentation());
-                    handleDocumentMimeType(document, documentBuilder);
-                    handleDocumentInitialContent(document, documentBuilder);
+                if (document.isMultiple()) {
+                    processMultipleDocument(processBuilder, document);
+                } else {
+                    processSimpleDocument(processBuilder, document);
                 }
             }
         }
     }
 
-    private void handleDocumentInitialContent(final Document document, final DocumentDefinitionBuilder documentBuilder) {
+    private void processSimpleDocument(final ProcessDefinitionBuilder processBuilder, final Document document) {
+        if (hasADefaultValue(document)) {
+            final DocumentDefinitionBuilder documentBuilder = processBuilder.addDocumentDefinition(document.getName());
+            documentBuilder.addDescription(document.getDocumentation());
+            handleDocumentMimeType(document, documentBuilder);
+            handleSimpleDocumentInitialContent(document, documentBuilder);
+        }
+    }
+
+    private void processMultipleDocument(final ProcessDefinitionBuilder processBuilder, final Document document) {
+        //if (hasADefaultValue(document)) {//TODO: waiting decision on adding or not document without initial value in process definition
+        final DocumentListDefinitionBuilder documentListBuilder = processBuilder.addDocumentListDefinition(document.getName());
+        documentListBuilder.addDescription(document.getDocumentation());
+        if (hasADefaultValue(document)) {
+            documentListBuilder.addInitialValue(EngineExpressionUtil.createExpression(document.getInitialMultipleContent()));
+        }
+        //}
+}
+
+    private void handleSimpleDocumentInitialContent(final Document document, final DocumentDefinitionBuilder documentBuilder) {
         final DocumentType documentType = document.getDocumentType();
         if (documentType.equals(org.bonitasoft.studio.model.process.DocumentType.INTERNAL)) {
             documentBuilder.addFile(document.getDefaultValueIdOfDocumentStore());
