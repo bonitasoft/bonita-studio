@@ -209,17 +209,22 @@ public class DesignProcessDefinitionBuilder {
     }
 
     boolean hasADefaultValue(final Document document) {
-        final DocumentType documentType = document.getDocumentType();
-        switch (documentType) {
-            case NONE:
-                return false;
-            case INTERNAL:
-                return hasDefaultValueIdOfDocumentStoreFiled(document);
-            case EXTERNAL:
-                return hasUrlFiled(document);
+        if (!document.isMultiple()) {
+            final DocumentType documentType = document.getDocumentType();
+            switch (documentType) {
+                case NONE:
+                    return false;
+                case INTERNAL:
+                    return hasDefaultValueIdOfDocumentStoreFiled(document);
+                case EXTERNAL:
+                    return hasUrlFiled(document);
 
-            default:
-                return false;
+                default:
+                    return false;
+            }
+        } else {
+            final Expression initialMultipleContent = document.getInitialMultipleContent();
+            return initialMultipleContent != null && initialMultipleContent.getContent() != null && !initialMultipleContent.getContent().isEmpty();
         }
     }
 
