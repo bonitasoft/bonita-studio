@@ -47,7 +47,8 @@ public class ModelVersion {
     public static final String VERSION_6_3_2_001 = "6.3.2-001";
     public static final String VERSION_6_3_3_001 = "6.3.3-001";
     public static final String VERSION_6_3_4_001 = "6.3.4-001";
-    public static final String CURRENT_VERSION = VERSION_6_3_4_001;
+    public static final String VERSION_6_3_8_001 = "6.3.8-001";
+    public static final String CURRENT_VERSION = VERSION_6_3_8_001;
 
     public static boolean sameVersion(final String version) {
         return CURRENT_VERSION.equals(version);
