@@ -621,9 +621,7 @@ public class DocumentWizardPage extends WizardPage {
         documentInternalIDObservedWidget = SWTObservables.observeDelayedValue(500, SWTObservables.observeText(documentTextId, SWT.Modify));
         final Binding binding = emfDataBindingContext.bindValue(
                 documentInternalIDObservedWidget,
-                documentInternalIDObserved,
-                uvsInternal,
-                null);
+                documentInternalIDObserved);
 
         ControlDecorationSupport.create(binding, SWT.LEFT);
     }
