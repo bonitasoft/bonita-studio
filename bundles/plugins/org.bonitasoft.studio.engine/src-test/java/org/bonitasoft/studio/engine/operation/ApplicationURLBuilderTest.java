@@ -16,7 +16,7 @@
  */
 package org.bonitasoft.studio.engine.operation;
 
-import static org.fest.assertions.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
@@ -40,46 +40,46 @@ import org.junit.Test;
  */
 public class ApplicationURLBuilderTest {
 
-	private ApplicationURLBuilder applicationURLBuilder;
-	private String loginURL;
+    private ApplicationURLBuilder applicationURLBuilder;
+    private String loginURL;
 
-	/**
-	 * @throws java.lang.Exception
-	 */
-	@Before
-	public void setUp() throws Exception {
-		AbstractProcess process = ProcessFactory.eINSTANCE.createPool();
-		process.setName("testPool");
-		process.setVersion("1.0");
-		Configuration configuration = ConfigurationFactory.eINSTANCE.createConfiguration();
-		applicationURLBuilder = spy(new ApplicationURLBuilder(process, 1L, ConfigurationPreferenceConstants.DEFAULT_CONFIGURATION));
-		doReturn("fr").when(applicationURLBuilder).getWebLocale();
-		doReturn("william.jobs").when(applicationURLBuilder).getDefaultUsername();
-		doReturn("bpm").when(applicationURLBuilder).getDefaultPassword();
-		doReturn(configuration).when(applicationURLBuilder).getConfiguration();
-		loginURL = "http://fakeLoginURL";
-		doReturn(loginURL).when(applicationURLBuilder).buildLoginUrl(anyString(),anyString());
-	}
+    /**
+     * @throws java.lang.Exception
+     */
+    @Before
+    public void setUp() throws Exception {
+        final AbstractProcess process = ProcessFactory.eINSTANCE.createPool();
+        process.setName("testPool");
+        process.setVersion("1.0");
+        final Configuration configuration = ConfigurationFactory.eINSTANCE.createConfiguration();
+        applicationURLBuilder = spy(new ApplicationURLBuilder(process, 1L, ConfigurationPreferenceConstants.DEFAULT_CONFIGURATION));
+        doReturn("fr").when(applicationURLBuilder).getWebLocale();
+        doReturn("william.jobs").when(applicationURLBuilder).getDefaultUsername();
+        doReturn("bpm").when(applicationURLBuilder).getDefaultPassword();
+        doReturn(configuration).when(applicationURLBuilder).getConfiguration();
+        loginURL = "http://fakeLoginURL";
+        doReturn(loginURL).when(applicationURLBuilder).buildLoginUrl(anyString(),anyString());
+    }
 
-	/**
-	 * @throws java.lang.Exception
-	 */
-	@After
-	public void tearDown() throws Exception {
-	}
+    /**
+     * @throws java.lang.Exception
+     */
+    @After
+    public void tearDown() throws Exception {
+    }
 
-	/**
-	 * Test method for {@link org.bonitasoft.studio.engine.operation.ApplicationURLBuilder#toURL(org.eclipse.core.runtime.IProgressMonitor)}.
-	 */
-	@Test
-	public void shouldToURL_RetursAValidURL() throws Exception {
-		URL url = applicationURLBuilder.toURL(Repository.NULL_PROGRESS_MONITOR);
-		assertThat(url).isNotNull();
-		String validApplicationPath = URLEncoder.encode("portal/homepage","UTF-8");
-		String validProcessReference = URLEncoder.encode("form=","UTF-8");
-		String validMode = URLEncoder.encode("mode=app","UTF-8");
-		String validLocale = URLEncoder.encode("locale=fr","UTF-8");
-		assertThat(url.toString()).contains(validApplicationPath).contains(validProcessReference).contains(validMode).contains(validLocale).startsWith(loginURL);
-	}
+    /**
+     * Test method for {@link org.bonitasoft.studio.engine.operation.ApplicationURLBuilder#toURL(org.eclipse.core.runtime.IProgressMonitor)}.
+     */
+    @Test
+    public void shouldToURL_RetursAValidURL() throws Exception {
+        final URL url = applicationURLBuilder.toURL(Repository.NULL_PROGRESS_MONITOR);
+        assertThat(url).isNotNull();
+        final String validApplicationPath = URLEncoder.encode("portal/homepage","UTF-8");
+        final String validProcessReference = URLEncoder.encode("form=","UTF-8");
+        final String validMode = URLEncoder.encode("mode=app","UTF-8");
+        final String validLocale = URLEncoder.encode("locale=fr","UTF-8");
+        assertThat(url.toString()).contains(validApplicationPath).contains(validProcessReference).contains(validMode).contains(validLocale).startsWith(loginURL);
+    }
 
 }
