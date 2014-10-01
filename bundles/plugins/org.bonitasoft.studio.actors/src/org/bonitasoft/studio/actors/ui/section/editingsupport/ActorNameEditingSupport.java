@@ -5,12 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -41,7 +41,7 @@ import org.eclipse.ui.progress.IProgressService;
 
 /**
  * @author Romain Bioteau
- * 
+ *
  */
 public class ActorNameEditingSupport extends EditingSupport {
 
@@ -120,9 +120,9 @@ public class ActorNameEditingSupport extends EditingSupport {
         if (element != null && value != null && transactionalEditingDomain != null) {
             final AbstractProcess process = ModelHelper.getParentProcess((EObject) element);
             if (process != null) {
+                executeOperation(process, (String) value, element);
                 transactionalEditingDomain.getCommandStack().execute(
                         SetCommand.create(transactionalEditingDomain, element, ProcessPackage.Literals.ELEMENT__NAME, value));
-                executeOperation(process, (String) value, element);
                 if (!getViewer().getControl().isDisposed()) {
                     getViewer().refresh();
                 }
