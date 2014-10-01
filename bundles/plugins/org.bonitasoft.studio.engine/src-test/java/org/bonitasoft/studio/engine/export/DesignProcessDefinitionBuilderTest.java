@@ -20,7 +20,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import org.bonitasoft.engine.bpm.process.impl.DocumentDefinitionBuilder;
+import org.bonitasoft.engine.bpm.process.impl.DocumentListDefinitionBuilder;
 import org.bonitasoft.engine.bpm.process.impl.ProcessDefinitionBuilder;
+import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.process.Document;
@@ -42,8 +44,8 @@ public class DesignProcessDefinitionBuilderTest {
         final Document document = createBasicDocument();
         document.setDocumentType(DocumentType.NONE);
         assertThat(builder.hasADefaultValue(document))
-                .as("Document type None can't have Initial content")
-                .isFalse();
+        .as("Document type None can't have Initial content")
+        .isFalse();
     }
 
     @Test
@@ -53,8 +55,8 @@ public class DesignProcessDefinitionBuilderTest {
         document.setDocumentType(DocumentType.INTERNAL);
         document.setDefaultValueIdOfDocumentStore("internalId");
         assertThat(builder.hasADefaultValue(document))
-                .as("Document type Internal with id set should have a defautl value")
-                .isTrue();
+        .as("Document type Internal with id set should have a defautl value")
+        .isTrue();
     }
 
     @Test
@@ -63,8 +65,8 @@ public class DesignProcessDefinitionBuilderTest {
         final Document document = createBasicDocument();
         document.setDocumentType(DocumentType.INTERNAL);
         assertThat(builder.hasADefaultValue(document))
-                .as("Document type Internal without id set should not have a default value")
-                .isFalse();
+        .as("Document type Internal without id set should not have a default value")
+        .isFalse();
     }
 
     @Test
@@ -91,6 +93,35 @@ public class DesignProcessDefinitionBuilderTest {
         assertThat(builder.hasADefaultValue(document))
         .as("Document type External with id but no url set should not have a default value")
         .isFalse();
+    }
+
+    @Test
+    public void testHasADefaultValueReturnFalseForDocumentList() {
+        final DesignProcessDefinitionBuilder builder = new DesignProcessDefinitionBuilder();
+        final Document document = createBasicDocument();
+        document.setDocumentType(DocumentType.EXTERNAL);
+        document.setMultiple(true);
+        final Expression urlExpression = ExpressionFactory.eINSTANCE.createExpression();
+        urlExpression.setName("testName");
+        urlExpression.setContent("testContent");
+        document.setUrl(urlExpression);
+        assertThat(builder.hasADefaultValue(document))
+        .as("Mulitple Document with type External set with id set without default value should not be called")
+        .isFalse();
+    }
+
+    @Test
+    public void testHasADefaultValueReturnTrueForDocumentList() {
+        final DesignProcessDefinitionBuilder builder = new DesignProcessDefinitionBuilder();
+        final Document document = createBasicDocument();
+        document.setMultiple(true);
+        final Expression urlExpression = ExpressionFactory.eINSTANCE.createExpression();
+        urlExpression.setName("testName");
+        urlExpression.setContent("testContent");
+        document.setInitialMultipleContent(urlExpression);
+        assertThat(builder.hasADefaultValue(document))
+        .as("Mulitple Document with initial multiple content set without should be called")
+        .isTrue();
     }
 
     @Mock
@@ -143,6 +174,26 @@ public class DesignProcessDefinitionBuilderTest {
         builder.processDocuments(process, processDefinitionBuilder);
 
         verify(docDefinitionBuilder, Mockito.never()).addMimeType(anyString());
+    }
+
+    @Mock
+    public DocumentListDefinitionBuilder docDefinitionListBuilder;
+
+    @Test
+    public void testIntialContentForMultipleDocumentAdded() {
+        final DesignProcessDefinitionBuilder builder = new DesignProcessDefinitionBuilder();
+        when(processDefinitionBuilder.addDocumentListDefinition(anyString())).thenReturn(docDefinitionListBuilder);
+
+        final Pool process = ProcessFactory.eINSTANCE.createPool();
+        final Document document = createBasicDocument();
+        document.setMultiple(true);
+        final Expression initialExpression = ExpressionHelper.createEmptyListGroovyScriptExpression();
+        document.setInitialMultipleContent(initialExpression);
+        process.getDocuments().add(document);
+
+        builder.processDocuments(process, processDefinitionBuilder);
+
+        verify(docDefinitionListBuilder).addInitialValue(Mockito.<org.bonitasoft.engine.expression.Expression> anyObject());
     }
 
     private Document createBasicDocument() {

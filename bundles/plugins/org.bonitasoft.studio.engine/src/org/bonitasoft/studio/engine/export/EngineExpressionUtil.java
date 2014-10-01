@@ -264,7 +264,7 @@ public class EngineExpressionUtil {
         final LeftOperandBuilder builder = new LeftOperandBuilder();
         builder.createNewInstance();
         builder.setName(getVariableName(leftOperand));
-        builder.setType(getVariableType(leftOperand, isExternal));
+        builder.setType(getLeftOperandType(leftOperand, isExternal));
         return builder.done();
     }
 
@@ -277,35 +277,53 @@ public class EngineExpressionUtil {
         return leftOperand.getContent();
     }
 
-    public static String getVariableType(final org.bonitasoft.studio.model.expression.Expression leftOperand, final boolean external) {
+    public static String getLeftOperandType(final org.bonitasoft.studio.model.expression.Expression leftOperand, final boolean external) {
         if (external) {
             return ExpressionConstants.LEFT_OPERAND_EXTERNAL_DATA;
         }
         final String leftOperandType = leftOperand.getType();
         if (ExpressionConstants.DOCUMENT_TYPE.equals(leftOperandType) || ExpressionConstants.DOCUMENT_REF_TYPE.equals(leftOperandType)) {
-            return ExpressionConstants.LEFT_OPERAND_DOCUMENT;
+            return getLeftOperandDocumentType(leftOperand);
         }
         if (ExpressionConstants.VARIABLE_TYPE.equals(leftOperandType)) {
-            final EList<EObject> referencedElements = leftOperand.getReferencedElements();
-            if (referencedElements != null && !referencedElements.isEmpty()) {
-                final EObject referencedElement = referencedElements.get(0);
-                if (referencedElement instanceof Data) {
-                    final Data data = (Data) referencedElement;
-                    if (data.isTransient()) {
-                        return ExpressionConstants.LEFT_OPERAND_TRANSIENT_DATA;
-                    } else if (data instanceof BusinessObjectData) {
-                        return ExpressionConstants.LEFT_OPERAND_BUSINESS_DATA;
-                    } else if (external || DatasourceConstants.PAGEFLOW_DATASOURCE.equals(data.getDatasourceId())) {
-                        return ExpressionConstants.LEFT_OPERAND_EXTERNAL_DATA;
-                    }
-                }
-            }
-            return ExpressionConstants.LEFT_OPERAND_DATA;
+            return getLeftOperandVariableType(leftOperand, external);
         }
         if (ExpressionConstants.SEARCH_INDEX_TYPE.equals(leftOperandType)) {
             return ExpressionConstants.LEFT_OPERAND_SEARCH_INDEX;
         }
         return leftOperand.getType();
+    }
+
+    private static String getLeftOperandDocumentType(final org.bonitasoft.studio.model.expression.Expression leftOperand) {
+        if (!leftOperand.getReferencedElements().isEmpty()) {
+            final EObject referencedElement = leftOperand.getReferencedElements().get(0);
+            if (referencedElement instanceof Document) {
+                if (((Document) referencedElement).isMultiple()) {
+                    return ExpressionConstants.LEFT_OPERAND_DOCUMENT_LIST;
+                } else {
+                    return ExpressionConstants.LEFT_OPERAND_DOCUMENT;
+                }
+            }
+        }
+        return ExpressionConstants.LEFT_OPERAND_DOCUMENT;
+    }
+
+    private static String getLeftOperandVariableType(final org.bonitasoft.studio.model.expression.Expression leftOperand, final boolean external) {
+        final EList<EObject> referencedElements = leftOperand.getReferencedElements();
+        if (referencedElements != null && !referencedElements.isEmpty()) {
+            final EObject referencedElement = referencedElements.get(0);
+            if (referencedElement instanceof Data) {
+                final Data data = (Data) referencedElement;
+                if (data.isTransient()) {
+                    return ExpressionConstants.LEFT_OPERAND_TRANSIENT_DATA;
+                } else if (data instanceof BusinessObjectData) {
+                    return ExpressionConstants.LEFT_OPERAND_BUSINESS_DATA;
+                } else if (external || DatasourceConstants.PAGEFLOW_DATASOURCE.equals(data.getDatasourceId())) {
+                    return ExpressionConstants.LEFT_OPERAND_EXTERNAL_DATA;
+                }
+            }
+        }
+        return ExpressionConstants.LEFT_OPERAND_DATA;
     }
 
     public static LeftOperand createLeftOperandIndex(final int i) {
@@ -651,7 +669,7 @@ public class EngineExpressionUtil {
         final ExpressionBuilder exp = new ExpressionBuilder();
         exp.createNewInstance(element.getName());
         exp.setContent(element.getName());
-        exp.setExpressionType(ExpressionType.TYPE_INPUT.toString());
+        exp.setExpressionType(ExpressionType.TYPE_INPUT);
         exp.setReturnType(element.getType());
         try {
             return exp.done();
