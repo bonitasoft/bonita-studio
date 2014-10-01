@@ -223,9 +223,13 @@ public class DesignProcessDefinitionBuilder {
                     return false;
             }
         } else {
-            final Expression initialMultipleContent = document.getInitialMultipleContent();
-            return initialMultipleContent != null && initialMultipleContent.getContent() != null && !initialMultipleContent.getContent().isEmpty();
+            return hasInitialMultipleContentFiled(document);
         }
+    }
+
+    private boolean hasInitialMultipleContentFiled(final Document document) {
+        final Expression initialMultipleContent = document.getInitialMultipleContent();
+        return initialMultipleContent != null && initialMultipleContent.getContent() != null && !initialMultipleContent.getContent().isEmpty();
     }
 
     private boolean hasUrlFiled(final Document document) {
