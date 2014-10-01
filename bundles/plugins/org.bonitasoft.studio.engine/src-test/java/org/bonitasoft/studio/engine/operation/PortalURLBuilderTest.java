@@ -16,7 +16,7 @@
  */
 package org.bonitasoft.studio.engine.operation;
 
-import static org.fest.assertions.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.doNothing;
@@ -39,58 +39,58 @@ import org.junit.Test;
  */
 public class PortalURLBuilderTest {
 
-	private PortalURLBuilder portalURLBuilder;
+    private PortalURLBuilder portalURLBuilder;
 
-	private String loginURL;
+    private String loginURL;
 
-	/**
-	 * @throws java.lang.Exception
-	 */
-	@Before
-	public void setUp() throws Exception {
-		final AbstractProcess process = ProcessFactory.eINSTANCE.createPool();
-		process.setName("testPool");
-		process.setVersion("1.0");
-		portalURLBuilder = spy(new PortalURLBuilder());
-		doReturn("fr").when(portalURLBuilder).getWebLocale();
-		doReturn("william.jobs").when(portalURLBuilder).getDefaultUsername();
-		doReturn("bpm").when(portalURLBuilder).getDefaultPassword();
-		doReturn(null).when(portalURLBuilder).getConfiguration();
-		loginURL = "http://fakeLoginURL";
-		doReturn(loginURL).when(portalURLBuilder).buildLoginUrl(anyString(),
-				anyString());
-	}
+    /**
+     * @throws java.lang.Exception
+     */
+    @Before
+    public void setUp() throws Exception {
+        final AbstractProcess process = ProcessFactory.eINSTANCE.createPool();
+        process.setName("testPool");
+        process.setVersion("1.0");
+        portalURLBuilder = spy(new PortalURLBuilder());
+        doReturn("fr").when(portalURLBuilder).getWebLocale();
+        doReturn("william.jobs").when(portalURLBuilder).getDefaultUsername();
+        doReturn("bpm").when(portalURLBuilder).getDefaultPassword();
+        doReturn(null).when(portalURLBuilder).getConfiguration();
+        loginURL = "http://fakeLoginURL";
+        doReturn(loginURL).when(portalURLBuilder).buildLoginUrl(anyString(),
+                anyString());
+    }
 
-	/**
-	 * @throws java.lang.Exception
-	 */
-	@After
-	public void tearDown() throws Exception {
-	}
+    /**
+     * @throws java.lang.Exception
+     */
+    @After
+    public void tearDown() throws Exception {
+    }
 
-	/**
-	 * Test method for
-	 * {@link org.bonitasoft.studio.engine.operation.ApplicationURLBuilder#toURL(org.eclipse.core.runtime.IProgressMonitor)}
-	 * .
-	 */
-	@Test
-	public void shouldToURL_RetursAValidURL() throws Exception {
-		final URL url = portalURLBuilder
-				.toURL(Repository.NULL_PROGRESS_MONITOR);
-		assertThat(url).isNotNull();
-		final String validApplicationPath = URLEncoder.encode(
-				"portal/homepage", "UTF-8");
-		final String validLocale = URLEncoder.encode("_l=fr", "UTF-8");
-		assertThat(url.toString()).contains(validApplicationPath)
-				.contains(validLocale).startsWith(loginURL);
-	}
+    /**
+     * Test method for
+     * {@link org.bonitasoft.studio.engine.operation.ApplicationURLBuilder#toURL(org.eclipse.core.runtime.IProgressMonitor)}
+     * .
+     */
+    @Test
+    public void shouldToURL_RetursAValidURL() throws Exception {
+        final URL url = portalURLBuilder
+                .toURL(Repository.NULL_PROGRESS_MONITOR);
+        assertThat(url).isNotNull();
+        final String validApplicationPath = URLEncoder.encode(
+                "portal/homepage", "UTF-8");
+        final String validLocale = URLEncoder.encode("_l=fr", "UTF-8");
+        assertThat(url.toString()).contains(validApplicationPath)
+        .contains(validLocale).startsWith(loginURL);
+    }
 
-	@Test
-	public void shouldGetConfigurationReturnNull() {
-		doCallRealMethod().when(portalURLBuilder).getConfiguration();
-		doNothing().when(portalURLBuilder).initConfigurationId();
+    @Test
+    public void shouldGetConfigurationReturnNull() {
+        doCallRealMethod().when(portalURLBuilder).getConfiguration();
+        doNothing().when(portalURLBuilder).initConfigurationId();
 
-		assertThat(portalURLBuilder.getConfiguration()).isNull();
-	}
+        assertThat(portalURLBuilder.getConfiguration()).isNull();
+    }
 
 }
