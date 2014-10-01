@@ -8655,6 +8655,17 @@
         </operation>
       </changes>
     </changes>
+    <changes xsi:type="history:CompositeChange">
+    <changes xsi:type="history:Create" target="process.ecore#//Document" referenceName="eStructuralFeatures"
+        element="process.ecore#//Document/initialMultipleContent">
+      <changes xsi:type="history:Set" element="process.ecore#//Document/initialMultipleContent"
+          featureName="name" dataValue="initialMultipleContent"/>
+      <changes xsi:type="history:Set" element="process.ecore#//Document/initialMultipleContent"
+          featureName="containment" dataValue="true" oldDataValue="false"/>
+      <changes xsi:type="history:Set" element="process.ecore#//Document/initialMultipleContent"
+          featureName="eType" referenceValue="expression.ecore#//Expression"/>
+    </changes>
+    </changes>
   </releases>
   <releases/>
 </history:History>
