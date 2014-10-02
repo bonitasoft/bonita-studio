@@ -71,12 +71,18 @@ public class RefactorDocumentOperation extends AbstractRefactorOperation<Documen
                     // update name and content
                     cc.append(SetCommand.create(domain, exp, ExpressionPackage.Literals.EXPRESSION__NAME, newValue.getName()));
                     cc.append(SetCommand.create(domain, exp, ExpressionPackage.Literals.EXPRESSION__CONTENT, newValue.getName()));
+                    updateReturnType(cc, newValue, exp);
                     updateDependencies(cc, pairToRefactor, exp);
                 }
             }
         } else {
             removeAllDocumentReferences(compoundCommand, pairToRefactor);
         }
+    }
+
+    private void updateReturnType(final CompoundCommand cc, final Document newValue, final Expression exp) {
+        final String newReturnType = newValue.isMultiple() ? List.class.getName() : org.bonitasoft.engine.bpm.document.Document.class.getName();
+        cc.append(SetCommand.create(domain, exp, ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE, newReturnType));
     }
 
     private void updateDependencies(final CompoundCommand cc, final DocumentRefactorPair pairToRefactor, final Expression exp) {

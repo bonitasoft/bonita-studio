@@ -18,6 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
@@ -324,8 +325,10 @@ public class RefactorDocumentOperationTest {
         rdo.setAskConfirmation(false);
         rdo.run(null);
 
-        final Document referencedDocument = (Document) operation.getLeftOperand().getReferencedElements().get(0);
+        final Expression leftOperandUpdated = operation.getLeftOperand();
+        final Document referencedDocument = (Document) leftOperandUpdated.getReferencedElements().get(0);
         assertThat(referencedDocument.isMultiple()).isTrue();
+        ExpressionAssert.assertThat(leftOperandUpdated).hasReturnType(List.class.getName());
     }
 
 }
