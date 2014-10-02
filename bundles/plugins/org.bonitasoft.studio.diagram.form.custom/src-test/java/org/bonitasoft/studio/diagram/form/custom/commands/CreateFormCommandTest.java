@@ -23,6 +23,7 @@ import java.util.Collections;
 
 import org.bonitasoft.engine.bpm.document.DocumentValue;
 import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.common.emf.tools.WidgetHelper;
 import org.bonitasoft.studio.diagram.form.custom.model.WidgetContainer;
 import org.bonitasoft.studio.diagram.form.custom.model.WidgetMapping;
 import org.bonitasoft.studio.model.expression.Expression;
@@ -41,6 +42,7 @@ import org.bonitasoft.studio.model.form.Table;
 import org.bonitasoft.studio.model.form.TextFormField;
 import org.bonitasoft.studio.model.form.ViewForm;
 import org.bonitasoft.studio.model.form.Widget;
+import org.bonitasoft.studio.model.form.WidgetLayoutInfo;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.DataType;
 import org.bonitasoft.studio.model.process.Document;
@@ -446,4 +448,54 @@ public class CreateFormCommandTest {
         final Group group = FormFactory.eINSTANCE.createGroup();
         assertThat(commandUnderTest.hasOutputOperation(group)).isTrue();
     }
+
+    @Test
+    public void should_canUndo_return_false() throws Exception {
+        assertThat(commandUnderTest.canUndo()).isFalse();
+    }
+
+    @Test
+    public void should_createVariableExpression_return_an_Expression_with_VARIABLE_TYPE() throws Exception {
+        final Data data = ProcessFactory.eINSTANCE.createData();
+        data.setName("theData");
+        final Expression resExpr = commandUnderTest.createVariableExpression(data);
+        ExpressionAssert.assertThat(resExpr).hasType(ExpressionConstants.VARIABLE_TYPE);
+    }
+
+    @Test
+    public void should_createWidgetExpression_return_expression_with_name_start_with_prefix_and_type_is_FORM_FIELD_TYPE() throws Exception {
+        final TextFormField text = FormFactory.eINSTANCE.createTextFormField();
+        text.setName("myTextForm");
+        final Expression resExpr = commandUnderTest.createWidgetExpression(text);
+        ExpressionAssert.assertThat(resExpr).hasType(ExpressionConstants.FORM_FIELD_TYPE);
+        assertThat(resExpr.getName()).startsWith(WidgetHelper.FIELD_PREFIX);
+    }
+
+    @Test
+    public void should_createDataOutputOperation_returns_Operation_with_assignement_with_ASSIGNMENT_OPERATOR_type() throws Exception {
+        final TextFormField text = FormFactory.eINSTANCE.createTextFormField();
+        text.setName("myTextForm");
+        final Data data = ProcessFactory.eINSTANCE.createData();
+        data.setName("theData");
+
+        final Operation ope = commandUnderTest.createDataOutputOperation(text, data);
+        assertThat(ope.getOperator()).isNotNull();
+        assertThat(ope.getOperator().getType()).isEqualTo(ExpressionConstants.ASSIGNMENT_OPERATOR);
+        assertThat(ope.getLeftOperand().getType().equals(ExpressionConstants.VARIABLE_TYPE));
+        assertThat(ope.getRightOperand().getType().equals(ExpressionConstants.FORM_FIELD_TYPE));
+    }
+
+    @Test
+    public void should_createWidgetLayout_returns_WidgetLayoutInfo_with_values_of_entry_parameters() throws Exception {
+        final int nLine = 10;
+        final int nCol = 22;
+        final int horizontalSpan = 33;
+        final int verticalSpan = 40;
+        final WidgetLayoutInfo wLayout = commandUnderTest.createWidgetLayout(nLine, nCol, horizontalSpan, verticalSpan);
+        assertThat(wLayout.getColumn()).isEqualTo(nCol);
+        assertThat(wLayout.getLine()).isEqualTo(nLine);
+        assertThat(wLayout.getHorizontalSpan()).isEqualTo(horizontalSpan);
+        assertThat(wLayout.getVerticalSpan()).isEqualTo(verticalSpan);
+    }
+
 }
