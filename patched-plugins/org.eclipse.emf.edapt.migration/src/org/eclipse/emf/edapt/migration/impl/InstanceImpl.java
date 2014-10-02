@@ -100,7 +100,7 @@ public class InstanceImpl extends EObjectImpl implements Instance {
     /**
      * The default value of the '{@link #getUri() <em>Uri</em>}' attribute. <!--
      * begin-user-doc --> <!-- end-user-doc -->
-     * 
+     *
      * @see #getUri()
      * @generated
      * @ordered
@@ -110,7 +110,7 @@ public class InstanceImpl extends EObjectImpl implements Instance {
     /**
      * The cached value of the '{@link #getUri() <em>Uri</em>}' attribute. <!--
      * begin-user-doc --> <!-- end-user-doc -->
-     * 
+     *
      * @see #getUri()
      * @generated
      * @ordered
@@ -178,7 +178,7 @@ public class InstanceImpl extends EObjectImpl implements Instance {
      * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
-    public NotificationChain basicSetType(Type newType, NotificationChain msgs) {
+    public NotificationChain basicSetType(final Type newType, NotificationChain msgs) {
         msgs = eBasicSetContainer((InternalEObject)newType, MigrationPackage.INSTANCE__TYPE, msgs);
         return msgs;
     }
@@ -187,8 +187,8 @@ public class InstanceImpl extends EObjectImpl implements Instance {
      * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
-    public void setType(Type newType) {
-        if (newType != eInternalContainer() || (eContainerFeatureID() != MigrationPackage.INSTANCE__TYPE && newType != null)) {
+    public void setType(final Type newType) {
+        if (newType != eInternalContainer() || eContainerFeatureID() != MigrationPackage.INSTANCE__TYPE && newType != null) {
             if (EcoreUtil.isAncestor(this, (EObject)newType)) {
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
             }
@@ -232,8 +232,8 @@ public class InstanceImpl extends EObjectImpl implements Instance {
      * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
-    public void setUri(URI newUri) {
-        URI oldUri = uri;
+    public void setUri(final URI newUri) {
+        final URI oldUri = uri;
         uri = newUri;
         if (eNotificationRequired()) {
             eNotify(new ENotificationImpl(this, Notification.SET, MigrationPackage.INSTANCE__URI, oldUri, uri));
@@ -252,8 +252,8 @@ public class InstanceImpl extends EObjectImpl implements Instance {
      * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
-    public void setUuid(String newUuid) {
-        String oldUuid = uuid;
+    public void setUuid(final String newUuid) {
+        final String oldUuid = uuid;
         uuid = newUuid;
         if (eNotificationRequired()) {
             eNotify(new ENotificationImpl(this, Notification.SET, MigrationPackage.INSTANCE__UUID, oldUuid, uuid));
@@ -262,10 +262,10 @@ public class InstanceImpl extends EObjectImpl implements Instance {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
+     *
      * @generated NOT
      */
-    public <V> V get(EStructuralFeature feature) {
+    public <V> V get(final EStructuralFeature feature) {
         if (feature instanceof EAttribute) {
             return this.getAttributeValue((EAttribute) feature);
         } else if (feature instanceof EReference) {
@@ -276,29 +276,29 @@ public class InstanceImpl extends EObjectImpl implements Instance {
 
     /**
      * Get the value of an instance's attribute
-     * 
+     *
      * @param <V>
      * @param attribute
      * @return Value
      */
     @SuppressWarnings("unchecked")
-    private <V> V getAttributeValue(EAttribute attribute) {
-        Slot slot = getSlot(attribute);
+    private <V> V getAttributeValue(final EAttribute attribute) {
+        final Slot slot = getSlot(attribute);
         if (slot == null) {
             if (attribute.isMany()) {
                 return (V) new UpdatingList(this, attribute);
             } else if (attribute.getEType().getInstanceClass() != null && Collection.class.isAssignableFrom(attribute.getEType().getInstanceClass())) {//Patch for Notation model
                 return (V) new UpdatingList(this, attribute);
             }else if(attribute.getEType() instanceof EEnum){
-            	 return (V) attribute.getDefaultValue();
-           }else if(attribute.getEType() instanceof EDataType && attribute.getEType().getInstanceClass() == null){
-            	 return (V) new UpdatingList(this, attribute);
+                return (V) attribute.getDefaultValue();
+            }else if(attribute.getEType() instanceof EDataType && attribute.getEType().getInstanceClass() == null){
+                return (V) new UpdatingList(this, attribute);
             }else if (attribute.getDefaultValue() != null) {
                 return (V) attribute.getDefaultValue();
             }
             return null;
         }
-        EList<Object> values = new UpdatingList(this, attribute,
+        final EList<Object> values = new UpdatingList(this, attribute,
                 ((AttributeSlot) slot).getValues());
         if (attribute.isMany()) {
             return (V) values;
@@ -310,14 +310,14 @@ public class InstanceImpl extends EObjectImpl implements Instance {
 
     /**
      * Get the value of an instance's reference
-     * 
+     *
      * @param <V>
      * @param reference
      * @return Value
      */
     @SuppressWarnings("unchecked")
-    <V> V getReferenceValue(EReference reference) {
-        Slot slot = getSlot(reference);
+    <V> V getReferenceValue(final EReference reference) {
+        final Slot slot = getSlot(reference);
         if (slot == null) {
             if (reference.isMany()) {
                 return (V) new UpdatingList(this, reference);
@@ -326,7 +326,7 @@ public class InstanceImpl extends EObjectImpl implements Instance {
             }
             return null;
         }
-        EList<Instance> values = new UpdatingList(this, reference,
+        final EList<Instance> values = new UpdatingList(this, reference,
                 ((ReferenceSlot) slot).getValues());
         if (reference.isMany()) {
             return (V) values;
@@ -338,23 +338,23 @@ public class InstanceImpl extends EObjectImpl implements Instance {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
+     *
      * @generated NOT
      */
-    public void set(EStructuralFeature feature, Object newValue) {
+    public void set(final EStructuralFeature feature, final Object newValue) {
         if (feature.isMany()) {
-            Collection<?> oldValues = (Collection<?>) this.get(feature);
-            for (Object value : oldValues) {
+            final Collection<?> oldValues = (Collection<?>) this.get(feature);
+            for (final Object value : oldValues) {
                 this.remove(feature, value);
             }
-            Collection<?> newValues = (Collection<?>) newValue;
-            for (Object value : newValues) {
+            final Collection<?> newValues = (Collection<?>) newValue;
+            for (final Object value : newValues) {
                 this.add(feature, value);
             }
         } else {
             //Patch for Notation model
             if(newValue instanceof List<?> && feature.getEType() != null && feature.getEType().getInstanceClass() != null && Collection.class.isAssignableFrom(feature.getEType().getInstanceClass())){
-                Object oldValue = this.get(feature);
+                final Object oldValue = this.get(feature);
                 if (oldValue != newValue) {
                     if (isSet(feature) && oldValue != null) {
                         this.remove(feature, oldValue);
@@ -364,32 +364,32 @@ public class InstanceImpl extends EObjectImpl implements Instance {
                     }
                 }
             }else if(newValue instanceof List<?> && feature.getEType() != null && feature.getEType().isInstance(EcorePackage.Literals.EJAVA_OBJECT)){
-            	 Object oldValue = this.get(feature);
-                 if (oldValue != newValue) {
-                     if (isSet(feature) && oldValue != null) {
-                         this.remove(feature, oldValue);
-                     }
-                     if (newValue != null) {
-                         this.add(feature, newValue);
-                     }
-                 }
+                final Object oldValue = this.get(feature);
+                if (oldValue != newValue) {
+                    if (isSet(feature) && oldValue != null) {
+                        this.remove(feature, oldValue);
+                    }
+                    if (newValue != null) {
+                        this.add(feature, newValue);
+                    }
+                }
             }else if(newValue instanceof List<?> && feature.getEType() != null && feature.getEType() instanceof EEnum){
-            	 Object oldValue = this.get(feature);
-                 if (oldValue != newValue) {
-                     if (isSet(feature) && oldValue != null) {
-                         this.remove(feature, oldValue);
-                     }
-                     if (newValue != null) {
-                         this.add(feature, newValue);
-                     }
-                 }
+                final Object oldValue = this.get(feature);
+                if (oldValue != newValue) {
+                    if (isSet(feature) && oldValue != null) {
+                        this.remove(feature, oldValue);
+                    }
+                    if (newValue != null) {
+                        this.add(feature, newValue);
+                    }
+                }
             }else{
-            
+
                 if (newValue instanceof List<?>) {
                     throw new IllegalArgumentException(
                             "Single value expected, but list found");
                 }
-                Object oldValue = this.get(feature);
+                final Object oldValue = this.get(feature);
                 if (oldValue != newValue) {
                     if (isSet(feature) && oldValue != null) {
                         this.remove(feature, oldValue);
@@ -404,11 +404,11 @@ public class InstanceImpl extends EObjectImpl implements Instance {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
+     *
      * @generated NOT
      */
-    public Slot getSlot(EStructuralFeature feature) {
-        for (Slot slot : getSlots()) {
+    public Slot getSlot(final EStructuralFeature feature) {
+        for (final Slot slot : getSlots()) {
             if (feature == slot.getEFeature()) {
                 return slot;
             }
@@ -418,31 +418,31 @@ public class InstanceImpl extends EObjectImpl implements Instance {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
+     *
      * @generated NOT
      */
     @SuppressWarnings("unchecked")
-    public <V> V evaluate(String expression) throws MigrationException {
-        Model model = getType().getModel();
+    public <V> V evaluate(final String expression) throws MigrationException {
+        final Model model = getType().getModel();
         enableReflection();
 
         OCL<?, EClassifier, ?, ?, ?, ?, ?, ?, ?, Constraint, EClass, EObject> ocl;
         ocl = OCL.newInstance(EcoreEnvironmentFactory.INSTANCE);
-        OCLHelper<EClassifier, ?, ?, Constraint> helper = ocl.createOCLHelper();
+        final OCLHelper<EClassifier, ?, ?, Constraint> helper = ocl.createOCLHelper();
 
         helper.setContext(eClass());
         OCLExpression<EClassifier> query;
         try {
             query = helper.createQuery(expression);
-        } catch (ParserException e) {
+        } catch (final ParserException e) {
             throw new MigrationException("OCL expression '" + expression
                     + "' could not be parsed", e);
         }
         ocl.setExtentMap((Map) model.createExtentMap());
 
         // create a Query to evaluate our query expression
-        Query<EClassifier, EClass, EObject> queryEval = ocl.createQuery(query);
-        Object result = queryEval.evaluate(this);
+        final Query<EClassifier, EClass, EObject> queryEval = ocl.createQuery(query);
+        final Object result = queryEval.evaluate(this);
 
         disableReflection();
         return (V) result;
@@ -450,11 +450,11 @@ public class InstanceImpl extends EObjectImpl implements Instance {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
+     *
      * @generated NOT
      */
     public EReference getContainerReference() {
-        for (ReferenceSlot slot : getReferences()) {
+        for (final ReferenceSlot slot : getReferences()) {
             if (slot.getEReference().isContainment()) {
                 return slot.getEReference();
             }
@@ -464,21 +464,21 @@ public class InstanceImpl extends EObjectImpl implements Instance {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
+     *
      * @generated NOT
      */
     public ModelResource getResource() {
-        Model model = getType().getModel();
+        final Model model = getType().getModel();
         Instance instance = this;
         while (instance.getContainer() != null) {
-            for (ModelResource resource : model.getResources()) {
+            for (final ModelResource resource : model.getResources()) {
                 if (resource.getRootInstances().contains(instance)) {
                     return resource;
                 }
             }
             instance = instance.getContainer();
         }
-        for (ModelResource resource : model.getResources()) {
+        for (final ModelResource resource : model.getResources()) {
             if (resource.getRootInstances().contains(instance)) {
                 return resource;
             }
@@ -488,7 +488,7 @@ public class InstanceImpl extends EObjectImpl implements Instance {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
+     *
      * @generated NOT
      */
     public boolean isProxy() {
@@ -497,17 +497,17 @@ public class InstanceImpl extends EObjectImpl implements Instance {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
+     *
      * @generated NOT
      */
-    public void migrate(String className) {
-        EClass eClass = checkAndGetClass(className);
+    public void migrate(final String className) {
+        final EClass eClass = checkAndGetClass(className);
         migrate(eClass);
     }
 
-    private EClass checkAndGetClass(String className) {
-        Metamodel metamodel = getType().getModel().getMetamodel();
-        EClass eClass = metamodel.getEClass(className);
+    private EClass checkAndGetClass(final String className) {
+        final Metamodel metamodel = getType().getModel().getMetamodel();
+        final EClass eClass = metamodel.getEClass(className);
         if (eClass == null) {
             throw new IllegalArgumentException("Class " + className + " not found.");
         }
@@ -516,16 +516,16 @@ public class InstanceImpl extends EObjectImpl implements Instance {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
+     *
      * @generated NOT
      */
-    public EList<Instance> getInverse(String referenceName) {
-        EReference reference = checkAndGetReference(referenceName);
+    public EList<Instance> getInverse(final String referenceName) {
+        final EReference reference = checkAndGetReference(referenceName);
         return getInverse(reference);
     }
 
-    private EReference checkAndGetReference(String referenceName) {
-        EReference reference = getType().getModel().getMetamodel()
+    private EReference checkAndGetReference(final String referenceName) {
+        final EReference reference = getType().getModel().getMetamodel()
                 .getEReference(referenceName);
         if (reference == null) {
             throw new IllegalArgumentException("Reference " + referenceName + " not found.");
@@ -535,92 +535,92 @@ public class InstanceImpl extends EObjectImpl implements Instance {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
+     *
      * @generated NOT
      */
-    public Instance getLink(String referenceName) {
+    public Instance getLink(final String referenceName) {
         return (Instance) get(referenceName);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
+     *
      * @generated NOT
      */
-    public EList<Instance> getLinks(String referenceName) {
+    public EList<Instance> getLinks(final String referenceName) {
         return (EList<Instance>) get(referenceName);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
+     *
      * @generated NOT
      */
-    public boolean instanceOf(String className) {
-        EClass eClass = checkAndGetClass(className);
+    public boolean instanceOf(final String className) {
+        final EClass eClass = checkAndGetClass(className);
         return instanceOf(eClass);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
+     *
      * @generated NOT
      */
-    public void add(String featureName, Object value) {
-        EStructuralFeature feature = checkAndGetFeature(featureName);
+    public void add(final String featureName, final Object value) {
+        final EStructuralFeature feature = checkAndGetFeature(featureName);
         add(feature, value);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
+     *
      * @generated NOT
      */
-    public void remove(String featureName, Object value) {
-        EStructuralFeature feature = checkAndGetFeature(featureName);
+    public void remove(final String featureName, final Object value) {
+        final EStructuralFeature feature = checkAndGetFeature(featureName);
         remove(feature, value);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
+     *
      * @generated NOT
      */
-    public void add(String featureName, int index, Object value) {
-        EStructuralFeature feature = checkAndGetFeature(featureName);
+    public void add(final String featureName, final int index, final Object value) {
+        final EStructuralFeature feature = checkAndGetFeature(featureName);
         add(feature, index, value);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
+     *
      * @generated NOT
      */
-    public Instance getLink(EReference reference) {
+    public Instance getLink(final EReference reference) {
         return (Instance) get(reference);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
+     *
      * @generated NOT
      */
-    public EList<Instance> getLinks(EReference reference) {
+    public EList<Instance> getLinks(final EReference reference) {
         return (EList<Instance>) get(reference);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
+     *
      * @generated NOT
      */
     public Instance copy() {
 
         // mapping of originals to copies
-        Map<Instance, Instance> map = new HashMap<Instance, Instance>();
+        final Map<Instance, Instance> map = new HashMap<Instance, Instance>();
 
         // copy tree structure
-        Instance copy = copyTree(this, map);
+        final Instance copy = copyTree(this, map);
         // copy cross references
         copyReferences(this, map);
 
@@ -628,24 +628,24 @@ public class InstanceImpl extends EObjectImpl implements Instance {
     }
 
     /** Copy the tree structure with an instance as root. */
-    private Instance copyTree(Instance original, Map<Instance, Instance> map) {
-        EClass eClass = original.getEClass();
-        Instance copi = getType().getModel().newInstance(eClass);
-        for (EReference reference : eClass.getEAllReferences()) {
+    private Instance copyTree(final Instance original, final Map<Instance, Instance> map) {
+        final EClass eClass = original.getEClass();
+        final Instance copi = getType().getModel().newInstance(eClass);
+        for (final EReference reference : eClass.getEAllReferences()) {
             if (reference.isContainment()) {
                 if (reference.isMany()) {
-                    for (Instance child : original.getLinks(reference)) {
-                        copi.add(reference, copyTree(child, map));
+                    for (final Instance child : original.getLinks(reference)) {
+                        copi.add(reference, child.copy()); //Bonita Fix to copy references
                     }
                 } else {
-                    Instance child = original.get(reference);
+                    final Instance child = original.get(reference);
                     if (child != null) {
-                        copi.set(reference, copyTree(child, map));
+                        copi.set(reference, child.copy());//Bonita Fix to copy references
                     }
                 }
             }
         }
-        for (EAttribute attribute : eClass.getEAllAttributes()) {
+        for (final EAttribute attribute : eClass.getEAllAttributes()) {
             copi.set(attribute, original.get(attribute));
         }
         map.put(original, copi);
@@ -653,10 +653,10 @@ public class InstanceImpl extends EObjectImpl implements Instance {
     }
 
     /** Copy cross references of an instance. */
-    private void copyReferences(Instance original, Map<Instance, Instance> map) {
-        EClass eClass = original.getEClass();
-        Instance copi = map.get(original);
-        for (EReference reference : eClass.getEAllReferences()) {
+    private void copyReferences(final Instance original, final Map<Instance, Instance> map) {
+        final EClass eClass = original.getEClass();
+        final Instance copi = map.get(original);
+        for (final EReference reference : eClass.getEAllReferences()) {
             if (!reference.isContainment()) {
                 if (reference.isMany()) {
                     if (reference.getEOpposite() == null
@@ -686,14 +686,14 @@ public class InstanceImpl extends EObjectImpl implements Instance {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
+     *
      * @generated NOT
      */
     @SuppressWarnings("unchecked")
-    public EList<Instance> getInverse(EReference reference) {
-        List<ReferenceSlot> slots = getReferences();
-        EList<Instance> instances = new BasicEList<Instance>();
-        for (ReferenceSlot slot : slots) {
+    public EList<Instance> getInverse(final EReference reference) {
+        final List<ReferenceSlot> slots = getReferences();
+        final EList<Instance> instances = new BasicEList<Instance>();
+        for (final ReferenceSlot slot : slots) {
             if (reference == slot.getEReference()) {
                 instances.add(slot.getInstance());
             }
@@ -703,26 +703,26 @@ public class InstanceImpl extends EObjectImpl implements Instance {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
+     *
      * @generated NOT
      */
-    public void migrate(EClass eClass) {
-        Type oldType = getType();
+    public void migrate(final EClass eClass) {
+        final Type oldType = getType();
         if (eClass != oldType.getEClass()) {
-            ModelImpl model = (ModelImpl) oldType.getModel();
+            final ModelImpl model = (ModelImpl) oldType.getModel();
             model.removeDeleteType(oldType, this);
-            Type type = model.getCreateType(eClass);
+            final Type type = model.getCreateType(eClass);
             type.getInstances().add(this);
         }
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
+     *
      * @generated NOT
      */
-    public <V> V unset(EStructuralFeature feature) {
-        V value = this.get(feature);
+    public <V> V unset(final EStructuralFeature feature) {
+        final V value = this.get(feature);
         if (isSet(feature)) {
             if (feature.isMany()) {
                 this.set(feature, Collections.EMPTY_LIST);
@@ -735,45 +735,45 @@ public class InstanceImpl extends EObjectImpl implements Instance {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
+     *
      * @generated NOT
      */
-    public void add(EStructuralFeature feature, int index, Object value) {
+    public void add(final EStructuralFeature feature, final int index, final Object value) {
         if (feature instanceof EAttribute) {
-            EAttribute attribute = (EAttribute) feature;
-            AttributeSlot attributeSlot = getCreateAttributeSlot(attribute);
+            final EAttribute attribute = (EAttribute) feature;
+            final AttributeSlot attributeSlot = getCreateAttributeSlot(attribute);
             if (!attribute.isUnique()
                     || !attributeSlot.getValues().contains(value)) {
                 attributeSlot.getValues().add(index, value);
             }
         } else {
-            EReference reference = (EReference) feature;
-            Instance target = (Instance) value;
+            final EReference reference = (EReference) feature;
+            final Instance target = (Instance) value;
             if (reference.isUnique() && contains(reference, target)) {
                 return;
             }
-            EReference opposite = reference.getEOpposite();
+            final EReference opposite = reference.getEOpposite();
             if (opposite != null && reference.eContainer() != null) {
                 // if opposite is single-valued, unset it before
                 if (!opposite.isMany()) {
                     target.unset(opposite);
                 }
-                ReferenceSlot oppositeSlot = ((InstanceImpl) target)
+                final ReferenceSlot oppositeSlot = ((InstanceImpl) target)
                         .getCreateReferenceSlot(opposite);
                 oppositeSlot.getValues().add(this);
             }
-            ReferenceSlot referenceSlot = getCreateReferenceSlot(reference);
+            final ReferenceSlot referenceSlot = getCreateReferenceSlot(reference);
             referenceSlot.getValues().add(index, target);
         }
     }
 
     /**
      * Get the slot for an instance's attribute (create one if there is none)
-     * 
+     *
      * @param attribute
      * @return Slot
      */
-    private AttributeSlot getCreateAttributeSlot(EAttribute attribute) {
+    private AttributeSlot getCreateAttributeSlot(final EAttribute attribute) {
 
         AttributeSlot attributeSlot = (AttributeSlot) getSlot(attribute);
         if (attributeSlot == null) {
@@ -786,11 +786,11 @@ public class InstanceImpl extends EObjectImpl implements Instance {
 
     /**
      * Get the slot for an instance's reference (create one if there is none)
-     * 
+     *
      * @param reference
      * @return Slot
      */
-    ReferenceSlot getCreateReferenceSlot(EReference reference) {
+    ReferenceSlot getCreateReferenceSlot(final EReference reference) {
 
         ReferenceSlot referenceSlot = (ReferenceSlot) getSlot(reference);
         if (referenceSlot == null) {
@@ -803,13 +803,13 @@ public class InstanceImpl extends EObjectImpl implements Instance {
 
     /**
      * Determine whether a value is contained in an instance's reference
-     * 
+     *
      * @param reference
      * @param value
      * @return true if it is contained, false otherwise
      */
-    private boolean contains(EReference reference, Instance value) {
-        ReferenceSlot referenceSlot = (ReferenceSlot) getSlot(reference);
+    private boolean contains(final EReference reference, final Instance value) {
+        final ReferenceSlot referenceSlot = (ReferenceSlot) getSlot(reference);
         if (referenceSlot != null) {
             return referenceSlot.getValues().contains(value);
         }
@@ -818,12 +818,12 @@ public class InstanceImpl extends EObjectImpl implements Instance {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
+     *
      * @generated NOT
      */
-    public void remove(EStructuralFeature feature, Object value) {
-        SlotImpl slot = (SlotImpl) getSlot(feature);
-        int index = slot != null ? slot.getValues().indexOf(value) : 0;
+    public void remove(final EStructuralFeature feature, final Object value) {
+        final SlotImpl slot = (SlotImpl) getSlot(feature);
+        final int index = slot != null ? slot.getValues().indexOf(value) : 0;
         if (index >= 0) {
             this.remove(feature, index);
         }
@@ -831,7 +831,7 @@ public class InstanceImpl extends EObjectImpl implements Instance {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
+     *
      * @generated NOT
      */
     public EClass getEClass() {
@@ -840,27 +840,27 @@ public class InstanceImpl extends EObjectImpl implements Instance {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
+     *
      * @generated NOT
      */
     public void validate() {
-        BasicDiagnostic chain = new BasicDiagnostic();
+        final BasicDiagnostic chain = new BasicDiagnostic();
         this.validate(chain);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
+     *
      * @generated NOT
      */
-    public boolean validate(DiagnosticChain chain) {
+    public boolean validate(final DiagnosticChain chain) {
         final ModelValidator validator = new ModelValidator(getType()
                 .getModel());
-        Diagnostician diagnostician = new Diagnostician() {
+        final Diagnostician diagnostician = new Diagnostician() {
             @Override
-            public String getObjectLabel(EObject eObject) {
-                EClass eClass = eObject.eClass();
-                StringBuffer result = new StringBuffer(eClass.getName());
+            public String getObjectLabel(final EObject eObject) {
+                final EClass eClass = eObject.eClass();
+                final StringBuffer result = new StringBuffer(eClass.getName());
                 if (eClass.getInstanceClassName() == null) {
                     result.append('/');
                     result.append(eClass.getEPackage().getNsURI());
@@ -874,8 +874,8 @@ public class InstanceImpl extends EObjectImpl implements Instance {
             }
 
             @Override
-            public boolean validate(EClass eClass, EObject eObject,
-                    DiagnosticChain diagnostics, Map<Object, Object> context) {
+            public boolean validate(final EClass eClass, final EObject eObject,
+                    final DiagnosticChain diagnostics, final Map<Object, Object> context) {
                 boolean result = validator.validate(eClass, eObject,
                         diagnostics, context);
                 if (result || diagnostics != null) {
@@ -885,7 +885,7 @@ public class InstanceImpl extends EObjectImpl implements Instance {
             }
         };
         enableReflection();
-        boolean result = diagnostician.validate(this, chain);
+        final boolean result = diagnostician.validate(this, chain);
         disableReflection();
         return result;
     }
@@ -906,16 +906,16 @@ public class InstanceImpl extends EObjectImpl implements Instance {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
+     *
      * @generated NOT
      */
-    public <V> V get(String featureName) {
-        EStructuralFeature feature = checkAndGetFeature(featureName);
+    public <V> V get(final String featureName) {
+        final EStructuralFeature feature = checkAndGetFeature(featureName);
         return this.get(feature);
     }
 
-    private EStructuralFeature checkAndGetFeature(String featureName) {
-        EStructuralFeature feature = getEClass().getEStructuralFeature(
+    private EStructuralFeature checkAndGetFeature(final String featureName) {
+        final EStructuralFeature feature = getEClass().getEStructuralFeature(
                 featureName);
         if (feature == null) {
             throw new IllegalArgumentException("Feature " + featureName + " not found.");
@@ -925,40 +925,40 @@ public class InstanceImpl extends EObjectImpl implements Instance {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
+     *
      * @generated NOT
      */
-    public void set(String featureName, Object value) {
-        EStructuralFeature feature = checkAndGetFeature(featureName);
+    public void set(final String featureName, final Object value) {
+        final EStructuralFeature feature = checkAndGetFeature(featureName);
         this.set(feature, value);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
+     *
      * @generated NOT
      */
-    public boolean isSet(EStructuralFeature feature) {
+    public boolean isSet(final EStructuralFeature feature) {
         return getSlot(feature) != null;
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
+     *
      * @generated NOT
      */
-    public boolean instanceOf(EClass eClass) {
+    public boolean instanceOf(final EClass eClass) {
         return getEClass() == eClass
                 || getEClass().getEAllSuperTypes().contains(eClass);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
+     *
      * @generated NOT
      */
     public Instance getContainer() {
-        for (ReferenceSlot slot : getReferences()) {
+        for (final ReferenceSlot slot : getReferences()) {
             if (slot.getEReference().isContainment()) {
                 return slot.getInstance();
             }
@@ -968,14 +968,14 @@ public class InstanceImpl extends EObjectImpl implements Instance {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
+     *
      * @generated NOT
      */
     public EList<Instance> getContents() {
-        EList<Instance> contents = new BasicEList<Instance>();
-        for (Slot slot : getSlots()) {
+        final EList<Instance> contents = new BasicEList<Instance>();
+        for (final Slot slot : getSlots()) {
             if (slot instanceof ReferenceSlot) {
-                ReferenceSlot referenceSlot = (ReferenceSlot) slot;
+                final ReferenceSlot referenceSlot = (ReferenceSlot) slot;
                 if (referenceSlot.getEReference().isContainment()) {
                     contents.addAll(referenceSlot.getValues());
                 }
@@ -986,31 +986,31 @@ public class InstanceImpl extends EObjectImpl implements Instance {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
+     *
      * @generated NOT
      */
-    public void add(EStructuralFeature feature, Object value) {
-        SlotImpl slot = (SlotImpl) getSlot(feature);
-        int index = slot != null ? slot.getValues().size() : 0;
+    public void add(final EStructuralFeature feature, final Object value) {
+        final SlotImpl slot = (SlotImpl) getSlot(feature);
+        final int index = slot != null ? slot.getValues().size() : 0;
         this.add(feature, index, value);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
+     *
      * @generated NOT
      */
-    public void remove(EStructuralFeature feature, int index) {
+    public void remove(final EStructuralFeature feature, final int index) {
         if (feature instanceof EAttribute) {
-            EAttribute attribute = (EAttribute) feature;
+            final EAttribute attribute = (EAttribute) feature;
             removeDeleteAttribute(attribute, index);
         } else {
-            EReference reference = (EReference) feature;
-            EReference opposite = reference.getEOpposite();
+            final EReference reference = (EReference) feature;
+            final EReference opposite = reference.getEOpposite();
             if (opposite != null && reference.eContainer() != null) {
-                ReferenceSlot referenceSlot = (ReferenceSlot) getSlot(reference);
-                Instance target = referenceSlot.getValues().get(index);
-                int oppositeIndex = ((ReferenceSlot) target.getSlot(opposite))
+                final ReferenceSlot referenceSlot = (ReferenceSlot) getSlot(reference);
+                final Instance target = referenceSlot.getValues().get(index);
+                final int oppositeIndex = ((ReferenceSlot) target.getSlot(opposite))
                         .getValues().indexOf(this);
                 ((InstanceImpl) target).removeDeleteReference(opposite,
                         oppositeIndex);
@@ -1021,12 +1021,12 @@ public class InstanceImpl extends EObjectImpl implements Instance {
 
     /**
      * Remove a value from an instance's attribute (delete slot if it is empty)
-     * 
+     *
      * @param attribute
      * @param index
      */
-    private void removeDeleteAttribute(EAttribute attribute, int index) {
-        AttributeSlot attributeSlot = (AttributeSlot) getSlot(attribute);
+    private void removeDeleteAttribute(final EAttribute attribute, final int index) {
+        final AttributeSlot attributeSlot = (AttributeSlot) getSlot(attribute);
         attributeSlot.getValues().remove(index);
         if (attributeSlot.getValues().isEmpty()) {
             getSlots().remove(attributeSlot);
@@ -1035,13 +1035,13 @@ public class InstanceImpl extends EObjectImpl implements Instance {
 
     /**
      * Remove a value from an instance's reference (delete slot if it is empty)
-     * 
+     *
      * @param reference
      * @param index
      */
-    void removeDeleteReference(EReference reference, int index) {
+    void removeDeleteReference(final EReference reference, final int index) {
 
-        ReferenceSlot referenceSlot = (ReferenceSlot) getSlot(reference);
+        final ReferenceSlot referenceSlot = (ReferenceSlot) getSlot(reference);
         referenceSlot.getValues().remove(index);
         if (referenceSlot.getValues().isEmpty()) {
             getSlots().remove(referenceSlot);
@@ -1054,8 +1054,8 @@ public class InstanceImpl extends EObjectImpl implements Instance {
      */
     @SuppressWarnings("unchecked")
     @Override
-    public NotificationChain eInverseAdd(InternalEObject otherEnd,
-            int featureID, NotificationChain msgs) {
+    public NotificationChain eInverseAdd(final InternalEObject otherEnd,
+            final int featureID, NotificationChain msgs) {
         switch (featureID) {
             case MigrationPackage.INSTANCE__SLOTS:
                 return ((InternalEList<InternalEObject>)(InternalEList<?>)getSlots()).basicAdd(otherEnd, msgs);
@@ -1075,8 +1075,8 @@ public class InstanceImpl extends EObjectImpl implements Instance {
      * @generated
      */
     @Override
-    public NotificationChain eInverseRemove(InternalEObject otherEnd,
-            int featureID, NotificationChain msgs) {
+    public NotificationChain eInverseRemove(final InternalEObject otherEnd,
+            final int featureID, final NotificationChain msgs) {
         switch (featureID) {
             case MigrationPackage.INSTANCE__SLOTS:
                 return ((InternalEList<?>)getSlots()).basicRemove(otherEnd, msgs);
@@ -1094,7 +1094,7 @@ public class InstanceImpl extends EObjectImpl implements Instance {
      */
     @Override
     public NotificationChain eBasicRemoveFromContainerFeature(
-            NotificationChain msgs) {
+            final NotificationChain msgs) {
         switch (eContainerFeatureID()) {
             case MigrationPackage.INSTANCE__TYPE:
                 return eInternalContainer().eInverseRemove(this, MigrationPackage.TYPE__INSTANCES, Type.class, msgs);
@@ -1107,7 +1107,7 @@ public class InstanceImpl extends EObjectImpl implements Instance {
      * @generated
      */
     @Override
-    public Object eGet(int featureID, boolean resolve, boolean coreType) {
+    public Object eGet(final int featureID, final boolean resolve, final boolean coreType) {
         switch (featureID) {
             case MigrationPackage.INSTANCE__SLOTS:
                 return getSlots();
@@ -1129,7 +1129,7 @@ public class InstanceImpl extends EObjectImpl implements Instance {
      */
     @SuppressWarnings("unchecked")
     @Override
-    public void eSet(int featureID, Object newValue) {
+    public void eSet(final int featureID, final Object newValue) {
         switch (featureID) {
             case MigrationPackage.INSTANCE__SLOTS:
                 getSlots().clear();
@@ -1157,7 +1157,7 @@ public class InstanceImpl extends EObjectImpl implements Instance {
      * @generated
      */
     @Override
-    public void eUnset(int featureID) {
+    public void eUnset(final int featureID) {
         switch (featureID) {
             case MigrationPackage.INSTANCE__SLOTS:
                 getSlots().clear();
@@ -1183,7 +1183,7 @@ public class InstanceImpl extends EObjectImpl implements Instance {
      * @generated
      */
     @Override
-    public boolean eIsSet(int featureID) {
+    public boolean eIsSet(final int featureID) {
         switch (featureID) {
             case MigrationPackage.INSTANCE__SLOTS:
                 return slots != null && !slots.isEmpty();
@@ -1209,7 +1209,7 @@ public class InstanceImpl extends EObjectImpl implements Instance {
             return super.toString();
         }
 
-        StringBuffer result = new StringBuffer();
+        final StringBuffer result = new StringBuffer();
         result.append("Instance of ");
         result.append(getType().getEClass().getName());
         if(getUri() != null) {
@@ -1237,8 +1237,8 @@ public class InstanceImpl extends EObjectImpl implements Instance {
      * {@inheritDoc}
      */
     @Override
-    public Object eGet(EStructuralFeature feature, boolean resolve,
-            boolean coreType) {
+    public Object eGet(final EStructuralFeature feature, final boolean resolve,
+            final boolean coreType) {
         if (getType().getModel().isReflection()) {
             return get(feature);
         }
@@ -1249,7 +1249,7 @@ public class InstanceImpl extends EObjectImpl implements Instance {
      * {@inheritDoc}
      */
     @Override
-    public boolean eIsSet(EStructuralFeature feature) {
+    public boolean eIsSet(final EStructuralFeature feature) {
         if (getType().getModel().isReflection()) {
             return getSlot(feature) != null;
         }
@@ -1262,7 +1262,7 @@ public class InstanceImpl extends EObjectImpl implements Instance {
     @Override
     public EList<EObject> eContents() {
         if (getType().getModel().isReflection()) {
-            EStructuralFeature[] features = ((EClassImpl.FeatureSubsetSupplier) getEClass()
+            final EStructuralFeature[] features = ((EClassImpl.FeatureSubsetSupplier) getEClass()
                     .getEAllStructuralFeatures()).containments();
             return new EContentsEList<EObject>(this, features);
         }
@@ -1275,7 +1275,7 @@ public class InstanceImpl extends EObjectImpl implements Instance {
     @Override
     public EList<EObject> eCrossReferences() {
         if (getType().getModel().isReflection()) {
-            EStructuralFeature[] features = ((EClassImpl.FeatureSubsetSupplier) getEClass()
+            final EStructuralFeature[] features = ((EClassImpl.FeatureSubsetSupplier) getEClass()
                     .getEAllStructuralFeatures()).crossReferences();
             return new EContentsEList<EObject>(this, features);
         }
