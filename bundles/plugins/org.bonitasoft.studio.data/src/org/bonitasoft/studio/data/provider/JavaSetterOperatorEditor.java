@@ -62,19 +62,19 @@ public class JavaSetterOperatorEditor implements IOperatorEditor {
      * @see org.bonitasoft.studio.expression.editor.provider.IOperatorEditor#appliesTo(java.lang.String)
      */
     @Override
-    public boolean appliesTo(String operatorType) {
+    public boolean appliesTo(final String operatorType) {
         return ExpressionConstants.JAVA_METHOD_OPERATOR.equals(operatorType);
     }
-    
-  
+
+
     @Override
-    public boolean appliesTo(Expression expression) {
-        return expression != null 
-        		&& expression.getContent() != null
-        		&& !expression.getContent().isEmpty() 
-        		&& ExpressionConstants.VARIABLE_TYPE.equals(expression.getType())
-        		&& !expression.getReferencedElements().isEmpty()
-        		&& expression.getReferencedElements().get(0) instanceof JavaObjectData;
+    public boolean appliesTo(final Expression expression) {
+        return expression != null
+                && expression.getContent() != null
+                && !expression.getContent().isEmpty()
+                && ExpressionConstants.VARIABLE_TYPE.equals(expression.getType())
+                && !expression.getReferencedElements().isEmpty()
+                && expression.getReferencedElements().get(0) instanceof JavaObjectData;
     }
 
     /* (non-Javadoc)
@@ -89,7 +89,7 @@ public class JavaSetterOperatorEditor implements IOperatorEditor {
      * @see org.bonitasoft.studio.expression.editor.provider.IOperatorEditor#createOpeartorEditor(org.eclipse.swt.widgets.Composite, org.bonitasoft.studio.model.expression.Operator, org.bonitasoft.studio.model.expression.Expression)
      */
     @Override
-    public Composite createOpeartorEditor(Composite parent, final Operator operator, Expression sourceExpression) {
+    public Composite createOpeartorEditor(final Composite parent, final Operator operator, final Expression sourceExpression) {
         final Composite client = new Composite(parent, SWT.NONE)  ;
         client.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         client.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).spacing(0, 0).create()) ;
@@ -101,11 +101,11 @@ public class JavaSetterOperatorEditor implements IOperatorEditor {
         javaTreeviewer.setContentProvider(new JavaSetterContentProvider());
         javaTreeviewer.setLabelProvider(new JavaUILabelProvider() {
             @Override
-            public String getText(Object item) {
+            public String getText(final Object item) {
                 if(item instanceof IMethod){
                     try {
                         return super.getText(item) + " - "+ SignatureUtil.stripSignatureToFQN(((IMethod) item).getReturnType());
-                    } catch (JavaModelException e) {
+                    } catch (final JavaModelException e) {
                         BonitaStudioLog.error(e) ;
                         return null ;
                     }
@@ -117,44 +117,44 @@ public class JavaSetterOperatorEditor implements IOperatorEditor {
 
         javaTreeviewer.addSelectionChangedListener(new ISelectionChangedListener() {
             @Override
-            public void selectionChanged(SelectionChangedEvent event) {
-                ITreeSelection selection = (ITreeSelection) event.getSelection();
+            public void selectionChanged(final SelectionChangedEvent event) {
+                final ITreeSelection selection = (ITreeSelection) event.getSelection();
                 if(!selection.isEmpty()){
-                    boolean isValid =  isSetterOrDataSelected(selection) ;
+                    final boolean isValid =  isSetterOrDataSelected(selection) ;
                     if(isValid){
-                        TreePath path = selection.getPaths()[0];
-                        IMethod item = (IMethod) path.getSegment(path.getSegmentCount() - 1);
+                        final TreePath path = selection.getPaths()[0];
+                        final IMethod item = (IMethod) path.getSegment(path.getSegmentCount() - 1);
                         operator.setExpression(item.getElementName()) ;
                         operator.getInputTypes().clear() ;
-                        for(String type : item.getParameterTypes()){
+                        for(final String type : item.getParameterTypes()){
                             String qualifiedType = Object.class.getName();
-							try {
-								qualifiedType = JavaModelUtil.getResolvedTypeName(Signature.getTypeErasure(type), item.getDeclaringType());
-								if("int".equals(qualifiedType)){
-									qualifiedType = Integer.class.getName();
-								}else if("boolean".equals(qualifiedType)){
-									qualifiedType = Boolean.class.getName();
-								}else if("long".equals(qualifiedType)){
-									qualifiedType = Long.class.getName();
-								}else if("float".equals(qualifiedType)){
-									qualifiedType = Float.class.getName();
-								}else if("double".equals(qualifiedType)){
-									qualifiedType = Double.class.getName();
-								}else if("short".equals(qualifiedType)){
-									qualifiedType = Short.class.getName();
-								}else if("byte".equals(qualifiedType)){
-									qualifiedType = Byte.class.getName();
-								}else if("E".equals(qualifiedType)){
-									qualifiedType = Object.class.getName();
-								}else if("V".equals(qualifiedType)){
-									qualifiedType = Object.class.getName();
-								}
-							} catch (JavaModelException e) {
-								BonitaStudioLog.error(e);
-							} catch (IllegalArgumentException e) {
-								BonitaStudioLog.error(e);
-							}
-                          
+                            try {
+                                qualifiedType = JavaModelUtil.getResolvedTypeName(Signature.getTypeErasure(type), item.getDeclaringType());
+                                if("int".equals(qualifiedType)){
+                                    qualifiedType = Integer.class.getName();
+                                }else if("boolean".equals(qualifiedType)){
+                                    qualifiedType = Boolean.class.getName();
+                                }else if("long".equals(qualifiedType)){
+                                    qualifiedType = Long.class.getName();
+                                }else if("float".equals(qualifiedType)){
+                                    qualifiedType = Float.class.getName();
+                                }else if("double".equals(qualifiedType)){
+                                    qualifiedType = Double.class.getName();
+                                }else if("short".equals(qualifiedType)){
+                                    qualifiedType = Short.class.getName();
+                                }else if("byte".equals(qualifiedType)){
+                                    qualifiedType = Byte.class.getName();
+                                }else if("E".equals(qualifiedType)){
+                                    qualifiedType = Object.class.getName();
+                                }else if("V".equals(qualifiedType)){
+                                    qualifiedType = Object.class.getName();
+                                }
+                            } catch (final JavaModelException e) {
+                                BonitaStudioLog.error(e);
+                            } catch (final IllegalArgumentException e) {
+                                BonitaStudioLog.error(e);
+                            }
+
                             operator.getInputTypes().add(qualifiedType) ;
                         }
                     }
@@ -166,16 +166,16 @@ public class JavaSetterOperatorEditor implements IOperatorEditor {
 
 
         String className = null ;
-        if(data instanceof JavaObjectData){
-            className = data.getClassName() ;
-        }else if(data.isMultiple()){
+        if(data.isMultiple()){
             className = List.class.getName() ;
+        }else if(data instanceof JavaObjectData){
+            className = data.getClassName() ;
         }
         if(className != null){
             javaTreeviewer.setInput(className);
             javaTreeviewer.getTree().setFocus() ;
             javaTreeviewer.expandAll() ;
-            IMethod selectedMethod  = getJavaSelectionFromContent(data,operator) ;
+            final IMethod selectedMethod  = getJavaSelectionFromContent(data,operator) ;
             if(selectedMethod != null){
                 javaTreeviewer.setSelection(new StructuredSelection(selectedMethod)) ;
             }
@@ -183,32 +183,32 @@ public class JavaSetterOperatorEditor implements IOperatorEditor {
         return client ;
     }
 
-    protected void fireSelectionChange(SelectionChangedEvent event) {
-        for(ISelectionChangedListener l : listeners){
+    protected void fireSelectionChange(final SelectionChangedEvent event) {
+        for(final ISelectionChangedListener l : listeners){
             l.selectionChanged(event) ;
         }
     }
 
-    protected String generateJavaAdditionalPath(ITreeSelection selection) {
+    protected String generateJavaAdditionalPath(final ITreeSelection selection) {
         if(selection == null){
             return "";
         }
-        TreePath path = selection.getPaths()[0];
+        final TreePath path = selection.getPaths()[0];
         if (path.getSegmentCount() == 1) {
             return "";
         }
-        StringBuilder res = new StringBuilder();
-        Object item = path.getSegment(path.getSegmentCount() - 1);
+        final StringBuilder res = new StringBuilder();
+        final Object item = path.getSegment(path.getSegmentCount() - 1);
         res.append(((IJavaElement)item).getElementName());
         return res.toString();
     }
 
-    private boolean isSetterOrDataSelected(ITreeSelection selection) {
+    private boolean isSetterOrDataSelected(final ITreeSelection selection) {
         if (selection.getFirstElement() instanceof IMethod) {
-            IMethod method = (IMethod)selection.getFirstElement();
+            final IMethod method = (IMethod)selection.getFirstElement();
             try {
                 return method.getParameterNames().length == 1;
-            } catch (Exception ex) {
+            } catch (final Exception ex) {
                 BonitaStudioLog.error(ex);
                 return false;
             }
@@ -220,7 +220,7 @@ public class JavaSetterOperatorEditor implements IOperatorEditor {
     }
 
 
-    private IMethod getJavaSelectionFromContent(final JavaObjectData data,Operator operator) {
+    private IMethod getJavaSelectionFromContent(final JavaObjectData data,final Operator operator) {
         String className = null ;
         if(data != null){
             if(data.isMultiple()){
@@ -229,20 +229,20 @@ public class JavaSetterOperatorEditor implements IOperatorEditor {
                 className = data.getClassName() ;
             }
             if(className != null){
-                String content = operator.getExpression() ;
+                final String content = operator.getExpression() ;
                 if(content != null && !content.isEmpty()){
 
-                    IJavaProject project = RepositoryManager.getInstance().getCurrentRepository().getJavaProject() ;
+                    final IJavaProject project = RepositoryManager.getInstance().getCurrentRepository().getJavaProject() ;
                     IType type = null;
                     try {
                         type = project.findType(className);
-                        for(IMethod m : type.getMethods()){
-                            String method = m.getElementName() ;
+                        for(final IMethod m : type.getMethods()){
+                            final String method = m.getElementName() ;
                             if(method.equals(content)){
                                 return m ;
                             }
                         }
-                    } catch (JavaModelException e) {
+                    } catch (final JavaModelException e) {
                         BonitaStudioLog.error(e) ;
                     }
 
@@ -253,7 +253,7 @@ public class JavaSetterOperatorEditor implements IOperatorEditor {
     }
 
     @Override
-    public void addSelectionChangedListener(ISelectionChangedListener listener) {
+    public void addSelectionChangedListener(final ISelectionChangedListener listener) {
         listeners .add(listener) ;
     }
 
@@ -263,12 +263,12 @@ public class JavaSetterOperatorEditor implements IOperatorEditor {
     }
 
     @Override
-    public void removeSelectionChangedListener(ISelectionChangedListener listener) {
+    public void removeSelectionChangedListener(final ISelectionChangedListener listener) {
         listeners.remove(listener) ;
     }
 
     @Override
-    public void setSelection(ISelection selection) {
+    public void setSelection(final ISelection selection) {
         javaTreeviewer.setSelection(selection) ;
     }
 

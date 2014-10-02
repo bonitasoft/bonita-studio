@@ -41,6 +41,7 @@ import org.bonitasoft.studio.model.process.FlowElement;
 import org.bonitasoft.studio.model.process.JavaObjectData;
 import org.bonitasoft.studio.model.process.JavaType;
 import org.bonitasoft.studio.model.process.MainProcess;
+import org.bonitasoft.studio.model.process.MultiInstanceType;
 import org.bonitasoft.studio.model.process.MultiInstantiable;
 import org.bonitasoft.studio.model.process.PageFlow;
 import org.bonitasoft.studio.model.process.ProcessFactory;
@@ -101,12 +102,15 @@ public class DataExpressionProvider implements IExpressionProvider {
 
         final FlowElement parentFlowElement = ModelHelper.getParentFlowElement(context);
         if (parentFlowElement instanceof MultiInstantiable) {
-            final Expression iteratorExpression = ((MultiInstantiable) parentFlowElement).getIteratorExpression();
-            if (iteratorExpression != null
-                    && iteratorExpression.getName() != null
-                    && !iteratorExpression.getName().isEmpty()) {
-                final Data d = dataFromIteratorExpression((MultiInstantiable) parentFlowElement, iteratorExpression);
-                result.add(createExpression(d));
+            final MultiInstanceType type = ((MultiInstantiable) parentFlowElement).getType();
+            if (type == MultiInstanceType.PARALLEL || type == MultiInstanceType.SEQUENTIAL) {
+                final Expression iteratorExpression = ((MultiInstantiable) parentFlowElement).getIteratorExpression();
+                if (iteratorExpression != null
+                        && iteratorExpression.getName() != null
+                        && !iteratorExpression.getName().isEmpty()) {
+                    final Data d = dataFromIteratorExpression((MultiInstantiable) parentFlowElement, iteratorExpression);
+                    result.add(createExpression(d));
+                }
             }
         }
 
