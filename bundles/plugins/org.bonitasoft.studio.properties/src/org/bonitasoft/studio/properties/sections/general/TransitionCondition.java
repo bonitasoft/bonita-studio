@@ -303,9 +303,7 @@ public class TransitionCondition implements IExtensibleGridPropertySectionContri
      */
     @Override
     public void refresh() {
-        if(transition != null && !conditionSection.isDisposed()){
-            refreshBindings() ;
-        }
+
     }
 
     /*
@@ -318,6 +316,7 @@ public class TransitionCondition implements IExtensibleGridPropertySectionContri
     @Override
     public void setEObject(final EObject object) {
         transition = (SequenceFlow) object;
+        refreshBindings();
     }
 
     private void refreshBindings() {
