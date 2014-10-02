@@ -18,6 +18,7 @@ import org.bonitasoft.studio.model.form.FileWidgetInputType;
 import org.bonitasoft.studio.model.form.FormFactory;
 import org.bonitasoft.studio.model.form.SubmitFormButton;
 import org.bonitasoft.studio.model.process.Document;
+import org.bonitasoft.studio.test.exporter.form.AbstractFormExporterTest;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
