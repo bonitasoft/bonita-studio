@@ -21,11 +21,13 @@ import java.util.List;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.model.process.ANDGateway;
 import org.bonitasoft.studio.model.process.Activity;
 import org.bonitasoft.studio.model.process.BoundaryEvent;
 import org.bonitasoft.studio.model.process.CatchLinkEvent;
 import org.bonitasoft.studio.model.process.Connection;
 import org.bonitasoft.studio.model.process.FlowElement;
+import org.bonitasoft.studio.model.process.InclusiveGateway;
 import org.bonitasoft.studio.model.process.NonInterruptingBoundaryTimerEvent;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
@@ -82,6 +84,17 @@ public class TokenDispatcher {
                 token = ModelHelper.getEObjectID(sourceFlowElement);
             }else if(isMerging((FlowElement) sourceFlowElement)){
                 token = getParentToken(sourceFlowElement);
+            } else {
+                if (allIncomingTokenSet((FlowElement) sourceFlowElement)) {
+                    if (sameTokenForAllIncomingFlows((FlowElement) sourceFlowElement)) {
+                        token = getFirstIncomingSequenceFlow((TargetElement) sourceFlowElement).getPathToken();//Like continuous
+                    } else {
+                        token = ModelHelper.getEObjectID(sourceFlowElement);//Like a split
+                    }
+                } else {
+                    return null;//Computed later
+                }
+
             }
         }else if (sourceFlowElement instanceof BoundaryEvent){
             final BoundaryEvent sourceBoundary = (BoundaryEvent) sourceFlowElement;
@@ -102,6 +115,18 @@ public class TokenDispatcher {
         return token ;
     }
 
+    private boolean allIncomingTokenSet(final FlowElement sourceFlowElement) {
+        for (final org.bonitasoft.studio.model.process.Connection c : sourceFlowElement.getIncoming()) {
+            if (c instanceof SequenceFlow) {
+                final String pathToken = ((SequenceFlow) c).getPathToken();
+                if (pathToken == null || pathToken.isEmpty()) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
     protected String getParentToken(final EObject sourceFlowElement) {
         String token;
         FlowElement lastSplit = (FlowElement) sourceFlowElement;
@@ -113,8 +138,10 @@ public class TokenDispatcher {
             }
             if(!ftoken.equals( ModelHelper.getEObjectID(ModelHelper.getParentProcess(sourceFlowElement)))){
                 final EObject tokenSourceElement = lastSplit.eResource().getEObject(ftoken);
-                if(tokenSourceElement instanceof FlowElement){
+                if (tokenSourceElement instanceof FlowElement) {
                     lastSplit = (FlowElement) tokenSourceElement;
+                } else if (tokenSourceElement instanceof NonInterruptingBoundaryTimerEvent) {
+                    break;
                 }
             }else{
                 break;
@@ -134,15 +161,6 @@ public class TokenDispatcher {
         if(tagetElement != null){
             for(final org.bonitasoft.studio.model.process.Connection c : tagetElement.getIncoming()){
                 if(c instanceof SequenceFlow){
-                    //					if(c.getSource() instanceof CatchLinkEvent){
-                    //						CatchLinkEvent event =  (CatchLinkEvent) c.getSource();
-                    //						if(!event.getFrom().isEmpty()){
-                    //							ThrowLinkEvent tEvent =event.getFrom().get(0);
-                    //							if(!tEvent.getIncoming().isEmpty()){
-                    //								return (SequenceFlow) tEvent.getIncoming().get(0);
-                    //							}
-                    //						}
-                    //					}
                     incomingFlow = (SequenceFlow)c;
                     if (incomingFlow.getPathToken()!=null && !incomingFlow.getPathToken().isEmpty()){
                         return incomingFlow;
@@ -179,7 +197,7 @@ public class TokenDispatcher {
 
     protected boolean isMerging(final FlowElement sourceFlowElement) {
         final int cpt = countIncomingSequenceFlows(sourceFlowElement);
-        return cpt > 1;
+        return cpt > 1 && (sourceFlowElement instanceof ANDGateway || sourceFlowElement instanceof InclusiveGateway);
     }
 
 
@@ -208,8 +226,22 @@ public class TokenDispatcher {
 
 
     protected boolean isContinuous(final FlowElement sourceFlowElement) {
-        return countOutgoingSequenceFlows(sourceFlowElement) == 1 &&
-                countIncomingSequenceFlows(sourceFlowElement) == 1 ;
+        return countOutgoingSequenceFlows(sourceFlowElement) == 1 && countIncomingSequenceFlows(sourceFlowElement) == 1;
+
+    }
+
+    protected boolean sameTokenForAllIncomingFlows(final FlowElement sourceFlowElement) {
+        String lastToken = null;
+        for (final org.bonitasoft.studio.model.process.Connection c : sourceFlowElement.getIncoming()) {
+            if (c instanceof SequenceFlow) {
+                final String pathToken = ((SequenceFlow) c).getPathToken();
+                if (lastToken != null && pathToken != null && !pathToken.equals(lastToken)) {
+                    return false;
+                }
+                lastToken = pathToken;
+            }
+        }
+        return true;
     }
 
     public void recomputeAllToken(final Pool process) {
