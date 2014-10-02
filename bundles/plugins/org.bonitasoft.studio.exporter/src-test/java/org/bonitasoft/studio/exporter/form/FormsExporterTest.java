@@ -3,7 +3,6 @@
  */
 package org.bonitasoft.studio.exporter.form;
 
-import static org.junit.Assert.fail;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 
@@ -19,10 +18,8 @@ import org.bonitasoft.studio.model.form.FileWidgetInputType;
 import org.bonitasoft.studio.model.form.FormFactory;
 import org.bonitasoft.studio.model.form.SubmitFormButton;
 import org.bonitasoft.studio.model.process.Document;
-import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -34,7 +31,7 @@ import org.mockito.runners.MockitoJUnitRunner;
  *
  */
 @RunWith(MockitoJUnitRunner.class)
-public class FormsExporterTest {
+public class FormsExporterTest extends AbstractFormExporterTest {
 
 
     @Mock
@@ -111,33 +108,9 @@ public class FormsExporterTest {
         verify(formExporter).addInitialValueExpression(formBuilder, documentExpr);
     }
 
-    @Test
-    @Ignore
-    public void should_addDocumentListBehavior() throws InvalidFormDefinitionException {
-        final FileWidget fileWidget = createFileWidget(FileWidgetInputType.DOCUMENT);
-        final Document document = createDocument("myBonitaDocument", true);
-        final Expression documentExpr = ExpressionFactory.eINSTANCE.createExpression();
-        documentExpr.setContent(document.getName());
-        fileWidget.setInputExpression(documentExpr);
-        formExporter.addDocumentInitialValue(fileWidget, formBuilder);
-        //uncomment next line
-        //  verify(formExporter).addDocumentListBehavior(document.isMultiple());
-        fail();
-    }
 
-    private Document createDocument(final String name, final boolean isMultiple) {
-        final Document document = ProcessFactory.eINSTANCE.createDocument();
-        document.setName(name);
-        document.setMultiple(isMultiple);
-        return document;
-    }
 
-    private FileWidget createFileWidget(final FileWidgetInputType type) {
-        final FileWidget fileWidget = FormFactory.eINSTANCE.createFileWidget();
-        fileWidget.setInputType(FileWidgetInputType.DOCUMENT);
-        return fileWidget;
 
-    }
 
     private Operation createOperation(final String leftOpreand, final String rightOperand,final String operatorType) {
         final Operation operation = ExpressionFactory.eINSTANCE.createOperation();
