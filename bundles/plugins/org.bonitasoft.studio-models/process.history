@@ -8655,17 +8655,18 @@
         </operation>
       </changes>
     </changes>
-    <changes xsi:type="history:CompositeChange">
-    <changes xsi:type="history:Create" target="process.ecore#//Document" referenceName="eStructuralFeatures"
-        element="process.ecore#//Document/initialMultipleContent">
-      <changes xsi:type="history:Set" element="process.ecore#//Document/initialMultipleContent"
-          featureName="name" dataValue="initialMultipleContent"/>
-      <changes xsi:type="history:Set" element="process.ecore#//Document/initialMultipleContent"
-          featureName="containment" dataValue="true" oldDataValue="false"/>
-      <changes xsi:type="history:Set" element="process.ecore#//Document/initialMultipleContent"
-          featureName="eType" referenceValue="expression.ecore#//Expression"/>
+    <changes xsi:type="history:CompositeChange" description="Add possibility of initial content for Multiple Document">
+      <changes xsi:type="history:Create" target="process.ecore#//Document" referenceName="eStructuralFeatures"
+          element="process.ecore#//Document/initialMultipleContent">
+        <changes xsi:type="history:Set" element="process.ecore#//Document/initialMultipleContent"
+            featureName="name" dataValue="initialMultipleContent"/>
+        <changes xsi:type="history:Set" element="process.ecore#//Document/initialMultipleContent"
+            featureName="containment" dataValue="true" oldDataValue="false"/>
+        <changes xsi:type="history:Set" element="process.ecore#//Document/initialMultipleContent"
+            featureName="eType" referenceValue="expression.ecore#//Expression"/>
+      </changes>
     </changes>
-    </changes>
+    <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.custom.migration.document.DocumentDefaultReturnTypeModifierMigration"/>
   </releases>
   <releases/>
 </history:History>

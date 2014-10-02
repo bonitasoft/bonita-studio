@@ -130,7 +130,7 @@ import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
  * @author Romain Bioteau
  */
 public class ExpressionViewer extends ContentViewer implements ExpressionConstants, SWTBotConstants,
-        IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContext {
+IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContext {
 
     protected Composite control;
     private Text textControl;
@@ -1026,7 +1026,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
             }
 
             final Image icon = getImageForMessageKind(message.getKey());
-            if (icon != null) {
+            if (icon != null && messageDecoration.isVisible()) {
                 messageDecoration.setImage(icon);
             }
 
