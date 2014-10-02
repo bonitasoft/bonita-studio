@@ -61,6 +61,7 @@ public interface ExpressionConstants {
     String XPATH_TYPE = ExpressionType.TYPE_XPATH_READ.name();
 
     String JAVA_TYPE = ExpressionType.TYPE_JAVA_METHOD_CALL.name();
+    String DOCUMENT_LIST_TYPE = ExpressionType.TYPE_DOCUMENT_LIST.name();
 
     String ASSIGNMENT_OPERATOR = OperatorType.ASSIGNMENT.name();
 

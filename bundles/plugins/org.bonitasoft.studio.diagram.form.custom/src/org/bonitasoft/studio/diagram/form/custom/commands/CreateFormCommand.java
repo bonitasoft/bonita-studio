@@ -28,6 +28,7 @@ import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.WidgetHelper;
 import org.bonitasoft.studio.common.emf.tools.WidgetModifiersSwitch;
+import org.bonitasoft.studio.data.provider.DocumentReferenceExpressionProvider;
 import org.bonitasoft.studio.diagram.form.custom.model.WidgetContainer;
 import org.bonitasoft.studio.diagram.form.custom.model.WidgetMapping;
 import org.bonitasoft.studio.model.expression.Expression;
@@ -69,9 +70,9 @@ import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCommand;
 
 /**
- * 
+ *
  * Add a new Form to a pageFlow It also create the Diagram and open it
- * 
+ *
  * @author Romain Bioteau
  */
 public class CreateFormCommand extends AbstractTransactionalCommand {
@@ -311,8 +312,7 @@ public class CreateFormCommand extends AbstractTransactionalCommand {
         return !(widget instanceof Info) && !(widget instanceof Table) ;
     }
 
-    protected void addOutputOperationForDocument(final WidgetMapping mapping,
-            final Widget widget) {
+    protected void addOutputOperationForDocument(final WidgetMapping mapping, final Widget widget) {
         final Document doc = (Document) mapping.getModelElement();
         if (doc.isMultiple()) {
             widget.setAction(createDocumentListOutputOperation(widget, doc));
@@ -321,14 +321,9 @@ public class CreateFormCommand extends AbstractTransactionalCommand {
         }
     }
 
-    protected void addInputExpressionForDocument(final Document key,
-            final FileWidget widget) {
-        final Expression inputExpression = ExpressionFactory.eINSTANCE.createExpression();
-        inputExpression.setContent(key.getName()) ;
-        inputExpression.setName(key.getName()) ;
-        inputExpression.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(key));
-        inputExpression.setReturnType(String.class.getName()) ;
-        inputExpression.setType(ExpressionConstants.DOCUMENT_REF_TYPE);
+    protected void addInputExpressionForDocument(final Document key, final FileWidget widget) {
+        final DocumentReferenceExpressionProvider drep = new DocumentReferenceExpressionProvider();
+        final Expression inputExpression = drep.createDocRefExpression(key);
         if(!(feature.equals(ProcessPackage.Literals.PAGE_FLOW__FORM) && pageFlow instanceof Pool)){ //Do not set input expression if we are in an instantiation form
             widget.setInputExpression(inputExpression);
         }

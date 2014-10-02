@@ -59,7 +59,7 @@ public class DocumentReferenceExpressionProvider implements IExpressionProvider 
         }
         if(context != null && process != null){
             for(final Document d : process.getDocuments()){
-                result.add(createExpression(d));
+                result.add(createDocRefExpression(d));
             }
         }
         return result;
@@ -82,7 +82,7 @@ public class DocumentReferenceExpressionProvider implements IExpressionProvider 
 
 
 
-    private Expression createExpression(final Document d) {
+    public Expression createDocRefExpression(final Document d) {
         final Expression exp = ExpressionFactory.eINSTANCE.createExpression() ;
         exp.setType(getExpressionType()) ;
         exp.setContent(d.getName()) ;

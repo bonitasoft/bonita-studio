@@ -634,13 +634,13 @@ public class EngineExpressionUtil {
         return (Operation_Compare) resource.getContents().get(0);
     }
 
-    private static String toEngineExpressionType(final org.bonitasoft.studio.model.expression.Expression expression) {
+    static String toEngineExpressionType(final org.bonitasoft.studio.model.expression.Expression expression) {
         final String type = expression.getType();
         if (ExpressionConstants.CONNECTOR_OUTPUT_TYPE.equals(type) || ExpressionConstants.URL_ATTRIBUTE_TYPE.equals(type)) {
             return ExpressionType.TYPE_INPUT.name();
         }
         if (ExpressionConstants.DOCUMENT_REF_TYPE.equals(type)) {
-            return ExpressionConstants.CONSTANT_TYPE;
+            return toEngineExpressionTypeFoDocumentRef(expression);
         }
         if (ExpressionConstants.GROUP_ITERATOR_TYPE.equals(type)) {
             return ExpressionConstants.FORM_FIELD_TYPE;
@@ -663,6 +663,19 @@ public class EngineExpressionUtil {
 
         }
         return type;
+    }
+
+    private static String toEngineExpressionTypeFoDocumentRef(final org.bonitasoft.studio.model.expression.Expression expression) {
+        if (!expression.getReferencedElements().isEmpty()) {
+            final EObject referencedElement = expression.getReferencedElements().get(0);
+            if (referencedElement instanceof Document) {
+                if (((Document) referencedElement).isMultiple()) {
+                    return ExpressionConstants.DOCUMENT_LIST_TYPE;
+                }
+            }
+        }
+        //Return CONSTANT_TYPE for ensuring backward-compatibility even if Engine has introduced the DOCUMENT_TYPE,
+        return ExpressionConstants.CONSTANT_TYPE;
     }
 
     public static Expression createConnectorOutputExpression(final Output element) {
