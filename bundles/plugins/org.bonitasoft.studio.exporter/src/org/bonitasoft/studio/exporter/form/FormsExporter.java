@@ -652,6 +652,9 @@ public class FormsExporter {
         if (OperatorType.DOCUMENT_CREATE_UPDATE.name().equals(type)) {
             return ActionType.ASSIGNMENT;
         }
+        if (ExpressionConstants.SET_LIST_DOCUMENT_OPERATOR.equals(type)) {
+            return ActionType.ASSIGNMENT;
+        }
         // it's the left operand that tell if it's a string index to set
         if (OperatorType.STRING_INDEX.name().equals(type)) {
             return ActionType.ASSIGNMENT;

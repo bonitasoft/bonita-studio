@@ -6,6 +6,8 @@ package org.bonitasoft.studio.exporter.form;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 
+import org.assertj.core.api.Assertions;
+import org.bonitasoft.forms.client.model.ActionType;
 import org.bonitasoft.forms.server.builder.IFormBuilder;
 import org.bonitasoft.forms.server.exception.InvalidFormDefinitionException;
 import org.bonitasoft.studio.common.ExpressionConstants;
@@ -109,9 +111,17 @@ public class FormsExporterTest extends AbstractFormExporterTest {
         verify(formExporter).addInitialValueExpression(formBuilder, documentExpr);
     }
 
+    @Test
+    public void getActionTypeFromStudioOperatorTypeReturnAssignmentForSetDocumentOperator() {
+        final ActionType actionTypeSetDoc = formExporter.getActionTypeFromStudioOperatorType(ExpressionConstants.SET_DOCUMENT_OPERATOR);
+        Assertions.assertThat(actionTypeSetDoc).isEqualTo(ActionType.ASSIGNMENT);
+    }
 
-
-
+    @Test
+    public void getActionTypeFromStudioOperatorTypeReturnAssignmentForSetDocumentListOperator() {
+        final ActionType actionTypeSetDoc = formExporter.getActionTypeFromStudioOperatorType(ExpressionConstants.SET_LIST_DOCUMENT_OPERATOR);
+        Assertions.assertThat(actionTypeSetDoc).isEqualTo(ActionType.ASSIGNMENT);
+    }
 
     private Operation createOperation(final String leftOpreand, final String rightOperand,final String operatorType) {
         final Operation operation = ExpressionFactory.eINSTANCE.createOperation();
