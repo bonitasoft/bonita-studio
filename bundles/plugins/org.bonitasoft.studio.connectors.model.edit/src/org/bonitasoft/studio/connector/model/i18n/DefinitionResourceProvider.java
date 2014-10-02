@@ -321,7 +321,10 @@ public class DefinitionResourceProvider {
     public Set<Locale> getExistingLocale(final ConnectorDefinition definition) {
         final Set<Locale> result = new HashSet<Locale>();
         String defId = null;
-        if (definition == null || definition.eResource() == null) {
+        if (definition == null) {
+            return result;
+        }
+        if (definition.eResource() == null) {
             defId = NamingUtils.toConnectorDefinitionFilename(definition.getId(), definition.getVersion(), false);
         } else {
             defId = URI.decode(definition.eResource().getURI().trimFileExtension().lastSegment());
