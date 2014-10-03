@@ -234,18 +234,7 @@ public class CreateFormCommandTest {
         assertThat(actionExpr.getReturnType()).isEqualTo(String.class.getName());
     }
 
-    @Test
-    public void should_createDocumentListOutputOperation_should_create_action_Not_Null() throws Exception {
-        final Document doc = ProcessFactory.eINSTANCE.createDocument();
-        doc.setName("toto");
-        final Widget w1 = FormFactory.eINSTANCE.createTextFormField();
-        w1.setName("toto");
 
-        final Operation action = commandUnderTest.createDocumentListOutputOperation(w1, doc);
-        assertThat(action).isNotNull();
-        assertThat(action.getRightOperand()).isNotNull();
-        assertThat(action.getLeftOperand()).isNotNull();
-    }
 
     @Test
     public void should_createDocumentOutputOperation_should_create_action_Not_Null() throws Exception {

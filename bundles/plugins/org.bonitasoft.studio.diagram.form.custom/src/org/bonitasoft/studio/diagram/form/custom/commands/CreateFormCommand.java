@@ -314,11 +314,7 @@ public class CreateFormCommand extends AbstractTransactionalCommand {
 
     protected void addOutputOperationForDocument(final WidgetMapping mapping, final Widget widget) {
         final Document doc = (Document) mapping.getModelElement();
-        if (doc.isMultiple()) {
-            widget.setAction(createDocumentListOutputOperation(widget, doc));
-        } else {
-            widget.setAction(createDocumentOutputOperation(widget, doc));
-        }
+        widget.setAction(createDocumentOutputOperation(widget, doc));
     }
 
     protected void addInputExpressionForDocument(final Document key, final FileWidget widget) {
@@ -383,20 +379,6 @@ public class CreateFormCommand extends AbstractTransactionalCommand {
         return wLayout;
     }
 
-    protected Operation createDocumentListOutputOperation(final Widget widget, final Document doc) {
-        final Operation action = ExpressionFactory.eINSTANCE.createOperation();
-
-        final Operator assignment = ExpressionFactory.eINSTANCE.createOperator();
-        assignment.setType(ExpressionConstants.SET_LIST_DOCUMENT_OPERATOR);
-        action.setOperator(assignment);
-
-        final Expression storageExpression = createStorageExpressionForDocument(doc);
-        action.setLeftOperand(storageExpression);
-
-        final Expression actionExpression = createActionExpressionForDocument(widget);
-        action.setRightOperand(actionExpression);
-        return action;
-    }
 
 
     protected Operation createDocumentOutputOperation(final Widget widget,final Document doc) {
