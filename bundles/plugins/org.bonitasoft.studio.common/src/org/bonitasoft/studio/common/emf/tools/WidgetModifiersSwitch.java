@@ -44,7 +44,7 @@ public class WidgetModifiersSwitch extends FormSwitch<Collection<String>>{
 
     @Override
     public Collection<String> caseTextFormField(final TextFormField object) {
-        final List<String> result = new ArrayList<String>();
+        final List<String> result = new ArrayList<String>(8);
         result.add(String.class.getName());
         result.add(Long.class.getName());
         result.add(Boolean.class.getName());
@@ -58,13 +58,10 @@ public class WidgetModifiersSwitch extends FormSwitch<Collection<String>>{
 
     @Override
     public Collection<String> caseFileWidget(final FileWidget fileWidget) {
-        final List<String> result = new ArrayList<String>();
-            result.add(OLD_LIST_OF_DOCUMENT);
-            result.add(NEW_LIST_OF_DOCUMENT);
-            result.add(ENGINE_DOCUMENT_QUALIFIED_NAME);
-
+        final List<String> result = new ArrayList<String>(3);
+        result.add(OLD_LIST_OF_DOCUMENT);
+        result.add(NEW_LIST_OF_DOCUMENT);
+        result.add(ENGINE_DOCUMENT_QUALIFIED_NAME);
         return result;
     }
-
-
 }
