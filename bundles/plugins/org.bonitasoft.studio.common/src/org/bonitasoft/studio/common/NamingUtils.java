@@ -220,7 +220,7 @@ public class NamingUtils {
                 final EObject eObject = (EObject) iterator.next();
                 if (eObject instanceof Element) {
                     final Element child = (Element) eObject;
-                    if (child.getName().startsWith(label)) {
+                    if (child.getName() != null && child.getName().startsWith(label)) {
                         String name = child.getName();
                         final int index = child.getName().indexOf(label) + label.length();
                         name = name.substring(index);
