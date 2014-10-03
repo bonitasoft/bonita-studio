@@ -187,23 +187,19 @@ public class DesignProcessDefinitionBuilder {
     }
 
     private void processSimpleDocument(final ProcessDefinitionBuilder processBuilder, final Document document) {
-        if (hasADefaultValue(document)) {
-            final DocumentDefinitionBuilder documentBuilder = processBuilder.addDocumentDefinition(document.getName());
-            documentBuilder.addDescription(document.getDocumentation());
-            handleDocumentMimeType(document, documentBuilder);
-            handleSimpleDocumentInitialContent(document, documentBuilder);
-        }
+        final DocumentDefinitionBuilder documentBuilder = processBuilder.addDocumentDefinition(document.getName());
+        documentBuilder.addDescription(document.getDocumentation());
+        handleDocumentMimeType(document, documentBuilder);
+        handleSimpleDocumentInitialContent(document, documentBuilder);
     }
 
     private void processMultipleDocument(final ProcessDefinitionBuilder processBuilder, final Document document) {
-        //if (hasADefaultValue(document)) {//TODO: waiting decision on adding or not document without initial value in process definition
         final DocumentListDefinitionBuilder documentListBuilder = processBuilder.addDocumentListDefinition(document.getName());
         documentListBuilder.addDescription(document.getDocumentation());
         if (hasADefaultValue(document)) {
             documentListBuilder.addInitialValue(EngineExpressionUtil.createExpression(document.getInitialMultipleContent()));
         }
-        //}
-}
+    }
 
     private void handleSimpleDocumentInitialContent(final Document document, final DocumentDefinitionBuilder documentBuilder) {
         final DocumentType documentType = document.getDocumentType();

@@ -155,7 +155,7 @@ public class DesignProcessDefinitionBuilderTest {
     }
 
     @Test
-    public void testMimeTypeNotAddedIfThereIsNoDefaultValue() {
+    public void testMimeTypeAddedEvenIfThereIsNoDefaultValue() {
         final DesignProcessDefinitionBuilder builder = new DesignProcessDefinitionBuilder();
         when(processDefinitionBuilder.addDocumentDefinition(anyString())).thenReturn(docDefinitionBuilder);
 
@@ -173,7 +173,7 @@ public class DesignProcessDefinitionBuilderTest {
 
         builder.processDocuments(process, processDefinitionBuilder);
 
-        verify(docDefinitionBuilder, Mockito.never()).addMimeType(anyString());
+        verify(docDefinitionBuilder).addMimeType(anyString());
     }
 
     @Mock
