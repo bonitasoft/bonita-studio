@@ -323,6 +323,7 @@ public class CreateFormCommand extends AbstractTransactionalCommand {
         if(!(feature.equals(ProcessPackage.Literals.PAGE_FLOW__FORM) && pageFlow instanceof Pool)){ //Do not set input expression if we are in an instantiation form
             widget.setInputExpression(inputExpression);
         }
+        widget.setReturnTypeModifier(WidgetModifiersSwitch.ENGINE_DOCUMENT_QUALIFIED_NAME);
     }
 
     protected void addSubmitButton(final Form myForm) {

@@ -19,7 +19,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import org.bonitasoft.engine.bpm.document.Document;
 import org.bonitasoft.engine.bpm.document.DocumentValue;
 import org.bonitasoft.studio.model.form.FileWidget;
 import org.bonitasoft.studio.model.form.TextFormField;
@@ -35,7 +34,7 @@ public class WidgetModifiersSwitch extends FormSwitch<Collection<String>>{
 
     public static final String OLD_LIST_OF_DOCUMENT = List.class.getName() + "<" + String.class.getName() + ">";
     public static final String NEW_LIST_OF_DOCUMENT = List.class.getName() + "<" + DocumentValue.class.getName() + ">";
-    public static final String ENGINE_DOCUMENT_QUALIFIED_NAME = Document.class.getName();
+    public static final String ENGINE_DOCUMENT_QUALIFIED_NAME = DocumentValue.class.getName();
 
     @Override
     public Collection<String> caseWidget(final Widget object) {
