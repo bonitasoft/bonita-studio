@@ -58,9 +58,13 @@ public class BotDataFormPropertySection extends BotBase {
         return this;
     }
 
+    public String getFieldModifier() {
+        return bot.comboBoxWithLabel(org.bonitasoft.studio.form.properties.i18n.Messages.fieldModifier).getText();
+    }
+
     /**
      * Select output variable.
-     * 
+     *
      * @deprecated use {@link #getOutputOperation()}
      * @param variableName
      * @param returnType
@@ -74,7 +78,7 @@ public class BotDataFormPropertySection extends BotBase {
 
     /**
      * Edit output expression.
-     * 
+     *
      * @deprecated use {@link #getOutputOperation()}
      * @return
      */
@@ -86,7 +90,7 @@ public class BotDataFormPropertySection extends BotBase {
 
     /**
      * Get the output operation.
-     * 
+     *
      * @return
      */
     public BotOperationComposite getOutputOperation() {
