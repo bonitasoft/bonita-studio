@@ -1772,6 +1772,7 @@ public class FormsExporter {
             builder.addAttachmentImageBehavior(((FileWidget) widget)
                     .isUsePreview());
             addDocumentInitialValue((FileWidget) widget, builder);
+            setDocumentIsMultiple((FileWidget) widget, builder);
         } else if (widget instanceof RichTextAreaFormField) {
             builder.addWidget(widget.getName(), WidgetType.RICH_TEXTAREA);
             addInitialValue(widget, builder);
@@ -1834,6 +1835,17 @@ public class FormsExporter {
         }
 
         //   builder.addDocumentListBehavior(widget.getDocument().isMultiple());
+    }
+
+    /**
+     * @param widget
+     * @param builder
+     * @throws InvalidFormDefinitionException
+     */
+    private void setDocumentIsMultiple(final FileWidget widget, final IFormBuilder builder) throws InvalidFormDefinitionException {
+        if (widget.isDuplicate()) {
+            builder.addFieldOutputType(widget.getReturnTypeModifier());
+        }
     }
 
     /**

@@ -37,7 +37,7 @@ public class AbstractFormExporterTest {
 
     protected FileWidget createFileWidget(final FileWidgetInputType type) {
         final FileWidget fileWidget = FormFactory.eINSTANCE.createFileWidget();
-        fileWidget.setInputType(FileWidgetInputType.DOCUMENT);
+        fileWidget.setInputType(type);
         return fileWidget;
 
     }

@@ -142,5 +142,17 @@ public class FormsExporterTest extends AbstractFormExporterTest {
         return operation;
     }
 
+    @Test
+    public void should_addFileWidgetInitialValueExpression_whenDocumentIsScript() throws InvalidFormDefinitionException {
+        final FileWidget fileWidget = createFileWidget(FileWidgetInputType.DOCUMENT);
+        final Expression scriptExpression = ExpressionFactory.eINSTANCE.createExpression();
+        scriptExpression.setName("myDocumentScript");
+        scriptExpression.setContent("myDocumentScript");
+        scriptExpression.setType(ExpressionConstants.SCRIPT_TYPE);
+        scriptExpression.setReturnType(String.class.getName());
+        fileWidget.setInputExpression(scriptExpression);
+        formExporter.addDocumentInitialValue(fileWidget, formBuilder);
+        verify(formExporter).addInitialValueExpression(formBuilder, fileWidget.getInputExpression());
+    }
 
 }
