@@ -556,7 +556,6 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
             final Object oldValue = event.diff.getOldValue();
             if (oldValue != null && oldUser != null) {
                 oldUser.setFirstName(oldValue.toString());
-
                 if(getViewer() != null && !getViewer().getControl().isDisposed()){
                     getViewer().refresh(user) ;
                 }
