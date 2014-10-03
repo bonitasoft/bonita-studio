@@ -37,7 +37,7 @@ public class BonitaStudioLog {
 	private static final SecureAction secureAction = AccessController.doPrivileged(SecureAction.createSecureAction());
 	private static int logLevel ;
 	static{
-		String newLogLevel = secureAction.getProperty(PROP_LOG_LEVEL);
+		final String newLogLevel = secureAction.getProperty(PROP_LOG_LEVEL);
 		if (newLogLevel != null) {
 			if (newLogLevel.equals("ERROR")) {
 				logLevel = FrameworkLogEntry.ERROR;
@@ -52,14 +52,14 @@ public class BonitaStudioLog {
 		}
 	}
 
-	public static void log(String message) {
-		ILog logger = Activator.getDefault().getLogger();
+	public static void log(final String message) {
+		final ILog logger = Activator.getDefault().getLogger();
 		if(logger != null){
 			logger.log(new Status(IStatus.INFO, Activator.PLUGIN_ID, message));
 		}
 	}
 
-	public static void error(Throwable exception) {
+	public static void error(final Throwable exception) {
 		final ILog logger = getLogger();
 		if(logger != null){
 			logger.log(new Status(IStatus.ERROR, Activator.PLUGIN_ID, exception.getMessage(),exception));
@@ -73,7 +73,7 @@ public class BonitaStudioLog {
 	 * @param exception - the exception to log
 	 * @param bundleId - the bundle id of the original exception to log
 	 */
-	public static void error(Throwable exception,String bundleId){
+	public static void error(final Throwable exception,final String bundleId){
 		final ILog logger = getLogger();
 		if(logger != null){
 			logger.log(new Status(IStatus.ERROR, bundleId, exception.getMessage(),exception));
@@ -83,7 +83,7 @@ public class BonitaStudioLog {
 	}
 
 	protected static ILog getLogger() {
-		Activator activator = Activator.getDefault();
+		final Activator activator = Activator.getDefault();
 		if(activator != null){
 			return Activator.getDefault().getLogger();
 		}
@@ -95,7 +95,7 @@ public class BonitaStudioLog {
 	 * @param message - the message to log
 	 * @param bundleId - the bundle id of the original exception to log
 	 */
-	public static void error(String message,String bundleId){
+	public static void error(final String message,final String bundleId){
 		final ILog logger = getLogger();
 		if(logger != null){
 			logger.log(new Status(IStatus.ERROR, bundleId, message));
@@ -104,12 +104,21 @@ public class BonitaStudioLog {
 		}
 	}
 
+    public static void error(final String message, final Throwable exception, final String bundleId) {
+        final ILog logger = getLogger();
+        if (logger != null) {
+            logger.log(new Status(IStatus.ERROR, bundleId, message, exception));
+        } else {
+            System.err.println(message);
+        }
+    }
+
 	/**
 	 * Log an information
 	 * @param message - the message to log
 	 * @param bundleId - the bundle id of the original exception to log
 	 */
-	public static void info(String message,String bundleId){
+	public static void info(final String message,final String bundleId){
 		final ILog logger = getLogger();
 		if(logger != null){
 			logger.log(new Status(IStatus.INFO, bundleId, message));
@@ -121,7 +130,7 @@ public class BonitaStudioLog {
 	 * @param message - the message to log
 	 * @param bundleId - the bundle id of the original exception to log
 	 */
-	public static void warning(String message,String bundleId){
+	public static void warning(final String message,final String bundleId){
 		final ILog logger = getLogger();
 		if(logger != null){
 			logger.log(new Status(IStatus.WARNING, bundleId, message));
@@ -133,14 +142,14 @@ public class BonitaStudioLog {
 	 * @param message - the message to log
 	 * @param bundleId - the bundle id of the original exception to log
 	 */
-	public static void debug(String message,String bundleId){
+	public static void debug(final String message,final String bundleId){
 		final ILog logger = getLogger();
 		if(logger != null){
 			logger.log(new Status(IStatus.OK,bundleId, message));
 		}
 	}
 
-	public static boolean isLoggable(int level) {
+	public static boolean isLoggable(final int level) {
 		if (logLevel == 0) {
 			return true;
 		}

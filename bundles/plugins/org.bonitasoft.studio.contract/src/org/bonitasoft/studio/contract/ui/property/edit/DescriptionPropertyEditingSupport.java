@@ -18,6 +18,7 @@ package org.bonitasoft.studio.contract.ui.property.edit;
 
 import org.bonitasoft.studio.contract.core.ContractDefinitionValidator;
 import org.bonitasoft.studio.model.process.ContractInput;
+import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.ICellEditorValidator;
@@ -36,7 +37,7 @@ public class DescriptionPropertyEditingSupport extends PropertyEditingSupport im
 
     public DescriptionPropertyEditingSupport(final ColumnViewer viewer, final IPropertySourceProvider propertySourceProvider,
             final ContractDefinitionValidator contractDefinitionValidator) {
-        super(viewer, propertySourceProvider, "description");
+        super(viewer, propertySourceProvider, ProcessPackage.Literals.CONTRACT_INPUT__DESCRIPTION.getName());
         this.contractDefinitionValidator = contractDefinitionValidator;
     }
 

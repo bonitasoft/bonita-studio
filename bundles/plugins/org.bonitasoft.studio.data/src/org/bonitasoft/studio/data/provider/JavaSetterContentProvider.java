@@ -81,7 +81,7 @@ public class JavaSetterContentProvider implements ITreeContentProvider {
         }else if(inputElement instanceof IType){
             return getChildren(inputElement) ;
         }
-        return null;
+        return new Object[0];
     }
 
     /*
@@ -107,7 +107,7 @@ public class JavaSetterContentProvider implements ITreeContentProvider {
                 final IType type = (IType) parentElement;
                 return computeChildren(type);
             } else {
-                return new Object[] {};
+                return new Object[0];
             }
         } catch (final Exception ex) {
             BonitaStudioLog.error(ex);

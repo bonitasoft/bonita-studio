@@ -17,10 +17,13 @@
 package org.bonitasoft.studio.contract.ui.property.edit;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.bonitasoft.studio.common.DataUtil;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.contract.ContractPlugin;
 import org.bonitasoft.studio.contract.core.ContractDefinitionValidator;
 import org.bonitasoft.studio.contract.i18n.Messages;
 import org.bonitasoft.studio.contract.ui.property.edit.proposal.InputMappingProposal;
@@ -31,6 +34,7 @@ import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ContractInputMapping;
 import org.bonitasoft.studio.model.process.ContractInputType;
 import org.bonitasoft.studio.model.process.Data;
+import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -51,8 +55,8 @@ import org.eclipse.jface.viewers.ICellEditorValidator;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
-import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.views.properties.IPropertySource;
@@ -70,10 +74,21 @@ public class InputNamePropertyEditingSupport extends PropertyEditingSupport impl
     private final ContractDefinitionValidator contractDefinitionValidator;
     private boolean validate = false;
     private Object currentValue;
-
+    private static final Map<String, ContractInputType> JAVA_TO_INPUT_TYPE_MAP;
+    static {
+        JAVA_TO_INPUT_TYPE_MAP = new HashMap<String, ContractInputType>();
+        JAVA_TO_INPUT_TYPE_MAP.put(String.class.getName(), ContractInputType.TEXT);
+        JAVA_TO_INPUT_TYPE_MAP.put(Long.class.getName(), ContractInputType.INTEGER);
+        JAVA_TO_INPUT_TYPE_MAP.put(Integer.class.getName(), ContractInputType.INTEGER);
+        JAVA_TO_INPUT_TYPE_MAP.put(Short.class.getName(), ContractInputType.INTEGER);
+        JAVA_TO_INPUT_TYPE_MAP.put(Boolean.class.getName(), ContractInputType.BOOLEAN);
+        JAVA_TO_INPUT_TYPE_MAP.put(Date.class.getName(), ContractInputType.DATE);
+        JAVA_TO_INPUT_TYPE_MAP.put(Double.class.getName(), ContractInputType.DECIMAL);
+        JAVA_TO_INPUT_TYPE_MAP.put(Float.class.getName(), ContractInputType.DECIMAL);
+    }
     public InputNamePropertyEditingSupport(final AdapterFactoryContentProvider propertySourceProvider, final TableViewer viewer,
             final AdapterFactoryLabelProvider adapterFactoryLabelProvider, final ContractDefinitionValidator contractDefinitionValidator) {
-        super(viewer, propertySourceProvider, "name");
+        super(viewer, propertySourceProvider, ProcessPackage.Literals.CONTRACT_INPUT__NAME.getName());
         this.adapterFactoryLabelProvider = adapterFactoryLabelProvider;
         this.contractDefinitionValidator = contractDefinitionValidator;
     }
@@ -109,13 +124,7 @@ public class InputNamePropertyEditingSupport extends PropertyEditingSupport impl
         controlDecoration.setImage(fieldDecoration.getImage());
         controlDecoration.setDescriptionText(Messages.automaticMappingTooltip);
         controlDecoration.setMarginWidth(0);
-        cellEditor.getControl().addControlListener(new ControlListener() {
-
-            @Override
-            public void controlResized(final ControlEvent arg0) {
-
-            }
-
+        cellEditor.getControl().addControlListener(new ControlAdapter() {
             @Override
             public void controlMoved(final ControlEvent event) {
                 if (cellEditor.getControl().equals(event.widget)) {
@@ -128,7 +137,6 @@ public class InputNamePropertyEditingSupport extends PropertyEditingSupport impl
                         editor.setSize(editor.getSize().x - offset, editor.getSize().y);
                     }
                 }
-
             }
         });
     }
@@ -140,7 +148,7 @@ public class InputNamePropertyEditingSupport extends PropertyEditingSupport impl
         try {
             keyStroke = KeyStroke.getInstance("Ctrl+Space");
         } catch (final ParseException e) {
-            BonitaStudioLog.error(e);
+            BonitaStudioLog.error("Failed to retrieve Ctrl+Space key stroke", e, ContractPlugin.PLUGIN_ID);
         }
         final ContentProposalAdapter contentProposalAdapter = new ContentProposalAdapter(textControl, new TextContentAdapter(),
                 new InputMappingProposalProvider((ContractInput) element), keyStroke,
@@ -151,20 +159,7 @@ public class InputNamePropertyEditingSupport extends PropertyEditingSupport impl
             @Override
             public void proposalAccepted(final IContentProposal acceptedProposal) {
                 if (acceptedProposal instanceof InputMappingProposal) {
-                    final IPropertySource inputPropertySource = propertySourceProvider.getPropertySource(element);
-                    final String name = ((InputMappingProposal) acceptedProposal).getInputContent();
-                    setValue(element, name);
-                    textControl.setText(name);
-                    inputPropertySource.setPropertyValue("type", getType((InputMappingProposal) acceptedProposal));
-                    inputPropertySource.setPropertyValue("multiple", ((InputMappingProposal) acceptedProposal).getData().isMultiple());
-
-                    final ContractInputMapping mapping = ((ContractInput) element).getMapping();
-                    Assert.isNotNull(mapping);
-                    final IPropertySource mappingPropertySource = propertySourceProvider.getPropertySource(mapping);
-                    mappingPropertySource.setPropertyValue("data", ((InputMappingProposal) acceptedProposal).getData());
-                    mappingPropertySource.setPropertyValue("setterName", ((InputMappingProposal) acceptedProposal).getSetterName());
-                    mappingPropertySource.setPropertyValue("setterParamType", ((InputMappingProposal) acceptedProposal).getSetterParamType());
-                    getViewer().update(element, null);
+                    updateContractInputWithProposal(element, textControl, acceptedProposal);
                 }
             }
         });
@@ -183,22 +178,11 @@ public class InputNamePropertyEditingSupport extends PropertyEditingSupport impl
             javaType = DataUtil.getTechnicalTypeFor(data);
         }
 
-        if (javaType.equals(String.class.getName())) {
-            return ContractInputType.TEXT;
-        } else if (javaType.equals(Integer.class.getName())
-                || javaType.equals(Long.class.getName())
-                || javaType.equals(Short.class.getName())) {
-            return ContractInputType.INTEGER;
-        } else if (javaType.equals(Double.class.getName())
-                || javaType.equals(Float.class.getName())) {
-            return ContractInputType.DECIMAL;
-        } else if (javaType.equals(Boolean.class.getName())) {
-            return ContractInputType.BOOLEAN;
-        } else if (javaType.equals(Date.class.getName())) {
-            return ContractInputType.DATE;
-        } else {
-            throw new RuntimeException("Invalid input type");
+        final ContractInputType inputType = JAVA_TO_INPUT_TYPE_MAP.get(javaType);
+        if (inputType == null) {
+            throw new IllegalStateException("Invalid input type: " + javaType);
         }
+        return inputType;
     }
 
     @Override
@@ -218,11 +202,33 @@ public class InputNamePropertyEditingSupport extends PropertyEditingSupport impl
 
     @Override
     public void cancelEditor() {
+        //Nothing to do
     }
 
     @Override
     public void editorValueChanged(final boolean oldValidState, final boolean newValidState) {
         validate = oldValidState || newValidState;
+    }
+
+    protected void updateContractInputWithProposal(final Object element, final Text textControl, final IContentProposal acceptedProposal) {
+        final IPropertySource inputPropertySource = propertySourceProvider.getPropertySource(element);
+        final String name = ((InputMappingProposal) acceptedProposal).getInputContent();
+        setValue(element, name);
+        textControl.setText(name);
+        inputPropertySource.setPropertyValue(ProcessPackage.Literals.CONTRACT_INPUT__TYPE.getName(), getType((InputMappingProposal) acceptedProposal));
+        inputPropertySource.setPropertyValue(ProcessPackage.Literals.CONTRACT_INPUT__MULTIPLE.getName(), ((InputMappingProposal) acceptedProposal).getData()
+                .isMultiple());
+
+        final ContractInputMapping mapping = ((ContractInput) element).getMapping();
+        Assert.isNotNull(mapping);
+        final IPropertySource mappingPropertySource = propertySourceProvider.getPropertySource(mapping);
+        mappingPropertySource.setPropertyValue(ProcessPackage.Literals.CONTRACT_INPUT_MAPPING__DATA.getName(),
+                ((InputMappingProposal) acceptedProposal).getData());
+        mappingPropertySource.setPropertyValue(ProcessPackage.Literals.CONTRACT_INPUT_MAPPING__SETTER_NAME.getName(),
+                ((InputMappingProposal) acceptedProposal).getSetterName());
+        mappingPropertySource.setPropertyValue(ProcessPackage.Literals.CONTRACT_INPUT_MAPPING__SETTER_PARAM_TYPE.getName(),
+                ((InputMappingProposal) acceptedProposal).getSetterParamType());
+        getViewer().update(element, null);
     }
 
 }

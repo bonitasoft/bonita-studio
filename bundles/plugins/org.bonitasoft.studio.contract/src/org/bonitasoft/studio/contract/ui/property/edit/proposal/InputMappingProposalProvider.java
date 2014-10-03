@@ -29,6 +29,7 @@ import org.bonitasoft.studio.common.DataUtil;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.contract.ContractPlugin;
 import org.bonitasoft.studio.data.provider.JavaSetterContentProvider;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.Data;
@@ -90,23 +91,27 @@ public class InputMappingProposalProvider implements IContentProposalProvider {
                     proposals.put(d.getName(), new InputMappingProposal(d));
                 }
                 if (d instanceof JavaObjectData) {
-                    final String className = ((JavaObjectData) d).getClassName();
-                    final IType javaType = getType(className);
-                    final Object[] setters = getSetters(javaType);
-                    if (setters != null) {
-                        for (final Object m : setters) {
-                            if (m instanceof IMethod && ((IMethod) m).getElementName().startsWith("set")) {
-                                final String inputType = toJavaType((IMethod) m);
-                                if (isCompatibleType(inputType)) {
-                                    final InputMappingProposal inputMappingProposal = new InputMappingProposal(d, ((IMethod) m).getElementName(), inputType);
-                                    proposals.put(inputMappingProposal.getContent(), inputMappingProposal);
-                                }
-                            }
-                        }
-                    }
+                    proposals.putAll(getProposalsFromJavaObjectData((JavaObjectData) d));
                 }
             }
         }
+    }
+
+    protected Map<String, IContentProposal> getProposalsFromJavaObjectData(final JavaObjectData d) {
+        final Map<String, IContentProposal> result = new HashMap<String, IContentProposal>();
+        final String className = d.getClassName();
+        final IType javaType = getType(className);
+        final Object[] setters = getSetters(javaType);
+        for (final Object m : setters) {
+            if (m instanceof IMethod && ((IMethod) m).getElementName().startsWith("set")) {
+                final String inputType = toJavaType((IMethod) m);
+                if (isCompatibleType(inputType)) {
+                    final InputMappingProposal inputMappingProposal = new InputMappingProposal(d, ((IMethod) m).getElementName(), inputType);
+                    result.put(inputMappingProposal.getContent(), inputMappingProposal);
+                }
+            }
+        }
+        return result;
     }
 
     protected Object[] getSetters(final IType javaType) {
@@ -126,9 +131,7 @@ public class InputMappingProposalProvider implements IContentProposalProvider {
         try {
             qualifiedType = JavaModelUtil.getResolvedTypeName(Signature.getTypeErasure(method.getParameterTypes()[0]), method.getDeclaringType());
         } catch (final JavaModelException e) {
-            BonitaStudioLog.error(e);
-        } catch (final IllegalArgumentException e) {
-            BonitaStudioLog.error(e);
+            BonitaStudioLog.error("Failed to retrieve return type of " + method.getElementName(), e, ContractPlugin.PLUGIN_ID);
         }
         if (primitiveToObjectTypes.containsKey(qualifiedType)) {
             qualifiedType = primitiveToObjectTypes.get(qualifiedType);
@@ -141,7 +144,7 @@ public class InputMappingProposalProvider implements IContentProposalProvider {
         try {
             return javaProject.findType(className);
         } catch (final JavaModelException e) {
-            BonitaStudioLog.error(e);
+            BonitaStudioLog.error("Failed to retrieve type for classname: " + className + " in current repository", e, ContractPlugin.PLUGIN_ID);
         }
         return null;
     }

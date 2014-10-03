@@ -128,7 +128,7 @@ public class InputNamePropertyEditingSupportTest {
         assertThat(propertyEditingSupport.getType(proposal)).isEqualTo(ContractInputType.INTEGER);
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test(expected = IllegalStateException.class)
     public void should_getType_throw_RuntimeException_if_type_unknown() throws Exception {
         final JavaObjectData javaData = ProcessFactory.eINSTANCE.createJavaObjectData();
         javaData.setDataType(ProcessFactory.eINSTANCE.createJavaType());

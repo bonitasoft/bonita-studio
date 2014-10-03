@@ -19,6 +19,7 @@ package org.bonitasoft.studio.contract.ui.property.edit;
 import org.bonitasoft.studio.contract.ui.property.edit.proposal.InputMappingProposal;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ContractInputMapping;
+import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.CellEditor;
@@ -60,9 +61,12 @@ public class InputMappingPropertyEditingSupport extends EditingSupport {
             final ContractInputMapping mapping = ((ContractInput) element).getMapping();
             if (value instanceof ContractInputMapping) {
                 final IPropertySource propertySource = propertySourceProvider.getPropertySource(mapping);
-                propertySource.setPropertyValue("data", ((ContractInputMapping) value).getData());
-                propertySource.setPropertyValue("setterName", ((ContractInputMapping) value).getSetterName());
-                propertySource.setPropertyValue("setterParamType", ((ContractInputMapping) value).getSetterParamType());
+                propertySource.setPropertyValue(ProcessPackage.Literals.CONTRACT_INPUT_MAPPING__DATA.getName(),
+                        ((ContractInputMapping) value).getData());
+                propertySource.setPropertyValue(ProcessPackage.Literals.CONTRACT_INPUT_MAPPING__SETTER_NAME.getName(),
+                        ((ContractInputMapping) value).getSetterName());
+                propertySource.setPropertyValue(ProcessPackage.Literals.CONTRACT_INPUT_MAPPING__SETTER_PARAM_TYPE.getName(),
+                        ((ContractInputMapping) value).getSetterParamType());
             }
             getViewer().update(element, null);
         }

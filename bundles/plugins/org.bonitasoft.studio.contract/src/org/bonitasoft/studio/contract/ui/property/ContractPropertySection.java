@@ -145,12 +145,12 @@ public class ContractPropertySection extends EObjectSelectionProviderSection {
 
     protected void addInput(final TableViewer inputsTableViewer) {
         final IObservableList input = (IObservableList) inputsTableViewer.getInput();
-        final ContractInput defaultInput = createDefaultInput(input);
+        final ContractInput defaultInput = createDefaultInput();
         input.add(defaultInput);
         inputsTableViewer.editElement(defaultInput, 0);
     }
 
-    private ContractInput createDefaultInput(final IObservableList input) {
+    private ContractInput createDefaultInput() {
         final ContractInput contractInput = ProcessFactory.eINSTANCE.createContractInput();
         contractInput.setType(ContractInputType.TEXT);
         contractInput.setMapping(ProcessFactory.eINSTANCE.createContractInputMapping());
@@ -396,7 +396,8 @@ public class ContractPropertySection extends EObjectSelectionProviderSection {
         final TableColumn column = mandatoryColumnViewer.getColumn();
         column.setText(Messages.mandatory);
         mandatoryColumnViewer.setLabelProvider(new MandatoryInputCheckboxLabelProvider(viewer.getControl()));
-        mandatoryColumnViewer.setEditingSupport(new CheckboxPropertyEditingSupport(propertySourceProvider, viewer, "mandatory"));
+        mandatoryColumnViewer.setEditingSupport(new CheckboxPropertyEditingSupport(propertySourceProvider, viewer,
+                ProcessPackage.Literals.CONTRACT_INPUT__MANDATORY.getName()));
     }
 
     protected void createMultipleColumn(final TableViewer viewer) {
@@ -404,7 +405,8 @@ public class ContractPropertySection extends EObjectSelectionProviderSection {
         final TableColumn column = multipleColumnViewer.getColumn();
         column.setText(Messages.multiple);
         multipleColumnViewer.setLabelProvider(new MultipleInputCheckboxLabelProvider(viewer.getControl()));
-        multipleColumnViewer.setEditingSupport(new CheckboxPropertyEditingSupport(propertySourceProvider, viewer, "multiple"));
+        multipleColumnViewer.setEditingSupport(new CheckboxPropertyEditingSupport(propertySourceProvider, viewer,
+                ProcessPackage.Literals.CONTRACT_INPUT__MULTIPLE.getName()));
     }
 
 
