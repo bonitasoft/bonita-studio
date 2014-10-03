@@ -243,7 +243,7 @@ public class CreateFormCommand extends AbstractTransactionalCommand {
             addOutputOperationForData(widget,mapping);
         }else if(modelElement instanceof Document && widget instanceof FileWidget){
             addInputExpressionForDocument((Document)modelElement, (FileWidget)widget);
-            addOutputOperationForDocument(mapping, widget);
+            addOutputOperationForDocument(mapping, (FileWidget) widget);
         }
 
     }
@@ -312,7 +312,7 @@ public class CreateFormCommand extends AbstractTransactionalCommand {
         return !(widget instanceof Info) && !(widget instanceof Table) ;
     }
 
-    protected void addOutputOperationForDocument(final WidgetMapping mapping, final Widget widget) {
+    protected void addOutputOperationForDocument(final WidgetMapping mapping, final FileWidget widget) {
         final Document doc = (Document) mapping.getModelElement();
         widget.setAction(createDocumentOutputOperation(widget, doc));
     }
@@ -382,14 +382,14 @@ public class CreateFormCommand extends AbstractTransactionalCommand {
 
 
 
-    protected Operation createDocumentOutputOperation(final Widget widget,final Document doc) {
+    protected Operation createDocumentOutputOperation(final FileWidget widget, final Document doc) {
         final Operation action = ExpressionFactory.eINSTANCE.createOperation() ;
 
         final Operator assignment = ExpressionFactory.eINSTANCE.createOperator();
         assignment.setType(ExpressionConstants.SET_DOCUMENT_OPERATOR) ;
         action.setOperator(assignment) ;
 
-        final Expression storageExpression = createStorageExpressionForDocument(doc);
+        final Expression storageExpression = createStorageExpressionForDocument(doc, false);
         action.setLeftOperand(storageExpression);
 
         final Expression actionExpression = createActionExpressionForDocument(widget);
@@ -397,24 +397,32 @@ public class CreateFormCommand extends AbstractTransactionalCommand {
         return action;
     }
 
-    protected Expression createStorageExpressionForDocument(final Document doc) {
+    protected Expression createStorageExpressionForDocument(final Document doc, final boolean isMultiple) {
         final Expression storageExpression = ExpressionFactory.eINSTANCE.createExpression();
         storageExpression.setContent(doc.getName()) ;
         storageExpression.setName(doc.getName()) ;
         storageExpression.setType(ExpressionConstants.DOCUMENT_REF_TYPE) ;
-        storageExpression.setReturnType(String.class.getName()) ;
+        if (isMultiple) {
+            storageExpression.setReturnType(List.class.getName());
+        } else {
+            storageExpression.setReturnType(String.class.getName());
+        }
         storageExpression.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(doc)) ;
         return storageExpression;
 
     }
 
-    protected Expression createActionExpressionForDocument(final Widget widget) {
+    protected Expression createActionExpressionForDocument(final FileWidget widget) {
         final Expression actionExpression = ExpressionFactory.eINSTANCE.createExpression();
         final String widgetName = widget.getName();
         actionExpression.setContent(WidgetHelper.FIELD_PREFIX + widgetName);
         actionExpression.setName(WidgetHelper.FIELD_PREFIX + widgetName);
         actionExpression.setType(ExpressionConstants.FORM_FIELD_TYPE);
-        actionExpression.setReturnType(DocumentValue.class.getName());
+        if (widget.isDuplicate()) {
+            actionExpression.setReturnType(List.class.getName());
+        } else {
+            actionExpression.setReturnType(DocumentValue.class.getName());
+        }
         actionExpression.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(widget));
         return actionExpression;
     }

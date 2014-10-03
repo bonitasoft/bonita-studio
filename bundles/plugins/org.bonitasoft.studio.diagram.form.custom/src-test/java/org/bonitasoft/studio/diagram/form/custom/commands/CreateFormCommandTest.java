@@ -20,6 +20,7 @@ package org.bonitasoft.studio.diagram.form.custom.commands;
 import static org.fest.assertions.Assertions.assertThat;
 
 import java.util.Collections;
+import java.util.List;
 
 import org.bonitasoft.engine.bpm.document.DocumentValue;
 import org.bonitasoft.studio.common.ExpressionConstants;
@@ -215,7 +216,7 @@ public class CreateFormCommandTest {
 
     @Test
     public void should_createActionExpressionForDocument_should_return_Expression_Not_Null() throws Exception {
-        final Widget w1 = FormFactory.eINSTANCE.createTextFormField();
+        final FileWidget w1 = FormFactory.eINSTANCE.createFileWidget();
         w1.setName("toto");
         final Expression storageExpr = commandUnderTest.createActionExpressionForDocument(w1);
         assertThat(storageExpr).isNotNull();
@@ -225,22 +226,30 @@ public class CreateFormCommandTest {
     }
 
     @Test
-    public void should_createStorageExpressionForDocument_should_return_Expression_Not_Null() throws Exception {
+    public void should_createStorageExpressionForDocumentSimple_should_return_Expression_Not_Null() throws Exception {
         final Document doc = ProcessFactory.eINSTANCE.createDocument();
         doc.setName("toto");
-        final Expression actionExpr = commandUnderTest.createStorageExpressionForDocument(doc);
+        final Expression actionExpr = commandUnderTest.createStorageExpressionForDocument(doc, false);
         assertThat(actionExpr).isNotNull();
         assertThat(actionExpr.getType()).isEqualTo(ExpressionConstants.DOCUMENT_REF_TYPE);
         assertThat(actionExpr.getReturnType()).isEqualTo(String.class.getName());
     }
 
-
+    @Test
+    public void should_createStorageExpressionForDocumentMultiple_should_return_Expression_Not_Null() throws Exception {
+        final Document doc = ProcessFactory.eINSTANCE.createDocument();
+        doc.setName("toto");
+        final Expression actionExpr = commandUnderTest.createStorageExpressionForDocument(doc, true);
+        assertThat(actionExpr).isNotNull();
+        assertThat(actionExpr.getType()).isEqualTo(ExpressionConstants.DOCUMENT_REF_TYPE);
+        assertThat(actionExpr.getReturnType()).isEqualTo(List.class.getName());
+    }
 
     @Test
     public void should_createDocumentOutputOperation_should_create_action_Not_Null() throws Exception {
         final Document doc = ProcessFactory.eINSTANCE.createDocument();
         doc.setName("toto");
-        final Widget w1 = FormFactory.eINSTANCE.createTextFormField();
+        final FileWidget w1 = FormFactory.eINSTANCE.createFileWidget();
         w1.setName("toto");
 
         final Operation action = commandUnderTest.createDocumentOutputOperation(w1, doc);
