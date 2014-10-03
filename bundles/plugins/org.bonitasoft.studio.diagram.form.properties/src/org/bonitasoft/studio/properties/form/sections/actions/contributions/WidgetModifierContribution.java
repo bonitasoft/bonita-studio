@@ -117,7 +117,9 @@ public class WidgetModifierContribution implements IExtensibleGridPropertySectio
             public void handleValueChange(final ValueChangeEvent arg0) {
                 if (widget instanceof FileWidget) {
                     modifiersCombo.setSelection(new StructuredSelection());
-                    modifiersCombo.refresh();
+                    if (!modifiersCombo.getControl().isDisposed()) {
+                        modifiersCombo.refresh();
+                    }
                     if (((FileWidget) widget).isDuplicate()) {
                         modifiersCombo.setSelection(new StructuredSelection(WidgetModifiersSwitch.NEW_LIST_OF_DOCUMENT));
                     } else {
