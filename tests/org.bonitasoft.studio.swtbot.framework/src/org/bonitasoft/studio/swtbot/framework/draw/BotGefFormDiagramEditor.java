@@ -45,7 +45,7 @@ public class BotGefFormDiagramEditor extends BotGefBaseEditor {
     }
 
     public BotGefFormDiagramEditor selectWidget(final String pWidgetName) {
-        final SWTBotGefEditPart gefEditPart = gmfEditor.getEditPart(pWidgetName).parent().select();
+        final SWTBotGefEditPart gefEditPart = gmfEditor.getEditPart(pWidgetName).parent().click();
         bot.sleep(100);
         return this;
     }

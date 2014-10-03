@@ -53,14 +53,7 @@ public class BotDataFormPropertySection extends BotBase {
         return new BotExpressionEditorDialog(bot);
     }
 
-    public BotDataFormPropertySection setFieldModifier(final String className) {
-        bot.comboBoxWithLabel(org.bonitasoft.studio.form.properties.i18n.Messages.fieldModifier).setSelection(className);
-        return this;
-    }
 
-    public String getFieldModifier() {
-        return bot.comboBoxWithLabel(org.bonitasoft.studio.form.properties.i18n.Messages.fieldModifier).getText();
-    }
 
     /**
      * Select output variable.

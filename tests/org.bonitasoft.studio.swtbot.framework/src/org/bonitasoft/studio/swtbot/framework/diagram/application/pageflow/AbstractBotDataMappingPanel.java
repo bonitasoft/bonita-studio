@@ -56,4 +56,9 @@ public abstract class AbstractBotDataMappingPanel extends BotBase {
         return this;
     }
 
+    public String getDataWidget(final String dataName) {
+        return bot.tree().getTreeItem(dataName).cell(1);
+
+    }
+
 }

@@ -16,10 +16,11 @@ import org.bonitasoft.studio.swtbot.framework.expression.BotExpressionEditorDial
 import org.bonitasoft.studio.swtbot.framework.expression.BotScriptExpressionEditor;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
+import org.eclipse.swtbot.swt.finder.waits.Conditions;
 
 /**
  * Add document dialog.
- * 
+ *
  * @author Joachim Segala
  */
 public class BotAddDocumentDialog extends BotWizardDialog {
@@ -34,7 +35,7 @@ public class BotAddDocumentDialog extends BotWizardDialog {
 
     /**
      * Set name of document.
-     * 
+     *
      * @param pName
      */
     public void setName(final String pName) {
@@ -43,7 +44,7 @@ public class BotAddDocumentDialog extends BotWizardDialog {
 
     /**
      * Set description of document.
-     * 
+     *
      * @param pDescription
      */
     public void setDescription(final String pDescription) {
@@ -81,7 +82,7 @@ public class BotAddDocumentDialog extends BotWizardDialog {
 
     /**
      * Set File.
-     * 
+     *
      * @param pFileName
      * @see StudioAPIUtil.importDocumentInBonitaStudioRepository
      */
@@ -98,7 +99,7 @@ public class BotAddDocumentDialog extends BotWizardDialog {
 
     /**
      * Set URL.
-     * 
+     *
      * @param pURL
      */
     public void setURL(final String pURL) {
@@ -123,7 +124,7 @@ public class BotAddDocumentDialog extends BotWizardDialog {
 
     /**
      * Set Initial Contents script of a multiple document
-     * 
+     *
      * @param scriptName
      * @param initialContentsScript
      */
@@ -152,7 +153,7 @@ public class BotAddDocumentDialog extends BotWizardDialog {
 
     /**
      * Set MIME type.
-     * 
+     *
      * @param pMimeType
      */
     public void setMimeType(final String pMimeType) {
@@ -172,7 +173,7 @@ public class BotAddDocumentDialog extends BotWizardDialog {
 
     /**
      * Return true if URL error message is present.
-     * 
+     *
      * @return
      */
     public boolean isErrorMessageUrl() {
@@ -181,7 +182,7 @@ public class BotAddDocumentDialog extends BotWizardDialog {
 
     /**
      * Return true if File error message is present.
-     * 
+     *
      * @return
      */
     public boolean isErrorMessageFile() {
@@ -190,7 +191,7 @@ public class BotAddDocumentDialog extends BotWizardDialog {
 
     /**
      * Return true if name empty error message is present.
-     * 
+     *
      * @return
      */
     public boolean isErrorMessageNameEmpty() {
@@ -200,7 +201,7 @@ public class BotAddDocumentDialog extends BotWizardDialog {
 
     /**
      * Return true if error message for already exist document is visible.
-     * 
+     *
      * @return
      */
     public boolean isErrorMessageAlreadyExist() {
@@ -217,5 +218,14 @@ public class BotAddDocumentDialog extends BotWizardDialog {
 
     public boolean isFinishAndAddEnabled() {
         return bot.button(org.bonitasoft.studio.common.Messages.createAndNewButton).isEnabled();
+    }
+
+    /**
+     * Click on Finish && Add
+     */
+    public BotAddDocumentDialog finishAndAdd() {
+        bot.waitUntil(Conditions.widgetIsEnabled(bot.button(org.bonitasoft.studio.common.Messages.createAndNewButton)), 5000);
+        bot.button(org.bonitasoft.studio.common.Messages.createAndNewButton).click();
+        return new BotAddDocumentDialog(bot);
     }
 }
