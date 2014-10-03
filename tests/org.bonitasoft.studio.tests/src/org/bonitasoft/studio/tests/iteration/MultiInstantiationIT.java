@@ -35,7 +35,7 @@ import org.bonitasoft.studio.swtbot.framework.diagram.application.pageflow.BotAd
 import org.bonitasoft.studio.swtbot.framework.diagram.application.pageflow.BotPageflowPropertySection;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.actors.BotActorDefinitionPropertySection;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.data.BotAddDataWizardPage;
-import org.bonitasoft.studio.swtbot.framework.diagram.general.form.data.BotDataPropertySection;
+import org.bonitasoft.studio.swtbot.framework.diagram.general.form.data.BotDataFormPropertySection;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.form.general.BotGeneralPropertySection;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.iteration.BotDataBasedStackPanel;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.iteration.BotMultiInstanceTypeStackPanel;
@@ -186,7 +186,7 @@ public class MultiInstantiationIT extends SWTBotGefTestCase implements SWTBotCon
         final BotGeneralPropertySection botGeneralPropertySection = botProcessDiagramPerspective.getFormPropertiesPart().selectGeneralTab().selectGeneralTab();
         botGeneralPropertySection.setFieldType("Message");
 
-        final BotDataPropertySection botDataPropertySection = botProcessDiagramPerspective.getFormPropertiesPart().selectGeneralTab().selectDataTab();
+        final BotDataFormPropertySection botDataPropertySection = botProcessDiagramPerspective.getFormPropertiesPart().selectGeneralTab().selectDataTab();
         botDataPropertySection.editInitialValue().selectScriptTab().setName("nbTicketsAvailable")
         .setScriptContent("\"Only \"+nbTicketsAvailable+\" tickets available.\"").setReturnType(String.class.getName()).ok();
 
@@ -194,7 +194,7 @@ public class MultiInstantiationIT extends SWTBotGefTestCase implements SWTBotCon
         botProcessDiagramPerspective.getFormPropertiesPart().selectGeneralTab().selectGeneralTab().setFieldType("Text field")
         .setDisplayName("Nbr de Tickets à reserver");
 
-        final BotDataPropertySection dataPropertySection = botProcessDiagramPerspective.getFormPropertiesPart().selectGeneralTab().selectDataTab();
+        final BotDataFormPropertySection dataPropertySection = botProcessDiagramPerspective.getFormPropertiesPart().selectGeneralTab().selectDataTab();
         dataPropertySection.editInitialValue().selectConstantType().setValue("0").ok();
         dataPropertySection.selectOutputVariable("nbTickets", Integer.class.getName());
         dataPropertySection.editOutputOperationExpression().selectScriptTab().setName("nbTickets").setScriptContent("Integer.valueOf(field_nbTickets1)")

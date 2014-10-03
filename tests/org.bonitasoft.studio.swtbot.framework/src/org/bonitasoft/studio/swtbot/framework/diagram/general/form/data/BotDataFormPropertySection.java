@@ -23,13 +23,13 @@ import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
  *
  * @author Romain Bioteau
  */
-public class BotDataPropertySection extends BotBase {
+public class BotDataFormPropertySection extends BotBase {
 
-    public BotDataPropertySection(final SWTGefBot bot) {
+    public BotDataFormPropertySection(final SWTGefBot bot) {
         super(bot);
     }
 
-    public BotDataPropertySection setName(final String pName) {
+    public BotDataFormPropertySection setName(final String pName) {
         bot.button(org.bonitasoft.studio.form.properties.i18n.Messages.Edit).click();
         bot.waitUntil(Conditions.shellIsActive(org.bonitasoft.studio.form.properties.i18n.Messages.editWidgetNameTitle));
         bot.textWithLabel(org.bonitasoft.studio.form.properties.i18n.Messages.name).setText(pName);
@@ -37,12 +37,12 @@ public class BotDataPropertySection extends BotBase {
         return this;
     }
 
-    public BotDataPropertySection setFieldType(final String pType) {
+    public BotDataFormPropertySection setFieldType(final String pType) {
         bot.comboBoxWithLabel(org.bonitasoft.studio.form.properties.i18n.Messages.formFieldType).setSelection(pType);
         return this;
     }
 
-    public BotDataPropertySection setDisplayName(final String widgetLabel) {
+    public BotDataFormPropertySection setDisplayName(final String widgetLabel) {
         bot.textWithId(SWTBotConstants.SWTBOT_ID_EXPRESSIONVIEWER_TEXT).setText(widgetLabel);
         return this;
 
@@ -53,7 +53,7 @@ public class BotDataPropertySection extends BotBase {
         return new BotExpressionEditorDialog(bot);
     }
 
-    public BotDataPropertySection setFieldModifier(final String className) {
+    public BotDataFormPropertySection setFieldModifier(final String className) {
         bot.comboBoxWithLabel(org.bonitasoft.studio.form.properties.i18n.Messages.fieldModifier).setSelection(className);
         return this;
     }
@@ -67,7 +67,7 @@ public class BotDataPropertySection extends BotBase {
      * @return
      */
     @Deprecated
-    public BotDataPropertySection selectOutputVariable(final String variableName, final String returnType) {
+    public BotDataFormPropertySection selectOutputVariable(final String variableName, final String returnType) {
         SWTBotTestUtil.selectExpressionProposal(bot, variableName, returnType, 1);
         return this;
     }

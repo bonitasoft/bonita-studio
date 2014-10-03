@@ -11,7 +11,7 @@ package org.bonitasoft.studio.swtbot.framework.diagram.general.form;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.swtbot.framework.BotBase;
 import org.bonitasoft.studio.swtbot.framework.BotQAUtil;
-import org.bonitasoft.studio.swtbot.framework.diagram.general.form.data.BotDataPropertySection;
+import org.bonitasoft.studio.swtbot.framework.diagram.general.form.data.BotDataFormPropertySection;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.form.general.BotGeneralPropertySection;
 import org.bonitasoft.studio.swtbot.framework.expression.BotExpressionEditorDialog;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
@@ -42,9 +42,9 @@ public class BotGeneralFormPropertiesView extends BotBase {
         //TODO:
     }
 
-    public BotDataPropertySection selectDataTab() {
+    public BotDataFormPropertySection selectDataTab() {
         BotQAUtil.selectTabbedPropertyView(bot, "Data");
-        return new BotDataPropertySection(bot);
+        return new BotDataFormPropertySection(bot);
     }
 
     public void selectActionsTab() {
