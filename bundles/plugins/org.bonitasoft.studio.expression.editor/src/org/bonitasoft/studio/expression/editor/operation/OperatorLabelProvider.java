@@ -63,7 +63,7 @@ public class OperatorLabelProvider extends LabelProvider {
                 return xpathExpression;
             } else if (ExpressionConstants.SET_DOCUMENT_OPERATOR.equals(operatorType)) {
                 return Messages.setDocumentOperator;
-            } else if (ExpressionConstants.SET_LIST_DOCUMENT_OPERATOR.equals(element)) {
+            } else if (ExpressionConstants.SET_LIST_DOCUMENT_OPERATOR.equals(operatorType)) {
                 return Messages.setDocumentListOperator;
             } else if (ExpressionConstants.CREATE_BUSINESS_DATA_OPERATOR.equals(operatorType)) {
                 return Messages.createBusinessData;
