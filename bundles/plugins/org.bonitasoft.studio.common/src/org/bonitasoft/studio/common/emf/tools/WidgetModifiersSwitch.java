@@ -33,9 +33,9 @@ import org.bonitasoft.studio.model.form.util.FormSwitch;
  */
 public class WidgetModifiersSwitch extends FormSwitch<Collection<String>>{
 
-    public static String OLD_LIST_OF_DOCUMENT = List.class.getName() + "<" + String.class.getName() + ">";
-    public static String NEW_LIST_OF_DOCUMENT = List.class.getName() + "<" + DocumentValue.class.getName() + ">";
-    public static String ENGINE_DOCUMENT_QUALIFIED_NAME = Document.class.getName();
+    public static final String OLD_LIST_OF_DOCUMENT = List.class.getName() + "<" + String.class.getName() + ">";
+    public static final String NEW_LIST_OF_DOCUMENT = List.class.getName() + "<" + DocumentValue.class.getName() + ">";
+    public static final String ENGINE_DOCUMENT_QUALIFIED_NAME = Document.class.getName();
 
     @Override
     public Collection<String> caseWidget(final Widget object) {
