@@ -50,7 +50,7 @@ import org.junit.runner.RunWith;
 
 /**
  * @author aurelie
- * 
+ *
  */
 
 @RunWith(SWTBotJunit4ClassRunner.class)
@@ -61,36 +61,36 @@ public class SWTBotConnectorExportTests extends SWTBotGefTestCase {
 
 	@Before
 	public void initializeEmailVersion() {
-		ConnectorImplRepositoryStore store = (ConnectorImplRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorImplRepositoryStore.class);
-		for(ConnectorImplementation impl : store.getImplementations()){
+		final ConnectorImplRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(ConnectorImplRepositoryStore.class);
+		for(final ConnectorImplementation impl : store.getImplementations()){
 			if(CONNCTOR_EMAIL_IMPL_ID.equals(impl.getImplementationId())){
-				this.emailConnectorVersion = impl.getImplementationVersion();
+				emailConnectorVersion = impl.getImplementationVersion();
 			}
 		}
 	}
 
 
-	private void exportConnector(String connector, String fileName,
-			boolean hasDependencies, boolean hasSources) throws Exception {
-		File f = new File(ProjectUtil.getBonitaStudioWorkFolder().getAbsolutePath());
+	private void exportConnector(final String connector, final String fileName,
+			final boolean hasDependencies, final boolean hasSources) throws Exception {
+		final File f = new File(ProjectUtil.getBonitaStudioWorkFolder().getAbsolutePath());
 		final String exportPath = f.getAbsolutePath();
 		SWTBotConnectorTestUtil.activateExportConnectorShell(bot);
 		bot.table().select(connector);
 		assertFalse("Finish button should be disabled",
 				bot.button(IDialogConstants.FINISH_LABEL).isEnabled());
 		if (hasSources) {
-			bot.checkBoxWithLabel("Include sources").select();
+            bot.checkBoxWithLabel(org.bonitasoft.studio.connectors.i18n.Messages.inculeSourcesLabel).select();
 		} else {
-			bot.checkBoxWithLabel("Include sources").deselect();
+            bot.checkBoxWithLabel(org.bonitasoft.studio.connectors.i18n.Messages.inculeSourcesLabel).deselect();
 		}
 		if (hasDependencies) {
-			bot.checkBoxWithLabel("Add dependencies").select();
+            bot.checkBoxWithLabel(org.bonitasoft.studio.connectors.i18n.Messages.addDependencies).select();
 		} else {
-			bot.checkBoxWithLabel("Add dependencies").deselect();
+            bot.checkBoxWithLabel(org.bonitasoft.studio.connectors.i18n.Messages.addDependencies).deselect();
 		}
-		bot.textWithLabel("Destination *").setText(exportPath);
+        bot.textWithLabel(org.bonitasoft.studio.connectors.i18n.Messages.destinationLabel + " *").setText(exportPath);
 		bot.button(IDialogConstants.FINISH_LABEL).click();
-		bot.waitUntil(Conditions.shellIsActive("Export result"));
+        bot.waitUntil(Conditions.shellIsActive(org.bonitasoft.studio.connectors.i18n.Messages.exportStatusTitle));
 		bot.button(IDialogConstants.OK_LABEL).click();
 		checkExportedFile(exportPath,fileName, hasDependencies, hasSources);
 	}
@@ -158,7 +158,7 @@ public class SWTBotConnectorExportTests extends SWTBotGefTestCase {
 				return nbEditorsBefore + 3 == bot.editors().size();
 			}
 
-			public void init(SWTBot bot) {
+			public void init(final SWTBot bot) {
 			}
 
 			public String getFailureMessage() {
@@ -167,44 +167,44 @@ public class SWTBotConnectorExportTests extends SWTBotGefTestCase {
 		}, 30000);
 		exportConnector(userConnector, fileName, false, true);
 		//String dirName = fileName.substring(0, fileName.lastIndexOf("."));
-		File destDir =new File(ProjectUtil.getBonitaStudioWorkFolder().getAbsolutePath());
+		final File destDir =new File(ProjectUtil.getBonitaStudioWorkFolder().getAbsolutePath());
 		assertNotNull(" unzip exported connector dir does not exist",destDir);
 		assertTrue("dest dir doesn't exist", destDir.exists());
-		Set<String> fileNames = new HashSet<String>();
+		final Set<String> fileNames = new HashSet<String>();
 		fileNames.add("connectorTest2-1.0.0.properties");
 		fileNames.add("connectorTest2-1.0.0_sq.properties");
 		fileNames.add("connectorTest2-1.0.0_de.properties");
 		checkMessageFiles(destDir, fileNames);
 	}
 
-	private void checkMessageFiles(File destDir, Set<String> fileNames) {
-		FilenameFilter messageFilter = new FilenameFilter() {
+	private void checkMessageFiles(final File destDir, final Set<String> fileNames) {
+		final FilenameFilter messageFilter = new FilenameFilter() {
 
-			public boolean accept(File dir, String name) {
+			public boolean accept(final File dir, final String name) {
 				return name.endsWith(".properties")
 						&& !name.equals(ExportConnectorArchiveOperation.DESCRIPTOR_FILE);
 			}
 
 		};
-		File[] messageFiles = destDir.listFiles(messageFilter);
+		final File[] messageFiles = destDir.listFiles(messageFilter);
 		assertNotNull("there should be at least one message file",messageFiles);
 		assertTrue(
 				" 3 message property file(s) should exist in exported connector zip file",
 				messageFiles.length == 3);
-		for (File mf : messageFiles) {
+		for (final File mf : messageFiles) {
 			assertTrue(mf.getName() + "", fileNames.contains(mf.getName()));
 		}
 	}
 
-	private void checkExportedFile(String path, String fileName, boolean hasDependencies,
-			boolean hasSources) throws Exception {
-		File zipFile = new File(path+File.separator+fileName);
+	private void checkExportedFile(final String path, final String fileName, final boolean hasDependencies,
+			final boolean hasSources) throws Exception {
+		final File zipFile = new File(path+File.separator+fileName);
 		//String dirName = fileName.substring(0, fileName.lastIndexOf("."));
-		File destDir = new File(ProjectUtil.getBonitaStudioWorkFolder().getAbsolutePath());
-		IProgressMonitor monitor = new NullProgressMonitor();
+		final File destDir = new File(ProjectUtil.getBonitaStudioWorkFolder().getAbsolutePath());
+		final IProgressMonitor monitor = new NullProgressMonitor();
 		try{
 			PlatformUtil.unzipZipFiles(zipFile, destDir, monitor);
-		}catch(Exception e){
+		}catch(final Exception e){
         	if(e instanceof IOException){
         		assertTrue("IO error while unzip file "+zipFile.getName(), false);
         	}
@@ -220,7 +220,7 @@ public class SWTBotConnectorExportTests extends SWTBotGefTestCase {
 		testMessageFilesExistence(destDir);
 	}
 
-	private void testSourcesDirExistence(File destDir, boolean hasSources) {
+	private void testSourcesDirExistence(final File destDir, final boolean hasSources) {
 		final File sourceDir = new File(destDir,
 				ExportConnectorArchiveOperation.SRC_DIR);
 		if (hasSources) {
@@ -228,7 +228,7 @@ public class SWTBotConnectorExportTests extends SWTBotGefTestCase {
 			assertTrue(
 					"source folder should be contained in exported connector zip",
 					sourceDir.exists());
-			File[] sourceFiles = sourceDir.listFiles();
+			final File[] sourceFiles = sourceDir.listFiles();
 			assertNotNull("source dir should contain at least one file",
 					sourceFiles);
 		} else {
@@ -237,12 +237,12 @@ public class SWTBotConnectorExportTests extends SWTBotGefTestCase {
 		}
 	}
 
-	private void testDescriptorFileExistence(File destDir) throws IOException {
+	private void testDescriptorFileExistence(final File destDir) throws IOException {
 		final File descriptor = new File(destDir,
 				ExportConnectorArchiveOperation.DESCRIPTOR_FILE);
 		assertTrue("descriptor should be contained in exported connector",
 				descriptor.exists());
-		Properties p = new Properties();
+		final Properties p = new Properties();
 		final FileInputStream fis = new FileInputStream(descriptor);
 		p.load(fis);
 		fis.close();
@@ -255,14 +255,14 @@ public class SWTBotConnectorExportTests extends SWTBotGefTestCase {
 				(type == null || type.isEmpty()));
 	}
 
-	private void testDefinitionFileExistence(File destDir) {
-		FilenameFilter defFilter = new FilenameFilter() {
-			public boolean accept(File dir, String name) {
+	private void testDefinitionFileExistence(final File destDir) {
+		final FilenameFilter defFilter = new FilenameFilter() {
+			public boolean accept(final File dir, final String name) {
 				return name.endsWith("."
 						+ ConnectorDefRepositoryStore.CONNECTOR_DEF_EXT);
 			}
 		};
-		File[] defFiles = destDir.listFiles(defFilter);
+		final File[] defFiles = destDir.listFiles(defFilter);
 		assertNotNull("def file should exist in exported connector zip file",
 				defFiles);
 		assertEquals(
@@ -270,15 +270,15 @@ public class SWTBotConnectorExportTests extends SWTBotGefTestCase {
 				defFiles.length, 1);
 	}
 
-	private void testImplementationFileExistence(File destDir) {
-		FilenameFilter implFilter = new FilenameFilter() {
+	private void testImplementationFileExistence(final File destDir) {
+		final FilenameFilter implFilter = new FilenameFilter() {
 
-			public boolean accept(File dir, String name) {
+			public boolean accept(final File dir, final String name) {
 				return name.endsWith("."
 						+ ConnectorImplRepositoryStore.CONNECTOR_IMPL_EXT);
 			}
 		};
-		File[] implFiles = destDir.listFiles(implFilter);
+		final File[] implFiles = destDir.listFiles(implFilter);
 		assertNotNull("impl file should exist in exported connector zip file",
 				implFiles);
 		assertEquals(
@@ -286,13 +286,13 @@ public class SWTBotConnectorExportTests extends SWTBotGefTestCase {
 				implFiles.length, 1);
 	}
 
-	private void testClasspathDirExistence(File destDir, boolean hasDependencies) {
+	private void testClasspathDirExistence(final File destDir, final boolean hasDependencies) {
 		final File classpathDir = new File(destDir,
 				ExportConnectorArchiveOperation.CLASSPATH_DIR);
 		assertTrue(
 				"classPath folder should be contained in exported connector",
 				classpathDir.exists());
-		File[] depfiles = classpathDir.listFiles();
+		final File[] depfiles = classpathDir.listFiles();
 		assertNotNull("classpath should countain at least one jar file",
 				depfiles);
 		if (hasDependencies) {
@@ -301,15 +301,15 @@ public class SWTBotConnectorExportTests extends SWTBotGefTestCase {
 		}
 	}
 
-	private void testMessageFilesExistence(File destDir) {
-		FilenameFilter messageFilter = new FilenameFilter() {
+	private void testMessageFilesExistence(final File destDir) {
+		final FilenameFilter messageFilter = new FilenameFilter() {
 
-			public boolean accept(File dir, String name) {
+			public boolean accept(final File dir, final String name) {
 				return name.endsWith(".properties")
 						&& !name.equals(ExportConnectorArchiveOperation.DESCRIPTOR_FILE);
 			}
 		};
-		File[] messageFiles = destDir.listFiles(messageFilter);
+		final File[] messageFiles = destDir.listFiles(messageFilter);
 		assertNotNull(
 				"message property file(s) should exist in exported connector zip file",
 				messageFiles);
