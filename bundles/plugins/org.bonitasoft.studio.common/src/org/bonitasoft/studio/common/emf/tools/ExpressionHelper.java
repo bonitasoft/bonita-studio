@@ -51,6 +51,9 @@ public class ExpressionHelper {
     protected static final String EMPTY_LIST_NAME = Messages.emptyListExpressionName;
     protected static final String EMPTY_LIST_CONTENT = "[]";
 
+    private ExpressionHelper() {
+
+    }
 
     public static Expression createExpressionFromEnumType(final EnumType type){
         final Expression generatedExp = ExpressionFactory.eINSTANCE.createExpression();
@@ -122,11 +125,8 @@ public class ExpressionHelper {
     }
 
     public static Expression createConstantExpression(final String name,final String content, final String returnClassName) {
-        final Expression exp = ExpressionFactory.eINSTANCE.createExpression();
-        exp.setType(ExpressionConstants.CONSTANT_TYPE);
+        final Expression exp = createConstantExpression(content, returnClassName);
         exp.setName(name);
-        exp.setContent(content);
-        exp.setReturnType(returnClassName);
         return  exp;
     }
 
@@ -204,7 +204,7 @@ public class ExpressionHelper {
 
     public static Expression createExpressionFromEObject(final EObject element) {
         if (element instanceof Data) {
-           return createVariableExpression((Data) element);
+            return createVariableExpression((Data) element);
         } else if (element instanceof Output) {
             return createConnectorOutputExpression((Output) element);
         } else if (element instanceof Parameter) {
@@ -218,7 +218,7 @@ public class ExpressionHelper {
         }else if (element instanceof GroupIterator) {
             return createGroupIteratorExpression((GroupIterator) element);
         }
-        return null;
+        throw new IllegalArgumentException("element argument is not supported: " + element);
     }
 
     public static Expression createGroupIteratorExpression(final GroupIterator iterator) {
