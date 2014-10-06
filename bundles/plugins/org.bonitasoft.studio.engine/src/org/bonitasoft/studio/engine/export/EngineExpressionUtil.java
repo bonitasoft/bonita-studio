@@ -185,7 +185,11 @@ public class EngineExpressionUtil {
                 } else if (element instanceof Widget) {
                     result.add(createWidgetExpression((Widget) element));
                 } else if (element instanceof Document) {
-                    result.add(createDocumentExpression((Document) element));
+                    if (((Document) element).isMultiple()) {
+                        result.add(createDocumentListExpression((Document) element));
+                    } else {
+                        result.add(createDocumentExpression((Document) element));
+                    }
                 } else if (element instanceof GroupIterator) {
                     result.add(createGroupIteratorExpression((GroupIterator) element));
                 }
@@ -217,6 +221,16 @@ public class EngineExpressionUtil {
         final ExpressionBuilder exp = new ExpressionBuilder();
         try {
             return exp.createDocumentReferenceExpression(element.getName());
+        } catch (final InvalidExpressionException e) {
+            BonitaStudioLog.error(e);
+            return null;
+        }
+    }
+
+    private static Expression createDocumentListExpression(final Document element) {
+        final ExpressionBuilder exp = new ExpressionBuilder();
+        try {
+            return exp.createDocumentListExpression(element.getName());
         } catch (final InvalidExpressionException e) {
             BonitaStudioLog.error(e);
             return null;
@@ -425,6 +439,9 @@ public class EngineExpressionUtil {
             if (ExpressionConstants.DOCUMENT_TYPE.equals(type)) {
                 return createDocumentExpression(expressionBuilder, expression);
             }
+            if (ExpressionConstants.DOCUMENT_LIST_TYPE.equals(type)) {
+                return createDocumentListExpression(expressionBuilder, expression);
+            }
             if (ExpressionConstants.XPATH_TYPE.equals(type)) {
                 return createXPATHExpression(expressionBuilder, expression);
             }
@@ -494,6 +511,18 @@ public class EngineExpressionUtil {
         Expression expression = null;
         try {
             expression = exp.createDocumentReferenceExpression(simpleExpression.getName());
+        } catch (final InvalidExpressionException e) {
+            BonitaStudioLog.error(e, EnginePlugin.PLUGIN_ID);
+            throw new RuntimeException(e);
+        }
+        return expression;
+    }
+
+    private static Expression createDocumentListExpression(final ExpressionBuilder exp,
+            final org.bonitasoft.studio.model.expression.Expression simpleExpression) {
+        Expression expression = null;
+        try {
+            expression = exp.createDocumentListExpression(simpleExpression.getName());
         } catch (final InvalidExpressionException e) {
             BonitaStudioLog.error(e, EnginePlugin.PLUGIN_ID);
             throw new RuntimeException(e);
