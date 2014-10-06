@@ -48,5 +48,6 @@ public class Messages extends NLS {
     public static String contractInputs;
     public static String inputTabLabel;
     public static String constraintsTabLabel;
+    public static String contractInputTypeLabel;
 
 }
