@@ -1175,6 +1175,22 @@
                      class="MultipleValuatedFormField">
                </target>
             </constraint>
+            <constraint
+                  class="org.bonitasoft.studio.validation.constraints.form.DuplicatedFileWidgetMultipleDocumentConsistencyConstraint"
+                  id="DuplicatedFileWidgetMultipleDocumentConsistencyConstraint"
+                  isEnabledByDefault="true"
+                  lang="Java"
+                  mode="Batch"
+                  name="%MultipleDocumentConstraint"
+                  severity="WARNING"
+                  statusCode="1">
+               <message>
+                  {0}
+               </message>
+               <target
+                     class="Widget">
+               </target>
+            </constraint>
          </constraints>
          <package
                namespaceUri="http://www.bonitasoft.org/ns/studio/expression">

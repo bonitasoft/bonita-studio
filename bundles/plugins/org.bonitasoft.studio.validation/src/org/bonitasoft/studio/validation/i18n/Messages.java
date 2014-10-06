@@ -20,6 +20,8 @@ public class Messages extends NLS {
 
     private static final String BUNDLE_NAME = "messages"; //$NON-NLS-1$
 
+    public static String DuplicatedFileWidgetMultipleDocumentConsistencyError;
+
     public static String Validation_CorrelationKeyNotUsed;
 
     public static String Validation_CorrelationKeyNotDefine;
