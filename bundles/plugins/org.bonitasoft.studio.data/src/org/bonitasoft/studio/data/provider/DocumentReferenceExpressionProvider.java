@@ -1,7 +1,7 @@
 /**
  * Copyright (C) 2012 BonitaSoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -28,14 +28,12 @@ import org.bonitasoft.studio.data.i18n.Messages;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionEditor;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionProvider;
 import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.process.Document;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.swt.graphics.Image;
 
 /**
@@ -44,22 +42,22 @@ import org.eclipse.swt.graphics.Image;
  */
 public class DocumentReferenceExpressionProvider implements IExpressionProvider {
 
-	
+
 	@Override
-	public Set<Expression> getExpressions(EObject context) {
-		Set<Expression> result = new HashSet<Expression>() ;
+	public Set<Expression> getExpressions(final EObject context) {
+		final Set<Expression> result = new HashSet<Expression>() ;
 		Pool process = null;
 		if(context instanceof Form && ModelHelper.isAnEntryPageFlowOnAPool((Form) context)){
 			return result;
 		}else{
-			EObject parent = ModelHelper.getParentProcess(context);
+			final EObject parent = ModelHelper.getParentProcess(context);
 			if(parent instanceof Pool){
 				process = (Pool) parent;
 			}
 		}
 		if(context != null && process != null){
-			for(Document d : process.getDocuments()){
-				result.add(createExpression(d));
+			for(final Document d : process.getDocuments()){
+                result.add(ExpressionHelper.createDocumentReferenceExpression(d));
 			}
 		}
 		return result;
@@ -71,29 +69,17 @@ public class DocumentReferenceExpressionProvider implements IExpressionProvider 
 	}
 
 	@Override
-	public Image getIcon(Expression expression) {
+	public Image getIcon(final Expression expression) {
 		return getTypeIcon();
 	}
 
 	@Override
-	public String getProposalLabel(Expression expression) {
+	public String getProposalLabel(final Expression expression) {
 		return expression.getName();
 	}
 
-
-
-	private Expression createExpression(Document d) {
-		Expression exp = ExpressionFactory.eINSTANCE.createExpression() ;
-		exp.setType(getExpressionType()) ;
-		exp.setContent(d.getName()) ;
-		exp.setName(d.getName()) ;
-		exp.setReturnType(String.class.getName()) ;
-		exp.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(d)) ;
-		return exp;
-	}
-
 	@Override
-	public boolean isRelevantFor(EObject context) {
+	public boolean isRelevantFor(final EObject context) {
 		return !getExpressions(context).isEmpty() ;
 	}
 
@@ -108,7 +94,7 @@ public class DocumentReferenceExpressionProvider implements IExpressionProvider 
 	}
 
 	@Override
-	public IExpressionEditor getExpressionEditor(Expression expression,EObject context) {
+	public IExpressionEditor getExpressionEditor(final Expression expression,final EObject context) {
 		return new DocumentExpressionEditor();
 	}
 

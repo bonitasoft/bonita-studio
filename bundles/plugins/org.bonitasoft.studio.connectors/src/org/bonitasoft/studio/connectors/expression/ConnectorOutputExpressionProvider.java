@@ -30,7 +30,6 @@ import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionEditor;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionProvider;
 import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.process.Connector;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.emf.ecore.EObject;
@@ -63,7 +62,7 @@ public class ConnectorOutputExpressionProvider implements IExpressionProvider {
         }
         if(definition != null){
             for(final Output output : definition.getOutput()){
-                result.add(createExpression(output)) ;
+                result.add(ExpressionHelper.createConnectorOutputExpression(output));
             }
         }
         return result;
@@ -83,16 +82,6 @@ public class ConnectorOutputExpressionProvider implements IExpressionProvider {
             }
         }
         return definition;
-    }
-
-    private Expression createExpression(final Output output) {
-        final Expression exp = ExpressionFactory.eINSTANCE.createExpression() ;
-        exp.setType(getExpressionType()) ;
-        exp.setContent(output.getName()) ;
-        exp.setName(output.getName()) ;
-        exp.setReturnType(output.getType()) ;
-        exp.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(output)) ;
-        return exp;
     }
 
     @Override
