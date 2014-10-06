@@ -40,6 +40,10 @@ public class BotOperationComposite extends BotBase {
         SWTBotTestUtil.selectExpressionProposal(localBot, pName, pType, 0);
     }
 
+    public String getLeftOperand() {
+        return localBot.text(0).getText();
+    }
+
     public void selectRightOperand(final String pName, final String pType) {
         SWTBotTestUtil.selectExpressionProposal(localBot, pName, pType, 1);
     }

@@ -11,6 +11,7 @@ package org.bonitasoft.studio.swtbot.framework.diagram.general.form.data;
 
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.swtbot.framework.BotBase;
+import org.bonitasoft.studio.swtbot.framework.composite.BotDocInitialValueComposite;
 import org.bonitasoft.studio.swtbot.framework.composite.BotOperationComposite;
 import org.bonitasoft.studio.swtbot.framework.expression.BotExpressionEditorDialog;
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
@@ -53,6 +54,9 @@ public class BotDataFormPropertySection extends BotBase {
         return new BotExpressionEditorDialog(bot);
     }
 
+    public BotDocInitialValueComposite getBotDocInitialValueComposite() {
+        return new BotDocInitialValueComposite(bot);
+    }
 
 
     /**
