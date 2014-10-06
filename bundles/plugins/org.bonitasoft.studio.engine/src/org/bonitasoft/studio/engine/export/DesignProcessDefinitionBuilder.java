@@ -177,12 +177,16 @@ public class DesignProcessDefinitionBuilder {
         if (process instanceof Pool) {
             final List<Document> documents = ((Pool) process).getDocuments();
             for (final Document document : documents) {
-                if (document.isMultiple()) {
-                    processMultipleDocument(processBuilder, document);
-                } else {
-                    processSimpleDocument(processBuilder, document);
-                }
+                processDocument(processBuilder, document);
             }
+        }
+    }
+
+    private void processDocument(final ProcessDefinitionBuilder processBuilder, final Document document) {
+        if (document.isMultiple()) {
+            processMultipleDocument(processBuilder, document);
+        } else {
+            processSimpleDocument(processBuilder, document);
         }
     }
 
@@ -204,8 +208,11 @@ public class DesignProcessDefinitionBuilder {
     private void handleSimpleDocumentInitialContent(final Document document, final DocumentDefinitionBuilder documentBuilder) {
         final DocumentType documentType = document.getDocumentType();
         if (documentType.equals(org.bonitasoft.studio.model.process.DocumentType.INTERNAL)) {
-            documentBuilder.addFile(document.getDefaultValueIdOfDocumentStore());
-            documentBuilder.addContentFileName(document.getDefaultValueIdOfDocumentStore());
+            final String defaultValueIdOfDocumentStore = document.getDefaultValueIdOfDocumentStore();
+            if (defaultValueIdOfDocumentStore != null && !defaultValueIdOfDocumentStore.isEmpty()) {
+                documentBuilder.addFile(defaultValueIdOfDocumentStore);
+                documentBuilder.addContentFileName(defaultValueIdOfDocumentStore);
+            }
         } else if (documentType.equals(org.bonitasoft.studio.model.process.DocumentType.EXTERNAL)) {
             final Expression url = document.getUrl();
             if (url != null) {

@@ -196,6 +196,72 @@ public class DesignProcessDefinitionBuilderTest {
         verify(docDefinitionListBuilder).addInitialValue(Mockito.<org.bonitasoft.engine.expression.Expression> anyObject());
     }
 
+    @Test
+    public void testIntialContentForExternalSimpleDocumentAdded() {
+        final DesignProcessDefinitionBuilder builder = new DesignProcessDefinitionBuilder();
+        when(processDefinitionBuilder.addDocumentDefinition(anyString())).thenReturn(docDefinitionBuilder);
+
+        final Pool process = ProcessFactory.eINSTANCE.createPool();
+        final Document document = createBasicDocument();
+        document.setDocumentType(DocumentType.EXTERNAL);
+        final Expression initialExpression = ExpressionHelper.createEmptyListGroovyScriptExpression();
+        initialExpression.setContent("http://testUrl");
+        document.setUrl(initialExpression);
+        process.getDocuments().add(document);
+
+        builder.processDocuments(process, processDefinitionBuilder);
+
+        verify(docDefinitionBuilder).addUrl(Mockito.anyString());
+    }
+
+    @Test
+    public void testIntialContentForExternalSimpleDocumentNotAddedIfUrlNotSpecified() {
+        final DesignProcessDefinitionBuilder builder = new DesignProcessDefinitionBuilder();
+        when(processDefinitionBuilder.addDocumentDefinition(anyString())).thenReturn(docDefinitionBuilder);
+
+        final Pool process = ProcessFactory.eINSTANCE.createPool();
+        final Document document = createBasicDocument();
+        document.setDocumentType(DocumentType.EXTERNAL);
+        process.getDocuments().add(document);
+
+        builder.processDocuments(process, processDefinitionBuilder);
+
+        verify(docDefinitionBuilder, Mockito.never()).addUrl(Mockito.anyString());
+    }
+
+    @Test
+    public void testIntialContentForInteralSimpleDocumentAdded() {
+        final DesignProcessDefinitionBuilder builder = new DesignProcessDefinitionBuilder();
+        when(processDefinitionBuilder.addDocumentDefinition(anyString())).thenReturn(docDefinitionBuilder);
+
+        final Pool process = ProcessFactory.eINSTANCE.createPool();
+        final Document document = createBasicDocument();
+        document.setDocumentType(DocumentType.INTERNAL);
+        document.setDefaultValueIdOfDocumentStore("idTest");
+        process.getDocuments().add(document);
+
+        builder.processDocuments(process, processDefinitionBuilder);
+
+        verify(docDefinitionBuilder).addFile(Mockito.anyString());
+        verify(docDefinitionBuilder).addContentFileName(Mockito.anyString());
+    }
+
+    @Test
+    public void testIntialContentNotAddedForInternalSimpleDocumentAddedIfStoreIdNotSpecified() {
+        final DesignProcessDefinitionBuilder builder = new DesignProcessDefinitionBuilder();
+        when(processDefinitionBuilder.addDocumentDefinition(anyString())).thenReturn(docDefinitionBuilder);
+
+        final Pool process = ProcessFactory.eINSTANCE.createPool();
+        final Document document = createBasicDocument();
+        document.setDocumentType(DocumentType.INTERNAL);
+        process.getDocuments().add(document);
+
+        builder.processDocuments(process, processDefinitionBuilder);
+
+        verify(docDefinitionBuilder, Mockito.never()).addFile(Mockito.anyString());
+        verify(docDefinitionBuilder, Mockito.never()).addContentFileName(Mockito.anyString());
+    }
+
     private Document createBasicDocument() {
         final Document document = ProcessFactory.eINSTANCE.createDocument();
         document.setName("testDocument");
