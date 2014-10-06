@@ -972,17 +972,11 @@ IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContex
         final Control composite = getControl();
         if (!composite.isDisposed()) {
             refreshTypeDecoration();
-        } else {
-            if (!typeDecoration.isVisible()) {
-                typeDecoration.show();
-                refreshMessageDecoration();
-
-            }
+            refreshMessageDecoration();
         }
     }
 
     private void refreshTypeDecoration() {
-        final Expression selectedExpression = getSelectedExpression();
         updateTypeDecorationIcon();
         updateTypeDecorationDescriptionText();
         updateTypeDecorationVisibility();
@@ -1026,7 +1020,7 @@ IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContex
             }
 
             final Image icon = getImageForMessageKind(message.getKey());
-            if (icon != null && messageDecoration.isVisible()) {
+            if (icon != null) {
                 messageDecoration.setImage(icon);
             }
 
