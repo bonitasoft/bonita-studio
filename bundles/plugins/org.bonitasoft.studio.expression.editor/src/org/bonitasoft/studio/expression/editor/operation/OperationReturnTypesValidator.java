@@ -130,21 +130,38 @@ public class OperationReturnTypesValidator implements IExpressionValidator {
         return ValidationStatus.ok();
     }
 
+
     private IStatus validateSetListDocumentOperation(final Expression expression, final String expressionName, final Operation operation) {
-        final String returnType = expression.getReturnType();
-        try {
-            if (!List.class.getName().equals(returnType)
-                    && !List.class.isAssignableFrom(Class.forName(returnType))) {
-                return ValidationStatus.warning(Messages.bind(
-                        Messages.invalidReturnTypeBetween, dataExpression.getName(),
-                        expressionName));
-            }
-        } catch (final ClassNotFoundException e) {
-            return ValidationStatus.warning(Messages.bind(
-                    Messages.invalidReturnTypeFor,
-                    expressionName));
+        final boolean isTask = operation.eContainer() instanceof Task;
+
+
+        final String listClass = List.class.getName();
+        if (!listClass.equals(dataExpression.getReturnType())) {
+            return ValidationStatus.error(Messages.bind(Messages.incompatibleStorageReturnType, dataExpression.getName(),
+                    operatorLabelProvider.getText(operation.getOperator())));
         }
-        return ValidationStatus.ok();
+
+        if (expression != null && expression.getContent() != null && !expression.getContent().isEmpty()) {
+            final String typeName = dataExpression.getReturnType();
+            final String actionType = expression.getReturnType();
+            if (!(listClass.equals(actionType) && listClass.equals(typeName))) {
+
+                if (!isTask) {
+                    return ValidationStatus.warning(Messages.incompatibleType + " " + Messages.messageOperationWithListDocumentInForm);
+                } else {
+                    return ValidationStatus.warning(Messages.incompatibleType + " " + Messages.messageOperationWithListDocumentInTask);
+                }
+            } else {
+                return ValidationStatus.ok();
+            }
+
+        } else {
+            if (!isTask) {
+                return ValidationStatus.info(Messages.messageOperationWithListDocumentInForm);
+            } else {
+                return ValidationStatus.info(Messages.messageOperationWithListDocumentInTask);
+            }
+        }
     }
 
     private IStatus validateConstantContentWithReturnType(final Expression expression, final String expressionContent) {
@@ -241,7 +258,7 @@ public class OperationReturnTypesValidator implements IExpressionValidator {
 
     protected IStatus validateSetDocumentOperation(final Expression expression, final String expressionName, final Operation operation) {
 
-        final boolean isTask = (operation.eContainer() instanceof Task);
+        final boolean isTask = operation.eContainer() instanceof Task;
 
         if (!String.class.getName().equals(dataExpression.getReturnType())) {
             return ValidationStatus.error(Messages.bind(Messages.incompatibleStorageReturnType, dataExpression.getName(),

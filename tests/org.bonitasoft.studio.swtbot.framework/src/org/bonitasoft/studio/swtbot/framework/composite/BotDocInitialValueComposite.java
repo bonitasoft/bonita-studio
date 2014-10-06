@@ -30,10 +30,8 @@ public class BotDocInitialValueComposite extends BotBase {
     public BotDocInitialValueComposite(final SWTGefBot bot) {
         super(bot);
         final Matcher<InitialValueComposite> matcher = new IsInstanceOf<InitialValueComposite>(InitialValueComposite.class);
-        final List<InitialValueComposite> initomposites = bot.getFinder().findControls(matcher);
-        System.out.println("size = " + initomposites.size());
-        System.out.println(initomposites);
-        localBot = new SWTBot(initomposites.get(0));
+        final List<InitialValueComposite> initComposites = bot.getFinder().findControls(matcher);
+        localBot = new SWTBot(initComposites.get(0));
     }
 
     public String getInitialValue() {
