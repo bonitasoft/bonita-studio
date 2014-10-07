@@ -142,17 +142,25 @@ public class OperationReturnTypesValidator implements IExpressionValidator {
         }
 
         if (expression != null && expression.getContent() != null && !expression.getContent().isEmpty()) {
-            final String typeName = dataExpression.getReturnType();
-            final String actionType = expression.getReturnType();
-            if (!(listClass.equals(actionType) && listClass.equals(typeName))) {
+            final String dataReturnType = dataExpression.getReturnType();
+            final String returnType = expression.getReturnType();
+            try {
+                final boolean isListType = listClass.equals(returnType) || List.class.isAssignableFrom(Class.forName(returnType));
 
-                if (!isTask) {
-                    return ValidationStatus.warning(Messages.incompatibleType + " " + Messages.messageOperationWithListDocumentInForm);
+                if (!isListType && listClass.equals(dataReturnType)) {
+
+                    if (!isTask) {
+                        return ValidationStatus.warning(Messages.incompatibleType + " " + Messages.messageOperationWithListDocumentInForm);
+                    } else {
+                        return ValidationStatus.warning(Messages.incompatibleType + " " + Messages.messageOperationWithListDocumentInTask);
+                    }
                 } else {
-                    return ValidationStatus.warning(Messages.incompatibleType + " " + Messages.messageOperationWithListDocumentInTask);
+                    return ValidationStatus.ok();
                 }
-            } else {
-                return ValidationStatus.ok();
+            } catch (final ClassNotFoundException e) {
+                return ValidationStatus.warning(Messages.bind(
+                        Messages.invalidReturnTypeFor,
+                        expression.getName()));
             }
 
         } else {

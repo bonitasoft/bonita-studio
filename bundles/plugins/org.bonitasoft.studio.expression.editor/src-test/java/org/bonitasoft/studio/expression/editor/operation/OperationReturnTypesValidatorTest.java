@@ -26,7 +26,6 @@ import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.expression.Operation;
 import org.bonitasoft.studio.model.expression.Operator;
 import org.eclipse.core.runtime.IStatus;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class OperationReturnTypesValidatorTest {
@@ -158,7 +157,6 @@ public class OperationReturnTypesValidatorTest {
 
 
     @Test
-    @Ignore
     public void testValidateSetDocumentListOperationValidWithArraylist() {
         final OperationReturnTypesValidator validator = new OperationReturnTypesValidator();
         final Operation operation = ExpressionFactory.eINSTANCE.createOperation();
