@@ -239,4 +239,17 @@ public class ExpressionHelper {
         return expression;
     }
 
+    public static Expression createListDocumentExpressionWithDependency(final String targetDocName) {
+        final Document document = ProcessFactory.eINSTANCE.createDocument();
+        document.setName(targetDocName);
+        document.setMultiple(true);
+        final Expression storageExpression = ExpressionFactory.eINSTANCE.createExpression();
+        storageExpression.setContent(targetDocName);
+        storageExpression.setName(targetDocName);
+        storageExpression.setType(ExpressionConstants.DOCUMENT_LIST_TYPE);
+        storageExpression.setReturnType(List.class.getName());
+        storageExpression.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(document));
+        return storageExpression;
+    }
+
 }

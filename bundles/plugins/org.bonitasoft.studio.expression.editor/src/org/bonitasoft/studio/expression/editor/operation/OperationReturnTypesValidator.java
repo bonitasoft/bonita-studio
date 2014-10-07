@@ -69,12 +69,12 @@ public class OperationReturnTypesValidator implements IExpressionValidator {
                     } else if (ExpressionConstants.XPATH_UPDATE_OPERATOR.equals(operatorType)) {
                         return validateXPathOperation(expression, expressionName, operation);
                     } else if (ExpressionConstants.SET_DOCUMENT_OPERATOR.equals(operatorType)) {
-                        final IStatus status = validateSetDocumentOperation(expression, expressionName, operation);
+                        final IStatus status = validateSetDocumentOperation(expression, operation);
                         if (status != null) {
                             return status;
                         }
                     } else if (ExpressionConstants.SET_LIST_DOCUMENT_OPERATOR.equals(operatorType)) {
-                        final IStatus status = validateSetListDocumentOperation(expression, expressionName, operation);
+                        final IStatus status = validateSetListDocumentOperation(expression, operation);
                         if (status != null) {
                             return status;
                         }
@@ -131,7 +131,7 @@ public class OperationReturnTypesValidator implements IExpressionValidator {
     }
 
 
-    private IStatus validateSetListDocumentOperation(final Expression expression, final String expressionName, final Operation operation) {
+    private IStatus validateSetListDocumentOperation(final Expression expression, final Operation operation) {
         final boolean isTask = operation.eContainer() instanceof Task;
 
 
@@ -256,7 +256,7 @@ public class OperationReturnTypesValidator implements IExpressionValidator {
         return expressionName;
     }
 
-    protected IStatus validateSetDocumentOperation(final Expression expression, final String expressionName, final Operation operation) {
+    protected IStatus validateSetDocumentOperation(final Expression expression, final Operation operation) {
 
         final boolean isTask = operation.eContainer() instanceof Task;
 
