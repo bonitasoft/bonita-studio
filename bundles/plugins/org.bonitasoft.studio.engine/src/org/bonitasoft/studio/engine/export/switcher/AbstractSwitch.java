@@ -78,32 +78,44 @@ public abstract class AbstractSwitch extends ProcessSwitch<Element> {
             if (!eObjectNotExported.contains(connector)) {
                 final ConnectorDefinitionBuilder connectorBuilder = builder.addConnector(connector.getName(), connector.getDefinitionId(),
                         connector.getDefinitionVersion(), ConnectorEvent.valueOf(connector.getEvent()));
-                if (connector.isIgnoreErrors()) {
-                    connectorBuilder.ignoreError();
-                } else if (connector.isThrowErrorEvent()) {
-                    connectorBuilder.throwErrorEventWhenFailed(connector.getNamedError());
-                }
-                for (final ConnectorParameter parameter : connector.getConfiguration().getParameters()) {
-                    final Expression inputExpression = EngineExpressionUtil.createExpression(parameter.getExpression());
-                    if (inputExpression != null) {
-                        connectorBuilder.addInput(parameter.getKey(), inputExpression);
+                handleConnectorBehaviorOnFailure(connector, connectorBuilder);
+                handleConnectorInputs(connector, connectorBuilder);
+                handleConnectorOutputs(connector, connectorBuilder);
+            }
+        }
+    }
 
-                    } else {
-                        if (BonitaStudioLog.isLoggable(IStatus.OK)) {
-                            BonitaStudioLog.debug("Expression of input " + parameter.getKey() + " is null for connector " + connector.getName(),
-                                    EnginePlugin.PLUGIN_ID);
-                        }
-                    }
+    private void handleConnectorBehaviorOnFailure(final Connector connector, final ConnectorDefinitionBuilder connectorBuilder) {
+        if (connector.isIgnoreErrors()) {
+            connectorBuilder.ignoreError();
+        } else if (connector.isThrowErrorEvent()) {
+            connectorBuilder.throwErrorEventWhenFailed(connector.getNamedError());
+        }
+    }
+
+    private void handleConnectorInputs(final Connector connector, final ConnectorDefinitionBuilder connectorBuilder) {
+        for (final ConnectorParameter parameter : connector.getConfiguration().getParameters()) {
+            final Expression inputExpression = EngineExpressionUtil.createExpression(parameter.getExpression());
+            if (inputExpression != null) {
+                connectorBuilder.addInput(parameter.getKey(), inputExpression);
+
+            } else {
+                if (BonitaStudioLog.isLoggable(IStatus.OK)) {
+                    BonitaStudioLog.debug("Expression of input " + parameter.getKey() + " is null for connector " + connector.getName(),
+                            EnginePlugin.PLUGIN_ID);
                 }
-                for (final Operation outputOperation : connector.getOutputs()) {
-                    if (outputOperation.getLeftOperand() != null
-                            && outputOperation.getLeftOperand().getContent() != null
-                            && !outputOperation.getLeftOperand().getContent().isEmpty()
-                            && outputOperation.getRightOperand() != null
-                            && outputOperation.getRightOperand().getContent() != null) {
-                        connectorBuilder.addOutput(EngineExpressionUtil.createOperation(outputOperation));
-                    }
-                }
+            }
+        }
+    }
+
+    private void handleConnectorOutputs(final Connector connector, final ConnectorDefinitionBuilder connectorBuilder) {
+        for (final Operation outputOperation : connector.getOutputs()) {
+            if (outputOperation.getLeftOperand() != null
+                    && outputOperation.getLeftOperand().getContent() != null
+                    && !outputOperation.getLeftOperand().getContent().isEmpty()
+                    && outputOperation.getRightOperand() != null
+                    && outputOperation.getRightOperand().getContent() != null) {
+                connectorBuilder.addOutput(EngineExpressionUtil.createOperation(outputOperation));
             }
         }
     }
