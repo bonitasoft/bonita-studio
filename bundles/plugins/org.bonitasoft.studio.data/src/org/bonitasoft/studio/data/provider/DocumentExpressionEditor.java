@@ -5,12 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -64,7 +64,7 @@ import org.eclipse.swt.widgets.Text;
 
 /**
  * @author Romain Bioteau
- * 
+ *
  */
 public class DocumentExpressionEditor extends SelectionAwareExpressionEditor
         implements IExpressionEditor {
@@ -84,7 +84,7 @@ public class DocumentExpressionEditor extends SelectionAwareExpressionEditor
     private boolean isPageFlowContext = false;
 
     @Override
-    public Control createExpressionEditor(Composite parent, EMFDataBindingContext ctx) {
+    public Control createExpressionEditor(final Composite parent, final EMFDataBindingContext ctx) {
         mainComposite = new Composite(parent, SWT.NONE);
         mainComposite.setLayoutData(GridDataFactory.fillDefaults()
                 .grab(true, true).create());
@@ -94,17 +94,17 @@ public class DocumentExpressionEditor extends SelectionAwareExpressionEditor
         viewer = new TableViewer(mainComposite, SWT.FULL_SELECTION | SWT.BORDER
                 | SWT.SINGLE | SWT.V_SCROLL);
 
-        TableLayout layout = new TableLayout();
+        final TableLayout layout = new TableLayout();
         layout.addColumnData(new ColumnWeightData(100, false));
         viewer.getTable().setLayout(layout);
         viewer.getTable().setLayoutData(
                 GridDataFactory.fillDefaults().grab(true, true).create());
 
-        TableViewerColumn columnViewer = new TableViewerColumn(viewer, SWT.NONE);
-        TableColumn column = columnViewer.getColumn();
+        final TableViewerColumn columnViewer = new TableViewerColumn(viewer, SWT.NONE);
+        final TableColumn column = columnViewer.getColumn();
         column.setText(Messages.name);
 
-        TableColumnSorter sorter = new TableColumnSorter(viewer);
+        final TableColumnSorter sorter = new TableColumnSorter(viewer);
         sorter.setColumn(column);
 
         viewer.getTable().setHeaderVisible(true);
@@ -112,7 +112,7 @@ public class DocumentExpressionEditor extends SelectionAwareExpressionEditor
         viewer.setLabelProvider(new AdapterFactoryLabelProvider(new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE)) {
 
             @Override
-            public String getColumnText(Object object, int columnIndex) {
+            public String getColumnText(final Object object, final int columnIndex) {
                 if (object instanceof Document) {
                     return ((Document) object).getName();
                 }
@@ -123,7 +123,7 @@ public class DocumentExpressionEditor extends SelectionAwareExpressionEditor
         viewer.addPostSelectionChangedListener(new ISelectionChangedListener() {
 
             @Override
-            public void selectionChanged(SelectionChangedEvent event) {
+            public void selectionChanged(final SelectionChangedEvent event) {
                 if (!event.getSelection().isEmpty()) {
                     DocumentExpressionEditor.this.fireSelectionChanged();
                 }
@@ -135,16 +135,16 @@ public class DocumentExpressionEditor extends SelectionAwareExpressionEditor
         return mainComposite;
     }
 
-    protected void createReturnTypeComposite(Composite parent) {
-        Composite typeComposite = new Composite(parent, SWT.NONE);
+    protected void createReturnTypeComposite(final Composite parent) {
+        final Composite typeComposite = new Composite(parent, SWT.NONE);
         typeComposite.setLayoutData(GridDataFactory.fillDefaults()
                 .grab(true, false).create());
-        GridLayout gl = new GridLayout(2, false);
+        final GridLayout gl = new GridLayout(2, false);
         gl.marginWidth = 0;
         gl.marginHeight = 0;
         typeComposite.setLayout(gl);
 
-        Label typeLabel = new Label(typeComposite, SWT.NONE);
+        final Label typeLabel = new Label(typeComposite, SWT.NONE);
         typeLabel.setText(Messages.returnType);
         typeLabel.setLayoutData(GridDataFactory.fillDefaults()
                 .align(SWT.FILL, SWT.CENTER).create());
@@ -154,74 +154,106 @@ public class DocumentExpressionEditor extends SelectionAwareExpressionEditor
                 .align(SWT.FILL, SWT.CENTER).indent(10, 0).create());
     }
 
-    private void fillViewerDocument(EObject context, ViewerFilter[] filters) {
-        Set<Document> input = new HashSet<Document>();
-        IExpressionProvider provider = ExpressionEditorService.getInstance().getExpressionProvider(ExpressionConstants.DOCUMENT_REF_TYPE);
-        final Set<Expression> expressions = provider.getExpressions(context);
-        for (Expression e1 : expressions) {
-            input.add((Document) e1.getReferencedElements().get(0));
-        }
-        if (editorInputExpression.isReturnTypeFixed() && !editorInputExpression.getReturnType().equals(String.class.getName())) {
-            input.clear();
-        }
+    private void fillViewerDocument(final EObject context, final ViewerFilter[] filters) {
+        final Set<Document> simpleDocuments = new HashSet<Document>();
+        final Set<Document> multipleDocuments = new HashSet<Document>();
+        retrieveAndFillDocumentSet(context, simpleDocuments, multipleDocuments);
+        final Set<Document> input = computeInput(simpleDocuments, multipleDocuments);
         viewer.setInput(input);
     }
 
+    private void retrieveAndFillDocumentSet(final EObject context, final Set<Document> simpleDocuments, final Set<Document> multipleDocuments) {
+        final IExpressionProvider provider = ExpressionEditorService.getInstance().getExpressionProvider(ExpressionConstants.DOCUMENT_REF_TYPE);
+        final Set<Expression> expressions = provider.getExpressions(context);
+        for (final Expression e1 : expressions) {
+            final Document document = (Document) e1.getReferencedElements().get(0);
+            if (document.isMultiple()) {
+                multipleDocuments.add(document);
+            } else {
+                simpleDocuments.add(document);
+            }
+        }
+    }
+
+    private Set<Document> computeInput(final Set<Document> simpleDocuments, final Set<Document> multipleDocuments) {
+        final Set<Document> input = new HashSet<Document>();
+        if (editorInputExpression.isReturnTypeFixed()) {
+            final String fixedReturnType = editorInputExpression.getReturnType();
+            if (String.class.getName().equals(fixedReturnType)) {
+                input.addAll(simpleDocuments);
+            } else if (List.class.getName().equals(fixedReturnType)) {
+                input.addAll(multipleDocuments);
+            } else {
+                input.clear();
+            }
+        } else {
+            input.addAll(simpleDocuments);
+            input.addAll(multipleDocuments);
+        }
+        return input;
+    }
+
     @Override
-    public void bindExpression(EMFDataBindingContext dataBindingContext,
-            EObject context, Expression inputExpression, ViewerFilter[] filters, ExpressionViewer expressionViewer) {
+    public void bindExpression(final EMFDataBindingContext dataBindingContext,
+            final EObject context, final Expression inputExpression, final ViewerFilter[] filters, final ExpressionViewer expressionViewer) {
         editorInputExpression = inputExpression;
         fillViewerDocument(context, filters);
 
-        IObservableValue contentObservable = EMFObservables
+        final IObservableValue contentObservable = EMFObservables
                 .observeValue(inputExpression,
                         ExpressionPackage.Literals.EXPRESSION__CONTENT);
-        IObservableValue nameObservable = EMFObservables.observeValue(
+        final IObservableValue nameObservable = EMFObservables.observeValue(
                 inputExpression, ExpressionPackage.Literals.EXPRESSION__NAME);
         returnTypeObservable = EMFObservables.observeValue(inputExpression,
                 ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE);
-        IObservableValue referenceObservable = EMFObservables.observeValue(
+        final IObservableValue referenceObservable = EMFObservables.observeValue(
                 inputExpression,
                 ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS);
 
-        UpdateValueStrategy selectionToName = new UpdateValueStrategy();
-        IConverter nameConverter = new Converter(Data.class, String.class) {
+        final UpdateValueStrategy selectionToName = new UpdateValueStrategy();
+        final IConverter nameConverter = new Converter(Data.class, String.class) {
 
             @Override
-            public Object convert(Object data) {
+            public Object convert(final Object data) {
                 return ((Data) data).getName();
             }
 
         };
         selectionToName.setConverter(nameConverter);
 
-        UpdateValueStrategy selectionToContent = new UpdateValueStrategy();
-        IConverter contentConverter = new Converter(Data.class, String.class) {
+        final UpdateValueStrategy selectionToContent = new UpdateValueStrategy();
+        final IConverter contentConverter = new Converter(Data.class, String.class) {
 
             @Override
-            public Object convert(Object document) {
+            public Object convert(final Object document) {
                 return ((Document) document).getName();
             }
 
         };
         selectionToContent.setConverter(contentConverter);
 
-        UpdateValueStrategy selectionToReturnType = new UpdateValueStrategy();
-        IConverter returnTypeConverter = new Converter(Document.class, String.class) {
+        final UpdateValueStrategy selectionToReturnType = new UpdateValueStrategy();
+        final IConverter returnTypeConverter = new Converter(Document.class, String.class) {
 
             @Override
-            public Object convert(Object data) {
+            public Object convert(final Object data) {
+                if (data instanceof Document) {
+                    if (((Document) data).isMultiple()) {
+                        return List.class.getName();
+                    } else {
+                        return String.class.getName();
+                    }
+                }
                 return String.class.getName();
             }
-
         };
         selectionToReturnType.setConverter(returnTypeConverter);
 
-        UpdateValueStrategy selectionToReferencedData = new UpdateValueStrategy();
-        IConverter referenceConverter = new Converter(Document.class, List.class) {
+        final UpdateValueStrategy selectionToReferencedData = new UpdateValueStrategy();
+        final IConverter referenceConverter = new Converter(Document.class, List.class) {
 
             @Override
-            public Object convert(Object document) {
+            public Object convert(final Object document) {
                 if (document != null) {
                     return Collections.singletonList(document);
                 } else {
@@ -232,16 +264,16 @@ public class DocumentExpressionEditor extends SelectionAwareExpressionEditor
         };
         selectionToReferencedData.setConverter(referenceConverter);
 
-        UpdateValueStrategy referencedDataToSelection = new UpdateValueStrategy();
-        IConverter referencetoDataConverter = new Converter(List.class,
+        final UpdateValueStrategy referencedDataToSelection = new UpdateValueStrategy();
+        final IConverter referencetoDataConverter = new Converter(List.class,
                 Document.class) {
 
             @Override
-            public Object convert(Object dataList) {
-                Document d = ((List<Document>) dataList).get(0);
-                Collection<Document> inputDocs = (Collection<Document>) viewer
+            public Object convert(final Object dataList) {
+                final Document d = ((List<Document>) dataList).get(0);
+                final Collection<Document> inputDocs = (Collection<Document>) viewer
                         .getInput();
-                for (Document doc : inputDocs) {
+                for (final Document doc : inputDocs) {
                     if (doc.getName().equals(d.getName())) {
                         return doc;
                     }
@@ -305,7 +337,7 @@ public class DocumentExpressionEditor extends SelectionAwareExpressionEditor
     }
 
     @Override
-    public void setIsPageFlowContext(boolean isPageFlowContext) {
+    public void setIsPageFlowContext(final boolean isPageFlowContext) {
         this.isPageFlowContext = isPageFlowContext;
     }
 
@@ -323,6 +355,6 @@ public class DocumentExpressionEditor extends SelectionAwareExpressionEditor
      * @see org.bonitasoft.studio.common.IBonitaVariableContext#setIsOverviewContext(boolean)
      */
     @Override
-    public void setIsOverviewContext(boolean isOverviewContext) {
+    public void setIsOverviewContext(final boolean isOverviewContext) {
     }
 }
