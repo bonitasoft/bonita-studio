@@ -29,7 +29,6 @@ public class FieldDecoratorProvider {
 
     public ControlDecoration createControlDecorator(final Control control, final String description, final String fieldDecorationType, final int style) {
         final FieldDecoration decorator = getDecorator(fieldDecorationType);
-
         final ControlDecoration controlDecoration = newControlDecoration(control, style);
         controlDecoration.setImage(decorator.getImage());
         controlDecoration.setDescriptionText(description);

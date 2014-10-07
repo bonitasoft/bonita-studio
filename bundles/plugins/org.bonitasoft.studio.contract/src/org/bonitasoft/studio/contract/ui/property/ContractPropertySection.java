@@ -32,9 +32,7 @@ import org.bonitasoft.studio.contract.ui.property.edit.proposal.InputMappingProp
 import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ContractInputMapping;
-import org.bonitasoft.studio.model.process.ContractInputType;
 import org.bonitasoft.studio.model.process.Data;
-import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.conversion.Converter;
@@ -55,20 +53,17 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.CellNavigationStrategy;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
-import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.ColumnViewerEditor;
 import org.eclipse.jface.viewers.ColumnViewerEditorActivationEvent;
 import org.eclipse.jface.viewers.ColumnViewerEditorActivationStrategy;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.FocusCellOwnerDrawHighlighter;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.TableViewerEditor;
 import org.eclipse.jface.viewers.TableViewerFocusCellManager;
-import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
@@ -78,9 +73,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.views.properties.PropertyColumnLabelProvider;
 import org.eclipse.ui.views.properties.PropertyEditingSupport;
 
@@ -98,6 +91,7 @@ public class ContractPropertySection extends EObjectSelectionProviderSection {
     private ContractDefinitionValidator contractValidator;
     private IObservableValue observeContractValue;
     private final FieldDecoratorProvider decoratorProvider = new FieldDecoratorProvider();
+    private ContractInputController inputController;
 
     @Override
     public String getSectionDescription() {
@@ -113,7 +107,7 @@ public class ContractPropertySection extends EObjectSelectionProviderSection {
     protected void createContent(final Composite parent) {
         contractValidator = new ContractDefinitionValidator(
                 getMessageManager());
-
+        inputController = new ContractInputController(contractValidator);
         context = new EMFDataBindingContext();
         composedAdapterFactory =
                 new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
@@ -125,7 +119,7 @@ public class ContractPropertySection extends EObjectSelectionProviderSection {
         getWidgetFactory().adapt(tabFolder, true, true);
 
         final CTabItem inputTabItem = getWidgetFactory().createTabItem(tabFolder, SWT.NULL);
-        inputTabItem.setText("Inputs");
+        inputTabItem.setText(Messages.inputTabLabel);
         final Composite inputComposite = getWidgetFactory().createComposite(tabFolder);
         inputComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         inputComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).extendedMargins(15, 15, 10, 5).create());
@@ -138,24 +132,9 @@ public class ContractPropertySection extends EObjectSelectionProviderSection {
         constraintComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         constraintComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).extendedMargins(15, 15, 10, 5).create());
         final CTabItem constraintTabItem = getWidgetFactory().createTabItem(tabFolder, SWT.NULL);
-        constraintTabItem.setText("Constraints");
+        constraintTabItem.setText(Messages.constraintsTabLabel);
         constraintTabItem.setControl(constraintComposite);
-
         tabFolder.setSelection(0);
-    }
-
-    protected void addInput(final TableViewer inputsTableViewer) {
-        final IObservableList input = (IObservableList) inputsTableViewer.getInput();
-        final ContractInput defaultInput = createDefaultInput();
-        input.add(defaultInput);
-        inputsTableViewer.editElement(defaultInput, 0);
-    }
-
-    private ContractInput createDefaultInput() {
-        final ContractInput contractInput = ProcessFactory.eINSTANCE.createContractInput();
-        contractInput.setType(ContractInputType.TEXT);
-        contractInput.setMapping(ProcessFactory.eINSTANCE.createContractInputMapping());
-        return contractInput;
     }
 
 
@@ -193,52 +172,7 @@ public class ContractPropertySection extends EObjectSelectionProviderSection {
             }
         };
 
-        final CellNavigationStrategy cellNavigationStrategy = new CellNavigationStrategy() {
-
-            @Override
-            public boolean isNavigationEvent(final ColumnViewer viewer, final Event event) {
-                switch (event.keyCode) {
-                    case SWT.CR:
-                        return true;
-                    case SWT.DEL:
-                        return true;
-                    default:
-                        return super.isNavigationEvent(viewer, event);
-                }
-            }
-
-            @Override
-            public ViewerCell findSelectedCell(final ColumnViewer viewer, final ViewerCell currentSelectedCell, final Event event) {
-                switch (event.keyCode) {
-                    case SWT.CR:
-                        if (currentSelectedCell != null) {
-                            ViewerCell nextCell = currentSelectedCell.getNeighbor(ViewerCell.BELOW, false);
-                            if (nextCell == null && currentSelectedCell.getColumnIndex() == 0) {
-                                addInput(inputsTableViewer);
-                            }
-                            nextCell = currentSelectedCell.getNeighbor(ViewerCell.BELOW, false);
-                            if (nextCell != null) {
-                                inputsTableViewer.getTable().setSelection((TableItem) nextCell.getViewerRow().getItem());
-                            }
-                            return nextCell;
-                        }
-                        break;
-                    case SWT.DEL:
-                        if(currentSelectedCell != null){
-                            final ViewerCell aboveCell = currentSelectedCell.getNeighbor(ViewerCell.ABOVE, false);
-                            removeInput(inputsTableViewer);
-                            inputsTableViewer.getTable().setSelection((TableItem) aboveCell.getViewerRow().getItem());
-                            return aboveCell;
-                        }
-                        break;
-                    default:
-                        return super.findSelectedCell(viewer, currentSelectedCell, event);
-                }
-                return super.findSelectedCell(viewer, currentSelectedCell, event);
-
-            }
-        };
-
+        final CellNavigationStrategy cellNavigationStrategy = new ContracInputTableViewerCellNavigationStrategy(inputsTableViewer, inputController);
         final TableViewerFocusCellManager focusCellManager = new TableViewerFocusCellManager(inputsTableViewer, new FocusCellOwnerDrawHighlighter(
                 inputsTableViewer), cellNavigationStrategy);
         TableViewerEditor.create(inputsTableViewer, focusCellManager, activationSupport, ColumnViewerEditor.TABBING_HORIZONTAL |
@@ -254,7 +188,6 @@ public class ContractPropertySection extends EObjectSelectionProviderSection {
         tableLayout.addColumnData(new ColumnWeightData(1));
         tableLayout.addColumnData(new ColumnWeightData(1));
         tableLayout.addColumnData(new ColumnWeightData(3));
-        //  tableLayout.addColumnData(new ColumnWeightData(1));
         tableLayout.addColumnData(new ColumnWeightData(5));
         inputsTableViewer.getTable().setLayout(tableLayout);
 
@@ -263,7 +196,6 @@ public class ContractPropertySection extends EObjectSelectionProviderSection {
         createMultipleColumn(inputsTableViewer);
         createMandatoryColumn(inputsTableViewer);
         createMappingColumn(inputsTableViewer);
-        //   createConstraintColumn(inputsTableViewer);
         createInputDescriptionColumn(inputsTableViewer);
 
         observeContractValue = CustomEMFEditObservables.observeDetailValue(Realm.getDefault(), getEObjectObservable(),
@@ -276,7 +208,7 @@ public class ContractPropertySection extends EObjectSelectionProviderSection {
 
             @Override
             public void widgetSelected(final SelectionEvent e) {
-                addInput(inputsTableViewer);
+                inputController.addInput(inputsTableViewer);
             }
         });
 
@@ -284,7 +216,7 @@ public class ContractPropertySection extends EObjectSelectionProviderSection {
 
             @Override
             public void widgetSelected(final SelectionEvent e) {
-                removeInput(inputsTableViewer);
+                inputController.removeInput(inputsTableViewer);
             }
         });
         observeContractValue.addValueChangeListener(new IValueChangeListener() {
@@ -312,16 +244,6 @@ public class ContractPropertySection extends EObjectSelectionProviderSection {
     protected void validate(final Contract contract) {
         final ContractDefinitionValidator definitionValidator = new ContractDefinitionValidator(getMessageManager());
         definitionValidator.validate(contract);
-    }
-
-    protected void removeInput(final TableViewer viewer) {
-        final IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
-        final IObservableList input = (IObservableList) viewer.getInput();
-        for (final Object o : selection.toList()) {
-            contractValidator.clearMessages(o);
-        }
-        input.removeAll(selection.toList());
-        contractValidator.validateDuplicatedInputs((Contract) observeContractValue.getValue());
     }
 
     protected void createInputNameColumn(final TableViewer viewer) {
@@ -379,14 +301,14 @@ public class ContractPropertySection extends EObjectSelectionProviderSection {
         final TableViewerColumn typeColumnViewer = new TableViewerColumn(viewer, SWT.FILL);
         final TableColumn column = typeColumnViewer.getColumn();
         column.setText(Messages.type);
-        typeColumnViewer.setLabelProvider(new PropertyColumnLabelProvider(propertySourceProvider, "type") {
+        typeColumnViewer.setLabelProvider(new PropertyColumnLabelProvider(propertySourceProvider, ProcessPackage.Literals.CONTRACT_INPUT__TYPE.getName()) {
 
             @Override
             public Image getImage(final Object object) {
                 return null;
             }
         });
-        typeColumnViewer.setEditingSupport(new PropertyEditingSupport(viewer, propertySourceProvider, "type") {
+        typeColumnViewer.setEditingSupport(new PropertyEditingSupport(viewer, propertySourceProvider, ProcessPackage.Literals.CONTRACT_INPUT__TYPE.getName()) {
 
             @Override
             protected void setValue(final Object object, final Object value) {

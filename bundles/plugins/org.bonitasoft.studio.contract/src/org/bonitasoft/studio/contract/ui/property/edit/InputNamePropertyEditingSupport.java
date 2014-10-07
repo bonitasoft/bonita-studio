@@ -114,7 +114,8 @@ public class InputNamePropertyEditingSupport extends PropertyEditingSupport impl
                 SWT.TOP | SWT.LEFT);
         cellEditor.setValidator(this);
         cellEditor.addListener(this);
-        cell.setText("");//Clear cell label
+        //Clear cell label
+        cell.setText("");
     }
 
     protected void attachContentAssist(final CellEditor cellEditor) {

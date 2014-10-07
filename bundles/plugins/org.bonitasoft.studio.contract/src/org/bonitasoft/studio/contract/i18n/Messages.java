@@ -46,5 +46,7 @@ public class Messages extends NLS {
     public static String inputSuffix;
     public static String duplicatedInputNames;
     public static String contractInputs;
+    public static String inputTabLabel;
+    public static String constraintsTabLabel;
 
 }

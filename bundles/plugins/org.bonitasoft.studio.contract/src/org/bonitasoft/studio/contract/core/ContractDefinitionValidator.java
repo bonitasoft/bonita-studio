@@ -128,7 +128,8 @@ public class ContractDefinitionValidator {
         messageManager.removeMessage(messageKey);
         if (!status.isOK()) {
             if (status.isMultiStatus()) {
-                final StringBuilder errorMessage = new StringBuilder(Messages.duplicatedInputNames + " ");
+                final StringBuilder errorMessage = new StringBuilder(Messages.duplicatedInputNames);
+                errorMessage.append(" ");
                 for (final IStatus child : status.getChildren()) {
                     errorMessage.append("\"" + child.getMessage() + "\"");
                     errorMessage.append(", ");
