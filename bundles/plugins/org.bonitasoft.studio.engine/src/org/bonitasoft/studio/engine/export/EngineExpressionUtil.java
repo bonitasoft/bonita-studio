@@ -442,6 +442,9 @@ public class EngineExpressionUtil {
             if (ExpressionConstants.DOCUMENT_LIST_TYPE.equals(type)) {
                 return createDocumentListExpression(expressionBuilder, expression);
             }
+            if (ExpressionConstants.DOCUMENT_REF_TYPE.equals(type)) {
+                return createEngineExpressionForDocumentRef(expressionBuilder, expression);
+            }
             if (ExpressionConstants.XPATH_TYPE.equals(type)) {
                 return createXPATHExpression(expressionBuilder, expression);
             }
@@ -469,6 +472,21 @@ public class EngineExpressionUtil {
         } else {
             return null;
         }
+    }
+
+    private static Expression createEngineExpressionForDocumentRef(final ExpressionBuilder expressionBuilder,
+            final org.bonitasoft.studio.model.expression.Expression expression) {
+        final String content = expression.getContent();
+        final EList<EObject> referencedElements = expression.getReferencedElements();
+        if (!referencedElements.isEmpty()) {
+            final EObject referencedElement = referencedElements.get(0);
+            if (referencedElement instanceof Document) {
+                if (((Document) referencedElement).isMultiple()) {
+                    return createDocumentListExpression(expressionBuilder, expression);
+                }
+            }
+        }
+        return createConstantExpression(content, content, String.class.getName());
     }
 
     private static Expression createQueryExpression(final ExpressionBuilder expressionBuilder,

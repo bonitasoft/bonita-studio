@@ -98,7 +98,6 @@ public abstract class AbstractSwitch extends ProcessSwitch<Element> {
             final Expression inputExpression = EngineExpressionUtil.createExpression(parameter.getExpression());
             if (inputExpression != null) {
                 connectorBuilder.addInput(parameter.getKey(), inputExpression);
-
             } else {
                 if (BonitaStudioLog.isLoggable(IStatus.OK)) {
                     BonitaStudioLog.debug("Expression of input " + parameter.getKey() + " is null for connector " + connector.getName(),
