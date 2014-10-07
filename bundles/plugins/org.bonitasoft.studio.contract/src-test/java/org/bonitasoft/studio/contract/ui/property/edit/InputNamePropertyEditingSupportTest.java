@@ -17,9 +17,13 @@
 package org.bonitasoft.studio.contract.ui.property.edit;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import org.bonitasoft.studio.contract.core.ContractDefinitionValidator;
+import org.bonitasoft.studio.contract.i18n.Messages;
+import org.bonitasoft.studio.contract.ui.property.FieldDecoratorProvider;
 import org.bonitasoft.studio.contract.ui.property.edit.proposal.InputMappingProposal;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ContractInputType;
@@ -29,7 +33,11 @@ import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.provider.ProcessItemProviderAdapterFactory;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
+import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
+import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.ViewerCell;
+import org.eclipse.swt.SWT;
 import org.eclipse.ui.forms.IMessageManager;
 import org.junit.After;
 import org.junit.Before;
@@ -59,6 +67,9 @@ public class InputNamePropertyEditingSupportTest {
     @Mock
     private IMessageManager iMessageManager;
 
+    @Mock
+    private FieldDecoratorProvider decoratorProvider;
+
     /**
      * @throws java.lang.Exception
      */
@@ -66,7 +77,7 @@ public class InputNamePropertyEditingSupportTest {
     public void setUp() throws Exception {
         propertySourceProvider = new AdapterFactoryContentProvider(new ProcessItemProviderAdapterFactory());
         propertyEditingSupport = new InputNamePropertyEditingSupport(propertySourceProvider, viewer, adapterFactoryLabelProvider,
-                new ContractDefinitionValidator());
+                new ContractDefinitionValidator(), decoratorProvider);
     }
 
     /**
@@ -135,6 +146,26 @@ public class InputNamePropertyEditingSupportTest {
         javaData.setClassName("com.test.Employee");
         final InputMappingProposal proposal = new InputMappingProposal(javaData, null, null);
         propertyEditingSupport.getType(proposal);
+    }
+
+    @Test
+    public void should_initializeCellEditorValue_set_validator_and_add_listener() throws Exception {
+        final ContractInput input = ProcessFactory.eINSTANCE.createContractInput();
+        final CellEditor cellEditorMock = mock(CellEditor.class);
+        final ViewerCell cellMock = mock(ViewerCell.class);
+        when(cellMock.getElement()).thenReturn(input);
+        final org.eclipse.swt.widgets.Text textMock = mock(org.eclipse.swt.widgets.Text.class);
+        when(cellEditorMock.getControl()).thenReturn(textMock);
+
+
+        propertyEditingSupport.initializeCellEditorValue(cellEditorMock, cellMock);
+        assertThat(propertyEditingSupport.getCurrentElement()).isEqualTo(input);
+        verify(decoratorProvider).createControlDecorator(cellEditorMock.getControl(), Messages.automaticMappingTooltip,
+                FieldDecorationRegistry.DEC_CONTENT_PROPOSAL, SWT.TOP | SWT.LEFT);
+        verify(cellEditorMock).setValidator(propertyEditingSupport);
+        verify(cellEditorMock).addListener(propertyEditingSupport);
+        verify(cellMock).setText("");
+
     }
 
 }

@@ -19,9 +19,11 @@ package org.bonitasoft.studio.contract.ui.property.edit;
 import org.bonitasoft.studio.contract.core.ContractDefinitionValidator;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.ICellEditorValidator;
+import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.ui.views.properties.IPropertySourceProvider;
 import org.eclipse.ui.views.properties.PropertyEditingSupport;
 
@@ -33,7 +35,8 @@ import org.eclipse.ui.views.properties.PropertyEditingSupport;
 public class DescriptionPropertyEditingSupport extends PropertyEditingSupport implements ICellEditorValidator {
 
     private final ContractDefinitionValidator contractDefinitionValidator;
-    private Object currentElement;
+    private ContractInput currentElement;
+
 
     public DescriptionPropertyEditingSupport(final ColumnViewer viewer, final IPropertySourceProvider propertySourceProvider,
             final ContractDefinitionValidator contractDefinitionValidator) {
@@ -48,17 +51,25 @@ public class DescriptionPropertyEditingSupport extends PropertyEditingSupport im
     }
 
     @Override
-    protected CellEditor getCellEditor(final Object object) {
-        final CellEditor cellEditor = super.getCellEditor(object);
-        currentElement = object;
+    protected void initializeCellEditorValue(final CellEditor cellEditor, final ViewerCell cell) {
+        super.initializeCellEditorValue(cellEditor, cell);
+        setCurrentElement(cell.getElement());
         cellEditor.setValidator(this);
-        return cellEditor;
     }
 
     @Override
     public String isValid(final Object value) {
-        contractDefinitionValidator.validateInputDescription((ContractInput) currentElement, (String) value);
+        contractDefinitionValidator.validateInputDescription(getCurrentElement(), (String) value);
         return null;
+    }
+
+    public ContractInput getCurrentElement() {
+        return currentElement;
+    }
+
+    public void setCurrentElement(final Object currentElement) {
+        Assert.isLegal(currentElement instanceof ContractInput);
+        this.currentElement = (ContractInput) currentElement;
     }
 
 }

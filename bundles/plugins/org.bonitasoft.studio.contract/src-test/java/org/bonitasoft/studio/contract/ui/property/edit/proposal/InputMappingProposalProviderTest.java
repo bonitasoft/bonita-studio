@@ -149,7 +149,7 @@ public class InputMappingProposalProviderTest {
         doReturn(Arrays.asList(javaObjectData)).when(inputMappingProposalProvider).getDataInScope();
         final IType employeeType = mock(IType.class);
         doReturn(employeeType).when(inputMappingProposalProvider).getType(javaObjectData.getClassName());
-        doReturn(null).when(inputMappingProposalProvider).getSetters(employeeType);
+        doReturn(new Object[] {}).when(inputMappingProposalProvider).getSetters(employeeType);
         assertThat(inputMappingProposalProvider.getProposals("", 0)).hasSize(0);
     }
 

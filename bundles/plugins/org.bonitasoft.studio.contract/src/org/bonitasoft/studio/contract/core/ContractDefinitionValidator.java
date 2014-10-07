@@ -156,7 +156,7 @@ public class ContractDefinitionValidator {
             case IStatus.INFO:
                 return IMessage.INFORMATION;
             default:
-                throw new RuntimeException("Unsupported status severity code :" + statusSeverity);
+                throw new IllegalArgumentException("Unsupported status severity code :" + statusSeverity);
         }
 
     }

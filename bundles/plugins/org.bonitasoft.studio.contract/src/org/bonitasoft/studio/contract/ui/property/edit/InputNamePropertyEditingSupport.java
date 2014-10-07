@@ -26,6 +26,7 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.contract.ContractPlugin;
 import org.bonitasoft.studio.contract.core.ContractDefinitionValidator;
 import org.bonitasoft.studio.contract.i18n.Messages;
+import org.bonitasoft.studio.contract.ui.property.FieldDecoratorProvider;
 import org.bonitasoft.studio.contract.ui.property.edit.proposal.InputMappingProposal;
 import org.bonitasoft.studio.contract.ui.property.edit.proposal.InputMappingProposalLabelProvider;
 import org.bonitasoft.studio.contract.ui.property.edit.proposal.InputMappingProposalProvider;
@@ -36,15 +37,12 @@ import org.bonitasoft.studio.model.process.ContractInputType;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jface.bindings.keys.KeyStroke;
 import org.eclipse.jface.bindings.keys.ParseException;
 import org.eclipse.jface.fieldassist.ContentProposalAdapter;
-import org.eclipse.jface.fieldassist.ControlDecoration;
-import org.eclipse.jface.fieldassist.FieldDecoration;
 import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
 import org.eclipse.jface.fieldassist.IContentProposal;
 import org.eclipse.jface.fieldassist.IContentProposalListener;
@@ -53,11 +51,8 @@ import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ICellEditorListener;
 import org.eclipse.jface.viewers.ICellEditorValidator;
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.TextCellEditor;
+import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ControlAdapter;
-import org.eclipse.swt.events.ControlEvent;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.ui.views.properties.PropertyEditingSupport;
@@ -68,12 +63,12 @@ import org.eclipse.ui.views.properties.PropertyEditingSupport;
  */
 public class InputNamePropertyEditingSupport extends PropertyEditingSupport implements ICellEditorValidator, ICellEditorListener {
 
-
-    private EObject currentElement;
+    private ContractInput currentElement;
     private final AdapterFactoryLabelProvider adapterFactoryLabelProvider;
     private final ContractDefinitionValidator contractDefinitionValidator;
     private boolean validate = false;
     private Object currentValue;
+    private final FieldDecoratorProvider decoratorProvider;
     private static final Map<String, ContractInputType> JAVA_TO_INPUT_TYPE_MAP;
     static {
         JAVA_TO_INPUT_TYPE_MAP = new HashMap<String, ContractInputType>();
@@ -86,11 +81,16 @@ public class InputNamePropertyEditingSupport extends PropertyEditingSupport impl
         JAVA_TO_INPUT_TYPE_MAP.put(Double.class.getName(), ContractInputType.DECIMAL);
         JAVA_TO_INPUT_TYPE_MAP.put(Float.class.getName(), ContractInputType.DECIMAL);
     }
-    public InputNamePropertyEditingSupport(final AdapterFactoryContentProvider propertySourceProvider, final TableViewer viewer,
-            final AdapterFactoryLabelProvider adapterFactoryLabelProvider, final ContractDefinitionValidator contractDefinitionValidator) {
+
+    public InputNamePropertyEditingSupport(final AdapterFactoryContentProvider propertySourceProvider,
+            final TableViewer viewer,
+            final AdapterFactoryLabelProvider adapterFactoryLabelProvider,
+            final ContractDefinitionValidator contractDefinitionValidator,
+            final FieldDecoratorProvider decoratorProvider) {
         super(viewer, propertySourceProvider, ProcessPackage.Literals.CONTRACT_INPUT__NAME.getName());
         this.adapterFactoryLabelProvider = adapterFactoryLabelProvider;
         this.contractDefinitionValidator = contractDefinitionValidator;
+        this.decoratorProvider = decoratorProvider;
     }
 
     @Override
@@ -103,45 +103,21 @@ public class InputNamePropertyEditingSupport extends PropertyEditingSupport impl
     }
 
     @Override
-    protected CellEditor getCellEditor(final Object element) {
-        if (element instanceof ContractInput) {
-            validate = false;
-            final TextCellEditor cellEditor = (TextCellEditor) super.getCellEditor(element);
-            currentElement = (EObject) element;
-            attachContentAssist(element, cellEditor);
-            attachControlDecorator(cellEditor);
-            cellEditor.setValidator(this);
-            cellEditor.addListener(this);
-
-            return cellEditor;
-        }
-        return null;
+    protected void initializeCellEditorValue(final CellEditor cellEditor, final ViewerCell cell) {
+        super.initializeCellEditorValue(cellEditor, cell);
+        validate = false;
+        setCurrentElement(cell.getElement());
+        attachContentAssist(cellEditor);
+        decoratorProvider.createControlDecorator(cellEditor.getControl(),
+                Messages.automaticMappingTooltip,
+                FieldDecorationRegistry.DEC_CONTENT_PROPOSAL,
+                SWT.TOP | SWT.LEFT);
+        cellEditor.setValidator(this);
+        cellEditor.addListener(this);
+        cell.setText("");//Clear cell label
     }
 
-    protected void attachControlDecorator(final TextCellEditor cellEditor) {
-        final FieldDecoration fieldDecoration = FieldDecorationRegistry.getDefault().getFieldDecoration(FieldDecorationRegistry.DEC_CONTENT_PROPOSAL);
-        final ControlDecoration controlDecoration = new ControlDecoration(cellEditor.getControl(), SWT.TOP | SWT.LEFT);
-        controlDecoration.setImage(fieldDecoration.getImage());
-        controlDecoration.setDescriptionText(Messages.automaticMappingTooltip);
-        controlDecoration.setMarginWidth(0);
-        cellEditor.getControl().addControlListener(new ControlAdapter() {
-            @Override
-            public void controlMoved(final ControlEvent event) {
-                if (cellEditor.getControl().equals(event.widget)) {
-                    final Text editor = (Text) event.widget;
-                    final Point location = editor.getLocation();
-
-                    if (location.x != 10) {
-                        final int offset = 10 - location.x;
-                        editor.setLocation(10, location.y);
-                        editor.setSize(editor.getSize().x - offset, editor.getSize().y);
-                    }
-                }
-            }
-        });
-    }
-
-    protected void attachContentAssist(final Object element, final TextCellEditor cellEditor) {
+    protected void attachContentAssist(final CellEditor cellEditor) {
         final Text textControl = (Text) cellEditor.getControl();
         textControl.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, SWTBotConstants.SWTBOT_ID_INPUT_NAME_TEXTEDITOR);
         KeyStroke keyStroke = null;
@@ -151,7 +127,7 @@ public class InputNamePropertyEditingSupport extends PropertyEditingSupport impl
             BonitaStudioLog.error("Failed to retrieve Ctrl+Space key stroke", e, ContractPlugin.PLUGIN_ID);
         }
         final ContentProposalAdapter contentProposalAdapter = new ContentProposalAdapter(textControl, new TextContentAdapter(),
-                new InputMappingProposalProvider((ContractInput) element), keyStroke,
+                new InputMappingProposalProvider(getCurrentElement()), keyStroke,
                 null);
         contentProposalAdapter.setLabelProvider(new InputMappingProposalLabelProvider(adapterFactoryLabelProvider));
         contentProposalAdapter.addContentProposalListener(new IContentProposalListener() {
@@ -159,7 +135,7 @@ public class InputNamePropertyEditingSupport extends PropertyEditingSupport impl
             @Override
             public void proposalAccepted(final IContentProposal acceptedProposal) {
                 if (acceptedProposal instanceof InputMappingProposal) {
-                    updateContractInputWithProposal(element, textControl, acceptedProposal);
+                    updateContractInputWithProposal(getCurrentElement(), textControl, acceptedProposal);
                 }
             }
         });
@@ -188,7 +164,7 @@ public class InputNamePropertyEditingSupport extends PropertyEditingSupport impl
     @Override
     public String isValid(final Object value) {
         if (validate || getValue(currentElement) != null) {
-            contractDefinitionValidator.validateInputName((ContractInput) currentElement, (String) value);
+            contractDefinitionValidator.validateInputName(currentElement, (String) value);
         }
         currentValue = value;
         return null;
@@ -230,5 +206,16 @@ public class InputNamePropertyEditingSupport extends PropertyEditingSupport impl
                 ((InputMappingProposal) acceptedProposal).getSetterParamType());
         getViewer().update(element, null);
     }
+
+    public ContractInput getCurrentElement() {
+        return currentElement;
+    }
+
+    public void setCurrentElement(final Object currentElement) {
+        Assert.isLegal(currentElement instanceof ContractInput);
+        this.currentElement = (ContractInput) currentElement;
+    }
+
+
 
 }

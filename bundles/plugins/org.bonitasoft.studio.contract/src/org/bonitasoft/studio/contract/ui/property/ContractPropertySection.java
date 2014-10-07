@@ -97,6 +97,7 @@ public class ContractPropertySection extends EObjectSelectionProviderSection {
     private AdapterFactoryLabelProvider adapterFactoryLabelProvider;
     private ContractDefinitionValidator contractValidator;
     private IObservableValue observeContractValue;
+    private final FieldDecoratorProvider decoratorProvider = new FieldDecoratorProvider();
 
     @Override
     public String getSectionDescription() {
@@ -328,7 +329,11 @@ public class ContractPropertySection extends EObjectSelectionProviderSection {
         final TableColumn column = nameColumnViewer.getColumn();
         column.setText(Messages.name + " *");
         nameColumnViewer.setLabelProvider(new InputNameCellLabelProvider(viewer, propertySourceProvider));
-        nameColumnViewer.setEditingSupport(new InputNamePropertyEditingSupport(propertySourceProvider, viewer, adapterFactoryLabelProvider, contractValidator));
+        nameColumnViewer.setEditingSupport(new InputNamePropertyEditingSupport(propertySourceProvider,
+                viewer,
+                adapterFactoryLabelProvider,
+                contractValidator,
+                decoratorProvider));
     }
 
     protected void createInputDescriptionColumn(final TableViewer viewer) {
