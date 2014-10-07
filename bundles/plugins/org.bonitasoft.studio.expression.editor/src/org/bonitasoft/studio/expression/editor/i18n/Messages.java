@@ -155,6 +155,10 @@ public class Messages extends NLS {
     public static String dialogTitleSelectOperator;
     public static String setDocumentListOperator;
 
+    public static String messageOperationWithListDocumentInForm;
+
+    public static String messageOperationWithListDocumentInTask;
+
     private Messages() {
         // Do not instantiate
     }

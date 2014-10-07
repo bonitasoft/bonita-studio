@@ -588,20 +588,45 @@ public class OperationViewer extends Composite implements IBonitaVariableContext
         }
     }
 
+    public static boolean isExpressionReferenceAListDocument(final Expression value) {
+        if (value != null) {
+            final EList<EObject> referencedElements = value.getReferencedElements();
+            return !referencedElements.isEmpty()
+                    && referencedElements.get(0) instanceof Document
+                    && ((Document) referencedElements.get(0)).isMultiple();
+        } else {
+            return false;
+        }
+    }
+
     public void refreshActionExpressionTooltip(final Expression value) {
         final boolean isLeftOperandADocument = isExpressionReferenceADocument(value);
+        final boolean isLeftOperandAListDocument = isExpressionReferenceAListDocument(value);
 
         if (isLeftOperandADocument && !value.getName().isEmpty()) {
 
-            if (operation != null && operation.eContainer() instanceof Task) {
-                getActionExpression().setMessage(Messages.messageOperationWithDocumentInTask, IStatus.INFO);
+            if (isOperationContainerIsATask()) {
+                if (isLeftOperandAListDocument) {
+                    getActionExpression().setMessage(Messages.messageOperationWithListDocumentInTask, IStatus.INFO);
+                } else {
+                    getActionExpression().setMessage(Messages.messageOperationWithDocumentInTask, IStatus.INFO);
+                }
+
             } else {
-                getActionExpression().setMessage(Messages.messageOperationWithDocumentInForm, IStatus.INFO);
+                if (isLeftOperandAListDocument) {
+                    getActionExpression().setMessage(Messages.messageOperationWithListDocumentInForm, IStatus.INFO);
+                } else {
+                    getActionExpression().setMessage(Messages.messageOperationWithDocumentInForm, IStatus.INFO);
+                }
             }
         } else {
             getActionExpression().removeMessages(IStatus.INFO);
         }
         getActionExpression().validate();
+    }
+
+    private boolean isOperationContainerIsATask() {
+        return operation != null && operation.eContainer() instanceof Task;
     }
 
 }
