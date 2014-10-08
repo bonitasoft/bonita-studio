@@ -24,20 +24,14 @@ import org.bonitasoft.studio.contract.ui.property.FieldDecoratorProvider;
 import org.bonitasoft.studio.contract.ui.property.edit.CheckboxPropertyEditingSupport;
 import org.bonitasoft.studio.contract.ui.property.edit.DescriptionCellLabelProvider;
 import org.bonitasoft.studio.contract.ui.property.edit.DescriptionPropertyEditingSupport;
-import org.bonitasoft.studio.contract.ui.property.edit.InputMappingPropertyEditingSupport;
 import org.bonitasoft.studio.contract.ui.property.edit.InputNameCellLabelProvider;
 import org.bonitasoft.studio.contract.ui.property.edit.InputNamePropertyEditingSupport;
-import org.bonitasoft.studio.contract.ui.property.edit.proposal.InputMappingProposal;
-import org.bonitasoft.studio.model.process.ContractInput;
-import org.bonitasoft.studio.model.process.ContractInputMapping;
-import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
 import org.eclipse.jface.viewers.CellNavigationStrategy;
-import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnViewerEditor;
 import org.eclipse.jface.viewers.ColumnViewerEditorActivationEvent;
 import org.eclipse.jface.viewers.ColumnViewerEditorActivationStrategy;
@@ -150,36 +144,36 @@ public class ContractInputTableViewer extends TableViewer {
         descriptionColumnViewer.setEditingSupport(new DescriptionPropertyEditingSupport(this, propertySourceProvider, contractValidator));
     }
 
-    protected void createMappingColumn() {
-        final TableViewerColumn mappingColumnViewer = new TableViewerColumn(this, SWT.FILL);
-        final TableColumn column = mappingColumnViewer.getColumn();
-        column.setText(Messages.savedInto);
-        mappingColumnViewer.setLabelProvider(new ColumnLabelProvider() {
-
-            @Override
-            public String getText(final Object element) {
-                if (element instanceof ContractInput) {
-                    final ContractInputMapping mapping = ((ContractInput) element).getMapping();
-                    return new InputMappingProposal(mapping).getContent();
-                }
-                return null;
-            }
-
-            @Override
-            public Image getImage(final Object element) {
-                if (element instanceof ContractInput) {
-                    final ContractInputMapping mapping = ((ContractInput) element).getMapping();
-                    final Data data = mapping.getData();
-                    if (data == null) {
-                        return null;
-                    }
-                    return adapterFactoryLabelProvider.getImage(data);
-                }
-                return null;
-            }
-        });
-        mappingColumnViewer.setEditingSupport(new InputMappingPropertyEditingSupport(propertySourceProvider, this));
-    }
+    //    protected void createMappingColumn() {
+    //        final TableViewerColumn mappingColumnViewer = new TableViewerColumn(this, SWT.FILL);
+    //        final TableColumn column = mappingColumnViewer.getColumn();
+    //        column.setText(Messages.savedInto);
+    //        mappingColumnViewer.setLabelProvider(new ColumnLabelProvider() {
+    //
+    //            @Override
+    //            public String getText(final Object element) {
+    //                if (element instanceof ContractInput) {
+    //                    final ContractInputMapping mapping = ((ContractInput) element).getMapping();
+    //                    return new InputMappingProposal(mapping).getContent();
+    //                }
+    //                return null;
+    //            }
+    //
+    //            @Override
+    //            public Image getImage(final Object element) {
+    //                if (element instanceof ContractInput) {
+    //                    final ContractInputMapping mapping = ((ContractInput) element).getMapping();
+    //                    final Data data = mapping.getData();
+    //                    if (data == null) {
+    //                        return null;
+    //                    }
+    //                    return adapterFactoryLabelProvider.getImage(data);
+    //                }
+    //                return null;
+    //            }
+    //        });
+    //        mappingColumnViewer.setEditingSupport(new InputMappingPropertyEditingSupport(propertySourceProvider, this));
+    //    }
 
     protected void createInputTypeColumn() {
         final TableViewerColumn typeColumnViewer = new TableViewerColumn(this, SWT.FILL);

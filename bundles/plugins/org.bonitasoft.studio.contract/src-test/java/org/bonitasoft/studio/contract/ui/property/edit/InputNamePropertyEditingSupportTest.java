@@ -22,7 +22,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import org.bonitasoft.studio.contract.core.ContractDefinitionValidator;
-import org.bonitasoft.studio.contract.i18n.Messages;
 import org.bonitasoft.studio.contract.ui.property.FieldDecoratorProvider;
 import org.bonitasoft.studio.contract.ui.property.edit.proposal.InputMappingProposal;
 import org.bonitasoft.studio.model.process.ContractInput;
@@ -33,11 +32,9 @@ import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.provider.ProcessItemProviderAdapterFactory;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
-import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.ViewerCell;
-import org.eclipse.swt.SWT;
 import org.eclipse.ui.forms.IMessageManager;
 import org.junit.After;
 import org.junit.Before;
@@ -160,8 +157,8 @@ public class InputNamePropertyEditingSupportTest {
 
         propertyEditingSupport.initializeCellEditorValue(cellEditorMock, cellMock);
         assertThat(propertyEditingSupport.getCurrentElement()).isEqualTo(input);
-        verify(decoratorProvider).createControlDecorator(cellEditorMock.getControl(), Messages.automaticMappingTooltip,
-                FieldDecorationRegistry.DEC_CONTENT_PROPOSAL, SWT.TOP | SWT.LEFT);
+        //        verify(decoratorProvider).createControlDecorator(cellEditorMock.getControl(), Messages.automaticMappingTooltip,
+        //                FieldDecorationRegistry.DEC_CONTENT_PROPOSAL, SWT.TOP | SWT.LEFT);
         verify(cellEditorMock).setValidator(propertyEditingSupport);
         verify(cellEditorMock).addListener(propertyEditingSupport);
         verify(cellMock).setText("");
