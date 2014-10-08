@@ -50,4 +50,9 @@ public class ContractPropertySectionTest {
     public void section_description_isNotEmpty() throws Exception {
         assertThat(section.getSectionDescription()).isNotEmpty();
     }
+
+    @Test
+    public void section_title_isNotEmpty() throws Exception {
+        assertThat(section.getSectionTitle()).isNotEmpty();
+    }
 }

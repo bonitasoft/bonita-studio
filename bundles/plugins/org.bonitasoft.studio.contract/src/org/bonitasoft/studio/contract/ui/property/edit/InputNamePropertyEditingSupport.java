@@ -21,17 +21,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.bonitasoft.studio.common.DataUtil;
-import org.bonitasoft.studio.common.jface.SWTBotConstants;
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.contract.ContractPlugin;
 import org.bonitasoft.studio.contract.core.ContractDefinitionValidator;
 import org.bonitasoft.studio.contract.ui.property.FieldDecoratorProvider;
 import org.bonitasoft.studio.contract.ui.property.edit.proposal.InputMappingProposal;
-import org.bonitasoft.studio.contract.ui.property.edit.proposal.InputMappingProposalLabelProvider;
-import org.bonitasoft.studio.contract.ui.property.edit.proposal.InputMappingProposalProvider;
 import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractInput;
-import org.bonitasoft.studio.model.process.ContractInputMapping;
 import org.bonitasoft.studio.model.process.ContractInputType;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.ProcessPackage;
@@ -39,19 +33,11 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
-import org.eclipse.jface.bindings.keys.KeyStroke;
-import org.eclipse.jface.bindings.keys.ParseException;
-import org.eclipse.jface.fieldassist.ContentProposalAdapter;
-import org.eclipse.jface.fieldassist.IContentProposal;
-import org.eclipse.jface.fieldassist.IContentProposalListener;
-import org.eclipse.jface.fieldassist.TextContentAdapter;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ICellEditorListener;
 import org.eclipse.jface.viewers.ICellEditorValidator;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.ViewerCell;
-import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.ui.views.properties.PropertyEditingSupport;
 
 /**
@@ -116,29 +102,29 @@ public class InputNamePropertyEditingSupport extends PropertyEditingSupport impl
         cell.setImage(null);
     }
 
-    protected void attachContentAssist(final CellEditor cellEditor) {
-        final Text textControl = (Text) cellEditor.getControl();
-        textControl.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, SWTBotConstants.SWTBOT_ID_INPUT_NAME_TEXTEDITOR);
-        KeyStroke keyStroke = null;
-        try {
-            keyStroke = KeyStroke.getInstance("Ctrl+Space");
-        } catch (final ParseException e) {
-            BonitaStudioLog.error("Failed to retrieve Ctrl+Space key stroke", e, ContractPlugin.PLUGIN_ID);
-        }
-        final ContentProposalAdapter contentProposalAdapter = new ContentProposalAdapter(textControl, new TextContentAdapter(),
-                new InputMappingProposalProvider(getCurrentElement()), keyStroke,
-                null);
-        contentProposalAdapter.setLabelProvider(new InputMappingProposalLabelProvider(adapterFactoryLabelProvider));
-        contentProposalAdapter.addContentProposalListener(new IContentProposalListener() {
-
-            @Override
-            public void proposalAccepted(final IContentProposal acceptedProposal) {
-                if (acceptedProposal instanceof InputMappingProposal) {
-                    updateContractInputWithProposal(getCurrentElement(), textControl, acceptedProposal);
-                }
-            }
-        });
-    }
+    //    protected void attachContentAssist(final CellEditor cellEditor) {
+    //        final Text textControl = (Text) cellEditor.getControl();
+    //        textControl.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, SWTBotConstants.SWTBOT_ID_INPUT_NAME_TEXTEDITOR);
+    //        KeyStroke keyStroke = null;
+    //        try {
+    //            keyStroke = KeyStroke.getInstance("Ctrl+Space");
+    //        } catch (final ParseException e) {
+    //            BonitaStudioLog.error("Failed to retrieve Ctrl+Space key stroke", e, ContractPlugin.PLUGIN_ID);
+    //        }
+    //        final ContentProposalAdapter contentProposalAdapter = new ContentProposalAdapter(textControl, new TextContentAdapter(),
+    //                new InputMappingProposalProvider(getCurrentElement()), keyStroke,
+    //                null);
+    //        contentProposalAdapter.setLabelProvider(new InputMappingProposalLabelProvider(adapterFactoryLabelProvider));
+    //        contentProposalAdapter.addContentProposalListener(new IContentProposalListener() {
+    //
+    //            @Override
+    //            public void proposalAccepted(final IContentProposal acceptedProposal) {
+    //                if (acceptedProposal instanceof InputMappingProposal) {
+    //                    updateContractInputWithProposal(getCurrentElement(), textControl, acceptedProposal);
+    //                }
+    //            }
+    //        });
+    //    }
 
     protected ContractInputType getType(final InputMappingProposal acceptedProposal) {
         String javaType = null;
@@ -185,26 +171,26 @@ public class InputNamePropertyEditingSupport extends PropertyEditingSupport impl
         validate = oldValidState || newValidState;
     }
 
-    protected void updateContractInputWithProposal(final Object element, final Text textControl, final IContentProposal acceptedProposal) {
-        final IPropertySource inputPropertySource = propertySourceProvider.getPropertySource(element);
-        final String name = ((InputMappingProposal) acceptedProposal).getInputContent();
-        setValue(element, name);
-        textControl.setText(name);
-        inputPropertySource.setPropertyValue(ProcessPackage.Literals.CONTRACT_INPUT__TYPE.getName(), getType((InputMappingProposal) acceptedProposal));
-        inputPropertySource.setPropertyValue(ProcessPackage.Literals.CONTRACT_INPUT__MULTIPLE.getName(), ((InputMappingProposal) acceptedProposal).getData()
-                .isMultiple());
-
-        final ContractInputMapping mapping = ((ContractInput) element).getMapping();
-        Assert.isNotNull(mapping);
-        final IPropertySource mappingPropertySource = propertySourceProvider.getPropertySource(mapping);
-        mappingPropertySource.setPropertyValue(ProcessPackage.Literals.CONTRACT_INPUT_MAPPING__DATA.getName(),
-                ((InputMappingProposal) acceptedProposal).getData());
-        mappingPropertySource.setPropertyValue(ProcessPackage.Literals.CONTRACT_INPUT_MAPPING__SETTER_NAME.getName(),
-                ((InputMappingProposal) acceptedProposal).getSetterName());
-        mappingPropertySource.setPropertyValue(ProcessPackage.Literals.CONTRACT_INPUT_MAPPING__SETTER_PARAM_TYPE.getName(),
-                ((InputMappingProposal) acceptedProposal).getSetterParamType());
-        getViewer().update(element, null);
-    }
+    //    protected void updateContractInputWithProposal(final Object element, final Text textControl, final IContentProposal acceptedProposal) {
+    //        final IPropertySource inputPropertySource = propertySourceProvider.getPropertySource(element);
+    //        final String name = ((InputMappingProposal) acceptedProposal).getInputContent();
+    //        setValue(element, name);
+    //        textControl.setText(name);
+    //        inputPropertySource.setPropertyValue(ProcessPackage.Literals.CONTRACT_INPUT__TYPE.getName(), getType((InputMappingProposal) acceptedProposal));
+    //        inputPropertySource.setPropertyValue(ProcessPackage.Literals.CONTRACT_INPUT__MULTIPLE.getName(), ((InputMappingProposal) acceptedProposal).getData()
+    //                .isMultiple());
+    //
+    //        final ContractInputMapping mapping = ((ContractInput) element).getMapping();
+    //        Assert.isNotNull(mapping);
+    //        final IPropertySource mappingPropertySource = propertySourceProvider.getPropertySource(mapping);
+    //        mappingPropertySource.setPropertyValue(ProcessPackage.Literals.CONTRACT_INPUT_MAPPING__DATA.getName(),
+    //                ((InputMappingProposal) acceptedProposal).getData());
+    //        mappingPropertySource.setPropertyValue(ProcessPackage.Literals.CONTRACT_INPUT_MAPPING__SETTER_NAME.getName(),
+    //                ((InputMappingProposal) acceptedProposal).getSetterName());
+    //        mappingPropertySource.setPropertyValue(ProcessPackage.Literals.CONTRACT_INPUT_MAPPING__SETTER_PARAM_TYPE.getName(),
+    //                ((InputMappingProposal) acceptedProposal).getSetterParamType());
+    //        getViewer().update(element, null);
+    //    }
 
     public ContractInput getCurrentElement() {
         return currentElement;
