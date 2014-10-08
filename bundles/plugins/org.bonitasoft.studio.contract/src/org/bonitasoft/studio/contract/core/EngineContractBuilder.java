@@ -16,12 +16,14 @@
  */
 package org.bonitasoft.studio.contract.core;
 
+import org.bonitasoft.engine.bpm.contract.ComplexInputDefinition;
+import org.bonitasoft.engine.bpm.contract.Type;
+import org.bonitasoft.engine.bpm.contract.impl.ComplexInputDefinitionImpl;
+import org.bonitasoft.engine.bpm.contract.impl.SimpleInputDefinitionImpl;
 import org.bonitasoft.engine.bpm.process.impl.ActivityDefinitionBuilder;
 import org.bonitasoft.engine.bpm.process.impl.ContractDefinitionBuilder;
 import org.bonitasoft.engine.bpm.process.impl.UserTaskDefinitionBuilder;
-import org.bonitasoft.engine.operation.Operation;
 import org.bonitasoft.studio.contract.core.exception.ContractCreationException;
-import org.bonitasoft.studio.contract.core.exception.OperationCreationException;
 import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractConstraint;
 import org.bonitasoft.studio.model.process.ContractInput;
@@ -49,12 +51,12 @@ public class EngineContractBuilder {
 
         final ContractDefinitionBuilder contractBuilder = taskBuilder.addContract();
         for (final ContractInput input : contract.getInputs()) {
-            contractBuilder.addSimpleInput(input.getName(), org.bonitasoft.engine.bpm.contract.Type.valueOf(input.getType().getName()),
-                    input.getDescription());
-            if (input.isMandatory()) {
-                contractBuilder.addMandatoryConstraint(input.getName());
+            final Type inputType = getInputType(input);
+            if (Type.COMPLEX == inputType) {
+                addComplexInput(contractBuilder, input);
+            } else {
+                addSimpleInput(contractBuilder, input, inputType);
             }
-            //addMappingOperation(input);
         }
         for (final ContractConstraint constraint : contract.getConstraints()) {
             contractBuilder.addConstraint(constraint.getName(),
@@ -65,20 +67,57 @@ public class EngineContractBuilder {
 
     }
 
-    protected void addMappingOperation(final ContractInput input) throws ContractCreationException {
-        if (isMapped(input)) {
-            try {
-                final Operation storageOperation = contractMappingBuilder.createOperation(input.getMapping());
-                activityDefinitionBuilder.addOperation(storageOperation);
-            } catch (final OperationCreationException e) {
-                throw new ContractCreationException("Failed to create mapping operation for input " + input.getName(), e);
-            }
+    protected void addSimpleInput(final ContractDefinitionBuilder contractBuilder, final ContractInput input, final Type inputType) {
+        contractBuilder.addSimpleInput(input.getName(), inputType,
+                input.getDescription());
+        if (input.isMandatory()) {
+            contractBuilder.addMandatoryConstraint(input.getName());
         }
+        //addMappingOperation(input);
     }
 
-    private boolean isMapped(final ContractInput input) {
-        return input != null && input.getMapping() != null && input.getMapping().getData() != null;
+    protected void addComplexInput(final ContractDefinitionBuilder contractBuilder, final ContractInput input) {
+        final ComplexInputDefinition complexInput = buildComplexInput(input, contractBuilder);
+        contractBuilder.addComplexInput(complexInput.getName(), complexInput.getDescription(), complexInput.getSimpleInputs(), complexInput.getComplexInputs());
     }
+
+    protected ComplexInputDefinition buildComplexInput(final ContractInput input, final ContractDefinitionBuilder contractBuilder) {
+        final ComplexInputDefinitionImpl complexInput = new ComplexInputDefinitionImpl(input.getName(), input.getDescription());
+        if (input.isMandatory()) {
+            contractBuilder.addMandatoryConstraint(complexInput.getName());
+        }
+        for (final ContractInput child : input.getInputs()) {
+            final Type inputType = getInputType(child);
+            if (Type.COMPLEX == inputType) {
+                complexInput.getComplexInputs().add(buildComplexInput(child, contractBuilder));
+            } else {
+                complexInput.getSimpleInputs().add(new SimpleInputDefinitionImpl(child.getName(), inputType, child.getDescription()));
+                if (child.isMandatory()) {
+                    contractBuilder.addMandatoryConstraint(child.getName());
+                }
+            }
+        }
+        return complexInput;
+    }
+
+    public Type getInputType(final ContractInput input) {
+        return org.bonitasoft.engine.bpm.contract.Type.valueOf(input.getType().getName());
+    }
+
+    //    protected void addMappingOperation(final ContractInput input) throws ContractCreationException {
+    //        if (isMapped(input)) {
+    //            try {
+    //                final Operation storageOperation = contractMappingBuilder.createOperation(input.getMapping());
+    //                activityDefinitionBuilder.addOperation(storageOperation);
+    //            } catch (final OperationCreationException e) {
+    //                throw new ContractCreationException("Failed to create mapping operation for input " + input.getName(), e);
+    //            }
+    //        }
+    //    }
+    //
+    //    private boolean isMapped(final ContractInput input) {
+    //        return input != null && input.getMapping() != null && input.getMapping().getData() != null;
+    //    }
 
     public void setEngineBuilder(final UserTaskDefinitionBuilder builder) {
         taskBuilder = builder;

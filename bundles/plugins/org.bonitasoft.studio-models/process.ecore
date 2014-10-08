@@ -152,6 +152,8 @@
         eType="#//ContractInput" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="constraints" upperBound="-1"
         eType="#//ContractConstraint" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="enabled" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
+        defaultValueLiteral="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ContractConstraint">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="expression" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -170,6 +172,8 @@
         defaultValueLiteral="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="mapping" eType="#//ContractInputMapping"
         containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="inputs" upperBound="-1"
+        eType="#//ContractInput" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ContractInputMapping">
     <eStructuralFeatures xsi:type="ecore:EReference" name="data" eType="#//Data"/>
@@ -182,10 +186,7 @@
     <eLiterals name="DECIMAL" value="2"/>
     <eLiterals name="BOOLEAN" value="3"/>
     <eLiterals name="DATE" value="4"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ContractComplexInput" eSuperTypes="#//ContractInput">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="inputs" upperBound="-1"
-        eType="#//ContractInput" containment="true"/>
+    <eLiterals name="COMPLEX" value="5" literal="COMPLEX"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Correlation">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="correlationType" lowerBound="1"

@@ -25,7 +25,9 @@ Bundle-ActivationPolicy: lazy
 Export-Package: org.bonitasoft.studio.contract.core,
  org.bonitasoft.studio.contract.core.exception,
  org.bonitasoft.studio.contract.i18n;x-friends:="org.bonitasoft.studio.swtbot.framework"
-Import-Package: org.bonitasoft.engine.bpm.contract,
+Import-Package: org.bonitasoft.engine.bpm,
+ org.bonitasoft.engine.bpm.contract,
+ org.bonitasoft.engine.bpm.contract.impl,
  org.bonitasoft.engine.bpm.process.impl,
  org.bonitasoft.engine.expression,
  org.bonitasoft.engine.operation

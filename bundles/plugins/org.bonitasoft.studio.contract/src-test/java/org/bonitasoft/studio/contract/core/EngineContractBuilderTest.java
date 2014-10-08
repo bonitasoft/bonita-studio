@@ -16,9 +16,14 @@
  */
 package org.bonitasoft.studio.contract.core;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.tuple;
+import static org.mockito.Matchers.anyList;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import org.bonitasoft.engine.bpm.contract.ComplexInputDefinition;
 import org.bonitasoft.engine.bpm.contract.Type;
 import org.bonitasoft.engine.bpm.process.impl.ContractDefinitionBuilder;
 import org.bonitasoft.engine.bpm.process.impl.UserTaskDefinitionBuilder;
@@ -107,6 +112,15 @@ public class EngineContractBuilderTest {
         return contractInput;
     }
 
+    private ContractInput addInput(final ContractInput parentInput, final String inputName, final ContractInputType type, final String description) {
+        final ContractInput contractInput = ProcessFactory.eINSTANCE.createContractInput();
+        contractInput.setName(inputName);
+        contractInput.setType(type);
+        contractInput.setDescription(description);
+        parentInput.getInputs().add(contractInput);
+        return contractInput;
+    }
+
     @Test(expected = AssertionFailedException.class)
     public void should_build_throw_an_AssertionFailedException_if_no_builder_is_set() throws Exception {
         engineContractBuilder.setEngineBuilder(null);
@@ -159,6 +173,55 @@ public class EngineContractBuilderTest {
         verify(taskBuilder).addContract();
         verify(contractDefBuilder).addSimpleInput("name", Type.TEXT, "name of an employee");
         verify(contractDefBuilder).addMandatoryConstraint("name");
+    }
+
+    @Test
+    public void should_build_add_a_complex_input() throws Exception {
+        final ContractInput employeeInput = addInput(aContract, "employee", ContractInputType.COMPLEX, "employee complex type");
+        addInput(employeeInput, "firstName", ContractInputType.TEXT, null).setMandatory(true);;
+
+        addInput(employeeInput, "lastName", ContractInputType.TEXT, null);
+        addInput(employeeInput, "birthDate", ContractInputType.DATE, null);
+        final ContractInput skillsInput = addInput(employeeInput, "skills", ContractInputType.COMPLEX, null);
+        skillsInput.setMultiple(true);
+        skillsInput.setMandatory(true);
+        addInput(skillsInput, "name", ContractInputType.TEXT, "name of the skills");
+        addInput(skillsInput, "rate", ContractInputType.INTEGER, "rate of the skill");
+
+        engineContractBuilder.setContract(aContract);
+        engineContractBuilder.build();
+        verify(taskBuilder).addContract();
+
+        verify(contractDefBuilder).addComplexInput(eq(employeeInput.getName()), eq(employeeInput.getDescription()), anyList(),
+                anyList());
+        verify(contractDefBuilder).addMandatoryConstraint("firstName");
+        verify(contractDefBuilder).addMandatoryConstraint("skills");
+    }
+
+    @Test
+    public void should_buildComplexInput_create_a_complex_input_recursively() throws Exception {
+        final ContractInput employeeInput = addInput(aContract, "employee", ContractInputType.COMPLEX, "employee complex type");
+        addInput(employeeInput, "firstName", ContractInputType.TEXT, null).setMandatory(false);
+        addInput(employeeInput, "lastName", ContractInputType.TEXT, null);
+        addInput(employeeInput, "birthDate", ContractInputType.DATE, null);
+        final ContractInput skillsInput = addInput(employeeInput, "skills", ContractInputType.COMPLEX, null);
+        skillsInput.setMultiple(true);
+        skillsInput.setMandatory(false);
+        addInput(skillsInput, "name", ContractInputType.TEXT, "name of the skills");
+        addInput(skillsInput, "rate", ContractInputType.INTEGER, "rate of the skill");
+
+        final ComplexInputDefinition complexInput = engineContractBuilder.buildComplexInput(employeeInput, contractDefBuilder);
+        assertThat(complexInput.getName()).isEqualTo(employeeInput.getName());
+        assertThat(complexInput.getDescription()).isEqualTo(employeeInput.getDescription());
+        assertThat(complexInput.getSimpleInputs()).extracting("name", "type").contains(
+                tuple("firstName", Type.TEXT),
+                tuple("lastName", Type.TEXT),
+                tuple("birthDate", Type.DATE));
+        assertThat(complexInput.getComplexInputs()).extracting("name").contains("skills");
+        final ComplexInputDefinition complexInputDefinition = complexInput.getComplexInputs().get(0);
+        assertThat(complexInputDefinition.getSimpleInputs()).extracting("name", "type").contains(
+                tuple("name", Type.TEXT),
+                tuple("rate", Type.INTEGER));
     }
 
 }

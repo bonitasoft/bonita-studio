@@ -428,6 +428,7 @@
       <genEnumLiterals ecoreEnumLiteral="process.ecore#//ContractInputType/DECIMAL"/>
       <genEnumLiterals ecoreEnumLiteral="process.ecore#//ContractInputType/BOOLEAN"/>
       <genEnumLiterals ecoreEnumLiteral="process.ecore#//ContractInputType/DATE"/>
+      <genEnumLiterals ecoreEnumLiteral="process.ecore#//ContractInputType/COMPLEX"/>
     </genEnums>
     <genEnums typeSafeEnumCompatible="false" ecoreEnum="process.ecore#//CorrelationTypeActive">
       <genEnumLiterals ecoreEnumLiteral="process.ecore#//CorrelationTypeActive/INACTIVE"/>
@@ -561,6 +562,7 @@
     <genClasses ecoreClass="process.ecore#//Contract">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//Contract/inputs"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//Contract/constraints"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//Contract/enabled"/>
     </genClasses>
     <genClasses ecoreClass="process.ecore#//ContractConstraint">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//ContractConstraint/expression"/>
@@ -575,14 +577,12 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//ContractInput/multiple"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//ContractInput/mandatory"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//ContractInput/mapping"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//ContractInput/inputs"/>
     </genClasses>
     <genClasses ecoreClass="process.ecore#//ContractInputMapping">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference process.ecore#//ContractInputMapping/data"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//ContractInputMapping/setterName"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//ContractInputMapping/setterParamType"/>
-    </genClasses>
-    <genClasses ecoreClass="process.ecore#//ContractComplexInput">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//ContractComplexInput/inputs"/>
     </genClasses>
     <genClasses ecoreClass="process.ecore#//Correlation">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//Correlation/correlationType"/>
