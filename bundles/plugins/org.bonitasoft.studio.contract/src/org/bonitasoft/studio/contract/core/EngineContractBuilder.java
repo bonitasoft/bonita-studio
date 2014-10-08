@@ -54,14 +54,7 @@ public class EngineContractBuilder {
             if (input.isMandatory()) {
                 contractBuilder.addMandatoryConstraint(input.getName());
             }
-            if (isMapped(input)) {
-                try {
-                    final Operation storageOperation = contractMappingBuilder.createOperation(input.getMapping());
-                    activityDefinitionBuilder.addOperation(storageOperation);
-                } catch (final OperationCreationException e) {
-                    throw new ContractCreationException("Failed to create mapping operation for input " + input.getName(), e);
-                }
-            }
+            //addMappingOperation(input);
         }
         for (final ContractConstraint constraint : contract.getConstraints()) {
             contractBuilder.addConstraint(constraint.getName(),
@@ -70,6 +63,17 @@ public class EngineContractBuilder {
                     constraint.getInputNames().toArray(new String[constraint.getInputNames().size()]));
         }
 
+    }
+
+    protected void addMappingOperation(final ContractInput input) throws ContractCreationException {
+        if (isMapped(input)) {
+            try {
+                final Operation storageOperation = contractMappingBuilder.createOperation(input.getMapping());
+                activityDefinitionBuilder.addOperation(storageOperation);
+            } catch (final OperationCreationException e) {
+                throw new ContractCreationException("Failed to create mapping operation for input " + input.getName(), e);
+            }
+        }
     }
 
     private boolean isMapped(final ContractInput input) {

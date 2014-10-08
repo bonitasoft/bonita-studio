@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.contract.ui.property;
+package org.bonitasoft.studio.contract.ui.property.table;
 
 import org.bonitasoft.studio.common.jface.AbstractCheckboxLabelProvider;
 import org.bonitasoft.studio.model.process.ContractInput;
@@ -25,16 +25,16 @@ import org.eclipse.swt.widgets.Control;
  * @author Romain Bioteau
  *
  */
-public class MultipleInputCheckboxLabelProvider extends AbstractCheckboxLabelProvider {
+public class MandatoryInputCheckboxLabelProvider extends AbstractCheckboxLabelProvider {
 
-    public MultipleInputCheckboxLabelProvider(final Control control) {
+    public MandatoryInputCheckboxLabelProvider(final Control control) {
         super(control);
     }
 
     @Override
     protected boolean isSelected(final Object element) {
         if (element instanceof ContractInput) {
-            return ((ContractInput) element).isMultiple();
+            return ((ContractInput) element).isMandatory();
         }
         return false;
     }

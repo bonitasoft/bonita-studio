@@ -25,7 +25,6 @@ import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.contract.ContractPlugin;
 import org.bonitasoft.studio.contract.core.ContractDefinitionValidator;
-import org.bonitasoft.studio.contract.i18n.Messages;
 import org.bonitasoft.studio.contract.ui.property.FieldDecoratorProvider;
 import org.bonitasoft.studio.contract.ui.property.edit.proposal.InputMappingProposal;
 import org.bonitasoft.studio.contract.ui.property.edit.proposal.InputMappingProposalLabelProvider;
@@ -43,7 +42,6 @@ import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jface.bindings.keys.KeyStroke;
 import org.eclipse.jface.bindings.keys.ParseException;
 import org.eclipse.jface.fieldassist.ContentProposalAdapter;
-import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
 import org.eclipse.jface.fieldassist.IContentProposal;
 import org.eclipse.jface.fieldassist.IContentProposalListener;
 import org.eclipse.jface.fieldassist.TextContentAdapter;
@@ -52,7 +50,6 @@ import org.eclipse.jface.viewers.ICellEditorListener;
 import org.eclipse.jface.viewers.ICellEditorValidator;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.ViewerCell;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.ui.views.properties.PropertyEditingSupport;
@@ -107,11 +104,11 @@ public class InputNamePropertyEditingSupport extends PropertyEditingSupport impl
         super.initializeCellEditorValue(cellEditor, cell);
         validate = false;
         setCurrentElement(cell.getElement());
-        attachContentAssist(cellEditor);
-        decoratorProvider.createControlDecorator(cellEditor.getControl(),
-                Messages.automaticMappingTooltip,
-                FieldDecorationRegistry.DEC_CONTENT_PROPOSAL,
-                SWT.TOP | SWT.LEFT);
+        //    attachContentAssist(cellEditor);
+        //        decoratorProvider.createControlDecorator(cellEditor.getControl(),
+        //                Messages.automaticMappingTooltip,
+        //                FieldDecorationRegistry.DEC_CONTENT_PROPOSAL,
+        //                SWT.TOP | SWT.LEFT);
         cellEditor.setValidator(this);
         cellEditor.addListener(this);
         //Clear cell label

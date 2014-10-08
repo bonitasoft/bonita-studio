@@ -19,10 +19,9 @@ package org.bonitasoft.studio.contract.core;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.bonitasoft.engine.operation.Operation;
-import org.bonitasoft.studio.common.Messages;
+import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.model.process.ContractInputMapping;
 import org.bonitasoft.studio.model.process.Data;
-import org.bonitasoft.studio.model.process.DataType;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.junit.After;
 import org.junit.Before;
@@ -73,14 +72,9 @@ public class ContractMappingFactoryTest {
     private Data createTextData(final String name) {
         final Data textData = ProcessFactory.eINSTANCE.createData();
         textData.setName(name);
-        textData.setDataType(createTextDataType());
+        textData.setDataType(ModelHelper.createStringDataType());
         return textData;
     }
 
-    private DataType createTextDataType() {
-        final DataType dt = ProcessFactory.eINSTANCE.createStringType();
-        dt.setName(Messages.StringType);
-        return dt;
-    }
 
 }
