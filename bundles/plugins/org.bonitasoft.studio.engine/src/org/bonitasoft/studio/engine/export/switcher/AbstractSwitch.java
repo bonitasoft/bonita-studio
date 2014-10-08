@@ -14,7 +14,6 @@
  */
 package org.bonitasoft.studio.engine.export.switcher;
 
-import java.util.Collection;
 import java.util.Set;
 
 import org.bonitasoft.engine.bpm.connector.ConnectorEvent;
@@ -25,7 +24,6 @@ import org.bonitasoft.engine.bpm.process.impl.DescriptionBuilder;
 import org.bonitasoft.engine.bpm.process.impl.FlowElementBuilder;
 import org.bonitasoft.engine.bpm.process.impl.ProcessDefinitionBuilder;
 import org.bonitasoft.engine.expression.Expression;
-import org.bonitasoft.engine.operation.OperatorType;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.engine.EnginePlugin;
 import org.bonitasoft.studio.engine.export.EngineExpressionUtil;
@@ -59,12 +57,12 @@ public abstract class AbstractSwitch extends ProcessSwitch<Element> {
     public static final String DB_USER = "username";
     public static final String DB_PASSWORD = "password";
 
-    public AbstractSwitch(Set<EObject> eObjectNotExported) {
+    public AbstractSwitch(final Set<EObject> eObjectNotExported) {
         this.eObjectNotExported = eObjectNotExported;
     }
 
     protected void addActors(final ProcessDefinitionBuilder builder, final AbstractProcess process) {
-        for (Actor a : process.getActors()) {
+        for (final Actor a : process.getActors()) {
             final ActorDefinitionBuilder actorBuilder = builder.addActor(a.getName());
             if (a.getDocumentation() != null) {
                 actorBuilder.addDescription(a.getDocumentation());
@@ -76,50 +74,57 @@ public abstract class AbstractSwitch extends ProcessSwitch<Element> {
     }
 
     protected void addConnector(final FlowElementBuilder builder, final ConnectableElement element) {
-        for (Connector connector : element.getConnectors()) {
+        for (final Connector connector : element.getConnectors()) {
             if (!eObjectNotExported.contains(connector)) {
                 final ConnectorDefinitionBuilder connectorBuilder = builder.addConnector(connector.getName(), connector.getDefinitionId(),
                         connector.getDefinitionVersion(), ConnectorEvent.valueOf(connector.getEvent()));
-                if (connector.isIgnoreErrors()) {
-                    connectorBuilder.ignoreError();
-                } else if (connector.isThrowErrorEvent()) {
-                    connectorBuilder.throwErrorEventWhenFailed(connector.getNamedError());
-                }
-                for (ConnectorParameter parameter : connector.getConfiguration().getParameters()) {
-                    final Expression inputExpression = EngineExpressionUtil.createExpression(parameter.getExpression());
-                    if (inputExpression != null) {
-                        connectorBuilder.addInput(parameter.getKey(), inputExpression);
+                handleConnectorBehaviorOnFailure(connector, connectorBuilder);
+                handleConnectorInputs(connector, connectorBuilder);
+                handleConnectorOutputs(connector, connectorBuilder);
+            }
+        }
+    }
 
-                    } else {
-                        if (BonitaStudioLog.isLoggable(IStatus.OK)) {
-                            BonitaStudioLog.debug("Expression of input " + parameter.getKey() + " is null for connector " + connector.getName(),
-                                    EnginePlugin.PLUGIN_ID);
-                        }
-                    }
-                }
-                for (Operation outputOperation : connector.getOutputs()) {
-                    String inputType = null;
-                    if (!outputOperation.getOperator().getInputTypes().isEmpty()) {
-                        inputType = outputOperation.getOperator().getInputTypes().get(0);
-                    }
-                    if (outputOperation.getLeftOperand() != null
-                            && outputOperation.getLeftOperand().getContent() != null
-                            && !outputOperation.getLeftOperand().getContent().isEmpty()
-                            && outputOperation.getRightOperand() != null
-                            && outputOperation.getRightOperand().getContent() != null) {
-                        connectorBuilder.addOutput(EngineExpressionUtil.createOperation(outputOperation));
-                    }
+    private void handleConnectorBehaviorOnFailure(final Connector connector, final ConnectorDefinitionBuilder connectorBuilder) {
+        if (connector.isIgnoreErrors()) {
+            connectorBuilder.ignoreError();
+        } else if (connector.isThrowErrorEvent()) {
+            connectorBuilder.throwErrorEventWhenFailed(connector.getNamedError());
+        }
+    }
+
+    private void handleConnectorInputs(final Connector connector, final ConnectorDefinitionBuilder connectorBuilder) {
+        for (final ConnectorParameter parameter : connector.getConfiguration().getParameters()) {
+            final Expression inputExpression = EngineExpressionUtil.createExpression(parameter.getExpression());
+            if (inputExpression != null) {
+                connectorBuilder.addInput(parameter.getKey(), inputExpression);
+            } else {
+                if (BonitaStudioLog.isLoggable(IStatus.OK)) {
+                    BonitaStudioLog.debug("Expression of input " + parameter.getKey() + " is null for connector " + connector.getName(),
+                            EnginePlugin.PLUGIN_ID);
                 }
             }
         }
     }
 
+    private void handleConnectorOutputs(final Connector connector, final ConnectorDefinitionBuilder connectorBuilder) {
+        for (final Operation outputOperation : connector.getOutputs()) {
+            if (outputOperation.getLeftOperand() != null
+                    && outputOperation.getLeftOperand().getContent() != null
+                    && !outputOperation.getLeftOperand().getContent().isEmpty()
+                    && outputOperation.getRightOperand() != null
+                    && outputOperation.getRightOperand().getContent() != null) {
+                connectorBuilder.addOutput(EngineExpressionUtil.createOperation(outputOperation));
+            }
+        }
+    }
+
     protected void addKPIBinding(final FlowElementBuilder builder, final ConnectableElement element) {
-        for (AbstractKPIBinding kpiBinding : element.getKpis()) {
+        for (final AbstractKPIBinding kpiBinding : element.getKpis()) {
             if (kpiBinding instanceof DatabaseKPIBinding) {
                 final ConnectorDefinitionBuilder connectorBuilder = builder.addConnector(kpiBinding.getName(), DB_CONNECTOR_FOR_KPI_ID, DB_CONNECTOR_VERSION,
                         ConnectorEvent.valueOf(kpiBinding.getEvent()));
-                DatabaseKPIBinding dbKPI = (DatabaseKPIBinding) kpiBinding;
+                final DatabaseKPIBinding dbKPI = (DatabaseKPIBinding) kpiBinding;
                 connectorBuilder.addInput(DB_DRIVER, EngineExpressionUtil.createExpression(dbKPI.getDriverclassName()));
                 connectorBuilder.addInput(DB_URL, EngineExpressionUtil.createExpression(dbKPI.getJdbcUrl()));
                 connectorBuilder.addInput(DB_QUERY, EngineExpressionUtil.createExpression(dbKPI.getRequest()));
@@ -151,7 +156,7 @@ public abstract class AbstractSwitch extends ProcessSwitch<Element> {
 
     protected DataSwitch getDataSwitch(
             final FlowElementBuilder dataContainerBuilder, final Data data,
-            Expression defaultValueExpression) {
+            final Expression defaultValueExpression) {
         return new DataSwitch(data, defaultValueExpression, dataContainerBuilder);
     }
 
