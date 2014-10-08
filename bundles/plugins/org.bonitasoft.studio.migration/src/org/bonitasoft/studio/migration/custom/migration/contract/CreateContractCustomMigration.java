@@ -34,7 +34,9 @@ public class CreateContractCustomMigration extends CustomMigration {
         for (final Instance taskInstance : model.getAllInstances("process.Task")) {
             final Instance contract = taskInstance.get("contract");
             if (contract == null) {
-                taskInstance.set("contract", model.newInstance("process.Contract"));
+                final Instance contractInstance = model.newInstance("process.Contract");
+                contractInstance.set("enabled", false);
+                taskInstance.set("contract", contractInstance);
             }
         }
     }
