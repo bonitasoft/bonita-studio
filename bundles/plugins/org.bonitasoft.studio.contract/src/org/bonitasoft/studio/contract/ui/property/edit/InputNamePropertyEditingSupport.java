@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.bonitasoft.studio.common.DataUtil;
+import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.contract.core.ContractDefinitionValidator;
 import org.bonitasoft.studio.contract.ui.property.FieldDecoratorProvider;
 import org.bonitasoft.studio.contract.ui.property.edit.proposal.InputMappingProposal;
@@ -38,6 +39,7 @@ import org.eclipse.jface.viewers.ICellEditorListener;
 import org.eclipse.jface.viewers.ICellEditorValidator;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.ViewerCell;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.views.properties.PropertyEditingSupport;
 
 /**
@@ -90,6 +92,8 @@ public class InputNamePropertyEditingSupport extends PropertyEditingSupport impl
         super.initializeCellEditorValue(cellEditor, cell);
         validate = false;
         setCurrentElement(cell.getElement());
+        final Text textControl = (Text) cellEditor.getControl();
+        textControl.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, SWTBotConstants.SWTBOT_ID_INPUT_NAME_TEXTEDITOR);
         //    attachContentAssist(cellEditor);
         //        decoratorProvider.createControlDecorator(cellEditor.getControl(),
         //                Messages.automaticMappingTooltip,
@@ -104,7 +108,6 @@ public class InputNamePropertyEditingSupport extends PropertyEditingSupport impl
 
     //    protected void attachContentAssist(final CellEditor cellEditor) {
     //        final Text textControl = (Text) cellEditor.getControl();
-    //        textControl.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, SWTBotConstants.SWTBOT_ID_INPUT_NAME_TEXTEDITOR);
     //        KeyStroke keyStroke = null;
     //        try {
     //            keyStroke = KeyStroke.getInstance("Ctrl+Space");
