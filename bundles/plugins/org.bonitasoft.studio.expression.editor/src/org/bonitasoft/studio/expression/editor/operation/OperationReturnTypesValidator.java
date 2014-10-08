@@ -19,6 +19,7 @@ import java.util.List;
 import org.bonitasoft.engine.bpm.document.DocumentValue;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.expression.editor.i18n.Messages;
 import org.bonitasoft.studio.expression.editor.provider.ExpressionTypeLabelProvider;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionValidator;
@@ -131,7 +132,7 @@ public class OperationReturnTypesValidator implements IExpressionValidator {
     }
 
 
-    private IStatus validateSetListDocumentOperation(final Expression expression, final Operation operation) {
+    protected IStatus validateSetListDocumentOperation(final Expression expression, final Operation operation) {
         final boolean isTask = operation.eContainer() instanceof Task;
 
 
@@ -149,10 +150,14 @@ public class OperationReturnTypesValidator implements IExpressionValidator {
 
                 if (!isListType && listClass.equals(dataReturnType)) {
 
-                    if (!isTask) {
-                        return ValidationStatus.warning(Messages.incompatibleType + " " + Messages.messageOperationWithListDocumentInForm);
-                    } else {
+                    if (isTask) {
                         return ValidationStatus.warning(Messages.incompatibleType + " " + Messages.messageOperationWithListDocumentInTask);
+                    } else {
+                        if (PlatformUtil.isACommunityBonitaProduct()) {
+                            return ValidationStatus.warning(Messages.incompatibleType + " " + Messages.messageOperationWithListDocumentInFormInCommunity);
+                        } else {
+                        return ValidationStatus.warning(Messages.incompatibleType + " " + Messages.messageOperationWithListDocumentInForm);
+                    }
                     }
                 } else {
                     return ValidationStatus.ok();
@@ -164,10 +169,10 @@ public class OperationReturnTypesValidator implements IExpressionValidator {
             }
 
         } else {
-            if (!isTask) {
-                return ValidationStatus.info(Messages.messageOperationWithListDocumentInForm);
-            } else {
+            if (isTask) {
                 return ValidationStatus.info(Messages.messageOperationWithListDocumentInTask);
+            } else {
+                return ValidationStatus.info(Messages.messageOperationWithListDocumentInForm);
             }
         }
     }
@@ -272,25 +277,25 @@ public class OperationReturnTypesValidator implements IExpressionValidator {
             return ValidationStatus.error(Messages.bind(Messages.incompatibleStorageReturnType, dataExpression.getName(),
                     operatorLabelProvider.getText(operation.getOperator())));
         }
-        if (dataExpression != null && dataExpression.getContent() != null && !dataExpression.getContent().isEmpty()) {
+        if (expression != null && expression.getContent() != null && !expression.getContent().isEmpty()) {
             final String typeName = dataExpression.getReturnType();
             final String actionType = expression.getReturnType();
             if (!(actionType.equals(DocumentValue.class.getName()) && typeName.equals(String.class.getName()))) {
 
-                if (!isTask) {
-                    return ValidationStatus.warning(Messages.incompatibleType + " " + Messages.messageOperationWithDocumentInForm);
-                } else {
+                if (isTask) {
                     return ValidationStatus.warning(Messages.incompatibleType + " " + Messages.messageOperationWithDocumentInTask);
+                } else {
+                    return ValidationStatus.warning(Messages.incompatibleType + " " + Messages.messageOperationWithDocumentInForm);
                 }
             } else {
                 return ValidationStatus.ok();
             }
 
         } else {
-            if (!isTask) {
-                return ValidationStatus.info(Messages.messageOperationWithDocumentInForm);
-            } else {
+            if (isTask) {
                 return ValidationStatus.info(Messages.messageOperationWithDocumentInTask);
+            } else {
+                return ValidationStatus.info(Messages.messageOperationWithDocumentInForm);
             }
         }
     }

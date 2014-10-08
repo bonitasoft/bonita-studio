@@ -18,6 +18,7 @@ import java.util.Set;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.IBonitaVariableContext;
+import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
 import org.bonitasoft.studio.expression.editor.i18n.Messages;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionNatureProvider;
@@ -614,7 +615,11 @@ public class OperationViewer extends Composite implements IBonitaVariableContext
 
             } else {
                 if (isLeftOperandAListDocument) {
-                    getActionExpression().setMessage(Messages.messageOperationWithListDocumentInForm, IStatus.INFO);
+                    if (PlatformUtil.isACommunityBonitaProduct()) {
+                        getActionExpression().setMessage(Messages.messageOperationWithListDocumentInFormInCommunity, IStatus.INFO);
+                    } else {
+                        getActionExpression().setMessage(Messages.messageOperationWithListDocumentInForm, IStatus.INFO);
+                    }
                 } else {
                     getActionExpression().setMessage(Messages.messageOperationWithDocumentInForm, IStatus.INFO);
                 }
