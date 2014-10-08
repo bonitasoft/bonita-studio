@@ -565,7 +565,7 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
         final User user = (User) userSingleSelectionObservable.getValue();
         final User oldUser = EcoreUtil.copy(user);
         final Object oldValue = event.diff.getOldValue();
-        if(oldValue!=null){
+        if (oldValue != null && oldUser != null) {
             oldUser.setLastName(oldValue.toString());
             if(getViewer() != null && !getViewer().getControl().isDisposed()){
                 getViewer().refresh(user) ;
@@ -577,7 +577,7 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
         final User user = (User) userSingleSelectionObservable.getValue();
         final User oldUser = EcoreUtil.copy(user);
         final Object oldValue = event.diff.getOldValue();
-        if (oldValue != null) {
+        if (oldValue != null && oldUser != null) {
             if (oldUser != null) {
                 oldUser.setUserName(oldValue.toString());
             }
