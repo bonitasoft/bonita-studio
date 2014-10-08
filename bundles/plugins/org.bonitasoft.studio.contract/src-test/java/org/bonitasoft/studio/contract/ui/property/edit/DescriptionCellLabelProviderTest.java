@@ -11,7 +11,6 @@ import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.ui.views.properties.IPropertySourceProvider;
-import org.eclipse.ui.views.properties.PropertyColumnLabelProvider;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -38,7 +37,7 @@ public class DescriptionCellLabelProviderTest {
     @Before
     public void setUp() throws Exception {
         descriptionCellLabelProvider = spy(new DescriptionCellLabelProvider(viewer, propertySourceLabelProvider));
-        doReturn(null).when(descriptionCellLabelProvider).getErrorBackgroundColor();
+        doReturn(null).when(descriptionCellLabelProvider).getErrorImage();
     }
 
     /**
@@ -80,20 +79,19 @@ public class DescriptionCellLabelProviderTest {
 
 
     @Test
-    public void should_getBackgroundColor_returns_red_color_for_too_long_description() throws Exception {
+    public void should_getImage_returns_error_icon_for_too_long_description() throws Exception {
         final ContractInput input = ProcessFactory.eINSTANCE.createContractInput();
         input.setName("name");
         input.setDescription(LONG_DESC);
-        descriptionCellLabelProvider.getBackground(input);
-        verify(descriptionCellLabelProvider).getErrorBackgroundColor();
+        descriptionCellLabelProvider.getImage(input);
+        verify(descriptionCellLabelProvider).getErrorImage();
     }
 
     @Test
-    public void should_getBackgroundColor_returns_standard_color() throws Exception {
+    public void should_getImage_returns_null_if_description_is_valid() throws Exception {
         final ContractInput input = ProcessFactory.eINSTANCE.createContractInput();
         input.setName("name");
-        descriptionCellLabelProvider.getBackground(input);
-        verify((PropertyColumnLabelProvider) descriptionCellLabelProvider).getBackground(input);
-        verify(descriptionCellLabelProvider, never()).getErrorBackgroundColor();
+        assertThat(descriptionCellLabelProvider.getImage(input)).isNull();
+        verify(descriptionCellLabelProvider, never()).getErrorImage();
     }
 }

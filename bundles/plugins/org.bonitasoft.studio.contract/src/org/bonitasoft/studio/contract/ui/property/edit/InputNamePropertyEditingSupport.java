@@ -116,6 +116,7 @@ public class InputNamePropertyEditingSupport extends PropertyEditingSupport impl
         cellEditor.addListener(this);
         //Clear cell label
         cell.setText("");
+        cell.setImage(null);
     }
 
     protected void attachContentAssist(final CellEditor cellEditor) {
@@ -215,6 +216,7 @@ public class InputNamePropertyEditingSupport extends PropertyEditingSupport impl
     public void setCurrentElement(final Object currentElement) {
         Assert.isLegal(currentElement instanceof ContractInput);
         this.currentElement = (ContractInput) currentElement;
+        currentValue = ((ContractInput) currentElement).getName();
     }
 
 

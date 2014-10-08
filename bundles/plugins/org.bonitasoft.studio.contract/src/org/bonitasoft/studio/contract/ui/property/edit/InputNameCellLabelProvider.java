@@ -21,11 +21,10 @@ import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.views.properties.IPropertySourceProvider;
 import org.eclipse.ui.views.properties.PropertyColumnLabelProvider;
 
@@ -46,7 +45,19 @@ public class InputNameCellLabelProvider extends PropertyColumnLabelProvider {
     }
 
     @Override
-    public Image getImage(final Object object) {
+    public Image getImage(final Object element) {
+        final String name = ((ContractInput) element).getName();
+        final IStatus status = validator.validateInputName((ContractInput) element, name);
+        final IStatus duplicateStatus = validator.validateDuplicatedInputs((Contract) ((ContractInput) element).eContainer());
+        if (!status.isOK()) {
+            return getErrorImage();
+        } else if (!duplicateStatus.isOK()) {
+            for (final IStatus c : duplicateStatus.getChildren()) {
+                if (c.getMessage().equals(name)) {
+                    return getErrorImage();
+                }
+            }
+        }
         return null;
     }
 
@@ -61,25 +72,9 @@ public class InputNameCellLabelProvider extends PropertyColumnLabelProvider {
         }
     }
 
-    @Override
-    public Color getBackground(final Object element) {
-        final String name = ((ContractInput) element).getName();
-        final IStatus status = validator.validateInputName((ContractInput) element, name);
-        final IStatus duplicateStatus = validator.validateDuplicatedInputs((Contract) ((ContractInput) element).eContainer());
-        if (!status.isOK()) {
-            return getErrorBackgroundColor();
-        } else if (!duplicateStatus.isOK()) {
-            for (final IStatus c : duplicateStatus.getChildren()) {
-                if (c.getMessage().equals(name)) {
-                    return getErrorBackgroundColor();
-                }
-            }
-        }
-        return super.getBackground(element);
-    }
 
-    protected Color getErrorBackgroundColor() {
-        return Display.getCurrent().getSystemColor(SWT.COLOR_RED);
+    protected Image getErrorImage() {
+        return JFaceResources.getImage(Dialog.DLG_IMG_MESSAGE_ERROR);
     }
 
 

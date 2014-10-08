@@ -19,11 +19,10 @@ package org.bonitasoft.studio.contract.ui.property.edit;
 import org.bonitasoft.studio.contract.core.ContractDefinitionValidator;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.views.properties.IPropertySourceProvider;
 import org.eclipse.ui.views.properties.PropertyColumnLabelProvider;
 
@@ -44,7 +43,12 @@ public class DescriptionCellLabelProvider extends PropertyColumnLabelProvider {
     }
 
     @Override
-    public Image getImage(final Object object) {
+    public Image getImage(final Object element) {
+        final String description = ((ContractInput) element).getDescription();
+        final IStatus status = validator.validateInputDescription((ContractInput) element, description);
+        if (!status.isOK()) {
+            return getErrorImage();
+        }
         return null;
     }
 
@@ -59,21 +63,8 @@ public class DescriptionCellLabelProvider extends PropertyColumnLabelProvider {
         }
     }
 
-    @Override
-    public Color getBackground(final Object element) {
-        final String description = ((ContractInput) element).getDescription();
-        final IStatus status = validator.validateInputDescription((ContractInput) element, description);
-        if (status.isOK()) {
-            return super.getBackground(element);
-        } else {
-            return getErrorBackgroundColor();
-        }
+    protected Image getErrorImage() {
+        return JFaceResources.getImage(Dialog.DLG_IMG_MESSAGE_ERROR);
     }
-
-    protected Color getErrorBackgroundColor() {
-        return Display.getCurrent().getSystemColor(SWT.COLOR_RED);
-    }
-
-
 
 }

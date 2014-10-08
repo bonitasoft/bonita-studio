@@ -28,7 +28,6 @@ import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.ui.views.properties.IPropertySourceProvider;
-import org.eclipse.ui.views.properties.PropertyColumnLabelProvider;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -58,7 +57,7 @@ public class InputNameCellLabelProviderTest {
     @Before
     public void setUp() throws Exception {
         inputNameCellLabelProvider = spy(new InputNameCellLabelProvider(viewer, propertySourceLabelProvider));
-        doReturn(null).when(inputNameCellLabelProvider).getErrorBackgroundColor();
+        doReturn(null).when(inputNameCellLabelProvider).getErrorImage();
     }
 
     /**
@@ -97,7 +96,7 @@ public class InputNameCellLabelProviderTest {
     }
 
     @Test
-    public void should_getBackgroundColor_returns_red_color_for_duplicated_name() throws Exception {
+    public void should_getImage_returns_error_image_for_duplicated_name() throws Exception {
         final Contract c = ProcessFactory.eINSTANCE.createContract();
         final ContractInput input = ProcessFactory.eINSTANCE.createContractInput();
         input.setName("nameInput");
@@ -105,12 +104,12 @@ public class InputNameCellLabelProviderTest {
         input2.setName("nameInput");
         c.getInputs().add(input);
         c.getInputs().add(input2);
-        inputNameCellLabelProvider.getBackground(input);
-        verify(inputNameCellLabelProvider).getErrorBackgroundColor();
+        inputNameCellLabelProvider.getImage(input);
+        verify(inputNameCellLabelProvider).getErrorImage();
     }
 
     @Test
-    public void should_getBackgroundColor_returns_standard_color_if_other_duplicated_name() throws Exception {
+    public void should_getImage_returns_null_if_other_duplicated_name() throws Exception {
         final Contract c = ProcessFactory.eINSTANCE.createContract();
         final ContractInput input = ProcessFactory.eINSTANCE.createContractInput();
         input.setName("nameInput");
@@ -121,25 +120,23 @@ public class InputNameCellLabelProviderTest {
         c.getInputs().add(input);
         c.getInputs().add(input2);
         c.getInputs().add(input3);
-        inputNameCellLabelProvider.getBackground(input3);
-        verify((PropertyColumnLabelProvider) inputNameCellLabelProvider).getBackground(input3);
-        verify(inputNameCellLabelProvider, never()).getErrorBackgroundColor();
+        inputNameCellLabelProvider.getImage(input3);
+        verify(inputNameCellLabelProvider, never()).getErrorImage();
     }
 
     @Test
-    public void should_getBackgroundColor_returns_red_color_for_empty_name() throws Exception {
+    public void should_getImage_returns_error_image_for_empty_name() throws Exception {
         final ContractInput input = ProcessFactory.eINSTANCE.createContractInput();
         input.setName("");
-        inputNameCellLabelProvider.getBackground(input);
-        verify(inputNameCellLabelProvider).getErrorBackgroundColor();
+        inputNameCellLabelProvider.getImage(input);
+        verify(inputNameCellLabelProvider).getErrorImage();
     }
 
     @Test
-    public void should_getBackgroundColor_returns_standard_color() throws Exception {
+    public void should_getImage_returns_null_for_valid_input_name() throws Exception {
         final ContractInput input = ProcessFactory.eINSTANCE.createContractInput();
         input.setName("name");
-        inputNameCellLabelProvider.getBackground(input);
-        verify((PropertyColumnLabelProvider) inputNameCellLabelProvider).getBackground(input);
-        verify(inputNameCellLabelProvider, never()).getErrorBackgroundColor();
+        inputNameCellLabelProvider.getImage(input);
+        verify(inputNameCellLabelProvider, never()).getErrorImage();
     }
 }

@@ -43,10 +43,8 @@ public abstract class AbstractBonitaDescriptionSection extends AbstractModelerPr
     @Override
     public void refresh(){
         super.refresh();
-        if(tabbedPropertySheetPage != null){
-            if (form != null) {
-                form.setText(getSectionTitle());
-            }
+        if (form != null) {
+            form.setText(getSectionTitle());
         }
     }
 
@@ -71,6 +69,7 @@ public abstract class AbstractBonitaDescriptionSection extends AbstractModelerPr
         form.getMenuManager().add(togglePropertyHelpContributionItem);
         createContent(form.getBody());
         form.update();
+        form.setFocus();
     }
 
     protected abstract void createContent(final Composite parent);

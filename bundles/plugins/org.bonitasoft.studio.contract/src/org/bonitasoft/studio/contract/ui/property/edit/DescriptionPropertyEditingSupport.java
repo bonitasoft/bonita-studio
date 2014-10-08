@@ -55,6 +55,10 @@ public class DescriptionPropertyEditingSupport extends PropertyEditingSupport im
         super.initializeCellEditorValue(cellEditor, cell);
         setCurrentElement(cell.getElement());
         cellEditor.setValidator(this);
+
+        //Clear cell label
+        cell.setText("");
+        cell.setImage(null);
     }
 
     @Override
