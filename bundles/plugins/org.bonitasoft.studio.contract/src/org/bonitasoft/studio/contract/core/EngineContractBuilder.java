@@ -61,7 +61,6 @@ public class EngineContractBuilder {
                 } catch (final OperationCreationException e) {
                     throw new ContractCreationException("Failed to create mapping operation for input " + input.getName(), e);
                 }
-
             }
         }
         for (final ContractConstraint constraint : contract.getConstraints()) {

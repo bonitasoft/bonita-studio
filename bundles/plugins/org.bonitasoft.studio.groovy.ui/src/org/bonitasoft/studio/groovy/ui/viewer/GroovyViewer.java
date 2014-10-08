@@ -38,6 +38,7 @@ import org.bonitasoft.studio.expression.editor.provider.ExpressionContentProvide
 import org.bonitasoft.studio.expression.editor.provider.ICustomExpressionNatureProvider;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionNatureProvider;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionProvider;
+import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.groovy.GroovyUtil;
 import org.bonitasoft.studio.groovy.ScriptVariable;
 import org.bonitasoft.studio.groovy.repository.GroovyFileStore;
@@ -337,7 +338,8 @@ public class GroovyViewer {
         getSourceViewer().getTextWidget().setLayoutData(layoutData);
     }
 
-    public void setContext(final EObject context, final ViewerFilter[] filters, final IExpressionNatureProvider expressionProvider) {
+    public void setContext(final ExpressionViewer viewer, final EObject context, final ViewerFilter[] filters,
+            final IExpressionNatureProvider expressionProvider) {
         nodes = new ArrayList<ScriptVariable>();
 
         IExpressionNatureProvider provider = expressionProvider;
@@ -354,7 +356,7 @@ public class GroovyViewer {
             if (input != null && filters != null) {
                 for (final Expression exp : expressions) {
                     for (final ViewerFilter filter : filters) {
-                        if (filter != null && !filter.select(getSourceViewer(), input, exp)) {
+                        if (filter != null && !filter.select(viewer, input, exp)) {
                             filteredExpressions.remove(exp);
                         }
                     }

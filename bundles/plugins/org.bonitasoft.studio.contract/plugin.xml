@@ -27,5 +27,11 @@
          </propertySection>
       </propertySections>
    </extension>
+   <extension
+         point="org.bonitasoft.studio.expression.expressionProvider">
+      <expressionProvider
+            providerClass="org.bonitasoft.studio.contract.core.expression.ContractInputExpressionProvider">
+      </expressionProvider>
+   </extension>
 
 </plugin>

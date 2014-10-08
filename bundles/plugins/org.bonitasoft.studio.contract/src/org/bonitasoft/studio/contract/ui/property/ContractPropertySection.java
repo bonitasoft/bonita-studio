@@ -89,7 +89,6 @@ public class ContractPropertySection extends EObjectSelectionProviderSection {
     private AdapterFactoryContentProvider propertySourceProvider;
     private AdapterFactoryLabelProvider adapterFactoryLabelProvider;
     private ContractDefinitionValidator contractValidator;
-    private IObservableValue observeContractValue;
     private final FieldDecoratorProvider decoratorProvider = new FieldDecoratorProvider();
     private ContractInputController inputController;
 
@@ -198,7 +197,7 @@ public class ContractPropertySection extends EObjectSelectionProviderSection {
         createMappingColumn(inputsTableViewer);
         createInputDescriptionColumn(inputsTableViewer);
 
-        observeContractValue = CustomEMFEditObservables.observeDetailValue(Realm.getDefault(), getEObjectObservable(),
+        final IObservableValue observeContractValue = CustomEMFEditObservables.observeDetailValue(Realm.getDefault(), getEObjectObservable(),
                 ProcessPackage.Literals.TASK__CONTRACT);
         final IObservableList observeContractInputDetailList = CustomEMFEditObservables.observeDetailList(Realm.getDefault(), observeContractValue,
                 ProcessPackage.Literals.CONTRACT__INPUTS);
