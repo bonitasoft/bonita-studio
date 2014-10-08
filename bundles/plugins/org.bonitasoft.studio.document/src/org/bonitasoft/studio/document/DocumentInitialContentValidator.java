@@ -16,6 +16,7 @@
 package org.bonitasoft.studio.document;
 
 import org.bonitasoft.studio.document.i18n.Messages;
+import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.process.Document;
 import org.bonitasoft.studio.model.process.DocumentType;
 import org.eclipse.core.databinding.validation.IValidator;
@@ -27,45 +28,56 @@ import org.eclipse.core.runtime.IStatus;
  */
 public class DocumentInitialContentValidator implements IValidator {
 
-    int maxLenght;
+    int maxLength;
 
-    public DocumentInitialContentValidator(final int maxLenght) {
-        this.maxLenght = maxLenght;
+    public DocumentInitialContentValidator(final int maxLength) {
+        this.maxLength = maxLength;
     }
 
     @Override
     public IStatus validate(final Object value) {
-
         final Document document = (Document) value;
-
         if (document.isMultiple()) {
-
-            if (document.getInitialMultipleContent() == null
-                    || document.getInitialMultipleContent().getContent() == null
-                    || document.getInitialMultipleContent().getContent().isEmpty()) {
-                return ValidationStatus.error(Messages.error_documentInitialContentsEmpty);
-            }
-
+            return validateMultipleDocument(document);
         } else {
-            if (document.getDocumentType().equals(DocumentType.EXTERNAL)
-                    && (document.getUrl() == null || document.getUrl().getContent() == null || document.getUrl().getContent().isEmpty())) {
-                return ValidationStatus.error(Messages.error_documentURLEmpty);
-            }
-
-            if (document.getDocumentType().equals(DocumentType.EXTERNAL) && document.getUrl() != null && document.getUrl().getContent() != null
-                    && document.getUrl().getContent().length() > maxLenght) {
-                return ValidationStatus.error(Messages.bind(Messages.error_documentURLTooLong, maxLenght + 1));
-            }
-
-
-            if (document.getDocumentType().equals(DocumentType.INTERNAL)
-                    && (document.getDefaultValueIdOfDocumentStore() == null || document.getDefaultValueIdOfDocumentStore().isEmpty())) {
-                return ValidationStatus.error(Messages.error_documentDefaultIDEmpty);
-            }
+            return validateSimpleDocument(document);
         }
-        return ValidationStatus.ok();
-
     }
 
+    private IStatus validateSimpleDocument(final Document document) {
+        final DocumentType documentType = document.getDocumentType();
+        if (DocumentType.EXTERNAL.equals(documentType)){
+            return validateExternalSimpleDocument(document);
+        } else if (DocumentType.INTERNAL.equals(documentType)
+                && (document.getDefaultValueIdOfDocumentStore() == null || document.getDefaultValueIdOfDocumentStore().isEmpty())) {
+            return ValidationStatus.error(Messages.error_documentDefaultIDEmpty);
+        } else {
+            return ValidationStatus.ok();
+        }
+    }
+
+    private IStatus validateExternalSimpleDocument(final Document document) {
+        if (document.getUrl() == null || document.getUrl().getContent() == null || document.getUrl().getContent().isEmpty()) {
+            return ValidationStatus.error(Messages.error_documentURLEmpty);
+        }
+
+        if (document.getUrl() != null && document.getUrl().getContent() != null
+                && document.getUrl().getContent().length() > maxLength) {
+            return ValidationStatus.error(Messages.bind(Messages.error_documentURLTooLong, maxLength + 1));
+        }
+
+        return ValidationStatus.ok();
+    }
+
+    private IStatus validateMultipleDocument(final Document document) {
+        final Expression initialMultipleContent = document.getInitialMultipleContent();
+        if (initialMultipleContent == null
+                || initialMultipleContent.getContent() == null
+                || initialMultipleContent.getContent().isEmpty()) {
+            return ValidationStatus.error(Messages.error_documentInitialContentsEmpty);
+        } else {
+            return ValidationStatus.ok();
+        }
+    }
 
 }
