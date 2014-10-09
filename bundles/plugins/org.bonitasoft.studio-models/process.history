@@ -9255,37 +9255,6 @@
           <parameters name="opposite"/>
         </operation>
       </changes>
-      <changes xsi:type="history:OperationChange">
-        <changes xsi:type="history:Create" target="process.ecore#//Contract" referenceName="eStructuralFeatures"
-            element="process.ecore#//Contract/enabled">
-          <changes xsi:type="history:Set" element="process.ecore#//Contract/enabled"
-              featureName="name" dataValue="enabled"/>
-          <changes xsi:type="history:Set" element="process.ecore#//Contract/enabled"
-              featureName="defaultValueLiteral" dataValue="true"/>
-          <changes xsi:type="history:Set" element="process.ecore#//Contract/enabled"
-              featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
-        </changes>
-        <operation name="newAttribute">
-          <parameters name="eClass">
-            <referenceValue element="process.ecore#//Contract"/>
-          </parameters>
-          <parameters name="name">
-            <dataValue>enabled</dataValue>
-          </parameters>
-          <parameters name="type">
-            <referenceValue element="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
-          </parameters>
-          <parameters name="lowerBound">
-            <dataValue>0</dataValue>
-          </parameters>
-          <parameters name="upperBound">
-            <dataValue>1</dataValue>
-          </parameters>
-          <parameters name="defaultValue">
-            <dataValue>true</dataValue>
-          </parameters>
-        </operation>
-      </changes>
     </changes>
   </releases>
 </history:History>

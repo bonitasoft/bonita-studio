@@ -562,7 +562,6 @@
     <genClasses ecoreClass="process.ecore#//Contract">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//Contract/inputs"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//Contract/constraints"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//Contract/enabled"/>
     </genClasses>
     <genClasses ecoreClass="process.ecore#//ContractConstraint">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//ContractConstraint/expression"/>

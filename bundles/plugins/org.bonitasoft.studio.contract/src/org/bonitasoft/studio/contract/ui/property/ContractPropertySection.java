@@ -24,6 +24,7 @@ import org.bonitasoft.studio.contract.ui.property.table.ContractInputController;
 import org.bonitasoft.studio.contract.ui.property.table.ContractInputTableViewer;
 import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.observable.Realm;
@@ -37,6 +38,7 @@ import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
@@ -53,7 +55,9 @@ import org.eclipse.swt.widgets.Composite;
 public class ContractPropertySection extends EObjectSelectionProviderSection {
 
     private EMFDataBindingContext context;
-    private ContractDefinitionValidator contractValidator;
+
+    private ContractDefinitionValidator contractDefinitionValidator;
+
     private ContractInputController inputController;
 
     @Override
@@ -66,13 +70,16 @@ public class ContractPropertySection extends EObjectSelectionProviderSection {
         return Messages.contractInputs;
     }
 
+    protected void init() {
+        setContractDefinitionValidator(new ContractDefinitionValidator(
+                getMessageManager()));
+        setInputController(new ContractInputController(getContractDefinitionValidator()));
+        setContext(new EMFDataBindingContext());
+    }
+
     @Override
     protected void createContent(final Composite parent) {
-        contractValidator = new ContractDefinitionValidator(
-                getMessageManager());
-        inputController = new ContractInputController(contractValidator);
-        context = new EMFDataBindingContext();
-
+        init();
         final CTabFolder tabFolder = getWidgetFactory().createTabFolder(parent, SWT.FLAT | SWT.TOP);
         tabFolder.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         getWidgetFactory().adapt(tabFolder, true, true);
@@ -111,7 +118,7 @@ public class ContractPropertySection extends EObjectSelectionProviderSection {
 
         final ContractInputTableViewer inputsTableViewer = new ContractInputTableViewer(parent, getWidgetFactory());
         inputsTableViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(500, 180).create());
-        inputsTableViewer.initialize(inputController, contractValidator);
+        inputsTableViewer.initialize(getInputController(), getContractDefinitionValidator());
 
         final IObservableValue observeContractValue = CustomEMFEditObservables.observeDetailValue(Realm.getDefault(), getEObjectObservable(),
                 ProcessPackage.Literals.TASK__CONTRACT);
@@ -124,7 +131,7 @@ public class ContractPropertySection extends EObjectSelectionProviderSection {
 
             @Override
             public void widgetSelected(final SelectionEvent e) {
-                inputController.addInput(inputsTableViewer);
+                getInputController().addInput(inputsTableViewer);
             }
         });
 
@@ -132,7 +139,7 @@ public class ContractPropertySection extends EObjectSelectionProviderSection {
 
             @Override
             public void widgetSelected(final SelectionEvent e) {
-                inputController.removeInput(inputsTableViewer);
+                getInputController().removeInput(inputsTableViewer);
             }
         });
         observeContractValue.addValueChangeListener(new IValueChangeListener() {
@@ -143,13 +150,15 @@ public class ContractPropertySection extends EObjectSelectionProviderSection {
             }
         });
 
+        bindRemoveButtonEnablement(removeButton, inputsTableViewer);
+        inputsTableViewer.getTable().setFocus();
+    }
 
-        context.bindValue(SWTObservables.observeEnabled(removeButton),
+    public Binding bindRemoveButtonEnablement(final Button removeButton, final TableViewer inputsTableViewer) {
+        return getContext().bindValue(SWTObservables.observeEnabled(removeButton),
                 ViewersObservables.observeSingleSelection(inputsTableViewer),
                 new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER),
                 removeButtonEnablementModelStrategy());
-
-        inputsTableViewer.getTable().setFocus();
     }
 
     private UpdateValueStrategy removeButtonEnablementModelStrategy() {
@@ -165,17 +174,43 @@ public class ContractPropertySection extends EObjectSelectionProviderSection {
     }
 
     protected void validate(final Contract contract) {
-        final ContractDefinitionValidator definitionValidator = new ContractDefinitionValidator(getMessageManager());
-        definitionValidator.validate(contract);
+        getContractDefinitionValidator().validate(contract);
     }
 
+
+    public ContractDefinitionValidator getContractDefinitionValidator() {
+        return contractDefinitionValidator;
+    }
+
+    public void setContractDefinitionValidator(final ContractDefinitionValidator contractValidator) {
+        contractDefinitionValidator = contractValidator;
+    }
+
+    public ContractInputController getInputController() {
+        return inputController;
+    }
+
+    public void setInputController(final ContractInputController inputController) {
+        this.inputController = inputController;
+    }
+
+    public EMFDataBindingContext getContext() {
+        return context;
+    }
+
+    public void setContext(final EMFDataBindingContext context) {
+        this.context = context;
+    }
 
     @Override
     public void dispose() {
         super.dispose();
-        if (context != null) {
-            context.dispose();
+        final EMFDataBindingContext ctx = getContext();
+        if (ctx != null) {
+            ctx.dispose();
         }
     }
+
+
 
 }

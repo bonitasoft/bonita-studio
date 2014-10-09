@@ -17,26 +17,75 @@
 package org.bonitasoft.studio.contract.ui.property;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
+import java.util.Arrays;
+
+import org.bonitasoft.studio.common.jface.databinding.DefaultRealm;
+import org.bonitasoft.studio.contract.core.ContractDefinitionValidator;
+import org.bonitasoft.studio.model.process.Contract;
+import org.bonitasoft.studio.model.process.ProcessFactory;
+import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
+import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.Spy;
+import org.mockito.runners.MockitoJUnitRunner;
 
 
 /**
  * @author Romain Bioteau
  *
  */
+@RunWith(MockitoJUnitRunner.class)
 public class ContractPropertySectionTest {
 
+    @Spy
     private ContractPropertySection section;
+
+    private Display display;
+
+    @Mock
+    private TabbedPropertySheetPage tabbedPropertySheetPage;
+
+    private DefaultRealm realm;
+
+    private Composite parent;
 
     /**
      * @throws java.lang.Exception
      */
     @Before
     public void setUp() throws Exception {
-        section = new ContractPropertySection();
+        createDisplay();
+        when(tabbedPropertySheetPage.getWidgetFactory()).thenReturn(new TabbedPropertySheetWidgetFactory());
+    }
+
+    protected void createDisplay() {
+        display = new Display();
+        final Shell headlessShell = new Shell(display);
+        headlessShell.setLayout(new GridLayout(1, true));
+        final GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
+        headlessShell.setLayoutData(gridData);
+        parent = new Composite(headlessShell, SWT.NONE);
+        realm = new DefaultRealm();
     }
 
     /**
@@ -44,6 +93,9 @@ public class ContractPropertySectionTest {
      */
     @After
     public void tearDown() throws Exception {
+        section.dispose();
+        realm.dispose();
+        display.dispose();
     }
 
     @Test
@@ -55,4 +107,35 @@ public class ContractPropertySectionTest {
     public void section_title_isNotEmpty() throws Exception {
         assertThat(section.getSectionTitle()).isNotEmpty();
     }
+
+    @Test
+    public void should_createControls_create_section_content() throws Exception {
+        section.createControls(parent, tabbedPropertySheetPage);
+    }
+
+    @Test
+    public void should_validate_call_validate_a_contract() throws Exception {
+        final ContractDefinitionValidator contractValidator = mock(ContractDefinitionValidator.class);
+        doReturn(contractValidator).when(section).getContractDefinitionValidator();
+        final Contract contract = ProcessFactory.eINSTANCE.createContract();
+        section.validate(contract);
+        verify(contractValidator).validate(contract);
+    }
+
+    @Test
+    public void should_bindRemoveButtonEnablement_convert_boolean_value() throws Exception {
+        section.init();
+        final Button removeButton = new Button(parent, SWT.PUSH);
+        final TableViewer inputsTableViewer = new TableViewer(parent);
+        inputsTableViewer.setLabelProvider(new LabelProvider());
+        inputsTableViewer.setContentProvider(ArrayContentProvider.getInstance());
+        inputsTableViewer.setInput(Arrays.asList("item"));
+        section.bindRemoveButtonEnablement(removeButton, inputsTableViewer);
+        assertThat(removeButton.isEnabled()).isFalse();
+        assertThat(inputsTableViewer.getSelection().isEmpty()).isTrue();
+        inputsTableViewer.setSelection(new StructuredSelection("item"));
+        assertThat(removeButton.isEnabled()).isTrue();
+        assertThat(inputsTableViewer.getSelection().isEmpty()).isFalse();
+    }
+
 }

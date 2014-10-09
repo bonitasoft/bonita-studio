@@ -83,7 +83,10 @@ public abstract class AbstractBonitaDescriptionSection extends AbstractModelerPr
     }
 
     protected IMessageManager getMessageManager() {
-        return form.getMessageManager();
+        if (form != null) {
+            return form.getMessageManager();
+        }
+        return null;
     }
 
 
