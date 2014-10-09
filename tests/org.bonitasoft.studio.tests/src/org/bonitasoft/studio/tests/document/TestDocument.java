@@ -84,7 +84,7 @@ public class TestDocument extends SWTBotGefTestCase {
         botRemoveDocumentDialog.ok();
     }
 
-    // @Test
+    @Test
     public void testUploadFile() throws FileNotFoundException {
         final String fileName = "Idea.jpg";
         final DocumentRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(DocumentRepositoryStore.class);
