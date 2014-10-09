@@ -50,7 +50,7 @@ public class ConnectorAvailableExpressionTypeFilter extends AvailableExpressionT
     public boolean select(final Viewer viewer, final Object context, final Object element) {
         if (viewer != null) {
             final Connector connector = getParentConnector(viewer.getInput());
-            if (connector != null && connector.getEvent().equals(ConnectorEvent.ON_FINISH.name())) {
+            if (connector != null && ConnectorEvent.ON_FINISH.name().equals(connector.getEvent())) {
                 final Set<String> contentTypes = new HashSet<String>(getContentTypes());
                 contentTypes.add(ExpressionConstants.CONTRACT_INPUT_TYPE);
                 return isExpressionAllowed(element, contentTypes);
