@@ -252,4 +252,17 @@ public class ExpressionHelper {
         return storageExpression;
     }
 
+    public static Expression createDocumentExpressionWithDependency(final String targetDocName) {
+        final Document document = ProcessFactory.eINSTANCE.createDocument();
+        document.setName(targetDocName);
+        document.setMultiple(false);
+        final Expression storageExpression = ExpressionFactory.eINSTANCE.createExpression();
+        storageExpression.setContent(targetDocName);
+        storageExpression.setName(targetDocName);
+        storageExpression.setType(ExpressionConstants.DOCUMENT_TYPE);
+        storageExpression.setReturnType(String.class.getName());
+        storageExpression.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(document));
+        return storageExpression;
+    }
+
 }

@@ -19,6 +19,9 @@ package org.bonitasoft.studio.document;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.util.List;
+
+import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.process.Document;
@@ -87,7 +90,6 @@ public class DocumentInitialContentValidatorTest {
 
     @Test
     public void test_Document_URL_Content_Null_NOK() {
-        final Document documentWithNoURL = ProcessFactory.eINSTANCE.createDocument();
         document.setDocumentType(DocumentType.EXTERNAL);
         final Expression urlExpressionWithNullContent = ExpressionFactory.eINSTANCE.createExpression();
         document.setUrl(urlExpressionWithNullContent);
@@ -97,7 +99,6 @@ public class DocumentInitialContentValidatorTest {
 
     @Test
     public void test_Document_URL_NULL_NOK() {
-        final Document documentWithNoURL = ProcessFactory.eINSTANCE.createDocument();
         document.setDocumentType(DocumentType.EXTERNAL);
         final IStatus status = validator.validate(document);
         assertFalse("the status should be an error " + status.getMessage(), status.isOK());
@@ -125,6 +126,21 @@ public class DocumentInitialContentValidatorTest {
         assertFalse("the status should not be ok " + status.getMessage(), status.isOK());
     }
 
+    @Test
+    public void test_Multiple_Document_InitialContent_Null_OK() {
+        document.setMultiple(true);
+        final IStatus status = validator.validate(document);
+        assertTrue("the status should not be ok " + status.getMessage(), status.isOK());
+    }
+
+    @Test
+    public void test_Multiple_Document_InitialContent_OK() {
+        document.setMultiple(true);
+        final Expression multipleInitialContent = ExpressionHelper.createGroovyScriptExpression("[]", List.class.getName());
+        document.setInitialMultipleContent(multipleInitialContent);
+        final IStatus status = validator.validate(document);
+        assertTrue("the status should not be ok " + status.getMessage(), status.isOK());
+    }
 
     public void initializeDocumentWithURL(final String url) {
         document.setDocumentType(DocumentType.EXTERNAL);
@@ -132,11 +148,9 @@ public class DocumentInitialContentValidatorTest {
         document.setUrl(urlExpression);
     }
 
-
     public void initializeInternalDocumentInitialContent(final String documentStoreId) {
         document.setDocumentType(DocumentType.INTERNAL);
         document.setDefaultValueIdOfDocumentStore(documentStoreId);
-
     }
 
 }

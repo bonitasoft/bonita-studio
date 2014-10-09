@@ -59,6 +59,20 @@ import org.eclipse.ui.internal.WorkbenchMessages;
  */
 public abstract class FileStoreSelectDialog extends Dialog {
 
+    private final class ViewerFilterOnFileStoreName extends ViewerFilter {
+
+        private final String textForFiltering;
+
+        private ViewerFilterOnFileStoreName(String textForFiltering) {
+            this.textForFiltering = textForFiltering;
+        }
+
+        @Override
+        public boolean select(final Viewer viewer, final Object parentElement, final Object element) {
+            return ((AbstractFileStore)element).getName().contains(textForFiltering);
+        }
+    }
+
     private ListViewer fileStoreListViewer;
     private Button removeButton;
     private AbstractFileStore selected;
@@ -110,33 +124,11 @@ public abstract class FileStoreSelectDialog extends Dialog {
         final Composite listComposite = new Composite(mainComposite, SWT.NONE);
         listComposite.setLayout(GridLayoutFactory.fillDefaults().create());
         listComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        final Text fileStoreListFilter = new Text(listComposite, SWT.BORDER | SWT.SEARCH | SWT.ICON_SEARCH | SWT.ICON_CANCEL);
-        fileStoreListFilter.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
-        fileStoreListFilter.setMessage(WorkbenchMessages.FilteredTree_FilterMessage);
-        fileStoreListFilter.addModifyListener(new ModifyListener() {
+        createFilter(listComposite);
+        createListViewer(listComposite);
+    }
 
-            private ViewerFilter filter;
-
-            @Override
-            public void modifyText(final ModifyEvent e) {
-                final String textForFiltering = fileStoreListFilter.getText();
-                if(filter != null){
-                    fileStoreListViewer.removeFilter(filter);
-                }
-                if(textForFiltering != null
-                        && !textForFiltering.isEmpty()){
-                    filter = new ViewerFilter() {
-
-                        @Override
-                        public boolean select(final Viewer viewer, final Object parentElement, final Object element) {
-                            return ((AbstractFileStore)element).getName().contains(textForFiltering);
-                        }
-                    };
-                    fileStoreListViewer.addFilter(filter);
-                }
-
-            }
-        });
+    private void createListViewer(final Composite listComposite) {
         fileStoreListViewer = new ListViewer(listComposite, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | SWT.FULL_SELECTION);
         fileStoreListViewer.getList().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 300).create());
         fileStoreListViewer.setContentProvider(new ArrayContentProvider());
@@ -154,6 +146,30 @@ public abstract class FileStoreSelectDialog extends Dialog {
             }
         });
         fileStoreListViewer.getList().setFocus();
+    }
+
+    private void createFilter(final Composite listComposite) {
+        final Text fileStoreListFilter = new Text(listComposite, SWT.BORDER | SWT.SEARCH | SWT.ICON_SEARCH | SWT.ICON_CANCEL);
+        fileStoreListFilter.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+        fileStoreListFilter.setMessage(WorkbenchMessages.FilteredTree_FilterMessage);
+        fileStoreListFilter.addModifyListener(new ModifyListener() {
+
+            private ViewerFilter filter;
+
+            @Override
+            public void modifyText(final ModifyEvent e) {
+                final String textForFiltering = fileStoreListFilter.getText();
+                if(filter != null){
+                    fileStoreListViewer.removeFilter(filter);
+                }
+                if(textForFiltering != null
+                        && !textForFiltering.isEmpty()){
+                    filter = new ViewerFilterOnFileStoreName(textForFiltering);
+                    fileStoreListViewer.addFilter(filter);
+                }
+
+            }
+        });
     }
 
     private void createButtons(final Composite mainComposite) {

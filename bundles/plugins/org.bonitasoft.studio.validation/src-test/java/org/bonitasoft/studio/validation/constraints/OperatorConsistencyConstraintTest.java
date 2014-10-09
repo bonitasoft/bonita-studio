@@ -70,6 +70,21 @@ public class OperatorConsistencyConstraintTest {
         Assertions.assertThat(status.isOK()).isTrue();
     }
 
+    @Test
+    public void testPerformBatchValidationReturnOkIfNoLeftOperand() {
+        final Operation operation = ExpressionFactory.eINSTANCE.createOperation();
+        final Operator operator = ExpressionFactory.eINSTANCE.createOperator();
+        operator.setType(ExpressionConstants.SET_DOCUMENT_OPERATOR);
+        operation.setOperator(operator);
+        final Expression leftOperand = ExpressionFactory.eINSTANCE.createExpression();
+        operation.setLeftOperand(leftOperand);
+        when(context.getTarget()).thenReturn(operation);
+
+        final OperatorConsistencyConstraint operatorConsistency = new OperatorConsistencyConstraint();
+        final IStatus status = operatorConsistency.performBatchValidation(context);
+        Assertions.assertThat(status.isOK()).isTrue();
+    }
+
     private IStatus performValidationWithDocumentMultiplicityAndOperatorType(final boolean isMultiple, final String operatorType) {
         final Operation operation = ExpressionFactory.eINSTANCE.createOperation();
         final Operator operator = ExpressionFactory.eINSTANCE.createOperator();

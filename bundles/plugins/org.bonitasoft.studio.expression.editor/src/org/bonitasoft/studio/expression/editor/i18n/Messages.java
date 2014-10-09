@@ -156,6 +156,7 @@ public class Messages extends NLS {
     public static String setDocumentListOperator;
 
     public static String messageOperationWithListDocumentInForm;
+    public static String messageOperationWithListDocumentInFormInCommunity;
 
     public static String messageOperationWithListDocumentInTask;
 
