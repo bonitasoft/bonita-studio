@@ -55,6 +55,7 @@ Embedded-Artifacts: lib/bonita-client.jar;g="org.bonitasoft.engine";a="b
  .3.1-SNAPSHOT";c="classes",lib/console-common.jar;g="org.bonitasoft.con
  sole";a="console-common";v="6.4.0-SNAPSHOT"
 Export-Package: org.bonitasoft.engine.bpm.contract;version="0.0.0",
+ org.bonitasoft.engine.bpm.contract.impl;version="0.0.0",
  org.bonitasoft.engine.data.instance.model;version="0.0.0",
  org.bonitasoft.console.common.server.preferences.constants;version="0.0.0",
  org.bonitasoft.console.common.server.preferences.properties;version="0.0.0",
