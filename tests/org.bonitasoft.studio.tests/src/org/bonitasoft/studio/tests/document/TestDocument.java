@@ -14,9 +14,13 @@
  */
 package org.bonitasoft.studio.tests.document;
 
+import java.io.FileNotFoundException;
+
 import org.assertj.core.api.Assertions;
 import org.bonitasoft.engine.bpm.document.DocumentValue;
 import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.data.attachment.repository.DocumentRepositoryStore;
 import org.bonitasoft.studio.expression.editor.operation.OperatorLabelProvider;
 import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
 import org.bonitasoft.studio.swtbot.framework.composite.BotOperationComposite;
@@ -24,6 +28,7 @@ import org.bonitasoft.studio.swtbot.framework.diagram.BotProcessDiagramPerspecti
 import org.bonitasoft.studio.swtbot.framework.diagram.BotProcessDiagramPropertiesViewFolder;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.documents.BotAddDocumentDialog;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.documents.BotDocumentsPropertySection;
+import org.bonitasoft.studio.swtbot.framework.diagram.general.documents.BotFileStoreSelectDialog;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.documents.BotRemoveDocumentDialog;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.operations.BotOperationsPropertySection;
 import org.bonitasoft.studio.swtbot.framework.expression.BotExpressionEditorDialog;
@@ -36,7 +41,9 @@ import org.junit.runner.RunWith;
 @RunWith(SWTBotJunit4ClassRunner.class)
 public class TestDocument extends SWTBotGefTestCase {
 
-    @Test
+
+
+
     public void testAddEditDeleteDocument() {
         final BotDocumentsPropertySection botDocumentsPropertySection = createDiagramAndGoToDocumentSection();
         BotAddDocumentDialog botAddDocumentDialog = botDocumentsPropertySection.addDocument();
@@ -75,6 +82,22 @@ public class TestDocument extends SWTBotGefTestCase {
         //Delete
         final BotRemoveDocumentDialog botRemoveDocumentDialog = botDocumentsPropertySection.removeDocument("doc11Edited");
         botRemoveDocumentDialog.ok();
+    }
+
+    // @Test
+    public void testUploadFile() throws FileNotFoundException {
+        final String fileName = "Idea.jpg";
+        final DocumentRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(DocumentRepositoryStore.class);
+        store.importInputStream(fileName, this.getClass().getResourceAsStream(fileName));
+        final BotDocumentsPropertySection botDocumentsPropertySection = createDiagramAndGoToDocumentSection();
+        final BotAddDocumentDialog botAddDocumentDialog = botDocumentsPropertySection.addDocument();
+        botAddDocumentDialog.setName("idea");
+        botAddDocumentDialog.chooseInternalInitialContent();
+        final BotFileStoreSelectDialog botFileStoreSelectDialog = botAddDocumentDialog.browseInternalFile();
+        botFileStoreSelectDialog.selectFile(fileName);
+        botFileStoreSelectDialog.ok();
+        assertInitialContentNotEmpty(botAddDocumentDialog);
+        botAddDocumentDialog.finish();
     }
 
     @Test
@@ -162,6 +185,10 @@ public class TestDocument extends SWTBotGefTestCase {
         }
     }
 
+    private void assertInitialContentNotEmpty(final BotAddDocumentDialog botAddDocumentDialog) {
+        Assertions.assertThat(botAddDocumentDialog.isInitialContentEmpty()).isFalse();
+    }
+
     @Test
     public void testDocumentOperationSwitch() {
         final BotApplicationWorkbenchWindow botApplicationWorkbenchWindow = new BotApplicationWorkbenchWindow(bot);
@@ -187,6 +214,8 @@ public class TestDocument extends SWTBotGefTestCase {
         editRightOperand.cancel();
 
     }
+
+
 
     protected BotDocumentsPropertySection createDiagramAndGoToDocumentSection() {
         final BotApplicationWorkbenchWindow botApplicationWorkbenchWindow = new BotApplicationWorkbenchWindow(bot);
@@ -247,8 +276,8 @@ public class TestDocument extends SWTBotGefTestCase {
         botAddDocumentDialog.finish();
 
 
-
     }
+
 
 
 }
