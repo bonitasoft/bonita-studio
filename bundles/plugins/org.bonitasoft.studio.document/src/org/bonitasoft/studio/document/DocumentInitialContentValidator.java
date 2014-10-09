@@ -38,7 +38,7 @@ public class DocumentInitialContentValidator implements IValidator {
     public IStatus validate(final Object value) {
         final Document document = (Document) value;
         if (document.isMultiple()) {
-            return validateMultipleDocument(document);
+            return ValidationStatus.ok();
         } else {
             return validateSimpleDocument(document);
         }
@@ -57,27 +57,17 @@ public class DocumentInitialContentValidator implements IValidator {
     }
 
     private IStatus validateExternalSimpleDocument(final Document document) {
-        if (document.getUrl() == null || document.getUrl().getContent() == null || document.getUrl().getContent().isEmpty()) {
+        final Expression url = document.getUrl();
+        if (url == null || url.getContent() == null || url.getContent().isEmpty()) {
             return ValidationStatus.error(Messages.error_documentURLEmpty);
         }
 
-        if (document.getUrl() != null && document.getUrl().getContent() != null
-                && document.getUrl().getContent().length() > maxLength) {
+        if (url != null && url.getContent() != null
+                && url.getContent().length() > maxLength) {
             return ValidationStatus.error(Messages.bind(Messages.error_documentURLTooLong, maxLength + 1));
         }
 
         return ValidationStatus.ok();
-    }
-
-    private IStatus validateMultipleDocument(final Document document) {
-        final Expression initialMultipleContent = document.getInitialMultipleContent();
-        if (initialMultipleContent == null
-                || initialMultipleContent.getContent() == null
-                || initialMultipleContent.getContent().isEmpty()) {
-            return ValidationStatus.error(Messages.error_documentInitialContentsEmpty);
-        } else {
-            return ValidationStatus.ok();
-        }
     }
 
 }
