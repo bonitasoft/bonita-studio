@@ -81,6 +81,50 @@ public class ContractAssert extends AbstractAssert<ContractAssert, Contract> {
     }
 
     /**
+     * Verifies that the actual Contract is enabled.
+     *
+     * @return this assertion object.
+     * @throws AssertionError - if the actual Contract is not enabled.
+     */
+    public ContractAssert isEnabled() {
+        // check that actual Contract we want to make assertions on is not null.
+        isNotNull();
+
+        // we overrides the default error message with a more explicit one
+        final String errorMessage = format("Expected actual Contract to be enabled but was not.", actual);
+
+        // check
+        if (!actual.isEnabled()) {
+            throw new AssertionError(errorMessage);
+        }
+
+        // return the current assertion for method chaining
+        return this;
+    }
+
+    /**
+     * Verifies that the actual Contract is not enabled.
+     *
+     * @return this assertion object.
+     * @throws AssertionError - if the actual Contract is enabled.
+     */
+    public ContractAssert isNotEnabled() {
+        // check that actual Contract we want to make assertions on is not null.
+        isNotNull();
+
+        // we overrides the default error message with a more explicit one
+        final String errorMessage = format("Expected actual Contract not to be enabled but was.", actual);
+
+        // check
+        if (actual.isEnabled()) {
+            throw new AssertionError(errorMessage);
+        }
+
+        // return the current assertion for method chaining
+        return this;
+    }
+
+    /**
      * Verifies that the actual Contract's inputs contains the given ContractInput elements.
      * @param inputs the given elements that should be contained in actual Contract's inputs.
      * @return this assertion object.
