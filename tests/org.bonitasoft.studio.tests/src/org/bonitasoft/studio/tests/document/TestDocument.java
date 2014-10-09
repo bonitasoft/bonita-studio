@@ -98,6 +98,7 @@ public class TestDocument extends SWTBotGefTestCase {
         botFileStoreSelectDialog.ok();
         assertInitialContentNotEmpty(botAddDocumentDialog);
         botAddDocumentDialog.finish();
+        store.getChild(fileName).delete();
     }
 
     @Test
