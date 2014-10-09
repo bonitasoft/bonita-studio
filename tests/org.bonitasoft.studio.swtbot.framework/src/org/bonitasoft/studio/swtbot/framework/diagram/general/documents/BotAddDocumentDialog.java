@@ -8,6 +8,8 @@
  *******************************************************************************/
 package org.bonitasoft.studio.swtbot.framework.diagram.general.documents;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import org.bonitasoft.studio.document.i18n.Messages;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.swtbot.framework.BotWizardDialog;
@@ -220,6 +222,12 @@ public class BotAddDocumentDialog extends BotWizardDialog {
         return bot.button(org.bonitasoft.studio.common.Messages.createAndNewButton).isEnabled();
     }
 
+    public BotFileStoreSelectDialog browseInternalFile() {
+        assertThat(bot.radio(Messages.initialValueButtonInternal).isSelected()).isTrue();
+        bot.button(Messages.Browse).click();
+        return new BotFileStoreSelectDialog(bot);
+    }
+
     /**
      * Click on Finish && Add
      */
@@ -227,5 +235,12 @@ public class BotAddDocumentDialog extends BotWizardDialog {
         bot.waitUntil(Conditions.widgetIsEnabled(bot.button(org.bonitasoft.studio.common.Messages.createAndNewButton)), 5000);
         bot.button(org.bonitasoft.studio.common.Messages.createAndNewButton).click();
         return new BotAddDocumentDialog(bot);
+    }
+
+    /**
+     * @return
+     */
+    public boolean isInitialContentEmpty() {
+        return bot.textWithLabel(Messages.documentInternalLabel + " *").getText().isEmpty();
     }
 }
