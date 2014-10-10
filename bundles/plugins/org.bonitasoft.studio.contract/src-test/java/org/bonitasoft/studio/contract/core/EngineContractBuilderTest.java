@@ -96,11 +96,11 @@ public class EngineContractBuilderTest {
         engineContractBuilder.setContract(aContract);
         engineContractBuilder.build();
         verify(taskBuilder).addContract();
-        verify(contractDefBuilder).addSimpleInput("name", Type.TEXT, "name of an employee");
-        verify(contractDefBuilder).addSimpleInput("birthDate", Type.DATE, "Birth date of an employee");
-        verify(contractDefBuilder).addSimpleInput("age", Type.INTEGER, null);
-        verify(contractDefBuilder).addSimpleInput("salary", Type.DECIMAL, null);
-        verify(contractDefBuilder).addSimpleInput("isMarried", Type.BOOLEAN, null);
+        verify(contractDefBuilder).addSimpleInput("name", Type.TEXT, "name of an employee", false);
+        verify(contractDefBuilder).addSimpleInput("birthDate", Type.DATE, "Birth date of an employee", false);
+        verify(contractDefBuilder).addSimpleInput("age", Type.INTEGER, null, false);
+        verify(contractDefBuilder).addSimpleInput("salary", Type.DECIMAL, null, false);
+        verify(contractDefBuilder).addSimpleInput("isMarried", Type.BOOLEAN, null, false);
     }
 
     private ContractInput addInput(final Contract contract, final String inputName, final ContractInputType type, final String description) {
@@ -141,7 +141,7 @@ public class EngineContractBuilderTest {
         engineContractBuilder.setContract(aContract);
         engineContractBuilder.build();
         verify(taskBuilder).addContract();
-        verify(contractDefBuilder).addSimpleInput("name", Type.TEXT, "name of an employee");
+        verify(contractDefBuilder).addSimpleInput("name", Type.TEXT, "name of an employee", nameInput.isMultiple());
         verify(contractDefBuilder).addConstraint("myConstraint", "name.length < 50", "name is too long", nameInput.getName());
     }
 
@@ -152,7 +152,7 @@ public class EngineContractBuilderTest {
         engineContractBuilder.setContract(aContract);
         engineContractBuilder.build();
         verify(taskBuilder).addContract();
-        verify(contractDefBuilder).addSimpleInput("name", Type.TEXT, "name of an employee");
+        verify(contractDefBuilder).addSimpleInput("name", Type.TEXT, "name of an employee", nameInput.isMultiple());
         verify(contractDefBuilder).addMandatoryConstraint("name");
     }
 
@@ -171,7 +171,7 @@ public class EngineContractBuilderTest {
         engineContractBuilder.setContract(aContract);
         engineContractBuilder.build();
         verify(taskBuilder).addContract();
-        verify(contractDefBuilder).addSimpleInput("name", Type.TEXT, "name of an employee");
+        verify(contractDefBuilder).addSimpleInput("name", Type.TEXT, "name of an employee", nameInput.isMultiple());
         verify(contractDefBuilder).addMandatoryConstraint("name");
     }
 
@@ -192,7 +192,7 @@ public class EngineContractBuilderTest {
         engineContractBuilder.build();
         verify(taskBuilder).addContract();
 
-        verify(contractDefBuilder).addComplexInput(eq(employeeInput.getName()), eq(employeeInput.getDescription()), anyList(),
+        verify(contractDefBuilder).addComplexInput(eq(employeeInput.getName()), eq(employeeInput.getDescription()), eq(employeeInput.isMultiple()), anyList(),
                 anyList());
         verify(contractDefBuilder).addMandatoryConstraint("firstName");
         verify(contractDefBuilder).addMandatoryConstraint("skills");

@@ -69,7 +69,7 @@ public class EngineContractBuilder {
 
     protected void addSimpleInput(final ContractDefinitionBuilder contractBuilder, final ContractInput input, final Type inputType) {
         contractBuilder.addSimpleInput(input.getName(), inputType,
-                input.getDescription());
+                input.getDescription(), input.isMultiple());
         if (input.isMandatory()) {
             contractBuilder.addMandatoryConstraint(input.getName());
         }
@@ -78,11 +78,12 @@ public class EngineContractBuilder {
 
     protected void addComplexInput(final ContractDefinitionBuilder contractBuilder, final ContractInput input) {
         final ComplexInputDefinition complexInput = buildComplexInput(input, contractBuilder);
-        contractBuilder.addComplexInput(complexInput.getName(), complexInput.getDescription(), complexInput.getSimpleInputs(), complexInput.getComplexInputs());
+        contractBuilder.addComplexInput(complexInput.getName(), complexInput.getDescription(), complexInput.isMultiple(), complexInput.getSimpleInputs(),
+                complexInput.getComplexInputs());
     }
 
     protected ComplexInputDefinition buildComplexInput(final ContractInput input, final ContractDefinitionBuilder contractBuilder) {
-        final ComplexInputDefinitionImpl complexInput = new ComplexInputDefinitionImpl(input.getName(), input.getDescription());
+        final ComplexInputDefinitionImpl complexInput = new ComplexInputDefinitionImpl(input.getName(), input.getDescription(), input.isMultiple());
         if (input.isMandatory()) {
             contractBuilder.addMandatoryConstraint(complexInput.getName());
         }
@@ -91,7 +92,7 @@ public class EngineContractBuilder {
             if (Type.COMPLEX == inputType) {
                 complexInput.getComplexInputs().add(buildComplexInput(child, contractBuilder));
             } else {
-                complexInput.getSimpleInputs().add(new SimpleInputDefinitionImpl(child.getName(), inputType, child.getDescription()));
+                complexInput.getSimpleInputs().add(new SimpleInputDefinitionImpl(child.getName(), inputType, child.getDescription(), child.isMultiple()));
                 if (child.isMandatory()) {
                     contractBuilder.addMandatoryConstraint(child.getName());
                 }
