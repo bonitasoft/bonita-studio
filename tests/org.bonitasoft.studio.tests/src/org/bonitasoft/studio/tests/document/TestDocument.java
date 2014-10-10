@@ -278,5 +278,43 @@ public class TestDocument extends SWTBotGefTestCase {
     }
 
 
+    //    @Test
+    //    public void test_UpdateReturnTypeInLeftOperandOperation_when_refactor_document() throws Exception {
+    //        SWTBotTestUtil.pressEnter();
+    //
+    //        final BotDocumentsPropertySection botDocumentsPropertySection = createDiagramAndGoToDocumentSection();
+    //        final BotAddDocumentDialog botAddDocumentDialog = botDocumentsPropertySection.addDocument();
+    //        botAddDocumentDialog.setName("doc1");
+    //        botAddDocumentDialog.chooseMultipleContent();
+    //        botAddDocumentDialog.finish();
+    //
+    //        // create form with FileWidget
+    //        final BotApplicationWorkbenchWindow botApplicationWorkbenchWindow = new BotApplicationWorkbenchWindow(bot);
+    //        final BotProcessDiagramPerspective botProcessDiagramPerspective = botApplicationWorkbenchWindow.createNewDiagram();
+    //
+    //        botProcessDiagramPerspective.activeProcessDiagramEditor().selectElement("Step1");
+    //        final BotProcessDiagramPropertiesViewFolder botProcessDiagramPropertiesViewFolder = botProcessDiagramPerspective.getDiagramPropertiesPart();
+    //        final BotPageflowPropertySection botOperationsPropertySection = botProcessDiagramPropertiesViewFolder.selectApplicationTab().selectPageflowTab();
+    //        final BotAddFormWizardDialog botAddFormWizardDialog = botOperationsPropertySection.addForm();
+    //        if (botAddFormWizardDialog.canFlipToNextPage()) {
+    //            botAddFormWizardDialog.next();
+    //        }
+    //        final BotProcessDataMappingPanel selectProcessDataTab = botAddFormWizardDialog.selectProcessDataTab();
+    //
+    //        selectProcessDataTab.selectAll();
+    //        assertEquals("Multiple File", selectProcessDataTab.getDataWidget("doc11"));
+    //        assertEquals("File", selectProcessDataTab.getDataWidget("doc12"));
+    //
+    //        // check doc11 has a Multiple File widget
+    //        botAddFormWizardDialog.finish();
+    //
+    //        // Select File widget Doc11
+    //        final BotGefFormDiagramEditor botGef = botProcessDiagramPerspective.activeFormDiagramEditor();
+    //        botGef.selectWidget("Doc11");
+    //
+    //        // select Data Section in General Tab
+    //        final BotDataFormPropertySectionEx dataSection = botProcessDiagramPerspective.getFormPropertiesPart().selectGeneralTab().selectDataTab();
+    //
+    //    }
 
 }
