@@ -241,6 +241,7 @@ public class BotAddDocumentDialog extends BotWizardDialog {
      * @return
      */
     public boolean isInitialContentEmpty() {
+        bot.shell(Messages.newDocument).setFocus();
         return bot.textWithLabel(Messages.documentInternalLabel + " *").getText().isEmpty();
     }
 }

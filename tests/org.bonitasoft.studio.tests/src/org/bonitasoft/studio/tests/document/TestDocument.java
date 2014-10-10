@@ -14,8 +14,6 @@
  */
 package org.bonitasoft.studio.tests.document;
 
-import java.io.FileNotFoundException;
-
 import org.assertj.core.api.Assertions;
 import org.bonitasoft.engine.bpm.document.DocumentValue;
 import org.bonitasoft.studio.common.ExpressionConstants;
@@ -85,7 +83,7 @@ public class TestDocument extends SWTBotGefTestCase {
     }
 
     @Test
-    public void testUploadFile() throws FileNotFoundException {
+    public void testUploadFile() {
         final String fileName = "Idea.jpg";
         final DocumentRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(DocumentRepositoryStore.class);
         store.importInputStream(fileName, this.getClass().getResourceAsStream(fileName));
@@ -187,6 +185,7 @@ public class TestDocument extends SWTBotGefTestCase {
     }
 
     private void assertInitialContentNotEmpty(final BotAddDocumentDialog botAddDocumentDialog) {
+
         Assertions.assertThat(botAddDocumentDialog.isInitialContentEmpty()).isFalse();
     }
 
@@ -273,7 +272,6 @@ public class TestDocument extends SWTBotGefTestCase {
         // NONE
         botAddDocumentDialog.chooseNoneInitialContent();
         Assertions.assertThat(botAddDocumentDialog.isMymeTypeFieldEnabled()).isFalse();
-
         botAddDocumentDialog.finish();
 
 
