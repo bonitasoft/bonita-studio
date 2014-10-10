@@ -17,6 +17,8 @@
 package org.bonitasoft.studio.common.jface.databinding;
 
 import org.eclipse.core.databinding.observable.Realm;
+import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.swt.widgets.Display;
 
 
 /**
@@ -31,17 +33,20 @@ public class DefaultRealm extends Realm {
 
     private final Realm previousRealm;
 
-    public DefaultRealm() {
-        previousRealm = super.setDefault(this);
+    public DefaultRealm(final Display display) {
+        final Realm displayRealm = SWTObservables.getRealm(display);
+        previousRealm = super.setDefault(displayRealm);
     }
 
     /**
      * @return always returns true
      */
+    @Override
     public boolean isCurrent() {
         return true;
     }
 
+    @Override
     protected void syncExec(final Runnable runnable) {
         runnable.run();
     }
@@ -49,6 +54,7 @@ public class DefaultRealm extends Realm {
     /**
      * @throws UnsupportedOperationException
      */
+    @Override
     public void asyncExec(final Runnable runnable) {
         throw new UnsupportedOperationException("asyncExec is unsupported");
     }

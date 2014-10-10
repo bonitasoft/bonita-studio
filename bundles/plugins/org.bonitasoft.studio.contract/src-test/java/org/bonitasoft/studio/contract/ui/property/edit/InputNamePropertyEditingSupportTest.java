@@ -33,7 +33,7 @@ import org.bonitasoft.studio.model.process.provider.ProcessItemProviderAdapterFa
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jface.viewers.CellEditor;
-import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.ui.forms.IMessageManager;
 import org.junit.After;
@@ -52,7 +52,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 public class InputNamePropertyEditingSupportTest {
 
     @Mock
-    private TableViewer viewer;
+    private ColumnViewer viewer;
 
     private InputNamePropertyEditingSupport propertyEditingSupport;
 
@@ -161,7 +161,6 @@ public class InputNamePropertyEditingSupportTest {
         //                FieldDecorationRegistry.DEC_CONTENT_PROPOSAL, SWT.TOP | SWT.LEFT);
         verify(cellEditorMock).setValidator(propertyEditingSupport);
         verify(cellEditorMock).addListener(propertyEditingSupport);
-        verify(cellMock).setText("");
 
     }
 

@@ -77,6 +77,7 @@ public class ContractIT extends SWTBotGefTestCase {
         contractInputRow.clickMandatory();
         assertThat(task.getContract().getInputs()).hasSize(1).extracting("name", "mandatory", "multiple", "description")
         .containsOnly(tuple("myInputName", false, true, "A short description"));
+
         contractTabBot.inputTable().select(0);
         contractTabBot.remove();
         assertThat(task.getContract().getInputs()).hasSize(0);

@@ -14,86 +14,74 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.contract.ui.property.table;
+package org.bonitasoft.studio.contract.ui.property.tree;
 
-import java.util.EventObject;
-
+import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.contract.core.ContractDefinitionValidator;
 import org.bonitasoft.studio.contract.i18n.Messages;
 import org.bonitasoft.studio.contract.ui.property.FieldDecoratorProvider;
 import org.bonitasoft.studio.contract.ui.property.edit.CheckboxPropertyEditingSupport;
-import org.bonitasoft.studio.contract.ui.property.edit.DescriptionCellLabelProvider;
+import org.bonitasoft.studio.contract.ui.property.edit.ContractInputTypeEditingSupport;
 import org.bonitasoft.studio.contract.ui.property.edit.DescriptionPropertyEditingSupport;
-import org.bonitasoft.studio.contract.ui.property.edit.InputNameCellLabelProvider;
 import org.bonitasoft.studio.contract.ui.property.edit.InputNamePropertyEditingSupport;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
-import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
+import org.eclipse.jface.databinding.viewers.ObservableListTreeContentProvider;
 import org.eclipse.jface.viewers.CellNavigationStrategy;
 import org.eclipse.jface.viewers.ColumnViewerEditor;
-import org.eclipse.jface.viewers.ColumnViewerEditorActivationEvent;
-import org.eclipse.jface.viewers.ColumnViewerEditorActivationStrategy;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.ColumnWeightData;
+import org.eclipse.jface.viewers.DecoratingStyledCellLabelProvider;
+import org.eclipse.jface.viewers.DecorationContext;
 import org.eclipse.jface.viewers.FocusCellOwnerDrawHighlighter;
 import org.eclipse.jface.viewers.TableLayout;
-import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.TableViewerColumn;
-import org.eclipse.jface.viewers.TableViewerEditor;
-import org.eclipse.jface.viewers.TableViewerFocusCellManager;
+import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.TreeViewerColumn;
+import org.eclipse.jface.viewers.TreeViewerEditor;
+import org.eclipse.jface.viewers.TreeViewerFocusCellManager;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.eclipse.ui.views.properties.PropertyColumnLabelProvider;
-import org.eclipse.ui.views.properties.PropertyEditingSupport;
 
 
 /**
  * @author Romain Bioteau
  *
  */
-public class ContractInputTableViewer extends TableViewer {
+public class ContractInputTreeViewer extends TreeViewer {
 
     private AdapterFactoryContentProvider propertySourceProvider;
     private AdapterFactoryLabelProvider adapterFactoryLabelProvider;
     private ContractDefinitionValidator contractValidator;
     private final FieldDecoratorProvider decoratorProvider = new FieldDecoratorProvider();
+    private ContractInputController inputController;
 
-    public ContractInputTableViewer(final Composite parent, final FormToolkit toolkit) {
-        super(toolkit.createTable(parent, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI));
+    public ContractInputTreeViewer(final Composite parent, final FormToolkit toolkit) {
+        super(toolkit.createTree(parent, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI));
+        getTree().setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, SWTBotConstants.SWTBOT_ID_CONTRACT_INPUT_TREE);
     }
 
     public void initialize(final ContractInputController inputController, final ContractDefinitionValidator contractValidator) {
         this.contractValidator = contractValidator;
+        this.inputController = inputController;
         final ComposedAdapterFactory composedAdapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
         propertySourceProvider = new AdapterFactoryContentProvider(composedAdapterFactory);
         adapterFactoryLabelProvider = new AdapterFactoryLabelProvider(composedAdapterFactory);
-        getTable().setHeaderVisible(true);
-        setContentProvider(new ObservableListContentProvider());
-        final ColumnViewerEditorActivationStrategy activationSupport = new ColumnViewerEditorActivationStrategy(this) {
+        getTree().setHeaderVisible(true);
+        getTree().setLinesVisible(true);
+        addFilter(new ComplexTypeChildrenViewerFilter());
+        setContentProvider(new ObservableListTreeContentProvider(new ContractInputObservableFactory(),
+                new ContractInputTreeStructureAdvisor()));
 
-            @Override
-            protected boolean isEditorActivationEvent(final ColumnViewerEditorActivationEvent event) {
-                if (event.eventType == ColumnViewerEditorActivationEvent.MOUSE_CLICK_SELECTION) {
-                    final EventObject source = event.sourceEvent;
-                    if (source instanceof MouseEvent && ((MouseEvent) source).button == 3) {
-                        return false;
-                    }
-                }
-                return super.isEditorActivationEvent(event) || event.eventType == ColumnViewerEditorActivationEvent.KEY_PRESSED && event.keyCode == SWT.CR;
-            }
-        };
 
-        final CellNavigationStrategy cellNavigationStrategy = new ContracInputTableViewerCellNavigationStrategy(this, inputController);
-        final TableViewerFocusCellManager focusCellManager = new TableViewerFocusCellManager(this, new FocusCellOwnerDrawHighlighter(
+        final CellNavigationStrategy cellNavigationStrategy = new ContracInputTreeViewerCellNavigationStrategy(this, inputController);
+        final TreeViewerFocusCellManager focusCellManager = new TreeViewerFocusCellManager(this, new FocusCellOwnerDrawHighlighter(
                 this), cellNavigationStrategy);
-        TableViewerEditor.create(this, focusCellManager, activationSupport, ColumnViewerEditor.TABBING_HORIZONTAL |
+        TreeViewerEditor.create(this, focusCellManager, new ContractInputColumnViewerEditorActivationStrategy(this), ColumnViewerEditor.TABBING_HORIZONTAL |
                 ColumnViewerEditor.TABBING_MOVE_TO_ROW_NEIGHBOR |
                 ColumnViewerEditor.TABBING_VERTICAL |
                 ColumnViewerEditor.KEYBOARD_ACTIVATION);
@@ -121,14 +109,13 @@ public class ContractInputTableViewer extends TableViewer {
         tableLayout.addColumnData(new ColumnWeightData(1));
         //   tableLayout.addColumnData(new ColumnWeightData(3));
         tableLayout.addColumnData(new ColumnWeightData(5));
-        getTable().setLayout(tableLayout);
+        getTree().setLayout(tableLayout);
     }
 
     protected void createInputNameColumn() {
-        final TableViewerColumn nameColumnViewer = new TableViewerColumn(this, SWT.FILL);
-        final TableColumn column = nameColumnViewer.getColumn();
-        column.setText(Messages.name + " *");
-        nameColumnViewer.setLabelProvider(new InputNameCellLabelProvider(this, propertySourceProvider));
+        final TreeViewerColumn nameColumnViewer = createColumnViewer(Messages.name + " *", SWT.FILL);
+        nameColumnViewer.setLabelProvider(new DecoratingStyledCellLabelProvider(new InputNameCellLabelProvider(propertySourceProvider),
+                new ValidationLabelDecorator(this), new DecorationContext()));
         nameColumnViewer.setEditingSupport(new InputNamePropertyEditingSupport(propertySourceProvider,
                 this,
                 adapterFactoryLabelProvider,
@@ -137,17 +124,13 @@ public class ContractInputTableViewer extends TableViewer {
     }
 
     protected void createInputDescriptionColumn() {
-        final TableViewerColumn descriptionColumnViewer = new TableViewerColumn(this, SWT.FILL);
-        final TableColumn column = descriptionColumnViewer.getColumn();
-        column.setText(Messages.description);
+        final TreeViewerColumn descriptionColumnViewer = createColumnViewer(Messages.description, SWT.FILL);
         descriptionColumnViewer.setLabelProvider(new DescriptionCellLabelProvider(this, propertySourceProvider));
         descriptionColumnViewer.setEditingSupport(new DescriptionPropertyEditingSupport(this, propertySourceProvider, contractValidator));
     }
 
     //    protected void createMappingColumn() {
-    //        final TableViewerColumn mappingColumnViewer = new TableViewerColumn(this, SWT.FILL);
-    //        final TableColumn column = mappingColumnViewer.getColumn();
-    //        column.setText(Messages.savedInto);
+    //        final TreeViewerColumn mappingColumnViewer = createColumnViewer(Messages.savedInto,SWT.FILL);
     //        mappingColumnViewer.setLabelProvider(new ColumnLabelProvider() {
     //
     //            @Override
@@ -176,54 +159,40 @@ public class ContractInputTableViewer extends TableViewer {
     //    }
 
     protected void createInputTypeColumn() {
-        final TableViewerColumn typeColumnViewer = new TableViewerColumn(this, SWT.FILL);
-        final TableColumn column = typeColumnViewer.getColumn();
-        column.setText(Messages.type);
-        typeColumnViewer.setLabelProvider(new PropertyColumnLabelProvider(propertySourceProvider, ProcessPackage.Literals.CONTRACT_INPUT__TYPE.getName()) {
-
-            @Override
-            public Image getImage(final Object object) {
-                return null;
-            }
-        });
-        typeColumnViewer.setEditingSupport(new PropertyEditingSupport(this, propertySourceProvider, ProcessPackage.Literals.CONTRACT_INPUT__TYPE.getName()) {
-
-            @Override
-            protected void setValue(final Object object, final Object value) {
-                super.setValue(object, value);
-                ContractInputTableViewer.this.update(object, null);
-            }
-        });
+        final TreeViewerColumn typeColumnViewer = createColumnViewer(Messages.type, SWT.FILL);
+        typeColumnViewer.setLabelProvider(new ContractInputTypeCellLabelProvider(propertySourceProvider));
+        typeColumnViewer.setEditingSupport(new ContractInputTypeEditingSupport(this, propertySourceProvider, inputController));
     }
 
     protected void createMandatoryColumn() {
-        final TableViewerColumn mandatoryColumnViewer = new TableViewerColumn(this, SWT.CENTER);
-        final TableColumn column = mandatoryColumnViewer.getColumn();
-        column.setText(Messages.mandatory);
+        final TreeViewerColumn mandatoryColumnViewer = createColumnViewer(Messages.mandatory, SWT.CENTER);
         mandatoryColumnViewer.setLabelProvider(new MandatoryInputCheckboxLabelProvider(getControl()));
         mandatoryColumnViewer.setEditingSupport(new CheckboxPropertyEditingSupport(propertySourceProvider, this,
                 ProcessPackage.Literals.CONTRACT_INPUT__MANDATORY.getName()));
     }
 
     protected void createMultipleColumn() {
-        final TableViewerColumn multipleColumnViewer = new TableViewerColumn(this, SWT.CENTER);
-        final TableColumn column = multipleColumnViewer.getColumn();
-        column.setText(Messages.multiple);
+        final TreeViewerColumn multipleColumnViewer = createColumnViewer(Messages.multiple, SWT.CENTER);
         multipleColumnViewer.setLabelProvider(new MultipleInputCheckboxLabelProvider(getControl()));
         multipleColumnViewer.setEditingSupport(new CheckboxPropertyEditingSupport(propertySourceProvider, this,
                 ProcessPackage.Literals.CONTRACT_INPUT__MULTIPLE.getName()));
     }
 
+    protected TreeViewerColumn createColumnViewer(final String text, final int style) {
+        final TreeViewerColumn columnViewer = new TreeViewerColumn(this, style);
+        final TreeColumn column = columnViewer.getColumn();
+        column.setText(text);
+        return columnViewer;
+    }
+
     @Override
     protected void handleDispose(final DisposeEvent event) {
         super.handleDispose(event);
-        if (event.widget.equals(getTable())) {
-            if (adapterFactoryLabelProvider != null) {
-                adapterFactoryLabelProvider.dispose();
-            }
-            if (propertySourceProvider != null) {
-                propertySourceProvider.dispose();
-            }
+        if (adapterFactoryLabelProvider != null) {
+            adapterFactoryLabelProvider.dispose();
+        }
+        if (propertySourceProvider != null) {
+            propertySourceProvider.dispose();
         }
     }
 

@@ -1,8 +1,8 @@
-package org.bonitasoft.studio.contract.ui.property.table;
+package org.bonitasoft.studio.contract.ui.property.tree;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.bonitasoft.studio.contract.ui.property.table.MultipleInputCheckboxLabelProvider;
+import org.bonitasoft.studio.contract.ui.property.tree.MultipleInputCheckboxLabelProvider;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.junit.After;

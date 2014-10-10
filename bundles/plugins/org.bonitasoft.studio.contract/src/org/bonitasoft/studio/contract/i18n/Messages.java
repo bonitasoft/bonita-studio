@@ -49,5 +49,9 @@ public class Messages extends NLS {
     public static String inputTabLabel;
     public static String constraintsTabLabel;
     public static String contractInputTypeLabel;
+    public static String addChild;
+    public static String removeInputConfirmationMessage;
+    public static String removeInputConfirmationTitle;
+    public static String returnType;
 
 }

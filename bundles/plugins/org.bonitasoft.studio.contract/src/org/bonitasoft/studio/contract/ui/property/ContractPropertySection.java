@@ -20,25 +20,26 @@ import org.bonitasoft.studio.common.databinding.CustomEMFEditObservables;
 import org.bonitasoft.studio.common.properties.EObjectSelectionProviderSection;
 import org.bonitasoft.studio.contract.core.ContractDefinitionValidator;
 import org.bonitasoft.studio.contract.i18n.Messages;
-import org.bonitasoft.studio.contract.ui.property.table.ContractInputController;
-import org.bonitasoft.studio.contract.ui.property.table.ContractInputTableViewer;
+import org.bonitasoft.studio.contract.ui.property.tree.ContractInputController;
+import org.bonitasoft.studio.contract.ui.property.tree.ContractInputTreeViewer;
 import org.bonitasoft.studio.model.process.Contract;
+import org.bonitasoft.studio.model.process.ContractInput;
+import org.bonitasoft.studio.model.process.ContractInputType;
 import org.bonitasoft.studio.model.process.ProcessPackage;
-import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.observable.Realm;
-import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.IValueChangeListener;
 import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
+import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
-import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
@@ -104,7 +105,6 @@ public class ContractPropertySection extends EObjectSelectionProviderSection {
         tabFolder.setSelection(0);
     }
 
-
     private void createInputTabContent(final Composite parent) {
         final Composite buttonsComposite = getWidgetFactory().createComposite(parent);
         buttonsComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).align(SWT.FILL, SWT.TOP).create());
@@ -113,25 +113,34 @@ public class ContractPropertySection extends EObjectSelectionProviderSection {
         final Button addButton = getWidgetFactory().createButton(buttonsComposite, Messages.add, SWT.PUSH);
         addButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).minSize(IDialogConstants.BUTTON_WIDTH, SWT.DEFAULT).create());
 
+        final Button addChildButton = getWidgetFactory().createButton(buttonsComposite, Messages.addChild, SWT.PUSH);
+        addChildButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).minSize(IDialogConstants.BUTTON_WIDTH, SWT.DEFAULT).create());
+
         final Button removeButton = getWidgetFactory().createButton(buttonsComposite, Messages.remove, SWT.PUSH);
         removeButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).minSize(IDialogConstants.BUTTON_WIDTH, SWT.DEFAULT).create());
 
-        final ContractInputTableViewer inputsTableViewer = new ContractInputTableViewer(parent, getWidgetFactory());
+        final ContractInputTreeViewer inputsTableViewer = new ContractInputTreeViewer(parent, getWidgetFactory());
         inputsTableViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(500, 180).create());
         inputsTableViewer.initialize(getInputController(), getContractDefinitionValidator());
 
         final IObservableValue observeContractValue = CustomEMFEditObservables.observeDetailValue(Realm.getDefault(), getEObjectObservable(),
                 ProcessPackage.Literals.TASK__CONTRACT);
-        final IObservableList observeContractInputDetailList = CustomEMFEditObservables.observeDetailList(Realm.getDefault(), observeContractValue,
-                ProcessPackage.Literals.CONTRACT__INPUTS);
 
-        inputsTableViewer.setInput(observeContractInputDetailList);
+        inputsTableViewer.setInput(observeContractValue);
 
         addButton.addSelectionListener(new SelectionAdapter() {
 
             @Override
             public void widgetSelected(final SelectionEvent e) {
                 getInputController().addInput(inputsTableViewer);
+            }
+        });
+
+        addChildButton.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(final SelectionEvent e) {
+                getInputController().addChildInput(inputsTableViewer);
             }
         });
 
@@ -151,23 +160,68 @@ public class ContractPropertySection extends EObjectSelectionProviderSection {
         });
 
         bindRemoveButtonEnablement(removeButton, inputsTableViewer);
-        inputsTableViewer.getTable().setFocus();
+        bindAddChildButtonEnablement(addChildButton, inputsTableViewer);
+        inputsTableViewer.getTree().setFocus();
     }
 
-    public Binding bindRemoveButtonEnablement(final Button removeButton, final TableViewer inputsTableViewer) {
-        return getContext().bindValue(SWTObservables.observeEnabled(removeButton),
-                ViewersObservables.observeSingleSelection(inputsTableViewer),
+    protected void bindRemoveButtonEnablement(final Button button, final Viewer viewer) {
+        getContext().bindValue(SWTObservables.observeEnabled(button),
+                ViewersObservables.observeSingleSelection(viewer),
                 new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER),
-                removeButtonEnablementModelStrategy());
+                emptySelectionToBooleanStrategy());
     }
 
-    private UpdateValueStrategy removeButtonEnablementModelStrategy() {
+    protected void bindAddChildButtonEnablement(final Button button, final Viewer viewer) {
+        getContext().bindValue(SWTObservables.observeEnabled(button),
+                ViewersObservables.observeSingleSelection(viewer),
+                new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER),
+                emptySelectionAndComplexTypeToBooleanStrategy());
+
+        getContext().bindValue(
+                SWTObservables.observeEnabled(button),
+                EMFObservables.observeDetailValue(Realm.getDefault(), ViewersObservables.observeSingleSelection(viewer),
+                        ProcessPackage.Literals.CONTRACT_INPUT__TYPE),
+                new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER),
+                complexTypeToBooleanStrategy());
+    }
+
+    private UpdateValueStrategy emptySelectionToBooleanStrategy() {
         final UpdateValueStrategy modelStrategy = new UpdateValueStrategy();
         modelStrategy.setConverter(new Converter(Object.class,Boolean.class) {
 
             @Override
             public Object convert(final Object from) {
                 return from != null;
+            }
+        });
+        return modelStrategy;
+    }
+
+    private UpdateValueStrategy emptySelectionAndComplexTypeToBooleanStrategy() {
+        final UpdateValueStrategy modelStrategy = new UpdateValueStrategy();
+        modelStrategy.setConverter(new Converter(Object.class, Boolean.class) {
+
+            @Override
+            public Object convert(final Object from) {
+                if (from instanceof ContractInput) {
+                    return ((ContractInput) from).getType() == ContractInputType.COMPLEX;
+                }
+                return false;
+            }
+        });
+        return modelStrategy;
+    }
+
+    private UpdateValueStrategy complexTypeToBooleanStrategy() {
+        final UpdateValueStrategy modelStrategy = new UpdateValueStrategy();
+        modelStrategy.setConverter(new Converter(ContractInputType.class, Boolean.class) {
+
+            @Override
+            public Object convert(final Object from) {
+                if (from instanceof ContractInputType) {
+                    return from == ContractInputType.COMPLEX;
+                }
+                return false;
             }
         });
         return modelStrategy;

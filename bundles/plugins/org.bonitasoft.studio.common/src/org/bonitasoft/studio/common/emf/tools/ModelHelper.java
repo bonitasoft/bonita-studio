@@ -2035,4 +2035,13 @@ public class ModelHelper {
 		return false;
 	}
 
+    @SuppressWarnings("unchecked")
+    public static <T extends EObject> T getFirstContainerOfType(final EObject element, final Class<T> type) {
+        EObject current = element;
+        while (current != null && !type.isAssignableFrom(current.getClass())) {
+            current = current.eContainer();
+        }
+        return (T) current;
+    }
+
 }

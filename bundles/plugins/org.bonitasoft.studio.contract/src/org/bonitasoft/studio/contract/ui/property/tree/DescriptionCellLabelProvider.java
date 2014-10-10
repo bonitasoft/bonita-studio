@@ -14,14 +14,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.contract.ui.property.edit;
+package org.bonitasoft.studio.contract.ui.property.tree;
 
 import org.bonitasoft.studio.contract.core.ContractDefinitionValidator;
 import org.bonitasoft.studio.model.process.ContractInput;
+import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.resource.JFaceResources;
-import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.views.properties.IPropertySourceProvider;
 import org.eclipse.ui.views.properties.PropertyColumnLabelProvider;
@@ -34,10 +35,10 @@ import org.eclipse.ui.views.properties.PropertyColumnLabelProvider;
 public class DescriptionCellLabelProvider extends PropertyColumnLabelProvider {
 
     private final ContractDefinitionValidator validator;
-    private final TableViewer viewer;
+    private final ColumnViewer viewer;
 
-    public DescriptionCellLabelProvider(final TableViewer viewer,final IPropertySourceProvider propertySourceProvider) {
-        super(propertySourceProvider, "description");
+    public DescriptionCellLabelProvider(final ColumnViewer viewer, final IPropertySourceProvider propertySourceProvider) {
+        super(propertySourceProvider, ProcessPackage.Literals.CONTRACT_INPUT__DESCRIPTION.getName());
         validator = new ContractDefinitionValidator();
         this.viewer = viewer;
     }

@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.contract.ui.property.table;
+package org.bonitasoft.studio.contract.ui.property.tree;
 
 import org.bonitasoft.studio.common.jface.AbstractCheckboxLabelProvider;
 import org.bonitasoft.studio.model.process.ContractInput;

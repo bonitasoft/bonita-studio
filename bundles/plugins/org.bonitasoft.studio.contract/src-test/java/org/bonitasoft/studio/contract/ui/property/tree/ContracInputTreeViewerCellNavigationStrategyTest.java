@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.contract.ui.property.table;
+package org.bonitasoft.studio.contract.ui.property.tree;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.anyBoolean;
@@ -25,13 +25,13 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import org.eclipse.jface.viewers.CellNavigationStrategy;
-import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.jface.viewers.ViewerRow;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.swt.widgets.Tree;
+import org.eclipse.swt.widgets.TreeItem;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -45,12 +45,12 @@ import org.mockito.runners.MockitoJUnitRunner;
  *
  */
 @RunWith(MockitoJUnitRunner.class)
-public class ContracInputTableViewerCellNavigationStrategyTest {
+public class ContracInputTreeViewerCellNavigationStrategyTest {
 
-    private ContracInputTableViewerCellNavigationStrategy contracInputTableViewerCellNavigationStrategy;
+    private ContracInputTreeViewerCellNavigationStrategy cellNavigationStrategy;
 
     @Mock
-    private TableViewer viewer;
+    private TreeViewer viewer;
 
     @Mock
     private ContractInputController controller;
@@ -59,7 +59,7 @@ public class ContracInputTableViewerCellNavigationStrategyTest {
     private ViewerCell currentSelectedCell;
 
     @Mock
-    private Table table;
+    private Tree tree;
 
     @Mock
     private ViewerCell viewerCell;
@@ -68,18 +68,18 @@ public class ContracInputTableViewerCellNavigationStrategyTest {
     private ViewerRow viewerRow;
 
     @Mock
-    private TableItem tableItem;
+    private TreeItem treeItem;
 
     /**
      * @throws java.lang.Exception
      */
     @Before
     public void setUp() throws Exception {
-        contracInputTableViewerCellNavigationStrategy = spy(new ContracInputTableViewerCellNavigationStrategy(viewer, controller));
-        when(viewer.getTable()).thenReturn(table);
+        cellNavigationStrategy = spy(new ContracInputTreeViewerCellNavigationStrategy(viewer, controller));
+        when(viewer.getTree()).thenReturn(tree);
         when(currentSelectedCell.getNeighbor(anyInt(), anyBoolean())).thenReturn(viewerCell);
         when(viewerCell.getViewerRow()).thenReturn(viewerRow);
-        when(viewerRow.getItem()).thenReturn(tableItem);
+        when(viewerRow.getItem()).thenReturn(treeItem);
     }
 
     /**
@@ -93,13 +93,13 @@ public class ContracInputTableViewerCellNavigationStrategyTest {
     public void should_isNavigationEvent_return_true_if_key_is_CR_or_DEL_or_ARROWS() throws Exception {
         final Event event = new Event();
         event.keyCode = SWT.CR;
-        assertThat(contracInputTableViewerCellNavigationStrategy.isNavigationEvent(viewer, event)).isTrue();
+        assertThat(cellNavigationStrategy.isNavigationEvent(viewer, event)).isTrue();
         event.keyCode = SWT.DEL;
-        assertThat(contracInputTableViewerCellNavigationStrategy.isNavigationEvent(viewer, event)).isTrue();
+        assertThat(cellNavigationStrategy.isNavigationEvent(viewer, event)).isTrue();
         event.keyCode = SWT.ARROW_RIGHT;
-        assertThat(contracInputTableViewerCellNavigationStrategy.isNavigationEvent(viewer, event)).isTrue();
+        assertThat(cellNavigationStrategy.isNavigationEvent(viewer, event)).isTrue();
         event.keyCode = 'a';
-        assertThat(contracInputTableViewerCellNavigationStrategy.isNavigationEvent(viewer, event)).isFalse();
+        assertThat(cellNavigationStrategy.isNavigationEvent(viewer, event)).isFalse();
     }
 
     @Test
@@ -107,9 +107,9 @@ public class ContracInputTableViewerCellNavigationStrategyTest {
         when(currentSelectedCell.getNeighbor(anyInt(), anyBoolean())).thenReturn(viewerCell);
         final Event event = new Event();
         event.keyCode = SWT.CR;
-        contracInputTableViewerCellNavigationStrategy.findSelectedCell(viewer, currentSelectedCell, event);
+        cellNavigationStrategy.findSelectedCell(viewer, currentSelectedCell, event);
         verify(controller,never()).addInput(viewer);
-        verify(table).setSelection(tableItem);
+        verify(tree, never()).setSelection(treeItem);
     }
 
     @Test
@@ -117,7 +117,7 @@ public class ContracInputTableViewerCellNavigationStrategyTest {
         when(currentSelectedCell.getNeighbor(anyInt(), anyBoolean())).thenReturn(null);
         final Event event = new Event();
         event.keyCode = SWT.CR;
-        contracInputTableViewerCellNavigationStrategy.findSelectedCell(viewer, currentSelectedCell, event);
+        cellNavigationStrategy.findSelectedCell(viewer, currentSelectedCell, event);
         verify(controller).addInput(viewer);
     }
 
@@ -127,7 +127,7 @@ public class ContracInputTableViewerCellNavigationStrategyTest {
         when(currentSelectedCell.getColumnIndex()).thenReturn(1);
         final Event event = new Event();
         event.keyCode = SWT.CR;
-        contracInputTableViewerCellNavigationStrategy.findSelectedCell(viewer, currentSelectedCell, event);
+        cellNavigationStrategy.findSelectedCell(viewer, currentSelectedCell, event);
         verify(controller, never()).addInput(viewer);
     }
 
@@ -135,7 +135,7 @@ public class ContracInputTableViewerCellNavigationStrategyTest {
     public void should_findSelectedCell_remove_input_on_Delete() throws Exception {
         final Event event = new Event();
         event.keyCode = SWT.DEL;
-        contracInputTableViewerCellNavigationStrategy.findSelectedCell(viewer, currentSelectedCell, event);
+        cellNavigationStrategy.findSelectedCell(viewer, currentSelectedCell, event);
         verify(controller).removeInput(viewer);
     }
 
@@ -143,11 +143,11 @@ public class ContracInputTableViewerCellNavigationStrategyTest {
     public void should_findSelectedCell_call_super() throws Exception {
         final Event event = new Event();
         event.keyCode = SWT.ARROW_LEFT;
-        contracInputTableViewerCellNavigationStrategy.findSelectedCell(viewer, null, event);
-        verify((CellNavigationStrategy) contracInputTableViewerCellNavigationStrategy).findSelectedCell(viewer, null, event);
+        cellNavigationStrategy.findSelectedCell(viewer, null, event);
+        verify((CellNavigationStrategy) cellNavigationStrategy).findSelectedCell(viewer, null, event);
 
-        contracInputTableViewerCellNavigationStrategy.findSelectedCell(viewer, currentSelectedCell, event);
-        verify((CellNavigationStrategy) contracInputTableViewerCellNavigationStrategy).findSelectedCell(viewer, currentSelectedCell, event);
+        cellNavigationStrategy.findSelectedCell(viewer, currentSelectedCell, event);
+        verify((CellNavigationStrategy) cellNavigationStrategy).findSelectedCell(viewer, currentSelectedCell, event);
     }
 
 }

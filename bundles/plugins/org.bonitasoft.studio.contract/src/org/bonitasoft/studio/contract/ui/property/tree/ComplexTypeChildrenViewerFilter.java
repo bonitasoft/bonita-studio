@@ -14,29 +14,31 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.contract.ui.property.table;
+package org.bonitasoft.studio.contract.ui.property.tree;
 
-import org.bonitasoft.studio.common.jface.AbstractCheckboxLabelProvider;
 import org.bonitasoft.studio.model.process.ContractInput;
-import org.eclipse.swt.widgets.Control;
+import org.bonitasoft.studio.model.process.ContractInputType;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerFilter;
 
 
 /**
  * @author Romain Bioteau
  *
  */
-public class MandatoryInputCheckboxLabelProvider extends AbstractCheckboxLabelProvider {
+public class ComplexTypeChildrenViewerFilter extends ViewerFilter {
 
-    public MandatoryInputCheckboxLabelProvider(final Control control) {
-        super(control);
-    }
-
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.viewers.ViewerFilter#select(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
+     */
     @Override
-    protected boolean isSelected(final Object element) {
-        if (element instanceof ContractInput) {
-            return ((ContractInput) element).isMandatory();
+    public boolean select(final Viewer viewer, final Object parentElement, final Object element) {
+        final ContractInput contractInput = (ContractInput) element;
+        if (contractInput.eContainer() instanceof ContractInput) {
+            final ContractInput parentInput = (ContractInput) contractInput.eContainer();
+            return parentInput.getType() == ContractInputType.COMPLEX;
         }
-        return false;
+        return true;
     }
 
 }

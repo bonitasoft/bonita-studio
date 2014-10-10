@@ -14,28 +14,28 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.contract.ui.property.table;
+package org.bonitasoft.studio.contract.ui.property.tree;
 
 import org.eclipse.jface.viewers.CellNavigationStrategy;
 import org.eclipse.jface.viewers.ColumnViewer;
-import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.swt.widgets.TreeItem;
 
 
 /**
  * @author Romain Bioteau
  *
  */
-public class ContracInputTableViewerCellNavigationStrategy extends CellNavigationStrategy {
+public class ContracInputTreeViewerCellNavigationStrategy extends CellNavigationStrategy {
 
-    private final TableViewer tableViewer;
+    private final TreeViewer treeViewer;
     private final ContractInputController inputController;
 
-    public ContracInputTableViewerCellNavigationStrategy(final TableViewer tableViewer, final ContractInputController inputController) {
-        this.tableViewer = tableViewer;
+    public ContracInputTreeViewerCellNavigationStrategy(final TreeViewer treeViewer, final ContractInputController inputController) {
+        this.treeViewer = treeViewer;
         this.inputController = inputController;
     }
 
@@ -68,25 +68,32 @@ public class ContracInputTableViewerCellNavigationStrategy extends CellNavigatio
 
     protected ViewerCell removeRow(final ViewerCell currentSelectedCell) {
         final ViewerCell aboveCell = currentSelectedCell.getNeighbor(ViewerCell.ABOVE, false);
-        inputController.removeInput(tableViewer);
+        inputController.removeInput(treeViewer);
         updateSelection(aboveCell);
         return aboveCell;
     }
 
     protected void updateSelection(final ViewerCell viewerCell) {
         if (viewerCell != null) {
-            tableViewer.getTable().setSelection((TableItem) viewerCell.getViewerRow().getItem());
+            treeViewer.getTree().setSelection((TreeItem) viewerCell.getViewerRow().getItem());
         }
     }
 
     protected ViewerCell addNewRow(final ViewerCell currentSelectedCell) {
-        ViewerCell nextCell = currentSelectedCell.getNeighbor(ViewerCell.BELOW, false);
-        if (nextCell == null && currentSelectedCell.getColumnIndex() == 0) {
-            inputController.addInput(tableViewer);
+        if (isContractInputNameColumn(currentSelectedCell)) {
+            ViewerCell nextCell = currentSelectedCell.getNeighbor(ViewerCell.BELOW, false);
+            if (nextCell == null) {
+                inputController.addInput(treeViewer);
+                nextCell = currentSelectedCell.getNeighbor(ViewerCell.BELOW, false);
+                updateSelection(nextCell);
+                return nextCell;
+            }
         }
-        nextCell = currentSelectedCell.getNeighbor(ViewerCell.BELOW, false);
-        updateSelection(nextCell);
-        return nextCell;
+        return null;
+    }
+
+    public boolean isContractInputNameColumn(final ViewerCell currentSelectedCell) {
+        return currentSelectedCell.getColumnIndex() == 0;
     }
 
 }

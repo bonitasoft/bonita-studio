@@ -24,6 +24,7 @@ import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.contract.ContractPlugin;
 import org.bonitasoft.studio.contract.i18n.Messages;
+import org.bonitasoft.studio.contract.ui.expression.ContractInputExpressionEditor;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionEditor;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionProvider;
 import org.bonitasoft.studio.model.expression.Expression;
@@ -83,7 +84,7 @@ public class ContractInputExpressionProvider implements IExpressionProvider {
      */
     @Override
     public Image getIcon(final Expression expression) {
-        if (!expression.getReferencedElements().isEmpty()) {
+        if (expression != null && !expression.getReferencedElements().isEmpty()) {
             return adapterLabelProvider.getImage(expression.getReferencedElements().get(0));
         }
         return null;
@@ -126,7 +127,7 @@ public class ContractInputExpressionProvider implements IExpressionProvider {
      */
     @Override
     public IExpressionEditor getExpressionEditor(final Expression expression, final EObject context) {
-        return null;
+        return new ContractInputExpressionEditor();
     }
 
 }

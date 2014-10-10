@@ -16,7 +16,7 @@
  */
 package org.bonitasoft.studio.contract.ui.property;
 
-import org.bonitasoft.studio.contract.ui.property.table.CellEditorControlAdapter;
+import org.bonitasoft.studio.contract.ui.property.tree.CellEditorControlAdapter;
 import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.fieldassist.FieldDecoration;
 import org.eclipse.jface.fieldassist.FieldDecorationRegistry;

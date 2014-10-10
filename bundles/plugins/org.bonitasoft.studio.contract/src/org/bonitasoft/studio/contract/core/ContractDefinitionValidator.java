@@ -90,9 +90,10 @@ public class ContractDefinitionValidator {
                 if (in.getName() != null && !in.getName().isEmpty() && !result.add(in.getName())) {
                     duplicated.add(in.getName());
                 }
+                validateDuplicatedInputsRecursively(in, duplicated, result);
             }
             for (final String dup : duplicated) {
-                status.add(createDuplicateStatus(dup));
+                status.add(ValidationStatus.error(dup));
             }
             if (messageManager != null) {
                 updateMessage(contract, DUPLICATED_CONSTRAINT_ID, status);
@@ -101,8 +102,13 @@ public class ContractDefinitionValidator {
         return status;
     }
 
-    protected IStatus createDuplicateStatus(final String inputName) {
-        return ValidationStatus.error(inputName);
+    private void validateDuplicatedInputsRecursively(final ContractInput in, final Set<String> duplicated, final Set<String> result) {
+        for (final ContractInput child : in.getInputs()) {
+            if (child.getName() != null && !child.getName().isEmpty() && !result.add(child.getName())) {
+                duplicated.add(child.getName());
+            }
+            validateDuplicatedInputsRecursively(child, duplicated, result);
+        }
     }
 
     public IStatus validateInputDescription(final ContractInput input, final String description) {

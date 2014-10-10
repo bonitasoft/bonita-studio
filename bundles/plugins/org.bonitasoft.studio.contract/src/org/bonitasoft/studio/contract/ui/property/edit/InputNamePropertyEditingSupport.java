@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.bonitasoft.studio.common.DataUtil;
+import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.contract.core.ContractDefinitionValidator;
 import org.bonitasoft.studio.contract.ui.property.FieldDecoratorProvider;
@@ -31,13 +32,14 @@ import org.bonitasoft.studio.model.process.ContractInputType;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jface.viewers.CellEditor;
+import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.ICellEditorListener;
 import org.eclipse.jface.viewers.ICellEditorValidator;
-import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.views.properties.PropertyEditingSupport;
@@ -68,7 +70,7 @@ public class InputNamePropertyEditingSupport extends PropertyEditingSupport impl
     }
 
     public InputNamePropertyEditingSupport(final AdapterFactoryContentProvider propertySourceProvider,
-            final TableViewer viewer,
+            final ColumnViewer viewer,
             final AdapterFactoryLabelProvider adapterFactoryLabelProvider,
             final ContractDefinitionValidator contractDefinitionValidator,
             final FieldDecoratorProvider decoratorProvider) {
@@ -82,10 +84,11 @@ public class InputNamePropertyEditingSupport extends PropertyEditingSupport impl
     protected void setValue(final Object element, final Object value) {
         super.setValue(element, value);
         if (element instanceof ContractInput) {
-            contractDefinitionValidator.validateDuplicatedInputs((Contract) ((ContractInput) element).eContainer());
+            contractDefinitionValidator.validateDuplicatedInputs(ModelHelper.getFirstContainerOfType((EObject) element, Contract.class));
         }
-        getViewer().refresh(true);
+        getViewer().refresh(true);//recompute error decorator label for duplicated input
     }
+
 
     @Override
     protected void initializeCellEditorValue(final CellEditor cellEditor, final ViewerCell cell) {
@@ -102,8 +105,8 @@ public class InputNamePropertyEditingSupport extends PropertyEditingSupport impl
         cellEditor.setValidator(this);
         cellEditor.addListener(this);
         //Clear cell label
-        cell.setText("");
-        cell.setImage(null);
+        //  cell.setText("");
+        //cell.setImage(null);
     }
 
     //    protected void attachContentAssist(final CellEditor cellEditor) {

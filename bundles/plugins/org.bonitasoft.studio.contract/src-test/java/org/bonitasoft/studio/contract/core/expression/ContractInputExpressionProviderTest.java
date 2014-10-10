@@ -22,6 +22,7 @@ import static org.assertj.core.api.Assertions.tuple;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.contract.i18n.Messages;
+import org.bonitasoft.studio.contract.ui.expression.ContractInputExpressionEditor;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractInput;
@@ -96,6 +97,33 @@ public class ContractInputExpressionProviderTest {
                 .contains(
                         tuple("firstName", String.class.getName()),
                         tuple("lastName", String.class.getName()));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void should_getExpressions_throw_IllegalArgumentException() throws Exception {
+        final Task task = ProcessFactory.eINSTANCE.createTask();
+        contractInputExpressionProvider.getExpressions(task);
+    }
+
+    @Test
+    public void should_getIcon_return_emf_icon() throws Exception {
+        final Contract creatContractWithInput = creatContractWithInput("name");
+        assertThat(contractInputExpressionProvider.getIcon(ExpressionHelper.createContractInputExpression(creatContractWithInput.getInputs().get(0))))
+                .isNotNull();
+    }
+
+    @Test
+    public void should_getIcon_return_null() throws Exception {
+        assertThat(contractInputExpressionProvider.getIcon(null))
+                .isNull();
+
+        assertThat(contractInputExpressionProvider.getIcon(ExpressionHelper.createConstantExpression("", "")))
+                .isNull();
+    }
+
+    @Test
+    public void should_getExpressionEditor_return_a_new_ContractInputExpressionEditor() throws Exception {
+        assertThat(contractInputExpressionProvider.getExpressionEditor(null, null)).isInstanceOf(ContractInputExpressionEditor.class);
     }
 
     private Contract creatContractWithInput(final String...inputNames) {

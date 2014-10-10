@@ -14,20 +14,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.contract.ui.property.edit;
+package org.bonitasoft.studio.contract.ui.property.tree;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import org.bonitasoft.studio.contract.AbstractSWTTestCase;
 import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ProcessFactory;
-import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.ui.views.properties.IPropertySourceProvider;
+import org.eclipse.jface.fieldassist.FieldDecoration;
+import org.eclipse.jface.viewers.ColumnViewer;
+import org.eclipse.swt.graphics.Image;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -41,62 +41,54 @@ import org.mockito.runners.MockitoJUnitRunner;
  *
  */
 @RunWith(MockitoJUnitRunner.class)
-public class InputNameCellLabelProviderTest {
+public class ValidationLabelDecoratorTest extends AbstractSWTTestCase {
 
     @Mock
-    private IPropertySourceProvider propertySourceLabelProvider;
-
-    private InputNameCellLabelProvider inputNameCellLabelProvider;
-
+    private ColumnViewer viewer;
+    private ValidationLabelDecorator validationLabelDecorator;
+    private Image errorDecorator;
     @Mock
-    private TableViewer viewer;
+    private FieldDecoration decorator;
+    private Image baseImage;
 
     /**
      * @throws java.lang.Exception
      */
     @Before
     public void setUp() throws Exception {
-        inputNameCellLabelProvider = spy(new InputNameCellLabelProvider(viewer, propertySourceLabelProvider));
-        doReturn(null).when(inputNameCellLabelProvider).getErrorImage();
+        createDisplayAndRealm();
+        validationLabelDecorator = spy(new ValidationLabelDecorator(viewer));
+        baseImage = createImage();
+        errorDecorator = createImage();
+        when(decorator.getImage()).thenReturn(errorDecorator);
+        doReturn(decorator).when(validationLabelDecorator).getErrorDecorator();
     }
+
 
     /**
      * @throws java.lang.Exception
      */
     @After
     public void tearDown() throws Exception {
+        dispose();
     }
 
     @Test
-    public void should_getImage_returns_null() throws Exception {
-        final ContractInput input = ProcessFactory.eINSTANCE.createContractInput();
-        assertThat(inputNameCellLabelProvider.getImage(input)).isNull();
-    }
-
-    @Test
-    public void should_getToolTipText_returns_null_if_no_error() throws Exception {
-        final ContractInput input = ProcessFactory.eINSTANCE.createContractInput();
-        input.setName("name");
-        assertThat(inputNameCellLabelProvider.getToolTipText(input)).isNull();
-    }
-
-    @Test
-    public void should_getToolTipText_returns_null_if_error_but_activeEditor() throws Exception {
-        when(viewer.isCellEditorActive()).thenReturn(true);
+    public void shoud_decorateText_returns_error_message_if_input_has_no_name() throws Exception {
         final ContractInput input = ProcessFactory.eINSTANCE.createContractInput();
         input.setName("");
-        assertThat(inputNameCellLabelProvider.getToolTipText(input)).isNull();
+        assertThat(validationLabelDecorator.decorateText(null, input)).isNotEmpty();
     }
 
     @Test
-    public void should_getToolTipText_returns_error_message_for_empty_name() throws Exception {
+    public void shoud_decorateText_returns_null_if_input_has_no_error() throws Exception {
         final ContractInput input = ProcessFactory.eINSTANCE.createContractInput();
-        input.setName("");
-        assertThat(inputNameCellLabelProvider.getToolTipText(input)).isNotEmpty();
+        input.setName("hello");
+        assertThat(validationLabelDecorator.decorateText(null, input)).isNullOrEmpty();
     }
 
     @Test
-    public void should_getImage_returns_error_image_for_duplicated_name() throws Exception {
+    public void shoud_decorateImage_returns_error_decorator_if_input_is_duplicated() throws Exception {
         final Contract c = ProcessFactory.eINSTANCE.createContract();
         final ContractInput input = ProcessFactory.eINSTANCE.createContractInput();
         input.setName("nameInput");
@@ -104,12 +96,11 @@ public class InputNameCellLabelProviderTest {
         input2.setName("nameInput");
         c.getInputs().add(input);
         c.getInputs().add(input2);
-        inputNameCellLabelProvider.getImage(input);
-        verify(inputNameCellLabelProvider).getErrorImage();
+        assertThat(validationLabelDecorator.decorateImage(baseImage, input)).isNotNull();
     }
 
     @Test
-    public void should_getImage_returns_null_if_other_duplicated_name() throws Exception {
+    public void shoud_decorateImage_returns_error_null_if_other_duplicated_name() throws Exception {
         final Contract c = ProcessFactory.eINSTANCE.createContract();
         final ContractInput input = ProcessFactory.eINSTANCE.createContractInput();
         input.setName("nameInput");
@@ -120,23 +111,22 @@ public class InputNameCellLabelProviderTest {
         c.getInputs().add(input);
         c.getInputs().add(input2);
         c.getInputs().add(input3);
-        inputNameCellLabelProvider.getImage(input3);
-        verify(inputNameCellLabelProvider, never()).getErrorImage();
+        assertThat(validationLabelDecorator.decorateImage(baseImage, input3)).isNull();
     }
 
     @Test
-    public void should_getImage_returns_error_image_for_empty_name() throws Exception {
+    public void shoud_decorateImage_returns_error_decorator_if_input_has_no_name() throws Exception {
         final ContractInput input = ProcessFactory.eINSTANCE.createContractInput();
         input.setName("");
-        inputNameCellLabelProvider.getImage(input);
-        verify(inputNameCellLabelProvider).getErrorImage();
+        assertThat(validationLabelDecorator.decorateImage(baseImage, input)).isNotNull();
     }
 
     @Test
-    public void should_getImage_returns_null_for_valid_input_name() throws Exception {
+    public void shoud_decorateImage_returns_null_if_no_error() throws Exception {
         final ContractInput input = ProcessFactory.eINSTANCE.createContractInput();
-        input.setName("name");
-        inputNameCellLabelProvider.getImage(input);
-        verify(inputNameCellLabelProvider, never()).getErrorImage();
+        input.setName("input");
+        assertThat(validationLabelDecorator.decorateImage(baseImage, input)).isNull();
     }
+
+
 }

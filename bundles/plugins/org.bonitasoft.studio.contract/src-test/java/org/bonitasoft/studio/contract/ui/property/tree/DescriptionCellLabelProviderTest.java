@@ -1,4 +1,4 @@
-package org.bonitasoft.studio.contract.ui.property.edit;
+package org.bonitasoft.studio.contract.ui.property.tree;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doReturn;
@@ -7,6 +7,7 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import org.bonitasoft.studio.contract.ui.property.tree.DescriptionCellLabelProvider;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.eclipse.jface.viewers.TableViewer;

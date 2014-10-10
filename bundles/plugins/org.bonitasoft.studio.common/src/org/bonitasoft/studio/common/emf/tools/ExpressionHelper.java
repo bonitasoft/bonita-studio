@@ -56,7 +56,7 @@ public class ExpressionHelper {
 
     protected static final String EMPTY_LIST_NAME = Messages.emptyListExpressionName;
     protected static final String EMPTY_LIST_CONTENT = "[]";
-    private static final Map<ContractInputType, String> returnTypeForInputType;
+    protected static final Map<ContractInputType, String> returnTypeForInputType;
     static {
         returnTypeForInputType = new HashMap<ContractInputType, String>();
         returnTypeForInputType.put(ContractInputType.TEXT, String.class.getName());
@@ -64,6 +64,7 @@ public class ExpressionHelper {
         returnTypeForInputType.put(ContractInputType.DATE, Date.class.getName());
         returnTypeForInputType.put(ContractInputType.INTEGER, Number.class.getName());
         returnTypeForInputType.put(ContractInputType.DECIMAL, Number.class.getName());
+        returnTypeForInputType.put(ContractInputType.COMPLEX, Map.class.getName());
     }
 
     private ExpressionHelper() {
@@ -301,9 +302,20 @@ public class ExpressionHelper {
         exp.setType(ExpressionConstants.CONTRACT_INPUT_TYPE);
         exp.setContent(input.getName());
         exp.setName(input.getName());
-        exp.setReturnType(returnTypeForInputType.get(input.getType()));
+        exp.setReturnType(getContractInputReturnType(input));
         exp.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(input));
         return exp;
+    }
+
+    public static String getContractInputReturnType(final ContractInput input) {
+        if(input == null){
+            return null;
+        }
+        String returnType = returnTypeForInputType.get(input.getType());
+        if (input.isMultiple()) {
+            returnType = List.class.getName();
+        }
+        return returnType;
     }
 
 }

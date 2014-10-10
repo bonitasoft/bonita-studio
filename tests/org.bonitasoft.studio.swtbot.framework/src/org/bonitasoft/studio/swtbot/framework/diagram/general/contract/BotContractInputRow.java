@@ -19,8 +19,17 @@ package org.bonitasoft.studio.swtbot.framework.diagram.general.contract;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.swtbot.framework.BotBase;
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Tree;
+import org.eclipse.swt.widgets.TreeItem;
+import org.eclipse.swt.widgets.Widget;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
+import org.eclipse.swtbot.swt.finder.widgets.AbstractSWTBot;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotCombo;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotText;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 
 
 /**
@@ -30,6 +39,8 @@ import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 public class BotContractInputRow extends BotBase {
 
     private final int row;
+
+    private TreeItem treeItem;
 
     private static final int NAME_COLUMN = 0;
     private static final int TYPE_COLUMN = 1;
@@ -45,27 +56,59 @@ public class BotContractInputRow extends BotBase {
     }
 
     public BotContractInputRow setName(final String name){
-        bot.table().click(row, NAME_COLUMN);
-        bot.textWithId(SWTBotConstants.SWTBOT_ID_INPUT_NAME_TEXTEDITOR).setText(name);
+        final SWTBotTreeItem item = getTreeItem(bot.treeWithId(SWTBotConstants.SWTBOT_ID_CONTRACT_INPUT_TREE), row);
+        item.setFocus();
+        item.click(NAME_COLUMN);
+        final SWTBotText botText = bot.textWithId(SWTBotConstants.SWTBOT_ID_INPUT_NAME_TEXTEDITOR);
+        botText.setText(name);
         SWTBotTestUtil.pressEnter();
-        bot.waitUntil(rowIsInactive());
         return this;
     }
 
-    public BotContractInputRow setDescription(final String description) {
-        bot.table().click(row, DESCRIPTION_COLUMN);
-        bot.text(1).setText(description);
-        SWTBotTestUtil.pressEnter();
-        bot.waitUntil(rowIsInactive());
-        return this;
-    }
-
-    protected DefaultCondition rowIsInactive() {
+    public DefaultCondition cellEditorIsInactive(final AbstractSWTBot<? extends Widget> botText) {
         return new DefaultCondition() {
 
             @Override
             public boolean test() throws Exception {
-                return !bot.table().getTableItem(row).isActive();
+                return !botText.isActive();
+            }
+
+            @Override
+            public String getFailureMessage() {
+                return null;
+            }
+        };
+    }
+
+    private SWTBotTreeItem getTreeItem(final SWTBotTree swtBotTree, final int row) {
+        Display.getDefault().syncExec(new Runnable() {
+
+            @Override
+            public void run() {
+                final Tree tree = swtBotTree.widget;
+                treeItem = tree.getItem(row);
+            }
+        });
+        return new SWTBotTreeItem(treeItem);
+
+    }
+
+    public BotContractInputRow setDescription(final String description) {
+        final SWTBotTreeItem item = getTreeItem(bot.treeWithId(SWTBotConstants.SWTBOT_ID_CONTRACT_INPUT_TREE), row);
+        item.setFocus();
+        item.click(DESCRIPTION_COLUMN);
+        final SWTBotText botText = bot.text(1);
+        botText.setText(description);
+        SWTBotTestUtil.pressEnter();
+        return this;
+    }
+
+    protected DefaultCondition rowIsInactive(final SWTBotTreeItem item) {
+        return new DefaultCondition() {
+
+            @Override
+            public boolean test() throws Exception {
+                return !item.isActive();
             }
 
             @Override
@@ -75,23 +118,43 @@ public class BotContractInputRow extends BotBase {
         };
     }
 
+    protected DefaultCondition rowIsActive(final SWTBotTreeItem item) {
+        return new DefaultCondition() {
+
+            @Override
+            public boolean test() throws Exception {
+                return item.isActive();
+            }
+
+            @Override
+            public String getFailureMessage() {
+                return "Row " + row + " is not active";
+            }
+        };
+    }
+
     public BotContractInputRow setType(final String type) {
-        bot.table().click(row, TYPE_COLUMN);
-        bot.comboBox().setSelection(type);
+        final SWTBotTreeItem item = getTreeItem(bot.treeWithId(SWTBotConstants.SWTBOT_ID_CONTRACT_INPUT_TREE), row);
+        item.setFocus();
+        item.click(TYPE_COLUMN);
+        bot.waitUntil(rowIsActive(item));
+        final SWTBotCombo comboBox = bot.comboBox();
+        comboBox.setSelection(type);
         SWTBotTestUtil.pressEnter();
-        bot.waitUntil(rowIsInactive());
         return this;
     }
 
     public BotContractInputRow clickMultiple() {
-        bot.table().click(row, MULTIPLE_COLUMN);
-        bot.waitUntil(rowIsInactive());
+        final SWTBotTreeItem item = getTreeItem(bot.treeWithId(SWTBotConstants.SWTBOT_ID_CONTRACT_INPUT_TREE), row);
+        item.setFocus();
+        item.click(MULTIPLE_COLUMN);
         return this;
     }
 
     public BotContractInputRow clickMandatory() {
-        bot.table().click(row, MANDATORY_COLUMN);
-        bot.waitUntil(rowIsInactive());
+        final SWTBotTreeItem item = getTreeItem(bot.treeWithId(SWTBotConstants.SWTBOT_ID_CONTRACT_INPUT_TREE), row);
+        item.setFocus();
+        item.click(MANDATORY_COLUMN);
         return this;
     }
 

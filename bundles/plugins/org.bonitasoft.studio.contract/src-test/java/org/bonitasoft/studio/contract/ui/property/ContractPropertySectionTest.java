@@ -24,7 +24,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
 
-import org.bonitasoft.studio.common.jface.databinding.DefaultRealm;
+import org.bonitasoft.studio.contract.AbstractSWTTestCase;
 import org.bonitasoft.studio.contract.core.ContractDefinitionValidator;
 import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ProcessFactory;
@@ -33,12 +33,8 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 import org.junit.After;
@@ -55,17 +51,13 @@ import org.mockito.runners.MockitoJUnitRunner;
  *
  */
 @RunWith(MockitoJUnitRunner.class)
-public class ContractPropertySectionTest {
+public class ContractPropertySectionTest extends AbstractSWTTestCase {
 
     @Spy
     private ContractPropertySection section;
 
-    private Display display;
-
     @Mock
     private TabbedPropertySheetPage tabbedPropertySheetPage;
-
-    private DefaultRealm realm;
 
     private Composite parent;
 
@@ -74,19 +66,10 @@ public class ContractPropertySectionTest {
      */
     @Before
     public void setUp() throws Exception {
-        createDisplay();
+        parent = createDisplayAndRealm();
         when(tabbedPropertySheetPage.getWidgetFactory()).thenReturn(new TabbedPropertySheetWidgetFactory());
     }
 
-    protected void createDisplay() {
-        display = new Display();
-        final Shell headlessShell = new Shell(display);
-        headlessShell.setLayout(new GridLayout(1, true));
-        final GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
-        headlessShell.setLayoutData(gridData);
-        parent = new Composite(headlessShell, SWT.NONE);
-        realm = new DefaultRealm();
-    }
 
     /**
      * @throws java.lang.Exception
@@ -94,8 +77,7 @@ public class ContractPropertySectionTest {
     @After
     public void tearDown() throws Exception {
         section.dispose();
-        realm.dispose();
-        display.dispose();
+        dispose();
     }
 
     @Test
