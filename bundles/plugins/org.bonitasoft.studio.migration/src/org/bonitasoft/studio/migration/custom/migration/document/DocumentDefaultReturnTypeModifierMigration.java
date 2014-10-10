@@ -34,7 +34,7 @@ public class DocumentDefaultReturnTypeModifierMigration extends CustomMigration 
             if (duplicated != null && Boolean.TRUE.equals(duplicated)) {
                 fileWidget.set("returnTypeModifier", "java.util.List<java.lang.String>");
             } else {
-                fileWidget.set("returnTypeModifier", "org.bonitasoft.engine.bpm.document.Document");
+                fileWidget.set("returnTypeModifier", "org.bonitasoft.engine.bpm.document.DocumentValue");
             }
         }
     }
