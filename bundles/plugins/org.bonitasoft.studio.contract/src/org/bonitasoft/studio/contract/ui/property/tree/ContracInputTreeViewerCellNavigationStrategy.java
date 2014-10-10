@@ -33,6 +33,7 @@ public class ContracInputTreeViewerCellNavigationStrategy extends CellNavigation
 
     private final TreeViewer treeViewer;
     private final ContractInputController inputController;
+    private boolean cancelEvent;
 
     public ContracInputTreeViewerCellNavigationStrategy(final TreeViewer treeViewer, final ContractInputController inputController) {
         this.treeViewer = treeViewer;
@@ -53,10 +54,11 @@ public class ContracInputTreeViewerCellNavigationStrategy extends CellNavigation
 
     @Override
     public ViewerCell findSelectedCell(final ColumnViewer viewer, final ViewerCell currentSelectedCell, final Event event) {
+        setCancelEvent(false);
         if (currentSelectedCell != null) {
             switch (event.keyCode) {
                 case SWT.CR:
-                    return addNewRow(currentSelectedCell);
+                    return addNewRow(currentSelectedCell, event);
                 case SWT.DEL:
                     return removeRow(currentSelectedCell);
                 default:
@@ -79,10 +81,11 @@ public class ContracInputTreeViewerCellNavigationStrategy extends CellNavigation
         }
     }
 
-    protected ViewerCell addNewRow(final ViewerCell currentSelectedCell) {
+    protected ViewerCell addNewRow(final ViewerCell currentSelectedCell, final Event event) {
         if (isContractInputNameColumn(currentSelectedCell)) {
             ViewerCell nextCell = currentSelectedCell.getNeighbor(ViewerCell.BELOW, false);
             if (nextCell == null) {
+                setCancelEvent(true);
                 inputController.addInput(treeViewer);
                 nextCell = currentSelectedCell.getNeighbor(ViewerCell.BELOW, false);
                 updateSelection(nextCell);
@@ -90,6 +93,15 @@ public class ContracInputTreeViewerCellNavigationStrategy extends CellNavigation
             }
         }
         return null;
+    }
+
+    private void setCancelEvent(final boolean cancelEvent) {
+        this.cancelEvent = cancelEvent;
+    }
+
+    @Override
+    public boolean shouldCancelEvent(final ColumnViewer viewer, final Event event) {
+        return cancelEvent;
     }
 
     public boolean isContractInputNameColumn(final ViewerCell currentSelectedCell) {

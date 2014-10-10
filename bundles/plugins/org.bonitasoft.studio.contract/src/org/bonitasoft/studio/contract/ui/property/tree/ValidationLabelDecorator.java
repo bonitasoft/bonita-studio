@@ -77,7 +77,7 @@ public class ValidationLabelDecorator implements ILabelDecorator {
 
     protected ImageDescriptor getDecoratorImageDescriptor(final Object element) {
         final ContractInput contractInput = (ContractInput) element;
-        if(contractInput.getName() == null){
+        if (contractInput.getName() == null) {
             return null;
         }
         final String name = contractInput.getName();

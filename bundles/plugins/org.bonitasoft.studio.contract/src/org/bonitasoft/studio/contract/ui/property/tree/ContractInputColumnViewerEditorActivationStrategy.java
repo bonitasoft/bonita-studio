@@ -16,10 +16,13 @@
  */
 package org.bonitasoft.studio.contract.ui.property.tree;
 
+import java.util.EventObject;
+
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.ColumnViewerEditorActivationEvent;
 import org.eclipse.jface.viewers.ColumnViewerEditorActivationStrategy;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.KeyEvent;
 
 
 /**
@@ -40,6 +43,10 @@ public class ContractInputColumnViewerEditorActivationStrategy extends ColumnVie
     }
 
     protected boolean enterKeyPressed(final ColumnViewerEditorActivationEvent event) {
-        return event.eventType == ColumnViewerEditorActivationEvent.KEY_PRESSED && event.keyCode == SWT.CR;
+        final EventObject sourceEvent = event.sourceEvent;
+        if (sourceEvent instanceof KeyEvent && ((KeyEvent) sourceEvent).doit) { //event must not be cancelled
+            return event.eventType == ColumnViewerEditorActivationEvent.KEY_PRESSED && event.keyCode == SWT.CR;
+        }
+        return false;
     }
 }

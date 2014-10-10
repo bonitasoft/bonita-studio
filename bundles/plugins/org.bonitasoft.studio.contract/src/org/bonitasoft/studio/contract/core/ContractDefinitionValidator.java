@@ -17,6 +17,7 @@
 package org.bonitasoft.studio.contract.core;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.Pair;
@@ -71,14 +72,19 @@ public class ContractDefinitionValidator {
         }
         if (contract != null) {
             final MultiStatus status = new MultiStatus(ContractPlugin.PLUGIN_ID, IStatus.OK, "", null);
-            for (final ContractInput input : contract.getInputs()) {
-                status.add(validateInputName(input, input.getName()));
-                status.add(validateInputDescription(input, input.getDescription()));
-            }
+            validateRecursively(contract.getInputs(), status);
             status.addAll(validateDuplicatedInputs(contract));
             return status;
         }
         return ValidationStatus.ok();
+    }
+
+    protected void validateRecursively(final List<ContractInput> inputs, final MultiStatus status) {
+        for (final ContractInput input : inputs) {
+            status.add(validateInputName(input, input.getName()));
+            status.add(validateInputDescription(input, input.getDescription()));
+            validateRecursively(input.getInputs(), status);
+        }
     }
 
     public IStatus validateDuplicatedInputs(final Contract contract) {
