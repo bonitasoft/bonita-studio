@@ -89,8 +89,7 @@ public class DuplicatedFileWidgetMultipleDocumentConsistencyConstraint extends A
         if (widget.getImgPath() != null) {
             final String inputExpressionType = widget.getImgPath().getReturnType();
             if (List.class.getName().equals(inputExpressionType) && !widget.isDuplicate()) {
-                return context.createFailureStatus(new Object[] { Messages.bind(Messages.DuplicatedFileWidgetMultipleDocumentConsistencyError,
-                        widget.getName(), inputExpressionType) });
+                return context.createFailureStatus(new Object[] { Messages.DuplicatedFileWidgetMultipleDocumentConsistencyError });
             }
             else {
                 return context.createSuccessStatus();
