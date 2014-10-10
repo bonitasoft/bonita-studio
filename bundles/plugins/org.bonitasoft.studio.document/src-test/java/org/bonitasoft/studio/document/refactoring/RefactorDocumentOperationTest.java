@@ -67,6 +67,7 @@ public class RefactorDocumentOperationTest {
         parentProcess.getElements().add(task);
     }
 
+
     private void createLeftOperandWithType(final String documentType) {
         leftOperand = ExpressionFactory.eINSTANCE.createExpression();
         leftOperand.setName(document.getName());
@@ -94,11 +95,13 @@ public class RefactorDocumentOperationTest {
         assertThat(parentProcess.getDocuments()).hasSize(1);
         assertEquals(parentProcess.getDocuments().get(0).getName(), "docNameUpdated");
         ExpressionAssert.assertThat(leftOperand).hasName(updatedDocument.getName());
+        ExpressionAssert.assertThat(operation.getLeftOperand()).hasReturnType(org.bonitasoft.engine.bpm.document.Document.class.getName());
 
         domain.getCommandStack().undo();
         assertThat(parentProcess.getDocuments()).hasSize(1);
         assertEquals(parentProcess.getDocuments().get(0).getName(), INITIAL_DOC_NAME);
         ExpressionAssert.assertThat(leftOperand).hasName(INITIAL_DOC_NAME);
+        ExpressionAssert.assertThat(operation.getLeftOperand()).hasReturnType(String.class.getName());
     }
 
     @Test
@@ -176,6 +179,7 @@ public class RefactorDocumentOperationTest {
         assertThat(parentProcess.getDocuments()).hasSize(1);
         assertEquals(parentProcess.getDocuments().get(0).getName(), "docNameUpdated");
         ExpressionAssert.assertThat(leftOperand).hasName(updatedDocument.getName());
+        ExpressionAssert.assertThat(leftOperand).hasReturnType(String.class.getName());
     }
 
     /**

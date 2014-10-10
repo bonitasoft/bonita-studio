@@ -97,7 +97,16 @@ public class RefactorDocumentOperation extends AbstractRefactorOperation<Documen
     }
 
     private void updateReturnType(final CompoundCommand cc, final Document newValue, final Expression exp) {
-        final String newReturnType = newValue.isMultiple() ? List.class.getName() : org.bonitasoft.engine.bpm.document.Document.class.getName();
+        final String newReturnType;
+        if (newValue.isMultiple()) {
+            newReturnType = List.class.getName();
+        } else {
+            if (ExpressionConstants.DOCUMENT_REF_TYPE.equals(exp.getType())) {
+                newReturnType = String.class.getName();
+            } else {
+                newReturnType = org.bonitasoft.engine.bpm.document.Document.class.getName();
+            }
+        }
         cc.append(SetCommand.create(domain, exp, ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE, newReturnType));
     }
 
@@ -114,6 +123,7 @@ public class RefactorDocumentOperation extends AbstractRefactorOperation<Documen
 
     private boolean isMatchingDocumentExpression(final DocumentRefactorPair pairToRefactor, final Expression exp) {
         return (ExpressionConstants.DOCUMENT_TYPE.equals(exp.getType())
+                || ExpressionConstants.DOCUMENT_LIST_TYPE.equals(exp.getType())
                 || ExpressionConstants.CONSTANT_TYPE.equals(exp.getType())
                 || ExpressionConstants.DOCUMENT_REF_TYPE.equals(exp.getType()))
                 && exp.getName() != null
