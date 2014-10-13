@@ -36,15 +36,17 @@ import org.eclipse.swt.widgets.Shell;
 public abstract class AbstractSWTTestCase {
 
     protected Display display;
+    private Shell headlessShell;
+    private DefaultRealm defaultRealm;
 
     protected Composite createDisplayAndRealm() {
         display = new Display();
-        final Shell headlessShell = new Shell(display);
+        headlessShell = new Shell(display);
         headlessShell.setLayout(new GridLayout(1, true));
         final GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
         headlessShell.setLayoutData(gridData);
         final Composite parent = new Composite(headlessShell, SWT.NONE);
-        new DefaultRealm(display);
+        defaultRealm = new DefaultRealm(display);
         return parent;
     }
 
@@ -59,7 +61,15 @@ public abstract class AbstractSWTTestCase {
     }
 
     protected void dispose() {
-        display.dispose();
+        if (defaultRealm != null) {
+            defaultRealm.dispose();
+        }
+        if (headlessShell != null) {
+            headlessShell.dispose();
+        }
+        if (display != null) {
+            display.dispose();
+        }
     }
 
 }
