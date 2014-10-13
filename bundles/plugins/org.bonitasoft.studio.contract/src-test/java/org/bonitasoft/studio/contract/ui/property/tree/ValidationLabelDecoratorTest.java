@@ -70,6 +70,9 @@ public class ValidationLabelDecoratorTest extends AbstractSWTTestCase {
      */
     @After
     public void tearDown() throws Exception {
+        if (baseImage != null) {
+            baseImage.dispose();
+        }
         dispose();
     }
 
