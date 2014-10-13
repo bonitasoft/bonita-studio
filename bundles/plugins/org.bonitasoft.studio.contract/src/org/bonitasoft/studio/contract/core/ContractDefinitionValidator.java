@@ -92,12 +92,7 @@ public class ContractDefinitionValidator {
         if (contract != null) {
             final Set<String> result = new HashSet<String>();
             final Set<String> duplicated = new HashSet<String>();
-            for (final ContractInput in : contract.getInputs()) {
-                if (in.getName() != null && !in.getName().isEmpty() && !result.add(in.getName())) {
-                    duplicated.add(in.getName());
-                }
-                validateDuplicatedInputsRecursively(in, duplicated, result);
-            }
+            validateDuplicatedInputsRecursively(contract.getInputs(), duplicated, result);
             for (final String dup : duplicated) {
                 status.add(ValidationStatus.error(dup));
             }
@@ -108,12 +103,14 @@ public class ContractDefinitionValidator {
         return status;
     }
 
-    private void validateDuplicatedInputsRecursively(final ContractInput in, final Set<String> duplicated, final Set<String> result) {
-        for (final ContractInput child : in.getInputs()) {
-            if (child.getName() != null && !child.getName().isEmpty() && !result.add(child.getName())) {
+    private void validateDuplicatedInputsRecursively(final List<ContractInput> inputs, final Set<String> duplicated, final Set<String> result) {
+        for (final ContractInput child : inputs) {
+            if (child.getName() != null
+                    && !child.getName().isEmpty()
+                    && !result.add(child.getName())) {
                 duplicated.add(child.getName());
-            }
-            validateDuplicatedInputsRecursively(child, duplicated, result);
+        }
+            validateDuplicatedInputsRecursively(child.getInputs(), duplicated, result);
         }
     }
 
@@ -147,9 +144,7 @@ public class ContractDefinitionValidator {
                     errorMessage.append(", ");
                 }
                 String error = errorMessage.toString();
-                if (error.endsWith(", ")) {
-                    error = error.substring(0, error.length() - 2);
-                }
+                error = error.substring(0, error.length() - 2);
                 messageManager.addMessage(messageKey,error, null, toMessageSeverity(status.getSeverity()));
 
             } else {

@@ -144,15 +144,17 @@ public class ContractDefinitionValidatorTest {
     @Test
     public void should_validate_a_contract_returns_all_errors_status_for_contract_with_multiple_invalid_input() throws Exception {
         final Contract contract = ProcessFactory.eINSTANCE.createContract();
-        addInput(contract, "", ContractInputType.TEXT, null);
-        addInput(contract, "", ContractInputType.TEXT, null);
-        addInput(contract, null, ContractInputType.TEXT, null);
-        addInput(contract, "name", ContractInputType.TEXT, null);
+        final ContractInput input = addInput(contract, "", ContractInputType.TEXT, null);
+        addInput(input, "", ContractInputType.TEXT, null);
+        final ContractInput input3 = addInput(contract, null, ContractInputType.TEXT, null);
+        addInput(input3, null, ContractInputType.TEXT, null);
+        final ContractInput input2 = addInput(contract, "name", ContractInputType.TEXT, null);
+        addInput(input2, "name", ContractInputType.TEXT, null);
+        addInput(input2, "name", ContractInputType.TEXT, null);
         final IStatus status = validator.validate(contract);
         assertThat(status.isOK()).isFalse();
         assertThat(status).isInstanceOf(MultiStatus.class);
-        assertThat(((MultiStatus) status).getChildren()).hasSize(8).extracting("severity")
-        .containsOnly(IStatus.ERROR, IStatus.ERROR, IStatus.ERROR, IStatus.OK, IStatus.OK, IStatus.OK, IStatus.OK, IStatus.OK, IStatus.OK);
+        assertThat(((MultiStatus) status).getChildren()).hasSize(15);
     }
 
     @Test
@@ -220,6 +222,15 @@ public class ContractDefinitionValidatorTest {
         contractInput.setType(type);
         contractInput.setDescription(description);
         contract.getInputs().add(contractInput);
+        return contractInput;
+    }
+
+    private ContractInput addInput(final ContractInput parentInput, final String inputName, final ContractInputType type, final String description) {
+        final ContractInput contractInput = ProcessFactory.eINSTANCE.createContractInput();
+        contractInput.setName(inputName);
+        contractInput.setType(type);
+        contractInput.setDescription(description);
+        parentInput.getInputs().add(contractInput);
         return contractInput;
     }
 }
