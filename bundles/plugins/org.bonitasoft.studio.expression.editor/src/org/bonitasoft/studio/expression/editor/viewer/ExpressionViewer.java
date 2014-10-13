@@ -71,13 +71,10 @@ import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.IValueChangeListener;
 import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
-import org.eclipse.core.databinding.validation.IValidator;
-import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
@@ -134,7 +131,7 @@ import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
  *
  */
 public class ExpressionViewer extends ContentViewer implements ExpressionConstants, SWTBotConstants,
-IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContext {
+        IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContext, IExpressionValidationListener, IValueChangeListener {
 
     protected Composite control;
     private Text textControl;
@@ -156,6 +153,7 @@ IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContex
     private boolean isOverviewContext = false;
     private AbstractRefactorOperation operation;
     private AbstractRefactorOperation removeOperation;
+    final ExpressionViewerValidator expressionViewerValidator = new ExpressionViewerValidator();
     protected final DisposeListener disposeListener = new DisposeListener() {
 
         @Override
@@ -250,6 +248,7 @@ IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContex
                 super.setEnabled(enabled);
                 updateEnablement(enabled);
             }
+
         };
         if (widgetFactory != null) {
             widgetFactory.adapt(control);
@@ -562,7 +561,6 @@ IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContex
                             ContentProposalAdapter.PROPOSAL_REPLACE);
                 }
                 validate();
-                refresh();
             }
         }
     }
@@ -725,81 +723,23 @@ IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContex
 
         final IObservableValue nameObservable = getExpressionNameObservable();
         final IObservableValue typeObservable = getExpressionTypeObservable();
+        final IObservableValue returnTypeObservable = getExpressionReturnTypeObservable();
+
+        nameObservable.addValueChangeListener(this);
+        typeObservable.addValueChangeListener(this);
+        returnTypeObservable.addValueChangeListener(this);
 
         final UpdateValueStrategy targetToModelNameStrategy = new UpdateValueStrategy();
         if (mandatoryFieldName != null) {
             targetToModelNameStrategy.setBeforeSetValidator(new EmptyInputValidator(mandatoryFieldName));
         }
-        targetToModelNameStrategy.setAfterConvertValidator(new IValidator() {
-
-            @Override
-            public IStatus validate(final Object value) {
-                final Expression selectedExpression = getSelectedExpression();
-                final EditingDomain editingDomain = getEditingDomain();
-                IExpressionValidator validator = null;
-                if (selectedExpression != null) {
-                    validator = validatorsForType.get(selectedExpression.getType());
-                }
-                if (validator == null) {
-                    validator = validatorsForType.get(ExpressionConstants.ALL_TYPES);
-                }
-                if (validator != null) {
-                    validator.setDomain(editingDomain);
-                    validator.setContext(context);
-                    if (selectedExpression != null) {
-                        validator.setInputExpression(selectedExpression);
-                    }
-                    setMessage(null, IStatus.OK);
-                    final IStatus status = validator.validate(value);
-                    if (status.isOK()) {
-                        setMessage(null, status.getSeverity());
-                    } else {
-                        String message = status.getMessage();
-                        if (status instanceof MultiStatus) {
-                            final StringBuilder sb = new StringBuilder();
-                            for (final IStatus statusChild : status.getChildren()) {
-                                sb.append(statusChild.getMessage());
-                                sb.append("\n");
-                            }
-                            if (sb.length() > 0) {
-                                sb.delete(sb.length() - 1, sb.length());
-                            }
-                            message = sb.toString();
-                        }
-                        setMessage(message, status.getSeverity());
-                    }
-                    return status;
-                } else {
-                    setMessage(null, IStatus.OK);
-                }
-                return ValidationStatus.ok();
-            }
-        });
         targetToModelNameStrategy.setConverter(getNameConverter());
 
         final ISWTObservableValue observeDelayedValue = SWTObservables.observeDelayedValue(500,
                 SWTObservables.observeText(textControl, SWT.Modify));
         expressionBinding = internalDataBindingContext.bindValue(observeDelayedValue, nameObservable,
                 targetToModelNameStrategy, null);
-
-        expressionBinding.getValidationStatus().addValueChangeListener(new IValueChangeListener() {
-
-            @Override
-            public void handleValueChange(final ValueChangeEvent event) {
-                final IStatus status = (IStatus) event.diff.getNewValue();
-                fireValidationStatusChanged(status.getSeverity());
-            }
-        });
-
         bindEditableText(typeObservable);
-        nameObservable.addValueChangeListener(new IValueChangeListener() {
-
-            @Override
-            public void handleValueChange(final ValueChangeEvent arg0) {
-                validate();
-                refresh();
-            }
-        });
         if (externalDataBindingContext != null) {
             externalDataBindingContext.addBinding(expressionBinding);
         }
@@ -829,6 +769,19 @@ IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContex
                     ExpressionPackage.Literals.EXPRESSION__TYPE);
         }
         return nameObservable;
+    }
+
+    protected IObservableValue getExpressionReturnTypeObservable() {
+        IObservableValue returnTypeObservable;
+        final EditingDomain editingDomain = getEditingDomain();
+        if (editingDomain != null) {
+            returnTypeObservable = CustomEMFEditObservables.observeDetailValue(Realm.getDefault(), getSelectedExpressionObservable(),
+                    ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE);
+        } else {
+            returnTypeObservable = EMFObservables.observeDetailValue(Realm.getDefault(), getSelectedExpressionObservable(),
+                    ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE);
+        }
+        return returnTypeObservable;
     }
 
     private IObservableValue getSelectedExpressionObservable() {
@@ -946,7 +899,7 @@ IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContex
         final Expression selectedExpression = getSelectedExpression();
         Assert.isNotNull(selectedExpression);
         String expressionType = selectedExpression.getType();
-        if (CONSTANT_TYPE.equals(expressionType)) {
+        if (input.equals(selectedExpression.getName()) && CONSTANT_TYPE.equals(expressionType)) {
             return expressionType;
         }
         if (selectedExpression.getType() == null) {
@@ -1017,6 +970,7 @@ IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContex
             }
             refreshMessageDecoration();
         }
+
     }
 
     private void refreshMessageDecoration() {
@@ -1038,9 +992,7 @@ IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContex
             messageDecoration.show();
 
         } else {
-
             messageDecoration.hide();
-
         }
     }
 
@@ -1119,7 +1071,7 @@ IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContex
         return messages.get(messageKind);
     }
 
-    public void setMessage(final String message, final int messageKind) {
+    public void setMessage(String message, final int messageKind) {
         if (IStatus.OK == messageKind) {
             messages.remove(IStatus.ERROR);
             messages.remove(IStatus.WARNING);
@@ -1131,24 +1083,17 @@ IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContex
                 messages.remove(IStatus.ERROR);
                 messages.remove(IStatus.WARNING);
             }
+            if(message != null && message.isEmpty()){
+                message = null;
+            }
             messages.put(messageKind, message);
         }
         refresh();
     }
 
-    protected void fireValidationStatusChanged(final int newStatus) {
-        for (final IExpressionValidationListener listener : validationListeners) {
-            listener.validationStatusChanged(newStatus);
-        }
-    }
 
     @Override
     protected void handleDispose(final DisposeEvent event) {
-        //        if (disposeDomain) {
-        //            WorkspaceEditingDomainFactory.INSTANCE.unmapResourceSet((TransactionalEditingDomain) editingDomain);
-        //            editingDomain = null;
-        //            disposeDomain = false;
-        //        }
         if (expressionBinding != null && externalDataBindingContext != null) {
             externalDataBindingContext.removeBinding(expressionBinding);
             expressionBinding.dispose();
@@ -1156,7 +1101,6 @@ IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContex
         if (internalDataBindingContext != null) {
             internalDataBindingContext.dispose();
         }
-
         super.handleDispose(event);
     }
 
@@ -1212,8 +1156,8 @@ IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContex
         return nameConverter;
     }
 
-    public void addExpressionValidator(final String expressionType, final IExpressionValidator comaprisonExpressionValidator) {
-        validatorsForType.put(expressionType, comaprisonExpressionValidator);
+    public void addExpressionValidator(final IExpressionValidator comaprisonExpressionValidator) {
+        expressionViewerValidator.addValidator(comaprisonExpressionValidator);
     }
 
     public void addExpressionValidationListener(final IExpressionValidationListener listener) {
@@ -1223,10 +1167,18 @@ IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContex
     }
 
     public void validate() {
-        if (expressionBinding != null && expressionBinding.getTarget() != null) {
-            expressionBinding.validateTargetToModel();
+        expressionViewerValidator.setContext(context);
+        expressionViewerValidator.setExpression(getSelectedExpression());
+        expressionViewerValidator.addValidationsStatusChangedListener(this);
+        for(final IExpressionValidationListener l : validationListeners){
+            expressionViewerValidator.addValidationsStatusChangedListener(l);
+        }
+        final Expression selectedExpression = getSelectedExpression();
+        if (selectedExpression != null) {
+            expressionViewerValidator.validate(selectedExpression.getName());
         }
     }
+
 
     public void setExternalDataBindingContext(final DataBindingContext ctx) {
         externalDataBindingContext = ctx;
@@ -1363,6 +1315,16 @@ IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContex
     public void setAutocomplitionLabelProvider(final LabelProvider labelProvider) {
         getContentAssistText().getAutocompletion().setLabelProvider(labelProvider);
 
+    }
+
+    @Override
+    public void validationStatusChanged(final IStatus newStatus) {
+        setMessage(newStatus.getMessage(), newStatus.getSeverity());
+    }
+
+    @Override
+    public void handleValueChange(final ValueChangeEvent event) {
+        validate();
     }
 
 }

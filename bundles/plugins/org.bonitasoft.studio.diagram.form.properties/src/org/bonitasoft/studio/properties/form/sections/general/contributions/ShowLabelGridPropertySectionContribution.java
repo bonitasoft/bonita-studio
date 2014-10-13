@@ -105,7 +105,7 @@ public class ShowLabelGridPropertySectionContribution implements IExtensibleGrid
 
         // add validator on the show label field when it is a form button - expression can't be empty
         if (element instanceof FormButton) {
-            displayLabelViewer.addExpressionValidator(ExpressionConstants.CONSTANT_TYPE, new ExpressionNotEmptyValidator());
+            displayLabelViewer.addExpressionValidator(new ExpressionNotEmptyValidator());
         }
 
         displayLabelViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(300, SWT.DEFAULT).create());

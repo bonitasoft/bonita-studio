@@ -149,7 +149,7 @@ public class TransitionCondition implements IExtensibleGridPropertySectionContri
 
         conditionViewer = new ExpressionViewer(client,SWT.BORDER, widgetFactory,editingDomain, ProcessPackage.Literals.SEQUENCE_FLOW__CONDITION);
         conditionViewer.setMessage(Messages.conditionExpresssionHelpMessage,IStatus.INFO);
-        conditionViewer.addExpressionValidator(ExpressionConstants.CONDITION_TYPE,new ComparisonExpressionValidator());
+        conditionViewer.addExpressionValidator(new ComparisonExpressionValidator());
         conditionViewer.addFilter(new AvailableExpressionTypeFilter(new String[]{ExpressionConstants.CONSTANT_TYPE,ExpressionConstants.PARAMETER_TYPE,ExpressionConstants.SCRIPT_TYPE,ExpressionConstants.VARIABLE_TYPE,ExpressionConstants.CONDITION_TYPE}));
         if(transition.getCondition() == null){
             final Expression expression =  ExpressionFactory.eINSTANCE.createExpression() ;

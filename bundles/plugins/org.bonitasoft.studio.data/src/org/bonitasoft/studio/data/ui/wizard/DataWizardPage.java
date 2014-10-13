@@ -99,8 +99,10 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
@@ -377,7 +379,11 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
 
     protected void copyDataFeature(final Data newData) {
         for (final EStructuralFeature feature : ProcessPackage.Literals.DATA.getEAllStructuralFeatures()) {
-            newData.eSet(feature, data.eGet(feature));
+            Object eGet = data.eGet(feature);
+            if (feature instanceof EReference && ((EReference) feature).isContainment() && eGet instanceof EObject) {
+                eGet = EcoreUtil.copy((EObject) eGet);
+            }
+            newData.eSet(feature, eGet);
         }
     }
 
