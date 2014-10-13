@@ -206,10 +206,12 @@ public class DataWizardIT extends SWTBotGefTestCase {
         bot.menu("Diagram").menu("Save").click();
         bot.waitUntil(new DefaultCondition() {
 
+            @Override
             public boolean test() throws Exception {
                 return nbStepData +1 == step.getData().size();
             }
 
+            @Override
             public String getFailureMessage() {
                 return "data not removed";
             }
@@ -432,9 +434,7 @@ public class DataWizardIT extends SWTBotGefTestCase {
         BotAddDataWizardPage addDataDialog = dataTab.addData();
 
         addDataDialog.setName(dataName);
-        assertThat(bot.button(IDialogConstants.FINISH_LABEL).isEnabled()).isTrue();
         addDataDialog.finish();
-
 
         //try to add a data myData on step
         diagramPerspective.activeProcessDiagramEditor().selectElement("Step1");
@@ -442,7 +442,6 @@ public class DataWizardIT extends SWTBotGefTestCase {
         addDataDialog.setName(dataName);
         assertThat(bot.button(IDialogConstants.FINISH_LABEL).isEnabled()).isFalse();
         addDataDialog.setName(dataName1);
-        assertThat(bot.button(IDialogConstants.FINISH_LABEL).isEnabled()).isTrue();
         addDataDialog.finish();
 
 
@@ -450,7 +449,6 @@ public class DataWizardIT extends SWTBotGefTestCase {
         diagramPerspective.activeProcessDiagramEditor().addElement("Step1", "Human", PositionConstants.EAST);
         addDataDialog = dataTab.addData();
         addDataDialog.setName(dataName1);
-        assertThat(bot.button(IDialogConstants.FINISH_LABEL).isEnabled()).isTrue();
         addDataDialog.finish();
     }
 
