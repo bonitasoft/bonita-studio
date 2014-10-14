@@ -12,9 +12,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.contract.core;
+package org.bonitasoft.studio.contract.core.validation;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
@@ -95,13 +97,6 @@ public class ContractDefinitionValidatorTest {
         assertThat(status.isOK()).isFalse();
     }
 
-    @Test
-    public void should_validate_a_contract_returns_an_error_status_for_contract_with_too_long_input() throws Exception {
-        final Contract contract = ProcessFactory.eINSTANCE.createContract();
-        addInput(contract, "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", ContractInputType.TEXT, null);
-        final IStatus status = validator.validate(contract);
-        assertThat(status.isOK()).isFalse();
-    }
 
     @Test
     public void should_validate_a_contract_returns_an_error_status_for_contract_with_duplicated_input_names() throws Exception {
@@ -121,7 +116,7 @@ public class ContractDefinitionValidatorTest {
         addInput(contract, "toto", ContractInputType.DECIMAL, null);
         final IStatus status = validatorWithMessageManager.validate(contract);
         assertThat(status.isOK()).isFalse();
-        verify(messageManager).addMessage(new Pair<Object, String>(contract, ContractDefinitionValidator.DUPLICATED_CONSTRAINT_ID),
+        verify(messageManager).addMessage(new Pair<Object, String>(contract, ContractInputNameDuplicationValidationRule.DUPLICATED_CONSTRAINT_ID),
                 Messages.duplicatedInputNames + " \"toto\", \"name\"", null, IMessage.ERROR);
     }
 
@@ -132,9 +127,9 @@ public class ContractDefinitionValidatorTest {
         final IStatus status = validatorWithMessageManager.validate(contract);
         assertThat(status.isOK()).isFalse();
         verify(messageManager).removeAllMessages();
-        final Pair<Object, String> key = new Pair<Object, String>(input, ContractDefinitionValidator.NAME_CONSTRAINT_ID);
-        verify(messageManager).addMessage(key, status.getChildren()[0].getMessage(), null,
-                validatorWithMessageManager.toMessageSeverity(status.getSeverity()));
+        final Pair<Object, String> key = new Pair<Object, String>(input, ContractInputNameValidationRule.NAME_CONSTRAINT_ID);
+        verify(messageManager).addMessage(eq(key), anyString(), eq(null),
+                eq(validatorWithMessageManager.toMessageSeverity(status.getSeverity())));
 
         input.setName("name");
         validatorWithMessageManager.validate(contract);
@@ -157,13 +152,6 @@ public class ContractDefinitionValidatorTest {
         assertThat(((MultiStatus) status).getChildren()).hasSize(15);
     }
 
-    @Test
-    public void should_validate_a_input_returns_an_error_status_for_invalid_input() throws Exception {
-        final Contract contract = ProcessFactory.eINSTANCE.createContract();
-        final ContractInput input = addInput(contract, "", ContractInputType.TEXT, null);
-        final IStatus status = validator.validateInputName(input, input.getName());
-        assertThat(status.isOK()).isFalse();
-    }
 
     @Test
     public void should_toMessageSeverity_convert_a_status_severity_into_an_IMessage_severity() throws Exception {
@@ -178,17 +166,7 @@ public class ContractDefinitionValidatorTest {
         validator.toMessageSeverity(5);
     }
 
-    @Test
-    public void should_validate_input_description_returns_an_error_status_for_too_long_description() throws Exception {
-        final Contract contract = ProcessFactory.eINSTANCE.createContract();
-        final ContractInput input = addInput(
-                contract,
-                "name",
-                ContractInputType.TEXT,
-                "a very loog description, kjdddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd");
-        final IStatus status = validator.validateInputDescription(input, input.getDescription());
-        assertThat(status.isOK()).isFalse();
-    }
+
 
     @Test
     public void should_clearMessage_removeAllMessage_for_given_element() throws Exception {
@@ -199,9 +177,9 @@ public class ContractDefinitionValidatorTest {
                 ContractInputType.TEXT,
                 null);
         validatorWithMessageManager.clearMessages(input);
-        verify(messageManager).removeMessage(new Pair<Object, String>(input, ContractDefinitionValidator.NAME_CONSTRAINT_ID));
-        verify(messageManager).removeMessage(new Pair<Object, String>(input, ContractDefinitionValidator.DUPLICATED_CONSTRAINT_ID));
-        verify(messageManager).removeMessage(new Pair<Object, String>(input, ContractDefinitionValidator.DESCRIPTION_CONSTRAINT_ID));
+        verify(messageManager).removeMessage(new Pair<Object, String>(input, ContractInputNameValidationRule.NAME_CONSTRAINT_ID));
+        verify(messageManager).removeMessage(new Pair<Object, String>(input, ContractInputNameDuplicationValidationRule.DUPLICATED_CONSTRAINT_ID));
+        verify(messageManager).removeMessage(new Pair<Object, String>(input, ContractInputDescriptionValidationRule.DESCRIPTION_CONSTRAINT_ID));
     }
 
     @Test

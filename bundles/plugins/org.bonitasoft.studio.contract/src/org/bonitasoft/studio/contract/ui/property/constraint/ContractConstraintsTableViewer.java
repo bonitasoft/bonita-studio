@@ -17,7 +17,7 @@
 package org.bonitasoft.studio.contract.ui.property.constraint;
 
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
-import org.bonitasoft.studio.contract.core.ContractDefinitionValidator;
+import org.bonitasoft.studio.contract.core.validation.ContractDefinitionValidator;
 import org.bonitasoft.studio.contract.i18n.Messages;
 import org.bonitasoft.studio.contract.ui.property.AddRowOnEnterCellNavigationStrategy;
 import org.bonitasoft.studio.contract.ui.property.CharriageColumnViewerEditorActivationStrategy;

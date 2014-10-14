@@ -14,24 +14,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.contract.core;
+package org.bonitasoft.studio.contract.core.validation;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.Pair;
-import org.bonitasoft.studio.common.databinding.MultiValidator;
-import org.bonitasoft.studio.common.jface.databinding.validator.GroovyReferenceValidator;
-import org.bonitasoft.studio.common.jface.databinding.validator.InputLengthValidator;
 import org.bonitasoft.studio.contract.ContractPlugin;
 import org.bonitasoft.studio.contract.i18n.Messages;
 import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractConstraint;
-import org.bonitasoft.studio.model.process.ContractInput;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.emf.common.util.TreeIterator;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.ui.forms.IMessage;
 import org.eclipse.ui.forms.IMessageManager;
 
@@ -42,29 +39,22 @@ import org.eclipse.ui.forms.IMessageManager;
  */
 public class ContractDefinitionValidator {
 
-    protected static final String DESCRIPTION_CONSTRAINT_ID = "description";
-    protected static final String DUPLICATED_CONSTRAINT_ID = "duplicate";
-    protected static final String NAME_CONSTRAINT_ID = "name";
+
+
 
     private final IMessageManager messageManager;
-    private final MultiValidator inputNameValidator;
-    private static Set<String> inputConstraints;
-    static {
-        inputConstraints = new HashSet<String>();
-        inputConstraints.add(NAME_CONSTRAINT_ID);
-        inputConstraints.add(DUPLICATED_CONSTRAINT_ID);
-        inputConstraints.add(DESCRIPTION_CONSTRAINT_ID);
-    }
+    private final Set<IValidationRule> validationRules;
 
     public ContractDefinitionValidator() {
         this(null);
     }
 
     public ContractDefinitionValidator(final IMessageManager messageManager) {
-        inputNameValidator = new MultiValidator();
-        inputNameValidator.addValidator(new GroovyReferenceValidator(Messages.name, true));
-        inputNameValidator.addValidator(new InputLengthValidator(Messages.name, 50));
         this.messageManager = messageManager;
+        validationRules = new HashSet<IValidationRule>();
+        validationRules.add(new ContractInputNameValidationRule());
+        validationRules.add(new ContractInputDescriptionValidationRule());
+        validationRules.add(new ContractInputNameDuplicationValidationRule());
     }
 
     public IStatus validate(final Contract contract) {
@@ -73,64 +63,31 @@ public class ContractDefinitionValidator {
         }
         if (contract != null) {
             final MultiStatus status = new MultiStatus(ContractPlugin.PLUGIN_ID, IStatus.OK, "", null);
-            validateRecursively(contract.getInputs(), status);
-            status.addAll(validateDuplicatedInputs(contract));
+            final TreeIterator<EObject> iterator = contract.eAllContents();
+            while (iterator.hasNext()) {
+                final EObject eObject = iterator.next();
+                for (final IValidationRule rule : validationRules) {
+                    if (rule.appliesTo(eObject)) {
+                        final IStatus iStatus = rule.validate(eObject);
+                        if (messageManager != null) {
+                            updateMessage(eObject, rule.getRuleId(), iStatus);
+                        }
+                        status.add(iStatus);
+                    }
+                }
+            }
+            for (final IValidationRule rule : validationRules) {
+                if (rule.appliesTo(contract)) {
+                    final IStatus iStatus = rule.validate(contract);
+                    if (messageManager != null) {
+                        updateMessage(contract, rule.getRuleId(), iStatus);
+                    }
+                    status.add(iStatus);
+                }
+            }
             return status;
         }
         return ValidationStatus.ok();
-    }
-
-    protected void validateRecursively(final List<ContractInput> inputs, final MultiStatus status) {
-        for (final ContractInput input : inputs) {
-            status.add(validateInputName(input, input.getName()));
-            status.add(validateInputDescription(input, input.getDescription()));
-            validateRecursively(input.getInputs(), status);
-        }
-    }
-
-    public IStatus validateDuplicatedInputs(final Contract contract) {
-        final MultiStatus status = new MultiStatus(ContractPlugin.PLUGIN_ID, IStatus.OK, "", null);
-        if (contract != null) {
-            final Set<String> result = new HashSet<String>();
-            final Set<String> duplicated = new HashSet<String>();
-            validateDuplicatedInputsRecursively(contract.getInputs(), duplicated, result);
-            for (final String dup : duplicated) {
-                status.add(ValidationStatus.error(dup));
-            }
-            if (messageManager != null) {
-                updateMessage(contract, DUPLICATED_CONSTRAINT_ID, status);
-            }
-        }
-        return status;
-    }
-
-    private void validateDuplicatedInputsRecursively(final List<ContractInput> inputs, final Set<String> duplicated, final Set<String> result) {
-        for (final ContractInput child : inputs) {
-            if (child.getName() != null
-                    && !child.getName().isEmpty()
-                    && !result.add(child.getName())) {
-                duplicated.add(child.getName());
-        }
-            validateDuplicatedInputsRecursively(child.getInputs(), duplicated, result);
-        }
-    }
-
-    public IStatus validateInputDescription(final ContractInput input, final String description) {
-        final IStatus status = new InputLengthValidator(Messages.description, 255).validate(description);
-        if (messageManager != null) {
-            updateMessage(input, DESCRIPTION_CONSTRAINT_ID, status);
-        }
-
-        return status;
-    }
-
-    public IStatus validateInputName(final ContractInput input, final String newName) {
-        final IStatus status = inputNameValidator.validate(newName);
-        if (messageManager != null) {
-            updateMessage(input, NAME_CONSTRAINT_ID, status);
-        }
-
-        return status;
     }
 
     private void updateMessage(final Object element, final String constraintID, final IStatus status) {
@@ -171,8 +128,8 @@ public class ContractDefinitionValidator {
 
     public void clearMessages(final Object element) {
         if (messageManager != null) {
-            for (final String constraintID : inputConstraints) {
-                final Pair<Object, String> messageKey = new org.bonitasoft.studio.common.Pair<Object, String>(element, constraintID);
+            for (final IValidationRule rule : validationRules) {
+                final Pair<Object, String> messageKey = new org.bonitasoft.studio.common.Pair<Object, String>(element, rule.getRuleId());
                 messageManager.removeMessage(messageKey);
             }
         }

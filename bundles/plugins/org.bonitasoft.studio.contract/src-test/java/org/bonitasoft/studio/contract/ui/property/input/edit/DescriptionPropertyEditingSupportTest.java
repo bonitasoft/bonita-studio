@@ -16,14 +16,12 @@
  */
 package org.bonitasoft.studio.contract.ui.property.input.edit;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import org.bonitasoft.studio.contract.core.ContractDefinitionValidator;
-import org.bonitasoft.studio.contract.ui.property.input.edit.DescriptionPropertyEditingSupport;
+import org.bonitasoft.studio.contract.core.validation.ContractDefinitionValidator;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
@@ -88,21 +86,17 @@ public class DescriptionPropertyEditingSupportTest {
         verify(viewer).update(input, null);
     }
 
-    @Test
-    public void should_isValid_call_contract_definition_validator() throws Exception {
-        assertThat(propertyEditingSupport.isValid("a desc")).isNull();
-        verify(validator).validateInputDescription(null, "a desc");
-    }
+
 
     @Test
-    public void should_initializeCellEditorValue_set_validator() throws Exception {
+    public void should_initializeCellEditorValue_clear_cell_content() throws Exception {
         final ContractInput input = ProcessFactory.eINSTANCE.createContractInput();
         final CellEditor cellEditorMock = mock(CellEditor.class);
         final ViewerCell cellMock = mock(ViewerCell.class);
         when(cellMock.getElement()).thenReturn(input);
         propertyEditingSupport.initializeCellEditorValue(cellEditorMock, cellMock);
-        assertThat(propertyEditingSupport.getCurrentElement()).isEqualTo(input);
-        verify(cellEditorMock).setValidator(propertyEditingSupport);
+        verify(cellMock).setText("");
+        verify(cellMock).setImage(null);
     }
 
 

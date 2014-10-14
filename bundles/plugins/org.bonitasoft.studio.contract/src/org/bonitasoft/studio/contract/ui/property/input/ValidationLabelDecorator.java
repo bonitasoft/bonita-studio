@@ -17,10 +17,12 @@
 package org.bonitasoft.studio.contract.ui.property.input;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.contract.core.ContractDefinitionValidator;
+import org.bonitasoft.studio.contract.core.validation.ContractInputNameDuplicationValidationRule;
+import org.bonitasoft.studio.contract.core.validation.ContractInputNameValidationRule;
 import org.bonitasoft.studio.contract.i18n.Messages;
 import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractInput;
+import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.fieldassist.FieldDecoration;
@@ -39,10 +41,12 @@ import org.eclipse.swt.graphics.Image;
  */
 public class ValidationLabelDecorator implements ILabelDecorator {
 
-    private final ContractDefinitionValidator validator;
+    private final ContractInputNameValidationRule inputNameValidationRule;
+    private final ContractInputNameDuplicationValidationRule inputNameDuplicationValidationRule;
 
     public ValidationLabelDecorator() {
-        validator = new ContractDefinitionValidator();
+        inputNameValidationRule = new ContractInputNameValidationRule();
+        inputNameDuplicationValidationRule = new ContractInputNameDuplicationValidationRule();
     }
 
     @Override
@@ -80,8 +84,12 @@ public class ValidationLabelDecorator implements ILabelDecorator {
             return null;
         }
         final String name = contractInput.getName();
-        final IStatus status = validator.validateInputName((ContractInput) element, name);
-        final IStatus duplicateStatus = validator.validateDuplicatedInputs(ModelHelper.getFirstContainerOfType((EObject) element, Contract.class));
+        final IStatus status = inputNameValidationRule.validate((ContractInput) element);
+        final Contract contract = ModelHelper.getFirstContainerOfType((EObject) element, Contract.class);
+        IStatus duplicateStatus = ValidationStatus.ok();
+        if (contract != null) {
+            duplicateStatus = inputNameDuplicationValidationRule.validate(contract);
+        }
         if (!status.isOK()) {
             final FieldDecoration decoration = getErrorDecorator();
             decoration.setDescription(status.getMessage());
@@ -104,8 +112,7 @@ public class ValidationLabelDecorator implements ILabelDecorator {
 
     @Override
     public String decorateText(final String text, final Object element) {
-        final String name = ((ContractInput) element).getName();
-        final IStatus status = validator.validateInputName((ContractInput) element, name);
+        final IStatus status = inputNameValidationRule.validate((ContractInput) element);
         if (!status.isOK()) {
             return status.getMessage();
         }

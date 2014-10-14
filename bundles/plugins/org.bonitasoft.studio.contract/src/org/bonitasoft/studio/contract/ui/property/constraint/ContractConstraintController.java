@@ -20,7 +20,7 @@ import java.util.List;
 
 import org.bonitasoft.studio.common.databinding.CustomEMFEditObservables;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.contract.core.ContractDefinitionValidator;
+import org.bonitasoft.studio.contract.core.validation.ContractDefinitionValidator;
 import org.bonitasoft.studio.contract.i18n.Messages;
 import org.bonitasoft.studio.contract.ui.property.IViewerController;
 import org.bonitasoft.studio.model.process.Contract;

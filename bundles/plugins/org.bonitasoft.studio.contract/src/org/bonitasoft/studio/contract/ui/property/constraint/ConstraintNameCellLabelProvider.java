@@ -16,7 +16,7 @@
  */
 package org.bonitasoft.studio.contract.ui.property.constraint;
 
-import org.bonitasoft.studio.contract.core.ContractDefinitionValidator;
+import org.bonitasoft.studio.contract.core.validation.ContractDefinitionValidator;
 import org.bonitasoft.studio.model.process.ContractConstraint;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.eclipse.core.runtime.IStatus;

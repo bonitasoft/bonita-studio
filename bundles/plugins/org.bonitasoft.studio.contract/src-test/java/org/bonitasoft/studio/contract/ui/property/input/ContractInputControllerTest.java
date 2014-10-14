@@ -28,7 +28,7 @@ import static org.mockito.Mockito.when;
 import java.util.Arrays;
 
 import org.bonitasoft.studio.contract.AbstractSWTTestCase;
-import org.bonitasoft.studio.contract.core.ContractDefinitionValidator;
+import org.bonitasoft.studio.contract.core.validation.ContractDefinitionValidator;
 import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ContractInputType;
@@ -167,7 +167,8 @@ public class ContractInputControllerTest extends AbstractSWTTestCase {
         assertThat(((Contract) observableValue.getValue()).getInputs()).containsOnly(input1);
         verify(contractDefinitionValidator).clearMessages(input2);
         verify(contractDefinitionValidator).clearMessages(input3);
-        verify(contractDefinitionValidator).validateDuplicatedInputs(contract);
+        verify(contractDefinitionValidator).validate(contract);
+        verify(viewer).refresh(true);
     }
 
     @Test
@@ -186,7 +187,8 @@ public class ContractInputControllerTest extends AbstractSWTTestCase {
         assertThat(((Contract) observableValue.getValue()).getInputs()).containsOnly(input1);
         verify(contractDefinitionValidator).clearMessages(child1);
         verify(contractDefinitionValidator).clearMessages(child2);
-        verify(contractDefinitionValidator).validateDuplicatedInputs(contract);
+        verify(contractDefinitionValidator).validate(contract);
+        verify(viewer).refresh(true);
     }
 
     @Test
@@ -203,7 +205,8 @@ public class ContractInputControllerTest extends AbstractSWTTestCase {
         contractInputController.remove(viewer);
         assertThat(((Contract) observableValue.getValue()).getInputs()).containsOnly(input1, input3);
         verify(contractDefinitionValidator).clearMessages(input2);
-        verify(contractDefinitionValidator, never()).validateDuplicatedInputs(any(Contract.class));
+        verify(contractDefinitionValidator, never()).validate(any(Contract.class));
+        verify(viewer, never()).refresh(true);
     }
 
     @Test

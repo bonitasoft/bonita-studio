@@ -17,11 +17,10 @@
 package org.bonitasoft.studio.contract.ui.property.input;
 
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
-import org.bonitasoft.studio.contract.core.ContractDefinitionValidator;
+import org.bonitasoft.studio.contract.core.validation.ContractDefinitionValidator;
 import org.bonitasoft.studio.contract.i18n.Messages;
 import org.bonitasoft.studio.contract.ui.property.AddRowOnEnterCellNavigationStrategy;
 import org.bonitasoft.studio.contract.ui.property.CharriageColumnViewerEditorActivationStrategy;
-import org.bonitasoft.studio.contract.ui.property.FieldDecoratorProvider;
 import org.bonitasoft.studio.contract.ui.property.input.edit.CheckboxPropertyEditingSupport;
 import org.bonitasoft.studio.contract.ui.property.input.edit.ContractInputTypeEditingSupport;
 import org.bonitasoft.studio.contract.ui.property.input.edit.DescriptionPropertyEditingSupport;
@@ -62,7 +61,6 @@ public class ContractInputTreeViewer extends TreeViewer {
     private AdapterFactoryContentProvider propertySourceProvider;
     private AdapterFactoryLabelProvider adapterFactoryLabelProvider;
     private ContractDefinitionValidator contractValidator;
-    private final FieldDecoratorProvider decoratorProvider = new FieldDecoratorProvider();
     private ContractInputController inputController;
 
     public ContractInputTreeViewer(final Composite parent, final FormToolkit toolkit) {
@@ -132,7 +130,6 @@ public class ContractInputTreeViewer extends TreeViewer {
         createInputTypeColumn();
         createMultipleColumn();
         createMandatoryColumn();
-        //   createMappingColumn();
         createInputDescriptionColumn();
     }
 
@@ -142,7 +139,6 @@ public class ContractInputTreeViewer extends TreeViewer {
         tableLayout.addColumnData(new ColumnWeightData(1));
         tableLayout.addColumnData(new ColumnWeightData(1));
         tableLayout.addColumnData(new ColumnWeightData(1));
-        //   tableLayout.addColumnData(new ColumnWeightData(3));
         tableLayout.addColumnData(new ColumnWeightData(5));
         getTree().setLayout(tableLayout);
     }
@@ -153,9 +149,7 @@ public class ContractInputTreeViewer extends TreeViewer {
                 new ValidationLabelDecorator(), new DecorationContext()));
         nameColumnViewer.setEditingSupport(new InputNamePropertyEditingSupport(propertySourceProvider,
                 this,
-                adapterFactoryLabelProvider,
-                contractValidator,
-                decoratorProvider));
+                contractValidator));
     }
 
     protected void createInputDescriptionColumn() {
@@ -163,35 +157,6 @@ public class ContractInputTreeViewer extends TreeViewer {
         descriptionColumnViewer.setLabelProvider(new DescriptionCellLabelProvider(this, propertySourceProvider));
         descriptionColumnViewer.setEditingSupport(new DescriptionPropertyEditingSupport(this, propertySourceProvider, contractValidator));
     }
-
-    //    protected void createMappingColumn() {
-    //        final TreeViewerColumn mappingColumnViewer = createColumnViewer(Messages.savedInto,SWT.FILL);
-    //        mappingColumnViewer.setLabelProvider(new ColumnLabelProvider() {
-    //
-    //            @Override
-    //            public String getText(final Object element) {
-    //                if (element instanceof ContractInput) {
-    //                    final ContractInputMapping mapping = ((ContractInput) element).getMapping();
-    //                    return new InputMappingProposal(mapping).getContent();
-    //                }
-    //                return null;
-    //            }
-    //
-    //            @Override
-    //            public Image getImage(final Object element) {
-    //                if (element instanceof ContractInput) {
-    //                    final ContractInputMapping mapping = ((ContractInput) element).getMapping();
-    //                    final Data data = mapping.getData();
-    //                    if (data == null) {
-    //                        return null;
-    //                    }
-    //                    return adapterFactoryLabelProvider.getImage(data);
-    //                }
-    //                return null;
-    //            }
-    //        });
-    //        mappingColumnViewer.setEditingSupport(new InputMappingPropertyEditingSupport(propertySourceProvider, this));
-    //    }
 
     protected void createInputTypeColumn() {
         final TreeViewerColumn typeColumnViewer = createColumnViewer(Messages.type, SWT.FILL);

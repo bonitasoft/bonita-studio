@@ -16,13 +16,13 @@
  */
 package org.bonitasoft.studio.contract.ui.property.input.edit;
 
-import org.bonitasoft.studio.contract.core.ContractDefinitionValidator;
-import org.bonitasoft.studio.model.process.ContractInput;
+import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.contract.core.validation.ContractDefinitionValidator;
+import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ProcessPackage;
-import org.eclipse.core.runtime.Assert;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnViewer;
-import org.eclipse.jface.viewers.ICellEditorValidator;
 import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.ui.views.properties.IPropertySourceProvider;
 import org.eclipse.ui.views.properties.PropertyEditingSupport;
@@ -32,10 +32,9 @@ import org.eclipse.ui.views.properties.PropertyEditingSupport;
  * @author Romain Bioteau
  *
  */
-public class DescriptionPropertyEditingSupport extends PropertyEditingSupport implements ICellEditorValidator {
+public class DescriptionPropertyEditingSupport extends PropertyEditingSupport {
 
     private final ContractDefinitionValidator contractDefinitionValidator;
-    private ContractInput currentElement;
 
 
     public DescriptionPropertyEditingSupport(final ColumnViewer viewer, final IPropertySourceProvider propertySourceProvider,
@@ -48,32 +47,16 @@ public class DescriptionPropertyEditingSupport extends PropertyEditingSupport im
     protected void setValue(final Object element, final Object value) {
         super.setValue(element, value);
         getViewer().update(element, null);
+        final Contract contract = ModelHelper.getFirstContainerOfType((EObject) element, Contract.class);
+        contractDefinitionValidator.validate(contract);
     }
 
     @Override
     protected void initializeCellEditorValue(final CellEditor cellEditor, final ViewerCell cell) {
         super.initializeCellEditorValue(cellEditor, cell);
-        setCurrentElement(cell.getElement());
-        cellEditor.setValidator(this);
-
         //Clear cell label
         cell.setText("");
         cell.setImage(null);
-    }
-
-    @Override
-    public String isValid(final Object value) {
-        contractDefinitionValidator.validateInputDescription(getCurrentElement(), (String) value);
-        return null;
-    }
-
-    public ContractInput getCurrentElement() {
-        return currentElement;
-    }
-
-    public void setCurrentElement(final Object currentElement) {
-        Assert.isLegal(currentElement instanceof ContractInput);
-        this.currentElement = (ContractInput) currentElement;
     }
 
 }

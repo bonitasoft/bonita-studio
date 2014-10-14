@@ -16,7 +16,7 @@
  */
 package org.bonitasoft.studio.contract.ui.property.input;
 
-import org.bonitasoft.studio.contract.core.ContractDefinitionValidator;
+import org.bonitasoft.studio.contract.core.validation.ContractInputDescriptionValidationRule;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.eclipse.core.runtime.IStatus;
@@ -34,19 +34,18 @@ import org.eclipse.ui.views.properties.PropertyColumnLabelProvider;
  */
 public class DescriptionCellLabelProvider extends PropertyColumnLabelProvider {
 
-    private final ContractDefinitionValidator validator;
     private final ColumnViewer viewer;
+    private final ContractInputDescriptionValidationRule inputDescriptionValidationRule;
 
     public DescriptionCellLabelProvider(final ColumnViewer viewer, final IPropertySourceProvider propertySourceProvider) {
         super(propertySourceProvider, ProcessPackage.Literals.CONTRACT_INPUT__DESCRIPTION.getName());
-        validator = new ContractDefinitionValidator();
+        inputDescriptionValidationRule = new ContractInputDescriptionValidationRule();
         this.viewer = viewer;
     }
 
     @Override
     public Image getImage(final Object element) {
-        final String description = ((ContractInput) element).getDescription();
-        final IStatus status = validator.validateInputDescription((ContractInput) element, description);
+        final IStatus status = inputDescriptionValidationRule.validate((ContractInput) element);
         if (!status.isOK()) {
             return getErrorImage();
         }
@@ -56,7 +55,7 @@ public class DescriptionCellLabelProvider extends PropertyColumnLabelProvider {
     @Override
     public String getToolTipText(final Object element) {
         final String description = ((ContractInput) element).getDescription();
-        final IStatus status = validator.validateInputDescription((ContractInput) element, description);
+        final IStatus status = inputDescriptionValidationRule.validate((ContractInput) element);
         if (viewer.isCellEditorActive() || status.isOK()) {
             return description;
         } else {

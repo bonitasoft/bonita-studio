@@ -26,7 +26,7 @@ import static org.mockito.Mockito.when;
 import java.util.Arrays;
 
 import org.bonitasoft.studio.contract.AbstractSWTTestCase;
-import org.bonitasoft.studio.contract.core.ContractDefinitionValidator;
+import org.bonitasoft.studio.contract.core.validation.ContractDefinitionValidator;
 import org.bonitasoft.studio.contract.ui.property.input.ContractInputController;
 import org.bonitasoft.studio.contract.ui.property.input.edit.ContractInputTypeEditingSupport;
 import org.bonitasoft.studio.model.process.ContractInput;
