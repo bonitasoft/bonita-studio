@@ -186,12 +186,7 @@ public class WebTemplatesUtil {
             ApplicationLookNFeelFileStore theme, IProgressMonitor monitor) {
         //clear old look'n feel
         CompoundCommand cc = new CompoundCommand();
-        for (ResourceFolder folder : process.getResourceFolders()) {
-            cc.append(new RemoveCommand(editingDomain, process, ProcessPackage.Literals.RESOURCE_CONTAINER__RESOURCE_FOLDERS, folder));
-        }
-        for (ResourceFile file : process.getResourceFiles()) {
-            cc.append(new RemoveCommand(editingDomain, process, ProcessPackage.Literals.RESOURCE_CONTAINER__RESOURCE_FILES, file));
-        }
+        clearOldLnF(editingDomain, process, cc);
 
         //copy all files to the user artifact
         ApplicationResourceRepositoryStore store = (ApplicationResourceRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ApplicationResourceRepositoryStore.class) ;
@@ -203,6 +198,131 @@ public class WebTemplatesUtil {
 
         artifact.clear();
 
+        appendCommandToAddFilesAndFolders(editingDomain, process, theme, monitor, cc, artifact);
+        cc.append(new SetCommand(editingDomain, process, ProcessPackage.Literals.PROCESS_APPLICATION__BASED_ON_LOOK_AND_FEEL, theme.getName()));
+        setProcessTemplateCommand(editingDomain, process, theme, cc, artifact);
+        setConsultationTemplateCommand(editingDomain, process, theme, cc, artifact);
+        setConfirmationTemplateCommand(editingDomain, process, theme, cc, artifact);
+        setErrorTemplateCommand(editingDomain, process, theme, cc, artifact);
+        setGlobalTemplateCommand(editingDomain, process, theme, cc, artifact);
+        setLoginPageCommand(editingDomain, process, theme, cc, artifact);
+        setHostPageCommand(editingDomain, process, theme, cc, artifact);
+        setWelcomePageCommand(editingDomain, process, theme, cc, artifact);
+
+        artifact.save(null); //Call save event only
+
+        return cc;
+    }
+
+    private static void clearOldLnF(TransactionalEditingDomain editingDomain, AbstractProcess process, CompoundCommand cc) {
+        for (ResourceFolder folder : process.getResourceFolders()) {
+            cc.append(new RemoveCommand(editingDomain, process, ProcessPackage.Literals.RESOURCE_CONTAINER__RESOURCE_FOLDERS, folder));
+        }
+        for (ResourceFile file : process.getResourceFiles()) {
+            cc.append(new RemoveCommand(editingDomain, process, ProcessPackage.Literals.RESOURCE_CONTAINER__RESOURCE_FILES, file));
+        }
+    }
+
+    private static void setWelcomePageCommand(TransactionalEditingDomain editingDomain, AbstractProcess process, ApplicationLookNFeelFileStore theme,
+            CompoundCommand cc, ApplicationResourceFileStore artifact) {
+        if(theme.getWelcomePage().exists()){
+            artifact.setWelcomePage(theme.getWelcomePage().getAbsolutePath());
+            AssociatedFile processTemplate = ProcessFactory.eINSTANCE.createAssociatedFile();
+            processTemplate.setPath(artifact.getWelcomePageRelativePath());
+            cc.append(new SetCommand(editingDomain, process, ProcessPackage.Literals.PROCESS_APPLICATION__WELCOME_PAGE, processTemplate));
+            cc.append(new SetCommand(editingDomain, process, ProcessPackage.Literals.PROCESS_APPLICATION__WELCOME_PAGE_INTERNAL, Boolean.TRUE));
+        }else{
+            cc.append(new SetCommand(editingDomain, process, ProcessPackage.Literals.PROCESS_APPLICATION__WELCOME_PAGE, null));
+            cc.append(new SetCommand(editingDomain, process, ProcessPackage.Literals.PROCESS_APPLICATION__WELCOME_PAGE_INTERNAL, Boolean.FALSE));
+        }
+    }
+
+    private static void setHostPageCommand(TransactionalEditingDomain editingDomain, AbstractProcess process, ApplicationLookNFeelFileStore theme,
+            CompoundCommand cc, ApplicationResourceFileStore artifact) {
+        if(theme.getHostPage().exists()){
+            artifact.setHostPage(theme.getHostPage().getAbsolutePath());
+            AssociatedFile processTemplate = ProcessFactory.eINSTANCE.createAssociatedFile();
+            processTemplate.setPath(artifact.getHostPageRelativePath());
+            cc.append(new SetCommand(editingDomain, process, ProcessPackage.Literals.PROCESS_APPLICATION__HOST_PAGE, processTemplate));
+        }else{
+            cc.append(new SetCommand(editingDomain, process, ProcessPackage.Literals.PROCESS_APPLICATION__HOST_PAGE, null));
+        }
+    }
+
+    private static void setLoginPageCommand(TransactionalEditingDomain editingDomain, AbstractProcess process, ApplicationLookNFeelFileStore theme,
+            CompoundCommand cc, ApplicationResourceFileStore artifact) {
+        if(theme.getLoginPage().exists()){
+            artifact.setLoginPage(theme.getLoginPage().getAbsolutePath());
+            AssociatedFile processTemplate = ProcessFactory.eINSTANCE.createAssociatedFile();
+            processTemplate.setPath(artifact.getLoginPageRelativePath());
+            cc.append(new SetCommand(editingDomain, process, ProcessPackage.Literals.PROCESS_APPLICATION__LOG_IN_PAGE, processTemplate));
+        }else{
+            cc.append(new SetCommand(editingDomain, process, ProcessPackage.Literals.PROCESS_APPLICATION__LOG_IN_PAGE, null));
+        }
+    }
+
+    private static void setGlobalTemplateCommand(TransactionalEditingDomain editingDomain, AbstractProcess process, ApplicationLookNFeelFileStore theme,
+            CompoundCommand cc, ApplicationResourceFileStore artifact) {
+        if(theme.getGlobalPageTemplate().exists()){
+            artifact.setGlobalPageTemplate(theme.getGlobalPageTemplate().getAbsolutePath());
+            AssociatedFile processTemplate = ProcessFactory.eINSTANCE.createAssociatedFile();
+            processTemplate.setPath(artifact.getGlobalPageTemplateRelativePath());
+            cc.append(new SetCommand(editingDomain, process, ProcessPackage.Literals.PROCESS_APPLICATION__PAGE_TEMPLATE, processTemplate));
+        }else{
+            cc.append(new SetCommand(editingDomain, process, ProcessPackage.Literals.PROCESS_APPLICATION__PAGE_TEMPLATE, null));
+        }
+    }
+
+    private static void setErrorTemplateCommand(TransactionalEditingDomain editingDomain, AbstractProcess process, ApplicationLookNFeelFileStore theme,
+            CompoundCommand cc, ApplicationResourceFileStore artifact) {
+        if(theme.getErrorTemplate().exists()){
+            artifact.setErrorTemplate(theme.getErrorTemplate().getAbsolutePath());
+            AssociatedFile processTemplate = ProcessFactory.eINSTANCE.createAssociatedFile();
+            processTemplate.setPath(artifact.getErrorTemplateProjectRelativePath());
+            cc.append(new SetCommand(editingDomain, process, ProcessPackage.Literals.PROCESS_APPLICATION__ERROR_TEMPLATE, processTemplate));
+        }else{
+            cc.append(new SetCommand(editingDomain, process, ProcessPackage.Literals.PROCESS_APPLICATION__ERROR_TEMPLATE, null));
+        }
+    }
+
+    private static void setConfirmationTemplateCommand(TransactionalEditingDomain editingDomain, AbstractProcess process, ApplicationLookNFeelFileStore theme,
+            CompoundCommand cc, ApplicationResourceFileStore artifact) {
+        if(theme.getConfirmationTemplate().exists()){
+            artifact.setConfirmationTemplate(theme.getConfirmationTemplate().getAbsolutePath());
+            AssociatedFile processTemplate = ProcessFactory.eINSTANCE.createAssociatedFile();
+            processTemplate.setPath(artifact.getConfirmationTemplateRelativePath());
+            cc.append(new SetCommand(editingDomain, process, ProcessPackage.Literals.PAGE_FLOW__CONFIRMATION_TEMPLATE, processTemplate));//bad
+        }else{
+            cc.append(new SetCommand(editingDomain, process, ProcessPackage.Literals.PAGE_FLOW__CONFIRMATION_TEMPLATE, null));
+        }
+    }
+
+    private static void setConsultationTemplateCommand(TransactionalEditingDomain editingDomain, AbstractProcess process, ApplicationLookNFeelFileStore theme,
+            CompoundCommand cc, ApplicationResourceFileStore artifact) {
+        if(theme.getConsultationTemplate().exists()){
+            artifact.setGlobalConsultationPage(theme.getConsultationTemplate().getAbsolutePath());
+            AssociatedFile processTemplate = ProcessFactory.eINSTANCE.createAssociatedFile();
+            processTemplate.setPath(artifact.getGlobalConsultationTemplateRelativePath());
+            cc.append(new SetCommand(editingDomain, process, ProcessPackage.Literals.PROCESS_APPLICATION__CONSULTATION_TEMPLATE, processTemplate));
+        }else{
+            cc.append(new SetCommand(editingDomain, process, ProcessPackage.Literals.PROCESS_APPLICATION__CONSULTATION_TEMPLATE, null));
+        }
+    }
+
+    private static void setProcessTemplateCommand(TransactionalEditingDomain editingDomain, AbstractProcess process, ApplicationLookNFeelFileStore theme,
+            CompoundCommand cc, ApplicationResourceFileStore artifact) {
+        if(theme.getProcessTemplate().exists()){
+            artifact.setProcessTemplate(theme.getProcessTemplate().getAbsolutePath());
+            AssociatedFile processTemplate = ProcessFactory.eINSTANCE.createAssociatedFile();
+            processTemplate.setPath(artifact.getProcessTemplateProjectRelativePath());
+            cc.append(new SetCommand(editingDomain, process, ProcessPackage.Literals.PROCESS_APPLICATION__PROCESS_TEMPLATE, processTemplate));
+        }else{
+            cc.append(new SetCommand(editingDomain, process, ProcessPackage.Literals.PROCESS_APPLICATION__PROCESS_TEMPLATE, null));
+        }
+    }
+
+    private static void appendCommandToAddFilesAndFolders(TransactionalEditingDomain editingDomain, AbstractProcess process,
+            ApplicationLookNFeelFileStore theme, IProgressMonitor monitor, CompoundCommand cc, ApplicationResourceFileStore artifact) {
         Collection<ResourceFile> filesToAdd = new ArrayList<ResourceFile>();
         Collection<ResourceFolder> foldersToAdd = new ArrayList<ResourceFolder>();
         final File themeResourcesApplicationFolder = theme.getResourcesApplicationFolder();
@@ -232,77 +352,6 @@ public class WebTemplatesUtil {
         if(foldersToAdd.size()>0){
             cc.append(new AddCommand(editingDomain, process,ProcessPackage.Literals.RESOURCE_CONTAINER__RESOURCE_FOLDERS, foldersToAdd));
         }
-        cc.append(new SetCommand(editingDomain, process, ProcessPackage.Literals.PROCESS_APPLICATION__BASED_ON_LOOK_AND_FEEL, theme.getName()));
-        if(theme.getProcessTemplate().exists()){
-            artifact.setProcessTemplate(theme.getProcessTemplate().getAbsolutePath());
-            AssociatedFile processTemplate = ProcessFactory.eINSTANCE.createAssociatedFile();
-            processTemplate.setPath(artifact.getProcessTemplateProjectRelativePath());
-            cc.append(new SetCommand(editingDomain, process, ProcessPackage.Literals.PROCESS_APPLICATION__PROCESS_TEMPLATE, processTemplate));
-        }else{
-            cc.append(new SetCommand(editingDomain, process, ProcessPackage.Literals.PROCESS_APPLICATION__PROCESS_TEMPLATE, null));
-        }
-        if(theme.getConsultationTemplate().exists()){
-            artifact.setGlobalConsultationPage(theme.getConsultationTemplate().getAbsolutePath());
-            AssociatedFile processTemplate = ProcessFactory.eINSTANCE.createAssociatedFile();
-            processTemplate.setPath(artifact.getGlobalConsultationTemplateRelativePath());
-            cc.append(new SetCommand(editingDomain, process, ProcessPackage.Literals.PROCESS_APPLICATION__CONSULTATION_TEMPLATE, processTemplate));
-        }else{
-            cc.append(new SetCommand(editingDomain, process, ProcessPackage.Literals.PROCESS_APPLICATION__CONSULTATION_TEMPLATE, null));
-        }
-        if(theme.getConfirmationTemplate().exists()){
-            artifact.setConfirmationTemplate(theme.getConfirmationTemplate().getAbsolutePath());
-            AssociatedFile processTemplate = ProcessFactory.eINSTANCE.createAssociatedFile();
-            processTemplate.setPath(artifact.getConfirmationTemplateRelativePath());
-            cc.append(new SetCommand(editingDomain, process, ProcessPackage.Literals.PAGE_FLOW__CONFIRMATION_TEMPLATE, processTemplate));//bad
-        }else{
-            cc.append(new SetCommand(editingDomain, process, ProcessPackage.Literals.PAGE_FLOW__CONFIRMATION_TEMPLATE, null));
-        }
-        if(theme.getErrorTemplate().exists()){
-            artifact.setErrorTemplate(theme.getErrorTemplate().getAbsolutePath());
-            AssociatedFile processTemplate = ProcessFactory.eINSTANCE.createAssociatedFile();
-            processTemplate.setPath(artifact.getErrorTemplateProjectRelativePath());
-            cc.append(new SetCommand(editingDomain, process, ProcessPackage.Literals.PROCESS_APPLICATION__ERROR_TEMPLATE, processTemplate));
-        }else{
-            cc.append(new SetCommand(editingDomain, process, ProcessPackage.Literals.PROCESS_APPLICATION__ERROR_TEMPLATE, null));
-        }
-        if(theme.getGlobalPageTemplate().exists()){
-            artifact.setGlobalPageTemplate(theme.getGlobalPageTemplate().getAbsolutePath());
-            AssociatedFile processTemplate = ProcessFactory.eINSTANCE.createAssociatedFile();
-            processTemplate.setPath(artifact.getGlobalPageTemplateRelativePath());
-            cc.append(new SetCommand(editingDomain, process, ProcessPackage.Literals.PROCESS_APPLICATION__PAGE_TEMPLATE, processTemplate));
-        }else{
-            cc.append(new SetCommand(editingDomain, process, ProcessPackage.Literals.PROCESS_APPLICATION__PAGE_TEMPLATE, null));
-        }
-        if(theme.getLoginPage().exists()){
-            artifact.setLoginPage(theme.getLoginPage().getAbsolutePath());
-            AssociatedFile processTemplate = ProcessFactory.eINSTANCE.createAssociatedFile();
-            processTemplate.setPath(artifact.getLoginPageRelativePath());
-            cc.append(new SetCommand(editingDomain, process, ProcessPackage.Literals.PROCESS_APPLICATION__LOG_IN_PAGE, processTemplate));
-        }else{
-            cc.append(new SetCommand(editingDomain, process, ProcessPackage.Literals.PROCESS_APPLICATION__LOG_IN_PAGE, null));
-        }
-        if(theme.getHostPage().exists()){
-            artifact.setHostPage(theme.getHostPage().getAbsolutePath());
-            AssociatedFile processTemplate = ProcessFactory.eINSTANCE.createAssociatedFile();
-            processTemplate.setPath(artifact.getHostPageRelativePath());
-            cc.append(new SetCommand(editingDomain, process, ProcessPackage.Literals.PROCESS_APPLICATION__HOST_PAGE, processTemplate));
-        }else{
-            cc.append(new SetCommand(editingDomain, process, ProcessPackage.Literals.PROCESS_APPLICATION__HOST_PAGE, null));
-        }
-        if(theme.getWelcomePage().exists()){
-            artifact.setWelcomePage(theme.getWelcomePage().getAbsolutePath());
-            AssociatedFile processTemplate = ProcessFactory.eINSTANCE.createAssociatedFile();
-            processTemplate.setPath(artifact.getWelcomePageRelativePath());
-            cc.append(new SetCommand(editingDomain, process, ProcessPackage.Literals.PROCESS_APPLICATION__WELCOME_PAGE, processTemplate));
-            cc.append(new SetCommand(editingDomain, process, ProcessPackage.Literals.PROCESS_APPLICATION__WELCOME_PAGE_INTERNAL, Boolean.TRUE));
-        }else{
-            cc.append(new SetCommand(editingDomain, process, ProcessPackage.Literals.PROCESS_APPLICATION__WELCOME_PAGE, null));
-            cc.append(new SetCommand(editingDomain, process, ProcessPackage.Literals.PROCESS_APPLICATION__WELCOME_PAGE_INTERNAL, Boolean.FALSE));
-        }
-
-        artifact.save(null); //Call save event only
-
-        return cc;
     }
 
     /**
