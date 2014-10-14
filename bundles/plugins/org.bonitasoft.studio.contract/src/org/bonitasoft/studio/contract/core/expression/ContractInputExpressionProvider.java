@@ -111,7 +111,7 @@ public class ContractInputExpressionProvider implements IExpressionProvider {
      */
     @Override
     public boolean isRelevantFor(final EObject context) {
-        return ModelHelper.getParentFlowElement(context) instanceof Task;
+        return ModelHelper.getParentFlowElement(context) instanceof Task && ModelHelper.getParentForm(context) == null;
     }
 
     /* (non-Javadoc)
