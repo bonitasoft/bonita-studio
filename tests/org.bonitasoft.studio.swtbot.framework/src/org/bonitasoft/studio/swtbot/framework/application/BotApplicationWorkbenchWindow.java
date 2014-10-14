@@ -29,6 +29,7 @@ public class BotApplicationWorkbenchWindow extends AbstractBotMenu {
     }
 
     public BotProcessDiagramPerspective createNewDiagram() {
+
         final long timebeforeCreatenewDiagram = System.currentTimeMillis();
         final int nbEditorsBefore = bot.editors().size();
         bot.waitUntil(Conditions.widgetIsEnabled(bot.menu("Diagram")), 40000);

@@ -13,8 +13,12 @@ import org.bonitasoft.studio.contract.i18n.Messages;
 import org.bonitasoft.studio.swtbot.framework.BotBase;
 import org.bonitasoft.studio.swtbot.framework.widget.BotTreeWidget;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Tree;
+import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 
 /**
  * Recurrence property section.
@@ -22,6 +26,8 @@ import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
  * @author Romain Bioteau
  */
 public class BotContractPropertySection extends BotBase {
+
+    private TreeItem treeItem;
 
     public BotContractPropertySection(final SWTGefBot bot) {
         super(bot);
@@ -33,7 +39,16 @@ public class BotContractPropertySection extends BotBase {
 
     public BotContractInputRow add() {
         bot.button(Messages.add).click();
-        return new BotContractInputRow(bot, inputTable().getSWTBotWidget().rowCount() - 1);
+        Display.getDefault().syncExec(new Runnable() {
+
+            @Override
+            public void run() {
+                final Tree tree = inputTable().getSWTBotWidget().widget;
+                treeItem = tree.getSelection()[0];
+            }
+        });
+
+        return new BotContractInputRow(bot, new SWTBotTreeItem(treeItem));
     }
 
     public BotContractPropertySection remove() {
@@ -45,7 +60,16 @@ public class BotContractPropertySection extends BotBase {
 
     public BotContractInputRow addChild() {
         bot.button(Messages.addChild).click();
-        return new BotContractInputRow(bot, inputTable().getSWTBotWidget().rowCount() - 1);
+        Display.getDefault().syncExec(new Runnable() {
+
+            @Override
+            public void run() {
+                final Tree tree = inputTable().getSWTBotWidget().widget;
+                treeItem = tree.getSelection()[0];
+            }
+        });
+
+        return new BotContractInputRow(bot, new SWTBotTreeItem(treeItem));
     }
 
 

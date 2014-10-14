@@ -19,13 +19,18 @@ package org.bonitasoft.studio.tests.contract;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.bonitasoft.studio.common.jface.FileActionDialog;
+import org.bonitasoft.studio.model.process.Contract;
+import org.bonitasoft.studio.model.process.ContractInput;
+import org.bonitasoft.studio.model.process.ContractInputType;
 import org.bonitasoft.studio.model.process.Task;
+import org.bonitasoft.studio.model.process.assertions.ContractInputAssert;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
 import org.bonitasoft.studio.swtbot.framework.diagram.BotProcessDiagramPerspective;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.contract.BotContractInputRow;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.contract.BotContractPropertySection;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.junit.After;
@@ -76,17 +81,38 @@ public class ContractIT extends SWTBotGefTestCase {
 
         //  contractTabBot.inputTable().select(0);
 
-        BotContractInputRow childRow = contractTabBot.inputTable().selectActiveRow(bot);
+        BotContractInputRow childRow = contractInputRow.getChildRow(0);
         childRow.setName("expenseLines").clickMultiple().setType("COMPLEX");
 
-        childRow = contractTabBot.inputTable().selectRow(bot, 2);
-        childRow.setName("nature").setDescription("The nature of the expense (eg: Restaurant, transport, hotel...etc)");
+        childRow = childRow.getChildRow(0);
+        childRow.setName("nature").setDescription("The nature of the expense");
 
         childRow = contractTabBot.add();
-        childRow.setName("amount").setType("DECIMAL").setDescription("The amount of the expense VAT included in euros.");
+        childRow.setName("amount").setType("DECIMAL").setDescription("The amount of the expense VAT included in euros");
 
+        childRow = contractTabBot.add();
+        childRow.setName("expenseDate").setType("DATE").setDescription("When the expense was done").clickMandatory();
+        final Contract contract = task.getContract();
+        final EList<ContractInput> rootInputs = contract.getInputs();
+        assertThat(rootInputs).hasSize(1);
+        final ContractInput expenseReportInput = rootInputs.get(0);
+        ContractInputAssert.assertThat(expenseReportInput).hasName("expenseReport").hasDescription("An expense report").hasType(ContractInputType.COMPLEX)
+                .isMandatory();
+        assertThat(expenseReportInput.getInputs()).hasSize(1);
+        final ContractInput expenseLineInput = expenseReportInput.getInputs().get(0);
+        ContractInputAssert.assertThat(expenseLineInput).hasName("expenseLines").hasType(ContractInputType.COMPLEX).isMultiple().isMandatory();
+        assertThat(expenseLineInput.getInputs()).hasSize(3);
+        final ContractInput natureInput = expenseLineInput.getInputs().get(0);
+        final ContractInput amountInput = expenseLineInput.getInputs().get(1);
+        final ContractInput dateInput = expenseLineInput.getInputs().get(2);
 
-        assertThat(task.getContract().getInputs()).hasSize(1);
+        ContractInputAssert.assertThat(natureInput).hasName("nature").hasType(ContractInputType.TEXT).isNotMultiple().isMandatory()
+                .hasDescription("The nature of the expense");
+        ContractInputAssert.assertThat(amountInput).hasName("amount").hasType(ContractInputType.DECIMAL).isNotMultiple().isMandatory()
+                .hasDescription("The amount of the expense VAT included in euros");
+        ContractInputAssert.assertThat(dateInput).hasName("expenseDate").hasType(ContractInputType.DATE).isNotMultiple().isNotMandatory()
+                .hasDescription("When the expense was done");
+
     }
 
 }
