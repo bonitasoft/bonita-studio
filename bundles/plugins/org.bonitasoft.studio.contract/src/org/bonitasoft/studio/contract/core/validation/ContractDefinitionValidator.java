@@ -56,6 +56,7 @@ public class ContractDefinitionValidator {
         validationRules.add(new ContractInputNameDuplicationValidationRule());
         validationRules.add(new ContractConstraintNameValidationRule());
         validationRules.add(new ContractConstraintDuplicationValidationRule());
+        validationRules.add(new ContractConstraintInputsValidationRule());
     }
 
     public IStatus validate(final Contract contract) {
