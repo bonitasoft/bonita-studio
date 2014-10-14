@@ -107,18 +107,11 @@ public class ExportConnectorArchiveOperation {
         try{
             ignoredLibs.add(NamingUtils.toConnectorImplementationFilename(impl.getImplementationId(), impl.getImplementationVersion(),false)+".jar");
             cleanAfterExport = new ArrayList<IResource>() ;
-            final SourceRepositoryStore sourceStore = getSourceStore() ;
-            final IRepositoryStore implStore = getImplementationStore() ;
+            final SourceRepositoryStore sourceStore = getSourceStore();
+            final IRepositoryStore implStore = getImplementationStore();
 
             final List<IResource> resourcesToExport = new ArrayList<IResource>() ;
-            final IFolder classpathFolder = implStore.getResource().getFolder(CLASSPATH_DIR) ;
-            if(classpathFolder.exists()){
-                classpathFolder.delete(true, Repository.NULL_PROGRESS_MONITOR) ;
-            }
-
-            classpathFolder.create(true, true, Repository.NULL_PROGRESS_MONITOR) ;
-            resourcesToExport.add(classpathFolder) ;
-            cleanAfterExport.add(classpathFolder) ;
+            final IFolder classpathFolder = createClasspathFolder(implStore, resourcesToExport);
 
             status =  addImplementationJar(impl,classpathFolder,sourceStore,implStore,resourcesToExport) ;
             if(status.getSeverity() != IStatus.OK){
@@ -136,11 +129,7 @@ public class ExportConnectorArchiveOperation {
             addConnectorImplementation(impl,resourcesToExport,includeSources) ;
             addConnectorDefinition(impl,resourcesToExport) ;
 
-            final ArchiveFileExportOperation operation =  new ArchiveFileExportOperation(null,resourcesToExport,destPath) ;
-            operation.setUseCompression(true) ;
-            operation.setUseTarFormat(false) ;
-            operation.setCreateLeadupStructure(false) ;
-            operation.run(progressMonitor) ;
+            final ArchiveFileExportOperation operation = executeArchiveFileExportOperation(progressMonitor, resourcesToExport);
 
             if( !operation.getStatus().isOK()){
                 return operation.getStatus() ;
@@ -160,15 +149,7 @@ public class ExportConnectorArchiveOperation {
                 }
             }
 
-            for(final IResource r : cleanAfterExport){
-                if(r.exists()){
-                    try {
-                        r.delete(true, Repository.NULL_PROGRESS_MONITOR) ;
-                    } catch (final CoreException e) {
-                        BonitaStudioLog.error(e) ;
-                    }
-                }
-            }
+            cleanResourceAfterExport();
         } catch (final CoreException e) {
             BonitaStudioLog.error(e);
             return ValidationStatus.error(e.getMessage(), e);
@@ -184,6 +165,40 @@ public class ExportConnectorArchiveOperation {
         }
 
         return status;
+    }
+
+    private ArchiveFileExportOperation executeArchiveFileExportOperation(final IProgressMonitor progressMonitor, final List<IResource> resourcesToExport)
+            throws InvocationTargetException, InterruptedException {
+        final ArchiveFileExportOperation operation =  new ArchiveFileExportOperation(null,resourcesToExport,destPath) ;
+        operation.setUseCompression(true) ;
+        operation.setUseTarFormat(false) ;
+        operation.setCreateLeadupStructure(false) ;
+        operation.run(progressMonitor) ;
+        return operation;
+    }
+
+    private IFolder createClasspathFolder(final IRepositoryStore implStore, final List<IResource> resourcesToExport) throws CoreException {
+        final IFolder classpathFolder = implStore.getResource().getFolder(CLASSPATH_DIR) ;
+        if(classpathFolder.exists()){
+            classpathFolder.delete(true, Repository.NULL_PROGRESS_MONITOR) ;
+        }
+
+        classpathFolder.create(true, true, Repository.NULL_PROGRESS_MONITOR) ;
+        resourcesToExport.add(classpathFolder) ;
+        cleanAfterExport.add(classpathFolder) ;
+        return classpathFolder;
+    }
+
+    private void cleanResourceAfterExport() {
+        for(final IResource r : cleanAfterExport){
+            if(r.exists()){
+                try {
+                    r.delete(true, Repository.NULL_PROGRESS_MONITOR) ;
+                } catch (final CoreException e) {
+                    BonitaStudioLog.error(e) ;
+                }
+            }
+        }
     }
 
     protected IStatus addImplementationJar(final ConnectorImplementation implementation, final IFolder classpathFolder, final SourceRepositoryStore sourceStore, final IRepositoryStore implStore, final List<IResource> resourcesToExport) throws CoreException, InvocationTargetException, InterruptedException {
