@@ -21,6 +21,7 @@ import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection;
 import org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution;
+import org.bonitasoft.studio.document.SelectDocumentInBonitaStudioRepository;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.form.properties.i18n.Messages;
@@ -32,7 +33,6 @@ import org.bonitasoft.studio.model.form.FormPackage;
 import org.bonitasoft.studio.model.form.ViewForm;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
-import org.bonitasoft.studio.properties.sections.document.SelectDocumentInBonitaStudioRepository;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.IValueChangeListener;
 import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
@@ -70,11 +70,11 @@ import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 
 /**
- * 
+ *
  * Allow user to choose a File (fileData) for the file widget
- * 
+ *
  * @author Baptiste Mesta
- * 
+ *
  */
 public class FileGridPropertySectionContribution implements IExtensibleGridPropertySectionContribution {
 
@@ -95,15 +95,15 @@ public class FileGridPropertySectionContribution implements IExtensibleGridPrope
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @seeorg.bonitasoft.studio.common.properties.
 	 * IExtensibleGridPropertySectionContribution
 	 * #createControl(org.eclipse.swt.widgets.Composite,
 	 * org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory,
 	 * org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection)
 	 */
-	public void createControl(Composite mainComposite, TabbedPropertySheetWidgetFactory widgetFactory,
-			ExtensibleGridPropertySection extensibleGridPropertySection) {
+	public void createControl(final Composite mainComposite, final TabbedPropertySheetWidgetFactory widgetFactory,
+			final ExtensibleGridPropertySection extensibleGridPropertySection) {
 
 		this.widgetFactory = widgetFactory ;
 		mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
@@ -121,17 +121,23 @@ public class FileGridPropertySectionContribution implements IExtensibleGridPrope
 		radioComposite.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL,SWT.CENTER).grab(true, false).span(3, 1).create());
 		radioComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(col).margins(0, 0).create()) ;
 
-		FileWidgetInputType initialInputType = createUseDocumentButton(
+		final FileWidgetInputType initialInputType = createUseDocumentButton(
 				widgetFactory, radioComposite);
 
 		//createURLButton(widgetFactory, radioComposite);
 
 		createUseResourceButton(radioComposite);
-		
-		initialValueSection = widgetFactory.createSection(mainComposite, Section.NO_TITLE | Section.CLIENT_INDENT) ;
-		initialValueSection.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).create());
-		initialValueSection.setLayoutData(GridDataFactory.fillDefaults().grab(true,true).span(3, 1).create()) ;
-		
+
+        // InitialValueComposite created to check initial values in SWTBot tests
+        final InitialValueComposite initialValueComposite = new InitialValueComposite(mainComposite, SWT.NONE);
+
+        initialValueComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).create());
+        initialValueComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).span(3, 1).create());
+
+        initialValueSection = widgetFactory.createSection(initialValueComposite, Section.NO_TITLE | Section.CLIENT_INDENT);
+        initialValueSection.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).create());
+        initialValueSection.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+
 		if(initialInputType == FileWidgetInputType.DOCUMENT){
 			initialValueSection.setClient(createInputExpressionComposite(initialValueSection, widgetFactory));
 		/*}else if(initialInputType == FileWidgetInputType.URL){
@@ -144,28 +150,28 @@ public class FileGridPropertySectionContribution implements IExtensibleGridPrope
 			}
 		}
 		bindFields();
-		
+
 		if(initialInputType == FileWidgetInputType.DOCUMENT){
 			useDocumentButton.setSelection(true);
 			useDocumentButton.notifyListeners(SWT.Selection, new Event());
-			
+
 			/*}else if(initialInputType == FileWidgetInputType.URL){
 			useURLButton.setSelection(true);*/
 		}else {
 			useResourceButton.setSelection(true);
 			useResourceButton.notifyListeners(SWT.Selection,new Event());
 		}
-		
 
 
-		
+
+
 	}
 
-	private void createUseResourceButton(Composite radioComposite) {
+	private void createUseResourceButton(final Composite radioComposite) {
 		useResourceButton = widgetFactory.createButton(radioComposite, Messages.useResource, SWT.RADIO) ;
 		useResourceButton.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+			public void widgetSelected(final org.eclipse.swt.events.SelectionEvent e) {
 				if(initialValueSection != null && !initialValueSection.isDisposed()){
 					if(useResourceButton.getSelection() && (element.getInputType() != FileWidgetInputType.RESOURCE || element.isDuplicate() != multiple || initialValueSection.getClient() == null)){
 						editingDomain.getCommandStack().execute(SetCommand.create(editingDomain, element, FormPackage.Literals.FILE_WIDGET__INPUT_TYPE, FileWidgetInputType.RESOURCE));
@@ -174,10 +180,10 @@ public class FileGridPropertySectionContribution implements IExtensibleGridPrope
 						}
 						if(element.isDuplicate()){
 							multiple = true ;
-							initialValueSection.setClient(createMultipleResourceComposite(initialValueSection, FileGridPropertySectionContribution.this.widgetFactory)) ;
+							initialValueSection.setClient(createMultipleResourceComposite(initialValueSection, widgetFactory)) ;
 						}else{
 							multiple = false ;
-							initialValueSection.setClient(createResourceComposite(initialValueSection, FileGridPropertySectionContribution.this.widgetFactory)) ;
+							initialValueSection.setClient(createResourceComposite(initialValueSection, widgetFactory)) ;
 						}
 
 						initialValueSection.setExpanded(true) ;
@@ -189,7 +195,7 @@ public class FileGridPropertySectionContribution implements IExtensibleGridPrope
 	}
 
 	private FileWidgetInputType createUseDocumentButton(
-			TabbedPropertySheetWidgetFactory widgetFactory,
+			final TabbedPropertySheetWidgetFactory widgetFactory,
 			final Composite radioComposite) {
 		FileWidgetInputType initialInputType = element.getInputType();
 		if(!ModelHelper.isAnEntryPageFlowOnAPool(ModelHelper.getParentForm(element))){
@@ -197,7 +203,7 @@ public class FileGridPropertySectionContribution implements IExtensibleGridPrope
 			useDocumentButton.addSelectionListener(new SelectionAdapter() {
 
 				@Override
-				public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+				public void widgetSelected(final org.eclipse.swt.events.SelectionEvent e) {
 					if(initialValueSection != null && !initialValueSection.isDisposed()){
 						if(useDocumentButton.getSelection() && (element.getInputType() != FileWidgetInputType.DOCUMENT || element.isDuplicate() != multiple || initialValueSection.getClient() == null)){
 							boolean recreate = false;
@@ -227,7 +233,7 @@ public class FileGridPropertySectionContribution implements IExtensibleGridPrope
 	}
 
 	private void createURLButton(
-			TabbedPropertySheetWidgetFactory widgetFactory,
+			final TabbedPropertySheetWidgetFactory widgetFactory,
 			final Composite radioComposite) {
 //		useURLButton = widgetFactory.createButton(radioComposite, Messages.useUrl, SWT.RADIO) ;
 //		useResourceButton = widgetFactory.createButton(radioComposite, Messages.useResource, SWT.RADIO) ;
@@ -257,7 +263,7 @@ public class FileGridPropertySectionContribution implements IExtensibleGridPrope
 //		});
 	}
 
-	protected Control createResourceComposite(Section section, TabbedPropertySheetWidgetFactory widgetFactory) {
+	protected Control createResourceComposite(final Section section, final TabbedPropertySheetWidgetFactory widgetFactory) {
 		final Composite client  = widgetFactory.createComposite(section);
 		client.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 		client.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(0, 0).create());
@@ -272,7 +278,7 @@ public class FileGridPropertySectionContribution implements IExtensibleGridPrope
 		browseResourceButton.setLayoutData(GridDataFactory.fillDefaults().create());
 		browseResourceButton.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e) {
+			public void widgetSelected(final SelectionEvent e) {
 				final SelectDocumentInBonitaStudioRepository selectDocumentInBonitaStudioRepository = new SelectDocumentInBonitaStudioRepository(Display.getDefault().getActiveShell());
 				if(IDialogConstants.OK_ID == selectDocumentInBonitaStudioRepository.open()){
 					resourceText.setText(selectDocumentInBonitaStudioRepository.getSelectedDocument().getName());
@@ -282,7 +288,7 @@ public class FileGridPropertySectionContribution implements IExtensibleGridPrope
 		return client;
 	}
 
-	protected Control createMultipleResourceComposite(Section section, TabbedPropertySheetWidgetFactory widgetFactory) {
+	protected Control createMultipleResourceComposite(final Section section, final TabbedPropertySheetWidgetFactory widgetFactory) {
 		final Composite client  = widgetFactory.createComposite(section);
 		client.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 		client.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(0, 0).create());
@@ -301,7 +307,7 @@ public class FileGridPropertySectionContribution implements IExtensibleGridPrope
 		addResourceButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(85, SWT.DEFAULT).create());
 		addResourceButton.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e) {
+			public void widgetSelected(final SelectionEvent e) {
 				final SelectDocumentInBonitaStudioRepository selectDocumentInBonitaStudioRepository = new SelectDocumentInBonitaStudioRepository(Display.getDefault().getActiveShell());
 				if(IDialogConstants.OK_ID == selectDocumentInBonitaStudioRepository.open()){
 					editingDomain.getCommandStack().execute(AddCommand.create(editingDomain, element, FormPackage.Literals.FILE_WIDGET__INTIAL_RESOURCE_LIST, selectDocumentInBonitaStudioRepository.getSelectedDocument().getName()));
@@ -313,7 +319,7 @@ public class FileGridPropertySectionContribution implements IExtensibleGridPrope
 		removeResourceButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(85, SWT.DEFAULT).create());
 		removeResourceButton.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e) {
+			public void widgetSelected(final SelectionEvent e) {
 				editingDomain.getCommandStack().execute(RemoveCommand.create(editingDomain, element, FormPackage.Literals.FILE_WIDGET__INTIAL_RESOURCE_LIST,((IStructuredSelection) resourceTableViewer.getSelection()).toList()));
 				resourceTableViewer.refresh();
 			}
@@ -328,12 +334,12 @@ public class FileGridPropertySectionContribution implements IExtensibleGridPrope
 		return client;
 	}
 
-	protected Control createInputExpressionComposite(Section section, TabbedPropertySheetWidgetFactory widgetFactory) {
+	protected Control createInputExpressionComposite(final Section section, final TabbedPropertySheetWidgetFactory widgetFactory) {
 		final Composite client  = widgetFactory.createComposite(section);
 		client.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 		client.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).create());
 
-		inputExpressionViewer = new ExpressionViewer(client,SWT.BORDER,widgetFactory,editingDomain, FormPackage.Literals.WIDGET__INPUT_EXPRESSION) ;
+        inputExpressionViewer = new ExpressionViewer(client, SWT.BORDER, widgetFactory, editingDomain, FormPackage.Literals.WIDGET__INPUT_EXPRESSION);
 		inputExpressionViewer.addFilter(new AvailableExpressionTypeFilter(new String[]{
 				ExpressionConstants.VARIABLE_TYPE,
 				ExpressionConstants.SCRIPT_TYPE,
@@ -381,11 +387,11 @@ public class FileGridPropertySectionContribution implements IExtensibleGridPrope
 		dataBindingContext.bindValue(SWTObservables.observeSelection(imagePreview), EMFEditObservables.observeValue(editingDomain, element,
 				FormPackage.Literals.FILE_WIDGET__USE_PREVIEW));
 
-		IObservableValue value = EMFObservables.observeValue(element, FormPackage.Literals.DUPLICABLE__DUPLICATE);
+		final IObservableValue value = EMFObservables.observeValue(element, FormPackage.Literals.DUPLICABLE__DUPLICATE);
 
 		value.addValueChangeListener(new IValueChangeListener() {
 
-			public void handleValueChange(ValueChangeEvent arg0) {
+			public void handleValueChange(final ValueChangeEvent arg0) {
 				if(useDocumentButton != null &&!useDocumentButton.isDisposed() && element.getInputType() == FileWidgetInputType.DOCUMENT){
 					useDocumentButton.notifyListeners(SWT.Selection,new Event());
 				/*}else if(!useResourceButton.isDisposed() && element.getInputType() == FileWidgetInputType.URL){
@@ -426,14 +432,14 @@ public class FileGridPropertySectionContribution implements IExtensibleGridPrope
 				dataBindingContext.bindValue(
 						ViewersObservables.observeSingleSelection(inputExpressionViewer),
 						EMFEditObservables.observeValue(editingDomain,element, FormPackage.Literals.WIDGET__INPUT_EXPRESSION));
-			
+
 			}
 		}
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @seeorg.bonitasoft.studio.common.properties.
 	 * IExtensibleGridPropertySectionContribution#getLabel()
 	 */
@@ -443,18 +449,18 @@ public class FileGridPropertySectionContribution implements IExtensibleGridPrope
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @seeorg.bonitasoft.studio.common.properties.
 	 * IExtensibleGridPropertySectionContribution
 	 * #isRelevantFor(org.eclipse.emf.ecore.EObject)
 	 */
-	public boolean isRelevantFor(EObject eObject) {
+	public boolean isRelevantFor(final EObject eObject) {
 		return eObject instanceof FileWidget;
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @seeorg.bonitasoft.studio.common.properties.
 	 * IExtensibleGridPropertySectionContribution#refresh()
 	 */
@@ -464,40 +470,40 @@ public class FileGridPropertySectionContribution implements IExtensibleGridPrope
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @seeorg.bonitasoft.studio.common.properties.
 	 * IExtensibleGridPropertySectionContribution
 	 * #setEObject(org.eclipse.emf.ecore.EObject)
 	 */
-	public void setEObject(EObject object) {
+	public void setEObject(final EObject object) {
 		element = (FileWidget) object;
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @seeorg.bonitasoft.studio.common.properties.
 	 * IExtensibleGridPropertySectionContribution
 	 * #setEditingDomain(org.eclipse.emf.transaction.TransactionalEditingDomain)
 	 */
-	public void setEditingDomain(TransactionalEditingDomain editingDomain) {
+	public void setEditingDomain(final TransactionalEditingDomain editingDomain) {
 		this.editingDomain = editingDomain;
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @seeorg.bonitasoft.studio.common.properties.
 	 * IExtensibleGridPropertySectionContribution
 	 * #setSelection(org.eclipse.jface.viewers.ISelection)
 	 */
-	public void setSelection(ISelection selection) {
+	public void setSelection(final ISelection selection) {
 		// NOTHING
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @seeorg.bonitasoft.studio.common.properties.
 	 * IExtensibleGridPropertySectionContribution#dispose()
 	 */

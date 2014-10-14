@@ -29,6 +29,7 @@ public class AbstractBotDataWizardPage extends AbstractBotWizardPage {
 
     /**
      * Set name of data.
+     * 
      * @param pName
      */
     public AbstractBotDataWizardPage setName(final String pName) {
@@ -38,6 +39,7 @@ public class AbstractBotDataWizardPage extends AbstractBotWizardPage {
 
     /**
      * Set description of data.
+     * 
      * @param pDescription
      */
     public AbstractBotDataWizardPage setDescription(final String pDescription) {
@@ -47,6 +49,7 @@ public class AbstractBotDataWizardPage extends AbstractBotWizardPage {
 
     /**
      * Set type of data.
+     * 
      * @param pType
      */
     public AbstractBotDataWizardPage setType(final String pType) {
@@ -75,8 +78,8 @@ public class AbstractBotDataWizardPage extends AbstractBotWizardPage {
     }
 
     public AbstractBotDataWizardPage finishAndAdd() {
-        bot.waitUntil(Conditions.widgetIsEnabled(bot.button(Messages.createAndNewButton)), 5000);
-        bot.button(Messages.createAndNewButton).click();
+        bot.waitUntil(Conditions.widgetIsEnabled(bot.button(org.bonitasoft.studio.common.Messages.createAndNewButton)), 5000);
+        bot.button(org.bonitasoft.studio.common.Messages.createAndNewButton).click();
         return this;
     }
 

@@ -434,11 +434,6 @@
             name="%openEngineLog_commandLabel">
       </command>
       <command
-            defaultHandler="org.bonitasoft.studio.application.actions.OpenEXchangeCommand"
-            id="org.bonitasoft.studio.application.openContributions"
-            name="%openContribution_commandLabel">
-      </command>
-      <command
             defaultHandler="org.bonitasoft.studio.application.actions.RefreshConnectorHandler"
             id="org.bonitasoft.studio.application.refreshconnectorcommand"
             name="%refreshConnectors_commandLabel">

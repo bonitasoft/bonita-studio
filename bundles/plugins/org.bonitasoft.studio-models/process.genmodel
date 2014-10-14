@@ -463,6 +463,11 @@
       <genEnumLiterals ecoreEnumLiteral="process.ecore#//StartTimerScriptType/MINUTELY"/>
       <genEnumLiterals ecoreEnumLiteral="process.ecore#//StartTimerScriptType/CONSTANT"/>
     </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="process.ecore#//DocumentType">
+      <genEnumLiterals ecoreEnumLiteral="process.ecore#//DocumentType/NONE"/>
+      <genEnumLiterals ecoreEnumLiteral="process.ecore#//DocumentType/INTERNAL"/>
+      <genEnumLiterals ecoreEnumLiteral="process.ecore#//DocumentType/EXTERNAL"/>
+    </genEnums>
     <genClasses image="false" ecoreClass="process.ecore#//AbstractCatchMessageEvent">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//AbstractCatchMessageEvent/event"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference process.ecore#//AbstractCatchMessageEvent/incomingMessag"/>
@@ -574,9 +579,11 @@
     <genClasses ecoreClass="process.ecore#//DateType"/>
     <genClasses ecoreClass="process.ecore#//Document">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference process.ecore#//Document/mimeType"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//Document/isInternal"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//Document/url"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//Document/defaultValueIdOfDocumentStore"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//Document/documentType"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//Document/multiple"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//Document/initialMultipleContent"/>
     </genClasses>
     <genClasses ecoreClass="process.ecore#//DoubleType"/>
     <genClasses ecoreClass="process.ecore#//EndErrorEvent"/>

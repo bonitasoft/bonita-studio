@@ -12,7 +12,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.properties.sections.document;
+package org.bonitasoft.studio.document;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -26,7 +26,7 @@ import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.provider.FileStoreLabelProvider;
 import org.bonitasoft.studio.common.repository.store.AbstractRepositoryStore;
-import org.bonitasoft.studio.properties.i18n.Messages;
+import org.bonitasoft.studio.document.i18n.Messages;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -45,7 +45,6 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -59,6 +58,20 @@ import org.eclipse.ui.internal.WorkbenchMessages;
  *
  */
 public abstract class FileStoreSelectDialog extends Dialog {
+
+    private final class ViewerFilterOnFileStoreName extends ViewerFilter {
+
+        private final String textForFiltering;
+
+        private ViewerFilterOnFileStoreName(String textForFiltering) {
+            this.textForFiltering = textForFiltering;
+        }
+
+        @Override
+        public boolean select(final Viewer viewer, final Object parentElement, final Object element) {
+            return ((AbstractFileStore)element).getName().contains(textForFiltering);
+        }
+    }
 
     private ListViewer fileStoreListViewer;
     private Button removeButton;
@@ -93,8 +106,8 @@ public abstract class FileStoreSelectDialog extends Dialog {
         mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
         mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         createDescription(mainComposite);
-        createList(mainComposite);
         createButtons(mainComposite);
+        createList(mainComposite);
 
         return dialogArea;
     }
@@ -111,33 +124,11 @@ public abstract class FileStoreSelectDialog extends Dialog {
         final Composite listComposite = new Composite(mainComposite, SWT.NONE);
         listComposite.setLayout(GridLayoutFactory.fillDefaults().create());
         listComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        final Text fileStoreListFilter = new Text(listComposite, SWT.BORDER | SWT.SEARCH | SWT.ICON_SEARCH | SWT.ICON_CANCEL);
-        fileStoreListFilter.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
-        fileStoreListFilter.setMessage(WorkbenchMessages.FilteredTree_FilterMessage);
-        fileStoreListFilter.addModifyListener(new ModifyListener() {
+        createFilter(listComposite);
+        createListViewer(listComposite);
+    }
 
-            private ViewerFilter filter;
-
-            @Override
-            public void modifyText(final ModifyEvent e) {
-                final String textForFiltering = fileStoreListFilter.getText();
-                if(filter != null){
-                    fileStoreListViewer.removeFilter(filter);
-                }
-                if(textForFiltering != null
-                        && !textForFiltering.isEmpty()){
-                    filter = new ViewerFilter() {
-
-                        @Override
-                        public boolean select(final Viewer viewer, final Object parentElement, final Object element) {
-                            return ((AbstractFileStore)element).getName().contains(textForFiltering);
-                        }
-                    };
-                    fileStoreListViewer.addFilter(filter);
-                }
-
-            }
-        });
+    private void createListViewer(final Composite listComposite) {
         fileStoreListViewer = new ListViewer(listComposite, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | SWT.FULL_SELECTION);
         fileStoreListViewer.getList().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 300).create());
         fileStoreListViewer.setContentProvider(new ArrayContentProvider());
@@ -157,11 +148,34 @@ public abstract class FileStoreSelectDialog extends Dialog {
         fileStoreListViewer.getList().setFocus();
     }
 
+    private void createFilter(final Composite listComposite) {
+        final Text fileStoreListFilter = new Text(listComposite, SWT.BORDER | SWT.SEARCH | SWT.ICON_SEARCH | SWT.ICON_CANCEL);
+        fileStoreListFilter.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+        fileStoreListFilter.setMessage(WorkbenchMessages.FilteredTree_FilterMessage);
+        fileStoreListFilter.addModifyListener(new ModifyListener() {
+
+            private ViewerFilter filter;
+
+            @Override
+            public void modifyText(final ModifyEvent e) {
+                final String textForFiltering = fileStoreListFilter.getText();
+                if(filter != null){
+                    fileStoreListViewer.removeFilter(filter);
+                }
+                if(textForFiltering != null
+                        && !textForFiltering.isEmpty()){
+                    filter = new ViewerFilterOnFileStoreName(textForFiltering);
+                    fileStoreListViewer.addFilter(filter);
+                }
+
+            }
+        });
+    }
+
     private void createButtons(final Composite mainComposite) {
         final Composite buttonComposite = new Composite(mainComposite, SWT.NONE);
-        final RowLayout rowLayout = new RowLayout(SWT.VERTICAL);
-        rowLayout.fill = true;
-        buttonComposite.setLayout(rowLayout);
+        buttonComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, false).create());
+        buttonComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 35).create());
         createAddButton(buttonComposite);
         createRemoveButton(buttonComposite);
 
@@ -169,6 +183,7 @@ public abstract class FileStoreSelectDialog extends Dialog {
 
     private void createAddButton(final Composite buttonComposite) {
         final Button addButton = new Button(buttonComposite, SWT.FLAT);
+        addButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         addButton.setText(Messages.importEtc);
         addButton.addSelectionListener(new SelectionAdapter() {
 
@@ -205,6 +220,7 @@ public abstract class FileStoreSelectDialog extends Dialog {
 
     private void createRemoveButton(final Composite buttonComposite) {
         removeButton = new Button(buttonComposite, SWT.FLAT);
+        removeButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         removeButton.setText(Messages.remove);
         removeButton.addSelectionListener(new SelectionAdapter() {
             @Override

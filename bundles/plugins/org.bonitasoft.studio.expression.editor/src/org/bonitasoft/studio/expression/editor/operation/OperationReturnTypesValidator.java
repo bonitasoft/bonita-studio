@@ -1,24 +1,25 @@
 /**
- * Copyright (C) 2012 BonitaSoft S.A.
+ * Copyright (C) 2012-2014 BonitaSoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.expression.editor.operation;
 
+import java.util.List;
+
 import org.bonitasoft.engine.bpm.document.DocumentValue;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.expression.editor.i18n.Messages;
 import org.bonitasoft.studio.expression.editor.provider.ExpressionTypeLabelProvider;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionValidator;
@@ -27,6 +28,7 @@ import org.bonitasoft.studio.model.expression.Operation;
 import org.bonitasoft.studio.model.form.Info;
 import org.bonitasoft.studio.model.process.BusinessObjectData;
 import org.bonitasoft.studio.model.process.JavaObjectData;
+import org.bonitasoft.studio.model.process.Task;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
@@ -34,15 +36,14 @@ import org.eclipse.emf.edit.domain.EditingDomain;
 
 /**
  * @author Romain Bioteau
- * 
  */
 public class OperationReturnTypesValidator implements IExpressionValidator {
 
     private Expression dataExpression;
 
-    private ExpressionTypeLabelProvider typeLabelProvider = new ExpressionTypeLabelProvider();
+    private final ExpressionTypeLabelProvider typeLabelProvider = new ExpressionTypeLabelProvider();
 
-    private OperatorLabelProvider operatorLabelProvider = new OperatorLabelProvider();
+    private final OperatorLabelProvider operatorLabelProvider = new OperatorLabelProvider();
 
     private Expression inputExpression;
 
@@ -51,11 +52,11 @@ public class OperationReturnTypesValidator implements IExpressionValidator {
      * @see org.eclipse.core.databinding.validation.IValidator#validate(java.lang.Object)
      */
     @Override
-    public IStatus validate(Object value) {
-        Expression expression = getExpression(value);
+    public IStatus validate(final Object value) {
+        final Expression expression = getExpression(value);
         if (expression != null) {
-            String expressionContent = getExpressionContent(value, expression);
-            String expressionName = getExpressionName(value, expression);
+            final String expressionContent = getExpressionContent(value, expression);
+            final String expressionName = getExpressionName(value, expression);
             if (dataExpression != null
                     && dataExpression.getContent() != null
                     && !dataExpression.getContent().isEmpty()
@@ -65,26 +66,26 @@ public class OperationReturnTypesValidator implements IExpressionValidator {
                 if (operation != null && needValidation(operation)) {
                     final String operatorType = operation.getOperator().getType();
                     if (ExpressionConstants.JAVA_METHOD_OPERATOR.equals(operatorType)) {
-                        return validateJavaMethodOperation(expression,
-                                expressionName, operation);
+                        return validateJavaMethodOperation(expression, expressionName, operation);
                     } else if (ExpressionConstants.XPATH_UPDATE_OPERATOR.equals(operatorType)) {
-                        return validateXPathOperation(expression,
-                                expressionName, operation);
+                        return validateXPathOperation(expression, expressionName, operation);
                     } else if (ExpressionConstants.SET_DOCUMENT_OPERATOR.equals(operatorType)) {
-                        IStatus status = validateSetDocumentOperation(expression,
-                                expressionName, operation);
+                        final IStatus status = validateSetDocumentOperation(expression, operation);
+                        if (status != null) {
+                            return status;
+                        }
+                    } else if (ExpressionConstants.SET_LIST_DOCUMENT_OPERATOR.equals(operatorType)) {
+                        final IStatus status = validateSetListDocumentOperation(expression, operation);
                         if (status != null) {
                             return status;
                         }
                     } else if (ExpressionConstants.CREATE_BUSINESS_DATA_OPERATOR.equals(operatorType)) {
-                        IStatus status = validateCreateBusinessDataOperation(expression,
-                                expressionName, operation);
+                        final IStatus status = validateCreateBusinessDataOperation(expression, expressionName, operation);
                         if (status != null) {
                             return status;
                         }
                     } else if (ExpressionConstants.DELETION_OPERATOR.equals(operatorType)) {
-                        IStatus status = validateDeletionOperation(expression,
-                                expressionName, operation);
+                        final IStatus status = validateDeletionOperation(expression, expressionName, operation);
                         if (status != null) {
                             return status;
                         }
@@ -98,21 +99,21 @@ public class OperationReturnTypesValidator implements IExpressionValidator {
                         return ValidationStatus.ok();
                     }
 
-                    if (ModelHelper.isAnExpressionCopy((Expression) expression)) {
+                    if (ModelHelper.isAnExpressionCopy(expression)) {
                         return ValidationStatus.ok();
                     }
                 }
 
                 try {
-                    Class<?> dataReturnTypeClass = Class.forName(dataExpression.getReturnType());
-                    Class<?> expressionReturnTypeClass = Class.forName(((Expression) expression).getReturnType());
+                    final Class<?> dataReturnTypeClass = Class.forName(dataExpression.getReturnType());
+                    final Class<?> expressionReturnTypeClass = Class.forName(expression.getReturnType());
                     if (!dataReturnTypeClass.isAssignableFrom(expressionReturnTypeClass)) {
                         return ValidationStatus.warning(Messages.bind(
                                 Messages.invalidReturnTypeBetween, dataExpression.getName(),
                                 expressionName));
                     }
-                } catch (Exception e) {
-                    if (!dataExpression.getReturnType().equals(((Expression) expression).getReturnType())) {
+                } catch (final Exception e) {
+                    if (!dataExpression.getReturnType().equals(expression.getReturnType())) {
                         return ValidationStatus.warning(Messages.bind(
                                 Messages.invalidReturnTypeFor,
                                 expressionName));
@@ -120,47 +121,99 @@ public class OperationReturnTypesValidator implements IExpressionValidator {
                 }
 
                 if (ExpressionConstants.CONSTANT_TYPE.equals(expression.getType())) {
-                    String returnType = expression.getReturnType();
-                    if (expressionContent != null && !expressionContent.isEmpty()) {
-                        if (Integer.class.getName().equals(returnType)) {
-                            try {
-                                Integer.valueOf(expressionContent);
-                            } catch (NumberFormatException e) {
-                                return ValidationStatus.warning(Messages.bind(Messages.expressionValueNotCompatibleWithReturnType, expressionContent,
-                                        returnType));
-                            }
-                        } else if (Double.class.getName().equals(returnType)) {
-                            try {
-                                Double.valueOf(expressionContent);
-                            } catch (NumberFormatException e) {
-                                return ValidationStatus.warning(Messages.bind(Messages.expressionValueNotCompatibleWithReturnType, expressionContent,
-                                        returnType));
-                            }
-                        } else if (Float.class.getName().equals(returnType)) {
-                            try {
-                                Float.valueOf(expressionContent);
-                            } catch (NumberFormatException e) {
-                                return ValidationStatus.warning(Messages.bind(Messages.expressionValueNotCompatibleWithReturnType, expressionContent,
-                                        returnType));
-                            }
-                        } else if (Long.class.getName().equals(returnType)) {
-                            try {
-                                Long.valueOf(expressionContent);
-                            } catch (NumberFormatException e) {
-                                return ValidationStatus.warning(Messages.bind(Messages.expressionValueNotCompatibleWithReturnType, expressionContent,
-                                        returnType));
-                            }
-                        }
+                    final IStatus status = validateConstantContentWithReturnType(expression, expressionContent);
+                    if (status != null) {
+                        return status;
                     }
-
                 }
-
             }
         }
         return ValidationStatus.ok();
     }
 
-    protected IStatus validateDeletionOperation(Expression expression, String expressionName, Operation operation) {
+
+    protected IStatus validateSetListDocumentOperation(final Expression expression, final Operation operation) {
+        final boolean isTask = operation.eContainer() instanceof Task;
+
+
+        final String listClass = List.class.getName();
+        if (!listClass.equals(dataExpression.getReturnType())) {
+            return ValidationStatus.error(Messages.bind(Messages.incompatibleStorageReturnType, dataExpression.getName(),
+                    operatorLabelProvider.getText(operation.getOperator())));
+        }
+
+        if (expression != null && expression.getContent() != null && !expression.getContent().isEmpty()) {
+            final String dataReturnType = dataExpression.getReturnType();
+            final String returnType = expression.getReturnType();
+            try {
+                final boolean isListType = listClass.equals(returnType) || List.class.isAssignableFrom(Class.forName(returnType));
+
+                if (!isListType && listClass.equals(dataReturnType)) {
+
+                    if (isTask) {
+                        return ValidationStatus.warning(Messages.incompatibleType + " " + Messages.messageOperationWithListDocumentInTask);
+                    } else {
+                        if (PlatformUtil.isACommunityBonitaProduct()) {
+                            return ValidationStatus.warning(Messages.incompatibleType + " " + Messages.messageOperationWithListDocumentInFormInCommunity);
+                        } else {
+                        return ValidationStatus.warning(Messages.incompatibleType + " " + Messages.messageOperationWithListDocumentInForm);
+                    }
+                    }
+                } else {
+                    return ValidationStatus.ok();
+                }
+            } catch (final ClassNotFoundException e) {
+                return ValidationStatus.warning(Messages.bind(
+                        Messages.invalidReturnTypeFor,
+                        expression.getName()));
+            }
+
+        } else {
+            if (isTask) {
+                return ValidationStatus.info(Messages.messageOperationWithListDocumentInTask);
+            } else {
+                return ValidationStatus.info(Messages.messageOperationWithListDocumentInForm);
+            }
+        }
+    }
+
+    private IStatus validateConstantContentWithReturnType(final Expression expression, final String expressionContent) {
+        final String returnType = expression.getReturnType();
+        if (expressionContent != null && !expressionContent.isEmpty()) {
+            if (Integer.class.getName().equals(returnType)) {
+                try {
+                    Integer.valueOf(expressionContent);
+                } catch (final NumberFormatException e) {
+                    return ValidationStatus.warning(Messages.bind(Messages.expressionValueNotCompatibleWithReturnType, expressionContent,
+                            returnType));
+                }
+            } else if (Double.class.getName().equals(returnType)) {
+                try {
+                    Double.valueOf(expressionContent);
+                } catch (final NumberFormatException e) {
+                    return ValidationStatus.warning(Messages.bind(Messages.expressionValueNotCompatibleWithReturnType, expressionContent,
+                            returnType));
+                }
+            } else if (Float.class.getName().equals(returnType)) {
+                try {
+                    Float.valueOf(expressionContent);
+                } catch (final NumberFormatException e) {
+                    return ValidationStatus.warning(Messages.bind(Messages.expressionValueNotCompatibleWithReturnType, expressionContent,
+                            returnType));
+                }
+            } else if (Long.class.getName().equals(returnType)) {
+                try {
+                    Long.valueOf(expressionContent);
+                } catch (final NumberFormatException e) {
+                    return ValidationStatus.warning(Messages.bind(Messages.expressionValueNotCompatibleWithReturnType, expressionContent,
+                            returnType));
+                }
+            }
+        }
+        return null;
+    }
+
+    protected IStatus validateDeletionOperation(final Expression expression, final String expressionName, final Operation operation) {
         if (!dataExpression.getReferencedElements().isEmpty() && !(dataExpression.getReferencedElements().get(0) instanceof BusinessObjectData)) {
             return ValidationStatus.error(Messages.bind(Messages.incompatibleExpressionTypeForOperator, typeLabelProvider.getText(dataExpression.getType()),
                     operatorLabelProvider.getText(operation.getOperator())));
@@ -168,8 +221,8 @@ public class OperationReturnTypesValidator implements IExpressionValidator {
         return null;
     }
 
-    protected IStatus validateCreateBusinessDataOperation(Expression expression,
-            String expressionName, Operation operation) {
+    protected IStatus validateCreateBusinessDataOperation(final Expression expression,
+            final String expressionName, final Operation operation) {
         if (!ExpressionConstants.VARIABLE_TYPE.equals(dataExpression.getType())
                 && !(dataExpression.getReferencedElements().get(0) instanceof BusinessObjectData)) {
             return ValidationStatus.error(Messages.bind(Messages.incompatibleExpressionTypeForOperator, typeLabelProvider.getText(dataExpression.getType()),
@@ -178,19 +231,19 @@ public class OperationReturnTypesValidator implements IExpressionValidator {
         return null;
     }
 
-    protected boolean needValidation(Operation operation) {
+    protected boolean needValidation(final Operation operation) {
         return !(operation.eContainer() instanceof Info);
     }
 
-    protected Operation getOperation(Expression expression) {
-        EObject container = expression.eContainer();
+    protected Operation getOperation(final Expression expression) {
+        final EObject container = expression.eContainer();
         if (container instanceof Operation) {
             return (Operation) container;
         }
         return null;
     }
 
-    protected Expression getExpression(Object value) {
+    protected Expression getExpression(final Object value) {
         Expression expression = null;
         if (value instanceof Expression) {
             expression = (Expression) value;
@@ -200,7 +253,7 @@ public class OperationReturnTypesValidator implements IExpressionValidator {
         return expression;
     }
 
-    protected String getExpressionContent(Object value, Expression expression) {
+    protected String getExpressionContent(final Object value, final Expression expression) {
         String expressionContent = expression.getContent();
         if (value instanceof String) {// Expression content to validate
             expressionContent = value.toString();
@@ -208,53 +261,64 @@ public class OperationReturnTypesValidator implements IExpressionValidator {
         return expressionContent;
     }
 
-    protected String getExpressionName(Object value, Expression expression) {
-        String expressionName = ((Expression) expression).getName();
+    protected String getExpressionName(final Object value, final Expression expression) {
+        String expressionName = expression.getName();
         if (expressionName == null || expressionName.isEmpty()) {
             expressionName = value.toString();
         }
         return expressionName;
     }
 
-    protected IStatus validateSetDocumentOperation(Expression expression,
-            String expressionName, final Operation operation) {
+    protected IStatus validateSetDocumentOperation(final Expression expression, final Operation operation) {
+
+        final boolean isTask = operation.eContainer() instanceof Task;
+
         if (!String.class.getName().equals(dataExpression.getReturnType())) {
             return ValidationStatus.error(Messages.bind(Messages.incompatibleStorageReturnType, dataExpression.getName(),
                     operatorLabelProvider.getText(operation.getOperator())));
         }
-        if (dataExpression != null && dataExpression.getContent() != null && !dataExpression.getContent().isEmpty()) {
-            String typeName = dataExpression.getReturnType();
-            String actionType = ((Expression) expression).getReturnType();
+        if (expression != null && expression.getContent() != null && !expression.getContent().isEmpty()) {
+            final String typeName = dataExpression.getReturnType();
+            final String actionType = expression.getReturnType();
             if (!(actionType.equals(DocumentValue.class.getName()) && typeName.equals(String.class.getName()))) {
-                return ValidationStatus.warning(Messages.bind(
-                        Messages.invalidReturnTypeBetween, dataExpression.getName(),
-                        expressionName) + "\n" + Messages.documentValueExprected);
+
+                if (isTask) {
+                    return ValidationStatus.warning(Messages.incompatibleType + " " + Messages.messageOperationWithDocumentInTask);
+                } else {
+                    return ValidationStatus.warning(Messages.incompatibleType + " " + Messages.messageOperationWithDocumentInForm);
+                }
             } else {
                 return ValidationStatus.ok();
             }
+
+        } else {
+            if (isTask) {
+                return ValidationStatus.info(Messages.messageOperationWithDocumentInTask);
+            } else {
+                return ValidationStatus.info(Messages.messageOperationWithDocumentInForm);
+            }
         }
-        return null;
     }
 
-    protected IStatus validateXPathOperation(Expression expression,
-            String expressionName, final Operation operation) {
+    protected IStatus validateXPathOperation(final Expression expression,
+            final String expressionName, final Operation operation) {
         if (!ExpressionConstants.VARIABLE_TYPE.equals(dataExpression.getType())) {
             return ValidationStatus.error(Messages.bind(Messages.incompatibleExpressionTypeForOperator, typeLabelProvider.getText(dataExpression.getType()),
                     operatorLabelProvider.getText(operation.getOperator())));
         }
         if (dataExpression != null && dataExpression.getContent() != null && !dataExpression.getContent().isEmpty()) {
             if (!operation.getOperator().getInputTypes().isEmpty()) {
-                String typeName = operation.getOperator().getInputTypes().get(0);
+                final String typeName = operation.getOperator().getInputTypes().get(0);
                 try {
-                    Class<?> dataReturnTypeClass = Class.forName(typeName);
-                    Class<?> expressionReturnTypeClass = Class.forName(((Expression) expression).getReturnType());
+                    final Class<?> dataReturnTypeClass = Class.forName(typeName);
+                    final Class<?> expressionReturnTypeClass = Class.forName(expression.getReturnType());
                     if (!dataReturnTypeClass.isAssignableFrom(expressionReturnTypeClass)) {
                         return ValidationStatus.warning(Messages.bind(
                                 Messages.invalidReturnTypeBetween, dataExpression.getName(),
                                 expressionName));
                     }
-                } catch (Exception e) {
-                    if (!operation.getOperator().getInputTypes().get(0).equals(((Expression) expression).getReturnType())) {
+                } catch (final Exception e) {
+                    if (!operation.getOperator().getInputTypes().get(0).equals(expression.getReturnType())) {
                         return ValidationStatus.warning(Messages.bind(
                                 Messages.invalidReturnTypeFor,
                                 expressionName));
@@ -265,25 +329,25 @@ public class OperationReturnTypesValidator implements IExpressionValidator {
         return ValidationStatus.ok();
     }
 
-    protected IStatus validateJavaMethodOperation(Expression expression,
-            String expressionName, final Operation operation) {
+    protected IStatus validateJavaMethodOperation(final Expression expression,
+            final String expressionName, final Operation operation) {
         if (!ExpressionConstants.VARIABLE_TYPE.equals(dataExpression.getType())
                 || !(!dataExpression.getReferencedElements().isEmpty() && dataExpression.getReferencedElements().get(0) instanceof JavaObjectData)) {
             return ValidationStatus.error(Messages.bind(Messages.incompatibleExpressionTypeForOperator, typeLabelProvider.getText(dataExpression.getType()),
                     operatorLabelProvider.getText(operation.getOperator())));
         }
         if (!operation.getOperator().getInputTypes().isEmpty()) {
-            String typeName = operation.getOperator().getInputTypes().get(0);
+            final String typeName = operation.getOperator().getInputTypes().get(0);
             try {
-                Class<?> dataReturnTypeClass = Class.forName(typeName);
-                Class<?> expressionReturnTypeClass = Class.forName(((Expression) expression).getReturnType());
+                final Class<?> dataReturnTypeClass = Class.forName(typeName);
+                final Class<?> expressionReturnTypeClass = Class.forName(expression.getReturnType());
                 if (!dataReturnTypeClass.isAssignableFrom(expressionReturnTypeClass)) {
                     return ValidationStatus.warning(Messages.bind(
                             Messages.invalidReturnTypeBetween, dataExpression.getName(),
                             expressionName));
                 }
-            } catch (Exception e) {
-                if (!operation.getOperator().getInputTypes().get(0).equals(((Expression) expression).getReturnType())) {
+            } catch (final Exception e) {
+                if (!operation.getOperator().getInputTypes().get(0).equals(expression.getReturnType())) {
                     return ValidationStatus.warning(Messages.bind(
                             Messages.invalidReturnTypeFor,
                             expressionName));
@@ -293,22 +357,22 @@ public class OperationReturnTypesValidator implements IExpressionValidator {
         return ValidationStatus.ok();
     }
 
-    public void setDataExpression(Expression dataExpression) {
+    public void setDataExpression(final Expression dataExpression) {
         this.dataExpression = dataExpression;
     }
 
     @Override
-    public void setInputExpression(Expression inputExpression) {
+    public void setInputExpression(final Expression inputExpression) {
         this.inputExpression = inputExpression;
     }
 
     @Override
-    public void setDomain(EditingDomain domain) {
+    public void setDomain(final EditingDomain domain) {
 
     }
 
     @Override
-    public void setContext(EObject context) {
+    public void setContext(final EObject context) {
     }
 
 }
