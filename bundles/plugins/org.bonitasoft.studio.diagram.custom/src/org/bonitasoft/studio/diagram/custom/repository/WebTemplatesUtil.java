@@ -325,6 +325,17 @@ public class WebTemplatesUtil {
             ApplicationLookNFeelFileStore theme, IProgressMonitor monitor, CompoundCommand cc, ApplicationResourceFileStore artifact) {
         Collection<ResourceFile> filesToAdd = new ArrayList<ResourceFile>();
         Collection<ResourceFolder> foldersToAdd = new ArrayList<ResourceFolder>();
+        computeFilesAndFoldersToAdd(theme, monitor, artifact, filesToAdd, foldersToAdd);
+        if(filesToAdd.size()>0) {
+            cc.append(new AddCommand(editingDomain, process,ProcessPackage.Literals.RESOURCE_CONTAINER__RESOURCE_FILES, filesToAdd));
+        }
+        if(foldersToAdd.size()>0){
+            cc.append(new AddCommand(editingDomain, process,ProcessPackage.Literals.RESOURCE_CONTAINER__RESOURCE_FOLDERS, foldersToAdd));
+        }
+    }
+
+    private static void computeFilesAndFoldersToAdd(ApplicationLookNFeelFileStore theme, IProgressMonitor monitor, ApplicationResourceFileStore artifact,
+            Collection<ResourceFile> filesToAdd, Collection<ResourceFolder> foldersToAdd) {
         final File themeResourcesApplicationFolder = theme.getResourcesApplicationFolder();
         if(themeResourcesApplicationFolder != null){
         	for (File resource : themeResourcesApplicationFolder.listFiles()) {
@@ -345,12 +356,6 @@ public class WebTemplatesUtil {
         	}
         } else {
         	BonitaStudioLog.log("The resource Application folder of the theme was not found. (theme: "+ theme.getDisplayName() + ")");
-        }
-        if(filesToAdd.size()>0) {
-            cc.append(new AddCommand(editingDomain, process,ProcessPackage.Literals.RESOURCE_CONTAINER__RESOURCE_FILES, filesToAdd));
-        }
-        if(foldersToAdd.size()>0){
-            cc.append(new AddCommand(editingDomain, process,ProcessPackage.Literals.RESOURCE_CONTAINER__RESOURCE_FOLDERS, foldersToAdd));
         }
     }
 
