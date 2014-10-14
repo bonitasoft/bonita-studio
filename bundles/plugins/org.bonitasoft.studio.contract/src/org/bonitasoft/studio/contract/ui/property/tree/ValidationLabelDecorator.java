@@ -26,7 +26,6 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.fieldassist.FieldDecoration;
 import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.DecorationOverlayIcon;
 import org.eclipse.jface.viewers.IDecoration;
 import org.eclipse.jface.viewers.ILabelDecorator;
@@ -42,7 +41,7 @@ public class ValidationLabelDecorator implements ILabelDecorator {
 
     private final ContractDefinitionValidator validator;
 
-    public ValidationLabelDecorator(final ColumnViewer viewer) {
+    public ValidationLabelDecorator() {
         validator = new ContractDefinitionValidator();
     }
 

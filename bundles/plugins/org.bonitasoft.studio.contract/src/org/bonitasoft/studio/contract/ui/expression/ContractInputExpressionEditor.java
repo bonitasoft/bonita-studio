@@ -121,7 +121,7 @@ public class ContractInputExpressionEditor extends SelectionAwareExpressionEdito
     }
 
 
-    private void fillViewer(final EObject context, final ViewerFilter[] filters) {
+    private void updateViewerInput(final EObject context) {
         final Set<ContractInput> input = new HashSet<ContractInput>();
         final IExpressionProvider provider = getContractInputExpressionProvider();
         final Set<Expression> expressions = provider.getExpressions(context);
@@ -149,7 +149,7 @@ public class ContractInputExpressionEditor extends SelectionAwareExpressionEdito
     public void bindExpression(final EMFDataBindingContext dataBindingContext,
             final EObject context, final Expression inputExpression, final ViewerFilter[] filters, final ExpressionViewer expressionViewer) {
         editorInputExpression = inputExpression;
-        fillViewer(context, filters);
+        updateViewerInput(context);
 
         final IObservableValue contentObservable = EMFObservables
                 .observeValue(inputExpression,

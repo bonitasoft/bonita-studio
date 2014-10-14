@@ -27,6 +27,8 @@ import java.util.Arrays;
 import org.bonitasoft.studio.contract.AbstractSWTTestCase;
 import org.bonitasoft.studio.contract.core.ContractDefinitionValidator;
 import org.bonitasoft.studio.model.process.Contract;
+import org.bonitasoft.studio.model.process.ContractInput;
+import org.bonitasoft.studio.model.process.ContractInputType;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
@@ -118,6 +120,31 @@ public class ContractPropertySectionTest extends AbstractSWTTestCase {
         inputsTableViewer.setSelection(new StructuredSelection("item"));
         assertThat(removeButton.isEnabled()).isTrue();
         assertThat(inputsTableViewer.getSelection().isEmpty()).isFalse();
+    }
+
+    @Test
+    public void should_bindAddChildButtonEnablement_convert_boolean_value() throws Exception {
+        section.init();
+        final Button button = new Button(parent, SWT.PUSH);
+        final TableViewer inputsTableViewer = new TableViewer(parent);
+        inputsTableViewer.setLabelProvider(new LabelProvider());
+        inputsTableViewer.setContentProvider(ArrayContentProvider.getInstance());
+
+        final ContractInput textParentInput = ProcessFactory.eINSTANCE.createContractInput();
+        textParentInput.setType(ContractInputType.TEXT);
+        final ContractInput complexParentInput = ProcessFactory.eINSTANCE.createContractInput();
+        complexParentInput.setType(ContractInputType.COMPLEX);
+
+        inputsTableViewer.setInput(Arrays.asList(textParentInput, complexParentInput));
+        section.bindAddChildButtonEnablement(button, inputsTableViewer);
+        assertThat(button.isEnabled()).isFalse();
+        assertThat(inputsTableViewer.getSelection().isEmpty()).isTrue();
+        inputsTableViewer.setSelection(new StructuredSelection(textParentInput));
+        assertThat(button.isEnabled()).isFalse();
+        assertThat(inputsTableViewer.getSelection().isEmpty()).isFalse();
+
+        inputsTableViewer.setSelection(new StructuredSelection(complexParentInput));
+        assertThat(button.isEnabled()).isTrue();
     }
 
 }

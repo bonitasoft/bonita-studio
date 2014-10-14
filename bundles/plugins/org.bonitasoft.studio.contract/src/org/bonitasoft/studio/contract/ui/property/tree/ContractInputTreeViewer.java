@@ -115,7 +115,7 @@ public class ContractInputTreeViewer extends TreeViewer {
     protected void createInputNameColumn() {
         final TreeViewerColumn nameColumnViewer = createColumnViewer(Messages.name + " *", SWT.FILL);
         nameColumnViewer.setLabelProvider(new DecoratingStyledCellLabelProvider(new InputNameCellLabelProvider(propertySourceProvider),
-                new ValidationLabelDecorator(this), new DecorationContext()));
+                new ValidationLabelDecorator(), new DecorationContext()));
         nameColumnViewer.setEditingSupport(new InputNamePropertyEditingSupport(propertySourceProvider,
                 this,
                 adapterFactoryLabelProvider,

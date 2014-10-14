@@ -26,7 +26,6 @@ import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.eclipse.jface.fieldassist.FieldDecoration;
-import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.swt.graphics.Image;
 import org.junit.After;
 import org.junit.Before;
@@ -43,8 +42,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class ValidationLabelDecoratorTest extends AbstractSWTTestCase {
 
-    @Mock
-    private ColumnViewer viewer;
     private ValidationLabelDecorator validationLabelDecorator;
     private Image errorDecorator;
     @Mock
@@ -57,7 +54,7 @@ public class ValidationLabelDecoratorTest extends AbstractSWTTestCase {
     @Before
     public void setUp() throws Exception {
         createDisplayAndRealm();
-        validationLabelDecorator = spy(new ValidationLabelDecorator(viewer));
+        validationLabelDecorator = spy(new ValidationLabelDecorator());
         baseImage = createImage();
         errorDecorator = createImage();
         when(decorator.getImage()).thenReturn(errorDecorator);
