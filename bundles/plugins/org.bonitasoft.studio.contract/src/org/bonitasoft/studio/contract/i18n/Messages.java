@@ -53,5 +53,11 @@ public class Messages extends NLS {
     public static String removeInputConfirmationMessage;
     public static String removeInputConfirmationTitle;
     public static String returnType;
+    public static String up;
+    public static String down;
+    public static String expression;
+    public static String removeConstraintConfirmationTitle;
+    public static String removeConstraintConfirmationMessage;
+    public static String errorMessage;
 
 }

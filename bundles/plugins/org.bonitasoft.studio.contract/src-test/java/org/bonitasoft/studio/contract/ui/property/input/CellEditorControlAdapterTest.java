@@ -14,27 +14,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.contract.ui.property;
+package org.bonitasoft.studio.contract.ui.property.input;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
-import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import org.bonitasoft.studio.contract.ui.property.input.CellEditorControlAdapter;
-import org.eclipse.jface.fieldassist.ControlDecoration;
-import org.eclipse.jface.fieldassist.FieldDecoration;
-import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.events.ControlEvent;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Event;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 
 
@@ -43,27 +39,21 @@ import org.mockito.runners.MockitoJUnitRunner;
  *
  */
 @RunWith(MockitoJUnitRunner.class)
-public class FieldDecoratorProviderTest {
+public class CellEditorControlAdapterTest {
 
-    @Spy
-    private FieldDecoratorProvider fieldDecoratorProvider;
+    private CellEditorControlAdapter cellEditorControlAdapter;
 
     @Mock
     private Control control;
-
-    @Mock
-    private FieldDecoration fieldDecoration;
-
-    @Mock
-    private ControlDecoration controlDecoration;
 
     /**
      * @throws java.lang.Exception
      */
     @Before
     public void setUp() throws Exception {
-        doReturn(fieldDecoration).when(fieldDecoratorProvider).getDecorator(FieldDecorationRegistry.DEC_CONTENT_PROPOSAL);
-        doReturn(controlDecoration).when(fieldDecoratorProvider).newControlDecoration(any(Control.class), anyInt());
+        cellEditorControlAdapter = new CellEditorControlAdapter(control);
+        when(control.getLocation()).thenReturn(new Point(0, 0));
+        when(control.getSize()).thenReturn(new Point(50, 20));
     }
 
     /**
@@ -74,12 +64,25 @@ public class FieldDecoratorProviderTest {
     }
 
     @Test
-    public void should_createControlDecorator_attach_a_ControlDecorator_to_a_Control() throws Exception {
-        final ControlDecoration decorator = fieldDecoratorProvider.createControlDecorator(control, "a description",
-                FieldDecorationRegistry.DEC_CONTENT_PROPOSAL, SWT.RIGHT);
-        assertThat(decorator).isEqualTo(controlDecoration);
-        verify(decorator).setDescriptionText("a description");
-        verify(decorator).setImage(any(Image.class));
-        verify(control).addControlListener(any(CellEditorControlAdapter.class));
+    public void should_controlMoved_adjust_control_location_and_size() throws Exception {
+        final Event e = new Event();
+        e.widget = control;
+        final ControlEvent event = new ControlEvent(e);
+        cellEditorControlAdapter.controlMoved(event);
+        verify(control).setLocation(CellEditorControlAdapter.OFFSET, 0);
+        verify(control).setSize(50 - CellEditorControlAdapter.OFFSET, 20);
     }
+
+    @Test
+    public void should_controlMoved_doNothing() throws Exception {
+        when(control.getLocation()).thenReturn(new Point(CellEditorControlAdapter.OFFSET, 0));
+
+        final Event e = new Event();
+        e.widget = control;
+        final ControlEvent event = new ControlEvent(e);
+        cellEditorControlAdapter.controlMoved(event);
+        verify(control, never()).setLocation(anyInt(), anyInt());
+        verify(control, never()).setSize(anyInt(), anyInt());
+    }
+
 }
