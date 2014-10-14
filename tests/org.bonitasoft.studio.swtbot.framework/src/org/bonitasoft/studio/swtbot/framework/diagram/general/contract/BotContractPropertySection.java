@@ -33,7 +33,7 @@ public class BotContractPropertySection extends BotBase {
 
     public BotContractInputRow add() {
         bot.button(Messages.add).click();
-        return new BotContractInputRow(bot, bot.tree().rowCount() - 1);
+        return new BotContractInputRow(bot, inputTable().getSWTBotWidget().rowCount() - 1);
     }
 
     public BotContractPropertySection remove() {
@@ -43,6 +43,10 @@ public class BotContractPropertySection extends BotBase {
         return this;
     }
 
+    public BotContractInputRow addChild() {
+        bot.button(Messages.addChild).click();
+        return new BotContractInputRow(bot, inputTable().getSWTBotWidget().rowCount() - 1);
+    }
 
 
 }

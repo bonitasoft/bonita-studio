@@ -17,7 +17,6 @@
 package org.bonitasoft.studio.tests.contract;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.tuple;
 
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.model.process.Task;
@@ -61,7 +60,7 @@ public class ContractIT extends SWTBotGefTestCase {
     }
 
     @Test
-    public void add_remove_input_to_a_step_contract() {
+    public void create_expense_report_step_contract() {
         final BotProcessDiagramPerspective botProcessDiagramPerspective = new BotApplicationWorkbenchWindow(bot).createNewDiagram();
         final Task task = (Task) botProcessDiagramPerspective.activeProcessDiagramEditor().selectElement("Step1")
                 .getSelectedSemanticElement();
@@ -70,17 +69,24 @@ public class ContractIT extends SWTBotGefTestCase {
                 .selectGeneralTab()
                 .selectContractTab();
         final BotContractInputRow contractInputRow = contractTabBot.add();
-        contractInputRow.setName("myInputName").setDescription("A short description");
-        assertThat(task.getContract().getInputs()).hasSize(1).extracting("name", "mandatory", "multiple", "description")
-        .containsOnly(tuple("myInputName", true, false, "A short description"));
-        contractInputRow.clickMultiple();
-        contractInputRow.clickMandatory();
-        assertThat(task.getContract().getInputs()).hasSize(1).extracting("name", "mandatory", "multiple", "description")
-        .containsOnly(tuple("myInputName", false, true, "A short description"));
 
-        contractTabBot.inputTable().select(0);
-        contractTabBot.remove();
-        assertThat(task.getContract().getInputs()).hasSize(0);
+        contractInputRow.setName("expenseReport").setDescription("An expense report").setType("COMPLEX");
+        //        assertThat(task.getContract().getInputs()).hasSize(1).extracting("name", "type", "mandatory", "multiple", "description")
+        //                .containsOnly(tuple("expenseReport", ContractInputType.COMPLEX, true, false, "An expense report"));
+
+        //  contractTabBot.inputTable().select(0);
+
+        BotContractInputRow childRow = contractTabBot.inputTable().selectActiveRow(bot);
+        childRow.setName("expenseLines").clickMultiple().setType("COMPLEX");
+
+        childRow = contractTabBot.inputTable().selectRow(bot, 2);
+        childRow.setName("nature").setDescription("The nature of the expense (eg: Restaurant, transport, hotel...etc)");
+
+        childRow = contractTabBot.add();
+        childRow.setName("amount").setType("DECIMAL").setDescription("The amount of the expense VAT included in euros.");
+
+
+        assertThat(task.getContract().getInputs()).hasSize(1);
     }
 
 }

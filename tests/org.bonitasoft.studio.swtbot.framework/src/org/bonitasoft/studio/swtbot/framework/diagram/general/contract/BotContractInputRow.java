@@ -26,7 +26,7 @@ import org.eclipse.swt.widgets.Widget;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.eclipse.swtbot.swt.finder.widgets.AbstractSWTBot;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotCombo;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotCCombo;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotText;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
@@ -137,8 +137,7 @@ public class BotContractInputRow extends BotBase {
         final SWTBotTreeItem item = getTreeItem(bot.treeWithId(SWTBotConstants.SWTBOT_ID_CONTRACT_INPUT_TREE), row);
         item.setFocus();
         item.click(TYPE_COLUMN);
-        bot.waitUntil(rowIsActive(item));
-        final SWTBotCombo comboBox = bot.comboBox();
+        final SWTBotCCombo comboBox = bot.ccomboBox();
         comboBox.setSelection(type);
         SWTBotTestUtil.pressEnter();
         return this;
@@ -155,6 +154,12 @@ public class BotContractInputRow extends BotBase {
         final SWTBotTreeItem item = getTreeItem(bot.treeWithId(SWTBotConstants.SWTBOT_ID_CONTRACT_INPUT_TREE), row);
         item.setFocus();
         item.click(MANDATORY_COLUMN);
+        return this;
+    }
+
+    public BotContractInputRow select() {
+        final SWTBotTreeItem item = getTreeItem(bot.treeWithId(SWTBotConstants.SWTBOT_ID_CONTRACT_INPUT_TREE), row);
+        item.select();
         return this;
     }
 
