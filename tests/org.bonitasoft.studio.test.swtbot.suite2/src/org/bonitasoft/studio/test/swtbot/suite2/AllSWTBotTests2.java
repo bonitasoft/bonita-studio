@@ -35,6 +35,7 @@ import org.bonitasoft.studio.tests.dialog.TestDuplicate;
 import org.bonitasoft.studio.tests.draw2d.TestLifeCycleWidget;
 import org.bonitasoft.studio.tests.form.TestBug1682;
 import org.bonitasoft.studio.tests.iteration.MultiInstantiationIT;
+import org.bonitasoft.studio.tests.refactoring.widget.RefactorWidgetIT;
 import org.bonitasoft.studio.tests.timer.TestTimer;
 import org.bonitasoft.studio.util.test.BonitaTestSuite;
 import org.bonitasoft.studio.validators.test.swtbot.TestCreateValidatorWizard;
@@ -98,7 +99,8 @@ import org.junit.runners.Suite;
     MigrationReporTest.class,
     TestTimer.class,
     TestBonitaGroovyEditorDialog.class,
-    TestProcessDependencies.class
+        TestProcessDependencies.class,
+        RefactorWidgetIT.class
 })
 public class AllSWTBotTests2 {
 
