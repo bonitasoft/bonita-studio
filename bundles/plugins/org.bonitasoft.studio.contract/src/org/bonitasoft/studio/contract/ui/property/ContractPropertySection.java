@@ -25,6 +25,7 @@ import org.bonitasoft.studio.contract.ui.property.constraint.ContractConstraints
 import org.bonitasoft.studio.contract.ui.property.input.ContractInputController;
 import org.bonitasoft.studio.contract.ui.property.input.ContractInputTreeViewer;
 import org.bonitasoft.studio.model.process.Contract;
+import org.bonitasoft.studio.model.process.ContractConstraint;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ContractInputType;
 import org.bonitasoft.studio.model.process.ProcessPackage;
@@ -34,6 +35,7 @@ import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.IValueChangeListener;
 import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.jface.databinding.swt.SWTObservables;
@@ -45,8 +47,6 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 
@@ -136,42 +136,14 @@ public class ContractPropertySection extends EObjectSelectionProviderSection {
 
         constraintsTableViewer.setInput(CustomEMFEditObservables.observeDetailList(Realm.getDefault(), observeContractValue,
                 ProcessPackage.Literals.CONTRACT__CONSTRAINTS));
-
-        addButton.addSelectionListener(new SelectionAdapter() {
-
-            @Override
-            public void widgetSelected(final SelectionEvent e) {
-                getConstraintController().addConstraint(constraintsTableViewer);
-            }
-        });
-
-        upButton.addSelectionListener(new SelectionAdapter() {
-
-            @Override
-            public void widgetSelected(final SelectionEvent e) {
-                getConstraintController().moveUp(constraintsTableViewer);
-            }
-
-        });
-
-        downButton.addSelectionListener(new SelectionAdapter() {
-
-            @Override
-            public void widgetSelected(final SelectionEvent e) {
-                getConstraintController().moveDown(constraintsTableViewer);
-            }
-
-        });
-
-        removeButton.addSelectionListener(new SelectionAdapter() {
-
-            @Override
-            public void widgetSelected(final SelectionEvent e) {
-                getConstraintController().removeConstraint(constraintsTableViewer);
-            }
-        });
+        constraintsTableViewer.createAddListener(addButton);
+        constraintsTableViewer.createMoveUpListener(upButton);
+        constraintsTableViewer.createMoveDownListener(downButton);
+        constraintsTableViewer.createRemoveListener(removeButton);
 
         bindRemoveButtonEnablement(removeButton, constraintsTableViewer);
+        bindUpButtonEnablement(upButton, constraintsTableViewer);
+        bindDownButtonEnablement(downButton, constraintsTableViewer);
     }
 
     private void createInputTabContent(final Composite parent, final IObservableValue observeContractValue) {
@@ -186,33 +158,12 @@ public class ContractPropertySection extends EObjectSelectionProviderSection {
 
         inputsTableViewer.setInput(observeContractValue);
 
-        addButton.addSelectionListener(new SelectionAdapter() {
-
-            @Override
-            public void widgetSelected(final SelectionEvent e) {
-                getInputController().addInput(inputsTableViewer);
-            }
-        });
-
-        addChildButton.addSelectionListener(new SelectionAdapter() {
-
-            @Override
-            public void widgetSelected(final SelectionEvent e) {
-                getInputController().addChildInput(inputsTableViewer);
-            }
-        });
-
-        removeButton.addSelectionListener(new SelectionAdapter() {
-
-            @Override
-            public void widgetSelected(final SelectionEvent e) {
-                getInputController().removeInput(inputsTableViewer);
-            }
-        });
+        inputsTableViewer.createAddListener(addButton);
+        inputsTableViewer.createAddChildListener(addChildButton);
+        inputsTableViewer.createRemoveListener(removeButton);
 
         bindRemoveButtonEnablement(removeButton, inputsTableViewer);
         bindAddChildButtonEnablement(addChildButton, inputsTableViewer);
-        inputsTableViewer.getTree().setFocus();
     }
 
     public Button createRemoveButton(final Composite buttonsComposite) {
@@ -241,6 +192,20 @@ public class ContractPropertySection extends EObjectSelectionProviderSection {
                 emptySelectionToBooleanStrategy());
     }
 
+    protected void bindUpButtonEnablement(final Button button, final Viewer viewer) {
+        getContext().bindValue(SWTObservables.observeEnabled(button),
+                ViewersObservables.observeSingleSelection(viewer),
+                new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER),
+                isFirstElementToBooleanStrategy());
+    }
+
+    protected void bindDownButtonEnablement(final Button button, final Viewer viewer) {
+        getContext().bindValue(SWTObservables.observeEnabled(button),
+                ViewersObservables.observeSingleSelection(viewer),
+                new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER),
+                isLastElementToBooleanStrategy());
+    }
+
     protected void bindAddChildButtonEnablement(final Button button, final Viewer viewer) {
         getContext().bindValue(SWTObservables.observeEnabled(button),
                 ViewersObservables.observeSingleSelection(viewer),
@@ -265,6 +230,40 @@ public class ContractPropertySection extends EObjectSelectionProviderSection {
             }
         });
         return modelStrategy;
+    }
+
+    private UpdateValueStrategy isLastElementToBooleanStrategy() {
+        final UpdateValueStrategy strategy = new UpdateValueStrategy();
+        strategy.setConverter(new Converter(Object.class, Boolean.class) {
+
+            @Override
+            public Object convert(final Object from) {
+                if (from instanceof ContractConstraint) {
+                    final Contract contract = (Contract) ((ContractConstraint) from).eContainer();
+                    final EList<ContractConstraint> constraints = contract.getConstraints();
+                    return constraints.size() > 1 && constraints.indexOf(from) < constraints.size() - 1;
+                }
+                return false;
+            }
+        });
+        return strategy;
+    }
+
+    private UpdateValueStrategy isFirstElementToBooleanStrategy() {
+        final UpdateValueStrategy strategy = new UpdateValueStrategy();
+        strategy.setConverter(new Converter(Object.class, Boolean.class) {
+
+            @Override
+            public Object convert(final Object from) {
+                if (from instanceof ContractConstraint) {
+                    final Contract contract = (Contract) ((ContractConstraint) from).eContainer();
+                    final EList<ContractConstraint> constraints = contract.getConstraints();
+                    return constraints.size() > 1 && constraints.indexOf(from) > 0;
+                }
+                return false;
+            }
+        });
+        return strategy;
     }
 
     private UpdateValueStrategy emptySelectionAndComplexTypeToBooleanStrategy() {
@@ -342,7 +341,5 @@ public class ContractPropertySection extends EObjectSelectionProviderSection {
             ctx.dispose();
         }
     }
-
-
 
 }

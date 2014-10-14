@@ -19,6 +19,7 @@ package org.bonitasoft.studio.contract.ui.property.constraint;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.contract.core.ContractDefinitionValidator;
 import org.bonitasoft.studio.contract.i18n.Messages;
+import org.bonitasoft.studio.contract.ui.property.AddRowOnEnterCellNavigationStrategy;
 import org.bonitasoft.studio.contract.ui.property.CharriageColumnViewerEditorActivationStrategy;
 import org.bonitasoft.studio.contract.ui.property.constraint.edit.ConstraintErrorMessagePropertyEditingSupport;
 import org.bonitasoft.studio.contract.ui.property.constraint.edit.ConstraintExpressionPropertyEditingSupport;
@@ -39,6 +40,9 @@ import org.eclipse.jface.viewers.TableViewerEditor;
 import org.eclipse.jface.viewers.TableViewerFocusCellManager;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.forms.widgets.FormToolkit;
@@ -53,6 +57,7 @@ public class ContractConstraintsTableViewer extends TableViewer {
     private AdapterFactoryContentProvider propertySourceProvider;
     private AdapterFactoryLabelProvider adapterFactoryLabelProvider;
     private ContractDefinitionValidator contractValidator;
+    private ContractConstraintController constraintController;
 
     public ContractConstraintsTableViewer(final Composite parent, final FormToolkit toolkit) {
         super(toolkit.createTable(parent, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI));
@@ -61,6 +66,7 @@ public class ContractConstraintsTableViewer extends TableViewer {
 
     public void initialize(final ContractConstraintController constraintController, final ContractDefinitionValidator contractValidator) {
         this.contractValidator = contractValidator;
+        this.constraintController = constraintController;
         final ComposedAdapterFactory composedAdapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
         propertySourceProvider = new AdapterFactoryContentProvider(composedAdapterFactory);
         adapterFactoryLabelProvider = new AdapterFactoryLabelProvider(composedAdapterFactory);
@@ -68,8 +74,7 @@ public class ContractConstraintsTableViewer extends TableViewer {
         getTable().setLinesVisible(true);
         setContentProvider(new ObservableListContentProvider());
 
-
-        final CellNavigationStrategy cellNavigationStrategy = new ContractConstraintTableViewerCellNavigationStrategy(this, constraintController);
+        final CellNavigationStrategy cellNavigationStrategy = new AddRowOnEnterCellNavigationStrategy(this, constraintController);
         final TableViewerFocusCellManager focusCellManager = new TableViewerFocusCellManager(this, new FocusCellOwnerDrawHighlighter(
                 this), cellNavigationStrategy);
         TableViewerEditor.create(this, focusCellManager, new CharriageColumnViewerEditorActivationStrategy(this), ColumnViewerEditor.TABBING_HORIZONTAL |
@@ -81,6 +86,48 @@ public class ContractConstraintsTableViewer extends TableViewer {
 
         configureTableLayout();
         createColumns();
+    }
+
+    public void createAddListener(final Button button) {
+        button.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(final SelectionEvent e) {
+                constraintController.add(ContractConstraintsTableViewer.this);
+            }
+        });
+    }
+
+    public void createMoveUpListener(final Button button) {
+        button.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(final SelectionEvent e) {
+                constraintController.moveUp(ContractConstraintsTableViewer.this);
+            }
+        });
+    }
+
+    public void createMoveDownListener(final Button button) {
+        button.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(final SelectionEvent e) {
+                constraintController.moveDown(ContractConstraintsTableViewer.this);
+            }
+        });
+    }
+
+
+
+    public void createRemoveListener(final Button button) {
+        button.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(final SelectionEvent e) {
+                constraintController.remove(ContractConstraintsTableViewer.this);
+            }
+        });
     }
 
     public void createColumns() {

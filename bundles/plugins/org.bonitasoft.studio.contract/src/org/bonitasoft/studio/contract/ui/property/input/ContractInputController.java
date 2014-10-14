@@ -22,18 +22,19 @@ import org.bonitasoft.studio.common.databinding.CustomEMFEditObservables;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.contract.core.ContractDefinitionValidator;
 import org.bonitasoft.studio.contract.i18n.Messages;
+import org.bonitasoft.studio.contract.ui.property.IViewerController;
 import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ContractInputType;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 
@@ -42,7 +43,7 @@ import org.eclipse.swt.widgets.Display;
  * @author Romain Bioteau
  *
  */
-public class ContractInputController {
+public class ContractInputController implements IViewerController {
 
     private final ContractDefinitionValidator contractValidator;
 
@@ -50,7 +51,8 @@ public class ContractInputController {
         this.contractValidator = contractValidator;
     }
 
-    public ContractInput addInput(final ColumnViewer viewer) {
+    @Override
+    public ContractInput add(final ColumnViewer viewer) {
         final IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
         final ContractInput defaultInput = createDefaultInput();
         final IObservableValue contractObservable = (IObservableValue) viewer.getInput();
@@ -87,7 +89,8 @@ public class ContractInputController {
         return contractInput;
     }
 
-    public void removeInput(final Viewer viewer) {
+    @Override
+    public void remove(final ColumnViewer viewer) {
         final IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
         final List<?> selectedInput = selection.toList();
         Contract contract = null;
@@ -127,4 +130,44 @@ public class ContractInputController {
             clearMessagesRecursively(in);
         }
     }
+
+    @Override
+    public void moveUp(final ColumnViewer viewer) {
+        final ContractInput selectedConstraint = getSelectedInput(viewer);
+        final ContractInput parentInput = ModelHelper.getFirstContainerOfType(selectedConstraint, ContractInput.class);
+        IObservableList list = null;
+        if (parentInput == null) {
+            final Contract contract = ModelHelper.getFirstContainerOfType(selectedConstraint, Contract.class);
+            list = CustomEMFEditObservables.observeList(contract, ProcessPackage.Literals.CONTRACT__INPUTS);
+        } else {
+            list = CustomEMFEditObservables.observeList(parentInput, ProcessPackage.Literals.CONTRACT_INPUT__INPUTS);
+        }
+        final int index = list.indexOf(selectedConstraint);
+        if (index > 0) {
+            list.move(index, index - 1);
+        }
+    }
+
+    @Override
+    public void moveDown(final ColumnViewer viewer) {
+        final ContractInput selectedConstraint = getSelectedInput(viewer);
+        final ContractInput parentInput = ModelHelper.getFirstContainerOfType(selectedConstraint, ContractInput.class);
+        IObservableList list = null;
+        if (parentInput == null) {
+            final Contract contract = ModelHelper.getFirstContainerOfType(selectedConstraint, Contract.class);
+            list = CustomEMFEditObservables.observeList(contract, ProcessPackage.Literals.CONTRACT__INPUTS);
+        } else {
+            list = CustomEMFEditObservables.observeList(parentInput, ProcessPackage.Literals.CONTRACT_INPUT__INPUTS);
+        }
+        final int index = list.indexOf(selectedConstraint);
+        if (index < list.size()) {
+            list.move(index, index + 1);
+        }
+    }
+
+    protected ContractInput getSelectedInput(final ColumnViewer viewer) {
+        final IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
+        return (ContractInput) selection.getFirstElement();
+    }
+
 }

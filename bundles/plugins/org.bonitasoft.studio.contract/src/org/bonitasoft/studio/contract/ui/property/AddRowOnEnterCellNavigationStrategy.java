@@ -14,30 +14,29 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.contract.ui.property.input;
+package org.bonitasoft.studio.contract.ui.property;
 
 import org.eclipse.jface.viewers.CellNavigationStrategy;
 import org.eclipse.jface.viewers.ColumnViewer;
-import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.TreeItem;
 
 
 /**
  * @author Romain Bioteau
  *
  */
-public class ContracInputTreeViewerCellNavigationStrategy extends CellNavigationStrategy {
+public class AddRowOnEnterCellNavigationStrategy extends CellNavigationStrategy {
 
-    private final TreeViewer treeViewer;
-    private final ContractInputController inputController;
+    private final ColumnViewer viewer;
     private boolean cancelEvent;
+    private final IViewerController controller;
 
-    public ContracInputTreeViewerCellNavigationStrategy(final TreeViewer treeViewer, final ContractInputController inputController) {
-        this.treeViewer = treeViewer;
-        this.inputController = inputController;
+    public AddRowOnEnterCellNavigationStrategy(final ColumnViewer viewer, final IViewerController controller) {
+        this.viewer = viewer;
+        this.controller = controller;
     }
 
     @Override
@@ -70,14 +69,14 @@ public class ContracInputTreeViewerCellNavigationStrategy extends CellNavigation
 
     protected ViewerCell removeRow(final ViewerCell currentSelectedCell) {
         final ViewerCell aboveCell = currentSelectedCell.getNeighbor(ViewerCell.ABOVE, false);
-        inputController.removeInput(treeViewer);
+        controller.remove(viewer);
         updateSelection(aboveCell);
         return aboveCell;
     }
 
     protected void updateSelection(final ViewerCell viewerCell) {
         if (viewerCell != null) {
-            treeViewer.getTree().setSelection((TreeItem) viewerCell.getViewerRow().getItem());
+            viewer.setSelection(new StructuredSelection(viewerCell.getItem().getData()));
         }
     }
 
@@ -86,7 +85,7 @@ public class ContracInputTreeViewerCellNavigationStrategy extends CellNavigation
             ViewerCell nextCell = currentSelectedCell.getNeighbor(ViewerCell.BELOW, false);
             if (nextCell == null) {
                 setCancelEvent(true);
-                inputController.addInput(treeViewer);
+                controller.add(viewer);
                 nextCell = currentSelectedCell.getNeighbor(ViewerCell.BELOW, false);
                 updateSelection(nextCell);
                 return nextCell;

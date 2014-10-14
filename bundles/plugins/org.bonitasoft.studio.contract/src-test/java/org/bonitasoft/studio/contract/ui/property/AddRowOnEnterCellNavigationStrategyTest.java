@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.contract.ui.property.input;
+package org.bonitasoft.studio.contract.ui.property;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.anyBoolean;
@@ -24,8 +24,6 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import org.bonitasoft.studio.contract.ui.property.input.ContracInputTreeViewerCellNavigationStrategy;
-import org.bonitasoft.studio.contract.ui.property.input.ContractInputController;
 import org.eclipse.jface.viewers.CellNavigationStrategy;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerCell;
@@ -47,15 +45,15 @@ import org.mockito.runners.MockitoJUnitRunner;
  *
  */
 @RunWith(MockitoJUnitRunner.class)
-public class ContracInputTreeViewerCellNavigationStrategyTest {
+public class AddRowOnEnterCellNavigationStrategyTest {
 
-    private ContracInputTreeViewerCellNavigationStrategy cellNavigationStrategy;
+    private AddRowOnEnterCellNavigationStrategy cellNavigationStrategy;
 
     @Mock
     private TreeViewer viewer;
 
     @Mock
-    private ContractInputController controller;
+    private IViewerController controller;
 
     @Mock
     private ViewerCell currentSelectedCell;
@@ -77,11 +75,11 @@ public class ContracInputTreeViewerCellNavigationStrategyTest {
      */
     @Before
     public void setUp() throws Exception {
-        cellNavigationStrategy = spy(new ContracInputTreeViewerCellNavigationStrategy(viewer, controller));
-        when(viewer.getTree()).thenReturn(tree);
+        cellNavigationStrategy = spy(new AddRowOnEnterCellNavigationStrategy(viewer, controller));
         when(currentSelectedCell.getNeighbor(anyInt(), anyBoolean())).thenReturn(viewerCell);
-        when(viewerCell.getViewerRow()).thenReturn(viewerRow);
-        when(viewerRow.getItem()).thenReturn(treeItem);
+        when(currentSelectedCell.getViewerRow()).thenReturn(viewerRow);
+        when(viewerCell.getItem()).thenReturn(treeItem);
+        when(treeItem.getData()).thenReturn(new Object());
     }
 
     /**
@@ -110,7 +108,7 @@ public class ContracInputTreeViewerCellNavigationStrategyTest {
         final Event event = new Event();
         event.keyCode = SWT.CR;
         cellNavigationStrategy.findSelectedCell(viewer, currentSelectedCell, event);
-        verify(controller,never()).addInput(viewer);
+        verify(controller, never()).add(viewer);
         verify(tree, never()).setSelection(treeItem);
     }
 
@@ -120,7 +118,7 @@ public class ContracInputTreeViewerCellNavigationStrategyTest {
         final Event event = new Event();
         event.keyCode = SWT.CR;
         cellNavigationStrategy.findSelectedCell(viewer, currentSelectedCell, event);
-        verify(controller).addInput(viewer);
+        verify(controller).add(viewer);
     }
 
     @Test
@@ -130,7 +128,7 @@ public class ContracInputTreeViewerCellNavigationStrategyTest {
         final Event event = new Event();
         event.keyCode = SWT.CR;
         cellNavigationStrategy.findSelectedCell(viewer, currentSelectedCell, event);
-        verify(controller, never()).addInput(viewer);
+        verify(controller, never()).add(viewer);
     }
 
     @Test
@@ -138,7 +136,7 @@ public class ContracInputTreeViewerCellNavigationStrategyTest {
         final Event event = new Event();
         event.keyCode = SWT.DEL;
         cellNavigationStrategy.findSelectedCell(viewer, currentSelectedCell, event);
-        verify(controller).removeInput(viewer);
+        verify(controller).remove(viewer);
     }
 
     @Test

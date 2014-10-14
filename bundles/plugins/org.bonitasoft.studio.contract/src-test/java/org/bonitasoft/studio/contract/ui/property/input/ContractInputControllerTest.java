@@ -29,7 +29,6 @@ import java.util.Arrays;
 
 import org.bonitasoft.studio.contract.AbstractSWTTestCase;
 import org.bonitasoft.studio.contract.core.ContractDefinitionValidator;
-import org.bonitasoft.studio.contract.ui.property.input.ContractInputController;
 import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ContractInputType;
@@ -91,7 +90,7 @@ public class ContractInputControllerTest extends AbstractSWTTestCase {
         when(viewer.getSelection()).thenReturn(new StructuredSelection());
         final Contract contract = ProcessFactory.eINSTANCE.createContract();
         observableValue.setValue(contract);
-        final ContractInput input = contractInputController.addInput(viewer);
+        final ContractInput input = contractInputController.add(viewer);
         assertThat(contract.getInputs()).containsOnly(input);
         assertThat(input.getName()).isNullOrEmpty();
         assertThat(input.getType()).isEqualTo(ContractInputType.TEXT);
@@ -107,7 +106,7 @@ public class ContractInputControllerTest extends AbstractSWTTestCase {
 
         when(viewer.getSelection()).thenReturn(new StructuredSelection(Arrays.asList(input1)));
 
-        final ContractInput input = contractInputController.addInput(viewer);
+        final ContractInput input = contractInputController.add(viewer);
         ContractAssert.assertThat(contract).hasInputs(input1, input);
     }
 
@@ -122,7 +121,7 @@ public class ContractInputControllerTest extends AbstractSWTTestCase {
 
         when(viewer.getSelection()).thenReturn(new StructuredSelection(Arrays.asList(input2)));
 
-        final ContractInput input = contractInputController.addInput(viewer);
+        final ContractInput input = contractInputController.add(viewer);
         ContractInputAssert.assertThat(input1).hasInputs(input2, input);
     }
 
@@ -164,7 +163,7 @@ public class ContractInputControllerTest extends AbstractSWTTestCase {
         observableValue.setValue(contract);
 
         when(viewer.getSelection()).thenReturn(new StructuredSelection(Arrays.asList(input2, input3)));
-        contractInputController.removeInput(viewer);
+        contractInputController.remove(viewer);
         assertThat(((Contract) observableValue.getValue()).getInputs()).containsOnly(input1);
         verify(contractDefinitionValidator).clearMessages(input2);
         verify(contractDefinitionValidator).clearMessages(input3);
@@ -183,7 +182,7 @@ public class ContractInputControllerTest extends AbstractSWTTestCase {
         observableValue.setValue(contract);
 
         when(viewer.getSelection()).thenReturn(new StructuredSelection(Arrays.asList(child1)));
-        contractInputController.removeInput(viewer);
+        contractInputController.remove(viewer);
         assertThat(((Contract) observableValue.getValue()).getInputs()).containsOnly(input1);
         verify(contractDefinitionValidator).clearMessages(child1);
         verify(contractDefinitionValidator).clearMessages(child2);
@@ -201,7 +200,7 @@ public class ContractInputControllerTest extends AbstractSWTTestCase {
         observableValue.setValue(contract);
 
         when(viewer.getSelection()).thenReturn(new StructuredSelection(Arrays.asList(input2)));
-        contractInputController.removeInput(viewer);
+        contractInputController.remove(viewer);
         assertThat(((Contract) observableValue.getValue()).getInputs()).containsOnly(input1, input3);
         verify(contractDefinitionValidator).clearMessages(input2);
         verify(contractDefinitionValidator, never()).validateDuplicatedInputs(any(Contract.class));
@@ -220,7 +219,7 @@ public class ContractInputControllerTest extends AbstractSWTTestCase {
         observableValue.setValue(contract);
 
         when(viewer.getSelection()).thenReturn(new StructuredSelection(Arrays.asList(input2, input3)));
-        contractInputController.removeInput(viewer);
+        contractInputController.remove(viewer);
         assertThat(((Contract) observableValue.getValue()).getInputs()).containsOnly(input1, input2, input3);
     }
 

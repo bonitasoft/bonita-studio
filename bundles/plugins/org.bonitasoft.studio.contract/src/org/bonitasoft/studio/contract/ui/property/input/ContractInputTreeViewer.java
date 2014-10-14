@@ -19,6 +19,7 @@ package org.bonitasoft.studio.contract.ui.property.input;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.contract.core.ContractDefinitionValidator;
 import org.bonitasoft.studio.contract.i18n.Messages;
+import org.bonitasoft.studio.contract.ui.property.AddRowOnEnterCellNavigationStrategy;
 import org.bonitasoft.studio.contract.ui.property.CharriageColumnViewerEditorActivationStrategy;
 import org.bonitasoft.studio.contract.ui.property.FieldDecoratorProvider;
 import org.bonitasoft.studio.contract.ui.property.input.edit.CheckboxPropertyEditingSupport;
@@ -44,6 +45,9 @@ import org.eclipse.jface.viewers.TreeViewerEditor;
 import org.eclipse.jface.viewers.TreeViewerFocusCellManager;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.ui.forms.widgets.FormToolkit;
@@ -66,6 +70,36 @@ public class ContractInputTreeViewer extends TreeViewer {
         getTree().setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, SWTBotConstants.SWTBOT_ID_CONTRACT_INPUT_TREE);
     }
 
+    public void createAddListener(final Button button) {
+        button.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(final SelectionEvent e) {
+                inputController.add(ContractInputTreeViewer.this);
+            }
+        });
+    }
+
+    public void createAddChildListener(final Button button) {
+        button.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(final SelectionEvent e) {
+                inputController.addChildInput(ContractInputTreeViewer.this);
+            }
+        });
+    }
+
+    public void createRemoveListener(final Button button) {
+        button.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(final SelectionEvent e) {
+                inputController.remove(ContractInputTreeViewer.this);
+            }
+        });
+    }
+
     public void initialize(final ContractInputController inputController, final ContractDefinitionValidator contractValidator) {
         this.contractValidator = contractValidator;
         this.inputController = inputController;
@@ -79,7 +113,7 @@ public class ContractInputTreeViewer extends TreeViewer {
                 new ContractInputTreeStructureAdvisor()));
 
 
-        final CellNavigationStrategy cellNavigationStrategy = new ContracInputTreeViewerCellNavigationStrategy(this, inputController);
+        final CellNavigationStrategy cellNavigationStrategy = new AddRowOnEnterCellNavigationStrategy(this, inputController);
         final TreeViewerFocusCellManager focusCellManager = new TreeViewerFocusCellManager(this, new FocusCellOwnerDrawHighlighter(
                 this), cellNavigationStrategy);
         TreeViewerEditor.create(this, focusCellManager, new CharriageColumnViewerEditorActivationStrategy(this), ColumnViewerEditor.TABBING_HORIZONTAL |
