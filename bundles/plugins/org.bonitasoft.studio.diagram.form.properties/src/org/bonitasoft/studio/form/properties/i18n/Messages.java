@@ -234,23 +234,28 @@ public class Messages extends NLS {
     public static String updatingWidgetReferences;
     public static String fieldModifier;
     public static String modifierDescription;
-	public static String newDocumentNameHint;
-	public static String multipleExplanation;
+    public static String newDocumentNameHint;
+    public static String multipleExplanation;
 
-	public static String generateFromEnumTooltip;
+    public static String generateFromEnumTooltip;
 
-	public static String Action_SelectedValue;
+    public static String Action_SelectedValue;
 
-	public static String dateWidgetReturnTypeWarning;
-	
-	public static String widgetNameAllreadyExistError;
+    public static String dateWidgetReturnTypeWarning;
 
-	public static String widgetEditMessage;
+    public static String widgetNameAllreadyExistError;
 
-	public static String editWidgetNameTitle;
+    public static String widgetEditMessage;
 
-	public static String removingWidgetReferences;
+    public static String editWidgetNameTitle;
 
+    public static String removingWidgetReferences;
+
+    public static String documentPickerLabel;
+
+    public static String both;
+
+    public static String BrowseRadio;
 
 
     static {

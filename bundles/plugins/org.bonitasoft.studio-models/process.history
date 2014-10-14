@@ -8668,6 +8668,38 @@
     </changes>
     <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.custom.migration.document.DocumentDefaultReturnTypeModifierMigration"/>
     <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.custom.migration.form.FileWidgetDocumentMigration"/>
+    <changes xsi:type="history:Create" target="form.ecore#/" referenceName="eClassifiers"
+        element="form.ecore#//FileWidgetDownloadType"/>
+    <changes xsi:type="history:Set" element="form.ecore#//FileWidgetDownloadType"
+        featureName="name" dataValue="FileWidgetDownloadType"/>
+    <changes xsi:type="history:Create" target="form.ecore#//FileWidgetDownloadType"
+        referenceName="eLiterals" element="form.ecore#//FileWidgetDownloadType/Both"/>
+    <changes xsi:type="history:Set" element="form.ecore#//FileWidgetDownloadType/Both"
+        featureName="name" dataValue="All"/>
+    <changes xsi:type="history:Create" target="form.ecore#//FileWidgetDownloadType"
+        referenceName="eLiterals" element="form.ecore#//FileWidgetDownloadType/URL"/>
+    <changes xsi:type="history:Set" element="form.ecore#//FileWidgetDownloadType/URL"
+        featureName="value" dataValue="1" oldDataValue="0"/>
+    <changes xsi:type="history:Set" element="form.ecore#//FileWidgetDownloadType/URL"
+        featureName="name" dataValue="URL"/>
+    <changes xsi:type="history:Create" target="form.ecore#//FileWidgetDownloadType"
+        referenceName="eLiterals" element="form.ecore#//FileWidgetDownloadType/Browse"/>
+    <changes xsi:type="history:Set" element="form.ecore#//FileWidgetDownloadType/Browse"
+        featureName="value" dataValue="2" oldDataValue="0"/>
+    <changes xsi:type="history:Set" element="form.ecore#//FileWidgetDownloadType/Browse"
+        featureName="name" dataValue="Browse"/>
+    <changes xsi:type="history:Set" element="form.ecore#//FileWidgetDownloadType/Both"
+        featureName="name" dataValue="Both" oldDataValue="All"/>
+    <changes xsi:type="history:Create" target="form.ecore#//FileWidget" referenceName="eStructuralFeatures"
+        element="form.ecore#//FileWidget/downloadType"/>
+    <changes xsi:type="history:Set" element="form.ecore#//FileWidget/downloadType"
+        featureName="name" dataValue="downloadType"/>
+    <changes xsi:type="history:Set" element="form.ecore#//FileWidget/downloadType"
+        featureName="defaultValueLiteral" dataValue=""/>
+    <changes xsi:type="history:Set" element="form.ecore#//FileWidget/downloadType"
+        featureName="eType" referenceValue="form.ecore#//FileWidgetDownloadType"/>
+    <changes xsi:type="history:Set" element="form.ecore#//FileWidget/downloadType"
+        featureName="defaultValueLiteral" dataValue="Both" oldDataValue=""/>
   </releases>
   <releases/>
 </history:History>
