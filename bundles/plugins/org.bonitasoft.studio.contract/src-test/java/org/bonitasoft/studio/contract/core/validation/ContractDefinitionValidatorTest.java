@@ -149,7 +149,7 @@ public class ContractDefinitionValidatorTest {
         final IStatus status = validator.validate(contract);
         assertThat(status.isOK()).isFalse();
         assertThat(status).isInstanceOf(MultiStatus.class);
-        assertThat(((MultiStatus) status).getChildren()).hasSize(15);
+        assertThat(((MultiStatus) status).getChildren()).hasSize(16);
     }
 
 

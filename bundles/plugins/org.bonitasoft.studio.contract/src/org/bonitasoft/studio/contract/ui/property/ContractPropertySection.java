@@ -16,6 +16,8 @@
  */
 package org.bonitasoft.studio.contract.ui.property;
 
+import java.util.List;
+
 import org.bonitasoft.studio.common.databinding.CustomEMFEditObservables;
 import org.bonitasoft.studio.common.properties.EObjectSelectionProviderSection;
 import org.bonitasoft.studio.contract.core.validation.ContractDefinitionValidator;
@@ -29,15 +31,20 @@ import org.bonitasoft.studio.model.process.ContractConstraint;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ContractInputType;
 import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.eclipse.core.databinding.UpdateListStrategy;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.observable.Realm;
+import org.eclipse.core.databinding.observable.list.IListChangeListener;
+import org.eclipse.core.databinding.observable.list.IObservableList;
+import org.eclipse.core.databinding.observable.list.ListChangeEvent;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.IValueChangeListener;
 import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
+import org.eclipse.jface.databinding.swt.ISWTObservableValue;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -141,6 +148,7 @@ public class ContractPropertySection extends EObjectSelectionProviderSection {
         constraintsTableViewer.createMoveDownListener(downButton);
         constraintsTableViewer.createRemoveListener(removeButton);
 
+        bindAddConstraintButtonEnablement(addButton, observeContractValue);
         bindRemoveButtonEnablement(removeButton, constraintsTableViewer);
         bindUpButtonEnablement(upButton, constraintsTableViewer);
         bindDownButtonEnablement(downButton, constraintsTableViewer);
@@ -185,6 +193,21 @@ public class ContractPropertySection extends EObjectSelectionProviderSection {
         return buttonsComposite;
     }
 
+    protected void bindAddConstraintButtonEnablement(final Button button, final IObservableValue contractObservable) {
+        final ISWTObservableValue observeEnabled = SWTObservables.observeEnabled(button);
+        final IObservableList observeDetailList = CustomEMFEditObservables.observeDetailList(Realm.getDefault(), contractObservable,
+                ProcessPackage.Literals.CONTRACT__INPUTS);
+        observeDetailList.addListChangeListener(new IListChangeListener() {
+
+            @Override
+            public void handleListChange(final ListChangeEvent event) {
+                if (!button.isDisposed()) {
+                    observeEnabled.setValue(!event.getObservableList().isEmpty());
+                }
+            }
+        });
+        //observeEnabled.setValue(!observeDetailList.isEmpty());
+    }
     protected void bindRemoveButtonEnablement(final Button button, final Viewer viewer) {
         getContext().bindValue(SWTObservables.observeEnabled(button),
                 ViewersObservables.observeSingleSelection(viewer),
@@ -230,6 +253,18 @@ public class ContractPropertySection extends EObjectSelectionProviderSection {
             }
         });
         return modelStrategy;
+    }
+
+    private UpdateListStrategy emptyListToBooleanStrategy() {
+        final UpdateListStrategy strategy = new UpdateListStrategy();
+        strategy.setConverter(new Converter(List.class, Boolean.class) {
+
+            @Override
+            public Object convert(final Object from) {
+                return from != null && !((List<?>) from).isEmpty();
+            }
+        });
+        return strategy;
     }
 
     private UpdateValueStrategy isLastElementToBooleanStrategy() {

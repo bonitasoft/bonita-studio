@@ -22,7 +22,7 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
 import org.bonitasoft.studio.contract.AbstractSWTTestCase;
-import org.bonitasoft.studio.contract.ui.property.input.ValidationLabelDecorator;
+import org.bonitasoft.studio.contract.ui.property.input.InputNameValidationLabelDecorator;
 import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ProcessFactory;
@@ -41,9 +41,9 @@ import org.mockito.runners.MockitoJUnitRunner;
  *
  */
 @RunWith(MockitoJUnitRunner.class)
-public class ValidationLabelDecoratorTest extends AbstractSWTTestCase {
+public class InputNameValidationLabelDecoratorTest extends AbstractSWTTestCase {
 
-    private ValidationLabelDecorator validationLabelDecorator;
+    private InputNameValidationLabelDecorator validationLabelDecorator;
     private Image errorDecorator;
     @Mock
     private FieldDecoration decorator;
@@ -55,7 +55,7 @@ public class ValidationLabelDecoratorTest extends AbstractSWTTestCase {
     @Before
     public void setUp() throws Exception {
         createDisplayAndRealm();
-        validationLabelDecorator = spy(new ValidationLabelDecorator());
+        validationLabelDecorator = spy(new InputNameValidationLabelDecorator());
         baseImage = createImage();
         errorDecorator = createImage();
         when(decorator.getImage()).thenReturn(errorDecorator);

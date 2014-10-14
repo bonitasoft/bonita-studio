@@ -16,13 +16,11 @@
  */
 package org.bonitasoft.studio.contract.ui.property.constraint;
 
-import org.bonitasoft.studio.contract.core.validation.ContractDefinitionValidator;
-import org.bonitasoft.studio.model.process.ContractConstraint;
+import org.bonitasoft.studio.contract.ContractPlugin;
 import org.bonitasoft.studio.model.process.ProcessPackage;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.resource.JFaceResources;
-import org.eclipse.jface.viewers.ColumnViewer;
+import org.bonitasoft.studio.pics.Pics;
+import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider.IStyledLabelProvider;
+import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.views.properties.IPropertySourceProvider;
 import org.eclipse.ui.views.properties.PropertyColumnLabelProvider;
@@ -32,39 +30,22 @@ import org.eclipse.ui.views.properties.PropertyColumnLabelProvider;
  * @author Romain Bioteau
  *
  */
-public class ConstraintNameCellLabelProvider extends PropertyColumnLabelProvider {
+public class ConstraintNameCellLabelProvider extends PropertyColumnLabelProvider implements IStyledLabelProvider {
 
-    private final ContractDefinitionValidator validator;
-    private final ColumnViewer viewer;
 
-    public ConstraintNameCellLabelProvider(final ColumnViewer viewer, final IPropertySourceProvider propertySourceProvider) {
+    public ConstraintNameCellLabelProvider(final IPropertySourceProvider propertySourceProvider) {
         super(propertySourceProvider, ProcessPackage.Literals.CONTRACT_CONSTRAINT__NAME.getName());
-        validator = new ContractDefinitionValidator();
-        this.viewer = viewer;
     }
 
     @Override
     public Image getImage(final Object element) {
-        final String name = ((ContractConstraint) element).getName();
-        final IStatus status = validator.validateConstraintName((ContractConstraint) element, name);
-        if (!status.isOK()) {
-            return getErrorImage();
-        }
-        return null;
+        return Pics.getImage("ContractConstraint.gif", ContractPlugin.getDefault());
     }
 
     @Override
-    public String getToolTipText(final Object element) {
-        final String name = ((ContractConstraint) element).getName();
-        final IStatus status = validator.validateConstraintName((ContractConstraint) element, name);
-        if (!viewer.isCellEditorActive() && !status.isOK()) {
-            return status.getMessage();
-        }
-        return null;
+    public StyledString getStyledText(final Object element) {
+        return new StyledString(getText(element));
     }
 
-    protected Image getErrorImage() {
-        return JFaceResources.getImage(Dialog.DLG_IMG_MESSAGE_ERROR);
-    }
 
 }

@@ -17,10 +17,10 @@
 package org.bonitasoft.studio.contract.core.validation;
 
 import org.bonitasoft.studio.common.databinding.MultiValidator;
-import org.bonitasoft.studio.common.jface.databinding.validator.GroovyReferenceValidator;
+import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
 import org.bonitasoft.studio.common.jface.databinding.validator.InputLengthValidator;
 import org.bonitasoft.studio.contract.i18n.Messages;
-import org.bonitasoft.studio.model.process.ContractInput;
+import org.bonitasoft.studio.model.process.ContractConstraint;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 
@@ -29,27 +29,27 @@ import org.eclipse.emf.ecore.EObject;
  * @author Romain Bioteau
  *
  */
-public class ContractInputNameValidationRule implements IValidationRule {
+public class ContractConstraintNameValidationRule implements IValidationRule {
 
-    protected static final String NAME_CONSTRAINT_ID = "input_name";
+    protected static final String NAME_CONSTRAINT_ID = "constraint_name";
 
-    private final MultiValidator inputNameValidator;
+    private final MultiValidator multiValidator;
 
-    public ContractInputNameValidationRule() {
-        inputNameValidator = new MultiValidator();
-        inputNameValidator.addValidator(new GroovyReferenceValidator(Messages.name, true));
-        inputNameValidator.addValidator(new InputLengthValidator(Messages.name, 50));
+    public ContractConstraintNameValidationRule() {
+        multiValidator = new MultiValidator();
+        multiValidator.addValidator(new EmptyInputValidator(Messages.name));
+        multiValidator.addValidator(new InputLengthValidator(Messages.name, 50));
     }
 
     @Override
     public boolean appliesTo(final EObject element) {
-        return element instanceof ContractInput;
+        return element instanceof ContractConstraint;
     }
 
     @Override
     public IStatus validate(final EObject element) {
-        final ContractInput input = (ContractInput) element;
-        return inputNameValidator.validate(input.getName());
+        final ContractConstraint input = (ContractConstraint) element;
+        return multiValidator.validate(input.getName());
     }
 
     @Override

@@ -23,7 +23,6 @@ import org.bonitasoft.studio.common.Pair;
 import org.bonitasoft.studio.contract.ContractPlugin;
 import org.bonitasoft.studio.contract.i18n.Messages;
 import org.bonitasoft.studio.model.process.Contract;
-import org.bonitasoft.studio.model.process.ContractConstraint;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
@@ -55,6 +54,8 @@ public class ContractDefinitionValidator {
         validationRules.add(new ContractInputNameValidationRule());
         validationRules.add(new ContractInputDescriptionValidationRule());
         validationRules.add(new ContractInputNameDuplicationValidationRule());
+        validationRules.add(new ContractConstraintNameValidationRule());
+        validationRules.add(new ContractConstraintDuplicationValidationRule());
     }
 
     public IStatus validate(final Contract contract) {
@@ -104,7 +105,6 @@ public class ContractDefinitionValidator {
                 String error = errorMessage.toString();
                 error = error.substring(0, error.length() - 2);
                 messageManager.addMessage(messageKey,error, null, toMessageSeverity(status.getSeverity()));
-
             } else {
                 messageManager.addMessage(messageKey, status.getMessage(), null, toMessageSeverity(status.getSeverity()));
             }
@@ -135,16 +135,5 @@ public class ContractDefinitionValidator {
         }
     }
 
-    public IStatus validateDuplicatedConstraints(final Contract contract) {
-        return ValidationStatus.ok();
-    }
-
-    public IStatus validateConstraintName(final ContractConstraint constraint, final String value) {
-        return ValidationStatus.ok();
-    }
-
-    public IStatus validateConstraintExpression(final ContractConstraint constraint, final String expression) {
-        return ValidationStatus.ok();
-    }
 
 }

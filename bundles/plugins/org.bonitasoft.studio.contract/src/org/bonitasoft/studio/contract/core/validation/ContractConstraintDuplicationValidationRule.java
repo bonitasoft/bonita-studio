@@ -17,12 +17,11 @@
 package org.bonitasoft.studio.contract.core.validation;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.bonitasoft.studio.contract.ContractPlugin;
 import org.bonitasoft.studio.model.process.Contract;
-import org.bonitasoft.studio.model.process.ContractInput;
+import org.bonitasoft.studio.model.process.ContractConstraint;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
@@ -33,13 +32,10 @@ import org.eclipse.emf.ecore.EObject;
  * @author Romain Bioteau
  *
  */
-public class ContractInputNameDuplicationValidationRule implements IValidationRule {
+public class ContractConstraintDuplicationValidationRule implements IValidationRule {
 
-    protected static final String DUPLICATED_CONSTRAINT_ID = "duplicate_input";
+    protected static final String DUPLICATED_CONSTRAINT_ID = "duplicate_constraint";
 
-    public ContractInputNameDuplicationValidationRule() {
-
-    }
 
     @Override
     public boolean appliesTo(final EObject element) {
@@ -53,23 +49,19 @@ public class ContractInputNameDuplicationValidationRule implements IValidationRu
 
         final Set<String> result = new HashSet<String>();
         final Set<String> duplicated = new HashSet<String>();
-        validateDuplicatedInputsRecursively(contract.getInputs(), duplicated, result);
+        for (final ContractConstraint child : contract.getConstraints()) {
+            if (child.getName() != null
+                    && !child.getName().isEmpty()
+                    && !result.add(child.getName())) {
+                duplicated.add(child.getName());
+            }
+        }
         for (final String dup : duplicated) {
             status.add(ValidationStatus.error(dup));
         }
         return status;
     }
 
-    private void validateDuplicatedInputsRecursively(final List<ContractInput> inputs, final Set<String> duplicated, final Set<String> result) {
-        for (final ContractInput child : inputs) {
-            if (child.getName() != null
-                    && !child.getName().isEmpty()
-                    && !result.add(child.getName())) {
-                duplicated.add(child.getName());
-            }
-            validateDuplicatedInputsRecursively(child.getInputs(), duplicated, result);
-        }
-    }
 
     @Override
     public String getRuleId() {

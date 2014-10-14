@@ -77,7 +77,8 @@ public class ContractConstraintController implements IViewerController {
 
             }
             if (contract != null) {
-                contractValidator.validateDuplicatedConstraints(contract);
+                contractValidator.validate(contract);
+                viewer.refresh(true);
             }
         }
     }

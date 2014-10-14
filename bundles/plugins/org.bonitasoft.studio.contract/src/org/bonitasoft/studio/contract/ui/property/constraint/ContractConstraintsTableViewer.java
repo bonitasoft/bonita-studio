@@ -32,6 +32,8 @@ import org.eclipse.jface.viewers.CellNavigationStrategy;
 import org.eclipse.jface.viewers.ColumnViewerEditor;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.ColumnWeightData;
+import org.eclipse.jface.viewers.DecoratingStyledCellLabelProvider;
+import org.eclipse.jface.viewers.DecorationContext;
 import org.eclipse.jface.viewers.FocusCellOwnerDrawHighlighter;
 import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TableViewer;
@@ -146,7 +148,9 @@ public class ContractConstraintsTableViewer extends TableViewer {
 
     protected void createConstraintNameColumn() {
         final TableViewerColumn nameColumnViewer = createColumnViewer(Messages.name + " *", SWT.FILL);
-        nameColumnViewer.setLabelProvider(new ConstraintNameCellLabelProvider(this, propertySourceProvider));
+        nameColumnViewer.setLabelProvider(new DecoratingStyledCellLabelProvider(new ConstraintNameCellLabelProvider(propertySourceProvider),
+                new ConstraintNameValidationLabelDecorator(),
+                new DecorationContext()));
         nameColumnViewer.setEditingSupport(new ConstraintNamePropertyEditingSupport(propertySourceProvider,
                 this,
                 adapterFactoryLabelProvider,
@@ -155,13 +159,13 @@ public class ContractConstraintsTableViewer extends TableViewer {
 
     protected void createConstraintExpressionColumn() {
         final TableViewerColumn nameColumnViewer = createColumnViewer(Messages.expression + " *", SWT.FILL);
-        nameColumnViewer.setLabelProvider(new ConstraintExpressionCellLabelProvider(this, propertySourceProvider));
+        nameColumnViewer.setLabelProvider(new ConstraintExpressionCellLabelProvider(propertySourceProvider));
         nameColumnViewer.setEditingSupport(new ConstraintExpressionPropertyEditingSupport(this, propertySourceProvider));
     }
 
     protected void createConstraintErrorMessageColumn() {
         final TableViewerColumn descriptionColumnViewer = createColumnViewer(Messages.errorMessage, SWT.FILL);
-        descriptionColumnViewer.setLabelProvider(new ConstraintErrorMessageCellLabelProvider(this, propertySourceProvider));
+        descriptionColumnViewer.setLabelProvider(new ConstraintErrorMessageCellLabelProvider(propertySourceProvider));
         descriptionColumnViewer.setEditingSupport(new ConstraintErrorMessagePropertyEditingSupport(this, propertySourceProvider));
     }
 

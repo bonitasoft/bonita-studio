@@ -39,12 +39,12 @@ import org.eclipse.swt.graphics.Image;
  * @author Romain Bioteau
  *
  */
-public class ValidationLabelDecorator implements ILabelDecorator {
+public class InputNameValidationLabelDecorator implements ILabelDecorator {
 
     private final ContractInputNameValidationRule inputNameValidationRule;
     private final ContractInputNameDuplicationValidationRule inputNameDuplicationValidationRule;
 
-    public ValidationLabelDecorator() {
+    public InputNameValidationLabelDecorator() {
         inputNameValidationRule = new ContractInputNameValidationRule();
         inputNameDuplicationValidationRule = new ContractInputNameDuplicationValidationRule();
     }

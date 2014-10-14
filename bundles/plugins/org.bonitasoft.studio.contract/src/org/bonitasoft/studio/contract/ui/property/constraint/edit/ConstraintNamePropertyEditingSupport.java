@@ -22,14 +22,11 @@ import org.bonitasoft.studio.contract.core.validation.ContractDefinitionValidato
 import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractConstraint;
 import org.bonitasoft.studio.model.process.ProcessPackage;
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnViewer;
-import org.eclipse.jface.viewers.ICellEditorListener;
-import org.eclipse.jface.viewers.ICellEditorValidator;
 import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.views.properties.PropertyEditingSupport;
@@ -38,12 +35,9 @@ import org.eclipse.ui.views.properties.PropertyEditingSupport;
  * @author Romain Bioteau
  *
  */
-public class ConstraintNamePropertyEditingSupport extends PropertyEditingSupport implements ICellEditorValidator, ICellEditorListener {
+public class ConstraintNamePropertyEditingSupport extends PropertyEditingSupport {
 
-    private ContractConstraint currentElement;
     private final ContractDefinitionValidator contractDefinitionValidator;
-    private boolean validate = false;
-    private Object currentValue;
 
 
     public ConstraintNamePropertyEditingSupport(final AdapterFactoryContentProvider propertySourceProvider,
@@ -58,7 +52,7 @@ public class ConstraintNamePropertyEditingSupport extends PropertyEditingSupport
     protected void setValue(final Object element, final Object value) {
         super.setValue(element, value);
         if (element instanceof ContractConstraint) {
-            contractDefinitionValidator.validateDuplicatedConstraints(ModelHelper.getFirstContainerOfType((EObject) element, Contract.class));
+            contractDefinitionValidator.validate(ModelHelper.getFirstContainerOfType((EObject) element, Contract.class));
         }
         //recompute error decorator label for duplicated constraint
         getViewer().refresh(true);
@@ -68,49 +62,12 @@ public class ConstraintNamePropertyEditingSupport extends PropertyEditingSupport
     @Override
     protected void initializeCellEditorValue(final CellEditor cellEditor, final ViewerCell cell) {
         super.initializeCellEditorValue(cellEditor, cell);
-        validate = false;
-        setCurrentElement(cell.getElement());
         final Text textControl = (Text) cellEditor.getControl();
         textControl.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, SWTBotConstants.SWTBOT_ID_CONSTRAINT_NAME_TEXTEDITOR);
-        cellEditor.setValidator(this);
-        cellEditor.addListener(this);
+
     }
 
 
-    @Override
-    public String isValid(final Object value) {
-        if (validate || getValue(currentElement) != null) {
-            contractDefinitionValidator.validateConstraintName(currentElement, (String) value);
-        }
-        currentValue = value;
-        return null;
-    }
 
-    @Override
-    public void applyEditorValue() {
-        validate = true;
-        isValid(currentValue);
-    }
-
-    @Override
-    public void cancelEditor() {
-        //Nothing to do
-    }
-
-    @Override
-    public void editorValueChanged(final boolean oldValidState, final boolean newValidState) {
-        validate = oldValidState || newValidState;
-    }
-
-
-    public ContractConstraint getCurrentElement() {
-        return currentElement;
-    }
-
-    public void setCurrentElement(final Object currentElement) {
-        Assert.isLegal(currentElement instanceof ContractConstraint);
-        this.currentElement = (ContractConstraint) currentElement;
-        currentValue = ((ContractConstraint) currentElement).getName();
-    }
 
 }
