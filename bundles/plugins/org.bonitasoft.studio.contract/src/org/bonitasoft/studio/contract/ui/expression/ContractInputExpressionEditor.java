@@ -24,8 +24,8 @@ import java.util.Set;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
+import org.bonitasoft.studio.contract.core.expression.ContractInputExpressionProvider;
 import org.bonitasoft.studio.contract.i18n.Messages;
-import org.bonitasoft.studio.expression.editor.ExpressionEditorService;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionEditor;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionProvider;
 import org.bonitasoft.studio.expression.editor.provider.SelectionAwareExpressionEditor;
@@ -69,6 +69,12 @@ public class ContractInputExpressionEditor extends SelectionAwareExpressionEdito
     private Expression editorInputExpression;
 
     private Text typeText;
+
+    private final ContractInputExpressionProvider contractInputExpressionProvider;
+
+    public ContractInputExpressionEditor(final ContractInputExpressionProvider contractInputExpressionProvider) {
+        this.contractInputExpressionProvider = contractInputExpressionProvider;
+    }
 
     @Override
     public Control createExpressionEditor(final Composite parent, final EMFDataBindingContext ctx) {
@@ -119,35 +125,24 @@ public class ContractInputExpressionEditor extends SelectionAwareExpressionEdito
         final Set<ContractInput> input = new HashSet<ContractInput>();
         final IExpressionProvider provider = getContractInputExpressionProvider();
         final Set<Expression> expressions = provider.getExpressions(context);
-        final Set<Expression> filteredExpressions = new HashSet<Expression>();
-        if (expressions != null) {
-            filteredExpressions.addAll(expressions);
-            if (input != null && filters != null) {
-                for (final Expression exp : expressions) {
-                    for (final ViewerFilter filter : filters) {
-                        if (filter != null
-                                && !filter.select(viewer, context, exp)) {
-                            filteredExpressions.remove(exp);
-                        }
-                    }
-                }
-            }
-        }
-        for (final Expression e1 : filteredExpressions) {
+        for (final Expression expression : expressions) {
             if (editorInputExpression.isReturnTypeFixed()) {
-                if (compatibleReturnType(editorInputExpression, e1)) {
-                    input.add((ContractInput) e1.getReferencedElements().get(0));
+                if (compatibleReturnType(editorInputExpression, expression)) {
+                    input.add(getContractInputFromExpression(expression));
                 }
             } else {
-                input.add((ContractInput) e1.getReferencedElements().get(0));
+                input.add(getContractInputFromExpression(expression));
             }
         }
         viewer.setInput(input);
     }
 
+    public ContractInput getContractInputFromExpression(final Expression expression) {
+        return (ContractInput) expression.getReferencedElements().get(0);
+    }
+
     protected IExpressionProvider getContractInputExpressionProvider() {
-        return ExpressionEditorService.getInstance()
-                .getExpressionProvider(ExpressionConstants.CONTRACT_INPUT_TYPE);
+        return contractInputExpressionProvider;
     }
 
     @Override
@@ -217,12 +212,12 @@ public class ContractInputExpressionEditor extends SelectionAwareExpressionEdito
             @SuppressWarnings("unchecked")
             @Override
             public Object convert(final Object inputList) {
-                final ContractInput d = ((List<ContractInput>) inputList).get(0);
-                final Collection<ContractInput> inputData = (Collection<ContractInput>) viewer
+                final ContractInput contractInput = ((List<ContractInput>) inputList).get(0);
+                final Collection<ContractInput> inputs = (Collection<ContractInput>) viewer
                         .getInput();
-                for (final ContractInput data : inputData) {
-                    if (EcoreUtil.equals(data, d)) {
-                        return data;
+                for (final ContractInput input : inputs) {
+                    if (EcoreUtil.equals(input, contractInput)) {
+                        return input;
                     }
                 }
                 return null;
@@ -284,45 +279,6 @@ public class ContractInputExpressionEditor extends SelectionAwareExpressionEdito
         return !viewer.getSelection().isEmpty();
     }
 
-    @Override
-    public void okPressed() {
-        if (!editorInputExpression.getContent().equals(
-                editorInputExpression.getName())) {
-            editorInputExpression.setName(editorInputExpression.getContent());
-        }
-    }
-
-    @Override
-    public Control getTextControl() {
-        return null;
-    }
-
-    @Override
-    public boolean isPageFlowContext() {
-        return false;
-    }
-
-    @Override
-    public void setIsPageFlowContext(final boolean isPageFlowContext) {
-        //Nothing to do
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.IBonitaVariableContext#isOverViewContext()
-     */
-    @Override
-    public boolean isOverViewContext() {
-        return false;
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.common.IBonitaVariableContext#setIsOverviewContext(boolean)
-     */
-    @Override
-    public void setIsOverviewContext(final boolean isOverviewContext) {
-    }
 
     protected TableViewer getViewer() {
         return viewer;

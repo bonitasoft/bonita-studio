@@ -23,6 +23,8 @@ package org.bonitasoft.studio.contract.core.exception;
  */
 public class ContractCreationException extends Exception {
 
+    private static final long serialVersionUID = -728572790590510546L;
+
     public ContractCreationException(final String message, final Throwable e) {
         super(message, e);
     }

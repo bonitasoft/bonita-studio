@@ -127,7 +127,7 @@ public class ContractInputExpressionProvider implements IExpressionProvider {
      */
     @Override
     public IExpressionEditor getExpressionEditor(final Expression expression, final EObject context) {
-        return new ContractInputExpressionEditor();
+        return new ContractInputExpressionEditor(this);
     }
 
 }

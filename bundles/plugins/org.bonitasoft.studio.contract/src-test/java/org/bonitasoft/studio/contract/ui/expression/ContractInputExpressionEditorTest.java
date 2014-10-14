@@ -17,12 +17,14 @@
 package org.bonitasoft.studio.contract.ui.expression;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.doReturn;
+
+import java.util.Collection;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.contract.AbstractSWTTestCase;
 import org.bonitasoft.studio.contract.core.expression.ContractInputExpressionProvider;
+import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.assertions.ExpressionAssert;
 import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractInput;
@@ -32,12 +34,12 @@ import org.bonitasoft.studio.model.process.Task;
 import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.widgets.Composite;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 
 
@@ -48,12 +50,12 @@ import org.mockito.runners.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class ContractInputExpressionEditorTest extends AbstractSWTTestCase {
 
-    @Spy
     private ContractInputExpressionEditor contractInputExpressionEditor;
     private Composite parent;
     private Task task;
     private Contract contract;
     private EMFDataBindingContext dataBindingContext;
+    private ContractInput dateInput;
 
     private Contract creatContractWithInput(final String... inputNames) {
         final Contract contract = createEmptyContract();
@@ -76,10 +78,14 @@ public class ContractInputExpressionEditorTest extends AbstractSWTTestCase {
     @Before
     public void setUp() throws Exception {
         parent = createDisplayAndRealm();
+        contractInputExpressionEditor = new ContractInputExpressionEditor(new ContractInputExpressionProvider());
         task = ProcessFactory.eINSTANCE.createTask();
         contract = creatContractWithInput("firstName", "lastName");
+        dateInput = ProcessFactory.eINSTANCE.createContractInput();
+        dateInput.setName("birthDate");
+        dateInput.setType(ContractInputType.DATE);
+        contract.getInputs().add(dateInput);
         task.setContract(contract);
-        doReturn(new ContractInputExpressionProvider()).when(contractInputExpressionEditor).getContractInputExpressionProvider();
         dataBindingContext = new EMFDataBindingContext(Realm.getDefault());
     }
 
@@ -96,7 +102,7 @@ public class ContractInputExpressionEditorTest extends AbstractSWTTestCase {
         contractInputExpressionEditor.createExpressionEditor(parent, dataBindingContext);
         contractInputExpressionEditor.bindExpression(dataBindingContext, task,
                 ExpressionHelper.createConstantExpression("", String.class.getName()), null, null);
-        final Object elementAt = contractInputExpressionEditor.getViewer().getElementAt(1);
+        final Object elementAt = contractInputExpressionEditor.getViewer().getElementAt(2);
 
         assertThat(contractInputExpressionEditor.canFinish()).isFalse();
 
@@ -108,6 +114,43 @@ public class ContractInputExpressionEditorTest extends AbstractSWTTestCase {
                 .hasType(ExpressionConstants.CONTRACT_INPUT_TYPE);
 
         assertThat(contractInputExpressionEditor.canFinish()).isTrue();
+    }
+
+    @Test
+    public void should_contract_input_expression_editor_have_a_default_selection() throws Exception {
+        contractInputExpressionEditor.createExpressionEditor(parent, dataBindingContext);
+        final Expression contractInputExpression = ExpressionHelper.createContractInputExpression(contract.getInputs().get(0));
+        contractInputExpressionEditor.bindExpression(dataBindingContext, task,
+                contractInputExpression, null, null);
+        final TableViewer viewer = contractInputExpressionEditor.getViewer();
+        assertThat(viewer.getSelection().isEmpty()).isFalse();
+
+        assertThat(contractInputExpressionEditor.canFinish()).isTrue();
+
+        viewer.setSelection(new StructuredSelection());
+        assertThat(contractInputExpressionEditor.canFinish()).isFalse();
+    }
+
+    @Test
+    public void should_contract_input_expression_editor_have_an_empty_selection() throws Exception {
+        contractInputExpressionEditor.createExpressionEditor(parent, dataBindingContext);
+
+        final Expression contractInputExpression = ExpressionHelper.createContractInputExpression(ProcessFactory.eINSTANCE.createContractInput());
+        contractInputExpressionEditor.bindExpression(dataBindingContext, task,
+                contractInputExpression, null, null);
+        final TableViewer viewer = contractInputExpressionEditor.getViewer();
+        assertThat(viewer.getSelection().isEmpty()).isTrue();
+    }
+
+    @Test
+    public void should_contract_input_expression_editor_hide_contract_input_with_incompatible_type() throws Exception {
+        contractInputExpressionEditor.createExpressionEditor(parent, dataBindingContext);
+        final Expression contractInputExpression = ExpressionHelper.createContractInputExpression(contract.getInputs().get(0));
+        contractInputExpression.setReturnTypeFixed(true);
+        contractInputExpressionEditor.bindExpression(dataBindingContext, task,
+                contractInputExpression, null, null);
+        final TableViewer viewer = contractInputExpressionEditor.getViewer();
+        assertThat((Collection) viewer.getInput()).hasSize(2);
     }
 
 
