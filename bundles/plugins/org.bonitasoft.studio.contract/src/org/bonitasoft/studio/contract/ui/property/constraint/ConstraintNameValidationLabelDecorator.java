@@ -41,12 +41,12 @@ import org.eclipse.swt.graphics.Image;
  */
 public class ConstraintNameValidationLabelDecorator implements ILabelDecorator {
 
-    private final ContractConstraintNameValidationRule inputNameValidationRule;
-    private final ContractConstraintDuplicationValidationRule inputNameDuplicationValidationRule;
+    private final ContractConstraintNameValidationRule constraintNameValidationRule;
+    private final ContractConstraintDuplicationValidationRule constraintNameDuplicationValidationRule;
 
     public ConstraintNameValidationLabelDecorator() {
-        inputNameValidationRule = new ContractConstraintNameValidationRule();
-        inputNameDuplicationValidationRule = new ContractConstraintDuplicationValidationRule();
+        constraintNameValidationRule = new ContractConstraintNameValidationRule();
+        constraintNameDuplicationValidationRule = new ContractConstraintDuplicationValidationRule();
     }
 
     @Override
@@ -84,11 +84,11 @@ public class ConstraintNameValidationLabelDecorator implements ILabelDecorator {
             return null;
         }
         final String name = contractConstraint.getName();
-        final IStatus status = inputNameValidationRule.validate(contractConstraint);
+        final IStatus status = constraintNameValidationRule.validate(contractConstraint);
         final Contract contract = ModelHelper.getFirstContainerOfType((EObject) element, Contract.class);
         IStatus duplicateStatus = ValidationStatus.ok();
         if (contract != null) {
-            duplicateStatus = inputNameDuplicationValidationRule.validate(contract);
+            duplicateStatus = constraintNameDuplicationValidationRule.validate(contract);
         }
         if (!status.isOK()) {
             final FieldDecoration decoration = getErrorDecorator();
@@ -98,7 +98,7 @@ public class ConstraintNameValidationLabelDecorator implements ILabelDecorator {
             for (final IStatus c : duplicateStatus.getChildren()) {
                 if (c.getMessage().equals(name)) {
                     final FieldDecoration decoration = getErrorDecorator();
-                    decoration.setDescription(Messages.duplicatedInputNames + status.getMessage());
+                    decoration.setDescription(Messages.bind(Messages.duplicatedConstraintNames, status.getMessage()));
                     return ImageDescriptor.createFromImage(decoration.getImage());
                 }
             }
@@ -112,7 +112,7 @@ public class ConstraintNameValidationLabelDecorator implements ILabelDecorator {
 
     @Override
     public String decorateText(final String text, final Object element) {
-        final IStatus status = inputNameValidationRule.validate((ContractConstraint) element);
+        final IStatus status = constraintNameValidationRule.validate((ContractConstraint) element);
         if (!status.isOK()) {
             return status.getMessage();
         }

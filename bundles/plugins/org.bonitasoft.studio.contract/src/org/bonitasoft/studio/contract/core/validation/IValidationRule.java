@@ -32,4 +32,6 @@ public interface IValidationRule {
 
     String getRuleId();
 
+    String getMessage(IStatus status);
+
 }

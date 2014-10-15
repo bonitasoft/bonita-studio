@@ -27,6 +27,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
 
+import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.contract.AbstractSWTTestCase;
 import org.bonitasoft.studio.contract.core.validation.ContractDefinitionValidator;
 import org.bonitasoft.studio.model.process.Contract;
@@ -70,8 +71,8 @@ public class ContractInputControllerTest extends AbstractSWTTestCase {
     @Before
     public void setUp() throws Exception {
         createDisplayAndRealm();
+        FileActionDialog.setDisablePopup(true);
         contractInputController = spy(new ContractInputController(contractDefinitionValidator));
-        doReturn(true).when(contractInputController).openConfirmation(anyList());
         observableValue = new WritableValue(Realm.getDefault());
         when(viewer.getInput()).thenReturn(observableValue);
     }

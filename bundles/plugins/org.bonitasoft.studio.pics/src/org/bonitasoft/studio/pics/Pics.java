@@ -52,7 +52,7 @@ public class Pics extends AbstractUIPlugin{
 
         private final String file;
 
-        public ClassPathResourceImageDescriptor(String file) {
+        public ClassPathResourceImageDescriptor(final String file) {
             this.file = file;
         }
 
@@ -79,11 +79,11 @@ public class Pics extends AbstractUIPlugin{
     /**
      * Returns the given image. The image will be managed by the plugin's
      * image registry.
-     * 
+     *
      * @param imageName a pathname relative to the icons directory of
      * this project.
      */
-    public static Image getImage(String imageName) {
+    public static Image getImage(final String imageName) {
         if(PicsConstants.hint.equals(imageName)){
             return PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_INFO_TSK);
         }else{
@@ -91,8 +91,11 @@ public class Pics extends AbstractUIPlugin{
         }
     }
 
-    public static Image getImage(String imageName, AbstractUIPlugin plugin) {
-        ImageRegistry reg = plugin.getImageRegistry();
+    public static Image getImage(final String imageName, final AbstractUIPlugin plugin) {
+        if (plugin == null) {
+            return null;
+        }
+        final ImageRegistry reg = plugin.getImageRegistry();
 
         Image result = reg.get(imageName);
 
@@ -100,7 +103,7 @@ public class Pics extends AbstractUIPlugin{
             return result;
         }
 
-        ImageDescriptor descriptor = getImageDescriptor(imageName,plugin) ;
+        final ImageDescriptor descriptor = getImageDescriptor(imageName,plugin) ;
         if(descriptor != null){
             result = descriptor.createImage();
         }
@@ -113,7 +116,7 @@ public class Pics extends AbstractUIPlugin{
         return result;
     }
 
-    public static ImageDescriptor getImageDescriptor(String imageName, AbstractUIPlugin plugin) {
+    public static ImageDescriptor getImageDescriptor(final String imageName, final AbstractUIPlugin plugin) {
         ImageDescriptor desc;
         try {
             desc =
@@ -121,7 +124,7 @@ public class Pics extends AbstractUIPlugin{
                             new URL(
                                     plugin.getBundle().getResource("/"), //$NON-NLS-1$
                                     "icons/" + imageName)); //$NON-NLS-1$
-        } catch (MalformedURLException e) {
+        } catch (final MalformedURLException e) {
             desc = ImageDescriptor.getMissingImageDescriptor();
         }
 
@@ -131,11 +134,11 @@ public class Pics extends AbstractUIPlugin{
     /**
      * Returns the given image descriptor. The caller will be responsible
      * for deallocating the image if it creates the image from the descriptor
-     * 
+     *
      * @param imageName is a pathname relative to the icons directory
      * within this project.
      */
-    public static ImageDescriptor getImageDescriptor(String imageName) {
+    public static ImageDescriptor getImageDescriptor(final String imageName) {
         return getImageDescriptor(imageName,plugin);
     }
 
@@ -144,7 +147,7 @@ public class Pics extends AbstractUIPlugin{
      * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext)
      */
     @Override
-    public void start(BundleContext context) throws Exception {
+    public void start(final BundleContext context) throws Exception {
         super.start(context);
         plugin = this;
     }
@@ -154,7 +157,7 @@ public class Pics extends AbstractUIPlugin{
      * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext)
      */
     @Override
-    public void stop(BundleContext context) throws Exception {
+    public void stop(final BundleContext context) throws Exception {
         plugin = null;
         super.stop(context);
     }
@@ -163,12 +166,12 @@ public class Pics extends AbstractUIPlugin{
      * @param connectorCategories
      * @param element
      */
-    public static Image getImage(String connectorCategories, String element) {
+    public static Image getImage(final String connectorCategories, final String element) {
         return getImage(connectorCategories + element + ".png"); //$NON-NLS-1$
     }
 
 
-    public static Image getFlag(Locale locale) {
+    public static Image getFlag(final Locale locale) {
         return getImage("/flags/" + locale.getCountry() + ".png"); //$NON-NLS-1$
     }
 
@@ -177,18 +180,18 @@ public class Pics extends AbstractUIPlugin{
      * @param id
      * @return
      */
-    public static Image getSystemImage(int id){
-        ImageRegistry reg = plugin.getImageRegistry();
+    public static Image getSystemImage(final int id){
+        final ImageRegistry reg = plugin.getImageRegistry();
 
-        String imageName = id+"";
+        final String imageName = id+"";
         Image result = reg.get(imageName);
 
         if (result != null && !result.isDisposed()) {//prevent from bad dispose
             return result;
         }
         result = Display.getCurrent().getSystemImage(id);
-        Image scaled = new Image(Display.getDefault(), 16, 16);
-        GC gc = new GC(scaled);
+        final Image scaled = new Image(Display.getDefault(), 16, 16);
+        final GC gc = new GC(scaled);
         gc.setAntialias(SWT.ON);
         gc.setInterpolation(SWT.HIGH);
         gc.drawImage(result, 0, 0, result.getBounds().width, result.getBounds().height, 0, 0, 16, 16);

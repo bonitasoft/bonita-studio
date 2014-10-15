@@ -20,6 +20,7 @@ import org.bonitasoft.studio.common.databinding.MultiValidator;
 import org.bonitasoft.studio.common.jface.databinding.validator.InputLengthValidator;
 import org.bonitasoft.studio.contract.i18n.Messages;
 import org.bonitasoft.studio.model.process.ContractInput;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 
@@ -53,6 +54,12 @@ public class ContractInputDescriptionValidationRule implements IValidationRule {
     @Override
     public String getRuleId() {
         return DESCRIPTION_CONSTRAINT_ID;
+    }
+
+    @Override
+    public String getMessage(final IStatus status) {
+        Assert.isLegal(status != null);
+        return status.getMessage();
     }
 
 }

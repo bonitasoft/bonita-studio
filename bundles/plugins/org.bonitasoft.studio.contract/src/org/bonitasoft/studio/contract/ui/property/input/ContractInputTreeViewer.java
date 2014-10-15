@@ -26,7 +26,7 @@ import org.bonitasoft.studio.contract.ui.property.input.edit.ContractInputTypeEd
 import org.bonitasoft.studio.contract.ui.property.input.edit.DescriptionPropertyEditingSupport;
 import org.bonitasoft.studio.contract.ui.property.input.edit.InputNamePropertyEditingSupport;
 import org.bonitasoft.studio.model.process.ProcessPackage;
-import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
+import org.bonitasoft.studio.model.process.provider.ProcessItemProviderAdapterFactory;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jface.databinding.viewers.ObservableListTreeContentProvider;
@@ -101,9 +101,9 @@ public class ContractInputTreeViewer extends TreeViewer {
     public void initialize(final ContractInputController inputController, final ContractDefinitionValidator contractValidator) {
         this.contractValidator = contractValidator;
         this.inputController = inputController;
-        final ComposedAdapterFactory composedAdapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
-        propertySourceProvider = new AdapterFactoryContentProvider(composedAdapterFactory);
-        adapterFactoryLabelProvider = new AdapterFactoryLabelProvider(composedAdapterFactory);
+        final ProcessItemProviderAdapterFactory adapterFactory = new ProcessItemProviderAdapterFactory();
+        propertySourceProvider = new AdapterFactoryContentProvider(adapterFactory);
+        adapterFactoryLabelProvider = new AdapterFactoryLabelProvider(adapterFactory);
         getTree().setHeaderVisible(true);
         getTree().setLinesVisible(true);
         addFilter(new ComplexTypeChildrenViewerFilter());
@@ -125,7 +125,7 @@ public class ContractInputTreeViewer extends TreeViewer {
         createColumns();
     }
 
-    public void createColumns() {
+    protected void createColumns() {
         createInputNameColumn();
         createInputTypeColumn();
         createMultipleColumn();
@@ -133,7 +133,7 @@ public class ContractInputTreeViewer extends TreeViewer {
         createInputDescriptionColumn();
     }
 
-    public void configureTableLayout() {
+    protected void configureTableLayout() {
         final TableLayout tableLayout = new TableLayout();
         tableLayout.addColumnData(new ColumnWeightData(3));
         tableLayout.addColumnData(new ColumnWeightData(1));

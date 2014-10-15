@@ -21,7 +21,6 @@ import java.util.Set;
 
 import org.bonitasoft.studio.common.Pair;
 import org.bonitasoft.studio.contract.ContractPlugin;
-import org.bonitasoft.studio.contract.i18n.Messages;
 import org.bonitasoft.studio.model.process.Contract;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
@@ -38,14 +37,11 @@ import org.eclipse.ui.forms.IMessageManager;
  */
 public class ContractDefinitionValidator {
 
-
-
-
     private final IMessageManager messageManager;
     private final Set<IValidationRule> validationRules;
 
     public ContractDefinitionValidator() {
-        this(null);
+        this(new DummyMessageManager());
     }
 
     public ContractDefinitionValidator(final IMessageManager messageManager) {
@@ -60,9 +56,7 @@ public class ContractDefinitionValidator {
     }
 
     public IStatus validate(final Contract contract) {
-        if (messageManager != null) {
-            messageManager.removeAllMessages();
-        }
+        messageManager.removeAllMessages();
         if (contract != null) {
             final MultiStatus status = new MultiStatus(ContractPlugin.PLUGIN_ID, IStatus.OK, "", null);
             final TreeIterator<EObject> iterator = contract.eAllContents();
@@ -71,9 +65,7 @@ public class ContractDefinitionValidator {
                 for (final IValidationRule rule : validationRules) {
                     if (rule.appliesTo(eObject)) {
                         final IStatus iStatus = rule.validate(eObject);
-                        if (messageManager != null) {
-                            updateMessage(eObject, rule.getRuleId(), iStatus);
-                        }
+                        updateMessage(eObject, rule, iStatus);
                         status.add(iStatus);
                     }
                 }
@@ -81,9 +73,7 @@ public class ContractDefinitionValidator {
             for (final IValidationRule rule : validationRules) {
                 if (rule.appliesTo(contract)) {
                     final IStatus iStatus = rule.validate(contract);
-                    if (messageManager != null) {
-                        updateMessage(contract, rule.getRuleId(), iStatus);
-                    }
+                    updateMessage(contract, rule, iStatus);
                     status.add(iStatus);
                 }
             }
@@ -92,23 +82,11 @@ public class ContractDefinitionValidator {
         return ValidationStatus.ok();
     }
 
-    private void updateMessage(final Object element, final String constraintID, final IStatus status) {
-        final Pair<Object, String> messageKey = new org.bonitasoft.studio.common.Pair<Object, String>(element, constraintID);
+    private void updateMessage(final Object element, final IValidationRule rule, final IStatus status) {
+        final Pair<Object, String> messageKey = new org.bonitasoft.studio.common.Pair<Object, String>(element, rule.getRuleId());
         messageManager.removeMessage(messageKey);
         if (!status.isOK()) {
-            if (status.isMultiStatus()) {
-                final StringBuilder errorMessage = new StringBuilder(Messages.duplicatedInputNames);
-                errorMessage.append(" ");
-                for (final IStatus child : status.getChildren()) {
-                    errorMessage.append("\"" + child.getMessage() + "\"");
-                    errorMessage.append(", ");
-                }
-                String error = errorMessage.toString();
-                error = error.substring(0, error.length() - 2);
-                messageManager.addMessage(messageKey,error, null, toMessageSeverity(status.getSeverity()));
-            } else {
-                messageManager.addMessage(messageKey, status.getMessage(), null, toMessageSeverity(status.getSeverity()));
-            }
+            messageManager.addMessage(messageKey, rule.getMessage(status), null, toMessageSeverity(status.getSeverity()));
         }
     }
 
@@ -128,11 +106,9 @@ public class ContractDefinitionValidator {
     }
 
     public void clearMessages(final Object element) {
-        if (messageManager != null) {
-            for (final IValidationRule rule : validationRules) {
-                final Pair<Object, String> messageKey = new org.bonitasoft.studio.common.Pair<Object, String>(element, rule.getRuleId());
-                messageManager.removeMessage(messageKey);
-            }
+        for (final IValidationRule rule : validationRules) {
+            final Pair<Object, String> messageKey = new org.bonitasoft.studio.common.Pair<Object, String>(element, rule.getRuleId());
+            messageManager.removeMessage(messageKey);
         }
     }
 

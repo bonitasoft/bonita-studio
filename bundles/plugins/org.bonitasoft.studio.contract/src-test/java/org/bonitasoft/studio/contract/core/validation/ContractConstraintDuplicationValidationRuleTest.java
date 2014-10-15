@@ -60,10 +60,13 @@ public class ContractConstraintDuplicationValidationRuleTest {
         final Contract contract = ProcessFactory.eINSTANCE.createContract();
         final ContractConstraint constraint = ProcessFactory.eINSTANCE.createContractConstraint();
         constraint.setName("legal age");
-        contract.getConstraints().add(constraint);
         final ContractConstraint constraint2 = ProcessFactory.eINSTANCE.createContractConstraint();
         constraint2.setName("name length");
+        final ContractConstraint constraint3 = ProcessFactory.eINSTANCE.createContractConstraint();
+        constraint3.setName("");
+        contract.getConstraints().add(constraint);
         contract.getConstraints().add(constraint2);
+        contract.getConstraints().add(constraint3);
         assertThat(validationRule.validate(contract).isOK()).isTrue();
     }
 

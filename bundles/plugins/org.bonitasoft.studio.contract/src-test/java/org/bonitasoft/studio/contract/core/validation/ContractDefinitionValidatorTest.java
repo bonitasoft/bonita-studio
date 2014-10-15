@@ -22,7 +22,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 
 import org.bonitasoft.studio.common.Pair;
-import org.bonitasoft.studio.contract.i18n.Messages;
 import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ContractInputType;
@@ -116,8 +115,8 @@ public class ContractDefinitionValidatorTest {
         addInput(contract, "toto", ContractInputType.DECIMAL, null);
         final IStatus status = validatorWithMessageManager.validate(contract);
         assertThat(status.isOK()).isFalse();
-        verify(messageManager).addMessage(new Pair<Object, String>(contract, ContractInputNameDuplicationValidationRule.DUPLICATED_CONSTRAINT_ID),
-                Messages.duplicatedInputNames + " \"toto\", \"name\"", null, IMessage.ERROR);
+        verify(messageManager).addMessage(eq(new Pair<Object, String>(contract, ContractInputNameDuplicationValidationRule.DUPLICATED_CONSTRAINT_ID)),
+                anyString(), eq(null), eq(IMessage.ERROR));
     }
 
     @Test
@@ -211,4 +210,6 @@ public class ContractDefinitionValidatorTest {
         parentInput.getInputs().add(contractInput);
         return contractInput;
     }
+
+
 }

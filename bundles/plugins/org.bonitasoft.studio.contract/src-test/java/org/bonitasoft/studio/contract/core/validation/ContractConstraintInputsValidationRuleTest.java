@@ -53,8 +53,11 @@ public class ContractConstraintInputsValidationRuleTest {
     }
 
     @Test
-    public void should_appliesTo_Contract_Constraint() throws Exception {
-        assertThat(validationRule.appliesTo(ProcessFactory.eINSTANCE.createContractConstraint())).isTrue();
+    public void should_appliesTo_Contract_Constraint_with_an_expression() throws Exception {
+        final ContractConstraint contractConstraint = ProcessFactory.eINSTANCE.createContractConstraint();
+        assertThat(validationRule.appliesTo(contractConstraint)).isFalse();
+        contractConstraint.setExpression("");
+        assertThat(validationRule.appliesTo(contractConstraint)).isTrue();
         assertThat(validationRule.appliesTo(ProcessFactory.eINSTANCE.createContract())).isFalse();
     }
 

@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.bonitasoft.studio.common.databinding.CustomEMFEditObservables;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.contract.core.validation.ContractDefinitionValidator;
 import org.bonitasoft.studio.contract.i18n.Messages;
 import org.bonitasoft.studio.contract.ui.property.IViewerController;
@@ -122,7 +123,8 @@ public class ContractInputController implements IViewerController {
             message.append(SWT.CR);
             message.append("- " + ((ContractInput) input).getName());
         }
-        return MessageDialog.openConfirm(Display.getDefault().getActiveShell(), Messages.removeInputConfirmationTitle, message.toString());
+        return FileActionDialog.getDisablePopup() ? true : MessageDialog.openConfirm(Display.getDefault().getActiveShell(),
+                Messages.removeInputConfirmationTitle, message.toString());
     }
 
     protected void clearMessagesRecursively(final ContractInput input) {
@@ -170,5 +172,4 @@ public class ContractInputController implements IViewerController {
         final IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
         return (ContractInput) selection.getFirstElement();
     }
-
 }

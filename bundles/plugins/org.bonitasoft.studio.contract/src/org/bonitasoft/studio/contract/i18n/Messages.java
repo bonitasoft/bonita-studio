@@ -61,5 +61,6 @@ public class Messages extends NLS {
     public static String errorMessage;
     public static String noInputReferencedInConstraintExpression;
     public static String unknownInputReferencedInConstraintExpression;
+    public static String duplicatedConstraintNames;
 
 }

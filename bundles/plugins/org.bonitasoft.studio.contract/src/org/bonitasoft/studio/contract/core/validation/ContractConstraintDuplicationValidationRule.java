@@ -20,9 +20,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.bonitasoft.studio.contract.ContractPlugin;
+import org.bonitasoft.studio.contract.i18n.Messages;
 import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractConstraint;
 import org.eclipse.core.databinding.validation.ValidationStatus;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.emf.ecore.EObject;
@@ -35,7 +37,6 @@ import org.eclipse.emf.ecore.EObject;
 public class ContractConstraintDuplicationValidationRule implements IValidationRule {
 
     protected static final String DUPLICATED_CONSTRAINT_ID = "duplicate_constraint";
-
 
     @Override
     public boolean appliesTo(final EObject element) {
@@ -66,6 +67,23 @@ public class ContractConstraintDuplicationValidationRule implements IValidationR
     @Override
     public String getRuleId() {
         return DUPLICATED_CONSTRAINT_ID;
+    }
+
+    @Override
+    public String getMessage(final IStatus status) {
+        Assert.isLegal(status != null);
+        if (status.isMultiStatus()) {
+            final StringBuilder errorMessage = new StringBuilder();
+            errorMessage.append(" ");
+            for (final IStatus child : status.getChildren()) {
+                errorMessage.append("\"" + child.getMessage() + "\"");
+                errorMessage.append(", ");
+            }
+            String error = errorMessage.toString();
+            error = error.substring(0, error.length() - 2);
+            return Messages.bind(Messages.duplicatedConstraintNames, error);
+        }
+        return status.getMessage();
     }
 
 }

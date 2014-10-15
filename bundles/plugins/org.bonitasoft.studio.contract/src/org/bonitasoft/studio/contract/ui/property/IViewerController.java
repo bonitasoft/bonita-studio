@@ -21,15 +21,15 @@ import org.eclipse.jface.viewers.ColumnViewer;
 
 /**
  * @author Romain Bioteau
- *
+ *         This interface can be used be a JFace ColumnViewer to add, remove, move element in viewer
  */
 public interface IViewerController {
 
-    public Object add(ColumnViewer viewer);
+    Object add(ColumnViewer viewer);
 
-    public void remove(ColumnViewer viewer);
+    void remove(ColumnViewer viewer);
 
-    public void moveUp(ColumnViewer viewer);
+    void moveUp(ColumnViewer viewer);
 
-    public void moveDown(ColumnViewer viewer);
+    void moveDown(ColumnViewer viewer);
 }

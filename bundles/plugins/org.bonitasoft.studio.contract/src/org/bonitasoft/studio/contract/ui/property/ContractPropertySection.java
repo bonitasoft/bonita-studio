@@ -16,8 +16,6 @@
  */
 package org.bonitasoft.studio.contract.ui.property;
 
-import java.util.List;
-
 import org.bonitasoft.studio.common.databinding.CustomEMFEditObservables;
 import org.bonitasoft.studio.common.properties.EObjectSelectionProviderSection;
 import org.bonitasoft.studio.contract.core.validation.ContractDefinitionValidator;
@@ -31,7 +29,6 @@ import org.bonitasoft.studio.model.process.ContractConstraint;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ContractInputType;
 import org.bonitasoft.studio.model.process.ProcessPackage;
-import org.eclipse.core.databinding.UpdateListStrategy;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.observable.Realm;
@@ -174,12 +171,6 @@ public class ContractPropertySection extends EObjectSelectionProviderSection {
         bindAddChildButtonEnablement(addChildButton, inputsTableViewer);
     }
 
-    public Button createRemoveButton(final Composite buttonsComposite) {
-        final Button removeButton = getWidgetFactory().createButton(buttonsComposite, Messages.remove, SWT.PUSH);
-        removeButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).minSize(IDialogConstants.BUTTON_WIDTH, SWT.DEFAULT).create());
-        return removeButton;
-    }
-
     private Button createButton(final Composite buttonsComposite, final String label) {
         final Button button = getWidgetFactory().createButton(buttonsComposite, label, SWT.PUSH);
         button.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).minSize(IDialogConstants.BUTTON_WIDTH, SWT.DEFAULT).create());
@@ -206,7 +197,6 @@ public class ContractPropertySection extends EObjectSelectionProviderSection {
                 }
             }
         });
-        //observeEnabled.setValue(!observeDetailList.isEmpty());
     }
     protected void bindRemoveButtonEnablement(final Button button, final Viewer viewer) {
         getContext().bindValue(SWTObservables.observeEnabled(button),
@@ -253,18 +243,6 @@ public class ContractPropertySection extends EObjectSelectionProviderSection {
             }
         });
         return modelStrategy;
-    }
-
-    private UpdateListStrategy emptyListToBooleanStrategy() {
-        final UpdateListStrategy strategy = new UpdateListStrategy();
-        strategy.setConverter(new Converter(List.class, Boolean.class) {
-
-            @Override
-            public Object convert(final Object from) {
-                return from != null && !((List<?>) from).isEmpty();
-            }
-        });
-        return strategy;
     }
 
     private UpdateValueStrategy isLastElementToBooleanStrategy() {

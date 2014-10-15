@@ -61,12 +61,13 @@ public class CustomEMFEditObservables extends EMFEditObservables {
             @Override
             public IObservable createObservable(final Object target)
             {
-                final TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(target);
-                if (editingDomain != null) {
-                    return observeValue(realm, editingDomain, (EObject) target, eStructuralFeature);
-                } else {
-                    return new EObjectObservableValue(realm, (EObject) target, eStructuralFeature);
+                if (((EObject) target).eResource() != null) {
+                    final TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(target);
+                    if (editingDomain != null) {
+                        return observeValue(realm, editingDomain, (EObject) target, eStructuralFeature);
+                    }
                 }
+                return new EObjectObservableValue(realm, (EObject) target, eStructuralFeature);
 
             }
         };
@@ -86,12 +87,14 @@ public class CustomEMFEditObservables extends EMFEditObservables {
             @Override
             public IObservable createObservable(final Object target)
             {
-                final TransactionalEditingDomain domain = TransactionUtil.getEditingDomain(target);
-                if (domain != null) {
-                    return observeList(realm, domain, (EObject) target, eStructuralFeature);
-                } else {
-                    return observeList(realm, (EObject) target, eStructuralFeature);
+                if (((EObject) target).eResource() != null) {
+                    final TransactionalEditingDomain domain = TransactionUtil.getEditingDomain(target);
+                    if (domain != null) {
+                        return observeList(realm, domain, (EObject) target, eStructuralFeature);
+                    }
                 }
+
+                return observeList(realm, (EObject) target, eStructuralFeature);
 
             }
         };
@@ -99,23 +102,27 @@ public class CustomEMFEditObservables extends EMFEditObservables {
 
     public static IObservableList observeList(final EObject eObject, final EStructuralFeature eStructuralFeature)
     {
-        final TransactionalEditingDomain domain = TransactionUtil.getEditingDomain(eObject);
-        if (domain != null) {
-            return new EditingDomainEObjectObservableList(domain, eObject, eStructuralFeature);
-        } else {
-            return new EObjectObservableList(eObject, eStructuralFeature);
+        if (eObject.eResource() != null) {
+            final TransactionalEditingDomain domain = TransactionUtil.getEditingDomain(eObject);
+            if (domain != null) {
+                return new EditingDomainEObjectObservableList(domain, eObject, eStructuralFeature);
+            }
         }
+        return new EObjectObservableList(eObject, eStructuralFeature);
 
     }
 
     public static IObservableList observeList(final Realm realm, final EObject eObject, final EStructuralFeature eStructuralFeature)
     {
-        final TransactionalEditingDomain domain = TransactionUtil.getEditingDomain(eObject);
-        if (domain != null) {
-            return new EditingDomainEObjectObservableList(realm, domain, eObject, eStructuralFeature);
-        } else {
-            return new EObjectObservableList(realm, eObject, eStructuralFeature);
+        if (eObject.eResource() != null) {
+            final TransactionalEditingDomain domain = TransactionUtil.getEditingDomain(eObject);
+            if (domain != null) {
+                return new EditingDomainEObjectObservableList(realm, domain, eObject, eStructuralFeature);
+
+            }
         }
+        return new EObjectObservableList(realm, eObject, eStructuralFeature);
+
 
     }
 

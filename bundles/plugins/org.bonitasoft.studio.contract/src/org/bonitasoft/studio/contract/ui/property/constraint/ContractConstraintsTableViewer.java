@@ -21,10 +21,11 @@ import org.bonitasoft.studio.contract.core.validation.ContractDefinitionValidato
 import org.bonitasoft.studio.contract.i18n.Messages;
 import org.bonitasoft.studio.contract.ui.property.AddRowOnEnterCellNavigationStrategy;
 import org.bonitasoft.studio.contract.ui.property.CharriageColumnViewerEditorActivationStrategy;
+import org.bonitasoft.studio.contract.ui.property.IViewerController;
 import org.bonitasoft.studio.contract.ui.property.constraint.edit.ConstraintErrorMessagePropertyEditingSupport;
 import org.bonitasoft.studio.contract.ui.property.constraint.edit.ConstraintExpressionPropertyEditingSupport;
 import org.bonitasoft.studio.contract.ui.property.constraint.edit.ConstraintNamePropertyEditingSupport;
-import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
+import org.bonitasoft.studio.model.process.provider.ProcessItemProviderAdapterFactory;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
@@ -59,19 +60,19 @@ public class ContractConstraintsTableViewer extends TableViewer {
     private AdapterFactoryContentProvider propertySourceProvider;
     private AdapterFactoryLabelProvider adapterFactoryLabelProvider;
     private ContractDefinitionValidator contractValidator;
-    private ContractConstraintController constraintController;
+    private IViewerController constraintController;
 
     public ContractConstraintsTableViewer(final Composite parent, final FormToolkit toolkit) {
         super(toolkit.createTable(parent, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI));
         getTable().setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, SWTBotConstants.SWTBOT_ID_CONTRACT_CONSTRAINT_TABLE);
     }
 
-    public void initialize(final ContractConstraintController constraintController, final ContractDefinitionValidator contractValidator) {
+    public void initialize(final IViewerController constraintController, final ContractDefinitionValidator contractValidator) {
         this.contractValidator = contractValidator;
         this.constraintController = constraintController;
-        final ComposedAdapterFactory composedAdapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
-        propertySourceProvider = new AdapterFactoryContentProvider(composedAdapterFactory);
-        adapterFactoryLabelProvider = new AdapterFactoryLabelProvider(composedAdapterFactory);
+        final ProcessItemProviderAdapterFactory adapterFactory = new ProcessItemProviderAdapterFactory();
+        propertySourceProvider = new AdapterFactoryContentProvider(adapterFactory);
+        adapterFactoryLabelProvider = new AdapterFactoryLabelProvider(adapterFactory);
         getTable().setHeaderVisible(true);
         getTable().setLinesVisible(true);
         setContentProvider(new ObservableListContentProvider());
@@ -121,7 +122,6 @@ public class ContractConstraintsTableViewer extends TableViewer {
     }
 
 
-
     public void createRemoveListener(final Button button) {
         button.addSelectionListener(new SelectionAdapter() {
 
@@ -132,13 +132,13 @@ public class ContractConstraintsTableViewer extends TableViewer {
         });
     }
 
-    public void createColumns() {
+    protected void createColumns() {
         createConstraintNameColumn();
         createConstraintExpressionColumn();
         createConstraintErrorMessageColumn();
     }
 
-    public void configureTableLayout() {
+    protected void configureTableLayout() {
         final TableLayout tableLayout = new TableLayout();
         tableLayout.addColumnData(new ColumnWeightData(1));
         tableLayout.addColumnData(new ColumnWeightData(2));

@@ -98,7 +98,7 @@ public class InputNameValidationLabelDecorator implements ILabelDecorator {
             for (final IStatus c : duplicateStatus.getChildren()) {
                 if (c.getMessage().equals(name)) {
                     final FieldDecoration decoration = getErrorDecorator();
-                    decoration.setDescription(Messages.duplicatedInputNames + status.getMessage());
+                    decoration.setDescription(Messages.bind(Messages.duplicatedInputNames, status.getMessage()));
                     return ImageDescriptor.createFromImage(decoration.getImage());
                 }
             }

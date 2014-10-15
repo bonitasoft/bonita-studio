@@ -26,6 +26,7 @@ import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractConstraint;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.eclipse.core.databinding.validation.ValidationStatus;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.emf.common.util.EList;
@@ -44,7 +45,8 @@ public class ContractConstraintInputsValidationRule implements IValidationRule {
 
     @Override
     public boolean appliesTo(final EObject element) {
-        return element instanceof ContractConstraint;
+        return element instanceof ContractConstraint
+                && ((ContractConstraint) element).getExpression() != null;
     }
 
     @Override
@@ -80,6 +82,12 @@ public class ContractConstraintInputsValidationRule implements IValidationRule {
     @Override
     public String getRuleId() {
         return CONSTRAINT_INPUTS_ID;
+    }
+
+    @Override
+    public String getMessage(final IStatus status) {
+        Assert.isLegal(status != null);
+        return status.getMessage();
     }
 
 }

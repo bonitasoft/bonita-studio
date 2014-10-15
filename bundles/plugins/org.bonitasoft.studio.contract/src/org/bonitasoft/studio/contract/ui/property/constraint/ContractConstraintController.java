@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.bonitasoft.studio.common.databinding.CustomEMFEditObservables;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.contract.core.validation.ContractDefinitionValidator;
 import org.bonitasoft.studio.contract.i18n.Messages;
 import org.bonitasoft.studio.contract.ui.property.IViewerController;
@@ -66,6 +67,7 @@ public class ContractConstraintController implements IViewerController {
     @Override
     public void remove(final ColumnViewer viewer) {
         final IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
+        final IObservableList constraintsObservable = (IObservableList) viewer.getInput();
         final List<?> selectedInput = selection.toList();
         Contract contract = null;
         if (openConfirmation(selectedInput)) {
@@ -73,8 +75,7 @@ public class ContractConstraintController implements IViewerController {
                 final ContractConstraint contractConstraint = (ContractConstraint) constraint;
                 contract = ModelHelper.getFirstContainerOfType(contractConstraint, Contract.class);
                 contractValidator.clearMessages(contractConstraint);
-                CustomEMFEditObservables.observeList(contract, ProcessPackage.Literals.CONTRACT__CONSTRAINTS).remove(contractConstraint);
-
+                constraintsObservable.remove(contractConstraint);
             }
             if (contract != null) {
                 contractValidator.validate(contract);
@@ -91,10 +92,10 @@ public class ContractConstraintController implements IViewerController {
         final int index = list.indexOf(selectedConstraint);
         if (index > 0) {
             list.move(index, index - 1);
+            //refresh button enablement
+            viewer.setSelection(new StructuredSelection());
+            viewer.setSelection(new StructuredSelection(selectedConstraint));
         }
-        //refresh button enablement
-        viewer.setSelection(new StructuredSelection());
-        viewer.setSelection(new StructuredSelection(selectedConstraint));
     }
 
     @Override
@@ -105,10 +106,10 @@ public class ContractConstraintController implements IViewerController {
         final int index = list.indexOf(selectedConstraint);
         if (index < list.size() - 1) {
             list.move(index, index + 1);
+            //refresh button enablement
+            viewer.setSelection(new StructuredSelection());
+            viewer.setSelection(new StructuredSelection(selectedConstraint));
         }
-        //refresh button enablement
-        viewer.setSelection(new StructuredSelection());
-        viewer.setSelection(new StructuredSelection(selectedConstraint));
     }
 
     protected ContractConstraint getSelectedConstraint(final ColumnViewer viewer) {
@@ -122,8 +123,7 @@ public class ContractConstraintController implements IViewerController {
             message.append(SWT.CR);
             message.append("- " + ((ContractConstraint) constraint).getName());
         }
-        return MessageDialog.openConfirm(Display.getDefault().getActiveShell(), Messages.removeConstraintConfirmationTitle, message.toString());
+        return FileActionDialog.getDisablePopup() ? true : MessageDialog.openConfirm(Display.getDefault().getActiveShell(),
+                Messages.removeConstraintConfirmationTitle, message.toString());
     }
-
-
 }
