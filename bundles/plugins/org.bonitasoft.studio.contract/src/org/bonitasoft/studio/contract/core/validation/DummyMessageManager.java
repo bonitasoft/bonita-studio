@@ -5,12 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -33,7 +33,6 @@ public class DummyMessageManager implements IMessageManager {
      */
     @Override
     public void addMessage(final Object arg0, final String arg1, final Object arg2, final int arg3) {
-
     }
 
     /* (non-Javadoc)
@@ -41,7 +40,6 @@ public class DummyMessageManager implements IMessageManager {
      */
     @Override
     public void addMessage(final Object arg0, final String arg1, final Object arg2, final int arg3, final Control arg4) {
-
     }
 
     /* (non-Javadoc)
@@ -81,7 +79,6 @@ public class DummyMessageManager implements IMessageManager {
      */
     @Override
     public void removeAllMessages() {
-
     }
 
     /* (non-Javadoc)
@@ -89,7 +86,6 @@ public class DummyMessageManager implements IMessageManager {
      */
     @Override
     public void removeMessage(final Object arg0) {
-
     }
 
     /* (non-Javadoc)
@@ -97,7 +93,6 @@ public class DummyMessageManager implements IMessageManager {
      */
     @Override
     public void removeMessage(final Object arg0, final Control arg1) {
-
     }
 
     /* (non-Javadoc)
@@ -113,7 +108,6 @@ public class DummyMessageManager implements IMessageManager {
      */
     @Override
     public void removeMessages(final Control arg0) {
-
     }
 
     /* (non-Javadoc)
@@ -121,7 +115,6 @@ public class DummyMessageManager implements IMessageManager {
      */
     @Override
     public void setAutoUpdate(final boolean arg0) {
-
     }
 
     /* (non-Javadoc)
@@ -129,7 +122,6 @@ public class DummyMessageManager implements IMessageManager {
      */
     @Override
     public void setDecorationPosition(final int arg0) {
-
     }
 
     /* (non-Javadoc)
@@ -137,7 +129,6 @@ public class DummyMessageManager implements IMessageManager {
      */
     @Override
     public void setMessagePrefixProvider(final IMessagePrefixProvider arg0) {
-
     }
 
     /* (non-Javadoc)
@@ -145,7 +136,6 @@ public class DummyMessageManager implements IMessageManager {
      */
     @Override
     public void update() {
-
     }
 
 }

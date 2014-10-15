@@ -8,6 +8,7 @@
  *******************************************************************************/
 package org.bonitasoft.studio.swtbot.framework.diagram.general.contract;
 
+import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.contract.i18n.Messages;
 import org.bonitasoft.studio.swtbot.framework.BotBase;
@@ -53,8 +54,10 @@ public class BotContractPropertySection extends BotBase {
 
     public BotContractPropertySection remove() {
         bot.button(Messages.remove).click();
-        bot.waitUntil(Conditions.shellIsActive(Messages.removeInputConfirmationTitle));
-        bot.button(IDialogConstants.OK_LABEL).click();
+        if (!FileActionDialog.getDisablePopup()) {
+            bot.waitUntil(Conditions.shellIsActive(Messages.removeInputConfirmationTitle));
+            bot.button(IDialogConstants.OK_LABEL).click();
+        }
         return this;
     }
 
