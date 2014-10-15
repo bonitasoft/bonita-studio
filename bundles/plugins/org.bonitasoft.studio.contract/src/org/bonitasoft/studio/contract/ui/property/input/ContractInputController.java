@@ -161,7 +161,7 @@ public class ContractInputController implements IViewerController {
             list = CustomEMFEditObservables.observeList(parentInput, ProcessPackage.Literals.CONTRACT_INPUT__INPUTS);
         }
         final int index = list.indexOf(selectedConstraint);
-        if (index < list.size()) {
+        if (index < list.size() - 1) {
             list.move(index, index + 1);
         }
     }
