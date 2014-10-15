@@ -21,7 +21,6 @@ import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValida
 import org.bonitasoft.studio.common.jface.databinding.validator.InputLengthValidator;
 import org.bonitasoft.studio.contract.i18n.Messages;
 import org.bonitasoft.studio.model.process.ContractConstraint;
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 
@@ -30,7 +29,7 @@ import org.eclipse.emf.ecore.EObject;
  * @author Romain Bioteau
  *
  */
-public class ContractConstraintNameValidationRule implements IValidationRule {
+public class ContractConstraintNameValidationRule extends MessageValidationRule implements IValidationRule {
 
     protected static final String NAME_CONSTRAINT_ID = "constraint_name";
 
@@ -58,10 +57,5 @@ public class ContractConstraintNameValidationRule implements IValidationRule {
         return NAME_CONSTRAINT_ID;
     }
 
-    @Override
-    public String getMessage(final IStatus status) {
-        Assert.isLegal(status != null);
-        return status.getMessage();
-    }
 
 }

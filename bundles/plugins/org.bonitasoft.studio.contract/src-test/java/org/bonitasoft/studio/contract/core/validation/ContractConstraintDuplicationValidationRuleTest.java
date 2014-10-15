@@ -21,6 +21,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractConstraint;
 import org.bonitasoft.studio.model.process.ProcessFactory;
+import org.eclipse.core.databinding.validation.ValidationStatus;
+import org.eclipse.core.runtime.IStatus;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -64,9 +66,11 @@ public class ContractConstraintDuplicationValidationRuleTest {
         constraint2.setName("name length");
         final ContractConstraint constraint3 = ProcessFactory.eINSTANCE.createContractConstraint();
         constraint3.setName("");
+        final ContractConstraint constraint4 = ProcessFactory.eINSTANCE.createContractConstraint();
         contract.getConstraints().add(constraint);
         contract.getConstraints().add(constraint2);
         contract.getConstraints().add(constraint3);
+        contract.getConstraints().add(constraint4);
         assertThat(validationRule.validate(contract).isOK()).isTrue();
     }
 
@@ -79,9 +83,20 @@ public class ContractConstraintDuplicationValidationRuleTest {
         final ContractConstraint constraint2 = ProcessFactory.eINSTANCE.createContractConstraint();
         constraint2.setName("legal age");
         contract.getConstraints().add(constraint2);
-        assertThat(validationRule.validate(contract).isOK()).isFalse();
+        final IStatus status = validationRule.validate(contract);
+        assertThat(status.isOK()).isFalse();
+        assertThat(validationRule.getMessage(status)).isNotEmpty();
     }
 
+    @Test
+    public void should_getMessage_return_status_message() throws Exception {
+        assertThat(validationRule.getMessage(ValidationStatus.ok())).isNotEmpty();
+    }
+
+    @Test(expected=IllegalArgumentException.class)
+    public void should_getMessage_thrown_IllegalArgumentException() throws Exception {
+        validationRule.getMessage(null);
+    }
 
 
 }

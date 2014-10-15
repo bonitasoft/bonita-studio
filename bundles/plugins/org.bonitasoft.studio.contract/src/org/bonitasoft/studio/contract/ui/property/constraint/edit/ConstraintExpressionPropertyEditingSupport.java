@@ -16,6 +16,7 @@
  */
 package org.bonitasoft.studio.contract.ui.property.constraint.edit;
 
+import org.bonitasoft.studio.model.process.ContractConstraint;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.eclipse.jface.viewers.CellEditor;
@@ -56,7 +57,7 @@ public class ConstraintExpressionPropertyEditingSupport extends PropertyEditingS
 
     @Override
     protected boolean canEdit(final Object object) {
-        return true;
+        return object instanceof ContractConstraint;
     }
 
 

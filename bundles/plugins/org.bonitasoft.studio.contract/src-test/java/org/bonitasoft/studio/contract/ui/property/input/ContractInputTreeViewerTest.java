@@ -94,4 +94,14 @@ public class ContractInputTreeViewerTest extends AbstractSWTTestCase {
         assertThat(inputTreeViewer.getTree().getItemCount()).isEqualTo(0);
     }
 
+    @Test
+    public void shoud_createAddChildListener_add_a_selection_listener_that_add_a_child_input_to_the_selected_contract_inputs() throws Exception {
+        final Button button = new Button(parent, SWT.PUSH);
+        inputTreeViewer.createAddChildListener(button);
+        inputTreeViewer.setSelection(new StructuredSelection(input));
+        assertThat(inputTreeViewer.getTree().getItemCount()).isEqualTo(1);
+        button.notifyListeners(SWT.Selection, new Event());
+        assertThat(input.getInputs()).hasSize(1);
+    }
+
 }

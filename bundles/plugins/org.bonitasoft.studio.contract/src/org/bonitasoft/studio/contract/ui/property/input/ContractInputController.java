@@ -29,7 +29,6 @@ import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ContractInputType;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.ProcessPackage;
-import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.ecore.EObject;
@@ -136,40 +135,12 @@ public class ContractInputController implements IViewerController {
 
     @Override
     public void moveUp(final ColumnViewer viewer) {
-        final ContractInput selectedConstraint = getSelectedInput(viewer);
-        final ContractInput parentInput = ModelHelper.getFirstContainerOfType(selectedConstraint, ContractInput.class);
-        IObservableList list = null;
-        if (parentInput == null) {
-            final Contract contract = ModelHelper.getFirstContainerOfType(selectedConstraint, Contract.class);
-            list = CustomEMFEditObservables.observeList(contract, ProcessPackage.Literals.CONTRACT__INPUTS);
-        } else {
-            list = CustomEMFEditObservables.observeList(parentInput, ProcessPackage.Literals.CONTRACT_INPUT__INPUTS);
-        }
-        final int index = list.indexOf(selectedConstraint);
-        if (index > 0) {
-            list.move(index, index - 1);
-        }
+        //Not implemented yet
     }
 
     @Override
     public void moveDown(final ColumnViewer viewer) {
-        final ContractInput selectedConstraint = getSelectedInput(viewer);
-        final ContractInput parentInput = ModelHelper.getFirstContainerOfType(selectedConstraint, ContractInput.class);
-        IObservableList list = null;
-        if (parentInput == null) {
-            final Contract contract = ModelHelper.getFirstContainerOfType(selectedConstraint, Contract.class);
-            list = CustomEMFEditObservables.observeList(contract, ProcessPackage.Literals.CONTRACT__INPUTS);
-        } else {
-            list = CustomEMFEditObservables.observeList(parentInput, ProcessPackage.Literals.CONTRACT_INPUT__INPUTS);
-        }
-        final int index = list.indexOf(selectedConstraint);
-        if (index < list.size() - 1) {
-            list.move(index, index + 1);
-        }
+        //Not implemented yet
     }
 
-    protected ContractInput getSelectedInput(final ColumnViewer viewer) {
-        final IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
-        return (ContractInput) selection.getFirstElement();
-    }
 }

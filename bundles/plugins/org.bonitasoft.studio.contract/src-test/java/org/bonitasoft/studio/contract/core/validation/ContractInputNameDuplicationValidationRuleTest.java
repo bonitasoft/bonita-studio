@@ -22,6 +22,7 @@ import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ContractInputType;
 import org.bonitasoft.studio.model.process.ProcessFactory;
+import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 import org.junit.After;
 import org.junit.Before;
@@ -58,6 +59,7 @@ public class ContractInputNameDuplicationValidationRuleTest {
         addInput(contract, "name", ContractInputType.DECIMAL, null);
         final IStatus status = validationRule.validate(contract);
         assertThat(status.isOK()).isFalse();
+        assertThat(validationRule.getMessage(status)).isNotEmpty();
     }
 
     @Test
@@ -75,6 +77,16 @@ public class ContractInputNameDuplicationValidationRuleTest {
         final ContractInput contractInput = addInput(contract, "", ContractInputType.TEXT, null);
         assertThat(validationRule.appliesTo(contractInput)).isFalse();
         assertThat(validationRule.appliesTo(contract)).isTrue();
+    }
+
+    @Test
+    public void should_getMessage_return_status_message() throws Exception {
+        assertThat(validationRule.getMessage(ValidationStatus.ok())).isNotEmpty();
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void should_getMessage_thrown_IllegalArgumentException() throws Exception {
+        validationRule.getMessage(null);
     }
 
     private ContractInput addInput(final Contract contract, final String inputName, final ContractInputType type, final String description) {

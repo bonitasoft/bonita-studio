@@ -20,7 +20,6 @@ import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.contract.core.validation.ContractDefinitionValidator;
 import org.bonitasoft.studio.model.process.Contract;
-import org.bonitasoft.studio.model.process.ContractConstraint;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
@@ -51,9 +50,7 @@ public class ConstraintNamePropertyEditingSupport extends PropertyEditingSupport
     @Override
     protected void setValue(final Object element, final Object value) {
         super.setValue(element, value);
-        if (element instanceof ContractConstraint) {
-            contractDefinitionValidator.validate(ModelHelper.getFirstContainerOfType((EObject) element, Contract.class));
-        }
+        contractDefinitionValidator.validate(ModelHelper.getFirstContainerOfType((EObject) element, Contract.class));
         //recompute error decorator label for duplicated constraint
         getViewer().refresh(true);
     }
@@ -64,7 +61,6 @@ public class ConstraintNamePropertyEditingSupport extends PropertyEditingSupport
         super.initializeCellEditorValue(cellEditor, cell);
         final Text textControl = (Text) cellEditor.getControl();
         textControl.setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, SWTBotConstants.SWTBOT_ID_CONSTRAINT_NAME_TEXTEDITOR);
-
     }
 
 
