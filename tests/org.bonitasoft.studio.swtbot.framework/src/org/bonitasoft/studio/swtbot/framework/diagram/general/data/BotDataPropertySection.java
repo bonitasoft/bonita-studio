@@ -35,9 +35,9 @@ public class BotDataPropertySection extends BotBase {
         return new BotTableWidget(bot.table());
     }
 
-    public BotEditDataWizardPage edit() {
+    public BotEditDataDialog edit() {
         bot.button(org.bonitasoft.studio.common.Messages.edit).click();
-        return new BotEditDataWizardPage(bot);
+        return new BotEditDataDialog(bot);
     }
 
     public BotDataPropertySection remove() {

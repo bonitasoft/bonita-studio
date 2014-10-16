@@ -70,7 +70,7 @@ public class CheckBoxExpressionViewer extends ExpressionViewer implements Expres
             checkBoxControl = new Button(mc, SWT.CHECK);
         }
         checkBoxControl
-        .setLayoutData(GridDataFactory.fillDefaults().grab(false, true).hint(SWT.DEFAULT, 30).indent(16, 0).align(SWT.BEGINNING, SWT.CENTER).create());
+                .setLayoutData(GridDataFactory.fillDefaults().grab(false, true).hint(SWT.DEFAULT, 30).indent(16, 0).align(SWT.BEGINNING, SWT.CENTER).create());
 
         if (widgetFactory != null) {
             control = widgetFactory.createComposite(mc, SWT.INHERIT_DEFAULT);
@@ -124,7 +124,7 @@ public class CheckBoxExpressionViewer extends ExpressionViewer implements Expres
                 falseExp.setContent(Boolean.FALSE.toString());
                 falseExp.setReturnType(Boolean.class.getName());
                 falseExp.setType(ExpressionConstants.CONSTANT_TYPE);
-                updateSelection(falseExp);
+                updateSelection(null, falseExp);
                 bindExpression();
             }
         }

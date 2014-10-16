@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -23,12 +21,11 @@ import org.eclipse.jface.viewers.LabelProvider;
 
 /**
  * @author Romain Bioteau
- * 
  */
 public class OperatorLabelProvider extends LabelProvider {
 
     @Override
-    public String getText(Object element) {
+    public String getText(final Object element) {
         if (element instanceof String) {
             if (ExpressionConstants.ASSIGNMENT_OPERATOR.equals(element)) {
                 return Messages.assignment;
@@ -38,13 +35,15 @@ public class OperatorLabelProvider extends LabelProvider {
                 return Messages.xpathUpdateOperator;
             } else if (ExpressionConstants.SET_DOCUMENT_OPERATOR.equals(element)) {
                 return Messages.setDocumentOperator;
+            } else if (ExpressionConstants.SET_LIST_DOCUMENT_OPERATOR.equals(element)) {
+                return Messages.setDocumentListOperator;
             } else if (ExpressionConstants.CREATE_BUSINESS_DATA_OPERATOR.equals(element)) {
                 return Messages.createBusinessData;
             } else if (ExpressionConstants.DELETION_OPERATOR.equals(element)) {
                 return Messages.deleteOperatorLabel;
             }
         } else if (element instanceof Operator) {
-            Operator op = (Operator) element;
+            final Operator op = (Operator) element;
             final String operatorType = op.getType();
             if (ExpressionConstants.ASSIGNMENT_OPERATOR.equals(operatorType)) {
                 return Messages.assignment;
@@ -64,6 +63,8 @@ public class OperatorLabelProvider extends LabelProvider {
                 return xpathExpression;
             } else if (ExpressionConstants.SET_DOCUMENT_OPERATOR.equals(operatorType)) {
                 return Messages.setDocumentOperator;
+            } else if (ExpressionConstants.SET_LIST_DOCUMENT_OPERATOR.equals(operatorType)) {
+                return Messages.setDocumentListOperator;
             } else if (ExpressionConstants.CREATE_BUSINESS_DATA_OPERATOR.equals(operatorType)) {
                 return Messages.createBusinessData;
             }

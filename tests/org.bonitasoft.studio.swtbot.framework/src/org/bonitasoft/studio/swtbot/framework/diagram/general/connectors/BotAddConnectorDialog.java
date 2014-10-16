@@ -10,7 +10,7 @@ package org.bonitasoft.studio.swtbot.framework.diagram.general.connectors;
 
 import org.bonitasoft.studio.connectors.i18n.Messages;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
-import org.bonitasoft.studio.swtbot.framework.AbstractBotWizardPage;
+import org.bonitasoft.studio.swtbot.framework.BotWizardDialog;
 import org.bonitasoft.studio.swtbot.framework.expression.BotExpressionEditorDialog;
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -25,12 +25,10 @@ import org.eclipse.swtbot.swt.finder.widgets.SWTBotText;
  *
  * @author Joachim Segala
  */
-public class BotAddConnectorDialog extends AbstractBotWizardPage {
+public class BotAddConnectorDialog extends BotWizardDialog {
 
     public BotAddConnectorDialog(final SWTGefBot bot) {
-        super(bot);
-        bot.waitUntil(Conditions.shellIsActive(Messages.connectors));
-        bot.shell(Messages.connectors);
+        super(bot, Messages.connectors);
     }
 
     //public void selectConnectorCategory(final String pCategory) {
@@ -165,7 +163,6 @@ public class BotAddConnectorDialog extends AbstractBotWizardPage {
         bot.button(IDialogConstants.NEXT_LABEL).click();
         return this;
     }
-
 
     /**
      * Switch editor for the query

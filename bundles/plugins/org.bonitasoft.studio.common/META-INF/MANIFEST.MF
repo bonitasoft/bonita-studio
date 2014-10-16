@@ -57,18 +57,27 @@ Import-Package: org.bonitasoft.engine.bpm.bar,
  org.bonitasoft.engine.session,
  org.bonitasoft.engine.util,
  org.bonitasoft.forms.client.model
-Export-Package: org.bonitasoft.studio.common,org.bonitasoft.studio.com
- mon.api,org.bonitasoft.studio.common.databinding,org.bonitasoft.studi
- o.common.databinding.converter,org.bonitasoft.studio.common.dialog,or
- g.bonitasoft.studio.common.editingdomain,org.bonitasoft.studio.common
- .editor,org.bonitasoft.studio.common.emf.tools,org.bonitasoft.studio.
- common.exporter,org.bonitasoft.studio.common.extension,org.bonitasoft
- .studio.common.gmfgraph,org.bonitasoft.studio.common.jface,org.bonita
- soft.studio.common.jface.databinding,org.bonitasoft.studio.common.jfa
- ce.databinding.observables,org.bonitasoft.studio.common.jface.databin
- ding.validator,org.bonitasoft.studio.common.log,org.bonitasoft.studio
- .common.perspectives,org.bonitasoft.studio.common.platform.tools,org.
- bonitasoft.studio.common.properties,org.bonitasoft.studio.common.view
- s,org.bonitasoft.studio.common.widgets
+Export-Package: org.bonitasoft.studio.common,
+ org.bonitasoft.studio.common.api,
+ org.bonitasoft.studio.common.databinding,
+ org.bonitasoft.studio.common.databinding.converter,
+ org.bonitasoft.studio.common.dialog,
+ org.bonitasoft.studio.common.editingdomain,
+ org.bonitasoft.studio.common.editor,
+ org.bonitasoft.studio.common.emf.tools,
+ org.bonitasoft.studio.common.exporter,
+ org.bonitasoft.studio.common.extension,
+ org.bonitasoft.studio.common.gmfgraph,
+ org.bonitasoft.studio.common.jface,
+ org.bonitasoft.studio.common.jface.databinding,
+ org.bonitasoft.studio.common.jface.databinding.observables,
+ org.bonitasoft.studio.common.jface.databinding.validator,
+ org.bonitasoft.studio.common.jface.dialog,
+ org.bonitasoft.studio.common.log,
+ org.bonitasoft.studio.common.perspectives,
+ org.bonitasoft.studio.common.platform.tools,
+ org.bonitasoft.studio.common.properties,
+ org.bonitasoft.studio.common.views,
+ org.bonitasoft.studio.common.widgets
 Bundle-ClassPath: .,
  lib/imgscalr-lib-3.2.jar

@@ -6,6 +6,7 @@ Bundle-Version: 6.4.0.qualifier
 Bundle-Vendor: BonitaSoft S.A.
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.bonitasoft.studio.model.expression.assertions,
- org.bonitasoft.studio.model.process.assertions
+ org.bonitasoft.studio.model.process.assertions,
+ org.bonitasoft.studio.test.exporter.form
 Require-Bundle: assertj-core,
  org.bonitasoft.studio.model
