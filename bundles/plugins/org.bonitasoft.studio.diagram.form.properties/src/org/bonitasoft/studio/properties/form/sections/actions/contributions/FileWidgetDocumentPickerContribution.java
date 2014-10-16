@@ -133,7 +133,7 @@ public class FileWidgetDocumentPickerContribution implements IExtensibleGridProp
 
             public void handleValueChange(final ValueChangeEvent event) {
                 final FileWidgetInputType inputType = (FileWidgetInputType) ((IObservableValue) event.getSource()).getValue();
-                if (FileWidgetInputType.RESOURCE.equals(inputType)) {
+                if (FileWidgetInputType.RESOURCE.equals(inputType) && url.getSelection()) {
                     browse.setSelection(true);
                     url.setSelection(false);
                     both.setSelection(false);
