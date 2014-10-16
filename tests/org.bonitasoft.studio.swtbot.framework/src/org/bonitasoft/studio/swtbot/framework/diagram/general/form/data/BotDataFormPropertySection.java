@@ -10,7 +10,6 @@ package org.bonitasoft.studio.swtbot.framework.diagram.general.form.data;
 
 
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
-import org.bonitasoft.studio.form.properties.i18n.Messages;
 import org.bonitasoft.studio.swtbot.framework.BotBase;
 import org.bonitasoft.studio.swtbot.framework.composite.BotDocInitialValueComposite;
 import org.bonitasoft.studio.swtbot.framework.composite.BotOperationComposite;
@@ -60,41 +59,7 @@ public class BotDataFormPropertySection extends BotBase {
     }
 
 
-    public boolean isDocumentPickerEnabled() {
-        return bot.radio(Messages.both).isEnabled();
-    }
 
-    public void checkDownloadOnly() {
-        bot.checkBox(Messages.downloadOnly).select();;
-    }
-
-    public void uncheckDownloadOnly() {
-        bot.checkBox(Messages.downloadOnly).deselect();
-    }
-
-    public void selectDocumentPickerBoth() {
-        bot.radio(Messages.both).click();
-    }
-
-    public boolean isDocumentPickerBothSelected() {
-        return bot.radio(Messages.both).isSelected();
-    }
-
-    public void selectDocumentPickerURL() {
-        bot.radio(Messages.useUrl).click();
-    }
-
-    public boolean isDocumentPickerUrlSelected() {
-        return bot.radio(Messages.useUrl).isSelected();
-    }
-
-    public void selectDocumentPickerBrowse() {
-        bot.radio(Messages.BrowseRadio).click();
-    }
-
-    public boolean isDocumentPickerBrowseSelected() {
-        return bot.radio(Messages.BrowseRadio).isSelected();
-    }
     /**
      * Select output variable.
      *
