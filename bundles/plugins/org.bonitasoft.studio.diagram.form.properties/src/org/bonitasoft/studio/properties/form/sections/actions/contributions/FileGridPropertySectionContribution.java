@@ -408,9 +408,23 @@ public class FileGridPropertySectionContribution implements IExtensibleGridPrope
                 }
 
             }
+
         });
+        final IObservableValue widgetTypeValue = EMFObservables.observeValue(element, FormPackage.Literals.FILE_WIDGET__INPUT_TYPE);
+        widgetTypeValue.addValueChangeListener(new IValueChangeListener() {
 
+            public void handleValueChange(final ValueChangeEvent event) {
+                final FileWidgetInputType inputType = (FileWidgetInputType) ((IObservableValue) event.getSource()).getValue();
+                if (inputType.equals(FileWidgetInputType.RESOURCE)) {
+                    useResourceButton.setSelection(true);
+                    useDocumentButton.setSelection(false);
+                } else {
+                    useResourceButton.setSelection(false);
+                    useDocumentButton.setSelection(true);
+                }
 
+            }
+        });
         bindInputExpressionViewer();
         bindResourceText();
     }

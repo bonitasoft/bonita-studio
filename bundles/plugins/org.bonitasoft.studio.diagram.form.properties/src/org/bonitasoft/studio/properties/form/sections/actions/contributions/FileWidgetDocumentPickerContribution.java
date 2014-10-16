@@ -140,7 +140,7 @@ public class FileWidgetDocumentPickerContribution implements IExtensibleGridProp
                     final Command c = SetCommand.create(editingDomain, fileWidget, FormPackage.Literals.FILE_WIDGET__DOWNLOAD_TYPE,
                             FileWidgetDownloadType.BROWSE);
                     if (c.canExecute()) {
-                        c.execute();
+                        editingDomain.getCommandStack().execute(c);
                     }
 
                 }
@@ -175,7 +175,7 @@ public class FileWidgetDocumentPickerContribution implements IExtensibleGridProp
         dataBindingContext.bindValue(SWTObservables.observeEnabled(url),
                 EMFObservables.observeValue(fileWidget, FormPackage.Literals.FILE_WIDGET__DOWNLOAD_ONLY), strategyForUrl, strategyForUrl);
         dataBindingContext.bindValue(SWTObservables.observeEnabled(url), EMFObservables.observeValue(fileWidget, FormPackage.Literals.FILE_WIDGET__INPUT_TYPE),
-                null, createEnabledUrlWhenInputIsResourceStrategy());
+                null, createEnabledUrlWhenInputIsResourceStrategyTargetToModel());
         dataBindingContext.bindValue(SWTObservables.observeEnabled(browse),
                 EMFObservables.observeValue(fileWidget, FormPackage.Literals.FILE_WIDGET__DOWNLOAD_ONLY), strategy, strategy);
         dataBindingContext.bindValue(SWTObservables.observeEnabled(both),
@@ -184,7 +184,9 @@ public class FileWidgetDocumentPickerContribution implements IExtensibleGridProp
 
 
 
-    private UpdateValueStrategy createEnabledUrlWhenInputIsResourceStrategy(){
+
+
+    private UpdateValueStrategy createEnabledUrlWhenInputIsResourceStrategyTargetToModel() {
         final UpdateValueStrategy strategy = new UpdateValueStrategy();
         strategy.setConverter(new IConverter() {
 
