@@ -159,8 +159,9 @@ public class ContractConstraintsTableViewer extends TableViewer {
 
     protected void createConstraintExpressionColumn() {
         final TableViewerColumn nameColumnViewer = createColumnViewer(Messages.expression + " *", SWT.FILL);
-        nameColumnViewer.setLabelProvider(new ConstraintExpressionCellLabelProvider(propertySourceProvider));
-        nameColumnViewer.setEditingSupport(new ConstraintExpressionPropertyEditingSupport(this, propertySourceProvider));
+        nameColumnViewer.setLabelProvider(new DecoratingStyledCellLabelProvider(new ConstraintExpressionCellLabelProvider(propertySourceProvider),
+                new ConstraintExpressionValidationLabelDecorator(), new DecorationContext()));
+        nameColumnViewer.setEditingSupport(new ConstraintExpressionPropertyEditingSupport(this, propertySourceProvider, contractValidator));
     }
 
     protected void createConstraintErrorMessageColumn() {

@@ -62,5 +62,10 @@ public class Messages extends NLS {
     public static String noInputReferencedInConstraintExpression;
     public static String unknownInputReferencedInConstraintExpression;
     public static String duplicatedConstraintNames;
+    public static String constraintEditorDescription;
+    public static String addContentToConstraint;
+    public static String editContentToConstraint;
+    public static String emptyExpressionContent;
+    public static String noContractInputReferencedInExpression;
 
 }

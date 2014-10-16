@@ -43,12 +43,17 @@ public class ContractInputLabelProvider extends StyledCellLabelProvider implemen
     public void update(final ViewerCell cell) {
         super.update(cell);
         final ContractInput element = (ContractInput) cell.getElement();
-        final StyledString styledString = new StyledString(element.getName());
-        styledString.append(" -- ");
-        styledString.append(new StyledString(element.getType().name(), StyledString.DECORATIONS_STYLER));
+        final StyledString styledString = getStyledString(element);
         cell.setText(styledString.toString());
         cell.setStyleRanges(styledString.getStyleRanges());
         cell.setImage(getImage(element));
+    }
+
+    public StyledString getStyledString(final ContractInput element) {
+        final StyledString styledString = new StyledString(element.getName());
+        styledString.append(" -- ");
+        styledString.append(new StyledString(element.getType().name(), StyledString.DECORATIONS_STYLER));
+        return styledString;
     }
 
     @Override

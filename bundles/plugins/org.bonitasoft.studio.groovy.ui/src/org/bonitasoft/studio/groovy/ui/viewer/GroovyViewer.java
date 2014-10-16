@@ -157,12 +157,10 @@ public class GroovyViewer {
 
         editor = new BonitaGroovyEditor(GroovyPlugin.getDefault().getPreferenceStore());
         try {
-
             editor.getDocumentProvider().connect(input);
             editor.init(new DummyEditorSite(mainComposite.getShell(), editor), this.input);
             editor.createPartControl(mainComposite);
             editor.createJavaSourceViewerConfiguration();
-
         } catch (final Exception e1) {
             BonitaStudioLog.error(e1);
         }

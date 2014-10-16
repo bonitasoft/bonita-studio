@@ -17,6 +17,8 @@
 package org.bonitasoft.studio.contract.ui.property.constraint;
 
 import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider.IStyledLabelProvider;
+import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.views.properties.IPropertySourceProvider;
 import org.eclipse.ui.views.properties.PropertyColumnLabelProvider;
@@ -26,7 +28,7 @@ import org.eclipse.ui.views.properties.PropertyColumnLabelProvider;
  * @author Romain Bioteau
  *
  */
-public class ConstraintExpressionCellLabelProvider extends PropertyColumnLabelProvider {
+public class ConstraintExpressionCellLabelProvider extends PropertyColumnLabelProvider implements IStyledLabelProvider {
 
     public ConstraintExpressionCellLabelProvider(final IPropertySourceProvider propertySourceProvider) {
         super(propertySourceProvider, ProcessPackage.Literals.CONTRACT_CONSTRAINT__EXPRESSION.getName());
@@ -37,5 +39,9 @@ public class ConstraintExpressionCellLabelProvider extends PropertyColumnLabelPr
         return null;
     }
 
+    @Override
+    public StyledString getStyledText(final Object element) {
+        return new StyledString(getText(element));
+    }
 
 }

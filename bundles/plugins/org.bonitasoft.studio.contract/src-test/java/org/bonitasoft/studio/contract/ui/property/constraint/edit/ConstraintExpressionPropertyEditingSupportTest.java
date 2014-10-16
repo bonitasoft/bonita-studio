@@ -20,6 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 
 import org.bonitasoft.studio.contract.AbstractSWTTestCase;
+import org.bonitasoft.studio.contract.core.validation.ContractDefinitionValidator;
 import org.bonitasoft.studio.contract.ui.property.FieldDecoratorProvider;
 import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractConstraint;
@@ -63,6 +64,9 @@ public class ConstraintExpressionPropertyEditingSupportTest extends AbstractSWTT
 
     private Composite container;
 
+    @Mock
+    private ContractDefinitionValidator validator;
+
     /**
      * @throws java.lang.Exception
      */
@@ -70,7 +74,7 @@ public class ConstraintExpressionPropertyEditingSupportTest extends AbstractSWTT
     public void setUp() throws Exception {
         container = createDisplayAndRealm();
         propertySourceProvider = new AdapterFactoryContentProvider(new ProcessItemProviderAdapterFactory());
-        propertyEditingSupport = new ConstraintExpressionPropertyEditingSupport(viewer, propertySourceProvider);
+        propertyEditingSupport = new ConstraintExpressionPropertyEditingSupport(viewer, propertySourceProvider, validator);
     }
 
     /**
@@ -88,6 +92,7 @@ public class ConstraintExpressionPropertyEditingSupportTest extends AbstractSWTT
         contract.getConstraints().add(constraint);
         propertyEditingSupport.setValue(constraint, "name.length > 50");
         assertThat(constraint.getExpression()).isEqualTo("name.length > 50");
+        verify(validator).validate(contract);
         verify(viewer).update(constraint, null);
     }
 

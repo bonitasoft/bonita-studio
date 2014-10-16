@@ -26,11 +26,13 @@ import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractConstraint;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.eclipse.core.databinding.validation.ValidationStatus;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.swt.SWT;
 
 
 /**
@@ -76,6 +78,21 @@ public class ContractConstraintInputsValidationRule extends MessageValidationRul
             }
         }
         return result;
+    }
+
+    @Override
+    public String getMessage(final IStatus status) {
+        Assert.isLegal(status != null);
+        if (status.isMultiStatus() && status.getChildren().length > 0) {
+            StringBuilder errorMessage = new StringBuilder();
+            for (final IStatus child : status.getChildren()) {
+                errorMessage.append(child.getMessage());
+                errorMessage.append(SWT.CR);
+            }
+            errorMessage = errorMessage.delete(errorMessage.length() - 1, errorMessage.length());
+            return errorMessage.toString();
+        }
+        return status.getMessage();
     }
 
     @Override

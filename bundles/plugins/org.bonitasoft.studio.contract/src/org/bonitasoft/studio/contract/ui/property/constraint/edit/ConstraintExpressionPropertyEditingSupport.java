@@ -16,14 +16,17 @@
  */
 package org.bonitasoft.studio.contract.ui.property.constraint.edit;
 
+import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.contract.core.validation.ContractDefinitionValidator;
+import org.bonitasoft.studio.contract.ui.property.constraint.edit.editor.ContractConstraintExpressionDialogCellEditor;
+import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractConstraint;
 import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnViewer;
-import org.eclipse.jface.viewers.DialogCellEditor;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.views.properties.PropertyEditingSupport;
 
 /**
@@ -33,26 +36,26 @@ import org.eclipse.ui.views.properties.PropertyEditingSupport;
 public class ConstraintExpressionPropertyEditingSupport extends PropertyEditingSupport {
 
 
+    private final ContractDefinitionValidator contractDefinitionValidator;
+
     public ConstraintExpressionPropertyEditingSupport(final ColumnViewer viewer,
-            final AdapterFactoryContentProvider propertySourceProvider) {
+            final AdapterFactoryContentProvider propertySourceProvider,
+            final ContractDefinitionValidator contractDefinitionValidator) {
         super(viewer, propertySourceProvider, ProcessPackage.Literals.CONTRACT_CONSTRAINT__EXPRESSION.getName());
+        this.contractDefinitionValidator = contractDefinitionValidator;
     }
 
     @Override
     protected void setValue(final Object element, final Object value) {
         super.setValue(element, value);
+        final Contract contract = ModelHelper.getFirstContainerOfType((EObject) element, Contract.class);
+        contractDefinitionValidator.validate(contract);
         getViewer().update(element, null);
     }
 
     @Override
     protected CellEditor getCellEditor(final Object object) {
-        return new DialogCellEditor((Composite) getViewer().getControl()) {
-
-            @Override
-            protected Object openDialogBox(final Control parent) {
-                return null;
-            }
-        };
+        return new ContractConstraintExpressionDialogCellEditor((Composite) getViewer().getControl(), (ContractConstraint) object, propertySourceProvider);
     }
 
     @Override
