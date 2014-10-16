@@ -34,7 +34,7 @@ import org.bonitasoft.studio.tests.data.DataWizardIT;
 import org.bonitasoft.studio.tests.dialog.OpenNameAndVersionForDiagramDialogTest;
 import org.bonitasoft.studio.tests.dialog.TestDuplicate;
 import org.bonitasoft.studio.tests.draw2d.TestLifeCycleWidget;
-import org.bonitasoft.studio.tests.form.DeleteWidgetWithXontextMenuIT;
+import org.bonitasoft.studio.tests.form.DeleteWidgetWithContextMenuIT;
 import org.bonitasoft.studio.tests.iteration.MultiInstantiationIT;
 import org.bonitasoft.studio.tests.timer.TestTimer;
 import org.bonitasoft.studio.util.test.BonitaTestSuite;
@@ -71,7 +71,7 @@ import org.junit.runners.Suite;
 @Suite.SuiteClasses({
     TestBug1640.class,
     NewRunTest.class,
-    DeleteWidgetWithXontextMenuIT.class,
+        DeleteWidgetWithContextMenuIT.class,
     DataWizardIT.class,
     TestConvertToMessage.class,
     ExtractAsSubprocessTest.class,
