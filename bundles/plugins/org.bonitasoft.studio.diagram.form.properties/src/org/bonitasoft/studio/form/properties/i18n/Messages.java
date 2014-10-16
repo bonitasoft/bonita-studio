@@ -257,6 +257,9 @@ public class Messages extends NLS {
 
     public static String BrowseRadio;
 
+    public static String resourceToolTip;
+
+    public static String documentToolTip;
 
     static {
         // initialize resource bundle

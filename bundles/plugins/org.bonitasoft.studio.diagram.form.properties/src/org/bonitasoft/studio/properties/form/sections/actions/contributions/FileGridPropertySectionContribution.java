@@ -17,6 +17,7 @@
  */
 package org.bonitasoft.studio.properties.form.sections.actions.contributions;
 
+
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection;
@@ -60,6 +61,7 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -119,8 +121,8 @@ public class FileGridPropertySectionContribution implements IExtensibleGridPrope
         widgetFactory.createLabel(mainComposite, "");
 
         final Composite radioComposite = widgetFactory.createComposite(mainComposite) ;
-        radioComposite.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL,SWT.CENTER).grab(true, false).span(3, 1).create());
-        radioComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(col).margins(0, 0).create()) ;
+        radioComposite.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(true, false).span(3, 1).create());
+        radioComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(col).margins(0, 0).create());
 
         final FileWidgetInputType initialInputType = createUseDocumentButton(
                 widgetFactory, radioComposite);
@@ -172,7 +174,11 @@ public class FileGridPropertySectionContribution implements IExtensibleGridPrope
 
 
     private void createUseResourceButton(final Composite radioComposite) {
-        useResourceButton = widgetFactory.createButton(radioComposite, Messages.useResource, SWT.RADIO) ;
+        final Composite resourceComposite = widgetFactory.createComposite(radioComposite);
+        resourceComposite.setLayout(GridLayoutFactory.fillDefaults().create());
+        resourceComposite.setLayoutData(GridDataFactory.fillDefaults().create());
+        useResourceButton = widgetFactory.createButton(resourceComposite, Messages.useResource, SWT.RADIO);
+
         useResourceButton.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(final org.eclipse.swt.events.SelectionEvent e) {
@@ -196,6 +202,11 @@ public class FileGridPropertySectionContribution implements IExtensibleGridPrope
                 }
             }
         });
+        final ControlDecoration deco = new ControlDecoration(useResourceButton, SWT.RIGHT);
+        deco.setDescriptionText(Messages.resourceToolTip);
+        deco.setImage(Pics.getImage(PicsConstants.hint));
+        deco.setMarginWidth(0);
+        deco.setShowOnlyOnFocus(false);
     }
 
     private FileWidgetInputType createUseDocumentButton(
@@ -203,7 +214,16 @@ public class FileGridPropertySectionContribution implements IExtensibleGridPrope
             final Composite radioComposite) {
         FileWidgetInputType initialInputType = element.getInputType();
         if(!ModelHelper.isAnEntryPageFlowOnAPool(ModelHelper.getParentForm(element))){
-            useDocumentButton = widgetFactory.createButton(radioComposite, Messages.useDocument, SWT.RADIO) ;
+            final Composite documentComposite = widgetFactory.createComposite(radioComposite);
+            final GridLayout layoyut = GridLayoutFactory.fillDefaults().create();
+
+
+            final GridLayout layout = GridLayoutFactory.fillDefaults().create();
+            layout.marginRight = 20;
+            documentComposite.setLayout(layout);
+            documentComposite.setLayoutData(GridDataFactory.fillDefaults().create());
+            useDocumentButton = widgetFactory.createButton(documentComposite, Messages.useDocument, SWT.RADIO);
+            useDocumentButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
             useDocumentButton.addSelectionListener(new SelectionAdapter() {
 
                 @Override
@@ -230,9 +250,15 @@ public class FileGridPropertySectionContribution implements IExtensibleGridPrope
                     }
                 }
             });
+            final ControlDecoration decoDoc = new ControlDecoration(useDocumentButton, SWT.RIGHT);
+            decoDoc.setDescriptionText(Messages.documentToolTip);
+            decoDoc.setImage(Pics.getImage(PicsConstants.hint));
+            decoDoc.setMarginWidth(0);
+            decoDoc.setShowOnlyOnFocus(false);
         }else{
             initialInputType = FileWidgetInputType.URL;
         }
+
         return initialInputType;
     }
 
