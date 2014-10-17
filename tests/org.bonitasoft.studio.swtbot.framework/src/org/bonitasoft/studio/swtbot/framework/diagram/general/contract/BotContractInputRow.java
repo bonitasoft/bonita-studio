@@ -22,6 +22,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
+import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotCCombo;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
@@ -116,7 +117,20 @@ public class BotContractInputRow extends BotBase {
     }
 
     public BotContractInputRow getChildRow(final int childIndex) {
-        final SWTBotTreeItem childItem = swtBotTreeItem.expand().getItems()[childIndex];
+        bot.waitUntil(new DefaultCondition() {
+
+            @Override
+            public boolean test() throws Exception {
+                return swtBotTreeItem.expand().getItems().length > childIndex;
+            }
+
+            @Override
+            public String getFailureMessage() {
+                return "Child at index " + childIndex + " doesn't exist";
+            }
+        });
+        final SWTBotTreeItem[] items = swtBotTreeItem.expand().getItems();
+        final SWTBotTreeItem childItem = items[childIndex];
         return new BotContractInputRow(bot, childItem);
     }
 
