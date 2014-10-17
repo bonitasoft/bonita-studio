@@ -56,4 +56,15 @@ public abstract class AbstractBotDataMappingPanel extends BotBase {
         return this;
     }
 
+    /**
+     * Return content of the Widget column of a given element
+     * 
+     * @param dataName
+     * @return
+     */
+    public String getDataWidget(final String dataName) {
+        return bot.tree().getTreeItem(dataName).cell(1);
+
+    }
+
 }

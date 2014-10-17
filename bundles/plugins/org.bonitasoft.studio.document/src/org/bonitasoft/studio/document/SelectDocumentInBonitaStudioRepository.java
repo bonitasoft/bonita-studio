@@ -12,14 +12,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.properties.sections.document;
+package org.bonitasoft.studio.document;
 
 
 import static org.bonitasoft.studio.common.Messages.bonitaStudioModuleName;
 
 import org.bonitasoft.studio.data.attachment.repository.DocumentFileStore;
 import org.bonitasoft.studio.data.attachment.repository.DocumentRepositoryStore;
-import org.bonitasoft.studio.properties.i18n.Messages;
+import org.bonitasoft.studio.document.i18n.Messages;
 import org.eclipse.jface.window.IShellProvider;
 import org.eclipse.swt.widgets.Shell;
 /**

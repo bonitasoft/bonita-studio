@@ -27,6 +27,7 @@ import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.parameter.Parameter;
 import org.bonitasoft.studio.model.process.AbstractProcess;
+import org.bonitasoft.studio.model.process.Document;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.SearchIndex;
 import org.eclipse.emf.ecore.EObject;
@@ -82,7 +83,7 @@ public class OutlineDialog extends MessageDialog{
     }
 
     /** Remove objects that are not referenced in expressions in the parent process in the <i>elementToDisplay</i> list field.
-     * 
+     *
      */
     protected void updateListOfElementToDisplay() {
         final List<Object> filteredElements = new ArrayList<Object>();
@@ -189,9 +190,14 @@ public class OutlineDialog extends MessageDialog{
                 return Messages.widgetListViewerTitle;
             }
 
+            if (element instanceof Document) {
+                return Messages.documentListViewerTitle;
+            }
+
             if(element instanceof Element){
                 return Messages.dataListViewerTitle;
             }
+
 
         }
         return "";

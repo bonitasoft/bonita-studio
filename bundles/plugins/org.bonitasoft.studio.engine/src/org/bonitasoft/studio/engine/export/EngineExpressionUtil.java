@@ -75,6 +75,7 @@ public class EngineExpressionUtil {
     public static org.bonitasoft.engine.operation.Operation createOperation(final Operation operation) {
         return createOperation(operation, createLeftOperand(operation.getLeftOperand()));
     }
+
     public static org.bonitasoft.engine.operation.Operation createOperation(final Operation operation, final LeftOperand leftOperand) {
         final OperationBuilder builder = new OperationBuilder();
         builder.createNewInstance();
@@ -93,30 +94,38 @@ public class EngineExpressionUtil {
         final String type = operation.getOperator().getType();
         return getEngineOperator(type);
     }
+
+    /**
+     * @param type in the Studio
+     * @return Engine OperatorType
+     */
     public static OperatorType getEngineOperator(final String type) {
         //it's the left operand that tell if it's a document to set
-        if(OperatorType.DOCUMENT_CREATE_UPDATE.name().equals(type)) {
+        if (OperatorType.DOCUMENT_CREATE_UPDATE.name().equals(type)) {
+            return OperatorType.ASSIGNMENT;
+        }
+        if (ExpressionConstants.SET_LIST_DOCUMENT_OPERATOR.equals(type)) {
+            return OperatorType.ASSIGNMENT;//TODO: [BS-9610] remove it if specific operation is provided by engine
+        }
+        //it's the left operand that tell if it's a string index to set
+        if (OperatorType.STRING_INDEX.name().equals(type)) {
             return OperatorType.ASSIGNMENT;
         }
         //it's the left operand that tell if it's a string index to set
-        if(OperatorType.STRING_INDEX.name().equals(type)) {
+        if (ExpressionConstants.CREATE_BUSINESS_DATA_OPERATOR.equals(type)) {
             return OperatorType.ASSIGNMENT;
         }
-        //it's the left operand that tell if it's a string index to set
-        if(ExpressionConstants.CREATE_BUSINESS_DATA_OPERATOR.equals(type)) {
-            return OperatorType.ASSIGNMENT;
-        }
-        if(ExpressionConstants.BUSINESS_DATA_JAVA_SETTER_OPERATOR.equals(type)) {
+        if (ExpressionConstants.BUSINESS_DATA_JAVA_SETTER_OPERATOR.equals(type)) {
             return OperatorType.JAVA_METHOD;
         }
-        if(ExpressionConstants.ATTACH_EXISTING_BUSINESS_DATA.equals(type)) {
+        if (ExpressionConstants.ATTACH_EXISTING_BUSINESS_DATA.equals(type)) {
             return OperatorType.ASSIGNMENT;
         }
         return OperatorType.valueOf(type);
     }
 
-    public static org.bonitasoft.engine.operation.Operation createOperation(final Operation operation,final boolean isExternal) {
-        return createOperation(operation, createLeftOperand(operation.getLeftOperand(),isExternal));
+    public static org.bonitasoft.engine.operation.Operation createOperation(final Operation operation, final boolean isExternal) {
+        return createOperation(operation, createLeftOperand(operation.getLeftOperand(), isExternal));
     }
 
     public static String getOperatorType(final Operation operation) {
@@ -176,8 +185,12 @@ public class EngineExpressionUtil {
                 } else if (element instanceof Widget) {
                     result.add(createWidgetExpression((Widget) element));
                 } else if (element instanceof Document) {
-                    result.add(createDocumentExpression((Document) element));
-                }else if (element instanceof GroupIterator) {
+                    if (((Document) element).isMultiple()) {
+                        result.add(createDocumentListExpression((Document) element));
+                    } else {
+                        result.add(createDocumentExpression((Document) element));
+                    }
+                } else if (element instanceof GroupIterator) {
                     result.add(createGroupIteratorExpression((GroupIterator) element));
                 }
             }
@@ -208,6 +221,16 @@ public class EngineExpressionUtil {
         final ExpressionBuilder exp = new ExpressionBuilder();
         try {
             return exp.createDocumentReferenceExpression(element.getName());
+        } catch (final InvalidExpressionException e) {
+            BonitaStudioLog.error(e);
+            return null;
+        }
+    }
+
+    private static Expression createDocumentListExpression(final Document element) {
+        final ExpressionBuilder exp = new ExpressionBuilder();
+        try {
+            return exp.createDocumentListExpression(element.getName());
         } catch (final InvalidExpressionException e) {
             BonitaStudioLog.error(e);
             return null;
@@ -251,54 +274,71 @@ public class EngineExpressionUtil {
         return createLeftOperand(leftOperand, false);
     }
 
-    public static LeftOperand createLeftOperand(final org.bonitasoft.studio.model.expression.Expression leftOperand,final boolean isExternal) {
+    public static LeftOperand createLeftOperand(final org.bonitasoft.studio.model.expression.Expression leftOperand, final boolean isExternal) {
         final LeftOperandBuilder builder = new LeftOperandBuilder();
         builder.createNewInstance();
         builder.setName(getVariableName(leftOperand));
-        builder.setType(getVariableType(leftOperand, isExternal));
+        builder.setType(getLeftOperandType(leftOperand, isExternal));
         return builder.done();
     }
 
     private static String getVariableName(
             final org.bonitasoft.studio.model.expression.Expression leftOperand) {
         final String leftOperandType = leftOperand.getType();
-        if(ExpressionConstants.SEARCH_INDEX_TYPE.equals(leftOperandType)) {
+        if (ExpressionConstants.SEARCH_INDEX_TYPE.equals(leftOperandType)) {
             final EObject eObject = leftOperand.getReferencedElements().get(0);
         }
         return leftOperand.getContent();
     }
 
-    public static String getVariableType(final org.bonitasoft.studio.model.expression.Expression leftOperand, final boolean external) {
-        if(external){
+    public static String getLeftOperandType(final org.bonitasoft.studio.model.expression.Expression leftOperand, final boolean external) {
+        if (external) {
             return ExpressionConstants.LEFT_OPERAND_EXTERNAL_DATA;
         }
         final String leftOperandType = leftOperand.getType();
-        if(ExpressionConstants.DOCUMENT_TYPE.equals(leftOperandType)|| ExpressionConstants.DOCUMENT_REF_TYPE.equals(leftOperandType) ) {
-            return ExpressionConstants.LEFT_OPERAND_DOCUMENT;
+        if (ExpressionConstants.DOCUMENT_TYPE.equals(leftOperandType) || ExpressionConstants.DOCUMENT_REF_TYPE.equals(leftOperandType)) {
+            return getLeftOperandDocumentType(leftOperand);
         }
-        if(ExpressionConstants.VARIABLE_TYPE.equals(leftOperandType) ) {
-            final EList<EObject> referencedElements = leftOperand.getReferencedElements();
-            if(referencedElements != null && ! referencedElements.isEmpty()) {
-                final EObject referencedElement = referencedElements.get(0);
-                if (referencedElement instanceof Data) {
-                    final Data data = (Data)referencedElement;
-                    if(data.isTransient()) {
-                        return ExpressionConstants.LEFT_OPERAND_TRANSIENT_DATA;
-                    }else if(data instanceof BusinessObjectData) {
-                        return ExpressionConstants.LEFT_OPERAND_BUSINESS_DATA;
-                    }else if(external || DatasourceConstants.PAGEFLOW_DATASOURCE.equals(data.getDatasourceId())) {
-                        return ExpressionConstants.LEFT_OPERAND_EXTERNAL_DATA;
-                    }
-                }
-            }
-            return ExpressionConstants.LEFT_OPERAND_DATA;
+        if (ExpressionConstants.VARIABLE_TYPE.equals(leftOperandType)) {
+            return getLeftOperandVariableType(leftOperand, external);
         }
-        if(ExpressionConstants.SEARCH_INDEX_TYPE.equals(leftOperandType) ) {
+        if (ExpressionConstants.SEARCH_INDEX_TYPE.equals(leftOperandType)) {
             return ExpressionConstants.LEFT_OPERAND_SEARCH_INDEX;
         }
         return leftOperand.getType();
     }
 
+    private static String getLeftOperandDocumentType(final org.bonitasoft.studio.model.expression.Expression leftOperand) {
+        if (!leftOperand.getReferencedElements().isEmpty()) {
+            final EObject referencedElement = leftOperand.getReferencedElements().get(0);
+            if (referencedElement instanceof Document) {
+                if (((Document) referencedElement).isMultiple()) {
+                    return ExpressionConstants.LEFT_OPERAND_DOCUMENT_LIST;
+                } else {
+                    return ExpressionConstants.LEFT_OPERAND_DOCUMENT;
+                }
+            }
+        }
+        return ExpressionConstants.LEFT_OPERAND_DOCUMENT;
+    }
+
+    private static String getLeftOperandVariableType(final org.bonitasoft.studio.model.expression.Expression leftOperand, final boolean external) {
+        final EList<EObject> referencedElements = leftOperand.getReferencedElements();
+        if (referencedElements != null && !referencedElements.isEmpty()) {
+            final EObject referencedElement = referencedElements.get(0);
+            if (referencedElement instanceof Data) {
+                final Data data = (Data) referencedElement;
+                if (data.isTransient()) {
+                    return ExpressionConstants.LEFT_OPERAND_TRANSIENT_DATA;
+                } else if (data instanceof BusinessObjectData) {
+                    return ExpressionConstants.LEFT_OPERAND_BUSINESS_DATA;
+                } else if (external || DatasourceConstants.PAGEFLOW_DATASOURCE.equals(data.getDatasourceId())) {
+                    return ExpressionConstants.LEFT_OPERAND_EXTERNAL_DATA;
+                }
+            }
+        }
+        return ExpressionConstants.LEFT_OPERAND_DATA;
+    }
 
     public static LeftOperand createLeftOperandIndex(final int i) {
         final LeftOperandBuilder builder = new LeftOperandBuilder();
@@ -330,7 +370,7 @@ public class EngineExpressionUtil {
             expressionNames.append("(");
             for (final org.bonitasoft.studio.model.expression.Expression simpleExpression : listExpression.getExpressions()) {
                 final Expression createExpression = createExpression(simpleExpression);
-                if (createExpression!=null){
+                if (createExpression != null) {
                     engineExpressionList.add(createExpression);
                     expressionNames.append(createExpression.getName());
                     expressionNames.append(",");
@@ -354,7 +394,7 @@ public class EngineExpressionUtil {
         final StringBuilder expressionNames = new StringBuilder("List of expression containing the following expressions: (");
         for (final org.bonitasoft.studio.model.expression.Expression simpleExpression : ((ListExpression) expression).getExpressions()) {
             final Expression createExpression = createExpression(simpleExpression);
-            if (createExpression!=null){
+            if (createExpression != null) {
                 expressions.add(createExpression);
                 expressionNames.append(createExpression.getName());
                 expressionNames.append(",");
@@ -378,7 +418,7 @@ public class EngineExpressionUtil {
         final ExpressionBuilder expressionBuilder = new ExpressionBuilder();
         if (name == null || name.isEmpty()) {
             name = expression.getName();
-            if(name == null || name.isEmpty()){
+            if (name == null || name.isEmpty()) {
                 name = "<empty-name>";
             }
         }
@@ -390,7 +430,7 @@ public class EngineExpressionUtil {
         String content = expression.getContent();
         if (content != null && !content.isEmpty()) {
             final String type = expression.getType();
-            if(ExpressionConstants.CONDITION_TYPE.equals(type)){
+            if (ExpressionConstants.CONDITION_TYPE.equals(type)) {
                 return createComparisonExpression(expressionBuilder, expression);
             }
             if (ExpressionConstants.PATTERN_TYPE.equals(type)) {
@@ -399,17 +439,23 @@ public class EngineExpressionUtil {
             if (ExpressionConstants.DOCUMENT_TYPE.equals(type)) {
                 return createDocumentExpression(expressionBuilder, expression);
             }
+            if (ExpressionConstants.DOCUMENT_LIST_TYPE.equals(type)) {
+                return createDocumentListExpression(expressionBuilder, expression);
+            }
+            if (ExpressionConstants.DOCUMENT_REF_TYPE.equals(type)) {
+                return createEngineExpressionForDocumentRef(expressionBuilder, expression);
+            }
             if (ExpressionConstants.XPATH_TYPE.equals(type)) {
                 return createXPATHExpression(expressionBuilder, expression);
             }
             if (ExpressionConstants.QUERY_TYPE.equals(type)) {
                 return createQueryExpression(expressionBuilder, expression);
-            }else{
+            } else {
                 content = content.replace("\r", "\n");
                 expressionBuilder.setContent(content);
                 final String engineExpressionType = toEngineExpressionType(expression);
                 expressionBuilder.setExpressionType(engineExpressionType);
-                if(ExpressionConstants.SCRIPT_TYPE.equals(engineExpressionType)){
+                if (ExpressionConstants.SCRIPT_TYPE.equals(engineExpressionType)) {
                     expressionBuilder.setInterpreter(expression.getInterpreter());
                 } else {
                     expressionBuilder.setInterpreter("");
@@ -428,13 +474,30 @@ public class EngineExpressionUtil {
         }
     }
 
-    private static Expression createQueryExpression(final ExpressionBuilder expressionBuilder, final org.bonitasoft.studio.model.expression.Expression simpleExpression) {
+    private static Expression createEngineExpressionForDocumentRef(final ExpressionBuilder expressionBuilder,
+            final org.bonitasoft.studio.model.expression.Expression expression) {
+        final String content = expression.getContent();
+        final EList<EObject> referencedElements = expression.getReferencedElements();
+        if (!referencedElements.isEmpty()) {
+            final EObject referencedElement = referencedElements.get(0);
+            if (referencedElement instanceof Document) {
+                if (((Document) referencedElement).isMultiple()) {
+                    return createDocumentListExpression(expressionBuilder, expression);
+                }
+            }
+        }
+        return createConstantExpression(content, content, String.class.getName());
+    }
+
+    private static Expression createQueryExpression(final ExpressionBuilder expressionBuilder,
+            final org.bonitasoft.studio.model.expression.Expression simpleExpression) {
         final List<Expression> dependencies = new ArrayList<Expression>();
         for (final EObject param : simpleExpression.getReferencedElements()) {
             if (param instanceof org.bonitasoft.studio.model.expression.Expression) {
                 final EList<EObject> referencedElements = ((org.bonitasoft.studio.model.expression.Expression) param).getReferencedElements();
                 if (!referencedElements.isEmpty()) {
-                    final Expression paramExpression = buildSimpleEngineExpressionWithName(((org.bonitasoft.studio.model.expression.Expression) param).getName(),
+                    final Expression paramExpression = buildSimpleEngineExpressionWithName(
+                            ((org.bonitasoft.studio.model.expression.Expression) param).getName(),
                             (org.bonitasoft.studio.model.expression.Expression) referencedElements.get(0));
                     if (paramExpression != null) {
                         dependencies.add(paramExpression);
@@ -467,7 +530,19 @@ public class EngineExpressionUtil {
         try {
             expression = exp.createDocumentReferenceExpression(simpleExpression.getName());
         } catch (final InvalidExpressionException e) {
-            BonitaStudioLog.error(e,EnginePlugin.PLUGIN_ID);
+            BonitaStudioLog.error(e, EnginePlugin.PLUGIN_ID);
+            throw new RuntimeException(e);
+        }
+        return expression;
+    }
+
+    private static Expression createDocumentListExpression(final ExpressionBuilder exp,
+            final org.bonitasoft.studio.model.expression.Expression simpleExpression) {
+        Expression expression = null;
+        try {
+            expression = exp.createDocumentListExpression(simpleExpression.getName());
+        } catch (final InvalidExpressionException e) {
+            BonitaStudioLog.error(e, EnginePlugin.PLUGIN_ID);
             throw new RuntimeException(e);
         }
         return expression;
@@ -479,7 +554,7 @@ public class EngineExpressionUtil {
         exp.setContent(simpleExpression.getContent());
         final String engineExpressionType = toEngineExpressionType(simpleExpression);
         exp.setExpressionType(engineExpressionType);
-        if(ExpressionConstants.SCRIPT_TYPE.equals(engineExpressionType)){
+        if (ExpressionConstants.SCRIPT_TYPE.equals(engineExpressionType)) {
             exp.setInterpreter(simpleExpression.getInterpreter());
         } else {
             exp.setInterpreter("");
@@ -487,8 +562,8 @@ public class EngineExpressionUtil {
         exp.setReturnType(simpleExpression.getReturnType());
         final List<Expression> dependenciesList = createDependenciesList(simpleExpression);
         final List<Expression> toRemove = new ArrayList<Expression>();
-        for(final Expression expression : dependenciesList){
-            if(!simpleExpression.getContent().contains("${"+expression.getName()+"}")){
+        for (final Expression expression : dependenciesList) {
+            if (!simpleExpression.getContent().contains("${" + expression.getName() + "}")) {
                 toRemove.add(expression);
             }
         }
@@ -505,25 +580,27 @@ public class EngineExpressionUtil {
     private static Expression createComparisonExpression(final ExpressionBuilder exp,
             final org.bonitasoft.studio.model.expression.Expression simpleExpression) {
         String name = simpleExpression.getName();
-        if(name == null || name.isEmpty()){
+        if (name == null || name.isEmpty()) {
             name = "<empty-name>";
         }
         try {
             final String content = simpleExpression.getContent();
-            final Operation_Compare compare = parseConditionExpression(content,simpleExpression.eContainer());
+            final Operation_Compare compare = parseConditionExpression(content, simpleExpression.eContainer());
             final EObject op = compare.getOp();
-            if(op instanceof Unary_Operation){
-                final org.bonitasoft.studio.condition.conditionModel.Expression conditionExp = ((Unary_Operation)op).getValue();
+            if (op instanceof Unary_Operation) {
+                final org.bonitasoft.studio.condition.conditionModel.Expression conditionExp = ((Unary_Operation) op).getValue();
                 final Expression expression = new ExpressionConditionModelSwitch(simpleExpression).doSwitch(conditionExp);
-                if(op instanceof Operation_NotUnary){
+                if (op instanceof Operation_NotUnary) {
                     return exp.createLogicalComplementExpression(name, expression);
-                }else{
+                } else {
                     return expression;
                 }
-            }else if(op instanceof org.bonitasoft.studio.condition.conditionModel.Operation){
-                final org.bonitasoft.studio.condition.conditionModel.Expression rightExp = ((org.bonitasoft.studio.condition.conditionModel.Operation)op).getRight();
-                final org.bonitasoft.studio.condition.conditionModel.Expression leftExp = ((org.bonitasoft.studio.condition.conditionModel.Operation)op).getLeft();
-                final String operator = new ConditionModelSwitch<String>(){
+            } else if (op instanceof org.bonitasoft.studio.condition.conditionModel.Operation) {
+                final org.bonitasoft.studio.condition.conditionModel.Expression rightExp = ((org.bonitasoft.studio.condition.conditionModel.Operation) op)
+                        .getRight();
+                final org.bonitasoft.studio.condition.conditionModel.Expression leftExp = ((org.bonitasoft.studio.condition.conditionModel.Operation) op)
+                        .getLeft();
+                final String operator = new ConditionModelSwitch<String>() {
 
                     @Override
                     public String caseOperation_Equals(final org.bonitasoft.studio.condition.conditionModel.Operation_Equals object) {
@@ -557,12 +634,12 @@ public class EngineExpressionUtil {
                 }.doSwitch(op);
 
                 final Expression rightExpression = new ExpressionConditionModelSwitch(simpleExpression).doSwitch(rightExp);
-                if(rightExpression == null){
-                    throw new InvalidExpressionException("Condition expression "+name+ " failed to export right operand: "+rightExp.toString());
+                if (rightExpression == null) {
+                    throw new InvalidExpressionException("Condition expression " + name + " failed to export right operand: " + rightExp.toString());
                 }
                 final Expression leftExpression = new ExpressionConditionModelSwitch(simpleExpression).doSwitch(leftExp);
-                if(leftExpression == null){
-                    throw new InvalidExpressionException("Condition expression "+name+ " failed to export left operand: "+leftExp.toString());
+                if (leftExpression == null) {
+                    throw new InvalidExpressionException("Condition expression " + name + " failed to export left operand: " + leftExp.toString());
                 }
                 return exp.createComparisonExpression(name, leftExpression, operator, rightExpression);
             }
@@ -574,7 +651,7 @@ public class EngineExpressionUtil {
         return null;
     }
 
-    public static Operation_Compare parseConditionExpression(final String content,final EObject context) {
+    public static Operation_Compare parseConditionExpression(final String content, final EObject context) {
         final Injector injector = ConditionModelActivator.getInstance().getInjector(ConditionModelActivator.ORG_BONITASOFT_STUDIO_CONDITION_CONDITIONMODEL);
         final IResourceValidator xtextResourceChecker = injector.getInstance(IResourceValidator.class);
         final XtextResourceSetProvider xtextResourceSetProvider = injector.getInstance(XtextResourceSetProvider.class);
@@ -589,13 +666,13 @@ public class EngineExpressionUtil {
         }
         final ConditionModelGlobalScopeProvider globalScopeProvider = injector.getInstance(ConditionModelGlobalScopeProvider.class);
         final List<String> accessibleObjects = new ArrayList<String>();
-        for(final Data d : ModelHelper.getAccessibleData(context)){
+        for (final Data d : ModelHelper.getAccessibleData(context)) {
             accessibleObjects.add(ModelHelper.getEObjectID(d));
         }
 
         final AbstractProcess process = ModelHelper.getParentProcess(context);
-        if(process != null){
-            for(final Parameter p : process.getParameters()){
+        if (process != null) {
+            for (final Parameter p : process.getParameters()) {
                 accessibleObjects.add(ModelHelper.getEObjectID(p));
             }
         }
@@ -604,15 +681,15 @@ public class EngineExpressionUtil {
         return (Operation_Compare) resource.getContents().get(0);
     }
 
-    private static String toEngineExpressionType(final org.bonitasoft.studio.model.expression.Expression expression) {
+    static String toEngineExpressionType(final org.bonitasoft.studio.model.expression.Expression expression) {
         final String type = expression.getType();
         if (ExpressionConstants.CONNECTOR_OUTPUT_TYPE.equals(type) || ExpressionConstants.URL_ATTRIBUTE_TYPE.equals(type)) {
             return ExpressionType.TYPE_INPUT.name();
         }
-        if(ExpressionConstants.DOCUMENT_REF_TYPE.equals(type)){
-            return ExpressionConstants.CONSTANT_TYPE;
+        if (ExpressionConstants.DOCUMENT_REF_TYPE.equals(type)) {
+            return toEngineExpressionTypeFoDocumentRef(expression);
         }
-        if(ExpressionConstants.GROUP_ITERATOR_TYPE.equals(type)){
+        if (ExpressionConstants.GROUP_ITERATOR_TYPE.equals(type)) {
             return ExpressionConstants.FORM_FIELD_TYPE;
         }
         if (ExpressionConstants.MULTIINSTANCE_ITERATOR_TYPE.equals(type)) {
@@ -635,11 +712,24 @@ public class EngineExpressionUtil {
         return type;
     }
 
+    private static String toEngineExpressionTypeFoDocumentRef(final org.bonitasoft.studio.model.expression.Expression expression) {
+        if (!expression.getReferencedElements().isEmpty()) {
+            final EObject referencedElement = expression.getReferencedElements().get(0);
+            if (referencedElement instanceof Document) {
+                if (((Document) referencedElement).isMultiple()) {
+                    return ExpressionConstants.DOCUMENT_LIST_TYPE;
+                }
+            }
+        }
+        //Return CONSTANT_TYPE for ensuring backward-compatibility even if Engine has introduced the DOCUMENT_TYPE,
+        return ExpressionConstants.CONSTANT_TYPE;
+    }
+
     public static Expression createConnectorOutputExpression(final Output element) {
         final ExpressionBuilder exp = new ExpressionBuilder();
         exp.createNewInstance(element.getName());
         exp.setContent(element.getName());
-        exp.setExpressionType(ExpressionType.TYPE_INPUT.toString());
+        exp.setExpressionType(ExpressionType.TYPE_INPUT);
         exp.setReturnType(element.getType());
         try {
             return exp.done();
@@ -649,14 +739,14 @@ public class EngineExpressionUtil {
         }
     }
 
-    public static Expression createXPATHExpression(final ExpressionBuilder exp,final org.bonitasoft.studio.model.expression.Expression expression ){
+    public static Expression createXPATHExpression(final ExpressionBuilder exp, final org.bonitasoft.studio.model.expression.Expression expression) {
         try {
             exp.createNewInstance(expression.getName()).setExpressionType(ExpressionType.TYPE_XPATH_READ).setContent(expression.getContent());
             exp.setReturnType(expression.getReturnType());
             exp.setDependencies(createDependenciesList(expression));
             return exp.done();
         } catch (final InvalidExpressionException e) {
-            BonitaStudioLog.error(e,EnginePlugin.PLUGIN_ID);
+            BonitaStudioLog.error(e, EnginePlugin.PLUGIN_ID);
             throw new RuntimeException(e);
         }
     }
@@ -669,7 +759,8 @@ public class EngineExpressionUtil {
         }
         if (DatasourceConstants.PAGEFLOW_DATASOURCE.equals(datasourceId)) {
             type = ExpressionConstants.FORM_FIELD_TYPE;
-        }if (element.isTransient()) {
+        }
+        if (element.isTransient()) {
             type = ExpressionConstants.TRANSIENT_VARIABLE_TYPE;
         }
         final ExpressionBuilder exp = new ExpressionBuilder();
@@ -717,8 +808,8 @@ public class EngineExpressionUtil {
     }
 
     protected static boolean isNotEscapeWord(final String content, final int indexOf) {
-        if(indexOf-1>-1){
-            return content.charAt(indexOf-1) != '\\';
+        if (indexOf - 1 > -1) {
+            return content.charAt(indexOf - 1) != '\\';
         }
         return true;
     }

@@ -477,17 +477,15 @@ public class TestSimpleMigrationUseCase {
         for(final FileWidget fileWidget : fileWidgets){
             if(!(ModelHelper.getParentWidget(fileWidget).eContainer() instanceof Expression)){
                 assertEquals("File widget input type is invalid", FileWidgetInputType.DOCUMENT, fileWidget.getInputType());
-                assertNotNull("File widget document is not set",fileWidget.getDocument());
-                assertEquals("File widget input type is invalid", ExpressionConstants.DOCUMENT_REF_TYPE, fileWidget.getInputExpression().getType());
             }
         }
         final List<ImageWidget> imageWidgets = ModelHelper.getAllItemsOfType(mainProc, FormPackage.Literals.IMAGE_WIDGET);
         for(final ImageWidget imageWidget : imageWidgets){
             if(!(ModelHelper.getParentWidget(imageWidget).eContainer() instanceof Expression)){
                 if(imageWidget.isIsADocument()){
-                    assertNotNull("File widget document is not set",imageWidget.getDocument());
+                    assertNotNull("Image widget document is not set", imageWidget.getDocument());
                 }else{
-                    assertNotNull("File widget document is not set",imageWidget.getImgPath().getContent());
+                    assertNotNull("Image widget document is not set", imageWidget.getImgPath().getContent());
                 }
             }
         }

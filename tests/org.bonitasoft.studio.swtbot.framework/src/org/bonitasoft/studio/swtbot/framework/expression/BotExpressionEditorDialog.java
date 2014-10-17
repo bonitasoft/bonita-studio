@@ -25,9 +25,7 @@ import org.eclipse.swtbot.swt.finder.matchers.WidgetMatcherFactory;
 public class BotExpressionEditorDialog extends BotDialog {
 
     public BotExpressionEditorDialog(final SWTGefBot bot) {
-        super(bot);
-        bot.waitUntil(Conditions.shellIsActive(Messages.editExpression));
-        bot.shell(Messages.editExpression);
+        super(bot, Messages.editExpression);
     }
 
     public BotScriptExpressionEditor selectScriptTab() {

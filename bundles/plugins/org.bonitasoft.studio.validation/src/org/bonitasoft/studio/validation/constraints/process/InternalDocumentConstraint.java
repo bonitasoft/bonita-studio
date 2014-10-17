@@ -1,7 +1,7 @@
 /**
  * Copyright (C) 2010 BonitaSoft S.A.
  * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -30,47 +30,47 @@ import org.eclipse.emf.validation.IValidationContext;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 
 /**
- * 
+ *
  * @author Baptiste Mesta
  * @author Aurelien Pupier - constraint for assigned actors with Lane
  *
  */
 public class InternalDocumentConstraint extends AbstractLiveValidationMarkerConstraint {
 
-	@Override
-	protected IStatus performLiveValidation(IValidationContext ctx) {
-		return ctx.createSuccessStatus();
-	}
+    @Override
+    protected IStatus performLiveValidation(final IValidationContext ctx) {
+        return ctx.createSuccessStatus();
+    }
 
-	@Override
-	protected String getMarkerType(DiagramEditor editor) {
-		return ProcessMarkerNavigationProvider.MARKER_TYPE;
-	}
+    @Override
+    protected String getMarkerType(final DiagramEditor editor) {
+        return ProcessMarkerNavigationProvider.MARKER_TYPE;
+    }
 
-	@Override
-	protected String getConstraintId() {
-		return "org.bonitasoft.studio.validation.constraints.document";
-	}
+    @Override
+    protected String getConstraintId() {
+        return "org.bonitasoft.studio.validation.constraints.document";
+    }
 
-	@Override
-	protected IStatus performBatchValidation(IValidationContext ctx) {
-		EObject eObj = ctx.getTarget();
-		if (eObj instanceof Pool) {
-			DocumentRepositoryStore store = (DocumentRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DocumentRepositoryStore.class); 
-			Pool pool = (Pool) eObj;
-			for(Document document : pool.getDocuments()){
-				if(document.isIsInternal()){
-					String id = document.getDefaultValueIdOfDocumentStore();
-					if(id != null && !id.isEmpty()){
-						if(store.getChild(id) == null){
-							return ctx.createFailureStatus(Messages.bind(Messages.missingDocumentFile,document.getName(),document.getDefaultValueIdOfDocumentStore()));
-						}
-					}
-				}
-			}
-		} 
-		return ctx.createSuccessStatus();
-	}
+    @Override
+    protected IStatus performBatchValidation(final IValidationContext ctx) {
+        final EObject eObj = ctx.getTarget();
+        if (eObj instanceof Pool) {
+            final DocumentRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(DocumentRepositoryStore.class);
+            final Pool pool = (Pool) eObj;
+            for(final Document document : pool.getDocuments()){
+                if (document.getDocumentType().equals(org.bonitasoft.studio.model.process.DocumentType.INTERNAL)) {
+                    final String id = document.getDefaultValueIdOfDocumentStore();
+                    if(id != null && !id.isEmpty()){
+                        if(store.getChild(id) == null){
+                            return ctx.createFailureStatus(Messages.bind(Messages.missingDocumentFile,document.getName(),document.getDefaultValueIdOfDocumentStore()));
+                        }
+                    }
+                }
+            }
+        }
+        return ctx.createSuccessStatus();
+    }
 
 
 }

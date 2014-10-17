@@ -11,6 +11,8 @@ package org.bonitasoft.studio.swtbot.framework.diagram.general.form.data;
 
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.swtbot.framework.BotBase;
+import org.bonitasoft.studio.swtbot.framework.composite.BotDocInitialValueComposite;
+import org.bonitasoft.studio.swtbot.framework.composite.BotOperationComposite;
 import org.bonitasoft.studio.swtbot.framework.expression.BotExpressionEditorDialog;
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -22,13 +24,13 @@ import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
  *
  * @author Romain Bioteau
  */
-public class BotDataPropertySection extends BotBase {
+public class BotDataFormPropertySection extends BotBase {
 
-    public BotDataPropertySection(final SWTGefBot bot) {
+    public BotDataFormPropertySection(final SWTGefBot bot) {
         super(bot);
     }
 
-    public BotDataPropertySection setName(final String pName) {
+    public BotDataFormPropertySection setName(final String pName) {
         bot.button(org.bonitasoft.studio.form.properties.i18n.Messages.Edit).click();
         bot.waitUntil(Conditions.shellIsActive(org.bonitasoft.studio.form.properties.i18n.Messages.editWidgetNameTitle));
         bot.textWithLabel(org.bonitasoft.studio.form.properties.i18n.Messages.name).setText(pName);
@@ -36,12 +38,12 @@ public class BotDataPropertySection extends BotBase {
         return this;
     }
 
-    public BotDataPropertySection setFieldType(final String pType) {
+    public BotDataFormPropertySection setFieldType(final String pType) {
         bot.comboBoxWithLabel(org.bonitasoft.studio.form.properties.i18n.Messages.formFieldType).setSelection(pType);
         return this;
     }
 
-    public BotDataPropertySection setDisplayName(final String widgetLabel) {
+    public BotDataFormPropertySection setDisplayName(final String widgetLabel) {
         bot.textWithId(SWTBotConstants.SWTBOT_ID_EXPRESSIONVIEWER_TEXT).setText(widgetLabel);
         return this;
 
@@ -52,18 +54,43 @@ public class BotDataPropertySection extends BotBase {
         return new BotExpressionEditorDialog(bot);
     }
 
-    public BotDataPropertySection setFieldModifier(final String className) {
-        bot.comboBoxWithLabel(org.bonitasoft.studio.form.properties.i18n.Messages.fieldModifier).setSelection(className);
+    public BotDocInitialValueComposite getBotDocInitialValueComposite() {
+        return new BotDocInitialValueComposite(bot);
+    }
+
+
+    /**
+     * Select output variable.
+     *
+     * @deprecated use {@link #getOutputOperation()}
+     * @param variableName
+     * @param returnType
+     * @return
+     */
+    @Deprecated
+    public BotDataFormPropertySection selectOutputVariable(final String variableName, final String returnType) {
+        SWTBotTestUtil.selectExpressionProposal(bot, variableName, returnType, 1);
         return this;
     }
 
-    public BotDataPropertySection selectOutputVariable(final String variableName, final String returnType) {
-        SWTBotTestUtil.setOutputStorageExpressionByName(bot, variableName, returnType, 1);
-        return this;
-    }
-
+    /**
+     * Edit output expression.
+     *
+     * @deprecated use {@link #getOutputOperation()}
+     * @return
+     */
+    @Deprecated
     public BotExpressionEditorDialog editOutputOperationExpression() {
         bot.toolbarButtonWithId(SWTBotConstants.SWTBOT_ID_EDITBUTTON, 1).click();
         return new BotExpressionEditorDialog(bot);
+    }
+
+    /**
+     * Get the output operation.
+     *
+     * @return
+     */
+    public BotOperationComposite getOutputOperation() {
+        return new BotOperationComposite(bot, 0);
     }
 }

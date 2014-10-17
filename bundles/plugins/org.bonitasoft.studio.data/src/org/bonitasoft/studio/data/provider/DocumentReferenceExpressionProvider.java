@@ -19,6 +19,7 @@
 package org.bonitasoft.studio.data.provider;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
@@ -28,6 +29,7 @@ import org.bonitasoft.studio.data.i18n.Messages;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionEditor;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionProvider;
 import org.bonitasoft.studio.model.expression.Expression;
+import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.process.Document;
 import org.bonitasoft.studio.model.process.Pool;
@@ -43,60 +45,76 @@ import org.eclipse.swt.graphics.Image;
 public class DocumentReferenceExpressionProvider implements IExpressionProvider {
 
 
-	@Override
-	public Set<Expression> getExpressions(final EObject context) {
-		final Set<Expression> result = new HashSet<Expression>() ;
-		Pool process = null;
-		if(context instanceof Form && ModelHelper.isAnEntryPageFlowOnAPool((Form) context)){
-			return result;
-		}else{
-			final EObject parent = ModelHelper.getParentProcess(context);
-			if(parent instanceof Pool){
-				process = (Pool) parent;
-			}
-		}
-		if(context != null && process != null){
-			for(final Document d : process.getDocuments()){
-                result.add(ExpressionHelper.createDocumentReferenceExpression(d));
-			}
-		}
-		return result;
-	}
+    @Override
+    public Set<Expression> getExpressions(final EObject context) {
+        final Set<Expression> result = new HashSet<Expression>() ;
+        Pool process = null;
+        if(context instanceof Form && ModelHelper.isAnEntryPageFlowOnAPool((Form) context)){
+            return result;
+        }else{
+            final EObject parent = ModelHelper.getParentProcess(context);
+            if(parent instanceof Pool){
+                process = (Pool) parent;
+            }
+        }
+        if(context != null && process != null){
+            for(final Document d : process.getDocuments()){
+                result.add(createDocRefExpression(d));
+            }
+        }
+        return result;
+    }
 
-	@Override
-	public String getExpressionType() {
-		return ExpressionConstants.DOCUMENT_REF_TYPE;
-	}
+    @Override
+    public String getExpressionType() {
+        return ExpressionConstants.DOCUMENT_REF_TYPE;
+    }
 
-	@Override
-	public Image getIcon(final Expression expression) {
-		return getTypeIcon();
-	}
+    @Override
+    public Image getIcon(final Expression expression) {
+        return getTypeIcon();
+    }
 
-	@Override
-	public String getProposalLabel(final Expression expression) {
-		return expression.getName();
-	}
+    @Override
+    public String getProposalLabel(final Expression expression) {
+        return expression.getName();
+    }
 
-	@Override
-	public boolean isRelevantFor(final EObject context) {
-		return !getExpressions(context).isEmpty() ;
-	}
 
-	@Override
-	public Image getTypeIcon() {
-		return Pics.getImage(PicsConstants.attachmentData);
-	}
 
-	@Override
-	public String getTypeLabel() {
-		return Messages.documentReferenceType;
-	}
+    public Expression createDocRefExpression(final Document d) {
+        final Expression exp = ExpressionFactory.eINSTANCE.createExpression() ;
+        exp.setType(getExpressionType()) ;
+        exp.setContent(d.getName()) ;
+        exp.setName(d.getName()) ;
+        if (d.isMultiple()) {
+            exp.setReturnType(List.class.getName());
+        } else {
+            exp.setReturnType(String.class.getName());
+        }
+        exp.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(d)) ;
+        return exp;
+    }
 
-	@Override
-	public IExpressionEditor getExpressionEditor(final Expression expression,final EObject context) {
-		return new DocumentExpressionEditor();
-	}
+    @Override
+    public boolean isRelevantFor(final EObject context) {
+        return !getExpressions(context).isEmpty() ;
+    }
+
+    @Override
+    public Image getTypeIcon() {
+        return Pics.getImage(PicsConstants.attachmentData);
+    }
+
+    @Override
+    public String getTypeLabel() {
+        return Messages.documentReferenceType;
+    }
+
+    @Override
+    public IExpressionEditor getExpressionEditor(final Expression expression,final EObject context) {
+        return new DocumentExpressionEditor();
+    }
 
 
 
