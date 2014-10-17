@@ -261,6 +261,10 @@ public class Messages extends NLS {
 
     public static String documentToolTip;
 
+    public static String urlRadio;
+
+    public static String fileWidgetTypeToolTip;
+
     static {
         // initialize resource bundle
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

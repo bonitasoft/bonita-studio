@@ -54,11 +54,11 @@ public class BotFileWidgetBotDataFormPropertySection extends BotDataFormProperty
     }
 
     public void selectDocumentPickerURL() {
-        bot.radio(Messages.useUrl).click();
+        bot.radio(Messages.urlRadio).click();
     }
 
     public boolean isDocumentPickerUrlSelected() {
-        return bot.radio(Messages.useUrl).isSelected();
+        return bot.radio(Messages.urlRadio).isSelected();
     }
 
     public void selectDocumentPickerBrowse() {
@@ -79,7 +79,7 @@ public class BotFileWidgetBotDataFormPropertySection extends BotDataFormProperty
 
 
     public boolean isUrlRadioIsEnabled() {
-        return bot.radio(Messages.useUrl).isEnabled();
+        return bot.radio(Messages.urlRadio).isEnabled();
     }
 
 }

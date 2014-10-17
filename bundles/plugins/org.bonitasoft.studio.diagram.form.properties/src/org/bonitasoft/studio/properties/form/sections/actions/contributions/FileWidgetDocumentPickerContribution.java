@@ -23,6 +23,8 @@ import org.bonitasoft.studio.model.form.FileWidget;
 import org.bonitasoft.studio.model.form.FileWidgetDownloadType;
 import org.bonitasoft.studio.model.form.FileWidgetInputType;
 import org.bonitasoft.studio.model.form.FormPackage;
+import org.bonitasoft.studio.pics.Pics;
+import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
@@ -38,6 +40,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ISelection;
@@ -80,6 +83,7 @@ public class FileWidgetDocumentPickerContribution implements IExtensibleGridProp
 
 
 
+
     /*
      * (non-Javadoc)
      * @see org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution#getLabel()
@@ -104,11 +108,17 @@ public class FileWidgetDocumentPickerContribution implements IExtensibleGridProp
 
     private void createDownloadTypeComposite(final Composite parent) {
         final Composite composite = widgetFactory.createComposite(parent);
-        composite.setLayout(GridLayoutFactory.fillDefaults().numColumns(4).margins(0, 0).create());
+        composite.setLayout(GridLayoutFactory.fillDefaults().numColumns(4).margins(3, 0).create());
 
-        url = widgetFactory.createButton(composite, Messages.useUrl, SWT.RADIO);
+        url = widgetFactory.createButton(composite, Messages.urlRadio, SWT.RADIO);
         browse = widgetFactory.createButton(composite, Messages.BrowseRadio, SWT.RADIO);
         both = widgetFactory.createButton(composite, Messages.both, SWT.RADIO);
+
+        final ControlDecoration decoDoc = new ControlDecoration(url, SWT.LEFT);
+        decoDoc.setDescriptionText(Messages.fileWidgetTypeToolTip);
+        decoDoc.setImage(Pics.getImage(PicsConstants.hint));
+        decoDoc.setMarginWidth(0);
+        decoDoc.setShowOnlyOnFocus(false);
 
         final IObservableValue resourceObservable = createResourceObservable();
 
