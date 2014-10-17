@@ -579,19 +579,26 @@ public class DocumentWizardPage extends WizardPage {
                     final Boolean internalBtn = (Boolean) btnDocumentTypeInternal.getValue();
 
                     // check external (URL)
-                    final String url = ((Expression) externalInitialContentObserveWidget.getValue()).getContent();
-
-                    if (externalBtn && url.isEmpty()) {
-                        return ValidationStatus.error(Messages.error_documentURLEmpty);
-                    }
-
-                    if (externalBtn && url.length() > URL_SIZE_MAX) {
-                        return ValidationStatus.error(Messages.bind(Messages.error_documentURLTooLong, URL_SIZE_MAX + 1));
-                    }
-
-                    // check internal
-                    if (internalBtn && (defaultSingleID == null || defaultSingleID.isEmpty())) {
-                        return ValidationStatus.error(Messages.error_documentDefaultIDEmpty);
+                    final Expression expression = (Expression) externalInitialContentObserveWidget.getValue();
+                    if (expression != null) {
+                        final String url = expression.getContent();
+                        if (externalBtn && url.isEmpty()) {
+                            return ValidationStatus.error(Messages.error_documentURLEmpty);
+                        }
+                        if (externalBtn && url.length() > URL_SIZE_MAX) {
+                            return ValidationStatus.error(Messages.bind(Messages.error_documentURLTooLong, URL_SIZE_MAX + 1));
+                        }
+                        // check internal
+                        if (internalBtn && (defaultSingleID == null || defaultSingleID.isEmpty())) {
+                            return ValidationStatus.error(Messages.error_documentDefaultIDEmpty);
+                        }
+                    } else {
+                        if (externalBtn) {
+                            return ValidationStatus.error(Messages.error_documentURLEmpty);
+                        }
+                        if (internalBtn && (defaultSingleID == null || defaultSingleID.isEmpty())) {
+                            return ValidationStatus.error(Messages.error_documentDefaultIDEmpty);
+                        }
                     }
                 }
 

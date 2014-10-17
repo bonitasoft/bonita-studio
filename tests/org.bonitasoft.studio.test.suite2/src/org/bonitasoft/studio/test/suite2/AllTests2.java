@@ -38,6 +38,7 @@ import org.bonitasoft.studio.exporter.tests.form.TestFormsExporter;
 import org.bonitasoft.studio.groovy.ui.test.TestGroovyScriptExpressionEditor;
 import org.bonitasoft.studio.importer.test.bos.TestBOSArchiveImport;
 import org.bonitasoft.studio.migration.tests.MigrationReportPDFExportTest;
+import org.bonitasoft.studio.migration.tests.document.DocumentTypeMigrationIT;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.bonitasoft.studio.properties.test.TestLookAndFeel;
@@ -86,7 +87,7 @@ import org.junit.runners.Suite;
     TestSimulationResourceRepository.class,
     TestLookAndFeel.class,
     TestGroovyScriptExpressionEditor.class,
-    
+
     TestExportProcessBar.class,
     TestThemeRepository.class,
     TestDirtyState.class,
@@ -110,6 +111,7 @@ import org.junit.runners.Suite;
     TestRefactorWidgetOperation.class,
     TestRemoveWidgetReferencesOperation.class,
     TestWebserviceVersionForBPMNImport.class,
+        DocumentTypeMigrationIT.class,
     CloseAllEditors.class,
 })
 public class AllTests2 extends TestSuite {
@@ -126,12 +128,12 @@ public class AllTests2 extends TestSuite {
 
     @AfterClass
     public static void tearDown() {
-        for(IConfigurationElement elem : BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements("org.bonitasoft.studio.tests.heapdump")){
+        for(final IConfigurationElement elem : BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements("org.bonitasoft.studio.tests.heapdump")){
             IHeapDumper dumper;
             try {
                 dumper = (IHeapDumper) elem.createExecutableExtension("class");
                 dumper.dumpHeap(AllTests2.class.getSimpleName()+".hprof", false);
-            } catch (CoreException e) {
+            } catch (final CoreException e) {
                 BonitaStudioLog.error(e);
             }
         }
