@@ -58,6 +58,7 @@ import org.bonitasoft.studio.tests.TestFullScenario;
 import org.bonitasoft.studio.tests.TestPathSize;
 import org.bonitasoft.studio.tests.conditions.TestConditions;
 import org.bonitasoft.studio.tests.document.TestDocumentRefactoring;
+import org.bonitasoft.studio.tests.form.TestFileWidgetMigration;
 import org.bonitasoft.studio.tests.subprocess.TestSubprocess;
 import org.bonitasoft.studio.util.test.BonitaJunit4TestSuite;
 import org.bonitasoft.studio.workspace.test.TestInitialWorkspace;
@@ -100,11 +101,12 @@ import org.junit.runners.Suite;
     TestImportActorFilter.class,
     TestImportOrganization.class,
     TestExportOrganization.class,
-        TestDocumentRefactoring.class,
+    TestDocumentRefactoring.class,
     TestConfigurationSynhronizer.class,
     TestImportExportAndDeleteRepository.class,
     TestSimulationLoadProfileRepository.class,
     TestSimulationExporter.class,
+        TestFileWidgetMigration.class,
     TestBugSave.class,
     TestImportExtensionPoint.class,
     ProcBuilderTests.class,
