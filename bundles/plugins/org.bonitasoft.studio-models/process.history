@@ -8668,6 +8668,8 @@
     </changes>
     <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.custom.migration.document.DocumentDefaultReturnTypeModifierMigration"/>
     <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.custom.migration.form.FileWidgetDocumentMigration"/>
+  </releases>
+  <releases date="2014-10-17T10:17:14.066+0200" label="6.4.0-003">
     <changes xsi:type="history:Create" target="form.ecore#/" referenceName="eClassifiers"
         element="form.ecore#//FileWidgetDownloadType"/>
     <changes xsi:type="history:Set" element="form.ecore#//FileWidgetDownloadType"
@@ -8700,7 +8702,7 @@
         featureName="eType" referenceValue="form.ecore#//FileWidgetDownloadType"/>
     <changes xsi:type="history:Set" element="form.ecore#//FileWidget/downloadType"
         featureName="defaultValueLiteral" dataValue="Both" oldDataValue=""/>
-    <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.custom.migration.form.FileWidgetResourceMigration"/>    
+    <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.custom.migration.form.FileWidgetResourceMigration"/>
   </releases>
   <releases/>
 </history:History>
