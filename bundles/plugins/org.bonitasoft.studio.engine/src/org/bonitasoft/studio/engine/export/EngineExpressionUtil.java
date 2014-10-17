@@ -31,6 +31,7 @@ import org.bonitasoft.engine.operation.OperatorType;
 import org.bonitasoft.studio.common.DataUtil;
 import org.bonitasoft.studio.common.DatasourceConstants;
 import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.emf.tools.WidgetHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -52,6 +53,7 @@ import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.parameter.Parameter;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.BusinessObjectData;
+import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.Document;
 import org.eclipse.emf.common.util.EList;
@@ -160,10 +162,11 @@ public class EngineExpressionUtil {
         return builder.done();
     }
 
-    public static List<Expression> createDependenciesList(final org.bonitasoft.studio.model.expression.Expression expression) {
+    public static List<Expression> createDependenciesList(final org.bonitasoft.studio.model.expression.Expression expression) throws InvalidExpressionException {
         final List<Expression> result = new ArrayList<Expression>();
         if (expression.getType().equals(ExpressionConstants.SCRIPT_TYPE) || expression.getType().equals(ExpressionConstants.PATTERN_TYPE)
                 || expression.getType().equals(ExpressionConstants.JAVA_TYPE) || expression.getType().equals(ExpressionConstants.XPATH_TYPE)) {
+            final ExpressionBuilder expBuilder = new ExpressionBuilder();
             for (final EObject element : expression.getReferencedElements()) {
                 if (element instanceof Data) {
                     result.add(createVariableExpression((Data) element));
@@ -179,6 +182,9 @@ public class EngineExpressionUtil {
                     result.add(createDocumentExpression((Document) element));
                 }else if (element instanceof GroupIterator) {
                     result.add(createGroupIteratorExpression((GroupIterator) element));
+                } else if (element instanceof ContractInput) {
+                    result.add(expBuilder.createContractInputExpression(((ContractInput) element).getName(),
+                            ExpressionHelper.getContractInputReturnType((ContractInput) element)));
                 }
             }
         }
@@ -414,9 +420,10 @@ public class EngineExpressionUtil {
                 } else {
                     expressionBuilder.setInterpreter("");
                 }
+
                 expressionBuilder.setReturnType(expression.getReturnType());
-                expressionBuilder.setDependencies(createDependenciesList(expression));
                 try {
+                    expressionBuilder.setDependencies(createDependenciesList(expression));
                     return expressionBuilder.done();
                 } catch (final InvalidExpressionException e) {
                     BonitaStudioLog.error(e);
@@ -485,16 +492,16 @@ public class EngineExpressionUtil {
             exp.setInterpreter("");
         }
         exp.setReturnType(simpleExpression.getReturnType());
-        final List<Expression> dependenciesList = createDependenciesList(simpleExpression);
-        final List<Expression> toRemove = new ArrayList<Expression>();
-        for(final Expression expression : dependenciesList){
-            if(!simpleExpression.getContent().contains("${"+expression.getName()+"}")){
-                toRemove.add(expression);
-            }
-        }
-        dependenciesList.removeAll(toRemove);
-        exp.setDependencies(dependenciesList);
         try {
+            final List<Expression> dependenciesList = createDependenciesList(simpleExpression);
+            final List<Expression> toRemove = new ArrayList<Expression>();
+            for (final Expression expression : dependenciesList) {
+                if (!simpleExpression.getContent().contains("${" + expression.getName() + "}")) {
+                    toRemove.add(expression);
+                }
+            }
+            dependenciesList.removeAll(toRemove);
+            exp.setDependencies(dependenciesList);
             return exp.done();
         } catch (final InvalidExpressionException e) {
             BonitaStudioLog.error(e);
@@ -684,6 +691,7 @@ public class EngineExpressionUtil {
             throw new RuntimeException(e);
         }
     }
+
 
     public static Expression createEmptyListExpression() {
         final ExpressionBuilder exp = new ExpressionBuilder();

@@ -54,6 +54,7 @@ import org.codehaus.groovy.eclipse.GroovyPlugin;
 import org.codehaus.groovy.eclipse.codeassist.requestor.CompletionNodeFinder;
 import org.codehaus.groovy.eclipse.codeassist.requestor.ContentAssistContext;
 import org.codehaus.groovy.eclipse.core.preferences.PreferenceConstants;
+import org.codehaus.groovy.eclipse.editor.GroovyEditor;
 import org.codehaus.groovy.eclipse.refactoring.actions.FormatKind;
 import org.codehaus.groovy.eclipse.refactoring.actions.OrganizeGroovyImportsAction;
 import org.codehaus.jdt.groovy.model.GroovyCompilationUnit;
@@ -108,7 +109,7 @@ public class GroovyViewer {
 
     public static final int MAX_SCRIPT_LENGTH = 65535;
 
-    private BonitaGroovyEditor editor;
+    private GroovyEditor editor;
 
     private IEditorInput input;
 
@@ -129,7 +130,7 @@ public class GroovyViewer {
     private boolean isPageFlowContext;
 
     public GroovyViewer(final Composite mainComposite) {
-        this(mainComposite, null);
+        this(mainComposite, null, null);
     }
 
     public GroovyViewer(final Composite mainComposite, final boolean isPageFlowContext) {
@@ -137,11 +138,11 @@ public class GroovyViewer {
     }
 
     public GroovyViewer(final Composite mainComposite, final IEditorInput input, final boolean isPageFlowContext) {
-        this(mainComposite, input);
+        this(mainComposite, input, null);
         this.isPageFlowContext = isPageFlowContext;
     }
 
-    public GroovyViewer(final Composite mainComposite, final IEditorInput input) {
+    public GroovyViewer(final Composite mainComposite, final IEditorInput input, final GroovyEditor groovyEditor) {
         final IPreferenceStore groovyStore = org.codehaus.groovy.eclipse.GroovyPlugin.getDefault().getPreferenceStore();
         groovyStore.setDefault(PreferenceConstants.GROOVY_SEMANTIC_HIGHLIGHTING, false);
         groovyStore.setValue(PreferenceConstants.GROOVY_SEMANTIC_HIGHLIGHTING, false);
@@ -154,8 +155,10 @@ public class GroovyViewer {
         } else {
             this.input = input;
         }
-
-        editor = new BonitaGroovyEditor(GroovyPlugin.getDefault().getPreferenceStore());
+        editor = groovyEditor;
+        if (editor == null) {
+            editor = new BonitaGroovyEditor(GroovyPlugin.getDefault().getPreferenceStore());
+        }
         try {
             editor.getDocumentProvider().connect(input);
             editor.init(new DummyEditorSite(mainComposite.getShell(), editor), this.input);

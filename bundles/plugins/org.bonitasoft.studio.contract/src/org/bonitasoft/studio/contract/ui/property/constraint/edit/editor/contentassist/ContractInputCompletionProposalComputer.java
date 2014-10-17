@@ -91,11 +91,11 @@ public class ContractInputCompletionProposalComputer extends GroovyCompletionPro
         if (contentAssistContext.completionNode instanceof VariableExpression) {
             final VariableExpression expression = (VariableExpression) contentAssistContext.completionNode;
             final String fullyQualifiedType = getTypeFor(expression.getName(), inputs);
-            if (fullyQualifiedType != null && computeIdentifierPrefix.toString().isEmpty()) {
-                return getMethodProposals(contentAssistContext, javaContext, inputs, computeIdentifierPrefix, expression.getName(), fullyQualifiedType);
-            } else if (fullyQualifiedType != null && Map.class.getName().equals(fullyQualifiedType)) { //COMPLEX
+            if (fullyQualifiedType != null && Map.class.getName().equals(fullyQualifiedType)) { //COMPLEX
                 final ContractInput complexInput = getInputWithName(expression.getName(), inputs);
                 return getInputProposals(context, complexInput.getInputs(), computeIdentifierPrefix);
+            } else if (fullyQualifiedType != null) {
+                return getMethodProposals(contentAssistContext, javaContext, inputs, computeIdentifierPrefix, expression.getName(), fullyQualifiedType);
             }
             return getInputProposals(context, inputs, computeIdentifierPrefix);
         } else if (contentAssistContext.completionNode instanceof ConstantExpression) {
@@ -104,7 +104,7 @@ public class ContractInputCompletionProposalComputer extends GroovyCompletionPro
             if (fullyQualifiedType != null && computeIdentifierPrefix.toString().isEmpty()) {
                 return getMethodProposals(contentAssistContext, javaContext, inputs, computeIdentifierPrefix, expression.getText(), fullyQualifiedType);
             }
-            return super.computeCompletionProposals(context, monitor);
+            return Collections.emptyList();
         } else if (contentAssistContext.completionNode instanceof BlockStatement) {
             return getInputProposals(context, inputs, computeIdentifierPrefix);
         } else if (contentAssistContext.completionNode instanceof BinaryExpression) {

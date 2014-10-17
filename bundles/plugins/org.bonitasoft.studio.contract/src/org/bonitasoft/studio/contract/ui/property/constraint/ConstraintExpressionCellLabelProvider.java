@@ -41,7 +41,17 @@ public class ConstraintExpressionCellLabelProvider extends PropertyColumnLabelPr
 
     @Override
     public StyledString getStyledText(final Object element) {
-        return new StyledString(getText(element));
+        String text = getText(element);
+        if (text != null) {
+            text = stripCharriage(text);
+        }
+        return new StyledString(text);
+    }
+
+    protected String stripCharriage(String text) {
+        text = text.replace("\n", " ");
+        text = text.replace("\r", " ");
+        return text;
     }
 
 }
