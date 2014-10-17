@@ -30,7 +30,7 @@ import org.bonitasoft.engine.bpm.process.impl.ProcessDefinitionBuilder;
 import org.bonitasoft.engine.bpm.process.impl.UserFilterDefinitionBuilder;
 import org.bonitasoft.engine.bpm.process.impl.UserTaskDefinitionBuilder;
 import org.bonitasoft.engine.expression.Expression;
-import org.bonitasoft.studio.contract.core.EngineContractBuilder;
+import org.bonitasoft.studio.engine.contribution.IEngineDefinitionBuilder;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfigurationFactory;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorParameter;
@@ -64,7 +64,7 @@ public class FlowElementSwitchTest {
     private UserTaskDefinitionBuilder taskBuilder;
 
     @Mock
-    private EngineContractBuilder engineContractBuilder;
+    private IEngineDefinitionBuilder engineContractBuilder;
 
     /**
      * @throws java.lang.Exception
@@ -73,7 +73,7 @@ public class FlowElementSwitchTest {
     public void setUp() throws Exception {
         final ProcessDefinitionBuilder instance = new ProcessDefinitionBuilder().createNewInstance("test", "1.0");
         flowElementSwitch = spy(new FlowElementSwitch(instance, Collections.<EObject> emptySet()));
-        doReturn(engineContractBuilder).when(flowElementSwitch).createEngineContractBuilder();
+        doReturn(engineContractBuilder).when(flowElementSwitch).getEngineDefinitionBuilder(any(Contract.class));
 
     }
 
@@ -117,14 +117,13 @@ public class FlowElementSwitchTest {
     public void should_addContract_build_an_engine_contract() throws Exception {
         final Contract contract = ProcessFactory.eINSTANCE.createContract();
         flowElementSwitch.addContract(taskBuilder, contract);
-        verify(engineContractBuilder).setContract(contract);
         verify(engineContractBuilder).setEngineBuilder(taskBuilder);
-        verify(engineContractBuilder).build();
+        verify(engineContractBuilder).build(contract);
     }
 
     @Test
     public void should_not_addContract_build_an_engine_contract() throws Exception {
         flowElementSwitch.addContract(taskBuilder, null);
-        verify(engineContractBuilder, never()).build();
+        verify(engineContractBuilder, never()).build(any(Contract.class));
     }
 }

@@ -48,5 +48,11 @@
             providerClass="org.bonitasoft.studio.contract.core.expression.ContractInputExpressionProvider">
       </expressionProvider>
    </extension>
+   <extension
+         point="org.bonitasoft.studio.engine.definition.builder">
+           <EngineDefinitionBuilder
+                 class="org.bonitasoft.studio.contract.core.ContractEngineDefinitionBuilder">
+           </EngineDefinitionBuilder>
+   </extension>
 
 </plugin>

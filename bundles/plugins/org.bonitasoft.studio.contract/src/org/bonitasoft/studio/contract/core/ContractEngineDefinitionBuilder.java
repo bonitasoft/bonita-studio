@@ -23,31 +23,34 @@ import org.bonitasoft.engine.bpm.contract.impl.SimpleInputDefinitionImpl;
 import org.bonitasoft.engine.bpm.process.impl.ActivityDefinitionBuilder;
 import org.bonitasoft.engine.bpm.process.impl.ContractDefinitionBuilder;
 import org.bonitasoft.engine.bpm.process.impl.UserTaskDefinitionBuilder;
-import org.bonitasoft.studio.contract.core.exception.ContractCreationException;
+import org.bonitasoft.studio.engine.contribution.BuildProcessDefinitionException;
+import org.bonitasoft.studio.engine.contribution.IEngineDefinitionBuilder;
 import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractConstraint;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.emf.ecore.EObject;
 
 /**
  * @author Romain Bioteau
  *
  */
-public class EngineContractBuilder {
+public class ContractEngineDefinitionBuilder implements IEngineDefinitionBuilder {
 
     private UserTaskDefinitionBuilder taskBuilder;
-    private Contract contract;
     private ActivityDefinitionBuilder activityDefinitionBuilder;
     private final ContractMappingFactory contractMappingBuilder;
 
 
-    public EngineContractBuilder() {
+    public ContractEngineDefinitionBuilder() {
         contractMappingBuilder = new ContractMappingFactory();
     }
 
-    public void build() throws ContractCreationException {
+    @Override
+    public void build(final EObject element) throws BuildProcessDefinitionException {
         Assert.isNotNull(taskBuilder);
-        Assert.isNotNull(contract);
+        Assert.isLegal(element instanceof Contract);
+        final Contract contract = (Contract) element;
 
         final ContractDefinitionBuilder contractBuilder = taskBuilder.addContract();
         for (final ContractInput input : contract.getInputs()) {
@@ -125,8 +128,17 @@ public class EngineContractBuilder {
         activityDefinitionBuilder = builder;
     }
 
-    public void setContract(final Contract contract) {
-        this.contract = contract;
+    @Override
+    public boolean appliesTo(final EObject element) {
+        return element instanceof Contract;
+    }
+
+    @Override
+    public void setEngineBuilder(final Object engineBuilder) {
+        if (engineBuilder instanceof UserTaskDefinitionBuilder) {
+            taskBuilder = (UserTaskDefinitionBuilder) engineBuilder;
+            activityDefinitionBuilder = (ActivityDefinitionBuilder) engineBuilder;
+        }
     }
 
 }

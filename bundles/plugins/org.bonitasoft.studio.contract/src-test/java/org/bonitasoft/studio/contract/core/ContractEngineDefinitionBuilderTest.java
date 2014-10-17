@@ -49,12 +49,12 @@ import org.mockito.runners.MockitoJUnitRunner;
  *
  */
 @RunWith(MockitoJUnitRunner.class)
-public class EngineContractBuilderTest {
+public class ContractEngineDefinitionBuilderTest {
 
     @Mock
     private UserTaskDefinitionBuilder taskBuilder;
 
-    private EngineContractBuilder engineContractBuilder;
+    private ContractEngineDefinitionBuilder engineContractBuilder;
 
     private Contract aContract;
 
@@ -68,9 +68,8 @@ public class EngineContractBuilderTest {
     public void setUp() throws Exception {
         when(taskBuilder.addContract()).thenReturn(contractDefBuilder);
         aContract = ProcessFactory.eINSTANCE.createContract();
-        engineContractBuilder = new EngineContractBuilder();
+        engineContractBuilder = new ContractEngineDefinitionBuilder();
         engineContractBuilder.setEngineBuilder(taskBuilder);
-        engineContractBuilder.setContract(aContract);
     }
 
     /**
@@ -81,8 +80,14 @@ public class EngineContractBuilderTest {
     }
 
     @Test
+    public void should_appliesTo_a_contract() throws Exception {
+        assertThat(engineContractBuilder.appliesTo(aContract)).isTrue();
+        assertThat(engineContractBuilder.appliesTo(null)).isFalse();
+    }
+
+    @Test
     public void should_build_build_an_empty_contract() throws Exception {
-        engineContractBuilder.build();
+        engineContractBuilder.build(aContract);
         verify(taskBuilder).addContract();
     }
 
@@ -93,8 +98,7 @@ public class EngineContractBuilderTest {
         addInput(aContract, "age", ContractInputType.INTEGER, null);
         addInput(aContract, "salary", ContractInputType.DECIMAL, null);
         addInput(aContract, "isMarried", ContractInputType.BOOLEAN, null);
-        engineContractBuilder.setContract(aContract);
-        engineContractBuilder.build();
+        engineContractBuilder.build(aContract);
         verify(taskBuilder).addContract();
         verify(contractDefBuilder).addSimpleInput("name", Type.TEXT, "name of an employee", false);
         verify(contractDefBuilder).addSimpleInput("birthDate", Type.DATE, "Birth date of an employee", false);
@@ -124,13 +128,12 @@ public class EngineContractBuilderTest {
     @Test(expected = AssertionFailedException.class)
     public void should_build_throw_an_AssertionFailedException_if_no_builder_is_set() throws Exception {
         engineContractBuilder.setEngineBuilder(null);
-        engineContractBuilder.build();
+        engineContractBuilder.build(aContract);
     }
 
-    @Test(expected = AssertionFailedException.class)
-    public void should_build_throw_an_AssertionFailedException_if_no_contract_is_set() throws Exception {
-        engineContractBuilder.setContract(null);
-        engineContractBuilder.build();
+    @Test(expected = IllegalArgumentException.class)
+    public void should_build_throw_an_IllegalArgumentException_if_no_contract_is_set() throws Exception {
+        engineContractBuilder.build(null);
     }
 
     @Test
@@ -138,8 +141,7 @@ public class EngineContractBuilderTest {
         final ContractInput nameInput = addInput(aContract, "name", ContractInputType.TEXT, "name of an employee");
         nameInput.setMandatory(false);
         aContract.getConstraints().add(ContractConstraintUtil.createConstraint("myConstraint", "name.length < 50", "name is too long", nameInput));
-        engineContractBuilder.setContract(aContract);
-        engineContractBuilder.build();
+        engineContractBuilder.build(aContract);
         verify(taskBuilder).addContract();
         verify(contractDefBuilder).addSimpleInput("name", Type.TEXT, "name of an employee", nameInput.isMultiple());
         verify(contractDefBuilder).addConstraint("myConstraint", "name.length < 50", "name is too long", nameInput.getName());
@@ -149,8 +151,7 @@ public class EngineContractBuilderTest {
     public void should_build_create_a_contract_with_mandatory_constraint() throws Exception {
         final ContractInput nameInput = addInput(aContract, "name", ContractInputType.TEXT, "name of an employee");
         nameInput.setMandatory(true);
-        engineContractBuilder.setContract(aContract);
-        engineContractBuilder.build();
+        engineContractBuilder.build(aContract);
         verify(taskBuilder).addContract();
         verify(contractDefBuilder).addSimpleInput("name", Type.TEXT, "name of an employee", nameInput.isMultiple());
         verify(contractDefBuilder).addMandatoryConstraint("name");
@@ -168,8 +169,7 @@ public class EngineContractBuilderTest {
         textData.setName("employeeName");
         mapping.setData(textData);
         nameInput.setMapping(mapping);
-        engineContractBuilder.setContract(aContract);
-        engineContractBuilder.build();
+        engineContractBuilder.build(aContract);
         verify(taskBuilder).addContract();
         verify(contractDefBuilder).addSimpleInput("name", Type.TEXT, "name of an employee", nameInput.isMultiple());
         verify(contractDefBuilder).addMandatoryConstraint("name");
@@ -188,8 +188,7 @@ public class EngineContractBuilderTest {
         addInput(skillsInput, "name", ContractInputType.TEXT, "name of the skills");
         addInput(skillsInput, "rate", ContractInputType.INTEGER, "rate of the skill");
 
-        engineContractBuilder.setContract(aContract);
-        engineContractBuilder.build();
+        engineContractBuilder.build(aContract);
         verify(taskBuilder).addContract();
 
         verify(contractDefBuilder).addComplexInput(eq(employeeInput.getName()), eq(employeeInput.getDescription()), eq(employeeInput.isMultiple()), anyList(),
