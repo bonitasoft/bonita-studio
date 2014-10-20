@@ -1,4 +1,4 @@
-package org.bonitasoft.studio.actors.tests.exporter;
+package org.bonitasoft.studio.util.test.conditions;
 
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadInfo;
@@ -21,17 +21,16 @@ import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
  * @author Vincent MAHE &lt;vmahe [at] free[dot]fr&gt;
  * @version $Id$
  */
-class ShellIsActiveWithThreadSTacksOnFailure extends DefaultCondition {
+public class ShellIsActiveWithThreadSTacksOnFailure extends DefaultCondition {
 
 	private final String	text;
 
-	ShellIsActiveWithThreadSTacksOnFailure(final String text) {
+    public ShellIsActiveWithThreadSTacksOnFailure(final String text) {
 		Assert.isNotNull(text, "The shell text was null"); //$NON-NLS-1$
 		Assert.isLegal(!StringUtils.isEmpty(text), "The shell text was empty"); //$NON-NLS-1$
 		this.text = text;
 	}
 
-	@Override
     public String getFailureMessage() {
         final StringBuilder dump = new StringBuilder();
         final ThreadMXBean threadMxBean = ManagementFactory.getThreadMXBean();
@@ -53,12 +52,11 @@ class ShellIsActiveWithThreadSTacksOnFailure extends DefaultCondition {
                 + dump.toString();
 	}
 
-	@Override
     public boolean test() throws Exception {
 		try {
 			final SWTBotShell shell = bot.shell(text);
 			return UIThreadRunnable.syncExec(new BoolResult() {
-				@Override
+
                 public Boolean run() {
 					return shell.widget.isVisible() || shell.widget.isFocusControl();
 				}
