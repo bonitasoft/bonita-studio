@@ -55,10 +55,10 @@ public class ContractEngineDefinitionBuilder implements IEngineDefinitionBuilder
 
         final ContractDefinitionBuilder contractBuilder = taskBuilder.addContract();
         for (final ContractInput input : contract.getInputs()) {
-            final Type inputType = getInputType(input);
-            if (Type.COMPLEX == inputType) {
+            if (input.getType() == ContractInputType.COMPLEX) {
                 addComplexInput(contractBuilder, input);
             } else {
+                final Type inputType = getInputType(input);
                 addSimpleInput(contractBuilder, input, inputType);
             }
         }
