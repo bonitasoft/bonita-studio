@@ -183,13 +183,14 @@ public class OperationReturnTypesValidator implements IExpressionValidator {
     protected IStatus validateSetListDocumentOperation(final Expression expression, final Operation operation) {
         final boolean isTask = operation.eContainer() instanceof Task;
         final String listClass = List.class.getName();
-        if (!listClass.equals(dataExpression.getReturnType())) {
-            return ValidationStatus.error(Messages.bind(Messages.incompatibleStorageReturnType, dataExpression.getName(),
+        final Expression storageExpression = operation.getLeftOperand();
+        if (!listClass.equals(storageExpression.getReturnType())) {
+            return ValidationStatus.error(Messages.bind(Messages.incompatibleStorageReturnType, storageExpression.getName(),
                     operatorLabelProvider.getText(operation.getOperator())));
         }
 
         if (expression != null && expression.getContent() != null && !expression.getContent().isEmpty()) {
-            final String dataReturnType = dataExpression.getReturnType();
+            final String dataReturnType = storageExpression.getReturnType();
             final String returnType = expression.getReturnType();
             try {
                 final boolean isListType = listClass.equals(returnType) || List.class.isAssignableFrom(Class.forName(returnType));
@@ -274,13 +275,13 @@ public class OperationReturnTypesValidator implements IExpressionValidator {
     protected IStatus validateSetDocumentOperation(final Expression expression, final Operation operation) {
 
         final boolean isTask = operation.eContainer() instanceof Task;
-
-        if (!String.class.getName().equals(dataExpression.getReturnType())) {
-            return ValidationStatus.error(Messages.bind(Messages.incompatibleStorageReturnType, dataExpression.getName(),
+        final Expression storageExpression = operation.getLeftOperand();
+        if (!String.class.getName().equals(storageExpression.getReturnType())) {
+            return ValidationStatus.error(Messages.bind(Messages.incompatibleStorageReturnType, storageExpression.getName(),
                     operatorLabelProvider.getText(operation.getOperator())));
         }
         if (expression != null && expression.getContent() != null && !expression.getContent().isEmpty()) {
-            final String typeName = dataExpression.getReturnType();
+            final String typeName = storageExpression.getReturnType();
             final String actionType = expression.getReturnType();
             if (!(actionType.equals(DocumentValue.class.getName()) && typeName.equals(String.class.getName()))) {
 
