@@ -61,7 +61,7 @@ public class ConstraintInputIndexer extends Job {
     protected IStatus run(final IProgressMonitor monitor) {
         monitor.beginTask("Computing referenced inputs...", IProgressMonitor.UNKNOWN);
         referencedInputs.clear();
-        final CompletionNodeFinder finder = new CompletionNodeFinder(0, 0, 0, "", ""); //$NON-NLS-1$ //$NON-NLS-2$
+        final CompletionNodeFinder finder = new CompletionNodeFinder(0, 0, 0, "", "");
         final ContentAssistContext assistContext = finder.findContentAssistContext(groovyCompilationUnit);
 
         org.codehaus.groovy.ast.ASTNode astNode = null;
@@ -70,18 +70,21 @@ public class ConstraintInputIndexer extends Job {
         }
         if (astNode instanceof BlockStatement) {
             final BlockStatement blockStatement = (BlockStatement) astNode;
-            final Iterator<Variable> referencedClassVariablesIterator = blockStatement.getVariableScope().getReferencedClassVariablesIterator();
-            while (referencedClassVariablesIterator.hasNext()) {
-                final Variable variable = referencedClassVariablesIterator.next();
-                for (final ContractInput in : inputs) {
-                    if (in.getName().equals(variable.getName())) {
-                        referencedInputs.add(variable.getName());
-                    }
-                }
-
-            }
+            addRefrencedInputs(blockStatement);
         }
         return Status.OK_STATUS;
+    }
+
+    protected void addRefrencedInputs(final BlockStatement blockStatement) {
+        final Iterator<Variable> referencedClassVariablesIterator = blockStatement.getVariableScope().getReferencedClassVariablesIterator();
+        while (referencedClassVariablesIterator.hasNext()) {
+            final Variable variable = referencedClassVariablesIterator.next();
+            for (final ContractInput in : inputs) {
+                if (in.getName().equals(variable.getName())) {
+                    referencedInputs.add(variable.getName());
+                }
+            }
+        }
     }
 
     public Set<String> getReferencedInputs() {

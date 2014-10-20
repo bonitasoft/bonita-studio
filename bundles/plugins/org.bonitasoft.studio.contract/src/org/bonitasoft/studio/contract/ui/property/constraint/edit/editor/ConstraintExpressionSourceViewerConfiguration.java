@@ -28,6 +28,8 @@ public class ConstraintExpressionSourceViewerConfiguration extends GroovyConfigu
     @Override
     public IContentAssistant getContentAssistant(final ISourceViewer sourceViewer) {
         final ContentAssistant contentAssistant = (ContentAssistant) super.getContentAssistant(sourceViewer);
+        contentAssistant.enableAutoActivation(true);
+        contentAssistant.setStatusLineVisible(false);
         final IContentAssistProcessor processor = contentAssistant.getContentAssistProcessor(IDocument.DEFAULT_CONTENT_TYPE);
         final List<CompletionProposalCategory> categories = (List<CompletionProposalCategory>) ReflectionUtils.getPrivateField(ContentAssistProcessor.class,
                 "fCategories", processor);

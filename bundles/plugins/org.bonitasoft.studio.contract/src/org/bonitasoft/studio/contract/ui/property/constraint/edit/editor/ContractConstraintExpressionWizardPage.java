@@ -16,16 +16,13 @@
  */
 package org.bonitasoft.studio.contract.ui.property.constraint.edit.editor;
 
-import java.io.ByteArrayInputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.charset.Charset;
 import java.util.List;
 
+import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.contract.ContractPlugin;
-import org.bonitasoft.studio.contract.core.constraint.BuildMVELExpressionJob;
 import org.bonitasoft.studio.contract.core.constraint.ConstraintInputIndexer;
 import org.bonitasoft.studio.contract.i18n.Messages;
 import org.bonitasoft.studio.contract.ui.property.constraint.edit.editor.contentassist.ContractInputCompletionProposalComputer;
@@ -33,18 +30,14 @@ import org.bonitasoft.studio.groovy.ui.viewer.GroovyViewer;
 import org.bonitasoft.studio.model.process.ContractConstraint;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ProcessPackage;
-import org.codehaus.groovy.eclipse.editor.GroovyEditor;
+import org.bonitasoft.studio.model.process.Task;
 import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.jface.databinding.wizard.WizardPageSupport;
 import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocumentListener;
-import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
@@ -54,7 +47,6 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.browser.IWebBrowser;
 import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
-import org.eclipse.ui.part.FileEditorInput;
 
 
 /**
@@ -66,12 +58,8 @@ public class ContractConstraintExpressionWizardPage extends WizardPage implement
     private static final String MVEL_BASICS_URL = "http://mvel.codehaus.org/Language+Guide+for+2.0";
 
     private final ContractConstraint constraint;
-    private FileEditorInput input;
     private final List<ContractInput> inputs;
-    private IAnnotationModel annotationModel;
-    private final BuildMVELExpressionJob buildJob;
     private ConstraintInputIndexer inputIndexer;
-    private SourceViewer sourceViewer;
     private IObservableValue expressionContentObservable;
     private IObservableList inputsObservable;
     private GroovyViewer groovyViewer;
@@ -81,33 +69,11 @@ public class ContractConstraintExpressionWizardPage extends WizardPage implement
         setDescription(Messages.constraintEditorDescription);
         this.constraint = constraint;
         this.inputs = inputs;
-        buildJob = new BuildMVELExpressionJob(inputs);
-    }
-
-    protected FileEditorInput createTmpGroovyResource(final ContractConstraint constraint) {
-        final IFile file = RepositoryManager.getInstance().getCurrentRepository().getProject().getFile("tmp" + System.currentTimeMillis() + ".groovy");
-
-        try {
-            String expression = constraint.getExpression();
-            if (expression == null) {
-                expression = "";
-            }
-            file.create(new ByteArrayInputStream(expression.getBytes(Charset.forName("UTF-8"))), IResource.FORCE, null);
-        } catch (final CoreException e) {
-            e.printStackTrace();
-        }
-        return new FileEditorInput(file);
     }
 
 
     @Override
     public void dispose() {
-        final IFile resource = (IFile) input.getAdapter(IFile.class);
-        try {
-            resource.delete(true, null);
-        } catch (final CoreException e) {
-            BonitaStudioLog.error("Failed to delete temporary groovy file", e, ContractPlugin.PLUGIN_ID);
-        }
         if (groovyViewer != null) {
             groovyViewer.dispose();
         }
@@ -123,20 +89,31 @@ public class ContractConstraintExpressionWizardPage extends WizardPage implement
         final EMFDataBindingContext context = new EMFDataBindingContext();
         final Composite container = new Composite(parent, SWT.NONE);
         container.setLayout(new FillLayout());
-        final GroovyEditor editor = new MVELEditor();
-        input = createTmpGroovyResource(constraint);
-        groovyViewer = new GroovyViewer(container, input, editor);
-        inputIndexer = new ConstraintInputIndexer(inputs, editor.getGroovyCompilationUnit());
-
+        final MVELEditor editor = cretaeSourceViewer(container);
         getSourceViewer().getTextWidget().setData(ContractInputCompletionProposalComputer.INPUTS, inputs);
         getSourceViewer().getDocument().addDocumentListener(this);
-        annotationModel = getSourceViewer().getAnnotationModel();
 
         setControl(container);
         expressionContentObservable = EMFObservables.observeValue(constraint, ProcessPackage.Literals.CONTRACT_CONSTRAINT__EXPRESSION);
+
         inputsObservable = EMFObservables.observeList(constraint, ProcessPackage.Literals.CONTRACT_CONSTRAINT__INPUT_NAMES);
+        inputIndexer = new ConstraintInputIndexer(inputs, editor.getGroovyCompilationUnit());
+        inputIndexer.addJobChangeListener(new UpdateInputReferenceListener(inputsObservable));
+        getSourceViewer().getDocument().set(expressionContentObservable.getValue().toString());
         context.addValidationStatusProvider(new ConstraintExpressionEditorValidator(expressionContentObservable, inputsObservable));
         WizardPageSupport.create(this, context);
+    }
+
+
+    protected MVELEditor cretaeSourceViewer(final Composite container) {
+        final MVELEditor editor = new MVELEditor();
+        groovyViewer = new GroovyViewer(container, null, editor);
+        Task parentTask = null;
+        if (!inputs.isEmpty()) {
+            parentTask = ModelHelper.getFirstContainerOfType(inputs.get(0), Task.class);
+        }
+        groovyViewer.setContext(null, parentTask, null, null);
+        return editor;
     }
 
 
@@ -149,13 +126,11 @@ public class ContractConstraintExpressionWizardPage extends WizardPage implement
     public void documentChanged(final DocumentEvent event) {
         final String expression = event.getDocument().get();
         expressionContentObservable.setValue(expression);
-        buildJob.setExpression(expression);
-        buildJob.schedule();
-        buildJob.addJobChangeListener(new UpdateCompilerAnnotationListener(annotationModel));
 
-        inputIndexer.setExpression(expression);
-        inputIndexer.addJobChangeListener(new UpdateInputReferenceListener(inputsObservable));
-        inputIndexer.schedule();
+        if (inputIndexer != null) {
+            inputIndexer.setExpression(expression);
+            inputIndexer.schedule();
+        }
     }
 
 

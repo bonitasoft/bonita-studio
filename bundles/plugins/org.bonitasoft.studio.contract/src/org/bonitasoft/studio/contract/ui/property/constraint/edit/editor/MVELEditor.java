@@ -17,12 +17,10 @@
 package org.bonitasoft.studio.contract.ui.property.constraint.edit.editor;
 
 import org.codehaus.groovy.eclipse.GroovyPlugin;
-import org.codehaus.groovy.eclipse.core.preferences.PreferenceConstants;
 import org.codehaus.groovy.eclipse.editor.GroovyColorManager;
 import org.codehaus.groovy.eclipse.editor.GroovyEditor;
 import org.eclipse.jdt.ui.text.JavaSourceViewerConfiguration;
 import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.jface.preference.IPreferenceStore;
 
 
 /**
@@ -48,9 +46,6 @@ public class MVELEditor extends GroovyEditor {
 
     @Override
     public JavaSourceViewerConfiguration createJavaSourceViewerConfiguration() {
-        final IPreferenceStore groovyStore = org.codehaus.groovy.eclipse.GroovyPlugin.getDefault().getPreferenceStore();
-        groovyStore.setDefault(PreferenceConstants.GROOVY_SEMANTIC_HIGHLIGHTING, false);
-        groovyStore.setValue(PreferenceConstants.GROOVY_SEMANTIC_HIGHLIGHTING, false);
         return new ConstraintExpressionSourceViewerConfiguration(new GroovyColorManager(), getPreferenceStore(), this);
     }
 }
