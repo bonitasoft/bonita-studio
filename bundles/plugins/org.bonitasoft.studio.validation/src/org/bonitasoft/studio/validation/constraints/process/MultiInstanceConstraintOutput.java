@@ -70,6 +70,4 @@ public class MultiInstanceConstraintOutput extends AbstractLiveValidationMarkerC
         return "org.bonitasoft.studio.validation.multiInstanceOutput";
     }
 
-
-
 }

@@ -4,7 +4,7 @@ Bundle-Name: GMF SVG Support
 Bundle-SymbolicName: org.eclipse.gmf.runtime.lite.svg;singleton:=true
 Bundle-Version: 1.0.1.qualifier
 Bundle-Activator: org.eclipse.gmf.internal.runtime.lite.svg.Activator
-Bundle-Vendor: BonitaSoft S.A.
+Bundle-Vendor: Bonitasoft S.A.
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.draw2d,

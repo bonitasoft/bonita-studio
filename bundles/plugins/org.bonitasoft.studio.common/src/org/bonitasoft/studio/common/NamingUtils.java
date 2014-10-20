@@ -220,9 +220,9 @@ public class NamingUtils {
                 final EObject eObject = (EObject) iterator.next();
                 if (eObject instanceof Element) {
                     final Element child = (Element) eObject;
-                    if (child.getName().startsWith(label)) {
-                        String name = child.getName();
-                        final int index = child.getName().indexOf(label) + label.length();
+                    String name = child.getName();
+                    if (name != null && name.startsWith(label)) {
+                        final int index = name.indexOf(label) + label.length();
                         name = name.substring(index);
                         try {
                             max = Math.max(Integer.valueOf(name), max);

@@ -17,12 +17,14 @@
  */
 package org.bonitasoft.studio.tests.bug;
 
+import static org.bonitasoft.studio.repository.themes.i18n.Messages.themeRepository;
+
+import org.bonitasoft.studio.properties.i18n.Messages;
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
 import org.junit.Test;
-
 
 /**
  * @author Mickael Istria
@@ -30,25 +32,25 @@ import org.junit.Test;
  */
 public class TestBugsSWTBot extends SWTBotGefTestCase {
 
-	@Test
-	public void testOpenHtmlEditor() throws Exception {
-		SWTBotTestUtil.createNewDiagram(bot);
+    @Test
+    public void testOpenHtmlEditor() throws Exception {
+        SWTBotTestUtil.createNewDiagram(bot);
 
-		SWTBotView botView =  bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_APPLICATION);
-		if(!botView.isActive()){
-			botView.show();
-		}
-		botView.setFocus();
-		SWTBotTestUtil.selectTabbedPropertyView(bot, "Look'n'feel");
+        final SWTBotView botView =  bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_APPLICATION);
+        if(!botView.isActive()){
+            botView.show();
+        }
+        botView.setFocus();
+        SWTBotTestUtil.selectTabbedPropertyView(bot, themeRepository);
 
-		SWTBotView properties = bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_APPLICATION);
-		properties.bot().button("Edit",1).click();
-		SWTBotEditor activeEditor = bot.activeEditor();
-		assertEquals("org.eclipse.wst.html.core.htmlsource.source",activeEditor.getReference().getId());
-	}
+        final SWTBotView properties = bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_APPLICATION);
+        properties.bot().button(Messages.Edit, 1).click();
+        final SWTBotEditor activeEditor = bot.activeEditor();
+        assertEquals("org.eclipse.wst.html.core.htmlsource.source",activeEditor.getReference().getId());
+    }
 
-	@Override
-	protected void tearDown() throws Exception {
-		bot.closeAllEditors();	
-	}
+    @Override
+    protected void tearDown() throws Exception {
+        bot.closeAllEditors();
+    }
 }

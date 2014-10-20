@@ -35,21 +35,21 @@ import org.eclipse.emf.edapt.migration.Model;
  */
 public class FileAndImageWidgetMigration extends ReportCustomMigration {
 
-	private Map<String, String> fileDocumentNames = new HashMap<String,String>();
-	private Map<String, String> imgPaths = new HashMap<String,String>();
-	private Map<String, Boolean> isDocuments = new HashMap<String,Boolean>();
-	private Map<Instance,Instance> attachmentDatas=new HashMap<Instance,Instance>();
+	private final Map<String, String> fileDocumentNames = new HashMap<String,String>();
+	private final Map<String, String> imgPaths = new HashMap<String,String>();
+	private final Map<String, Boolean> isDocuments = new HashMap<String,Boolean>();
+	private final Map<Instance,Instance> attachmentDatas=new HashMap<Instance,Instance>();
 
 	@Override
-	public void migrateBefore(Model model, Metamodel metamodel)
+	public void migrateBefore(final Model model, final Metamodel metamodel)
 			throws MigrationException {
-		for(Instance widget : model.getAllInstances("form.FileWidget")){
-			if(!(widget.getContainer().instanceOf("expression.Expression"))){
+		for(final Instance widget : model.getAllInstances("form.FileWidget")){
+			if(!widget.getContainer().instanceOf("expression.Expression")){
 				storeFileData(widget);
 			}
 		}
-		for(Instance widget : model.getAllInstances("form.ImageWidget")){
-			if(!(widget.getContainer().instanceOf("expression.Expression"))){
+		for(final Instance widget : model.getAllInstances("form.ImageWidget")){
+			if(!widget.getContainer().instanceOf("expression.Expression")){
 				storeImgPath(widget);
 				storeIsDocument(widget);
 			}
@@ -57,14 +57,14 @@ public class FileAndImageWidgetMigration extends ReportCustomMigration {
 		removeAttachmentData(model);
 	}
 
-	protected void removeAttachmentData(Model model) {
-		for (Instance data : model.getAllInstances("process.AttachmentData")) {
+	protected void removeAttachmentData(final Model model) {
+		for (final Instance data : model.getAllInstances("process.AttachmentData")) {
 			attachmentDatas.put(data.copy(),data.getContainer());
 			model.delete(data);
 		}
 	}
 
-	private void storeFileData(Instance widget) {
+	private void storeFileData(final Instance widget) {
 		final Instance data = widget.get("fileData");
 		if(data != null){
 			final String dataName = data.get("name");
@@ -73,7 +73,7 @@ public class FileAndImageWidgetMigration extends ReportCustomMigration {
 		}
 	}
 
-	private void storeImgPath(Instance widget) {
+	private void storeImgPath(final Instance widget) {
 		final String imgPath = widget.get("imgPath");
 		widget.set("imgPath", null);
 		if(imgPath != null && !imgPath.trim().isEmpty()){
@@ -81,44 +81,43 @@ public class FileAndImageWidgetMigration extends ReportCustomMigration {
 		}
 	}
 
-	private void storeIsDocument(Instance widget) {
+	private void storeIsDocument(final Instance widget) {
 		final boolean isDocument = widget.get("isAnAttachment");
 		isDocuments.put(widget.getUuid(), isDocument);
 	}
 
 	@Override
-	public void migrateAfter(Model model, Metamodel metamodel)
+	public void migrateAfter(final Model model, final Metamodel metamodel)
 			throws MigrationException {
 		createDocuments(model);
-		for(Instance widget : model.getAllInstances("form.FileWidget")){
-			if(!(widget.getContainer().instanceOf("expression.Expression"))){
+		for(final Instance widget : model.getAllInstances("form.FileWidget")){
+			if(!widget.getContainer().instanceOf("expression.Expression")){
 				setFileDocument(widget,model,metamodel);
 			}
 		}
-		for(Instance widget : model.getAllInstances("form.ImageWidget")){
-			if(!(widget.getContainer().instanceOf("expression.Expression"))){
+		for(final Instance widget : model.getAllInstances("form.ImageWidget")){
+			if(!widget.getContainer().instanceOf("expression.Expression")){
 				setIsADocument(widget);
 				setImgPath(model, widget);
 			}
 		}
 	}
 
-	private void setIsADocument(Instance widget) {
+	private void setIsADocument(final Instance widget) {
 		widget.set("isADocument",isDocuments.get(widget.getUuid()));
 	}
 
-	private void setFileDocument(Instance widget,Model model,Metamodel metamodel) {
+	private void setFileDocument(final Instance widget,final Model model,final Metamodel metamodel) {
 		if(fileDocumentNames.containsKey(widget.getUuid())){
 			final String name = fileDocumentNames.get(widget.getUuid());
 			Instance documentToSet = null;
-			for(Instance document : model.getAllInstances("process.Document")){
+			for(final Instance document : model.getAllInstances("process.Document")){
 				if(name.equals(document.get("name"))){
 					documentToSet = document;
 					break;
 				}
 			}
 			if(documentToSet != null){
-				widget.set("document",documentToSet);
 				widget.set("inputType", metamodel.getEEnumLiteral("form.FileWidgetInputType.Document"));
 				widget.set("outputDocumentName", name);
 			}
@@ -127,21 +126,21 @@ public class FileAndImageWidgetMigration extends ReportCustomMigration {
 
 
 
-	private void setImgPath(Model model, Instance widget) {
+	private void setImgPath(final Model model, final Instance widget) {
 		Instance expression = null;
 		if(imgPaths.containsKey(widget.getUuid())){
-			String imgPath = imgPaths.get(widget.getUuid());
+			final String imgPath = imgPaths.get(widget.getUuid());
 			if(widget.get("isADocument")){
 				Instance documentToSet = null;
-				for(Instance document : model.getAllInstances("process.Document")){
+				for(final Instance document : model.getAllInstances("process.Document")){
 					if(imgPath.equals(document.get("name"))){
 						documentToSet = document;
 						break;
 					}
 				}
-				if(documentToSet != null){
-					widget.set("document", documentToSet);
-				}
+                if (documentToSet != null) {
+                    widget.set("document", documentToSet);
+                }
 				expression = StringToExpressionConverter.createExpressionInstance(model, "", "", String.class.getName(), ExpressionConstants.CONSTANT_TYPE, true);
 			}else{
 				expression = getConverter(model,getScope(widget)).parse(imgPath, String.class.getName(), true);
@@ -156,20 +155,20 @@ public class FileAndImageWidgetMigration extends ReportCustomMigration {
 		widget.set("imgPath", expression);
 	}
 
-	private void createDocuments(Model model){
-		for (Instance attachmentData:attachmentDatas.keySet()){
-			Instance process = attachmentDatas.get(attachmentData);
+	private void createDocuments(final Model model){
+		for (final Instance attachmentData:attachmentDatas.keySet()){
+			final Instance process = attachmentDatas.get(attachmentData);
 			if(process.instanceOf("process.Pool")){
-				Instance document = model.newInstance("process.Document");
+				final Instance document = model.newInstance("process.Document");
 				document.set("isInternal", true);
-				String name = attachmentData.get("name");
+				final String name = attachmentData.get("name");
 				document.set("name",name);
 				String defaultValue = attachmentData.get("barPath");
 				if(defaultValue != null && defaultValue.startsWith("attachments/")){
 					defaultValue = defaultValue.substring("attachments/".length());
 				}
 				document.set("defaultValueIdOfDocumentStore", defaultValue);
-				String doc = attachmentData.get("documentation");
+				final String doc = attachmentData.get("documentation");
 				document.set("documentation", doc);
 				process.add("documents", document);
 				addReportChange(name,Messages.document, process.getUuid(),Messages.documentCreationDescription,Messages.documentProperty, IStatus.WARNING);

@@ -461,12 +461,12 @@
             referenceValue="process.ecore#//Element"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#//Document" referenceName="eStructuralFeatures"
-          element="process.ecore#//Document/isInternal">
-        <changes xsi:type="history:Set" element="process.ecore#//Document/isInternal"
+          element="#//@releases.17/@changes.0/@changes.2/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.17/@changes.0/@changes.2/@changes.0/@element"
             featureName="name" dataValue="isInternal"/>
-        <changes xsi:type="history:Set" element="process.ecore#//Document/isInternal"
+        <changes xsi:type="history:Set" element="#//@releases.17/@changes.0/@changes.2/@changes.0/@element"
             featureName="defaultValueLiteral" dataValue="false"/>
-        <changes xsi:type="history:Set" element="process.ecore#//Document/isInternal"
+        <changes xsi:type="history:Set" element="#//@releases.17/@changes.0/@changes.2/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#//Document" referenceName="eStructuralFeatures"
@@ -8097,7 +8097,7 @@
   <releases date="2014-08-06T11:48:39.611+0200" label="6.3.4-001">
     <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.custom.migration.connector.UpdateAlfrescoMigrationConnectorVersionTo113"/>
   </releases>
-  <releases date="2014-07-30T11:48:39.611+0200" label="6.4.0-001">
+  <releases date="2014-07-22T11:48:39.611+0200" label="6.4.0-001">
     <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.custom.migration.multiinstance.MultiInstanceCustomMigration">
       <changes xsi:type="history:OperationChange">
         <changes xsi:type="history:Create" target="process.ecore#/" referenceName="eClassifiers"
@@ -8574,6 +8574,100 @@
       <changes xsi:type="history:Set" element="process.ecore#//MultiInstantiable/useCardinality"
           featureName="defaultValueLiteral" dataValue="false" oldDataValue="true"/>
     </changes>
+  </releases>
+  <releases date="2014-09-24T11:48:39.611+0200" label="6.4.0-002">
+    <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.custom.migration.document.DocumentTypeMigration">
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Create" target="process.ecore#/" referenceName="eClassifiers"
+            element="process.ecore#//DocumentType"/>
+        <changes xsi:type="history:Set" element="process.ecore#//DocumentType" featureName="name"
+            dataValue="DocumentType"/>
+        <operation name="createEnumeration">
+          <parameters name="ePackage">
+            <referenceValue element="process.ecore#/"/>
+          </parameters>
+          <parameters name="name">
+            <dataValue>DocumentType</dataValue>
+          </parameters>
+          <parameters name="literals"/>
+        </operation>
+      </changes>
+      <changes xsi:type="history:CompositeChange">
+        <changes xsi:type="history:Create" target="process.ecore#//DocumentType" referenceName="eLiterals"
+            element="process.ecore#//DocumentType/NONE"/>
+        <changes xsi:type="history:Set" element="process.ecore#//DocumentType/NONE"
+            featureName="name" dataValue="NONE"/>
+        <changes xsi:type="history:Create" target="process.ecore#//DocumentType" referenceName="eLiterals"
+            element="process.ecore#//DocumentType/INTERNAL"/>
+        <changes xsi:type="history:Set" element="process.ecore#//DocumentType/INTERNAL"
+            featureName="name" dataValue="INTERNAL"/>
+        <changes xsi:type="history:Set" element="process.ecore#//DocumentType/INTERNAL"
+            featureName="value" dataValue="1" oldDataValue="0"/>
+        <changes xsi:type="history:Create" target="process.ecore#//DocumentType" referenceName="eLiterals"
+            element="process.ecore#//DocumentType/EXTERNAL"/>
+        <changes xsi:type="history:Set" element="process.ecore#//DocumentType/EXTERNAL"
+            featureName="name" dataValue="EXTERNAL"/>
+        <changes xsi:type="history:Set" element="process.ecore#//DocumentType/EXTERNAL"
+            featureName="value" dataValue="2" oldDataValue="0"/>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Delete" target="process.ecore#//Document" referenceName="eStructuralFeatures">
+          <element xsi:type="ecore:EAttribute" name="isInternal" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
+              defaultValueLiteral="false"/>
+        </changes>
+        <operation name="deleteFeature2">
+          <parameters name="feature">
+            <referenceValue element="#//@releases.17/@changes.0/@changes.2/@changes.0/@element"/>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Create" target="process.ecore#//Document" referenceName="eStructuralFeatures"
+            element="process.ecore#//Document/documentType">
+          <changes xsi:type="history:Set" element="process.ecore#//Document/documentType"
+              featureName="name" dataValue="documentType"/>
+          <changes xsi:type="history:Set" element="process.ecore#//Document/documentType"
+              featureName="lowerBound" dataValue="1" oldDataValue="0"/>
+          <changes xsi:type="history:Set" element="process.ecore#//Document/documentType"
+              featureName="defaultValueLiteral" dataValue="0"/>
+          <changes xsi:type="history:Set" element="process.ecore#//Document/documentType"
+              featureName="eType" referenceValue="process.ecore#//DocumentType"/>
+        </changes>
+        <operation name="newAttribute">
+          <parameters name="eClass">
+            <referenceValue element="process.ecore#//Document"/>
+          </parameters>
+          <parameters name="name">
+            <dataValue>documentType</dataValue>
+          </parameters>
+          <parameters name="type">
+            <referenceValue element="process.ecore#//DocumentType"/>
+          </parameters>
+          <parameters name="lowerBound">
+            <dataValue>1</dataValue>
+          </parameters>
+          <parameters name="upperBound">
+            <dataValue>1</dataValue>
+          </parameters>
+          <parameters name="defaultValue">
+            <dataValue>0</dataValue>
+          </parameters>
+        </operation>
+      </changes>
+    </changes>
+    <changes xsi:type="history:CompositeChange" description="Add possibility of initial content for Multiple Document">
+      <changes xsi:type="history:Create" target="process.ecore#//Document" referenceName="eStructuralFeatures"
+          element="process.ecore#//Document/initialMultipleContent">
+        <changes xsi:type="history:Set" element="process.ecore#//Document/initialMultipleContent"
+            featureName="name" dataValue="initialMultipleContent"/>
+        <changes xsi:type="history:Set" element="process.ecore#//Document/initialMultipleContent"
+            featureName="containment" dataValue="true" oldDataValue="false"/>
+        <changes xsi:type="history:Set" element="process.ecore#//Document/initialMultipleContent"
+            featureName="eType" referenceValue="expression.ecore#//Expression"/>
+      </changes>
+    </changes>
+    <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.custom.migration.document.DocumentDefaultReturnTypeModifierMigration"/>
+    <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.custom.migration.form.FileWidgetDocumentMigration"/>
   </releases>
   <releases/>
 </history:History>
