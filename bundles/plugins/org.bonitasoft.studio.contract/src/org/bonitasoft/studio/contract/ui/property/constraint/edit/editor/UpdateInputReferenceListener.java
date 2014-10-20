@@ -17,10 +17,9 @@
 package org.bonitasoft.studio.contract.ui.property.constraint.edit.editor;
 
 import org.bonitasoft.studio.contract.core.constraint.ConstraintInputIndexer;
-import org.eclipse.core.databinding.observable.list.IObservableList;
+import org.bonitasoft.studio.model.process.ContractConstraint;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
-import org.eclipse.swt.widgets.Display;
 
 
 /**
@@ -30,10 +29,10 @@ import org.eclipse.swt.widgets.Display;
 public class UpdateInputReferenceListener extends JobChangeAdapter {
 
 
-    private final IObservableList dependenciesList;
+    private final ContractConstraint constraint;
 
-    public UpdateInputReferenceListener(final IObservableList dependenciesList) {
-        this.dependenciesList = dependenciesList;
+    public UpdateInputReferenceListener(final ContractConstraint constraint) {
+        this.constraint = constraint;
     }
 
     /* (non-Javadoc)
@@ -42,15 +41,8 @@ public class UpdateInputReferenceListener extends JobChangeAdapter {
     @Override
     public void done(final IJobChangeEvent event) {
         final ConstraintInputIndexer inputIndexer = (ConstraintInputIndexer) event.getJob();
-        Display.getDefault().syncExec(new Runnable() {
-
-            @Override
-            public void run() {
-                dependenciesList.clear();
-                dependenciesList.addAll(inputIndexer.getReferencedInputs());
-            }
-        });
-
+        constraint.getInputNames().clear();
+        constraint.getInputNames().addAll(inputIndexer.getReferencedInputs());
     }
 
 

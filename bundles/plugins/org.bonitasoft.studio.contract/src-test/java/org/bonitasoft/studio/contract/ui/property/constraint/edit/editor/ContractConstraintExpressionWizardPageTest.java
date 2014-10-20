@@ -17,24 +17,32 @@
 package org.bonitasoft.studio.contract.ui.property.constraint.edit.editor;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import org.bonitasoft.studio.contract.AbstractSWTTestCase;
+import org.bonitasoft.studio.groovy.ui.viewer.GroovySourceViewerFactory;
 import org.bonitasoft.studio.groovy.ui.viewer.GroovyViewer;
 import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractConstraint;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ProcessFactory;
+import org.codehaus.groovy.eclipse.editor.GroovyEditor;
 import org.eclipse.jface.text.Document;
+import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.source.SourceViewer;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.osgi.framework.BundleContext;
 
 
 /**
@@ -49,6 +57,16 @@ public class ContractConstraintExpressionWizardPageTest extends AbstractSWTTestC
     private ContractConstraint constraint;
     @Mock
     private GroovyViewer groovyViewer;
+    @Mock
+    private BundleContext bundleContext;
+    @Mock
+    private GroovySourceViewerFactory groovySourceViewerFactory;
+    @Mock
+    private MVELEditorFactory editorFactory;
+    @Mock
+    private MVELEditor editor;
+    @Mock
+    private WebBrowserFactory browserFactory;
 
     /**
      * @throws java.lang.Exception
@@ -57,7 +75,7 @@ public class ContractConstraintExpressionWizardPageTest extends AbstractSWTTestC
     public void setUp() throws Exception {
         composite = createDisplayAndRealm();
         constraint = ProcessFactory.eINSTANCE.createContractConstraint();
-        constraint.setExpression("name.length() == 5");
+        constraint.setExpression("");
         final Contract c = ProcessFactory.eINSTANCE.createContract();
         c.getConstraints().add(constraint);
         final ContractInput name = ProcessFactory.eINSTANCE.createContractInput();
@@ -66,9 +84,25 @@ public class ContractConstraintExpressionWizardPageTest extends AbstractSWTTestC
         final SourceViewer sourceViewer = new SourceViewer(composite, null, SWT.NONE);
         sourceViewer.setDocument(new Document());
         when(groovyViewer.getSourceViewer()).thenReturn(sourceViewer);
-        wizardPage = new ContractConstraintExpressionWizardPage(constraint, c.getInputs());
-        //        doReturn(groovyViewer).when(wizardPage).createSourceViewer(any(Composite.class));
-        //        doReturn(groovyViewer.getSourceViewer()).when(wizardPage).getSourceViewer();
+        when(editorFactory.newInstance()).thenReturn(editor);
+        when(groovySourceViewerFactory.createSourceViewer(any(Composite.class), any(GroovyEditor.class))).thenReturn(groovyViewer);
+        wizardPage = new ContractConstraintExpressionWizardPage(constraint,
+                c.getInputs(),
+                groovySourceViewerFactory,
+                editorFactory,
+                browserFactory);
+        final ContractConstraintExpressionWizard wizard = new ContractConstraintExpressionWizard(constraint, null);
+        final WizardDialog wizardContainer = new WizardDialog(composite.getShell(), wizard) {
+
+            @Override
+            protected Control createContents(final Composite parent) {
+                return null;
+            }
+        };
+        wizardContainer.create();
+        assertThat(wizardContainer.getShell()).isNotNull();
+        wizard.setContainer(wizardContainer);
+        wizardPage.setWizard(wizard);
     }
 
     /**
@@ -80,9 +114,31 @@ public class ContractConstraintExpressionWizardPageTest extends AbstractSWTTestC
     }
 
     @Test
-    public void should_createControl() throws Exception {
+    public void should_createControl_set_page_control() throws Exception {
         wizardPage.createControl(composite);
         assertThat(wizardPage.getControl()).isNotNull();
     }
 
+    @Test
+    public void should_dispose_dispose_viewer() throws Exception {
+        wizardPage.createControl(composite);
+        wizardPage.dispose();
+        verify(groovyViewer).dispose();
+    }
+
+    @Test
+    public void should_documentChanged_set_expression_value() throws Exception {
+        wizardPage.createControl(composite);
+        final Document document = new Document("name.length() > 25");
+        final DocumentEvent event = new DocumentEvent(document, 0, document.getLength(), document.get());
+        wizardPage.documentChanged(event);
+        assertThat(constraint.getExpression()).isEqualTo(document.get());
+    }
+
+    @Test
+    public void should_performHelp_open_browser_with_mvel_url() throws Exception {
+        wizardPage.createControl(composite);
+        wizardPage.performHelp();
+        verify(browserFactory).openExteranlBrowser(ContractConstraintExpressionWizardPage.MVEL_BASICS_URL);
+    }
 }

@@ -16,7 +16,6 @@
  */
 package org.bonitasoft.studio.contract.ui.property.constraint.edit.editor;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
@@ -24,9 +23,9 @@ import java.util.HashSet;
 
 import org.bonitasoft.studio.contract.AbstractSWTTestCase;
 import org.bonitasoft.studio.contract.core.constraint.ConstraintInputIndexer;
-import org.codehaus.jdt.groovy.model.GroovyCompilationUnit;
-import org.eclipse.core.databinding.observable.list.IObservableList;
-import org.eclipse.core.databinding.observable.list.WritableList;
+import org.bonitasoft.studio.model.process.ContractConstraint;
+import org.bonitasoft.studio.model.process.ProcessFactory;
+import org.bonitasoft.studio.model.process.assertions.ContractConstraintAssert;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.junit.After;
 import org.junit.Before;
@@ -44,14 +43,12 @@ import org.mockito.runners.MockitoJUnitRunner;
 public class UpdateInputReferenceListenerTest extends AbstractSWTTestCase {
 
     private UpdateInputReferenceListener updateInputReferenceListener;
-    private IObservableList observableList;
 
     @Mock
     private ConstraintInputIndexer job;
     @Mock
-    private GroovyCompilationUnit groovyCompilationUnit;
-    @Mock
     private IJobChangeEvent event;
+    private ContractConstraint constraint;
 
     /**
      * @throws java.lang.Exception
@@ -61,8 +58,8 @@ public class UpdateInputReferenceListenerTest extends AbstractSWTTestCase {
         createDisplayAndRealm();
         when(job.getReferencedInputs()).thenReturn(new HashSet<String>(Arrays.asList("name")));
         when(event.getJob()).thenReturn(job);
-        observableList = new WritableList();
-        updateInputReferenceListener = new UpdateInputReferenceListener(observableList);
+        constraint = ProcessFactory.eINSTANCE.createContractConstraint();
+        updateInputReferenceListener = new UpdateInputReferenceListener(constraint);
     }
 
     /**
@@ -75,9 +72,9 @@ public class UpdateInputReferenceListenerTest extends AbstractSWTTestCase {
 
     @Test
     public void should_done_update_ObservableList_with_job_result() throws Exception {
-        assertThat(observableList).hasSize(0);
+        ContractConstraintAssert.assertThat(constraint).hasNoInputNames();
         updateInputReferenceListener.done(event);
-        assertThat(observableList).hasSize(1);
+        ContractConstraintAssert.assertThat(constraint).hasInputNames("name");
     }
 
 

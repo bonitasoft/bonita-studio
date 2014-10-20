@@ -40,6 +40,7 @@ import org.eclipse.core.runtime.jobs.Job;
  */
 public class ConstraintInputIndexer extends Job {
 
+    public static final Object FAMILY = "ConstraintInputIndexerFamily";
     private String expression;
     private List<ContractInput> inputs = new ArrayList<ContractInput>();
     private final GroovyCompilationUnit groovyCompilationUnit;
@@ -52,6 +53,14 @@ public class ConstraintInputIndexer extends Job {
         setUser(false);
         inputs = availableInputs;
         this.groovyCompilationUnit = groovyCompilationUnit;
+    }
+
+    @Override
+    public boolean belongsTo(final Object family) {
+        if (FAMILY.equals(family)) {
+            return true;
+        }
+        return super.belongsTo(family);
     }
 
     /* (non-Javadoc)

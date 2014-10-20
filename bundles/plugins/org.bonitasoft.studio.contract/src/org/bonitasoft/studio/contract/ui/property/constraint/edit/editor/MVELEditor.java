@@ -21,7 +21,6 @@ import org.codehaus.groovy.eclipse.editor.GroovyColorManager;
 import org.codehaus.groovy.eclipse.editor.GroovyEditor;
 import org.eclipse.jdt.ui.text.JavaSourceViewerConfiguration;
 import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.jface.preference.IPreferenceStore;
 
 
 /**
@@ -47,12 +46,9 @@ public class MVELEditor extends GroovyEditor {
 
     @Override
     public JavaSourceViewerConfiguration createJavaSourceViewerConfiguration() {
-        return new ConstraintExpressionSourceViewerConfiguration(getColorManager(), getStore(), this);
+        return new ConstraintExpressionSourceViewerConfiguration(getColorManager(), getPreferenceStore(), this);
     }
 
-    protected IPreferenceStore getStore() {
-        return getPreferenceStore();
-    }
 
     protected GroovyColorManager getColorManager() {
         return new GroovyColorManager();

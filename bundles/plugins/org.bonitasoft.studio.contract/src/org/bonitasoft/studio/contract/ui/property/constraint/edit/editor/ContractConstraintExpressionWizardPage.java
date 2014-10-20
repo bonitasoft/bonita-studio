@@ -17,7 +17,6 @@
 package org.bonitasoft.studio.contract.ui.property.constraint.edit.editor;
 
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.List;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
@@ -26,6 +25,7 @@ import org.bonitasoft.studio.contract.ContractPlugin;
 import org.bonitasoft.studio.contract.core.constraint.ConstraintInputIndexer;
 import org.bonitasoft.studio.contract.i18n.Messages;
 import org.bonitasoft.studio.contract.ui.property.constraint.edit.editor.contentassist.ContractInputCompletionProposalComputer;
+import org.bonitasoft.studio.groovy.ui.viewer.GroovySourceViewerFactory;
 import org.bonitasoft.studio.groovy.ui.viewer.GroovyViewer;
 import org.bonitasoft.studio.model.process.ContractConstraint;
 import org.bonitasoft.studio.model.process.ContractInput;
@@ -43,10 +43,6 @@ import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.browser.IWebBrowser;
-import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
 
 
 /**
@@ -55,7 +51,7 @@ import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
  */
 public class ContractConstraintExpressionWizardPage extends WizardPage implements IDocumentListener {
 
-    private static final String MVEL_BASICS_URL = "http://mvel.codehaus.org/Language+Guide+for+2.0";
+    protected static final String MVEL_BASICS_URL = "http://mvel.codehaus.org/Language+Guide+for+2.0";
 
     private final ContractConstraint constraint;
     private final List<ContractInput> inputs;
@@ -63,12 +59,23 @@ public class ContractConstraintExpressionWizardPage extends WizardPage implement
     private IObservableValue expressionContentObservable;
     private IObservableList inputsObservable;
     private GroovyViewer groovyViewer;
+    private final GroovySourceViewerFactory groovyViewerFactory;
+    private final MVELEditorFactory editorFactory;
 
-    public ContractConstraintExpressionWizardPage(final ContractConstraint constraint, final List<ContractInput> inputs) {
+    private final WebBrowserFactory browserFactory;
+
+    public ContractConstraintExpressionWizardPage(final ContractConstraint constraint,
+            final List<ContractInput> inputs,
+            final GroovySourceViewerFactory sourceViewerFactory,
+            final MVELEditorFactory editorFactory,
+            final WebBrowserFactory browserFactory) {
         super(ContractConstraintExpressionWizardPage.class.getName());
         setDescription(Messages.constraintEditorDescription);
         this.constraint = constraint;
         this.inputs = inputs;
+        groovyViewerFactory = sourceViewerFactory;
+        this.editorFactory = editorFactory;
+        this.browserFactory = browserFactory;
     }
 
 
@@ -97,17 +104,17 @@ public class ContractConstraintExpressionWizardPage extends WizardPage implement
 
         inputsObservable = EMFObservables.observeList(constraint, ProcessPackage.Literals.CONTRACT_CONSTRAINT__INPUT_NAMES);
         inputIndexer = new ConstraintInputIndexer(inputs, viewer.getGroovyCompilationUnit());
-        inputIndexer.addJobChangeListener(new UpdateInputReferenceListener(inputsObservable));
+        inputIndexer.addJobChangeListener(new UpdateInputReferenceListener(constraint));
         getSourceViewer().getDocument().set(expressionContentObservable.getValue().toString());
         context.addValidationStatusProvider(new ConstraintExpressionEditorValidator(expressionContentObservable, inputsObservable));
-        WizardPageSupport.create(this, context);
 
         setControl(container);
+        WizardPageSupport.create(this, context);
+
     }
 
-
     protected GroovyViewer createSourceViewer(final Composite container) {
-        groovyViewer = new GroovyViewer(container, null, new MVELEditor());
+        groovyViewer = groovyViewerFactory.createSourceViewer(container, editorFactory.newInstance());
         Task parentTask = null;
         if (!inputs.isEmpty()) {
             parentTask = ModelHelper.getFirstContainerOfType(inputs.get(0), Task.class);
@@ -136,18 +143,11 @@ public class ContractConstraintExpressionWizardPage extends WizardPage implement
 
     @Override
     public void performHelp() {
-        URL url = null;
         try {
-            url = new URL(MVEL_BASICS_URL);
+            browserFactory.openExteranlBrowser(MVEL_BASICS_URL);
         } catch (final MalformedURLException e) {
             BonitaStudioLog.error("Invalid URL format for :" + MVEL_BASICS_URL, e, ContractPlugin.PLUGIN_ID);
         }
-        IWebBrowser browser = null;
-        try {
-            browser = PlatformUI.getWorkbench().getBrowserSupport().createBrowser(IWorkbenchBrowserSupport.AS_EXTERNAL, null, null, null);
-            browser.openURL(url);
-        } catch (final PartInitException e) {
-            BonitaStudioLog.error("Failed to oepn browser to display contract constraint expression help content", e, ContractPlugin.PLUGIN_ID);
-        }
     }
+
 }

@@ -18,6 +18,7 @@ package org.bonitasoft.studio.contract.ui.property.constraint.edit.editor;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.contract.i18n.Messages;
+import org.bonitasoft.studio.groovy.ui.viewer.GroovySourceViewerFactory;
 import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractConstraint;
 import org.bonitasoft.studio.model.process.ContractInput;
@@ -36,7 +37,6 @@ import org.eclipse.ui.views.properties.IPropertySourceProvider;
  */
 public class ContractConstraintExpressionWizard extends Wizard {
 
-    private ContractConstraintExpressionWizardPage editor;
     private final ContractConstraint constraint;
     private final ContractConstraint constraintWorkingCopy;
     private final EList<ContractInput> inputs;
@@ -52,13 +52,16 @@ public class ContractConstraintExpressionWizard extends Wizard {
 
     @Override
     public void addPages() {
-        editor = new ContractConstraintExpressionWizardPage(constraintWorkingCopy, inputs);
+        final ContractConstraintExpressionWizardPage page = new ContractConstraintExpressionWizardPage(constraintWorkingCopy,
+                inputs, new GroovySourceViewerFactory(),
+                new MVELEditorFactory(),
+                new WebBrowserFactory());
         if (constraintWorkingCopy.getExpression() == null || constraintWorkingCopy.getExpression().isEmpty()) {
-            editor.setTitle(Messages.bind(Messages.addContentToConstraint, constraintWorkingCopy.getName()));
+            page.setTitle(Messages.bind(Messages.addContentToConstraint, constraintWorkingCopy.getName()));
         } else {
-            editor.setTitle(Messages.bind(Messages.editContentToConstraint, constraintWorkingCopy.getName()));
+            page.setTitle(Messages.bind(Messages.editContentToConstraint, constraintWorkingCopy.getName()));
         }
-        addPage(editor);
+        addPage(page);
     }
     /* (non-Javadoc)
      * @see org.eclipse.jface.wizard.Wizard#performFinish()

@@ -17,46 +17,30 @@
 package org.bonitasoft.studio.contract.ui.property.constraint.edit.editor;
 
 import org.bonitasoft.studio.model.process.ContractConstraint;
-import org.eclipse.jface.viewers.DialogCellEditor;
 import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.views.properties.IPropertySourceProvider;
-
 
 /**
  * @author Romain Bioteau
  *
  */
-public class ContractConstraintExpressionDialogCellEditor extends DialogCellEditor {
+public class ConstraintEditorFactory {
 
-    private final ContractConstraint constraint;
-    private final IPropertySourceProvider propertySourceProvider;
-    private final ConstraintEditorFactory factory;
-
-    public ContractConstraintExpressionDialogCellEditor(final Composite parent, final ContractConstraint constraint,
-            final IPropertySourceProvider propertySourceProvider, final ConstraintEditorFactory factory) {
-        super(parent);
-        this.constraint = constraint;
-        this.propertySourceProvider = propertySourceProvider;
-        this.factory = factory;
-    }
-
-    /* (non-Javadoc)
-     * @see org.eclipse.jface.viewers.DialogCellEditor#openDialogBox(org.eclipse.swt.widgets.Control)
-     */
-    @Override
-    protected String openDialogBox(final Control parent) {
-        factory.openConstraintEditor(Display.getDefault().getActiveShell(), constraint, propertySourceProvider);
-        return constraint.getExpression();
+    public int openConstraintEditor(final Shell shell,
+            final ContractConstraint constraint,
+            final IPropertySourceProvider propertySourceProvider) {
+        final ContractConstraintExpressionWizard wizard = createWizard(constraint, propertySourceProvider);
+        final WizardDialog wizardDialog = new ConstraintEditorWizardDialog(Display.getDefault().getActiveShell(), wizard);
+        return openDialog(wizardDialog);
     }
 
     protected int openDialog(final WizardDialog wizardDialog) {
         return wizardDialog.open();
     }
 
-    protected ContractConstraintExpressionWizard createWizard() {
+    protected ContractConstraintExpressionWizard createWizard(final ContractConstraint constraint, final IPropertySourceProvider propertySourceProvider) {
         return new ContractConstraintExpressionWizard(constraint, propertySourceProvider);
     }
 

@@ -18,6 +18,7 @@ package org.bonitasoft.studio.contract.ui.property.constraint.edit;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.contract.core.validation.ContractDefinitionValidator;
+import org.bonitasoft.studio.contract.ui.property.constraint.edit.editor.ConstraintEditorFactory;
 import org.bonitasoft.studio.contract.ui.property.constraint.edit.editor.ContractConstraintExpressionDialogCellEditor;
 import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractConstraint;
@@ -55,7 +56,8 @@ public class ConstraintExpressionPropertyEditingSupport extends PropertyEditingS
 
     @Override
     protected CellEditor getCellEditor(final Object object) {
-        return new ContractConstraintExpressionDialogCellEditor((Composite) getViewer().getControl(), (ContractConstraint) object, propertySourceProvider);
+        return new ContractConstraintExpressionDialogCellEditor((Composite) getViewer().getControl(), (ContractConstraint) object, propertySourceProvider,
+                new ConstraintEditorFactory());
     }
 
     @Override

@@ -83,7 +83,7 @@ public class ConstraintExpressionValidationLabelDecorator implements ILabelDecor
             final FieldDecoration decoration = getErrorDecorator();
             decoration.setDescription(expressionValidationRule.getMessage(status));
             final Image image = decoration.getImage();
-            if (!image.isDisposed()) {
+            if (!image.getDevice().isDisposed()) {
                 return ImageDescriptor.createFromImage(image);
             }
 
@@ -93,7 +93,7 @@ public class ConstraintExpressionValidationLabelDecorator implements ILabelDecor
                     final FieldDecoration decoration = getErrorDecorator();
                     decoration.setDescription(dependenciesValidationRule.getMessage(c));
                     final Image image = decoration.getImage();
-                    if (!image.isDisposed()) {
+                    if (!image.getDevice().isDisposed()) {
                         return ImageDescriptor.createFromImage(image);
                     }
                 }
