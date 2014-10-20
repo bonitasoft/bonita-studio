@@ -89,31 +89,31 @@ public class ContractConstraintExpressionWizardPage extends WizardPage implement
         final EMFDataBindingContext context = new EMFDataBindingContext();
         final Composite container = new Composite(parent, SWT.NONE);
         container.setLayout(new FillLayout());
-        final MVELEditor editor = cretaeSourceViewer(container);
+        final GroovyViewer viewer = createSourceViewer(container);
         getSourceViewer().getTextWidget().setData(ContractInputCompletionProposalComputer.INPUTS, inputs);
         getSourceViewer().getDocument().addDocumentListener(this);
 
-        setControl(container);
         expressionContentObservable = EMFObservables.observeValue(constraint, ProcessPackage.Literals.CONTRACT_CONSTRAINT__EXPRESSION);
 
         inputsObservable = EMFObservables.observeList(constraint, ProcessPackage.Literals.CONTRACT_CONSTRAINT__INPUT_NAMES);
-        inputIndexer = new ConstraintInputIndexer(inputs, editor.getGroovyCompilationUnit());
+        inputIndexer = new ConstraintInputIndexer(inputs, viewer.getGroovyCompilationUnit());
         inputIndexer.addJobChangeListener(new UpdateInputReferenceListener(inputsObservable));
         getSourceViewer().getDocument().set(expressionContentObservable.getValue().toString());
         context.addValidationStatusProvider(new ConstraintExpressionEditorValidator(expressionContentObservable, inputsObservable));
         WizardPageSupport.create(this, context);
+
+        setControl(container);
     }
 
 
-    protected MVELEditor cretaeSourceViewer(final Composite container) {
-        final MVELEditor editor = new MVELEditor();
-        groovyViewer = new GroovyViewer(container, null, editor);
+    protected GroovyViewer createSourceViewer(final Composite container) {
+        groovyViewer = new GroovyViewer(container, null, new MVELEditor());
         Task parentTask = null;
         if (!inputs.isEmpty()) {
             parentTask = ModelHelper.getFirstContainerOfType(inputs.get(0), Task.class);
         }
         groovyViewer.setContext(null, parentTask, null, null);
-        return editor;
+        return groovyViewer;
     }
 
 

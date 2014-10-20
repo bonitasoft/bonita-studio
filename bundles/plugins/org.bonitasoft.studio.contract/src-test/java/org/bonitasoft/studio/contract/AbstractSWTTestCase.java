@@ -60,6 +60,10 @@ public abstract class AbstractSWTTestCase {
         return image;
     }
 
+    protected Color createColor() {
+        return new Color(display, new RGB(255, 0, 0));
+    }
+
     protected void dispose() {
         if (defaultRealm != null) {
             defaultRealm.dispose();
