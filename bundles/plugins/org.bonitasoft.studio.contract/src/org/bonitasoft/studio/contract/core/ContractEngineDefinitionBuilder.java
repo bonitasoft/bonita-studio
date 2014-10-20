@@ -124,10 +124,6 @@ public class ContractEngineDefinitionBuilder implements IEngineDefinitionBuilder
     //        return input != null && input.getMapping() != null && input.getMapping().getData() != null;
     //    }
 
-    public void setEngineBuilder(final UserTaskDefinitionBuilder builder) {
-        taskBuilder = builder;
-        activityDefinitionBuilder = builder;
-    }
 
     @Override
     public boolean appliesTo(final EObject element) {
@@ -136,10 +132,9 @@ public class ContractEngineDefinitionBuilder implements IEngineDefinitionBuilder
 
     @Override
     public void setEngineBuilder(final Object engineBuilder) {
-        if (engineBuilder instanceof UserTaskDefinitionBuilder) {
-            taskBuilder = (UserTaskDefinitionBuilder) engineBuilder;
-            activityDefinitionBuilder = (ActivityDefinitionBuilder) engineBuilder;
-        }
+        Assert.isLegal(engineBuilder instanceof UserTaskDefinitionBuilder);
+        taskBuilder = (UserTaskDefinitionBuilder) engineBuilder;
+        activityDefinitionBuilder = (ActivityDefinitionBuilder) engineBuilder;
     }
 
 }
