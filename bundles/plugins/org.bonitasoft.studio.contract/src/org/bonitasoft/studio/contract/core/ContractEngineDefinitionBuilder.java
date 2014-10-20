@@ -28,6 +28,7 @@ import org.bonitasoft.studio.engine.contribution.IEngineDefinitionBuilder;
 import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractConstraint;
 import org.bonitasoft.studio.model.process.ContractInput;
+import org.bonitasoft.studio.model.process.ContractInputType;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.ecore.EObject;
 
@@ -91,10 +92,10 @@ public class ContractEngineDefinitionBuilder implements IEngineDefinitionBuilder
             contractBuilder.addMandatoryConstraint(complexInput.getName());
         }
         for (final ContractInput child : input.getInputs()) {
-            final Type inputType = getInputType(child);
-            if (Type.COMPLEX == inputType) {
+            if (ContractInputType.COMPLEX == child.getType()) {
                 complexInput.getComplexInputs().add(buildComplexInput(child, contractBuilder));
             } else {
+                final Type inputType = getInputType(child);
                 complexInput.getSimpleInputs().add(new SimpleInputDefinitionImpl(child.getName(), inputType, child.getDescription(), child.isMultiple()));
                 if (child.isMandatory()) {
                     contractBuilder.addMandatoryConstraint(child.getName());
