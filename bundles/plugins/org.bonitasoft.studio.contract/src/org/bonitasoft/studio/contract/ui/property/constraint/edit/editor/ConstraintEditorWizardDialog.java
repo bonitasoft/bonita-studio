@@ -16,13 +16,20 @@
  */
 package org.bonitasoft.studio.contract.ui.property.constraint.edit.editor;
 
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Cursor;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
@@ -41,20 +48,38 @@ public class ConstraintEditorWizardDialog extends WizardDialog {
 
     @Override
     protected Control createHelpControl(final Composite parent) {
-        final ToolBar helpControl = (ToolBar) super.createHelpControl(parent);
-        final ToolItem item = helpControl.getItem(0);
-        final Listener[] selectionListeners = item.getListeners(SWT.Selection);
-        for (final Listener l : selectionListeners) {
-            item.removeListener(SWT.Selection, l);
-        }
-        item.addListener(SWT.Selection, new Listener() {
+        return createHelpImageButton(parent, getHelpImage());
+    }
+
+
+    protected Image getHelpImage() {
+        return JFaceResources.getImage(DLG_IMG_HELP);
+    }
+
+    private ToolBar createHelpImageButton(final Composite parent, final Image image) {
+        final ToolBar toolBar = new ToolBar(parent, SWT.FLAT | SWT.NO_FOCUS);
+        ((GridLayout) parent.getLayout()).numColumns++;
+        toolBar.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_CENTER));
+        final Cursor cursor = new Cursor(parent.getDisplay(), SWT.CURSOR_HAND);
+        toolBar.setCursor(cursor);
+        toolBar.addDisposeListener(new DisposeListener() {
 
             @Override
-            public void handleEvent(final Event event) {
+            public void widgetDisposed(final DisposeEvent e) {
+                cursor.dispose();
+            }
+        });
+        final ToolItem fHelpButton = new ToolItem(toolBar, SWT.CHECK);
+        fHelpButton.setImage(image);
+        fHelpButton.setToolTipText(JFaceResources.getString("helpToolTip")); //$NON-NLS-1$
+        fHelpButton.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(final SelectionEvent e) {
                 helpPressed();
             }
         });
-        return helpControl;
+        return toolBar;
     }
 
 }

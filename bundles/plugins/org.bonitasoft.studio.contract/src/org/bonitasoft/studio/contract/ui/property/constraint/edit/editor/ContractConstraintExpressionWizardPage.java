@@ -133,9 +133,7 @@ public class ContractConstraintExpressionWizardPage extends WizardPage implement
     public void documentChanged(final DocumentEvent event) {
         final String expression = event.getDocument().get();
         expressionContentObservable.setValue(expression);
-
         if (inputIndexer != null) {
-            inputIndexer.setExpression(expression);
             inputIndexer.schedule();
         }
     }

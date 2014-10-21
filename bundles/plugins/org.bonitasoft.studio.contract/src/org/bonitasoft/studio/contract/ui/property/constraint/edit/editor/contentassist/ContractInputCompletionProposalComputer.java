@@ -17,6 +17,7 @@
 package org.bonitasoft.studio.contract.ui.property.constraint.edit.editor.contentassist;
 
 import java.net.URLClassLoader;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -60,6 +61,9 @@ public class ContractInputCompletionProposalComputer extends GroovyCompletionPro
                 (GroovyCompilationUnit) javaContext.getCompilationUnit(),
                 context.getInvocationOffset(), context.getDocument());
         final List<ContractInput> inputs = getContractInputs(context);
+        if (inputs.isEmpty()) {
+            return java.util.Collections.emptyList();
+        }
         CharSequence computeIdentifierPrefix = "";
         try {
             computeIdentifierPrefix = javaContext.computeIdentifierPrefix();
@@ -99,7 +103,10 @@ public class ContractInputCompletionProposalComputer extends GroovyCompletionPro
     @SuppressWarnings("unchecked")
     protected List<ContractInput> getContractInputs(final ContentAssistInvocationContext context) {
         final ITextViewer viewer = context.getViewer();
-        final List<ContractInput> inputs = (List<ContractInput>) viewer.getTextWidget().getData(INPUTS);
+        List<ContractInput> inputs = (List<ContractInput>) viewer.getTextWidget().getData(INPUTS);
+        if (inputs == null) {
+            inputs = new ArrayList<ContractInput>();
+        }
         return inputs;
     }
 

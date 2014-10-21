@@ -40,8 +40,6 @@ import org.eclipse.core.runtime.jobs.Job;
  */
 public class ConstraintInputIndexer extends Job {
 
-    public static final Object FAMILY = "ConstraintInputIndexerFamily";
-    private String expression;
     private List<ContractInput> inputs = new ArrayList<ContractInput>();
     private final GroovyCompilationUnit groovyCompilationUnit;
     private final Set<String> referencedInputs = new HashSet<String>();
@@ -55,20 +53,14 @@ public class ConstraintInputIndexer extends Job {
         this.groovyCompilationUnit = groovyCompilationUnit;
     }
 
-    @Override
-    public boolean belongsTo(final Object family) {
-        if (FAMILY.equals(family)) {
-            return true;
-        }
-        return super.belongsTo(family);
-    }
-
     /* (non-Javadoc)
      * @see org.eclipse.core.runtime.jobs.Job#run(org.eclipse.core.runtime.IProgressMonitor)
      */
     @Override
     protected IStatus run(final IProgressMonitor monitor) {
-        monitor.beginTask("Computing referenced inputs...", IProgressMonitor.UNKNOWN);
+        if (monitor != null) {
+            monitor.beginTask("Computing referenced inputs...", IProgressMonitor.UNKNOWN);
+        }
         referencedInputs.clear();
         final CompletionNodeFinder finder = new CompletionNodeFinder(0, 0, 0, "", "");
         final ContentAssistContext assistContext = finder.findContentAssistContext(groovyCompilationUnit);
@@ -98,14 +90,6 @@ public class ConstraintInputIndexer extends Job {
 
     public Set<String> getReferencedInputs() {
         return referencedInputs;
-    }
-
-    public String getExpression() {
-        return expression;
-    }
-
-    public void setExpression(final String expression) {
-        this.expression = expression;
     }
 
 }

@@ -24,6 +24,7 @@ public class ConstraintExpressionSourceViewerConfiguration extends GroovyConfigu
         super(colorManager, preferenceSource, editor);
     }
 
+
     @SuppressWarnings({ "restriction", "unchecked" })
     @Override
     public IContentAssistant getContentAssistant(final ISourceViewer sourceViewer) {

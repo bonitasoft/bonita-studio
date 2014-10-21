@@ -35,14 +35,18 @@ public class WebBrowserFactory {
     public void openExteranlBrowser(final String urlAsString) throws MalformedURLException {
         final URL url = new URL(urlAsString);
         try {
-            final IWebBrowser browser = PlatformUI.getWorkbench().getBrowserSupport().createBrowser(IWorkbenchBrowserSupport.AS_EXTERNAL,
-                    null,
-                    null,
-                    null);
+            final IWebBrowser browser = createExternalBrowser();
             browser.openURL(url);
         } catch (final PartInitException e) {
             BonitaStudioLog.error("Failed to oepn browser to display contract constraint expression help content", e, ContractPlugin.PLUGIN_ID);
         }
+    }
+
+    protected IWebBrowser createExternalBrowser() throws PartInitException {
+        return PlatformUI.getWorkbench().getBrowserSupport().createBrowser(IWorkbenchBrowserSupport.AS_EXTERNAL,
+                null,
+                null,
+                null);
     }
 
 }
