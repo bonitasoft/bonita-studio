@@ -45,6 +45,7 @@ public class ContractConstraintExpressionWizard extends Wizard {
     public ContractConstraintExpressionWizard(final ContractConstraint constraint, final IPropertySourceProvider propertySourceProvider) {
         this.constraint = constraint;
         constraintWorkingCopy = EcoreUtil.copy(constraint);
+
         inputs = ModelHelper.getFirstContainerOfType(constraint, Contract.class).getInputs();
         this.propertySourceProvider = propertySourceProvider;
         setDefaultPageImageDescriptor(Pics.getWizban());
@@ -56,7 +57,9 @@ public class ContractConstraintExpressionWizard extends Wizard {
                 inputs, new GroovySourceViewerFactory(),
                 new MVELEditorFactory(),
                 new WebBrowserFactory());
-        if (constraintWorkingCopy.getExpression() == null || constraintWorkingCopy.getExpression().isEmpty()) {
+        if (constraintWorkingCopy.getExpression() == null
+                || constraintWorkingCopy.getExpression().isEmpty()) {
+            constraintWorkingCopy.setExpression("");
             page.setTitle(Messages.bind(Messages.addContentToConstraint, constraintWorkingCopy.getName()));
         } else {
             page.setTitle(Messages.bind(Messages.editContentToConstraint, constraintWorkingCopy.getName()));
