@@ -20,7 +20,6 @@ import org.bonitasoft.engine.bpm.contract.ComplexInputDefinition;
 import org.bonitasoft.engine.bpm.contract.Type;
 import org.bonitasoft.engine.bpm.contract.impl.ComplexInputDefinitionImpl;
 import org.bonitasoft.engine.bpm.contract.impl.SimpleInputDefinitionImpl;
-import org.bonitasoft.engine.bpm.process.impl.ActivityDefinitionBuilder;
 import org.bonitasoft.engine.bpm.process.impl.ContractDefinitionBuilder;
 import org.bonitasoft.engine.bpm.process.impl.UserTaskDefinitionBuilder;
 import org.bonitasoft.studio.engine.contribution.BuildProcessDefinitionException;
@@ -39,13 +38,6 @@ import org.eclipse.emf.ecore.EObject;
 public class ContractEngineDefinitionBuilder implements IEngineDefinitionBuilder {
 
     private UserTaskDefinitionBuilder taskBuilder;
-    private ActivityDefinitionBuilder activityDefinitionBuilder;
-    private final ContractMappingFactory contractMappingBuilder;
-
-
-    public ContractEngineDefinitionBuilder() {
-        contractMappingBuilder = new ContractMappingFactory();
-    }
 
     @Override
     public void build(final EObject element) throws BuildProcessDefinitionException {
@@ -77,7 +69,6 @@ public class ContractEngineDefinitionBuilder implements IEngineDefinitionBuilder
         if (input.isMandatory()) {
             contractBuilder.addMandatoryConstraint(input.getName());
         }
-        //addMappingOperation(input);
     }
 
     protected void addComplexInput(final ContractDefinitionBuilder contractBuilder, final ContractInput input) {
@@ -109,21 +100,6 @@ public class ContractEngineDefinitionBuilder implements IEngineDefinitionBuilder
         return org.bonitasoft.engine.bpm.contract.Type.valueOf(input.getType().getName());
     }
 
-    //    protected void addMappingOperation(final ContractInput input) throws ContractCreationException {
-    //        if (isMapped(input)) {
-    //            try {
-    //                final Operation storageOperation = contractMappingBuilder.createOperation(input.getMapping());
-    //                activityDefinitionBuilder.addOperation(storageOperation);
-    //            } catch (final OperationCreationException e) {
-    //                throw new ContractCreationException("Failed to create mapping operation for input " + input.getName(), e);
-    //            }
-    //        }
-    //    }
-    //
-    //    private boolean isMapped(final ContractInput input) {
-    //        return input != null && input.getMapping() != null && input.getMapping().getData() != null;
-    //    }
-
 
     @Override
     public boolean appliesTo(final EObject element) {
@@ -134,7 +110,6 @@ public class ContractEngineDefinitionBuilder implements IEngineDefinitionBuilder
     public void setEngineBuilder(final Object engineBuilder) {
         Assert.isLegal(engineBuilder instanceof UserTaskDefinitionBuilder);
         taskBuilder = (UserTaskDefinitionBuilder) engineBuilder;
-        activityDefinitionBuilder = (ActivityDefinitionBuilder) engineBuilder;
     }
 
 }
