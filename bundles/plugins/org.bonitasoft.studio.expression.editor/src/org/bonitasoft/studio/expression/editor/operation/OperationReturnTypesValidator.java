@@ -266,7 +266,7 @@ public class OperationReturnTypesValidator implements IExpressionValidator {
 
     protected String getExpressionName(final Object value, final Expression expression) {
         String expressionName = expression.getName();
-        if (expressionName == null || expressionName.isEmpty()) {
+        if (expressionName == null || expressionName.isEmpty() && value != null) {
             expressionName = value.toString();
         }
         return expressionName;

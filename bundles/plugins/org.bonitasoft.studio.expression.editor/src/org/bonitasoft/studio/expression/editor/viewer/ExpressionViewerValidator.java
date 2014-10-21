@@ -103,7 +103,7 @@ public class ExpressionViewerValidator implements IValidator {
             if (toValidate == null) {
                 toValidate = "";
             }
-            return delagateValidator.validate(value);
+            return delagateValidator.validate(toValidate);
         }
         return ValidationStatus.ok();
     }
