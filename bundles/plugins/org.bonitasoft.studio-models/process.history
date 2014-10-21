@@ -461,12 +461,12 @@
             referenceValue="process.ecore#//Element"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#//Document" referenceName="eStructuralFeatures"
-          element="#//@releases.17/@changes.0/@changes.2/@changes.0/@element">
-        <changes xsi:type="history:Set" element="#//@releases.17/@changes.0/@changes.2/@changes.0/@element"
+          element="#//@releases.18/@changes.0/@changes.2/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.18/@changes.0/@changes.2/@changes.0/@element"
             featureName="name" dataValue="isInternal"/>
-        <changes xsi:type="history:Set" element="#//@releases.17/@changes.0/@changes.2/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.18/@changes.0/@changes.2/@changes.0/@element"
             featureName="defaultValueLiteral" dataValue="false"/>
-        <changes xsi:type="history:Set" element="#//@releases.17/@changes.0/@changes.2/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.18/@changes.0/@changes.2/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#//Document" referenceName="eStructuralFeatures"
@@ -8097,10 +8097,10 @@
   <releases date="2014-08-06T11:48:39.611+0200" label="6.3.4-001">
     <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.custom.migration.connector.UpdateAlfrescoMigrationConnectorVersionTo113"/>
   </releases>
-  <releases date="2014-10-01T11:48:39.611+0200" label="6.3.8-001">
+  <releases date="2014-10-21T15:45:32.712+0200" label="6.3.8-001">
     <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.custom.migration.connector.UpdateTalendConnectorVersionTo101"/>
   </releases>
-  <releases date="2014-07-30T11:48:39.611+0200" label="6.4.0-001">
+  <releases date="2014-07-22T11:48:39.611+0200" label="6.4.0-001">
     <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.custom.migration.multiinstance.MultiInstanceCustomMigration">
       <changes xsi:type="history:OperationChange">
         <changes xsi:type="history:Create" target="process.ecore#/" referenceName="eClassifiers"
@@ -8620,7 +8620,7 @@
         </changes>
         <operation name="deleteFeature2">
           <parameters name="feature">
-            <referenceValue element="#//@releases.17/@changes.0/@changes.2/@changes.0/@element"/>
+            <referenceValue element="#//@releases.18/@changes.0/@changes.2/@changes.0/@element"/>
           </parameters>
         </operation>
       </changes>
