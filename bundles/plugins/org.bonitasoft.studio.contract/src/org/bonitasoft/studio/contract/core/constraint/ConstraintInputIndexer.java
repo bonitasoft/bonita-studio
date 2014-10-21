@@ -22,6 +22,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.bonitasoft.studio.model.process.ContractConstraint;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.codehaus.groovy.ast.Variable;
 import org.codehaus.groovy.ast.stmt.BlockStatement;
@@ -43,13 +44,16 @@ public class ConstraintInputIndexer extends Job {
     private List<ContractInput> inputs = new ArrayList<ContractInput>();
     private final GroovyCompilationUnit groovyCompilationUnit;
     private final Set<String> referencedInputs = new HashSet<String>();
+    private final ContractConstraint constraint;
 
-    public ConstraintInputIndexer(final List<ContractInput> availableInputs, final GroovyCompilationUnit groovyCompilationUnit) {
+    public ConstraintInputIndexer(final ContractConstraint constraint, final List<ContractInput> availableInputs,
+            final GroovyCompilationUnit groovyCompilationUnit) {
         super("Constraint inputs indexer");
         setPriority(Job.BUILD);
         setSystem(true);
         setUser(false);
         inputs = availableInputs;
+        this.constraint = constraint;
         this.groovyCompilationUnit = groovyCompilationUnit;
     }
 
@@ -73,6 +77,8 @@ public class ConstraintInputIndexer extends Job {
             final BlockStatement blockStatement = (BlockStatement) astNode;
             addRefrencedInputs(blockStatement);
         }
+        constraint.getInputNames().clear();
+        constraint.getInputNames().addAll(getReferencedInputs());
         return Status.OK_STATUS;
     }
 

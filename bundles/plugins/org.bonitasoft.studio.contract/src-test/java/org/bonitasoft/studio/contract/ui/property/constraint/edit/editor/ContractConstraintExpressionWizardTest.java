@@ -102,6 +102,7 @@ public class ContractConstraintExpressionWizardTest extends AbstractSWTTestCase 
 
     @Test
     public void should_performFinish_return_true_and_update_constraint_expression_and_input_names() throws Exception {
+        wizard.addPages();
         assertThat(wizard.performFinish()).isTrue();
         verify(propertySource).setPropertyValue(eq(ProcessPackage.Literals.CONTRACT_CONSTRAINT__EXPRESSION), anyString());
         verify(propertySource).setPropertyValue(eq(ProcessPackage.Literals.CONTRACT_CONSTRAINT__INPUT_NAMES), anyCollection());

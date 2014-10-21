@@ -22,12 +22,10 @@ import org.bonitasoft.studio.groovy.ui.viewer.GroovySourceViewerFactory;
 import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractConstraint;
 import org.bonitasoft.studio.model.process.ContractInput;
-import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.ui.views.properties.IPropertySourceProvider;
 
 
@@ -41,11 +39,11 @@ public class ContractConstraintExpressionWizard extends Wizard {
     private final ContractConstraint constraintWorkingCopy;
     private final EList<ContractInput> inputs;
     private final IPropertySourceProvider propertySourceProvider;
+    private ContractConstraintExpressionWizardPage page;
 
     public ContractConstraintExpressionWizard(final ContractConstraint constraint, final IPropertySourceProvider propertySourceProvider) {
         this.constraint = constraint;
         constraintWorkingCopy = EcoreUtil.copy(constraint);
-
         inputs = ModelHelper.getFirstContainerOfType(constraint, Contract.class).getInputs();
         this.propertySourceProvider = propertySourceProvider;
         setDefaultPageImageDescriptor(Pics.getWizban());
@@ -53,7 +51,7 @@ public class ContractConstraintExpressionWizard extends Wizard {
 
     @Override
     public void addPages() {
-        final ContractConstraintExpressionWizardPage page = new ContractConstraintExpressionWizardPage(constraintWorkingCopy,
+        page = new ContractConstraintExpressionWizardPage(constraintWorkingCopy,
                 inputs, new GroovySourceViewerFactory(),
                 new MVELEditorFactory(),
                 new WebBrowserFactory());
@@ -66,15 +64,13 @@ public class ContractConstraintExpressionWizard extends Wizard {
         }
         addPage(page);
     }
+
     /* (non-Javadoc)
      * @see org.eclipse.jface.wizard.Wizard#performFinish()
      */
     @Override
     public boolean performFinish() {
-        final IPropertySource constraintPropertySource = propertySourceProvider.getPropertySource(constraint);
-        constraintPropertySource.setPropertyValue(ProcessPackage.Literals.CONTRACT_CONSTRAINT__EXPRESSION, constraintWorkingCopy.getExpression());
-        constraintPropertySource.setPropertyValue(ProcessPackage.Literals.CONTRACT_CONSTRAINT__INPUT_NAMES, constraintWorkingCopy.getInputNames());
-        return true;
+        return page.performFinish(constraint, propertySourceProvider);
     }
 
 

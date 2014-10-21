@@ -21,6 +21,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 
+import org.bonitasoft.studio.model.process.ContractConstraint;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.codehaus.groovy.ast.ModuleNode;
@@ -54,7 +55,8 @@ public class ConstraintInputIndexerTest {
     public void setUp() throws Exception {
         availableInputs = new ArrayList<ContractInput>();
         configureModuleNode("name.length() > 0");
-        indexer = new ConstraintInputIndexer(availableInputs, groovyCompilationUnit);
+        final ContractConstraint constraint = ProcessFactory.eINSTANCE.createContractConstraint();
+        indexer = new ConstraintInputIndexer(constraint, availableInputs, groovyCompilationUnit);
     }
 
     protected void configureModuleNode(final String source) {

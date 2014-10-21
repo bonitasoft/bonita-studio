@@ -11,6 +11,7 @@ import org.bonitasoft.studio.model.process.ContractConstraint;
  */
 public class ContractConstraintAssert extends AbstractAssert<ContractConstraintAssert, ContractConstraint> {
 
+
     /**
      * Creates a new </code>{@link ContractConstraintAssert}</code> to make assertions on actual ContractConstraint.
      * @param actual the ContractConstraint we want to make assertions on.
@@ -40,11 +41,11 @@ public class ContractConstraintAssert extends AbstractAssert<ContractConstraintA
         isNotNull();
 
         // we overrides the default error message with a more explicit one
-        final String errorMsg = format("\nExpected <%s> errorMessage to be:\n  <%s>\n but was:\n  <%s>", actual, errorMessage, actual.getErrorMessage());
+        final String msg = format("\nExpected <%s> errorMessage to be:\n  <%s>\n but was:\n  <%s>", actual, errorMessage, actual.getErrorMessage());
 
         // check
-        if (!actual.getErrorMessage().equals(errorMsg)) {
-            throw new AssertionError(errorMsg);
+        if (!actual.getErrorMessage().equals(errorMessage)) {
+            throw new AssertionError(msg);
         }
 
         // return the current assertion for method chaining
@@ -121,5 +122,29 @@ public class ContractConstraintAssert extends AbstractAssert<ContractConstraintA
         // return the current assertion for method chaining
         return this;
     }
+
+    /**
+     * Verifies that the actual ContractConstraint's name is equal to the given one.
+     *
+     * @param name the given name to compare the actual ContractConstraint's name to.
+     * @return this assertion object.
+     * @throws AssertionError - if the actual ContractConstraint's name is not equal to the given one.
+     */
+    public ContractConstraintAssert hasName(final String name) {
+        // check that actual ContractConstraint we want to make assertions on is not null.
+        isNotNull();
+
+        // we overrides the default error message with a more explicit one
+        final String errorMessage = format("\nExpected <%s> name to be:\n  <%s>\n but was:\n  <%s>", actual, name, actual.getName());
+
+        // check
+        if (!actual.getName().equals(name)) {
+            throw new AssertionError(errorMessage);
+        }
+
+        // return the current assertion for method chaining
+        return this;
+    }
+
 
 }

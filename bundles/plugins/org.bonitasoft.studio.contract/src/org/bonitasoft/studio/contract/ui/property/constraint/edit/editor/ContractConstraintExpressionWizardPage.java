@@ -43,6 +43,8 @@ import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.views.properties.IPropertySource;
+import org.eclipse.ui.views.properties.IPropertySourceProvider;
 
 
 /**
@@ -103,8 +105,7 @@ public class ContractConstraintExpressionWizardPage extends WizardPage implement
         expressionContentObservable = EMFObservables.observeValue(constraint, ProcessPackage.Literals.CONTRACT_CONSTRAINT__EXPRESSION);
 
         inputsObservable = EMFObservables.observeList(constraint, ProcessPackage.Literals.CONTRACT_CONSTRAINT__INPUT_NAMES);
-        inputIndexer = new ConstraintInputIndexer(inputs, viewer.getGroovyCompilationUnit());
-        inputIndexer.addJobChangeListener(new UpdateInputReferenceListener(constraint));
+        inputIndexer = new ConstraintInputIndexer(constraint, inputs, viewer.getGroovyCompilationUnit());
         getSourceViewer().getDocument().set(expressionContentObservable.getValue().toString());
         context.addValidationStatusProvider(new ConstraintExpressionEditorValidator(expressionContentObservable, inputsObservable));
 
@@ -122,7 +123,6 @@ public class ContractConstraintExpressionWizardPage extends WizardPage implement
         groovyViewer.setContext(null, parentTask, null, null);
         return groovyViewer;
     }
-
 
     @Override
     public void documentAboutToBeChanged(final DocumentEvent event) {
@@ -146,6 +146,20 @@ public class ContractConstraintExpressionWizardPage extends WizardPage implement
         } catch (final MalformedURLException e) {
             BonitaStudioLog.error("Invalid URL format for :" + MVEL_BASICS_URL, e, ContractPlugin.PLUGIN_ID);
         }
+    }
+
+    public boolean performFinish(final ContractConstraint constraintToUpdate, final IPropertySourceProvider propertySourceProvider) {
+        final IPropertySource constraintPropertySource = propertySourceProvider.getPropertySource(constraintToUpdate);
+        constraintPropertySource.setPropertyValue(ProcessPackage.Literals.CONTRACT_CONSTRAINT__EXPRESSION, constraint.getExpression());
+        if (inputIndexer != null) {
+            try {
+                inputIndexer.join();
+            } catch (final InterruptedException e) {
+                return false;
+            }
+        }
+        constraintPropertySource.setPropertyValue(ProcessPackage.Literals.CONTRACT_CONSTRAINT__INPUT_NAMES, constraint.getInputNames());
+        return true;
     }
 
 }
