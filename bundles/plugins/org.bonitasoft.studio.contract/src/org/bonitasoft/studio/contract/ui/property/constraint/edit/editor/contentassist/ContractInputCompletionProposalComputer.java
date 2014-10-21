@@ -77,7 +77,7 @@ public class ContractInputCompletionProposalComputer extends GroovyCompletionPro
                 (JavaContentAssistInvocationContext) context,
                 contentAssistContext,
                 getProjectClassloader(),
-                this,
+                new GroovyCompletionProposalComputer(),
                 createMethodProposalCreator(),
                 getModuleNode(contentAssistContext),
                 monitor);

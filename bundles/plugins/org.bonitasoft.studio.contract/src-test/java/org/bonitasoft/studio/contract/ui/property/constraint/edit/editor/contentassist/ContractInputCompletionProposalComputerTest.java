@@ -35,6 +35,9 @@ import org.bonitasoft.studio.model.process.ContractInputType;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.ast.ModuleNode;
+import org.codehaus.groovy.ast.expr.BinaryExpression;
+import org.codehaus.groovy.ast.expr.ConstantExpression;
+import org.codehaus.groovy.ast.expr.PropertyExpression;
 import org.codehaus.groovy.ast.expr.VariableExpression;
 import org.codehaus.groovy.eclipse.codeassist.creators.MethodProposalCreator;
 import org.codehaus.groovy.eclipse.codeassist.requestor.ContentAssistContext;
@@ -117,6 +120,12 @@ public class ContractInputCompletionProposalComputerTest extends AbstractSWTTest
     }
 
     @Test
+    public void should_computeCompletionProposals_return_empty_list_when_inputs_is_empty() throws Exception {
+        doReturn(Collections.emptyList()).when(proposalComputer).getContractInputs(context);
+        assertThat(proposalComputer.computeCompletionProposals(context, null)).isEmpty();
+    }
+
+    @Test
     public void should_computeCompletionProposals_returns_inputs_proposal() throws Exception {
         final List<ICompletionProposal> proposals = proposalComputer.computeCompletionProposals(context, null);
         assertThat(proposals).extracting("displayString").contains("name -- TEXT", "employee -- COMPLEX", "days -- TEXT");
@@ -151,6 +160,22 @@ public class ContractInputCompletionProposalComputerTest extends AbstractSWTTest
         verify(methodProposalCreator).findAllProposals(any(ClassNode.class), anySet(), eq(""), eq(false), eq(false));
     }
 
+    @Test
+    public void should_computeCompletionProposals_returns_complex_and_multiple_input_children_for_variable_expression() throws Exception {
+        final BinaryExpression binaryExpression = new BinaryExpression(new VariableExpression("employee"), null, null);
+        when(contentAssistContext.getPerceivedCompletionNode()).thenReturn(binaryExpression);
+        assertThat(proposalComputer.computeCompletionProposals(context, null)).extracting("displayString").contains("firstName -- TEXT", "lastName -- TEXT",
+                "skills -- TEXT");
+    }
+
+    @Test
+    public void should_computeCompletionProposals_returns_complex_and_multiple_input_children_for_property_expression() throws Exception {
+        final BinaryExpression binaryExpression = new BinaryExpression(new PropertyExpression(new ConstantExpression("employee"), new ConstantExpression(
+                "employee")), null, null);
+        when(contentAssistContext.getPerceivedCompletionNode()).thenReturn(binaryExpression);
+        assertThat(proposalComputer.computeCompletionProposals(context, null)).extracting("displayString").contains("firstName -- TEXT", "lastName -- TEXT",
+                "skills -- TEXT");
+    }
 
     private ContractInput buildInput(final ContractInput parent, final String name, final ContractInputType type, final boolean multiple) {
         final ContractInput input = ProcessFactory.eINSTANCE.createContractInput();

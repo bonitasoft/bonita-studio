@@ -67,7 +67,7 @@ public class ContractInputProposalsCodeVisitorSupport extends CodeVisitorSupport
     private final ContentAssistContext contentAssistContext;
     private final ClassLoader classLoader;
     private final IProgressMonitor monitor;
-    private IJavaCompletionProposalComputer completionComputer;
+    private final IJavaCompletionProposalComputer completionComputer;
     private final MethodProposalCreator methodProposalCreator;
     private final ModuleNode moduleNode;
 
@@ -84,6 +84,7 @@ public class ContractInputProposalsCodeVisitorSupport extends CodeVisitorSupport
         this.prefix = prefix;
         this.context = context;
         this.contentAssistContext = contentAssistContext;
+        this.completionComputer = completionComputer;
         this.classLoader = classLoader;
         this.methodProposalCreator = methodProposalCreator;
         this.moduleNode = moduleNode;
@@ -119,7 +120,7 @@ public class ContractInputProposalsCodeVisitorSupport extends CodeVisitorSupport
     @Override
     public void visitBinaryExpression(final BinaryExpression expression) {
         proposals = completionComputer.computeCompletionProposals(context, monitor);
-        final BinaryExpression binaryExpression = (BinaryExpression) contentAssistContext.completionNode;
+        final BinaryExpression binaryExpression = (BinaryExpression) contentAssistContext.getPerceivedCompletionNode();
         final Expression leftExpression = binaryExpression.getLeftExpression();
         String multipleInputName = null;
         if (leftExpression instanceof PropertyExpression) {
@@ -206,6 +207,7 @@ public class ContractInputProposalsCodeVisitorSupport extends CodeVisitorSupport
         return null;
     }
 
+
     private ContractInput getInputWithName(final String name, final List<ContractInput> inputs) {
         final ContractInput contractInput = inputs.get(0);
         final Contract contract = ModelHelper.getFirstContainerOfType(contractInput, Contract.class);
@@ -216,7 +218,7 @@ public class ContractInputProposalsCodeVisitorSupport extends CodeVisitorSupport
                 return (ContractInput) eObject;
             }
         }
-        return null;
+        throw new IllegalArgumentException("Input with name \"" + name + "\" does not exists");
     }
 
     private Class<?> getClassForQualifiedName(final String fullyQualifiedType) {
