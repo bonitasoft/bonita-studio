@@ -9,7 +9,6 @@
 package org.bonitasoft.studio.swtbot.framework.draw;
 
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
-import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditPart;
 import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 
 /**
@@ -45,7 +44,8 @@ public class BotGefFormDiagramEditor extends BotGefBaseEditor {
     }
 
     public BotGefFormDiagramEditor selectWidget(final String pWidgetName) {
-        final SWTBotGefEditPart gefEditPart = gmfEditor.getEditPart(pWidgetName).parent().select();
+        gmfEditor.getEditPart(pWidgetName).click();
+        gmfEditor.getEditPart(pWidgetName).parent().select();
         bot.sleep(100);
         return this;
     }

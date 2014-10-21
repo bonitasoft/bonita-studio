@@ -979,6 +979,22 @@
                      class="Operation">
                </target>
             </constraint>
+            <constraint
+                  class="org.bonitasoft.studio.validation.constraints.OperatorConsistencyConstraint"
+                  id="org.bonitasoft.studio.validation.operatorconsistency"
+                  isEnabledByDefault="true"
+                  lang="java"
+                  mode="Batch"
+                  name="Operator consistency"
+                  severity="ERROR"
+                  statusCode="1">
+               <message>
+                  {0}
+               </message>
+               <target
+                     class="Operation">
+               </target>
+            </constraint>
          </constraints>
          <package
                namespaceUri="http://www.bonitasoft.org/ns/studio/process">
@@ -1157,6 +1173,22 @@
                </message>
                <target
                      class="MultipleValuatedFormField">
+               </target>
+            </constraint>
+            <constraint
+                  class="org.bonitasoft.studio.validation.constraints.form.DuplicatedFileWidgetMultipleDocumentConsistencyConstraint"
+                  id="DuplicatedFileWidgetMultipleDocumentConsistencyConstraint"
+                  isEnabledByDefault="true"
+                  lang="Java"
+                  mode="Batch"
+                  name="%MultipleDocumentConstraint"
+                  severity="WARNING"
+                  statusCode="1">
+               <message>
+                  {0}
+               </message>
+               <target
+                     class="Widget">
                </target>
             </constraint>
          </constraints>

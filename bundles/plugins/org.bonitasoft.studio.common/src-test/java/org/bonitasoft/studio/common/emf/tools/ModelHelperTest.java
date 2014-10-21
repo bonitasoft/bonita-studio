@@ -18,10 +18,13 @@ package org.bonitasoft.studio.common.emf.tools;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import org.bonitasoft.studio.model.expression.Expression;
+import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.form.FormFactory;
 import org.bonitasoft.studio.model.form.TextFormField;
 import org.bonitasoft.studio.model.process.Data;
+import org.bonitasoft.studio.model.process.Document;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessFactory;
@@ -36,85 +39,113 @@ import org.junit.Test;
  */
 public class ModelHelperTest {
 
-	private Pool process;
-	private Task task1;
-	private Task task2;
-	private Data processData;
-	private Data t1Data;
-	private Data t2Data;
-	private Form myForm;
-	private TextFormField textField;
-	private Data pageFlowTransientData;
+    private Pool process;
+    private Task task1;
+    private Task task2;
+    private Data processData;
+    private Data t1Data;
+    private Data t2Data;
+    private Form myForm;
+    private TextFormField textField;
+    private Data pageFlowTransientData;
 
-	/**
-	 * @throws java.lang.Exception
-	 */
-	@Before
-	public void setUp() throws Exception {
-		ProcessFactory processFactory = ProcessFactory.eINSTANCE;
-		FormFactory formFactory = FormFactory.eINSTANCE;
-		process = processFactory.createPool();
-		processData = processFactory.createData();
-		process.getData().add(processData);
-		task1 = processFactory.createTask();
-		t1Data = processFactory.createData();
-		task1.getData().add(t1Data);
-		
-		myForm = formFactory.createForm();
-		textField = formFactory.createTextFormField();
-		myForm.getWidgets().add(textField);
-		task1.getForm().add(myForm);
-		
-		pageFlowTransientData = processFactory.createData();
-		pageFlowTransientData.setTransient(true);
-		task1.getTransientData().add(pageFlowTransientData);
-		
-		task2 = processFactory.createTask();
-		t2Data = processFactory.createData();
-		task2.getData().add(t2Data);
-		process.getElements().add(task1);
-		process.getElements().add(task2);
-		
-		
-	}
+    /**
+     * @throws java.lang.Exception
+     */
+    @Before
+    public void setUp() throws Exception {
+        final ProcessFactory processFactory = ProcessFactory.eINSTANCE;
+        final FormFactory formFactory = FormFactory.eINSTANCE;
+        process = processFactory.createPool();
+        processData = processFactory.createData();
+        process.getData().add(processData);
+        task1 = processFactory.createTask();
+        t1Data = processFactory.createData();
+        task1.getData().add(t1Data);
 
-	/**
-	 * @throws java.lang.Exception
-	 */
-	@After
-	public void tearDown() throws Exception {
-	
-	}
+        myForm = formFactory.createForm();
+        textField = formFactory.createTextFormField();
+        myForm.getWidgets().add(textField);
+        task1.getForm().add(myForm);
 
-	@Test
-	public void shouldGetAccessibleData_ReturnEmptyListWhenNoDataAccessible() throws Exception {
-		Element container = ProcessFactory.eINSTANCE.createPool(); 
-		assertThat(ModelHelper.getAccessibleData(container, true)).isNotNull().isEmpty();
-	}
-	
-	@Test
-	public void shouldGetAccessibleData_ReturnEmptyListWhenContainerIsNull() throws Exception {
-		assertThat(ModelHelper.getAccessibleData(null, true)).isNotNull().isEmpty();
-	}
-	
-	@Test
-	public void shouldGetAccessibleData_ForProcessReturnProcessData() throws Exception {
-		assertThat(ModelHelper.getAccessibleData(process, false)).isNotNull().containsOnly(processData);
-	}
-	
-	@Test
-	public void shouldGetAccessibleData_ForTask1ReturnProcessDataAndT1Data() throws Exception {
-		assertThat(ModelHelper.getAccessibleData(task1, false)).isNotNull().containsOnly(processData,t1Data);
-	}
-	
-	@Test
-	public void shouldGetAccessibleData_ForWidgetReturnAllAccessibleAndPageflowTransientData() throws Exception {
-		assertThat(ModelHelper.getAccessibleData(textField, true)).isNotNull().containsOnly(processData,t1Data,pageFlowTransientData);
-	}
-	
-	@Test
-	public void shouldGetAccessibleData_ForWidgetReturnAllAccessibleWithoutPageflowTransientData_IfIncludeTransientDataIsFalse() throws Exception {
-		assertThat(ModelHelper.getAccessibleData(textField, false)).isNotNull().containsOnly(processData,t1Data);
-	}
-	
+        pageFlowTransientData = processFactory.createData();
+        pageFlowTransientData.setTransient(true);
+        task1.getTransientData().add(pageFlowTransientData);
+
+        task2 = processFactory.createTask();
+        t2Data = processFactory.createData();
+        task2.getData().add(t2Data);
+        process.getElements().add(task1);
+        process.getElements().add(task2);
+
+
+    }
+
+    /**
+     * @throws java.lang.Exception
+     */
+    @After
+    public void tearDown() throws Exception {
+
+    }
+
+    @Test
+    public void shouldGetAccessibleData_ReturnEmptyListWhenNoDataAccessible() throws Exception {
+        final Element container = ProcessFactory.eINSTANCE.createPool();
+        assertThat(ModelHelper.getAccessibleData(container, true)).isNotNull().isEmpty();
+    }
+
+    @Test
+    public void shouldGetAccessibleData_ReturnEmptyListWhenContainerIsNull() throws Exception {
+        assertThat(ModelHelper.getAccessibleData(null, true)).isNotNull().isEmpty();
+    }
+
+    @Test
+    public void shouldGetAccessibleData_ForProcessReturnProcessData() throws Exception {
+        assertThat(ModelHelper.getAccessibleData(process, false)).isNotNull().containsOnly(processData);
+    }
+
+    @Test
+    public void shouldGetAccessibleData_ForTask1ReturnProcessDataAndT1Data() throws Exception {
+        assertThat(ModelHelper.getAccessibleData(task1, false)).isNotNull().containsOnly(processData,t1Data);
+    }
+
+    @Test
+    public void shouldGetAccessibleData_ForWidgetReturnAllAccessibleAndPageflowTransientData() throws Exception {
+        assertThat(ModelHelper.getAccessibleData(textField, true)).isNotNull().containsOnly(processData,t1Data,pageFlowTransientData);
+    }
+
+    @Test
+    public void shouldGetAccessibleData_ForWidgetReturnAllAccessibleWithoutPageflowTransientData_IfIncludeTransientDataIsFalse() throws Exception {
+        assertThat(ModelHelper.getAccessibleData(textField, false)).isNotNull().containsOnly(processData,t1Data);
+    }
+
+    @Test
+    public void shouldGetReferencedDocument() {
+        final Expression expr = ExpressionFactory.eINSTANCE.createExpression();
+        expr.setName("MyDocument");
+        expr.setContent("MyDocument");
+        final Document doc = ProcessFactory.eINSTANCE.createDocument();
+        doc.setName("MyDocument");
+        expr.getReferencedElements().add(doc);
+        final Data data = ProcessFactory.eINSTANCE.createData();
+        data.setName("myDocument");
+        expr.getReferencedElements().add(data);
+        assertThat(ModelHelper.getDocumentReferencedInExpression(expr)).isNotNull().isEqualTo(doc);
+    }
+
+    @Test
+    public void shouldGedReferencedDocument_returnNull() {
+        final Expression expr = ExpressionFactory.eINSTANCE.createExpression();
+        expr.setName("MyDocument");
+        final Data data = ProcessFactory.eINSTANCE.createData();
+        data.setName("myDocument");
+        expr.getReferencedElements().add(data);
+        assertThat(ModelHelper.getDocumentReferencedInExpression(expr)).isNull();
+        final Document doc = ProcessFactory.eINSTANCE.createDocument();
+        doc.setName("MyDocumentBis");
+        expr.getReferencedElements().add(doc);
+        assertThat(ModelHelper.getDocumentReferencedInExpression(expr)).isNull();
+    }
+
 }

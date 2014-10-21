@@ -9,21 +9,18 @@
 package org.bonitasoft.studio.swtbot.framework.diagram.application.pageflow;
 
 import org.bonitasoft.studio.properties.i18n.Messages;
-import org.bonitasoft.studio.swtbot.framework.AbstractBotWizardPage;
+import org.bonitasoft.studio.swtbot.framework.BotWizardDialog;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
-import org.eclipse.swtbot.swt.finder.waits.Conditions;
 
 /**
  * Add form dialog.
  *
  * @author Joachim Segala
  */
-public class BotAddFormWizardDialog extends AbstractBotWizardPage {
+public class BotAddFormWizardDialog extends BotWizardDialog {
 
     public BotAddFormWizardDialog(final SWTGefBot bot) {
-        super(bot);
-        bot.waitUntil(Conditions.shellIsActive(Messages.addFormTitle));
-        bot.shell(Messages.addFormTitle);
+        super(bot, Messages.addFormTitle);
     }
 
     /**
@@ -44,13 +41,11 @@ public class BotAddFormWizardDialog extends AbstractBotWizardPage {
         bot.textWithLabel(Messages.description).setText(pDescription);
     }
 
-
     /**
      * Select Process data tab.
      */
     public BotProcessDataMappingPanel selectProcessDataTab() {
         return new BotProcessDataMappingPanel(bot);
     }
-
 
 }

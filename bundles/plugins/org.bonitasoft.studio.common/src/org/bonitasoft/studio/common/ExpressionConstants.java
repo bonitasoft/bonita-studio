@@ -1,17 +1,14 @@
 /**
  * Copyright (C) 2013 BonitaSoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
- *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -25,7 +22,6 @@ import org.bonitasoft.engine.operation.OperatorType;
 
 /**
  * @author Romain Bioteau
- *
  */
 public interface ExpressionConstants {
 
@@ -65,6 +61,7 @@ public interface ExpressionConstants {
     String XPATH_TYPE = ExpressionType.TYPE_XPATH_READ.name();
 
     String JAVA_TYPE = ExpressionType.TYPE_JAVA_METHOD_CALL.name();
+    String DOCUMENT_LIST_TYPE = ExpressionType.TYPE_DOCUMENT_LIST.name();
 
     String ASSIGNMENT_OPERATOR = OperatorType.ASSIGNMENT.name();
 
@@ -83,6 +80,7 @@ public interface ExpressionConstants {
     String PATTERN_TYPE = ExpressionType.TYPE_PATTERN.name();
 
     String SET_DOCUMENT_OPERATOR = "DOCUMENT_CREATE_UPDATE";
+    String SET_LIST_DOCUMENT_OPERATOR = "DOCUMENT_LIST_SET";
 
     String VARIABLE_TYPE_FOR_FORM_OUPUT = "VARIABLE_TYPE_FOR_FORM_OUPUT";
 
@@ -102,15 +100,11 @@ public interface ExpressionConstants {
 
     // left operand types:
     String LEFT_OPERAND_DATA = LeftOperand.TYPE_DATA;
-
     String LEFT_OPERAND_SEARCH_INDEX = LeftOperand.TYPE_SEARCH_INDEX;
-
     String LEFT_OPERAND_DOCUMENT = LeftOperand.TYPE_DOCUMENT;
-
+    String LEFT_OPERAND_DOCUMENT_LIST = LeftOperand.TYPE_DOCUMENT_LIST;
     String LEFT_OPERAND_EXTERNAL_DATA = LeftOperand.TYPE_EXTERNAL_DATA;
-
     String LEFT_OPERAND_TRANSIENT_DATA = LeftOperand.TYPE_TRANSIENT_DATA;
-
     String LEFT_OPERAND_BUSINESS_DATA = LeftOperand.TYPE_BUSINESS_DATA;
 
     /*

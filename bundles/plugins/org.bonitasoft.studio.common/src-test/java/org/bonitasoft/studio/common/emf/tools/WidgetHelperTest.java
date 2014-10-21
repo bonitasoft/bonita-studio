@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.bonitasoft.studio.common.emf.tools;
 
@@ -23,6 +23,7 @@ import org.bonitasoft.studio.model.form.RadioFormField;
 import org.bonitasoft.studio.model.form.SelectFormField;
 import org.bonitasoft.studio.model.form.SuggestBox;
 import org.bonitasoft.studio.model.form.TextFormField;
+import org.bonitasoft.studio.model.form.Widget;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -49,68 +50,81 @@ public class WidgetHelperTest {
 
 	@Test
 	public void shouldGetAssociatedReturnType_ReturnStringClassName() throws Exception {
-		TextFormField textField = FormFactory.eINSTANCE.createTextFormField();
+		final TextFormField textField = FormFactory.eINSTANCE.createTextFormField();
 		assertThat(WidgetHelper.getAssociatedReturnType(textField)).isEqualTo(String.class.getName());
 
-		RadioFormField radioField = FormFactory.eINSTANCE.createRadioFormField();
+		final RadioFormField radioField = FormFactory.eINSTANCE.createRadioFormField();
 		assertThat(WidgetHelper.getAssociatedReturnType(radioField)).isEqualTo(String.class.getName());
 
-		SelectFormField selectField = FormFactory.eINSTANCE.createSelectFormField();
+		final SelectFormField selectField = FormFactory.eINSTANCE.createSelectFormField();
 		assertThat(WidgetHelper.getAssociatedReturnType(selectField)).isEqualTo(String.class.getName());
-		
-		SuggestBox suggestBox = FormFactory.eINSTANCE.createSuggestBox();
+
+		final SuggestBox suggestBox = FormFactory.eINSTANCE.createSuggestBox();
 		assertThat(WidgetHelper.getAssociatedReturnType(suggestBox)).isEqualTo(String.class.getName());
 	}
 
+    @Test
+    public void shouldGetAssociatedInputType_ReturnStringClassName() throws Exception {
+        checWidgetInputTypeIsString(FormFactory.eINSTANCE.createTextFormField());
+        checWidgetInputTypeIsString(FormFactory.eINSTANCE.createRadioFormField());
+        checWidgetInputTypeIsString(FormFactory.eINSTANCE.createSelectFormField());
+        checWidgetInputTypeIsString(FormFactory.eINSTANCE.createSuggestBox());
+        checWidgetInputTypeIsString(FormFactory.eINSTANCE.createFileWidget());
+    }
+
+    private void checWidgetInputTypeIsString(final Widget widget) {
+        assertThat(WidgetHelper.getAssociatedInputType(widget)).isEqualTo(String.class.getName());
+    }
+
 	@Test
 	public void shouldGetAssociatedReturnType_ReturnBooleanClassName() throws Exception {
-		NextFormButton nextButton = FormFactory.eINSTANCE.createNextFormButton();
+		final NextFormButton nextButton = FormFactory.eINSTANCE.createNextFormButton();
 		assertThat(WidgetHelper.getAssociatedReturnType(nextButton)).isEqualTo(Boolean.class.getName());
 
-		CheckBoxSingleFormField checkboxButton = FormFactory.eINSTANCE.createCheckBoxSingleFormField();
+		final CheckBoxSingleFormField checkboxButton = FormFactory.eINSTANCE.createCheckBoxSingleFormField();
 		assertThat(WidgetHelper.getAssociatedReturnType(checkboxButton)).isEqualTo(Boolean.class.getName());
 	}
 
 	@Test
 	public void shouldGetAssociatedReturnType_ReturnLongClassName() throws Exception {
-		DurationFormField duration = FormFactory.eINSTANCE.createDurationFormField();
+		final DurationFormField duration = FormFactory.eINSTANCE.createDurationFormField();
 		assertThat(WidgetHelper.getAssociatedReturnType(duration)).isEqualTo(Long.class.getName());
 	}
 
 	@Test
 	public void shouldGetAssociatedReturnType_ReturnMapClassName() throws Exception {
-		Group group = FormFactory.eINSTANCE.createGroup();
+		final Group group = FormFactory.eINSTANCE.createGroup();
 		assertThat(WidgetHelper.getAssociatedReturnType(group)).isEqualTo(Map.class.getName());
 	}
 
 	@Test
 	public void shouldGetAssociatedReturnType_ReturnListClassName() throws Exception {
-		ListFormField list = FormFactory.eINSTANCE.createListFormField();
+		final ListFormField list = FormFactory.eINSTANCE.createListFormField();
 		assertThat(WidgetHelper.getAssociatedReturnType(list)).isEqualTo(List.class.getName());
 
-		AbstractTable table =  FormFactory.eINSTANCE.createDynamicTable();
+		final AbstractTable table =  FormFactory.eINSTANCE.createDynamicTable();
 		assertThat(WidgetHelper.getAssociatedReturnType(table)).isEqualTo(List.class.getName());
-		
-		TextFormField textField = FormFactory.eINSTANCE.createTextFormField();
+
+		final TextFormField textField = FormFactory.eINSTANCE.createTextFormField();
 		textField.setDuplicate(true);
 		assertThat(WidgetHelper.getAssociatedReturnType(textField)).isEqualTo(List.class.getName());
 	}
 
 	@Test
 	public void shouldGetAssociatedReturnType_ReturnDateClassName() throws Exception {
-		DateFormField date = FormFactory.eINSTANCE.createDateFormField();
+		final DateFormField date = FormFactory.eINSTANCE.createDateFormField();
 		assertThat(WidgetHelper.getAssociatedReturnType(date)).isEqualTo(Date.class.getName());
 	}
-	
+
 	@Test
 	public void shouldGetAssociatedReturnType_ReturnDocumentValueClassName() throws Exception {
-		FileWidget file = FormFactory.eINSTANCE.createFileWidget();
+		final FileWidget file = FormFactory.eINSTANCE.createFileWidget();
 		assertThat(WidgetHelper.getAssociatedReturnType(file)).isEqualTo(DocumentValue.class.getName());
 	}
-	
+
 	@Test
 	public void shouldGetAssociatedReturnType_ReturnIntegeerClassName() throws Exception {
-		TextFormField text = FormFactory.eINSTANCE.createTextFormField();
+		final TextFormField text = FormFactory.eINSTANCE.createTextFormField();
 		text.setReturnTypeModifier(Integer.class.getName());
 		assertThat(WidgetHelper.getAssociatedReturnType(text)).isEqualTo(Integer.class.getName());
 	}

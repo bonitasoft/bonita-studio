@@ -146,6 +146,20 @@ public class Messages extends NLS {
 
     public static String browse;
 
+    public static String messageOperationWithDocumentInForm;
+
+    public static String messageOperationWithDocumentInTask;
+
+    public static String incompatibleType;
+
+    public static String dialogTitleSelectOperator;
+    public static String setDocumentListOperator;
+
+    public static String messageOperationWithListDocumentInForm;
+    public static String messageOperationWithListDocumentInFormInCommunity;
+
+    public static String messageOperationWithListDocumentInTask;
+
     private Messages() {
         // Do not instantiate
     }

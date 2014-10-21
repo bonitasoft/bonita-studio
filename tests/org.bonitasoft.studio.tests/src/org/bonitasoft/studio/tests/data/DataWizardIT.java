@@ -37,7 +37,7 @@ import org.bonitasoft.studio.swtbot.framework.diagram.BotProcessDiagramPerspecti
 import org.bonitasoft.studio.swtbot.framework.diagram.BotProcessDiagramPropertiesViewFolder;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.data.BotAddDataWizardPage;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.data.BotDataPropertySection;
-import org.bonitasoft.studio.swtbot.framework.diagram.general.data.BotEditDataWizardPage;
+import org.bonitasoft.studio.swtbot.framework.diagram.general.data.BotEditDataDialog;
 import org.bonitasoft.studio.swtbot.framework.expression.BotExpressionEditorDialog;
 import org.bonitasoft.studio.swtbot.framework.widget.BotTableWidget;
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
@@ -206,10 +206,12 @@ public class DataWizardIT extends SWTBotGefTestCase {
         bot.menu("Diagram").menu("Save").click();
         bot.waitUntil(new DefaultCondition() {
 
+            @Override
             public boolean test() throws Exception {
                 return nbStepData +1 == step.getData().size();
             }
 
+            @Override
             public String getFailureMessage() {
                 return "data not removed";
             }
@@ -343,7 +345,7 @@ public class DataWizardIT extends SWTBotGefTestCase {
 
         // Test on var varS1_1
         botDataPropertySection.dataList().select("varS1_1" + " -- " + "Text");
-        BotEditDataWizardPage editDataWizardPage = botDataPropertySection.edit();
+        BotEditDataDialog editDataWizardPage = botDataPropertySection.edit();
         BotExpressionEditorDialog editDefaultValueExpression = editDataWizardPage.editDefaultValueExpression();
         BotTableWidget variableList = editDefaultValueExpression.selectVariableTab().variableList();
 
@@ -432,9 +434,7 @@ public class DataWizardIT extends SWTBotGefTestCase {
         BotAddDataWizardPage addDataDialog = dataTab.addData();
 
         addDataDialog.setName(dataName);
-        assertThat(bot.button(IDialogConstants.FINISH_LABEL).isEnabled()).isTrue();
         addDataDialog.finish();
-
 
         //try to add a data myData on step
         diagramPerspective.activeProcessDiagramEditor().selectElement("Step1");
@@ -442,7 +442,6 @@ public class DataWizardIT extends SWTBotGefTestCase {
         addDataDialog.setName(dataName);
         assertThat(bot.button(IDialogConstants.FINISH_LABEL).isEnabled()).isFalse();
         addDataDialog.setName(dataName1);
-        assertThat(bot.button(IDialogConstants.FINISH_LABEL).isEnabled()).isTrue();
         addDataDialog.finish();
 
 
@@ -450,7 +449,6 @@ public class DataWizardIT extends SWTBotGefTestCase {
         diagramPerspective.activeProcessDiagramEditor().addElement("Step1", "Human", PositionConstants.EAST);
         addDataDialog = dataTab.addData();
         addDataDialog.setName(dataName1);
-        assertThat(bot.button(IDialogConstants.FINISH_LABEL).isEnabled()).isTrue();
         addDataDialog.finish();
     }
 

@@ -75,8 +75,8 @@ public class WidgetTypeEditingSupport extends EditingSupport {
         final CCombo combo = new CCombo((Composite) getViewer().getControl(), SWT.READ_ONLY);
         combo.setEditable(false);
         combo.setItems(getItemsFor(element));
-        final String value = NamingUtils.getFormPaletteText(false, ((WidgetMapping) element).getWidgetType().eClass());
-        combo.setText(value);
+        final String initialValue = getText(((WidgetMapping) element).getWidgetType().eClass(), (WidgetMapping) element);
+        combo.setText(initialValue);
         combo.addSelectionListener(new SelectionAdapter() {
 
             @Override
