@@ -80,22 +80,7 @@ public class WidgetModifierContribution implements IExtensibleGridPropertySectio
         dataBindingContext = new EMFDataBindingContext();
         composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         composite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).create());
-        final ComboViewer modifiersCombo = new ComboViewer(composite, SWT.READ_ONLY | SWT.BORDER);
-        modifiersCombo.getControl().setLayoutData(GridDataFactory.fillDefaults().indent(5, 0).create());
-        modifiersCombo.setLabelProvider(new LabelProvider());
-        modifiersCombo.setContentProvider(new ArrayContentProvider());
-        modifiersCombo.setSorter(new ViewerSorter());
-        if (widget instanceof FileWidget) {
-            modifiersCombo.addFilter(new FileWidgetModifierFilter((FileWidget) widget));
-        }
-        modifiersCombo.setInput(getAvailableModifiersFor(widget));
-        modifiersCombo.addSelectionChangedListener(this);
-
-        final ControlDecoration deco = new ControlDecoration(modifiersCombo.getControl(), SWT.LEFT);
-        deco.setDescriptionText(Messages.modifierDescription);
-        deco.setImage(Pics.getImage(PicsConstants.hint));
-        deco.setMarginWidth(2);
-        deco.setShowOnlyOnFocus(false);
+        final ComboViewer modifiersCombo = createModifiersCombo(composite);
 
         dataBindingContext.bindValue(ViewersObservables.observeSingleSelection(modifiersCombo),
                 EMFEditObservables.observeValue(editingDomain, widget, FormPackage.Literals.WIDGET__RETURN_TYPE_MODIFIER));
@@ -127,6 +112,26 @@ public class WidgetModifierContribution implements IExtensibleGridPropertySectio
             dataBindingContext.bindValue(SWTObservables.observeEnabled(modifiersCombo.getCombo()),
                     duplicableValueObserved);
         }
+    }
+
+    protected ComboViewer createModifiersCombo(final Composite composite) {
+        final ComboViewer modifiersCombo = new ComboViewer(composite, SWT.READ_ONLY | SWT.BORDER);
+        modifiersCombo.getControl().setLayoutData(GridDataFactory.fillDefaults().indent(5, 0).create());
+        modifiersCombo.setLabelProvider(new LabelProvider());
+        modifiersCombo.setContentProvider(new ArrayContentProvider());
+        modifiersCombo.setSorter(new ViewerSorter());
+        if (widget instanceof FileWidget) {
+            modifiersCombo.addFilter(new FileWidgetModifierFilter((FileWidget) widget));
+        }
+        modifiersCombo.setInput(getAvailableModifiersFor(widget));
+        modifiersCombo.addSelectionChangedListener(this);
+
+        final ControlDecoration deco = new ControlDecoration(modifiersCombo.getControl(), SWT.LEFT);
+        deco.setDescriptionText(Messages.modifierDescription);
+        deco.setImage(Pics.getImage(PicsConstants.hint));
+        deco.setMarginWidth(2);
+        deco.setShowOnlyOnFocus(false);
+        return modifiersCombo;
     }
 
     private Collection<String> getAvailableModifiersFor(final Widget widget) {
