@@ -8,38 +8,43 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.test.exporter.form;
+package org.bonitasoft.studio.model.form.builders;
 
 import org.bonitasoft.studio.model.form.FileWidget;
 import org.bonitasoft.studio.model.form.FileWidgetInputType;
 import org.bonitasoft.studio.model.form.FormFactory;
-import org.bonitasoft.studio.model.process.Document;
-import org.bonitasoft.studio.model.process.ProcessFactory;
 
 /**
- * @author aurelie
+ * @author Romain Bioteau
  *
  */
-public class AbstractFormExporterTest {
+public class FileWidgetBuilder extends WidgetBuilder {
 
-    protected Document createDocument(final String name, final boolean isMultiple) {
-        final Document document = ProcessFactory.eINSTANCE.createDocument();
-        document.setName(name);
-        document.setMultiple(isMultiple);
-        return document;
+    private final FileWidget fileWidget;
+
+    private FileWidgetBuilder(final FileWidget fileWidget) {
+        super(fileWidget);
+        this.fileWidget = fileWidget;
     }
 
-    protected FileWidget createFileWidget(final FileWidgetInputType type) {
-        final FileWidget fileWidget = FormFactory.eINSTANCE.createFileWidget();
-        fileWidget.setInputType(type);
-        return fileWidget;
+    public static FileWidgetBuilder create() {
+        return new FileWidgetBuilder(FormFactory.eINSTANCE.createFileWidget());
+    }
 
+    public FileWidgetBuilder withInputType(final FileWidgetInputType type) {
+        fileWidget.setInputType(type);
+        return this;
+    }
+
+    @Override
+    public FileWidget build() {
+        return fileWidget;
     }
 
 }
