@@ -169,10 +169,6 @@ public class FileGridPropertySectionContribution implements IExtensibleGridPrope
 
     }
 
-
-
-
-
     private void createUseResourceButton(final Composite radioComposite) {
         final Composite resourceComposite = widgetFactory.createComposite(radioComposite);
         resourceComposite.setLayout(GridLayoutFactory.fillDefaults().create());
@@ -358,8 +354,6 @@ public class FileGridPropertySectionContribution implements IExtensibleGridPrope
         }
 
     }
-
-
 
     protected void bindFields() {
         if(dataBindingContext != null){
