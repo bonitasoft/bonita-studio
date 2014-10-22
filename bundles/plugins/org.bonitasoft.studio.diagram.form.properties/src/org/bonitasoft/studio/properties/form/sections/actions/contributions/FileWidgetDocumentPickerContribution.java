@@ -16,6 +16,7 @@
  */
 package org.bonitasoft.studio.properties.form.sections.actions.contributions;
 
+import org.bonitasoft.studio.common.emf.converter.BooleanInverserConverter;
 import org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection;
 import org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution;
 import org.bonitasoft.studio.form.properties.i18n.Messages;
@@ -212,7 +213,7 @@ public class FileWidgetDocumentPickerContribution implements IExtensibleGridProp
             }
 
             public Object convert(final Object arg0) {
-                if (fileWidget.getInputType().equals(FileWidgetInputType.RESOURCE)) {
+                if (FileWidgetInputType.RESOURCE.equals(fileWidget.getInputType())) {
                     return false;
                 }
                 return !((Boolean) arg0);
@@ -223,20 +224,7 @@ public class FileWidgetDocumentPickerContribution implements IExtensibleGridProp
 
     private UpdateValueStrategy createEnabledStrategy() {
         final UpdateValueStrategy strategy = new UpdateValueStrategy();
-        strategy.setConverter(new IConverter() {
-
-            public Object getToType() {
-                return Boolean.class;
-            }
-
-            public Object getFromType() {
-                return Boolean.class;
-            }
-
-            public Object convert(final Object arg0) {
-                return !((Boolean)arg0);
-            }
-        });
+        strategy.setConverter(new BooleanInverserConverter());
         return strategy;
     }
 

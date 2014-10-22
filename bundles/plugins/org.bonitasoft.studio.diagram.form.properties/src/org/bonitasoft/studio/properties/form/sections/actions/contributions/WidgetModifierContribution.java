@@ -18,6 +18,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.common.emf.converter.BooleanInverserConverter;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.emf.tools.WidgetHelper;
 import org.bonitasoft.studio.common.emf.tools.WidgetModifiersSwitch;
@@ -34,7 +35,6 @@ import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.databinding.UpdateValueStrategy;
-import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.IValueChangeListener;
 import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
@@ -101,15 +101,7 @@ public class WidgetModifierContribution implements IExtensibleGridPropertySectio
                 EMFEditObservables.observeValue(editingDomain, widget, FormPackage.Literals.WIDGET__RETURN_TYPE_MODIFIER));
 
         final UpdateValueStrategy notStrategy = new UpdateValueStrategy();
-        notStrategy.setConverter(new Converter(Boolean.class, Boolean.class) {
-
-            public Object convert(final Object fromObject) {
-                if ((Boolean) fromObject) {
-                    return !(Boolean) fromObject;
-                }
-                return true;
-            }
-        });
+        notStrategy.setConverter(new BooleanInverserConverter());
 
         final IObservableValue duplicableValueObserved = EMFEditObservables.observeValue(editingDomain, widget, FormPackage.Literals.DUPLICABLE__DUPLICATE);
         duplicableValueObserved.addValueChangeListener(new IValueChangeListener() {

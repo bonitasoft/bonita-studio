@@ -16,6 +16,7 @@
  */
 package org.bonitasoft.studio.scripting.provider;
 
+import org.bonitasoft.studio.common.emf.converter.BooleanInverserConverter;
 import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
@@ -236,13 +237,7 @@ public class ScriptExpressionEditor extends SelectionAwareExpressionEditor imple
         // ExpressionPackage.Literals.EXPRESSION__PROPAGATE_VARIABLE_CHANGE) ;
 
         UpdateValueStrategy opposite = new UpdateValueStrategy();
-        opposite.setConverter(new Converter(Boolean.class, Boolean.class) {
-
-            @Override
-            public Object convert(Object fromObject) {
-                return !(Boolean) fromObject;
-            }
-        });
+        opposite.setConverter(new BooleanInverserConverter());
 
         UpdateValueStrategy targetToModel = new UpdateValueStrategy();
         targetToModel.setAfterConvertValidator(new EmptyInputValidator(Messages.name));

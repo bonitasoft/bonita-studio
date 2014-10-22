@@ -17,6 +17,7 @@
 package org.bonitasoft.studio.properties.form.sections.actions.contributions;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.common.emf.converter.BooleanInverserConverter;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection;
 import org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution;
@@ -118,12 +119,7 @@ public class OutputSectionContribution implements IExtensibleGridPropertySection
             operationViewer.setEditingDomain(getEditingDomain());
             operationViewer.setEObject(element);
             UpdateValueStrategy strategy = new UpdateValueStrategy();
-            strategy.setConverter(new Converter(Boolean.class, Boolean.class) {
-
-                public Object convert(Object fromObject) {
-                    return !((Boolean) fromObject).booleanValue();
-                }
-            });
+            strategy.setConverter(new BooleanInverserConverter());
 
             dataBinding.bindValue(SWTObservables.observeVisible(ExtensibleGridPropertySection.getLabelCompositeOf(operationViewer.getParent())),
                     EMFEditObservables.observeValue(getEditingDomain(), element, FormPackage.Literals.WIDGET__READ_ONLY), strategy, strategy);
