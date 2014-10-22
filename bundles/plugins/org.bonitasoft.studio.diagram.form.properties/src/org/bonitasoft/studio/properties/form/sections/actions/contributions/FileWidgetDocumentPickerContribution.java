@@ -25,7 +25,6 @@ import org.bonitasoft.studio.model.form.FileWidgetInputType;
 import org.bonitasoft.studio.model.form.FormPackage;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
-import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.conversion.IConverter;
@@ -64,7 +63,6 @@ public class FileWidgetDocumentPickerContribution implements IExtensibleGridProp
     private TabbedPropertySheetWidgetFactory widgetFactory;
     private DataBindingContext dataBindingContext;
     private Composite mainComposite;
-    private Binding binding;
     /*
      * (non-Javadoc)
      * @see org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution#isRelevantFor(org.eclipse.emf.ecore.EObject)
@@ -80,9 +78,6 @@ public class FileWidgetDocumentPickerContribution implements IExtensibleGridProp
     public void refresh() {
 
     }
-
-
-
 
     /*
      * (non-Javadoc)
@@ -120,11 +115,10 @@ public class FileWidgetDocumentPickerContribution implements IExtensibleGridProp
         decoDoc.setMarginWidth(0);
         decoDoc.setShowOnlyOnFocus(false);
 
-        final IObservableValue resourceObservable = createResourceObservable();
+        createResourceObservable();
 
         updateBinding();
     }
-
 
     private void updateBinding() {
         if (dataBindingContext != null) {
@@ -152,17 +146,12 @@ public class FileWidgetDocumentPickerContribution implements IExtensibleGridProp
                     if (c.canExecute()) {
                         editingDomain.getCommandStack().execute(c);
                     }
-
                 }
-
             }
         });
         return resourceObservable;
     }
 
-    /**
-     *
-     */
     private void bindDownloadType() {
         final SelectObservableValue downLoadTypeObservable = new SelectObservableValue(FileWidgetDownloadType.class);
         downLoadTypeObservable.addOption(FileWidgetDownloadType.URL, SWTObservables
@@ -171,14 +160,10 @@ public class FileWidgetDocumentPickerContribution implements IExtensibleGridProp
                 .observeSelection(browse));
         downLoadTypeObservable.addOption(FileWidgetDownloadType.BOTH, SWTObservables
                 .observeSelection(both));
-        binding = dataBindingContext
+        dataBindingContext
                 .bindValue(downLoadTypeObservable, EMFObservables.observeValue(fileWidget, FormPackage.Literals.FILE_WIDGET__DOWNLOAD_TYPE));
     }
 
-
-    /**
-     *
-     */
     private void bindEnableButtons() {
         final UpdateValueStrategy strategy = createEnabledStrategy();
         final UpdateValueStrategy strategyForUrl = createEnabledStrategyForDownloadOnlyURLCase();
@@ -192,21 +177,15 @@ public class FileWidgetDocumentPickerContribution implements IExtensibleGridProp
                 EMFObservables.observeValue(fileWidget, FormPackage.Literals.FILE_WIDGET__DOWNLOAD_ONLY), strategy, strategy);
     }
 
-
-
-
-
     private UpdateValueStrategy createEnabledUrlWhenInputIsResourceStrategyTargetToModel() {
         final UpdateValueStrategy strategy = new UpdateValueStrategy();
         strategy.setConverter(new IConverter() {
 
             public Object getToType() {
-
                 return Boolean.class;
             }
 
             public Object getFromType() {
-
                 return FileWidgetInputType.class;
             }
 
@@ -215,10 +194,7 @@ public class FileWidgetDocumentPickerContribution implements IExtensibleGridProp
                     return false;
                 }
                 return true;
-
             }
-
-
         });
         return strategy;
     }
@@ -228,12 +204,10 @@ public class FileWidgetDocumentPickerContribution implements IExtensibleGridProp
         strategy.setConverter(new IConverter() {
 
             public Object getToType() {
-
                 return Boolean.class;
             }
 
             public Object getFromType() {
-
                 return Boolean.class;
             }
 
@@ -245,7 +219,6 @@ public class FileWidgetDocumentPickerContribution implements IExtensibleGridProp
             }
         });
         return strategy;
-
     }
 
     private UpdateValueStrategy createEnabledStrategy() {
@@ -253,17 +226,14 @@ public class FileWidgetDocumentPickerContribution implements IExtensibleGridProp
         strategy.setConverter(new IConverter() {
 
             public Object getToType() {
-
                 return Boolean.class;
             }
 
             public Object getFromType() {
-
                 return Boolean.class;
             }
 
             public Object convert(final Object arg0) {
-
                 return !((Boolean)arg0);
             }
         });
@@ -276,7 +246,6 @@ public class FileWidgetDocumentPickerContribution implements IExtensibleGridProp
      */
     public void setEObject(final EObject object) {
         fileWidget = (FileWidget) object;
-
     }
 
     /*
@@ -302,8 +271,6 @@ public class FileWidgetDocumentPickerContribution implements IExtensibleGridProp
      * @see org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution#dispose()
      */
     public void dispose() {
-        // TODO Auto-generated method stub
-
     }
 
 }

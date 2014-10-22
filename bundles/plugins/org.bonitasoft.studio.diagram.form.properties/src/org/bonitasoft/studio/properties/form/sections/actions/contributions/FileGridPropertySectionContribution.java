@@ -215,9 +215,6 @@ public class FileGridPropertySectionContribution implements IExtensibleGridPrope
         FileWidgetInputType initialInputType = element.getInputType();
         if(!ModelHelper.isAnEntryPageFlowOnAPool(ModelHelper.getParentForm(element))){
             final Composite documentComposite = widgetFactory.createComposite(radioComposite);
-            final GridLayout layoyut = GridLayoutFactory.fillDefaults().create();
-
-
             final GridLayout layout = GridLayoutFactory.fillDefaults().create();
             layout.marginRight = 20;
             documentComposite.setLayout(layout);
@@ -260,37 +257,6 @@ public class FileGridPropertySectionContribution implements IExtensibleGridPrope
         }
 
         return initialInputType;
-    }
-
-    private void createURLButton(
-            final TabbedPropertySheetWidgetFactory widgetFactory,
-            final Composite radioComposite) {
-        //		useURLButton = widgetFactory.createButton(radioComposite, Messages.useUrl, SWT.RADIO) ;
-        //		useResourceButton = widgetFactory.createButton(radioComposite, Messages.useResource, SWT.RADIO) ;
-        //
-        //		useURLButton.addSelectionListener(new SelectionAdapter() {
-        //			@Override
-        //			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
-        //				if(initialValueSection != null && !initialValueSection.isDisposed()){
-        //					if(useURLButton.getSelection() && (element.getInputType() != FileWidgetInputType.URL || element.isDuplicate() != multiple || initialValueSection.getClient() == null)){
-        //						boolean recreate = false;
-        //						if(initialValueSection.getClient() == null || element.getInputType() == FileWidgetInputType.RESOURCE){
-        //							recreate = true;
-        //						}
-        //						editingDomain.getCommandStack().execute(SetCommand.create(editingDomain, element, FormPackage.Literals.FILE_WIDGET__INPUT_TYPE, FileWidgetInputType.URL));
-        //						if(recreate){
-        //							if(initialValueSection.getClient() != null){
-        //								initialValueSection.getClient().dispose() ;
-        //							}
-        //							multiple = element.isDuplicate();
-        //							initialValueSection.setClient(createInputExpressionComposite(initialValueSection,FileGridPropertySectionContribution.this.widgetFactory)) ;
-        //							initialValueSection.setExpanded(true) ;
-        //							bindFields();
-        //						}
-        //					}
-        //				}
-        //			}
-        //		});
     }
 
     protected Control createResourceComposite(final Section section, final TabbedPropertySheetWidgetFactory widgetFactory) {
