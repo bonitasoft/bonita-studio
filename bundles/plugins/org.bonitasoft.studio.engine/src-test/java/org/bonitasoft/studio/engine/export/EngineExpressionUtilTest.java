@@ -286,14 +286,14 @@ public class EngineExpressionUtilTest {
         final Document document = ProcessFactory.eINSTANCE.createDocument();
         document.setMultiple(true);
         final Expression expression= new DocumentReferenceExpressionProvider().createDocRefExpression(document);
-        assertThat(EngineExpressionUtil.toEngineExpressionType(expression)).isEqualTo(ExpressionConstants.DOCUMENT_LIST_TYPE);
+        assertThat(EngineExpressionUtil.toEngineExpressionType(expression)).isEqualTo(ExpressionType.TYPE_DOCUMENT_LIST);
     }
 
     @Test
     public void toEngineExpressionType_returnDocumentListForDocumentReferenceSimple() {
         final Document document = ProcessFactory.eINSTANCE.createDocument();
         final Expression expression = new DocumentReferenceExpressionProvider().createDocRefExpression(document);
-        assertThat(EngineExpressionUtil.toEngineExpressionType(expression)).isEqualTo(ExpressionConstants.CONSTANT_TYPE);
+        assertThat(EngineExpressionUtil.toEngineExpressionType(expression)).isEqualTo(ExpressionType.TYPE_CONSTANT);
     }
 
     @Test
