@@ -28,7 +28,7 @@ import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
-import org.eclipse.core.databinding.conversion.IConverter;
+import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.IValueChangeListener;
 import org.eclipse.core.databinding.observable.value.SelectObservableValue;
@@ -178,17 +178,9 @@ public class FileWidgetDocumentPickerContribution implements IExtensibleGridProp
                 EMFObservables.observeValue(fileWidget, FormPackage.Literals.FILE_WIDGET__DOWNLOAD_ONLY), strategy, strategy);
     }
 
-    private UpdateValueStrategy createEnabledUrlWhenInputIsResourceStrategyTargetToModel() {
+    protected UpdateValueStrategy createEnabledUrlWhenInputIsResourceStrategyTargetToModel() {
         final UpdateValueStrategy strategy = new UpdateValueStrategy();
-        strategy.setConverter(new IConverter() {
-
-            public Object getToType() {
-                return Boolean.class;
-            }
-
-            public Object getFromType() {
-                return FileWidgetInputType.class;
-            }
+        strategy.setConverter(new Converter(FileWidgetInputType.class, Boolean.class) {
 
             public Object convert(final Object arg0) {
                 if (FileWidgetInputType.RESOURCE.equals(arg0) || fileWidget.isDownloadOnly()) {
@@ -200,17 +192,9 @@ public class FileWidgetDocumentPickerContribution implements IExtensibleGridProp
         return strategy;
     }
 
-    private UpdateValueStrategy createEnabledStrategyForDownloadOnlyURLCase() {
+    protected UpdateValueStrategy createEnabledStrategyForDownloadOnlyURLCase() {
         final UpdateValueStrategy strategy = new UpdateValueStrategy();
-        strategy.setConverter(new IConverter() {
-
-            public Object getToType() {
-                return Boolean.class;
-            }
-
-            public Object getFromType() {
-                return Boolean.class;
-            }
+        strategy.setConverter(new Converter(Boolean.class, Boolean.class) {
 
             public Object convert(final Object arg0) {
                 if (FileWidgetInputType.RESOURCE.equals(fileWidget.getInputType())) {
@@ -222,7 +206,7 @@ public class FileWidgetDocumentPickerContribution implements IExtensibleGridProp
         return strategy;
     }
 
-    private UpdateValueStrategy createEnabledStrategy() {
+    protected UpdateValueStrategy createEnabledStrategy() {
         final UpdateValueStrategy strategy = new UpdateValueStrategy();
         strategy.setConverter(new BooleanInverserConverter());
         return strategy;
