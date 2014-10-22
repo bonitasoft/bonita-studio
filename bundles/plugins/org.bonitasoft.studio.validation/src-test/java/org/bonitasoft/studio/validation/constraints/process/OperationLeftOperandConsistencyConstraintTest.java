@@ -5,37 +5,28 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.validation.constraints.process;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.anyObject;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
-import org.bonitasoft.studio.condition.conditionModel.ConditionModelFactory;
-import org.bonitasoft.studio.condition.conditionModel.Operation_Compare;
-import org.bonitasoft.studio.condition.conditionModel.Operation_Greater;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.expression.Operation;
 import org.bonitasoft.studio.model.form.FormFactory;
 import org.bonitasoft.studio.model.form.TextFormField;
-import org.bonitasoft.studio.model.process.ProcessFactory;
-import org.bonitasoft.studio.model.process.SequenceFlow;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.validation.IValidationContext;
-import org.eclipse.ocl.expressions.util.ExpressionsAdapterFactory;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -44,112 +35,107 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 
-
 /**
- * 
  * @author Baptiste Mesta
- *
  */
 @RunWith(MockitoJUnitRunner.class)
 public class OperationLeftOperandConsistencyConstraintTest {
-	 private static final ExpressionFactory expressionFactory = ExpressionFactory.eINSTANCE;
 
-	    @Mock
-	    private IValidationContext context;
+    private static final ExpressionFactory expressionFactory = ExpressionFactory.eINSTANCE;
 
-	    @Spy
-	    private OperationLeftOperandConsistencyConstraint constraint;
+    @Mock
+    private IValidationContext context;
 
-	    /**
-	     * @throws java.lang.Exception
-	     */
-	    @Before
-	    public void setUp() throws Exception {
-	        when(context.createSuccessStatus()).thenReturn(Status.OK_STATUS);
-	        when(context.createFailureStatus(anyObject())).thenReturn(new Status(IStatus.ERROR, "unknown", ""));
-	    }
+    @Spy
+    private OperationLeftOperandConsistencyConstraint constraint;
 
-	    /**
-	     * @throws java.lang.Exception
-	     */
-	    @After
-	    public void tearDown() throws Exception {
-	    }
+    /**
+     * @throws java.lang.Exception
+     */
+    @Before
+    public void setUp() throws Exception {
+        when(context.createSuccessStatus()).thenReturn(Status.OK_STATUS);
+        when(context.createFailureStatus(anyObject())).thenReturn(new Status(IStatus.ERROR, "unknown", ""));
+    }
 
-	    @Test
-	    public void should_performBatchValidation_return_valid_status_for_type_that_is_not_variable_nor_constant() throws Exception {
-	    	//given
-	    	Operation operation = expressionFactory.createOperation();
-	    	Expression expression = expressionFactory.createExpression();
-	    	expression.setType("TOTO");
-	    	expression.setContent("dataName");
-			operation.setLeftOperand(expression);
-			when(context.getTarget()).thenReturn(operation);
-			
-	    	//when
-			IStatus status = constraint.performBatchValidation(context);
-			
-	    	//then
-	        assertThat(status.isOK()).isTrue();
-	    }
+    /**
+     * @throws java.lang.Exception
+     */
+    @After
+    public void tearDown() throws Exception {
+    }
 
-	    @Test
-	    public void should_performBatchValidation_fail_if_type_is_data_and_referenced_element_is_missing() throws Exception {
-	    	//given
-	    	Operation operation = expressionFactory.createOperation();
-	    	Expression expression = expressionFactory.createExpression();
-	    	expression.setType(ExpressionConstants.VARIABLE_TYPE);
-	    	expression.setName("dataName");
-	    	expression.setContent("dataName");
-			operation.setLeftOperand(expression);
-			when(context.getTarget()).thenReturn(operation);
-			
-			
-	    	//when
-			IStatus status = constraint.performBatchValidation(context);
-			
-	    	//then
-	        assertThat(status.isOK()).isFalse();
-	    }
+    @Test
+    public void should_performBatchValidation_return_valid_status_for_type_that_is_not_variable_nor_constant() throws Exception {
+        //given
+        final Operation operation = expressionFactory.createOperation();
+        final Expression expression = expressionFactory.createExpression();
+        expression.setType("TOTO");
+        expression.setContent("dataName");
+        operation.setLeftOperand(expression);
+        when(context.getTarget()).thenReturn(operation);
 
-	    @Test
-	    public void should_performBatchValidation_fail_if_type_is_CONSTANT() throws Exception {
-	    	//given
-	    	Operation operation = expressionFactory.createOperation();
-	    	Expression expression = expressionFactory.createExpression();
-	    	expression.setType(ExpressionConstants.CONSTANT_TYPE);
-	    	expression.setName("dataName");
-	    	expression.setContent("dataName");
-			operation.setLeftOperand(expression);
-			when(context.getTarget()).thenReturn(operation);
-			
-			
-	    	//when
-			IStatus status = constraint.performBatchValidation(context);
-			
-	    	//then
-	        assertThat(status.isOK()).isFalse();
-	    }
+        //when
+        final IStatus status = constraint.performBatchValidation(context);
 
-	    @Test
-	    public void should_performBatchValidation__ok_if_in_read_only_widget() throws Exception {
-	    	//given
-	    	Operation operation = expressionFactory.createOperation();
-	    	Expression expression = expressionFactory.createExpression();
-	    	expression.setType(ExpressionConstants.CONSTANT_TYPE);
-	    	expression.setName("dataName");
-	    	expression.setContent("dataName");
-			operation.setLeftOperand(expression);
-			TextFormField widget = FormFactory.eINSTANCE.createTextFormField();
-			widget.setAction(operation);
-			widget.setReadOnly(true);
-			when(context.getTarget()).thenReturn(operation);
-			
-			
-	    	//when
-			IStatus status = constraint.performBatchValidation(context);
-			
-	    	//then
-	        assertThat(status.isOK()).isTrue();
-	    }
+        //then
+        assertThat(status.isOK()).isTrue();
+    }
+
+    @Test
+    public void should_performBatchValidation_fail_if_type_is_data_and_referenced_element_is_missing() throws Exception {
+        //given
+        final Operation operation = expressionFactory.createOperation();
+        final Expression expression = expressionFactory.createExpression();
+        expression.setType(ExpressionConstants.VARIABLE_TYPE);
+        expression.setName("dataName");
+        expression.setContent("dataName");
+        operation.setLeftOperand(expression);
+        when(context.getTarget()).thenReturn(operation);
+
+        //when
+        final IStatus status = constraint.performBatchValidation(context);
+
+        //then
+        assertThat(status.isOK()).isFalse();
+    }
+
+    @Test
+    public void should_performBatchValidation_fail_if_type_is_CONSTANT() throws Exception {
+        //given
+        final Operation operation = expressionFactory.createOperation();
+        final Expression expression = expressionFactory.createExpression();
+        expression.setType(ExpressionConstants.CONSTANT_TYPE);
+        expression.setName("dataName");
+        expression.setContent("dataName");
+        operation.setLeftOperand(expression);
+        when(context.getTarget()).thenReturn(operation);
+
+        //when
+        final IStatus status = constraint.performBatchValidation(context);
+
+        //then
+        assertThat(status.isOK()).isFalse();
+    }
+
+    @Test
+    public void should_performBatchValidation__ok_if_in_read_only_widget() throws Exception {
+        //given
+        final Operation operation = expressionFactory.createOperation();
+        final Expression expression = expressionFactory.createExpression();
+        expression.setType(ExpressionConstants.CONSTANT_TYPE);
+        expression.setName("dataName");
+        expression.setContent("dataName");
+        operation.setLeftOperand(expression);
+        final TextFormField widget = FormFactory.eINSTANCE.createTextFormField();
+        widget.setAction(operation);
+        widget.setReadOnly(true);
+        when(context.getTarget()).thenReturn(operation);
+
+        //when
+        final IStatus status = constraint.performBatchValidation(context);
+
+        //then
+        assertThat(status.isOK()).isTrue();
+    }
 }

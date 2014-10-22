@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Additional Ant tasks for studio build
 Bundle-SymbolicName: org.bonitasoft.studio_antTasks;singleton:=true
 Bundle-Version: 6.4.0.qualifier
-Bundle-Vendor: BonitaSoft S.A.
+Bundle-Vendor: Bonitasoft S.A.
 Require-Bundle: org.eclipse.core.runtime,
  org.apache.ant,
  org.eclipse.ant.core;bundle-version="3.2.100",

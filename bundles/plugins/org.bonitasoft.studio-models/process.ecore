@@ -191,14 +191,22 @@
   <eClassifiers xsi:type="ecore:EClass" name="DataType" abstract="true" eSuperTypes="#//Element"/>
   <eClassifiers xsi:type="ecore:EClass" name="DateType" eSuperTypes="#//StringType"/>
   <eClassifiers xsi:type="ecore:EClass" name="Document" eSuperTypes="#//Element">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="A document can be simple or multiple:&#xD;&#xA;- if Simple, the documentType will refer to the inital content type:&#xD;&#xA;    - NONE: no initial content&#xD;&#xA;    - INTERNAL:&#xD;&#xA;&#x9;&#x9;- stored in Bonita,&#xD;&#xA;&#x9;&#x9;- use the defaultValueIdOfDocumentStore to retrieve the initial content file&#xD;&#xA;&#x9;&#x9;- MIME Type can be specified&#xD;&#xA;    - EXTERNAL:&#xD;&#xA;&#x9;&#x9;- stored externally&#xD;&#xA;&#x9;&#x9;- use the url to specify the remote URL specifying th einitial content&#xD;&#xA;&#x9;&#x9;- MIME Type can be specified&#xD;&#xA;- if multiple&#xD;&#xA;&#x9;- Initial content can be provided using an Expression initialMultipleContent&#x9;&#xD;&#xA;&#x9;- MIME Type will be specified for each Document of the list created in the expression"/>
+    </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="mimeType" eType="ecore:EClass expression.ecore#//Expression"
         containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="isInternal" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
-        defaultValueLiteral="false"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="url" eType="ecore:EClass expression.ecore#//Expression"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="defaultValueIdOfDocumentStore"
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="documentType" lowerBound="1"
+        eType="#//DocumentType" defaultValueLiteral="0"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="multiple" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//Boolean"
+        defaultValueLiteral="false"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="initialMultipleContent"
+        eType="ecore:EClass expression.ecore#//Expression" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="DoubleType" eSuperTypes="#//DataType"/>
   <eClassifiers xsi:type="ecore:EClass" name="EndErrorEvent" eSuperTypes="#//Event #//ErrorEvent"/>
@@ -567,6 +575,11 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="XMLType" eSuperTypes="#//DataType"/>
   <eClassifiers xsi:type="ecore:EClass" name="XORGateway" eSuperTypes="#//Gateway"/>
+  <eClassifiers xsi:type="ecore:EEnum" name="DocumentType">
+    <eLiterals name="NONE"/>
+    <eLiterals name="INTERNAL" value="1"/>
+    <eLiterals name="EXTERNAL" value="2"/>
+  </eClassifiers>
   <eSubpackages name="decision" nsURI="http://www.bonitasoft.org/ns/studio/process/decision"
       nsPrefix="decision">
     <eClassifiers xsi:type="ecore:EClass" name="DecisionTable">

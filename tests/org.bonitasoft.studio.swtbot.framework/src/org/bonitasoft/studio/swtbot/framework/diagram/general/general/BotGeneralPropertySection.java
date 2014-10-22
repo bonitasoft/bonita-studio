@@ -30,7 +30,7 @@ public class BotGeneralPropertySection extends BotBase {
         if (textWithLabel.isEnabled()) {
             textWithLabel.setText(pName);
         } else {
-
+			//FIXME: what happend when text is not enabled?
         }
         bot.sleep(500);
     }

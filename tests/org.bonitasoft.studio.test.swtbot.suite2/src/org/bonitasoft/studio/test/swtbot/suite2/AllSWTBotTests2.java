@@ -28,10 +28,11 @@ import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.bonitasoft.studio.properties.test.TestResources;
 import org.bonitasoft.studio.repository.test.swtbot.TestExportBosArchive;
 import org.bonitasoft.studio.tests.IHeapDumper;
-import org.bonitasoft.studio.tests.attachment.TestRunWithDocument;
 import org.bonitasoft.studio.tests.data.DataWizardIT;
 import org.bonitasoft.studio.tests.dialog.OpenNameAndVersionForDiagramDialogTest;
 import org.bonitasoft.studio.tests.dialog.TestDuplicate;
+import org.bonitasoft.studio.tests.document.TestDocument;
+import org.bonitasoft.studio.tests.document.TestRunWithDocument;
 import org.bonitasoft.studio.tests.draw2d.TestLifeCycleWidget;
 import org.bonitasoft.studio.tests.form.TestBug1682;
 import org.bonitasoft.studio.tests.iteration.MultiInstantiationIT;
@@ -91,6 +92,7 @@ import org.junit.runners.Suite;
     BPMNEventSubProcessExportImportTest.class,
     BarExporterTest.class,
     TestRunWithDocument.class,
+        TestDocument.class,
     DuplicateCommandTest.class,
     TestExportBosArchive.class,
     TestSave.class,

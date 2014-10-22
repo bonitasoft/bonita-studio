@@ -43,15 +43,15 @@ import org.junit.runner.RunWith;
 
 /**
  * @author aurelie
- * 
+ *
  */
 
 @RunWith(SWTBotJunit4ClassRunner.class)
 public class SWTBotActorFilterExportTests extends SWTBotGefTestCase {
 
-    private void exportActorFilter(String connector, String fileName,
-            boolean hasDependencies, boolean hasSources) throws Exception {
-        File f = new File(ProjectUtil.getBonitaStudioWorkFolder().getAbsolutePath());
+    private void exportActorFilter(final String connector, final String fileName,
+            final boolean hasDependencies, final boolean hasSources) throws Exception {
+        final File f = new File(ProjectUtil.getBonitaStudioWorkFolder().getAbsolutePath());
         final String exportPath = f.getAbsolutePath();
         SWTBotActorFilterUtil.activateExportActorFilterShell(bot);
         bot.table().select(connector);
@@ -70,7 +70,7 @@ public class SWTBotActorFilterExportTests extends SWTBotGefTestCase {
         bot.textWithLabel("Destination *").setText(exportPath);
         bot.waitUntil(Conditions.widgetIsEnabled(bot.button(IDialogConstants.FINISH_LABEL)),5000);
         bot.button(IDialogConstants.FINISH_LABEL).click();
-        bot.waitUntil(Conditions.shellIsActive("Export result"));
+        bot.waitUntil(new ShellIsActiveWithThreadSTacksOnFailure("Export result"));
         bot.button(IDialogConstants.OK_LABEL).click();
         checkExportedFile(exportPath,fileName, hasDependencies, hasSources);
     }
@@ -104,15 +104,15 @@ public class SWTBotActorFilterExportTests extends SWTBotGefTestCase {
         exportActorFilter(userActorFilter, fileName, false, true);
     }
 
-    private void checkExportedFile(String path,String fileName, boolean hasDependencies,
-            boolean hasSources) throws Exception {
-        File zipFile = new File(path+File.separator+fileName);
+    private void checkExportedFile(final String path,final String fileName, final boolean hasDependencies,
+            final boolean hasSources) throws Exception {
+        final File zipFile = new File(path+File.separator+fileName);
         assertTrue("actor filter zip file was not created", zipFile.exists());
-        File destDir = new File(ProjectUtil.getBonitaStudioWorkFolder().getAbsolutePath());
-        IProgressMonitor monitor = new NullProgressMonitor();
+        final File destDir = new File(ProjectUtil.getBonitaStudioWorkFolder().getAbsolutePath());
+        final IProgressMonitor monitor = new NullProgressMonitor();
         try{
         	PlatformUtil.unzipZipFiles(zipFile, destDir, monitor);
-        }catch(Exception e){
+        }catch(final Exception e){
         	if(e instanceof IOException){
         		assertTrue("IO error while unzip file "+zipFile.getName(), false);
         	}
@@ -130,7 +130,7 @@ public class SWTBotActorFilterExportTests extends SWTBotGefTestCase {
         testMessageFilesExistence(destDir);
     }
 
-    private void testSourceFileExistence(File destDir, boolean hasSources) {
+    private void testSourceFileExistence(final File destDir, final boolean hasSources) {
         final File sourceDir = new File(destDir,
                 ExportConnectorArchiveOperation.SRC_DIR);
         if (hasSources) {
@@ -138,7 +138,7 @@ public class SWTBotActorFilterExportTests extends SWTBotGefTestCase {
             assertTrue(
                     "source folder should be contained in exported Actor Filter zip",
                     sourceDir.exists());
-            File[] sourceFiles = sourceDir.listFiles();
+            final File[] sourceFiles = sourceDir.listFiles();
             assertNotNull("source dir should contain at least one file",
                     sourceFiles);
         } else {
@@ -147,12 +147,12 @@ public class SWTBotActorFilterExportTests extends SWTBotGefTestCase {
         }
     }
 
-    private void testDescriptorFileExistence(File destDir) throws IOException {
+    private void testDescriptorFileExistence(final File destDir) throws IOException {
         final File descriptor = new File(destDir,
                 ExportConnectorArchiveOperation.DESCRIPTOR_FILE);
         assertTrue("descriptor should be contained in exported Actor Filter",
                 descriptor.exists());
-        Properties p = new Properties();
+        final Properties p = new Properties();
         final FileInputStream fis = new FileInputStream(descriptor);
         p.load(fis);
         fis.close();
@@ -166,15 +166,15 @@ public class SWTBotActorFilterExportTests extends SWTBotGefTestCase {
                 (type == null || type.isEmpty()));
     }
 
-    private void testDefinitionFileExistence(File destDir) {
-        FilenameFilter defFilter = new FilenameFilter() {
+    private void testDefinitionFileExistence(final File destDir) {
+        final FilenameFilter defFilter = new FilenameFilter() {
             @Override
-            public boolean accept(File dir, String name) {
+            public boolean accept(final File dir, final String name) {
                 return name.endsWith("."
                         + ConnectorDefRepositoryStore.CONNECTOR_DEF_EXT);
             }
         };
-        File[] defFiles = destDir.listFiles(defFilter);
+        final File[] defFiles = destDir.listFiles(defFilter);
         assertNotNull("def file should exist in exported Actor Filter zip file",
                 defFiles);
         assertEquals(
@@ -182,16 +182,16 @@ public class SWTBotActorFilterExportTests extends SWTBotGefTestCase {
                 defFiles.length, 1);
     }
 
-    private void testImplementationFileExistence(File destDir) {
-        FilenameFilter implFilter = new FilenameFilter() {
+    private void testImplementationFileExistence(final File destDir) {
+        final FilenameFilter implFilter = new FilenameFilter() {
 
             @Override
-            public boolean accept(File dir, String name) {
+            public boolean accept(final File dir, final String name) {
                 return name.endsWith("."
                         + ConnectorImplRepositoryStore.CONNECTOR_IMPL_EXT);
             }
         };
-        File[] implFiles = destDir.listFiles(implFilter);
+        final File[] implFiles = destDir.listFiles(implFilter);
         assertNotNull("impl file should exist in exported Actor Filter zip file",
                 implFiles);
         assertEquals(
@@ -199,13 +199,13 @@ public class SWTBotActorFilterExportTests extends SWTBotGefTestCase {
                 implFiles.length, 1);
     }
 
-    private void testClasspathDirExistence(File destDir, boolean hasDependencies) {
+    private void testClasspathDirExistence(final File destDir, final boolean hasDependencies) {
         final File classpathDir = new File(destDir,
                 ExportConnectorArchiveOperation.CLASSPATH_DIR);
         assertTrue(
                 "classPath folder should be contained in exported Actor Filter",
                 classpathDir.exists());
-        File[] depfiles = classpathDir.listFiles();
+        final File[] depfiles = classpathDir.listFiles();
         assertNotNull("classpath should countain at least one jar file",
                 depfiles);
         if (hasDependencies) {
@@ -214,16 +214,16 @@ public class SWTBotActorFilterExportTests extends SWTBotGefTestCase {
         }
     }
 
-    private void testMessageFilesExistence(File destDir) {
-        FilenameFilter messageFilter = new FilenameFilter() {
+    private void testMessageFilesExistence(final File destDir) {
+        final FilenameFilter messageFilter = new FilenameFilter() {
 
             @Override
-            public boolean accept(File dir, String name) {
+            public boolean accept(final File dir, final String name) {
                 return name.endsWith(".properties")
                         && !name.equals(ExportConnectorArchiveOperation.DESCRIPTOR_FILE);
             }
         };
-        File[] messageFiles = destDir.listFiles(messageFilter);
+        final File[] messageFiles = destDir.listFiles(messageFilter);
         assertNotNull(
                 "message property file(s) should exist in exported connector zip file",
                 messageFiles);

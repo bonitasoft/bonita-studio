@@ -1,19 +1,16 @@
 /**
- * Copyright (C) 2012 BonitaSoft S.A.
+ * Copyright (C) 2012-2014 BonitaSoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
- *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.expression.editor.operation;
 
@@ -54,7 +51,6 @@ import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
@@ -67,293 +63,291 @@ import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
  */
 public abstract class OperationsComposite extends Composite implements IBonitaVariableContext {
 
-	public static final String SWTBOT_ID_REMOVE_LINE = "actionLinesCompositeRemoveButton";
-	protected List<OperationViewer> operationViewers = new ArrayList<OperationViewer>();
-	protected ArrayList<Button> removes = new ArrayList<Button>();
-	protected TabbedPropertySheetPage tabbedPropertySheetPage;
-	protected EMFDataBindingContext context;
-	protected ArrayList<List<Binding>> bindings = new ArrayList<List<Binding>>();
-	private TabbedPropertySheetWidgetFactory widgetFactory;
-	private EObject eObject;
-	protected final Composite mainComposite;
-	private EReference operationContainmentFeature;
-	private final ViewerFilter storageExpressionFilter;
-	private final ViewerFilter actionExpressionFilter;
-	private IExpressionNatureProvider storageExpressionNatureProvider;
-	private IExpressionNatureProvider actionExpressionNatureProvider;
-	private Map<String, IExpressionValidator> validatorMap = new HashMap<String, IExpressionValidator>();
-	private EObject eObjectContext;
-	private boolean isPageFlowContext = false;
-	
-	
-	public OperationsComposite(TabbedPropertySheetPage tabbedPropertySheetPage,
-			Composite mainComposite, ViewerFilter actionExpressionFilter,
-			ViewerFilter storageExpressionFilter,boolean isPageFlowContext){
-		super(mainComposite, SWT.NONE);
-		this.mainComposite = mainComposite;
-		this.isPageFlowContext=isPageFlowContext;
-		if (tabbedPropertySheetPage != null) {
-			widgetFactory = tabbedPropertySheetPage.getWidgetFactory();
-			if (widgetFactory != null) {
-				widgetFactory.adapt(this);
-			}
-			this.tabbedPropertySheetPage = tabbedPropertySheetPage;
-		}
-		this.actionExpressionFilter = actionExpressionFilter;
-		this.storageExpressionFilter = storageExpressionFilter;
-		setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
+    public static final String SWTBOT_ID_REMOVE_LINE = "actionLinesCompositeRemoveButton";
+    protected List<OperationViewer> operationViewers = new ArrayList<OperationViewer>();
+    protected ArrayList<Button> removes = new ArrayList<Button>();
+    protected TabbedPropertySheetPage tabbedPropertySheetPage;
+    protected EMFDataBindingContext context;
+    protected ArrayList<List<Binding>> bindings = new ArrayList<List<Binding>>();
+    private TabbedPropertySheetWidgetFactory widgetFactory;
+    private EObject eObject;
+    protected final Composite mainComposite;
+    private EReference operationContainmentFeature;
+    private final ViewerFilter storageExpressionFilter;
+    private final ViewerFilter actionExpressionFilter;
+    private IExpressionNatureProvider storageExpressionNatureProvider;
+    private IExpressionNatureProvider actionExpressionNatureProvider;
+    private final Map<String, IExpressionValidator> validatorMap = new HashMap<String, IExpressionValidator>();
+    private EObject eObjectContext;
+    private boolean isPageFlowContext = false;
 
-		Button addButton = null;
-		if (widgetFactory != null) {
-			addButton = widgetFactory.createButton(mainComposite, "", SWT.PUSH);
-		} else {
-			addButton = new Button(mainComposite, SWT.PUSH);
-		}
-		addButton.setText(Messages.addAction);
-		addButton.setLayoutData(GridDataFactory.fillDefaults()
-				.align(SWT.BEGINNING, SWT.TOP).hint(85, SWT.DEFAULT).create());
-		addButton.addSelectionListener(new SelectionListener() {
+    public OperationsComposite(final TabbedPropertySheetPage tabbedPropertySheetPage,
+            final Composite mainComposite, final ViewerFilter actionExpressionFilter,
+            final ViewerFilter storageExpressionFilter, final boolean isPageFlowContext) {
+        super(mainComposite, SWT.NONE);
+        this.mainComposite = mainComposite;
+        this.isPageFlowContext = isPageFlowContext;
+        if (tabbedPropertySheetPage != null) {
+            widgetFactory = tabbedPropertySheetPage.getWidgetFactory();
+            if (widgetFactory != null) {
+                widgetFactory.adapt(this);
+            }
+            this.tabbedPropertySheetPage = tabbedPropertySheetPage;
+        }
+        this.actionExpressionFilter = actionExpressionFilter;
+        this.storageExpressionFilter = storageExpressionFilter;
+        setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
+        createAddButton(mainComposite);
+    }
 
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				final Operation action = ExpressionFactory.eINSTANCE.createOperation();
-				final Operator operator = ExpressionFactory.eINSTANCE.createOperator();
-				operator.setType(ExpressionConstants.ASSIGNMENT_OPERATOR);
-				action.setOperator(operator);
-				final EditingDomain domain = getEditingDomain();
-				if (domain != null) {
-					domain.getCommandStack().execute(
-							AddCommand.create(domain, getEObject(),
-									getActionTargetFeature(), action));
-				} else {
-					getActions().add(action);
-				}
-				addLineUI(action);
-				refresh();
-			}
+    private void createAddButton(final Composite mainComposite) {
+        Button addButton = null;
+        if (widgetFactory != null) {
+            addButton = widgetFactory.createButton(mainComposite, "", SWT.PUSH);
+        } else {
+            addButton = new Button(mainComposite, SWT.PUSH);
+        }
+        addButton.setText(Messages.addAction);
+        addButton.setLayoutData(GridDataFactory.fillDefaults()
+                .align(SWT.BEGINNING, SWT.TOP).hint(85, SWT.DEFAULT).create());
+        addButton.addSelectionListener(new SelectionAdapter() {
 
-			@Override
-			public void widgetDefaultSelected(SelectionEvent e) {
+            @Override
+            public void widgetSelected(final SelectionEvent e) {
+                final Operation action = createOperation();
+                addLineUI(action);
+                refresh();
+            }
 
-			}
-		});
+            private Operation createOperation() {
+                final Operation action = ExpressionFactory.eINSTANCE.createOperation();
+                final Operator operator = ExpressionFactory.eINSTANCE.createOperator();
+                operator.setType(ExpressionConstants.ASSIGNMENT_OPERATOR);
+                action.setOperator(operator);
+                final EditingDomain domain = getEditingDomain();
+                if (domain != null) {
+                    domain.getCommandStack().execute(
+                            AddCommand.create(domain, getEObject(),
+                                    getActionTargetFeature(), action));
+                } else {
+                    getActions().add(action);
+                }
+                return action;
+            }
+        });
+    }
 
-		
-	}
+    public OperationsComposite(final TabbedPropertySheetPage tabbedPropertySheetPage,
+            final Composite mainComposite, final ViewerFilter actionExpressionFilter,
+            final ViewerFilter storageExpressionFilter) {
+        this(tabbedPropertySheetPage, mainComposite, actionExpressionFilter, storageExpressionFilter, false);
 
-	public OperationsComposite(TabbedPropertySheetPage tabbedPropertySheetPage,
-			Composite mainComposite, ViewerFilter actionExpressionFilter,
-			ViewerFilter storageExpressionFilter) {
-		this(tabbedPropertySheetPage,mainComposite,actionExpressionFilter,storageExpressionFilter,false);	
-		
-	}
+    }
 
-	protected EditingDomain getEditingDomain() {
-		return TransactionUtil.getEditingDomain(getEObject());
-	}
+    protected EditingDomain getEditingDomain() {
+        return TransactionUtil.getEditingDomain(getEObject());
+    }
 
-	public int getNbLines(){
-		return operationViewers.size();
-	}
-	
-	public void removeLinesUI() {
-		if(!operationViewers.isEmpty()){
-			for (int i = operationViewers.size() - 1; i >= 0; i--) {
-				removeLineUI(i);
-			}
-			refresh();
-		}
-	}
+    public int getNbLines() {
+        return operationViewers.size();
+    }
 
-	private void removeLine(int i) {
-		int lineNumber = removeLineUI(i);
-		final EditingDomain domain = getEditingDomain();
-		if (domain != null) {
-			getEditingDomain().getCommandStack().execute(
-					RemoveCommand.create(getEditingDomain(), getEObject(),
-							getActionTargetFeature(),
-							getActions().get(lineNumber)));
-		} else {
-			getActions().remove(i);
-		}
-		refresh();
-	}
+    public void removeLinesUI() {
+        if (!operationViewers.isEmpty()) {
+            for (int i = operationViewers.size() - 1; i >= 0; i--) {
+                removeLineUI(i);
+            }
+            refresh();
+        }
+    }
 
-	/**
-	 * @param i
-	 * @return
-	 */
-	protected int removeLineUI(int i) {
-		int lineNumber = i;
-		removes.get(lineNumber).dispose();
-		removes.remove(lineNumber);
-		final OperationViewer operationViewer = operationViewers.get(lineNumber);
-		operationViewer.dispose();
-		operationViewers.remove(lineNumber);
-		return lineNumber;
-	}
+    private void removeLine(final int i) {
+        final int lineNumber = removeLineUI(i);
+        final EditingDomain domain = getEditingDomain();
+        if (domain != null) {
+            getEditingDomain().getCommandStack().execute(
+                    RemoveCommand.create(getEditingDomain(), getEObject(),
+                            getActionTargetFeature(),
+                            getActions().get(lineNumber)));
+        } else {
+            getActions().remove(i);
+        }
+        refresh();
+    }
 
-	public void addLineUI(final Operation action) {
-		final OperationViewer opViewer = createOperationViewer(action);
-		operationViewers.add(opViewer);
-		removes.add(createRemoveButton());
-	}
+    /**
+     * @param i
+     * @return
+     */
+    protected int removeLineUI(final int i) {
+        final int lineNumber = i;
+        removes.get(lineNumber).dispose();
+        removes.remove(lineNumber);
+        final OperationViewer operationViewer = operationViewers.get(lineNumber);
+        operationViewer.dispose();
+        operationViewers.remove(lineNumber);
+        return lineNumber;
+    }
 
-	protected OperationViewer createOperationViewer(Operation action) {
-		final OperationViewer viewer = new OperationViewer(this, widgetFactory, getEditingDomain(), actionExpressionFilter, storageExpressionFilter,isPageFlowContext) ;
-		viewer.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
-		if(context != null){
-			viewer.setContext(context);
-		}
-		if(eObjectContext != null){
-			viewer.setContext(eObjectContext);
-		}
-		if(storageExpressionNatureProvider != null){
-			viewer.setStorageExpressionNatureProvider(storageExpressionNatureProvider);
-		}
-		if(actionExpressionNatureProvider != null){
-			viewer.setActionExpressionNatureProvider(actionExpressionNatureProvider);
-		}
-		for(Entry<String, IExpressionValidator> validator : validatorMap.entrySet()){
-			viewer.addActionExpressionValidator(validator.getKey(), validator.getValue());
-		}
+    public void addLineUI(final Operation action) {
+        final OperationViewer opViewer = createOperationViewer(action);
+        operationViewers.add(opViewer);
+        removes.add(createRemoveButton());
+    }
 
-		viewer.setOperation(action);
-		viewer.setEObject(eObject);
+    protected OperationViewer createOperationViewer(final Operation action) {
+        final OperationViewer viewer = new OperationViewer(this, widgetFactory, getEditingDomain(), actionExpressionFilter, storageExpressionFilter,
+                isPageFlowContext);
+        viewer.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+        if (context != null) {
+            viewer.setContext(context);
+        }
+        if (eObjectContext != null) {
+            viewer.setContext(eObjectContext);
+        }
+        if (storageExpressionNatureProvider != null) {
+            viewer.setStorageExpressionNatureProvider(storageExpressionNatureProvider);
+        }
+        if (actionExpressionNatureProvider != null) {
+            viewer.setActionExpressionNatureProvider(actionExpressionNatureProvider);
+        }
+        for (final Entry<String, IExpressionValidator> validator : validatorMap.entrySet()) {
+            viewer.addActionExpressionValidator(validator.getKey(), validator.getValue());
+        }
 
-		return viewer;
-	}
-	
-	public void setContext(EObject context){
-		this.eObjectContext = context;
-	}
+        viewer.setOperation(action);
+        viewer.setEObject(eObject);
 
-	public void addActionExpressionValidator(String expressionType,IExpressionValidator validator){
-		validatorMap.put(expressionType,validator);
-	}
+        return viewer;
+    }
 
-	protected Button createRemoveButton() {
-		Button remove = new Button(this, SWT.FLAT);
-		if (widgetFactory != null) {
-			widgetFactory.adapt(remove, false, false);
-		}
-		remove.setData("org.eclipse.swtbot.widget.key", SWTBOT_ID_REMOVE_LINE);
-		remove.setLayoutData(GridDataFactory.swtDefaults().create());
-		remove.setImage(Pics.getImage("delete.png"));
-		remove.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				removeLine(removes.indexOf(e.getSource()));
-			}
-		});
+    public void setContext(final EObject context) {
+        eObjectContext = context;
+    }
 
-		return remove;
-	}
+    public void addActionExpressionValidator(final String expressionType, final IExpressionValidator validator) {
+        validatorMap.put(expressionType, validator);
+    }
 
-	protected String getExpressionTooltip() {
-		return Messages.shortExpr_tooltip;
-	}
+    protected Button createRemoveButton() {
+        final Button remove = new Button(this, SWT.FLAT);
+        if (widgetFactory != null) {
+            widgetFactory.adapt(remove, false, false);
+        }
+        remove.setData("org.eclipse.swtbot.widget.key", SWTBOT_ID_REMOVE_LINE);
+        remove.setLayoutData(GridDataFactory.swtDefaults().create());
+        remove.setImage(Pics.getImage("delete.png"));
+        remove.addSelectionListener(new SelectionAdapter() {
 
-	/**
-	 * add lines from the form
-	 */
-	public void fillTable() {
-		for (Operation action : getActions()) {
-			addLineUI(action);
-		}
-	}
+            @Override
+            public void widgetSelected(final SelectionEvent e) {
+                removeLine(removes.indexOf(e.getSource()));
+            }
+        });
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @seeorg.eclipse.gmf.runtime.diagram.ui.properties.sections.
-	 * AbstractModelerPropertySection#dispose()
-	 */
-	@Override
-	public void dispose() {
-		super.dispose();
-		for (OperationViewer text : operationViewers) {
-			if (text != null) {
-				text.dispose();
-			}
-		}
-		for (Button toDispose : removes) {
-			if (toDispose != null && !toDispose.isDisposed()) {
-				toDispose.dispose();
-			}
-		}
-	}
+        return remove;
+    }
 
-	public void setContext(EMFDataBindingContext emfDataBindingContext) {
-		context = emfDataBindingContext;
-	}
+    protected String getExpressionTooltip() {
+        return Messages.shortExpr_tooltip;
+    }
 
-	public void setEObject(EObject eObject) {
-		this.eObject = eObject;
-		if (eObject instanceof Form) {
-			setOperationContainmentFeature(FormPackage.Literals.FORM__ACTIONS);
-		} else if (eObject instanceof SubmitFormButton) {
-			setOperationContainmentFeature(FormPackage.Literals.SUBMIT_FORM_BUTTON__ACTIONS);
-		} else if (eObject instanceof AbstractCatchMessageEvent) {
-			setOperationContainmentFeature(ProcessPackage.Literals.ABSTRACT_CATCH_MESSAGE_EVENT__MESSAGE_CONTENT);
-		} else if (eObject instanceof Connector) {
-			setOperationContainmentFeature(ProcessPackage.Literals.CONNECTOR__OUTPUTS);
-		} else if (eObject instanceof OperationContainer) {
-			setOperationContainmentFeature(ProcessPackage.Literals.OPERATION_CONTAINER__OPERATIONS);
-		}
-	}
+    /**
+     * add lines from the form
+     */
+    public void fillTable() {
+        for (final Operation action : getActions()) {
+            addLineUI(action);
+        }
+    }
 
-	public void setOperationContainmentFeature(EReference actionTargetFeature) {
-		operationContainmentFeature = actionTargetFeature;
-	}
+    /*
+     * (non-Javadoc)
+     * @seeorg.eclipse.gmf.runtime.diagram.ui.properties.sections.
+     * AbstractModelerPropertySection#dispose()
+     */
+    @Override
+    public void dispose() {
+        super.dispose();
+        for (final OperationViewer text : operationViewers) {
+            if (text != null) {
+                text.dispose();
+            }
+        }
+        for (final Button toDispose : removes) {
+            if (toDispose != null && !toDispose.isDisposed()) {
+                toDispose.dispose();
+            }
+        }
+    }
 
-	public EObject getEObject() {
-		return eObject;
-	}
+    public void setContext(final EMFDataBindingContext emfDataBindingContext) {
+        context = emfDataBindingContext;
+    }
 
+    public void setEObject(final EObject eObject) {
+        this.eObject = eObject;
+        if (eObject instanceof Form) {
+            setOperationContainmentFeature(FormPackage.Literals.FORM__ACTIONS);
+        } else if (eObject instanceof SubmitFormButton) {
+            setOperationContainmentFeature(FormPackage.Literals.SUBMIT_FORM_BUTTON__ACTIONS);
+        } else if (eObject instanceof AbstractCatchMessageEvent) {
+            setOperationContainmentFeature(ProcessPackage.Literals.ABSTRACT_CATCH_MESSAGE_EVENT__MESSAGE_CONTENT);
+        } else if (eObject instanceof Connector) {
+            setOperationContainmentFeature(ProcessPackage.Literals.CONNECTOR__OUTPUTS);
+        } else if (eObject instanceof OperationContainer) {
+            setOperationContainmentFeature(ProcessPackage.Literals.OPERATION_CONTAINER__OPERATIONS);
+        }
+    }
 
-	public abstract void refresh() ;
+    public void setOperationContainmentFeature(final EReference actionTargetFeature) {
+        operationContainmentFeature = actionTargetFeature;
+    }
 
+    public EObject getEObject() {
+        return eObject;
+    }
 
-	protected EReference getActionTargetFeature() {
-		return operationContainmentFeature;
-	}
+    public abstract void refresh();
 
-	@SuppressWarnings("unchecked")
-	private List<Operation> getActions() {
-		EObject eObject = getEObject();
-		if (getEObject() instanceof Lane) {
-			eObject = getEObject().eContainer();
-		}
-		return (List<Operation>) eObject.eGet(getActionTargetFeature());
-	}
+    protected EReference getActionTargetFeature() {
+        return operationContainmentFeature;
+    }
 
-	/**
-	 * Set a specify IExpressionNatureProvider for the left operand
-	 * 
-	 * @param dataFeature
-	 */
-	public void setStorageExpressionNatureContentProvider(
-			IExpressionNatureProvider provider) {
-		storageExpressionNatureProvider = provider;
-	}
+    @SuppressWarnings("unchecked")
+    private List<Operation> getActions() {
+        EObject eObject = getEObject();
+        if (getEObject() instanceof Lane) {
+            eObject = getEObject().eContainer();
+        }
+        return (List<Operation>) eObject.eGet(getActionTargetFeature());
+    }
 
-	public void setActionExpressionNatureContentProvider(
-			IExpressionNatureProvider provider) {
-		actionExpressionNatureProvider = provider;
-	}
+    /**
+     * Set a specify IExpressionNatureProvider for the left operand
+     *
+     * @param dataFeature
+     */
+    public void setStorageExpressionNatureContentProvider(
+            final IExpressionNatureProvider provider) {
+        storageExpressionNatureProvider = provider;
+    }
 
-	@Override
-	public boolean isPageFlowContext() {
-		
-		return isPageFlowContext;
-	}
-	
-	
-	@Override
-	public void setIsPageFlowContext(boolean isPageFlowContext) {
-		this.isPageFlowContext = isPageFlowContext;
-		
-	}
+    public void setActionExpressionNatureContentProvider(
+            final IExpressionNatureProvider provider) {
+        actionExpressionNatureProvider = provider;
+    }
+
+    @Override
+    public boolean isPageFlowContext() {
+
+        return isPageFlowContext;
+    }
+
+    @Override
+    public void setIsPageFlowContext(final boolean isPageFlowContext) {
+        this.isPageFlowContext = isPageFlowContext;
+
+    }
 
 }
