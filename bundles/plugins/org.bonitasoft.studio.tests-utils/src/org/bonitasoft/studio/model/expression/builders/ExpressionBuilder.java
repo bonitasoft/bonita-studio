@@ -62,13 +62,23 @@ public class ExpressionBuilder {
         return this;
     }
 
-    public ExpressionBuilder setFixedReturnType(final boolean fixedReturnType) {
-        expression.setReturnTypeFixed(fixedReturnType);
+    public ExpressionBuilder fixedReturnType() {
+        expression.setReturnTypeFixed(true);
         return this;
     }
 
-    public ExpressionBuilder setAutomaticDependencies(final boolean automaticDependencies) {
-        expression.setAutomaticDependencies(automaticDependencies);
+    public ExpressionBuilder anyReturnType() {
+        expression.setReturnTypeFixed(false);
+        return this;
+    }
+
+    public ExpressionBuilder automaticDependencies() {
+        expression.setAutomaticDependencies(true);
+        return this;
+    }
+
+    public ExpressionBuilder manualDependencies() {
+        expression.setAutomaticDependencies(false);
         return this;
     }
 

@@ -62,8 +62,13 @@ public class DocumentBuilder {
         return this;
     }
 
-    public DocumentBuilder setMultiple(final boolean multiple) {
-        document.setMultiple(multiple);
+    public DocumentBuilder multiple() {
+        document.setMultiple(true);
+        return this;
+    }
+
+    public DocumentBuilder single() {
+        document.setMultiple(false);
         return this;
     }
 

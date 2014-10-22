@@ -94,7 +94,7 @@ public class FormsExporterTest {
     @Test
     public void should_addFileWidgetInitialValueExpression_whenTypeIsDocument() throws InvalidFormDefinitionException {
         final FileWidget fileWidget = FileWidgetBuilder.create().withInputType(FileWidgetInputType.DOCUMENT).build();
-        final Document document = DocumentBuilder.create().withName("myBonitaDocument").setMultiple(false).build();
+        final Document document = DocumentBuilder.create().withName("myBonitaDocument").multiple().build();
         final Expression documentExpr = ExpressionFactory.eINSTANCE.createExpression();
         documentExpr.setContent(document.getName());
         fileWidget.setInputExpression(documentExpr);
