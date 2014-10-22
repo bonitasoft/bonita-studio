@@ -18,13 +18,12 @@ package org.bonitasoft.studio.migration.tests;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.util.List;
-
-import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
-import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.studio.common.ModelVersion;
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.edapt.common.ResourceUtils;
+import org.eclipse.emf.edapt.history.History;
+import org.eclipse.emf.edapt.history.HistoryPackage;
 import org.eclipse.emf.edapt.history.Release;
-import org.eclipse.emf.edapt.migration.execution.Migrator;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -34,20 +33,27 @@ import org.junit.Test;
  */
 public class EdaptHistoryIT {
 
-    private Migrator migrator;
+    private History history;
 
     @Before
     public void setUp() throws Exception{
-        final DiagramRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
-        migrator = store.getMigrator(ProcessPackage.eNS_URI);
+        final URI historyURI = URI.createPlatformPluginURI("org.bonitasoft.studio-models/process.history", false);
+        HistoryPackage.eINSTANCE.getHistory();
+        history = ResourceUtils.loadElement(historyURI);
     }
 
     @Test
-    public void should_migrator_has_an_unreleased_release() throws Exception {
-        final List<Release> releases = migrator.getReleases();
-        assertThat(releases).extracting("label").containsOnlyOnce("");
+    public void should_history_last_release_has_no_name_and_date() throws Exception {
+        final Release release = history.getLastRelease();
+        assertThat(release.getLabel()).isNull();
+        assertThat(release.getDate()).isNull();
     }
 
+    @Test
+    public void should_history_latest_release_label_equals_current_model_version() throws Exception {
+        final Release release = history.getLatestRelease();
+        assertThat(release.getLabel()).isEqualTo(ModelVersion.CURRENT_VERSION);
+    }
 
 
 
