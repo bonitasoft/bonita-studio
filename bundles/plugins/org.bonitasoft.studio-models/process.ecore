@@ -201,7 +201,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="defaultValueIdOfDocumentStore"
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="documentType" lowerBound="1"
-        eType="#//DocumentType" defaultValueLiteral="0"/>
+        eType="#//DocumentType" defaultValueLiteral="NONE"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="multiple" lowerBound="1"
         eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//Boolean"
         defaultValueLiteral="false"/>

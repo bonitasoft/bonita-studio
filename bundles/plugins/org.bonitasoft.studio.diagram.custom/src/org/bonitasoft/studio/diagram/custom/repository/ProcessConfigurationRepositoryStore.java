@@ -17,8 +17,11 @@
 package org.bonitasoft.studio.diagram.custom.repository;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -27,6 +30,7 @@ import java.util.Set;
 import org.bonitasoft.studio.common.ModelVersion;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.platform.tools.CopyInputStream;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
@@ -45,6 +49,7 @@ import org.eclipse.emf.ecore.xmi.XMLOptions;
 import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.emf.ecore.xmi.impl.XMLOptionsImpl;
 import org.eclipse.emf.edapt.history.Release;
+import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.emf.edapt.migration.execution.Migrator;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.swt.graphics.Image;
@@ -142,15 +147,7 @@ public class ProcessConfigurationRepositoryStore extends AbstractEMFRepositorySt
 		} catch (final IOException e) {
 			BonitaStudioLog.error(e,CommonRepositoryPlugin.PLUGIN_ID);
 		}
-		String modelVersion = ModelVersion.VERSION_6_0_0_ALPHA;
-		for(final EObject root : resource.getContents()){
-			if(root instanceof Configuration){
-				final String version = ((Configuration) root).getVersion();
-				if(version != null){
-					modelVersion = version ;
-				}
-			}
-		}
+		final String modelVersion = getModelVersion(resource);
 		for(final Release release : targetMigrator.getReleases()){
 			if(release.getLabel().equals(modelVersion)){
 				return release;
@@ -158,6 +155,74 @@ public class ProcessConfigurationRepositoryStore extends AbstractEMFRepositorySt
 		}
 		return targetMigrator.getReleases().iterator().next(); //First release of all time
 	}
+
+
+    protected String getModelVersion(final Resource resource) {
+        final String modelVersion = ModelVersion.VERSION_6_0_0_ALPHA;
+		for(final EObject root : resource.getContents()){
+			if(root instanceof Configuration){
+				final String version = ((Configuration) root).getVersion();
+				if(version != null){
+                    return version;
+				}
+			}
+		}
+        return modelVersion;
+    }
+
+    @Override
+    protected InputStream handlePreImport(final String fileName, final InputStream inputStream) throws MigrationException, IOException {
+        CopyInputStream copyIs = null;
+        try {
+            final InputStream is = super.handlePreImport(fileName, inputStream);
+            copyIs = new CopyInputStream(is);
+            final Resource r = getTmpEMFResource("beforeImport",
+                    copyIs.getCopy());
+            try {
+                r.load(Collections.EMPTY_MAP);
+            } catch (final IOException e) {
+                BonitaStudioLog.error(e);
+            }
+            if (!r.getContents().isEmpty()) {
+                final Configuration configuration = (Configuration) r.getContents()
+                        .get(0);
+                if (configuration != null) {
+                    final String mVersion = configuration.getVersion();
+                    if (!ModelVersion.CURRENT_VERSION.equals(mVersion)) {
+                        configuration.setVersion(ModelVersion.CURRENT_VERSION);
+                    }
+                    try {
+                        r.save(Collections.EMPTY_MAP);
+                    } catch (final IOException e) {
+                        BonitaStudioLog.error(e);
+                    }
+                    try {
+                        return new FileInputStream(new File(r.getURI()
+                                .toFileString()));
+                    } catch (final FileNotFoundException e) {
+                        BonitaStudioLog.error(e);
+                    } finally {
+                        copyIs.close();
+                        try {
+                            r.delete(Collections.EMPTY_MAP);
+                        } catch (final IOException e) {
+                            BonitaStudioLog.error(e);
+                        }
+                    }
+                } else {
+                    return null;
+                }
+            }
+            return copyIs.getCopy();
+        } catch (final IOException e) {
+            BonitaStudioLog.error(e);
+            return null;
+        } finally {
+            if (copyIs != null) {
+                copyIs.close();
+            }
+        }
+    }
 
 	@Override
 	protected void addAdapterFactory(final ComposedAdapterFactory adapterFactory) {

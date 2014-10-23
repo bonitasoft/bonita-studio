@@ -8672,5 +8672,44 @@
     <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.custom.migration.document.DocumentDefaultReturnTypeModifierMigration"/>
     <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.custom.migration.form.FileWidgetDocumentMigration"/>
   </releases>
+  <releases date="2014-10-23T11:45:10.092+0200" label="6.4.0-003">
+    <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.custom.migration.connector.InitializeConnectorConfigurationModelVersion">
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Create" target="connector-configuration.ecore#//ConnectorConfiguration"
+            referenceName="eStructuralFeatures" element="connector-configuration.ecore#//ConnectorConfiguration/modelVersion">
+          <changes xsi:type="history:Set" element="connector-configuration.ecore#//ConnectorConfiguration/modelVersion"
+              featureName="name" dataValue="modelVersion"/>
+          <changes xsi:type="history:Set" element="connector-configuration.ecore#//ConnectorConfiguration/modelVersion"
+              featureName="defaultValueLiteral" dataValue=""/>
+          <changes xsi:type="history:Set" element="connector-configuration.ecore#//ConnectorConfiguration/modelVersion"
+              featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        </changes>
+        <operation name="newAttribute">
+          <parameters name="eClass">
+            <referenceValue element="connector-configuration.ecore#//ConnectorConfiguration"/>
+          </parameters>
+          <parameters name="name">
+            <dataValue>modelVersion</dataValue>
+          </parameters>
+          <parameters name="type">
+            <referenceValue element="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+          </parameters>
+          <parameters name="lowerBound">
+            <dataValue>0</dataValue>
+          </parameters>
+          <parameters name="upperBound">
+            <dataValue>1</dataValue>
+          </parameters>
+          <parameters name="defaultValue">
+            <dataValue></dataValue>
+          </parameters>
+        </operation>
+      </changes>
+    </changes>
+    <changes xsi:type="history:CompositeChange">
+      <changes xsi:type="history:Set" element="process.ecore#//Document/documentType"
+          featureName="defaultValueLiteral" dataValue="NONE" oldDataValue="0"/>
+    </changes>
+  </releases>
   <releases/>
 </history:History>
