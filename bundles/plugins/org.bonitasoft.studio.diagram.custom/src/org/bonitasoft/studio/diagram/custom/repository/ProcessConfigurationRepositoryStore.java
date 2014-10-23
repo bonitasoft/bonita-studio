@@ -65,27 +65,31 @@ public class ProcessConfigurationRepositoryStore extends AbstractEMFRepositorySt
 	/* (non-Javadoc)
 	 * @see org.bonitasoft.studio.common.repository.IRepositoryStore#getName()
 	 */
-	public String getName() {
+	@Override
+    public String getName() {
 		return STORE_NAME ;
 	}
 
 
-	public String getDisplayName() {
+	@Override
+    public String getDisplayName() {
 		return Messages.configurations;
 	}
 
-	public Image getIcon() {
+	@Override
+    public Image getIcon() {
 		return Pics.getImage(PicsConstants.configuration);
 	}
 
 
 	@Override
-	public ProcessConfigurationFileStore createRepositoryFileStore(String fileName) {
+	public ProcessConfigurationFileStore createRepositoryFileStore(final String fileName) {
 		return new ProcessConfigurationFileStore(fileName,this) ;
 	}
 
 
-	public Set<String> getCompatibleExtensions() {
+	@Override
+    public Set<String> getCompatibleExtensions() {
 		return extensions;
 	}
 
@@ -95,13 +99,13 @@ public class ProcessConfigurationRepositoryStore extends AbstractEMFRepositorySt
 	}
 
 	@Override
-	protected ProcessConfigurationFileStore doImportInputStream(String fileName, InputStream inputStream) {
+	protected ProcessConfigurationFileStore doImportInputStream(final String fileName, final InputStream inputStream) {
 		final IFile file = getResource().getFile(fileName);
 		try{
 			if(file.exists()){
 				String fileNameLabel = fileName;
 				final String processUUID = fileName.substring(0, fileName.lastIndexOf("."));
-				final DiagramRepositoryStore diagramStore = (DiagramRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
+				final DiagramRepositoryStore diagramStore = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
 				final AbstractProcess process = diagramStore.getProcessByUUID(processUUID);
 				if(process != null){
 					fileNameLabel =Messages.bind(Messages.localConfigurationFor,process.getName() +" ("+process.getVersion()+")");
@@ -112,42 +116,42 @@ public class ProcessConfigurationRepositoryStore extends AbstractEMFRepositorySt
 					return createRepositoryFileStore(fileName);
 				}
 			} else {
-				File f = file.getLocation().toFile();
+				final File f = file.getLocation().toFile();
 				if(!f.getParentFile().exists()){
 					f.getParentFile().mkdirs();
 					refresh();
 				}
 				file.create(inputStream, true, Repository.NULL_PROGRESS_MONITOR);
 			}
-		}catch(Exception e){
+		}catch(final Exception e){
 			BonitaStudioLog.error(e) ;
 		}
 		return createRepositoryFileStore(fileName) ;
 	}
 
 	@Override
-	protected Release getRelease(Migrator targetMigrator, Resource resource) {
-		final Map<Object, Object> loadOptions = new HashMap<Object, Object>();
+	protected Release getRelease(final Migrator targetMigrator, final Resource resource) {
+        final Map<Object, Object> loadOptions = new HashMap<Object, Object>();
 		//Ignore unknown features
 		loadOptions.put(XMIResource.OPTION_RECORD_UNKNOWN_FEATURE, Boolean.TRUE);
-		XMLOptions options = new XMLOptionsImpl() ;
+		final XMLOptions options = new XMLOptionsImpl() ;
 		options.setProcessAnyXML(true) ;
 		loadOptions.put(XMLResource.OPTION_XML_OPTIONS, options);
 		try {
 			resource.load(loadOptions);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			BonitaStudioLog.error(e,CommonRepositoryPlugin.PLUGIN_ID);
 		}
 		String modelVersion = ModelVersion.VERSION_6_0_0_ALPHA;
-		for(EObject root : resource.getContents()){
+		for(final EObject root : resource.getContents()){
 			if(root instanceof Configuration){
-				String version = ((Configuration) root).getVersion();
+				final String version = ((Configuration) root).getVersion();
 				if(version != null){
 					modelVersion = version ;
 				}
 			}
 		}
-		for(Release release : targetMigrator.getReleases()){
+		for(final Release release : targetMigrator.getReleases()){
 			if(release.getLabel().equals(modelVersion)){
 				return release;
 			}
@@ -156,7 +160,7 @@ public class ProcessConfigurationRepositoryStore extends AbstractEMFRepositorySt
 	}
 
 	@Override
-	protected void addAdapterFactory(ComposedAdapterFactory adapterFactory) {
+	protected void addAdapterFactory(final ComposedAdapterFactory adapterFactory) {
 		adapterFactory.addAdapterFactory(new ConfigurationAdapterFactory()) ;
 	}
 }
