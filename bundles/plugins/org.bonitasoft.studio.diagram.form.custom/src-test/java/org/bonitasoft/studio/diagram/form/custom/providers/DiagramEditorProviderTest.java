@@ -16,8 +16,8 @@
  */
 package org.bonitasoft.studio.diagram.form.custom.providers;
 
-import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Map;
 
@@ -41,11 +41,11 @@ public class DiagramEditorProviderTest {
     private URI globalUri;
 
     @Before
-    public void setup() {
+    public void setup() throws URISyntaxException {
         initEMFRegistryForStandaloneMode();
-        final URL resource = DiagramEditorProviderTest.class.getResource("DiagramWithPoolWithInstanciationForm-1.0.proc");
+        final URL resource = DiagramEditorProviderTest.class.getResource("/DiagramWithPoolWithInstanciationForm-1.0.proc");
 
-        globalUri = URI.createFileURI(new File(resource.getFile()).getAbsolutePath());
+        globalUri = URI.createURI(resource.toURI().toString());
     }
 
     protected void initEMFRegistryForStandaloneMode() {
