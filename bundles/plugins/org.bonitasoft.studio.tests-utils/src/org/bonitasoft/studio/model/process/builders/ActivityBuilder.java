@@ -28,7 +28,8 @@ import org.bonitasoft.studio.model.process.ProcessFactory;
  */
 public class ActivityBuilder<T extends Activity, B extends ActivityBuilder<T, B>> extends FlowElementBuilder<T, B> {
 
-    public static ActivityBuilder<?, ?> create() {
+    @SuppressWarnings("rawtypes")
+    public static ActivityBuilder create() {
         return new ActivityBuilder();
     }
 
@@ -121,6 +122,7 @@ public class ActivityBuilder<T extends Activity, B extends ActivityBuilder<T, B>
         return getThis();
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     protected T newInstance() {
         return (T) ProcessFactory.eINSTANCE.createActivity();

@@ -26,7 +26,8 @@ import org.bonitasoft.studio.model.process.ProcessFactory;
  */
 public class DataBuilder<T extends Data, B extends DataBuilder<T, B>> extends ElementBuilder<T, B> {
 
-    public static DataBuilder<?, ?> create() {
+    @SuppressWarnings("rawtypes")
+    public static DataBuilder create() {
         return new DataBuilder();
     }
 
@@ -75,6 +76,7 @@ public class DataBuilder<T extends Data, B extends DataBuilder<T, B>> extends El
         return getThis();
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     protected T newInstance() {
         return (T) ProcessFactory.eINSTANCE.createData();

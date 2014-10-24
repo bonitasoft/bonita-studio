@@ -16,28 +16,34 @@
  */
 package org.bonitasoft.studio.model.process.builders;
 
-import org.bonitasoft.studio.model.process.JavaObjectData;
+import org.bonitasoft.studio.model.process.Actor;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 
 /**
  * @author Romain Bioteau
  *
  */
-public class JavaObjectDataBuilder<T extends JavaObjectData, B extends JavaObjectDataBuilder<T, B>> extends DataBuilder<T, B> {
+public class ActorBuilder extends ElementBuilder<Actor, ActorBuilder> {
 
-    @SuppressWarnings("rawtypes")
-    public static JavaObjectDataBuilder create() {
-        return new JavaObjectDataBuilder();
+    public static ActorBuilder create() {
+        return new ActorBuilder();
     }
 
-    public B withClassname(final String classname) {
-        getBuiltInstance().setClassName(classname);
+    public ActorBuilder initiator() {
+        getBuiltInstance().setInitiator(true);
         return getThis();
     }
 
-    @SuppressWarnings("unchecked")
-    @Override
-    protected T newInstance() {
-        return (T) ProcessFactory.eINSTANCE.createJavaObjectData();
+    public ActorBuilder notInitiator() {
+        getBuiltInstance().setInitiator(false);
+        return getThis();
     }
+
+    @Override
+    protected Actor newInstance() {
+        return ProcessFactory.eINSTANCE.createActor();
+    }
+
+
+
 }

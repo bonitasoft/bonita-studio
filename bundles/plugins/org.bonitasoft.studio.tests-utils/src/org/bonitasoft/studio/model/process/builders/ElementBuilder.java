@@ -25,19 +25,21 @@ import org.bonitasoft.studio.model.process.Element;
 public abstract class ElementBuilder<T extends Element, B extends ElementBuilder<T, B>> {
 
     protected final T builtEObject;
+    private final B thisBuilder;
 
     protected ElementBuilder() {
         builtEObject = newInstance();
+        thisBuilder = getThis();
     }
 
     public B withName(final String name) {
         getBuiltInstance().setName(name);
-        return getThis();
+        return thisBuilder;
     }
 
     public B withDocumentation(final String documentation) {
         getBuiltInstance().setDocumentation(documentation);
-        return getThis();
+        return thisBuilder;
     }
 
     public B havingTextAnnotationAttachment(final TextAnnotationAttachmentBuilder... textAnnotationAttachments) {
@@ -46,13 +48,14 @@ public abstract class ElementBuilder<T extends Element, B extends ElementBuilder
                 getBuiltInstance().getTextAnnotationAttachment().add(annotation.build());
             }
         }
-        return getThis();
+        return thisBuilder;
     }
 
     public T build() {
         return getBuiltInstance();
     }
 
+    @SuppressWarnings("unchecked")
     protected B getThis() {
         return (B) this;
     }
