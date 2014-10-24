@@ -14,31 +14,28 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.model.form.builders;
+package org.bonitasoft.studio.model.process.builders;
 
-import org.bonitasoft.studio.model.form.FileWidget;
-import org.bonitasoft.studio.model.form.FileWidgetInputType;
-import org.bonitasoft.studio.model.form.FormFactory;
+import org.bonitasoft.studio.model.process.JavaObjectData;
+import org.bonitasoft.studio.model.process.ProcessFactory;
 
 /**
  * @author Romain Bioteau
  *
  */
-public class FileWidgetBuilder extends WidgetBuilder<FileWidget, FileWidgetBuilder> {
+public class JavaObjectDataBuilder<T extends JavaObjectData, B extends JavaObjectDataBuilder<T, B>> extends DataBuilder<T, B> {
 
-    public static FileWidgetBuilder create() {
-        return new FileWidgetBuilder();
+    public static JavaObjectDataBuilder<?, ?> create() {
+        return new JavaObjectDataBuilder();
     }
 
-    public FileWidgetBuilder withInputType(final FileWidgetInputType type) {
-        getBuiltInstance().setInputType(type);
+    public B withClassname(final String classname) {
+        getBuiltInstance().setClassName(classname);
         return getThis();
     }
 
     @Override
-    protected FileWidget newInstance() {
-        return FormFactory.eINSTANCE.createFileWidget();
+    protected T newInstance() {
+        return (T) ProcessFactory.eINSTANCE.createJavaObjectData();
     }
-
-
 }

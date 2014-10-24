@@ -25,65 +25,60 @@ import org.bonitasoft.studio.model.process.ProcessFactory;
  * @author Romain Bioteau
  *
  */
-public class DocumentBuilder {
-
-    private final Document document;
-
-    private DocumentBuilder(final Document document) {
-        this.document = document;
-    }
+public class DocumentBuilder extends ElementBuilder<Document, DocumentBuilder> {
 
     public static DocumentBuilder create() {
-        return new DocumentBuilder(ProcessFactory.eINSTANCE.createDocument());
-    }
-
-    public DocumentBuilder withName(final String name) {
-        document.setName(name);
-        return this;
+        return new DocumentBuilder();
     }
 
     public DocumentBuilder withDocumentType(final DocumentType type) {
-        document.setDocumentType(type);
-        return this;
-    }
-
-    public DocumentBuilder withDocumentation(final String documentation) {
-        document.setDocumentation(documentation);
-        return this;
+        getBuiltInstance().setDocumentType(type);
+        return getThis();
     }
 
     public DocumentBuilder havingMimeType(final ExpressionBuilder mimeTypeExpression) {
-        document.setMimeType(mimeTypeExpression.build());
-        return this;
+        getBuiltInstance().setMimeType(mimeTypeExpression.build());
+        return getThis();
     }
 
     public DocumentBuilder havingInitialMultipleContent(final ExpressionBuilder initialMultipleContentExpression) {
-        document.setInitialMultipleContent(initialMultipleContentExpression.build());
-        return this;
+        getBuiltInstance().setInitialMultipleContent(initialMultipleContentExpression.build());
+        return getThis();
     }
 
     public DocumentBuilder multiple() {
-        document.setMultiple(true);
-        return this;
+        getBuiltInstance().setMultiple(true);
+        return getThis();
     }
 
     public DocumentBuilder single() {
-        document.setMultiple(false);
-        return this;
+        getBuiltInstance().setMultiple(false);
+        return getThis();
     }
 
     public DocumentBuilder havingURL(final ExpressionBuilder urlExpression) {
-        document.setUrl(urlExpression.build());
-        return this;
+        getBuiltInstance().setUrl(urlExpression.build());
+        return getThis();
     }
 
     public DocumentBuilder withDefaultValueIdOfDocumentStore(final String defaultValueIdOfDocumentStore) {
-        document.setDefaultValueIdOfDocumentStore(defaultValueIdOfDocumentStore);
+        getBuiltInstance().setDefaultValueIdOfDocumentStore(defaultValueIdOfDocumentStore);
+        return getThis();
+    }
+
+    @Override
+    protected DocumentBuilder getThis() {
         return this;
     }
 
-    public Document build() {
-        return document;
+    @Override
+    protected Document newInstance() {
+        return ProcessFactory.eINSTANCE.createDocument();
+    }
+
+    @Override
+    protected Document getBuiltInstance() {
+        return builtEObject;
     }
 
 }

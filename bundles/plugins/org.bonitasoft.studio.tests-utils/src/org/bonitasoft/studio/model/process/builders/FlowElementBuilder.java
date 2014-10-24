@@ -14,33 +14,36 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.model.form.builders;
+package org.bonitasoft.studio.model.process.builders;
 
 import org.bonitasoft.studio.model.expression.builders.ExpressionBuilder;
-import org.bonitasoft.studio.model.form.Widget;
-import org.bonitasoft.studio.model.process.builders.ElementBuilder;
+import org.bonitasoft.studio.model.process.FlowElement;
 
 /**
  * @author Romain Bioteau
  *
  */
-public abstract class WidgetBuilder<T extends Widget, B extends WidgetBuilder<T, B>> extends ElementBuilder<T, B> {
+public abstract class FlowElementBuilder<T extends FlowElement, B extends FlowElementBuilder<T, B>> extends ElementBuilder<T, B> {
 
-    public B havingDisplayLabel(final ExpressionBuilder displayLabelExpression) {
-        getBuiltInstance().setDisplayLabel(displayLabelExpression.build());
+    public B havingStepSummary(final ExpressionBuilder stepSummaryExpression) {
+        getBuiltInstance().setStepSummary(stepSummaryExpression.build());
         return getThis();
     }
 
-    public B havingInputExpression(final ExpressionBuilder inputExpression) {
-        getBuiltInstance().setInputExpression(inputExpression.build());
+    public B havingDynamicLabel(final ExpressionBuilder dynamicLabelExpression) {
+        getBuiltInstance().setDynamicLabel(dynamicLabelExpression.build());
         return getThis();
     }
 
-    public B withReturnTypeModifier(final String returnTypeModifier) {
-        getBuiltInstance().setReturnTypeModifier(returnTypeModifier);
+    public B havingDynamicDescription(final ExpressionBuilder dynamicDescriptionExpression) {
+        getBuiltInstance().setDynamicDescription(dynamicDescriptionExpression.build());
         return getThis();
     }
 
+    public B withEstimatedTime(final double estimatedTime) {
+        getBuiltInstance().setEstimatedTime(estimatedTime);
+        return getThis();
+    }
 
 
 }

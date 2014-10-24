@@ -14,33 +14,35 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.model.form.builders;
+package org.bonitasoft.studio.model.process.builders;
 
-import org.bonitasoft.studio.model.expression.builders.ExpressionBuilder;
-import org.bonitasoft.studio.model.form.Widget;
-import org.bonitasoft.studio.model.process.builders.ElementBuilder;
+import org.bonitasoft.studio.model.process.ProcessFactory;
+import org.bonitasoft.studio.model.process.XMLData;
 
 /**
  * @author Romain Bioteau
  *
  */
-public abstract class WidgetBuilder<T extends Widget, B extends WidgetBuilder<T, B>> extends ElementBuilder<T, B> {
+public class XMLDataBuilder extends DataBuilder<XMLData, XMLDataBuilder> {
 
-    public B havingDisplayLabel(final ExpressionBuilder displayLabelExpression) {
-        getBuiltInstance().setDisplayLabel(displayLabelExpression.build());
+    public static XMLDataBuilder create() {
+        return new XMLDataBuilder();
+    }
+
+    public XMLDataBuilder withNamespace(final String namespace) {
+        getBuiltInstance().setNamespace(namespace);
         return getThis();
     }
 
-    public B havingInputExpression(final ExpressionBuilder inputExpression) {
-        getBuiltInstance().setInputExpression(inputExpression.build());
+    public XMLDataBuilder withElementType(final String elementType) {
+        getBuiltInstance().setType(elementType);
         return getThis();
     }
 
-    public B withReturnTypeModifier(final String returnTypeModifier) {
-        getBuiltInstance().setReturnTypeModifier(returnTypeModifier);
-        return getThis();
+    @Override
+    protected XMLData newInstance() {
+        return ProcessFactory.eINSTANCE.createXMLData();
     }
-
-
 
 }
+

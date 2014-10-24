@@ -14,31 +14,33 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.model.form.builders;
+package org.bonitasoft.studio.model.process.builders;
 
-import org.bonitasoft.studio.model.form.FileWidget;
-import org.bonitasoft.studio.model.form.FileWidgetInputType;
-import org.bonitasoft.studio.model.form.FormFactory;
+import org.bonitasoft.studio.model.process.EnumType;
+import org.bonitasoft.studio.model.process.ProcessFactory;
 
 /**
  * @author Romain Bioteau
  *
  */
-public class FileWidgetBuilder extends WidgetBuilder<FileWidget, FileWidgetBuilder> {
+public class EnumDataTypeBuilder extends DataTypeBuilder<EnumType, EnumDataTypeBuilder> {
 
-    public static FileWidgetBuilder create() {
-        return new FileWidgetBuilder();
+    public static EnumDataTypeBuilder create() {
+        return new EnumDataTypeBuilder();
     }
 
-    public FileWidgetBuilder withInputType(final FileWidgetInputType type) {
-        getBuiltInstance().setInputType(type);
-        return getThis();
+    public EnumDataTypeBuilder havingLiterals(final String... literals) {
+        if (literals != null) {
+            for (final String literal : literals) {
+                getBuiltInstance().getLiterals().add(literal);
+            }
+        }
+        return this;
     }
 
     @Override
-    protected FileWidget newInstance() {
-        return FormFactory.eINSTANCE.createFileWidget();
+    protected EnumType newInstance() {
+        return ProcessFactory.eINSTANCE.createEnumType();
     }
-
 
 }

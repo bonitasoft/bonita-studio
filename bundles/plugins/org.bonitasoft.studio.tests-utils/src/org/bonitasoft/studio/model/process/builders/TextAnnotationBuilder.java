@@ -14,31 +14,38 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.model.form.builders;
+package org.bonitasoft.studio.model.process.builders;
 
-import org.bonitasoft.studio.model.form.FileWidget;
-import org.bonitasoft.studio.model.form.FileWidgetInputType;
-import org.bonitasoft.studio.model.form.FormFactory;
+import org.bonitasoft.studio.model.process.ProcessFactory;
+import org.bonitasoft.studio.model.process.TextAnnotation;
 
 /**
  * @author Romain Bioteau
  *
  */
-public class FileWidgetBuilder extends WidgetBuilder<FileWidget, FileWidgetBuilder> {
+public class TextAnnotationBuilder extends ElementBuilder<TextAnnotation, TextAnnotationBuilder> {
 
-    public static FileWidgetBuilder create() {
-        return new FileWidgetBuilder();
+    public static TextAnnotationBuilder create() {
+        return new TextAnnotationBuilder();
     }
 
-    public FileWidgetBuilder withInputType(final FileWidgetInputType type) {
-        getBuiltInstance().setInputType(type);
-        return getThis();
+    public TextAnnotationBuilder withText(final String text) {
+        getBuiltInstance().setText(text);
+        return this;
     }
 
     @Override
-    protected FileWidget newInstance() {
-        return FormFactory.eINSTANCE.createFileWidget();
+    protected TextAnnotation newInstance() {
+        return ProcessFactory.eINSTANCE.createTextAnnotation();
     }
 
+    @Override
+    protected TextAnnotationBuilder getThis() {
+        return this;
+    }
 
+    @Override
+    protected TextAnnotation getBuiltInstance() {
+        return builtEObject;
+    }
 }
