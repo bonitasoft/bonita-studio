@@ -21,7 +21,6 @@ import static org.fest.assertions.Assertions.assertThat;
 import org.bonitasoft.studio.diagram.form.custom.model.WidgetMapping;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.ProcessFactory;
-import org.bonitasoft.studio.properties.sections.forms.wizard.provider.ReadOnlyCheckboxLabelProvider;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,40 +31,40 @@ import org.junit.Test;
  */
 public class ReadOnlyCheckboxLabelProviderTest {
 
-	private ReadOnlyCheckboxLabelProvider readOnlyCheckboxLabelProvider;
+    private ReadOnlyCheckboxLabelProvider readOnlyCheckboxLabelProvider;
 
-	/**
-	 * @throws java.lang.Exception
-	 */
-	@Before
-	public void setUp() throws Exception {
-		readOnlyCheckboxLabelProvider = new ReadOnlyCheckboxLabelProvider(null);
-	}
+    /**
+     * @throws java.lang.Exception
+     */
+    @Before
+    public void setUp() throws Exception {
+        readOnlyCheckboxLabelProvider = new ReadOnlyCheckboxLabelProvider();
+    }
 
-	/**
-	 * @throws java.lang.Exception
-	 */
-	@After
-	public void tearDown() throws Exception {
-	}
+    /**
+     * @throws java.lang.Exception
+     */
+    @After
+    public void tearDown() throws Exception {
+    }
 
-	@Test
-	public void shouldIsSelected_ReturnTrue() throws Exception {
-		Data data = ProcessFactory.eINSTANCE.createData();
-		data.setDataType(ProcessFactory.eINSTANCE.createBooleanType());
-		WidgetMapping mapping = new WidgetMapping(data);
-		mapping.setReadOnly(true);
-		assertThat(readOnlyCheckboxLabelProvider.isSelected(mapping)).isTrue();
-	}
-	
-	@Test
-	public void shouldIsSelected_ReturnFalse() throws Exception {
-		Data data = ProcessFactory.eINSTANCE.createData();
-		data.setDataType(ProcessFactory.eINSTANCE.createBooleanType());
-		WidgetMapping mapping = new WidgetMapping(data);
-		mapping.setReadOnly(false);
-		assertThat(readOnlyCheckboxLabelProvider.isSelected(mapping)).isFalse();
-		assertThat(readOnlyCheckboxLabelProvider.isSelected(new Object())).isFalse();
-		assertThat(readOnlyCheckboxLabelProvider.isSelected(null)).isFalse();
-	}
+    @Test
+    public void shouldIsSelected_ReturnTrue() throws Exception {
+        final Data data = ProcessFactory.eINSTANCE.createData();
+        data.setDataType(ProcessFactory.eINSTANCE.createBooleanType());
+        final WidgetMapping mapping = new WidgetMapping(data);
+        mapping.setReadOnly(true);
+        assertThat(readOnlyCheckboxLabelProvider.isSelected(mapping)).isTrue();
+    }
+
+    @Test
+    public void shouldIsSelected_ReturnFalse() throws Exception {
+        final Data data = ProcessFactory.eINSTANCE.createData();
+        data.setDataType(ProcessFactory.eINSTANCE.createBooleanType());
+        final WidgetMapping mapping = new WidgetMapping(data);
+        mapping.setReadOnly(false);
+        assertThat(readOnlyCheckboxLabelProvider.isSelected(mapping)).isFalse();
+        assertThat(readOnlyCheckboxLabelProvider.isSelected(new Object())).isFalse();
+        assertThat(readOnlyCheckboxLabelProvider.isSelected(null)).isFalse();
+    }
 }

@@ -46,6 +46,8 @@ import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ContentViewer;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
@@ -336,6 +338,13 @@ public abstract class AbstractDefinitionSelectionImpementationWizardPage extends
         final List<Object> flattenTree = new ArrayList<Object>();
         getFlattenTree(flattenTree,rootElement,contentProvider);
         explorer.getRightTableViewer().setInput(flattenTree);
+        explorer.getRightTableViewer().addDoubleClickListener(new IDoubleClickListener() {
+
+            @Override
+            public void doubleClick(final DoubleClickEvent event) {
+                getContainer().showPage(getNextPage());
+            }
+        });
         return explorer;
     }
 

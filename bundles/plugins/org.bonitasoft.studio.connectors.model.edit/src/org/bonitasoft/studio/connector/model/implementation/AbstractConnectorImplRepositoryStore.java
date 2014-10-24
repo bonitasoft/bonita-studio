@@ -5,12 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -52,19 +52,19 @@ import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 
 /**
  * @author Romain Bioteau
- * 
+ *
  */
 public abstract class AbstractConnectorImplRepositoryStore<T extends EMFFileStore> extends AbstractEMFRepositoryStore<T> implements IRepositoryStore<T>,
         IImplementationRepositoryStore {
 
     @Override
-    protected void addAdapterFactory(ComposedAdapterFactory adapterFactory) {
+    protected void addAdapterFactory(final ComposedAdapterFactory adapterFactory) {
         adapterFactory.addAdapterFactory(new ConnectorImplementationAdapterFactory());
     }
 
     @Override
-    public ConnectorImplementation getImplementation(String id, String version) {
-        for (ConnectorImplementation impl : getImplementations()) {
+    public ConnectorImplementation getImplementation(final String id, final String version) {
+        for (final ConnectorImplementation impl : getImplementations()) {
             if (impl.getImplementationId().equals(id) && impl.getImplementationVersion().equals(version)) {
                 return impl;
             }
@@ -74,18 +74,18 @@ public abstract class AbstractConnectorImplRepositoryStore<T extends EMFFileStor
 
     @Override
     public List<ConnectorImplementation> getImplementations() {
-        List<ConnectorImplementation> result = new ArrayList<ConnectorImplementation>();
-        for (IRepositoryFileStore fileStore : getChildren()) {
-            ConnectorImplementation def = (ConnectorImplementation) fileStore.getContent();
+        final List<ConnectorImplementation> result = new ArrayList<ConnectorImplementation>();
+        for (final IRepositoryFileStore fileStore : getChildren()) {
+            final ConnectorImplementation def = (ConnectorImplementation) fileStore.getContent();
             result.add(def);
         }
         return result;
     }
 
     @Override
-    public List<ConnectorImplementation> getImplementations(String definitionId, String definitionVersion) {
-        List<ConnectorImplementation> implementations = new ArrayList<ConnectorImplementation>();
-        for (ConnectorImplementation impl : getImplementations()) {
+    public List<ConnectorImplementation> getImplementations(final String definitionId, final String definitionVersion) {
+        final List<ConnectorImplementation> implementations = new ArrayList<ConnectorImplementation>();
+        for (final ConnectorImplementation impl : getImplementations()) {
             if (impl != null && definitionId.equals(impl.getDefinitionId())
                     && definitionVersion.equals(impl.getDefinitionVersion())) {
                 implementations.add(impl);
@@ -96,9 +96,9 @@ public abstract class AbstractConnectorImplRepositoryStore<T extends EMFFileStor
     }
 
     @Override
-    public IRepositoryFileStore getImplementationFileStore(String implId, String implVersion) {
-        for (IRepositoryFileStore implStore : getChildren()) {
-            ConnectorImplementation impl = (ConnectorImplementation) implStore.getContent();
+    public IRepositoryFileStore getImplementationFileStore(final String implId, final String implVersion) {
+        for (final IRepositoryFileStore implStore : getChildren()) {
+            final ConnectorImplementation impl = (ConnectorImplementation) implStore.getContent();
             if (impl != null && implId.equals(impl.getImplementationId())
                     && implVersion.equals(impl.getImplementationVersion())) {
                 return implStore;
@@ -108,35 +108,35 @@ public abstract class AbstractConnectorImplRepositoryStore<T extends EMFFileStor
     }
 
     @Override
-    protected void performMigration(Migrator migrator, URI resourceURI,
-            Release release) throws MigrationException {
+    protected void performMigration(final Migrator migrator, final URI resourceURI,
+            final Release release) throws MigrationException {
         migrator.setLevel(ValidationLevel.NONE);
-        ResourceSet rSet = migrator.migrateAndLoad(
+        final ResourceSet rSet = migrator.migrateAndLoad(
                 Collections.singletonList(resourceURI), release,
                 null, Repository.NULL_PROGRESS_MONITOR);
         if (!rSet.getResources().isEmpty()) {
             FileOutputStream fos = null;
             try {
-                ConnectorImplementationResourceImpl r = (ConnectorImplementationResourceImpl) rSet.getResources().get(0);
-                Resource resource = new XMLResourceImpl(resourceURI);
-                org.bonitasoft.studio.connector.model.implementation.DocumentRoot root = ConnectorImplementationFactory.eINSTANCE.createDocumentRoot();
+                final ConnectorImplementationResourceImpl r = (ConnectorImplementationResourceImpl) rSet.getResources().get(0);
+                final Resource resource = new XMLResourceImpl(resourceURI);
+                final org.bonitasoft.studio.connector.model.implementation.DocumentRoot root = ConnectorImplementationFactory.eINSTANCE.createDocumentRoot();
                 final ConnectorImplementation definition = EcoreUtil.copy(((org.bonitasoft.studio.connector.model.implementation.DocumentRoot) r.getContents()
                         .get(0)).getConnectorImplementation());
                 root.setConnectorImplementation(definition);
                 resource.getContents().add(root);
-                Map<String, String> options = new HashMap<String, String>();
+                final Map<String, String> options = new HashMap<String, String>();
                 options.put(XMLResource.OPTION_ENCODING, "UTF-8");
                 options.put(XMLResource.OPTION_XML_VERSION, "1.0");
-                File target = new File(resourceURI.toFileString());
+                final File target = new File(resourceURI.toFileString());
                 fos = new FileOutputStream(target);
                 new ConnectorImplementationXMLProcessor().save(fos, resource, options);
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 BonitaStudioLog.error(e);
             } finally {
                 if (fos != null) {
                     try {
                         fos.close();
-                    } catch (IOException e) {
+                    } catch (final IOException e) {
                         BonitaStudioLog.error(e);
                     }
                 }
@@ -146,8 +146,8 @@ public abstract class AbstractConnectorImplRepositoryStore<T extends EMFFileStor
     }
 
     @Override
-    protected T doImportInputStream(String fileName, InputStream inputStream) {
-        T fStore = super.doImportInputStream(fileName, inputStream);
+    protected T doImportInputStream(final String fileName, final InputStream inputStream) {
+        final T fStore = super.doImportInputStream(fileName, inputStream);
         cleanJarDependency(fStore, RepositoryManager.getInstance().getRepositoryStore(DependencyRepositoryStore.class), getSourceRepositoryStore());
         return fStore;
 
@@ -155,17 +155,17 @@ public abstract class AbstractConnectorImplRepositoryStore<T extends EMFFileStor
 
     protected abstract IRepositoryStore<? extends IRepositoryFileStore> getSourceRepositoryStore();
 
-    protected void cleanJarDependency(IRepositoryFileStore fStore, IRepositoryStore<? extends IRepositoryFileStore> dependencyRepositoryStore,
-            IRepositoryStore<? extends IRepositoryFileStore> sourceRepositoryStore) {
-        ConnectorImplementation content = (ConnectorImplementation) fStore.getContent();
+    protected void cleanJarDependency(final IRepositoryFileStore fStore, final IRepositoryStore<? extends IRepositoryFileStore> dependencyRepositoryStore,
+            final IRepositoryStore<? extends IRepositoryFileStore> sourceRepositoryStore) {
+        final ConnectorImplementation content = (ConnectorImplementation) fStore.getContent();
         if (hasSources(content, sourceRepositoryStore)) {
-            JarDependencies jarDependencies = content.getJarDependencies();
+            final JarDependencies jarDependencies = content.getJarDependencies();
             if (jarDependencies != null) {
-                for (String dep : jarDependencies.getJarDependency()) {
-                    String depJarName = NamingUtils.toConnectorImplementationFilename(content.getImplementationId(), content.getImplementationVersion(), false)
+                for (final String dep : jarDependencies.getJarDependency()) {
+                    final String depJarName = NamingUtils.toConnectorImplementationFilename(content.getImplementationId(), content.getImplementationVersion(), false)
                             + ".jar";
                     if (dep.equals(depJarName)) {
-                        IRepositoryFileStore dependencyFileStore = dependencyRepositoryStore.getChild(depJarName);
+                        final IRepositoryFileStore dependencyFileStore = dependencyRepositoryStore.getChild(depJarName);
                         if (dependencyFileStore != null) {
                             dependencyFileStore.delete();
                         }
@@ -175,7 +175,7 @@ public abstract class AbstractConnectorImplRepositoryStore<T extends EMFFileStor
         }
     }
 
-    private boolean hasSources(ConnectorImplementation content, IRepositoryStore<? extends IRepositoryFileStore> sourceRepositoryStore) {
+    private boolean hasSources(final ConnectorImplementation content, final IRepositoryStore<? extends IRepositoryFileStore> sourceRepositoryStore) {
         return sourceRepositoryStore.getChild(content.getImplementationClassname()) != null;
     }
 }

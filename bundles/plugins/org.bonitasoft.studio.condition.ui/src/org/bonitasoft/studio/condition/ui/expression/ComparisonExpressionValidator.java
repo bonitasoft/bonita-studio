@@ -76,7 +76,7 @@ public class ComparisonExpressionValidator implements IExpressionValidator {
 	 * @see org.eclipse.core.databinding.validation.IValidator#validate(java.lang.Object)
 	 */
 	@Override
-	public IStatus validate(Object value) {
+	public IStatus validate(final Object value) {
 
 		if(value == null || value.toString().isEmpty() || !ExpressionConstants.CONDITION_TYPE.equals(inputExpression.getType())){
 			return ValidationStatus.ok();
@@ -86,24 +86,24 @@ public class ComparisonExpressionValidator implements IExpressionValidator {
 		final XtextResourceSetProvider xtextResourceSetProvider = injector.getInstance(XtextResourceSetProvider.class);
 		final ResourceSet resourceSet = xtextResourceSetProvider.get(RepositoryManager.getInstance().getCurrentRepository().getProject());
 		final XtextResource resource = (XtextResource) resourceSet.createResource(URI.createURI("somefile.cmodel"));
-		Map<String, String> options = new HashMap<String, String>();
+		final Map<String, String> options = new HashMap<String, String>();
 		options.put(XtextResource.OPTION_ENCODING, "UTF-8");
 		try {
 			resource.load(new StringInputStream(value.toString(), "UTF-8"), options);
-		} catch (UnsupportedEncodingException e1) {
+		} catch (final UnsupportedEncodingException e1) {
 			BonitaStudioLog.error(e1, ExpressionEditorPlugin.PLUGIN_ID);
-		} catch (IOException e1) {
+		} catch (final IOException e1) {
 			BonitaStudioLog.error(e1, ExpressionEditorPlugin.PLUGIN_ID);
 		}
 		final ConditionModelGlobalScopeProvider globalScopeProvider = injector.getInstance(ConditionModelGlobalScopeProvider.class);
 		final List<String> accessibleObjects = new ArrayList<String>();
-		for(Data d : ModelHelper.getAccessibleData(context)){
+		for(final Data d : ModelHelper.getAccessibleData(context)){
 			accessibleObjects.add(ModelHelper.getEObjectID(d));
 		}
 
-		AbstractProcess process =  ModelHelper.getParentProcess(context);
+		final AbstractProcess process =  ModelHelper.getParentProcess(context);
 		if(process != null){
-			for(Parameter p : process.getParameters()){
+			for(final Parameter p : process.getParameters()){
 				accessibleObjects.add(ModelHelper.getEObjectID(p));
 			}
 		}
@@ -117,9 +117,9 @@ public class ComparisonExpressionValidator implements IExpressionValidator {
 			updateDependencies(resource);
 		}
 
-		for(Issue issue : issues){
+		for(final Issue issue : issues){
 			int severity = IStatus.ERROR;
-			Severity issueSeverity = issue.getSeverity();
+			final Severity issueSeverity = issue.getSeverity();
 			if(issueSeverity == Severity.WARNING){
 				severity = IStatus.WARNING;
 			}
@@ -132,21 +132,21 @@ public class ComparisonExpressionValidator implements IExpressionValidator {
 	private void updateDependencies(final XtextResource resource) {
 		if(domain != null && inputExpression != null){
 			domain.getCommandStack().execute(new RemoveCommand(domain, inputExpression, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS, inputExpression.getReferencedElements()));
-			Operation_Compare compareOp = (Operation_Compare) resource.getContents().get(0);
+			final Operation_Compare compareOp = (Operation_Compare) resource.getContents().get(0);
 			if(compareOp != null){
-				List<Expression_ProcessRef> references = ModelHelper.getAllItemsOfType(compareOp, ConditionModelPackage.Literals.EXPRESSION_PROCESS_REF);
-				for(Expression_ProcessRef ref : references){
-					EObject dep = getResolvedDependency(ref);
+				final List<Expression_ProcessRef> references = ModelHelper.getAllItemsOfType(compareOp, ConditionModelPackage.Literals.EXPRESSION_PROCESS_REF);
+				for(final Expression_ProcessRef ref : references){
+					final EObject dep = getResolvedDependency(ref);
 					domain.getCommandStack().execute(new AddCommand(domain, inputExpression, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS, EcoreUtil.copy(dep)));
 				}
 			}
 		}else if(inputExpression != null){
 			inputExpression.getReferencedElements().clear();
-			Operation_Compare compareOp = (Operation_Compare) resource.getContents().get(0);
+			final Operation_Compare compareOp = (Operation_Compare) resource.getContents().get(0);
 			if(compareOp != null){
-				List<Expression_ProcessRef> references = ModelHelper.getAllItemsOfType(compareOp, ConditionModelPackage.Literals.EXPRESSION_PROCESS_REF);
-				for(Expression_ProcessRef ref : references){
-					EObject dep = getResolvedDependency(ref);
+				final List<Expression_ProcessRef> references = ModelHelper.getAllItemsOfType(compareOp, ConditionModelPackage.Literals.EXPRESSION_PROCESS_REF);
+				for(final Expression_ProcessRef ref : references){
+					final EObject dep = getResolvedDependency(ref);
 					inputExpression.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(dep));
 				}
 			}
@@ -154,10 +154,10 @@ public class ComparisonExpressionValidator implements IExpressionValidator {
 	}
 
 
-	private EObject getResolvedDependency(Expression_ProcessRef ref) {
+	private EObject getResolvedDependency(final Expression_ProcessRef ref) {
 		EObject dep = resolveProxy(ref.getValue());
-		List<EObject> orignalDep = ModelHelper.getAllItemsOfType( ModelHelper.getMainProcess(context), dep.eClass());
-		for(EObject d : orignalDep){
+		final List<EObject> orignalDep = ModelHelper.getAllItemsOfType( ModelHelper.getMainProcess(context), dep.eClass());
+		for(final EObject d : orignalDep){
 			if(EcoreUtil.equals(dep, d)){
 				dep = d;
 				break;
@@ -166,29 +166,36 @@ public class ComparisonExpressionValidator implements IExpressionValidator {
 		return dep;
 	}
 
-	private EObject resolveProxy(EObject ref) {
+	private EObject resolveProxy(final EObject ref) {
 		ResourceSet rSet = null;
 		if(ref.eIsProxy()){
 			rSet =context.eResource().getResourceSet();
 		}
-		EObject dep = EcoreUtil2.resolve(ref, rSet);
+		final EObject dep = EcoreUtil2.resolve(ref, rSet);
 		if(rSet != null){
 			rSet.getResources().remove(ref.eResource());
 		}
 		return dep;
 	}
 
-	public void setInputExpression(Expression inputExpression) {
+	@Override
+    public void setInputExpression(final Expression inputExpression) {
 		this.inputExpression = inputExpression;
 	}
 
-	public void setDomain(EditingDomain domain) {
+	@Override
+    public void setDomain(final EditingDomain domain) {
 		this.domain = domain;
 	}
 
 	@Override
-	public void setContext(EObject context) {
+	public void setContext(final EObject context) {
 		this.context = context;
 	}
+
+    @Override
+    public boolean isRelevantForExpressionType(final String type) {
+        return ExpressionConstants.CONDITION_TYPE.equals(type);
+    }
 
 }

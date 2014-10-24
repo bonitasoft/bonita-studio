@@ -15,38 +15,38 @@ import org.junit.runner.RunWith;
 @RunWith(SWTBotJunit4ClassRunner.class)
 public class OpenNameAndVersionDiagramTest extends SWTBotEclipseTestCase implements SWTBotConstants {
 
-	@Test
-	public void testOpenNameAndVersionDiagram() {
+    @Test
+    public void testOpenNameAndVersionDiagram() {
 
-		SWTBotTestUtil.pressEnter();
-		
-		final SWTWorkbenchBot workbenchBot = new SWTWorkbenchBot();
+        SWTBotTestUtil.pressEnter();
 
-		SWTBotTestUtil.createNewDiagram(workbenchBot);
-		SWTBotTestUtil.createNewDiagram(workbenchBot);
+        final SWTWorkbenchBot workbenchBot = new SWTWorkbenchBot();
 
-		bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL).show();
-		bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL).setFocus();
+        SWTBotTestUtil.createNewDiagram(workbenchBot);
+        SWTBotTestUtil.createNewDiagram(workbenchBot);
 
-		SWTBotTestUtil.selectTabbedPropertyView(bot, "Pool");
-		bot.waitUntil(Conditions.widgetIsEnabled(bot.button("Edit...")));
-		bot.button("Edit...").click();
+        bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL).show();
+        bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL).setFocus();
 
-		bot.waitUntil(Conditions.shellIsActive(org.bonitasoft.studio.common.Messages.openNameAndVersionDialogTitle));
+        SWTBotTestUtil.selectTabbedPropertyView(bot, "Pool");
+        bot.waitUntil(Conditions.widgetIsEnabled(bot.button("Edit...")));
+        bot.button("Edit...").click();
 
-		SWTBotText t = bot.textWithLabel("Name");
-		t.setText("Pool1");
+        bot.waitUntil(Conditions.shellIsActive(org.bonitasoft.studio.common.Messages.openNameAndVersionDialogTitle));
 
-		SWTBotButton okBtton = bot.button(IDialogConstants.OK_LABEL);
+        SWTBotText t = bot.textWithLabel("Name");
+        t.setText("Pool");
 
-		assertFalse("Ok button is enabled when rename the pool name but the pool name already exist", okBtton.isEnabled());
+        final SWTBotButton okBtton = bot.button(IDialogConstants.OK_LABEL);
 
-		t = bot.textWithLabel("Name");
-		t.setText("Pool2"+System.currentTimeMillis());
+        assertFalse("Ok button is enabled when rename the pool name but the pool name already exist", okBtton.isEnabled());
 
-		assertTrue("Ok button is disabled when rename the pool name but the pool name doesn't already exist", okBtton.isEnabled());
-		
-		okBtton.click();
-	}
+        t = bot.textWithLabel("Name");
+        t.setText("Pool2"+System.currentTimeMillis());
+
+        assertTrue("Ok button is disabled when rename the pool name but the pool name doesn't already exist", okBtton.isEnabled());
+
+        okBtton.click();
+    }
 
 }

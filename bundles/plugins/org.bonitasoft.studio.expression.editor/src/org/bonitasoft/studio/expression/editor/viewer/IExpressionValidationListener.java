@@ -17,12 +17,14 @@
  */
 package org.bonitasoft.studio.expression.editor.viewer;
 
+import org.eclipse.core.runtime.IStatus;
+
 /**
  * @author Florine Boudin
  *
  */
 public interface IExpressionValidationListener {
 
-	void validationStatusChanged(int newStatus);
-	
+    void validationStatusChanged(IStatus status);
+
 }

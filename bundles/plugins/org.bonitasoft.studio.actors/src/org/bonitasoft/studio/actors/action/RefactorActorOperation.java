@@ -5,12 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -48,69 +48,72 @@ import org.eclipse.emf.edit.domain.EditingDomain;
  */
 public class RefactorActorOperation extends AbstractRefactorOperation<String, Actor, ActorRefactorPair> {
 
-    private AbstractProcess process;
+    private final AbstractProcess process;
 
-    public RefactorActorOperation(AbstractProcess process, Actor actor, String newValue) {
+    public RefactorActorOperation(final AbstractProcess process, final Actor actor, final String newValue) {
         super(RefactoringOperationType.UPDATE);
         this.process = process;
         addItemToRefactor(newValue, actor);
     }
 
     @Override
-    protected void doExecute(IProgressMonitor monitor) {
+    protected void doExecute(final IProgressMonitor monitor) {
         monitor.beginTask(Messages.updateActorReferences, IProgressMonitor.UNKNOWN);
-        String id = ModelHelper.getEObjectID(process);
-        String fileName = id + ".conf";
-        ProcessConfigurationRepositoryStore processConfStore = (ProcessConfigurationRepositoryStore) RepositoryManager.getInstance().getCurrentRepository()
+        final String id = ModelHelper.getEObjectID(process);
+        final String fileName = id + ".conf";
+        final ProcessConfigurationRepositoryStore processConfStore = (ProcessConfigurationRepositoryStore) RepositoryManager.getInstance().getCurrentRepository()
                 .getRepositoryStore(ProcessConfigurationRepositoryStore.class);
-        ProcessConfigurationFileStore file = processConfStore.getChild(fileName);
+        final ProcessConfigurationFileStore file = processConfStore.getChild(fileName);
         Configuration localeConfiguration = null;
         Configuration localConfigurationCopy = null;
         if (file != null) {
             localeConfiguration = file.getContent();
             localConfigurationCopy = EcoreUtil.copy(localeConfiguration);
         }
-        List<Configuration> configurations = new ArrayList<Configuration>();
+        final List<Configuration> configurations = new ArrayList<Configuration>();
         if (localeConfiguration != null) {
             configurations.add(localeConfiguration);
         }
         configurations.addAll(process.getConfigurations());
 
-        CompoundCommand cc = new CompoundCommand();
-        for(ActorRefactorPair pairToRefactor : pairsToRefactor){
-        	Actor actor = (Actor) pairToRefactor.getOldValue();
-        	for (Configuration configuration : configurations) {
-        		if (configuration.getActorMappings() != null) {
-        			List<ActorMapping> actorMappings = configuration.getActorMappings().getActorMapping();
-        			for (ActorMapping actorMapping : actorMappings) {
-        				if (actorMapping.getName().equals(actor.getName())) {
-        					cc.append(SetCommand.create(domain, actorMapping, ActorMappingPackage.Literals.ACTOR_MAPPING__NAME, pairToRefactor.getNewValueName()));
-        				}
-        			}
-        			if (localeConfiguration != null) {
-        				cc.append(new SaveConfigurationEMFCommand(file, localConfigurationCopy, localeConfiguration));
-        			}
-        		}
-        	}
-        	cc.append(SetCommand.create(domain, actor, ProcessPackage.Literals.ELEMENT__NAME, pairToRefactor.getNewValueName()));
+        if (compoundCommand == null) {
+            compoundCommand = new CompoundCommand();
+        }
+        for(final ActorRefactorPair pairToRefactor : pairsToRefactor){
+            final Actor actor = pairToRefactor.getOldValue();
+            for (final Configuration configuration : configurations) {
+                if (configuration.getActorMappings() != null) {
+                    final List<ActorMapping> actorMappings = configuration.getActorMappings().getActorMapping();
+                    for (final ActorMapping actorMapping : actorMappings) {
+                        if (actorMapping.getName().equals(actor.getName())) {
+                            compoundCommand.append(SetCommand.create(domain, actorMapping, ActorMappingPackage.Literals.ACTOR_MAPPING__NAME,
+                                    pairToRefactor.getNewValueName()));
+                        }
+                    }
+                    if (localeConfiguration != null) {
+                        compoundCommand.append(new SaveConfigurationEMFCommand(file, localConfigurationCopy, localeConfiguration));
+                    }
+                }
+            }
+            compoundCommand.append(SetCommand.create(domain, actor, ProcessPackage.Literals.ELEMENT__NAME, pairToRefactor.getNewValueName()));
         }
     }
 
     @Override
-    protected AbstractScriptExpressionRefactoringAction<ActorRefactorPair> getScriptExpressionRefactoringAction(List<ActorRefactorPair> pairsToRefactor,
-            List<Expression> scriptExpressions, List<Expression> refactoredScriptExpression, CompoundCommand compoundCommand, EditingDomain domain,
-            RefactoringOperationType operationType) {
+    protected AbstractScriptExpressionRefactoringAction<ActorRefactorPair> getScriptExpressionRefactoringAction(final List<ActorRefactorPair> pairsToRefactor,
+            final List<Expression> scriptExpressions, final List<Expression> refactoredScriptExpression, final CompoundCommand compoundCommand, final EditingDomain domain,
+            final RefactoringOperationType operationType) {
         return null;
     }
 
     @Override
-    protected EObject getContainer(Actor oldValue) {
+    protected EObject getContainer(final Actor oldValue) {
         return null;
     }
 
-	@Override
-	protected ActorRefactorPair createRefactorPair(String newItem, Actor oldItem) {
-		return new ActorRefactorPair(newItem, oldItem);
-	}
+    @Override
+    protected ActorRefactorPair createRefactorPair(final String newItem, final Actor oldItem) {
+        return new ActorRefactorPair(newItem, oldItem);
+    }
 
 }

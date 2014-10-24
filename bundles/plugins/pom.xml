@@ -21,7 +21,7 @@
 		<module>org.bonitasoft.studio.simulation.libs</module>
 		<module>org.bonitasoft.studio.model</module>
 		<module>org.bonitasoft.studio.model.edit</module>
-		<module>org.bonitasoft.studio.model.assertions</module>
+		<module>org.bonitasoft.studio.tests-utils</module>
 		<module>org.bonitasoft.studio.diagram</module>
 		<module>org.bonitasoft.studio.diagram.form</module>
 		<module>org.bonitasoft.studio.actors</module>

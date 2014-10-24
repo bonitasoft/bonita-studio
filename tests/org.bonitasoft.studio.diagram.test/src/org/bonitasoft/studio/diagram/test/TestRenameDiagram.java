@@ -115,6 +115,7 @@ public class TestRenameDiagram extends SWTBotGefTestCase {
 
         SWTBotTestUtil.createNewDiagram(bot);
         bot.menu("Diagram").menu("Save").click();
+        bot.waitWhile(Conditions.shellIsActive("Progress Information"));
         assertFalse(bot.activeShell().getText().equals(org.bonitasoft.studio.common.Messages.openNameAndVersionDialogTitle));
         assertFalse("Editor is dirty", bot.activeEditor().isDirty());
     }
@@ -142,5 +143,21 @@ public class TestRenameDiagram extends SWTBotGefTestCase {
         assertFalse("Editor is dirty", bot.activeEditor().isDirty());
     }
 
+
+    @Test
+    public void testRenameDiagramOnce() throws Exception {
+
+        final boolean tmpDisablePopup = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
+                .getDefaultBoolean(BonitaPreferenceConstants.ASK_RENAME_ON_FIRST_SAVE);
+        BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().setValue(BonitaPreferenceConstants.ASK_RENAME_ON_FIRST_SAVE, true);
+
+        SWTBotTestUtil.createNewDiagram(bot);
+        SWTBotTestUtil.changeDiagramName(bot, "NewDiagramName");
+
+        // TimeOUt if a the pop up has been reopened (see BS-9819)
+        bot.waitWhile(Conditions.shellIsActive(org.bonitasoft.studio.common.Messages.openNameAndVersionDialogTitle));
+
+        BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().setValue(BonitaPreferenceConstants.ASK_RENAME_ON_FIRST_SAVE, tmpDisablePopup);
+    }
 
 }

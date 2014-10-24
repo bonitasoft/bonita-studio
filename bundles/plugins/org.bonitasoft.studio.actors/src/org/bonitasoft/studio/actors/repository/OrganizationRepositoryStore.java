@@ -66,8 +66,6 @@ import org.eclipse.swt.graphics.Image;
  */
 public class OrganizationRepositoryStore extends AbstractEMFRepositoryStore<OrganizationFileStore> {
 
-    private static final String NAMESPACE_6_3_0 = "xmlns:organization=\"http://documentation.bonitasoft.com/organization-xml-schema\"";
-    private static final String NAMESPACE_6_0_0_BETA_016 = "xmlns:organization=\"http://www.bonitasoft.org/ns/organization/6.0.0-beta-016\"";
     private static final String STORE_NAME = "organizations";
     public static final String ORGANIZATION_EXT = "organization";
     private static final Set<String> extensions = new HashSet<String>() ;
@@ -207,10 +205,6 @@ public class OrganizationRepositoryStore extends AbstractEMFRepositoryStore<Orga
                 final Resource resource = new XMLResourceImpl(resourceURI);
                 final DocumentRoot root = OrganizationFactory.eINSTANCE.createDocumentRoot();
                 final Organization orga = EcoreUtil.copy(((DocumentRoot) r.getContents().get(0)).getOrganization());
-                //                List<PasswordType> passwords = ModelHelper.getAllItemsOfType(orga, OrganizationPackage.Literals.PASSWORD_TYPE);
-                //                for(PasswordType p : passwords){
-                //                    p.setEncrypted(p.isEncrypted());
-                //                }
                 root.setOrganization(orga);
                 resource.getContents().add(root);
                 final Map<String, String> options = new HashMap<String, String>();

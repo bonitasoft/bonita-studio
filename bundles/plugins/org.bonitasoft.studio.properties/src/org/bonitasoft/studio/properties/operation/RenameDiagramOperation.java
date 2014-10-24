@@ -131,7 +131,7 @@ public class RenameDiagramOperation implements IRunnableWithProgress {
                     }
                 }
             }
-	 partToActivate.getSite().getPage().activate(partToActivate);
+            partToActivate.getSite().getPage().activate(partToActivate);
         }
     }
 
