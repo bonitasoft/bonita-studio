@@ -24,6 +24,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.bonitasoft.studio.common.editor.EditorUtil;
 import org.bonitasoft.studio.common.emf.tools.EMFResourceUtil;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -322,7 +323,7 @@ public class DiagramFileStore extends EMFFileStore implements IRepositoryFileSto
             for (final IEditorReference iEditorReference : editors) {
                 try {
                     final IEditorInput input = iEditorReference.getEditorInput();
-                    final IResource iResource = (IResource) input.getAdapter(IResource.class);
+                    final IResource iResource = EditorUtil.retrieveResourceFromEditorInput(input);
                     if (getResource().equals(iResource)) {
                         final IWorkbenchPart part = iEditorReference.getPart(false);
                         if(part != null && part instanceof DiagramDocumentEditor){
