@@ -27,7 +27,7 @@ import org.bonitasoft.studio.model.process.ProcessFactory;
 public class DataBuilder<T extends Data, B extends DataBuilder<T, B>> extends ElementBuilder<T, B> {
 
     @SuppressWarnings("rawtypes")
-    public static DataBuilder create() {
+    public static DataBuilder<?, ?> create() {
         return new DataBuilder();
     }
 

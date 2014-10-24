@@ -26,7 +26,7 @@ import org.bonitasoft.studio.model.process.ProcessFactory;
 public class JavaObjectDataBuilder<T extends JavaObjectData, B extends JavaObjectDataBuilder<T, B>> extends DataBuilder<T, B> {
 
     @SuppressWarnings("rawtypes")
-    public static JavaObjectDataBuilder create() {
+    public static JavaObjectDataBuilder<?, ?> create() {
         return new JavaObjectDataBuilder();
     }
 
