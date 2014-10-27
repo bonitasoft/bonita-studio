@@ -20,7 +20,9 @@ import static org.fest.assertions.Assertions.assertThat;
 
 import org.bonitasoft.studio.diagram.form.custom.model.WidgetMapping;
 import org.bonitasoft.studio.model.process.Data;
-import org.bonitasoft.studio.model.process.ProcessFactory;
+import org.bonitasoft.studio.model.process.builders.BooleanDataTypeBuilder;
+import org.bonitasoft.studio.model.process.builders.DataBuilder;
+import org.bonitasoft.studio.swt.AbstractSWTTestCase;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,7 +31,7 @@ import org.junit.Test;
  * @author Romain Bioteau
  *
  */
-public class ReadOnlyCheckboxLabelProviderTest {
+public class ReadOnlyCheckboxLabelProviderTest extends AbstractSWTTestCase {
 
     private ReadOnlyCheckboxLabelProvider readOnlyCheckboxLabelProvider;
 
@@ -38,6 +40,7 @@ public class ReadOnlyCheckboxLabelProviderTest {
      */
     @Before
     public void setUp() throws Exception {
+        createDisplayAndRealm();
         readOnlyCheckboxLabelProvider = new ReadOnlyCheckboxLabelProvider();
     }
 
@@ -46,12 +49,12 @@ public class ReadOnlyCheckboxLabelProviderTest {
      */
     @After
     public void tearDown() throws Exception {
+        dispose();
     }
 
     @Test
     public void shouldIsSelected_ReturnTrue() throws Exception {
-        final Data data = ProcessFactory.eINSTANCE.createData();
-        data.setDataType(ProcessFactory.eINSTANCE.createBooleanType());
+        final Data data = DataBuilder.create().havingDataType(BooleanDataTypeBuilder.create()).build();
         final WidgetMapping mapping = new WidgetMapping(data);
         mapping.setReadOnly(true);
         assertThat(readOnlyCheckboxLabelProvider.isSelected(mapping)).isTrue();
@@ -59,8 +62,7 @@ public class ReadOnlyCheckboxLabelProviderTest {
 
     @Test
     public void shouldIsSelected_ReturnFalse() throws Exception {
-        final Data data = ProcessFactory.eINSTANCE.createData();
-        data.setDataType(ProcessFactory.eINSTANCE.createBooleanType());
+        final Data data = DataBuilder.create().havingDataType(BooleanDataTypeBuilder.create()).build();
         final WidgetMapping mapping = new WidgetMapping(data);
         mapping.setReadOnly(false);
         assertThat(readOnlyCheckboxLabelProvider.isSelected(mapping)).isFalse();
