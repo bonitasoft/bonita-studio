@@ -55,8 +55,18 @@ public abstract class AbstractManageDiagramWizardPage extends WizardPage impleme
      */
     protected AbstractManageDiagramWizardPage(final String pageName) {
         super(pageName);
-        processConfStore = RepositoryManager.getInstance().getRepositoryStore(ProcessConfigurationRepositoryStore.class);
-        applicationResourceStore = RepositoryManager.getInstance().getRepositoryStore(ApplicationResourceRepositoryStore.class);
+        processConfStore=getConfigurationRepositoryStore();
+        applicationResourceStore = getApplicationResourceRepositoryStore();
+    }
+
+
+    public ApplicationResourceRepositoryStore getApplicationResourceRepositoryStore() {
+        return RepositoryManager.getInstance().getRepositoryStore(ApplicationResourceRepositoryStore.class);
+    }
+
+
+    public ProcessConfigurationRepositoryStore getConfigurationRepositoryStore() {
+        return RepositoryManager.getInstance().getRepositoryStore(ProcessConfigurationRepositoryStore.class);
     }
 
 
