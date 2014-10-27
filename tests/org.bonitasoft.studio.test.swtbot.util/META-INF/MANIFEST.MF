@@ -34,6 +34,7 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.bonitasoft.studio.test.swtbot.util,org.bonitasoft.
  studio.test.swtbot.util.conditions
 Bundle-ActivationPolicy: lazy
-Import-Package: org.bonitasoft.studio.actors.i18n,
+Import-Package: org.apache.log4j;version="1.2.15",
+ org.bonitasoft.studio.actors.i18n,
  org.bonitasoft.studio.expression.editor.i18n,
  org.bonitasoft.studio.expression.editor.viewer

@@ -70,6 +70,7 @@ import org.eclipse.swtbot.swt.finder.finders.UIThreadRunnable;
 import org.eclipse.swtbot.swt.finder.keyboard.Keyboard;
 import org.eclipse.swtbot.swt.finder.keyboard.KeyboardFactory;
 import org.eclipse.swtbot.swt.finder.keyboard.Keystrokes;
+import org.eclipse.swtbot.swt.finder.matchers.WithId;
 import org.eclipse.swtbot.swt.finder.results.VoidResult;
 import org.eclipse.swtbot.swt.finder.utils.SWTBotPreferences;
 import org.eclipse.swtbot.swt.finder.waits.ICondition;
@@ -100,6 +101,8 @@ public class SWTBotTestUtil implements SWTBotConstants {
     public static void createNewDiagram(final SWTWorkbenchBot bot) {
         final long timebeforeCreatenewDiagram = System.currentTimeMillis();
         final int nbEditorsBefore = bot.editors().size();
+        bot.waitUntil(Conditions.waitForWidget(WithId.withId(SWTBOT_ID_MAIN_SHELL)), 40000);
+        bot.waitUntil(Conditions.shellIsActive(bot.shellWithId(SWTBOT_ID_MAIN_SHELL).getText()), 40000);
         bot.waitUntil(Conditions.widgetIsEnabled(bot.menu("Diagram")), 40000);
         final SWTBotMenu menu = bot.menu("Diagram");
         menu.menu("New").click();
@@ -262,7 +265,7 @@ public class SWTBotTestUtil implements SWTBotConstants {
 
     /**
      * Create a new Form and save it
-     * 
+     *
      * @param bot
      * @param gmfEditor
      * @param nameOfStepOnwhichCreateTheForm
@@ -286,7 +289,7 @@ public class SWTBotTestUtil implements SWTBotConstants {
 
     /**
      * select an event on diagram with the given name
-     * 
+     *
      * @param bot
      * @param gmfEditor
      * @param poolName
@@ -299,7 +302,7 @@ public class SWTBotTestUtil implements SWTBotConstants {
 
     /**
      * select an event in the overview tree. Becarefull, if treeViewer exists in other views SWTBot may not find the one in overview
-     * 
+     *
      * @param bot
      * @param poolName
      * @param eventName
@@ -445,7 +448,7 @@ public class SWTBotTestUtil implements SWTBotConstants {
 
     /**
      * add data wizard configuration (only for defined types as String Integer Boolean etc.)
-     * 
+     *
      * @param bot
      * @param name
      * @param type
@@ -483,7 +486,7 @@ public class SWTBotTestUtil implements SWTBotConstants {
 
     /**
      * add data with option wizard configuration (only for defined types as String Integer Boolean etc.)
-     * 
+     *
      * @param bot
      * @param name
      * @param type
@@ -524,7 +527,7 @@ public class SWTBotTestUtil implements SWTBotConstants {
 
     /**
      * add a sequence flow between startElement and End Element
-     * 
+     *
      * @param bot
      * @param gmfEditor
      * @param startElementName
@@ -614,7 +617,7 @@ public class SWTBotTestUtil implements SWTBotConstants {
        bot.button(IDialogConstants.OK_LABEL).click();
 
    }
-    
+
     /**
      * @param bot
      * @param taskName
@@ -648,7 +651,7 @@ public class SWTBotTestUtil implements SWTBotConstants {
 
     /**
      * select in the overview tree the first transition flow in the given pool
-     * 
+     *
      * @param name
      * @param defaultFlow
      * @param condition

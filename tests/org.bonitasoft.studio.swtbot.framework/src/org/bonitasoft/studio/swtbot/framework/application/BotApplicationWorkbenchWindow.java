@@ -8,11 +8,13 @@
  *******************************************************************************/
 package org.bonitasoft.studio.swtbot.framework.application;
 
+import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.swtbot.framework.application.menu.AbstractBotMenu;
 import org.bonitasoft.studio.swtbot.framework.diagram.BotProcessDiagramPerspective;
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.SWTBot;
+import org.eclipse.swtbot.swt.finder.matchers.WithId;
 import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.eclipse.swtbot.swt.finder.waits.ICondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotMenu;
@@ -31,6 +33,8 @@ public class BotApplicationWorkbenchWindow extends AbstractBotMenu {
     public BotProcessDiagramPerspective createNewDiagram() {
         final long timebeforeCreatenewDiagram = System.currentTimeMillis();
         final int nbEditorsBefore = bot.editors().size();
+        bot.waitUntil(Conditions.waitForWidget(WithId.withId(SWTBotConstants.SWTBOT_ID_MAIN_SHELL)), 40000);
+        bot.waitUntil(Conditions.shellIsActive(bot.shellWithId(SWTBotConstants.SWTBOT_ID_MAIN_SHELL).getText()), 40000);
         bot.waitUntil(Conditions.widgetIsEnabled(bot.menu("Diagram")), 40000);
         final SWTBotMenu menu = bot.menu("Diagram");
         menu.menu("New").click();
