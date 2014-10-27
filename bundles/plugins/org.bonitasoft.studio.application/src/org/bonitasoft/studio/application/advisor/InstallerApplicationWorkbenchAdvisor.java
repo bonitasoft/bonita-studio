@@ -34,10 +34,6 @@ public abstract class InstallerApplicationWorkbenchAdvisor extends BonitaStudioW
 
 	protected static final String PRIORITY = "priority";
 
-    public InstallerApplicationWorkbenchAdvisor() {
-        System.setProperty("bonita.noregister", "1");
-    }
-
 	@Override
 	public boolean openWindows() {
 		return true; //DO NOT OPEN WORKBENCH WINDOW
