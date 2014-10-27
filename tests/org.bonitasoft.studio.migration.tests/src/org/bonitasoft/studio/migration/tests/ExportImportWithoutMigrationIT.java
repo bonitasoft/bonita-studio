@@ -22,18 +22,25 @@ import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.operation.ExportBosArchiveOperation;
+import org.bonitasoft.studio.common.repository.operation.ImportBosArchiveOperation;
+import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.exporter.handler.ExportBosArchiveHandler;
 import org.bonitasoft.studio.model.process.MainProcess;
+import org.bonitasoft.studio.model.process.assertions.ElementAssert;
+import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
+import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
 import org.bonitasoft.studio.swtbot.framework.diagram.BotProcessDiagramPerspective;
 import org.bonitasoft.studio.swtbot.framework.draw.BotGefProcessDiagramEditor;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.junit.After;
@@ -58,6 +65,10 @@ public class ExportImportWithoutMigrationIT extends SWTBotGefTestCase {
     public void setUp() throws Exception{
         bot.saveAllEditors();
         bot.closeAllEditors();
+        FileActionDialog.setDisablePopup(true);
+        BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
+                .setValue(BonitaPreferenceConstants.CONSOLE_BROWSER_CHOICE, BonitaPreferenceConstants.INTERNAL_BROWSER);
+        BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().setValue(BonitaPreferenceConstants.ASK_RENAME_ON_FIRST_SAVE, false);
     }
 
     @Override
@@ -70,19 +81,27 @@ public class ExportImportWithoutMigrationIT extends SWTBotGefTestCase {
     @Test
     public void should_export_and_import_of_a_diagram_do_not_trigger_migration() throws Exception {
         final BotApplicationWorkbenchWindow workbenchWindow = new BotApplicationWorkbenchWindow(bot);
-        final BotProcessDiagramPerspective newDiagram = workbenchWindow.createNewDiagram();
-        final BotGefProcessDiagramEditor diagramEditor = newDiagram.activeProcessDiagramEditor();
+        final BotProcessDiagramPerspective diagramPerspective = workbenchWindow.createNewDiagram();
+        BotGefProcessDiagramEditor diagramEditor = diagramPerspective.activeProcessDiagramEditor();
         diagramEditor.selectDiagram();
+        diagramPerspective.getDiagramPropertiesPart().selectGeneralTab().selectDiagramTab().setName("ExportImportWithoutMigrationIT");
+        diagramEditor = diagramPerspective.activeProcessDiagramEditor().selectDiagram();
         final EObject originalSemanticElement = diagramEditor.getSelectedSemanticElement();
         assertThat(originalSemanticElement).isInstanceOf(MainProcess.class);
-
+        ElementAssert.assertThat((MainProcess) originalSemanticElement).hasName("ExportImportWithoutMigrationIT");
         final ExportBosArchiveOperation exportBosArchiveOperation = new ExportBosArchiveOperation();
         final File destFolder = folder.newFolder();
         destFolder.mkdirs();
-        final File bosFile = new File(destFolder,"test.bos");
+        final File bosFile = new File(destFolder, "ExportImportWithoutMigrationIT-1.0.bos");
         exportBosArchiveOperation.setDestinationPath(bosFile.getAbsolutePath());
 
-        final Set<Object> allDiagramRelatedFiles = ExportBosArchiveHandler.getAllDiagramRelatedFiles((MainProcess) originalSemanticElement);
+        final DiagramRepositoryStore diagramRepositoryStore = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
+        final DiagramFileStore diagramFileStore = diagramRepositoryStore.getDiagram("ExportImportWithoutMigrationIT",
+                "1.0");
+        assertThat(diagramFileStore).isNotNull();
+        final MainProcess mainProcess = diagramFileStore.getContent();
+        assertThat(mainProcess.eResource()).isNotNull();
+        final Set<Object> allDiagramRelatedFiles = ExportBosArchiveHandler.getAllDiagramRelatedFiles(mainProcess);
         final Set<IResource> resources = new HashSet<IResource>();
         for (final Object filestore : allDiagramRelatedFiles) {
             if (filestore instanceof IRepositoryFileStore) {
@@ -96,8 +115,18 @@ public class ExportImportWithoutMigrationIT extends SWTBotGefTestCase {
         assertThat(bosFile.exists()).isTrue();
 
         //delete diagram
-        final DiagramRepositoryStore diagramRepositoryStore = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
-        diagramRepositoryStore.getDiagram(((MainProcess) originalSemanticElement).getName(), ((MainProcess) originalSemanticElement).getVersion());
+        diagramFileStore.delete();
+
+        final ImportBosArchiveOperation importBosArchiveOperation = new ImportBosArchiveOperation();
+        importBosArchiveOperation.setArchiveFile(bosFile.getAbsolutePath());
+        importBosArchiveOperation.setCurrentRepository(RepositoryManager.getInstance().getCurrentRepository());
+        importBosArchiveOperation.run(Repository.NULL_PROGRESS_MONITOR);
+        assertThat(importBosArchiveOperation.getStatus().isOK()).isTrue();
+
+        workbenchWindow.open().selectDiagram("ExportImportWithoutMigrationIT", "1.0").open();
+        diagramPerspective.activeProcessDiagramEditor().selectDiagram();
+        final EObject newSemanticElement = diagramPerspective.activeProcessDiagramEditor().getSelectedSemanticElement();
+        assertThat(EcoreUtil.equals(originalSemanticElement, newSemanticElement)).isTrue();
     }
 
 

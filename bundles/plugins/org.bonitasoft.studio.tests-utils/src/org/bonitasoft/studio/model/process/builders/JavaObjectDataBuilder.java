@@ -25,8 +25,8 @@ import org.bonitasoft.studio.model.process.ProcessFactory;
  */
 public class JavaObjectDataBuilder<T extends JavaObjectData, B extends JavaObjectDataBuilder<T, B>> extends DataBuilder<T, B> {
 
-    public static <T extends JavaObjectData, B extends JavaObjectDataBuilder<T, B>> JavaObjectDataBuilder<T, B> create() {
-        return new JavaObjectDataBuilder<T, B>();
+    public static JavaObjectDataBuilder<?, ?> create() {
+        return new JavaObjectDataBuilder();
     }
 
     public B withClassname(final String classname) {

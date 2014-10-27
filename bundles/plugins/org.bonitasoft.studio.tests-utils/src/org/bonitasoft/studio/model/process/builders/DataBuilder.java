@@ -26,8 +26,8 @@ import org.bonitasoft.studio.model.process.ProcessFactory;
  */
 public class DataBuilder<T extends Data, B extends DataBuilder<T, B>> extends ElementBuilder<T, B> {
 
-    public static <T extends Data, B extends DataBuilder<T, B>> DataBuilder<T, B> create() {
-        return new DataBuilder<T, B>();
+    public static DataBuilder<?, ?> create() {
+        return new DataBuilder();
     }
 
     public B withDatasourceId(final String datasourceId) {
