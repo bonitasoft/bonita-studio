@@ -365,5 +365,6 @@ public class PicsConstants {
 
     public static String processDiagrammeWithGreyLock = "editor/processDiagrammeWithGreyLock.png";
     public static String processDiagrammeWithRedLock = "editor/processDiagrammeWithRedLock.png";
-
+    public static String formDiagramWithGreyLock = "editor/formDiagramWithGreyLock.png";
+    public static String formDiagramWithRedLock = "editor/formDiagramWithRedLock.png";
 }
