@@ -38,6 +38,7 @@ import org.bonitasoft.studio.swtbot.framework.diagram.BotProcessDiagramPropertie
 import org.bonitasoft.studio.swtbot.framework.diagram.general.data.BotAddDataWizardPage;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.data.BotDataPropertySection;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.data.BotEditDataDialog;
+import org.bonitasoft.studio.swtbot.framework.draw.BotGefProcessDiagramEditor;
 import org.bonitasoft.studio.swtbot.framework.expression.BotExpressionEditorDialog;
 import org.bonitasoft.studio.swtbot.framework.widget.BotTableWidget;
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
@@ -53,7 +54,6 @@ import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditor;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
 import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -112,41 +112,29 @@ public class DataWizardIT extends SWTBotGefTestCase {
     public void testEditData() throws Exception {
         SWTBotTestUtil.importProcessWIthPathFromClass(bot, "ProcessWithData_1_0.bos", "Bonita 6.x", "ProcessWithData", this.getClass(), false);
 
-        final SWTBotEditor botEditor = bot.activeEditor();
-        final SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
-
+        final BotProcessDiagramPerspective botProcessDiagramPerspective = new BotProcessDiagramPerspective(bot);
+        final BotProcessDiagramPropertiesViewFolder diagramPropertiesPart = botProcessDiagramPerspective.getDiagramPropertiesPart();
+        final BotGefProcessDiagramEditor activeProcessDiagramEditor = botProcessDiagramPerspective.activeProcessDiagramEditor();
+        final SWTBotGefEditor gmfEditor = activeProcessDiagramEditor.getGmfEditor();
         final IGraphicalEditPart part = (IGraphicalEditPart)gmfEditor.mainEditPart().part();
         final MainProcess model = (MainProcess)part.resolveSemanticElement();
         final Pool pool = (Pool)model.getElements().get(0);
+        gmfEditor.select(pool.getName());
+        final BotDataPropertySection dataTab = diagramPropertiesPart.selectGeneralTab().selectDataTab();
+        dataTab.dataList().select(1);
+        final BotEditDataDialog editDataDialog = dataTab.edit();
+        editDataDialog.setName("anewName");
+        editDataDialog.setType("Integer");
+        editDataDialog.ok();
+        final BotApplicationWorkbenchWindow applicationWorkbenchWindow = new BotApplicationWorkbenchWindow(bot);
+        applicationWorkbenchWindow.save();
 
-        gmfEditor.getEditPart(pool.getName()).parent().select();
-
-        bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL).show();
-        SWTBotTestUtil.selectTabbedPropertyView(bot, "Data");
-
-        Data firstData = pool.getData().get(0);
-
-
-        bot.table().select(firstData.getName()+" -- "+firstData.getDataType().getName());
-        // button("Edit...")
-        bot.button(Messages.updateData).click();
-        bot.text().setText("newName");
-        bot.comboBox().setSelection("Integer");
-        final SWTBotShell editVarShell = bot.activeShell();
-        bot.button(IDialogConstants.OK_LABEL).click();
-        bot.waitUntil(Conditions.shellCloses(editVarShell));
-
-        bot.menu("Diagram").menu("Save").click();
-
-        firstData = pool.getData().get(0);
-        assertTrue("wrong rename",firstData.getName().equals("newName"));
+        final Data firstData = pool.getData().get(0);
+        assertEquals("wrong rename", firstData.getName(), "anewName");
         assertTrue("wrong change type",firstData.getDataType() instanceof IntegerType);
 
-        SWTBotTestUtil.waitUntilBonitaBPmShellIsActive(bot);
-        bot.menu("Diagram").menu("Close").click();
+        applicationWorkbenchWindow.close();
     }
-
-
 
     @Test
     public void testRemoveData() throws Exception {

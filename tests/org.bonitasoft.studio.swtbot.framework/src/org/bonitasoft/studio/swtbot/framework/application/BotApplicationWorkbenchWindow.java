@@ -81,4 +81,28 @@ public class BotApplicationWorkbenchWindow extends AbstractBotMenu {
         });
         return this;
     }
+
+    public BotApplicationWorkbenchWindow close() {
+        final int nbEditorsBefore = bot.editors().size();
+        bot.waitUntil(Conditions.widgetIsEnabled(bot.menu("Diagram")), 40000);
+        final SWTBotMenu menu = bot.menu("Diagram");
+        menu.menu("Close").click();
+        bot.waitUntil(new ICondition() {
+
+            @Override
+            public boolean test() throws Exception {
+                return nbEditorsBefore - 1 == bot.editors().size();
+            }
+
+            @Override
+            public void init(final SWTBot bot) {
+            }
+
+            @Override
+            public String getFailureMessage() {
+                return "Editor for new diagram has not been opened";
+            }
+        }, 30000, 100);
+        return this;
+    }
 }
