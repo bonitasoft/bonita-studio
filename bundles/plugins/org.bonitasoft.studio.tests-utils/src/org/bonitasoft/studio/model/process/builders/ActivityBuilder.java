@@ -28,9 +28,8 @@ import org.bonitasoft.studio.model.process.ProcessFactory;
  */
 public class ActivityBuilder<T extends Activity, B extends ActivityBuilder<T, B>> extends FlowElementBuilder<T, B> {
 
-    @SuppressWarnings("rawtypes")
-    public static ActivityBuilder<?, ?> create() {
-        return new ActivityBuilder();
+    public static <T extends Activity, B extends ActivityBuilder<T, B>> ActivityBuilder<T, B> create() {
+        return new ActivityBuilder<T,B>();
     }
 
     public B withDuration(final String duration) {
