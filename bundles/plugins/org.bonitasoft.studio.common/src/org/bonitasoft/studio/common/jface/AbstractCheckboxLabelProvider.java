@@ -16,7 +16,6 @@
  */
 package org.bonitasoft.studio.common.jface;
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.StyledCellLabelProvider;
@@ -33,7 +32,6 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.TreeItem;
-import org.eclipse.swt.widgets.Widget;
 
 public abstract class AbstractCheckboxLabelProvider extends StyledCellLabelProvider implements ILabelProvider {
 
@@ -41,36 +39,11 @@ public abstract class AbstractCheckboxLabelProvider extends StyledCellLabelProvi
 
     protected static final String UNCHECK_KEY = "uncheckKey";// NON-NLS-1
 
-    protected static final String DISABLED_CHECKED_KEY = "checkedKeyDisabled";
+    protected static final String DISABLED_CHECKED_KEY = "checkedKeyDisabled";// NON-NLS-1
 
-    protected static final String DISABLED_UNCHECKED_KEY = "uncheckKeyDisabled";
+    protected static final String DISABLED_UNCHECKED_KEY = "uncheckKeyDisabled";// NON-NLS-1
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.jface.viewers.ILabelProvider#getImage(java.lang.Object)
-     */
-    @Override
-    public Image getImage(final Object element) {
-        if (isSelected(element)) {
-            if (isEnabled(element)) {
-                return getCheckboxImage(CHECKED_KEY);
-            } else {
-                return getCheckboxImage(DISABLED_CHECKED_KEY);
-            }
-
-        }
-        return isEnabled(element) ? getCheckboxImage(UNCHECK_KEY) : getCheckboxImage(DISABLED_UNCHECKED_KEY);
-    }
-
-    protected Image getCheckboxImage(final String key) {
-        final Image image = JFaceResources.getImage(key);
-        if (image == null) {
-            loadImages();
-        }
-        return JFaceResources.getImage(key);
-    }
-
-    protected void loadImages() {
+    public AbstractCheckboxLabelProvider() {
         if (JFaceResources.getImageRegistry().getDescriptor(UNCHECK_KEY) == null) {
             JFaceResources.getImageRegistry().put(UNCHECK_KEY,
                     makeShot(false, true));
@@ -87,6 +60,23 @@ public abstract class AbstractCheckboxLabelProvider extends StyledCellLabelProvi
             JFaceResources.getImageRegistry().put(DISABLED_UNCHECKED_KEY,
                     makeShot(false, false));
         }
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.jface.viewers.ILabelProvider#getImage(java.lang.Object)
+     */
+    @Override
+    public Image getImage(final Object element) {
+        if (isSelected(element)) {
+            if (isEnabled(element)) {
+                return JFaceResources.getImage(CHECKED_KEY);
+            } else {
+                return JFaceResources.getImage(DISABLED_CHECKED_KEY);
+            }
+
+        }
+        return isEnabled(element) ? JFaceResources.getImage(UNCHECK_KEY) : JFaceResources.getImage(DISABLED_UNCHECKED_KEY);
     }
 
     /*
@@ -149,30 +139,40 @@ public abstract class AbstractCheckboxLabelProvider extends StyledCellLabelProvi
 
     @Override
     protected void paint(final Event event, final Object element) {
-        super.paint(event, element);
-        final Image image = getImage(element);
-        if (image == null) {
-            return;
-        }
-        final Widget item = event.item;
-        Rectangle bounds = null;
-        if (item instanceof TreeItem) {
-            bounds = ((TreeItem) item).getBounds(event.index);
-        } else if (item instanceof TableItem) {
-            bounds = ((TableItem) item).getBounds(event.index);
-        }
-        final Rectangle imgBounds = image.getBounds();
-        bounds.width /= 2;
-        bounds.width -= imgBounds.width / 2;
-        bounds.height /= 2;
-        bounds.height -= imgBounds.height / 2;
 
-        final int x = bounds.width > 0 ? bounds.x + bounds.width : bounds.x;
-        int y = bounds.height > 0 ? bounds.y + bounds.height : bounds.y;
-        if (!Platform.OS_WIN32.equals(Platform.getOS())) {
-            y = y - 3;
+        final Image img = getImage(element);
+
+        if (img != null) {
+            Rectangle bounds;
+
+            if (event.item instanceof TableItem) {
+                bounds = ((TableItem) event.item).getBounds(event.index);
+            } else {
+                bounds = ((TreeItem) event.item).getBounds(event.index);
+            }
+
+            final Rectangle imgBounds = img.getBounds();
+            bounds.width /= 2;
+            bounds.width -= imgBounds.width / 2;
+            bounds.height /= 2;
+            bounds.height -= imgBounds.height / 2;
+
+            final int x = bounds.width > 0 ? bounds.x + bounds.width : bounds.x;
+            final int y = bounds.height > 0 ? bounds.y + bounds.height : bounds.y;
+
+            if (SWT.getPlatform().equals("carbon")) {
+                event.gc.drawImage(img, x + 2, y - 1);
+            } else {
+                event.gc.drawImage(img, x, y - 1);
+            }
+
         }
-        event.gc.drawImage(image, x, y);
+
+    }
+
+    @Override
+    protected void measure(final Event event, final Object element) {
+        event.height = getImage(element).getBounds().height;
     }
 
 }
