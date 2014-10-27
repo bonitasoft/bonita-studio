@@ -18,7 +18,6 @@
 package org.bonitasoft.studio.registration;
 
 import org.bonitasoft.studio.common.extension.IPostStartupContribution;
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.eclipse.swt.widgets.Display;
 
 public class RegistrationContribution implements IPostStartupContribution {
@@ -32,7 +31,6 @@ public class RegistrationContribution implements IPostStartupContribution {
      */
     @Override
     public void execute() {
-        BonitaStudioLog.error(new Exception("Trace execution"));
         Display.getDefault().syncExec(new Runnable() {
 
             @Override
