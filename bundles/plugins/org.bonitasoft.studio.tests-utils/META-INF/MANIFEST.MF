@@ -12,4 +12,5 @@ Export-Package: org.bonitasoft.studio.model.expression.assertions,
  org.bonitasoft.studio.model.process.assertions,
  org.bonitasoft.studio.model.process.builders
 Require-Bundle: assertj-core,
- org.bonitasoft.studio.model
+ org.bonitasoft.studio.model,
+ org.eclipse.swt
