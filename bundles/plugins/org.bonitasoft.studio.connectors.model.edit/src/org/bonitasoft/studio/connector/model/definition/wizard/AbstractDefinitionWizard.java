@@ -5,12 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -67,7 +67,7 @@ import org.eclipse.ui.ide.IDE;
 
 /**
  * @author Romain Bioteau
- * 
+ *
  */
 public abstract class AbstractDefinitionWizard extends ExtensibleWizard {
 
@@ -93,8 +93,8 @@ public abstract class AbstractDefinitionWizard extends ExtensibleWizard {
 
     private final AbstractDefinitionRepositoryStore<? extends IRepositoryFileStore> defStore;
 
-    public AbstractDefinitionWizard(String windowTitle, AbstractDefinitionRepositoryStore<? extends IRepositoryFileStore> defStore,
-            DefinitionResourceProvider messageProvider) {
+    public AbstractDefinitionWizard(final String windowTitle, final AbstractDefinitionRepositoryStore<? extends IRepositoryFileStore> defStore,
+            final DefinitionResourceProvider messageProvider) {
         Assert.isTrue(defStore instanceof IDefinitionRepositoryStore);
         setWindowTitle(windowTitle);
         setDefaultPageImageDescriptor(Pics.getWizban());
@@ -105,8 +105,8 @@ public abstract class AbstractDefinitionWizard extends ExtensibleWizard {
         messages = new Properties();
     }
 
-    public AbstractDefinitionWizard(String windowTitle, ConnectorDefinition definition,
-            AbstractDefinitionRepositoryStore<? extends IRepositoryFileStore> defStore, DefinitionResourceProvider messageProvider) {
+    public AbstractDefinitionWizard(final String windowTitle, final ConnectorDefinition definition,
+            final AbstractDefinitionRepositoryStore<? extends IRepositoryFileStore> defStore, final DefinitionResourceProvider messageProvider) {
         Assert.isTrue(defStore instanceof IDefinitionRepositoryStore);
         setWindowTitle(windowTitle);
         setDefaultPageImageDescriptor(Pics.getWizban());
@@ -123,8 +123,8 @@ public abstract class AbstractDefinitionWizard extends ExtensibleWizard {
     @Override
     public void addPages() {
         final List<ConnectorDefinition> existinfDefinitions = new ArrayList<ConnectorDefinition>();
-        for (ConnectorDefinition def : ((IDefinitionRepositoryStore) defStore).getDefinitions()) {
-            if (originalDefinition == null || (!(def.getId().equals(originalDefinition.getId()) && def.getVersion().equals(originalDefinition.getVersion())))) {
+        for (final ConnectorDefinition def : ((IDefinitionRepositoryStore) defStore).getDefinitions()) {
+            if (originalDefinition == null || !(def.getId().equals(originalDefinition.getId()) && def.getVersion().equals(originalDefinition.getVersion()))) {
                 existinfDefinitions.add(def);
             }
         }
@@ -154,24 +154,24 @@ public abstract class AbstractDefinitionWizard extends ExtensibleWizard {
      */
     @Override
     public boolean performFinish() {
-        Input faultyMandatoryInput = isDefinitionValid();
+        final Input faultyMandatoryInput = isDefinitionValid();
         if (faultyMandatoryInput != null) {
             MessageDialog.openError(Display.getCurrent().getActiveShell(), Messages.bind(Messages.inputMandatoryErrorTitle, faultyMandatoryInput.getName()),
                     Messages.bind(Messages.inputMandatoryError, faultyMandatoryInput.getName()));
             return false;
         } else {
-            String defId = NamingUtils.toConnectorDefinitionFilename(definitionWorkingCopy.getId(), definitionWorkingCopy.getVersion(), false);
-            String defFileName = defId + "." + DEF_EXT;
+            final String defId = NamingUtils.toConnectorDefinitionFilename(definitionWorkingCopy.getId(), definitionWorkingCopy.getVersion(), false);
+            final String defFileName = defId + "." + DEF_EXT;
 
             if (editMode) {
                 if (!editConnectorDefinition()) {
                     return false;
                 }
             }
-            File imageFile = infoPage.getIconImageFile();
+            final File imageFile = infoPage.getIconImageFile();
             if (imageFile != null) {
-                IFolder targetFoler = defStore.getResource();
-                IFile iconFile = targetFoler.getFile(definitionWorkingCopy.getIcon());
+                final IFolder targetFoler = defStore.getResource();
+                final IFile iconFile = targetFoler.getFile(definitionWorkingCopy.getIcon());
                 try {
                     if (iconFile.exists() && !iconFile.getLocation().toFile().getAbsolutePath().equals(imageFile.getAbsolutePath())) {
                         iconFile.delete(true, Repository.NULL_PROGRESS_MONITOR);
@@ -179,11 +179,11 @@ public abstract class AbstractDefinitionWizard extends ExtensibleWizard {
                     BufferedImage image = ImageIO.read(imageFile);
                     image = FileUtil.resizeImage(image, 16);
                     ImageIO.write(image, "PNG", iconFile.getLocation().toFile());
-                } catch (Exception ex) {
+                } catch (final Exception ex) {
                     BonitaStudioLog.error(ex);
                     try {
                         iconFile.delete(true, Repository.NULL_PROGRESS_MONITOR);
-                    } catch (CoreException e) {
+                    } catch (final CoreException e) {
                         BonitaStudioLog.error(e);
                     }
                 }
@@ -201,10 +201,10 @@ public abstract class AbstractDefinitionWizard extends ExtensibleWizard {
 
                 @Override
                 public void run() {
-                    for (IFile toOpen : filesToOpen) {
+                    for (final IFile toOpen : filesToOpen) {
                         try {
                             IDE.openEditor(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage(), toOpen);
-                        } catch (PartInitException e) {
+                        } catch (final PartInitException e) {
                             BonitaStudioLog.error(e);
                         }
                     }
@@ -219,7 +219,7 @@ public abstract class AbstractDefinitionWizard extends ExtensibleWizard {
         final IPreferenceStore preferenceStore = ConnectorEditPlugin.getPlugin().getPreferenceStore();
         boolean editAnyway = true;
         if (!preferenceStore.getBoolean(HIDE_CONNECTOR_DEFINITION_CHANGE_WARNING)) {
-            MessageDialogWithPrompt dialog = MessageDialogWithPrompt.openOkCancelConfirm(Display.getDefault().getActiveShell(),
+            final MessageDialogWithPrompt dialog = MessageDialogWithPrompt.openOkCancelConfirm(Display.getDefault().getActiveShell(),
                     Messages.confirmConnectorDefEditionTitle,
                     Messages.confirmConnectorDefEditionMsg,
                     Messages.doNotDisplayAgain,
@@ -234,29 +234,29 @@ public abstract class AbstractDefinitionWizard extends ExtensibleWizard {
             return false;
         }
 
-        String oldDefId = NamingUtils.toConnectorDefinitionFilename(originalDefinition.getId(), originalDefinition.getVersion(), false);
-        String defId = NamingUtils.toConnectorDefinitionFilename(definitionWorkingCopy.getId(), definitionWorkingCopy.getVersion(), false);
+        final String oldDefId = NamingUtils.toConnectorDefinitionFilename(originalDefinition.getId(), originalDefinition.getVersion(), false);
+        final String defId = NamingUtils.toConnectorDefinitionFilename(definitionWorkingCopy.getId(), definitionWorkingCopy.getVersion(), false);
         String oldFileName = oldDefId + "." + DEF_EXT;
-        String defFileName = defId + "." + DEF_EXT;
+        final String defFileName = defId + "." + DEF_EXT;
         if (!oldDefId.equals(defId)) {
-            String oldId = oldDefId + ".properties";
+            final String oldId = oldDefId + ".properties";
             try {
                 defStore.getResource().getFile(oldId).delete(true, Repository.NULL_PROGRESS_MONITOR);
-            } catch (CoreException e) {
+            } catch (final CoreException e) {
                 BonitaStudioLog.error(e);
             }
         }
-        Set<Locale> existingLocales = messageProvider.getExistingLocale(originalDefinition);
-        for (Locale l : existingLocales) {
+        final Set<Locale> existingLocales = messageProvider.getExistingLocale(originalDefinition);
+        for (final Locale l : existingLocales) {
             try {
-                for (IResource r : defStore.getResource().members()) {
+                for (final IResource r : defStore.getResource().members()) {
                     if (r.getFileExtension() != null && r.getFileExtension().equals("properties")) {
-                        String resourceName = r.getName();
+                        final String resourceName = r.getName();
 
                         if (!oldDefId.equals(defId)) {
-                            String oldLocaleFile = oldDefId + "_" + l.toString() + ".properties";
+                            final String oldLocaleFile = oldDefId + "_" + l.toString() + ".properties";
                             if (resourceName.equals(oldLocaleFile)) {
-                                String newLocaleFile = defId + "_" + l.toString() + ".properties";
+                                final String newLocaleFile = defId + "_" + l.toString() + ".properties";
                                 IPath tarhetPath = r.getFullPath().removeLastSegments(1);
                                 tarhetPath = tarhetPath.append(newLocaleFile);
                                 r.move(tarhetPath, true, Repository.NULL_PROGRESS_MONITOR);
@@ -264,7 +264,7 @@ public abstract class AbstractDefinitionWizard extends ExtensibleWizard {
                         }
                     }
                 }
-            } catch (CoreException e) {
+            } catch (final CoreException e) {
                 BonitaStudioLog.error(e);
             }
         }
@@ -275,7 +275,7 @@ public abstract class AbstractDefinitionWizard extends ExtensibleWizard {
                 oldDefFilseStore.delete();
             }
         } else if (oldDefFilseStore == null) {
-            ConnectorDefinition oldef = defStore.getDefinition(originalDefinition.getId(), originalDefinition.getVersion());
+            final ConnectorDefinition oldef = defStore.getDefinition(originalDefinition.getId(), originalDefinition.getVersion());
             oldFileName = URI.decode(oldef.eResource().getURI().lastSegment());
             oldDefFilseStore = defStore.getChild(oldFileName);
             if (oldDefFilseStore != null) {
@@ -287,7 +287,7 @@ public abstract class AbstractDefinitionWizard extends ExtensibleWizard {
 
     private void reloadCategories() {
         boolean reloadCategories = false;
-        for (Category c : definitionWorkingCopy.getCategory()) {
+        for (final Category c : definitionWorkingCopy.getCategory()) {
             if (!messageProvider.getAllCategories().contains(c)) {
                 reloadCategories = true;
                 break;
@@ -298,53 +298,53 @@ public abstract class AbstractDefinitionWizard extends ExtensibleWizard {
         }
     }
 
-    protected List<IFile> openPropertiesEditor(Set<Locale> selectedLocales) {
-        String defId = NamingUtils.toConnectorDefinitionFilename(definitionWorkingCopy.getId(), definitionWorkingCopy.getVersion(), false);
-        List<IFile> filesToOpen = new ArrayList<IFile>();
-        for (Locale l : selectedLocales) {
+    protected List<IFile> openPropertiesEditor(final Set<Locale> selectedLocales) {
+        final String defId = NamingUtils.toConnectorDefinitionFilename(definitionWorkingCopy.getId(), definitionWorkingCopy.getVersion(), false);
+        final List<IFile> filesToOpen = new ArrayList<IFile>();
+        for (final Locale l : selectedLocales) {
             try {
                 for (final IResource r : defStore.getResource().members()) {
                     if (r.getFileExtension() != null && r.getFileExtension().equals("properties")) {
-                        String resourceName = r.getName();
-                        String localFile = defId + "_" + l.toString() + ".properties";
+                        final String resourceName = r.getName();
+                        final String localFile = defId + "_" + l.toString() + ".properties";
                         if (resourceName.equals(localFile)) {
-                            Properties oldProperties = new Properties();
+                            final Properties oldProperties = new Properties();
                             try {
                                 oldProperties.load(((IFile) r).getContents());
-                                for (Object key : messages.keySet()) {
+                                for (final Object key : messages.keySet()) {
                                     if (oldProperties.get(key) == null) {
                                         oldProperties.put(key, messages.get(key));
                                     }
                                 }
-                                FileOutputStream fos = new FileOutputStream(r.getLocation().toFile());
+                                final FileOutputStream fos = new FileOutputStream(r.getLocation().toFile());
                                 oldProperties.store(fos, null);
                                 fos.close();
                                 r.refreshLocal(IResource.DEPTH_ZERO, Repository.NULL_PROGRESS_MONITOR);
                                 filesToOpen.add((IFile) r);
-                            } catch (IOException e) {
+                            } catch (final IOException e) {
                                 BonitaStudioLog.error(e);
                             }
 
                         }
                     }
                 }
-            } catch (CoreException e) {
+            } catch (final CoreException e) {
                 BonitaStudioLog.error(e);
             }
         }
 
-        Set<Locale> existingLocales = messageProvider.getExistingLocale(definitionWorkingCopy);
+        final Set<Locale> existingLocales = messageProvider.getExistingLocale(definitionWorkingCopy);
         selectedLocales.removeAll(existingLocales);
-        for (Locale l : selectedLocales) {
+        for (final Locale l : selectedLocales) {
             try {
-                String localFile = defId + "_" + l.toString() + ".properties";
+                final String localFile = defId + "_" + l.toString() + ".properties";
                 final IFile file = defStore.getResource().getFile(localFile);
-                FileOutputStream fos = new FileOutputStream(file.getLocation().toFile());
+                final FileOutputStream fos = new FileOutputStream(file.getLocation().toFile());
                 messages.store(fos, null);
                 fos.close();
                 file.refreshLocal(IResource.DEPTH_ZERO, Repository.NULL_PROGRESS_MONITOR);
                 filesToOpen.add(file);
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 BonitaStudioLog.error(e);
             }
         }
@@ -357,10 +357,10 @@ public abstract class AbstractDefinitionWizard extends ExtensibleWizard {
 
     private Input isDefinitionValid() {
         if (definitionWorkingCopy != null) {
-            for (Input input : definitionWorkingCopy.getInput()) {
+            for (final Input input : definitionWorkingCopy.getInput()) {
                 if (input.isMandatory() && (input.getDefaultValue() == null || input.getDefaultValue().isEmpty())) {
                     boolean isPageContainingInput = false;
-                    for (Page page : definitionWorkingCopy.getPage()) {
+                    for (final Page page : definitionWorkingCopy.getPage()) {
                         isPageContainingInput = isPageContainingInput || isPageContainingInput(input, page.getWidget());
                     }
                     if (!isPageContainingInput) {
@@ -373,10 +373,10 @@ public abstract class AbstractDefinitionWizard extends ExtensibleWizard {
         return null;
     }
 
-    private boolean isPageContainingInput(Input input, List<Component> components) {
-        for (Component component : components) {
+    private boolean isPageContainingInput(final Input input, final List<Component> components) {
+        for (final Component component : components) {
             if (component instanceof WidgetComponent) {
-                WidgetComponent widget = (WidgetComponent) component;
+                final WidgetComponent widget = (WidgetComponent) component;
                 if (widget.getInputName().equals(input.getName())) {
                     return true;
                 }

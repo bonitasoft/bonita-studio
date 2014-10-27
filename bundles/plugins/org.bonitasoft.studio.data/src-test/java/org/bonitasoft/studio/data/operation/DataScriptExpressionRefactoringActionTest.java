@@ -5,12 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -24,11 +24,10 @@ import java.util.List;
 import java.util.Map;
 
 import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.model.expression.ExpressionFactory;
-import org.bonitasoft.studio.model.parameter.Parameter;
-import org.bonitasoft.studio.model.parameter.ParameterFactory;
+import org.bonitasoft.studio.model.expression.builders.ExpressionBuilder;
+import org.bonitasoft.studio.model.parameter.builders.ParameterBuilder;
 import org.bonitasoft.studio.model.process.Data;
-import org.bonitasoft.studio.model.process.ProcessFactory;
+import org.bonitasoft.studio.model.process.builders.DataBuilder;
 import org.bonitasoft.studio.refactoring.core.RefactoringOperationType;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.ecore.EObject;
@@ -38,22 +37,21 @@ import org.junit.Test;
 
 /**
  * @author Romain Bioteau
- * 
+ *
  */
 public class DataScriptExpressionRefactoringActionTest {
 
     private DataScriptExpressionRefactoringAction refactoringAction;
-    
+
     private Data oldData;
-    
+
     /**
      * @throws java.lang.Exception
      */
     @Before
     public void setUp() throws Exception {
-    	List<DataRefactorPair> pairsToRefactor = new ArrayList<DataRefactorPair>();
-    	oldData = ProcessFactory.eINSTANCE.createData();
-    	oldData.setName("myData");
+    	final List<DataRefactorPair> pairsToRefactor = new ArrayList<DataRefactorPair>();
+        oldData = DataBuilder.create().withName("myData").build();
 		pairsToRefactor.add(new DataRefactorPair(oldData, oldData));
         refactoringAction = new DataScriptExpressionRefactoringAction(pairsToRefactor,
                 Collections.<Expression> emptyList(),
@@ -71,15 +69,11 @@ public class DataScriptExpressionRefactoringActionTest {
 
     @Test
     public void should_retrieve_data_in_expression_dependencies() throws Exception {
-        Expression expr = ExpressionFactory.eINSTANCE.createExpression();
-        Data createData = ProcessFactory.eINSTANCE.createData();
-        createData.setName("myData");
-        Parameter parameter = ParameterFactory.eINSTANCE.createParameter();
-        parameter.setName("myData");
-        expr.getReferencedElements().add(parameter);
-        expr.getReferencedElements().add(createData);
-        Map<EObject,EObject> eObject = refactoringAction.getReferencedObjectInScriptsOperation(expr);
+        final Data createData = DataBuilder.create().withName("myData").build();
+        final Expression expr = ExpressionBuilder.create().
+                havingReferencedElements(createData,
+                        ParameterBuilder.create().withName("myData").build()).build();
+        final Map<EObject,EObject> eObject = refactoringAction.getReferencedObjectInScriptsOperation(expr);
         assertThat(eObject).isNotEmpty().containsEntry(createData, oldData);
-
     }
 }

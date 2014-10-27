@@ -1,6 +1,6 @@
 package org.bonitasoft.studio.engine.export;
 
-import static org.fest.assertions.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 
 import java.util.Arrays;
@@ -21,7 +21,6 @@ import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.Document;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.eclipse.emf.ecore.EObject;
-import org.fest.assertions.Assertions;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -287,14 +286,14 @@ public class EngineExpressionUtilTest {
         final Document document = ProcessFactory.eINSTANCE.createDocument();
         document.setMultiple(true);
         final Expression expression= new DocumentReferenceExpressionProvider().createDocRefExpression(document);
-        assertThat(EngineExpressionUtil.toEngineExpressionType(expression)).isEqualTo(ExpressionConstants.DOCUMENT_LIST_TYPE);
+        assertThat(EngineExpressionUtil.toEngineExpressionType(expression)).isEqualTo(ExpressionType.TYPE_DOCUMENT_LIST);
     }
 
     @Test
     public void toEngineExpressionType_returnDocumentListForDocumentReferenceSimple() {
         final Document document = ProcessFactory.eINSTANCE.createDocument();
         final Expression expression = new DocumentReferenceExpressionProvider().createDocRefExpression(document);
-        assertThat(EngineExpressionUtil.toEngineExpressionType(expression)).isEqualTo(ExpressionConstants.CONSTANT_TYPE);
+        assertThat(EngineExpressionUtil.toEngineExpressionType(expression)).isEqualTo(ExpressionType.TYPE_CONSTANT);
     }
 
     @Test
@@ -306,7 +305,7 @@ public class EngineExpressionUtilTest {
         expressionWithDocumentList.setType(ExpressionConstants.DOCUMENT_LIST_TYPE);
         expressionWithDocumentList.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(document));
         final org.bonitasoft.engine.expression.Expression createdExpression = EngineExpressionUtil.createExpression(expressionWithDocumentList);
-        Assertions.assertThat(createdExpression.getExpressionType()).isEqualTo(ExpressionType.TYPE_DOCUMENT_LIST.name());
+        assertThat(createdExpression.getExpressionType()).isEqualTo(ExpressionType.TYPE_DOCUMENT_LIST.name());
     }
 
     @Test
@@ -317,7 +316,7 @@ public class EngineExpressionUtilTest {
         expressionWithDocumentSimple.setType(ExpressionConstants.DOCUMENT_TYPE);
         expressionWithDocumentSimple.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(document));
         final org.bonitasoft.engine.expression.Expression createdExpression = EngineExpressionUtil.createExpression(expressionWithDocumentSimple);
-        Assertions.assertThat(createdExpression.getExpressionType()).isEqualTo(ExpressionType.TYPE_DOCUMENT.name());
+        assertThat(createdExpression.getExpressionType()).isEqualTo(ExpressionType.TYPE_DOCUMENT.name());
     }
 
     @Test
@@ -328,8 +327,8 @@ public class EngineExpressionUtilTest {
         expressionWithDocumentList.setType(ExpressionConstants.DOCUMENT_REF_TYPE);
         expressionWithDocumentList.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(document));
         final org.bonitasoft.engine.expression.Expression createdExpression = EngineExpressionUtil.createExpression(expressionWithDocumentList);
-        Assertions.assertThat(createdExpression.getExpressionType()).isEqualTo(ExpressionType.TYPE_CONSTANT.name());
-        Assertions.assertThat(createdExpression.getReturnType()).isEqualTo(String.class.getName());
+        assertThat(createdExpression.getExpressionType()).isEqualTo(ExpressionType.TYPE_CONSTANT.name());
+        assertThat(createdExpression.getReturnType()).isEqualTo(String.class.getName());
     }
 
     @Test
@@ -341,8 +340,8 @@ public class EngineExpressionUtilTest {
         expressionWithDocumentList.setType(ExpressionConstants.DOCUMENT_REF_TYPE);
         expressionWithDocumentList.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(document));
         final org.bonitasoft.engine.expression.Expression createdExpression = EngineExpressionUtil.createExpression(expressionWithDocumentList);
-        Assertions.assertThat(createdExpression.getExpressionType()).isEqualTo(ExpressionType.TYPE_DOCUMENT_LIST.name());
-        Assertions.assertThat(createdExpression.getReturnType()).isEqualTo(List.class.getName());
+        assertThat(createdExpression.getExpressionType()).isEqualTo(ExpressionType.TYPE_DOCUMENT_LIST.name());
+        assertThat(createdExpression.getReturnType()).isEqualTo(List.class.getName());
     }
 
     @Test
@@ -355,8 +354,8 @@ public class EngineExpressionUtilTest {
         expression.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(document));
         final List<org.bonitasoft.engine.expression.Expression> dependenciesList = EngineExpressionUtil.createDependenciesList(expression);
 
-        Assertions.assertThat(dependenciesList.get(0).getExpressionType()).isEqualTo(ExpressionType.TYPE_DOCUMENT_LIST.name());
-        Assertions.assertThat(dependenciesList.get(0).getReturnType()).isEqualTo(List.class.getName());
+        assertThat(dependenciesList.get(0).getExpressionType()).isEqualTo(ExpressionType.TYPE_DOCUMENT_LIST.name());
+        assertThat(dependenciesList.get(0).getReturnType()).isEqualTo(List.class.getName());
     }
 
     @Test
@@ -368,6 +367,6 @@ public class EngineExpressionUtilTest {
         expression.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(document));
         final List<org.bonitasoft.engine.expression.Expression> dependenciesList = EngineExpressionUtil.createDependenciesList(expression);
 
-        Assertions.assertThat(dependenciesList.get(0).getExpressionType()).isEqualTo(ExpressionType.TYPE_DOCUMENT.name());
+        assertThat(dependenciesList.get(0).getExpressionType()).isEqualTo(ExpressionType.TYPE_DOCUMENT.name());
     }
 }

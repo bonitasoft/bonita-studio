@@ -36,7 +36,6 @@ class StorageViewerChangedListener implements ISelectionChangedListener {
         final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
         final Expression selectedExpression = (Expression) selection.getFirstElement();
         if (selectedExpression != null) {
-            operationViewer.getOperationReturnTypeValidator().setDataExpression(action.getLeftOperand());
             operationViewer.getActionExpression().validate();
             refreshOperatorLink();
             operationViewer.refreshActionExpressionTooltip(selectedExpression);

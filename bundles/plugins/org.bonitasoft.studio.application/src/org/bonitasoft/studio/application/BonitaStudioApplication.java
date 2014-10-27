@@ -1,17 +1,17 @@
 /**
  * Copyright (C) 2009 BonitaSoft S.A.
  * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -30,8 +30,8 @@ import org.eclipse.core.commands.operations.OperationHistoryFactory;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
-import org.eclipse.core.runtime.jobs.IJobChangeListener;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
 import org.eclipse.osgi.service.datalocation.Location;
@@ -55,7 +55,7 @@ public class BonitaStudioApplication implements IApplication {
 
 	}
 
-	public BonitaStudioApplication(Display display) {
+	public BonitaStudioApplication(final Display display) {
 		this.display = display;
 	}
 
@@ -63,15 +63,12 @@ public class BonitaStudioApplication implements IApplication {
 	 * @see org.eclipse.equinox.app.IApplication#start(org.eclipse.equinox.app.IApplicationContext)
 	 */
 	@Override
-	public Object start(IApplicationContext context) {
+	public Object start(final IApplicationContext context) {
 		//avoid the execution of AutoBuild job during startup
-		Job.getJobManager().addJobChangeListener(new IJobChangeListener() {
+        Job.getJobManager().addJobChangeListener(new JobChangeAdapter() {
 
 			@Override
-			public void sleeping(IJobChangeEvent event) {}
-
-			@Override
-			public void scheduled(IJobChangeEvent event) {
+			public void scheduled(final IJobChangeEvent event) {
 				if(event.getJob().belongsTo(ResourcesPlugin.FAMILY_AUTO_BUILD)){
 					if(!PlatformUI.isWorkbenchRunning()){
 						event.getJob().cancel();
@@ -79,17 +76,6 @@ public class BonitaStudioApplication implements IApplication {
 				}
 			}
 
-			@Override
-			public void running(IJobChangeEvent event) {	}
-
-			@Override
-			public void done(IJobChangeEvent event) {	}
-
-			@Override
-			public void awake(IJobChangeEvent event) {}
-
-			@Override
-			public void aboutToRun(IJobChangeEvent event) {}
 		});
 		START_TIME = System.currentTimeMillis() ;
 
@@ -101,7 +87,7 @@ public class BonitaStudioApplication implements IApplication {
 
 		OperationHistoryFactory.setOperationHistory(new BonitaOperationHistory());//set our custom operation factory
 		try {
-			int returnCode = PlatformUI.createAndRunWorkbench(display, new BonitaStudioWorkbenchAdvisor());
+			final int returnCode = PlatformUI.createAndRunWorkbench(display, new BonitaStudioWorkbenchAdvisor());
 			if (returnCode == PlatformUI.RETURN_RESTART) {
 				return IApplication.EXIT_RESTART;
 			}
@@ -114,22 +100,22 @@ public class BonitaStudioApplication implements IApplication {
 
 	public static void preStartupStudio() {
 
-		Location instanceLoc = Platform.getInstanceLocation();
+		final Location instanceLoc = Platform.getInstanceLocation();
 		//if workspace is set via -Data, can't reset it
 		if(!instanceLoc.isSet()){
-			String path2 = Platform.getInstallLocation().getURL().getFile()+ File.separator + PREFERENCES_FILE;
+			final String path2 = Platform.getInstallLocation().getURL().getFile()+ File.separator + PREFERENCES_FILE;
 			String lastUsedWs = null;//preferences.get(WS_ROOT, null);
-			File propertiesFile = new File(path2);
+			final File propertiesFile = new File(path2);
 			if(propertiesFile.exists()){
-				Properties properties = new Properties();
+				final Properties properties = new Properties();
 				try {
-					FileInputStream fis = new FileInputStream(propertiesFile) ;
+					final FileInputStream fis = new FileInputStream(propertiesFile) ;
 					properties.load(fis);
 					fis.close() ;
 					lastUsedWs = properties.getProperty(WS_ROOT);
-				} catch (FileNotFoundException e) {
+				} catch (final FileNotFoundException e) {
 					BonitaStudioLog.error(e);
-				} catch (IOException e) {
+				} catch (final IOException e) {
 					BonitaStudioLog.error(e);
 				}
 			}
@@ -137,16 +123,16 @@ public class BonitaStudioApplication implements IApplication {
 				// set the last used location and continue
 				try {
 					instanceLoc.set(new URL("file", null, lastUsedWs), true);
-				} catch (Exception e) {
+				} catch (final Exception e) {
 					BonitaStudioLog.error(e);
 				}
 			}
 			//no pref found use default ws location
 			if(!instanceLoc.isSet()){
-				String path = Platform.getInstallLocation().getURL().getPath() + "workspace";
+				final String path = Platform.getInstallLocation().getURL().getPath() + "workspace";
 				try {
 					instanceLoc.set(new URL("file", null, path), true);
-				} catch (Exception e) {
+				} catch (final Exception e) {
 					BonitaStudioLog.error(e);
 				}
 			}
