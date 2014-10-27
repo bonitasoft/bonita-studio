@@ -41,6 +41,7 @@ import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.PoolEditPart;
 import org.bonitasoft.studio.model.process.diagram.form.edit.parts.FormEditPart;
+import org.bonitasoft.studio.util.test.conditions.ShellIsActiveWithThreadSTacksOnFailure;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IStatus;
@@ -260,7 +261,7 @@ public class SWTBotTestUtil implements SWTBotConstants {
     }
 
     public static void waitUntilBonitaBPmShellIsActive(final SWTWorkbenchBot bot) {
-        bot.waitUntil(Conditions.shellIsActive("Bonita BPM"));
+        bot.waitUntil(new ShellIsActiveWithThreadSTacksOnFailure("Bonita BPM"));
     }
 
     /**
