@@ -10,18 +10,15 @@ import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenc
 import org.bonitasoft.studio.swtbot.framework.application.BotOpenDiagramDialog;
 import org.bonitasoft.studio.swtbot.framework.diagram.BotProcessDiagramPerspective;
 import org.bonitasoft.studio.swtbot.framework.widget.BotTreeWidget;
-import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-
 public class TestOpenDiagram extends SWTBotGefTestCase {
 
     private boolean askRename;
     private boolean disablePopup;
-
 
     @Override
     @After
@@ -41,14 +38,12 @@ public class TestOpenDiagram extends SWTBotGefTestCase {
         BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().setValue(BonitaPreferenceConstants.ASK_RENAME_ON_FIRST_SAVE, false);
     }
 
-
     @Test
-    public void testDeleteDiagramWhenEditorIsDirty(){
+    public void testDeleteDiagramWhenEditorIsDirty() {
         final BotApplicationWorkbenchWindow botApplicationWorkbenchWindow = new BotApplicationWorkbenchWindow(bot);
         final BotProcessDiagramPerspective botProcessDiagramPerspective = botApplicationWorkbenchWindow.createNewDiagram();
         botProcessDiagramPerspective.activeProcessDiagramEditor().selectDiagram();
         botProcessDiagramPerspective.getDiagramPropertiesPart().selectGeneralTab().selectDiagramTab().setName("OpenDiagramDelete1");
-
 
         // set editor dirty
         botProcessDiagramPerspective.activeProcessDiagramEditor().selectElement("Step1");
@@ -59,19 +54,13 @@ public class TestOpenDiagram extends SWTBotGefTestCase {
 
         assertThat(diagramList.getSWTBotWidget().hasItems()).overridingErrorMessage("Error: no item in the table of Open Diagram Shell").isTrue();
         final int nbItems = diagramList.getSWTBotWidget().rowCount();
-        final String diagramName = "OpenDiagramDelete1"+" (1.0)";
+        final String diagramName = "OpenDiagramDelete1" + " (1.0)";
         diagramList.select(diagramName);
         openDialog.delete();
 
         assertThat(diagramList.getSWTBotWidget().rowCount()).isEqualTo(nbItems - 1);
 
         openDialog.cancel();
-
-        for(final SWTBotEditor editor : bot.editors()){
-            assertThat(editor.getTitle().equals(diagramName)).overridingErrorMessage("Error: Editor " + diagramName + " should not be in the tree.").isFalse();
-        }
-
     }
-
 
 }

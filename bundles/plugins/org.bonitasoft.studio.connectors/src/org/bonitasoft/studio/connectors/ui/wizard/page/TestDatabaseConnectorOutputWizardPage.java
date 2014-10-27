@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.bonitasoft.studio.connectors.ui.wizard.page;
 
@@ -39,13 +39,13 @@ import org.eclipse.swt.widgets.Text;
  */
 public class TestDatabaseConnectorOutputWizardPage extends DatabaseConnectorOutputWizardPage implements DatabaseConnectorConstants, IValueChangeListener{
 
-	
+
 	private ExpressionViewer outputExpressionViewer;
 
 	public TestDatabaseConnectorOutputWizardPage(){
 		super();
 		setTitle(Messages.outputOperationsDefinitionTitle);
-		rightFilter =  new AvailableExpressionTypeFilter(new String[]{ 
+		rightFilter =  new AvailableExpressionTypeFilter(new String[]{
 				ExpressionConstants.CONNECTOR_OUTPUT_TYPE,
 				ExpressionConstants.SCRIPT_TYPE
 		}) ;
@@ -53,8 +53,8 @@ public class TestDatabaseConnectorOutputWizardPage extends DatabaseConnectorOutp
 
 
 	@Override
-	protected Composite createNRowsOneColumOuputControl(Composite parent,
-			EMFDataBindingContext context) {
+	protected Composite createNRowsOneColumOuputControl(final Composite parent,
+			final EMFDataBindingContext context) {
 		final Composite mainComposite = new Composite(parent, SWT.NONE) ;
 		mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
 		mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(20, 20).create());
@@ -81,8 +81,8 @@ public class TestDatabaseConnectorOutputWizardPage extends DatabaseConnectorOutp
 	}
 
 	@Override
-	protected Composite createNRowsNColsOuputControl(Composite parent,
-			EMFDataBindingContext context) {
+	protected Composite createNRowsNColsOuputControl(final Composite parent,
+			final EMFDataBindingContext context) {
 		final Composite mainComposite = new Composite(parent, SWT.NONE) ;
 		mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
 		mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(20, 20).create());
@@ -97,7 +97,7 @@ public class TestDatabaseConnectorOutputWizardPage extends DatabaseConnectorOutp
 
 		final Label expressionLabel = new Label(mainComposite, SWT.READ_ONLY);
 		expressionLabel.setText(Messages.connectorExpressionViewerLabel);
-		
+
 		final Text nRowsNColumnsColumnText = new Text(mainComposite,SWT.BORDER | SWT.READ_ONLY) ;
 		nRowsNColumnsColumnText.setLayoutData(GridDataFactory.fillDefaults().grab(true,false).create());
 		nRowsNColumnsColumnText.setText(singleModeOuputOperation.getRightOperand().getName());
@@ -110,7 +110,7 @@ public class TestDatabaseConnectorOutputWizardPage extends DatabaseConnectorOutp
 	}
 
 	@Override
-	protected void buildListOfOutputForOneRowNCols(ScrolledComposite scrolledComposite,EMFDataBindingContext context) {
+	protected void buildListOfOutputForOneRowNCols(final ScrolledComposite scrolledComposite,final EMFDataBindingContext context) {
 		if(scrolledComposite.getContent() != null){
 			scrolledComposite.getContent().dispose();
 			scrolledComposite.setContent(null);
@@ -119,14 +119,14 @@ public class TestDatabaseConnectorOutputWizardPage extends DatabaseConnectorOutp
 		oneRowNColsComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create()) ;
 		oneRowNColsComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(10, 10).create());
 
-		
+
 		final ConnectorConfiguration configuration = getConnector().getConfiguration();
 		final Expression scriptExpression = (Expression) getConnectorParameter(configuration, getInput(SCRIPT_KEY)).getExpression();
-		List<Operation> operations = getOuputOperationsFor(ONEROW_NCOL_RESULT_OUTPUT,scriptExpression);
-		for(Operation op : operations){
+		final List<Operation> operations = getOuputOperationsFor(ONEROW_NCOL_RESULT_OUTPUT,scriptExpression);
+		for(final Operation op : operations){
 			final Label expressionLabel = new Label(oneRowNColsComposite, SWT.READ_ONLY);
 			expressionLabel.setText(Messages.connectorExpressionViewerLabel);
-			
+
 			final Text columnText = new Text(oneRowNColsComposite,SWT.BORDER | SWT.READ_ONLY) ;
 			columnText.setLayoutData(GridDataFactory.fillDefaults().grab(true,false).create());
 			columnText.setText(op.getRightOperand().getName());
@@ -140,15 +140,15 @@ public class TestDatabaseConnectorOutputWizardPage extends DatabaseConnectorOutp
 
 
 	@Override
-	protected Composite createSingleOuputControl(Composite parent,
-			EMFDataBindingContext context) {
+	protected Composite createSingleOuputControl(final Composite parent,
+			final EMFDataBindingContext context) {
 		final Composite mainComposite = new Composite(parent, SWT.NONE) ;
 		mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
 		mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(20, 20).create());
 
 		final Label expressionLabel = new Label(mainComposite, SWT.READ_ONLY);
 		expressionLabel.setText(Messages.connectorExpressionViewerLabel);
-		
+
 		Operation singleModeOuputOperation = getOuputOperationFor(SINGLE_RESULT_OUTPUT);
 		if(singleModeOuputOperation == null){
 			singleModeOuputOperation = createDefaultOutput(SINGLE_RESULT_OUTPUT, getDefinition());
@@ -162,14 +162,14 @@ public class TestDatabaseConnectorOutputWizardPage extends DatabaseConnectorOutp
 	}
 
 	@Override
-	protected Composite createDefaultOuputControl(Composite parent,EMFDataBindingContext context){
+	protected Composite createDefaultOuputControl(final Composite parent,final EMFDataBindingContext context){
 		final Composite mainComposite = new Composite(parent, SWT.NONE) ;
 		mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
 		mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
 
 		final Label expressionLabel = new Label(mainComposite, SWT.READ_ONLY);
 		expressionLabel.setText(Messages.connectorExpressionViewerLabel);
-		
+
 		outputExpressionViewer = new ExpressionViewer(mainComposite, SWT.BORDER, ExpressionPackage.Literals.OPERATION__RIGHT_OPERAND);
 		outputExpressionViewer.getControl().setLayoutData( GridDataFactory.fillDefaults().grab(true, false).create());
 		outputExpressionViewer.addFilter(rightFilter);
@@ -177,13 +177,13 @@ public class TestDatabaseConnectorOutputWizardPage extends DatabaseConnectorOutp
 		outputExpressionViewer.setMessage(Messages.connectorExpressionViewerMessage, IStatus.INFO);
 		outputExpressionViewer.setExternalDataBindingContext(context);
 		outputExpressionViewer.setProposalsFiltering(false);
-		outputExpressionViewer.addExpressionValidator(ExpressionConstants.ALL_TYPES, new IExpressionValidator() {
+        outputExpressionViewer.addExpressionValidator(new IExpressionValidator() {
 
 			private Expression inputExpression;
 
 			@Override
-			public IStatus validate(Object value) {
-				Expression exp = (Expression) inputExpression;
+			public IStatus validate(final Object value) {
+				final Expression exp = inputExpression;
 				if(exp.getType().equals(ExpressionConstants.SCRIPT_TYPE) || exp.getType().equals(ExpressionConstants.CONNECTOR_OUTPUT_TYPE)) {
 					return ValidationStatus.ok();
 				}
@@ -191,21 +191,26 @@ public class TestDatabaseConnectorOutputWizardPage extends DatabaseConnectorOutp
 			}
 
 			@Override
-			public void setInputExpression(Expression inputExpression) {
+			public void setInputExpression(final Expression inputExpression) {
 				this.inputExpression = inputExpression;
 			}
 
 			@Override
-			public void setDomain(EditingDomain domain) {
+			public void setDomain(final EditingDomain domain) {
 
 			}
 
 			@Override
-			public void setContext(EObject context) {
+			public void setContext(final EObject context) {
 
 			}
+
+            @Override
+            public boolean isRelevantForExpressionType(final String type) {
+                return true;
+            }
 		});
-		Operation output = getOuputOperationFor(RESULTSET_OUTPUT);
+		final Operation output = getOuputOperationFor(RESULTSET_OUTPUT);
 		if(output != null){
 			outputExpressionViewer.setInput(output);
 			context.bindValue(ViewersObservables.observeSingleSelection(outputExpressionViewer), EMFObservables.observeValue(output, ExpressionPackage.Literals.OPERATION__RIGHT_OPERAND));
@@ -226,7 +231,7 @@ public class TestDatabaseConnectorOutputWizardPage extends DatabaseConnectorOutp
 		}
 		if(SINGLE.equals(outputType)){
 			updateSingleOutput();
-			String column = SQLQueryUtil.getSelectedColumn(scriptExpression);
+			final String column = SQLQueryUtil.getSelectedColumn(scriptExpression);
 			if(column != null){
 				singleColumnText.setText(column);
 			}
@@ -239,7 +244,7 @@ public class TestDatabaseConnectorOutputWizardPage extends DatabaseConnectorOutp
 			setDescription(Messages.oneRowDatabaseOutputDescription);
 		}else if(N_ROW.equals(outputType)){
 			updateNRowOutput();
-			String column = SQLQueryUtil.getSelectedColumn(scriptExpression);
+			final String column = SQLQueryUtil.getSelectedColumn(scriptExpression);
 			if(column != null){
 				nRowsOneColumnColumnText.setText(column);
 			}
@@ -251,7 +256,7 @@ public class TestDatabaseConnectorOutputWizardPage extends DatabaseConnectorOutp
 			setDescription(Messages.nRowsNColsDatabaseOutputDescription);
 		}else{
 			updateDefaultOutput();
-			Operation ouputOperationFor = getOuputOperationFor(RESULTSET_OUTPUT);
+			final Operation ouputOperationFor = getOuputOperationFor(RESULTSET_OUTPUT);
 			outputExpressionViewer.setInput(ouputOperationFor);
 			outputExpressionViewer.setSelection(new StructuredSelection(ouputOperationFor.getRightOperand()));
 			stackLayout.topControl = defaultOutputComposite ;

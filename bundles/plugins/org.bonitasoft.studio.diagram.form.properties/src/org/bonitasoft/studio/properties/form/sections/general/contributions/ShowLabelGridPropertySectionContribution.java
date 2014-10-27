@@ -53,7 +53,7 @@ import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 /**
  * @author Aurelien Pupier
  * @author Baptiste Mesta
- * 
+ *
  */
 public class ShowLabelGridPropertySectionContribution implements IExtensibleGridPropertySectionContribution {
 
@@ -63,14 +63,14 @@ public class ShowLabelGridPropertySectionContribution implements IExtensibleGrid
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.bonitasoft.studio.common.properties.
      * IExtensibleGridPropertySectionContribution
      * #createControl(org.eclipse.swt.widgets.Composite,
      * org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory,
      * org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection)
      */
-    public void createControl(Composite composite, TabbedPropertySheetWidgetFactory widgetFactory, ExtensibleGridPropertySection extensibleGridPropertySection) {
+    public void createControl(final Composite composite, final TabbedPropertySheetWidgetFactory widgetFactory, final ExtensibleGridPropertySection extensibleGridPropertySection) {
 
         composite.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, true, false));
         composite.setLayout(new GridLayout(3, false));
@@ -78,18 +78,18 @@ public class ShowLabelGridPropertySectionContribution implements IExtensibleGrid
             dataBindingContext.dispose();
         }
         dataBindingContext = new EMFDataBindingContext();
-		Button enableLabel = null;
+        Button enableLabel = null;
 
-		if (!(element instanceof FormButton)) {
-        /* Create the checkbox to hide/show the label */
-        enableLabel = widgetFactory.createButton(composite, "", SWT.CHECK); //$NON-NLS-1$
-        enableLabel.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false));
-        enableLabel.setToolTipText(Messages.GeneralSection_EnableLabel_tooltip);
-        dataBindingContext.bindValue(SWTObservables.observeSelection(enableLabel),
-                EMFEditObservables.observeValue(editingDomain, element, FormPackage.Literals.WIDGET__SHOW_DISPLAY_LABEL));
-		}
+        if (!(element instanceof FormButton)) {
+            /* Create the checkbox to hide/show the label */
+            enableLabel = widgetFactory.createButton(composite, "", SWT.CHECK); //$NON-NLS-1$
+            enableLabel.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false));
+            enableLabel.setToolTipText(Messages.GeneralSection_EnableLabel_tooltip);
+            dataBindingContext.bindValue(SWTObservables.observeSelection(enableLabel),
+                    EMFEditObservables.observeValue(editingDomain, element, FormPackage.Literals.WIDGET__SHOW_DISPLAY_LABEL));
+        }
 
-        ExpressionViewer displayLabelViewer = new ExpressionViewer(composite, SWT.BORDER, widgetFactory,editingDomain, FormPackage.Literals.WIDGET__DISPLAY_LABEL);
+        final ExpressionViewer displayLabelViewer = new ExpressionViewer(composite, SWT.BORDER, widgetFactory,editingDomain, FormPackage.Literals.WIDGET__DISPLAY_LABEL);
         displayLabelViewer.addFilter(new AvailableExpressionTypeFilter(new String[]{
                 ExpressionConstants.CONSTANT_TYPE,
                 ExpressionConstants.I18N_TYPE,
@@ -102,37 +102,35 @@ public class ShowLabelGridPropertySectionContribution implements IExtensibleGrid
             displayLabelExpression = ExpressionFactory.eINSTANCE.createExpression();
             editingDomain.getCommandStack().execute(SetCommand.create(editingDomain, element, FormPackage.Literals.WIDGET__DISPLAY_LABEL, displayLabelExpression));
         }
-		
-		// add validator on the show label field when it is a form button - expression can't be empty
-		if (element instanceof FormButton) {
-			displayLabelViewer.addExpressionValidator(ExpressionConstants.CONSTANT_TYPE, new ExpressionNotEmptyValidator());
-		}
-		
+
+        // add validator on the show label field when it is a form button - expression can't be empty
+        if (element instanceof FormButton) {
+            displayLabelViewer.addExpressionValidator(new ExpressionNotEmptyValidator());
+        }
+
         displayLabelViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(300, SWT.DEFAULT).create());
-        
+
         displayLabelViewer.setInput(element);
         dataBindingContext.bindValue(
-        		ViewerProperties.singleSelection().observe(displayLabelViewer),
-        		EMFEditProperties.value(editingDomain, FormPackage.Literals.WIDGET__DISPLAY_LABEL).observe(element));
+                ViewerProperties.singleSelection().observe(displayLabelViewer),
+                EMFEditProperties.value(editingDomain, FormPackage.Literals.WIDGET__DISPLAY_LABEL).observe(element));
 
         if (!(element instanceof FormButton)) {
 
             /* Create the chekbox to allow HTML for the label or not */
-            Button allowHtmlButton = widgetFactory.createButton(composite, Messages.GeneralSection_allowHTML, SWT.CHECK);
+            final Button allowHtmlButton = widgetFactory.createButton(composite, Messages.GeneralSection_allowHTML, SWT.CHECK);
             dataBindingContext.bindValue(SWTObservables.observeSelection(allowHtmlButton),
                     EMFEditObservables.observeValue(editingDomain, element, FormPackage.Literals.WIDGET__ALLOW_HTML_FOR_DISPLAY_LABEL));
             dataBindingContext.bindValue(SWTObservables.observeEnabled(allowHtmlButton), SWTObservables.observeSelection(enableLabel));
 
-        /* Enable/disable the combo for the text and the allow html */
-        dataBindingContext.bindValue(SWTObservables.observeEnabled(displayLabelViewer.getControl()), SWTObservables.observeSelection(enableLabel));
-        dataBindingContext.bindValue(SWTObservables.observeEnabled(displayLabelViewer.getTextControl()), SWTObservables.observeSelection(enableLabel));
-        dataBindingContext.bindValue(SWTObservables.observeEnabled(displayLabelViewer.getButtonControl()), SWTObservables.observeSelection(enableLabel));
+            /* Enable/disable the combo for the text and the allow html */
+            dataBindingContext.bindValue(SWTObservables.observeEnabled(displayLabelViewer.getControl()), SWTObservables.observeSelection(enableLabel));
+        }
     }
-	}
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.bonitasoft.studio.common.properties.
      * IExtensibleGridPropertySectionContribution#getLabel()
      */
@@ -142,18 +140,18 @@ public class ShowLabelGridPropertySectionContribution implements IExtensibleGrid
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.bonitasoft.studio.common.properties.
      * IExtensibleGridPropertySectionContribution
      * #isRelevantFor(org.eclipse.emf.ecore.EObject)
      */
-    public boolean isRelevantFor(EObject eObject) {
+    public boolean isRelevantFor(final EObject eObject) {
         return eObject instanceof Widget && !(eObject instanceof IFrameWidget) && !(eObject instanceof HiddenWidget) && !(eObject instanceof MessageInfo) && !(eObject instanceof HtmlWidget);
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.bonitasoft.studio.common.properties.
      * IExtensibleGridPropertySectionContribution#refresh()
      */
@@ -162,41 +160,41 @@ public class ShowLabelGridPropertySectionContribution implements IExtensibleGrid
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.bonitasoft.studio.common.properties.
      * IExtensibleGridPropertySectionContribution
      * #setEObject(org.eclipse.emf.ecore.EObject)
      */
-    public void setEObject(EObject object) {
+    public void setEObject(final EObject object) {
         element = (Widget) object;
 
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.bonitasoft.studio.common.properties.
      * IExtensibleGridPropertySectionContribution
      * #setEditingDomain(org.eclipse.emf.transaction.TransactionalEditingDomain)
      */
-    public void setEditingDomain(TransactionalEditingDomain editingDomain) {
+    public void setEditingDomain(final TransactionalEditingDomain editingDomain) {
         this.editingDomain = editingDomain;
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.bonitasoft.studio.common.properties.
      * IExtensibleGridPropertySectionContribution
      * #setSelection(org.eclipse.jface.viewers.ISelection)
      */
-    public void setSelection(ISelection selection) {
+    public void setSelection(final ISelection selection) {
         // NOTHING
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.bonitasoft.studio.common.properties.
      * IExtensibleGridPropertySectionContribution#dispose()
      */

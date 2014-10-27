@@ -1257,8 +1257,7 @@ public class ProcBuilder implements IProcBuilder {
 
 
     @Override
-    public void addEvent(String id, final String name, final Point location,final Dimension size, EventType eventType) throws ProcBuilderException {
-
+    public void addEvent(String id, final String name, final Point location, final Dimension size, EventType eventType) throws ProcBuilderException {
         id = NamingUtils.convertToId(id) ;
         Element createdElement = null ;
         if(eventType == EventType.TIMER_BOUNDARY
@@ -1290,7 +1289,6 @@ public class ProcBuilder implements IProcBuilder {
             final IElementType type = resolveEventType(eventType) ;
             createdElement = createShape(id,currentContainer,location,size,type);
         }
-
 
         commandStack.append(SetCommand.create(editingDomain, createdElement, ProcessPackage.eINSTANCE.getElement_Name(), name)) ;
 

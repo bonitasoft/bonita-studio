@@ -5,12 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -41,7 +41,7 @@ import org.eclipse.ui.progress.IProgressService;
 
 /**
  * @author Romain Bioteau
- * 
+ *
  */
 public class ActorNameEditingSupport extends EditingSupport {
 
@@ -49,7 +49,7 @@ public class ActorNameEditingSupport extends EditingSupport {
 
     private final CellEditorValidationStatusListener listener;
 
-    public ActorNameEditingSupport(ColumnViewer viewer, TransactionalEditingDomain transactionalEditingDomain, CellEditorValidationStatusListener listener) {
+    public ActorNameEditingSupport(final ColumnViewer viewer, final TransactionalEditingDomain transactionalEditingDomain, final CellEditorValidationStatusListener listener) {
         super(viewer);
         this.transactionalEditingDomain = transactionalEditingDomain;
         this.listener = listener;
@@ -60,7 +60,7 @@ public class ActorNameEditingSupport extends EditingSupport {
      * @see org.eclipse.jface.viewers.EditingSupport#canEdit(java.lang.Object)
      */
     @Override
-    protected boolean canEdit(Object element) {
+    protected boolean canEdit(final Object element) {
         return true;
     }
 
@@ -70,21 +70,21 @@ public class ActorNameEditingSupport extends EditingSupport {
      */
     @Override
     protected CellEditor getCellEditor(final Object element) {
-        TextCellEditor editor = new TextCellEditor((Composite) getViewer().getControl(), SWT.NONE);
+        final TextCellEditor editor = new TextCellEditor((Composite) getViewer().getControl(), SWT.NONE);
         editor.setValidator(new ICellEditorValidator() {
 
             @Override
-            public String isValid(Object value) {
-                String input = (String) value;
+            public String isValid(final Object value) {
+                final String input = (String) value;
                 if (input.isEmpty()) {
                     return Messages.nameIsEmpty;
                 }
                 if (input.length() > 50) {
                     return Messages.nameTooLong;
                 }
-                Actor actor = (Actor) element;
-                AbstractProcess process = ModelHelper.getParentProcess(actor);
-                for (Actor a : process.getActors()) {
+                final Actor actor = (Actor) element;
+                final AbstractProcess process = ModelHelper.getParentProcess(actor);
+                for (final Actor a : process.getActors()) {
                     if (!a.equals(actor)) {
                         if (a.getName().equals(input)) {
                             return Messages.nameAlreadyExists;
@@ -104,7 +104,7 @@ public class ActorNameEditingSupport extends EditingSupport {
      * @see org.eclipse.jface.viewers.EditingSupport#getValue(java.lang.Object)
      */
     @Override
-    protected Object getValue(Object element) {
+    protected Object getValue(final Object element) {
         if (element instanceof Actor) {
             return ((Actor) element).getName();
         }
@@ -116,31 +116,33 @@ public class ActorNameEditingSupport extends EditingSupport {
      * @see org.eclipse.jface.viewers.EditingSupport#setValue(java.lang.Object, java.lang.Object)
      */
     @Override
-    protected void setValue(Object element, Object value) {
+    protected void setValue(final Object element, final Object value) {
         if (element != null && value != null && transactionalEditingDomain != null) {
-            AbstractProcess process = ModelHelper.getParentProcess((EObject) element);
+            final AbstractProcess process = ModelHelper.getParentProcess((EObject) element);
             if (process != null) {
+                executeOperation(process, (String) value, element);
                 transactionalEditingDomain.getCommandStack().execute(
                         SetCommand.create(transactionalEditingDomain, element, ProcessPackage.Literals.ELEMENT__NAME, value));
-                executeOperation(process, (String) value, element);
-                getViewer().refresh();
+                if (!getViewer().getControl().isDisposed()) {
+                    getViewer().refresh();
+                }
             }
         }
     }
 
-    public void setTransactionalEditingDomain(TransactionalEditingDomain transactionalEditingDomain) {
+    public void setTransactionalEditingDomain(final TransactionalEditingDomain transactionalEditingDomain) {
         this.transactionalEditingDomain = transactionalEditingDomain;
     }
 
-    private void executeOperation(AbstractProcess process, String newValue, Object element) {
-        RefactorActorOperation operation = new RefactorActorOperation(process, (Actor) element, newValue);
+    private void executeOperation(final AbstractProcess process, final String newValue, final Object element) {
+        final RefactorActorOperation operation = new RefactorActorOperation(process, (Actor) element, newValue);
         operation.setEditingDomain(transactionalEditingDomain);
-        IProgressService service = PlatformUI.getWorkbench().getProgressService();
+        final IProgressService service = PlatformUI.getWorkbench().getProgressService();
         try {
             service.busyCursorWhile(operation);
-        } catch (InvocationTargetException e) {
+        } catch (final InvocationTargetException e) {
             BonitaStudioLog.error(e);
-        } catch (InterruptedException e) {
+        } catch (final InterruptedException e) {
             BonitaStudioLog.error(e);
         }
 

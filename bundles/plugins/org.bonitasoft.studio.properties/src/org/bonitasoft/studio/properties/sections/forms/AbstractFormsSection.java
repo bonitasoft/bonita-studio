@@ -132,7 +132,7 @@ public abstract class AbstractFormsSection extends AbstractBonitaDescriptionSect
     }
 
     /**
-     * 
+     *
      */
     protected Composite createPageFlowComposite(final Composite parent) {
         final Composite mainComposite = getWidgetFactory().createComposite(parent, SWT.NONE);
@@ -152,7 +152,7 @@ public abstract class AbstractFormsSection extends AbstractBonitaDescriptionSect
      * To be overriden when necessary
      * @param mainComposite
      * @override
-     * 
+     *
      */
     protected Composite createRadioButtons(final Composite mainComposite) {
         return null;
@@ -480,7 +480,7 @@ public abstract class AbstractFormsSection extends AbstractBonitaDescriptionSect
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.gmf.runtime.diagram.ui.properties.sections.
      * AbstractModelerPropertySection#setInput(org.eclipse.ui.IWorkbenchPart,
      * org.eclipse.jface.viewers.ISelection)
@@ -537,7 +537,7 @@ public abstract class AbstractFormsSection extends AbstractBonitaDescriptionSect
     }
 
     /**
-     * 
+     *
      */
     protected void hideAllContentComposite() {
         if (pageFlowComposite != null) {
@@ -547,7 +547,7 @@ public abstract class AbstractFormsSection extends AbstractBonitaDescriptionSect
     }
 
     /**
-     * 
+     *
      */
     protected void showOrHideComposite(final Composite target, final boolean visible) {
         target.setVisible(visible);
@@ -557,7 +557,7 @@ public abstract class AbstractFormsSection extends AbstractBonitaDescriptionSect
 
     @Override
     public void refresh() {
-        mainComposite.layout(true);
+        mainComposite.layout(true, true);
         super.refresh();
     }
 

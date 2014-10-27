@@ -18,6 +18,7 @@
 
 package org.bonitasoft.studio.properties.sections.general;
 
+import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionValidator;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.properties.i18n.Messages;
@@ -40,7 +41,7 @@ public class ExpressionNotEmptyValidator implements IExpressionValidator {
 	}
 
 	@Override
-	public IStatus validate(Object value) {
+	public IStatus validate(final Object value) {
 		if (value != null && value.toString().isEmpty()){
 			return ValidationStatus.error(Messages.expressionCantBeEmpty);
 		}
@@ -49,20 +50,25 @@ public class ExpressionNotEmptyValidator implements IExpressionValidator {
 	}
 
 	@Override
-	public void setInputExpression(Expression inputExpression) {
+	public void setInputExpression(final Expression inputExpression) {
 
 	}
 
 	@Override
-	public void setDomain(EditingDomain domain) {
+	public void setDomain(final EditingDomain domain) {
 
 
 	}
 
 	@Override
-	public void setContext(EObject context) {
+	public void setContext(final EObject context) {
 
 
 	}
+
+    @Override
+    public boolean isRelevantForExpressionType(final String type) {
+        return ExpressionConstants.CONSTANT_TYPE.equals(type);
+    }
 
 }
