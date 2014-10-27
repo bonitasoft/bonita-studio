@@ -69,17 +69,17 @@ public class ExportBosArchiveHandler extends AbstractHandler {
      * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
      */
     @Override
-    public Object execute(ExecutionEvent event) throws ExecutionException {
+    public Object execute(final ExecutionEvent event) throws ExecutionException {
         if(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().saveAllEditors(true)){
             Set<Object> selectedFiles = new HashSet<Object>() ;
-            MainProcess diagram = getDiagramInEditor();
+            final MainProcess diagram = getDiagramInEditor();
             if(diagram != null){
                 selectedFiles = getAllDiagramRelatedFiles(diagram);
             }else{
-                for(IRepositoryStore<? extends IRepositoryFileStore> store : RepositoryManager.getInstance().getCurrentRepository().getAllExportableStores()){
-                    List<? extends IRepositoryFileStore> files = store.getChildren() ;
+                for(final IRepositoryStore<? extends IRepositoryFileStore> store : RepositoryManager.getInstance().getCurrentRepository().getAllExportableStores()){
+                    final List<? extends IRepositoryFileStore> files = store.getChildren() ;
                     if( files != null){
-                        for(IRepositoryFileStore fStore : files){
+                        for(final IRepositoryFileStore fStore : files){
                             if(fStore != null){
                                 selectedFiles.add(fStore) ;
                             }
@@ -89,10 +89,11 @@ public class ExportBosArchiveHandler extends AbstractHandler {
             }
 
             final ExportRepositoryWizard wizard = new ExportRepositoryWizard(RepositoryManager.getInstance().getCurrentRepository().getAllExportableStores(),true,selectedFiles,getDefaultName(),Messages.ExportButtonLabel) ;
-            WizardDialog dialog = new WizardDialog(Display.getDefault().getActiveShell(),wizard){
+            final WizardDialog dialog = new WizardDialog(Display.getDefault().getActiveShell(),wizard){
+                @Override
                 protected void initializeBounds() {
                     super.initializeBounds();
-                    getShell().setSize(600, 500); 
+                    getShell().setSize(600, 500);
                 }
             };
             dialog.setTitle(Messages.ExportButtonLabel);
@@ -109,36 +110,36 @@ public class ExportBosArchiveHandler extends AbstractHandler {
         return NamingUtils.toDiagramFilename(diagram).replace(".proc", ".bos");
     }
 
-    public Set<Object> getAllDiagramRelatedFiles(MainProcess diagram) {
+    public static Set<Object> getAllDiagramRelatedFiles(final MainProcess diagram) {
         final Set<Object> result = new HashSet<Object>() ;
         final List<Pool> processes =  ModelHelper.getAllItemsOfType(diagram, ProcessPackage.Literals.POOL) ;
         final List<IBOSArchiveFileStoreProvider> fileStoreProvider = getFileStoreProviders() ;
 
-        for(Pool p : processes){
-            Configuration conf = getConfiguration(p, ConfigurationPreferenceConstants.LOCAL_CONFIGURAITON) ;
-            for(IBOSArchiveFileStoreProvider provider : fileStoreProvider){
+        for(final Pool p : processes){
+            final Configuration conf = getConfiguration(p, ConfigurationPreferenceConstants.LOCAL_CONFIGURAITON) ;
+            for(final IBOSArchiveFileStoreProvider provider : fileStoreProvider){
                 result.addAll(provider.getFileStoreForConfiguration(p, conf)) ;
-                for(Configuration config : p.getConfigurations()){
+                for(final Configuration config : p.getConfigurations()){
                     result.addAll(provider.getFileStoreForConfiguration(p, config)) ;
                 }
             }
         }
 
         if(processes.isEmpty()){
-            DiagramRepositoryStore dStore = (DiagramRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
+            final DiagramRepositoryStore dStore = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
             result.add(dStore.getDiagram(diagram.getName(), diagram.getVersion()));
         }
 
         return result;
     }
 
-    private List<IBOSArchiveFileStoreProvider> getFileStoreProviders() {
-        List<IBOSArchiveFileStoreProvider> res = new ArrayList<IBOSArchiveFileStoreProvider>();
-        IConfigurationElement[] extensions = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(BOS_ARCHIVE_PROVIDERS_EXTENSION_POINT);
-        for (IConfigurationElement extension : extensions) {
+    private static List<IBOSArchiveFileStoreProvider> getFileStoreProviders() {
+        final List<IBOSArchiveFileStoreProvider> res = new ArrayList<IBOSArchiveFileStoreProvider>();
+        final IConfigurationElement[] extensions = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(BOS_ARCHIVE_PROVIDERS_EXTENSION_POINT);
+        for (final IConfigurationElement extension : extensions) {
             try {
                 res.add((IBOSArchiveFileStoreProvider)extension.createExecutableExtension("providerClass"));
-            } catch (Exception ex) {
+            } catch (final Exception ex) {
                 BonitaStudioLog.error(ex);
             }
         }
@@ -149,35 +150,35 @@ public class ExportBosArchiveHandler extends AbstractHandler {
         if( PlatformUI.getWorkbench().getWorkbenchWindows() == null ||  PlatformUI.getWorkbench().getWorkbenchWindows().length == 0){
             return null ;
         }
-        IEditorPart editor = PlatformUI.getWorkbench().getWorkbenchWindows()[0].getActivePage().getActiveEditor() ;
-        boolean isADiagram = editor != null && editor instanceof DiagramEditor;
+        final IEditorPart editor = PlatformUI.getWorkbench().getWorkbenchWindows()[0].getActivePage().getActiveEditor() ;
+        final boolean isADiagram = editor != null && editor instanceof DiagramEditor;
         if(isADiagram){
-            EObject root = ((DiagramEditor)editor).getDiagramEditPart().resolveSemanticElement() ;
-            MainProcess mainProc = ModelHelper.getMainProcess(root) ;
+            final EObject root = ((DiagramEditor)editor).getDiagramEditPart().resolveSemanticElement() ;
+            final MainProcess mainProc = ModelHelper.getMainProcess(root) ;
             return mainProc ;
         }
 
         return null;
     }
 
-    public Configuration getConfiguration(final AbstractProcess process,String configurationId) {
+    public static Configuration getConfiguration(final AbstractProcess process, String configurationId) {
         Configuration configuration = null ;
-        final ProcessConfigurationRepositoryStore processConfStore = (ProcessConfigurationRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ProcessConfigurationRepositoryStore.class) ;
+        final ProcessConfigurationRepositoryStore processConfStore = RepositoryManager.getInstance().getRepositoryStore(ProcessConfigurationRepositoryStore.class) ;
         if(configurationId == null){
             configurationId = ConfigurationPlugin.getDefault().getPreferenceStore().getString(ConfigurationPreferenceConstants.DEFAULT_CONFIGURATION) ;
         }
         if(configurationId.equals(ConfigurationPreferenceConstants.LOCAL_CONFIGURAITON)){
-            String id = ModelHelper.getEObjectID(process) ;
+            final String id = ModelHelper.getEObjectID(process) ;
             IRepositoryFileStore file = processConfStore.getChild(id+".conf") ;
             if(file == null){
                 file = processConfStore.createRepositoryFileStore(id+".conf") ;
-                Configuration conf = ConfigurationFactory.eINSTANCE.createConfiguration();
+                final Configuration conf = ConfigurationFactory.eINSTANCE.createConfiguration();
                 conf.setVersion(ModelVersion.CURRENT_VERSION);
                 file.save(conf);
             }
             configuration = (Configuration) file.getContent();
         }else{
-            for(Configuration conf : process.getConfigurations()){
+            for(final Configuration conf : process.getConfigurations()){
                 if(configurationId.equals(conf.getName())){
                     configuration = conf ;
                 }
