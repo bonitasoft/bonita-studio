@@ -11,7 +11,7 @@
 	<properties>
 		<!--forceContextQualifier -->
 		<tychoVersion>0.21.0</tychoVersion>
-		<tychoExtrasVersion>0.21.0</tychoExtrasVersion>
+		<tychoExtrasVersion>0.20.0</tychoExtrasVersion>
 		<os-jvm-flags></os-jvm-flags>
 		<bundle.version>6.4.0-SNAPSHOT</bundle.version>
 		<engine.version>6.4.0-SNAPSHOT</engine.version>
