@@ -36,39 +36,31 @@ import org.eclipse.core.runtime.Status;
  * @author Romain Bioteau
  *
  */
-public class OrganizationUserValidator implements IValidator {
-
-
+public class OrganizationValidator implements IValidator {
 
     /* (non-Javadoc)
      * @see org.eclipse.core.databinding.validation.IValidator#validate(java.lang.Object)
      */
     @Override
-    public IStatus validate(Object input) {
+    public IStatus validate(final Object input) {
         final Organization organization = (Organization) input;
-        for(User u : organization.getUsers().getUser()){
+        for(final User u : organization.getUsers().getUser()){
             if(u.getUserName() == null || u.getUserName().isEmpty()){
                 return ValidationStatus.error(Messages.userNameMissing);
             }
             if(u.getPassword() == null || u.getPassword().getValue() == null || u.getPassword().getValue().isEmpty()){
                 return ValidationStatus.error(Messages.bind(Messages.userPasswordMissing,u.getUserName()));
             }
-//            if(u.getFirstName() == null || u.getFirstName().isEmpty()){
-//                return ValidationStatus.error(Messages.bind(Messages.userFirstNameMissing,u.getUserName()));
-//            }
-//            if(u.getLastName() == null || u.getLastName().isEmpty()){
-//                return ValidationStatus.error(Messages.bind(Messages.userLastNameMissing,u.getUserName()));
-//            }
 
             if(u.getManager() != null && !u.getManager().isEmpty()){
-                IStatus status = checkManagerCycles(organization,u);
+                final IStatus status = checkManagerCycles(organization,u);
                 if(!status.isOK()){
                     return status;
                 }
             }
 
             boolean membershipFound = false;
-            for(Membership membership : organization.getMemberships().getMembership()){
+            for(final Membership membership : organization.getMemberships().getMembership()){
                 final String userName = membership.getUserName() ;
                 if(userName != null){
                     if(userName.equals(u.getUserName())){
@@ -84,7 +76,7 @@ public class OrganizationUserValidator implements IValidator {
                         }else{
                             groupPath = parentPath + GroupContentProvider.GROUP_SEPARATOR + groupName ;
                         }
-                        IStatus groupStatus = validateGroupExists(organization,groupPath,membership) ;
+                        final IStatus groupStatus = validateGroupExists(organization,groupPath,membership) ;
                         if(groupStatus.getSeverity() != IStatus.OK){
                             return groupStatus ;
                         }
@@ -93,7 +85,7 @@ public class OrganizationUserValidator implements IValidator {
                         if(roleName == null){
                             return ValidationStatus.error(Messages.bind(Messages.missingRole,u.getUserName()));
                         }
-                        IStatus roleStatus = validateRoleExists(organization,roleName,membership) ;
+                        final IStatus roleStatus = validateRoleExists(organization,roleName,membership) ;
                         if(roleStatus.getSeverity() != IStatus.OK){
                             return roleStatus ;
                         }
@@ -104,12 +96,17 @@ public class OrganizationUserValidator implements IValidator {
                 return ValidationStatus.error(Messages.bind(Messages.missingMembershipForUser,u.getUserName()));
             }
         }
+        for (final Group group : organization.getGroups().getGroup()) {
+            if (!group.getDisplayName().isEmpty() && group.getDisplayName().length() > 75) {
+                return ValidationStatus.error(Messages.bind(Messages.groupDisplayLengthTooLong, group.getDisplayName()));
+            }
+        }
         return ValidationStatus.ok() ;
     }
 
-    private IStatus checkManagerCycles(Organization organization,User u) {
+    private IStatus checkManagerCycles(final Organization organization,final User u) {
         String managerUsername = u.getManager();
-        List<String> managers = new ArrayList<String>();
+        final List<String> managers = new ArrayList<String>();
         managers.add(u.getUserName());
         managers.add(managerUsername);
         while (managerUsername != null ) {
@@ -127,8 +124,8 @@ public class OrganizationUserValidator implements IValidator {
         return ValidationStatus.ok();
     }
 
-    private String getManagerOf(Organization organization,String managerUsername) {
-        for(User u : organization.getUsers().getUser()){
+    private String getManagerOf(final Organization organization,final String managerUsername) {
+        for(final User u : organization.getUsers().getUser()){
             if(managerUsername.equals(u.getUserName())){
                 return u.getManager();
             }
@@ -136,8 +133,8 @@ public class OrganizationUserValidator implements IValidator {
         return null;
     }
 
-    private IStatus validateRoleExists(Organization organization,String roleName, Membership membership) {
-        for(Role role : organization.getRoles().getRole()){
+    private IStatus validateRoleExists(final Organization organization,final String roleName, final Membership membership) {
+        for(final Role role : organization.getRoles().getRole()){
             if(role.getName().equals(roleName)){
                 return ValidationStatus.ok() ;
             }
@@ -145,8 +142,8 @@ public class OrganizationUserValidator implements IValidator {
         return ValidationStatus.error(Messages.bind(Messages.missingRoleInMembership,roleName,membership.getUserName()));
     }
 
-    private IStatus validateGroupExists(Organization organization,String groupPath, Membership membership) {
-        for(Group group : organization.getGroups().getGroup()){
+    private IStatus validateGroupExists(final Organization organization,final String groupPath, final Membership membership) {
+        for(final Group group : organization.getGroups().getGroup()){
             if(GroupContentProvider.getGroupPath(group).equals(groupPath)){
                 return ValidationStatus.ok() ;
             }

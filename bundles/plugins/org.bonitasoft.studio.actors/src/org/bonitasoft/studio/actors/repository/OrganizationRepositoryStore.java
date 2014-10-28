@@ -36,7 +36,6 @@ import org.bonitasoft.studio.actors.model.organization.util.OrganizationAdapterF
 import org.bonitasoft.studio.actors.model.organization.util.OrganizationResourceFactoryImpl;
 import org.bonitasoft.studio.actors.model.organization.util.OrganizationResourceImpl;
 import org.bonitasoft.studio.actors.model.organization.util.OrganizationXMLProcessor;
-import org.bonitasoft.studio.actors.ui.wizard.page.OrganizationUserValidator;
 import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
@@ -46,7 +45,6 @@ import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.store.AbstractEMFRepositoryStore;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -133,13 +131,13 @@ public class OrganizationRepositoryStore extends AbstractEMFRepositoryStore<Orga
                 final Organization orga = fileStore.getContent() ;
                 if(orga != null && (orga.getName() == null || orga.getName().isEmpty())){
                     orga.setName(newFileName.substring(0,newFileName.length()-ORGANIZATION_EXT.length() - 1)) ;
-                    final IStatus status = new OrganizationUserValidator().validate(orga);
-                    if(status.isOK()){
+                    //  final IStatus status = new OrganizationValidator().validate(orga);
+                    //if(status.isOK()){
                         fileStore.save(orga) ;
-                    }else{
-                        fileStore.delete();
-                        throw new CancellationException(status.getMessage());
-                    }
+                    //}else{
+                    //                        fileStore.delete();
+                    //                        throw new CancellationException(status.getMessage());
+                    //                    }
                 }
 
             }
