@@ -201,6 +201,8 @@ protected void configureGraphicalViewer() {
 	«REM»default size for palette«ENDREM»
 	«EXPAND defaultPaletteSize»
 	
+	«EXPAND setReadOnly»
+	
 /**
  * @generated BonitaSoft
  */
@@ -685,6 +687,15 @@ TODO: get it fixed in GMF-Runtime«ENDREM»
 		return root;
 	}
 
+«ENDDEFINE»
+
+«DEFINE setReadOnly FOR gmfgen::GenEditorView-»
+	/**
+	 *  @generated Bonitasoft
+	 */
+	public void setReadOnly(final boolean isReadOnly) {
+      	  enableSanityChecking(!isReadOnly);
+    }
 «ENDDEFINE»
 
 «AROUND getEditingDomain FOR gmfgen::GenEditorView»

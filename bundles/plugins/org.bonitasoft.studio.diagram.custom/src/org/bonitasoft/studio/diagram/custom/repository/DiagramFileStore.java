@@ -238,7 +238,7 @@ public class DiagramFileStore extends EMFFileStore implements IRepositoryFileSto
 
     @Override
     protected IWorkbenchPart doOpen() {
-    	final IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+        final IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
         closeEditorIfAlreadyOpened(activePage);
         IEditorPart part = null;
         try {
@@ -250,6 +250,9 @@ public class DiagramFileStore extends EMFFileStore implements IRepositoryFileSto
                 diagram.eAdapters().add(new PoolNotificationListener());
                 if(isReadOnly()){
                     editor.getDiagramEditPart().disableEditMode() ;
+                    if (editor instanceof ProcessDiagramEditor) {
+                        ((ProcessDiagramEditor) editor).setReadOnly(true);
+                    }
                     Display.getDefault().syncExec(new Runnable() {
 
                         @Override
@@ -274,20 +277,20 @@ public class DiagramFileStore extends EMFFileStore implements IRepositoryFileSto
         return part ;
     }
 
-	private void handleMigrationReportIfPresent(final IWorkbenchPage activePage)
-			throws PartInitException {
-		if(hasMigrationReport()){
-		    activePage.showView("org.bonitasoft.studio.migration.view");
-		} else {
-		    final IViewPart migrationView = activePage.findView("org.bonitasoft.studio.migration.view");
-		    if(migrationView != null){
-		        PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().hideView(migrationView);
-		    }
-		}
-	}
+    private void handleMigrationReportIfPresent(final IWorkbenchPage activePage)
+            throws PartInitException {
+        if(hasMigrationReport()){
+            activePage.showView("org.bonitasoft.studio.migration.view");
+        } else {
+            final IViewPart migrationView = activePage.findView("org.bonitasoft.studio.migration.view");
+            if(migrationView != null){
+                PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().hideView(migrationView);
+            }
+        }
+    }
 
-	private void closeEditorIfAlreadyOpened(final IWorkbenchPage activePage) {
-		final MainProcess newProcess = getContent() ;
+    private void closeEditorIfAlreadyOpened(final IWorkbenchPage activePage) {
+        final MainProcess newProcess = getContent() ;
         for (final IEditorReference editor : activePage.getEditorReferences()) {
             final IEditorPart simpleEditor = editor.getEditor(true);
             if (simpleEditor instanceof DiagramEditor) {
@@ -312,7 +315,7 @@ public class DiagramFileStore extends EMFFileStore implements IRepositoryFileSto
                 }
             }
         }
-	}
+    }
 
     @Override
     protected void doClose() {
