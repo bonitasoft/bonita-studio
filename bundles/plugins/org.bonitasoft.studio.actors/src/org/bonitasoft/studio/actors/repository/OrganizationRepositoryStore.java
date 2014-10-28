@@ -25,7 +25,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.CancellationException;
 
 import org.bonitasoft.studio.actors.ActorsPlugin;
 import org.bonitasoft.studio.actors.i18n.Messages;
@@ -131,20 +130,10 @@ public class OrganizationRepositoryStore extends AbstractEMFRepositoryStore<Orga
                 final Organization orga = fileStore.getContent() ;
                 if(orga != null && (orga.getName() == null || orga.getName().isEmpty())){
                     orga.setName(newFileName.substring(0,newFileName.length()-ORGANIZATION_EXT.length() - 1)) ;
-                    //  final IStatus status = new OrganizationValidator().validate(orga);
-                    //if(status.isOK()){
-                        fileStore.save(orga) ;
-                    //}else{
-                    //                        fileStore.delete();
-                    //                        throw new CancellationException(status.getMessage());
-                    //                    }
+                    fileStore.save(orga);
                 }
-
             }
         }catch(final Exception e){
-            if(e instanceof CancellationException){
-                throw (CancellationException)e;
-            }
             BonitaStudioLog.error(e) ;
             return null;
         }

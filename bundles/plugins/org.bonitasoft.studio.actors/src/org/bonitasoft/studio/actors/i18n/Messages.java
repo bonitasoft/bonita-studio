@@ -280,6 +280,8 @@ public class Messages extends NLS {
     public static String customUserInfoValueLimitSize;
     public static String userNameIsEmpty;
     public static String groupDisplayLengthTooLong;
+    public static String importOrganizationWithWarningTitle;
+    public static String importOrganizationWithWarningMessage;
 
 
 }
