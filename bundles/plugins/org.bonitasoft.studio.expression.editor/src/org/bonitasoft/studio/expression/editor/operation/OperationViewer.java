@@ -145,7 +145,7 @@ public class OperationViewer extends Composite implements IBonitaVariableContext
             actionExpression.validate();
         }
     }
-    
+
     public void refreshDatabinding() {
         final Operation action = getOperation();
         if (action != null) {
@@ -169,15 +169,18 @@ public class OperationViewer extends Composite implements IBonitaVariableContext
 
     private void bindOperator() {
         final UpdateValueStrategy uvsOperator = new UpdateValueStrategy();
-        uvsOperator.setConverter(new OperatorTypeToStringLinkConverter());
-
+        uvsOperator.setConverter(new OperatorTypeToStringLinkConverter(EMFEditObservables.observeValue(getEditingDomain(), getOperation(),
+                ExpressionPackage.Literals.OPERATION__OPERATOR)));
+        final IObservableValue operatorExpressionObserveValue = EMFEditObservables.observeValue(getEditingDomain(), getOperation().getOperator(),
+                ExpressionPackage.Literals.OPERATOR__EXPRESSION);
         final IObservableValue operatorObservedValue = EMFEditObservables.observeValue(getEditingDomain(), getOperation().getOperator(),
                 ExpressionPackage.Literals.OPERATOR__TYPE);
         operatorObservedValue.addChangeListener(new RevalidateActionExpressionChangeListener());
-        context.bindValue(SWTObservables.observeText(getOperatorLink()), operatorObservedValue, null, uvsOperator);
 
+        context.bindValue(SWTObservables.observeText(getOperatorLink()), operatorObservedValue, null, uvsOperator);
+        context.bindValue(SWTObservables.observeText(getOperatorLink()), operatorExpressionObserveValue, null, uvsOperator);
         context.bindValue(SWTObservables.observeTooltipText(getOperatorLink()),
-                EMFEditObservables.observeValue(getEditingDomain(), getOperation().getOperator(), ExpressionPackage.Literals.OPERATOR__EXPRESSION));
+                operatorExpressionObserveValue);
     }
 
     private void bindStorageViewer(final Operation action) {
