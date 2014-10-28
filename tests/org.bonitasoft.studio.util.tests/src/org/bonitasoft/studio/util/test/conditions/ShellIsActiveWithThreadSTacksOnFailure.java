@@ -48,6 +48,11 @@ public class ShellIsActiveWithThreadSTacksOnFailure extends DefaultCondition {
             dump.append("\n\n");
         }
 
+        dump.append("\nAvailablable shells:\n");
+        for (final SWTBotShell shell : bot.shells()) {
+            dump.append(shell.getText()).append("\n");
+        }
+
         return "The shell '" + text + "' did not activate.\n" //$NON-NLS-1$ //$NON-NLS-2$
                 + dump.toString();
 	}
