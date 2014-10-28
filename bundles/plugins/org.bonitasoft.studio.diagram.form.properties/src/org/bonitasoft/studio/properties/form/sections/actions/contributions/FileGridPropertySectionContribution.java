@@ -121,10 +121,9 @@ public class FileGridPropertySectionContribution implements IExtensibleGridPrope
 		radioComposite.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL,SWT.CENTER).grab(true, false).span(3, 1).create());
 		radioComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(col).margins(0, 0).create()) ;
 
-		final FileWidgetInputType initialInputType = createUseDocumentButton(
+        final FileWidgetInputType initialInputType = element.getInputType();
+        createUseDocumentButton(
 				widgetFactory, radioComposite);
-
-		//createURLButton(widgetFactory, radioComposite);
 
 		createUseResourceButton(radioComposite);
 
@@ -138,11 +137,9 @@ public class FileGridPropertySectionContribution implements IExtensibleGridPrope
         initialValueSection.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).create());
         initialValueSection.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
-		if(initialInputType == FileWidgetInputType.DOCUMENT){
+        if (initialInputType == FileWidgetInputType.DOCUMENT) {
 			initialValueSection.setClient(createInputExpressionComposite(initialValueSection, widgetFactory));
-		/*}else if(initialInputType == FileWidgetInputType.URL){
-			initialValueSection.setClient(createInputExpressionComposite(initialValueSection, widgetFactory));*/
-		}else if(initialInputType == FileWidgetInputType.RESOURCE){
+        } else if (initialInputType == FileWidgetInputType.RESOURCE) {
 			if(element.isDuplicate()){
 				initialValueSection.setClient(createMultipleResourceComposite(initialValueSection, widgetFactory));
 			}else{
@@ -151,20 +148,13 @@ public class FileGridPropertySectionContribution implements IExtensibleGridPrope
 		}
 		bindFields();
 
-		if(initialInputType == FileWidgetInputType.DOCUMENT){
+        if (initialInputType == FileWidgetInputType.DOCUMENT) {
 			useDocumentButton.setSelection(true);
 			useDocumentButton.notifyListeners(SWT.Selection, new Event());
-
-			/*}else if(initialInputType == FileWidgetInputType.URL){
-			useURLButton.setSelection(true);*/
-		}else {
+        } else if (initialInputType == FileWidgetInputType.RESOURCE) {
 			useResourceButton.setSelection(true);
 			useResourceButton.notifyListeners(SWT.Selection,new Event());
 		}
-
-
-
-
 	}
 
 	private void createUseResourceButton(final Composite radioComposite) {
@@ -227,40 +217,9 @@ public class FileGridPropertySectionContribution implements IExtensibleGridPrope
 				}
 			});
 		}else{
-			initialInputType = FileWidgetInputType.URL;
+            initialInputType = FileWidgetInputType.RESOURCE;
 		}
 		return initialInputType;
-	}
-
-	private void createURLButton(
-			final TabbedPropertySheetWidgetFactory widgetFactory,
-			final Composite radioComposite) {
-//		useURLButton = widgetFactory.createButton(radioComposite, Messages.useUrl, SWT.RADIO) ;
-//		useResourceButton = widgetFactory.createButton(radioComposite, Messages.useResource, SWT.RADIO) ;
-//
-//		useURLButton.addSelectionListener(new SelectionAdapter() {
-//			@Override
-//			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
-//				if(initialValueSection != null && !initialValueSection.isDisposed()){
-//					if(useURLButton.getSelection() && (element.getInputType() != FileWidgetInputType.URL || element.isDuplicate() != multiple || initialValueSection.getClient() == null)){
-//						boolean recreate = false;
-//						if(initialValueSection.getClient() == null || element.getInputType() == FileWidgetInputType.RESOURCE){
-//							recreate = true;
-//						}
-//						editingDomain.getCommandStack().execute(SetCommand.create(editingDomain, element, FormPackage.Literals.FILE_WIDGET__INPUT_TYPE, FileWidgetInputType.URL));
-//						if(recreate){
-//							if(initialValueSection.getClient() != null){
-//								initialValueSection.getClient().dispose() ;
-//							}
-//							multiple = element.isDuplicate();
-//							initialValueSection.setClient(createInputExpressionComposite(initialValueSection,FileGridPropertySectionContribution.this.widgetFactory)) ;
-//							initialValueSection.setExpanded(true) ;
-//							bindFields();
-//						}
-//					}
-//				}
-//			}
-//		});
 	}
 
 	protected Control createResourceComposite(final Section section, final TabbedPropertySheetWidgetFactory widgetFactory) {
@@ -394,8 +353,6 @@ public class FileGridPropertySectionContribution implements IExtensibleGridPrope
 			public void handleValueChange(final ValueChangeEvent arg0) {
 				if(useDocumentButton != null &&!useDocumentButton.isDisposed() && element.getInputType() == FileWidgetInputType.DOCUMENT){
 					useDocumentButton.notifyListeners(SWT.Selection,new Event());
-				/*}else if(!useResourceButton.isDisposed() && element.getInputType() == FileWidgetInputType.URL){
-					useURLButton.notifyListeners(SWT.Selection,new Event());*/
 				}else if(!useResourceButton.isDisposed() && element.getInputType() == FileWidgetInputType.RESOURCE){
 					useResourceButton.notifyListeners(SWT.Selection,new Event());
 				}
