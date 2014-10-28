@@ -129,6 +129,7 @@ public class SWTBotActorFilterExportTests extends SWTBotGefTestCase {
         testImplementationFileExistence(destDir);
         testClasspathDirExistence(destDir, hasDependencies);
         testMessageFilesExistence(destDir);
+        zipFile.delete();
     }
 
     private void testSourceFileExistence(final File destDir, final boolean hasSources) {
