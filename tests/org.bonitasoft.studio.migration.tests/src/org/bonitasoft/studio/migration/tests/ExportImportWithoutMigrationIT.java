@@ -89,6 +89,7 @@ public class ExportImportWithoutMigrationIT extends SWTBotGefTestCase {
         final EObject originalSemanticElement = diagramEditor.getSelectedSemanticElement();
         assertThat(originalSemanticElement).isInstanceOf(MainProcess.class);
         ElementAssert.assertThat((MainProcess) originalSemanticElement).hasName("ExportImportWithoutMigrationIT");
+        final EObject source = EcoreUtil.copy(originalSemanticElement);
         final ExportBosArchiveOperation exportBosArchiveOperation = new ExportBosArchiveOperation();
         final File destFolder = folder.newFolder();
         destFolder.mkdirs();
@@ -96,7 +97,7 @@ public class ExportImportWithoutMigrationIT extends SWTBotGefTestCase {
         exportBosArchiveOperation.setDestinationPath(bosFile.getAbsolutePath());
 
         final DiagramRepositoryStore diagramRepositoryStore = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
-        final DiagramFileStore diagramFileStore = diagramRepositoryStore.getDiagram("ExportImportWithoutMigrationIT",
+        DiagramFileStore diagramFileStore = diagramRepositoryStore.getDiagram("ExportImportWithoutMigrationIT",
                 "1.0");
         assertThat(diagramFileStore).isNotNull();
         final MainProcess mainProcess = diagramFileStore.getContent();
@@ -123,13 +124,14 @@ public class ExportImportWithoutMigrationIT extends SWTBotGefTestCase {
         importBosArchiveOperation.run(Repository.NULL_PROGRESS_MONITOR);
         assertThat(importBosArchiveOperation.getStatus().isOK()).isTrue();
 
-        workbenchWindow.open().selectDiagram("ExportImportWithoutMigrationIT", "1.0").open();
+        diagramFileStore = diagramRepositoryStore.getDiagram("ExportImportWithoutMigrationIT",
+                "1.0");
+        diagramFileStore.open();
         diagramPerspective.activeProcessDiagramEditor().selectDiagram();
         final EObject newSemanticElement = diagramPerspective.activeProcessDiagramEditor().getSelectedSemanticElement();
-        assertThat(EcoreUtil.equals(originalSemanticElement, newSemanticElement)).isTrue();
+        final EObject target = EcoreUtil.copy(newSemanticElement);
+        assertThat(EcoreUtil.equals(source, target)).isTrue();
     }
-
-
 
 
 }
