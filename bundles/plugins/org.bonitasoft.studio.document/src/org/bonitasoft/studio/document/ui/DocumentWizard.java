@@ -75,6 +75,16 @@ public class DocumentWizard extends Wizard {
         setDefaultPageImageDescriptor(Pics.getWizban());
         this.document = document;
         documentWorkingCopy = EcoreUtil.copy(document);
+        if (documentWorkingCopy.getUrl() == null) {
+            final Expression urlExpression = ExpressionHelper.createConstantExpression("", String.class.getName());
+            urlExpression.setReturnTypeFixed(true);
+            documentWorkingCopy.setUrl(urlExpression);
+        }
+        if (documentWorkingCopy.getMimeType() == null) {
+            final Expression mimeTypeExpression = ExpressionHelper.createConstantExpression("", String.class.getName());
+            mimeTypeExpression.setReturnTypeFixed(true);
+            documentWorkingCopy.setMimeType(mimeTypeExpression);
+        }
         this.editMode = editMode;
     }
 
