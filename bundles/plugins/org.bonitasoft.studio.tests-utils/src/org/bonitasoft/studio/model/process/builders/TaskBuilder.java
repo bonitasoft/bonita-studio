@@ -26,8 +26,7 @@ import org.bonitasoft.studio.model.process.Task;
  */
 public class TaskBuilder extends ActivityBuilder<Task, TaskBuilder> {
 
-    @SuppressWarnings("unchecked")
-    public static TaskBuilder create() {
+    public static TaskBuilder createTaskBuilder() {
         return new TaskBuilder();
     }
 

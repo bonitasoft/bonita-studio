@@ -25,8 +25,7 @@ import org.bonitasoft.studio.model.process.ProcessFactory;
  */
 public class BusinessObjectDataBuilder extends JavaObjectDataBuilder<BusinessObjectData, BusinessObjectDataBuilder> {
 
-    @SuppressWarnings("unchecked")
-    public static BusinessObjectDataBuilder create() {
+    public static BusinessObjectDataBuilder createBusinessObjectDataBuilder() {
         return new BusinessObjectDataBuilder();
     }
 
