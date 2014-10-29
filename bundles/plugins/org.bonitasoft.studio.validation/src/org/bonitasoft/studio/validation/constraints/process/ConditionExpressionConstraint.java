@@ -1,7 +1,7 @@
 /**
  * Copyright (C) 2009 BonitaSoft S.A.
  * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -19,7 +19,7 @@ package org.bonitasoft.studio.validation.constraints.process;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.condition.conditionModel.Operation_Compare;
-import org.bonitasoft.studio.engine.export.EngineExpressionUtil;
+import org.bonitasoft.studio.engine.export.expression.converter.comparison.ComparisonExpressionConverter;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.process.SequenceFlow;
 import org.bonitasoft.studio.model.process.diagram.providers.ProcessMarkerNavigationProvider;
@@ -31,20 +31,21 @@ import org.eclipse.emf.validation.IValidationContext;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 
 /**
- * 
+ *
  * @author Romain Bioteau
  *
  */
 public class ConditionExpressionConstraint extends AbstractLiveValidationMarkerConstraint {
 
+    private final ComparisonExpressionConverter comparisonExpressionConverter = new ComparisonExpressionConverter();
 
     @Override
-    protected IStatus performLiveValidation(IValidationContext ctx) {
+    protected IStatus performLiveValidation(final IValidationContext ctx) {
         return ctx.createSuccessStatus();
     }
 
     @Override
-    protected String getMarkerType(DiagramEditor editor) {
+    protected String getMarkerType(final DiagramEditor editor) {
         return ProcessMarkerNavigationProvider.MARKER_TYPE;
     }
 
@@ -54,15 +55,15 @@ public class ConditionExpressionConstraint extends AbstractLiveValidationMarkerC
     }
 
     @Override
-    protected IStatus performBatchValidation(IValidationContext ctx) {
-        EObject target = ctx.getTarget();
+    protected IStatus performBatchValidation(final IValidationContext ctx) {
+        final EObject target = ctx.getTarget();
         if(target instanceof SequenceFlow){
-            Expression conditionExpression = ((SequenceFlow) target).getCondition();
-            if(conditionExpression != null 
+            final Expression conditionExpression = ((SequenceFlow) target).getCondition();
+            if(conditionExpression != null
                     && ExpressionConstants.CONDITION_TYPE.equals(conditionExpression.getType())
-                    && conditionExpression.getContent() != null 
+                    && conditionExpression.getContent() != null
                     && !conditionExpression.getContent().isEmpty()){
-                Operation_Compare opCompare = getCompareOperation(conditionExpression);
+                final Operation_Compare opCompare = getCompareOperation(conditionExpression);
                 if(opCompare == null || opCompare.getOp() == null){
                     return ctx.createFailureStatus(Messages.bind(Messages.invalidConditionExpression,conditionExpression.getName()));
                 }
@@ -71,8 +72,9 @@ public class ConditionExpressionConstraint extends AbstractLiveValidationMarkerC
         return ctx.createSuccessStatus();
     }
 
-    protected Operation_Compare getCompareOperation(Expression conditionExpression) {
-        return EngineExpressionUtil.parseConditionExpression(conditionExpression.getContent(), conditionExpression);
+    protected Operation_Compare getCompareOperation(final Expression conditionExpression) {
+        return comparisonExpressionConverter.parseConditionExpression(
+                conditionExpression.getContent(), conditionExpression);
     }
 
 }

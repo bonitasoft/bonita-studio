@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.engine.export.switcher;
+package org.bonitasoft.studio.engine.export.expression.converter.comparison;
 
 import org.bonitasoft.engine.expression.Expression;
 import org.bonitasoft.studio.condition.conditionModel.Expression_Boolean;
