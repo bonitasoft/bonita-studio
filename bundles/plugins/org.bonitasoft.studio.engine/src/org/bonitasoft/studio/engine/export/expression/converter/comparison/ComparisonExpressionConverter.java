@@ -27,7 +27,6 @@ import org.bonitasoft.engine.expression.InvalidExpressionException;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.condition.conditionModel.Operation_Compare;
 import org.bonitasoft.studio.condition.conditionModel.Operation_NotUnary;
 import org.bonitasoft.studio.condition.conditionModel.Unary_Operation;
@@ -38,11 +37,12 @@ import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.parameter.Parameter;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Data;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.xtext.resource.SynchronizedXtextResourceSet;
 import org.eclipse.xtext.resource.XtextResource;
-import org.eclipse.xtext.ui.resource.XtextResourceSetProvider;
+import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.util.StringInputStream;
 import org.eclipse.xtext.validation.CheckMode;
 import org.eclipse.xtext.validation.IResourceValidator;
@@ -113,8 +113,7 @@ public class ComparisonExpressionConverter implements IExpressionConverter {
         final Injector injector = ConditionModelActivator.getInstance().getInjector(
                 ConditionModelActivator.ORG_BONITASOFT_STUDIO_CONDITION_CONDITIONMODEL);
         final IResourceValidator xtextResourceChecker = injector.getInstance(IResourceValidator.class);
-        final XtextResourceSetProvider xtextResourceSetProvider = injector.getInstance(XtextResourceSetProvider.class);
-        final ResourceSet resourceSet = xtextResourceSetProvider.get(RepositoryManager.getInstance().getCurrentRepository().getProject());
+        final XtextResourceSet resourceSet = new SynchronizedXtextResourceSet();
         final XtextResource resource = (XtextResource) resourceSet.createResource(URI.createURI("somefile.cmodel"));
         try {
             resource.load(new StringInputStream(content, "UTF-8"), Collections.emptyMap());
@@ -122,6 +121,10 @@ public class ComparisonExpressionConverter implements IExpressionConverter {
             BonitaStudioLog.error(e1);
         } catch (final IOException e1) {
             BonitaStudioLog.error(e1);
+        }
+        final EList<EObject> contents = resource.getContents();
+        if (contents.isEmpty()) {
+            return null;
         }
         final ConditionModelGlobalScopeProvider globalScopeProvider = injector.getInstance(ConditionModelGlobalScopeProvider.class);
         final List<String> accessibleObjects = new ArrayList<String>();
