@@ -21,21 +21,17 @@ import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.properties.AbstractPropertySectionContribution;
 import org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
-import org.bonitasoft.studio.expression.editor.provider.IExpressionValidator;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.process.FlowElement;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.properties.i18n.Messages;
-import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.edit.EMFEditProperties;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.command.SetCommand;
-import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.jface.databinding.viewers.ViewerProperties;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -61,10 +57,10 @@ public class DynamicLabelPropertySectionContribution extends AbstractPropertySec
      * @see org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution#createControl(org.eclipse.swt.widgets.Composite, org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory, org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection)
      */
     @Override
-    public void createControl(Composite composite, TabbedPropertySheetWidgetFactory widgetFactory, ExtensibleGridPropertySection extensibleGridPropertySection) {
+    public void createControl(final Composite composite, final TabbedPropertySheetWidgetFactory widgetFactory, final ExtensibleGridPropertySection extensibleGridPropertySection) {
         composite.setLayout(new GridLayout(1, true));
         composite.setLayoutData(new GridData(SWT.FILL, SWT.DEFAULT, true, false));
-        CLabel label = widgetFactory.createCLabel(composite,Messages.bind(Messages.warningDisplayLabelMaxLength,maxLength+1,"255"));
+        final CLabel label = widgetFactory.createCLabel(composite,Messages.bind(Messages.warningDisplayLabelMaxLength,maxLength+1,"255"));
         label.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         label.setLayout(GridLayoutFactory.fillDefaults().spacing(0,10).create());
         label.setImage(PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_WARN_TSK));
@@ -73,7 +69,7 @@ public class DynamicLabelPropertySectionContribution extends AbstractPropertySec
         expressionViewer.addFilter(new AvailableExpressionTypeFilter(new String[]{ExpressionConstants.CONSTANT_TYPE,ExpressionConstants.VARIABLE_TYPE,ExpressionConstants.PARAMETER_TYPE,ExpressionConstants.SCRIPT_TYPE}));
         expressionViewer.setInput(eObject) ;
         expressionViewer.setMessage(Messages.dynamicLabelHint,IStatus.INFO) ;
-        expressionViewer.addExpressionValidator(ExpressionConstants.CONSTANT_TYPE,new ExpressionLengthValidator(maxLength));
+        expressionViewer.addExpressionValidator(new ExpressionLengthValidator(maxLength));
         refreshDataBindingContext();
     }
 
@@ -116,7 +112,7 @@ public class DynamicLabelPropertySectionContribution extends AbstractPropertySec
      * @see org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution#isRelevantFor(org.eclipse.emf.ecore.EObject)
      */
     @Override
-    public boolean isRelevantFor(EObject eObject) {
+    public boolean isRelevantFor(final EObject eObject) {
         return eObject instanceof FlowElement;
     }
 

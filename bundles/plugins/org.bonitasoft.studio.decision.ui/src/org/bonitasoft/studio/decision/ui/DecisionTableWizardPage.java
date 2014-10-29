@@ -289,11 +289,11 @@ public class DecisionTableWizardPage extends WizardPage {
 
             final ExpressionViewer op1widget = new ExpressionViewer(placeHolder, SWT.BORDER);
             op1widget.getControl().setLayoutData(GridDataFactory.fillDefaults().hint(500, SWT.DEFAULT).grab(true, false).span(2, 1).create());
-            op1widget.addExpressionValidator(ExpressionConstants.CONDITION_TYPE,new ComparisonExpressionValidator());
+            op1widget.addExpressionValidator(new ComparisonExpressionValidator());
             op1widget.addExpressionValidationListener(new IExpressionValidationListener(){
 
                 @Override
-                public void validationStatusChanged(final int newStatus) {
+                public void validationStatusChanged(final IStatus newStatus) {
                     updateButtons(operands);
                 }
 

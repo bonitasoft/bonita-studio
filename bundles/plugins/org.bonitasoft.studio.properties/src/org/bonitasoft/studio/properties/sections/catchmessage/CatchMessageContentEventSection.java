@@ -77,8 +77,7 @@ public class CatchMessageContentEventSection extends AbstractBonitaDescriptionSe
 		createAutoFillButton(aTabbedPropertySheetPage);
 		validator= new MessageContentExpressionValidator();
 		alc = new PropertyOperationsComposite(aTabbedPropertySheetPage,mainComposite,new AvailableExpressionTypeFilter(new String[]{ExpressionConstants.CONSTANT_TYPE,ExpressionConstants.MESSAGE_ID_TYPE}), new AvailableExpressionTypeFilter(new String[]{ExpressionConstants.VARIABLE_TYPE}));
-		alc.addActionExpressionValidator(ExpressionConstants.MESSAGE_ID_TYPE, validator);
-		alc.addActionExpressionValidator(ExpressionConstants.CONSTANT_TYPE, validator);
+        alc.addActionExpressionValidator(validator);
 		alc.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
 	}
 
@@ -88,7 +87,7 @@ public class CatchMessageContentEventSection extends AbstractBonitaDescriptionSe
 			@Override
 			public void widgetSelected(final SelectionEvent e) {
 				BusyIndicator.showWhile(Display.getDefault(), new Runnable() {
-					
+
 					@Override
 					public void run() {
 						final MessageFlow incomingMessag = getCatchMessageEvent().getIncomingMessag();
@@ -129,7 +128,7 @@ public class CatchMessageContentEventSection extends AbstractBonitaDescriptionSe
 						return false;
 					}
 				});
-				
+
 
 			}
 
@@ -176,7 +175,7 @@ public class CatchMessageContentEventSection extends AbstractBonitaDescriptionSe
 			refreshUI();
 		}
 	}
-	
+
 	private void refreshUI() {
 		validator.setCatchMessageEvent(getCatchMessageEvent());
 		alc.setEObject(getCatchMessageEvent());

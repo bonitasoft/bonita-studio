@@ -18,6 +18,9 @@
 package org.bonitasoft.studio.common.gmf.tools.tree;
 
 import org.bonitasoft.studio.model.expression.Expression;
+import org.bonitasoft.studio.model.process.MultiInstanceType;
+import org.bonitasoft.studio.model.process.MultiInstantiable;
+import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 
@@ -31,12 +34,17 @@ public class EmptyExpressionViewFilter extends ViewerFilter {
 	 * @see org.eclipse.jface.viewers.ViewerFilter#select(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
 	 */
 	@Override
-	public boolean select(Viewer viewer, Object parentElement, Object element) {
+	public boolean select(final Viewer viewer, final Object parentElement, final Object element) {
 		if (element instanceof Expression ){
-			Expression expr = (Expression)element;
+			final Expression expr = (Expression)element;
 			if ((expr.getName()==null || expr.getName().isEmpty()) && (expr.getContent()==null || expr.getContent().isEmpty())){
 				return false;
 			}
+            if (ProcessPackage.Literals.MULTI_INSTANTIABLE__ITERATOR_EXPRESSION.equals(expr.eContainingFeature())) {
+                final MultiInstantiable eContainer = (MultiInstantiable) expr.eContainer();
+                return (eContainer.getType() == MultiInstanceType.PARALLEL || eContainer.getType() == MultiInstanceType.SEQUENTIAL)
+                        && !eContainer.isUseCardinality();
+            }
 		}
 		return true;
 	}
