@@ -86,13 +86,6 @@ public class FormsExporterTest {
     }
 
     @Test
-    public void should_AddFileWidgetInputType_All() throws InvalidFormDefinitionException {
-        final FileWidget fileWidget = FileWidgetBuilder.create().withInputType(FileWidgetInputType.DOCUMENT).build();
-        formExporter.addDocumentInitialValue(fileWidget, formBuilder);
-        verify(formBuilder).addFileWidgetInputType(org.bonitasoft.forms.client.model.FileWidgetInputType.ALL);
-    }
-
-    @Test
     public void should_addFileWidgetInitialValueExpression_whenTypeIsDocument() throws InvalidFormDefinitionException {
         final FileWidget fileWidget = FileWidgetBuilder.create().withInputType(FileWidgetInputType.DOCUMENT).build();
         final Document document = DocumentBuilder.create().withName("myBonitaDocument").multiple().build();
@@ -159,7 +152,7 @@ public class FormsExporterTest {
 
     @Test
     public void should_addDocumentInitialValue_WhenFileDocumentDownloadType_isURL() throws InvalidFormDefinitionException {
-        final FileWidget fileWidget = createFileWidget(FileWidgetInputType.DOCUMENT);
+        final FileWidget fileWidget = FileWidgetBuilder.create().withInputType(FileWidgetInputType.DOCUMENT).build();
         fileWidget.setDuplicate(false);
         fileWidget.setDownloadType(FileWidgetDownloadType.URL);
         formExporter.addFileWidgetInputType(fileWidget, formBuilder);
@@ -168,7 +161,7 @@ public class FormsExporterTest {
 
     @Test
     public void should_addDocumentInitialValue_WhenFileDocumentDownloadType_isBrowse() throws InvalidFormDefinitionException {
-        final FileWidget fileWidget = createFileWidget(FileWidgetInputType.DOCUMENT);
+        final FileWidget fileWidget = FileWidgetBuilder.create().withInputType(FileWidgetInputType.DOCUMENT).build();
         fileWidget.setDuplicate(false);
         fileWidget.setDownloadType(FileWidgetDownloadType.BROWSE);
         formExporter.addFileWidgetInputType(fileWidget, formBuilder);
@@ -177,7 +170,7 @@ public class FormsExporterTest {
 
     @Test
     public void should_addDocumentInitialValue_WhenFileDocumentDownloadType_isBoth() throws InvalidFormDefinitionException {
-        final FileWidget fileWidget = createFileWidget(FileWidgetInputType.DOCUMENT);
+        final FileWidget fileWidget = FileWidgetBuilder.create().withInputType(FileWidgetInputType.DOCUMENT).build();
         fileWidget.setDuplicate(false);
         fileWidget.setDownloadType(FileWidgetDownloadType.BOTH);
         formExporter.addFileWidgetInputType(fileWidget, formBuilder);
