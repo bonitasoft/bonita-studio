@@ -237,8 +237,7 @@
         eType="ecore:EClass expression.ecore#//Expression" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="intialResourceList" upperBound="-1"
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="downloadType" eType="#//FileWidgetDownloadType"
-        defaultValueLiteral="Both"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="downloadType" eType="#//FileWidgetDownloadType"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Column">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="width" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -390,8 +389,8 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="className" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="FileWidgetDownloadType">
-    <eLiterals name="Both"/>
-    <eLiterals name="URL" value="1"/>
-    <eLiterals name="Browse" value="2"/>
+    <eLiterals name="Both" literal="Both"/>
+    <eLiterals name="URL" value="1" literal="URL"/>
+    <eLiterals name="Browse" value="2" literal="Browse"/>
   </eClassifiers>
 </ecore:EPackage>
