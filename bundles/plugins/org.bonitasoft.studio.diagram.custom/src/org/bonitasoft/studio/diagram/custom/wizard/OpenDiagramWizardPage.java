@@ -116,6 +116,9 @@ public class OpenDiagramWizardPage extends AbstractManageDiagramWizardPage {
     }
 
 
+    protected Button getRemoveButton() {
+        return removeProcessButton;
+    }
 
     /*
      * (non-Javadoc)
