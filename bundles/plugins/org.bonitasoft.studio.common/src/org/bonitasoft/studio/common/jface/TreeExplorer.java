@@ -62,14 +62,14 @@ public class TreeExplorer extends Composite implements SWTBotConstants{
 	private ILabelProvider labelProvider;
 	private Composite additionalComposite;
 
-	public TreeExplorer(Composite parent, int style) {
+	public TreeExplorer(final Composite parent, final int style) {
 		super(parent, style);
 		setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
 
 		final Text searchField = new Text(this, SWT.BORDER | SWT.SEARCH | SWT.ICON_SEARCH | SWT.ICON_CANCEL);
 		searchField.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 		searchField.setMessage(Messages.filterLabel);
-		
+
 		additionalComposite = new Composite(this, SWT.NONE);
 		additionalComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, false).hint(0, 0).create());
 		additionalComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).create());
@@ -88,11 +88,11 @@ public class TreeExplorer extends Composite implements SWTBotConstants{
 		rightTable.getTable().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(180,SWT.DEFAULT).create());
 		rightTable.setSorter(new ViewerSorter());
 		rightTable.addFilter(new ViewerFilter() {
-			
+
 			@Override
-			public boolean select(Viewer viewer, Object parentElement, Object element) {
-				Object leftSelection =((IStructuredSelection) leftTree.getSelection()).getFirstElement();
-				Set<Object> parents = new HashSet<Object>();
+			public boolean select(final Viewer viewer, final Object parentElement, final Object element) {
+				final Object leftSelection =((IStructuredSelection) leftTree.getSelection()).getFirstElement();
+				final Set<Object> parents = new HashSet<Object>();
 				Object p = contentProvider.getParent(element);
 				if(p != null){
 					parents.add(p);
@@ -113,103 +113,103 @@ public class TreeExplorer extends Composite implements SWTBotConstants{
 		leftTree.addSelectionChangedListener(new ISelectionChangedListener() {
 
 			@Override
-			public void selectionChanged(SelectionChangedEvent event) {
-				Object selection =	((IStructuredSelection) event.getSelection()).getFirstElement();
+			public void selectionChanged(final SelectionChangedEvent event) {
+				final Object selection =	((IStructuredSelection) event.getSelection()).getFirstElement();
 				if(selection != null){
 					rightTable.refresh(null);
 				}
 			}
 		});
-		
+
 		leftTree.addDoubleClickListener(new IDoubleClickListener() {
-			
+
 			@Override
-			public void doubleClick(DoubleClickEvent event) {
-				Object selection =  ((IStructuredSelection) event.getSelection()).getFirstElement() ;
+			public void doubleClick(final DoubleClickEvent event) {
+				final Object selection =  ((IStructuredSelection) event.getSelection()).getFirstElement() ;
 		        if(selection != null){
 		        	if(leftTree.getExpandedState(selection)){
 		        		leftTree.collapseToLevel(selection, 1) ;
 		        	}else{
 		        		leftTree.expandToLevel(selection, 1) ;
 		        	}
-		        	
+
 		        }
 			}
 		});
-		
+
 		rightTable.addSelectionChangedListener(new ISelectionChangedListener() {
 
 			@Override
-			public void selectionChanged(SelectionChangedEvent event) {
-				Object selection =	((IStructuredSelection) event.getSelection()).getFirstElement();
+			public void selectionChanged(final SelectionChangedEvent event) {
+				final Object selection =	((IStructuredSelection) event.getSelection()).getFirstElement();
 				if(selection != null){
-					Object parent = contentProvider.getParent(selection);
+					final Object parent = contentProvider.getParent(selection);
 					if(parent != null){
 						leftTree.setSelection(new StructuredSelection(parent),true);
 					}
 				}
 			}
 		});
-		
+
 		searchField.addModifyListener(new ModifyListener() {
-			
+
 			@Override
-			public void modifyText(ModifyEvent e) {
+			public void modifyText(final ModifyEvent e) {
 				Display.getDefault().asyncExec(new Runnable() {
-					
+
 					@Override
 					public void run() {
 						rightTable.refresh();
 					}
 				});
-				
+
 			}
 		});
 	}
 
-	protected Object[] getSubtree(Object selection) {
-		Set<Object> result = new HashSet<Object>();
+	protected Object[] getSubtree(final Object selection) {
+		final Set<Object> result = new HashSet<Object>();
 		addChildren(result,selection);
 		return result.toArray();
 	}
-	
-	private void addChildren(Set<Object> result, Object element) {
+
+	private void addChildren(final Set<Object> result, final Object element) {
 		if(contentProvider.hasChildren(element)){
-			for(Object c : contentProvider.getChildren(element)){
+			for(final Object c : contentProvider.getChildren(element)){
 				result.add(c);
 				addChildren(result, c);
 			}
 		}
 	}
 
-	public void setContentProvider(ITreeContentProvider contentProvider){
+	public void setContentProvider(final ITreeContentProvider contentProvider){
 		this.contentProvider = contentProvider;
 	}
 
-	public void addLeftTreeFilter(ViewerFilter filter){
+	public void addLeftTreeFilter(final ViewerFilter filter){
 		leftTree.addFilter(filter);
 	}
 
-	public void addRightTreeFilter(ViewerFilter filter){
+	public void addRightTreeFilter(final ViewerFilter filter){
 		if(!Arrays.asList(rightTable.getFilters()).contains(filter)){
 			rightTable.addFilter(filter);
 		}
 	}
 
-	public void removeRightTreeFilter(ViewerFilter filter) {
+	public void removeRightTreeFilter(final ViewerFilter filter) {
 		rightTable.removeFilter(filter);
 	}
-	
-	public void removeLeftTreeFilter(ViewerFilter filter) {
+
+	public void removeLeftTreeFilter(final ViewerFilter filter) {
 		leftTree.removeFilter(filter);
 	}
 
-	
-	public void setLabelProvider(ILabelProvider labelProvider){
+
+	public void setLabelProvider(final ILabelProvider labelProvider){
 		this.labelProvider = labelProvider;
 	}
 
-	public void setInput(Object input){
+	public void setInput(final Object input){
 		Assert.isNotNull(contentProvider);
 		Assert.isNotNull(labelProvider);
 		leftTree.setContentProvider(contentProvider);
@@ -218,36 +218,36 @@ public class TreeExplorer extends Composite implements SWTBotConstants{
 		rightTable.setLabelProvider(labelProvider);
 		leftTree.setInput(input);
 	}
-	
+
 	public Composite getAdditionalComposite() {
 		return additionalComposite;
 	}
 
-	public void setLeftHeader(String title) {
+	public void setLeftHeader(final String title) {
 		leftTree.getTree().setHeaderVisible(true);
 		final TreeColumn columnName = new TreeColumn(leftTree.getTree(), SWT.NONE);
 		columnName.setText(title);
-		TableLayout layout = new TableLayout();
+		final TableLayout layout = new TableLayout();
 		layout.addColumnData(new ColumnWeightData(1));
 		leftTree.getTree().setLayout(layout);
 	}
 
-	public void setRightHeader(String title) {
+	public void setRightHeader(final String title) {
 		rightTable.getTable().setHeaderVisible(true);
 		final TableColumn columnName = new TableColumn(rightTable.getTable(), SWT.NONE);
 		columnName.setText(title);
-		TableLayout layout = new TableLayout();
+		final TableLayout layout = new TableLayout();
 		layout.addColumnData(new ColumnWeightData(1));
 		rightTable.getTable().setLayout(layout);
 	}
 
-	public Viewer getRightTableViewer() {
+    public TableViewer getRightTableViewer() {
 		return rightTable;
 	}
-	
+
 	public TreeViewer geLeftTreeViewer() {
 		return leftTree;
 	}
 
-	
+
 }

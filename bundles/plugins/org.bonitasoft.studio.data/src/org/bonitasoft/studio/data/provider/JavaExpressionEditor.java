@@ -316,9 +316,11 @@ public class JavaExpressionEditor extends SelectionAwareExpressionEditor impleme
         final Set<Data> input = new HashSet<Data>();
         final IExpressionProvider provider = ExpressionEditorService.getInstance().getExpressionProvider(ExpressionConstants.VARIABLE_TYPE);
         for (final Expression e : provider.getExpressions(context)) {
-            final Data data = (Data) e.getReferencedElements().get(0);
-            if (data instanceof JavaObjectData || data.isMultiple()) {
-                input.add(data);
+            if (acceptExpression(expressionViewer, e, context, filters)) {
+                final Data data = (Data) e.getReferencedElements().get(0);
+                if (data instanceof JavaObjectData || data.isMultiple()) {
+                    input.add(data);
+                }
             }
         }
         viewer.setInput(input);
@@ -474,6 +476,17 @@ public class JavaExpressionEditor extends SelectionAwareExpressionEditor impleme
         dataBindingContext.bindValue(ViewersObservables.observeSingleSelection(javaTreeviewer), returnTypeObservable, selectionToReturnType,
                 new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER));
         dataBindingContext.bindValue(SWTObservables.observeText(typeText, SWT.Modify), returnTypeObservable);
+    }
+
+    private boolean acceptExpression(final ExpressionViewer viewer,final Expression e, final EObject context ,final ViewerFilter[] filters) {
+        if (filters != null) {
+            for (final ViewerFilter f : filters) {
+                if (!f.select(viewer, context, e)) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     @Override

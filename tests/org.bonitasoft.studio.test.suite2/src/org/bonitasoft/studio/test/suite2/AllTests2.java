@@ -59,6 +59,7 @@ import org.bonitasoft.studio.themes.tests.TestCSSModel;
 import org.bonitasoft.studio.themes.tests.TestDirtyState;
 import org.bonitasoft.studio.themes.tests.TestThemeRepository;
 import org.bonitasoft.studio.util.test.BonitaJunit4TestSuite;
+import org.bonitasoft.studio.validation.test.TestTokenDispatcher;
 import org.bonitasoft.studio.validation.test.TestValidationConstraints;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -94,7 +95,7 @@ import org.junit.runners.Suite;
     TestCSSModel.class,
     /*
     TestURLs.class,
-  */
+     */
     TestDuplicateCommand.class,
     BPMNImportExportTest.class,
     BPMNDataExportImportTest.class,
@@ -111,6 +112,7 @@ import org.junit.runners.Suite;
     TestRefactorWidgetOperation.class,
     TestRemoveWidgetReferencesOperation.class,
     TestWebserviceVersionForBPMNImport.class,
+        TestTokenDispatcher.class,
         DocumentTypeMigrationIT.class,
     CloseAllEditors.class,
 })

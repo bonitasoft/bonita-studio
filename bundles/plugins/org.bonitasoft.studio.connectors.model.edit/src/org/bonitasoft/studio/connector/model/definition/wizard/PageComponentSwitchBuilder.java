@@ -236,13 +236,17 @@ public class PageComponentSwitchBuilder {
         return labelWidth != DEFAULT_WITH_VALUE;
     }
 
-    protected String getLabel(final String inputName) {
+    public String getLabel(final String inputName) {
         String label = messageProvider.getFieldLabel(definition, inputName);
         if (label == null) {
             label = "";
         }
 
         return label;
+    }
+
+    public String getDescription(final String inputName) {
+        return messageProvider.getFieldDescription(definition, inputName);
     }
 
     protected ConnectorParameter getConnectorParameter(final String inputName, final WidgetComponent object, final Input input) {
@@ -253,6 +257,9 @@ public class PageComponentSwitchBuilder {
                 } else {
                     if (param.getExpression() instanceof Expression) {
                         final Expression exp = (Expression) param.getExpression();
+                        if (!exp.isReturnTypeFixed()) {
+                            exp.setReturnTypeFixed(true);
+                        }
                         if (!input.getType().equals(exp.getReturnType())) {
                             exp.setReturnType(input.getType());
                         }
@@ -319,7 +326,7 @@ public class PageComponentSwitchBuilder {
             }
             viewer.addFilter(connectorExpressionContentTypeFilter);
             viewer.setInput(parameter);
-            final String desc = messageProvider.getFieldDescription(definition, object.getId());
+            final String desc = getDescription(object.getId());
             if (desc != null && !desc.isEmpty()) {
                 viewer.setMessage(desc, IStatus.INFO);
             }
@@ -409,7 +416,7 @@ public class PageComponentSwitchBuilder {
             viewer.addFilter(connectorExpressionContentTypeFilter);
 
             final Expression exp = (Expression) parameter.getExpression();
-            final String desc = messageProvider.getFieldDescription(definition, object.getId());
+            final String desc = getDescription(object.getId());
             if (desc != null && !desc.isEmpty()) {
                 viewer.setHint(desc);
             }
@@ -446,7 +453,7 @@ public class PageComponentSwitchBuilder {
             }
             viewer.addFilter(connectorExpressionContentTypeFilter);
             viewer.setInput(parameter);
-            final String desc = messageProvider.getFieldDescription(definition, object.getId());
+            final String desc = getDescription(object.getId());
             if (desc != null && !desc.isEmpty()) {
                 viewer.setMessage(desc, IStatus.INFO);
             }
@@ -463,7 +470,7 @@ public class PageComponentSwitchBuilder {
 
         if (parameter != null) {
             final Label labelField = createFieldLabel(composite, SWT.TOP, object.getId(), input.isMandatory());
-            final String desc = messageProvider.getFieldDescription(definition, object.getId());
+            final String desc = getDescription(object.getId());
             if (desc != null && !desc.isEmpty()) {
                 createDescriptionDecorator(composite, labelField, desc);
             }
@@ -500,6 +507,8 @@ public class PageComponentSwitchBuilder {
                     AbstractExpression expression = parameter.getExpression();
                     if (!(expression instanceof Expression)) {
                         expression = ExpressionFactory.eINSTANCE.createExpression();
+                        ((Expression) expression).setReturnType(input.getType());
+                        ((Expression) expression).setReturnTypeFixed(true);
                         parameter.setExpression(expression);
                     }
                     viewer.setSelection(expression);
@@ -512,8 +521,7 @@ public class PageComponentSwitchBuilder {
     }
 
     public Section createGroupControl(final Composite composite, final Group object) {
-
-        final String desc = messageProvider.getFieldDescription(definition, object.getId());
+        final String desc = getDescription(object.getId());
         int style = Section.NO_TITLE_FOCUS_BOX | Section.TWISTIE | Section.CLIENT_INDENT;
         if (desc != null && !desc.isEmpty()) {
             style = style | Section.DESCRIPTION;
@@ -534,7 +542,7 @@ public class PageComponentSwitchBuilder {
 
         if (parameter != null) {
             final Label labelField = createFieldLabel(composite, SWT.TOP, object.getId(), input.isMandatory());
-            final String desc = messageProvider.getFieldDescription(definition, object.getId());
+            final String desc = getDescription(object.getId());
             if (desc != null && !desc.isEmpty()) {
                 createDescriptionDecorator(composite, labelField, desc);
             }
@@ -576,6 +584,8 @@ public class PageComponentSwitchBuilder {
                     AbstractExpression expression = parameter.getExpression();
                     if (!(expression instanceof Expression)) {
                         expression = ExpressionFactory.eINSTANCE.createExpression();
+                        ((Expression) expression).setReturnType(input.getType());
+                        ((Expression) expression).setReturnTypeFixed(true);
                         parameter.setExpression(expression);
                     }
                     viewer.setSelection(expression);
@@ -614,7 +624,7 @@ public class PageComponentSwitchBuilder {
             }
             viewer.addFilter(connectorExpressionContentTypeFilter);
             viewer.setInput(parameter);
-            final String desc = messageProvider.getFieldDescription(definition, object.getId());
+            final String desc = getDescription(object.getId());
             if (desc != null && !desc.isEmpty()) {
                 viewer.setMessage(desc, IStatus.INFO);
             }
@@ -657,7 +667,7 @@ public class PageComponentSwitchBuilder {
                 }
             }
 
-            final String desc = messageProvider.getFieldDescription(definition, object.getId());
+            final String desc = getDescription(object.getId());
             if (desc != null && !desc.isEmpty()) {
                 combo.setToolTipText(desc);
             }

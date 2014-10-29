@@ -644,8 +644,7 @@ public class DocumentWizardPage extends WizardPage {
     }
 
     private void bindDocumentURL() {
-
-        documentUrlViewer.addExpressionValidator(ExpressionConstants.ALL_TYPES, new IExpressionValidator() {
+        documentUrlViewer.addExpressionValidator(new IExpressionValidator() {
 
             @Override
             public IStatus validate(final Object arg0) {
@@ -679,6 +678,11 @@ public class DocumentWizardPage extends WizardPage {
 
             @Override
             public void setContext(final EObject context) {
+            }
+
+            @Override
+            public boolean isRelevantForExpressionType(final String type) {
+                return true;
             }
         });
 

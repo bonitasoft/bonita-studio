@@ -28,6 +28,10 @@ import org.eclipse.emf.edit.domain.EditingDomain;
 public interface IExpressionValidator extends IValidator {
 
 	public void setInputExpression(Expression inputExpression);
+
 	public void setDomain(EditingDomain domain);
+
 	public void setContext(EObject context);
+
+    public boolean isRelevantForExpressionType(String type);
 }

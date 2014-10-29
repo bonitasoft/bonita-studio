@@ -94,6 +94,7 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute connector-configuration.ecore#//ConnectorConfiguration/definitionId"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute connector-configuration.ecore#//ConnectorConfiguration/version"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute connector-configuration.ecore#//ConnectorConfiguration/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute connector-configuration.ecore#//ConnectorConfiguration/modelVersion"/>
     </genClasses>
     <genClasses ecoreClass="connector-configuration.ecore#//ConnectorParameter">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute connector-configuration.ecore#//ConnectorParameter/key"/>

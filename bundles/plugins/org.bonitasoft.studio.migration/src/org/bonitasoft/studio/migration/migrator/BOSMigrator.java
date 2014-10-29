@@ -67,7 +67,7 @@ import org.eclipse.emf.edapt.migration.execution.WrappedMigrationException;
  * @author Romain Bioteau
  *
  */
-public class BOSMigrator  {
+public class BOSMigrator {
 
 	/** Metamodel history no which this migrator is based. */
 	private History history;
@@ -152,7 +152,7 @@ public class BOSMigrator  {
 
 	/**
 	 * Migrate a model based on a set of {@link URI}.
-	 * 
+	 *
 	 * @param modelURIs
 	 * @param sourceRelease
 	 *            Release to which the model conforms
@@ -162,15 +162,16 @@ public class BOSMigrator  {
 	 * @param monitor
 	 *            Progress monitor
 	 */
-	public void migrateAndSave(final List<URI> modelURIs, final Release sourceRelease,
-			final Release targetRelease, final IProgressMonitor monitor)
-			throws MigrationException {
-		final Model model = migrate(modelURIs, sourceRelease, targetRelease, monitor);
+	public void migrateAndSave(final List<URI> modelURIs,
+			final Release sourceRelease, final Release targetRelease,
+			final IProgressMonitor monitor) throws MigrationException {
+		final Model model = migrate(modelURIs, sourceRelease, targetRelease,
+				monitor);
 		if (model == null) {
 			throw new MigrationException("Model is up-to-date", null);
 		}
 		try {
-			
+
 			Persistency.saveModel(model);
 		} catch (final IOException e) {
 			throw new MigrationException("Model could not be saved", e);
@@ -179,7 +180,7 @@ public class BOSMigrator  {
 
 	/**
 	 * Migrate a model based on a set of {@link URI}s and load it afterwards.
-	 * 
+	 *
 	 * @param modelURIs
 	 *            The set of {@link URI}
 	 * @param sourceRelease
@@ -194,7 +195,8 @@ public class BOSMigrator  {
 	public ResourceSet migrateAndLoad(final List<URI> modelURIs,
 			final Release sourceRelease, final Release targetRelease,
 			final IProgressMonitor monitor) throws MigrationException {
-		final Model model = migrate(modelURIs, sourceRelease, targetRelease, monitor);
+		final Model model = migrate(modelURIs, sourceRelease, targetRelease,
+				monitor);
 		if (model == null) {
 			return null;
 		}
@@ -203,14 +205,14 @@ public class BOSMigrator  {
 	}
 
 	/** Get the latest release. */
-	private Release getLatestRelease() {
+	public Release getLatestRelease() {
 		final List<Release> releases = history.getReleases();
 		return releases.get(releases.size() - 2);
 	}
 
 	/**
 	 * Migrate a model based on a set of {@link URI}s.
-	 * 
+	 *
 	 * @param modelURIs
 	 *            The set of {@link URI}
 	 * @param sourceRelease
@@ -222,9 +224,9 @@ public class BOSMigrator  {
 	 *            Progress monitor
 	 * @return The model in the generic structure
 	 */
-	private Model migrate(final List<URI> modelURIs, final Release sourceRelease,
-			Release targetRelease, final IProgressMonitor monitor)
-			throws MigrationException {
+	private Model migrate(final List<URI> modelURIs,
+			final Release sourceRelease, Release targetRelease,
+			final IProgressMonitor monitor) throws MigrationException {
 		try {
 			if (targetRelease == null) {
 				targetRelease = getLatestRelease();
@@ -237,8 +239,8 @@ public class BOSMigrator  {
 					numberOfSteps(sourceRelease, targetRelease));
 			final EcoreForwardReconstructor reconstructor = new EcoreForwardReconstructor(
 					URI.createFileURI("test"));
-			reportReconstructor = new BOSReportReconstructor(modelURIs, sourceRelease, targetRelease, monitor,
-					classLoader, level);
+			reportReconstructor = new BOSReportReconstructor(modelURIs,
+					sourceRelease, targetRelease, monitor, classLoader, level);
 			reconstructor.addReconstructor(reportReconstructor);
 			reconstructor.reconstruct(targetRelease, false);
 
@@ -252,7 +254,8 @@ public class BOSMigrator  {
 	}
 
 	/** Returns the length of the migration in terms of the steps. */
-	private int numberOfSteps(final Release sourceRelease, final Release targetRelease) {
+	private int numberOfSteps(final Release sourceRelease,
+			final Release targetRelease) {
 		int size = 0;
 		boolean inRelease = false;
 		for (final Release release : history.getReleases()) {
@@ -349,7 +352,8 @@ public class BOSMigrator  {
 			}
 
 			if (commandLine.isBackup()) {
-				final Metamodel metamodel = migrator.getMetamodel(sourceRelease);
+				final Metamodel metamodel = migrator
+						.getMetamodel(sourceRelease);
 				try {
 					BackupUtils.backup(modelURIs, metamodel);
 				} catch (final IOException e) {
@@ -357,7 +361,8 @@ public class BOSMigrator  {
 				}
 			}
 
-			final Release targetRelease = migrator.getRelease(targetReleaseNumber);
+			final Release targetRelease = migrator
+					.getRelease(targetReleaseNumber);
 
 			migrator.migrateAndSave(modelURIs, sourceRelease, targetRelease,
 					new PrintStreamProgressMonitor(System.out));
@@ -366,8 +371,8 @@ public class BOSMigrator  {
 			System.err.println(e.getCause().getMessage());
 		}
 	}
-	
-	public Report getReport(){
+
+	public Report getReport() {
 		return reportReconstructor.getReport();
 	}
 }

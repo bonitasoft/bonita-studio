@@ -58,16 +58,16 @@ public class DynamicTableDataPropertySection extends AbstractTableDataPropertySe
     private Composite outputComposite;
 
     @Override
-    public void createControls(Composite parent,
-            TabbedPropertySheetPage aTabbedPropertySheetPage) {
+    public void createControls(final Composite parent,
+            final TabbedPropertySheetPage aTabbedPropertySheetPage) {
         super.createControls(parent, aTabbedPropertySheetPage);
 
-        TabbedPropertySheetWidgetFactory widgetFactory = aTabbedPropertySheetPage.getWidgetFactory();
+        final TabbedPropertySheetWidgetFactory widgetFactory = aTabbedPropertySheetPage.getWidgetFactory();
         outputComposite = widgetFactory.createComposite(parent);
         outputComposite.setLayout(new GridLayout(2, false));
         outputComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
         widgetFactory.createCLabel(outputComposite, contrib.getLabel());
-        Composite rightOutputComposite = widgetFactory.createComposite(outputComposite);
+        final Composite rightOutputComposite = widgetFactory.createComposite(outputComposite);
         rightOutputComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
         contrib.createControl(rightOutputComposite, widgetFactory, null);
 
@@ -76,17 +76,17 @@ public class DynamicTableDataPropertySection extends AbstractTableDataPropertySe
 
     }
 
-    protected void createAddRemoveColumn(Composite composite,
-            TabbedPropertySheetWidgetFactory widgetFactory) {
+    protected void createAddRemoveColumn(final Composite composite,
+            final TabbedPropertySheetWidgetFactory widgetFactory) {
 
-        Composite compo = widgetFactory.createComposite(composite);
+        final Composite compo = widgetFactory.createComposite(composite);
         compo.setLayout(new GridLayout(2, false));
         compo.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
 
         allowAddRemoveColumnButton = widgetFactory.createButton(compo, Messages.data_allowAddRemoveColumn, SWT.CHECK);
 
         /*Number limitation*/
-        Composite compoForNumberLimitation = widgetFactory.createComposite(compo);
+        final Composite compoForNumberLimitation = widgetFactory.createComposite(compo);
         compoForNumberLimitation.setLayout(new GridLayout(2, false));
         compoForNumberLimitation.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
 
@@ -105,17 +105,17 @@ public class DynamicTableDataPropertySection extends AbstractTableDataPropertySe
                 ExpressionConstants.SCRIPT_TYPE}));
     }
 
-    protected Composite createAddRemoveRow(Composite composite,
-            TabbedPropertySheetWidgetFactory widgetFactory) {
+    protected Composite createAddRemoveRow(final Composite composite,
+            final TabbedPropertySheetWidgetFactory widgetFactory) {
 
-        Composite compo = widgetFactory.createComposite(composite);
+        final Composite compo = widgetFactory.createComposite(composite);
         compo.setLayout(new GridLayout(2, false));
         compo.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
 
         allowAddRemoveRowButton = widgetFactory.createButton(compo, Messages.data_allowAddRemoveRow, SWT.CHECK);
 
         /*Number limitation*/
-        Composite compoForNumberLimitation = widgetFactory.createComposite(compo);
+        final Composite compoForNumberLimitation = widgetFactory.createComposite(compo);
         compoForNumberLimitation.setLayout(new GridLayout(2, false));
         compoForNumberLimitation.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
 
@@ -156,7 +156,7 @@ public class DynamicTableDataPropertySection extends AbstractTableDataPropertySe
     @Override
     protected void refreshDataBinding() {
         super.refreshDataBinding();
-        DynamicTable dynamicTable = getEObject();
+        final DynamicTable dynamicTable = getEObject();
         if(dynamicTable != null){
             bindRow(dynamicTable);
             bindColumn(dynamicTable);
@@ -164,7 +164,7 @@ public class DynamicTableDataPropertySection extends AbstractTableDataPropertySe
     }
 
 
-    protected void bindColumn(DynamicTable dynamicTable) {
+    protected void bindColumn(final DynamicTable dynamicTable) {
         dataBindingContext.bindValue(SWTObservables.observeSelection(allowAddRemoveColumnButton), EMFEditObservables.observeValue(getEditingDomain(), dynamicTable, FormPackage.Literals.DYNAMIC_TABLE__ALLOW_ADD_REMOVE_COLUMN));
         
         if(dynamicTable != null){
@@ -203,11 +203,7 @@ public class DynamicTableDataPropertySection extends AbstractTableDataPropertySe
          * Enable the combo only if we want to set a number limitation.
          * */
         dataBindingContext.bindValue(SWTObservables.observeEnabled(textOrDataMinColumn.getControl()), SWTObservables.observeSelection(limitMinColumnButton));
-        dataBindingContext.bindValue(SWTObservables.observeEnabled(textOrDataMinColumn.getTextControl()), SWTObservables.observeSelection(limitMinColumnButton));
-        dataBindingContext.bindValue(SWTObservables.observeEnabled(textOrDataMinColumn.getToolbar()), SWTObservables.observeSelection(limitMinColumnButton));
         dataBindingContext.bindValue(SWTObservables.observeEnabled(textOrDataMaxColumn.getControl()), SWTObservables.observeSelection(limitMaxColumnButton));
-        dataBindingContext.bindValue(SWTObservables.observeEnabled(textOrDataMaxColumn.getTextControl()), SWTObservables.observeSelection(limitMaxColumnButton));
-        dataBindingContext.bindValue(SWTObservables.observeEnabled(textOrDataMaxColumn.getToolbar()), SWTObservables.observeSelection(limitMaxColumnButton));
         
         dataBindingContext.bindValue(SWTObservables.observeVisible(limitMinColumnButton),SWTObservables.observeSelection(allowAddRemoveColumnButton),new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER),null);
         dataBindingContext.bindValue(SWTObservables.observeVisible(limitMaxColumnButton),SWTObservables.observeSelection(allowAddRemoveColumnButton),new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER),null);
@@ -219,7 +215,7 @@ public class DynamicTableDataPropertySection extends AbstractTableDataPropertySe
     }
 
 
-    protected void bindRow(DynamicTable dynamicTable) {
+    protected void bindRow(final DynamicTable dynamicTable) {
         dataBindingContext.bindValue(SWTObservables.observeSelection(allowAddRemoveRowButton), EMFEditObservables.observeValue(getEditingDomain(), dynamicTable, FormPackage.Literals.DYNAMIC_TABLE__ALLOW_ADD_REMOVE_ROW));
         
         if(dynamicTable != null){
@@ -258,11 +254,7 @@ public class DynamicTableDataPropertySection extends AbstractTableDataPropertySe
          * Enable the combo only if we want to set a number limitation.
          * */
         dataBindingContext.bindValue(SWTObservables.observeEnabled(textOrDataMinRow.getControl()), SWTObservables.observeSelection(limitMinRowButton));
-        dataBindingContext.bindValue(SWTObservables.observeEnabled(textOrDataMinRow.getTextControl()), SWTObservables.observeSelection(limitMinRowButton));
-        dataBindingContext.bindValue(SWTObservables.observeEnabled(textOrDataMinRow.getToolbar()), SWTObservables.observeSelection(limitMinRowButton));
         dataBindingContext.bindValue(SWTObservables.observeEnabled(textOrDataMaxRow.getControl()), SWTObservables.observeSelection(limitMaxRowButton));
-        dataBindingContext.bindValue(SWTObservables.observeEnabled(textOrDataMaxRow.getTextControl()), SWTObservables.observeSelection(limitMaxRowButton));
-        dataBindingContext.bindValue(SWTObservables.observeEnabled(textOrDataMaxRow.getToolbar()), SWTObservables.observeSelection(limitMaxRowButton));
 
         dataBindingContext.bindValue(SWTObservables.observeVisible(limitMinRowButton),EMFEditObservables.observeValue(getEditingDomain(), dynamicTable, FormPackage.Literals.DYNAMIC_TABLE__ALLOW_ADD_REMOVE_ROW), new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER),null);
         dataBindingContext.bindValue(SWTObservables.observeVisible(limitMaxRowButton),EMFEditObservables.observeValue(getEditingDomain(), dynamicTable, FormPackage.Literals.DYNAMIC_TABLE__ALLOW_ADD_REMOVE_ROW),new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER),null);
@@ -279,8 +271,8 @@ public class DynamicTableDataPropertySection extends AbstractTableDataPropertySe
 	}
 	
 	@Override
-	protected void setEObject(EObject object) {
-	    this.eObject = object;
+	protected void setEObject(final EObject object) {
+	    eObject = object;
 		if (getEObject() != null && !getEObject().equals(lastKnownObject)) {
             disposeDataBinding();
             lastKnownObject = getEObject();
