@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.util.Collections;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.store.AbstractEMFRepositoryStore;
@@ -28,9 +29,12 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.swt.graphics.Image;
 
 /**
@@ -42,12 +46,12 @@ public abstract class EMFFileStore extends AbstractFileStore implements IReposit
     protected Resource eResource;
 
 
-    public EMFFileStore(String fileName,IRepositoryStore<? extends EMFFileStore> store){
+    public EMFFileStore(final String fileName, final IRepositoryStore<? extends EMFFileStore> store) {
         super(fileName,store) ;
     }
 
     protected Resource doCreateEMFResource(){
-        URI uri = URI.createFileURI(getFileStorePath()) ;
+        final URI uri = URI.createFileURI(getFileStorePath()) ;
         try{
             final EditingDomain editingDomain  = getParentStore().getEditingDomain();
             if(new File(uri.toFileString()).exists()){
@@ -55,7 +59,7 @@ public abstract class EMFFileStore extends AbstractFileStore implements IReposit
             }else{
                 return editingDomain.getResourceSet().createResource(uri) ;
             }
-        }catch (Exception e) {
+        }catch (final Exception e) {
             BonitaStudioLog.error(e);
         }
         return null;
@@ -69,14 +73,21 @@ public abstract class EMFFileStore extends AbstractFileStore implements IReposit
      * @see org.bonitasoft.studio.common.repository.IRepositoryFileStore#getContent()
      */
     @Override
-    public synchronized Object getContent() {
+    public synchronized EObject getContent() {
         final Resource eResource = getEMFResource() ;
         if(eResource != null){
             if(!eResource.isLoaded()){
                 try {
-                    eResource.load(Collections.EMPTY_MAP) ;
-                } catch (IOException e) {
-                    BonitaStudioLog.error(e) ;
+                    final TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(eResource);
+                    if (editingDomain != null) {
+                        editingDomain.runExclusive(eResourceLoader(eResource));
+                    } else {
+                        eResource.load(Collections.EMPTY_MAP);
+                    }
+                } catch (final IOException e) {
+                    BonitaStudioLog.error(e, CommonRepositoryPlugin.PLUGIN_ID);
+                } catch (final InterruptedException e) {
+                    BonitaStudioLog.error(e, CommonRepositoryPlugin.PLUGIN_ID);
                 }
             }
             if(!eResource.getContents().isEmpty()){
@@ -84,6 +95,20 @@ public abstract class EMFFileStore extends AbstractFileStore implements IReposit
             }
         }
         return null;
+    }
+
+    private Runnable eResourceLoader(final Resource resource) {
+        return new Runnable() {
+
+            @Override
+            public void run() {
+                try {
+                    eResource.load(Collections.EMPTY_MAP);
+                } catch (final IOException e) {
+                    BonitaStudioLog.error(e, CommonRepositoryPlugin.PLUGIN_ID);
+                }
+            }
+        };
     }
 
     @Override
@@ -96,15 +121,15 @@ public abstract class EMFFileStore extends AbstractFileStore implements IReposit
     		}
     		try {
     			eResource.delete(Collections.EMPTY_MAP) ;
-    		} catch (IOException e) {
+    		} catch (final IOException e) {
     			BonitaStudioLog.error(e) ;
-    			
+
     		}
     	} else {
     		try {
 				getResource().delete(true, new NullProgressMonitor());
-			} catch (CoreException e) {
-			
+			} catch (final CoreException e) {
+
 				BonitaStudioLog.error(e);
 			}
     	}

@@ -46,4 +46,10 @@ public class BotExpressionEditorDialog extends BotDialog {
         return new BotConstantExpressionEditor(bot, this);
     }
 
+    public BotFormFieldExpressionEditor selectFormFieldType() {
+        bot.tableWithLabel(Messages.expressionTypeLabel).select("Form field");
+        bot.waitUntilWidgetAppears(Conditions.waitForWidget(WidgetMatcherFactory.widgetOfType(Table.class)));
+        return new BotFormFieldExpressionEditor(bot, this);
+    }
+
 }

@@ -20,6 +20,7 @@ package org.bonitasoft.studio.validation.constraints.process;
 import java.util.List;
 
 import org.bonitasoft.studio.model.form.Form;
+import org.bonitasoft.studio.model.form.Group;
 import org.bonitasoft.studio.model.form.SubmitFormButton;
 import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.process.PageFlow;
@@ -34,52 +35,55 @@ import org.eclipse.osgi.util.NLS;
  *
  */
 public class EndingPageflowConstraint extends
-		AbstractLiveValidationMarkerConstraint {
+AbstractLiveValidationMarkerConstraint {
 
-	/* (non-Javadoc)
-	 * @see org.bonitasoft.studio.validation.constraints.AbstractLiveValidationMarkerConstraint#performLiveValidation(org.eclipse.emf.validation.IValidationContext)
-	 */
-	@Override
-	protected IStatus performLiveValidation(IValidationContext context) {
-		return context.createSuccessStatus();
-	}
+    /* (non-Javadoc)
+     * @see org.bonitasoft.studio.validation.constraints.AbstractLiveValidationMarkerConstraint#performLiveValidation(org.eclipse.emf.validation.IValidationContext)
+     */
+    @Override
+    protected IStatus performLiveValidation(final IValidationContext context) {
+        return context.createSuccessStatus();
+    }
 
-	/* (non-Javadoc)
-	 * @see org.bonitasoft.studio.validation.constraints.AbstractLiveValidationMarkerConstraint#performBatchValidation(org.eclipse.emf.validation.IValidationContext)
-	 */
-	@Override
-	protected IStatus performBatchValidation(IValidationContext context) {
-		if (context.getTarget() instanceof PageFlow){
-			PageFlow flow  = (PageFlow)context.getTarget();
-			List<Form> forms = flow.getForm();
-			for (Form form :forms){
-				List<Widget> widgets =form.getWidgets();
-				if (containsSubmitButton(widgets)){
-					return context.createSuccessStatus();
-				}
-			}
-			if (!forms.isEmpty()){
-				return context.createFailureStatus(new Object[] { NLS.bind(Messages.validation_errorEndingPageflow,"") });
-			}
-		}
-		return context.createSuccessStatus();
-	}
-	
-	public boolean containsSubmitButton(List<Widget> widgets){
-		for (Widget widget:widgets){
-			if (widget instanceof SubmitFormButton){
-				return true;
-			}
-		}
-		return false;
-	}
+    /* (non-Javadoc)
+     * @see org.bonitasoft.studio.validation.constraints.AbstractLiveValidationMarkerConstraint#performBatchValidation(org.eclipse.emf.validation.IValidationContext)
+     */
+    @Override
+    protected IStatus performBatchValidation(final IValidationContext context) {
+        if (context.getTarget() instanceof PageFlow){
+            final PageFlow flow  = (PageFlow)context.getTarget();
+            final List<Form> forms = flow.getForm();
+            for (final Form form :forms){
+                final List<Widget> widgets = form.getWidgets();
+                if (containsSubmitButton(widgets)){
+                    return context.createSuccessStatus();
+                }
+            }
+            if (!forms.isEmpty()){
+                return context.createFailureStatus(new Object[] { NLS.bind(Messages.validation_errorEndingPageflow,"") });
+            }
+        }
+        return context.createSuccessStatus();
+    }
 
-	/* (non-Javadoc)
-	 * @see org.bonitasoft.studio.validation.constraints.AbstractLiveValidationMarkerConstraint#getConstraintId()
-	 */
-	@Override
-	protected String getConstraintId() {
-		return "org.bonitasoft.studio.validation.endingPageflowConstraint";
-	}
+    public boolean containsSubmitButton(final List<Widget> widgets){
+        for (final Widget widget : widgets) {
+            if (widget instanceof SubmitFormButton){
+                return true;
+            }
+            if (widget instanceof Group) {
+                return containsSubmitButton(((Group) widget).getWidgets());
+            }
+        }
+        return false;
+    }
+
+    /* (non-Javadoc)
+     * @see org.bonitasoft.studio.validation.constraints.AbstractLiveValidationMarkerConstraint#getConstraintId()
+     */
+    @Override
+    protected String getConstraintId() {
+        return "org.bonitasoft.studio.validation.endingPageflowConstraint";
+    }
 
 }

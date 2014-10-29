@@ -80,7 +80,7 @@ import org.eclipse.ui.PlatformUI;
  * @author Romain Bioteau
  *
  */
-public class DiagramFileStore extends EMFFileStore implements IRepositoryFileStore{
+public class DiagramFileStore extends EMFFileStore implements IRepositoryFileStore {
 
     public static final String PROC_EXT = "proc";
 
@@ -92,7 +92,7 @@ public class DiagramFileStore extends EMFFileStore implements IRepositoryFileSto
 
     @Override
     public synchronized MainProcess getContent() {
-        return (MainProcess) super.getContent() ;
+        return (MainProcess) super.getContent();
     }
 
     /* (non-Javadoc)
@@ -289,9 +289,9 @@ public class DiagramFileStore extends EMFFileStore implements IRepositoryFileSto
         }
     }
 
-    private void closeEditorIfAlreadyOpened(final IWorkbenchPage activePage) {
-        final MainProcess newProcess = getContent() ;
-        for (final IEditorReference editor : activePage.getEditorReferences()) {
+	private void closeEditorIfAlreadyOpened(final IWorkbenchPage activePage) {
+	    final MainProcess newProcess = getContent() ;
+	    for (final IEditorReference editor : activePage.getEditorReferences()) {
             final IEditorPart simpleEditor = editor.getEditor(true);
             if (simpleEditor instanceof DiagramEditor) {
                 final DiagramEditor diagramEditor = (DiagramEditor) simpleEditor;

@@ -53,7 +53,7 @@ public class StepSummarySectionContribution extends AbstractPropertySectionContr
      * @see org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution#isRelevantFor(org.eclipse.emf.ecore.EObject)
      */
     @Override
-    public boolean isRelevantFor(EObject eObject) {
+    public boolean isRelevantFor(final EObject eObject) {
         return eObject instanceof FlowElement ;
     }
 
@@ -77,7 +77,7 @@ public class StepSummarySectionContribution extends AbstractPropertySectionContr
      * @see org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution#createControl(org.eclipse.swt.widgets.Composite, org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory, org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection)
      */
     @Override
-    public void createControl(Composite composite, TabbedPropertySheetWidgetFactory widgetFactory, ExtensibleGridPropertySection extensibleGridPropertySection) {
+    public void createControl(final Composite composite, final TabbedPropertySheetWidgetFactory widgetFactory, final ExtensibleGridPropertySection extensibleGridPropertySection) {
         context = new EMFDataBindingContext();
         composite.setLayout(new GridLayout(1, true));
         composite.setLayoutData(new GridData(SWT.FILL, SWT.DEFAULT, true, false));
@@ -86,7 +86,7 @@ public class StepSummarySectionContribution extends AbstractPropertySectionContr
         expressionViewer.getControl().setLayoutData(new GridData(SWT.FILL, SWT.DEFAULT, true, false));
         expressionViewer.setInput(eObject) ;
         expressionViewer.setMessage(Messages.stepSummaryHint,IStatus.INFO) ;
-        expressionViewer.addExpressionValidator(ExpressionConstants.CONSTANT_TYPE, new ExpressionLengthValidator(maxLength));
+        expressionViewer.addExpressionValidator(new ExpressionLengthValidator(maxLength));
         refreshDataBindingContext();
     }
 

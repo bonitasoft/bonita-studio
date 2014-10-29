@@ -108,7 +108,7 @@ public class TransitionCondition implements IExtensibleGridPropertySectionContri
 
     @Override
     public void createControl(final Composite mainComposite,final TabbedPropertySheetWidgetFactory widgetFactory,
-            ExtensibleGridPropertySection extensibleGridPropertySection) {
+            final ExtensibleGridPropertySection extensibleGridPropertySection) {
 
         this.widgetFactory = widgetFactory ;
         mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 5).create());
@@ -141,7 +141,7 @@ public class TransitionCondition implements IExtensibleGridPropertySectionContri
 
 
     protected Composite createExpressionComposite(final Composite parent,
-            TabbedPropertySheetWidgetFactory widgetFactory) {
+            final TabbedPropertySheetWidgetFactory widgetFactory) {
 
         final Composite client = widgetFactory.createComposite(parent) ;
         client.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0,0).spacing(0, 0).create()) ;
@@ -149,10 +149,10 @@ public class TransitionCondition implements IExtensibleGridPropertySectionContri
 
         conditionViewer = new ExpressionViewer(client,SWT.BORDER, widgetFactory,editingDomain, ProcessPackage.Literals.SEQUENCE_FLOW__CONDITION);
         conditionViewer.setMessage(Messages.conditionExpresssionHelpMessage,IStatus.INFO);
-        conditionViewer.addExpressionValidator(ExpressionConstants.CONDITION_TYPE,new ComparisonExpressionValidator());
+        conditionViewer.addExpressionValidator(new ComparisonExpressionValidator());
         conditionViewer.addFilter(new AvailableExpressionTypeFilter(new String[]{ExpressionConstants.CONSTANT_TYPE,ExpressionConstants.PARAMETER_TYPE,ExpressionConstants.SCRIPT_TYPE,ExpressionConstants.VARIABLE_TYPE,ExpressionConstants.CONDITION_TYPE}));
         if(transition.getCondition() == null){
-            Expression expression =  ExpressionFactory.eINSTANCE.createExpression() ;
+            final Expression expression =  ExpressionFactory.eINSTANCE.createExpression() ;
             expression.setReturnType(Boolean.class.getName()) ;
             expression.setReturnTypeFixed(true) ;
             expression.setType(ExpressionConstants.CONDITION_TYPE);
@@ -166,7 +166,7 @@ public class TransitionCondition implements IExtensibleGridPropertySectionContri
     }
 
     protected Composite createDecisionTableComposite(final Composite parent,
-            TabbedPropertySheetWidgetFactory widgetFactory) {
+            final TabbedPropertySheetWidgetFactory widgetFactory) {
         final Composite client = widgetFactory.createComposite(parent) ;
         client.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).create()) ;
         client.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
@@ -176,9 +176,9 @@ public class TransitionCondition implements IExtensibleGridPropertySectionContri
         updateTableButton = widgetFactory.createButton(client, Messages.editDecisionTable ,SWT.PUSH) ;
         updateTableButton.addSelectionListener(new SelectionAdapter() {
             @Override
-            public void widgetSelected(SelectionEvent e) {
+            public void widgetSelected(final SelectionEvent e) {
 
-                DecisionTableWizard wizard = new DecisionTableWizard(transition, transition.getDecisionTable());
+                final DecisionTableWizard wizard = new DecisionTableWizard(transition, transition.getDecisionTable());
                 final TakeTransitionAction takeTransitionAction = TransitionsFactory.eINSTANCE.createTakeTransitionAction();
                 takeTransitionAction.setTakeTransition(true);
                 final TakeTransitionAction dontTakeTransitionAction = TransitionsFactory.eINSTANCE.createTakeTransitionAction();
@@ -188,12 +188,12 @@ public class TransitionCondition implements IExtensibleGridPropertySectionContri
                 wizard.setActionsLabelProvider(new TakeTransitionLabelProvider());
                 wizard.setActionsComparer(new IElementComparer() {
                     @Override
-                    public int hashCode(Object element) {
+                    public int hashCode(final Object element) {
                         return element.hashCode();
                     }
 
                     @Override
-                    public boolean equals(Object a, Object b) {
+                    public boolean equals(final Object a, final Object b) {
                         if (a instanceof TakeTransitionAction && b instanceof TakeTransitionAction) {
                             return ((TakeTransitionAction)a).isTakeTransition() == ((TakeTransitionAction)b).isTakeTransition();
                         } else {
@@ -203,10 +203,10 @@ public class TransitionCondition implements IExtensibleGridPropertySectionContri
                     }
                 });
 
-                WizardDialog dialog = new MaximizableWizardDialog(Display.getDefault().getActiveShell(), wizard);
+                final WizardDialog dialog = new MaximizableWizardDialog(Display.getDefault().getActiveShell(), wizard);
                 if (dialog.open() == Dialog.OK) {
-                    DecisionTable table = wizard.getDecisionTable();
-                    CompoundCommand cmd = new CompoundCommand();
+                    final DecisionTable table = wizard.getDecisionTable();
+                    final CompoundCommand cmd = new CompoundCommand();
                     cmd.append(new SetCommand(editingDomain, transition, ProcessPackage.Literals.SEQUENCE_FLOW__DECISION_TABLE, table));
                     editingDomain.getCommandStack().execute(cmd);
                     conditionSection.getClient().dispose() ;
@@ -223,7 +223,7 @@ public class TransitionCondition implements IExtensibleGridPropertySectionContri
 
         final DecisionTable table = transition.getDecisionTable() ;
         if(table != null && !table.getLines().isEmpty()){
-            for(DecisionTableLine line : table.getLines()){
+            for(final DecisionTableLine line : table.getLines()){
                 if(!line.getConditions().isEmpty()){
                     createLine(tableComposite,line.getConditions(),line.getAction()) ;
                 }
@@ -233,12 +233,12 @@ public class TransitionCondition implements IExtensibleGridPropertySectionContri
         return client ;
     }
 
-    private void createLine(Composite parent, List<Expression> conditions, DecisionTableAction decisionTableAction) {
+    private void createLine(final Composite parent, final List<Expression> conditions, final DecisionTableAction decisionTableAction) {
         final Composite row = widgetFactory.createComposite(parent) ;
         row.setLayoutData(GridDataFactory.fillDefaults().grab(true,false).create()) ;
         row.setLayout(RowLayoutFactory.fillDefaults().spacing(0).type(SWT.HORIZONTAL).create()) ;
 
-        for(Expression condition : conditions){
+        for(final Expression condition : conditions){
             widgetFactory.createLabel(row,	condition.getContent(), SWT.NONE) ;
             if(conditions.indexOf(condition) != conditions.size()-1){
                 widgetFactory.createLabel(row, " ", SWT.NONE) ;
@@ -265,7 +265,7 @@ public class TransitionCondition implements IExtensibleGridPropertySectionContri
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @seeorg.bonitasoft.studio.properties.sections.general.
      * IExtenstibleGridPropertySectionContribution#getLabel()
      */
@@ -276,48 +276,47 @@ public class TransitionCondition implements IExtensibleGridPropertySectionContri
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @seeorg.bonitasoft.studio.properties.sections.general.
      * IExtenstibleGridPropertySectionContribution
      * #isRelevantFor(org.eclipse.emf.ecore.EObject)
      */
     @Override
-    public boolean isRelevantFor(EObject eObject) {
+    public boolean isRelevantFor(final EObject eObject) {
         if(eObject instanceof SequenceFlow && BonitaProfilesManager.getInstance().isEnabled(IBonitaActivitiesCategory.DATA_MANAGEMENT)){
-    		SourceElement source =  ((SequenceFlow)eObject).getSource() ;
-    		boolean sourceIdAndGateway = source instanceof ANDGateway ;
-    		TargetElement target =  ((SequenceFlow)eObject).getTarget() ;
-    		boolean targetIsAndGateway = target instanceof ANDGateway && !(source instanceof XORGateway);
-    		return !(source instanceof BoundaryEvent) &&  !sourceIdAndGateway && !targetIsAndGateway;
+            final SourceElement source =  ((SequenceFlow)eObject).getSource() ;
+            final boolean sourceIdAndGateway = source instanceof ANDGateway ;
+            final TargetElement target =  ((SequenceFlow)eObject).getTarget() ;
+            final boolean targetIsAndGateway = target instanceof ANDGateway && !(source instanceof XORGateway);
+            return !(source instanceof BoundaryEvent) &&  !sourceIdAndGateway && !targetIsAndGateway;
 
-    	}
-    	return false ;
+        }
+        return false ;
 
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @seeorg.bonitasoft.studio.properties.sections.general.
      * IExtenstibleGridPropertySectionContribution#refresh()
      */
     @Override
     public void refresh() {
-        if(transition != null && !conditionSection.isDisposed()){
-            refreshBindings() ;
-        }
+
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @seeorg.bonitasoft.studio.properties.sections.general.
      * IExtenstibleGridPropertySectionContribution
      * #setEObject(org.eclipse.emf.ecore.EObject)
      */
     @Override
-    public void setEObject(EObject object) {
+    public void setEObject(final EObject object) {
         transition = (SequenceFlow) object;
+        refreshBindings();
     }
 
     private void refreshBindings() {
@@ -326,10 +325,10 @@ public class TransitionCondition implements IExtensibleGridPropertySectionContri
                 dataBindingContext.dispose();
             }
 
-            IConverter conditionConverter = new Converter(Boolean.class,Boolean.class) {
+            final IConverter conditionConverter = new Converter(Boolean.class,Boolean.class) {
 
                 @Override
-                public Object convert(Object fromObject) {
+                public Object convert(final Object fromObject) {
                     if(transition != null && transition.getSource() instanceof CatchLinkEvent){
                         return false ;
                     }
@@ -338,16 +337,16 @@ public class TransitionCondition implements IExtensibleGridPropertySectionContri
                 }
             };
 
-            IConverter defaultConverter = new Converter(Boolean.class,Boolean.class) {
+            final IConverter defaultConverter = new Converter(Boolean.class,Boolean.class) {
 
                 @Override
-                public Object convert(Object fromObject) {
+                public Object convert(final Object fromObject) {
                     if(transition != null && transition.getSource() instanceof CatchLinkEvent){
                         return false ;
                     }else{
-                        SourceElement elem = transition.getSource() ;
+                        final SourceElement elem = transition.getSource() ;
                         boolean alreadyExistDefault = false ;
-                        for(Connection c  :elem.getOutgoing()){
+                        for(final Connection c  :elem.getOutgoing()){
                             if(c instanceof SequenceFlow ){
                                 if(((SequenceFlow) c).isIsDefault() && !c.equals(transition)){
                                     alreadyExistDefault = true ;
@@ -368,7 +367,7 @@ public class TransitionCondition implements IExtensibleGridPropertySectionContri
             useExpressionTargetToModel.setConverter(new Converter(Boolean.class,SequenceFlowConditionType.class){
 
                 @Override
-                public Object convert(Object fromObject) {
+                public Object convert(final Object fromObject) {
                     if((Boolean)fromObject){
                         return SequenceFlowConditionType.EXPRESSION ;
                     }else{
@@ -381,7 +380,7 @@ public class TransitionCondition implements IExtensibleGridPropertySectionContri
             useDescisionTargetToModel.setConverter(new Converter(Boolean.class,SequenceFlowConditionType.class){
 
                 @Override
-                public Object convert(Object fromObject) {
+                public Object convert(final Object fromObject) {
                     if((Boolean)fromObject){
                         return SequenceFlowConditionType.DECISION_TABLE ;
                     }else{
@@ -394,7 +393,7 @@ public class TransitionCondition implements IExtensibleGridPropertySectionContri
             useExpressionModelToTarget.setConverter(new Converter(SequenceFlowConditionType.class,Boolean.class){
 
                 @Override
-                public Object convert(Object fromObject) {
+                public Object convert(final Object fromObject) {
                     if(fromObject == SequenceFlowConditionType.EXPRESSION){
                         return true ;
                     }else{
@@ -407,7 +406,7 @@ public class TransitionCondition implements IExtensibleGridPropertySectionContri
             useDecisionModelToTarget.setConverter(new Converter(SequenceFlowConditionType.class,Boolean.class){
 
                 @Override
-                public Object convert(Object fromObject) {
+                public Object convert(final Object fromObject) {
                     if(fromObject == SequenceFlowConditionType.DECISION_TABLE){
                         return true ;
                     }else{
@@ -419,11 +418,11 @@ public class TransitionCondition implements IExtensibleGridPropertySectionContri
 
             dataBindingContext = new EMFDataBindingContext();
 
-            IObservableValue typeValue = EMFEditObservables.observeValue(editingDomain, transition, ProcessPackage.Literals.SEQUENCE_FLOW__CONDITION_TYPE);
+            final IObservableValue typeValue = EMFEditObservables.observeValue(editingDomain, transition, ProcessPackage.Literals.SEQUENCE_FLOW__CONDITION_TYPE);
             typeValue.addValueChangeListener(new IValueChangeListener() {
 
                 @Override
-                public void handleValueChange(ValueChangeEvent event) {
+                public void handleValueChange(final ValueChangeEvent event) {
                     if(conditionSection != null && !conditionSection.isDisposed()){
                         if(event.diff.getNewValue() == SequenceFlowConditionType.EXPRESSION && (conditionViewer == null || conditionViewer.getControl().isDisposed())){
                             if(conditionSection.getClient() != null){
@@ -431,7 +430,7 @@ public class TransitionCondition implements IExtensibleGridPropertySectionContri
                             }
                             conditionSection.setClient(createExpressionComposite(conditionSection, widgetFactory)) ;
                             conditionSection.setExpanded(true) ;
-                        }else if(event.diff.getNewValue() == SequenceFlowConditionType.DECISION_TABLE &&  (conditionViewer != null && !conditionViewer.getControl().isDisposed())){
+                        }else if(event.diff.getNewValue() == SequenceFlowConditionType.DECISION_TABLE &&  conditionViewer != null && !conditionViewer.getControl().isDisposed()){
                             if(conditionSection.getClient() != null){
                                 conditionSection.getClient().dispose() ;
                             }
@@ -456,29 +455,29 @@ public class TransitionCondition implements IExtensibleGridPropertySectionContri
                     EMFEditObservables.observeValue(editingDomain, transition, ProcessPackage.Literals.SEQUENCE_FLOW__IS_DEFAULT),new UpdateValueStrategy().setConverter(defaultConverter),new UpdateValueStrategy().setConverter(defaultConverter));
 
             if(conditionViewer != null && !conditionViewer.getControl().isDisposed()){
-                dataBindingContext.bindValue(SWTObservables.observeEnabled(conditionViewer.getTextControl()),
+                dataBindingContext.bindValue(SWTObservables.observeEnabled(conditionViewer.getControl()),
                         EMFEditObservables.observeValue(editingDomain, transition, ProcessPackage.Literals.SEQUENCE_FLOW__IS_DEFAULT),new UpdateValueStrategy().setConverter(conditionConverter),new UpdateValueStrategy().setConverter(conditionConverter));
-                
-                dataBindingContext.bindValue(SWTObservables.observeEnabled(conditionViewer.getToolbar()),
-                        EMFEditObservables.observeValue(editingDomain, transition, ProcessPackage.Literals.SEQUENCE_FLOW__IS_DEFAULT),new UpdateValueStrategy().setConverter(conditionConverter),new UpdateValueStrategy().setConverter(conditionConverter));
+
+                //                dataBindingContext.bindValue(SWTObservables.observeEnabled(conditionViewer.getToolbar()),
+                //                        EMFEditObservables.observeValue(editingDomain, transition, ProcessPackage.Literals.SEQUENCE_FLOW__IS_DEFAULT),new UpdateValueStrategy().setConverter(conditionConverter),new UpdateValueStrategy().setConverter(conditionConverter));
 
                 conditionViewer.setEditingDomain(editingDomain) ;
                 dataBindingContext.bindValue(
                         ViewerProperties.singleSelection().observe(conditionViewer),
                         EMFEditProperties.value(editingDomain, ProcessPackage.Literals.SEQUENCE_FLOW__CONDITION).observe(transition));
                 conditionViewer.setInput(transition) ;
-                
+
                 dataBindingContext.bindValue(SWTObservables.observeSelection(useExpressionCondition),SWTObservables.observeEnabled(conditionViewer.getControl()));
             }
-            
+
             dataBindingContext.bindValue(SWTObservables.observeEnabled(useExpressionCondition),
                     EMFEditObservables.observeValue(editingDomain, transition, ProcessPackage.Literals.SEQUENCE_FLOW__IS_DEFAULT),new UpdateValueStrategy().setConverter(conditionConverter),new UpdateValueStrategy().setConverter(conditionConverter));
-            
-      
-            
+
+
+
             dataBindingContext.bindValue(SWTObservables.observeEnabled(useDecisionTable),
                     EMFEditObservables.observeValue(editingDomain, transition, ProcessPackage.Literals.SEQUENCE_FLOW__IS_DEFAULT),new UpdateValueStrategy().setConverter(conditionConverter),new UpdateValueStrategy().setConverter(conditionConverter));
-            
+
             if(updateTableButton != null && !updateTableButton.isDisposed()){
                 dataBindingContext.bindValue(SWTObservables.observeEnabled(updateTableButton),
                         EMFEditObservables.observeValue(editingDomain, transition, ProcessPackage.Literals.SEQUENCE_FLOW__IS_DEFAULT),new UpdateValueStrategy().setConverter(conditionConverter),new UpdateValueStrategy().setConverter(conditionConverter));
@@ -489,13 +488,13 @@ public class TransitionCondition implements IExtensibleGridPropertySectionContri
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @seeorg.bonitasoft.studio.properties.sections.general.
      * IExtenstibleGridPropertySectionContribution
      * #setEditingDomain(org.eclipse.emf.transaction.TransactionalEditingDomain)
      */
     @Override
-    public void setEditingDomain(TransactionalEditingDomain editingDomain) {
+    public void setEditingDomain(final TransactionalEditingDomain editingDomain) {
         this.editingDomain = editingDomain;
         if (conditionViewer != null) {
             conditionViewer.setEditingDomain(editingDomain);
@@ -504,13 +503,13 @@ public class TransitionCondition implements IExtensibleGridPropertySectionContri
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @seeorg.bonitasoft.studio.properties.sections.general.
      * IExtenstibleGridPropertySectionContribution
      * #setSelection(org.eclipse.jface.viewers.ISelection)
      */
     @Override
-    public void setSelection(ISelection selection) {
+    public void setSelection(final ISelection selection) {
 
     }
 

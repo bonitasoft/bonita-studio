@@ -19,6 +19,7 @@ package org.bonitasoft.studio.actors.ui.wizard.page;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -550,39 +551,44 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 
     private void handleFirstNameChange(final ValueChangeEvent event) {
         final User user = (User) userSingleSelectionObservable.getValue();
-        final User oldUser = EcoreUtil.copy(user);
-        final Object oldValue = event.diff.getOldValue();
-        if (oldValue != null && oldUser != null) {
-            oldUser.setFirstName(oldValue.toString());
-
-            if(getViewer() != null && !getViewer().getControl().isDisposed()){
-                getViewer().refresh(user) ;
+        if (user != null) {
+            final User oldUser = EcoreUtil.copy(user);
+            final Object oldValue = event.diff.getOldValue();
+            if (oldValue != null && oldUser != null) {
+                oldUser.setFirstName(oldValue.toString());
+                if(getViewer() != null && !getViewer().getControl().isDisposed()){
+                    getViewer().refresh(user) ;
+                }
             }
         }
     }
 
     private void handleLastNameChange(final ValueChangeEvent event) {
         final User user = (User) userSingleSelectionObservable.getValue();
-        final User oldUser = EcoreUtil.copy(user);
-        final Object oldValue = event.diff.getOldValue();
-        if(oldValue!=null){
-            oldUser.setLastName(oldValue.toString());
-            if(getViewer() != null && !getViewer().getControl().isDisposed()){
-                getViewer().refresh(user) ;
+        if (user != null) {
+            final User oldUser = EcoreUtil.copy(user);
+            final Object oldValue = event.diff.getOldValue();
+            if(oldValue!=null){
+                oldUser.setLastName(oldValue.toString());
+                if(getViewer() != null && !getViewer().getControl().isDisposed()){
+                    getViewer().refresh(user) ;
+                }
             }
         }
     }
 
     private void handleUserNameChange(final ValueChangeEvent event) {
         final User user = (User) userSingleSelectionObservable.getValue();
-        final User oldUser = EcoreUtil.copy(user);
-        final Object oldValue = event.diff.getOldValue();
-        if (oldValue != null) {
-            if (oldUser != null) {
-                oldUser.setUserName(oldValue.toString());
-            }
-            if (getViewer() != null && !getViewer().getControl().isDisposed()) {
-                getViewer().refresh(user);
+        if (user != null) {
+            final User oldUser = EcoreUtil.copy(user);
+            final Object oldValue = event.diff.getOldValue();
+            if (oldValue != null) {
+                if (oldUser != null) {
+                    oldUser.setUserName(oldValue.toString());
+                }
+                if (getViewer() != null && !getViewer().getControl().isDisposed()) {
+                    getViewer().refresh(user);
+                }
             }
         }
     }
@@ -773,29 +779,30 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
         groupName.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).create());
         groupName.setText(Messages.groupName);
 
-        final Combo groupNameCombo = new Combo(detailsInfoComposite, SWT.BORDER | SWT.READ_ONLY) ;
-        groupNameCombo.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).minSize(100, SWT.DEFAULT).create()) ;
+        final ComboViewer groupNameCombo = new ComboViewer(detailsInfoComposite, SWT.BORDER | SWT.READ_ONLY);
+        groupNameCombo.getCombo().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).minSize(100, SWT.DEFAULT).create());
+        groupNameCombo.setContentProvider(new ObservableListContentProvider());
+        groupNameCombo.setLabelProvider(new OrganizationGroupLabelProvider());
+        //        for(final org.bonitasoft.studio.actors.model.organization.Group g : groupList){
+        //            groupNameCombo.add(GroupContentProvider.getGroupPath(g)) ;
+        //        }
 
-        for(final org.bonitasoft.studio.actors.model.organization.Group g : groupList){
-            groupNameCombo.add(GroupContentProvider.getGroupPath(g)) ;
-        }
+        final IObservableList observeGroupList = EMFObservables.observeList(organization.getGroups(), OrganizationPackage.Literals.GROUPS__GROUP);
 
         final UpdateValueStrategy targetStrategy = new UpdateValueStrategy();
         targetStrategy.setAfterGetValidator(new EmptyInputValidator(Messages.emtpyMembershipValue));
-        targetStrategy.setConverter(new Converter(String.class,String.class) {
+        targetStrategy.setConverter(new Converter(org.bonitasoft.studio.actors.model.organization.Group.class, String.class) {
 
             @Override
             public Object convert(final Object from) {
-                final String path = (String) from ;
-                if(!path.isEmpty()){
-                    final String parentPath = path.substring(0, path.lastIndexOf(GroupContentProvider.GROUP_SEPARATOR)) ;
-                    final String groupName = path.substring(path.lastIndexOf(GroupContentProvider.GROUP_SEPARATOR)+1,path.length()) ;
-                    if(parentPath.isEmpty()){
+                final org.bonitasoft.studio.actors.model.organization.Group group = (org.bonitasoft.studio.actors.model.organization.Group) from;
+                if (group != null) {
+                    if (group.getParentPath() == null || group.getParentPath().isEmpty()) {
                         membership.setGroupParentPath(null) ;
                     }else{
-                        membership.setGroupParentPath(parentPath) ;
+                        membership.setGroupParentPath(group.getParentPath());
                     }
-                    return groupName;
+                    return group.getName();
                 }else{
                     return "";
                 }
@@ -803,26 +810,32 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
         });
 
         final UpdateValueStrategy modelStrategy = new UpdateValueStrategy();
-        modelStrategy.setConverter(new Converter(String.class,String.class) {
+        modelStrategy.setConverter(new Converter(String.class, org.bonitasoft.studio.actors.model.organization.Group.class) {
 
             @Override
             public Object convert(final Object from) {
-                if(membership.getGroupParentPath() != null && !membership.getGroupParentPath().isEmpty()){
-                    String parentPath =  membership.getGroupParentPath() ;
-                    if(!membership.getGroupParentPath().endsWith(GroupContentProvider.GROUP_SEPARATOR)){
-                        parentPath = parentPath + GroupContentProvider.GROUP_SEPARATOR ;
+                final String groupName = (String) from;
+                final Iterator<org.bonitasoft.studio.actors.model.organization.Group> iterator = observeGroupList.iterator();
+                while (iterator.hasNext()) {
+                    final org.bonitasoft.studio.actors.model.organization.Group group = iterator.next();
+                    if (group.getName().equals(groupName)) {
+                        final String gParentPath = group.getParentPath();
+                        final String mGroupParentPath = membership.getGroupParentPath();
+                        if (gParentPath == null && mGroupParentPath == null || gParentPath.equals(mGroupParentPath)) {
+                            return group;
+                        }
                     }
-                    final String path = parentPath + from ;
-                    return path ;
-                }else if(from!= null && !from.toString().isEmpty()){
-                    return GroupContentProvider.GROUP_SEPARATOR  + membership.getGroupName() ;
-                }else{
-                    return "";
+
                 }
+                return null;
+
             }
         });
+
+
+        groupNameCombo.setInput(observeGroupList);
         final IObservableValue membershipValue = EMFObservables.observeValue(membership, OrganizationPackage.Literals.MEMBERSHIP__GROUP_NAME);
-        final Binding binding = context.bindValue(SWTObservables.observeText(groupNameCombo), membershipValue, targetStrategy, modelStrategy);
+        final Binding binding = context.bindValue(ViewersObservables.observeSingleSelection(groupNameCombo), membershipValue, targetStrategy, modelStrategy);
         ControlDecorationSupport.create(binding, SWT.LEFT,detailsInfoComposite);
     }
 

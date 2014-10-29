@@ -27,6 +27,8 @@ import org.bonitasoft.studio.dependencies.DependenciesPlugin;
 import org.bonitasoft.studio.dependencies.i18n.Messages;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.swt.graphics.Image;
 
 /**
@@ -41,7 +43,7 @@ public class DependencyRepositoryStore extends AbstractRepositoryStore<Dependenc
     static{
         extensions.add("jar") ;
     }
-    
+
     private Map<String,String> runtimeDependencies ;
 
 
@@ -49,15 +51,15 @@ public class DependencyRepositoryStore extends AbstractRepositoryStore<Dependenc
      * @see org.bonitasoft.studio.common.repository.model.IRepositoryStore#createRepositoryFileStore(java.lang.String)
      */
     @Override
-    public DependencyFileStore createRepositoryFileStore(String fileName) {
+    public DependencyFileStore createRepositoryFileStore(final String fileName) {
         return new DependencyFileStore(fileName,this);
     }
 
-    protected static Set<String> retriveAllJarFilesFrom(File root) {
-    	Set<String> allJarFiles = new HashSet<String>();
-		File[] listFiles = root.listFiles();
+    protected static Set<String> retriveAllJarFilesFrom(final File root) {
+    	final Set<String> allJarFiles = new HashSet<String>();
+		final File[] listFiles = root.listFiles();
 		if(listFiles != null){
-			for(File f : listFiles){
+			for(final File f : listFiles){
 				if(f.isDirectory()){
 					allJarFiles.addAll(retriveAllJarFilesFrom(f));
 				}else if(f.getName().endsWith(".jar")){
@@ -103,10 +105,10 @@ public class DependencyRepositoryStore extends AbstractRepositoryStore<Dependenc
 	public Map<String,String> getRuntimeDependencies() {
 		if(runtimeDependencies == null){
 			runtimeDependencies = new  HashMap<String, String>();
-	    	File tomcatRoot = getTomcatRootFile();
-	    	Set<String> allJarFiles = retriveAllJarFilesFrom(new File(tomcatRoot,"lib"));
+	    	final File tomcatRoot = getTomcatRootFile();
+	    	final Set<String> allJarFiles = retriveAllJarFilesFrom(new File(tomcatRoot,"lib"));
 	    	allJarFiles.addAll(retriveAllJarFilesFrom(new File(tomcatRoot,"webapps")));
-	    	for(String jarName : allJarFiles){
+	    	for(final String jarName : allJarFiles){
 	    		runtimeDependencies.put(getLibName(jarName), getLibVersion(jarName));
 	    	}
 		}
@@ -152,4 +154,8 @@ public class DependencyRepositoryStore extends AbstractRepositoryStore<Dependenc
 		return new File(ResourcesPlugin.getWorkspace().getRoot().getLocation().toFile(),"tomcat");
 	}
 
+    @Override
+    public void migrate() throws CoreException, MigrationException {
+        //NOTHING TO DO
+    }
 }

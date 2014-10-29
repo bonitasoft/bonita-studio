@@ -130,7 +130,7 @@ public class Repository implements IRepository {
     }
 
     @Override
-    public void create() {
+    public void create(final boolean migrateStoreIfNeeded) {
         try {
             final long init = System.currentTimeMillis();
             if (BonitaStudioLog.isLoggable(IStatus.OK)) {
@@ -144,9 +144,9 @@ public class Repository implements IRepository {
             open();
             if (!projectExists) {
                 initializeProject(project);
-
             }
-            initRepositoryStores();
+
+            initRepositoryStores(migrateStoreIfNeeded);
             refreshClasspath(project);
 
             enableBuild();
@@ -163,6 +163,11 @@ public class Repository implements IRepository {
         } catch (final Exception e) {
             BonitaStudioLog.error(e);
         }
+    }
+
+    @Override
+    public void create() {
+        create(false);
     }
 
     /*
@@ -239,7 +244,7 @@ public class Repository implements IRepository {
         }
     }
 
-    protected synchronized void initRepositoryStores() {
+    protected synchronized void initRepositoryStores(final boolean migrateStoreIfNeeded) {
         if (stores == null || stores.isEmpty()) {
             disableBuild();
             stores = new TreeMap<Class<?>, IRepositoryStore<? extends IRepositoryFileStore>>(new Comparator<Class<?>>() {
@@ -254,6 +259,13 @@ public class Repository implements IRepository {
             for (final IConfigurationElement configuration : elements) {
                 try {
                     final IRepositoryStore<? extends IRepositoryFileStore> store = createRepositoryStore(configuration);
+                    if (migrateStoreIfNeeded) {
+                        try {
+                            store.migrate();
+                        } catch (final MigrationException e) {
+                            BonitaStudioLog.error(e, CommonRepositoryPlugin.PLUGIN_ID);
+                        }
+                    }
                     stores.put(store.getClass(), store);
                 } catch (final CoreException e) {
                     BonitaStudioLog.error(e);
@@ -563,7 +575,7 @@ public class Repository implements IRepository {
     @Override
     public IRepositoryStore<? extends IRepositoryFileStore> getRepositoryStore(final Class<?> repositoryStoreClass) {
         if (stores == null || stores.isEmpty()) {
-            initRepositoryStores();
+            initRepositoryStores(false);
             enableBuild();
         }
         return stores.get(repositoryStoreClass);
@@ -605,9 +617,9 @@ public class Repository implements IRepository {
     }
 
     @Override
-    public List<IRepositoryStore<? extends IRepositoryFileStore>> getAllStores() {
+    public synchronized List<IRepositoryStore<? extends IRepositoryFileStore>> getAllStores() {
         if (stores == null) {
-            initRepositoryStores();
+            initRepositoryStores(false);
             enableBuild();
         }
         final List<IRepositoryStore<? extends IRepositoryFileStore>> result = new ArrayList<IRepositoryStore<? extends IRepositoryFileStore>>(stores.values());
