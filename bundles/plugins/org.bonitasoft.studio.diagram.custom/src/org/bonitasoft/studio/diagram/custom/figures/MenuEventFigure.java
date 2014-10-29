@@ -1,7 +1,7 @@
 /**
  * Copyright (C) 2010 BonitaSoft S.A.
  * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.bonitasoft.studio.common.NamingUtils;
+import org.bonitasoft.studio.common.palette.ProcessPaletteLabelProvider;
 import org.bonitasoft.studio.model.process.diagram.providers.ProcessElementTypes;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.draw2d.Figure;
@@ -60,29 +60,17 @@ public class MenuEventFigure extends Figure {
     protected List<IFigure> allElements = new ArrayList<IFigure>();
     private final IFigure parent;
     private final List<IEventSelectionListener> registeredListeners;
-    private Map<IElementType, Command> createCmds;
-    public MenuEventFigure(IFigure parent) {
-        super();
-        allElements = new ArrayList<IFigure>();
-        figureList = new ArrayList<List<IFigure>>();
-        registeredListeners = new ArrayList<IEventSelectionListener>();
-        this.parent = parent ;
-        addEventsFigure(addNoneEventFigures());
-        addEventsFigure(addMessageEventFigures());
-        addEventsFigure(addTimerEventFigures());
-        addEventsFigure(addSignalEventFigures());
-        addEventsFigure(addLinkEventFigures());
-        addEventsFigure(addErrorEventFigures());
-        addEventsFigure(addTerminatedEventFigures());
-    }
+    private final Map<IElementType, Command> createCmds;
+    private final ProcessPaletteLabelProvider processPaletteLabelProvider;
 
-    public MenuEventFigure(FreeformLayer parent ,Map<IElementType, Command> createCmds) {
+    public MenuEventFigure(final FreeformLayer parent ,final Map<IElementType, Command> createCmds) {
         super();
         allElements = new ArrayList<IFigure>();
         figureList = new ArrayList<List<IFigure>>();
         registeredListeners = new ArrayList<IEventSelectionListener>();
         this.parent = parent ;
         this.createCmds = createCmds ;
+        processPaletteLabelProvider = new ProcessPaletteLabelProvider();
         addEventsFigure(addNoneEventFigures());
         addEventsFigure(addMessageEventFigures());
         addEventsFigure(addTimerEventFigures());
@@ -90,9 +78,10 @@ public class MenuEventFigure extends Figure {
         addEventsFigure(addLinkEventFigures());
         addEventsFigure(addErrorEventFigures());
         addEventsFigure(addTerminatedEventFigures());
+
     }
 
-    public void addEventsFigure(List<IFigure> eventFigureList) {
+    public void addEventsFigure(final List<IFigure> eventFigureList) {
         figureList.add(eventFigureList) ;
     }
 
@@ -100,20 +89,20 @@ public class MenuEventFigure extends Figure {
 
     public void show(){
         parent.setVisible(true);
-        for(IFigure elem : allElements){
+        for(final IFigure elem : allElements){
             elem.setVisible(true);
         }
     }
 
     public void hide(){
         parent.setVisible(false);
-        for(IFigure elem : allElements){
+        for(final IFigure elem : allElements){
             elem.setVisible(false);
         }
     }
 
     public void paintElements() {
-        RoundedRectangle background = new RoundedRectangle();
+        final RoundedRectangle background = new RoundedRectangle();
         background.setAlpha(50);
         background.setBackgroundColor(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_GRAY));
         background.setSize(new Dimension(4*20,figureList.size()*20));
@@ -122,8 +111,8 @@ public class MenuEventFigure extends Figure {
         parent.add(background);
         addElementsToShow(background);
         if (figureList != null) {
-            for(List<IFigure> eventLists : figureList){
-                for(IFigure f : eventLists){
+            for(final List<IFigure> eventLists : figureList){
+                for(final IFigure f : eventLists){
                     f.setSize(new Dimension(20,20));
                     f.setLocation(new Point(parent.getBounds().getTopLeft().x +f.getSize().width*eventLists.indexOf(f),parent.getBounds().getTopLeft().y+20*(figureList.indexOf(eventLists)+2)));
                     f.setVisible(false);
@@ -134,7 +123,7 @@ public class MenuEventFigure extends Figure {
 
                 }
                 if(figureList.indexOf(eventLists) != figureList.size()-1){
-                    Polyline lineSeparator = new Polyline();
+                    final Polyline lineSeparator = new Polyline();
                     lineSeparator.addPoint(new Point(parent.getBounds().getTopLeft().x ,parent.getBounds().getTopLeft().y+20+20*(figureList.indexOf(eventLists)+2)));
                     lineSeparator.addPoint(new Point(parent.getBounds().getTopLeft().x + 80,parent.getBounds().getTopLeft().y+20+20*(figureList.indexOf(eventLists)+2)));
                     lineSeparator.setAlpha(80);
@@ -145,12 +134,12 @@ public class MenuEventFigure extends Figure {
             }
         }
     }
-    protected void addElementsToShow(IFigure f) {
+    protected void addElementsToShow(final IFigure f) {
         allElements.add(f);
     }
 
     private List<IFigure> addNoneEventFigures() {
-        List<IFigure> result = new ArrayList<IFigure>();
+        final List<IFigure> result = new ArrayList<IFigure>();
         if(createCmds != null){
             if(createCmds.get(ProcessElementTypes.StartEvent_2002) == null && createCmds.get(ProcessElementTypes.StartEvent_3002) == null){
                 result.add(EMPTY_FIGURE);
@@ -169,7 +158,7 @@ public class MenuEventFigure extends Figure {
     }
 
     private List<IFigure> addLinkEventFigures() {
-        List<IFigure> result = new ArrayList<IFigure>();
+        final List<IFigure> result = new ArrayList<IFigure>();
 
         result.add(EMPTY_FIGURE);
         result.add(createItem(ProcessElementTypes.CatchLinkEvent_2018));
@@ -180,7 +169,7 @@ public class MenuEventFigure extends Figure {
     }
 
     private List<IFigure> addSignalEventFigures() {
-        List<IFigure> result = new ArrayList<IFigure>();
+        final List<IFigure> result = new ArrayList<IFigure>();
         result.add(createItem(ProcessElementTypes.StartSignalEvent_2022));
         result.add(createItem(ProcessElementTypes.IntermediateCatchSignalEvent_2021));
         result.add(createItem(ProcessElementTypes.IntermediateThrowSignalEvent_2020));
@@ -190,7 +179,7 @@ public class MenuEventFigure extends Figure {
     }
 
     private List<IFigure> addTimerEventFigures() {
-        List<IFigure> result = new ArrayList<IFigure>();
+        final List<IFigure> result = new ArrayList<IFigure>();
         //result.add(createClickableItem(new Point(0, 0),getHost(), ProcessElementTypes.StartTimerEvent_2016));
         result.add(createItem(ProcessElementTypes.StartTimerEvent_2016));
         result.add(createItem(ProcessElementTypes.IntermediateCatchTimerEvent_2017));
@@ -201,7 +190,7 @@ public class MenuEventFigure extends Figure {
     }
 
     private List<IFigure> addMessageEventFigures() {
-        List<IFigure> result = new ArrayList<IFigure>();
+        final List<IFigure> result = new ArrayList<IFigure>();
         result.add(createItem(ProcessElementTypes.StartMessageEvent_2010));
         result.add(createItem(ProcessElementTypes.IntermediateCatchMessageEvent_2013));
         result.add(createItem(ProcessElementTypes.IntermediateThrowMessageEvent_2014));
@@ -211,7 +200,7 @@ public class MenuEventFigure extends Figure {
     }
 
     private List<IFigure> addErrorEventFigures() {
-        List<IFigure> result = new ArrayList<IFigure>();
+        final List<IFigure> result = new ArrayList<IFigure>();
         if(createCmds != null){
             if(createCmds.get(ProcessElementTypes.StartErrorEvent_2033) == null && createCmds.get(ProcessElementTypes.StartErrorEvent_3060) == null){
                 result.add(EMPTY_FIGURE);
@@ -230,7 +219,7 @@ public class MenuEventFigure extends Figure {
 
 
     private List<IFigure> addTerminatedEventFigures() {
-        List<IFigure> result = new ArrayList<IFigure>();
+        final List<IFigure> result = new ArrayList<IFigure>();
         result.add(EMPTY_FIGURE);
         result.add(EMPTY_FIGURE);
         result.add(EMPTY_FIGURE);
@@ -249,23 +238,26 @@ public class MenuEventFigure extends Figure {
             image = new ImageFigure(IconService.getInstance().getIcon(type));
         }
         image.setSize(16, 16);
-        image.setToolTip(new Label(NamingUtils.getPaletteText(false, type.getEClass())));
+        image.setToolTip(new Label(processPaletteLabelProvider.getProcessPaletteText(type.getEClass())));
 
         image.addMouseListener(new MouseListener() {
 
-            public void mouseReleased(MouseEvent me) {
+            @Override
+            public void mouseReleased(final MouseEvent me) {
             }
 
-            public void mousePressed(MouseEvent me) {
-                for(IEventSelectionListener listener : registeredListeners){
-                    Event ev = new Event();
+            @Override
+            public void mousePressed(final MouseEvent me) {
+                for(final IEventSelectionListener listener : registeredListeners){
+                    final Event ev = new Event();
                     ev.widget = Display.getCurrent().getActiveShell() ;
-                    SelectionEvent selev= new SelectionEvent(ev);
+                    final SelectionEvent selev= new SelectionEvent(ev);
                     selev.data = getTypesFor(type);
                     listener.eventSelected(selev);
                 }
             }
-            public void mouseDoubleClicked(MouseEvent me) {
+            @Override
+            public void mouseDoubleClicked(final MouseEvent me) {
 
             }
         });
@@ -273,15 +265,15 @@ public class MenuEventFigure extends Figure {
         return image;
     }
 
-    public void addSelectionListener(IEventSelectionListener iEventSelectionListener) {
+    public void addSelectionListener(final IEventSelectionListener iEventSelectionListener) {
         registeredListeners.add(iEventSelectionListener);
     }
 
-    public void removeSelectionListener(IEventSelectionListener iEventSelectionListener) {
+    public void removeSelectionListener(final IEventSelectionListener iEventSelectionListener) {
         registeredListeners.remove(iEventSelectionListener);
     }
 
-    private Object[] getTypesFor(IElementType type) {
+    private Object[] getTypesFor(final IElementType type) {
         if(type.equals(ProcessElementTypes.CatchLinkEvent_2018)){
             return new Object[]{ProcessElementTypes.CatchLinkEvent_2018,ProcessElementTypes.CatchLinkEvent_3019};
         }else if(type.equals(ProcessElementTypes.ThrowLinkEvent_2019)){

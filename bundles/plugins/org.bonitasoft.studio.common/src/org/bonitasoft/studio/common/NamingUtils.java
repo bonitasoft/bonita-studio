@@ -27,42 +27,26 @@ import java.util.Set;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.databinding.validator.URLEncodableInputValidator;
+import org.bonitasoft.studio.common.palette.DefaultElementNameProvider;
+import org.bonitasoft.studio.common.palette.FormPaletteLabelProvider;
+import org.bonitasoft.studio.common.palette.ProcessPaletteLabelProvider;
 import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.model.form.FormPackage;
 import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.process.AbstractProcess;
-import org.bonitasoft.studio.model.process.Activity;
-import org.bonitasoft.studio.model.process.BoundaryMessageEvent;
-import org.bonitasoft.studio.model.process.BoundaryTimerEvent;
-import org.bonitasoft.studio.model.process.CatchLinkEvent;
 import org.bonitasoft.studio.model.process.Element;
-import org.bonitasoft.studio.model.process.EndEvent;
-import org.bonitasoft.studio.model.process.ErrorEvent;
-import org.bonitasoft.studio.model.process.Gateway;
-import org.bonitasoft.studio.model.process.IntermediateErrorCatchEvent;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.Message;
-import org.bonitasoft.studio.model.process.MessageEvent;
 import org.bonitasoft.studio.model.process.MessageFlow;
 import org.bonitasoft.studio.model.process.PageFlow;
-import org.bonitasoft.studio.model.process.Pool;
-import org.bonitasoft.studio.model.process.ProcessPackage;
-import org.bonitasoft.studio.model.process.SequenceFlow;
-import org.bonitasoft.studio.model.process.SignalEvent;
-import org.bonitasoft.studio.model.process.StartEvent;
-import org.bonitasoft.studio.model.process.SubProcessEvent;
-import org.bonitasoft.studio.model.process.ThrowLinkEvent;
-import org.bonitasoft.studio.model.process.TimerEvent;
 import org.bonitasoft.studio.model.process.ViewPageFlow;
 import org.bonitasoft.studio.model.process.provider.ProcessItemProviderAdapterFactory;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.edit.provider.ItemProviderAdapter;
-import org.eclipse.gmf.runtime.emf.type.core.ElementType;
+import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 
 /**
  * @author Mickael Istria
@@ -105,9 +89,10 @@ public class NamingUtils {
     }
 
     public String generateName(final Element newItem, final Element existingItem) {
+        final DefaultElementNameProvider elementNameProvider = new DefaultElementNameProvider();
         final Adapter adapter = new ProcessItemProviderAdapterFactory().createAdapter(newItem);
         final ItemProviderAdapter itemProvider = (ItemProviderAdapter) adapter;
-        String defaultName = getDefaultNameFor(newItem);
+        String defaultName = elementNameProvider.getNameFor(newItem);
         // the container of the newItem (where we search for the number max)
         EObject mainContainer;
         if (defaultName == null) {
@@ -122,8 +107,6 @@ public class NamingUtils {
                     mainContainer = mainContainer.eContainer();
                 }
             }
-            //        } else if (newItem instanceof BoundaryEvent) {
-            //            mainContainer = newItem.eContainer();
         } else {
             mainContainer = process;
         }
@@ -151,60 +134,6 @@ public class NamingUtils {
         return defaultName;
     }
 
-    /**
-     * @param item
-     * @return
-     */
-    public static String getDefaultNameFor(final Element item) {
-        if (item instanceof SubProcessEvent) {
-            return Messages.SubprocessEventDefaultName ;
-        }   else if (item instanceof Gateway) {
-            return Messages.GatewayDefaultName;
-        } else if (item instanceof Activity) {
-            return Messages.StepDefaultName;
-        } else if (item instanceof Pool) {
-            return Messages.PoolDefaultName;
-        } else if (item instanceof SequenceFlow) {
-            return Messages.SequenceFlowDefaultName;
-        } else if (item instanceof MessageFlow) {
-            return Messages.MessageFlowDefaultName;
-        } else if (item instanceof StartEvent) {
-            return Messages.startEventDefaultName;
-        } else if (item instanceof EndEvent) {
-            return Messages.endEventDefaultName;
-        } else if (item instanceof SignalEvent) {
-            return Messages.signalEventDefaultName;
-        } else if (item instanceof MessageEvent) {
-            return Messages.intermediateMessageEventDefaultName;
-        }else if(item instanceof BoundaryMessageEvent){
-            return "Boundary "+Messages.intermediateMessageEventDefaultName;
-        }else if(item instanceof BoundaryTimerEvent){
-            return "Boundary "+Messages.intermeiateTimerEventDefaultName;
-        } else if(item instanceof IntermediateErrorCatchEvent){
-            return "Boundary "+Messages.IntermediateErrorCatchEventLabel;
-        }  else if (item instanceof TimerEvent) {
-            return Messages.intermeiateTimerEventDefaultName;
-        } else if (item instanceof ThrowLinkEvent || item instanceof CatchLinkEvent) {
-            return Messages.linkEventDefaultName;
-        } else if (item instanceof ErrorEvent) {
-            return Messages.IntermediateErrorCatchEventLabel;
-        } else if (item instanceof Widget) {
-            String name = null;
-            name = getFormPaletteText(false, item.eClass());
-            if (name != null) {
-                return toJavaIdentifier(name, true);
-            } else {
-                return Messages.WidgetDefaultLabel;
-            }
-        }
-        String name = null;
-        name = getPaletteText(false, item.eClass());
-        if (name != null) {
-            return name;
-        } else {
-            return null;
-        }
-    }
 
     /**
      * get the max number of elements prefixed if label
@@ -268,7 +197,6 @@ public class NamingUtils {
     }
 
     public static String convertToId(final String label) {
-
         final StringBuffer tmp = new StringBuffer();
         char car;
         char toAppendChar;
@@ -303,7 +231,6 @@ public class NamingUtils {
 
                 i++;
             }
-
             return tmp.toString();
         }
         return ""; //$NON-NLS-1$
@@ -318,10 +245,9 @@ public class NamingUtils {
      * @return
      */
     public static String toJavaIdentifier(final String text, final Boolean uppercaseFirst) {
-
         boolean isStart = true;
         boolean nextIsUpperCase = true;
-        final StringBuffer res = new StringBuffer();
+        final StringBuilder res = new StringBuilder();
         for (final char c : text.toCharArray()) {
             boolean isValid = false;
             if (isStart) {
@@ -360,456 +286,13 @@ public class NamingUtils {
             self.getTarget().setEvent(self.getName());
             return self.getSource().getEvents().get(0).getName();
         }
-        return ""; //$NON-NLS-1$
+        return "";
     }
 
     public static String convertToPackage(final String name, final String version) {
-        return name + "_" + version.replace(".", "_"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        return name + "_" + version.replace(".", "_");
     }
 
-    /**
-     * @param elementTypes
-     * @return
-     */
-    public static String getPaletteDescription(final List<?> elementTypes) {
-        return getPaletteText(true, ((ElementType) elementTypes.get(0)).getEClass());
-    }
-
-    /**
-     * @param elementTypes
-     * @return
-     */
-    public static String getPaletteTitle(final List<?> elementTypes) {
-        return getPaletteText(false, ((ElementType) elementTypes.get(0)).getEClass());
-    }
-
-    /**
-     * @param elementTypes
-     * @return
-     */
-    public static String getFormPaletteDescription(final List<?> elementTypes) {
-        return getFormPaletteText(true, ((ElementType) elementTypes.get(0)).getEClass());
-    }
-
-    /**
-     * @param elementTypes
-     * @return
-     */
-    public static String getFormPaletteTitle(final List<?> elementTypes) {
-        return getFormPaletteText(false, ((ElementType) elementTypes.get(0)).getEClass());
-    }
-
-    /**
-     * @param b
-     * @param eClass
-     * @return
-     */
-    public static String getFormPaletteText(final boolean isDescription, final EClass eClass) {
-        final int id = eClass.getClassifierID();
-        switch (id) {
-            case FormPackage.CHECK_BOX_SINGLE_FORM_FIELD:
-                if (isDescription) {
-                    return Messages.Checkbox_desc;
-                } else {
-                    return Messages.Checkbox_title;
-                }
-            case FormPackage.CHECK_BOX_MULTIPLE_FORM_FIELD:
-                if (isDescription) {
-                    return Messages.CheckboxList_desc;
-                } else {
-                    return Messages.CheckboxList_title;
-                }
-            case FormPackage.DATE_FORM_FIELD:
-                if (isDescription) {
-                    return Messages.Date_desc;
-                } else {
-                    return Messages.Date_title;
-                }
-            case FormPackage.PASSWORD_FORM_FIELD:
-                if (isDescription) {
-                    return Messages.Password_desc;
-                } else {
-                    return Messages.Password_title;
-                }
-            case FormPackage.DURATION_FORM_FIELD:
-                if (isDescription) {
-                    return Messages.Duration_desc;
-                } else {
-                    return Messages.Duration_title;
-                }
-            case FormPackage.LIST_FORM_FIELD:
-                if (isDescription) {
-                    return Messages.List_desc;
-                } else {
-                    return Messages.List_title;
-                }
-            case FormPackage.RADIO_FORM_FIELD:
-                if (isDescription) {
-                    return Messages.Radio_desc;
-                } else {
-                    return Messages.Radio_title;
-                }
-            case FormPackage.SELECT_FORM_FIELD:
-                if (isDescription) {
-                    return Messages.Select_desc;
-                } else {
-                    return Messages.Select_title;
-                }
-            case FormPackage.SUGGEST_BOX:
-                if (isDescription) {
-                    return Messages.SuggestBox_desc;
-                } else {
-                    return Messages.SuggestBox_title;
-                }
-            case FormPackage.TEXT_INFO:
-                if (isDescription) {
-                    return Messages.Text_desc;
-                } else {
-                    return Messages.Text_title;
-                }
-            case FormPackage.TEXT_FORM_FIELD:
-                if (isDescription) {
-                    return Messages.TextBox_desc;
-                } else {
-                    return Messages.TextBox_title;
-                }
-            case FormPackage.TEXT_AREA_FORM_FIELD:
-                if (isDescription) {
-                    return Messages.TextArea_desc;
-                } else {
-                    return Messages.TextArea_title;
-                }
-            case FormPackage.RICH_TEXT_AREA_FORM_FIELD:
-                if (isDescription) {
-                    return Messages.RichTextArea_desc;
-                } else {
-                    return Messages.RichTextArea_title;
-                }
-            case FormPackage.MESSAGE_INFO:
-                if (isDescription) {
-                    return Messages.Message_desc;
-                } else {
-                    return Messages.Message_title;
-                }
-            case FormPackage.SUBMIT_FORM_BUTTON:
-                if (isDescription) {
-                    return Messages.Submit_desc;
-                } else {
-                    return Messages.Submit_title;
-                }
-            case FormPackage.PREVIOUS_FORM_BUTTON:
-                if (isDescription) {
-                    return Messages.Previous_desc;
-                } else {
-                    return Messages.Previous_title;
-                }
-            case FormPackage.NEXT_FORM_BUTTON:
-                if (isDescription) {
-                    return Messages.Next_desc;
-                } else {
-                    return Messages.Next_title;
-                }
-            case FormPackage.FORM_BUTTON:
-                if (isDescription) {
-                    return Messages.SimpleButton_desc;
-                } else {
-                    return Messages.SimpleButton_title;
-                }
-            case FormPackage.FILE_WIDGET:
-                if (isDescription) {
-                    return Messages.File_desc;
-                } else {
-                    return Messages.File_title;
-                }
-            case FormPackage.IMAGE_WIDGET:
-                if (isDescription) {
-                    return Messages.Image_desc;
-                } else {
-                    return Messages.Image_title;
-                }
-            case FormPackage.TABLE:
-                if (isDescription) {
-                    return Messages.Table_desc;
-                } else {
-                    return Messages.Table_title;
-                }
-            case FormPackage.DYNAMIC_TABLE:
-                if (isDescription) {
-                    return Messages.EditableGrid_desc;
-                } else {
-                    return Messages.EditableGrid_title;
-                }
-            case FormPackage.HIDDEN_WIDGET:
-                if (isDescription) {
-                    return Messages.Hidden_desc;
-                } else {
-                    return Messages.Hidden_title;
-                }
-            case FormPackage.IFRAME_WIDGET:
-                if (isDescription) {
-                    return Messages.IFrame_desc;
-                } else {
-                    return Messages.IFrame_title;
-                }
-            case FormPackage.HTML_WIDGET:
-                if (isDescription) {
-                    return Messages.HTML_desc;
-                } else {
-                    return Messages.HTML_title;
-                }
-            case FormPackage.GROUP:
-                if (isDescription) {
-                    return Messages.Group_desc;
-                } else {
-                    return Messages.Group_title;
-                }
-            default:
-                break;
-        }
-        return null;
-    }
-
-    /**
-     * @param b
-     * @param object
-     * @return
-     */
-    public static String getPaletteText(final boolean isDescription, final EClass eClass) {
-        final int id = eClass.getClassifierID();
-        switch (id) {
-            case ProcessPackage.ACTIVITY:
-                if (isDescription) {
-                    return Messages.Step_desc;
-                } else {
-                    return Messages.Step_title;
-                }
-            case ProcessPackage.TASK:
-                if (isDescription) {
-                    return Messages.Human_desc;
-                } else {
-                    return Messages.Human_title;
-                }
-            case ProcessPackage.CALL_ACTIVITY:
-                if (isDescription) {
-                    return Messages.CallActivity_desc;
-                } else {
-                    return Messages.CallActivity_title;
-                }
-            case ProcessPackage.AND_GATEWAY:
-                if (isDescription) {
-                    return Messages.Gate_desc;
-                } else {
-                    return Messages.Gate_title;
-                }
-            case ProcessPackage.XOR_GATEWAY:
-                if (isDescription) {
-                    return Messages.XORGate_desc;
-                } else {
-                    return Messages.XORGate_title;
-                }
-            case ProcessPackage.INCLUSIVE_GATEWAY:
-                if (isDescription) {
-                    return Messages.InclusiveGate_desc;
-                } else {
-                    return Messages.InclusiveGate_title;
-                }
-            case ProcessPackage.THROW_LINK_EVENT:
-                if (isDescription) {
-                    return Messages.ThrowLink_desc;
-                } else {
-                    return Messages.ThrowLink_title;
-                }
-            case ProcessPackage.CATCH_LINK_EVENT:
-                if (isDescription) {
-                    return Messages.CatchLink_desc;
-                } else {
-                    return Messages.CatchLink_title;
-                }
-            case ProcessPackage.POOL:
-                if (isDescription) {
-                    return Messages.Pool_desc;
-                } else {
-                    return Messages.Pool_title;
-                }
-            case ProcessPackage.LANE:
-                if (isDescription) {
-                    return Messages.Lane_desc;
-                } else {
-                    return Messages.Lane_title;
-                }
-            case ProcessPackage.TEXT_ANNOTATION:
-                if (isDescription) {
-                    return Messages.TextAnnotation_desc;
-                } else {
-                    return Messages.TextAnnotation_title;
-                }
-            case ProcessPackage.START_EVENT:
-                if (isDescription) {
-                    return Messages.Start_desc;
-                } else {
-                    return Messages.Start_title;
-                }
-            case ProcessPackage.START_TIMER_EVENT:
-                if (isDescription) {
-                    return Messages.StartTimer_desc;
-                } else {
-                    return Messages.StartTimer_title;
-                }
-            case ProcessPackage.START_MESSAGE_EVENT:
-                if (isDescription) {
-                    return Messages.StartMessage_desc;
-                } else {
-                    return Messages.StartMessage_title;
-                }
-            case ProcessPackage.START_SIGNAL_EVENT:
-                if (isDescription) {
-                    return Messages.StartSignal_desc;
-                } else {
-                    return Messages.StartSignal_title;
-                }
-            case ProcessPackage.START_ERROR_EVENT:
-                if (isDescription) {
-                    return Messages.StartError_desc;
-                } else {
-                    return Messages.StartError_title;
-                }
-            case ProcessPackage.END_EVENT:
-                if (isDescription) {
-                    return Messages.End_desc;
-                } else {
-                    return Messages.End_title;
-                }
-            case ProcessPackage.END_MESSAGE_EVENT:
-                if (isDescription) {
-                    return Messages.EndMessage_desc;
-                } else {
-                    return Messages.EndMessage_title;
-                }
-            case ProcessPackage.END_SIGNAL_EVENT:
-                if (isDescription) {
-                    return Messages.EndSignal_desc;
-                } else {
-                    return Messages.EndSignal_title;
-                }
-            case ProcessPackage.END_ERROR_EVENT:
-                if (isDescription) {
-                    return Messages.EndError_desc;
-                } else {
-                    return Messages.EndError_title;
-                }
-            case ProcessPackage.BOUNDARY_TIMER_EVENT:
-                if (isDescription) {
-                    return Messages.Timer_desc;
-                } else {
-                    return Messages.Timer_title;
-                }
-            case ProcessPackage.TIMER_EVENT:
-                if (isDescription) {
-                    return Messages.Timer_desc;
-                } else {
-                    return Messages.Timer_title;
-                }
-            case ProcessPackage.INTERMEDIATE_THROW_MESSAGE_EVENT:
-                if (isDescription) {
-                    return Messages.ThrowMessage_desc;
-                } else {
-                    return Messages.ThrowMessage_title;
-                }
-            case ProcessPackage.INTERMEDIATE_CATCH_MESSAGE_EVENT:
-                if (isDescription) {
-                    return Messages.CatchMessage_desc;
-                } else {
-                    return Messages.CatchMessage_title;
-                }
-            case ProcessPackage.BOUNDARY_MESSAGE_EVENT:
-                if (isDescription) {
-                    return Messages.CatchMessage_desc;
-                } else {
-                    return Messages.CatchMessage_title;
-                }
-            case ProcessPackage.INTERMEDIATE_THROW_SIGNAL_EVENT:
-                if (isDescription) {
-                    return Messages.ThrowSignal_desc;
-                } else {
-                    return Messages.ThrowSignal_title;
-                }
-            case ProcessPackage.INTERMEDIATE_CATCH_SIGNAL_EVENT:
-                if (isDescription) {
-                    return Messages.CatchSignal_desc;
-                } else {
-                    return Messages.CatchSignal_title;
-                }
-            case ProcessPackage.BOUNDARY_SIGNAL_EVENT:
-                if (isDescription) {
-                    return Messages.CatchSignal_desc;
-                } else {
-                    return Messages.CatchSignal_title;
-                }
-            case ProcessPackage.INTERMEDIATE_ERROR_CATCH_EVENT:
-                if (isDescription) {
-                    return Messages.CatchError_desc;
-                } else {
-                    return Messages.CatchError_title;
-                }
-            case ProcessPackage.NON_INTERRUPTING_BOUNDARY_TIMER_EVENT:
-                if (isDescription) {
-                    return Messages.nonInterruptingTimerEvent_desc;
-                } else {
-                    return Messages.nonInterruptingTimerEvent_title;
-                }
-            case ProcessPackage.EVENT:
-                if (isDescription) {
-                    return Messages.Event_desc;
-                } else {
-                    return Messages.Event_title;
-                }
-            case ProcessPackage.SERVICE_TASK:
-                if (isDescription) {
-                    return Messages.ServiceTask_desc;
-                } else {
-                    return Messages.ServiceTask_title;
-                }
-            case ProcessPackage.SCRIPT_TASK:
-                if (isDescription) {
-                    return Messages.ScriptTask_desc;
-                } else {
-                    return Messages.ScriptTask_title;
-                }
-            case ProcessPackage.RECEIVE_TASK:
-                if (isDescription) {
-                    return Messages.ReceiveTask_desc;
-                } else {
-                    return Messages.ReceiveTask_title;
-                }
-            case ProcessPackage.SEND_TASK:
-                if (isDescription) {
-                    return Messages.SendTask_desc;
-                } else {
-                    return Messages.SendTask_title;
-                }
-            case ProcessPackage.SEQUENCE_FLOW:
-                if (isDescription) {
-                    return Messages.Transition_desc;
-                } else {
-                    return Messages.Transition_title;
-                }
-            case ProcessPackage.END_TERMINATED_EVENT:
-                if (isDescription) {
-                    return Messages.TerminateEnd_desc;
-                } else {
-                    return Messages.TerminateEnd_title;
-                }
-            case ProcessPackage.SUB_PROCESS_EVENT:
-                if (isDescription) {
-                    return Messages.SubprocessEvent_desc;
-                } else {
-                    return Messages.SubprocessEvent_title;
-                }
-            default:
-                break;
-        }
-        return eClass.getName();
-    }
 
     public static String generateNewName(final Set<String> existingNames, final String defaultName) {
         int cpt = 1 ;
@@ -886,10 +369,6 @@ public class NamingUtils {
         return null;
     }
 
-    public static String eClassToBusinessObjectId(final EClass eClass) {
-        return eClass.getEPackage().getName()+"."+eClass.getName();
-    }
-
 
     public static String getSimpleName(final String qualifiedName) {
         Assert.isNotNull(qualifiedName);
@@ -909,6 +388,34 @@ public class NamingUtils {
             packageName = qualifiedName.substring(0,qualifiedName.lastIndexOf("."));
         }
         return packageName;
+    }
+
+    public static String getPaletteTitle(final List<IElementType> relationshipTypes) {
+        if (!relationshipTypes.isEmpty()) {
+            new ProcessPaletteLabelProvider().getProcessPaletteText(relationshipTypes.get(0).getEClass());
+        }
+        return null;
+    }
+
+    public static String getPaletteDescription(final List<IElementType> relationshipTypes) {
+        if (!relationshipTypes.isEmpty()) {
+            new ProcessPaletteLabelProvider().getProcessPaletteDescription(relationshipTypes.get(0).getEClass());
+        }
+        return null;
+    }
+
+    public static String getFormPaletteDescription(final List<IElementType> elementTypes) {
+        if (!elementTypes.isEmpty()) {
+            new FormPaletteLabelProvider().getFormPaletteDescription(elementTypes.get(0).getEClass());
+        }
+        return null;
+    }
+
+    public static String getFormPaletteTitle(final List<IElementType> elementTypes) {
+        if (!elementTypes.isEmpty()) {
+            new FormPaletteLabelProvider().getFormPaletteText(elementTypes.get(0).getEClass());
+        }
+        return null;
     }
 
 }

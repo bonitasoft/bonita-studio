@@ -26,7 +26,7 @@ import org.bonitasoft.studio.model.form.FormFactory;
  */
 public class FileWidgetBuilder extends WidgetBuilder<FileWidget, FileWidgetBuilder> {
 
-    public static FileWidgetBuilder create() {
+    public static FileWidgetBuilder createFileWidgetBuilder() {
         return new FileWidgetBuilder();
     }
 
@@ -39,6 +39,5 @@ public class FileWidgetBuilder extends WidgetBuilder<FileWidget, FileWidgetBuild
     protected FileWidget newInstance() {
         return FormFactory.eINSTANCE.createFileWidget();
     }
-
 
 }

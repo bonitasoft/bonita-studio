@@ -86,14 +86,14 @@ public class FormsExporterTest {
 
     @Test
     public void should_AddFileWidgetInputType_All() throws InvalidFormDefinitionException {
-        final FileWidget fileWidget = FileWidgetBuilder.create().withInputType(FileWidgetInputType.DOCUMENT).build();
+        final FileWidget fileWidget = FileWidgetBuilder.createFileWidgetBuilder().withInputType(FileWidgetInputType.DOCUMENT).build();
         formExporter.addDocumentInitialValue(fileWidget, formBuilder);
         verify(formBuilder).addFileWidgetInputType(org.bonitasoft.forms.client.model.FileWidgetInputType.ALL);
     }
 
     @Test
     public void should_addFileWidgetInitialValueExpression_whenTypeIsDocument() throws InvalidFormDefinitionException {
-        final FileWidget fileWidget = FileWidgetBuilder.create().withInputType(FileWidgetInputType.DOCUMENT).build();
+        final FileWidget fileWidget = FileWidgetBuilder.createFileWidgetBuilder().withInputType(FileWidgetInputType.DOCUMENT).build();
         final Document document = DocumentBuilder.create().withName("myBonitaDocument").multiple().build();
         final Expression documentExpr = ExpressionFactory.eINSTANCE.createExpression();
         documentExpr.setContent(document.getName());
@@ -104,7 +104,7 @@ public class FormsExporterTest {
 
     @Test
     public void should_addFileWidgetInitialValueExpression_whenTypeIsURL() throws InvalidFormDefinitionException {
-        final FileWidget fileWidget = FileWidgetBuilder.create().withInputType(FileWidgetInputType.URL).build();
+        final FileWidget fileWidget = FileWidgetBuilder.createFileWidgetBuilder().withInputType(FileWidgetInputType.URL).build();
         final Expression documentExpr = ExpressionFactory.eINSTANCE.createExpression();
         documentExpr.setContent("http://www.bonitasoft.com");
         fileWidget.setInputExpression(documentExpr);
@@ -145,7 +145,7 @@ public class FormsExporterTest {
 
     @Test
     public void should_addFileWidgetInitialValueExpression_whenDocumentIsScript() throws InvalidFormDefinitionException {
-        final FileWidget fileWidget = FileWidgetBuilder.create().withInputType(FileWidgetInputType.DOCUMENT).build();
+        final FileWidget fileWidget = FileWidgetBuilder.createFileWidgetBuilder().withInputType(FileWidgetInputType.DOCUMENT).build();
         final Expression scriptExpression = ExpressionFactory.eINSTANCE.createExpression();
         scriptExpression.setName("myDocumentScript");
         scriptExpression.setContent("myDocumentScript");
