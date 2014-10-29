@@ -23,18 +23,26 @@ import java.util.Collection;
 import org.bonitasoft.engine.bpm.document.DocumentValue;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.Messages;
+import org.bonitasoft.studio.connector.model.definition.ConnectorDefinitionFactory;
+import org.bonitasoft.studio.connector.model.definition.Output;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.form.DateFormField;
 import org.bonitasoft.studio.model.form.Duplicable;
 import org.bonitasoft.studio.model.form.FormFactory;
+import org.bonitasoft.studio.model.form.GroupIterator;
+import org.bonitasoft.studio.model.form.TextFormField;
 import org.bonitasoft.studio.model.form.Widget;
+import org.bonitasoft.studio.model.parameter.Parameter;
+import org.bonitasoft.studio.model.parameter.ParameterFactory;
+import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.DataType;
 import org.bonitasoft.studio.model.process.Document;
 import org.bonitasoft.studio.model.process.JavaObjectData;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.SearchIndex;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.junit.After;
 import org.junit.Before;
@@ -139,7 +147,7 @@ public class ExpressionHelperTest {
         widget.setReturnTypeModifier(Integer.class.getName());
 
         final EObject dependencyFromEObject = ExpressionHelper.createDependencyFromEObject(widget);
-        assertThat(((Widget) dependencyFromEObject).getReturnTypeModifier()).isEqualTo(Integer.class.getName());
+        assertThat(((Widget)dependencyFromEObject).getReturnTypeModifier()).isEqualTo(Integer.class.getName());
     }
 
     @Test
@@ -148,7 +156,7 @@ public class ExpressionHelperTest {
         ((Duplicable) widget).setDuplicate(true);
 
         final EObject dependencyFromEObject = ExpressionHelper.createDependencyFromEObject(widget);
-        assertThat(((Duplicable) dependencyFromEObject).isDuplicate()).isTrue();
+        assertThat(((Duplicable)dependencyFromEObject).isDuplicate()).isTrue();
     }
 
     @Test
@@ -198,5 +206,131 @@ public class ExpressionHelperTest {
         hasType(ExpressionConstants.SCRIPT_TYPE).
         hasName(Messages.emptyListExpressionName).
         hasReturnType(Collection.class.getName());
+    }
+
+    @Test
+    public void should_createExpressionFromEObject_Returns_a_VariableExpression_if_EObject_is_a_Data() throws Exception {
+        final Data data = ProcessFactory.eINSTANCE.createData();
+        data.setName("myVar");
+        final DataType textDataType = ProcessFactory.eINSTANCE.createStringType();
+        textDataType.setName(Messages.StringType);
+        data.setDataType(textDataType);
+        final Expression expression = ExpressionHelper.createExpressionFromEObject(data);
+        assertThat(expression).hasContent(data.getName()).
+                hasInterpreter("").
+                hasType(ExpressionConstants.VARIABLE_TYPE).
+                hasName(data.getName()).
+                hasReturnType(String.class.getName());
+        assertThat(expression.getReferencedElements()).hasSize(1);
+        final EObject refElement = expression.getReferencedElements().get(0);
+        assertThat(EcoreUtil.equals(data, refElement)).isTrue();
+    }
+
+    @Test
+    public void should_createExpressionFromEObject_Returns_a_ParameterExpression_if_EObject_is_a_Parameter() throws Exception {
+        final Parameter parameter = ParameterFactory.eINSTANCE.createParameter();
+        parameter.setName("myParam");
+        parameter.setTypeClassname(Integer.class.getName());
+        final Expression expression = ExpressionHelper.createExpressionFromEObject(parameter);
+        assertThat(expression).hasContent(parameter.getName()).
+                hasInterpreter("").
+                hasType(ExpressionConstants.PARAMETER_TYPE).
+                hasName(parameter.getName()).
+                hasReturnType(parameter.getTypeClassname());
+        assertThat(expression.getReferencedElements()).hasSize(1);
+        final EObject refElement = expression.getReferencedElements().get(0);
+        assertThat(EcoreUtil.equals(parameter, refElement)).isTrue();
+    }
+
+    @Test
+    public void should_createExpressionFromEObject_Returns_a_ConnectorOutputExpression_if_EObject_is_a_ConnectorOutput() throws Exception {
+        final Output output = ConnectorDefinitionFactory.eINSTANCE.createOutput();
+        output.setName("connectorOutput");
+        output.setType(Boolean.class.getName());
+        final Expression expression = ExpressionHelper.createExpressionFromEObject(output);
+        assertThat(expression).hasContent(output.getName()).
+                hasInterpreter("").
+                hasType(ExpressionConstants.CONNECTOR_OUTPUT_TYPE).
+                hasName(output.getName()).
+                hasReturnType(output.getType());
+        assertThat(expression.getReferencedElements()).hasSize(1);
+        final EObject refElement = expression.getReferencedElements().get(0);
+        assertThat(EcoreUtil.equals(output, refElement)).isTrue();
+    }
+
+    @Test
+    public void should_createExpressionFromEObject_Returns_a_FormFieldExpression_if_EObject_is_a_Widget() throws Exception {
+        final TextFormField widget = FormFactory.eINSTANCE.createTextFormField();
+        widget.setName("textField");
+        final Expression expression = ExpressionHelper.createExpressionFromEObject(widget);
+        assertThat(expression).hasContent("field_" + widget.getName()).
+                hasInterpreter("").
+                hasType(ExpressionConstants.FORM_FIELD_TYPE).
+                hasName("field_" + widget.getName()).
+                hasReturnType(widget.getReturnTypeModifier());
+        assertThat(expression.getReferencedElements()).hasSize(1);
+        final EObject refElement = expression.getReferencedElements().get(0);
+        assertThat(EcoreUtil.equals(widget, refElement)).isTrue();
+    }
+
+    @Test
+    public void should_createExpressionFromEObject_Returns_a_DocumentExpression_if_EObject_is_a_Document() throws Exception {
+        final Document document = ProcessFactory.eINSTANCE.createDocument();
+        document.setName("leave_request");
+        final Expression expression = ExpressionHelper.createExpressionFromEObject(document);
+        assertThat(expression).hasContent(document.getName()).
+                hasInterpreter("").
+                hasType(ExpressionConstants.DOCUMENT_REF_TYPE).
+                hasName(document.getName()).
+                hasReturnType(String.class.getName());
+        assertThat(expression.getReferencedElements()).hasSize(1);
+        final EObject refElement = expression.getReferencedElements().get(0);
+        assertThat(EcoreUtil.equals(document, refElement)).isTrue();
+    }
+
+    @Test
+    public void should_createExpressionFromEObject_Returns_a_GroupIteratorExpression_if_EObject_is_a_GroupIterator() throws Exception {
+        final GroupIterator iterator = FormFactory.eINSTANCE.createGroupIterator();
+        iterator.setName("iterator");
+        iterator.setClassName(Float.class.getName());
+        final Expression expression = ExpressionHelper.createExpressionFromEObject(iterator);
+        assertThat(expression).hasContent(iterator.getName()).
+                hasInterpreter("").
+                hasType(ExpressionConstants.GROUP_ITERATOR_TYPE).
+                hasName(iterator.getName()).
+                hasReturnType(iterator.getClassName());
+        assertThat(expression.getReferencedElements()).hasSize(1);
+        final EObject refElement = expression.getReferencedElements().get(0);
+        assertThat(EcoreUtil.equals(iterator, refElement)).isTrue();
+    }
+
+    @Test
+    public void should_createExpressionFromEObject_Returns_a_GroupIteratorExpression_if_EObject_is_a_GroupIterator_without_type() throws Exception {
+        final GroupIterator iterator = FormFactory.eINSTANCE.createGroupIterator();
+        iterator.setName("iterator");
+        final Expression expression = ExpressionHelper.createExpressionFromEObject(iterator);
+        assertThat(expression).hasContent(iterator.getName()).
+                hasInterpreter("").
+                hasType(ExpressionConstants.GROUP_ITERATOR_TYPE).
+                hasName(iterator.getName()).
+                hasReturnType(Object.class.getName());
+        assertThat(expression.getReferencedElements()).hasSize(1);
+        final EObject refElement = expression.getReferencedElements().get(0);
+        assertThat(EcoreUtil.equals(iterator, refElement)).isTrue();
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void should_createExpressionFromEObject_Throw_an_IllegalArgumentException_for_Unsupported_EObject() throws Exception {
+        final org.bonitasoft.studio.model.form.Form form = FormFactory.eINSTANCE.createForm();
+        ExpressionHelper.createExpressionFromEObject(form);
+    }
+
+    @Test
+    public void should_createExpressionFromEObject_Returns_a_itself_if_EObject_is_an_Expression() throws Exception {
+        final Expression inputExpression = ExpressionFactory.eINSTANCE.createExpression();
+        inputExpression.setName("connectorOutput");
+        inputExpression.setType(ExpressionConstants.CONSTANT_TYPE);
+        final Expression expression = ExpressionHelper.createExpressionFromEObject(inputExpression);
+        assertThat(expression).isEqualTo(inputExpression);
     }
 }

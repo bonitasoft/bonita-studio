@@ -18,20 +18,15 @@ package org.bonitasoft.studio.migration.ui.view;
 
 import org.bonitasoft.studio.common.jface.AbstractCheckboxLabelProvider;
 import org.bonitasoft.studio.migration.model.report.Change;
-import org.eclipse.swt.widgets.Control;
 
 public class ReviewStatusCheckboxLabelProvider extends AbstractCheckboxLabelProvider {
 
-
-	public ReviewStatusCheckboxLabelProvider(Control control) {
-		super(control);
-	}
 
 	/* (non-Javadoc)
 	 * @see org.bonitasoft.studio.common.jface.AbstractCheckboxLabelProvider#isSelected(java.lang.Object)
 	 */
 	@Override
-	protected boolean isSelected(Object element) {
+	protected boolean isSelected(final Object element) {
 		if(element instanceof Change){
 			return ((Change) element).isReviewed();
 		}

@@ -311,10 +311,14 @@ public class SWTBotTestUtil implements SWTBotConstants {
         final SWTBotTree tree = bot.treeWithId(BONITA_OVERVIEW_TREE_ID);
         tree.setFocus();
         tree.getTreeItem(poolName).click();
-        if (laneName == null) {
+        if (laneName==null){
             tree.expandNode(poolName).select(eventName);
         } else {
-            tree.expandNode(laneName).click();
+            tree.expandNode(poolName).expandNode(laneName);
+            //tree.expandNode(laneName);
+            if (eventName != null) {
+                tree.getTreeItem(eventName);
+            }
         }
     }
 
@@ -583,6 +587,35 @@ public class SWTBotTestUtil implements SWTBotConstants {
     }
 
     /**
+    *
+    * @param bot
+    * @param taskName
+    * @param newDiagramName
+    */
+   public static void changeDiagramName(final SWTGefBot bot, final String newDiagramName) {
+
+       final SWTBotEditor botEditor = bot.activeEditor();
+       final SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
+
+       gmfEditor.mainEditPart().click();
+
+       bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL).show();
+       bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL).setFocus();
+
+       selectTabbedPropertyView(bot, "Diagram");
+       bot.waitUntil(Conditions.widgetIsEnabled(bot.button(org.bonitasoft.studio.common.Messages.edit)));
+       bot.button(org.bonitasoft.studio.common.Messages.edit).click();
+
+
+       // Open new Shell
+       bot.waitUntil(Conditions.shellIsActive(org.bonitasoft.studio.common.Messages.openNameAndVersionDialogTitle));
+
+       bot.textWithLabel(org.bonitasoft.studio.common.Messages.name,0).setText(newDiagramName);
+       bot.button(IDialogConstants.OK_LABEL).click();
+
+   }
+    
+    /**
      * @param bot
      * @param taskName
      * @param newName
@@ -592,9 +625,9 @@ public class SWTBotTestUtil implements SWTBotConstants {
         final SWTBotEditor botEditor = bot.activeEditor();
         final SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
 
-        //	    AbstractProcess proc = ModelHelper.getParentProcess(((IGraphicalEditPart)gmfEditor.getEditPart(taskName).part()).resolveSemanticElement());
-        //	    AbstractProcess diag = ModelHelper.getParentProcess(((IGraphicalEditPart)gmfEditor.getEditPart(proc.getName()).part()).resolveSemanticElement());
-        //	    AbstractProcess diag = ModelHelper.getMainProcess(((IGraphicalEditPart)gmfEditor.getEditPart("Step1").part()).resolveSemanticElement());
+        //      AbstractProcess proc = ModelHelper.getParentProcess(((IGraphicalEditPart)gmfEditor.getEditPart(taskName).part()).resolveSemanticElement());
+        //      AbstractProcess diag = ModelHelper.getParentProcess(((IGraphicalEditPart)gmfEditor.getEditPart(proc.getName()).part()).resolveSemanticElement());
+        //      AbstractProcess diag = ModelHelper.getMainProcess(((IGraphicalEditPart)gmfEditor.getEditPart("Step1").part()).resolveSemanticElement());
 
         gmfEditor.mainEditPart().click();
 
@@ -927,18 +960,18 @@ public class SWTBotTestUtil implements SWTBotConstants {
     public static void editConnector(final SWTGefBot bot, final String connectorType, final String connectorTool) {
 
         bot.waitUntil(Conditions.shellIsActive("Connectors"));
-        //		SWTBotTree tree = bot.tree();
-        //		tree.expandNode(connectorType);
-        //		SWTBotTreeItem theItem = tree.getTreeItem(connectorType);
-        //		Assert.assertNotNull("Error : No item "+connectorType+" found in the tree.", theItem);
-        //		for( SWTBotTreeItem item : theItem.getItems()){
-        //			System.out.println("item = "+item.getText());
-        //			if(item.getText().startsWith(connectorTool)){
-        //				item.select();
-        //				item.click();
-        //				break;
-        //			}
-        //		}
+        //      SWTBotTree tree = bot.tree();
+        //      tree.expandNode(connectorType);
+        //      SWTBotTreeItem theItem = tree.getTreeItem(connectorType);
+        //      Assert.assertNotNull("Error : No item "+connectorType+" found in the tree.", theItem);
+        //      for( SWTBotTreeItem item : theItem.getItems()){
+        //          System.out.println("item = "+item.getText());
+        //          if(item.getText().startsWith(connectorTool)){
+        //              item.select();
+        //              item.click();
+        //              break;
+        //          }
+        //      }
         bot.text().setText(connectorTool);
         bot.table().select(0);
         Assert.assertTrue("Error : No " + connectorTool + " " + connectorType + " found in the connector list", bot.button(IDialogConstants.NEXT_LABEL)
@@ -1015,6 +1048,7 @@ public class SWTBotTestUtil implements SWTBotConstants {
         }
 
     }
+
 
     public static void selectExpressionProposal(final SWTBot bot, final String storageExpressionName, final String returnType, final int index) {
         bot.toolbarButtonWithId(SWTBOT_ID_EXPRESSIONVIEWER_DROPDOWN, index).click();

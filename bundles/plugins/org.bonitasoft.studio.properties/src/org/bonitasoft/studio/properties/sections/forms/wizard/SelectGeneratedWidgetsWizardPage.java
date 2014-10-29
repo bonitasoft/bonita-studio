@@ -5,12 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -70,12 +70,12 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.TreeItem;
 
 /**
- * 
+ *
  * This Wizard page is the second page of the wizard which allow to select
  * multiples variables to generate a default Form
- * 
+ *
  * @author Baptiste Mesta
- * 
+ *
  */
 public class SelectGeneratedWidgetsWizardPage extends WizardSelectionPage implements ICheckStateListener {
 
@@ -191,13 +191,13 @@ public class SelectGeneratedWidgetsWizardPage extends WizardSelectionPage implem
         final TreeViewerColumn mandatoryTreeViewerColumn = new TreeViewerColumn(treeViewer, SWT.CENTER);
         mandatoryTreeViewerColumn.getColumn().setText(Messages.mandatory);
         mandatoryTreeViewerColumn.getColumn().setWidth(90);
-        mandatoryTreeViewerColumn.setLabelProvider(new MandatoryCheckboxLabelProvider(treeViewer.getControl()));
+        mandatoryTreeViewerColumn.setLabelProvider(new MandatoryCheckboxLabelProvider());
         mandatoryTreeViewerColumn.setEditingSupport(createMandatoryEditingSupport(treeViewer));
 
         final TreeViewerColumn readOnlyTreeViewerColumn = new TreeViewerColumn(treeViewer, SWT.CENTER);
         readOnlyTreeViewerColumn.getColumn().setText(Messages.readOnly);
         readOnlyTreeViewerColumn.getColumn().setWidth(90);
-        readOnlyTreeViewerColumn.setLabelProvider(new ReadOnlyCheckboxLabelProvider(treeViewer.getControl()));
+        readOnlyTreeViewerColumn.setLabelProvider(new ReadOnlyCheckboxLabelProvider());
         readOnlyTreeViewerColumn.setEditingSupport(createReadOnlyEditingSupport(treeViewer));
 
         final WritableValue dataAndDocumentList = new WritableValue();

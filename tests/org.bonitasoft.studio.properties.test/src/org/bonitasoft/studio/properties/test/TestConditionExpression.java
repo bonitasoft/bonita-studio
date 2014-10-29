@@ -79,21 +79,19 @@ public class TestConditionExpression extends SWTBotGefTestCase implements SWTBot
 		testValidConditionExpression("\"myString\"<\"myString1\"",ExpressionConstants.CONDITION_TYPE);
 		testUnvalidConditionExpression("myString<\"myString1\"",ExpressionConstants.CONDITION_TYPE,true,false);
 		testUnvalidConditionExpression("\"myString\"<myString1",ExpressionConstants.CONDITION_TYPE,true,true);
-		
-		
 	}
 
 
-	private void testUnvalidConditionExpression(String condition, String expressionType,boolean leftError,boolean rightError) throws OperationCanceledException, InterruptedException{
+	private void testUnvalidConditionExpression(final String condition, final String expressionType,final boolean leftError,final boolean rightError) throws OperationCanceledException, InterruptedException{
 		SWTBotTestUtil.initializeComparisonExpression(bot, condition);
-		Point p1 = getLeftExpressionColumnLength(condition);
+		final Point p1 = getLeftExpressionColumnLength(condition);
 		StyleRange styles = SWTBotTestUtil.getTextStyleInEditExpressionDialog(bot, ExpressionConstants.CONDITION_TYPE, 0, p1.x);
 		if (leftError){
 			assertTrue(unvalidErrorMessage+" expression = "+condition,styles.underline);
 		} else {
 			assertFalse(validErrorMessage+" expression = "+condition,styles.underline);
 		}
-		Point p2 = getRighExpressionColumnLength(condition);
+		final Point p2 = getRighExpressionColumnLength(condition);
 		bot.sleep(500);
 		styles = SWTBotTestUtil.getTextStyleInEditExpressionDialog(bot, ExpressionConstants.CONDITION_TYPE, 0, p2.x);
 		if (rightError){
@@ -104,12 +102,12 @@ public class TestConditionExpression extends SWTBotGefTestCase implements SWTBot
 		bot.button(IDialogConstants.CANCEL_LABEL).click(); 
 	}
 
-	private void testValidConditionExpression(String condition, String expressionType) throws OperationCanceledException, InterruptedException{
+	private void testValidConditionExpression(final String condition, final String expressionType) throws OperationCanceledException, InterruptedException{
 		SWTBotTestUtil.initializeComparisonExpression(bot, condition);
-		Point p1 = getLeftExpressionColumnLength(condition);
+		final Point p1 = getLeftExpressionColumnLength(condition);
 		StyleRange styles = SWTBotTestUtil.getTextStyleInEditExpressionDialog(bot, ExpressionConstants.CONDITION_TYPE, 0, p1.x);
 		assertFalse(validErrorMessage,styles.underline);
-		Point p2 = getRighExpressionColumnLength(condition);
+		final Point p2 = getRighExpressionColumnLength(condition);
 		bot.sleep(500);
 		styles = SWTBotTestUtil.getTextStyleInEditExpressionDialog(bot, ExpressionConstants.CONDITION_TYPE, 0, p2.x);
 		bot.button(IDialogConstants.OK_LABEL).click();
@@ -118,7 +116,7 @@ public class TestConditionExpression extends SWTBotGefTestCase implements SWTBot
 
 
 
-	private void configurePool(String poolName,String version){
+	private void configurePool(final String poolName,final String version){
 		SWTBotTestUtil.selectTabbedPropertyView(bot,"Pool");
 		bot.button(org.bonitasoft.studio.common.Messages.edit).click();
 		bot.waitUntil(Conditions.shellIsActive(org.bonitasoft.studio.common.Messages.openNameAndVersionDialogTitle));
@@ -127,7 +125,7 @@ public class TestConditionExpression extends SWTBotGefTestCase implements SWTBot
 		bot.button(IDialogConstants.OK_LABEL).click();
 	}
 
-	private Point getLeftExpressionColumnLength(String condition){
+	private Point getLeftExpressionColumnLength(final String condition){
 		int operatorIndex;
 		if (condition.contains(">")){
 			operatorIndex = condition.indexOf(">");
@@ -153,7 +151,7 @@ public class TestConditionExpression extends SWTBotGefTestCase implements SWTBot
 		return new Point(0,condition.length());
 	}
 
-	private Point getRighExpressionColumnLength(String condition){
+	private Point getRighExpressionColumnLength(final String condition){
 		int operatorIndex;
 		if (condition.contains(">")){
 			operatorIndex = condition.indexOf(">");

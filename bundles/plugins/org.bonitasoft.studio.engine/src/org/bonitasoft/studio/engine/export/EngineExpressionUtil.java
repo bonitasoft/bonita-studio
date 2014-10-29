@@ -246,7 +246,7 @@ public class EngineExpressionUtil {
         final ExpressionBuilder exp = new ExpressionBuilder();
         exp.createNewInstance(WidgetHelper.FIELD_PREFIX + element.getName());
         exp.setContent(WidgetHelper.FIELD_PREFIX + element.getName());
-        exp.setExpressionType(ExpressionConstants.FORM_FIELD_TYPE);
+        exp.setExpressionType(ExpressionType.TYPE_INPUT);
         exp.setReturnType(WidgetHelper.getAssociatedReturnType(element));
         try {
             return exp.done();
@@ -260,7 +260,7 @@ public class EngineExpressionUtil {
         final ExpressionBuilder exp = new ExpressionBuilder();
         exp.createNewInstance(parameter.getName());
         exp.setContent(parameter.getName());
-        exp.setExpressionType(ExpressionType.TYPE_PARAMETER.toString());
+        exp.setExpressionType(ExpressionType.TYPE_PARAMETER);
         exp.setReturnType(parameter.getTypeClassname());
         try {
             return exp.done();
@@ -277,18 +277,9 @@ public class EngineExpressionUtil {
     public static LeftOperand createLeftOperand(final org.bonitasoft.studio.model.expression.Expression leftOperand, final boolean isExternal) {
         final LeftOperandBuilder builder = new LeftOperandBuilder();
         builder.createNewInstance();
-        builder.setName(getVariableName(leftOperand));
+        builder.setName(leftOperand.getName());
         builder.setType(getLeftOperandType(leftOperand, isExternal));
         return builder.done();
-    }
-
-    private static String getVariableName(
-            final org.bonitasoft.studio.model.expression.Expression leftOperand) {
-        final String leftOperandType = leftOperand.getType();
-        if (ExpressionConstants.SEARCH_INDEX_TYPE.equals(leftOperandType)) {
-            final EObject eObject = leftOperand.getReferencedElements().get(0);
-        }
-        return leftOperand.getContent();
     }
 
     public static String getLeftOperandType(final org.bonitasoft.studio.model.expression.Expression leftOperand, final boolean external) {
@@ -453,9 +444,9 @@ public class EngineExpressionUtil {
             } else {
                 content = content.replace("\r", "\n");
                 expressionBuilder.setContent(content);
-                final String engineExpressionType = toEngineExpressionType(expression);
+                final ExpressionType engineExpressionType = toEngineExpressionType(expression);
                 expressionBuilder.setExpressionType(engineExpressionType);
-                if (ExpressionConstants.SCRIPT_TYPE.equals(engineExpressionType)) {
+                if (ExpressionType.TYPE_READ_ONLY_SCRIPT.equals(engineExpressionType)) {
                     expressionBuilder.setInterpreter(expression.getInterpreter());
                 } else {
                     expressionBuilder.setInterpreter("");
@@ -552,9 +543,9 @@ public class EngineExpressionUtil {
             final org.bonitasoft.studio.model.expression.Expression simpleExpression) {
         exp.createNewInstance("<pattern-expression>");
         exp.setContent(simpleExpression.getContent());
-        final String engineExpressionType = toEngineExpressionType(simpleExpression);
+        final ExpressionType engineExpressionType = toEngineExpressionType(simpleExpression);
         exp.setExpressionType(engineExpressionType);
-        if (ExpressionConstants.SCRIPT_TYPE.equals(engineExpressionType)) {
+        if (ExpressionType.TYPE_READ_ONLY_SCRIPT == engineExpressionType) {
             exp.setInterpreter(simpleExpression.getInterpreter());
         } else {
             exp.setInterpreter("");
@@ -681,48 +672,48 @@ public class EngineExpressionUtil {
         return (Operation_Compare) resource.getContents().get(0);
     }
 
-    static String toEngineExpressionType(final org.bonitasoft.studio.model.expression.Expression expression) {
+    static ExpressionType toEngineExpressionType(final org.bonitasoft.studio.model.expression.Expression expression) {
         final String type = expression.getType();
         if (ExpressionConstants.CONNECTOR_OUTPUT_TYPE.equals(type) || ExpressionConstants.URL_ATTRIBUTE_TYPE.equals(type)) {
-            return ExpressionType.TYPE_INPUT.name();
+            return ExpressionType.TYPE_INPUT;
         }
         if (ExpressionConstants.DOCUMENT_REF_TYPE.equals(type)) {
             return toEngineExpressionTypeFoDocumentRef(expression);
         }
         if (ExpressionConstants.GROUP_ITERATOR_TYPE.equals(type)) {
-            return ExpressionConstants.FORM_FIELD_TYPE;
+            return ExpressionType.TYPE_INPUT;
         }
         if (ExpressionConstants.MULTIINSTANCE_ITERATOR_TYPE.equals(type)) {
-            return ExpressionConstants.VARIABLE_TYPE;
+            return ExpressionType.TYPE_VARIABLE;
         }
         if (ExpressionConstants.VARIABLE_TYPE.equals(type) && !expression.getReferencedElements().isEmpty()) {
             final Data data = (Data) expression.getReferencedElements().get(0);
             final String ds = data.getDatasourceId();
             if (DatasourceConstants.PAGEFLOW_DATASOURCE.equals(ds)) {
-                return ExpressionConstants.FORM_FIELD_TYPE;
+                return ExpressionType.TYPE_INPUT;
             }
             if (data.isTransient()) {
-                return ExpressionConstants.TRANSIENT_VARIABLE_TYPE;
+                return ExpressionType.TYPE_TRANSIENT_VARIABLE;
             }
             if (data instanceof BusinessObjectData) {
-                return ExpressionConstants.BUSINESS_DATA_TYPE;
+                return ExpressionType.TYPE_BUSINESS_DATA;
             }
 
         }
-        return type;
+        return ExpressionType.valueOf(expression.getType());
     }
 
-    private static String toEngineExpressionTypeFoDocumentRef(final org.bonitasoft.studio.model.expression.Expression expression) {
+    private static ExpressionType toEngineExpressionTypeFoDocumentRef(final org.bonitasoft.studio.model.expression.Expression expression) {
         if (!expression.getReferencedElements().isEmpty()) {
             final EObject referencedElement = expression.getReferencedElements().get(0);
             if (referencedElement instanceof Document) {
                 if (((Document) referencedElement).isMultiple()) {
-                    return ExpressionConstants.DOCUMENT_LIST_TYPE;
+                    return ExpressionType.TYPE_DOCUMENT_LIST;
                 }
             }
         }
         //Return CONSTANT_TYPE for ensuring backward-compatibility even if Engine has introduced the DOCUMENT_TYPE,
-        return ExpressionConstants.CONSTANT_TYPE;
+        return ExpressionType.TYPE_CONSTANT;
     }
 
     public static Expression createConnectorOutputExpression(final Output element) {
@@ -753,15 +744,15 @@ public class EngineExpressionUtil {
 
     public static Expression createVariableExpression(final Data element) {
         final String datasourceId = element.getDatasourceId();
-        String type = ExpressionConstants.VARIABLE_TYPE;
+        ExpressionType type = ExpressionType.TYPE_VARIABLE;
         if (element instanceof BusinessObjectData) {
-            type = ExpressionConstants.BUSINESS_DATA_TYPE;
+            type = ExpressionType.TYPE_BUSINESS_DATA;
         }
         if (DatasourceConstants.PAGEFLOW_DATASOURCE.equals(datasourceId)) {
-            type = ExpressionConstants.FORM_FIELD_TYPE;
+            type = ExpressionType.TYPE_INPUT;
         }
         if (element.isTransient()) {
-            type = ExpressionConstants.TRANSIENT_VARIABLE_TYPE;
+            type = ExpressionType.TYPE_TRANSIENT_VARIABLE;
         }
         final ExpressionBuilder exp = new ExpressionBuilder();
         exp.createNewInstance(element.getName());
@@ -780,7 +771,7 @@ public class EngineExpressionUtil {
         final ExpressionBuilder exp = new ExpressionBuilder();
         exp.createNewInstance("<empty-name>");
         exp.setContent("[]");
-        exp.setExpressionType(ExpressionConstants.SCRIPT_TYPE);
+        exp.setExpressionType(ExpressionType.TYPE_READ_ONLY_SCRIPT);
         exp.setInterpreter(ExpressionConstants.GROOVY);
         exp.setReturnType(List.class.getName());
         exp.setDependencies(new ArrayList<Expression>());
@@ -797,7 +788,7 @@ public class EngineExpressionUtil {
         final ExpressionBuilder exp = new ExpressionBuilder();
         exp.createNewInstance(name);
         exp.setContent(content);
-        exp.setExpressionType(ExpressionConstants.CONSTANT_TYPE);
+        exp.setExpressionType(ExpressionType.TYPE_CONSTANT);
         exp.setReturnType(returnType);
         try {
             return exp.done();

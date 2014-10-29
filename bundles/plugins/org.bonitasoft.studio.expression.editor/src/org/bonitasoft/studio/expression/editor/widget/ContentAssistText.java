@@ -25,6 +25,9 @@ import org.bonitasoft.studio.expression.editor.autocompletion.AutoCompletionFiel
 import org.bonitasoft.studio.expression.editor.autocompletion.IBonitaContentProposalListener2;
 import org.bonitasoft.studio.expression.editor.autocompletion.IExpressionProposalLabelProvider;
 import org.bonitasoft.studio.pics.Pics;
+import org.eclipse.core.databinding.observable.value.IValueChangeListener;
+import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
+import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.fieldassist.TextContentAdapter;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -53,162 +56,157 @@ import org.eclipse.swt.widgets.ToolItem;
 public class ContentAssistText extends Composite implements SWTBotConstants {
 
 
-	private Text textControl;
-	private AutoCompletionField autoCompletion;
-	private boolean drawBorder = true;
-	private ToolBar tb;
-	private boolean isReadOnly = false;
-	private List<IBonitaContentProposalListener2> contentAssistListerners = new ArrayList<IBonitaContentProposalListener2>();
-	
-	public ContentAssistText(Composite parent, IExpressionProposalLabelProvider contentProposalLabelProvider, int style) {
-		super(parent, SWT.NONE);
-		Point margins = new Point(3, 3);
-		if ((style & SWT.BORDER) == 0){
-			drawBorder = false;
-			margins = new Point(0, 0);
-		}else{
-			style = style ^ SWT.BORDER;
-		}
-		if((style & SWT.READ_ONLY) != 0){
-			isReadOnly = true;
-		}
-		int indent = 32;
-		if(isReadOnly){
-			indent = 18;
-		}
-		setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(margins).spacing(indent, 0).create());
-		setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
+    private final Text textControl;
+    private final AutoCompletionField autoCompletion;
+    private boolean drawBorder = true;
+    private final ToolBar tb;
+    private boolean isReadOnly = false;
+    private final List<IBonitaContentProposalListener2> contentAssistListerners = new ArrayList<IBonitaContentProposalListener2>();
 
-		
-		textControl = new Text(this,style | SWT.SINGLE);
-		textControl.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
-		textControl.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-		textControl.addFocusListener(new FocusListener() {
+    public ContentAssistText(final Composite parent, final IExpressionProposalLabelProvider contentProposalLabelProvider, int style) {
+        super(parent, SWT.NONE);
+        Point margins = new Point(3, 3);
+        if ((style & SWT.BORDER) == 0){
+            drawBorder = false;
+            margins = new Point(0, 0);
+        }else{
+            style = style ^ SWT.BORDER;
+        }
+        if((style & SWT.READ_ONLY) != 0){
+            isReadOnly = true;
+        }
+        int indent = 32;
+        if(isReadOnly){
+            indent = 18;
+        }
+        setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(margins).spacing(indent, 0).create());
+        setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
 
-			@Override
-			public void focusLost(FocusEvent e) {
-				if(textControl.equals(e.widget)){
-					Display.getDefault().asyncExec(new Runnable() {
 
-						@Override
-						public void run() {
-							if(!ContentAssistText.this.isDisposed()){
-								ContentAssistText.this.redraw();
-								//Useless after e4 migration ? Has an invalid behavior during swtbot tests
-//								if(!autoCompletion.getContentProposalAdapter().hasProposalPopupFocus()){
-//									if(autoCompletion.getContentProposalAdapter().isProposalPopupOpen()){
-//										autoCompletion.getContentProposalAdapter().closeProposalPopup();
-//									}
-//								}
-							}
-						}
-					});
+        textControl = new Text(this, style | SWT.SINGLE);
+        textControl.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
+        textControl.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        textControl.addFocusListener(new FocusListener() {
 
-				}
-			}
+            @Override
+            public void focusLost(final FocusEvent e) {
+                if(textControl.equals(e.widget)){
+                    Display.getDefault().asyncExec(new Runnable() {
 
-			@Override
-			public void focusGained(FocusEvent e) {
-				if(textControl.equals(e.widget)){
-					Display.getDefault().asyncExec(new Runnable() {
+                        @Override
+                        public void run() {
+                            if(!ContentAssistText.this.isDisposed()){
+                                ContentAssistText.this.redraw();
+                            }
+                        }
+                    });
 
-						@Override
-						public void run() {
-							if(!ContentAssistText.this.isDisposed()){
-								ContentAssistText.this.redraw();
-							}
+                }
+            }
 
-						}
-					});
-				}
-			}
-		});
-		/*Data for test purpose*/
-		textControl.setData(SWTBOT_WIDGET_ID_KEY, SWTBOT_ID_EXPRESSIONVIEWER_TEXT);
-		tb = new ToolBar(this, SWT.FLAT | SWT.NO_FOCUS);
-		tb.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
-		tb.setLayoutData(GridDataFactory.swtDefaults().create());
-		tb.setEnabled(true);
-		final ToolItem ti = new ToolItem(tb, SWT.FLAT | SWT.NO_FOCUS);
-		ti.setData(SWTBOT_WIDGET_ID_KEY, SWTBOT_ID_EXPRESSIONVIEWER_DROPDOWN);
-		ti.setImage(Pics.getImage("resize_S.gif"));
-		ti.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void focusGained(final FocusEvent e) {
+                if(textControl.equals(e.widget)){
+                    Display.getDefault().asyncExec(new Runnable() {
 
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				setFocus();
-				BusyIndicator.showWhile(getShell().getDisplay(), new Runnable() {
-					public void run() {
-						fireOpenProposalEvent();
-						if(autoCompletion.getContentProposalAdapter().isProposalPopupOpen()){
-							autoCompletion.getContentProposalAdapter().closeProposalPopup();
-						}else{
-							autoCompletion.getContentProposalAdapter().showProposalPopup();
-						}
-					}
-				});
-			}
-		});
-		addPaintListener(new PaintListener() {
+                        @Override
+                        public void run() {
+                            if(!ContentAssistText.this.isDisposed()){
+                                ContentAssistText.this.redraw();
+                            }
 
-			@Override
-			public void paintControl(PaintEvent e) {
-				if(drawBorder){
-					paintControlBorder(e);
-				}
-			}
-		});
-		autoCompletion = new AutoCompletionField(textControl, new TextContentAdapter(), contentProposalLabelProvider) ;
-	}
-	
-	public void setProposalEnabled(Boolean proposalEnabled){
-		if(!proposalEnabled){
-			tb.setEnabled(false);
-		} else {
-			tb.setEnabled(true);
-		}
-	}
-	
-	protected void fireOpenProposalEvent() {
-		for(IBonitaContentProposalListener2 listener : contentAssistListerners){
-			listener.proposalPopupOpened(autoCompletion.getContentProposalAdapter());
-		}
-	}
+                        }
+                    });
+                }
+            }
+        });
+        /*Data for test purpose*/
+        textControl.setData(SWTBOT_WIDGET_ID_KEY, SWTBOT_ID_EXPRESSIONVIEWER_TEXT);
+        tb = new ToolBar(this, SWT.FLAT | SWT.NO_FOCUS);
+        tb.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
+        tb.setLayoutData(GridDataFactory.swtDefaults().create());
+        tb.setEnabled(true);
+        final ToolItem ti = new ToolItem(tb, SWT.FLAT | SWT.NO_FOCUS);
+        ti.setData(SWTBOT_WIDGET_ID_KEY, SWTBOT_ID_EXPRESSIONVIEWER_DROPDOWN);
+        ti.setImage(Pics.getImage("resize_S.gif"));
+        ti.addSelectionListener(new SelectionAdapter() {
 
-	protected void paintControlBorder(PaintEvent e) {
-		GC gc = e.gc;
-		Display display = e.display ;
-		if(display!= null && gc != null && !gc.isDisposed()){
-			Control focused = display.getFocusControl() ;
-			GC parentGC  = gc;
-			parentGC.setAdvanced(true);
-			Rectangle r = ContentAssistText.this.getBounds();
-			if(focused == null || (focused.getParent() != null && !focused.getParent().equals(ContentAssistText.this))){
-				parentGC.setForeground(display.getSystemColor(SWT.COLOR_GRAY));
-			}else{
-				parentGC.setForeground(display.getSystemColor(SWT.COLOR_WIDGET_BORDER));
-			}
-			parentGC.setLineWidth(1);
-			parentGC.drawRectangle(0, 0, r.width-1, r.height-1);
-		}
-	}
+            @Override
+            public void widgetSelected(final SelectionEvent e) {
+                setFocus();
+                BusyIndicator.showWhile(getShell().getDisplay(), new Runnable() {
+                    @Override
+                    public void run() {
+                        fireOpenProposalEvent();
+                        if(autoCompletion.getContentProposalAdapter().isProposalPopupOpen()){
+                            autoCompletion.getContentProposalAdapter().closeProposalPopup();
+                        }else{
+                            autoCompletion.getContentProposalAdapter().showProposalPopup();
+                        }
+                    }
+                });
+            }
+        });
+        addPaintListener(new PaintListener() {
 
-	public Text getTextControl() {
-		return textControl;
-	}
+            @Override
+            public void paintControl(final PaintEvent e) {
+                if(drawBorder){
+                    paintControlBorder(e);
+                }
+            }
+        });
+        autoCompletion = new AutoCompletionField(textControl, new TextContentAdapter(), contentProposalLabelProvider) ;
+    }
 
-	public AutoCompletionField getAutocompletion() {
-		return autoCompletion;
-	}
+    public void setProposalEnabled(final boolean proposalEnabled) {
+        if(!proposalEnabled){
+            tb.setEnabled(false);
+        } else {
+            tb.setEnabled(true);
+        }
+    }
 
-	public ToolBar getToolbar() {
-		return tb;
-	}
+    protected void fireOpenProposalEvent() {
+        for(final IBonitaContentProposalListener2 listener : contentAssistListerners){
+            listener.proposalPopupOpened(autoCompletion.getContentProposalAdapter());
+        }
+    }
 
-	public void addContentAssistListener(IBonitaContentProposalListener2 listener) {
-		contentAssistListerners.add(listener);
-	}
+    protected void paintControlBorder(final PaintEvent e) {
+        final GC gc = e.gc;
+        final Display display = e.display ;
+        if(display!= null && gc != null && !gc.isDisposed()){
+            final Control focused = display.getFocusControl() ;
+            final GC parentGC  = gc;
+            parentGC.setAdvanced(true);
+            final Rectangle r = ContentAssistText.this.getBounds();
+            if(focused == null || focused.getParent() != null && !focused.getParent().equals(ContentAssistText.this)){
+                parentGC.setForeground(display.getSystemColor(SWT.COLOR_GRAY));
+            }else{
+                parentGC.setForeground(display.getSystemColor(SWT.COLOR_WIDGET_BORDER));
+            }
+            parentGC.setLineWidth(1);
+            parentGC.drawRectangle(0, 0, r.width-1, r.height-1);
+        }
+    }
 
-	
+    public Text getTextControl() {
+        return textControl;
+    }
+
+    public AutoCompletionField getAutocompletion() {
+        return autoCompletion;
+    }
+
+    public ToolBar getToolbar() {
+        return tb;
+    }
+
+    public void addContentAssistListener(final IBonitaContentProposalListener2 listener) {
+        contentAssistListerners.add(listener);
+    }
+
+
 
 }

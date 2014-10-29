@@ -48,19 +48,19 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.EMap;
 
 /**
- * 
+ *
  * create a css file using widgets styles and other attributes
- * 
+ *
  * @author Baptiste Mesta
- * 
+ *
  */
 public class CssGenerator {
 
     public static final String HIDDEN_STYLE_CLASS = "hidden_on_instantiation";
 
-    public File createCssFile(String targetFolder,Element element) {
+    public File createCssFile(final String targetFolder,final Element element) {
         // TODO consultation form
-        StringBuilder cssContents = new StringBuilder();
+        final StringBuilder cssContents = new StringBuilder();
 
         addToCss(element, cssContents);
         addTableContainerClass(cssContents) ;
@@ -78,15 +78,15 @@ public class CssGenerator {
                 writer.flush();
                 return generatedCss;
 
-            } catch (FileNotFoundException e1) {
+            } catch (final FileNotFoundException e1) {
                 BonitaStudioLog.error(e1);
-            } catch (IOException e2) {
+            } catch (final IOException e2) {
                 BonitaStudioLog.error(e2);
             } finally{
                 if(writer != null){
                     try {
                         writer.close();
-                    } catch (IOException e) {
+                    } catch (final IOException e) {
                         BonitaStudioLog.error(e);
                     }
                 }
@@ -97,7 +97,7 @@ public class CssGenerator {
 
     }
 
-    private void addHiddenStyle(StringBuilder cssContents) {
+    private void addHiddenStyle(final StringBuilder cssContents) {
         cssContents.append("\n.");
         cssContents.append(HIDDEN_STYLE_CLASS);
         cssContents.append(" {\n");
@@ -105,54 +105,54 @@ public class CssGenerator {
         cssContents.append("}\n");
     }
 
-    private void addTableContainerClass(StringBuilder cssContents) {
+    private void addTableContainerClass(final StringBuilder cssContents) {
         cssContents.append("\n.bonita_table_container {\n");
         cssContents.append("\ttable-layout: fixed;\n");
         cssContents.append("}\n");
     }
 
-    public void addCssToWar(AbstractProcess process, File destFolderFile, IProgressMonitor monitor) {
-        File cssFile = createCssFile(ProjectUtil.getBonitaStudioWorkFolder().getAbsolutePath(),process);
+    public void addCssToWar(final AbstractProcess process, final File destFolderFile, final IProgressMonitor monitor) {
+        final File cssFile = createCssFile(ProjectUtil.getBonitaStudioWorkFolder().getAbsolutePath(),process);
         if (cssFile != null) {
-            File destFile = new File(destFolderFile.getAbsolutePath() + File.separatorChar + "application" + File.separatorChar + "css"); //$NON-NLS-1$ //$NON-NLS-2$
+            final File destFile = new File(destFolderFile.getAbsolutePath() + File.separatorChar + "application" + File.separatorChar + "css"); //$NON-NLS-1$ //$NON-NLS-2$
             destFile.mkdirs();
             PlatformUtil.copyResource(destFile, cssFile, monitor);
             PlatformUtil.delete(cssFile.getParentFile().getParentFile(), monitor) ;
         }
     }
 
-    protected void addToCss(Element element, StringBuilder cssContents) {
+    protected void addToCss(final Element element, final StringBuilder cssContents) {
 
         if (element instanceof Form) {
-            for (Line line : ((Form) element).getLines()) {
+            for (final Line line : ((Form) element).getLines()) {
                 addHeightRule(cssContents, element, line);
             }
-            for (Column column : ((Form) element).getColumns()) {
+            for (final Column column : ((Form) element).getColumns()) {
                 addWidthRule(cssContents, element, column);
             }
-            for (Widget widget : ((Form) element).getWidgets()) {
+            for (final Widget widget : ((Form) element).getWidgets()) {
                 addToCss(widget, cssContents);
             }
         }
 
         if (element instanceof PageFlow) {
-            for (Form form : ((PageFlow) element).getForm()) {
+            for (final Form form : ((PageFlow) element).getForm()) {
                 addToCss(form, cssContents);
             }
             if(element instanceof AbstractProcess){
-                for (Form form : ((AbstractProcess) element).getRecapForms()) {
+                for (final Form form : ((AbstractProcess) element).getRecapForms()) {
                     addToCss(form, cssContents);
                 }
             }
         }
 
         if(element instanceof ViewPageFlow){
-            for (Form form : ((ViewPageFlow) element).getViewForm()) {
+            for (final Form form : ((ViewPageFlow) element).getViewForm()) {
                 addToCss(form, cssContents);
             }
         }
         if (element instanceof Container) {
-            for (Element el : ((Container) element).getElements()) {
+            for (final Element el : ((Container) element).getElements()) {
                 // do not add contained process
                 if (!(el instanceof AbstractProcess)) {
                     addToCss(el, cssContents);
@@ -162,10 +162,10 @@ public class CssGenerator {
 
     }
 
-    protected void addToCss(Widget widget, StringBuilder cssContents) {
+    protected void addToCss(final Widget widget, final StringBuilder cssContents) {
 
         // browse widget for css attr
-        EMap<String, String> map = widget.getHtmlAttributes();
+        final EMap<String, String> map = widget.getHtmlAttributes();
 
         if (FormPackage.eINSTANCE.getItemContainer().isSuperTypeOf(widget.eClass())) {
             createWidgetRule(cssContents, (ItemContainer) widget);
@@ -179,7 +179,7 @@ public class CssGenerator {
 
     }
 
-    protected void createRules(StringBuilder cssContents, EMap<String, String> map, Widget widget) {
+    protected void createRules(final StringBuilder cssContents, final EMap<String, String> map, final Widget widget) {
         createWidgetRule(cssContents, map, widget);
 
         // create input rule
@@ -204,9 +204,8 @@ public class CssGenerator {
      * @param cssContents
      * @param object
      */
-    private void createWidgetRule(StringBuilder cssContents, ItemContainer widget) {
+    private void createWidgetRule(final StringBuilder cssContents, final ItemContainer widget) {
         if (widget.getItemClass() != null) {
-
             cssContents.append("\n." + ExporterTools.getWidgetUID((Widget) widget) + "_align" + "{\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
             if (widget.getItemClass().equals("v")) { //$NON-NLS-1$
                 cssContents.append("clear:both;"); //$NON-NLS-1$
@@ -221,17 +220,16 @@ public class CssGenerator {
 
     }
 
-    private void createWidgetRule(StringBuilder cssContents, EMap<String, String> map, Widget widget) {
-
-		if(widget instanceof RichTextAreaFormField){
-			cssContents.append("\n." + "widget_" + ExporterTools.getWidgetUID((Widget) widget) + " .bonita_richTextArea {\n"); //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
-		} else {
-			cssContents.append("\n." + "widget_" + ExporterTools.getWidgetUID((Widget) widget) + "{\n"); //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
-		}
+    private void createWidgetRule(final StringBuilder cssContents, final EMap<String, String> map, final Widget widget) {
+        if(widget instanceof RichTextAreaFormField){
+            cssContents.append("\n." + "widget_" + ExporterTools.getWidgetUID(widget) + " div.bonita_rich_text {\n"); //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+        } else {
+            cssContents.append("\n." + "widget_" + ExporterTools.getWidgetUID(widget) + "{\n"); //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+        }
         if (map.containsKey(ExporterTools.PREFIX_WIDGET + ExporterTools.STYLE_ATTR)) {
 
             // add style property
-            StringTokenizer st = new StringTokenizer(map.get(ExporterTools.PREFIX_WIDGET +ExporterTools. STYLE_ATTR).replace("\n", ""), ";");
+            final StringTokenizer st = new StringTokenizer(map.get(ExporterTools.PREFIX_WIDGET +ExporterTools. STYLE_ATTR).replace("\n", ""), ";");
             while (st.hasMoreElements())
             {
                 cssContents.append("\t" + st.nextToken() + ";" + "\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
@@ -241,9 +239,9 @@ public class CssGenerator {
         if (map.containsKey(ExporterTools.PREFIX_WIDGET + ExporterTools.WIDGET_HEIGHT)) {
             try {
                 // by default px format
-                int height = Integer.valueOf(map.get(ExporterTools.PREFIX_WIDGET + ExporterTools.WIDGET_HEIGHT));
+                final int height = Integer.valueOf(map.get(ExporterTools.PREFIX_WIDGET + ExporterTools.WIDGET_HEIGHT));
                 cssContents.append("\theight:" + height + "px;\n"); //$NON-NLS-1$ //$NON-NLS-2$
-            } catch (NumberFormatException e) {
+            } catch (final NumberFormatException e) {
                 cssContents.append("\t" + "height : " + map.get(ExporterTools.PREFIX_WIDGET + ExporterTools.WIDGET_HEIGHT) + ";" + "\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
             }
@@ -251,9 +249,9 @@ public class CssGenerator {
         if (map.containsKey(ExporterTools.PREFIX_WIDGET + ExporterTools.WIDGET_WIDTH)) {
             try {
                 // by default px format
-                int height = Integer.valueOf(map.get(ExporterTools.PREFIX_WIDGET + ExporterTools.WIDGET_WIDTH));
-                cssContents.append("\t width :" + height + "px;\n");
-            } catch (NumberFormatException e) {
+                final int width = Integer.valueOf(map.get(ExporterTools.PREFIX_WIDGET + ExporterTools.WIDGET_WIDTH));
+                cssContents.append("\t width :" + width + "px;\n");
+            } catch (final NumberFormatException e) {
                 cssContents.append("\t width : " + map.get(ExporterTools.PREFIX_WIDGET + ExporterTools.WIDGET_WIDTH) + ";" + "\n");
 
             }
@@ -262,7 +260,7 @@ public class CssGenerator {
         cssContents.append("\n}\n");
     }
 
-    protected void addHeightRule(StringBuilder cssContents, Element element, Line line) {
+    protected void addHeightRule(final StringBuilder cssContents, final Element element, final Line line) {
         if (element instanceof Form) {
             cssContents.append("\n." + ExporterTools.getFormUID((Form) element) + "_Row" + line.getNumber() + "{\n");
         } else {
@@ -270,9 +268,9 @@ public class CssGenerator {
         }
         try {
             // by default px format
-            int height = Integer.valueOf(line.getHeight());
+            final int height = Integer.valueOf(line.getHeight());
             cssContents.append("\theight:" + height + "px;\n");
-        } catch (NumberFormatException e) {
+        } catch (final NumberFormatException e) {
             cssContents.append("\theight:" + line.getHeight() + ";\n");
 
         }
@@ -281,7 +279,7 @@ public class CssGenerator {
 
     }
 
-    protected void addWidthRule(StringBuilder cssContents, Element element, Column column) {
+    protected void addWidthRule(final StringBuilder cssContents, final Element element, final Column column) {
         if (element instanceof Form) {
             cssContents.append("\n." + ExporterTools.getFormUID((Form) element) + "_Column" + column.getNumber() + "{\n");
         } else {
@@ -289,9 +287,9 @@ public class CssGenerator {
         }
         try {
             // by default px format
-            int height = Integer.valueOf(column.getWidth());
-            cssContents.append("\twidth:" + height + "px;\n");
-        } catch (NumberFormatException e) {
+            final int width = Integer.valueOf(column.getWidth());
+            cssContents.append("\twidth:" + width + "px;\n");
+        } catch (final NumberFormatException e) {
             cssContents.append("\twidth:" + column.getWidth() + ";\n");
         }
         // close Css rule
@@ -299,7 +297,7 @@ public class CssGenerator {
 
     }
 
-    private void addTdRule(StringBuilder cssContents, Widget w) {
+    private void addTdRule(final StringBuilder cssContents, final Widget w) {
         if (w instanceof FormButton && w.eContainer().eContainer() != null) {
             cssContents.append("\n." + ExporterTools.getFormUID(ModelHelper.getForm(w)) + "_td_" + w.getName() + "{\n");
 
@@ -310,18 +308,18 @@ public class CssGenerator {
 
     }
 
-    protected void createRule(StringBuilder cssContents, EMap<String, String> map, String prefix, Widget widget) {
-    	if(widget instanceof RichTextAreaFormField){
-    		cssContents.append("\n." + prefix + ExporterTools.getWidgetUID(widget) + " .bonita_richTextArea {\n");
-    	} else {
-    		 cssContents.append("\n." + prefix + ExporterTools.getWidgetUID(widget) + "{\n");
-    	}
-       
+    protected void createRule(final StringBuilder cssContents, final EMap<String, String> map, final String prefix, final Widget widget) {
+        if(widget instanceof RichTextAreaFormField){
+            cssContents.append("\n." + prefix + ExporterTools.getWidgetUID(widget) + " div.bonita_rich_text {\n");
+        } else {
+            cssContents.append("\n." + prefix + ExporterTools.getWidgetUID(widget) + "{\n");
+        }
+
 
         if (map.containsKey(prefix + ExporterTools.STYLE_ATTR)) {
 
             // add style property
-            StringTokenizer st = new StringTokenizer(map.get(prefix + ExporterTools.STYLE_ATTR).replace("\n", ""), ";");
+            final StringTokenizer st = new StringTokenizer(map.get(prefix + ExporterTools.STYLE_ATTR).replace("\n", ""), ";");
             while (st.hasMoreElements()) {
                 cssContents.append("\t" + st.nextToken() + ";" + "\n");
             }
@@ -374,9 +372,9 @@ public class CssGenerator {
         if (map.containsKey(prefix + ExporterTools.WIDGET_HEIGHT)) {
             try {
                 // by default px format
-                int height = Integer.valueOf(map.get(prefix + ExporterTools.WIDGET_HEIGHT));
+                final int height = Integer.valueOf(map.get(prefix + ExporterTools.WIDGET_HEIGHT));
                 cssContents.append("\t height :" + height + "px;\n");
-            } catch (NumberFormatException e) {
+            } catch (final NumberFormatException e) {
                 cssContents.append("\t height : " + map.get(prefix + ExporterTools.WIDGET_HEIGHT) + ";" + "\n");
             }
 
@@ -384,9 +382,13 @@ public class CssGenerator {
         if (map.containsKey(prefix + ExporterTools.WIDGET_WIDTH)) {
             try {
                 // by default px format
-                int height = Integer.valueOf(map.get(prefix + ExporterTools.WIDGET_WIDTH));
-                cssContents.append("\t width :" + height + "px;\n");
-            } catch (NumberFormatException e) {
+                final int height = Integer.valueOf(map.get(prefix + ExporterTools.WIDGET_WIDTH));
+                if (widget instanceof RichTextAreaFormField) {
+                    cssContents.append("\t width :" + height + "px;height: auto; overflow: hidden;\n");
+                } else {
+                    cssContents.append("\t width :" + height + "px;\n");
+                }
+            } catch (final NumberFormatException e) {
                 cssContents.append("\t width : " + map.get(prefix + ExporterTools.WIDGET_WIDTH) + ";" + "\n");
 
             }

@@ -39,18 +39,28 @@ public class OperationReturnTypesValidatorTest {
     public void testValidateConstantNotInteger() {
         final OperationReturnTypesValidator validator = new OperationReturnTypesValidator();
         final Expression dataExpression = ExpressionHelper.createConstantExpression("data", Integer.class.getName());
-        validator.setDataExpression(dataExpression);
         final Expression expr = ExpressionHelper.createConstantExpression("5.2", Integer.class.getName());
+        createOperation(dataExpression, expr, ExpressionConstants.ASSIGNMENT_OPERATOR);
         final IStatus status = validator.validate(expr);
         Assertions.assertThat(status.isOK()).isFalse();
+    }
+
+    private Operation createOperation(final Expression dataExpression, final Expression expr, final String operatorType) {
+        final Operation createOperation = ExpressionFactory.eINSTANCE.createOperation();
+        createOperation.setLeftOperand(dataExpression);
+        createOperation.setRightOperand(expr);
+        final Operator assignement = ExpressionFactory.eINSTANCE.createOperator();
+        assignement.setType(operatorType);
+        createOperation.setOperator(assignement);
+        return createOperation;
     }
 
     @Test
     public void testValidateConstantInteger() {
         final OperationReturnTypesValidator validator = new OperationReturnTypesValidator();
         final Expression dataExpression = ExpressionHelper.createConstantExpression("data", Double.class.getName());
-        validator.setDataExpression(dataExpression);
         final Expression expr = ExpressionHelper.createConstantExpression("5.2", Double.class.getName());
+        createOperation(dataExpression, expr, ExpressionConstants.ASSIGNMENT_OPERATOR);
         final IStatus status = validator.validate(expr);
         Assertions.assertThat(status.isOK()).isTrue();
     }
@@ -59,8 +69,8 @@ public class OperationReturnTypesValidatorTest {
     public void testValidateConstantNotDouble() {
         final OperationReturnTypesValidator validator = new OperationReturnTypesValidator();
         final Expression dataExpression = ExpressionHelper.createConstantExpression("data", Double.class.getName());
-        validator.setDataExpression(dataExpression);
         final Expression expr = ExpressionHelper.createConstantExpression("not a double", Double.class.getName());
+        createOperation(dataExpression, expr, ExpressionConstants.ASSIGNMENT_OPERATOR);
         final IStatus status = validator.validate(expr);
         Assertions.assertThat(status.isOK()).isFalse();
     }
@@ -69,8 +79,8 @@ public class OperationReturnTypesValidatorTest {
     public void testValidateConstantDouble() {
         final OperationReturnTypesValidator validator = new OperationReturnTypesValidator();
         final Expression dataExpression = ExpressionHelper.createConstantExpression("data", Double.class.getName());
-        validator.setDataExpression(dataExpression);
         final Expression expr = ExpressionHelper.createConstantExpression("5.5", Double.class.getName());
+        createOperation(dataExpression, expr, ExpressionConstants.ASSIGNMENT_OPERATOR);
         final IStatus status = validator.validate(expr);
         Assertions.assertThat(status.isOK()).isTrue();
     }
@@ -79,8 +89,8 @@ public class OperationReturnTypesValidatorTest {
     public void testValidateNotMatchingReturnTypeWithData() {
         final OperationReturnTypesValidator validator = new OperationReturnTypesValidator();
         final Expression dataExpression = ExpressionHelper.createConstantExpression("data", String.class.getName());
-        validator.setDataExpression(dataExpression);
         final Expression expr = ExpressionHelper.createConstantExpression("5.5", Double.class.getName());
+        createOperation(dataExpression, expr, ExpressionConstants.ASSIGNMENT_OPERATOR);
         final IStatus status = validator.validate(expr);
         Assertions.assertThat(status.isOK()).isFalse();
     }
@@ -88,16 +98,9 @@ public class OperationReturnTypesValidatorTest {
     @Test
     public void testValidateSetDocumentOperationInvalid() {
         final OperationReturnTypesValidator validator = new OperationReturnTypesValidator();
-        final Operation operation = ExpressionFactory.eINSTANCE.createOperation();
-        final Operator operator = ExpressionFactory.eINSTANCE.createOperator();
-        operator.setType(ExpressionConstants.SET_DOCUMENT_OPERATOR);
-        operation.setOperator(operator);
         final Expression dataExpression = ExpressionHelper.createConstantExpression("doc", String.class.getName());
-        validator.setDataExpression(dataExpression);
         final Expression expr = ExpressionHelper.createConstantExpression("5.5", Double.class.getName());
-        operation.setLeftOperand(dataExpression);
-        operation.setRightOperand(expr);
-
+        final Operation operation = createOperation(dataExpression, expr, ExpressionConstants.SET_DOCUMENT_OPERATOR);
         final IStatus status = validator.validate(expr);
 
         Assertions.assertThat(status.isOK()).isFalse();
@@ -119,75 +122,39 @@ public class OperationReturnTypesValidatorTest {
         final Expression rightOperand = ExpressionHelper.createGroovyScriptExpression("myList", DocumentValue.class.getName());
         rightOperand.setContent("[]");
 
-        final Operator operator = ExpressionFactory.eINSTANCE.createOperator();
-        operator.setType(ExpressionConstants.SET_DOCUMENT_OPERATOR);
-
-        final Operation operation = ExpressionFactory.eINSTANCE.createOperation();
-        operation.setOperator(operator);
-        operation.setLeftOperand(leftOperand);
-        operation.setRightOperand(rightOperand);
+        createOperation(leftOperand, rightOperand, ExpressionConstants.SET_DOCUMENT_OPERATOR);
 
         final OperationReturnTypesValidator validator = new OperationReturnTypesValidator();
-        validator.setDataExpression(leftOperand);
-
         final IStatus status = validator.validate(rightOperand);
-
         Assertions.assertThat(status.isOK()).isTrue();
     }
 
     @Test
     public void testValidateSetDocumentListOperationInValid() {
         final OperationReturnTypesValidator validator = new OperationReturnTypesValidator();
-        final Operation operation = ExpressionFactory.eINSTANCE.createOperation();
-        final Operator operator = ExpressionFactory.eINSTANCE.createOperator();
-        operator.setType(ExpressionConstants.SET_LIST_DOCUMENT_OPERATOR);
-        operation.setOperator(operator);
         final Expression dataExpression = ExpressionHelper.createConstantExpression("doc", String.class.getName());
-        validator.setDataExpression(dataExpression);
         final Expression expr = ExpressionHelper.createGroovyScriptExpression("doc", DocumentValue.class.getName());
-        operation.setLeftOperand(dataExpression);
-        operation.setRightOperand(expr);
-
+        createOperation(dataExpression, expr, ExpressionConstants.SET_LIST_DOCUMENT_OPERATOR);
         final IStatus status = validator.validate(expr);
-
         Assertions.assertThat(status.isOK()).isFalse();
     }
 
     @Test
     public void testValidateSetDocumentListOperationValid() {
         final OperationReturnTypesValidator validator = new OperationReturnTypesValidator();
-        final Operation operation = ExpressionFactory.eINSTANCE.createOperation();
-        final Operator operator = ExpressionFactory.eINSTANCE.createOperator();
-        operator.setType(ExpressionConstants.SET_LIST_DOCUMENT_OPERATOR);
-        operation.setOperator(operator);
-
         final Expression dataExpression = ExpressionHelper.createListDocumentExpressionWithDependency("doc");
-        validator.setDataExpression(dataExpression);
         final Expression expr = ExpressionHelper.createGroovyScriptExpression("polop", List.class.getName());
-        operation.setLeftOperand(dataExpression);
-        operation.setRightOperand(expr);
-
+        createOperation(dataExpression, expr, ExpressionConstants.SET_LIST_DOCUMENT_OPERATOR);
         final IStatus status = validator.validate(expr);
-
         Assertions.assertThat(status.isOK()).isTrue();
     }
-
-
-
 
     @Test
     public void testValidateSetDocumentListOperationValidWithArraylist() {
         final OperationReturnTypesValidator validator = new OperationReturnTypesValidator();
-        final Operation operation = ExpressionFactory.eINSTANCE.createOperation();
-        final Operator operator = ExpressionFactory.eINSTANCE.createOperator();
-        operator.setType(ExpressionConstants.SET_LIST_DOCUMENT_OPERATOR);
-        operation.setOperator(operator);
         final Expression leftOperand = ExpressionHelper.createListDocumentExpressionWithDependency("doc");
-        validator.setDataExpression(leftOperand);
         final Expression rightOperand = ExpressionHelper.createGroovyScriptExpression("plop", ArrayList.class.getName());
-        operation.setLeftOperand(leftOperand);
-        operation.setRightOperand(rightOperand);
-
+        createOperation(leftOperand, rightOperand, ExpressionConstants.SET_LIST_DOCUMENT_OPERATOR);
         final IStatus status = validator.validate(rightOperand);
         Assertions.assertThat(status.isOK()).isTrue();
     }
@@ -195,22 +162,10 @@ public class OperationReturnTypesValidatorTest {
 
     @Test
     public void shouldValidateSetDocumentListOperation_add_error_message_when_right_operand_is_String_in_Operation_of_Task_Or_Form() throws Exception {
-
         final Expression leftOperand = ExpressionHelper.createListDocumentExpressionWithDependency("doc");
-
         final Expression rightOperand = ExpressionHelper.createConstantExpression("toto", "toto", String.class.getName());
-
-        final Operator operator = ExpressionFactory.eINSTANCE.createOperator();
-        operator.setType(ExpressionConstants.SET_LIST_DOCUMENT_OPERATOR);
-
-        final Operation operation = ExpressionFactory.eINSTANCE.createOperation();
-        operation.setOperator(operator);
-        operation.setLeftOperand(leftOperand);
-        operation.setRightOperand(rightOperand);
-
+        final Operation operation = createOperation(leftOperand, rightOperand, ExpressionConstants.SET_LIST_DOCUMENT_OPERATOR);
         final OperationReturnTypesValidator validator = new OperationReturnTypesValidator();
-        validator.setDataExpression(leftOperand);
-
 
         // test in a task operation
         final Task task = ProcessFactory.eINSTANCE.createTask();
@@ -219,26 +174,14 @@ public class OperationReturnTypesValidatorTest {
         final IStatus status = validator.validate(rightOperand);
         Assertions.assertThat(status.isOK()).isFalse();
         Assertions.assertThat(status.getMessage()).isEqualTo(Messages.incompatibleType + " " + Messages.messageOperationWithListDocumentInTask);
-
     }
 
     @Test
     public void shouldValidateSetListDocumentOperation_add_info_message_when_expression_is_empty_in_Operation_of_Task_Or_Form() throws Exception {
-
         final Expression leftOperand = ExpressionHelper.createListDocumentExpressionWithDependency("doc");
-
         final Expression rightOperand = ExpressionHelper.createConstantExpression("", "", String.class.getName());
-
-        final Operator operator = ExpressionFactory.eINSTANCE.createOperator();
-        operator.setType(ExpressionConstants.SET_LIST_DOCUMENT_OPERATOR);
-
-        final Operation operation = ExpressionFactory.eINSTANCE.createOperation();
-        operation.setOperator(operator);
-        operation.setLeftOperand(leftOperand);
-        operation.setRightOperand(rightOperand);
-
+        final Operation operation = createOperation(leftOperand, rightOperand, ExpressionConstants.SET_LIST_DOCUMENT_OPERATOR);
         final OperationReturnTypesValidator validator = new OperationReturnTypesValidator();
-        validator.setDataExpression(leftOperand);
 
         // Test task Action
         final Task task = ProcessFactory.eINSTANCE.createTask();
@@ -260,25 +203,14 @@ public class OperationReturnTypesValidatorTest {
 
     @Test
     public void shouldValidateSetDocumentOperation_add_info_message_when_rightOperandExpression_is_empty_in_Operation_of_Task_Or_Form() throws Exception {
-
         // set left operand
         final Expression leftOperand = ExpressionHelper.createDocumentExpressionWithDependency("doc");
-
         // set right operand
         final Expression rightOperand = ExpressionHelper.createConstantExpression("", "", String.class.getName());
+        final Operation operation = createOperation(leftOperand, rightOperand, ExpressionConstants.SET_DOCUMENT_OPERATOR);
 
-        // set operator
-        final Operator operator = ExpressionFactory.eINSTANCE.createOperator();
-        operator.setType(ExpressionConstants.SET_DOCUMENT_OPERATOR);
-
-        // Create Operation
-        final Operation operation = ExpressionFactory.eINSTANCE.createOperation();
-        operation.setOperator(operator);
-        operation.setLeftOperand(leftOperand);
-        operation.setRightOperand(rightOperand);
 
         final OperationReturnTypesValidator validator = new OperationReturnTypesValidator();
-        validator.setDataExpression(leftOperand);
 
         // test in a task operation
         final Task task = ProcessFactory.eINSTANCE.createTask();
