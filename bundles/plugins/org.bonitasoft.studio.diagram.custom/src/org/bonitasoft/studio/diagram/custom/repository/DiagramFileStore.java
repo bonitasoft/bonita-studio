@@ -273,7 +273,18 @@ public class DiagramFileStore extends EMFFileStore implements IRepositoryFileSto
 	private void handleMigrationReportIfPresent(final IWorkbenchPage activePage)
 			throws PartInitException {
 		if(hasMigrationReport()){
-		    activePage.showView("org.bonitasoft.studio.migration.view");
+            Display.getDefault().syncExec(new Runnable() {
+
+                @Override
+                public void run() {
+                    try {
+                        activePage.showView("org.bonitasoft.studio.migration.view");
+                    } catch (final PartInitException e) {
+                        BonitaStudioLog.error(e);
+                    }
+                }
+            });
+
 		} else {
 		    final IViewPart migrationView = activePage.findView("org.bonitasoft.studio.migration.view");
 		    if(migrationView != null){
