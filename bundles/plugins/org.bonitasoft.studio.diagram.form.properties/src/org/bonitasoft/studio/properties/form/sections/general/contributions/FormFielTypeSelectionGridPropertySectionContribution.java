@@ -114,6 +114,7 @@ public class FormFielTypeSelectionGridPropertySectionContribution implements IEx
         eClasses.put(formPaletteLabelProvider.getFormPaletteText(FormPackage.Literals.RADIO_FORM_FIELD), FormPackage.Literals.RADIO_FORM_FIELD);
         eClasses.put(formPaletteLabelProvider.getFormPaletteText(FormPackage.Literals.SELECT_FORM_FIELD), FormPackage.Literals.SELECT_FORM_FIELD);
         eClasses.put(formPaletteLabelProvider.getFormPaletteText(FormPackage.Literals.TEXT_INFO), FormPackage.Literals.TEXT_INFO);
+        eClasses.put(formPaletteLabelProvider.getFormPaletteText(FormPackage.Literals.TEXT_FORM_FIELD), FormPackage.Literals.TEXT_FORM_FIELD);
         eClasses.put(formPaletteLabelProvider.getFormPaletteText(FormPackage.Literals.TEXT_AREA_FORM_FIELD), FormPackage.Literals.TEXT_AREA_FORM_FIELD);
         eClasses.put(formPaletteLabelProvider.getFormPaletteText(FormPackage.Literals.SUBMIT_FORM_BUTTON), FormPackage.Literals.SUBMIT_FORM_BUTTON);
         eClasses.put(formPaletteLabelProvider.getFormPaletteText(FormPackage.Literals.PREVIOUS_FORM_BUTTON), FormPackage.Literals.PREVIOUS_FORM_BUTTON);
@@ -139,7 +140,7 @@ public class FormFielTypeSelectionGridPropertySectionContribution implements IEx
         labels_single.add(formPaletteLabelProvider.getFormPaletteText(FormPackage.Literals.PASSWORD_FORM_FIELD));
         labels_singlelist.add(formPaletteLabelProvider.getFormPaletteText(FormPackage.Literals.RADIO_FORM_FIELD));
         labels_singlelist.add(formPaletteLabelProvider.getFormPaletteText(FormPackage.Literals.SELECT_FORM_FIELD));
-        labels_single.add(formPaletteLabelProvider.getFormPaletteText(FormPackage.Literals.SELECT_FORM_FIELD));
+        labels_single.add(formPaletteLabelProvider.getFormPaletteText(FormPackage.Literals.TEXT_FORM_FIELD));
         labels_single.add(formPaletteLabelProvider.getFormPaletteText(FormPackage.Literals.TEXT_AREA_FORM_FIELD));
         labels_single.add(formPaletteLabelProvider.getFormPaletteText(FormPackage.Literals.RICH_TEXT_AREA_FORM_FIELD));
         labels_singlelist.add(formPaletteLabelProvider.getFormPaletteText(FormPackage.Literals.SUGGEST_BOX));
