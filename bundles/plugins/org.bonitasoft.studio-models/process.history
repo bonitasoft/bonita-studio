@@ -8744,7 +8744,7 @@
         featureName="name" dataValue="downloadType"/>
     <changes xsi:type="history:Set" element="form.ecore#//FileWidget/downloadType"
         featureName="eType" referenceValue="form.ecore#//FileWidgetDownloadType"/>
-    <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.custom.migration.form.FileWidgetDocumentMigration"/>
+    <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.custom.migration.form.FileWidgetResourceMigration"/>
   </releases>
   <releases/>
 </history:History>
