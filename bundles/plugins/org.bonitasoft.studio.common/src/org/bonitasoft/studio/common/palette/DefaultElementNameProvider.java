@@ -58,7 +58,6 @@ public class DefaultElementNameProvider {
         classifierIDToDefaultName.put(ProcessPackage.START_ERROR_EVENT, Messages.startEventDefaultName);
         classifierIDToDefaultName.put(ProcessPackage.START_EVENT, Messages.startEventDefaultName);
         classifierIDToDefaultName.put(ProcessPackage.START_MESSAGE_EVENT, Messages.startEventDefaultName);
-        classifierIDToDefaultName.put(ProcessPackage.START_TIMER_EVENT, Messages.startEventDefaultName);
         classifierIDToDefaultName.put(ProcessPackage.START_SIGNAL_EVENT, Messages.startEventDefaultName);
 
         classifierIDToDefaultName.put(ProcessPackage.END_ERROR_EVENT, Messages.endEventDefaultName);
@@ -79,6 +78,7 @@ public class DefaultElementNameProvider {
 
         classifierIDToDefaultName.put(ProcessPackage.INTERMEDIATE_CATCH_TIMER_EVENT, Messages.intermeiateTimerEventDefaultName);
         classifierIDToDefaultName.put(ProcessPackage.TIMER_EVENT, Messages.intermeiateTimerEventDefaultName);
+        classifierIDToDefaultName.put(ProcessPackage.START_TIMER_EVENT, Messages.intermeiateTimerEventDefaultName);
         classifierIDToDefaultName.put(ProcessPackage.BOUNDARY_TIMER_EVENT, BOUNDARY_PREFIX + Messages.intermeiateTimerEventDefaultName);
 
         classifierIDToDefaultName.put(ProcessPackage.THROW_LINK_EVENT, Messages.linkEventDefaultName);
