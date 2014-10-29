@@ -392,28 +392,28 @@ public class NamingUtils {
 
     public static String getPaletteTitle(final List<IElementType> relationshipTypes) {
         if (!relationshipTypes.isEmpty()) {
-            new ProcessPaletteLabelProvider().getProcessPaletteText(relationshipTypes.get(0).getEClass());
+            return new ProcessPaletteLabelProvider().getProcessPaletteText(relationshipTypes.get(0).getEClass());
         }
         return null;
     }
 
     public static String getPaletteDescription(final List<IElementType> relationshipTypes) {
         if (!relationshipTypes.isEmpty()) {
-            new ProcessPaletteLabelProvider().getProcessPaletteDescription(relationshipTypes.get(0).getEClass());
+            return new ProcessPaletteLabelProvider().getProcessPaletteDescription(relationshipTypes.get(0).getEClass());
         }
         return null;
     }
 
     public static String getFormPaletteDescription(final List<IElementType> elementTypes) {
         if (!elementTypes.isEmpty()) {
-            new FormPaletteLabelProvider().getFormPaletteDescription(elementTypes.get(0).getEClass());
+            return new FormPaletteLabelProvider().getFormPaletteDescription(elementTypes.get(0).getEClass());
         }
         return null;
     }
 
     public static String getFormPaletteTitle(final List<IElementType> elementTypes) {
         if (!elementTypes.isEmpty()) {
-            new FormPaletteLabelProvider().getFormPaletteText(elementTypes.get(0).getEClass());
+            return new FormPaletteLabelProvider().getFormPaletteText(elementTypes.get(0).getEClass());
         }
         return null;
     }

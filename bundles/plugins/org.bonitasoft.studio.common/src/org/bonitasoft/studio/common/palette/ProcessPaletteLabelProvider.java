@@ -158,9 +158,7 @@ public class ProcessPaletteLabelProvider {
         Assert.isLegal(eClass != null);
         Assert.isLegal(ProcessPackage.eINSTANCE.equals(eClass.getEPackage()), "EClass " + eClass.getName() + " is not supported.");
         final int id = eClass.getClassifierID();
-        final String label = classifierIDToDescription.get(id);
-        Assert.isLegal(label != null, "EClass " + eClass.getName() + " is not supported.");
-        return label;
+        return classifierIDToDescription.get(id);
     }
 
     public String getProcessPaletteText(final EClass eClass) {
