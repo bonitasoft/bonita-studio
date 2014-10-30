@@ -55,32 +55,40 @@ public class DiagramEditorProvider extends AbstractEditorProvider {
 	}
 
     protected boolean isAProcessDiagramURI(final URI uri) {
-        final ResourceSet resourceSet = new ResourceSetImpl();
-        final Resource resource = resourceSet.getResource(uri, true);
-
-        try {
-            resource.load(null);
-        } catch (final IOException e) {
-            BonitaStudioLog.error(e);
-        }
-        final EObject eObject = resource.getEObject(uri.fragment());
-        if (eObject instanceof Diagram) {
-            if (((Diagram) eObject).getElement() instanceof MainProcess) {
-                return true;
+        final String fragment = uri.fragment();
+        if (fragment == null) {
+            return true;
+        } else {
+            final EObject eObject = retrieveElementInURIForFragment(uri, fragment);
+            if (eObject instanceof Diagram) {
+                if (((Diagram) eObject).getElement() instanceof MainProcess) {
+                    return true;
+                }
             }
         }
 
         return false;
     }
 
-    protected URI retrieveURI(final IEditorInput editorInput) {
-        URI uri = null;
-        if (editorInput instanceof URIEditorInput) {
-            uri = ((URIEditorInput) editorInput).getURI();
-        } else if (editorInput instanceof FileEditorInput) {
-            uri = URI.createURI(((FileEditorInput) editorInput).getURI().toString());
+    private EObject retrieveElementInURIForFragment(final URI uri, final String fragment) {
+        final ResourceSet resourceSet = new ResourceSetImpl();
+        final Resource resource = resourceSet.getResource(uri, true);
+        try {
+            resource.load(null);
+        } catch (final IOException e) {
+            BonitaStudioLog.error(e);
         }
-        return uri;
+        final EObject eObject = resource.getEObject(fragment);
+        return eObject;
+    }
+
+    protected URI retrieveURI(final IEditorInput editorInput) {
+        if (editorInput instanceof URIEditorInput) {
+            return ((URIEditorInput) editorInput).getURI();
+        } else if (editorInput instanceof FileEditorInput) {
+            return URI.createURI(((FileEditorInput) editorInput).getURI().toString());
+        }
+        return null;
     }
 
 }

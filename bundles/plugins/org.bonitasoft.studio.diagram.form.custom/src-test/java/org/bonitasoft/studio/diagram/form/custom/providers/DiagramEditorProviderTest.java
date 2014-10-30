@@ -32,13 +32,22 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.gmf.runtime.emf.core.resources.GMFResourceFactory;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.part.FileEditorInput;
 import org.fest.assertions.Assertions;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.runners.MockitoJUnitRunner;
 
+@RunWith(MockitoJUnitRunner.class)
 public class DiagramEditorProviderTest {
 
     private URI globalUri;
+
+    @Mock
+    private FileEditorInput fileEditorInput;
 
     @Before
     public void setup() throws URISyntaxException {
@@ -64,6 +73,17 @@ public class DiagramEditorProviderTest {
         final URI uri = globalUri.appendFragment("_HzivLFtPEeS_U_Le4RccVQ");
         final IEditorInput editorInput = new URIEditorInput(uri);
         Assertions.assertThat(provider.getEditorId(editorInput)).isEqualTo(ProcessDiagramEditor.ID);
+    }
+
+    @Test
+    public void testGetEditorIdProcessWithFileEditorInput() throws IOException, ProcBuilderException, URISyntaxException {
+        final DiagramEditorProvider provider = new DiagramEditorProvider();
+
+        final URL resource = DiagramEditorProviderTest.class.getResource("/DiagramWithPoolWithInstanciationForm-1.0.proc");
+
+        Mockito.when(fileEditorInput.getURI()).thenReturn(resource.toURI());
+
+        Assertions.assertThat(provider.getEditorId(fileEditorInput)).isEqualTo(ProcessDiagramEditor.ID);
     }
 
     @Test
