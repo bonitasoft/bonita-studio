@@ -276,95 +276,113 @@ public class ExportRepositoryWizardPage extends WizardPage {
 
 
 	public boolean finish() {
-		final Set<IResource> resourcesToExport = new HashSet<IResource>() ;
 		saveWidgetValues() ;
 
 		if(isZip){
-			final ExportBosArchiveOperation operation = new ExportBosArchiveOperation() ;
-			operation.setDestinationPath(getDetinationPath()) ;
-			for(final IRepositoryFileStore file : getArtifacts()){
-				if(file.getResource() != null && file.getResource().exists()){
-					resourcesToExport.add(file.getResource()) ;
-				}
-				if(!file.getRelatedResources().isEmpty()){
-					resourcesToExport.addAll(file.getRelatedResources()) ;
-				}
-			}
-			try{
-                final Set<IResource> toOpen = new HashSet<IResource>();
-                for (final IEditorReference ref : PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getEditorReferences()) {
-                    final IFile file = (IFile) EditorUtil.retrieveResourceFromEditorInput(ref.getEditorInput());
-                    if (resourcesToExport.contains(file)) {
-                        toOpen.add(file);
-                    }
-                }
-				operation.setResourcesToOpen(toOpen);
-			}catch (final Exception e) {
-				BonitaStudioLog.error(e);
-			}
-
-			operation.setResources(resourcesToExport) ;
-
-			try {
-				getContainer().run(false, true, new IRunnableWithProgress() {
-
-					@Override
-					public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-						operation.run(monitor) ;
-					}
-				});
-			} catch (final InterruptedException e) {
-				return false;
-			} catch (final InvocationTargetException e) {
-				BonitaStudioLog.error(e) ;
-				return false;
-			}
-
-			final IStatus status = operation.getStatus();
-			if (!status.isOK()) {
-				ErrorDialog.openError(Display.getDefault().getActiveShell(),
-						DataTransferMessages.DataTransfer_exportProblems,
-						null, // no special message
-						status);
-				return false;
-			}else{
-				MessageDialog.openInformation(getContainer().getShell(),Messages.exportLabel, Messages.bind(Messages.exportFinishMessage,getDetinationPath())) ;
-			}
-
-			return status.getSeverity() == IStatus.OK ;
+            return performFinishForZipExport();
 		}else{
-			try {
-				getContainer().run(false, false, new IRunnableWithProgress() {
-
-					@Override
-					public void run(final IProgressMonitor monitor) throws InvocationTargetException,
-					InterruptedException {
-						monitor.beginTask(Messages.exporting, getArtifacts().size()) ;
-						final File dest = new File(getDetinationPath()) ;
-						if(!dest.exists()){
-							dest.mkdirs() ;
-						}
-						for(final IRepositoryFileStore file : getArtifacts()){
-							if(file.getResource() != null && file.getResource().exists()){
-								try {
-									file.export(dest.getAbsolutePath()) ;
-								} catch (final IOException e) {
-									throw new InvocationTargetException(e);
-								}
-								monitor.worked(1) ;
-							}
-						}
-
-					}
-				}) ;
-			} catch (final Exception e){
-				MessageDialog.openError(Display.getDefault().getActiveShell(), Messages.exportFailed, e.getCause().getMessage());
-				return false;
-			}
-
-			return true ;
+			return performFinishForNotZipExport();
 		}
 	}
+
+    protected boolean performFinishForNotZipExport() {
+        try {
+        	getContainer().run(false, false, new IRunnableWithProgress() {
+
+        		@Override
+        		public void run(final IProgressMonitor monitor) throws InvocationTargetException,
+        		InterruptedException {
+        			monitor.beginTask(Messages.exporting, getArtifacts().size()) ;
+        			final File dest = new File(getDetinationPath()) ;
+        			if(!dest.exists()){
+        				dest.mkdirs() ;
+        			}
+        			for(final IRepositoryFileStore file : getArtifacts()){
+        				if(file.getResource() != null && file.getResource().exists()){
+        					try {
+        						file.export(dest.getAbsolutePath()) ;
+        					} catch (final IOException e) {
+        						throw new InvocationTargetException(e);
+        					}
+        					monitor.worked(1) ;
+        				}
+        			}
+
+        		}
+        	}) ;
+        } catch (final Exception e){
+        	MessageDialog.openError(Display.getDefault().getActiveShell(), Messages.exportFailed, e.getCause().getMessage());
+        	return false;
+        }
+
+        return true ;
+    }
+
+    protected boolean performFinishForZipExport() {
+        final ExportBosArchiveOperation operation = createExportBOSOperation();
+
+        try {
+            getContainer().run(false, true, new IRunnableWithProgress() {
+
+                @Override
+                public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+                    operation.run(monitor);
+                }
+            });
+        } catch (final InterruptedException e) {
+            return false;
+        } catch (final InvocationTargetException e) {
+            BonitaStudioLog.error(e);
+            return false;
+        }
+
+        final IStatus status = operation.getStatus();
+        if (!status.isOK()) {
+            ErrorDialog.openError(Display.getDefault().getActiveShell(),
+                    DataTransferMessages.DataTransfer_exportProblems,
+                    null, // no special message
+                    status);
+            return false;
+        } else {
+            MessageDialog.openInformation(getContainer().getShell(), Messages.exportLabel, Messages.bind(Messages.exportFinishMessage, getDetinationPath()));
+        }
+
+        return status.getSeverity() == IStatus.OK;
+    }
+
+    protected ExportBosArchiveOperation createExportBOSOperation() {
+        final ExportBosArchiveOperation operation = new ExportBosArchiveOperation();
+        operation.setDestinationPath(getDetinationPath());
+        final Set<IResource> resourcesToExport = computeResourcesToExport();
+        try {
+            final Set<IResource> toOpen = new HashSet<IResource>();
+            for (final IEditorReference ref : PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getEditorReferences()) {
+                final IFile file = (IFile) EditorUtil.retrieveResourceFromEditorInput(ref.getEditorInput());
+                if (resourcesToExport.contains(file)) {
+                    toOpen.add(file);
+                }
+            }
+            operation.setResourcesToOpen(toOpen);
+        } catch (final Exception e) {
+            BonitaStudioLog.error(e);
+        }
+
+        operation.setResources(resourcesToExport);
+        return operation;
+    }
+
+    protected Set<IResource> computeResourcesToExport() {
+        final Set<IResource> resourcesToExport = new HashSet<IResource>();
+        for (final IRepositoryFileStore file : getArtifacts()) {
+            if (file.getResource() != null && file.getResource().exists()) {
+                resourcesToExport.add(file.getResource());
+            }
+            if (!file.getRelatedResources().isEmpty()) {
+                resourcesToExport.addAll(file.getRelatedResources());
+            }
+        }
+        return resourcesToExport;
+    }
 
 	protected void createDestination(final Composite group) {
 		final Label destPath = new Label(group, SWT.NONE) ;
