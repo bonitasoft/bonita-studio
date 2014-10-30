@@ -16,6 +16,7 @@
  */
 package org.bonitasoft.studio.common.palette;
 
+import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -170,7 +171,7 @@ public class ProcessPaletteLabelProvider {
 
     protected int getEClassifierId(final EClass eClass) {
         Assert.isLegal(eClass != null);
-        Assert.isLegal(ProcessPackage.eINSTANCE.equals(eClass.getEPackage()), "EClass " + eClass.getName() + " is not supported.");
+        Assert.isLegal(ProcessPackage.eINSTANCE.equals(eClass.getEPackage()), MessageFormat.format("EClass {0} is not supported.", eClass.getName()));
         return eClass.getClassifierID();
     }
 

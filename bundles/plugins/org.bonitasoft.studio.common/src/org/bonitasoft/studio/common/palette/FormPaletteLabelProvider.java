@@ -16,6 +16,7 @@
  */
 package org.bonitasoft.studio.common.palette;
 
+import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -123,13 +124,13 @@ public class FormPaletteLabelProvider {
     public String getFormPaletteText(final EClass eClass) {
         final int id = getEClassifierId(eClass);
         final String label = classifierIDToTitle.get(id);
-        Assert.isLegal(label != null, "EClass " + eClass.getName() + " is not supported.");
+        Assert.isLegal(label != null, MessageFormat.format("EClass {0} is not supported.", eClass.getName()));
         return label;
     }
 
     protected int getEClassifierId(final EClass eClass) {
         Assert.isLegal(eClass != null);
-        Assert.isLegal(FormPackage.Literals.WIDGET.isSuperTypeOf(eClass), "EClass " + eClass.getName() + " is not supported.");
+        Assert.isLegal(FormPackage.Literals.WIDGET.isSuperTypeOf(eClass), MessageFormat.format("EClass {0} is not supported.", eClass.getName()));
         return eClass.getClassifierID();
     }
 
