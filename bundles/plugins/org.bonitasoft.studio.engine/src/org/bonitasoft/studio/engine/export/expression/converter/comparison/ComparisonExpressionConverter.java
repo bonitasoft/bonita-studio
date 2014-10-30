@@ -31,6 +31,7 @@ import org.bonitasoft.studio.condition.conditionModel.Operation_Compare;
 import org.bonitasoft.studio.condition.conditionModel.Operation_NotUnary;
 import org.bonitasoft.studio.condition.conditionModel.Unary_Operation;
 import org.bonitasoft.studio.condition.scoping.ConditionModelGlobalScopeProvider;
+import org.bonitasoft.studio.condition.ui.internal.ConditionModelActivator;
 import org.bonitasoft.studio.engine.export.expression.converter.IExpressionConverter;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.parameter.Parameter;
@@ -39,15 +40,14 @@ import org.bonitasoft.studio.model.process.Data;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EValidator;
 import org.eclipse.xtext.resource.SynchronizedXtextResourceSet;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.util.StringInputStream;
-import org.eclipse.xtext.validation.CancelableDiagnostician;
 import org.eclipse.xtext.validation.CheckMode;
-import org.eclipse.xtext.validation.DiagnosticConverterImpl;
-import org.eclipse.xtext.validation.ResourceValidatorImpl;
+import org.eclipse.xtext.validation.IResourceValidator;
+
+import com.google.inject.Injector;
 
 /**
  * @author Romain Bioteau
@@ -110,9 +110,9 @@ public class ComparisonExpressionConverter implements IExpressionConverter {
     }
 
     public Operation_Compare parseConditionExpression(final String content, final EObject context) {
-        final ResourceValidatorImpl xtextResourceChecker = new ResourceValidatorImpl();
-        xtextResourceChecker.setDiagnostician(new CancelableDiagnostician(EValidator.Registry.INSTANCE));
-        xtextResourceChecker.setDiagnosticConverter(new DiagnosticConverterImpl());
+        final Injector injector = ConditionModelActivator.getInstance().getInjector(
+                ConditionModelActivator.ORG_BONITASOFT_STUDIO_CONDITION_CONDITIONMODEL);
+        final IResourceValidator xtextResourceChecker = injector.getInstance(IResourceValidator.class);
         final XtextResourceSet resourceSet = new SynchronizedXtextResourceSet();
         final XtextResource resource = (XtextResource) resourceSet.createResource(URI.createURI("somefile.cmodel"));
         try {
@@ -126,7 +126,7 @@ public class ComparisonExpressionConverter implements IExpressionConverter {
         if (contents.isEmpty()) {
             return null;
         }
-        final ConditionModelGlobalScopeProvider globalScopeProvider = new ConditionModelGlobalScopeProvider();
+        final ConditionModelGlobalScopeProvider globalScopeProvider = injector.getInstance(ConditionModelGlobalScopeProvider.class);
         final List<String> accessibleObjects = new ArrayList<String>();
         for (final Data d : ModelHelper.getAccessibleData(context)) {
             accessibleObjects.add(ModelHelper.getEObjectID(d));
