@@ -155,21 +155,23 @@ public class ProcessPaletteLabelProvider {
     }
 
     public String getProcessPaletteDescription(final EClass eClass) {
-        Assert.isLegal(eClass != null);
-        Assert.isLegal(ProcessPackage.eINSTANCE.equals(eClass.getEPackage()), "EClass " + eClass.getName() + " is not supported.");
-        final int id = eClass.getClassifierID();
+        final int id = getEClassifierId(eClass);
         return classifierIDToDescription.get(id);
     }
 
     public String getProcessPaletteText(final EClass eClass) {
-        Assert.isLegal(eClass != null);
-        Assert.isLegal(ProcessPackage.eINSTANCE.equals(eClass.getEPackage()), "EClass " + eClass.getName() + " is not supported.");
-        final int id = eClass.getClassifierID();
+        final int id = getEClassifierId(eClass);
         final String label = classifierIDToTitle.get(id);
         if (label == null) {
             return eClass.getName();
         }
         return label;
+    }
+
+    protected int getEClassifierId(final EClass eClass) {
+        Assert.isLegal(eClass != null);
+        Assert.isLegal(ProcessPackage.eINSTANCE.equals(eClass.getEPackage()), "EClass " + eClass.getName() + " is not supported.");
+        return eClass.getClassifierID();
     }
 
 

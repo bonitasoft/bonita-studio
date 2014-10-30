@@ -71,11 +71,6 @@ public class FormPaletteLabelProviderTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void should_getFormPaletteDescription_throw_IllegalArgumentException_for_combo_eClass() throws Exception {
-        labelProvider.getFormPaletteDescription(FormPackage.Literals.COMBO_FORM_FIELD);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
     public void should_getFormPaletteText_throw_IllegalArgumentException_for_combo_eClass() throws Exception {
         labelProvider.getFormPaletteText(FormPackage.Literals.COMBO_FORM_FIELD);
     }

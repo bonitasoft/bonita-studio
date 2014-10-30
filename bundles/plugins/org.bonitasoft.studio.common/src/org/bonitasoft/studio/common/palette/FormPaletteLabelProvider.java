@@ -116,21 +116,21 @@ public class FormPaletteLabelProvider {
     }
 
     public String getFormPaletteDescription(final EClass eClass) {
-        Assert.isLegal(eClass != null);
-        Assert.isLegal(FormPackage.Literals.WIDGET.isSuperTypeOf(eClass), "EClass " + eClass.getName() + " is not supported.");
-        final int id = eClass.getClassifierID();
-        final String label = classifierIDToDescription.get(id);
+        final int id = getEClassifierId(eClass);
+        return classifierIDToDescription.get(id);
+    }
+
+    public String getFormPaletteText(final EClass eClass) {
+        final int id = getEClassifierId(eClass);
+        final String label = classifierIDToTitle.get(id);
         Assert.isLegal(label != null, "EClass " + eClass.getName() + " is not supported.");
         return label;
     }
 
-    public String getFormPaletteText(final EClass eClass) {
+    protected int getEClassifierId(final EClass eClass) {
         Assert.isLegal(eClass != null);
         Assert.isLegal(FormPackage.Literals.WIDGET.isSuperTypeOf(eClass), "EClass " + eClass.getName() + " is not supported.");
-        final int id = eClass.getClassifierID();
-        final String label = classifierIDToTitle.get(id);
-        Assert.isLegal(label != null, "EClass " + eClass.getName() + " is not supported.");
-        return label;
+        return eClass.getClassifierID();
     }
 
 
