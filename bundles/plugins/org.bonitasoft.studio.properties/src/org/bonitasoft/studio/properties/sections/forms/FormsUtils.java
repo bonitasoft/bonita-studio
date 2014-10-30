@@ -158,19 +158,36 @@ public class FormsUtils {
         formEditor.getDiagramGraphicalViewer().select(formEditor.getDiagramEditPart());
         if (form != null && formEditor != null) {
             final MainProcess diagram = ModelHelper.getMainProcess(form);
-            if (diagram != null) {
-                final DiagramRepositoryStore diagramStore = (DiagramRepositoryStore) RepositoryManager.getInstance().getCurrentRepository()
-                        .getRepositoryStore(DiagramRepositoryStore.class);
-                final DiagramFileStore diagramFile = diagramStore.getDiagram(diagram.getName(), diagram.getVersion());
+            handleReadOnlyModeOnEditor(formEditor, diagram);
+        }
+        ensureAdaptersForDeletionOrRenamingWellSetted(form, formEditor);
+        final MainProcess mainProcess = ModelHelper.getMainProcess(form);
 
-                if (diagramFile != null && diagramFile.isReadOnly()) {
-                    formEditor.getDiagramEditPart().disableEditMode();
-                    if (formEditor instanceof FormDiagramEditor) {
-                        formEditor.setReadOnly(true);
-                    }
+        final DiagramRepositoryStore diagramStore = (DiagramRepositoryStore) RepositoryManager.getInstance().getCurrentRepository()
+                .getRepositoryStore(DiagramRepositoryStore.class);
+        final IRepositoryFileStore file = diagramStore.getChild(NamingUtils.toDiagramFilename(mainProcess));
+        if (file.isReadOnly()) {
+            formEditor.getDiagramEditPart().disableEditMode();
+        }
+        return formEditor;
+    }
+
+    protected static void handleReadOnlyModeOnEditor(final FormDiagramEditor formEditor, final MainProcess diagram) {
+        if (diagram != null) {
+            final DiagramRepositoryStore diagramStore = (DiagramRepositoryStore) RepositoryManager.getInstance().getCurrentRepository()
+                    .getRepositoryStore(DiagramRepositoryStore.class);
+            final DiagramFileStore diagramFile = diagramStore.getDiagram(diagram.getName(), diagram.getVersion());
+
+            if (diagramFile != null && diagramFile.isReadOnly()) {
+                formEditor.getDiagramEditPart().disableEditMode();
+                if (formEditor instanceof FormDiagramEditor) {
+                    formEditor.setReadOnly(true);
                 }
             }
         }
+    }
+
+    protected static void ensureAdaptersForDeletionOrRenamingWellSetted(final Form form, final FormDiagramEditor formEditor) {
         final EObject parent = form.eContainer();
         if (parent instanceof PageFlow) {
             parent.eAdapters().add(new FormRemovedAdapter(form, formEditor));
@@ -187,15 +204,6 @@ public class FormsUtils {
             final WidgetAddedOrRemoved adapterImpl = new WidgetAddedOrRemoved(form);
             eAdapters.add(adapterImpl);
         }
-        final MainProcess mainProcess = ModelHelper.getMainProcess(form);
-
-        final DiagramRepositoryStore diagramStore = (DiagramRepositoryStore) RepositoryManager.getInstance().getCurrentRepository()
-                .getRepositoryStore(DiagramRepositoryStore.class);
-        final IRepositoryFileStore file = diagramStore.getChild(NamingUtils.toDiagramFilename(mainProcess));
-        if (file.isReadOnly()) {
-            formEditor.getDiagramEditPart().disableEditMode();
-        }
-        return formEditor;
     }
 
     /**
