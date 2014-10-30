@@ -14,6 +14,7 @@ import org.bonitasoft.studio.swtbot.framework.diagram.general.actors.BotActorAss
 import org.bonitasoft.studio.swtbot.framework.diagram.general.actors.BotActorDefinitionPropertySection;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.connectors.BotConnectorsPropertySection;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.data.BotDataPropertySection;
+import org.bonitasoft.studio.swtbot.framework.diagram.general.documents.BotDocumentsPropertySection;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.general.BotDiagramPropertySection;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.general.BotGeneralPropertySection;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.iteration.BotReccurencePropertySection;
@@ -108,11 +109,10 @@ public class BotGeneralDiagramPropertiesView extends BotBase {
         return new BotReccurencePropertySection(bot);
     }
 
-    public void selectDocumentsTab() {
+    public BotDocumentsPropertySection selectDocumentsTab() {
         BotQAUtil.selectTabbedPropertyView(bot, "Documents");
-        //TODO:
+        return new BotDocumentsPropertySection(bot);
     }
-
 
     public BotOperationsPropertySection selectOperationTab() {
         BotQAUtil.selectTabbedPropertyView(bot, "Operations");

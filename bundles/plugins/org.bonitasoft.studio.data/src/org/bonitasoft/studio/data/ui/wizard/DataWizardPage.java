@@ -47,9 +47,7 @@ import org.bonitasoft.studio.data.ui.wizard.provider.BooleanExpressionNatureProv
 import org.bonitasoft.studio.data.ui.wizard.provider.NowDateExpressionNatureProvider;
 import org.bonitasoft.studio.data.ui.wizard.provider.OptionsExpressionNatureProvider;
 import org.bonitasoft.studio.data.util.DataUtil;
-import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
 import org.bonitasoft.studio.expression.editor.provider.ExpressionContentProvider;
-import org.bonitasoft.studio.expression.editor.provider.IExpressionProvider;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
@@ -99,8 +97,10 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
@@ -377,7 +377,11 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
 
     protected void copyDataFeature(final Data newData) {
         for (final EStructuralFeature feature : ProcessPackage.Literals.DATA.getEAllStructuralFeatures()) {
-            newData.eSet(feature, data.eGet(feature));
+            Object eGet = data.eGet(feature);
+            if (feature instanceof EReference && ((EReference) feature).isContainment() && eGet instanceof EObject) {
+                eGet = EcoreUtil.copy((EObject) eGet);
+            }
+            newData.eSet(feature, eGet);
         }
     }
 
@@ -899,23 +903,7 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
 
         refreshDataNames();
 
-        defaultValueViewer.addFilter(new AvailableExpressionTypeFilter(new String[] { ExpressionConstants.VARIABLE_TYPE, ExpressionConstants.CONSTANT_TYPE,
-                ExpressionConstants.SCRIPT_TYPE,
-                ExpressionConstants.PARAMETER_TYPE, ExpressionConstants.QUERY_TYPE }) {
-
-            @Override
-            public boolean select(final Viewer viewer, final Object context, final Object element) {
-                final boolean selected = super.select(viewer, context, element);
-                refreshDataNames();
-                if (element instanceof Expression && ExpressionConstants.VARIABLE_TYPE.equals(((Expression) element).getType())) {
-                    return availableDataNames.contains(((Expression) element).getName());
-                } else if (element instanceof IExpressionProvider
-                        && ExpressionConstants.VARIABLE_TYPE.equals(((IExpressionProvider) element).getExpressionType())) {
-                    return !(container instanceof AbstractProcess) || container instanceof Pool && isOverviewContext;
-                }
-                return selected;
-            }
-        });
+        defaultValueViewer.addFilter(new DataDefaultValueExpressionFilter(this, container, isOverViewContext()));
         defaultValueViewer.setInput(data);
 
         updateBrowseXMLButton(data.getDataType());
@@ -1376,7 +1364,7 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
 
     }
 
-    public void refreshDataNames() {
+    public Set<String> refreshDataNames() {
         if (!(container instanceof AbstractProcess)) {
             final List<Data> availableData = ModelHelper.getAccessibleData(ModelHelper.getParentProcess(container));
             if (isPageFlowContext && container instanceof Task) {
@@ -1394,6 +1382,7 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
                 }
             }
         }
+        return availableDataNames;
     }
 
     /*

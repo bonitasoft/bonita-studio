@@ -30,11 +30,9 @@ import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionEditor;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionProvider;
 import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.process.Connector;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.swt.graphics.Image;
 
 /**
@@ -43,40 +41,40 @@ import org.eclipse.swt.graphics.Image;
  */
 public class ConnectorOutputExpressionProvider implements IExpressionProvider {
 
-    private final ConnectorDefRepositoryStore store;
 
     public ConnectorOutputExpressionProvider(){
-        store = (ConnectorDefRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class);
+
     }
 
     @Override
-    public Set<Expression> getExpressions(EObject context) {
-        Set<Expression> result = new HashSet<Expression>() ;
+    public Set<Expression> getExpressions(final EObject context) {
+        final Set<Expression> result = new HashSet<Expression>() ;
+        final ConnectorDefRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class);
         ConnectorDefinition definition = null ;
         if (context instanceof ConnectorDefinition) {
             definition = (ConnectorDefinition) context ;
         }else if(context instanceof Connector){
-            String defId =   ((Connector) context).getDefinitionId() ;
-            String defVersion =   ((Connector) context).getDefinitionVersion() ;
+            final String defId =   ((Connector) context).getDefinitionId() ;
+            final String defVersion =   ((Connector) context).getDefinitionVersion() ;
             definition = store.getDefinition(defId, defVersion) ;
         }else{
-            definition = (ConnectorDefinition) getConnectorDefinition(context) ;
+            definition = (ConnectorDefinition) getConnectorDefinition(context, store);
         }
         if(definition != null){
-            for(Output output : definition.getOutput()){
-                result.add(createExpression(output)) ;
+            for(final Output output : definition.getOutput()){
+                result.add(ExpressionHelper.createConnectorOutputExpression(output));
             }
         }
         return result;
     }
 
-    private EObject getConnectorDefinition(EObject context) {
+    private EObject getConnectorDefinition(final EObject context, final ConnectorDefRepositoryStore store) {
         EObject definition = context ;
         if(context != null){
             while (definition != null && !(definition instanceof ConnectorDefinition)) {
                 if(definition instanceof Connector){
-                    String defId =   ((Connector) definition).getDefinitionId() ;
-                    String defVersion =   ((Connector) definition).getDefinitionVersion() ;
+                    final String defId =   ((Connector) definition).getDefinitionId() ;
+                    final String defVersion =   ((Connector) definition).getDefinitionVersion() ;
                     definition = store.getDefinition(defId, defVersion) ;
                     break ;
                 }
@@ -86,23 +84,13 @@ public class ConnectorOutputExpressionProvider implements IExpressionProvider {
         return definition;
     }
 
-    private Expression createExpression(Output output) {
-        Expression exp = ExpressionFactory.eINSTANCE.createExpression() ;
-        exp.setType(getExpressionType()) ;
-        exp.setContent(output.getName()) ;
-        exp.setName(output.getName()) ;
-        exp.setReturnType(output.getType()) ;
-        exp.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(output)) ;
-        return exp;
-    }
-
     @Override
     public String getExpressionType() {
         return ExpressionConstants.CONNECTOR_OUTPUT_TYPE;
     }
 
     @Override
-    public Image getIcon(Expression expression) {
+    public Image getIcon(final Expression expression) {
         if(expression.getReferencedElements().isEmpty()){
             return null ;
         }
@@ -110,12 +98,12 @@ public class ConnectorOutputExpressionProvider implements IExpressionProvider {
     }
 
     @Override
-    public String getProposalLabel(Expression expression) {
+    public String getProposalLabel(final Expression expression) {
         return expression.getName() ;
     }
 
     @Override
-    public boolean isRelevantFor(EObject context) {
+    public boolean isRelevantFor(final EObject context) {
         return context instanceof EObject && !getExpressions(context).isEmpty();
     }
 
@@ -130,7 +118,7 @@ public class ConnectorOutputExpressionProvider implements IExpressionProvider {
     }
 
     @Override
-    public IExpressionEditor getExpressionEditor(Expression expression,EObject context) {
+    public IExpressionEditor getExpressionEditor(final Expression expression,final EObject context) {
         return new ConnectorOutputExpressionEditor();
     }
 

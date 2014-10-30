@@ -1,16 +1,14 @@
 /**
- * Copyright (C) 2009-2012 BonitaSoft S.A.
+ * Copyright (C) 2009-2014 BonitaSoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -29,6 +27,7 @@ import org.bonitasoft.studio.form.properties.i18n.Messages;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.model.form.Duplicable;
+import org.bonitasoft.studio.model.form.FileWidget;
 import org.bonitasoft.studio.model.form.FormPackage;
 import org.bonitasoft.studio.model.form.TextFormField;
 import org.bonitasoft.studio.model.form.Widget;
@@ -36,6 +35,9 @@ import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.conversion.Converter;
+import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.core.databinding.observable.value.IValueChangeListener;
+import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
@@ -55,15 +57,16 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 
 /**
- * 
+ *
  * @author Romain Bioteau
- * 
+ *
  */
 public class WidgetModifierContribution implements IExtensibleGridPropertySectionContribution, ISelectionChangedListener {
 
@@ -73,7 +76,7 @@ public class WidgetModifierContribution implements IExtensibleGridPropertySectio
 
     protected EMFDataBindingContext dataBindingContext;
 
-    public void createControl(Composite composite, TabbedPropertySheetWidgetFactory widgetFactory, ExtensibleGridPropertySection extensibleGridPropertySection) {
+    public void createControl(final Composite composite, final TabbedPropertySheetWidgetFactory widgetFactory, final ExtensibleGridPropertySection extensibleGridPropertySection) {
         dataBindingContext = new EMFDataBindingContext();
         composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         composite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).create());
@@ -82,6 +85,9 @@ public class WidgetModifierContribution implements IExtensibleGridPropertySectio
         modifiersCombo.setLabelProvider(new LabelProvider());
         modifiersCombo.setContentProvider(new ArrayContentProvider());
         modifiersCombo.setSorter(new ViewerSorter());
+        if (widget instanceof FileWidget) {
+            modifiersCombo.addFilter(new FileWidgetModifierFilter((FileWidget) widget));
+        }
         modifiersCombo.setInput(getAvailableModifiersFor(widget));
         modifiersCombo.addSelectionChangedListener(this);
 
@@ -94,10 +100,10 @@ public class WidgetModifierContribution implements IExtensibleGridPropertySectio
         dataBindingContext.bindValue(ViewersObservables.observeSingleSelection(modifiersCombo),
                 EMFEditObservables.observeValue(editingDomain, widget, FormPackage.Literals.WIDGET__RETURN_TYPE_MODIFIER));
 
-        UpdateValueStrategy notStrategy = new UpdateValueStrategy();
+        final UpdateValueStrategy notStrategy = new UpdateValueStrategy();
         notStrategy.setConverter(new Converter(Boolean.class, Boolean.class) {
 
-            public Object convert(Object fromObject) {
+            public Object convert(final Object fromObject) {
                 if ((Boolean) fromObject) {
                     return !(Boolean) fromObject;
                 }
@@ -105,11 +111,33 @@ public class WidgetModifierContribution implements IExtensibleGridPropertySectio
             }
         });
 
-        dataBindingContext.bindValue(SWTObservables.observeEnabled(modifiersCombo.getCombo()),
-                EMFEditObservables.observeValue(editingDomain, widget, FormPackage.Literals.DUPLICABLE__DUPLICATE), notStrategy, notStrategy);
+        final IObservableValue duplicableValueObserved = EMFEditObservables.observeValue(editingDomain, widget, FormPackage.Literals.DUPLICABLE__DUPLICATE);
+        duplicableValueObserved.addValueChangeListener(new IValueChangeListener() {
+
+            public void handleValueChange(final ValueChangeEvent arg0) {
+                if (widget instanceof FileWidget) {
+                    modifiersCombo.setSelection(new StructuredSelection());
+                    if (!modifiersCombo.getControl().isDisposed()) {
+                        modifiersCombo.refresh();
+                    }
+                    if (((FileWidget) widget).isDuplicate()) {
+                        modifiersCombo.setSelection(new StructuredSelection(WidgetModifiersSwitch.NEW_LIST_OF_DOCUMENT));
+                    } else {
+                        modifiersCombo.setSelection(new StructuredSelection(WidgetModifiersSwitch.ENGINE_DOCUMENT_QUALIFIED_NAME));
+                    }
+                }
+            }
+        });
+        if (!(widget instanceof FileWidget)) {
+            dataBindingContext.bindValue(SWTObservables.observeEnabled(modifiersCombo.getCombo()),
+                    duplicableValueObserved, notStrategy, notStrategy);
+        } else {
+            dataBindingContext.bindValue(SWTObservables.observeEnabled(modifiersCombo.getCombo()),
+                    duplicableValueObserved);
+        }
     }
 
-    private Collection<String> getAvailableModifiersFor(Widget widget) {
+    private Collection<String> getAvailableModifiersFor(final Widget widget) {
         final WidgetModifiersSwitch modifierSwitch = new WidgetModifiersSwitch();
         return modifierSwitch.doSwitch(widget);
     }
@@ -124,37 +152,37 @@ public class WidgetModifierContribution implements IExtensibleGridPropertySectio
         return Messages.fieldModifier;
     }
 
-    public boolean isRelevantFor(EObject eObject) {
-        return eObject instanceof TextFormField;
+    public boolean isRelevantFor(final EObject eObject) {
+        return eObject instanceof TextFormField || eObject instanceof FileWidget;
     }
 
     public void refresh() {
     }
 
-    public void setEObject(EObject object) {
+    public void setEObject(final EObject object) {
         widget = (Widget) object;
     }
 
-    public void setEditingDomain(TransactionalEditingDomain editingDomain) {
+    public void setEditingDomain(final TransactionalEditingDomain editingDomain) {
         this.editingDomain = editingDomain;
     }
 
-    public void setSelection(ISelection selection) {
+    public void setSelection(final ISelection selection) {
 
     }
 
-    public void selectionChanged(SelectionChangedEvent event) {
-        String type = (String) ((IStructuredSelection) event.getSelection()).getFirstElement();
+    public void selectionChanged(final SelectionChangedEvent event) {
+        final String type = (String) ((IStructuredSelection) event.getSelection()).getFirstElement();
         if (widget != null && type != null) {
             updateWidgetReferences(widget, type);
         }
     }
 
-    protected void updateWidgetReferences(Widget widget, String type) {
+    protected void updateWidgetReferences(final Widget widget, final String type) {
         Assert.isNotNull(type);
-        CompoundCommand cc = new CompoundCommand("Update widget modifier");
-        List<Expression> allExpressionOfWidget = ModelHelper.getAllItemsOfType(ModelHelper.getParentForm(widget), ExpressionPackage.Literals.EXPRESSION);
-        for (Expression exp : allExpressionOfWidget) {
+        final CompoundCommand cc = new CompoundCommand("Update widget modifier");
+        final List<Expression> allExpressionOfWidget = ModelHelper.getAllItemsOfType(ModelHelper.getParentForm(widget), ExpressionPackage.Literals.EXPRESSION);
+        for (final Expression exp : allExpressionOfWidget) {
             if (exp.getContent() != null && (WidgetHelper.FIELD_PREFIX + widget.getName()).equals(exp.getContent())
                     && ExpressionConstants.FORM_FIELD_TYPE.equals(exp.getType()) && !type.equals(exp.getReturnType())) {
                 if (((Duplicable) widget).isDuplicate()) {
@@ -162,11 +190,10 @@ public class WidgetModifierContribution implements IExtensibleGridPropertySectio
                 } else {
                     cc.append(SetCommand.create(editingDomain, exp, ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE, type));
                 }
-
             }
         }
-        List<Widget> allWidget = ModelHelper.getAllItemsOfType(ModelHelper.getParentForm(widget), FormPackage.Literals.WIDGET);
-        for (Widget w : allWidget) {
+        final List<Widget> allWidget = ModelHelper.getAllItemsOfType(ModelHelper.getParentForm(widget), FormPackage.Literals.WIDGET);
+        for (final Widget w : allWidget) {
             if (w.getName().equals(widget.getName()) && w.eClass().equals(widget.eClass()) && !type.equals(w.getReturnTypeModifier())) {
                 cc.append(SetCommand.create(editingDomain, w, FormPackage.Literals.WIDGET__RETURN_TYPE_MODIFIER, type));
             }

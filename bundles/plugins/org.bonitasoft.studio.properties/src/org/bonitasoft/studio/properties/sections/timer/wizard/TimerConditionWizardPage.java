@@ -1,7 +1,7 @@
 /**
  * Copyright (C) 2009 BonitaSoft S.A.
  * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -60,7 +60,7 @@ import org.quartz.CronExpression;
 
 /**
  * @author Romain Bioteau
- * 
+ *
  */
 public class TimerConditionWizardPage extends WizardPage {
 
@@ -70,7 +70,7 @@ public class TimerConditionWizardPage extends WizardPage {
 	private boolean enableCycles = false;
 	private Button generateExpression;
 
-	protected TimerConditionWizardPage(AbstractTimerEvent event, Expression condition) {
+	protected TimerConditionWizardPage(final AbstractTimerEvent event, final Expression condition) {
 		super(TimerConditionWizardPage.class.getName());
 		setImageDescriptor(Pics.getWizban());
 		setTitle(Messages.timerConditionWizardTitle);
@@ -85,12 +85,13 @@ public class TimerConditionWizardPage extends WizardPage {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets
 	 * .Composite)
 	 */
-	public void createControl(Composite parent) {
+	@Override
+    public void createControl(final Composite parent) {
 		final Composite mainComposite = new Composite(parent, SWT.NONE);
 		mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(10, 10).create());
 		mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
@@ -105,7 +106,7 @@ public class TimerConditionWizardPage extends WizardPage {
 
 		final Label basedOn = new Label(radioComposite, SWT.NONE);
 		basedOn.setText(Messages.basedOn);
-		
+
 		Button cycleButton = null;
 		if(enableCycles){
 			cycleButton = new Button(radioComposite, SWT.RADIO);
@@ -129,7 +130,7 @@ public class TimerConditionWizardPage extends WizardPage {
 		if(cycleButton != null){
 			cycleButton.addSelectionListener(new SelectionAdapter() {
 				@Override
-				public void widgetSelected(SelectionEvent e) {
+				public void widgetSelected(final SelectionEvent e) {
 					if(((Button) e.getSource()).getSelection()){
 						stackLayout.topControl = editor.getParent();
 						stackedComposite.layout();
@@ -140,7 +141,7 @@ public class TimerConditionWizardPage extends WizardPage {
 
 		fixedDateButton.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e) {
+			public void widgetSelected(final SelectionEvent e) {
 				if(fixedDateButton.getSelection()){
 					stackLayout.topControl = calendarEditor;
 					stackedComposite.layout();
@@ -150,7 +151,7 @@ public class TimerConditionWizardPage extends WizardPage {
 
 		durationButton.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e) {
+			public void widgetSelected(final SelectionEvent e) {
 				if(durationButton.getSelection()){
 					stackLayout.topControl = durationEditor;
 					stackedComposite.layout();
@@ -175,14 +176,14 @@ public class TimerConditionWizardPage extends WizardPage {
 			conditionViewer.setMessage(Messages.timerConditionHint, IStatus.INFO);
 			conditionViewer.addFilter(new AvailableExpressionTypeFilter(new String[]{ExpressionConstants.SCRIPT_TYPE,ExpressionConstants.PARAMETER_TYPE,ExpressionConstants.CONSTANT_TYPE,ExpressionConstants.VARIABLE_TYPE}));
 		}
-		conditionViewer.addExpressionValidator(ExpressionConstants.CONSTANT_TYPE, new IExpressionValidator() {
+        conditionViewer.addExpressionValidator(new IExpressionValidator() {
 
 			private Expression inputExpression;
 
 			@Override
-			public IStatus validate(Object value) {
+			public IStatus validate(final Object value) {
 				if(inputExpression.getReturnType().equals(String.class.getName())){
-					String cron = inputExpression.getContent();
+					final String cron = inputExpression.getContent();
 					if(!cron.isEmpty() && !CronExpression.isValidExpression(cron)){
 						return ValidationStatus.error(Messages.invalidCronExpression);
 					}
@@ -191,18 +192,23 @@ public class TimerConditionWizardPage extends WizardPage {
 			}
 
 			@Override
-			public void setInputExpression(Expression inputExpression) {
+			public void setInputExpression(final Expression inputExpression) {
 				this.inputExpression = inputExpression;
 			}
 
 			@Override
-			public void setDomain(EditingDomain domain) {
+			public void setDomain(final EditingDomain domain) {
 
 			}
 
 			@Override
-			public void setContext(EObject context) {
+			public void setContext(final EObject context) {
 			}
+
+            @Override
+            public boolean isRelevantForExpressionType(final String type) {
+                return ExpressionConstants.CONSTANT_TYPE.equals(type);
+            }
 		});
 		conditionViewer.setInput(event) ;
 		condition = event.getCondition() ;
@@ -240,18 +246,18 @@ public class TimerConditionWizardPage extends WizardPage {
 		WizardPageSupport.create(this, editor.getContext());
 		setControl(mainComposite);
 	}
-	
+
 	@Override
-	public void setPageComplete(boolean complete) {
+	public void setPageComplete(final boolean complete) {
 		super.setPageComplete(complete);
 		setCronGenerationEnabled(complete);
 	}
 
-	private void setCronGenerationEnabled(boolean complete) {
+	private void setCronGenerationEnabled(final boolean complete) {
 		generateExpression.setEnabled(getErrorMessage() == null);
 	}
 
-	protected Control createCalendarEditor(Composite stackedComposite) {
+	protected Control createCalendarEditor(final Composite stackedComposite) {
 		final Composite calendarControl = new Composite(stackedComposite, SWT.NONE);
 		calendarControl.setLayout(GridLayoutFactory.fillDefaults().numColumns(4).margins(15, 15).create());
 		calendarControl.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
@@ -271,7 +277,7 @@ public class TimerConditionWizardPage extends WizardPage {
 		generateFixedDate.setText(Messages.generateFixedDateLabel);
 		generateFixedDate.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e) {
+			public void widgetSelected(final SelectionEvent e) {
 				final String displayDate = DateUtil.getWidgetDisplayDate(dateChooser, timeChooser);
 				condition.setName(displayDate);
 				condition.setContent(DateUtil.getDateExpressionContent(dateChooser.getYear(),
@@ -290,7 +296,7 @@ public class TimerConditionWizardPage extends WizardPage {
 		return calendarControl;
 	}
 
-	protected Control createDurationEditor(Composite stackedComposite) {
+	protected Control createDurationEditor(final Composite stackedComposite) {
 		final Composite durationControl = new Composite(stackedComposite, SWT.NONE);
 		durationControl.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(15, 15).create());
 		durationControl.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
@@ -307,7 +313,7 @@ public class TimerConditionWizardPage extends WizardPage {
 		generateDuration.setText(Messages.generateDurationLabel);
 		generateDuration.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e) {
+			public void widgetSelected(final SelectionEvent e) {
 				final long duration = durationWidget.getDuration();
 				condition.setName(DateUtil.getDisplayDuration(duration));
 				condition.setContent(String.valueOf(duration)+"L");
@@ -330,20 +336,20 @@ public class TimerConditionWizardPage extends WizardPage {
 		final CronEditor editor = new CronEditor(cronGroup, SWT.NONE);
 		editor.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 		editor.addTabChangedListener(new Listener() {
-			
+
 			@Override
-			public void handleEvent(Event event) {
+			public void handleEvent(final Event event) {
 				generateExpression.setEnabled(true);
 			}
 		});
-		
+
 		generateExpression = new Button(cronGroup, SWT.PUSH);
 		generateExpression.setText(Messages.generateCronButtonLabel);
 		generateExpression.setLayoutData(GridDataFactory.swtDefaults().create());
 		generateExpression.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e) {
-				String cronExpression = editor.getExpression();
+			public void widgetSelected(final SelectionEvent e) {
+				final String cronExpression = editor.getExpression();
 				if(cronExpression != null && !cronExpression.isEmpty()){
 					condition = ExpressionFactory.eINSTANCE.createExpression();
 					condition.setName(cronExpression);

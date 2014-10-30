@@ -48,7 +48,8 @@ public class BotGefBaseEditor extends BotBase {
     public BotGefBaseEditor selectElement(final String pName) {
         final SWTBotGefEditPart element = gmfEditor.getEditPart(pName);
         Assert.assertNotNull("Error: Element not found : \'" + pName + "\'.", element);
-        element.click();
+        element.click();//
+        element.parent().select();//call select on parent of LabelEditpart
         bot.waitUntil(new DefaultCondition() {
 
             @Override

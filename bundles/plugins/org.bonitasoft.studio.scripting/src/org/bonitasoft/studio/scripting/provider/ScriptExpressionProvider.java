@@ -5,14 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.scripting.provider;
 
@@ -33,70 +31,85 @@ import org.eclipse.swt.graphics.Image;
 
 /**
  * @author Romain Bioteau
- *
  */
 public class ScriptExpressionProvider implements IExpressionProvider {
 
-	/* (non-Javadoc)
-	 * @see org.bonitasoft.studio.expression.editor.provider.IExpressionProvider#getExpressions(org.eclipse.emf.ecore.EObject)
-	 */
-	public Set<Expression> getExpressions(EObject context) {
-		return Collections.emptySet() ;
-	}
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.expression.editor.provider.IExpressionProvider#getExpressions(org.eclipse.emf.ecore.EObject)
+     */
+    @Override
+    public Set<Expression> getExpressions(final EObject context) {
+        return Collections.emptySet();
+    }
 
-	/* (non-Javadoc)
-	 * @see org.bonitasoft.studio.expression.editor.provider.IExpressionProvider#getExpressionType()
-	 */
-	public String getExpressionType() {
-		return ExpressionConstants.SCRIPT_TYPE;
-	}
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.expression.editor.provider.IExpressionProvider#getExpressionType()
+     */
+    @Override
+    public String getExpressionType() {
+        return ExpressionConstants.SCRIPT_TYPE;
+    }
 
-	/* (non-Javadoc)
-	 * @see org.bonitasoft.studio.expression.editor.provider.IExpressionProvider#getIcon(org.bonitasoft.studio.model.expression.Expression)
-	 */
-	public Image getIcon(Expression expression) {
-		String languageId = expression.getInterpreter() ;
-		IScriptLanguageProvider provider = ScriptLanguageService.getInstance().getScriptLanguageProvider(languageId) ;
-		if(provider != null){
-			return provider.getIcon();
-		} else {
-			return null;
-		}		
-	}
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.expression.editor.provider.IExpressionProvider#getIcon(org.bonitasoft.studio.model.expression.Expression)
+     */
+    @Override
+    public Image getIcon(final Expression expression) {
+        final String languageId = expression.getInterpreter();
+        final IScriptLanguageProvider provider = ScriptLanguageService.getInstance().getScriptLanguageProvider(languageId);
+        if (expression != null && expression.getName() != null && !expression.getName().isEmpty() && provider != null) {
+            return provider.getIcon();
+        } else {
+            return null;
+        }
+    }
 
-	/* (non-Javadoc)
-	 * @see org.bonitasoft.studio.expression.editor.provider.IExpressionProvider#getTypeIcon()
-	 */
-	public Image getTypeIcon() {
-		return Pics.getImage(PicsConstants.groovyScript);
-	}
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.expression.editor.provider.IExpressionProvider#getTypeIcon()
+     */
+    @Override
+    public Image getTypeIcon() {
+        return Pics.getImage(PicsConstants.groovyScript);
+    }
 
-	/* (non-Javadoc)
-	 * @see org.bonitasoft.studio.expression.editor.provider.IExpressionProvider#getProposalLabel(org.bonitasoft.studio.model.expression.Expression)
-	 */
-	public String getProposalLabel(Expression expression) {
-		return expression.getName();
-	}
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.expression.editor.provider.IExpressionProvider#getProposalLabel(org.bonitasoft.studio.model.expression.Expression)
+     */
+    @Override
+    public String getProposalLabel(final Expression expression) {
+        return expression.getName();
+    }
 
-	/* (non-Javadoc)
-	 * @see org.bonitasoft.studio.expression.editor.provider.IExpressionProvider#isRelevantFor(org.eclipse.emf.ecore.EObject)
-	 */
-	public boolean isRelevantFor(EObject context) {
-		return true;
-	}
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.expression.editor.provider.IExpressionProvider#isRelevantFor(org.eclipse.emf.ecore.EObject)
+     */
+    @Override
+    public boolean isRelevantFor(final EObject context) {
+        return true;
+    }
 
-	/* (non-Javadoc)
-	 * @see org.bonitasoft.studio.expression.editor.provider.IExpressionProvider#getTypeLabel()
-	 */
-	public String getTypeLabel() {
-		return Messages.scriptTypeLabel;
-	}
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.expression.editor.provider.IExpressionProvider#getTypeLabel()
+     */
+    @Override
+    public String getTypeLabel() {
+        return Messages.scriptTypeLabel;
+    }
 
-	/* (non-Javadoc)
-	 * @see org.bonitasoft.studio.expression.editor.provider.IExpressionProvider#getExpressionEditor()
-	 */
-	public IExpressionEditor getExpressionEditor(Expression expression,EObject context) {
-		return new ScriptExpressionEditor(expression);
-	}
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.expression.editor.provider.IExpressionProvider#getExpressionEditor()
+     */
+    @Override
+    public IExpressionEditor getExpressionEditor(final Expression expression, final EObject context) {
+        return new ScriptExpressionEditor(expression);
+    }
 
 }

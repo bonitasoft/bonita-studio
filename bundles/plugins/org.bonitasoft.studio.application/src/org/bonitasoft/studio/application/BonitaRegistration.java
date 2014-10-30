@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2010 BonitaSoft S.A.
- * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2010-2014 BonitaSoft S.A.
+ * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -45,7 +45,7 @@ import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Baptiste Mesta
- * 
+ *
  */
 public class BonitaRegistration {
 
@@ -58,27 +58,42 @@ public class BonitaRegistration {
 	public static final String BONITA_USER_PHONE = "user.register.phone";
 	public static final String BONITA_INFO_SENT = "user.info.sent";
 	public static final String BONITA_USER_INFOS = "user.info.data";
+	public static final String BONITA_USER_ORGANIZATION = "user.register.organization";
 	public static final int BONITA_USER_REGISTER_MAXTRY = 6;
 
-	private static HashMap<String, String> initUserInfos(IPreferenceStore prefStore) {
-		HashMap<String, String> infos2 = new HashMap<String, String>();
-		infos2.put(BonitaRegistration.BONITA_USER_MAIL, prefStore.getString(BonitaRegistration.BONITA_USER_MAIL));
-		infos2.put(BonitaRegistration.BONITA_USER_COUNTRY, prefStore.getString(BonitaRegistration.BONITA_USER_COUNTRY));
-		infos2.put(BonitaRegistration.BONITA_USER_FIRST_NAME, prefStore.getString(BonitaRegistration.BONITA_USER_FIRST_NAME));
-		infos2.put(BonitaRegistration.BONITA_USER_LAST_NAME, prefStore.getString(BonitaRegistration.BONITA_USER_LAST_NAME));
-		infos2.put(BonitaRegistration.BONITA_USER_PHONE, prefStore.getString(BonitaRegistration.BONITA_USER_PHONE));
+	private static HashMap<String, String> initUserInfos(
+			final IPreferenceStore prefStore) {
+		final HashMap<String, String> infos2 = new HashMap<String, String>();
+		infos2.put(BonitaRegistration.BONITA_USER_MAIL,
+				prefStore.getString(BonitaRegistration.BONITA_USER_MAIL));
+		infos2.put(BonitaRegistration.BONITA_USER_COUNTRY,
+				prefStore.getString(BonitaRegistration.BONITA_USER_COUNTRY));
+		infos2.put(BonitaRegistration.BONITA_USER_FIRST_NAME,
+				prefStore.getString(BonitaRegistration.BONITA_USER_FIRST_NAME));
+		infos2.put(BonitaRegistration.BONITA_USER_LAST_NAME,
+				prefStore.getString(BonitaRegistration.BONITA_USER_LAST_NAME));
+		infos2.put(BonitaRegistration.BONITA_USER_PHONE,
+				prefStore.getString(BonitaRegistration.BONITA_USER_PHONE));
+		infos2.put(BonitaRegistration.BONITA_USER_ORGANIZATION,
+				prefStore.getString(BonitaRegistration.BONITA_USER_ORGANIZATION));
 		infos2.put("bonita.version", ProductVersion.CURRENT_VERSION);
 		infos2.put("java.version", System.getProperty("java.version"));
 		infos2.put("java.vendor", System.getProperty("java.vendor"));
 		infos2.put("os.name", System.getProperty("os.name"));
 		infos2.put("os.arch", System.getProperty("os.arch"));
 		infos2.put("os.version", System.getProperty("os.version"));
-		infos2.put("proc.number", String.valueOf(Runtime.getRuntime().availableProcessors()));
-		infos2.put("mem.total", String.valueOf(Runtime.getRuntime().totalMemory() / 1048576) + "mo");
-		infos2.put("mem.max", String.valueOf(Runtime.getRuntime().maxMemory() / 1048576) + "mo");
-		Display display = PlatformUI.getWorkbench().getDisplay();
-		if(display != null){
-			infos2.put("screen.number", String.valueOf(display.getMonitors().length));
+		infos2.put("proc.number",
+				String.valueOf(Runtime.getRuntime().availableProcessors()));
+		infos2.put("mem.total",
+				String.valueOf(Runtime.getRuntime().totalMemory() / 1048576)
+						+ "mo");
+		infos2.put("mem.max",
+				String.valueOf(Runtime.getRuntime().maxMemory() / 1048576)
+						+ "mo");
+		final Display display = PlatformUI.getWorkbench().getDisplay();
+		if (display != null) {
+			infos2.put("screen.number",
+					String.valueOf(display.getMonitors().length));
 			Rectangle b = display.getMonitors()[0].getBounds();
 			String rez = b.width + "x" + b.height;
 			infos2.put("screen.main.size", rez);
@@ -94,19 +109,24 @@ public class BonitaRegistration {
 			e = NetworkInterface.getNetworkInterfaces();
 
 			while (e.hasMoreElements()) {
-				NetworkInterface ni = (NetworkInterface) e.nextElement();
+				final NetworkInterface ni = e.nextElement();
 				if (!ni.getName().contains("lo")) {
 
-					Enumeration<InetAddress> e2 = ni.getInetAddresses();
+					final Enumeration<InetAddress> e2 = ni.getInetAddresses();
 
 					while (e2.hasMoreElements()) {
-						InetAddress ip = e2.nextElement();
-						String name = ip.getClass().getName();
-						infos2.put("netwrk." + ni.getName() + "." + (name.contains("Inet6") ? "ipv6" : "ipv4"), ip.getHostAddress());
+						final InetAddress ip = e2.nextElement();
+						final String name = ip.getClass().getName();
+						infos2.put(
+								"netwrk."
+										+ ni.getName()
+										+ "."
+										+ (name.contains("Inet6") ? "ipv6"
+												: "ipv4"), ip.getHostAddress());
 					}
 				}
 			}
-		} catch (SocketException e1) {
+		} catch (final SocketException e1) {
 
 		}
 		return infos2;
@@ -114,42 +134,49 @@ public class BonitaRegistration {
 
 	/**
 	 * @param prefStore
-	 * 
+	 *
 	 */
-	public static void sendUserInfo(IPreferenceStore prefStore) {
+	public static void sendUserInfo(final IPreferenceStore prefStore) {
 
-		HashMap<String, String> infos = initUserInfos(prefStore);
-		sendUserInfo(prefStore, infos.get(BonitaRegistration.BONITA_USER_MAIL), infos);
+		final HashMap<String, String> infos = initUserInfos(prefStore);
+		sendUserInfo(prefStore, infos.get(BonitaRegistration.BONITA_USER_MAIL),
+				infos);
 	}
 
 	/**
 	 * @param prefStore
-	 * 
+	 *
 	 */
-	public static void sendUserInfo(final IPreferenceStore prefStore, final String email1, final HashMap<String, String> infos2) {
+	public static void sendUserInfo(final IPreferenceStore prefStore,
+			final String email1, final HashMap<String, String> infos2) {
 		// send info to bonitasoft
 		String data = "";
 
 		try {
 
 			// create email
-			String email = URLEncoder.encode("email", "UTF-8") + "=" + URLEncoder.encode(infos2.get(BonitaRegistration.BONITA_USER_MAIL), "UTF-8");
+			final String email = URLEncoder.encode("email", "UTF-8")
+					+ "="
+					+ URLEncoder.encode(
+							infos2.get(BonitaRegistration.BONITA_USER_MAIL),
+							"UTF-8");
 
 			// send stats
-			StringBuilder sb = new StringBuilder();
-			Set<Entry<String, String>> infos2Entries = infos2.entrySet();
-			for(Entry<String, String> infos2Entry: infos2Entries){
-				String key = infos2Entry.getKey();
-				String value = infos2Entry.getValue();
-				if (!key.equals(BonitaRegistration.BONITA_USER_MAIL)){
-					sb.append("<value key=\"").append(key).append("\">").append(value).append("</value>\n");
+			final StringBuilder sb = new StringBuilder();
+			final Set<Entry<String, String>> infos2Entries = infos2.entrySet();
+			for (final Entry<String, String> infos2Entry : infos2Entries) {
+				final String key = infos2Entry.getKey();
+				final String value = infos2Entry.getValue();
+				if (!key.equals(BonitaRegistration.BONITA_USER_MAIL)) {
+					sb.append("<value key=\"").append(key).append("\">")
+							.append(value).append("</value>\n");
 				}
 			}
 			data = "&data=" + URLEncoder.encode(sb.toString(), "UTF-8");
 
 			sendUserInfoEncoded(prefStore, email, data);
 
-		} catch (UnsupportedEncodingException e) {
+		} catch (final UnsupportedEncodingException e) {
 			BonitaStudioLog.error(e);
 		}
 
@@ -157,50 +184,60 @@ public class BonitaRegistration {
 
 	/**
 	 * @param prefStore
-	 * 
+	 *
 	 */
-	public static void sendUserInfo(final IPreferenceStore prefStore, final String email1) {
+	public static void sendUserInfo(final IPreferenceStore prefStore,
+			final String email1) {
 		// send info to bonitasoft
-		HashMap<String, String> infos2 = initUserInfos(prefStore);
+		final HashMap<String, String> infos2 = initUserInfos(prefStore);
 
 		sendUserInfo(prefStore, email1, infos2);
 
 	}
 
-	private static void sendUserInfoEncoded(final IPreferenceStore prefStore, final String email, final String data) {
+	private static void sendUserInfoEncoded(final IPreferenceStore prefStore,
+			final String email, final String data) {
 
-		if (prefStore.getInt(BonitaRegistration.BONITA_INFO_SENT) != 1 && data != null && data.length() > 0 && email != null && email.length() > 0) {
-			Job job = new Job("Send user infos") {
+		if (prefStore.getInt(BonitaRegistration.BONITA_INFO_SENT) != 1
+				&& data != null && data.length() > 0 && email != null
+				&& email.length() > 0) {
+			final Job job = new Job("Send user infos") {
 
 				@Override
-				protected IStatus run(IProgressMonitor monitor) {
+				protected IStatus run(final IProgressMonitor monitor) {
 					try {
 
 						// Send data
-						URL url = new URL("http://stats.bonitasoft.org/stats.php");
-						URLConnection conn = url.openConnection();
+						final URL url = new URL(
+								"http://stats.bonitasoft.org/stats.php");
+						final URLConnection conn = url.openConnection();
 
 						conn.setDoOutput(true);
-						OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
+						final OutputStreamWriter wr = new OutputStreamWriter(
+								conn.getOutputStream());
 						wr.write(email);
 						wr.write(data);
 						wr.flush();
 
 						// Get the response
-						BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+						final BufferedReader rd = new BufferedReader(
+								new InputStreamReader(conn.getInputStream()));
 
 						String line;
 						while ((line = rd.readLine()) != null) {
 							if (line.equals("1")) {
-								prefStore.setValue(BonitaRegistration.BONITA_INFO_SENT, 1);
+								prefStore.setValue(
+										BonitaRegistration.BONITA_INFO_SENT, 1);
 							}
 						}
 						wr.close();
 						rd.close();
-					} catch (Exception e) {
+					} catch (final Exception e) {
 						// may not be online saving info for sending it later
-						prefStore.setValue(BonitaRegistration.BONITA_USER_INFOS, data);
-						prefStore.setValue(BonitaRegistration.BONITA_INFO_SENT, 0);
+						prefStore.setValue(
+								BonitaRegistration.BONITA_USER_INFOS, data);
+						prefStore.setValue(BonitaRegistration.BONITA_INFO_SENT,
+								0);
 						return Status.CANCEL_STATUS;
 					}
 					return Status.OK_STATUS;

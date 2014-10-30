@@ -38,12 +38,13 @@ public class DocumentFilseStoreProvider implements IBOSArchiveFileStoreProvider 
      * @see org.bonitasoft.studio.common.repository.provider.IBOSArchiveFileStoreProvider#getFileStoreForConfiguration(org.bonitasoft.studio.model.process.AbstractProcess, org.bonitasoft.studio.model.configuration.Configuration)
      */
     @Override
-    public Set<IRepositoryFileStore> getFileStoreForConfiguration(AbstractProcess process, Configuration configuration) {
-        Set<IRepositoryFileStore> result = new HashSet<IRepositoryFileStore>();
-        DocumentRepositoryStore store = (DocumentRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DocumentRepositoryStore.class);
+    public Set<IRepositoryFileStore> getFileStoreForConfiguration(final AbstractProcess process, final Configuration configuration) {
+        final Set<IRepositoryFileStore> result = new HashSet<IRepositoryFileStore>();
+        final DocumentRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(DocumentRepositoryStore.class);
         if(process instanceof Pool){
-            for(Document doc :  ((Pool) process).getDocuments()){
-                if(doc.isIsInternal() && doc.getDefaultValueIdOfDocumentStore() != null && !doc.getDefaultValueIdOfDocumentStore().isEmpty()){
+            for(final Document doc :  ((Pool) process).getDocuments()){
+                if (doc.getDocumentType().equals(org.bonitasoft.studio.model.process.DocumentType.INTERNAL) && doc.getDefaultValueIdOfDocumentStore() != null
+                        && !doc.getDefaultValueIdOfDocumentStore().isEmpty()) {
                     final DocumentFileStore fileStore = store.getChild(doc.getDefaultValueIdOfDocumentStore());
                     if(fileStore != null){
                         result.add(fileStore);

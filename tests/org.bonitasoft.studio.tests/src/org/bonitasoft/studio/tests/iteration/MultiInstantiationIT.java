@@ -1,19 +1,16 @@
 /**
  * Copyright (C) 2011 BonitaSoft S.A.
  * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
- *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.tests.iteration;
 
@@ -32,12 +29,13 @@ import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.bonitasoft.studio.properties.i18n.Messages;
 import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
+import org.bonitasoft.studio.swtbot.framework.composite.BotOperationComposite;
 import org.bonitasoft.studio.swtbot.framework.diagram.BotProcessDiagramPerspective;
 import org.bonitasoft.studio.swtbot.framework.diagram.application.pageflow.BotAddFormWizardDialog;
 import org.bonitasoft.studio.swtbot.framework.diagram.application.pageflow.BotPageflowPropertySection;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.actors.BotActorDefinitionPropertySection;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.data.BotAddDataWizardPage;
-import org.bonitasoft.studio.swtbot.framework.diagram.general.form.data.BotDataPropertySection;
+import org.bonitasoft.studio.swtbot.framework.diagram.general.form.data.BotDataFormPropertySection;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.form.general.BotGeneralPropertySection;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.iteration.BotDataBasedStackPanel;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.iteration.BotMultiInstanceTypeStackPanel;
@@ -57,7 +55,6 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
 
 /**
  * @author Romain Bioteau
@@ -189,7 +186,7 @@ public class MultiInstantiationIT extends SWTBotGefTestCase implements SWTBotCon
         final BotGeneralPropertySection botGeneralPropertySection = botProcessDiagramPerspective.getFormPropertiesPart().selectGeneralTab().selectGeneralTab();
         botGeneralPropertySection.setFieldType("Message");
 
-        final BotDataPropertySection botDataPropertySection = botProcessDiagramPerspective.getFormPropertiesPart().selectGeneralTab().selectDataTab();
+        final BotDataFormPropertySection botDataPropertySection = botProcessDiagramPerspective.getFormPropertiesPart().selectGeneralTab().selectDataTab();
         botDataPropertySection.editInitialValue().selectScriptTab().setName("nbTicketsAvailable")
         .setScriptContent("\"Only \"+nbTicketsAvailable+\" tickets available.\"").setReturnType(String.class.getName()).ok();
 
@@ -197,7 +194,7 @@ public class MultiInstantiationIT extends SWTBotGefTestCase implements SWTBotCon
         botProcessDiagramPerspective.getFormPropertiesPart().selectGeneralTab().selectGeneralTab().setFieldType("Text field")
         .setDisplayName("Nbr de Tickets à reserver");
 
-        final BotDataPropertySection dataPropertySection = botProcessDiagramPerspective.getFormPropertiesPart().selectGeneralTab().selectDataTab();
+        final BotDataFormPropertySection dataPropertySection = botProcessDiagramPerspective.getFormPropertiesPart().selectGeneralTab().selectDataTab();
         dataPropertySection.editInitialValue().selectConstantType().setValue("0").ok();
         dataPropertySection.selectOutputVariable("nbTickets", Integer.class.getName());
         dataPropertySection.editOutputOperationExpression().selectScriptTab().setName("nbTickets").setScriptContent("Integer.valueOf(field_nbTickets1)")
@@ -292,7 +289,6 @@ public class MultiInstantiationIT extends SWTBotGefTestCase implements SWTBotCon
         .editDefaultValueExpression();
         botExpressionEditorDialog.selectScriptTab().setName("vipScript").setScriptContent("[\"A\",\"B\",\"C\",\"D\"]").ok();
         addDataBot.finish();
-
 
         botApplicationWorkbenchWindow.save();
 
@@ -398,10 +394,8 @@ public class MultiInstantiationIT extends SWTBotGefTestCase implements SWTBotCon
                 .selectActorsDefinitionTab();
         botActorDefinitionPropertySection.selectActor("Employee actor").setSetAsInitiator();
 
-
         drawDiagram.selectElement("Step1");
         botProcessDiagramPerspective.getDiagramPropertiesPart().selectGeneralTab().selectActorAssignementTab().useBelowActor().selectActor("Employee actor");
-
 
         addDataBot = botProcessDiagramPerspective.getDiagramPropertiesPart().selectGeneralTab().selectDataTab()
                 .addData();
@@ -412,7 +406,6 @@ public class MultiInstantiationIT extends SWTBotGefTestCase implements SWTBotCon
         addDataBot.setName("vipName").setType("Text").finish();
 
         botApplicationWorkbenchWindow.save();
-
 
         // Set properties of Multi-Instance
         // Set properties of Multi-Instance
@@ -430,16 +423,16 @@ public class MultiInstantiationIT extends SWTBotGefTestCase implements SWTBotCon
         // set output results
         botDataBasedStackPanel.selectListOfAppenedResults("alreadyVip -- java.util.List");
 
-
         // Edit the Completion condition
         botDataBasedStackPanel.editEarlyCompletionCondition().selectScriptTab().setName("isOK").setScriptContent("(vip.isEmpty())||(nbTicketsAvailable==0)")
         .ok();
 
         // Add operation to update the number of available tickets
         final BotOperationsPropertySection operationTab = botProcessDiagramPerspective.getDiagramPropertiesPart().selectGeneralTab().selectOperationTab();
-        operationTab.add();
-        operationTab.selectOutputVariable("vip", "java.util.List", 0);
-        operationTab.editActionExpression(0).selectScriptTab().setName("removeUser")
+        operationTab.addOperation();
+        final BotOperationComposite botOperationComposite = operationTab.getOperation(0);
+        botOperationComposite.selectLeftOperand("vip", "java.util.List");
+        botOperationComposite.editRightOperand().selectScriptTab().setName("removeUser")
         .setScriptContent("List vipList = new ArrayList(vip)\nvipList.remove(vipName)\nreturn vipList")
         .setReturnType(List.class.getName())
         .ok();

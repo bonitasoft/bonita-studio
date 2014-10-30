@@ -25,9 +25,7 @@ import org.eclipse.swtbot.swt.finder.matchers.WidgetMatcherFactory;
 public class BotExpressionEditorDialog extends BotDialog {
 
     public BotExpressionEditorDialog(final SWTGefBot bot) {
-        super(bot);
-        bot.waitUntil(Conditions.shellIsActive(Messages.editExpression));
-        bot.shell(Messages.editExpression);
+        super(bot, Messages.editExpression);
     }
 
     public BotScriptExpressionEditor selectScriptTab() {
@@ -46,6 +44,12 @@ public class BotExpressionEditorDialog extends BotDialog {
         bot.tableWithLabel(Messages.expressionTypeLabel).select("Constant");
         bot.waitUntilWidgetAppears(Conditions.waitForWidget(WidgetMatcherFactory.widgetOfType(Text.class)));
         return new BotConstantExpressionEditor(bot, this);
+    }
+
+    public BotFormFieldExpressionEditor selectFormFieldType() {
+        bot.tableWithLabel(Messages.expressionTypeLabel).select("Form field");
+        bot.waitUntilWidgetAppears(Conditions.waitForWidget(WidgetMatcherFactory.widgetOfType(Table.class)));
+        return new BotFormFieldExpressionEditor(bot, this);
     }
 
 }

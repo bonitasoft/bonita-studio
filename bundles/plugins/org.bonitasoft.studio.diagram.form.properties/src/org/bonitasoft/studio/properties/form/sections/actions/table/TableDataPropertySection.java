@@ -45,140 +45,140 @@ import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
  */
 public class TableDataPropertySection extends AbstractTableDataPropertySection {
 
-	private Button allowSelectionButton;
-	private Button allowMultipleSelection;
-	private Composite allowedSelectionCompo;
-	private ExpressionViewer initialSelectedValues;
-	private ExpressionViewer initialFromColumn;
-	private Button allowSingleSelection;
-	private ExpressionViewer paginationMaxNumber;
+    private Button allowSelectionButton;
+    private Button allowMultipleSelection;
+    private Composite allowedSelectionCompo;
+    private ExpressionViewer initialSelectedValues;
+    private ExpressionViewer initialFromColumn;
+    private Button allowSingleSelection;
+    private ExpressionViewer paginationMaxNumber;
 
 
-	@Override
-	public void createControls(Composite parent,
-			TabbedPropertySheetPage aTabbedPropertySheetPage) {
-		super.createControls(parent, aTabbedPropertySheetPage);
-		createSaveTo(parent, aTabbedPropertySheetPage);
-	}
+    @Override
+    public void createControls(final Composite parent,
+            final TabbedPropertySheetPage aTabbedPropertySheetPage) {
+        super.createControls(parent, aTabbedPropertySheetPage);
+        createSaveTo(parent, aTabbedPropertySheetPage);
+    }
 
-	protected void createSaveTo(Composite parent, TabbedPropertySheetPage aTabbedPropertySheetPage) {
-		TabbedPropertySheetWidgetFactory widgetFactory = aTabbedPropertySheetPage.getWidgetFactory();
-		Composite compoForSaveTo = widgetFactory.createComposite(parent, SWT.NONE);
-		compoForSaveTo.setLayout(new GridLayout(1, false));
-		compoForSaveTo.setLayoutData(GridDataFactory.fillDefaults().grab(true,false).create()) ;
-		Composite paginationComposite = widgetFactory.createComposite(compoForSaveTo);
-		paginationComposite.setLayout(new GridLayout(2,false));
-		paginationComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
-		widgetFactory.createCLabel(paginationComposite, Messages.table_paginationNumber + " ");//$NON-NLS-1$
-		paginationMaxNumber = new ExpressionViewer(paginationComposite, SWT.BORDER, widgetFactory,getEditingDomain(), FormPackage.Literals.TABLE__MAX_ROW_FOR_PAGINATION);
-		paginationMaxNumber.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
-		Composite selectionButtonsComposite = widgetFactory.createComposite(compoForSaveTo);
-		selectionButtonsComposite.setLayout(new RowLayout(SWT.HORIZONTAL));
+    protected void createSaveTo(final Composite parent, final TabbedPropertySheetPage aTabbedPropertySheetPage) {
+        final TabbedPropertySheetWidgetFactory widgetFactory = aTabbedPropertySheetPage.getWidgetFactory();
+        final Composite compoForSaveTo = widgetFactory.createComposite(parent, SWT.NONE);
+        compoForSaveTo.setLayout(new GridLayout(1, false));
+        compoForSaveTo.setLayoutData(GridDataFactory.fillDefaults().grab(true,false).create()) ;
+        final Composite paginationComposite = widgetFactory.createComposite(compoForSaveTo);
+        paginationComposite.setLayout(new GridLayout(2,false));
+        paginationComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
+        widgetFactory.createCLabel(paginationComposite, Messages.table_paginationNumber + " ");//$NON-NLS-1$
+        paginationMaxNumber = new ExpressionViewer(paginationComposite, SWT.BORDER, widgetFactory,getEditingDomain(), FormPackage.Literals.TABLE__MAX_ROW_FOR_PAGINATION);
+        paginationMaxNumber.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
+        final Composite selectionButtonsComposite = widgetFactory.createComposite(compoForSaveTo);
+        selectionButtonsComposite.setLayout(new RowLayout(SWT.HORIZONTAL));
 
-		//Messages.data_allowSelectionInTable
-		allowSelectionButton = widgetFactory.createButton(selectionButtonsComposite, Messages.data_allowSelectionInTable, SWT.CHECK);
-		//Messages.data_multipleSelectionInTable
-		allowSingleSelection = widgetFactory.createButton(selectionButtonsComposite, Messages.table_selectionSingle, SWT.RADIO);
+        //Messages.data_allowSelectionInTable
+        allowSelectionButton = widgetFactory.createButton(selectionButtonsComposite, Messages.data_allowSelectionInTable, SWT.CHECK);
+        //Messages.data_multipleSelectionInTable
+        allowSingleSelection = widgetFactory.createButton(selectionButtonsComposite, Messages.table_selectionSingle, SWT.RADIO);
 
-		allowMultipleSelection = widgetFactory.createButton(selectionButtonsComposite, Messages.table_selectionMultiple, SWT.RADIO);
+        allowMultipleSelection = widgetFactory.createButton(selectionButtonsComposite, Messages.table_selectionMultiple, SWT.RADIO);
 
-		allowedSelectionCompo = widgetFactory.createComposite(compoForSaveTo);
-		allowedSelectionCompo.setLayout(new GridLayout(1, false));
-		allowedSelectionCompo.setLayoutData(GridDataFactory.fillDefaults().grab(true,false).create()) ;
-		createInitialSelectedValues(widgetFactory);
+        allowedSelectionCompo = widgetFactory.createComposite(compoForSaveTo);
+        allowedSelectionCompo.setLayout(new GridLayout(1, false));
+        allowedSelectionCompo.setLayoutData(GridDataFactory.fillDefaults().grab(true,false).create()) ;
+        createInitialSelectedValues(widgetFactory);
 
-		Composite outputComposite = widgetFactory.createComposite(allowedSelectionCompo);
-		outputComposite.setLayout(new GridLayout(2, false));
-		outputComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true,false).create()) ;
-		widgetFactory.createCLabel(outputComposite, contrib.getLabel());
-		Composite rightOutputComposite = widgetFactory.createComposite(outputComposite);
-		rightOutputComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true,false).create()) ;
-		contrib.createControl(rightOutputComposite, widgetFactory, null);
-	}
+        final Composite outputComposite = widgetFactory.createComposite(allowedSelectionCompo);
+        outputComposite.setLayout(new GridLayout(2, false));
+        outputComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true,false).create()) ;
+        widgetFactory.createCLabel(outputComposite, contrib.getLabel());
+        final Composite rightOutputComposite = widgetFactory.createComposite(outputComposite);
+        rightOutputComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true,false).create()) ;
+        contrib.createControl(rightOutputComposite, widgetFactory, null);
+    }
 
-	protected void createInitialSelectedValues(
-			TabbedPropertySheetWidgetFactory widgetFactory) {
-		Composite initialSelectedValuesCompo = widgetFactory.createComposite(allowedSelectionCompo);
-		initialSelectedValuesCompo.setLayout(new GridLayout(4, false));
-		initialSelectedValuesCompo.setLayoutData(GridDataFactory.fillDefaults().grab(true,false).create()) ;
-		widgetFactory.createLabel(initialSelectedValuesCompo, Messages.data_initialSelectedTableValues);
-		initialSelectedValues = new ExpressionViewer(initialSelectedValuesCompo, SWT.BORDER, widgetFactory,getEditingDomain(), FormPackage.Literals.TABLE__SELECTED_VALUES);
-		initialSelectedValues.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true,false).create()) ;
-		widgetFactory.createLabel(initialSelectedValuesCompo, Messages.data_initialSelectedTableValuesFromColumn);
-		initialFromColumn = new ExpressionViewer(initialSelectedValuesCompo, SWT.BORDER, widgetFactory,getEditingDomain(), FormPackage.Literals.TABLE__COLUMN_FOR_INITIAL_SELECTION_INDEX);
-		initialFromColumn.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true,false).create()) ;
-		initialFromColumn.setMessage(Messages.data_initialSelectedTableValuesFromColumn_hint,IStatus.INFO) ;
+    protected void createInitialSelectedValues(
+            final TabbedPropertySheetWidgetFactory widgetFactory) {
+        final Composite initialSelectedValuesCompo = widgetFactory.createComposite(allowedSelectionCompo);
+        initialSelectedValuesCompo.setLayout(new GridLayout(4, false));
+        initialSelectedValuesCompo.setLayoutData(GridDataFactory.fillDefaults().grab(true,false).create()) ;
+        widgetFactory.createLabel(initialSelectedValuesCompo, Messages.data_initialSelectedTableValues);
+        initialSelectedValues = new ExpressionViewer(initialSelectedValuesCompo, SWT.BORDER, widgetFactory,getEditingDomain(), FormPackage.Literals.TABLE__SELECTED_VALUES);
+        initialSelectedValues.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true,false).create()) ;
+        widgetFactory.createLabel(initialSelectedValuesCompo, Messages.data_initialSelectedTableValuesFromColumn);
+        initialFromColumn = new ExpressionViewer(initialSelectedValuesCompo, SWT.BORDER, widgetFactory,getEditingDomain(), FormPackage.Literals.TABLE__COLUMN_FOR_INITIAL_SELECTION_INDEX);
+        initialFromColumn.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true,false).create()) ;
+        initialFromColumn.setMessage(Messages.data_initialSelectedTableValuesFromColumn_hint,IStatus.INFO) ;
 
-	}
+    }
 
-	@Override
-	protected void refreshDataBinding() {
-		super.refreshDataBinding();
-		if(getEObject() != null){
-			UpdateValueStrategy not = new UpdateValueStrategy().setConverter(new Converter(Boolean.class,Boolean.class) {
+    @Override
+    protected void refreshDataBinding() {
+        super.refreshDataBinding();
+        if(getEObject() != null){
+            final UpdateValueStrategy not = new UpdateValueStrategy().setConverter(new Converter(Boolean.class,Boolean.class) {
 
-				public Object convert(Object fromObject) {
-					return !((Boolean)fromObject);
-				}
-			});
-			dataBindingContext.bindValue(SWTObservables.observeSelection(allowSelectionButton), EMFEditObservables.observeValue(getEditingDomain(), getEObject(), FormPackage.Literals.TABLE__ALLOW_SELECTION));
-			dataBindingContext.bindValue(SWTObservables.observeSelection(allowSingleSelection), EMFEditObservables.observeValue(getEditingDomain(), getEObject(), FormPackage.Literals.TABLE__SELECTION_MODE_IS_MULTIPLE),not,not);
-			dataBindingContext.bindValue(SWTObservables.observeSelection(allowMultipleSelection), EMFEditObservables.observeValue(getEditingDomain(), getEObject(), FormPackage.Literals.TABLE__SELECTION_MODE_IS_MULTIPLE));
+                public Object convert(final Object fromObject) {
+                    return !((Boolean)fromObject);
+                }
+            });
+            dataBindingContext.bindValue(SWTObservables.observeSelection(allowSelectionButton), EMFEditObservables.observeValue(getEditingDomain(), getEObject(), FormPackage.Literals.TABLE__ALLOW_SELECTION));
+            dataBindingContext.bindValue(SWTObservables.observeSelection(allowSingleSelection), EMFEditObservables.observeValue(getEditingDomain(), getEObject(), FormPackage.Literals.TABLE__SELECTION_MODE_IS_MULTIPLE),not,not);
+            dataBindingContext.bindValue(SWTObservables.observeSelection(allowMultipleSelection), EMFEditObservables.observeValue(getEditingDomain(), getEObject(), FormPackage.Literals.TABLE__SELECTION_MODE_IS_MULTIPLE));
 
 
-			Expression maxRowForPagination = getEObject().getMaxRowForPagination();
-			if(maxRowForPagination == null){
-				maxRowForPagination = ExpressionFactory.eINSTANCE.createExpression();
-				getEditingDomain().getCommandStack().execute(SetCommand.create(getEditingDomain(), getEObject(), FormPackage.Literals.TABLE__MAX_ROW_FOR_PAGINATION, maxRowForPagination));
-			}
-			dataBindingContext.bindValue(ViewerProperties.singleSelection().observe(paginationMaxNumber), EMFEditProperties.value(getEditingDomain(), FormPackage.Literals.TABLE__MAX_ROW_FOR_PAGINATION).observe(getEObject()));
-			paginationMaxNumber.setInput(getEObject());
-			paginationMaxNumber.setEditingDomain(getEditingDomain()) ;
-			dataBindingContext.bindValue(SWTObservables.observeEnabled(paginationMaxNumber.getTextControl()),EMFEditObservables.observeValue(getEditingDomain(), getEObject(), FormPackage.Literals.TABLE__ALLOW_SELECTION),new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER),not );
-			dataBindingContext.bindValue(SWTObservables.observeEnabled(paginationMaxNumber.getButtonControl()),EMFEditObservables.observeValue(getEditingDomain(), getEObject(), FormPackage.Literals.TABLE__ALLOW_SELECTION),new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER),not );
-			Expression selectedValues = getEObject().getMaxRowForPagination();
-			if(selectedValues == null){
-				selectedValues = ExpressionFactory.eINSTANCE.createExpression();
-				getEditingDomain().getCommandStack().execute(SetCommand.create(getEditingDomain(), getEObject(), FormPackage.Literals.TABLE__SELECTED_VALUES, selectedValues));
-			}
-			dataBindingContext.bindValue(ViewerProperties.singleSelection().observe(initialSelectedValues), EMFEditProperties.value(getEditingDomain(), FormPackage.Literals.TABLE__SELECTED_VALUES).observe(getEObject()));
-			initialSelectedValues.setInput(getEObject());
-			initialSelectedValues.setEditingDomain(getEditingDomain()) ;
+            Expression maxRowForPagination = getEObject().getMaxRowForPagination();
+            if(maxRowForPagination == null){
+                maxRowForPagination = ExpressionFactory.eINSTANCE.createExpression();
+                getEditingDomain().getCommandStack().execute(SetCommand.create(getEditingDomain(), getEObject(), FormPackage.Literals.TABLE__MAX_ROW_FOR_PAGINATION, maxRowForPagination));
+            }
+            dataBindingContext.bindValue(ViewerProperties.singleSelection().observe(paginationMaxNumber), EMFEditProperties.value(getEditingDomain(), FormPackage.Literals.TABLE__MAX_ROW_FOR_PAGINATION).observe(getEObject()));
+            paginationMaxNumber.setInput(getEObject());
+            paginationMaxNumber.setEditingDomain(getEditingDomain()) ;
+            dataBindingContext.bindValue(SWTObservables.observeEnabled(paginationMaxNumber.getControl()), EMFEditObservables.observeValue(getEditingDomain(),
+                    getEObject(), FormPackage.Literals.TABLE__ALLOW_SELECTION), new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER), not);
+            Expression selectedValues = getEObject().getMaxRowForPagination();
+            if(selectedValues == null){
+                selectedValues = ExpressionFactory.eINSTANCE.createExpression();
+                getEditingDomain().getCommandStack().execute(SetCommand.create(getEditingDomain(), getEObject(), FormPackage.Literals.TABLE__SELECTED_VALUES, selectedValues));
+            }
+            dataBindingContext.bindValue(ViewerProperties.singleSelection().observe(initialSelectedValues), EMFEditProperties.value(getEditingDomain(), FormPackage.Literals.TABLE__SELECTED_VALUES).observe(getEObject()));
+            initialSelectedValues.setInput(getEObject());
+            initialSelectedValues.setEditingDomain(getEditingDomain()) ;
 
-			Expression columnForInitialSelectionIndex = getEObject().getColumnForInitialSelectionIndex();
-			if(columnForInitialSelectionIndex == null){
-				columnForInitialSelectionIndex = ExpressionFactory.eINSTANCE.createExpression();
-				getEditingDomain().getCommandStack().execute(SetCommand.create(getEditingDomain(), getEObject(), FormPackage.Literals.TABLE__COLUMN_FOR_INITIAL_SELECTION_INDEX, columnForInitialSelectionIndex));
-			}
-			dataBindingContext.bindValue(
-					ViewerProperties.singleSelection().observe(initialFromColumn),
-					EMFEditProperties.value(getEditingDomain(), FormPackage.Literals.TABLE__COLUMN_FOR_INITIAL_SELECTION_INDEX).observe(getEObject()));
-			initialFromColumn.setInput(getEObject());
-			initialFromColumn.setEditingDomain(getEditingDomain()) ;
+            Expression columnForInitialSelectionIndex = getEObject().getColumnForInitialSelectionIndex();
+            if(columnForInitialSelectionIndex == null){
+                columnForInitialSelectionIndex = ExpressionFactory.eINSTANCE.createExpression();
+                getEditingDomain().getCommandStack().execute(SetCommand.create(getEditingDomain(), getEObject(), FormPackage.Literals.TABLE__COLUMN_FOR_INITIAL_SELECTION_INDEX, columnForInitialSelectionIndex));
+            }
+            dataBindingContext.bindValue(
+                    ViewerProperties.singleSelection().observe(initialFromColumn),
+                    EMFEditProperties.value(getEditingDomain(), FormPackage.Literals.TABLE__COLUMN_FOR_INITIAL_SELECTION_INDEX).observe(getEObject()));
+            initialFromColumn.setInput(getEObject());
+            initialFromColumn.setEditingDomain(getEditingDomain()) ;
 
-			/*Hide if no selection allowed*/
-			dataBindingContext.bindValue(SWTObservables.observeVisible(allowedSelectionCompo),EMFEditObservables.observeValue(getEditingDomain(), getEObject(), FormPackage.Literals.TABLE__ALLOW_SELECTION),new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER),null );
-			dataBindingContext.bindValue(SWTObservables.observeVisible(allowSingleSelection),EMFEditObservables.observeValue(getEditingDomain(), getEObject(), FormPackage.Literals.TABLE__ALLOW_SELECTION),new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER),null );
-			dataBindingContext.bindValue(SWTObservables.observeVisible(allowMultipleSelection),EMFEditObservables.observeValue(getEditingDomain(), getEObject(), FormPackage.Literals.TABLE__ALLOW_SELECTION),new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER),null );
-			contrib.setEditingDomain(getEditingDomain());
-			contrib.setEObject(getEObject());
-			contrib.superBind();
-		}
-	}
+            /*Hide if no selection allowed*/
+            dataBindingContext.bindValue(SWTObservables.observeVisible(allowedSelectionCompo),EMFEditObservables.observeValue(getEditingDomain(), getEObject(), FormPackage.Literals.TABLE__ALLOW_SELECTION),new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER),null );
+            dataBindingContext.bindValue(SWTObservables.observeVisible(allowSingleSelection),EMFEditObservables.observeValue(getEditingDomain(), getEObject(), FormPackage.Literals.TABLE__ALLOW_SELECTION),new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER),null );
+            dataBindingContext.bindValue(SWTObservables.observeVisible(allowMultipleSelection),EMFEditObservables.observeValue(getEditingDomain(), getEObject(), FormPackage.Literals.TABLE__ALLOW_SELECTION),new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER),null );
+            contrib.setEditingDomain(getEditingDomain());
+            contrib.setEObject(getEObject());
+            contrib.superBind();
+        }
+    }
 
-	@Override
-	protected Table getEObject() {
-		return (Table)super.getEObject();
-	}
+    @Override
+    protected Table getEObject() {
+        return (Table)super.getEObject();
+    }
 
-	@Override
-	protected boolean isOuputActivated() {
-		return getEObject().isAllowSelection();
-	}
+    @Override
+    protected boolean isOuputActivated() {
+        return getEObject().isAllowSelection();
+    }
 
-	@Override
-	public String getSectionDescription() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public String getSectionDescription() {
+        // TODO Auto-generated method stub
+        return null;
+    }
 }

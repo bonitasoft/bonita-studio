@@ -26,7 +26,8 @@ Import-Package: org.bonitasoft.engine.bpm.bar,
  org.bonitasoft.theme.exception,
  org.bonitasoft.theme.impl,
  org.bonitasoft.theme.model
-Export-Package: org.bonitasoft.studio.repository.themes,org.bonitasoft
- .studio.repository.themes.exceptions,org.bonitasoft.studio.repository
- .themes.helper,org.bonitasoft.studio.repository.themes.i18n,org.bonit
- asoft.studio.repository.themes.model
+Export-Package: org.bonitasoft.studio.repository.themes,
+ org.bonitasoft.studio.repository.themes.exceptions,
+ org.bonitasoft.studio.repository.themes.helper,
+ org.bonitasoft.studio.repository.themes.i18n;x-friends:="org.bonitasoft.studio.tests",
+ org.bonitasoft.studio.repository.themes.model

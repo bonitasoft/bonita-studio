@@ -77,19 +77,19 @@ import org.eclipse.ui.ide.IDE;
  * @author Romain Bioteau
  *
  */
-public class DiagramFileStore extends EMFFileStore implements IRepositoryFileStore{
+public class DiagramFileStore extends EMFFileStore implements IRepositoryFileStore {
 
     public static final String PROC_EXT = "proc";
 
     private final NotificationListener poolListener = new PoolNotificationListener();
 
-    public DiagramFileStore(String fileName, IRepositoryStore<? extends EMFFileStore> store) {
+    public DiagramFileStore(final String fileName, final IRepositoryStore<? extends EMFFileStore> store) {
         super(fileName, store);
     }
 
     @Override
     public synchronized MainProcess getContent() {
-        return (MainProcess) super.getContent() ;
+        return (MainProcess) super.getContent();
     }
 
     /* (non-Javadoc)
@@ -97,22 +97,22 @@ public class DiagramFileStore extends EMFFileStore implements IRepositoryFileSto
      */
     @Override
     public String getDisplayName() {
-        DiagramRepositoryStore store =  (DiagramRepositoryStore) getParentStore();
+        final DiagramRepositoryStore store =  (DiagramRepositoryStore) getParentStore();
         String label = null;
-        String fileName = getName();
+        final String fileName = getName();
         label = fileName.replace("."+getResource().getFileExtension(), "");
         String[] eObectIfFromEObjectType = null;
         EMFResourceUtil emfResourceUtil = null;
         try {
             emfResourceUtil = new EMFResourceUtil(getResource().getLocation().toFile());
             eObectIfFromEObjectType = emfResourceUtil.getEObectIfFromEObjectType("process:MainProcess");
-        } catch (FeatureNotFoundException e) {
+        } catch (final FeatureNotFoundException e) {
             BonitaStudioLog.error(e);
             return label;
         }
 
         if(eObectIfFromEObjectType != null && eObectIfFromEObjectType.length == 1){
-            String diagramUUID = eObectIfFromEObjectType[0];
+            final String diagramUUID = eObectIfFromEObjectType[0];
             label = store.getLabelFor(diagramUUID);
             if(label == null){
                 label = fileName.replace("."+getResource().getFileExtension(), "");
@@ -131,7 +131,7 @@ public class DiagramFileStore extends EMFFileStore implements IRepositoryFileSto
 
     @Override
     public Resource getEMFResource() {
-        DiagramEditor editor = getOpenedEditor();
+        final DiagramEditor editor = getOpenedEditor();
         if(editor != null){
             final DiagramEditPart diagramEditPart = editor.getDiagramEditPart();
             if(diagramEditPart != null){
@@ -144,10 +144,10 @@ public class DiagramFileStore extends EMFFileStore implements IRepositoryFileSto
         return super.getEMFResource();
     }
 
-    public void registerListeners(EObject input,TransactionalEditingDomain domain) {
+    public void registerListeners(final EObject input,final TransactionalEditingDomain domain) {
         DiagramEventBroker.getInstance(domain).addNotificationListener(input, ProcessPackage.Literals.CONTAINER__ELEMENTS, poolListener ) ;
         if(input instanceof MainProcess){
-            for(EObject element : ((MainProcess) input).getElements()){
+            for(final EObject element : ((MainProcess) input).getElements()){
                 if(element instanceof Pool){
                     DiagramEventBroker.getInstance(domain).addNotificationListener(element, ProcessPackage.Literals.ELEMENT__NAME, poolListener ) ;
                     DiagramEventBroker.getInstance(domain).addNotificationListener(element, ProcessPackage.Literals.ABSTRACT_PROCESS__VERSION, poolListener ) ;
@@ -157,25 +157,25 @@ public class DiagramFileStore extends EMFFileStore implements IRepositoryFileSto
     }
 
 
-    public void unregisterListeners(EObject input,TransactionalEditingDomain domain) {
+    public void unregisterListeners(final EObject input,final TransactionalEditingDomain domain) {
         DiagramEventBroker.getInstance(domain).removeNotificationListener(input, ProcessPackage.Literals.CONTAINER__ELEMENTS, poolListener) ;
     }
 
     public DiagramEditor getOpenedEditor(){
         if(PlatformUI.isWorkbenchRunning() && PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null && PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage() != null){
             final String resourceName = getResource().getName();
-            for (IEditorReference ref:PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getEditorReferences()){
+            for (final IEditorReference ref:PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getEditorReferences()){
                 String inputName;
                 try {
                     inputName = ref.getEditorInput().getName();
                     if (resourceName.equals(inputName)){
-                        IEditorPart editor = ref.getEditor(false);
+                        final IEditorPart editor = ref.getEditor(false);
                         if(editor instanceof ProcessDiagramEditor){
                             return (DiagramEditor) editor;
                         }
 
                     }
-                } catch (PartInitException e) {
+                } catch (final PartInitException e) {
                     BonitaStudioLog.error(e,Activator.PLUGIN_ID);
                 }
             }
@@ -185,7 +185,7 @@ public class DiagramFileStore extends EMFFileStore implements IRepositoryFileSto
 
     public List<AbstractProcess> getProcesses()  {
         MainProcess diagram = null;
-        DiagramEditor editor = getOpenedEditor();
+        final DiagramEditor editor = getOpenedEditor();
         if(editor!= null){
             diagram = (MainProcess) editor.getDiagramEditPart().resolveSemanticElement();
         }
@@ -193,8 +193,8 @@ public class DiagramFileStore extends EMFFileStore implements IRepositoryFileSto
             diagram = getContent() ;
         }
         final List<AbstractProcess> allProcesses = ModelHelper.getAllProcesses(diagram);
-        List<AbstractProcess> pools = new ArrayList<AbstractProcess>();
-        for(AbstractProcess abstractProcess : allProcesses){
+        final List<AbstractProcess> pools = new ArrayList<AbstractProcess>();
+        for(final AbstractProcess abstractProcess : allProcesses){
             if(abstractProcess instanceof Pool){
                 pools.add(abstractProcess);
             }
@@ -203,8 +203,8 @@ public class DiagramFileStore extends EMFFileStore implements IRepositoryFileSto
     }
 
     @Override
-    protected void doSave(Object content) {
-        Resource resource = getEMFResource() ;
+    protected void doSave(final Object content) {
+        final Resource resource = getEMFResource() ;
         if(content instanceof MainProcess){
             if(!resource.getContents().isEmpty()){
                 resource.getContents().remove(0) ;
@@ -217,6 +217,7 @@ public class DiagramFileStore extends EMFFileStore implements IRepositoryFileSto
             resource.getContents().add(1,(EObject) content) ;
         }else if(content instanceof Collection){
             @SuppressWarnings("unchecked")
+            final
             Collection<EObject> collectionsOfContents = (Collection<EObject>)content;
             resource.getContents().addAll(collectionsOfContents);
         }else if(content instanceof DiagramDocumentEditor){
@@ -226,7 +227,7 @@ public class DiagramFileStore extends EMFFileStore implements IRepositoryFileSto
 
         try {
             resource.save(ProcessDiagramEditorUtil.getSaveOptions()) ;
-        } catch (IOException e) {
+        } catch (final IOException e) {
             BonitaStudioLog.error(e) ;
         }
     }
@@ -234,14 +235,14 @@ public class DiagramFileStore extends EMFFileStore implements IRepositoryFileSto
 
     @Override
     protected IWorkbenchPart doOpen() {
-    	IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+    	final IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
         closeEditorIfAlreadyOpened(activePage);
         IEditorPart part = null;
         try {
             part = IDE.openEditor(activePage,getParentStore().getResource().getFile(getName()),true);
             if(part instanceof DiagramEditor){
                 final DiagramEditor editor = (DiagramEditor) part;
-                MainProcess diagram = (MainProcess) editor.getDiagramEditPart().resolveSemanticElement() ;
+                final MainProcess diagram = (MainProcess) editor.getDiagramEditPart().resolveSemanticElement() ;
                 diagram.eAdapters().add(new PoolNotificationListener());
                 if(isReadOnly()){
                     editor.getDiagramEditPart().disableEditMode() ;
@@ -254,7 +255,7 @@ public class DiagramFileStore extends EMFFileStore implements IRepositoryFileSto
                     });
                 }
                 registerListeners(diagram, editor.getEditingDomain()) ;
-                IGraphicalEditPart editPart = editor.getDiagramEditPart().getChildBySemanticHint(PoolEditPart.VISUAL_ID+"");
+                final IGraphicalEditPart editPart = editor.getDiagramEditPart().getChildBySemanticHint(PoolEditPart.VISUAL_ID+"");
                 if(editPart != null) {
                     editor.getDiagramEditPart().getViewer().select(editPart);
                 }
@@ -263,13 +264,13 @@ public class DiagramFileStore extends EMFFileStore implements IRepositoryFileSto
                 editor.setFocus(); //refresh coolbar button
                 return editor;
             }
-        } catch (PartInitException e) {
+        } catch (final PartInitException e) {
             BonitaStudioLog.error(e) ;
         }
         return part ;
     }
 
-	private void handleMigrationReportIfPresent(IWorkbenchPage activePage)
+	private void handleMigrationReportIfPresent(final IWorkbenchPage activePage)
 			throws PartInitException {
 		if(hasMigrationReport()){
 		    activePage.showView("org.bonitasoft.studio.migration.view");
@@ -281,13 +282,13 @@ public class DiagramFileStore extends EMFFileStore implements IRepositoryFileSto
 		}
 	}
 
-	private void closeEditorIfAlreadyOpened(IWorkbenchPage activePage) {
+	private void closeEditorIfAlreadyOpened(final IWorkbenchPage activePage) {
 		final MainProcess newProcess = getContent() ;
-        for (IEditorReference editor : activePage.getEditorReferences()) {
-            IEditorPart simpleEditor = editor.getEditor(true);
+        for (final IEditorReference editor : activePage.getEditorReferences()) {
+            final IEditorPart simpleEditor = editor.getEditor(true);
             if (simpleEditor instanceof DiagramEditor) {
-                DiagramEditor diagramEditor = (DiagramEditor) simpleEditor;
-                EObject input = diagramEditor.getDiagramEditPart().resolveSemanticElement();
+                final DiagramEditor diagramEditor = (DiagramEditor) simpleEditor;
+                final EObject input = diagramEditor.getDiagramEditPart().resolveSemanticElement();
                 MainProcess oldProcess = null;
                 if (input instanceof MainProcess) {
                     oldProcess =(MainProcess) input;
@@ -311,21 +312,21 @@ public class DiagramFileStore extends EMFFileStore implements IRepositoryFileSto
 
     @Override
     protected void doClose() {
-        IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+        final IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
         if(activeWorkbenchWindow != null && activeWorkbenchWindow.getActivePage() != null){
-            IEditorReference[] editors = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getEditorReferences();
+            final IEditorReference[] editors = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getEditorReferences();
             // look for the resource in other editors
-            for (IEditorReference iEditorReference : editors) {
+            for (final IEditorReference iEditorReference : editors) {
                 try {
-                    IEditorInput input = iEditorReference.getEditorInput();
-                    IResource iResource = (IResource) input.getAdapter(IResource.class);
+                    final IEditorInput input = iEditorReference.getEditorInput();
+                    final IResource iResource = (IResource) input.getAdapter(IResource.class);
                     if (getResource().equals(iResource)) {
-                        IWorkbenchPart part = iEditorReference.getPart(false);
+                        final IWorkbenchPart part = iEditorReference.getPart(false);
                         if(part != null && part instanceof DiagramDocumentEditor){
                             ((DiagramDocumentEditor)part).close(true);
                         }
                     }
-                } catch (PartInitException e) {
+                } catch (final PartInitException e) {
                     // no input? -> nothing to do
                 }
             }
@@ -340,13 +341,13 @@ public class DiagramFileStore extends EMFFileStore implements IRepositoryFileSto
 
 
     /**
-     * 
+     *
      * @return the migration report if exists otherwise returns null
      */
     public Report getMigrationReport(){
         final Resource emfResource = getEMFResource();
         if(emfResource != null){
-            for(EObject root : emfResource.getContents()){
+            for(final EObject root : emfResource.getContents()){
                 if(root instanceof Report){
                     return (Report) root;
                 }
@@ -356,19 +357,20 @@ public class DiagramFileStore extends EMFFileStore implements IRepositoryFileSto
     }
 
     /**
-     * 
+     *
      * Remove the migration report from the proc file.
      * @param save , Whether we save the resoruce after deletion or not
-     * @throws IOException 
+     * @throws IOException
      */
-    public void clearMigrationReport(boolean save) throws IOException{
-        EObject toRemove = null;
+    public void clearMigrationReport(final boolean save) throws IOException{
+        final EObject toRemove = null;
         final Resource emfResource = getEMFResource();
-        final Report report = getMigrationReport(); 
+        final Report report = getMigrationReport();
         if(report != null){
             final TransactionalEditingDomain domain = TransactionUtil.getEditingDomain(toRemove);
             if(domain != null){
                 domain.getCommandStack().execute(new RecordingCommand(domain) {
+                    @Override
                     protected void doExecute() {
                         emfResource.getContents().remove(report);
                     }
@@ -381,13 +383,13 @@ public class DiagramFileStore extends EMFFileStore implements IRepositoryFileSto
     }
 
     public boolean hasMigrationReport() {
-        EMFResourceUtil emfResourceUtil = new EMFResourceUtil(getResource().getLocation().toFile());
-        Map<String, String[]> featureValueFromEObjectType = emfResourceUtil.getFeatureValueFromEObjectType("report:Report", MigrationReportPackage.Literals.REPORT__NAME);
+        final EMFResourceUtil emfResourceUtil = new EMFResourceUtil(getResource().getLocation().toFile());
+        final Map<String, String[]> featureValueFromEObjectType = emfResourceUtil.getFeatureValueFromEObjectType("report:Report", MigrationReportPackage.Literals.REPORT__NAME);
         if(featureValueFromEObjectType == null || featureValueFromEObjectType.values() == null || featureValueFromEObjectType.values().isEmpty()){
             return false;
         }
-        Iterator<String[]> iterator = featureValueFromEObjectType.values().iterator();
-        String[] values = iterator.next();
+        final Iterator<String[]> iterator = featureValueFromEObjectType.values().iterator();
+        final String[] values = iterator.next();
         return values != null && values[0] != null;
     }
 

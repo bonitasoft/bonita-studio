@@ -19,7 +19,6 @@ import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.connector.model.definition.AbstractDefinitionRepositoryStore;
 import org.bonitasoft.studio.connector.model.definition.Category;
 import org.bonitasoft.studio.connector.model.i18n.DefinitionResourceProvider;
@@ -49,10 +48,6 @@ public class ConnectorDefRepositoryStore extends AbstractDefinitionRepositorySto
 
     private DefinitionResourceProvider resourceProvider;
 
-    @Override
-    public void createRepositoryStore(final IRepository repository) {
-        super.createRepositoryStore(repository);
-    }
 
     @Override
     public ConnectorDefFileStore createRepositoryFileStore(final String fileName) {

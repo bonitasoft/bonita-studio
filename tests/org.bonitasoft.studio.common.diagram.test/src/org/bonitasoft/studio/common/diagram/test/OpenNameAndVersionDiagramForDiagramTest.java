@@ -18,43 +18,43 @@ import org.junit.runner.RunWith;
 @RunWith(SWTBotJunit4ClassRunner.class)
 public class OpenNameAndVersionDiagramForDiagramTest extends SWTBotEclipseTestCase implements SWTBotConstants {
 
-	@Test
-	public void testOpenNameAndVersionDiagramForDiagram() {
+    @Test
+    public void testOpenNameAndVersionDiagramForDiagram() {
 
-		final SWTWorkbenchBot workbenchBot = new SWTWorkbenchBot();
-		
+        final SWTWorkbenchBot workbenchBot = new SWTWorkbenchBot();
 
-		SWTBotTestUtil.createNewDiagram(workbenchBot);
-		SWTBotTestUtil.createNewDiagram(workbenchBot);
 
-		SWTGefBot gefBot = new SWTGefBot();
-		SWTBotEditor botEditor = gefBot.activeEditor();
-		SWTBotGefEditor gmfEditor = gefBot.gefEditor(botEditor.getTitle());
-		gmfEditor.mainEditPart().click();
+        SWTBotTestUtil.createNewDiagram(workbenchBot);
+        SWTBotTestUtil.createNewDiagram(workbenchBot);
 
-		bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL).show();
-		bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL).setFocus();
+        final SWTGefBot gefBot = new SWTGefBot();
+        final SWTBotEditor botEditor = gefBot.activeEditor();
+        final SWTBotGefEditor gmfEditor = gefBot.gefEditor(botEditor.getTitle());
+        gmfEditor.mainEditPart().click();
 
-		SWTBotTestUtil.selectTabbedPropertyView(bot, "Diagram");
-		bot.waitUntil(Conditions.widgetIsEnabled(bot.button("Edit...")));
-		bot.button("Edit...").click();
+        bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL).show();
+        bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL).setFocus();
 
-		bot.waitUntil(Conditions.shellIsActive(org.bonitasoft.studio.common.Messages.openNameAndVersionDialogTitle));
+        SWTBotTestUtil.selectTabbedPropertyView(bot, "Diagram");
+        bot.waitUntil(Conditions.widgetIsEnabled(bot.button("Edit...")));
+        bot.button("Edit...").click();
 
-		SWTBotText t = bot.textWithLabelInGroup("Name", "Pools");
-		t.setText("Pool1");
+        bot.waitUntil(Conditions.shellIsActive(org.bonitasoft.studio.common.Messages.openNameAndVersionDialogTitle));
 
-		SWTBotButton okBtton = bot.button(IDialogConstants.OK_LABEL);
+        SWTBotText t = bot.textWithLabelInGroup("Name", "Pools");
+        t.setText("Pool");
 
-		assertFalse("Ok button is enabled when rename the pool name but the pool name already exist", okBtton.isEnabled());
+        final SWTBotButton okBtton = bot.button(IDialogConstants.OK_LABEL);
 
-		t = bot.textWithLabelInGroup("Name", "Pools");
-		t.setText("Pool2"+System.currentTimeMillis());
+        assertFalse("Ok button is enabled when rename the pool name but the pool name already exist", okBtton.isEnabled());
 
-		assertTrue("Ok button is disabled when rename the pool name but the pool name doesn't already exist",
-				okBtton.isEnabled());
-		
-		okBtton.click();
-	}
+        t = bot.textWithLabelInGroup("Name", "Pools");
+        t.setText("Pool2"+System.currentTimeMillis());
+
+        assertTrue("Ok button is disabled when rename the pool name but the pool name doesn't already exist",
+                okBtton.isEnabled());
+
+        okBtton.click();
+    }
 
 }

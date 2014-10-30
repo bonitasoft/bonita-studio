@@ -1,7 +1,7 @@
 /**
  * Copyright (C) 2012 BonitaSoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -19,6 +19,7 @@
 package org.bonitasoft.studio.data.provider;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
@@ -35,7 +36,6 @@ import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.swt.graphics.Image;
 
 /**
@@ -44,73 +44,75 @@ import org.eclipse.swt.graphics.Image;
  */
 public class DocumentObjectExpressionProvider implements IExpressionProvider {
 
-	
-	@Override
-	public Set<Expression> getExpressions(EObject context) {
-		Set<Expression> result = new HashSet<Expression>() ;
-		Pool process = null;
-		if(context instanceof Form && ModelHelper.isAnEntryPageFlowOnAPool((Form) context)){
-			return result;
-		}else{
-			EObject parent = ModelHelper.getParentProcess(context);
-			if(parent instanceof Pool){
-				process = (Pool) parent;
-			}
-		}
-		if(context != null && process != null){
-			for(Document d : process.getDocuments()){
-				result.add(createExpression(d));
-			}
-		}
-		return result;
-	}
 
-	@Override
-	public String getExpressionType() {
-		return ExpressionConstants.DOCUMENT_TYPE;
-	}
+    @Override
+    public Set<Expression> getExpressions(final EObject context) {
+        final Set<Expression> result = new HashSet<Expression>() ;
+        Pool process = null;
+        if(context instanceof Form && ModelHelper.isAnEntryPageFlowOnAPool((Form) context)){
+            return result;
+        }else{
+            final EObject parent = ModelHelper.getParentProcess(context);
+            if(parent instanceof Pool){
+                process = (Pool) parent;
+            }
+        }
+        if(context != null && process != null){
+            for(final Document d : process.getDocuments()){
+                result.add(createExpression(d));
+            }
+        }
+        return result;
+    }
 
-	@Override
-	public Image getIcon(Expression expression) {
-		return getTypeIcon();
-	}
+    @Override
+    public String getExpressionType() {
+        return ExpressionConstants.DOCUMENT_TYPE;
+    }
 
-	@Override
-	public String getProposalLabel(Expression expression) {
-		return expression.getName();
-	}
+    @Override
+    public Image getIcon(final Expression expression) {
+        return getTypeIcon();
+    }
 
+    @Override
+    public String getProposalLabel(final Expression expression) {
+        return expression.getName();
+    }
 
+    private Expression createExpression(final Document d) {
+        final Expression exp = ExpressionFactory.eINSTANCE.createExpression() ;
+        exp.setType(getExpressionType()) ;
+        exp.setContent(d.getName()) ;
+        exp.setName(d.getName()) ;
+        if (d.isMultiple()) {
+            exp.setReturnType(List.class.getName());
+        } else {
+            exp.setReturnType(org.bonitasoft.engine.bpm.document.Document.class.getName());
+        }
+        exp.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(d)) ;
+        return exp;
+    }
 
-	private Expression createExpression(Document d) {
-		Expression exp = ExpressionFactory.eINSTANCE.createExpression() ;
-		exp.setType(getExpressionType()) ;
-		exp.setContent(d.getName()) ;
-		exp.setName(d.getName()) ;
-		exp.setReturnType(org.bonitasoft.engine.bpm.document.Document.class.getName()) ;
-		exp.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(d)) ;
-		return exp;
-	}
+    @Override
+    public boolean isRelevantFor(final EObject context) {
+        return true;
+    }
 
-	@Override
-	public boolean isRelevantFor(EObject context) {
-		return true;
-	}
+    @Override
+    public Image getTypeIcon() {
+        return Pics.getImage(PicsConstants.attachmentData);
+    }
 
-	@Override
-	public Image getTypeIcon() {
-		return Pics.getImage(PicsConstants.attachmentData);
-	}
+    @Override
+    public String getTypeLabel() {
+        return Messages.documentType;
+    }
 
-	@Override
-	public String getTypeLabel() {
-		return Messages.documentType;
-	}
-
-	@Override
-	public IExpressionEditor getExpressionEditor(Expression expression,EObject context) {
-		return null;
-	}
+    @Override
+    public IExpressionEditor getExpressionEditor(final Expression expression,final EObject context) {
+        return null;
+    }
 
 
 

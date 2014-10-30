@@ -32,6 +32,7 @@ import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -63,19 +64,16 @@ public class CheckBoxExpressionViewer extends ExpressionViewer implements Expres
     protected void createControl(final Composite composite, final int style, final TabbedPropertySheetWidgetFactory widgetFactory) {
         mc = new MagicComposite(composite, SWT.INHERIT_DEFAULT);
         mc.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).spacing(0, 0).create());
-
+        checkBoxControl = new Button(mc, SWT.CHECK);
         if (widgetFactory != null) {
-            checkBoxControl = widgetFactory.createButton(mc, "", SWT.CHECK);
-        } else {
-            checkBoxControl = new Button(mc, SWT.CHECK);
+            widgetFactory.adapt(checkBoxControl, true, true);
         }
         checkBoxControl
-        .setLayoutData(GridDataFactory.fillDefaults().grab(false, true).hint(SWT.DEFAULT, 30).indent(16, 0).align(SWT.BEGINNING, SWT.CENTER).create());
+                .setLayoutData(GridDataFactory.fillDefaults().grab(false, true).hint(SWT.DEFAULT, 30).indent(16, 0).align(SWT.BEGINNING, SWT.CENTER).create());
 
+        control = new Composite(mc, SWT.INHERIT_DEFAULT);
         if (widgetFactory != null) {
-            control = widgetFactory.createComposite(mc, SWT.INHERIT_DEFAULT);
-        } else {
-            control = new Composite(mc, SWT.INHERIT_DEFAULT);
+            widgetFactory.adapt(control);
         }
         control.addDisposeListener(disposeListener);
         control.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).align(SWT.BEGINNING, SWT.CENTER).create());
@@ -124,7 +122,7 @@ public class CheckBoxExpressionViewer extends ExpressionViewer implements Expres
                 falseExp.setContent(Boolean.FALSE.toString());
                 falseExp.setReturnType(Boolean.class.getName());
                 falseExp.setType(ExpressionConstants.CONSTANT_TYPE);
-                updateSelection(falseExp);
+                updateSelection(null, falseExp);
                 bindExpression();
             }
         }
@@ -215,21 +213,23 @@ public class CheckBoxExpressionViewer extends ExpressionViewer implements Expres
 
     @Override
     public void setSelection(final ISelection selection) {
-        final Expression exp = getSelectedExpression();
-        if (exp != null) {
-            if (ExpressionConstants.CONSTANT_TYPE.equals(exp.getType())) {
-                if (!checkBoxControl.isVisible()) {
-                    switchToCheckBoxMode();
-                    mc.layout(true, true);
-                }
-            } else {
-                if (!control.isVisible()) {
-                    switchToExpressionMode();
-                    mc.layout(true, true);
+        if (!selection.isEmpty()) {
+            final Expression exp = (Expression) ((IStructuredSelection) selection).getFirstElement();
+            if (exp != null) {
+                if (ExpressionConstants.CONSTANT_TYPE.equals(exp.getType())) {
+                    if (!checkBoxControl.isVisible()) {
+                        switchToCheckBoxMode();
+                        mc.layout(true, true);
+                    }
+                } else {
+                    if (!control.isVisible()) {
+                        switchToExpressionMode();
+                        mc.layout(true, true);
+                    }
                 }
             }
         }
-
+        super.setSelection(selection);
     }
 
     @Override
@@ -240,7 +240,7 @@ public class CheckBoxExpressionViewer extends ExpressionViewer implements Expres
 
     private void refreshDecoration() {
         final String message = getMessage(IStatus.INFO);
-        if (checkBoxControl.isVisible() && message != null && !"".equals(message)) {
+        if (checkBoxControl.isVisible() && message != null && !message.isEmpty()) {
             checkBoxDecoration.setDescriptionText(message);
             checkBoxDecoration.show();
         } else {
