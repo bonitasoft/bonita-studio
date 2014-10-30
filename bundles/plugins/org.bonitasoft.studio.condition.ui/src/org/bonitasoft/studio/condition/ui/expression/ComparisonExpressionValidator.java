@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
-import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
@@ -51,7 +50,6 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.command.AddCommand;
 import org.eclipse.emf.edit.command.RemoveCommand;
 import org.eclipse.emf.edit.domain.EditingDomain;
-import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.ui.resource.XtextResourceSetProvider;
@@ -136,46 +134,14 @@ public class ComparisonExpressionValidator implements IExpressionValidator {
 			if(compareOp != null){
 				final List<Expression_ProcessRef> references = ModelHelper.getAllItemsOfType(compareOp, ConditionModelPackage.Literals.EXPRESSION_PROCESS_REF);
 				for(final Expression_ProcessRef ref : references){
-					final EObject dep = getResolvedDependency(ref);
+                    final EObject dep = ComparisonExpressionUtil.getResolvedDependency(context, ref);
 					domain.getCommandStack().execute(new AddCommand(domain, inputExpression, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS, EcoreUtil.copy(dep)));
 				}
 			}
 		}else if(inputExpression != null){
 			inputExpression.getReferencedElements().clear();
-			final Operation_Compare compareOp = (Operation_Compare) resource.getContents().get(0);
-			if(compareOp != null){
-				final List<Expression_ProcessRef> references = ModelHelper.getAllItemsOfType(compareOp, ConditionModelPackage.Literals.EXPRESSION_PROCESS_REF);
-				for(final Expression_ProcessRef ref : references){
-					final EObject dep = getResolvedDependency(ref);
-					inputExpression.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(dep));
-				}
-			}
+            inputExpression.getReferencedElements().addAll(ComparisonExpressionUtil.computeReferencedElement(context, resource));
 		}
-	}
-
-
-	private EObject getResolvedDependency(final Expression_ProcessRef ref) {
-		EObject dep = resolveProxy(ref.getValue());
-		final List<EObject> orignalDep = ModelHelper.getAllItemsOfType( ModelHelper.getMainProcess(context), dep.eClass());
-		for(final EObject d : orignalDep){
-			if(EcoreUtil.equals(dep, d)){
-				dep = d;
-				break;
-			}
-		}
-		return dep;
-	}
-
-	private EObject resolveProxy(final EObject ref) {
-		ResourceSet rSet = null;
-		if(ref.eIsProxy()){
-			rSet =context.eResource().getResourceSet();
-		}
-		final EObject dep = EcoreUtil2.resolve(ref, rSet);
-		if(rSet != null){
-			rSet.getResources().remove(ref.eResource());
-		}
-		return dep;
 	}
 
 	@Override
