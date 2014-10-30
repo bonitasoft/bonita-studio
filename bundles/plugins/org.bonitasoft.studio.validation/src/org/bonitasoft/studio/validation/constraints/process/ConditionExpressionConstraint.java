@@ -19,7 +19,9 @@ package org.bonitasoft.studio.validation.constraints.process;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.condition.conditionModel.Operation_Compare;
-import org.bonitasoft.studio.engine.export.expression.converter.comparison.ComparisonExpressionConverter;
+import org.bonitasoft.studio.condition.ui.expression.ComparisonExpressionLoadException;
+import org.bonitasoft.studio.condition.ui.expression.XtextComparisonExpressionLoader;
+import org.bonitasoft.studio.condition.ui.internal.ConditionModelActivator;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.process.SequenceFlow;
 import org.bonitasoft.studio.model.process.diagram.providers.ProcessMarkerNavigationProvider;
@@ -37,7 +39,7 @@ import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
  */
 public class ConditionExpressionConstraint extends AbstractLiveValidationMarkerConstraint {
 
-    private final ComparisonExpressionConverter comparisonExpressionConverter = new ComparisonExpressionConverter();
+
 
     @Override
     protected IStatus performLiveValidation(final IValidationContext ctx) {
@@ -73,8 +75,13 @@ public class ConditionExpressionConstraint extends AbstractLiveValidationMarkerC
     }
 
     protected Operation_Compare getCompareOperation(final Expression conditionExpression) {
-        return comparisonExpressionConverter.parseConditionExpression(
-                conditionExpression.getContent(), conditionExpression);
+        final XtextComparisonExpressionLoader comparisonExpressionConverter = new XtextComparisonExpressionLoader(ConditionModelActivator.getInstance()
+                .getInjector(ConditionModelActivator.ORG_BONITASOFT_STUDIO_CONDITION_CONDITIONMODEL));
+        try {
+            return comparisonExpressionConverter.loadConditionExpression(conditionExpression.getContent(), conditionExpression);
+        } catch (final ComparisonExpressionLoadException e) {
+            return null;
+        }
     }
 
 }

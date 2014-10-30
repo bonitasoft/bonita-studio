@@ -20,14 +20,12 @@ import org.bonitasoft.studio.model.process.JavaObjectData;
 import org.bonitasoft.studio.model.process.LongType;
 import org.bonitasoft.studio.model.process.StringType;
 import org.eclipse.emf.common.notify.Adapter;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.nodemodel.impl.RootNode;
@@ -35,7 +33,6 @@ import org.eclipse.xtext.validation.Check;
 
 public class ConditionModelJavaValidator extends AbstractConditionModelJavaValidator {
 
-    private ResourceSet rSet;
     public static final String INVALID_EQUALITY_SIGN = "org.bonitasoft.studio.condition.quickfix.InvalidEqualitySign";
 
     @Check
@@ -186,7 +183,7 @@ public class ConditionModelJavaValidator extends AbstractConditionModelJavaValid
     protected EObject resolveProxyReferenceOnCurrentResourceSet(
             final Expression_ProcessRef e) {
         final EObject proxy = (EObject) e.eGet(ConditionModelPackage.Literals.EXPRESSION_PROCESS_REF__VALUE , false);
-        rSet = getCurrentResourceSet(proxy);
+        final ResourceSet rSet = getCurrentResourceSet(proxy);
         final EObject data = EcoreUtil2.resolve(proxy, rSet);
         e.setValue(data);
         if (rSet != null) {
@@ -195,37 +192,14 @@ public class ConditionModelJavaValidator extends AbstractConditionModelJavaValid
         return data;
     }
 
-    /**
-     * @param proxy
-     * @return
-     */
+
     private ResourceSet getCurrentResourceSet(final EObject proxy) {
-        rSet = null;
-        if (proxy.eIsProxy() && EcoreUtil.getURI(proxy).lastSegment().endsWith(".proc")) {
-            if(PlatformUI.isWorkbenchRunning()){
-                Display.getDefault().syncExec(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        final DiagramEditor editor = (DiagramEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-                                .getActivePage().getActiveEditor();
-                        if (editor != null) {
-                            final DiagramEditPart diagramEditPart = editor.getDiagramEditPart();
-                            if (diagramEditPart != null) {
-                                final EObject resolveSemanticElement = diagramEditPart.resolveSemanticElement();
-                                if (resolveSemanticElement != null) {
-                                    final Resource eResource = resolveSemanticElement.eResource();
-                                    if (eResource != null) {
-                                        rSet = eResource.getResourceSet();
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                });
-            }
+        final ResourceSetImpl resourceSetImpl = new ResourceSetImpl();
+        final URI uri = EcoreUtil.getURI(proxy);
+        if (uri != null && uri.toString().contains(".proc")) {
+            final Resource resource = resourceSetImpl.getResource(uri.trimFragment(), true);
+            return resource.getResourceSet();
         }
-        return rSet;
+        return null;
     }
 }

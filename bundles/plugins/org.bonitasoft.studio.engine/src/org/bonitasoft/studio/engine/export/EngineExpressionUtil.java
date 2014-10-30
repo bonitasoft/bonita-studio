@@ -30,6 +30,8 @@ import org.bonitasoft.studio.common.DatasourceConstants;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.WidgetHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.condition.ui.expression.XtextComparisonExpressionLoader;
+import org.bonitasoft.studio.condition.ui.internal.ConditionModelActivator;
 import org.bonitasoft.studio.connector.model.definition.Output;
 import org.bonitasoft.studio.engine.EnginePlugin;
 import org.bonitasoft.studio.engine.export.expression.converter.IExpressionConverter;
@@ -53,10 +55,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 public class EngineExpressionUtil {
 
     private static List<IExpressionConverter> converters;
-    static {
-        converters = new ArrayList<IExpressionConverter>();
-        converters.add(new ComparisonExpressionConverter());
-    }
+
 
     public static org.bonitasoft.engine.operation.Operation createOperation(final Operation operation) {
         return createOperation(operation, createLeftOperand(operation.getLeftOperand()));
@@ -458,6 +457,13 @@ public class EngineExpressionUtil {
     }
 
     private static IExpressionConverter getConverter(final org.bonitasoft.studio.model.expression.Expression expression) {
+        if (converters == null) {
+            converters = new ArrayList<IExpressionConverter>();
+            if (ConditionModelActivator.getInstance() != null) {
+            converters.add(new ComparisonExpressionConverter(new XtextComparisonExpressionLoader(ConditionModelActivator.getInstance().getInjector(
+                    ConditionModelActivator.ORG_BONITASOFT_STUDIO_CONDITION_CONDITIONMODEL))));
+            }
+        }
         for (final IExpressionConverter converter : converters) {
             if (converter.appliesTo(expression)) {
                 return converter;

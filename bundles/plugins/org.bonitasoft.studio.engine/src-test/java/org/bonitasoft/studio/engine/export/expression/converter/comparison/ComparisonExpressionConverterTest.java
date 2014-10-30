@@ -17,9 +17,10 @@
 package org.bonitasoft.studio.engine.export.expression.converter.comparison;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.when;
 
 import org.bonitasoft.engine.expression.ExpressionType;
+import org.bonitasoft.engine.expression.InvalidExpressionException;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.condition.conditionModel.ConditionModelFactory;
 import org.bonitasoft.studio.condition.conditionModel.Expression_ProcessRef;
@@ -27,6 +28,8 @@ import org.bonitasoft.studio.condition.conditionModel.Operation_Compare;
 import org.bonitasoft.studio.condition.conditionModel.Operation_Less_Equals;
 import org.bonitasoft.studio.condition.conditionModel.Operation_NotUnary;
 import org.bonitasoft.studio.condition.conditionModel.Operation_Unary;
+import org.bonitasoft.studio.condition.ui.expression.ComparisonExpressionLoadException;
+import org.bonitasoft.studio.condition.ui.expression.XtextComparisonExpressionLoader;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.builders.ExpressionBuilder;
 import org.bonitasoft.studio.model.parameter.Parameter;
@@ -40,7 +43,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Spy;
+import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 
@@ -51,8 +54,11 @@ import org.mockito.runners.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class ComparisonExpressionConverterTest {
 
-    @Spy
     private ComparisonExpressionConverter comparisonExpressionConverter;
+
+    @Mock
+    private XtextComparisonExpressionLoader loader;
+
     private Data variable;
     private Parameter parameter;
     private Expression binaryExpression;
@@ -66,6 +72,7 @@ public class ComparisonExpressionConverterTest {
      */
     @Before
     public void setUp() throws Exception {
+        comparisonExpressionConverter = new ComparisonExpressionConverter(loader);
         variable = DataBuilder.createDataBuilder().withName("amount").havingDataType(DoubleDataTypeBuilder.create()).build();
         validVariable = DataBuilder.createDataBuilder().withName("valid").havingDataType(BooleanDataTypeBuilder.create()).build();
         parameter = ParameterBuilder.create().withName("commission").withType(Double.class.getName()).build();
@@ -104,20 +111,25 @@ public class ComparisonExpressionConverterTest {
     }
 
     @Test
-    public void should_convert_a_studio_expression_into_an_engine_expression_returns_null_if_parsing_fail() throws Exception {
-        doReturn(null).when(comparisonExpressionConverter).parseConditionExpression(binaryExpression.getContent(), null);
+    public void should_convert_a_studio_expression_into_an_engine_expression_returns_null_if_parsing_return_null() throws Exception {
+        when(loader.loadConditionExpression(binaryExpression.getContent(), null)).thenReturn(null);
         assertThat(comparisonExpressionConverter.convert(binaryExpression)).isNull();
 
-        doReturn(ConditionModelFactory.eINSTANCE.createOperation_Compare()).when(comparisonExpressionConverter).parseConditionExpression(
-                binaryExpression.getContent(), null);
+        when(loader.loadConditionExpression(binaryExpression.getContent(), null)).thenReturn(ConditionModelFactory.eINSTANCE.createOperation_Compare());
         assertThat(comparisonExpressionConverter.convert(binaryExpression)).isNull();
 
         final Operation_Compare compare = ConditionModelFactory.eINSTANCE.createOperation_Compare();
         compare.setOp(ConditionModelFactory.eINSTANCE.createExpression_Integer());
-        doReturn(compare).when(comparisonExpressionConverter).parseConditionExpression(
-                binaryExpression.getContent(), null);
+        when(loader.loadConditionExpression(binaryExpression.getContent(), null)).thenReturn(compare);
         assertThat(comparisonExpressionConverter.convert(binaryExpression)).isNull();
     }
+
+    @Test(expected=InvalidExpressionException.class)
+    public void should_convert_a_studio_expression_into_an_engine_expression_returns_null_if_parsing_fail() throws Exception {
+        when(loader.loadConditionExpression(binaryExpression.getContent(), null)).thenThrow(new ComparisonExpressionLoadException(""));
+        comparisonExpressionConverter.convert(binaryExpression);
+    }
+
 
     @Test
     public void should_convert_a_studio_expression_into_an_engine_expression_for_binary_operation() throws Exception {
@@ -130,7 +142,9 @@ public class ComparisonExpressionConverterTest {
         param_Ref.setValue(EcoreUtil.copy(parameter));
         less_Equals.setRight(param_Ref);
         binaryOperation.setOp(less_Equals);
-        doReturn(binaryOperation).when(comparisonExpressionConverter).parseConditionExpression(binaryExpression.getContent(), null);
+
+        when(loader.loadConditionExpression(binaryExpression.getContent(), null)).thenReturn(binaryOperation);
+
         final org.bonitasoft.engine.expression.Expression engineExpression = comparisonExpressionConverter.convert(binaryExpression);
         assertThat(engineExpression).isNotNull();
         assertThat(engineExpression.getExpressionType()).isEqualTo(ExpressionType.TYPE_CONDITION.name());
@@ -154,7 +168,9 @@ public class ComparisonExpressionConverterTest {
         processRef.setValue(EcoreUtil.copy(validVariable));
         unaryOperation.setValue(processRef);
         operation_Compare.setOp(unaryOperation);
-        doReturn(operation_Compare).when(comparisonExpressionConverter).parseConditionExpression(notUnaryExpression.getContent(), null);
+
+        when(loader.loadConditionExpression(notUnaryExpression.getContent(), null)).thenReturn(operation_Compare);
+
         final org.bonitasoft.engine.expression.Expression engineExpression = comparisonExpressionConverter.convert(notUnaryExpression);
         assertThat(engineExpression).isNotNull();
         assertThat(engineExpression.getExpressionType()).isEqualTo(ExpressionType.TYPE_CONDITION.name());
@@ -174,7 +190,8 @@ public class ComparisonExpressionConverterTest {
         processRef.setValue(EcoreUtil.copy(validVariable));
         unaryOperation.setValue(processRef);
         operation_Compare.setOp(unaryOperation);
-        doReturn(operation_Compare).when(comparisonExpressionConverter).parseConditionExpression(unaryExpression.getContent(), null);
+        when(loader.loadConditionExpression(unaryExpression.getContent(), null)).thenReturn(operation_Compare);
+
         final org.bonitasoft.engine.expression.Expression engineExpression = comparisonExpressionConverter.convert(unaryExpression);
         assertThat(engineExpression).isNotNull();
         assertThat(engineExpression.getExpressionType()).isEqualTo(ExpressionType.TYPE_VARIABLE.name());

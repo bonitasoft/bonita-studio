@@ -16,39 +16,17 @@
  */
 package org.bonitasoft.studio.engine.export.expression.converter.comparison;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import org.bonitasoft.engine.expression.ExpressionBuilder;
 import org.bonitasoft.engine.expression.InvalidExpressionException;
 import org.bonitasoft.studio.common.ExpressionConstants;
-import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.condition.conditionModel.Operation_Compare;
 import org.bonitasoft.studio.condition.conditionModel.Operation_NotUnary;
 import org.bonitasoft.studio.condition.conditionModel.Unary_Operation;
-import org.bonitasoft.studio.condition.scoping.ConditionModelGlobalScopeProvider;
-import org.bonitasoft.studio.condition.ui.internal.ConditionModelActivator;
+import org.bonitasoft.studio.condition.ui.expression.ComparisonExpressionLoadException;
+import org.bonitasoft.studio.condition.ui.expression.XtextComparisonExpressionLoader;
 import org.bonitasoft.studio.engine.export.expression.converter.IExpressionConverter;
 import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.model.parameter.Parameter;
-import org.bonitasoft.studio.model.process.AbstractProcess;
-import org.bonitasoft.studio.model.process.Data;
-import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.xtext.resource.XtextResource;
-import org.eclipse.xtext.ui.resource.XtextResourceSetProvider;
-import org.eclipse.xtext.util.StringInputStream;
-import org.eclipse.xtext.validation.CheckMode;
-import org.eclipse.xtext.validation.IResourceValidator;
-
-import com.google.inject.Injector;
 
 /**
  * @author Romain Bioteau
@@ -56,6 +34,11 @@ import com.google.inject.Injector;
  */
 public class ComparisonExpressionConverter implements IExpressionConverter {
 
+    private final XtextComparisonExpressionLoader expressionLoader;
+
+    public ComparisonExpressionConverter(final XtextComparisonExpressionLoader expressionLoader) {
+        this.expressionLoader = expressionLoader;
+    }
 
     @Override
     public boolean appliesTo(final Expression expression) {
@@ -67,7 +50,12 @@ public class ComparisonExpressionConverter implements IExpressionConverter {
         final ExpressionBuilder expressionBuilder = new ExpressionBuilder();
         final String name = getExpressionName(expression);
         final String content = expression.getContent();
-        final Operation_Compare compare = parseConditionExpression(content, expression.eContainer());
+        Operation_Compare compare;
+        try {
+            compare = expressionLoader.loadConditionExpression(content, expression.eContainer());
+        } catch (final ComparisonExpressionLoadException e) {
+            throw new InvalidExpressionException("Failed to load comparison expression");
+        }
         if (compare != null && compare.getOp() != null) {
             final EObject op = compare.getOp();
             if (op instanceof Unary_Operation) {
@@ -103,46 +91,14 @@ public class ComparisonExpressionConverter implements IExpressionConverter {
             final ExpressionBuilder expressionBuilder, final String name, final EObject op) throws InvalidExpressionException {
         final org.bonitasoft.studio.condition.conditionModel.Expression conditionExp = ((Unary_Operation) op).getValue();
         final org.bonitasoft.engine.expression.Expression engineExpression = new ExpressionConditionModelSwitch(expression).doSwitch(conditionExp);
+        if (engineExpression == null) {
+            throw new InvalidExpressionException("Condition expression " + name + " convertion has failed");
+        }
         if (op instanceof Operation_NotUnary) {
             return expressionBuilder.createLogicalComplementExpression(name, engineExpression);
         } else {
             return engineExpression;
         }
-    }
-
-    public Operation_Compare parseConditionExpression(final String content, final EObject context) {
-        final Injector injector = ConditionModelActivator.getInstance().getInjector(
-                ConditionModelActivator.ORG_BONITASOFT_STUDIO_CONDITION_CONDITIONMODEL);
-        final IResourceValidator xtextResourceChecker = injector.getInstance(IResourceValidator.class);
-        final XtextResourceSetProvider xtextResourceSetProvider = injector.getInstance(XtextResourceSetProvider.class);
-        final ResourceSet resourceSet = xtextResourceSetProvider.get(RepositoryManager.getInstance().getCurrentRepository().getProject());
-        final XtextResource resource = (XtextResource) resourceSet.createResource(URI.createURI("somefile.cmodel"));
-        try {
-            resource.load(new StringInputStream(content, "UTF-8"), Collections.emptyMap());
-        } catch (final UnsupportedEncodingException e1) {
-            BonitaStudioLog.error(e1);
-        } catch (final IOException e1) {
-            BonitaStudioLog.error(e1);
-        }
-        final ConditionModelGlobalScopeProvider globalScopeProvider = injector.getInstance(ConditionModelGlobalScopeProvider.class);
-        final List<String> accessibleObjects = new ArrayList<String>();
-        for (final Data d : ModelHelper.getAccessibleData(context)) {
-            accessibleObjects.add(ModelHelper.getEObjectID(d));
-        }
-
-        final AbstractProcess process = ModelHelper.getParentProcess(context);
-        if (process != null) {
-            for (final Parameter p : process.getParameters()) {
-                accessibleObjects.add(ModelHelper.getEObjectID(p));
-            }
-        }
-        globalScopeProvider.setAccessibleEObjects(accessibleObjects);
-        xtextResourceChecker.validate(resource, CheckMode.FAST_ONLY, null);
-        final EList<EObject> contents = resource.getContents();
-        if (contents.isEmpty()) {
-            return null;
-        }
-        return (Operation_Compare) contents.get(0);
     }
 
     protected String getExpressionName(final Expression expression) {
