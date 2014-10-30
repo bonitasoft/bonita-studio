@@ -16,6 +16,7 @@
  */
 package org.bonitasoft.studio.common;
 
+import org.osgi.framework.Version;
 
 /**
  * @author Romain Bioteau
