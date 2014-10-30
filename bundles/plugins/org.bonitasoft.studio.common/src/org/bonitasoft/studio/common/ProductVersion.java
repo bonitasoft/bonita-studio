@@ -16,7 +16,6 @@
  */
 package org.bonitasoft.studio.common;
 
-import org.osgi.framework.Version;
 
 /**
  * @author Romain Bioteau
@@ -28,20 +27,21 @@ public class ProductVersion {
 	public static final String REDIRECT_URL_PRODUCT_ID = "bos";
     public static final String VERSION_6_0_0_ALPHA = "6.0.0-Alpha";
     public static final String CURRENT_VERSION = "6.4.0";
+
 	public static final String CURRENT_YEAR = "2014";
 
 
-    public static boolean sameVersion(String version){
+    public static boolean sameVersion(final String version){
         return CURRENT_VERSION.equals(version);
     }
 
 
-    public static boolean sameMinorVersion(String version){
+    public static boolean sameMinorVersion(final String version){
         if(version == null){
             return false ;
         }
-        String minor =  CURRENT_VERSION.substring(0, CURRENT_VERSION.lastIndexOf(".")) ;
-        String[] split = version.split("\\.");
+        final String minor =  CURRENT_VERSION.substring(0, CURRENT_VERSION.lastIndexOf(".")) ;
+        final String[] split = version.split("\\.");
         String testedVersion = version ;
         if(split.length > 2){
             testedVersion = split[0] + "." + split[1] ;
@@ -49,31 +49,31 @@ public class ProductVersion {
         return minor.equals(testedVersion) ;
     }
 
-	public static boolean canBeMigrated(String version) {
+	public static boolean canBeMigrated(final String version) {
 		if(version == null){
 			return false;
 		}
 		Version current = new Version("0.0.0");
 		try{
 			current = Version.parseVersion(version);
-		}catch(IllegalArgumentException e){
-			
+		}catch(final IllegalArgumentException e){
+
 		}
-		Version productVersion = new Version(CURRENT_VERSION);
+		final Version productVersion = new Version(CURRENT_VERSION);
 		return current.compareTo(productVersion) < 0;
 	}
 
-	public static boolean canBeImported(String version) {
+	public static boolean canBeImported(final String version) {
 		if(version == null){
 			return true;
 		}
 		Version current = new Version("0.0.0");
 		try{
 			current = Version.parseVersion(version);
-		}catch(IllegalArgumentException e){
-			
+		}catch(final IllegalArgumentException e){
+
 		}
-		Version productVersion = new Version(CURRENT_VERSION);
+		final Version productVersion = new Version(CURRENT_VERSION);
 		return current.compareTo(productVersion) <= 0;
 	}
 
