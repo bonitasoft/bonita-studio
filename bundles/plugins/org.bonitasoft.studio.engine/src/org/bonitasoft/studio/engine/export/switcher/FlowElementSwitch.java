@@ -48,8 +48,8 @@ import org.bonitasoft.engine.operation.LeftOperandBuilder;
 import org.bonitasoft.engine.operation.OperationBuilder;
 import org.bonitasoft.engine.operation.OperatorType;
 import org.bonitasoft.studio.common.DataUtil;
+import org.bonitasoft.studio.common.DateUtil;
 import org.bonitasoft.studio.common.ExpressionConstants;
-import org.bonitasoft.studio.common.TimerUtil;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.engine.export.EngineExpressionUtil;
@@ -552,7 +552,7 @@ public class FlowElementSwitch extends AbstractSwitch {
     }
 
     private TimerType getTimerType(final AbstractTimerEvent timer) {
-        if (TimerUtil.isDuration(timer)) {
+        if (isDuration(timer)) {
             return TimerType.DURATION;
         } else {
             final String timerConditionReturnType = timer.getCondition().getReturnType();
@@ -569,6 +569,14 @@ public class FlowElementSwitch extends AbstractSwitch {
         BonitaStudioLog.error("Timer type can't be defined for timer " + timer.getName() + ". You might use a wrong return type. ",
                 "org.bonitasoft.studio.engine");
         return null;
+    }
+
+    private boolean isDuration(final AbstractTimerEvent timer) {
+        final Expression exp = timer.getCondition();
+        if (exp != null) {
+            return DateUtil.isDuration(exp.getContent());
+        }
+        return false;
     }
 
     @Override

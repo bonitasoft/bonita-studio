@@ -16,7 +16,7 @@
  */
 package org.bonitasoft.studio.migration.custom.migration;
 
-import static org.fest.assertions.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doReturn;
 
 import java.util.List;
@@ -28,10 +28,7 @@ import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.edapt.migration.Instance;
-import org.eclipse.emf.edapt.migration.Metamodel;
 import org.eclipse.emf.edapt.migration.MigrationFactory;
-import org.eclipse.emf.edapt.migration.MigrationPackage;
-import org.eclipse.emf.edapt.migration.Model;
 import org.eclipse.emf.edapt.migration.impl.MetamodelImpl;
 import org.eclipse.emf.edapt.migration.impl.ModelImpl;
 import org.junit.After;
@@ -50,12 +47,12 @@ import org.mockito.runners.MockitoJUnitRunner;
 public class BusinessObjectTypeCustomMigrationTest {
 
 	private BusinessObjectTypeCustomMigration migrationUnderTest;
-	
+
 	@Spy
-	private ModelImpl model; 
-	
+	private ModelImpl model;
+
 	@Spy
-	private MetamodelImpl metamodel; 
+	private MetamodelImpl metamodel;
 
 	/**
 	 * @throws java.lang.Exception
@@ -77,18 +74,18 @@ public class BusinessObjectTypeCustomMigrationTest {
 	@Test
 	public void shouldMigrateAfter_AddBusinessObjectType_InDiagram_IfNotExists() throws Exception {
 		doReturn(metamodel).when(model).getMetamodel();
-		EPackage ePackage = ProcessPackage.eINSTANCE.getMainProcess().getEPackage();
-		EList<EPackage> result = new BasicEList<EPackage>();
+		final EPackage ePackage = ProcessPackage.eINSTANCE.getMainProcess().getEPackage();
+		final EList<EPackage> result = new BasicEList<EPackage>();
 		result.add(ePackage);
 		doReturn(result).when(metamodel).getEPackages();
-		EList<Instance> emptyList = new BasicEList<Instance>();
+		final EList<Instance> emptyList = new BasicEList<Instance>();
 		doReturn(emptyList).when(model).getAllInstances("process.BusinessObjectType");
-		EList<Instance> diagramList = new BasicEList<Instance>();
-		Instance instance = model.newInstance("process.MainProcess");
+		final EList<Instance> diagramList = new BasicEList<Instance>();
+		final Instance instance = model.newInstance("process.MainProcess");
 		diagramList.add(instance);
 		doReturn(diagramList).when(model).getAllInstances("process.MainProcess");
 		migrationUnderTest.migrateAfter(model , metamodel);
-		assertThat((List<Instance>)instance.get("datatypes")).onProperty("name").containsOnly(NamingUtils.convertToId(DataTypeLabels.businessObjectType));
+        assertThat((List<Instance>) instance.get("datatypes")).extracting("name").containsOnly(NamingUtils.convertToId(DataTypeLabels.businessObjectType));
 	}
 
 }
