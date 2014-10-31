@@ -19,6 +19,8 @@ package org.bonitasoft.studio.engine.export.expression.converter.comparison;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
+import java.io.File;
+
 import org.bonitasoft.engine.expression.ExpressionType;
 import org.bonitasoft.engine.expression.InvalidExpressionException;
 import org.bonitasoft.studio.common.ExpressionConstants;
@@ -38,10 +40,15 @@ import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.builders.BooleanDataTypeBuilder;
 import org.bonitasoft.studio.model.process.builders.DataBuilder;
 import org.bonitasoft.studio.model.process.builders.DoubleDataTypeBuilder;
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.xtext.resource.XtextResource;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -58,6 +65,9 @@ public class ComparisonExpressionConverterTest {
 
     @Mock
     private XtextComparisonExpressionLoader loader;
+
+    @Rule
+    public TemporaryFolder folder = new TemporaryFolder();
 
     private Data variable;
     private Parameter parameter;
@@ -198,6 +208,24 @@ public class ComparisonExpressionConverterTest {
         assertThat(engineExpression.getContent()).isEqualTo("valid");
         assertThat(engineExpression.getReturnType()).isEqualTo(Boolean.class.getName());
         assertThat(engineExpression.getDependencies()).isEmpty();
+    }
 
+
+    @Test
+    public void should_convert_a_studio_expression_into_an_engine_expression_clean_compare_resource() throws Exception {
+        final File newFile = folder.newFile("somcemodel.cmodel");
+        final URI fileURI = URI.createFileURI(newFile.getAbsolutePath());
+        final Resource resource = new XtextResource(fileURI);
+        assertThat(newFile).exists();
+        final Operation_Compare operation_Compare = ConditionModelFactory.eINSTANCE.createOperation_Compare();
+        final Operation_Unary unaryOperation = ConditionModelFactory.eINSTANCE.createOperation_Unary();
+        final Expression_ProcessRef processRef = ConditionModelFactory.eINSTANCE.createExpression_ProcessRef();
+        processRef.setValue(EcoreUtil.copy(validVariable));
+        unaryOperation.setValue(processRef);
+        operation_Compare.setOp(unaryOperation);
+        resource.getContents().add(operation_Compare);
+        when(loader.loadConditionExpression(unaryExpression.getContent(), null)).thenReturn(operation_Compare);
+        comparisonExpressionConverter.convert(unaryExpression);
+        assertThat(newFile).doesNotExist();
     }
 }

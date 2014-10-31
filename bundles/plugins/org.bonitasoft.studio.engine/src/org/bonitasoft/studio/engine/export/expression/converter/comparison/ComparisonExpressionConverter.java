@@ -57,16 +57,15 @@ public class ComparisonExpressionConverter implements IExpressionConverter {
         Operation_Compare compare = null;
         try {
             compare = expressionLoader.loadConditionExpression(content, expression.eContainer());
-
-        if (compare != null && compare.getOp() != null) {
-            final EObject op = compare.getOp();
-            if (op instanceof Unary_Operation) {
-                return createExpressionForUnaryOperation(expression, expressionBuilder, name, op);
-            } else if (op instanceof org.bonitasoft.studio.condition.conditionModel.Operation) {
-                return createExpressionForBinaryOperation(expression, expressionBuilder, name, op);
+            if (compare != null && compare.getOp() != null) {
+                final EObject op = compare.getOp();
+                if (op instanceof Unary_Operation) {
+                    return createExpressionForUnaryOperation(expression, expressionBuilder, name, op);
+                } else if (op instanceof org.bonitasoft.studio.condition.conditionModel.Operation) {
+                    return createExpressionForBinaryOperation(expression, expressionBuilder, name, op);
+                }
             }
-        }
-        return null;
+            return null;
         } catch (final ComparisonExpressionLoadException e) {
             throw new InvalidExpressionException("Failed to load comparison expression");
         } finally {
