@@ -16,9 +16,13 @@
  */
 package org.bonitasoft.studio.engine.export.expression.converter.comparison;
 
+import java.io.IOException;
+import java.util.Collections;
+
 import org.bonitasoft.engine.expression.ExpressionBuilder;
 import org.bonitasoft.engine.expression.InvalidExpressionException;
 import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.condition.conditionModel.Operation_Compare;
 import org.bonitasoft.studio.condition.conditionModel.Operation_NotUnary;
 import org.bonitasoft.studio.condition.conditionModel.Unary_Operation;
@@ -50,12 +54,10 @@ public class ComparisonExpressionConverter implements IExpressionConverter {
         final ExpressionBuilder expressionBuilder = new ExpressionBuilder();
         final String name = getExpressionName(expression);
         final String content = expression.getContent();
-        Operation_Compare compare;
+        Operation_Compare compare = null;
         try {
             compare = expressionLoader.loadConditionExpression(content, expression.eContainer());
-        } catch (final ComparisonExpressionLoadException e) {
-            throw new InvalidExpressionException("Failed to load comparison expression");
-        }
+
         if (compare != null && compare.getOp() != null) {
             final EObject op = compare.getOp();
             if (op instanceof Unary_Operation) {
@@ -65,6 +67,17 @@ public class ComparisonExpressionConverter implements IExpressionConverter {
             }
         }
         return null;
+        } catch (final ComparisonExpressionLoadException e) {
+            throw new InvalidExpressionException("Failed to load comparison expression");
+        } finally {
+            if (compare != null && compare.eResource() != null) {
+                try {
+                    compare.eResource().delete(Collections.emptyMap());
+                } catch (final IOException e) {
+                    BonitaStudioLog.error(e);
+                }
+            }
+        }
 
     }
 

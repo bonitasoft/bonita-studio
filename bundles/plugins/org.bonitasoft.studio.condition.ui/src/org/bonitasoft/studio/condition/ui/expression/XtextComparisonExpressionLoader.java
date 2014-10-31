@@ -65,7 +65,7 @@ public class XtextComparisonExpressionLoader {
     }
 
     protected IFile createTmpFile(final String content, final IProject project) throws UnsupportedEncodingException, CoreException {
-        final IFile file = project.getFile("somefile" + System.currentTimeMillis() + ".cmodel");
+        final IFile file = project.getFile("somefile.cmodel");
         if (file.exists()) {
             file.delete(true, null);
         }

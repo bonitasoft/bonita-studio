@@ -17,7 +17,11 @@
  */
 package org.bonitasoft.studio.validation.constraints.process;
 
+import java.io.IOException;
+import java.util.Collections;
+
 import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.condition.conditionModel.Operation_Compare;
 import org.bonitasoft.studio.condition.ui.expression.ComparisonExpressionLoadException;
 import org.bonitasoft.studio.condition.ui.expression.XtextComparisonExpressionLoader;
@@ -68,6 +72,13 @@ public class ConditionExpressionConstraint extends AbstractLiveValidationMarkerC
                 final Operation_Compare opCompare = getCompareOperation(conditionExpression);
                 if(opCompare == null || opCompare.getOp() == null){
                     return ctx.createFailureStatus(Messages.bind(Messages.invalidConditionExpression,conditionExpression.getName()));
+                }
+                if (opCompare != null && opCompare.eResource() != null) {
+                    try {
+                        opCompare.eResource().delete(Collections.emptyMap());
+                    } catch (final IOException e) {
+                        BonitaStudioLog.error(e);
+                    }
                 }
             }
         }

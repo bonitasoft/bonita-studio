@@ -16,7 +16,9 @@
  */
 package org.bonitasoft.studio.condition.ui.expression;
 
+import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -406,7 +408,13 @@ public class ComparisonExpressionEditor extends SelectionAwareExpressionEditor i
      */
     @Override
     public void dispose() {
-
+        if (resource != null) {
+            try {
+                resource.delete(Collections.emptyMap());
+            } catch (final IOException e) {
+                BonitaStudioLog.error(e);
+            }
+        }
     }
 
     /*
