@@ -20,7 +20,9 @@ import org.bonitasoft.studio.model.process.JavaObjectData;
 import org.bonitasoft.studio.model.process.LongType;
 import org.bonitasoft.studio.model.process.StringType;
 import org.eclipse.emf.common.notify.Adapter;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xtext.nodemodel.INode;
@@ -107,7 +109,13 @@ public class ConditionModelJavaValidator extends AbstractConditionModelJavaValid
     private String getDataType(final Expression_ProcessRef e) {
         EObject reference = e.getValue();
         if (reference.eIsProxy()) {
-            reference = EcoreUtil.resolve(reference, resourceSet);
+            final URI uri = EcoreUtil.getURI(reference);
+            if (uri.toString().contains(".proc")) {
+                final Resource resource = resourceSet.getResource(uri.trimFragment(), false);
+                if (resource != null) {
+                    reference = resource.getEObject(uri.fragment());
+                }
+            }
         }
         if (reference instanceof JavaObjectData) {
             final JavaObjectData javaData = (JavaObjectData) reference;

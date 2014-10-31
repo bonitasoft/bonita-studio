@@ -37,6 +37,7 @@ import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.command.AddCommand;
 import org.eclipse.emf.edit.command.RemoveCommand;
@@ -68,8 +69,9 @@ public class ComparisonExpressionValidator implements IExpressionValidator {
 		}
 		final Injector injector = ConditionModelActivator.getInstance().getInjector(ConditionModelActivator.ORG_BONITASOFT_STUDIO_CONDITION_CONDITIONMODEL);
         Resource resource = null;
+        final XtextComparisonExpressionLoader xtextComparisonExpressionLoader = new XtextComparisonExpressionLoader(injector);
         try {
-            resource = new XtextComparisonExpressionLoader(injector).loadResource(value.toString(), context);
+            resource = xtextComparisonExpressionLoader.loadResource(value.toString(), context);
         } catch (final ComparisonExpressionLoadException e) {
             BonitaStudioLog.error(e);
             return ValidationStatus.error(e.getMessage());
@@ -78,7 +80,8 @@ public class ComparisonExpressionValidator implements IExpressionValidator {
         final IResourceValidator xtextResourceChecker = injector.getInstance(IResourceValidator.class);
 		final MultiStatus status = new MultiStatus(ExpressionEditorPlugin.PLUGIN_ID, 0, "", null);
         final ConditionModelJavaValidator validator = injector.getInstance(ConditionModelJavaValidator.class);
-        validator.setCurrentResourceSet(context.eResource().getResourceSet());
+        final ResourceSet resourceSet = context.eResource().getResourceSet();
+        validator.setCurrentResourceSet(resourceSet);
 		final List<Issue> issues = xtextResourceChecker.validate(resource, CheckMode.FAST_ONLY, null);
 
 		if(issues.isEmpty()){

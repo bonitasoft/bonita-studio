@@ -18,7 +18,9 @@ package org.bonitasoft.studio.condition.ui.expression;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
@@ -30,9 +32,8 @@ import org.bonitasoft.studio.condition.scoping.ConditionModelGlobalScopeProvider
 import org.bonitasoft.studio.model.parameter.Parameter;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Data;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
@@ -70,26 +71,6 @@ public class XtextComparisonExpressionLoader {
         return (Operation_Compare) contents.get(0);
     }
 
-    protected IFile createTmpFile(final String content, final IProject project) throws IOException {
-        final IFile file = project.getFile("somefile.cmodel");
-        if (file.exists()) {
-            try {
-                file.delete(true, null);
-            } catch (final CoreException e) {
-                throw new IOException(e);
-            }
-        }
-        if (content != null && !content.isEmpty()) {
-            final InputStream is = new StringInputStream(content, "UTF-8");
-            try {
-                file.create(is, true, null);
-            } catch (final CoreException e) {
-                throw new IOException(e);
-            }
-        }
-        return file;
-    }
-
     protected List<String> getAccessibleReferences(final EObject context) {
         final List<String> accessibleObjects = new ArrayList<String>();
         for (final Data d : ModelHelper.getAccessibleData(context)) {
@@ -105,22 +86,22 @@ public class XtextComparisonExpressionLoader {
     }
 
     public Resource loadResource(final String comparisonExpression, final EObject context) throws ComparisonExpressionLoadException {
+        Assert.isLegal(comparisonExpression != null);
         final XtextResourceSetProvider xtextResourceSetProvider = injector.getInstance(XtextResourceSetProvider.class);
         final IProject project = RepositoryManager.getInstance().getCurrentRepository().getProject();
         final ResourceSet resourceSet = xtextResourceSetProvider.get(project);
-        IFile file;
+        final Resource resource = resourceSet.createResource(URI.createFileURI("somefile.cmodel"));
+        InputStream inputStream;
         try {
-            file = createTmpFile(comparisonExpression, project);
+            inputStream = new StringInputStream(comparisonExpression, "UTF-8");
+        } catch (final UnsupportedEncodingException e) {
+            throw new ComparisonExpressionLoadException("Failed to create StringInputString from expression.", e);
+        }
+        try {
+            resource.load(inputStream, Collections.emptyMap());
         } catch (final IOException e) {
-            throw new ComparisonExpressionLoadException("Failed to create a temporary file for comparison expression " + comparisonExpression, e);
+            throw new ComparisonExpressionLoadException("Failed to load Xtext resource.", e);
         }
-        Resource resource = null;
-        if (file.exists()) {
-            resource = resourceSet.getResource(URI.createPlatformResourceURI(file.getFullPath().toOSString(), true), true);
-        } else {
-            resource = resourceSet.createResource(URI.createPlatformResourceURI(file.getFullPath().toOSString(), true));
-        }
-
         final ConditionModelGlobalScopeProvider globalScopeProvider = injector.getInstance(ConditionModelGlobalScopeProvider.class);
         globalScopeProvider.setAccessibleEObjects(getAccessibleReferences(context));
         return resource;
