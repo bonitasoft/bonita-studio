@@ -16,19 +16,20 @@
  */
 package org.bonitasoft.studio.condition.ui.expression;
 
+import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.condition.conditionModel.ConditionModelPackage;
+import org.bonitasoft.studio.condition.conditionModel.Expression_ProcessRef;
 import org.bonitasoft.studio.condition.conditionModel.Operation_Compare;
 import org.bonitasoft.studio.condition.scoping.ConditionModelGlobalScopeProvider;
 import org.bonitasoft.studio.model.parameter.Parameter;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Data;
-import org.bonitasoft.studio.model.process.MainProcess;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
@@ -37,8 +38,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecore.util.EcoreUtil.Copier;
-import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.ui.resource.XtextResourceSetProvider;
 import org.eclipse.xtext.util.CancelIndicator;
@@ -64,17 +64,28 @@ public class XtextComparisonExpressionLoader {
         if (contents.isEmpty()) {
             throw new ComparisonExpressionLoadException("Failed to laod comparison expression " + comparisonExpression);
         }
+        if (context != null && context.eResource() != null) {
+            return resolveProxies(resource, context.eResource().getResourceSet());
+        }
         return (Operation_Compare) contents.get(0);
     }
 
-    protected IFile createTmpFile(final String content, final IProject project) throws UnsupportedEncodingException, CoreException {
+    protected IFile createTmpFile(final String content, final IProject project) throws IOException {
         final IFile file = project.getFile("somefile.cmodel");
         if (file.exists()) {
-            file.delete(true, null);
+            try {
+                file.delete(true, null);
+            } catch (final CoreException e) {
+                throw new IOException(e);
+            }
         }
         if (content != null && !content.isEmpty()) {
             final InputStream is = new StringInputStream(content, "UTF-8");
-            file.create(is, true, null);
+            try {
+                file.create(is, true, null);
+            } catch (final CoreException e) {
+                throw new IOException(e);
+            }
         }
         return file;
     }
@@ -97,15 +108,10 @@ public class XtextComparisonExpressionLoader {
         final XtextResourceSetProvider xtextResourceSetProvider = injector.getInstance(XtextResourceSetProvider.class);
         final IProject project = RepositoryManager.getInstance().getCurrentRepository().getProject();
         final ResourceSet resourceSet = xtextResourceSetProvider.get(project);
-        if (context != null) {
-            addContextProcessInResourceSet(context, resourceSet);
-        }
         IFile file;
         try {
             file = createTmpFile(comparisonExpression, project);
-        } catch (final UnsupportedEncodingException e) {
-            throw new ComparisonExpressionLoadException("Failed to create a temporary file for comparison expression " + comparisonExpression, e);
-        } catch (final CoreException e) {
+        } catch (final IOException e) {
             throw new ComparisonExpressionLoadException("Failed to create a temporary file for comparison expression " + comparisonExpression, e);
         }
         Resource resource = null;
@@ -117,24 +123,21 @@ public class XtextComparisonExpressionLoader {
 
         final ConditionModelGlobalScopeProvider globalScopeProvider = injector.getInstance(ConditionModelGlobalScopeProvider.class);
         globalScopeProvider.setAccessibleEObjects(getAccessibleReferences(context));
-
-        if (comparisonExpression != null && !comparisonExpression.isEmpty()) {
-            //Resolve reference proxies
-            EcoreUtil2.resolveLazyCrossReferences(resource, CancelIndicator.NullImpl);
-        }
         return resource;
-
     }
 
-    protected void addContextProcessInResourceSet(final EObject context, final ResourceSet resourceSet) {
-        final Copier copier = new Copier(false);
-        final MainProcess mainProcess = ModelHelper.getMainProcess(context);
-        if (mainProcess != null) {
-            final EObject root = copier.copy(mainProcess);
-            final Resource resource = new XMIResourceFactoryImpl().createResource(URI.createFileURI("tmp.proc"));
-            resource.getContents().add(root);
-            resourceSet.getResources().add(resource);
+
+    public Operation_Compare resolveProxies(final Resource resource, final ResourceSet resourceSet) {
+        EcoreUtil2.resolveLazyCrossReferences(resource, CancelIndicator.NullImpl);
+        final Operation_Compare compareOp = (Operation_Compare) resource.getContents().get(0);
+        final List<Expression_ProcessRef> allRefs = ModelHelper.getAllItemsOfType(compareOp, ConditionModelPackage.Literals.EXPRESSION_PROCESS_REF);
+        for (final Expression_ProcessRef ref : allRefs) {
+            final EObject proxy = ref.getValue();
+            if (proxy.eIsProxy()) {
+                ref.eSet(ConditionModelPackage.Literals.EXPRESSION_PROCESS_REF__VALUE, EcoreUtil.resolve(proxy, resourceSet));
+            }
         }
+        return compareOp;
     }
 
 }

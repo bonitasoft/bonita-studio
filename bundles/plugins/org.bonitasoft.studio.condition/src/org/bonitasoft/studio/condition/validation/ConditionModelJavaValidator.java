@@ -21,6 +21,8 @@ import org.bonitasoft.studio.model.process.LongType;
 import org.bonitasoft.studio.model.process.StringType;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.nodemodel.impl.RootNode;
 import org.eclipse.xtext.validation.Check;
@@ -28,6 +30,8 @@ import org.eclipse.xtext.validation.Check;
 public class ConditionModelJavaValidator extends AbstractConditionModelJavaValidator {
 
     public static final String INVALID_EQUALITY_SIGN = "org.bonitasoft.studio.condition.quickfix.InvalidEqualitySign";
+
+    private ResourceSet resourceSet;
 
     @Check
     public void checkCompatibleTypes(final Operation_Compare operation) {
@@ -101,7 +105,10 @@ public class ConditionModelJavaValidator extends AbstractConditionModelJavaValid
     }
 
     private String getDataType(final Expression_ProcessRef e) {
-        final EObject reference = e.getValue();
+        EObject reference = e.getValue();
+        if (reference.eIsProxy()) {
+            reference = EcoreUtil.resolve(reference, resourceSet);
+        }
         if (reference instanceof JavaObjectData) {
             final JavaObjectData javaData = (JavaObjectData) reference;
             final String className = javaData.getClassName();
@@ -172,5 +179,8 @@ public class ConditionModelJavaValidator extends AbstractConditionModelJavaValid
         return null;
     }
 
+    public void setCurrentResourceSet(final ResourceSet resourceSet) {
+        this.resourceSet = resourceSet;
+    }
 
 }

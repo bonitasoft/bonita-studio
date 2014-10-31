@@ -26,6 +26,7 @@ import org.bonitasoft.studio.condition.conditionModel.ConditionModelPackage;
 import org.bonitasoft.studio.condition.conditionModel.Expression_ProcessRef;
 import org.bonitasoft.studio.condition.conditionModel.Operation_Compare;
 import org.bonitasoft.studio.condition.ui.internal.ConditionModelActivator;
+import org.bonitasoft.studio.condition.validation.ConditionModelJavaValidator;
 import org.bonitasoft.studio.expression.editor.ExpressionEditorPlugin;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionValidator;
 import org.bonitasoft.studio.model.expression.Expression;
@@ -76,6 +77,8 @@ public class ComparisonExpressionValidator implements IExpressionValidator {
 
         final IResourceValidator xtextResourceChecker = injector.getInstance(IResourceValidator.class);
 		final MultiStatus status = new MultiStatus(ExpressionEditorPlugin.PLUGIN_ID, 0, "", null);
+        final ConditionModelJavaValidator validator = injector.getInstance(ConditionModelJavaValidator.class);
+        validator.setCurrentResourceSet(context.eResource().getResourceSet());
 		final List<Issue> issues = xtextResourceChecker.validate(resource, CheckMode.FAST_ONLY, null);
 
 		if(issues.isEmpty()){
