@@ -20,13 +20,7 @@ import org.bonitasoft.studio.model.process.JavaObjectData;
 import org.bonitasoft.studio.model.process.LongType;
 import org.bonitasoft.studio.model.process.StringType;
 import org.eclipse.emf.common.notify.Adapter;
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
-import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.nodemodel.impl.RootNode;
 import org.eclipse.xtext.validation.Check;
@@ -101,16 +95,15 @@ public class ConditionModelJavaValidator extends AbstractConditionModelJavaValid
         } else {
             if (!e1Type.equals(e2Type)) {
                 return Messages.incompatibleTypes;
-
             }
         }
         return null;
     }
 
     private String getDataType(final Expression_ProcessRef e) {
-        final EObject data = resolveProxyReferenceOnCurrentResourceSet(e);
-        if (data instanceof JavaObjectData) {
-            final JavaObjectData javaData = (JavaObjectData) data;
+        final EObject reference = e.getValue();
+        if (reference instanceof JavaObjectData) {
+            final JavaObjectData javaData = (JavaObjectData) reference;
             final String className = javaData.getClassName();
             if (className.equals(Boolean.class.getName())) {
                 return ConditionModelPackage.Literals.EXPRESSION_BOOLEAN.getName();
@@ -131,8 +124,8 @@ public class ConditionModelJavaValidator extends AbstractConditionModelJavaValid
                 return ConditionModelPackage.Literals.EXPRESSION_DOUBLE.getName();
             }
         } else {
-            if (data instanceof Data) {
-                final DataType type = ((Data) data).getDataType();
+            if (reference instanceof Data) {
+                final DataType type = ((Data) reference).getDataType();
                 if (type instanceof BooleanType) {
                     return ConditionModelPackage.Literals.EXPRESSION_BOOLEAN.getName();
                 }
@@ -154,8 +147,8 @@ public class ConditionModelJavaValidator extends AbstractConditionModelJavaValid
                 if (type instanceof EnumType) {
                     return ConditionModelPackage.Literals.EXPRESSION_STRING.getName();
                 }
-            } else if (data instanceof Parameter) {
-                final String type = ((Parameter) data).getTypeClassname();
+            } else if (reference instanceof Parameter) {
+                final String type = ((Parameter) reference).getTypeClassname();
                 if (Boolean.class.getName().equals(type)) {
                     return ConditionModelPackage.Literals.EXPRESSION_BOOLEAN.getName();
                 }
@@ -180,26 +173,4 @@ public class ConditionModelJavaValidator extends AbstractConditionModelJavaValid
     }
 
 
-    protected EObject resolveProxyReferenceOnCurrentResourceSet(
-            final Expression_ProcessRef e) {
-        final EObject proxy = (EObject) e.eGet(ConditionModelPackage.Literals.EXPRESSION_PROCESS_REF__VALUE , false);
-        final ResourceSet rSet = getCurrentResourceSet(proxy);
-        final EObject data = EcoreUtil2.resolve(proxy, rSet);
-        e.setValue(data);
-        if (rSet != null) {
-            rSet.getResources().remove(e.eResource());
-        }
-        return data;
-    }
-
-
-    private ResourceSet getCurrentResourceSet(final EObject proxy) {
-        final ResourceSetImpl resourceSetImpl = new ResourceSetImpl();
-        final URI uri = EcoreUtil.getURI(proxy);
-        if (uri != null && uri.toString().contains(".proc")) {
-            final Resource resource = resourceSetImpl.getResource(uri.trimFragment(), true);
-            return resource.getResourceSet();
-        }
-        return null;
-    }
 }

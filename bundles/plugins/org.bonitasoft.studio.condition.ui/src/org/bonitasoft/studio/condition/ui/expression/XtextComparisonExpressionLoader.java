@@ -56,23 +56,7 @@ public class XtextComparisonExpressionLoader {
     }
 
     public Operation_Compare loadConditionExpression(final String comparisonExpression, final EObject context) throws ComparisonExpressionLoadException {
-        final XtextResourceSetProvider xtextResourceSetProvider = injector.getInstance(XtextResourceSetProvider.class);
-        final IProject project = RepositoryManager.getInstance().getCurrentRepository().getProject();
-        final ResourceSet resourceSet = xtextResourceSetProvider.get(project);
-        IFile file;
-        try {
-            file = createTmpFile(comparisonExpression, project);
-        } catch (final UnsupportedEncodingException e) {
-            throw new ComparisonExpressionLoadException("Failed to create a temporary file for comparison expression " + comparisonExpression, e);
-        } catch (final CoreException e) {
-            throw new ComparisonExpressionLoadException("Failed to create a temporary file for comparison expression " + comparisonExpression, e);
-        }
-        final Resource resource = resourceSet.getResource(URI.createPlatformResourceURI(file.getFullPath().toOSString(), true), true);
-        final ConditionModelGlobalScopeProvider globalScopeProvider = injector.getInstance(ConditionModelGlobalScopeProvider.class);
-        globalScopeProvider.setAccessibleEObjects(getAccessibleReferences(context));
-
-        //Resolve reference proxies
-        EcoreUtil2.resolveLazyCrossReferences(resource, CancelIndicator.NullImpl);
+        final Resource resource = loadResource(comparisonExpression, context);
         final EList<EObject> contents = resource.getContents();
         if (contents.isEmpty()) {
             throw new ComparisonExpressionLoadException("Failed to laod comparison expression " + comparisonExpression);
@@ -85,8 +69,10 @@ public class XtextComparisonExpressionLoader {
         if (file.exists()) {
             file.delete(true, null);
         }
-        final InputStream is = new StringInputStream(content, "UTF-8");
-        file.create(is, true, null);
+        if (content != null && !content.isEmpty()) {
+            final InputStream is = new StringInputStream(content, "UTF-8");
+            file.create(is, true, null);
+        }
         return file;
     }
 
@@ -102,6 +88,40 @@ public class XtextComparisonExpressionLoader {
             }
         }
         return accessibleObjects;
+    }
+
+    public Resource loadResource(final String comparisonExpression, final EObject context) throws ComparisonExpressionLoadException {
+        final XtextResourceSetProvider xtextResourceSetProvider = injector.getInstance(XtextResourceSetProvider.class);
+        final IProject project = RepositoryManager.getInstance().getCurrentRepository().getProject();
+        final ResourceSet resourceSet = xtextResourceSetProvider.get(project);
+
+        if (context != null && context.eResource() != null) {
+            resourceSet.getResources().add(context.eResource());
+        }
+        IFile file;
+        try {
+            file = createTmpFile(comparisonExpression, project);
+        } catch (final UnsupportedEncodingException e) {
+            throw new ComparisonExpressionLoadException("Failed to create a temporary file for comparison expression " + comparisonExpression, e);
+        } catch (final CoreException e) {
+            throw new ComparisonExpressionLoadException("Failed to create a temporary file for comparison expression " + comparisonExpression, e);
+        }
+        Resource resource = null;
+        if (file.exists()) {
+            resource = resourceSet.getResource(URI.createPlatformResourceURI(file.getFullPath().toOSString(), true), true);
+        } else {
+            resource = resourceSet.createResource(URI.createPlatformResourceURI(file.getFullPath().toOSString(), true));
+        }
+
+        final ConditionModelGlobalScopeProvider globalScopeProvider = injector.getInstance(ConditionModelGlobalScopeProvider.class);
+        globalScopeProvider.setAccessibleEObjects(getAccessibleReferences(context));
+
+        if (comparisonExpression != null && !comparisonExpression.isEmpty()) {
+            //Resolve reference proxies
+            EcoreUtil2.resolveLazyCrossReferences(resource, CancelIndicator.NullImpl);
+        }
+        return resource;
+
     }
 
 }

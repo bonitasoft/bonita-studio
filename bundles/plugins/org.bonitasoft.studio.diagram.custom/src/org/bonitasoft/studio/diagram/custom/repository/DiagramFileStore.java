@@ -173,7 +173,6 @@ public class DiagramFileStore extends EMFFileStore implements IRepositoryFileSto
                         if(editor instanceof ProcessDiagramEditor){
                             return (DiagramEditor) editor;
                         }
-
                     }
                 } catch (final PartInitException e) {
                     BonitaStudioLog.error(e,Activator.PLUGIN_ID);
