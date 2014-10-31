@@ -28,6 +28,7 @@ import org.bonitasoft.studio.condition.scoping.ConditionModelGlobalScopeProvider
 import org.bonitasoft.studio.model.parameter.Parameter;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Data;
+import org.bonitasoft.studio.model.process.MainProcess;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
@@ -36,6 +37,8 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.util.EcoreUtil.Copier;
+import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.ui.resource.XtextResourceSetProvider;
 import org.eclipse.xtext.util.CancelIndicator;
@@ -94,9 +97,8 @@ public class XtextComparisonExpressionLoader {
         final XtextResourceSetProvider xtextResourceSetProvider = injector.getInstance(XtextResourceSetProvider.class);
         final IProject project = RepositoryManager.getInstance().getCurrentRepository().getProject();
         final ResourceSet resourceSet = xtextResourceSetProvider.get(project);
-
-        if (context != null && context.eResource() != null) {
-            resourceSet.getResources().add(context.eResource());
+        if (context != null) {
+            addContextProcessInResourceSet(context, resourceSet);
         }
         IFile file;
         try {
@@ -122,6 +124,17 @@ public class XtextComparisonExpressionLoader {
         }
         return resource;
 
+    }
+
+    protected void addContextProcessInResourceSet(final EObject context, final ResourceSet resourceSet) {
+        final Copier copier = new Copier(false);
+        final MainProcess mainProcess = ModelHelper.getMainProcess(context);
+        if (mainProcess != null) {
+            final EObject root = copier.copy(mainProcess);
+            final Resource resource = new XMIResourceFactoryImpl().createResource(URI.createFileURI("tmp.proc"));
+            resource.getContents().add(root);
+            resourceSet.getResources().add(resource);
+        }
     }
 
 }
