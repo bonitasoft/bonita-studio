@@ -162,7 +162,6 @@ public class ImportBosArchiveOperation {
             @Override
             public void run() {
                 final ProcessesValidationAction validationAction = new ProcessesValidationAction(importedProcesses);
-                validationAction.activateValidationPart();
                 validationAction.performValidation();
             }
         });
