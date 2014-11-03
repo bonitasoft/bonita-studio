@@ -17,6 +17,7 @@
  */
 package org.bonitasoft.studio.tests.processzoo;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
@@ -107,7 +108,6 @@ public class TestProcessZoo {
                     .getActivePage().getEditorReferences().length);
         }
         final AbstractProcess diagram = (AbstractProcess) processEditor.getDiagramEditPart().resolveSemanticElement();
-
         if (file.getAbsolutePath().endsWith(".bos")) {// Check unresolved dependencies for BAR Files
             final DependencyRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(
                     DependencyRepositoryStore.class);
@@ -127,16 +127,17 @@ public class TestProcessZoo {
             }
         }
 
-        final RunProcessCommand command = new RunProcessCommand(true);
-        command.execute(ProcessSelector.createExecutionEvent(diagram));
-        assertNotNull("There should be an application deployed and running for " + url, command.getUrl().getContent());
+        final RunProcessCommand runProcessCommand = new RunProcessCommand(true);
+        runProcessCommand.execute(ProcessSelector.createExecutionEvent((AbstractProcess) diagram.getElements().get(0)));
+        assertThat(runProcessCommand.getUrl()).isNotNull();
+        assertNotNull("There should be an application deployed and running for " + url, runProcessCommand.getUrl().getContent());
     }
 
     /* attempt to be able to run the test locally */
     protected List<URL> getEntries() {
         final List<URL> res = new ArrayList<URL>();
         final String[] nameForEntry = new String[] {
-                "toqa/Buy a NEW mini-1.0.bos",
+                "toqa/Buy a NEW mini-6.4.bos",
                 "BPMN-ShowcaseToTestDynamicLabels-1.0.bos",
                 "testonsLesValidateurs-1.0.bos"
                 // Deactivate previous processes import

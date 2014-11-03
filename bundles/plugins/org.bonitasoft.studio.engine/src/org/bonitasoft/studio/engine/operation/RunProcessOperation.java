@@ -71,18 +71,16 @@ public class RunProcessOperation implements IRunnableWithProgress, Runnable {
     @Override
     public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
         monitor.beginTask(Messages.running, IProgressMonitor.UNKNOWN);
-        final DeployProcessOperation operation = createDeployProcessOperation();
-        operation.setConfigurationId(executionContext.getConfigurationId());
-        operation.setObjectToExclude(executionContext.getExcludedObject());
-        for (final AbstractProcess process : processSelector.getExecutableProcesses()) {
-            operation.addProcessToDeploy(process);
-        }
 
-        status = operation.run(monitor);
-        if (status == null) {
-            return;
+        final DeployProcessOperation deployOperation = createDeployProcessOperation();
+        deployOperation.setConfigurationId(executionContext.getConfigurationId());
+        deployOperation.setObjectToExclude(executionContext.getExcludedObject());
+        for (final AbstractProcess process : processSelector.getExecutableProcesses()) {
+            deployOperation.addProcessToDeploy(process);
         }
-        if (status.getSeverity() == IStatus.CANCEL) {
+        status = deployOperation.run(monitor);
+        if (status == null
+                || status.getSeverity() == IStatus.CANCEL) {
             return;
         }
         if (!status.isOK()) {
@@ -102,7 +100,7 @@ public class RunProcessOperation implements IRunnableWithProgress, Runnable {
         if (processToRun != null) {
             final boolean hasInitiator = hasInitiator(processToRun);
             try {
-                url = operation.getUrlFor(processToRun, monitor);
+                url = deployOperation.getUrlFor(processToRun, monitor);
                 if (!executionContext.synchronousExecution()) {
                     BOSWebServerManager.getInstance().startServer(monitor);
                     if (hasInitiator) {
