@@ -33,6 +33,7 @@ import java.util.Properties;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.Pair;
+import org.bonitasoft.studio.common.ProcessesValidationAction;
 import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -45,6 +46,8 @@ import org.bonitasoft.studio.common.repository.filestore.FileStoreChangeEvent.Ev
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
+import org.bonitasoft.studio.model.process.AbstractProcess;
+import org.bonitasoft.studio.model.process.MainProcess;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -78,6 +81,8 @@ public class ImportBosArchiveOperation {
     private final List<IRepositoryFileStore> fileStoresToOpen = new ArrayList<IRepositoryFileStore>();
 
     private IRepository currentRepository;
+
+    private final List<AbstractProcess> importedProcesses = new ArrayList<AbstractProcess>();
 
     public IStatus run(final IProgressMonitor monitor) {
         status = Status.OK_STATUS;
@@ -139,6 +144,7 @@ public class ImportBosArchiveOperation {
             currentRepository.enableBuild();
             currentRepository.refresh(Repository.NULL_PROGRESS_MONITOR);
             currentRepository.notifyFileStoreEvent(new FileStoreChangeEvent(EventType.POST_IMPORT, null));
+            validateAllAfterImport();
         } catch (final Exception e) {
             BonitaStudioLog.error(e);
         } finally {
@@ -148,6 +154,19 @@ public class ImportBosArchiveOperation {
             cleanTmpProject();
         }
         return status;
+    }
+
+    private void validateAllAfterImport() {
+        Display.getDefault().syncExec(new Runnable() {
+
+            @Override
+            public void run() {
+                final ProcessesValidationAction validationAction = new ProcessesValidationAction(importedProcesses);
+                validationAction.activateValidationPart();
+                validationAction.performValidation();
+            }
+        });
+
     }
 
     public void setCurrentRepository(final IRepository currentRepository) {
@@ -202,6 +221,10 @@ public class ImportBosArchiveOperation {
             final boolean openAfterImport = resourceToOpen != null && resourceToOpen.contains(filename)
                     || resourceToOpen == null;
             final IRepositoryFileStore fileStore = repository.importIResource(filename, child);
+            if (filename.endsWith(".proc")) {
+                importedProcesses.add((MainProcess) fileStore.getContent());
+            }
+
             if (fileStore != null && openAfterImport) {
                 fileStoresToOpen.add(fileStore);
             }

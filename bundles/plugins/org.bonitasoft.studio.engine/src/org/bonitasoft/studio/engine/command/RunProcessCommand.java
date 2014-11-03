@@ -29,8 +29,6 @@ import java.util.TreeSet;
 import org.bonitasoft.studio.common.ProcessesValidationAction;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.BonitaErrorDialog;
-import org.bonitasoft.studio.common.jface.FileActionDialog;
-import org.bonitasoft.studio.common.jface.ValidationDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
@@ -57,14 +55,10 @@ import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
-import org.eclipse.core.commands.Parameterization;
-import org.eclipse.core.commands.ParameterizedCommand;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
@@ -72,12 +66,8 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IEditorReference;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
-import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.progress.IProgressService;
 
 public class RunProcessCommand extends AbstractHandler implements IHandler {
@@ -104,21 +94,21 @@ public class RunProcessCommand extends AbstractHandler implements IHandler {
         this(false);
     }
 
-    public RunProcessCommand(boolean runSynchronously) {
+    public RunProcessCommand(final boolean runSynchronously) {
         this.runSynchronously = runSynchronously;
         excludedObject = new HashSet<EObject>();
     }
 
-    public RunProcessCommand(AbstractProcess proc, boolean runSynchronously) {
+    public RunProcessCommand(final AbstractProcess proc, final boolean runSynchronously) {
         this(runSynchronously);
         selectedProcess = proc;
     }
 
-    public RunProcessCommand(Set<EObject> excludedObject) {
+    public RunProcessCommand(final Set<EObject> excludedObject) {
         new RunProcessCommand(excludedObject, false);
     }
 
-    public RunProcessCommand(Set<EObject> excludedObject, boolean runSynchronously) {
+    public RunProcessCommand(final Set<EObject> excludedObject, final boolean runSynchronously) {
         this(runSynchronously);
         this.excludedObject = excludedObject;
     }
@@ -130,8 +120,8 @@ public class RunProcessCommand extends AbstractHandler implements IHandler {
     @Override
     public Object execute(final ExecutionEvent event) throws ExecutionException {
         final String configurationId = retrieveConfigurationId(event);
-        String currentTheme = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().getString(BonitaPreferenceConstants.DEFAULT_USERXP_THEME);
-        String installedTheme = BonitaUserXpPreferencePage.getInstalledThemeId();
+        final String currentTheme = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().getString(BonitaPreferenceConstants.DEFAULT_USERXP_THEME);
+        final String installedTheme = BonitaUserXpPreferencePage.getInstalledThemeId();
         if (installedTheme != null && !installedTheme.equals(currentTheme)) {
             BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().setValue(BonitaPreferenceConstants.DEFAULT_USERXP_THEME, currentTheme);
             BonitaUserXpPreferencePage.updateBonitaHome();
@@ -139,85 +129,25 @@ public class RunProcessCommand extends AbstractHandler implements IHandler {
 
         final Set<AbstractProcess> executableProcesses = getProcessesToDeploy(event);
         if (BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().getBoolean(BonitaPreferenceConstants.VALIDATION_BEFORE_RUN)) {
-        	List<AbstractProcess> processes = new ArrayList<AbstractProcess>(executableProcesses);
-        	ProcessesValidationAction validationOperation = new ProcessesValidationAction( processes);
+        	final List<AbstractProcess> processes = new ArrayList<AbstractProcess>(executableProcesses);
+        	final ProcessesValidationAction validationOperation = new ProcessesValidationAction( processes);
         	validationOperation.performValidation();
         	if (!validationOperation.displayConfirmationDialog()){
         		return null;
         	}
-            // Validate before run
-//            final ICommandService cmdService = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
-//            Command cmd = cmdService.getCommand("org.bonitasoft.studio.validation.batchValidation");
-//            if (cmd.isEnabled()) {
-//                final IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService(IHandlerService.class);
-//                Set<String> procFiles = new HashSet<String>();
-//                for (AbstractProcess p : executableProcesses) {
-//                    Resource eResource = p.eResource();
-//                    if (eResource != null) {
-//                        procFiles.add(URI.decode(eResource.getURI().lastSegment()));
-//                    }
-//                }
-//                try {
-//                    Parameterization showReportParam = new Parameterization(cmd.getParameter("showReport"), Boolean.FALSE.toString());
-//                    Parameterization filesParam = new Parameterization(cmd.getParameter("diagrams"), procFiles.toString());
-//                    final IStatus status = (IStatus) handlerService.executeCommand(new ParameterizedCommand(cmd, new Parameterization[] { showReportParam,
-//                            filesParam }), null);
-//                    if (statusContainsError(status)) {
-//                        if (!FileActionDialog.getDisablePopup()) {
-//                            String errorMessage = Messages.errorValidationMessage
-//                                    + PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor().getTitle()
-//                                    + Messages.errorValidationContinueAnywayMessage;
-//                            int result = new ValidationDialog(Display.getDefault().getActiveShell(), Messages.validationFailedTitle, errorMessage,
-//                                    ValidationDialog.YES_NO_SEEDETAILS).open();
-//                            if (result == ValidationDialog.NO) {
-//                                return null;
-//                            } else if (result == ValidationDialog.SEE_DETAILS) {
-//                                final IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-//                                IEditorPart part = activePage.getActiveEditor();
-//                                if (part != null && part instanceof DiagramEditor) {
-//                                    MainProcess proc = ModelHelper.getMainProcess(((DiagramEditor) part).getDiagramEditPart().resolveSemanticElement());
-//                                    String partName = proc.getName() + " (" + proc.getVersion() + ")";
-//                                    for (IEditorReference ref : activePage.getEditorReferences()) {
-//                                        if (partName.equals(ref.getPartName())) {
-//                                            activePage.activate(ref.getPart(true));
-//                                            break;
-//                                        }
-//                                    }
-//
-//                                }
-//                                Display.getDefault().asyncExec(new Runnable() {
-//
-//                                    @Override
-//                                    public void run() {
-//                                        try {
-//                                            activePage.showView("org.bonitasoft.studio.validation.view");
-//                                        } catch (PartInitException e) {
-//                                            BonitaStudioLog.error(e);
-//                                        }
-//                                    }
-//                                });
-//                                return null;
-//                            }
-//
-//                        }
-//                    }
-//                } catch (Exception e) {
-//                    BonitaStudioLog.error(e);
-//                }
-//            }
         }
 
-        IRunnableWithProgress runnable = new IRunnableWithProgress() {
+        final IRunnableWithProgress runnable = new IRunnableWithProgress() {
 
             @Override
-            public void run(IProgressMonitor monitor) throws InvocationTargetException,
+            public void run(final IProgressMonitor monitor) throws InvocationTargetException,
                     InterruptedException {
                 monitor.beginTask(Messages.running, IProgressMonitor.UNKNOWN);
                 final DeployProcessOperation operation = createDeployProcessOperation();
                 operation.setConfigurationId(configurationId);
                 operation.setObjectToExclude(excludedObject);
 
-                for (AbstractProcess process : executableProcesses) {
+                for (final AbstractProcess process : executableProcesses) {
                     operation.addProcessToDeploy(process);
                 }
 
@@ -257,8 +187,8 @@ public class RunProcessCommand extends AbstractHandler implements IHandler {
 
                                     @Override
                                     public void run() {
-                                        IPreferenceStore preferenceStore = EnginePlugin.getDefault().getPreferenceStore();
-                                        String pref = preferenceStore.getString(EnginePreferenceConstants.TOGGLE_STATE_FOR_NO_INITIATOR);
+                                        final IPreferenceStore preferenceStore = EnginePlugin.getDefault().getPreferenceStore();
+                                        final String pref = preferenceStore.getString(EnginePreferenceConstants.TOGGLE_STATE_FOR_NO_INITIATOR);
                                         if (MessageDialogWithToggle.NEVER.equals(pref)) {
                                             MessageDialogWithToggle.openWarning(Display.getDefault().getActiveShell(), Messages.noInitiatorDefinedTitle,
                                                     Messages.bind(Messages.noInitiatorDefinedMessage,
@@ -273,7 +203,7 @@ public class RunProcessCommand extends AbstractHandler implements IHandler {
                                 status = openConsole();
                             }
                         }
-                    } catch (Exception e) {
+                    } catch (final Exception e) {
                         status = new Status(IStatus.ERROR, EnginePlugin.PLUGIN_ID, e.getMessage(), e);
                         BonitaStudioLog.error(e);
                     }
@@ -286,11 +216,11 @@ public class RunProcessCommand extends AbstractHandler implements IHandler {
 
             private Status openConsole() {
                 Status status = null;
-                ICommandService service = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
-                Command cmd = service.getCommand("org.bonitasoft.studio.application.openConsole");
+                final ICommandService service = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
+                final Command cmd = service.getCommand("org.bonitasoft.studio.application.openConsole");
                 try {
                     cmd.executeWithChecks(new ExecutionEvent());
-                } catch (Exception ex) {
+                } catch (final Exception ex) {
                     status = new Status(IStatus.ERROR, EnginePlugin.PLUGIN_ID, ex.getMessage(), ex);
                     BonitaStudioLog.error(ex);
                 }
@@ -299,7 +229,7 @@ public class RunProcessCommand extends AbstractHandler implements IHandler {
 
         };
 
-        IProgressService service = PlatformUI.getWorkbench().getProgressService();
+        final IProgressService service = PlatformUI.getWorkbench().getProgressService();
 
         try {
             if (runSynchronously) {
@@ -325,9 +255,9 @@ public class RunProcessCommand extends AbstractHandler implements IHandler {
         return status;
     }
 
-    private boolean statusContainsError(IStatus validationStatus) {
+    private boolean statusContainsError(final IStatus validationStatus) {
         if (validationStatus != null) {
-            for (IStatus s : validationStatus.getChildren()) {
+            for (final IStatus s : validationStatus.getChildren()) {
                 if (s.getSeverity() == IStatus.WARNING || s.getSeverity() == IStatus.ERROR) {
                     return true;
                 }
@@ -336,8 +266,8 @@ public class RunProcessCommand extends AbstractHandler implements IHandler {
         return false;
     }
 
-    private boolean hasInitiator(AbstractProcess p) {
-        for (Actor a : p.getActors()) {
+    private boolean hasInitiator(final AbstractProcess p) {
+        for (final Actor a : p.getActors()) {
             if (a.isInitiator()) {
                 return true;
             }
@@ -345,21 +275,21 @@ public class RunProcessCommand extends AbstractHandler implements IHandler {
         return false;
     }
 
-    protected AbstractProcess getProcessToRun(ExecutionEvent event) {
+    protected AbstractProcess getProcessToRun(final ExecutionEvent event) {
         if (event != null && event.getParameters().get(PROCESS) != null) {
             return (AbstractProcess) event.getParameters().get(PROCESS);
         } else {
-            IEditorPart editor = PlatformUI.getWorkbench().getWorkbenchWindows()[0].getActivePage().getActiveEditor();
-            boolean isADiagram = editor != null && editor instanceof DiagramEditor;
+            final IEditorPart editor = PlatformUI.getWorkbench().getWorkbenchWindows()[0].getActivePage().getActiveEditor();
+            final boolean isADiagram = editor != null && editor instanceof DiagramEditor;
             if (isADiagram) {
-                List<?> selectedEditParts = ((DiagramEditor) editor).getDiagramGraphicalViewer().getSelectedEditParts();
+                final List<?> selectedEditParts = ((DiagramEditor) editor).getDiagramGraphicalViewer().getSelectedEditParts();
                 if (selectedEditParts != null && !selectedEditParts.isEmpty()) {
-                    Object selectedEp = selectedEditParts.iterator().next();
+                    final Object selectedEp = selectedEditParts.iterator().next();
                     if (selectedEp != null) {
                         return ModelHelper.getParentProcess(((IGraphicalEditPart) selectedEp).resolveSemanticElement());
                     }
                 } else {
-                    EObject element = ((DiagramEditor) editor).getDiagramEditPart().resolveSemanticElement();
+                    final EObject element = ((DiagramEditor) editor).getDiagramEditPart().resolveSemanticElement();
                     return ModelHelper.getParentProcess(element);
                 }
             } else if (selectedProcess != null && selectedProcess instanceof Pool) {
@@ -369,7 +299,7 @@ public class RunProcessCommand extends AbstractHandler implements IHandler {
         return null;
     }
 
-    protected String retrieveConfigurationId(ExecutionEvent event) {
+    protected String retrieveConfigurationId(final ExecutionEvent event) {
         String configurationId = null;
         if (event != null) {
             configurationId = event.getParameter("configuration");
@@ -380,20 +310,20 @@ public class RunProcessCommand extends AbstractHandler implements IHandler {
         return configurationId;
     }
 
-    protected Set<AbstractProcess> getProcessesToDeploy(ExecutionEvent event) {
+    protected Set<AbstractProcess> getProcessesToDeploy(final ExecutionEvent event) {
 
-        Set<AbstractProcess> result = new TreeSet<AbstractProcess>(new Comparator<AbstractProcess>() {
+        final Set<AbstractProcess> result = new TreeSet<AbstractProcess>(new Comparator<AbstractProcess>() {
 
             @Override
-            public int compare(AbstractProcess p1, AbstractProcess p2) {
-                String s1 = p1.getName() + "--" + p1.getVersion();
-                String s2 = p2.getName() + "--" + p2.getVersion();
+            public int compare(final AbstractProcess p1, final AbstractProcess p2) {
+                final String s1 = p1.getName() + "--" + p1.getVersion();
+                final String s2 = p2.getName() + "--" + p2.getVersion();
                 return s1.compareTo(s2);
             }
         });
         if (event != null && event.getParameters().get(PROCESS) != null) {
             selectedProcess = (AbstractProcess) event.getParameters().get(PROCESS);
-            Set<AbstractProcess> calledProcesses = new HashSet<AbstractProcess>();
+            final Set<AbstractProcess> calledProcesses = new HashSet<AbstractProcess>();
             findCalledProcesses(selectedProcess, calledProcesses);
             if (!calledProcesses.isEmpty()) {
                 result.addAll(calledProcesses);
@@ -402,21 +332,21 @@ public class RunProcessCommand extends AbstractHandler implements IHandler {
                 result.add(selectedProcess);
             }
         } else {
-            MainProcess processInEditor = getProcessInEditor();
+            final MainProcess processInEditor = getProcessInEditor();
             if (processInEditor != null) {
                 selectedProcess = processInEditor;
             }
             if (selectedProcess instanceof MainProcess) {
-                for (EObject p : ModelHelper.getAllItemsOfType(selectedProcess, ProcessPackage.Literals.POOL)) {
+                for (final EObject p : ModelHelper.getAllItemsOfType(selectedProcess, ProcessPackage.Literals.POOL)) {
                     result.add((AbstractProcess) p);
-                    Set<AbstractProcess> calledProcesses = new HashSet<AbstractProcess>();
+                    final Set<AbstractProcess> calledProcesses = new HashSet<AbstractProcess>();
                     findCalledProcesses((AbstractProcess) p, calledProcesses);
                     if (!calledProcesses.isEmpty()) {
                         result.addAll(calledProcesses);
                     }
                 }
             } else {
-                Set<AbstractProcess> calledProcesses = new HashSet<AbstractProcess>();
+                final Set<AbstractProcess> calledProcesses = new HashSet<AbstractProcess>();
                 findCalledProcesses(selectedProcess, calledProcesses);
                 if (!calledProcesses.isEmpty()) {
                     result.addAll(calledProcesses);
@@ -430,10 +360,10 @@ public class RunProcessCommand extends AbstractHandler implements IHandler {
         return result;
     }
 
-    private void findCalledProcesses(AbstractProcess process, Set<AbstractProcess> result) {
+    private void findCalledProcesses(final AbstractProcess process, final Set<AbstractProcess> result) {
         final List<CallActivity> callActivities = ModelHelper.getAllItemsOfType(process, ProcessPackage.Literals.CALL_ACTIVITY);
-        final DiagramRepositoryStore diagramStore = (DiagramRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
-        for (CallActivity callActivity : callActivities) {
+        final DiagramRepositoryStore diagramStore = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
+        for (final CallActivity callActivity : callActivities) {
             final Expression calledName = callActivity.getCalledActivityName();
             if (calledName != null && calledName.getContent() != null && !calledName.getContent().isEmpty()) {
                 final Expression calledVersion = callActivity.getCalledActivityVersion();
@@ -441,7 +371,7 @@ public class RunProcessCommand extends AbstractHandler implements IHandler {
                 if (calledVersion != null && calledVersion.getContent() != null && !calledVersion.getContent().isEmpty()) {
                     version = calledVersion.getContent();
                 }
-                AbstractProcess subProcess = ModelHelper.findProcess(calledName.getContent(), version, diagramStore.getAllProcesses());
+                final AbstractProcess subProcess = ModelHelper.findProcess(calledName.getContent(), version, diagramStore.getAllProcesses());
                 if (subProcess != null && !containsSubProcess(subProcess, result)) {
                     result.add(subProcess);
                     findCalledProcesses(subProcess, result);
@@ -450,10 +380,10 @@ public class RunProcessCommand extends AbstractHandler implements IHandler {
         }
     }
 
-    private boolean containsSubProcess(AbstractProcess subProcess, Set<AbstractProcess> result) {
-        String currentSubProcessId = subProcess.getName() + "--" + subProcess.getVersion();
-        for (AbstractProcess process : result) {
-            String id = process.getName() + "--" + process.getVersion();
+    private boolean containsSubProcess(final AbstractProcess subProcess, final Set<AbstractProcess> result) {
+        final String currentSubProcessId = subProcess.getName() + "--" + subProcess.getVersion();
+        for (final AbstractProcess process : result) {
+            final String id = process.getName() + "--" + process.getVersion();
             if (id.equals(currentSubProcessId)) {
                 return true;
             }
@@ -462,11 +392,11 @@ public class RunProcessCommand extends AbstractHandler implements IHandler {
     }
 
     protected MainProcess getProcessInEditor() {
-        IEditorPart editor = PlatformUI.getWorkbench().getWorkbenchWindows()[0].getActivePage().getActiveEditor();
-        boolean isADiagram = editor != null && editor instanceof DiagramEditor;
+        final IEditorPart editor = PlatformUI.getWorkbench().getWorkbenchWindows()[0].getActivePage().getActiveEditor();
+        final boolean isADiagram = editor != null && editor instanceof DiagramEditor;
         if (isADiagram) {
-            EObject root = ((DiagramEditor) editor).getDiagramEditPart().resolveSemanticElement();
-            MainProcess mainProc = ModelHelper.getMainProcess(root);
+            final EObject root = ((DiagramEditor) editor).getDiagramEditPart().resolveSemanticElement();
+            final MainProcess mainProc = ModelHelper.getMainProcess(root);
             return mainProc;
         }
 
@@ -476,7 +406,7 @@ public class RunProcessCommand extends AbstractHandler implements IHandler {
     @Override
     public boolean isEnabled() {
         if (PlatformUI.isWorkbenchRunning() && PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null) {
-            MainProcess process = getProcessInEditor();
+            final MainProcess process = getProcessInEditor();
             return process != null && process.isEnableValidation();
         }
         return false;
@@ -490,11 +420,11 @@ public class RunProcessCommand extends AbstractHandler implements IHandler {
         return new DeployProcessOperation();
     }
 
-    public void setExcludedObject(Set<EObject> exludedObject) {
-        this.excludedObject = exludedObject;
+    public void setExcludedObject(final Set<EObject> exludedObject) {
+        excludedObject = exludedObject;
     }
 
-    public void setRunSynchronously(boolean runSynchronously) {
+    public void setRunSynchronously(final boolean runSynchronously) {
         this.runSynchronously = runSynchronously;
     }
 
