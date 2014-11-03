@@ -51,7 +51,6 @@ import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
@@ -123,13 +122,16 @@ public class ComparisonExpressionEditor extends SelectionAwareExpressionEditor i
 
     private final XtextComparisonExpressionLoader xtextComparisonExpressionLoader;
 
-    public ComparisonExpressionEditor(final Resource eResource, final EObject context) {
+    public ComparisonExpressionEditor(final EObject context) {
         this.context = context;
         adapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
         adapterLabelProvider = new AdapterFactoryLabelProvider(adapterFactory);
         final Injector injector = ConditionModelActivator.getInstance().getInjector(ConditionModelActivator.ORG_BONITASOFT_STUDIO_CONDITION_CONDITIONMODEL);
+        if (context != null && context.eResource() != null) {
         final ConditionModelJavaValidator validator = injector.getInstance(ConditionModelJavaValidator.class);
-        validator.setCurrentResourceSet(context.eResource().getResourceSet());
+            validator.setCurrentResourceSet(context.eResource().getResourceSet());
+        }
+
         xtextComparisonExpressionLoader = new XtextComparisonExpressionLoader(injector);
     }
 
