@@ -1,4 +1,4 @@
-package org.bonitasoft.studio.validation.constraints.process;
+package org.bonitasoft.studio.validation.constraints.connector;
 
 import java.util.HashSet;
 import java.util.List;
