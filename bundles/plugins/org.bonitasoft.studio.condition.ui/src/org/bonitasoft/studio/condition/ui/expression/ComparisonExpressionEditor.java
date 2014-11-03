@@ -191,6 +191,7 @@ public class ComparisonExpressionEditor extends SelectionAwareExpressionEditor i
         final Builder buildEditor = factory.newEditor(resourceProvider);
         comparisonEditor = buildEditor.withParent(parent);
         comparisonEditor.createPartialEditor(true);
+        comparisonEditor.getDocument().set("");
         comparisonEditor.getViewer().getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         comparisonEditor.getViewer().addTextListener(new ITextListener() {
 
