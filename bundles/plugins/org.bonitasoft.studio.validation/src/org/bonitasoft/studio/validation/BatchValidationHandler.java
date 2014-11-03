@@ -27,6 +27,8 @@ import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.validation.i18n.Messages;
+import org.bonitasoft.studio.validation.operation.BatchValidationOperation;
+import org.bonitasoft.studio.validation.operation.OffscreenEditPartFactory;
 import org.bonitasoft.studio.validation.ui.view.ValidationViewPart;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -59,7 +61,7 @@ public class BatchValidationHandler extends AbstractHandler {
     public Object execute(final ExecutionEvent event) throws ExecutionException {
         if (PlatformUI.isWorkbenchRunning()) {
             final Map<?, ?> parameters = event.getParameters();
-            final BatchValidationOperation validateOperation = new BatchValidationOperation();
+            final BatchValidationOperation validateOperation = new BatchValidationOperation(new OffscreenEditPartFactory());
             if (parameters != null && !parameters.isEmpty()) {
                 String files = event.getParameter("diagrams");
                 if (files != null) {
@@ -95,22 +97,20 @@ public class BatchValidationHandler extends AbstractHandler {
                 }
             }
 
-            //            if (!toValidate.isEmpty()) {
-            //                final Resource eResource = toValidate.iterator().next().eResource();
-            //                final IFile target = eResource != null ? WorkspaceSynchronizer.getFile(eResource) : null;
-            //                if (target != null) {
-            //                    ProcessMarkerNavigationProvider.deleteMarkers(target);
-            //                }
-            //            }
+            Display.getDefault().syncExec(new Runnable() {
 
-            final IProgressService service = PlatformUI.getWorkbench().getProgressService();
-            try {
-                service.run(true, false, validateOperation);
-            } catch (final InvocationTargetException e) {
-                BonitaStudioLog.error(e);
-            } catch (final InterruptedException e) {
-                BonitaStudioLog.error(e);
-            }
+                @Override
+                public void run() {
+                    final IProgressService service = PlatformUI.getWorkbench().getProgressService();
+                    try {
+                        service.run(true, false, validateOperation);
+                    } catch (final InvocationTargetException e) {
+                        BonitaStudioLog.error(e);
+                    } catch (final InterruptedException e) {
+                        BonitaStudioLog.error(e);
+                    }
+                }
+            });
 
             Object showReport = parameters.get("showReport");
             if (showReport == null) {
