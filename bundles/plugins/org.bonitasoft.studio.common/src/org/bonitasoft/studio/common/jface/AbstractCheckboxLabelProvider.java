@@ -102,10 +102,7 @@ public abstract class AbstractCheckboxLabelProvider extends StyledCellLabelProvi
 
         final Shell shell = new Shell(SWT.NO_TRIM);
         shell.setVisible(false);
-        final Rectangle bounds = display.getBounds();
-        final int h = bounds.height / 2;
-        final int w = bounds.width / 2;
-        shell.setLocation(w, h);
+        shell.setLocation(42, 42);
         // otherwise we have a default gray color
         shell.setBackground(greenScreen);
 
