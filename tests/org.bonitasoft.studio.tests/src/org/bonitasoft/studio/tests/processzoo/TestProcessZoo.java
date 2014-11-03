@@ -1,17 +1,17 @@
 /**
  * Copyright (C) 2009-2012 BonitaSoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -34,6 +34,7 @@ import org.bonitasoft.studio.common.repository.operation.ImportBosArchiveOperati
 import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.command.RunProcessCommand;
+import org.bonitasoft.studio.engine.operation.ProcessSelector;
 import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.model.configuration.Fragment;
 import org.bonitasoft.studio.model.configuration.FragmentContainer;
@@ -51,7 +52,7 @@ import org.junit.Test;
 
 /**
  * @author Mickael Istria
- * 
+ *
  */
 public class TestProcessZoo {
 
@@ -63,13 +64,13 @@ public class TestProcessZoo {
     @Test
     public void testProcesses() throws Throwable {
         int foundProcesses = 0;
-        List<URL> entries = getEntries();
+        final List<URL> entries = getEntries();
         for (URL url : entries) {
             System.err.println(url.getFile());
             url = FileLocator.toFileURL(url);
             try {
                 applyTestsOnProcess(url);
-            } catch (Exception ex) {
+            } catch (final Exception ex) {
                 BonitaStudioLog.error(ex);
                 throw new Exception("Error on file: " + url.toString(), ex);
             }
@@ -78,25 +79,25 @@ public class TestProcessZoo {
         assertNotSame("No process was tested", 0, foundProcesses);
     }
 
-    protected void applyTestsOnProcess(URL url) throws Throwable {
-        int beforeImport = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getEditorReferences().length;
-        File file = new File(FileLocator.toFileURL(url).getFile());
-        ImportBosArchiveOperation ibao = new ImportBosArchiveOperation();
+    protected void applyTestsOnProcess(final URL url) throws Throwable {
+        final int beforeImport = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getEditorReferences().length;
+        final File file = new File(FileLocator.toFileURL(url).getFile());
+        final ImportBosArchiveOperation ibao = new ImportBosArchiveOperation();
         ibao.setArchiveFile(file.getAbsolutePath());
         ibao.setCurrentRepository(RepositoryManager.getInstance().getCurrentRepository());
         ibao.run(Repository.NULL_PROGRESS_MONITOR);
 
-        for (IRepositoryFileStore f : ibao.getFileStoresToOpen()) {
+        for (final IRepositoryFileStore f : ibao.getFileStoresToOpen()) {
             f.open();
         }
 
-        IEditorPart editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+        final IEditorPart editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
         if (editor instanceof ErrorEditorPart) {
-            ErrorEditorPart errorEditor = (ErrorEditorPart) editor;
-            IStatus error = (IStatus) ErrorEditorPart.class.getField("error").get(errorEditor);
+            final ErrorEditorPart errorEditor = (ErrorEditorPart) editor;
+            final IStatus error = (IStatus) ErrorEditorPart.class.getField("error").get(errorEditor);
             throw error.getException();
         }
-        ProcessDiagramEditor processEditor = (ProcessDiagramEditor) editor;
+        final ProcessDiagramEditor processEditor = (ProcessDiagramEditor) editor;
         /* for mickeyprocessses .proc will overrided (as it is sorted) when they come so need */
         if (url.toString().contains("mickeyProcesses/") && url.toString().contains(".proc")) {
             assertEquals("Import should have opened another process editor but colsed another one for " + url, beforeImport, PlatformUI.getWorkbench()
@@ -105,17 +106,17 @@ public class TestProcessZoo {
             assertEquals("Import should have opened another process editor for " + url, beforeImport + 1, PlatformUI.getWorkbench().getActiveWorkbenchWindow()
                     .getActivePage().getEditorReferences().length);
         }
-        AbstractProcess diagram = (AbstractProcess) processEditor.getDiagramEditPart().resolveSemanticElement();
+        final AbstractProcess diagram = (AbstractProcess) processEditor.getDiagramEditPart().resolveSemanticElement();
 
         if (file.getAbsolutePath().endsWith(".bos")) {// Check unresolved dependencies for BAR Files
-            final DependencyRepositoryStore store = (DependencyRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(
+            final DependencyRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(
                     DependencyRepositoryStore.class);
-            for (Element element : diagram.getElements()) {
+            for (final Element element : diagram.getElements()) {
                 if (element instanceof AbstractProcess) {
-                    for (Configuration config : ((AbstractProcess) element).getConfigurations()) {
-                        for (FragmentContainer fragmentContainer : config.getProcessDependencies()) {
-                            for (Fragment fragment : fragmentContainer.getFragments()) {
-                                String lib = fragment.getValue();
+                    for (final Configuration config : ((AbstractProcess) element).getConfigurations()) {
+                        for (final FragmentContainer fragmentContainer : config.getProcessDependencies()) {
+                            for (final Fragment fragment : fragmentContainer.getFragments()) {
+                                final String lib = fragment.getValue();
                                 if (lib.endsWith(DependencyRepositoryStore.JAR_EXT)) {
                                     assertNotNull("A lib is unresolved " + lib, store.getChild(lib));
                                 }
@@ -126,15 +127,15 @@ public class TestProcessZoo {
             }
         }
 
-        RunProcessCommand command = new RunProcessCommand(diagram, true);
-        command.execute(null);
+        final RunProcessCommand command = new RunProcessCommand(true);
+        command.execute(ProcessSelector.createExecutionEvent(diagram));
         assertNotNull("There should be an application deployed and running for " + url, command.getUrl().getContent());
     }
 
     /* attempt to be able to run the test locally */
     protected List<URL> getEntries() {
-        List<URL> res = new ArrayList<URL>();
-        String[] nameForEntry = new String[] {
+        final List<URL> res = new ArrayList<URL>();
+        final String[] nameForEntry = new String[] {
                 "toqa/Buy a NEW mini-1.0.bos",
                 "BPMN-ShowcaseToTestDynamicLabels-1.0.bos",
                 "testonsLesValidateurs-1.0.bos"
@@ -162,7 +163,7 @@ public class TestProcessZoo {
                 // "Business_trip_application_process--1.0.bar"
         };
 
-        for (String name : nameForEntry) {
+        for (final String name : nameForEntry) {
             res.add(this.getClass().getResource(name));
         }
         return res;
