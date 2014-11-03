@@ -7,7 +7,6 @@ import java.util.Set;
 
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorParameter;
-import org.bonitasoft.studio.model.expression.AbstractExpression;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.process.Connector;
 import org.bonitasoft.studio.model.process.Element;
@@ -44,14 +43,16 @@ public class CMISConnectorDefinitionConstraint extends AbstractLiveValidationMar
         final ConnectorConfiguration configuration = connector.getConfiguration();
         if (isCMISConnectorDefinition(connector)) {
             final ConnectorParameter bindingTypeParam = getParameter("binding_type", configuration);
-            if (bindingTypeParam != null) {
-                final String type = getBindingType(bindingTypeParam);
-                if (ATOM_PUB.equals(type)) {
-                    return validateAtomPubConfiguration(configuration, context);
-                } else if (WEB_SERVICES.equals(type)) {
-                    return validateWebserviceConfiguration(configuration, context);
-                }
+            if (bindingTypeParam == null) {
+                return context.createFailureStatus("binding_type parameter not set");
             }
+            final String type = getBindingType(bindingTypeParam);
+            if (ATOM_PUB.equals(type)) {
+                return validateAtomPubConfiguration(configuration, context);
+            } else if (WEB_SERVICES.equals(type)) {
+                return validateWebserviceConfiguration(configuration, context);
+            }
+            return context.createFailureStatus("Unknown binding_type parameter");
         }
 
         return context.createSuccessStatus();
@@ -59,10 +60,10 @@ public class CMISConnectorDefinitionConstraint extends AbstractLiveValidationMar
 
     private IStatus validateWebserviceConfiguration(final ConnectorConfiguration configuration, final IValidationContext context) {
         final List<ConnectorParameter> serviceUrlParams = getAllParametersContaining("ServiceUrl", configuration);
-
         final List<ConnectorParameter> serviceEdpointUrlParams = getAllParametersContaining("ServiceEndpointUrl", configuration);
 
-        if (serviceUrlParams.isEmpty() && serviceEdpointUrlParams.isEmpty()) {
+        if (serviceUrlParams.isEmpty()
+                && serviceEdpointUrlParams.isEmpty()) {
             return context.createFailureStatus(Messages.bind(Messages.cmisConnectorWebserviceConfigMissingUrl, ((Element) context.getTarget()).getName()));
         }
 
@@ -71,20 +72,24 @@ public class CMISConnectorDefinitionConstraint extends AbstractLiveValidationMar
 
 
     private IStatus validateAtomPubConfiguration(final ConnectorConfiguration configuration, final IValidationContext context) {
-        final ConnectorParameter wsObjectServiceUrlParam = getParameter("url", configuration);
-        if (wsObjectServiceUrlParam == null
-                || wsObjectServiceUrlParam.getExpression() == null
-                || ((Expression) wsObjectServiceUrlParam.getExpression()).getContent() == null
-                || ((Expression) wsObjectServiceUrlParam.getExpression()).getContent().isEmpty()) {
+        final ConnectorParameter urlParam = getParameter("url", configuration);
+        if (urlParam == null
+                || !isAnExpressionWithContent((Expression) urlParam.getExpression())) {
             return context.createFailureStatus(Messages.bind(Messages.cmisConnectorAtomPubConfigMissingUrl, ((Element) context.getTarget()).getName()));
         }
         return context.createSuccessStatus();
     }
 
+    protected boolean isAnExpressionWithContent(final Expression expression) {
+        return expression != null
+                && expression.getContent() != null
+                && !expression.getContent().isEmpty();
+    }
+
     protected String getBindingType(final ConnectorParameter bindingTypeParam) {
-        final AbstractExpression expression = bindingTypeParam.getExpression();
-        if (expression instanceof Expression) {
-            return ((Expression) expression).getContent();
+        final Expression expression = (Expression) bindingTypeParam.getExpression();
+        if (expression != null) {
+            return expression.getContent();
         }
         return null;
     }
@@ -101,7 +106,8 @@ public class CMISConnectorDefinitionConstraint extends AbstractLiveValidationMar
     private List<ConnectorParameter> getAllParametersContaining(final String containing, final ConnectorConfiguration configuration) {
         final List<ConnectorParameter> result = new ArrayList<ConnectorParameter>();
         for (final ConnectorParameter param : configuration.getParameters()) {
-            if (param.getKey().contains(containing)) {
+            if (param.getKey().contains(containing)
+                    && isAnExpressionWithContent((Expression) param.getExpression())) {
                 result.add(param);
             }
         }

@@ -35,8 +35,10 @@ public class ConnectorConfigurationBuilder {
         instance = ConnectorConfigurationFactory.eINSTANCE.createConnectorConfiguration();
     }
 
-    public ConnectorConfigurationBuilder havingParameter(final ConnectorParameterBuilder parameter) {
-        instance.getParameters().add(parameter.build());
+    public ConnectorConfigurationBuilder havingParameters(final ConnectorParameterBuilder... parameters) {
+        for (final ConnectorParameterBuilder parameter : parameters) {
+            instance.getParameters().add(parameter.build());
+        }
         return this;
     }
 

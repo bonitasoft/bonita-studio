@@ -17,9 +17,18 @@
 package org.bonitasoft.studio.validation.constraints.connector;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.when;
 
+import org.bonitasoft.studio.model.connectorconfiguration.builders.ConnectorConfigurationBuilder;
+import org.bonitasoft.studio.model.connectorconfiguration.builders.ConnectorParameterBuilder;
+import org.bonitasoft.studio.model.expression.builders.ExpressionBuilder;
 import org.bonitasoft.studio.model.process.Connector;
+import org.bonitasoft.studio.model.process.builders.ConnectorBuilder;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.validation.IValidationContext;
 import org.junit.After;
 import org.junit.Before;
@@ -56,31 +65,152 @@ public class CMISConnectorDefinitionConstraintTest {
     }
 
     @Test
+    public void should_getConstraintId_return_ID_constant() throws Exception {
+        assertThat(cmisConnectorDefinitionConstraint.getConstraintId()).isEqualTo(CMISConnectorDefinitionConstraint.ID);
+    }
+
+    @Test
     public void should_performLiveValidation_return_null() throws Exception {
         assertThat(cmisConnectorDefinitionConstraint.performLiveValidation(context)).isNull();
         verifyZeroInteractions(context);
     }
 
     @Test
-    public void should_performBatchValidation() throws Exception {
-
+    public void should_performBatchValidation_return_a_failure_status_for_a_cmis_connector_without_binding_type() throws Exception {
+        when(context.getTarget()).thenReturn(anInvalidCMISConfigWithoutBindingType());
+        cmisConnectorDefinitionConstraint.performBatchValidation(context);
+        verify(context).createFailureStatus(anyString());
     }
 
-    private Connector aValidAtompubConfig() {
-        // final ConnectorBuilder
-        return null;
+    @Test
+    public void should_performBatchValidation_return_a_failure_status_for_a_cmis_connector_with_invalid_binding_type() throws Exception {
+        when(context.getTarget()).thenReturn(anInvalidCMISConfigWithInvalidBindingType());
+        cmisConnectorDefinitionConstraint.performBatchValidation(context);
+        verify(context).createFailureStatus(anyString());
     }
 
-    private Connector aValidWerbserviceConfig() {
-        return null;
+    @Test
+    public void should_performBatchValidation_return_a_succes_status_for_non_cmis_connector() throws Exception {
+        when(context.getTarget()).thenReturn(aNonCMISConnectorConfig());
+        cmisConnectorDefinitionConstraint.performBatchValidation(context);
+        verify(context).createSuccessStatus();
     }
 
-    private Connector anInvalidAtompubConfig() {
-        return null;
+    @Test
+    public void should_performBatchValidation_return_a_failure_status_for_a_cmis_connector_with_invalid_atom_pub_config() throws Exception {
+        when(context.getTarget()).thenReturn(aCMISConfigWithUrl("", ""));
+        cmisConnectorDefinitionConstraint.performBatchValidation(context);
+
+        when(context.getTarget()).thenReturn(aCMISConfigWithUrl(null, ""));
+        cmisConnectorDefinitionConstraint.performBatchValidation(context);
+
+        when(context.getTarget()).thenReturn(aCMISConfigWithUrl("atompub", ""));
+        cmisConnectorDefinitionConstraint.performBatchValidation(context);
+
+        when(context.getTarget()).thenReturn(aCMISConfigWithUrl("atompub", null));
+        cmisConnectorDefinitionConstraint.performBatchValidation(context);
+
+        when(context.getTarget()).thenReturn(anAtompubConfigWithoutURL("atompub"));
+        cmisConnectorDefinitionConstraint.performBatchValidation(context);
+
+        verify(context, times(5)).createFailureStatus(anyString());
     }
 
-    private Connector anInvalidWebserviceConfig() {
-        return null;
+    @Test
+    public void should_performBatchValidation_return_a_failure_status_for_a_cmis_connector_with_invalid_webservice_config() throws Exception {
+        when(context.getTarget()).thenReturn(aCMISConfigWithWSUrl("webservices", "", ""));
+        cmisConnectorDefinitionConstraint.performBatchValidation(context);
+
+        verify(context).createFailureStatus(anyString());
+    }
+
+
+    @Test
+    public void should_performBatchValidation_return_a_succes_status_for_a_valid_websercie_cmis_connector_config() throws Exception {
+        when(context.getTarget()).thenReturn(aCMISConfigWithWSUrl("webservices", "http://some/url", null));
+        cmisConnectorDefinitionConstraint.performBatchValidation(context);
+
+        when(context.getTarget()).thenReturn(aCMISConfigWithWSUrl("webservices", null, "http://some/url"));
+        cmisConnectorDefinitionConstraint.performBatchValidation(context);
+
+        verify(context, times(2)).createSuccessStatus();
+    }
+
+    @Test
+    public void should_performBatchValidation_return_a_succes_status_for_a_valid_atompub_cmis_connector_config() throws Exception {
+        when(context.getTarget()).thenReturn(aCMISConfigWithUrl("atompub", "http://some/url"));
+        cmisConnectorDefinitionConstraint.performBatchValidation(context);
+
+        verify(context).createSuccessStatus();
+    }
+
+    @Test
+    public void should_isAnExpressionWithContent_return_false() throws Exception {
+        assertThat(cmisConnectorDefinitionConstraint.isAnExpressionWithContent(ExpressionBuilder.create().build())).isFalse();
+        assertThat(cmisConnectorDefinitionConstraint.isAnExpressionWithContent(ExpressionBuilder.create().withContent("").build())).isFalse();
+        assertThat(cmisConnectorDefinitionConstraint.isAnExpressionWithContent(null)).isFalse();
+    }
+
+    @Test
+    public void should_isAnExpressionWithContent_return_true() throws Exception {
+        assertThat(cmisConnectorDefinitionConstraint.isAnExpressionWithContent(ExpressionBuilder.create().withContent("content").build())).isTrue();
+    }
+
+    private Connector aNonCMISConnectorConfig() {
+        return ConnectorBuilder.createConnectorBuilder().withDefinitionId("whatever").withDefinitionVersion("1.0").build();
+    }
+
+    private Connector anInvalidCMISConfigWithoutBindingType() {
+        return ConnectorBuilder.createConnectorBuilder().
+                withDefinitionId("cmis-createfolder").
+                withDefinitionVersion("1.0").
+                havingConfiguration(ConnectorConfigurationBuilder.create().
+                        havingParameters(aConnectorParameter("url", "http://some/url"))).build();
+    }
+
+    private Connector anInvalidCMISConfigWithInvalidBindingType() {
+        return ConnectorBuilder.createConnectorBuilder().
+                withDefinitionId("cmis-createfolder").
+                withDefinitionVersion("1.0").
+                havingConfiguration(ConnectorConfigurationBuilder.create().
+                        havingParameters(aConnectorParameter("binding_type", "anotherType"),
+                                aConnectorParameter("url", "http://some/url"))).build();
+    }
+
+    private ConnectorParameterBuilder aConnectorParameter(final String key, final String expressionContent) {
+        final ConnectorParameterBuilder builder =  ConnectorParameterBuilder.create().
+                withKey(key);
+        if(expressionContent != null){
+            builder.havingExpression(ExpressionBuilder.create().withContent(expressionContent));
+        }
+        return builder;
+    }
+
+    private Connector aCMISConfigWithUrl(final String bindingContent, final String urlContent) {
+        return ConnectorBuilder.createConnectorBuilder().
+                withDefinitionId("cmis-createfolder").
+                withDefinitionVersion("1.0").
+                havingConfiguration(ConnectorConfigurationBuilder.create().
+                        havingParameters(aConnectorParameter("binding_type", bindingContent),
+                                aConnectorParameter("url", urlContent))).build();
+    }
+
+    private Connector anAtompubConfigWithoutURL(final String bindingContent) {
+        return ConnectorBuilder.createConnectorBuilder().
+                withDefinitionId("cmis-createfolder").
+                withDefinitionVersion("1.0").
+                havingConfiguration(ConnectorConfigurationBuilder.create().
+                        havingParameters(aConnectorParameter("binding_type", bindingContent))).build();
+    }
+
+    private EObject aCMISConfigWithWSUrl(final String bindingContent, final String wsServiceUrl, final String wsServiceEndpointURL) {
+        return ConnectorBuilder.createConnectorBuilder().
+                withDefinitionId("cmis-createfolder").
+                withDefinitionVersion("1.0").
+                havingConfiguration(ConnectorConfigurationBuilder.create().
+                        havingParameters(aConnectorParameter("binding_type", bindingContent),
+                                aConnectorParameter("wsServiceUrl", wsServiceUrl),
+                                aConnectorParameter("wsServiceEndpointUrl", wsServiceEndpointURL))).build();
     }
 
 }
