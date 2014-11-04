@@ -30,4 +30,5 @@ Require-Bundle: org.eclipse.core.runtime,
  org.bonitasoft.studio.tests-utils;bundle-version="6.4.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
-Export-Package: org.bonitasoft.studio.migration.tests
+Export-Package: org.bonitasoft.studio.migration.tests,
+ org.bonitasoft.studio.migration.tests.document

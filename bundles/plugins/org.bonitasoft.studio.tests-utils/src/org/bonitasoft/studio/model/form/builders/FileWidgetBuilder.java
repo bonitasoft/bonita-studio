@@ -17,6 +17,7 @@
 package org.bonitasoft.studio.model.form.builders;
 
 import org.bonitasoft.studio.model.form.FileWidget;
+import org.bonitasoft.studio.model.form.FileWidgetDownloadType;
 import org.bonitasoft.studio.model.form.FileWidgetInputType;
 import org.bonitasoft.studio.model.form.FormFactory;
 
@@ -38,6 +39,21 @@ public class FileWidgetBuilder extends WidgetBuilder<FileWidget, FileWidgetBuild
     @Override
     protected FileWidget newInstance() {
         return FormFactory.eINSTANCE.createFileWidget();
+    }
+
+    public FileWidgetBuilder withUrlDownloadType() {
+        getBuiltInstance().setDownloadType(FileWidgetDownloadType.URL);
+        return getThis();
+    }
+
+    public FileWidgetBuilder withBrowseDownloadType() {
+        getBuiltInstance().setDownloadType(FileWidgetDownloadType.BROWSE);
+        return getThis();
+    }
+
+    public FileWidgetBuilder withBothDownloadType() {
+        getBuiltInstance().setDownloadType(FileWidgetDownloadType.BOTH);
+        return getThis();
     }
 
 }

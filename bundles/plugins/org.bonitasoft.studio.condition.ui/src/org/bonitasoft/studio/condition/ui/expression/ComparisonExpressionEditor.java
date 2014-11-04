@@ -23,6 +23,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.bonitasoft.studio.common.emf.converter.BooleanInverserConverter;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.BonitaStudioFontRegistry;
@@ -44,7 +45,6 @@ import org.bonitasoft.studio.expression.editor.viewer.SelectDependencyDialog;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.eclipse.core.databinding.UpdateValueStrategy;
-import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.IValueChangeListener;
 import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
@@ -118,11 +118,14 @@ public class ComparisonExpressionEditor extends SelectionAwareExpressionEditor i
 
     private XtextResource resource;
 
+
     private boolean isPageFlowContext = false;
+
 
     private final XtextComparisonExpressionLoader xtextComparisonExpressionLoader;
 
     public ComparisonExpressionEditor(final EObject context) {
+
         this.context = context;
         adapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
         adapterLabelProvider = new AdapterFactoryLabelProvider(adapterFactory);
@@ -299,7 +302,6 @@ public class ComparisonExpressionEditor extends SelectionAwareExpressionEditor i
         return dep;
     }
 
-
     protected void createReturnTypeComposite(final Composite parent) {
         final Composite returnTypeComposite = new Composite(parent, SWT.NONE);
         returnTypeComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
@@ -347,13 +349,8 @@ public class ComparisonExpressionEditor extends SelectionAwareExpressionEditor i
         dataBindingContext.bindValue(ViewersObservables.observeInput(dependenciesViewer), dependenciesModelObservable);
 
         final UpdateValueStrategy opposite = new UpdateValueStrategy();
-        opposite.setConverter(new Converter(Boolean.class, Boolean.class) {
+        opposite.setConverter(new BooleanInverserConverter());
 
-            @Override
-            public Object convert(final Object fromObject) {
-                return !((Boolean) fromObject);
-            }
-        });
 
         dataBindingContext.bindValue(SWTObservables.observeSelection(automaticResolutionButton), autoDepsModelObservable);
         dataBindingContext.bindValue(SWTObservables.observeSelection(automaticResolutionButton), SWTObservables.observeEnabled(addDependencyButton), opposite,

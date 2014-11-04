@@ -18,6 +18,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.common.emf.converter.BooleanInverserConverter;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.emf.tools.WidgetHelper;
 import org.bonitasoft.studio.common.emf.tools.WidgetModifiersSwitch;
@@ -34,7 +35,6 @@ import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.databinding.UpdateValueStrategy;
-import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.IValueChangeListener;
 import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
@@ -80,36 +80,13 @@ public class WidgetModifierContribution implements IExtensibleGridPropertySectio
         dataBindingContext = new EMFDataBindingContext();
         composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         composite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).create());
-        final ComboViewer modifiersCombo = new ComboViewer(composite, SWT.READ_ONLY | SWT.BORDER);
-        modifiersCombo.getControl().setLayoutData(GridDataFactory.fillDefaults().indent(5, 0).create());
-        modifiersCombo.setLabelProvider(new LabelProvider());
-        modifiersCombo.setContentProvider(new ArrayContentProvider());
-        modifiersCombo.setSorter(new ViewerSorter());
-        if (widget instanceof FileWidget) {
-            modifiersCombo.addFilter(new FileWidgetModifierFilter((FileWidget) widget));
-        }
-        modifiersCombo.setInput(getAvailableModifiersFor(widget));
-        modifiersCombo.addSelectionChangedListener(this);
-
-        final ControlDecoration deco = new ControlDecoration(modifiersCombo.getControl(), SWT.LEFT);
-        deco.setDescriptionText(Messages.modifierDescription);
-        deco.setImage(Pics.getImage(PicsConstants.hint));
-        deco.setMarginWidth(2);
-        deco.setShowOnlyOnFocus(false);
+        final ComboViewer modifiersCombo = createModifiersCombo(composite);
 
         dataBindingContext.bindValue(ViewersObservables.observeSingleSelection(modifiersCombo),
                 EMFEditObservables.observeValue(editingDomain, widget, FormPackage.Literals.WIDGET__RETURN_TYPE_MODIFIER));
 
         final UpdateValueStrategy notStrategy = new UpdateValueStrategy();
-        notStrategy.setConverter(new Converter(Boolean.class, Boolean.class) {
-
-            public Object convert(final Object fromObject) {
-                if ((Boolean) fromObject) {
-                    return !(Boolean) fromObject;
-                }
-                return true;
-            }
-        });
+        notStrategy.setConverter(new BooleanInverserConverter());
 
         final IObservableValue duplicableValueObserved = EMFEditObservables.observeValue(editingDomain, widget, FormPackage.Literals.DUPLICABLE__DUPLICATE);
         duplicableValueObserved.addValueChangeListener(new IValueChangeListener() {
@@ -135,6 +112,26 @@ public class WidgetModifierContribution implements IExtensibleGridPropertySectio
             dataBindingContext.bindValue(SWTObservables.observeEnabled(modifiersCombo.getCombo()),
                     duplicableValueObserved);
         }
+    }
+
+    protected ComboViewer createModifiersCombo(final Composite composite) {
+        final ComboViewer modifiersCombo = new ComboViewer(composite, SWT.READ_ONLY | SWT.BORDER);
+        modifiersCombo.getControl().setLayoutData(GridDataFactory.fillDefaults().indent(5, 0).create());
+        modifiersCombo.setLabelProvider(new LabelProvider());
+        modifiersCombo.setContentProvider(new ArrayContentProvider());
+        modifiersCombo.setSorter(new ViewerSorter());
+        if (widget instanceof FileWidget) {
+            modifiersCombo.addFilter(new FileWidgetModifierFilter((FileWidget) widget));
+        }
+        modifiersCombo.setInput(getAvailableModifiersFor(widget));
+        modifiersCombo.addSelectionChangedListener(this);
+
+        final ControlDecoration deco = new ControlDecoration(modifiersCombo.getControl(), SWT.LEFT);
+        deco.setDescriptionText(Messages.modifierDescription);
+        deco.setImage(Pics.getImage(PicsConstants.hint));
+        deco.setMarginWidth(2);
+        deco.setShowOnlyOnFocus(false);
+        return modifiersCombo;
     }
 
     private Collection<String> getAvailableModifiersFor(final Widget widget) {
