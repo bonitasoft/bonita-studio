@@ -158,7 +158,7 @@ public class NamingUtils {
     public static String getDefaultNameFor(final Element item) {
         if (item instanceof SubProcessEvent) {
             return Messages.SubprocessEventDefaultName ;
-        } 	else if (item instanceof Gateway) {
+        }   else if (item instanceof Gateway) {
             return Messages.GatewayDefaultName;
         } else if (item instanceof Activity) {
             return Messages.StepDefaultName;

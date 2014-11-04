@@ -62,6 +62,7 @@ import org.bonitasoft.studio.model.form.Duplicable;
 import org.bonitasoft.studio.model.form.DurationFormField;
 import org.bonitasoft.studio.model.form.DynamicTable;
 import org.bonitasoft.studio.model.form.FileWidget;
+import org.bonitasoft.studio.model.form.FileWidgetDownloadType;
 import org.bonitasoft.studio.model.form.FileWidgetInputType;
 import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.form.FormButton;
@@ -1771,10 +1772,12 @@ public class FormsExporter {
             }
             builder.addAttachmentImageBehavior(((FileWidget) widget)
                     .isUsePreview());
+            addFileWidgetInputType((FileWidget) widget, builder);
             addDocumentInitialValue((FileWidget) widget, builder);
             setDocumentIsMultiple((FileWidget) widget, builder);
         } else if (widget instanceof RichTextAreaFormField) {
             builder.addWidget(widget.getName(), WidgetType.RICH_TEXTAREA);
+
             addInitialValue(widget, builder);
         } else if (widget instanceof SuggestBox) {
             final SuggestBox suggestBox = (SuggestBox) widget;
@@ -1804,22 +1807,27 @@ public class FormsExporter {
         }
     }
 
-    protected void addDocumentInitialValue(final FileWidget widget,
+    protected void addFileWidgetInputType(final FileWidget widget,
             final IFormBuilder builder) throws InvalidFormDefinitionException {
-        final FileWidgetInputType widgetInputType = widget.getInputType();
-        switch (widgetInputType) {
-            case DOCUMENT:
+        final FileWidgetDownloadType widgetDownloadType = widget.getDownloadType();
+        switch (widgetDownloadType) {
+            case BOTH:
                 builder.addFileWidgetInputType(org.bonitasoft.forms.client.model.FileWidgetInputType.ALL);
                 break;
             case URL:
                 builder.addFileWidgetInputType(org.bonitasoft.forms.client.model.FileWidgetInputType.URL);
                 break;
-            case RESOURCE:
+            case BROWSE:
                 builder.addFileWidgetInputType(org.bonitasoft.forms.client.model.FileWidgetInputType.FILE);
                 break;
             default:
                 break;
         }
+    }
+
+    protected void addDocumentInitialValue(final FileWidget widget,
+            final IFormBuilder builder) throws InvalidFormDefinitionException {
+        final FileWidgetInputType widgetInputType = widget.getInputType();
         if (widgetInputType == FileWidgetInputType.URL
                 || widgetInputType == FileWidgetInputType.DOCUMENT) {
             final Expression inputExpression = widget.getInputExpression();

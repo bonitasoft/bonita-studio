@@ -94,6 +94,7 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute connector-configuration.ecore#//ConnectorConfiguration/definitionId"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute connector-configuration.ecore#//ConnectorConfiguration/version"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute connector-configuration.ecore#//ConnectorConfiguration/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute connector-configuration.ecore#//ConnectorConfiguration/modelVersion"/>
     </genClasses>
     <genClasses ecoreClass="connector-configuration.ecore#//ConnectorParameter">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute connector-configuration.ecore#//ConnectorParameter/key"/>
@@ -151,6 +152,11 @@
       <genEnumLiterals ecoreEnumLiteral="form.ecore#//FileWidgetInputType/Document"/>
       <genEnumLiterals ecoreEnumLiteral="form.ecore#//FileWidgetInputType/URL"/>
       <genEnumLiterals ecoreEnumLiteral="form.ecore#//FileWidgetInputType/Resource"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="form.ecore#//FileWidgetDownloadType">
+      <genEnumLiterals ecoreEnumLiteral="form.ecore#//FileWidgetDownloadType/Both"/>
+      <genEnumLiterals ecoreEnumLiteral="form.ecore#//FileWidgetDownloadType/URL"/>
+      <genEnumLiterals ecoreEnumLiteral="form.ecore#//FileWidgetDownloadType/Browse"/>
     </genEnums>
     <genClasses ecoreClass="form.ecore#//Form">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference form.ecore#//Form/widgets"/>
@@ -275,6 +281,7 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//FileWidget/updateDocument"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference form.ecore#//FileWidget/outputDocumentListExpression"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//FileWidget/intialResourceList"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//FileWidget/downloadType"/>
     </genClasses>
     <genClasses ecoreClass="form.ecore#//Column">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute form.ecore#//Column/width"/>

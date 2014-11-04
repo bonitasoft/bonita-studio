@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -34,7 +32,6 @@ import org.w3c.dom.Document;
 
 /**
  * @author Romain Bioteau
- * 
  */
 public class StringToExpressionConverter {
 
@@ -42,56 +39,67 @@ public class StringToExpressionConverter {
 
     private static final String GROOVY_PREFIX = "${";
 
-    private Model model;
+    private final Model model;
 
-    private Map<String, Instance> data = new HashMap<String, Instance>();
+    private final Map<String, Instance> data = new HashMap<String, Instance>();
 
-    private Map<String, Instance> widget = new HashMap<String, Instance>();
+    private final Map<String, Instance> widget = new HashMap<String, Instance>();
 
-    private Map<String, Instance> documents = new HashMap<String, Instance>();
+    private final Map<String, Instance> documents = new HashMap<String, Instance>();
 
     private boolean useSimulationDataScope = false;
 
-    public StringToExpressionConverter(Model model, Instance container) {
+    public StringToExpressionConverter(final Model model,
+            final Instance container) {
         Assert.isNotNull(model);
         this.model = model;
-        for (Instance data : model.getAllInstances("process.Data")) {
+        initDataWithProcessData(model, container);
+        for (final Instance widget : model.getAllInstances("form.Widget")) {
+            if (isInScope(container, widget)) {
+                this.widget.put(WidgetHelper.FIELD_PREFIX + widget.get("name"),
+                        widget);
+            }
+        }
+        for (final Instance document : model
+                .getAllInstances("process.Document")) {
+            if (isInScope(container, document)) {
+                documents.put((String) document.get("name"), document);
+            }
+        }
+    }
+
+    private void initDataWithProcessData(final Model model,
+            final Instance container) {
+        for (final Instance data : model.getAllInstances("process.Data")) {
             if (isInScope(container, data) && data.get("dataType") != null) {
                 this.data.put((String) data.get("name"), data);
             }
         }
-        for (Instance widget : model.getAllInstances("form.Widget")) {
-            if (isInScope(container, widget)) {
-                this.widget.put(WidgetHelper.FIELD_PREFIX + widget.get("name"), widget);
-            }
-        }
-        for (Instance document : model.getAllInstances("process.Document")) {
-            if (isInScope(container, document)) {
-                this.documents.put((String) document.get("name"), document);
-            }
-        }
     }
 
-    public static boolean isInScope(Instance container, Instance element) {
+    public static boolean isInScope(final Instance container,
+            final Instance element) {
         Instance current = element;
-        while (current != null && !container.equals(current.getContainer())) {
+        while (container != null && current != null && !container.equals(current.getContainer())) {
             current = current.getContainer();
         }
-        return current != null && container.equals(current.getContainer());
+        return container != null && current != null && container.equals(current.getContainer());
     }
 
-    public Instance parseOperation(Instance groovyScriptInstance, String returnType, boolean fixedReturnType) {
+    public Instance parseOperation(final Instance groovyScriptInstance,
+            final String returnType, final boolean fixedReturnType) {
         String expressionScript = groovyScriptInstance.get("exprScript");
         final String setVarScript = groovyScriptInstance.get("setVarScript");
 
         if (expressionScript == null || expressionScript.trim().isEmpty()) {
             if (setVarScript != null && !setVarScript.trim().isEmpty()) {
-                Instance widget = getParentWidget(groovyScriptInstance);
+                final Instance widget = getParentWidget(groovyScriptInstance);
                 String widgetName = setVarScript;
                 if (widget != null) {
                     widgetName = widget.get("name");
                 }
-                expressionScript = "${" + WidgetHelper.FIELD_PREFIX + widgetName + "}";
+                expressionScript = "${" + WidgetHelper.FIELD_PREFIX
+                        + widgetName + "}";
             }
         }
 
@@ -99,13 +107,19 @@ public class StringToExpressionConverter {
                 setVarScript);
     }
 
-    public Instance parseOperation(String returnType, boolean fixedReturnType, String expressionScript, final String setVarScript) {
-        return parseOperation(returnType, fixedReturnType, expressionScript, setVarScript, null);
+    public Instance parseOperation(final String returnType,
+            final boolean fixedReturnType, final String expressionScript,
+            final String setVarScript) {
+        return parseOperation(returnType, fixedReturnType, expressionScript,
+                setVarScript, null);
     }
 
-    public Instance parseOperation(String returnType, boolean fixedReturnType, String expressionScript, final String setVarScript, String outputType) {
-        Instance operation = model.newInstance("expression.Operation");
-        final Instance actionExpression = parse(expressionScript, returnType, fixedReturnType, outputType);
+    public Instance parseOperation(final String returnType,
+            final boolean fixedReturnType, final String expressionScript,
+            final String setVarScript, final String outputType) {
+        final Instance operation = model.newInstance("expression.Operation");
+        final Instance actionExpression = parse(expressionScript, returnType,
+                fixedReturnType, outputType);
         operation.set("rightOperand", actionExpression);
 
         Instance leftOperand = null;
@@ -114,7 +128,7 @@ public class StringToExpressionConverter {
         if (setVarScript != null) {
             String varName = setVarScript;
             Instance dataInstance = null;
-            for (String dataName : data.keySet()) {
+            for (final String dataName : data.keySet()) {
                 if (varName.equals(dataName)) {
                     dataInstance = data.get(dataName);
                     break;
@@ -123,7 +137,7 @@ public class StringToExpressionConverter {
             if (dataInstance == null && varName.contains("#")) {
                 varName = varName.substring(0, varName.indexOf("#"));
             }
-            for (String dataName : data.keySet()) {
+            for (final String dataName : data.keySet()) {
                 if (varName.equals(dataName)) {
                     dataInstance = data.get(dataName);
                     isJavaSetter = true;
@@ -131,7 +145,7 @@ public class StringToExpressionConverter {
                 }
             }
             if (dataInstance != null) {
-                String dataReturnType = getDataReturnType(dataInstance);
+                final String dataReturnType = getDataReturnType(dataInstance);
                 leftOperand = parse("${" + varName + "}", dataReturnType, false);
                 if (!isJavaSetter) {
                     actionExpression.set("returnType", dataReturnType);
@@ -140,14 +154,17 @@ public class StringToExpressionConverter {
 
             if (isJavaSetter) {
                 final int lastIndexOf = setVarScript.lastIndexOf("#");
-                if (lastIndexOf != -1 && lastIndexOf + 1 < setVarScript.length()) {
-                    methodCalled = setVarScript.substring(lastIndexOf + 1, setVarScript.length());
+                if (lastIndexOf != -1
+                        && lastIndexOf + 1 < setVarScript.length()) {
+                    methodCalled = setVarScript.substring(lastIndexOf + 1,
+                            setVarScript.length());
                 }
             }
         }
 
         if (leftOperand == null) {
-            leftOperand = createExpressionInstance(model, "", "", String.class.getName(), String.class.getName(), false);
+            leftOperand = createExpressionInstance(model, "", "",
+                    String.class.getName(), String.class.getName(), false);
         }
         operation.set("leftOperand", leftOperand);
 
@@ -155,7 +172,8 @@ public class StringToExpressionConverter {
         if (methodCalled != null) {
             operator.set("type", ExpressionConstants.JAVA_METHOD_OPERATOR);
             operator.set("expression", methodCalled);
-            operator.set("inputTypes", getInputTypes((String) actionExpression.get("returnType")));
+            operator.set("inputTypes",
+                    getInputTypes((String) actionExpression.get("returnType")));
         } else {
             operator.set("type", ExpressionConstants.ASSIGNMENT_OPERATOR);
         }
@@ -164,13 +182,15 @@ public class StringToExpressionConverter {
         return operation;
     }
 
-    private List<String> getInputTypes(String returnType) {
-        List<String> result = new ArrayList<String>();
+    private List<String> getInputTypes(final String returnType) {
+        final List<String> result = new ArrayList<String>();
         result.add(returnType);
         return result;
     }
 
-    public static Instance createOperation(Model model, Instance leftOperand, Instance operator, Instance rightOperand) {
+    public static Instance createOperation(final Model model,
+            final Instance leftOperand, final Instance operator,
+            final Instance rightOperand) {
         final Instance op = model.newInstance("expression.Operation");
         op.set("rightOperand", rightOperand);
         op.set("operator", operator);
@@ -178,7 +198,7 @@ public class StringToExpressionConverter {
         return op;
     }
 
-    private Instance getParentWidget(Instance groovyScriptInstance) {
+    private Instance getParentWidget(final Instance groovyScriptInstance) {
         Instance current = groovyScriptInstance;
         while (current != null && !current.instanceOf("form.Widget")) {
             current = current.getContainer();
@@ -186,18 +206,24 @@ public class StringToExpressionConverter {
         return current;
     }
 
-    public Instance parse(String stringToParse, String returnType, boolean fixedReturnType) {
+    public Instance parse(final String stringToParse, final String returnType,
+            final boolean fixedReturnType) {
         return parse(stringToParse, returnType, fixedReturnType, null);
     }
 
-    public Instance parse(String stringToParse, String returnType, boolean fixedReturnType, String expressionType) {
+    public Instance parse(String stringToParse, String returnType,
+            final boolean fixedReturnType, String expressionType) {
 
         final String originalReturnType = returnType;
-        if (returnType == null || returnType.isEmpty()) {// Default return type is String
+        if (returnType == null || returnType.isEmpty()) {// Default return type
+            // is String
             returnType = String.class.getName();
         }
-        if (stringToParse == null || stringToParse.isEmpty()) { // Returns an empty expression
-            return createExpressionInstance(model, null, null, returnType, ExpressionConstants.CONSTANT_TYPE, fixedReturnType);
+        if (stringToParse == null || stringToParse.isEmpty()) { // Returns an
+            // empty
+            // expression
+            return createExpressionInstance(model, null, null, returnType,
+                    ExpressionConstants.CONSTANT_TYPE, fixedReturnType);
         }
         stringToParse = stringToParse.trim();
         if (expressionType == null) {
@@ -211,100 +237,103 @@ public class StringToExpressionConverter {
             if (originalReturnType == null) {
                 returnType = Object.class.getName();
             }
-            final Instance expression = createExpressionInstance(model, "migratedScript", content, returnType, ExpressionConstants.SCRIPT_TYPE, fixedReturnType);
+            final Instance expression = createExpressionInstance(model,
+                    "migratedScript", content, returnType,
+                    ExpressionConstants.SCRIPT_TYPE, fixedReturnType);
             resolveScriptDependencies(expression);
             return expression;
         } else if (ExpressionConstants.PATTERN_TYPE.equals(expressionType)) {
-            final Instance expression = createExpressionInstance(model, content, content, returnType, ExpressionConstants.PATTERN_TYPE, fixedReturnType);
+            final Instance expression = createExpressionInstance(model,
+                    content, content, returnType,
+                    ExpressionConstants.PATTERN_TYPE, fixedReturnType);
             resolvePatternDependencies(expression);
             return expression;
-        } else if (ExpressionConstants.CONNECTOR_OUTPUT_TYPE.equals(expressionType)) {
+        } else if (ExpressionConstants.CONNECTOR_OUTPUT_TYPE
+                .equals(expressionType)) {
 
-            final Instance expression = createExpressionInstance(model, content, content, returnType, ExpressionConstants.CONNECTOR_OUTPUT_TYPE,
-                    fixedReturnType);
+            final Instance expression = createExpressionInstance(model,
+                    content, content, returnType,
+                    ExpressionConstants.CONNECTOR_OUTPUT_TYPE, fixedReturnType);
             resolveOutputDependencies(expression, content, returnType);
             return expression;
         } else {
-            final Instance exp = createExpressionInstance(model, content, content, returnType, expressionType, fixedReturnType);
-            if (ExpressionConstants.VARIABLE_TYPE.equals(expressionType) || ExpressionConstants.SIMULATION_VARIABLE_TYPE.equals(expressionType)) {
+            final Instance exp = createExpressionInstance(model, content,
+                    content, returnType, expressionType, fixedReturnType);
+            if (ExpressionConstants.VARIABLE_TYPE.equals(expressionType)
+                    || ExpressionConstants.SIMULATION_VARIABLE_TYPE
+                    .equals(expressionType)) {
                 resolveDataDependencies(exp);
-            } else if (ExpressionConstants.FORM_FIELD_TYPE.equals(expressionType)) {
+            } else if (ExpressionConstants.FORM_FIELD_TYPE
+                    .equals(expressionType)) {
                 resolveWidgetDependencies(exp);
-            } else if (ExpressionConstants.DOCUMENT_REF_TYPE.equals(expressionType)) {
+            } else if (ExpressionConstants.DOCUMENT_REF_TYPE
+                    .equals(expressionType)) {
                 resolveDocumentDependencies(exp);
             }
             return exp;
         }
     }
 
-    private void resolveOutputDependencies(Instance expression, String name, String returnType) {
-        final Instance instance = model.newInstance(ConnectorDefinitionPackage.Literals.OUTPUT);
+    private void resolveOutputDependencies(final Instance expression,
+            final String name, final String returnType) {
+        final Instance instance = model
+                .newInstance(ConnectorDefinitionPackage.Literals.OUTPUT);
         instance.set("name", name);
         instance.set("type", returnType);
         expression.add("referencedElements", instance);
     }
 
-    public void resolveDocumentDependencies(Instance expression) {
+    public void resolveDocumentDependencies(final Instance expression) {
         final String content = expression.get("content");
-        for (String documentName : documents.keySet()) {
+        for (final String documentName : documents.keySet()) {
             if (content.contains(documentName)) {
-                int index = content.indexOf(documentName);
-                boolean validPrefix = false;
-                boolean validSuffix = false;
-                if (index > 0) {
-                    String prefix = content.substring(index - 1, index);
-                    char previousChar = prefix.toCharArray()[0];
-                    if (!Character.isLetter(previousChar) && '_' != previousChar) {
-                        validPrefix = true;
-                    }
-                } else if (index == 0) {
-                    validPrefix = true;
-                }
-                if (index + documentName.length() < content.length() - 1) {
-                    String suffix = content.substring(index + documentName.length(), index + documentName.length() + 1);
-                    if (!Character.isLetter(suffix.toCharArray()[0])) {
-                        validSuffix = true;
-                    }
-                } else if (index + documentName.length() == content.trim().length()) {
-                    validSuffix = true;
-                }
+                final int index = content.indexOf(documentName);
+                final boolean validPrefix = isValidPrefix(content, index);
+                final boolean validSuffix = isValidSuffix(content,
+                        documentName, index);
                 if (validPrefix && validSuffix) {
-                    Instance dependencyInstance = copyInstance(documents.get(documentName));
-                    List<Instance> instList = expression.get("referencedElements");
+                    final Instance dependencyInstance = copyInstance(documents
+                            .get(documentName));
+                    final List<Instance> instList = expression
+                            .get("referencedElements");
                     if (!dependancyAlreadyExists(instList, dependencyInstance)) {
-                        expression.add("referencedElements", dependencyInstance);
+                        expression
+                        .add("referencedElements", dependencyInstance);
                     }
                 }
             }
         }
     }
 
-    private Instance copyInstance(Instance instance) {
-        Instance copy = instance.copy();
+    private Instance copyInstance(final Instance instance) {
+        final Instance copy = instance.copy();
         return copy;
     }
 
-    public void resolvePatternDependencies(Instance expression) {
+    public void resolvePatternDependencies(final Instance expression) {
         resolvePatternDataDependencies(expression);
         resolvePatternWidgetDependencies(expression);
     }
 
-    private void resolvePatternWidgetDependencies(Instance expression) {
+    private void resolvePatternWidgetDependencies(final Instance expression) {
         final String content = expression.get("content");
-        for (String widgetName : widget.keySet()) {
+        for (final String widgetName : widget.keySet()) {
             if (content.contains("${" + widgetName + "}")) {
-                Instance dependencyInstance = createFormFieldDependencyInstance(widget.get(widgetName));
+                final Instance dependencyInstance = createFormFieldDependencyInstance(widget
+                        .get(widgetName));
                 expression.add("referencedElements", dependencyInstance);
             }
         }
     }
 
-    private void resolvePatternDataDependencies(Instance expression) {
+    private void resolvePatternDataDependencies(final Instance expression) {
         final String content = expression.get("content");
-        for (String dataName : data.keySet()) {
+        for (final String dataName : data.keySet()) {
             if (content.contains("${" + dataName + "}")) {
-                Instance dependencyInstance = createVariableDependencyInstance(data.get(dataName));
-                List<Instance> instList = expression.get("referencedElements");
+                final Instance dependencyInstance = createVariableDependencyInstance(data
+                        .get(dataName));
+                final List<Instance> instList = expression
+                        .get("referencedElements");
                 if (!dependancyAlreadyExists(instList, dependencyInstance)) {
                     expression.add("referencedElements", dependencyInstance);
                 }
@@ -312,87 +341,117 @@ public class StringToExpressionConverter {
         }
     }
 
-    public void resolveScriptDependencies(Instance expression) {
+    public void resolveScriptDependencies(final Instance expression) {
         resolveDataDependencies(expression);
         resolveWidgetDependencies(expression);
     }
 
-    public void resolveWidgetDependencies(Instance expression) {
+    public void resolveWidgetDependencies(final Instance expression) {
         final String content = expression.get("content");
-        for (String widgetName : widget.keySet()) {
+        for (final String widgetName : widget.keySet()) {
             if (content.contains(widgetName)) {
-                int index = content.indexOf(widgetName);
-                boolean validPrefix = false;
-                boolean validSuffix = false;
-                if (index > 0) {
-                    String prefix = content.substring(index - 1, index);
-                    if (!Character.isLetter(prefix.toCharArray()[0])) {
-                        validPrefix = true;
-                    }
-                } else if (index == 0) {
-                    validPrefix = true;
-                }
-                if (index + widgetName.length() < content.length() - 1) {
-                    String suffix = content.substring(index + widgetName.length(), index + widgetName.length() + 1);
-                    if (!Character.isLetter(suffix.toCharArray()[0])) {
-                        validSuffix = true;
-                    }
-                } else if (index + widgetName.length() == content.trim().length()) {
-                    validSuffix = true;
-                }
+                final int index = content.indexOf(widgetName);
+                final boolean validPrefix = isValidWidgetPrefix(content, index);
+                final boolean validSuffix = isValidSuffix(content, widgetName,
+                        index);
                 if (validPrefix && validSuffix) {
-                    Instance dependencyInstance = createFormFieldDependencyInstance(widget.get(widgetName));
+                    final Instance dependencyInstance = createFormFieldDependencyInstance(widget
+                            .get(widgetName));
                     expression.add("referencedElements", dependencyInstance);
                 }
             }
         }
     }
 
-    public void resolveDataDependencies(Instance expression) {
-        final String content = expression.get("content");
-        for (String dataName : data.keySet()) {
-            if (content.contains(dataName)) {
-                int index = content.indexOf(dataName);
-                boolean validPrefix = false;
-                boolean validSuffix = false;
-                if (index > 0) {
-                    String prefix = content.substring(index - 1, index);
-                    char previousChar = prefix.toCharArray()[0];
-                    if (!Character.isLetter(previousChar) && '_' != previousChar) {
-                        validPrefix = true;
-                    }
-                } else if (index == 0) {
-                    validPrefix = true;
-                }
-                if (index + dataName.length() < content.length() - 1) {
-                    String suffix = content.substring(index + dataName.length(), index + dataName.length() + 1);
-                    if (!Character.isLetter(suffix.toCharArray()[0])) {
-                        validSuffix = true;
-                    }
-                } else if (index + dataName.length() == content.trim().length()) {
-                    validSuffix = true;
-                }
-                if (validPrefix && validSuffix) {
-                    Instance dependencyInstance = createVariableDependencyInstance(data.get(dataName));
-                    List<Instance> instList = expression.get("referencedElements");
-                    if (!dependancyAlreadyExists(instList, dependencyInstance)) {
-                        expression.add("referencedElements", dependencyInstance);
+    private boolean isValidWidgetPrefix(final String content, final int index) {
+        boolean validPrefix = false;
+        if (index > 0) {
+            final String prefix = content.substring(index - 1, index);
+            if (!Character.isLetter(prefix.toCharArray()[0])) {
+                validPrefix = true;
+            }
+        } else if (index == 0) {
+            validPrefix = true;
+        }
+        return validPrefix;
+    }
+
+    /**
+     * @param expression
+     * @return if a referenced elements has been added
+     */
+    public boolean resolveDataDependencies(final Instance expression) {
+        boolean hasAdded = false;
+        String currentDataName = expression.get("content");
+        if (currentDataName == null) {
+            currentDataName = expression.get("name");
+        }
+        if (currentDataName != null) {
+            for (final String dataName : data.keySet()) {
+                if (currentDataName.contains(dataName)) {
+                    final int index = currentDataName.indexOf(dataName);
+                    final boolean validPrefix = isValidPrefix(currentDataName,
+                            index);
+                    final boolean validSuffix = isValidSuffix(currentDataName,
+                            dataName, index);
+                    if (validPrefix && validSuffix) {
+                        final Instance dependencyInstance = createVariableDependencyInstance(data
+                                .get(dataName));
+                        final List<Instance> instList = expression
+                                .get("referencedElements");
+                        if (!dependancyAlreadyExists(instList,
+                                dependencyInstance)) {
+                            expression.add("referencedElements",
+                                    dependencyInstance);
+                            hasAdded = true;
+                        }
                     }
                 }
             }
         }
+        return hasAdded;
+    }
+
+    private boolean isValidSuffix(final String currentDataName,
+            final String dataName, final int index) {
+        boolean validSuffix = false;
+        if (index + dataName.length() < currentDataName.length() - 1) {
+            final String suffix = currentDataName.substring(
+                    index + dataName.length(), index + dataName.length() + 1);
+            if (!Character.isLetter(suffix.toCharArray()[0])) {
+                validSuffix = true;
+            }
+        } else if (index + dataName.length() == currentDataName.trim().length()) {
+            validSuffix = true;
+        }
+        return validSuffix;
+    }
+
+    private boolean isValidPrefix(final String currentDataName, final int index) {
+        boolean validPrefix = false;
+        if (index > 0) {
+            final String prefix = currentDataName.substring(index - 1, index);
+            final char previousChar = prefix.toCharArray()[0];
+            if (!Character.isLetter(previousChar) && '_' != previousChar) {
+                validPrefix = true;
+            }
+        } else if (index == 0) {
+            validPrefix = true;
+        }
+        return validPrefix;
     }
 
     /**
      * Check an Instance already exist in a Instance list
-     * 
+     *
      * @param instList
      * @param dependencyInstance
      * @return
      */
-    private boolean dependancyAlreadyExists(List<Instance> instList, Instance dependencyInstance) {
-        String dataName = dependencyInstance.get("name");
-        for (Instance instance : instList) {
+    private boolean dependancyAlreadyExists(final List<Instance> instList,
+            final Instance dependencyInstance) {
+        final String dataName = dependencyInstance.get("name");
+        for (final Instance instance : instList) {
             if (instance.get("name").equals(dataName)) {
                 return true;
             }
@@ -400,21 +459,26 @@ public class StringToExpressionConverter {
         return false;
     }
 
-    private Instance createFormFieldDependencyInstance(Instance widgetInstance) {
-        Instance widget = widgetInstance.copy();
-        List<Instance> widgetDependencies = widget.get("dependOn");
-        for (Instance w : widgetDependencies) {
+    private Instance createFormFieldDependencyInstance(
+            final Instance widgetInstance) {
+        final Instance widget = widgetInstance.copy();
+        final List<Instance> widgetDependencies = widget.get("dependOn");
+        for (final Instance w : widgetDependencies) {
             model.delete(w);
         }
         widget.set("dependOn", Collections.emptyList());
         return widget;
     }
 
-    private Instance createVariableDependencyInstance(Instance dataInstance) {
-        Instance copy = dataInstance.copy();
+    private Instance createVariableDependencyInstance(
+            final Instance dataInstance) {
+        final Instance copy = dataInstance.copy();
         if (copy.instanceOf("process.Data")) {
-            Object defaultValue = copy.get("defaultValue");
-            if (defaultValue != null && defaultValue instanceof Instance && ((Instance) defaultValue).instanceOf("expression.Expression")) {
+            final Object defaultValue = copy.get("defaultValue");
+            if (defaultValue != null
+                    && defaultValue instanceof Instance
+                    && ((Instance) defaultValue)
+                    .instanceOf("expression.Expression")) {
                 model.delete((Instance) defaultValue);
                 copy.set("defaultValue", null);
             }
@@ -422,12 +486,14 @@ public class StringToExpressionConverter {
         return copy;
     }
 
-    private String guessExpressionType(String stringToParse) {
+    private String guessExpressionType(final String stringToParse) {
         if (isAGroovyString(stringToParse)) {
-            final String groovyScript = stringToParse.substring(2, stringToParse.length() - 1);
+            final String groovyScript = stringToParse.substring(2,
+                    stringToParse.length() - 1);
             if (data.containsKey(groovyScript) && useSimulationDataScope) {
                 return ExpressionConstants.SIMULATION_VARIABLE_TYPE;
-            } else if (data.containsKey(groovyScript) && !useSimulationDataScope) {
+            } else if (data.containsKey(groovyScript)
+                    && !useSimulationDataScope) {
                 return ExpressionConstants.VARIABLE_TYPE;
             } else if (widget.containsKey(groovyScript)) {
                 return ExpressionConstants.FORM_FIELD_TYPE;
@@ -440,11 +506,14 @@ public class StringToExpressionConverter {
         }
     }
 
-    private boolean isAGroovyString(String stringToParse) {
-        return stringToParse.startsWith(GROOVY_PREFIX) && stringToParse.endsWith(GROOVY_SUFFIX);
+    private boolean isAGroovyString(final String stringToParse) {
+        return stringToParse.startsWith(GROOVY_PREFIX)
+                && stringToParse.endsWith(GROOVY_SUFFIX);
     }
 
-    public static Instance createExpressionInstance(Model model, String name, String content, String returnType, String expresisonType, boolean fixedReturnType) {
+    public static Instance createExpressionInstance(final Model model,
+            final String name, final String content, final String returnType,
+            final String expresisonType, final boolean fixedReturnType) {
         final Instance instance = model.newInstance("expression.Expression");
         instance.set("name", name);
         instance.set("content", content);
@@ -457,8 +526,10 @@ public class StringToExpressionConverter {
         return instance;
     }
 
-    public static Instance createExpressionInstanceWithDependency(Model model, String name, String content, String returnType, String expresisonType,
-            boolean fixedReturnType, Instance dependency) {
+    public static Instance createExpressionInstanceWithDependency(
+            final Model model, final String name, final String content,
+            final String returnType, final String expresisonType,
+            final boolean fixedReturnType, final Instance dependency) {
         final Instance instance = model.newInstance("expression.Expression");
         instance.set("name", name);
         instance.set("content", content);
@@ -474,7 +545,7 @@ public class StringToExpressionConverter {
         return instance;
     }
 
-    public static String getDataReturnType(Instance data) {
+    public static String getDataReturnType(final Instance data) {
         if (data.get("multiple")) {
             return List.class.getName();
         }
@@ -504,19 +575,21 @@ public class StringToExpressionConverter {
         return String.class.getName();
     }
 
-    public static int getStatusForExpression(Instance expression) {
-        return ExpressionConstants.SCRIPT_TYPE.equals(expression.get("type")) ? IStatus.WARNING : IStatus.OK;
+    public static int getStatusForExpression(final Instance expression) {
+        return ExpressionConstants.SCRIPT_TYPE.equals(expression.get("type")) ? IStatus.WARNING
+                : IStatus.OK;
     }
 
-    public void setUseSimulationDataScope(boolean useSimulationDataScope) {
+    public void setUseSimulationDataScope(final boolean useSimulationDataScope) {
         this.useSimulationDataScope = useSimulationDataScope;
         if (useSimulationDataScope) {
             data.clear();
-            for (Instance data : model.getAllInstances("simulation.SimulationData")) {
+            for (final Instance data : model
+                    .getAllInstances("simulation.SimulationData")) {
                 this.data.put((String) data.get("name"), data);
             }
         } else {
-            for (Instance data : model.getAllInstances("process.Data")) {
+            for (final Instance data : model.getAllInstances("process.Data")) {
                 this.data.put((String) data.get("name"), data);
             }
         }

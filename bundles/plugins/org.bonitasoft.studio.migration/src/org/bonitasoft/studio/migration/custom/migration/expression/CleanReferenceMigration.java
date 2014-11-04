@@ -27,39 +27,57 @@ import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.emf.edapt.migration.Model;
 
 public class CleanReferenceMigration extends CustomMigration {
-	
+
 	@Override
-	public void migrateAfter(Model model, Metamodel metamodel) throws MigrationException {
+	public void migrateAfter(final Model model, final Metamodel metamodel)
+			throws MigrationException {
 		super.migrateAfter(model, metamodel);
-		for(Instance operation : model.getAllInstances("expression.Operation")){
-			Instance expression = operation.get("leftOperand");
-			if(isExpressionOfVariableType(expression) && isNoneReferencedElements(expression)){
-				new StringToExpressionConverter(model, getScope(expression)).resolveDataDependencies(expression);
+		for (final Instance operation : model
+				.getAllInstances("expression.Operation")) {
+			final Instance expression = operation.get("leftOperand");
+			if ((isExpressionOfVariableType(expression) || isExpressionOfConstantType(expression))
+					&& isNoneReferencedElements(expression)) {
+				final boolean hasAddedAreference = new StringToExpressionConverter(
+						model, getScope(expression))
+						.resolveDataDependencies(expression);
+				if (hasAddedAreference
+						&& isExpressionOfConstantType(expression)) {
+					expression.set("type", ExpressionConstants.VARIABLE_TYPE);
+				}
 			}
 		}
 	}
 
-	private boolean isNoneReferencedElements(Instance expression) {
+	private boolean isExpressionOfConstantType(final Instance expression) {
+		return expression != null
+				&& ExpressionConstants.CONSTANT_TYPE.equals(expression
+						.<String> get("type"));
+	}
+
+	private boolean isNoneReferencedElements(final Instance expression) {
 		final Object referencedElements = expression.get("referencedElements");
 		return referencedElements instanceof List<?>
 				&& ((List<?>) expression.get("referencedElements")).isEmpty();
 	}
 
-	private boolean isExpressionOfVariableType(Instance expression) {
-		return expression != null && ExpressionConstants.VARIABLE_TYPE.equals(expression.<String>get("type"));
+	private boolean isExpressionOfVariableType(final Instance expression) {
+		return expression != null
+				&& ExpressionConstants.VARIABLE_TYPE.equals(expression
+						.<String> get("type"));
 	}
 
 	/**
-	 * 
+	 *
 	 * @param element
 	 * @return the parent process instance
 	 */
-	protected Instance getScope(Instance element){
+	protected Instance getScope(final Instance element) {
 		Instance container = element;
-		while(container != null && !container.instanceOf("process.AbstractProcess")){
+		while (container != null
+				&& !container.instanceOf("process.AbstractProcess")) {
 			container = container.getContainer();
 		}
 		return container;
 	}
-	
+
 }

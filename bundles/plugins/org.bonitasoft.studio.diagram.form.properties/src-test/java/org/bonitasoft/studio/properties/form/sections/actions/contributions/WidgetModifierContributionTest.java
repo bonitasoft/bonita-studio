@@ -19,6 +19,8 @@ package org.bonitasoft.studio.properties.form.sections.actions.contributions;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.bonitasoft.studio.model.expression.assertions.ExpressionAssert.assertThat;
 
+import java.util.List;
+
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.model.expression.Expression;
@@ -30,6 +32,11 @@ import org.bonitasoft.studio.model.form.TextFormField;
 import org.bonitasoft.studio.model.form.Widget;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.workspace.WorkspaceEditingDomainFactory;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.ISelectionProvider;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -49,7 +56,7 @@ public class WidgetModifierContributionTest {
      */
     @Before
     public void setUp() throws Exception {
-        Form form = FormFactory.eINSTANCE.createForm();
+        final Form form = FormFactory.eINSTANCE.createForm();
         textFormField = FormFactory.eINSTANCE.createTextFormField();
         textFormField.setName("name");
         textFormField.setReturnTypeModifier(String.class.getName());
@@ -67,26 +74,55 @@ public class WidgetModifierContributionTest {
 
     @Test
     public void shouldUpdateWidgetReferences_Update_Widget_References_WithNewModifierType_ForFormFieldExpressionType() throws Exception {
-        Operation operation= ExpressionFactory.eINSTANCE.createOperation();
-        Expression actionExp = ExpressionFactory.eINSTANCE.createExpression();
+        final Operation operation= ExpressionFactory.eINSTANCE.createOperation();
+        final Expression actionExp = ExpressionFactory.eINSTANCE.createExpression();
         actionExp.setReturnType(String.class.getName());
         actionExp.setType(ExpressionConstants.FORM_FIELD_TYPE);
         actionExp.setContent("field_name");
         operation.setRightOperand(actionExp);
         textFormField.setAction(operation);
-        widgetModifierContribution.updateWidgetReferences(textFormField, Integer.class.getName());
+        widgetModifierContribution.setEObject(textFormField);
+        widgetModifierContribution.selectionChanged(new SelectionChangedEvent(new ISelectionProvider() {
+
+            public void setSelection(final ISelection arg0) {
+            }
+
+            public void removeSelectionChangedListener(final ISelectionChangedListener arg0) {
+            }
+
+            public ISelection getSelection() {
+                return null;
+            }
+
+            public void addSelectionChangedListener(final ISelectionChangedListener arg0) {
+            }
+        }, new StructuredSelection(Integer.class.getName())));
         assertThat(actionExp).hasReturnType(Integer.class.getName());
     }
-    
+
+    @Test
+    public void shouldUpdateWidgetReferences_Update_Widget_References_WithNewModifierType_ForDuplicatedFormFieldExpressionType() throws Exception {
+        final Operation operation = ExpressionFactory.eINSTANCE.createOperation();
+        final Expression actionExp = ExpressionFactory.eINSTANCE.createExpression();
+        actionExp.setReturnType(String.class.getName());
+        actionExp.setType(ExpressionConstants.FORM_FIELD_TYPE);
+        actionExp.setContent("field_name");
+        operation.setRightOperand(actionExp);
+        textFormField.setAction(operation);
+        textFormField.setDuplicate(true);
+        widgetModifierContribution.updateWidgetReferences(textFormField, Integer.class.getName());
+        assertThat(actionExp).hasReturnType(List.class.getName());
+    }
+
     @Test
     public void shouldUpdateWidgetReferences_Update_Widget_References_WithNewModifierType_ForGroovyExpressionDependencies() throws Exception {
-        Operation operation= ExpressionFactory.eINSTANCE.createOperation();
-        Expression actionExp = ExpressionFactory.eINSTANCE.createExpression();
+        final Operation operation= ExpressionFactory.eINSTANCE.createOperation();
+        final Expression actionExp = ExpressionFactory.eINSTANCE.createExpression();
         actionExp.setReturnType(String.class.getName());
         actionExp.setType(ExpressionConstants.SCRIPT_TYPE);
         actionExp.setInterpreter(ExpressionConstants.GROOVY);
         actionExp.setContent("field_name");
-        EObject dependencyFromEObject = ExpressionHelper.createDependencyFromEObject(textFormField);
+        final EObject dependencyFromEObject = ExpressionHelper.createDependencyFromEObject(textFormField);
         assertThat(((Widget)dependencyFromEObject).getReturnTypeModifier()).isEqualTo(String.class.getName());
         actionExp.getReferencedElements().add(dependencyFromEObject);
         operation.setRightOperand(actionExp);

@@ -19,6 +19,7 @@ package org.bonitasoft.studio.properties.sections.catchmessage;
 
 import java.util.List;
 
+import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionValidator;
 import org.bonitasoft.studio.model.expression.Expression;
@@ -40,26 +41,23 @@ import org.eclipse.emf.edit.domain.EditingDomain;
 public class MessageContentExpressionValidator implements IExpressionValidator {
 
     private AbstractCatchMessageEvent messageEvent;
-	private Expression inputExpression;
-	private EditingDomain domain;
-	private EObject context;
-	
+
     @Override
-    public IStatus validate(Object value) {
+    public IStatus validate(final Object value) {
         if ( messageEvent !=null){
-            String expr = value.toString();
+            final String expr = value.toString();
             if(expr == null || expr.isEmpty()){
                 return ValidationStatus.ok();
             }
-            MessageFlow incomingMessag = messageEvent.getIncomingMessag();
+            final MessageFlow incomingMessag = messageEvent.getIncomingMessag();
             TableExpression throwMessageContent=null;
             if(incomingMessag != null){
                 final Message message = ModelHelper.findEvent(messageEvent, incomingMessag.getName());
                 if(message != null){
                     throwMessageContent = message.getMessageContent();
                     boolean isExisting =false;
-                    for (ListExpression row : throwMessageContent.getExpressions()) {
-                        List<org.bonitasoft.studio.model.expression.Expression> col =  row.getExpressions() ;
+                    for (final ListExpression row : throwMessageContent.getExpressions()) {
+                        final List<org.bonitasoft.studio.model.expression.Expression> col =  row.getExpressions() ;
                         if (col.size()==2){
                             if (expr.equals(col.get(0).getName())){
                                 isExisting =true;
@@ -78,25 +76,31 @@ public class MessageContentExpressionValidator implements IExpressionValidator {
         return ValidationStatus.OK_STATUS;
     }
 
-    public void setCatchMessageEvent(EObject object){
+    public void setCatchMessageEvent(final EObject object){
         if (object instanceof AbstractCatchMessageEvent ){
             messageEvent = (AbstractCatchMessageEvent)object;
         }
     }
 
 	@Override
-	public void setInputExpression(Expression inputExpression) {
-		this.inputExpression = inputExpression;
+	public void setInputExpression(final Expression inputExpression) {
+        //Nothing
 	}
 
 	@Override
-	public void setDomain(EditingDomain domain) {
-		this.domain = domain;
+	public void setDomain(final EditingDomain domain) {
+        //Nothing
 	}
 
 	@Override
-	public void setContext(EObject context) {
-		this.context = context;
+	public void setContext(final EObject context) {
+        //Nothing
 	}
+
+    @Override
+    public boolean isRelevantForExpressionType(final String type) {
+        return ExpressionConstants.MESSAGE_ID_TYPE.equals(type)
+                || ExpressionConstants.CONSTANT_TYPE.equals(type);
+    }
 
 }

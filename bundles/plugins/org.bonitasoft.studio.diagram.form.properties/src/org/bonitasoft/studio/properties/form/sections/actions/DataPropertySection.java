@@ -14,6 +14,7 @@ import org.bonitasoft.studio.properties.form.sections.actions.contributions.Date
 import org.bonitasoft.studio.properties.form.sections.actions.contributions.DefaultValueContribution;
 import org.bonitasoft.studio.properties.form.sections.actions.contributions.DurationContribution;
 import org.bonitasoft.studio.properties.form.sections.actions.contributions.FileGridPropertySectionContribution;
+import org.bonitasoft.studio.properties.form.sections.actions.contributions.FileWidgetDocumentPickerContribution;
 import org.bonitasoft.studio.properties.form.sections.actions.contributions.HtmlInitialValueContribution;
 import org.bonitasoft.studio.properties.form.sections.actions.contributions.ImageKindContribution;
 import org.bonitasoft.studio.properties.form.sections.actions.contributions.ImageWidgetInitialValueContribution;
@@ -42,30 +43,31 @@ public class DataPropertySection extends ExtensibleGridPropertySection {
     @Override
     protected void addContributions() {
 
-        IConfigurationElement[] elements = BonitaStudioExtensionRegistryManager
+        final IConfigurationElement[] elements = BonitaStudioExtensionRegistryManager
                 .getInstance().getConfigurationElements(
                         "org.bonitasoft.studio.common.properties.contribution");
 
-        List<IExtensibleGridPropertySectionContribution> contribs = new ArrayList<IExtensibleGridPropertySectionContribution>();
+        final List<IExtensibleGridPropertySectionContribution> contribs = new ArrayList<IExtensibleGridPropertySectionContribution>();
 
-        for (IConfigurationElement elem : elements) {
+        for (final IConfigurationElement elem : elements) {
             if (elem.getAttribute("contributeTo").equals(
                     this.getClass().getName())) {
                 try {
                     contribs
                     .add((IExtensibleGridPropertySectionContribution) elem
                             .createExecutableExtension("class"));
-                } catch (CoreException e) {
+                } catch (final CoreException e) {
                     BonitaStudioLog.error(e);
                 }
             }
         }
 
-        for (IExtensibleGridPropertySectionContribution contrib : contribs) {
+        for (final IExtensibleGridPropertySectionContribution contrib : contribs) {
             addContribution(contrib);
         }
         //line1
         addContribution(new FileGridPropertySectionContribution());
+        addContribution(new FileWidgetDocumentPickerContribution());
         addContribution(new ImageKindContribution());
         addContribution(new ImageWidgetInitialValueContribution());
         addContribution(new InitialValueContribution());

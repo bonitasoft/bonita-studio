@@ -14,7 +14,7 @@
  */
 package org.bonitasoft.studio.engine.export;
 
-import static org.fest.assertions.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -37,6 +37,9 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class DesignProcessDefinitionBuilderTest {
+
+    @Mock
+    public DocumentListDefinitionBuilder docDefinitionListBuilder;
 
     @Test
     public void testHasADefaultValueReturnFalseWithNone() {
@@ -176,8 +179,7 @@ public class DesignProcessDefinitionBuilderTest {
         verify(docDefinitionBuilder).addMimeType(anyString());
     }
 
-    @Mock
-    public DocumentListDefinitionBuilder docDefinitionListBuilder;
+
 
     @Test
     public void testIntialContentForMultipleDocumentAdded() {

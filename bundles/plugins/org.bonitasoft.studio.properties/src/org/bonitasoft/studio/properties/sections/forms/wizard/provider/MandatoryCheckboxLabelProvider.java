@@ -22,20 +22,14 @@ import org.bonitasoft.studio.model.form.FormField;
 import org.bonitasoft.studio.model.form.Group;
 import org.bonitasoft.studio.model.form.HiddenWidget;
 import org.bonitasoft.studio.model.form.Widget;
-import org.eclipse.swt.widgets.Control;
 
 public class MandatoryCheckboxLabelProvider extends AbstractCheckboxLabelProvider {
-
-
-	public MandatoryCheckboxLabelProvider(Control control) {
-		super(control);
-	}
 
 	/* (non-Javadoc)
 	 * @see org.bonitasoft.studio.common.jface.AbstractCheckboxLabelProvider#isSelected(java.lang.Object)
 	 */
 	@Override
-	protected boolean isSelected(Object element) {
+	protected boolean isSelected(final Object element) {
 		if(element instanceof WidgetMapping){
 			return ((WidgetMapping) element).isMandatory();
 		}
@@ -46,8 +40,8 @@ public class MandatoryCheckboxLabelProvider extends AbstractCheckboxLabelProvide
 	 * @see org.bonitasoft.studio.common.jface.AbstractCheckboxLabelProvider#isEnabled(java.lang.Object)
 	 */
 	@Override
-	protected boolean isEnabled(Object element) {
-		Widget widget = ((WidgetMapping) element).getWidgetType();
+	protected boolean isEnabled(final Object element) {
+		final Widget widget = ((WidgetMapping) element).getWidgetType();
 		return  widget instanceof FormField && !(widget instanceof HiddenWidget) || widget instanceof Group ;
 	}
 	

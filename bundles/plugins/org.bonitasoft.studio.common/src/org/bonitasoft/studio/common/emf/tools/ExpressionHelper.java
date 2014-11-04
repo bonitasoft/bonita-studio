@@ -20,6 +20,7 @@ import java.util.List;
 import org.bonitasoft.studio.common.DataUtil;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.Messages;
+import org.bonitasoft.studio.connector.model.definition.Output;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
@@ -27,7 +28,9 @@ import org.bonitasoft.studio.model.expression.Operation;
 import org.bonitasoft.studio.model.expression.Operator;
 import org.bonitasoft.studio.model.form.Duplicable;
 import org.bonitasoft.studio.model.form.FormFactory;
+import org.bonitasoft.studio.model.form.GroupIterator;
 import org.bonitasoft.studio.model.form.Widget;
+import org.bonitasoft.studio.model.parameter.Parameter;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.Document;
 import org.bonitasoft.studio.model.process.EnumType;
@@ -48,6 +51,11 @@ public class ExpressionHelper {
 
     protected static final String EMPTY_LIST_NAME = Messages.emptyListExpressionName;
     protected static final String EMPTY_LIST_CONTENT = "[]";
+
+    private ExpressionHelper() {
+
+    }
+
 
     public static Expression createExpressionFromEnumType(final EnumType type) {
         final Expression generatedExp = ExpressionFactory.eINSTANCE.createExpression();
@@ -118,13 +126,11 @@ public class ExpressionHelper {
         return exp;
     }
 
-    public static Expression createConstantExpression(final String name, final String content, final String returnClassName) {
-        final Expression exp = ExpressionFactory.eINSTANCE.createExpression();
-        exp.setType(ExpressionConstants.CONSTANT_TYPE);
+
+    public static Expression createConstantExpression(final String name,final String content, final String returnClassName) {
+        final Expression exp = createConstantExpression(content, returnClassName);
         exp.setName(name);
-        exp.setContent(content);
-        exp.setReturnType(returnClassName);
-        return exp;
+        return  exp;
     }
 
     public static EObject createDependencyFromEObject(final EObject dependency) {
@@ -237,6 +243,83 @@ public class ExpressionHelper {
         expression.setName(name);
         expression.setContent(content);
         return expression;
+    }
+
+    public static Expression createExpressionFromEObject(final EObject element) {
+        if (element instanceof Data) {
+            return createVariableExpression((Data) element);
+        } else if (element instanceof Output) {
+            return createConnectorOutputExpression((Output) element);
+        } else if (element instanceof Parameter) {
+            return createParameterExpression((Parameter) element);
+        } else if (element instanceof org.bonitasoft.studio.model.expression.Expression) {
+            return (Expression) element;
+        } else if (element instanceof Widget) {
+            return createWidgetExpression((Widget) element);
+        } else if (element instanceof Document) {
+            return createDocumentReferenceExpression((Document) element);
+        }else if (element instanceof GroupIterator) {
+            return createGroupIteratorExpression((GroupIterator) element);
+        }
+        throw new IllegalArgumentException("element argument is not supported: " + element);
+    }
+
+    public static Expression createGroupIteratorExpression(final GroupIterator iterator) {
+        final Expression exp = ExpressionFactory.eINSTANCE.createExpression() ;
+        final String iteratorName = iterator.getName();
+        exp.setName(iteratorName);
+        exp.setContent(iteratorName);
+        String className = Object.class.getName();
+        if(iterator.getClassName() != null){
+            className = iterator.getClassName();
+        }
+        exp.setReturnType(className);
+        exp.setReturnTypeFixed(true);
+        exp.setType(ExpressionConstants.GROUP_ITERATOR_TYPE);
+        exp.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(iterator));
+        return exp;
+    }
+
+    public static Expression createDocumentReferenceExpression(final Document d) {
+        final Expression exp = ExpressionFactory.eINSTANCE.createExpression();
+        exp.setType(ExpressionConstants.DOCUMENT_REF_TYPE);
+        exp.setContent(d.getName());
+        exp.setName(d.getName());
+        exp.setReturnType(String.class.getName());
+        exp.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(d));
+        return exp;
+    }
+
+    public static Expression createWidgetExpression(final Widget w) {
+        final Expression exp = ExpressionFactory.eINSTANCE.createExpression();
+        exp.setType(ExpressionConstants.FORM_FIELD_TYPE);
+        exp.setContent(WidgetHelper.FIELD_PREFIX + w.getName());
+        exp.setName(WidgetHelper.FIELD_PREFIX + w.getName());
+        exp.setReturnType(WidgetHelper.getAssociatedReturnType(w));
+        final Widget copy = (Widget) ExpressionHelper.createDependencyFromEObject(w);
+        copy.getDependOn().clear();
+        exp.getReferencedElements().add(copy);
+        return exp;
+    }
+
+    public static Expression createConnectorOutputExpression(final Output output) {
+        final Expression exp = ExpressionFactory.eINSTANCE.createExpression();
+        exp.setType(ExpressionConstants.CONNECTOR_OUTPUT_TYPE);
+        exp.setContent(output.getName());
+        exp.setName(output.getName());
+        exp.setReturnType(output.getType());
+        exp.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(output));
+        return exp;
+    }
+
+    public static Expression createParameterExpression(final Parameter p) {
+        final Expression exp = ExpressionFactory.eINSTANCE.createExpression();
+        exp.setType(ExpressionConstants.PARAMETER_TYPE);
+        exp.setContent(p.getName());
+        exp.setName(p.getName());
+        exp.setReturnType(p.getTypeClassname());
+        exp.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(p));
+        return exp;
     }
 
     public static Expression createListDocumentExpressionWithDependency(final String targetDocName) {

@@ -103,7 +103,8 @@ public class DataExpressionProvider implements IExpressionProvider {
         final FlowElement parentFlowElement = ModelHelper.getParentFlowElement(context);
         if (parentFlowElement instanceof MultiInstantiable) {
             final MultiInstanceType type = ((MultiInstantiable) parentFlowElement).getType();
-            if (type == MultiInstanceType.PARALLEL || type == MultiInstanceType.SEQUENTIAL) {
+            if (type == MultiInstanceType.PARALLEL || type == MultiInstanceType.SEQUENTIAL
+                    && !((MultiInstantiable) parentFlowElement).isUseCardinality()) {
                 final Expression iteratorExpression = ((MultiInstantiable) parentFlowElement).getIteratorExpression();
                 if (iteratorExpression != null
                         && iteratorExpression.getName() != null
