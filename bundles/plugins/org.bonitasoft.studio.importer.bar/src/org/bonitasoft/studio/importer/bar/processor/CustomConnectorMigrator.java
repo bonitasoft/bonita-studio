@@ -118,12 +118,15 @@ public class CustomConnectorMigrator {
                 fos.close();
             }
         }
-        final URLClassLoader customURLClassLoader = createBarClassloader(archiveFile, tmpConnectorJarFile);
 
         BonitaStudioLog.debug("Searching for custom connector in " + tmpConnectorJarFile.getName() + "...", BarImporterPlugin.PLUGIN_ID);
-
+        if (tmpConnectorJarFile.length() == 0) {
+            BonitaStudioLog.debug(tmpConnectorJarFile.getName() + " is empty.", BarImporterPlugin.PLUGIN_ID);
+            return;
+        }
+        final URLClassLoader customURLClassLoader = createBarClassloader(archiveFile, tmpConnectorJarFile);
         final List<String> connectorClassnames = BarReaderUtil.findCustomConnectorClassName(tmpConnectorJarFile);
-        if (connectorClassnames == null || connectorClassnames.isEmpty()) {
+        if (connectorClassnames.isEmpty()) {
             BonitaStudioLog.debug("No custom connector found in:" + tmpConnectorJarFile.getName(), BarImporterPlugin.PLUGIN_ID);
         } else {
             for (final String connectorClassname : connectorClassnames) {

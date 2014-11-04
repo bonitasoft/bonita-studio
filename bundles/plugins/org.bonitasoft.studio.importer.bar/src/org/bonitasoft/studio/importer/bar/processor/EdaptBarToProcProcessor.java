@@ -5,12 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -43,6 +43,7 @@ import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.data.attachment.repository.DocumentRepositoryStore;
+import org.bonitasoft.studio.dependencies.repository.DependencyFileStore;
 import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
 import org.bonitasoft.studio.diagram.custom.repository.ApplicationResourceRepositoryStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
@@ -87,7 +88,7 @@ import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Romain Bioteau
- * 
+ *
  */
 public class EdaptBarToProcProcessor extends ToProcProcessor {
 
@@ -305,7 +306,10 @@ public class EdaptBarToProcProcessor extends ToProcProcessor {
             zipEntry = (ZipEntry) enumEntries.nextElement();
             final File currentFile = new File(zipEntry.getName());
             if (!zipEntry.isDirectory() && zipEntry.getName().contains(FORMS_LIBS) && zipEntry.getName().endsWith(".jar")) {
-                store.importInputStream(currentFile.getName(), zipfile.getInputStream(zipEntry));
+                final DependencyFileStore dependencyFileStore = store.importInputStream(currentFile.getName(), zipfile.getInputStream(zipEntry));
+                if (dependencyFileStore == null) {
+                    BonitaStudioLog.debug("Failed to import application dependency " + currentFile.getName(), BarImporterPlugin.PLUGIN_ID);
+                }
             }
             if (!zipEntry.isDirectory() && zipEntry.getName().contains(VALIDATORS) && zipEntry.getName().endsWith(".jar")) {
                 if (store.getChild(currentFile.getName()) == null) {
@@ -331,7 +335,10 @@ public class EdaptBarToProcProcessor extends ToProcProcessor {
             final File currentFile = new File(zipEntry.getName());
             if (!zipEntry.isDirectory() && zipEntry.getName().contains(LIBS) && zipEntry.getName().endsWith(".jar")) {
                 if (!customConnectorMigrator.getImportedJarNames().contains(currentFile.getName()) && store.getChild(currentFile.getName()) == null) {
-                    store.importInputStream(currentFile.getName(), zipfile.getInputStream(zipEntry));
+                    final DependencyFileStore dependencyFileStore = store.importInputStream(currentFile.getName(), zipfile.getInputStream(zipEntry));
+                    if (dependencyFileStore == null) {
+                        BonitaStudioLog.debug("Failed to import process dependency " + currentFile.getName(), BarImporterPlugin.PLUGIN_ID);
+                    }
                 }
             }
         }
