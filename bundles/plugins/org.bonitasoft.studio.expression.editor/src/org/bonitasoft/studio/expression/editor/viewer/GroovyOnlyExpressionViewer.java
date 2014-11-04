@@ -18,9 +18,9 @@ package org.bonitasoft.studio.expression.editor.viewer;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 
 /**
@@ -29,16 +29,22 @@ import org.eclipse.swt.widgets.Composite;
  */
 public class GroovyOnlyExpressionViewer extends ExpressionViewer {
 
-    public GroovyOnlyExpressionViewer(final Composite composite, final int style,final EReference expressionReference) {
-        super(composite, style, expressionReference);
+    private final boolean displayHeader;
+
+    public GroovyOnlyExpressionViewer(final Composite composite, final int style) {
+        super(composite, style);
+        displayHeader = (style & SWT.SHORT) == 0;
         getContentAssistText().getToolbar().getItem(0).setEnabled(false);
 
     }
 
     @Override
     protected EditExpressionDialog createEditDialog(final EObject editInput) {
-        return new GroovyOnlyEditExpressionDialog(control.getShell(), isPassword, EcoreUtil.copy(getSelectedExpression()), editInput, getEditingDomain(),
+        final GroovyOnlyEditExpressionDialog groovyOnlyEditExpressionDialog = new GroovyOnlyEditExpressionDialog(control.getShell(), isPassword,
+                EcoreUtil.copy(getSelectedExpression()), editInput, getEditingDomain(),
                 filters.toArray(new ViewerFilter[filters.size()]), this);
+        groovyOnlyEditExpressionDialog.setShowScriptHeader(displayHeader);
+        return groovyOnlyEditExpressionDialog;
     }
 
     @Override
