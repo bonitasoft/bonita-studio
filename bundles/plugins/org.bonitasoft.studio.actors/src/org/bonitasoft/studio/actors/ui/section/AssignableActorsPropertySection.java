@@ -17,6 +17,7 @@
 package org.bonitasoft.studio.actors.ui.section;
 
 import org.bonitasoft.studio.actors.i18n.Messages;
+import org.bonitasoft.studio.common.emf.converter.BooleanInverserConverter;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.BonitaStudioFontRegistry;
 import org.bonitasoft.studio.model.process.Actor;
@@ -64,30 +65,17 @@ public class AssignableActorsPropertySection extends AbstractActorsPropertySecti
 			useLaneActorButton.setEnabled(current instanceof Lane) ;
 			final IObservableValue value = EMFEditObservables.observeValue(getEditingDomain(), assignable, ProcessPackage.Literals.TASK__OVERRIDE_ACTORS_OF_THE_LANE) ;
 			emfDatabindingContext.bindValue(SWTObservables.observeSelection(taskActorButton), value) ;
-			emfDatabindingContext.bindValue(SWTObservables.observeSelection(useLaneActorButton), value,new UpdateValueStrategy(),new UpdateValueStrategy().setConverter(new Converter(Boolean.class,Boolean.class){
-
-				@Override
-				public Object convert(Object from) {
-					return !(Boolean) from;
-				}
-
-			})) ;
-			final UpdateValueStrategy updateValueStrategy = new UpdateValueStrategy().setConverter(new Converter(Boolean.class,Boolean.class){
-
-				@Override
-				public Object convert(Object from) {
-					return !(Boolean) from;
-				}
-
-			});
-			emfDatabindingContext.bindValue(SWTObservables.observeEnabled(actorComboViewer.getControl()), SWTObservables.observeSelection(useLaneActorButton),new UpdateValueStrategy(),updateValueStrategy);			
+            emfDatabindingContext.bindValue(SWTObservables.observeSelection(useLaneActorButton), value, new UpdateValueStrategy(),
+                    new UpdateValueStrategy().setConverter(new BooleanInverserConverter()));
+            final UpdateValueStrategy updateValueStrategy = new UpdateValueStrategy().setConverter(new BooleanInverserConverter());
+			emfDatabindingContext.bindValue(SWTObservables.observeEnabled(actorComboViewer.getControl()), SWTObservables.observeSelection(useLaneActorButton),new UpdateValueStrategy(),updateValueStrategy);
 
 			databindactorDefinedInLaneLabel(assignable);
 
 		}
 	}
 
-	private void databindactorDefinedInLaneLabel(Assignable assignable) {
+	private void databindactorDefinedInLaneLabel(final Assignable assignable) {
 		final Lane parentLane = ModelHelper.getParentLane(assignable);
 		if(parentLane != null){
 
@@ -102,7 +90,7 @@ public class AssignableActorsPropertySection extends AbstractActorsPropertySecti
 					new UpdateValueStrategy().setConverter(new Converter(Object.class, String.class) {
 
 						@Override
-						public String convert(Object fromObject) {
+						public String convert(final Object fromObject) {
 							if(fromObject != null){
 								return "("+((Actor)fromObject).getName()+")";
 							} else {
@@ -115,7 +103,7 @@ public class AssignableActorsPropertySection extends AbstractActorsPropertySecti
 	}
 
 	@Override
-	protected void createRadioComposite(TabbedPropertySheetWidgetFactory widgetFactory,Composite mainComposite) {
+	protected void createRadioComposite(final TabbedPropertySheetWidgetFactory widgetFactory,final Composite mainComposite) {
 		radioComposite = widgetFactory.createComposite(mainComposite, SWT.NONE) ;
 		radioComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true,false).span(3, 1).create()) ;
 		radioComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(3).margins(0, 0).create()) ;

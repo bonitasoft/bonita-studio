@@ -38,6 +38,7 @@ import org.bonitasoft.studio.exporter.tests.form.TestFormsExporter;
 import org.bonitasoft.studio.groovy.ui.test.TestGroovyScriptExpressionEditor;
 import org.bonitasoft.studio.importer.test.bos.TestBOSArchiveImport;
 import org.bonitasoft.studio.migration.tests.MigrationReportPDFExportTest;
+import org.bonitasoft.studio.migration.tests.document.DocumentTypeMigrationIT;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.bonitasoft.studio.properties.test.TestLookAndFeel;
@@ -112,6 +113,7 @@ import org.junit.runners.Suite;
     TestRemoveWidgetReferencesOperation.class,
     TestWebserviceVersionForBPMNImport.class,
         TestTokenDispatcher.class,
+        DocumentTypeMigrationIT.class,
     CloseAllEditors.class,
 })
 public class AllTests2 extends TestSuite {
