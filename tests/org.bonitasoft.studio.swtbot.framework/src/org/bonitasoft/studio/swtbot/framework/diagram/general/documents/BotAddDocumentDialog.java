@@ -108,6 +108,19 @@ public class BotAddDocumentDialog extends BotWizardDialog {
         bot.textWithLabel(Messages.documentExternalLabel + " *").setText(pURL);
     }
 
+
+    /**
+     * get URL expressionEditor.
+     * 
+     * @param pURL
+     */
+    public void setURLWithExpressionEditor(final String pURL) {
+        bot.toolbarButtonWithId(ExpressionViewer.SWTBOT_ID_EDITBUTTON, 0).click();
+        final BotExpressionEditorDialog editor = new BotExpressionEditorDialog(bot);
+        editor.selectConstantType().setValue(pURL);
+        editor.ok();
+    }
+
     /**
      * MULTIPLE CONTENT
      */
