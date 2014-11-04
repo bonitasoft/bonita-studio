@@ -5,12 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -49,9 +49,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 
 /**
- * 
+ *
  * @author Baptiste Mesta
- * 
+ *
  */
 public class DefaultValueContribution implements IExtensibleGridPropertySectionContribution {
 
@@ -68,9 +68,8 @@ public class DefaultValueContribution implements IExtensibleGridPropertySectionC
 
     private InitialValueExpressionFilter expressionFilter;
 
-    public void createControl(Composite composite, TabbedPropertySheetWidgetFactory widgetFactory, ExtensibleGridPropertySection extensibleGridPropertySection) {
-
-        GridLayout layout = new GridLayout(2, false);
+    public void createControl(final Composite composite, final TabbedPropertySheetWidgetFactory widgetFactory, final ExtensibleGridPropertySection extensibleGridPropertySection) {
+        final GridLayout layout = new GridLayout(2, false);
 
         layout.marginHeight = InitialValueContribution.MARGIN_HEIGHT;
         layout.marginWidth = InitialValueContribution.MARGIN_WIDTH;
@@ -80,20 +79,24 @@ public class DefaultValueContribution implements IExtensibleGridPropertySectionC
         defaultExpressionViewer = new ExpressionViewer(composite, SWT.BORDER, widgetFactory, editingDomain,
                 FormPackage.Literals.MULTIPLE_VALUATED_FORM_FIELD__DEFAULT_EXPRESSION, true);
         defaultExpressionViewer.addFilter(getExpressionViewerFilter());
-        if (widget instanceof RadioFormField || widget instanceof ComboFormField || widget instanceof SelectFormField) {
-            defaultExpressionViewer.setMessage(Messages.data_tooltip_text, IStatus.INFO);
-        } else {
-            defaultExpressionViewer.setMessage(Messages.data_tooltip_list, IStatus.INFO);
-        }
+        defaultExpressionViewer.setMessage(getInitialInformationMessage(), IStatus.INFO);
         defaultExpressionViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
         bindWidgets();
     }
 
+    protected String getInitialInformationMessage() {
+        if (widget instanceof RadioFormField || widget instanceof ComboFormField || widget instanceof SelectFormField) {
+            return Messages.data_tooltip_text;
+        } else {
+            return Messages.data_tooltip_list;
+        }
+    }
+
     protected AvailableExpressionTypeFilter getExpressionViewerFilter() {
-        boolean allowGroupIterator = widget.eContainer() instanceof Group;
+        final boolean allowGroupIterator = widget.eContainer() instanceof Group;
         if (expressionFilter == null) {
-            List<String> contentTypes = new ArrayList<String>();
+            final List<String> contentTypes = new ArrayList<String>();
             contentTypes.add(ExpressionConstants.VARIABLE_TYPE);
             contentTypes.add(ExpressionConstants.SCRIPT_TYPE);
             contentTypes.add(ExpressionConstants.CONSTANT_TYPE);
@@ -126,7 +129,7 @@ public class DefaultValueContribution implements IExtensibleGridPropertySectionC
         return Messages.Action_SelectedValue;
     }
 
-    public boolean isRelevantFor(EObject eObject) {
+    public boolean isRelevantFor(final EObject eObject) {
         return eObject instanceof MultipleValuatedFormField;
     }
 
@@ -134,15 +137,15 @@ public class DefaultValueContribution implements IExtensibleGridPropertySectionC
 
     }
 
-    public void setEObject(EObject object) {
+    public void setEObject(final EObject object) {
         widget = (MultipleValuatedFormField) object;
     }
 
-    public void setEditingDomain(TransactionalEditingDomain editingDomain) {
+    public void setEditingDomain(final TransactionalEditingDomain editingDomain) {
         this.editingDomain = editingDomain;
     }
 
-    public void setSelection(ISelection selection) {
+    public void setSelection(final ISelection selection) {
 
     }
 
