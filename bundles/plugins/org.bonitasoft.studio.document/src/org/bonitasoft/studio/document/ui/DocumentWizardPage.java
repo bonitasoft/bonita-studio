@@ -259,8 +259,9 @@ public class DocumentWizardPage extends WizardPage {
         return new ExpressionViewer(parent, SWT.BORDER);
     }
 
-    protected GroovyOnlyExpressionViewer createExpressionViewerWithGroovyScriptOnly(final Composite parent) {
-        return new GroovyOnlyExpressionViewer(parent, SWT.READ_ONLY | SWT.BORDER);
+    protected GroovyOnlyExpressionViewer createExpressionViewerWitrhGroovyScriptOnly(final Composite parent) {
+        return new GroovyOnlyExpressionViewer(parent, SWT.READ_ONLY | SWT.BORDER,
+                ProcessPackage.Literals.DOCUMENT__INITIAL_MULTIPLE_CONTENT);
     }
 
     private void createDocumentManageMimeTypeLink(final Composite detailsComposite) {
@@ -407,7 +408,7 @@ public class DocumentWizardPage extends WizardPage {
     }
 
     protected void createDocumentInitialMultipleContent(final Composite parent) {
-        multipleInitialContentExpressionViewer = createExpressionViewerWithGroovyScriptOnly(parent);
+        multipleInitialContentExpressionViewer = createExpressionViewerWitrhGroovyScriptOnly(parent);
         multipleInitialContentExpressionViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         multipleInitialContentExpressionViewer.setInput(document);
     }

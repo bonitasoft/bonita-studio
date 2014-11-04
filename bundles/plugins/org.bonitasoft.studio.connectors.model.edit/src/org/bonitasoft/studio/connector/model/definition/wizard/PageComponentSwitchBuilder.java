@@ -443,7 +443,8 @@ public class PageComponentSwitchBuilder {
 
         if (parameter != null) {
             createFieldLabel(composite, SWT.CENTER, object.getId(), input.isMandatory());
-            final ExpressionViewer viewer = new GroovyOnlyExpressionViewer(composite, SWT.BORDER | SWT.SHORT);
+            final ExpressionViewer viewer = new GroovyOnlyExpressionViewer(composite, SWT.BORDER,
+                    ConnectorConfigurationPackage.Literals.CONNECTOR_PARAMETER__EXPRESSION);
             viewer.setIsPageFlowContext(isPageFlowContext);
             viewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
             viewer.setContext(container);

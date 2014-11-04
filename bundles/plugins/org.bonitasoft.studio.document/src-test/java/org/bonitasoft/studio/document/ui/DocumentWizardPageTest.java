@@ -68,7 +68,7 @@ public class DocumentWizardPageTest {
         doReturn(expressionViewerMock).when(documentWizardPageUnderTest).createExpressionViewer(Mockito.any(Composite.class), Mockito.any(EReference.class));
 
         when(groovyOnlyExpressionViewerMock.getControl()).thenReturn(mock(Control.class));
-        doReturn(groovyOnlyExpressionViewerMock).when(documentWizardPageUnderTest).createExpressionViewerWithGroovyScriptOnly(Mockito.any(Composite.class));
+        doReturn(groovyOnlyExpressionViewerMock).when(documentWizardPageUnderTest).createExpressionViewerWitrhGroovyScriptOnly(Mockito.any(Composite.class));
 
     }
 
@@ -99,7 +99,7 @@ public class DocumentWizardPageTest {
     @Test
     public void should_createDocumentInitialMultipleContent_should_create_ExpressionViwer_with_filter_accepting_only_Groovy_script() throws Exception {
         documentWizardPageUnderTest.createDocumentInitialMultipleContent(mock(Composite.class));
-        verify(documentWizardPageUnderTest).createExpressionViewerWithGroovyScriptOnly(Mockito.any(Composite.class));
+        verify(documentWizardPageUnderTest).createExpressionViewerWitrhGroovyScriptOnly(Mockito.any(Composite.class));
     }
 
 }
