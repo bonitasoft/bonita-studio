@@ -172,7 +172,7 @@ public class TestProvidedDefinitionAndImplementation extends TestCase {
 
     protected boolean filteredInput(final ConnectorDefinition definition, final String inputName) {
         return inputName.equals("outputType") && definition.getId().startsWith("database-")
-                || inputName.equals("variables ") && definition.getId().equals("scripting-groovy-script");
+                || inputName.equals("variables") && definition.getId().equals("scripting-groovy-script");
     }
 
 	private void parsePageWidget(final Component component, final List<String> bindInputs,final String resourceName,final ConnectorDefinition def, final StringBuilder testReport) {
