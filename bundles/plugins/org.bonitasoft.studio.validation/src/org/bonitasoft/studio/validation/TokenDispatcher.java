@@ -278,6 +278,7 @@ public class TokenDispatcher {
 
 
     private void visit(final SourceElement sourceElement) {
+        BonitaStudioLog.debug("Token dispatcher visiting " + sourceElement.getName(), ValidationPlugin.PLUGIN_ID);
         boolean allOutgoingFlowsHaveToken = true;
         for(final Connection c : sourceElement.getOutgoing()){
             if(c instanceof SequenceFlow && (((SequenceFlow) c).getPathToken() == null || ((SequenceFlow) c).getPathToken().isEmpty())){
@@ -291,16 +292,18 @@ public class TokenDispatcher {
             for(final Connection c : sourceElement.getOutgoing()){
                 if(c instanceof SequenceFlow){
                     final EObject target = c.getTarget();
-                    if(target instanceof ThrowLinkEvent){
-                        visit(((ThrowLinkEvent)target).getTo());
-                    }else{
-                        if(target instanceof Activity){
-                            for(final BoundaryEvent event : ((Activity) target).getBoundaryIntermediateEvents()){
-                                visit(event);
+                    if (!sourceElement.equals(target)) {
+                        if (target instanceof ThrowLinkEvent) {
+                            visit(((ThrowLinkEvent) target).getTo());
+                        } else {
+                            if (target instanceof Activity) {
+                                for (final BoundaryEvent event : ((Activity) target).getBoundaryIntermediateEvents()) {
+                                    visit(event);
+                                }
                             }
-                        }
-                        if(target instanceof FlowElement){
-                            visit((SourceElement) target);
+                            if (target instanceof FlowElement) {
+                                visit((SourceElement) target);
+                            }
                         }
                     }
                 }
