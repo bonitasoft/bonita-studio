@@ -148,7 +148,11 @@ public class ModelHelper {
     }
 
     public static FileWidgetInputType getDefaultFileWidgetInputType(final FileWidget widget) {
-        if (ModelHelper.isAnEntryPageFlowOnAPool(ModelHelper.getParentForm(widget))) {
+        final Form parentForm = ModelHelper.getParentForm(widget);
+        if (parentForm == null) {
+            return FileWidgetInputType.RESOURCE;
+        }
+        if (ModelHelper.isAnEntryPageFlowOnAPool(parentForm)) {
             return FileWidgetInputType.RESOURCE;
         }
         return FileWidgetInputType.DOCUMENT;
