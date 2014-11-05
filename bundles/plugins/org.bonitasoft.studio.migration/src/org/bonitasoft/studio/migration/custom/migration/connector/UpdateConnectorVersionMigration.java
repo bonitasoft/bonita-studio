@@ -34,6 +34,12 @@ public abstract class UpdateConnectorVersionMigration extends CustomMigration {
                 updateVersion(connectorInstance);
             }
         }
+        for (final Instance connectorInstance : model.getAllInstances("connectorconfiguration.ConnectorConfiguration")) {
+            final String defId = connectorInstance.get("definitionId");
+            if (shouldUpdateVersion(defId)) {
+                updateConfigVersion(connectorInstance);
+            }
+        }
     }
 
     private void updateVersion(final Instance connectorInstance) {
@@ -41,10 +47,14 @@ public abstract class UpdateConnectorVersionMigration extends CustomMigration {
         final String previousDefinitionVersion = getOldDefinitionVersion();
         if (defVersion.equals(previousDefinitionVersion)) {
             connectorInstance.set("definitionVersion", getNewDefinitionVersion());
-            final Instance connectorConfigInstance = connectorInstance.get("configuration");
-            if (connectorConfigInstance != null) {
-                connectorConfigInstance.set("version", getNewDefinitionVersion());
-            }
+        }
+    }
+
+    private void updateConfigVersion(final Instance connectorConfigInstance) {
+        final String defVersion = connectorConfigInstance.get("version");
+        final String previousDefinitionVersion = getOldDefinitionVersion();
+        if (defVersion.equals(previousDefinitionVersion)) {
+            connectorConfigInstance.set("version", getNewDefinitionVersion());
         }
     }
 
