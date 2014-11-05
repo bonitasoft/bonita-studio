@@ -396,7 +396,7 @@
 								<artifactItem>
 									<groupId>org.bonitasoft.connectors</groupId>
 									<artifactId>bonita-connector-scripting-groovy-impl</artifactId>
-									<version>1.0.10</version>
+									<version>1.0.11</version>
 									<classifier>connector</classifier>
 									<type>zip</type>
 								</artifactItem>
