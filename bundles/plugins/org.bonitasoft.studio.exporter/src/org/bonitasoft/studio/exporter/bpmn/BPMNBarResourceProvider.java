@@ -16,34 +16,17 @@
  */
 package org.bonitasoft.studio.exporter.bpmn;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
 import org.bonitasoft.engine.bpm.bar.BarResource;
 import org.bonitasoft.engine.bpm.bar.BusinessArchiveBuilder;
-import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.extension.BARResourcesProvider;
-import org.bonitasoft.studio.common.extension.BarResourcesProviderUtil;
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.exporter.bpmn.transfo.BonitaToBPMN;
-import org.bonitasoft.studio.exporter.extension.BonitaModelExporterImpl;
 import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.model.process.AbstractProcess;
-import org.bonitasoft.studio.model.process.diagram.edit.parts.MainProcessEditPart;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.transaction.RunnableWithResult;
-import org.eclipse.gmf.runtime.diagram.ui.OffscreenEditPartFactory;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
-import org.eclipse.gmf.runtime.emf.core.GMFEditingDomainFactory;
-import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 
@@ -54,53 +37,7 @@ public class BPMNBarResourceProvider implements BARResourcesProvider {
     public List<BarResource> addResourcesForConfiguration(final BusinessArchiveBuilder builder, final AbstractProcess process, final Configuration configuration,
             final Set<EObject> excludedObject) throws Exception {
         if(PlatformUI.isWorkbenchRunning()){
-            final RunnableWithResult<List<BarResource>> runnableWithResult = new RunnableWithResult<List<BarResource>>() {
-
-                final List<BarResource> res = new ArrayList<BarResource>();
-
-                @Override
-                public void run() {
-                    final Diagram diagramFor = ModelHelper.getDiagramFor(ModelHelper.getMainProcess(process), null);
-                    final ResourceSet rSet = diagramFor.eResource().getResourceSet() ;
-                    GMFEditingDomainFactory.getInstance().createEditingDomain(rSet) ;
-                    DiagramEditPart dep;
-                    try{
-                        dep = OffscreenEditPartFactory.getInstance().createDiagramEditPart(diagramFor,  Display.getDefault().getActiveShell());
-                    } catch(final Exception ex){
-                        dep = OffscreenEditPartFactory.getInstance().createDiagramEditPart(diagramFor,  Display.getDefault().getActiveShell());
-                    }
-                    final MainProcessEditPart mped = (MainProcessEditPart) dep;
-                    File destFile = null;
-                    try {
-                        destFile = File.createTempFile(process.getName() + "-" + process.getVersion(), ".bpmn");
-                        new BonitaToBPMN().transform(new BonitaModelExporterImpl(mped), destFile, new NullProgressMonitor());
-                        BarResourcesProviderUtil.addFileContents(res, destFile, "process.bpmn");
-                        for (final BarResource barResource : res) {
-                            builder.addClasspathResource(barResource);
-                        }
-                    } catch (final IOException e) {
-                        BonitaStudioLog.error(e);
-                    } finally {
-                        if(destFile != null){
-                            destFile.delete();
-                        }
-                    }
-                }
-
-                @Override
-                public List<BarResource> getResult() {
-                    return res;
-                }
-
-                @Override
-                public void setStatus(final IStatus status) {
-                }
-
-                @Override
-                public IStatus getStatus() {
-                    return Status.OK_STATUS;
-                }
-            };
+            final RunnableWithResult<List<BarResource>> runnableWithResult = new AddBpmnBarResourceRunnable(builder, process);
             Display.getDefault().syncExec(runnableWithResult);
             return runnableWithResult.getResult();
         }
