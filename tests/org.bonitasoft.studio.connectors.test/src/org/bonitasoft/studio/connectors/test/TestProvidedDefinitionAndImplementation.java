@@ -51,15 +51,15 @@ public class TestProvidedDefinitionAndImplementation extends TestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		connectorDefStore = (ConnectorDefRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class);
-		connectorImplStore = (ConnectorImplRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorImplRepositoryStore.class);
+		connectorDefStore = RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class);
+		connectorImplStore = RepositoryManager.getInstance().getRepositoryStore(ConnectorImplRepositoryStore.class);
 		connectorResourceProvider = DefinitionResourceProvider.getInstance(connectorDefStore, ConnectorPlugin.getDefault().getBundle());
 	}
 
 	public void testProvidedDefinitionsSanity() throws Exception {
-		StringBuilder testReport = new StringBuilder("testProvidedDefinitionsSanity report:");
-		for(ConnectorDefinition definition : connectorDefStore.getDefinitions()){
-			String resourceName = definition.eResource().getURI().lastSegment();
+		final StringBuilder testReport = new StringBuilder("testProvidedDefinitionsSanity report:");
+		for(final ConnectorDefinition definition : connectorDefStore.getDefinitions()){
+			final String resourceName = definition.eResource().getURI().lastSegment();
 			if(connectorDefStore.getChild(resourceName).isReadOnly()){
 				if(!(definition.getId() != null && !definition.getId().isEmpty())){
 					testReport.append("\n");
@@ -71,11 +71,11 @@ public class TestProvidedDefinitionAndImplementation extends TestCase {
 					testReport.append("Missing definition version for "+resourceName);
 				}
 
-//NO MORE A CONSTRAINT
-//				if(!NamingUtils.toConnectorDefinitionFilename(definition.getId(), definition.getVersion(), true).equals(resourceName)){
-//					testReport.append("\n");
-//					testReport.append("Resource name doesn't match id and version for "+resourceName);
-//				}
+                //NO MORE A CONSTRAINT
+                //				if(!NamingUtils.toConnectorDefinitionFilename(definition.getId(), definition.getVersion(), true).equals(resourceName)){
+                //					testReport.append("\n");
+                //					testReport.append("Resource name doesn't match id and version for "+resourceName);
+                //				}
 
 				if(!(definition.getIcon() != null && !definition.getIcon().isEmpty())){
 					testReport.append("\n");
@@ -98,27 +98,27 @@ public class TestProvidedDefinitionAndImplementation extends TestCase {
 					testReport.append("The definition should belong to at least one category for "+resourceName);
 				}
 
-				List<String> inputs = new ArrayList<String>();
-				for(Input in : definition.getInput()){
-//					try{
-//						Class inputClazz = Class.forName(in.getType());
-//						if(!(Collection.class.isAssignableFrom(inputClazz) || Serializable.class.isAssignableFrom(inputClazz))){
-//							testReport.append("\n");
-//							testReport.append("Input "+in.getName()+" with type "+in.getType()+" from "+definition.getId()+" ("+definition.getVersion()+") is not Serializable or is not a Collection");
-//						}
-//					}catch (Exception e) {
-//
-//					}
+				final List<String> inputs = new ArrayList<String>();
+				for(final Input in : definition.getInput()){
+                    //					try{
+                    //						Class inputClazz = Class.forName(in.getType());
+                    //						if(!(Collection.class.isAssignableFrom(inputClazz) || Serializable.class.isAssignableFrom(inputClazz))){
+                    //							testReport.append("\n");
+                    //							testReport.append("Input "+in.getName()+" with type "+in.getType()+" from "+definition.getId()+" ("+definition.getVersion()+") is not Serializable or is not a Collection");
+                    //						}
+                    //					}catch (Exception e) {
+                    //
+                    //					}
 					inputs.add(in.getName());
 				}
-				for(String inputName : inputs){
+				for(final String inputName : inputs){
 					if(Collections.frequency(inputs, inputName) != 1){
 						testReport.append("\n");
 						testReport.append("Input "+inputName+" is duplicated in "+resourceName);
 					}
 				}
-				List<String> bindInputs = new ArrayList<String>();
-				for(Page p : definition.getPage()){
+				final List<String> bindInputs = new ArrayList<String>();
+				for(final Page p : definition.getPage()){
 
 					if(!(p.getId() != null && !p.getId().isEmpty())){
 						testReport.append("\n");
@@ -138,14 +138,14 @@ public class TestProvidedDefinitionAndImplementation extends TestCase {
 						testReport.append("Invalid page description for "+p.getId()+" in "+resourceName);
 					}
 
-					for(Component component : p.getWidget()){
+					for(final Component component : p.getWidget()){
 						parsePageWidget(component,bindInputs, resourceName,definition,testReport);
 					}
 				}
 
-				for(String inputName : inputs){
+				for(final String inputName : inputs){
 					final int frequency = Collections.frequency(bindInputs, inputName);
-					if(frequency == 0 && !(inputName.equals("outputType") && definition.getId().startsWith("database-"))){
+					if(frequency == 0 && !filteredInput(definition, inputName)){
 						testReport.append("\n");
 						testReport.append("Input "+inputName+" is not bound to any widget in "+resourceName);
 					}
@@ -155,8 +155,8 @@ public class TestProvidedDefinitionAndImplementation extends TestCase {
 					}
 				}
 
-				List<String> outputs = new ArrayList<String>();
-				for(String outputName : outputs){
+				final List<String> outputs = new ArrayList<String>();
+				for(final String outputName : outputs){
 					if(Collections.frequency(outputs, outputName) != 1){
 						testReport.append("\n");
 						testReport.append("Output "+outputName+" is duplicated in "+resourceName);
@@ -170,7 +170,12 @@ public class TestProvidedDefinitionAndImplementation extends TestCase {
 		}
 	}
 
-	private void parsePageWidget(Component component, List<String> bindInputs,String resourceName,ConnectorDefinition def, StringBuilder testReport) {
+    protected boolean filteredInput(final ConnectorDefinition definition, final String inputName) {
+        return inputName.equals("outputType") && definition.getId().startsWith("database-")
+                || inputName.equals("variables ") && definition.getId().equals("scripting-groovy-script");
+    }
+
+	private void parsePageWidget(final Component component, final List<String> bindInputs,final String resourceName,final ConnectorDefinition def, final StringBuilder testReport) {
 		final String componentId = component.getId();
 		if(component instanceof Group){
 			if(!(componentId != null && !componentId.isEmpty())){
@@ -183,7 +188,7 @@ public class TestProvidedDefinitionAndImplementation extends TestCase {
 				testReport.append("\n");
 				testReport.append("The widget "+componentId+" has no label in "+resourceName);
 			}
-			for(Component widget : ((Group)component).getWidget()){
+			for(final Component widget : ((Group)component).getWidget()){
 				parsePageWidget(widget, bindInputs,resourceName,def,testReport);
 			}
 		}else if(component instanceof WidgetComponent){
@@ -204,10 +209,10 @@ public class TestProvidedDefinitionAndImplementation extends TestCase {
 	}
 
 	public void testProvidedImplementationsSanity() throws Exception {
-		StringBuilder testReport = new StringBuilder("testProvidedImplementationsSanity report:");
-		List<ConnectorDefinition> definitions = connectorDefStore.getDefinitions();
-		for(ConnectorImplementation implementation : connectorImplStore.getImplementations()){
-			String resourceName = implementation.eResource().getURI().lastSegment();
+		final StringBuilder testReport = new StringBuilder("testProvidedImplementationsSanity report:");
+		final List<ConnectorDefinition> definitions = connectorDefStore.getDefinitions();
+		for(final ConnectorImplementation implementation : connectorImplStore.getImplementations()){
+			final String resourceName = implementation.eResource().getURI().lastSegment();
 			if(connectorImplStore.getChild(resourceName).isReadOnly()){
 				if(implementation.getImplementationId() == null || implementation.getImplementationId().isEmpty()){
 					testReport.append("\n");
@@ -248,7 +253,7 @@ public class TestProvidedDefinitionAndImplementation extends TestCase {
 					testReport.append("Missing jar dependencies for "+resourceName);
 				}
 				if(implementation.getJarDependencies() != null){
-					for(String jarName : implementation.getJarDependencies().getJarDependency() ){
+					for(final String jarName : implementation.getJarDependencies().getJarDependency() ){
 						final InputStream stream = connectorResourceProvider.getDependencyInputStream(jarName);
 						if(stream == null){
 							testReport.append("\n");
