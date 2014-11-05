@@ -30,7 +30,7 @@ public abstract class UpdateConnectorVersionMigration extends CustomMigration {
     public void migrateAfter(final Model model, final Metamodel metamodel) throws MigrationException {
         for (final Instance connectorInstance : model.getAllInstances("process.Connector")) {
             final String defId = connectorInstance.get("definitionId");
-            if (isProvidedAlfrescoConnectorDef(defId)) {
+            if (shouldUpdateVersion(defId)) {
                 updateVersion(connectorInstance);
             }
         }
@@ -48,7 +48,7 @@ public abstract class UpdateConnectorVersionMigration extends CustomMigration {
         }
     }
 
-    protected abstract boolean isProvidedAlfrescoConnectorDef(final String defId);
+    protected abstract boolean shouldUpdateVersion(final String defId);
 
     protected abstract String getNewDefinitionVersion();
 

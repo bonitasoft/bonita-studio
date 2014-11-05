@@ -32,7 +32,7 @@ public class UpdateTalendConnectorVersionTo101 extends UpdateConnectorVersionMig
     }
 
     @Override
-    protected boolean isProvidedAlfrescoConnectorDef(final String defId) {
+    protected boolean shouldUpdateVersion(final String defId) {
         return defId.equals(TALEND_JOB_DEFINITION_ID);
     }
 }

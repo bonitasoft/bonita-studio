@@ -32,7 +32,7 @@ public class UpdateGroovyConnectorVersionTo101 extends UpdateConnectorVersionMig
     }
 
     @Override
-    protected boolean isProvidedAlfrescoConnectorDef(final String defId) {
+    protected boolean shouldUpdateVersion(final String defId) {
         return defId.equals(GROOVY_DEF_ID);
     }
 }
