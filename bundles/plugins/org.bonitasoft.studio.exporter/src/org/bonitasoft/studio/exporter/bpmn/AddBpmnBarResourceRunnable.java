@@ -35,12 +35,14 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.transaction.RunnableWithResult;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gmf.runtime.diagram.ui.OffscreenEditPartFactory;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.emf.core.GMFEditingDomainFactory;
 import org.eclipse.gmf.runtime.notation.Diagram;
-import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 
 public class AddBpmnBarResourceRunnable implements RunnableWithResult<List<BarResource>> {
 
@@ -83,17 +85,34 @@ public class AddBpmnBarResourceRunnable implements RunnableWithResult<List<BarRe
         }
     }
 
-    protected MainProcessEditPart createMainEditPart(final Diagram diagramFor, final Resource eResource) {
-        final ResourceSet rSet = eResource.getResourceSet();
-        GMFEditingDomainFactory.getInstance().createEditingDomain(rSet);
-        DiagramEditPart dep;
+    protected MainProcessEditPart createMainEditPart(Diagram diagramFor, final Resource eResourceuseless) {
+        final ResourceSet rSet = new ResourceSetImpl();
+
+        final TransactionalEditingDomain editingDomain = GMFEditingDomainFactory.getInstance().createEditingDomain(rSet);
+        final Resource resource = rSet.createResource(diagramFor.eResource().getURI());
         try {
-            dep = OffscreenEditPartFactory.getInstance().createDiagramEditPart(diagramFor, Display.getDefault().getActiveShell());
-        } catch (final Exception ex) {
-            dep = OffscreenEditPartFactory.getInstance().createDiagramEditPart(diagramFor, Display.getDefault().getActiveShell());
+            resource.load(rSet.getLoadOptions());
+        } catch (final IOException e1) {
+            BonitaStudioLog.error(e1);
         }
-        final MainProcessEditPart mped = (MainProcessEditPart) dep;
-        return mped;
+        diagramFor = (Diagram) resource.getEObject(diagramFor.eResource().getURIFragment(diagramFor));
+
+        DiagramEditPart dep;
+        final Shell shell = new Shell();
+        try {
+            dep = OffscreenEditPartFactory.getInstance().createDiagramEditPart(diagramFor, shell);
+        } catch (final Exception ex) {
+            dep = OffscreenEditPartFactory.getInstance().createDiagramEditPart(diagramFor, shell);
+        } finally {
+            if (editingDomain != null) {
+                editingDomain.dispose();
+            }
+            if (shell != null) {
+                shell.dispose();
+            }
+        }
+
+        return (MainProcessEditPart) dep;
     }
 
     @Override

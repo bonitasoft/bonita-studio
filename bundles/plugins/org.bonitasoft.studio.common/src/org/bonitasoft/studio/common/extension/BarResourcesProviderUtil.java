@@ -40,7 +40,7 @@ public class BarResourcesProviderUtil {
             final InputStream stream = new FileInputStream(file);
             stream.read(jarBytes);
             stream.close();
-            resources.add(new BarResource(file.getName(), jarBytes));
+            resources.add(new BarResource(barResourceName, jarBytes));
         }
     }
 
