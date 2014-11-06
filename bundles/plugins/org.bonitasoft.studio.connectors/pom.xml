@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>org.bonitasoft.studio.bundles.plugins</groupId>
 	<artifactId>org.bonitasoft.studio.connectors</artifactId>
-	<packaging>eclipse-plugin</packaging>
+	<packaging>eclipse</packaging>
 
 	<properties>
 		<connectors.impl.target>${basedir}/connectors-impl</connectors.impl.target>
@@ -331,8 +331,44 @@
 									<version>1.0.0</version>
 									<classifier>connector</classifier>
 									<type>zip</type>
-								</artifactItem>
-								<!--JASPER CONNECTORS-->
+                            	</artifactItem>
+                                <!-- GOOGLE CALENDAR V3 -->
+                                <dependency>
+                                    <groupId>org.bonitasoft.connectors</groupId>
+                                    <artifactId>bonita-connector-google-calendar-v3-create-event-impl</artifactId>
+                                    <version>1.0.0</version>
+                                    <type>zip</type>
+                                    <classifier>connector</classifier>
+                                </dependency>
+                                <dependency>
+                                    <groupId>org.bonitasoft.connectors</groupId>
+                                    <artifactId>bonita-connector-google-calendar-v3-get-event-impl</artifactId>
+                                    <version>1.0.0</version>
+                                    <type>zip</type>
+                                    <classifier>connector</classifier>
+                                </dependency>
+                                <dependency>
+                                    <groupId>org.bonitasoft.connectors</groupId>
+                                    <artifactId>bonita-connector-google-calendar-v3-delete-event-impl</artifactId>
+                                    <version>1.0.0</version>
+                                    <type>zip</type>
+                                    <classifier>connector</classifier>
+                                </dependency>
+                                <dependency>
+                                    <groupId>org.bonitasoft.connectors</groupId>
+                                    <artifactId>bonita-connector-google-calendar-v3-update-event-impl</artifactId>
+                                    <version>1.0.0</version>
+                                    <type>zip</type>
+                                    <classifier>connector</classifier>
+                                </dependency>
+                                <dependency>
+                                    <groupId>org.bonitasoft.connectors</groupId>
+                                    <artifactId>bonita-connector-google-calendar-v3-move-event-impl</artifactId>
+                                    <version>1.0.0</version>
+                                    <type>zip</type>
+                                    <classifier>connector</classifier>
+                                </dependency>
+                                <!--JASPER CONNECTORS -->
 								<artifactItem>
 									<groupId>org.bonitasoft.connectors</groupId>
 									<artifactId>bonita-connector-jasper-impl</artifactId>
