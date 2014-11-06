@@ -72,7 +72,6 @@ public class ImportBosArchiveOperation {
 
     private static final String TMP_IMPORT_PROJECT = "tmpImport";
 
-    private IStatus status;
 
     private String archiveFile;
 
@@ -84,8 +83,9 @@ public class ImportBosArchiveOperation {
 
     private final List<AbstractProcess> importedProcesses = new ArrayList<AbstractProcess>();
 
+    private BosArchiveImportStatus importStatus;
+
     public IStatus run(final IProgressMonitor monitor) {
-        status = Status.OK_STATUS;
         Assert.isNotNull(archiveFile);
         Assert.isNotNull(currentRepository);
         final File archive = new File(archiveFile);
@@ -153,19 +153,29 @@ public class ImportBosArchiveOperation {
             }
             cleanTmpProject();
         }
-        return status;
+        return Status.OK_STATUS;
+    }
+
+    public IStatus getValidationsStatus() {
+        return importStatus;
     }
 
     private void validateAllAfterImport() {
-        Display.getDefault().syncExec(new Runnable() {
+        final ImportBosArchiveStatusBuilder statusBuilder = new ImportBosArchiveStatusBuilder();
+        for (final AbstractProcess process : importedProcesses) {
+            final ProcessesValidationAction validationAction = new ProcessesValidationAction(Collections.singletonList(process));
+            Display.getDefault().syncExec(new Runnable() {
 
-            @Override
-            public void run() {
-                final ProcessesValidationAction validationAction = new ProcessesValidationAction(importedProcesses);
-                validationAction.performValidation();
-            }
-        });
+                @Override
+                public void run() {
+                    validationAction.performValidation();
+                }
 
+            });
+            statusBuilder.addStatus(process, validationAction.getStatus());
+        }
+
+        importStatus = statusBuilder.done();
     }
 
     public void setCurrentRepository(final IRepository currentRepository) {
@@ -336,10 +346,6 @@ public class ImportBosArchiveOperation {
         }
 
         return null;
-    }
-
-    public IStatus getStatus() {
-        return status;
     }
 
     public void setArchiveFile(final String archiveFile) {

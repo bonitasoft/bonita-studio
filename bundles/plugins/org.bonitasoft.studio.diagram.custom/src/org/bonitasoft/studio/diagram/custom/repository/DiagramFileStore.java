@@ -403,4 +403,8 @@ public class DiagramFileStore extends EMFFileStore implements IRepositoryFileSto
         return values != null && values[0] != null;
     }
 
+    public boolean isOpened() {
+        return getOpenedEditor() != null;
+    }
+
 }

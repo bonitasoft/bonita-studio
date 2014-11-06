@@ -81,7 +81,7 @@ public class ProcessesValidationAction {
 					return false;
 				} else {
 					if (result == ValidationDialog.SEE_DETAILS) {
-						activateValidationPart();
+						showValidationPart();
 						return false;
 					}
 				}
@@ -97,14 +97,18 @@ public class ProcessesValidationAction {
 			final int result = new ValidationDialog(Display.getDefault().getActiveShell(), Messages.validationFailedTitle, errorMessage,
 					ValidationDialog.OK_SEEDETAILS).open();
 			if (result == ValidationDialog.SEE_DETAILS) {
-				activateValidationPart();
+				showValidationPart();
 			}
 		}
 		return true;
 	}
 
+    public IStatus getStatus() {
+        return status;
+    }
 
-	public void activateValidationPart(){
+
+    public static void showValidationPart() {
 		final IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		final IEditorPart part = activePage.getActiveEditor();
 		if (part != null && part instanceof DiagramEditor) {

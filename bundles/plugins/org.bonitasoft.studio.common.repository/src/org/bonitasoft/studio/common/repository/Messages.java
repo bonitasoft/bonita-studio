@@ -67,6 +67,13 @@ public final class Messages extends NLS {
 	public static String writePermission;
 	public static String exportFailed;
 
+    public static String importResultTitle;
+
+    public static String importSucessfulMessage;
+
+    public static String issueFoundIn;
+    public static String issuesFoundIn;
+
     private Messages() {
         // Do not instantiate
     }

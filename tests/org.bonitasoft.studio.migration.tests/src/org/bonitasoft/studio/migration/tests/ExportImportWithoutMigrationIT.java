@@ -39,6 +39,7 @@ import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenc
 import org.bonitasoft.studio.swtbot.framework.diagram.BotProcessDiagramPerspective;
 import org.bonitasoft.studio.swtbot.framework.draw.BotGefProcessDiagramEditor;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
@@ -121,8 +122,8 @@ public class ExportImportWithoutMigrationIT extends SWTBotGefTestCase {
         final ImportBosArchiveOperation importBosArchiveOperation = new ImportBosArchiveOperation();
         importBosArchiveOperation.setArchiveFile(bosFile.getAbsolutePath());
         importBosArchiveOperation.setCurrentRepository(RepositoryManager.getInstance().getCurrentRepository());
-        importBosArchiveOperation.run(Repository.NULL_PROGRESS_MONITOR);
-        assertThat(importBosArchiveOperation.getStatus().isOK()).isTrue();
+        final IStatus status = importBosArchiveOperation.run(Repository.NULL_PROGRESS_MONITOR);
+        assertThat(status.isOK()).isTrue();
 
         diagramFileStore = diagramRepositoryStore.getDiagram("ExportImportWithoutMigrationIT",
                 "1.0");

@@ -28,7 +28,7 @@ public class Messages extends NLS {
 	static {
 		initializeMessages("messages", Messages.class); //$NON-NLS-1$
 	}
-	
+
 	public static String importFromXPDL;
 	public static String importFromBPMN;
 	public static String importTitle;
@@ -44,5 +44,10 @@ public class Messages extends NLS {
 	public static String errorWhileImporting_title;
 	public static String ImportProcessButtonLabel;
 	public static String importButtonLabel;
+    public static String importSucessfulMessage;
+    public static String importResultTitle;
+    public static String processesWithErrorAfterImport;
+    public static String openDiagramWithErrors;
+    public static String openDiagram;
 
 }
