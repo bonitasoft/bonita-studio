@@ -19,6 +19,8 @@ import org.bonitasoft.engine.bpm.document.DocumentValue;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.data.attachment.repository.DocumentRepositoryStore;
+import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
+import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.expression.editor.operation.OperatorLabelProvider;
 import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
 import org.bonitasoft.studio.swtbot.framework.composite.BotOperationComposite;
@@ -38,6 +40,7 @@ import org.bonitasoft.studio.swtbot.framework.expression.BotExpressionEditorDial
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -45,6 +48,15 @@ import org.junit.runner.RunWith;
 public class TestDocument extends SWTBotGefTestCase {
 
 
+    @Before
+    public void cleanRepo(){
+        bot.saveAllEditors();
+        bot.closeAllEditors();
+        final DiagramRepositoryStore repositoryStore = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
+        for (final DiagramFileStore fStore : repositoryStore.getChildren()) {
+            fStore.delete();
+        }
+    }
 
     @Test
     public void testAddEditDeleteDocument() {
@@ -288,7 +300,6 @@ public class TestDocument extends SWTBotGefTestCase {
 
     @Test
     public void test_UpdateReturnTypeInLeftOperandOperation_when_refactor_document() throws Exception {
-
         final BotApplicationWorkbenchWindow botApplicationWorkbenchWindow = new BotApplicationWorkbenchWindow(bot);
         final BotProcessDiagramPerspective botProcessDiagramPerspective = botApplicationWorkbenchWindow.createNewDiagram();
         final BotProcessDiagramPropertiesViewFolder botProcessDiagramPropertiesViewFolder = botProcessDiagramPerspective.getDiagramPropertiesPart();
