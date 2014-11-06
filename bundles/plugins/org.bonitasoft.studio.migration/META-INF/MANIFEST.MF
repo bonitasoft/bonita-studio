@@ -34,3 +34,4 @@ Export-Package: org.bonitasoft.studio.migration,org.bonitasoft.studio.
  oft.studio.migration.ui.wizard,org.bonitasoft.studio.migration.utils
 Bundle-ClassPath: .,
  lib/itextpdf-5.3.5.jar
+Import-Package: org.bonitasoft.engine.operation

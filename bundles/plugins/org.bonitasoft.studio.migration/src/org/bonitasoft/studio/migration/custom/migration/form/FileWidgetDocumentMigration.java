@@ -47,6 +47,7 @@ public class FileWidgetDocumentMigration extends CustomMigration {
             }
         }
 
+        documents = model.getAllInstances("process.Document");
 
     }
 
