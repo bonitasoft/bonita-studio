@@ -47,7 +47,6 @@ public class FileWidgetDocumentMigration extends CustomMigration {
             }
         }
 
-        documents = model.getAllInstances("process.Document");
 
     }
 
@@ -55,6 +54,8 @@ public class FileWidgetDocumentMigration extends CustomMigration {
     @Override
     public void migrateAfter(final Model model, final Metamodel metamodel) throws MigrationException {
         super.migrateAfter(model, metamodel);
+        documents = model.getAllInstances("process.Document");
+
         final EList<Instance> fileWidgets = model.getAllInstances("form.FileWidget");
 
         for (final Instance fileWidget : fileWidgets) {
@@ -63,7 +64,7 @@ public class FileWidgetDocumentMigration extends CustomMigration {
                 final Instance leftOperand = action.get("leftOperand");
                 final Instance operator = action.get("operator");
 
-                if (leftOperand != null && leftOperand.get("type").equals(ExpressionConstants.DOCUMENT_REF_TYPE)) {
+                if (leftOperand != null && ExpressionConstants.DOCUMENT_REF_TYPE.equals(leftOperand.get("type"))) {
                     final List<Instance> list = leftOperand.get("referencedElements");
                     // find the document referenced element
                     if (list.isEmpty()) {
@@ -72,7 +73,7 @@ public class FileWidgetDocumentMigration extends CustomMigration {
                             leftOperand.add("referencedElements", refDoc.copy());
                         }
                     }
-                } else if (leftOperand != null && leftOperand.get("name").equals("") && leftOperand.get("content").equals("")) {
+                } else if (leftOperand != null && "".equals(leftOperand.get("name")) && "".equals(leftOperand.get("content"))) {
                     // Set the operator type as he should be if designed in 6.4.0
                     operator.set("type", OperatorType.ASSIGNMENT.toString());
                 }
@@ -88,5 +89,6 @@ public class FileWidgetDocumentMigration extends CustomMigration {
         }
         return null;
     }
+
 
 }
