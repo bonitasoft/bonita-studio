@@ -25,6 +25,7 @@ import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.engine.i18n.Messages;
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
+import org.bonitasoft.studio.util.test.conditions.ShellIsActiveWithThreadSTacksOnFailure;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
@@ -66,8 +67,8 @@ public class BarExporterTest extends SWTBotGefTestCase {
     public void testServerBuild() {
 
         SWTBotTestUtil.createNewDiagram(bot);
-        SWTBotEditor activeEditor = bot.activeEditor();
-        String editorTitle = activeEditor.getTitle();
+        final SWTBotEditor activeEditor = bot.activeEditor();
+        final String editorTitle = activeEditor.getTitle();
         //System.out.println("editorTitle1 = "+editorTitle1);
         Assert.assertFalse("Error: first diagram name is empty.", editorTitle.isEmpty());
 
@@ -96,15 +97,15 @@ public class BarExporterTest extends SWTBotGefTestCase {
         bot.waitUntil(Conditions.shellIsActive(Messages.buildTitle));
 
         // select and check created Diagram in the Tree
-        SWTBotTree tree = bot.treeWithLabel("Select processes to export");
-        SWTBotTreeItem diagramTreeItem = tree.getTreeItem(editorTitle);
+        final SWTBotTree tree = bot.treeWithLabel("Select processes to export");
+        final SWTBotTreeItem diagramTreeItem = tree.getTreeItem(editorTitle);
 
         // check the diagram to export
         diagramTreeItem.select().check();
         diagramTreeItem.expand();
 
         // Number of pool in the diagram
-        int poolListSize = diagramTreeItem.getItems().length ;
+        final int poolListSize = diagramTreeItem.getItems().length ;
         //System.out.println("Diagram contains "+ poolListSize + " items");
         Assert.assertEquals("Error: Diagram must contain 3 Pools.",3,poolListSize );
 
@@ -113,21 +114,21 @@ public class BarExporterTest extends SWTBotGefTestCase {
         diagramTreeItem.getNode(0).select();
         diagramTreeItem.getNode(0).uncheck();
 
-        Vector<String> poolTitleList = new Vector<String>(3);
-        int poolTitleListSize = poolTitleList.size();
+        final Vector<String> poolTitleList = new Vector<String>(3);
+        final int poolTitleListSize = poolTitleList.size();
 
         // check the selected pools
         for(int i=1; i<poolTitleListSize;i++){
-            SWTBotTreeItem poolTreeItem = diagramTreeItem.getNode(i);
+            final SWTBotTreeItem poolTreeItem = diagramTreeItem.getNode(i);
             poolTitleList.set(i, poolTreeItem.getText());
-            String poolName = getItemName(poolTitleList.get(i));
+            final String poolName = getItemName(poolTitleList.get(i));
 
             // test the good pool is checked
             Assert.assertFalse("Error: Pool "+i+" should be checked.", !poolTreeItem.isChecked());
             Assert.assertFalse("Error: Pool selected is not the good one.",!poolName.equals("Pool"+i));
         }
         // create tmp directory to write diagrams
-        File tmpBarFolder = new File(ProjectUtil.getBonitaStudioWorkFolder(),"testExportBar");
+        final File tmpBarFolder = new File(ProjectUtil.getBonitaStudioWorkFolder(),"testExportBar");
         tmpBarFolder.mkdirs();
         //set the path where files are saved
         final String tmpBarFolderPath = tmpBarFolder.getAbsolutePath();
@@ -140,20 +141,20 @@ public class BarExporterTest extends SWTBotGefTestCase {
         bot.button(IDialogConstants.FINISH_LABEL).click();
 
         //  click 'OK' button to close 'Export' shell
-        bot.waitUntil(Conditions.shellIsActive(Messages.exportSuccessTitle));
+        bot.waitUntil(new ShellIsActiveWithThreadSTacksOnFailure(Messages.exportSuccessTitle));
         bot.button(IDialogConstants.OK_LABEL).click();
 
         // wait the shell to close before checking creation of files
         bot.waitUntil(Conditions.shellCloses(shell));
 
         // check directory exists
-        String diagramDir1    = getItemName(editorTitle) + "--"+getItemVersion(editorTitle);
+        final String diagramDir1    = getItemName(editorTitle) + "--"+getItemVersion(editorTitle);
         //System.out.println("diagramDir1 = "+diagramDir1);
 
         // check pools files exist
         for(int i=1; i<poolTitleListSize;i++){
-            String tmpPoolTitle = poolTitleList.get(i);
-            String poolFileName = getItemName(tmpPoolTitle)+"--"+getItemVersion(tmpPoolTitle)+".bar";
+            final String tmpPoolTitle = poolTitleList.get(i);
+            final String poolFileName = getItemName(tmpPoolTitle)+"--"+getItemVersion(tmpPoolTitle)+".bar";
             final  File poolFile = new File(tmpBarFolderPath, poolFileName);
 
             assertTrue(	"Error: The Pool export must exist",     poolFile.exists());
@@ -162,7 +163,7 @@ public class BarExporterTest extends SWTBotGefTestCase {
     }
 
     /**Return the name of a Diagram from the Title of the Editor
-     * 
+     *
      * @param s title of the editor
      * @return the name of the diagram
      * <p>
@@ -171,12 +172,12 @@ public class BarExporterTest extends SWTBotGefTestCase {
      * entry  : "MyDiagram (1.0)"<br>
      * return : "MyDiagram"
      */
-    public String getItemName(String s){
+    public String getItemName(final String s){
         return s.replaceFirst(EditorTitleRegex, "$1");
     }
 
     /**Return the version of a Diagram from the Title of the Editor
-     * 
+     *
      * @param s title of the editor
      * @return the name of the diagram
      * <p>
@@ -185,7 +186,7 @@ public class BarExporterTest extends SWTBotGefTestCase {
      * entry  : "MyDiagram (1.0)"<br>
      * return : "1.0"
      */
-    public String getItemVersion(String s){
+    public String getItemVersion(final String s){
         return s.replaceFirst(EditorTitleRegex, "$2");
     }
 
