@@ -17,53 +17,144 @@
  */
 package org.bonitasoft.studio.preferences.pages;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.jface.BonitaStudioFontRegistry;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
+import org.bonitasoft.studio.preferences.extension.IPreferenceFieldEditorContribution;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchPreferencePage;
 
-public abstract class AbstractBonitaPreferencePage extends FieldEditorPreferencePage {
+public abstract class AbstractBonitaPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
 
-	public AbstractBonitaPreferencePage() {
-		super();
-	}
+    private static final String FIELD_EDITOR_CONTRIBUTION_ID = "org.bonitasoft.studio.preferences.prefrenceFieldEditorContribution";
+    private final List<IPreferenceFieldEditorContribution> contributions = new ArrayList<IPreferenceFieldEditorContribution>();
+    private final Map<FieldEditor, IPreferenceStore> contributedEditors = new HashMap<FieldEditor, IPreferenceStore>();
 
-	public AbstractBonitaPreferencePage(int style) {
-		super(style);
-	}
+    public AbstractBonitaPreferencePage() {
+        super();
+    }
 
-	public AbstractBonitaPreferencePage(String title, int style) {
-		super(title, style);
-	}
+    public AbstractBonitaPreferencePage(final int style) {
+        super(style);
+    }
 
-	public AbstractBonitaPreferencePage(String title, ImageDescriptor image,
-			int style) {
-		super(title, image, style);
-	}
+    public AbstractBonitaPreferencePage(final String title, final int style) {
+        super(title, style);
+    }
 
-	protected void createTitleBar(String titleLabel, Image image,boolean useSeparator) {
+    public AbstractBonitaPreferencePage(final String title, final ImageDescriptor image,
+            final int style) {
+        super(title, image, style);
+    }
 
-		if(useSeparator){
-			new Label(getFieldEditorParent(), SWT.NONE) ;
-			Label separator = new Label(getFieldEditorParent(), SWT.SEPARATOR | SWT.HORIZONTAL);
-			separator.setLayoutData(GridDataFactory.fillDefaults().span(3, 1).grab(true, false).create()) ;
-		}
-		Composite composite = new Composite(getFieldEditorParent(), SWT.NONE) ;
-		composite.setLayout(new GridLayout(2,false)) ;
-		composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(3, 1).create()) ;
-	
-		Label imageLabel = new Label(composite, SWT.NONE) ;
-		imageLabel.setImage(image) ;
+    protected void createTitleBar(final String titleLabel, final Image image, final boolean useSeparator) {
+        if (useSeparator) {
+            new Label(getFieldEditorParent(), SWT.NONE);
+            final Label separator = new Label(getFieldEditorParent(), SWT.SEPARATOR | SWT.HORIZONTAL);
+            separator.setLayoutData(GridDataFactory.fillDefaults().span(3, 1).grab(true, false).create());
+        }
+        final Composite composite = new Composite(getFieldEditorParent(), SWT.NONE);
+        composite.setLayout(new GridLayout(2, false));
+        composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(3, 1).create());
 
-		Label title = new Label(composite, SWT.NONE) ;
-		title.setText(titleLabel) ;
-		title.setFont(BonitaStudioFontRegistry.getPreferenceTitleFont()) ;
+        final Label imageLabel = new Label(composite, SWT.NONE);
+        imageLabel.setImage(image);
 
-	}
+        final Label title = new Label(composite, SWT.NONE);
+        title.setText(titleLabel);
+        title.setFont(BonitaStudioFontRegistry.getPreferenceTitleFont());
+    }
+
+    protected void createPreferenceEditorContributions(final String contributorId) {
+        final List<IPreferenceFieldEditorContribution> prefEditorContributions = getFieldEditorContibutions();
+        for (final IPreferenceFieldEditorContribution prefEditorContrib : prefEditorContributions) {
+            if (prefEditorContrib.appliesTo(contributorId)) {
+                addContribution(prefEditorContrib);
+                for (final FieldEditor fe : prefEditorContrib.createFieldEditors(getFieldEditorParent())) {
+                    addField(fe);
+                    contributedEditors.put(fe, fe.getPreferenceStore());
+                }
+            }
+        }
+    }
+
+    protected void addContribution(final IPreferenceFieldEditorContribution prefEditorContrib) {
+        contributions.add(prefEditorContrib);
+    }
+
+    protected List<IPreferenceFieldEditorContribution> getFieldEditorContibutions() {
+        final List<IPreferenceFieldEditorContribution> result = new ArrayList<IPreferenceFieldEditorContribution>();
+        final IConfigurationElement[] elems = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(
+                FIELD_EDITOR_CONTRIBUTION_ID);
+        for (final IConfigurationElement elem : elems) {
+            try {
+                final IPreferenceFieldEditorContribution prefEditorContrib = (IPreferenceFieldEditorContribution) elem.createExecutableExtension("class");
+                result.add(prefEditorContrib);
+            } catch (final CoreException e) {
+                BonitaStudioLog.error(e, BonitaStudioPreferencesPlugin.PLUGIN_ID);
+            }
+        }
+        return result;
+    }
+
+    protected List<IPreferenceFieldEditorContribution> getContributions() {
+        return contributions;
+    }
+
+    protected Map<FieldEditor, IPreferenceStore> getContributedEditors() {
+        return contributedEditors;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see
+     * org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
+     */
+    @Override
+    public void init(final IWorkbench workbench) {
+        for (final IPreferenceFieldEditorContribution contrib : getContributions()) {
+            contrib.init(workbench);
+        }
+    }
+
+    @Override
+    protected void initialize() {
+        super.initialize();
+        for (final Entry<FieldEditor, IPreferenceStore> pe : getContributedEditors().entrySet()) {
+            if (pe.getValue() != null) {
+                pe.getKey().setPreferenceStore(pe.getValue());
+                pe.getKey().load();
+            }
+        }
+    }
+
+    @Override
+    public boolean performOk() {
+        for (final IPreferenceFieldEditorContribution contrib : getContributions()) {
+            if (!contrib.performOk()) {
+                return false;
+            }
+        }
+        return super.performOk();
+    }
 
 }
