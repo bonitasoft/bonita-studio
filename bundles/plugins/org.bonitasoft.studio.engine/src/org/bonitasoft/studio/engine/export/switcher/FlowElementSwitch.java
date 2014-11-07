@@ -500,7 +500,8 @@ public class FlowElementSwitch extends AbstractSwitch {
 
     void addInputIfExpressionValid(final UserFilterDefinitionBuilder filterBuilder, final ConnectorParameter parameter) {
         final Expression expression = (Expression) parameter.getExpression();
-        if (expression.getName() != null && !expression.getName().isEmpty() && !(expression.getContent() == null || expression.getContent().isEmpty())) {
+        if (expression != null && expression.getName() != null && !expression.getName().isEmpty()
+                && !(expression.getContent() == null || expression.getContent().isEmpty())) {
             filterBuilder.addInput(parameter.getKey(), EngineExpressionUtil.createExpression(parameter.getExpression()));
         }
     }
