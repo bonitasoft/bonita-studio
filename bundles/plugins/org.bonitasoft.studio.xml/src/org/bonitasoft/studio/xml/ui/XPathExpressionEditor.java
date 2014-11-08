@@ -5,12 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -48,6 +48,7 @@ import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -77,12 +78,13 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.xsd.XSDAttributeDeclaration;
 import org.eclipse.xsd.XSDElementDeclaration;
+import org.eclipse.xsd.XSDFeature;
 import org.eclipse.xsd.XSDNamedComponent;
 import org.eclipse.xsd.XSDParticle;
 
 /**
  * @author Romain Bioteau
- * 
+ *
  */
 public class XPathExpressionEditor extends SelectionAwareExpressionEditor implements IExpressionEditor {
 
@@ -109,23 +111,23 @@ public class XPathExpressionEditor extends SelectionAwareExpressionEditor implem
      * @see org.bonitasoft.studio.expression.editor.provider.IExpressionEditor#createExpressionEditor(org.eclipse.swt.widgets.Composite)
      */
     @Override
-    public Control createExpressionEditor(Composite parent, EMFDataBindingContext ctx) {
+    public Control createExpressionEditor(final Composite parent, final EMFDataBindingContext ctx) {
         mainComposite = new Composite(parent, SWT.NONE);
         mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         mainComposite.setLayout(new GridLayout(2, true));
 
         viewer = new TableViewer(mainComposite, SWT.FULL_SELECTION | SWT.BORDER | SWT.SINGLE | SWT.V_SCROLL);
 
-        TableLayout layout = new TableLayout();
+        final TableLayout layout = new TableLayout();
         layout.addColumnData(new ColumnWeightData(100, false));
         viewer.getTable().setLayout(layout);
         viewer.getTable().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
-        TableViewerColumn columnViewer = new TableViewerColumn(viewer, SWT.NONE);
-        TableColumn column = columnViewer.getColumn();
+        final TableViewerColumn columnViewer = new TableViewerColumn(viewer, SWT.NONE);
+        final TableColumn column = columnViewer.getColumn();
         column.setText(Messages.name);
 
-        TableColumnSorter sorter = new TableColumnSorter(viewer);
+        final TableColumnSorter sorter = new TableColumnSorter(viewer);
         sorter.setColumn(column);
 
         viewer.getTable().setHeaderVisible(true);
@@ -134,7 +136,7 @@ public class XPathExpressionEditor extends SelectionAwareExpressionEditor implem
         viewer.addPostSelectionChangedListener(new ISelectionChangedListener() {
 
             @Override
-            public void selectionChanged(SelectionChangedEvent event) {
+            public void selectionChanged(final SelectionChangedEvent event) {
                 if (!event.getSelection().isEmpty()) {
                     xsdViewer.expandAll();
                     // String content = editorInputExpression.getContent() ;
@@ -153,15 +155,15 @@ public class XPathExpressionEditor extends SelectionAwareExpressionEditor implem
         return mainComposite;
     }
 
-    protected void createReturnTypeComposite(Composite parent) {
-        Composite typeComposite = new Composite(parent, SWT.NONE);
+    protected void createReturnTypeComposite(final Composite parent) {
+        final Composite typeComposite = new Composite(parent, SWT.NONE);
         typeComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
-        GridLayout gl = new GridLayout(2, false);
+        final GridLayout gl = new GridLayout(2, false);
         gl.marginWidth = 0;
         gl.marginHeight = 0;
         typeComposite.setLayout(gl);
 
-        Label typeLabel = new Label(typeComposite, SWT.NONE);
+        final Label typeLabel = new Label(typeComposite, SWT.NONE);
         typeLabel.setText(Messages.returnType);
         typeLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).create());
 
@@ -201,32 +203,32 @@ public class XPathExpressionEditor extends SelectionAwareExpressionEditor implem
     }
 
     @Override
-    public void bindExpression(EMFDataBindingContext dataBindingContext,
-            EObject context, Expression inputExpression, ViewerFilter[] filters, ExpressionViewer expressionViewer) {
+    public void bindExpression(final EMFDataBindingContext dataBindingContext,
+            final EObject context, final Expression inputExpression, final ViewerFilter[] filters, final ExpressionViewer expressionViewer) {
         editorInputExpression = inputExpression;
-        Set<Data> input = new HashSet<Data>();
-        IExpressionProvider provider = ExpressionEditorService.getInstance().getExpressionProvider(ExpressionConstants.VARIABLE_TYPE);
-        for (Expression e : provider.getExpressions(context)) {
+        final Set<Data> input = new HashSet<Data>();
+        final IExpressionProvider provider = ExpressionEditorService.getInstance().getExpressionProvider(ExpressionConstants.VARIABLE_TYPE);
+        for (final Expression e : provider.getExpressions(context)) {
 
-            EObject data = e.getReferencedElements().get(0);
+            final EObject data = e.getReferencedElements().get(0);
             if (data instanceof XMLData) {
                 input.add((XMLData) data);
             }
         }
         viewer.setInput(input);
 
-        IObservableValue nameObservable = EMFObservables.observeValue(inputExpression, ExpressionPackage.Literals.EXPRESSION__NAME);
-        IObservableValue contentObservable = EMFObservables.observeValue(inputExpression, ExpressionPackage.Literals.EXPRESSION__CONTENT);
+        final IObservableValue nameObservable = EMFObservables.observeValue(inputExpression, ExpressionPackage.Literals.EXPRESSION__NAME);
+        final IObservableValue contentObservable = EMFObservables.observeValue(inputExpression, ExpressionPackage.Literals.EXPRESSION__CONTENT);
         final IObservableValue returnTypeObservable = EMFObservables.observeValue(inputExpression, ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE);
-        IObservableValue referenceObservable = EMFObservables.observeValue(inputExpression, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS);
+        final IObservableValue referenceObservable = EMFObservables.observeValue(inputExpression, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS);
 
-        UpdateValueStrategy selectionToName = new UpdateValueStrategy();
-        IConverter nameConverter = new Converter(String.class, String.class) {
+        final UpdateValueStrategy selectionToName = new UpdateValueStrategy();
+        final IConverter nameConverter = new Converter(String.class, String.class) {
 
             @Override
-            public Object convert(Object data) {
+            public Object convert(final Object data) {
                 if (data instanceof Data) {
-                    XMLData xmlData = (XMLData) data;
+                    final XMLData xmlData = (XMLData) data;
                     return xmlData.getName() + " - " + editorInputExpression.getContent();
                 } else if (data instanceof String) {
                     final XMLData xmlData = (XMLData) ((IStructuredSelection) viewer.getSelection()).getFirstElement();
@@ -240,15 +242,15 @@ public class XPathExpressionEditor extends SelectionAwareExpressionEditor implem
         };
         selectionToName.setConverter(nameConverter);
 
-        UpdateValueStrategy selectionToContent = new UpdateValueStrategy();
-        IConverter contentConverter = new Converter(Object.class, String.class) {
+        final UpdateValueStrategy selectionToContent = new UpdateValueStrategy();
+        final IConverter contentConverter = new Converter(Object.class, String.class) {
 
             @Override
-            public Object convert(Object value) {
+            public Object convert(final Object value) {
                 if (!xsdViewer.getSelection().isEmpty()) {
                     return computeXPath((ITreeSelection) xsdViewer.getSelection());
                 }
-                Object selection = ((IStructuredSelection) viewer.getSelection()).getFirstElement();
+                final Object selection = ((IStructuredSelection) viewer.getSelection()).getFirstElement();
                 if (selection instanceof Data) {
                     return ((Data) selection).getName();
                 }
@@ -258,13 +260,13 @@ public class XPathExpressionEditor extends SelectionAwareExpressionEditor implem
         };
         selectionToContent.setConverter(contentConverter);
 
-        UpdateValueStrategy contentToSelection = new UpdateValueStrategy();
-        IConverter methodToSelectionConverter = new Converter(String.class, Object.class) {
+        final UpdateValueStrategy contentToSelection = new UpdateValueStrategy();
+        final IConverter methodToSelectionConverter = new Converter(String.class, Object.class) {
 
             @Override
-            public Object convert(Object xPathExpression) {
+            public Object convert(final Object xPathExpression) {
                 if (xPathExpression instanceof String) {
-                    ITreeSelection selection = new org.eclipse.jface.viewers.TreeSelection(createTreePath((String) xPathExpression,
+                    final ITreeSelection selection = new org.eclipse.jface.viewers.TreeSelection(createTreePath((String) xPathExpression,
                             (XSDContentProvider) xsdViewer.getContentProvider()));
                     return selection.getFirstElement();
                 }
@@ -274,11 +276,11 @@ public class XPathExpressionEditor extends SelectionAwareExpressionEditor implem
         };
         contentToSelection.setConverter(methodToSelectionConverter);
 
-        UpdateValueStrategy selectionToReturnType = new UpdateValueStrategy();
+        final UpdateValueStrategy selectionToReturnType = new UpdateValueStrategy();
         selectionToReturnType.setConverter(new Converter(Object.class, String.class) {
 
             @Override
-            public Object convert(Object element) {
+            public Object convert(final Object element) {
                 if (editorInputExpression.isReturnTypeFixed()) {
                     return returnTypeObservable.getValue();
                 } else {
@@ -289,19 +291,19 @@ public class XPathExpressionEditor extends SelectionAwareExpressionEditor implem
 
         });
 
-        UpdateValueStrategy selectionToReferencedData = new UpdateValueStrategy();
-        IConverter referenceConverter = new Converter(Data.class, List.class) {
+        final UpdateValueStrategy selectionToReferencedData = new UpdateValueStrategy();
+        final IConverter referenceConverter = new Converter(Data.class, List.class) {
 
             @Override
-            public Object convert(Object data) {
+            public Object convert(final Object data) {
                 if (data != null) {
-                    XMLData xmlData = (XMLData) data;
+                    final XMLData xmlData = (XMLData) data;
                     dataName = xmlData.getName();
-                    String namespace = xmlData.getNamespace();
-                    String element = xmlData.getType();
-                    XSDRepositoryStore xsdStore = (XSDRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(XSDRepositoryStore.class);
-                    XSDElementDeclaration root = xsdStore.findElementDeclaration(namespace, element);
-                    XSDElementDeclaration existingElement = ((XSDContentProvider) xsdViewer.getContentProvider()).getElement();
+                    final String namespace = xmlData.getNamespace();
+                    final String element = xmlData.getType();
+                    final XSDRepositoryStore xsdStore = RepositoryManager.getInstance().getRepositoryStore(XSDRepositoryStore.class);
+                    final XSDElementDeclaration root = xsdStore.findElementDeclaration(namespace, element);
+                    final XSDElementDeclaration existingElement = ((XSDContentProvider) xsdViewer.getContentProvider()).getElement();
                     if (existingElement == null || !existingElement.equals(root)) {
                         ((XSDContentProvider) xsdViewer.getContentProvider()).setElement(root);
                     }
@@ -314,21 +316,21 @@ public class XPathExpressionEditor extends SelectionAwareExpressionEditor implem
         };
         selectionToReferencedData.setConverter(referenceConverter);
 
-        UpdateValueStrategy referencedDataToSelection = new UpdateValueStrategy();
-        IConverter referencetoDataConverter = new Converter(List.class, Data.class) {
+        final UpdateValueStrategy referencedDataToSelection = new UpdateValueStrategy();
+        final IConverter referencetoDataConverter = new Converter(List.class, Data.class) {
 
             @Override
-            public Object convert(Object dataList) {
-                Data d = ((List<Data>) dataList).get(0);
-                Collection<Data> inputData = (Collection<Data>) viewer.getInput();
-                for (Data data : inputData) {
+            public Object convert(final Object dataList) {
+                final Data d = ((List<Data>) dataList).get(0);
+                final Collection<Data> inputData = (Collection<Data>) viewer.getInput();
+                for (final Data data : inputData) {
                     if (data.getName().equals(d.getName()) && data.getDataType().getName().equals(d.getDataType().getName())) {
-                        XMLData xmlData = (XMLData) data;
+                        final XMLData xmlData = (XMLData) data;
                         dataName = xmlData.getName();
-                        String namespace = xmlData.getNamespace();
-                        String element = xmlData.getType();
-                        XSDRepositoryStore xsdStore = (XSDRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(XSDRepositoryStore.class);
-                        XSDElementDeclaration root = xsdStore.findElementDeclaration(namespace, element);
+                        final String namespace = xmlData.getNamespace();
+                        final String element = xmlData.getType();
+                        final XSDRepositoryStore xsdStore = RepositoryManager.getInstance().getRepositoryStore(XSDRepositoryStore.class);
+                        final XSDElementDeclaration root = xsdStore.findElementDeclaration(namespace, element);
                         ((XSDContentProvider) xsdViewer.getContentProvider()).setElement(root);
                         return data;
                     }
@@ -339,11 +341,11 @@ public class XPathExpressionEditor extends SelectionAwareExpressionEditor implem
         };
         referencedDataToSelection.setConverter(referencetoDataConverter);
 
-        UpdateValueStrategy enableStrategy = new UpdateValueStrategy();
+        final UpdateValueStrategy enableStrategy = new UpdateValueStrategy();
         enableStrategy.setConverter(new Converter(Object.class, Boolean.class) {
 
             @Override
-            public Object convert(Object fromObject) {
+            public Object convert(final Object fromObject) {
                 return fromObject != null;
             }
         });
@@ -361,14 +363,14 @@ public class XPathExpressionEditor extends SelectionAwareExpressionEditor implem
         dataBindingContext.bindValue(ViewersObservables.observeSingleSelection(typeCombo), returnTypeObservable);
     }
 
-    private void createXPathChooser(Composite parent) {
-        Composite composite = new Composite(parent, SWT.NONE);
+    private void createXPathChooser(final Composite parent) {
+        final Composite composite = new Composite(parent, SWT.NONE);
         composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        GridLayout gl = new GridLayout(1, false);
+        final GridLayout gl = new GridLayout(1, false);
         gl.marginHeight = 0;
         gl.marginWidth = 0;
         composite.setLayout(gl);
-        Label label = new Label(composite, SWT.WRAP);
+        final Label label = new Label(composite, SWT.WRAP);
         label.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 30).create());
         label.setText(Messages.selectElementLabel);
 
@@ -377,26 +379,26 @@ public class XPathExpressionEditor extends SelectionAwareExpressionEditor implem
         xsdViewer.setComparer(new IElementComparer() {
 
             @Override
-            public int hashCode(Object element) {
+            public int hashCode(final Object element) {
                 return element.hashCode();
             }
 
             @Override
-            public boolean equals(Object a, Object b) {
-                if (a instanceof XSDAttributeDeclaration && b instanceof XSDAttributeDeclaration) {
-                    return ((XSDAttributeDeclaration) a).getName().equals(((XSDAttributeDeclaration) b).getName()) &&
-                            ((XSDAttributeDeclaration) a).getType().getName().equals(((XSDAttributeDeclaration) b).getType().getName());
-                } else if (a instanceof XSDElementDeclaration && b instanceof XSDElementDeclaration) {
-                    return ((XSDElementDeclaration) a).getName().equals(((XSDElementDeclaration) b).getName()) &&
-                            ((XSDElementDeclaration) a).getType().getName().equals(((XSDElementDeclaration) b).getType().getName());
+            public boolean equals(final Object a, final Object b) {
+                if (a instanceof XSDFeature && b instanceof XSDFeature) {
+                    final String aName = ((XSDFeature) a).getName();
+                    final String bName = ((XSDFeature) b).getName();
+                    if (aName.equals(bName)) {
+                        return EcoreUtil.equals(((XSDFeature) a).getType(), ((XSDFeature) b).getType());
+                    }
                 }
                 return a.equals(b);
             }
         });
         xsdViewer.setContentProvider(provider);
-        XSDLabelProvider labelProvider = new XSDLabelProvider();
+        final XSDLabelProvider labelProvider = new XSDLabelProvider();
         xsdViewer.setLabelProvider(new DecoratingLabelProvider(labelProvider, labelProvider));
-        GridData layoutData = new GridData(SWT.FILL, SWT.FILL, true, true);
+        final GridData layoutData = new GridData(SWT.FILL, SWT.FILL, true, true);
         layoutData.minimumHeight = 100;
         xsdViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 150).create());
         xsdViewer.setInput(new Object());
@@ -407,9 +409,9 @@ public class XPathExpressionEditor extends SelectionAwareExpressionEditor implem
         xsdViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 
             @Override
-            public void selectionChanged(SelectionChangedEvent event) {
-                ITreeSelection selection = (ITreeSelection) xsdViewer.getSelection();
-                String xpath = computeXPath(selection, false);
+            public void selectionChanged(final SelectionChangedEvent event) {
+                final ITreeSelection selection = (ITreeSelection) xsdViewer.getSelection();
+                final String xpath = computeXPath(selection, false);
                 if (dataName != null) {
                     if (xpath == null || xpath.isEmpty()) {
                         text.setText(dataName);
@@ -425,15 +427,15 @@ public class XPathExpressionEditor extends SelectionAwareExpressionEditor implem
 
     }
 
-    private TreePath createTreePath(String details, XSDContentProvider provider) {
-        String[] pieces = details.split("\\" + BonitaConstants.XPATH_VAR_SEPARATOR);
+    private TreePath createTreePath(String details, final XSDContentProvider provider) {
+        final String[] pieces = details.split("\\" + BonitaConstants.XPATH_VAR_SEPARATOR);
         boolean append = false;
         if (pieces.length > 1 && pieces[1].equals(BonitaConstants.XPATH_APPEND_FLAG)) {
             append = true;
         }
         details = pieces[0];
-        List<String> segments = new ArrayList<String>();
-        for (String segment : details.split("/")) {
+        final List<String> segments = new ArrayList<String>();
+        for (final String segment : details.split("/")) {
             if (segment.length() != 0 && !segment.equals("text()")) {
                 if (segment.startsWith("@")) {
                     segments.add(segment.substring(1));
@@ -444,11 +446,11 @@ public class XPathExpressionEditor extends SelectionAwareExpressionEditor implem
                 }
             }
         }
-        List<Object> res = new ArrayList<Object>();
+        final List<Object> res = new ArrayList<Object>();
         Object current = XSDContentProvider.WHOLE_XML;
         res.add(current);
-        for (String segment : segments) {
-            for (Object item : provider.getChildren(current)) {
+        for (final String segment : segments) {
+            for (final Object item : provider.getChildren(current)) {
                 if (item instanceof XSDNamedComponent && ((XSDNamedComponent) item).getName().equals(segment)) {
                     current = item;
                     res.add(current);
@@ -466,16 +468,16 @@ public class XPathExpressionEditor extends SelectionAwareExpressionEditor implem
      * @param selection
      * @return
      */
-    public static String computeXPath(ITreeSelection selection) {
+    public static String computeXPath(final ITreeSelection selection) {
         return computeXPath(selection, false);
     }
 
-    public static String computeXPath(ITreeSelection selection, boolean useQualifiedName) {
+    public static String computeXPath(final ITreeSelection selection, final boolean useQualifiedName) {
         if (selection.getPaths().length == 0) {
             return "";
         }
 
-        TreePath path = selection.getPaths()[0];
+        final TreePath path = selection.getPaths()[0];
         return computeXPath(path, useQualifiedName);
     }
 
@@ -483,19 +485,19 @@ public class XPathExpressionEditor extends SelectionAwareExpressionEditor implem
      * @param path
      * @return
      */
-    public static String computeXPath(TreePath path) {
+    public static String computeXPath(final TreePath path) {
         return computeXPath(path, false);
     }
 
-    public static String computeXPath(TreePath path, boolean useQualifiedName) {
-        StringBuilder pathBuilder = new StringBuilder();
+    public static String computeXPath(final TreePath path, final boolean useQualifiedName) {
+        final StringBuilder pathBuilder = new StringBuilder();
         for (int i = 1; i < path.getSegmentCount(); i++) {
             if (path.getSegment(i) instanceof XSDContentProvider.Append) {
                 continue;
             }
 
             pathBuilder.append('/');
-            XSDNamedComponent item = (XSDNamedComponent) path.getSegment(i);
+            final XSDNamedComponent item = (XSDNamedComponent) path.getSegment(i);
             if (item instanceof XSDAttributeDeclaration) {
                 pathBuilder.append('@');
             }
@@ -505,9 +507,9 @@ public class XPathExpressionEditor extends SelectionAwareExpressionEditor implem
                 pathBuilder.append(item.getName());
             }
             if (item instanceof XSDElementDeclaration) {
-                XSDElementDeclaration element = (XSDElementDeclaration) item;
+                final XSDElementDeclaration element = (XSDElementDeclaration) item;
                 if (element.getContainer() instanceof XSDParticle) {
-                    XSDParticle particle = (XSDParticle) element.getContainer();
+                    final XSDParticle particle = (XSDParticle) element.getContainer();
                     if (particle.getMaxOccurs() < 0 || particle.getMinOccurs() > 1) {
                         pathBuilder.append("[1]");
                     }
@@ -536,7 +538,7 @@ public class XPathExpressionEditor extends SelectionAwareExpressionEditor implem
     }
 
     @Override
-    public void setIsPageFlowContext(boolean isPageFlowContext) {
+    public void setIsPageFlowContext(final boolean isPageFlowContext) {
         this.isPageFlowContext = isPageFlowContext;
 
     }
@@ -555,7 +557,7 @@ public class XPathExpressionEditor extends SelectionAwareExpressionEditor implem
      * @see org.bonitasoft.studio.common.IBonitaVariableContext#setIsOverviewContext(boolean)
      */
     @Override
-    public void setIsOverviewContext(boolean isOverviewContext) {
+    public void setIsOverviewContext(final boolean isOverviewContext) {
     }
 
 }

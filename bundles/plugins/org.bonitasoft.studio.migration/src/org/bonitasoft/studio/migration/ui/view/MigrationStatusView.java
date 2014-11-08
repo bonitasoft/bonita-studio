@@ -585,9 +585,11 @@ public class MigrationStatusView extends ViewPart implements ISelectionListener,
     private Report getReportFromEditor(final IEditorPart editorPart) {
         if(editorPart instanceof DiagramEditor){
             final Resource resource = ((DiagramEditor) editorPart).getDiagramEditPart().getNotationView().eResource();
-            for(final EObject r : resource.getContents()){
-                if(r instanceof Report){
-                    return (Report) r;
+            if (resource != null) {
+                for (final EObject r : resource.getContents()) {
+                    if (r instanceof Report) {
+                        return (Report) r;
+                    }
                 }
             }
         }

@@ -57,25 +57,25 @@ public class TestConditionExpression extends SWTBotGefTestCase implements SWTBot
 		SWTBotTestUtil.selectTabbedPropertyView(bot, "Data");
         bot.button(Messages.Add).click();
 		SWTBotTestUtil.addNewData(bot, "myData","Text" , false, null);
-		
+
 		 bot.button(Messages.Add).click();
 		SWTBotTestUtil.addNewData(bot, "myData2","Boolean" , false, null);
-		
+
 		SWTBotTestUtil.configureSequenceFlow(bot, "testCondition", poolName, false, "", ExpressionConstants.CONDITION_TYPE);
 		bot.button(IDialogConstants.OK_LABEL).click();
-		
+
 		testValidConditionExpression("1234555<122233445",ExpressionConstants.CONDITION_TYPE);
 		testValidConditionExpression("123444.345345==324234324.23423432",ExpressionConstants.CONDITION_TYPE);
 		testValidConditionExpression("123.567777>=234234234324",ExpressionConstants.CONDITION_TYPE);
 
 		testValidConditionExpression("myData<\"myString\"",ExpressionConstants.CONDITION_TYPE);
-		
+
 		testValidConditionExpression("!myData2",ExpressionConstants.CONDITION_TYPE);
-		testValidConditionExpression("myData2",ExpressionConstants.CONDITION_TYPE);
-		
+        testValidConditionExpression("myData2", ExpressionConstants.CONDITION_TYPE);
+
 		testUnvalidConditionExpression("myData != true",ExpressionConstants.CONDITION_TYPE,true,true);
 		testUnvalidConditionExpression("myData",ExpressionConstants.CONDITION_TYPE,true,true);
-		
+
 		testValidConditionExpression("\"myString\"<\"myString1\"",ExpressionConstants.CONDITION_TYPE);
 		testUnvalidConditionExpression("myString<\"myString1\"",ExpressionConstants.CONDITION_TYPE,true,false);
 		testUnvalidConditionExpression("\"myString\"<myString1",ExpressionConstants.CONDITION_TYPE,true,true);
@@ -99,7 +99,7 @@ public class TestConditionExpression extends SWTBotGefTestCase implements SWTBot
 		} else {
 			assertFalse(validErrorMessage+" expression = "+condition,styles.underline);
 		}
-		bot.button(IDialogConstants.CANCEL_LABEL).click(); 
+		bot.button(IDialogConstants.CANCEL_LABEL).click();
 	}
 
 	private void testValidConditionExpression(final String condition, final String expressionType) throws OperationCanceledException, InterruptedException{

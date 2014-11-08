@@ -76,4 +76,8 @@ public class BotProcessDiagramPerspective extends BotBase {
         return new BotGefFormDiagramEditor(bot);
     }
 
+    public void closeActiveDiagram() {
+        BotProcessDiagramPerspective.this.bot.activeEditor().close();
+    }
+
 }

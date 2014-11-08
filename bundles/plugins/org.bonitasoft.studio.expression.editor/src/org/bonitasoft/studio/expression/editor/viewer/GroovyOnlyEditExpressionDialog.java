@@ -30,16 +30,17 @@ import org.eclipse.swt.widgets.Shell;
  */
 public class GroovyOnlyEditExpressionDialog extends EditExpressionDialog {
 
-	protected GroovyOnlyEditExpressionDialog(Shell parentShell,boolean isPassword, Expression inputExpression,EObject context,EditingDomain domain, ViewerFilter[] viewerTypeFilters,ExpressionViewer expressionViewer) {
+    protected GroovyOnlyEditExpressionDialog(final Shell parentShell, final boolean isPassword, final Expression inputExpression, final EObject context,
+            final EditingDomain domain, final ViewerFilter[] viewerTypeFilters, final ExpressionViewer expressionViewer) {
 		super(parentShell,isPassword,inputExpression,context,domain,viewerTypeFilters,expressionViewer);
 		this.inputExpression.setType(ExpressionConstants.SCRIPT_TYPE) ;
 	}
-	
-	@Override
-	protected void createExpressionTypePanel(Composite parentForm) {
 
+	@Override
+	protected void createExpressionTypePanel(final Composite parentForm) {
+        //DO NOT CREATE EXPRESSION TYPE PANEL
 	}
-	
+
 	@Override
 	public void create() {
 		super.create();

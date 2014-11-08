@@ -195,7 +195,7 @@ public class CreateFormCommand extends AbstractTransactionalCommand {
 
     protected Widget createWidgetFromMapping(final WidgetContainer container, final WidgetMapping mapping, final int horizontalSpan) {
         if(mapping.isGenerated()){
-            final Widget widget = new CreateWidgetSwitch(ElementInitializers.getInstance()).doSwitch(mapping.getWidgetType());
+            final Widget widget = new CreateWidgetSwitch(pageFlow, ElementInitializers.getInstance()).doSwitch(mapping.getWidgetType());
             widget.setInjectWidgetScript(createInsertWidgetIfScript());
             if(supportReadOnly(widget)){
                 widget.setReadOnly(mapping.isReadOnly());

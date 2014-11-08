@@ -183,6 +183,10 @@ public class Messages extends NLS {
     public static String invalidDependencyAssignement;
     public static String validation_OperatorConsistency;
 
+    public static String cmisConnectorAtomPubConfigMissingUrl;
+
+    public static String cmisConnectorWebserviceConfigMissingUrl;
+
     static {
         // initialize resource bundle
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

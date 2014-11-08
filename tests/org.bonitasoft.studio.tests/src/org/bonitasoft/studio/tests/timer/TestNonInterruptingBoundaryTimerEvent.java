@@ -1,17 +1,17 @@
 /**
  * Copyright (C) 2012 BonitaSoft S.A.
  * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -41,6 +41,7 @@ import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.operation.ImportBosArchiveOperation;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.command.RunProcessCommand;
+import org.bonitasoft.studio.engine.operation.ProcessSelector;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditor;
@@ -54,7 +55,7 @@ import org.junit.Test;
 
 /**
  * @author Romain Bioteau
- * 
+ *
  */
 public class TestNonInterruptingBoundaryTimerEvent {
 
@@ -73,36 +74,36 @@ public class TestNonInterruptingBoundaryTimerEvent {
     @Test
     public void testNonInterruptingBoundaryEvent() throws Exception {
         final ProcessAPI processApi = BOSEngineManager.getInstance().getProcessAPI(session);
-        ImportBosArchiveOperation op = new ImportBosArchiveOperation();
-        URL fileURL1 = FileLocator.toFileURL(TestNonInterruptingBoundaryTimerEvent.class.getResource("TestNonInterruptingTimerEvent-1.0.bos")); //$NON-NLS-1$
+        final ImportBosArchiveOperation op = new ImportBosArchiveOperation();
+        final URL fileURL1 = FileLocator.toFileURL(TestNonInterruptingBoundaryTimerEvent.class.getResource("TestNonInterruptingTimerEvent-1.0.bos")); //$NON-NLS-1$
         op.setArchiveFile(FileLocator.toFileURL(fileURL1).getFile());
         op.setCurrentRepository(RepositoryManager.getInstance().getCurrentRepository());
         op.run(new NullProgressMonitor());
-        for (IRepositoryFileStore f : op.getFileStoresToOpen()) {
+        for (final IRepositoryFileStore f : op.getFileStoresToOpen()) {
             f.open();
         }
 
-        ProcessDiagramEditor processEditor = (ProcessDiagramEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
-        MainProcess mainProcess = (MainProcess) processEditor.getDiagramEditPart().resolveSemanticElement();
+        final ProcessDiagramEditor processEditor = (ProcessDiagramEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+        final MainProcess mainProcess = (MainProcess) processEditor.getDiagramEditPart().resolveSemanticElement();
         assertEquals("TestNonInterruptingTimerEvent", mainProcess.getName());
         final SearchOptions searchOptions = new SearchOptionsBuilder(0, 10).done();
 
-        final RunProcessCommand runProcessCommand = new RunProcessCommand((AbstractProcess) mainProcess.getElements().get(0), true);
-        runProcessCommand.execute(null);
+        final RunProcessCommand runProcessCommand = new RunProcessCommand(true);
+        runProcessCommand.execute(ProcessSelector.createExecutionEvent((AbstractProcess) mainProcess.getElements().get(0)));
         final String urlGivenToBrowser = runProcessCommand.getUrl().toString();
         assertFalse("The url contains null:" + urlGivenToBrowser, urlGivenToBrowser.contains("null"));
-        long processId = processApi.getProcessDefinitionId("TestNonInterruptingTimerEvent", "1.0");
+        final long processId = processApi.getProcessDefinitionId("TestNonInterruptingTimerEvent", "1.0");
         final ProcessDefinition processDef = processApi.getProcessDefinition(processId);
         processApi.startProcess(processId);
-        boolean evaluateAsync = new TestAsyncThread(30, 1000) {
+        final boolean evaluateAsync = new TestAsyncThread(30, 1000) {
 
             @Override
             public boolean isTestGreen() throws Exception {
-                IdentityAPI identityApi = BOSEngineManager.getInstance().getIdentityAPI(session);
-                SearchResult<HumanTaskInstance> tasks = processApi.searchPendingTasksForUser(identityApi.getUserByUserName("walter.bates").getId(),
+                final IdentityAPI identityApi = BOSEngineManager.getInstance().getIdentityAPI(session);
+                final SearchResult<HumanTaskInstance> tasks = processApi.searchPendingTasksForUser(identityApi.getUserByUserName("walter.bates").getId(),
                         searchOptions);
                 int cpt = 0;
-                for (HumanTaskInstance instance : tasks.getResult()) {
+                for (final HumanTaskInstance instance : tasks.getResult()) {
                     if (instance.getProcessDefinitionId() == processDef.getId()) {
                         cpt++;
                     }

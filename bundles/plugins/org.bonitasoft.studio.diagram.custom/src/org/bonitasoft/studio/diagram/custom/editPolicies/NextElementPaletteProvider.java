@@ -46,15 +46,15 @@ import org.eclipse.gmf.runtime.emf.type.core.IElementType;
  * @author Aurelien Pupier : improve resource management
  */
 public class NextElementPaletteProvider {
-	public static List<ToolAndToolEntry> getAllowedNextTypes(GraphicalEditPart host) {
-		EObject element = host.resolveSemanticElement();
+	public static List<ToolAndToolEntry> getAllowedNextTypes(final GraphicalEditPart host) {
+		final EObject element = host.resolveSemanticElement();
 
 		// Same as palette, but removing StartEvent
-		ArrayList<ToolAndToolEntry> res = new ArrayList<ToolAndToolEntry>();
+		final ArrayList<ToolAndToolEntry> res = new ArrayList<ToolAndToolEntry>();
 		// Map<Tool,ToolEntry> res1 = new HashMap<Tool, ToolEntry>();
-		List<ToolAndToolEntry> temp = new ProcessEditPolicyEntries(((EditDomain)host.getDiagramEditDomain())).getEntriesAndTools();
+		final List<ToolAndToolEntry> temp = new ProcessEditPolicyEntries((EditDomain)host.getDiagramEditDomain()).getEntriesAndTools();
 		if (element instanceof EndEvent || element instanceof EndMessageEvent || element instanceof EndTerminatedEvent || element instanceof EndErrorEvent || element instanceof ThrowLinkEvent || element instanceof EndSignalEvent) {
-			for (ToolAndToolEntry tate : temp) {
+			for (final ToolAndToolEntry tate : temp) {
 				if (tate.getTool() instanceof UnspecifiedTypeCreationTool) {
 					if (tate.getToolEntry().getLabel().contains("Text Annotation")) { //$NON-NLS-1$
 						res.add(tate);
@@ -67,17 +67,17 @@ public class NextElementPaletteProvider {
 				}
 			}
 		} else {
-			for (ToolAndToolEntry tate : temp) {
+			for (final ToolAndToolEntry tate : temp) {
 				// Tool tool1 = entry.createTool();
 				if (tate.getTool() instanceof UnspecifiedTypeCreationTool) {
 					if(!(element instanceof TextAnnotation)){
-						UnspecifiedTypeCreationTool tool = (UnspecifiedTypeCreationTool) tate.getTool();
-						CreateUnspecifiedTypeRequest createRequest = (CreateUnspecifiedTypeRequest) tool.createCreateRequest();
-						EClass eclass = ((IElementType) createRequest.getElementTypes().get(0)).getEClass();
-						if (ProcessPackage.Literals.SERVICE_TASK.equals(eclass) 
+						final UnspecifiedTypeCreationTool tool = (UnspecifiedTypeCreationTool) tate.getTool();
+						final CreateUnspecifiedTypeRequest createRequest = (CreateUnspecifiedTypeRequest) tool.createCreateRequest();
+						final EClass eclass = ((IElementType) createRequest.getElementTypes().get(0)).getEClass();
+						if (ProcessPackage.Literals.SERVICE_TASK.equals(eclass)
 								|| ProcessPackage.Literals.EVENT.equals(eclass)
 								|| ProcessPackage.Literals.AND_GATEWAY.equals(eclass)
-								|| (!(element instanceof BoundaryEvent) && ProcessPackage.Literals.TEXT_ANNOTATION.equals(eclass))) {
+								|| !(element instanceof BoundaryEvent) && ProcessPackage.Literals.TEXT_ANNOTATION.equals(eclass)) {
 							res.add(tate);
 						} else {
 							if(!(element instanceof BoundaryEvent)){
@@ -86,7 +86,8 @@ public class NextElementPaletteProvider {
 						}
 					}
 				} else if (tate.getTool() instanceof UnspecifiedTypeConnectionTool) {
-					if (!tate.getToolEntry().getLabel().contains("Text Annotation ") && !tate.getToolEntry().getLabel().contains("Message")) { //$NON-NLS-1$ //$NON-NLS-2$
+                    if (!tate.getToolEntry().getLabel().contains("Text Annotation ")
+                            && !tate.getToolEntry().getLabel().contains("Message")) { //$NON-NLS-1$ //$NON-NLS-2$
 						res.add(tate);
 					}
 				}
@@ -95,7 +96,7 @@ public class NextElementPaletteProvider {
 		Collections.sort(res, new Comparator<ToolAndToolEntry>(){
 
 			@Override
-			public int compare(ToolAndToolEntry arg0, ToolAndToolEntry arg1) {
+			public int compare(final ToolAndToolEntry arg0, final ToolAndToolEntry arg1) {
 				return getToolOrder(arg0).compareTo(getToolOrder(arg1));
 			}
 
@@ -103,7 +104,7 @@ public class NextElementPaletteProvider {
 		return res;
 	}
 
-	protected static Integer getToolOrder(ToolAndToolEntry entry) {
+	protected static Integer getToolOrder(final ToolAndToolEntry entry) {
 		final String id = entry.getToolEntry().getId();
 		if(id.equals("createGate1CreationTool")){
 			return 1;

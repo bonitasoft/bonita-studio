@@ -17,13 +17,16 @@
  */
 package org.bonitasoft.studio.actors.tests.organization;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
-
-import junit.framework.TestCase;
 
 import org.bonitasoft.studio.actors.model.organization.Membership;
 import org.bonitasoft.studio.actors.model.organization.Organization;
@@ -32,20 +35,20 @@ import org.bonitasoft.studio.actors.repository.OrganizationRepositoryStore;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.eclipse.core.runtime.FileLocator;
+import org.junit.Test;
 
 /**
- * @author Aurï¿½lie Zara
- *
+ * @author Aurélie Zara
  */
 
-public class TestImportOrganization extends  TestCase{
+public class TestImportOrganization {
 
-	protected void setUp() throws Exception {}
 
+    @Test
 	public void testImportOrganization() throws Exception{
-		final OrganizationRepositoryStore organizationStore = (OrganizationRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(OrganizationRepositoryStore.class);
-		String organizationName="OrganizationTest.xml";
-		URL archiveURL = TestImportOrganization.class.getResource(organizationName);
+		final OrganizationRepositoryStore organizationStore = RepositoryManager.getInstance().getRepositoryStore(OrganizationRepositoryStore.class);
+		final String organizationName="OrganizationTest.xml";
+		final URL archiveURL = TestImportOrganization.class.getResource(organizationName);
 		assertNotNull("filePath should not be null",archiveURL.getPath());
 		FileInputStream fis = null ;
 		String id =	null;
@@ -55,10 +58,10 @@ public class TestImportOrganization extends  TestCase{
 		id  = toImport.getName() ;
 		organizationStore.importInputStream(id, fis) ;
 		if(fis != null){
-			fis.close() ;	
+			fis.close() ;
 		}
-		String orgaNameWithBosExtansion = organizationName.substring(0,organizationName.indexOf("."))+"."+OrganizationRepositoryStore.ORGANIZATION_EXT;
-		Organization organizationTest = (Organization) organizationStore.getChild(orgaNameWithBosExtansion).getContent();
+		final String orgaNameWithBosExtansion = organizationName.substring(0,organizationName.indexOf("."))+"."+OrganizationRepositoryStore.ORGANIZATION_EXT;
+		final Organization organizationTest = organizationStore.getChild(orgaNameWithBosExtansion).getContent();
 		assertNotNull(orgaNameWithBosExtansion+" was not imported",organizationTest);
 		assertTrue("not all groups have been imported",organizationTest.getGroups().getGroup().size()==5);
 		assertTrue("not all roles have been imported", organizationTest.getRoles().getRole().size()==3);
@@ -67,9 +70,9 @@ public class TestImportOrganization extends  TestCase{
 		final User user2=organizationTest.getUsers().getUser().get(1);
 		assertEquals("user1 firstname is not imported correctly",user1.getFirstName(),"Aurore");
 		assertEquals("user1 lastname is not imported correctly",user1.getLastName(),"Richard");
-		ArrayList<Membership> userms=new ArrayList<Membership>();
-		ArrayList<Membership> userms2=new ArrayList<Membership>();
-		for (Membership ms:organizationTest.getMemberships().getMembership()) {
+		final ArrayList<Membership> userms=new ArrayList<Membership>();
+		final ArrayList<Membership> userms2=new ArrayList<Membership>();
+		for (final Membership ms:organizationTest.getMemberships().getMembership()) {
 			if(ms.getUserName().equals(user1.getUserName())){
 				userms.add(ms);
 			} else {
@@ -82,10 +85,11 @@ public class TestImportOrganization extends  TestCase{
 		assertEquals("memberships are not imported correctly",userms2.size(),2);
 	}
 
+    @Test
 	public void testImportAlphaOrganization() throws Exception{
-		final OrganizationRepositoryStore organizationStore = (OrganizationRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(OrganizationRepositoryStore.class);
-		String organizationName="ACME-Alpha.xml";
-		URL archiveURL = TestImportOrganization.class.getResource(organizationName);
+		final OrganizationRepositoryStore organizationStore = RepositoryManager.getInstance().getRepositoryStore(OrganizationRepositoryStore.class);
+		final String organizationName="ACME-Alpha.xml";
+		final URL archiveURL = TestImportOrganization.class.getResource(organizationName);
 		assertNotNull("filePath should not be null",archiveURL.getPath());
 		FileInputStream fis = null ;
 		String id =	null;
@@ -95,17 +99,18 @@ public class TestImportOrganization extends  TestCase{
 		id  = toImport.getName() ;
 		organizationStore.importInputStream(id, fis) ;
 		if(fis != null){
-			fis.close() ;	
+			fis.close() ;
 		}
-		String orgaNameWithBosExtansion = organizationName.substring(0,organizationName.indexOf("."))+"."+OrganizationRepositoryStore.ORGANIZATION_EXT;
-		Organization organizationTest = (Organization) organizationStore.getChild(orgaNameWithBosExtansion).getContent();
+		final String orgaNameWithBosExtansion = organizationName.substring(0,organizationName.indexOf("."))+"."+OrganizationRepositoryStore.ORGANIZATION_EXT;
+		final Organization organizationTest = organizationStore.getChild(orgaNameWithBosExtansion).getContent();
 		assertNotNull(orgaNameWithBosExtansion+" was not imported",organizationTest);
 	}
 
+    @Test
 	public void testImportCorruptedOrganization() throws IOException{
-		final OrganizationRepositoryStore organizationStore = (OrganizationRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(OrganizationRepositoryStore.class);
-		String organizationName = "toto.xml";
-		URL archiveURL = TestImportOrganization.class.getResource(organizationName);
+		final OrganizationRepositoryStore organizationStore = RepositoryManager.getInstance().getRepositoryStore(OrganizationRepositoryStore.class);
+		final String organizationName = "toto.xml";
+		final URL archiveURL = TestImportOrganization.class.getResource(organizationName);
 		assertNotNull("filePath should not be null",archiveURL.getPath());
 		FileInputStream fis = null ;
 		String id =	null;
@@ -113,19 +118,19 @@ public class TestImportOrganization extends  TestCase{
 		assertTrue("organization to import does not exist",toImport.exists());
 		fis = new FileInputStream(toImport);
 		id  = toImport.getName() ;
-		IRepositoryFileStore fStore = organizationStore.importInputStream(id, fis) ;
+		final IRepositoryFileStore fStore = organizationStore.importInputStream(id, fis) ;
 		if(fis != null){
-			fis.close() ;	
+			fis.close() ;
 		}
 		assertNull(id+" was imported",fStore);
 	}
-	
 
-	
+
+    @Test
 	public void testImportOldOrganization() throws Exception{
-		final OrganizationRepositoryStore organizationStore = (OrganizationRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(OrganizationRepositoryStore.class);
-		String organizationName="oldOrganizationTest.xml";
-		URL archiveURL = TestImportOrganization.class.getResource(organizationName);
+		final OrganizationRepositoryStore organizationStore = RepositoryManager.getInstance().getRepositoryStore(OrganizationRepositoryStore.class);
+		final String organizationName="oldOrganizationTest.xml";
+		final URL archiveURL = TestImportOrganization.class.getResource(organizationName);
 		assertNotNull("filePath should not be null",archiveURL.getPath());
 		FileInputStream fis = null ;
 		String id =	null;
@@ -133,15 +138,13 @@ public class TestImportOrganization extends  TestCase{
 		assertTrue("organization to import does not exist",toImport.exists());
 		fis = new FileInputStream(toImport);
 		id  = toImport.getName() ;
-		IRepositoryFileStore fStore = organizationStore.importInputStream(id, fis) ;
+		final IRepositoryFileStore fStore = organizationStore.importInputStream(id, fis) ;
 		if(fis != null){
-			fis.close() ;	
+			fis.close() ;
 		}
 		assertNotNull(id+" was imported",fStore);
 	}
 
-	
-	
-	protected void tearDown(){}
+
 
 }

@@ -71,4 +71,8 @@ public class BotGefFormDiagramEditor extends BotGefBaseEditor {
         gmfEditor.mainEditPart().select();
         return this;
     }
+
+    public void closeGefFormDiagramEditor() {
+        gmfEditor.close();
+    }
 }

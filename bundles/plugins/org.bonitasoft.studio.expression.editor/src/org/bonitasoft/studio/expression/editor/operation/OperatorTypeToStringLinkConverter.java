@@ -14,7 +14,9 @@
  */
 package org.bonitasoft.studio.expression.editor.operation;
 
+import org.bonitasoft.studio.model.expression.Operator;
 import org.eclipse.core.databinding.conversion.Converter;
+import org.eclipse.core.databinding.observable.value.IObservableValue;
 
 /**
  * This Converter is just adding the <A> tags around the String corresponding the Operator Message in order to be well displayed in Link components.
@@ -24,16 +26,23 @@ import org.eclipse.core.databinding.conversion.Converter;
 public class OperatorTypeToStringLinkConverter extends Converter {
 
     private final OperatorLabelProvider operatorLabelProvider;
+    private final IObservableValue operatorObservableValue;
 
-    public OperatorTypeToStringLinkConverter() {
+    public OperatorTypeToStringLinkConverter(final IObservableValue operatorObservableValue) {
         super(String.class, String.class);
         operatorLabelProvider = new OperatorLabelProvider();
+        this.operatorObservableValue = operatorObservableValue;
     }
 
     @Override
     public String convert(final Object arg0) {
+        final Operator operator = (Operator) operatorObservableValue.getValue();;
         final String operatorType = (String) arg0;
+        if (operator != null) {
+            return "<A>" + operatorLabelProvider.getText(operator) + "</A>";
+        }
         return "<A>" + operatorLabelProvider.getText(operatorType) + "</A>";
+
     }
 
 }

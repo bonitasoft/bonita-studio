@@ -38,7 +38,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.gmf.runtime.emf.core.GMFEditingDomainFactory;
-import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.IWorkbenchPart;
 import org.junit.Test;
 
 /**
@@ -105,11 +105,14 @@ public class TestTokenDispatcher {
         op.setArchiveFile(FileLocator.toFileURL(fileURL).getFile());
         op.setCurrentRepository(RepositoryManager.getInstance().getCurrentRepository());
         op.run(new NullProgressMonitor());
+        ProcessDiagramEditor processEditor = null;
         for (final IRepositoryFileStore f : op.getFileStoresToOpen()) {
-            f.open();
+            final IWorkbenchPart iWorkbenchPart = f.open();
+            if (iWorkbenchPart instanceof ProcessDiagramEditor) {
+                processEditor = (ProcessDiagramEditor) iWorkbenchPart;
+
+            }
         }
-        final ProcessDiagramEditor processEditor = (ProcessDiagramEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
-                .getActiveEditor();
         return processEditor;
     }
 

@@ -23,7 +23,7 @@ public abstract class UpdateAlfrescoMigrationConnectorVersion extends UpdateConn
 
 
     @Override
-    protected boolean isProvidedAlfrescoConnectorDef(final String defId) {
+    protected boolean shouldUpdateVersion(final String defId) {
         return defId.equals("Alfresco34CreateFolderByPath") ||
                 defId.equals("Alfresco34DeleteFileByPath") ||
                 defId.equals("Alfresco34DeleteItemById") ||

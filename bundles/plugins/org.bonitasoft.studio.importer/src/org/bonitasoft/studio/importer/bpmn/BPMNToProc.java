@@ -47,6 +47,7 @@ import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.importer.ImporterPlugin;
 import org.bonitasoft.studio.importer.builder.IProcBuilder;
 import org.bonitasoft.studio.importer.builder.IProcBuilder.DataType;
 import org.bonitasoft.studio.importer.builder.IProcBuilder.EventType;
@@ -63,6 +64,9 @@ import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.MainProcessEditPart;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
@@ -162,7 +166,7 @@ public class BPMNToProc extends ToProcProcessor {
     private List<BPMNPlane> bpmnProcessDiagrams;
     private BPMNShape subProc;
     private List<TProcess> bpmnProcess;
-    private final List<Object> errorElements = new ArrayList<Object>();
+    //   private final List<Object> errorElements = new ArrayList<Object>();
     private TDefinitions definitions;
     private EList<TRootElement> rootElements;
     protected Diagram diagram;
@@ -236,6 +240,7 @@ public class BPMNToProc extends ToProcProcessor {
     public File createDiagram(URL sourceBPMNUrl, final IProgressMonitor progressMonitor) {
         progressMonitor.beginTask(Messages.importFromBPMN,
                 IProgressMonitor.UNKNOWN);
+        status = new MultiStatus(ImporterPlugin.PLUGIN_ID, 0, null, null);
         builder = new ProcBuilder(progressMonitor);
 
         InputStream stream = null;
@@ -374,9 +379,9 @@ public class BPMNToProc extends ToProcProcessor {
                          */
                         final String convertedQName = nodeValue.replace(
                                 '/', '_').replace(':', '_');
-                        errorElements.add("invalid QName of tagName "
+                        status.add(new Status(IStatus.ERROR, ImporterPlugin.PLUGIN_ID, "invalid QName of tagName "
                                 + tagName + ": " + nodeValue
-                                + " converted to " + convertedQName);
+                                + " converted to " + convertedQName));
                         sourceNode.setNodeValue(convertedQName);
                         hadBeenPreProcessed = true;
                     }
@@ -609,8 +614,8 @@ public class BPMNToProc extends ToProcProcessor {
                         populateEvent(flowNode, eventType);
 
                     } else if (flowNode instanceof TBoundaryEvent) {
-                        errorElements.add(flowNode.eClass().getName() + ": "
-                                + flowNode.getName());
+                        status.add(new Status(IStatus.ERROR, ImporterPlugin.PLUGIN_ID, flowNode.eClass().getName() + ": "
+                                + flowNode.getName()));
                     }
                 }
             }
@@ -669,13 +674,13 @@ public class BPMNToProc extends ToProcProcessor {
         for(final TArtifact tArtifact : artifacts){
             if(!(tArtifact instanceof TTextAnnotation)){
                 if(!(tArtifact instanceof TAssociation && sourceRefs.contains(((TAssociation) tArtifact).getSourceRef().getLocalPart()))){
-                    errorElements.add(tArtifact.eClass().getName() + ": "
-                            + tArtifact.getId());
+                    status.add(new Status(IStatus.ERROR, ImporterPlugin.PLUGIN_ID, tArtifact.eClass().getName() + ": "
+                            + tArtifact.getId()));
                     BonitaStudioLog.log("can't create element for " + tArtifact);
                 }
             }else if(!(tArtifact instanceof TTextAnnotation)){
-                errorElements.add(tArtifact.eClass().getName() + ": "
-                        + tArtifact.getId());
+                status.add(new Status(IStatus.ERROR, ImporterPlugin.PLUGIN_ID, tArtifact.eClass().getName() + ": "
+                        + tArtifact.getId()));
                 BonitaStudioLog.log("can't create element for " + tArtifact);
             }
         }
@@ -1227,8 +1232,8 @@ public class BPMNToProc extends ToProcProcessor {
 
                         }
                     } else if (!(flowNode instanceof TBoundaryEvent)) {
-                        errorElements.add(flowNode.eClass().getName() + ": "
-                                + flowNode.getName());
+                        status.add(new Status(IStatus.ERROR, ImporterPlugin.PLUGIN_ID,flowNode.eClass().getName() + ": "
+                                + flowNode.getName()));
                     }
                     addFontStyle(flowNode.getId());
                 }
@@ -2007,9 +2012,10 @@ public class BPMNToProc extends ToProcProcessor {
     private final static String[] toDateTable = { "date", "dateTime" };
     private final static Set<String> toDate = new HashSet<String>(Arrays.asList(toDateTable));
     private boolean isInSubProcEventContainerSearch;
+    private MultiStatus status;
 
     /**
-     * 
+     *
      * @param itemDefinition
      * @return
      */
@@ -2613,7 +2619,7 @@ public class BPMNToProc extends ToProcProcessor {
      * the collaboration element use it //for now this case doesn't work
      * otherwise if there are lanesets, make sum of them for height and take the
      * max of them for width otherwise take the max of x and y of element inside
-     * 
+     *
      * @param id
      * @return
      */
@@ -2796,7 +2802,7 @@ public class BPMNToProc extends ToProcProcessor {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.bonitasoft.studio.importer.ToProcProcessor#getExtension()
      */
     @Override
@@ -2804,12 +2810,9 @@ public class BPMNToProc extends ToProcProcessor {
         return "bpmn"; //$NON-NLS-1$
     }
 
-    /**
-     * @return the errorElements
-     */
     @Override
-    public List<Object> getErrors() {
-        return errorElements;
+    public IStatus getStatus() {
+        return status;
     }
 
     @Override
