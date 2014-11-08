@@ -26,8 +26,8 @@ import java.util.List;
 
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.Pool;
+import org.bonitasoft.studio.validation.constraints.connector.ConnectorExistenceConstraint;
 import org.bonitasoft.studio.validation.constraints.process.AssignableConstraint;
-import org.bonitasoft.studio.validation.constraints.process.ConnectorExistenceConstraint;
 import org.bonitasoft.studio.validation.constraints.process.InclusiveMergeGatewayConstraint;
 import org.bonitasoft.studio.validation.constraints.process.XORGatewayConstraint;
 import org.eclipse.core.resources.IMarker;

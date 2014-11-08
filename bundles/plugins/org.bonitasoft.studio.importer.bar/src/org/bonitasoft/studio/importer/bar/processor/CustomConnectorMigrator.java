@@ -5,12 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -118,10 +118,13 @@ public class CustomConnectorMigrator {
                 fos.close();
             }
         }
-        final URLClassLoader customURLClassLoader = createBarClassloader(archiveFile, tmpConnectorJarFile);
 
         BonitaStudioLog.debug("Searching for custom connector in " + tmpConnectorJarFile.getName() + "...", BarImporterPlugin.PLUGIN_ID);
-
+        if (tmpConnectorJarFile.length() == 0) {
+            BonitaStudioLog.debug(tmpConnectorJarFile.getName() + " is empty.", BarImporterPlugin.PLUGIN_ID);
+            return;
+        }
+        final URLClassLoader customURLClassLoader = createBarClassloader(archiveFile, tmpConnectorJarFile);
         final List<String> connectorClassnames = BarReaderUtil.findCustomConnectorClassName(tmpConnectorJarFile);
         if (connectorClassnames.isEmpty()) {
             BonitaStudioLog.debug("No custom connector found in:" + tmpConnectorJarFile.getName(), BarImporterPlugin.PLUGIN_ID);
@@ -154,7 +157,7 @@ public class CustomConnectorMigrator {
 
     /***
      * Create an URLClassloader with all jar inside the archive file
-     * 
+     *
      * @param archiveFile
      * @param tmpConnectorJarFile
      * @return

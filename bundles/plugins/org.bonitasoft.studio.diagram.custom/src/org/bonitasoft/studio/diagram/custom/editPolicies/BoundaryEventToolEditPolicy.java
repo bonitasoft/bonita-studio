@@ -1,7 +1,7 @@
 /**
  * Copyright (C) 2009-2010 BonitaSoft S.A.
  * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -21,10 +21,10 @@ package org.bonitasoft.studio.diagram.custom.editPolicies;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.Pair;
 import org.bonitasoft.studio.common.gmf.tools.GMFTools;
 import org.bonitasoft.studio.common.gmf.tools.GMFTools.ElementTypeResolver;
+import org.bonitasoft.studio.common.palette.ProcessPaletteLabelProvider;
 import org.bonitasoft.studio.diagram.custom.Activator;
 import org.bonitasoft.studio.diagram.custom.figures.DropDownMenuFigure;
 import org.bonitasoft.studio.diagram.custom.figures.SlideMenuBarFigure;
@@ -75,9 +75,9 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Listener;
 
 /**
- * 
+ *
  * Show a tool that enable to create boundary events on the activity
- * 
+ *
  * @author Baptiste Mesta
  */
 public class BoundaryEventToolEditPolicy extends AbstractSingleSelectionEditPolicy implements ZoomListener , LayerConstants {
@@ -96,8 +96,9 @@ public class BoundaryEventToolEditPolicy extends AbstractSingleSelectionEditPoli
     private FreeformLayer composite;
     private final ElementTypeResolver elementTypeResolver = new ElementTypeResolver() {
 
-        public IElementType getElementType(GraphicalEditPart parentEditPart, EClass targetEClass) {
-            List<IElementType> allowedChildren = new ArrayList<IElementType>();
+        @Override
+        public IElementType getElementType(final GraphicalEditPart parentEditPart, final EClass targetEClass) {
+            final List<IElementType> allowedChildren = new ArrayList<IElementType>();
 
             if (parentEditPart instanceof Task2EditPart || parentEditPart instanceof TaskEditPart) {
                 allowedChildren.add(ProcessElementTypes.IntermediateErrorCatchEvent_3029);
@@ -122,7 +123,7 @@ public class BoundaryEventToolEditPolicy extends AbstractSingleSelectionEditPoli
             }
 
 
-            for (IElementType child : allowedChildren) {
+            for (final IElementType child : allowedChildren) {
                 if (child.getEClass().equals(targetEClass)) {
                     return child;
                 }
@@ -132,10 +133,12 @@ public class BoundaryEventToolEditPolicy extends AbstractSingleSelectionEditPoli
 
         }
     };
+    private final ProcessPaletteLabelProvider processPaletteLabelProvider;
 
     public BoundaryEventToolEditPolicy() {
         super();
         figures = new ArrayList<IFigure>();
+        processPaletteLabelProvider = new ProcessPaletteLabelProvider();
 
     }
 
@@ -148,33 +151,36 @@ public class BoundaryEventToolEditPolicy extends AbstractSingleSelectionEditPoli
         ImageFigure image;
         image = new ImageFigure(IconService.getInstance().getIcon(type));
         image.setSize(16, 16);
-        image.setToolTip(new Label(NamingUtils.getPaletteText(false, type.getEClass())));
+        image.setToolTip(new Label(processPaletteLabelProvider.getProcessPaletteText(type.getEClass())));
 
-        MouseListener listener = new MouseListener() {
+        final MouseListener listener = new MouseListener() {
 
-            public void mouseReleased(MouseEvent me) {
+            @Override
+            public void mouseReleased(final MouseEvent me) {
             }
 
-            public void mousePressed(MouseEvent me) {
-                ShapeNodeEditPart node = (ShapeNodeEditPart) host.getAdapter(ShapeNodeEditPart.class);
+            @Override
+            public void mousePressed(final MouseEvent me) {
+                final ShapeNodeEditPart node = (ShapeNodeEditPart) host.getAdapter(ShapeNodeEditPart.class);
                 if (node != null) {
-                    EClass targetEClass = getTargetEClass(type);
+                    final EClass targetEClass = getTargetEClass(type);
                     GMFTools.create(targetEClass, node, elementTypeResolver);
                     me.consume();
                 }
             }
 
-            public void mouseDoubleClicked(MouseEvent me) {
+            @Override
+            public void mouseDoubleClicked(final MouseEvent me) {
 
             }
         };
-        Pair<IFigure, MouseListener> pair = new Pair<IFigure, MouseListener>(image, listener);
+        final Pair<IFigure, MouseListener> pair = new Pair<IFigure, MouseListener>(image, listener);
         figures.add(image);
         return pair;
     }
 
-    private EClass getTargetEClass(IElementType child) {
-        EClass eClass = child.getEClass();
+    private EClass getTargetEClass(final IElementType child) {
+        final EClass eClass = child.getEClass();
         return eClass;
     }
 
@@ -182,10 +188,10 @@ public class BoundaryEventToolEditPolicy extends AbstractSingleSelectionEditPoli
     @Override
     @SuppressWarnings("unchecked")
     protected void hideFeedback() {
-        List<IFigure> figToDelete = new ArrayList<IFigure>();
+        final List<IFigure> figToDelete = new ArrayList<IFigure>();
         if (layer != null) {
-            List<Object> children = layer.getChildren();
-            for (Object fig : children) {
+            final List<Object> children = layer.getChildren();
+            for (final Object fig : children) {
                 if (figures.contains(fig)) {
                     if (fig instanceof IFigure) {
                         figToDelete.add((IFigure) fig);
@@ -193,7 +199,7 @@ public class BoundaryEventToolEditPolicy extends AbstractSingleSelectionEditPoli
                 }
             }
             figures.clear();
-            for (IFigure fig : figToDelete) {
+            for (final IFigure fig : figToDelete) {
                 layer.remove(fig);
             }
         }
@@ -201,7 +207,7 @@ public class BoundaryEventToolEditPolicy extends AbstractSingleSelectionEditPoli
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.gef.editpolicies.SelectionEditPolicy#showSelection()
      */
     @Override
@@ -223,14 +229,14 @@ public class BoundaryEventToolEditPolicy extends AbstractSingleSelectionEditPoli
             if (referenceFigure == null) {
                 referenceFigure = getHostFigure();
             }
-            Rectangle bounds = referenceFigure.getBounds().getCopy();
+            final Rectangle bounds = referenceFigure.getBounds().getCopy();
 
             // Get the absolute coordinate
             referenceFigure.translateToAbsolute(bounds);
             IFigure parentFigure = referenceFigure.getParent();
             while (parentFigure != null) {
                 if (parentFigure instanceof Viewport) {
-                    Viewport viewport = (Viewport) parentFigure;
+                    final Viewport viewport = (Viewport) parentFigure;
                     bounds.translate(viewport.getHorizontalRangeModel().getValue(), viewport.getVerticalRangeModel().getValue());
                     parentFigure = parentFigure.getParent();
                 } else {
@@ -250,7 +256,8 @@ public class BoundaryEventToolEditPolicy extends AbstractSingleSelectionEditPoli
             toolBarFigure.addToMenu(dropMenu);
             dropMenu.addToggleVisibilityListener(new Listener() {
 
-                public void handleEvent(org.eclipse.swt.widgets.Event event) {
+                @Override
+                public void handleEvent(final org.eclipse.swt.widgets.Event event) {
                     if(!dropMenu.isCollapsed()){
                         if(	getHost().getEditPolicy(ActivitySwitchEditPolicy.SWITCH_TYPE_ROLE) != null){
                             if(((ActivitySwitchEditPolicy) getHost().getEditPolicy(ActivitySwitchEditPolicy.SWITCH_TYPE_ROLE)).getDropMenu() != null ){
@@ -260,7 +267,7 @@ public class BoundaryEventToolEditPolicy extends AbstractSingleSelectionEditPoli
                     }
                 }
             }) ;
-            List<Pair<IFigure,MouseListener>> clickableItems = new ArrayList<Pair<IFigure,MouseListener>>();
+            final List<Pair<IFigure,MouseListener>> clickableItems = new ArrayList<Pair<IFigure,MouseListener>>();
 
             if (getHost().getAdapter(Task.class) != null) {
                 clickableItems.add(createClickableItem(new Point(0, 0), getHost(), ProcessElementTypes.IntermediateErrorCatchEvent_3029));
@@ -286,7 +293,7 @@ public class BoundaryEventToolEditPolicy extends AbstractSingleSelectionEditPoli
 	    clickableItems.add(createClickableItem(new Point(0, 0), getHost(), ProcessElementTypes.IntermediateErrorCatchEvent_3034));
 	}
 
-            for (Pair<IFigure,MouseListener> item : clickableItems) {
+            for (final Pair<IFigure,MouseListener> item : clickableItems) {
                 dropMenu.addToMenu(item.getFirst(),item.getSecond());
             }
 
@@ -299,24 +306,28 @@ public class BoundaryEventToolEditPolicy extends AbstractSingleSelectionEditPoli
 
             composite.addMouseMotionListener(new MouseMotionListener() {
 
-                public void mouseMoved(MouseEvent me) {
+                @Override
+                public void mouseMoved(final MouseEvent me) {
 
                 }
 
-                public void mouseHover(MouseEvent arg0) {
+                @Override
+                public void mouseHover(final MouseEvent arg0) {
 
                 }
 
-                public void mouseExited(MouseEvent me) {
+                @Override
+                public void mouseExited(final MouseEvent me) {
 
                 }
 
-                public void mouseEntered(MouseEvent me) {
+                @Override
+                public void mouseEntered(final MouseEvent me) {
                     referenceFigure.translateToAbsolute(me.getLocation());
                     IFigure parentFigure = referenceFigure.getParent();
                     while (parentFigure != null) {
                         if (parentFigure instanceof Viewport) {
-                            Viewport viewport = (Viewport) parentFigure;
+                            final Viewport viewport = (Viewport) parentFigure;
                             me.getLocation().translate(viewport.getHorizontalRangeModel().getValue(), viewport.getVerticalRangeModel().getValue());
                             parentFigure = parentFigure.getParent();
                         } else {
@@ -325,7 +336,8 @@ public class BoundaryEventToolEditPolicy extends AbstractSingleSelectionEditPoli
                     }
                 }
 
-                public void mouseDragged(MouseEvent arg0) {
+                @Override
+                public void mouseDragged(final MouseEvent arg0) {
 
                 }
             });
@@ -341,7 +353,7 @@ public class BoundaryEventToolEditPolicy extends AbstractSingleSelectionEditPoli
     }
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.gef.editpolicies.SelectionEditPolicy#deactivate()
      */
     @Override
@@ -362,7 +374,8 @@ public class BoundaryEventToolEditPolicy extends AbstractSingleSelectionEditPoli
         return dropMenu ;
     }
 
-    public void zoomChanged(double zoom) {
+    @Override
+    public void zoomChanged(final double zoom) {
         hideSelection() ;
     }
 

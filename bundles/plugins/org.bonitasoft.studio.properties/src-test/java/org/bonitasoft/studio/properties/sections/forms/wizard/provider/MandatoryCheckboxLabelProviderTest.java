@@ -21,6 +21,7 @@ import static org.fest.assertions.Assertions.assertThat;
 import org.bonitasoft.studio.diagram.form.custom.model.WidgetMapping;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.ProcessFactory;
+import org.bonitasoft.studio.swt.AbstractSWTTestCase;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,7 +30,7 @@ import org.junit.Test;
  * @author Romain Bioteau
  *
  */
-public class MandatoryCheckboxLabelProviderTest {
+public class MandatoryCheckboxLabelProviderTest extends AbstractSWTTestCase {
 
     private MandatoryCheckboxLabelProvider mandatoryCheckboxLabelProvider;
 
@@ -38,6 +39,7 @@ public class MandatoryCheckboxLabelProviderTest {
      */
     @Before
     public void setUp() throws Exception {
+        createDisplayAndRealm();
         mandatoryCheckboxLabelProvider = new MandatoryCheckboxLabelProvider();
     }
 
@@ -46,6 +48,7 @@ public class MandatoryCheckboxLabelProviderTest {
      */
     @After
     public void tearDown() throws Exception {
+        dispose();
     }
 
 

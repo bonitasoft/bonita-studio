@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.bonitasoft.studio.condition.ui.expression;
 
@@ -27,7 +27,7 @@ public class ComparisonExpressionProvider implements IExpressionProvider {
 	 * @see org.bonitasoft.studio.expression.editor.provider.IExpressionProvider#getExpressions(org.eclipse.emf.ecore.EObject)
 	 */
 	@Override
-	public Set<Expression> getExpressions(EObject context) {
+	public Set<Expression> getExpressions(final EObject context) {
 		return Collections.emptySet();
 	}
 
@@ -45,7 +45,7 @@ public class ComparisonExpressionProvider implements IExpressionProvider {
 	 * @see org.bonitasoft.studio.expression.editor.provider.IExpressionProvider#getIcon(org.bonitasoft.studio.model.expression.Expression)
 	 */
 	@Override
-	public Image getIcon(Expression expression) {
+	public Image getIcon(final Expression expression) {
 		return Pics.getImage("balance.png");
 	}
 
@@ -61,7 +61,7 @@ public class ComparisonExpressionProvider implements IExpressionProvider {
 	 * @see org.bonitasoft.studio.expression.editor.provider.IExpressionProvider#getProposalLabel(org.bonitasoft.studio.model.expression.Expression)
 	 */
 	@Override
-	public String getProposalLabel(Expression expression) {
+	public String getProposalLabel(final Expression expression) {
 		return expression.getName();
 	}
 
@@ -69,7 +69,7 @@ public class ComparisonExpressionProvider implements IExpressionProvider {
 	 * @see org.bonitasoft.studio.expression.editor.provider.IExpressionProvider#isRelevantFor(org.eclipse.emf.ecore.EObject)
 	 */
 	@Override
-	public boolean isRelevantFor(EObject context) {
+	public boolean isRelevantFor(final EObject context) {
 		return context instanceof SequenceFlow ;
 	}
 
@@ -85,9 +85,9 @@ public class ComparisonExpressionProvider implements IExpressionProvider {
 	 * @see org.bonitasoft.studio.expression.editor.provider.IExpressionProvider#getExpressionEditor(org.bonitasoft.studio.model.expression.Expression)
 	 */
 	@Override
-	public IExpressionEditor getExpressionEditor(Expression expression,EObject context) {
+	public IExpressionEditor getExpressionEditor(final Expression expression,final EObject context) {
 		if(context != null){
-			return new ComparisonExpressionEditor(context.eResource(),context);
+            return new ComparisonExpressionEditor(context);
 		}
 		return null;
 	}
