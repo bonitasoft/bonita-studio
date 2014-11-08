@@ -749,7 +749,7 @@
       </excludeSources>
    </extension>
    <extension
-         id="InitializerApplication"
+         id="org.bonitasoft.studio.application.InitializerApplication"
          point="org.eclipse.core.runtime.applications">
       <application
             thread="main"
@@ -760,7 +760,7 @@
       </application>
    </extension>
    <extension
-         id="WorkspaceRecovery"
+         id="org.bonitasoft.studio.application.WorkspaceRecovery"
          point="org.eclipse.core.runtime.applications">
       <application
             thread="main"

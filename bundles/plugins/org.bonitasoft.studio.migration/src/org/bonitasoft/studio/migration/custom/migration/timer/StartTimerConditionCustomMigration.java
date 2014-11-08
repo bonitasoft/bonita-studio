@@ -19,7 +19,7 @@ package org.bonitasoft.studio.migration.custom.migration.timer;
 import java.util.Date;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
-import org.bonitasoft.studio.common.TimerUtil;
+import org.bonitasoft.studio.migration.utils.LegacyTimerExpressionGenerator;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.StartTimerEvent;
 import org.bonitasoft.studio.model.process.StartTimerScriptType;
@@ -36,20 +36,22 @@ import org.eclipse.emf.edapt.migration.Model;
  */
 public class StartTimerConditionCustomMigration extends CustomMigration {
 
-	@Override
-	public void migrateAfter(Model model, Metamodel metamodel)
+    private LegacyTimerExpressionGenerator timerExpressionGenerator;
+
+    @Override
+	public void migrateAfter(final Model model, final Metamodel metamodel)
 			throws MigrationException {
-		for(Instance startTimer : model.getAllInstances("process.StartTimerEvent")){
-			EEnumLiteral scriptType = startTimer.get("scriptType");
-			Date from =  startTimer.get("from");
-			Date at = startTimer.get("at");
-			int month = startTimer.get("month");
-			int day = startTimer.get("day");
-			int hours = startTimer.get("hours");
-			int dayNumber = startTimer.get("dayNumber");
-			int minutes = startTimer.get("minutes");
-			int seconds = startTimer.get("seconds");
-			StartTimerEvent event = ProcessFactory.eINSTANCE.createStartTimerEvent();	
+		for(final Instance startTimer : model.getAllInstances("process.StartTimerEvent")){
+			final EEnumLiteral scriptType = startTimer.get("scriptType");
+			final Date from =  startTimer.get("from");
+			final Date at = startTimer.get("at");
+			final int month = startTimer.get("month");
+			final int day = startTimer.get("day");
+			final int hours = startTimer.get("hours");
+			final int dayNumber = startTimer.get("dayNumber");
+			final int minutes = startTimer.get("minutes");
+			final int seconds = startTimer.get("seconds");
+			final StartTimerEvent event = ProcessFactory.eINSTANCE.createStartTimerEvent();
 			event.setAt(at);
 			event.setFrom(from);
 			event.setMonth(month);
@@ -59,14 +61,15 @@ public class StartTimerConditionCustomMigration extends CustomMigration {
 			event.setMinutes(minutes);
 			event.setSeconds(seconds);
 			StartTimerScriptType type = null;
-			for(StartTimerScriptType t : StartTimerScriptType.values()){
+			for(final StartTimerScriptType t : StartTimerScriptType.values()){
 				if(t.getLiteral().equals(scriptType.getLiteral())){
 					type = t;
 				}
 			}
 			event.setScriptType(type);
-			if(TimerUtil.isCycle(event)){
-				String cron = TimerUtil.getTimerExpressionContent(event);
+			if(LegacyTimerExpressionGenerator.isCycle(event)){
+                timerExpressionGenerator = new LegacyTimerExpressionGenerator();
+                final String cron = timerExpressionGenerator.getTimerExpressionContent(event);
 				if(cron != null){
 					Instance condition = startTimer.get("condition");
 					if(condition != null){
@@ -86,14 +89,14 @@ public class StartTimerConditionCustomMigration extends CustomMigration {
 				}
 				condition = model.newInstance("expression.Expression");
 				condition.set("name", "fixedDate");
-				condition.set("content", TimerUtil.generateConstant(at));
+				condition.set("content", LegacyTimerExpressionGenerator.generateConstant(at));
 				condition.set("returnType", Date.class.getName());
 				condition.set("type", ExpressionConstants.SCRIPT_TYPE);
 				condition.set("interpreter", ExpressionConstants.GROOVY);
 				startTimer.set("condition", condition);
 			}
-			
+
 		}
 	}
-	
+
 }

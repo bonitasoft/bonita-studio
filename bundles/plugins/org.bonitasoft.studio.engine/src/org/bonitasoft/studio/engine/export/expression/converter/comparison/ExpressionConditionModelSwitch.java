@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.engine.export.switcher;
+package org.bonitasoft.studio.engine.export.expression.converter.comparison;
 
 import org.bonitasoft.engine.expression.Expression;
 import org.bonitasoft.studio.condition.conditionModel.Expression_Boolean;
@@ -27,9 +27,6 @@ import org.bonitasoft.studio.engine.export.EngineExpressionUtil;
 import org.bonitasoft.studio.model.parameter.Parameter;
 import org.bonitasoft.studio.model.process.Data;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.xtext.EcoreUtil2;
 
 /**
  * @author Romain Bioteau
@@ -37,40 +34,40 @@ import org.eclipse.xtext.EcoreUtil2;
  */
 public class ExpressionConditionModelSwitch extends ConditionModelSwitch<Expression> {
 
-	private org.bonitasoft.studio.model.expression.Expression studioExpression;
+	private final org.bonitasoft.studio.model.expression.Expression studioExpression;
 
-	public ExpressionConditionModelSwitch(org.bonitasoft.studio.model.expression.Expression studioExpression){
+	public ExpressionConditionModelSwitch(final org.bonitasoft.studio.model.expression.Expression studioExpression){
 		this.studioExpression = studioExpression;
 	}
-	
+
 	@Override
-	public Expression caseExpression_Boolean(Expression_Boolean object) {
+	public Expression caseExpression_Boolean(final Expression_Boolean object) {
 		return EngineExpressionUtil.createConstantExpression(String.valueOf(object.isValue()),String.valueOf(object.isValue()),Boolean.class.getName());
 	}
-	
+
 	@Override
-	public Expression caseExpression_Double(Expression_Double object) {
+	public Expression caseExpression_Double(final Expression_Double object) {
 		return EngineExpressionUtil.createConstantExpression(String.valueOf(object.getValue()),String.valueOf(object.getValue()),Double.class.getName());
 	}
-	
+
 	@Override
-	public Expression caseExpression_Integer(Expression_Integer object) {
+	public Expression caseExpression_Integer(final Expression_Integer object) {
 		return EngineExpressionUtil.createConstantExpression(String.valueOf(object.getValue()),String.valueOf(object.getValue()),Long.class.getName());
 	}
-	
+
 	@Override
-	public Expression caseExpression_String(Expression_String object) {
-		String value = object.getValue();
+	public Expression caseExpression_String(final Expression_String object) {
+		final String value = object.getValue();
 		if (value==null || value.isEmpty()){
 			return EngineExpressionUtil.createConstantExpression("<empty-string>","",String.class.getName());
 		}
 		return EngineExpressionUtil.createConstantExpression(value,value,String.class.getName());
 	}
-	
+
 	@Override
-	public Expression caseExpression_ProcessRef(Expression_ProcessRef object) {
-		EObject resolvedProxy = resolveProxy(object.getValue());
-		for(EObject dep : studioExpression.getReferencedElements()){
+	public Expression caseExpression_ProcessRef(final Expression_ProcessRef object) {
+        final EObject resolvedProxy = object.getValue();
+		for(final EObject dep : studioExpression.getReferencedElements()){
 			if(dep instanceof Data && resolvedProxy instanceof Data){
 				if(((Data) dep).getName().equals(((Data) resolvedProxy).getName())){
 					return EngineExpressionUtil.createVariableExpression((Data) dep);
@@ -83,17 +80,6 @@ public class ExpressionConditionModelSwitch extends ConditionModelSwitch<Express
 		}
 		return null;
 	}
-	
-	private EObject resolveProxy(EObject ref) {
-		ResourceSet rSet = null;
-		if(ref.eIsProxy() && EcoreUtil.getURI(ref).lastSegment().endsWith(".proc")){
-			rSet = studioExpression.eResource().getResourceSet();
-		}
-		EObject dep = EcoreUtil2.resolve(ref, rSet);
-		if(rSet != null){
-			rSet.getResources().remove(ref.eResource());
-		}
-		return dep;
-	}
-	
+
+
 }

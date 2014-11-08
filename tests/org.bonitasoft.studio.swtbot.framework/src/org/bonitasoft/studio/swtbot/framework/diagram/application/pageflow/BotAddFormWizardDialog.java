@@ -48,4 +48,22 @@ public class BotAddFormWizardDialog extends BotWizardDialog {
         return new BotProcessDataMappingPanel(bot);
     }
 
+    /**
+     * Check the selectAll
+     */
+    public BotAddFormWizardDialog selectAll() {
+        bot.checkBox(Messages.selectAll).select();
+        return this;
+    }
+
+    /**
+     * Return content of the Widget column of a given element
+     * 
+     * @param dataName
+     * @return
+     */
+    public String getDataWidget(final String dataName) {
+        return bot.tree().getTreeItem(dataName).cell(1);
+    }
+
 }

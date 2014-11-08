@@ -23,6 +23,7 @@ import org.bonitasoft.studio.exporter.tests.bpmn.BPMNExportTests;
 import org.bonitasoft.studio.exporter.tests.bpmn.BPMNGatewayExportImportTest;
 import org.bonitasoft.studio.exporter.tests.bpmn.BPMNSequenceFlowDefaultFlowExportImportTest;
 import org.bonitasoft.studio.groovy.tests.TestBonitaGroovyEditorDialog;
+import org.bonitasoft.studio.migration.tests.ExportImportWithoutMigrationIT;
 import org.bonitasoft.studio.migration.tests.MigrationReporTest;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
@@ -104,7 +105,8 @@ import org.junit.runners.Suite;
     TestTimer.class,
     TestBonitaGroovyEditorDialog.class,
         TestProcessDependencies.class,
-        RefactorWidgetIT.class
+        RefactorWidgetIT.class,
+        ExportImportWithoutMigrationIT.class
 })
 public class AllSWTBotTests2 {
 

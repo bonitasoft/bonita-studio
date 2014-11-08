@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.validation.constraints.process;
+package org.bonitasoft.studio.validation.constraints.connector;
 
 import static org.fest.assertions.Assertions.assertThat;
 import static org.mockito.Matchers.anyObject;
@@ -37,6 +37,7 @@ import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.expression.Operation;
 import org.bonitasoft.studio.model.process.Connector;
 import org.bonitasoft.studio.model.process.ProcessFactory;
+import org.bonitasoft.studio.validation.constraints.connector.ConnectorDefinitionAndConfigurationOutputConsistencyConstraint;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.validation.IValidationContext;

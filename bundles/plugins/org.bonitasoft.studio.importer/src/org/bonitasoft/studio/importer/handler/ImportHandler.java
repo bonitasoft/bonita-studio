@@ -24,7 +24,9 @@ import org.bonitasoft.studio.common.jface.BonitaErrorDialog;
 import org.bonitasoft.studio.common.jface.CustomWizardDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
+import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.importer.ImporterPlugin;
 import org.bonitasoft.studio.importer.i18n.Messages;
 import org.bonitasoft.studio.importer.processors.ImportFileOperation;
@@ -32,38 +34,38 @@ import org.bonitasoft.studio.importer.ui.wizard.ImportFileWizard;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressService;
 
 /**
  * @author Romain Bioteau
- * 
+ *
  */
 public class ImportHandler extends AbstractHandler {
 
-
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.
 	 * ExecutionEvent)
 	 */
 	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException {
-		ImportFileWizard importFileWizard = new ImportFileWizard();
+	public Object execute(final ExecutionEvent event) throws ExecutionException {
+		final ImportFileWizard importFileWizard = new ImportFileWizard();
 		new CustomWizardDialog(Display.getDefault().getActiveShell(), importFileWizard,Messages.importButtonLabel).open();
-		String absoluteFilePath = importFileWizard.getSelectedFilePath();
+		final String absoluteFilePath = importFileWizard.getSelectedFilePath();
 		if (absoluteFilePath == null) {
 			return null;
 		}
-		File selectedFile = new File(absoluteFilePath);
+		final File selectedFile = new File(absoluteFilePath);
 		final ImportFileOperation operation = new ImportFileOperation(importFileWizard.getSelectedTransfo(),selectedFile);
-		IProgressService progressManager = PlatformUI.getWorkbench().getProgressService();
+		final IProgressService progressManager = PlatformUI.getWorkbench().getProgressService();
 		try {
 			progressManager.run(true, false, operation);
-		} catch (InvocationTargetException e) {
+		} catch (final InvocationTargetException e) {
 			BonitaStudioLog.error("Import has failed for file "+ selectedFile.getName(), ImporterPlugin.PLUGIN_ID);
 			BonitaStudioLog.error(e,ImporterPlugin.PLUGIN_ID);
 			String message =  Messages.errorWhileImporting_message;
@@ -72,7 +74,7 @@ public class ImportHandler extends AbstractHandler {
 			}
 			new BonitaErrorDialog(Display.getDefault().getActiveShell(), Messages.errorWhileImporting_title,message,e).open();
 			return null;
-		} catch (InterruptedException e) {
+		} catch (final InterruptedException e) {
 			BonitaStudioLog.error("Import has failed for file "+ selectedFile.getName(), ImporterPlugin.PLUGIN_ID);
 			BonitaStudioLog.error(e,ImporterPlugin.PLUGIN_ID);
 			String message =  Messages.errorWhileImporting_message;
@@ -89,9 +91,14 @@ public class ImportHandler extends AbstractHandler {
 		PlatformUtil.closeIntro() ;
 		PlatformUtil.openIntroIfNoOtherEditorOpen() ;
 
+        final IStatus importStatus = operation.getStatus();
+        new ImportStatusDialogHandler(importStatus, getDiagramRepositoryStore()).open(Display.getDefault().getActiveShell());
 		return null;
 	}
 
+    protected DiagramRepositoryStore getDiagramRepositoryStore() {
+        return RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
+    }
 
 
 }

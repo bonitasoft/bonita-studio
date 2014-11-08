@@ -25,6 +25,7 @@ import java.util.concurrent.CancellationException;
 import org.bonitasoft.studio.actors.i18n.Messages;
 import org.bonitasoft.studio.actors.repository.OrganizationFileStore;
 import org.bonitasoft.studio.actors.repository.OrganizationRepositoryStore;
+import org.bonitasoft.studio.actors.ui.wizard.page.OrganizationValidator;
 import org.bonitasoft.studio.common.jface.BonitaErrorDialog;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -33,6 +34,7 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.SWT;
@@ -51,28 +53,37 @@ public class ImportOrganizationHandler extends AbstractHandler {
 	 * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
 	 */
 	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException {
-		final OrganizationRepositoryStore organizationStore = (OrganizationRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(OrganizationRepositoryStore.class) ;
-		FileDialog fd = new FileDialog(Display.getDefault().getActiveShell(),SWT.OPEN) ;
+	public Object execute(final ExecutionEvent event) throws ExecutionException {
+		final OrganizationRepositoryStore organizationStore = RepositoryManager.getInstance().getRepositoryStore(OrganizationRepositoryStore.class) ;
+		final FileDialog fd = new FileDialog(Display.getDefault().getActiveShell(),SWT.OPEN) ;
 		fd.setFilterExtensions(new String[]{"*.xml;*.zip"}) ;
 		final String filePath = fd.open() ;
 		if(filePath != null){
-			IProgressService service = PlatformUI.getWorkbench().getProgressService() ;
+			final IProgressService service = PlatformUI.getWorkbench().getProgressService() ;
 			try {
 				service.run(false, false, new IRunnableWithProgress() {
 
 					@Override
-					public void run(IProgressMonitor monitor) throws InvocationTargetException,
+					public void run(final IProgressMonitor monitor) throws InvocationTargetException,
 					InterruptedException {
 						monitor.beginTask(Messages.importingOrganization, IProgressMonitor.UNKNOWN) ;
 						FileInputStream fis = null ;
 						try {
 							fis = new FileInputStream(filePath);
-							String id =	new File(filePath).getName() ;
+							final String id =	new File(filePath).getName() ;
 							FileActionDialog.setThrowExceptionOnCancel(true);
-							OrganizationFileStore file = organizationStore.importInputStream(id, fis) ;
+							final OrganizationFileStore file = organizationStore.importInputStream(id, fis) ;
+
 							if(file != null && file.isCorrectlySyntaxed()){
-								MessageDialog.openInformation(Display.getDefault().getActiveShell(), Messages.importOrganizationSuccessfullTitle, Messages.importOrganizationSuccessfullMessage);
+                                final IStatus status = new OrganizationValidator().validate(file.getContent());
+                                if (!status.isOK()) {
+                                    MessageDialog.openWarning(Display.getDefault().getActiveShell(), Messages.importOrganizationWithWarningTitle,
+                                            Messages.bind(Messages.importOrganizationWithWarningMessage,status.getMessage()));
+                                } else {
+                                    MessageDialog.openInformation(Display.getDefault().getActiveShell(), Messages.importOrganizationSuccessfullTitle,
+                                            Messages.importOrganizationSuccessfullMessage);
+                                }
+
 							} else {
 								fis.close();
 								if( file != null){
@@ -80,15 +91,15 @@ public class ImportOrganizationHandler extends AbstractHandler {
 								}
 								MessageDialog.openError(Display.getDefault().getActiveShell(),  Messages.importOrganizationFailedTitle, Messages.importOrganizationFailedMessage);
 							}
-						} catch(CancellationException ce) {
+						} catch(final CancellationException ce) {
 							String message = Messages.importOrganizationCancelledMessage;
 							if(ce.getMessage() != null){
 								message = Messages.importOrganizationCancelledMessage + ":\n"+ce.getMessage();
 							}
 							MessageDialog.openWarning(Display.getDefault().getActiveShell(), Messages.importOrganizationCancelledTitle, message);
-						} catch (Exception e) {
-							BonitaStudioLog.error(e) ; 
-							OrganizationFileStore file = organizationStore.getChild(new File(filePath).getName().replace(".xml", "."+OrganizationRepositoryStore.ORGANIZATION_EXT));
+						} catch (final Exception e) {
+							BonitaStudioLog.error(e) ;
+							final OrganizationFileStore file = organizationStore.getChild(new File(filePath).getName().replace(".xml", "."+OrganizationRepositoryStore.ORGANIZATION_EXT));
 							if( file != null){
 								file.delete();
 							}
@@ -98,7 +109,7 @@ public class ImportOrganizationHandler extends AbstractHandler {
 							if(fis != null){
 								try {
 									fis.close() ;
-								} catch (IOException e) {
+								} catch (final IOException e) {
 
 								}
 							}
@@ -106,7 +117,7 @@ public class ImportOrganizationHandler extends AbstractHandler {
 
 					}
 				});
-			} catch (Exception e) {
+			} catch (final Exception e) {
 				BonitaStudioLog.error(e) ;
 			} finally {
 				FileActionDialog.setThrowExceptionOnCancel(false);

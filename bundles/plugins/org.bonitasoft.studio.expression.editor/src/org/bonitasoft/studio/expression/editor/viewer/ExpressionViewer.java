@@ -715,9 +715,11 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
         final IObservableValue nameObservable = getExpressionNameObservable();
         final IObservableValue typeObservable = getExpressionTypeObservable();
         final IObservableValue returnTypeObservable = getExpressionReturnTypeObservable();
+        final IObservableValue contentObservable = getExpressionContentObservable();
 
         nameObservable.addValueChangeListener(this);
         typeObservable.addValueChangeListener(this);
+        contentObservable.addValueChangeListener(this);
         returnTypeObservable.addValueChangeListener(this);
 
         final UpdateValueStrategy targetToModelNameStrategy = new UpdateValueStrategy();
@@ -773,6 +775,19 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
                     ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE);
         }
         return returnTypeObservable;
+    }
+
+    protected IObservableValue getExpressionContentObservable() {
+        IObservableValue returnContentObservable;
+        final EditingDomain editingDomain = getEditingDomain();
+        if (editingDomain != null) {
+            returnContentObservable = CustomEMFEditObservables.observeDetailValue(Realm.getDefault(), getSelectedExpressionObservable(),
+                    ExpressionPackage.Literals.EXPRESSION__CONTENT);
+        } else {
+            returnContentObservable = EMFObservables.observeDetailValue(Realm.getDefault(), getSelectedExpressionObservable(),
+                    ExpressionPackage.Literals.EXPRESSION__CONTENT);
+        }
+        return returnContentObservable;
     }
 
     private IObservableValue getSelectedExpressionObservable() {

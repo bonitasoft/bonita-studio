@@ -5,12 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -38,6 +38,7 @@ import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.operation.ImportBosArchiveOperation;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.command.RunProcessCommand;
+import org.bonitasoft.studio.engine.operation.ProcessSelector;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditor;
@@ -70,22 +71,23 @@ public class TestUserFilterMatchingEngineVersion {
         final Long williamJobsID = williamJobsUser.getId();
         final List<HumanTaskInstance> tasks = processApi.searchPendingTasksForUser(williamJobsID, searchOptions).getResult();
 
-        ImportBosArchiveOperation op = new ImportBosArchiveOperation();
-        URL fileURL1 = FileLocator.toFileURL(TestUserFilterMatchingEngineVersion.class.getResource("DiagramToTestUserFIlter-1.0.bos")); //$NON-NLS-1$
+        final ImportBosArchiveOperation op = new ImportBosArchiveOperation();
+        final URL fileURL1 = FileLocator.toFileURL(TestUserFilterMatchingEngineVersion.class.getResource("DiagramToTestUserFIlter-1.0.bos")); //$NON-NLS-1$
         op.setArchiveFile(FileLocator.toFileURL(fileURL1).getFile());
         op.setCurrentRepository(RepositoryManager.getInstance().getCurrentRepository());
         op.run(Repository.NULL_PROGRESS_MONITOR);
 
-        for (IRepositoryFileStore f : op.getFileStoresToOpen()) {
+        for (final IRepositoryFileStore f : op.getFileStoresToOpen()) {
             f.open();
         }
 
-        ProcessDiagramEditor processEditor = (ProcessDiagramEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
-        MainProcess mainProcess = (MainProcess) processEditor.getDiagramEditPart().resolveSemanticElement();
+        final ProcessDiagramEditor processEditor = (ProcessDiagramEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+        final MainProcess mainProcess = (MainProcess) processEditor.getDiagramEditPart().resolveSemanticElement();
         assertEquals("DiagramToTestUserFIlter", mainProcess.getName());
 
-        final RunProcessCommand runProcessCommand = new RunProcessCommand((AbstractProcess) mainProcess.getElements().get(0), true);
-        runProcessCommand.execute(null);
+        final AbstractProcess selectedProcess = (AbstractProcess) mainProcess.getElements().get(0);
+        final RunProcessCommand runProcessCommand = new RunProcessCommand(true);
+        runProcessCommand.execute(ProcessSelector.createExecutionEvent(selectedProcess));
 
         assertNotNull("The url is null:", runProcessCommand.getUrl());
         final String urlGivenToBrowser = runProcessCommand.getUrl().toString();
@@ -97,7 +99,7 @@ public class TestUserFilterMatchingEngineVersion {
         final ProcessInstance processInstance = processApi.startProcess(processId);
         System.out.println("Process Instance started in state: " + processInstance.getState());
 
-        boolean evaluateAsync = new TestAsyncThread(30, 1000) {
+        final boolean evaluateAsync = new TestAsyncThread(30, 1000) {
 
             @Override
             public boolean isTestGreen() throws Exception {

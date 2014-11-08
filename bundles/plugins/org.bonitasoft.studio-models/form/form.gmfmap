@@ -2949,6 +2949,15 @@
             xsi:type="gmfmap:FeatureValueSpec">
           <feature
               xsi:type="ecore:EAttribute"
+              href="../form.ecore#//FileWidget/inputType"/>
+          <value
+              body="return org.bonitasoft.studio.common.emf.tools.ModelHelper.getDefaultFileWidgetInputType(self);"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EAttribute"
               href="../process.ecore#//Element/name"/>
           <value
               body="return org.bonitasoft.studio.common.NamingUtils.getInstance(self).generateName(self, self);"
@@ -3115,6 +3124,14 @@
           <value
               body="return org.bonitasoft.studio.common.emf.tools.WidgetModifiersSwitch.ENGINE_DOCUMENT_QUALIFIED_NAME;"
               language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EAttribute"
+              href="../form.ecore#//FileWidget/initialResourcePath"/>
+          <value
+              body="''"/>
         </initializers>
       </domainInitializer>
       <labelMappings

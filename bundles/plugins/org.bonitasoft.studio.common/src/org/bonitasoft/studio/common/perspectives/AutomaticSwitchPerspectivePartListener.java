@@ -33,20 +33,7 @@ public final class AutomaticSwitchPerspectivePartListener implements IPartListen
 
     @Override
     public void partActivated(final MPart part) {
-        //		if(!isSwitching){
-        //			isSwitching = true;
-        //			try{
-        //				if (part.getElementId().equals("org.eclipse.e4.ui.compatibility.editor")) {
-        //					String activePerspective = getActivePerspectiveId(part);
-        //					final String id = BonitaPerspectivesUtils.getPerspectiveId(((CompatibilityEditor) part.getObject()).getEditor());
-        //					if (id != null && !id.equals(activePerspective)) {
-        //						BonitaPerspectivesUtils.switchToPerspective(id);
-        //					}
-        //				}
-        //			}finally{
-        //				isSwitching = false;
-        //			}
-        //		}
+
     }
 
     @Override

@@ -19,7 +19,7 @@ package org.bonitasoft.studio.data.ui.property.section;
 import static org.bonitasoft.studio.common.Messages.removalConfirmationDialogTitle;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -87,7 +87,6 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressService;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
-import org.eclipse.xtext.ui.XtextProjectHelper;
 
 /**
  *
@@ -112,6 +111,8 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
     protected EMFDataBindingContext context;
 
     private boolean isOverviewContext = false;
+
+    private static final String XTEXT_BUILDER_ID = "org.eclipse.xtext.ui.shared.xtextBuilder";
 
     /*
      * (non-Javadoc)
@@ -219,9 +220,6 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
             try {
                 if (op.canExecute()) {
                     service.run(true, false, op);
-                    //                        if (!op.isCancelled()) {
-                    //                            getEditingDomain().getCommandStack().execute(DeleteCommand.create(getEditingDomain(), d));
-                    //                        }
                 }
             } catch (final InvocationTargetException e) {
                 BonitaStudioLog.error(e, DataPlugin.PLUGIN_ID);
@@ -230,7 +228,7 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
             }
             try {
                 RepositoryManager.getInstance().getCurrentRepository().getProject()
-                .build(IncrementalProjectBuilder.FULL_BUILD, XtextProjectHelper.BUILDER_ID, new HashMap<String, String>(), null);
+                        .build(IncrementalProjectBuilder.FULL_BUILD, XTEXT_BUILDER_ID, Collections.<String, String> emptyMap(), null);
             } catch (final CoreException e) {
                 BonitaStudioLog.error(e, DataPlugin.PLUGIN_ID);
             }

@@ -16,9 +16,9 @@
  */
 package org.bonitasoft.studio.importer.bar.custom.migration;
 
-import org.bonitasoft.studio.common.TimerUtil;
 import org.bonitasoft.studio.importer.bar.i18n.Messages;
 import org.bonitasoft.studio.migration.migrator.ReportCustomMigration;
+import org.bonitasoft.studio.migration.utils.LegacyTimerExpressionGenerator;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.StartTimerEvent;
 import org.bonitasoft.studio.model.process.StartTimerScriptType;
@@ -36,22 +36,22 @@ import org.eclipse.emf.edapt.migration.Model;
 public class StartTimerCustomMigration extends ReportCustomMigration {
 
 	@Override
-	public void migrateAfter(Model model, Metamodel metamodel)
+	public void migrateAfter(final Model model, final Metamodel metamodel)
 			throws MigrationException {
-		for(Instance startTimer : model.getAllInstances("process.StartTimerEvent")){
-			EEnumLiteral scriptType = startTimer.get("scriptType");
-			StartTimerEvent event = ProcessFactory.eINSTANCE.createStartTimerEvent();
+		for(final Instance startTimer : model.getAllInstances("process.StartTimerEvent")){
+			final EEnumLiteral scriptType = startTimer.get("scriptType");
+			final StartTimerEvent event = ProcessFactory.eINSTANCE.createStartTimerEvent();
 			StartTimerScriptType type =null;
-			for(StartTimerScriptType t : StartTimerScriptType.values()){
+			for(final StartTimerScriptType t : StartTimerScriptType.values()){
 				if(t.getLiteral().equals(scriptType.getLiteral())){
 					type  = t;
 				}
 			}
 			event.setScriptType(type);
-			if(TimerUtil.isCycle(event)){
+			if(LegacyTimerExpressionGenerator.isCycle(event)){
 				addReportChange((String) startTimer.get("name"), startTimer.getEClass().getName(), startTimer.getUuid(), Messages.startTimerCycleMigration, Messages.timerCondition, IStatus.WARNING);
 			}
 		}
 	}
-	
+
 }

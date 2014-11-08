@@ -26,15 +26,15 @@ import org.bonitasoft.studio.condition.conditionModel.ConditionModelPackage;
 import org.bonitasoft.studio.condition.conditionModel.Expression_ProcessRef;
 import org.bonitasoft.studio.condition.conditionModel.Operation_Compare;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xtext.EcoreUtil2;
-import org.eclipse.xtext.resource.XtextResource;
 
 
 public class ComparisonExpressionUtil {
 
-    public static Collection<? extends EObject> computeReferencedElement(final EObject context, final XtextResource resource) {
+    public static Collection<? extends EObject> computeReferencedElement(final EObject context, final Resource resource) {
         final Collection<EObject> res = new HashSet<EObject>();
         final Operation_Compare compareOp = (Operation_Compare) resource.getContents().get(0);
         if(compareOp != null){

@@ -22,33 +22,43 @@ import org.eclipse.emf.edapt.migration.Model;
 
 public abstract class UpdateConnectorVersionMigration extends CustomMigration {
 
-    public UpdateConnectorVersionMigration() {
-        super();
-    }
+    protected static final String VERSION_FEATURE_NAME = "version";
+    protected static final String DEFINITION_VERSION_FEATURE_NAME = "definitionVersion";
+    protected static final String DEFINITION_ID_FEATURE_NAME = "definitionId";
 
     @Override
     public void migrateAfter(final Model model, final Metamodel metamodel) throws MigrationException {
         for (final Instance connectorInstance : model.getAllInstances("process.Connector")) {
-            final String defId = connectorInstance.get("definitionId");
-            if (isProvidedAlfrescoConnectorDef(defId)) {
+            final String defId = connectorInstance.get(DEFINITION_ID_FEATURE_NAME);
+            if (shouldUpdateVersion(defId)) {
                 updateVersion(connectorInstance);
+            }
+        }
+        for (final Instance connectorInstance : model.getAllInstances("connectorconfiguration.ConnectorConfiguration")) {
+            final String defId = connectorInstance.get(DEFINITION_ID_FEATURE_NAME);
+            if (shouldUpdateVersion(defId)) {
+                updateConfigVersion(connectorInstance);
             }
         }
     }
 
     private void updateVersion(final Instance connectorInstance) {
-        final String defVersion = connectorInstance.get("definitionVersion");
+        final String defVersion = connectorInstance.get(DEFINITION_VERSION_FEATURE_NAME);
         final String previousDefinitionVersion = getOldDefinitionVersion();
         if (defVersion.equals(previousDefinitionVersion)) {
-            connectorInstance.set("definitionVersion", getNewDefinitionVersion());
-            final Instance connectorConfigInstance = connectorInstance.get("configuration");
-            if (connectorConfigInstance != null) {
-                connectorConfigInstance.set("version", getNewDefinitionVersion());
-            }
+            connectorInstance.set(DEFINITION_VERSION_FEATURE_NAME, getNewDefinitionVersion());
         }
     }
 
-    protected abstract boolean isProvidedAlfrescoConnectorDef(final String defId);
+    private void updateConfigVersion(final Instance connectorConfigInstance) {
+        final String defVersion = connectorConfigInstance.get(VERSION_FEATURE_NAME);
+        final String previousDefinitionVersion = getOldDefinitionVersion();
+        if (defVersion.equals(previousDefinitionVersion)) {
+            connectorConfigInstance.set(VERSION_FEATURE_NAME, getNewDefinitionVersion());
+        }
+    }
+
+    protected abstract boolean shouldUpdateVersion(final String defId);
 
     protected abstract String getNewDefinitionVersion();
 

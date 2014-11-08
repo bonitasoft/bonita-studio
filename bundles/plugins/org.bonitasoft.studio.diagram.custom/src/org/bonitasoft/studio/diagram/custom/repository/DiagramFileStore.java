@@ -176,7 +176,6 @@ public class DiagramFileStore extends EMFFileStore implements IRepositoryFileSto
                         if(editor instanceof ProcessDiagramEditor){
                             return (DiagramEditor) editor;
                         }
-
                     }
                 } catch (final PartInitException e) {
                     BonitaStudioLog.error(e,Activator.PLUGIN_ID);
@@ -274,7 +273,6 @@ public class DiagramFileStore extends EMFFileStore implements IRepositoryFileSto
             ((ProcessDiagramEditor) editor).setReadOnly(true);
         }
         Display.getDefault().syncExec(new Runnable() {
-
             @Override
             public void run() {
                 MessageDialog.openInformation(Display.getDefault().getActiveShell(), Messages.readOnlyFileTitle, Messages.readOnlyFileWarning);
@@ -285,7 +283,17 @@ public class DiagramFileStore extends EMFFileStore implements IRepositoryFileSto
     private void handleMigrationReportIfPresent(final IWorkbenchPage activePage)
             throws PartInitException {
         if(hasMigrationReport()){
-            activePage.showView("org.bonitasoft.studio.migration.view");
+             Display.getDefault().syncExec(new Runnable() {
+
+                @Override
+                public void run() {
+                    try {
+                        activePage.showView("org.bonitasoft.studio.migration.view");
+                    } catch (final PartInitException e) {
+                        BonitaStudioLog.error(e);
+                    }
+                }
+            });
         } else {
             final IViewPart migrationView = activePage.findView("org.bonitasoft.studio.migration.view");
             if(migrationView != null){
@@ -403,6 +411,10 @@ public class DiagramFileStore extends EMFFileStore implements IRepositoryFileSto
         final Iterator<String[]> iterator = featureValueFromEObjectType.values().iterator();
         final String[] values = iterator.next();
         return values != null && values[0] != null;
+    }
+
+    public boolean isOpened() {
+        return getOpenedEditor() != null;
     }
 
 }
