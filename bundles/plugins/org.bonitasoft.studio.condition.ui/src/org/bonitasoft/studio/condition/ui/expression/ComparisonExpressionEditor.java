@@ -16,8 +16,9 @@
  */
 package org.bonitasoft.studio.condition.ui.expression;
 
-import java.util.ArrayList;
+import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -27,13 +28,12 @@ import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.BonitaStudioFontRegistry;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.condition.conditionModel.ConditionModelPackage;
 import org.bonitasoft.studio.condition.conditionModel.Expression_ProcessRef;
 import org.bonitasoft.studio.condition.conditionModel.Operation_Compare;
-import org.bonitasoft.studio.condition.scoping.ConditionModelGlobalScopeProvider;
 import org.bonitasoft.studio.condition.ui.i18n.Messages;
 import org.bonitasoft.studio.condition.ui.internal.ConditionModelActivator;
+import org.bonitasoft.studio.condition.validation.ConditionModelJavaValidator;
 import org.bonitasoft.studio.expression.editor.ExpressionEditorPlugin;
 import org.bonitasoft.studio.expression.editor.constant.ConstantTypeLabelProvider;
 import org.bonitasoft.studio.expression.editor.constant.ExpressionReturnTypeContentProvider;
@@ -44,18 +44,13 @@ import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.expression.editor.viewer.SelectDependencyDialog;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
-import org.bonitasoft.studio.model.parameter.Parameter;
-import org.bonitasoft.studio.model.process.Data;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.IValueChangeListener;
 import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
@@ -84,16 +79,11 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.forms.widgets.Section;
-import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.ui.editor.embedded.EmbeddedEditor;
 import org.eclipse.xtext.ui.editor.embedded.EmbeddedEditorFactory;
 import org.eclipse.xtext.ui.editor.embedded.EmbeddedEditorFactory.Builder;
 import org.eclipse.xtext.ui.editor.embedded.IEditedResourceProvider;
-import org.eclipse.xtext.ui.resource.XtextResourceSetProvider;
-import org.eclipse.xtext.validation.CheckMode;
-import org.eclipse.xtext.validation.IResourceValidator;
-import org.eclipse.xtext.validation.Issue;
 
 import com.google.inject.Injector;
 
@@ -128,15 +118,24 @@ public class ComparisonExpressionEditor extends SelectionAwareExpressionEditor i
 
     private XtextResource resource;
 
-    private final Resource eResource;
 
     private boolean isPageFlowContext = false;
 
-    public ComparisonExpressionEditor(final Resource eResource, final EObject context) {
+
+    private final XtextComparisonExpressionLoader xtextComparisonExpressionLoader;
+
+    public ComparisonExpressionEditor(final EObject context) {
+
         this.context = context;
-        this.eResource = eResource;
         adapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
         adapterLabelProvider = new AdapterFactoryLabelProvider(adapterFactory);
+        final Injector injector = ConditionModelActivator.getInstance().getInjector(ConditionModelActivator.ORG_BONITASOFT_STUDIO_CONDITION_CONDITIONMODEL);
+        if (context != null && context.eResource() != null) {
+        final ConditionModelJavaValidator validator = injector.getInstance(ConditionModelJavaValidator.class);
+            validator.setCurrentResourceSet(context.eResource().getResourceSet());
+        }
+
+        xtextComparisonExpressionLoader = new XtextComparisonExpressionLoader(injector);
     }
 
     /*
@@ -179,19 +178,8 @@ public class ComparisonExpressionEditor extends SelectionAwareExpressionEditor i
                 try {
                     final Injector injector = ConditionModelActivator.getInstance().getInjector(
                             ConditionModelActivator.ORG_BONITASOFT_STUDIO_CONDITION_CONDITIONMODEL);
-                    final XtextResourceSetProvider xtextResourceSetProvider = injector.getInstance(XtextResourceSetProvider.class);
-                    final ResourceSet resourceSet = xtextResourceSetProvider.get(RepositoryManager.getInstance().getCurrentRepository().getProject());
-                    resource = (XtextResource) resourceSet.createResource(URI.createURI("somefile.cmodel"));
+                    resource = (XtextResource) new XtextComparisonExpressionLoader(injector).loadResource("", context);
                     resource.setValidationDisabled(false);
-                    final ConditionModelGlobalScopeProvider globalScopeProvider = injector.getInstance(ConditionModelGlobalScopeProvider.class);
-                    final List<String> accessibleObjects = new ArrayList<String>();
-                    for (final Data d : ModelHelper.getAccessibleData(context)) {
-                        accessibleObjects.add(ModelHelper.getEObjectID(d));
-                    }
-                    for (final Parameter p : ModelHelper.getParentProcess(context).getParameters()) {
-                        accessibleObjects.add(ModelHelper.getEObjectID(p));
-                    }
-                    globalScopeProvider.setAccessibleEObjects(accessibleObjects);
                     return resource;
                 } catch (final Exception e) {
                     BonitaStudioLog.error(e, ExpressionEditorPlugin.PLUGIN_ID);
@@ -206,6 +194,7 @@ public class ComparisonExpressionEditor extends SelectionAwareExpressionEditor i
         final Builder buildEditor = factory.newEditor(resourceProvider);
         comparisonEditor = buildEditor.withParent(parent);
         comparisonEditor.createPartialEditor(true);
+        comparisonEditor.getDocument().set("");
         comparisonEditor.getViewer().getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         comparisonEditor.getViewer().addTextListener(new ITextListener() {
 
@@ -287,17 +276,12 @@ public class ComparisonExpressionEditor extends SelectionAwareExpressionEditor i
 
     protected void updateDependencies() {
         inputExpression.getReferencedElements().clear();
-        final Injector injector = ConditionModelActivator.getInstance().getInjector(ConditionModelActivator.ORG_BONITASOFT_STUDIO_CONDITION_CONDITIONMODEL);
-        final IResourceValidator xtextResourceChecker = injector.getInstance(IResourceValidator.class);
-        final List<Issue> issues = xtextResourceChecker.validate(resource, CheckMode.NORMAL_AND_FAST, null);
-        if (issues.isEmpty()) {// Validation is OK
-            final Operation_Compare compareOp = (Operation_Compare) resource.getContents().get(0);
-            if (compareOp != null) {
-                final List<Expression_ProcessRef> references = ModelHelper.getAllItemsOfType(compareOp, ConditionModelPackage.Literals.EXPRESSION_PROCESS_REF);
-                for (final Expression_ProcessRef ref : references) {
-                    final EObject dep = getResolvedDependency(ref);
-                    inputExpression.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(dep));
-                }
+        final Operation_Compare compareOp = xtextComparisonExpressionLoader.resolveProxies(resource, context.eResource().getResourceSet());
+        if (compareOp != null) {
+            final List<Expression_ProcessRef> references = ModelHelper.getAllItemsOfType(compareOp, ConditionModelPackage.Literals.EXPRESSION_PROCESS_REF);
+            for (final Expression_ProcessRef ref : references) {
+                final EObject dep = getResolvedDependency(ref);
+                inputExpression.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(dep));
             }
         }
     }
@@ -307,25 +291,13 @@ public class ComparisonExpressionEditor extends SelectionAwareExpressionEditor i
      * @return
      */
     private EObject getResolvedDependency(final Expression_ProcessRef ref) {
-        EObject dep = resolveProxy(ref.getValue());
+        EObject dep = ref.getValue();
         final List<EObject> orignalDep = ModelHelper.getAllItemsOfType(ModelHelper.getMainProcess(context), dep.eClass());
         for (final EObject d : orignalDep) {
             if (EcoreUtil.equals(dep, d)) {
                 dep = d;
                 break;
             }
-        }
-        return dep;
-    }
-
-    private EObject resolveProxy(final EObject ref) {
-        ResourceSet rSet = null;
-        if (ref.eIsProxy()) {
-            rSet = eResource.getResourceSet();
-        }
-        final EObject dep = EcoreUtil2.resolve(ref, rSet);
-        if (rSet != null) {
-            rSet.getResources().remove(ref.eResource());
         }
         return dep;
     }
@@ -378,6 +350,7 @@ public class ComparisonExpressionEditor extends SelectionAwareExpressionEditor i
 
         final UpdateValueStrategy opposite = new UpdateValueStrategy();
         opposite.setConverter(new BooleanInverserConverter());
+
 
         dataBindingContext.bindValue(SWTObservables.observeSelection(automaticResolutionButton), autoDepsModelObservable);
         dataBindingContext.bindValue(SWTObservables.observeSelection(automaticResolutionButton), SWTObservables.observeEnabled(addDependencyButton), opposite,
@@ -434,7 +407,13 @@ public class ComparisonExpressionEditor extends SelectionAwareExpressionEditor i
      */
     @Override
     public void dispose() {
-
+        if (resource != null) {
+            try {
+                resource.delete(Collections.emptyMap());
+            } catch (final IOException e) {
+                BonitaStudioLog.error(e);
+            }
+        }
     }
 
     /*

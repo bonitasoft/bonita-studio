@@ -23,6 +23,8 @@ import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Activity;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.studio.model.process.ReceiveTask;
+import org.bonitasoft.studio.model.process.SendTask;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -37,22 +39,20 @@ import org.eclipse.swt.widgets.Shell;
  */
 public class CreateVariableProposalListener implements IProposalListener {
 
-    private boolean isPageFlowContext = false;
+    private boolean isPageFlowContext = true;
 
     private EStructuralFeature feature;
 
     @Override
-    public String handleEvent(EObject context, final String fixedReturnType) {
+    public String handleEvent(final EObject context, final String fixedReturnType) {
         Assert.isNotNull(context);
-        while (!(context instanceof AbstractProcess || context instanceof Activity)) {
-            context = context.eContainer();
-        }
+        final EObject dataContainer = getDataContainer(context);
         if (feature == null) {
             feature = ProcessPackage.Literals.DATA_AWARE__DATA;
         }
         final Set<EStructuralFeature> res = new HashSet<EStructuralFeature>();
         res.add(feature);
-        final DataWizard newWizard = new DataWizard(TransactionUtil.getEditingDomain(context), context, feature, res, true, fixedReturnType);
+        final DataWizard newWizard = new DataWizard(TransactionUtil.getEditingDomain(context), dataContainer, feature, res, true, fixedReturnType);
         newWizard.setIsPageFlowContext(isPageFlowContext);
         Shell activeShell = Display
                 .getDefault().getActiveShell();
@@ -70,9 +70,21 @@ public class CreateVariableProposalListener implements IProposalListener {
                 }
             }
         }
-
         return null;
+    }
 
+    protected EObject getDataContainer(EObject context) {
+        while (!isValidContainer(context)) {
+            context = context.eContainer();
+        }
+        return context;
+    }
+
+    private boolean isValidContainer(final EObject context) {
+        return (context instanceof AbstractProcess
+                || context instanceof Activity)
+                && !(context instanceof SendTask)
+                && !(context instanceof ReceiveTask);
     }
 
     @Override
@@ -86,7 +98,7 @@ public class CreateVariableProposalListener implements IProposalListener {
      */
     @Override
     public boolean isPageFlowContext() {
-        return true;
+        return isPageFlowContext;
     }
 
     /*
@@ -96,7 +108,6 @@ public class CreateVariableProposalListener implements IProposalListener {
     @Override
     public void setIsPageFlowContext(final boolean isPageFlowContext) {
         this.isPageFlowContext = isPageFlowContext;
-
     }
 
     /*

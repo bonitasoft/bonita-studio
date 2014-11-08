@@ -16,8 +16,11 @@
  */
 package org.bonitasoft.studio.actors.ui.wizard.page;
 
+import static org.bonitasoft.studio.common.Messages.bonitaPortalModuleName;
+
 import org.bonitasoft.studio.actors.i18n.Messages;
 import org.bonitasoft.studio.actors.model.organization.Organization;
+import org.bonitasoft.studio.actors.repository.OrganizationFileStore;
 import org.bonitasoft.studio.actors.repository.OrganizationRepositoryStore;
 import org.bonitasoft.studio.common.jface.TableColumnSorter;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
@@ -37,37 +40,36 @@ import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.TableColumn;
-import static org.bonitasoft.studio.common.Messages.bonitaPortalModuleName;
 /**
  * @author Romain Bioteau
  *
  */
 public class SynchronizeOrganizationWizardPage extends WizardPage implements ISelectionChangedListener{
 
-    private IRepositoryFileStore file;
+    private OrganizationFileStore file;
     private TableViewer viewer;
     private final OrganizationRepositoryStore organizationStore;
 
- 
+
     public SynchronizeOrganizationWizardPage() {
         super(SynchronizeOrganizationWizardPage.class.getName());
         setTitle(Messages.synchronizeOrganizationTitle) ;
         setDescription(Messages.bind(Messages.synchronizeOrganizationDesc, new Object[]{bonitaPortalModuleName})) ;
-        organizationStore = (OrganizationRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(OrganizationRepositoryStore.class) ;
+        organizationStore = RepositoryManager.getInstance().getRepositoryStore(OrganizationRepositoryStore.class) ;
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
      */
     @Override
-    public void createControl(Composite parent) {
-        Composite mainComposite = new Composite(parent, SWT.NONE) ;
+    public void createControl(final Composite parent) {
+        final Composite mainComposite = new Composite(parent, SWT.NONE) ;
         mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create()) ;
         mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(10, 10).create()) ;
 
         viewer = new TableViewer(mainComposite,SWT.BORDER | SWT.FULL_SELECTION | SWT.SINGLE) ;
         viewer.getTable().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).minSize(SWT.DEFAULT, 200).create());
-        TableLayout layout = new TableLayout() ;
+        final TableLayout layout = new TableLayout() ;
         layout.addColumnData(new ColumnWeightData(30)) ;
         layout.addColumnData(new ColumnWeightData(70)) ;
         viewer.getTable().setLayout(layout);
@@ -76,7 +78,7 @@ public class SynchronizeOrganizationWizardPage extends WizardPage implements ISe
         viewer.setContentProvider(new ArrayContentProvider()) ;
 
         TableViewerColumn column = new TableViewerColumn(viewer, SWT.FILL) ;
-        TableColumn nameColumn = column.getColumn() ;
+        final TableColumn nameColumn = column.getColumn() ;
         column.getColumn().setText(Messages.name);
         column.setLabelProvider(new OrganizationLabelProvider());
 
@@ -85,12 +87,12 @@ public class SynchronizeOrganizationWizardPage extends WizardPage implements ISe
         column.getColumn().setText(Messages.description);
         column.setLabelProvider(new ColumnLabelProvider(){
             @Override
-            public String getText(Object element) {
+            public String getText(final Object element) {
                 return ((Organization) ((IRepositoryFileStore) element).getContent()).getDescription();
             }
         });
 
-        TableColumnSorter sorter = new TableColumnSorter(viewer) ;
+        final TableColumnSorter sorter = new TableColumnSorter(viewer) ;
         sorter.setColumn(nameColumn) ;
 
         viewer.setInput(organizationStore.getChildren()) ;
@@ -102,18 +104,18 @@ public class SynchronizeOrganizationWizardPage extends WizardPage implements ISe
 
 
     @Override
-    public void selectionChanged(SelectionChangedEvent event) {
+    public void selectionChanged(final SelectionChangedEvent event) {
         if(!event.getSelection().isEmpty()){
-            file = (IRepositoryFileStore) ((IStructuredSelection) event.getSelection()).getFirstElement() ;
-            DefaultUserOrganizationWizardPage nextPage = (DefaultUserOrganizationWizardPage)getNextPage();
-            nextPage.setOrganization((Organization)file.getContent());
+            file = (OrganizationFileStore) ((IStructuredSelection) event.getSelection()).getFirstElement();
+            final DefaultUserOrganizationWizardPage nextPage = (DefaultUserOrganizationWizardPage)getNextPage();
+            nextPage.setOrganization(file.getContent());
             nextPage.refreshBindings();
         }
-       
+
         getContainer().updateButtons() ;
     }
 
-    public IRepositoryFileStore getFileStore() {
+    public OrganizationFileStore getFileStore() {
         return file;
     }
 

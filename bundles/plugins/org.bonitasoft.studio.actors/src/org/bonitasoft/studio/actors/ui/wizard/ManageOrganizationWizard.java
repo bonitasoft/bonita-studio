@@ -28,7 +28,7 @@ import org.bonitasoft.studio.actors.repository.OrganizationRepositoryStore;
 import org.bonitasoft.studio.actors.ui.wizard.page.AbstractOrganizationWizardPage;
 import org.bonitasoft.studio.actors.ui.wizard.page.GroupsWizardPage;
 import org.bonitasoft.studio.actors.ui.wizard.page.ManageOrganizationWizardPage;
-import org.bonitasoft.studio.actors.ui.wizard.page.OrganizationUserValidator;
+import org.bonitasoft.studio.actors.ui.wizard.page.OrganizationValidator;
 import org.bonitasoft.studio.actors.ui.wizard.page.RolesWizardPage;
 import org.bonitasoft.studio.actors.ui.wizard.page.UsersWizardPage;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -65,7 +65,7 @@ public class ManageOrganizationWizard extends Wizard {
     private final List<Organization> organizations;
     private final List<Organization> organizationsWorkingCopy;
     private final OrganizationRepositoryStore store;
-    private final OrganizationUserValidator validator = new OrganizationUserValidator();
+    private final OrganizationValidator validator = new OrganizationValidator();
     private Organization activeOrganization;
     private boolean activeOrganizationHasBeenModified = false;
     String userName;

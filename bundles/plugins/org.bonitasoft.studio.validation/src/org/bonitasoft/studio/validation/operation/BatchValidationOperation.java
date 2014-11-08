@@ -12,19 +12,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.validation;
+package org.bonitasoft.studio.validation.operation;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.diagram.form.providers.ProcessMarkerNavigationProvider;
 import org.bonitasoft.studio.model.process.diagram.part.ValidateAction;
+import org.bonitasoft.studio.validation.ValidationPlugin;
 import org.bonitasoft.studio.validation.i18n.Messages;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
@@ -36,17 +39,14 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.workspace.util.WorkspaceSynchronizer;
-import org.eclipse.gmf.runtime.diagram.ui.OffscreenEditPartFactory;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
-import org.eclipse.gmf.runtime.emf.core.GMFEditingDomainFactory;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IEditorReference;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 
 /**
@@ -54,102 +54,90 @@ import org.eclipse.ui.PlatformUI;
  */
 public class BatchValidationOperation implements IRunnableWithProgress {
 
-    private Set<Diagram> toValidate;
-    private final List<Shell> toDispose = new ArrayList<Shell>();
+    private final Map<Diagram, DiagramEditPart> diagramsToDiagramEditPart = new HashMap<Diagram, DiagramEditPart>();
     private final List<IFile> fileProcessed = new ArrayList<IFile>(); //Avoid duplicate
+    private final org.bonitasoft.studio.validation.operation.OffscreenEditPartFactory offscreenEditPartFactory;
 
+    public BatchValidationOperation(final org.bonitasoft.studio.validation.operation.OffscreenEditPartFactory offscreenEditPartFactory) {
+        this.offscreenEditPartFactory = offscreenEditPartFactory;
+    }
     /*
      * (non-Javadoc)
      * @see org.eclipse.jface.operation.IRunnableWithProgress#run(org.eclipse.core.runtime.IProgressMonitor)
      */
     @Override
     public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-        Assert.isNotNull(toValidate);
+        Assert.isLegal(!diagramsToDiagramEditPart.isEmpty());
         monitor.beginTask(Messages.validating, IProgressMonitor.UNKNOWN);
-        Display.getDefault().syncExec(new Runnable() {
 
-            @Override
-            public void run() {
-                if (!toValidate.isEmpty()) {
-                    final Iterator<Diagram> it = toValidate.iterator();
-                    clearMarkers(it);
+        clearMarkers();
+        for (final Entry<Diagram, DiagramEditPart> entry : diagramsToDiagramEditPart.entrySet()) {
+            final DiagramEditPart diagramEp = entry.getValue();
+            final Diagram diagram = entry.getKey();
+            if (diagramEp != null) {
+                final EObject resolvedSemanticElement = diagramEp.resolveSemanticElement();
+                if (resolvedSemanticElement instanceof MainProcess) {
+                    ValidateAction.runValidation(diagramEp, diagram);
+                } else if (resolvedSemanticElement instanceof Form) {
+                    org.bonitasoft.studio.model.process.diagram.form.part.ValidateAction.runValidation(diagramEp, diagram);
                 }
-                for (final Diagram d : toValidate) {
-                    final DiagramEditPart de = getDiagramEditPart(d);
-                    if (de != null) {
-                        final EObject resolvedSemanticElement = de.resolveSemanticElement();
-                        if (resolvedSemanticElement instanceof MainProcess) {
-                            ValidateAction.runValidation(de, d);
-                        } else if (resolvedSemanticElement instanceof Form) {
-                            org.bonitasoft.studio.model.process.diagram.form.part.ValidateAction.runValidation(de, d);
-                        }
-                    }
-                }
-                dispose();
+
             }
+        }
 
-            private void clearMarkers(final Iterator<Diagram> it) {
-                while (it.hasNext()) {
-                    final Diagram d = it.next();
-                    final DiagramEditPart de = getDiagramEditPart(d);
-                    if (de != null) {
-                        final EObject resolvedSemanticElement = de.resolveSemanticElement();
-                        if (resolvedSemanticElement instanceof Form) {
-                            final IFile target = d.eResource() != null ? WorkspaceSynchronizer.getFile(d.eResource()) : null;
-                            if (target != null) {
-                                ProcessMarkerNavigationProvider.deleteMarkers(target);
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-        });
-
-        monitor.done();
+        offscreenEditPartFactory.dispose();
     }
 
-    private void dispose() {
-        for (final Shell s : toDispose) {
-            s.dispose();
+    private void clearMarkers() {
+        final Iterator<Entry<Diagram, DiagramEditPart>> iterator = diagramsToDiagramEditPart.entrySet().iterator();
+        while (iterator.hasNext()) {
+            final Entry<Diagram, DiagramEditPart> entry = iterator.next();
+            final Diagram d = entry.getKey();
+            final DiagramEditPart de = entry.getValue();
+            if (de != null) {
+                final EObject resolvedSemanticElement = de.resolveSemanticElement();
+                if (resolvedSemanticElement instanceof Form) {
+                    final IFile target = d.eResource() != null ? WorkspaceSynchronizer.getFile(d.eResource()) : null;
+                    if (target != null) {
+                        ProcessMarkerNavigationProvider.deleteMarkers(target);
+                        break;
+                    }
+                }
+            }
         }
     }
 
+
     private DiagramEditPart getDiagramEditPart(final Diagram d) {
-        if (PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null && PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage() != null) {
-            for (final IEditorPart ep : PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getEditors()) {
-                if (ep instanceof DiagramEditor) {
-                    if (((DiagramEditor) ep).getDiagram().equals(d)) {
-                        return ((DiagramEditor) ep).getDiagramEditPart();
+        final IWorkbenchPage activePage = getActivePage();
+        if (activePage != null) {
+            for (final IEditorReference ep : activePage.getEditorReferences()) {
+                final IEditorPart editor = ep.getEditor(false);
+                if (editor instanceof DiagramEditor) {
+                    if (((DiagramEditor) editor).getDiagram().equals(d)) {
+                        return ((DiagramEditor) editor).getDiagramEditPart();
                     }
                 }
             }
         }
         if (d != null && d.eResource() != null) {
-            return createOffscreenDiagramEditPart(d);
+            return offscreenEditPartFactory.createOffscreenDiagramEditPart(d);
         }
         return null;
     }
 
-    private DiagramEditPart createOffscreenDiagramEditPart(final Diagram d) {
-        final ResourceSet rSet = d.eResource().getResourceSet();
-        if (GMFEditingDomainFactory.getInstance().getEditingDomain(rSet) == null) {
-            GMFEditingDomainFactory.getInstance().createEditingDomain(rSet);
+    protected IWorkbenchPage getActivePage() {
+        if (PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null) {
+            return PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
         }
-        final EObject element = d.getElement();
-        DiagramEditPart diagramEp = null;
-        if (element != null) {
-            final Shell shell = new Shell();
-            diagramEp = OffscreenEditPartFactory.getInstance().createDiagramEditPart(d, shell);
-            toDispose.add(shell);
-        }
-        return diagramEp;
+        return null;
     }
+
 
     public IStatus getResult() {
         final MultiStatus result = new MultiStatus(ValidationPlugin.PLUGIN_ID, IStatus.OK, "", null);
         fileProcessed.clear();
-        for (final Diagram d : toValidate) {
+        for (final Diagram d : diagramsToDiagramEditPart.keySet()) {
             final EObject element = d.getElement();
             if (element != null) {
                 final IFile target = d.eResource() != null ? WorkspaceSynchronizer.getFile(d.eResource()) : null;
@@ -214,8 +202,9 @@ public class BatchValidationOperation implements IRunnableWithProgress {
         return false;
     }
 
-    public void setDiagramToValidate(final Set<Diagram> toValidate) {
-        this.toValidate = toValidate;
+    public void addDiagram(final Diagram diagramToValidate) {
+        diagramsToDiagramEditPart.put(diagramToValidate, getDiagramEditPart(diagramToValidate));
+
     }
 
 }

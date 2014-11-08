@@ -41,7 +41,6 @@ import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.emf.tools.EMFResourceUtil;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.CopyInputStream;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
@@ -60,7 +59,6 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.xmi.FeatureNotFoundException;
 import org.eclipse.emf.edapt.history.Release;
 import org.eclipse.emf.edapt.migration.MigrationException;
@@ -71,7 +69,6 @@ import org.eclipse.emf.edit.provider.resource.ResourceItemProviderAdapterFactory
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.gmf.runtime.notation.util.NotationAdapterFactory;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 
@@ -230,18 +227,6 @@ public class DiagramRepositoryStore extends
         return null;
     }
 
-	private boolean processExistInList(final AbstractProcess ip,
-			final List<AbstractProcess> processes) {
-        for (final AbstractProcess p : processes) {
-			if (ip.getName().equals(p.getName())
-					&& ip.getVersion().equals(p.getVersion())
-					&& !EcoreUtil.equals(ip, p)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     @Override
 	protected DiagramFileStore doImportIResource(final String fileName,
 			final IResource resource) {
@@ -257,48 +242,7 @@ public class DiagramRepositoryStore extends
             return null;
         }
 
-		if (!FileActionDialog.getDisablePopup()) {
-			final List<AbstractProcess> importedProcess = ModelHelper
-					.getAllProcesses(content);
-            final List<AbstractProcess> duplicateProcess = findDuplicatedProcess(importedProcess);
-            if (!duplicateProcess.isEmpty()) {
-                openWarningForDuplicatedProcess(duplicateProcess);
-            }
-        }
-
         return fileStore;
-    }
-
-	private List<AbstractProcess> findDuplicatedProcess(
-			final List<AbstractProcess> importedProcess) {
-        final List<AbstractProcess> processes = getAllProcesses();
-        final List<AbstractProcess> duplicateProcess = new ArrayList<AbstractProcess>();
-        for (final AbstractProcess p : importedProcess) {
-            if (processExistInList(p, processes)) {
-                duplicateProcess.add(p);
-            }
-        }
-        return duplicateProcess;
-    }
-
-    private void openWarningForDuplicatedProcess(
-            final List<AbstractProcess> duplicateProcess) {
-        Display.getDefault().syncExec(new Runnable() {
-
-            @Override
-            public void run() {
-                final StringBuilder sb = new StringBuilder();
-                for (final AbstractProcess p : duplicateProcess) {
-                    sb.append(SWT.CR);
-					sb.append(p.getName() + " " + "(" + p.getVersion() + ")");
-                }
-				MessageDialog.openWarning(
-						Display.getDefault().getActiveShell(),
-						Messages.warningDuplicateDialogTitle, Messages.bind(
-								Messages.poolAlreadyExistWarningMessage,
-								sb.toString()));
-            }
-        });
     }
 
     @Override
