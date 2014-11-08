@@ -17,6 +17,7 @@
 package org.bonitasoft.studio.common.repository.ui.viewer;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 
 import org.assertj.core.api.Assertions;
@@ -45,9 +46,21 @@ public class RepositoryTreeContentProviderTest {
     }
 
     @Test
+    public void testGetChildrenReturnEmptyListIfNotARepositoryStore() {
+        final Object[] children = new RepositoryTreeContentProvider().getChildren(new Object());
+        Assertions.assertThat(children).isNotNull();
+        Assertions.assertThat(children).isEmpty();
+    }
+
+    @Test
     public void testGetParent() {
         Mockito.doReturn(repoStore).when(repoFileStore).getParentStore();
         Assertions.assertThat(new RepositoryTreeContentProvider().getParent(repoFileStore)).isEqualTo(repoStore);
+    }
+
+    @Test
+    public void testGetParentReturnNullIfNotARepositoryFileStore() {
+        Assertions.assertThat(new RepositoryTreeContentProvider().getParent(new Object())).isEqualTo(null);
     }
 
     @Test
@@ -57,6 +70,27 @@ public class RepositoryTreeContentProviderTest {
 
         Mockito.doReturn(Arrays.asList(new IRepositoryFileStore[] { repoFileStore })).when(repoStore).getChildren();
         Assertions.assertThat(new RepositoryTreeContentProvider().hasChildren(repoStore)).isTrue();
+    }
+
+    @Test
+    public void testHasChildrenReturnFalseIfNotARepositoryFileStore() {
+        Assertions.assertThat(new RepositoryTreeContentProvider().hasChildren(new Object())).isFalse();
+    }
+
+    @Test
+    public void testGetElementsReturnATable() {
+        final Collection<Object> collec = Collections.emptyList();
+        final Object[] elements = new RepositoryTreeContentProvider().getElements(collec);
+        Assertions.assertThat(elements).isInstanceOf(Object[].class);
+
+    }
+
+    @Test
+    public void testGetElementsReturnEmptyListIfNotACollection() {
+        final Object[] elements = new RepositoryTreeContentProvider().getElements(new Object());
+        Assertions.assertThat(elements).isInstanceOf(Object[].class);
+        Assertions.assertThat(elements).isNotNull();
+        Assertions.assertThat(elements).isEmpty();
     }
 
 }
