@@ -249,17 +249,7 @@ public class DiagramFileStore extends EMFFileStore implements IRepositoryFileSto
                 final MainProcess diagram = (MainProcess) editor.getDiagramEditPart().resolveSemanticElement() ;
                 diagram.eAdapters().add(new PoolNotificationListener());
                 if(isReadOnly()){
-                    editor.getDiagramEditPart().disableEditMode() ;
-                    if (editor instanceof ProcessDiagramEditor) {
-                        ((ProcessDiagramEditor) editor).setReadOnly(true);
-                    }
-                    Display.getDefault().syncExec(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            MessageDialog.openInformation(Display.getDefault().getActiveShell(), Messages.readOnlyFileTitle, Messages.readOnlyFileWarning);
-                        }
-                    });
+                    setReadOnlyAndOpenWarningDialogAboutReadOnly(editor);
                 }
                 registerListeners(diagram, editor.getEditingDomain()) ;
                 final IGraphicalEditPart editPart = editor.getDiagramEditPart().getChildBySemanticHint(PoolEditPart.VISUAL_ID+"");
@@ -275,6 +265,21 @@ public class DiagramFileStore extends EMFFileStore implements IRepositoryFileSto
             BonitaStudioLog.error(e) ;
         }
         return part ;
+    }
+
+    
+    private void setReadOnlyAndOpenWarningDialogAboutReadOnly(final DiagramEditor editor) {
+        editor.getDiagramEditPart().disableEditMode() ;
+        if (editor instanceof ProcessDiagramEditor) {
+            ((ProcessDiagramEditor) editor).setReadOnly(true);
+        }
+        Display.getDefault().syncExec(new Runnable() {
+
+            @Override
+            public void run() {
+                MessageDialog.openInformation(Display.getDefault().getActiveShell(), Messages.readOnlyFileTitle, Messages.readOnlyFileWarning);
+            }
+        });
     }
 
     private void handleMigrationReportIfPresent(final IWorkbenchPage activePage)
