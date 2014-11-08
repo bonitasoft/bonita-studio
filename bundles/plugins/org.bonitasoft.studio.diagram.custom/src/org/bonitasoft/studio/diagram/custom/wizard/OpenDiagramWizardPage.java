@@ -86,8 +86,6 @@ public class OpenDiagramWizardPage extends AbstractManageDiagramWizardPage {
 
         getDiagramTree().getViewer().setInput(new Object());
 
-
-        setWorkspaceThingsEnabled(true);
         setControl(getMainComposite());
     }
 

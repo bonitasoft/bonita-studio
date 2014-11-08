@@ -63,7 +63,6 @@ public class DeleteDiagramWizardPage extends AbstractManageDiagramWizardPage {
         final Composite blank = new Composite(getMainComposite(), SWT.NONE);
         blank.setLayoutData(new GridData(SWT.DEFAULT, 40));
         getDiagramTree().getViewer().setInput(new Object());
-        setWorkspaceThingsEnabled(true);
         setControl(getMainComposite());
         selectCurrentDiagram();
     }

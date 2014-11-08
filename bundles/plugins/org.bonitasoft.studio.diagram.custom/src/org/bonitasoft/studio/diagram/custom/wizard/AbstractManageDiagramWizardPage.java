@@ -156,9 +156,4 @@ public abstract class AbstractManageDiagramWizardPage extends WizardPage impleme
         return applicationResourceStore;
     }
 
-    protected void setWorkspaceThingsEnabled(final boolean enabled) {
-        getDiagramTree().getFilterControl().setEnabled(enabled);
-        getDiagramTree().getViewer().getTree().setEnabled(enabled);
-    }
-
 }

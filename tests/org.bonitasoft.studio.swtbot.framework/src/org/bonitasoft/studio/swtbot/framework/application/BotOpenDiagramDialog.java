@@ -61,6 +61,11 @@ public class BotOpenDiagramDialog extends BotDialog {
         return new BotProcessDiagramPerspective(bot);
     }
 
+    public boolean isOpenEnabled() {
+        bot.waitUntil(Conditions.widgetIsEnabled(bot.button(OpenProcessButtonLabel)), 15000);
+        return bot.button(OpenProcessButtonLabel).isEnabled();
+    }
+
     public BotTreeWidget diagramList() {
         return new BotTreeWidget(bot.tree());
 
