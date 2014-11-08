@@ -1,18 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-
 <product name="BonitaBPM" uid="org.bonitasoft.studio.product" id="org.bonitasoft.studio.product" application="org.bonitasoft.studio.application.application" version="6.4.0.qualifier" useFeatures="true" includeLaunchers="true">
+
 
    <configIni use="default">
    </configIni>
 
    <launcherArgs>
-      <programArgs>--launcher.XXMaxPermSize512m -groovy.compiler.level 18 -clearPersistedState</programArgs>
-      <vmArgs>-Dosgi.requiredJavaVersion=1.6 -Dfile.encoding=UTF8 -Xmx512m -Xms128m -XX:MaxPermSize=256m</vmArgs>
-      <vmArgsLin>-Dorg.eclipse.swt.browser.UseWebKitGTK=False -Dorg.eclipse.swt.browser.DefaultType=mozilla -Djava.endorsed.dirs=endorsed</vmArgsLin>
-      <vmArgsMac>-Xdock:name=BonitaBPM -XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts -Dorg.eclipse.swt.browser.DefaultType=webkit -Djava.endorsed.dirs=../../../endorsed</vmArgsMac>
-      <vmArgsWin>-Dgreclipse.nonlocking=true -Djava.endorsed.dirs=endorsed</vmArgsWin>
+      <programArgs>--launcher.XXMaxPermSize512m -groovy.compiler.level 18 -clearPersistedState
+      </programArgs>
+      <vmArgs>-Dosgi.requiredJavaVersion=1.6 -Dfile.encoding=UTF8 -Xmx512m -Xms128m -XX:MaxPermSize=256m
+      </vmArgs>
+      <vmArgsLin>-Dorg.eclipse.swt.browser.UseWebKitGTK=False -Dorg.eclipse.swt.browser.DefaultType=mozilla -Djava.endorsed.dirs=endorsed
+      </vmArgsLin>
+      <vmArgsMac>-Xdock:name=BonitaBPM -XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts -Dorg.eclipse.swt.browser.DefaultType=webkit -Djava.endorsed.dirs=../../../endorsed
+      </vmArgsMac>
+      <vmArgsWin>-Dgreclipse.nonlocking=true -Djava.endorsed.dirs=endorsed
+      </vmArgsWin>
    </launcherArgs>
 
    <windowImages/>
@@ -26,10 +31,11 @@
       <macosx icon="icons/bonitasoft-icon-128-128-transparent.icns"/>
       <solaris/>
       <win useIco="true">
-         <ico path="icons/bonitasoft-icon-128-128-transparent.ico"/>
+         <ico path="icons/bonitasoft.ico"/>
          <bmp/>
       </win>
    </launcher>
+
 
    <vm>
       <linux include="false">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6</linux>
