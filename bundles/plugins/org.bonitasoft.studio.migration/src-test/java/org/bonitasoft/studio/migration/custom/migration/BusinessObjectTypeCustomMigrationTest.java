@@ -16,76 +16,81 @@
  */
 package org.bonitasoft.studio.migration.custom.migration;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.doReturn;
-
-import java.util.List;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import org.bonitasoft.studio.common.DataTypeLabels;
 import org.bonitasoft.studio.common.NamingUtils;
-import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.edapt.migration.Instance;
-import org.eclipse.emf.edapt.migration.MigrationFactory;
 import org.eclipse.emf.edapt.migration.impl.MetamodelImpl;
 import org.eclipse.emf.edapt.migration.impl.ModelImpl;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Spy;
+import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-/**
- * @author Romain Bioteau
- *
- */
+
+
+
 @RunWith(MockitoJUnitRunner.class)
 public class BusinessObjectTypeCustomMigrationTest {
 
-	private BusinessObjectTypeCustomMigration migrationUnderTest;
+    private BusinessObjectTypeCustomMigration migrationUnderTest;
 
-	@Spy
-	private ModelImpl model;
+    @Mock
+    private ModelImpl model;
 
-	@Spy
-	private MetamodelImpl metamodel;
+    @Mock
+    private MetamodelImpl metamodel;
 
-	/**
-	 * @throws java.lang.Exception
-	 */
-	@Before
-	public void setUp() throws Exception {
-		migrationUnderTest= new BusinessObjectTypeCustomMigration();
-		MigrationFactory.eINSTANCE.createType();
-	}
+    @Mock
+    private Instance diagramInstance;
 
-	/**
-	 * @throws java.lang.Exception
-	 */
-	@After
-	public void tearDown() throws Exception {
-	}
+    @Mock
+    private Instance businessDataTypeInstance;
 
-	@Ignore
-	@Test
-	public void shouldMigrateAfter_AddBusinessObjectType_InDiagram_IfNotExists() throws Exception {
-		doReturn(metamodel).when(model).getMetamodel();
-		final EPackage ePackage = ProcessPackage.eINSTANCE.getMainProcess().getEPackage();
-		final EList<EPackage> result = new BasicEList<EPackage>();
-		result.add(ePackage);
-		doReturn(result).when(metamodel).getEPackages();
-		final EList<Instance> emptyList = new BasicEList<Instance>();
-		doReturn(emptyList).when(model).getAllInstances("process.BusinessObjectType");
-		final EList<Instance> diagramList = new BasicEList<Instance>();
-		final Instance instance = model.newInstance("process.MainProcess");
-		diagramList.add(instance);
-		doReturn(diagramList).when(model).getAllInstances("process.MainProcess");
-		migrationUnderTest.migrateAfter(model , metamodel);
-        assertThat((List<Instance>) instance.get("datatypes")).extracting("name").containsOnly(NamingUtils.convertToId(DataTypeLabels.businessObjectType));
-	}
+    /**
+     * @throws java.lang.Exception
+     */
+    @Before
+    public void setUp() throws Exception {
+        migrationUnderTest= new BusinessObjectTypeCustomMigration();
+        final EList<Instance> diagramList = new BasicEList<Instance>();
+        diagramList.add(diagramInstance);
+        when(model.getAllInstances("process.MainProcess")).thenReturn(diagramList);
+        when(model.newInstance("process.BusinessObjectType")).thenReturn(businessDataTypeInstance);
+        final EList<Instance> emptyDatatypesList = new BasicEList<Instance>();
+        when(diagramInstance.get("datatypes")).thenReturn(emptyDatatypesList);
+    }
+
+    /**
+     * @throws java.lang.Exception
+     */
+    @After
+    public void tearDown() throws Exception {
+    }
+
+    @Test
+    public void should_migrateAfter_Add_the_businessObjectType_InDiagram_IfNotExists() throws Exception {
+        migrationUnderTest.migrateAfter(model , metamodel);
+        verify(model).newInstance("process.BusinessObjectType");
+        verify(businessDataTypeInstance).set("name", NamingUtils.convertToId(DataTypeLabels.businessObjectType));
+        verify(diagramInstance).add("datatypes", businessDataTypeInstance);
+    }
+
+    @Test
+    public void should_migrateAfter_NOT_Add_the_businessObjectType_InDiagram_IfNotExists() throws Exception {
+        final EList<Instance> datatypesList = new BasicEList<Instance>();
+        when(businessDataTypeInstance.instanceOf("process.BusinessObjectType")).thenReturn(true);
+        datatypesList.add(businessDataTypeInstance);
+        when(diagramInstance.get("datatypes")).thenReturn(datatypesList);
+        migrationUnderTest.migrateAfter(model, metamodel);
+        verify(diagramInstance, never()).add("datatypes", businessDataTypeInstance);
+    }
 
 }
