@@ -213,10 +213,12 @@ public class ImportBosArchiveOperation {
 
     protected Set<String> getResourcesToOpen(final IContainer container) {
         final Properties manifestProperties = getManifestInfo(container);
-        final String toOpen = manifestProperties.getProperty(ExportBosArchiveOperation.TO_OPEN);
-        if (toOpen != null) {
-            final String[] array = toOpen.split(",");
-            return new HashSet<String>(Arrays.asList(array));
+        if (manifestProperties != null) {
+            final String toOpen = manifestProperties.getProperty(ExportBosArchiveOperation.TO_OPEN);
+            if (toOpen != null) {
+                final String[] array = toOpen.split(",");
+                return new HashSet<String>(Arrays.asList(array));
+            }
         }
         return Collections.emptySet();
     }
