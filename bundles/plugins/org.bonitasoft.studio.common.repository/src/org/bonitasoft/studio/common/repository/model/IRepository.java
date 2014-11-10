@@ -91,4 +91,6 @@ public interface IRepository extends IFileStoreChangeListener {
 	void migrate() throws CoreException, MigrationException;
 
     void create();
+
+    void updateStudioShellText();
 }

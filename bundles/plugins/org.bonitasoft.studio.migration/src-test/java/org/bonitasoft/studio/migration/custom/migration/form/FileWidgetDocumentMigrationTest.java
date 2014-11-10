@@ -78,6 +78,7 @@ public class FileWidgetDocumentMigrationTest {
         operationInstance.set("operator", operatorInstance);
 
         fileWidgetInstance.set("action", operationInstance);
+        fileWidgetInstance.set("document", documentInstance);
 
         final EList<Instance> fileWidgetList = new BasicEList<Instance>();
         fileWidgetList.add(fileWidgetInstance);
@@ -115,6 +116,14 @@ public class FileWidgetDocumentMigrationTest {
         when(leftOperandInstance.get("name")).thenReturn("myDoc");
         migrationUnderTest.migrateAfter(model, metamodel);
         verify(leftOperandInstance).add("referencedElements", documentInstance.copy());
+    }
+
+    @Test
+    public void should_migrateBefore_RemoveExistingDocumentAttributeInFileWidget() throws Exception {
+        when(fileWidgetInstance.get("document")).thenReturn(documentInstance);
+        migrationUnderTest.migrateBefore(model, metamodel);
+        verify(fileWidgetInstance).remove("document", documentInstance);
+
     }
 
 }
