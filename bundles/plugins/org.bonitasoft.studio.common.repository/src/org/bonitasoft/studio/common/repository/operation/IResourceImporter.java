@@ -60,11 +60,7 @@ public class IResourceImporter {
         final List<IFolder> folderSortedList = getFolders(rootContainer);
         Collections.sort(folderSortedList, importFolderComparator);
         for (final IFolder folder : folderSortedList) {
-            final Pair<IRepositoryStore<? extends IRepositoryFileStore>, IFolder> pair = findRepository(
-                    repositoryStoreMap, folder);
-            if (pair != null) {
-                importRepositoryStore(pair, monitor);
-            }
+            findRepository(repositoryStoreMap, folder, monitor);
         }
     }
 
@@ -76,23 +72,18 @@ public class IResourceImporter {
         return fileStoresToOpen;
     }
 
-    private Pair<IRepositoryStore<? extends IRepositoryFileStore>, IFolder> findRepository(
+    private void findRepository(
             final Map<String, IRepositoryStore<? extends IRepositoryFileStore>> repositoryStoreMap,
-            final IFolder folder) throws ResourceImportException {
+            final IFolder folder, final IProgressMonitor monitor) throws ResourceImportException {
         final String path = folder.getProjectRelativePath().removeFirstSegments(1).toOSString();
         final IRepositoryStore<? extends IRepositoryFileStore> store = repositoryStoreMap.get(path);
         if (store != null) {
-            return new Pair<IRepositoryStore<? extends IRepositoryFileStore>, IFolder>(store, folder);
+            importRepositoryStore(new Pair<IRepositoryStore<? extends IRepositoryFileStore>, IFolder>(store, folder), monitor);
         } else {
             for (final IFolder subFolder : getFolders(folder)) {
-                final Pair<IRepositoryStore<? extends IRepositoryFileStore>, IFolder> pair = findRepository(repositoryStoreMap, subFolder);
-                if (pair != null) {
-                    return pair;
-                }
+                findRepository(repositoryStoreMap, subFolder, monitor);
             }
         }
-
-        return null;
     }
 
     protected List<IFolder> getFolders(final IContainer container) throws ResourceImportException {
