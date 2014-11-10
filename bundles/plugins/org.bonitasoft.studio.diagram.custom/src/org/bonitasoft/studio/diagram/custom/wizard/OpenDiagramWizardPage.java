@@ -21,6 +21,7 @@ import org.bonitasoft.studio.diagram.custom.i18n.Messages;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -85,7 +86,7 @@ public class OpenDiagramWizardPage extends AbstractManageDiagramWizardPage {
         blank.setLayoutData(new GridData(SWT.DEFAULT, 40));
 
         getDiagramTree().getViewer().setInput(new Object());
-
+        getDiagramTree().getViewer().setSelection(new StructuredSelection(getDiagramTree().getViewer().getTree().getItem(0).getData()));
         setControl(getMainComposite());
     }
 
@@ -130,6 +131,7 @@ public class OpenDiagramWizardPage extends AbstractManageDiagramWizardPage {
             public void selectionChanged(final SelectionChangedEvent event) {
                 updateRemoveButton();
                 setPageComplete(isPageComplete());
+                getContainer().updateButtons();
             }
         };
     }
