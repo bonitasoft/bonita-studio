@@ -1,17 +1,17 @@
 /**
  * Copyright (C) 2010-2013 BonitaSoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -47,34 +47,34 @@ public class TestExportProcessBar extends TestCase {
         /* Import the processus */
         URL url = getClass().getResource("TestExportProcessBarWithDocument-1.0.bos");
         url = FileLocator.toFileURL(url);
-        File barToImport = new File(url.getFile());
-        ImportBosArchiveOperation op = new ImportBosArchiveOperation();
+        final File barToImport = new File(url.getFile());
+        final ImportBosArchiveOperation op = new ImportBosArchiveOperation();
         op.setArchiveFile(barToImport.getAbsolutePath());
         op.setCurrentRepository(RepositoryManager.getInstance().getCurrentRepository());
         op.run(Repository.NULL_PROGRESS_MONITOR);
         /* Retrieve the AbstractProcess */
-        DiagramRepositoryStore store = (DiagramRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
-        DiagramFileStore diagram = store.getDiagram("TestExportProcessBarWithDocument", "1.0");
+        final DiagramRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
+        final DiagramFileStore diagram = store.getDiagram("TestExportProcessBarWithDocument", "1.0");
         assertNotNull(diagram);
-        MainProcess diagramElement = diagram.getContent();
+        final MainProcess diagramElement = diagram.getContent();
         assertNotNull(diagramElement);
         final AbstractProcess proc = (AbstractProcess) diagramElement.getElements().get(0);
 
         /* Export to the specified folder */
-        File targetFolder = new File(System.getProperty("java.io.tmpdir") + File.separator + "testExportBar");
+        final File targetFolder = new File(System.getProperty("java.io.tmpdir") + File.separator + "testExportBar");
         PlatformUtil.delete(targetFolder, Repository.NULL_PROGRESS_MONITOR);
         targetFolder.mkdirs();
-        ExportBarOperation ebo = new ExportBarOperation();
+        final ExportBarOperation ebo = new ExportBarOperation();
         ebo.addProcessToDeploy(proc);
         ebo.setTargetFolder(targetFolder.getAbsolutePath());
         ebo.setConfigurationId("Local");
-        IStatus exportStatus = ebo.run(new NullProgressMonitor());
+        final IStatus exportStatus = ebo.run(new NullProgressMonitor());
         assertTrue("Export in bar has failed.", exportStatus.isOK());
 
-        File generatedBarFile = ebo.getGeneratedBars().get(0);
+        final File generatedBarFile = ebo.getGeneratedBars().get(0);
 
         /* Check that attachment is in the bar */
-        ZipInputStream generatedBarStream = new ZipInputStream(new FileInputStream(generatedBarFile));
+        final ZipInputStream generatedBarStream = new ZipInputStream(new FileInputStream(generatedBarFile));
         ZipEntry barEntry;
         while ((barEntry = generatedBarStream.getNextEntry()) != null) {
             if (barEntry.getName().contains("documents")) {
@@ -91,37 +91,37 @@ public class TestExportProcessBar extends TestCase {
         /* Import the processus */
         URL url = getClass().getResource("TestExportBarWithApplicationResources-1.0.bos");
         url = FileLocator.toFileURL(url);
-        File barToImport = new File(url.getFile());
+        final File barToImport = new File(url.getFile());
 
-        ImportBosArchiveOperation op = new ImportBosArchiveOperation();
+        final ImportBosArchiveOperation op = new ImportBosArchiveOperation();
         op.setArchiveFile(barToImport.getAbsolutePath());
         op.setCurrentRepository(RepositoryManager.getInstance().getCurrentRepository());
-        op.run(Repository.NULL_PROGRESS_MONITOR);
-        assertTrue(op.getStatus().isOK());
+        final IStatus status = op.run(Repository.NULL_PROGRESS_MONITOR);
+        assertTrue(status.isOK());
         /* Retrieve the AbstractProcess */
-        DiagramRepositoryStore store = (DiagramRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
-        DiagramFileStore diagram = store.getDiagram("TestExportBarWithApplicationResources", "1.0");
+        final DiagramRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
+        final DiagramFileStore diagram = store.getDiagram("TestExportBarWithApplicationResources", "1.0");
         assertNotNull(diagram);
-        MainProcess diagramElement = diagram.getContent();
+        final MainProcess diagramElement = diagram.getContent();
         assertNotNull(diagramElement);
         final AbstractProcess proc = (AbstractProcess) diagramElement.getElements().get(0);
 
         /* Export to the specified folder */
-        File targetFolder = new File(System.getProperty("java.io.tmpdir") + File.separator + "testExportBar");
+        final File targetFolder = new File(System.getProperty("java.io.tmpdir") + File.separator + "testExportBar");
         PlatformUtil.delete(targetFolder, Repository.NULL_PROGRESS_MONITOR);
         targetFolder.mkdirs();
 
-        ExportBarOperation ebo = new ExportBarOperation();
+        final ExportBarOperation ebo = new ExportBarOperation();
         ebo.addProcessToDeploy(proc);
         ebo.setTargetFolder(targetFolder.getAbsolutePath());
         ebo.setConfigurationId("Local");
-        IStatus exportStatus = ebo.run(new NullProgressMonitor());
+        final IStatus exportStatus = ebo.run(new NullProgressMonitor());
         assertTrue("Export in bar has failed.", exportStatus.isOK());
 
-        File generatedBarFile = ebo.getGeneratedBars().get(0);
+        final File generatedBarFile = ebo.getGeneratedBars().get(0);
 
         /* Check that attachment is in the bar */
-        ZipInputStream generatedBarStream = new ZipInputStream(new FileInputStream(generatedBarFile));
+        final ZipInputStream generatedBarStream = new ZipInputStream(new FileInputStream(generatedBarFile));
         ZipEntry barEntry;
         boolean formsFolderExists = false;
         boolean formsXmlExists = false;
@@ -162,7 +162,7 @@ public class TestExportProcessBar extends TestCase {
     @Override
     protected void tearDown() throws Exception {
         super.tearDown();
-        File targetFolder = new File(System.getProperty("java.io.tmpdir") + File.separator + "testExportBar");
+        final File targetFolder = new File(System.getProperty("java.io.tmpdir") + File.separator + "testExportBar");
         PlatformUtil.delete(targetFolder, Repository.NULL_PROGRESS_MONITOR);
     }
 

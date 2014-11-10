@@ -70,6 +70,7 @@ import org.eclipse.ui.application.IWorkbenchConfigurer;
 import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
 import org.eclipse.ui.application.WorkbenchAdvisor;
 import org.eclipse.ui.application.WorkbenchWindowAdvisor;
+import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.internal.browser.WebBrowserUtil;
 import org.eclipse.ui.internal.ide.IDEWorkbenchMessages;
 import org.eclipse.ui.internal.ide.IDEWorkbenchPlugin;
@@ -118,6 +119,8 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
     public void initialize(final IWorkbenchConfigurer configurer) {
         super.initialize(configurer);
         configurer.setSaveAndRestore(true);
+        final IContextService contextService = (IContextService) PlatformUI.getWorkbench().getService(IContextService.class);
+        contextService.activateContext("org.bonitasoft.studio.context.id");
     }
 
     @Override

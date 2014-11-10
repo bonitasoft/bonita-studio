@@ -1,7 +1,7 @@
 /**
  * Copyright (C) 2009 BonitaSoft S.A.
  * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -42,10 +42,10 @@ public class CustomClipboardSupportGlobalActionHandler extends DiagramGlobalActi
 	}
 
 	@Override
-	public boolean canHandle(IGlobalActionContext cntxt) {
+	public boolean canHandle(final IGlobalActionContext cntxt) {
 
 		/* Check if the active part is a IDiagramWorkbenchPart */
-		IWorkbenchPart part = cntxt.getActivePart();
+		final IWorkbenchPart part = cntxt.getActivePart();
 		if (!(part instanceof IDiagramWorkbenchPart)) {
 			return false;
 		}
@@ -56,71 +56,73 @@ public class CustomClipboardSupportGlobalActionHandler extends DiagramGlobalActi
 		}
 
 		/* Check the action id */
-		String actionId = cntxt.getActionId();
+		final String actionId = cntxt.getActionId();
 		if (actionId.equals(GlobalActionId.COPY)) {
 			return canCopy(cntxt);
 		} else if (actionId.equals(GlobalActionId.CUT)) {
 			return canCut(cntxt);
 		} else if (actionId.equals(GlobalActionId.PASTE)) {
 			return canPaste(cntxt);
-		}
-		return false;
+        } else {
+            return super.canHandle(cntxt);
+        }
 	}
 
 
 	@Override
-	protected org.eclipse.gmf.runtime.common.core.command.ICommand getCopyCommand(IGlobalActionContext cntxt,
-			IDiagramWorkbenchPart diagramPart, final boolean isUndoable) {
+	protected org.eclipse.gmf.runtime.common.core.command.ICommand getCopyCommand(final IGlobalActionContext cntxt,
+			final IDiagramWorkbenchPart diagramPart, final boolean isUndoable) {
 
 		return new CustomCopyCommand("Copy", getSelectedEditParts(cntxt));
 	}
 
 
 
-	protected org.eclipse.gmf.runtime.common.core.command.ICommand getCutCommand(IGlobalActionContext cntxt,
-			IDiagramWorkbenchPart diagramPart) {
+	@Override
+    protected org.eclipse.gmf.runtime.common.core.command.ICommand getCutCommand(final IGlobalActionContext cntxt,
+			final IDiagramWorkbenchPart diagramPart) {
 		return new CustomCutCommand("Cut", getSelectedEditParts(cntxt));
 	}
 
 
 	@Override
-	public org.eclipse.gmf.runtime.common.core.command.ICommand getCommand(IGlobalActionContext cntxt) {
+	public org.eclipse.gmf.runtime.common.core.command.ICommand getCommand(final IGlobalActionContext cntxt) {
 		/* Check if the active part is a IDiagramWorkbenchPart */
-		IWorkbenchPart part = cntxt.getActivePart();
+		final IWorkbenchPart part = cntxt.getActivePart();
 		if (!(part instanceof IDiagramWorkbenchPart)) {
 			return null;
 		}
 
 		/* Get the model operation context */
-		IDiagramWorkbenchPart diagramPart = (IDiagramWorkbenchPart) part;
+		final IDiagramWorkbenchPart diagramPart = (IDiagramWorkbenchPart) part;
 
 		/* Create a command */
 		org.eclipse.gmf.runtime.common.core.command.ICommand command = null;
 
 		/* Check the action id */
-		String actionId = cntxt.getActionId();
+		final String actionId = cntxt.getActionId();
 		if (actionId.equals(GlobalActionId.DELETE)) {
-			super.getCommand(cntxt);
+            command = super.getCommand(cntxt);
 		} else if (actionId.equals(GlobalActionId.COPY)) {
 			command = getCopyCommand(cntxt, diagramPart, false);
 		} else if (actionId.equals(GlobalActionId.CUT)) {
 			command = getCutCommand(cntxt, diagramPart);
 		} else if (actionId.equals(GlobalActionId.OPEN)) {
-			super.getCommand(cntxt);
+            command = super.getCommand(cntxt);
 		} else if (actionId.equals(GlobalActionId.PASTE)) {
 			command = getPasteCommand(cntxt, diagramPart);
 		} else if (actionId.equals(GlobalActionId.SAVE)) {
-			super.getCommand(cntxt);
+            command = super.getCommand(cntxt);
 		} else if (actionId.equals(GlobalActionId.PROPERTIES)) {
-			super.getCommand(cntxt);
+            command = super.getCommand(cntxt);
 		}
 
 		return command;
 
 	}
 
-	
-	private org.eclipse.gmf.runtime.common.core.command.ICommand getPasteCommand(IGlobalActionContext cntxt, IDiagramWorkbenchPart diagramPart) {
+
+	private org.eclipse.gmf.runtime.common.core.command.ICommand getPasteCommand(final IGlobalActionContext cntxt, final IDiagramWorkbenchPart diagramPart) {
 		return new CustomPasteCommand("Paste", getSelectedEditParts(cntxt).get(0));
 
 	}
@@ -128,10 +130,10 @@ public class CustomClipboardSupportGlobalActionHandler extends DiagramGlobalActi
 	/**
 	 * @return
 	 */
-	private List<IGraphicalEditPart> getSelectedEditParts(IGlobalActionContext cntxt) {
-		List<IGraphicalEditPart> res = new ArrayList<IGraphicalEditPart>();
-		IStructuredSelection selection = (IStructuredSelection)cntxt.getSelection();
-		for (Object item : selection.toList()) {
+	private List<IGraphicalEditPart> getSelectedEditParts(final IGlobalActionContext cntxt) {
+		final List<IGraphicalEditPart> res = new ArrayList<IGraphicalEditPart>();
+		final IStructuredSelection selection = (IStructuredSelection)cntxt.getSelection();
+		for (final Object item : selection.toList()) {
 			if (item instanceof IGraphicalEditPart) {
 				res.add((IGraphicalEditPart)item);
 			}
@@ -140,7 +142,7 @@ public class CustomClipboardSupportGlobalActionHandler extends DiagramGlobalActi
 	}
 
 	@Override
-	protected boolean canPaste(IGlobalActionContext cntxt) {
+	protected boolean canPaste(final IGlobalActionContext cntxt) {
 		/* Check if the clipboard has data for the drawing surface */
 		final List<IGraphicalEditPart> selectedEditParts = getSelectedEditParts(cntxt);
 		return Clipboard.hasThingsToCopy() && allInSameContainer(selectedEditParts);
@@ -150,11 +152,11 @@ public class CustomClipboardSupportGlobalActionHandler extends DiagramGlobalActi
 	 * @param selectedEditParts
 	 * @return
 	 */
-	private boolean allInSameContainer(List<IGraphicalEditPart> selectedEditParts) {
+	private boolean allInSameContainer(final List<IGraphicalEditPart> selectedEditParts) {
 		Container commonContainer = null;
-		for (IGraphicalEditPart part : selectedEditParts) {
-			EObject semantic = part.resolveSemanticElement();
-			Container container = getContainer(semantic);
+		for (final IGraphicalEditPart part : selectedEditParts) {
+			final EObject semantic = part.resolveSemanticElement();
+			final Container container = getContainer(semantic);
 			if (commonContainer == null) {
 				commonContainer = container;
 			} else if (!commonContainer.equals(container)) {

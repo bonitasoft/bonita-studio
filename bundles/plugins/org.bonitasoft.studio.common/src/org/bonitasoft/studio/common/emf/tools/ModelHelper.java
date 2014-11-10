@@ -34,6 +34,8 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.model.form.Duplicable;
+import org.bonitasoft.studio.model.form.FileWidget;
+import org.bonitasoft.studio.model.form.FileWidgetInputType;
 import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.form.FormField;
 import org.bonitasoft.studio.model.form.FormPackage;
@@ -143,6 +145,17 @@ public class ModelHelper {
             findAllProcesses(mainProcess, res);
         }
         return res;
+    }
+
+    public static FileWidgetInputType getDefaultFileWidgetInputType(final FileWidget widget) {
+        final Form parentForm = ModelHelper.getParentForm(widget);
+        if (parentForm == null) {
+            return FileWidgetInputType.RESOURCE;
+        }
+        if (ModelHelper.isAnEntryPageFlowOnAPool(parentForm)) {
+            return FileWidgetInputType.RESOURCE;
+        }
+        return FileWidgetInputType.DOCUMENT;
     }
 
     private static List<AbstractProcess> findAllProcesses(final Element element, final List<AbstractProcess> processes) {
@@ -597,7 +610,7 @@ public class ModelHelper {
             final AbstractProcess process = (AbstractProcess) element;
             containsResources = process.getResourceFolders().size() > 0 || process.getResourceFiles().size() > 0 || process.getLogInPage() != null
                     || process.getProcessTemplate() != null || process.getConfirmationTemplate() != null || process.getErrorTemplate() != null
-                    || (process.getWelcomePage() != null && !process.getWelcomePageInternal());
+                    || process.getWelcomePage() != null && !process.getWelcomePageInternal();
             if (containsResources) {
                 return true;
             }
@@ -990,7 +1003,7 @@ public class ModelHelper {
         if (!expr.getReferencedElements().isEmpty()) {
             for (final EObject o : expr.getReferencedElements()) {
                 if (element instanceof Element && o instanceof Element && ((Element) element).getName().equals(((Element) o).getName())) {
-                    return (true && !isAExpressionReferencedElement(expr));
+                    return true && !isAExpressionReferencedElement(expr);
                 } else {
                     if (element instanceof Parameter && o instanceof Parameter && ((Parameter) element).getName().equals(((Parameter) o).getName())) {
                         return true && !isAExpressionReferencedElement(expr);
@@ -1854,7 +1867,7 @@ public class ModelHelper {
         final List<EObject> refs = expr.getReferencedElements();
         for (final EObject ref : refs) {
             if (ref instanceof Document && ((Document) ref).getName().equals(expr.getContent())) {
-                return ((Document) ref);
+                return (Document) ref;
             }
         }
         return null;

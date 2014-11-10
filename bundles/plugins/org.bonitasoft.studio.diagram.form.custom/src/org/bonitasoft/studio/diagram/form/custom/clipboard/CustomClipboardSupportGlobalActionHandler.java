@@ -1,7 +1,7 @@
 /**
  * Copyright (C) 2009 BonitaSoft S.A.
  * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -41,23 +41,20 @@ public class CustomClipboardSupportGlobalActionHandler extends DiagramGlobalActi
 		super();
 	}
 
-
-	protected EObject getSelectedElement(ISelection selection){
-
-		Object input = ((IStructuredSelection) selection).getFirstElement();
+	protected EObject getSelectedElement(final ISelection selection){
+		final Object input = ((IStructuredSelection) selection).getFirstElement();
 		if (input != null){
-			EObject element =  (EObject) ( (EditPart) input).getAdapter(EObject.class) ;		
+			final EObject element =  (EObject) ( (EditPart) input).getAdapter(EObject.class) ;
 			return element;
 		}
 		return null;
-
-
 	}
 
-	public boolean canHandle(IGlobalActionContext cntxt) {
+	@Override
+    public boolean canHandle(final IGlobalActionContext cntxt) {
 
 		/* Check if the active part is a IDiagramWorkbenchPart */
-		IWorkbenchPart part = cntxt.getActivePart();
+		final IWorkbenchPart part = cntxt.getActivePart();
 		if (!(part instanceof IDiagramWorkbenchPart)) {
 			return false;
 		}
@@ -68,7 +65,7 @@ public class CustomClipboardSupportGlobalActionHandler extends DiagramGlobalActi
 		}
 
 		/* Check the action id */
-		String actionId = cntxt.getActionId();
+		final String actionId = cntxt.getActionId();
 		if (actionId.equals(GlobalActionId.COPY)) {
 			return canCopy(cntxt);
 		} else if (actionId.equals(GlobalActionId.CUT)) {
@@ -78,43 +75,36 @@ public class CustomClipboardSupportGlobalActionHandler extends DiagramGlobalActi
 		} else {
 			return super.canHandle(cntxt);
 		}
-		//return false;
 	}
 
-
-
-	protected org.eclipse.gmf.runtime.common.core.command.ICommand getCopyCommand(IGlobalActionContext cntxt,
-			IDiagramWorkbenchPart diagramPart, final boolean isUndoable) {
-
-		EObject toCopyElement = this.getSelectedElement(cntxt.getSelection());
+	@Override
+    protected org.eclipse.gmf.runtime.common.core.command.ICommand getCopyCommand(final IGlobalActionContext cntxt, final IDiagramWorkbenchPart diagramPart,
+            final boolean isUndoable) {
+		final EObject toCopyElement = getSelectedElement(cntxt.getSelection());
 		return new CustomCopyCommand("Copy",toCopyElement);
 	}
 
-
-
-	protected org.eclipse.gmf.runtime.common.core.command.ICommand getCutCommand(IGlobalActionContext cntxt,
-			IDiagramWorkbenchPart diagramPart) {
-
+    @Override
+    protected org.eclipse.gmf.runtime.common.core.command.ICommand getCutCommand(final IGlobalActionContext cntxt, final IDiagramWorkbenchPart diagramPart) {
 		return new CustomCutCommand("Cut",getSelectedElement(cntxt.getSelection()));
 	}
 
-
 	@Override
-	public org.eclipse.gmf.runtime.common.core.command.ICommand getCommand(IGlobalActionContext cntxt) {
+	public org.eclipse.gmf.runtime.common.core.command.ICommand getCommand(final IGlobalActionContext cntxt) {
 		/* Check if the active part is a IDiagramWorkbenchPart */
-		IWorkbenchPart part = cntxt.getActivePart();
+		final IWorkbenchPart part = cntxt.getActivePart();
 		if (!(part instanceof IDiagramWorkbenchPart)) {
 			return null;
 		}
 
 		/* Get the model operation context */
-		IDiagramWorkbenchPart diagramPart = (IDiagramWorkbenchPart) part;
+		final IDiagramWorkbenchPart diagramPart = (IDiagramWorkbenchPart) part;
 
 		/* Create a command */
 		org.eclipse.gmf.runtime.common.core.command.ICommand command = null;
 
 		/* Check the action id */
-		String actionId = cntxt.getActionId();
+		final String actionId = cntxt.getActionId();
 		if (actionId.equals(GlobalActionId.DELETE)) {
 			command = super.getCommand(cntxt);
 		} else if (actionId.equals(GlobalActionId.COPY)) {
@@ -130,24 +120,16 @@ public class CustomClipboardSupportGlobalActionHandler extends DiagramGlobalActi
 		} else if (actionId.equals(GlobalActionId.PROPERTIES)) {
 			command = super.getCommand(cntxt);
 		}
-
 		return command;
-
 	}
 
-
-	private org.eclipse.gmf.runtime.common.core.command.ICommand getPasteCommand(IGlobalActionContext cntxt,
-			IDiagramWorkbenchPart diagramPart) {
-		 
+    private org.eclipse.gmf.runtime.common.core.command.ICommand getPasteCommand(final IGlobalActionContext cntxt, final IDiagramWorkbenchPart diagramPart) {
 		return new CustomPasteCommand("Paste",(IGraphicalEditPart) ((StructuredSelection)cntxt.getSelection()).getFirstElement());
-
 	}
 
 	@Override
-	protected boolean canPaste(IGlobalActionContext cntxt) {
+	protected boolean canPaste(final IGlobalActionContext cntxt) {
 		/* Check if the clipboard has data for the drawing surface */
 		return CustomCopyCommand.copiedElement != null;
 	}
-
-
 }

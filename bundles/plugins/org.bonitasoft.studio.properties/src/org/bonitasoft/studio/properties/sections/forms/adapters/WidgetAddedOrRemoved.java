@@ -26,6 +26,7 @@ import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.BonitaErrorDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.palette.DefaultElementNameProvider;
 import org.bonitasoft.studio.diagram.custom.repository.WebTemplatesUtil;
 import org.bonitasoft.studio.exporter.ExporterService;
 import org.bonitasoft.studio.exporter.ExporterService.SERVICE_TYPE;
@@ -43,9 +44,11 @@ import org.eclipse.ui.PlatformUI;
 
 public class WidgetAddedOrRemoved extends AdapterImpl {
     private final Form form;
+    private final DefaultElementNameProvider elementNameProvider;
 
     public WidgetAddedOrRemoved(final Form form) {
         this.form = form;
+        elementNameProvider = new DefaultElementNameProvider();
     }
 
     @Override
@@ -78,7 +81,7 @@ public class WidgetAddedOrRemoved extends AdapterImpl {
     }
 
     private void handleAddFormWidgetNotification(final Notification notification) {
-        final Widget widget = ((Widget) (notification.getNewValue()));
+        final Widget widget = (Widget) notification.getNewValue();
         if (ModelHelper.formIsCustomized(form)) {
             BonitaStudioLog.info("Updating Custom Form Template. Adding widget: " + widget.getName(), Activator.PLUGIN_ID);
             final File file = WebTemplatesUtil.getFile(form.getHtmlTemplate().getPath());
@@ -109,8 +112,8 @@ public class WidgetAddedOrRemoved extends AdapterImpl {
     }
 
     private void addDivForAddedWidget(final Widget widget, final FileInputStream fis, final FileWriter fileWriter) throws IOException {
-        final HtmlTemplateGenerator generator = ((HtmlTemplateGenerator) ExporterService.getInstance().getExporterService(SERVICE_TYPE.HtmlTemplateGenerator));
-        String label = NamingUtils.getDefaultNameFor(widget);
+        final HtmlTemplateGenerator generator = (HtmlTemplateGenerator) ExporterService.getInstance().getExporterService(SERVICE_TYPE.HtmlTemplateGenerator);
+        String label = elementNameProvider.getNameFor(widget);
         label = NamingUtils.convertToId(label);
         int number = NamingUtils.getMaxElements(form, label);
         number++;

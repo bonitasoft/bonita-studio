@@ -89,6 +89,18 @@ public class EndingPageflowConstraintTest {
     }
 
     @Test
+    public void shouldPerformBatchValidation_ReturnValidStatus_For_Pageflow_With_Group_And_SubmitButton() throws Exception {
+        final Task pageflow = ProcessFactory.eINSTANCE.createTask();
+        final Form formWithSubmitButton = FormFactory.eINSTANCE.createForm();
+        final Group group = FormFactory.eINSTANCE.createGroup();
+        formWithSubmitButton.getWidgets().add(group);
+        formWithSubmitButton.getWidgets().add(FormFactory.eINSTANCE.createSubmitFormButton());
+        pageflow.getForm().add(formWithSubmitButton);
+        when(context.getTarget()).thenReturn(pageflow);
+        assertThat(constraintUnderTest.performBatchValidation(context).isOK()).isTrue();
+    }
+
+    @Test
     public void shouldPerformBatchValidation_ReturnErrorStatus_For_Pageflow_Without_SubmitButton() throws Exception {
         final Task pageflow = ProcessFactory.eINSTANCE.createTask();
         final Form formWithSubmitButton = FormFactory.eINSTANCE.createForm();

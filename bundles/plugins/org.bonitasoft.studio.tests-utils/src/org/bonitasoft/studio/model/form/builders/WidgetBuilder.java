@@ -17,6 +17,7 @@
 package org.bonitasoft.studio.model.form.builders;
 
 import org.bonitasoft.studio.model.expression.builders.ExpressionBuilder;
+import org.bonitasoft.studio.model.form.Duplicable;
 import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.process.builders.ElementBuilder;
 
@@ -38,6 +39,22 @@ public abstract class WidgetBuilder<T extends Widget, B extends WidgetBuilder<T,
 
     public B withReturnTypeModifier(final String returnTypeModifier) {
         getBuiltInstance().setReturnTypeModifier(returnTypeModifier);
+        return getThis();
+    }
+
+    public B duplicated() {
+        final T builtInstance = getBuiltInstance();
+        if (builtInstance instanceof Duplicable) {
+            ((Duplicable) builtInstance).setDuplicate(true);
+        }
+        return getThis();
+    }
+
+    public B notDuplicated() {
+        final T builtInstance = getBuiltInstance();
+        if (builtInstance instanceof Duplicable) {
+            ((Duplicable) builtInstance).setDuplicate(false);
+        }
         return getThis();
     }
 

@@ -115,7 +115,7 @@
  <extension
        point="org.eclipse.gmf.runtime.common.ui.services.editorProviders">
     <EditorProvider
-          class="org.bonitasoft.studio.diagram.form.custom.providers.FormDiagramEditorProvider">
+          class="org.bonitasoft.studio.diagram.form.custom.providers.DiagramEditorProvider">
        <Priority
              name="Medium">
        </Priority>

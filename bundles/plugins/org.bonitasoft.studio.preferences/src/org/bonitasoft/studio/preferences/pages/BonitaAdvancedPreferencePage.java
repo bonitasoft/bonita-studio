@@ -14,46 +14,34 @@
  */
 package org.bonitasoft.studio.preferences.pages;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.connector.model.definition.provider.ConnectorEditPlugin;
 import org.bonitasoft.studio.connector.model.definition.wizard.AbstractDefinitionWizard;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
-import org.bonitasoft.studio.preferences.extension.IPreferenceFieldEditorContribution;
 import org.bonitasoft.studio.preferences.i18n.Messages;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.preference.BooleanFieldEditor;
-import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
 /**
  * @author Romain Bioteau
- * 
+ *
  */
 
 public class BonitaAdvancedPreferencePage extends AbstractBonitaPreferencePage implements IWorkbenchPreferencePage {
 
-    private BooleanFieldEditor askSaveDiagramAfterFirstSave;
+    private static final String ADVANCED_CONTRIBUTOR_ID = "Advanced";
 
-    private List<IPreferenceFieldEditorContribution> contributions;
+    private BooleanFieldEditor askSaveDiagramAfterFirstSave;
 
     private BooleanFieldEditor showConnectorEditionConfirmation;
 
     public BonitaAdvancedPreferencePage() {
         super(GRID);
         setPreferenceStore(BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore());
-        contributions = new ArrayList<IPreferenceFieldEditorContribution>();
     }
 
     /**
@@ -61,6 +49,7 @@ public class BonitaAdvancedPreferencePage extends AbstractBonitaPreferencePage i
      * GUI blocks needed to manipulate various types of preferences. Each field
      * editor knows how to save and restore itself.
      */
+    @Override
     public void createFieldEditors() {
 
         createTitleBar(Messages.BonitaPreferenceDialog_Advanced, Pics.getImage(PicsConstants.preferenceAdvanced), false);
@@ -73,63 +62,17 @@ public class BonitaAdvancedPreferencePage extends AbstractBonitaPreferencePage i
                 Messages.doNotDisplayConnectorDefConfirmationMessage, getFieldEditorParent());
         addField(showConnectorEditionConfirmation);
 
-        IConfigurationElement[] elems = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(
-                "org.bonitasoft.studio.preferences.prefrenceFieldEditorContribution"); //$NON-NLS-1$
-        IPreferenceFieldEditorContribution prefEditorContrib = null;
-        for (IConfigurationElement elem : elems) {
-            try {
-                prefEditorContrib = (IPreferenceFieldEditorContribution) elem.createExecutableExtension("class"); //$NON-NLS-1$
-            } catch (CoreException e) {
-                BonitaStudioLog.error(e);
-            }
-            if (prefEditorContrib.appliesTo("Advanced")) {
-                new Label(getFieldEditorParent(), SWT.NONE);
-                new Label(getFieldEditorParent(), SWT.NONE);
+        new Label(getFieldEditorParent(), SWT.NONE);
+        new Label(getFieldEditorParent(), SWT.NONE);
 
-                Label separator = new Label(getFieldEditorParent(), SWT.SEPARATOR | SWT.HORIZONTAL);
-                separator.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 1).create());
+        final Label separator = new Label(getFieldEditorParent(), SWT.SEPARATOR | SWT.HORIZONTAL);
+        separator.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 1).create());
 
-                new Label(getFieldEditorParent(), SWT.NONE);
-                new Label(getFieldEditorParent(), SWT.NONE);
+        new Label(getFieldEditorParent(), SWT.NONE);
+        new Label(getFieldEditorParent(), SWT.NONE);
 
-                contributions.add(prefEditorContrib);
-                for (FieldEditor fe : prefEditorContrib.createFieldEditors(getFieldEditorParent())) {
-                    addField(fe);
-                }
-            }
-        }
-
+        createPreferenceEditorContributions(ADVANCED_CONTRIBUTOR_ID);
     }
 
-    @Override
-    public boolean performOk() {
-        boolean ok = true;
-        for (IPreferenceFieldEditorContribution contrib : contributions) {
-            if (ok) {
-                ok = ok && contrib.performOk();
-            }
-        }
-        return super.performOk() && ok;
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see
-     * org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
-     */
-    public void init(IWorkbench workbench) {
-        for (IPreferenceFieldEditorContribution contrib : contributions) {
-            contrib.init(workbench);
-        }
-    }
-
-    @Override
-    protected void initialize() {
-        super.initialize();
-        if (showConnectorEditionConfirmation != null) {
-            showConnectorEditionConfirmation.setPreferenceStore(ConnectorEditPlugin.getPlugin().getPreferenceStore());
-            showConnectorEditionConfirmation.load();
-        }
-    }
 
 }
