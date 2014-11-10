@@ -220,7 +220,8 @@ public class ImportBosArchiveOperation {
                 return new HashSet<String>(Arrays.asList(array));
             }
         }
-        return Collections.emptySet();
+        //No manifest means import all .proc
+        return null;
     }
 
     protected void checkArchiveCompatibility(final IContainer container) {
