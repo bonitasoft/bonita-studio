@@ -41,6 +41,11 @@ public class BotTreeWidget extends BotWidget {
         return this;
     }
 
+    public BotTreeWidget unselect() {
+        getSWTBotWidget().unselect();
+        return this;
+    }
+
     public BotTreeWidget select(final int indexInTree) {
         getSWTBotWidget().select(indexInTree);
         return this;
@@ -62,6 +67,21 @@ public class BotTreeWidget extends BotWidget {
             @Override
             public String getFailureMessage() {
                 return "Tree is not empty";
+            }
+        };
+    }
+
+    public ICondition activeCondition() {
+        return new DefaultCondition() {
+
+            @Override
+            public boolean test() throws Exception {
+                return getSWTBotWidget().isActive() && getSWTBotWidget().isEnabled();
+            }
+
+            @Override
+            public String getFailureMessage() {
+                return "Tree is not active";
             }
         };
     }
