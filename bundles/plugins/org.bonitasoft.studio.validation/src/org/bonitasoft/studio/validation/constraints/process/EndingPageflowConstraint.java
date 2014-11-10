@@ -66,13 +66,15 @@ AbstractLiveValidationMarkerConstraint {
         return context.createSuccessStatus();
     }
 
-    public boolean containsSubmitButton(final List<Widget> widgets){
+    protected boolean containsSubmitButton(final List<Widget> widgets) {
         for (final Widget widget : widgets) {
             if (widget instanceof SubmitFormButton){
                 return true;
             }
             if (widget instanceof Group) {
-                return containsSubmitButton(((Group) widget).getWidgets());
+                if (containsSubmitButton(((Group) widget).getWidgets())) {
+                   return true;
+               }
             }
         }
         return false;

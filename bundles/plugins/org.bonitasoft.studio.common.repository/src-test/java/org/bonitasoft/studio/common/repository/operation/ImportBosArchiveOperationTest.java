@@ -54,4 +54,12 @@ public class ImportBosArchiveOperationTest {
         operationUnserTest.run(Repository.NULL_PROGRESS_MONITOR);
         verify(repostioty).refresh(Repository.NULL_PROGRESS_MONITOR);
     }
+
+    @Test
+    public void should_validate_all_imported_processes_at_the_end_of_import() throws Exception {
+        operationUnserTest.setCurrentRepository(repostioty);
+        operationUnserTest.setArchiveFile(archiveFile.getAbsolutePath());
+        operationUnserTest.run(Repository.NULL_PROGRESS_MONITOR);
+        verify(operationUnserTest).validateAllAfterImport();
+    }
 }

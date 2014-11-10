@@ -15,8 +15,8 @@ import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.expression.Operation;
 import org.bonitasoft.studio.model.expression.Operator;
+import org.bonitasoft.studio.model.expression.builders.ExpressionBuilder;
 import org.bonitasoft.studio.model.form.FileWidget;
-import org.bonitasoft.studio.model.form.FileWidgetDownloadType;
 import org.bonitasoft.studio.model.form.FileWidgetInputType;
 import org.bonitasoft.studio.model.form.FormFactory;
 import org.bonitasoft.studio.model.form.SubmitFormButton;
@@ -85,9 +85,10 @@ public class FormsExporterTest {
         verify(formExporter).addAction(formBuilder,operation);
     }
 
+
     @Test
     public void should_addFileWidgetInitialValueExpression_whenTypeIsDocument() throws InvalidFormDefinitionException {
-        final FileWidget fileWidget = FileWidgetBuilder.create().withInputType(FileWidgetInputType.DOCUMENT).build();
+        final FileWidget fileWidget = FileWidgetBuilder.createFileWidgetBuilder().withInputType(FileWidgetInputType.DOCUMENT).build();
         final Document document = DocumentBuilder.create().withName("myBonitaDocument").multiple().build();
         final Expression documentExpr = ExpressionFactory.eINSTANCE.createExpression();
         documentExpr.setContent(document.getName());
@@ -98,7 +99,7 @@ public class FormsExporterTest {
 
     @Test
     public void should_addFileWidgetInitialValueExpression_whenTypeIsURL() throws InvalidFormDefinitionException {
-        final FileWidget fileWidget = FileWidgetBuilder.create().withInputType(FileWidgetInputType.URL).build();
+        final FileWidget fileWidget = FileWidgetBuilder.createFileWidgetBuilder().withInputType(FileWidgetInputType.URL).build();
         final Expression documentExpr = ExpressionFactory.eINSTANCE.createExpression();
         documentExpr.setContent("http://www.bonitasoft.com");
         fileWidget.setInputExpression(documentExpr);
@@ -139,40 +140,44 @@ public class FormsExporterTest {
 
     @Test
     public void should_addFileWidgetInitialValueExpression_whenDocumentIsScript() throws InvalidFormDefinitionException {
-        final FileWidget fileWidget = FileWidgetBuilder.create().withInputType(FileWidgetInputType.DOCUMENT).build();
-        final Expression scriptExpression = ExpressionFactory.eINSTANCE.createExpression();
-        scriptExpression.setName("myDocumentScript");
-        scriptExpression.setContent("myDocumentScript");
-        scriptExpression.setType(ExpressionConstants.SCRIPT_TYPE);
-        scriptExpression.setReturnType(String.class.getName());
-        fileWidget.setInputExpression(scriptExpression);
+        final FileWidget fileWidget = FileWidgetBuilder.createFileWidgetBuilder().
+                withInputType(FileWidgetInputType.DOCUMENT).
+                havingInputExpression(ExpressionBuilder.create().
+                        withName("myDocumentScript").
+                        withContent("myDocumentScript").
+                        withExpressionType(ExpressionConstants.SCRIPT_TYPE).
+                        withReturnType(String.class.getName())).build();
         formExporter.addDocumentInitialValue(fileWidget, formBuilder);
         verify(formExporter).addInitialValueExpression(formBuilder, fileWidget.getInputExpression());
     }
 
     @Test
     public void should_addDocumentInitialValue_WhenFileDocumentDownloadType_isURL() throws InvalidFormDefinitionException {
-        final FileWidget fileWidget = FileWidgetBuilder.create().withInputType(FileWidgetInputType.DOCUMENT).build();
-        fileWidget.setDuplicate(false);
-        fileWidget.setDownloadType(FileWidgetDownloadType.URL);
+        final FileWidget fileWidget = FileWidgetBuilder.createFileWidgetBuilder().
+                withInputType(FileWidgetInputType.DOCUMENT)
+                .notDuplicated().withUrlDownloadType().build();
         formExporter.addFileWidgetInputType(fileWidget, formBuilder);
         verify(formBuilder).addFileWidgetInputType(org.bonitasoft.forms.client.model.FileWidgetInputType.URL);
     }
 
     @Test
     public void should_addDocumentInitialValue_WhenFileDocumentDownloadType_isBrowse() throws InvalidFormDefinitionException {
-        final FileWidget fileWidget = FileWidgetBuilder.create().withInputType(FileWidgetInputType.DOCUMENT).build();
-        fileWidget.setDuplicate(false);
-        fileWidget.setDownloadType(FileWidgetDownloadType.BROWSE);
+        final FileWidget fileWidget = FileWidgetBuilder.createFileWidgetBuilder().
+                withInputType(FileWidgetInputType.DOCUMENT)
+                .notDuplicated()
+                .withBrowseDownloadType()
+                .build();
         formExporter.addFileWidgetInputType(fileWidget, formBuilder);
         verify(formBuilder).addFileWidgetInputType(org.bonitasoft.forms.client.model.FileWidgetInputType.FILE);
     }
 
     @Test
     public void should_addDocumentInitialValue_WhenFileDocumentDownloadType_isBoth() throws InvalidFormDefinitionException {
-        final FileWidget fileWidget = FileWidgetBuilder.create().withInputType(FileWidgetInputType.DOCUMENT).build();
-        fileWidget.setDuplicate(false);
-        fileWidget.setDownloadType(FileWidgetDownloadType.BOTH);
+        final FileWidget fileWidget = FileWidgetBuilder.createFileWidgetBuilder()
+                .withInputType(FileWidgetInputType.DOCUMENT)
+                .notDuplicated()
+                .withBothDownloadType()
+                .build();
         formExporter.addFileWidgetInputType(fileWidget, formBuilder);
         verify(formBuilder).addFileWidgetInputType(org.bonitasoft.forms.client.model.FileWidgetInputType.ALL);
     }

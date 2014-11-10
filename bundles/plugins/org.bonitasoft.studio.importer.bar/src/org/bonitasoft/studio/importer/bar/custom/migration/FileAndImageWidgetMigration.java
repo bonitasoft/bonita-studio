@@ -170,6 +170,11 @@ public class FileAndImageWidgetMigration extends ReportCustomMigration {
 				document.set("defaultValueIdOfDocumentStore", defaultValue);
 				final String doc = attachmentData.get("documentation");
 				document.set("documentation", doc);
+                document.set("mimeType",
+                        StringToExpressionConverter.createExpressionInstance(model, "", "", String.class.getName(), ExpressionConstants.CONSTANT_TYPE, true));
+                document.set("url",
+                        StringToExpressionConverter.createExpressionInstance(model, "", "", String.class.getName(), ExpressionConstants.CONSTANT_TYPE, true));
+
 				process.add("documents", document);
 				addReportChange(name,Messages.document, process.getUuid(),Messages.documentCreationDescription,Messages.documentProperty, IStatus.WARNING);
 			}else{

@@ -1,4 +1,4 @@
-package org.bonitasoft.studio.validation.constraints.process;
+package org.bonitasoft.studio.validation.constraints.connector;
 
 import org.bonitasoft.studio.actors.repository.ActorFilterDefRepositoryStore;
 import org.bonitasoft.studio.common.repository.RepositoryManager;

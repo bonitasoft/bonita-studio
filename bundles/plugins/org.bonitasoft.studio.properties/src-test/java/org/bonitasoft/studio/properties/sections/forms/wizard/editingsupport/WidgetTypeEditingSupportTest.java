@@ -18,7 +18,7 @@ package org.bonitasoft.studio.properties.sections.forms.wizard.editingsupport;
 
 import static org.fest.assertions.Assertions.assertThat;
 
-import org.bonitasoft.studio.common.NamingUtils;
+import org.bonitasoft.studio.common.palette.FormPaletteLabelProvider;
 import org.bonitasoft.studio.diagram.form.custom.model.WidgetMapping;
 import org.bonitasoft.studio.model.form.FormPackage;
 import org.bonitasoft.studio.model.process.Data;
@@ -40,8 +40,10 @@ public class WidgetTypeEditingSupportTest {
 
 	@Mock
 	private ColumnViewer columnViewer;
-	
+
 	private WidgetTypeEditingSupport widgettTypeEditingSupport;
+
+    private FormPaletteLabelProvider formPaletteLabelProvider;
 
 	/**
 	 * @throws java.lang.Exception
@@ -49,6 +51,7 @@ public class WidgetTypeEditingSupportTest {
 	@Before
 	public void setUp() throws Exception {
 		widgettTypeEditingSupport = new WidgetTypeEditingSupport(columnViewer);
+        formPaletteLabelProvider = new FormPaletteLabelProvider();
 	}
 
 	/**
@@ -63,72 +66,77 @@ public class WidgetTypeEditingSupportTest {
 	 */
 	@Test
 	public void shouldGetItemsFor_ReturnCompatibleWidgetsNameForTextData() throws Exception {
-		Data data = ProcessFactory.eINSTANCE.createData();
+		final Data data = ProcessFactory.eINSTANCE.createData();
 		data.setDataType(ProcessFactory.eINSTANCE.createStringType());
-		assertThat(widgettTypeEditingSupport.getItemsFor(new WidgetMapping(data))).containsOnly(NamingUtils.getFormPaletteText(false, FormPackage.Literals.TEXT_FORM_FIELD),
-				NamingUtils.getFormPaletteText(false, FormPackage.Literals.TEXT_AREA_FORM_FIELD),
-				NamingUtils.getFormPaletteText(false, FormPackage.Literals.PASSWORD_FORM_FIELD),
-				NamingUtils.getFormPaletteText(false, FormPackage.Literals.MESSAGE_INFO),
-				NamingUtils.getFormPaletteText(false, FormPackage.Literals.TEXT_INFO),
-				NamingUtils.getFormPaletteText(false, FormPackage.Literals.RICH_TEXT_AREA_FORM_FIELD));
+        assertThat(widgettTypeEditingSupport.getItemsFor(new WidgetMapping(data))).containsOnly(
+                formPaletteLabelProvider.getFormPaletteText(FormPackage.Literals.TEXT_FORM_FIELD),
+                formPaletteLabelProvider.getFormPaletteText(FormPackage.Literals.TEXT_AREA_FORM_FIELD),
+                formPaletteLabelProvider.getFormPaletteText(FormPackage.Literals.PASSWORD_FORM_FIELD),
+                formPaletteLabelProvider.getFormPaletteText(FormPackage.Literals.MESSAGE_INFO),
+                formPaletteLabelProvider.getFormPaletteText(FormPackage.Literals.TEXT_INFO),
+                formPaletteLabelProvider.getFormPaletteText(FormPackage.Literals.RICH_TEXT_AREA_FORM_FIELD));
 	}
 
 	@Test
 	public void shouldGetItemsFor_ReturnCompatibleWidgetsNameForBooleanData() throws Exception {
-		Data data = ProcessFactory.eINSTANCE.createData();
+		final Data data = ProcessFactory.eINSTANCE.createData();
 		data.setDataType(ProcessFactory.eINSTANCE.createBooleanType());
-		assertThat(widgettTypeEditingSupport.getItemsFor(new WidgetMapping(data))).containsOnly(NamingUtils.getFormPaletteText(false, FormPackage.Literals.CHECK_BOX_SINGLE_FORM_FIELD));
+        assertThat(widgettTypeEditingSupport.getItemsFor(new WidgetMapping(data))).containsOnly(
+                formPaletteLabelProvider.getFormPaletteText(FormPackage.Literals.CHECK_BOX_SINGLE_FORM_FIELD));
 	}
-	
+
 	@Test
 	public void shouldGetItemsFor_ReturnCompatibleWidgetsNameForEnumData() throws Exception {
-		Data data = ProcessFactory.eINSTANCE.createData();
+		final Data data = ProcessFactory.eINSTANCE.createData();
 		data.setDataType(ProcessFactory.eINSTANCE.createEnumType());
-		assertThat(widgettTypeEditingSupport.getItemsFor(new WidgetMapping(data))).containsOnly(NamingUtils.getFormPaletteText(false, FormPackage.Literals.RADIO_FORM_FIELD),
-				NamingUtils.getFormPaletteText(false, FormPackage.Literals.SELECT_FORM_FIELD));
+        assertThat(widgettTypeEditingSupport.getItemsFor(new WidgetMapping(data))).containsOnly(
+                formPaletteLabelProvider.getFormPaletteText(FormPackage.Literals.RADIO_FORM_FIELD),
+                formPaletteLabelProvider.getFormPaletteText(FormPackage.Literals.SELECT_FORM_FIELD));
 	}
-	
+
 	@Test
 	public void shouldGetItemsFor_ReturnCompatibleWidgetsNameForNumericData() throws Exception {
-		Data data = ProcessFactory.eINSTANCE.createData();
+		final Data data = ProcessFactory.eINSTANCE.createData();
 		data.setDataType(ProcessFactory.eINSTANCE.createIntegerType());
-		assertThat(widgettTypeEditingSupport.getItemsFor(new WidgetMapping(data))).containsOnly(NamingUtils.getFormPaletteText(false, FormPackage.Literals.TEXT_FORM_FIELD));
+        assertThat(widgettTypeEditingSupport.getItemsFor(new WidgetMapping(data))).containsOnly(
+                formPaletteLabelProvider.getFormPaletteText(FormPackage.Literals.TEXT_FORM_FIELD));
 	}
-	
+
 	@Test
 	public void shouldGetItemsFor_ReturnCompatibleWidgetsNameForMultipleBooleanData() throws Exception {
-		Data data = ProcessFactory.eINSTANCE.createData();
+		final Data data = ProcessFactory.eINSTANCE.createData();
 		data.setDataType(ProcessFactory.eINSTANCE.createBooleanType());
 		data.setMultiple(true);
-		assertThat(widgettTypeEditingSupport.getItemsFor(new WidgetMapping(data))).containsOnly(NamingUtils.getFormPaletteText(false, FormPackage.Literals.CHECK_BOX_MULTIPLE_FORM_FIELD));
+        assertThat(widgettTypeEditingSupport.getItemsFor(new WidgetMapping(data))).containsOnly(
+                formPaletteLabelProvider.getFormPaletteText(FormPackage.Literals.CHECK_BOX_MULTIPLE_FORM_FIELD));
 	}
-	
+
 	@Test
 	public void shouldCanEdit_ReturnTrue() throws Exception {
-		Data data = ProcessFactory.eINSTANCE.createData();
+		final Data data = ProcessFactory.eINSTANCE.createData();
 		data.setDataType(ProcessFactory.eINSTANCE.createStringType());
 		data.setMultiple(false);
 		assertThat(widgettTypeEditingSupport.canEdit(new WidgetMapping(data))).isTrue();
 	}
-	
+
 	@Test
 	public void shouldCanEdit_ReturnFalse() throws Exception {
-		Data data = ProcessFactory.eINSTANCE.createData();
+		final Data data = ProcessFactory.eINSTANCE.createData();
 		data.setDataType(ProcessFactory.eINSTANCE.createStringType());
 		data.setMultiple(true);
 		assertThat(widgettTypeEditingSupport.canEdit(new WidgetMapping(data))).isFalse();
-		
+
 		data.setDataType(ProcessFactory.eINSTANCE.createBooleanType());
 		assertThat(widgettTypeEditingSupport.canEdit(new WidgetMapping(data))).isFalse();
 		data.setMultiple(true);
 		assertThat(widgettTypeEditingSupport.canEdit(new WidgetMapping(data))).isFalse();
 		data.setMultiple(false);
-		
+
 		data.setDataType(ProcessFactory.eINSTANCE.createIntegerType());
 		assertThat(widgettTypeEditingSupport.canEdit(new WidgetMapping(data))).isFalse();
 		assertThat(widgettTypeEditingSupport.canEdit(data)).isFalse();
 	}
-	
-	
+
+
 
 }

@@ -19,6 +19,7 @@ import org.bonitasoft.studio.expression.editor.operation.OperatorViewerFilter;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.Operation;
 import org.bonitasoft.studio.model.expression.Operator;
+import org.bonitasoft.studio.model.form.FileWidget;
 import org.bonitasoft.studio.validation.i18n.Messages;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.validation.IValidationContext;
@@ -35,6 +36,10 @@ public class OperatorConsistencyConstraint extends AbstractLiveValidationMarkerC
     @Override
     protected IStatus performBatchValidation(final IValidationContext context) {
         final Operation operation = (Operation) context.getTarget();
+        final Object operationContainer = operation.eContainer();
+        if (operationContainer instanceof FileWidget && ((FileWidget) operationContainer).isDownloadOnly()) {
+            return context.createSuccessStatus();
+        }
         final OperatorViewerFilter filter = new OperatorViewerFilter(operation);
         final Operator operator = operation.getOperator();
         final Expression leftOperand = operation.getLeftOperand();
