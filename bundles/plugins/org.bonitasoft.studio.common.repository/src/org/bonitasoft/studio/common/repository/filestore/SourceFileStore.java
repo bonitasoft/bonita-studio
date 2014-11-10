@@ -22,6 +22,7 @@ import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
 
+import org.bonitasoft.studio.common.editor.EditorUtil;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.Repository;
@@ -64,7 +65,7 @@ public class SourceFileStore extends AbstractFileStore {
     private String qualifiedClassName;
     private IEditorPart editorPart;
 
-    public SourceFileStore(String qualifiedClassName, IRepositoryStore<?> parentStore) {
+    public SourceFileStore(final String qualifiedClassName, final IRepositoryStore<?> parentStore) {
         super("", parentStore);
         this.qualifiedClassName = qualifiedClassName ;
     }
@@ -99,7 +100,7 @@ public class SourceFileStore extends AbstractFileStore {
     public InputStream getContent() {
         try {
             return getResource().getContents() ;
-        } catch (CoreException e) {
+        } catch (final CoreException e) {
             BonitaStudioLog.error(e);
         }
         return null;
@@ -110,14 +111,14 @@ public class SourceFileStore extends AbstractFileStore {
      */
     @Override
     public IFile getResource() {
-        IJavaProject project = RepositoryManager.getInstance().getCurrentRepository().getJavaProject() ;
+        final IJavaProject project = RepositoryManager.getInstance().getCurrentRepository().getJavaProject() ;
         IType type;
         try {
             type = project.findType(qualifiedClassName);
             if(type != null && type.getCompilationUnit() != null){
                 return (IFile) type.getCompilationUnit().getResource() ;
             }
-        } catch (JavaModelException e) {
+        } catch (final JavaModelException e) {
             BonitaStudioLog.error(e) ;
         }
         return null;
@@ -127,7 +128,7 @@ public class SourceFileStore extends AbstractFileStore {
      * @see org.bonitasoft.studio.common.repository.filestore.AbstractFileStore#doSave(java.lang.Object)
      */
     @Override
-    protected void doSave(Object content) {
+    protected void doSave(final Object content) {
 
 
     }
@@ -142,11 +143,11 @@ public class SourceFileStore extends AbstractFileStore {
 
             @Override
             public void run() {
-                IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+                final IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
                 try {
                     editorPart = IDE.openEditor(page, new FileEditorInput(getResource()), "org.eclipse.jdt.ui.CompilationUnitEditor");
                     PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().saveEditor(editorPart, false);
-                } catch (PartInitException e) {
+                } catch (final PartInitException e) {
                 }
 
             }
@@ -162,14 +163,14 @@ public class SourceFileStore extends AbstractFileStore {
 
     }
 
-    public void exportAsJar(String absoluteTargetFilePath, boolean includeSources) throws InvocationTargetException, InterruptedException {
+    public void exportAsJar(final String absoluteTargetFilePath, final boolean includeSources) throws InvocationTargetException, InterruptedException {
     	try {
 			checkWritePermission(new File(absoluteTargetFilePath));
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new InvocationTargetException(e);
 		}
     	final JarPackageData jarPackakeData = createJarPackageData() ;
-        IFile[] elements = Collections.singletonList(getResource()).toArray(new IFile[1]) ;
+        final IFile[] elements = Collections.singletonList(getResource()).toArray(new IFile[1]) ;
         jarPackakeData.setJarLocation(new Path(absoluteTargetFilePath)) ;
         jarPackakeData.setBuildIfNeeded(true);
         jarPackakeData.setElements(elements) ;
@@ -190,8 +191,8 @@ public class SourceFileStore extends AbstractFileStore {
 	}
 
     @Override
-    public void rename(String newQualifiedClassName) {
-        IJavaProject project = RepositoryManager.getInstance().getCurrentRepository().getJavaProject() ;
+    public void rename(final String newQualifiedClassName) {
+        final IJavaProject project = RepositoryManager.getInstance().getCurrentRepository().getJavaProject() ;
         String packageName = "" ;
         String className = newQualifiedClassName ;
 
@@ -202,26 +203,26 @@ public class SourceFileStore extends AbstractFileStore {
 
         try {
             final IRepositoryStore<?> store = getParentStore() ;
-            IPackageFragmentRoot root = project.findPackageFragmentRoot(store.getResource().getFullPath());
+            final IPackageFragmentRoot root = project.findPackageFragmentRoot(store.getResource().getFullPath());
             root.createPackageFragment(packageName, true, Repository.NULL_PROGRESS_MONITOR) ;
-            IPackageFragment targetContainer = project.findPackageFragment(store.getResource().getFullPath().append(packageName.replace(".","/"))) ;
-            IType type = project.findType(qualifiedClassName) ;
+            final IPackageFragment targetContainer = project.findPackageFragment(store.getResource().getFullPath().append(packageName.replace(".","/"))) ;
+            final IType type = project.findType(qualifiedClassName) ;
             if(type != null){
                 type.getCompilationUnit().move(targetContainer, null, className+".java", true, Repository.NULL_PROGRESS_MONITOR) ;
                 qualifiedClassName = newQualifiedClassName ;
             }
-        } catch (Exception e) {
+        } catch (final Exception e) {
             BonitaStudioLog.error(e) ;
         }
     }
 
     @Override
     protected void doDelete() {
-    	IJavaProject project = RepositoryManager.getInstance().getCurrentRepository().getJavaProject() ;
+    	final IJavaProject project = RepositoryManager.getInstance().getCurrentRepository().getJavaProject() ;
     	try {
-    		IType type = project.findType(qualifiedClassName);
+    		final IType type = project.findType(qualifiedClassName);
     		if(type != null){
-    			IPackageFragment packageFragment = type.getPackageFragment();
+    			final IPackageFragment packageFragment = type.getPackageFragment();
     			final ICompilationUnit compilationUnit = type.getCompilationUnit();
     			if(compilationUnit != null){
     				closeRelatedEditorIfOpened(compilationUnit);//the editor need to be closed here, otherwise the PackageFragment are not refreshed correctly
@@ -231,23 +232,23 @@ public class SourceFileStore extends AbstractFileStore {
     		} else {
     			super.doDelete();
     		}
-    	} catch (JavaModelException e1) {
+    	} catch (final JavaModelException e1) {
     		BonitaStudioLog.error(e1);
     		super.doDelete();
-    	} catch (CoreException e) {
+    	} catch (final CoreException e) {
     		BonitaStudioLog.error(e);
     	}
     }
 
-	private void deleteRecursivelyEmptyPackages(IJavaProject project, IPackageFragment packageFragment) throws JavaModelException {
+	private void deleteRecursivelyEmptyPackages(final IJavaProject project, IPackageFragment packageFragment) throws JavaModelException {
 		if(packageFragment != null){
 			while(!packageFragment.hasChildren()){
 				//I don't find another way than passing through IResource, directly using IJavaElement seems not possible.
 				final IPath pathOfParentPackageFragment = packageFragment.getResource().getParent().getFullPath();
-				IPackageFragment parent = project.findPackageFragment(pathOfParentPackageFragment);
+				final IPackageFragment parent = project.findPackageFragment(pathOfParentPackageFragment);
 				packageFragment.delete(true, new NullProgressMonitor());
 				if(parent instanceof IPackageFragment && !parent.isDefaultPackage()){
-					packageFragment = (IPackageFragment) parent;
+					packageFragment = parent;
 				} else {
 					return;
 				}
@@ -263,15 +264,13 @@ public class SourceFileStore extends AbstractFileStore {
 			}
 		} else {
 			if(PlatformUI.isWorkbenchRunning()){
-				for(IEditorReference editorReference : activePage.getEditorReferences()){
-					final IEditorInput editorInput = editorReference.getEditorInput();
-					if(editorInput instanceof FileEditorInput){
-						if(compilationUnit.getResource().equals(((FileEditorInput) editorInput).getFile())){
-							activePage.closeEditors(new IEditorReference[]{editorReference}, false);
-							break;
-						}
-					}
-				}
+                for (final IEditorReference editorReference : activePage.getEditorReferences()) {
+                    final IEditorInput editorInput = editorReference.getEditorInput();
+                    if (compilationUnit.getResource().equals(EditorUtil.retrieveResourceFromEditorInput(editorInput))) {
+                        activePage.closeEditors(new IEditorReference[] { editorReference }, false);
+                        break;
+                    }
+                }
 			}
 		}
 	}

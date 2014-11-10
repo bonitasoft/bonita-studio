@@ -201,6 +201,8 @@ protected void configureGraphicalViewer() {
 	«REM»default size for palette«ENDREM»
 	«EXPAND defaultPaletteSize»
 	
+	«EXPAND setReadOnly»
+	
 /**
  * @generated BonitaSoft
  */
@@ -258,22 +260,22 @@ public void dispose() {
 
 «DEFINE setPartName FOR gmfgen::GenEditorView-»
 	/**
-	* @generated BonitaSoft
+	* @generated Bonitasoft
 	* Remove the extension in tabs name
  	*/
 	@Override
 	protected void setPartName(String partName) {
-		if( getEditorInput()!= null){
+		if(getEditorInput()!= null){
 			org.eclipse.ui.IEditorInput input = getEditorInput() ;
-			if(input instanceof org.eclipse.ui.part.FileEditorInput){
-				org.eclipse.core.resources.IFile f = ((org.eclipse.ui.part.FileEditorInput) input).getFile() ;
-				for(org.eclipse.emf.ecore.resource.Resource r : getEditingDomain().getResourceSet().getResources()){
-                    if(org.eclipse.emf.common.util.URI.decode(r.getURI().toString()).endsWith(f.getLocation().toFile().getName())){
-                       	org.bonitasoft.studio.model.process.MainProcess process = (org.bonitasoft.studio.model.process.MainProcess) r.getContents().get(0) ;
-						super.setPartName(process.getName() + " (" + process.getVersion() +")") ;
-                        break;
-                    }
-                }
+			final String fileName = retrieveFileName(input);
+            if (fileName != null) {
+				for (final org.eclipse.emf.ecore.resource.Resource r : getEditingDomain().getResourceSet().getResources()) {
+                    if (org.eclipse.emf.common.util.URI.decode(r.getURI().toString()).endsWith(fileName)) {
+						final org.bonitasoft.studio.model.process.MainProcess process = (org.bonitasoft.studio.model.process.MainProcess) r.getContents().get(0);
+						super.setPartName(process.getName() + " (" + process.getVersion() + ")");
+						break;
+					}
+				}
 			}else{
 				super.setPartName(partName) ;
 			}
@@ -281,6 +283,21 @@ public void dispose() {
 			super.setPartName(partName) ;
 		}
 	}
+	/**
+	* @generated Bonitasoft
+	* Remove the extension in tabs name
+ 	*/
+	private String retrieveFileName(final org.eclipse.ui.IEditorInput input) {
+        if (input instanceof org.eclipse.ui.part.FileEditorInput) {
+            final org.eclipse.core.resources.IFile f = ((org.eclipse.ui.part.FileEditorInput) input).getFile();
+            return f.getLocation().toFile().getName();
+        } else if (input instanceof org.eclipse.emf.common.ui.URIEditorInput) {
+            final org.eclipse.emf.common.util.URI uri = ((org.eclipse.emf.common.ui.URIEditorInput) input).getURI();
+            return org.eclipse.emf.common.util.URI.decode(uri.lastSegment());
+        }
+
+        return null;
+    }
 «ENDDEFINE»
 
 «DEFINE initializeGraphicalViewer FOR gmfgen::GenEditorView-»
@@ -670,6 +687,15 @@ TODO: get it fixed in GMF-Runtime«ENDREM»
 		return root;
 	}
 
+«ENDDEFINE»
+
+«DEFINE setReadOnly FOR gmfgen::GenEditorView-»
+	/**
+	 *  @generated Bonitasoft
+	 */
+	public void setReadOnly(final boolean isReadOnly) {
+      	  enableSanityChecking(!isReadOnly);
+    }
 «ENDDEFINE»
 
 «AROUND getEditingDomain FOR gmfgen::GenEditorView»
