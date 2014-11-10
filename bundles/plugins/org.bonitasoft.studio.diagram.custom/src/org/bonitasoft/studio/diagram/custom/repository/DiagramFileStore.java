@@ -24,6 +24,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.bonitasoft.studio.common.editor.EditorUtil;
 import org.bonitasoft.studio.common.emf.tools.EMFResourceUtil;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -46,12 +47,15 @@ import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditorUtil
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.emf.common.ui.URIEditorInput;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.xmi.FeatureNotFoundException;
 import org.eclipse.emf.transaction.RecordingCommand;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
+import org.eclipse.gmf.runtime.common.ui.services.editor.EditorService;
 import org.eclipse.gmf.runtime.diagram.core.listener.DiagramEventBroker;
 import org.eclipse.gmf.runtime.diagram.core.listener.NotificationListener;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
@@ -71,7 +75,6 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.ide.IDE;
 
 /**
  * @author Romain Bioteau
@@ -234,24 +237,18 @@ public class DiagramFileStore extends EMFFileStore implements IRepositoryFileSto
 
     @Override
     protected IWorkbenchPart doOpen() {
-    	final IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+        final IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
         closeEditorIfAlreadyOpened(activePage);
         IEditorPart part = null;
         try {
-            part = IDE.openEditor(activePage,getParentStore().getResource().getFile(getName()),true);
+
+            part = EditorService.getInstance().openEditor(new URIEditorInput(EcoreUtil.getURI(ModelHelper.getDiagramFor(getContent(), null))));//IDE.openEditor(activePage,getParentStore().getResource().getFile(getName()),true);
             if(part instanceof DiagramEditor){
                 final DiagramEditor editor = (DiagramEditor) part;
                 final MainProcess diagram = (MainProcess) editor.getDiagramEditPart().resolveSemanticElement() ;
                 diagram.eAdapters().add(new PoolNotificationListener());
                 if(isReadOnly()){
-                    editor.getDiagramEditPart().disableEditMode() ;
-                    Display.getDefault().syncExec(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            MessageDialog.openInformation(Display.getDefault().getActiveShell(), Messages.readOnlyFileTitle, Messages.readOnlyFileWarning);
-                        }
-                    });
+                    setReadOnlyAndOpenWarningDialogAboutReadOnly(editor);
                 }
                 registerListeners(diagram, editor.getEditingDomain()) ;
                 final IGraphicalEditPart editPart = editor.getDiagramEditPart().getChildBySemanticHint(PoolEditPart.VISUAL_ID+"");
@@ -269,10 +266,24 @@ public class DiagramFileStore extends EMFFileStore implements IRepositoryFileSto
         return part ;
     }
 
-	private void handleMigrationReportIfPresent(final IWorkbenchPage activePage)
-			throws PartInitException {
-		if(hasMigrationReport()){
-            Display.getDefault().syncExec(new Runnable() {
+    
+    private void setReadOnlyAndOpenWarningDialogAboutReadOnly(final DiagramEditor editor) {
+        editor.getDiagramEditPart().disableEditMode() ;
+        if (editor instanceof ProcessDiagramEditor) {
+            ((ProcessDiagramEditor) editor).setReadOnly(true);
+        }
+        Display.getDefault().syncExec(new Runnable() {
+            @Override
+            public void run() {
+                MessageDialog.openInformation(Display.getDefault().getActiveShell(), Messages.readOnlyFileTitle, Messages.readOnlyFileWarning);
+            }
+        });
+    }
+
+    private void handleMigrationReportIfPresent(final IWorkbenchPage activePage)
+            throws PartInitException {
+        if(hasMigrationReport()){
+             Display.getDefault().syncExec(new Runnable() {
 
                 @Override
                 public void run() {
@@ -283,18 +294,17 @@ public class DiagramFileStore extends EMFFileStore implements IRepositoryFileSto
                     }
                 }
             });
-
-		} else {
-		    final IViewPart migrationView = activePage.findView("org.bonitasoft.studio.migration.view");
-		    if(migrationView != null){
-		        PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().hideView(migrationView);
-		    }
-		}
-	}
+        } else {
+            final IViewPart migrationView = activePage.findView("org.bonitasoft.studio.migration.view");
+            if(migrationView != null){
+                PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().hideView(migrationView);
+            }
+        }
+    }
 
 	private void closeEditorIfAlreadyOpened(final IWorkbenchPage activePage) {
-		final MainProcess newProcess = getContent() ;
-        for (final IEditorReference editor : activePage.getEditorReferences()) {
+	    final MainProcess newProcess = getContent() ;
+	    for (final IEditorReference editor : activePage.getEditorReferences()) {
             final IEditorPart simpleEditor = editor.getEditor(true);
             if (simpleEditor instanceof DiagramEditor) {
                 final DiagramEditor diagramEditor = (DiagramEditor) simpleEditor;
@@ -318,7 +328,7 @@ public class DiagramFileStore extends EMFFileStore implements IRepositoryFileSto
                 }
             }
         }
-	}
+    }
 
     @Override
     protected void doClose() {
@@ -329,7 +339,7 @@ public class DiagramFileStore extends EMFFileStore implements IRepositoryFileSto
             for (final IEditorReference iEditorReference : editors) {
                 try {
                     final IEditorInput input = iEditorReference.getEditorInput();
-                    final IResource iResource = (IResource) input.getAdapter(IResource.class);
+                    final IResource iResource = EditorUtil.retrieveResourceFromEditorInput(input);
                     if (getResource().equals(iResource)) {
                         final IWorkbenchPart part = iEditorReference.getPart(false);
                         if(part != null && part instanceof DiagramDocumentEditor){

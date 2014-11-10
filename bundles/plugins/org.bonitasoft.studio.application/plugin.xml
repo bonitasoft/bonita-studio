@@ -946,5 +946,14 @@
             class="org.bonitasoft.studio.application.BonitaStudioWorkbenchAdvisor">
       </startup>
    </extension>
+   <extension
+         point="org.eclipse.ui.contexts">
+      <context
+            description="Bonita context"
+            id="org.bonitasoft.studio.context.id"
+            name="Bonita"
+            parentId="org.eclipse.ui.contexts.window">
+      </context>
+   </extension>
 
 </plugin>
