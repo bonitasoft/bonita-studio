@@ -64,7 +64,7 @@ public class AddBpmnBarResourceRunnable implements RunnableWithResult<List<BarRe
                 final MainProcessEditPart mped = createMainEditPart(diagramFor, eResource);
                 createBPMNFileAndAddContents(mped);
                 for (final BarResource barResource : res) {
-                    builder.addClasspathResource(barResource);
+                    builder.addExternalResource(barResource);
                 }
             }
         }
