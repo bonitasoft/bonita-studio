@@ -38,25 +38,18 @@ public class ImportArtifactsFromZip extends AbstractHandler {
 
     public static final String FILE_EXTENSION = ".bos";
 
-    // private AbstractRepositoryArtifact[] importedArtifacts;
-
-    public ImportArtifactsFromZip() {
-
-    }
-
     @Override
-    public Object execute(ExecutionEvent event) throws ExecutionException {
-
-        FileDialog dialog = new FileDialog(Display.getDefault().getActiveShell(), SWT.OPEN);
+    public Object execute(final ExecutionEvent event) throws ExecutionException {
+        final FileDialog dialog = new FileDialog(Display.getDefault().getActiveShell(), SWT.OPEN);
         dialog.setText(Messages.importedRepository_title);
         dialog.setFilterExtensions(new String[] { "*" + FILE_EXTENSION }); //$NON-NLS-1$
         final String workspaceArchiveFile = dialog.open();
         if (workspaceArchiveFile != null) {
-            IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
-            IRunnableWithProgress runnable = new IRunnableWithProgress() {
+            final IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
+            final IRunnableWithProgress runnable = new IRunnableWithProgress() {
 
                 @Override
-                public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+                public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
                     final ImportBosArchiveOperation operation = new ImportBosArchiveOperation();
                     operation.setArchiveFile(workspaceArchiveFile);
                     operation.setCurrentRepository(RepositoryManager.getInstance().getCurrentRepository());
@@ -66,7 +59,7 @@ public class ImportArtifactsFromZip extends AbstractHandler {
 
             try {
                 progressService.run(true, false, runnable);
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 new BonitaErrorDialog(Display.getDefault().getActiveShell(), Messages.importRepositoryFailedTitle, Messages.importRepositoryFailedMsg,
                         new org.eclipse.core.runtime.Status(IStatus.ERROR, "org.bonitasoft.studio.repository.ex", e.getMessage(), e), IStatus.ERROR).open();
                 BonitaStudioLog.error(e);

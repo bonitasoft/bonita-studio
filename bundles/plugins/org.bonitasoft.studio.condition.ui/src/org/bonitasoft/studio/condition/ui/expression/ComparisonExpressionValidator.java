@@ -16,46 +16,32 @@
  */
 package org.bonitasoft.studio.condition.ui.expression;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
-import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.condition.conditionModel.ConditionModelPackage;
 import org.bonitasoft.studio.condition.conditionModel.Expression_ProcessRef;
 import org.bonitasoft.studio.condition.conditionModel.Operation_Compare;
-import org.bonitasoft.studio.condition.scoping.ConditionModelGlobalScopeProvider;
 import org.bonitasoft.studio.condition.ui.internal.ConditionModelActivator;
+import org.bonitasoft.studio.condition.validation.ConditionModelJavaValidator;
 import org.bonitasoft.studio.expression.editor.ExpressionEditorPlugin;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionValidator;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
-import org.bonitasoft.studio.model.parameter.Parameter;
-import org.bonitasoft.studio.model.process.AbstractProcess;
-import org.bonitasoft.studio.model.process.Data;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.command.AddCommand;
 import org.eclipse.emf.edit.command.RemoveCommand;
 import org.eclipse.emf.edit.domain.EditingDomain;
-import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.diagnostics.Severity;
-import org.eclipse.xtext.resource.XtextResource;
-import org.eclipse.xtext.ui.resource.XtextResourceSetProvider;
-import org.eclipse.xtext.util.StringInputStream;
 import org.eclipse.xtext.validation.CheckMode;
 import org.eclipse.xtext.validation.IResourceValidator;
 import org.eclipse.xtext.validation.Issue;
@@ -77,40 +63,24 @@ public class ComparisonExpressionValidator implements IExpressionValidator {
 	 */
 	@Override
 	public IStatus validate(final Object value) {
-
 		if(value == null || value.toString().isEmpty() || !ExpressionConstants.CONDITION_TYPE.equals(inputExpression.getType())){
 			return ValidationStatus.ok();
 		}
 		final Injector injector = ConditionModelActivator.getInstance().getInjector(ConditionModelActivator.ORG_BONITASOFT_STUDIO_CONDITION_CONDITIONMODEL);
-		final IResourceValidator xtextResourceChecker =	injector.getInstance(IResourceValidator.class);
-		final XtextResourceSetProvider xtextResourceSetProvider = injector.getInstance(XtextResourceSetProvider.class);
-		final ResourceSet resourceSet = xtextResourceSetProvider.get(RepositoryManager.getInstance().getCurrentRepository().getProject());
-		final XtextResource resource = (XtextResource) resourceSet.createResource(URI.createURI("somefile.cmodel"));
-		final Map<String, String> options = new HashMap<String, String>();
-		options.put(XtextResource.OPTION_ENCODING, "UTF-8");
-		try {
-			resource.load(new StringInputStream(value.toString(), "UTF-8"), options);
-		} catch (final UnsupportedEncodingException e1) {
-			BonitaStudioLog.error(e1, ExpressionEditorPlugin.PLUGIN_ID);
-		} catch (final IOException e1) {
-			BonitaStudioLog.error(e1, ExpressionEditorPlugin.PLUGIN_ID);
-		}
-		final ConditionModelGlobalScopeProvider globalScopeProvider = injector.getInstance(ConditionModelGlobalScopeProvider.class);
-		final List<String> accessibleObjects = new ArrayList<String>();
-		for(final Data d : ModelHelper.getAccessibleData(context)){
-			accessibleObjects.add(ModelHelper.getEObjectID(d));
-		}
+        Resource resource = null;
+        final XtextComparisonExpressionLoader xtextComparisonExpressionLoader = new XtextComparisonExpressionLoader(injector);
+        try {
+            resource = xtextComparisonExpressionLoader.loadResource(value.toString(), context);
+        } catch (final ComparisonExpressionLoadException e) {
+            BonitaStudioLog.error(e);
+            return ValidationStatus.error(e.getMessage());
+        }
 
-		final AbstractProcess process =  ModelHelper.getParentProcess(context);
-		if(process != null){
-			for(final Parameter p : process.getParameters()){
-				accessibleObjects.add(ModelHelper.getEObjectID(p));
-			}
-		}
-		globalScopeProvider.setAccessibleEObjects(accessibleObjects);
-
-
+        final IResourceValidator xtextResourceChecker = injector.getInstance(IResourceValidator.class);
 		final MultiStatus status = new MultiStatus(ExpressionEditorPlugin.PLUGIN_ID, 0, "", null);
+        final ConditionModelJavaValidator validator = injector.getInstance(ConditionModelJavaValidator.class);
+        final ResourceSet resourceSet = context.eResource().getResourceSet();
+        validator.setCurrentResourceSet(resourceSet);
 		final List<Issue> issues = xtextResourceChecker.validate(resource, CheckMode.FAST_ONLY, null);
 
 		if(issues.isEmpty()){
@@ -129,53 +99,21 @@ public class ComparisonExpressionValidator implements IExpressionValidator {
 		return status;
 	}
 
-	private void updateDependencies(final XtextResource resource) {
+    private void updateDependencies(final Resource resource) {
 		if(domain != null && inputExpression != null){
 			domain.getCommandStack().execute(new RemoveCommand(domain, inputExpression, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS, inputExpression.getReferencedElements()));
 			final Operation_Compare compareOp = (Operation_Compare) resource.getContents().get(0);
 			if(compareOp != null){
 				final List<Expression_ProcessRef> references = ModelHelper.getAllItemsOfType(compareOp, ConditionModelPackage.Literals.EXPRESSION_PROCESS_REF);
 				for(final Expression_ProcessRef ref : references){
-					final EObject dep = getResolvedDependency(ref);
+                    final EObject dep = ComparisonExpressionUtil.getResolvedDependency(context, ref);
 					domain.getCommandStack().execute(new AddCommand(domain, inputExpression, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS, EcoreUtil.copy(dep)));
 				}
 			}
 		}else if(inputExpression != null){
 			inputExpression.getReferencedElements().clear();
-			final Operation_Compare compareOp = (Operation_Compare) resource.getContents().get(0);
-			if(compareOp != null){
-				final List<Expression_ProcessRef> references = ModelHelper.getAllItemsOfType(compareOp, ConditionModelPackage.Literals.EXPRESSION_PROCESS_REF);
-				for(final Expression_ProcessRef ref : references){
-					final EObject dep = getResolvedDependency(ref);
-					inputExpression.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(dep));
-				}
-			}
+            inputExpression.getReferencedElements().addAll(ComparisonExpressionUtil.computeReferencedElement(context, resource));
 		}
-	}
-
-
-	private EObject getResolvedDependency(final Expression_ProcessRef ref) {
-		EObject dep = resolveProxy(ref.getValue());
-		final List<EObject> orignalDep = ModelHelper.getAllItemsOfType( ModelHelper.getMainProcess(context), dep.eClass());
-		for(final EObject d : orignalDep){
-			if(EcoreUtil.equals(dep, d)){
-				dep = d;
-				break;
-			}
-		}
-		return dep;
-	}
-
-	private EObject resolveProxy(final EObject ref) {
-		ResourceSet rSet = null;
-		if(ref.eIsProxy()){
-			rSet =context.eResource().getResourceSet();
-		}
-		final EObject dep = EcoreUtil2.resolve(ref, rSet);
-		if(rSet != null){
-			rSet.getResources().remove(ref.eResource());
-		}
-		return dep;
 	}
 
 	@Override

@@ -71,7 +71,7 @@ public class SWTBotActorFilterExportTests extends SWTBotGefTestCase {
         bot.textWithLabel("Destination *").setText(exportPath);
         bot.waitUntil(Conditions.widgetIsEnabled(bot.button(IDialogConstants.FINISH_LABEL)),5000);
         bot.button(IDialogConstants.FINISH_LABEL).click();
-        bot.waitUntil(new ShellIsActiveWithThreadSTacksOnFailure("Export result"));
+        bot.waitUntil(new ShellIsActiveWithThreadSTacksOnFailure(org.bonitasoft.studio.common.repository.Messages.exportLabel), 15000);
         bot.button(IDialogConstants.OK_LABEL).click();
         checkExportedFile(exportPath,fileName, hasDependencies, hasSources);
     }
@@ -129,6 +129,7 @@ public class SWTBotActorFilterExportTests extends SWTBotGefTestCase {
         testImplementationFileExistence(destDir);
         testClasspathDirExistence(destDir, hasDependencies);
         testMessageFilesExistence(destDir);
+        zipFile.delete();
     }
 
     private void testSourceFileExistence(final File destDir, final boolean hasSources) {

@@ -97,6 +97,13 @@ public abstract class AbstractRepositoryStore<T extends IRepositoryFileStore> im
 	public final T importInputStream(final String fileName,final InputStream inputStream) {
 		Assert.isNotNull(inputStream);
 		Assert.isNotNull(fileName);
+        try {
+            if (inputStream.available() == 0) {
+                return null;
+            }
+        } catch (final IOException e1) {
+            BonitaStudioLog.error(e1);
+        }
 		InputStream newIs = null;
 		try {
 			newIs = handlePreImport(fileName,inputStream);

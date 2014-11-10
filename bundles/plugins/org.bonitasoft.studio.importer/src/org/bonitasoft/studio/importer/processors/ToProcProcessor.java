@@ -19,12 +19,13 @@ package org.bonitasoft.studio.importer.processors;
 
 import java.io.File;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 
 
 /**
@@ -35,20 +36,20 @@ public abstract class ToProcProcessor {
 
 
 	protected String resourceName;
-	
+
 	public abstract File createDiagram(URL sourceFileURL, IProgressMonitor progressMonitor) throws Exception;
 
-	public void setResourceName(String resourceName) {
+	public void setResourceName(final String resourceName) {
 		this.resourceName = resourceName;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @deprecated Use getDiagramFileStoresToOpen instead
 	 */
 	@Deprecated
 	public abstract List<File> getResources() ;
-	
+
 	/**
 	 * Default implementation returns an empty list
 	 * @return
@@ -56,12 +57,17 @@ public abstract class ToProcProcessor {
 	public List<IRepositoryFileStore> getDiagramFileStoresToOpen() {
 		return Collections.emptyList();
 	}
-	
+
 
 	public abstract String getExtension();
 
-	public List<Object> getErrors(){
-		return new ArrayList<Object>();
-	}
+    //
+    //    public List<Object> getErrors() {
+    //        return new ArrayList<Object>();
+    //    }
+
+    public IStatus getStatus() {
+        return Status.OK_STATUS;
+    }
 
 }

@@ -27,6 +27,7 @@ import org.bonitasoft.studio.migration.migrator.ReportCustomMigration;
 import org.bonitasoft.studio.migration.utils.StringToExpressionConverter;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.edapt.migration.Instance;
 import org.eclipse.emf.edapt.migration.Metamodel;
 import org.eclipse.emf.edapt.migration.MigrationException;
@@ -38,17 +39,17 @@ import org.eclipse.emf.edapt.migration.Model;
  */
 public class PageFlowMigration extends ReportCustomMigration {
 
-	private Map<String, String> confirmationMessages = new HashMap<String,String>();
-	private Map<String, String> entryRedirectionUrls = new HashMap<String,String>();
-	private Map<String, String> viewRedirectionUrls = new HashMap<String,String>();
-	private Map<String, String> recapRedirectionUrls = new HashMap<String,String>();
-	private Map<String, String> pageFlowTransitionConditions = new HashMap<String,String>();
-	private Map<String, List<Instance>> entryRedirectionActions = new HashMap<String,List<Instance>>();
-	
+	private final Map<String, String> confirmationMessages = new HashMap<String,String>();
+	private final Map<String, String> entryRedirectionUrls = new HashMap<String,String>();
+	private final Map<String, String> viewRedirectionUrls = new HashMap<String,String>();
+	private final Map<String, String> recapRedirectionUrls = new HashMap<String,String>();
+	private final Map<String, String> pageFlowTransitionConditions = new HashMap<String,String>();
+	private final Map<String, List<Instance>> entryRedirectionActions = new HashMap<String,List<Instance>>();
+
 	@Override
-	public void migrateBefore(Model model, Metamodel metamodel)
+	public void migrateBefore(final Model model, final Metamodel metamodel)
 			throws MigrationException {
-		for(Instance pageFlow : model.getAllInstances("process.PageFlow")){
+		for(final Instance pageFlow : model.getAllInstances("process.PageFlow")){
 			final String confirmationScript = pageFlow.get("confirmationMessage");
 			final String redirectionScript = pageFlow.get("entryRedirectionURL");
 			pageFlow.set("confirmationMessage", null);
@@ -60,10 +61,10 @@ public class PageFlowMigration extends ReportCustomMigration {
 				entryRedirectionUrls.put(pageFlow.getUuid(), redirectionScript);
 			}
 			final List<Instance> actions = pageFlow.get("entryRedirectionActions");
-			List<Instance> operations = new ArrayList<Instance>();
-			for(Instance groovyScript : actions){
+			final List<Instance> operations = new ArrayList<Instance>();
+			for(final Instance groovyScript : actions){
 				final StringToExpressionConverter converter = getConverter(model,getScope(pageFlow));
-				Instance operation = converter.parseOperation(groovyScript, String.class.getName(), true);
+				final Instance operation = converter.parseOperation(groovyScript, String.class.getName(), true);
 				operations.add(operation);
 				model.delete(groovyScript);
 			}
@@ -71,24 +72,24 @@ public class PageFlowMigration extends ReportCustomMigration {
 				entryRedirectionActions.put(pageFlow.getUuid(), operations);
 			}
 		}
-		
-		for(Instance pageFlow : model.getAllInstances("process.ViewPageFlow")){
+
+		for(final Instance pageFlow : model.getAllInstances("process.ViewPageFlow")){
 			final String redirectionScript = pageFlow.get("viewPageFlowRedirectionURL");
 			pageFlow.set("viewPageFlowRedirectionURL", null);
 			if(redirectionScript != null && !redirectionScript.trim().isEmpty()){
 				viewRedirectionUrls.put(pageFlow.getUuid(), redirectionScript);
 			}
 		}
-		
-		for(Instance pageFlow : model.getAllInstances("process.RecapFlow")){
+
+		for(final Instance pageFlow : model.getAllInstances("process.RecapFlow")){
 			final String redirectionScript = pageFlow.get("recapPageFlowRedirectionURL");
 			pageFlow.set("recapPageFlowRedirectionURL", null);
 			if(redirectionScript != null && !redirectionScript.trim().isEmpty()){
 				recapRedirectionUrls.put(pageFlow.getUuid(), redirectionScript);
 			}
 		}
-		
-		for(Instance pageFlowTransition : model.getAllInstances("process.PageFlowTransition")){
+
+		for(final Instance pageFlowTransition : model.getAllInstances("process.PageFlowTransition")){
 			final String condition = pageFlowTransition.get("condition");
 			pageFlowTransition.set("condition", null);
 			if(condition != null && !condition.trim().isEmpty()){
@@ -96,28 +97,58 @@ public class PageFlowMigration extends ReportCustomMigration {
 			}
 		}
 	}
-	
+
 	@Override
-	public void migrateAfter(Model model, Metamodel metamodel)
+	public void migrateAfter(final Model model, final Metamodel metamodel)
 			throws MigrationException {
-		for(Instance pageFlow : model.getAllInstances("process.PageFlow")){
+		for(final Instance pageFlow : model.getAllInstances("process.PageFlow")){
 			setConfirmationMessage(pageFlow, model);
 			setEntryRedirectionURL(pageFlow,model);
 			setRedirectionActions(pageFlow,model);
 		}
-		for(Instance pageFlow : model.getAllInstances("process.ViewPageFlow")){
+		for(final Instance pageFlow : model.getAllInstances("process.ViewPageFlow")){
 			setViewRedirectionURL(pageFlow,model);
+            final List<Instance> transientDataInstances = pageFlow.get("viewTransientData");
+            for (final Instance viewTransientData : transientDataInstances) {
+                model.delete(viewTransientData);
+            }
+
+            final List<Instance> connectorDataInstances = pageFlow.get("viewPageFlowConnectors");
+            for (final Instance viewConnectorData : connectorDataInstances) {
+                model.delete(viewConnectorData);
+            }
+
+            final List<Instance> transitionsInstances = pageFlow.get("viewPageFlowTransitions");
+            for (final Instance transition : transitionsInstances) {
+                model.delete(transition);
+            }
 		}
-		for(Instance pageFlow : model.getAllInstances("process.RecapFlow")){
+		for(final Instance pageFlow : model.getAllInstances("process.RecapFlow")){
 			setRecapRedirectionURL(pageFlow,model);
 		}
-		for(Instance pageFlowTransition : model.getAllInstances("process.PageFlowTransition")){
+		for(final Instance pageFlowTransition : model.getAllInstances("process.PageFlowTransition")){
 			setPageFlowTransitionCondition(pageFlowTransition,model);
 		}
+        for (final Instance viewForm : model.getAllInstances("form.ViewForm")) {
+            final EReference ref = viewForm.getContainerReference();
+            if (ref != null
+                    && ref.getName().equals(ProcessPackage.Literals.VIEW_PAGE_FLOW__VIEW_FORM.getName())
+                    && ref.getEContainingClass().getName().equals(ProcessPackage.Literals.VIEW_PAGE_FLOW.getName())) {
+                model.delete(viewForm);
+            }
+        }
+        for (final Instance viewForm : model.getAllInstances("form.ViewForm")) {
+            final EReference ref = viewForm.getContainerReference();
+            if (ref != null
+                    && ref.getName().equals(ProcessPackage.Literals.VIEW_PAGE_FLOW__VIEW_FORM.getName())
+                    && ref.getEContainingClass().getName().equals(ProcessPackage.Literals.VIEW_PAGE_FLOW.getName())) {
+                model.delete(viewForm);
+            }
+        }
 	}
 
-	private void setPageFlowTransitionCondition(Instance pageFlowTransition,Model model) {
-		Instance expression = null; 
+	private void setPageFlowTransitionCondition(final Instance pageFlowTransition,final Model model) {
+		Instance expression = null;
 		if(pageFlowTransitionConditions.containsKey(pageFlowTransition.getUuid())){
 			final StringToExpressionConverter converter = getConverter(model,getScope(pageFlowTransition));
 			final String url = pageFlowTransitionConditions.get(pageFlowTransition.getUuid());
@@ -139,11 +170,11 @@ public class PageFlowMigration extends ReportCustomMigration {
 			expression = StringToExpressionConverter.createExpressionInstance(model, "", "", Boolean.class.getName(), ExpressionConstants.CONSTANT_TYPE, true);
 		}
 		pageFlowTransition.set("condition", expression);
-		
+
 	}
 
-	private void setRecapRedirectionURL(Instance pageFlow, Model model) {
-		Instance expression = null; 
+	private void setRecapRedirectionURL(final Instance pageFlow, final Model model) {
+		Instance expression = null;
 		if(recapRedirectionUrls.containsKey(pageFlow.getUuid())){
 			final StringToExpressionConverter converter = getConverter(model,getScope(pageFlow));
 			final String url = recapRedirectionUrls.get(pageFlow.getUuid());
@@ -158,8 +189,8 @@ public class PageFlowMigration extends ReportCustomMigration {
 		pageFlow.set("recapPageFlowRedirectionURL", expression);
 	}
 
-	private void setViewRedirectionURL(Instance pageFlow, Model model) {
-		Instance expression = null; 
+	private void setViewRedirectionURL(final Instance pageFlow, final Model model) {
+		Instance expression = null;
 		if(viewRedirectionUrls.containsKey(pageFlow.getUuid())){
 			final StringToExpressionConverter converter = getConverter(model,getScope(pageFlow));
 			final String url = viewRedirectionUrls.get(pageFlow.getUuid());
@@ -174,18 +205,18 @@ public class PageFlowMigration extends ReportCustomMigration {
 		pageFlow.set("viewPageFlowRedirectionURL", expression);
 	}
 
-	private void setRedirectionActions(Instance pageFlow, Model model) {
+	private void setRedirectionActions(final Instance pageFlow, final Model model) {
 		if(entryRedirectionActions.containsKey(pageFlow.getUuid())){
 			pageFlow.get("entryRedirectionActions");
-			for(Instance operation : entryRedirectionActions.get(pageFlow.getUuid())){
+			for(final Instance operation : entryRedirectionActions.get(pageFlow.getUuid())){
 				pageFlow.add("entryRedirectionActions", operation);
 				addReportChange((String) pageFlow.get("name"),pageFlow.getType().getEClass().getName(), pageFlow.getUuid(),Messages.redirectionActionMigrationDescription, Messages.entryPageflowProperty, ExpressionConstants.SCRIPT_TYPE.equals(((Instance)operation.get("rightOperand")).get("type")) ? IStatus.WARNING : IStatus.OK);
 			}
 		}
 	}
 
-	private void setEntryRedirectionURL(Instance pageFlow, Model model) {
-		Instance expression = null; 
+	private void setEntryRedirectionURL(final Instance pageFlow, final Model model) {
+		Instance expression = null;
 		if(entryRedirectionUrls.containsKey(pageFlow.getUuid())){
 			final StringToExpressionConverter converter = getConverter(model,getScope(pageFlow));
 			final String url = entryRedirectionUrls.get(pageFlow.getUuid());
@@ -200,8 +231,8 @@ public class PageFlowMigration extends ReportCustomMigration {
 		pageFlow.set("entryRedirectionURL", expression);
 	}
 
-	private void setConfirmationMessage(Instance pageFlow, Model model) {
-		Instance expression = null; 
+	private void setConfirmationMessage(final Instance pageFlow, final Model model) {
+		Instance expression = null;
 		if(confirmationMessages.containsKey(pageFlow.getUuid())){
 			final StringToExpressionConverter converter = getConverter(model,getScope(pageFlow));
 			final String confirmationMessage = confirmationMessages.get(pageFlow.getUuid());
@@ -214,6 +245,6 @@ public class PageFlowMigration extends ReportCustomMigration {
 			expression = StringToExpressionConverter.createExpressionInstance(model, "", "", String.class.getName(), ExpressionConstants.CONSTANT_TYPE, true);
 		}
 		pageFlow.set("confirmationMessage", expression);
-		
+
 	}
 }

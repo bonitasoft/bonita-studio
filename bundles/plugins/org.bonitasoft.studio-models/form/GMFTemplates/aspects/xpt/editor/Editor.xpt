@@ -141,6 +141,8 @@ protected org.eclipse.emf.transaction.TransactionalEditingDomain createEditingDo
 	«REM»Prompt for save only if no other editors use the same resource set«ENDREM»
 	«EXPAND isSaveOnCloseNeeded-»
 	
+	«EXPAND setReadOnly»
+	
 «ENDAROUND»
 
 «DEFINE getTitleTooltip FOR gmfgen::GenEditorView-»
@@ -471,6 +473,15 @@ TODO: get it fixed in GMF-Runtime«ENDREM»
 				getDiagramEditPart().resolveSemanticElement().eResource().getResourceSet(),
 				getEditorInput());
 	}
+«ENDDEFINE»
+
+«DEFINE setReadOnly FOR gmfgen::GenEditorView-»
+	/**
+	 *  @generated Bonitasoft
+	 */
+	public void setReadOnly(final boolean isReadOnly) {
+      	  enableSanityChecking(!isReadOnly);
+    }
 «ENDDEFINE»
 
 «AROUND getEditingDomain FOR gmfgen::GenEditorView»

@@ -40,7 +40,7 @@ import org.junit.runner.RunWith;
 
 /**
  * @author aurelie Zara
- * 
+ *
  */
 
 @RunWith(SWTBotJunit4ClassRunner.class)
@@ -243,6 +243,7 @@ public class OrganizationCreationTest extends SWTBotGefTestCase {
         // Finish the user add
         bot.waitUntil(Conditions.widgetIsEnabled(bot.button(IDialogConstants.FINISH_LABEL)));
         bot.button(IDialogConstants.FINISH_LABEL).click();
+        bot.waitUntil(Conditions.shellIsActive(Messages.organizationHasBeenModifiedTitle));
         bot.button(IDialogConstants.NO_LABEL).click();
     }
 

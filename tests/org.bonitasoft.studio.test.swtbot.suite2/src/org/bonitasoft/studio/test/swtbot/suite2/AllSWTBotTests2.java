@@ -2,6 +2,7 @@ package org.bonitasoft.studio.test.swtbot.suite2;
 
 import org.bonitasoft.expressions.test.TestConnectorExpression;
 import org.bonitasoft.studio.commands.test.CopyPasteTests;
+import org.bonitasoft.studio.commands.test.DeleteCommandTest;
 import org.bonitasoft.studio.commands.test.DuplicateCommandTest;
 import org.bonitasoft.studio.commands.test.ExtractAsSubprocessTest;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
@@ -22,6 +23,7 @@ import org.bonitasoft.studio.exporter.tests.bpmn.BPMNExportTests;
 import org.bonitasoft.studio.exporter.tests.bpmn.BPMNGatewayExportImportTest;
 import org.bonitasoft.studio.exporter.tests.bpmn.BPMNSequenceFlowDefaultFlowExportImportTest;
 import org.bonitasoft.studio.groovy.tests.TestBonitaGroovyEditorDialog;
+import org.bonitasoft.studio.migration.tests.ExportImportWithoutMigrationIT;
 import org.bonitasoft.studio.migration.tests.MigrationReporTest;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
@@ -84,6 +86,7 @@ import org.junit.runners.Suite;
     OpenNameAndVersionForDiagramDialogTest.class,
     TestDuplicate.class,
     CopyPasteTests.class,
+        DeleteCommandTest.class,
     TestCreateValidatorWizard.class,
     TestLifeCycleWidget.class,
     TestConnectorExpression.class,
@@ -102,7 +105,8 @@ import org.junit.runners.Suite;
     TestTimer.class,
     TestBonitaGroovyEditorDialog.class,
         TestProcessDependencies.class,
-        RefactorWidgetIT.class
+        RefactorWidgetIT.class,
+        ExportImportWithoutMigrationIT.class
 })
 public class AllSWTBotTests2 {
 

@@ -1,7 +1,7 @@
 /**
  * Copyright (C) 2009 BonitaSoft S.A.
  * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 package org.bonitasoft.studio.diagram.custom.clipboard;
 
 import java.util.Hashtable;
@@ -23,7 +23,7 @@ import java.util.Hashtable;
 import org.eclipse.gmf.runtime.common.ui.services.action.global.AbstractGlobalActionHandlerProvider;
 import org.eclipse.gmf.runtime.common.ui.services.action.global.IGlobalActionHandler;
 import org.eclipse.gmf.runtime.common.ui.services.action.global.IGlobalActionHandlerContext;
-import org.eclipse.ui.IPartListener;
+import org.eclipse.gmf.runtime.common.ui.util.PartListenerAdapter;
 import org.eclipse.ui.IWorkbenchPart;
 
 /**
@@ -35,7 +35,7 @@ public class CustomGlobalActionHandlerProvider extends AbstractGlobalActionHandl
 	/**
 	 * List for handlers.
 	 */
-	private Hashtable<Object,Object> handlerList = new Hashtable<Object,Object>();
+	private final Hashtable<Object,Object> handlerList = new Hashtable<Object,Object>();
 
 	/**
 	 * Creates a new instance.
@@ -48,7 +48,8 @@ public class CustomGlobalActionHandlerProvider extends AbstractGlobalActionHandl
 	 * Returns a global action handler that supports global image operations
 	 * (cut, copy, and paste).
 	 */
-	public IGlobalActionHandler getGlobalActionHandler(
+	@Override
+    public IGlobalActionHandler getGlobalActionHandler(
 			final IGlobalActionHandlerContext context) {
 		/* Create the handler */
 		if (!getHandlerList().containsKey(context.getActivePart())) {
@@ -60,28 +61,15 @@ public class CustomGlobalActionHandlerProvider extends AbstractGlobalActionHandl
 			 * the part is disposed
 			 */
 			context.getActivePart().getSite().getPage().addPartListener(
-				new IPartListener() {
+                    new PartListenerAdapter() {
 
 					private IWorkbenchPart localPart = context.getActivePart();
 
 					/**
-					 * @see org.eclipse.ui.IPartListener#partActivated(IWorkbenchPart)
-					 */
-					public void partActivated(IWorkbenchPart part) {
-						// Do nothing
-					}
-
-					/**
-					 * @see org.eclipse.ui.IPartListener#partBroughtToTop(IWorkbenchPart)
-					 */
-					public void partBroughtToTop(IWorkbenchPart part) {
-						// Do nothing
-					}
-
-					/**
 					 * @see org.eclipse.ui.IPartListener#partClosed(IWorkbenchPart)
 					 */
-					public void partClosed(IWorkbenchPart part) {
+					@Override
+                    public void partClosed(final IWorkbenchPart part) {
 						/* Remove the cache associated with the part */
 						if (part != null && part == localPart
 							&& getHandlerList().containsKey(part)) {
@@ -92,19 +80,6 @@ public class CustomGlobalActionHandlerProvider extends AbstractGlobalActionHandl
 						}
 					}
 
-					/**
-					 * @see org.eclipse.ui.IPartListener#partDeactivated(IWorkbenchPart)
-					 */
-					public void partDeactivated(IWorkbenchPart part) {
-						// Do nothing
-					}
-
-					/**
-					 * @see org.eclipse.ui.IPartListener#partOpened(IWorkbenchPart)
-					 */
-					public void partOpened(IWorkbenchPart part) {
-						// Do nothing
-					}
 				});
 		}
 
@@ -114,13 +89,13 @@ public class CustomGlobalActionHandlerProvider extends AbstractGlobalActionHandl
 
 	/**
 	 * Returns the handlerList.
-	 * 
+	 *
 	 * @return Hashtable
 	 */
 	private Hashtable<Object,Object> getHandlerList() {
 		return handlerList;
 	}
-	
+
 }
 
 

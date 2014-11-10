@@ -65,7 +65,6 @@ public class OpeartionReturnTypeWarningConstraint extends AbstractLiveValidation
 						return ctx.createSuccessStatus();
 					}
 				}
-                //validator.setDataExpression(op.getLeftOperand());
 				final IStatus status = validator.validate(op.getRightOperand());
 				if(!status.isOK()){
 					final FlowElement el = ModelHelper.getParentFlowElement(op);
@@ -135,7 +134,6 @@ public class OpeartionReturnTypeWarningConstraint extends AbstractLiveValidation
 					return ctx.createFailureStatus(Messages.bind(Messages.leftOperandMissing,activityName));
 				}
 			}
-            //		validator.setDataExpression(op.getLeftOperand());
 			final IStatus status = validator.validate(op.getRightOperand());
 			if(!status.isOK()){
 				final FlowElement el = ModelHelper.getParentFlowElement(op);

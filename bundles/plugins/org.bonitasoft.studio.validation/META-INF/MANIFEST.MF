@@ -28,15 +28,18 @@ Require-Bundle: org.eclipse.ui,
  org.mockito;bundle-version="1.9.5";resolution:=optional,
  org.bonitasoft.studio.engine;bundle-version="6.3.0",
  org.bonitasoft.studio.condition,
- org.codehaus.groovy;bundle-version="1.8.6"
+ org.codehaus.groovy;bundle-version="1.8.6",
+ org.bonitasoft.studio.condition.ui,
+ org.bonitasoft.studio.tests-utils;bundle-version="6.4.0";resolution:=optional
 Bundle-ActivationPolicy: lazy
 Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Vendor: BonitaSoft S.A.
 Import-Package: org.bonitasoft.engine.expression,
+ org.bonitasoft.engine.operation,
  org.bonitasoft.studio.properties.i18n
-Export-Package: org.bonitasoft.studio.validation,org.bonitasoft.studio
- .validation.constraints,org.bonitasoft.studio.validation.constraints.
- form;x-friends:="org.bonitasoft.studio.validation.test",org.bonitasof
- t.studio.validation.constraints.process;x-friends:="org.bonitasoft.st
- udio.validation.test"
+Export-Package: org.bonitasoft.studio.validation,
+ org.bonitasoft.studio.validation.constraints,
+ org.bonitasoft.studio.validation.constraints.connector,
+ org.bonitasoft.studio.validation.constraints.form;x-friends:="org.bonitasoft.studio.validation.test",
+ org.bonitasoft.studio.validation.constraints.process;x-friends:="org.bonitasoft.studio.validation.test"

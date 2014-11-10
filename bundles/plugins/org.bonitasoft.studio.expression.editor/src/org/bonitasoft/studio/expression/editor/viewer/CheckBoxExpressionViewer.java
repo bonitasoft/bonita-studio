@@ -84,13 +84,13 @@ public class CheckBoxExpressionViewer extends ExpressionViewer implements Expres
         if ((style & SWT.BORDER) != 0) {//Not in a table
             createSwitchEditorControl(widgetFactory);
         }
-        addDecorator();
+        addDecorator(composite);
         mc.show(checkBoxControl);
         mc.hide(control);
     }
 
-    private void addDecorator() {
-        checkBoxDecoration = new ControlDecoration(checkBoxControl, SWT.RIGHT);
+    private void addDecorator(final Composite composite) {
+        checkBoxDecoration = new ControlDecoration(checkBoxControl, SWT.RIGHT, composite);
         checkBoxDecoration.setImage(Pics.getImage(PicsConstants.hint));
         refreshDecoration();
     }

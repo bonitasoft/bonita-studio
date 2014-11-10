@@ -44,7 +44,6 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.command.AddCommand;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.xtext.ui.XtextProjectHelper;
 
 /**
  * @author Romain Bioteau
@@ -74,6 +73,8 @@ public class DataWizard extends Wizard implements IBonitaVariableContext {
     private boolean isPageFlowContext = false;
 
     private boolean isOverviewContext = false;
+
+    private static final String XTEXT_BUILDER_ID = "org.eclipse.xtext.ui.shared.xtextBuilder";
 
     public DataWizard(final TransactionalEditingDomain editingDomain, final EObject container, final EStructuralFeature dataContainmentFeature,
             final Set<EStructuralFeature> featureToCheckForUniqueID,
@@ -191,7 +192,7 @@ public class DataWizard extends Wizard implements IBonitaVariableContext {
     protected void refreshXtextReferences() {
         try {
             RepositoryManager.getInstance().getCurrentRepository().getProject()
-                    .build(IncrementalProjectBuilder.FULL_BUILD, XtextProjectHelper.BUILDER_ID, Collections.<String, String> emptyMap(), null);
+                    .build(IncrementalProjectBuilder.FULL_BUILD, XTEXT_BUILDER_ID, Collections.<String, String> emptyMap(), null);
         } catch (final CoreException e) {
             BonitaStudioLog.error(e, DataPlugin.PLUGIN_ID);
         }
