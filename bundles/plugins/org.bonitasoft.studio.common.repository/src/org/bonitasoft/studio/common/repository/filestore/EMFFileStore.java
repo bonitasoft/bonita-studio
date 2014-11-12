@@ -31,6 +31,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
@@ -53,11 +54,12 @@ public abstract class EMFFileStore extends AbstractFileStore implements IReposit
     protected Resource doCreateEMFResource(){
         final URI uri = URI.createFileURI(getFileStorePath()) ;
         try{
-            final EditingDomain editingDomain  = getParentStore().getEditingDomain();
+            final EditingDomain editingDomain = getParentStore().getEditingDomain(uri);
+            final ResourceSet resourceSet = editingDomain.getResourceSet();
             if(new File(uri.toFileString()).exists()){
-                return editingDomain.getResourceSet().getResource(uri,true) ;
+                return resourceSet.getResource(uri,true) ;
             }else{
-                return editingDomain.getResourceSet().createResource(uri) ;
+                return resourceSet.createResource(uri);
             }
         }catch (final Exception e) {
             BonitaStudioLog.error(e);

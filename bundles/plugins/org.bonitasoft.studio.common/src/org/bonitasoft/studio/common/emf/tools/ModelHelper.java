@@ -1404,7 +1404,6 @@ public class ModelHelper {
         if (element == null) {
             return null;
         }
-        Diagram diag = null;
         Resource r = null;
         if (domain == null) {
             domain = AdapterFactoryEditingDomain.getEditingDomainFor(element);
@@ -1425,17 +1424,27 @@ public class ModelHelper {
                 BonitaStudioLog.error(e);
             }
         }
+        final TreeIterator<EObject> allContents = r.getAllContents();
+        EObject elementToFind = null;
+        while (allContents.hasNext()) {
+            final EObject eObject = allContents.next();
+            if (EcoreUtil.equals(eObject, element)) {
+                elementToFind = eObject;
+            }
+        }
+        if (elementToFind == null) {
+            return null;
+        }
         final EList<EObject> resources = r.getContents();
         for (final EObject eObject : resources) {
             if (eObject instanceof Diagram) {
                 final EObject diagramElement = ((Diagram) eObject).getElement();
-                if (diagramElement != null && diagramElement.equals(element)) {
-                    diag = (Diagram) eObject;
-                    break;
+                if (diagramElement != null && diagramElement.equals(elementToFind)) {
+                    return (Diagram) eObject;
                 }
             }
         }
-        return diag;
+        return null;
     }
 
     public static Widget getWidgetById(final Form form, final String id) {

@@ -597,12 +597,12 @@ public class Repository implements IRepository {
     }
 
     @Override
-    public IRepositoryStore<? extends IRepositoryFileStore> getRepositoryStore(final Class<?> repositoryStoreClass) {
+    public <T> T getRepositoryStore(final Class<T> repositoryStoreClass) {
         if (stores == null || stores.isEmpty()) {
             initRepositoryStores(false);
             enableBuild();
         }
-        return stores.get(repositoryStoreClass);
+        return repositoryStoreClass.cast(stores.get(repositoryStoreClass));
     }
 
     @SuppressWarnings("restriction")

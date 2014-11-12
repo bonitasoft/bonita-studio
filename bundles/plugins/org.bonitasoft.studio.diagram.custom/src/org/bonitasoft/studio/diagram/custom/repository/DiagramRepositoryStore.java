@@ -39,6 +39,7 @@ import org.bonitasoft.studio.common.ModelVersion;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.ProjectUtil;
+import org.bonitasoft.studio.common.editingdomain.BonitaEditingDomainUtil;
 import org.bonitasoft.studio.common.emf.tools.EMFResourceUtil;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -58,11 +59,13 @@ import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.xmi.FeatureNotFoundException;
 import org.eclipse.emf.edapt.history.Release;
 import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.emf.edapt.migration.execution.Migrator;
+import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.provider.ReflectiveItemProviderAdapterFactory;
 import org.eclipse.emf.edit.provider.resource.ResourceItemProviderAdapterFactory;
@@ -112,6 +115,14 @@ public class DiagramRepositoryStore extends
     @Override
     public DiagramFileStore createRepositoryFileStore(final String fileName) {
 		return new DiagramFileStore(fileName, this);
+    }
+
+    @Override
+    public EditingDomain getEditingDomain(final URI uri) {
+        if (uri != null) {
+            return BonitaEditingDomainUtil.getSharedEditingDomain(uri);
+        }
+        return super.getEditingDomain(uri);
     }
 
     public List<AbstractProcess> getAllProcesses() {

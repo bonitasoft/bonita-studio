@@ -51,7 +51,7 @@ public interface IRepository extends IFileStoreChangeListener {
 
     void close() ;
 
-    IRepositoryStore<? extends IRepositoryFileStore> getRepositoryStore(Class<?> repositoryStoreClass) ;
+    <T> T getRepositoryStore(final Class<T> repositoryStoreClass);
 
     List<IRepositoryStore<? extends IRepositoryFileStore>> getAllStores() ;
 
