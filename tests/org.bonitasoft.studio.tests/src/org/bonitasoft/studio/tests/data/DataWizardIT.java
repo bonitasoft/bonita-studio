@@ -54,6 +54,7 @@ import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditor;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
 import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotMenu;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -161,13 +162,14 @@ public class DataWizardIT extends SWTBotGefTestCase {
         bot.button(IDialogConstants.OK_LABEL).click();
 
         SWTBotTestUtil.waitUntilBonitaBPmShellIsActive(bot);
-        bot.menu("Diagram").menu("Save").click();
+        final SWTBotMenu menuDiagram = bot.menu("Diagram");
+        menuDiagram.menu("Save").click();
 
         assertEquals("data not removed",nbData -1, pool.getData().size());
         assertFalse("the wrong data was removed",firstData.equals(pool.getData().get(0)));
 
         SWTBotTestUtil.waitUntilBonitaBPmShellIsActive(bot);
-        bot.menu("Diagram").menu("Close").click();
+        menuDiagram.menu("Close").click();
     }
 
     @Test
