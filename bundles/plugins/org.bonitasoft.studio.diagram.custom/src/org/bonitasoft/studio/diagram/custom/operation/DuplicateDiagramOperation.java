@@ -63,14 +63,12 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil.Copier;
 import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCommand;
-import org.eclipse.gmf.runtime.emf.core.GMFEditingDomainFactory;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 
 /**
@@ -102,7 +100,7 @@ public class DuplicateDiagramOperation implements IRunnableWithProgress {
             newDiagram = copyDiagram();
         }
 
-        final TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(newDiagram);
+        final TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(newDiagram.eResource());
         editingDomain.getCommandStack().execute(
                 SetCommand.create(editingDomain, newDiagram, ProcessPackage.Literals.ABSTRACT_PROCESS__AUTHOR,
                         System.getProperty("user.name", "Unknown")));
@@ -148,9 +146,7 @@ public class DuplicateDiagramOperation implements IRunnableWithProgress {
         store.save(copiedElements);
 
         final MainProcess newDiagram = store.getContent();
-
-        final ResourceSet rSet = newDiagram.eResource().getResourceSet();
-        final TransactionalEditingDomain createEditingDomain = GMFEditingDomainFactory.getInstance().createEditingDomain(rSet);
+        final TransactionalEditingDomain createEditingDomain = TransactionUtil.getEditingDomain(newDiagram.eResource());
         changeProcessNameAndVersion(newDiagram, createEditingDomain, diagramName, diagramVersion);
         createEditingDomain.getCommandStack().execute(
                 SetCommand.create(createEditingDomain, newDiagram, ProcessPackage.Literals.MAIN_PROCESS__CONFIG_ID, ConfigurationIdProvider
@@ -163,7 +159,6 @@ public class DuplicateDiagramOperation implements IRunnableWithProgress {
                         protected CommandResult doExecuteWithResult(final IProgressMonitor arg0, final IAdaptable arg1) throws ExecutionException {
                             try {
                                 changePathAndCopyResources(diagram, newDiagram, createEditingDomain, copier);
-                                newDiagram.eResource().save(ProcessDiagramEditorUtil.getSaveOptions());
                             } catch (final IOException e) {
                                 BonitaStudioLog.error(e);
                                 return CommandResult.newErrorCommandResult(e);
@@ -183,8 +178,9 @@ public class DuplicateDiagramOperation implements IRunnableWithProgress {
         } catch (final ExecutionException e1) {
             BonitaStudioLog.error(e1);
         }
+        store.save(null);
         duplicateConfigurations(diagram, newDiagram);
-        return newDiagram;
+        return store.getContent();
     }
 
     private void duplicateConfigurations(final MainProcess sourceDiagram, final MainProcess newDiagram) {
@@ -445,11 +441,11 @@ public class DuplicateDiagramOperation implements IRunnableWithProgress {
         editingDomain.getCommandStack()
         .execute(SetCommand.create(editingDomain, process, ProcessPackage.Literals.ABSTRACT_PROCESS__VERSION, newProcessVersion));
 
-        try {
-            process.eResource().save(Collections.EMPTY_MAP);
-        } catch (final IOException e) {
-            BonitaStudioLog.error(e);
-        }
+        //        try {
+        //            process.eResource().save(Collections.EMPTY_MAP);
+        //        } catch (final IOException e) {
+        //            BonitaStudioLog.error(e);
+        //        }
     }
 
     public void setDiagramToDuplicate(final MainProcess diagram) {
