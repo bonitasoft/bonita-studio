@@ -204,7 +204,7 @@ public abstract class AbstractRepositoryStore<T extends IRepositoryFileStore> im
         try {
             if (file.exists()) {
                 if (FileActionDialog.overwriteQuestion(fileName)) {
-                    file.delete(true, false, Repository.NULL_PROGRESS_MONITOR);
+                    handleOverwrite(file);
                 } else {
                     inputStream.close();
                     return createRepositoryFileStore(fileName);
@@ -216,11 +216,14 @@ public abstract class AbstractRepositoryStore<T extends IRepositoryFileStore> im
                 refresh();
             }
             file.create(inputStream, true, Repository.NULL_PROGRESS_MONITOR);
-
         } catch (final Exception e) {
             BonitaStudioLog.error(e);
         }
         return createRepositoryFileStore(fileName);
+    }
+
+    protected void handleOverwrite(final IFile file) throws CoreException {
+        file.delete(true, false, Repository.NULL_PROGRESS_MONITOR);
     }
 
     @Override

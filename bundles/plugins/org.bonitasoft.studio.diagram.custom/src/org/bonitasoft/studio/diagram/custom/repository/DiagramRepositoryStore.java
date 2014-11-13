@@ -56,6 +56,7 @@ import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.util.ProcessAdapterFactory;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -131,6 +132,12 @@ public class DiagramRepositoryStore extends
 			processes.addAll(((DiagramFileStore) file).getProcesses());
         }
 		return processes;
+    }
+
+    @Override
+    protected void handleOverwrite(final IFile file) throws CoreException {
+        final DiagramFileStore fileStore = createRepositoryFileStore(file.getName());
+        fileStore.delete();
     }
 
     @Override
