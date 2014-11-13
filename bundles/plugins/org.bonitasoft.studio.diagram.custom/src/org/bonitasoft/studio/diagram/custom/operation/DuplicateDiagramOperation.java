@@ -101,7 +101,7 @@ public class DuplicateDiagramOperation implements IRunnableWithProgress {
             copyDiagram();
         }
 
-        final DiagramFileStore newFildeStore = diagramStore.getDiagram(diagramName, diagramVersion);
+        final DiagramFileStore newFildeStore = diagramStore.createRepositoryFileStore(NamingUtils.toDiagramFilename(diagramName, diagramVersion));
         final MainProcess newDiagram = newFildeStore.getContent();
         final TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(newFildeStore.getEMFResource());
         editingDomain.getCommandStack().execute(
