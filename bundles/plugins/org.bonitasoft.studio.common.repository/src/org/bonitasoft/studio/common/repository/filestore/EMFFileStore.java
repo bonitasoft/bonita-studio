@@ -52,11 +52,11 @@ public abstract class EMFFileStore extends AbstractFileStore implements IReposit
     }
 
     protected Resource doCreateEMFResource(){
-        final URI uri = URI.createFileURI(getFileStorePath()) ;
+        final URI uri = getResourceURI() ;
         try{
             final EditingDomain editingDomain = getParentStore().getEditingDomain(uri);
             final ResourceSet resourceSet = editingDomain.getResourceSet();
-            if(new File(uri.toFileString()).exists()){
+            if (getResource().exists()) {
                 return resourceSet.getResource(uri,true) ;
             }else{
                 return resourceSet.createResource(uri);
@@ -65,6 +65,10 @@ public abstract class EMFFileStore extends AbstractFileStore implements IReposit
             BonitaStudioLog.error(e);
         }
         return null;
+    }
+
+    protected URI getResourceURI() {
+        return URI.createFileURI(getFileStorePath());
     }
 
 	protected String getFileStorePath() {

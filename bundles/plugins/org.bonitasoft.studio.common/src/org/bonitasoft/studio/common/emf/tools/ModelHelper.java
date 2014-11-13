@@ -1426,7 +1426,7 @@ public class ModelHelper {
         }
         final TreeIterator<EObject> allContents = r.getAllContents();
         EObject elementToFind = null;
-        while (allContents.hasNext()) {
+        while (elementToFind == null && allContents.hasNext()) {
             final EObject eObject = allContents.next();
             if (EcoreUtil.equals(eObject, element)) {
                 elementToFind = eObject;

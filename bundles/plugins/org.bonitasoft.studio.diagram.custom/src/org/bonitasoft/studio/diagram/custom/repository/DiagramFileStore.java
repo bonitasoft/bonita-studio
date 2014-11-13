@@ -50,8 +50,10 @@ import org.eclipse.core.commands.operations.OperationHistoryFactory;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.ui.URIEditorInput;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -130,6 +132,12 @@ public class DiagramFileStore extends EMFFileStore implements IRepositoryFileSto
             }
         }
         return label;
+    }
+
+    @Override
+    protected URI getResourceURI() {
+        final IPath fullPath = getResource().getFullPath();
+        return URI.createPlatformResourceURI(fullPath.toOSString(), true);
     }
 
     /* (non-Javadoc)
