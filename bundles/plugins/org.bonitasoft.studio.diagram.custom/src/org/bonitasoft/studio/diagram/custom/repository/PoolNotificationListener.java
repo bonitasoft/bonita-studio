@@ -1,7 +1,7 @@
 /**
  * Copyright (C) 2011-2012 BonitaSoft S.A.
  * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -32,6 +32,9 @@ import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.bonitasoft.studio.repository.themes.ApplicationLookNFeelFileStore;
 import org.bonitasoft.studio.repository.themes.LookNFeelRepositoryStore;
+import org.eclipse.core.resources.IWorkspaceRunnable;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
@@ -41,18 +44,19 @@ import org.eclipse.gmf.runtime.diagram.core.listener.NotificationListener;
 import org.eclipse.gmf.runtime.diagram.core.listener.NotificationUtil;
 
 /**
- * 
+ *
  * @author Romain Bioteau
  *
  */
 public class PoolNotificationListener extends AdapterImpl implements NotificationListener {
 
 
-    public void notifyChanged(Notification notification) {
-        final ProcessConfigurationRepositoryStore processConfStore = (ProcessConfigurationRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ProcessConfigurationRepositoryStore.class) ;
-        final DiagramRepositoryStore diagramStore = (DiagramRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class) ;
-        final ApplicationResourceRepositoryStore resourceStore = (ApplicationResourceRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ApplicationResourceRepositoryStore.class) ;
-        final LookNFeelRepositoryStore lookNFeelStore = (LookNFeelRepositoryStore)RepositoryManager.getInstance().getRepositoryStore(LookNFeelRepositoryStore.class) ;
+    @Override
+    public void notifyChanged(final Notification notification) {
+        final ProcessConfigurationRepositoryStore processConfStore = RepositoryManager.getInstance().getRepositoryStore(ProcessConfigurationRepositoryStore.class) ;
+        final DiagramRepositoryStore diagramStore = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class) ;
+        final ApplicationResourceRepositoryStore resourceStore = RepositoryManager.getInstance().getRepositoryStore(ApplicationResourceRepositoryStore.class) ;
+        final LookNFeelRepositoryStore lookNFeelStore = RepositoryManager.getInstance().getRepositoryStore(LookNFeelRepositoryStore.class) ;
 
         // Listen for changes to features.
         switch (notification.getFeatureID(AbstractProcess.class)) {
@@ -60,56 +64,82 @@ public class PoolNotificationListener extends AdapterImpl implements Notificatio
             case ProcessPackage.ABSTRACT_PROCESS__VERSION:updatePoolLabel(ModelHelper.getEObjectID((AbstractProcess)notification.getNotifier()),((AbstractProcess)notification.getNotifier()).getName(),notification.getNewStringValue());break;
             case ProcessPackage.ABSTRACT_PROCESS__ELEMENTS:
                 if(NotificationUtil.isElementAddedToSlot(notification) || NotificationUtil.isElementRemovedFromSlot(notification)){
-                    if (notification.getNewValue() instanceof Pool) { //Pool added
-                        Pool pool = (Pool) notification.getNewValue();
-                        pool.eAdapters().add(this);
-                        TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(pool) ;
-
-                        // check that process is not empty
-                        String processUUID = ModelHelper.getEObjectID(pool) ;
-                        IRepositoryFileStore confFile = processConfStore.createRepositoryFileStore(processUUID+".conf") ;
-                        final Configuration conf = ConfigurationFactory.eINSTANCE.createConfiguration();
-                        conf.setVersion(ModelVersion.CURRENT_VERSION);
-                        confFile.save(conf) ;
-
-                        ApplicationResourceFileStore artifact = (ApplicationResourceFileStore) resourceStore.getChild(processUUID) ;
-                        if (artifact == null) {
-                            String themeId = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().getString(BonitaPreferenceConstants.DEFAULT_APPLICATION_THEME) ;
-                            ApplicationLookNFeelFileStore file = (ApplicationLookNFeelFileStore) lookNFeelStore.getChild(themeId) ;
-                            CompoundCommand templateCommand = WebTemplatesUtil.createAddTemplateCommand(editingDomain, pool, file);
-                            // add an empty application folder
-                            editingDomain.getCommandStack().execute(templateCommand);
-                            org.eclipse.emf.common.command.Command createDefaultResourceFolders = WebTemplatesUtil.createDefaultResourceFolders(editingDomain, pool);
-                            if (createDefaultResourceFolders != null) {
-                                editingDomain.getCommandStack().execute(createDefaultResourceFolders);
-                            }
-                        }
-                    } else if(notification.getNewValue() == null && notification.getOldValue() instanceof Pool){//Pool removed
-                        Set<String> poolIds = diagramStore.getAllProcessIds() ;
-                        for(IRepositoryFileStore file : processConfStore.getChildren()){
-                            String id = file.getName() ;
-                            id = id.substring(0, id.lastIndexOf(".")) ;
-                            if(!poolIds.contains(id)){
-                                file.delete() ;
-                            }
-                        }
-
-                        for(IRepositoryFileStore file : resourceStore.getChildren()){
-                            String id = file.getName() ;
-                            if(!poolIds.contains(id)){
-                                file.delete() ;
-                            }
-                        }
+                    final Object newValue = notification.getNewValue();
+                    if (newValue instanceof Pool) { //Pool added
+                        handlePoolAdded(notification, processConfStore, resourceStore, lookNFeelStore);
+                    } else if(newValue == null && notification.getOldValue() instanceof Pool){//Pool removed
+                        handlePoolRemoved(processConfStore, diagramStore, resourceStore);
                     }
                 }
                 break;
         }
     }
 
+    protected IWorkspaceRunnable handlePoolRemoved(final ProcessConfigurationRepositoryStore processConfStore, final DiagramRepositoryStore diagramStore,
+            final ApplicationResourceRepositoryStore resourceStore) {
+        return new IWorkspaceRunnable() {
 
-    private void updatePoolLabel(String eObjectID, String name, String version) {
-        DiagramRepositoryStore repositoryStore = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
-        repositoryStore.updateProcessLabel(eObjectID, name+" ("+version+")");
+            @Override
+            public void run(final IProgressMonitor arg0) throws CoreException {
+                final Set<String> poolIds = diagramStore.getAllProcessIds();
+                for (final IRepositoryFileStore file : processConfStore.getChildren()) {
+                    String id = file.getName();
+                    id = id.substring(0, id.lastIndexOf("."));
+                    if (!poolIds.contains(id)) {
+                        file.delete();
+                    }
+                }
+
+                for (final IRepositoryFileStore file : resourceStore.getChildren()) {
+                    final String id = file.getName();
+                    if (!poolIds.contains(id)) {
+                        file.delete();
+                    }
+                }
+            }
+        };
+
+    }
+
+
+    protected IWorkspaceRunnable handlePoolAdded(final Notification notification, final ProcessConfigurationRepositoryStore processConfStore,
+            final ApplicationResourceRepositoryStore resourceStore, final LookNFeelRepositoryStore lookNFeelStore) {
+        return new IWorkspaceRunnable() {
+
+            @Override
+            public void run(final IProgressMonitor arg0) throws CoreException {
+                final Pool pool = (Pool) notification.getNewValue();
+                pool.eAdapters().add(PoolNotificationListener.this);
+                final TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(pool) ;
+
+                // check that process is not empty
+                final String processUUID = ModelHelper.getEObjectID(pool) ;
+                final IRepositoryFileStore confFile = processConfStore.createRepositoryFileStore(processUUID+".conf") ;
+                final Configuration conf = ConfigurationFactory.eINSTANCE.createConfiguration();
+                conf.setVersion(ModelVersion.CURRENT_VERSION);
+                confFile.save(conf) ;
+
+                final ApplicationResourceFileStore artifact = (ApplicationResourceFileStore) resourceStore.getChild(processUUID) ;
+                if (artifact == null) {
+                    final String themeId = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().getString(BonitaPreferenceConstants.DEFAULT_APPLICATION_THEME) ;
+                    final ApplicationLookNFeelFileStore file = (ApplicationLookNFeelFileStore) lookNFeelStore.getChild(themeId) ;
+                    final CompoundCommand templateCommand = WebTemplatesUtil.createAddTemplateCommand(editingDomain, pool, file);
+                    // add an empty application folder
+                    editingDomain.getCommandStack().execute(templateCommand);
+                    final org.eclipse.emf.common.command.Command createDefaultResourceFolders = WebTemplatesUtil.createDefaultResourceFolders(editingDomain, pool);
+                    if (createDefaultResourceFolders != null) {
+                        editingDomain.getCommandStack().execute(createDefaultResourceFolders);
+                    }
+                }
+            }
+        };
+
+    }
+
+
+    private void updatePoolLabel(final String eObjectID, final String name, final String version) {
+        final DiagramRepositoryStore repositoryStore = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
+        repositoryStore.updateProcessLabel(eObjectID, name + " (" + version + ")");
     }
 
 }
