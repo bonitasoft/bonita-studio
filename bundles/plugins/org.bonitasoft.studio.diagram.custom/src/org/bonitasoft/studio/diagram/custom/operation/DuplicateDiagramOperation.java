@@ -179,8 +179,9 @@ public class DuplicateDiagramOperation implements IRunnableWithProgress {
             BonitaStudioLog.error(e1);
         }
         store.save(null);
-        duplicateConfigurations(diagram, newDiagram);
-        return store.getContent();
+        final MainProcess duplicatedDiagram = store.getContent();
+        duplicateConfigurations(diagram, duplicatedDiagram);
+        return duplicatedDiagram;
     }
 
     private void duplicateConfigurations(final MainProcess sourceDiagram, final MainProcess newDiagram) {
