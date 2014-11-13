@@ -18,7 +18,6 @@ package org.bonitasoft.studio.diagram.custom.repository;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -49,9 +48,7 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.operations.OperationHistoryFactory;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.ui.URIEditorInput;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
@@ -62,8 +59,6 @@ import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.transaction.RecordingCommand;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
-import org.eclipse.emf.workspace.util.WorkspaceSynchronizer;
-import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.common.ui.services.editor.EditorService;
 import org.eclipse.gmf.runtime.diagram.core.listener.DiagramEventBroker;
 import org.eclipse.gmf.runtime.diagram.core.listener.NotificationListener;
@@ -71,8 +66,6 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.parts.DiagramDocumentEditor;
-import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCommand;
-import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
@@ -204,7 +197,7 @@ public class DiagramFileStore extends EMFFileStore implements IRepositoryFileSto
     public List<AbstractProcess> getProcesses()  {
         MainProcess diagram = null;
         final DiagramEditor editor = getOpenedEditor();
-        if(editor!= null){
+        if (editor != null && editor.getDiagramEditPart() != null) {
             diagram = (MainProcess) editor.getDiagramEditPart().resolveSemanticElement();
         }
         if(diagram == null){
@@ -225,29 +218,8 @@ public class DiagramFileStore extends EMFFileStore implements IRepositoryFileSto
         final Resource resource = getEMFResource() ;
         final TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(resource);
         try {
-            OperationHistoryFactory.getOperationHistory().execute(
-                    new AbstractTransactionalCommand(editingDomain, "Save diagram resource content", Collections.singletonList(WorkspaceSynchronizer
-                            .getFile(eResource))) {
-
-                        @Override
-                        protected CommandResult doExecuteWithResult(final IProgressMonitor monitor, final IAdaptable info) throws ExecutionException {
-                            if (content instanceof MainProcess) {
-                                if (!resource.getContents().isEmpty()) {
-                                    resource.getContents().remove(0);
-                                }
-                                resource.getContents().add(0, (MainProcess) content);
-                            } else if (content instanceof Diagram) {
-                                if (resource.getContents().size() > 1) {
-                                    resource.getContents().remove(1);
-                                }
-                                resource.getContents().add(1, (EObject) content);
-                            } else if (content instanceof Collection) {
-                                final Collection<EObject> collectionsOfContents = (Collection<EObject>) content;
-                                resource.getContents().addAll(collectionsOfContents);
-                            }
-                            return CommandResult.newOKCommandResult(resource);
-                        }
-                    }, null, null);
+            OperationHistoryFactory.getOperationHistory().execute(new SaveDiagramResourceCommand(content, editingDomain, resource), Repository.NULL_PROGRESS_MONITOR,
+                    null);
         } catch (final ExecutionException e1) {
             BonitaStudioLog.error(e1);
         }

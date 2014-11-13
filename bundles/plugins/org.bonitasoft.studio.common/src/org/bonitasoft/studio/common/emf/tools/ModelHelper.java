@@ -18,7 +18,6 @@
 
 package org.bonitasoft.studio.common.emf.tools;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -30,7 +29,6 @@ import org.bonitasoft.studio.common.DataTypeLabels;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.Messages;
 import org.bonitasoft.studio.common.NamingUtils;
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.model.form.Duplicable;
@@ -93,8 +91,8 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.eclipse.emf.edit.domain.EditingDomain;
+import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.gmf.runtime.notation.Diagram;
 
 /**
@@ -1406,24 +1404,24 @@ public class ModelHelper {
         }
         Resource r = null;
         if (domain == null) {
-            domain = AdapterFactoryEditingDomain.getEditingDomainFor(element);
+            domain = TransactionUtil.getEditingDomain(element);
             if (domain != null) {
-                r = domain.getResourceSet().getResource(element.eResource().getURI(), false);
+                r = domain.getResourceSet().getResource(element.eResource().getURI(), true);
             } else {
                 r = element.eResource();
             }
 
         } else {
-            r = domain.getResourceSet().getResource(element.eResource().getURI(), false);
+            r = domain.getResourceSet().getResource(element.eResource().getURI(), true);
         }
 
-        if (!r.isLoaded()) {
-            try {
-                r.load(Collections.EMPTY_MAP);
-            } catch (final IOException e) {
-                BonitaStudioLog.error(e);
-            }
-        }
+        //        if (!r.isLoaded()) {
+        //            try {
+        //                r.load(Collections.EMPTY_MAP);
+        //            } catch (final IOException e) {
+        //                BonitaStudioLog.error(e);
+        //            }
+        //        }
         final TreeIterator<EObject> allContents = r.getAllContents();
         EObject elementToFind = null;
         while (elementToFind == null && allContents.hasNext()) {

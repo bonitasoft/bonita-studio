@@ -204,7 +204,6 @@ public class BatchValidationOperation implements IRunnableWithProgress {
 
     public void addDiagram(final Diagram diagramToValidate) {
         diagramsToDiagramEditPart.put(diagramToValidate, getDiagramEditPart(diagramToValidate));
-
     }
 
 }
