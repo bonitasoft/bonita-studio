@@ -53,7 +53,6 @@ import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.ResourceFile;
 import org.bonitasoft.studio.model.process.ResourceFolder;
-import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditorUtil;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.operations.OperationHistoryFactory;
 import org.eclipse.core.resources.IFile;
@@ -97,11 +96,13 @@ public class DuplicateDiagramOperation implements IRunnableWithProgress {
         final String oldVersion = diagram.getVersion();
 
         final DiagramRepositoryStore diagramStore = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
+        DiagramFileStore newFildeStore = null;
         if (!(oldName.equals(diagramName) && oldVersion.equals(diagramVersion))) {
-            copyDiagram();
+            newFildeStore = copyDiagram();
         }
-
-        final DiagramFileStore newFildeStore = diagramStore.createRepositoryFileStore(NamingUtils.toDiagramFilename(diagramName, diagramVersion));
+        if (newFildeStore == null) {
+            newFildeStore = diagramStore.createRepositoryFileStore(NamingUtils.toDiagramFilename(diagramName, diagramVersion));
+        }
         final MainProcess newDiagram = newFildeStore.getContent();
         final TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(newFildeStore.getEMFResource());
         editingDomain.getCommandStack().execute(
@@ -129,17 +130,13 @@ public class DuplicateDiagramOperation implements IRunnableWithProgress {
 
         }
         if (poolRenamed) {
-            try {
-                if (newDiagram.eResource() != null) {
-                    newDiagram.eResource().save(ProcessDiagramEditorUtil.getSaveOptions());
-                }
-            } catch (final IOException e) {
-                BonitaStudioLog.error(e);
-            }
+            newFildeStore.save(null);
+            newFildeStore.getEMFResource().unload();
         }
+
     }
 
-    private void copyDiagram() {
+    private DiagramFileStore copyDiagram() {
         final DiagramRepositoryStore diagramStore = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
 
         final Copier copier = new Copier(true, false);
@@ -181,10 +178,8 @@ public class DuplicateDiagramOperation implements IRunnableWithProgress {
         } catch (final ExecutionException e1) {
             BonitaStudioLog.error(e1);
         }
-        store.save(null);
-        final MainProcess duplicatedDiagram = store.getContent();
-        duplicateConfigurations(diagram, duplicatedDiagram);
-        store.close();
+        duplicateConfigurations(diagram, newDiagram);
+        return store;
     }
 
     private void duplicateConfigurations(final MainProcess sourceDiagram, final MainProcess newDiagram) {

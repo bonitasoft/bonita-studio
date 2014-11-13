@@ -318,7 +318,7 @@ public class NewDiagramCommandHandler extends AbstractHandler {
         monitor.worked(1 * SCALE);
         createDefaultProcessArtifact(editingDomain, fileStore.getContent());
         monitor.worked(1 * SCALE);
-        fileStore.save(null);
+        //   fileStore.save(null);
         diagramEp.deactivate();
         shell.dispose();
         // editingDomain.dispose();
