@@ -121,7 +121,7 @@ public class NewDiagramCommandHandler extends AbstractHandler {
     @Override
     public DiagramFileStore execute(final ExecutionEvent event) throws ExecutionException {
         final IRepository repository = RepositoryManager.getInstance().getCurrentRepository();
-        diagramStore = (DiagramRepositoryStore) repository.getRepositoryStore(DiagramRepositoryStore.class);
+        diagramStore = repository.getRepositoryStore(DiagramRepositoryStore.class);
         try {
             final IRunnableWithProgress runnable = new IRunnableWithProgress() {
 
@@ -148,10 +148,6 @@ public class NewDiagramCommandHandler extends AbstractHandler {
                     monitor.worked(1 * SCALE);
                     diagram.setElement(model);
                     monitor.worked(1 * SCALE);
-                    //                    emfResource.getContents().add(model);
-                    //                    monitor.worked(1 * SCALE);
-                    //                    emfResource.getContents().add(diagram);
-                    //                    monitor.worked(1 * SCALE);
                     fileStore.save(Arrays.asList(model, diagram));
                     monitor.worked(1 * SCALE);
                     Display.getDefault().syncExec(new Runnable() {
