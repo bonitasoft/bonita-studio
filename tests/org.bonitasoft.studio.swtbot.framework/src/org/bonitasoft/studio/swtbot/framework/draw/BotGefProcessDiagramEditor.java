@@ -408,4 +408,19 @@ public class BotGefProcessDiagramEditor extends BotGefBaseEditor {
         return this;
     }
 
+    /**
+     * NOT YET FUNCTIONAL, the direct edit is not activated
+     *
+     * @param oldName
+     * @param newName
+     * @return
+     */
+    @Deprecated
+    public BotGefProcessDiagramEditor renameStep(final String oldName, final String newName) {
+        gmfEditor.doubleClick(oldName);
+        gmfEditor.getEditPart(oldName).parent().activateDirectEdit();
+        gmfEditor.directEditType(newName);
+        return this;
+    }
+
 }
