@@ -151,17 +151,20 @@ public class ImportBosArchiveOperation {
 
     protected void validateAllAfterImport() {
         final ImportBosArchiveStatusBuilder statusBuilder = new ImportBosArchiveStatusBuilder();
-        for (final AbstractProcess process : iResourceImporter.getImportedProcesses()) {
-            final ProcessesValidationAction validationAction = new ProcessesValidationAction(Collections.singletonList(process));
+        for (final IRepositoryFileStore diagramFileStore : iResourceImporter.getImportedProcesses()) {
+
             Display.getDefault().syncExec(new Runnable() {
 
                 @Override
                 public void run() {
+                    final AbstractProcess process = (AbstractProcess) diagramFileStore.getContent();
+                    final ProcessesValidationAction validationAction = new ProcessesValidationAction(Collections.singletonList(process));
                     validationAction.performValidation();
+                    statusBuilder.addStatus(process, validationAction.getStatus());
                 }
 
             });
-            statusBuilder.addStatus(process, validationAction.getStatus());
+
         }
 
         importStatus = statusBuilder.done();
