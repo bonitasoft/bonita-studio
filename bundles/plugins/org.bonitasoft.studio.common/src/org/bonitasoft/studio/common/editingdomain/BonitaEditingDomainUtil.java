@@ -91,4 +91,8 @@ public class BonitaEditingDomainUtil {
         return getSharedEditingDomain(BASE_ID + "." + filename);
     }
 
+    public static void cleanEditingDomainRegistry() {
+        BonitaEditingDomainRegistry.INSTANCE.removeAll();
+    }
+
 }

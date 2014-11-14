@@ -174,7 +174,7 @@ public abstract class AbstractRepositoryStore<T extends IRepositoryFileStore> im
 
     /**
      * Handler use to call migration action if needed
-     * 
+     *
      * @param fileName
      * @param resource
      * @return A the IResource with a migrated content
@@ -185,7 +185,7 @@ public abstract class AbstractRepositoryStore<T extends IRepositoryFileStore> im
 
     /**
      * Handler use to call migration action if needed
-     * 
+     *
      * @param fileName
      * @param inputStream
      * @return A new InputStream with a migrated content
@@ -334,5 +334,9 @@ public abstract class AbstractRepositoryStore<T extends IRepositoryFileStore> im
         }
     }
 
+    @Override
+    public void close() {
+        //INTENDED TO BE OVERRIDE
 
+    }
 }

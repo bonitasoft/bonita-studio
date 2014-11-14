@@ -524,4 +524,10 @@ public class DiagramRepositoryStore extends
 			final String processLabel) {
         eObjectIdToLabel.put(processId, processLabel);
     }
+
+    @Override
+    public void close() {
+        BonitaEditingDomainUtil.cleanEditingDomainRegistry();
+        super.close();
+    }
 }

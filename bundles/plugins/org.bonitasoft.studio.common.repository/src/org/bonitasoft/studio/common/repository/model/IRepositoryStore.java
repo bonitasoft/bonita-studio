@@ -64,4 +64,6 @@ public interface IRepositoryStore<T extends IRepositoryFileStore> {
 
 	void migrate() throws CoreException, MigrationException;
 
+    void close();
+
 }
