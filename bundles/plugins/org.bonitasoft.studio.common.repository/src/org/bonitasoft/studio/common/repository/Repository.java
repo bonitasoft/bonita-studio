@@ -32,7 +32,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -259,8 +258,8 @@ public class Repository implements IRepository {
             BonitaStudioLog.debug("Closing repository " + project.getName(), CommonRepositoryPlugin.PLUGIN_ID);
             if (project.isOpen()) {
                 if (stores != null) {
-                    for (final Entry<Class<?>, IRepositoryStore<? extends IRepositoryFileStore>> store : stores.entrySet()) {
-                        store.getValue().close();
+                    for (final IRepositoryStore<? extends IRepositoryFileStore> store : stores.values()) {
+                        store.close();
                     }
                 }
                 project.close(NULL_PROGRESS_MONITOR);
