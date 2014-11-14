@@ -29,20 +29,21 @@ import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.workspace.util.WorkspaceSynchronizer;
 
 /**
- * 
+ *
  * @author Baptiste Mesta
  */
 public class BonitaResourceSetInfoDelegate {
 
+    private static final NullProgressMonitor NULL_PROGRESS_MONITOR = new NullProgressMonitor();
 
 	private WorkspaceSynchronizer theSynchronizer;
 	private final TransactionalEditingDomain editingDomain;
 	private final List<WorkspaceSynchronizer.Delegate> delegates;
 	private long theModificationStamp = IResource.NULL_STAMP;
 
-	public BonitaResourceSetInfoDelegate(TransactionalEditingDomain editingDomain) {
+	public BonitaResourceSetInfoDelegate(final TransactionalEditingDomain editingDomain) {
 		this.editingDomain = editingDomain;
-		this.delegates = new ArrayList<WorkspaceSynchronizer.Delegate>();
+		delegates = new ArrayList<WorkspaceSynchronizer.Delegate>();
 		startResourceListening();
 	}
 
@@ -50,7 +51,7 @@ public class BonitaResourceSetInfoDelegate {
 		return theModificationStamp;
 	}
 
-	public void setModificationStamp(long modificationStamp) {
+	public void setModificationStamp(final long modificationStamp) {
 		theModificationStamp = modificationStamp;
 	}
 
@@ -75,64 +76,70 @@ public class BonitaResourceSetInfoDelegate {
 		}
 	}
 
-	public boolean addWorkspaceSynchronizerDelegate(WorkspaceSynchronizer.Delegate delegate) {
+	public boolean addWorkspaceSynchronizerDelegate(final WorkspaceSynchronizer.Delegate delegate) {
 		return delegates.add(delegate);
 	}
 
-	public boolean removeWorkspaceSynchronizerDelegate(WorkspaceSynchronizer.Delegate delegate) {
+	public boolean removeWorkspaceSynchronizerDelegate(final WorkspaceSynchronizer.Delegate delegate) {
 		return delegates.remove(delegate);
 	}
 
 	private class CompositeSynchronizerDelegate implements WorkspaceSynchronizer.Delegate {
 
-		public boolean handleResourceChanged(final Resource resource) {
-			org.eclipse.core.resources.IFile file = org.eclipse.emf.workspace.util.WorkspaceSynchronizer.getFile(resource);
+
+
+        @Override
+        public boolean handleResourceChanged(final Resource resource) {
+			final org.eclipse.core.resources.IFile file = org.eclipse.emf.workspace.util.WorkspaceSynchronizer.getFile(resource);
 			if (file != null) {
 				try {
-					file.refreshLocal(org.eclipse.core.resources.IResource.DEPTH_INFINITE, new NullProgressMonitor());
-				} catch (org.eclipse.core.runtime.CoreException ex) {
+					file.refreshLocal(org.eclipse.core.resources.IResource.DEPTH_INFINITE, NULL_PROGRESS_MONITOR);
+				} catch (final org.eclipse.core.runtime.CoreException ex) {
 					BonitaStudioLog.error(ex);
 				}
 			}
-			resource.unload();
+            //		resource.unload();
 			synchronized (BonitaResourceSetInfoDelegate.this) {
-				for (WorkspaceSynchronizer.Delegate delegate : delegates) {
+				for (final WorkspaceSynchronizer.Delegate delegate : delegates) {
 					delegate.handleResourceChanged(resource);
 				}
 			}
 			return true;
 		}
 
-		public boolean handleResourceMoved(final Resource resource, final URI newURI) {
+		@Override
+        public boolean handleResourceMoved(final Resource resource, final URI newURI) {
 			synchronized (BonitaResourceSetInfoDelegate.this) {
-				for (WorkspaceSynchronizer.Delegate delegate : delegates) {
+				for (final WorkspaceSynchronizer.Delegate delegate : delegates) {
 					delegate.handleResourceMoved(resource, newURI);
 				}
 			}
 			return true;
 		}
 
-		public boolean handleResourceDeleted(final Resource resource) {
+		@Override
+        public boolean handleResourceDeleted(final Resource resource) {
 			synchronized (BonitaResourceSetInfoDelegate.this) {
-				for (WorkspaceSynchronizer.Delegate delegate : delegates) {
+				for (final WorkspaceSynchronizer.Delegate delegate : delegates) {
 					delegate.handleResourceDeleted(resource);
 				}
 			}
 			return true;
 		}
 
-		public void dispose() {
+		@Override
+        public void dispose() {
 			//Nothing to do
 		}
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 * 	true if some resource of the resource set is modified
 	 */
 	public boolean resourceSetIsDirty() {
-		for (Resource resource : getEditingDomain().getResourceSet().getResources()) {
+		for (final Resource resource : getEditingDomain().getResourceSet().getResources()) {
 			if (resource.isLoaded() && !getEditingDomain().isReadOnly(resource) && resource.isModified()) {
 				return true;
 			}
@@ -140,10 +147,10 @@ public class BonitaResourceSetInfoDelegate {
 		return false;
 	}
 
-	public static BonitaResourceSetInfoDelegate adapt(TransactionalEditingDomain editingDomain) {
-		BonitaResourceSetInfoAdapter.ResourceSetFactory factory = new BonitaResourceSetInfoAdapter.ResourceSetFactory();
-		BonitaResourceSetInfoAdapter adapter = (BonitaResourceSetInfoAdapter) factory
+	public static BonitaResourceSetInfoDelegate adapt(final TransactionalEditingDomain editingDomain) {
+		final BonitaResourceSetInfoAdapter.ResourceSetFactory factory = new BonitaResourceSetInfoAdapter.ResourceSetFactory();
+		final BonitaResourceSetInfoAdapter adapter = (BonitaResourceSetInfoAdapter) factory
 				.adapt(editingDomain.getResourceSet(), BonitaResourceSetInfoDelegate.class);
-		return (adapter != null) ? adapter.getSharedResourceSetInfoDelegate() : null;
+		return adapter != null ? adapter.getSharedResourceSetInfoDelegate() : null;
 	}
 }

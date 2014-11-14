@@ -241,10 +241,8 @@ public class DiagramFileStore extends EMFFileStore implements IRepositoryFileSto
         closeEditorIfAlreadyOpened(activePage);
         IEditorPart part = null;
         try {
-
             final EditingDomain editingDomain = getParentStore().getEditingDomain(getEMFResource().getURI());
             part = EditorService.getInstance().openEditor(new URIEditorInput(EcoreUtil.getURI(ModelHelper.getDiagramFor(getContent(), editingDomain))));
-            //IDE.openEditor(activePage,getParentStore().getResource().getFile(getName()),true);
             if(part instanceof DiagramEditor){
                 final DiagramEditor editor = (DiagramEditor) part;
                 final MainProcess diagram = (MainProcess) editor.getDiagramEditPart().resolveSemanticElement() ;
