@@ -17,9 +17,11 @@
  */
 package org.bonitasoft.studio.common.editingdomain;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.util.URI;
@@ -87,12 +89,18 @@ public class BonitaResourceSetInfoDelegate {
 
         @Override
         public boolean handleResourceChanged(final Resource resource) {
-			synchronized (BonitaResourceSetInfoDelegate.this) {
+            resource.unload();
+            try {
+                resource.load(resource.getResourceSet().getLoadOptions());
+            } catch (final IOException e) {
+                BonitaStudioLog.error(e);
+            }
+            synchronized (BonitaResourceSetInfoDelegate.this) {
 				for (final WorkspaceSynchronizer.Delegate delegate : delegates) {
 					delegate.handleResourceChanged(resource);
 				}
 			}
-            return false;
+            return true;
 		}
 
 		@Override

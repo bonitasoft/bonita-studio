@@ -131,9 +131,7 @@ public class DuplicateDiagramOperation implements IRunnableWithProgress {
         }
         if (poolRenamed) {
             newFildeStore.save(null);
-            newFildeStore.getEMFResource().unload();
         }
-
     }
 
     private DiagramFileStore copyDiagram() {
