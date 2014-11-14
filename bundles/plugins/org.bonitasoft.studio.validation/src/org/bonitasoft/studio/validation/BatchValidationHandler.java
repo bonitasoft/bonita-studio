@@ -89,20 +89,20 @@ public class BatchValidationHandler extends AbstractHandler {
             }
         }
 
-        //            Display.getDefault().syncExec(new Runnable() {
-        //
-        //                @Override
-        //                public void run() {
-        final IProgressService service = PlatformUI.getWorkbench().getProgressService();
-        try {
-            service.run(true, false, validateOperation);
-        } catch (final InvocationTargetException e) {
-            throw new ExecutionException("An error occurend durig validation", e);
-        } catch (final InterruptedException e) {
-            throw new ExecutionException("Validation has been cancelled", e);
-        }
-        //                }
-        //            });
+        Display.getDefault().syncExec(new Runnable() {
+
+            @Override
+            public void run() {
+                final IProgressService service = PlatformUI.getWorkbench().getProgressService();
+                try {
+                    service.run(true, false, validateOperation);
+                } catch (final InvocationTargetException e) {
+                    BonitaStudioLog.error(e);
+                } catch (final InterruptedException e) {
+                    BonitaStudioLog.error(e);
+                }
+            }
+        });
 
         Object showReport = parameters.get("showReport");
         if (showReport == null) {
