@@ -179,12 +179,17 @@ public class DiagramFileStore extends EMFFileStore implements IRepositoryFileSto
             for (final IEditorReference ref:PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getEditorReferences()){
                 String inputName;
                 try {
-                    inputName = ref.getEditorInput().getName();
-                    if (resourceName.equals(inputName)){
-                        final IEditorPart editor = ref.getEditor(false);
-                        if(editor instanceof ProcessDiagramEditor){
-                            return (DiagramEditor) editor;
+                    final IEditorInput editorInput = ref.getEditorInput();
+                    if (editorInput != null) {
+                        inputName = editorInput.getName();
+                        if (resourceName.equals(inputName)) {
+                            final IEditorPart editor = ref.getEditor(false);
+                            if (editor instanceof ProcessDiagramEditor) {
+                                return (DiagramEditor) editor;
+                            }
                         }
+                    } else {
+                        BonitaStudioLog.log("There is an editor without input.");
                     }
                 } catch (final PartInitException e) {
                     BonitaStudioLog.error(e,Activator.PLUGIN_ID);
