@@ -158,6 +158,7 @@ public class NewDiagramCommandHandler extends AbstractHandler {
                             monitor.worked(1 * SCALE);
                             buildDiagram(d, monitor);
                             monitor.worked(1 * SCALE);
+                            fileStore.save(null);
                             final IEditorPart editor = (IEditorPart) fileStore.open();
                             monitor.worked(1 * SCALE);
                             if (editor instanceof DiagramEditor) {
