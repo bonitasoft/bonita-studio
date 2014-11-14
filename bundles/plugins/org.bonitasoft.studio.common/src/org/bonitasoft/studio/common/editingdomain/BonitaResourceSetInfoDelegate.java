@@ -93,9 +93,7 @@ public class BonitaResourceSetInfoDelegate {
         public boolean handleResourceChanged(final Resource resource) {
             final IFile file = WorkspaceSynchronizer.getFile(resource);
             try {
-                if (!file.isSynchronized(IResource.DEPTH_ONE)) {
-                    file.refreshLocal(IResource.DEPTH_ONE, NULL_PROGRESS_MONITOR);
-                }
+                file.refreshLocal(IResource.DEPTH_ONE, NULL_PROGRESS_MONITOR);
             } catch (final CoreException e1) {
                 BonitaStudioLog.error(e1);
             }

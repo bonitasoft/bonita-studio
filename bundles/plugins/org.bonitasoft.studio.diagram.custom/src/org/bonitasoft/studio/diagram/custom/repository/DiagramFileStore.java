@@ -268,10 +268,7 @@ public class DiagramFileStore extends EMFFileStore implements IRepositoryFileSto
 
 
     private void setReadOnlyAndOpenWarningDialogAboutReadOnly(final DiagramEditor editor) {
-        editor.getDiagramEditPart().disableEditMode() ;
-        if (editor instanceof ProcessDiagramEditor) {
-            ((ProcessDiagramEditor) editor).setReadOnly(true);
-        }
+        setReadOnly(true);
         Display.getDefault().syncExec(new Runnable() {
             @Override
             public void run() {
