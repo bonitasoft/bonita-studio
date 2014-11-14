@@ -114,7 +114,7 @@ public class BatchValidationOperation implements IRunnableWithProgress {
             for (final IEditorReference ep : activePage.getEditorReferences()) {
                 final IEditorPart editor = ep.getEditor(false);
                 if (editor instanceof DiagramEditor) {
-                    if (((DiagramEditor) editor).getDiagram().equals(d)) {
+                    if (((DiagramEditor) editor).getDiagram().equals(d) && ((DiagramEditor) editor).getDiagramEditPart() != null) {
                         return ((DiagramEditor) editor).getDiagramEditPart();
                     }
                 }
