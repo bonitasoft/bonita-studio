@@ -22,7 +22,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -89,6 +91,14 @@ public class BonitaResourceSetInfoDelegate {
 
         @Override
         public boolean handleResourceChanged(final Resource resource) {
+            final IFile file = WorkspaceSynchronizer.getFile(resource);
+            try {
+                if (!file.isSynchronized(IResource.DEPTH_ONE)) {
+                    file.refreshLocal(IResource.DEPTH_ONE, NULL_PROGRESS_MONITOR);
+                }
+            } catch (final CoreException e1) {
+                BonitaStudioLog.error(e1);
+            }
             resource.unload();
             try {
                 resource.load(resource.getResourceSet().getLoadOptions());
