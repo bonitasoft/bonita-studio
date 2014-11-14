@@ -20,7 +20,6 @@ package org.bonitasoft.studio.common.editingdomain;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.util.URI;
@@ -86,25 +85,14 @@ public class BonitaResourceSetInfoDelegate {
 
 	private class CompositeSynchronizerDelegate implements WorkspaceSynchronizer.Delegate {
 
-
-
         @Override
         public boolean handleResourceChanged(final Resource resource) {
-			final org.eclipse.core.resources.IFile file = org.eclipse.emf.workspace.util.WorkspaceSynchronizer.getFile(resource);
-			if (file != null) {
-				try {
-					file.refreshLocal(org.eclipse.core.resources.IResource.DEPTH_INFINITE, NULL_PROGRESS_MONITOR);
-				} catch (final org.eclipse.core.runtime.CoreException ex) {
-					BonitaStudioLog.error(ex);
-				}
-			}
-            //		resource.unload();
 			synchronized (BonitaResourceSetInfoDelegate.this) {
 				for (final WorkspaceSynchronizer.Delegate delegate : delegates) {
 					delegate.handleResourceChanged(resource);
 				}
 			}
-			return true;
+            return false;
 		}
 
 		@Override
