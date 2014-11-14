@@ -36,7 +36,7 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
@@ -147,12 +147,15 @@ public class BatchValidationHandler extends AbstractHandler {
             if (fileStore == null) {
                 throw new IOException(fileName + " does not exists in " + store.getResource().getLocation());
             }
-            final Resource r = fileStore.getEMFResource();
-            final EList<EObject> contents = r.getContents();
-            for (final EObject eObject : contents) {
+            final MainProcess mainProcess = fileStore.getContent();
+            final Resource eResource = mainProcess.eResource();
+            final TreeIterator<EObject> allContents = eResource.getAllContents();
+            while (allContents.hasNext()) {
+                final EObject eObject = allContents.next();
                 if (eObject instanceof Diagram) {
                     validateOperation.addDiagram((Diagram) eObject);
                 }
+
             }
         }
     }
