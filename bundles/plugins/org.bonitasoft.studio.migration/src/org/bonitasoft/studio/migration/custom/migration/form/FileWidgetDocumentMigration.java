@@ -33,11 +33,12 @@ import org.eclipse.emf.edapt.migration.Model;
 public class FileWidgetDocumentMigration extends CustomMigration {
 
     private EList<Instance> documents;
+    private EList<Instance> fileWidgets;
 
     @Override
     public void migrateBefore(final Model model, final Metamodel metamodel) throws MigrationException {
         super.migrateBefore(model, metamodel);
-        final EList<Instance> fileWidgets = model.getAllInstances("form.FileWidget");
+        fileWidgets = model.getAllInstances("form.FileWidget");
 
         // remove old documents
         for (final Instance fileWidget : fileWidgets) {
@@ -47,7 +48,6 @@ public class FileWidgetDocumentMigration extends CustomMigration {
             }
         }
 
-        documents = model.getAllInstances("process.Document");
 
     }
 
@@ -90,5 +90,6 @@ public class FileWidgetDocumentMigration extends CustomMigration {
         }
         return null;
     }
+
 
 }

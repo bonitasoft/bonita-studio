@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2008 Borland Software Corporation
- * 
+ *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,6 +15,7 @@ import java.awt.RenderingHints;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.WeakHashMap;
 
@@ -45,255 +46,290 @@ import org.w3c.dom.NodeList;
 
 public class SVGFigure extends Figure {
 
-	private String uri;
-	private boolean failedToLoadDocument = true;
-	protected boolean specifyCanvasWidth = true;
-	protected boolean specifyCanvasHeight = true;
-	protected SimpleImageTranscoder transcoder;
+    private String uri;
+    private boolean failedToLoadDocument = true;
+    protected boolean specifyCanvasWidth = true;
+    protected boolean specifyCanvasHeight = true;
+    protected SimpleImageTranscoder transcoder;
 
-	private static WeakHashMap<String, Document> documentsMap = new WeakHashMap<String, Document>();
-	
-	public final String getURI() {
-		return uri;
-	}
+    private static WeakHashMap<String, Document> documentsMap = new WeakHashMap<String, Document>();
 
-	public final void setURI(String uri) {
-		setURI(uri, true);
-	}
+    public final String getURI() {
+        return uri;
+    }
 
-	public void setURI(String uri, boolean loadOnDemand) {
-		this.uri = uri;
-		transcoder = null;
-		failedToLoadDocument = false;
-		if (loadOnDemand) {
-			loadDocument();
-		}
-	}
+    public final void setURI(final String uri) {
+        setURI(uri, true);
+    }
 
-	
-	private void loadDocument() {
-		transcoder = null;
-		failedToLoadDocument = true;
-		if (uri == null) {
-			return;
-		}
-		String parser = XMLResourceDescriptor.getXMLParserClassName();
-		SAXSVGDocumentFactory factory = new SAXSVGDocumentFactory(parser);
-		try {
-			Document document;
-			if (documentsMap.containsKey(uri)){
-				document =  documentsMap.get(uri);
-			} else {
-				document = factory.createDocument(uri);
-				documentsMap.put(uri, document);
-			}
-			transcoder = new SimpleImageTranscoder(document);
-			failedToLoadDocument = false;
-		} catch (IOException e) {
-			Activator.logError("Error loading SVG file", e);
-		}
-	}
+    public void setURI(final String uri, final boolean loadOnDemand) {
+        this.uri = uri;
+        transcoder = null;
+        failedToLoadDocument = false;
+        if (loadOnDemand) {
+            loadDocument();
+        }
+    }
 
-	
-	protected final Document getDocument() {
-		if (failedToLoadDocument) {
-			return null;
-		}
-		if (transcoder == null) {
-			loadDocument();
-		}
-		return transcoder == null ? null : transcoder.getDocument();
-	}
 
-	
-	
-	/**
-	 * Returns true if document was loaded without errors; tries to load document if needed.
-	 */
-	public final boolean checkContentAvailable() {
-		return getDocument() != null;
-	}
+    private void loadDocument() {
+        transcoder = null;
+        failedToLoadDocument = true;
+        if (uri == null) {
+            return;
+        }
+        final String documentKey = getDocumentKey();
+        Document document;
+        if (documentsMap.containsKey(documentKey)) {
+            document = documentsMap.get(documentKey);
+        } else {
+            document = createDocument();
+            documentsMap.put(documentKey, document);
+        }
+        if (document != null) {
+            transcoder = new SimpleImageTranscoder(document);
+            failedToLoadDocument = false;
+        }
 
-	private XPath getXPath() {
-		XPath xpath = XPathFactory.newInstance().newXPath();
-		xpath.setNamespaceContext(new InferringNamespaceContext(getDocument().getDocumentElement()));
-		return xpath;
-	}
+    }
 
-	/**
-	 * Executes XPath query over the SVG document.
-	 */
-	protected final NodeList getNodes(String query) {
-		Document document = getDocument();
-		if (document != null) {
-			try {
-				return (NodeList) getXPath().evaluate(query, document, XPathConstants.NODESET);
-			} catch (XPathExpressionException e) {
-				throw new RuntimeException(e);
-			}
-		}
-		return null;
-	}
+    /**
+     * The key used to store the document.
+     *
+     * @return the key.
+     */
+    protected String getDocumentKey() {
+        return uri;
+    }
 
-	/**
-	 * Reads color value from the document.
-	 */
-	protected Color getColor(Element element, String attributeName) {
-		if (getDocument() == null || getDocument() != element.getOwnerDocument()) {
-			return null;
-		}
-		Color color = null;
-		// Make sure that CSSEngine is available.
-		BridgeContext ctx = transcoder.initCSSEngine();
-		try {
-			color = SVGUtils.toSWTColor(element, attributeName);
-		} finally {
-			if (ctx != null) {
-				ctx.dispose();
-			}
-		}
-		return color;
-	}
+    private Document createDocument() {
+        final String parser = XMLResourceDescriptor.getXMLParserClassName();
+        final SAXSVGDocumentFactory factory = new SAXSVGDocumentFactory(parser);
+        return createDocument(factory, false);
+    }
 
-	@Override
-	protected void paintFigure(Graphics graphics) {
-		super.paintFigure(graphics);
-		Document document = getDocument();
-		if (document == null) {
-			return;
-		}
-	
-		Image image = null;
-		try {
-			Rectangle r = getClientArea();
-			transcoder.setCanvasSize(specifyCanvasWidth ? r.width : -1, specifyCanvasHeight ? r.height : -1);
-			updateRenderingHints(graphics);
-			BufferedImage awtImage = transcoder.getBufferedImage();
-			if (awtImage != null) {
-				image = toSWT(Display.getCurrent(), awtImage);
-				graphics.drawImage(image, r.x, r.y);
-			}
-		} finally {
-			if (image != null) {
-				image.dispose();
-			}
-			
-			document = null ;
-		}
-	}
+    private Document createDocument(final SAXSVGDocumentFactory factory, final boolean forceClassLoader) {
+        ClassLoader originalContextClassloader = null;
+        if (forceClassLoader) {
+            originalContextClassloader = Thread.currentThread().getContextClassLoader();
+            Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader());
+        }
+        try {
+            return factory.createDocument(uri);
+        } catch (final IOException e) {
+            final boolean saxParserNotFound = !(e instanceof FileNotFoundException);
+            if (!forceClassLoader && saxParserNotFound && Thread.currentThread().getContextClassLoader() == null) {
+                return createDocument(factory, true);
+            } else {
+                Activator.logError("Error loading SVG file", e);
+            }
+        } finally {
+            if (forceClassLoader) {
+                Thread.currentThread().setContextClassLoader(originalContextClassloader);
+            }
+        }
+        return null;
+    }
 
-	protected void updateRenderingHints(Graphics graphics) {
-		{
-			int aa = SWT.DEFAULT;
-			try {
-				aa = graphics.getAntialias();
-			} catch (Exception e) {
-				// not supported
-			}
-			Object aaHint;
-			if (aa == SWT.ON) {
-				aaHint = RenderingHints.VALUE_ANTIALIAS_ON;
-			} else if (aa == SWT.OFF) {
-				aaHint = RenderingHints.VALUE_ANTIALIAS_OFF;
-			} else {
-				aaHint = RenderingHints.VALUE_ANTIALIAS_DEFAULT;
-			}
-			if (transcoder.getRenderingHints().get(RenderingHints.KEY_ANTIALIASING) != aaHint) {
-				transcoder.getRenderingHints().put(RenderingHints.KEY_ANTIALIASING, aaHint);
-				transcoder.contentChanged();
-			}
-		}
-		{
-			int aa = SWT.DEFAULT;
-			try {
-				aa = graphics.getTextAntialias();
-			} catch (Exception e) {
-				// not supported
-			}
-			Object aaHint;
-			if (aa == SWT.ON) {
-				aaHint = RenderingHints.VALUE_TEXT_ANTIALIAS_ON;
-			} else if (aa == SWT.OFF) {
-				aaHint = RenderingHints.VALUE_TEXT_ANTIALIAS_OFF;
-			} else {
-				aaHint = RenderingHints.VALUE_TEXT_ANTIALIAS_DEFAULT;
-			}
-			if (transcoder.getRenderingHints().get(RenderingHints.KEY_TEXT_ANTIALIASING) != aaHint) {
-				transcoder.getRenderingHints().put(RenderingHints.KEY_TEXT_ANTIALIASING, aaHint);
-				transcoder.contentChanged();
-			}
-		}
-	}
+    protected final Document getDocument() {
+        if (failedToLoadDocument) {
+            return null;
+        }
+        if (transcoder == null) {
+            loadDocument();
+        }
+        return transcoder == null ? null : transcoder.getDocument();
+    }
 
-	/**
-	 * Converts an AWT based buffered image into an SWT <code>Image</code>. This will always return an <code>Image</code> that
-	 * has 24 bit depth regardless of the type of AWT buffered image that is passed into the method.
-	 * 
-	 * @param awtImage the {@link java.awt.image.BufferedImage} to be converted to an <code>Image</code>
-	 * @return an <code>Image</code> that represents the same image data as the AWT <code>BufferedImage</code> type.
-	 */
-	protected static org.eclipse.swt.graphics.Image toSWT(Device device, BufferedImage awtImage) {
-		// We can force bitdepth to be 24 bit because BufferedImage getRGB
-		// allows us to always retrieve 24 bit data regardless of source color depth.
-		PaletteData palette = new PaletteData(0xFF0000, 0xFF00, 0xFF);
-		ImageData swtImageData = new ImageData(awtImage.getWidth(), awtImage.getHeight(), 24, palette);
-		// Ensure scansize is aligned on 32 bit.
-		int scansize = (((awtImage.getWidth() * 3) + 3) * 4) / 4;
-		WritableRaster alphaRaster = awtImage.getAlphaRaster();
-		byte[] alphaBytes = new byte[awtImage.getWidth()];
-		for (int y = 0; y < awtImage.getHeight(); y++) {
-			int[] buff = awtImage.getRGB(0, y, awtImage.getWidth(), 1, null, 0, scansize);
-			swtImageData.setPixels(0, y, awtImage.getWidth(), buff, 0);
-			if (alphaRaster != null) {
-				int[] alpha = alphaRaster.getPixels(0, y, awtImage.getWidth(), 1, (int[]) null);
-				for (int i = 0; i < awtImage.getWidth(); i++) {
-					alphaBytes[i] = (byte) alpha[i];
-				}
-				swtImageData.setAlphas(0, y, awtImage.getWidth(), alphaBytes, 0);
-			}
-		}
-		return new org.eclipse.swt.graphics.Image(device, swtImageData);
-	}
 
-	public final Rectangle2D getAreaOfInterest() {
-		getDocument();
-		return transcoder == null ? null : transcoder.getCanvasAreaOfInterest();
-	}
 
-	public void setAreaOfInterest(Rectangle2D value) {
-		getDocument();
-		if (transcoder != null) {
-			transcoder.setCanvasAreaOfInterest(value);
-		}
-		repaint();
-	}
+    /**
+     * Returns true if document was loaded without errors; tries to load document if needed.
+     */
+    public final boolean checkContentAvailable() {
+        return getDocument() != null;
+    }
 
-	public final boolean isSpecifyCanvasWidth() {
-		return specifyCanvasWidth;
-	}
+    private XPath getXPath() {
+        final XPath xpath = XPathFactory.newInstance().newXPath();
+        xpath.setNamespaceContext(new InferringNamespaceContext(getDocument().getDocumentElement()));
+        return xpath;
+    }
 
-	public void setSpecifyCanvasWidth(boolean specifyCanvasWidth) {
-		this.specifyCanvasWidth = specifyCanvasWidth;
-		contentChanged();
-	}
+    /**
+     * Executes XPath query over the SVG document.
+     */
+    protected final NodeList getNodes(final String query) {
+        final Document document = getDocument();
+        if (document != null) {
+            try {
+                return (NodeList) getXPath().evaluate(query, document, XPathConstants.NODESET);
+            } catch (final XPathExpressionException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return null;
+    }
 
-	public final boolean isSpecifyCanvasHeight() {
-		return specifyCanvasHeight;
-	}
+    /**
+     * Reads color value from the document.
+     */
+    protected Color getColor(final Element element, final String attributeName) {
+        if (getDocument() == null || getDocument() != element.getOwnerDocument()) {
+            return null;
+        }
+        Color color = null;
+        // Make sure that CSSEngine is available.
+        final BridgeContext ctx = transcoder.initCSSEngine();
+        try {
+            color = SVGUtils.toSWTColor(element, attributeName);
+        } finally {
+            if (ctx != null) {
+                ctx.dispose();
+            }
+        }
+        return color;
+    }
 
-	public void setSpecifyCanvasHeight(boolean specifyCanvasHeight) {
-		this.specifyCanvasHeight = specifyCanvasHeight;
-		contentChanged();
-	}
+    @Override
+    protected void paintFigure(final Graphics graphics) {
+        super.paintFigure(graphics);
+        Document document = getDocument();
+        if (document == null) {
+            return;
+        }
 
-	/**
-	 * Should be called when SVG document has been changed. It will be re-rendered and figure will be repainted.
-	 */
-	public void contentChanged() {
-		getDocument();
-		if (transcoder != null) {
-			transcoder.contentChanged();
-		}
-		repaint();
-	}
+        Image image = null;
+        try {
+            final Rectangle r = getClientArea();
+            transcoder.setCanvasSize(specifyCanvasWidth ? r.width : -1, specifyCanvasHeight ? r.height : -1);
+            updateRenderingHints(graphics);
+            final BufferedImage awtImage = transcoder.getBufferedImage();
+            if (awtImage != null) {
+                image = toSWT(Display.getCurrent(), awtImage);
+                graphics.drawImage(image, r.x, r.y);
+            }
+        } finally {
+            if (image != null) {
+                image.dispose();
+            }
+
+            document = null;
+        }
+    }
+
+    protected void updateRenderingHints(final Graphics graphics) {
+        {
+            int aa = SWT.DEFAULT;
+            try {
+                aa = graphics.getAntialias();
+            } catch (final Exception e) {
+                // not supported
+            }
+            Object aaHint;
+            if (aa == SWT.ON) {
+                aaHint = RenderingHints.VALUE_ANTIALIAS_ON;
+            } else if (aa == SWT.OFF) {
+                aaHint = RenderingHints.VALUE_ANTIALIAS_OFF;
+            } else {
+                aaHint = RenderingHints.VALUE_ANTIALIAS_DEFAULT;
+            }
+            if (transcoder != null && transcoder.getRenderingHints().get(RenderingHints.KEY_ANTIALIASING) != aaHint) {
+                transcoder.getRenderingHints().put(RenderingHints.KEY_ANTIALIASING, aaHint);
+                transcoder.contentChanged();
+            }
+        }
+        {
+            int aa = SWT.DEFAULT;
+            try {
+                aa = graphics.getTextAntialias();
+            } catch (final Exception e) {
+                // not supported
+            }
+            Object aaHint;
+            if (aa == SWT.ON) {
+                aaHint = RenderingHints.VALUE_TEXT_ANTIALIAS_ON;
+            } else if (aa == SWT.OFF) {
+                aaHint = RenderingHints.VALUE_TEXT_ANTIALIAS_OFF;
+            } else {
+                aaHint = RenderingHints.VALUE_TEXT_ANTIALIAS_DEFAULT;
+            }
+            if (transcoder != null && transcoder.getRenderingHints().get(RenderingHints.KEY_TEXT_ANTIALIASING) != aaHint) {
+                transcoder.getRenderingHints().put(RenderingHints.KEY_TEXT_ANTIALIASING, aaHint);
+                transcoder.contentChanged();
+            }
+        }
+    }
+
+    /**
+     * Converts an AWT based buffered image into an SWT <code>Image</code>. This will always return an <code>Image</code> that
+     * has 24 bit depth regardless of the type of AWT buffered image that is passed into the method.
+     *
+     * @param awtImage the {@link java.awt.image.BufferedImage} to be converted to an <code>Image</code>
+     * @return an <code>Image</code> that represents the same image data as the AWT <code>BufferedImage</code> type.
+     */
+    protected static org.eclipse.swt.graphics.Image toSWT(final Device device, final BufferedImage awtImage) {
+        // We can force bitdepth to be 24 bit because BufferedImage getRGB
+        // allows us to always retrieve 24 bit data regardless of source color depth.
+        final PaletteData palette = new PaletteData(0xFF0000, 0xFF00, 0xFF);
+        final ImageData swtImageData = new ImageData(awtImage.getWidth(), awtImage.getHeight(), 24, palette);
+        // Ensure scansize is aligned on 32 bit.
+        final int scansize = (awtImage.getWidth() * 3 + 3) * 4 / 4;
+        final WritableRaster alphaRaster = awtImage.getAlphaRaster();
+        final byte[] alphaBytes = new byte[awtImage.getWidth()];
+        for (int y = 0; y < awtImage.getHeight(); y++) {
+            final int[] buff = awtImage.getRGB(0, y, awtImage.getWidth(), 1, null, 0, scansize);
+            swtImageData.setPixels(0, y, awtImage.getWidth(), buff, 0);
+            if (alphaRaster != null) {
+                final int[] alpha = alphaRaster.getPixels(0, y, awtImage.getWidth(), 1, (int[]) null);
+                for (int i = 0; i < awtImage.getWidth(); i++) {
+                    alphaBytes[i] = (byte) alpha[i];
+                }
+                swtImageData.setAlphas(0, y, awtImage.getWidth(), alphaBytes, 0);
+            }
+        }
+        return new org.eclipse.swt.graphics.Image(device, swtImageData);
+    }
+
+    public final Rectangle2D getAreaOfInterest() {
+        getDocument();
+        return transcoder == null ? null : transcoder.getCanvasAreaOfInterest();
+    }
+
+    public void setAreaOfInterest(final Rectangle2D value) {
+        getDocument();
+        if (transcoder != null) {
+            transcoder.setCanvasAreaOfInterest(value);
+        }
+        repaint();
+    }
+
+    public final boolean isSpecifyCanvasWidth() {
+        return specifyCanvasWidth;
+    }
+
+    public void setSpecifyCanvasWidth(final boolean specifyCanvasWidth) {
+        this.specifyCanvasWidth = specifyCanvasWidth;
+        contentChanged();
+    }
+
+    public final boolean isSpecifyCanvasHeight() {
+        return specifyCanvasHeight;
+    }
+
+    public void setSpecifyCanvasHeight(final boolean specifyCanvasHeight) {
+        this.specifyCanvasHeight = specifyCanvasHeight;
+        contentChanged();
+    }
+
+    /**
+     * Should be called when SVG document has been changed. It will be re-rendered and figure will be repainted.
+     */
+    public void contentChanged() {
+        getDocument();
+        if (transcoder != null) {
+            transcoder.contentChanged();
+        }
+        repaint();
+    }
 }

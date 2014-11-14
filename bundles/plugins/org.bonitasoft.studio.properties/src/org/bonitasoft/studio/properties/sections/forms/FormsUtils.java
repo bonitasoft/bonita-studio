@@ -31,6 +31,7 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
+import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.diagram.custom.repository.WebTemplatesUtil;
 import org.bonitasoft.studio.exporter.ExporterService;
@@ -74,7 +75,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 
 /**
- * 
+ *
  * @author Charles Souillard
  * @author Aurelien Pupier
  * @author Baptiste Mesta
@@ -99,7 +100,7 @@ public class FormsUtils {
 
     /**
      * create the diagram of the form and put it in the same resource file
-     * 
+     *
      * @param form
      *            create the diagram corresponding to this form
      * @return created diagram
@@ -137,7 +138,7 @@ public class FormsUtils {
 
     /**
      * open the diagram corresponding to the form
-     * 
+     *
      * @param form
      *            the form to open
      */
@@ -155,30 +156,54 @@ public class FormsUtils {
         /* open the form editor */
         final FormDiagramEditor formEditor = (FormDiagramEditor) EditorService.getInstance().openEditor(new URIEditorInput(uri, form.getName()));
         formEditor.getDiagramGraphicalViewer().select(formEditor.getDiagramEditPart());
+        if (form != null && formEditor != null) {
+            final MainProcess diagram = ModelHelper.getMainProcess(form);
+            handleReadOnlyModeOnEditor(formEditor, diagram);
+        }
+        ensureAdaptersForDeletionOrRenamingWellSetted(form, formEditor);
+        final MainProcess mainProcess = ModelHelper.getMainProcess(form);
+
+        final DiagramRepositoryStore diagramStore = (DiagramRepositoryStore) RepositoryManager.getInstance().getCurrentRepository()
+                .getRepositoryStore(DiagramRepositoryStore.class);
+        final IRepositoryFileStore file = diagramStore.getChild(NamingUtils.toDiagramFilename(mainProcess));
+        if (file.isReadOnly()) {
+            formEditor.getDiagramEditPart().disableEditMode();
+        }
+        return formEditor;
+    }
+
+    protected static void handleReadOnlyModeOnEditor(final FormDiagramEditor formEditor, final MainProcess diagram) {
+        if (diagram != null) {
+            final DiagramRepositoryStore diagramStore = (DiagramRepositoryStore) RepositoryManager.getInstance().getCurrentRepository()
+                    .getRepositoryStore(DiagramRepositoryStore.class);
+            final DiagramFileStore diagramFile = diagramStore.getDiagram(diagram.getName(), diagram.getVersion());
+
+            if (diagramFile != null && diagramFile.isReadOnly()) {
+                formEditor.getDiagramEditPart().disableEditMode();
+                if (formEditor instanceof FormDiagramEditor) {
+                    formEditor.setReadOnly(true);
+                }
+            }
+        }
+    }
+
+    protected static void ensureAdaptersForDeletionOrRenamingWellSetted(final Form form, final FormDiagramEditor formEditor) {
         final EObject parent = form.eContainer();
-        if(parent instanceof PageFlow){
+        if (parent instanceof PageFlow) {
             parent.eAdapters().add(new FormRemovedAdapter(form, formEditor));
         }
         final EList<Adapter> eAdapters = form.eAdapters();
         boolean alreadyHere = false;
         for (final Adapter adapter : eAdapters) {
-            if(adapter instanceof WidgetAddedOrRemoved){
+            if (adapter instanceof WidgetAddedOrRemoved) {
                 alreadyHere = true;
                 break;
             }
         }
-        if(!alreadyHere){
+        if (!alreadyHere) {
             final WidgetAddedOrRemoved adapterImpl = new WidgetAddedOrRemoved(form);
             eAdapters.add(adapterImpl);
         }
-        final MainProcess mainProcess = ModelHelper.getMainProcess(form);
-
-        final DiagramRepositoryStore diagramStore = (DiagramRepositoryStore) RepositoryManager.getInstance().getCurrentRepository().getRepositoryStore(DiagramRepositoryStore.class) ;
-        final IRepositoryFileStore file = diagramStore.getChild(NamingUtils.toDiagramFilename(mainProcess)) ;
-        if (file.isReadOnly()) {
-            formEditor.getDiagramEditPart().disableEditMode();
-        }
-        return formEditor;
     }
 
     /**
@@ -202,6 +227,7 @@ public class FormsUtils {
         } catch (final Exception e) {
             BonitaStudioLog.error(e);
             Display.getDefault().syncExec(new Runnable() {
+
                 @Override
                 public void run() {
                     new BonitaErrorDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), Messages.Error, "Unexpected error", e).open();

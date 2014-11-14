@@ -2,6 +2,7 @@ package org.bonitasoft.studio.test.swtbot.suite2;
 
 import org.bonitasoft.expressions.test.TestConnectorExpression;
 import org.bonitasoft.studio.commands.test.CopyPasteTests;
+import org.bonitasoft.studio.commands.test.DeleteCommandTest;
 import org.bonitasoft.studio.commands.test.DuplicateCommandTest;
 import org.bonitasoft.studio.commands.test.ExtractAsSubprocessTest;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
@@ -85,6 +86,7 @@ import org.junit.runners.Suite;
     OpenNameAndVersionForDiagramDialogTest.class,
     TestDuplicate.class,
     CopyPasteTests.class,
+        DeleteCommandTest.class,
     TestCreateValidatorWizard.class,
     TestLifeCycleWidget.class,
     TestConnectorExpression.class,

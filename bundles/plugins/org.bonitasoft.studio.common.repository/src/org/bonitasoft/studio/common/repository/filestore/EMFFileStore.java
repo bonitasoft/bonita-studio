@@ -103,7 +103,7 @@ public abstract class EMFFileStore extends AbstractFileStore implements IReposit
             @Override
             public void run() {
                 try {
-                    eResource.load(Collections.EMPTY_MAP);
+                    resource.load(Collections.EMPTY_MAP);
                 } catch (final IOException e) {
                     BonitaStudioLog.error(e, CommonRepositoryPlugin.PLUGIN_ID);
                 }

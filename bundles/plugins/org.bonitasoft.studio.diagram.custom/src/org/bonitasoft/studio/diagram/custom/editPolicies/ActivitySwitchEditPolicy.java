@@ -696,11 +696,10 @@ public class ActivitySwitchEditPolicy extends AbstractSingleSelectionEditPolicy 
     private boolean hasOutgoingConnection(){
     	final EditPart host = getHost();
     	final EObject element = ((IGraphicalEditPart)host).resolveSemanticElement();
-
     	final List<Connection> connections = ModelHelper.getParentProcess(element).getConnections();
     	for (final Connection connection : connections){
     		final EObject source = connection.getSource();
-    		if (source.equals(element)){
+            if (element.equals(source)) {
     			return true;
     		}
     	}

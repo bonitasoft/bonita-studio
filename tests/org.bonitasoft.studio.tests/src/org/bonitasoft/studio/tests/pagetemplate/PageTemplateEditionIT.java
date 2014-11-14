@@ -51,13 +51,16 @@ public class PageTemplateEditionIT extends SWTBotGefTestCase {
         bot.closeAllEditors();
         bot.waitUntil(new ICondition() {
 
+            @Override
             public boolean test() throws Exception {
                 return bot.editors().isEmpty();
             }
 
+            @Override
             public void init(final SWTBot bot) {
             }
 
+            @Override
             public String getFailureMessage() {
                 return "Some editors has not been closed properly.";
             }
@@ -104,20 +107,21 @@ public class PageTemplateEditionIT extends SWTBotGefTestCase {
         checkTextInsideHtml(botGeneralTab, "<div id=\"CheckboxModified\">");//the line should be better
 
         /* Add and delete a widget, check that there is a warning popup */
-        botProcessDiagramPerspective.activeFormDiagramEditor().addWidget("Date", 1, 2).save();
+        botProcessDiagramPerspective.activeFormDiagramEditor().addWidget("Date", 1, 2);
+        botApplicationWorkbenchWindow.save();
         botProcessDiagramPerspective.activeFormDiagramEditor().selectWidget("Date1").clickContextMenu("Delete");
         bot.button(IDialogConstants.OK_LABEL).click();
         bot.waitUntil(Conditions.shellIsActive("Warning"));
         bot.button(IDialogConstants.OK_LABEL).click();
-        botProcessDiagramPerspective.activeFormDiagramEditor().save();
-
+        //  botProcessDiagramPerspective.activeFormDiagramEditor().save();
+        botApplicationWorkbenchWindow.save();
         /* check it has opened, content and close it to come back to form editor */
         botProcessDiagramPerspective.activeFormDiagramEditor().selectForm();
         checkTextInsideHtml(botGeneralTab, "<div id=\"Date1\">");
 
         botGeneralTab.clear();
-        botProcessDiagramPerspective.activeFormDiagramEditor().save();
-
+        // botProcessDiagramPerspective.activeFormDiagramEditor().save();
+        botApplicationWorkbenchWindow.save();
         assertThat(bot.button(Messages.Edit).isEnabled()).isFalse();
         assertThat(bot.button(Messages.Clear).isEnabled()).isFalse();
     }
