@@ -21,6 +21,7 @@ import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditor;
 import org.bonitasoft.studio.model.process.impl.LaneImpl;
 import org.bonitasoft.studio.model.process.impl.PoolImpl;
 import org.bonitasoft.studio.swtbot.framework.BotQAConstants;
+import org.bonitasoft.studio.swtbot.framework.diagram.general.BotGeneralDiagramPropertiesView;
 import org.eclipse.draw2d.FigureCanvas;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.PositionConstants;
@@ -408,18 +409,9 @@ public class BotGefProcessDiagramEditor extends BotGefBaseEditor {
         return this;
     }
 
-    /**
-     * NOT YET FUNCTIONAL, the direct edit is not activated
-     *
-     * @param oldName
-     * @param newName
-     * @return
-     */
-    @Deprecated
     public BotGefProcessDiagramEditor renameStep(final String oldName, final String newName) {
         gmfEditor.doubleClick(oldName);
-        gmfEditor.getEditPart(oldName).parent().activateDirectEdit();
-        gmfEditor.directEditType(newName);
+        new BotGeneralDiagramPropertiesView(bot).selectGeneralTab().setName(newName);
         return this;
     }
 
