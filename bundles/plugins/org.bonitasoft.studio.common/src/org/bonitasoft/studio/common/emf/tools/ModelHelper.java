@@ -83,7 +83,6 @@ import org.bonitasoft.studio.model.process.ViewPageFlow;
 import org.bonitasoft.studio.model.simulation.SimulationData;
 import org.bonitasoft.studio.model.simulation.SimulationDataContainer;
 import org.bonitasoft.studio.model.simulation.SimulationTransition;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EClass;
@@ -1409,58 +1408,12 @@ public class ModelHelper {
             throw new IllegalStateException("EMF Resource is not loaded.");
         }
         final TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(resource);
-
-        final RunnableWithResult<Diagram> runnableWithResult = new RunnableWithResult<Diagram>() {
-
-            private Diagram result;
-
-            @Override
-            public void run() {
-                final TreeIterator<EObject> allContents = resource.getAllContents();
-                EObject elementToFind = null;
-                final Set<Diagram> diagrams = new HashSet<Diagram>();
-                while (allContents.hasNext()) {
-                    final EObject eObject = allContents.next();
-                    if (EcoreUtil.equals(eObject, element)) {
-                        elementToFind = eObject;
-                    }
-                    if (eObject instanceof Diagram) {
-                        diagrams.add((Diagram) eObject);
-                    }
-                }
-                if (elementToFind == null) {
-                    return;
-                }
-                for (final Diagram diagram : diagrams) {
-                    final EObject diagramElement = diagram.getElement();
-                    if (diagramElement != null && diagramElement.equals(elementToFind)) {
-                        result = diagram;
-                        break;
-                    }
-                }
-            }
-
-            @Override
-            public Diagram getResult() {
-                return result;
-            }
-
-            @Override
-            public void setStatus(final IStatus status) {
-
-            }
-
-            @Override
-            public IStatus getStatus() {
-                return null;
-            }
-        };
+        final RunnableWithResult<Diagram> runnableWithResult = new DiagramForElementRunnable(resource, element);
         try {
             editingDomain.runExclusive(runnableWithResult);
         } catch (final InterruptedException e) {
             BonitaStudioLog.error(e);
         }
-
         return runnableWithResult.getResult();
     }
 
