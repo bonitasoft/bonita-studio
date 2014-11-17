@@ -255,14 +255,14 @@ public class DiagramFileStore extends EMFFileStore implements IRepositoryFileSto
 
     @Override
     protected IWorkbenchPart doOpen() {
-        final Resource emfResource = getEMFResource();
-        final MainProcess content = getContent();
-        Assert.isLegal(content != null);
-        Assert.isLegal(emfResource != null && emfResource.isLoaded());
         final IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-        closeEditorIfAlreadyOpened(activePage, content);
+        closeEditorIfAlreadyOpened(activePage);
         IEditorPart part = null;
         try {
+            final Resource emfResource = getEMFResource();
+            final MainProcess content = getContent();
+            Assert.isLegal(content != null);
+            Assert.isLegal(emfResource != null && emfResource.isLoaded());
             final Diagram diagram = ModelHelper.getDiagramFor(content, emfResource);
             part = EditorService.getInstance().openEditor(new URIEditorInput(EcoreUtil.getURI(diagram)));
             if(part instanceof DiagramEditor){
@@ -339,7 +339,8 @@ public class DiagramFileStore extends EMFFileStore implements IRepositoryFileSto
         }
     }
 
-    private void closeEditorIfAlreadyOpened(final IWorkbenchPage activePage, final MainProcess newProcess) {
+    private void closeEditorIfAlreadyOpened(final IWorkbenchPage activePage) {
+        final MainProcess newProcess = getContent();
         for (final IEditorReference editor : activePage.getEditorReferences()) {
             final IEditorPart simpleEditor = editor.getEditor(true);
             if (simpleEditor instanceof DiagramEditor) {
