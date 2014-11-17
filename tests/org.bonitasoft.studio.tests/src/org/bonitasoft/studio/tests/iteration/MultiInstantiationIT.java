@@ -263,9 +263,8 @@ public class MultiInstantiationIT extends SWTBotGefTestCase implements SWTBotCon
         bot.toolbarButtonWithTooltip(Messages.clearSelection, 2).click();
         Assert.assertTrue("Error: Output Collection is not erased !", bot.comboBox(3).getText().isEmpty());
 
-        bot.menu("Diagram").menu("Save").click();
+        botApplicationWorkbenchWindow.save();
         SWTBotTestUtil.waitUntilBonitaBPmShellIsActive(bot);
-        bot.menu("Diagram").menu("Close").click();
     }
 
     @Test

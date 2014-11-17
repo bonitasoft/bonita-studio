@@ -109,6 +109,14 @@ public class BatchValidationOperation implements IRunnableWithProgress {
 
 
     private DiagramEditPart getDiagramEditPart(final Diagram d) {
+        DiagramEditPart res = retrieveEditPartFromOpenedEditors(d);
+        if (res == null) {
+            res = createDiagramEditPart(d);
+        }
+        return res;
+    }
+
+    protected DiagramEditPart retrieveEditPartFromOpenedEditors(final Diagram d) {
         final IWorkbenchPage activePage = getActivePage();
         if (activePage != null) {
             for (final IEditorReference ep : activePage.getEditorReferences()) {
@@ -120,8 +128,18 @@ public class BatchValidationOperation implements IRunnableWithProgress {
                 }
             }
         }
+        return null;
+    }
+    protected DiagramEditPart createDiagramEditPart(final Diagram d) {
         if (d != null && d.eResource() != null) {
-            return offscreenEditPartFactory.createOffscreenDiagramEditPart(d);
+            DiagramEditPart offscreenDiagramEditPart = null;
+            try {
+                offscreenDiagramEditPart = offscreenEditPartFactory.createOffscreenDiagramEditPart(d);
+            } catch (final Exception e) {
+                //Need to call twice because sometimes for unknown reasons, the first time is not working
+                offscreenDiagramEditPart = offscreenEditPartFactory.createOffscreenDiagramEditPart(d);
+            }
+            return offscreenDiagramEditPart;
         }
         return null;
     }
