@@ -298,8 +298,9 @@ public class DiagramFileStore extends EMFFileStore implements IRepositoryFileSto
             @Override
             public void run() {
                 //default selection
+                editor.setFocus();
                 final IGraphicalEditPart editPart = editor.getDiagramEditPart().getChildBySemanticHint(String.valueOf(PoolEditPart.VISUAL_ID));
-                if (editPart != null) {
+                if (editPart != null && editPart.getFigure() != null) {
                     editor.getDiagramEditPart().getViewer().select(editPart);
                 }
             }
