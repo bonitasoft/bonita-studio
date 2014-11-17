@@ -187,7 +187,9 @@ public class DiagramFileStore extends EMFFileStore implements IRepositoryFileSto
     }
 
     public DiagramEditor getOpenedEditor(){
-        if(PlatformUI.isWorkbenchRunning() && PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null && PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage() != null){
+        if (PlatformUI.isWorkbenchRunning()
+                && PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null
+                && PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage() != null) {
             final String resourceName = getResource().getName();
             for (final IEditorReference ref:PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getEditorReferences()){
                 String inputName;
@@ -256,7 +258,11 @@ public class DiagramFileStore extends EMFFileStore implements IRepositoryFileSto
     @Override
     protected IWorkbenchPart doOpen() {
         final IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-        closeEditorIfAlreadyOpened(activePage);
+        final DiagramEditor openedEditor = getOpenedEditor();
+        if (openedEditor != null) {
+            activePage.closeEditor(openedEditor, false);
+        }
+
         IEditorPart part = null;
         try {
             final Resource emfResource = getEMFResource();
@@ -340,6 +346,7 @@ public class DiagramFileStore extends EMFFileStore implements IRepositoryFileSto
     }
 
     private void closeEditorIfAlreadyOpened(final IWorkbenchPage activePage) {
+        getOpenedEditor();
         final MainProcess newProcess = getContent();
         for (final IEditorReference editor : activePage.getEditorReferences()) {
             final IEditorPart simpleEditor = editor.getEditor(true);

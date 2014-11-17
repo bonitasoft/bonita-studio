@@ -24,6 +24,7 @@ import org.bonitasoft.studio.common.ModelVersion;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.diagram.tools.FiguresHelper;
+import org.bonitasoft.studio.common.editingdomain.BonitaResourceSetInfoDelegate;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
@@ -148,6 +149,9 @@ public class NewDiagramCommandHandler extends AbstractHandler {
                         @Override
                         public void run() {
                             fileStore = diagramStore.createRepositoryFileStore(uniqueFileName);
+                            final TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(fileStore.getEMFResource());
+                            final BonitaResourceSetInfoDelegate resourceSetInfoDelegate = BonitaResourceSetInfoDelegate.adapt(editingDomain);
+                            resourceSetInfoDelegate.stopResourceListening();
                             fileStore.save(Arrays.asList(model, diagram));
                             monitor.worked(1 * SCALE);
                             buildDiagram(diagram, monitor);
@@ -157,7 +161,6 @@ public class NewDiagramCommandHandler extends AbstractHandler {
                             monitor.worked(1 * SCALE);
                             if (editor instanceof DiagramEditor) {
                                 final String author = System.getProperty("user.name", "unknown");
-                                final TransactionalEditingDomain editingDomain = ((DiagramEditor) editor).getDiagramEditPart().getEditingDomain();
                                 editingDomain.getCommandStack().execute(
                                         SetCommand.create(editingDomain,
                                                 ((DiagramEditor) editor).getDiagramEditPart().resolveSemanticElement(),
