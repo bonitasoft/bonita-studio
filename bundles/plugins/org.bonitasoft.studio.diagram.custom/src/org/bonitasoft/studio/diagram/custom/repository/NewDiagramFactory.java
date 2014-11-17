@@ -111,9 +111,10 @@ public class NewDiagramFactory {
         monitor.worked(1);
 
         final Task task = ProcessFactory.eINSTANCE.createTask();
+        lane.getElements().add(task);
         ElementInitializers.getInstance().init_Task_3005(task);
         task.setOverrideActorsOfTheLane(false);
-        lane.getElements().add(task);
+
 
         final View laneCompartmentView = (View) laneNode.getPersistedChildren().get(1);
         final Node stepShape = processViewProvider.createTask_3005(task, laneCompartmentView, -1, true,
@@ -128,8 +129,9 @@ public class NewDiagramFactory {
         monitor.worked(1);
 
         final StartEvent startEvent = ProcessFactory.eINSTANCE.createStartEvent();
-        ElementInitializers.getInstance().init_StartEvent_3002(startEvent);
         lane.getElements().add(startEvent);
+        ElementInitializers.getInstance().init_StartEvent_3002(startEvent);
+
         final Node startEventShape = processViewProvider.createStartEvent_3002(startEvent, laneCompartmentView, -1, true,
                 ProcessDiagramEditorPlugin.DIAGRAM_PREFERENCES_HINT);
         final Bounds stepLayoutConstraint = (Bounds) startEventShape.getLayoutConstraint();
