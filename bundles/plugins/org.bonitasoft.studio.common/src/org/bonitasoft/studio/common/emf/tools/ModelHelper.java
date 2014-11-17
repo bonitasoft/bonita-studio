@@ -29,6 +29,7 @@ import org.bonitasoft.studio.common.DataTypeLabels;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.Messages;
 import org.bonitasoft.studio.common.NamingUtils;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.model.form.Duplicable;
@@ -82,6 +83,7 @@ import org.bonitasoft.studio.model.process.ViewPageFlow;
 import org.bonitasoft.studio.model.simulation.SimulationData;
 import org.bonitasoft.studio.model.simulation.SimulationDataContainer;
 import org.bonitasoft.studio.model.simulation.SimulationTransition;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EClass;
@@ -91,6 +93,8 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.domain.EditingDomain;
+import org.eclipse.emf.transaction.RunnableWithResult;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.gmf.runtime.notation.Diagram;
 
@@ -1404,32 +1408,64 @@ public class ModelHelper {
         if (!resource.isLoaded()) {
             throw new IllegalStateException("EMF Resource is not loaded.");
         }
-        final TreeIterator<EObject> allContents = resource.getAllContents();
-        EObject elementToFind = null;
-        final Set<Diagram> diagrams = new HashSet<Diagram>();
-        while (allContents.hasNext()) {
-            final EObject eObject = allContents.next();
-            if (EcoreUtil.equals(eObject, element)) {
-                elementToFind = eObject;
-            }
-            if (eObject instanceof Diagram) {
-                diagrams.add((Diagram) eObject);
-            }
-        }
-        if (elementToFind == null) {
-            return null;
-        }
-        for (final Diagram diagram : diagrams) {
-            final EObject diagramElement = diagram.getElement();
-                if (diagramElement != null && diagramElement.equals(elementToFind)) {
-                return diagram;
+        final TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(resource);
+
+        final RunnableWithResult<Diagram> runnableWithResult = new RunnableWithResult<Diagram>() {
+
+            private Diagram result;
+
+            @Override
+            public void run() {
+                final TreeIterator<EObject> allContents = resource.getAllContents();
+                EObject elementToFind = null;
+                final Set<Diagram> diagrams = new HashSet<Diagram>();
+                while (allContents.hasNext()) {
+                    final EObject eObject = allContents.next();
+                    if (EcoreUtil.equals(eObject, element)) {
+                        elementToFind = eObject;
+                    }
+                    if (eObject instanceof Diagram) {
+                        diagrams.add((Diagram) eObject);
+                    }
                 }
+                if (elementToFind == null) {
+                    return;
+                }
+                for (final Diagram diagram : diagrams) {
+                    final EObject diagramElement = diagram.getElement();
+                    if (diagramElement != null && diagramElement.equals(elementToFind)) {
+                        result = diagram;
+                        break;
+                    }
+                }
+            }
+
+            @Override
+            public Diagram getResult() {
+                return result;
+            }
+
+            @Override
+            public void setStatus(final IStatus status) {
+
+            }
+
+            @Override
+            public IStatus getStatus() {
+                return null;
+            }
+        };
+        try {
+            editingDomain.runExclusive(runnableWithResult);
+        } catch (final InterruptedException e) {
+            BonitaStudioLog.error(e);
         }
-        return null;
+
+        return runnableWithResult.getResult();
     }
 
     public static Diagram getDiagramFor(final EObject element) {
-        if (element.eResource() != null) {
+        if (element != null && element.eResource() != null) {
             return getDiagramFor(element, TransactionUtil.getEditingDomain(element.eResource()));
         }
         return null;
