@@ -364,8 +364,7 @@ public class TestThemeRepository {
         final LookNFeelFileStore artifactToApply = repository.importInputStream("themewithpreview.zip", stream);
 
         final NewDiagramCommandHandler newProcessCommandHandler = new NewDiagramCommandHandler();
-        newProcessCommandHandler.execute(null);
-        final DiagramFileStore artifact = newProcessCommandHandler.getNewDiagramFileStore();
+        final DiagramFileStore artifact = newProcessCommandHandler.execute(null);
 
         final AbstractProcess process = ModelHelper.getAllProcesses(artifact.getContent()).get(0);
         final TransactionalEditingDomain editingDomain = (TransactionalEditingDomain) AdapterFactoryEditingDomain.getEditingDomainFor(process);
@@ -393,8 +392,7 @@ public class TestThemeRepository {
         file.create(resourceIS, false, new NullProgressMonitor());
         assertTrue(file.exists());
         final NewDiagramCommandHandler newProcessCommandHandler = new NewDiagramCommandHandler();
-        newProcessCommandHandler.execute(null);
-        final DiagramFileStore artifact = newProcessCommandHandler.getNewDiagramFileStore();
+        final DiagramFileStore artifact = newProcessCommandHandler.execute(null);
         final AbstractProcess process = ModelHelper.getAllProcesses(artifact.getContent()).get(0);
 
         final ApplicationResourceRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(ApplicationResourceRepositoryStore.class);

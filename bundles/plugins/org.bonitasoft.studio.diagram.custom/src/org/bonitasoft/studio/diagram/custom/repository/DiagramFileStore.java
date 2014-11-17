@@ -23,6 +23,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.bonitasoft.studio.common.editingdomain.BonitaResourceSetInfoDelegate;
 import org.bonitasoft.studio.common.editor.EditorUtil;
 import org.bonitasoft.studio.common.emf.tools.EMFResourceUtil;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
@@ -459,6 +460,12 @@ public class DiagramFileStore extends EMFFileStore implements IRepositoryFileSto
 
     public boolean isOpened() {
         return getOpenedEditor() != null;
+    }
+
+    public void stopResourceListening() {
+        final TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(getEMFResource());
+        final BonitaResourceSetInfoDelegate resourceSetInfoDelegate = BonitaResourceSetInfoDelegate.adapt(editingDomain);
+        resourceSetInfoDelegate.stopResourceListening();
     }
 
 }
