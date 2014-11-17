@@ -1398,31 +1398,14 @@ public class ModelHelper {
      * @param form
      * @return the diagram corresponding to the form.
      */
-    public static Diagram getDiagramFor(final EObject element, EditingDomain domain) {
+    public static Diagram getDiagramFor(final EObject element, final Resource resource) {
         if (element == null) {
             return null;
         }
-        Resource r = null;
-        if (domain == null) {
-            domain = TransactionUtil.getEditingDomain(element);
-            if (domain != null) {
-                r = domain.getResourceSet().getResource(element.eResource().getURI(), true);
-            } else {
-                r = element.eResource();
-            }
-
-        } else {
-            r = domain.getResourceSet().getResource(element.eResource().getURI(), true);
+        if (!resource.isLoaded()) {
+            throw new IllegalStateException("EMF Resource is not loaded.");
         }
-
-        //        if (!r.isLoaded()) {
-        //            try {
-        //                r.load(Collections.EMPTY_MAP);
-        //            } catch (final IOException e) {
-        //                BonitaStudioLog.error(e);
-        //            }
-        //        }
-        final TreeIterator<EObject> allContents = r.getAllContents();
+        final TreeIterator<EObject> allContents = resource.getAllContents();
         EObject elementToFind = null;
         while (elementToFind == null && allContents.hasNext()) {
             final EObject eObject = allContents.next();
@@ -1433,7 +1416,7 @@ public class ModelHelper {
         if (elementToFind == null) {
             return null;
         }
-        final EList<EObject> resources = r.getContents();
+        final EList<EObject> resources = resource.getContents();
         for (final EObject eObject : resources) {
             if (eObject instanceof Diagram) {
                 final EObject diagramElement = ((Diagram) eObject).getElement();
@@ -1443,6 +1426,32 @@ public class ModelHelper {
             }
         }
         return null;
+    }
+
+    public static Diagram getDiagramFor(final EObject element) {
+        if (element.eResource() != null) {
+            return getDiagramFor(element, TransactionUtil.getEditingDomain(element.eResource()));
+        }
+        return null;
+    }
+
+    public static Diagram getDiagramFor(final EObject element, EditingDomain domain) {
+        if (element == null) {
+            return null;
+        }
+        Resource resource = null;
+        if (domain == null) {
+            domain = TransactionUtil.getEditingDomain(element);
+            if (domain != null) {
+                resource = domain.getResourceSet().getResource(element.eResource().getURI(), true);
+            } else {
+                resource = element.eResource();
+            }
+
+        } else {
+            resource = domain.getResourceSet().getResource(element.eResource().getURI(), true);
+        }
+        return getDiagramFor(element, resource);
     }
 
     public static Widget getWidgetById(final Form form, final String id) {

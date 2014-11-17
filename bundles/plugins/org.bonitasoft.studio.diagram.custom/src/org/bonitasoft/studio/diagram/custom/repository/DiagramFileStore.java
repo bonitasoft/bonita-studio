@@ -55,7 +55,6 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.xmi.FeatureNotFoundException;
-import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.transaction.RecordingCommand;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
@@ -246,9 +245,9 @@ public class DiagramFileStore extends EMFFileStore implements IRepositoryFileSto
         closeEditorIfAlreadyOpened(activePage);
         IEditorPart part = null;
         try {
-            final EditingDomain editingDomain = getParentStore().getEditingDomain(getEMFResource().getURI());
+            final Resource emfResource = getEMFResource();
             final MainProcess content = getContent();
-            part = EditorService.getInstance().openEditor(new URIEditorInput(EcoreUtil.getURI(ModelHelper.getDiagramFor(content, editingDomain))));
+            part = EditorService.getInstance().openEditor(new URIEditorInput(EcoreUtil.getURI(ModelHelper.getDiagramFor(content, emfResource))));
             if(part instanceof DiagramEditor){
                 final DiagramEditor editor = (DiagramEditor) part;
                 final MainProcess diagram = (MainProcess) editor.getDiagramEditPart().resolveSemanticElement() ;

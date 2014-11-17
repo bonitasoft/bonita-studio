@@ -28,6 +28,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.transaction.RunnableWithResult;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.emf.workspace.util.WorkspaceSynchronizer;
@@ -101,7 +102,8 @@ public class BonitaResourceSetInfoDelegate {
             final TransactionalEditingDomain transactionalEditingDomain = TransactionUtil.getEditingDomain(resource);
             if (transactionalEditingDomain != null) {
                 try {
-                    transactionalEditingDomain.runExclusive(reloadRunnable(resource));
+                    final RunnableWithResult<?> privilegedRunnable = transactionalEditingDomain.createPrivilegedRunnable(reloadRunnable(resource));
+                    transactionalEditingDomain.runExclusive(privilegedRunnable);
                 } catch (final InterruptedException e) {
                     BonitaStudioLog.error(e);
                 }

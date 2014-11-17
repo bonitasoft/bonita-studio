@@ -178,7 +178,7 @@ public class TestCommands {
 
         final Form form = ((PageFlow) proc.getElements().get(0)).getForm().get(0);
         /* get the Diagram element related to the form in the resource */
-        final Diagram diag = ModelHelper.getDiagramFor(form, null);
+        final Diagram diag = ModelHelper.getDiagramFor(form);
         final URI uri = EcoreUtil.getURI(diag);
 
         /* open the form editor */
