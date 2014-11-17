@@ -280,19 +280,30 @@ public class DiagramFileStore extends EMFFileStore implements IRepositoryFileSto
                     setReadOnlyAndOpenWarningDialogAboutReadOnly(editor);
                 }
                 registerListeners(mainProcess, editor.getEditingDomain());
-                final IGraphicalEditPart editPart = editor.getDiagramEditPart().getChildBySemanticHint(PoolEditPart.VISUAL_ID+"");
-                if(editPart != null) {
-                    editor.getDiagramEditPart().getViewer().select(editPart);
-                }
-
                 handleMigrationReportIfPresent(activePage);
-                editor.setFocus(); //refresh coolbar button
+
+                setDefaultSelection(editor);
+
                 return editor;
             }
         } catch (final PartInitException e) {
             BonitaStudioLog.error(e) ;
         }
         return part ;
+    }
+
+    protected void setDefaultSelection(final DiagramEditor editor) {
+        Display.getDefault().asyncExec(new Runnable() {
+
+            @Override
+            public void run() {
+                //default selection
+                final IGraphicalEditPart editPart = editor.getDiagramEditPart().getChildBySemanticHint(String.valueOf(PoolEditPart.VISUAL_ID));
+                if (editPart != null) {
+                    editor.getDiagramEditPart().getViewer().select(editPart);
+                }
+            }
+        });
     }
 
 

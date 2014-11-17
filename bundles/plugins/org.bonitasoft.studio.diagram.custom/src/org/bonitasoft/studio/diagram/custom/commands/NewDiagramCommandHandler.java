@@ -68,11 +68,10 @@ public class NewDiagramCommandHandler extends AbstractHandler {
                     SetCommand.create(editingDomain,
                             ((DiagramEditor) editor).getDiagramEditPart().resolveSemanticElement(),
                             ProcessPackage.Literals.ABSTRACT_PROCESS__AUTHOR, author));
+            //clear the OperationHistory because it implies otherwise and that we don't need undo/redo for the basic creation.
+            OperationHistoryFactory.getOperationHistory().dispose((IUndoContext) editor.getAdapter(IUndoContext.class), true, true, true);
+            PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().activate(editor);
         }
-        //clear the OperationHistory because it implies otherwise and that we don't need undo/redo for the basic creation.
-        OperationHistoryFactory.getOperationHistory().dispose((IUndoContext) editor.getAdapter(IUndoContext.class), true, true, true);
-
-
 
         return diagramFileStore;
     }
