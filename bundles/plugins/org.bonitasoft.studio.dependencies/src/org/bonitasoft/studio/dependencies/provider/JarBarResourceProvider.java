@@ -17,10 +17,6 @@
 package org.bonitasoft.studio.dependencies.provider;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -30,6 +26,7 @@ import org.bonitasoft.engine.bpm.bar.BusinessArchiveBuilder;
 import org.bonitasoft.studio.common.FragmentTypes;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.extension.BARResourcesProvider;
+import org.bonitasoft.studio.common.extension.BarResourcesProviderUtil;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
@@ -48,23 +45,23 @@ import org.eclipse.emf.ecore.EObject;
 public class JarBarResourceProvider implements BARResourcesProvider {
 
     @Override
-    public List<BarResource> addResourcesForConfiguration(BusinessArchiveBuilder builder,AbstractProcess process, Configuration configuration,Set<EObject> excludedObjects) {
+    public List<BarResource> addResourcesForConfiguration(final BusinessArchiveBuilder builder,final AbstractProcess process, final Configuration configuration,final Set<EObject> excludedObjects) {
         final List<BarResource> resources = new ArrayList<BarResource>() ;
         if(configuration == null){
             return resources ;
         }
-        final DependencyRepositoryStore store = (DependencyRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DependencyRepositoryStore.class) ;
-        for (FragmentContainer fc : configuration.getProcessDependencies()) {
-            List<Fragment> fragments = ModelHelper.getAllItemsOfType(fc, ConfigurationPackage.Literals.FRAGMENT) ;
-            for (Fragment fragment : fragments) {
+        final DependencyRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(DependencyRepositoryStore.class) ;
+        for (final FragmentContainer fc : configuration.getProcessDependencies()) {
+            final List<Fragment> fragments = ModelHelper.getAllItemsOfType(fc, ConfigurationPackage.Literals.FRAGMENT) ;
+            for (final Fragment fragment : fragments) {
                 if(fragment.getType().equals(FragmentTypes.JAR)) {
                     if(fragment.isExported()){
-                        IRepositoryFileStore jarArtifact = store.getChild(fragment.getValue()) ;
+                        final IRepositoryFileStore jarArtifact = store.getChild(fragment.getValue()) ;
                         if(jarArtifact != null){
-                            File file = jarArtifact.getResource().getLocation().toFile();
+                            final File file = jarArtifact.getResource().getLocation().toFile();
                             try {
-                                addFileContents(resources, file);
-                            } catch (Exception e){
+                                BarResourcesProviderUtil.addFileContents(resources, file);
+                            } catch (final Exception e){
                                 BonitaStudioLog.error(e) ;
                             }
                         }
@@ -73,21 +70,11 @@ public class JarBarResourceProvider implements BARResourcesProvider {
             }
         }
 
-        for(BarResource barResource : resources){
+        for(final BarResource barResource : resources){
             builder.addClasspathResource(barResource) ;
         }
 
         return resources;
-    }
-
-    private void addFileContents(final List<BarResource>  resources, final File file) throws FileNotFoundException, IOException {
-        if (file.exists()) {
-            byte[] jarBytes = new byte[(int) file.length()];
-            InputStream stream = new FileInputStream(file);
-            stream.read(jarBytes);
-            stream.close();
-            resources.add(new BarResource(file.getName(), jarBytes));
-        }
     }
 
 }
