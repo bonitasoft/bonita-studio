@@ -1407,12 +1407,17 @@ public class ModelHelper {
         if (!resource.isLoaded()) {
             throw new IllegalStateException("EMF Resource is not loaded.");
         }
-        final TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(resource);
+
         final RunnableWithResult<Diagram> runnableWithResult = new DiagramForElementRunnable(resource, element);
-        try {
-            editingDomain.runExclusive(runnableWithResult);
-        } catch (final InterruptedException e) {
-            BonitaStudioLog.error(e);
+        final TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(resource);
+        if (editingDomain != null) {
+            try {
+                editingDomain.runExclusive(runnableWithResult);
+            } catch (final InterruptedException e) {
+                BonitaStudioLog.error(e);
+            }
+        } else {
+            runnableWithResult.run();
         }
         return runnableWithResult.getResult();
     }
