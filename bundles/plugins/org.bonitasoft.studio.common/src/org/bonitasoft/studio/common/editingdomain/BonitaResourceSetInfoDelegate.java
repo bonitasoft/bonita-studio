@@ -29,6 +29,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.emf.workspace.util.WorkspaceSynchronizer;
 
 /**
@@ -97,12 +98,15 @@ public class BonitaResourceSetInfoDelegate {
             } catch (final CoreException e1) {
                 BonitaStudioLog.error(e1);
             }
-            resource.unload();
-            try {
-                resource.load(resource.getResourceSet().getLoadOptions());
-            } catch (final IOException e) {
-                BonitaStudioLog.error(e);
+            final TransactionalEditingDomain transactionalEditingDomain = TransactionUtil.getEditingDomain(resource);
+            if (transactionalEditingDomain != null) {
+                try {
+                    transactionalEditingDomain.runExclusive(reloadRunnable(resource));
+                } catch (final InterruptedException e) {
+                    BonitaStudioLog.error(e);
+                }
             }
+
             synchronized (BonitaResourceSetInfoDelegate.this) {
 				for (final WorkspaceSynchronizer.Delegate delegate : delegates) {
 					delegate.handleResourceChanged(resource);
@@ -151,7 +155,23 @@ public class BonitaResourceSetInfoDelegate {
 		return false;
 	}
 
-	public static BonitaResourceSetInfoDelegate adapt(final TransactionalEditingDomain editingDomain) {
+    protected Runnable reloadRunnable(final Resource resource) {
+        return new Runnable() {
+
+            @Override
+            public void run() {
+                resource.unload();
+                try {
+                    resource.load(resource.getResourceSet().getLoadOptions());
+                } catch (final IOException e) {
+                    BonitaStudioLog.error(e);
+                }
+            }
+        };
+
+    }
+
+    public static BonitaResourceSetInfoDelegate adapt(final TransactionalEditingDomain editingDomain) {
 		final BonitaResourceSetInfoAdapter.ResourceSetFactory factory = new BonitaResourceSetInfoAdapter.ResourceSetFactory();
 		final BonitaResourceSetInfoAdapter adapter = (BonitaResourceSetInfoAdapter) factory
 				.adapt(editingDomain.getResourceSet(), BonitaResourceSetInfoDelegate.class);
