@@ -77,7 +77,6 @@ import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.edit.command.AddCommand;
 import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
@@ -128,15 +127,11 @@ public class NewDiagramCommandHandler extends AbstractHandler {
                 @Override
                 public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
                     monitor.beginTask(Messages.newDiagram, 40);
-
                     diagramIdentifier = getNewProcessIdentifier(diagramStore);
                     monitor.worked(1 * SCALE);
                     diagramName = NamingUtils.convertToId(org.bonitasoft.studio.diagram.custom.i18n.Messages.newFilePrefix + diagramIdentifier);
                     monitor.worked(1 * SCALE);
                     final String uniqueFileName = NamingUtils.toDiagramFilename(diagramName, BASE_VERSION);
-                    monitor.worked(1 * SCALE);
-                    fileStore = diagramStore.createRepositoryFileStore(uniqueFileName);
-                    final Resource emfResource = fileStore.getEMFResource();
                     monitor.worked(1 * SCALE);
                     final MainProcess model = createInitialModel();
                     monitor.worked(1 * SCALE);
@@ -148,17 +143,16 @@ public class NewDiagramCommandHandler extends AbstractHandler {
                     monitor.worked(1 * SCALE);
                     diagram.setElement(model);
                     monitor.worked(1 * SCALE);
-                    fileStore.save(Arrays.asList(model, diagram));
-                    monitor.worked(1 * SCALE);
                     Display.getDefault().syncExec(new Runnable() {
 
                         @Override
                         public void run() {
-                            final Diagram d = (Diagram) emfResource.getContents().get(1);
+                            fileStore = diagramStore.createRepositoryFileStore(uniqueFileName);
+                            fileStore.save(Arrays.asList(model, diagram));
                             monitor.worked(1 * SCALE);
-                            buildDiagram(d, monitor);
+                            buildDiagram(diagram, monitor);
                             monitor.worked(1 * SCALE);
-                            fileStore.save(null);
+                            fileStore.save(Arrays.asList(model, diagram));
                             final IEditorPart editor = (IEditorPart) fileStore.open();
                             monitor.worked(1 * SCALE);
                             if (editor instanceof DiagramEditor) {

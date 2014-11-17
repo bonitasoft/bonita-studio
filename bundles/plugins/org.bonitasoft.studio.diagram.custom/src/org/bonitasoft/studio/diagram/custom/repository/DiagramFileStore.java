@@ -48,13 +48,16 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.operations.OperationHistoryFactory;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.common.ui.URIEditorInput;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.xmi.FeatureNotFoundException;
+import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.transaction.RecordingCommand;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
@@ -65,6 +68,7 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.parts.DiagramDocumentEditor;
+import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
@@ -151,6 +155,16 @@ public class DiagramFileStore extends EMFFileStore implements IRepositoryFileSto
                     return resolveSemanticElement.eResource();
                 }
             }
+        }
+        final URI uri = getResourceURI();
+        final EditingDomain editingDomain = getParentStore().getEditingDomain(uri);
+        final ResourceSet resourceSet = editingDomain.getResourceSet();
+        if (getResource().exists()) {
+            Resource resource = resourceSet.getResource(uri, false);
+            if (resource == null) {
+                resource = resourceSet.createResource(uri);
+            }
+            return resource;
         }
         return super.getEMFResource();
     }
@@ -241,21 +255,24 @@ public class DiagramFileStore extends EMFFileStore implements IRepositoryFileSto
 
     @Override
     protected IWorkbenchPart doOpen() {
+        final Resource emfResource = getEMFResource();
+        final MainProcess content = getContent();
+        Assert.isLegal(content != null);
+        Assert.isLegal(emfResource != null && emfResource.isLoaded());
         final IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-        closeEditorIfAlreadyOpened(activePage);
+        closeEditorIfAlreadyOpened(activePage, content);
         IEditorPart part = null;
         try {
-            final Resource emfResource = getEMFResource();
-            final MainProcess content = getContent();
-            part = EditorService.getInstance().openEditor(new URIEditorInput(EcoreUtil.getURI(ModelHelper.getDiagramFor(content, emfResource))));
+            final Diagram diagram = ModelHelper.getDiagramFor(content, emfResource);
+            part = EditorService.getInstance().openEditor(new URIEditorInput(EcoreUtil.getURI(diagram)));
             if(part instanceof DiagramEditor){
                 final DiagramEditor editor = (DiagramEditor) part;
-                final MainProcess diagram = (MainProcess) editor.getDiagramEditPart().resolveSemanticElement() ;
-                diagram.eAdapters().add(new PoolNotificationListener());
+                final MainProcess mainProcess = (MainProcess) editor.getDiagramEditPart().resolveSemanticElement();
+                mainProcess.eAdapters().add(new PoolNotificationListener());
                 if(isReadOnly()){
                     setReadOnlyAndOpenWarningDialogAboutReadOnly(editor);
                 }
-                registerListeners(diagram, editor.getEditingDomain()) ;
+                registerListeners(mainProcess, editor.getEditingDomain());
                 final IGraphicalEditPart editPart = editor.getDiagramEditPart().getChildBySemanticHint(PoolEditPart.VISUAL_ID+"");
                 if(editPart != null) {
                     editor.getDiagramEditPart().getViewer().select(editPart);
@@ -322,8 +339,7 @@ public class DiagramFileStore extends EMFFileStore implements IRepositoryFileSto
         }
     }
 
-    private void closeEditorIfAlreadyOpened(final IWorkbenchPage activePage) {
-        final MainProcess newProcess = getContent();
+    private void closeEditorIfAlreadyOpened(final IWorkbenchPage activePage, final MainProcess newProcess) {
         for (final IEditorReference editor : activePage.getEditorReferences()) {
             final IEditorPart simpleEditor = editor.getEditor(true);
             if (simpleEditor instanceof DiagramEditor) {

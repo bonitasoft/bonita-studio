@@ -83,7 +83,6 @@ import org.bonitasoft.studio.model.simulation.SimulationData;
 import org.bonitasoft.studio.model.simulation.SimulationDataContainer;
 import org.bonitasoft.studio.model.simulation.SimulationTransition;
 import org.eclipse.draw2d.geometry.Point;
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
@@ -1407,23 +1406,24 @@ public class ModelHelper {
         }
         final TreeIterator<EObject> allContents = resource.getAllContents();
         EObject elementToFind = null;
-        while (elementToFind == null && allContents.hasNext()) {
+        final Set<Diagram> diagrams = new HashSet<Diagram>();
+        while (allContents.hasNext()) {
             final EObject eObject = allContents.next();
             if (EcoreUtil.equals(eObject, element)) {
                 elementToFind = eObject;
+            }
+            if (eObject instanceof Diagram) {
+                diagrams.add((Diagram) eObject);
             }
         }
         if (elementToFind == null) {
             return null;
         }
-        final EList<EObject> resources = resource.getContents();
-        for (final EObject eObject : resources) {
-            if (eObject instanceof Diagram) {
-                final EObject diagramElement = ((Diagram) eObject).getElement();
+        for (final Diagram diagram : diagrams) {
+            final EObject diagramElement = diagram.getElement();
                 if (diagramElement != null && diagramElement.equals(elementToFind)) {
-                    return (Diagram) eObject;
+                return diagram;
                 }
-            }
         }
         return null;
     }

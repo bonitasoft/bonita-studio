@@ -81,8 +81,17 @@ public abstract class EMFFileStore extends AbstractFileStore implements IReposit
     @Override
     public synchronized EObject getContent() {
         final Resource eResource = getEMFResource() ;
+        doLoad(eResource);
+        if (!eResource.getContents().isEmpty()) {
+            return eResource.getContents().get(0);
+        }
+        return null;
+    }
+
+    protected void doLoad(final Resource eResource) {
         if(eResource != null){
-            if(!eResource.isLoaded()){
+            final boolean loaded = eResource.isLoaded();
+            if(!loaded){
                 try {
                     final TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(eResource);
                     if (editingDomain != null) {
@@ -96,11 +105,7 @@ public abstract class EMFFileStore extends AbstractFileStore implements IReposit
                     BonitaStudioLog.error(e, CommonRepositoryPlugin.PLUGIN_ID);
                 }
             }
-            if(!eResource.getContents().isEmpty()){
-                return eResource.getContents().get(0);
-            }
         }
-        return null;
     }
 
     private Runnable eResourceLoader(final Resource resource) {
@@ -126,7 +131,6 @@ public abstract class EMFFileStore extends AbstractFileStore implements IReposit
     			eResource.delete(Collections.EMPTY_MAP) ;
     		} catch (final IOException e) {
     			BonitaStudioLog.error(e) ;
-
     		}
     	} else {
     		try {
