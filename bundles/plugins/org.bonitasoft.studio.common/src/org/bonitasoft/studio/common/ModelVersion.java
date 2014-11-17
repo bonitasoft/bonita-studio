@@ -20,7 +20,8 @@ package org.bonitasoft.studio.common;
 public class ModelVersion {
 
     public static final String VERSION_6_0_0_ALPHA = "6.0.0-Alpha";
-    public static final String CURRENT_VERSION = "6.4.0-002";
+
+    public static final String CURRENT_VERSION = "6.4.0-006";
 
     public static boolean sameVersion(final String version) {
         return CURRENT_VERSION.equals(version);

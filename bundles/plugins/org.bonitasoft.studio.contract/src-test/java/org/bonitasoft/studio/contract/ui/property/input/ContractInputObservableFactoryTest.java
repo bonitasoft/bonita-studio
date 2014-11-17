@@ -18,10 +18,9 @@ package org.bonitasoft.studio.contract.ui.property.input;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.bonitasoft.studio.contract.AbstractSWTTestCase;
-import org.bonitasoft.studio.contract.ui.property.input.ContractInputObservableFactory;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.studio.swt.AbstractSWTTestCase;
 import org.eclipse.core.databinding.observable.IObservable;
 import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.list.IObservableList;

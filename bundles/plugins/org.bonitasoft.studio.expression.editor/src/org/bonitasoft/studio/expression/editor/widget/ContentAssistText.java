@@ -53,157 +53,157 @@ import org.eclipse.swt.widgets.ToolItem;
 public class ContentAssistText extends Composite implements SWTBotConstants {
 
 
-	private final Text textControl;
-	private final AutoCompletionField autoCompletion;
-	private boolean drawBorder = true;
-	private final ToolBar tb;
-	private boolean isReadOnly = false;
-	private final List<IBonitaContentProposalListener2> contentAssistListerners = new ArrayList<IBonitaContentProposalListener2>();
-	
-	public ContentAssistText(final Composite parent, final IExpressionProposalLabelProvider contentProposalLabelProvider, int style) {
-		super(parent, SWT.NONE);
-		Point margins = new Point(3, 3);
-		if ((style & SWT.BORDER) == 0){
-			drawBorder = false;
-			margins = new Point(0, 0);
-		}else{
-			style = style ^ SWT.BORDER;
-		}
-		if((style & SWT.READ_ONLY) != 0){
-			isReadOnly = true;
-		}
-		int indent = 32;
-		if(isReadOnly){
-			indent = 18;
-		}
-		setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(margins).spacing(indent, 0).create());
-		setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
+    private final Text textControl;
+    private final AutoCompletionField autoCompletion;
+    private boolean drawBorder = true;
+    private final ToolBar tb;
+    private boolean isReadOnly = false;
+    private final List<IBonitaContentProposalListener2> contentAssistListerners = new ArrayList<IBonitaContentProposalListener2>();
+    
+    public ContentAssistText(final Composite parent, final IExpressionProposalLabelProvider contentProposalLabelProvider, int style) {
+        super(parent, SWT.NONE);
+        Point margins = new Point(3, 3);
+        if ((style & SWT.BORDER) == 0){
+            drawBorder = false;
+            margins = new Point(0, 0);
+        }else{
+            style = style ^ SWT.BORDER;
+        }
+        if((style & SWT.READ_ONLY) != 0){
+            isReadOnly = true;
+        }
+        int indent = 32;
+        if(isReadOnly){
+            indent = 18;
+        }
+        setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(margins).spacing(indent, 0).create());
+        setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
 
-		
-		textControl = new Text(this,style | SWT.SINGLE);
-		textControl.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
-		textControl.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-		textControl.addFocusListener(new FocusListener() {
+        
+        textControl = new Text(this,style | SWT.SINGLE);
+        textControl.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
+        textControl.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        textControl.addFocusListener(new FocusListener() {
 
-			@Override
-			public void focusLost(final FocusEvent e) {
-				if(textControl.equals(e.widget)){
-					Display.getDefault().asyncExec(new Runnable() {
+            @Override
+            public void focusLost(final FocusEvent e) {
+                if(textControl.equals(e.widget)){
+                    Display.getDefault().asyncExec(new Runnable() {
 
-						@Override
-						public void run() {
-							if(!ContentAssistText.this.isDisposed()){
-								ContentAssistText.this.redraw();
-							}
-						}
-					});
+                        @Override
+                        public void run() {
+                            if(!ContentAssistText.this.isDisposed()){
+                                ContentAssistText.this.redraw();
+                            }
+                        }
+                    });
 
-				}
-			}
+                }
+            }
 
-			@Override
-			public void focusGained(final FocusEvent e) {
-				if(textControl.equals(e.widget)){
-					Display.getDefault().asyncExec(new Runnable() {
+            @Override
+            public void focusGained(final FocusEvent e) {
+                if(textControl.equals(e.widget)){
+                    Display.getDefault().asyncExec(new Runnable() {
 
-						@Override
-						public void run() {
-							if(!ContentAssistText.this.isDisposed()){
-								ContentAssistText.this.redraw();
-							}
+                        @Override
+                        public void run() {
+                            if(!ContentAssistText.this.isDisposed()){
+                                ContentAssistText.this.redraw();
+                            }
 
-						}
-					});
-				}
-			}
-		});
-		/*Data for test purpose*/
-		textControl.setData(SWTBOT_WIDGET_ID_KEY, SWTBOT_ID_EXPRESSIONVIEWER_TEXT);
-		tb = new ToolBar(this, SWT.FLAT | SWT.NO_FOCUS);
-		tb.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
-		tb.setLayoutData(GridDataFactory.swtDefaults().create());
-		tb.setEnabled(true);
-		final ToolItem ti = new ToolItem(tb, SWT.FLAT | SWT.NO_FOCUS);
-		ti.setData(SWTBOT_WIDGET_ID_KEY, SWTBOT_ID_EXPRESSIONVIEWER_DROPDOWN);
-		ti.setImage(Pics.getImage("resize_S.gif"));
-		ti.addSelectionListener(new SelectionAdapter() {
+                        }
+                    });
+                }
+            }
+        });
+        /*Data for test purpose*/
+        textControl.setData(SWTBOT_WIDGET_ID_KEY, SWTBOT_ID_EXPRESSIONVIEWER_TEXT);
+        tb = new ToolBar(this, SWT.FLAT | SWT.NO_FOCUS);
+        tb.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
+        tb.setLayoutData(GridDataFactory.swtDefaults().create());
+        tb.setEnabled(true);
+        final ToolItem ti = new ToolItem(tb, SWT.FLAT | SWT.NO_FOCUS);
+        ti.setData(SWTBOT_WIDGET_ID_KEY, SWTBOT_ID_EXPRESSIONVIEWER_DROPDOWN);
+        ti.setImage(Pics.getImage("resize_S.gif"));
+        ti.addSelectionListener(new SelectionAdapter() {
 
-			@Override
-			public void widgetSelected(final SelectionEvent e) {
-				setFocus();
-				BusyIndicator.showWhile(getShell().getDisplay(), new Runnable() {
-					@Override
+            @Override
+            public void widgetSelected(final SelectionEvent e) {
+                setFocus();
+                BusyIndicator.showWhile(getShell().getDisplay(), new Runnable() {
+                    @Override
                     public void run() {
-						fireOpenProposalEvent();
-						if(autoCompletion.getContentProposalAdapter().isProposalPopupOpen()){
-							autoCompletion.getContentProposalAdapter().closeProposalPopup();
-						}else{
-							autoCompletion.getContentProposalAdapter().showProposalPopup();
-						}
-					}
-				});
-			}
-		});
-		addPaintListener(new PaintListener() {
+                        fireOpenProposalEvent();
+                        if(autoCompletion.getContentProposalAdapter().isProposalPopupOpen()){
+                            autoCompletion.getContentProposalAdapter().closeProposalPopup();
+                        }else{
+                            autoCompletion.getContentProposalAdapter().showProposalPopup();
+                        }
+                    }
+                });
+            }
+        });
+        addPaintListener(new PaintListener() {
 
-			@Override
-			public void paintControl(final PaintEvent e) {
-				if(drawBorder){
-					paintControlBorder(e);
-				}
-			}
-		});
-		autoCompletion = new AutoCompletionField(textControl, new TextContentAdapter(), contentProposalLabelProvider) ;
-	}
-	
-	public void setProposalEnabled(final Boolean proposalEnabled){
-		if(!proposalEnabled){
-			tb.setEnabled(false);
-		} else {
-			tb.setEnabled(true);
-		}
-	}
-	
-	protected void fireOpenProposalEvent() {
-		for(final IBonitaContentProposalListener2 listener : contentAssistListerners){
-			listener.proposalPopupOpened(autoCompletion.getContentProposalAdapter());
-		}
-	}
+            @Override
+            public void paintControl(final PaintEvent e) {
+                if(drawBorder){
+                    paintControlBorder(e);
+                }
+            }
+        });
+        autoCompletion = new AutoCompletionField(textControl, new TextContentAdapter(), contentProposalLabelProvider) ;
+    }
+    
+    public void setProposalEnabled(final Boolean proposalEnabled){
+        if(!proposalEnabled){
+            tb.setEnabled(false);
+        } else {
+            tb.setEnabled(true);
+        }
+    }
+    
+    protected void fireOpenProposalEvent() {
+        for(final IBonitaContentProposalListener2 listener : contentAssistListerners){
+            listener.proposalPopupOpened(autoCompletion.getContentProposalAdapter());
+        }
+    }
 
-	protected void paintControlBorder(final PaintEvent e) {
-		final GC gc = e.gc;
-		final Display display = e.display ;
-		if(display!= null && gc != null && !gc.isDisposed()){
-			final Control focused = display.getFocusControl() ;
-			final GC parentGC  = gc;
-			parentGC.setAdvanced(true);
-			final Rectangle r = ContentAssistText.this.getBounds();
-			if(focused == null || focused.getParent() != null && !focused.getParent().equals(ContentAssistText.this)){
-				parentGC.setForeground(display.getSystemColor(SWT.COLOR_GRAY));
-			}else{
-				parentGC.setForeground(display.getSystemColor(SWT.COLOR_WIDGET_BORDER));
-			}
-			parentGC.setLineWidth(1);
-			parentGC.drawRectangle(0, 0, r.width-1, r.height-1);
-		}
-	}
+    protected void paintControlBorder(final PaintEvent e) {
+        final GC gc = e.gc;
+        final Display display = e.display ;
+        if(display!= null && gc != null && !gc.isDisposed()){
+            final Control focused = display.getFocusControl() ;
+            final GC parentGC  = gc;
+            parentGC.setAdvanced(true);
+            final Rectangle r = ContentAssistText.this.getBounds();
+            if(focused == null || focused.getParent() != null && !focused.getParent().equals(ContentAssistText.this)){
+                parentGC.setForeground(display.getSystemColor(SWT.COLOR_GRAY));
+            }else{
+                parentGC.setForeground(display.getSystemColor(SWT.COLOR_WIDGET_BORDER));
+            }
+            parentGC.setLineWidth(1);
+            parentGC.drawRectangle(0, 0, r.width-1, r.height-1);
+        }
+    }
 
-	public Text getTextControl() {
-		return textControl;
-	}
+    public Text getTextControl() {
+        return textControl;
+    }
 
-	public AutoCompletionField getAutocompletion() {
-		return autoCompletion;
-	}
+    public AutoCompletionField getAutocompletion() {
+        return autoCompletion;
+    }
 
-	public ToolBar getToolbar() {
-		return tb;
-	}
+    public ToolBar getToolbar() {
+        return tb;
+    }
 
-	public void addContentAssistListener(final IBonitaContentProposalListener2 listener) {
-		contentAssistListerners.add(listener);
-	}
+    public void addContentAssistListener(final IBonitaContentProposalListener2 listener) {
+        contentAssistListerners.add(listener);
+    }
 
-	
+    
 
 }

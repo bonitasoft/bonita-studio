@@ -62,6 +62,7 @@ import org.bonitasoft.studio.model.form.Duplicable;
 import org.bonitasoft.studio.model.form.DurationFormField;
 import org.bonitasoft.studio.model.form.DynamicTable;
 import org.bonitasoft.studio.model.form.FileWidget;
+import org.bonitasoft.studio.model.form.FileWidgetDownloadType;
 import org.bonitasoft.studio.model.form.FileWidgetInputType;
 import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.form.FormButton;
@@ -370,7 +371,7 @@ public class FormsExporter {
 
     /**
      * Add all the Task on the tag activities.
-     * 
+     *
      * @param studioProcess
      * @param builder
      * @throws InvalidFormDefinitionException
@@ -400,7 +401,7 @@ public class FormsExporter {
 
     /**
      * This add a task in the forms.xml, the tag for it is activity...
-     * 
+     *
      * @param task
      * @param builder
      * @throws InvalidFormDefinitionException
@@ -632,7 +633,7 @@ public class FormsExporter {
         final ActionType actionType = getActionTypeFromStudioOperatorType(action
                 .getOperator().getType());
         final String variableName = action.getLeftOperand().getContent();
-        final String variableType = EngineExpressionUtil.getVariableType(
+        final String variableType = EngineExpressionUtil.getLeftOperandType(
                 action.getLeftOperand(), false);
         final String operator = action.getOperator().getExpression();
         final EList<String> inputTypes = action.getOperator().getInputTypes();
@@ -650,6 +651,9 @@ public class FormsExporter {
     protected ActionType getActionTypeFromStudioOperatorType(final String type) {
         // it's the left operand that tell if it's a document to set
         if (OperatorType.DOCUMENT_CREATE_UPDATE.name().equals(type)) {
+            return ActionType.ASSIGNMENT;
+        }
+        if (ExpressionConstants.SET_LIST_DOCUMENT_OPERATOR.equals(type)) {
             return ActionType.ASSIGNMENT;
         }
         // it's the left operand that tell if it's a string index to set
@@ -852,7 +856,7 @@ public class FormsExporter {
 
     /**
      * Add each widget
-     * 
+     *
      * @param f
      * @param builder
      * @throws InvalidFormDefinitionException
@@ -1327,7 +1331,7 @@ public class FormsExporter {
 
     /**
      * add the horizontal header of the table
-     * 
+     *
      * @param table
      * @param builder
      * @throws InvalidFormDefinitionException
@@ -1407,7 +1411,7 @@ public class FormsExporter {
 
     /**
      * add the vertical header of the table
-     * 
+     *
      * @param table
      * @param builder
      * @throws InvalidFormDefinitionException
@@ -1447,7 +1451,7 @@ public class FormsExporter {
 
     /**
      * add the available values of the table
-     * 
+     *
      * @param table
      * @param builder
      * @throws InvalidFormDefinitionException
@@ -1554,7 +1558,7 @@ public class FormsExporter {
 
     /**
      * add the initial value of the table
-     * 
+     *
      * @param widget
      * @param builder
      * @throws InvalidFormDefinitionException
@@ -1768,9 +1772,12 @@ public class FormsExporter {
             }
             builder.addAttachmentImageBehavior(((FileWidget) widget)
                     .isUsePreview());
+            addFileWidgetInputType((FileWidget) widget, builder);
             addDocumentInitialValue((FileWidget) widget, builder);
+            setDocumentIsMultiple((FileWidget) widget, builder);
         } else if (widget instanceof RichTextAreaFormField) {
             builder.addWidget(widget.getName(), WidgetType.RICH_TEXTAREA);
+
             addInitialValue(widget, builder);
         } else if (widget instanceof SuggestBox) {
             final SuggestBox suggestBox = (SuggestBox) widget;
@@ -1800,22 +1807,27 @@ public class FormsExporter {
         }
     }
 
-    protected void addDocumentInitialValue(final FileWidget widget,
+    protected void addFileWidgetInputType(final FileWidget widget,
             final IFormBuilder builder) throws InvalidFormDefinitionException {
-        final FileWidgetInputType widgetInputType = widget.getInputType();
-        switch (widgetInputType) {
-            case DOCUMENT:
+        final FileWidgetDownloadType widgetDownloadType = widget.getDownloadType();
+        switch (widgetDownloadType) {
+            case BOTH:
                 builder.addFileWidgetInputType(org.bonitasoft.forms.client.model.FileWidgetInputType.ALL);
                 break;
             case URL:
                 builder.addFileWidgetInputType(org.bonitasoft.forms.client.model.FileWidgetInputType.URL);
                 break;
-            case RESOURCE:
+            case BROWSE:
                 builder.addFileWidgetInputType(org.bonitasoft.forms.client.model.FileWidgetInputType.FILE);
                 break;
             default:
                 break;
         }
+    }
+
+    protected void addDocumentInitialValue(final FileWidget widget,
+            final IFormBuilder builder) throws InvalidFormDefinitionException {
+        final FileWidgetInputType widgetInputType = widget.getInputType();
         if (widgetInputType == FileWidgetInputType.URL
                 || widgetInputType == FileWidgetInputType.DOCUMENT) {
             final Expression inputExpression = widget.getInputExpression();
@@ -1828,6 +1840,19 @@ public class FormsExporter {
             if (resourcePath != null && !resourcePath.isEmpty()) {
                 builder.addInitialValueResource(resourcePath);
             }
+        }
+
+        //   builder.addDocumentListBehavior(widget.getDocument().isMultiple());
+    }
+
+    /**
+     * @param widget
+     * @param builder
+     * @throws InvalidFormDefinitionException
+     */
+    private void setDocumentIsMultiple(final FileWidget widget, final IFormBuilder builder) throws InvalidFormDefinitionException {
+        if (widget.isDuplicate()) {
+            builder.addFieldOutputType(widget.getReturnTypeModifier());
         }
     }
 
@@ -1888,7 +1913,7 @@ public class FormsExporter {
      * The initial value for SingleValuatedFormField is the value returned by
      * the input Groovy Script. In case of MultipleValuatedField, it is the
      * defaultValue.
-     * 
+     *
      * @param widget
      * @param builder
      * @throws InvalidFormDefinitionException
@@ -1927,7 +1952,7 @@ public class FormsExporter {
 
     /**
      * Set available values for multiplevaluated widget.
-     * 
+     *
      * @param widget
      * @param builder
      * @throws InvalidFormDefinitionException
@@ -2150,7 +2175,7 @@ public class FormsExporter {
 
     /**
      * Add all form page relative to a studio process.
-     * 
+     *
      * @param entryPageFlow
      * @param builder
      * @throws InvalidFormDefinitionException

@@ -550,7 +550,7 @@ public abstract class AbstractFormsSection extends AbstractBonitaDescriptionSect
 
     @Override
     public void refresh() {
-        mainComposite.layout(true);
+        mainComposite.layout(true, true);
         super.refresh();
     }
 

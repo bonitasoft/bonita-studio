@@ -21,22 +21,18 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.bonitasoft.studio.common.editor.EditorUtil;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.eclipse.emf.common.ui.URIEditorInput;
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
-import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramEditorInput;
 import org.eclipse.gmf.runtime.emf.core.util.EMFCoreUtil;
-import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.part.FileEditorInput;
 
 /**
  *
@@ -46,21 +42,6 @@ import org.eclipse.ui.part.FileEditorInput;
  *
  */
 public class EditingDomainResourcesDisposer {
-
-    private static Resource getDiagramResource(final ResourceSet resourceSet, final IEditorInput editorInput) {
-        Resource diagramResource = null;
-        if (editorInput instanceof URIEditorInput) {
-            final URI resourceURI = ((URIEditorInput) editorInput).getURI().trimFragment();
-            diagramResource = resourceSet.getResource(resourceURI, false);
-        } else if (editorInput instanceof FileEditorInput) {
-            final URI resourceURI = URI.createPlatformResourceURI(((FileEditorInput) editorInput).getFile().getFullPath().toString(), true);
-            diagramResource = resourceSet.getResource(resourceURI, false);
-        } else if (editorInput instanceof IDiagramEditorInput) {
-            final Diagram diagram = ((IDiagramEditorInput) editorInput).getDiagram();
-            diagramResource = diagram.eResource();
-        }
-        return diagramResource;
-    }
 
     /**
      * called to dispose the resource set when closing the editor in parameter.
@@ -91,7 +72,7 @@ public class EditingDomainResourcesDisposer {
                         final DiagramEditor openDiagramEditor = (DiagramEditor) openEditor;
                         final ResourceSet diagramResourceSet = openDiagramEditor.getEditingDomain().getResourceSet();
                         if (diagramResourceSet == resourceSet) {
-                            final Resource diagramResource = getDiagramResource(diagramResourceSet, currentEditorInput);
+                            final Resource diagramResource = EditorUtil.getDiagramResource(diagramResourceSet, currentEditorInput);
                             if(diagramResource != null){
                                 resourcesToDispose.remove(diagramResource);
                                 final Collection<?> imports = EMFCoreUtil.getImports(diagramResource);

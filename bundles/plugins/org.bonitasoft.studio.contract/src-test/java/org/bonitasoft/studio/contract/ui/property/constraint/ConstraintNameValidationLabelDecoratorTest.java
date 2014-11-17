@@ -21,13 +21,13 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
-import org.bonitasoft.studio.contract.AbstractSWTTestCase;
 import org.bonitasoft.studio.contract.core.ContractConstraintUtil;
 import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractConstraint;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ContractInputType;
 import org.bonitasoft.studio.model.process.ProcessFactory;
+import org.bonitasoft.studio.swt.AbstractSWTTestCase;
 import org.eclipse.jface.fieldassist.FieldDecoration;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;

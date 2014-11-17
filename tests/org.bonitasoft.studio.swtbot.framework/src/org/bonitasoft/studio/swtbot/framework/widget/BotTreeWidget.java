@@ -46,6 +46,11 @@ public class BotTreeWidget extends BotWidget {
         return this;
     }
 
+    public BotTreeWidget unselect() {
+        getSWTBotWidget().unselect();
+        return this;
+    }
+
     public BotTreeWidget select(final int indexInTree) {
         getSWTBotWidget().select(indexInTree);
         return this;
@@ -81,6 +86,21 @@ public class BotTreeWidget extends BotWidget {
         final SWTBotTreeItem treeItem = treeWithId.getTreeItem(selection.get(0, 0));
         System.out.println(treeItem);
         return new BotContractInputRow(bot, selection.rowCount());
+    }
+
+    public ICondition activeCondition() {
+        return new DefaultCondition() {
+
+            @Override
+            public boolean test() throws Exception {
+                return getSWTBotWidget().isActive() && getSWTBotWidget().isEnabled();
+            }
+
+            @Override
+            public String getFailureMessage() {
+                return "Tree is not active";
+            }
+        };
     }
 
 }

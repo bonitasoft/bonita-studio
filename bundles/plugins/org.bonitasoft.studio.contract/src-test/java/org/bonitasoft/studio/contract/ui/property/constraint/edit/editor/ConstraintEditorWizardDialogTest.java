@@ -20,7 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
 
-import org.bonitasoft.studio.contract.AbstractSWTTestCase;
+import org.bonitasoft.studio.swt.AbstractSWTTestCase;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.swt.graphics.Image;

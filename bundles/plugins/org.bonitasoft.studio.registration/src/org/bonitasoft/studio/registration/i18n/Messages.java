@@ -35,7 +35,7 @@ public class Messages extends NLS {
 	public static String RegisterWizardPage_Desc;
 	public static String RegisterWizardPage_email;
 	public static String RegisterWizardPage_country;
-
+	public static String RegisterWizardPage_organization;
 
 	static {
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

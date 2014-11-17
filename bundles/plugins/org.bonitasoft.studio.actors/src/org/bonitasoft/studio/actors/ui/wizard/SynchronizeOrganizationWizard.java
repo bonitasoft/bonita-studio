@@ -22,7 +22,9 @@ import org.bonitasoft.studio.actors.i18n.Messages;
 import org.bonitasoft.studio.actors.model.organization.Organization;
 import org.bonitasoft.studio.actors.model.organization.User;
 import org.bonitasoft.studio.actors.preference.ActorsPreferenceConstants;
+import org.bonitasoft.studio.actors.repository.OrganizationFileStore;
 import org.bonitasoft.studio.actors.ui.wizard.page.DefaultUserOrganizationWizardPage;
+import org.bonitasoft.studio.actors.ui.wizard.page.OrganizationValidator;
 import org.bonitasoft.studio.actors.ui.wizard.page.SynchronizeOrganizationWizardPage;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
@@ -33,6 +35,7 @@ import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.Parameterization;
 import org.eclipse.core.commands.ParameterizedCommand;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -53,12 +56,14 @@ public class SynchronizeOrganizationWizard extends Wizard {
     private SynchronizeOrganizationWizardPage page;
     private DefaultUserOrganizationWizardPage userPage;
     private Organization activeOrganization;
+    private final OrganizationValidator validator;
 
     public SynchronizeOrganizationWizard(){
         setWindowTitle(Messages.synchronizeOrganizationTitle);
         setDefaultPageImageDescriptor(Pics.getWizban()) ;
         setForcePreviousAndNextButtons(false) ;
         setNeedsProgressMonitor(true) ;
+        validator = new OrganizationValidator();
     }
 
     @Override
@@ -75,7 +80,7 @@ public class SynchronizeOrganizationWizard extends Wizard {
     @Override
     public IWizardPage getNextPage(final IWizardPage page) {
         if(page instanceof SynchronizeOrganizationWizardPage){
-            activeOrganization = (Organization) ((SynchronizeOrganizationWizardPage)page).getFileStore().getContent();
+            activeOrganization = ((SynchronizeOrganizationWizardPage)page).getFileStore().getContent();
             userPage.setOrganization(activeOrganization) ;
             return userPage ;
         }else{
@@ -88,28 +93,19 @@ public class SynchronizeOrganizationWizard extends Wizard {
      */
     @Override
     public boolean performFinish() {
+            final IPreferenceStore prefStore = updateDefaultUserPreference();
+            final OrganizationFileStore artifact = getFileStore();
         try {
             getContainer().run(true, false, new IRunnableWithProgress() {
 
                 @Override
-                public void run(final IProgressMonitor maonitor) throws InvocationTargetException,InterruptedException {
-                    maonitor.beginTask(Messages.synchronizingOrganization, IProgressMonitor.UNKNOWN) ;
-
-                    final IPreferenceStore prefStore = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore() ;
-                    final String userName = userPage.getUser();
-                    String password = null;
-                    if (activeOrganization!=null){
-
-                        for (final User user:activeOrganization.getUsers().getUser()){
-                            if (user.getUserName().equals(userPage.getUser())){
-                                password = user.getPassword().getValue();
-                            }
-                        }
+                public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+                    monitor.beginTask(Messages.validatingOrganizationContent, IProgressMonitor.UNKNOWN);
+                    final IStatus status = validator.validate(artifact.getContent());
+                    if (!status.isOK()) {
+                        throw new InvocationTargetException(new OrganizationValidationException(status));
                     }
-                    prefStore.setValue(BonitaPreferenceConstants.USER_NAME,userName);
-                    prefStore.setValue(BonitaPreferenceConstants.USER_PASSWORD,password);
-
-                    final IRepositoryFileStore artifact = getFileStore() ;
+                    monitor.beginTask(Messages.synchronizingOrganization, IProgressMonitor.UNKNOWN);
                     final ICommandService service = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class) ;
                     final IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService(IHandlerService.class) ;
                     final Command cmd = service.getCommand("org.bonitasoft.studio.engine.installOrganization") ;
@@ -120,25 +116,40 @@ public class SynchronizeOrganizationWizard extends Wizard {
                     } catch (final Exception e) {
                         throw new InvocationTargetException(e);
                     }
-
-                    final String organizationName = artifact.getDisplayName();
-                    Display.getDefault().syncExec( new Runnable() {
-                        @Override
-                        public void run() {
-                            MessageDialog.openInformation(Display.getDefault().getActiveShell(), Messages.synchronizeInformationTitle,Messages.bind(Messages.synchronizeOrganizationSuccessMsg, organizationName));
-                        }
-                    });
-
                 }
             }) ;
-        } catch (final Exception e) {
-            BonitaStudioLog.error(e) ;
+        } catch (final InvocationTargetException e) {
+            if (e.getCause() instanceof OrganizationValidationException) {
+                MessageDialog.openError(Display.getDefault().getActiveShell(), Messages.organizationValidationFailed, e.getCause().getMessage());
+            }
             return false ;
+        } catch (final InterruptedException e) {
+            BonitaStudioLog.error(e);
+            return false;
         }
+        final String organizationName = artifact.getDisplayName();
+                MessageDialog.openInformation(Display.getDefault().getActiveShell(), Messages.synchronizeInformationTitle,
+                        Messages.bind(Messages.synchronizeOrganizationSuccessMsg, organizationName));
         return true;
     }
 
-    public IRepositoryFileStore getFileStore() {
+    protected IPreferenceStore updateDefaultUserPreference() {
+        final IPreferenceStore prefStore = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore();
+        final String userName = userPage.getUser();
+        String password = null;
+        if (activeOrganization != null) {
+            for (final User user : activeOrganization.getUsers().getUser()) {
+                if (user.getUserName().equals(userPage.getUser())) {
+                    password = user.getPassword().getValue();
+                }
+            }
+        }
+        prefStore.setValue(BonitaPreferenceConstants.USER_NAME, userName);
+        prefStore.setValue(BonitaPreferenceConstants.USER_PASSWORD, password);
+        return prefStore;
+    }
+
+    public OrganizationFileStore getFileStore() {
         return page.getFileStore();
     }
 

@@ -17,37 +17,42 @@ Require-Bundle: org.bonitasoft.studio.model;bundle-version="1.0.0",
  org.bonitasoft.studio.profiles;bundle-version="1.0.0",
  org.bonitasoft.studio.diagram.custom;bundle-version="1.0.0",
  org.bonitasoft.studio.decision.core;bundle-version="1.0.0",
- org.eclipse.core.databinding;bundle-version="1.4.0",
  org.eclipse.core.databinding.beans;bundle-version="1.2.100",
  org.eclipse.jface.databinding;bundle-version="1.5.0",
- org.eclipse.emf.edit.ui;bundle-version="2.7.0",
  org.bonitasoft.studio.connectors.model.edit;bundle-version="1.0.0",
  org.eclipse.wst.server.core;bundle-version="1.1.303",
  org.eclipse.jst.server.tomcat.core;bundle-version="1.1.301",
  org.eclipse.debug.ui;bundle-version="3.7.101",
- org.eclipse.core.databinding.property;bundle-version="1.4.0",
- org.eclipse.gmf.runtime.diagram.ui.render,
  org.bonitasoft.studio.repository.themes;bundle-version="1.0.0",
  org.eclipse.jdt.launching;bundle-version="3.6.1",
- org.bonitasoft.studio.condition;bundle-version="1.0.0",
  org.bonitasoft.studio.condition.ui;bundle-version="1.0.0",
- org.eclipse.xtext.ui;bundle-version="2.3.1",
  org.bonitasoft.studio.xml;bundle-version="6.0.0",
  org.eclipse.ui.browser;bundle-version="3.3.101",
- org.eclipse.core.expressions,
  org.junit;bundle-version="4.11.0";resolution:=optional,
- org.fest-assert;bundle-version="1.4.2";resolution:=optional,
  org.mockito;bundle-version="1.9.5";resolution:=optional,
+ assertj-core;bundle-version="1.5.0";resolution:=optional,
  org.bonitasoft.studio.expression.editor,
- org.bonitasoft.studio.groovy
-Export-Package: org.bonitasoft.studio.engine,org.bonitasoft.studio.eng
- ine.command,org.bonitasoft.studio.engine.config,org.bonitasoft.studio
- .engine.contribution,org.bonitasoft.studio.engine.export,org.bonitaso
- ft.studio.engine.export.switcher,org.bonitasoft.studio.engine.i18n;x-
- friends:="org.bonitasoft.studio.engine.test",org.bonitasoft.studio.en
- gine.operation,org.bonitasoft.studio.engine.preferences,org.bonitasof
- t.studio.engine.store,org.bonitasoft.studio.engine.ui,org.bonitasoft.
- studio.engine.ui.dialog,org.bonitasoft.studio.engine.ui.wizard
+ org.bonitasoft.studio.data,
+ org.bonitasoft.studio.tests-utils;bundle-version="6.4.0";resolution:=optional,
+ org.eclipse.core.databinding.property;bundle-version="1.4.200",
+ org.eclipse.gmf.runtime.diagram.ui.render;bundle-version="1.7.0",
+ org.eclipse.emf.edit.ui,
+ org.eclipse.jdt.core,
+ org.eclipse.xtext.ui
+Export-Package: org.bonitasoft.studio.engine,
+ org.bonitasoft.studio.engine.command,
+ org.bonitasoft.studio.engine.config,
+ org.bonitasoft.studio.engine.contribution,
+ org.bonitasoft.studio.engine.export,
+ org.bonitasoft.studio.engine.export.expression.converter.comparison,
+ org.bonitasoft.studio.engine.export.switcher,
+ org.bonitasoft.studio.engine.i18n;x-friends:="org.bonitasoft.studio.engine.test",
+ org.bonitasoft.studio.engine.operation,
+ org.bonitasoft.studio.engine.preferences,
+ org.bonitasoft.studio.engine.store,
+ org.bonitasoft.studio.engine.ui,
+ org.bonitasoft.studio.engine.ui.dialog,
+ org.bonitasoft.studio.engine.ui.wizard
 Bundle-Activator: org.bonitasoft.studio.engine.EnginePlugin
 Bundle-ActivationPolicy: lazy
 Import-Package: org.bonitasoft.engine.api,
@@ -61,6 +66,5 @@ Import-Package: org.bonitasoft.engine.api,
  org.bonitasoft.engine.expression,
  org.bonitasoft.engine.operation,
  org.bonitasoft.engine.platform,
- org.bonitasoft.engine.session,
- org.bonitasoft.forms.server.accessor.impl.util
+ org.bonitasoft.engine.session
 

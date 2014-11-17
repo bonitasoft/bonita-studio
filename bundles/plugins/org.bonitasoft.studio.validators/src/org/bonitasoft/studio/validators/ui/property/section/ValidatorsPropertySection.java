@@ -238,13 +238,13 @@ public class ValidatorsPropertySection extends AbstractBonitaDescriptionSection 
         defaultValidator = getWidgetFactory().createButton(defaultValidatorComposite, Messages.Validator_defaultValidator, SWT.CHECK);
 
 
-        positionComp = 	getWidgetFactory().createComposite(defaultValidatorComposite);
+        positionComp =  getWidgetFactory().createComposite(defaultValidatorComposite);
         positionComp.setLayout(new GridLayout(3,false)) ;
         getWidgetFactory().createLabel(positionComp, Messages.Validator_isBelow);
         defaultValidatorIsBelow = getWidgetFactory().createButton(positionComp, Messages.Validator_Below, SWT.RADIO);
         defaultValidatorIsAbove = getWidgetFactory().createButton(positionComp, Messages.Validator_Above, SWT.RADIO);
 
-        positionComp.setLayoutData(	GridDataFactory.fillDefaults().indent(15, 0).create()) ;
+        positionComp.setLayoutData( GridDataFactory.fillDefaults().indent(15, 0).create()) ;
         defaultValidator.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(final SelectionEvent e) {
@@ -411,24 +411,20 @@ public class ValidatorsPropertySection extends AbstractBonitaDescriptionSection 
     private void enableFields(final boolean enable) {
         fieldsComposite.setVisible(enable);
         nameField.setEnabled(enable);
-        labelExpressionViewer.getTextControl().setEnabled(enable);
-        labelExpressionViewer.getButtonControl().setEnabled(enable);
+        labelExpressionViewer.getControl().setEnabled(enable);
         comboViewerForValidatorClass.getCombo().setEnabled(enable);
         htmlClassField.setEnabled(enable);
         isBelow.setEnabled(enable);
         if(currentValidator != null &&  currentValidator.getValidatorClass() != null){
             final ValidatorDescriptor descriptior = validatorStore.getValidatorDescriptor(currentValidator.getValidatorClass()) ;
             if(descriptior == null){
-                parameterExpressionViewer.getTextControl().setEnabled(false);
-                parameterExpressionViewer.getButtonControl().setEnabled(false);
+                parameterExpressionViewer.getControl().setEnabled(false);
             }else{
                 final boolean enabled = enable && descriptior.getHasParameter() ;
-                parameterExpressionViewer.getTextControl().setEnabled(enabled);
-                parameterExpressionViewer.getButtonControl().setEnabled(enabled);
+                parameterExpressionViewer.getControl().setEnabled(enabled);
             }
         } else {
-            parameterExpressionViewer.getTextControl().setEnabled(false);
-            parameterExpressionViewer.getButtonControl().setEnabled(false);
+            parameterExpressionViewer.getControl().setEnabled(false);
         }
     }
 
@@ -459,21 +455,21 @@ public class ValidatorsPropertySection extends AbstractBonitaDescriptionSection 
                     }
 
 
-                    //					for(Validator validator :((Validable)lastEObject).getValidators()){
-                    //						if(validator.getValidatorClass() != null){
-                    //							boolean stilExists = false ;
-                    //							for(IRepositoryFileStore file : validatorStore.getChildren()){
-                    //								ValidatorDescriptor desc = (ValidatorDescriptor) file.getContent() ;
-                    //								if(desc.getClassName().equals(validator.getValidatorClass())){
-                    //									stilExists = true ;
-                    //									break ;
-                    //								}
-                    //							}
-                    //							if(!stilExists){
-                    //								getEditingDomain().getCommandStack().execute(SetCommand.create(getEditingDomain(), validator, FormPackage.Literals.VALIDATOR__VALIDATOR_CLASS, null)) ;
-                    //							}
-                    //						}
-                    //					}
+                    //                  for(Validator validator :((Validable)lastEObject).getValidators()){
+                    //                      if(validator.getValidatorClass() != null){
+                    //                          boolean stilExists = false ;
+                    //                          for(IRepositoryFileStore file : validatorStore.getChildren()){
+                    //                              ValidatorDescriptor desc = (ValidatorDescriptor) file.getContent() ;
+                    //                              if(desc.getClassName().equals(validator.getValidatorClass())){
+                    //                                  stilExists = true ;
+                    //                                  break ;
+                    //                              }
+                    //                          }
+                    //                          if(!stilExists){
+                    //                              getEditingDomain().getCommandStack().execute(SetCommand.create(getEditingDomain(), validator, FormPackage.Literals.VALIDATOR__VALIDATOR_CLASS, null)) ;
+                    //                          }
+                    //                      }
+                    //                  }
 
                     comboViewerForValidatorClass.setInput(validatorStore.getValidatorDescriptors());
 
@@ -504,8 +500,8 @@ public class ValidatorsPropertySection extends AbstractBonitaDescriptionSection 
                      * Use pattern master-detail databinding in order to be up to date with the selection in the FilteredTreeViewer
                      * */
 
-                    //		labelField.setElement((Element) lastEObject);
-                    //		labelField.reset();
+                    //      labelField.setElement((Element) lastEObject);
+                    //      labelField.reset();
 
                     /*Observe change in selection*/
                     final IViewerObservableValue treeViewerObservaleValue = ViewersObservables.observeSingleSelection(tableViewer);
@@ -702,12 +698,12 @@ public class ValidatorsPropertySection extends AbstractBonitaDescriptionSection 
         } catch (final ExecutionException e) {
             BonitaStudioLog.error(e);
         }
-        //		EObject eobject = getEObject();
-        //		while(!(eobject instanceof AbstractProcess)){
-        //			eobject = eobject.eContainer();
-        //		}
-        //		AbstractProcess ap = (AbstractProcess) eobject;
-        //		getEditingDomain().getCommandStack().execute(new AddCommand(getEditingDomain(), ap.getResourceValidators(), ValidatorRepositoryArtifact.ID_BASE+validatorClass));
+        //      EObject eobject = getEObject();
+        //      while(!(eobject instanceof AbstractProcess)){
+        //          eobject = eobject.eContainer();
+        //      }
+        //      AbstractProcess ap = (AbstractProcess) eobject;
+        //      getEditingDomain().getCommandStack().execute(new AddCommand(getEditingDomain(), ap.getResourceValidators(), ValidatorRepositoryArtifact.ID_BASE+validatorClass));
     }
 
     /**

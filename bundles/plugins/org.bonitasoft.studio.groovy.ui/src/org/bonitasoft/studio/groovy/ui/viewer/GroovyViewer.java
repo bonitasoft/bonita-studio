@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
-import java.util.ResourceBundle;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
@@ -45,8 +44,6 @@ import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.codehaus.groovy.eclipse.GroovyPlugin;
 import org.codehaus.groovy.eclipse.core.preferences.PreferenceConstants;
 import org.codehaus.groovy.eclipse.editor.GroovyEditor;
-import org.codehaus.groovy.eclipse.refactoring.actions.FormatKind;
-import org.codehaus.groovy.eclipse.refactoring.actions.OrganizeGroovyImportsAction;
 import org.codehaus.jdt.groovy.model.GroovyCompilationUnit;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -60,7 +57,6 @@ import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentListener;
 import org.eclipse.jface.text.ITextListener;
-import org.eclipse.jface.text.ITextOperationTarget;
 import org.eclipse.jface.text.TextEvent;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.SourceViewer;
@@ -77,7 +73,6 @@ import org.eclipse.ui.handlers.IHandlerActivation;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
-import org.eclipse.ui.texteditor.TextOperationAction;
 
 /**
  * @author Romain Bioteau
@@ -148,7 +143,7 @@ public class GroovyViewer implements IDocumentListener {
         } catch (final Exception e1) {
             BonitaStudioLog.error(e1);
         }
-
+        final GroovyEditorActionFactory actionFactory = new GroovyEditorActionFactory(editor);
         getSourceViewer().getTextWidget().setTextLimit(MAX_SCRIPT_LENGTH);
         getSourceViewer().addTextListener(new ITextListener() {
 
@@ -186,16 +181,11 @@ public class GroovyViewer implements IDocumentListener {
             @Override
             public void keyReleased(final KeyEvent e) {
                 if ((e.stateMask == SWT.CTRL || e.stateMask == SWT.COMMAND) && e.keyCode == 'z') {
-                    final TextOperationAction action = new TextOperationAction(
-                            ResourceBundle.getBundle("org.eclipse.ui.texteditor.ConstructedEditorMessages"), "Editor.Undo.", editor, ITextOperationTarget.UNDO); //$NON-NLS-1$ //$NON-NLS-2$
-                    action.run();
+                    actionFactory.getUndoAction().run();
                 } else if ((e.stateMask == SWT.CTRL || e.stateMask == SWT.COMMAND) && e.keyCode == 'y') {
-                    final TextOperationAction action = new TextOperationAction(
-                            ResourceBundle.getBundle("org.eclipse.ui.texteditor.ConstructedEditorMessages"), "Editor.Redo.", editor, ITextOperationTarget.REDO); //$NON-NLS-1$ //$NON-NLS-2$
-                    action.run();
+                    actionFactory.getRedoAction().run();
                 } else if (e.stateMask == (SWT.CTRL | SWT.SHIFT) && e.keyCode == 'o') {
-                    final OrganizeGroovyImportsAction action = new OrganizeGroovyImportsAction(editor);
-                    action.run();
+                    actionFactory.getOrganizeImportAction().run();
                 }
 
             }
@@ -203,15 +193,14 @@ public class GroovyViewer implements IDocumentListener {
             @Override
             public void keyPressed(final KeyEvent e) {
                 if (e.keyCode == SWT.DEL) {
-                    final TextOperationAction action = new TextOperationAction(
-                            ResourceBundle.getBundle("org.eclipse.ui.texteditor.ConstructedEditorMessages"), "Editor.Delete.", editor, ITextOperationTarget.DELETE); //$NON-NLS-1$ //$NON-NLS-2$
-                    action.run();
-                } else if ((e.stateMask == SWT.CTRL || e.stateMask == SWT.COMMAND) && e.keyCode == 'i') {
-                    final BonitaFormatGroovyAction action = new BonitaFormatGroovyAction(editor.getEditorSite(), FormatKind.FORMAT, editor, editor
-                            .getGroovyCompilationUnit());
-                    action.run();
+                    actionFactory.getDeleteAction().run();
+                } else
+                if ((e.stateMask == SWT.CTRL || e.stateMask == SWT.COMMAND) && e.keyCode == 'i') {
+                    actionFactory.getFormatAction().run();
                 }
             }
+
+
         });
         enableContextAssitShortcut();
 
@@ -224,6 +213,8 @@ public class GroovyViewer implements IDocumentListener {
             }
         });
     }
+
+
 
     public void enableContextAssitShortcut() {
         final IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getAdapter(IHandlerService.class);

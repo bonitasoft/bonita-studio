@@ -19,6 +19,7 @@ package org.bonitasoft.studio.validation.constraints.process;
 
 import java.util.List;
 
+import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.model.process.AbstractProcess;
@@ -36,43 +37,46 @@ import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 
 /**
  * @author Baptiste Mesta
- * 
+ *
  */
 public class UniqueContainerIdConstraint extends AbstractLiveValidationMarkerConstraint {
 
 
 	@Override
-	protected IStatus performLiveValidation(IValidationContext ctx) {
+	protected IStatus performLiveValidation(final IValidationContext ctx) {
 		return ctx.createSuccessStatus();
 	}
 
 	@Override
-	protected IStatus performBatchValidation(IValidationContext ctx) {
-		EObject eObj = ctx.getTarget();
+	protected IStatus performBatchValidation(final IValidationContext ctx) {
+		final EObject eObj = ctx.getTarget();
 		if(eObj instanceof Pool){
-			for (Element el : ((Container) eObj.eContainer()).getElements()) {
+			for (final Element el : ((Container) eObj.eContainer()).getElements()) {
 				if(!el.equals(eObj) && el.getName().equals(((Element) eObj).getName()) && ((AbstractProcess) el).getVersion().equals(((AbstractProcess) eObj).getVersion())){
 					return ctx.createFailureStatus(new Object[] { Messages.Validation_Element_SameName + ": " + el.getName() });
 				}
 			}
-			
-			Pool p = (Pool) eObj;
-			final DiagramRepositoryStore diagramStore =  (DiagramRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
+
+			final Pool p = (Pool) eObj;
+			final DiagramRepositoryStore diagramStore =  RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
 			final List<AbstractProcess> allProcesses = diagramStore.getAllProcesses();
-			for (AbstractProcess other_p : allProcesses) {
-				if(!EcoreUtil.equals(p,other_p) && p.getName().equals(other_p.getName()) && p.getVersion().equals(other_p.getVersion())){
+			for (final AbstractProcess other_p : allProcesses) {
+                if (!EcoreUtil.equals(p, other_p)
+                        && !ModelHelper.getEObjectID(p).equals(ModelHelper.getEObjectID(other_p))
+                        && p.getName().equals(other_p.getName())
+                        && p.getVersion().equals(other_p.getVersion())) {
 					return ctx.createFailureStatus(new Object[] { Messages.bind(Messages.Validation_Duplicate_Process , p.getName(), p.getVersion())});
 				}
 			}
 		}
-		
-		
+
+
 		return ctx.createSuccessStatus();
 	}
 
 
 	@Override
-	protected String getMarkerType(DiagramEditor editor) {
+	protected String getMarkerType(final DiagramEditor editor) {
 		return ProcessMarkerNavigationProvider.MARKER_TYPE;
 	}
 

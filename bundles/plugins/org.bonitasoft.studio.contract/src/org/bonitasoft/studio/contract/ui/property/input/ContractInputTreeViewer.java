@@ -166,14 +166,14 @@ public class ContractInputTreeViewer extends TreeViewer {
 
     protected void createMandatoryColumn() {
         final TreeViewerColumn mandatoryColumnViewer = createColumnViewer(Messages.mandatory, SWT.CENTER);
-        mandatoryColumnViewer.setLabelProvider(new MandatoryInputCheckboxLabelProvider(getControl()));
+        mandatoryColumnViewer.setLabelProvider(new MandatoryInputCheckboxLabelProvider());
         mandatoryColumnViewer.setEditingSupport(new CheckboxPropertyEditingSupport(propertySourceProvider, this,
                 ProcessPackage.Literals.CONTRACT_INPUT__MANDATORY.getName()));
     }
 
     protected void createMultipleColumn() {
         final TreeViewerColumn multipleColumnViewer = createColumnViewer(Messages.multiple, SWT.CENTER);
-        multipleColumnViewer.setLabelProvider(new MultipleInputCheckboxLabelProvider(getControl()));
+        multipleColumnViewer.setLabelProvider(new MultipleInputCheckboxLabelProvider());
         multipleColumnViewer.setEditingSupport(new CheckboxPropertyEditingSupport(propertySourceProvider, this,
                 ProcessPackage.Literals.CONTRACT_INPUT__MULTIPLE.getName()));
     }

@@ -62,7 +62,7 @@ public class DynamicDescriptionPropertySectionContribution extends AbstractPrope
                 ExpressionConstants.PARAMETER_TYPE, ExpressionConstants.SCRIPT_TYPE }));
         expressionViewer.setInput(eObject) ;
         expressionViewer.setMessage(Messages.dynamicDescriptionHint,IStatus.INFO) ;
-        expressionViewer.addExpressionValidator(ExpressionConstants.CONSTANT_TYPE, new ExpressionLengthValidator(maxLength));
+        expressionViewer.addExpressionValidator(new ExpressionLengthValidator(maxLength));
         refreshDataBindingContext();
     }
 

@@ -2,7 +2,6 @@ package org.bonitasoft.studio.contract.ui.property.input;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.bonitasoft.studio.contract.ui.property.input.MultipleInputCheckboxLabelProvider;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.junit.After;
@@ -19,7 +18,7 @@ public class MultipleInputCheckboxLabelProviderTest {
      */
     @Before
     public void setUp() throws Exception {
-        labelProviderUnderTest = new MultipleInputCheckboxLabelProvider(null);
+        labelProviderUnderTest = new MultipleInputCheckboxLabelProvider();
     }
 
     /**

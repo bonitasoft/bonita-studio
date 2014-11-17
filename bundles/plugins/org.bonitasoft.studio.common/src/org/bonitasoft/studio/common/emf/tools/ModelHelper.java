@@ -34,6 +34,8 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.model.form.Duplicable;
+import org.bonitasoft.studio.model.form.FileWidget;
+import org.bonitasoft.studio.model.form.FileWidgetInputType;
 import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.form.FormField;
 import org.bonitasoft.studio.model.form.FormPackage;
@@ -59,6 +61,7 @@ import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.DataAware;
 import org.bonitasoft.studio.model.process.DataType;
 import org.bonitasoft.studio.model.process.DateType;
+import org.bonitasoft.studio.model.process.Document;
 import org.bonitasoft.studio.model.process.DoubleType;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.EnumType;
@@ -152,6 +155,19 @@ public class ModelHelper {
         }
         return res;
     }
+
+
+    public static FileWidgetInputType getDefaultFileWidgetInputType(final FileWidget widget) {
+        final Form parentForm = ModelHelper.getParentForm(widget);
+        if (parentForm == null) {
+            return FileWidgetInputType.RESOURCE;
+        }
+        if (ModelHelper.isAnEntryPageFlowOnAPool(parentForm)) {
+            return FileWidgetInputType.RESOURCE;
+        }
+        return FileWidgetInputType.DOCUMENT;
+    }
+
 
     private static List<AbstractProcess> findAllProcesses(final Element element, final List<AbstractProcess> processes) {
 
@@ -644,33 +660,17 @@ public class ModelHelper {
      * @param proc
      */
     public static void addDataTypes(final MainProcess proc) {
-        // boolean
         proc.getDatatypes().add(createBooleanDataType());
-
-        // date
         proc.getDatatypes().add(createDateDataType());
-
-        // int
         proc.getDatatypes().add(createIntegerDataType());
-
-        // long
         proc.getDatatypes().add(createLongDataType());
-
-        // double
         proc.getDatatypes().add(createDoubleDataType());
-
-        // string
         proc.getDatatypes().add(createStringDataType());
-
-        // java
         proc.getDatatypes().add(createJavaDataType());
-
-        // xml
         proc.getDatatypes().add(createXMLDataType());
-
-        // xml
         proc.getDatatypes().add(createBusinessObjectType());
     }
+
 
     public static BusinessObjectType createBusinessObjectType() {
         final BusinessObjectType businessObjectType = ProcessFactory.eINSTANCE.createBusinessObjectType();
@@ -726,14 +726,15 @@ public class ModelHelper {
         return boolDataType;
     }
 
+
     public static DataType getDataTypeForID(final EObject elem, final String name) {
         final MainProcess proc = getMainProcess(elem);
         if (proc != null) {
-        for (final DataType type : proc.getDatatypes()) {
-            if (type.getName().equals(NamingUtils.convertToId(name))) {
-                return type;
+            for (final DataType type : proc.getDatatypes()) {
+                if (type.getName().equals(NamingUtils.convertToId(name))) {
+                    return type;
+                }
             }
-        }
         }
         return null;
     }
@@ -1213,7 +1214,7 @@ public class ModelHelper {
                                             || i + k >= form.getNColumn()
                                             || j + l >= form.getNLine()
                                             || !getWidgetContainer(form, i + k, j + l).equals(container)) {// check that the case is empty and that we are still
-                                                                                                           // on the grid
+                                        // on the grid
                                         available = false;
                                         break;
                                     }
@@ -1621,17 +1622,17 @@ public class ModelHelper {
                                     if (dt.eClass().equals(child.eClass())) {
                                         if (dt.eClass().equals(ProcessPackage.Literals.ENUM_TYPE)) {
                                             if (((EnumType) child).getName().equals(dt.getName())) {
-                                               toCheck.eSet(reference, dt);
-                                               removeReference = false;
-                                               break;
-                                           }
+                                                toCheck.eSet(reference, dt);
+                                                removeReference = false;
+                                                break;
+                                            }
                                         } else {
-                                           toCheck.eSet(reference, dt);
-                                           removeReference = false;
-                                           break;
-                                       }
-                                   }
-                               }
+                                            toCheck.eSet(reference, dt);
+                                            removeReference = false;
+                                            break;
+                                        }
+                                    }
+                                }
                             }
                         }
                         if (removeReference) {
@@ -1892,6 +1893,17 @@ public class ModelHelper {
         return null;
     }
 
+
+    public static Document getDocumentReferencedInExpression(final Expression expr) {
+        final List<EObject> refs = expr.getReferencedElements();
+        for (final EObject ref : refs) {
+            if (ref instanceof Document && ((Document) ref).getName().equals(expr.getContent())) {
+                return (Document) ref;
+            }
+        }
+        return null;
+    }
+
     public static Lane getParentLane(final EObject element) {
         EObject lane = element.eContainer();
         while (lane != null && !(lane instanceof Lane)) {
@@ -1997,7 +2009,7 @@ public class ModelHelper {
         Widget widget = getParentWidget(context);
 
         if(context.equals(widget) && widget instanceof Group && widget.eContainer() instanceof Group){
-        	widget = (Widget) widget.eContainer();
+            widget = (Widget) widget.eContainer();
         }
 
         if(widget != null){
@@ -2018,22 +2030,24 @@ public class ModelHelper {
     }
 
 
-	public static boolean isObjectIsReferencedInExpression(final Expression expr, final Object elementToDisplay){
-		for (final EObject referencedElement:expr.getReferencedElements()){
-			if (referencedElement instanceof Parameter && elementToDisplay instanceof Parameter && ((Parameter)referencedElement).getName().equals(((Parameter)elementToDisplay).getName())){
-				return true;
-			}
 
-			if (referencedElement instanceof SearchIndex && elementToDisplay instanceof SearchIndex && ((SearchIndex)referencedElement).getName().getName().equals(((SearchIndex)elementToDisplay).getName().getName())){
-				return true;
-			}
+    public static boolean isObjectIsReferencedInExpression(final Expression expr, final Object elementToDisplay){
+        for (final EObject referencedElement:expr.getReferencedElements()){
+            if (referencedElement instanceof Parameter && elementToDisplay instanceof Parameter && ((Parameter)referencedElement).getName().equals(((Parameter)elementToDisplay).getName())){
+                return true;
+            }
 
-			if (referencedElement instanceof Element && elementToDisplay instanceof Element && ((Element)referencedElement).getName().equals(((Element)elementToDisplay).getName())){
-				return true;
-			}
-		}
-		return false;
-	}
+            if (referencedElement instanceof SearchIndex && elementToDisplay instanceof SearchIndex
+                    && ((SearchIndex) referencedElement).getName().getName().equals(((SearchIndex) elementToDisplay).getName().getName())) {
+                return true;
+            }
+
+            if (referencedElement instanceof Element && elementToDisplay instanceof Element && ((Element)referencedElement).getName().equals(((Element)elementToDisplay).getName())){
+                return true;
+            }
+        }
+        return false;
+    }
 
     @SuppressWarnings("unchecked")
     public static <T extends EObject> T getFirstContainerOfType(final EObject element, final Class<T> type) {
@@ -2043,5 +2057,4 @@ public class ModelHelper {
         }
         return (T) current;
     }
-
 }

@@ -66,7 +66,21 @@ public class CatchMessageContentEventSection extends AbstractBonitaDescriptionSe
     MessageContentExpressionValidator validator;
     private EObject lastEObject;
 
+    @Override
+    protected void createContent(final Composite parent) {
+        mainComposite = getWidgetFactory().createComposite(parent);
+        mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).extendedMargins(15, 25, 15, 10).create());
+        mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        createAutoFillButton();
+        validator = new MessageContentExpressionValidator();
+        alc = new PropertyOperationsComposite(getTabbedPropertySheetPage(), mainComposite, new AvailableExpressionTypeFilter(new String[] {
+                ExpressionConstants.CONSTANT_TYPE, ExpressionConstants.MESSAGE_ID_TYPE }), new AvailableExpressionTypeFilter(
+                new String[] { ExpressionConstants.VARIABLE_TYPE }));
+        alc.addActionExpressionValidator(validator);
+        alc.addActionExpressionValidator(validator);
+        alc.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
+    }
 
     private void createAutoFillButton() {
         final Button autoFillButton = getWidgetFactory().createButton(mainComposite, Messages.autoFillMessageContent, SWT.FLAT);
@@ -179,20 +193,5 @@ public class CatchMessageContentEventSection extends AbstractBonitaDescriptionSe
     @Override
     public String getSectionDescription() {
         return Messages.catchMessageContentEventSectionDescription;
-    }
-
-    @Override
-    protected void createContent(final Composite parent) {
-        mainComposite = getWidgetFactory().createComposite(parent);
-        mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).extendedMargins(15, 25, 15, 10).create());
-        mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        createAutoFillButton();
-        validator = new MessageContentExpressionValidator();
-        alc = new PropertyOperationsComposite(getTabbedPropertySheetPage(), mainComposite, new AvailableExpressionTypeFilter(new String[] {
-                ExpressionConstants.CONSTANT_TYPE, ExpressionConstants.MESSAGE_ID_TYPE }), new AvailableExpressionTypeFilter(
-                        new String[] { ExpressionConstants.VARIABLE_TYPE }));
-        alc.addActionExpressionValidator(ExpressionConstants.MESSAGE_ID_TYPE, validator);
-        alc.addActionExpressionValidator(ExpressionConstants.CONSTANT_TYPE, validator);
-        alc.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
     }
 }

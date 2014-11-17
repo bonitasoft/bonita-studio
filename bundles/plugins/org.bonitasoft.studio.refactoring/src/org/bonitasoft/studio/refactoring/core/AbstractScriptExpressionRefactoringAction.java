@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -46,20 +44,20 @@ import org.eclipse.ui.IWorkbenchWindowActionDelegate;
  * @author Romain Bioteau
  */
 
-public abstract class AbstractScriptExpressionRefactoringAction<T extends  RefactorPair<?, ?>> implements IWorkbenchWindowActionDelegate {
+public abstract class AbstractScriptExpressionRefactoringAction<T extends RefactorPair<?, ?>> implements IWorkbenchWindowActionDelegate {
 
-    private List<Expression> scriptExpressions;
-    private CompoundCommand compoundCommand;
+    private final List<Expression> scriptExpressions;
+    private final CompoundCommand compoundCommand;
     private EditingDomain domain;
-    private List<Expression> refactoredScriptExpression;
+    private final List<Expression> refactoredScriptExpression;
     private boolean askConfirmation = false;
     private boolean cancelled;
-    private RefactoringOperationType operationType;
-	protected List<T> pairsToRefactor;
+    private final RefactoringOperationType operationType;
+    protected List<T> pairsToRefactor;
 
-    public AbstractScriptExpressionRefactoringAction(List<T> pairsToRefactor, List<Expression> scriptExpressions,
-            List<Expression> refactoredScriptExpression, CompoundCommand compoundCommand,
-            EditingDomain domain, RefactoringOperationType operationType) {
+    public AbstractScriptExpressionRefactoringAction(final List<T> pairsToRefactor, final List<Expression> scriptExpressions,
+            final List<Expression> refactoredScriptExpression, final CompoundCommand compoundCommand,
+            final EditingDomain domain, final RefactoringOperationType operationType) {
         this.scriptExpressions = scriptExpressions;
         this.refactoredScriptExpression = refactoredScriptExpression;
         this.compoundCommand = compoundCommand;
@@ -68,7 +66,7 @@ public abstract class AbstractScriptExpressionRefactoringAction<T extends  Refac
     }
 
     @Override
-    public void run(IAction action) {
+    public void run(final IAction action) {
         setCancelled(false);
         if (askConfirmation()) {
             final BonitaCompareEditorInput editorInput = createCompareEditorInput();
@@ -100,22 +98,24 @@ public abstract class AbstractScriptExpressionRefactoringAction<T extends  Refac
         config.setProperty(CompareConfiguration.USE_OUTLINE_VIEW, true);
         String oldNames = "";
         String newNames = "";
-        for(RefactorPair<?, ?> pairRefactor : pairsToRefactor){
-        	oldNames += oldNames.isEmpty() ? pairRefactor.getOldValueName():","+pairRefactor.getOldValueName();
-        	newNames += newNames.isEmpty() ? pairRefactor.getNewValueName():","+pairRefactor.getNewValueName();
+        boolean canBeContainedInscript = true;
+        for (final RefactorPair<?, ?> pairRefactor : pairsToRefactor) {
+            oldNames += oldNames.isEmpty() ? pairRefactor.getOldValueName() : "," + pairRefactor.getOldValueName();
+            newNames += newNames.isEmpty() ? pairRefactor.getNewValueName() : "," + pairRefactor.getNewValueName();
+            canBeContainedInscript = canBeContainedInscript && pairRefactor.canBeContainedInScript();
         }
         return new BonitaCompareEditorInput(config, scriptExpressions, refactoredScriptExpression, operationType, oldNames,
-                newNames);
+                newNames, canBeContainedInscript);
     }
 
-    public void setCancelled(boolean cancelled) {
+    public void setCancelled(final boolean cancelled) {
         this.cancelled = cancelled;
     }
 
     protected void doRefactor() {
         for (int i = 0; i < scriptExpressions.size(); i++) {
-            Expression updatedExpression = refactoredScriptExpression.get(i);
-            Expression originalExpression = scriptExpressions.get(i);
+            final Expression updatedExpression = refactoredScriptExpression.get(i);
+            final Expression originalExpression = scriptExpressions.get(i);
             if (!originalExpression.getContent().equals(updatedExpression.getContent())) {
                 compoundCommand.append(SetCommand.create(domain, originalExpression, ExpressionPackage.Literals.EXPRESSION__CONTENT,
                         updatedExpression.getContent()));
@@ -126,32 +126,32 @@ public abstract class AbstractScriptExpressionRefactoringAction<T extends  Refac
             }
 
             if (operationType == RefactoringOperationType.REMOVE) {
-                Map<EObject,EObject> references = getReferencedObjectInScriptsOperation(originalExpression);
-                for(EObject reference : references.keySet()){
+                final Map<EObject, EObject> references = getReferencedObjectInScriptsOperation(originalExpression);
+                for (final EObject reference : references.keySet()) {
                     compoundCommand.append(RemoveCommand.create(domain, originalExpression, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS,
                             reference));
                 }
             }
             if (operationType == RefactoringOperationType.UPDATE) {
-                Map<EObject,EObject> referencedObjects = getReferencedObjectInScriptsOperation(originalExpression);
-                for(Entry<EObject,EObject> referencedObject : referencedObjects.entrySet()){
-                	compoundCommand.append(RemoveCommand.create(domain, originalExpression, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS,
-                			referencedObject.getKey()));
-                	compoundCommand.append(AddCommand.create(domain, originalExpression, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS,
-                			ExpressionHelper.createDependencyFromEObject(referencedObject.getValue())));
+                final Map<EObject, EObject> referencedObjects = getReferencedObjectInScriptsOperation(originalExpression);
+                for (final Entry<EObject, EObject> referencedObject : referencedObjects.entrySet()) {
+                    compoundCommand.append(RemoveCommand.create(domain, originalExpression, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS,
+                            referencedObject.getKey()));
+                    compoundCommand.append(AddCommand.create(domain, originalExpression, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS,
+                            ExpressionHelper.createDependencyFromEObject(referencedObject.getValue())));
                 }
             }
         }
     }
 
-    protected abstract Map<EObject,EObject> getReferencedObjectInScriptsOperation(Expression expr);
+    protected abstract Map<EObject, EObject> getReferencedObjectInScriptsOperation(Expression expr);
 
     public boolean isCancelled() {
         return cancelled;
     }
 
     @Override
-    public void selectionChanged(IAction action, ISelection selection) {
+    public void selectionChanged(final IAction action, final ISelection selection) {
     }
 
     @Override
@@ -160,11 +160,11 @@ public abstract class AbstractScriptExpressionRefactoringAction<T extends  Refac
     }
 
     @Override
-    public void init(IWorkbenchWindow window) {
+    public void init(final IWorkbenchWindow window) {
 
     }
 
-    public void setAskConfirmation(boolean askConfirmation) {
+    public void setAskConfirmation(final boolean askConfirmation) {
         this.askConfirmation = askConfirmation;
     }
 
@@ -172,7 +172,7 @@ public abstract class AbstractScriptExpressionRefactoringAction<T extends  Refac
         return askConfirmation;
     }
 
-    public void setEditingDomain(EditingDomain domain) {
+    public void setEditingDomain(final EditingDomain domain) {
         this.domain = domain;
     }
 

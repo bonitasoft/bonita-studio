@@ -53,7 +53,8 @@ Require-Bundle: org.eclipse.core.runtime,
  assertj-core;bundle-version="1.5.0";resolution:=optional,
  org.junit;bundle-version="4.11.0";resolution:=optional,
  org.mockito;bundle-version="1.9.5";resolution:=optional,
- org.bonitasoft.studio.expression.editor
+ org.bonitasoft.studio.expression.editor,
+ org.apache.commons.lang;bundle-version="2.6.0"
 Bundle-ActivationPolicy: lazy
 Import-Package: org.bonitasoft.engine.api,
  org.bonitasoft.engine.bpm,
@@ -64,5 +65,7 @@ Import-Package: org.bonitasoft.engine.api,
  org.bonitasoft.engine.profile,
  org.bonitasoft.engine.search,
  org.bonitasoft.engine.session,
+ org.bonitasoft.studio.common.jface,
+ org.bonitasoft.studio.common.jface.databinding.validator,
  org.bonitasoft.studio.expression.editor.filter
 Bundle-Activator: org.bonitasoft.studio.actors.ActorsPlugin

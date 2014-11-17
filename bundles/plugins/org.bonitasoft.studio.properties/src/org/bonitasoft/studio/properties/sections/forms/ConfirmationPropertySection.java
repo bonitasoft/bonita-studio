@@ -122,6 +122,7 @@ public class ConfirmationPropertySection extends AbstractBonitaDescriptionSectio
     private EMFDataBindingContext context;
     private PageFlow pageFlow;
 
+
     public ConfirmationPropertySection() {
 
     }
@@ -238,19 +239,12 @@ public class ConfirmationPropertySection extends AbstractBonitaDescriptionSectio
         }
         if (pageFlow instanceof AbstractProcess) {
             final AbstractProcess process = (AbstractProcess) pageFlow;
-            confirmationMessage.getTextControl().setEnabled(!formList.isEmpty()
-                    || !containsViewForm
-                    || !process.getRecapForms().isEmpty()
-                    || EntryPageFlowType.REDIRECT.equals(pageFlow.getEntryPageFlowType()));
-            confirmationMessage.getButtonControl().setEnabled(!formList.isEmpty()
+            confirmationMessage.getControl().setEnabled(!formList.isEmpty()
                     || !containsViewForm
                     || !process.getRecapForms().isEmpty()
                     || EntryPageFlowType.REDIRECT.equals(pageFlow.getEntryPageFlowType()));
         } else {
-            confirmationMessage.getTextControl().setEnabled(!formList.isEmpty()
-                    || !containsViewForm
-                    || EntryPageFlowType.REDIRECT.equals(pageFlow.getEntryPageFlowType()));
-            confirmationMessage.getButtonControl().setEnabled(!formList.isEmpty()
+            confirmationMessage.getControl().setEnabled(!formList.isEmpty()
                     || !containsViewForm
                     || EntryPageFlowType.REDIRECT.equals(pageFlow.getEntryPageFlowType()));
         }

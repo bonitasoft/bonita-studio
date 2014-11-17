@@ -118,13 +118,13 @@ public class DecisionTableWizardPage extends WizardPage {
      * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
      */
     @Override
-    public void createControl(final Composite arg0) {
+    public void createControl(final Composite parent) {
         if (decisionTable.getDefaultAction() == null && wizard.getPossibleDefaultTableActions() != null
                 && wizard.getPossibleDefaultTableActions().length > 0) {
             decisionTable.setDefaultAction(wizard.getPossibleDefaultTableActions()[0]);
         }
 
-        final Composite res = new Composite(arg0, SWT.NONE);
+        final Composite res = new Composite(parent, SWT.NONE);
         res.setLayout(new GridLayout(1, false));
 
         final Group gridGroup = new Group(res, SWT.NONE);
@@ -289,17 +289,18 @@ public class DecisionTableWizardPage extends WizardPage {
 
             final ExpressionViewer op1widget = new ExpressionViewer(placeHolder, SWT.BORDER);
             op1widget.getControl().setLayoutData(GridDataFactory.fillDefaults().hint(500, SWT.DEFAULT).grab(true, false).span(2, 1).create());
-            op1widget.addExpressionValidator(ExpressionConstants.CONDITION_TYPE,new ComparisonExpressionValidator());
+            op1widget.addExpressionValidator(new ComparisonExpressionValidator());
             op1widget.addExpressionValidationListener(new IExpressionValidationListener(){
 
                 @Override
-                public void validationStatusChanged(final int newStatus) {
+                public void validationStatusChanged(final IStatus newStatus) {
                     updateButtons(operands);
                 }
 
             });
             op1widget.setContext(container);
             op1widget.addFilter(new AvailableExpressionTypeFilter(new String[]{ExpressionConstants.CONDITION_TYPE}));
+            op1widget.setContext(container);
             op1widget.setInput(lineWorkingCopy);
             op1widget.setSelection(new StructuredSelection(cond));
             op1widget.getEraseControl().addListener(SWT.Selection, new Listener() {

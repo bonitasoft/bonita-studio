@@ -57,6 +57,13 @@ public class OperationsPropertySection extends AbstractBonitaDescriptionSection 
         operationComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
     }
 
+
+    @Override
+    public void refresh() {
+        super.refresh();
+        operationComposite.refreshViewers();
+    }
+
     protected OperationsComposite createActionLinesComposite(final Composite parent) {
         final AvailableExpressionTypeFilter actionFilter = new AvailableExpressionTypeFilter(new String[] {
                 ExpressionConstants.CONSTANT_TYPE,

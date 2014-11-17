@@ -87,7 +87,7 @@ public class StepSummarySectionContribution extends AbstractPropertySectionContr
         expressionViewer.getControl().setLayoutData(new GridData(SWT.FILL, SWT.DEFAULT, true, false));
         expressionViewer.setInput(eObject) ;
         expressionViewer.setMessage(Messages.stepSummaryHint,IStatus.INFO) ;
-        expressionViewer.addExpressionValidator(ExpressionConstants.CONSTANT_TYPE, new ExpressionLengthValidator(maxLength));
+        expressionViewer.addExpressionValidator(new ExpressionLengthValidator(maxLength));
         refreshDataBindingContext();
     }
 

@@ -5,14 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.validation.constraints;
 
@@ -67,37 +65,37 @@ import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Romain Bioteau
- *
  */
 public abstract class AbstractLiveValidationMarkerConstraint extends AbstractModelConstraint {
 
     private static final String CONSTRAINT_ID = "constraintId";
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see org.eclipse.emf.validation.AbstractModelConstraint#validate(org.eclipse.emf.validation.IValidationContext)
      */
     @Override
     public final IStatus validate(final IValidationContext ctx) {
-        IStatus status = null ;
+        IStatus status = null;
         final EMFEventType eType = ctx.getEventType();
         final EStructuralFeature featureTriggered = ctx.getFeature();
-        if(featureTriggered != null && featureTriggered.equals(NotationPackage.Literals.VIEW__ELEMENT)){
+        if (featureTriggered != null && featureTriggered.equals(NotationPackage.Literals.VIEW__ELEMENT)) {
             final EObject eobject = (EObject) ctx.getFeatureNewValue();
-            if(eobject != null){
+            if (eobject != null) {
                 final MainProcess mainProc = ModelHelper.getMainProcess(eobject);
-                if(mainProc!= null && !mainProc.isEnableValidation()){
+                if (mainProc != null && !mainProc.isEnableValidation()) {
                     return Status.OK_STATUS;
                 }
             }
         }
         final EObject target = ctx.getTarget();
-        if(isAExpressionReferencedElement(target)){
+        if (isAExpressionReferencedElement(target)) {
             return ctx.createSuccessStatus();
         }
         if (eType != EMFEventType.NULL) { //LIVE
             status = performLiveValidation(ctx);
             updateValidationMarkersOnDiagram(status, ctx);
-        }else{ //Batch
+        } else { //Batch
             status = performBatchValidation(ctx);
         }
 
@@ -105,7 +103,7 @@ public abstract class AbstractLiveValidationMarkerConstraint extends AbstractMod
     }
 
     protected boolean isAExpressionReferencedElement(final EObject target) {
-        if(target != null){
+        if (target != null) {
             EObject current = target;
             EReference ref = current.eContainmentFeature();
             while (ref != null && !ref.equals(ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS)) {
@@ -117,31 +115,30 @@ public abstract class AbstractLiveValidationMarkerConstraint extends AbstractMod
         return false;
     }
 
-
-    private void updateValidationMarkersOnDiagram(final IStatus status,final IValidationContext context) {
-        if(PlatformUI.isWorkbenchRunning() &&  PlatformUI.getWorkbench()
-                .getActiveWorkbenchWindow() != null &&  PlatformUI.getWorkbench()
-                .getActiveWorkbenchWindow().getActivePage() != null){
+    private void updateValidationMarkersOnDiagram(final IStatus status, final IValidationContext context) {
+        if (PlatformUI.isWorkbenchRunning() && PlatformUI.getWorkbench()
+                .getActiveWorkbenchWindow() != null && PlatformUI.getWorkbench()
+                .getActiveWorkbenchWindow().getActivePage() != null) {
             final IEditorPart editorPart = PlatformUI.getWorkbench()
                     .getActiveWorkbenchWindow().getActivePage()
                     .getActiveEditor();
 
             if (editorPart instanceof DiagramEditor) {
-                EObject validatedObject  = context.getTarget();
-                if(status instanceof IConstraintStatus){
+                EObject validatedObject = context.getTarget();
+                if (status instanceof IConstraintStatus) {
                     validatedObject = ((IConstraintStatus) status).getTarget();
                 }
-                if(validatedObject == null){
+                if (validatedObject == null) {
                     return;
                 }
-                View view = null ;
-                if(validatedObject instanceof View){
+                View view = null;
+                if (validatedObject instanceof View) {
                     view = (View) validatedObject;
-                }else{
-                    view = getViewFor((DiagramEditor) editorPart,validatedObject);
+                } else {
+                    view = getViewFor((DiagramEditor) editorPart, validatedObject);
                 }
-                if(view == null ){
-                    return ;
+                if (view == null) {
+                    return;
                 }
                 final String viewId = ViewUtil.getIdStr(view);
 
@@ -150,13 +147,14 @@ public abstract class AbstractLiveValidationMarkerConstraint extends AbstractMod
                     BonitaStudioLog.error("DiagramEditPart is null. Ignoring validation marker update.", ValidationPlugin.PLUGIN_ID);
                     return;
                 }
-                final IFile target = diagramEditPart.getDiagramView().eResource() != null ? WorkspaceSynchronizer.getFile(diagramEditPart.getDiagramView().eResource()) : null;
+                final IFile target = diagramEditPart.getDiagramView().eResource() != null ? WorkspaceSynchronizer.getFile(diagramEditPart.getDiagramView()
+                        .eResource()) : null;
                 if (target != null) {
                     try {
-                        for(final IMarker marker : target.findMarkers(getMarkerType((DiagramEditor) editorPart), false, IResource.DEPTH_ZERO)){
+                        for (final IMarker marker : target.findMarkers(getMarkerType((DiagramEditor) editorPart), false, IResource.DEPTH_ZERO)) {
                             final String elementId = (String) marker.getAttribute(org.eclipse.gmf.runtime.common.ui.resources.IMarker.ELEMENT_ID);
                             final String constraintId = (String) marker.getAttribute(CONSTRAINT_ID);
-                            if(elementId != null && elementId.equals(viewId) && getConstraintId().equals(constraintId)){
+                            if (elementId != null && elementId.equals(viewId) && getConstraintId().equals(constraintId)) {
                                 marker.delete();
                             }
                         }
@@ -166,8 +164,8 @@ public abstract class AbstractLiveValidationMarkerConstraint extends AbstractMod
                 }
 
                 // create problem markers on the appropriate resources
-                if(status != null && !status.isOK()){
-                    createMarkers(target,status, diagramEditPart,(DiagramEditor) editorPart);
+                if (status != null && !status.isOK()) {
+                    createMarkers(target, status, diagramEditPart, (DiagramEditor) editorPart);
                 }
             }
         }
@@ -177,10 +175,10 @@ public abstract class AbstractLiveValidationMarkerConstraint extends AbstractMod
 
     protected abstract IStatus performBatchValidation(IValidationContext context);
 
-    protected String getMarkerType(final DiagramEditor editor){
-        if(editor instanceof ProcessDiagramEditor){
+    protected String getMarkerType(final DiagramEditor editor) {
+        if (editor instanceof ProcessDiagramEditor) {
             return ProcessMarkerNavigationProvider.MARKER_TYPE;
-        }else if (editor instanceof FormDiagramEditor){
+        } else if (editor instanceof FormDiagramEditor) {
             return org.bonitasoft.studio.model.process.diagram.form.providers.ProcessMarkerNavigationProvider.MARKER_TYPE;
         }
         return null;
@@ -188,34 +186,35 @@ public abstract class AbstractLiveValidationMarkerConstraint extends AbstractMod
 
     protected abstract String getConstraintId();
 
-    private View getViewFor(final DiagramEditor editor,EObject validatedObject) {
-        if(editor instanceof ProcessDiagramEditor){
-            if(!(validatedObject instanceof FlowElement
+    private View getViewFor(final DiagramEditor editor, EObject validatedObject) {
+        if (editor instanceof ProcessDiagramEditor) {
+            if (!(validatedObject instanceof FlowElement
                     || validatedObject instanceof BoundaryEvent
                     || validatedObject instanceof Container
-                    || validatedObject instanceof Connection)){
+                    || validatedObject instanceof Connection)) {
                 validatedObject = ModelHelper.getParentFlowElement(validatedObject);
             }
-        }else if(editor instanceof FormDiagramEditor){
-            if(!(validatedObject instanceof Widget
-                    || validatedObject instanceof Form)){
+        } else if (editor instanceof FormDiagramEditor) {
+            if (!(validatedObject instanceof Widget
+            || validatedObject instanceof Form)) {
                 EObject result = ModelHelper.getParentWidget(validatedObject);
-                if(result == null){
+                if (result == null) {
                     result = ModelHelper.getParentForm(validatedObject);
                 }
                 validatedObject = result;
             }
         }
-        for(final Object ep : editor.getDiagramGraphicalViewer().getEditPartRegistry().values()){
-            if(!(ep instanceof ITextAwareEditPart) && !(ep instanceof ShapeCompartmentEditPart) && ep instanceof IGraphicalEditPart && ((IGraphicalEditPart)ep).resolveSemanticElement() != null &&  ((IGraphicalEditPart)ep).resolveSemanticElement().equals(validatedObject)){
-                return ((IGraphicalEditPart)ep).getNotationView();
+        for (final Object ep : editor.getDiagramGraphicalViewer().getEditPartRegistry().values()) {
+            if (!(ep instanceof ITextAwareEditPart) && !(ep instanceof ShapeCompartmentEditPart) && ep instanceof IGraphicalEditPart
+                    && ((IGraphicalEditPart) ep).resolveSemanticElement() != null && ((IGraphicalEditPart) ep).resolveSemanticElement().equals(validatedObject)) {
+                return ((IGraphicalEditPart) ep).getNotationView();
             }
         }
-        return null ;
+        return null;
     }
 
     private void createMarkers(final IFile target, final IStatus validationStatus,
-            final DiagramEditPart diagramEditPart,final DiagramEditor editor) {
+            final DiagramEditPart diagramEditPart, final DiagramEditor editor) {
         if (validationStatus.isOK()) {
             return;
         }
@@ -227,14 +226,14 @@ public abstract class AbstractLiveValidationMarkerConstraint extends AbstractMod
         for (final Iterator it = allStatuses.iterator(); it.hasNext();) {
             final IConstraintStatus nextStatus = (IConstraintStatus) it.next();
             final EObject targetEObject = nextStatus.getTarget();
-            View view = null ;
-            if(targetEObject instanceof View){
+            View view = null;
+            if (targetEObject instanceof View) {
                 view = (View) targetEObject;
-            }else{
+            } else {
                 view = ProcessDiagramEditorUtil.findView(diagramEditPart,
                         targetEObject, element2ViewMap);
             }
-            addMarker(editor,diagramEditPart.getViewer(), target,ViewUtil.getIdStr(view), EMFCoreUtil.getQualifiedName(
+            addMarker(editor, diagramEditPart.getViewer(), target, ViewUtil.getIdStr(view), EMFCoreUtil.getQualifiedName(
                     nextStatus.getTarget(), true), nextStatus.getMessage(),
                     nextStatus.getSeverity());
         }
@@ -244,7 +243,7 @@ public abstract class AbstractLiveValidationMarkerConstraint extends AbstractMod
             final Set<EObject> targetElementCollector, final List allConstraintStatuses) {
         if (status instanceof IConstraintStatus) {
             targetElementCollector
-            .add(((IConstraintStatus) status).getTarget());
+                    .add(((IConstraintStatus) status).getTarget());
             allConstraintStatuses.add(status);
         }
         if (status.isMultiStatus()) {
@@ -257,7 +256,7 @@ public abstract class AbstractLiveValidationMarkerConstraint extends AbstractMod
         return targetElementCollector;
     }
 
-    private void addMarker(final DiagramEditor editor,final EditPartViewer viewer, final IFile target,
+    private void addMarker(final DiagramEditor editor, final EditPartViewer viewer, final IFile target,
             final String elementId, final String location, final String message,
             final int statusSeverity) {
         if (target == null) {
@@ -271,7 +270,7 @@ public abstract class AbstractLiveValidationMarkerConstraint extends AbstractMod
             marker.setAttribute(
                     org.eclipse.gmf.runtime.common.ui.resources.IMarker.ELEMENT_ID,
                     elementId);
-            marker.setAttribute(CONSTRAINT_ID,getConstraintId());
+            marker.setAttribute(CONSTRAINT_ID, getConstraintId());
             int markerSeverity = IMarker.SEVERITY_INFO;
             if (statusSeverity == IStatus.WARNING) {
                 markerSeverity = IMarker.SEVERITY_WARNING;
@@ -281,8 +280,7 @@ public abstract class AbstractLiveValidationMarkerConstraint extends AbstractMod
             }
             marker.setAttribute(IMarker.SEVERITY, markerSeverity);
         } catch (final CoreException e) {
-            ProcessDiagramEditorPlugin.getInstance().logError(
-                    "Failed to create validation marker", e); //$NON-NLS-1$
+            ProcessDiagramEditorPlugin.getInstance().logError("Failed to create validation marker", e); //$NON-NLS-1$
         }
     }
 

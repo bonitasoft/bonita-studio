@@ -434,11 +434,6 @@
             name="%openEngineLog_commandLabel">
       </command>
       <command
-            defaultHandler="org.bonitasoft.studio.application.actions.OpenEXchangeCommand"
-            id="org.bonitasoft.studio.application.openContributions"
-            name="%openContribution_commandLabel">
-      </command>
-      <command
             defaultHandler="org.bonitasoft.studio.application.actions.RefreshConnectorHandler"
             id="org.bonitasoft.studio.application.refreshconnectorcommand"
             name="%refreshConnectors_commandLabel">
@@ -754,7 +749,7 @@
       </excludeSources>
    </extension>
    <extension
-         id="InitializerApplication"
+         id="org.bonitasoft.studio.application.InitializerApplication"
          point="org.eclipse.core.runtime.applications">
       <application
             thread="main"
@@ -765,7 +760,7 @@
       </application>
    </extension>
    <extension
-         id="WorkspaceRecovery"
+         id="org.bonitasoft.studio.application.WorkspaceRecovery"
          point="org.eclipse.core.runtime.applications">
       <application
             thread="main"
@@ -950,6 +945,15 @@
       <startup
             class="org.bonitasoft.studio.application.BonitaStudioWorkbenchAdvisor">
       </startup>
+   </extension>
+   <extension
+         point="org.eclipse.ui.contexts">
+      <context
+            description="Bonita context"
+            id="org.bonitasoft.studio.context.id"
+            name="Bonita"
+            parentId="org.eclipse.ui.contexts.window">
+      </context>
    </extension>
 
 </plugin>

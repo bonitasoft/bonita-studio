@@ -1,3 +1,17 @@
+/**
+ * Copyright (C) 2014 Bonitasoft S.A.
+ * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2.0 of the License, or
+ * (at your option) any later version.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.bonitasoft.studio.data.ui.wizard;
 
 import java.util.HashSet;
@@ -9,6 +23,8 @@ import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Activity;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.studio.model.process.ReceiveTask;
+import org.bonitasoft.studio.model.process.SendTask;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -17,37 +33,26 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
-/*******************************************************************************
- * Copyright (C) 2013 BonitaSoft S.A.
- * BonitaSoft is a trademark of BonitaSoft SA.
- * This software file is BONITASOFT CONFIDENTIAL. Not For Distribution.
- * For commercial licensing information, contact:
- * BonitaSoft, 32 rue Gustave Eiffel a 38000 Grenoble
- * or BonitaSoft US, 51 Federal Street, Suite 305, San Francisco, CA 94107
- *******************************************************************************/
-
 /**
  * @author Maxence Raoux
  *
  */
 public class CreateVariableProposalListener implements IProposalListener {
 
-    private boolean isPageFlowContext = false;
+    private boolean isPageFlowContext = true;
 
     private EStructuralFeature feature;
 
     @Override
-    public String handleEvent(EObject context, final String fixedReturnType) {
+    public String handleEvent(final EObject context, final String fixedReturnType) {
         Assert.isNotNull(context);
-        while (!(context instanceof AbstractProcess || context instanceof Activity)) {
-            context = context.eContainer();
-        }
+        final EObject dataContainer = getDataContainer(context);
         if (feature == null) {
             feature = ProcessPackage.Literals.DATA_AWARE__DATA;
         }
         final Set<EStructuralFeature> res = new HashSet<EStructuralFeature>();
         res.add(feature);
-        final DataWizard newWizard = new DataWizard(TransactionUtil.getEditingDomain(context), context, feature, res, true, fixedReturnType);
+        final DataWizard newWizard = new DataWizard(TransactionUtil.getEditingDomain(context), dataContainer, feature, res, true, fixedReturnType);
         newWizard.setIsPageFlowContext(isPageFlowContext);
         Shell activeShell = Display
                 .getDefault().getActiveShell();
@@ -65,9 +70,21 @@ public class CreateVariableProposalListener implements IProposalListener {
                 }
             }
         }
-
         return null;
+    }
 
+    protected EObject getDataContainer(EObject context) {
+        while (!isValidContainer(context)) {
+            context = context.eContainer();
+        }
+        return context;
+    }
+
+    private boolean isValidContainer(final EObject context) {
+        return (context instanceof AbstractProcess
+                || context instanceof Activity)
+                && !(context instanceof SendTask)
+                && !(context instanceof ReceiveTask);
     }
 
     @Override
@@ -81,7 +98,7 @@ public class CreateVariableProposalListener implements IProposalListener {
      */
     @Override
     public boolean isPageFlowContext() {
-        return true;
+        return isPageFlowContext;
     }
 
     /*
@@ -91,7 +108,6 @@ public class CreateVariableProposalListener implements IProposalListener {
     @Override
     public void setIsPageFlowContext(final boolean isPageFlowContext) {
         this.isPageFlowContext = isPageFlowContext;
-
     }
 
     /*

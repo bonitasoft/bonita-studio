@@ -18,7 +18,6 @@ package org.bonitasoft.studio.contract.ui.property.input;
 
 import org.bonitasoft.studio.common.jface.AbstractCheckboxLabelProvider;
 import org.bonitasoft.studio.model.process.ContractInput;
-import org.eclipse.swt.widgets.Control;
 
 
 /**
@@ -27,9 +26,6 @@ import org.eclipse.swt.widgets.Control;
  */
 public class MultipleInputCheckboxLabelProvider extends AbstractCheckboxLabelProvider {
 
-    public MultipleInputCheckboxLabelProvider(final Control control) {
-        super(control);
-    }
 
     @Override
     protected boolean isSelected(final Object element) {

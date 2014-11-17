@@ -56,6 +56,7 @@ public interface SWTBotConstants {
 
     public static final String APPLICATION_SECTION_FORMS_SELECTION_TREE = "org.bonitasoft.studio.application.formTree";
 
+
     public static final String SWTBOT_ID_INPUT_NAME_TEXTEDITOR = "SWTBOT_ID_INPUT_NAME_TEXTEDITOR";
 
     public static final String SWTBOT_ID_CONTRACT_INPUT_TREE = "SWTBOT_ID_CONTRACT_INPUT_TREE";
@@ -63,4 +64,7 @@ public interface SWTBotConstants {
     public static final String SWTBOT_ID_CONTRACT_CONSTRAINT_TABLE = "SWTBOT_ID_CONTRACT_CONSTRAINT_TABLE";
 
     public static final String SWTBOT_ID_CONSTRAINT_NAME_TEXTEDITOR = "SWTBOT_ID_CONSTRAINT_NAME_TEXTEDITOR";
+
+    public static final String SWTBOT_ID_MAIN_SHELL = "SWTBOT_ID_MAIN_SHELL";
+
 }

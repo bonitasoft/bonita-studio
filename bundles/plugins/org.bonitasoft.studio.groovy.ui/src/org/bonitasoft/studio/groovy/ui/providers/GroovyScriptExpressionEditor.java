@@ -27,6 +27,7 @@ import java.util.Set;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.IBonitaVariableContext;
+import org.bonitasoft.studio.common.emf.converter.BooleanInverserConverter;
 import org.bonitasoft.studio.common.jface.databinding.observables.DocumentObservable;
 import org.bonitasoft.studio.common.jface.databinding.validator.InputLengthValidator;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -487,13 +488,7 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
         dataBindingContext.bindValue(ViewersObservables.observeInput(dependenciesViewer), dependenciesModelObservable);
 
         final UpdateValueStrategy opposite = new UpdateValueStrategy();
-        opposite.setConverter(new Converter(Boolean.class, Boolean.class) {
-
-            @Override
-            public Object convert(final Object fromObject) {
-                return !((Boolean) fromObject);
-            }
-        });
+        opposite.setConverter(new BooleanInverserConverter());
 
         dataBindingContext.bindValue(SWTObservables.observeSelection(automaticResolutionButton), autoDepsModelObservable);
         dataBindingContext.bindValue(SWTObservables.observeSelection(automaticResolutionButton), SWTObservables

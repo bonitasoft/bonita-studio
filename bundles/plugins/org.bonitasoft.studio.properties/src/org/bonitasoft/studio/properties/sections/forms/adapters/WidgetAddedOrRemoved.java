@@ -19,12 +19,14 @@ package org.bonitasoft.studio.properties.sections.forms.adapters;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
+import java.io.IOException;
 
 import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.BonitaErrorDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.palette.DefaultElementNameProvider;
 import org.bonitasoft.studio.diagram.custom.repository.WebTemplatesUtil;
 import org.bonitasoft.studio.exporter.ExporterService;
 import org.bonitasoft.studio.exporter.ExporterService.SERVICE_TYPE;
@@ -32,6 +34,7 @@ import org.bonitasoft.studio.exporter.application.HtmlTemplateGenerator;
 import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.form.FormPackage;
 import org.bonitasoft.studio.model.form.Widget;
+import org.bonitasoft.studio.properties.Activator;
 import org.bonitasoft.studio.properties.i18n.Messages;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
@@ -41,61 +44,80 @@ import org.eclipse.ui.PlatformUI;
 
 public class WidgetAddedOrRemoved extends AdapterImpl {
     private final Form form;
+    private final DefaultElementNameProvider elementNameProvider;
 
-    public WidgetAddedOrRemoved(Form form) {
+    public WidgetAddedOrRemoved(final Form form) {
         this.form = form;
+        elementNameProvider = new DefaultElementNameProvider();
     }
 
     @Override
-    public void notifyChanged(Notification notification) {
+    public void notifyChanged(final Notification notification) {
         // Listen for changes to features.
         switch (notification.getFeatureID(Form.class)) {
             case FormPackage.FORM__WIDGETS:
-                if (notification.getEventType() == Notification.ADD) {
-                    final Widget widget = ((Widget) (notification.getNewValue()));
-                    if (ModelHelper.formIsCustomized(form)) {
-                        // there is a template
-
-                        HtmlTemplateGenerator generator = ((HtmlTemplateGenerator) ExporterService.getInstance().getExporterService(SERVICE_TYPE.HtmlTemplateGenerator));
-
-                        File file = WebTemplatesUtil.getFile(form.getHtmlTemplate().getPath());
-                        FileInputStream fis;
-                        try {
-                            fis = new FileInputStream(file);
-                            File tempFile = File.createTempFile("tempForm", ".html");
-                            FileWriter fileWriter = new FileWriter(tempFile);
-                            String label = NamingUtils.getDefaultNameFor(widget);
-                            label = NamingUtils.convertToId(label);
-                            int number = NamingUtils.getMaxElements(form, label);
-                            number++;
-                            label += number;
-                            generator.addDivInTemplate(label, fis, fileWriter);
-                            fis.close();
-                            fileWriter.close();
-                            FileUtil.copy(tempFile, file);
-                            WebTemplatesUtil.refreshFile(form.getHtmlTemplate().getPath());
-                        } catch (final Exception e) {
-                            BonitaStudioLog.error(e);
-                            Display.getDefault().syncExec(new Runnable() {
-                                @Override
-                                public void run() {
-                                    new BonitaErrorDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), Messages.Error, "Unexpected error", e).open();
-                                }
-                            });
-                        }
-                    }
-                } else if (notification.getEventType() == Notification.REMOVE) {
-                    if (form.getHtmlTemplate() != null && form.getHtmlTemplate().getPath() != null && !form.getHtmlTemplate().getPath().isEmpty()) {
-                        // there is a template
-                        Display.getDefault().syncExec(new Runnable() {
-                            @Override
-                            public void run() {
-                                MessageDialog.openWarning(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), Messages.widgetRemovedWarning_title, Messages.widgetRemovedWarning_msg);
-                            }
-                        });
-                    }
-
-                }
+                handleNotificationOnFormWidgets(notification);
         }
+    }
+
+    private void handleNotificationOnFormWidgets(final Notification notification) {
+        if (notification.getEventType() == Notification.ADD) {
+            handleAddFormWidgetNotification(notification);
+        } else if (notification.getEventType() == Notification.REMOVE) {
+            handleRemoveFormWidgetNotification();
+        }
+    }
+
+    private void handleRemoveFormWidgetNotification() {
+        if (form.getHtmlTemplate() != null && form.getHtmlTemplate().getPath() != null && !form.getHtmlTemplate().getPath().isEmpty()) {
+            // there is a template
+            Display.getDefault().syncExec(new Runnable() {
+                @Override
+                public void run() {
+                    MessageDialog.openWarning(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), Messages.widgetRemovedWarning_title, Messages.widgetRemovedWarning_msg);
+                }
+            });
+        }
+    }
+
+    private void handleAddFormWidgetNotification(final Notification notification) {
+        final Widget widget = (Widget) notification.getNewValue();
+        if (ModelHelper.formIsCustomized(form)) {
+            BonitaStudioLog.info("Updating Custom Form Template. Adding widget: " + widget.getName(), Activator.PLUGIN_ID);
+            final File file = WebTemplatesUtil.getFile(form.getHtmlTemplate().getPath());
+            FileInputStream fis;
+            try {
+                fis = new FileInputStream(file);
+                final File tempFile = File.createTempFile("tempForm", ".html");
+                final FileWriter fileWriter = new FileWriter(tempFile);
+                addDivForAddedWidget(widget, fis, fileWriter);
+                fis.close();
+                fileWriter.close();
+                FileUtil.copy(tempFile, file);
+                WebTemplatesUtil.refreshFile(form.getHtmlTemplate().getPath());
+            } catch (final Exception e) {
+                handleExceptionWhileAddingWidgetInTemplate(e);
+            }
+        }
+    }
+
+    private void handleExceptionWhileAddingWidgetInTemplate(final Exception e) {
+        BonitaStudioLog.error(e);
+        Display.getDefault().syncExec(new Runnable() {
+            @Override
+            public void run() {
+                new BonitaErrorDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), Messages.Error, "Unexpected error", e).open();
+            }
+        });
+    }
+
+    private void addDivForAddedWidget(final Widget widget, final FileInputStream fis, final FileWriter fileWriter) throws IOException {
+        final HtmlTemplateGenerator generator = (HtmlTemplateGenerator) ExporterService.getInstance().getExporterService(SERVICE_TYPE.HtmlTemplateGenerator);
+        String label = elementNameProvider.getNameFor(widget);
+        label = NamingUtils.convertToId(label);
+        int number = NamingUtils.getMaxElements(form, label);
+        number++;
+        label += number;
+        generator.addDivInTemplate(label, fis, fileWriter);
     }
 }

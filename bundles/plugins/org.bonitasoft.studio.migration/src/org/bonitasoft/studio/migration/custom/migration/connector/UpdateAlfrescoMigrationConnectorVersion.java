@@ -14,41 +14,16 @@
  */
 package org.bonitasoft.studio.migration.custom.migration.connector;
 
-import org.eclipse.emf.edapt.migration.CustomMigration;
-import org.eclipse.emf.edapt.migration.Instance;
-import org.eclipse.emf.edapt.migration.Metamodel;
-import org.eclipse.emf.edapt.migration.MigrationException;
-import org.eclipse.emf.edapt.migration.Model;
 
-public abstract class UpdateAlfrescoMigrationConnectorVersion extends CustomMigration {
+public abstract class UpdateAlfrescoMigrationConnectorVersion extends UpdateConnectorVersionMigration {
 
     public UpdateAlfrescoMigrationConnectorVersion() {
         super();
     }
 
+
     @Override
-    public void migrateAfter(final Model model, final Metamodel metamodel) throws MigrationException {
-        for (final Instance connectorInstance : model.getAllInstances("process.Connector")) {
-            final String defId = connectorInstance.get("definitionId");
-            if (isProvidedAlfrescoConnectorDef(defId)) {
-                updateVersion(connectorInstance);
-            }
-        }
-    }
-
-    private void updateVersion(final Instance connectorInstance) {
-        final String defVersion = connectorInstance.get("definitionVersion");
-        final String previousDefinitionVersion = getOldDefinitionVersion();
-        if (defVersion.equals(previousDefinitionVersion)) {
-            connectorInstance.set("definitionVersion", getNewDefinitionVersion());
-            final Instance connectorConfigInstance = connectorInstance.get("configuration");
-            if (connectorConfigInstance != null) {
-                connectorConfigInstance.set("version", getNewDefinitionVersion());
-            }
-        }
-    }
-
-    private boolean isProvidedAlfrescoConnectorDef(final String defId) {
+    protected boolean shouldUpdateVersion(final String defId) {
         return defId.equals("Alfresco34CreateFolderByPath") ||
                 defId.equals("Alfresco34DeleteFileByPath") ||
                 defId.equals("Alfresco34DeleteItemById") ||
@@ -59,8 +34,10 @@ public abstract class UpdateAlfrescoMigrationConnectorVersion extends CustomMigr
                 defId.equals("Alfresco42UploadFileByPath");
     }
 
+    @Override
     protected abstract String getNewDefinitionVersion();
 
+    @Override
     protected abstract String getOldDefinitionVersion();
 
 }

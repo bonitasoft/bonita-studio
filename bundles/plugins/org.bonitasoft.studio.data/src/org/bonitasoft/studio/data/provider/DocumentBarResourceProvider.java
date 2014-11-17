@@ -49,40 +49,40 @@ public class DocumentBarResourceProvider implements BARResourcesProvider {
      * @see org.bonitasoft.studio.common.extension.BARResourcesProvider#getResourcesForConfiguration(org.bonitasoft.studio.model.process.AbstractProcess, org.bonitasoft.studio.model.configuration.Configuration, org.bonitasoft.engine.bpm.model.DesignProcessDefinition, java.util.Map)
      */
     @Override
-    public List<BarResource> addResourcesForConfiguration(BusinessArchiveBuilder builder, AbstractProcess process, Configuration configuration,Set<EObject> excludedObjects) {
-    	final List<BarResource> resources = new ArrayList<BarResource>() ;
-    	if(process instanceof Pool){
-    		final List<Document> documents = ((Pool)process).getDocuments();
-    		final DocumentRepositoryStore store = (DocumentRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DocumentRepositoryStore.class);
-    		for (Document document : documents) {
-    			if(document.isIsInternal()){
-    				String documentID= document.getDefaultValueIdOfDocumentStore();
-    				if(documentID != null){
-    					DocumentFileStore artifact = (DocumentFileStore) store.getChild(documentID);
-    					if(artifact != null){
-    						try {
-    							addFileContents(resources, artifact.getResource().getLocation().toFile(), "");
-    						} catch (FileNotFoundException e) {
-    							BonitaStudioLog.error(e);
-    						} catch (IOException e) {
-    							BonitaStudioLog.error(e);
-    						}
-    					}
-    				}
-    			}
-    		}
+    public List<BarResource> addResourcesForConfiguration(final BusinessArchiveBuilder builder, final AbstractProcess process, final Configuration configuration,final Set<EObject> excludedObjects) {
+        final List<BarResource> resources = new ArrayList<BarResource>() ;
+        if(process instanceof Pool){
+            final List<Document> documents = ((Pool)process).getDocuments();
+            final DocumentRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(DocumentRepositoryStore.class);
+            for (final Document document : documents) {
+                if (document.getDocumentType().equals(org.bonitasoft.studio.model.process.DocumentType.INTERNAL)) {
+                    final String documentID= document.getDefaultValueIdOfDocumentStore();
+                    if(documentID != null){
+                        final DocumentFileStore artifact = store.getChild(documentID);
+                        if(artifact != null){
+                            try {
+                                addFileContents(resources, artifact.getResource().getLocation().toFile(), "");
+                            } catch (final FileNotFoundException e) {
+                                BonitaStudioLog.error(e);
+                            } catch (final IOException e) {
+                                BonitaStudioLog.error(e);
+                            }
+                        }
+                    }
+                }
+            }
 
-    		for(BarResource barResource : resources ){
-    			builder.addDocumentResource(barResource)  ;
-    		}
-    	}
+            for(final BarResource barResource : resources ){
+                builder.addDocumentResource(barResource)  ;
+            }
+        }
         return resources ;
     }
 
     private void addFileContents(final List<BarResource>  resources, final File file,String barPathPrefix) throws FileNotFoundException, IOException {
         if (file.exists()) {
-            byte[] jarBytes = new byte[(int) file.length()];
-            InputStream stream = new FileInputStream(file);
+            final byte[] jarBytes = new byte[(int) file.length()];
+            final InputStream stream = new FileInputStream(file);
             stream.read(jarBytes);
             stream.close();
             if(barPathPrefix != null && !barPathPrefix.isEmpty() && !barPathPrefix.endsWith("/")){

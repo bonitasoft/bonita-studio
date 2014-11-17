@@ -43,7 +43,7 @@ public interface IRepository extends IFileStoreChangeListener {
 
     IProject getProject() ;
 
-    void create() ;
+    void create(boolean migrateStoreIfNeeded);
 
     void delete() ;
 
@@ -76,7 +76,7 @@ public interface IRepository extends IFileStoreChangeListener {
     IRepositoryStore<? extends IRepositoryFileStore> getRepositoryStore(IResource resource);
 
     boolean isBuildEnable() ;
-    
+
     void disableBuild();
     void enableBuild();
 
@@ -89,4 +89,8 @@ public interface IRepository extends IFileStoreChangeListener {
     IRepositoryFileStore asRepositoryFileStore(IFile res);
 
 	void migrate() throws CoreException, MigrationException;
+
+    void create();
+
+    void updateStudioShellText();
 }

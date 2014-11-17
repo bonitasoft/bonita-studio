@@ -48,10 +48,10 @@ public class BonitaStudioInitializerApplication implements IApplication {
      * (non-Javadoc)
      * @see org.eclipse.equinox.app.IApplication#start(org.eclipse.equinox.app.IApplicationContext)
      */
-    public Object start(IApplicationContext arg0) throws Exception {
-        // Start with -Dbonita.noregister
+    @Override
+    public Object start(final IApplicationContext arg0) throws Exception {
         BonitaStudioApplication.preStartupStudio();
-        Display display = PlatformUI.createDisplay();
+        final Display display = PlatformUI.createDisplay();
         PlatformUI.createAndRunWorkbench(display, new InitWorkspaceAdvisor());
 
         return IApplication.EXIT_OK;
@@ -61,6 +61,7 @@ public class BonitaStudioInitializerApplication implements IApplication {
      * (non-Javadoc)
      * @see org.eclipse.equinox.app.IApplication#stop()
      */
+    @Override
     public void stop() {
     }
 

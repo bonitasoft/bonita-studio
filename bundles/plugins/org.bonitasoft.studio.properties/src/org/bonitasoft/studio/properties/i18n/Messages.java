@@ -486,6 +486,7 @@ public class Messages extends NLS {
     public static String type;
 
     public static String typeHint;
+	public static String areYouSureMessage;
 
     static {
         // initialize resource bundle

@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.OpenNameAndVersionForDiagramDialog.ProcessesNameVersion;
+import org.bonitasoft.studio.common.editor.EditorUtil;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
@@ -131,7 +132,7 @@ public class RenameDiagramOperation implements IRunnableWithProgress {
                     }
                 }
             }
-	 partToActivate.getSite().getPage().activate(partToActivate);
+            partToActivate.getSite().getPage().activate(partToActivate);
         }
     }
 
@@ -151,15 +152,18 @@ public class RenameDiagramOperation implements IRunnableWithProgress {
     private List<Form> getFormsToReopen(final DiagramEditor editor) {
         final List<Form> formsToReopen = new ArrayList<Form>();
         final IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-        final IResource diagramResource = (IResource) editor.getEditorInput().getAdapter(IResource.class);
+
+        final IEditorInput editorInput = editor.getEditorInput();
+        final IResource diagramResource = EditorUtil.retrieveResourceFromEditorInput(editorInput);
+
         if (activeWorkbenchWindow != null && activeWorkbenchWindow.getActivePage() != null) {
             final IEditorReference[] editors = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getEditorReferences();
             // look for the resource in other editors
             for (final IEditorReference iEditorReference : editors) {
                 try {
                     final IEditorInput input = iEditorReference.getEditorInput();
-                    final IResource iResource = (IResource) input.getAdapter(IResource.class);
-                    if (diagramResource.equals(iResource)) {
+                    final IResource iResource = EditorUtil.retrieveResourceFromEditorInput(input);
+                    if (diagramResource != null && diagramResource.equals(iResource)) {
                         final IWorkbenchPart part = iEditorReference.getPart(false);
                         if (part != null && part instanceof DiagramDocumentEditor) {
                             final EObject root = ((DiagramDocumentEditor) part).getDiagramEditPart().resolveSemanticElement();

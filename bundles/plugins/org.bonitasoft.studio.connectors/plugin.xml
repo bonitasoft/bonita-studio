@@ -215,4 +215,16 @@
             name="DBConnectors">
       </page>
    </extension>
+   <extension
+         point="org.bonitasoft.studio.connectors.connectorWizard">
+      <connectorWizard
+            DefinitionId="scripting-groovy-script"
+            priority="1"
+            useDefaultGeneratedPages="false"
+            useDefaultOutputPage="true">
+         <configurationPage
+               page="org.bonitasoft.studio.connectors.ui.wizard.custom.GroovyScriptConfigurationWizardPage">
+         </configurationPage>
+      </connectorWizard>
+   </extension>
 </plugin>

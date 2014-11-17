@@ -16,10 +16,8 @@
  */
 package org.bonitasoft.studio.data.ui.property.section;
 
-import static org.bonitasoft.studio.common.Messages.removalConfirmationDialogTitle;
-
 import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -86,7 +84,6 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressService;
-import org.eclipse.xtext.ui.XtextProjectHelper;
 
 /**
  *
@@ -111,6 +108,8 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
     protected EMFDataBindingContext context;
 
     private boolean isOverviewContext = false;
+
+    private static final String XTEXT_BUILDER_ID = "org.eclipse.xtext.ui.shared.xtextBuilder";
 
 
     @Override
@@ -195,7 +194,8 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
 
     protected void removeData(final IStructuredSelection structuredSelection) {
         final String[] buttonList = { IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL };
-        final OutlineDialog dialog = new OutlineDialog(Display.getDefault().getActiveShell(), removalConfirmationDialogTitle, Display.getCurrent().getSystemImage(
+        final OutlineDialog dialog = new OutlineDialog(Display.getDefault().getActiveShell(),
+                org.bonitasoft.studio.common.Messages.removalConfirmationDialogTitle, Display.getCurrent().getSystemImage(
                 SWT.ICON_WARNING), createMessage(structuredSelection), MessageDialog.CONFIRM, buttonList, 1, structuredSelection.toList());
         if (dialog.open() == Dialog.OK) {
             final IProgressService service = PlatformUI.getWorkbench().getProgressService();
@@ -211,9 +211,6 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
             try {
                 if (op.canExecute()) {
                     service.run(true, false, op);
-                    //                        if (!op.isCancelled()) {
-                    //                            getEditingDomain().getCommandStack().execute(DeleteCommand.create(getEditingDomain(), d));
-                    //                        }
                 }
             } catch (final InvocationTargetException e) {
                 BonitaStudioLog.error(e, DataPlugin.PLUGIN_ID);
@@ -222,7 +219,7 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
             }
             try {
                 RepositoryManager.getInstance().getCurrentRepository().getProject()
-                .build(IncrementalProjectBuilder.FULL_BUILD, XtextProjectHelper.BUILDER_ID, new HashMap<String, String>(), null);
+                        .build(IncrementalProjectBuilder.FULL_BUILD, XTEXT_BUILDER_ID, Collections.<String, String> emptyMap(), null);
             } catch (final CoreException e) {
                 BonitaStudioLog.error(e, DataPlugin.PLUGIN_ID);
             }
@@ -312,7 +309,7 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
             final DataWizard wizard = new DataWizard(getEditingDomain(), selectedData, getDataFeature(), getDataFeatureToCheckUniqueID(), getShowAutoGenerateForm());
             wizard.setIsPageFlowContext(isPageFlowContext());
             wizard.setIsOverviewContext(isOverViewContext());
-            new CustomWizardDialog(Display.getCurrent().getActiveShell(), wizard, IDialogConstants.OK_LABEL).open();
+            new CustomWizardDialog(Display.getDefault().getActiveShell(), wizard, IDialogConstants.OK_LABEL).open();
             dataTableViewer.refresh();
         }
     }

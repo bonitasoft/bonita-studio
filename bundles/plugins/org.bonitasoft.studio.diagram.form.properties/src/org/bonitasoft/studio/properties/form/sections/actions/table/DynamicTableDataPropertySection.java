@@ -183,17 +183,13 @@ public class DynamicTableDataPropertySection extends AbstractTableDataPropertySe
          * Enable the combo only if we want to set a number limitation.
          * */
         dataBindingContext.bindValue(SWTObservables.observeEnabled(textOrDataMinColumn.getControl()), SWTObservables.observeSelection(limitMinColumnButton));
-        dataBindingContext.bindValue(SWTObservables.observeEnabled(textOrDataMinColumn.getTextControl()), SWTObservables.observeSelection(limitMinColumnButton));
-        dataBindingContext.bindValue(SWTObservables.observeEnabled(textOrDataMinColumn.getToolbar()), SWTObservables.observeSelection(limitMinColumnButton));
         dataBindingContext.bindValue(SWTObservables.observeEnabled(textOrDataMaxColumn.getControl()), SWTObservables.observeSelection(limitMaxColumnButton));
-        dataBindingContext.bindValue(SWTObservables.observeEnabled(textOrDataMaxColumn.getTextControl()), SWTObservables.observeSelection(limitMaxColumnButton));
-        dataBindingContext.bindValue(SWTObservables.observeEnabled(textOrDataMaxColumn.getToolbar()), SWTObservables.observeSelection(limitMaxColumnButton));
-
+        
         dataBindingContext.bindValue(SWTObservables.observeVisible(limitMinColumnButton),SWTObservables.observeSelection(allowAddRemoveColumnButton),new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER),null);
         dataBindingContext.bindValue(SWTObservables.observeVisible(limitMaxColumnButton),SWTObservables.observeSelection(allowAddRemoveColumnButton),new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER),null);
         dataBindingContext.bindValue(SWTObservables.observeVisible(textOrDataMinColumn.getControl()),SWTObservables.observeSelection(allowAddRemoveColumnButton),new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER),null);
         dataBindingContext.bindValue(SWTObservables.observeVisible(textOrDataMaxColumn.getControl()),SWTObservables.observeSelection(allowAddRemoveColumnButton),new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER),null);
-
+   
         textOrDataMaxColumn.setInput(dynamicTable);
         textOrDataMinColumn.setInput(dynamicTable);
     }
@@ -238,19 +234,15 @@ public class DynamicTableDataPropertySection extends AbstractTableDataPropertySe
          * Enable the combo only if we want to set a number limitation.
          * */
         dataBindingContext.bindValue(SWTObservables.observeEnabled(textOrDataMinRow.getControl()), SWTObservables.observeSelection(limitMinRowButton));
-        dataBindingContext.bindValue(SWTObservables.observeEnabled(textOrDataMinRow.getTextControl()), SWTObservables.observeSelection(limitMinRowButton));
-        dataBindingContext.bindValue(SWTObservables.observeEnabled(textOrDataMinRow.getToolbar()), SWTObservables.observeSelection(limitMinRowButton));
         dataBindingContext.bindValue(SWTObservables.observeEnabled(textOrDataMaxRow.getControl()), SWTObservables.observeSelection(limitMaxRowButton));
-        dataBindingContext.bindValue(SWTObservables.observeEnabled(textOrDataMaxRow.getTextControl()), SWTObservables.observeSelection(limitMaxRowButton));
-        dataBindingContext.bindValue(SWTObservables.observeEnabled(textOrDataMaxRow.getToolbar()), SWTObservables.observeSelection(limitMaxRowButton));
 
         dataBindingContext.bindValue(SWTObservables.observeVisible(limitMinRowButton),EMFEditObservables.observeValue(getEditingDomain(), dynamicTable, FormPackage.Literals.DYNAMIC_TABLE__ALLOW_ADD_REMOVE_ROW), new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER),null);
         dataBindingContext.bindValue(SWTObservables.observeVisible(limitMaxRowButton),EMFEditObservables.observeValue(getEditingDomain(), dynamicTable, FormPackage.Literals.DYNAMIC_TABLE__ALLOW_ADD_REMOVE_ROW),new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER),null);
         dataBindingContext.bindValue(SWTObservables.observeVisible(textOrDataMinRow.getControl()),EMFEditObservables.observeValue(getEditingDomain(), dynamicTable, FormPackage.Literals.DYNAMIC_TABLE__ALLOW_ADD_REMOVE_ROW), new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER),null);
         dataBindingContext.bindValue(SWTObservables.observeVisible(textOrDataMaxRow.getControl()),EMFEditObservables.observeValue(getEditingDomain(), dynamicTable, FormPackage.Literals.DYNAMIC_TABLE__ALLOW_ADD_REMOVE_ROW), new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER),null);
-
+    
         textOrDataMinRow.setInput(dynamicTable);
-        textOrDataMaxRow.setInput(dynamicTable);
+        textOrDataMaxRow.setInput(dynamicTable);   
     }
 
     @Override

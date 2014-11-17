@@ -19,12 +19,12 @@ package org.bonitasoft.studio.contract.ui.property.input;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.bonitasoft.studio.common.jface.FileActionDialog;
-import org.bonitasoft.studio.contract.AbstractSWTTestCase;
 import org.bonitasoft.studio.contract.core.validation.ContractDefinitionValidator;
 import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ContractInputType;
 import org.bonitasoft.studio.model.process.ProcessFactory;
+import org.bonitasoft.studio.swt.AbstractSWTTestCase;
 import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;

@@ -28,12 +28,12 @@ public class DateFormFielContribution extends InitialValueContribution{
     private DateTime dateChooser;
 
     @Override
-    public void createControl(Composite composite, TabbedPropertySheetWidgetFactory widgetFactory,
-            ExtensibleGridPropertySection extensibleGridPropertySection) {
+    public void createControl(Composite composite, final TabbedPropertySheetWidgetFactory widgetFactory,
+            final ExtensibleGridPropertySection extensibleGridPropertySection) {
         super.createControl(composite, widgetFactory, extensibleGridPropertySection);
 
         composite = widgetFactory.createComposite(composite);
-        GridLayout layout = new GridLayout(2, false);
+        final GridLayout layout = new GridLayout(2, false);
         layout.marginHeight = 5;
         layout.marginWidth = 5;
         composite.setLayout(layout);
@@ -44,15 +44,19 @@ public class DateFormFielContribution extends InitialValueContribution{
         widgetFactory.adapt(dateChooser,false,false);
         timeChooser = new DateTime(composite, SWT.BORDER | SWT.TIME);
         widgetFactory.adapt(timeChooser,false,false);
-        expressionViewer.setMessage(Messages.data_tooltip_date,IStatus.INFO);
         bindDateWidget();
     }
 
+    @Override
+    protected void doCreateControl(final TabbedPropertySheetWidgetFactory widgetFactory) {
+        super.doCreateControl(widgetFactory);
+        expressionViewer.setMessage(Messages.data_tooltip_date, IStatus.INFO);
+    }
 
     private void bindDateWidget() {
-        UpdateValueStrategy dateToInCombo = new UpdateValueStrategy().setConverter(new Converter(Date.class,String.class) {
+        final UpdateValueStrategy dateToInCombo = new UpdateValueStrategy().setConverter(new Converter(Date.class,String.class) {
 
-            public Object convert(Object fromObject) {
+            public Object convert(final Object fromObject) {
                 return DateUtil.getWidgetDisplayDate(dateChooser, timeChooser);
             }
         });
@@ -67,9 +71,9 @@ public class DateFormFielContribution extends InitialValueContribution{
                 new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER));
 
 
-        UpdateValueStrategy dateToFormat = new UpdateValueStrategy().setConverter(new Converter(Date.class,String.class) {
+        final UpdateValueStrategy dateToFormat = new UpdateValueStrategy().setConverter(new Converter(Date.class,String.class) {
 
-            public Object convert(Object fromObject) {
+            public Object convert(final Object fromObject) {
                 return DateFormFielContribution.DEFAULT_DATE_FORMAT;
             }
         });
@@ -86,7 +90,7 @@ public class DateFormFielContribution extends InitialValueContribution{
 
 
     @Override
-    public boolean isRelevantFor(EObject eObject) {
+    public boolean isRelevantFor(final EObject eObject) {
         return eObject instanceof DateFormField;
     }
 

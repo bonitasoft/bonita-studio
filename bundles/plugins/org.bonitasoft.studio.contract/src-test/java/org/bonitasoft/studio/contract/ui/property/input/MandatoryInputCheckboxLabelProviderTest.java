@@ -2,15 +2,15 @@ package org.bonitasoft.studio.contract.ui.property.input;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.bonitasoft.studio.contract.ui.property.input.MandatoryInputCheckboxLabelProvider;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ProcessFactory;
+import org.bonitasoft.studio.swt.AbstractSWTTestCase;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 
-public class MandatoryInputCheckboxLabelProviderTest {
+public class MandatoryInputCheckboxLabelProviderTest extends AbstractSWTTestCase {
 
     private MandatoryInputCheckboxLabelProvider labelProviderUnderTest;
 
@@ -19,7 +19,8 @@ public class MandatoryInputCheckboxLabelProviderTest {
      */
     @Before
     public void setUp() throws Exception {
-        labelProviderUnderTest = new MandatoryInputCheckboxLabelProvider(null);
+        createDisplayAndRealm();
+        labelProviderUnderTest = new MandatoryInputCheckboxLabelProvider();
     }
 
     /**
@@ -27,6 +28,7 @@ public class MandatoryInputCheckboxLabelProviderTest {
      */
     @After
     public void tearDown() throws Exception {
+        dispose();
     }
 
 

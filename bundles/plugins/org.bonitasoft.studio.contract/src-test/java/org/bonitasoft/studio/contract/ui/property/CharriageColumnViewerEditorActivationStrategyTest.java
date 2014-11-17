@@ -19,7 +19,6 @@ package org.bonitasoft.studio.contract.ui.property;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
-import org.bonitasoft.studio.contract.ui.property.CharriageColumnViewerEditorActivationStrategy;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.ColumnViewerEditorActivationEvent;
 import org.eclipse.jface.viewers.StructuredSelection;

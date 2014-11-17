@@ -34,7 +34,6 @@ import org.bonitasoft.studio.engine.contribution.IEngineDefinitionBuilder;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfigurationFactory;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorParameter;
-import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.process.ActorFilter;
 import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ProcessFactory;
@@ -98,9 +97,7 @@ public class FlowElementSwitchTest {
 
     @Test
     public void should_addUserFilterToTask_not_export_parameter_if_expression_is_null() throws Exception {
-
         final ConnectorParameter parameter = ConnectorConfigurationFactory.eINSTANCE.createConnectorParameter();
-        parameter.setExpression(ExpressionFactory.eINSTANCE.createExpression());
         final ConnectorConfiguration connectorConfiguration = ConnectorConfigurationFactory.eINSTANCE.createConnectorConfiguration();
         connectorConfiguration.getParameters().add(parameter);
 

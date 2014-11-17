@@ -53,21 +53,21 @@ AbstractConnectorOutputWizardPage {
 	 * @see org.bonitasoft.studio.connectors.ui.wizard.page.AbstractConnectorOutputWizardPage#doCreateControl(org.eclipse.swt.widgets.Composite, org.eclipse.emf.databinding.EMFDataBindingContext)
 	 */
 	@Override
-	protected Control doCreateControl(Composite parent,
-			EMFDataBindingContext context) {
+	protected Control doCreateControl(final Composite parent,
+			final EMFDataBindingContext context) {
 
 		final Composite mainComposite = new Composite(parent, SWT.NONE) ;
 		mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
 		mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create()) ;
 
-		AvailableExpressionTypeFilter connectorOutputFilter =  new AvailableExpressionTypeFilter(new String[]{
+		final AvailableExpressionTypeFilter connectorOutputFilter =  new AvailableExpressionTypeFilter(new String[]{
 				ExpressionConstants.CONNECTOR_OUTPUT_TYPE,
 				ExpressionConstants.VARIABLE_TYPE,
 				ExpressionConstants.SCRIPT_TYPE
 		}) ;
 		final List<Operation> outputOperations = getConnector().getOutputs();
 
-		for (Operation output:outputOperations){
+		for (final Operation output:outputOperations){
 			final Label expressionLabel = new Label(mainComposite, SWT.READ_ONLY);
 			expressionLabel.setText(Messages.connectorExpressionViewerLabel);
 
@@ -79,13 +79,13 @@ AbstractConnectorOutputWizardPage {
 			outputExpressionViewer.setMessage(Messages.connectorExpressionViewerMessage, IStatus.INFO);
 			outputExpressionViewer.setExternalDataBindingContext(context);
 			outputExpressionViewer.setInput(output);
-			outputExpressionViewer.addExpressionValidator(ExpressionConstants.ALL_TYPES, new IExpressionValidator() {
+            outputExpressionViewer.addExpressionValidator(new IExpressionValidator() {
 
 				private Expression inputExpression;
 
 				@Override
-				public IStatus validate(Object value) {
-					Expression exp = (Expression) inputExpression;
+				public IStatus validate(final Object value) {
+					final Expression exp = inputExpression;
 					if(exp.getType().equals(ExpressionConstants.SCRIPT_TYPE) || exp.getType().equals(ExpressionConstants.CONNECTOR_OUTPUT_TYPE)) {
 						return ValidationStatus.ok();
 					}
@@ -93,19 +93,24 @@ AbstractConnectorOutputWizardPage {
 				}
 
 				@Override
-				public void setInputExpression(Expression inputExpression) {
+				public void setInputExpression(final Expression inputExpression) {
 					this.inputExpression = inputExpression;
 				}
 
 				@Override
-				public void setDomain(EditingDomain domain) {
+				public void setDomain(final EditingDomain domain) {
 
 				}
 
 				@Override
-				public void setContext(EObject context) {
+				public void setContext(final EObject context) {
 
 				}
+
+                @Override
+                public boolean isRelevantForExpressionType(final String type) {
+                    return true;
+                }
 			});
 
 			context.bindValue(ViewersObservables.observeSingleSelection(outputExpressionViewer), EMFObservables.observeValue(output, ExpressionPackage.Literals.OPERATION__RIGHT_OPERAND));
@@ -124,8 +129,8 @@ AbstractConnectorOutputWizardPage {
 	 * @see org.bonitasoft.studio.common.IBonitaVariableContext#setIsOverviewContext(boolean)
 	 */
 	@Override
-	public void setIsOverviewContext(boolean isOverviewContext) {
-		
+	public void setIsOverviewContext(final boolean isOverviewContext) {
+
 	}
 
 }

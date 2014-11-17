@@ -179,8 +179,6 @@ public class Messages extends NLS {
 
     public static String dataMoveErrorTargetCantBeSource;
 
-    public static String createAndNewButton;
-
     public static String documentType;
 
     public static String documentReferenceType;

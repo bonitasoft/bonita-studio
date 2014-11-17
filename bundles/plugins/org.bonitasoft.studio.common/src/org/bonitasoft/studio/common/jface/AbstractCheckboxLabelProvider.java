@@ -16,7 +16,7 @@
  */
 package org.bonitasoft.studio.common.jface;
 
-import org.eclipse.jface.resource.ImageRegistry;
+
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.StyledCellLabelProvider;
@@ -28,7 +28,7 @@ import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TableItem;
@@ -44,25 +44,23 @@ public abstract class AbstractCheckboxLabelProvider extends StyledCellLabelProvi
 
     protected static final String DISABLED_UNCHECKED_KEY = "uncheckKeyDisabled";// NON-NLS-1
 
-    public AbstractCheckboxLabelProvider(final Control control) {
-        if (control != null) {
-            final ImageRegistry imageRegistry = JFaceResources.getImageRegistry();
-            if (imageRegistry.getDescriptor(UNCHECK_KEY) == null) {
-                imageRegistry.put(UNCHECK_KEY,
-                        makeShot(control, false, true));
-            }
-            if (imageRegistry.getDescriptor(CHECKED_KEY) == null) {
-                imageRegistry.put(CHECKED_KEY,
-                        makeShot(control, true, true));
-            }
-            if (imageRegistry.getDescriptor(DISABLED_CHECKED_KEY) == null) {
-                imageRegistry.put(DISABLED_CHECKED_KEY,
-                        makeShot(control, true, false));
-            }
-            if (imageRegistry.getDescriptor(DISABLED_UNCHECKED_KEY) == null) {
-                imageRegistry.put(DISABLED_UNCHECKED_KEY,
-                        makeShot(control, false, false));
-            }
+
+    public AbstractCheckboxLabelProvider() {
+        if (JFaceResources.getImageRegistry().getDescriptor(UNCHECK_KEY) == null) {
+            JFaceResources.getImageRegistry().put(UNCHECK_KEY,
+                    makeShot(false, true));
+        }
+        if (JFaceResources.getImageRegistry().getDescriptor(CHECKED_KEY) == null) {
+            JFaceResources.getImageRegistry().put(CHECKED_KEY,
+                    makeShot(true, true));
+        }
+        if (JFaceResources.getImageRegistry().getDescriptor(DISABLED_CHECKED_KEY) == null) {
+            JFaceResources.getImageRegistry().put(DISABLED_CHECKED_KEY,
+                    makeShot(true, false));
+        }
+        if (JFaceResources.getImageRegistry().getDescriptor(DISABLED_UNCHECKED_KEY) == null) {
+            JFaceResources.getImageRegistry().put(DISABLED_UNCHECKED_KEY,
+                    makeShot(false, false));
         }
     }
 
@@ -98,12 +96,15 @@ public abstract class AbstractCheckboxLabelProvider extends StyledCellLabelProvi
         return true;
     }
 
-    private Image makeShot(final Control control, final boolean type, final boolean enabled) {
-        // Hopefully no platform uses exactly this color because we'll make
-        // it transparent in the image.
-        final Color greenScreen = new Color(control.getDisplay(), 222, 223, 224);
 
-        final Shell shell = new Shell(control.getShell(), SWT.NO_TRIM);
+    private Image makeShot(final boolean type, final boolean enabled) {
+        final Display display = Display.getDefault();
+        final Color greenScreen = new Color(display, 222, 223, 224);
+
+
+        final Shell shell = new Shell(SWT.NO_TRIM);
+        shell.setVisible(false);
+        shell.setLocation(42, 42);
 
         // otherwise we have a default gray color
         shell.setBackground(greenScreen);
@@ -126,15 +127,16 @@ public abstract class AbstractCheckboxLabelProvider extends StyledCellLabelProvi
 
         shell.open();
         final GC gc = new GC(shell);
-        final Image image = new Image(control.getDisplay(), bsize.x, bsize.y);
+        final Image image = new Image(display, bsize.x, bsize.y);
         gc.copyArea(image, 0, 0);
         gc.dispose();
         shell.close();
 
         final ImageData imageData = image.getImageData();
-        imageData.transparentPixel = imageData.palette.getPixel(greenScreen.getRGB());
+        imageData.transparentPixel = imageData.palette.getPixel(greenScreen
+                .getRGB());
 
-        return new Image(control.getDisplay(), imageData);
+        return new Image(display, imageData);
     }
 
     @Override
@@ -168,8 +170,8 @@ public abstract class AbstractCheckboxLabelProvider extends StyledCellLabelProvi
 
         }
 
-
     }
+
 
 
     @Override

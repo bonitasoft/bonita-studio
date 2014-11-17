@@ -2,6 +2,7 @@ package org.bonitasoft.studio.test.swtbot.suite2;
 
 import org.bonitasoft.expressions.test.TestConnectorExpression;
 import org.bonitasoft.studio.commands.test.CopyPasteTests;
+import org.bonitasoft.studio.commands.test.DeleteCommandTest;
 import org.bonitasoft.studio.commands.test.DuplicateCommandTest;
 import org.bonitasoft.studio.commands.test.ExtractAsSubprocessTest;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
@@ -22,20 +23,23 @@ import org.bonitasoft.studio.exporter.tests.bpmn.BPMNExportTests;
 import org.bonitasoft.studio.exporter.tests.bpmn.BPMNGatewayExportImportTest;
 import org.bonitasoft.studio.exporter.tests.bpmn.BPMNSequenceFlowDefaultFlowExportImportTest;
 import org.bonitasoft.studio.groovy.tests.TestBonitaGroovyEditorDialog;
+import org.bonitasoft.studio.migration.tests.ExportImportWithoutMigrationIT;
 import org.bonitasoft.studio.migration.tests.MigrationReporTest;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.bonitasoft.studio.properties.test.TestResources;
 import org.bonitasoft.studio.repository.test.swtbot.TestExportBosArchive;
 import org.bonitasoft.studio.tests.IHeapDumper;
-import org.bonitasoft.studio.tests.attachment.TestRunWithDocument;
 import org.bonitasoft.studio.tests.contract.ContractIT;
 import org.bonitasoft.studio.tests.data.DataWizardIT;
 import org.bonitasoft.studio.tests.dialog.OpenNameAndVersionForDiagramDialogTest;
 import org.bonitasoft.studio.tests.dialog.TestDuplicate;
+import org.bonitasoft.studio.tests.document.TestDocument;
+import org.bonitasoft.studio.tests.document.TestRunWithDocument;
 import org.bonitasoft.studio.tests.draw2d.TestLifeCycleWidget;
 import org.bonitasoft.studio.tests.form.DeleteWidgetWithContextMenuIT;
 import org.bonitasoft.studio.tests.iteration.MultiInstantiationIT;
+import org.bonitasoft.studio.tests.refactoring.widget.RefactorWidgetIT;
 import org.bonitasoft.studio.tests.timer.TestTimer;
 import org.bonitasoft.studio.util.test.BonitaTestSuite;
 import org.bonitasoft.studio.validators.test.swtbot.TestCreateValidatorWizard;
@@ -83,6 +87,7 @@ import org.junit.runners.Suite;
     OpenNameAndVersionForDiagramDialogTest.class,
     TestDuplicate.class,
     CopyPasteTests.class,
+    DeleteCommandTest.class,
     TestCreateValidatorWizard.class,
     TestLifeCycleWidget.class,
     TestConnectorExpression.class,
@@ -92,6 +97,7 @@ import org.junit.runners.Suite;
     BPMNEventSubProcessExportImportTest.class,
     BarExporterTest.class,
     TestRunWithDocument.class,
+    TestDocument.class,
     DuplicateCommandTest.class,
     TestExportBosArchive.class,
     TestSave.class,
@@ -100,7 +106,10 @@ import org.junit.runners.Suite;
     TestTimer.class,
     TestBonitaGroovyEditorDialog.class,
         TestProcessDependencies.class,
-        ContractIT.class
+        ContractIT.class,
+        RefactorWidgetIT.class,
+        ExportImportWithoutMigrationIT.class
+
 })
 public class AllSWTBotTests2 {
 
