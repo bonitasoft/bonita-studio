@@ -523,7 +523,7 @@ public class Repository implements IRepository {
         if (!projectManifest.exists()) {
             projectManifest.create(is2, false, null);
         } else {
-            projectManifest.setContents(is2, IResource.NONE, null);
+            projectManifest.setContents(is2, IResource.FORCE, null);
         }
     }
 
