@@ -697,7 +697,21 @@ public class Repository implements IRepository {
             allResources.add(store.getResource());
         }
         operation.setResources(allResources);
-        operation.run(NULL_PROGRESS_MONITOR);
+        final IStatus status = operation.run(NULL_PROGRESS_MONITOR);
+        if (!status.isOK()) {
+            logErrorStatus(status);
+        }
+    }
+
+    protected void logErrorStatus(final IStatus status) {
+        final StringBuilder sb = new StringBuilder();
+        if (status.isMultiStatus()) {
+            for (final IStatus childStatus : status.getChildren()) {
+                sb.append(childStatus.getMessage()).append("\n");
+            }
+
+        }
+        BonitaStudioLog.error("Export to archive failed.\n" + status.getMessage() + "\n" + sb.toString(), CommonRepositoryPlugin.PLUGIN_ID);
     }
 
     @Override
