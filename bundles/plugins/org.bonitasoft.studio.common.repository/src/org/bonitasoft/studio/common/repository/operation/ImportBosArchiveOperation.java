@@ -67,17 +67,19 @@ import org.eclipse.swt.widgets.Display;
 public class ImportBosArchiveOperation {
 
     private static final String TMP_IMPORT_PROJECT = "tmpImport";
-
     private String archiveFile;
-
     private IRepository currentRepository;
-
     private BosArchiveImportStatus importStatus;
-
     private final IResourceImporter iResourceImporter;
+    private final boolean launchValidationafterImport;
 
     public ImportBosArchiveOperation() {
+        this(true);
+    }
+
+    public ImportBosArchiveOperation(final boolean launchValidationafterImport) {
         iResourceImporter = new IResourceImporter();
+        this.launchValidationafterImport = launchValidationafterImport;
     }
 
     public IStatus run(final IProgressMonitor monitor) {
@@ -133,7 +135,9 @@ public class ImportBosArchiveOperation {
 
         currentRepository.refresh(Repository.NULL_PROGRESS_MONITOR);
         currentRepository.notifyFileStoreEvent(new FileStoreChangeEvent(EventType.POST_IMPORT, null));
-        validateAllAfterImport();
+        if (launchValidationafterImport) {
+            validateAllAfterImport();
+        }
 
         return Status.OK_STATUS;
     }

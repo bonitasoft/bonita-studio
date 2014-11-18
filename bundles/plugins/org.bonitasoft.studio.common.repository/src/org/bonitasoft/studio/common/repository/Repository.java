@@ -678,10 +678,10 @@ public class Repository implements IRepository {
     }
 
     @Override
-    public void importFromArchive(final File archiveFile, final boolean askOverwrite) {
+    public void importFromArchive(final File archiveFile, final boolean askOverwrite, final boolean validateAfterImport) {
         final boolean disableConfirmation = FileActionDialog.getDisablePopup();
         FileActionDialog.setDisablePopup(!askOverwrite);
-        final ImportBosArchiveOperation operation = new ImportBosArchiveOperation();
+        final ImportBosArchiveOperation operation = new ImportBosArchiveOperation(validateAfterImport);
         operation.setArchiveFile(archiveFile.getAbsolutePath());
         operation.setCurrentRepository(RepositoryManager.getInstance().getCurrentRepository());
         operation.run(NULL_PROGRESS_MONITOR);
