@@ -64,14 +64,14 @@ import org.eclipse.emf.ecore.EObject;
 
 /**
  * @author Romain Bioteau
- * 
+ *
  */
 public class ApplicationResourcesProvider implements BARResourcesProvider {
 
     public static final String AUTO_LOGIN_PROPERTY = "forms.application.login.auto";
     public static final String AUTO_LOGIN_USERNAME_PROPERTY = "forms.application.login.auto.username";
     public static final String AUTO_LOGIN_PASSWORD_PROPERTY = "forms.application.login.auto.password";
-    
+
 	protected static final String CSS_BONITA_FORM_DEFAULT = "css/bonita_form_default.css";
 	private static final long TENANT_ID = 1;
 	private final File tmpDir = ProjectUtil.getBonitaStudioWorkFolder();
@@ -80,7 +80,7 @@ public class ApplicationResourcesProvider implements BARResourcesProvider {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.bonitasoft.studio.application.actions.barresource.BARResourcesProvider
 	 * #
@@ -88,22 +88,22 @@ public class ApplicationResourcesProvider implements BARResourcesProvider {
 	 * )
 	 */
 	@Override
-	public List<BarResource> addResourcesForConfiguration(BusinessArchiveBuilder builder,AbstractProcess process,Configuration configuration,Set<EObject> excludedObject) throws Exception {
+	public List<BarResource> addResourcesForConfiguration(final BusinessArchiveBuilder builder,final AbstractProcess process,final Configuration configuration,final Set<EObject> excludedObject) throws Exception {
 		final List<BarResource> res = new ArrayList<BarResource>();
 		addHTMLTemplates(res, process);
 		addApplicationResources(res, process);
 		addFormsXML(res, process,excludedObject);
 		addApplicationDependencies(res, process,configuration);
 		addAutologin(res, process, configuration) ;
-		for(BarResource barResource : res){
+		for(final BarResource barResource : res){
 			builder.addExternalResource(barResource) ;
 		}
 		return res;
 	}
 
-	protected void addApplicationDependencies(List<BarResource> res, AbstractProcess process, Configuration configuration) throws Exception {
+	protected void addApplicationDependencies(final List<BarResource> res, final AbstractProcess process, final Configuration configuration) throws Exception {
 		if(configuration != null){
-			File libFile = new File(tmpDir, "lib");
+			final File libFile = new File(tmpDir, "lib");
 			libFile.delete();
 			libFile.mkdir();
 			ResourcesExporter.exportJars(process, configuration,libFile,Repository.NULL_PROGRESS_MONITOR);
@@ -114,21 +114,21 @@ public class ApplicationResourcesProvider implements BARResourcesProvider {
 		}
 	}
 
-	protected void addHTMLTemplates(List<BarResource> res, AbstractProcess process) throws Exception {
-		File templateDir = new File(tmpDir, "templates");
+	protected void addHTMLTemplates(final List<BarResource> res, final AbstractProcess process) throws Exception {
+		final File templateDir = new File(tmpDir, "templates");
 		templateDir.delete();
 		templateDir.mkdir();
 		TemplatesExporter.exportTemplates(process, templateDir, Repository.NULL_PROGRESS_MONITOR);
-		ApplicationResourceRepositoryStore resourceStore = (ApplicationResourceRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ApplicationResourceRepositoryStore.class) ;
+		final ApplicationResourceRepositoryStore resourceStore = RepositoryManager.getInstance().getRepositoryStore(ApplicationResourceRepositoryStore.class) ;
 		if (templateDir.exists()) {
-			File htmlDir = findDirectory(templateDir, "html");
+			final File htmlDir = findDirectory(templateDir, "html");
 			if (htmlDir != null) {
 				AbstractProcess targetProcess = process;
 				if(process instanceof SubProcessEvent){
 					targetProcess = ModelHelper.getParentProcess(process);
 				}
-				String id = ModelHelper.getEObjectID(targetProcess) ;
-				ApplicationResourceFileStore artifact = (ApplicationResourceFileStore) resourceStore.getChild(id);
+				final String id = ModelHelper.getEObjectID(targetProcess) ;
+				final ApplicationResourceFileStore artifact = (ApplicationResourceFileStore) resourceStore.getChild(id);
 				if (artifact != null) {
 					replaceUrl(htmlDir, artifact.getResourcesApplicationFolder().getFolder("application").getLocation().toFile().toURI(), "application/", process.getName(),process.getVersion()) ;
 				}
@@ -138,12 +138,12 @@ public class ApplicationResourcesProvider implements BARResourcesProvider {
 		}
 	}
 
-	protected File findDirectory(File root, String dirName) {
+	protected File findDirectory(final File root, final String dirName) {
 		File founded = null;
 		if (root.getName().equals(dirName)) {
 			return root;
 		} else if (root.isDirectory()) {
-			for (File f : root.listFiles()) {
+			for (final File f : root.listFiles()) {
 				if (founded == null) {
 					founded = findDirectory(f, dirName);
 				} else {
@@ -155,8 +155,8 @@ public class ApplicationResourcesProvider implements BARResourcesProvider {
 
 	}
 
-	protected void addApplicationResources(List<BarResource> res, AbstractProcess process) throws Exception {
-		File resourceFile = new File(tmpDir, "resources");
+	protected void addApplicationResources(final List<BarResource> res, AbstractProcess process) throws Exception {
+		final File resourceFile = new File(tmpDir, "resources");
 		resourceFile.delete();
 		if(process instanceof SubProcessEvent){
 			process = ModelHelper.getParentProcess(process);
@@ -165,9 +165,9 @@ public class ApplicationResourcesProvider implements BARResourcesProvider {
 		exportFileWidgetResource(process,res);
 		CssGeneratorService.getInstance().getCssGenerator().addCssToWar(process, resourceFile, new NullProgressMonitor());
 		if (resourceFile.exists()) {
-			ApplicationResourceRepositoryStore resourceStore = (ApplicationResourceRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ApplicationResourceRepositoryStore.class) ;
-			String processUUID = ModelHelper.getEObjectID(process) ;
-			ApplicationResourceFileStore artifact = (ApplicationResourceFileStore) resourceStore.getChild(processUUID) ;
+			final ApplicationResourceRepositoryStore resourceStore = RepositoryManager.getInstance().getRepositoryStore(ApplicationResourceRepositoryStore.class) ;
+			final String processUUID = ModelHelper.getEObjectID(process) ;
+			final ApplicationResourceFileStore artifact = (ApplicationResourceFileStore) resourceStore.getChild(processUUID) ;
 			if(artifact != null){
 				replaceUrl(resourceFile,artifact.getResourcesApplicationFolder().getLocation().toFile().toURI(), "", process.getName(),process.getVersion());
 			}
@@ -178,20 +178,20 @@ public class ApplicationResourcesProvider implements BARResourcesProvider {
 		}
 	}
 
-	private void exportFileWidgetResource(AbstractProcess process, List<BarResource> res) throws Exception {
-		List<FileWidget> fileWidgets = ModelHelper.getAllItemsOfType(process, FormPackage.Literals.FILE_WIDGET);
+	private void exportFileWidgetResource(final AbstractProcess process, final List<BarResource> res) throws Exception {
+		final List<FileWidget> fileWidgets = ModelHelper.getAllItemsOfType(process, FormPackage.Literals.FILE_WIDGET);
 		if(!fileWidgets.isEmpty()){
 			final File documentFolder = new File(tmpDir, "documents");
 			documentFolder.delete();
 			documentFolder.mkdirs();
-			final DocumentRepositoryStore store = (DocumentRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DocumentRepositoryStore.class);
-			for(FileWidget w : fileWidgets){
+			final DocumentRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(DocumentRepositoryStore.class);
+			for(final FileWidget w : fileWidgets){
 				if(w.getInputType() == FileWidgetInputType.RESOURCE){
 					final String initialResourcePath = w.getInitialResourcePath();
 					if(initialResourcePath != null){
 						final IRepositoryFileStore fileStore = store.getChild(initialResourcePath);
 						if(fileStore != null){
-							File f = fileStore.getResource().getLocation().toFile();
+							final File f = fileStore.getResource().getLocation().toFile();
 							final File target = new File(documentFolder, f.getName());
 							if(!target.exists()){
 								FileUtil.copy(f, target);
@@ -205,11 +205,11 @@ public class ApplicationResourcesProvider implements BARResourcesProvider {
 
 	}
 
-	private void replaceUrl(File file, URI baseURI, String baseFolder, String processName, String processVersion) throws Exception {
+	private void replaceUrl(final File file, final URI baseURI, final String baseFolder, final String processName, final String processVersion) throws Exception {
 		existingResource.clear();
 		replaceUrl( file, baseURI, baseFolder, true, processName, processVersion, System.currentTimeMillis());
 	}
-	private void replaceUrl(File file, URI baseURI, String baseFolder, boolean firstCall, String processName, String processVersion, long timestamp) throws Exception {
+	private void replaceUrl(final File file, final URI baseURI, final String baseFolder, final boolean firstCall, final String processName, final String processVersion, final long timestamp) throws Exception {
 		if (file.isDirectory()) {
 			String baseFolder2;
 			if(firstCall){
@@ -218,19 +218,19 @@ public class ApplicationResourcesProvider implements BARResourcesProvider {
 				baseFolder2 = baseFolder + URLEncoder.encode(file.getName(),"UTF-8") + "/";
 			}
 
-			for (File f : file.listFiles()) {
+			for (final File f : file.listFiles()) {
 				replaceUrl(f, f.isDirectory()?baseURI.resolve(URLEncoder.encode(f.getName(), "UTF-8")+'/'):baseURI, baseFolder2,false, processName, processVersion, timestamp);
 			}
 		} else if (file.getName().endsWith(".html") || file.getName().endsWith(".htm") || file.getName().endsWith(".xhtml") || file.getName().endsWith(".css")
 				|| file.getName().endsWith(".jsp")) {
-			FileInputStream fis = new FileInputStream(file);
-			String content = PlatformUtil.getFileContent(fis);
+			final FileInputStream fis = new FileInputStream(file);
+			final String content = PlatformUtil.getFileContent(fis);
 			fis.close();
 			String newContent = new String(content);
-			String regex = "(src=\")([^\"]*)(\")|(href=\")([^\"]*)(\")|(url\\(')\"{0,1}([^'\\)\"]*)\"{0,1}('\\))|(url\\()\"{0,1}([^\\)\"]*)\"{0,1}(\\))|(background=\")([^\"]*)(\")";
-			Pattern pattern = Pattern.compile(regex.toString());
-			Matcher matcher = pattern.matcher(newContent);
-			StringBuffer stringBuffer = new StringBuffer();
+			final String regex = "(src=\")([^\"]*)(\")|(href=\")([^\"]*)(\")|(url\\(')\"{0,1}([^'\\)\"]*)\"{0,1}('\\))|(url\\()\"{0,1}([^\\)\"]*)\"{0,1}(\\))|(background=\")([^\"]*)(\")";
+			final Pattern pattern = Pattern.compile(regex.toString());
+			final Matcher matcher = pattern.matcher(newContent);
+			final StringBuffer stringBuffer = new StringBuffer();
 			while(matcher.find()) {
 				int i;
 				if(matcher.group(1)!= null){
@@ -244,18 +244,18 @@ public class ApplicationResourcesProvider implements BARResourcesProvider {
 				}else{
 					i = 12;
 				}
-				String url = matcher.group(2+i);
+				final String url = matcher.group(2+i);
 				if(i==0 && "application.nocache.js".equals(url)){//link src="application.nocache.js" should be replace by "console.nocache.js" for all in bar mode
-					String replacement = matcher.group(1+i) + "console.nocache.js" + matcher.group(3+i);
+					final String replacement = matcher.group(1+i) + "console.nocache.js" + matcher.group(3+i);
 					matcher.appendReplacement(stringBuffer, replacement);
 				}else if (shouldReplaceUrl(url,baseURI)) {
-					String replacement = matcher.group(1+i) + ExporterTools.toApplicationResourceURL(baseFolder+url, processName, processVersion, timestamp) + matcher.group(3+i);
+					final String replacement = matcher.group(1+i) + ExporterTools.toApplicationResourceURL(baseFolder+url, processName, processVersion, timestamp) + matcher.group(3+i);
 					matcher.appendReplacement(stringBuffer, replacement);
 				}
 			}
 			matcher.appendTail(stringBuffer);
 			newContent = stringBuffer.toString();
-			FileOutputStream fos = new FileOutputStream(file);
+			final FileOutputStream fos = new FileOutputStream(file);
 			fos.write(newContent.getBytes(Charset.forName("UTF-8")));
 			fos.flush();
 			fos.close();
@@ -263,7 +263,7 @@ public class ApplicationResourcesProvider implements BARResourcesProvider {
 		}
 	}
 
-	private boolean shouldReplaceUrl(String url, URI baseURI) {
+	private boolean shouldReplaceUrl(final String url, final URI baseURI) {
 		boolean shouldReplace = !(url.startsWith("http://") || url.startsWith("https://") || url.startsWith("file://") || url.startsWith("ftp://"));
 		if(shouldReplace){
 			for (int i = 0; i < urlThatWontBeReplaced.length && shouldReplace; i++) {
@@ -276,11 +276,11 @@ public class ApplicationResourcesProvider implements BARResourcesProvider {
 		if(shouldReplace){
 			if(!existingResource.containsKey(url)){//the resource exists (already checked it)
 				try{
-					URI resource = baseURI.resolve(url);//resolve the uri
-					File file = new File(resource);
+					final URI resource = baseURI.resolve(url);//resolve the uri
+					final File file = new File(resource);
 					shouldReplace = file.exists();
 					existingResource.put(url,shouldReplace);
-				} catch (IllegalArgumentException e ) {
+				} catch (final IllegalArgumentException e ) {
 					existingResource.put(url,false);
 					return false;
 				}
@@ -291,30 +291,30 @@ public class ApplicationResourcesProvider implements BARResourcesProvider {
 		return shouldReplace;
 	}
 
-	protected void addFolder(File resourceFile, String currentPathInBar, List<BarResource> res) throws Exception {
+	protected void addFolder(final File resourceFile, final String currentPathInBar, final List<BarResource> res) throws Exception {
 		if (resourceFile.getName().startsWith(".")) {
 			return; // remove .svn folders and more
 		}
 		if (resourceFile.isDirectory()) {
-			for (File f : resourceFile.listFiles()) {
+			for (final File f : resourceFile.listFiles()) {
 				addFolder(f, currentPathInBar + resourceFile.getName() + "/", res);
 			}
 		} else {
-			FileInputStream is = new FileInputStream(resourceFile);
-			byte[] fileBytes = new byte[(int) resourceFile.length()];
+			final FileInputStream is = new FileInputStream(resourceFile);
+			final byte[] fileBytes = new byte[(int) resourceFile.length()];
 			is.read(fileBytes);
 			is.close();
 			res.add(new BarResource(currentPathInBar + resourceFile.getName(), fileBytes));
 		}
 	}
 
-	protected void addFormsXML(List<BarResource> res, AbstractProcess process, Set<EObject> excludedObject ) throws Exception {
-		File formsXmlFile = new File(tmpDir, "forms.xml");
+	protected void addFormsXML(final List<BarResource> res, final AbstractProcess process, final Set<EObject> excludedObject ) throws Exception {
+		final File formsXmlFile = new File(tmpDir, "forms.xml");
 		formsXmlFile.delete();
 		FormsXMLExporter.exportFormsXML(process, tmpDir, true,excludedObject, Repository.NULL_PROGRESS_MONITOR);
 		if (formsXmlFile.exists()) {
-			FileInputStream is = new FileInputStream(formsXmlFile);
-			byte[] fileBytes = new byte[(int) formsXmlFile.length()];
+			final FileInputStream is = new FileInputStream(formsXmlFile);
+			final byte[] fileBytes = new byte[(int) formsXmlFile.length()];
 			is.read(fileBytes);
 			is.close();
 			res.add(new BarResource(FORMS_FOLDER_IN_BAR + formsXmlFile.getName(), fileBytes));
@@ -324,31 +324,31 @@ public class ApplicationResourcesProvider implements BARResourcesProvider {
 		}
 	}
 
-	protected void addAutologin(List<BarResource> res, AbstractProcess process, Configuration conf) throws Exception {
+	protected void addAutologin(final List<BarResource> res, final AbstractProcess process, final Configuration conf) throws Exception {
 		if(process.isAutoLogin()){
 			File securityConfig = BonitaHomeUtil.getDefaultTenantSecurityConfigFile(TENANT_ID);
 			if(!securityConfig.exists()){
 				securityConfig = BonitaHomeUtil.getDefaultTenantSecurityConfigStudioFile();
 			}
 			if (securityConfig.exists()) {
-				Properties properties = new Properties();
-				FileInputStream is = new FileInputStream(securityConfig);
+				final Properties properties = new Properties();
+				final FileInputStream is = new FileInputStream(securityConfig);
 				properties.load(is) ;
 				properties.setProperty(AUTO_LOGIN_PROPERTY, Boolean.TRUE.toString());
-				String autoLoginUserName = conf.getAnonymousUserName();
-				String autoLoginPassword = conf.getAnonymousPassword();
+				final String autoLoginUserName = conf.getAnonymousUserName();
+				final String autoLoginPassword = conf.getAnonymousPassword();
 				if (autoLoginUserName != null && !autoLoginUserName.isEmpty()) {
 					properties.setProperty(AUTO_LOGIN_USERNAME_PROPERTY, autoLoginUserName);
 					properties.setProperty(AUTO_LOGIN_PASSWORD_PROPERTY, (autoLoginPassword!=null && !autoLoginPassword.isEmpty())? autoLoginPassword : "");
 				}
-				
-				ByteArrayOutputStream os = new ByteArrayOutputStream();
+
+				final ByteArrayOutputStream os = new ByteArrayOutputStream();
 				properties.store(os, null);
 				res.add(new BarResource(FORMS_FOLDER_IN_BAR + securityConfig.getName(), os.toByteArray()));
 				is.close() ;
 				os.close() ;
 			}else{
-				
+
 				throw new FileNotFoundException(securityConfig.getAbsolutePath());
 			}
 		}
