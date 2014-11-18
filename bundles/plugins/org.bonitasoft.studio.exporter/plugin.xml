@@ -126,4 +126,10 @@
             providerClass="org.bonitasoft.studio.exporter.ApplicationResourcesProvider">
       </barResourceProvider>
    </extension>
+   <extension
+         point="org.bonitasoft.studio.common.barResourcesProvider">
+      <barResourceProvider
+            providerClass="org.bonitasoft.studio.exporter.bpmn.BPMNBarResourceProvider">
+      </barResourceProvider>
+   </extension>
 </plugin>
