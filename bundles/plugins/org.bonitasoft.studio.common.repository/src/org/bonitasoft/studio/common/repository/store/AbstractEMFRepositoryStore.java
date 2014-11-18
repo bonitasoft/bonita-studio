@@ -159,7 +159,7 @@ public abstract class AbstractEMFRepositoryStore<T extends EMFFileStore>
 			final Release release = getRelease(targetMigrator, resource);
 			if (release != null && !release.isLatestRelease()) {
 				try {
-                    BonitaStudioLog.debug("Perfroming migration on " + fileName + " from " + release.getLabel() + " to latest...",
+                    BonitaStudioLog.debug("Performing migration on " + fileName + " from " + release.getLabel() + " to latest...",
                             CommonRepositoryPlugin.PLUGIN_ID);
 					performMigration(targetMigrator, resourceURI, release);
 				} catch (final MigrationException e) {
