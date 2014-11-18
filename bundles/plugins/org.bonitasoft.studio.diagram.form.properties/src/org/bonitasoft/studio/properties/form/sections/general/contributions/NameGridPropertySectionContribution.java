@@ -1,17 +1,17 @@
 /**
  * Copyright (C) 2009-2014 BonitaSoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -75,21 +75,21 @@ public class NameGridPropertySectionContribution extends AbstractNamePropertySec
      * @param tabbedPropertySheetPage
      * @param extensibleGridPropertySection
      */
-    public NameGridPropertySectionContribution(TabbedPropertySheetPage tabbedPropertySheetPage,
-            ExtensibleGridPropertySection extensibleGridPropertySection) {
+    public NameGridPropertySectionContribution(final TabbedPropertySheetPage tabbedPropertySheetPage,
+            final ExtensibleGridPropertySection extensibleGridPropertySection) {
         super(tabbedPropertySheetPage, extensibleGridPropertySection);
     }
 
     @Override
-    protected void createBinding(EMFDataBindingContext context) {
+    protected void createBinding(final EMFDataBindingContext context) {
 
-        Converter convertToId = new Converter(String.class, String.class) {
+        final Converter convertToId = new Converter(String.class, String.class) {
 
             public Object convert(final Object fromObject) {
                 updatePropertyTabTitle();
                 /* Update the tab of the editor if the form name change */
                 if (element instanceof Form) {
-                    FormDiagramEditor editor = (FormDiagramEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+                    final FormDiagramEditor editor = (FormDiagramEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
                     editor.setPartName(text.getText());
                 }
 
@@ -98,13 +98,13 @@ public class NameGridPropertySectionContribution extends AbstractNamePropertySec
         };
         labelTargetToModelUpdate = new UpdateValueStrategy();
         labelTargetToModelUpdate.setConverter(convertToId);
-        List<IValidator> validators = new ArrayList<IValidator>();
+        final List<IValidator> validators = new ArrayList<IValidator>();
         validators.add(new InputLengthValidator(Messages.name, 50));
         validators.add(new GroovyReferenceValidator(Messages.name, true, false));
         validators.add(createUniqueWidgetIdValidator());
-        MultiValidator multiValidation = new MultiValidator(validators);
+        final MultiValidator multiValidation = new MultiValidator(validators);
         labelTargetToModelUpdate.setAfterGetValidator(multiValidation);
-        ISWTObservableValue observable = SWTObservables.observeDelayedValue(400, SWTObservables.observeText(text, SWT.Modify));
+        final ISWTObservableValue observable = SWTObservables.observeDelayedValue(400, SWTObservables.observeText(text, SWT.Modify));
         ControlDecorationSupport.create(context.bindValue(observable,
                 EMFEditObservables.observeValue(editingDomain, element, ProcessPackage.Literals.ELEMENT__NAME), labelTargetToModelUpdate, null), SWT.LEFT);
     }
@@ -130,7 +130,7 @@ public class NameGridPropertySectionContribution extends AbstractNamePropertySec
      * (non-Javadoc)
      * @see org.bonitasoft.studio.properties.sections.general.IExtenstibleGridPropertySectionContribution#setEObject(org.eclipse.emf.ecore.EObject)
      */
-    public void setEObject(EObject object) {
+    public void setEObject(final EObject object) {
         element = (Element) object;
         workingCopy = EcoreUtil.copy(element);
     }
@@ -141,7 +141,7 @@ public class NameGridPropertySectionContribution extends AbstractNamePropertySec
      * IExtenstibleGridPropertySectionContribution
      * #setSelection(org.eclipse.jface.viewers.ISelection)
      */
-    public void setSelection(ISelection selection) {
+    public void setSelection(final ISelection selection) {
         this.selection = selection;
     }
 
@@ -153,25 +153,25 @@ public class NameGridPropertySectionContribution extends AbstractNamePropertySec
     protected void editProcessNameAndVersion() {
         // change the id of the form
         // if (element instanceof Widget && element.eContainer() instanceof Form && ModelHelper.formIsCustomized((Form) element.eContainer())) {
-        if ((element instanceof Widget && element.eContainer() instanceof Form)) {
+        if (element instanceof Widget && isContainerIsAFormOrAGroup(element.eContainer())) {
             if (!workingCopy.getName().equals(element.getName())) {
                 workingCopy.setName(element.getName());
             }
-            OpenNameDialog dialog = new OpenNameDialog(Display.getDefault().getActiveShell(), Messages.editWidgetNameTitle, element.getName());
+            final OpenNameDialog dialog = new OpenNameDialog(Display.getDefault().getActiveShell(), Messages.editWidgetNameTitle, element.getName());
             dialog.setMessage(Messages.widgetEditMessage);
             nameObserver = EMFEditObservables.observeValue(editingDomain, workingCopy, ProcessPackage.Literals.ELEMENT__NAME);
             dialog.setBinding(nameObserver, labelTargetToModelUpdate, null);
             if (dialog.open() == Dialog.OK) {
                 if (element instanceof Widget) {
-                    IProgressService service = PlatformUI.getWorkbench().getProgressService();
+                    final IProgressService service = PlatformUI.getWorkbench().getProgressService();
                     try {
-                        RefactorWidgetOperation operation = new RefactorWidgetOperation((Widget) element, dialog.getNewName());
+                        final RefactorWidgetOperation operation = new RefactorWidgetOperation((Widget) element, dialog.getNewName());
                         operation.setEditingDomain(editingDomain);
                         operation.setAskConfirmation(true);
                         service.busyCursorWhile(operation);
-                    } catch (InvocationTargetException e) {
+                    } catch (final InvocationTargetException e) {
                         BonitaStudioLog.error(e);
-                    } catch (InterruptedException e) {
+                    } catch (final InterruptedException e) {
                         BonitaStudioLog.error(e);
                     }
                 }
@@ -182,12 +182,12 @@ public class NameGridPropertySectionContribution extends AbstractNamePropertySec
     private IValidator createUniqueWidgetIdValidator() {
         return new IValidator() {
 
-            public IStatus validate(Object value) {
+            public IStatus validate(final Object value) {
                 if (element instanceof Widget) {
-                    Widget widget = (Widget) element;
-                    List<Widget> widgets = ModelHelper.getAllWidgetInsidePageFlow((PageFlow) ModelHelper.getPageFlow(widget));
-                    for (Widget wd : widgets) {
-                        if (!wd.equals(widget) && wd.getName().equals((String) value)) {
+                    final Widget widget = (Widget) element;
+                    final List<Widget> widgets = ModelHelper.getAllWidgetInsidePageFlow((PageFlow) ModelHelper.getPageFlow(widget));
+                    for (final Widget wd : widgets) {
+                        if (!wd.equals(widget) && wd.getName().equals(value)) {
                             return ValidationStatus.error(Messages.bind(Messages.widgetNameAllreadyExistError, wd.getName()));
                         }
                     }
