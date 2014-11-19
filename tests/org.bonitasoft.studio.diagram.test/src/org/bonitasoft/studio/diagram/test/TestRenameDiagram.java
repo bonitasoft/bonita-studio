@@ -14,10 +14,13 @@
  */
 package org.bonitasoft.studio.diagram.test;
 
+import org.assertj.core.api.Assertions;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
+import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
+import org.bonitasoft.studio.swtbot.framework.diagram.BotProcessDiagramPerspective;
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -158,6 +161,23 @@ public class TestRenameDiagram extends SWTBotGefTestCase {
         bot.waitWhile(Conditions.shellIsActive(org.bonitasoft.studio.common.Messages.openNameAndVersionDialogTitle));
 
         BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().setValue(BonitaPreferenceConstants.ASK_RENAME_ON_FIRST_SAVE, tmpDisablePopup);
+    }
+
+    @Test
+    public void testFormDiagramReopenedAfterRenaming() {
+        bot.closeAllEditors();
+        final BotApplicationWorkbenchWindow botApplicationWorkbenchWindow = new BotApplicationWorkbenchWindow(bot);
+        final BotProcessDiagramPerspective botProcessDiagramPerspective = botApplicationWorkbenchWindow.createNewDiagram();
+        botProcessDiagramPerspective.activeProcessDiagramEditor().selectElement("Step1");
+        final SWTBotEditor diagramEditor = bot.activeEditor();
+        botProcessDiagramPerspective.getDiagramPropertiesPart().selectApplicationTab().selectPageflowTab().addForm().finish();
+        diagramEditor.show();
+        diagramEditor.setFocus();
+        botProcessDiagramPerspective.activeProcessDiagramEditor().selectDiagram();
+
+        botProcessDiagramPerspective.getDiagramPropertiesPart().selectGeneralTab().selectDiagramTab().setName("newName");
+
+        Assertions.assertThat(bot.editors()).hasSize(2);
     }
 
 }

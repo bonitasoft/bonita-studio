@@ -253,7 +253,7 @@ public class ExpressionHelper {
         } else if (element instanceof Parameter) {
             return createParameterExpression((Parameter) element);
         } else if (element instanceof org.bonitasoft.studio.model.expression.Expression) {
-            return (Expression) element;
+            return (Expression) EcoreUtil.copy(element);
         } else if (element instanceof Widget) {
             return createWidgetExpression((Widget) element);
         } else if (element instanceof Document) {
