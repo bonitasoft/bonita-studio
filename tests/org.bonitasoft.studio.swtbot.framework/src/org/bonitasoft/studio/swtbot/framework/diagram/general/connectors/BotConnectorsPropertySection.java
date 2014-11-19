@@ -14,7 +14,7 @@ import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 
 /**
  * Connectors property section.
- * 
+ *
  * @author Joachim Segala
  */
 public class BotConnectorsPropertySection extends BotBase {
@@ -26,6 +26,12 @@ public class BotConnectorsPropertySection extends BotBase {
     public BotAddConnectorDialog addConnector() {
         bot.button(Messages.add).click();
         return new BotAddConnectorDialog(bot);
+    }
+
+    public BotEditConnectorDialog editConnector(final int index, final String expectedWizardTitleOnOpen) {
+        bot.table().select(index);
+        bot.button(Messages.Edit).click();
+        return new BotEditConnectorDialog(bot, expectedWizardTitleOnOpen);
     }
 
 }

@@ -10,6 +10,7 @@ package org.bonitasoft.studio.swtbot.framework.application;
 
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.swtbot.framework.application.menu.AbstractBotMenu;
+import org.bonitasoft.studio.swtbot.framework.application.menu.BotEditMenu;
 import org.bonitasoft.studio.swtbot.framework.diagram.BotProcessDiagramPerspective;
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
@@ -105,4 +106,10 @@ public class BotApplicationWorkbenchWindow extends AbstractBotMenu {
         }, 30000, 100);
         return this;
     }
+
+    public BotEditMenu editMenu() {
+        openMenu("Edit");
+        return new BotEditMenu(bot);
+    }
+
 }
