@@ -326,11 +326,12 @@ public class ExpressionHelperTest {
     }
 
     @Test
-    public void should_createExpressionFromEObject_Returns_a_itself_if_EObject_is_an_Expression() throws Exception {
+    public void should_createExpressionFromEObject_Returns_a_copy_if_EObject_is_an_Expression() throws Exception {
         final Expression inputExpression = ExpressionFactory.eINSTANCE.createExpression();
         inputExpression.setName("connectorOutput");
         inputExpression.setType(ExpressionConstants.CONSTANT_TYPE);
         final Expression expression = ExpressionHelper.createExpressionFromEObject(inputExpression);
-        assertThat(expression).isEqualTo(inputExpression);
+        assertThat(expression).isNotEqualTo(inputExpression);
+        assertThat(EcoreUtil.equals(expression, inputExpression)).isTrue();
     }
 }
