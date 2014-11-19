@@ -16,6 +16,8 @@
  */
 package org.bonitasoft.studio.connectors.ui.wizard.custom;
 
+import java.util.Arrays;
+
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.connector.model.definition.Input;
@@ -35,6 +37,7 @@ import org.bonitasoft.studio.model.expression.TableExpression;
 import org.eclipse.core.databinding.UpdateListStrategy;
 import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.ecore.EObject;
@@ -110,7 +113,13 @@ public class GroovyScriptConfigurationWizardPage extends AbstractConnectorConfig
                 if (from instanceof ListExpression) {
                     if (((ListExpression) from).getExpressions().size() == 2) {
                         final Expression expression = ((ListExpression) from).getExpressions().get(1);
-                        return expression.getReferencedElements().get(0);
+                        final EList<EObject> referencedElements = expression.getReferencedElements();
+                        if (referencedElements.isEmpty()) {
+                            return expression;
+                        } else {
+                            return referencedElements.get(0);
+                        }
+
                     }
                 }
                 return null;
@@ -126,12 +135,11 @@ public class GroovyScriptConfigurationWizardPage extends AbstractConnectorConfig
                     if (depValueExpression != null) {
                         final ListExpression depLine = ExpressionFactory.eINSTANCE.createListExpression();
                         final Expression depNameExpression = ExpressionHelper.createConstantExpression(depValueExpression.getName(), String.class.getName());
-                        depLine.getExpressions().add(depNameExpression);
-                        depLine.getExpressions().add(depValueExpression);
+                        final EList<Expression> expressions = depLine.getExpressions();
+                        expressions.addAll(Arrays.asList(depNameExpression, depValueExpression));
                         return depLine;
                     }
                     return null;
-
                 }
                 return null;
             }
