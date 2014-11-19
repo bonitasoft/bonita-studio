@@ -127,16 +127,32 @@ public abstract class EMFFileStore extends AbstractFileStore implements IReposit
         final Resource eResource = getEMFResource();
     	doClose();
     	if(eResource != null){
-    		try {
-    			eResource.delete(Collections.EMPTY_MAP) ;
-    		} catch (final IOException e) {
-    			BonitaStudioLog.error(e) ;
+    	    final Runnable deleteRunnable = new Runnable() {
+
+                @Override
+                public void run() {
+                    try {
+                        eResource.delete(Collections.EMPTY_MAP);
+                    } catch (final IOException e) {
+                        BonitaStudioLog.error(e);
+                    }
+
+                }
+            };
+    	    final TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(eResource);
+            if (editingDomain != null) {
+                try {
+                    editingDomain.runExclusive(deleteRunnable);
+                } catch (final InterruptedException e) {
+                    BonitaStudioLog.error(e);
+                }
+    		}else{
+                deleteRunnable.run();
     		}
     	} else {
     		try {
                 getResource().delete(true, Repository.NULL_PROGRESS_MONITOR);
 			} catch (final CoreException e) {
-
 				BonitaStudioLog.error(e);
 			}
     	}
