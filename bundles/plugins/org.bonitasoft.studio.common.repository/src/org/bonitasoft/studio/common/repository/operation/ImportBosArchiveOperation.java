@@ -76,6 +76,8 @@ public class ImportBosArchiveOperation {
 
     private final IResourceImporter iResourceImporter;
 
+    private boolean validate = true;
+
     public ImportBosArchiveOperation() {
         iResourceImporter = new IResourceImporter();
     }
@@ -133,6 +135,7 @@ public class ImportBosArchiveOperation {
 
         currentRepository.refresh(Repository.NULL_PROGRESS_MONITOR);
         currentRepository.notifyFileStoreEvent(new FileStoreChangeEvent(EventType.POST_IMPORT, null));
+
         validateAllAfterImport();
 
         return Status.OK_STATUS;
@@ -151,19 +154,23 @@ public class ImportBosArchiveOperation {
 
     protected void validateAllAfterImport() {
         final ImportBosArchiveStatusBuilder statusBuilder = new ImportBosArchiveStatusBuilder();
-        for (final AbstractProcess process : iResourceImporter.getImportedProcesses()) {
-            final ProcessesValidationAction validationAction = new ProcessesValidationAction(Collections.singletonList(process));
-            Display.getDefault().syncExec(new Runnable() {
+        if (validate) {
+            for (final IRepositoryFileStore diagramFileStore : iResourceImporter.getImportedProcesses()) {
 
-                @Override
-                public void run() {
-                    validationAction.performValidation();
-                }
+                Display.getDefault().syncExec(new Runnable() {
 
-            });
-            statusBuilder.addStatus(process, validationAction.getStatus());
+                    @Override
+                    public void run() {
+                        final AbstractProcess process = (AbstractProcess) diagramFileStore.getContent();
+                        final ProcessesValidationAction validationAction = new ProcessesValidationAction(Collections.singletonList(process));
+                        validationAction.performValidation();
+                        statusBuilder.addStatus(process, validationAction.getStatus());
+                    }
+
+                });
+
+            }
         }
-
         importStatus = statusBuilder.done();
     }
 
@@ -318,5 +325,13 @@ public class ImportBosArchiveOperation {
 
     public void setArchiveFile(final String archiveFile) {
         this.archiveFile = archiveFile;
+    }
+
+    public void disableValidation() {
+        validate = false;
+    }
+
+    public void enableValidation() {
+        validate = true;
     }
 }

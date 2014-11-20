@@ -53,7 +53,6 @@ import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.ResourceFile;
 import org.bonitasoft.studio.model.process.ResourceFolder;
-import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditorUtil;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.operations.OperationHistoryFactory;
 import org.eclipse.core.resources.IFile;
@@ -63,14 +62,12 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil.Copier;
 import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCommand;
-import org.eclipse.gmf.runtime.emf.core.GMFEditingDomainFactory;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 
 /**
@@ -97,12 +94,17 @@ public class DuplicateDiagramOperation implements IRunnableWithProgress {
 
         final String oldName = diagram.getName();
         final String oldVersion = diagram.getVersion();
-        MainProcess newDiagram = diagram;
-        if (!(oldName.equals(diagramName) && oldVersion.equals(diagramVersion))) {
-            newDiagram = copyDiagram();
-        }
 
-        final TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(newDiagram);
+        final DiagramRepositoryStore diagramStore = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
+        DiagramFileStore newFildeStore = null;
+        if (!(oldName.equals(diagramName) && oldVersion.equals(diagramVersion))) {
+            newFildeStore = copyDiagram();
+        }
+        if (newFildeStore == null) {
+            newFildeStore = diagramStore.createRepositoryFileStore(NamingUtils.toDiagramFilename(diagramName, diagramVersion));
+        }
+        final MainProcess newDiagram = newFildeStore.getContent();
+        final TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(newFildeStore.getEMFResource());
         editingDomain.getCommandStack().execute(
                 SetCommand.create(editingDomain, newDiagram, ProcessPackage.Literals.ABSTRACT_PROCESS__AUTHOR,
                         System.getProperty("user.name", "Unknown")));
@@ -128,17 +130,11 @@ public class DuplicateDiagramOperation implements IRunnableWithProgress {
 
         }
         if (poolRenamed) {
-            try {
-                if (newDiagram.eResource() != null) {
-                    newDiagram.eResource().save(ProcessDiagramEditorUtil.getSaveOptions());
-                }
-            } catch (final IOException e) {
-                BonitaStudioLog.error(e);
-            }
+            newFildeStore.save(null);
         }
     }
 
-    private MainProcess copyDiagram() {
+    private DiagramFileStore copyDiagram() {
         final DiagramRepositoryStore diagramStore = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
 
         final Copier copier = new Copier(true, false);
@@ -148,22 +144,19 @@ public class DuplicateDiagramOperation implements IRunnableWithProgress {
         store.save(copiedElements);
 
         final MainProcess newDiagram = store.getContent();
-
-        final ResourceSet rSet = newDiagram.eResource().getResourceSet();
-        final TransactionalEditingDomain createEditingDomain = GMFEditingDomainFactory.getInstance().createEditingDomain(rSet);
-        changeProcessNameAndVersion(newDiagram, createEditingDomain, diagramName, diagramVersion);
-        createEditingDomain.getCommandStack().execute(
-                SetCommand.create(createEditingDomain, newDiagram, ProcessPackage.Literals.MAIN_PROCESS__CONFIG_ID, ConfigurationIdProvider
+        final TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(newDiagram.eResource());
+        changeProcessNameAndVersion(newDiagram, editingDomain, diagramName, diagramVersion);
+        editingDomain.getCommandStack().execute(
+                SetCommand.create(editingDomain, newDiagram, ProcessPackage.Literals.MAIN_PROCESS__CONFIG_ID, ConfigurationIdProvider
                         .getConfigurationIdProvider().getConfigurationId(newDiagram)));
         try {
             OperationHistoryFactory.getOperationHistory().execute(
-                    new AbstractTransactionalCommand(createEditingDomain, "Duplicate", Collections.EMPTY_LIST) {
+                    new AbstractTransactionalCommand(editingDomain, "Duplicate", Collections.EMPTY_LIST) {
 
                         @Override
                         protected CommandResult doExecuteWithResult(final IProgressMonitor arg0, final IAdaptable arg1) throws ExecutionException {
                             try {
-                                changePathAndCopyResources(diagram, newDiagram, createEditingDomain, copier);
-                                newDiagram.eResource().save(ProcessDiagramEditorUtil.getSaveOptions());
+                                changePathAndCopyResources(diagram, newDiagram, editingDomain, copier);
                             } catch (final IOException e) {
                                 BonitaStudioLog.error(e);
                                 return CommandResult.newErrorCommandResult(e);
@@ -184,7 +177,7 @@ public class DuplicateDiagramOperation implements IRunnableWithProgress {
             BonitaStudioLog.error(e1);
         }
         duplicateConfigurations(diagram, newDiagram);
-        return newDiagram;
+        return store;
     }
 
     private void duplicateConfigurations(final MainProcess sourceDiagram, final MainProcess newDiagram) {
@@ -445,11 +438,11 @@ public class DuplicateDiagramOperation implements IRunnableWithProgress {
         editingDomain.getCommandStack()
         .execute(SetCommand.create(editingDomain, process, ProcessPackage.Literals.ABSTRACT_PROCESS__VERSION, newProcessVersion));
 
-        try {
-            process.eResource().save(Collections.EMPTY_MAP);
-        } catch (final IOException e) {
-            BonitaStudioLog.error(e);
-        }
+        //        try {
+        //            process.eResource().save(Collections.EMPTY_MAP);
+        //        } catch (final IOException e) {
+        //            BonitaStudioLog.error(e);
+        //        }
     }
 
     public void setDiagramToDuplicate(final MainProcess diagram) {

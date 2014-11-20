@@ -77,28 +77,28 @@ public class BPMNExportTests extends SWTBotGefTestCase {
     public void testExportToBPMN() throws Exception {
         SWTBotTestUtil.importProcessWIthPathFromClass(bot, "TestExportToBPMNDiagram_1_0.bos", "Bonita 6.x", "TestExportToBPMN", this.getClass(), false);
 
-        MainProcess mainProcess = (MainProcess)((ProcessDiagramEditor)bot.activeEditor().getReference().getPart(false)).getDiagram().getElement();
-        final Diagram diagramFor = ModelHelper.getDiagramFor(mainProcess,null);
+        final MainProcess mainProcess = (MainProcess)((ProcessDiagramEditor)bot.activeEditor().getReference().getPart(false)).getDiagram().getElement();
+        final Diagram diagramFor = ModelHelper.getDiagramFor(mainProcess);
 
         Display.getDefault().syncExec(new Runnable() {
 
             public void run() {
                 try{
                     dep = OffscreenEditPartFactory.getInstance().createDiagramEditPart(diagramFor, new Shell());
-                } catch(Exception ex){
+                } catch(final Exception ex){
                     dep = OffscreenEditPartFactory.getInstance().createDiagramEditPart(diagramFor, new Shell());
                 }
             }
         });
 
-        MainProcessEditPart mped = (MainProcessEditPart) dep;
-        IBonitaModelExporter exporter = new BonitaModelExporterImpl(mped) ;
-        File bpmnFileExported = File.createTempFile("withAllExported", ".bpmn");
+        final MainProcessEditPart mped = (MainProcessEditPart) dep;
+        final IBonitaModelExporter exporter = new BonitaModelExporterImpl(mped) ;
+        final File bpmnFileExported = File.createTempFile("withAllExported", ".bpmn");
         final boolean transformed = new BonitaToBPMN().transform(exporter, bpmnFileExported, new NullProgressMonitor());
         assertTrue("Export failed", transformed);
 
         //
-        BufferedReader reader = new BufferedReader(new FileReader(bpmnFileExported));
+        final BufferedReader reader = new BufferedReader(new FileReader(bpmnFileExported));
         String line = ""; //$NON-NLS-1$
         boolean correctEncoding = false;
         while((line = reader.readLine()) != null) {
@@ -111,14 +111,14 @@ public class BPMNExportTests extends SWTBotGefTestCase {
 
         assertTrue("Bad xml file encding", correctEncoding);
 
-        ModelResourceFactoryImpl factory = new ModelResourceFactoryImpl();
-        Resource resource = factory.createResource(URI.createFileURI(bpmnFileExported.getAbsolutePath()));
+        final ModelResourceFactoryImpl factory = new ModelResourceFactoryImpl();
+        final Resource resource = factory.createResource(URI.createFileURI(bpmnFileExported.getAbsolutePath()));
         resource.load(Collections.EMPTY_MAP);
-        TDefinitions bpmnProcess = ((DocumentRoot)resource.getContents().get(0)).getDefinitions();
+        final TDefinitions bpmnProcess = ((DocumentRoot)resource.getContents().get(0)).getDefinitions();
         TProcess bpmnPool1 = null, bpmnPool2 = null;
-        for (TRootElement el : bpmnProcess.getRootElement()) {
+        for (final TRootElement el : bpmnProcess.getRootElement()) {
             if (el instanceof TProcess) {
-                TProcess process = (TProcess)el;
+                final TProcess process = (TProcess)el;
                 if (process.getName().equals("Pool1")) {
                     bpmnPool1 = process;
                 } else if (process.getName().equals("Pool2")) {
@@ -127,9 +127,9 @@ public class BPMNExportTests extends SWTBotGefTestCase {
             }
         }
         boolean conditionFalseFound = false;
-        for (TFlowElement el : bpmnPool1.getFlowElement()) {
+        for (final TFlowElement el : bpmnPool1.getFlowElement()) {
             if (el instanceof TSequenceFlow) {
-                TSequenceFlow sequenceFlow = (TSequenceFlow)el;
+                final TSequenceFlow sequenceFlow = (TSequenceFlow)el;
                 if (sequenceFlow.getConditionExpression() != null) {
                     conditionFalseFound = conditionFalseFound || sequenceFlow.getConditionExpression().getMixed().get(0).getValue().toString().equals("false");
                 }
@@ -152,10 +152,10 @@ public class BPMNExportTests extends SWTBotGefTestCase {
 
             public void run() {
                 mi.getMenu().notifyListeners(SWT.Show, new Event()) ;
-                MenuItem[] mis = mi.getMenu().getItems();
+                final MenuItem[] mis = mi.getMenu().getItems();
                 System.out.println("Menu present in "+mi.getText());
-                for (MenuItem mi: mis) {
-                    String menuText = mi.getText();
+                for (final MenuItem mi: mis) {
+                    final String menuText = mi.getText();
                     System.out.println(menuText);
                     menuBPMN2found = menuBPMN2found || "BPMN 2.0...".equals(menuText);
                 }
@@ -169,23 +169,23 @@ public class BPMNExportTests extends SWTBotGefTestCase {
     }
 
     public void testBPMN2MenuPresentAfterOepningAnotherEditor(){
-    	final String id = "testBPMN2MenuPresentAfterOpeningAnotherEditor";     
+    	final String id = "testBPMN2MenuPresentAfterOpeningAnotherEditor";
         final String className = "MyConnectorImpl"+System.currentTimeMillis();
         final String packageName = "org.bonita.connector.test";
         SWTBotConnectorTestUtil.createConnectorDefAndImpl(bot, id, "1.0.0", className, packageName);
-        
+
         bot.waitUntil(Conditions.waitForEditor(new BaseMatcher<IEditorReference>() {
 
-            public boolean matches(Object item) {
+            public boolean matches(final Object item) {
                 return "org.eclipse.jdt.ui.CompilationUnitEditor".equals(((IEditorReference)item).getId());
             }
 
-            public void describeTo(Description description) {
+            public void describeTo(final Description description) {
 
             }
 
         }), 10000);
-        SWTBotEditor activeEditor = bot.activeEditor();
+        final SWTBotEditor activeEditor = bot.activeEditor();
         assertEquals("org.eclipse.jdt.ui.CompilationUnitEditor",activeEditor.getReference().getId());
 
 
@@ -197,10 +197,10 @@ public class BPMNExportTests extends SWTBotGefTestCase {
 
             public void run() {
                 mi.getMenu().notifyListeners(SWT.Show, new Event()) ;
-                MenuItem[] mis = mi.getMenu().getItems();
+                final MenuItem[] mis = mi.getMenu().getItems();
 
-                for (MenuItem mi: mis) {
-                    String menuText = mi.getText();
+                for (final MenuItem mi: mis) {
+                    final String menuText = mi.getText();
                     menuBPMN2found = menuBPMN2found || "BPMN 2.0...".equals(menuText);
                 }
 

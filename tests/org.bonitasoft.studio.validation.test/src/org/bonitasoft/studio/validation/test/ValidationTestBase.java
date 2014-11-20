@@ -39,18 +39,18 @@ public class ValidationTestBase {
 
     /**
      * Helper method to find the status matching a constraint ID.
-     * 
+     *
      * @param statuses
      *            the statuses to search
      * @param id
      *            the constraint ID to look for
      * @return the matching status, or <code>null</code> if it's not found
      */
-    protected IStatus getStatus(IStatus[] statuses, String id) {
+    protected IStatus getStatus(final IStatus[] statuses, final String id) {
         IStatus result = null;
 
-        for (IStatus element : statuses) {
-            IConstraintStatus next = (IConstraintStatus) element;
+        for (final IStatus element : statuses) {
+            final IConstraintStatus next = (IConstraintStatus) element;
 
             if (next.getConstraint().getDescriptor().getId().equals(id)) {
                 result = next;
@@ -62,20 +62,20 @@ public class ValidationTestBase {
 
     /**
      * Helper method to find multiple statuses matching a constraint ID.
-     * 
+     *
      * @param statuses
      *            the statuses to search
      * @param id
      *            the constraint ID to look for
      * @return the matching statuses, or empty array if none found
-     * 
+     *
      * @since 1.1
      */
-    protected IStatus[] getStatuses(IStatus[] statuses, String id) {
-        List<IStatus> result = new java.util.ArrayList<IStatus>();
+    protected IStatus[] getStatuses(final IStatus[] statuses, final String id) {
+        final List<IStatus> result = new java.util.ArrayList<IStatus>();
 
-        for (IStatus element : statuses) {
-            IConstraintStatus next = (IConstraintStatus) element;
+        for (final IStatus element : statuses) {
+            final IConstraintStatus next = (IConstraintStatus) element;
 
             if (next.getConstraint().getDescriptor().getId().equals(id)) {
                 result.add(next);
@@ -90,28 +90,28 @@ public class ValidationTestBase {
      * of statuses for uniform treatment of scalar and multi-statuses. As a
      * special case, the scalar status indicating success because no constraints
      * were evaluated results in an empty array being returned.
-     * 
+     *
      * @param status
      *            the status, which may be multi or not
      * @return all of the statuses represented by the incoming <code>status</code>
      */
-    protected IStatus[] getStatuses(IStatus status) {
+    protected IStatus[] getStatuses(final IStatus status) {
         if (status.getCode() == EMFModelValidationStatusCodes.NO_CONSTRAINTS_EVALUATED) {
             return new IStatus[0];
         }
 
-        List<IStatus> result = new java.util.ArrayList<IStatus>();
+        final List<IStatus> result = new java.util.ArrayList<IStatus>();
 
         collectStatuses(status, result);
 
         return result.toArray(new IStatus[result.size()]);
     }
 
-    private void collectStatuses(IStatus status, List<IStatus> statuses) {
+    private void collectStatuses(final IStatus status, final List<IStatus> statuses) {
         if (status.isMultiStatus()) {
-            IStatus[] children = status.getChildren();
+            final IStatus[] children = status.getChildren();
 
-            for (IStatus element : children) {
+            for (final IStatus element : children) {
                 collectStatuses(element, statuses);
             }
         } else {
@@ -119,10 +119,10 @@ public class ValidationTestBase {
         }
     }
 
-    protected List<IConstraintStatus> getStatusForConstraint(IStatus[] statuses, String constraintId) {
-        List<IConstraintStatus> result = new java.util.ArrayList<IConstraintStatus>();
-        for (IStatus element : statuses) {
-            IModelConstraint next = ((IConstraintStatus) element).getConstraint();
+    protected List<IConstraintStatus> getStatusForConstraint(final IStatus[] statuses, final String constraintId) {
+        final List<IConstraintStatus> result = new java.util.ArrayList<IConstraintStatus>();
+        for (final IStatus element : statuses) {
+            final IModelConstraint next = ((IConstraintStatus) element).getConstraint();
             if (next.getDescriptor().getId().equals(constraintId)) {
                 result.add((IConstraintStatus) element);
             }
@@ -130,21 +130,22 @@ public class ValidationTestBase {
         return result;
     }
 
-    protected MainProcess getDiagramFromArchive(String archiveName, String diagramName,
-            String diagramVersion) throws IOException {
+    protected MainProcess getDiagramFromArchive(final String archiveName, final String diagramName,
+            final String diagramVersion) throws IOException {
         final URL url = TestValidationConstraints.class.getResource(archiveName);
-        ImportBosArchiveOperation op = new ImportBosArchiveOperation();
+        final ImportBosArchiveOperation op = new ImportBosArchiveOperation();
+        op.disableValidation();
         op.setArchiveFile(FileLocator.toFileURL(url).getFile());
         op.setCurrentRepository(RepositoryManager.getInstance().getCurrentRepository());
         op.run(Repository.NULL_PROGRESS_MONITOR);
-        final DiagramRepositoryStore store = (DiagramRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
+        final DiagramRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
         final DiagramFileStore fStore = store.getDiagram(diagramName, diagramVersion);
         assertNotNull(fStore);
         return fStore.getContent();
     }
 
-    protected Pool getProcess(MainProcess diagram, String processName, String version) {
-        for (Element e : diagram.getElements()) {
+    protected Pool getProcess(final MainProcess diagram, final String processName, final String version) {
+        for (final Element e : diagram.getElements()) {
             if (e instanceof Pool) {
                 if (e.getName().equals(processName) && ((AbstractProcess) e).getVersion().equals(version)) {
                     return (Pool) e;

@@ -28,9 +28,7 @@ import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Element;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
@@ -51,10 +49,10 @@ public class CopyToImageUtilEx extends CopyToImageUtil {
 
 	/**
 	 * This version avoid problem with model without xmi id.
-	 * 
+	 *
 	 * Creates an image of the diagram in the specified image file format. The diagram image is scaled to fit in
 	 * the maxWidth, maxHeight window. The image is returned as a byte array
-	 * 
+	 *
 	 * @param diagram diagram model
 	 * @param maxWidth the max width of the image
 	 * @param maxHeight the max height of the image
@@ -65,24 +63,27 @@ public class CopyToImageUtilEx extends CopyToImageUtil {
 	 * @return the image as array of bytes
 	 * @throws CoreException
 	 */
-	public byte [] copyToImageByteArray(Diagram diagram,AbstractProcess processToDraw, ImageFileFormat format, IProgressMonitor monitor, PreferencesHint preferencesHint, boolean useMargins) throws CoreException {
-		Shell shell = new Shell();
+	public byte [] copyToImageByteArray(final Diagram diagram,final AbstractProcess processToDraw, final ImageFileFormat format, final IProgressMonitor monitor, final PreferencesHint preferencesHint, final boolean useMargins) throws CoreException {
+		final Shell shell = new Shell();
 		DiagramEditPart diagramEditPart = null ;
 		try {
 			diagramEditPart = createDiagramEditPart(diagram,
 					shell, preferencesHint);
 			Assert.isNotNull(diagramEditPart);
 			IGraphicalEditPart ep = null ;
-			for(Object child : diagramEditPart.getChildren()){
+			for(final Object child : diagramEditPart.getChildren()){
 				if(child instanceof IGraphicalEditPart){
 					if(((Element)((IGraphicalEditPart) child).resolveSemanticElement()).getName().equals(processToDraw.getName())){
-						ep = (IGraphicalEditPart) child ; 
+						ep = (IGraphicalEditPart) child ;
 					}
 				}
 			}
-			DiagramGenerator gen = getDiagramGenerator(diagramEditPart, format);
-			final Rectangle calculateImageRectangle = gen.calculateImageRectangle(Collections.singletonList(ep));
-			return copyToOutputStream(gen, Collections.singletonList(ep), calculateImageRectangle, format, monitor);
+            if (ep != null) {
+                final DiagramGenerator gen = getDiagramGenerator(diagramEditPart, format);
+                final Rectangle calculateImageRectangle = gen.calculateImageRectangle(Collections.singletonList(ep));
+                return copyToOutputStream(gen, Collections.singletonList(ep), calculateImageRectangle, format, monitor);
+            }
+            return null;
 		} finally {
 			if(diagramEditPart != null){
 				diagramEditPart.getEditingDomain().dispose();
@@ -94,23 +95,24 @@ public class CopyToImageUtilEx extends CopyToImageUtil {
 
 	}
 
-	protected byte[] copyToOutputStream(DiagramGenerator gen, List editParts,
-			org.eclipse.swt.graphics.Rectangle imageRect,
-			ImageFileFormat format, IProgressMonitor monitor)
+	protected byte[] copyToOutputStream(final DiagramGenerator gen, final List editParts,
+			final org.eclipse.swt.graphics.Rectangle imageRect,
+			final ImageFileFormat format, final IProgressMonitor monitor)
 					throws CoreException {
 		if (format.equals(ImageFileFormat.JPEG)
 				|| format.equals(ImageFileFormat.PNG)) {
 
 			String exportFormat = org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.image.ImageExporter.JPEG_FILE;
-			if (format.equals(ImageFileFormat.PNG))
-				exportFormat = org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.image.ImageExporter.PNG_FILE;
+			if (format.equals(ImageFileFormat.PNG)) {
+                exportFormat = org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.image.ImageExporter.PNG_FILE;
+            }
 
-			java.awt.Image image = gen.createAWTImageForParts(editParts,
+			final java.awt.Image image = gen.createAWTImageForParts(editParts,
 					imageRect);
 			monitor.worked(1);
 			ByteArrayOutputStream stream = null;
 			try{
-				
+
 				if (image instanceof BufferedImage) {
 					stream = new ByteArrayOutputStream();
 					org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.image.ImageExporter.exportToOutputStream(stream,(BufferedImage) image,exportFormat, monitor, format.getQuality());
@@ -120,7 +122,7 @@ public class CopyToImageUtilEx extends CopyToImageUtil {
 				if(stream != null){
 					try {
 						stream.close();
-					} catch (IOException e) {
+					} catch (final IOException e) {
 						BonitaStudioLog.error(e);
 					}
 				}
@@ -129,8 +131,8 @@ public class CopyToImageUtilEx extends CopyToImageUtil {
 		return null;
 	}
 
-	public byte [] copyToImageByteArray(Diagram diagram,Element elementToDraw, int maxWidth, int maxHeight, ImageFileFormat format, IProgressMonitor monitor, PreferencesHint preferencesHint, boolean useMargins) throws Exception {
-		Shell shell = new Shell();
+	public byte [] copyToImageByteArray(final Diagram diagram,final Element elementToDraw, final int maxWidth, final int maxHeight, final ImageFileFormat format, final IProgressMonitor monitor, final PreferencesHint preferencesHint, final boolean useMargins) throws Exception {
+		final Shell shell = new Shell();
 		DiagramEditPart diagramEditPart = null ;
 		EditPart ep = null ;
 		try {
@@ -140,16 +142,17 @@ public class CopyToImageUtilEx extends CopyToImageUtil {
 			ep = GMFTools.findEditPart(diagramEditPart,elementToDraw) ;
 
 
-			if(ep == null)
-				throw new Exception("Element to draw not found") ;
+			if(ep == null) {
+                throw new Exception("Element to draw not found") ;
+            }
 
 			return copyToImageByteArray(diagramEditPart, Collections.singletonList(ep), maxWidth, maxHeight, format, monitor, useMargins);
-		}catch(Exception e){
+		}catch(final Exception e){
 			e.printStackTrace();
 			throw e ;
 		} finally {
 			shell.dispose();
-		}	
+		}
 	}
 
 

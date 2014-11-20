@@ -16,6 +16,7 @@
  */
 package org.bonitasoft.studio.validation;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 
@@ -33,11 +34,12 @@ import org.bonitasoft.studio.validation.ui.view.ValidationViewPart;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
-import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
@@ -59,89 +61,116 @@ public class BatchValidationHandler extends AbstractHandler {
      */
     @Override
     public Object execute(final ExecutionEvent event) throws ExecutionException {
-        if (PlatformUI.isWorkbenchRunning()) {
-            final Map<?, ?> parameters = event.getParameters();
-            final BatchValidationOperation validateOperation = new BatchValidationOperation(new OffscreenEditPartFactory());
-            if (parameters != null && !parameters.isEmpty()) {
-                String files = event.getParameter("diagrams");
-                if (files != null) {
-                    final DiagramRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
-                    files = files.substring(1, files.length() - 1);
-                    final String[] allFiles = files.split(",");
-                    for (final String fileName : allFiles) {
-                        final DiagramFileStore fileStore = store.getChild(fileName.trim());
-                        if (fileStore != null) {
-                            final Resource r = fileStore.getEMFResource();
-                            for (final EObject eObject : r.getContents()) {
-                                if (eObject instanceof Diagram) {
-                                    validateOperation.addDiagram((Diagram) eObject);
-                                }
-                            }
-                        } else {
-                            BonitaStudioLog.debug("Proc file : " + fileName.trim() + " not found in repository!", ValidationPlugin.PLUGIN_ID);
-                        }
-                    }
-                }
-            } else if (PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null
-                    && PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage() != null) {
-                final IEditorPart part = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
-                if (part instanceof DiagramEditor) {
-                    final Resource resource = ((DiagramEditor) part).getDiagramEditPart().resolveSemanticElement().eResource();
-                    if (resource != null) {
-                        for (final EObject content : resource.getContents()) {
-                            if (content instanceof Diagram) {
-                                validateOperation.addDiagram((Diagram) content);
-                            }
-                        }
-                    }
-                }
-            }
-
-            Display.getDefault().syncExec(new Runnable() {
-
-                @Override
-                public void run() {
-                    final IProgressService service = PlatformUI.getWorkbench().getProgressService();
-                    try {
-                        service.run(true, false, validateOperation);
-                    } catch (final InvocationTargetException e) {
-                        BonitaStudioLog.error(e);
-                    } catch (final InterruptedException e) {
-                        BonitaStudioLog.error(e);
-                    }
-                }
-            });
-
-            Object showReport = parameters.get("showReport");
-            if (showReport == null) {
-                showReport = Boolean.TRUE;
-            }
-            if (showReport instanceof Boolean) {
-                if (((Boolean) showReport).booleanValue()) {
-                    showReport(validateOperation.getResult());
-                }
-            }
-
-            if (PlatformUI.isWorkbenchRunning() && PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null) {
-                final IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-                if (activePage != null) {
-                    final IViewPart part = activePage.findView("org.bonitasoft.studio.validation.view");
-                    if (part instanceof ValidationViewPart) {
-                        ((ValidationViewPart) part).refreshViewer();
-                    }
-                }
-            }
-
-            return validateOperation.getResult();
-        } else {
+        if (!PlatformUI.isWorkbenchRunning()) {
             return IStatus.OK;
         }
+
+        final Map<?, ?> parameters = event.getParameters();
+        final BatchValidationOperation validateOperation = new BatchValidationOperation(new OffscreenEditPartFactory());
+        if (parameters != null && !parameters.isEmpty()) {
+            final String files = event.getParameter("diagrams");
+            if (files != null) {
+                try {
+                    addDiagramsToValidate(validateOperation, toFileNames(files));
+                } catch (final IOException e) {
+                    BonitaStudioLog.error(e);
+                }
+            }
+        } else if (currentEditorIsADiagram()) {
+            final DiagramEditor part = (DiagramEditor) getActiveEditor();
+            final IFile resource = (IFile) part.getEditorInput().getAdapter(IFile.class);
+            if (resource != null) {
+                try {
+                    addDiagramsToValidate(validateOperation, new String[] { resource.getLocation().toFile().getName() });
+                } catch (final IOException e) {
+                    BonitaStudioLog.error(e);
+                }
+            }
+        }
+
+        Display.getDefault().syncExec(new Runnable() {
+
+            @Override
+            public void run() {
+                final IProgressService service = PlatformUI.getWorkbench().getProgressService();
+                try {
+                    service.run(true, false, validateOperation);
+                } catch (final InvocationTargetException e) {
+                    BonitaStudioLog.error(e);
+                } catch (final InterruptedException e) {
+                    BonitaStudioLog.error(e);
+                }
+            }
+        });
+
+        Object showReport = parameters.get("showReport");
+        if (showReport == null) {
+            showReport = Boolean.TRUE;
+        }
+        if (showReport instanceof Boolean) {
+            if (((Boolean) showReport).booleanValue()) {
+                showReport(validateOperation.getResult());
+            }
+        }
+
+        if (PlatformUI.isWorkbenchRunning() && PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null) {
+            final IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+            if (activePage != null) {
+                final IViewPart part = activePage.findView("org.bonitasoft.studio.validation.view");
+                if (part instanceof ValidationViewPart) {
+                    ((ValidationViewPart) part).refreshViewer();
+                }
+            }
+        }
+
+        return validateOperation.getResult();
+    }
+
+    protected IEditorPart getActiveEditor() {
+        if (PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null
+                && PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage() != null) {
+            return PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+        }
+        return null;
+    }
+
+    protected boolean currentEditorIsADiagram() {
+        return getActiveEditor() instanceof DiagramEditor;
+    }
+
+    protected void addDiagramsToValidate(final BatchValidationOperation validateOperation, final String[] files) throws IOException {
+        final DiagramRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
+        for (final String fName : files) {
+            final String fileName = fName.trim();
+            final DiagramFileStore fileStore = store.getChild(fileName);
+            if (fileStore == null) {
+                throw new IOException(fileName + " does not exists in " + store.getResource().getLocation());
+            }
+            final Resource eResource = fileStore.getEMFResource();
+            final TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(eResource);
+            final FindDiagramRunnable runnable = new FindDiagramRunnable(eResource,validateOperation);
+            if(editingDomain != null){
+                try {
+                    editingDomain.runExclusive(runnable);
+                } catch (final InterruptedException e) {
+                    BonitaStudioLog.error(e);
+                }
+            }else{
+                runnable.run();
+            }
+        }
+    }
+
+    protected String[] toFileNames(String files) {
+        files = files.substring(1, files.length() - 1);
+        final String[] allFiles = files.split(",");
+        return allFiles;
     }
 
     private void showReport(final IStatus status) {
         if (statusContainsError(status)) {
             final String errorMessage = Messages.validationErrorFoundMessage + " "
-                    + PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor().getTitle();
+                    + getActiveEditor().getTitle();
             final int result = new ValidationDialog(Display.getDefault().getActiveShell(), Messages.validationFailedTitle, errorMessage,
                     ValidationDialog.OK_SEEDETAILS).open();
 
