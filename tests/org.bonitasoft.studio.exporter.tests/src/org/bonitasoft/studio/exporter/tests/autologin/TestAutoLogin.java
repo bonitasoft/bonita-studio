@@ -31,6 +31,7 @@ import org.bonitasoft.studio.engine.export.BarExporter;
 import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.model.configuration.ConfigurationFactory;
 import org.bonitasoft.studio.model.process.AbstractProcess;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.ui.PlatformUI;
 import org.junit.Assert;
@@ -48,7 +49,7 @@ public class TestAutoLogin extends TestCase {
 		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().saveAllEditors(false);
 		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeAllEditors(false);
         if(pool == null){
-            final NewDiagramCommandHandler newDiagram =  new NewDiagramCommandHandler();
+            final NewDiagramCommandHandler newDiagram = new NewDiagramCommandHandler();
             final DiagramFileStore diagramFileStore = newDiagram.execute(null);
             final AbstractProcess p = (AbstractProcess) diagramFileStore.getContent().getElements().get(0);
             pool = EcoreUtil.copy(p);
@@ -87,7 +88,7 @@ public class TestAutoLogin extends TestCase {
     	Assert.assertNotNull("Configuration should not be null", conf);
 
     	if(conf!=null){
-    		final BusinessArchive bar = BarExporter.getInstance().createBusinessArchive(pool, conf.getName(), Collections.EMPTY_SET);
+            final BusinessArchive bar = BarExporter.getInstance().createBusinessArchive(pool, conf.getName(), Collections.<EObject> emptySet());
     		final Map<String, byte[]> map = bar.getResources();
     		boolean hasSecurityFile = false;
     		for(final String s : map.keySet()){
