@@ -12,7 +12,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.properties.sections.document;
+package org.bonitasoft.studio.document.ui;
 
 import static org.bonitasoft.studio.common.Messages.removalConfirmationDialogTitle;
 
@@ -25,14 +25,12 @@ import org.bonitasoft.studio.common.jface.CustomWizardDialog;
 import org.bonitasoft.studio.common.jface.ElementForIdLabelProvider;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection;
+import org.bonitasoft.studio.document.i18n.Messages;
 import org.bonitasoft.studio.document.refactoring.RefactorDocumentOperation;
-import org.bonitasoft.studio.document.ui.DocumentWizard;
-import org.bonitasoft.studio.document.ui.DocumentWizardDialog;
 import org.bonitasoft.studio.model.process.Document;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
-import org.bonitasoft.studio.properties.i18n.Messages;
 import org.bonitasoft.studio.refactoring.core.RefactoringOperationType;
 import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -146,14 +144,14 @@ public class DocumentPropertySection extends AbstractBonitaDescriptionSection im
     private void createButtons(final Composite mainComposite) {
         final Composite buttonComposite = getWidgetFactory().createComposite(mainComposite);
         buttonComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).spacing(0, 3).create());
-        buttonComposite.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).create());
+        buttonComposite.setLayoutData(GridDataFactory.swtDefaults().align(SWT.FILL, SWT.TOP).grab(false, true).create());
         createAddButton(buttonComposite);
         createEditButton(buttonComposite);
         createRemoveButton(buttonComposite);
     }
 
     private void createEditButton(final Composite buttonComposite) {
-        editButton = getWidgetFactory().createButton(buttonComposite, Messages.Edit, SWT.FLAT);
+        editButton = getWidgetFactory().createButton(buttonComposite, org.bonitasoft.studio.common.Messages.edit, SWT.FLAT);
         editButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(85, SWT.DEFAULT).create());
         editButton.setEnabled(false);
         editButton.addSelectionListener(new SelectionAdapter() {
@@ -168,7 +166,7 @@ public class DocumentPropertySection extends AbstractBonitaDescriptionSection im
     }
 
     private void createAddButton(final Composite buttonComposite) {
-        final Button addButton = getWidgetFactory().createButton(buttonComposite, Messages.AddSimple, SWT.FLAT);
+        final Button addButton = getWidgetFactory().createButton(buttonComposite, org.bonitasoft.studio.document.i18n.Messages.AddSimple, SWT.FLAT);
         addButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(85, SWT.DEFAULT).create());
         addButton.addSelectionListener(new SelectionAdapter() {
 
@@ -187,7 +185,7 @@ public class DocumentPropertySection extends AbstractBonitaDescriptionSection im
     }
 
     private void createRemoveButton(final Composite buttonComposite) {
-        removeButton = getWidgetFactory().createButton(buttonComposite, Messages.Remove, SWT.FLAT);
+        removeButton = getWidgetFactory().createButton(buttonComposite, Messages.remove, SWT.FLAT);
         removeButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(85, SWT.DEFAULT).create());
         removeButton.setEnabled(false);
         removeButton.addSelectionListener(new SelectionAdapter() {

@@ -58,17 +58,18 @@ public abstract class AbstractConnectorConfigurationWizardPage extends WizardPag
     public AbstractConnectorConfigurationWizardPage(){
         this(AbstractConnectorConfigurationWizardPage.class.getName()) ;
     }
-    
-    public AbstractConnectorConfigurationWizardPage(String pageName){
+
+    public AbstractConnectorConfigurationWizardPage(final String pageName){
         super(pageName) ;
         context = new EMFDataBindingContext() ;
     }
-    
+
 
     @Override
     public final void createControl(final Composite parent) {
+        final Control control = doCreateControl(parent, context);
         supportPage = WizardPageSupport.create(this, context) ;
-        setControl(doCreateControl(parent,context)) ;
+        setControl(control);
     }
 
     protected EMFDataBindingContext getDatabindingContext(){
@@ -92,7 +93,7 @@ public abstract class AbstractConnectorConfigurationWizardPage extends WizardPag
         return configuration;
     }
 
-    public void setConfiguration(ConnectorConfiguration configuration) {
+    public void setConfiguration(final ConnectorConfiguration configuration) {
         this.configuration = configuration;
     }
 
@@ -100,7 +101,7 @@ public abstract class AbstractConnectorConfigurationWizardPage extends WizardPag
         return page;
     }
 
-    public void setPage(Page page) {
+    public void setPage(final Page page) {
         this.page = page;
         if(messageProvider != null){
             setTitle(messageProvider.getPageTitle(definition, page.getId())) ;
@@ -113,7 +114,7 @@ public abstract class AbstractConnectorConfigurationWizardPage extends WizardPag
         return elementContainer;
     }
 
-    public void setElementContainer(EObject elementContainer) {
+    public void setElementContainer(final EObject elementContainer) {
         this.elementContainer = elementContainer;
     }
 
@@ -121,7 +122,7 @@ public abstract class AbstractConnectorConfigurationWizardPage extends WizardPag
         return definition;
     }
 
-    public void setDefinition(ConnectorDefinition definition) {
+    public void setDefinition(final ConnectorDefinition definition) {
         this.definition = definition;
     }
 
@@ -129,12 +130,12 @@ public abstract class AbstractConnectorConfigurationWizardPage extends WizardPag
         return messageProvider;
     }
 
-    public void setMessageProvider(DefinitionResourceProvider messageProvider) {
+    public void setMessageProvider(final DefinitionResourceProvider messageProvider) {
         this.messageProvider = messageProvider;
     }
-    
-    protected Input getInput(String inputName) {
-		for(Input input : getDefinition().getInput()){
+
+    protected Input getInput(final String inputName) {
+		for(final Input input : getDefinition().getInput()){
 			if(input.getName().equals(inputName)){
 				return input;
 			}
@@ -142,8 +143,8 @@ public abstract class AbstractConnectorConfigurationWizardPage extends WizardPag
 		throw new IllegalArgumentException("Input "+inputName +" not found in connector definition "+getDefinition().getId());
 	}
 
-    protected ConnectorParameter getConnectorParameter(Input input) {
-		for(ConnectorParameter param : configuration.getParameters()){
+    protected ConnectorParameter getConnectorParameter(final Input input) {
+		for(final ConnectorParameter param : configuration.getParameters()){
 			if(param.getKey().equals(input.getName())){
 				if(param.getExpression() == null){
 					param.setExpression(createExpression(input)) ;
@@ -160,8 +161,8 @@ public abstract class AbstractConnectorConfigurationWizardPage extends WizardPag
 		return parameter ;
 	}
 
-	protected AbstractExpression createExpression(Input input) {
-		String inputClassName = input.getType() ;
+	protected AbstractExpression createExpression(final Input input) {
+		final String inputClassName = input.getType() ;
 		final Expression expression = ExpressionFactory.eINSTANCE.createExpression() ;
 		expression.setReturnType(inputClassName) ;
 		expression.setReturnTypeFixed(true) ;
@@ -173,7 +174,7 @@ public abstract class AbstractConnectorConfigurationWizardPage extends WizardPag
 
     @Override
     public IWizardPage getPreviousPage() {
-        IWizard wizard = getWizard();
+        final IWizard wizard = getWizard();
         if(wizard != null){
             return wizard.getPreviousPage(this);
         }
@@ -184,7 +185,7 @@ public abstract class AbstractConnectorConfigurationWizardPage extends WizardPag
 		return connectorExpressionContentTypeFilter;
 	}
 
-	public void setExpressionTypeFilter(AvailableExpressionTypeFilter connectorExpressionContentTypeFilter) {
+	public void setExpressionTypeFilter(final AvailableExpressionTypeFilter connectorExpressionContentTypeFilter) {
 		this.connectorExpressionContentTypeFilter = connectorExpressionContentTypeFilter;
 	}
 
@@ -193,9 +194,9 @@ public abstract class AbstractConnectorConfigurationWizardPage extends WizardPag
 
 		return isPageFlowContext;
 	}
-	
+
 	@Override
-	public void setIsPageFlowContext(boolean isPageFlowContext) {
+	public void setIsPageFlowContext(final boolean isPageFlowContext) {
 		this.isPageFlowContext = isPageFlowContext;
 	}
 
@@ -208,11 +209,11 @@ public abstract class AbstractConnectorConfigurationWizardPage extends WizardPag
 	public boolean isOverViewContext() {
 		return false;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.bonitasoft.studio.common.IBonitaVariableContext#setIsOverviewContext(boolean)
 	 */
 	@Override
-	public void setIsOverviewContext(boolean isOverviewContext) {
+	public void setIsOverviewContext(final boolean isOverviewContext) {
 	}
 }
