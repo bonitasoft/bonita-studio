@@ -16,8 +16,10 @@
  */
 package org.bonitasoft.studio.contract.ui.property.constraint.edit;
 
+import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
+import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.ui.views.properties.PropertyEditingSupport;
 
@@ -31,6 +33,13 @@ public class ConstraintErrorMessagePropertyEditingSupport extends PropertyEditin
     public ConstraintErrorMessagePropertyEditingSupport(final ColumnViewer viewer,
             final AdapterFactoryContentProvider propertySourceProvider) {
         super(viewer, propertySourceProvider, ProcessPackage.Literals.CONTRACT_CONSTRAINT__ERROR_MESSAGE.getName());
+    }
+
+    @Override
+    protected CellEditor getCellEditor(final Object object) {
+        final CellEditor cellEditor = super.getCellEditor(object);
+        cellEditor.getControl().setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, SWTBotConstants.SWTBOT_ID_CONSTRAINT_ERROR_MESSAGE_TEXTEDITOR);
+        return cellEditor;
     }
 
     @Override

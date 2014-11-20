@@ -132,6 +132,7 @@ public class ContractIT extends SWTBotGefTestCase {
         ContractConstraintAssert.assertThat(constraint).hasName("Check empty report");
         ContractConstraintAssert.assertThat(constraint).hasExpression("expenseReport.expenseLines.size() > 0");
         ContractConstraintAssert.assertThat(constraint).hasInputNames("expenseReport");
+        assertThat(constraint.getErrorMessage()).isNotNull();
         ContractConstraintAssert.assertThat(constraint).hasErrorMessage("An expense report must have at lease one expense line");
 
     }

@@ -67,4 +67,6 @@ public interface SWTBotConstants {
 
     public static final String SWTBOT_ID_MAIN_SHELL = "SWTBOT_ID_MAIN_SHELL";
 
+    public static final String SWTBOT_ID_CONSTRAINT_ERROR_MESSAGE_TEXTEDITOR = "SWTBOT_ID_CONSTRAINT_ERROR_MESSAGE_TEXTEDITOR";
+
 }

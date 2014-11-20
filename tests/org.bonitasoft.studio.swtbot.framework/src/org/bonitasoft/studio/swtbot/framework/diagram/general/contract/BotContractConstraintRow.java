@@ -88,7 +88,7 @@ public class BotContractConstraintRow extends BotBase {
     public BotContractConstraintRow setErrorMessages(final String errorMessage) {
         constraintTable.setFocus();
         constraintTable.click(row, ERROR_MESSAGE_COLUMN);
-        bot.text(1);
+        bot.textWithId(SWTBotConstants.SWTBOT_ID_CONSTRAINT_ERROR_MESSAGE_TEXTEDITOR);
         typeText(errorMessage);
         pressEnter();
         return this;
