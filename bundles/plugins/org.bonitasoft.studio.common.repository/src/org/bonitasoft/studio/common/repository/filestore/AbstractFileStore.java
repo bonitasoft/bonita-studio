@@ -18,7 +18,9 @@ package org.bonitasoft.studio.common.repository.filestore;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.jface.FileActionDialog;
@@ -49,13 +51,23 @@ import org.eclipse.ui.progress.IProgressService;
  */
 public abstract class AbstractFileStore implements IRepositoryFileStore, IFileStoreChangeNotifier, IPartListener {
 
+    public final static String ASK_ACTION_ON_CLOSE = "ASK_ACTION_ON_CLOSE";
+
     private String name;
     final IRepositoryStore<? extends IRepositoryFileStore> store;
     private IWorkbenchPart activePart;
+    private Map<String, Object> parameters;
+
 
     public AbstractFileStore(final String fileName , final IRepositoryStore<? extends IRepositoryFileStore> parentStore){
         name = fileName ;
         store = parentStore ;
+        initParameters();
+    }
+
+    private void initParameters() {
+        parameters = new HashMap<String, Object>();
+        parameters.put(ASK_ACTION_ON_CLOSE, true);
     }
 
     @Override
@@ -186,8 +198,10 @@ public abstract class AbstractFileStore implements IRepositoryFileStore, IFileSt
                 PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage() != null){
             PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().removePartListener(this) ;
         }
-        fireFileStoreEvent(new FileStoreChangeEvent(EventType.POST_CLOSE, this)) ;
+        fireFileStoreEvent(new FileStoreChangeEvent(EventType.POST_CLOSE, this, parameters));
     }
+
+
 
     @Override
     public void rename(final String newName) {
@@ -320,5 +334,13 @@ public abstract class AbstractFileStore implements IRepositoryFileStore, IFileSt
     @Override
     public Set<IResource> getRelatedResources() {
         return new HashSet<IResource>();
+    }
+
+    public void setParameters(final Map<String, Object> parameters) {
+        this.parameters = parameters;
+    }
+
+    public Map<String, Object> getParameters() {
+        return parameters;
     }
 }

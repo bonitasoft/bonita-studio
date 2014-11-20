@@ -39,6 +39,7 @@ import org.bonitasoft.studio.common.ModelVersion;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.ProjectUtil;
+import org.bonitasoft.studio.common.editingdomain.BonitaEditingDomainUtil;
 import org.bonitasoft.studio.common.emf.tools.EMFResourceUtil;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -55,14 +56,17 @@ import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.util.ProcessAdapterFactory;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.xmi.FeatureNotFoundException;
 import org.eclipse.emf.edapt.history.Release;
 import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.emf.edapt.migration.execution.Migrator;
+import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.provider.ReflectiveItemProviderAdapterFactory;
 import org.eclipse.emf.edit.provider.resource.ResourceItemProviderAdapterFactory;
@@ -114,12 +118,26 @@ public class DiagramRepositoryStore extends
 		return new DiagramFileStore(fileName, this);
     }
 
+    @Override
+    public EditingDomain getEditingDomain(final URI uri) {
+        if (uri != null) {
+            return BonitaEditingDomainUtil.getSharedEditingDomain(uri);
+        }
+        return super.getEditingDomain(uri);
+    }
+
     public List<AbstractProcess> getAllProcesses() {
 		final List<AbstractProcess> processes = new ArrayList<AbstractProcess>();
 		for (final IRepositoryFileStore file : getChildren()) {
 			processes.addAll(((DiagramFileStore) file).getProcesses());
         }
 		return processes;
+    }
+
+    @Override
+    protected void handleOverwrite(final IFile file) throws CoreException {
+        final DiagramFileStore fileStore = createRepositoryFileStore(file.getName());
+        fileStore.delete();
     }
 
     @Override
@@ -505,5 +523,11 @@ public class DiagramRepositoryStore extends
 	public void updateProcessLabel(final String processId,
 			final String processLabel) {
         eObjectIdToLabel.put(processId, processLabel);
+    }
+
+    @Override
+    public void close() {
+        BonitaEditingDomainUtil.cleanEditingDomainRegistry();
+        super.close();
     }
 }

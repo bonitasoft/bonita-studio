@@ -41,9 +41,10 @@ import org.eclipse.ui.commands.ICommandService;
  */
 public class NewDiagramCoolbarItem implements IBonitaContributionItem {
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.action.IContributionItem#dispose()
-	 */
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.jface.action.IContributionItem#dispose()
+     */
 	@Override
 	public void dispose() {}
 
@@ -51,25 +52,25 @@ public class NewDiagramCoolbarItem implements IBonitaContributionItem {
 	 * @see org.eclipse.jface.action.IContributionItem#fill(org.eclipse.swt.widgets.Composite)
 	 */
 	@Override
-	public void fill(Composite parent) {}
+	public void fill(final Composite parent) {}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.action.IContributionItem#fill(org.eclipse.swt.widgets.Menu, int)
 	 */
 	@Override
-	public void fill(Menu parent, int index) {}
+	public void fill(final Menu parent, final int index) {}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.action.IContributionItem#fill(org.eclipse.swt.widgets.ToolBar, int)
 	 */
 	@Override
-	public void fill(ToolBar parent, int index) {
+	public void fill(final ToolBar parent, final int index) {
 
 	}
 
 	private Command getCommand() {
-		ICommandService service = (ICommandService)PlatformUI.getWorkbench().getService(ICommandService.class);
-		Command cmd = service.getCommand("org.bonitasoft.studio.diagram.command.newDiagram") ;
+		final ICommandService service = (ICommandService)PlatformUI.getWorkbench().getService(ICommandService.class);
+		final Command cmd = service.getCommand("org.bonitasoft.studio.diagram.command.newDiagram") ;
 		return cmd;
 	}
 
@@ -77,7 +78,7 @@ public class NewDiagramCoolbarItem implements IBonitaContributionItem {
 	 * @see org.eclipse.jface.action.IContributionItem#fill(org.eclipse.swt.widgets.CoolBar, int)
 	 */
 	@Override
-	public void fill(CoolBar parent, int index) {}
+	public void fill(final CoolBar parent, final int index) {}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.action.IContributionItem#getId()
@@ -92,7 +93,7 @@ public class NewDiagramCoolbarItem implements IBonitaContributionItem {
 	 */
 	@Override
 	public boolean isEnabled() {
-		return true;
+        return true;
 	}
 
 	/* (non-Javadoc)
@@ -148,7 +149,7 @@ public class NewDiagramCoolbarItem implements IBonitaContributionItem {
 	 * @see org.eclipse.jface.action.IContributionItem#setParent(org.eclipse.jface.action.IContributionManager)
 	 */
 	@Override
-	public void setParent(IContributionManager parent) {
+	public void setParent(final IContributionManager parent) {
 
 
 	}
@@ -157,7 +158,7 @@ public class NewDiagramCoolbarItem implements IBonitaContributionItem {
 	 * @see org.eclipse.jface.action.IContributionItem#setVisible(boolean)
 	 */
 	@Override
-	public void setVisible(boolean visible) {
+	public void setVisible(final boolean visible) {
 
 
 	}
@@ -175,13 +176,13 @@ public class NewDiagramCoolbarItem implements IBonitaContributionItem {
 	 * @see org.eclipse.jface.action.IContributionItem#update(java.lang.String)
 	 */
 	@Override
-	public void update(String id) {
+	public void update(final String id) {
 
 	}
 
 	@Override
-	public void fill(ToolBar toolbar, int index, int iconSize) {
-		ToolItem item = new ToolItem(toolbar,  SWT.PUSH) ;
+	public void fill(final ToolBar toolbar, final int index, final int iconSize) {
+		final ToolItem item = new ToolItem(toolbar,  SWT.PUSH) ;
 		item.setToolTipText(Messages.NewProcessButtonLabel) ;
 		if(iconSize < 0 ){
 			item.setText(Messages.NewProcessButtonLabel) ;
@@ -193,13 +194,15 @@ public class NewDiagramCoolbarItem implements IBonitaContributionItem {
 		}
 		item.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e) {
-				Command cmd = getCommand();
+			public void widgetSelected(final SelectionEvent e) {
+                item.setEnabled(false);
+				final Command cmd = getCommand();
 				try {
 					cmd.executeWithChecks(new ExecutionEvent());
-				} catch (Exception ex) {
+				} catch (final Exception ex) {
 					BonitaStudioLog.error(ex);
 				}
+                item.setEnabled(true);
 			}
 		}) ;
 

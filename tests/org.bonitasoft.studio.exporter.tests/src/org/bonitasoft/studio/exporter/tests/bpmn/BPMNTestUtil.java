@@ -40,69 +40,69 @@ import org.omg.spec.bpmn.model.DocumentRoot;
  */
 public class BPMNTestUtil {
 
-    public static File importFileWithName(Class<?> clazz, final String bpmnFileName) throws IOException {
-        URL bpmnResource = FileLocator.toFileURL(clazz.getResource(bpmnFileName));
+    public static File importFileWithName(final Class<?> clazz, final String bpmnFileName) throws IOException {
+        final URL bpmnResource = FileLocator.toFileURL(clazz.getResource(bpmnFileName));
         return importBPMNFile(bpmnResource);
     }
 
-    protected static File importBPMNFile(URL bpmnResource) {
-        BPMNToProc bpmnToProc = new BPMNToProc(new File(bpmnResource.getFile()).getAbsolutePath());
-        File destFile = bpmnToProc.createDiagram(bpmnResource, new NullProgressMonitor());
+    protected static File importBPMNFile(final URL bpmnResource) {
+        final BPMNToProc bpmnToProc = new BPMNToProc(new File(bpmnResource.getFile()).getAbsolutePath());
+        final File destFile = bpmnToProc.createDiagram(bpmnResource, new NullProgressMonitor());
         return destFile;
     }
 
-    public static MainProcessEditPart getMainProcessEditPart(Diagram diag) {
+    public static MainProcessEditPart getMainProcessEditPart(final Diagram diag) {
 
         /*
          * need to get the URI after save because the name can change as it is
          * synchronized with the MainProcess name
          */
-        URI uri = EcoreUtil.getURI(diag);
+        final URI uri = EcoreUtil.getURI(diag);
 
         /* open the process editor */
-        DiagramEditor processEditor = (DiagramEditor) EditorService.getInstance().openEditor(new URIEditorInput(uri, diag.getName()));
+        final DiagramEditor processEditor = (DiagramEditor) EditorService.getInstance().openEditor(new URIEditorInput(uri, diag.getName()));
         return (MainProcessEditPart)processEditor.getDiagramEditPart();
     }
 
-    public static org.eclipse.emf.common.util.URI toEMFURI(File file) throws MalformedURLException {
-        org.eclipse.emf.common.util.URI res = URI.createURI(file.toURI().toString());
+    public static org.eclipse.emf.common.util.URI toEMFURI(final File file) throws MalformedURLException {
+        final org.eclipse.emf.common.util.URI res = URI.createURI(file.toURI().toString());
         return res;
     }
 
-    public static  MainProcess importBPMNFile(DocumentRoot model2)
+    public static  MainProcess importBPMNFile(final DocumentRoot model2)
             throws MalformedURLException {
-        File reImportedFile = BPMNTestUtil.importBPMNFile(new File(model2.eResource().getURI().toFileString()).toURI().toURL());
-        ResourceSet resourceSet = new ResourceSetImpl();
+        final File reImportedFile = BPMNTestUtil.importBPMNFile(new File(model2.eResource().getURI().toFileString()).toURI().toURL());
+        final ResourceSet resourceSet = new ResourceSetImpl();
         GMFEditingDomainFactory.getInstance().createEditingDomain(resourceSet);
-        Resource resource = resourceSet.getResource(BPMNTestUtil.toEMFURI(reImportedFile), true);
-        MainProcess mainProcess = (MainProcess)resource.getContents().get(0);
+        final Resource resource = resourceSet.getResource(BPMNTestUtil.toEMFURI(reImportedFile), true);
+        final MainProcess mainProcess = (MainProcess)resource.getContents().get(0);
         return mainProcess;
     }
 
     public static DocumentRoot exportToBpmn(final DiagramFileStore newDiagramFileStore) throws IOException {
-        final Diagram diagramFor = ModelHelper.getDiagramFor(newDiagramFileStore.getContent(),null);
-        ResourceSet rSet = diagramFor.eResource().getResourceSet() ;
+        final Diagram diagramFor = ModelHelper.getDiagramFor(newDiagramFileStore.getContent());
+        final ResourceSet rSet = diagramFor.eResource().getResourceSet() ;
         GMFEditingDomainFactory.getInstance().createEditingDomain(rSet) ;
         DiagramEditPart dep;
         try{
             dep = OffscreenEditPartFactory.getInstance().createDiagramEditPart(diagramFor,  newDiagramFileStore.getOpenedEditor().getSite().getShell());
-        } catch(Exception ex){
+        } catch(final Exception ex){
             dep = OffscreenEditPartFactory.getInstance().createDiagramEditPart(diagramFor,  newDiagramFileStore.getOpenedEditor().getSite().getShell());
         }
-        MainProcessEditPart mped = (MainProcessEditPart) dep;
-        IBonitaModelExporter exporter = new BonitaModelExporterImpl(mped);
-        File bpmnFileExported = File.createTempFile("testBpmnExport", ".bpmn");
+        final MainProcessEditPart mped = (MainProcessEditPart) dep;
+        final IBonitaModelExporter exporter = new BonitaModelExporterImpl(mped);
+        final File bpmnFileExported = File.createTempFile("testBpmnExport", ".bpmn");
         final boolean transformed = new BonitaToBPMN().transform(exporter, bpmnFileExported, new NullProgressMonitor());
         Assert.assertTrue("Error during export", transformed);
 
-        ResourceSet resourceSet1 = new ResourceSetImpl();
+        final ResourceSet resourceSet1 = new ResourceSetImpl();
         final Map<String, Object> extensionToFactoryMap = resourceSet1.getResourceFactoryRegistry().getExtensionToFactoryMap();
         final DiResourceFactoryImpl diResourceFactoryImpl = new DiResourceFactoryImpl();
         extensionToFactoryMap.put("bpmn", diResourceFactoryImpl);
-        Resource resource2 = resourceSet1.createResource(URI.createFileURI(bpmnFileExported.getAbsolutePath()));
+        final Resource resource2 = resourceSet1.createResource(URI.createFileURI(bpmnFileExported.getAbsolutePath()));
         resource2.load(Collections.emptyMap());
 
-        DocumentRoot model2 = (DocumentRoot) resource2.getContents().get(0);
+        final DocumentRoot model2 = (DocumentRoot) resource2.getContents().get(0);
         return model2;
     }
 

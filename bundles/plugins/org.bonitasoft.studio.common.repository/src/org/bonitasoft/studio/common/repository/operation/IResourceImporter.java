@@ -28,8 +28,6 @@ import org.bonitasoft.studio.common.Pair;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
-import org.bonitasoft.studio.model.process.AbstractProcess;
-import org.bonitasoft.studio.model.process.MainProcess;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
@@ -46,7 +44,7 @@ public class IResourceImporter {
     final Comparator<IResource> importFolderComparator = new ImportFolderComparator();
     private Set<String> resourcesToOpen;
     private final List<IRepositoryFileStore> fileStoresToOpen = new ArrayList<IRepositoryFileStore>();
-    private final List<AbstractProcess> importedProcesses = new ArrayList<AbstractProcess>();
+    private final List<IRepositoryFileStore> importedProcesses = new ArrayList<IRepositoryFileStore>();
 
     public void run(final IContainer rootContainer, final IRepository repository, final IProgressMonitor monitor) throws ResourceImportException {
         Assert.isLegal(rootContainer != null);
@@ -64,7 +62,7 @@ public class IResourceImporter {
         }
     }
 
-    public List<AbstractProcess> getImportedProcesses() {
+    public List<IRepositoryFileStore> getImportedProcesses() {
         return importedProcesses;
     }
 
@@ -120,7 +118,7 @@ public class IResourceImporter {
                     || resourcesToOpen == null;
             final IRepositoryFileStore fileStore = store.importIResource(filename, child);
             if (filename.endsWith(".proc")) {
-                importedProcesses.add((MainProcess) fileStore.getContent());
+                importedProcesses.add(fileStore);
             }
 
             if (fileStore != null && openAfterImport) {

@@ -70,6 +70,7 @@ public class BatchValidationOperation implements IRunnableWithProgress {
         Assert.isLegal(!diagramsToDiagramEditPart.isEmpty());
         monitor.beginTask(Messages.validating, IProgressMonitor.UNKNOWN);
 
+        buildEditPart();
         clearMarkers();
         for (final Entry<Diagram, DiagramEditPart> entry : diagramsToDiagramEditPart.entrySet()) {
             final DiagramEditPart diagramEp = entry.getValue();
@@ -88,6 +89,12 @@ public class BatchValidationOperation implements IRunnableWithProgress {
         offscreenEditPartFactory.dispose();
     }
 
+    private void buildEditPart() {
+        for (final Diagram diagram : diagramsToDiagramEditPart.keySet()) {
+            diagramsToDiagramEditPart.put(diagram, getDiagramEditPart(diagram));
+        }
+
+    }
     private void clearMarkers() {
         final Iterator<Entry<Diagram, DiagramEditPart>> iterator = diagramsToDiagramEditPart.entrySet().iterator();
         while (iterator.hasNext()) {
@@ -122,7 +129,7 @@ public class BatchValidationOperation implements IRunnableWithProgress {
             for (final IEditorReference ep : activePage.getEditorReferences()) {
                 final IEditorPart editor = ep.getEditor(false);
                 if (editor instanceof DiagramEditor) {
-                    if (((DiagramEditor) editor).getDiagram().equals(d)) {
+                    if (((DiagramEditor) editor).getDiagram().equals(d) && ((DiagramEditor) editor).getDiagramEditPart() != null) {
                         return ((DiagramEditor) editor).getDiagramEditPart();
                     }
                 }
@@ -221,8 +228,7 @@ public class BatchValidationOperation implements IRunnableWithProgress {
     }
 
     public void addDiagram(final Diagram diagramToValidate) {
-        diagramsToDiagramEditPart.put(diagramToValidate, getDiagramEditPart(diagramToValidate));
-
+        diagramsToDiagramEditPart.put(diagramToValidate, null);
     }
 
 }

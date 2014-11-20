@@ -63,7 +63,6 @@ public class RenameDiagramCommandHandler extends AbstractHandler {
             renameDiagramOperation.setNewDiagramName(nameDialog.getDiagramName());
             renameDiagramOperation.setNewDiagramVersion(nameDialog.getDiagramVersion());
             renameDiagramOperation.setPoolsRenamed(nameDialog.getPools());
-            renameDiagramOperation.setSaveAfterRename(false);
             final IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
             try {
                 progressService.run(false, false, renameDiagramOperation);

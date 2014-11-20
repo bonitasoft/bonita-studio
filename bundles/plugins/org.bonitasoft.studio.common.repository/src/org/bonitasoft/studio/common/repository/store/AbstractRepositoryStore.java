@@ -54,49 +54,50 @@ import org.eclipse.swt.widgets.Display;
  */
 public abstract class AbstractRepositoryStore<T extends IRepositoryFileStore> implements IRepositoryStore<T> {
 
-	private static final String CLASS = "class";
-	private IFolder folder ;
-	private IRepository repository;
+    private static final String CLASS = "class";
+    private IFolder folder;
+    private IRepository repository;
 
-	@Override
-	public void createRepositoryStore(final IRepository repository){
-		this.repository = repository ;
-		final IProject project = repository.getProject() ;
-		this.folder = project.getFolder(getName()) ;
-		if(!this.folder.exists()){
-			try {
-				if(!this.folder.getParent().exists()){
-					this.folder.getLocation().toFile().mkdirs() ;
-					this.folder.getParent().refreshLocal(IResource.DEPTH_ONE, Repository.NULL_PROGRESS_MONITOR) ;
-				}else{
-					this.folder.create(true, true, Repository.NULL_PROGRESS_MONITOR) ;
-				}
-				processDefaultContribution() ;
-			} catch (final CoreException e) {
-				BonitaStudioLog.error(e) ;
-			}
+    @Override
+    public void createRepositoryStore(final IRepository repository) {
+        this.repository = repository;
+        final IProject project = repository.getProject();
+        this.folder = project.getFolder(getName());
+        if (!this.folder.exists()) {
+            try {
+                if (!this.folder.getParent().exists()) {
+                    this.folder.getLocation().toFile().mkdirs();
+                    this.folder.getParent().refreshLocal(IResource.DEPTH_ONE, Repository.NULL_PROGRESS_MONITOR);
+                } else {
+                    this.folder.create(true, true, Repository.NULL_PROGRESS_MONITOR);
+                }
+                processDefaultContribution();
+            } catch (final CoreException e) {
+                BonitaStudioLog.error(e);
+            }
         }
-	}
+    }
 
-	private void processDefaultContribution() {
-		final IConfigurationElement[] elements = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements("org.bonitasoft.studio.repository.fileContribution") ;
-		for(final IConfigurationElement element : elements){
-			IFileStoreContribution contribution;
-			try {
-				contribution = (IFileStoreContribution) element.createExecutableExtension(CLASS);
-				if(contribution.appliesTo(this)){
-					contribution.execute(this) ;
-				}
-			} catch (final CoreException e) {
-				BonitaStudioLog.error(e) ;
-			}
-		}
-	}
+    private void processDefaultContribution() {
+        final IConfigurationElement[] elements = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(
+                "org.bonitasoft.studio.repository.fileContribution");
+        for (final IConfigurationElement element : elements) {
+            IFileStoreContribution contribution;
+            try {
+                contribution = (IFileStoreContribution) element.createExecutableExtension(CLASS);
+                if (contribution.appliesTo(this)) {
+                    contribution.execute(this);
+                }
+            } catch (final CoreException e) {
+                BonitaStudioLog.error(e);
+            }
+        }
+    }
 
-	@Override
-	public final T importInputStream(final String fileName,final InputStream inputStream) {
-		Assert.isNotNull(inputStream);
-		Assert.isNotNull(fileName);
+    @Override
+    public final T importInputStream(final String fileName, final InputStream inputStream) {
+        Assert.isNotNull(inputStream);
+        Assert.isNotNull(fileName);
         try {
             if (inputStream.available() == 0) {
                 return null;
@@ -104,229 +105,238 @@ public abstract class AbstractRepositoryStore<T extends IRepositoryFileStore> im
         } catch (final IOException e1) {
             BonitaStudioLog.error(e1);
         }
-		InputStream newIs = null;
-		try {
-			newIs = handlePreImport(fileName,inputStream);
-		} catch (final MigrationException e) {
-			if(!FileActionDialog.getDisablePopup()){
-				Display.getDefault().syncExec(new Runnable() {
+        InputStream newIs = null;
+        try {
+            newIs = handlePreImport(fileName, inputStream);
+        } catch (final MigrationException e) {
+            if (!FileActionDialog.getDisablePopup()) {
+                Display.getDefault().syncExec(new Runnable() {
 
-					@Override
-					public void run() {
-						new BonitaErrorDialog(Display.getDefault().getActiveShell(), Messages.migrationFailedTitle, Messages.migrationFailedMessage,e).open();
-					}
-				});
-			}
-			return null;
-		} catch (final IOException e) {
-			if(!FileActionDialog.getDisablePopup()){
-				Display.getDefault().syncExec(new Runnable() {
+                    @Override
+                    public void run() {
+                        new BonitaErrorDialog(Display.getDefault().getActiveShell(), Messages.migrationFailedTitle, Messages.migrationFailedMessage, e).open();
+                    }
+                });
+            }
+            return null;
+        } catch (final IOException e) {
+            if (!FileActionDialog.getDisablePopup()) {
+                Display.getDefault().syncExec(new Runnable() {
 
-					@Override
-					public void run() {
-						new BonitaErrorDialog(Display.getDefault().getActiveShell(), Messages.importedFileIsInvalidTitle, Messages.bind(Messages.importedFileIsInvalid, e.getMessage()),e).open();
-					}
-				});
-			}
-			return null;
-		}
-
-
-
-		if(newIs == null){
-			return null;
-		}
-		final T store = doImportInputStream(fileName,newIs) ;
-		return store;
-	}
-
-	@Override
-	public final T importIResource(final String fileName,final IResource resource) {
-		final IResource newResource = handlePreImport(fileName,resource) ;
-		final T store = doImportIResource(fileName,newResource) ;
-		return store;
-	}
-
-	protected T doImportIResource(final String fileName,final IResource resource) {
-		try{
-			if(resource instanceof IFile){
-				return importInputStream(fileName, ((IFile) resource).getContents()) ;
-			}else if(resource instanceof IFolder){
-				final IPath path = getResource().getFullPath().append(fileName) ;
-				final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot() ;
-				final IFolder targetFolder = root.getFolder(path);
-				if(targetFolder.exists()){
-					if(FileActionDialog.overwriteQuestion(fileName)){
-						targetFolder.delete(true, Repository.NULL_PROGRESS_MONITOR) ;
-					}else{
-						return createRepositoryFileStore(fileName);
-					}
-				}
-				resource.copy(getResource().getFullPath().append(fileName), true, Repository.NULL_PROGRESS_MONITOR) ;
-			}
-		}catch (final Exception e) {
-			BonitaStudioLog.error(e) ;
-		}
-		return createRepositoryFileStore(fileName);
-	}
-
-	/**
-	 * Handler use to call migration action if needed
-	 * @param fileName
-	 * @param resource
-	 * @return A the IResource with a migrated content
-	 */
-	 protected IResource handlePreImport(final String fileName, final IResource resource) {
-		 return resource;
-	 }
-
-	 /**
-	  * Handler use to call migration action if needed
-	  * @param fileName
-	  * @param inputStream
-	  * @return A new InputStream with a migrated content
-	  */
-	 protected InputStream handlePreImport(final String fileName, final InputStream inputStream) throws MigrationException, IOException{
-		 return inputStream ;
-	 }
-
-	 /**
-	  *
-	  * @param fileName
-	  * @param inputStream , read and closed inside this method
-	  * @return IRepositoryFileStore
-	  */
-	 protected T doImportInputStream(final String fileName, final InputStream inputStream) {
-		 final IFile file = getResource().getFile(fileName);
-		 try{
-			 if(file.exists()){
-				 if(FileActionDialog.overwriteQuestion(fileName)){
-					 file.setContents(inputStream, true, false, Repository.NULL_PROGRESS_MONITOR);
-				 }else{
-					 inputStream.close();
-					 return createRepositoryFileStore(fileName);
-				 }
-			 } else {
-				 final File f = file.getLocation().toFile();
-				 if(!f.getParentFile().exists()){
-					 f.getParentFile().mkdirs();
-					 refresh();
-				 }
-				 file.create(inputStream, true, Repository.NULL_PROGRESS_MONITOR);
-			 }
-		 }catch(final Exception e){
-			 BonitaStudioLog.error(e) ;
-		 }
-		 return createRepositoryFileStore(fileName) ;
-	 }
-
-	 @Override
-	 public IFolder getResource() {
-		 return folder;
-	 }
-
-	 @Override
-	 public List<T> getChildren() {
-
-		 refresh() ;
-
-		 final List<T> result = new ArrayList<T>() ;
-		 final IFolder folder = getResource();
-		 try {
-			 for(final IResource r : folder.members()){
-				 if(getCompatibleExtensions() == null){
-					 if(!r.isHidden() && !r.getName().startsWith(".")){
-						 final T repositoryFileStore = createRepositoryFileStore(r.getName());
-						 if(repositoryFileStore != null){
-							 result.add(repositoryFileStore) ;
-						 }
-					 }
-				 }else if(r.getFileExtension() != null && getCompatibleExtensions().contains(r.getFileExtension())){
-					 final T repositoryFileStore = createRepositoryFileStore(r.getName());
-					 if(repositoryFileStore != null){
-						 result.add(repositoryFileStore) ;
-					 }
-				 }
-			 }
-		 } catch (final CoreException e) {
-			 BonitaStudioLog.error(e) ;
-		 }
-		 Collections.sort(result, new RepositoryFileStoreComparator()) ;
-		 return result;
-	 }
-
-	 @Override
-	 public T getChild(final String fileName) {
-		 Assert.isNotNull(fileName) ;
-		 final IFile file = getResource().getFile(fileName) ;
-		 if(!file.isSynchronized(IResource.DEPTH_ONE) && file.isAccessible()){
-			 try {
-				 file.refreshLocal(IResource.DEPTH_ONE, Repository.NULL_PROGRESS_MONITOR) ;
-			 } catch (final CoreException e) {
-				 BonitaStudioLog.error(e) ;
-			 }
-		 }
-		 if(file.exists()){
-			 return createRepositoryFileStore(fileName) ;
-		 }
-
-		 return null ;
-	 }
-
-	 @Override
-	 public void refresh() {
-		 if(!folder.isSynchronized(IResource.DEPTH_INFINITE)){
-			 try {
-				 folder.refreshLocal(IResource.DEPTH_INFINITE, Repository.NULL_PROGRESS_MONITOR) ;
-			 } catch (final CoreException e1) {
-				 BonitaStudioLog.error(e1) ;
-			 }
-		 }
-	 }
-
-	 @Override
-	 public boolean isShared() {
-		 return canBeShared() && repository.isShared();
-	 }
-
-	 @Override
-	 public boolean canBeShared() {
-		 return true;
-	 }
-
-	 @Override
-	 public boolean canBeExported() {
-		 return true;
-	 }
-
-	 @Override
-	 public abstract T createRepositoryFileStore(String fileName);
-
-	 @Override
-	 public void migrate() throws CoreException, MigrationException {
-		 for(final IRepositoryFileStore fs : getChildren()){
-			 if(!fs.isReadOnly() && fs.canBeShared()){
-				 final IResource r = fs.getResource();
-				 if(r instanceof IFile && r.exists()){
-					 final IFile iFile = (IFile) r;
-					 final InputStream is = iFile.getContents();
-					 InputStream newIs;
-					try {
-						newIs = handlePreImport(r.getName(), is);
-						 if(!is.equals(newIs)){
-							 iFile.setContents(newIs, IResource.FORCE, Repository.NULL_PROGRESS_MONITOR);
-							 iFile.refreshLocal(IResource.DEPTH_ONE, Repository.NULL_PROGRESS_MONITOR);
-						 }
-					} catch (final IOException e) {
-						throw new MigrationException("Cannot migrate resource "+r.getName() +" (not a valid file)", new Exception());
-					}
-
-				 }else{
-					 throw new MigrationException("Cannot migrate resource "+r.getName() +" (not a file)", new Exception());
-				 }
-			 }
-		 }
-	 }
+                    @Override
+                    public void run() {
+                        new BonitaErrorDialog(Display.getDefault().getActiveShell(), Messages.importedFileIsInvalidTitle, Messages.bind(
+                                Messages.importedFileIsInvalid, e.getMessage()), e).open();
+                    }
+                });
+            }
+            return null;
+        }
 
 
+
+        if (newIs == null) {
+            return null;
+        }
+        final T store = doImportInputStream(fileName, newIs);
+        return store;
+    }
+
+    @Override
+    public final T importIResource(final String fileName, final IResource resource) {
+        final IResource newResource = handlePreImport(fileName, resource);
+        final T store = doImportIResource(fileName, newResource);
+        return store;
+    }
+
+    protected T doImportIResource(final String fileName, final IResource resource) {
+        try {
+            if (resource instanceof IFile) {
+                return importInputStream(fileName, ((IFile) resource).getContents());
+            } else if (resource instanceof IFolder) {
+                final IPath path = getResource().getFullPath().append(fileName);
+                final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+                final IFolder targetFolder = root.getFolder(path);
+                if (targetFolder.exists()) {
+                    if (FileActionDialog.overwriteQuestion(fileName)) {
+                        targetFolder.delete(true, Repository.NULL_PROGRESS_MONITOR);
+                    } else {
+                        return createRepositoryFileStore(fileName);
+                    }
+                }
+                resource.copy(getResource().getFullPath().append(fileName), true, Repository.NULL_PROGRESS_MONITOR);
+            }
+        } catch (final Exception e) {
+            BonitaStudioLog.error(e);
+        }
+        return createRepositoryFileStore(fileName);
+    }
+
+    /**
+     * Handler use to call migration action if needed
+     *
+     * @param fileName
+     * @param resource
+     * @return A the IResource with a migrated content
+     */
+    protected IResource handlePreImport(final String fileName, final IResource resource) {
+        return resource;
+    }
+
+    /**
+     * Handler use to call migration action if needed
+     *
+     * @param fileName
+     * @param inputStream
+     * @return A new InputStream with a migrated content
+     */
+    protected InputStream handlePreImport(final String fileName, final InputStream inputStream) throws MigrationException, IOException {
+        return inputStream;
+    }
+
+    /**
+     * @param fileName
+     * @param inputStream , read and closed inside this method
+     * @return IRepositoryFileStore
+     */
+    protected T doImportInputStream(final String fileName, final InputStream inputStream) {
+        final IFile file = getResource().getFile(fileName);
+        try {
+            if (file.exists()) {
+                if (FileActionDialog.overwriteQuestion(fileName)) {
+                    handleOverwrite(file);
+                } else {
+                    inputStream.close();
+                    return createRepositoryFileStore(fileName);
+                }
+            }
+            final File f = file.getLocation().toFile();
+            if (!f.getParentFile().exists()) {
+                f.getParentFile().mkdirs();
+                refresh();
+            }
+            file.create(inputStream, true, Repository.NULL_PROGRESS_MONITOR);
+        } catch (final Exception e) {
+            BonitaStudioLog.error(e);
+        }
+        return createRepositoryFileStore(fileName);
+    }
+
+    protected void handleOverwrite(final IFile file) throws CoreException {
+        file.delete(true, false, Repository.NULL_PROGRESS_MONITOR);
+    }
+
+    @Override
+    public IFolder getResource() {
+        return folder;
+    }
+
+    @Override
+    public List<T> getChildren() {
+
+        refresh();
+
+        final List<T> result = new ArrayList<T>();
+        final IFolder folder = getResource();
+        try {
+            for (final IResource r : folder.members()) {
+                if (getCompatibleExtensions() == null) {
+                    if (!r.isHidden() && !r.getName().startsWith(".")) {
+                        final T repositoryFileStore = createRepositoryFileStore(r.getName());
+                        if (repositoryFileStore != null) {
+                            result.add(repositoryFileStore);
+                        }
+                    }
+                } else if (r.getFileExtension() != null && getCompatibleExtensions().contains(r.getFileExtension())) {
+                    final T repositoryFileStore = createRepositoryFileStore(r.getName());
+                    if (repositoryFileStore != null) {
+                        result.add(repositoryFileStore);
+                    }
+                }
+            }
+        } catch (final CoreException e) {
+            BonitaStudioLog.error(e);
+        }
+        Collections.sort(result, new RepositoryFileStoreComparator());
+        return result;
+    }
+
+    @Override
+    public T getChild(final String fileName) {
+        Assert.isNotNull(fileName);
+        final IFile file = getResource().getFile(fileName);
+        if (!file.isSynchronized(IResource.DEPTH_ONE) && file.isAccessible()) {
+            try {
+                file.refreshLocal(IResource.DEPTH_ONE, Repository.NULL_PROGRESS_MONITOR);
+            } catch (final CoreException e) {
+                BonitaStudioLog.error(e);
+            }
+        }
+        if (file.exists()) {
+            return createRepositoryFileStore(fileName);
+        }
+
+        return null;
+    }
+
+    @Override
+    public void refresh() {
+        if (!folder.isSynchronized(IResource.DEPTH_INFINITE)) {
+            try {
+                folder.refreshLocal(IResource.DEPTH_INFINITE, Repository.NULL_PROGRESS_MONITOR);
+            } catch (final CoreException e1) {
+                BonitaStudioLog.error(e1);
+            }
+        }
+    }
+
+    @Override
+    public boolean isShared() {
+        return canBeShared() && repository.isShared();
+    }
+
+    @Override
+    public boolean canBeShared() {
+        return true;
+    }
+
+    @Override
+    public boolean canBeExported() {
+        return true;
+    }
+
+    @Override
+    public abstract T createRepositoryFileStore(String fileName);
+
+    @Override
+    public void migrate() throws CoreException, MigrationException {
+        for (final IRepositoryFileStore fs : getChildren()) {
+            if (!fs.isReadOnly() && fs.canBeShared()) {
+                final IResource r = fs.getResource();
+                if (r instanceof IFile && r.exists()) {
+                    final IFile iFile = (IFile) r;
+                    final InputStream is = iFile.getContents();
+                    InputStream newIs;
+                    try {
+                        newIs = handlePreImport(r.getName(), is);
+                        if (!is.equals(newIs)) {
+                            iFile.setContents(newIs, IResource.FORCE, Repository.NULL_PROGRESS_MONITOR);
+                            iFile.refreshLocal(IResource.DEPTH_ONE, Repository.NULL_PROGRESS_MONITOR);
+                        }
+                    } catch (final IOException e) {
+                        throw new MigrationException("Cannot migrate resource " + r.getName() + " (not a valid file)", new Exception());
+                    }
+
+                } else {
+                    throw new MigrationException("Cannot migrate resource " + r.getName() + " (not a file)", new Exception());
+                }
+            }
+        }
+    }
+
+    @Override
+    public void close() {
+        //INTENDED TO BE OVERRIDE
+
+    }
 }
