@@ -365,13 +365,13 @@ public class BPMNImportExportTest {
 		doTest(bpmnFileName, true, true, true);
 	}
 
-	protected void doTest(final String bpmnFileName, boolean checkActivities, boolean checkEvents, boolean checkMessageFlow) throws IOException,MalformedURLException, InterruptedException {
-		File destFile = BPMNTestUtil.importFileWithName(BPMNImportExportTest.class, bpmnFileName);
+	protected void doTest(final String bpmnFileName, final boolean checkActivities, final boolean checkEvents, final boolean checkMessageFlow) throws IOException,MalformedURLException, InterruptedException {
+		final File destFile = BPMNTestUtil.importFileWithName(BPMNImportExportTest.class, bpmnFileName);
 		try{
-			ResourceSet resourceSet = new ResourceSetImpl();
+			final ResourceSet resourceSet = new ResourceSetImpl();
 			GMFEditingDomainFactory.getInstance().createEditingDomain(resourceSet);
-			Resource resource = resourceSet.getResource(BPMNTestUtil.toEMFURI(destFile), true);
-			MainProcess mainProcess = (MainProcess)resource.getContents().get(0);
+			final Resource resource = resourceSet.getResource(BPMNTestUtil.toEMFURI(destFile), true);
+			final MainProcess mainProcess = (MainProcess)resource.getContents().get(0);
 
 			checkSemantic(bpmnFileName,
 					checkActivities,
@@ -389,30 +389,30 @@ public class BPMNImportExportTest {
 	}
 
 	protected void checkSemantic(final String bpmnFileName,
-			boolean checkActivities, boolean checkEvents,
-			boolean checkMessageFlow, MainProcess mainProcess)
+			final boolean checkActivities, final boolean checkEvents,
+			final boolean checkMessageFlow, final MainProcess mainProcess)
 					throws IOException {
-		final Diagram diagramFor = ModelHelper.getDiagramFor(mainProcess,null);
+        final Diagram diagramFor = ModelHelper.getDiagramFor(mainProcess);
 		DiagramEditPart dep;
 		try{
 			dep = OffscreenEditPartFactory.getInstance().createDiagramEditPart(diagramFor, PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
-		} catch(Exception ex){
+		} catch(final Exception ex){
 			dep = OffscreenEditPartFactory.getInstance().createDiagramEditPart(diagramFor, PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
 		}
-		MainProcessEditPart mped = (MainProcessEditPart) dep;
-		IBonitaModelExporter exporter = new BonitaModelExporterImpl(mped) ;
-		File bpmnFileExported = File.createTempFile("withAllExported", ".bpmn");
+		final MainProcessEditPart mped = (MainProcessEditPart) dep;
+		final IBonitaModelExporter exporter = new BonitaModelExporterImpl(mped) ;
+		final File bpmnFileExported = File.createTempFile("withAllExported", ".bpmn");
 		final boolean transformed = new BonitaToBPMN().transform(exporter, bpmnFileExported, new NullProgressMonitor());
 		Assert.assertTrue("Error during export", transformed);
 
 		//compare bpmn before import and after import/export
-		ResourceSet resourceSet1 = new ResourceSetImpl();
+		final ResourceSet resourceSet1 = new ResourceSetImpl();
 		final Map<String, Object> extensionToFactoryMap = resourceSet1.getResourceFactoryRegistry().getExtensionToFactoryMap();
 		final DiResourceFactoryImpl diResourceFactoryImpl = new DiResourceFactoryImpl();
 		extensionToFactoryMap.put("bpmn", diResourceFactoryImpl);
-		URL bpmnResource = FileLocator.toFileURL(BPMNImportExportTest.class.getResource(bpmnFileName));
+		final URL bpmnResource = FileLocator.toFileURL(BPMNImportExportTest.class.getResource(bpmnFileName));
 
-		URI emfuri = BPMNTestUtil.toEMFURI(new File(bpmnResource.getFile()));
+		final URI emfuri = BPMNTestUtil.toEMFURI(new File(bpmnResource.getFile()));
 		Resource resource1 = null;
 		Resource resource2 = null;
 		try{
@@ -422,11 +422,11 @@ public class BPMNImportExportTest {
 			resource2 = resourceSet1.createResource(URI.createFileURI(bpmnFileExported.getAbsolutePath()));
 			resource2.load(Collections.emptyMap());
 
-			DocumentRoot model1 = (DocumentRoot) resource1.getContents().get(0);
-			DocumentRoot model2 = (DocumentRoot) resource2.getContents().get(0);
+			final DocumentRoot model1 = (DocumentRoot) resource1.getContents().get(0);
+			final DocumentRoot model2 = (DocumentRoot) resource2.getContents().get(0);
 			int nbProcess1 = 0;
-			Set<String> processNames = new HashSet<String>();
-			List<String> activityNames = new ArrayList<String>();
+			final Set<String> processNames = new HashSet<String>();
+			final List<String> activityNames = new ArrayList<String>();
 			int nbActivity1 = 0;
 			int nbBoundaryEvent1 = 0;
 			int nbTsignal1 = 0;
@@ -437,20 +437,20 @@ public class BPMNImportExportTest {
 			int nbDataObject1 = 0;
 			int nbProperty1 = 0;
 
-			for(TRootElement rootElement : model1.getDefinitions().getRootElement()){
+			for(final TRootElement rootElement : model1.getDefinitions().getRootElement()){
 				if(rootElement instanceof TProcess){
 					nbProcess1++;
 					final String processName = ((TProcess) rootElement).getName() != null ? ((TProcess) rootElement).getName() : ((TProcess) rootElement).getId();
 					processNames.add(processName);
-					for(TArtifact tArtifact :((TProcess) rootElement).getArtifact()){
+					for(final TArtifact tArtifact :((TProcess) rootElement).getArtifact()){
 						if(tArtifact instanceof TTextAnnotation){
 							nbTextannotation1++;
 						}
 					}
-					for(TFlowElement tFlowElement : ((TProcess) rootElement).getFlowElement()){
-						if(tFlowElement instanceof TActivity){                   	
+					for(final TFlowElement tFlowElement : ((TProcess) rootElement).getFlowElement()){
+						if(tFlowElement instanceof TActivity){
 							nbActivity1++;
-							String name  = getFlowElementName((TActivity) tFlowElement);
+							final String name  = getFlowElementName((TActivity) tFlowElement);
 							activityNames.add(name);
 							if(tFlowElement instanceof TSubProcess){
 								//for now we are creating new processses for each subprocess but we don't manage event
@@ -501,20 +501,20 @@ public class BPMNImportExportTest {
 			int nbDataObject2 = 0;
 			int nbProperty2 = 0;
 
-			for(TRootElement rootElement : model2.getDefinitions().getRootElement()){
+			for(final TRootElement rootElement : model2.getDefinitions().getRootElement()){
 				if(rootElement instanceof TProcess){
 					nbProcess2++;
 					final String processName = ((TProcess) rootElement).getName() != null ? ((TProcess) rootElement).getName() : ((TProcess) rootElement).getId();
 					processNames.remove(processName);
-					for(TArtifact tArtifact :((TProcess) rootElement).getArtifact()){
+					for(final TArtifact tArtifact :((TProcess) rootElement).getArtifact()){
 						if(tArtifact instanceof TTextAnnotation){
 							nbTextannotation2++;
 						}
 					}
-					for(TFlowElement tFlowElement : ((TProcess) rootElement).getFlowElement()){
+					for(final TFlowElement tFlowElement : ((TProcess) rootElement).getFlowElement()){
 						if(tFlowElement instanceof TActivity){
 							nbActivity2++;
-							String name  = getFlowElementName((TActivity) tFlowElement);
+							final String name  = getFlowElementName((TActivity) tFlowElement);
 							if(!activityNames.remove(name)){
 							}
 							if(tFlowElement instanceof TSubProcess){
@@ -543,13 +543,13 @@ public class BPMNImportExportTest {
 			}
 
 			/*Check id unicity*/
-			Collection<String> ids = new HashSet<String>();
-			Collection<String> duplicatedIds = new HashSet<String>();
-			Collection<EObject> noIds = new HashSet<EObject>();
-			for (Iterator<EObject> iterator = model2.eAllContents(); iterator.hasNext();) {
-				EObject object = iterator.next();
+			final Collection<String> ids = new HashSet<String>();
+			final Collection<String> duplicatedIds = new HashSet<String>();
+			final Collection<EObject> noIds = new HashSet<EObject>();
+			for (final Iterator<EObject> iterator = model2.eAllContents(); iterator.hasNext();) {
+				final EObject object = iterator.next();
 				if(object instanceof TBaseElement){
-					String id = ((TBaseElement) object).getId();
+					final String id = ((TBaseElement) object).getId();
 					if(id == null){
 						noIds.add(object);
 					}
@@ -591,15 +591,15 @@ public class BPMNImportExportTest {
 		//TODO: check link between signal thrown and caught
 	}
 
-	protected String getFlowElementName(TActivity tFlowElement) {
+	protected String getFlowElementName(final TActivity tFlowElement) {
 		return tFlowElement.getName() != null && !tFlowElement.getName().isEmpty() ? tFlowElement.getName() : tFlowElement.getId();
 	}
 
 
 
-	private int findNbActivitiesInSubProc(TSubProcess tSubProc) {
+	private int findNbActivitiesInSubProc(final TSubProcess tSubProc) {
 		int result = 0;
-		for(TFlowElement tFlowElement : tSubProc.getFlowElement()){
+		for(final TFlowElement tFlowElement : tSubProc.getFlowElement()){
 			if(tFlowElement instanceof TActivity){
 				//for now we are creating new processses for each subprocess
 				result++;
@@ -615,21 +615,21 @@ public class BPMNImportExportTest {
 	}
 
 
-	protected void checkGraphic(String fileName, MainProcess mainProcess) throws IOException{
-		URL bpmnResource = FileLocator.toFileURL(BPMNImportExportTest.class.getResource(fileName));
-		ResourceSet resourceSet1 = new ResourceSetImpl();
-		Resource resource1 = resourceSet1.createResource(BPMNTestUtil.toEMFURI(new File(bpmnResource.getFile())));
+	protected void checkGraphic(final String fileName, final MainProcess mainProcess) throws IOException{
+		final URL bpmnResource = FileLocator.toFileURL(BPMNImportExportTest.class.getResource(fileName));
+		final ResourceSet resourceSet1 = new ResourceSetImpl();
+		final Resource resource1 = resourceSet1.createResource(BPMNTestUtil.toEMFURI(new File(bpmnResource.getFile())));
 		resource1.load(Collections.emptyMap());
-		DocumentRoot model1 = (DocumentRoot) resource1.getContents().get(0);
+		final DocumentRoot model1 = (DocumentRoot) resource1.getContents().get(0);
 
-		final Diagram diagramFor = ModelHelper.getDiagramFor(mainProcess,null);
+        final Diagram diagramFor = ModelHelper.getDiagramFor(mainProcess);
 		DiagramEditPart dep;
 		try{
 			dep = OffscreenEditPartFactory.getInstance().createDiagramEditPart(diagramFor, PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
-		} catch(Exception ex){
+		} catch(final Exception ex){
 			dep = OffscreenEditPartFactory.getInstance().createDiagramEditPart(diagramFor, PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
 		}
-		MainProcessEditPart mped = (MainProcessEditPart) dep;
+		final MainProcessEditPart mped = (MainProcessEditPart) dep;
 
 		checkAllEditPartsAreVisible(mped);
 
@@ -638,22 +638,22 @@ public class BPMNImportExportTest {
 //		}
 	}
 
-	protected void checkRelativeGraphicPosition(MainProcess mainProcess,
-			DocumentRoot model1, DiagramEditPart dep, MainProcessEditPart mped) {
+	protected void checkRelativeGraphicPosition(final MainProcess mainProcess,
+			final DocumentRoot model1, final DiagramEditPart dep, final MainProcessEditPart mped) {
 		/*find correspondence between bonita model element and bpmn2 model element,
 		 * they should have the same ID*/
-		List<Element> activities = ModelHelper.getAllItemsOfType(mainProcess, ProcessPackage.Literals.ACTIVITY);
+		final List<Element> activities = ModelHelper.getAllItemsOfType(mainProcess, ProcessPackage.Literals.ACTIVITY);
 
-		for(Element activity : activities){
+		for(final Element activity : activities){
 			if(!(activity instanceof Task)
 					/*&& !(activity instanceof SubProcess)*/){
 				/*Find the Bonita EditPart for the id*/
-				String ID = findIdOfFlowNodeWithName(model1, activity.getName());/*argh now, the name is no more the ID of the BPMN element from which it is extracted, this id is lost...*/
-				IGraphicalEditPart activityPart = (IGraphicalEditPart)dep.findEditPart(mped, activity);
+				final String ID = findIdOfFlowNodeWithName(model1, activity.getName());/*argh now, the name is no more the ID of the BPMN element from which it is extracted, this id is lost...*/
+				final IGraphicalEditPart activityPart = (IGraphicalEditPart)dep.findEditPart(mped, activity);
 				assertNotNull(activityPart);
 
 				/*Find relative positions*/
-				Point bpmnLocation = getLocationFor(model1.getDefinitions(), ID);
+				final Point bpmnLocation = getLocationFor(model1.getDefinitions(), ID);
 				assertNotNull("ID not found bpmn location:" + ID, bpmnLocation);
 
 
@@ -677,22 +677,22 @@ public class BPMNImportExportTest {
 	 * @param name
 	 * @return
 	 */
-	private String findIdOfFlowNodeWithName(DocumentRoot model1, String name) {
-		for(TRootElement root : model1.getDefinitions().getRootElement()){
+	private String findIdOfFlowNodeWithName(final DocumentRoot model1, final String name) {
+		for(final TRootElement root : model1.getDefinitions().getRootElement()){
 			if(root instanceof TProcess){
-				for(TFlowElement flowElementDirectlyInProcess : ((TProcess) root).getFlowElement()){
+				for(final TFlowElement flowElementDirectlyInProcess : ((TProcess) root).getFlowElement()){
 					if(flowElementDirectlyInProcess instanceof TFlowNode){
 						if(name.equals(flowElementDirectlyInProcess.getName())){
 							return flowElementDirectlyInProcess.getId();
 						}
 						if(flowElementDirectlyInProcess instanceof TSubProcess){
-							for(TFlowElement flowElementInSubProcess : ((TSubProcess) flowElementDirectlyInProcess).getFlowElement()){
+							for(final TFlowElement flowElementInSubProcess : ((TSubProcess) flowElementDirectlyInProcess).getFlowElement()){
 								if(flowElementInSubProcess instanceof TFlowNode){
 									if(name.equals(flowElementInSubProcess.getName())){
 										return flowElementInSubProcess.getId();
 									}
 									if(flowElementInSubProcess instanceof TSubProcess){
-										for(TFlowElement flowElementInSubSubProcess : ((TSubProcess) flowElementInSubProcess).getFlowElement()){
+										for(final TFlowElement flowElementInSubSubProcess : ((TSubProcess) flowElementInSubProcess).getFlowElement()){
 											if(flowElementInSubSubProcess instanceof TFlowNode){
 												if(name.equals(flowElementInSubSubProcess.getName())){
 													return flowElementInSubSubProcess.getId();
@@ -710,14 +710,14 @@ public class BPMNImportExportTest {
 		return name;//hope name and id were the same and that we didn't do a correct search
 	}
 
-	private void checkAllEditPartsAreVisible(IGraphicalEditPart mped) {
-		Rectangle parentBounds = mped.getFigure().getBounds();
+	private void checkAllEditPartsAreVisible(final IGraphicalEditPart mped) {
+		final Rectangle parentBounds = mped.getFigure().getBounds();
 		//Rectangle childrenBounds = mped.getChildrenBounds();
 		if(parentBounds != null){
-			for(Object childEditPart :mped.getChildren()){
+			for(final Object childEditPart :mped.getChildren()){
 				if(childEditPart instanceof IGraphicalEditPart){
 					assertTrue(((IGraphicalEditPart) childEditPart).getFigure().isVisible());
-					EObject semanticElement = ((IGraphicalEditPart)childEditPart).resolveSemanticElement();
+					final EObject semanticElement = ((IGraphicalEditPart)childEditPart).resolveSemanticElement();
 					if(semanticElement instanceof Pool
 							|| semanticElement instanceof Lane){
 						checkAllEditPartsAreVisible((IGraphicalEditPart) childEditPart);
@@ -731,11 +731,11 @@ public class BPMNImportExportTest {
 	 * @param id :  the id of the BPMN Element (not the graphical one)
 	 * @return
 	 */
-	private Point getLocationFor(TDefinitions tDefinition, String id) {
+	private Point getLocationFor(final TDefinitions tDefinition, final String id) {
 		/*need to have location relatively to the container*/
 		//for(TDefinitions tDefinition : tDefinitions){
-		for(BPMNDiagram rootElement : tDefinition.getBPMNDiagram()){
-			for(DiagramElement diagramElement : rootElement.getBPMNPlane().getDiagramElement()){
+		for(final BPMNDiagram rootElement : tDefinition.getBPMNDiagram()){
+			for(final DiagramElement diagramElement : rootElement.getBPMNPlane().getDiagramElement()){
 				if(diagramElement instanceof BPMNShape){
 					final BPMNShape bpmnShape = (BPMNShape)diagramElement;
 					final String localPart = bpmnShape.getBpmnElement().getLocalPart();
@@ -743,7 +743,7 @@ public class BPMNImportExportTest {
 							|| localPart.equals(id)
 							|| NamingUtils.convertToId("subProc_"+localPart).equals(id)
 							|| ("subProc_"+localPart).equals(id)){
-						Point containerLocation = getContainerLocationFor(tDefinition, tDefinition.getRootElement(), id);
+						final Point containerLocation = getContainerLocationFor(tDefinition, tDefinition.getRootElement(), id);
 						final Bounds bounds = ((Shape)diagramElement).getBounds();
 						return new Point(bounds.getX() - containerLocation.x,
 								bounds.getY()- containerLocation.y);
@@ -755,18 +755,18 @@ public class BPMNImportExportTest {
 		return null;
 	}
 
-	protected Point getContainerLocationFor(TDefinitions tDefinitions, List<TRootElement> rootElements,String id) {
+	protected Point getContainerLocationFor(final TDefinitions tDefinitions, final List<TRootElement> rootElements,final String id) {
 		/*Retrieve container*/
 		String containerId = null;
-		Iterator<TRootElement> rootElementsIterator = rootElements.iterator();
+		final Iterator<TRootElement> rootElementsIterator = rootElements.iterator();
 		while(containerId == null && rootElementsIterator.hasNext()){
-			TRootElement rootElement = rootElementsIterator.next();
+			final TRootElement rootElement = rootElementsIterator.next();
 			/*Search in all Processes ...*/
 			if(rootElement instanceof TProcess){
 				/*... in all LaneSets...*/
 				final EList<TLaneSet> laneSet = ((TProcess) rootElement).getLaneSet();
 				if(!laneSet.isEmpty()){
-					for (TLaneSet childLaneSet : laneSet) {
+					for (final TLaneSet childLaneSet : laneSet) {
 						containerId = findContainerIdOf(id, childLaneSet);
 						if (containerId != null) {
 							break;
@@ -774,7 +774,7 @@ public class BPMNImportExportTest {
 					}
 				} else {
 					//Search directly in the process
-					for(TFlowElement flowElement : ((TProcess)rootElement).getFlowElement()){
+					for(final TFlowElement flowElement : ((TProcess)rootElement).getFlowElement()){
 						if(id.equals(flowElement.getId())){
 							containerId = rootElement.getId();
 							break;
@@ -786,18 +786,18 @@ public class BPMNImportExportTest {
 		/*if we don't find a container, perhaps it is because it is a TArtifact*/
 		if(containerId == null){
 			/*so search with a different algo... thanks BPMN2!!!*/
-			for(TRootElement rootElement : rootElements){
+			for(final TRootElement rootElement : rootElements){
 				/*Search in all Processes ...*/
 				if(rootElement instanceof TProcess){
-					for(TArtifact artifact : ((TProcess) rootElement).getArtifact()){
+					for(final TArtifact artifact : ((TProcess) rootElement).getArtifact()){
 						if(id.equals(artifact.getId())){
 							//need to find the top container that has a BMPNShape associated with, again thanks BPMN2!!!
 							Point containerLocationOfTArtifact = null;
 							/*... in all LaneSets...*/
-							for(TLaneSet laneSet : ((TProcess)rootElement).getLaneSet()){
+							for(final TLaneSet laneSet : ((TProcess)rootElement).getLaneSet()){
 								/*... in all Lanes ...*/
-								for(TLane lane : laneSet.getLane()){
-									Point tempContainerLocationOfTArtifact = getLocationFor(tDefinitions, lane.getId());
+								for(final TLane lane : laneSet.getLane()){
+									final Point tempContainerLocationOfTArtifact = getLocationFor(tDefinitions, lane.getId());
 									if(containerLocationOfTArtifact != null){
 										containerLocationOfTArtifact.x = Math.min(containerLocationOfTArtifact.x, tempContainerLocationOfTArtifact.x);
 										containerLocationOfTArtifact.y = Math.min(containerLocationOfTArtifact.y, tempContainerLocationOfTArtifact.y);
@@ -826,10 +826,10 @@ public class BPMNImportExportTest {
 		} else {
 			//TODO : support recursivity fort subprocesses, we are doing it only in tests because
 			/*check we were not in a subprocess from BPMN that is not in a lane*/
-			for(TRootElement rootElement : rootElements){
+			for(final TRootElement rootElement : rootElements){
 				/*Search in all Processes ...*/
 				if(rootElement instanceof TProcess){
-					for (TFlowElement tFlowElement : ((TProcess) rootElement).getFlowElement()) {
+					for (final TFlowElement tFlowElement : ((TProcess) rootElement).getFlowElement()) {
 						if(tFlowElement instanceof TSubProcess){
 							containerLocation = getContainerLocationFor((TSubProcess)tFlowElement, id, tDefinitions);
 							if(containerLocation != null){
@@ -843,10 +843,10 @@ public class BPMNImportExportTest {
 		return containerLocation != null? containerLocation : new Point();
 	}
 
-	private Point getContainerLocationFor(TSubProcess subProcess, String id, TDefinitions tDefinitions) {
+	private Point getContainerLocationFor(final TSubProcess subProcess, final String id, final TDefinitions tDefinitions) {
 		final BPMNShape bpmnShapeForBpmnID = getBPMNShapeForBpmnID(tDefinitions, subProcess.getId());
 		if(bpmnShapeForBpmnID != null && bpmnShapeForBpmnID.isIsExpanded()){
-			for (TFlowElement subProcFlowElement : subProcess.getFlowElement()) {
+			for (final TFlowElement subProcFlowElement : subProcess.getFlowElement()) {
 				if(id.equals(subProcFlowElement.getId())){
 					if(subProcess.isTriggeredByEvent()){
 						return getContainerLocationFor(tDefinitions, tDefinitions.getRootElement(), subProcess.getId()).getCopy();
@@ -854,7 +854,7 @@ public class BPMNImportExportTest {
 						return getAbsoluteLocationFor(tDefinitions, subProcess.getId()).getCopy().translate(-25, -25);
 					}
 				} else if(subProcFlowElement instanceof TSubProcess){
-					Point containerLocation = getContainerLocationFor((TSubProcess)subProcFlowElement, id, tDefinitions);
+					final Point containerLocation = getContainerLocationFor((TSubProcess)subProcFlowElement, id, tDefinitions);
 					if(containerLocation != null){
 						return containerLocation.getCopy();
 					}
@@ -864,9 +864,9 @@ public class BPMNImportExportTest {
 		return null;
 	}
 
-	private Point getAbsoluteLocationFor(TDefinitions tDefinitions, String id) {
-		for(BPMNDiagram rootElement : tDefinitions.getBPMNDiagram()){
-			for(DiagramElement diagramElement : rootElement.getBPMNPlane().getDiagramElement()){
+	private Point getAbsoluteLocationFor(final TDefinitions tDefinitions, final String id) {
+		for(final BPMNDiagram rootElement : tDefinitions.getBPMNDiagram()){
+			for(final DiagramElement diagramElement : rootElement.getBPMNPlane().getDiagramElement()){
 				if(diagramElement instanceof BPMNShape){
 					final BPMNShape bpmnShape = (BPMNShape)diagramElement;
 					final String localPart = bpmnShape.getBpmnElement().getLocalPart();
@@ -884,10 +884,10 @@ public class BPMNImportExportTest {
 		return null;
 	}
 
-	protected BPMNShape getBPMNShapeForBpmnID(TDefinitions tDefinitions, String id) {
-		for (BPMNDiagram bpmnDiagram : tDefinitions.getBPMNDiagram()) {
-			BPMNPlane bpmnPlane = bpmnDiagram.getBPMNPlane();
-			for(DiagramElement diagramElement : bpmnPlane.getDiagramElement()){
+	protected BPMNShape getBPMNShapeForBpmnID(final TDefinitions tDefinitions, final String id) {
+		for (final BPMNDiagram bpmnDiagram : tDefinitions.getBPMNDiagram()) {
+			final BPMNPlane bpmnPlane = bpmnDiagram.getBPMNPlane();
+			for(final DiagramElement diagramElement : bpmnPlane.getDiagramElement()){
 				if(diagramElement instanceof BPMNShape){
 					if(((BPMNShape)diagramElement).getBpmnElement().getLocalPart().equals(id)){
 						return (BPMNShape)diagramElement;
@@ -898,11 +898,11 @@ public class BPMNImportExportTest {
 		return null;
 	}
 
-	protected String findContainerIdOf(String id, TLaneSet laneSet) {
+	protected String findContainerIdOf(final String id, final TLaneSet laneSet) {
 		/*... in all Lanes ...*/
-		for(TLane lane : laneSet.getLane()){
+		for(final TLane lane : laneSet.getLane()){
 			/*... to find if it is contained in it, ie if it is in FlowNodeRef*/
-			for(String flowNodeRef :lane.getFlowNodeRef()){
+			for(final String flowNodeRef :lane.getFlowNodeRef()){
 				if(flowNodeRef.equals(id)
 						|| NamingUtils.convertToId(flowNodeRef).equals(id)
 						|| ("subProc_"+flowNodeRef).equals(id)
@@ -911,7 +911,7 @@ public class BPMNImportExportTest {
 				}
 			}
 			if(lane.getChildLaneSet() != null){
-				String res = findContainerIdOf(id, lane.getChildLaneSet());
+				final String res = findContainerIdOf(id, lane.getChildLaneSet());
 				if(res != null){
 					return res;
 				}

@@ -39,20 +39,20 @@ public class TestBOSArchiveImport extends TestCase {
 
     public void testImportBOSArchiveLight() throws Exception {
         final ImportBosArchiveOperation operation = new ImportBosArchiveOperation();
-        File file = new File(FileLocator.toFileURL(TestBOSArchiveImport.class.getResource("MyDiagram_1_0.bos")).getFile());
+        final File file = new File(FileLocator.toFileURL(TestBOSArchiveImport.class.getResource("MyDiagram_1_0.bos")).getFile());
         operation.setArchiveFile(file.getAbsolutePath());
         operation.setCurrentRepository(RepositoryManager.getInstance().getCurrentRepository());
-        IStatus status = operation.run(new NullProgressMonitor());
+        final IStatus status = operation.run(new NullProgressMonitor());
         assertNotNull(status);
         assertTrue(status.getMessage(), status.isOK());
     }
 
     public void testImportBOSArchiveFull() throws Exception {
         final ImportBosArchiveOperation operation = new ImportBosArchiveOperation();
-        File file = new File(FileLocator.toFileURL(TestBOSArchiveImport.class.getResource("testRepo_100912_1757.bos")).getFile());
+        final File file = new File(FileLocator.toFileURL(TestBOSArchiveImport.class.getResource("testRepo_100912_1757.bos")).getFile());
         operation.setArchiveFile(file.getAbsolutePath());
         operation.setCurrentRepository(RepositoryManager.getInstance().getCurrentRepository());
-        IStatus status = operation.run(new NullProgressMonitor());
+        final IStatus status = operation.run(new NullProgressMonitor());
         assertNotNull(status);
         assertTrue(status.getMessage(), status.isOK());
 
@@ -60,28 +60,28 @@ public class TestBOSArchiveImport extends TestCase {
 
     public void testImportSeveralDiagrams() throws IOException {
         final ImportBosArchiveOperation operation = new ImportBosArchiveOperation();
-        File file = new File(FileLocator.toFileURL(TestBOSArchiveImport.class.getResource("severalDiagramsImportTest.bos")).getFile());
+        final File file = new File(FileLocator.toFileURL(TestBOSArchiveImport.class.getResource("severalDiagramsImportTest.bos")).getFile());
         operation.setCurrentRepository(RepositoryManager.getInstance().getCurrentRepository());
         operation.setArchiveFile(file.getAbsolutePath());
-        IStatus status = operation.run(new NullProgressMonitor());
+        final IStatus status = operation.run(new NullProgressMonitor());
         assertNotNull(status);
         assertTrue(status.getMessage(), status.isOK());
-        DiagramRepositoryStore store = (DiagramRepositoryStore) RepositoryManager.getInstance().getCurrentRepository()
+        final DiagramRepositoryStore store = RepositoryManager.getInstance().getCurrentRepository()
                 .getRepositoryStore(DiagramRepositoryStore.class);
-        DiagramFileStore diagram1 = store.getDiagram("diagram1", "1.0");
+        final DiagramFileStore diagram1 = store.getDiagram("diagram1", "1.0");
         assertNotNull("diagram1 was not imported correctly", diagram1);
-        DiagramFileStore diagram2 = store.getDiagram("diagram2", "1.0");
+        final DiagramFileStore diagram2 = store.getDiagram("diagram2", "1.0");
         assertNotNull("diagram2 was not imported correctly", diagram2);
-        DiagramFileStore diagram3 = store.getDiagram("diagram3", "1.0");
+        final DiagramFileStore diagram3 = store.getDiagram("diagram3", "1.0");
         assertNotNull("diagram2 was not imported correctly", diagram3);
     }
 
     public void testImportBOSArchiveDemoProcess() throws Exception {
         final ImportBosArchiveOperation operation = new ImportBosArchiveOperation();
-        File file = new File(FileLocator.toFileURL(TestBOSArchiveImport.class.getResource("FillDBForDemo_1_0.bos")).getFile());
+        final File file = new File(FileLocator.toFileURL(TestBOSArchiveImport.class.getResource("FillDBForDemo_1_0.bos")).getFile());
         operation.setArchiveFile(file.getAbsolutePath());
         operation.setCurrentRepository(RepositoryManager.getInstance().getCurrentRepository());
-        IStatus status = operation.run(new NullProgressMonitor());
+        final IStatus status = operation.run(new NullProgressMonitor());
         assertNotNull(status);
         assertTrue(status.getMessage(), status.isOK());
 

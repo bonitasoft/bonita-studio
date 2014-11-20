@@ -16,6 +16,8 @@
  */
 package org.bonitasoft.studio.common.repository.filestore;
 
+import java.util.Map;
+
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 
 /**
@@ -24,22 +26,39 @@ import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
  */
 public class FileStoreChangeEvent {
 
-	public enum EventType {PRE_OPEN,POST_OPEN,POST_CLOSE,PRE_CLOSE,PRE_DELETE,POST_DELETE,PRE_SAVE,POST_SAVE,POST_IMPORT, PRE_IMPORT}
+    public enum EventType {PRE_OPEN,POST_OPEN,POST_CLOSE,PRE_CLOSE,PRE_DELETE,POST_DELETE,PRE_SAVE,POST_SAVE,POST_IMPORT, PRE_IMPORT}
 
-	private EventType event;
-	private IRepositoryFileStore fileStore;  ;
-	
-	public FileStoreChangeEvent(EventType event,IRepositoryFileStore fileStore){
-		this.event = event ; 
-		this.fileStore = fileStore ; 
-	}
+    private final EventType event;
+    private final IRepositoryFileStore fileStore;
+    Map<String, Object> parameters;
 
-	public EventType getEvent() {
-		return event;
-	}
+    public FileStoreChangeEvent(final EventType event,final IRepositoryFileStore fileStore){
+        this.event = event ;
+        this.fileStore = fileStore ;
+    }
 
-	public IRepositoryFileStore getFileStore() {
-		return fileStore;
-	}
-	
+    public FileStoreChangeEvent(final EventType event, final IRepositoryFileStore fileStore, final Map<String, Object> parameters) {
+        this(event, fileStore);
+        this.parameters = parameters;
+    }
+
+    public EventType getEvent() {
+        return event;
+    }
+
+    public IRepositoryFileStore getFileStore() {
+        return fileStore;
+    }
+
+    public Map<String, Object> getParameters() {
+        return parameters;
+    }
+
+    public Object getParameter(final String key) {
+        if (parameters != null) {
+            return parameters.get(key);
+        }
+        return null;
+    }
+
 }

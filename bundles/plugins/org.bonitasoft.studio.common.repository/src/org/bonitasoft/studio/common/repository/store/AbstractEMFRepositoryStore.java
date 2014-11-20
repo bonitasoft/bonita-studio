@@ -114,10 +114,18 @@ public abstract class AbstractEMFRepositoryStore<T extends EMFFileStore>
 	protected abstract void addAdapterFactory(
 			ComposedAdapterFactory adapterFactory);
 
-	public EditingDomain getEditingDomain() {
-		return new AdapterFactoryEditingDomain(adapterFactory,
-				new BasicCommandStack(), new HashMap<Resource, Boolean>());
+    public EditingDomain getEditingDomain(final URI uri) {
+        return createAdapterFactoryEditingDomain();
 	}
+
+    public EditingDomain getEditingDomain() {
+        return createAdapterFactoryEditingDomain();
+    }
+
+    protected EditingDomain createAdapterFactoryEditingDomain() {
+        return new AdapterFactoryEditingDomain(adapterFactory,
+                new BasicCommandStack(), new HashMap<Resource, Boolean>());
+    }
 
 	@Override
 	protected InputStream handlePreImport(final String fileName,

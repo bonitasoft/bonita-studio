@@ -20,9 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
-import org.eclipse.gmf.runtime.emf.core.GMFEditingDomainFactory;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
@@ -38,10 +36,11 @@ public class OffscreenEditPartFactory {
     private final List<Shell> toDispose = new ArrayList<Shell>();
 
     public DiagramEditPart createOffscreenDiagramEditPart(final Diagram d) {
-        final ResourceSet rSet = d.eResource().getResourceSet();
-        if (GMFEditingDomainFactory.getInstance().getEditingDomain(rSet) == null) {
-            GMFEditingDomainFactory.getInstance().createEditingDomain(rSet);
-        }
+        //        final Resource resource = d.eResource();
+        //        TransactionUtil.getE
+        //        if (GMFEditingDomainFactory.getInstance().getEditingDomain(rSet) == null) {
+        //            GMFEditingDomainFactory.getInstance().createEditingDomain(rSet);
+        //        }
         final EObject element = d.getElement();
         if (element != null) {
             final OffscreenDiagramEditPartRunnable runnable = new OffscreenDiagramEditPartRunnable(d);

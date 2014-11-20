@@ -258,7 +258,7 @@ public class BarExporter {
             final String path = processName +".png" ; //$NON-NLS-1$
 
             try {
-                Diagram diagram = ModelHelper.getDiagramFor(ModelHelper.getMainProcess(process),null);
+                Diagram diagram = ModelHelper.getDiagramFor(ModelHelper.getMainProcess(process));
                 if(diagram == null){
                     return;//DON'T ADD IMAGE, DON'T THROW EXCEPTION FOR TESTS PURPUSES
                 }

@@ -18,7 +18,6 @@
 
 package org.bonitasoft.studio.common.emf.tools;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -94,7 +93,6 @@ import org.bonitasoft.studio.model.simulation.SimulationData;
 import org.bonitasoft.studio.model.simulation.SimulationDataContainer;
 import org.bonitasoft.studio.model.simulation.SimulationTransition;
 import org.eclipse.draw2d.geometry.Point;
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
@@ -102,8 +100,10 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.eclipse.emf.edit.domain.EditingDomain;
+import org.eclipse.emf.transaction.RunnableWithResult;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.gmf.runtime.notation.Diagram;
 
 /**
@@ -1430,42 +1430,52 @@ public class ModelHelper {
      * @param form
      * @return the diagram corresponding to the form.
      */
+    public static Diagram getDiagramFor(final EObject element, final Resource resource) {
+        if (element == null) {
+            return null;
+        }
+        if (!resource.isLoaded()) {
+            throw new IllegalStateException("EMF Resource is not loaded.");
+        }
+
+        final RunnableWithResult<Diagram> runnableWithResult = new DiagramForElementRunnable(resource, element);
+        final TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(resource);
+        if (editingDomain != null) {
+            try {
+                editingDomain.runExclusive(runnableWithResult);
+            } catch (final InterruptedException e) {
+                BonitaStudioLog.error(e);
+            }
+        } else {
+            runnableWithResult.run();
+        }
+        return runnableWithResult.getResult();
+    }
+
+    public static Diagram getDiagramFor(final EObject element) {
+        if (element != null && element.eResource() != null) {
+            return getDiagramFor(element, TransactionUtil.getEditingDomain(element.eResource()));
+        }
+        return null;
+    }
+
     public static Diagram getDiagramFor(final EObject element, EditingDomain domain) {
         if (element == null) {
             return null;
         }
-        Diagram diag = null;
-        Resource r = null;
+        Resource resource = null;
         if (domain == null) {
-            domain = AdapterFactoryEditingDomain.getEditingDomainFor(element);
+            domain = TransactionUtil.getEditingDomain(element);
             if (domain != null) {
-                r = domain.getResourceSet().getResource(element.eResource().getURI(), false);
+                resource = domain.getResourceSet().getResource(element.eResource().getURI(), true);
             } else {
-                r = element.eResource();
+                resource = element.eResource();
             }
 
         } else {
-            r = domain.getResourceSet().getResource(element.eResource().getURI(), false);
+            resource = domain.getResourceSet().getResource(element.eResource().getURI(), true);
         }
-
-        if (!r.isLoaded()) {
-            try {
-                r.load(Collections.EMPTY_MAP);
-            } catch (final IOException e) {
-                BonitaStudioLog.error(e);
-            }
-        }
-        final EList<EObject> resources = r.getContents();
-        for (final EObject eObject : resources) {
-            if (eObject instanceof Diagram) {
-                final EObject diagramElement = ((Diagram) eObject).getElement();
-                if (diagramElement != null && diagramElement.equals(element)) {
-                    diag = (Diagram) eObject;
-                    break;
-                }
-            }
-        }
-        return diag;
+        return getDiagramFor(element, resource);
     }
 
     public static Widget getWidgetById(final Form form, final String id) {
