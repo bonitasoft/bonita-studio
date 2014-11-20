@@ -276,7 +276,6 @@ public class SaveCommandHandler extends SaveHandler {
                 renameDiagramOperation.setNewDiagramName(nameDialog.getDiagramName());
                 renameDiagramOperation.setNewDiagramVersion(nameDialog.getDiagramVersion());
                 renameDiagramOperation.setPoolsRenamed(nameDialog.getPools());
-                renameDiagramOperation.setSaveAfterRename(false);
                 final IProgressService service = PlatformUI.getWorkbench().getProgressService();
                 try {
                     service.run(false, false, renameDiagramOperation);

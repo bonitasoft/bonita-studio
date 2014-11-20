@@ -362,11 +362,6 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
             type = ExpressionConstants.CONSTANT_TYPE;
         }
         clearExpression(type, selectedExpression);
-
-        //        final IObservableValue nameObservable = (IObservableValue) expressionBinding.getTarget();
-        //        nameObservable.setValue("");
-
-        validateExternalDatabindingContextTargets(externalDataBindingContext);
         validate();
         refresh();
     }
@@ -472,7 +467,6 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
                                 newExpression.getType()));
                 editingDomain.getCommandStack().execute(cc);
             }
-
             refresh();
             fireExpressionEditorChanged(new SelectionChangedEvent(this, new StructuredSelection(selectedExpression)));
         }
@@ -1228,6 +1222,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
         if (selectedExpression != null) {
             expressionViewerValidator.validate(selectedExpression.getName());
         }
+        validateExternalDatabindingContextTargets(externalDataBindingContext);
     }
 
 

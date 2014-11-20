@@ -26,6 +26,7 @@ import junit.framework.TestCase;
 import org.bonitasoft.engine.bpm.bar.BusinessArchive;
 import org.bonitasoft.studio.common.BonitaHomeUtil;
 import org.bonitasoft.studio.diagram.custom.commands.NewDiagramCommandHandler;
+import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.engine.export.BarExporter;
 import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.model.configuration.ConfigurationFactory;
@@ -48,9 +49,9 @@ public class TestAutoLogin extends TestCase {
 		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().saveAllEditors(false);
 		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeAllEditors(false);
         if(pool == null){
-            final NewDiagramCommandHandler newDiagram =  new NewDiagramCommandHandler();
-            newDiagram.execute(null);
-            final AbstractProcess p = (AbstractProcess) newDiagram.getNewDiagramFileStore().getContent().getElements().get(0);
+            final NewDiagramCommandHandler newDiagram = new NewDiagramCommandHandler();
+            final DiagramFileStore diagramFileStore = newDiagram.execute(null);
+            final AbstractProcess p = (AbstractProcess) diagramFileStore.getContent().getElements().get(0);
             pool = EcoreUtil.copy(p);
             final Configuration conf = ConfigurationFactory.eINSTANCE.createConfiguration();
 

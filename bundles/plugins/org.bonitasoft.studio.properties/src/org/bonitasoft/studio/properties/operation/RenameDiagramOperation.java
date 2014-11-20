@@ -37,13 +37,12 @@ import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.properties.i18n.Messages;
 import org.bonitasoft.studio.properties.sections.forms.FormsUtils;
-import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
+import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.parts.DiagramDocumentEditor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -53,7 +52,6 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.commands.ICommandService;
 
 /**
  * @author Romain Bioteau
@@ -65,7 +63,6 @@ public class RenameDiagramOperation implements IRunnableWithProgress {
     private String diagramName;
     private List<ProcessesNameVersion> pools = new ArrayList<ProcessesNameVersion>();
     private DiagramEditor editor;
-    private boolean saveAfterRename = true;
 
     /*
      * (non-Javadoc)
@@ -93,14 +90,9 @@ public class RenameDiagramOperation implements IRunnableWithProgress {
         operation.setPoolsRenamed(pools);
         operation.run(Repository.NULL_PROGRESS_MONITOR);
 
-        if (saveAfterRename) {
-            save();
-        }
-
         if (!(oldName.equals(diagramName) && oldVersion.equals(diagramVersion))) {
             final DiagramFileStore diagramFileStore = diagramStore.getDiagram(oldName, oldVersion);
             diagramFileStore.getOpenedEditor().doSave(Repository.NULL_PROGRESS_MONITOR);
-
             cleanOldFileStores(diagramFileStore);
             reopenEditors(partName, diagramStore, forms);
         }
@@ -108,13 +100,14 @@ public class RenameDiagramOperation implements IRunnableWithProgress {
 
     protected void reopenEditors(final String partName, final DiagramRepositoryStore diagramStore, final List<Form> forms) {
         final DiagramFileStore fStore = diagramStore.getChild(NamingUtils.toDiagramFilename(diagramName, diagramVersion));
+        fStore.save(null);
         IWorkbenchPart partToActivate = fStore.open();
         final MainProcess mainProcess = fStore.getContent();
         for (final Form form : forms) {
             final List<Form> allItemsOfTypeForms = ModelHelper.getAllItemsOfType(mainProcess, FormPackage.Literals.FORM);
             for (final Form f : allItemsOfTypeForms) {
                 if (EcoreUtil.equals(form, f)) {
-                    final DiagramEditor ed = FormsUtils.openDiagram(f, AdapterFactoryEditingDomain.getEditingDomainFor(f));
+                    final DiagramEditor ed = FormsUtils.openDiagram(f, TransactionUtil.getEditingDomain(mainProcess));
                     if (partName.equals(ed.getTitle())) {
                         partToActivate = ed;
                     }
@@ -139,19 +132,8 @@ public class RenameDiagramOperation implements IRunnableWithProgress {
                 fileStore.delete();
             }
         }
+        diagramFileStore.close();
         diagramFileStore.delete();
-    }
-
-    private void save() throws InvocationTargetException {
-        try {
-            final ICommandService service = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
-            final org.eclipse.core.commands.Command c = service.getCommand("org.eclipse.ui.file.save");
-            if (c.isEnabled()) {
-                c.executeWithChecks(new ExecutionEvent());
-            }
-        } catch (final Exception e) {
-            throw new InvocationTargetException(e);
-        }
     }
 
     private List<Form> computeFormsToReopen(final DiagramEditor editor) {
@@ -205,8 +187,5 @@ public class RenameDiagramOperation implements IRunnableWithProgress {
         this.editor = editor;
     }
 
-    public void setSaveAfterRename(final boolean saveAfterRename) {
-        this.saveAfterRename = saveAfterRename;
-    }
 
 }
