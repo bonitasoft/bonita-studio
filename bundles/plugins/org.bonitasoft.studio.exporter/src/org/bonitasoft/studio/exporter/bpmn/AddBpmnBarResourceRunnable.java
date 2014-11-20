@@ -36,6 +36,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.transaction.RunnableWithResult;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gmf.runtime.diagram.ui.OffscreenEditPartFactory;
@@ -57,7 +58,7 @@ public class AddBpmnBarResourceRunnable implements RunnableWithResult<List<BarRe
 
     @Override
     public void run() {
-        final Diagram diagramFor = ModelHelper.getDiagramFor(ModelHelper.getMainProcess(process), null);
+        final Diagram diagramFor = ModelHelper.getDiagramFor(ModelHelper.getMainProcess(process), (EditingDomain) null);
         if (diagramFor != null) {
             final Resource eResource = diagramFor.eResource();
             if (eResource != null) {
