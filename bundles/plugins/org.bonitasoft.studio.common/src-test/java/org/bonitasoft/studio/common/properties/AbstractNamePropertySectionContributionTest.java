@@ -16,11 +16,13 @@ package org.bonitasoft.studio.common.properties;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.spy;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.when;
 
 import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.form.FormFactory;
 import org.bonitasoft.studio.model.form.Group;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,6 +34,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class AbstractNamePropertySectionContributionTest {
 
+    @Mock
     private AbstractNamePropertySectionContribution nameContribution;
 
     @Mock
@@ -43,7 +46,7 @@ public class AbstractNamePropertySectionContributionTest {
 
     @Before
     public void setUp(){
-        nameContribution = spy(new NamePropertySectionContributionForTest(tabbedPropertySheetPage, extensibleGridPropertySection));
+        when(nameContribution.isContainerIsAFormOrAGroup(any(EObject.class))).thenCallRealMethod();
     }
 
     @Test
