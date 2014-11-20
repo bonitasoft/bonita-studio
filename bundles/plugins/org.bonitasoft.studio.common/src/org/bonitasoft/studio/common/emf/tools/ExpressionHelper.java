@@ -183,21 +183,17 @@ public class ExpressionHelper {
         return widgetDependency;
     }
 
-    public static CompoundCommand clearExpression(final Expression expr, final EditingDomain editingDomain) {
+    public static CompoundCommand clearExpression(final Expression expr, final String type, final EditingDomain editingDomain) {
         if (editingDomain != null) {
-            String returnType = expr.getReturnType();
-            if (!expr.isReturnTypeFixed() || expr.getReturnType() == null) {
-                returnType = String.class.getName();
-            }
             final CompoundCommand cc = new CompoundCommand();
             cc.append(SetCommand.create(editingDomain, expr,
-                    ExpressionPackage.Literals.EXPRESSION__TYPE, ExpressionConstants.CONSTANT_TYPE));
+                    ExpressionPackage.Literals.EXPRESSION__TYPE, type));
             cc.append(SetCommand.create(editingDomain, expr,
                     ExpressionPackage.Literals.EXPRESSION__NAME, ""));
             cc.append(SetCommand.create(editingDomain, expr,
                     ExpressionPackage.Literals.EXPRESSION__CONTENT, ""));
             cc.append(SetCommand.create(editingDomain, expr,
-                    ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE, returnType));
+                    ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE, String.class.getName()));
             cc.append(RemoveCommand.create(editingDomain, expr,
                     ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS,
                     expr.getReferencedElements()));
@@ -216,7 +212,6 @@ public class ExpressionHelper {
         expr.setContent("");
         expr.setType(ExpressionConstants.CONSTANT_TYPE);
         expr.getReferencedElements().clear();
-        expr.getConnectors().clear();
         if (!expr.isReturnTypeFixed() || expr.getReturnType() == null) {
             expr.setReturnType(String.class.getName());
         }
