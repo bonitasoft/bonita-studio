@@ -63,7 +63,7 @@ public interface IRepository extends IFileStoreChangeListener {
 
     List<IRepositoryStore<? extends IRepositoryFileStore>> getAllExportableStores();
 
-    String getDispslayName();
+    String getDisplayName();
 
     Image getIcon() ;
 
@@ -93,4 +93,6 @@ public interface IRepository extends IFileStoreChangeListener {
     void create();
 
     void updateStudioShellText();
+
+    boolean isOnline();
 }

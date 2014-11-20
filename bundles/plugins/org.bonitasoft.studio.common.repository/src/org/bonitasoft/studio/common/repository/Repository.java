@@ -669,7 +669,7 @@ public class Repository implements IRepository {
     }
 
     @Override
-    public String getDispslayName() {
+    public String getDisplayName() {
         return getName() + " [" + getVersion() + "]";
     }
 
@@ -877,6 +877,11 @@ public class Repository implements IRepository {
         if (monitor != null && subtask != null) {
             monitor.subTask(subtask);
         }
+    }
+
+    @Override
+    public boolean isOnline() {
+        return true;
     }
 
 }
