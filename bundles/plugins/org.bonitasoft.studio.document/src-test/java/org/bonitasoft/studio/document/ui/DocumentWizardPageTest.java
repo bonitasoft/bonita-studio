@@ -155,7 +155,7 @@ public class DocumentWizardPageTest extends AbstractSWTTestCase{
         final IStatus status = (IStatus) iObservableValue.getValue();
 
         assertThat(status.isOK()).isFalse();
-        assertThat(status.getMessage()).contains(Messages.nameCantHaveAWhitespace);
+        assertThat(status.getMessage()).isEqualTo(Messages.bind(Messages.nameCantHaveAWhitespace, "my Document Name"));
     }
 
 }
