@@ -73,9 +73,6 @@ public abstract class AbstractSWTTestCase {
         if (headlessShell != null) {
             headlessShell.dispose();
         }
-        if (display != null) {
-            display.dispose();
-        }
     }
 
 }
