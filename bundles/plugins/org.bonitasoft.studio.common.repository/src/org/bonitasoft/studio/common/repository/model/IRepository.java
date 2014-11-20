@@ -67,7 +67,7 @@ public interface IRepository extends IFileStoreChangeListener {
 
     Image getIcon() ;
 
-    void importFromArchive(File archiveFile, boolean askOverwrite);
+    void importFromArchive(File archiveFile, boolean askOverwrite, boolean validateAfterImport);
 
     void exportToArchive(String file);
 

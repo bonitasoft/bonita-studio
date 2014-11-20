@@ -367,7 +367,7 @@ public class CreateFormCommand extends AbstractTransactionalCommand {
         myForm.setName(formName);
         myForm.setPageLabel(createLabelExpression(formName));
         myForm.setShowPageLabel(true);
-        myForm.setDocumentation(description);
+        myForm.setDocumentation(description == null ? "" : description);
         return myForm;
     }
 

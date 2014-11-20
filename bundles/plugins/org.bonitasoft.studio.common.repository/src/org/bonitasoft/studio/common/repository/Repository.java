@@ -523,7 +523,7 @@ public class Repository implements IRepository {
         if (!projectManifest.exists()) {
             projectManifest.create(is2, false, null);
         } else {
-            projectManifest.setContents(is2, IResource.NONE, null);
+            projectManifest.setContents(is2, IResource.FORCE, null);
         }
     }
 
@@ -678,10 +678,10 @@ public class Repository implements IRepository {
     }
 
     @Override
-    public void importFromArchive(final File archiveFile, final boolean askOverwrite) {
+    public void importFromArchive(final File archiveFile, final boolean askOverwrite, final boolean validateAfterImport) {
         final boolean disableConfirmation = FileActionDialog.getDisablePopup();
         FileActionDialog.setDisablePopup(!askOverwrite);
-        final ImportBosArchiveOperation operation = new ImportBosArchiveOperation();
+        final ImportBosArchiveOperation operation = new ImportBosArchiveOperation(validateAfterImport);
         operation.setArchiveFile(archiveFile.getAbsolutePath());
         operation.setCurrentRepository(RepositoryManager.getInstance().getCurrentRepository());
         operation.run(NULL_PROGRESS_MONITOR);
@@ -697,7 +697,21 @@ public class Repository implements IRepository {
             allResources.add(store.getResource());
         }
         operation.setResources(allResources);
-        operation.run(NULL_PROGRESS_MONITOR);
+        final IStatus status = operation.run(NULL_PROGRESS_MONITOR);
+        if (!status.isOK()) {
+            logErrorStatus(status);
+        }
+    }
+
+    protected void logErrorStatus(final IStatus status) {
+        final StringBuilder sb = new StringBuilder();
+        if (status.isMultiStatus()) {
+            for (final IStatus childStatus : status.getChildren()) {
+                sb.append(childStatus.getMessage()).append("\n");
+            }
+
+        }
+        BonitaStudioLog.error("Export to archive failed.\n" + status.getMessage() + "\n" + sb.toString(), CommonRepositoryPlugin.PLUGIN_ID);
     }
 
     @Override
