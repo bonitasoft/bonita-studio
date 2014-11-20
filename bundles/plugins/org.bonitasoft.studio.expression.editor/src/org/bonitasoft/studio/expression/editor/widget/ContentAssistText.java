@@ -40,6 +40,7 @@ import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
@@ -128,7 +129,7 @@ public class ContentAssistText extends Composite implements SWTBotConstants {
         tb.setEnabled(true);
         final ToolItem ti = new ToolItem(tb, SWT.FLAT | SWT.NO_FOCUS);
         ti.setData(SWTBOT_WIDGET_ID_KEY, SWTBOT_ID_EXPRESSIONVIEWER_DROPDOWN);
-        ti.setImage(Pics.getImage("resize_S.gif"));
+        ti.setImage(getArrowDownImage());
         ti.addSelectionListener(new SelectionAdapter() {
 
             @Override
@@ -157,6 +158,10 @@ public class ContentAssistText extends Composite implements SWTBotConstants {
             }
         });
         autoCompletion = new AutoCompletionField(textControl, new TextContentAdapter(), contentProposalLabelProvider) ;
+    }
+
+    protected Image getArrowDownImage() {
+        return Pics.getImage("resize_S.gif");
     }
 
     public void setProposalEnabled(final boolean proposalEnabled) {

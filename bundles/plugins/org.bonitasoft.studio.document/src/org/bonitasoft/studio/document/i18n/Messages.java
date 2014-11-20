@@ -76,6 +76,11 @@ public class Messages extends NLS {
     public static String radioButtonMultipleToolTip;
     public static String radioButtonSingle;
 
+    public static String areYouSureMessage;
+
+    public static String documentPropertySectionDescription;
+
+    public static String AddSimple;
 
     static {
         // initialize resource bundle

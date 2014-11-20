@@ -22,10 +22,16 @@ import java.util.List;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionValidator;
 import org.bonitasoft.studio.model.expression.Expression;
+import org.eclipse.core.databinding.ValidationStatusProvider;
+import org.eclipse.core.databinding.observable.list.IObservableList;
+import org.eclipse.core.databinding.observable.list.WritableList;
+import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.transaction.util.TransactionUtil;
 
@@ -34,12 +40,13 @@ import org.eclipse.emf.transaction.util.TransactionUtil;
  * @author Romain Bioteau
  *
  */
-public class ExpressionViewerValidator implements IValidator {
+public class ExpressionViewerValidator extends ValidationStatusProvider implements IValidator {
 
     private final List<IExpressionValidator> validators = new ArrayList<IExpressionValidator>();
     private EObject context;
     private final List<IExpressionValidationListener> listeners = new ArrayList<IExpressionValidationListener>();
     private Expression expression;
+    private WritableValue validationStatus = new WritableValue(Status.OK_STATUS, IStatus.class);
 
     public void addValidator(final IExpressionValidator expressionValidator){
         if(!validators.contains(expressionValidator)){
@@ -53,6 +60,7 @@ public class ExpressionViewerValidator implements IValidator {
     @Override
     public IStatus validate(final Object value) {
         final IStatus iStatus = updateMessage(doValidate(value, getExpression()));
+        validationStatus = new WritableValue(iStatus, IStatus.class);
         fireValidationStatusChanged(iStatus);
         return iStatus;
     }
@@ -145,6 +153,21 @@ public class ExpressionViewerValidator implements IValidator {
         if (listeners.contains(listener)) {
             listeners.remove(listener);
         }
+    }
+
+    @Override
+    public IObservableList getModels() {
+        return new WritableList();
+    }
+
+    @Override
+    public IObservableList getTargets() {
+        return new WritableList();
+    }
+
+    @Override
+    public IObservableValue getValidationStatus() {
+        return validationStatus;
     }
 
 }

@@ -212,7 +212,9 @@ public class ExpressionHelper {
         expr.setContent("");
         expr.setType(ExpressionConstants.CONSTANT_TYPE);
         expr.getReferencedElements().clear();
-        expr.setReturnType(String.class.getName());
+        if (!expr.isReturnTypeFixed() || expr.getReturnType() == null) {
+            expr.setReturnType(String.class.getName());
+        }
     }
 
     public static Expression createEmptyListGroovyScriptExpression() {
