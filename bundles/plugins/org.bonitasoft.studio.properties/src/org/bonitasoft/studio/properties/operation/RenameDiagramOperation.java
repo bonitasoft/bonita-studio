@@ -42,7 +42,7 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
+import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.parts.DiagramDocumentEditor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -100,13 +100,14 @@ public class RenameDiagramOperation implements IRunnableWithProgress {
 
     protected void reopenEditors(final String partName, final DiagramRepositoryStore diagramStore, final List<Form> forms) {
         final DiagramFileStore fStore = diagramStore.getChild(NamingUtils.toDiagramFilename(diagramName, diagramVersion));
+        fStore.save(null);
         IWorkbenchPart partToActivate = fStore.open();
         final MainProcess mainProcess = fStore.getContent();
         for (final Form form : forms) {
             final List<Form> allItemsOfTypeForms = ModelHelper.getAllItemsOfType(mainProcess, FormPackage.Literals.FORM);
             for (final Form f : allItemsOfTypeForms) {
                 if (EcoreUtil.equals(form, f)) {
-                    final DiagramEditor ed = FormsUtils.openDiagram(f, AdapterFactoryEditingDomain.getEditingDomainFor(f));
+                    final DiagramEditor ed = FormsUtils.openDiagram(f, TransactionUtil.getEditingDomain(mainProcess));
                     if (partName.equals(ed.getTitle())) {
                         partToActivate = ed;
                     }
