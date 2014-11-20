@@ -86,7 +86,9 @@
 					<configuration>
 						<strictBinIncludes>false</strictBinIncludes>
 						<strictVersions>false</strictVersions>
-                        <addMavenDescriptor>false</addMavenDescriptor>
+                        <archive>
+                           <addMavenDescriptor>false</addMavenDescriptor>
+                        </archive>
 					</configuration>
 				</plugin>
 				<plugin>
