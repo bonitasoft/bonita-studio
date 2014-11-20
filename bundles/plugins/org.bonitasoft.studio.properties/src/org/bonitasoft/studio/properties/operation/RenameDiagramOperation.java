@@ -132,6 +132,7 @@ public class RenameDiagramOperation implements IRunnableWithProgress {
                 fileStore.delete();
             }
         }
+        diagramFileStore.close();
         diagramFileStore.delete();
     }
 
