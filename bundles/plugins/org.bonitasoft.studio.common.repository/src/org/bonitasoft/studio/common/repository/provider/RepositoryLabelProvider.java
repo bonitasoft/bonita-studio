@@ -31,8 +31,6 @@ public class RepositoryLabelProvider extends StyledCellLabelProvider {
             return ColorConstants.gray;
         }else if (!ProductVersion.sameMinorVersion(repository.getVersion())){
             return ColorConstants.red;
-        } else if (!repository.isOnline()) {
-            return ColorConstants.red;
         }
         return null;
     }

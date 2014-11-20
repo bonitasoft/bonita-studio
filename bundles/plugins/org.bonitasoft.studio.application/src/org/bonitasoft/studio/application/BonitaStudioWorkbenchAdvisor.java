@@ -180,18 +180,17 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
                         Display.getDefault().getActiveShell(),
                         Messages.offlineRepositoryTitle,
                         Messages.bind(Messages.offlineRepositoryMessage, current));
-                resetToDefaultRepository();
-            } else {
-                final String version = repository.getVersion();
-                if (!ProductVersion.sameMinorVersion(version)) {
-                    MessageDialog.openWarning(
-                            Display.getDefault().getActiveShell(),
-                            Messages.badWorkspaceVersionTitle,
-                            Messages.bind(Messages.badWorkspaceVersionMessage, new Object[] { current, version, bonitaStudioModuleName,
-                                    ProductVersion.CURRENT_VERSION, bosProductName }));
-                    resetToDefaultRepository();
-                }
             }
+            final String version = repository.getVersion();
+            if (!ProductVersion.sameMinorVersion(version)) {
+                MessageDialog.openWarning(
+                        Display.getDefault().getActiveShell(),
+                        Messages.badWorkspaceVersionTitle,
+                        Messages.bind(Messages.badWorkspaceVersionMessage, new Object[] { current, version, bonitaStudioModuleName,
+                                ProductVersion.CURRENT_VERSION, bosProductName }));
+                resetToDefaultRepository();
+            }
+
         }
     }
 
