@@ -385,7 +385,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
     private void clearExpression(final String type, final Expression selectedExpression) {
         final EditingDomain editingDomain = getEditingDomain();
         if (editingDomain != null) {
-            final CompoundCommand cc = ExpressionHelper.clearExpression(selectedExpression, type, editingDomain);
+            final CompoundCommand cc = ExpressionHelper.clearExpression(selectedExpression, editingDomain);
             final boolean hasBeenExecuted = executeRemoveOperation(cc);
             if (!hasBeenExecuted) {
                 editingDomain.getCommandStack().execute(cc);
