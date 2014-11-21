@@ -66,6 +66,9 @@ public class Messages extends NLS {
     public static Object openingStudio;
     public static String noProcessAvailable;
 
+    public static String offlineRepositoryTitle;
+    public static String offlineRepositoryMessage;
+
     static {
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);
     }

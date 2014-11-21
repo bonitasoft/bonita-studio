@@ -122,7 +122,7 @@ public class RepositoryManager {
 
 
     public <T> T getRepositoryStore(final Class<T> storeClass) {
-        return storeClass.cast(getCurrentRepository().getRepositoryStore(storeClass));
+        return storeClass.cast(repository.getRepositoryStore(storeClass));
     }
 
     public IRepository getRepository(final String repositoryName) {

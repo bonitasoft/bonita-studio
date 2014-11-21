@@ -37,13 +37,12 @@ import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.properties.i18n.Messages;
 import org.bonitasoft.studio.properties.sections.forms.FormsUtils;
-import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
+import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.parts.DiagramDocumentEditor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -53,7 +52,6 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.commands.ICommandService;
 
 /**
  * @author Romain Bioteau
@@ -65,7 +63,6 @@ public class RenameDiagramOperation implements IRunnableWithProgress {
     private String diagramName;
     private List<ProcessesNameVersion> pools = new ArrayList<ProcessesNameVersion>();
     private DiagramEditor editor;
-    private boolean saveAfterRename = true;
 
     /*
      * (non-Javadoc)
@@ -85,7 +82,7 @@ public class RenameDiagramOperation implements IRunnableWithProgress {
         final String partName = editor.getPartName();
         final DiagramRepositoryStore diagramStore = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
 
-        final List<Form> forms = getFormsToReopen(editor);
+        final List<Form> forms = computeFormsToReopen(editor);
         final DuplicateDiagramOperation operation = new DuplicateDiagramOperation();
         operation.setDiagramToDuplicate(diagram);
         operation.setNewDiagramName(diagramName);
@@ -93,63 +90,53 @@ public class RenameDiagramOperation implements IRunnableWithProgress {
         operation.setPoolsRenamed(pools);
         operation.run(Repository.NULL_PROGRESS_MONITOR);
 
-        if (saveAfterRename) {
-            save();
-        }
-
         if (!(oldName.equals(diagramName) && oldVersion.equals(diagramVersion))) {
             final DiagramFileStore diagramFileStore = diagramStore.getDiagram(oldName, oldVersion);
             diagramFileStore.getOpenedEditor().doSave(Repository.NULL_PROGRESS_MONITOR);
+            cleanOldFileStores(diagramFileStore);
+            reopenEditors(partName, diagramStore, forms);
+        }
+    }
 
-            final List<Pool> allPools = ModelHelper.getAllItemsOfType(diagram, ProcessPackage.Literals.POOL);
-
-            final ApplicationResourceRepositoryStore resourceStore = RepositoryManager.getInstance().getRepositoryStore(
-                    ApplicationResourceRepositoryStore.class);
-            final ProcessConfigurationRepositoryStore confStore = RepositoryManager.getInstance().getRepositoryStore(
-                    ProcessConfigurationRepositoryStore.class);
-            for (final Pool p : allPools) {
-                IRepositoryFileStore fileStore = resourceStore.getChild(ModelHelper.getEObjectID(p));
-                if (fileStore != null) {
-                    fileStore.delete();
-                }
-                fileStore = confStore.getChild(ModelHelper.getEObjectID(p) + "." + ProcessConfigurationRepositoryStore.CONF_EXT);
-                if (fileStore != null) {
-                    fileStore.delete();
-                }
-            }
-            diagramFileStore.delete();
-            final DiagramFileStore fStore = diagramStore.getChild(NamingUtils.toDiagramFilename(diagramName, diagramVersion));
-            IWorkbenchPart partToActivate = fStore.open();
-            final MainProcess mainProcess = fStore.getContent();
-            for (final Form form : forms) {
-                final List<Form> allItemsOfTypeForms = ModelHelper.getAllItemsOfType(mainProcess, FormPackage.Literals.FORM);
-                for (final Form f : allItemsOfTypeForms) {
-                    if (EcoreUtil.equals(form, f)) {
-                        final DiagramEditor ed = FormsUtils.openDiagram(f, AdapterFactoryEditingDomain.getEditingDomainFor(f));
-                        if (partName.equals(ed.getTitle())) {
-                            partToActivate = ed;
-                        }
+    protected void reopenEditors(final String partName, final DiagramRepositoryStore diagramStore, final List<Form> forms) {
+        final DiagramFileStore fStore = diagramStore.getChild(NamingUtils.toDiagramFilename(diagramName, diagramVersion));
+        fStore.save(null);
+        IWorkbenchPart partToActivate = fStore.open();
+        final MainProcess mainProcess = fStore.getContent();
+        for (final Form form : forms) {
+            final List<Form> allItemsOfTypeForms = ModelHelper.getAllItemsOfType(mainProcess, FormPackage.Literals.FORM);
+            for (final Form f : allItemsOfTypeForms) {
+                if (EcoreUtil.equals(form, f)) {
+                    final DiagramEditor ed = FormsUtils.openDiagram(f, TransactionUtil.getEditingDomain(mainProcess));
+                    if (partName.equals(ed.getTitle())) {
+                        partToActivate = ed;
                     }
                 }
             }
-            partToActivate.getSite().getPage().activate(partToActivate);
         }
+        partToActivate.getSite().getPage().activate(partToActivate);
     }
 
+    protected void cleanOldFileStores(final DiagramFileStore diagramFileStore) {
+        final List<Pool> allPools = ModelHelper.getAllItemsOfType(diagram, ProcessPackage.Literals.POOL);
 
-    private void save() throws InvocationTargetException {
-        try {
-            final ICommandService service = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
-            final org.eclipse.core.commands.Command c = service.getCommand("org.eclipse.ui.file.save");
-            if (c.isEnabled()) {
-                c.executeWithChecks(new ExecutionEvent());
+        final ApplicationResourceRepositoryStore resourceStore = RepositoryManager.getInstance().getRepositoryStore(ApplicationResourceRepositoryStore.class);
+        final ProcessConfigurationRepositoryStore confStore = RepositoryManager.getInstance().getRepositoryStore(ProcessConfigurationRepositoryStore.class);
+        for (final Pool p : allPools) {
+            IRepositoryFileStore fileStore = resourceStore.getChild(ModelHelper.getEObjectID(p));
+            if (fileStore != null) {
+                fileStore.delete();
             }
-        } catch (final Exception e) {
-            throw new InvocationTargetException(e);
+            fileStore = confStore.getChild(ModelHelper.getEObjectID(p) + "." + ProcessConfigurationRepositoryStore.CONF_EXT);
+            if (fileStore != null) {
+                fileStore.delete();
+            }
         }
+        diagramFileStore.close();
+        diagramFileStore.delete();
     }
 
-    private List<Form> getFormsToReopen(final DiagramEditor editor) {
+    private List<Form> computeFormsToReopen(final DiagramEditor editor) {
         final List<Form> formsToReopen = new ArrayList<Form>();
         final IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 
@@ -200,8 +187,5 @@ public class RenameDiagramOperation implements IRunnableWithProgress {
         this.editor = editor;
     }
 
-    public void setSaveAfterRename(final boolean saveAfterRename) {
-        this.saveAfterRename = saveAfterRename;
-    }
 
 }

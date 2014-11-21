@@ -23,7 +23,6 @@ import java.util.List;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.gmf.tools.GMFTools;
-import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.model.process.Lane;
@@ -39,7 +38,6 @@ import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditPart;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditor;
 import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
-import org.eclipse.swtbot.swt.finder.waits.ICondition;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -62,7 +60,7 @@ public class ExtractAsSubprocessTest extends SWTBotGefTestCase {
          * @param bot
          * @param size
          */
-        public OneMoreEditor(SWTGefBot bot, int size) {
+        public OneMoreEditor(final SWTGefBot bot, final int size) {
             this.bot = bot;
             this.size = size;
         }
@@ -85,9 +83,9 @@ public class ExtractAsSubprocessTest extends SWTBotGefTestCase {
         }
 
     }
-    
-    private DiagramRepositoryStore store = (DiagramRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
-    
+
+    private final DiagramRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
+
 
     @Override
     @Before
@@ -98,7 +96,7 @@ public class ExtractAsSubprocessTest extends SWTBotGefTestCase {
     @Override
     @After
     public void tearDown() {
-        bot.activeEditor().saveAndClose();
+        bot.saveAllEditors();
         bot.closeAllEditors();
     }
 
@@ -106,17 +104,17 @@ public class ExtractAsSubprocessTest extends SWTBotGefTestCase {
     @Test
     public void testExtractAsSubprocess() throws Exception {
         SWTBotTestUtil.createNewDiagram(bot);
-        SWTBotGefEditor editor1 = bot.gefEditor(bot.activeEditor().getTitle());
-        SWTBotGefEditPart stepPart = editor1.getEditPart("Step1").parent();
-        SWTBotGefEditPart startPart = editor1.getEditPart("Start1").parent();
+        final SWTBotGefEditor editor1 = bot.gefEditor(bot.activeEditor().getTitle());
+        final SWTBotGefEditPart stepPart = editor1.getEditPart("Step1").parent();
+        final SWTBotGefEditPart startPart = editor1.getEditPart("Start1").parent();
         editor1.select(stepPart, startPart);
         final SWTBotGefEditPart poolPart = stepPart.parent(/*Compartment*/).parent().parent().parent();
         editor1.clickContextMenu("Extract subprocess");
         editor1.select(poolPart);
-        Pool pool = (Pool) ((IGraphicalEditPart)poolPart.part()).resolveSemanticElement();
+        final Pool pool = (Pool) ((IGraphicalEditPart)poolPart.part()).resolveSemanticElement();
         assertEquals("Not same number of nodes in main as expected", 1, pool.getElements().size());
         assertEquals("Not same number of transitions in main as expected", 0, pool.getConnections().size());
-        Pool subprocessPool = (Pool) ((MainProcess)pool.eContainer()).getElements().get(1);
+        final Pool subprocessPool = (Pool) ((MainProcess)pool.eContainer()).getElements().get(1);
         assertEquals("Not same number of nodes as expected", 2, subprocessPool.getElements().size());
         assertEquals("Not same number of transitions as expected", 1, subprocessPool.getConnections().size());
     }
@@ -126,20 +124,20 @@ public class ExtractAsSubprocessTest extends SWTBotGefTestCase {
     public void testExtractAsSubprocessFromLane() throws Exception {
         // Test Bug 3100
         SWTBotTestUtil.createNewDiagram(bot);
-        SWTBotGefEditor editor1 = bot.gefEditor(bot.activeEditor().getTitle());
+        final SWTBotGefEditor editor1 = bot.gefEditor(bot.activeEditor().getTitle());
         editor1.activateTool("Lane");
         editor1.click(100, 100);
-        SWTBotGefEditPart stepPart = editor1.getEditPart("Step1").parent();
-        SWTBotGefEditPart startPart = editor1.getEditPart("Start1").parent();
+        final SWTBotGefEditPart stepPart = editor1.getEditPart("Step1").parent();
+        final SWTBotGefEditPart startPart = editor1.getEditPart("Start1").parent();
         editor1.select(stepPart, startPart);
         final SWTBotGefEditPart lanePart = stepPart.parent(/*Compartment*/).parent();
         editor1.clickContextMenu("Extract subprocess");
         editor1.select(lanePart);
-        Lane lane = (Lane) ((IGraphicalEditPart)lanePart.part()).resolveSemanticElement();
-        Pool pool = (Pool) lane.eContainer();
+        final Lane lane = (Lane) ((IGraphicalEditPart)lanePart.part()).resolveSemanticElement();
+        final Pool pool = (Pool) lane.eContainer();
         assertEquals("Not same number of nodes in main as expected", 1, lane.getElements().size());
         assertEquals("Not same number of transitions in main as expected", 0, pool.getConnections().size());
-        Pool subprocessPool = (Pool) ((MainProcess)pool.eContainer()).getElements().get(1);
+        final Pool subprocessPool = (Pool) ((MainProcess)pool.eContainer()).getElements().get(1);
         assertEquals("Not same number of nodes as expected", 2, subprocessPool.getElements().size());
         assertEquals("Not same number of transitions as expected", 1, subprocessPool.getConnections().size());
     }
@@ -148,10 +146,10 @@ public class ExtractAsSubprocessTest extends SWTBotGefTestCase {
     public void testAddMissingConnectionsAndBoundaries() throws Exception {
         importProcess();
 
-        SWTBotGefEditor editor1 = bot.gefEditor(bot.activeEditor().getTitle());
-        IGraphicalEditPart step1Part = (IGraphicalEditPart) editor1.getEditPart("Step1").parent().part();
-        IGraphicalEditPart step2Part = (IGraphicalEditPart) editor1.getEditPart("Step2").parent().part();
-        List<IGraphicalEditPart> list = new ArrayList<IGraphicalEditPart>();
+        final SWTBotGefEditor editor1 = bot.gefEditor(bot.activeEditor().getTitle());
+        final IGraphicalEditPart step1Part = (IGraphicalEditPart) editor1.getEditPart("Step1").parent().part();
+        final IGraphicalEditPart step2Part = (IGraphicalEditPart) editor1.getEditPart("Step2").parent().part();
+        final List<IGraphicalEditPart> list = new ArrayList<IGraphicalEditPart>();
         list.add(step2Part);
         list.add(step1Part);
         assertEquals("Util method does not work", 5, GMFTools.addMissingConnectionsAndBoundaries(list).size());
@@ -163,10 +161,12 @@ public class ExtractAsSubprocessTest extends SWTBotGefTestCase {
         // Test bug 3102
         importProcess();
 
-        SWTBotGefEditor editor1 = bot.gefEditor(bot.activeEditor().getTitle());
-        SWTBotGefEditPart step1Part = editor1.getEditPart("Step1").parent();
-        SWTBotGefEditPart step2Part = editor1.getEditPart("Step2").parent();
-        SWTBotGefEditPart error1Part = editor1.getEditPart("Error1").parent();
+        final String title = bot.activeEditor().getTitle();
+        System.out.println(title);
+        final SWTBotGefEditor editor1 = bot.gefEditor(title);
+        final SWTBotGefEditPart step1Part = editor1.getEditPart("Step1").parent();
+        final SWTBotGefEditPart step2Part = editor1.getEditPart("Step2").parent();
+        final SWTBotGefEditPart error1Part = editor1.getEditPart("Error1").parent();
         editor1.select(step1Part, step2Part, error1Part);
         final SWTBotGefEditPart poolPart = step1Part.parent().parent();
         bot.sleep(100);
@@ -175,17 +175,17 @@ public class ExtractAsSubprocessTest extends SWTBotGefTestCase {
         final Lane lane = (Lane) ((IGraphicalEditPart)poolPart.part()).resolveSemanticElement();
         //use a waitUntil in order to wait UI operation to finish
         bot.waitUntil(new DefaultCondition() {
-			
+
 			public boolean test() throws Exception {
 				return 2 == lane.getElements().size();
 			}
-			
+
 			public String getFailureMessage() {
 				return "Not same number of nodes in main as expected";
 			}
 		});
         assertEquals("Not same number of transitions in main as expected", 1, ((Pool)lane.eContainer()).getConnections().size());
-        Pool subprocessPool = (Pool) ModelHelper.getMainProcess(lane).getElements().get(1);
+        final Pool subprocessPool = (Pool) ModelHelper.getMainProcess(lane).getElements().get(1);
         assertEquals("Not same number of nodes as expected", 2, subprocessPool.getElements().size());
         assertEquals("Not same number of transitions as expected", 2, subprocessPool.getConnections().size());
     }
@@ -195,9 +195,9 @@ public class ExtractAsSubprocessTest extends SWTBotGefTestCase {
         // Test bug 3102, selecting only the 2 steps, and not the boundary
         importProcess();
 
-        SWTBotGefEditor editor1 = bot.gefEditor(bot.activeEditor().getTitle());
-        SWTBotGefEditPart step1Part = editor1.getEditPart("Step1").parent();
-        SWTBotGefEditPart step2Part = editor1.getEditPart("Step2").parent();
+        final SWTBotGefEditor editor1 = bot.gefEditor(bot.activeEditor().getTitle());
+        final SWTBotGefEditPart step1Part = editor1.getEditPart("Step1").parent();
+        final SWTBotGefEditPart step2Part = editor1.getEditPart("Step2").parent();
         editor1.select(step1Part, step2Part);
         final SWTBotGefEditPart poolPart = step1Part.parent().parent();
         bot.sleep(100);
@@ -207,17 +207,17 @@ public class ExtractAsSubprocessTest extends SWTBotGefTestCase {
 
         //use a waitUntil in order to wait UI operation to finish
         bot.waitUntil(new DefaultCondition() {
-			
+
 			public boolean test() throws Exception {
 				return 2 == lane.getElements().size();
 			}
-			
+
 			public String getFailureMessage() {
 				return "Not same number of nodes in main as expected";
 			}
 		});
         assertEquals("Not same number of transitions in main as expected", 1,((Pool)lane.eContainer()).getConnections().size());
-        Pool subprocessPool = (Pool) ModelHelper.getMainProcess(lane).getElements().get(1);
+        final Pool subprocessPool = (Pool) ModelHelper.getMainProcess(lane).getElements().get(1);
         assertEquals("Not same number of nodes as expected", 2, subprocessPool.getElements().size());
         assertEquals("Not same number of transitions as expected", 2, subprocessPool.getConnections().size());
     }
@@ -226,7 +226,6 @@ public class ExtractAsSubprocessTest extends SWTBotGefTestCase {
      * @throws IOException
      */
     public void importProcess() throws IOException {
-        ICondition newEditorCond = new OneMoreEditor(bot, bot.editors().size());
         SWTBotTestUtil.importProcessWIthPathFromClass(bot, "BoundaryProcess_1_0.bos", "Bonita 6.x", "BoundaryProcess", this.getClass(), false);
         bot.waitUntil(new EditorOpenCondition(store.getChild("BoundaryProcess-1.0.proc").getResource()));
         bot.waitUntil(Conditions.shellIsActive("Bonita BPM"));//to avoid Progress information dialog

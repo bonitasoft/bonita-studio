@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -66,6 +67,7 @@ import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.observable.Realm;
+import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.IValueChangeListener;
 import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
@@ -164,7 +166,6 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
     private final Map<Integer, String> messages = new HashMap<Integer, String>();
     protected ToolBar toolbar;
     private final List<IExpressionToolbarContribution> toolbarContributions = new ArrayList<IExpressionToolbarContribution>();
-    private final Map<String, IExpressionValidator> validatorsForType = new HashMap<String, IExpressionValidator>();
     protected boolean isPassword;
     private DefaultToolTip textTooltip;
     private IExpressionProposalLabelProvider expressionProposalLableProvider;
@@ -340,41 +341,53 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 
             @Override
             public void handleEvent(final Event event) {
-                final Expression selectedExpression = getSelectedExpression();
-                String type = selectedExpression.getType();
-                if (ExpressionConstants.SCRIPT_TYPE.equals(type)) {
-                    if (!MessageDialog.openConfirm(Display.getDefault().getActiveShell(), Messages.cleanExpressionTitle,
-                            Messages.cleanExpressionMsg)) {
-                        return;
-                    }
-                }
-                if (!ExpressionConstants.CONDITION_TYPE.equals(type)) {
-                    type = ExpressionConstants.CONSTANT_TYPE;
-                }
-                clearExpression(type);
-
-                textControl.setText("");
-                validate();
-                refresh();
+                erase(getSelectedExpression());
             }
 
-            private void clearExpression(final String type) {
-                final EditingDomain editingDomain = getEditingDomain();
-                if (editingDomain != null) {
-
-                    final CompoundCommand cc = ExpressionHelper.clearExpression(getSelectedExpression(), type, editingDomain);
-                    final boolean hasBeenExecuted = executeRemoveOperation(cc);
-                    if (!hasBeenExecuted) {
-                        editingDomain.getCommandStack().execute(cc);
-                    }
-                } else {
-                    ExpressionHelper.clearExpression(getSelectedExpression());
-                }
-            }
         });
 
         eraseControl.addDisposeListener(disposeListener);
         return eraseControl;
+    }
+
+    protected void erase(final Expression selectedExpression) {
+        String type = selectedExpression.getType();
+        if (ExpressionConstants.SCRIPT_TYPE.equals(type)) {
+            if (!MessageDialog.openConfirm(Display.getDefault().getActiveShell(), Messages.cleanExpressionTitle,
+                    Messages.cleanExpressionMsg)) {
+                return;
+            }
+        }
+        if (!ExpressionConstants.CONDITION_TYPE.equals(type)) {
+            type = ExpressionConstants.CONSTANT_TYPE;
+        }
+        clearExpression(type, selectedExpression);
+        validate();
+        refresh();
+    }
+
+    protected void validateExternalDatabindingContextTargets(final DataBindingContext dbc) {
+        if (dbc != null) {
+            final IObservableList bindings = dbc.getBindings();
+            final Iterator iterator = bindings.iterator();
+            while (iterator.hasNext()) {
+                final Binding binding = (Binding) iterator.next();
+                binding.validateTargetToModel();
+            }
+        }
+    }
+
+    private void clearExpression(final String type, final Expression selectedExpression) {
+        final EditingDomain editingDomain = getEditingDomain();
+        if (editingDomain != null) {
+            final CompoundCommand cc = ExpressionHelper.clearExpression(selectedExpression, editingDomain);
+            final boolean hasBeenExecuted = executeRemoveOperation(cc);
+            if (!hasBeenExecuted) {
+                editingDomain.getCommandStack().execute(cc);
+            }
+        } else {
+            ExpressionHelper.clearExpression(selectedExpression);
+        }
     }
 
     public void setExpressionProposalLableProvider(final IExpressionProposalLabelProvider expressionProposalLableProvider) {
@@ -454,7 +467,6 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
                                 newExpression.getType()));
                 editingDomain.getCommandStack().execute(cc);
             }
-
             refresh();
             fireExpressionEditorChanged(new SelectionChangedEvent(this, new StructuredSelection(selectedExpression)));
         }
@@ -735,6 +747,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
         bindEditableText(typeObservable);
         if (externalDataBindingContext != null) {
             externalDataBindingContext.addBinding(expressionBinding);
+            externalDataBindingContext.addValidationStatusProvider(expressionViewerValidator);
         }
     }
 
@@ -1209,6 +1222,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
         if (selectedExpression != null) {
             expressionViewerValidator.validate(selectedExpression.getName());
         }
+        validateExternalDatabindingContextTargets(externalDataBindingContext);
     }
 
 

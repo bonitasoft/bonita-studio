@@ -18,8 +18,8 @@
 package org.bonitasoft.studio.common.properties;
 
 import org.bonitasoft.studio.common.Messages;
-import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.model.form.Form;
+import org.bonitasoft.studio.model.form.Group;
 import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.MainProcess;
@@ -49,7 +49,7 @@ import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 
 /**
  * @author Aurelien Pupier
- * 
+ *
  */
 @SuppressWarnings("restriction")
 public abstract class AbstractNamePropertySectionContribution implements IExtensibleGridPropertySectionContribution {
@@ -62,8 +62,8 @@ public abstract class AbstractNamePropertySectionContribution implements IExtens
     protected EMFDataBindingContext context ;
 
 
-    public AbstractNamePropertySectionContribution(TabbedPropertySheetPage tabbedPropertySheetPage,
-            ExtensibleGridPropertySection extensibleGridPropertySection) {
+    public AbstractNamePropertySectionContribution(final TabbedPropertySheetPage tabbedPropertySheetPage,
+            final ExtensibleGridPropertySection extensibleGridPropertySection) {
         this.tabbedPropertySheetPage = tabbedPropertySheetPage;
     }
 
@@ -72,19 +72,19 @@ public abstract class AbstractNamePropertySectionContribution implements IExtens
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @seeorg.bonitasoft.studio.properties.sections.general.
      * IExtenstibleGridPropertySectionContribution
      * #isRelevantFor(org.eclipse.emf.ecore.EObject)
      */
     @Override
-    public boolean isRelevantFor(EObject eObject) {
+    public boolean isRelevantFor(final EObject eObject) {
         return eObject instanceof Element && !(eObject instanceof MessageFlow) && !(eObject instanceof TextAnnotation);
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @seeorg.bonitasoft.studio.common.properties.
      * IExtensibleGridPropertySectionContribution#refresh()
      */
@@ -96,13 +96,13 @@ public abstract class AbstractNamePropertySectionContribution implements IExtens
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @seeorg.bonitasoft.studio.common.properties.
      * IExtensibleGridPropertySectionContribution
      * #setEditingDomain(org.eclipse.emf.transaction.TransactionalEditingDomain)
      */
     @Override
-    public void setEditingDomain(TransactionalEditingDomain editingDomain) {
+    public void setEditingDomain(final TransactionalEditingDomain editingDomain) {
         this.editingDomain = editingDomain;
 
     }
@@ -112,10 +112,10 @@ public abstract class AbstractNamePropertySectionContribution implements IExtens
      */
     protected void updatePropertyTabTitle() {
         if(text != null){
-            TabbedPropertyComposite tabbedPropertyComposite = (TabbedPropertyComposite) tabbedPropertySheetPage.getControl();
-            TabbedPropertyTitle title = tabbedPropertyComposite.getTitle();
+            final TabbedPropertyComposite tabbedPropertyComposite = (TabbedPropertyComposite) tabbedPropertySheetPage.getControl();
+            final TabbedPropertyTitle title = tabbedPropertyComposite.getTitle();
             if(title != null){
-                Image image = tabbedPropertySheetPage.getTitleImage(selection);
+                final Image image = tabbedPropertySheetPage.getTitleImage(selection);
                 title.setTitle(text.getText(), image);
             }
         }
@@ -124,24 +124,24 @@ public abstract class AbstractNamePropertySectionContribution implements IExtens
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @seeorg.bonitasoft.studio.properties.sections.general.
      * IExtenstibleGridPropertySectionContribution
      * #createControl(org.eclipse.swt.widgets.Composite,
      * org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory)
      */
     @Override
-    public void createControl(final Composite composite, TabbedPropertySheetWidgetFactory widgetFactory,
+    public void createControl(final Composite composite, final TabbedPropertySheetWidgetFactory widgetFactory,
             final ExtensibleGridPropertySection page) {
 
         context = new EMFDataBindingContext();
 
         composite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-        GridLayout rl = new GridLayout(3, false);
+        final GridLayout rl = new GridLayout(3, false);
         composite.setLayout(rl);
 
         text = widgetFactory.createText(composite, "", SWT.BORDER); //$NON-NLS-1$
-        GridData rd = new GridData(SWT.NONE, SWT.CENTER, false, false);
+        final GridData rd = new GridData(SWT.NONE, SWT.CENTER, false, false);
         rd.widthHint = 250;
 
         rd.grabExcessVerticalSpace = true;
@@ -153,10 +153,10 @@ public abstract class AbstractNamePropertySectionContribution implements IExtens
         if (!(element instanceof SequenceFlow)) {
 
             if(useEditButton()){
-                Button editDiagramNameButton =  widgetFactory.createButton(composite, Messages.edit, SWT.FLAT) ;
+                final Button editDiagramNameButton =  widgetFactory.createButton(composite, Messages.edit, SWT.FLAT) ;
                 editDiagramNameButton.addSelectionListener(new SelectionAdapter() {
                     @Override
-                    public void widgetSelected(SelectionEvent e) {
+                    public void widgetSelected(final SelectionEvent e) {
                         editProcessNameAndVersion() ;
                         //   text.setText(element.getName()) ;
                         // composite.layout(true, true) ;
@@ -170,13 +170,25 @@ public abstract class AbstractNamePropertySectionContribution implements IExtens
     }
 
     private boolean useEditButton() {
-      //  return element instanceof MainProcess || element instanceof Pool|| (element instanceof Widget && element.eContainer() instanceof Form && ModelHelper.formIsCustomized((Form) element.eContainer()));
-    	return element instanceof MainProcess || element instanceof Pool|| (element instanceof Widget && element.eContainer() instanceof Form) ;
+        //  return element instanceof MainProcess || element instanceof Pool|| (element instanceof Widget && element.eContainer() instanceof Form && ModelHelper.formIsCustomized((Form) element.eContainer()));
+        return element instanceof MainProcess || element instanceof Pool || (element instanceof Widget && isContainerIsAFormOrAGroup(element.eContainer()));
     }
-    
+
 
     protected void editProcessNameAndVersion() {
         //TO IMPLEMENT IN SUBCLASS
+    }
+
+    protected boolean isContainerIsAFormOrAGroup(final EObject element) {
+        if (element != null && element instanceof Group) {
+            return isContainerIsAFormOrAGroup(element.eContainer());
+        } else {
+            if (element != null && element instanceof Form) {
+                return true;
+            } else {
+                return false;
+            }
+        }
     }
 
 

@@ -21,6 +21,7 @@ import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -29,40 +30,46 @@ import org.eclipse.emf.transaction.TransactionalEditingDomain;
 
 public class BonitaEditingDomainUtil {
 
+    private static final String BASE_ID = "org.bonitasoft.studio.diagram.EditingDomain";
+
 	private static final class ModificationAdapter implements Adapter {
 		private final NotificationFilter notifactionFilter;
 		private Notifier target;
 
-		private ModificationAdapter(NotificationFilter notifactionFilter) {
+		private ModificationAdapter(final NotificationFilter notifactionFilter) {
 			this.notifactionFilter = notifactionFilter;
 		}
 
-		public void notifyChanged(Notification notification) {
+		@Override
+        public void notifyChanged(final Notification notification) {
 			if (notifactionFilter.matches(notification)) {
-				Object value = notification.getNewValue();
+				final Object value = notification.getNewValue();
 				if (value instanceof Resource) {
 					((Resource) value).setTrackingModification(true);
 				}
 			}
 		}
 
-		public void setTarget(Notifier newTarget) {
+		@Override
+        public void setTarget(final Notifier newTarget) {
 			target = newTarget;
 		}
 
-		public boolean isAdapterForType(Object type) {
+		@Override
+        public boolean isAdapterForType(final Object type) {
 			return type == ModificationAdapter.class;
 		}
 
-		public Notifier getTarget() {
+		@Override
+        public Notifier getTarget() {
 			return target;
 		}
 
 	}
 
-	private static void addResourceTracking(TransactionalEditingDomain editingDomain) {
-		EList<Adapter> adapters = editingDomain.getResourceSet().eAdapters();
-		Adapter adapter = EcoreUtil.getAdapter(adapters, ModificationAdapter.class);
+	private static void addResourceTracking(final TransactionalEditingDomain editingDomain) {
+		final EList<Adapter> adapters = editingDomain.getResourceSet().eAdapters();
+		final Adapter adapter = EcoreUtil.getAdapter(adapters, ModificationAdapter.class);
 		if (adapter == null) {
 			final NotificationFilter diagramResourceModifiedFilter = NotificationFilter.createNotifierFilter(editingDomain.getResourceSet())
 					.and(NotificationFilter.createEventTypeFilter(Notification.ADD))
@@ -71,11 +78,21 @@ public class BonitaEditingDomainUtil {
 		}
 	}
 
-	public static TransactionalEditingDomain getSharedEditingDomain(String id) {
-		TransactionalEditingDomain editingDomain = BonitaEditingDomainRegistry.INSTANCE.getEditingDomain(id);
+	public static TransactionalEditingDomain getSharedEditingDomain(final String id) {
+		final TransactionalEditingDomain editingDomain = BonitaEditingDomainRegistry.INSTANCE.getEditingDomain(id);
 		addResourceTracking(editingDomain);
 		BonitaResourceSetInfoDelegate.adapt(editingDomain);
 		return editingDomain;
 	}
+
+    public static TransactionalEditingDomain getSharedEditingDomain(final URI uri) {
+        org.eclipse.core.runtime.Assert.isLegal(uri != null);
+        final String filename = URI.decode(uri.lastSegment());
+        return getSharedEditingDomain(BASE_ID + "." + filename);
+    }
+
+    public static void cleanEditingDomainRegistry() {
+        BonitaEditingDomainRegistry.INSTANCE.removeAll();
+    }
 
 }

@@ -19,6 +19,7 @@ package org.bonitasoft.studio.diagram.custom;
 
 
 import org.bonitasoft.studio.model.process.Element;
+import org.bonitasoft.studio.model.process.TextAnnotation;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessVisualIDRegistry;
 import org.bonitasoft.studio.model.process.diagram.providers.ProcessElementTypes;
 import org.eclipse.core.runtime.IAdaptable;
@@ -35,29 +36,34 @@ import org.eclipse.swt.graphics.Image;
  */
 public class ProcessElementLabelProvider extends LabelProvider {
 
-	public String getText(Object element) {
+	@Override
+    public String getText(Object element) {
 		element = unwrap(element);
 		if(((IGraphicalEditPart)element).resolveSemanticElement() instanceof Element){
-			Element item = (Element) ((IGraphicalEditPart)element).resolveSemanticElement();
-			return (item.getName() != null ? item.getName() : "");
+			final Element item = (Element) ((IGraphicalEditPart)element).resolveSemanticElement();
+            if (item instanceof TextAnnotation) {
+                return null;
+            }
+			return item.getName() != null ? item.getName() : "";
 		}else{
 			return "";
 		}
 	}
 
-	public Image getImage(Object element) {
-		IElementType etype = getElementType(getView(unwrap(element)));
+	@Override
+    public Image getImage(final Object element) {
+		final IElementType etype = getElementType(getView(unwrap(element)));
 		return etype == null ? null : ProcessElementTypes.getImage(etype);
 	}
 
-	private Object unwrap(Object element) {
+	private Object unwrap(final Object element) {
 		if (element instanceof IStructuredSelection) {
 			return ((IStructuredSelection) element).getFirstElement();
 		}
 		return element;
 	}
 
-	private View getView(Object element) {
+	private View getView(final Object element) {
 		if (element instanceof View) {
 			return (View) element;
 		}
@@ -70,8 +76,8 @@ public class ProcessElementLabelProvider extends LabelProvider {
 	private IElementType getElementType(View view) {
 		// For intermediate views climb up the containment hierarchy to find the one associated with an element type.
 		while (view != null) {
-			int vid = ProcessVisualIDRegistry.getVisualID(view);
-			IElementType etype = ProcessElementTypes.getElementType(vid);
+			final int vid = ProcessVisualIDRegistry.getVisualID(view);
+			final IElementType etype = ProcessElementTypes.getElementType(vid);
 			if (etype != null) {
 				return etype;
 			}

@@ -51,7 +51,7 @@ public interface IRepository extends IFileStoreChangeListener {
 
     void close() ;
 
-    IRepositoryStore<? extends IRepositoryFileStore> getRepositoryStore(Class<?> repositoryStoreClass) ;
+    <T> T getRepositoryStore(final Class<T> repositoryStoreClass);
 
     List<IRepositoryStore<? extends IRepositoryFileStore>> getAllStores() ;
 
@@ -63,11 +63,11 @@ public interface IRepository extends IFileStoreChangeListener {
 
     List<IRepositoryStore<? extends IRepositoryFileStore>> getAllExportableStores();
 
-    String getDispslayName();
+    String getDisplayName();
 
     Image getIcon() ;
 
-    void importFromArchive(File archiveFile, boolean askOverwrite);
+    void importFromArchive(File archiveFile, boolean askOverwrite, boolean validateAfterImport);
 
     void exportToArchive(String file);
 
@@ -93,4 +93,6 @@ public interface IRepository extends IFileStoreChangeListener {
     void create();
 
     void updateStudioShellText();
+
+    boolean isOnline();
 }

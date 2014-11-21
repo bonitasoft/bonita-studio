@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2009 BonitaSoft S.A.
- * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2009-2014 BonitaSoft S.A.
+ * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -110,7 +110,7 @@ public class NameGridPropertySectionContribution extends AbstractNamePropertySec
     public NameGridPropertySectionContribution(final TabbedPropertySheetPage tabbedPropertySheetPage,
             final ExtensibleGridPropertySection extensibleGridPropertySection) {
         super(tabbedPropertySheetPage, extensibleGridPropertySection);
-        diagramStore = (DiagramRepositoryStore) RepositoryManager.getInstance().getCurrentRepository().getRepositoryStore(DiagramRepositoryStore.class);
+        diagramStore = RepositoryManager.getInstance().getCurrentRepository().getRepositoryStore(DiagramRepositoryStore.class);
     }
 
     protected void updateEvents(final Element element) {
@@ -199,7 +199,6 @@ public class NameGridPropertySectionContribution extends AbstractNamePropertySec
                 text.setSelection(start);
             }
         }
-
     }
 
     /*
@@ -248,65 +247,79 @@ public class NameGridPropertySectionContribution extends AbstractNamePropertySec
     @Override
     protected void editProcessNameAndVersion() {
         if (element instanceof Pool) {
-            final MainProcess diagram = ModelHelper.getMainProcess(element);
-            final OpenNameAndVersionDialog dialog1 = new OpenNameAndVersionDialog(Display.getDefault().getActiveShell(), diagram, element.getName(),
-                    ((Pool) element).getVersion(), diagramStore);
-            if (dialog1.open() == Dialog.OK) {
-                final String oldPoolName = element.getName();
-                final String newPoolName = dialog1.getDiagramName();
-                final String oldVersion = ((Pool) element).getVersion();
-                final String newVersion = dialog1.getDiagramVersion();
-                processNamingTools.proceedForPools(element, newPoolName, oldPoolName, oldVersion, newVersion);
-            }
-
+            editSinglePoolNameAndVersion();
         } else {
-            final MainProcess diagram = ModelHelper.getMainProcess(element);
-            final OpenNameAndVersionForDiagramDialog nameDialog = new OpenNameAndVersionForDiagramDialog(Display.getDefault().getActiveShell(), diagram,
-                    diagramStore);
-            if (nameDialog.open() == Dialog.OK) {
-                final DiagramEditor editor = (DiagramEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
-                final MainProcess newProcess = (MainProcess) editor.getDiagramEditPart().resolveSemanticElement();
-                editingDomain.getCommandStack().execute(
-                        SetCommand.create(editingDomain, newProcess, ProcessPackage.Literals.ABSTRACT_PROCESS__AUTHOR,
-                                System.getProperty("user.name", "Unknown")));
+            editDiagramAndPoolNameAndVersion();
+        }
+    }
 
-                final String oldName = newProcess.getName();
-                final String oldVersion = newProcess.getVersion();
-                if (oldName.equals(nameDialog.getDiagramName()) && oldVersion.equals(nameDialog.getDiagramVersion())) {
-                    editor.doSave(Repository.NULL_PROGRESS_MONITOR);
-                    processNamingTools.changeProcessNameAndVersion(newProcess, nameDialog.getDiagramName(), nameDialog.getDiagramVersion());
-                    for (final ProcessesNameVersion pnv : nameDialog.getPools()) {
-                        processNamingTools.changeProcessNameAndVersion(pnv.getAbstractProcess(), pnv.getNewName(), pnv.getNewVersion());
-                    }
-                    try {
-                        final ICommandService service = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
-                        final org.eclipse.core.commands.Command c = service.getCommand("org.eclipse.ui.file.save");
-                        if (c.isEnabled()) {
-                            c.executeWithChecks(new ExecutionEvent());
-                        }
-                    } catch (final Exception e) {
-                        BonitaStudioLog.error(e);
-                    }
-                } else {
-                    final RenameDiagramOperation renameDiagramOperation = new RenameDiagramOperation();
-                    renameDiagramOperation.setDiagramToDuplicate(newProcess);
-                    renameDiagramOperation.setNewDiagramName(nameDialog.getDiagramName());
-                    renameDiagramOperation.setNewDiagramVersion(nameDialog.getDiagramVersion());
-                    renameDiagramOperation.setPoolsRenamed(nameDialog.getPools());
-                    renameDiagramOperation.setEditor(editor);
-                    renameDiagramOperation.setSaveAfterRename(false);
-                    final IProgressService service = PlatformUI.getWorkbench().getProgressService();
-                    try {
-                        service.run(false, false, renameDiagramOperation);
-                    } catch (final InvocationTargetException e) {
-                        BonitaStudioLog.error(e);
-                    } catch (final InterruptedException e) {
-                        BonitaStudioLog.error(e);
-                    }
-                }
+
+    protected void editDiagramAndPoolNameAndVersion() {
+        final MainProcess diagram = ModelHelper.getMainProcess(element);
+        final OpenNameAndVersionForDiagramDialog nameDialog = new OpenNameAndVersionForDiagramDialog(Display.getDefault().getActiveShell(), diagram,
+                diagramStore);
+        if (nameDialog.open() == Dialog.OK) {
+            final DiagramEditor editor = (DiagramEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+            final MainProcess newProcess = (MainProcess) editor.getDiagramEditPart().resolveSemanticElement();
+            editingDomain.getCommandStack().execute(
+                    SetCommand.create(editingDomain, newProcess, ProcessPackage.Literals.ABSTRACT_PROCESS__AUTHOR,
+                            System.getProperty("user.name", "Unknown")));
+
+            final String oldName = newProcess.getName();
+            final String oldVersion = newProcess.getVersion();
+            if (oldName.equals(nameDialog.getDiagramName()) && oldVersion.equals(nameDialog.getDiagramVersion())) {
+                renamePoolsOnly(nameDialog, editor, newProcess);
+            } else {
+                renameDiagramAndPool(nameDialog, editor, newProcess);
             }
         }
     }
 
+    protected void renameDiagramAndPool(final OpenNameAndVersionForDiagramDialog nameDialog, final DiagramEditor editor, final MainProcess newProcess) {
+        final RenameDiagramOperation renameDiagramOperation = new RenameDiagramOperation();
+        renameDiagramOperation.setDiagramToDuplicate(newProcess);
+        renameDiagramOperation.setNewDiagramName(nameDialog.getDiagramName());
+        renameDiagramOperation.setNewDiagramVersion(nameDialog.getDiagramVersion());
+        renameDiagramOperation.setPoolsRenamed(nameDialog.getPools());
+        renameDiagramOperation.setEditor(editor);
+        final IProgressService service = PlatformUI.getWorkbench().getProgressService();
+        try {
+            service.run(false, false, renameDiagramOperation);
+        } catch (final InvocationTargetException e) {
+            BonitaStudioLog.error(e);
+        } catch (final InterruptedException e) {
+            BonitaStudioLog.error(e);
+        }
+    }
+
+    protected void editSinglePoolNameAndVersion() {
+        final MainProcess diagram = ModelHelper.getMainProcess(element);
+        final OpenNameAndVersionDialog dialog1 = new OpenNameAndVersionDialog(Display.getDefault().getActiveShell(), diagram, element.getName(),
+                ((Pool) element).getVersion(), diagramStore);
+        if (dialog1.open() == Dialog.OK) {
+            final String oldPoolName = element.getName();
+            final String newPoolName = dialog1.getDiagramName();
+            final String oldVersion = ((Pool) element).getVersion();
+            final String newVersion = dialog1.getDiagramVersion();
+            processNamingTools.proceedForPools(element, newPoolName, oldPoolName, oldVersion, newVersion);
+        }
+    }
+
+    protected void renamePoolsOnly(final OpenNameAndVersionForDiagramDialog nameDialog, final DiagramEditor editor, final MainProcess newProcess) {
+        editor.doSave(Repository.NULL_PROGRESS_MONITOR);
+        processNamingTools.changeProcessNameAndVersion(newProcess, nameDialog.getDiagramName(), nameDialog.getDiagramVersion());
+        for (final ProcessesNameVersion pnv : nameDialog.getPools()) {
+            processNamingTools.changeProcessNameAndVersion(pnv.getAbstractProcess(), pnv.getNewName(), pnv.getNewVersion());
+        }
+        try {
+            final ICommandService service = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
+            final org.eclipse.core.commands.Command c = service.getCommand("org.eclipse.ui.file.save");
+            if (c.isEnabled()) {
+                c.executeWithChecks(new ExecutionEvent());
+            }
+        } catch (final Exception e) {
+            BonitaStudioLog.error(e);
+        }
+    }
 
 }

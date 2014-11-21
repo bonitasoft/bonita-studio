@@ -102,17 +102,17 @@ public class GridLayer extends AbstractGridLayer {
     protected MouseMotionListener mmlForMinus = new MouseMotionListener.Stub(){
 
         @Override
-        public void mouseEntered(MouseEvent me) {
+        public void mouseEntered(final MouseEvent me) {
             if(me.getSource() instanceof ImageFigure){
-                ImageFigure f = (ImageFigure) me.getSource();
+                final ImageFigure f = (ImageFigure) me.getSource();
                 f.setImage(imageMinusBlack);
             }
         };
 
         @Override
-        public void mouseExited(MouseEvent me) {
+        public void mouseExited(final MouseEvent me) {
             if(me.getSource() instanceof ImageFigure){
-                ImageFigure f = (ImageFigure) me.getSource();
+                final ImageFigure f = (ImageFigure) me.getSource();
                 f.setImage(imageMinusGrey);
             }
 
@@ -123,17 +123,17 @@ public class GridLayer extends AbstractGridLayer {
     protected MouseMotionListener mmlForPlus = new MouseMotionListener.Stub(){
 
         @Override
-        public void mouseEntered(MouseEvent me) {
+        public void mouseEntered(final MouseEvent me) {
             if(me.getSource() instanceof ImageFigure){
-                ImageFigure f = (ImageFigure) me.getSource();
+                final ImageFigure f = (ImageFigure) me.getSource();
                 f.setImage(imagePlusBlack);
             }
         };
 
         @Override
-        public void mouseExited(MouseEvent me) {
+        public void mouseExited(final MouseEvent me) {
             if(me.getSource() instanceof ImageFigure){
-                ImageFigure f = (ImageFigure) me.getSource();
+                final ImageFigure f = (ImageFigure) me.getSource();
                 f.setImage(imagePlusGrey);
             }
 
@@ -145,10 +145,10 @@ public class GridLayer extends AbstractGridLayer {
     /**
      * Constructs a new GridFigure with grid drawing enabled and default grid
      * color.
-     * 
+     *
      * @param formEditPart
      */
-    public GridLayer(FormEditPart formEditPart) {
+    public GridLayer(final FormEditPart formEditPart) {
         this.formEditPart = formEditPart;
         setBorder(new MarginBorder(margin, margin, margin, margin));
         setOpaque(false);
@@ -176,14 +176,14 @@ public class GridLayer extends AbstractGridLayer {
     }
 
     private void clearRowBorder() {
-        for (IFigure fig : removeRows) {
+        for (final IFigure fig : removeRows) {
             if (fig != null) {
                 fig.getParent().remove(fig);
                 fig.erase();
             }
         }
         removeRows.clear();
-        for (IFigure fig : insertRows) {
+        for (final IFigure fig : insertRows) {
             if (fig != null) {
                 fig.getParent().remove(fig);
                 fig.erase();
@@ -194,14 +194,14 @@ public class GridLayer extends AbstractGridLayer {
     }
 
     private void clearColumnBorder() {
-        for (IFigure fig : removeColumns) {
+        for (final IFigure fig : removeColumns) {
             if (fig != null) {
                 fig.getParent().remove(fig);
                 fig.erase();
             }
         }
         removeColumns.clear();
-        for (IFigure fig : insertColumns) {
+        for (final IFigure fig : insertColumns) {
             if (fig != null) {
                 fig.getParent().remove(fig);
                 fig.erase();
@@ -214,12 +214,12 @@ public class GridLayer extends AbstractGridLayer {
      * @param index
      * @return
      */
-    protected Set<GraphicalEditPart> getEditPartsInRow(int index) {
-        Set<GraphicalEditPart> res = new HashSet<GraphicalEditPart>();
-        for (Object part : formEditPart.getChildren()) {
+    protected Set<GraphicalEditPart> getEditPartsInRow(final int index) {
+        final Set<GraphicalEditPart> res = new HashSet<GraphicalEditPart>();
+        for (final Object part : formEditPart.getChildren()) {
             if (part instanceof GraphicalEditPart) {
                 if (((GraphicalEditPart) part).resolveSemanticElement() instanceof Widget) {
-                    Widget widget = (Widget) ((GraphicalEditPart) part).resolveSemanticElement();
+                    final Widget widget = (Widget) ((GraphicalEditPart) part).resolveSemanticElement();
                     if (widget.getWidgetLayoutInfo().getLine() == index) {
                         res.add((GraphicalEditPart) part);
                     }
@@ -232,7 +232,7 @@ public class GridLayer extends AbstractGridLayer {
 
 
     /**
-     * 
+     *
      */
     private void drawColumnFigure() {
         removeColumns.clear();
@@ -251,7 +251,7 @@ public class GridLayer extends AbstractGridLayer {
     }
 
     /**
-     * 
+     *
      */
     private void drawRowsFigure() {
         removeRows.clear();
@@ -270,12 +270,12 @@ public class GridLayer extends AbstractGridLayer {
         createInsertRow(getNumLine());
     }
 
-    public Set<GraphicalEditPart> getEditPartsInColumn(int columnIndex) {
-        Set<GraphicalEditPart> res = new HashSet<GraphicalEditPart>();
-        for (Object part : formEditPart.getChildren()) {
+    public Set<GraphicalEditPart> getEditPartsInColumn(final int columnIndex) {
+        final Set<GraphicalEditPart> res = new HashSet<GraphicalEditPart>();
+        for (final Object part : formEditPart.getChildren()) {
             if (part instanceof GraphicalEditPart) {
                 if (((GraphicalEditPart) part).resolveSemanticElement() instanceof Widget) {
-                    Widget widget = (Widget) ((GraphicalEditPart) part).resolveSemanticElement();
+                    final Widget widget = (Widget) ((GraphicalEditPart) part).resolveSemanticElement();
                     if (widget.getWidgetLayoutInfo().getColumn() == columnIndex) {
                         res.add((GraphicalEditPart) part);
                     }
@@ -292,10 +292,10 @@ public class GridLayer extends AbstractGridLayer {
      */
     private void createInsertRow(final int index) {
 
-        ImageFigure figure = new ImageFigure(imagePlusGrey);
+        final ImageFigure figure = new ImageFigure(imagePlusGrey);
         figure.addMouseMotionListener(mmlForPlus);
         commonAllFigure(figure, index);
-        Point location = new Point(margin - 25, margin + index * getGridLayout().getSizeY() - 8);
+        final Point location = new Point(margin - 25, margin + index * getGridLayout().getSizeY() - 8);
         figure.setLocation(location);
         figure.setToolTip(insertRowTooltipFigure);
         insertRows.add(figure);
@@ -303,12 +303,12 @@ public class GridLayer extends AbstractGridLayer {
         figure.addMouseListener(new MouseListener.Stub() {
 
             @Override
-            public void mousePressed(MouseEvent me) {
+            public void mousePressed(final MouseEvent me) {
                 addRow(index);
             }
 
-            private void addRow(int index) {
-                IUndoableOperation command = new AddRowCommand(formEditPart, index);
+            private void addRow(final int index) {
+                final IUndoableOperation command = new AddRowCommand(formEditPart, index);
                 commandToExecuteWhenMousePressed(command);
             }
         });
@@ -319,25 +319,25 @@ public class GridLayer extends AbstractGridLayer {
      * @return
      */
     private void createInsertColumn(final int index) {
-        ImageFigure figure = new ImageFigure(imagePlusGrey);
+        final ImageFigure figure = new ImageFigure(imagePlusGrey);
         figure.addMouseMotionListener(mmlForPlus);
         commonAllFigure(figure, index);
-        Point location = new Point(margin + index * getGridLayout().getSizeX() - 8, margin - 25);
+        final Point location = new Point(margin + index * getGridLayout().getSizeX() - 8, margin - 25);
         figure.setLocation(location);
         figure.setToolTip(insertColumnTooltipFigure);
         insertColumns.add(figure);
         figure.addMouseListener(new MouseListener.Stub() {
 
             @Override
-            public void mousePressed(MouseEvent me) {
-                IUndoableOperation command = new AddColumnCommand(formEditPart, index);
+            public void mousePressed(final MouseEvent me) {
+                final IUndoableOperation command = new AddColumnCommand(formEditPart, index);
                 commandToExecuteWhenMousePressed(command);
             }
         });
 
     }
 
-    private void commonAllFigure(ImageFigure figure, int index) {
+    private void commonAllFigure(final ImageFigure figure, final int index) {
         figure.setSize(16, 16);
         getParent().add(figure);
     }
@@ -347,24 +347,24 @@ public class GridLayer extends AbstractGridLayer {
      * @return
      */
     private void createRemoveRow(final int index) {
-        ImageFigure figure = new ImageFigure(imageMinusGrey);
+        final ImageFigure figure = new ImageFigure(imageMinusGrey);
         figure.addMouseMotionListener(mmlForMinus);
         commonAllFigure(figure, index);
-        Point location = new Point(margin - 25, margin + index * getGridLayout().getSizeY() + getGridLayout().getSizeY() / 2 - 8);
+        final Point location = new Point(margin - 25, margin + index * getGridLayout().getSizeY() + getGridLayout().getSizeY() / 2 - 8);
         figure.setLocation(location);
         figure.setToolTip(removeRowTooltipFigure);
         removeRows.add(figure);
         figure.addMouseListener(new MouseListener.Stub() {
 
             @Override
-            public void mousePressed(MouseEvent me) {
-                IUndoableOperation command = createRemoveRowCommand(index);
+            public void mousePressed(final MouseEvent me) {
+                final IUndoableOperation command = createRemoveRowCommand(index);
                 commandToExecuteWhenMousePressed(command);
             }
         });
     }
 
-    protected IUndoableOperation createRemoveRowCommand(int index) {
+    protected IUndoableOperation createRemoveRowCommand(final int index) {
         return new RemoveRowCommand(formEditPart, index);
     }
 
@@ -375,10 +375,10 @@ public class GridLayer extends AbstractGridLayer {
      * @return
      */
     private void createRemoveColumn(final int index) {
-        ImageFigure figure = new ImageFigure(imageMinusGrey);
+        final ImageFigure figure = new ImageFigure(imageMinusGrey);
         figure.addMouseMotionListener(mmlForMinus);
         commonAllFigure(figure, index);
-        Point location = new Point(margin + index * getGridLayout().getSizeX() + getGridLayout().getSizeX() / 2 - 8,
+        final Point location = new Point(margin + index * getGridLayout().getSizeX() + getGridLayout().getSizeX() / 2 - 8,
                 margin - 25);
         figure.setLocation(location);
         figure.setToolTip(removeColumnTooltipFigure);
@@ -386,14 +386,14 @@ public class GridLayer extends AbstractGridLayer {
         figure.addMouseListener(new MouseListener.Stub() {
 
             @Override
-            public void mousePressed(MouseEvent me) {
-                IUndoableOperation command = createRemoveColumnCommand(index);
+            public void mousePressed(final MouseEvent me) {
+                final IUndoableOperation command = createRemoveColumnCommand(index);
                 commandToExecuteWhenMousePressed(command);
             }
         });
     }
 
-    protected IUndoableOperation createRemoveColumnCommand(int index) {
+    protected IUndoableOperation createRemoveColumnCommand(final int index) {
         return new RemoveColumnCommand(formEditPart, index);
     }
 
@@ -414,14 +414,14 @@ public class GridLayer extends AbstractGridLayer {
 
     /**
      * Set the numColumn in the model and repaint
-     * 
+     *
      * @param numColumn
      *            the numColumn to set
      */
     @Override
-    public void setNumColumn(int numColumn) {
+    public void setNumColumn(final int numColumn) {
         /* update the value in the model */
-        Form form = (Form) formEditPart.resolveSemanticElement();
+        final Form form = (Form) formEditPart.resolveSemanticElement();
         formEditPart.getEditingDomain().getCommandStack().execute(
                 new SetCommand(formEditPart.getEditingDomain(), form, FormPackage.eINSTANCE.getForm_NColumn(), numColumn));
         repaint();
@@ -431,27 +431,27 @@ public class GridLayer extends AbstractGridLayer {
     /**
      * Execute IUndoableOperation and repaint.
      * */
-    protected void commandToExecuteWhenMousePressed(IUndoableOperation operation){
+    protected void commandToExecuteWhenMousePressed(final IUndoableOperation operation){
         try {
             OperationHistoryFactory.getOperationHistory().execute(operation, null, null);
-        } catch (ExecutionException e) {
+        } catch (final ExecutionException e) {
             BonitaStudioLog.error(e);
         }
         revalidate();
         repaint();
     }
 
-    protected void goToForm(int n, EStructuralFeature feature){
-        Form actualForm = (Form) formEditPart.resolveSemanticElement();
+    protected void goToForm(final int n, final EStructuralFeature feature){
+        final Form actualForm = (Form) formEditPart.resolveSemanticElement();
         final PageFlow pageFlow = (PageFlow) actualForm.eContainer();
-        Form formToOpen = (Form) ((List<?>) pageFlow.eGet(feature)).get(n);
+        final Form formToOpen = (Form) ((List<?>) pageFlow.eGet(feature)).get(n);
         /* get the Diagram element related to the form to open */
-        Diagram diag = ModelHelper.getDiagramFor(formToOpen,null);
-        IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-        IEditorPart editor = page.getActiveEditor();
+        final Diagram diag = ModelHelper.getDiagramFor(formToOpen);
+        final IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+        final IEditorPart editor = page.getActiveEditor();
         if(editor instanceof FormDiagramEditor){
             /*Close the actual form editor*/
-            URI uri = EcoreUtil.getURI(diag);
+            final URI uri = EcoreUtil.getURI(diag);
             EditorService.getInstance().openEditor(new URIEditorInput(uri, formToOpen.getName()));
 
             page.closeEditor(editor, false);
@@ -459,7 +459,7 @@ public class GridLayer extends AbstractGridLayer {
     }
 
     @Override
-    protected void paintFigure(Graphics graphics) {
+    protected void paintFigure(final Graphics graphics) {
         super.paintFigure(graphics);
         if(isDrawGrid()){
             /*update border*/
@@ -476,8 +476,8 @@ public class GridLayer extends AbstractGridLayer {
      * Draw if needed arrow to go to adjacent forms.
      * @param graphics
      */
-    protected void goToPreviousOrNextPage(Graphics graphics) {
-        Form form = (Form) formEditPart.resolveSemanticElement();
+    protected void goToPreviousOrNextPage(final Graphics graphics) {
+        final Form form = (Form) formEditPart.resolveSemanticElement();
         final EStructuralFeature feature;
         if(form instanceof ViewForm){
             if(form.eContainer() != null && form.eContainingFeature().equals(ProcessPackage.Literals.RECAP_FLOW__RECAP_FORMS)){
@@ -500,12 +500,12 @@ public class GridLayer extends AbstractGridLayer {
         if(index > 0 && previousFormFigure.getBounds().width == 0){
 
             previousFormFigure.setLocation(this.getClientArea().getTopLeft().translate(-40, -50));
-            Dimension dim = previousFormFigure.getTextUtilities().getStringExtents(Messages.labelPreviousForm, graphics.getFont());
+            final Dimension dim = previousFormFigure.getTextUtilities().getStringExtents(Messages.labelPreviousForm, graphics.getFont());
             previousFormFigure.setSize(dim.expand(20, 0));
             previousFormFigure.setIcon(Pics.getImage(PicsConstants.arrowLeft));
             previousFormFigure.addMouseListener(new MouseListener.Stub(){
                 @Override
-                public void mousePressed(MouseEvent me) {
+                public void mousePressed(final MouseEvent me) {
                     goToForm(index-1,feature);
                     me.consume();
                 }
@@ -515,15 +515,15 @@ public class GridLayer extends AbstractGridLayer {
         /*go next if form is not the last in the index*/
         //TODO : find a better condition to avoid to redraw always
         if(index < ((List<?>) pageFlow.eGet(feature)).size()-1 && nextFormFigure.getBounds().width == 0){
-            Dimension dimOfPrevious = previousFormFigure.getTextUtilities().getStringExtents(Messages.labelPreviousForm, graphics.getFont());
+            final Dimension dimOfPrevious = previousFormFigure.getTextUtilities().getStringExtents(Messages.labelPreviousForm, graphics.getFont());
             nextFormFigure.setLocation(this.getClientArea().getTopLeft().translate(dimOfPrevious.width-10, -50));
-            Dimension dim = nextFormFigure.getTextUtilities().getStringExtents(Messages.labelNextForm, graphics.getFont());
+            final Dimension dim = nextFormFigure.getTextUtilities().getStringExtents(Messages.labelNextForm, graphics.getFont());
             nextFormFigure.setSize(dim.expand(20, 0));
             nextFormFigure.setIcon(Pics.getImage(PicsConstants.arrowRight));
             nextFormFigure.setTextPlacement(PositionConstants.WEST);
             nextFormFigure.addMouseListener(new MouseListener.Stub(){
                 @Override
-                public void mousePressed(MouseEvent me) {
+                public void mousePressed(final MouseEvent me) {
                     goToForm(index+1,feature);
                     me.consume();
                 }

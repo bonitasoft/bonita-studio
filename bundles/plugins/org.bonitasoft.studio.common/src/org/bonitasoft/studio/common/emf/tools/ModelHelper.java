@@ -18,7 +18,6 @@
 
 package org.bonitasoft.studio.common.emf.tools;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -85,7 +84,6 @@ import org.bonitasoft.studio.model.simulation.SimulationData;
 import org.bonitasoft.studio.model.simulation.SimulationDataContainer;
 import org.bonitasoft.studio.model.simulation.SimulationTransition;
 import org.eclipse.draw2d.geometry.Point;
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
@@ -93,8 +91,10 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.eclipse.emf.edit.domain.EditingDomain;
+import org.eclipse.emf.transaction.RunnableWithResult;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.gmf.runtime.notation.Diagram;
 
 /**
@@ -1002,7 +1002,7 @@ public class ModelHelper {
     private static boolean isElementIsReferencedInScript(final Expression expr, final EObject element) {
         if (!expr.getReferencedElements().isEmpty()) {
             for (final EObject o : expr.getReferencedElements()) {
-                if (element instanceof Element && o instanceof Element && ((Element) element).getName().equals(((Element) o).getName())) {
+                if (element instanceof Element && o instanceof Element && isSameElement(element, o)) {
                     return true && !isAExpressionReferencedElement(expr);
                 } else {
                     if (element instanceof Parameter && o instanceof Parameter && ((Parameter) element).getName().equals(((Parameter) o).getName())) {
@@ -1400,42 +1400,52 @@ public class ModelHelper {
      * @param form
      * @return the diagram corresponding to the form.
      */
+    public static Diagram getDiagramFor(final EObject element, final Resource resource) {
+        if (element == null) {
+            return null;
+        }
+        if (!resource.isLoaded()) {
+            throw new IllegalStateException("EMF Resource is not loaded.");
+        }
+
+        final RunnableWithResult<Diagram> runnableWithResult = new DiagramForElementRunnable(resource, element);
+        final TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(resource);
+        if (editingDomain != null) {
+            try {
+                editingDomain.runExclusive(runnableWithResult);
+            } catch (final InterruptedException e) {
+                BonitaStudioLog.error(e);
+            }
+        } else {
+            runnableWithResult.run();
+        }
+        return runnableWithResult.getResult();
+    }
+
+    public static Diagram getDiagramFor(final EObject element) {
+        if (element != null && element.eResource() != null) {
+            return getDiagramFor(element, TransactionUtil.getEditingDomain(element.eResource()));
+        }
+        return null;
+    }
+
     public static Diagram getDiagramFor(final EObject element, EditingDomain domain) {
         if (element == null) {
             return null;
         }
-        Diagram diag = null;
-        Resource r = null;
+        Resource resource = null;
         if (domain == null) {
-            domain = AdapterFactoryEditingDomain.getEditingDomainFor(element);
+            domain = TransactionUtil.getEditingDomain(element);
             if (domain != null) {
-                r = domain.getResourceSet().getResource(element.eResource().getURI(), false);
+                resource = domain.getResourceSet().getResource(element.eResource().getURI(), true);
             } else {
-                r = element.eResource();
+                resource = element.eResource();
             }
 
         } else {
-            r = domain.getResourceSet().getResource(element.eResource().getURI(), false);
+            resource = domain.getResourceSet().getResource(element.eResource().getURI(), true);
         }
-
-        if (!r.isLoaded()) {
-            try {
-                r.load(Collections.EMPTY_MAP);
-            } catch (final IOException e) {
-                BonitaStudioLog.error(e);
-            }
-        }
-        final EList<EObject> resources = r.getContents();
-        for (final EObject eObject : resources) {
-            if (eObject instanceof Diagram) {
-                final EObject diagramElement = ((Diagram) eObject).getElement();
-                if (diagramElement != null && diagramElement.equals(element)) {
-                    diag = (Diagram) eObject;
-                    break;
-                }
-            }
-        }
-        return diag;
+        return getDiagramFor(element, resource);
     }
 
     public static Widget getWidgetById(final Form form, final String id) {
@@ -1999,7 +2009,7 @@ public class ModelHelper {
     }
 
 
-    public static boolean isObjectIsReferencedInExpression(final Expression expr, final Object elementToDisplay){
+    public static boolean isObjectIsReferencedInExpression(final Expression expr, final Object elementToDisplay) {
         for (final EObject referencedElement:expr.getReferencedElements()){
             if (referencedElement instanceof Parameter && elementToDisplay instanceof Parameter && ((Parameter)referencedElement).getName().equals(((Parameter)elementToDisplay).getName())){
                 return true;
@@ -2009,11 +2019,87 @@ public class ModelHelper {
                 return true;
             }
 
-            if (referencedElement instanceof Element && elementToDisplay instanceof Element && ((Element)referencedElement).getName().equals(((Element)elementToDisplay).getName())){
+            if (referencedElement instanceof Element && elementToDisplay instanceof Element && isSameElement((Element) elementToDisplay, referencedElement)) {
                 return true;
             }
         }
         return false;
+    }
+
+    protected static EObject getReferencedDataInActivity(final Data refData) {
+        EObject container = refData.eContainer();
+        while (container != null && !(container instanceof Activity)) {
+            container = container.eContainer();
+        }
+        if (container != null) {
+            if (getDataOnActivity(refData, container) != null) {
+                return container;
+            }
+        }
+        return null;
+    }
+
+    protected static EObject getReferencedDataInPool(final Data refData) {
+        EObject container = refData.eContainer();
+        while (container != null && !(container instanceof Pool)) {
+            container = container.eContainer();
+        }
+        if (container != null) {
+            if (getDataOnPool(refData, container) != null) {
+                return container;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * @param refData
+     * @param container
+     */
+    protected static Data getDataOnActivity(final Data refData, final EObject container) {
+        final List<Data> datas = ((Activity) container).getData();
+        for (final Data data : datas) {
+            if (data.getName().equals(refData.getName())) {
+                return data;
+            }
+        }
+        return null;
+    }
+
+    protected static Data getDataOnPool(final Data refData, final EObject container) {
+        final List<Data> datas = ((Pool) container).getData();
+        for (final Data data : datas) {
+            if (data.getName().equals(refData.getName())) {
+                return data;
+            }
+        }
+        return null;
+    }
+
+    protected static boolean isSameContainer(final EObject referencedElement, final EObject container) {
+        if (referencedElement instanceof Data) {
+            final Activity stepContainer = (Activity) getReferencedDataInActivity((Data) referencedElement);
+            if (stepContainer!=null){
+                return stepContainer.equals(container);
+            }
+            final Pool poolContainer = (Pool) getReferencedDataInPool((Data) referencedElement);
+            if (poolContainer != null) {
+                return poolContainer.equals(container);
+            }
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * @param elementToDisplay
+     * @param referencedElement
+     * @return
+     */
+    protected static boolean isSameElement(final EObject elementToDisplay, final EObject referencedElement) {
+
+        return ((Element) referencedElement).getName().equals(((Element) elementToDisplay).getName())
+                && isSameContainer(referencedElement, elementToDisplay.eContainer());
     }
 
 }

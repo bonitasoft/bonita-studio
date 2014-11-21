@@ -257,6 +257,11 @@ public class Repository implements IRepository {
         try {
             BonitaStudioLog.debug("Closing repository " + project.getName(), CommonRepositoryPlugin.PLUGIN_ID);
             if (project.isOpen()) {
+                if (stores != null) {
+                    for (final IRepositoryStore<? extends IRepositoryFileStore> store : stores.values()) {
+                        store.close();
+                    }
+                }
                 project.close(NULL_PROGRESS_MONITOR);
             }
         } catch (final CoreException e) {
@@ -523,7 +528,7 @@ public class Repository implements IRepository {
         if (!projectManifest.exists()) {
             projectManifest.create(is2, false, null);
         } else {
-            projectManifest.setContents(is2, IResource.NONE, null);
+            projectManifest.setContents(is2, IResource.FORCE, null);
         }
     }
 
@@ -597,12 +602,12 @@ public class Repository implements IRepository {
     }
 
     @Override
-    public IRepositoryStore<? extends IRepositoryFileStore> getRepositoryStore(final Class<?> repositoryStoreClass) {
+    public <T> T getRepositoryStore(final Class<T> repositoryStoreClass) {
         if (stores == null || stores.isEmpty()) {
             initRepositoryStores(false);
             enableBuild();
         }
-        return stores.get(repositoryStoreClass);
+        return repositoryStoreClass.cast(stores.get(repositoryStoreClass));
     }
 
     @SuppressWarnings("restriction")
@@ -664,7 +669,7 @@ public class Repository implements IRepository {
     }
 
     @Override
-    public String getDispslayName() {
+    public String getDisplayName() {
         return getName() + " [" + getVersion() + "]";
     }
 
@@ -678,10 +683,10 @@ public class Repository implements IRepository {
     }
 
     @Override
-    public void importFromArchive(final File archiveFile, final boolean askOverwrite) {
+    public void importFromArchive(final File archiveFile, final boolean askOverwrite, final boolean validateAfterImport) {
         final boolean disableConfirmation = FileActionDialog.getDisablePopup();
         FileActionDialog.setDisablePopup(!askOverwrite);
-        final ImportBosArchiveOperation operation = new ImportBosArchiveOperation();
+        final ImportBosArchiveOperation operation = new ImportBosArchiveOperation(validateAfterImport);
         operation.setArchiveFile(archiveFile.getAbsolutePath());
         operation.setCurrentRepository(RepositoryManager.getInstance().getCurrentRepository());
         operation.run(NULL_PROGRESS_MONITOR);
@@ -697,7 +702,21 @@ public class Repository implements IRepository {
             allResources.add(store.getResource());
         }
         operation.setResources(allResources);
-        operation.run(NULL_PROGRESS_MONITOR);
+        final IStatus status = operation.run(NULL_PROGRESS_MONITOR);
+        if (!status.isOK()) {
+            logErrorStatus(status);
+        }
+    }
+
+    protected void logErrorStatus(final IStatus status) {
+        final StringBuilder sb = new StringBuilder();
+        if (status.isMultiStatus()) {
+            for (final IStatus childStatus : status.getChildren()) {
+                sb.append(childStatus.getMessage()).append("\n");
+            }
+
+        }
+        BonitaStudioLog.error("Export to archive failed.\n" + status.getMessage() + "\n" + sb.toString(), CommonRepositoryPlugin.PLUGIN_ID);
     }
 
     @Override
@@ -858,6 +877,11 @@ public class Repository implements IRepository {
         if (monitor != null && subtask != null) {
             monitor.subTask(subtask);
         }
+    }
+
+    @Override
+    public boolean isOnline() {
+        return true;
     }
 
 }
