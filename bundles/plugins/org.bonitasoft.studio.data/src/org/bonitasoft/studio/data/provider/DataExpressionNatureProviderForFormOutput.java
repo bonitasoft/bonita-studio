@@ -1,7 +1,7 @@
 /**
  * Copyright (C) 2012 BonitaSoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -17,17 +17,12 @@
  */
 package org.bonitasoft.studio.data.provider;
 
-import java.util.List;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
-import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.expression.editor.ExpressionEditorService;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionNatureProvider;
 import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.model.form.Form;
-import org.bonitasoft.studio.model.process.Data;
-import org.bonitasoft.studio.model.process.PageFlow;
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -35,30 +30,21 @@ import org.eclipse.emf.ecore.EObject;
  * /!\ not declared in extension points, we don't want it in the list, it is only used in Operation output
  *
  */
-public class DataExpressionNatureProviderForFormOutput extends DataExpressionProvider implements IExpressionNatureProvider {
+public class DataExpressionNatureProviderForFormOutput implements IExpressionNatureProvider {
 
-	private EObject context;
+    private final DataExpressionProviderForOutput dataExpressionProvider;
 
-	protected List<Data> getDataInForm(Form form, final EObject formContainer) {
-		return ModelHelper.getAccessibleDataInFormsWithNoRestriction((PageFlow) formContainer, form.eContainmentFeature());
-	}
+    public DataExpressionNatureProviderForFormOutput(final DataExpressionProviderForOutput dataExpressionProvider) {
+        this.dataExpressionProvider = dataExpressionProvider;
+    }
 
-	@Override
-	public Expression[] getExpressions() {
-		final Set<Expression> expressions = getExpressions(context);
+    @Override
+    public Expression[] getExpressions(final EObject context) {
+        final Set<Expression> expressions = dataExpressionProvider.getExpressions(context);
 		expressions.addAll(ExpressionEditorService.getInstance().getExpressionProvider(ExpressionConstants.DOCUMENT_REF_TYPE).getExpressions(context));
 		return expressions.toArray(new Expression[expressions.size()]);
 	}
 
-	@Override
-	public void setContext(EObject context) {
-		this.context = context;
-		
-	}
 
-	@Override
-	public EObject getContext() {
-		return context;
-	}
-	
+
 }

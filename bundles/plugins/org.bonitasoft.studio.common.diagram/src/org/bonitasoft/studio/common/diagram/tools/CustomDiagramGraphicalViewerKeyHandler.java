@@ -1,17 +1,17 @@
 /**
  * Copyright (C) 2013 BonitaSoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -29,8 +29,7 @@ import org.bonitasoft.studio.common.dialog.OutlineDialog;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.model.form.Widget;
-import org.eclipse.emf.common.command.CompoundCommand;
-import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
+import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.gef.GraphicalViewer;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.parts.DiagramGraphicalViewerKeyHandler;
@@ -44,39 +43,37 @@ import org.eclipse.ui.progress.IProgressService;
 
 /**
  * @author aurelie Zara
- * 
+ *
  */
 @SuppressWarnings("restriction")
 public class CustomDiagramGraphicalViewerKeyHandler extends
         DiagramGraphicalViewerKeyHandler {
 
-    public CustomDiagramGraphicalViewerKeyHandler(GraphicalViewer viewer) {
+    public CustomDiagramGraphicalViewerKeyHandler(final GraphicalViewer viewer) {
         super(viewer);
     }
 
     @Override
-    public boolean keyPressed(KeyEvent event) {
+    public boolean keyPressed(final KeyEvent event) {
         if (event.keyCode == 127) {
-            GraphicalEditPart part = (GraphicalEditPart) getFocusEditPart();
-            Widget widget = (Widget) part.resolveSemanticElement();
-            String[] buttonList = { IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL };
-            List<Object> widgetSelected = new ArrayList<Object>();
+            final GraphicalEditPart part = (GraphicalEditPart) getFocusEditPart();
+            final Widget widget = (Widget) part.resolveSemanticElement();
+            final String[] buttonList = { IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL };
+            final List<Object> widgetSelected = new ArrayList<Object>();
             widgetSelected.add(widget);
-            OutlineDialog dialog = new OutlineDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), removalConfirmationDialogTitle,
+            final OutlineDialog dialog = new OutlineDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), removalConfirmationDialogTitle,
                     Display.getCurrent().getSystemImage(SWT.ICON_WARNING), Messages.bind(Messages.askConfirmationForDeleting, widget.getName()),
                     MessageDialog.CONFIRM, buttonList, 1, widgetSelected);
-            int ok = 0;
-            RemoveWidgetReferencesOperation op = new RemoveWidgetReferencesOperation(ModelHelper.getPageFlow(widget), widget);
+            final int ok = 0;
+            final RemoveWidgetReferencesOperation op = new RemoveWidgetReferencesOperation(ModelHelper.getPageFlow(widget), widget);
             if (ok == dialog.open()) {
-                CompoundCommand cc = new CompoundCommand();
-                op.setCompoundCommand(cc);
-                op.setEditingDomain(AdapterFactoryEditingDomain.getEditingDomainFor(widget));
-                IProgressService service = PlatformUI.getWorkbench().getProgressService();
+                op.setEditingDomain(TransactionUtil.getEditingDomain(widget));
+                final IProgressService service = PlatformUI.getWorkbench().getProgressService();
                 try {
                     service.busyCursorWhile(op);
-                } catch (InvocationTargetException e) {
+                } catch (final InvocationTargetException e) {
                     BonitaStudioLog.error(e);
-                } catch (InterruptedException e) {
+                } catch (final InterruptedException e) {
                     BonitaStudioLog.error(e);
                 }
                 if (!op.canExecute()) {

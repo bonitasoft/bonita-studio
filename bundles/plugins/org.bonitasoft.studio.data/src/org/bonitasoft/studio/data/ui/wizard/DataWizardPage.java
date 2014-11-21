@@ -681,7 +681,7 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
     }
 
     protected void bindDefaultValueViewer() {
-        defaultValueViewer.setExpressionNatureProvider(new ExpressionContentProvider());
+        defaultValueViewer.setExpressionNatureProvider(ExpressionContentProvider.getInstance());
         defaultValueViewer.setExample("");
         final DataType dataType = data.getDataType();
         if (dataType instanceof DateType) {

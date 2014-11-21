@@ -39,18 +39,18 @@ public class CatchMessageEventNamesExpressionNatureProvider implements IExpressi
 
 
 	@Override
-	public Expression[] getExpressions() {
-		List<Expression> result = new ArrayList<Expression>();
+    public Expression[] getExpressions(final EObject context) {
+		final List<Expression> result = new ArrayList<Expression>();
 		if(processes != null && !processes.isEmpty()){
 			final Set<String> names = new HashSet<String>();
-			for(AbstractProcess process : processes){
-				for(AbstractCatchMessageEvent catchMessage :  ModelHelper.getAllCatchEvent(process)){
+			for(final AbstractProcess process : processes){
+				for(final AbstractCatchMessageEvent catchMessage :  ModelHelper.getAllCatchEvent(process)){
 					if(!names.contains(catchMessage.getName()) && (catchMessage.getIncomingMessag() == null || catchMessage.getIncomingMessag().getSource().equals(throwMessage))){
 						names.add(catchMessage.getName());
 					}
 				}
-				for(String pName : names){
-					Expression exp = ExpressionFactory.eINSTANCE.createExpression();
+				for(final String pName : names){
+					final Expression exp = ExpressionFactory.eINSTANCE.createExpression();
 					exp.setName(pName);
 					exp.setContent(pName);
 					exp.setReturnType(String.class.getName());
@@ -63,23 +63,14 @@ public class CatchMessageEventNamesExpressionNatureProvider implements IExpressi
 		return result.toArray(new Expression[result.size()]);
 	}
 
-	public void setFoundProcesses(List<AbstractProcess> processes){
+	public void setFoundProcesses(final List<AbstractProcess> processes){
 		this.processes = processes;
 	}
-	
 
-	@Override
-	public void setContext(final EObject context) {
 
-	}
-
-	public void setThrowMessage(ThrowMessageEvent throwMessage){
+	public void setThrowMessage(final ThrowMessageEvent throwMessage){
 		this.throwMessage = throwMessage;
 	}
-	
-	@Override
-	public AbstractProcess getContext() {
-		return null;
-	}
+
 
 }

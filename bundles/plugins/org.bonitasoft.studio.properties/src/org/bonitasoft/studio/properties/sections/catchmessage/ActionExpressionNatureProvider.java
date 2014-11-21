@@ -1,7 +1,7 @@
 /**
  * Copyright (C) 2009-2012 BonitaSoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -26,6 +26,7 @@ import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ListExpression;
 import org.bonitasoft.studio.model.expression.TableExpression;
 import org.bonitasoft.studio.model.process.AbstractCatchMessageEvent;
+import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.Message;
 import org.eclipse.emf.ecore.EObject;
 
@@ -35,49 +36,32 @@ import org.eclipse.emf.ecore.EObject;
  */
 public class ActionExpressionNatureProvider implements IExpressionNatureProvider {
 
-    private AbstractCatchMessageEvent catchMessageEvent;
-
-
 
     @Override
-    public Expression[] getExpressions() {
-        String event = catchMessageEvent.getEvent();
-        TableExpression throwMessageContent=null;
-        Set<Expression> messageContentIds=null;
-        if(event != null){
-            final Message message = ModelHelper.findEvent(catchMessageEvent, event);
-            if(message != null){
-                throwMessageContent = message.getMessageContent();
-                messageContentIds = new HashSet<Expression>();
-                for (int i=0;i<throwMessageContent.getExpressions().size();i++){
-                    ListExpression row = throwMessageContent.getExpressions().get(i);
-                    Expression id = row.getExpressions().get(0);
-                    if (id!=null && id.getName()!=null){
-                        messageContentIds.add(id);
+    public Expression[] getExpressions(final EObject context) {
+        if (context instanceof AbstractCatchMessageEvent) {
+            final String event = ((AbstractCatchMessageEvent) context).getEvent();
+            TableExpression throwMessageContent = null;
+            Set<Expression> messageContentIds = null;
+            if (event != null) {
+                final Message message = ModelHelper.findEvent((Element) context, event);
+                if (message != null) {
+                    throwMessageContent = message.getMessageContent();
+                    messageContentIds = new HashSet<Expression>();
+                    for (int i = 0; i < throwMessageContent.getExpressions().size(); i++) {
+                        final ListExpression row = throwMessageContent.getExpressions().get(i);
+                        final Expression id = row.getExpressions().get(0);
+                        if (id != null && id.getName() != null) {
+                            messageContentIds.add(id);
+                        }
                     }
                 }
             }
+            if (messageContentIds != null) {
+                return messageContentIds.toArray(new Expression[messageContentIds.size()]);
+            }
         }
-        if (messageContentIds !=null){
-            return messageContentIds.toArray(new Expression[messageContentIds.size()]);
-        }else{
-            return null;
-        }
-    }
-
-
-
-    @Override
-    public void setContext(EObject context) {
-        if (context instanceof AbstractCatchMessageEvent) {
-            catchMessageEvent =(AbstractCatchMessageEvent)context;
-        }
-    }
-
-    @Override
-    public EObject getContext() {
-        // TODO Auto-generated method stub
-        return catchMessageEvent;
+        return null;
     }
 
 

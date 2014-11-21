@@ -176,7 +176,7 @@ public class ConnectorConfRepositoryStore extends AbstractEMFRepositoryStore<Def
             final Resource r = getTmpEMFResource("beforeImport",
                     copyIs.getCopy());
             try {
-                r.load(Collections.EMPTY_MAP);
+                r.load(r.getResourceSet().getLoadOptions());
             } catch (final IOException e) {
                 BonitaStudioLog.error(e);
             }

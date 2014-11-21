@@ -27,13 +27,10 @@ import org.eclipse.emf.ecore.EObject;
 public interface IExpressionNatureProvider extends ExpressionConstants {
 
     /**
-     * 
+     *
      * @return the provided expression
      */
-    Expression[] getExpressions();
+    Expression[] getExpressions(EObject context);
 
-    void setContext(EObject context) ;
-
-    EObject getContext();
 
 }
