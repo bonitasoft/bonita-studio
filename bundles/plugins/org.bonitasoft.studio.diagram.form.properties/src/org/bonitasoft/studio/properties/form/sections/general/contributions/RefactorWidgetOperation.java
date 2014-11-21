@@ -16,7 +16,6 @@
  */
 package org.bonitasoft.studio.properties.form.sections.general.contributions;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +23,6 @@ import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.emf.tools.WidgetHelper;
-import org.bonitasoft.studio.expression.editor.provider.ExpressionContentProvider;
 import org.bonitasoft.studio.form.properties.i18n.Messages;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
@@ -62,11 +60,6 @@ public class RefactorWidgetOperation extends AbstractRefactorOperation<Widget, W
 
     }
 
-    @Override
-    public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-        ExpressionContentProvider.getInstance().clearCache();
-        super.run(monitor);
-    }
 
     @Override
     protected void doExecute(final IProgressMonitor monitor) {

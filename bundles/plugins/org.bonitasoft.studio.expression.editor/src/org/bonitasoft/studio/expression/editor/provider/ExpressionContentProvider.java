@@ -19,7 +19,6 @@ package org.bonitasoft.studio.expression.editor.provider;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import java.util.WeakHashMap;
 
 import org.bonitasoft.studio.expression.editor.ExpressionEditorService;
 import org.bonitasoft.studio.model.expression.Expression;
@@ -32,10 +31,9 @@ import org.eclipse.emf.ecore.EObject;
 public class ExpressionContentProvider implements IExpressionNatureProvider {
 
     private static ExpressionContentProvider INSTANCE;
-    protected WeakHashMap<EObject, Expression[]> cachedExpressions = new WeakHashMap<EObject, Expression[]>();
 
     private ExpressionContentProvider() {
-
+        //Private Constructor
     }
 
     public static ExpressionContentProvider getInstance() {
@@ -47,8 +45,8 @@ public class ExpressionContentProvider implements IExpressionNatureProvider {
 
     @Override
     public Expression[] getExpressions(final EObject context) {
-        if (context != null && cachedExpressions.get(context) == null) {
-            final SortedSet<Expression> expressionsSet = new TreeSet<Expression>(new ExpressionComparator());
+        final SortedSet<Expression> expressionsSet = new TreeSet<Expression>(new ExpressionComparator());
+        if (context != null) {
             final Set<IExpressionProvider> providers = ExpressionEditorService.getInstance().getExpressionProviders();
             for (final IExpressionProvider provider : providers) {
                 if (provider.isRelevantFor(context)) {
@@ -58,17 +56,9 @@ public class ExpressionContentProvider implements IExpressionNatureProvider {
                     }
                 }
             }
-            cachedExpressions.put(context, expressionsSet.toArray(new Expression[expressionsSet.size()]));
         }
-        final Expression[] expressions = cachedExpressions.get(context);
-        if (expressions == null) {
-            return new Expression[0];
-        }
-        return expressions;
-    }
+        return expressionsSet.toArray(new Expression[expressionsSet.size()]);
 
-    public void clearCache() {
-        cachedExpressions.clear();
     }
 
 }
