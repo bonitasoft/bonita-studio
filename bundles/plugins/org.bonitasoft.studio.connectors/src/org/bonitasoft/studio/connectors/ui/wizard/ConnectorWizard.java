@@ -26,6 +26,7 @@ import java.util.Set;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.IBonitaVariableContext;
+import org.bonitasoft.studio.common.ModelVersion;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
@@ -163,7 +164,9 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
     public ConnectorWizard(final EObject container, final EStructuralFeature connectorContainmentFeature, final Set<EStructuralFeature> featureToCheckForUniqueID) {
         this.container = container;
         connectorWorkingCopy = ProcessFactory.eINSTANCE.createConnector();
-        connectorWorkingCopy.setConfiguration(ConnectorConfigurationFactory.eINSTANCE.createConnectorConfiguration());
+        final ConnectorConfiguration configuration = ConnectorConfigurationFactory.eINSTANCE.createConnectorConfiguration();
+        configuration.setModelVersion(ModelVersion.CURRENT_VERSION);
+        connectorWorkingCopy.setConfiguration(configuration);
         editMode = false;
         this.connectorContainmentFeature = connectorContainmentFeature;
         this.featureToCheckForUniqueID = new HashSet<EStructuralFeature>();
@@ -379,7 +382,7 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
     }
 
     protected boolean hasOutputPage() {
-        return (extension != null && !extension.useDefaultOutputPage() && extension.getOutputPage() != null) || (!getDefinition().getOutput().isEmpty());
+        return extension != null && !extension.useDefaultOutputPage() && extension.getOutputPage() != null || !getDefinition().getOutput().isEmpty();
     }
 
     protected void createDefaultOutputs(final ConnectorDefinition definition) {

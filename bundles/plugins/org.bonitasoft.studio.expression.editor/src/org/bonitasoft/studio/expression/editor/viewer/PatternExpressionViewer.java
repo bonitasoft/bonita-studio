@@ -79,7 +79,7 @@ public class PatternExpressionViewer extends Composite {
 
     private TextViewer viewer;
     private ExpressionViewer expressionViewer;
-    private final IExpressionNatureProvider expressionNatureProvider = new ExpressionContentProvider();
+    private final IExpressionNatureProvider expressionNatureProvider = ExpressionContentProvider.getInstance();
     private ExpressionContentAssistProcessor contentAssisProcessor;
     private final Set<ViewerFilter> filters = new HashSet<ViewerFilter>();
     protected Expression expression;
@@ -325,9 +325,6 @@ public class PatternExpressionViewer extends Composite {
 
 
     protected void manageNatureProviderAndAutocompletionProposal(final Object input) {
-        if(expressionNatureProvider != null){
-            expressionNatureProvider.setContext((EObject) input);
-        }
         filteredExpressions =  getFilteredExpressions() ;
         final Set<Expression> expressionSet = new HashSet<Expression>(filteredExpressions);
         contentAssisProcessor.setExpressions(expressionSet);
@@ -367,14 +364,13 @@ public class PatternExpressionViewer extends Composite {
 
     private List<Expression> getFilteredExpressions() {
         final List<Expression> filteredExpressions = new ArrayList<Expression>() ;
-        final Expression[] expressions = expressionNatureProvider.getExpressions();
-        final EObject input =  expressionNatureProvider.getContext() ;
+        final Expression[] expressions = expressionNatureProvider.getExpressions(contextInput);
         if(expressions != null){
             filteredExpressions.addAll(Arrays.asList(expressions)) ;
-            if(input != null){
+            if (contextInput != null) {
                 for(final Expression exp : expressions) {
                     for(final ViewerFilter filter : filters){
-                        if(filter != null && !filter.select(viewer, input, exp)){
+                        if (filter != null && !filter.select(viewer, contextInput, exp)) {
                             filteredExpressions.remove(exp) ;
                         }
                     }

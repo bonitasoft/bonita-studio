@@ -257,6 +257,11 @@ public class Repository implements IRepository {
         try {
             BonitaStudioLog.debug("Closing repository " + project.getName(), CommonRepositoryPlugin.PLUGIN_ID);
             if (project.isOpen()) {
+                if (stores != null) {
+                    for (final IRepositoryStore<? extends IRepositoryFileStore> store : stores.values()) {
+                        store.close();
+                    }
+                }
                 project.close(NULL_PROGRESS_MONITOR);
             }
         } catch (final CoreException e) {
@@ -597,12 +602,12 @@ public class Repository implements IRepository {
     }
 
     @Override
-    public IRepositoryStore<? extends IRepositoryFileStore> getRepositoryStore(final Class<?> repositoryStoreClass) {
+    public <T> T getRepositoryStore(final Class<T> repositoryStoreClass) {
         if (stores == null || stores.isEmpty()) {
             initRepositoryStores(false);
             enableBuild();
         }
-        return stores.get(repositoryStoreClass);
+        return repositoryStoreClass.cast(stores.get(repositoryStoreClass));
     }
 
     @SuppressWarnings("restriction")
@@ -664,7 +669,7 @@ public class Repository implements IRepository {
     }
 
     @Override
-    public String getDispslayName() {
+    public String getDisplayName() {
         return getName() + " [" + getVersion() + "]";
     }
 
@@ -872,6 +877,11 @@ public class Repository implements IRepository {
         if (monitor != null && subtask != null) {
             monitor.subTask(subtask);
         }
+    }
+
+    @Override
+    public boolean isOnline() {
+        return true;
     }
 
 }

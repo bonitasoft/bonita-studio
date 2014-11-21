@@ -17,6 +17,7 @@
 package org.bonitasoft.studio.expression.editor.viewer;
 
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.model.expression.Expression;
@@ -24,8 +25,11 @@ import org.bonitasoft.studio.model.expression.assertions.ExpressionAssert;
 import org.bonitasoft.studio.model.expression.builders.ExpressionBuilder;
 import org.bonitasoft.studio.model.process.builders.DataBuilder;
 import org.bonitasoft.studio.swt.AbstractSWTTestCase;
-import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.DataBindingContext;
+import org.eclipse.core.databinding.ValidationStatusProvider;
+import org.eclipse.core.databinding.observable.value.WritableValue;
+import org.eclipse.core.databinding.validation.ValidationStatus;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -47,7 +51,7 @@ public class ExpressionViewerTest extends AbstractSWTTestCase {
     private ExpressionViewer expressionViewer;
     private DataBindingContext dbc;
     @Mock
-    private Binding binding;
+    private ValidationStatusProvider validationStatusProvider;
 
     /**
      * @throws java.lang.Exception
@@ -57,6 +61,7 @@ public class ExpressionViewerTest extends AbstractSWTTestCase {
         final Composite composite = createDisplayAndRealm();
         dbc = new EMFDataBindingContext();
         expressionViewer = new ExpressionViewer(composite, SWT.BORDER);
+        when(validationStatusProvider.getValidationStatus()).thenReturn(new WritableValue(ValidationStatus.ok(), IStatus.class));
     }
 
     /**
@@ -69,11 +74,11 @@ public class ExpressionViewerTest extends AbstractSWTTestCase {
 
     @Test
     public void should_validateExternalDatabindingContextTargets_validate_binding_target_to_model() throws Exception {
-        dbc.addBinding(binding);
+        dbc.addValidationStatusProvider(validationStatusProvider);
 
         expressionViewer.validateExternalDatabindingContextTargets(dbc);
 
-        verify(binding).validateTargetToModel();
+        verify(validationStatusProvider).getValidationStatus();
     }
 
     @Test

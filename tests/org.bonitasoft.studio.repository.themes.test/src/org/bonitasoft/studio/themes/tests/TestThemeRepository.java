@@ -59,7 +59,7 @@ import org.junit.Test;
 /**
  * @author Romain Bioteau
  * @author Baptiste Mesta
- * 
+ *
  */
 public class TestThemeRepository {
 
@@ -67,7 +67,7 @@ public class TestThemeRepository {
 
     @Test
 	public void testDuplicateLookNFeelFileStore() throws Exception {
-        LookNFeelRepositoryStore repository = (LookNFeelRepositoryStore)RepositoryManager.getInstance().getRepositoryStore(LookNFeelRepositoryStore.class);
+        final LookNFeelRepositoryStore repository = RepositoryManager.getInstance().getRepositoryStore(LookNFeelRepositoryStore.class);
         final LookNFeelFileStore artifact = repository.getChild(DEFAULT_APPLICATION_LNF_ID);
         assertNotNull(artifact);
         final LookNFeelFileStore duplicateTheme = repository.duplicateFrom("grey2", "grey2Desc", artifact);
@@ -82,7 +82,7 @@ public class TestThemeRepository {
 
     @Test
     public void testDuplicateLookNFeelFileStoreWithNullDesc() throws Exception {
-        LookNFeelRepositoryStore repository = (LookNFeelRepositoryStore)RepositoryManager.getInstance().getRepositoryStore(LookNFeelRepositoryStore.class);
+        final LookNFeelRepositoryStore repository = RepositoryManager.getInstance().getRepositoryStore(LookNFeelRepositoryStore.class);
         final LookNFeelFileStore artifact = repository.getChild(DEFAULT_APPLICATION_LNF_ID);
         assertNotNull(artifact);
         final LookNFeelFileStore duplicateTheme = repository.duplicateFrom("grey2", null, artifact);
@@ -98,14 +98,14 @@ public class TestThemeRepository {
 
     @Test
     public void testDuplicateLookNFeelFileStoreWithNoName() throws ThemeAlreadyExistsException {
-        LookNFeelRepositoryStore repository = (LookNFeelRepositoryStore)RepositoryManager.getInstance().getRepositoryStore(LookNFeelRepositoryStore.class);
+        final LookNFeelRepositoryStore repository = RepositoryManager.getInstance().getRepositoryStore(LookNFeelRepositoryStore.class);
         final int size = repository.getApplicationLookNFeels().size();
         try {
             final LookNFeelFileStore artifact = repository.getChild(DEFAULT_APPLICATION_LNF_ID);
             assertNotNull(artifact);
             repository.duplicateFrom("", "", artifact);
             fail("should have failed");
-        } catch (IllegalArgumentException e){
+        } catch (final IllegalArgumentException e){
             //OK
         } finally {
             assertEquals(size, repository.getApplicationLookNFeels().size());
@@ -114,14 +114,14 @@ public class TestThemeRepository {
 
     @Test
     public void testDuplicateLookNFeelFileStoreWithNullName() throws ThemeAlreadyExistsException {
-        LookNFeelRepositoryStore repository = (LookNFeelRepositoryStore)RepositoryManager.getInstance().getRepositoryStore(LookNFeelRepositoryStore.class);
+        final LookNFeelRepositoryStore repository = RepositoryManager.getInstance().getRepositoryStore(LookNFeelRepositoryStore.class);
         final int size = repository.getApplicationLookNFeels().size();
         try {
             final LookNFeelFileStore artifact = repository.getChild(DEFAULT_APPLICATION_LNF_ID);
             assertNotNull(artifact);
             repository.duplicateFrom(null, null, artifact);
             fail("should have failed");
-        } catch (IllegalArgumentException e){
+        } catch (final IllegalArgumentException e){
             //OK
         } finally {
             assertEquals(size, repository.getApplicationLookNFeels().size());
@@ -130,7 +130,7 @@ public class TestThemeRepository {
 
     @Test
     public void testDuplicateLookNFeelFileStoreWithSameName() throws ThemeAlreadyExistsException {
-        LookNFeelRepositoryStore repository = (LookNFeelRepositoryStore)RepositoryManager.getInstance().getRepositoryStore(LookNFeelRepositoryStore.class);
+        final LookNFeelRepositoryStore repository = RepositoryManager.getInstance().getRepositoryStore(LookNFeelRepositoryStore.class);
         final int size = repository.getApplicationLookNFeels().size();
         final LookNFeelFileStore artifact = repository.getChild(DEFAULT_APPLICATION_LNF_ID);
         assertNotNull(artifact);
@@ -140,12 +140,12 @@ public class TestThemeRepository {
 
     @Test
     public void testCantRemoveProvidedTheme() throws Exception {
-        LookNFeelRepositoryStore repository = (LookNFeelRepositoryStore)RepositoryManager.getInstance().getRepositoryStore(LookNFeelRepositoryStore.class);
+        final LookNFeelRepositoryStore repository = RepositoryManager.getInstance().getRepositoryStore(LookNFeelRepositoryStore.class);
         try {
             final LookNFeelFileStore artifact = repository.getChild(DEFAULT_APPLICATION_LNF_ID);
             assertNotNull(artifact);
             artifact.delete();
-        } catch (IllegalArgumentException e){
+        } catch (final IllegalArgumentException e){
             //OK
         } finally {
             assertNotNull("grey theme was removed", repository.getChild(DEFAULT_APPLICATION_LNF_ID));
@@ -154,9 +154,9 @@ public class TestThemeRepository {
 
     @Test
     public void testImportLookNFeelFileStore() throws Exception {
-        LookNFeelRepositoryStore repository = (LookNFeelRepositoryStore)RepositoryManager.getInstance().getRepositoryStore(LookNFeelRepositoryStore.class);
-        InputStream stream = this.getClass().getResourceAsStream("myTheme.zip");
-        LookNFeelFileStore importInputStream = repository.importInputStream("myTheme.zip", stream);
+        final LookNFeelRepositoryStore repository = RepositoryManager.getInstance().getRepositoryStore(LookNFeelRepositoryStore.class);
+        final InputStream stream = this.getClass().getResourceAsStream("myTheme.zip");
+        final LookNFeelFileStore importInputStream = repository.importInputStream("myTheme.zip", stream);
         importInputStream.load();
         assertTrue(importInputStream instanceof ApplicationLookNFeelFileStore);
         assertNotNull(importInputStream);
@@ -170,9 +170,9 @@ public class TestThemeRepository {
 
     @Test
     public void testReplaceUrlsOfLookNFeelFileStore() throws Exception {
-        LookNFeelRepositoryStore repository = (LookNFeelRepositoryStore)RepositoryManager.getInstance().getRepositoryStore(LookNFeelRepositoryStore.class);
+        final LookNFeelRepositoryStore repository = RepositoryManager.getInstance().getRepositoryStore(LookNFeelRepositoryStore.class);
         final LookNFeelFileStore createArtifact = repository.duplicateFrom("testgetContentsWithUrl", "", repository.getUserXPLookNFeels().get(0));
-        IFolder afolder = createArtifact.getResource().getFolder("afolder");
+        final IFolder afolder = createArtifact.getResource().getFolder("afolder");
         afolder.create(false, false, new NullProgressMonitor());
         afolder.getFile("aresource").create(new ByteArrayInputStream("plop".getBytes("UTF-8")), false, new NullProgressMonitor());
 
@@ -180,16 +180,16 @@ public class TestThemeRepository {
         file.create(new ByteArrayInputStream("src=\"test/\"".getBytes("UTF-8")), false, new NullProgressMonitor());
         file = createArtifact.getResource().getFile("test2.html");//depth = 0
         file.create(new ByteArrayInputStream("src=\"themeResource?theme=testgetContentsWithUrl&location=..%2Ftest%2F\"".getBytes("UTF-8")), false, new NullProgressMonitor());
-        IFolder folder = createArtifact.getResource().getFolder("test");
+        final IFolder folder = createArtifact.getResource().getFolder("test");
         folder.create(false, true, new NullProgressMonitor());
         file = folder.getFile("test3.html");//depth = 1
         file.create(new ByteArrayInputStream("src=\"../afolder/aresource\"".getBytes("UTF-8")), false, new NullProgressMonitor());
-        IFolder subFolder = folder.getFolder("subFolder");
-        IFolder imagesFolder = folder.getFolder("images");
+        final IFolder subFolder = folder.getFolder("subFolder");
+        final IFolder imagesFolder = folder.getFolder("images");
         imagesFolder.create(false, false, new NullProgressMonitor());
         imagesFolder.getFile("plop.jpg").create(new ByteArrayInputStream("plop".getBytes("UTF-8")), false, new NullProgressMonitor());
         subFolder.create(false, true, new NullProgressMonitor());
-        IFile testCss = subFolder.getFile("test.css");//depth = 2
+        final IFile testCss = subFolder.getFile("test.css");//depth = 2
         testCss.create(new ByteArrayInputStream("src=\"../images/plop.jpg\"".getBytes("UTF-8")), false, new NullProgressMonitor());
         final InputStream is = createArtifact.getContent();
         final File createTempFile = File.createTempFile("exportLookNFeelFileStore", ".zip");
@@ -210,7 +210,7 @@ public class TestThemeRepository {
         FileInputStream fis = new FileInputStream(new File(destDir,"test.html"));
         String fileContent = PlatformUtil.getFileContent(fis);
         String startsWith = "src=\"themeResource?theme=testgetContentsWithUrl&timestamp=";
-        String endsWithForTest = "&location=test%2F\"";
+        final String endsWithForTest = "&location=test%2F\"";
         assertTrue("should start with:<"+startsWith+"> but was <"+fileContent+">", fileContent.startsWith(startsWith));
         assertTrue("should end with:<"+endsWithForTest+"> but was <"+fileContent+">", fileContent.endsWith(endsWithForTest));
         fis.close();
@@ -237,8 +237,8 @@ public class TestThemeRepository {
 
         //re import
         createArtifact.delete();
-        FileInputStream stream = new FileInputStream(createTempFile);
-        LookNFeelFileStore importInputStream = repository.importInputStream("testgetContentsWithUrl.zip", stream);
+        final FileInputStream stream = new FileInputStream(createTempFile);
+        final LookNFeelFileStore importInputStream = repository.importInputStream("testgetContentsWithUrl.zip", stream);
         stream.close();
 
         InputStream contents = importInputStream.getResource().getFile("test.html").getContents();
@@ -259,18 +259,18 @@ public class TestThemeRepository {
 
     @Test
     public void testReplaceUrlsOfLookNFeelFileStoreWithUnexistingFile() throws Exception {
-        LookNFeelRepositoryStore repository = (LookNFeelRepositoryStore)RepositoryManager.getInstance().getRepositoryStore(LookNFeelRepositoryStore.class);
+        final LookNFeelRepositoryStore repository = RepositoryManager.getInstance().getRepositoryStore(LookNFeelRepositoryStore.class);
         final LookNFeelFileStore createArtifact = repository.duplicateFrom("testgetContentsWithnonExistingResources","",repository.getUserXPLookNFeels().get(0));
-        IFolder afolder = createArtifact.getResource().getFolder("afolder");
+        final IFolder afolder = createArtifact.getResource().getFolder("afolder");
         afolder.create(true, true, new NullProgressMonitor());
         afolder.getFile("aresource").create(new ByteArrayInputStream("plop".getBytes("UTF-8")), false, new NullProgressMonitor());
 
-        IFolder folder = createArtifact.getResource().getFolder("test");
+        final IFolder folder = createArtifact.getResource().getFolder("test");
         folder.create(false, true, new NullProgressMonitor());
-        IFile file = folder.getFile("test1.html");//depth = 1
+        final IFile file = folder.getFile("test1.html");//depth = 1
         file.create(new ByteArrayInputStream("src=\"../afolder/aresource\"".getBytes("UTF-8")), false, new NullProgressMonitor());
 
-        IFile file2 = folder.getFile("test2.html");//depth = 1
+        final IFile file2 = folder.getFile("test2.html");//depth = 1
         file2.create(new ByteArrayInputStream("src=\"../afolder/aNonExistingResource\"".getBytes("UTF-8")), false, new NullProgressMonitor());
 
         final InputStream is = createArtifact.getContent();
@@ -289,10 +289,10 @@ public class TestThemeRepository {
         destDir.mkdir();
         PlatformUtil.unzipZipFiles(createTempFile, destDir, null);
 
-        String startsWith = "src=\"themeResource?theme=testgetContentsWithnonExistingResources&timestamp=";
+        final String startsWith = "src=\"themeResource?theme=testgetContentsWithnonExistingResources&timestamp=";
         FileInputStream fis = new FileInputStream(new File(new File(destDir,"test"),"test1.html"));
         String fileContent = PlatformUtil.getFileContent(fis);
-        String endsWith = "&location=afolder%2Faresource\"";
+        final String endsWith = "&location=afolder%2Faresource\"";
         assertTrue("should start with:<"+startsWith+"> but was <"+fileContent+">", fileContent.startsWith(startsWith));
         assertTrue("should end with:<"+endsWith+"> but was <"+fileContent+">", fileContent.endsWith(endsWith));
         fis.close();
@@ -308,9 +308,9 @@ public class TestThemeRepository {
 
     @Test
     public void testChangeArtifactName() throws Exception {
-        LookNFeelRepositoryStore repository = (LookNFeelRepositoryStore)RepositoryManager.getInstance().getRepositoryStore(LookNFeelRepositoryStore.class);
-        InputStream stream = this.getClass().getResourceAsStream("myTheme.zip");
-        LookNFeelFileStore artifact = repository.importInputStream("myTheme.zip", stream);
+        final LookNFeelRepositoryStore repository = RepositoryManager.getInstance().getRepositoryStore(LookNFeelRepositoryStore.class);
+        final InputStream stream = this.getClass().getResourceAsStream("myTheme.zip");
+        final LookNFeelFileStore artifact = repository.importInputStream("myTheme.zip", stream);
 
         artifact.setThemeName("myTheme2");
         assertEquals("myTheme",artifact.getResource().getName());
@@ -322,12 +322,12 @@ public class TestThemeRepository {
         assertTrue(repository.getResource().getFolder("myTheme2").exists());
         artifact.delete();
     }
-    
+
     @Test
     public void testChangeArtifactNameIntoExsitingName() throws Exception {
-        LookNFeelRepositoryStore repository = (LookNFeelRepositoryStore)RepositoryManager.getInstance().getRepositoryStore(LookNFeelRepositoryStore.class);
-        InputStream stream = this.getClass().getResourceAsStream("myTheme.zip");
-        LookNFeelFileStore artifact = repository.importInputStream("myTheme.zip", stream);
+        final LookNFeelRepositoryStore repository = RepositoryManager.getInstance().getRepositoryStore(LookNFeelRepositoryStore.class);
+        final InputStream stream = this.getClass().getResourceAsStream("myTheme.zip");
+        final LookNFeelFileStore artifact = repository.importInputStream("myTheme.zip", stream);
 
         artifact.setThemeName(DEFAULT_APPLICATION_LNF_ID);
 
@@ -343,40 +343,39 @@ public class TestThemeRepository {
 
     @Test
     public void testDuplicateUserXpFileStore(){
-        LookNFeelRepositoryStore repository = (LookNFeelRepositoryStore)RepositoryManager.getInstance().getRepositoryStore(LookNFeelRepositoryStore.class);
-        LookNFeelFileStore artifact = repository.getUserXPLookNFeels().get(0);
-        LookNFeelFileStore duplicateTheme = repository.duplicateFrom("myDuplicateduserXPTheme", "myDesc", artifact);
+        final LookNFeelRepositoryStore repository = RepositoryManager.getInstance().getRepositoryStore(LookNFeelRepositoryStore.class);
+        final LookNFeelFileStore artifact = repository.getUserXPLookNFeels().get(0);
+        final LookNFeelFileStore duplicateTheme = repository.duplicateFrom("myDuplicateduserXPTheme", "myDesc", artifact);
         assertTrue(duplicateTheme instanceof UserXpFileStore);
     }
 
     @Test
     public void testDuplicateApplicationLookNFeelFileStore() throws ThemeAlreadyExistsException{
-        LookNFeelRepositoryStore repository = (LookNFeelRepositoryStore)RepositoryManager.getInstance().getRepositoryStore(LookNFeelRepositoryStore.class);
-        LookNFeelFileStore artifact = repository.getChild( DEFAULT_APPLICATION_LNF_ID);
-        LookNFeelFileStore duplicateTheme = repository.duplicateFrom("myDuplicatedApplicationTheme", "myDesc", artifact);
+        final LookNFeelRepositoryStore repository = RepositoryManager.getInstance().getRepositoryStore(LookNFeelRepositoryStore.class);
+        final LookNFeelFileStore artifact = repository.getChild( DEFAULT_APPLICATION_LNF_ID);
+        final LookNFeelFileStore duplicateTheme = repository.duplicateFrom("myDuplicatedApplicationTheme", "myDesc", artifact);
         assertTrue(duplicateTheme instanceof ApplicationLookNFeelFileStore);
     }
 
     @Test
     public void testApplyApplicationTheme() throws Exception{
-        LookNFeelRepositoryStore repository = (LookNFeelRepositoryStore)RepositoryManager.getInstance().getRepositoryStore(LookNFeelRepositoryStore.class);
-        InputStream stream = this.getClass().getResourceAsStream("themewithpreview.zip");
-        LookNFeelFileStore artifactToApply = repository.importInputStream("themewithpreview.zip", stream);
+        final LookNFeelRepositoryStore repository = RepositoryManager.getInstance().getRepositoryStore(LookNFeelRepositoryStore.class);
+        final InputStream stream = this.getClass().getResourceAsStream("themewithpreview.zip");
+        final LookNFeelFileStore artifactToApply = repository.importInputStream("themewithpreview.zip", stream);
 
-        NewDiagramCommandHandler newProcessCommandHandler = new NewDiagramCommandHandler();
-        newProcessCommandHandler.execute(null);
-        DiagramFileStore artifact = newProcessCommandHandler.getNewDiagramFileStore();
+        final NewDiagramCommandHandler newProcessCommandHandler = new NewDiagramCommandHandler();
+        final DiagramFileStore artifact = newProcessCommandHandler.execute(null);
 
-        AbstractProcess process = ModelHelper.getAllProcesses(artifact.getContent()).get(0);
-        TransactionalEditingDomain editingDomain = (TransactionalEditingDomain) AdapterFactoryEditingDomain.getEditingDomainFor(process);
-        CompoundCommand command = WebTemplatesUtil.createAddTemplateCommand(editingDomain, process, (ApplicationLookNFeelFileStore) artifactToApply);
+        final AbstractProcess process = ModelHelper.getAllProcesses(artifact.getContent()).get(0);
+        final TransactionalEditingDomain editingDomain = (TransactionalEditingDomain) AdapterFactoryEditingDomain.getEditingDomainFor(process);
+        final CompoundCommand command = WebTemplatesUtil.createAddTemplateCommand(editingDomain, process, (ApplicationLookNFeelFileStore) artifactToApply);
 
         editingDomain.getCommandStack().execute(command);
         artifact.save(artifact.getOpenedEditor());
         artifact.close();
-        File file = WebTemplatesUtil.getFile(process.getProcessTemplate().getPath());
-        FileInputStream is = new FileInputStream(file);
-        String fileContent = PlatformUtil.getFileContent(is);
+        final File file = WebTemplatesUtil.getFile(process.getProcessTemplate().getPath());
+        final FileInputStream is = new FileInputStream(file);
+        final String fileContent = PlatformUtil.getFileContent(is);
         is.close();
         assertEquals("PLOP PLOP\n", fileContent);
         assertTrue(process.getResourceFiles().get(0).getPath().endsWith("pom.xml"));
@@ -385,38 +384,36 @@ public class TestThemeRepository {
 
     @Test
     public void testSaveAsLookNFeel() throws Exception{
-        LookNFeelRepositoryStore repository = (LookNFeelRepositoryStore)RepositoryManager.getInstance().getRepositoryStore(LookNFeelRepositoryStore.class);
-        InputStream resourceIS = this.getClass().getResourceAsStream("previewImage.png");
-        IFolder tmpFolder = repository.getResource().getFolder("tmpTest");
+        final LookNFeelRepositoryStore repository = RepositoryManager.getInstance().getRepositoryStore(LookNFeelRepositoryStore.class);
+        final InputStream resourceIS = this.getClass().getResourceAsStream("previewImage.png");
+        final IFolder tmpFolder = repository.getResource().getFolder("tmpTest");
         tmpFolder.create(false, true, new NullProgressMonitor());
-        IFile file = tmpFolder.getFile("previewImage.png");
+        final IFile file = tmpFolder.getFile("previewImage.png");
         file.create(resourceIS, false, new NullProgressMonitor());
         assertTrue(file.exists());
-        NewDiagramCommandHandler newProcessCommandHandler = new NewDiagramCommandHandler();
-        newProcessCommandHandler.execute(null);
-        DiagramFileStore artifact = newProcessCommandHandler.getNewDiagramFileStore();
-        artifact.close();
-        AbstractProcess process = ModelHelper.getAllProcesses(artifact.getContent()).get(0);
+        final NewDiagramCommandHandler newProcessCommandHandler = new NewDiagramCommandHandler();
+        final DiagramFileStore artifact = newProcessCommandHandler.execute(null);
+        final AbstractProcess process = ModelHelper.getAllProcesses(artifact.getContent()).get(0);
 
-        ApplicationResourceRepositoryStore store = (ApplicationResourceRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ApplicationResourceRepositoryStore.class);
+        final ApplicationResourceRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(ApplicationResourceRepositoryStore.class);
         store.refresh();
 
-        ApplicationResourceFileStore webTemplateArtifact = (ApplicationResourceFileStore) store.getChild(ModelHelper.getEObjectID(process));
-        ApplicationLookNFeelFileStore theme = WebTemplatesUtil.convertWebTemplateToTheme(webTemplateArtifact, "test Theme", file.getLocation().toFile().getAbsolutePath(), new NullProgressMonitor());
+        final ApplicationResourceFileStore webTemplateArtifact = (ApplicationResourceFileStore) store.getChild(ModelHelper.getEObjectID(process));
+        final ApplicationLookNFeelFileStore theme = WebTemplatesUtil.convertWebTemplateToTheme(webTemplateArtifact, "test Theme", file.getLocation().toFile().getAbsolutePath(), new NullProgressMonitor());
         assertNotNull(theme);
         assertEquals("test Theme", theme.getName());
-        Image previewImage = theme.getPreviewImage();
+        final Image previewImage = theme.getPreviewImage();
         assertNotNull(previewImage);
         theme.delete();
         PlatformUtil.delete(tmpFolder.getLocation().toFile(),new NullProgressMonitor());
     }
-    
+
     @Before
     @After
     public void closeEditors() throws Exception {
     	PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().saveAllEditors(false);
     	PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeAllEditors(false);
     }
-    
+
 
 }

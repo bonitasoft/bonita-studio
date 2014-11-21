@@ -331,19 +331,16 @@ public class GroovyViewer {
 
         IExpressionNatureProvider provider = expressionProvider;
         if (!(provider instanceof ICustomExpressionNatureProvider)) {
-            provider = new ExpressionContentProvider();
+            provider = ExpressionContentProvider.getInstance();
         }
-        provider.setContext(context);
-
         final Set<Expression> filteredExpressions = new HashSet<Expression>();
-        final Expression[] expressions = provider.getExpressions();
-        final EObject input = provider.getContext();
+        final Expression[] expressions = provider.getExpressions(context);
         if (expressions != null) {
             filteredExpressions.addAll(Arrays.asList(expressions));
-            if (input != null && filters != null) {
+            if (context != null && filters != null) {
                 for (final Expression exp : expressions) {
                     for (final ViewerFilter filter : filters) {
-                        if (filter != null && !filter.select(getSourceViewer(), input, exp)) {
+                        if (filter != null && !filter.select(getSourceViewer(), context, exp)) {
                             filteredExpressions.remove(exp);
                         }
                     }

@@ -396,9 +396,24 @@ public class DocumentWizardPage extends WizardPage {
         isMultipleObservableValue.addOption(false, SWTObservables.observeSelection(radioButtonSingle));
         isMultipleObservableValue.addOption(true, SWTObservables.observeSelection(radioButtonMultiple));
 
+        final IObservableValue multipleObserveValue = EMFObservables.observeValue(document, ProcessPackage.Literals.DOCUMENT__MULTIPLE);
         emfDataBindingContext.bindValue(
                 isMultipleObservableValue,
-                EMFObservables.observeValue(document, ProcessPackage.Literals.DOCUMENT__MULTIPLE));
+                multipleObserveValue);
+        multipleObserveValue.addValueChangeListener(new IValueChangeListener() {
+
+            @Override
+            public void handleValueChange(final ValueChangeEvent event) {
+                validate();
+            }
+        });
+    }
+
+    protected void validate() {
+        documentUrlViewer.validate();
+        if (internalFileIdbinding != null && !internalFileIdbinding.isDisposed()) {
+            internalFileIdbinding.validateTargetToModel();
+        }
     }
 
     private Button createRadioButtonSingle(final Composite compo) {
@@ -528,10 +543,7 @@ public class DocumentWizardPage extends WizardPage {
 
             @Override
             public void handleValueChange(final ValueChangeEvent event) {
-                documentUrlViewer.validate();
-                if (internalFileIdbinding != null && !internalFileIdbinding.isDisposed()) {
-                    internalFileIdbinding.validateTargetToModel();
-                }
+                validate();
             }
         });
     }

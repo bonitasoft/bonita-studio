@@ -39,6 +39,7 @@ import org.bonitasoft.studio.data.operation.RefactorDataOperation;
 import org.bonitasoft.studio.data.ui.wizard.DataWizard;
 import org.bonitasoft.studio.data.ui.wizard.DataWizardDialog;
 import org.bonitasoft.studio.data.ui.wizard.MoveDataWizard;
+import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.DataAware;
 import org.bonitasoft.studio.model.process.Element;
@@ -315,7 +316,17 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
         final IStructuredSelection selection = (IStructuredSelection) dataTableViewer.getSelection();
         if (onlyOneElementSelected(selection)) {
             final Data selectedData = (Data) selection.getFirstElement();
-            final DataWizard wizard = new DataWizard(getEditingDomain(), selectedData, getDataFeature(), getDataFeatureToCheckUniqueID(), getShowAutoGenerateForm());
+            if (selectedData.eContainer() == null) {
+                final AbstractProcess parentProcess = ModelHelper.getParentProcess(eObject);
+                BonitaStudioLog.error("Investigation trace for issue BS-11552:\n"
+                        + "The context was not initialized.\n "
+                        + "Please report the issue with details and attached impacted process.\n"
+                        + "data: " + (selectedData != null ? selectedData.getName() : "null data") + "\n"
+                        + "From diagram:" + (parentProcess != null ? parentProcess.getName() : "No process found."), DataPlugin.PLUGIN_ID);
+            }
+
+            final DataWizard wizard = new DataWizard(getEditingDomain(), selectedData, getDataFeature(),
+                    getDataFeatureToCheckUniqueID(), getShowAutoGenerateForm());
             wizard.setIsPageFlowContext(isPageFlowContext());
             wizard.setIsOverviewContext(isOverViewContext());
             new CustomWizardDialog(Display.getDefault().getActiveShell(), wizard, IDialogConstants.OK_LABEL).open();

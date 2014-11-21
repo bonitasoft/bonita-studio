@@ -23,6 +23,7 @@ import java.util.Iterator;
 import junit.framework.TestCase;
 
 import org.bonitasoft.studio.diagram.custom.commands.NewDiagramCommandHandler;
+import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.form.custom.commands.CreateFormCommand;
 import org.bonitasoft.studio.diagram.form.custom.model.WidgetMapping;
 import org.bonitasoft.studio.model.form.Form;
@@ -56,32 +57,36 @@ public class TestAutomaticSwitchPerspective extends TestCase {
     //	private static final String BirtPerspective = "org.bonitasoft.studio.birt.ui.perspective.birt";
 
     public void testSwitchPerspectiveToForms() throws Exception {
-        NewDiagramCommandHandler cmd = new NewDiagramCommandHandler();
-        cmd.execute(null);
-        MainProcess process = cmd.getNewDiagramFileStore().getContent();
+        final NewDiagramCommandHandler cmd = new NewDiagramCommandHandler();
+        final DiagramFileStore fileStore = cmd.execute(null);
+        final MainProcess process = fileStore.getContent();
 
         assertTrue("Wrong perspective when opening the form",new TestAsyncThread(10, 500) {
 
             @Override
             public boolean isTestGreen() throws Exception {
 
-                RunnableWithResult<Boolean> runnable = new RunnableWithResult<Boolean>(){
+                final RunnableWithResult<Boolean> runnable = new RunnableWithResult<Boolean>(){
 
                     private boolean processPerspective = false;
 
+                    @Override
                     public void run() {
                         processPerspective  = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getPerspective().getId().equals(ProcessPerspective);
                     }
 
+                    @Override
                     public Boolean getResult() {
                         return processPerspective;
                     }
 
+                    @Override
                     public IStatus getStatus() {
                         return Status.OK_STATUS;
                     }
 
-                    public void setStatus(IStatus arg0) {
+                    @Override
+                    public void setStatus(final IStatus arg0) {
                     }
 
                 };
@@ -92,18 +97,18 @@ public class TestAutomaticSwitchPerspective extends TestCase {
 
 
         PageFlow pageflow = null;
-        for (Iterator<?> iterator = process.eAllContents(); iterator.hasNext();) {
-            EObject type = (EObject) iterator.next();
+        for (final Iterator<?> iterator = process.eAllContents(); iterator.hasNext();) {
+            final EObject type = (EObject) iterator.next();
             if(type instanceof PageFlow){
                 pageflow = (PageFlow) type;
                 break;
             }
         }
         IEditorPart editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
-        TransactionalEditingDomain editingDomain = ((ProcessDiagramEditor)editor).getEditingDomain();
-        CreateFormCommand formCommand = new CreateFormCommand(pageflow,ProcessPackage.Literals.PAGE_FLOW__FORM,"testForm","form to test perspectives", Collections.<WidgetMapping>emptyList(), editingDomain);
+        final TransactionalEditingDomain editingDomain = ((ProcessDiagramEditor)editor).getEditingDomain();
+        final CreateFormCommand formCommand = new CreateFormCommand(pageflow,ProcessPackage.Literals.PAGE_FLOW__FORM,"testForm","form to test perspectives", Collections.<WidgetMapping>emptyList(), editingDomain);
         formCommand.execute(new NullProgressMonitor(), null);
-        Form createdForm = (Form) formCommand.getCommandResult().getReturnValue();
+        final Form createdForm = (Form) formCommand.getCommandResult().getReturnValue();
 		FormsUtils.createDiagram(createdForm, editingDomain, pageflow);
         FormsUtils.openDiagram(createdForm, editingDomain);
 
@@ -112,23 +117,27 @@ public class TestAutomaticSwitchPerspective extends TestCase {
             @Override
             public boolean isTestGreen() throws Exception {
 
-                RunnableWithResult<Boolean> runnable = new RunnableWithResult<Boolean>(){
+                final RunnableWithResult<Boolean> runnable = new RunnableWithResult<Boolean>(){
 
                     private boolean editorIsForm = false;
 
+                    @Override
                     public void run() {
                         editorIsForm  = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getPerspective().getId().equals(FormPerspective);
                     }
 
+                    @Override
                     public Boolean getResult() {
                         return editorIsForm;
                     }
 
+                    @Override
                     public IStatus getStatus() {
                         return Status.OK_STATUS;
                     }
 
-                    public void setStatus(IStatus arg0) {
+                    @Override
+                    public void setStatus(final IStatus arg0) {
                     }
 
                 };
@@ -145,23 +154,27 @@ public class TestAutomaticSwitchPerspective extends TestCase {
         assertTrue(new TestAsyncThread(10, 500) {
             @Override
             public boolean isTestGreen() throws Exception {
-                RunnableWithResult<Boolean> runnable = new RunnableWithResult<Boolean>(){
+                final RunnableWithResult<Boolean> runnable = new RunnableWithResult<Boolean>(){
 
                     private boolean editorIsProcess = false;
 
+                    @Override
                     public void run() {
                         editorIsProcess  = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor() instanceof ProcessDiagramEditor;
                     }
 
+                    @Override
                     public Boolean getResult() {
                         return editorIsProcess;
                     }
 
+                    @Override
                     public IStatus getStatus() {
                         return Status.OK_STATUS;
                     }
 
-                    public void setStatus(IStatus arg0) {
+                    @Override
+                    public void setStatus(final IStatus arg0) {
                     }
 
                 };

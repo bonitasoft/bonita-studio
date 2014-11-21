@@ -362,18 +362,16 @@ public class ComparisonExpressionEditor extends SelectionAwareExpressionEditor i
                 .create(dataBindingContext.bindValue(ViewersObservables.observeSingleSelection(typeCombo), returnTypeModelObservable), SWT.LEFT);
         typeCombo.getCombo().setEnabled(!inputExpression.isReturnTypeFixed());
 
-        final ExpressionContentProvider provider = new ExpressionContentProvider();
-        provider.setContext(context);
+        final ExpressionContentProvider provider = ExpressionContentProvider.getInstance();
 
         final Set<Expression> filteredExpressions = new HashSet<Expression>();
-        final Expression[] expressions = provider.getExpressions();
-        final EObject input = provider.getContext();
+        final Expression[] expressions = provider.getExpressions(context);
         if (expressions != null) {
             filteredExpressions.addAll(Arrays.asList(expressions));
-            if (input != null && viewerTypeFilters != null) {
+            if (context != null && viewerTypeFilters != null) {
                 for (final Expression exp : expressions) {
                     for (final ViewerFilter filter : viewerTypeFilters) {
-                        if (filter != null && !filter.select(comparisonEditor.getViewer(), input, exp)) {
+                        if (filter != null && !filter.select(comparisonEditor.getViewer(), context, exp)) {
                             filteredExpressions.remove(exp);
                         }
                     }

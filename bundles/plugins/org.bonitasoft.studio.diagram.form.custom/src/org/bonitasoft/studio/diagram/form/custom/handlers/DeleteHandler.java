@@ -1,21 +1,23 @@
 /**
  * Copyright (C) 2010 BonitaSoft S.A.
  * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.diagram.form.custom.handlers;
+
+import static org.bonitasoft.studio.common.Messages.removalConfirmationDialogTitle;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -33,7 +35,7 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
+import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.gmf.runtime.common.ui.action.actions.global.GlobalActionManager;
 import org.eclipse.gmf.runtime.common.ui.action.global.GlobalActionId;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
@@ -47,40 +49,39 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressService;
 
-import static org.bonitasoft.studio.common.Messages.removalConfirmationDialogTitle;
-
 /**
  * @author Aurelien Pupier
  */
 public class DeleteHandler extends AbstractHandler {
 
-    public Object execute(ExecutionEvent event) throws ExecutionException {
-        IEditorPart part = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+    @Override
+    public Object execute(final ExecutionEvent event) throws ExecutionException {
+        final IEditorPart part = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
         if (part instanceof DiagramEditor) {
-            List<?> selectedEps = ((DiagramEditor) part).getDiagramGraphicalViewer().getSelectedEditParts();
+            final List<?> selectedEps = ((DiagramEditor) part).getDiagramGraphicalViewer().getSelectedEditParts();
             if (!selectedEps.isEmpty()) {
-                Object ep = selectedEps.get(0);
+                final Object ep = selectedEps.get(0);
                 if (ep instanceof IGraphicalEditPart) {
-                    EObject semanticElement = ((IGraphicalEditPart) ep).resolveSemanticElement();
+                    final EObject semanticElement = ((IGraphicalEditPart) ep).resolveSemanticElement();
                     if (semanticElement instanceof Widget) {
-                        String[] buttonList = { IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL };
-                        List<Object> widgetSelected = new ArrayList<Object>();
+                        final String[] buttonList = { IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL };
+                        final List<Object> widgetSelected = new ArrayList<Object>();
                         widgetSelected.add(semanticElement);
-                        OutlineDialog dialog = new OutlineDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+                        final OutlineDialog dialog = new OutlineDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
                         		removalConfirmationDialogTitle, Display.getCurrent().getSystemImage(SWT.ICON_WARNING), Messages.bind(
                                         Messages.askConfirmationForDeleting, ((Element) semanticElement).getName()), MessageDialog.CONFIRM, buttonList, 1,
                                 widgetSelected);
-                        int ok = 0;
-                        RemoveWidgetReferencesOperation op = new RemoveWidgetReferencesOperation(ModelHelper.getPageFlow((Widget) semanticElement),
+                        final int ok = 0;
+                        final RemoveWidgetReferencesOperation op = new RemoveWidgetReferencesOperation(ModelHelper.getPageFlow((Widget) semanticElement),
                                 (Widget) semanticElement);
-                        op.setEditingDomain(AdapterFactoryEditingDomain.getEditingDomainFor(semanticElement));
+                        op.setEditingDomain(TransactionUtil.getEditingDomain(semanticElement));
                         if (dialog.open() == ok) {
-                            IProgressService service = PlatformUI.getWorkbench().getProgressService();
+                            final IProgressService service = PlatformUI.getWorkbench().getProgressService();
                             try {
                                 service.busyCursorWhile(op);
-                            } catch (InvocationTargetException e) {
+                            } catch (final InvocationTargetException e) {
                                 BonitaStudioLog.error(e);
-                            } catch (InterruptedException e) {
+                            } catch (final InterruptedException e) {
                                 BonitaStudioLog.error(e);
                             }
                             if (!op.canExecute()) {
@@ -99,15 +100,15 @@ public class DeleteHandler extends AbstractHandler {
 
     /**
      * disable for Form
-     * 
+     *
      * @see org.eclipse.core.commands.AbstractHandler#isEnabled()
      */
     @Override
     public boolean isEnabled() {
-        IEditorPart part = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
-        IStructuredSelection currentSelection = ((IStructuredSelection) part.getSite().getSelectionProvider().getSelection());
+        final IEditorPart part = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+        final IStructuredSelection currentSelection = (IStructuredSelection) part.getSite().getSelectionProvider().getSelection();
         if (currentSelection.getFirstElement() instanceof IGraphicalEditPart) {
-            if ((currentSelection.getFirstElement() instanceof FormEditPart)) {
+            if (currentSelection.getFirstElement() instanceof FormEditPart) {
                 return false;
             }
         }

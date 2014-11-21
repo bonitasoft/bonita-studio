@@ -22,15 +22,16 @@ import java.util.Collections;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
+import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.store.AbstractEMFRepositoryStore;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
@@ -51,18 +52,23 @@ public abstract class EMFFileStore extends AbstractFileStore implements IReposit
     }
 
     protected Resource doCreateEMFResource(){
-        final URI uri = URI.createFileURI(getFileStorePath()) ;
+        final URI uri = getResourceURI() ;
         try{
-            final EditingDomain editingDomain  = getParentStore().getEditingDomain();
-            if(new File(uri.toFileString()).exists()){
-                return editingDomain.getResourceSet().getResource(uri,true) ;
+            final EditingDomain editingDomain = getParentStore().getEditingDomain(uri);
+            final ResourceSet resourceSet = editingDomain.getResourceSet();
+            if (getResource().exists()) {
+                return resourceSet.getResource(uri,true) ;
             }else{
-                return editingDomain.getResourceSet().createResource(uri) ;
+                return resourceSet.createResource(uri);
             }
         }catch (final Exception e) {
             BonitaStudioLog.error(e);
         }
         return null;
+    }
+
+    protected URI getResourceURI() {
+        return URI.createFileURI(getFileStorePath());
     }
 
 	protected String getFileStorePath() {
@@ -75,8 +81,17 @@ public abstract class EMFFileStore extends AbstractFileStore implements IReposit
     @Override
     public synchronized EObject getContent() {
         final Resource eResource = getEMFResource() ;
+        doLoad(eResource);
+        if (eResource != null && !eResource.getContents().isEmpty()) {
+            return eResource.getContents().get(0);
+        }
+        return null;
+    }
+
+    protected void doLoad(final Resource eResource) {
         if(eResource != null){
-            if(!eResource.isLoaded()){
+            final boolean loaded = eResource.isLoaded();
+            if(!loaded){
                 try {
                     final TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(eResource);
                     if (editingDomain != null) {
@@ -90,11 +105,7 @@ public abstract class EMFFileStore extends AbstractFileStore implements IReposit
                     BonitaStudioLog.error(e, CommonRepositoryPlugin.PLUGIN_ID);
                 }
             }
-            if(!eResource.getContents().isEmpty()){
-                return eResource.getContents().get(0);
-            }
         }
-        return null;
     }
 
     private Runnable eResourceLoader(final Resource resource) {
@@ -113,23 +124,35 @@ public abstract class EMFFileStore extends AbstractFileStore implements IReposit
 
     @Override
     protected void doDelete() {
+        final Resource eResource = getEMFResource();
     	doClose();
-    	final Resource eResource = getEMFResource() ;
     	if(eResource != null){
-    		if(eResource.isLoaded()){
-    			eResource.unload() ;
-    		}
-    		try {
-    			eResource.delete(Collections.EMPTY_MAP) ;
-    		} catch (final IOException e) {
-    			BonitaStudioLog.error(e) ;
+    	    final Runnable deleteRunnable = new Runnable() {
 
+                @Override
+                public void run() {
+                    try {
+                        eResource.delete(Collections.EMPTY_MAP);
+                    } catch (final IOException e) {
+                        BonitaStudioLog.error(e);
+                    }
+
+                }
+            };
+    	    final TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(eResource);
+            if (editingDomain != null) {
+                try {
+                    editingDomain.runExclusive(deleteRunnable);
+                } catch (final InterruptedException e) {
+                    BonitaStudioLog.error(e);
+                }
+    		}else{
+                deleteRunnable.run();
     		}
     	} else {
     		try {
-				getResource().delete(true, new NullProgressMonitor());
+                getResource().delete(true, Repository.NULL_PROGRESS_MONITOR);
 			} catch (final CoreException e) {
-
 				BonitaStudioLog.error(e);
 			}
     	}

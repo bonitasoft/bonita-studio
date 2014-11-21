@@ -38,7 +38,7 @@ public class ConfigurationsContentProvider implements ITreeContentProvider {
     private final String definitionVersion;
     private final String definitionId;
 
-    public ConfigurationsContentProvider(String definitionId,String definitionVersion, IRepositoryStore<? extends IRepositoryFileStore> configurationStore) {
+    public ConfigurationsContentProvider(final String definitionId,final String definitionVersion, final IRepositoryStore<? extends IRepositoryFileStore> configurationStore) {
         store = configurationStore ;
         this.definitionVersion = definitionVersion ;
         this.definitionId = definitionId ;
@@ -53,9 +53,9 @@ public class ConfigurationsContentProvider implements ITreeContentProvider {
      * Object)
      */
     @Override
-    public Object[] getChildren(Object parentElement) {
+    public Object[] getChildren(final Object parentElement) {
         if (parentElement instanceof ConnectorConfiguration) {
-            ConnectorConfiguration configuration = (ConnectorConfiguration) parentElement;
+            final ConnectorConfiguration configuration = (ConnectorConfiguration) parentElement;
             return configuration.getParameters().toArray();
         }
         return null;
@@ -70,7 +70,7 @@ public class ConfigurationsContentProvider implements ITreeContentProvider {
      * )
      */
     @Override
-    public Object getParent(Object element) {
+    public Object getParent(final Object element) {
         if (element instanceof ConnectorConfiguration) {
             return ((ConnectorConfiguration) element).eContainer();
         }
@@ -85,7 +85,7 @@ public class ConfigurationsContentProvider implements ITreeContentProvider {
      * Object)
      */
     @Override
-    public boolean hasChildren(Object element) {
+    public boolean hasChildren(final Object element) {
         return element instanceof ConnectorConfiguration && !((ConnectorConfiguration) element).getParameters().isEmpty();
     }
 
@@ -97,12 +97,14 @@ public class ConfigurationsContentProvider implements ITreeContentProvider {
      * .lang.Object)
      */
     @Override
-    public Object[] getElements(Object inputElement) {
-        List<ConnectorConfiguration> configurations = new ArrayList<ConnectorConfiguration>();
-        for(IRepositoryFileStore f  : store.getChildren()){
-            ConnectorConfiguration config =  (ConnectorConfiguration) f.getContent() ;
-            if(config.getDefinitionId().equals(definitionId) && config.getVersion().equals(definitionVersion)){
-                configurations.add(config) ;
+    public Object[] getElements(final Object inputElement) {
+        final List<ConnectorConfiguration> configurations = new ArrayList<ConnectorConfiguration>();
+        for(final IRepositoryFileStore f  : store.getChildren()){
+            final ConnectorConfiguration config =  (ConnectorConfiguration) f.getContent() ;
+            if (config != null) {
+                if (config.getDefinitionId().equals(definitionId) && config.getVersion().equals(definitionVersion)) {
+                    configurations.add(config);
+                }
             }
         }
         return configurations.toArray() ;
@@ -125,7 +127,7 @@ public class ConfigurationsContentProvider implements ITreeContentProvider {
      * .viewers.Viewer, java.lang.Object, java.lang.Object)
      */
     @Override
-    public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+    public void inputChanged(final Viewer viewer, final Object oldInput, final Object newInput) {
     }
 
 }

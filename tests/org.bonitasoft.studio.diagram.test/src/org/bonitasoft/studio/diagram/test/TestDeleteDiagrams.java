@@ -72,8 +72,7 @@ public class TestDeleteDiagrams extends SWTBotGefTestCase {
     @Test
     public void testDeleteDiagrams() {
 
-        final DiagramRepositoryStore diagramStore = (DiagramRepositoryStore) RepositoryManager.getInstance().getCurrentRepository()
-                .getRepositoryStore(DiagramRepositoryStore.class);
+        final DiagramRepositoryStore diagramStore = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
 
         final int nbDiagramsInRepository = diagramStore.getChildren().size();
 
@@ -111,15 +110,18 @@ public class TestDeleteDiagrams extends SWTBotGefTestCase {
         bot.button(IDialogConstants.YES_LABEL).click();
         bot.waitUntil(new ICondition() {
 
+            @Override
             public boolean test() throws Exception {
-                return (nbEditors - 3) == bot.editors().size();
+                return nbEditors - 3 == bot.editors().size();
             }
 
+            @Override
             public void init(final SWTBot bot) {
 
 
             }
 
+            @Override
             public String getFailureMessage() {
                 return "editors have not been closed after deleted diagrams";
             }

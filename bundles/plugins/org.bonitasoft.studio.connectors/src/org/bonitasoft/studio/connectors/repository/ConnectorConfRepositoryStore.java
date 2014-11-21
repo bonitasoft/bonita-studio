@@ -19,6 +19,7 @@ package org.bonitasoft.studio.connectors.repository;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -29,7 +30,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.ModelVersion;
+import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.CopyInputStream;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
@@ -40,7 +43,10 @@ import org.bonitasoft.studio.connectors.ConnectorPlugin;
 import org.bonitasoft.studio.connectors.i18n.Messages;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
 import org.bonitasoft.studio.model.connectorconfiguration.util.ConnectorConfigurationAdapterFactory;
+import org.bonitasoft.studio.model.connectorconfiguration.util.ConnectorConfigurationResourceFactoryImpl;
+import org.bonitasoft.studio.model.connectorconfiguration.util.ConnectorConfigurationResourceImpl;
 import org.bonitasoft.studio.pics.Pics;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.xmi.XMIResource;
@@ -168,15 +174,50 @@ public class ConnectorConfRepositoryStore extends AbstractEMFRepositoryStore<Def
     }
 
     @Override
+    protected Resource getTmpEMFResource(final String fileName, final InputStream inputStream) {
+        FileOutputStream fos = null;
+        File tmpFile = null;
+        try {
+            tmpFile = File.createTempFile("tmp", fileName,
+                    ProjectUtil.getBonitaStudioWorkFolder());
+            fos = new FileOutputStream(tmpFile);
+            FileUtil.copy(inputStream, fos);
+            final Resource resource = new ConnectorConfigurationResourceFactoryImpl()
+                    .createResource(
+                    URI.createFileURI(tmpFile.getAbsolutePath()));
+            return resource;
+        } catch (final Exception e) {
+            BonitaStudioLog.error(e, CommonRepositoryPlugin.PLUGIN_ID);
+        } finally {
+            if (fos != null) {
+                try {
+                    fos.close();
+                } catch (final IOException e) {
+                    BonitaStudioLog.error(e, CommonRepositoryPlugin.PLUGIN_ID);
+                }
+            }
+            if (inputStream != null) {
+                try {
+                    inputStream.close();
+                } catch (final IOException e) {
+                    BonitaStudioLog.error(e, CommonRepositoryPlugin.PLUGIN_ID);
+                }
+            }
+        }
+
+        return null;
+    }
+
+    @Override
     protected InputStream handlePreImport(final String fileName, final InputStream inputStream) throws MigrationException, IOException {
         CopyInputStream copyIs = null;
         try {
             final InputStream is = super.handlePreImport(fileName, inputStream);
             copyIs = new CopyInputStream(is);
-            final Resource r = getTmpEMFResource("beforeImport",
+            final ConnectorConfigurationResourceImpl r = (ConnectorConfigurationResourceImpl) getTmpEMFResource("beforeImport",
                     copyIs.getCopy());
             try {
-                r.load(Collections.EMPTY_MAP);
+                r.load(r.getDefaultLoadOptions());
             } catch (final IOException e) {
                 BonitaStudioLog.error(e);
             }
@@ -189,7 +230,7 @@ public class ConnectorConfRepositoryStore extends AbstractEMFRepositoryStore<Def
                         configuration.setModelVersion(ModelVersion.CURRENT_VERSION);
                     }
                     try {
-                        r.save(Collections.EMPTY_MAP);
+                        r.save(r.getDefaultSaveOptions());
                     } catch (final IOException e) {
                         BonitaStudioLog.error(e);
                     }

@@ -43,6 +43,7 @@ import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.domain.EditingDomain;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.text.BadLocationException;
@@ -56,7 +57,7 @@ import org.eclipse.text.edits.MultiTextEdit;
  */
 public abstract class AbstractRefactorOperation<Y,Z,T extends RefactorPair<Y,Z>> implements IRunnableWithProgress {
 
-    protected EditingDomain domain;
+    protected TransactionalEditingDomain domain;
     protected CompoundCommand compoundCommand;
     private boolean canExecute = true;
     private boolean isCancelled = false;
@@ -69,7 +70,7 @@ public abstract class AbstractRefactorOperation<Y,Z,T extends RefactorPair<Y,Z>>
     }
 
     @Override
-    public final void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+    public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
         Assert.isNotNull(domain);
         if (compoundCommand == null) {
             compoundCommand = new CompoundCommand("Refactor Operation");
@@ -212,7 +213,7 @@ public abstract class AbstractRefactorOperation<Y,Z,T extends RefactorPair<Y,Z>>
         return script;
     }
 
-    public void setEditingDomain(final EditingDomain domain) {
+    public void setEditingDomain(final TransactionalEditingDomain domain) {
         this.domain = domain;
     }
 

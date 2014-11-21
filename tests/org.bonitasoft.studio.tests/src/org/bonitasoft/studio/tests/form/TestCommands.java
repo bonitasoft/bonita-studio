@@ -17,16 +17,15 @@
  */
 package org.bonitasoft.studio.tests.form;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import junit.framework.TestCase;
 
 import org.bonitasoft.studio.application.actions.RedoCommandHandler;
 import org.bonitasoft.studio.application.actions.UndoCommandHandler;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
-import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.console.test.util.ProcessRegistry;
 import org.bonitasoft.studio.diagram.form.custom.commands.AddColumnCommand;
 import org.bonitasoft.studio.diagram.form.custom.commands.AddRowCommand;
@@ -45,123 +44,121 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.gmf.runtime.common.ui.services.editor.EditorService;
 import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCommand;
 import org.eclipse.gmf.runtime.notation.Diagram;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 
 /**
  * @author Aurelien Pupier
- * 
+ *
  */
-public class TestCommands extends TestCase {
+public class TestCommands {
 
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    private FormDiagramEditor formEditor;
+
+    @Before
+    public void setUp() throws Exception {
         FileActionDialog.setDisablePopup(true);
+        formEditor = openFormEditorWithBaseTestForForm();
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        if (formEditor != null) {
+            formEditor.close(false);
+        }
     }
 
     /**
      * Test that the deleteRowCommand was executed
      * @throws Exception
      */
+    @Test
     public void testDeleteRowCommand() throws Exception {
-        FormDiagramEditor formEditor = openFormEditorWithBaseTestForForm();
-
-        RemoveRowCommand rRow = new RemoveRowCommand(formEditor.getDiagramEditPart(), 1);
+        final RemoveRowCommand rRow = new RemoveRowCommand(formEditor.getDiagramEditPart(), 1);
         IStatus status = rRow.execute(null, formEditor);
-        assertTrue("The remove column command wasn't execute succesfully.", status.isOK()); //$NON-NLS-1$
+        assertThat(status.isOK()).overridingErrorMessage("The remove column command wasn't execute succesfully.").isTrue();
         status = rRow.undo(null, formEditor);
-        assertTrue("first undo", status.isOK()); //$NON-NLS-1$
-        status = rRow.redo(null, formEditor);
-        assertTrue("first redo", status.isOK()); //$NON-NLS-1$
-        status = rRow.undo(null, formEditor);
-        assertTrue("second undo", status.isOK()); //$NON-NLS-1$
-        status = rRow.redo(null, formEditor);
-        assertTrue("second redo", status.isOK()); //$NON-NLS-1$
-        status = rRow.undo(null, formEditor);
-        assertTrue("third undo", status.isOK()); //$NON-NLS-1$
-        status = rRow.redo(null, formEditor);
-        assertTrue("third redo", status.isOK()); //$NON-NLS-1$
-        formEditor.doSave(Repository.NULL_PROGRESS_MONITOR);
-        formEditor.close(false);
-        //assertTrue("Can't save the editor.", page.saveEditor(formEditor, false)); //$NON-NLS-1$
+        assertThat(status.isOK()).overridingErrorMessage("first undo").isTrue();
 
+        status = rRow.redo(null, formEditor);
+        assertThat(status.isOK()).overridingErrorMessage("first redo").isTrue();
+
+        status = rRow.undo(null, formEditor);
+        assertThat(status.isOK()).overridingErrorMessage("second undo").isTrue();
+
+        status = rRow.redo(null, formEditor);
+        assertThat(status.isOK()).overridingErrorMessage("second redo").isTrue();
+
+        status = rRow.undo(null, formEditor);
+        assertThat(status.isOK()).overridingErrorMessage("third undo").isTrue();
+
+        status = rRow.redo(null, formEditor);
+        assertThat(status.isOK()).overridingErrorMessage("third redo").isTrue();
     }
 
     /**
      * Test that the DeleteColumnCOmmand was succesfully executed and that there is one column less.
      * @throws Exception
      */
+    @Test
     public void testDeleteColumnCommand() throws Exception {
+        final int oldNcolumn = ((Form) formEditor.getDiagram().getElement()).getNColumn();
+        assertThat(oldNcolumn).isGreaterThanOrEqualTo(2).overridingErrorMessage("The example need to have more than 2 columns.");
 
-        FormDiagramEditor formEditor = openFormEditorWithBaseTestForForm();
-
-        int oldNcolumn = ((Form) formEditor.getDiagram().getElement()).getNColumn();
-        assertTrue("The example need to have more than 2 columns.", oldNcolumn >= 2); //$NON-NLS-1$
-        RemoveColumnCommand rCol = new RemoveColumnCommand(formEditor.getDiagramEditPart(), 1);
+        final RemoveColumnCommand rCol = new RemoveColumnCommand(formEditor.getDiagramEditPart(), 1);
         IStatus status = rCol.execute(null, formEditor);
-        assertTrue("The remove column command wasn't execute succesfully.", status.isOK()); //$NON-NLS-1$
-        status = rCol.undo(null, formEditor);
-        assertTrue("first undo", status.isOK()); //$NON-NLS-1$
-        status = rCol.redo(null, formEditor);
-        assertTrue("first redo", status.isOK()); //$NON-NLS-1$
-        status = rCol.undo(null, formEditor);
-        assertTrue("second undo", status.isOK()); //$NON-NLS-1$
-        status = rCol.redo(null, formEditor);
-        assertTrue("second redo", status.isOK()); //$NON-NLS-1$
-        status = rCol.undo(null, formEditor);
-        assertTrue("third undo", status.isOK()); //$NON-NLS-1$
-        status = rCol.redo(null, formEditor);
-        assertTrue("third redo", status.isOK()); //$NON-NLS-1$
-        formEditor.doSave(Repository.NULL_PROGRESS_MONITOR);
-        formEditor.close(false);
-        //assertTrue("Can't save the editor.", page.saveEditor(formEditor, false)); //$NON-NLS-1$
-        assertEquals(oldNcolumn - 1, ((Form) formEditor.getDiagram().getElement()).getNColumn());
+        assertThat(status.isOK()).overridingErrorMessage("The remove column command wasn't execute succesfully.").isTrue();
 
-        // TODO : check that it is removed
+        status = rCol.undo(null, formEditor);
+        assertThat(status.isOK()).isTrue();
+
+        status = rCol.redo(null, formEditor);
+        assertThat(status.isOK()).isTrue();
+
+        status = rCol.undo(null, formEditor);
+        assertThat(status.isOK()).isTrue();
+
+        status = rCol.redo(null, formEditor);
+        assertThat(status.isOK()).isTrue();
+
+        status = rCol.undo(null, formEditor);
+        assertThat(status.isOK()).isTrue();
+
+        status = rCol.redo(null, formEditor);
+        assertThat(status.isOK()).isTrue();
+
+        assertThat(((Form) formEditor.getDiagram().getElement()).getNColumn()).isEqualTo(oldNcolumn - 1);
     }
 
-
+    @Test
     public void testAddColumnCommand() throws Exception{
-
-        FormDiagramEditor formEditor = openFormEditorWithBaseTestForForm();
-
-        int oldNcolumn = ((Form) formEditor.getDiagram().getElement()).getNColumn();
+        final int oldNcolumn = ((Form) formEditor.getDiagram().getElement()).getNColumn();
         //assertTrue("The example need to have more than 2 columns.", oldNcolumn >= 2);
-        AddColumnCommand aCol = new AddColumnCommand((FormEditPart) formEditor.getDiagramEditPart(), 1);
-        IStatus status = aCol.execute(null, formEditor);
-        assertTrue("The remove column command wasn't execute succesfully.", status.isOK());
-        formEditor.doSave(Repository.NULL_PROGRESS_MONITOR);
-        formEditor.close(false);
-        //assertTrue("Can't save the editor.", page.saveEditor(formEditor, false));
-        assertEquals(oldNcolumn + 1, ((Form) formEditor.getDiagram().getElement()).getNColumn());
-
-
+        final AddColumnCommand aCol = new AddColumnCommand((FormEditPart) formEditor.getDiagramEditPart(), 1);
+        final IStatus status = aCol.execute(null, formEditor);
+        assertThat(status.isOK()).isTrue();
+        assertThat(((Form) formEditor.getDiagram().getElement()).getNColumn()).isEqualTo(oldNcolumn + 1);
     }
 
+    @Test
     public void testAddRowCommand() throws Exception{
-
-        FormDiagramEditor formEditor = openFormEditorWithBaseTestForForm();
-
-        AddRowCommand aCol = new AddRowCommand((FormEditPart) formEditor.getDiagramEditPart(), 1);
-        IStatus status = aCol.execute(null, formEditor);
-        assertTrue("The remove column command wasn't execute succesfully.", status.isOK());
-        formEditor.doSave(Repository.NULL_PROGRESS_MONITOR);
-        formEditor.close(false);
-        //assertTrue("Can't save the editor.", page.saveEditor(formEditor, false));
-
+        final AddRowCommand aCol = new AddRowCommand((FormEditPart) formEditor.getDiagramEditPart(), 1);
+        final IStatus status = aCol.execute(null, formEditor);
+        assertThat(status.isOK()).isTrue();
     }
 
+    @Test
     public void testCompositionOfCommand() throws Exception{
-        FormDiagramEditor formEditor = openFormEditorWithBaseTestForForm();
-
-        FormEditPart formEditPart = (FormEditPart) formEditor.getDiagramEditPart();
-        List<AbstractTransactionalCommand> cs = new ArrayList<AbstractTransactionalCommand>();
+        final FormEditPart formEditPart = (FormEditPart) formEditor.getDiagramEditPart();
+        final List<AbstractTransactionalCommand> cs = new ArrayList<AbstractTransactionalCommand>();
         cs.add(new RemoveColumnCommand(formEditPart,1));
         cs.add(new AddColumnCommand(formEditPart, 0));
         cs.add(new RemoveRowCommand(formEditPart, 1));
         cs.add(new AddRowCommand(formEditPart, 1));
-        for(AbstractTransactionalCommand c : cs){
+        for(final AbstractTransactionalCommand c : cs){
             OperationHistoryFactory.getOperationHistory().execute(c, null, formEditPart);
         }
 
@@ -174,17 +171,15 @@ public class TestCommands extends TestCase {
         new RedoCommandHandler().execute(null);
         new RedoCommandHandler().execute(null);
         new RedoCommandHandler().execute(null);
-        formEditor.doSave(Repository.NULL_PROGRESS_MONITOR);
-        formEditor.close(false);
     }
 
     public static FormDiagramEditor openFormEditorWithBaseTestForForm() throws Exception {
-        MainProcess proc = ProcessRegistry.getTestExampleProcess("BaseTestForForm_1_1.proc");
+        final MainProcess proc = ProcessRegistry.getTestExampleProcess("BaseTestForForm_1_1.proc");
 
-        Form form = ((PageFlow) proc.getElements().get(0)).getForm().get(0);
+        final Form form = ((PageFlow) proc.getElements().get(0)).getForm().get(0);
         /* get the Diagram element related to the form in the resource */
-        Diagram diag = ModelHelper.getDiagramFor(form, null);
-        URI uri = EcoreUtil.getURI(diag);
+        final Diagram diag = ModelHelper.getDiagramFor(form);
+        final URI uri = EcoreUtil.getURI(diag);
 
         /* open the form editor */
         return (FormDiagramEditor) EditorService.getInstance().openEditor(new URIEditorInput(uri, form.getName()));

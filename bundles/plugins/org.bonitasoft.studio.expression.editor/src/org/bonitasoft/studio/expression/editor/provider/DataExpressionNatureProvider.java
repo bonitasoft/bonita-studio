@@ -27,34 +27,32 @@ import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.process.Data;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 
 
 /**
  * @author Romain Bioteau
  *
  */
-public class DataExpressionNatureProvider extends ExpressionContentProvider implements IExpressionNatureProvider{
+public class DataExpressionNatureProvider implements IExpressionNatureProvider {
 
-    private EObject context;
     private final EStructuralFeature dataFeature;
 
     public EStructuralFeature getDataFeature() {
 		return dataFeature;
 	}
 
-	public DataExpressionNatureProvider(EStructuralFeature dataFeature){
+	public DataExpressionNatureProvider(final EStructuralFeature dataFeature){
         this.dataFeature = dataFeature ;
     }
 
     @Override
-    public Expression[] getExpressions() {
-        Set<Expression> result = new HashSet<Expression>() ;
+    public Expression[] getExpressions(final EObject context) {
+        final Set<Expression> result = new HashSet<Expression>() ;
         EObject container = context ;
         while(container != null){
             if(container.eClass().getEAllStructuralFeatures().contains(dataFeature)){
-                List<?> data = (List<?>) container.eGet(dataFeature) ;
-                for(Object d : data){
+                final List<?> data = (List<?>) container.eGet(dataFeature) ;
+                for(final Object d : data){
                     if(d instanceof Data){
                         result.add(createExpression((Data) d)) ;
                     }
@@ -67,13 +65,10 @@ public class DataExpressionNatureProvider extends ExpressionContentProvider impl
         return result.toArray(new Expression[result.size()]);
     }
 
-    @Override
-    public void setContext(EObject context) {
-        this.context = context ;
-    }
 
-    private Expression createExpression(Data d) {
-        Expression exp = ExpressionFactory.eINSTANCE.createExpression() ;
+
+    private Expression createExpression(final Data d) {
+        final Expression exp = ExpressionFactory.eINSTANCE.createExpression() ;
         exp.setType(ExpressionConstants.VARIABLE_TYPE) ;
         exp.setContent(d.getName()) ;
         exp.setName(d.getName()) ;
@@ -82,9 +77,5 @@ public class DataExpressionNatureProvider extends ExpressionContentProvider impl
         return exp;
     }
 
-    @Override
-    public EObject getContext() {
-        return context;
-    }
 
 }

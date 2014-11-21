@@ -21,6 +21,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.math.BigInteger;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -97,6 +98,8 @@ import org.bonitasoft.studio.model.process.Lane;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.Message;
 import org.bonitasoft.studio.model.process.MessageFlow;
+import org.bonitasoft.studio.model.process.MultiInstanceType;
+import org.bonitasoft.studio.model.process.MultiInstantiable;
 import org.bonitasoft.studio.model.process.NonInterruptingBoundaryTimerEvent;
 import org.bonitasoft.studio.model.process.OutputMapping;
 import org.bonitasoft.studio.model.process.Pool;
@@ -197,9 +200,11 @@ import org.omg.spec.bpmn.model.TItemDefinition;
 import org.omg.spec.bpmn.model.TLane;
 import org.omg.spec.bpmn.model.TLaneSet;
 import org.omg.spec.bpmn.model.TLinkEventDefinition;
+import org.omg.spec.bpmn.model.TLoopCharacteristics;
 import org.omg.spec.bpmn.model.TMessage;
 import org.omg.spec.bpmn.model.TMessageEventDefinition;
 import org.omg.spec.bpmn.model.TMessageFlow;
+import org.omg.spec.bpmn.model.TMultiInstanceLoopCharacteristics;
 import org.omg.spec.bpmn.model.TOperation;
 import org.omg.spec.bpmn.model.TOutputSet;
 import org.omg.spec.bpmn.model.TParticipant;
@@ -214,6 +219,7 @@ import org.omg.spec.bpmn.model.TSequenceFlow;
 import org.omg.spec.bpmn.model.TServiceTask;
 import org.omg.spec.bpmn.model.TSignal;
 import org.omg.spec.bpmn.model.TSignalEventDefinition;
+import org.omg.spec.bpmn.model.TStandardLoopCharacteristics;
 import org.omg.spec.bpmn.model.TStartEvent;
 import org.omg.spec.bpmn.model.TSubProcess;
 import org.omg.spec.bpmn.model.TTerminateEventDefinition;
@@ -1731,11 +1737,36 @@ public class BonitaToBPMN implements IBonitaTransformer {
         } else if (child instanceof ReceiveTask) {
             final TReceiveTask scriptTask = ModelFactory.eINSTANCE.createTReceiveTask();
             res = scriptTask;
-        }
-        else if (child instanceof Activity) {
-            final Activity bonitaActivity = (Activity)child;
+        } else if (child instanceof Activity) {
             final TActivity bpmnActivity = ModelFactory.eINSTANCE.createTTask();
             res = bpmnActivity;
+        }
+        if (child instanceof MultiInstantiable && res instanceof TActivity) {
+            final MultiInstantiable multiInstantiable = (MultiInstantiable) child;
+            final MultiInstanceType multiInstanceType = ((MultiInstantiable) child).getType();
+            TLoopCharacteristics loopCharacteristics = null;
+            if (multiInstanceType == MultiInstanceType.STANDARD) {
+                loopCharacteristics = ModelFactory.eINSTANCE.createTStandardLoopCharacteristics();
+                ((TStandardLoopCharacteristics) loopCharacteristics).setTestBefore(multiInstantiable.getTestBefore());
+                ((TStandardLoopCharacteristics) loopCharacteristics).setLoopCondition(createBPMNFormalExpressionFromBonitaExpression(multiInstantiable
+                        .getLoopCondition()));
+                final Expression loopMaximum = multiInstantiable.getLoopMaximum();
+                if (loopMaximum != null && ExpressionConstants.CONSTANT_TYPE.equals(loopMaximum.getType()) && loopMaximum.getContent() != null
+                        && !loopMaximum.getContent().isEmpty()) {
+                    ((TStandardLoopCharacteristics) loopCharacteristics).setLoopMaximum(new BigInteger(loopMaximum.getContent()));
+                }
+            } else if (multiInstanceType == MultiInstanceType.PARALLEL || multiInstanceType == MultiInstanceType.SEQUENTIAL) {
+                loopCharacteristics = ModelFactory.eINSTANCE.createTMultiInstanceLoopCharacteristics();
+                ((TMultiInstanceLoopCharacteristics) loopCharacteristics).setIsSequential(multiInstanceType == MultiInstanceType.SEQUENTIAL);
+                ((TMultiInstanceLoopCharacteristics) loopCharacteristics)
+                        .setCompletionCondition(createBPMNFormalExpressionFromBonitaExpression(multiInstantiable.getCompletionCondition()));
+                ((TMultiInstanceLoopCharacteristics) loopCharacteristics)
+                        .setLoopCardinality(createBPMNFormalExpressionFromBonitaExpression(multiInstantiable.getCardinalityExpression()));
+            }
+            if (loopCharacteristics != null) {
+                ((TActivity) res).setLoopCharacteristics(loopCharacteristics);
+            }
+
         }
         return res;
     }

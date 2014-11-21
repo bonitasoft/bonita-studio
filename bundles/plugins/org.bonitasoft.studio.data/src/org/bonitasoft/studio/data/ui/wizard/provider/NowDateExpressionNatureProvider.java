@@ -34,8 +34,8 @@ import org.eclipse.emf.ecore.EObject;
 public class NowDateExpressionNatureProvider implements IExpressionNatureProvider {
 
     @Override
-    public Expression[] getExpressions() {
-        List<Expression> result = new ArrayList<Expression>() ;
+    public Expression[] getExpressions(final EObject context) {
+        final List<Expression> result = new ArrayList<Expression>() ;
 
         final Expression exp = ExpressionFactory.eINSTANCE.createExpression() ;
         exp.setName("Now") ;
@@ -48,14 +48,5 @@ public class NowDateExpressionNatureProvider implements IExpressionNatureProvide
         return result.toArray(new Expression[0]);
     }
 
-    @Override
-    public void setContext(final EObject context) {
-
-    }
-
-    @Override
-    public EObject getContext() {
-        return null;
-    }
 
 }

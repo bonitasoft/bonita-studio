@@ -110,7 +110,7 @@ public class NameGridPropertySectionContribution extends AbstractNamePropertySec
     public NameGridPropertySectionContribution(final TabbedPropertySheetPage tabbedPropertySheetPage,
             final ExtensibleGridPropertySection extensibleGridPropertySection) {
         super(tabbedPropertySheetPage, extensibleGridPropertySection);
-        diagramStore = (DiagramRepositoryStore) RepositoryManager.getInstance().getCurrentRepository().getRepositoryStore(DiagramRepositoryStore.class);
+        diagramStore = RepositoryManager.getInstance().getCurrentRepository().getRepositoryStore(DiagramRepositoryStore.class);
     }
 
     protected void updateEvents(final Element element) {
@@ -253,6 +253,7 @@ public class NameGridPropertySectionContribution extends AbstractNamePropertySec
         }
     }
 
+
     protected void editDiagramAndPoolNameAndVersion() {
         final MainProcess diagram = ModelHelper.getMainProcess(element);
         final OpenNameAndVersionForDiagramDialog nameDialog = new OpenNameAndVersionForDiagramDialog(Display.getDefault().getActiveShell(), diagram,
@@ -281,7 +282,6 @@ public class NameGridPropertySectionContribution extends AbstractNamePropertySec
         renameDiagramOperation.setNewDiagramVersion(nameDialog.getDiagramVersion());
         renameDiagramOperation.setPoolsRenamed(nameDialog.getPools());
         renameDiagramOperation.setEditor(editor);
-        renameDiagramOperation.setSaveAfterRename(false);
         final IProgressService service = PlatformUI.getWorkbench().getProgressService();
         try {
             service.run(false, false, renameDiagramOperation);
