@@ -36,20 +36,14 @@ import org.bonitasoft.studio.model.expression.Expression;
 import org.codehaus.groovy.eclipse.codeassist.requestor.CompletionNodeFinder;
 import org.codehaus.groovy.eclipse.codeassist.requestor.ContentAssistContext;
 import org.codehaus.jdt.groovy.model.GroovyCompilationUnit;
-import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.commands.operations.OperationHistoryFactory;
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
-import org.eclipse.emf.workspace.AbstractEMFOperation;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.text.BadLocationException;
@@ -89,20 +83,7 @@ public abstract class AbstractRefactorOperation<Y,Z,T extends RefactorPair<Y,Z>>
             doExecute(monitor);
         }
         if (canExecute()) {
-            try {
-                OperationHistoryFactory.getOperationHistory().execute(new AbstractEMFOperation(domain, "Refactor") {
-
-                    @Override
-                    protected IStatus doExecute(final IProgressMonitor monitor, final IAdaptable info) throws ExecutionException {
-                        getEditingDomain().getCommandStack().execute(compoundCommand);
-                        return Status.OK_STATUS;
-                    }
-
-                }, null, null);
-            } catch (final ExecutionException e) {
-                BonitaStudioLog.error(e);
-            }
-
+            domain.getCommandStack().execute(compoundCommand);
             compoundCommand.dispose();
             compoundCommand = null;
         }
