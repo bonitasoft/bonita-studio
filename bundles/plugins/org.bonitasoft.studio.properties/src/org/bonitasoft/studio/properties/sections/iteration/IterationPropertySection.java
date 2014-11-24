@@ -16,7 +16,6 @@
  */
 package org.bonitasoft.studio.properties.sections.iteration;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
 
 import org.bonitasoft.studio.common.DataUtil;
@@ -26,7 +25,6 @@ import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.properties.EObjectSelectionProviderSection;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.data.operation.RefactorDataOperation;
 import org.bonitasoft.studio.data.provider.DataExpressionProvider;
 import org.bonitasoft.studio.data.ui.property.section.DataLabelProvider;
 import org.bonitasoft.studio.expression.editor.constant.ExpressionReturnTypeContentProvider;
@@ -44,7 +42,6 @@ import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.properties.i18n.Messages;
-import org.bonitasoft.studio.refactoring.core.RefactoringOperationType;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.beans.PojoObservables;
 import org.eclipse.core.databinding.conversion.Converter;
@@ -59,13 +56,11 @@ import org.eclipse.core.databinding.observable.value.IValueChangeListener;
 import org.eclipse.core.databinding.observable.value.SelectObservableValue;
 import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.search.IJavaSearchConstants;
 import org.eclipse.jdt.internal.core.search.JavaSearchScope;
@@ -101,8 +96,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.progress.IProgressService;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 
@@ -138,11 +131,13 @@ public class IterationPropertySection extends EObjectSelectionProviderSection im
         }
     }
 
+    private final MutexRule mutexRule = new MutexRule();
+
     private EMFDataBindingContext context;
 
     private ISWTObservableValue returnTypeComboTextObservable;
 
-    private IObservableValue observeReturnTypeInput;
+    private ComboViewer returnTypeCombo;
 
     /* (non-Javadoc)
      * @see org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection#getSectionDescription()
@@ -467,9 +462,10 @@ public class IterationPropertySection extends EObjectSelectionProviderSection im
                         final String technicalTypeFor = getQualifiedNameFromMultipleData((Data) data);
                         if (!returnTypeComboTextObservable.isDisposed()) {
                             final String currentReturnType = (String) returnTypeComboTextObservable.getValue();
-                            if (currentInstantiable == null || currentInstantiable.equals(getEObjectObservable().getValue())) {
+                            if (currentReturnType.equals(Object.class.getName()) || currentInstantiable == null
+                                    || currentInstantiable.equals(getEObjectObservable().getValue())) {
                                 if (!technicalTypeFor.equals(currentReturnType)) {
-                                    observeReturnTypeInput.setValue(new Object());
+                                    returnTypeCombo.setInput(getReturnTypeInput());
                                     returnTypeComboTextObservable.setValue(technicalTypeFor);
                                 }
                             }
@@ -538,7 +534,9 @@ public class IterationPropertySection extends EObjectSelectionProviderSection im
 
                         @Override
                         public void handleListChange(final ListChangeEvent event) {
-                            comboViewer.refresh();
+                            if (comboViewer != null && !comboViewer.getCombo().isDisposed()) {
+                                comboViewer.refresh();
+                            }
                         }
                     });
                     final Object dataValue = dataObservableValue.getValue();
@@ -597,59 +595,28 @@ public class IterationPropertySection extends EObjectSelectionProviderSection im
 
         final IObservableValue iteratorObservable = CustomEMFEditObservables.observeDetailValue(Realm.getDefault(), getEObjectObservable(),
                 ProcessPackage.Literals.MULTI_INSTANTIABLE__ITERATOR_EXPRESSION);
+        final IObservableValue expressionNameDetailValue = CustomEMFEditObservables.observeDetailValue(Realm.getDefault(), iteratorObservable,
+                ExpressionPackage.Literals.EXPRESSION__NAME);
+
+        final IObservableValue expressionContentDetailValue = CustomEMFEditObservables.observeDetailValue(Realm.getDefault(), iteratorObservable,
+                ExpressionPackage.Literals.EXPRESSION__CONTENT);
+        expressionNameDetailValue.addValueChangeListener(new IValueChangeListener() {
+
+            @Override
+            public void handleValueChange(final ValueChangeEvent event) {
+                expressionContentDetailValue.setValue(event.diff.getNewValue());
+
+            }
+        });
+        final IObservableValue expressionReturnTypeDetailValue = CustomEMFEditObservables.observeDetailValue(Realm.getDefault(), iteratorObservable,
+                ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE);
+
 
         final ISWTObservableValue observeinstanceDataNameText = SWTObservables.observeText(instanceDataNameText, SWT.Modify);
 
-        final UpdateValueStrategy updateIteratorNameTarget = new UpdateValueStrategy();
-        updateIteratorNameTarget.setConverter(new Converter(String.class, Expression.class) {
 
-            @Override
-            public Object convert(final Object name) {
-                final Expression expression = (Expression) iteratorObservable.getValue();
-                if (expression != null && name != null) {
-                    final Data oldItem = DataExpressionProvider.dataFromIteratorExpression(
-                            (MultiInstantiable) ModelHelper.getParentFlowElement(expression), expression);
-
-                    final CompoundCommand cc = new CompoundCommand();
-                    cc.append(SetCommand.create(getEditingDomain(), expression, ExpressionPackage.Literals.EXPRESSION__NAME, name));
-                    cc.append(SetCommand.create(getEditingDomain(), expression, ExpressionPackage.Literals.EXPRESSION__CONTENT, name));
-                    getEditingDomain().getCommandStack().execute(cc);
-
-                    final RefactorDataOperation op = new RefactorDataOperation(RefactoringOperationType.UPDATE);
-                    op.setContainer(ModelHelper.getParentProcess(expression));
-
-                    final Data newItem = EcoreUtil.copy(oldItem);
-                    newItem.setName(name.toString());
-                    op.addItemToRefactor(newItem, oldItem);
-                    op.setEditingDomain(getEditingDomain());
-                    final IProgressService service = PlatformUI.getWorkbench().getProgressService();
-                    try {
-                        service.run(true, false, op);
-                    } catch (final InvocationTargetException e) {
-                        BonitaStudioLog.error(e);
-                    } catch (final InterruptedException e) {
-                        BonitaStudioLog.error(e);
-                    }
-                }
-                return expression;
-            }
-        });
-
-        final UpdateValueStrategy updateIteratorNameModel = new UpdateValueStrategy();
-        updateIteratorNameModel.setConverter(new Converter(Expression.class, String.class) {
-
-            @Override
-            public Object convert(final Object from) {
-                final Expression expression = (Expression) from;
-                if (expression != null) {
-                    return expression.getName();
-                }
-                return "";
-            }
-        });
-
-        context.bindValue(SWTObservables.observeDelayedValue(200, observeinstanceDataNameText), iteratorObservable, updateIteratorNameTarget,
-                updateIteratorNameModel);
+        context.bindValue(SWTObservables.observeDelayedValue(400, observeinstanceDataNameText), expressionNameDetailValue,
+                refactorNameStrategy(iteratorObservable), null);
 
         final Label iteratorTypeLabel = widgetFactory.createLabel(iteratorComposite, Messages.type + " *");
         iteratorTypeLabel.setLayoutData(GridDataFactory.swtDefaults().align(SWT.RIGHT, SWT.CENTER).create());
@@ -659,7 +626,7 @@ public class IterationPropertySection extends EObjectSelectionProviderSection im
         ieratorTypeDecoration.setImage(Pics.getImage(PicsConstants.hint));
         ieratorTypeDecoration.setMarginWidth(-3);
 
-        final ComboViewer returnTypeCombo = new ComboViewer(new Combo(iteratorComposite, SWT.BORDER));
+        returnTypeCombo = new ComboViewer(new Combo(iteratorComposite, SWT.BORDER));
         returnTypeCombo.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).align(SWT.FILL, SWT.CENTER).indent(5, 0).create());
         returnTypeCombo.setContentProvider(new ExpressionReturnTypeContentProvider());
         returnTypeCombo.setLabelProvider(new LabelProvider());
@@ -676,72 +643,29 @@ public class IterationPropertySection extends EObjectSelectionProviderSection im
         final Button browseClassesButton = widgetFactory.createButton(iteratorComposite, Messages.Browse, SWT.PUSH);
         browseClassesButton.setLayoutData(GridDataFactory.fillDefaults().create());
 
-        final UpdateValueStrategy updateInputModel = new UpdateValueStrategy();
-        updateInputModel.setConverter(new Converter(Expression.class, Object.class) {
+        expressionReturnTypeDetailValue.addValueChangeListener(new IValueChangeListener() {
 
             @Override
-            public Object convert(final Object from) {
-                final MultiInstantiable instantiable = (MultiInstantiable) getEObjectObservable().getValue();
-                if (instantiable instanceof MultiInstantiable && instantiable.getCollectionDataToMultiInstantiate() != null) {
-                    return getQualifiedNameFromMultipleData(instantiable.getCollectionDataToMultiInstantiate());
-                }
-                return new Object();
-            }
-        });
-        observeReturnTypeInput = ViewersObservables.observeInput(returnTypeCombo);
-        context.bindValue(observeReturnTypeInput, iteratorObservable, null, updateInputModel);
-
-        final UpdateValueStrategy updateIteratorReturnTypeTarget = new UpdateValueStrategy();
-        updateIteratorReturnTypeTarget.setConverter(new Converter(String.class, Expression.class) {
-
-            @Override
-            public Object convert(final Object returnType) {
+            public void handleValueChange(final ValueChangeEvent event) {
                 final Expression expression = (Expression) iteratorObservable.getValue();
-                if (expression != null && returnType != null && !((String) returnType).isEmpty()) {
-
+                final String oldReturnType = (String) event.diff.getOldValue();
+                if (expression != null && oldReturnType != null && !oldReturnType.isEmpty()) {
+                    final Expression oldExpression = EcoreUtil.copy(expression);
+                    oldExpression.setReturnType(oldReturnType);
                     final Data oldItem = DataExpressionProvider.dataFromIteratorExpression(
-                            (MultiInstantiable) ModelHelper.getParentFlowElement(expression), expression);
-
-                    getEditingDomain().getCommandStack().execute(
-                            SetCommand.create(getEditingDomain(), expression, ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE, returnType));
-
-                    final RefactorDataOperation op = new RefactorDataOperation(RefactoringOperationType.UPDATE);
-                    op.setContainer(ModelHelper.getParentProcess(expression));
+                            (MultiInstantiable) ModelHelper.getParentFlowElement(expression), oldExpression);
 
                     final Data newItem = DataExpressionProvider.dataFromIteratorExpression(
                             (MultiInstantiable) ModelHelper.getParentFlowElement(expression), expression);
 
-                    op.addItemToRefactor(newItem, oldItem);
-                    op.setEditingDomain(getEditingDomain());
-                    final IProgressService service = PlatformUI.getWorkbench().getProgressService();
-                    try {
-                        service.run(true, false, op);
-                    } catch (final InvocationTargetException e) {
-                        BonitaStudioLog.error(e);
-                    } catch (final InterruptedException e) {
-                        BonitaStudioLog.error(e);
-                    }
+                    refactorIteratorExpression(oldItem, newItem, expression);
                 }
-                return expression;
-            }
-        });
 
-        final UpdateValueStrategy updateIteratorReturnTypeModel = new UpdateValueStrategy();
-        updateIteratorReturnTypeModel.setConverter(new Converter(Expression.class, String.class) {
-
-            @Override
-            public Object convert(final Object from) {
-                final Expression expression = (Expression) from;
-                if (expression != null) {
-                    return expression.getReturnType();
-                }
-                return Object.class.getName();
             }
         });
 
         returnTypeComboTextObservable = SWTObservables.observeText(returnTypeCombo.getCombo());
-        context.bindValue(SWTObservables.observeDelayedValue(200, returnTypeComboTextObservable), iteratorObservable, updateIteratorReturnTypeTarget,
-                updateIteratorReturnTypeModel);
+        context.bindValue(returnTypeComboTextObservable, expressionReturnTypeDetailValue);
 
         browseClassesButton.addSelectionListener(new SelectionAdapter() {
 
@@ -753,6 +677,82 @@ public class IterationPropertySection extends EObjectSelectionProviderSection im
                 }
             }
         });
+
+        iteratorObservable.addValueChangeListener(new IValueChangeListener() {
+
+            @Override
+            public void handleValueChange(final ValueChangeEvent event) {
+                final Expression expression = (Expression) event.diff.getNewValue();
+                if (!expressionNameDetailValue.getValue().equals(expression.getName())) {
+                    expressionNameDetailValue.setValue(expression.getName());
+                }
+                if (!expressionContentDetailValue.getValue().equals(expression.getContent())) {
+                    expressionContentDetailValue.setValue(expression.getContent());
+                }
+                String returnType = expression.getReturnType();
+                if (returnType == null || returnType.isEmpty()) {
+                    returnType = Object.class.getName();
+                }
+                returnTypeCombo.setInput(getReturnTypeInput());
+                expressionReturnTypeDetailValue.setValue(returnType);
+
+            }
+        });
+    }
+
+    private UpdateValueStrategy refactorNameStrategy(final IObservableValue iteratorObservable) {
+        final UpdateValueStrategy strategy = new UpdateValueStrategy();
+        strategy.setConverter(new Converter(String.class, String.class) {
+
+            @Override
+            public Object convert(final Object value) {
+                final String name = (String) value;
+                final Expression expression = (Expression) iteratorObservable.getValue();
+                if (expression != null && name != null) {
+                    final Data oldItem = DataExpressionProvider.dataFromIteratorExpression(
+                            (MultiInstantiable) ModelHelper.getParentFlowElement(expression), expression);
+                    final Data newItem = EcoreUtil.copy(oldItem);
+                    newItem.setName(name.toString());
+                    refactorIteratorExpression(oldItem, newItem, expression);
+                }
+                return value;
+            }
+        });
+        return strategy;
+    }
+
+    protected void refactorIteratorExpression(final Data oldItem, final Data newItem, final Expression expression) {
+        //TODO
+        //        final RefactorDataOperation op = new RefactorDataOperation(RefactoringOperationType.UPDATE);
+        //        op.setContainer(ModelHelper.getParentProcess(expression));
+        //        op.addItemToRefactor(newItem, oldItem);
+        //        op.setEditingDomain(getEditingDomain());
+        //        final Job job = new Job("Refactor") {
+        //
+        //            @Override
+        //            protected IStatus run(final IProgressMonitor monitor) {
+        //                try {
+        //                    op.run(monitor);
+        //                } catch (final InvocationTargetException e) {
+        //                    BonitaStudioLog.error(e);
+        //                } catch (final InterruptedException e) {
+        //                    BonitaStudioLog.error(e);
+        //                }
+        //                return Status.OK_STATUS;
+        //            }
+        //        };
+        //        job.setPriority(Job.INTERACTIVE);
+        //        job.setUser(true);
+        //        job.setRule(mutexRule);
+        //        job.schedule();
+    }
+
+    protected Object getReturnTypeInput() {
+        final MultiInstantiable instantiable = (MultiInstantiable) getEObjectObservable().getValue();
+        if (instantiable instanceof MultiInstantiable && instantiable.getCollectionDataToMultiInstantiate() != null) {
+            return getQualifiedNameFromMultipleData(instantiable.getCollectionDataToMultiInstantiate());
+        }
+        return new Object();
     }
 
     /**
