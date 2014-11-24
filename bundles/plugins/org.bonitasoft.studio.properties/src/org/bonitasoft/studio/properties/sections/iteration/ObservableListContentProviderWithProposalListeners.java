@@ -33,14 +33,35 @@ import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
  * @author Romain Bioteau
  *
  */
-public class ObservableListContentProviderWithCreateData extends ObservableListContentProvider {
+public abstract class ObservableListContentProviderWithProposalListeners extends ObservableListContentProvider {
 
-    private final IConfigurationElement[] proposalListeners;
-    private final EObject context;
+    private static final String PROPOSAL_LISTENER_EXTENSION_ID = "org.bonitasoft.studio.expression.proposalListener";
+    private final List<IProposalListener> proposalListeners = new ArrayList<IProposalListener>();
 
-    public ObservableListContentProviderWithCreateData(final EObject context) {
-        proposalListeners = getProposalListeners();
-        this.context = context;
+    public ObservableListContentProviderWithProposalListeners(final EObject context) {
+        initProposalListeners(context);
+    }
+
+    protected void initProposalListeners(final EObject context) {
+        proposalListeners.clear();
+        final IConfigurationElement[] configurationElements = BonitaStudioExtensionRegistryManager.getInstance()
+                .getConfigurationElements(PROPOSAL_LISTENER_EXTENSION_ID);
+        // Filters duplicates
+        for (final IConfigurationElement configElement : configurationElements) {
+            final String type = configElement.getAttribute("type");
+            if (type.equals(ExpressionConstants.VARIABLE_TYPE)) {
+                IProposalListener extension;
+                try {
+                    extension = (IProposalListener) configElement.createExecutableExtension("providerClass");
+                    if (extension.isRelevant(context) && !proposalListeners.contains(extension)) {
+                        proposalListeners.add(extension);
+                    }
+                } catch (final CoreException e) {
+                    BonitaStudioLog.error(e);
+                }
+
+            }
+        }
     }
 
     @Override
@@ -50,31 +71,9 @@ public class ObservableListContentProviderWithCreateData extends ObservableListC
         for (final Object element : elements) {
             result.add(element);
         }
-        for (final IConfigurationElement configElement : proposalListeners) {
-            try {
-                final IProposalListener extension = (IProposalListener) configElement.createExecutableExtension("providerClass");
-                if (extension.isRelevant(context)) {
-                    result.add(extension);
-                }
-            } catch (final CoreException e) {
-                BonitaStudioLog.error(e);
-            }
-        }
+        result.addAll(proposalListeners);
         return result.toArray();
     }
 
-    private IConfigurationElement[] getProposalListeners() {
-        final IConfigurationElement[] configurationElements = BonitaStudioExtensionRegistryManager.getInstance()
-                .getConfigurationElements("org.bonitasoft.studio.expression.proposalListener");
-        final List<IConfigurationElement> elements = new ArrayList<IConfigurationElement>();
-        // Filters duplicates
-        for (final IConfigurationElement e : configurationElements) {
-            final String type = e.getAttribute("type");
-            if (type.equals(ExpressionConstants.VARIABLE_TYPE)) {
-                elements.add(e);
-            }
-        }
-        return elements.toArray(new IConfigurationElement[elements.size()]);
-    }
 
 }

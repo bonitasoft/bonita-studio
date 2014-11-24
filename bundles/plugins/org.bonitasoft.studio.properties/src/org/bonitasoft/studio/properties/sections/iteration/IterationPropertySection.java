@@ -40,7 +40,6 @@ import org.bonitasoft.studio.model.process.Activity;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.MultiInstanceType;
 import org.bonitasoft.studio.model.process.MultiInstantiable;
-import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
@@ -50,7 +49,9 @@ import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.beans.PojoObservables;
 import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.observable.Realm;
+import org.eclipse.core.databinding.observable.list.IListChangeListener;
 import org.eclipse.core.databinding.observable.list.IObservableList;
+import org.eclipse.core.databinding.observable.list.ListChangeEvent;
 import org.eclipse.core.databinding.observable.map.IObservableMap;
 import org.eclipse.core.databinding.observable.set.IObservableSet;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
@@ -369,9 +370,10 @@ public class IterationPropertySection extends EObjectSelectionProviderSection im
 
         final Label outputDatalabel = widgetFactory.createLabel(outputGroup, Messages.outputData);
         outputDatalabel.setLayoutData(GridDataFactory.swtDefaults().align(SWT.RIGHT, SWT.CENTER).create());
-        final ComboViewer outputDataComboViewer = createComboViewer(widgetFactory, outputGroup, ProcessFactory.eINSTANCE.createActivity());
+        final ComboViewer outputDataComboViewer = createComboViewer(widgetFactory, outputGroup,
+                new ObservableListContentProviderWithProposalListenersForActivity());
         outputDataComboViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(200, SWT.DEFAULT).indent(5, 0).create());
-
+        outputDataComboViewer.setSorter(new DataViewerSorter());
 
         final IViewerObservableValue observeSingleSelection = ViewersObservables.observeSingleSelection(outputDataComboViewer);
 
@@ -388,10 +390,10 @@ public class IterationPropertySection extends EObjectSelectionProviderSection im
 
         final Label outputListlabel = widgetFactory.createLabel(outputGroup, Messages.outputList);
         outputListlabel.setLayoutData(GridDataFactory.swtDefaults().align(SWT.RIGHT, SWT.CENTER).create());
-        final ComboViewer outputListComboViewer = createComboViewer(widgetFactory, outputGroup, ProcessFactory.eINSTANCE.createPool());
+        final ComboViewer outputListComboViewer = createComboViewer(widgetFactory, outputGroup, new ObservableListContentProviderWithProposalListenersForPool());
         outputListComboViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(200, SWT.DEFAULT).indent(5, 0).create());
         outputListComboViewer.addFilter(new ListDataFilter());
-
+        outputListComboViewer.setSorter(new DataViewerSorter());
 
         final IObservableValue observeDetailValue = CustomEMFEditObservables.observeDetailValue(Realm.getDefault(),
                 getEObjectObservable(), ProcessPackage.Literals.MULTI_INSTANTIABLE__LIST_DATA_CONTAINING_OUTPUT_RESULTS);
@@ -435,11 +437,11 @@ public class IterationPropertySection extends EObjectSelectionProviderSection im
         inputListlabelDecoration.setDescriptionText(Messages.inputListHint);
         inputListlabelDecoration.setImage(Pics.getImage(PicsConstants.hint));
 
-        final ComboViewer inputListComboViewer = createComboViewer(widgetFactory, inputGroup, ProcessFactory.eINSTANCE.createPool());
+        final ComboViewer inputListComboViewer = createComboViewer(widgetFactory, inputGroup, new ObservableListContentProviderWithProposalListenersForPool());
         inputListComboViewer.getControl().setLayoutData(
                 GridDataFactory.fillDefaults().grab(true, false).hint(200, SWT.DEFAULT).indent(5, 0).create());
         inputListComboViewer.addFilter(new ListDataFilter());
-
+        inputListComboViewer.setSorter(new DataViewerSorter());
         final IViewerObservableValue observeSingleSelection = ViewersObservables.observeSingleSelection(inputListComboViewer);
         final IObservableValue observeInputCollectionValue = CustomEMFEditObservables.observeDetailValue(Realm.getDefault(),
                 getEObjectObservable(), ProcessPackage.Literals.MULTI_INSTANTIABLE__COLLECTION_DATA_TO_MULTI_INSTANTIATE);
@@ -509,8 +511,7 @@ public class IterationPropertySection extends EObjectSelectionProviderSection im
                     if (value != null) {
                         final String newVariableName = ((IProposalListener) selection).handleEvent(value, null);
                         if (newVariableName != null) {
-                            final IObservableList observeList = EMFObservables.observeList(value, ProcessPackage.Literals.DATA_AWARE__DATA);
-                            inputListComboViewer.setInput(observeList);
+                            final IObservableList observeList = (IObservableList) inputListComboViewer.getInput();
                             inputListComboViewer.setSelection(new StructuredSelection(getDataFromName(newVariableName, observeList)));
                         }
                     }else{
@@ -531,11 +532,18 @@ public class IterationPropertySection extends EObjectSelectionProviderSection im
             public void handleValueChange(final ValueChangeEvent event) {
                 final EObject parentProcess = getTargetEObject(event, stepData);
                 if (parentProcess != null) {
-                    final Object newInput = EMFObservables.observeList(parentProcess, ProcessPackage.Literals.DATA_AWARE__DATA);
+                    final IObservableList newInput = EMFObservables.observeList(parentProcess, ProcessPackage.Literals.DATA_AWARE__DATA);
                     comboViewer.setInput(newInput);
+                    newInput.addListChangeListener(new IListChangeListener() {
+
+                        @Override
+                        public void handleListChange(final ListChangeEvent event) {
+                            comboViewer.refresh();
+                        }
+                    });
                     final Object dataValue = dataObservableValue.getValue();
                     if (dataValue instanceof Data && newInput != null) {
-                        final Iterator<?> iterator = ((IObservableList) newInput).iterator();
+                        final Iterator<?> iterator = newInput.iterator();
                         while (iterator.hasNext()) {
                             final Object object = iterator.next();
                             if (object instanceof Data) {
@@ -768,10 +776,9 @@ public class IterationPropertySection extends EObjectSelectionProviderSection im
 
 
     protected ComboViewer createComboViewer(final TabbedPropertySheetWidgetFactory widgetFactory, final Composite composite,
-            final EObject contextFoContentProvider) {
+            final ObservableListContentProviderWithProposalListeners contentProvider) {
         final ComboViewer comboViewer = new ComboViewer(composite, SWT.BORDER | SWT.READ_ONLY);
 
-        final ObservableListContentProviderWithCreateData contentProvider = new ObservableListContentProviderWithCreateData(contextFoContentProvider);
         comboViewer.setContentProvider(contentProvider);
         final IObservableSet knownElements = contentProvider.getKnownElements();
         final IObservableMap[] labelMaps = EMFObservables.observeMaps(knownElements, new EStructuralFeature[] { ProcessPackage.Literals.ELEMENT__NAME,
