@@ -35,26 +35,24 @@ import org.eclipse.emf.ecore.EObject;
  */
 public class ProcessNamesExpressionNatureProvider implements IExpressionNatureProvider {
 
-    private EObject context;
-
     @Override
-    public Expression[] getExpressions() {
-        List<Expression> result = new ArrayList<Expression>();
-        final DiagramRepositoryStore diagramStore = (DiagramRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
-        List<String> names = new ArrayList<String>();
-        MainProcess diagram = ModelHelper.getMainProcess(context);
-        for(EObject p : ModelHelper.getAllItemsOfType(diagram, ProcessPackage.Literals.POOL)){
+    public Expression[] getExpressions(final EObject context) {
+        final List<Expression> result = new ArrayList<Expression>();
+        final DiagramRepositoryStore diagramStore = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
+        final List<String> names = new ArrayList<String>();
+        final MainProcess diagram = ModelHelper.getMainProcess(context);
+        for(final EObject p : ModelHelper.getAllItemsOfType(diagram, ProcessPackage.Literals.POOL)){
             if(!names.contains(((Pool) p).getName())){
                 names.add(((Pool) p).getName());
             }
         }
-        for(AbstractProcess p : diagramStore.getAllProcesses()){
+        for(final AbstractProcess p : diagramStore.getAllProcesses()){
             if(!names.contains(p.getName())){
                 names.add(p.getName());
             }
         }
-        for(String pName : names){
-            Expression exp = ExpressionFactory.eINSTANCE.createExpression();
+        for(final String pName : names){
+            final Expression exp = ExpressionFactory.eINSTANCE.createExpression();
             exp.setName(pName);
             exp.setContent(pName);
             exp.setReturnType(String.class.getName());
@@ -63,16 +61,6 @@ public class ProcessNamesExpressionNatureProvider implements IExpressionNaturePr
             result.add(exp);
         }
         return result.toArray(new Expression[result.size()]);
-    }
-
-    @Override
-    public void setContext(final EObject context) {
-        this.context = context ;
-    }
-
-    @Override
-    public EObject getContext() {
-        return context;
     }
 
 }

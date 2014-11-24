@@ -94,7 +94,6 @@ AbstractBonitaDescriptionSection {
         ecv.setAddRowLabel(Messages.AddCorrelation);
         ecv.setRemoveRowLabel(Messages.removeCorrelation);
         final IExpressionNatureProvider provider = new CorrelationIdNatureProvider();
-        provider.setContext(getCatchMessageEvent());
         ecv.addExpressionNatureProvider(provider);
         final List<ViewerFilter> filters = new ArrayList<ViewerFilter>(1);
         filters.add(new ViewerFilter() {

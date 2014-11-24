@@ -41,7 +41,9 @@ public class NewRunTest extends SWTBotGefTestCase {
     public void testNewRun() throws Exception {
         final long nbProcBeforeRun = getNBProcessDefinitions();
 
-        SWTBotTestUtil.createNewDiagram(bot);
+        for (int i = 0; i < 100; i++) {
+            SWTBotTestUtil.createNewDiagram(bot);
+        }
         SWTBotTestUtil.selectAndRunFirstPoolFound(bot);
 
         bot.waitUntil(new ICondition() {
@@ -50,7 +52,7 @@ public class NewRunTest extends SWTBotGefTestCase {
                 return getNBProcessDefinitions() == nbProcBeforeRun + 1 ;
             }
 
-            public void init(SWTBot bot) {
+            public void init(final SWTBot bot) {
             }
 
             public String getFailureMessage() {

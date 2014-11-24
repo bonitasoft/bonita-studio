@@ -61,7 +61,7 @@ public class FormPaletteLabelProvider {
         classifierIDToTitle.put(FormPackage.SELECT_FORM_FIELD, Messages.Select_title);
         classifierIDToDescription.put(FormPackage.SELECT_FORM_FIELD, Messages.Select_desc);
 
-        classifierIDToTitle.put(FormPackage.SUGGEST_BOX, Messages.Submit_title);
+        classifierIDToTitle.put(FormPackage.SUGGEST_BOX, Messages.SuggestBox_title);
         classifierIDToDescription.put(FormPackage.SUGGEST_BOX, Messages.SuggestBox_desc);
 
         classifierIDToTitle.put(FormPackage.TEXT_INFO, Messages.Text_title);

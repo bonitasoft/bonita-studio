@@ -372,7 +372,6 @@ public class Messages extends NLS {
     public static String diagramSectionDescription;
     public static String catchMessageContentEventSectionDescription;
     public static String catchMessageEventCorrelationSectionDescription;
-    public static String documentPropertySectionDescription;
     public static String laneSectionDescription;
     public static String looknfeelPropertySectionDescription;
     public static String resourcePropertySectionDescription;

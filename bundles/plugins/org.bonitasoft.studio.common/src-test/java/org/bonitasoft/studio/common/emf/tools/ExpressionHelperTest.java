@@ -16,7 +16,6 @@ package org.bonitasoft.studio.common.emf.tools;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.bonitasoft.studio.model.expression.assertions.ExpressionAssert.assertThat;
-import static org.mockito.Matchers.any;
 
 import java.util.Collection;
 
@@ -27,6 +26,7 @@ import org.bonitasoft.studio.connector.model.definition.ConnectorDefinitionFacto
 import org.bonitasoft.studio.connector.model.definition.Output;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
+import org.bonitasoft.studio.model.expression.provider.ExpressionItemProviderAdapterFactory;
 import org.bonitasoft.studio.model.form.DateFormField;
 import org.bonitasoft.studio.model.form.Duplicable;
 import org.bonitasoft.studio.model.form.FormFactory;
@@ -41,9 +41,11 @@ import org.bonitasoft.studio.model.process.Document;
 import org.bonitasoft.studio.model.process.JavaObjectData;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.SearchIndex;
+import org.eclipse.emf.common.command.BasicCommandStack;
+import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.emf.edit.domain.EditingDomain;
+import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -185,7 +187,13 @@ public class ExpressionHelperTest {
         expression.setReturnType(DocumentValue.class.getName());
         expression.getReferencedElements().add(ProcessFactory.eINSTANCE.createData());
 
-        ExpressionHelper.clearExpression(expression, any(String.class), any(EditingDomain.class));
+        final CompoundCommand compoundCommand = ExpressionHelper.clearExpression(expression, new AdapterFactoryEditingDomain(
+                new ExpressionItemProviderAdapterFactory(), new BasicCommandStack()));
+        assertThat(compoundCommand).isNotNull();
+        assertThat(compoundCommand.canExecute()).isTrue();
+
+        compoundCommand.execute();
+
         assertThat(expression.getName()).isEmpty();
         assertThat(expression.getContent()).isEmpty();
         assertThat(expression.getType()).isEqualTo(ExpressionConstants.CONSTANT_TYPE);
@@ -326,11 +334,12 @@ public class ExpressionHelperTest {
     }
 
     @Test
-    public void should_createExpressionFromEObject_Returns_a_itself_if_EObject_is_an_Expression() throws Exception {
+    public void should_createExpressionFromEObject_Returns_a_copy_if_EObject_is_an_Expression() throws Exception {
         final Expression inputExpression = ExpressionFactory.eINSTANCE.createExpression();
         inputExpression.setName("connectorOutput");
         inputExpression.setType(ExpressionConstants.CONSTANT_TYPE);
         final Expression expression = ExpressionHelper.createExpressionFromEObject(inputExpression);
-        assertThat(expression).isEqualTo(inputExpression);
+        assertThat(expression).isNotEqualTo(inputExpression);
+        assertThat(EcoreUtil.equals(expression, inputExpression)).isTrue();
     }
 }

@@ -41,30 +41,27 @@ import org.eclipse.emf.ecore.EObject;
  * @author Aurelie Zara
  *
  */
-public class FormFieldExpressionNatureProvider implements
-IExpressionNatureProvider {
+public class FormFieldExpressionNatureProvider implements IExpressionNatureProvider {
 
 
-	private EAttribute flowType;
-	private EObject context;
+	private final EAttribute flowType;
 
-	public FormFieldExpressionNatureProvider(EAttribute flowType,EObject context){
+    public FormFieldExpressionNatureProvider(final EAttribute flowType) {
 		this.flowType = flowType;
-		this.context = context;
-
 	}
 
 	/* (non-Javadoc)
 	 * @see org.bonitasoft.studio.expression.editor.provider.IExpressionNatureProvider#getExpressions()
 	 */
-	public Expression[] getExpressions() {
-		EObject relevantParent = getRelevantParent(context) ;
-		List<Expression> result = new ArrayList<Expression>();
+    @Override
+    public Expression[] getExpressions(final EObject context) {
+		final EObject relevantParent = getRelevantParent(context) ;
+		final List<Expression> result = new ArrayList<Expression>();
 		if (ProcessPackage.Literals.PAGE_FLOW__ENTRY_PAGE_FLOW_TYPE.equals(flowType)){
 			final PageFlow pageFlow = (PageFlow) relevantParent;
 			if(pageFlow != null){
-				for (Form f : pageFlow.getForm()){
-					for (Widget w : f.getWidgets()) {
+				for (final Form f : pageFlow.getForm()){
+					for (final Widget w : f.getWidgets()) {
 						if (w instanceof FormField || w instanceof NextFormButton){
 							result.add( createExpression(w) ) ;
 						}
@@ -75,8 +72,8 @@ IExpressionNatureProvider {
 			if ( ProcessPackage.Literals.VIEW_PAGE_FLOW__VIEW_PAGE_FLOW_TYPE.equals(flowType)){
 				final ViewPageFlow pageFlow = (ViewPageFlow) relevantParent;
 				if(pageFlow != null){
-					for (Form f : pageFlow.getViewForm()){
-						for (Widget w : f.getWidgets()) {
+					for (final Form f : pageFlow.getViewForm()){
+						for (final Widget w : f.getWidgets()) {
 							if (w instanceof FormField || w instanceof NextFormButton){
 								result.add( createExpression(w) ) ;
 							}
@@ -87,8 +84,8 @@ IExpressionNatureProvider {
 				if (ProcessPackage.Literals.RECAP_FLOW__RECAP_PAGE_FLOW_TYPE.equals(flowType)){
 					final RecapFlow pageFlow = (RecapFlow) relevantParent;
 					if(pageFlow != null){
-						for (Form f : pageFlow.getRecapForms()){
-							for (Widget w : f.getWidgets()) {
+						for (final Form f : pageFlow.getRecapForms()){
+							for (final Widget w : f.getWidgets()) {
 								if (w instanceof FormField || w instanceof NextFormButton){
 									result.add( createExpression(w) ) ;
 								}
@@ -102,33 +99,18 @@ IExpressionNatureProvider {
 		return result.toArray(new Expression[result.size()]) ;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.bonitasoft.studio.expression.editor.provider.IExpressionNatureProvider#setContext(org.eclipse.emf.ecore.EObject)
-	 */
-	public void setContext(EObject context) {
-		this.context = context;
 
-	}
-
-	/* (non-Javadoc)
-	 * @see org.bonitasoft.studio.expression.editor.provider.IExpressionNatureProvider#getContext()
-	 */
-	public EObject getContext() {
-		// TODO Auto-generated method stub
-		return context;
-	}
-
-	private EObject getRelevantParent(EObject context) {
+	private EObject getRelevantParent(final EObject context) {
 		EObject parent = context ;
-		while(parent != null && (!(parent instanceof Form) && !(parent instanceof Widget)) && !(parent instanceof PageFlow)){
+		while(parent != null && !(parent instanceof Form) && !(parent instanceof Widget) && !(parent instanceof PageFlow)){
 			parent = parent.eContainer() ;
 		}
 		return parent;
 	}
 
 
-	private Expression createExpression(Widget w) {
-		Expression exp = ExpressionFactory.eINSTANCE.createExpression() ;
+	private Expression createExpression(final Widget w) {
+		final Expression exp = ExpressionFactory.eINSTANCE.createExpression() ;
 		exp.setType(getExpressionType()) ;
 		exp.setContent(WidgetHelper.FIELD_PREFIX+w.getName()) ;
 		exp.setName(WidgetHelper.FIELD_PREFIX+w.getName()) ;

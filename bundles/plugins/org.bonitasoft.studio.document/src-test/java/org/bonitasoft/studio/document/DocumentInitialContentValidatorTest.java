@@ -106,27 +106,6 @@ public class DocumentInitialContentValidatorTest {
 
 
     @Test
-    public void test_Internal_Document_Content_OK() {
-        initializeInternalDocumentInitialContent("bonitaDocument");
-        final IStatus status = validator.validate(document);
-        assertTrue("the status should be ok " + status.getMessage(), status.isOK());
-    }
-
-    @Test
-    public void test_Internal_Document_InitialContent_Empty_NOK() {
-        initializeInternalDocumentInitialContent("");
-        final IStatus status = validator.validate(document);
-        assertFalse("the status should not be ok " + status.getMessage(), status.isOK());
-    }
-
-    @Test
-    public void test_Internal_Document_InitialContent_Null_NOK() {
-        initializeInternalDocumentInitialContent(null);
-        final IStatus status = validator.validate(document);
-        assertFalse("the status should not be ok " + status.getMessage(), status.isOK());
-    }
-
-    @Test
     public void test_Multiple_Document_InitialContent_Null_OK() {
         document.setMultiple(true);
         final IStatus status = validator.validate(document);
@@ -142,15 +121,12 @@ public class DocumentInitialContentValidatorTest {
         assertTrue("the status should not be ok " + status.getMessage(), status.isOK());
     }
 
-    public void initializeDocumentWithURL(final String url) {
+    private void initializeDocumentWithURL(final String url) {
         document.setDocumentType(DocumentType.EXTERNAL);
         urlExpression.setContent(url);
         document.setUrl(urlExpression);
     }
 
-    public void initializeInternalDocumentInitialContent(final String documentStoreId) {
-        document.setDocumentType(DocumentType.INTERNAL);
-        document.setDefaultValueIdOfDocumentStore(documentStoreId);
-    }
+
 
 }

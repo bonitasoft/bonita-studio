@@ -48,12 +48,8 @@ public class DocumentInitialContentValidator implements IValidator {
         final DocumentType documentType = document.getDocumentType();
         if (DocumentType.EXTERNAL.equals(documentType)){
             return validateExternalSimpleDocument(document);
-        } else if (DocumentType.INTERNAL.equals(documentType)
-                && (document.getDefaultValueIdOfDocumentStore() == null || document.getDefaultValueIdOfDocumentStore().isEmpty())) {
-            return ValidationStatus.error(Messages.error_documentDefaultIDEmpty);
-        } else {
-            return ValidationStatus.ok();
         }
+        return ValidationStatus.ok();
     }
 
     private IStatus validateExternalSimpleDocument(final Document document) {

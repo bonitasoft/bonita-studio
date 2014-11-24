@@ -48,7 +48,7 @@ import org.eclipse.ui.IWorkbenchPart;
  */
 public class OrganizationFileStore extends EMFFileStore {
 
-	public OrganizationFileStore(String fileName, OrganizationRepositoryStore store) {
+	public OrganizationFileStore(final String fileName, final OrganizationRepositoryStore store) {
 		super(fileName, store);
 	}
 
@@ -70,7 +70,7 @@ public class OrganizationFileStore extends EMFFileStore {
 
 	@Override
 	public Organization getContent() {
-		DocumentRoot root = (DocumentRoot) super.getContent();
+		final DocumentRoot root = (DocumentRoot) super.getContent();
 		if(root != null){
 			return root.getOrganization() ;
 		}
@@ -78,45 +78,48 @@ public class OrganizationFileStore extends EMFFileStore {
 	}
 
 	@Override
-	protected void doSave(Object content) {
+	protected void doSave(final Object content) {
 		if(content instanceof Organization){
-			Resource emfResource = getEMFResource() ;
+			final Resource emfResource = getEMFResource() ;
 			emfResource.getContents().clear() ;
-			DocumentRoot root = OrganizationFactory.eINSTANCE.createDocumentRoot() ;
+			final DocumentRoot root = OrganizationFactory.eINSTANCE.createDocumentRoot() ;
 			root.setOrganization((Organization) EcoreUtil.copy((EObject) content)) ;
 			emfResource.getContents().add(root) ;
 			try {
-				Map<String, String> options = new HashMap<String, String>() ;
+                final Map<Object, Object> options = new HashMap<Object, Object>();
 				options.put(XMLResource.OPTION_ENCODING, "UTF-8");
 				options.put(XMLResource.OPTION_XML_VERSION, "1.0");
+                if (emfResource instanceof XMLResourceImpl) {
+                    options.putAll(((XMLResourceImpl) emfResource).getDefaultSaveOptions());
+                }
 				emfResource.save(options) ;
-			} catch (IOException e) {
+			} catch (final IOException e) {
 				BonitaStudioLog.error(e) ;
 			}
 		}
 	}
 
 	@Override
-	public void export(String targetAbsoluteFilePath) throws IOException {
+	public void export(final String targetAbsoluteFilePath) throws IOException {
 		checkWritePermission(new File(targetAbsoluteFilePath));
-		Organization organization = getContent() ;
-		DocumentRoot root = OrganizationFactory.eINSTANCE.createDocumentRoot() ;
-		Organization exportedCopy = EcoreUtil.copy(organization)  ;
+		final Organization organization = getContent() ;
+		final DocumentRoot root = OrganizationFactory.eINSTANCE.createDocumentRoot() ;
+		final Organization exportedCopy = EcoreUtil.copy(organization)  ;
 		exportedCopy.setName(null) ;
 		exportedCopy.setDescription(null) ;
 		root.setOrganization(exportedCopy) ;
 		try{
-			File to = new File(targetAbsoluteFilePath) ;
+			final File to = new File(targetAbsoluteFilePath) ;
 			if(targetAbsoluteFilePath.endsWith(".xml")){
 				to.getParentFile().mkdirs() ;
 			}else{
 				to.mkdirs() ;
 			}
-			XMLProcessor processor = new OrganizationXMLProcessor() ;
+			final XMLProcessor processor = new OrganizationXMLProcessor() ;
 
 			File target = null;
 			if(to.isDirectory()){
-				String targetFilename = organization.getName()+".xml";
+				final String targetFilename = organization.getName()+".xml";
 				target = new File(to,targetFilename) ;
 			}else{
 				target = to ;
@@ -129,16 +132,16 @@ public class OrganizationFileStore extends EMFFileStore {
 				}
 			}
 
-			Resource resource = new XMLResourceImpl(URI.createFileURI(target.getAbsolutePath())) ;
+			final Resource resource = new XMLResourceImpl(URI.createFileURI(target.getAbsolutePath())) ;
 			resource.getContents().add(root) ;
-			Map<String, String> options = new HashMap<String, String>() ;
+			final Map<String, String> options = new HashMap<String, String>() ;
 			options.put(XMLResource.OPTION_ENCODING, "UTF-8");
 			options.put(XMLResource.OPTION_XML_VERSION, "1.0");
 
-			FileOutputStream fos = new FileOutputStream(target)  ;
+			final FileOutputStream fos = new FileOutputStream(target)  ;
 			processor.save(fos, resource, options)  ;
 			fos.close() ;
-		}catch (Exception e) {
+		}catch (final Exception e) {
 			BonitaStudioLog.error(e);
 		}
 
@@ -154,7 +157,7 @@ public class OrganizationFileStore extends EMFFileStore {
 	public IFile getResource() {
 		return getParentStore().getResource().getFile(getName());
 	}
-	
+
 	public boolean isCorrectlySyntaxed(){
 		if (getContent()==null){
 			return false;

@@ -32,16 +32,17 @@ import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.Task;
 import org.bonitasoft.studio.refactoring.core.RefactoringOperationType;
-import org.eclipse.emf.common.command.BasicCommandStack;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.emf.transaction.impl.TransactionalCommandStackImpl;
+import org.eclipse.emf.transaction.impl.TransactionalEditingDomainImpl;
 import org.junit.Before;
 import org.junit.Test;
 
 public class RefactorDocumentOperationTest {
 
-    private AdapterFactoryEditingDomain domain;
+    private TransactionalEditingDomain domain;
     private Pool parentProcess;
     private Operation operation;
     private Expression leftOperand;
@@ -50,7 +51,7 @@ public class RefactorDocumentOperationTest {
 
     @Before
     public void setUp() throws Exception {
-        domain = new AdapterFactoryEditingDomain(new CustomProcessItemProviderAdapterFactory(), new BasicCommandStack());
+        domain = new TransactionalEditingDomainImpl(new CustomProcessItemProviderAdapterFactory(), new TransactionalCommandStackImpl());
         parentProcess = ProcessFactory.eINSTANCE.createPool();
         document = ProcessFactory.eINSTANCE.createDocument();
         document.setName(INITIAL_DOC_NAME);

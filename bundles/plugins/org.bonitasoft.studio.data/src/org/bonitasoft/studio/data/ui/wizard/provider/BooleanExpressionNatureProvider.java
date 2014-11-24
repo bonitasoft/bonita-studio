@@ -29,8 +29,8 @@ import org.eclipse.emf.ecore.EObject;
 public class BooleanExpressionNatureProvider implements IExpressionNatureProvider {
 
     @Override
-    public Expression[] getExpressions() {
-        List<Expression> result = new ArrayList<Expression>();
+    public Expression[] getExpressions(final EObject context) {
+        final List<Expression> result = new ArrayList<Expression>();
 
         Expression exp = ExpressionFactory.eINSTANCE.createExpression();
         exp.setName("true");
@@ -49,14 +49,5 @@ public class BooleanExpressionNatureProvider implements IExpressionNatureProvide
         return result.toArray(new Expression[2]);
     }
 
-    @Override
-    public void setContext(final EObject context) {
-
-    }
-
-    @Override
-    public EObject getContext() {
-        return null;
-    }
 
 }

@@ -82,7 +82,7 @@ public abstract class EMFFileStore extends AbstractFileStore implements IReposit
     public synchronized EObject getContent() {
         final Resource eResource = getEMFResource() ;
         doLoad(eResource);
-        if (!eResource.getContents().isEmpty()) {
+        if (eResource != null && !eResource.getContents().isEmpty()) {
             return eResource.getContents().get(0);
         }
         return null;

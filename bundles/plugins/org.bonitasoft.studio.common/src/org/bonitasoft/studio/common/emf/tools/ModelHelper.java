@@ -1002,7 +1002,7 @@ public class ModelHelper {
     private static boolean isElementIsReferencedInScript(final Expression expr, final EObject element) {
         if (!expr.getReferencedElements().isEmpty()) {
             for (final EObject o : expr.getReferencedElements()) {
-                if (element instanceof Element && o instanceof Element && ((Element) element).getName().equals(((Element) o).getName())) {
+                if (element instanceof Element && o instanceof Element && isSameElement(element, o)) {
                     return true && !isAExpressionReferencedElement(expr);
                 } else {
                     if (element instanceof Parameter && o instanceof Parameter && ((Parameter) element).getName().equals(((Parameter) o).getName())) {
@@ -2009,7 +2009,7 @@ public class ModelHelper {
     }
 
 
-    public static boolean isObjectIsReferencedInExpression(final Expression expr, final Object elementToDisplay){
+    public static boolean isObjectIsReferencedInExpression(final Expression expr, final Object elementToDisplay) {
         for (final EObject referencedElement:expr.getReferencedElements()){
             if (referencedElement instanceof Parameter && elementToDisplay instanceof Parameter && ((Parameter)referencedElement).getName().equals(((Parameter)elementToDisplay).getName())){
                 return true;
@@ -2019,11 +2019,87 @@ public class ModelHelper {
                 return true;
             }
 
-            if (referencedElement instanceof Element && elementToDisplay instanceof Element && ((Element)referencedElement).getName().equals(((Element)elementToDisplay).getName())){
+            if (referencedElement instanceof Element && elementToDisplay instanceof Element && isSameElement((Element) elementToDisplay, referencedElement)) {
                 return true;
             }
         }
         return false;
+    }
+
+    protected static EObject getReferencedDataInActivity(final Data refData) {
+        EObject container = refData.eContainer();
+        while (container != null && !(container instanceof Activity)) {
+            container = container.eContainer();
+        }
+        if (container != null) {
+            if (getDataOnActivity(refData, container) != null) {
+                return container;
+            }
+        }
+        return null;
+    }
+
+    protected static EObject getReferencedDataInPool(final Data refData) {
+        EObject container = refData.eContainer();
+        while (container != null && !(container instanceof Pool)) {
+            container = container.eContainer();
+        }
+        if (container != null) {
+            if (getDataOnPool(refData, container) != null) {
+                return container;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * @param refData
+     * @param container
+     */
+    protected static Data getDataOnActivity(final Data refData, final EObject container) {
+        final List<Data> datas = ((Activity) container).getData();
+        for (final Data data : datas) {
+            if (data.getName().equals(refData.getName())) {
+                return data;
+            }
+        }
+        return null;
+    }
+
+    protected static Data getDataOnPool(final Data refData, final EObject container) {
+        final List<Data> datas = ((Pool) container).getData();
+        for (final Data data : datas) {
+            if (data.getName().equals(refData.getName())) {
+                return data;
+            }
+        }
+        return null;
+    }
+
+    protected static boolean isSameContainer(final EObject referencedElement, final EObject container) {
+        if (referencedElement instanceof Data) {
+            final Activity stepContainer = (Activity) getReferencedDataInActivity((Data) referencedElement);
+            if (stepContainer!=null){
+                return stepContainer.equals(container);
+            }
+            final Pool poolContainer = (Pool) getReferencedDataInPool((Data) referencedElement);
+            if (poolContainer != null) {
+                return poolContainer.equals(container);
+            }
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * @param elementToDisplay
+     * @param referencedElement
+     * @return
+     */
+    protected static boolean isSameElement(final EObject elementToDisplay, final EObject referencedElement) {
+
+        return ((Element) referencedElement).getName().equals(((Element) elementToDisplay).getName())
+                && isSameContainer(referencedElement, elementToDisplay.eContainer());
     }
 
 }

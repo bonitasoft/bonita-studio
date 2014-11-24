@@ -14,7 +14,6 @@
 package org.bonitasoft.studio.actors.ui.wizard.connector;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.bonitasoft.studio.actors.model.organization.CustomUserInfoDefinition;
@@ -23,16 +22,17 @@ import org.bonitasoft.studio.actors.model.organization.Organization;
 import org.bonitasoft.studio.actors.repository.OrganizationFileStore;
 import org.bonitasoft.studio.actors.repository.OrganizationRepositoryStore;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
-import org.bonitasoft.studio.expression.editor.provider.ExpressionContentProvider;
+import org.bonitasoft.studio.expression.editor.provider.IExpressionNatureProvider;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EObject;
 
 
 /**
  * @author Elias Ricken de Medeiros
  *
  */
-public class CustomUserInfoNameExpressionProvider extends ExpressionContentProvider {
+public class CustomUserInfoNameExpressionProvider implements IExpressionNatureProvider {
 
 
     private final OrganizationRepositoryStore store;
@@ -44,25 +44,20 @@ public class CustomUserInfoNameExpressionProvider extends ExpressionContentProvi
     }
 
     @Override
-    public Expression[] getExpressions() {
+    public Expression[] getExpressions(final EObject context) {
         final OrganizationFileStore organizationFileStore = store.getChild(activeOrgFileName);
         final Organization organization = organizationFileStore.getContent();
         final CustomUserInfoDefinitions infoDefContainer = organization.getCustomUserInfoDefinitions();
-        final Expression[] inheritedExpressions = super.getExpressions();
-        return getExpressions(infoDefContainer, inheritedExpressions);
+        return getExpressions(infoDefContainer);
     }
 
-    private Expression[] getExpressions(final CustomUserInfoDefinitions infoDefContainer, final Expression[] inheritedExpressions) {
+    private Expression[] getExpressions(final CustomUserInfoDefinitions infoDefContainer) {
         final List<Expression> exprList = new ArrayList<Expression>();
         if(infoDefContainer != null) {
             final EList<CustomUserInfoDefinition> infoDefElements = infoDefContainer.getCustomUserInfoDefinition();
             for (final CustomUserInfoDefinition infoDefinition : infoDefElements) {
                 exprList.add(ExpressionHelper.createConstantExpression(infoDefinition.getName(), String.class.getName()));
             }
-        }
-        if (inheritedExpressions != null) {
-            final List<Expression> currentExpressions = Arrays.asList(inheritedExpressions);
-            exprList.addAll(currentExpressions);
         }
         return exprList.toArray(new Expression[exprList.size()]);
     }
