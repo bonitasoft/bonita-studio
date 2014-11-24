@@ -20,6 +20,7 @@ import java.util.Arrays;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
+import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
 import org.bonitasoft.studio.connector.model.definition.Input;
 import org.bonitasoft.studio.connector.model.definition.wizard.AbstractConnectorConfigurationWizardPage;
 import org.bonitasoft.studio.connector.model.definition.wizard.PageComponentSwitchBuilder;
@@ -35,6 +36,7 @@ import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.model.expression.ListExpression;
 import org.bonitasoft.studio.model.expression.TableExpression;
 import org.eclipse.core.databinding.UpdateListStrategy;
+import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.util.EList;
@@ -90,9 +92,9 @@ public class GroovyScriptConfigurationWizardPage extends AbstractConnectorConfig
         viewer.setIsPageFlowContext(isPageFlowContext());
         viewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         viewer.setContext(getElementContainer());
-        viewer.setMandatoryField(builder.getLabel("script"), context);
+        final String fieldName = builder.getLabel("script");
+        viewer.setMandatoryField(fieldName, context);
         viewer.addFilter(getExpressionTypeFilter());
-        viewer.setExternalDataBindingContext(context);
         viewer.setInput(parameter);
         final String desc = builder.getDescription(SCRIPT_INPUT_NAME);
         if (desc != null && !desc.isEmpty()) {
@@ -102,7 +104,8 @@ public class GroovyScriptConfigurationWizardPage extends AbstractConnectorConfig
                 EMFObservables.observeValue(parameter, ConnectorConfigurationPackage.Literals.CONNECTOR_PARAMETER__EXPRESSION));
 
         context.bindValue(EMFObservables.observeValue(scriptParameter.getExpression(), ExpressionPackage.Literals.EXPRESSION__CONTENT),
-                EMFObservables.observeValue(parameter.getExpression(), ExpressionPackage.Literals.EXPRESSION__CONTENT));
+                EMFObservables.observeValue(parameter.getExpression(), ExpressionPackage.Literals.EXPRESSION__CONTENT),
+                mandatoryScriptContentStrategy(fieldName), mandatoryScriptContentStrategy(fieldName));
         context.bindValue(EMFObservables.observeValue(scriptParameter.getExpression(), ExpressionPackage.Literals.EXPRESSION__NAME),
                 EMFObservables.observeValue(parameter.getExpression(), ExpressionPackage.Literals.EXPRESSION__NAME));
 
@@ -152,6 +155,12 @@ public class GroovyScriptConfigurationWizardPage extends AbstractConnectorConfig
                 expressionToReferencedElements);
 
         return viewer;
+    }
+
+    private UpdateValueStrategy mandatoryScriptContentStrategy(final String fieldLabel) {
+        final UpdateValueStrategy startegy = new UpdateValueStrategy();
+        startegy.setAfterGetValidator(new EmptyInputValidator(fieldLabel));
+        return startegy;
     }
 
     @Override
