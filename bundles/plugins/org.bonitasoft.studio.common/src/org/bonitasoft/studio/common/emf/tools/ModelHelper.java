@@ -1003,10 +1003,10 @@ public class ModelHelper {
         if (!expr.getReferencedElements().isEmpty()) {
             for (final EObject o : expr.getReferencedElements()) {
                 if (element instanceof Element && o instanceof Element && isSameElement(element, o)) {
-                    return true && !isAExpressionReferencedElement(expr);
+                    return true && !isReferencedElementIsInExpression(expr);
                 } else {
                     if (element instanceof Parameter && o instanceof Parameter && ((Parameter) element).getName().equals(((Parameter) o).getName())) {
-                        return true && !isAExpressionReferencedElement(expr);
+                        return true && !isReferencedElementIsInExpression(expr);
                     }
                 }
             }
@@ -1014,7 +1014,7 @@ public class ModelHelper {
         return false;
     }
 
-    public static boolean isAExpressionReferencedElement(final EObject target) {
+    public static boolean isReferencedElementIsInExpression(final EObject target) {
         EObject container = target.eContainer();
         while (container != null) {
             if (container instanceof Expression) {
@@ -2026,7 +2026,7 @@ public class ModelHelper {
         return false;
     }
 
-    protected static EObject getReferencedDataInActivity(final Data refData) {
+    protected static EObject getReferencedDataActivityContainer(final Data refData) {
         EObject container = refData.eContainer();
         while (container != null && !(container instanceof Activity)) {
             container = container.eContainer();
@@ -2039,7 +2039,7 @@ public class ModelHelper {
         return null;
     }
 
-    protected static EObject getReferencedDataInPool(final Data refData) {
+    protected static EObject getReferencedDataPoolContainer(final Data refData) {
         EObject container = refData.eContainer();
         while (container != null && !(container instanceof Pool)) {
             container = container.eContainer();
@@ -2078,11 +2078,11 @@ public class ModelHelper {
 
     protected static boolean isSameContainer(final EObject referencedElement, final EObject container) {
         if (referencedElement instanceof Data) {
-            final Activity stepContainer = (Activity) getReferencedDataInActivity((Data) referencedElement);
+            final Activity stepContainer = (Activity) getReferencedDataActivityContainer((Data) referencedElement);
             if (stepContainer!=null){
                 return stepContainer.equals(container);
             }
-            final Pool poolContainer = (Pool) getReferencedDataInPool((Data) referencedElement);
+            final Pool poolContainer = (Pool) getReferencedDataPoolContainer((Data) referencedElement);
             if (poolContainer != null) {
                 return poolContainer.equals(container);
             }
