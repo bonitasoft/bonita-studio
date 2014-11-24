@@ -92,6 +92,7 @@ public class GroovyScriptConfigurationWizardPage extends AbstractConnectorConfig
         viewer.setContext(getElementContainer());
         viewer.setMandatoryField(builder.getLabel("script"), context);
         viewer.addFilter(getExpressionTypeFilter());
+        viewer.setExternalDataBindingContext(context);
         viewer.setInput(parameter);
         final String desc = builder.getDescription(SCRIPT_INPUT_NAME);
         if (desc != null && !desc.isEmpty()) {
