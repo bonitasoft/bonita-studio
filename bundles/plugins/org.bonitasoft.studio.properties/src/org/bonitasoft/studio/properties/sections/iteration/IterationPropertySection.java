@@ -740,7 +740,9 @@ public class IterationPropertySection extends EObjectSelectionProviderSection im
             @Override
             public void widgetSelected(final SelectionEvent e) {
                 final String typeName = openClassSelectionDialog();
-                returnTypeComboTextObservable.setValue(typeName);
+                if (typeName != null && !typeName.isEmpty()) {
+                    returnTypeComboTextObservable.setValue(typeName);
+                }
             }
         });
     }
