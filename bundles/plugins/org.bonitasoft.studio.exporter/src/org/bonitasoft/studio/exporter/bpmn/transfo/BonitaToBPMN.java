@@ -1753,8 +1753,10 @@ public class BonitaToBPMN implements IBonitaTransformer {
         if (MultiInstanceType.STANDARD.equals(multiInstanceType)) {
             loopCharacteristics = ModelFactory.eINSTANCE.createTStandardLoopCharacteristics();
             ((TStandardLoopCharacteristics) loopCharacteristics).setTestBefore(multiInstantiable.getTestBefore());
-            ((TStandardLoopCharacteristics) loopCharacteristics).setLoopCondition(createBPMNFormalExpressionFromBonitaExpression(multiInstantiable
-                    .getLoopCondition()));
+            final Expression loopCondition = multiInstantiable.getLoopCondition();
+            if (loopCondition != null) {
+                ((TStandardLoopCharacteristics) loopCharacteristics).setLoopCondition(createBPMNFormalExpressionFromBonitaExpression(loopCondition));
+            }
             final Expression loopMaximum = multiInstantiable.getLoopMaximum();
             if (loopMaximum != null && ExpressionConstants.CONSTANT_TYPE.equals(loopMaximum.getType()) && loopMaximum.getContent() != null
                     && !loopMaximum.getContent().isEmpty()) {
@@ -1763,10 +1765,16 @@ public class BonitaToBPMN implements IBonitaTransformer {
         } else if (MultiInstanceType.PARALLEL.equals(multiInstanceType) || MultiInstanceType.SEQUENTIAL.equals(multiInstanceType)) {
             loopCharacteristics = ModelFactory.eINSTANCE.createTMultiInstanceLoopCharacteristics();
             ((TMultiInstanceLoopCharacteristics) loopCharacteristics).setIsSequential(MultiInstanceType.SEQUENTIAL.equals(multiInstanceType));
-            ((TMultiInstanceLoopCharacteristics) loopCharacteristics)
-                    .setCompletionCondition(createBPMNFormalExpressionFromBonitaExpression(multiInstantiable.getCompletionCondition()));
-            ((TMultiInstanceLoopCharacteristics) loopCharacteristics)
-                    .setLoopCardinality(createBPMNFormalExpressionFromBonitaExpression(multiInstantiable.getCardinalityExpression()));
+            final Expression completionCondition = multiInstantiable.getCompletionCondition();
+            if (completionCondition != null) {
+                ((TMultiInstanceLoopCharacteristics) loopCharacteristics)
+                        .setCompletionCondition(createBPMNFormalExpressionFromBonitaExpression(completionCondition));
+            }
+            final Expression cardinalityExpression = multiInstantiable.getCardinalityExpression();
+            if (cardinalityExpression != null) {
+                ((TMultiInstanceLoopCharacteristics) loopCharacteristics)
+                        .setLoopCardinality(createBPMNFormalExpressionFromBonitaExpression(cardinalityExpression));
+            }
         }
         if (loopCharacteristics != null) {
             res.setLoopCharacteristics(loopCharacteristics);
