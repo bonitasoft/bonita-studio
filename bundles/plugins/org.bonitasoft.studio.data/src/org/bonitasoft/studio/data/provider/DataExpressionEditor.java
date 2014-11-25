@@ -30,6 +30,7 @@ import org.bonitasoft.studio.common.jface.DataStyledTreeLabelProvider;
 import org.bonitasoft.studio.common.jface.TableColumnSorter;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.data.i18n.Messages;
+import org.bonitasoft.studio.data.ui.wizard.CreateVariableProposalListener;
 import org.bonitasoft.studio.expression.editor.ExpressionEditorService;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionEditor;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionProvider;
@@ -186,7 +187,7 @@ public class DataExpressionEditor extends SelectionAwareExpressionEditor
             final String expressionTypeLink = element.getAttribute("type");
             if (expressionTypeLink.equals(ExpressionConstants.VARIABLE_TYPE)) {
                 final IProposalListener proposalListener = (IProposalListener) element.createExecutableExtension("providerClass");
-                if (proposalListener.isRelevant(context)) {
+                if (proposalListener.isRelevant(context) && proposalListener instanceof CreateVariableProposalListener) {
                     expressionViewer.getContentProposal().addNewData(proposalListener);
                     fillViewerData(context, filters);
                     return;
