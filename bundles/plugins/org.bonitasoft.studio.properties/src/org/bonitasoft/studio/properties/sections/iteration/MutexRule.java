@@ -16,6 +16,7 @@
  */
 package org.bonitasoft.studio.properties.sections.iteration;
 
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 
 
@@ -30,7 +31,7 @@ public class MutexRule implements ISchedulingRule {
      */
     @Override
     public boolean contains(final ISchedulingRule rule) {
-        return rule == this;
+        return rule == this || rule instanceof IResource;
     }
 
     /* (non-Javadoc)
@@ -38,7 +39,7 @@ public class MutexRule implements ISchedulingRule {
      */
     @Override
     public boolean isConflicting(final ISchedulingRule rule) {
-        return rule == this;
+        return rule == this || rule instanceof IResource;
     }
 
 }

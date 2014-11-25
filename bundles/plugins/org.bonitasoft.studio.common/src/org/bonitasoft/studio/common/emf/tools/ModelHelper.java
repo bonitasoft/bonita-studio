@@ -2097,9 +2097,13 @@ public class ModelHelper {
      * @return
      */
     protected static boolean isSameElement(final EObject elementToDisplay, final EObject referencedElement) {
+        if (elementToDisplay.eContainer() != null) {
+            return ((Element) referencedElement).getName().equals(((Element) elementToDisplay).getName())
+                    && isSameContainer(referencedElement, elementToDisplay.eContainer());
+        } else {
+            return EcoreUtil.equals(elementToDisplay, referencedElement);
+        }
 
-        return ((Element) referencedElement).getName().equals(((Element) elementToDisplay).getName())
-                && isSameContainer(referencedElement, elementToDisplay.eContainer());
     }
 
 }
