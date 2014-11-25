@@ -107,7 +107,7 @@ public class GroovyScriptConfigurationWizardPage extends AbstractConnectorConfig
         if (input.getName().equals(FAKE_SCRIPT_EXPRESSION)) {
             final Expression expression = ExpressionHelper.createGroovyScriptExpression("", input.getType());
             expression.setReturnTypeFixed(true);
-            expression.setName("Click on pencil to edit/view groovy script");
+            expression.setName("");
             return expression;
         }
         return super.createExpression(input);
