@@ -139,7 +139,7 @@ public class DataExpressionProvider implements IExpressionProvider {
     }
 
     private static DataType getDataTypeFrom(final String returnType, final Expression iteratorExpression, final MultiInstantiable parentFlowElement) {
-        final MainProcess diagram = ModelHelper.getMainProcess(iteratorExpression);
+        final MainProcess diagram = ModelHelper.getMainProcess(parentFlowElement);
         if (returnType.equals(Boolean.class.getName())) {
             return ModelHelper.getDataTypeForID(diagram, DataTypeLabels.booleanDataType);
         } else if (returnType.equals(String.class.getName())) {
@@ -218,3 +218,4 @@ public class DataExpressionProvider implements IExpressionProvider {
 
 
 }
+
