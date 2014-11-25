@@ -41,6 +41,7 @@ import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.Task;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -359,8 +360,7 @@ public class ModelHelperTest {
 
         activity.getData().add(data);
         activity.getData().add(anotherData);
-        //   final EObject container = ModelHelper.getReferencedDataActivityContainer(refData);
-        assertTrue(ModelHelper.isSameContainer(refData, activity));
+        assertTrue(ModelHelper.isSameContainer(refData, data));
     }
 
     @Test
@@ -381,7 +381,7 @@ public class ModelHelperTest {
         anotherData.setName("anotherData");
         pool.getData().add(data);
         pool.getData().add(anotherData);
-        assertTrue(ModelHelper.isSameContainer(refData, pool));
+        assertTrue(ModelHelper.isSameContainer(refData, data));
     }
 
     @Test
@@ -401,7 +401,7 @@ public class ModelHelperTest {
         final Data anotherData = ProcessFactory.eINSTANCE.createData();
         anotherData.setName("anotherData");
         pool.getData().add(anotherData);
-        assertFalse(ModelHelper.isSameContainer(refData, pool));
+        assertFalse(ModelHelper.isSameContainer(refData, data));
     }
 
     @Test
@@ -409,8 +409,11 @@ public class ModelHelperTest {
         final Parameter parameter = ParameterFactory.eINSTANCE.createParameter();
         parameter.setName("myParameter");
         final Pool pool = ProcessFactory.eINSTANCE.createPool();
+        final Expression expr = ExpressionFactory.eINSTANCE.createExpression();
+        final Parameter refParameter = EcoreUtil.copy(parameter);
+        expr.getReferencedElements().add(refParameter);
         pool.getParameters().add(parameter);
-        assertTrue(ModelHelper.isSameContainer(parameter, pool));
+        assertTrue(ModelHelper.isSameContainer(refParameter, pool));
     }
 
     @Test

@@ -2026,27 +2026,27 @@ public class ModelHelper {
         return false;
     }
 
-    protected static EObject getReferencedDataActivityContainer(final Data refData) {
+    protected static Activity getReferencedDataActivityContainer(final Data refData) {
         EObject container = refData.eContainer();
         while (container != null && !(container instanceof Activity)) {
             container = container.eContainer();
         }
         if (container != null) {
             if (getDataOnActivity(refData, container) != null) {
-                return container;
+                return (Activity) container;
             }
         }
         return null;
     }
 
-    protected static EObject getReferencedDataPoolContainer(final Data refData) {
+    protected static Pool getReferencedDataPoolContainer(final Data refData) {
         EObject container = refData.eContainer();
         while (container != null && !(container instanceof Pool)) {
             container = container.eContainer();
         }
         if (container != null) {
             if (getDataOnPool(refData, container) != null) {
-                return container;
+                return (Pool) container;
             }
         }
         return null;
@@ -2076,15 +2076,15 @@ public class ModelHelper {
         return null;
     }
 
-    protected static boolean isSameContainer(final EObject referencedElement, final EObject container) {
+    protected static boolean isSameContainer(final EObject referencedElement, final EObject element) {
         if (referencedElement instanceof Data) {
-            final Activity stepContainer = (Activity) getReferencedDataActivityContainer((Data) referencedElement);
+            final Activity stepContainer = getReferencedDataActivityContainer((Data) referencedElement);
             if (stepContainer!=null){
-                return stepContainer.equals(container);
+                return stepContainer.equals(element.eContainer());
             }
-            final Pool poolContainer = (Pool) getReferencedDataPoolContainer((Data) referencedElement);
+            final Pool poolContainer = getReferencedDataPoolContainer((Data) referencedElement);
             if (poolContainer != null) {
-                return poolContainer.equals(container);
+                return poolContainer.equals(element.eContainer());
             }
             return false;
         }
@@ -2097,9 +2097,12 @@ public class ModelHelper {
      * @return
      */
     protected static boolean isSameElement(final EObject elementToDisplay, final EObject referencedElement) {
-
-        return ((Element) referencedElement).getName().equals(((Element) elementToDisplay).getName())
-                && isSameContainer(referencedElement, elementToDisplay.eContainer());
+        if (elementToDisplay.eContainer() != null) {
+            return ((Element) referencedElement).getName().equals(((Element) elementToDisplay).getName())
+                    && isSameContainer(referencedElement, elementToDisplay);
+        } else {
+            return EcoreUtil.equals(elementToDisplay, referencedElement);
+        }
     }
 
 }
