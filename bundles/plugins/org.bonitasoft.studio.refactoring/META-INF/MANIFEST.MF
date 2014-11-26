@@ -20,7 +20,9 @@ Require-Bundle: org.eclipse.ui,
  org.bonitasoft.studio.common.repository;bundle-version="6.3.0",
  org.bonitasoft.studio.groovy,
  org.codehaus.groovy.eclipse.refactoring,
- org.eclipse.text
+ org.eclipse.text,
+ org.eclipse.emf.transaction;bundle-version="1.4.0",
+ org.eclipse.emf.workspace
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: org.bonitasoft.studio.refactoring.core

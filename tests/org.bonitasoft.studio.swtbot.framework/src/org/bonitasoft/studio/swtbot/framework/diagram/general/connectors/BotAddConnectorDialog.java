@@ -35,6 +35,10 @@ public class BotAddConnectorDialog extends BotWizardDialog {
     //    bot.tree().select(pCategory);
     //}
 
+    public BotAddConnectorDialog(final SWTGefBot bot, final String expectedWizardTitle) {
+        super(bot, expectedWizardTitle);
+    }
+
     /**
      * Select the connector in the right list.
      *

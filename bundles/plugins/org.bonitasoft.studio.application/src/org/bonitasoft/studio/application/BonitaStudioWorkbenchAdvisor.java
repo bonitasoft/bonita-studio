@@ -175,6 +175,12 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
             if (!repository.getProject().isOpen()) {
                 repository.open();
             }
+            if (!repository.isOnline()) {
+                MessageDialog.openWarning(
+                        Display.getDefault().getActiveShell(),
+                        Messages.offlineRepositoryTitle,
+                        Messages.bind(Messages.offlineRepositoryMessage, current));
+            }
             final String version = repository.getVersion();
             if (!ProductVersion.sameMinorVersion(version)) {
                 MessageDialog.openWarning(
@@ -182,9 +188,15 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
                         Messages.badWorkspaceVersionTitle,
                         Messages.bind(Messages.badWorkspaceVersionMessage, new Object[] { current, version, bonitaStudioModuleName,
                                 ProductVersion.CURRENT_VERSION, bosProductName }));
-                CommonRepositoryPlugin.setCurrentRepository(RepositoryPreferenceConstant.DEFAULT_REPOSITORY_NAME);
+                resetToDefaultRepository();
             }
+
         }
+    }
+
+    protected void resetToDefaultRepository() {
+        CommonRepositoryPlugin.setCurrentRepository(RepositoryPreferenceConstant.DEFAULT_REPOSITORY_NAME);
+        RepositoryManager.getInstance().setRepository(RepositoryPreferenceConstant.DEFAULT_REPOSITORY_NAME);
     }
 
     private List<IConfigurationElement> retrievePreStartupContribution() {
@@ -457,11 +469,11 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
 
     @Override
     public void postStartup() {
-    	super.postStartup();
-    	if (PlatformUI.isWorkbenchRunning()) {
-    		sendUserInfo();
-    		openStartupDialog();
-    	}
+        super.postStartup();
+        if (PlatformUI.isWorkbenchRunning()) {
+            sendUserInfo();
+            openStartupDialog();
+        }
     }
 
 }

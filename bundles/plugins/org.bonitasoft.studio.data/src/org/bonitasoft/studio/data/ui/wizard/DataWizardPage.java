@@ -294,8 +294,8 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
     public DataWizardPage(final Data data, final EObject container, final boolean allowXML, final boolean allowEnum, final boolean showIsTransient,
             final boolean showAutoGenerateform, final Set<EStructuralFeature> featureToCheckForUniqueID, final String fixedReturnType) {
         super(DataWizardPage.class.getName());
-        this.container = container;
         setTitle(Messages.bind(Messages.addDataWizardTitle, getCurrentDataAwareContextName()));
+        this.container = container;
         setDescription(Messages.addDataWizardDescription);
         this.data = data;
         this.featureToCheckForUniqueID = featureToCheckForUniqueID;
@@ -309,6 +309,10 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
     private String getCurrentDataAwareContextName() {
         String name = "---";
         EObject context = container;
+        if (context == null) {
+            return "---- Error, please check Studio logs";
+        }
+
         while (!(context instanceof DataAware) || context instanceof Form) {
             context = context.eContainer();
         }
@@ -677,7 +681,7 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
     }
 
     protected void bindDefaultValueViewer() {
-        defaultValueViewer.setExpressionNatureProvider(new ExpressionContentProvider());
+        defaultValueViewer.setExpressionNatureProvider(ExpressionContentProvider.getInstance());
         defaultValueViewer.setExample("");
         final DataType dataType = data.getDataType();
         if (dataType instanceof DateType) {

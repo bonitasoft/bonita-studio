@@ -36,29 +36,27 @@ import org.eclipse.emf.ecore.EObject;
  */
 public class ProcessVersionsExpressionNatureProvider implements IExpressionNatureProvider {
 
-    private EObject context;
-
     @Override
-    public Expression[] getExpressions() {
-        List<Expression> result = new ArrayList<Expression>();
-        final DiagramRepositoryStore diagramStore = (DiagramRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
-        List<String> versions = new ArrayList<String>();
-        MainProcess diagram = ModelHelper.getMainProcess(context);
+    public Expression[] getExpressions(final EObject context) {
+        final List<Expression> result = new ArrayList<Expression>();
+        final DiagramRepositoryStore diagramStore = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
+        final List<String> versions = new ArrayList<String>();
+        final MainProcess diagram = ModelHelper.getMainProcess(context);
         if(context instanceof CallActivity){
             final Expression exp = ((CallActivity)context).getCalledActivityName();
             if(exp != null
                     && ExpressionConstants.CONSTANT_TYPE.equals(exp.getType())
                     && exp.getContent() != null
                     && !exp.getContent().isEmpty()){
-                String processName = exp.getContent();
-                for(EObject p : ModelHelper.getAllItemsOfType(diagram, ProcessPackage.Literals.POOL)){
+                final String processName = exp.getContent();
+                for(final EObject p : ModelHelper.getAllItemsOfType(diagram, ProcessPackage.Literals.POOL)){
                     if(processName.equals(((Pool) p).getName())){
                         if(!versions.contains(((Pool) p).getVersion())){
                             versions.add(((Pool) p).getVersion());
                         }
                     }
                 }
-                for(AbstractProcess p : diagramStore.getAllProcesses()){
+                for(final AbstractProcess p : diagramStore.getAllProcesses()){
                     if(processName.equals(((Pool) p).getName())){
                         if(!versions.contains(((Pool) p).getVersion())){
                             versions.add(((Pool) p).getVersion());
@@ -67,8 +65,8 @@ public class ProcessVersionsExpressionNatureProvider implements IExpressionNatur
                 }
             }
         }
-        for(String version : versions){
-            Expression exp = ExpressionFactory.eINSTANCE.createExpression();
+        for(final String version : versions){
+            final Expression exp = ExpressionFactory.eINSTANCE.createExpression();
             exp.setName(version);
             exp.setContent(version);
             exp.setReturnType(String.class.getName());
@@ -77,16 +75,6 @@ public class ProcessVersionsExpressionNatureProvider implements IExpressionNatur
             result.add(exp);
         }
         return result.toArray(new Expression[result.size()]);
-    }
-
-    @Override
-    public void setContext(final EObject context) {
-        this.context = context ;
-    }
-
-    @Override
-    public EObject getContext() {
-        return context;
     }
 
 }

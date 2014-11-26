@@ -20,6 +20,7 @@ package org.bonitasoft.studio.properties.form.sections.actions;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection;
 import org.bonitasoft.studio.data.provider.DataExpressionNatureProviderForFormOutput;
+import org.bonitasoft.studio.data.provider.DataExpressionProviderForOutput;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
 import org.bonitasoft.studio.expression.editor.operation.OperationsComposite;
 import org.bonitasoft.studio.expression.editor.operation.PropertyOperationsComposite;
@@ -47,7 +48,6 @@ public class FormActionsPropertySection extends AbstractBonitaDescriptionSection
 
     private Object lastEObject;
 
-
     protected OperationsComposite createActionLinesComposite() {
         final AvailableExpressionTypeFilter actionFilter = new AvailableExpressionTypeFilter(new String[] {
                 ExpressionConstants.CONSTANT_TYPE,
@@ -65,7 +65,7 @@ public class FormActionsPropertySection extends AbstractBonitaDescriptionSection
         });
 
         final OperationsComposite operationsComposite = new PropertyOperationsComposite(tabbedPropertySheetPage, mainComposite, actionFilter, storageFilter);
-        operationsComposite.setStorageExpressionNatureContentProvider(new DataExpressionNatureProviderForFormOutput());
+        operationsComposite.setStorageExpressionNatureContentProvider(new DataExpressionNatureProviderForFormOutput(new DataExpressionProviderForOutput()));
         return operationsComposite;
     }
 

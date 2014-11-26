@@ -5,12 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -49,7 +49,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 /**
  * @author Romain Bioteau
- * 
+ *
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(Display.class)
@@ -77,11 +77,13 @@ public class DataWizardTest {
         PowerMockito.when(Display.getCurrent()).thenReturn(display);
         when(refactorOperation.canExecute()).thenReturn(true);
         editingDomain = new TransactionalEditingDomainImpl(new ProcessAdapterFactory(), new TransactionalCommandStackImpl());
-        Data data = ProcessFactory.eINSTANCE.createData();
+        final Data data = ProcessFactory.eINSTANCE.createData();
         wizard = spy(new DataWizard(editingDomain, data, ProcessPackage.Literals.DATA_AWARE__DATA, Collections.<EStructuralFeature> emptySet(), true));
         doReturn(refactorOperation).when(wizard).createRefactorOperation(eq(editingDomain), any(Data.class));
-        doReturn(EcoreUtil.copy(data)).when(wizard).getWorkingCopy();
+        final Data workingCopy = EcoreUtil.copy(data);
+        doReturn(workingCopy).when(wizard).getWorkingCopy();
         doReturn(wizardContainer).when(wizard).getContainer();
+        doReturn(true).when(wizard).isEdited(workingCopy);
         doNothing().when(wizard).refreshXtextReferences();
     }
 

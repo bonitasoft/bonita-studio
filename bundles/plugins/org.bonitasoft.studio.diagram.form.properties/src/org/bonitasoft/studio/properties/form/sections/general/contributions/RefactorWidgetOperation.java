@@ -60,12 +60,14 @@ public class RefactorWidgetOperation extends AbstractRefactorOperation<Widget, W
 
     }
 
+
     @Override
     protected void doExecute(final IProgressMonitor monitor) {
         monitor.beginTask(Messages.updatingWidgetReferences, IProgressMonitor.UNKNOWN);
         if (compoundCommand == null) {
             compoundCommand = new CompoundCommand();
         }
+
         for(final WidgetRefactorPair pairToRefactor : pairsToRefactor){
             final Widget widget = pairToRefactor.getOldValue();
             final String newReferenceName = pairToRefactor.getNewValueName();
@@ -77,6 +79,7 @@ public class RefactorWidgetOperation extends AbstractRefactorOperation<Widget, W
                 }
             }
             compoundCommand.append(SetCommand.create(domain, widget, ProcessPackage.Literals.ELEMENT__NAME, pairToRefactor.getNewValue().getName()));
+
             for (final Expression exp : expressionsList) {
                 final String fieldExpressionName = exp.getName();
                 final String oldExpressionName = WidgetHelper.FIELD_PREFIX + widget.getName();

@@ -18,15 +18,15 @@ public class RepositoryLabelProvider extends StyledCellLabelProvider {
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.IColorProvider#getBackground(java.lang.Object)
      */
-    public Color getBackground(Object element) {
+    public Color getBackground(final Object element) {
         return null;
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.IColorProvider#getForeground(java.lang.Object)
      */
-    public Color getForeground(Object element) {
-        IRepository repository = (IRepository) element ;
+    public Color getForeground(final Object element) {
+        final IRepository repository = (IRepository) element ;
         if(RepositoryManager.getInstance().getCurrentRepository().equals(element)){
             return ColorConstants.gray;
         }else if (!ProductVersion.sameMinorVersion(repository.getVersion())){
@@ -38,33 +38,32 @@ public class RepositoryLabelProvider extends StyledCellLabelProvider {
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.IFontProvider#getFont(java.lang.Object)
      */
-    public Font getFont(Object element) {
+    public Font getFont(final Object element) {
         return null;
     }
 
-    public String getText(IRepository element) {
-        return element.getDispslayName();
+    public String getText(final IRepository element) {
+        return element.getDisplayName();
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.LabelProvider#getImage(java.lang.Object)
      */
-    public Image getImage(IRepository element) {
+    public Image getImage(final IRepository element) {
         return element.getIcon();
     }
 
     @Override
-    public void update(ViewerCell cell) {
-        IRepository element = (IRepository) cell.getElement();
-        StyledString styledString = new StyledString();
+    public void update(final ViewerCell cell) {
+        final IRepository element = (IRepository) cell.getElement();
+        final StyledString styledString = new StyledString();
 
         styledString.append(getText(element), null);
         if(RepositoryManager.getInstance().getCurrentRepository().equals(element)){
             styledString.append(" -- ",StyledString.QUALIFIER_STYLER) ;
             styledString.append(Messages.current, StyledString.DECORATIONS_STYLER);
         }
-
-
+        cell.setForeground(getForeground(element));
         cell.setText(styledString.getString());
         cell.setImage(getImage(element)) ;
         cell.setStyleRanges(styledString.getStyleRanges());

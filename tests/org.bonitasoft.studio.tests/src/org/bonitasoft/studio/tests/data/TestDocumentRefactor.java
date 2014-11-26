@@ -16,8 +16,6 @@ package org.bonitasoft.studio.tests.data;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.HashMap;
-
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.document.refactoring.RefactorDocumentOperation;
@@ -32,11 +30,11 @@ import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.util.ProcessAdapterFactory;
 import org.bonitasoft.studio.refactoring.core.RefactoringOperationType;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.emf.common.command.BasicCommandStack;
-import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.emf.transaction.impl.TransactionalCommandStackImpl;
+import org.eclipse.emf.transaction.impl.TransactionalEditingDomainImpl;
 import org.junit.Test;
 
 public class TestDocumentRefactor {
@@ -68,7 +66,7 @@ public class TestDocumentRefactor {
         newDocument.setName(newDocumentName);
 
         final RefactorDocumentOperation rdo = new RefactorDocumentOperation(RefactoringOperationType.UPDATE);
-        final AdapterFactoryEditingDomain editingDomain = createEditingDomain();
+        final TransactionalEditingDomain editingDomain = createEditingDomain();
         rdo.setEditingDomain(editingDomain);
         rdo.setAskConfirmation(false);
         rdo.addItemToRefactor(newDocument, document);
@@ -105,14 +103,14 @@ public class TestDocumentRefactor {
         return pool;
     }
 
-    private AdapterFactoryEditingDomain createEditingDomain() {
+    private TransactionalEditingDomain createEditingDomain() {
         final ComposedAdapterFactory adapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
         adapterFactory.addAdapterFactory(new ProcessAdapterFactory());
 
         // command stack that will notify this editor as commands are executed
-        final BasicCommandStack commandStack = new BasicCommandStack();
+        final TransactionalCommandStackImpl commandStack = new TransactionalCommandStackImpl();
 
         // Create the editing domain with our adapterFactory and command stack.
-        return new AdapterFactoryEditingDomain(adapterFactory, commandStack, new HashMap<Resource, Boolean>());
+        return new TransactionalEditingDomainImpl(adapterFactory, commandStack);
     }
 }

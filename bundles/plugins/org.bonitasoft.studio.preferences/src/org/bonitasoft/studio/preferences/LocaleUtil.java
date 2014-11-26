@@ -37,7 +37,7 @@ public class LocaleUtil {
     private  static Comparator<Locale> localeComparator = new Comparator<Locale>() {
 
         @Override
-        public int compare(Locale paramT1, Locale paramT2) {
+        public int compare(final Locale paramT1, final Locale paramT2) {
             return paramT1.getLanguage().compareTo(paramT2.getLanguage());
         }
 
@@ -45,19 +45,19 @@ public class LocaleUtil {
 
 
     public static Locale[] getProtalLocales() {
-        File portalI18NFolder = BonitaHomeUtil.getPortalI18NFolder();
-        String[] poFiles = portalI18NFolder.list(new FilenameFilter() {
+        final File portalI18NFolder = BonitaHomeUtil.getPortalI18NFolder();
+        final String[] poFiles = portalI18NFolder.list(new FilenameFilter() {
 
             @Override
-            public boolean accept(File parent, String filename) {
+            public boolean accept(final File parent, final String filename) {
                 return filename.endsWith(".po");
             }
         });
-        Set<Locale> locales = new TreeSet<Locale>(localeComparator);
+        final Set<Locale> locales = new TreeSet<Locale>(localeComparator);
         locales.add(Locale.ENGLISH);
         if(poFiles != null){
             for(String poFile : poFiles){
-                poFile = poFile.replace("mobile_", "").replace("portal-sp_", "").replace("portal_", "").replace(".po", "").replace("mobile", "").replace("portal-sp", "").replace("portal", "");
+                poFile = replacePartNotI18nRelated(poFile);
                 if(!poFile.isEmpty()){
                     String country = null;
                     String language = null;
@@ -74,15 +74,32 @@ public class LocaleUtil {
         return locales.toArray(new Locale[locales.size()]);
     }
 
+    protected static String replacePartNotI18nRelated(final String poFile) {
+        return poFile
+                .replace("mobile_", "")
+                .replace("mobile-sp_", "")
+                .replace("portal-sp_", "")
+                .replace("portal_", "")
+                .replace("portal-js-sp_", "")
+                .replace("portal-js_", "")
+                .replace(".po", "")
+                .replace("mobile-sp", "")
+                .replace("mobile", "")
+                .replace("portal-sp", "")
+                .replace("portal-js-sp", "")
+                .replace("portal-js", "")
+                .replace("portal", "");
+    }
+
     public static Locale[] getStudioLocales() {
-        Enumeration<URL> findEntries = BonitaStudioPreferencesPlugin.getDefault().getBundle().findEntries("/", "message*_*.properties", false);
-        Set<Locale> locales = new TreeSet<Locale>(localeComparator);
+        final Enumeration<URL> findEntries = BonitaStudioPreferencesPlugin.getDefault().getBundle().findEntries("/", "message*_*.properties", false);
+        final Set<Locale> locales = new TreeSet<Locale>(localeComparator);
         locales.add(Locale.ENGLISH);
         if(findEntries != null){
             while(findEntries.hasMoreElements()){
-                URL propertiesFile =  findEntries.nextElement();
-                String file = propertiesFile.getFile();
-                String[] split = file.replace(".properties", "").split("_");
+                final URL propertiesFile =  findEntries.nextElement();
+                final String file = propertiesFile.getFile();
+                final String[] split = file.replace(".properties", "").split("_");
                 String language = null;
                 String country = null;
                 if(split.length == 2){

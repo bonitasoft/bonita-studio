@@ -35,7 +35,7 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
+import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.gmf.runtime.common.ui.action.actions.global.GlobalActionManager;
 import org.eclipse.gmf.runtime.common.ui.action.global.GlobalAction;
 import org.eclipse.gmf.runtime.common.ui.action.global.GlobalActionId;
@@ -75,7 +75,7 @@ public class DeleteHandler extends AbstractHandler {
                         final int ok = 0;
                         final RemoveWidgetReferencesOperation op = new RemoveWidgetReferencesOperation(ModelHelper.getPageFlow((Widget) semanticElement),
                                 (Widget) semanticElement);
-                        op.setEditingDomain(AdapterFactoryEditingDomain.getEditingDomainFor(semanticElement));
+                        op.setEditingDomain(TransactionUtil.getEditingDomain(semanticElement));
                         if (dialog.open() == ok) {
                             final IProgressService service = PlatformUI.getWorkbench().getProgressService();
                             try {

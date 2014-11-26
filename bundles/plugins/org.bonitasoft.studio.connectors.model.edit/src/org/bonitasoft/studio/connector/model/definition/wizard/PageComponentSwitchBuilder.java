@@ -260,8 +260,9 @@ public class PageComponentSwitchBuilder {
                         if (!exp.isReturnTypeFixed()) {
                             exp.setReturnTypeFixed(true);
                         }
-                        if (!input.getType().equals(exp.getReturnType())) {
-                            exp.setReturnType(input.getType());
+                        final String type = input.getType();
+                        if (type != null && !type.equals(exp.getReturnType())) {
+                            exp.setReturnType(type);
                         }
                     }
 

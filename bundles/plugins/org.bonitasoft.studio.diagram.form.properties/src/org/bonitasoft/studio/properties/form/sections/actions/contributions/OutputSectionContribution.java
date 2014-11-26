@@ -5,12 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -22,6 +22,7 @@ import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection;
 import org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution;
 import org.bonitasoft.studio.data.provider.DataExpressionNatureProviderForFormOutput;
+import org.bonitasoft.studio.data.provider.DataExpressionProviderForOutput;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
 import org.bonitasoft.studio.expression.editor.operation.OperationViewer;
 import org.bonitasoft.studio.form.properties.i18n.Messages;
@@ -36,7 +37,6 @@ import org.bonitasoft.studio.model.form.FormPackage;
 import org.bonitasoft.studio.model.form.ViewForm;
 import org.bonitasoft.studio.model.form.Widget;
 import org.eclipse.core.databinding.UpdateValueStrategy;
-import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.edit.EMFEditObservables;
 import org.eclipse.emf.ecore.EObject;
@@ -63,11 +63,11 @@ public class OutputSectionContribution implements IExtensibleGridPropertySection
 
     private OperationViewer operationViewer;
 
-    public void createControl(Composite composite, TabbedPropertySheetWidgetFactory widgetFactory, ExtensibleGridPropertySection extensibleGridPropertySection) {
+    public void createControl(final Composite composite, final TabbedPropertySheetWidgetFactory widgetFactory, final ExtensibleGridPropertySection extensibleGridPropertySection) {
         composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         composite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).create());
 
-        AvailableExpressionTypeFilter expressionFilter = new AvailableExpressionTypeFilter(new String[] {
+        final AvailableExpressionTypeFilter expressionFilter = new AvailableExpressionTypeFilter(new String[] {
                 ExpressionConstants.CONSTANT_TYPE,
                 ExpressionConstants.VARIABLE_TYPE,
                 ExpressionConstants.SCRIPT_TYPE,
@@ -77,13 +77,13 @@ public class OutputSectionContribution implements IExtensibleGridPropertySection
                 ExpressionConstants.DOCUMENT_TYPE
         });
 
-        AvailableExpressionTypeFilter storageExpressionFilter = new AvailableExpressionTypeFilter(new String[] {
+        final AvailableExpressionTypeFilter storageExpressionFilter = new AvailableExpressionTypeFilter(new String[] {
                 ExpressionConstants.VARIABLE_TYPE,
                 ExpressionConstants.DOCUMENT_REF_TYPE
         });
 
         operationViewer = new OperationViewer(composite, widgetFactory, getEditingDomain(), expressionFilter, storageExpressionFilter);
-        operationViewer.setStorageExpressionNatureProvider(new DataExpressionNatureProviderForFormOutput());
+        operationViewer.setStorageExpressionNatureProvider(new DataExpressionNatureProviderForFormOutput(new DataExpressionProviderForOutput()));
         operationViewer.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
         bindWidgets();
@@ -105,20 +105,20 @@ public class OutputSectionContribution implements IExtensibleGridPropertySection
             Operation action = element.getAction();
             if (action == null) {
                 action = ExpressionFactory.eINSTANCE.createOperation();
-                Operator op = ExpressionFactory.eINSTANCE.createOperator();
+                final Operator op = ExpressionFactory.eINSTANCE.createOperator();
                 op.setType(ExpressionConstants.ASSIGNMENT_OPERATOR);
                 op.setExpression("=");
                 action.setOperator(op);
 
-                Expression variableExp = ExpressionFactory.eINSTANCE.createExpression();
-                Expression actionExp = ExpressionFactory.eINSTANCE.createExpression();
+                final Expression variableExp = ExpressionFactory.eINSTANCE.createExpression();
+                final Expression actionExp = ExpressionFactory.eINSTANCE.createExpression();
                 action.setLeftOperand(variableExp);
                 action.setRightOperand(actionExp);
                 editingDomain.getCommandStack().execute(SetCommand.create(editingDomain, element, FormPackage.Literals.WIDGET__ACTION, action));
             }
             operationViewer.setEditingDomain(getEditingDomain());
             operationViewer.setEObject(element);
-            UpdateValueStrategy strategy = new UpdateValueStrategy();
+            final UpdateValueStrategy strategy = new UpdateValueStrategy();
             strategy.setConverter(new BooleanInverserConverter());
 
             dataBinding.bindValue(SWTObservables.observeVisible(ExtensibleGridPropertySection.getLabelCompositeOf(operationViewer.getParent())),
@@ -147,9 +147,9 @@ public class OutputSectionContribution implements IExtensibleGridPropertySection
         return Messages.outputOperation;
     }
 
-    public boolean isRelevantFor(EObject eObject) {
+    public boolean isRelevantFor(final EObject eObject) {
         if (eObject instanceof FormField && !ModelHelper.isInDuplicatedGrp(eObject)) {
-            Form form = ModelHelper.getForm((Widget) eObject);
+            final Form form = ModelHelper.getForm((Widget) eObject);
             return !(form instanceof ViewForm);
         } else {
             return false;
@@ -157,15 +157,15 @@ public class OutputSectionContribution implements IExtensibleGridPropertySection
 
     }
 
-    public void setEObject(EObject object) {
+    public void setEObject(final EObject object) {
         element = (Widget) object;
     }
 
-    public void setEditingDomain(TransactionalEditingDomain editingDomain) {
+    public void setEditingDomain(final TransactionalEditingDomain editingDomain) {
         this.editingDomain = editingDomain;
     }
 
-    public void setSelection(ISelection selection) {
+    public void setSelection(final ISelection selection) {
 
     }
 

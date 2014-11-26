@@ -102,7 +102,7 @@ public class OpenDiagramWizardPage extends AbstractManageDiagramWizardPage {
 
     @Override
     public boolean isPageComplete() {
-        return getDiagrams() != null;
+        return (getDiagrams() != null && !getDiagrams().isEmpty());
     }
 
     /**

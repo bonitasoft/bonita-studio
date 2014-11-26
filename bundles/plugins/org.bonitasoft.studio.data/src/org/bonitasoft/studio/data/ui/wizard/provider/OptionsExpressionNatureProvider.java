@@ -34,7 +34,7 @@ public class OptionsExpressionNatureProvider implements IExpressionNatureProvide
 
     private final EnumType type;
 
-    public OptionsExpressionNatureProvider(EnumType type){
+    public OptionsExpressionNatureProvider(final EnumType type){
         this.type = type ;
     }
 
@@ -42,9 +42,9 @@ public class OptionsExpressionNatureProvider implements IExpressionNatureProvide
      * @see org.bonitasoft.studio.expression.editor.provider.IExpressionNatureProvider#getExpressions()
      */
     @Override
-    public Expression[] getExpressions() {
-        List<Expression> result = new ArrayList<Expression>() ;
-        for(String option : type.getLiterals()){
+    public Expression[] getExpressions(final EObject context) {
+        final List<Expression> result = new ArrayList<Expression>() ;
+        for(final String option : type.getLiterals()){
             final Expression exp = ExpressionFactory.eINSTANCE.createExpression() ;
             exp.setName(option) ;
             exp.setContent(option) ;
@@ -55,16 +55,4 @@ public class OptionsExpressionNatureProvider implements IExpressionNatureProvide
         return result.toArray(new Expression[]{});
     }
 
-    /* (non-Javadoc)
-     * @see org.bonitasoft.studio.expression.editor.provider.IExpressionNatureProvider#setContext(org.eclipse.emf.ecore.EObject)
-     */
-    @Override
-    public void setContext(EObject context) {
-
-    }
-
-    @Override
-    public EObject getContext() {
-        return null;
-    }
 }

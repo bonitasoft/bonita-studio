@@ -126,6 +126,7 @@ public class DocumentWizard extends Wizard {
 
     private boolean performFinishOnEdition(final TransactionalEditingDomain editingDomain) {
         final RefactorDocumentOperation refactorDocumentOperation = createRefactorOperation(editingDomain);
+
         try {
             getContainer().run(false, false, refactorDocumentOperation);
         } catch (final InvocationTargetException e) {
@@ -140,14 +141,21 @@ public class DocumentWizard extends Wizard {
         final RefactorDocumentOperation refactorDocumentOperation = new RefactorDocumentOperation(RefactoringOperationType.UPDATE);
         refactorDocumentOperation.setEditingDomain(editingDomain);
         refactorDocumentOperation.addItemToRefactor(documentWorkingCopy, document);
-        refactorDocumentOperation.setAskConfirmation(true);
+        refactorDocumentOperation.setAskConfirmation(isEdited());
         return refactorDocumentOperation;
+    }
+
+    /**
+     * @return
+     */
+    protected boolean isEdited() {
+        return !(documentWorkingCopy.getName().equals(document.getName()) && documentWorkingCopy.isMultiple() == document.isMultiple());
     }
 
     private void refreshProject() {
         try {
             RepositoryManager.getInstance().getCurrentRepository().getProject()
-                    .build(IncrementalProjectBuilder.FULL_BUILD, XTEXT_BUILDER_ID, Collections.<String, String> emptyMap(), null);
+            .build(IncrementalProjectBuilder.FULL_BUILD, XTEXT_BUILDER_ID, Collections.<String, String> emptyMap(), null);
         } catch (final CoreException e1) {
             BonitaStudioLog.error(e1, DocumentPlugin.PLUGIN_ID);
         }

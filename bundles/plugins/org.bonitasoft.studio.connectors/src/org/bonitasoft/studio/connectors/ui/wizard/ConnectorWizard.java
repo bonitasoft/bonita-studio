@@ -26,6 +26,7 @@ import java.util.Set;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.IBonitaVariableContext;
+import org.bonitasoft.studio.common.ModelVersion;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
@@ -90,6 +91,7 @@ import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
@@ -157,7 +159,9 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
     public ConnectorWizard(final EObject container, final EStructuralFeature connectorContainmentFeature, final Set<EStructuralFeature> featureToCheckForUniqueID) {
         this.container = container;
         connectorWorkingCopy = ProcessFactory.eINSTANCE.createConnector();
-        connectorWorkingCopy.setConfiguration(ConnectorConfigurationFactory.eINSTANCE.createConnectorConfiguration());
+        final ConnectorConfiguration configuration = ConnectorConfigurationFactory.eINSTANCE.createConnectorConfiguration();
+        configuration.setModelVersion(ModelVersion.CURRENT_VERSION);
+        connectorWorkingCopy.setConfiguration(configuration);
         editMode = false;
         this.connectorContainmentFeature = connectorContainmentFeature;
         this.featureToCheckForUniqueID = new HashSet<EStructuralFeature>();
@@ -696,14 +700,27 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
     public boolean performFinish() {
         final EditingDomain editingDomain = AdapterFactoryEditingDomain.getEditingDomainFor(container);
         if (editMode) {
-            final List<?> connectorsList = (List<?>) container.eGet(connectorContainmentFeature);
-            final int index = connectorsList.indexOf(originalConnector);
-            editingDomain.getCommandStack().execute(RemoveCommand.create(editingDomain, container, connectorContainmentFeature, originalConnector));
-            editingDomain.getCommandStack().execute(AddCommand.create(editingDomain, container, connectorContainmentFeature, connectorWorkingCopy, index));
+            final CompoundCommand cc = createPerformFinishCommandOnEdition(editingDomain);
+            editingDomain.getCommandStack().execute(cc);
         } else {
-            editingDomain.getCommandStack().execute(AddCommand.create(editingDomain, container, connectorContainmentFeature, connectorWorkingCopy));
+            editingDomain.getCommandStack().execute(createPerformFinishCommandOnCreation(editingDomain));
         }
         return true;
+    }
+
+    protected CompoundCommand createPerformFinishCommandOnCreation(final EditingDomain editingDomain) {
+        final CompoundCommand cc = new CompoundCommand("Add Connector");
+        cc.append(AddCommand.create(editingDomain, container, connectorContainmentFeature, connectorWorkingCopy));
+        return cc;
+    }
+
+    protected CompoundCommand createPerformFinishCommandOnEdition(final EditingDomain editingDomain) {
+        final List<?> connectorsList = (List<?>) container.eGet(connectorContainmentFeature);
+        final int index = connectorsList.indexOf(originalConnector);
+        final CompoundCommand cc = new CompoundCommand("Update Connector");
+        cc.append(RemoveCommand.create(editingDomain, container, connectorContainmentFeature, originalConnector));
+        cc.append(AddCommand.create(editingDomain, container, connectorContainmentFeature, connectorWorkingCopy, index));
+        return cc;
     }
 
     public Connector getOriginalConnector() {

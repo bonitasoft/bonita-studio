@@ -26,7 +26,6 @@ import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.model.expression.ListExpression;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.command.AddCommand;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.jface.viewers.CellEditor;
@@ -52,7 +51,7 @@ public class ExpressionCollectionEditingSupport extends EditingSupport {
 	protected final List<ViewerFilter> filters;
 	protected EditingDomain editingDomain;
 	private IExpressionNatureProvider expressionNatureProvider;
-	private SelectionListener removeRowListener;
+	private final SelectionListener removeRowListener;
 	private IExpressionProposalLabelProvider expressionProposalLabelProvider;
 
 	/**
@@ -60,12 +59,12 @@ public class ExpressionCollectionEditingSupport extends EditingSupport {
 	 * @param textOrDataFactory
 	 * @param dontUseFormField
 	 */
-	public ExpressionCollectionEditingSupport(ColumnViewer viewer, int colIndex, SelectionListener removeRowListener) {
+	public ExpressionCollectionEditingSupport(final ColumnViewer viewer, final int colIndex, final SelectionListener removeRowListener) {
 		this(viewer, colIndex, null, removeRowListener);
 	}
 
-	public ExpressionCollectionEditingSupport(ColumnViewer viewer,
-			int colIndex, EditingDomain editingDomain, SelectionListener removeRowListener) {
+	public ExpressionCollectionEditingSupport(final ColumnViewer viewer,
+			final int colIndex, final EditingDomain editingDomain, final SelectionListener removeRowListener) {
 		super(viewer);
 		this.colIndex = colIndex;
 		filters = new ArrayList<ViewerFilter>();
@@ -74,27 +73,27 @@ public class ExpressionCollectionEditingSupport extends EditingSupport {
 	}
 
 	@Override
-	protected void initializeCellEditorValue(CellEditor cellEditor,
-			ViewerCell cell) {
+	protected void initializeCellEditorValue(final CellEditor cellEditor,
+			final ViewerCell cell) {
 		super.initializeCellEditorValue(cellEditor, cell);
 		cell.setImage(null);
 		cell.setText("");
 	}
 
 	@Override
-	protected void setValue(Object element, Object value) {
+	protected void setValue(final Object element, final Object value) {
 		getViewer().refresh();
 		getViewer().getControl().notifyListeners(SWT.Selection, new Event());
 	}
 
 	@Override
-	protected Object getValue(Object element) {
+	protected Object getValue(final Object element) {
 		return element;
 	}
 
 	@Override
-	protected CellEditor getCellEditor(Object element) {
-		ExpressionViewerCellEditor editor = new ExpressionViewerCellEditor(
+	protected CellEditor getCellEditor(final Object element) {
+		final ExpressionViewerCellEditor editor = new ExpressionViewerCellEditor(
 				getViewer(), (Composite) getViewer().getControl(),
 				editingDomain,colIndex,removeRowListener);
 		if (expressionNatureProvider != null) {
@@ -103,7 +102,7 @@ public class ExpressionCollectionEditingSupport extends EditingSupport {
 		if(expressionProposalLabelProvider != null){
 			editor.setExpressionProposalLableProvider(expressionProposalLabelProvider);
 		}
-		for (ViewerFilter filter : filters) {
+		for (final ViewerFilter filter : filters) {
 			editor.addFilter(filter);
 		}
 		if (context != null) {
@@ -114,7 +113,7 @@ public class ExpressionCollectionEditingSupport extends EditingSupport {
 		}
 		if (element instanceof ListExpression) {
 
-			List<Expression> list = ((ListExpression) element).getExpressions();
+			final List<Expression> list = ((ListExpression) element).getExpressions();
 			for (int i = 0; i <= colIndex; i++) {
 				if (i < list.size()) {
 					if (list.get(i) == null) {
@@ -160,39 +159,34 @@ public class ExpressionCollectionEditingSupport extends EditingSupport {
 	}
 
 	@Override
-	protected boolean canEdit(Object element) {
+	protected boolean canEdit(final Object element) {
 		return true;
 	}
 
-	public void setInput(Object input) {
+	public void setInput(final Object input) {
 		context = input;
-		if(expressionNatureProvider != null){
-			if(input instanceof EObject){
-				expressionNatureProvider.setContext((EObject) input);
-			}
-		}
 	}
 
-	public void addFilter(ViewerFilter filter) {
+	public void addFilter(final ViewerFilter filter) {
 		filters.add(filter);
 	}
 
-	public void setEditingDomain(EditingDomain editingDomain) {
+	public void setEditingDomain(final EditingDomain editingDomain) {
 		this.editingDomain = editingDomain;
 	}
 
 	@Override
-	protected void saveCellEditorValue(CellEditor cellEditor, ViewerCell cell) {
+	protected void saveCellEditorValue(final CellEditor cellEditor, final ViewerCell cell) {
 		super.saveCellEditorValue(cellEditor, cell);
 		ExpressionCollectionEditingSupport.this.getViewer().refresh();
 	}
 
 	public void setExpressionNatureProvider(
-			IExpressionNatureProvider expressionNatureProvider) {
+			final IExpressionNatureProvider expressionNatureProvider) {
 		this.expressionNatureProvider = expressionNatureProvider;
 	}
 
-	public void setExpressionProposalLableProvider(IExpressionProposalLabelProvider expressionProposalLabelProvider) {
+	public void setExpressionProposalLableProvider(final IExpressionProposalLabelProvider expressionProposalLabelProvider) {
 		this.expressionProposalLabelProvider = expressionProposalLabelProvider;
 	}
 

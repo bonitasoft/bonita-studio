@@ -288,13 +288,6 @@
                       tab="tab.transitionordering"
                       viewID="org.bonitasoft.studio.views.properties.process.general">
                 </propertySection>
-                <propertySection
-                      class="org.bonitasoft.studio.properties.sections.document.DocumentPropertySection"
-                      filter="org.bonitasoft.studio.properties.filters.PoolOrLaneFilter"
-                      id="section.general.tab.document"
-                      tab="tab.document"
-                      viewID="org.bonitasoft.studio.views.properties.process.general">
-                </propertySection>
       </propertySections>
    </extension>
 </plugin>

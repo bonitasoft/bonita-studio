@@ -38,7 +38,6 @@ import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.emf.common.command.CompoundCommand;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.edit.command.SetCommand;
@@ -123,7 +122,6 @@ public class ReadOnlyExpressionViewer extends ExpressionViewer {
                 return true;
             }
         }
-        final EObject context = expressionNatureProvider.getContext();
         if (context != null) {
             if (context instanceof Operation && context.eContainer() instanceof Connector) {
                 return context.eContainer().eContainmentFeature().equals(ProcessPackage.Literals.PAGE_FLOW__PAGE_FLOW_CONNECTORS);
@@ -148,16 +146,12 @@ public class ReadOnlyExpressionViewer extends ExpressionViewer {
     @Override
     protected void sideModificationOnProposalAccepted(final CompoundCommand cc, final Expression copy) {
         super.sideModificationOnProposalAccepted(cc, copy);
-        EObject parent = context;
-        if (parent == null) {
-            parent = expressionNatureProvider.getContext();
-        }
-        if (parent instanceof Operation) {
+        if (context instanceof Operation) {
             final Expression selectedExpression = getSelectedExpression();
             if (selectedExpression != null && ExpressionPackage.Literals.OPERATION__LEFT_OPERAND.equals(selectedExpression.eContainingFeature())) {
-                final Operator operator = ((Operation) parent).getOperator();
+                final Operator operator = ((Operation) context).getOperator();
                 final String newOperatorType = updateOperatorType(cc, operator, copy);
-                updateRightOperand(cc, ((Operation) parent), newOperatorType);
+                updateRightOperand(cc, (Operation) context, newOperatorType);
             }
         }
     }

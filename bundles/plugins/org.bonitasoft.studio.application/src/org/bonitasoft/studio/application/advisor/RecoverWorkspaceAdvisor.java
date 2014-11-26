@@ -38,10 +38,10 @@ import org.eclipse.ui.PlatformUI;
  */
 public class RecoverWorkspaceAdvisor extends InstallerApplicationWorkbenchAdvisor {
 
-	private String targetPath;
+	private final String targetPath;
 
 
-	public RecoverWorkspaceAdvisor(String targetPath){
+	public RecoverWorkspaceAdvisor(final String targetPath){
 		super() ;
 		this.targetPath = targetPath ;
 	}
@@ -53,15 +53,15 @@ public class RecoverWorkspaceAdvisor extends InstallerApplicationWorkbenchAdviso
 	public void preStartup() {
 		try {
 			ResourcesPlugin.getWorkspace().getRoot().refreshLocal(IResource.DEPTH_INFINITE,new NullProgressMonitor());
-		} catch (CoreException e) {
+		} catch (final CoreException e) {
 			BonitaStudioLog.error(e);
 		}
-		IProject defaultDir = ResourcesPlugin.getWorkspace().getRoot().getProject("default");
+		final IProject defaultDir = ResourcesPlugin.getWorkspace().getRoot().getProject("default");
 		if (defaultDir != null && defaultDir.exists()){
 			super.preStartup();
 		} else {
 			MessageDialog.openError(Display.getCurrent().getActiveShell(),Messages.invalidWorkspaceTitle, Messages.invalidWorkspace);
-			PlatformUI.getWorkbench().close() ; 
+			PlatformUI.getWorkbench().close() ;
 		}
 
 	}
@@ -72,9 +72,9 @@ public class RecoverWorkspaceAdvisor extends InstallerApplicationWorkbenchAdviso
 	 */
 	@Override
 	protected void executePostStartupHandler() {
-		for(IRepository repo : RepositoryManager.getInstance().getAllRepositories()){
+		for(final IRepository repo : RepositoryManager.getInstance().getAllRepositories()){
 			if(!repo.isShared()){
-				RepositoryManager.getInstance().setRepository(repo.getName());
+                RepositoryManager.getInstance().setRepository(repo.getName(), false);
 				repo.exportToArchive(targetPath+File.separatorChar+repo.getName()+".bos") ;
 				RepositoryManager.getInstance().getCurrentRepository().close();
 			}
@@ -87,7 +87,7 @@ public class RecoverWorkspaceAdvisor extends InstallerApplicationWorkbenchAdviso
 	 */
 	@Override
 	public void postStartup() {
-		IProject defaultDir = ResourcesPlugin.getWorkspace().getRoot().getProject("default");
+		final IProject defaultDir = ResourcesPlugin.getWorkspace().getRoot().getProject("default");
 		if (defaultDir != null && defaultDir.exists()){
 			super.postStartup();
 		}

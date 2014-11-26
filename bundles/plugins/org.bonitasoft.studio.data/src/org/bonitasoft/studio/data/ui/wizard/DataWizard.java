@@ -167,6 +167,7 @@ public class DataWizard extends Wizard implements IBonitaVariableContext {
             final RefactorDataOperation op = createRefactorOperation(editingDomain, workingCopy);
             final boolean switchingDataEClass = !originalData.eClass().equals(workingCopy.eClass());
             op.setUpdateDataReferences(switchingDataEClass);
+            op.setAskConfirmation(isEdited(workingCopy));
             if (op.canExecute()) {
                 try {
                     getContainer().run(true, false, op);
@@ -189,10 +190,19 @@ public class DataWizard extends Wizard implements IBonitaVariableContext {
         return true;
     }
 
+    /**
+     * @param workingCopy
+     * @return
+     */
+    protected boolean isEdited(final Data workingCopy) {
+        return !(originalData.eClass().equals(workingCopy.eClass()) && originalData.getName().equals(workingCopy.getName()) && originalData.getDataType()
+                .equals(workingCopy.getDataType()));
+    }
+
     protected void refreshXtextReferences() {
         try {
             RepositoryManager.getInstance().getCurrentRepository().getProject()
-                    .build(IncrementalProjectBuilder.FULL_BUILD, XTEXT_BUILDER_ID, Collections.<String, String> emptyMap(), null);
+            .build(IncrementalProjectBuilder.FULL_BUILD, XTEXT_BUILDER_ID, Collections.<String, String> emptyMap(), null);
         } catch (final CoreException e) {
             BonitaStudioLog.error(e, DataPlugin.PLUGIN_ID);
         }

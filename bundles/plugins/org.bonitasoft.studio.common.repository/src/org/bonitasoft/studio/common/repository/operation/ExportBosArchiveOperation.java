@@ -62,7 +62,7 @@ public class ExportBosArchiveOperation {
     private IFile manifestFile;
     private Set<IResource> resourcesToReOpen;
 
-    public IStatus run(IProgressMonitor monitor){
+    public IStatus run(final IProgressMonitor monitor){
         status = Status.OK_STATUS ;
 
         Assert.isNotNull(destPath) ;
@@ -88,7 +88,7 @@ public class ExportBosArchiveOperation {
             return status;
         }
 
-        ArchiveFileExportOperation op = new ArchiveFileExportOperation(null, new ArrayList<IResource>(resources),destPath) ;
+        final ArchiveFileExportOperation op = new ArchiveFileExportOperation(null, new ArrayList<IResource>(resources),destPath) ;
         op.setCreateLeadupStructure(true);
         op.setUseCompression(true);
         op.setUseTarFormat(false);
@@ -97,17 +97,16 @@ public class ExportBosArchiveOperation {
             if(manifestFile != null && manifestFile.exists()){
                 manifestFile.delete(true, Repository.NULL_PROGRESS_MONITOR);
             }
-        } catch (InvocationTargetException e) {
+        } catch (final InvocationTargetException e) {
             BonitaStudioLog.error(e) ;
-        } catch (InterruptedException e) {
+        } catch (final InterruptedException e) {
             BonitaStudioLog.error(e) ;
-        } catch (CoreException e) {
+        } catch (final CoreException e) {
             status = new Status(IStatus.ERROR, CommonRepositoryPlugin.PLUGIN_ID,  e.getMessage(),e);
+            return status;
         }
 
-        if(status == null){
-            status = op.getStatus() ;
-        }
+        status = op.getStatus();
         return  status;
     }
 
@@ -116,17 +115,17 @@ public class ExportBosArchiveOperation {
         if(manifestFile.exists()){
             try {
                 manifestFile.delete(true,  Repository.NULL_PROGRESS_MONITOR);
-            } catch (CoreException e) {
+            } catch (final CoreException e) {
                 BonitaStudioLog.error(e);
                 return new Status(IStatus.ERROR, CommonRepositoryPlugin.PLUGIN_ID,  e.getMessage(),e);
             }
         }
-        Properties prop = new Properties();
+        final Properties prop = new Properties();
         prop.put(VERSION, ProductVersion.CURRENT_VERSION);
 
         if(resourcesToReOpen != null &&!resourcesToReOpen.isEmpty()){
-            StringBuilder sb = new StringBuilder();
-            for(IResource r : resourcesToReOpen){
+            final StringBuilder sb = new StringBuilder();
+            for(final IResource r : resourcesToReOpen){
                 sb.append(r.getName());
                 sb.append(",");
             }
@@ -141,7 +140,7 @@ public class ExportBosArchiveOperation {
         final Writer w = new CharArrayWriter();
         try {
             prop.store(w, BOS_MANIFEST_COMMENT);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             BonitaStudioLog.error(e);
             return new Status(IStatus.ERROR, CommonRepositoryPlugin.PLUGIN_ID,  e.getMessage(),e);
         }
@@ -149,7 +148,7 @@ public class ExportBosArchiveOperation {
         final InputStream source = new ByteArrayInputStream(w.toString().getBytes());
         try {
             manifestFile.create(source, IResource.FORCE, Repository.NULL_PROGRESS_MONITOR);
-        } catch (CoreException e1) {
+        } catch (final CoreException e1) {
             return new Status(IStatus.ERROR, CommonRepositoryPlugin.PLUGIN_ID,  e1.getMessage(),e1);
         }
         resources.add(manifestFile);
@@ -160,15 +159,15 @@ public class ExportBosArchiveOperation {
         return status ;
     }
 
-    public void setResources(Set<IResource> resourcesToExport){
+    public void setResources(final Set<IResource> resourcesToExport){
         resources = resourcesToExport ;
     }
 
-    public void setResourcesToOpen(Set<IResource> resourcesToReopenAtImport){
+    public void setResourcesToOpen(final Set<IResource> resourcesToReopenAtImport){
         resourcesToReOpen = resourcesToReopenAtImport ;
     }
 
-    public void setDestinationPath(String destPath){
+    public void setDestinationPath(final String destPath){
         this.destPath = destPath ;
     }
 }

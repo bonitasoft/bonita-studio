@@ -562,18 +562,15 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
 
         });
 
-        final ExpressionContentProvider provider = new ExpressionContentProvider();
-        provider.setContext(context);
-
+        final ExpressionContentProvider provider = ExpressionContentProvider.getInstance();
         final Set<Expression> filteredExpressions = new HashSet<Expression>();
-        final Expression[] expressions = provider.getExpressions();
-        final EObject input = provider.getContext();
+        final Expression[] expressions = provider.getExpressions(context);
         if (expressions != null) {
             filteredExpressions.addAll(Arrays.asList(expressions));
-            if (input != null && filters != null) {
+            if (context != null && filters != null) {
                 for (final Expression exp : expressions) {
                     for (final ViewerFilter filter : filters) {
-                        if (filter != null && !filter.select(groovyViewer.getSourceViewer(), input, exp)) {
+                        if (filter != null && !filter.select(groovyViewer.getSourceViewer(), context, exp)) {
                             filteredExpressions.remove(exp);
                         }
                     }
