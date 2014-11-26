@@ -52,22 +52,26 @@ public abstract class AbstractBonitaDescriptionSection extends AbstractModelerPr
     public void createControls(final Composite parent, final TabbedPropertySheetPage aTabbedPropertySheetPage) {
         super.createControls(parent, aTabbedPropertySheetPage);
         parent.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).create());
+
         tabbedPropertySheetPage=aTabbedPropertySheetPage;
         final TabbedPropertySheetWidgetFactory widgetFactory = tabbedPropertySheetPage.getWidgetFactory();
+
         form = widgetFactory.createForm(parent);
         form.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).create());
         form.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        form.getBody().setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).create());
-        form.getBody().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        final Composite formBodyComposite = form.getBody();
+        formBodyComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).create());
+        formBodyComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+
         form.setToolBarVerticalAlignment(SWT.CENTER);
         final TogglePropertyHelpContributionItem togglePropertyHelpContributionItem = new TogglePropertyHelpContributionItem(widgetFactory, form,
                 getSectionDescription());
         form.getToolBarManager().add(togglePropertyHelpContributionItem);
         form.getToolBarManager().update(true);
-
         form.setText(getSectionTitle());
         form.getMenuManager().add(togglePropertyHelpContributionItem);
-        createContent(form.getBody());
+
+        createContent(formBodyComposite);
         form.update();
         form.setFocus();
     }

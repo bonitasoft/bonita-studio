@@ -41,7 +41,7 @@ public class ContractDefinitionValidator {
     private final Set<IValidationRule> validationRules;
 
     public ContractDefinitionValidator() {
-        this(new DummyMessageManager());
+        this(new DefaultMessageManager());
     }
 
     public ContractDefinitionValidator(final IMessageManager messageManager) {

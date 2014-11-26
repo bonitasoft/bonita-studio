@@ -24,15 +24,16 @@ import org.eclipse.ui.forms.IMessagePrefixProvider;
 
 /**
  * @author Romain Bioteau
- *
+ *         Default implementation doing basically nothing
  */
-public class DummyMessageManager implements IMessageManager {
+public class DefaultMessageManager implements IMessageManager {
 
     /* (non-Javadoc)
      * @see org.eclipse.ui.forms.IMessageManager#addMessage(java.lang.Object, java.lang.String, java.lang.Object, int)
      */
     @Override
     public void addMessage(final Object arg0, final String arg1, final Object arg2, final int arg3) {
+        //Nothing to do
     }
 
     /* (non-Javadoc)
@@ -40,6 +41,7 @@ public class DummyMessageManager implements IMessageManager {
      */
     @Override
     public void addMessage(final Object arg0, final String arg1, final Object arg2, final int arg3, final Control arg4) {
+        //Nothing to do
     }
 
     /* (non-Javadoc)
@@ -79,6 +81,7 @@ public class DummyMessageManager implements IMessageManager {
      */
     @Override
     public void removeAllMessages() {
+        //Nothing to do
     }
 
     /* (non-Javadoc)
@@ -86,6 +89,7 @@ public class DummyMessageManager implements IMessageManager {
      */
     @Override
     public void removeMessage(final Object arg0) {
+        //Nothing to do
     }
 
     /* (non-Javadoc)
@@ -93,6 +97,7 @@ public class DummyMessageManager implements IMessageManager {
      */
     @Override
     public void removeMessage(final Object arg0, final Control arg1) {
+        //Nothing to do
     }
 
     /* (non-Javadoc)
@@ -100,7 +105,7 @@ public class DummyMessageManager implements IMessageManager {
      */
     @Override
     public void removeMessages() {
-
+        //Nothing to do
     }
 
     /* (non-Javadoc)
@@ -108,6 +113,7 @@ public class DummyMessageManager implements IMessageManager {
      */
     @Override
     public void removeMessages(final Control arg0) {
+        //Nothing to do
     }
 
     /* (non-Javadoc)
@@ -115,6 +121,7 @@ public class DummyMessageManager implements IMessageManager {
      */
     @Override
     public void setAutoUpdate(final boolean arg0) {
+        //Nothing to do
     }
 
     /* (non-Javadoc)
@@ -122,6 +129,7 @@ public class DummyMessageManager implements IMessageManager {
      */
     @Override
     public void setDecorationPosition(final int arg0) {
+        //Nothing to do
     }
 
     /* (non-Javadoc)
@@ -129,6 +137,7 @@ public class DummyMessageManager implements IMessageManager {
      */
     @Override
     public void setMessagePrefixProvider(final IMessagePrefixProvider arg0) {
+        //Nothing to do
     }
 
     /* (non-Javadoc)
@@ -136,6 +145,7 @@ public class DummyMessageManager implements IMessageManager {
      */
     @Override
     public void update() {
+        //Nothing to do
     }
 
 }

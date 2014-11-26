@@ -17,9 +17,6 @@
 package org.bonitasoft.studio.contract.ui.property.input.edit;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -37,7 +34,9 @@ import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.ViewerCell;
+import org.eclipse.swt.widgets.Composite;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -55,18 +54,22 @@ public class ContractInputTypeEditingSupportTest extends AbstractSWTTestCase {
 
     @Mock
     private ColumnViewer viewer;
+
     private ContractInputTypeEditingSupport contractInputTypeEditingSupport;
+
     @Mock
     private CellEditor cellEditor;
     @Mock
     private ViewerCell cell;
+
+    private Composite parent;
 
     /**
      * @throws java.lang.Exception
      */
     @Before
     public void setUp() throws Exception {
-        createDisplayAndRealm();
+        parent = createDisplayAndRealm();
         contractInputTypeEditingSupport = new ContractInputTypeEditingSupport(viewer,
                 new AdapterFactoryContentProvider(new ProcessItemProviderAdapterFactory()), new ContractInputController(
                         new ContractDefinitionValidator()));
@@ -81,11 +84,18 @@ public class ContractInputTypeEditingSupportTest extends AbstractSWTTestCase {
     }
 
     @Test
+    public void should_cancelEditor_and_editorValueChanged_doNothing() throws Exception {
+        contractInputTypeEditingSupport.cancelEditor();
+        contractInputTypeEditingSupport.editorValueChanged(true, true);
+    }
+
+    @Test
     public void should_initializeCellEditorValue_add_ICellEditorListener() throws Exception {
-        contractInputTypeEditingSupport = spy(new ContractInputTypeEditingSupport(viewer,
+        viewer = new TableViewer(parent);
+        contractInputTypeEditingSupport = new ContractInputTypeEditingSupport(viewer,
                 new AdapterFactoryContentProvider(new ProcessItemProviderAdapterFactory()), new ContractInputController(
-                        new ContractDefinitionValidator())));
-        doReturn(null).when(contractInputTypeEditingSupport).getValue(any(Object.class));
+                        new ContractDefinitionValidator()));
+        when(cell.getElement()).thenReturn(ProcessFactory.eINSTANCE.createContractInput());
         contractInputTypeEditingSupport.initializeCellEditorValue(cellEditor, cell);
         verify(cellEditor).addListener(contractInputTypeEditingSupport);
     }

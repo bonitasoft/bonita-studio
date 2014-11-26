@@ -21,6 +21,7 @@ import static org.mockito.Mockito.verify;
 
 import org.bonitasoft.studio.contract.core.validation.ContractDefinitionValidator;
 import org.bonitasoft.studio.contract.ui.property.FieldDecoratorProvider;
+import org.bonitasoft.studio.contract.ui.property.constraint.edit.editor.ContractConstraintExpressionDialogCellEditor;
 import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractConstraint;
 import org.bonitasoft.studio.model.process.ProcessFactory;
@@ -28,7 +29,9 @@ import org.bonitasoft.studio.model.process.provider.ProcessItemProviderAdapterFa
 import org.bonitasoft.studio.swt.AbstractSWTTestCase;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
+import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnViewer;
+import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.IMessageManager;
 import org.junit.After;
@@ -102,4 +105,10 @@ public class ConstraintExpressionPropertyEditingSupportTest extends AbstractSWTT
         assertThat(propertyEditingSupport.canEdit(ProcessFactory.eINSTANCE.createContractInput())).isFalse();
     }
 
+    @Test
+    public void should_getCellEditor_return() throws Exception {
+        propertyEditingSupport = new ConstraintExpressionPropertyEditingSupport(new TableViewer(container), propertySourceProvider, validator);
+        final CellEditor cellEditor = propertyEditingSupport.getCellEditor(ProcessFactory.eINSTANCE.createContractConstraint());
+        assertThat(cellEditor).isNotNull().isInstanceOf(ContractConstraintExpressionDialogCellEditor.class);
+    }
 }

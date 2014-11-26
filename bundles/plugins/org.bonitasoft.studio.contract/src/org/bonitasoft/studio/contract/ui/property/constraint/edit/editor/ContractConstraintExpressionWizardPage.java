@@ -59,7 +59,7 @@ public class ContractConstraintExpressionWizardPage extends WizardPage implement
     private final List<ContractInput> inputs;
     private ConstraintInputIndexer inputIndexer;
     private IObservableValue expressionContentObservable;
-    private IObservableList inputsObservable;
+
     private GroovyViewer groovyViewer;
     private final GroovySourceViewerFactory groovyViewerFactory;
     private final MVELEditorFactory editorFactory;
@@ -104,7 +104,7 @@ public class ContractConstraintExpressionWizardPage extends WizardPage implement
 
         expressionContentObservable = EMFObservables.observeValue(constraint, ProcessPackage.Literals.CONTRACT_CONSTRAINT__EXPRESSION);
 
-        inputsObservable = EMFObservables.observeList(constraint, ProcessPackage.Literals.CONTRACT_CONSTRAINT__INPUT_NAMES);
+        final IObservableList inputsObservable = EMFObservables.observeList(constraint, ProcessPackage.Literals.CONTRACT_CONSTRAINT__INPUT_NAMES);
         inputIndexer = new ConstraintInputIndexer(constraint, inputs, viewer.getGroovyCompilationUnit());
         getSourceViewer().getDocument().set(expressionContentObservable.getValue().toString());
         context.addValidationStatusProvider(new ConstraintExpressionEditorValidator(expressionContentObservable, inputsObservable));
@@ -155,6 +155,7 @@ public class ContractConstraintExpressionWizardPage extends WizardPage implement
             try {
                 inputIndexer.join();
             } catch (final InterruptedException e) {
+                BonitaStudioLog.error("Failed to join input indexer job.", e, ContractPlugin.PLUGIN_ID);
                 return false;
             }
         }

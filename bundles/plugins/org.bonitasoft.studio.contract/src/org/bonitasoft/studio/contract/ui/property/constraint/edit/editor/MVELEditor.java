@@ -30,13 +30,13 @@ import org.eclipse.jface.action.IMenuManager;
 public class MVELEditor extends GroovyEditor {
 
     public MVELEditor() {
-       super();
+        super();
         setPreferenceStore(GroovyPlugin.getDefault().getPreferenceStore());
     }
 
     @Override
     protected void createUndoRedoActions() {
-
+        //Nothing to do
     }
 
     @Override

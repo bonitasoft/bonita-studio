@@ -57,11 +57,6 @@ public class ContractInputTypeEditingSupport extends PropertyEditingSupport impl
     }
 
     @Override
-    protected Object getValue(final Object object) {
-        return super.getValue(object);
-    }
-
-    @Override
     public void applyEditorValue() {
         final ContractInput input = getContractInput();
         if (input.getType() == ContractInputType.COMPLEX) {
@@ -73,12 +68,12 @@ public class ContractInputTypeEditingSupport extends PropertyEditingSupport impl
 
     @Override
     public void cancelEditor() {
-        // Nothing to do
+        //Nothing to do
     }
 
     @Override
     public void editorValueChanged(final boolean oldValidState, final boolean newValidState) {
-        // Nothing to do
+        //Nothing to do
     }
 
     public ContractInput getContractInput() {

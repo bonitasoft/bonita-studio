@@ -17,24 +17,19 @@
 package org.bonitasoft.studio.contract.ui.property;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyInt;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.verify;
 
-import org.bonitasoft.studio.contract.ui.property.input.CellEditorControlAdapter;
+import org.bonitasoft.studio.swt.AbstractSWTTestCase;
 import org.eclipse.jface.fieldassist.ControlDecoration;
-import org.eclipse.jface.fieldassist.FieldDecoration;
 import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Text;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 
 
@@ -43,16 +38,13 @@ import org.mockito.runners.MockitoJUnitRunner;
  *
  */
 @RunWith(MockitoJUnitRunner.class)
-public class FieldDecoratorProviderTest {
+public class FieldDecoratorProviderTest extends AbstractSWTTestCase {
 
-    @Spy
+
     private FieldDecoratorProvider fieldDecoratorProvider;
 
-    @Mock
     private Control control;
 
-    @Mock
-    private FieldDecoration fieldDecoration;
 
     @Mock
     private ControlDecoration controlDecoration;
@@ -62,8 +54,9 @@ public class FieldDecoratorProviderTest {
      */
     @Before
     public void setUp() throws Exception {
-        doReturn(fieldDecoration).when(fieldDecoratorProvider).getDecorator(FieldDecorationRegistry.DEC_CONTENT_PROPOSAL);
-        doReturn(controlDecoration).when(fieldDecoratorProvider).newControlDecoration(any(Control.class), anyInt());
+        final Composite composite = createDisplayAndRealm();
+        control = new Text(composite, SWT.NONE);
+        fieldDecoratorProvider = new FieldDecoratorProvider();
     }
 
     /**
@@ -71,15 +64,20 @@ public class FieldDecoratorProviderTest {
      */
     @After
     public void tearDown() throws Exception {
+        dispose();
     }
 
     @Test
     public void should_createControlDecorator_attach_a_ControlDecorator_to_a_Control() throws Exception {
         final ControlDecoration decorator = fieldDecoratorProvider.createControlDecorator(control, "a description",
                 FieldDecorationRegistry.DEC_CONTENT_PROPOSAL, SWT.RIGHT);
-        assertThat(decorator).isEqualTo(controlDecoration);
-        verify(decorator).setDescriptionText("a description");
-        verify(decorator).setImage(any(Image.class));
-        verify(control).addControlListener(any(CellEditorControlAdapter.class));
+        assertThat(decorator.getControl()).isEqualTo(control);
+        assertThat(decorator.getDescriptionText()).isEqualTo("a description");
+        assertThat(decorator.getImage()).isNotNull();
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void should_getFieldDecorator_thorw_IllegalArgumentException() throws Exception {
+        fieldDecoratorProvider.getDecorator("fake type");
     }
 }

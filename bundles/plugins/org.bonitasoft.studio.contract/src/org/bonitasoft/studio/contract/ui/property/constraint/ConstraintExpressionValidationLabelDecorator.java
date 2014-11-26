@@ -22,7 +22,6 @@ import org.bonitasoft.studio.model.process.ContractConstraint;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.fieldassist.FieldDecoration;
 import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ILabelDecorator;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.swt.graphics.Image;
@@ -64,43 +63,24 @@ public class ConstraintExpressionValidationLabelDecorator implements ILabelDecor
 
     @Override
     public Image decorateImage(final Image image, final Object element) {
-        final ImageDescriptor decorator = getDecoratorImageDescriptor(element);
-        if(decorator != null){
-            return decorator.createImage();
-        }
-        return null;
+        return getDecoratorImage(element);
     }
 
-    protected ImageDescriptor getDecoratorImageDescriptor(final Object element) {
+    protected Image getDecoratorImage(final Object element) {
         final ContractConstraint contractConstraint = (ContractConstraint) element;
-        //        if (contractConstraint.getExpression() == null) {
-        //            return null;
-        //        }
         final String name = contractConstraint.getName();
         final IStatus status = expressionValidationRule.validate(contractConstraint);
         final IStatus dependenciesStatus = dependenciesValidationRule.validate(contractConstraint);
         if (!status.isOK()) {
-            final FieldDecoration decoration = getErrorDecorator();
-            decoration.setDescription(expressionValidationRule.getMessage(status));
-            final Image image = decoration.getImage();
-            if (!image.getDevice().isDisposed()) {
-                return ImageDescriptor.createFromImage(image);
-            }
-
+            return getErrorDecorator().getImage();
         } else if (!dependenciesStatus.isOK()) {
-            for (final IStatus c : dependenciesStatus.getChildren()) {
-                if (c.getMessage().contains(name)) {
-                    final FieldDecoration decoration = getErrorDecorator();
-                    decoration.setDescription(dependenciesValidationRule.getMessage(c));
-                    final Image image = decoration.getImage();
-                    if (!image.getDevice().isDisposed()) {
-                        return ImageDescriptor.createFromImage(image);
-                    }
-                }
+            if (dependenciesStatus.getMessage().contains(name)) {
+                return getErrorDecorator().getImage();
             }
         }
         return null;
     }
+
 
     protected FieldDecoration getErrorDecorator() {
         return FieldDecorationRegistry.getDefault().getFieldDecoration(FieldDecorationRegistry.DEC_ERROR);
@@ -109,9 +89,6 @@ public class ConstraintExpressionValidationLabelDecorator implements ILabelDecor
     @Override
     public String decorateText(final String text, final Object element) {
         final ContractConstraint constraint = (ContractConstraint) element;
-        //        if (constraint.getExpression() == null) {
-        //            return null;
-        //        }
         final IStatus status = expressionValidationRule.validate(constraint);
         if (!status.isOK()) {
             return status.getMessage();

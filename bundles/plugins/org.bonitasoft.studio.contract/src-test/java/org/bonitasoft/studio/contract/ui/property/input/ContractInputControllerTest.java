@@ -227,6 +227,15 @@ public class ContractInputControllerTest extends AbstractSWTTestCase {
         assertThat(((Contract) observableValue.getValue()).getInputs()).containsOnly(input1, input2, input3);
     }
 
+    @Test
+    public void should_moveUp_do_nothing() throws Exception {
+        contractInputController.moveUp(viewer);
+    }
+
+    @Test
+    public void should_moveDown_do_nothing() throws Exception {
+        contractInputController.moveDown(viewer);
+    }
 
 
 }

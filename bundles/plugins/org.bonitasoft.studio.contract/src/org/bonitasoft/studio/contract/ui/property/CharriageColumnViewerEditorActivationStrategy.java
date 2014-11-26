@@ -44,7 +44,8 @@ public class CharriageColumnViewerEditorActivationStrategy extends ColumnViewerE
 
     protected boolean enterKeyPressed(final ColumnViewerEditorActivationEvent event) {
         final EventObject sourceEvent = event.sourceEvent;
-        if (sourceEvent instanceof KeyEvent && ((KeyEvent) sourceEvent).doit) { //event must not be cancelled
+        //event must not be cancelled
+        if (sourceEvent instanceof KeyEvent && ((KeyEvent) sourceEvent).doit) {
             return event.eventType == ColumnViewerEditorActivationEvent.KEY_PRESSED && event.keyCode == SWT.CR;
         }
         return false;

@@ -18,12 +18,16 @@ package org.bonitasoft.studio.contract.core.validation;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import org.bonitasoft.studio.contract.ContractPlugin;
 import org.bonitasoft.studio.contract.core.ContractConstraintUtil;
 import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractConstraint;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ContractInputType;
 import org.bonitasoft.studio.model.process.ProcessFactory;
+import org.eclipse.core.databinding.validation.ValidationStatus;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -90,6 +94,31 @@ public class ContractConstraintInputsValidationRuleTest {
     @Test
     public void should_rule_id_be_set() throws Exception {
         assertThat(validationRule.getRuleId()).isEqualTo(ContractConstraintInputsValidationRule.CONSTRAINT_INPUTS_ID);
+    }
+
+    @Test
+    public void should_getMessage_return_status_message_for_single_status() throws Exception {
+        final IStatus status = ValidationStatus.error("a single status error message");
+        assertThat(validationRule.getMessage(status)).isEqualTo(status.getMessage());
+    }
+
+    @Test
+    public void should_getMessage_return_status_message_for_empty_multi_status() throws Exception {
+        final MultiStatus status = new MultiStatus(ContractPlugin.PLUGIN_ID, 0, "", null);
+        assertThat(validationRule.getMessage(status)).isEmpty();
+    }
+
+    @Test
+    public void should_getMessage_return_aggregated_status_message_for_mulit_status() throws Exception {
+        final MultiStatus status = new MultiStatus(ContractPlugin.PLUGIN_ID, 0, "", null);
+        status.add(ValidationStatus.error("a status error message 1"));
+        status.add(ValidationStatus.error("a status error message 2"));
+        assertThat(validationRule.getMessage(status)).contains("message 1", "message 2");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void should_getMessage_throw_IllegalArgumentException_for_null_status() throws Exception {
+        validationRule.getMessage(null);
     }
 
     private ContractInput addInput(final Contract contract, final String inputName, final ContractInputType type, final String description) {

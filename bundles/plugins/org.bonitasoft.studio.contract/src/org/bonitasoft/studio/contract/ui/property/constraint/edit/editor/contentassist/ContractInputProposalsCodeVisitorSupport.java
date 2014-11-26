@@ -23,6 +23,8 @@ import java.util.Map;
 
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.contract.ContractPlugin;
 import org.bonitasoft.studio.contract.ui.expression.ContractInputLabelProvider;
 import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractInput;
@@ -72,22 +74,16 @@ public class ContractInputProposalsCodeVisitorSupport extends CodeVisitorSupport
     private final ModuleNode moduleNode;
 
     public ContractInputProposalsCodeVisitorSupport(final List<ContractInput> inputs,
-            final String prefix,
-            final JavaContentAssistInvocationContext context,
-            final ContentAssistContext contentAssistContext,
-            final ClassLoader classLoader,
-            final IJavaCompletionProposalComputer completionComputer,
-            final MethodProposalCreator methodProposalCreator,
-            final ModuleNode moduleNode,
+            final CodeVisitorSupportContext codeVisitorSupportContext,
             final IProgressMonitor monitor) {
         this.inputs = inputs;
-        this.prefix = prefix;
-        this.context = context;
-        this.contentAssistContext = contentAssistContext;
-        this.completionComputer = completionComputer;
-        this.classLoader = classLoader;
-        this.methodProposalCreator = methodProposalCreator;
-        this.moduleNode = moduleNode;
+        prefix = codeVisitorSupportContext.getPrefix();
+        context = codeVisitorSupportContext.getContext();
+        contentAssistContext = codeVisitorSupportContext.getContenttAssistContext();
+        completionComputer = codeVisitorSupportContext.getCompletionComputer();
+        classLoader = codeVisitorSupportContext.getContextClassloader();
+        methodProposalCreator = codeVisitorSupportContext.getMethodProposalCreator();
+        moduleNode = codeVisitorSupportContext.getModuleNode();
         this.monitor = monitor;
     }
 
@@ -95,7 +91,7 @@ public class ContractInputProposalsCodeVisitorSupport extends CodeVisitorSupport
     public void visitVariableExpression(final VariableExpression expression) {
         proposals = getInputProposals(context, inputs, prefix);
         final String fullyQualifiedType = getTypeFor(expression.getName(), inputs);
-        if (fullyQualifiedType != null && Map.class.getName().equals(fullyQualifiedType)) { //COMPLEX
+        if (Map.class.getName().equals(fullyQualifiedType)) { //COMPLEX
             final ContractInput complexInput = getInputWithName(expression.getName(), inputs);
             proposals = getInputProposals(context, complexInput.getInputs(), prefix);
         } else if (fullyQualifiedType != null) {
@@ -225,6 +221,7 @@ public class ContractInputProposalsCodeVisitorSupport extends CodeVisitorSupport
         try {
             return classLoader.loadClass(fullyQualifiedType);
         } catch (final ClassNotFoundException e) {
+            BonitaStudioLog.debug("Failed to retrieve class for type:" + fullyQualifiedType, ContractPlugin.PLUGIN_ID);
             return null;
         }
     }

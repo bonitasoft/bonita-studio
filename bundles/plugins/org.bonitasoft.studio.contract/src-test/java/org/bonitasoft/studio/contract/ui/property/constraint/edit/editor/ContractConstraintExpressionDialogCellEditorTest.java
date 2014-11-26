@@ -16,6 +16,7 @@
  */
 package org.bonitasoft.studio.contract.ui.property.constraint.edit.editor;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
@@ -28,6 +29,7 @@ import org.bonitasoft.studio.model.process.provider.ProcessItemProviderAdapterFa
 import org.bonitasoft.studio.swt.AbstractSWTTestCase;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
 import org.junit.After;
@@ -51,6 +53,8 @@ public class ContractConstraintExpressionDialogCellEditorTest extends AbstractSW
     @Mock
     private ConstraintEditorFactory constraintEditorFactory;
     private AdapterFactoryContentProvider adapterFactoryContentProvider;
+    @Mock
+    private WizardDialog wizardDialog;
 
     /**
      * @throws java.lang.Exception
@@ -87,6 +91,18 @@ public class ContractConstraintExpressionDialogCellEditorTest extends AbstractSW
         verify(constraintEditorFactory).openConstraintEditor(any(Shell.class),
                 eq(constraint),
                 eq(adapterFactoryContentProvider));
+    }
+
+    @Test
+    public void should_openDialog_open_wizardDialog() throws Exception {
+        cellEditor.openDialog(wizardDialog);
+        verify(wizardDialog).open();
+    }
+
+    @Test
+    public void should_createWizard_return_a_new_ContractConstraintExpressionWizard() throws Exception {
+        final ContractConstraintExpressionWizard wizard = cellEditor.createWizard();
+        assertThat(wizard).isNotNull();
     }
 
 }

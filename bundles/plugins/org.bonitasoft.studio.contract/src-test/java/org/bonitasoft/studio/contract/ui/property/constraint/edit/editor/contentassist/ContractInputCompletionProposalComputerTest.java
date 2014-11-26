@@ -109,14 +109,14 @@ public class ContractInputCompletionProposalComputerTest extends AbstractSWTTest
     }
 
     @Test
-    public void should_computeCompletionProposals_return_if_context_is_not_a_JavaContentAssistInvocationContext() throws Exception {
-        assertThat(proposalComputer.computeCompletionProposals(null, null)).isNull();
+    public void should_computeCompletionProposals_return_emptyList_if_context_is_not_a_JavaContentAssistInvocationContext() throws Exception {
+        assertThat(proposalComputer.computeCompletionProposals(null, null)).isEmpty();
     }
 
     @Test
-    public void should_computeCompletionProposals_log_BadLocationException_and_return_null() throws Exception {
+    public void should_computeCompletionProposals_log_BadLocationException_and_return_emptyList() throws Exception {
         when(context.computeIdentifierPrefix()).thenThrow(new BadLocationException());
-        assertThat(proposalComputer.computeCompletionProposals(context, null)).isNull();
+        assertThat(proposalComputer.computeCompletionProposals(context, null)).isEmpty();
     }
 
     @Test

@@ -18,6 +18,7 @@ package org.bonitasoft.studio.contract.ui.property.constraint.edit.editor.conten
 
 import java.net.URLClassLoader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -53,7 +54,7 @@ public class ContractInputCompletionProposalComputer extends GroovyCompletionPro
     @Override
     public List<ICompletionProposal> computeCompletionProposals(final ContentAssistInvocationContext context, final IProgressMonitor monitor) {
         if (!(context instanceof JavaContentAssistInvocationContext)) {
-            return null;
+            return Collections.emptyList();
         }
 
         final JavaContentAssistInvocationContext javaContext = (JavaContentAssistInvocationContext) context;
@@ -69,17 +70,17 @@ public class ContractInputCompletionProposalComputer extends GroovyCompletionPro
             computeIdentifierPrefix = javaContext.computeIdentifierPrefix();
         } catch (final BadLocationException e) {
             BonitaStudioLog.error("Failed to compute identifier prefix in ContractConstraint expression editor", e, ContractPlugin.PLUGIN_ID);
-            return null;
+            return Collections.emptyList();
         }
-
-        final ContractInputProposalsCodeVisitorSupport codeVistor = new ContractInputProposalsCodeVisitorSupport(inputs,
-                computeIdentifierPrefix.toString(),
+        final CodeVisitorSupportContext codeVisitorSupportContext = new CodeVisitorSupportContext(computeIdentifierPrefix.toString(),
                 (JavaContentAssistInvocationContext) context,
                 contentAssistContext,
                 getProjectClassloader(),
                 new GroovyCompletionProposalComputer(),
                 createMethodProposalCreator(),
-                getModuleNode(contentAssistContext),
+                getModuleNode(contentAssistContext));
+        final ContractInputProposalsCodeVisitorSupport codeVistor = new ContractInputProposalsCodeVisitorSupport(inputs,
+                codeVisitorSupportContext,
                 monitor);
         final ASTNode completionNode = contentAssistContext.getPerceivedCompletionNode();
         if (completionNode != null) {

@@ -61,7 +61,8 @@ public class ContractInputController implements IViewerController {
             final EObject eContainer = parentInput.eContainer();
             if (eContainer instanceof ContractInput) {
                 CustomEMFEditObservables.observeList(eContainer, ProcessPackage.Literals.CONTRACT_INPUT__INPUTS).add(defaultInput);
-            } else if (eContainer instanceof Contract) {
+            } else {
+                Assert.isLegal(eContainer instanceof Contract);
                 CustomEMFEditObservables.observeList(eContainer, ProcessPackage.Literals.CONTRACT__INPUTS).add(defaultInput);
             }
         } else {
@@ -105,7 +106,8 @@ public class ContractInputController implements IViewerController {
                 final EObject eContainer = contractInput.eContainer();
                 if (eContainer instanceof ContractInput) {
                     CustomEMFEditObservables.observeList(eContainer, ProcessPackage.Literals.CONTRACT_INPUT__INPUTS).remove(contractInput);
-                } else if (eContainer instanceof Contract) {
+                } else {
+                    Assert.isLegal(eContainer instanceof Contract);
                     CustomEMFEditObservables.observeList(eContainer, ProcessPackage.Literals.CONTRACT__INPUTS).remove(contractInput);
                 }
             }

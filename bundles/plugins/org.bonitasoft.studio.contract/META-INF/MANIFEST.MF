@@ -37,7 +37,6 @@ Require-Bundle: org.eclipse.core.runtime;bundle-version="3.9.0",
 Bundle-Activator: org.bonitasoft.studio.contract.ContractPlugin
 Bundle-ActivationPolicy: lazy
 Export-Package: org.bonitasoft.studio.contract.core,
- org.bonitasoft.studio.contract.core.exception,
  org.bonitasoft.studio.contract.core.validation,
  org.bonitasoft.studio.contract.i18n;x-friends:="org.bonitasoft.studio.swtbot.framework"
 Import-Package: org.bonitasoft.engine.bpm,
