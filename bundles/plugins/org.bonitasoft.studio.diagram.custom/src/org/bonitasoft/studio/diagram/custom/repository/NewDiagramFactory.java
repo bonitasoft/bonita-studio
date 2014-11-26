@@ -59,10 +59,11 @@ import org.eclipse.gmf.runtime.diagram.core.services.ViewService;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
 import org.eclipse.gmf.runtime.notation.Bounds;
+import org.eclipse.gmf.runtime.notation.Connector;
 import org.eclipse.gmf.runtime.notation.Diagram;
-import org.eclipse.gmf.runtime.notation.Edge;
 import org.eclipse.gmf.runtime.notation.Node;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
+import org.eclipse.gmf.runtime.notation.Routing;
 import org.eclipse.gmf.runtime.notation.ShapeStyle;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.swt.graphics.RGB;
@@ -145,7 +146,10 @@ public class NewDiagramFactory {
         sequenceFlow.setSource(startEvent);
         sequenceFlow.setTarget(task);
         pool.getConnections().add(sequenceFlow);
-        final Edge edge = processViewProvider.createSequenceFlow_4001(sequenceFlow, diagram, -1, true, ProcessDiagramEditorPlugin.DIAGRAM_PREFERENCES_HINT);
+        final Connector edge = (Connector) processViewProvider.createSequenceFlow_4001(sequenceFlow, diagram, -1, true,
+                ProcessDiagramEditorPlugin.DIAGRAM_PREFERENCES_HINT);
+        edge.setRouting(Routing.RECTILINEAR_LITERAL);
+        edge.setRoundedBendpointsRadius(10);
         edge.setSource(startEventShape);
         edge.setTarget(stepShape);
         monitor.worked(1);
