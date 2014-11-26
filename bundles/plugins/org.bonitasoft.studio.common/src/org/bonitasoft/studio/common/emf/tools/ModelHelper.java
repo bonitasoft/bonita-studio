@@ -1003,10 +1003,10 @@ public class ModelHelper {
         if (!expr.getReferencedElements().isEmpty()) {
             for (final EObject o : expr.getReferencedElements()) {
                 if (element instanceof Element && o instanceof Element && isSameElement(element, o)) {
-                    return true && !isAExpressionReferencedElement(expr);
+                    return true && !isReferencedElementIsInExpression(expr);
                 } else {
                     if (element instanceof Parameter && o instanceof Parameter && ((Parameter) element).getName().equals(((Parameter) o).getName())) {
-                        return true && !isAExpressionReferencedElement(expr);
+                        return true && !isReferencedElementIsInExpression(expr);
                     }
                 }
             }
@@ -1014,7 +1014,7 @@ public class ModelHelper {
         return false;
     }
 
-    public static boolean isAExpressionReferencedElement(final EObject target) {
+    public static boolean isReferencedElementIsInExpression(final EObject target) {
         EObject container = target.eContainer();
         while (container != null) {
             if (container instanceof Expression) {
@@ -2026,27 +2026,27 @@ public class ModelHelper {
         return false;
     }
 
-    protected static EObject getReferencedDataInActivity(final Data refData) {
+    protected static Activity getReferencedDataActivityContainer(final Data refData) {
         EObject container = refData.eContainer();
         while (container != null && !(container instanceof Activity)) {
             container = container.eContainer();
         }
         if (container != null) {
             if (getDataOnActivity(refData, container) != null) {
-                return container;
+                return (Activity) container;
             }
         }
         return null;
     }
 
-    protected static EObject getReferencedDataInPool(final Data refData) {
+    protected static Pool getReferencedDataPoolContainer(final Data refData) {
         EObject container = refData.eContainer();
         while (container != null && !(container instanceof Pool)) {
             container = container.eContainer();
         }
         if (container != null) {
             if (getDataOnPool(refData, container) != null) {
-                return container;
+                return (Pool) container;
             }
         }
         return null;
@@ -2076,15 +2076,15 @@ public class ModelHelper {
         return null;
     }
 
-    protected static boolean isSameContainer(final EObject referencedElement, final EObject container) {
+    protected static boolean isSameContainer(final EObject referencedElement, final EObject element) {
         if (referencedElement instanceof Data) {
-            final Activity stepContainer = (Activity) getReferencedDataInActivity((Data) referencedElement);
+            final Activity stepContainer = getReferencedDataActivityContainer((Data) referencedElement);
             if (stepContainer!=null){
-                return stepContainer.equals(container);
+                return stepContainer.equals(element.eContainer());
             }
-            final Pool poolContainer = (Pool) getReferencedDataInPool((Data) referencedElement);
+            final Pool poolContainer = getReferencedDataPoolContainer((Data) referencedElement);
             if (poolContainer != null) {
-                return poolContainer.equals(container);
+                return poolContainer.equals(element.eContainer());
             }
             return false;
         }
@@ -2097,9 +2097,12 @@ public class ModelHelper {
      * @return
      */
     protected static boolean isSameElement(final EObject elementToDisplay, final EObject referencedElement) {
-
-        return ((Element) referencedElement).getName().equals(((Element) elementToDisplay).getName())
-                && isSameContainer(referencedElement, elementToDisplay.eContainer());
+        if (elementToDisplay.eContainer() != null) {
+            return ((Element) referencedElement).getName().equals(((Element) elementToDisplay).getName())
+                    && isSameContainer(referencedElement, elementToDisplay);
+        } else {
+            return EcoreUtil.equals(elementToDisplay, referencedElement);
+        }
     }
 
 }

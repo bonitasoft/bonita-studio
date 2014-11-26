@@ -219,6 +219,7 @@
          point="org.bonitasoft.studio.connectors.connectorWizard">
       <connectorWizard
             DefinitionId="scripting-groovy-script"
+            canFinishProvider="org.bonitasoft.studio.connectors.ui.wizard.custom.GroovyScriptConfigurationWizardPage"
             priority="1"
             useDefaultGeneratedPages="false"
             useDefaultOutputPage="true">

@@ -294,8 +294,8 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
     public DataWizardPage(final Data data, final EObject container, final boolean allowXML, final boolean allowEnum, final boolean showIsTransient,
             final boolean showAutoGenerateform, final Set<EStructuralFeature> featureToCheckForUniqueID, final String fixedReturnType) {
         super(DataWizardPage.class.getName());
-        setTitle(Messages.bind(Messages.addDataWizardTitle, getCurrentDataAwareContextName()));
         this.container = container;
+        setTitle(Messages.bind(Messages.addDataWizardTitle, getCurrentDataAwareContextName()));
         setDescription(Messages.addDataWizardDescription);
         this.data = data;
         this.featureToCheckForUniqueID = featureToCheckForUniqueID;
@@ -1408,3 +1408,4 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
 
     }
 }
+

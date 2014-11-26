@@ -353,17 +353,14 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
     }
 
     protected void erase(final Expression selectedExpression) {
-        String type = selectedExpression.getType();
+        final String type = selectedExpression.getType();
         if (ExpressionConstants.SCRIPT_TYPE.equals(type)) {
             if (!MessageDialog.openConfirm(Display.getDefault().getActiveShell(), Messages.cleanExpressionTitle,
                     Messages.cleanExpressionMsg)) {
                 return;
             }
         }
-        if (!ExpressionConstants.CONDITION_TYPE.equals(type)) {
-            type = ExpressionConstants.CONSTANT_TYPE;
-        }
-        clearExpression(type, selectedExpression);
+        clearExpression(selectedExpression);
         validate();
         refresh();
     }
@@ -393,17 +390,28 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
         }
     }
 
-    private void clearExpression(final String type, final Expression selectedExpression) {
+    private void clearExpression(final Expression selectedExpression) {
+        final String type = getDefaultExpressionType(selectedExpression);
         final EditingDomain editingDomain = getEditingDomain();
         if (editingDomain != null) {
             final CompoundCommand cc = ExpressionHelper.clearExpression(selectedExpression, editingDomain);
+            cc.append(SetCommand.create(editingDomain, selectedExpression, ExpressionPackage.Literals.EXPRESSION__TYPE, type));
             final boolean hasBeenExecuted = executeRemoveOperation(cc);
             if (!hasBeenExecuted) {
                 editingDomain.getCommandStack().execute(cc);
             }
         } else {
             ExpressionHelper.clearExpression(selectedExpression);
+            selectedExpression.setType(type);
         }
+    }
+
+    protected String getDefaultExpressionType(final Expression selectedExpression) {
+        String type = ExpressionConstants.CONSTANT_TYPE;
+        if (ExpressionConstants.CONDITION_TYPE.equals(selectedExpression.getType())) {
+            type = ExpressionConstants.CONDITION_TYPE;
+        }
+        return type;
     }
 
     public void setExpressionProposalLableProvider(final IExpressionProposalLabelProvider expressionProposalLableProvider) {
@@ -549,10 +557,6 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
         if (!getSelection().isEmpty()) {
             internalRefresh();
         }
-    }
-
-    private Image getLabelProviderImage(final ILabelProvider labelProvider, final Object input) {
-        return labelProvider.getImage(input);
     }
 
     @Override
@@ -982,8 +986,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 
     private void updateTypeDecorationIcon() {
         final ILabelProvider labelProvider = (ILabelProvider) getLabelProvider();
-        final Image icon = getLabelProviderImage(labelProvider, getSelectedExpression());
-        typeDecoration.setImage(icon);
+        typeDecoration.setImage(labelProvider.getImage(getSelectedExpression()));
     }
 
     private void updateTypeDecorationDescriptionText() {
@@ -994,7 +997,8 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 
     private void updateTypeDecorationVisibility() {
         if (getSelectedExpression().getName() == null || getSelectedExpression().getName().isEmpty()) {
-            if (!ExpressionConstants.CONDITION_TYPE.equals(getSelectedExpression().getType())) {
+            if (!ExpressionConstants.CONDITION_TYPE.equals(getSelectedExpression().getType())
+                    && !ExpressionConstants.SCRIPT_TYPE.equals(getSelectedExpression().getType())) {
                 if (typeDecoration.isVisible()) {
                     typeDecoration.hide();
                 }
