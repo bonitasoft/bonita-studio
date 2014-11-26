@@ -26,6 +26,7 @@ import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.diagram.custom.i18n.Messages;
+import org.bonitasoft.studio.diagram.custom.providers.CustomProcessViewProvider;
 import org.bonitasoft.studio.model.actormapping.ActorMapping;
 import org.bonitasoft.studio.model.actormapping.ActorMappingFactory;
 import org.bonitasoft.studio.model.actormapping.ActorMappingsType;
@@ -57,16 +58,11 @@ import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.gmf.runtime.diagram.core.services.ViewService;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
-import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
 import org.eclipse.gmf.runtime.notation.Bounds;
 import org.eclipse.gmf.runtime.notation.Connector;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.Node;
-import org.eclipse.gmf.runtime.notation.NotationPackage;
-import org.eclipse.gmf.runtime.notation.Routing;
-import org.eclipse.gmf.runtime.notation.ShapeStyle;
 import org.eclipse.gmf.runtime.notation.View;
-import org.eclipse.swt.graphics.RGB;
 
 
 public class NewDiagramFactory {
@@ -87,7 +83,7 @@ public class NewDiagramFactory {
         diagram.setName(model.getName());
         diagram.setElement(model);
 
-        final ProcessViewProvider processViewProvider = new ProcessViewProvider();
+        final ProcessViewProvider processViewProvider = new CustomProcessViewProvider();
 
         final Pool pool = ProcessFactory.eINSTANCE.createPool();
         ElementInitializers.getInstance().init_Pool_2007(pool);
@@ -123,9 +119,6 @@ public class NewDiagramFactory {
         final Bounds taskLayoutConstraint = (Bounds) stepShape.getLayoutConstraint();
         taskLayoutConstraint.setX(160);
         taskLayoutConstraint.setY(60);
-        final ShapeStyle shapeStyle = (ShapeStyle) stepShape.getStyle(NotationPackage.Literals.SHAPE_STYLE);
-        shapeStyle.setLineColor(FigureUtilities.RGBToInteger(new RGB(44,109,163)));
-        shapeStyle.setFillColor(FigureUtilities.RGBToInteger(new RGB(184, 185, 218)));
 
         monitor.worked(1);
 
@@ -148,8 +141,6 @@ public class NewDiagramFactory {
         pool.getConnections().add(sequenceFlow);
         final Connector edge = (Connector) processViewProvider.createSequenceFlow_4001(sequenceFlow, diagram, -1, true,
                 ProcessDiagramEditorPlugin.DIAGRAM_PREFERENCES_HINT);
-        edge.setRouting(Routing.RECTILINEAR_LITERAL);
-        edge.setRoundedBendpointsRadius(10);
         edge.setSource(startEventShape);
         edge.setTarget(stepShape);
         monitor.worked(1);
