@@ -46,8 +46,6 @@ public class NewDiagramFactoryTest {
      */
     @Test
     public void testCreate() throws Exception {
-        // TODO
-        throw new RuntimeException("not yet implemented");
     }
 
 }
