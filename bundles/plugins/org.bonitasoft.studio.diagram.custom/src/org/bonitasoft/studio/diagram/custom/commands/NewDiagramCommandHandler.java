@@ -21,6 +21,7 @@ import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.NewDiagramFactory;
 import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -42,7 +43,8 @@ public class NewDiagramCommandHandler extends AbstractHandler {
 
     @Override
     public DiagramFileStore execute(final ExecutionEvent event) throws ExecutionException {
-        final NewDiagramFactory diagramFactory = new NewDiagramFactory(RepositoryManager.getInstance().getCurrentRepository());
+        final NewDiagramFactory diagramFactory = new NewDiagramFactory(RepositoryManager.getInstance().getCurrentRepository(),
+                BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore());
         final IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
         try {
             progressService.run(true, false, new IRunnableWithProgress() {

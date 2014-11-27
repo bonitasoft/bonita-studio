@@ -66,6 +66,7 @@ import org.eclipse.gmf.runtime.notation.Connector;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.Node;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.jface.preference.IPreferenceStore;
 
 
 public class NewDiagramFactory {
@@ -75,9 +76,11 @@ public class NewDiagramFactory {
     private final IRepository repository;
     private final CustomProcessViewProvider processViewProvider;
     private final ProcessFactory processFactory;
+    private final IPreferenceStore preferenceStore;
 
-    public NewDiagramFactory(final IRepository repository) {
+    public NewDiagramFactory(final IRepository repository, final IPreferenceStore preferenceStore) {
         this.repository = repository;
+        this.preferenceStore = preferenceStore;
         processViewProvider = new CustomProcessViewProvider();
         processFactory = ProcessFactory.eINSTANCE;
     }
@@ -86,7 +89,7 @@ public class NewDiagramFactory {
         monitor.beginTask(Messages.newDiagram, 7);
 
         final String diagramIdentifier = getNewProcessIdentifier();
-        final Map<Class<?>, EObject> domainElements = createlModel(processFactory, diagramIdentifier, monitor);
+        final Map<Class<?>, EObject> domainElements = createlModel(processFactory, diagramIdentifier, ElementInitializers.getInstance(), monitor);
         final Diagram diagram = createViews(domainElements, monitor);
 
         final MainProcess mainProcess = (MainProcess) domainElements.get(MainProcess.class);
@@ -277,7 +280,8 @@ public class NewDiagramFactory {
     }
 
 
-    private Map<Class<?>, EObject> createlModel(final ProcessFactory processFactory, final String diagramIdentifier, final IProgressMonitor monitor) {
+    protected Map<Class<?>, EObject> createlModel(final ProcessFactory processFactory, final String diagramIdentifier, final ElementInitializers initializers,
+            final IProgressMonitor monitor) {
         final Map<Class<?>, EObject> domainElements = new HashMap<Class<?>, EObject>();
         final String diagramName = NamingUtils.convertToId(org.bonitasoft.studio.diagram.custom.i18n.Messages.newFilePrefix + diagramIdentifier);
         final MainProcess mainProcess = processFactory.createMainProcess();
@@ -285,14 +289,14 @@ public class NewDiagramFactory {
         mainProcess.setVersion(BASE_VERSION);
         mainProcess.setBonitaVersion(ProductVersion.CURRENT_VERSION);
         mainProcess.setBonitaModelVersion(ModelVersion.CURRENT_VERSION);
-        mainProcess.setEnableValidation(BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().getBoolean(BonitaPreferenceConstants.PREF_ENABLE_VALIDATION));
+        mainProcess.setEnableValidation(preferenceStore.getBoolean(BonitaPreferenceConstants.PREF_ENABLE_VALIDATION));
         mainProcess.setConfigId(getConfigurationId(mainProcess));
         ModelHelper.addDataTypes(mainProcess);
         domainElements.put(MainProcess.class, mainProcess);
 
         //Add Pool
         final Pool pool = processFactory.createPool();
-        ElementInitializers.getInstance().init_Pool_2007(pool);
+        initializers.init_Pool_2007(pool);
         pool.setName(getPoolName(diagramIdentifier));
         pool.setVersion(BASE_VERSION);
         pool.getActors().addAll(createInitialActors(processFactory));
@@ -301,7 +305,7 @@ public class NewDiagramFactory {
 
         //Add Lane
         final Lane lane = processFactory.createLane();
-        ElementInitializers.getInstance().init_Lane_3007(lane);
+        initializers.init_Lane_3007(lane);
         lane.setName(Messages.defaultLaneName);
         lane.setActor(pool.getActors().get(0));
         pool.getElements().add(lane);
@@ -310,19 +314,19 @@ public class NewDiagramFactory {
         //Add Start Event
         final StartEvent startEvent = processFactory.createStartEvent();
         lane.getElements().add(startEvent);
-        ElementInitializers.getInstance().init_StartEvent_3002(startEvent);
+        initializers.init_StartEvent_3002(startEvent);
         domainElements.put(StartEvent.class, startEvent);
 
         //Add Task
         final Task task = processFactory.createTask();
         lane.getElements().add(task);
-        ElementInitializers.getInstance().init_Task_3005(task);
+        initializers.init_Task_3005(task);
         task.setOverrideActorsOfTheLane(false);
         domainElements.put(Task.class, task);
 
         //Add Sequence Flow
         final SequenceFlow sequenceFlow = processFactory.createSequenceFlow();
-        ElementInitializers.getInstance().init_SequenceFlow_4001(sequenceFlow);
+        initializers.init_SequenceFlow_4001(sequenceFlow);
         sequenceFlow.setSource(startEvent);
         sequenceFlow.setTarget(task);
         pool.getConnections().add(sequenceFlow);
@@ -332,7 +336,7 @@ public class NewDiagramFactory {
     }
 
 
-    private Object getConfigurationId(final MainProcess proc) {
+    protected Object getConfigurationId(final MainProcess proc) {
         return ConfigurationIdProvider.getConfigurationIdProvider().getConfigurationId(proc);
     }
 
