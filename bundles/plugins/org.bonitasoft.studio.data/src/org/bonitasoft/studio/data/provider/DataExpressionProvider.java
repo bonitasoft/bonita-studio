@@ -144,8 +144,6 @@ public class DataExpressionProvider implements IExpressionProvider {
             return ModelHelper.getDataTypeForID(diagram, DataTypeLabels.booleanDataType);
         } else if (returnType.equals(String.class.getName())) {
             return ModelHelper.getDataTypeForID(diagram, DataTypeLabels.stringDataType);
-        } else if (returnType.equals(Float.class.getName())) {
-            return ModelHelper.getDataTypeForID(diagram, DataTypeLabels.floatDataType);
         } else if (returnType.equals(Double.class.getName())) {
             return ModelHelper.getDataTypeForID(diagram, DataTypeLabels.doubleDataType);
         } else if (returnType.equals(Long.class.getName())) {
