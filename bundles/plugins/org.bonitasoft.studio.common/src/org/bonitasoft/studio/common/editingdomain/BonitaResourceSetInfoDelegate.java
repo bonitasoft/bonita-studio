@@ -17,11 +17,9 @@
  */
 package org.bonitasoft.studio.common.editingdomain;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -133,22 +131,6 @@ public class BonitaResourceSetInfoDelegate {
             }
         }
         return false;
-    }
-
-    protected Runnable reloadRunnable(final Resource resource) {
-        return new Runnable() {
-
-            @Override
-            public void run() {
-                resource.unload();
-                try {
-                    resource.load(resource.getResourceSet().getLoadOptions());
-                } catch (final IOException e) {
-                    BonitaStudioLog.error(e);
-                }
-            }
-        };
-
     }
 
     public static BonitaResourceSetInfoDelegate adapt(final TransactionalEditingDomain editingDomain) {
