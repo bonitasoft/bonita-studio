@@ -19,7 +19,6 @@ import java.lang.reflect.InvocationTargetException;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
-import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.diagram.custom.repository.NewDiagramFactory;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.eclipse.core.commands.AbstractHandler;
@@ -43,14 +42,14 @@ public class NewDiagramCommandHandler extends AbstractHandler {
 
     @Override
     public DiagramFileStore execute(final ExecutionEvent event) throws ExecutionException {
-        final NewDiagramFactory diagramFactory = new NewDiagramFactory();
+        final NewDiagramFactory diagramFactory = new NewDiagramFactory(RepositoryManager.getInstance().getCurrentRepository());
         final IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
         try {
             progressService.run(true, false, new IRunnableWithProgress() {
 
                 @Override
                 public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-                    diagramFactory.create(RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class), monitor);
+                    diagramFactory.create(monitor);
                     monitor.done();
                 }
             });
