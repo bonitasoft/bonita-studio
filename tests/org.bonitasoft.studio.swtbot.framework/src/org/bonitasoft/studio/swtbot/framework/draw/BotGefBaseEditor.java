@@ -52,6 +52,8 @@ public class BotGefBaseEditor extends BotBase {
         element.parent().select();//call select on parent of LabelEditpart
         bot.waitUntil(new DefaultCondition() {
 
+
+
             @Override
             public boolean test() throws Exception {
                 for (final SWTBotGefEditPart ep : gmfEditor.selectedEditParts()) {
@@ -69,11 +71,22 @@ public class BotGefBaseEditor extends BotBase {
                 return false;
             }
 
-
-
             @Override
             public String getFailureMessage() {
-                return "Failed to select " + pName;
+                final StringBuilder editpartSelected = new StringBuilder();
+                for (final SWTBotGefEditPart ep : gmfEditor.selectedEditParts()) {
+                    EditPart part = ep.part();
+                    while (!(part instanceof IGraphicalEditPart)) {
+                        part = part.getParent();
+                    }
+                    if (part != null) {
+                        final EObject resolveSemanticElement = ((IGraphicalEditPart) part).resolveSemanticElement();
+                        if (resolveSemanticElement instanceof Element) {
+                            editpartSelected.append(((Element) resolveSemanticElement).getName());
+                        }
+                    }
+                }
+                return "Failed to select " + pName + "\nThe currently selected elments are: " + editpartSelected;
             }
         });
         return this;

@@ -16,7 +16,6 @@
  */
 package org.bonitasoft.studio.properties.sections.iteration;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
 
 import org.bonitasoft.studio.common.DataUtil;
@@ -26,6 +25,7 @@ import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.databinding.validator.GroovyReferenceValidator;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.properties.EObjectSelectionProviderSection;
+import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.data.operation.RefactorDataOperation;
 import org.bonitasoft.studio.data.provider.DataExpressionProvider;
@@ -46,6 +46,9 @@ import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.properties.i18n.Messages;
 import org.bonitasoft.studio.refactoring.core.RefactoringOperationType;
+import org.bonitasoft.studio.refactoring.core.emf.DetailObservableValueWithRefactor;
+import org.bonitasoft.studio.refactoring.core.emf.EMFEditWithRefactorObservables;
+import org.bonitasoft.studio.refactoring.core.emf.EditingDomainEObjectObservableValueWithRefactoring;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.beans.PojoObservables;
 import org.eclipse.core.databinding.conversion.Converter;
@@ -60,10 +63,8 @@ import org.eclipse.core.databinding.observable.value.IValueChangeListener;
 import org.eclipse.core.databinding.observable.value.SelectObservableValue;
 import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
 import org.eclipse.core.internal.databinding.observable.masterdetail.DetailObservableValue;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.ecore.EObject;
@@ -567,7 +568,6 @@ public class IterationPropertySection extends EObjectSelectionProviderSection im
                         }
                     }
                 }
-
             }
 
             private EObject getTargetEObject(final ValueChangeEvent event, final boolean stepData) {
@@ -610,7 +610,8 @@ public class IterationPropertySection extends EObjectSelectionProviderSection im
 
         final IObservableValue iteratorObservable = CustomEMFEditObservables.observeDetailValue(Realm.getDefault(), getEObjectObservable(),
                 ProcessPackage.Literals.MULTI_INSTANTIABLE__ITERATOR_EXPRESSION);
-        final IObservableValue expressionNameDetailValue = CustomEMFEditObservables.observeDetailValue(Realm.getDefault(), iteratorObservable,
+        final IObservableValue expressionNameDetailValue = EMFEditWithRefactorObservables.observeDetailValueWithRefactor(Realm.getDefault(),
+                iteratorObservable,
                 ExpressionPackage.Literals.EXPRESSION__NAME);
 
         final IObservableValue expressionContentDetailValue = CustomEMFEditObservables.observeDetailValue(Realm.getDefault(), iteratorObservable,
@@ -623,15 +624,15 @@ public class IterationPropertySection extends EObjectSelectionProviderSection im
 
             }
         });
-        expressionReturnTypeDetailValue = CustomEMFEditObservables.observeDetailValue(Realm.getDefault(), iteratorObservable,
+        expressionReturnTypeDetailValue = EMFEditWithRefactorObservables.observeDetailValueWithRefactor(Realm.getDefault(), iteratorObservable,
                 ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE);
 
 
         final ISWTObservableValue observeinstanceDataNameText = SWTObservables.observeText(instanceDataNameText, SWT.Modify);
 
-
         ControlDecorationSupport.create(context.bindValue(SWTObservables.observeDelayedValue(200, observeinstanceDataNameText), expressionNameDetailValue,
-                refactorNameStrategy(iteratorObservable), null), SWT.LEFT, iteratorComposite.getParent(), new ControlDecorationUpdater() {
+                refactorNameStrategy(expressionNameDetailValue, iteratorObservable), null), SWT.LEFT, iteratorComposite.getParent(),
+                new ControlDecorationUpdater() {
 
             @Override
             protected void update(final ControlDecoration decoration, final IStatus status) {
@@ -674,7 +675,7 @@ public class IterationPropertySection extends EObjectSelectionProviderSection im
 
         returnTypeComboTextObservable = SWTObservables.observeText(returnTypeCombo.getCombo());
         context.bindValue(SWTObservables.observeDelayedValue(200, returnTypeComboTextObservable), expressionReturnTypeDetailValue,
-                refactorReturnTypeStrategy(iteratorObservable), null);
+                refactorReturnTypeStrategy(expressionReturnTypeDetailValue, iteratorObservable), null);
 
         browseClassesButton.addSelectionListener(new SelectionAdapter() {
 
@@ -689,7 +690,7 @@ public class IterationPropertySection extends EObjectSelectionProviderSection im
 
     }
 
-    private UpdateValueStrategy refactorReturnTypeStrategy(final IObservableValue iteratorObservable) {
+    private UpdateValueStrategy refactorReturnTypeStrategy(final IObservableValue expressionReturnTypeDetailValue, final IObservableValue iteratorObservable) {
         final UpdateValueStrategy strategy = new UpdateValueStrategy();
         strategy.setConverter(new Converter(String.class, String.class) {
 
@@ -697,13 +698,17 @@ public class IterationPropertySection extends EObjectSelectionProviderSection im
             public Object convert(final Object value) {
                 final String returnType = (String) value;
                 final Expression expression = (Expression) iteratorObservable.getValue();
+                final EditingDomainEObjectObservableValueWithRefactoring innerObservableValue = (EditingDomainEObjectObservableValueWithRefactoring) ((DetailObservableValueWithRefactor) expressionReturnTypeDetailValue)
+                        .getInnerObservableValue();
                 if (expression != null && returnType != null) {
                     final MultiInstantiable parentFlowElement = (MultiInstantiable) ModelHelper.getParentFlowElement(expression);
                     final Data oldItem = DataExpressionProvider.dataFromIteratorExpression(parentFlowElement, expression);
                     final Expression expressionCopy = EcoreUtil.copy(expression);
                     expressionCopy.setReturnType(returnType);
                     final Data newItem = DataExpressionProvider.dataFromIteratorExpression(parentFlowElement, expressionCopy);
-                    refactorIteratorExpression(oldItem, newItem, parentFlowElement);
+                    innerObservableValue.setRefactoringCommand(getRefactorCommand(oldItem, newItem, parentFlowElement));
+                } else {
+                    innerObservableValue.setRefactoringCommand(null);
                 }
                 return value;
             }
@@ -711,7 +716,7 @@ public class IterationPropertySection extends EObjectSelectionProviderSection im
         return strategy;
     }
 
-    private UpdateValueStrategy refactorNameStrategy(final IObservableValue iteratorObservable) {
+    private UpdateValueStrategy refactorNameStrategy(final IObservableValue expressionNameDetailValue, final IObservableValue iteratorObservable) {
         final UpdateValueStrategy strategy = new UpdateValueStrategy();
         strategy.setAfterGetValidator(new GroovyReferenceValidator(Messages.iterator, true, true));
         strategy.setConverter(new Converter(String.class, String.class) {
@@ -719,6 +724,8 @@ public class IterationPropertySection extends EObjectSelectionProviderSection im
             @Override
             public Object convert(final Object value) {
                 final String name = (String) value;
+                final EditingDomainEObjectObservableValueWithRefactoring innerObservableValue = (EditingDomainEObjectObservableValueWithRefactoring) ((DetailObservableValueWithRefactor) expressionNameDetailValue)
+                        .getInnerObservableValue();
                 final Expression expression = (Expression) iteratorObservable.getValue();
                 if (expression != null && name != null) {
                     final MultiInstantiable parentFlowElement = (MultiInstantiable) ModelHelper.getParentFlowElement(expression);
@@ -726,7 +733,9 @@ public class IterationPropertySection extends EObjectSelectionProviderSection im
                             parentFlowElement, expression);
                     final Data newItem = EcoreUtil.copy(oldItem);
                     newItem.setName(name.toString());
-                    refactorIteratorExpression(oldItem, newItem, parentFlowElement);
+                    innerObservableValue.setRefactoringCommand(getRefactorCommand(oldItem, newItem, parentFlowElement));
+                } else {
+                    innerObservableValue.setRefactoringCommand(null);
                 }
                 return value;
             }
@@ -734,29 +743,12 @@ public class IterationPropertySection extends EObjectSelectionProviderSection im
         return strategy;
     }
 
-    protected void refactorIteratorExpression(final Data oldItem, final Data newItem, final MultiInstantiable container) {
+    protected CompoundCommand getRefactorCommand(final Data oldItem, final Data newItem, final MultiInstantiable container) {
         final RefactorDataOperation op = new RefactorDataOperation(RefactoringOperationType.UPDATE);
         op.setContainer(ModelHelper.getParentProcess(container));
         op.addItemToRefactor(newItem, oldItem);
         op.setEditingDomain(getEditingDomain());
-        final Job job = new Job("Refactor") {
-
-            @Override
-            protected IStatus run(final IProgressMonitor monitor) {
-                try {
-                    op.run(monitor);
-                } catch (final InvocationTargetException e) {
-                    BonitaStudioLog.error(e);
-                } catch (final InterruptedException e) {
-                    BonitaStudioLog.error(e);
-                }
-                return Status.OK_STATUS;
-            }
-        };
-        job.setPriority(Job.INTERACTIVE);
-        job.setUser(true);
-        job.setRule(mutexRule);
-        job.schedule();
+        return op.getCommand(Repository.NULL_PROGRESS_MONITOR);
     }
 
     protected Object getReturnTypeInput() {

@@ -242,4 +242,5 @@ public class RefactorDataOperation extends AbstractRefactorOperation<Data,Data,D
         return new DataRefactorPair(newItem, oldItem);
     }
 
+
 }
