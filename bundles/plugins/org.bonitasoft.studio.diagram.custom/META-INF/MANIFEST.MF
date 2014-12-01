@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Bonita Process Editor customization classes
 Bundle-SymbolicName: org.bonitasoft.studio.diagram.custom;singleton:=true
-Bundle-Version: 6.4.0.qualifier
+Bundle-Version: 7.0.0.qualifier
 Bundle-Localization: plugin
 Bundle-Activator: org.bonitasoft.studio.diagram.custom.Activator
 Bundle-Vendor: BonitaSoft S.A.
@@ -33,22 +33,16 @@ Require-Bundle: org.eclipse.ui,
  org.mockito;bundle-version="1.9.5";resolution:=optional
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
-Export-Package: org.bonitasoft.studio.diagram.custom;
-  x-friends:="org.bonitasoft.studio.properties.test,
-   org.bonitasoft.studio.tests,
-   org.bonitasoft.studio.diagram.test,
-   org.bonitasoft.studio.tests.ex",
- org.bonitasoft.studio.diagram.custom.actions,
- org.bonitasoft.studio.diagram.custom.clipboard,
- org.bonitasoft.studio.diagram.custom.commands,
- org.bonitasoft.studio.diagram.custom.editPolicies,
- org.bonitasoft.studio.diagram.custom.figures,
- org.bonitasoft.studio.diagram.custom.i18n,
- org.bonitasoft.studio.diagram.custom.operation,
- org.bonitasoft.studio.diagram.custom.part,
- org.bonitasoft.studio.diagram.custom.parts,
- org.bonitasoft.studio.diagram.custom.perspective,
- org.bonitasoft.studio.diagram.custom.refactoring,
- org.bonitasoft.studio.diagram.custom.repository,
- org.bonitasoft.studio.diagram.custom.resources,
- org.bonitasoft.studio.diagram.custom.wizard
+Export-Package: org.bonitasoft.studio.diagram.custom; x-friends:="org.
+ bonitasoft.studio.properties.test,  org.bonitasoft.studio.tests,  org
+ .bonitasoft.studio.diagram.test,  org.bonitasoft.studio.tests.ex",org
+ .bonitasoft.studio.diagram.custom.actions,org.bonitasoft.studio.diagr
+ am.custom.clipboard,org.bonitasoft.studio.diagram.custom.commands,org
+ .bonitasoft.studio.diagram.custom.editPolicies,org.bonitasoft.studio.
+ diagram.custom.figures,org.bonitasoft.studio.diagram.custom.i18n,org.
+ bonitasoft.studio.diagram.custom.operation,org.bonitasoft.studio.diag
+ ram.custom.part,org.bonitasoft.studio.diagram.custom.parts,org.bonita
+ soft.studio.diagram.custom.perspective,org.bonitasoft.studio.diagram.
+ custom.refactoring,org.bonitasoft.studio.diagram.custom.repository,or
+ g.bonitasoft.studio.diagram.custom.resources,org.bonitasoft.studio.di
+ agram.custom.wizard

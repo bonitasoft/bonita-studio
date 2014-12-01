@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: BonitaSoft Datas
 Bundle-SymbolicName: org.bonitasoft.studio.data;singleton:=true
-Bundle-Version: 6.4.0.qualifier
+Bundle-Version: 7.0.0.qualifier
 Bundle-Localization: plugin
 Bundle-Activator: org.bonitasoft.studio.data.DataPlugin
 Bundle-Vendor: BonitaSoft S.A.
@@ -43,17 +43,13 @@ Require-Bundle: org.eclipse.ui,
  org.bonitasoft.studio.model.edit;bundle-version="6.4.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
-Export-Package: org.bonitasoft.studio.data.attachment.repository,
- org.bonitasoft.studio.data.i18n;
-  x-friends:="org.bonitasoft.studio.diagram.test,
-   org.bonitasoft.studio.tests,
-   org.bonitasoft.studio.properties.test,
-   org.bonitasoft.studio.test.swtbot.util,
-   org.bonitasoft.studio.swtbot.framework",
- org.bonitasoft.studio.data.operation,
- org.bonitasoft.studio.data.provider,
- org.bonitasoft.studio.data.ui.property.section,
- org.bonitasoft.studio.data.util
+Export-Package: org.bonitasoft.studio.data.attachment.repository,org.b
+ onitasoft.studio.data.i18n; x-friends:="org.bonitasoft.studio.diagram
+ .test,  org.bonitasoft.studio.tests,  org.bonitasoft.studio.propertie
+ s.test,  org.bonitasoft.studio.test.swtbot.util,  org.bonitasoft.stud
+ io.swtbot.framework",org.bonitasoft.studio.data.operation,org.bonitas
+ oft.studio.data.provider,org.bonitasoft.studio.data.ui.property.secti
+ on,org.bonitasoft.studio.data.util
 Import-Package: org.bonitasoft.engine.bpm.bar,
  org.bonitasoft.engine.bpm.document
  

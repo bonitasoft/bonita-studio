@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: org.bonitasoft.studio.validation
 Bundle-SymbolicName: org.bonitasoft.studio.validation;singleton:=true
-Bundle-Version: 6.4.0.qualifier
+Bundle-Version: 7.0.0.qualifier
 Bundle-Activator: org.bonitasoft.studio.validation.ValidationPlugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
@@ -38,8 +38,9 @@ Bundle-Vendor: BonitaSoft S.A.
 Import-Package: org.bonitasoft.engine.expression,
  org.bonitasoft.engine.operation,
  org.bonitasoft.studio.properties.i18n
-Export-Package: org.bonitasoft.studio.validation,
- org.bonitasoft.studio.validation.constraints,
- org.bonitasoft.studio.validation.constraints.connector,
- org.bonitasoft.studio.validation.constraints.form;x-friends:="org.bonitasoft.studio.validation.test",
- org.bonitasoft.studio.validation.constraints.process;x-friends:="org.bonitasoft.studio.validation.test"
+Export-Package: org.bonitasoft.studio.validation,org.bonitasoft.studio
+ .validation.constraints,org.bonitasoft.studio.validation.constraints.
+ connector,org.bonitasoft.studio.validation.constraints.form;x-friends
+ :="org.bonitasoft.studio.validation.test",org.bonitasoft.studio.valid
+ ation.constraints.process;x-friends:="org.bonitasoft.studio.validatio
+ n.test"

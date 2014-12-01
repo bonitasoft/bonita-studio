@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: SWTBot Framework
 Bundle-SymbolicName: org.bonitasoft.studio.swtbot.framework
-Bundle-Version: 6.4.0.qualifier
+Bundle-Version: 7.0.0.qualifier
 Bundle-Vendor: BonitaSoft S.A.
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.eclipse.swtbot.eclipse.gef.finder,
@@ -29,29 +29,25 @@ Import-Package: org.bonitasoft.studio.application.i18n,
  org.bonitasoft.studio.form.properties.i18n,
  org.bonitasoft.studio.properties.form.sections.actions.contributions,
  org.bonitasoft.studio.properties.i18n
-Export-Package: org.bonitasoft.studio.swtbot.framework,
- org.bonitasoft.studio.swtbot.framework.application,
- org.bonitasoft.studio.swtbot.framework.application.editor,
- org.bonitasoft.studio.swtbot.framework.application.menu,
- org.bonitasoft.studio.swtbot.framework.composite,
- org.bonitasoft.studio.swtbot.framework.diagram,
- org.bonitasoft.studio.swtbot.framework.diagram.application,
- org.bonitasoft.studio.swtbot.framework.diagram.application.pageflow,
- org.bonitasoft.studio.swtbot.framework.diagram.general,
- org.bonitasoft.studio.swtbot.framework.diagram.general.actors,
- org.bonitasoft.studio.swtbot.framework.diagram.general.connectors,
- org.bonitasoft.studio.swtbot.framework.diagram.general.data,
- org.bonitasoft.studio.swtbot.framework.diagram.general.documents,
- org.bonitasoft.studio.swtbot.framework.diagram.general.form,
- org.bonitasoft.studio.swtbot.framework.diagram.general.form.data,
- org.bonitasoft.studio.swtbot.framework.diagram.general.form.general,
- org.bonitasoft.studio.swtbot.framework.diagram.general.general,
- org.bonitasoft.studio.swtbot.framework.diagram.general.iteration,
- org.bonitasoft.studio.swtbot.framework.diagram.general.lane,
- org.bonitasoft.studio.swtbot.framework.diagram.general.operations,
- org.bonitasoft.studio.swtbot.framework.diagram.general.pool,
- org.bonitasoft.studio.swtbot.framework.draw,
- org.bonitasoft.studio.swtbot.framework.exception,
- org.bonitasoft.studio.swtbot.framework.expression,
- org.bonitasoft.studio.swtbot.framework.widget
+Export-Package: org.bonitasoft.studio.swtbot.framework,org.bonitasoft.
+ studio.swtbot.framework.application,org.bonitasoft.studio.swtbot.fram
+ ework.application.editor,org.bonitasoft.studio.swtbot.framework.appli
+ cation.menu,org.bonitasoft.studio.swtbot.framework.composite,org.boni
+ tasoft.studio.swtbot.framework.diagram,org.bonitasoft.studio.swtbot.f
+ ramework.diagram.application,org.bonitasoft.studio.swtbot.framework.d
+ iagram.application.pageflow,org.bonitasoft.studio.swtbot.framework.di
+ agram.general,org.bonitasoft.studio.swtbot.framework.diagram.general.
+ actors,org.bonitasoft.studio.swtbot.framework.diagram.general.connect
+ ors,org.bonitasoft.studio.swtbot.framework.diagram.general.data,org.b
+ onitasoft.studio.swtbot.framework.diagram.general.documents,org.bonit
+ asoft.studio.swtbot.framework.diagram.general.form,org.bonitasoft.stu
+ dio.swtbot.framework.diagram.general.form.data,org.bonitasoft.studio.
+ swtbot.framework.diagram.general.form.general,org.bonitasoft.studio.s
+ wtbot.framework.diagram.general.general,org.bonitasoft.studio.swtbot.
+ framework.diagram.general.iteration,org.bonitasoft.studio.swtbot.fram
+ ework.diagram.general.lane,org.bonitasoft.studio.swtbot.framework.dia
+ gram.general.operations,org.bonitasoft.studio.swtbot.framework.diagra
+ m.general.pool,org.bonitasoft.studio.swtbot.framework.draw,org.bonita
+ soft.studio.swtbot.framework.exception,org.bonitasoft.studio.swtbot.f
+ ramework.expression,org.bonitasoft.studio.swtbot.framework.widget
 

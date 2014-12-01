@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Document
 Bundle-SymbolicName: org.bonitasoft.studio.document;singleton:=true
-Bundle-Version: 6.4.0.qualifier
+Bundle-Version: 7.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Vendor: BonitaSoft S.A.
 Require-Bundle: org.eclipse.ui,
@@ -34,7 +34,6 @@ Require-Bundle: org.eclipse.ui,
 Bundle-Localization: plugin
 Import-Package: org.bonitasoft.engine.bpm.document,
  org.bonitasoft.studio.common
-Export-Package: org.bonitasoft.studio.document,
- org.bonitasoft.studio.document.i18n,
- org.bonitasoft.studio.document.refactoring,
- org.bonitasoft.studio.document.ui
+Export-Package: org.bonitasoft.studio.document,org.bonitasoft.studio.d
+ ocument.i18n,org.bonitasoft.studio.document.refactoring,org.bonitasof
+ t.studio.document.ui

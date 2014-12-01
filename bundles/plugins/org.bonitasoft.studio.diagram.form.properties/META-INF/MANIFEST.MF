@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Properties for the form editor
 Bundle-SymbolicName: org.bonitasoft.studio.diagram.form.properties;singleton:=true
-Bundle-Version: 6.4.0.qualifier
+Bundle-Version: 7.0.0.qualifier
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.ui.views.properties.tabbed,
@@ -46,18 +46,16 @@ Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Localization: plugin
 Bundle-Vendor: BonitaSoft S.A.
-Export-Package: org.bonitasoft.studio.form.properties.i18n;
-  x-friends:="org.bonitasoft.studio.configuration.test,
-   org.bonitasoft.studio.diagram.test,
-   org.bonitasoft.studio.properties.test,
-   org.bonitasoft.studio.tests.ex,
-   org.bonitasoft.studio.tests,
-   org.bonitasoft.studio.swtbot.framework.ex",
- org.bonitasoft.studio.properties.form.filters,
- org.bonitasoft.studio.properties.form.provider,
- org.bonitasoft.studio.properties.form.sections.actions,
- org.bonitasoft.studio.properties.form.sections.actions.contributions;x-friends:="org.bonitasoft.studio.swtbot.framework",
- org.bonitasoft.studio.properties.form.sections.appearance,
- org.bonitasoft.studio.properties.form.sections.appearance.contributions,
- org.bonitasoft.studio.properties.form.sections.general.contributions
+Export-Package: org.bonitasoft.studio.form.properties.i18n; x-friends:
+ ="org.bonitasoft.studio.configuration.test,  org.bonitasoft.studio.di
+ agram.test,  org.bonitasoft.studio.properties.test,  org.bonitasoft.s
+ tudio.tests.ex,  org.bonitasoft.studio.tests,  org.bonitasoft.studio.
+ swtbot.framework.ex",org.bonitasoft.studio.properties.form.filters,or
+ g.bonitasoft.studio.properties.form.provider,org.bonitasoft.studio.pr
+ operties.form.sections.actions,org.bonitasoft.studio.properties.form.
+ sections.actions.contributions;x-friends:="org.bonitasoft.studio.swtb
+ ot.framework",org.bonitasoft.studio.properties.form.sections.appearan
+ ce,org.bonitasoft.studio.properties.form.sections.appearance.contribu
+ tions,org.bonitasoft.studio.properties.form.sections.general.contribu
+ tions
 Import-Package: org.bonitasoft.engine.bpm.document
