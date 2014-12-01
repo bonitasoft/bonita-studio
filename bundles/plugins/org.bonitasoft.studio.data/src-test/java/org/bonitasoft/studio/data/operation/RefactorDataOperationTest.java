@@ -5,12 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -20,6 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
+import org.bonitasoft.studio.model.edit.custom.process.CustomProcessItemProviderAdapterFactory;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.expression.Operation;
@@ -28,33 +29,27 @@ import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.Task;
-import org.bonitasoft.studio.model.process.util.ProcessAdapterFactory;
 import org.bonitasoft.studio.refactoring.core.RefactoringOperationType;
-import org.eclipse.emf.common.command.BasicCommandStack;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
-import org.eclipse.emf.edit.domain.EditingDomain;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.emf.transaction.impl.TransactionalCommandStackImpl;
+import org.eclipse.emf.transaction.impl.TransactionalEditingDomainImpl;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 /**
  * @author Romain Bioteau
- * 
+ *
  */
 public class RefactorDataOperationTest {
 
     private AbstractProcess parentProcess;
-
     private Data myData;
-
     private Expression leftOperand;
-
     private Expression rightOperand;
-
-    private EditingDomain domain;
-
+    private TransactionalEditingDomain domain;
     private Operation operation;
 
     /**
@@ -62,12 +57,12 @@ public class RefactorDataOperationTest {
      */
     @Before
     public void setUp() throws Exception {
-        domain = new AdapterFactoryEditingDomain(new ProcessAdapterFactory(), new BasicCommandStack());
+        domain = new TransactionalEditingDomainImpl(new CustomProcessItemProviderAdapterFactory(), new TransactionalCommandStackImpl());
         parentProcess = ProcessFactory.eINSTANCE.createPool();
         myData = ProcessFactory.eINSTANCE.createData();
         myData.setName("myData");
         parentProcess.getData().add(myData);
-        Task task = ProcessFactory.eINSTANCE.createTask();
+        final Task task = ProcessFactory.eINSTANCE.createTask();
         operation = ExpressionFactory.eINSTANCE.createOperation();
         leftOperand = ExpressionFactory.eINSTANCE.createExpression();
         leftOperand.setName(myData.getName());
@@ -96,9 +91,9 @@ public class RefactorDataOperationTest {
         rightOperand.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(myData));
         operation.setRightOperand(rightOperand);
 
-        Data newData = ProcessFactory.eINSTANCE.createData();
+        final Data newData = ProcessFactory.eINSTANCE.createData();
         newData.setName("refactored");
-        RefactorDataOperation refacorDataOperation = new RefactorDataOperation(RefactoringOperationType.UPDATE);
+        final RefactorDataOperation refacorDataOperation = new RefactorDataOperation(RefactoringOperationType.UPDATE);
         refacorDataOperation.setAskConfirmation(false);// Skip UI
         refacorDataOperation.setEditingDomain(domain);
         refacorDataOperation.setContainer(parentProcess);
@@ -106,10 +101,32 @@ public class RefactorDataOperationTest {
         refacorDataOperation.run(null);
         ExpressionAssert.assertThat(leftOperand).hasName(newData.getName());
         ExpressionAssert.assertThat(rightOperand).hasContent("hello ${" + newData.getName() + "}");
-        EList<EObject> referencedElements = rightOperand.getReferencedElements();
+        final EList<EObject> referencedElements = rightOperand.getReferencedElements();
         assertThat(referencedElements).hasSize(1);
-        EObject dep = referencedElements.get(0);
+        final EObject dep = referencedElements.get(0);
         assertThat(dep).isInstanceOf(Data.class);
         assertThat(((Data) dep).getName()).isEqualTo("refactored");
+    }
+
+    @Test
+    public void testDeleteData() throws Exception {
+        rightOperand = ExpressionFactory.eINSTANCE.createExpression();
+        rightOperand.setName("getData");
+        rightOperand.setContent("hello ${" + myData.getName() + "}");
+        rightOperand.setType(ExpressionConstants.PATTERN_TYPE);
+        rightOperand.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(myData));
+        operation.setRightOperand(rightOperand);
+
+        final RefactorDataOperation refacorDataOperation = new RefactorDataOperation(RefactoringOperationType.REMOVE);
+        refacorDataOperation.setAskConfirmation(false);// Skip UI
+        refacorDataOperation.setEditingDomain(domain);
+        refacorDataOperation.setContainer(parentProcess);
+        refacorDataOperation.addItemToRefactor(null, myData);
+        refacorDataOperation.run(null);
+        ExpressionAssert.assertThat(rightOperand).hasContent("hello ${     }");
+        final EList<EObject> referencedElements = rightOperand.getReferencedElements();
+        assertThat(referencedElements).hasSize(0);
+        assertThat(parentProcess.getData()).isEmpty();
+
     }
 }

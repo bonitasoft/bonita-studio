@@ -39,17 +39,17 @@ import org.bonitasoft.studio.importer.bar.i18n.Messages;
  */
 public class BarReaderUtil {
 
-    static List<String> findCustomConnectorClassName(File archiveFile) throws ZipException, IOException {
-    	List<String> res = new ArrayList<String>();
+    static List<String> findCustomConnectorClassName(final File archiveFile) throws ZipException, IOException {
+    	final List<String> res = new ArrayList<String>();
         ZipFile zipfile = null;
         try {
         	try {
         		zipfile = new ZipFile(archiveFile);
-        	} catch (ZipException ex){
+        	} catch (final ZipException ex){
         		BonitaStudioLog.error(ex);
-        		return null;
+                return res;
         	}
-            Enumeration<?> enumEntries = zipfile.entries();
+            final Enumeration<?> enumEntries = zipfile.entries();
             ZipEntry zipEntry = null;
             String className = null;
             String startWith = null;
@@ -58,9 +58,9 @@ public class BarReaderUtil {
                 if (!zipEntry.isDirectory() && zipEntry.getName().endsWith(".class")) {
                     startWith = zipEntry.toString().replace(".class", "");
                     className = zipEntry.toString().replace("/", ".").replace(".class", "");
-                    Enumeration<? extends ZipEntry> newEntries = zipfile.entries();
+                    final Enumeration<? extends ZipEntry> newEntries = zipfile.entries();
                     while (newEntries.hasMoreElements()) {
-                        ZipEntry newEntry = (ZipEntry) newEntries.nextElement();
+                        final ZipEntry newEntry = newEntries.nextElement();
                         if (!newEntry.isDirectory() && newEntry.toString().endsWith(startWith + ".properties")) {
                         	res.add(className);
                         }
@@ -72,11 +72,10 @@ public class BarReaderUtil {
                 zipfile.close();
             }
         }
-
         return res;
     }
-	
-    static File getProcFormBar(File archiveFile) throws Exception {
+
+    static File getProcFormBar(final File archiveFile) throws Exception {
         ZipInputStream zin = null;
         FileOutputStream out = null;
         try {
@@ -88,12 +87,12 @@ public class BarReaderUtil {
             if (zipEntry == null) {
                 throw new FileNotFoundException(Messages.bind(Messages.invalidArchiveStructure, archiveFile.getName()));
             }
-            String entryName = zipEntry.getName();
+            final String entryName = zipEntry.getName();
             if (entryName.indexOf("/") != -1) {
                 entryName.substring(entryName.lastIndexOf("/"));
             }
             final File tempFile = new File(ProjectUtil.getBonitaStudioWorkFolder(), entryName);
-            byte[] buf = new byte[1024];
+            final byte[] buf = new byte[1024];
             tempFile.delete();
             int len;
             out = new FileOutputStream(tempFile);

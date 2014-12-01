@@ -17,7 +17,6 @@
 package org.bonitasoft.studio.properties.form.sections.actions.contributions;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -66,7 +65,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 
 /**
- * 
+ *
  * @author Baptiste Mesta
  *
  */
@@ -83,29 +82,29 @@ public class InitialValueContribution implements IExtensibleGridPropertySectionC
 	protected Button allowHtmlButton;
 	private InitialValueExpressionFilter initialValueExpressionFilter;
 
-	public void createControl(Composite composite, TabbedPropertySheetWidgetFactory widgetFactory, ExtensibleGridPropertySection extensibleGridPropertySection) {
+	public void createControl(final Composite composite, final TabbedPropertySheetWidgetFactory widgetFactory, final ExtensibleGridPropertySection extensibleGridPropertySection) {
 		initCreateControl(composite);
 		doCreateControl(widgetFactory);
 		bindWidgets();
 	}
 
-	protected void doCreateControl(TabbedPropertySheetWidgetFactory widgetFactory) {
+	protected void doCreateControl(final TabbedPropertySheetWidgetFactory widgetFactory) {
 		/*Create control for initial value*/
 		expressionViewer = new ExpressionViewer(composite,SWT.BORDER,widgetFactory,editingDomain, FormPackage.Literals.WIDGET__INPUT_EXPRESSION, true) ;
 		expressionViewer.addFilter(getExpressionViewerFilter());
-		if(widget instanceof CheckBoxSingleFormField){
-			expressionViewer.setMessage(Messages.data_tooltip_boolean,IStatus.INFO);
-		} else {
-			expressionViewer.setMessage(Messages.data_tooltip_text,IStatus.INFO);
-		}
+        if (widget instanceof CheckBoxSingleFormField) {
+            expressionViewer.setMessage(Messages.data_tooltip_boolean, IStatus.INFO);
+        } else {
+            expressionViewer.setMessage(Messages.data_tooltip_text, IStatus.INFO);
+        }
 		if(widget instanceof DateFormField){
-			expressionViewer.addExpressionValidator(ExpressionConstants.ALL_TYPES, new IExpressionValidator() {
+            expressionViewer.addExpressionValidator(new IExpressionValidator() {
 
 				private Expression inputExpression;
 
-				public IStatus validate(Object value) {
-					String returnType = inputExpression.getReturnType();
-					if(returnType.equals(Date.class.getName()) 
+				public IStatus validate(final Object value) {
+					final String returnType = inputExpression.getReturnType();
+					if(returnType.equals(Date.class.getName())
 							|| returnType.equals(String.class.getName())){
 						return ValidationStatus.ok();
 					}else{
@@ -113,31 +112,34 @@ public class InitialValueContribution implements IExtensibleGridPropertySectionC
 					}
 				}
 
-				public void setInputExpression(Expression inputExpression) {
+				public void setInputExpression(final Expression inputExpression) {
 					this.inputExpression = inputExpression;
 				}
 
-				public void setDomain(EditingDomain domain) {
+				public void setDomain(final EditingDomain domain) {
 
 				}
 
-				public void setContext(EObject context) {
+				public void setContext(final EObject context) {
 
 				}
+
+                public boolean isRelevantForExpressionType(final String type) {
+                    return true;
+                }
 			});
 		}
 		expressionViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
-
 		/*Create checkbox to allow HTML*/
 		createAllowHtmlButton(composite, widgetFactory);
 	}
 
 	protected AvailableExpressionTypeFilter getExpressionViewerFilter() {
-		
-		boolean allowGroupIterator = widget.eContainer() instanceof Group ;
-		
+
+		final boolean allowGroupIterator = widget.eContainer() instanceof Group ;
+
 		if(initialValueExpressionFilter == null){
-			List<String> contentTypes = new ArrayList<String>();
+			final List<String> contentTypes = new ArrayList<String>();
 			contentTypes.add(ExpressionConstants.VARIABLE_TYPE);
 			contentTypes.add(ExpressionConstants.SCRIPT_TYPE);
 			contentTypes.add(ExpressionConstants.CONSTANT_TYPE);
@@ -146,7 +148,7 @@ public class InitialValueContribution implements IExtensibleGridPropertySectionC
 			contentTypes.add(ExpressionConstants.DOCUMENT_TYPE);
 			contentTypes.add(ExpressionConstants.XPATH_TYPE);
 			contentTypes.add(ExpressionConstants.I18N_TYPE);
-			
+
 			if(allowGroupIterator){
 				contentTypes.add(ExpressionConstants.GROUP_ITERATOR_TYPE);
 			}
@@ -156,7 +158,7 @@ public class InitialValueContribution implements IExtensibleGridPropertySectionC
 		return initialValueExpressionFilter;
 	}
 
-	private void initCreateControl(Composite composite) {
+	private void initCreateControl(final Composite composite) {
 		this.composite = composite;
 		composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 		if(dataBindingContext != null){
@@ -167,13 +169,13 @@ public class InitialValueContribution implements IExtensibleGridPropertySectionC
 	}
 
 	protected GridLayout getCompositeLayout() {
-		GridLayout layout = new GridLayout(1, false);
+		final GridLayout layout = new GridLayout(1, false);
 		layout.marginHeight = MARGIN_HEIGHT;
 		layout.marginWidth = MARGIN_WIDTH;
 		return layout;
 	}
 
-	protected void createAllowHtmlButton(Composite composite, TabbedPropertySheetWidgetFactory widgetFactory) {
+	protected void createAllowHtmlButton(final Composite composite, final TabbedPropertySheetWidgetFactory widgetFactory) {
 		//HTML can be an issue only with these two kind of widget
 		if( widget instanceof MessageInfo
 				|| widget instanceof TextInfo){
@@ -209,7 +211,7 @@ public class InitialValueContribution implements IExtensibleGridPropertySectionC
 		}
 	}
 
-	public boolean isRelevantFor(EObject eObject) {
+	public boolean isRelevantFor(final EObject eObject) {
 		return (eObject instanceof FormField || eObject instanceof Info)
 				&& !(eObject instanceof DateFormField)
 				&& !(eObject instanceof MultipleValuatedFormField)
@@ -221,7 +223,7 @@ public class InitialValueContribution implements IExtensibleGridPropertySectionC
 	public void refresh() {
 	}
 
-	public void setEObject(EObject object) {
+	public void setEObject(final EObject object) {
 		widget = (Widget) object;
 		if(initialValueExpressionFilter != null){
 			initialValueExpressionFilter.setWidget(widget);
@@ -245,11 +247,11 @@ public class InitialValueContribution implements IExtensibleGridPropertySectionC
 	}
 
 
-	public void setEditingDomain(TransactionalEditingDomain editingDomain) {
+	public void setEditingDomain(final TransactionalEditingDomain editingDomain) {
 		this.editingDomain = editingDomain;
 	}
 
-	public void setSelection(ISelection selection) {
+	public void setSelection(final ISelection selection) {
 
 	}
 

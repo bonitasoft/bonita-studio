@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: org.bonitasoft.studio.condition
 Bundle-Vendor: BonitaSoft S.A.
-Bundle-Version: 6.4.0.qualifier
+Bundle-Version: 7.0.0.qualifier
 Bundle-SymbolicName: org.bonitasoft.studio.condition; singleton:=true
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.eclipse.xtext;visibility:=reexport,
@@ -26,7 +26,9 @@ Require-Bundle: org.eclipse.xtext;visibility:=reexport,
  com.google.guava,
  org.eclipse.xtext.xbase.lib,
  org.junit;bundle-version="4.11.0";resolution:=optional,
- assertj-core;bundle-version="1.5.0";resolution:=optional
+ assertj-core;bundle-version="1.5.0";resolution:=optional,
+ org.bonitasoft.studio.diagram.custom;bundle-version="6.4.0",
+ org.bonitasoft.studio.common.repository;bundle-version="6.4.0"
 Import-Package: org.apache.log4j,
  org.eclipse.xtext.xbase.lib
 Bundle-RequiredExecutionEnvironment: J2SE-1.5

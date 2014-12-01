@@ -1,7 +1,7 @@
 /**
  * Copyright (C) 2010 BonitaSoft S.A.
  * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -45,14 +45,13 @@ public class TestBonitaExportModel extends TestCase {
     }
 
     public void testExportNewProcess() throws Exception {
-        NewDiagramCommandHandler newCmd = new NewDiagramCommandHandler() ;
-        newCmd.execute(new ExecutionEvent()) ;
-        DiagramFileStore artifact = newCmd.getNewDiagramFileStore() ;
-        DiagramEditor editor = (DiagramEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor() ;
+        final NewDiagramCommandHandler newCmd = new NewDiagramCommandHandler() ;
+        final DiagramFileStore artifact = newCmd.execute(new ExecutionEvent());
+        final DiagramEditor editor = (DiagramEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor() ;
         editor.doSave(new NullProgressMonitor());
-        String editorName = editor.getTitle().replaceFirst("(.*)\\s\\((.*)\\)", "$1");
-        String editorVersion = editor.getTitle().replaceFirst("(.*)\\s\\((.*)\\)", "$2");
-        IBonitaModelExporter exporter  = new BonitaModelExporterImpl((MainProcessEditPart) editor.getDiagramEditPart()) ;
+        final String editorName = editor.getTitle().replaceFirst("(.*)\\s\\((.*)\\)", "$1");
+        final String editorVersion = editor.getTitle().replaceFirst("(.*)\\s\\((.*)\\)", "$2");
+        final IBonitaModelExporter exporter  = new BonitaModelExporterImpl((MainProcessEditPart) editor.getDiagramEditPart()) ;
         assertTrue("Bad diagram version in exporter", exporter.getDiagram().getVersion().equals(editorVersion));
         assertEquals("Bad diagram name in exporter", exporter.getDiagram().getName() ,editorName);
         assertTrue("Bad pool number in exporter", exporter.getPools().size() == 1);

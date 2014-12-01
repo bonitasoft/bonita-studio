@@ -31,43 +31,42 @@ import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.MainProcess;
-import org.bonitasoft.studio.properties.sections.general.ProcessNamesExpressionNatureProvider;
+import org.eclipse.emf.ecore.EObject;
 
 /**
  * @author aurelie
  *
  */
-public class ProcessNamesExpressionNatureProviderForMessage extends
-ProcessNamesExpressionNatureProvider implements
-IExpressionNatureProvider {
-	@Override
-	public Expression[] getExpressions() {
-		List<Expression> result = new ArrayList<Expression>();
-		final DiagramRepositoryStore diagramStore = (DiagramRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
-		MainProcess diagram = ModelHelper.getMainProcess(getContext());
-		AbstractProcess parentProcess = ModelHelper.getParentProcess(getContext());
-		Set<String> names = new HashSet<String>();
-		
-		for(AbstractProcess p : ModelHelper.getAllProcesses(diagram)){
-			if(!p.getName().equals(parentProcess.getName())){
-				names.add(p.getName());
-			}
-		}
-		for(AbstractProcess p : diagramStore.getAllProcesses()){
-			if(!p.getName().equals(parentProcess.getName())){
-				names.add(p.getName());
-			}
-		}
-		
-		for(String pName : names){
-			Expression exp = ExpressionFactory.eINSTANCE.createExpression();
-			exp.setName(pName);
-			exp.setContent(pName);
-			exp.setReturnType(String.class.getName());
-			exp.setReturnTypeFixed(true);
-			exp.setType(ExpressionConstants.CONSTANT_TYPE);
-			result.add(exp);
-		}
-		return result.toArray(new Expression[result.size()]);
-	}
+public class ProcessNamesExpressionNatureProviderForMessage implements IExpressionNatureProvider {
+
+    @Override
+    public Expression[] getExpressions(final EObject context) {
+        final List<Expression> result = new ArrayList<Expression>();
+        final DiagramRepositoryStore diagramStore = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
+        final MainProcess diagram = ModelHelper.getMainProcess(context);
+        final AbstractProcess parentProcess = ModelHelper.getParentProcess(context);
+        final Set<String> names = new HashSet<String>();
+
+        for (final AbstractProcess p : ModelHelper.getAllProcesses(diagram)) {
+            if (!p.getName().equals(parentProcess.getName())) {
+                names.add(p.getName());
+            }
+        }
+        for (final AbstractProcess p : diagramStore.getAllProcesses()) {
+            if (!p.getName().equals(parentProcess.getName())) {
+                names.add(p.getName());
+            }
+        }
+
+        for (final String pName : names) {
+            final Expression exp = ExpressionFactory.eINSTANCE.createExpression();
+            exp.setName(pName);
+            exp.setContent(pName);
+            exp.setReturnType(String.class.getName());
+            exp.setReturnTypeFixed(true);
+            exp.setType(ExpressionConstants.CONSTANT_TYPE);
+            result.add(exp);
+        }
+        return result.toArray(new Expression[result.size()]);
+    }
 }

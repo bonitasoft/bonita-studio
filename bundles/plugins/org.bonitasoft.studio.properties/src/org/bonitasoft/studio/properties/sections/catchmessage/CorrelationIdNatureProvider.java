@@ -23,6 +23,7 @@ import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ListExpression;
 import org.bonitasoft.studio.model.expression.TableExpression;
 import org.bonitasoft.studio.model.process.AbstractCatchMessageEvent;
+import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.Message;
 import org.bonitasoft.studio.model.process.MessageFlow;
 import org.eclipse.emf.ecore.EObject;
@@ -33,41 +34,27 @@ import org.eclipse.emf.ecore.EObject;
  */
 public class CorrelationIdNatureProvider implements IExpressionNatureProvider{
 
-	private AbstractCatchMessageEvent catchMessageEvent;
-	
-	@Override
-	public Expression[] getExpressions() {
-		MessageFlow incomingMessag = catchMessageEvent.getIncomingMessag();
-		TableExpression throwCorrelations=null;
-		Expression[] expressionsList = null;
-		 if(incomingMessag != null){
-	            final Message message = ModelHelper.findEvent(catchMessageEvent, incomingMessag.getName());
-	            if(message != null){
-	            	throwCorrelations = message.getCorrelation().getCorrelationAssociation();
-	            	expressionsList = new Expression[throwCorrelations.getExpressions().size()];
-	            	for (int i=0; i<throwCorrelations.getExpressions().size();i++){
-	            		ListExpression row = throwCorrelations.getExpressions().get(i);
-               			expressionsList[i]=row.getExpressions().get(0);
-	            	}
-	            }
-		 }
-		return expressionsList;
-	}
 
-	@Override
-	public void setContext(EObject context) {
-		 if (context instanceof AbstractCatchMessageEvent){
-			 catchMessageEvent =(AbstractCatchMessageEvent)context;
-		 }
-				
-		
-	}
-
-	@Override
-	public EObject getContext() {
-		return catchMessageEvent;
-	}
-	
-	
+    @Override
+    public Expression[] getExpressions(final EObject context) {
+        if (context instanceof AbstractCatchMessageEvent) {
+            final MessageFlow incomingMessag = ((AbstractCatchMessageEvent) context).getIncomingMessag();
+            TableExpression throwCorrelations = null;
+            Expression[] expressionsList = null;
+            if (incomingMessag != null) {
+                final Message message = ModelHelper.findEvent((Element) context, incomingMessag.getName());
+                if (message != null) {
+                    throwCorrelations = message.getCorrelation().getCorrelationAssociation();
+                    expressionsList = new Expression[throwCorrelations.getExpressions().size()];
+                    for (int i = 0; i < throwCorrelations.getExpressions().size(); i++) {
+                        final ListExpression row = throwCorrelations.getExpressions().get(i);
+                        expressionsList[i] = row.getExpressions().get(0);
+                    }
+                }
+            }
+            return expressionsList;
+        }
+        return null;
+    }
 
 }

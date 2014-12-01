@@ -16,13 +16,16 @@
  */
 package org.bonitasoft.studio.diagram.custom.wizard;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
+import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
-import org.bonitasoft.studio.diagram.custom.Messages;
+import org.bonitasoft.studio.diagram.custom.i18n.Messages;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationRepositoryStore;
 import org.bonitasoft.studio.model.process.AbstractProcess;
@@ -72,6 +75,9 @@ public abstract class AbstractManageDiagramWizard extends Wizard implements IWiz
                                 break;
                             }
                         }
+                        final Map<String, Object> parameters = new HashMap<String, Object>();
+                        parameters.put(AbstractFileStore.ASK_ACTION_ON_CLOSE, false);
+                        file.setParameters(parameters);
                         file.close();
                         file.delete() ;
                     }
@@ -96,7 +102,6 @@ public abstract class AbstractManageDiagramWizard extends Wizard implements IWiz
      */
     @Override
     public boolean performFinish() {
-        // TODO Auto-generated method stub
         return false;
     }
 

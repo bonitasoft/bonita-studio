@@ -22,9 +22,7 @@ import static org.junit.Assert.assertTrue;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.bonitasoft.engine.api.ProcessAPI;
 import org.bonitasoft.engine.bpm.flownode.ActivityInstanceCriterion;
@@ -49,10 +47,11 @@ import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.operation.ImportBosArchiveOperation;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.command.RunProcessCommand;
+import org.bonitasoft.studio.engine.operation.ProcessSelector;
+import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.util.test.EngineAPIUtil;
 import org.bonitasoft.studio.util.test.async.TestAsyncThread;
-import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -62,7 +61,7 @@ import org.junit.Test;
 
 /**
  * @author Aurelie Zara
- * 
+ *
  */
 public class TestConditions {
 
@@ -143,10 +142,7 @@ public class TestConditions {
 
     private void runProcess(final MainProcess mainProcess) throws ExecutionException {
         final RunProcessCommand runProcessCommand = new RunProcessCommand(true);
-        final Map<String, Object> param = new HashMap<String, Object>();
-        param.put(RunProcessCommand.PROCESS, mainProcess.getElements().get(0));
-        final ExecutionEvent ee = new ExecutionEvent(null, param, null, null);
-        runProcessCommand.execute(ee);
+        runProcessCommand.execute(ProcessSelector.createExecutionEvent((AbstractProcess) mainProcess.getElements().get(0)));
     }
 
     private List<HumanTaskInstance> getPendingTasks(final ProcessAPI processApi) throws SearchException {

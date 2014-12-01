@@ -25,6 +25,7 @@ import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.process.Activity;
+import org.bonitasoft.studio.model.process.MultiInstanceType;
 import org.bonitasoft.studio.model.simulation.SimulationFactory;
 import org.bonitasoft.studio.model.simulation.SimulationPackage;
 import org.bonitasoft.studio.model.simulation.SimulationTransition;
@@ -67,8 +68,8 @@ public class LoopContribution extends AbstractPropertySectionContribution {
      * @see org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution#isRelevantFor(org.eclipse.emf.ecore.EObject)
      */
     @Override
-    public boolean isRelevantFor(EObject eObject) {
-        return eObject instanceof Activity && ((Activity) eObject).getIsLoop();
+    public boolean isRelevantFor(final EObject eObject) {
+        return eObject instanceof Activity && ((Activity) eObject).getType() == MultiInstanceType.STANDARD;
     }
 
     /* (non-Javadoc)
@@ -90,7 +91,7 @@ public class LoopContribution extends AbstractPropertySectionContribution {
      * @see org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution#createControl(org.eclipse.swt.widgets.Composite, org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory, org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection)
      */
     @Override
-    public void createControl(Composite composite, TabbedPropertySheetWidgetFactory widgetFactory, ExtensibleGridPropertySection extensibleGridPropertySection) {
+    public void createControl(final Composite composite, final TabbedPropertySheetWidgetFactory widgetFactory, final ExtensibleGridPropertySection extensibleGridPropertySection) {
         SimulationTransition transition;
         if(((Activity)eObject).getLoopTransition() == null){
             transition = SimulationFactory.eINSTANCE.createSimulationTransition();
@@ -103,11 +104,11 @@ public class LoopContribution extends AbstractPropertySectionContribution {
 
 
         composite.setLayout(new GridLayout(2, false));
-        Composite radioComposite = widgetFactory.createComposite(composite);
+        final Composite radioComposite = widgetFactory.createComposite(composite);
         radioComposite.setLayout(new FillLayout());
         radioComposite.setLayoutData(GridDataFactory.fillDefaults().create());
-        Button expressionRadio = widgetFactory.createButton(radioComposite, "Expression", SWT.RADIO);
-        Button probaRadio = widgetFactory.createButton(radioComposite, "Probability", SWT.RADIO);
+        final Button expressionRadio = widgetFactory.createButton(radioComposite, "Expression", SWT.RADIO);
+        final Button probaRadio = widgetFactory.createButton(radioComposite, "Probability", SWT.RADIO);
 
 
 
@@ -119,23 +120,23 @@ public class LoopContribution extends AbstractPropertySectionContribution {
 
 
         final Composite probaComposite = widgetFactory.createComposite(stackComposite);
-        FillLayout layout = new FillLayout();
+        final FillLayout layout = new FillLayout();
         layout.marginWidth = 10;
         probaComposite.setLayout(layout);
-        Text probaText = widgetFactory.createText(probaComposite, "",SWT.BORDER);
+        final Text probaText = widgetFactory.createText(probaComposite, "",SWT.BORDER);
 
-        ControlDecoration controlDecoration = new ControlDecoration(probaText, SWT.LEFT|SWT.TOP);
-        FieldDecoration fieldDecoration = FieldDecorationRegistry.getDefault()
+        final ControlDecoration controlDecoration = new ControlDecoration(probaText, SWT.LEFT|SWT.TOP);
+        final FieldDecoration fieldDecoration = FieldDecorationRegistry.getDefault()
                 .getFieldDecoration(FieldDecorationRegistry.DEC_ERROR);
         controlDecoration.setImage(fieldDecoration.getImage());
         controlDecoration.setDescriptionText(Messages.mustBeAPercentage);
 
 
         final Composite expressionComposite = widgetFactory.createComposite(stackComposite);
-        FillLayout layout2 = new FillLayout();
+        final FillLayout layout2 = new FillLayout();
         layout2.marginWidth = 10;
         expressionComposite.setLayout(layout2);
-        ExpressionViewer expressionText = new ExpressionViewer(expressionComposite,SWT.BORDER,widgetFactory,editingDomain,SimulationPackage.Literals.SIMULATION_TRANSITION__EXPRESSION);
+        final ExpressionViewer expressionText = new ExpressionViewer(expressionComposite,SWT.BORDER,widgetFactory,editingDomain,SimulationPackage.Literals.SIMULATION_TRANSITION__EXPRESSION);
         Expression selection = transition.getExpression() ;
         if(selection == null){
             selection = ExpressionFactory.eINSTANCE.createExpression() ;
@@ -144,7 +145,7 @@ public class LoopContribution extends AbstractPropertySectionContribution {
         context.bindValue(ViewerProperties.singleSelection().observe(expressionText), EMFEditProperties.value(editingDomain, SimulationPackage.Literals.SIMULATION_TRANSITION__EXPRESSION).observe(eObject));
         expressionText.setInput(eObject) ;
 
-        boolean useExpression = transition.isUseExpression();
+        final boolean useExpression = transition.isUseExpression();
         if (useExpression) {
             stackLayout.topControl = expressionComposite;
         } else {
@@ -155,7 +156,7 @@ public class LoopContribution extends AbstractPropertySectionContribution {
 
         expressionRadio.addSelectionListener(new SelectionAdapter() {
             @Override
-            public void widgetSelected(SelectionEvent e) {
+            public void widgetSelected(final SelectionEvent e) {
                 if(((Button) e.getSource()).getSelection()){
                     stackLayout.topControl = expressionComposite;
                 } else {

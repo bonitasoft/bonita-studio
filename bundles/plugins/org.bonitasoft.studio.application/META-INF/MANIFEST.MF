@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Bonita Main UI plugin
 Bundle-SymbolicName: org.bonitasoft.studio.application;singleton:=true
-Bundle-Version: 6.4.0.qualifier
+Bundle-Version: 7.0.0.qualifier
 Bundle-Localization: plugin
 Bundle-Activator: org.bonitasoft.studio.application.ApplicationPlugin
 Bundle-Vendor: BonitaSoft S.A.
@@ -74,7 +74,11 @@ Export-Package: org.bonitasoft.studio.application,
  org.bonitasoft.studio.application.actions,
  org.bonitasoft.studio.application.actions.coolbar,
  org.bonitasoft.studio.application.contribution,
- org.bonitasoft.studio.application.i18n;x-friends:="org.bonitasoft.studio.tests,org.bonitasoft.studio.application.test,org.bonitasoft.studio.diagram.test",
+ org.bonitasoft.studio.application.i18n;
+  x-friends:="org.bonitasoft.studio.tests,
+   org.bonitasoft.studio.application.test,
+   org.bonitasoft.studio.diagram.test,
+   org.bonitasoft.studio.swtbot.framework",
  org.bonitasoft.studio.application.job,
  org.bonitasoft.studio.application.splash,
  org.bonitasoft.studio.application.views,

@@ -42,14 +42,19 @@ public interface SWTBotConstants {
     public static final String VIEWS_PROPERTIES_APPLICATION = "org.bonitasoft.studio.views.properties.application";
     public static final String VIEWS_PROPERTIES_FORM_GENERAL = "org.bonitasoft.studio.views.properties.form.general";
     public static final String VIEWS_PROPERTIES_APPEARANCE = "org.bonitasoft.studio.views.properties.appearance";
+    public static final String VIEWS_PROPERTIES_VALIDATION_STATUS = "org.bonitasoft.studio.validation.view";
+    public static final String VIEWS_PROPERTIES_PREVIEW = "org.bonitasoft.studio.views.properties.form.preview";
+
     public static final String VIEWS_OVERVIEW = "org.bonitasoft.studio.views.overview";
     public static final String VIEWS_TREE_OVERVIEW = "org.bonitasoft.studio.views.overview.tree";
-    
+
     public static final String SWTBOT_ID_EXPLORER_LEFT_TREE = "org.bonitasoft.studio.treeexplorer.left";
     public static final String SWTBOT_ID_EXPLORER_RIGHT_TABLE = "org.bonitasoft.studio.treeexplorer.right";
-    
+
     public static final String SQLBUILDER_CRITERIA_TREE_ID = "sqlBuilderCriteriaTreeId";
 
 
-	public static final String APPLICATION_SECTION_FORMS_SELECTION_TREE = "org.bonitasoft.studio.application.formTree";;
+    public static final String APPLICATION_SECTION_FORMS_SELECTION_TREE = "org.bonitasoft.studio.application.formTree";
+
+    public static final String SWTBOT_ID_MAIN_SHELL = "SWTBOT_ID_MAIN_SHELL";
 }

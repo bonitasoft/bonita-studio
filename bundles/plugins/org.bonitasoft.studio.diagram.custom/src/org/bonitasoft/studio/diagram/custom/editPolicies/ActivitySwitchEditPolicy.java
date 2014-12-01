@@ -1,7 +1,7 @@
 /**
  * Copyright (C) 2009-2013 BonitaSoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -21,17 +21,17 @@ package org.bonitasoft.studio.diagram.custom.editPolicies;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.Pair;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.gmf.tools.GMFTools;
 import org.bonitasoft.studio.common.gmf.tools.GMFTools.ElementTypeResolver;
+import org.bonitasoft.studio.common.palette.ProcessPaletteLabelProvider;
 import org.bonitasoft.studio.diagram.custom.Activator;
 import org.bonitasoft.studio.diagram.custom.BonitaNodesElementTypeResolver;
-import org.bonitasoft.studio.diagram.custom.Messages;
 import org.bonitasoft.studio.diagram.custom.figures.DropDownMenuEventFigure;
 import org.bonitasoft.studio.diagram.custom.figures.DropDownMenuFigure;
 import org.bonitasoft.studio.diagram.custom.figures.SlideMenuBarFigure;
+import org.bonitasoft.studio.diagram.custom.i18n.Messages;
 import org.bonitasoft.studio.model.process.ANDGateway;
 import org.bonitasoft.studio.model.process.Activity;
 import org.bonitasoft.studio.model.process.BoundaryTimerEvent;
@@ -115,10 +115,12 @@ public class ActivitySwitchEditPolicy extends AbstractSingleSelectionEditPolicy 
     private SlideMenuBarFigure toolBarFigure ;
     private ImageFigure toolImage ;
     private FreeformLayer composite;
+    private final ProcessPaletteLabelProvider processPaletteLabelProvider;
 
     public ActivitySwitchEditPolicy(){
         super();
         figures = new ArrayList<IFigure>();
+        processPaletteLabelProvider = new ProcessPaletteLabelProvider();
 
     }
 
@@ -134,7 +136,7 @@ public class ActivitySwitchEditPolicy extends AbstractSingleSelectionEditPolicy 
     protected Pair<IFigure, MouseListener> createClickableItem(final Point location, final IGraphicalEditPart host, final IElementType type) {
         ImageFigure image  ;
         /*Activity*/
-        AdapterFactory factory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
+        final AdapterFactory factory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
         if(type.equals(ProcessElementTypes.Task_2004) || type.equals(ProcessElementTypes.Task_3005)){
             image = new ImageFigure(Pics.getImage("decoration/","task")); //$NON-NLS-1$ //$NON-NLS-2$
         }else if(type.equals(ProcessElementTypes.CallActivity_2036) || type.equals(ProcessElementTypes.CallActivity_3063)){
@@ -151,19 +153,21 @@ public class ActivitySwitchEditPolicy extends AbstractSingleSelectionEditPolicy 
             image = new ImageFigure(IconService.getInstance().getIcon(type));
         }
         image.setSize(16, 16);
-        image.setToolTip(new Label(NamingUtils.getPaletteText(false, type.getEClass())));
+        image.setToolTip(new Label(processPaletteLabelProvider.getProcessPaletteText(type.getEClass())));
 
 
 
-        MouseListener listener = new MouseListener() {
+        final MouseListener listener = new MouseListener() {
 
-            public void mouseReleased(MouseEvent me) {
+            @Override
+            public void mouseReleased(final MouseEvent me) {
             }
 
-            public void mousePressed(MouseEvent me) {
-                ShapeNodeEditPart node = (ShapeNodeEditPart) host.getAdapter(ShapeNodeEditPart.class);
+            @Override
+            public void mousePressed(final MouseEvent me) {
+                final ShapeNodeEditPart node = (ShapeNodeEditPart) host.getAdapter(ShapeNodeEditPart.class);
                 if(node != null){
-                    GraphicalEditPart targetEditPart = GMFTools.convert(type.getEClass(),node, getElementTypeResolver(),GMFTools.PROCESS_DIAGRAM);
+                    final GraphicalEditPart targetEditPart = GMFTools.convert(type.getEClass(),node, getElementTypeResolver(),GMFTools.PROCESS_DIAGRAM);
                     EditPart p = targetEditPart.getParent() ;
                     while(!(p instanceof MainProcessEditPart)){
                         p = p.getParent() ;
@@ -175,9 +179,10 @@ public class ActivitySwitchEditPolicy extends AbstractSingleSelectionEditPolicy 
                 }
             }
 
-			
 
-            public void mouseDoubleClicked(MouseEvent me) {
+
+            @Override
+            public void mouseDoubleClicked(final MouseEvent me) {
 
             }
         };
@@ -185,13 +190,13 @@ public class ActivitySwitchEditPolicy extends AbstractSingleSelectionEditPolicy 
 
         return new Pair<IFigure, MouseListener>(image, listener);
     }
-    
+
     protected ElementTypeResolver getElementTypeResolver() {
 		return new BonitaNodesElementTypeResolver();
 	}
 
     private IFigure createClickableFigure(final Point location, final IGraphicalEditPart host, final IElementType type) {
-        Pair<IFigure, MouseListener> item = createClickableItem(location, host, type);
+        final Pair<IFigure, MouseListener> item = createClickableItem(location, host, type);
         item.getFirst().addMouseListener(item.getSecond());
         return item.getFirst();
     }
@@ -199,10 +204,10 @@ public class ActivitySwitchEditPolicy extends AbstractSingleSelectionEditPolicy 
     @Override
     @SuppressWarnings("unchecked")
     protected void hideFeedback() {
-        List<IFigure> figToDelete = new ArrayList<IFigure>();
+        final List<IFigure> figToDelete = new ArrayList<IFigure>();
         if(layer != null){
-            List<Object> children = layer.getChildren();
-            for (Object fig : children){
+            final List<Object> children = layer.getChildren();
+            for (final Object fig : children){
                 if(figures.contains(fig)){
                     if(fig instanceof IFigure) {
                         figToDelete.add((IFigure) fig);
@@ -210,7 +215,7 @@ public class ActivitySwitchEditPolicy extends AbstractSingleSelectionEditPolicy 
                 }
             }
             figures.clear();
-            for(IFigure fig : figToDelete){
+            for(final IFigure fig : figToDelete){
                 layer.remove(fig);
             }
         }
@@ -223,7 +228,7 @@ public class ActivitySwitchEditPolicy extends AbstractSingleSelectionEditPolicy 
     @Override
     protected void showFeedback() {
         if(zoomManager.getZoom() > GMFTools.MINIMAL_ZOOM_DISPLAY){
-            IGraphicalEditPart host2 = getHost();
+            final IGraphicalEditPart host2 = getHost();
             IGraphicalEditPart host = host2;
             if(host == null) {
                 return ;
@@ -239,14 +244,14 @@ public class ActivitySwitchEditPolicy extends AbstractSingleSelectionEditPolicy 
             if (referenceFigure == null) {
                 referenceFigure = getHostFigure();
             }
-            Rectangle bounds = referenceFigure.getBounds().getCopy();
+            final Rectangle bounds = referenceFigure.getBounds().getCopy();
 
             //Get the absolute coordinate
             referenceFigure.translateToAbsolute(bounds);
             IFigure parentFigure = referenceFigure.getParent();
             while( parentFigure != null  ) {
                 if(parentFigure instanceof Viewport) {
-                    Viewport viewport = (Viewport)parentFigure;
+                    final Viewport viewport = (Viewport)parentFigure;
                     bounds.translate(
                             viewport.getHorizontalRangeModel().getValue(),
                             viewport.getVerticalRangeModel().getValue());
@@ -273,7 +278,8 @@ public class ActivitySwitchEditPolicy extends AbstractSingleSelectionEditPolicy 
             toolBarFigure.addToMenu(dropMenu);
             dropMenu.addToggleVisibilityListener(new Listener() {
 
-                public void handleEvent(org.eclipse.swt.widgets.Event event) {
+                @Override
+                public void handleEvent(final org.eclipse.swt.widgets.Event event) {
                     if(!dropMenu.isCollapsed()){
                         if(	getHost().getEditPolicy(BoundaryEventToolEditPolicy.BOUNDARY_TOOL_ROLE) != null){
                             if(((BoundaryEventToolEditPolicy) getHost().getEditPolicy(BoundaryEventToolEditPolicy.BOUNDARY_TOOL_ROLE)).getDropMenu() != null ){
@@ -284,14 +290,14 @@ public class ActivitySwitchEditPolicy extends AbstractSingleSelectionEditPolicy 
                 }
             }) ;
 
-            List<Pair<IFigure, MouseListener>> clickableItems = getItems(host2);
+            final List<Pair<IFigure, MouseListener>> clickableItems = getItems(host2);
 
-            for(Pair<IFigure, MouseListener> item : clickableItems){
+            for(final Pair<IFigure, MouseListener> item : clickableItems){
                 dropMenu.addToMenu(item.getFirst(),item.getSecond());
             }
 
             if(host instanceof IGraphicalEditPart){
-                EObject model = host2.resolveSemanticElement();
+                final EObject model = host2.resolveSemanticElement();
                 if(model instanceof Event
                         && !(model instanceof ReceiveTask)
                         && !(model instanceof SendTask)){
@@ -321,25 +327,29 @@ public class ActivitySwitchEditPolicy extends AbstractSingleSelectionEditPolicy 
 
             composite.addMouseMotionListener(new MouseMotionListener() {
 
-                public void mouseMoved(MouseEvent me) {
+                @Override
+                public void mouseMoved(final MouseEvent me) {
 
                 }
 
-                public void mouseHover(MouseEvent arg0) {
+                @Override
+                public void mouseHover(final MouseEvent arg0) {
 
 
                 }
 
-                public void mouseExited(MouseEvent me) {
+                @Override
+                public void mouseExited(final MouseEvent me) {
 
                 }
 
-                public void mouseEntered(MouseEvent me) {
+                @Override
+                public void mouseEntered(final MouseEvent me) {
                     referenceFigure.translateToAbsolute(me.getLocation());
                     IFigure parentFigure = referenceFigure.getParent();
                     while( parentFigure != null  ) {
                         if(parentFigure instanceof Viewport) {
-                            Viewport viewport = (Viewport)parentFigure;
+                            final Viewport viewport = (Viewport)parentFigure;
                             me.getLocation().translate(
                                     viewport.getHorizontalRangeModel().getValue(),
                                     viewport.getVerticalRangeModel().getValue());
@@ -351,20 +361,21 @@ public class ActivitySwitchEditPolicy extends AbstractSingleSelectionEditPolicy 
                     }
                 }
 
-                public void mouseDragged(MouseEvent arg0) {
+                @Override
+                public void mouseDragged(final MouseEvent arg0) {
 
                 }
             });
         }
     }
 
-	protected Point getIconLocation(Rectangle bounds) {
+	protected Point getIconLocation(final Rectangle bounds) {
 		return new Point(bounds.getLeft().x + 10, bounds.getBottomRight().y);
 	}
 
 	protected List<Pair<IFigure, MouseListener>> getItems(
-			IGraphicalEditPart host2) {
-		List<Pair<IFigure, MouseListener>> clickableItems = new ArrayList<Pair<IFigure, MouseListener>>();
+			final IGraphicalEditPart host2) {
+		final List<Pair<IFigure, MouseListener>> clickableItems = new ArrayList<Pair<IFigure, MouseListener>>();
 
 		if(host2.getAdapter(Task.class) != null ){
 		    clickableItems.add(createClickableItem(new Point(0, 0), host2, ProcessElementTypes.ServiceTask_2027));
@@ -529,8 +540,8 @@ public class ActivitySwitchEditPolicy extends AbstractSingleSelectionEditPolicy 
     }
 
     private List<IFigure> addNoneEventFigures() {
-        List<IFigure> result = new ArrayList<IFigure>();
-        IGraphicalEditPart host = getHost();
+        final List<IFigure> result = new ArrayList<IFigure>();
+        final IGraphicalEditPart host = getHost();
         if(!isInSubProcessEventPool() && !(isEndEvent(host.resolveSemanticElement()) || hasIncomingConnection())){
             result.add(createClickableFigure(new Point(0, 0),getHost(), ProcessElementTypes.StartEvent_2002));
         } else {
@@ -547,7 +558,7 @@ public class ActivitySwitchEditPolicy extends AbstractSingleSelectionEditPolicy 
     }
 
     private List<IFigure> addLinkEventFigures() {
-        List<IFigure> result = new ArrayList<IFigure>();
+        final List<IFigure> result = new ArrayList<IFigure>();
         result.add(EMPTY_FIGURE);
         result.add(createClickableFigure(new Point(0, 0),getHost(), ProcessElementTypes.CatchLinkEvent_2018));
         result.add(createClickableFigure(new Point(0, 0),getHost(), ProcessElementTypes.ThrowLinkEvent_2019));
@@ -557,8 +568,8 @@ public class ActivitySwitchEditPolicy extends AbstractSingleSelectionEditPolicy 
     }
 
     private List<IFigure> addSignalEventFigures() {
-        List<IFigure> result = new ArrayList<IFigure>();
-        IGraphicalEditPart host = getHost();
+        final List<IFigure> result = new ArrayList<IFigure>();
+        final IGraphicalEditPart host = getHost();
         if (!(isEndEvent(host.resolveSemanticElement()) || hasIncomingConnection())){
         	result.add(createClickableFigure(new Point(0, 0),getHost(), ProcessElementTypes.StartSignalEvent_2022));
         } else {
@@ -575,8 +586,8 @@ public class ActivitySwitchEditPolicy extends AbstractSingleSelectionEditPolicy 
     }
 
     private List<IFigure> addTimerEventFigures() {
-        List<IFigure> result = new ArrayList<IFigure>();
-        IGraphicalEditPart host = getHost();
+        final List<IFigure> result = new ArrayList<IFigure>();
+        final IGraphicalEditPart host = getHost();
         if (!(isEndEvent(host.resolveSemanticElement()) || hasIncomingConnection())){
         	result.add(createClickableFigure(new Point(0, 0),getHost(), ProcessElementTypes.StartTimerEvent_2016));
         } else {
@@ -590,8 +601,8 @@ public class ActivitySwitchEditPolicy extends AbstractSingleSelectionEditPolicy 
 
 
     private List<IFigure> addMessageEventFigures() {
-        List<IFigure> result = new ArrayList<IFigure>();
-        IGraphicalEditPart host = getHost();
+        final List<IFigure> result = new ArrayList<IFigure>();
+        final IGraphicalEditPart host = getHost();
         if (!(isEndEvent(host.resolveSemanticElement()) || hasIncomingConnection())){
         	result.add(createClickableFigure(new Point(0, 0),getHost(), ProcessElementTypes.StartMessageEvent_2010));
         } else {
@@ -608,8 +619,8 @@ public class ActivitySwitchEditPolicy extends AbstractSingleSelectionEditPolicy 
     }
 
     private List<IFigure> addErrorEventFigures() {
-        List<IFigure> result = new ArrayList<IFigure>();
-        IGraphicalEditPart host = getHost();
+        final List<IFigure> result = new ArrayList<IFigure>();
+        final IGraphicalEditPart host = getHost();
         if(isInSubProcessEventPool() &&  !(isEndEvent(host.resolveSemanticElement()) || hasIncomingConnection())){
             result.add(createClickableFigure(new Point(0, 0),host, ProcessElementTypes.StartErrorEvent_2033));
         } else {
@@ -626,8 +637,8 @@ public class ActivitySwitchEditPolicy extends AbstractSingleSelectionEditPolicy 
     }
 
     private List<IFigure> addTerminatedEventFigures() {
-        List<IFigure> result = new ArrayList<IFigure>();
-        IGraphicalEditPart host = getHost();
+        final List<IFigure> result = new ArrayList<IFigure>();
+        final IGraphicalEditPart host = getHost();
         	result.add(EMPTY_FIGURE);
         	result.add(EMPTY_FIGURE);
         	result.add(EMPTY_FIGURE);
@@ -640,56 +651,55 @@ public class ActivitySwitchEditPolicy extends AbstractSingleSelectionEditPolicy 
     }
 
     private boolean isInSubProcessEventPool() {
-        EditPart host = getHost();
+        final EditPart host = getHost();
         return host instanceof IGraphicalEditPart
                 && ModelHelper.isInEvenementialSubProcessPool(((IGraphicalEditPart)host).resolveSemanticElement());
     }
-    
-    
-    private boolean isStartEvent(EObject element){
-    	if ((element instanceof StartEvent) ||
-    		(element instanceof StartMessageEvent) ||
-    		(element instanceof StartTimerEvent) ||
-    		(element instanceof StartSignalEvent) ||
-    		(element instanceof StartErrorEvent) ){
+
+
+    private boolean isStartEvent(final EObject element){
+    	if (element instanceof StartEvent ||
+    		element instanceof StartMessageEvent ||
+    		element instanceof StartTimerEvent ||
+    		element instanceof StartSignalEvent ||
+    		element instanceof StartErrorEvent ){
     		return true;
     	}
     	return false;
     }
-    
-    private boolean isEndEvent(EObject element){
-    	if ((element instanceof EndEvent) ||
-        		(element instanceof EndMessageEvent) ||
-        		(element instanceof EndTerminatedEvent) ||
-        		(element instanceof EndSignalEvent) ||
-        		(element instanceof EndErrorEvent) ){
+
+    private boolean isEndEvent(final EObject element){
+    	if (element instanceof EndEvent ||
+        		element instanceof EndMessageEvent ||
+        		element instanceof EndTerminatedEvent ||
+        		element instanceof EndSignalEvent ||
+        		element instanceof EndErrorEvent ){
         		return true;
         	}
         	return false;
     }
-    	
+
     private boolean hasIncomingConnection(){
-    	EditPart host = getHost();
-    	EObject element = ((IGraphicalEditPart)host).resolveSemanticElement();
-    	
-    	List<Connection> connections = ModelHelper.getParentProcess(element).getConnections();
-    	for (Connection connection : connections){
-    		EObject target = connection.getTarget();
+    	final EditPart host = getHost();
+    	final EObject element = ((IGraphicalEditPart)host).resolveSemanticElement();
+
+    	final List<Connection> connections = ModelHelper.getParentProcess(element).getConnections();
+    	for (final Connection connection : connections){
+    		final EObject target = connection.getTarget();
     		if (target.equals(element)){
     			return true;
     		}
     	}
     	return false;
     }
-    
+
     private boolean hasOutgoingConnection(){
-    	EditPart host = getHost();
-    	EObject element = ((IGraphicalEditPart)host).resolveSemanticElement();
-    	
-    	List<Connection> connections = ModelHelper.getParentProcess(element).getConnections();
-    	for (Connection connection : connections){
-    		EObject source = connection.getSource();
-    		if (source.equals(element)){
+    	final EditPart host = getHost();
+    	final EObject element = ((IGraphicalEditPart)host).resolveSemanticElement();
+    	final List<Connection> connections = ModelHelper.getParentProcess(element).getConnections();
+    	for (final Connection connection : connections){
+    		final EObject source = connection.getSource();
+            if (element.equals(source)) {
     			return true;
     		}
     	}
@@ -721,7 +731,8 @@ public class ActivitySwitchEditPolicy extends AbstractSingleSelectionEditPolicy 
         return toolBarFigure;
     }
 
-    public void zoomChanged(double zoom) {
+    @Override
+    public void zoomChanged(final double zoom) {
         hideSelection();
     }
 

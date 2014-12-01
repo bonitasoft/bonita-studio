@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.bonitasoft.studio</groupId>
 	<artifactId>studio</artifactId>
-	<version>6.4.0-SNAPSHOT</version>
+	<version>7.0.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>Bonita Studio</name>
 	<properties>
@@ -13,11 +13,11 @@
 		<tychoVersion>0.20.0</tychoVersion>
 		<tychoExtrasVersion>0.20.0</tychoExtrasVersion>
 		<os-jvm-flags></os-jvm-flags>
-		<bundle.version>6.4.0-SNAPSHOT</bundle.version>
-		<engine.version>6.4.0-SNAPSHOT</engine.version>
+		<bundle.version>7.0.0-SNAPSHOT</bundle.version>
+		<engine.version>7.0.0-SNAPSHOT</engine.version>
 		<connector.version>6.1.1</connector.version>
 		<simulation.version>6.1.0</simulation.version>
-		<filters.version>6.4.0-SNAPSHOT</filters.version>
+		<filters.version>7.0.0-SNAPSHOT</filters.version>
 		<theme.builder.version>6.1.0</theme.builder.version>
 		<watchdog.version>6.0.1</watchdog.version>
 		<p2MirrorUrl>http://repositories.rd.lan/p2/6.3</p2MirrorUrl>
@@ -30,8 +30,8 @@
 		<sonar.jacoco.reportPath>target/jacoco.exec</sonar.jacoco.reportPath>
 		<sonar.jacoco.itReportPath>${project.basedir}/../../../target/jacoco-it.exec</sonar.jacoco.itReportPath>
 		<!-- Skip generated code -->
-		<sonar.skippedModules>org.bonitasoft.studio.model,org.bonitasoft.studio.model.edit,org.bonitasoft.studio.diagram,org.bonitasoft.studio.diagram.form</sonar.skippedModules>
-		<sonar.exclusions>org/w3/**/*,org/omg/**/*,org/wfmc/**/*,org/jbpm/**/*,**/Messages.java, file:**/src-gen/**/*</sonar.exclusions>
+		<sonar.skippedModules>org.bonitasoft.studio.model,org.bonitasoft.studio.model.edit,org.bonitasoft.studio.diagram,org.bonitasoft.studio.diagram.form,org.bonitasoft.studio.connector.model,org.bonitasoft.studio.tests-utils</sonar.skippedModules>
+		<sonar.exclusions>org/w3/**/*,org/omg/**/*,org/wfmc/**/*,org/jbpm/**/*,**/Messages.java, file:**/src-gen/**/*,org/bonitasoft/studio/connector/model/definition/provider/*,org/bonitasoft/studio/connector/model/implementation/provider/*,org/bonitasoft/studio/actor/model/organization/*</sonar.exclusions>
 		<sonar.skipDesign>true</sonar.skipDesign><!-- Takes too much time -->
 	</properties>
 
@@ -49,6 +49,11 @@
 	<build>
 		<pluginManagement>
 			<plugins>
+                <plugin>
+                    <groupId>org.bonitasoft.maven</groupId>
+                    <artifactId>image-overlay-plugin</artifactId>
+                    <version>1.0.1</version>
+                </plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
@@ -81,6 +86,9 @@
 					<configuration>
 						<strictBinIncludes>false</strictBinIncludes>
 						<strictVersions>false</strictVersions>
+                        <archive>
+                           <addMavenDescriptor>false</addMavenDescriptor>
+                        </archive>
 					</configuration>
 				</plugin>
 				<plugin>
@@ -237,7 +245,7 @@
 						<artifact>
 							<groupId>org.bonitasoft.studio</groupId>
 							<artifactId>platform</artifactId>
-							<version>6.4.0-SNAPSHOT</version>
+							<version>7.0.0-SNAPSHOT</version>
 						</artifact>
 					</target>
 					<filters>

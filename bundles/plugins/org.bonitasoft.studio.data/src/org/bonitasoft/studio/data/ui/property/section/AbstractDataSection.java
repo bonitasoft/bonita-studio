@@ -5,12 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -19,7 +19,7 @@ package org.bonitasoft.studio.data.ui.property.section;
 import static org.bonitasoft.studio.common.Messages.removalConfirmationDialogTitle;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -39,6 +39,7 @@ import org.bonitasoft.studio.data.operation.RefactorDataOperation;
 import org.bonitasoft.studio.data.ui.wizard.DataWizard;
 import org.bonitasoft.studio.data.ui.wizard.DataWizardDialog;
 import org.bonitasoft.studio.data.ui.wizard.MoveDataWizard;
+import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.DataAware;
 import org.bonitasoft.studio.model.process.Element;
@@ -87,10 +88,9 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressService;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
-import org.eclipse.xtext.ui.XtextProjectHelper;
 
 /**
- * 
+ *
  * @author Romain Bioteau
  */
 public abstract class AbstractDataSection extends AbstractBonitaDescriptionSection implements IDoubleClickListener, IBonitaVariableContext {
@@ -112,6 +112,8 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
     protected EMFDataBindingContext context;
 
     private boolean isOverviewContext = false;
+
+    private static final String XTEXT_BUILDER_ID = "org.eclipse.xtext.ui.shared.xtextBuilder";
 
     /*
      * (non-Javadoc)
@@ -219,9 +221,6 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
             try {
                 if (op.canExecute()) {
                     service.run(true, false, op);
-                    //                        if (!op.isCancelled()) {
-                    //                            getEditingDomain().getCommandStack().execute(DeleteCommand.create(getEditingDomain(), d));
-                    //                        }
                 }
             } catch (final InvocationTargetException e) {
                 BonitaStudioLog.error(e, DataPlugin.PLUGIN_ID);
@@ -230,7 +229,7 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
             }
             try {
                 RepositoryManager.getInstance().getCurrentRepository().getProject()
-                .build(IncrementalProjectBuilder.FULL_BUILD, XtextProjectHelper.BUILDER_ID, new HashMap<String, String>(), null);
+                        .build(IncrementalProjectBuilder.FULL_BUILD, XTEXT_BUILDER_ID, Collections.<String, String> emptyMap(), null);
             } catch (final CoreException e) {
                 BonitaStudioLog.error(e, DataPlugin.PLUGIN_ID);
             }
@@ -317,10 +316,20 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
         final IStructuredSelection selection = (IStructuredSelection) dataTableViewer.getSelection();
         if (onlyOneElementSelected(selection)) {
             final Data selectedData = (Data) selection.getFirstElement();
-            final DataWizard wizard = new DataWizard(getEditingDomain(), selectedData, getDataFeature(), getDataFeatureToCheckUniqueID(), getShowAutoGenerateForm());
+            if (selectedData.eContainer() == null) {
+                final AbstractProcess parentProcess = ModelHelper.getParentProcess(eObject);
+                BonitaStudioLog.error("Investigation trace for issue BS-11552:\n"
+                        + "The context was not initialized.\n "
+                        + "Please report the issue with details and attached impacted process.\n"
+                        + "data: " + (selectedData != null ? selectedData.getName() : "null data") + "\n"
+                        + "From diagram:" + (parentProcess != null ? parentProcess.getName() : "No process found."), DataPlugin.PLUGIN_ID);
+            }
+
+            final DataWizard wizard = new DataWizard(getEditingDomain(), selectedData, getDataFeature(),
+                    getDataFeatureToCheckUniqueID(), getShowAutoGenerateForm());
             wizard.setIsPageFlowContext(isPageFlowContext());
             wizard.setIsOverviewContext(isOverViewContext());
-            new CustomWizardDialog(Display.getCurrent().getActiveShell(), wizard, IDialogConstants.OK_LABEL).open();
+            new CustomWizardDialog(Display.getDefault().getActiveShell(), wizard, IDialogConstants.OK_LABEL).open();
             dataTableViewer.refresh();
         }
     }

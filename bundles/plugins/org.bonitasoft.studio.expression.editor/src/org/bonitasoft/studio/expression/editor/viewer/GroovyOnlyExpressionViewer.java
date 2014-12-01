@@ -17,8 +17,8 @@
 package org.bonitasoft.studio.expression.editor.viewer;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.model.expression.Expression;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.widgets.Composite;
@@ -29,20 +29,28 @@ import org.eclipse.swt.widgets.Composite;
  */
 public class GroovyOnlyExpressionViewer extends ExpressionViewer {
 
-	public GroovyOnlyExpressionViewer(Composite composite, int style,EReference expressionReference) {
-		super(composite, style, expressionReference);
-		getContentAssistText().getToolbar().getItem(0).setEnabled(false);
-		
-	}
+    public GroovyOnlyExpressionViewer(final Composite composite, final int style) {
+        super(composite, style);
+        getContentAssistText().getToolbar().getItem(0).setEnabled(false);
 
-	@Override
-	protected EditExpressionDialog createEditDialog(EObject editInput) {
-		return new GroovyOnlyEditExpressionDialog(control.getShell(),isPassword,EcoreUtil.copy(selectedExpression),editInput,editingDomain, filters.toArray(new ViewerFilter[filters.size()]),this);
-	}
-	
-	@Override
-	protected String getContentTypeFromInput(String input) {
-		return ExpressionConstants.SCRIPT_TYPE;
-	}
-	
+    }
+
+    @Override
+    protected EditExpressionDialog createEditDialog(final EObject editInput) {
+        final GroovyOnlyEditExpressionDialog groovyOnlyEditExpressionDialog = new GroovyOnlyEditExpressionDialog(control.getShell(), isPassword,
+                EcoreUtil.copy(getSelectedExpression()), editInput, getEditingDomain(),
+                filters.toArray(new ViewerFilter[filters.size()]), this);
+        return groovyOnlyEditExpressionDialog;
+    }
+
+    @Override
+    protected String getContentTypeFromInput(final String input) {
+        return ExpressionConstants.SCRIPT_TYPE;
+    }
+
+    @Override
+    protected String getDefaultExpressionType(final Expression selectedExpression) {
+        return ExpressionConstants.SCRIPT_TYPE;
+    }
+
 }

@@ -49,11 +49,11 @@ public class DynamicDescriptionPropertySectionContribution extends AbstractPrope
     private ExpressionViewer expressionViewer;
     private EMFDataBindingContext dataBindingContext;
     private final int maxLength = 254;
-    
+
     @Override
-    public void createControl(Composite composite,
-            TabbedPropertySheetWidgetFactory widgetFactory,
-            ExtensibleGridPropertySection extensibleGridPropertySection) {
+    public void createControl(final Composite composite,
+            final TabbedPropertySheetWidgetFactory widgetFactory,
+            final ExtensibleGridPropertySection extensibleGridPropertySection) {
         composite.setLayout(new GridLayout(1, true));
         composite.setLayoutData(new GridData(SWT.FILL, SWT.DEFAULT, true, false));
         expressionViewer = new ExpressionViewer(composite,SWT.BORDER,widgetFactory,editingDomain, ProcessPackage.Literals.FLOW_ELEMENT__DYNAMIC_DESCRIPTION);
@@ -61,7 +61,7 @@ public class DynamicDescriptionPropertySectionContribution extends AbstractPrope
         expressionViewer.addFilter(new AvailableExpressionTypeFilter(new String[]{ExpressionConstants.CONSTANT_TYPE,ExpressionConstants.VARIABLE_TYPE,ExpressionConstants.PARAMETER_TYPE,ExpressionConstants.SCRIPT_TYPE}));
         expressionViewer.setInput(eObject) ;
         expressionViewer.setMessage(Messages.dynamicDescriptionHint,IStatus.INFO) ;
-        expressionViewer.addExpressionValidator(ExpressionConstants.CONSTANT_TYPE, new ExpressionLengthValidator(maxLength));
+        expressionViewer.addExpressionValidator(new ExpressionLengthValidator(maxLength));
         refreshDataBindingContext();
     }
 
@@ -95,7 +95,7 @@ public class DynamicDescriptionPropertySectionContribution extends AbstractPrope
     }
 
     @Override
-    public boolean isRelevantFor(EObject eObject) {
+    public boolean isRelevantFor(final EObject eObject) {
         return eObject instanceof FlowElement;
     }
 

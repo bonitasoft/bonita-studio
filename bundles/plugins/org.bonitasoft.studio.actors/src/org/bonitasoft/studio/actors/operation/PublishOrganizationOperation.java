@@ -16,6 +16,7 @@
  */
 package org.bonitasoft.studio.actors.operation;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -61,19 +62,45 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
  */
 public class PublishOrganizationOperation implements IRunnableWithProgress{
 
-    private Organization organization;
+    private static final class OrganizationXMLProcessorRespectingEncoding extends OrganizationXMLProcessor {
+
+        /*
+         * (non-Javadoc)
+         * @see org.eclipse.emf.ecore.xmi.util.XMLProcessor#saveToString(org.eclipse.emf.ecore.resource.Resource, java.util.Map)
+         * Override to fix Eclipse EMF bug https://bugs.eclipse.org/bugs/show_bug.cgi?id=441484
+         */
+        @Override
+        public String saveToString(final Resource resource, final Map<?, ?> options) throws IOException {
+            final ByteArrayOutputStream os = new ByteArrayOutputStream();
+            if (options != null) {
+                final Map<Object, Object> mergedOptions = new HashMap<Object, Object>(saveOptions);
+                mergedOptions.putAll(options);
+                ((XMLResource) resource).save(os, mergedOptions);
+            } else {
+                ((XMLResource) resource).save(os, saveOptions);
+            }
+            final Object encoding = options.get(XMLResource.OPTION_ENCODING);
+            if (encoding != null && encoding instanceof String) {
+                return os.toString((String) encoding);
+            } else {
+                return os.toString();
+            }
+        }
+    }
+
+    private final Organization organization;
     private APISession session;
     private boolean flushSession;
 
-    public PublishOrganizationOperation(Organization organization){
+    public PublishOrganizationOperation(final Organization organization){
         this.organization =  organization;
     }
 
-    public void setSession(APISession session){
+    public void setSession(final APISession session){
         this.session = session;
     }
 
-    public void setOrganization(Organization organization){
+    public void setOrganization(final Organization organization){
 
     }
 
@@ -81,7 +108,7 @@ public class PublishOrganizationOperation implements IRunnableWithProgress{
      * @see org.eclipse.jface.operation.IRunnableWithProgress#run(org.eclipse.core.runtime.IProgressMonitor)
      */
     @Override
-    public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+    public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
         Assert.isNotNull(organization);
         flushSession = false;
         BonitaStudioLog.info("Loading organization "+organization.getName()+" in portal...",ActorsPlugin.PLUGIN_ID) ;
@@ -91,19 +118,19 @@ public class PublishOrganizationOperation implements IRunnableWithProgress{
                 flushSession = true;
             }
 
-            IdentityAPI identityAPI = BOSEngineManager.getInstance().getIdentityAPI(session);
-            ProcessAPI processApi = BOSEngineManager.getInstance().getProcessAPI(session);
-            SearchResult<ProcessDeploymentInfo> result = processApi.searchProcessDeploymentInfos(new SearchOptionsBuilder(0,Integer.MAX_VALUE).done());
-            for(ProcessDeploymentInfo info : result.getResult()){
+            final IdentityAPI identityAPI = BOSEngineManager.getInstance().getIdentityAPI(session);
+            final ProcessAPI processApi = BOSEngineManager.getInstance().getProcessAPI(session);
+            final SearchResult<ProcessDeploymentInfo> result = processApi.searchProcessDeploymentInfos(new SearchOptionsBuilder(0,Integer.MAX_VALUE).done());
+            for(final ProcessDeploymentInfo info : result.getResult()){
                 processApi.deleteProcessInstances(info.getProcessId(), 0, Integer.MAX_VALUE);
                 processApi.deleteArchivedProcessInstances(info.getProcessId(), 0, Integer.MAX_VALUE);
             }
             identityAPI.deleteOrganization() ;
-            String content = toString(organization);
+            final String content = toString(organization);
             identityAPI.importOrganization(content) ;
-            ProfileAPI profileAPI =  BOSEngineManager.getInstance().getProfileAPI(session) ;
+            final ProfileAPI profileAPI =  BOSEngineManager.getInstance().getProfileAPI(session) ;
             applyAllProfileToUsers(identityAPI,profileAPI) ;
-        }catch(Exception e){
+        }catch(final Exception e){
             throw new InvocationTargetException(e);
         }finally{
             if(flushSession && session != null){
@@ -113,28 +140,34 @@ public class PublishOrganizationOperation implements IRunnableWithProgress{
         }
     }
 
-    private String toString(Organization organization) throws IOException {
-        DocumentRoot root = OrganizationFactory.eINSTANCE.createDocumentRoot() ;
-        Organization exportedCopy = EcoreUtil.copy(organization)  ;
-        exportedCopy.setName(null) ;
-        exportedCopy.setDescription(null) ;
-        addStudioTechnicalUser(exportedCopy);
-        root.setOrganization(exportedCopy) ;
-        final XMLProcessor processor = new OrganizationXMLProcessor() ;
-        final Resource resource = new XMLResourceImpl() ;
-        resource.getContents().add(root) ;
+    String toString(final Organization organization) throws IOException {
+        final XMLResource resource = createResourceFromOrganization(organization);
+        final XMLProcessor processor = new OrganizationXMLProcessorRespectingEncoding();
         final Map<String, Object> options = new HashMap<String, Object>();
         options.put(XMLResource.OPTION_ENCODING, "UTF-8");
         options.put(XMLResource.OPTION_XML_VERSION, "1.0");
         return processor.saveToString(resource, options);
     }
 
+    private XMLResource createResourceFromOrganization(final Organization organization) {
+        final DocumentRoot root = OrganizationFactory.eINSTANCE.createDocumentRoot() ;
+        final Organization exportedCopy = EcoreUtil.copy(organization)  ;
+        exportedCopy.setName(null) ;
+        exportedCopy.setDescription(null) ;
+        addStudioTechnicalUser(exportedCopy);
+        root.setOrganization(exportedCopy) ;
+        final XMLResource resource = new XMLResourceImpl();
+        resource.setEncoding("UTF-8");
+        resource.getContents().add(root);
+        return resource;
+    }
+
     /**
      * @param exportedCopy
      */
-    private void addStudioTechnicalUser(Organization exportedCopy) {
-        org.bonitasoft.studio.actors.model.organization.User user = OrganizationFactory.eINSTANCE.createUser();
-        PasswordType passwordType = OrganizationFactory.eINSTANCE.createPasswordType();
+    private void addStudioTechnicalUser(final Organization exportedCopy) {
+        final org.bonitasoft.studio.actors.model.organization.User user = OrganizationFactory.eINSTANCE.createUser();
+        final PasswordType passwordType = OrganizationFactory.eINSTANCE.createPasswordType();
         passwordType.setValue("bpm");
         passwordType.setEncrypted(false);
         user.setUserName(BonitaConstants.STUDIO_TECHNICAL_USER_NAME);
@@ -144,19 +177,19 @@ public class PublishOrganizationOperation implements IRunnableWithProgress{
         exportedCopy.getUsers().getUser().add(user);
     }
 
-    protected void applyAllProfileToUsers(IdentityAPI identityAPI, ProfileAPI profileAPI) throws Exception {
+    protected void applyAllProfileToUsers(final IdentityAPI identityAPI, final ProfileAPI profileAPI) throws Exception {
         final List<Long> profiles = new ArrayList<Long>() ;
         final SearchOptions options = new SearchOptionsBuilder(0, Integer.MAX_VALUE).sort("name", Order.DESC).done();
         final SearchResult<Profile> searchedProfiles = profileAPI.searchProfiles(options);
-        for(Profile profile : searchedProfiles.getResult()){
-            long profileId = profile.getId();
+        for(final Profile profile : searchedProfiles.getResult()){
+            final long profileId = profile.getId();
             profiles.add(profileId) ;
         }
 
-        List<User> users = identityAPI.getUsers(0, Integer.MAX_VALUE, UserCriterion.USER_NAME_ASC) ;
-        for(User u : users){
-            long id =  u.getId() ;
-            for(Long profile : profiles){
+        final List<User> users = identityAPI.getUsers(0, Integer.MAX_VALUE, UserCriterion.USER_NAME_ASC) ;
+        for(final User u : users){
+            final long id =  u.getId() ;
+            for(final Long profile : profiles){
                 profileAPI.createProfileMember(profile, id, -1L, -1L);
             }
         }

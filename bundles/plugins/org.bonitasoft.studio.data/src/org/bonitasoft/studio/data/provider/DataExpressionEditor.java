@@ -5,12 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -30,6 +30,7 @@ import org.bonitasoft.studio.common.jface.DataStyledTreeLabelProvider;
 import org.bonitasoft.studio.common.jface.TableColumnSorter;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.data.i18n.Messages;
+import org.bonitasoft.studio.data.ui.wizard.CreateVariableProposalListener;
 import org.bonitasoft.studio.expression.editor.ExpressionEditorService;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionEditor;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionProvider;
@@ -80,7 +81,7 @@ import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Romain Bioteau
- * 
+ *
  */
 public class DataExpressionEditor extends SelectionAwareExpressionEditor
         implements IExpressionEditor {
@@ -102,7 +103,7 @@ public class DataExpressionEditor extends SelectionAwareExpressionEditor
     private boolean isPageFlowContext = false;
 
     @Override
-    public Control createExpressionEditor(Composite parent, EMFDataBindingContext ctx) {
+    public Control createExpressionEditor(final Composite parent, final EMFDataBindingContext ctx) {
         mainComposite = new Composite(parent, SWT.NONE);
         mainComposite.setLayoutData(GridDataFactory.fillDefaults()
                 .grab(true, true).create());
@@ -112,17 +113,17 @@ public class DataExpressionEditor extends SelectionAwareExpressionEditor
         viewer = new TableViewer(mainComposite, SWT.FULL_SELECTION | SWT.BORDER
                 | SWT.SINGLE | SWT.V_SCROLL);
 
-        TableLayout layout = new TableLayout();
+        final TableLayout layout = new TableLayout();
         layout.addColumnData(new ColumnWeightData(100, false));
         viewer.getTable().setLayout(layout);
         viewer.getTable().setLayoutData(
                 GridDataFactory.fillDefaults().grab(true, true).create());
 
-        TableViewerColumn columnViewer = new TableViewerColumn(viewer, SWT.NONE);
-        TableColumn column = columnViewer.getColumn();
+        final TableViewerColumn columnViewer = new TableViewerColumn(viewer, SWT.NONE);
+        final TableColumn column = columnViewer.getColumn();
         column.setText(Messages.name);
 
-        TableColumnSorter sorter = new TableColumnSorter(viewer);
+        final TableColumnSorter sorter = new TableColumnSorter(viewer);
         sorter.setColumn(column);
 
         viewer.getTable().setHeaderVisible(true);
@@ -132,7 +133,7 @@ public class DataExpressionEditor extends SelectionAwareExpressionEditor
         viewer.addPostSelectionChangedListener(new ISelectionChangedListener() {
 
             @Override
-            public void selectionChanged(SelectionChangedEvent event) {
+            public void selectionChanged(final SelectionChangedEvent event) {
                 if (!event.getSelection().isEmpty()) {
                     DataExpressionEditor.this.fireSelectionChanged();
                 }
@@ -149,16 +150,16 @@ public class DataExpressionEditor extends SelectionAwareExpressionEditor
         return mainComposite;
     }
 
-    protected void createReturnTypeComposite(Composite parent) {
-        Composite typeComposite = new Composite(parent, SWT.NONE);
+    protected void createReturnTypeComposite(final Composite parent) {
+        final Composite typeComposite = new Composite(parent, SWT.NONE);
         typeComposite.setLayoutData(GridDataFactory.fillDefaults()
                 .grab(true, false).create());
-        GridLayout gl = new GridLayout(2, false);
+        final GridLayout gl = new GridLayout(2, false);
         gl.marginWidth = 0;
         gl.marginHeight = 0;
         typeComposite.setLayout(gl);
 
-        Label typeLabel = new Label(typeComposite, SWT.NONE);
+        final Label typeLabel = new Label(typeComposite, SWT.NONE);
         typeLabel.setText(Messages.returnType);
         typeLabel.setLayoutData(GridDataFactory.fillDefaults()
                 .align(SWT.FILL, SWT.CENTER).create());
@@ -168,7 +169,7 @@ public class DataExpressionEditor extends SelectionAwareExpressionEditor
                 .align(SWT.FILL, SWT.CENTER).indent(10, 0).create());
     }
 
-    protected void handleSpecificDatatypeEdition(Data data) {
+    protected void handleSpecificDatatypeEdition(final Data data) {
         if (gridLayout.numColumns > 1) {
             mainComposite.getChildren()[1].dispose();
             gridLayout.numColumns--;
@@ -179,22 +180,25 @@ public class DataExpressionEditor extends SelectionAwareExpressionEditor
 
     }
 
-    private void expressionButtonListener(EObject context, ExpressionViewer expressionViewer,
-            ViewerFilter[] filters) throws CoreException {
-        for (IConfigurationElement element : BonitaStudioExtensionRegistryManager.getInstance()
+    private void expressionButtonListener(final EObject context, final ExpressionViewer expressionViewer,
+            final ViewerFilter[] filters) throws CoreException {
+        for (final IConfigurationElement element : BonitaStudioExtensionRegistryManager.getInstance()
                 .getConfigurationElements("org.bonitasoft.studio.expression.proposalListener")) {
             final String expressionTypeLink = element.getAttribute("type");
             if (expressionTypeLink.equals(ExpressionConstants.VARIABLE_TYPE)) {
                 final IProposalListener proposalListener = (IProposalListener) element.createExecutableExtension("providerClass");
-                expressionViewer.getContentProposal().addNewData(proposalListener);
-                fillViewerData(context, filters);
+                if (proposalListener.isRelevant(context) && proposalListener instanceof CreateVariableProposalListener) {
+                    expressionViewer.getContentProposal().addNewData(proposalListener);
+                    fillViewerData(context, filters);
+                    return;
+                }
             }
         }
     }
 
-    private void fillViewerData(EObject context, ViewerFilter[] filters) {
-        Set<Data> input = new HashSet<Data>();
-        IExpressionProvider provider = ExpressionEditorService.getInstance()
+    private void fillViewerData(final EObject context, final ViewerFilter[] filters) {
+        final Set<Data> input = new HashSet<Data>();
+        final IExpressionProvider provider = ExpressionEditorService.getInstance()
                 .getExpressionProvider(ExpressionConstants.VARIABLE_TYPE);
         final Set<Expression> expressions = provider.getExpressions(context);
         final Set<Expression> filteredExpressions = new HashSet<Expression>();
@@ -211,7 +215,7 @@ public class DataExpressionEditor extends SelectionAwareExpressionEditor
                 }
             }
         }
-        for (Expression e1 : filteredExpressions) {
+        for (final Expression e1 : filteredExpressions) {
             if (editorInputExpression.isReturnTypeFixed()) {
                 if (compatibleReturnType(editorInputExpression, e1)) {
                     input.add((Data) e1.getReferencedElements().get(0));
@@ -224,8 +228,8 @@ public class DataExpressionEditor extends SelectionAwareExpressionEditor
     }
 
     @Override
-    public void bindExpression(EMFDataBindingContext dataBindingContext,
-            EObject context, Expression inputExpression, ViewerFilter[] filters, final ExpressionViewer expressionViewer) {
+    public void bindExpression(final EMFDataBindingContext dataBindingContext,
+            final EObject context, final Expression inputExpression, final ViewerFilter[] filters, final ExpressionViewer expressionViewer) {
 
         final EObject finalContext = context;
         if (context instanceof Widget) {
@@ -237,10 +241,10 @@ public class DataExpressionEditor extends SelectionAwareExpressionEditor
         addExpressionButton.addSelectionListener(new SelectionAdapter() {
 
             @Override
-            public void widgetSelected(SelectionEvent e) {
+            public void widgetSelected(final SelectionEvent e) {
                 try {
                     expressionButtonListener(finalContext, expressionViewer, finalFilters);
-                } catch (CoreException e1) {
+                } catch (final CoreException e1) {
                     BonitaStudioLog.error(e1);
                 }
             }
@@ -249,44 +253,44 @@ public class DataExpressionEditor extends SelectionAwareExpressionEditor
         editorInputExpression = inputExpression;
         fillViewerData(context, filters);
 
-        IObservableValue contentObservable = EMFObservables
+        final IObservableValue contentObservable = EMFObservables
                 .observeValue(inputExpression,
                         ExpressionPackage.Literals.EXPRESSION__CONTENT);
-        IObservableValue nameObservable = EMFObservables.observeValue(
+        final IObservableValue nameObservable = EMFObservables.observeValue(
                 inputExpression, ExpressionPackage.Literals.EXPRESSION__NAME);
         returnTypeObservable = EMFObservables.observeValue(inputExpression,
                 ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE);
-        IObservableValue referenceObservable = EMFObservables.observeValue(
+        final IObservableValue referenceObservable = EMFObservables.observeValue(
                 inputExpression,
                 ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS);
 
-        UpdateValueStrategy selectionToName = new UpdateValueStrategy();
-        IConverter nameConverter = new Converter(Data.class, String.class) {
+        final UpdateValueStrategy selectionToName = new UpdateValueStrategy();
+        final IConverter nameConverter = new Converter(Data.class, String.class) {
 
             @Override
-            public Object convert(Object data) {
+            public Object convert(final Object data) {
                 return ((Data) data).getName();
             }
 
         };
         selectionToName.setConverter(nameConverter);
 
-        UpdateValueStrategy selectionToContent = new UpdateValueStrategy();
-        IConverter contentConverter = new Converter(Data.class, String.class) {
+        final UpdateValueStrategy selectionToContent = new UpdateValueStrategy();
+        final IConverter contentConverter = new Converter(Data.class, String.class) {
 
             @Override
-            public Object convert(Object data) {
+            public Object convert(final Object data) {
                 return ((Data) data).getName();
             }
 
         };
         selectionToContent.setConverter(contentConverter);
 
-        UpdateValueStrategy selectionToReturnType = new UpdateValueStrategy();
-        IConverter returnTypeConverter = new Converter(Data.class, String.class) {
+        final UpdateValueStrategy selectionToReturnType = new UpdateValueStrategy();
+        final IConverter returnTypeConverter = new Converter(Data.class, String.class) {
 
             @Override
-            public Object convert(Object data) {
+            public Object convert(final Object data) {
                 return org.bonitasoft.studio.common.DataUtil
                         .getTechnicalTypeFor((Data) data);
             }
@@ -294,11 +298,11 @@ public class DataExpressionEditor extends SelectionAwareExpressionEditor
         };
         selectionToReturnType.setConverter(returnTypeConverter);
 
-        UpdateValueStrategy selectionToReferencedData = new UpdateValueStrategy();
-        IConverter referenceConverter = new Converter(Data.class, List.class) {
+        final UpdateValueStrategy selectionToReferencedData = new UpdateValueStrategy();
+        final IConverter referenceConverter = new Converter(Data.class, List.class) {
 
             @Override
-            public Object convert(Object data) {
+            public Object convert(final Object data) {
                 if (data != null) {
                     return Collections.singletonList(data);
                 } else {
@@ -309,16 +313,16 @@ public class DataExpressionEditor extends SelectionAwareExpressionEditor
         };
         selectionToReferencedData.setConverter(referenceConverter);
 
-        UpdateValueStrategy referencedDataToSelection = new UpdateValueStrategy();
-        IConverter referencetoDataConverter = new Converter(List.class,
+        final UpdateValueStrategy referencedDataToSelection = new UpdateValueStrategy();
+        final IConverter referencetoDataConverter = new Converter(List.class,
                 Data.class) {
 
             @Override
-            public Object convert(Object dataList) {
-                Data d = ((List<Data>) dataList).get(0);
-                Collection<Data> inputData = (Collection<Data>) viewer
+            public Object convert(final Object dataList) {
+                final Data d = ((List<Data>) dataList).get(0);
+                final Collection<Data> inputData = (Collection<Data>) viewer
                         .getInput();
-                for (Data data : inputData) {
+                for (final Data data : inputData) {
                     if (data.getName().equals(d.getName())
                             && data.getDataType().getName()
                                     .equals(d.getDataType().getName())) {
@@ -371,7 +375,7 @@ public class DataExpressionEditor extends SelectionAwareExpressionEditor
                     .addValueChangeListener(new IValueChangeListener() {
 
                         @Override
-                        public void handleValueChange(ValueChangeEvent event) {
+                        public void handleValueChange(final ValueChangeEvent event) {
                             if (typeText.getText().equals(Date.class.getName())
                                     || typeText.getText().equals(
                                             String.class.getName())) {
@@ -419,7 +423,7 @@ public class DataExpressionEditor extends SelectionAwareExpressionEditor
     }
 
     @Override
-    public void setIsPageFlowContext(boolean isPageFlowContext) {
+    public void setIsPageFlowContext(final boolean isPageFlowContext) {
         this.isPageFlowContext = isPageFlowContext;
 
     }
@@ -438,6 +442,6 @@ public class DataExpressionEditor extends SelectionAwareExpressionEditor
      * @see org.bonitasoft.studio.common.IBonitaVariableContext#setIsOverviewContext(boolean)
      */
     @Override
-    public void setIsOverviewContext(boolean isOverviewContext) {
+    public void setIsOverviewContext(final boolean isOverviewContext) {
     }
 }

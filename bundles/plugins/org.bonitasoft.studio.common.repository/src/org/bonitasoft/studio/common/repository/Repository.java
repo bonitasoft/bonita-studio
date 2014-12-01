@@ -5,12 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -97,13 +97,14 @@ import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.osgi.internal.loader.EquinoxClassLoader;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.osgi.framework.BundleReference;
 import org.xml.sax.InputSource;
 
 /**
  * @author Romain Bioteau
- * 
+ *
  */
 public class Repository implements IRepository {
 
@@ -131,7 +132,7 @@ public class Repository implements IRepository {
     }
 
     @Override
-    public void create() {
+    public void create(final boolean migrateStoreIfNeeded) {
         try {
             final long init = System.currentTimeMillis();
             if (BonitaStudioLog.isLoggable(IStatus.OK)) {
@@ -145,12 +146,11 @@ public class Repository implements IRepository {
             open();
             if (!projectExists) {
                 initializeProject(project);
+            }
 
-            }
-            initRepositoryStores();
-            if (!projectExists) {
-                initClasspath(project);
-            }
+            initRepositoryStores(migrateStoreIfNeeded);
+            refreshClasspath(project);
+
             enableBuild();
             try {
                 getProject().build(IncrementalProjectBuilder.FULL_BUILD, NULL_PROGRESS_MONITOR);
@@ -165,6 +165,11 @@ public class Repository implements IRepository {
         } catch (final Exception e) {
             BonitaStudioLog.error(e);
         }
+    }
+
+    @Override
+    public void create() {
+        create(false);
     }
 
     /*
@@ -211,11 +216,37 @@ public class Repository implements IRepository {
                         jProject.open(NULL_PROGRESS_MONITOR);
                     }
                     new ClasspathValidation(jProject).validate();
+                } else {
+                    BonitaStudioLog.log("Cannot retrieve the JavaProject Nature from the project: " + project.getName());
+                    project.open(NULL_PROGRESS_MONITOR);//Open anyway
                 }
             }
+            updateStudioShellText();
         } catch (final CoreException e) {
             BonitaStudioLog.error(e);
         }
+    }
+
+    @Override
+    public void updateStudioShellText() {
+        Display.getDefault().syncExec(new Runnable() {
+
+            @Override
+            public void run() {
+                if (PlatformUI.isWorkbenchRunning() && PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null) {
+                    final Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+                    final String currentName = shell.getText();
+                    final int index = currentName.indexOf(" - ");
+                    String newName = index > 0 ? currentName.substring(0, index)
+                            : currentName;
+                    if (!getName()
+                            .equals(RepositoryPreferenceConstant.DEFAULT_REPOSITORY_NAME)) {
+                        newName = newName + " - " + getName();
+                    }
+                    shell.setText(newName);
+                }
+            }
+        });
     }
 
     /*
@@ -227,6 +258,11 @@ public class Repository implements IRepository {
         try {
             BonitaStudioLog.debug("Closing repository " + project.getName(), CommonRepositoryPlugin.PLUGIN_ID);
             if (project.isOpen()) {
+                if (stores != null) {
+                    for (final IRepositoryStore<? extends IRepositoryFileStore> store : stores.values()) {
+                        store.close();
+                    }
+                }
                 project.close(NULL_PROGRESS_MONITOR);
             }
         } catch (final CoreException e) {
@@ -238,7 +274,7 @@ public class Repository implements IRepository {
         }
     }
 
-    protected synchronized void initRepositoryStores() {
+    protected synchronized void initRepositoryStores(final boolean migrateStoreIfNeeded) {
         if (stores == null || stores.isEmpty()) {
             disableBuild();
             stores = new TreeMap<Class<?>, IRepositoryStore<? extends IRepositoryFileStore>>(new Comparator<Class<?>>() {
@@ -253,6 +289,13 @@ public class Repository implements IRepository {
             for (final IConfigurationElement configuration : elements) {
                 try {
                     final IRepositoryStore<? extends IRepositoryFileStore> store = createRepositoryStore(configuration);
+                    if (migrateStoreIfNeeded) {
+                        try {
+                            store.migrate();
+                        } catch (final MigrationException e) {
+                            BonitaStudioLog.error(e, CommonRepositoryPlugin.PLUGIN_ID);
+                        }
+                    }
                     stores.put(store.getClass(), store);
                 } catch (final CoreException e) {
                     BonitaStudioLog.error(e);
@@ -327,6 +370,7 @@ public class Repository implements IRepository {
         final Set<String> additionalNatures = getNatures();
         final Set<String> notExistingNature = new HashSet<String>();
         for (final String natureId : additionalNatures) {
+            BonitaStudioLog.log("Plan to add Project Nature " + natureId);
             @SuppressWarnings("restriction")
             final
             Object naturDesc = ((Workspace) ResourcesPlugin.getWorkspace()).getNatureManager().getNatureDescriptor(natureId);
@@ -354,6 +398,7 @@ public class Repository implements IRepository {
             @Override
             public void run() {
                 try {
+                    BonitaStudioLog.log("Setting Project Descritor with natures:" + descriptor.getNatureIds());
                     project.setDescription(descriptor, null);
                 } catch (final CoreException e) {
                     throw new RuntimeException(e);
@@ -398,7 +443,7 @@ public class Repository implements IRepository {
         return project.findMember(".classpath") != null;
     }
 
-    protected void initClasspath(final IProject extensionsProject) throws CoreException {
+    protected void refreshClasspath(final IProject extensionsProject) throws CoreException {
         monitorSubtask(Messages.initializingProjectClasspath);
         createProjectManifest(extensionsProject);
 
@@ -412,6 +457,7 @@ public class Repository implements IRepository {
         } catch (final IOException e) {
             throw new RuntimeException(e);
         }
+        BonitaStudioLog.debug("Updating build path...", CommonRepositoryPlugin.PLUGIN_ID);
         javaProject.setRawClasspath(entries.toArray(new IClasspathEntry[entries.size()]), true, Repository.NULL_PROGRESS_MONITOR);
         monitorWorked(1);
     }
@@ -483,7 +529,7 @@ public class Repository implements IRepository {
         if (!projectManifest.exists()) {
             projectManifest.create(is2, false, null);
         } else {
-            projectManifest.setContents(is2, IResource.NONE, null);
+            projectManifest.setContents(is2, IResource.FORCE, null);
         }
     }
 
@@ -557,12 +603,12 @@ public class Repository implements IRepository {
     }
 
     @Override
-    public IRepositoryStore<? extends IRepositoryFileStore> getRepositoryStore(final Class<?> repositoryStoreClass) {
+    public <T> T getRepositoryStore(final Class<T> repositoryStoreClass) {
         if (stores == null || stores.isEmpty()) {
-            initRepositoryStores();
+            initRepositoryStores(false);
             enableBuild();
         }
-        return stores.get(repositoryStoreClass);
+        return repositoryStoreClass.cast(stores.get(repositoryStoreClass));
     }
 
     @SuppressWarnings("restriction")
@@ -601,9 +647,9 @@ public class Repository implements IRepository {
     }
 
     @Override
-    public List<IRepositoryStore<? extends IRepositoryFileStore>> getAllStores() {
+    public synchronized List<IRepositoryStore<? extends IRepositoryFileStore>> getAllStores() {
         if (stores == null) {
-            initRepositoryStores();
+            initRepositoryStores(false);
             enableBuild();
         }
         final List<IRepositoryStore<? extends IRepositoryFileStore>> result = new ArrayList<IRepositoryStore<? extends IRepositoryFileStore>>(stores.values());
@@ -624,7 +670,7 @@ public class Repository implements IRepository {
     }
 
     @Override
-    public String getDispslayName() {
+    public String getDisplayName() {
         return getName() + " [" + getVersion() + "]";
     }
 
@@ -638,10 +684,10 @@ public class Repository implements IRepository {
     }
 
     @Override
-    public void importFromArchive(final File archiveFile, final boolean askOverwrite) {
+    public void importFromArchive(final File archiveFile, final boolean askOverwrite, final boolean validateAfterImport) {
         final boolean disableConfirmation = FileActionDialog.getDisablePopup();
         FileActionDialog.setDisablePopup(!askOverwrite);
-        final ImportBosArchiveOperation operation = new ImportBosArchiveOperation();
+        final ImportBosArchiveOperation operation = new ImportBosArchiveOperation(validateAfterImport);
         operation.setArchiveFile(archiveFile.getAbsolutePath());
         operation.setCurrentRepository(RepositoryManager.getInstance().getCurrentRepository());
         operation.run(NULL_PROGRESS_MONITOR);
@@ -657,7 +703,21 @@ public class Repository implements IRepository {
             allResources.add(store.getResource());
         }
         operation.setResources(allResources);
-        operation.run(NULL_PROGRESS_MONITOR);
+        final IStatus status = operation.run(NULL_PROGRESS_MONITOR);
+        if (!status.isOK()) {
+            logErrorStatus(status);
+        }
+    }
+
+    protected void logErrorStatus(final IStatus status) {
+        final StringBuilder sb = new StringBuilder();
+        if (status.isMultiStatus()) {
+            for (final IStatus childStatus : status.getChildren()) {
+                sb.append(childStatus.getMessage()).append("\n");
+            }
+
+        }
+        BonitaStudioLog.error("Export to archive failed.\n" + status.getMessage() + "\n" + sb.toString(), CommonRepositoryPlugin.PLUGIN_ID);
     }
 
     @Override
@@ -715,7 +775,7 @@ public class Repository implements IRepository {
         final List<URL> jars = new ArrayList<URL>();
         try {
             if (!classpathExists()) {
-                initClasspath(getProject());
+                refreshClasspath(getProject());
             }
 
             // Synchronize with build jobs
@@ -801,7 +861,7 @@ public class Repository implements IRepository {
         if (classpathFile.exists()) {
             classpathFile.delete(true, false, NULL_PROGRESS_MONITOR);
         }
-        initClasspath(project);
+        refreshClasspath(project);
     }
 
     public void setProgressMonitor(final IProgressMonitor monitor) {
@@ -818,6 +878,11 @@ public class Repository implements IRepository {
         if (monitor != null && subtask != null) {
             monitor.subTask(subtask);
         }
+    }
+
+    @Override
+    public boolean isOnline() {
+        return true;
     }
 
 }

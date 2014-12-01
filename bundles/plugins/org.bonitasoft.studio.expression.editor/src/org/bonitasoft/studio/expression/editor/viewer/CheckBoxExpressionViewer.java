@@ -19,16 +19,12 @@ import org.bonitasoft.studio.common.widgets.MagicComposite;
 import org.bonitasoft.studio.expression.editor.i18n.Messages;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
-import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.emf.databinding.EMFDataBindingContext;
-import org.eclipse.emf.databinding.EMFObservables;
-import org.eclipse.emf.databinding.edit.EMFEditObservables;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -68,19 +64,16 @@ public class CheckBoxExpressionViewer extends ExpressionViewer implements Expres
     protected void createControl(final Composite composite, final int style, final TabbedPropertySheetWidgetFactory widgetFactory) {
         mc = new MagicComposite(composite, SWT.INHERIT_DEFAULT);
         mc.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).spacing(0, 0).create());
-
+        checkBoxControl = new Button(mc, SWT.CHECK);
         if (widgetFactory != null) {
-            checkBoxControl = widgetFactory.createButton(mc, "", SWT.CHECK);
-        } else {
-            checkBoxControl = new Button(mc, SWT.CHECK);
+            widgetFactory.adapt(checkBoxControl, true, true);
         }
         checkBoxControl
-        .setLayoutData(GridDataFactory.fillDefaults().grab(false, true).hint(SWT.DEFAULT, 30).indent(16, 0).align(SWT.BEGINNING, SWT.CENTER).create());
+                .setLayoutData(GridDataFactory.fillDefaults().grab(false, true).hint(SWT.DEFAULT, 30).indent(16, 0).align(SWT.BEGINNING, SWT.CENTER).create());
 
+        control = new Composite(mc, SWT.INHERIT_DEFAULT);
         if (widgetFactory != null) {
-            control = widgetFactory.createComposite(mc, SWT.INHERIT_DEFAULT);
-        } else {
-            control = new Composite(mc, SWT.INHERIT_DEFAULT);
+            widgetFactory.adapt(control);
         }
         control.addDisposeListener(disposeListener);
         control.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).align(SWT.BEGINNING, SWT.CENTER).create());
@@ -91,13 +84,13 @@ public class CheckBoxExpressionViewer extends ExpressionViewer implements Expres
         if ((style & SWT.BORDER) != 0) {//Not in a table
             createSwitchEditorControl(widgetFactory);
         }
-        addDecorator();
+        addDecorator(composite);
         mc.show(checkBoxControl);
         mc.hide(control);
     }
 
-    private void addDecorator() {
-        checkBoxDecoration = new ControlDecoration(checkBoxControl, SWT.RIGHT);
+    private void addDecorator(final Composite composite) {
+        checkBoxDecoration = new ControlDecoration(checkBoxControl, SWT.RIGHT, composite);
         checkBoxDecoration.setImage(Pics.getImage(PicsConstants.hint));
         refreshDecoration();
     }
@@ -129,7 +122,7 @@ public class CheckBoxExpressionViewer extends ExpressionViewer implements Expres
                 falseExp.setContent(Boolean.FALSE.toString());
                 falseExp.setReturnType(Boolean.class.getName());
                 falseExp.setType(ExpressionConstants.CONSTANT_TYPE);
-                updateSelection(falseExp);
+                updateSelection(null, falseExp);
                 bindExpression();
             }
         }
@@ -172,17 +165,7 @@ public class CheckBoxExpressionViewer extends ExpressionViewer implements Expres
                 externalDataBindingContext.removeBinding(expressionBinding);
                 expressionBinding.dispose();
             }
-            if (internalDataBindingContext != null) {
-                internalDataBindingContext.dispose();
-            }
-            internalDataBindingContext = new EMFDataBindingContext();
-            IObservableValue nameObservable = null;
-            if (editingDomain != null) {
-                nameObservable = EMFEditObservables.observeValue(editingDomain, selectedExpression, ExpressionPackage.Literals.EXPRESSION__NAME);
-            } else {
-                nameObservable = EMFObservables.observeValue(selectedExpression, ExpressionPackage.Literals.EXPRESSION__NAME);
-            }
-
+            final IObservableValue nameObservable = getExpressionNameObservable();
             final UpdateValueStrategy targetToModelNameStrategy = new UpdateValueStrategy();
             targetToModelNameStrategy.setConverter(new Converter(Boolean.class, String.class) {
 
@@ -220,8 +203,8 @@ public class CheckBoxExpressionViewer extends ExpressionViewer implements Expres
     }
 
     @Override
-    protected void internalRefresh(final Object element) {
-        super.internalRefresh(element);
+    protected void internalRefresh() {
+        super.internalRefresh();
         final String description = getMessage(IStatus.INFO);
         if (description != null) {
             checkBoxControl.setToolTipText(description);
@@ -230,20 +213,23 @@ public class CheckBoxExpressionViewer extends ExpressionViewer implements Expres
 
     @Override
     public void setSelection(final ISelection selection) {
-        final Expression exp = (Expression) ((IStructuredSelection) getSelection()).getFirstElement();
-        if (ExpressionConstants.CONSTANT_TYPE.equals(exp.getType())) {
-            if (!checkBoxControl.isVisible()) {
-                switchToCheckBoxMode();
-                mc.layout(true, true);
-            }
-        } else {
-            if (!control.isVisible()) {
-                switchToExpressionMode();
-                mc.layout(true, true);
+        if (!selection.isEmpty()) {
+            final Expression exp = (Expression) ((IStructuredSelection) selection).getFirstElement();
+            if (exp != null) {
+                if (ExpressionConstants.CONSTANT_TYPE.equals(exp.getType())) {
+                    if (!checkBoxControl.isVisible()) {
+                        switchToCheckBoxMode();
+                        mc.layout(true, true);
+                    }
+                } else {
+                    if (!control.isVisible()) {
+                        switchToExpressionMode();
+                        mc.layout(true, true);
+                    }
+                }
             }
         }
         super.setSelection(selection);
-
     }
 
     @Override
@@ -254,7 +240,7 @@ public class CheckBoxExpressionViewer extends ExpressionViewer implements Expres
 
     private void refreshDecoration() {
         final String message = getMessage(IStatus.INFO);
-        if (checkBoxControl.isVisible() && message != null && !"".equals(message)) {
+        if (checkBoxControl.isVisible() && message != null && !message.isEmpty()) {
             checkBoxDecoration.setDescriptionText(message);
             checkBoxDecoration.show();
         } else {

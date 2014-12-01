@@ -5,12 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -26,42 +26,39 @@ import org.eclipse.emf.ecore.EObject;
 
 /**
  * @author Romain Bioteau
- * 
+ *
  */
 public class ExpressionContentProvider implements IExpressionNatureProvider {
 
-    protected EObject context;
+    private static ExpressionContentProvider INSTANCE;
 
-    protected Expression[] cachedExpressions;
+    private ExpressionContentProvider() {
+        //Private Constructor
+    }
 
-    @Override
-    public EObject getContext() {
-        return context;
+    public static ExpressionContentProvider getInstance() {
+        if (INSTANCE == null) {
+            INSTANCE = new ExpressionContentProvider();
+        }
+        return INSTANCE;
     }
 
     @Override
-    public void setContext(EObject context) {
-        this.context = context;
-        cachedExpressions = null;
-        getExpressions();
-    }
-
-    @Override
-    public Expression[] getExpressions() {
-        if (context != null && cachedExpressions == null) {
-            SortedSet<Expression> expressionsSet = new TreeSet<Expression>(new ExpressionComparator());
-            Set<IExpressionProvider> providers = ExpressionEditorService.getInstance().getExpressionProviders();
-            for (IExpressionProvider provider : providers) {
+    public Expression[] getExpressions(final EObject context) {
+        final SortedSet<Expression> expressionsSet = new TreeSet<Expression>(new ExpressionComparator());
+        if (context != null) {
+            final Set<IExpressionProvider> providers = ExpressionEditorService.getInstance().getExpressionProviders();
+            for (final IExpressionProvider provider : providers) {
                 if (provider.isRelevantFor(context)) {
-                    Set<Expression> expressions = provider.getExpressions(context);
+                    final Set<Expression> expressions = provider.getExpressions(context);
                     if (expressions != null) {
                         expressionsSet.addAll(expressions);
                     }
                 }
             }
-            cachedExpressions = expressionsSet.toArray(new Expression[expressionsSet.size()]);
         }
-        return cachedExpressions;
+        return expressionsSet.toArray(new Expression[expressionsSet.size()]);
+
     }
 
 }

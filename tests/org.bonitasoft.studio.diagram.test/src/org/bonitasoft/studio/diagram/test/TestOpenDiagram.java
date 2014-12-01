@@ -1,116 +1,80 @@
+/**
+ * Copyright (C) 2014 BonitaSoft S.A.
+ * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2.0 of the License, or
+ * (at your option) any later version.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.bonitasoft.studio.diagram.test;
 
-import static org.bonitasoft.studio.diagram.custom.Messages.confirmProcessDeleteTitle;
-import static org.bonitasoft.studio.diagram.custom.Messages.openProcessWizardPage_title;
-import static org.bonitasoft.studio.diagram.custom.Messages.removeProcessLabel;
-
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.bonitasoft.studio.properties.i18n.Messages.activityType_serviceTask;
-import static org.bonitasoft.studio.properties.i18n.Messages.activityType;
 
-import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
-import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
-import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
-import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
-import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotView;
+import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
+import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
+import org.bonitasoft.studio.swtbot.framework.application.BotApplicationWorkbenchWindow;
+import org.bonitasoft.studio.swtbot.framework.application.BotOpenDiagramDialog;
+import org.bonitasoft.studio.swtbot.framework.diagram.BotProcessDiagramPerspective;
+import org.bonitasoft.studio.swtbot.framework.widget.BotTreeWidget;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
-import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditor;
-import org.eclipse.swtbot.swt.finder.exceptions.WidgetNotFoundException;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotButton;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Test;
-
 
 public class TestOpenDiagram extends SWTBotGefTestCase {
 
-
-    // Before and After
-    private static boolean disablePopup;
-
-    @BeforeClass
-    public static void setUpBeforeClass() {
-        disablePopup = FileActionDialog.getDisablePopup();
-        FileActionDialog.setDisablePopup(true);
-    }
-
-
-    @AfterClass
-    public static void tearDownAfterClass() {
-
-        FileActionDialog.setDisablePopup(disablePopup);
-    }
+    private boolean askRename;
+    private boolean disablePopup;
 
     @Override
     @After
-    public void tearDown(){
+    public void tearDown() throws Exception {
         bot.saveAllEditors();
+        BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().setValue(BonitaPreferenceConstants.ASK_RENAME_ON_FIRST_SAVE, askRename);
+        FileActionDialog.setDisablePopup(disablePopup);
     }
 
+    @Before
+    @Override
+    public void setUp() throws Exception {
+        super.setUp();
+        disablePopup = FileActionDialog.getDisablePopup();
+        FileActionDialog.setDisablePopup(true);
+        askRename = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().getBoolean(BonitaPreferenceConstants.ASK_RENAME_ON_FIRST_SAVE);
+        BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().setValue(BonitaPreferenceConstants.ASK_RENAME_ON_FIRST_SAVE, false);
+    }
 
     @Test
-    public void testDeleteDiagramWhenEditorIsDirty(){
+    public void testDeleteDiagramWhenEditorIsDirty() {
+        final BotApplicationWorkbenchWindow botApplicationWorkbenchWindow = new BotApplicationWorkbenchWindow(bot);
+        final BotProcessDiagramPerspective botProcessDiagramPerspective = botApplicationWorkbenchWindow.createNewDiagram();
+        botProcessDiagramPerspective.activeProcessDiagramEditor().selectDiagram();
+        botProcessDiagramPerspective.getDiagramPropertiesPart().selectGeneralTab().selectDiagramTab().setName("OpenDiagramDelete1");
 
-    	// editor
-    	SWTBotTestUtil.createNewDiagram(bot);
-    	SWTBotTestUtil.changeDiagramName(bot, "Step1", "OpenDiagramDelete1");
+        // set editor dirty
+        botProcessDiagramPerspective.activeProcessDiagramEditor().selectElement("Step1");
+        botProcessDiagramPerspective.getDiagramPropertiesPart().selectGeneralTab().selectGeneralTab().setTaskType(activityType_serviceTask);
 
-    	// set editor dirty
-    	SWTBotEditor botEditor = bot.activeEditor();
-    	SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
+        final BotOpenDiagramDialog openDialog = botApplicationWorkbenchWindow.open();
+        final BotTreeWidget diagramList = openDialog.diagramList();
 
-    	gmfEditor.getEditPart("Step1").click();
-    	SWTBotView generalView = bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL);
+        assertThat(diagramList.getSWTBotWidget().hasItems()).overridingErrorMessage("Error: no item in the table of Open Diagram Shell").isTrue();
+        final int nbItems = diagramList.getSWTBotWidget().rowCount();
+        final String diagramName = "OpenDiagramDelete1" + " (1.0)";
+        diagramList.select(diagramName);
+        openDialog.delete();
 
-    	generalView.show();
-    	generalView.setFocus();
+        assertThat(diagramList.getSWTBotWidget().rowCount()).isEqualTo(nbItems - 1);
 
-    	SWTBotTestUtil.selectTabbedPropertyView(bot, "General");
-    	bot.comboBoxWithLabel(activityType).setSelection(activityType_serviceTask);
-    	
-    	
-    	bot.toolbarButton(Messages.OpenProcessButtonLabel).click();
-    	bot.waitUntil(Conditions.shellIsActive(openProcessWizardPage_title));
-    	
-    	
-    	SWTBotTree tree = bot.tree();
-    	SWTBotButton cancelButton = bot.button(IDialogConstants.CANCEL_LABEL);
-
-    	
-    	Assert.assertTrue("Error: no item in the table of Open Diagram Shell", tree.hasItems());
-    	int nbItems = tree.rowCount();
-
-    	String diagramName = "OpenDiagramDelete1"+" (1.0)";
-    	try{
-    		SWTBotTreeItem item = tree.getTreeItem(diagramName);
-    		item.select();
-    		
-    	}catch(WidgetNotFoundException e){
-        	Assert.assertTrue("Error: diagram OpenDiagramDelete1 not found in the table of Open Diagram Shell", false);
-    	}
-    	
-    	
-    	bot.button(removeProcessLabel).click();
-    	
-    	bot.waitUntil(Conditions.shellIsActive(confirmProcessDeleteTitle));
-    	bot.button(IDialogConstants.YES_LABEL).click();
-    	
-    	bot.waitUntil(Conditions.shellIsActive(openProcessWizardPage_title));
-    	Assert.assertEquals("Error", nbItems-1, tree.rowCount());
-    	
-    	cancelButton.click();
-    	
-    	
-    	for(SWTBotEditor editor : bot.editors()){
-    		Assert.assertFalse("Error: Editor "+diagramName+" should not be in the tree.",editor.getTitle().equals(diagramName));
-    	}
-    	
+        openDialog.cancel();
     }
-
 
 }

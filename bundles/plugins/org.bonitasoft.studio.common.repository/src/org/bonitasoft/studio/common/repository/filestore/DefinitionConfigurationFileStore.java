@@ -17,7 +17,8 @@
 package org.bonitasoft.studio.common.repository.filestore;
 
 import java.io.IOException;
-import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
@@ -27,6 +28,8 @@ import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.emf.ecore.xmi.XMLResource;
+import org.eclipse.emf.ecore.xmi.impl.XMLResourceImpl;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IWorkbenchPart;
 
@@ -37,7 +40,7 @@ import org.eclipse.ui.IWorkbenchPart;
  */
 public class DefinitionConfigurationFileStore extends EMFFileStore {
 
-    public DefinitionConfigurationFileStore(String fileName, IRepositoryStore<? extends EMFFileStore> store) {
+    public DefinitionConfigurationFileStore(final String fileName, final IRepositoryStore<? extends EMFFileStore> store) {
         super(fileName, store);
     }
 
@@ -55,14 +58,20 @@ public class DefinitionConfigurationFileStore extends EMFFileStore {
      * @see org.bonitasoft.studio.common.repository.filestore.AbstractFileStore#doSave(java.lang.Object)
      */
     @Override
-    protected void doSave(Object content) {
+    protected void doSave(final Object content) {
         if(content instanceof ConnectorConfiguration){
-            Resource emfResource = getEMFResource() ;
+            final Resource emfResource = getEMFResource() ;
             emfResource.getContents().clear() ;
             emfResource.getContents().add(EcoreUtil.copy((EObject) content)) ;
+            final Map<Object, Object> options = new HashMap<Object, Object>();
+            options.put(XMLResource.OPTION_ENCODING, "UTF-8");
+            options.put(XMLResource.OPTION_XML_VERSION, "1.0");
+            if (emfResource instanceof XMLResourceImpl) {
+                options.putAll(((XMLResourceImpl) emfResource).getDefaultSaveOptions());
+            }
             try {
-                emfResource.save(Collections.EMPTY_MAP) ;
-            } catch (IOException e) {
+                emfResource.save(options);
+            } catch (final IOException e) {
                 BonitaStudioLog.error(e) ;
             }
         }

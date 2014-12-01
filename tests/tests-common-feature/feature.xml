@@ -2,7 +2,7 @@
 <feature
       id="tests-common-feature"
       label="Feature for BonitaStudio tests"
-      version="6.4.0.qualifier"
+      version="7.0.0.qualifier"
       provider-name="BonitaSoft S.A.">
 
    <description url="http://www.example.com/description">
@@ -255,6 +255,13 @@
 
    <plugin
          id="org.hamcrest.library"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.bonitasoft.studio.swtbot.framework"
          download-size="0"
          install-size="0"
          version="0.0.0"

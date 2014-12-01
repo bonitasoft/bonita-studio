@@ -17,7 +17,7 @@
  */
 package org.bonitasoft.studio.diagram.custom.wizard;
 
-import org.bonitasoft.studio.diagram.custom.Messages;
+import org.bonitasoft.studio.diagram.custom.i18n.Messages;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -85,9 +85,6 @@ public class OpenDiagramWizardPage extends AbstractManageDiagramWizardPage {
         blank.setLayoutData(new GridData(SWT.DEFAULT, 40));
 
         getDiagramTree().getViewer().setInput(new Object());
-
-
-        setWorkspaceThingsEnabled(true);
         setControl(getMainComposite());
     }
 
@@ -105,7 +102,7 @@ public class OpenDiagramWizardPage extends AbstractManageDiagramWizardPage {
 
     @Override
     public boolean isPageComplete() {
-        return getDiagrams() != null;
+        return (getDiagrams() != null && !getDiagrams().isEmpty());
     }
 
     /**
@@ -116,6 +113,9 @@ public class OpenDiagramWizardPage extends AbstractManageDiagramWizardPage {
     }
 
 
+    protected Button getRemoveButton() {
+        return removeProcessButton;
+    }
 
     /*
      * (non-Javadoc)
@@ -129,6 +129,7 @@ public class OpenDiagramWizardPage extends AbstractManageDiagramWizardPage {
             public void selectionChanged(final SelectionChangedEvent event) {
                 updateRemoveButton();
                 setPageComplete(isPageComplete());
+                getContainer().updateButtons();
             }
         };
     }

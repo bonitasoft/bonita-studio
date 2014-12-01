@@ -24,12 +24,10 @@ import java.util.Set;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.common.emf.tools.WidgetHelper;
 import org.bonitasoft.studio.expression.editor.i18n.Messages;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionEditor;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionProvider;
 import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.form.FormButton;
 import org.bonitasoft.studio.model.form.FormField;
@@ -57,175 +55,164 @@ import org.eclipse.swt.graphics.Image;
  */
 public class FormFieldExpressionProvider implements IExpressionProvider {
 
-	private final ComposedAdapterFactory adapterFactory;
-	private final AdapterFactoryLabelProvider adapterLabelProvider;
-	private boolean addContingentFields = true;
+    private final ComposedAdapterFactory adapterFactory;
+    private final AdapterFactoryLabelProvider adapterLabelProvider;
 
-	public FormFieldExpressionProvider(){
-		adapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
-		adapterLabelProvider  = new AdapterFactoryLabelProvider(adapterFactory) ;
-	}
-
-	public FormFieldExpressionProvider(boolean addContingentFields){
-		this();
-		this.addContingentFields  = addContingentFields;
-	}
-
-	public Set<Expression> getExpressions(EObject context) {
-		Set<Expression> result = new HashSet<Expression>() ;
-		EObject relevantParent = getRelevantParent(context) ;
-		if (relevantParent instanceof Widget) {
-			result.add(createExpression((Widget) relevantParent) ) ;
-			if(addContingentFields){
-				for(WidgetDependency dep : ((Widget) relevantParent).getDependOn()){
-					if(dep.getWidget()!=null){
-						result.add(createExpression(dep.getWidget())) ;
-					}
-				}
-			}
-			// for the Submit button only, add fields of other widgets
-			if(relevantParent instanceof SubmitFormButton){
-				if(relevantParent.eContainer()!= null && 
-						(relevantParent.eContainer() instanceof Form || relevantParent.eContainer() instanceof Group)){
-					Form f = ModelHelper.getParentForm(relevantParent);
-					for (Widget w : ModelHelper.getAllAccessibleWidgetInsideForm(f)) {
-						if (w instanceof FormField || w instanceof Group){
-							result.add( createExpression(w) ) ;
-						}
-					}
-				}
-			}
-
-			//Add all widgets from the pageflow not in the same form
-			final AbstractPageFlow pageFlow = ModelHelper.getPageFlow((Widget) relevantParent);
-			if (pageFlow != null ) {
-				List<? extends Form> forms= getForms(pageFlow, ModelHelper.getForm((Widget) relevantParent));
-				Form parentForm = ModelHelper.getParentForm(relevantParent);
-				for (Form f : forms){
-					if(!f.equals(parentForm)){
-						for (Widget w : ModelHelper.getAllAccessibleWidgetInsideForm(f)) {
-							if (w instanceof FormField || w instanceof NextFormButton || w instanceof Group){
-								result.add( createExpression(w) ) ;
-							}
-						}
-					}
-				}
-			}
-		}else  if (relevantParent instanceof Form && relevantParent.eContainer() != null) {
-			if(relevantParent.eContainer() instanceof AbstractPageFlow){
-				// get all fields from pageflow
-				final AbstractPageFlow pageFlow = (AbstractPageFlow) relevantParent.eContainer();
-				if(pageFlow != null){
-					List<? extends Form> forms= getForms(pageFlow, (Form) relevantParent);					
-					for (Form f : forms){
-						for (Widget w : ModelHelper.getAllAccessibleWidgetInsideForm(f)) {
-							if (w instanceof FormField || w instanceof FormButton || w instanceof Group){
-								result.add( createExpression(w) ) ;
-							}
-						}
-					}
-				}
-			}
-		}else if(relevantParent instanceof AbstractPageFlow){
-			// get all fields from pageflow
-			if(relevantParent instanceof PageFlow){
-				if(relevantParent != null){
-					for (Form f : ((PageFlow) relevantParent).getForm()){
-						for (Widget w : ModelHelper.getAllAccessibleWidgetInsideForm(f)) {
-							if (w instanceof FormField || w instanceof NextFormButton || w instanceof Group){
-								result.add( createExpression(w) ) ;
-							}
-						}
-					}
-					if(relevantParent instanceof ViewPageFlow){
-						for (Form f : ((ViewPageFlow) relevantParent).getViewForm()){
-							for (Widget w : ModelHelper.getAllAccessibleWidgetInsideForm(f)) {
-								if (w instanceof FormField || w instanceof NextFormButton || w instanceof Group){
-									result.add( createExpression(w) ) ;
-								}
-							}
-						}
-					}
-					if(relevantParent instanceof RecapFlow){
-						for (Form f : ((RecapFlow) relevantParent).getRecapForms()){
-							for (Widget w : ModelHelper.getAllAccessibleWidgetInsideForm(f)) {
-								if (w instanceof FormField || w instanceof NextFormButton || w instanceof Group){
-									result.add( createExpression(w) ) ;
-								}
-							}
-						}
-					}
-				}
-			}
-		}
+    public FormFieldExpressionProvider() {
+        adapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
+        adapterLabelProvider = new AdapterFactoryLabelProvider(adapterFactory);
+    }
 
 
-		return result;
-	}
+    @Override
+    public Set<Expression> getExpressions(final EObject context) {
+        final Set<Expression> result = new HashSet<Expression>();
+        final EObject relevantParent = getRelevantParent(context);
+        if (relevantParent instanceof Widget) {
+            result.add(ExpressionHelper.createWidgetExpression((Widget) relevantParent));
+            for (final WidgetDependency dep : ((Widget) relevantParent).getDependOn()) {
+                if (dep.getWidget() != null) {
+                    result.add(ExpressionHelper.createWidgetExpression(dep.getWidget()));
+                }
+            }
+            // for the Submit button only, add fields of other widgets
+            if (relevantParent instanceof SubmitFormButton) {
+                if (relevantParent.eContainer() != null &&
+                        (relevantParent.eContainer() instanceof Form || relevantParent.eContainer() instanceof Group)) {
+                    final Form f = ModelHelper.getParentForm(relevantParent);
+                    for (final Widget w : ModelHelper.getAllAccessibleWidgetInsideForm(f)) {
+                        if (w instanceof FormField || w instanceof Group) {
+                            result.add(ExpressionHelper.createWidgetExpression(w));
+                        }
+                    }
+                }
+            }
 
-	private List<? extends Form> getForms(AbstractPageFlow pageFlow, Form form) {
-		EStructuralFeature eContainingFeature = form.eContainingFeature();
-		if(ProcessPackage.Literals.PAGE_FLOW__FORM.equals(eContainingFeature)){
-			return ((PageFlow) pageFlow).getForm();
-		} else if(ProcessPackage.Literals.VIEW_PAGE_FLOW__VIEW_FORM.equals(eContainingFeature)){
-			return ((ViewPageFlow) pageFlow).getViewForm();
-		} else if(ProcessPackage.Literals.RECAP_FLOW__RECAP_FORMS.equals(eContainingFeature)){
-			return ((RecapFlow) pageFlow).getRecapForms();
-		}
-		return Collections.emptyList();
-	}
+            //Add all widgets from the pageflow not in the same form
+            final AbstractPageFlow pageFlow = ModelHelper.getPageFlow((Widget) relevantParent);
+            if (pageFlow != null) {
+                final List<? extends Form> forms = getForms(pageFlow, ModelHelper.getForm((Widget) relevantParent));
+                final Form parentForm = ModelHelper.getParentForm(relevantParent);
+                for (final Form f : forms) {
+                    if (!f.equals(parentForm)) {
+                        for (final Widget w : ModelHelper.getAllAccessibleWidgetInsideForm(f)) {
+                            if (w instanceof FormField || w instanceof NextFormButton || w instanceof Group) {
+                                result.add(ExpressionHelper.createWidgetExpression(w));
+                            }
+                        }
+                    }
+                }
+            }
+        } else if (relevantParent instanceof Form && relevantParent.eContainer() != null) {
+            if (relevantParent.eContainer() instanceof AbstractPageFlow) {
+                // get all fields from pageflow
+                final AbstractPageFlow pageFlow = (AbstractPageFlow) relevantParent.eContainer();
+                if (pageFlow != null) {
+                    final List<? extends Form> forms = getForms(pageFlow, (Form) relevantParent);
+                    for (final Form f : forms) {
+                        for (final Widget w : ModelHelper.getAllAccessibleWidgetInsideForm(f)) {
+                            if (w instanceof FormField || w instanceof FormButton || w instanceof Group) {
+                                result.add(ExpressionHelper.createWidgetExpression(w));
+                            }
+                        }
+                    }
+                }
+            }
+        } else if (relevantParent instanceof AbstractPageFlow) {
+            // get all fields from pageflow
+            if (relevantParent instanceof PageFlow) {
+                if (relevantParent != null) {
+                    for (final Form f : ((PageFlow) relevantParent).getForm()) {
+                        for (final Widget w : ModelHelper.getAllAccessibleWidgetInsideForm(f)) {
+                            if (w instanceof FormField || w instanceof NextFormButton || w instanceof Group) {
+                                result.add(ExpressionHelper.createWidgetExpression(w));
+                            }
+                        }
+                    }
+                    if (relevantParent instanceof ViewPageFlow) {
+                        for (final Form f : ((ViewPageFlow) relevantParent).getViewForm()) {
+                            for (final Widget w : ModelHelper.getAllAccessibleWidgetInsideForm(f)) {
+                                if (w instanceof FormField || w instanceof NextFormButton || w instanceof Group) {
+                                    result.add(ExpressionHelper.createWidgetExpression(w));
+                                }
+                            }
+                        }
+                    }
+                    if (relevantParent instanceof RecapFlow) {
+                        for (final Form f : ((RecapFlow) relevantParent).getRecapForms()) {
+                            for (final Widget w : ModelHelper.getAllAccessibleWidgetInsideForm(f)) {
+                                if (w instanceof FormField || w instanceof NextFormButton || w instanceof Group) {
+                                    result.add(ExpressionHelper.createWidgetExpression(w));
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
-	private EObject getRelevantParent(EObject context) {
-		EObject parent = context ;
-		while(parent != null && (!(parent instanceof Form) && !(parent instanceof Widget)) && !(parent instanceof PageFlow)){
-			parent = parent.eContainer() ;
-		}
-		return parent;
-	}
 
-	private Expression createExpression(Widget w) {
-		Expression exp = ExpressionFactory.eINSTANCE.createExpression() ;
-		exp.setType(getExpressionType()) ;
-		exp.setContent(WidgetHelper.FIELD_PREFIX+w.getName()) ;
-		exp.setName(WidgetHelper.FIELD_PREFIX+w.getName()) ;
-		exp.setReturnType(WidgetHelper.getAssociatedReturnType(w)) ;
+        return result;
+    }
 
-		Widget copy = (Widget) ExpressionHelper.createDependencyFromEObject(w);
-		copy.getDependOn().clear();
-		exp.getReferencedElements().add(copy) ;
-		return exp;
-	}
+    private List<? extends Form> getForms(final AbstractPageFlow pageFlow, final Form form) {
+        final EStructuralFeature eContainingFeature = form.eContainingFeature();
+        if (ProcessPackage.Literals.PAGE_FLOW__FORM.equals(eContainingFeature)) {
+            return ((PageFlow) pageFlow).getForm();
+        } else if (ProcessPackage.Literals.VIEW_PAGE_FLOW__VIEW_FORM.equals(eContainingFeature)) {
+            return ((ViewPageFlow) pageFlow).getViewForm();
+        } else if (ProcessPackage.Literals.RECAP_FLOW__RECAP_FORMS.equals(eContainingFeature)) {
+            return ((RecapFlow) pageFlow).getRecapForms();
+        }
+        return Collections.emptyList();
+    }
 
-	public String getExpressionType() {
-		return ExpressionConstants.FORM_FIELD_TYPE;
-	}
+    private EObject getRelevantParent(final EObject context) {
+        EObject parent = context;
+        while (parent != null && !(parent instanceof Form) && !(parent instanceof Widget) && !(parent instanceof PageFlow)) {
+            parent = parent.eContainer();
+        }
+        return parent;
+    }
 
-	public Image getIcon(Expression expression) {
-		if(expression.getReferencedElements().isEmpty()){
-			return null ;
-		}
-		return adapterLabelProvider.getImage(expression.getReferencedElements().get(0)) ;
-	}
 
-	public String getProposalLabel(Expression expression) {
-		return expression.getName() ;
-	}
+    @Override
+    public String getExpressionType() {
+        return ExpressionConstants.FORM_FIELD_TYPE;
+    }
 
-	public boolean isRelevantFor(EObject context) {
-		return context instanceof EObject;
-	}
+    @Override
+    public Image getIcon(final Expression expression) {
+        if (expression.getReferencedElements().isEmpty()) {
+            return null;
+        }
+        return adapterLabelProvider.getImage(expression.getReferencedElements().get(0));
+    }
 
-	public Image getTypeIcon() {
-		return Pics.getImage(PicsConstants.form);
-	}
+    @Override
+    public String getProposalLabel(final Expression expression) {
+        return expression.getName();
+    }
 
-	public String getTypeLabel() {
-		return Messages.formFieldTypeLabel;
-	}
+    @Override
+    public boolean isRelevantFor(final EObject context) {
+        return context instanceof EObject;
+    }
 
-	public IExpressionEditor getExpressionEditor(Expression expression,EObject context) {
-		return new FormFieldExpressionEditor();
-	}
+    @Override
+    public Image getTypeIcon() {
+        return Pics.getImage(PicsConstants.form);
+    }
+
+    @Override
+    public String getTypeLabel() {
+        return Messages.formFieldTypeLabel;
+    }
+
+    @Override
+    public IExpressionEditor getExpressionEditor(final Expression expression,final EObject context) {
+        return new FormFieldExpressionEditor();
+    }
 
 
 

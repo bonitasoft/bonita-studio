@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.diagram.custom.Messages;
+import org.bonitasoft.studio.diagram.custom.i18n.Messages;
 import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.process.AbstractCatchMessageEvent;
 import org.bonitasoft.studio.model.process.Lane;
@@ -49,7 +49,6 @@ import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.gmf.runtime.common.ui.action.actions.global.GlobalActionManager;
 import org.eclipse.gmf.runtime.common.ui.action.global.GlobalActionId;
-import org.eclipse.gmf.runtime.common.ui.services.editor.EditorService;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeCompartmentEditPart;
@@ -65,20 +64,21 @@ import org.eclipse.ui.PlatformUI;
  */
 public class DeleteHandler extends AbstractHandler {
 
-	private List<Lane> lanes = new ArrayList<Lane>();
+	private final List<Lane> lanes = new ArrayList<Lane>();
 
-	public Object execute(ExecutionEvent event) throws ExecutionException {
-		IEditorPart part = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+	@Override
+    public Object execute(final ExecutionEvent event) throws ExecutionException {
+		final IEditorPart part = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
 
 		if (part != null && part instanceof DiagramEditor) {
-			IStructuredSelection currentSelection = (IStructuredSelection) ((DiagramEditor) part).getDiagramGraphicalViewer().getSelection();
+			final IStructuredSelection currentSelection = (IStructuredSelection) ((DiagramEditor) part).getDiagramGraphicalViewer().getSelection();
 			if (currentSelection.getFirstElement() instanceof IGraphicalEditPart) {
 				lanes.clear() ;
 				boolean containsPool = false;
 				boolean isMessageFlow = false;
 				MessageFlow flow  = null;
-				List<IGraphicalEditPart> newSelection = new ArrayList<IGraphicalEditPart>() ;
-				for (Object item : currentSelection.toArray()) {
+				final List<IGraphicalEditPart> newSelection = new ArrayList<IGraphicalEditPart>() ;
+				for (final Object item : currentSelection.toArray()) {
 					final EObject semanticElement = ((IGraphicalEditPart) item).resolveSemanticElement();
 					if (semanticElement instanceof Pool) {
 						containsPool = true;
@@ -88,8 +88,8 @@ public class DeleteHandler extends AbstractHandler {
 					}
 					if (semanticElement instanceof PageFlow) {
 
-						PageFlow element = (PageFlow)semanticElement;
-						List<Form> forms =element.getForm();
+						final PageFlow element = (PageFlow)semanticElement;
+						final List<Form> forms =element.getForm();
 						closeFormsRelatedToDiagramElement(forms);
 					} 
 					if  (semanticElement instanceof MessageFlow) {
@@ -132,25 +132,25 @@ public class DeleteHandler extends AbstractHandler {
 	}
 
 	private void upadateLaneItems() {
-		CompoundCommand cc = new CompoundCommand() ;
-		for(Lane l : lanes){
-			TransactionalEditingDomain domain = TransactionUtil.getEditingDomain(l) ;
-			for(EObject task : ModelHelper.getAllItemsOfType(l, ProcessPackage.Literals.TASK)){
+		final CompoundCommand cc = new CompoundCommand() ;
+		for(final Lane l : lanes){
+			final TransactionalEditingDomain domain = TransactionUtil.getEditingDomain(l) ;
+			for(final EObject task : ModelHelper.getAllItemsOfType(l, ProcessPackage.Literals.TASK)){
 				cc.append(SetCommand.create(domain, task, ProcessPackage.Literals.TASK__OVERRIDE_ACTORS_OF_THE_LANE, true)) ;
 			}
 			domain.getCommandStack().execute(cc) ;
 		}
 	}
 
-	private void closeFormsRelatedToDiagramElement(List<Form> forms){
-		for (Form form:forms){
-			IEditorPart[] editors = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getEditors();
-			for (IEditorPart editor:editors){
+	private void closeFormsRelatedToDiagramElement(final List<Form> forms){
+		for (final Form form:forms){
+			final IEditorPart[] editors = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getEditors();
+			for (final IEditorPart editor:editors){
 				if (editor instanceof FormDiagramEditor){
-					FormDiagramEditor formEditor = (FormDiagramEditor)editor;
-					DiagramEditPart diagramEditPart = formEditor.getDiagramEditPart();
+					final FormDiagramEditor formEditor = (FormDiagramEditor)editor;
+					final DiagramEditPart diagramEditPart = formEditor.getDiagramEditPart();
 					if(diagramEditPart != null){
-						Form availableform= (Form) diagramEditPart.resolveSemanticElement();
+						final Form availableform= (Form) diagramEditPart.resolveSemanticElement();
 						if (EcoreUtil.equals(availableform,form)){
 							((FormDiagramEditor) editor).close(false);
 						}
@@ -161,18 +161,18 @@ public class DeleteHandler extends AbstractHandler {
 	}
 
 
-	public void removeMessage(MessageFlow flow){
-		MainProcess diagram = ModelHelper.getMainProcess(flow);
+	public void removeMessage(final MessageFlow flow){
+		final MainProcess diagram = ModelHelper.getMainProcess(flow);
 		Assert.isNotNull(diagram);
-		AbstractCatchMessageEvent catchEvent = flow.getTarget();
-		ThrowMessageEvent thowEvent = flow.getSource();
+		final AbstractCatchMessageEvent catchEvent = flow.getTarget();
+		final ThrowMessageEvent thowEvent = flow.getSource();
 		Assert.isNotNull(catchEvent);
 		Assert.isNotNull(thowEvent);
-		EditingDomain domain = AdapterFactoryEditingDomain.getEditingDomainFor(diagram) ;
+		final EditingDomain domain = AdapterFactoryEditingDomain.getEditingDomainFor(diagram) ;
 		Assert.isNotNull(domain);
-		CompoundCommand cc = new CompoundCommand();
-		List<Message> messages =flow.getSource().getEvents();
-		for (Message message:messages){
+		final CompoundCommand cc = new CompoundCommand();
+		final List<Message> messages =flow.getSource().getEvents();
+		for (final Message message:messages){
 			if (flow.getName().equals(message.getName())){
 				cc.append(DeleteCommand.create(domain,message));
 				break;
@@ -187,8 +187,8 @@ public class DeleteHandler extends AbstractHandler {
 	 */
 	@Override
 	public boolean isEnabled() {
-		IEditorPart part = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
-		IStructuredSelection currentSelection = ((IStructuredSelection) part.getSite().getSelectionProvider().getSelection());
+		final IEditorPart part = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+		final IStructuredSelection currentSelection = ((IStructuredSelection) part.getSite().getSelectionProvider().getSelection());
 		if (currentSelection.getFirstElement() instanceof IGraphicalEditPart){
 			if( (currentSelection.getFirstElement() instanceof MainProcessEditPart)){
 				return false;

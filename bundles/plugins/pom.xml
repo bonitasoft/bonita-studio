@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>org.bonitasoft.studio</groupId>
 		<artifactId>bundles</artifactId>
-		<version>6.4.0-SNAPSHOT</version>
+        <version>7.0.0-SNAPSHOT</version>
 	</parent>
 	<name>Bonita BPM Studio Community Plugins</name>
 	<groupId>org.bonitasoft.studio.bundles</groupId>
@@ -21,7 +21,7 @@
 		<module>org.bonitasoft.studio.simulation.libs</module>
 		<module>org.bonitasoft.studio.model</module>
 		<module>org.bonitasoft.studio.model.edit</module>
-		<module>org.bonitasoft.studio.model.assertions</module>
+		<module>org.bonitasoft.studio.tests-utils</module>
 		<module>org.bonitasoft.studio.diagram</module>
 		<module>org.bonitasoft.studio.diagram.form</module>
 		<module>org.bonitasoft.studio.actors</module>
@@ -128,6 +128,10 @@
 						<goals>
 							<goal>testCompile</goal>
 						</goals>
+                        <configuration>
+                            <source>1.6</source>
+                             <target>1.6</target>
+                        </configuration>
 					</execution>
 				</executions>
 			</plugin>

@@ -38,6 +38,7 @@ import org.bonitasoft.studio.exporter.tests.form.TestFormsExporter;
 import org.bonitasoft.studio.groovy.ui.test.TestGroovyScriptExpressionEditor;
 import org.bonitasoft.studio.importer.test.bos.TestBOSArchiveImport;
 import org.bonitasoft.studio.migration.tests.MigrationReportPDFExportTest;
+import org.bonitasoft.studio.migration.tests.document.DocumentTypeMigrationIT;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.bonitasoft.studio.properties.test.TestLookAndFeel;
@@ -46,8 +47,9 @@ import org.bonitasoft.studio.tests.CloseAllEditors;
 import org.bonitasoft.studio.tests.IHeapDumper;
 import org.bonitasoft.studio.tests.api.TestBonitaAPI;
 import org.bonitasoft.studio.tests.bug.TestBugs;
+import org.bonitasoft.studio.tests.connectors.GroovyConnectorIT;
 import org.bonitasoft.studio.tests.connectors.TestDatabaseConnectorResulset;
-import org.bonitasoft.studio.tests.data.TestDataRefactor;
+import org.bonitasoft.studio.tests.data.DataRefactorIT;
 import org.bonitasoft.studio.tests.form.TestCommands;
 import org.bonitasoft.studio.tests.perspectives.TestAutomaticSwitchPerspective;
 import org.bonitasoft.studio.tests.processzoo.TestProcessZoo;
@@ -58,6 +60,7 @@ import org.bonitasoft.studio.themes.tests.TestCSSModel;
 import org.bonitasoft.studio.themes.tests.TestDirtyState;
 import org.bonitasoft.studio.themes.tests.TestThemeRepository;
 import org.bonitasoft.studio.util.test.BonitaJunit4TestSuite;
+import org.bonitasoft.studio.validation.test.TestTokenDispatcher;
 import org.bonitasoft.studio.validation.test.TestValidationConstraints;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -86,19 +89,15 @@ import org.junit.runners.Suite;
     TestSimulationResourceRepository.class,
     TestLookAndFeel.class,
     TestGroovyScriptExpressionEditor.class,
-    
     TestExportProcessBar.class,
     TestThemeRepository.class,
     TestDirtyState.class,
     TestCSSModel.class,
-    /*
-    TestURLs.class,
-  */
     TestDuplicateCommand.class,
     BPMNImportExportTest.class,
     BPMNDataExportImportTest.class,
     BPMNSequenceFlowConditionExportImportTest.class,
-    TestDataRefactor.class,
+    DataRefactorIT.class,
     TestBonitaAPI.class,
     TestNonInterruptingBoundaryTimerEvent.class,
     TestUserFilterMatchingEngineVersion.class,
@@ -110,7 +109,10 @@ import org.junit.runners.Suite;
     TestRefactorWidgetOperation.class,
     TestRemoveWidgetReferencesOperation.class,
     TestWebserviceVersionForBPMNImport.class,
-    CloseAllEditors.class,
+        TestTokenDispatcher.class,
+        DocumentTypeMigrationIT.class,
+        GroovyConnectorIT.class,
+        CloseAllEditors.class
 })
 public class AllTests2 extends TestSuite {
 
@@ -126,12 +128,12 @@ public class AllTests2 extends TestSuite {
 
     @AfterClass
     public static void tearDown() {
-        for(IConfigurationElement elem : BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements("org.bonitasoft.studio.tests.heapdump")){
+        for(final IConfigurationElement elem : BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements("org.bonitasoft.studio.tests.heapdump")){
             IHeapDumper dumper;
             try {
                 dumper = (IHeapDumper) elem.createExecutableExtension("class");
                 dumper.dumpHeap(AllTests2.class.getSimpleName()+".hprof", false);
-            } catch (CoreException e) {
+            } catch (final CoreException e) {
                 BonitaStudioLog.error(e);
             }
         }

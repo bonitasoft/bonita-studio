@@ -29,6 +29,7 @@ import org.bonitasoft.studio.importer.bar.tests.connector.TestConnectorMigration
 import org.bonitasoft.studio.importer.bar.tests.connector.TestCustomConnectorMigrationUseCase;
 import org.bonitasoft.studio.importer.bar.tests.examples.Test59ExampleImport;
 import org.bonitasoft.studio.importer.bar.tests.messagesImport.CorrelationMigrationTest;
+import org.bonitasoft.studio.migration.tests.EdaptHistoryIT;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.bonitasoft.studio.tests.CloseAllEditors;
@@ -48,6 +49,7 @@ import org.junit.runners.Suite;
  */
 @RunWith(BonitaJunit4TestSuite.class)
 @Suite.SuiteClasses({
+        EdaptHistoryIT.class,
     TestBarImporterInput.class,
     TestSimpleMigrationUseCase.class,
     TestConnectorMigrationUseCase.class,
@@ -71,12 +73,12 @@ public class AllMigrationTests extends TestSuite {
 
     @AfterClass
     public static void tearDown() {
-        for(IConfigurationElement elem : BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements("org.bonitasoft.studio.tests.heapdump")){
+        for(final IConfigurationElement elem : BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements("org.bonitasoft.studio.tests.heapdump")){
             IHeapDumper dumper;
             try {
                 dumper = (IHeapDumper) elem.createExecutableExtension("class");
                 dumper.dumpHeap(AllMigrationTests.class.getSimpleName()+".hprof", false);
-            } catch (CoreException e) {
+            } catch (final CoreException e) {
                 BonitaStudioLog.error(e);
             }
         }

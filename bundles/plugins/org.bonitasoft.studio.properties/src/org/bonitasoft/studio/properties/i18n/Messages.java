@@ -372,7 +372,6 @@ public class Messages extends NLS {
     public static String diagramSectionDescription;
     public static String catchMessageContentEventSectionDescription;
     public static String catchMessageEventCorrelationSectionDescription;
-    public static String documentPropertySectionDescription;
     public static String laneSectionDescription;
     public static String looknfeelPropertySectionDescription;
     public static String resourcePropertySectionDescription;
@@ -452,6 +451,41 @@ public class Messages extends NLS {
     public static String readOnly;
 
     public static String renamingDiagram;
+
+    public static String standardLoop;
+
+    public static String parallelMultinstantition;
+
+    public static String sequentialMultinstantition;
+
+    public static String dataBasedInstanceLabel;
+
+    public static String definedNumberOfInstanceLabel;
+
+    public static String input;
+
+    public static String output;
+
+    public static String numberOfInstancesToCreate;
+
+    public static String inputList;
+
+    public static String inputListHint;
+
+    public static String outputList;
+
+    public static String iterator;
+
+    public static String iteratorHint;
+
+    public static String outputData;
+
+    public static String storeOutputResult;
+
+    public static String type;
+
+    public static String typeHint;
+	public static String areYouSureMessage;
 
     static {
         // initialize resource bundle

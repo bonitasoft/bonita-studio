@@ -16,6 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.common.repository.ui.viewer;
+
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -28,30 +30,30 @@ public class RepositoryTreeContentProvider implements ITreeContentProvider {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang
      * .Object)
      */
     @Override
-    public Object[] getChildren(Object parentElement) {
+    public Object[] getChildren(final Object parentElement) {
         if (parentElement instanceof IRepositoryStore) {
-            List<IRepositoryFileStore> children = ((IRepositoryStore) parentElement).getChildren();
+            final List<IRepositoryFileStore> children = ((IRepositoryStore) parentElement).getChildren();
             return children.toArray();
 
         }
-        return null;
+        return new Object[]{};
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.eclipse.jface.viewers.ITreeContentProvider#getParent(java.lang
      * .Object)
      */
     @Override
-    public Object getParent(Object element) {
+    public Object getParent(final Object element) {
         if (element instanceof IRepositoryFileStore){
             return ((IRepositoryFileStore) element).getParentStore();
         }
@@ -60,13 +62,13 @@ public class RepositoryTreeContentProvider implements ITreeContentProvider {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.eclipse.jface.viewers.ITreeContentProvider#hasChildren(java.lang
      * .Object)
      */
     @Override
-    public boolean hasChildren(Object element) {
+    public boolean hasChildren(final Object element) {
         if (element instanceof IRepositoryStore) {
             return !((IRepositoryStore) element).getChildren().isEmpty();
         }
@@ -75,22 +77,22 @@ public class RepositoryTreeContentProvider implements ITreeContentProvider {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.eclipse.jface.viewers.IStructuredContentProvider#getElements(
      * java.lang.Object)
      */
     @Override
-    public Object[] getElements(Object element) {
+    public Object[] getElements(final Object element) {
         if (element instanceof Collection<?>) {
             return ((Collection<?>) element).toArray() ;
         }
-        return null;
+        return new Object[]{};
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.viewers.IContentProvider#dispose()
      */
     @Override
@@ -99,13 +101,13 @@ public class RepositoryTreeContentProvider implements ITreeContentProvider {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse
      * .jface.viewers.Viewer, java.lang.Object, java.lang.Object)
      */
     @Override
-    public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+    public void inputChanged(final Viewer viewer, final Object oldInput, final Object newInput) {
     }
 
 }

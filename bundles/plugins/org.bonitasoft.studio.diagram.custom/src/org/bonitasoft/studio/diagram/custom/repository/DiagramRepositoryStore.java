@@ -39,15 +39,15 @@ import org.bonitasoft.studio.common.ModelVersion;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.ProjectUtil;
+import org.bonitasoft.studio.common.editingdomain.BonitaEditingDomainUtil;
 import org.bonitasoft.studio.common.emf.tools.EMFResourceUtil;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.CopyInputStream;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.store.AbstractEMFRepositoryStore;
 import org.bonitasoft.studio.diagram.custom.Activator;
-import org.bonitasoft.studio.diagram.custom.Messages;
+import org.bonitasoft.studio.diagram.custom.i18n.Messages;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.MainProcess;
@@ -56,22 +56,23 @@ import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.util.ProcessAdapterFactory;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.xmi.FeatureNotFoundException;
 import org.eclipse.emf.edapt.history.Release;
 import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.emf.edapt.migration.execution.Migrator;
+import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.provider.ReflectiveItemProviderAdapterFactory;
 import org.eclipse.emf.edit.provider.resource.ResourceItemProviderAdapterFactory;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.gmf.runtime.notation.util.NotationAdapterFactory;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 
@@ -79,20 +80,22 @@ import org.eclipse.swt.widgets.Display;
  * @author Romain Bioteau
  *
  */
-public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFileStore> {
+public class DiagramRepositoryStore extends
+		AbstractEMFRepositoryStore<DiagramFileStore> {
 
-    private static final String STORE_NAME = "diagrams" ;
-    private static final Set<String> extensions = new HashSet<String>() ;
-    static{
-        extensions.add("proc") ;
+	private static final String STORE_NAME = "diagrams";
+	private static final Set<String> extensions = new HashSet<String>();
+	static {
+		extensions.add("proc");
     }
 
     private AdapterFactoryLabelProvider labelProvider;
 
-
     private final Map<String, String> eObjectIdToLabel = new HashMap<String, String>();
 
-    /* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 *
      * @see org.bonitasoft.studio.common.repository.IRepositoryStore#getName()
      */
     @Override
@@ -112,46 +115,63 @@ public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFi
 
     @Override
     public DiagramFileStore createRepositoryFileStore(final String fileName) {
-        return new DiagramFileStore(fileName,this)  ;
+		return new DiagramFileStore(fileName, this);
+    }
+
+    @Override
+    public EditingDomain getEditingDomain(final URI uri) {
+        if (uri != null) {
+            return BonitaEditingDomainUtil.getSharedEditingDomain(uri);
+        }
+        return super.getEditingDomain(uri);
     }
 
     public List<AbstractProcess> getAllProcesses() {
-        final List<AbstractProcess> processes = new ArrayList<AbstractProcess>() ;
-        for(final IRepositoryFileStore file : getChildren()){
-            processes.addAll(((DiagramFileStore)file).getProcesses()) ;
+		final List<AbstractProcess> processes = new ArrayList<AbstractProcess>();
+		for (final IRepositoryFileStore file : getChildren()) {
+			processes.addAll(((DiagramFileStore) file).getProcesses());
         }
-        return processes ;
+		return processes;
+    }
+
+    @Override
+    protected void handleOverwrite(final IFile file) throws CoreException {
+        final DiagramFileStore fileStore = createRepositoryFileStore(file.getName());
+        fileStore.delete();
     }
 
     @Override
     public Set<String> getCompatibleExtensions() {
-        return extensions  ;
+		return extensions;
     }
 
     public List<AbstractProcess> findProcesses(final String processName) {
-        final List<AbstractProcess> result = new ArrayList<AbstractProcess>() ;
-        for(final AbstractProcess proc : getAllProcesses()){
-            if(proc.getName().equals(processName)){
-                result.add(proc) ;
+		final List<AbstractProcess> result = new ArrayList<AbstractProcess>();
+		for (final AbstractProcess proc : getAllProcesses()) {
+			if (proc.getName().equals(processName)) {
+				result.add(proc);
             }
         }
         return result;
     }
 
-    public AbstractProcess findProcess(final String processName, final String processVersion) {
-        if(processVersion != null && !processVersion.trim().isEmpty()){
-            for(final AbstractProcess proc : getAllProcesses()){
-                if(proc.getName().equals(processName)
-                        && proc.getVersion().equals(processVersion)){
+	public AbstractProcess findProcess(final String processName,
+			final String processVersion) {
+		if (processVersion != null && !processVersion.trim().isEmpty()) {
+			for (final AbstractProcess proc : getAllProcesses()) {
+				if (proc.getName().equals(processName)
+						&& proc.getVersion().equals(processVersion)) {
                     return proc;
                 }
             }
         } else {
-            //return the process  with the higher version
+			// return the process with the higher version
             AbstractProcess currentHigher = null;
-            for(final AbstractProcess proc : getAllProcesses()){
-                if(proc.getName().equals(processName)){
-                    if(currentHigher == null || proc.getVersion().compareTo(currentHigher.getVersion()) > 0){
+			for (final AbstractProcess proc : getAllProcesses()) {
+				if (proc.getName().equals(processName)) {
+					if (currentHigher == null
+							|| proc.getVersion().compareTo(
+									currentHigher.getVersion()) > 0) {
                         currentHigher = proc;
                     }
                 }
@@ -162,46 +182,49 @@ public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFi
     }
 
     public  List<DiagramFileStore> getRecentChildren(final int nbResult) {
-        refresh() ;
+		refresh();
 
-        final List<DiagramFileStore> result = new ArrayList<DiagramFileStore>() ;
-        final List<IResource> resources = new ArrayList<IResource>() ;
+		final List<DiagramFileStore> result = new ArrayList<DiagramFileStore>();
+		final List<IResource> resources = new ArrayList<IResource>();
         final IFolder folder = getResource();
         try {
-            for(final IResource r : folder.members()){
-                if(r.getFileExtension() != null && getCompatibleExtensions().contains(r.getFileExtension())){
+			for (final IResource r : folder.members()) {
+				if (r.getFileExtension() != null
+						&& getCompatibleExtensions().contains(
+								r.getFileExtension())) {
                     resources.add(r);
                 }
             }
         } catch (final CoreException e) {
-            BonitaStudioLog.error(e) ;
+			BonitaStudioLog.error(e);
         }
-
 
         Collections.sort(resources, new Comparator<IResource>() {
             @Override
             public int compare(final IResource arg0, final IResource arg1) {
-                final long lastModifiedArg1 = arg1.getLocation().toFile().lastModified();
-                final long lastModifiedArg0 = arg0.getLocation().toFile().lastModified();
-                return Long.valueOf(lastModifiedArg1).compareTo(Long.valueOf(lastModifiedArg0));
+				final long lastModifiedArg1 = arg1.getLocation().toFile()
+						.lastModified();
+				final long lastModifiedArg0 = arg0.getLocation().toFile()
+						.lastModified();
+				return Long.valueOf(lastModifiedArg1).compareTo(
+						Long.valueOf(lastModifiedArg0));
             }
-        }) ;
+		});
 
-        for(int i=0; i<nbResult;i++){
-            if(resources.size() > i){
+		for (int i = 0; i < nbResult; i++) {
+			if (resources.size() > i) {
                 result.add(createRepositoryFileStore(resources.get(i).getName()));
             }
         }
-
 
         return result;
     }
 
     public DiagramFileStore getDiagram(final String name, final String version) {
         final StringBuilder sb = new StringBuilder("Repository content:\n");
-        for(final DiagramFileStore diagram : getChildren()){
-            final MainProcess diagramModel = diagram.getContent() ;
-            if(diagramModel != null){
+		for (final DiagramFileStore diagram : getChildren()) {
+			final MainProcess diagramModel = diagram.getContent();
+			if (diagramModel != null) {
                 final String diagramName = diagramModel.getName();
                 sb.append(diagramName);
                 if (diagramName.equals(name)) {
@@ -216,111 +239,77 @@ public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFi
                 }
             }
         }
-        BonitaStudioLog.log("Diagram not found in repository: " + name + version != null ? "(" + version + ")" : "");
+		BonitaStudioLog.log("Diagram not found in repository: " + name
+				+ version != null ? "(" + version + ")" : "");
         BonitaStudioLog.log(sb.toString());
         return null;
     }
 
-    private boolean processExistInList(final AbstractProcess ip, final List<AbstractProcess> processes) {
-        for (final AbstractProcess p : processes) {
-            if (ip.getName().equals(p.getName()) && ip.getVersion().equals(p.getVersion()) && !EcoreUtil.equals(ip, p)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     @Override
-    protected DiagramFileStore doImportIResource(final String fileName, final IResource resource) {
+	protected DiagramFileStore doImportIResource(final String fileName,
+			final IResource resource) {
 
-        final DiagramFileStore fileStore = super.doImportIResource(fileName, resource);
-        if(fileStore == null){
+		final DiagramFileStore fileStore = super.doImportIResource(fileName,
+				resource);
+		if (fileStore == null) {
             return null;
         }
         final MainProcess content = fileStore.getContent();
-        if(content == null){
+		if (content == null) {
             fileStore.delete();
             return null;
-        }
-
-        if(!FileActionDialog.getDisablePopup()){
-            final List<AbstractProcess> importedProcess = ModelHelper.getAllProcesses(content);
-            final List<AbstractProcess> duplicateProcess = findDuplicatedProcess(importedProcess);
-            if (!duplicateProcess.isEmpty()) {
-                openWarningForDuplicatedProcess(duplicateProcess);
-            }
         }
 
         return fileStore;
     }
 
-    private List<AbstractProcess> findDuplicatedProcess(final List<AbstractProcess> importedProcess) {
-        final List<AbstractProcess> processes = getAllProcesses();
-        final List<AbstractProcess> duplicateProcess = new ArrayList<AbstractProcess>();
-        for (final AbstractProcess p : importedProcess) {
-            if (processExistInList(p, processes)) {
-                duplicateProcess.add(p);
-            }
-        }
-        return duplicateProcess;
-    }
-
-    private void openWarningForDuplicatedProcess(
-            final List<AbstractProcess> duplicateProcess) {
-        Display.getDefault().syncExec(new Runnable() {
-
-            @Override
-            public void run() {
-                final StringBuilder sb = new StringBuilder();
-                for (final AbstractProcess p : duplicateProcess) {
-                    sb.append(SWT.CR);
-                    sb.append(p.getName()+" "+"("+p.getVersion()+")");
-                }
-                MessageDialog.openWarning(Display.getDefault().getActiveShell(), Messages.warningDuplicateDialogTitle, Messages.bind(Messages.poolAlreadyExistWarningMessage,sb.toString()));
-            }
-        });
-    }
-
     @Override
-    protected DiagramFileStore doImportInputStream(final String fileName, final InputStream inputStream) {
+	protected DiagramFileStore doImportInputStream(final String fileName,
+			final InputStream inputStream) {
         final CopyInputStream copyIs = new CopyInputStream(inputStream);
         final InputStream originalStream = copyIs.getCopy();
-        final String newFileName = getValidFileName(fileName,copyIs.getCopy());
+		final String newFileName = getValidFileName(fileName, copyIs.getCopy());
         copyIs.close();
         return super.doImportInputStream(newFileName, originalStream);
     }
 
-
-    protected String getValidFileName(final String fileName,final InputStream is) {
+	protected String getValidFileName(final String fileName,
+			final InputStream is) {
         FileOutputStream fos = null;
-        File tmpFile = null ;
-        try{
-            tmpFile = File.createTempFile("tmp", fileName, ProjectUtil.getBonitaStudioWorkFolder());
+		File tmpFile = null;
+		try {
+			tmpFile = File.createTempFile("tmp", fileName,
+					ProjectUtil.getBonitaStudioWorkFolder());
             fos = new FileOutputStream(tmpFile);
             FileUtil.copy(is, fos);
-            final Map<String, String[]> featureValueFromEObjectType = new EMFResourceUtil(tmpFile).getFeatureValueFromEObjectType("process:MainProcess", ProcessPackage.Literals.ELEMENT__NAME,ProcessPackage.Literals.ABSTRACT_PROCESS__VERSION);
-            if(featureValueFromEObjectType.size() == 1){
-                final String[] next = featureValueFromEObjectType.values().iterator().next();
+			final Map<String, String[]> featureValueFromEObjectType = new EMFResourceUtil(
+					tmpFile).getFeatureValueFromEObjectType(
+					"process:MainProcess",
+					ProcessPackage.Literals.ELEMENT__NAME,
+					ProcessPackage.Literals.ABSTRACT_PROCESS__VERSION);
+			if (featureValueFromEObjectType.size() == 1) {
+				final String[] next = featureValueFromEObjectType.values()
+						.iterator().next();
                 return NamingUtils.toDiagramFilename(next[0], next[1]);
             }
-        }catch (final Exception e) {
+		} catch (final Exception e) {
             BonitaStudioLog.error(e, Activator.PLUGIN_ID);
-        }finally{
-            if(fos != null){
+		} finally {
+			if (fos != null) {
                 try {
                     fos.close();
                 } catch (final IOException e) {
-                    BonitaStudioLog.error(e,Activator.PLUGIN_ID);
+					BonitaStudioLog.error(e, Activator.PLUGIN_ID);
                 }
             }
-            if(is != null){
+			if (is != null) {
                 try {
                     is.close();
                 } catch (final IOException e) {
-                    BonitaStudioLog.error(e,Activator.PLUGIN_ID);
+					BonitaStudioLog.error(e, Activator.PLUGIN_ID);
                 }
             }
-            if(tmpFile != null && tmpFile.exists()){
+			if (tmpFile != null && tmpFile.exists()) {
                 tmpFile.delete();
             }
         }
@@ -328,35 +317,41 @@ public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFi
     }
 
     public Set<String> getAllProcessIds() {
-        final Set<String> resut = new HashSet<String>() ;
-        for(final DiagramFileStore fStore : getChildren()){
-            final EMFResourceUtil emfResourceUtil = new EMFResourceUtil(fStore.getResource().getLocation().toFile());
+		final Set<String> resut = new HashSet<String>();
+		for (final DiagramFileStore fStore : getChildren()) {
+			final EMFResourceUtil emfResourceUtil = new EMFResourceUtil(fStore
+					.getResource().getLocation().toFile());
             String[] poolIds = null;
             try {
-                poolIds = emfResourceUtil.getEObectIfFromEObjectType("process:Pool");
+				poolIds = emfResourceUtil
+						.getEObectIfFromEObjectType("process:Pool");
             } catch (final FeatureNotFoundException e) {
                 BonitaStudioLog.error(e);
             }
-            if(poolIds != null){
-                resut.addAll(Arrays.asList(poolIds)) ;
+			if (poolIds != null) {
+				resut.addAll(Arrays.asList(poolIds));
             }
         }
         return resut;
     }
 
     public AbstractProcess getProcessByUUID(final String processUUID) {
-        for(final DiagramFileStore fStore : getChildren()){
-            final EMFResourceUtil emfResourceUtil = new EMFResourceUtil(fStore.getResource().getLocation().toFile());
+		for (final DiagramFileStore fStore : getChildren()) {
+			final EMFResourceUtil emfResourceUtil = new EMFResourceUtil(fStore
+					.getResource().getLocation().toFile());
             String[] poolIds = null;
             try {
-                poolIds = emfResourceUtil.getEObectIfFromEObjectType("process:Pool");
+				poolIds = emfResourceUtil
+						.getEObectIfFromEObjectType("process:Pool");
             } catch (final FeatureNotFoundException e) {
                 BonitaStudioLog.error(e);
             }
-            if(poolIds != null && Arrays.asList(poolIds).contains(processUUID)){
+			if (poolIds != null && Arrays.asList(poolIds).contains(processUUID)) {
                 final MainProcess diagram =  fStore.getContent();
-                for(final Element pool : diagram.getElements()){
-                    if(pool instanceof Pool && processUUID.equals(ModelHelper.getEObjectID(pool))){
+				for (final Element pool : diagram.getElements()) {
+					if (pool instanceof Pool
+							&& processUUID.equals(ModelHelper
+									.getEObjectID(pool))) {
                         return (AbstractProcess) pool;
                     }
                 }
@@ -367,63 +362,76 @@ public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFi
 
     @Override
     public AdapterFactoryLabelProvider getLabelProvider() {
-        if(labelProvider != null){
+		if (labelProvider != null) {
             labelProvider.dispose();
         }
-        final ComposedAdapterFactory adapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
-        adapterFactory.addAdapterFactory(new ResourceItemProviderAdapterFactory());
-        adapterFactory.addAdapterFactory(new ReflectiveItemProviderAdapterFactory());
-        adapterFactory.addAdapterFactory(new ProcessAdapterFactory()) ;
-        adapterFactory.addAdapterFactory(new NotationAdapterFactory()) ;
+		final ComposedAdapterFactory adapterFactory = new ComposedAdapterFactory(
+				ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
+		adapterFactory
+				.addAdapterFactory(new ResourceItemProviderAdapterFactory());
+		adapterFactory
+				.addAdapterFactory(new ReflectiveItemProviderAdapterFactory());
+		adapterFactory.addAdapterFactory(new ProcessAdapterFactory());
+		adapterFactory.addAdapterFactory(new NotationAdapterFactory());
         labelProvider = new AdapterFactoryLabelProvider(adapterFactory);
         return labelProvider;
     }
 
     @Override
     protected void addAdapterFactory(final ComposedAdapterFactory adapterFactory) {
-        adapterFactory.addAdapterFactory(new ProcessAdapterFactory()) ;
-        adapterFactory.addAdapterFactory(new NotationAdapterFactory()) ;
+		adapterFactory.addAdapterFactory(new ProcessAdapterFactory());
+		adapterFactory.addAdapterFactory(new NotationAdapterFactory());
     }
 
     @Override
     protected InputStream handlePreImport(final String fileName,
             final InputStream inputStream) throws MigrationException {
         CopyInputStream copyIs = null;
-        try{
+		try {
             final InputStream is = super.handlePreImport(fileName, inputStream);
             copyIs = new CopyInputStream(is);
-            final Resource r = getTmpEMFResource("beforeImport", copyIs.getCopy());
+			final Resource r = getTmpEMFResource("beforeImport",
+					copyIs.getCopy());
             try {
                 r.load(Collections.EMPTY_MAP);
             } catch (final IOException e) {
                 BonitaStudioLog.error(e);
             }
-            if(!r.getContents().isEmpty()){
-                final MainProcess diagram  = (MainProcess) r.getContents().get(0);
-                if(diagram != null){
+			if (!r.getContents().isEmpty()) {
+				final MainProcess diagram = (MainProcess) r.getContents()
+						.get(0);
+				if (diagram != null) {
                     final String pVersion = diagram.getBonitaVersion();
                     final String mVersion = diagram.getBonitaModelVersion();
-                    if(!ConfigurationIdProvider.getConfigurationIdProvider().isConfigurationIdValid(diagram)){
+					if (!ConfigurationIdProvider.getConfigurationIdProvider()
+							.isConfigurationIdValid(diagram)) {
                         Display.getDefault().syncExec(new Runnable() {
 
                             @Override
                             public void run() {
-                                BonitaStudioLog.log("Incompatible Version for "+fileName);
-                                MessageDialog.openWarning(Display.getDefault().getActiveShell(), Messages.incompatibleVersionTitle, Messages.incompatibleVersionMsg);
+								BonitaStudioLog.log("Incompatible Version for "
+										+ fileName);
+								MessageDialog.openWarning(Display.getDefault()
+										.getActiveShell(),
+										Messages.incompatibleVersionTitle,
+										Messages.incompatibleVersionMsg);
                             }
                         });
                         return null;
                     }
 
-                    if(!ProductVersion.CURRENT_VERSION.equals(pVersion)){
+					if (!ProductVersion.CURRENT_VERSION.equals(pVersion)) {
                         diagram.setBonitaVersion(ProductVersion.CURRENT_VERSION);
                     }
-                    if(!ModelVersion.CURRENT_VERSION.equals(mVersion)){
+					if (!ModelVersion.CURRENT_VERSION.equals(mVersion)) {
                         diagram.setBonitaModelVersion(ModelVersion.CURRENT_VERSION);
                     }
-                    diagram.setConfigId(ConfigurationIdProvider.getConfigurationIdProvider().getConfigurationId(diagram));
-                    if(diagram.getAuthor() == null){
-                        diagram.setAuthor(System.getProperty("user.name", "Unknown"));
+					diagram.setConfigId(ConfigurationIdProvider
+							.getConfigurationIdProvider().getConfigurationId(
+									diagram));
+					if (diagram.getAuthor() == null) {
+						diagram.setAuthor(System.getProperty("user.name",
+								"Unknown"));
                     }
                     try {
                         r.save(Collections.EMPTY_MAP);
@@ -431,10 +439,11 @@ public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFi
                         BonitaStudioLog.error(e);
                     }
                     try {
-                        return new FileInputStream(new File(r.getURI().toFileString()));
+						return new FileInputStream(new File(r.getURI()
+								.toFileString()));
                     } catch (final FileNotFoundException e) {
                         BonitaStudioLog.error(e);
-                    }finally{
+					} finally {
                         copyIs.close();
                         try {
                             r.delete(Collections.EMPTY_MAP);
@@ -442,44 +451,67 @@ public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFi
                             BonitaStudioLog.error(e);
                         }
                     }
-                }else{
+				} else {
                     return null;
                 }
             }
             return copyIs.getCopy();
-        }catch(final IOException e){
+		} catch (final IOException e) {
             BonitaStudioLog.error(e);
             return null;
-        }finally{
-            if(copyIs != null){
+		} finally {
+			if (copyIs != null) {
                 copyIs.close();
             }
         }
     }
 
     @Override
-    protected Release getRelease(final Migrator targetMigrator, final Resource resource) {
-        final Map<String, String[]> featureValueFromEObjectType = new EMFResourceUtil(new File(resource.getURI().toFileString())).getFeatureValueFromEObjectType("process:MainProcess", ProcessPackage.Literals.MAIN_PROCESS__BONITA_MODEL_VERSION);
-        String modelVersion = null;
-        for(final Entry<String, String[]> e : featureValueFromEObjectType.entrySet()){
-            modelVersion = e.getValue()[0];
+	protected Release getRelease(final Migrator targetMigrator,
+			final Resource resource) {
+		final String modelVersion = getModelVersion(resource);
+		return getRelease(targetMigrator, modelVersion);
         }
-        for(final Release release : targetMigrator.getReleases()){
-            if(release.getLabel().equals(modelVersion)){
+
+	public Release getRelease(final Migrator targetMigrator,
+			final String modelVersion) {
+		for (final Release release : targetMigrator.getReleases()) {
+			if (release.getLabel().equals(modelVersion)) {
                 return release;
             }
         }
-        return targetMigrator.getReleases().iterator().next(); //First release of all time
+		return targetMigrator.getReleases().iterator().next(); // First release
+																// of all time
+	}
+
+	private String getModelVersion(final Resource resource) {
+		final Map<String, String[]> featureValueFromEObjectType = new EMFResourceUtil(
+				new File(resource.getURI().toFileString()))
+				.getFeatureValueFromEObjectType(
+						"process:MainProcess",
+						ProcessPackage.Literals.MAIN_PROCESS__BONITA_MODEL_VERSION);
+		String modelVersion = null;
+		for (final Entry<String, String[]> e : featureValueFromEObjectType
+				.entrySet()) {
+			modelVersion = e.getValue()[0];
     }
+		return modelVersion;
+	}
 
     public String getLabelFor(final String processUUID) {
         String label = eObjectIdToLabel.get(processUUID);
-        if(label == null){
-            for(final DiagramFileStore fStore : getChildren()){
-                final EMFResourceUtil emfResourceUtil = new EMFResourceUtil(fStore.getResource().getLocation().toFile());
-                final String[] featureValuesFromEObjectId = emfResourceUtil.getFeatureValuesFromEObjectId(processUUID, ProcessPackage.Literals.ELEMENT__NAME, ProcessPackage.Literals.ABSTRACT_PROCESS__VERSION);
-                if(featureValuesFromEObjectId != null){
-                    label = featureValuesFromEObjectId[0] + " ("+featureValuesFromEObjectId[1]+")";
+		if (label == null) {
+			for (final DiagramFileStore fStore : getChildren()) {
+				final EMFResourceUtil emfResourceUtil = new EMFResourceUtil(
+						fStore.getResource().getLocation().toFile());
+				final String[] featureValuesFromEObjectId = emfResourceUtil
+						.getFeatureValuesFromEObjectId(
+								processUUID,
+								ProcessPackage.Literals.ELEMENT__NAME,
+								ProcessPackage.Literals.ABSTRACT_PROCESS__VERSION);
+				if (featureValuesFromEObjectId != null) {
+					label = featureValuesFromEObjectId[0] + " ("
+							+ featureValuesFromEObjectId[1] + ")";
                     updateProcessLabel(processUUID, label);
                     break;
                 }
@@ -488,7 +520,14 @@ public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFi
         return label;
     }
 
-    public void updateProcessLabel(final String processId,final String processLabel){
+	public void updateProcessLabel(final String processId,
+			final String processLabel) {
         eObjectIdToLabel.put(processId, processLabel);
+    }
+
+    @Override
+    public void close() {
+        BonitaEditingDomainUtil.cleanEditingDomainRegistry();
+        super.close();
     }
 }

@@ -70,7 +70,8 @@ import org.bonitasoft.studio.model.process.Lane;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.Message;
 import org.bonitasoft.studio.model.process.MessageFlow;
-import org.bonitasoft.studio.model.process.MultiInstantiation;
+import org.bonitasoft.studio.model.process.MultiInstanceType;
+import org.bonitasoft.studio.model.process.MultiInstantiable;
 import org.bonitasoft.studio.model.process.OutputMapping;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessFactory;
@@ -543,7 +544,7 @@ public class ProcBuilder implements IProcBuilder {
 
 
     /**
-     * 
+     *
      * It depends if source and target are correctly defined and already exists.
      * @param srcId
      * @param trgtId
@@ -1016,15 +1017,17 @@ public class ProcBuilder implements IProcBuilder {
 
     @Override
     public void addMultiInstantiation(final boolean isSequential) throws ProcBuilderException {
-        if(!(currentStep instanceof Activity)){
+        if (!(currentStep instanceof MultiInstantiable)) {
             throw new ProcBuilderException("Impossible to add a MultiInstantiation on Current element :" + currentStep != null ? ((Element) currentStep).getName() : "null") ;
         }
-
-        final MultiInstantiation multiInstantition = ProcessFactory.eINSTANCE.createMultiInstantiation();
-        multiInstantition.setSequential(isSequential);
-        currentElement = multiInstantition ;
-
-        commandStack.append(SetCommand.create(editingDomain, currentStep, ProcessPackage.eINSTANCE.getActivity_MultiInstantiation(), multiInstantition)) ;
+        MultiInstanceType type = MultiInstanceType.NONE;
+        if (isSequential) {
+            type = MultiInstanceType.SEQUENTIAL;
+        } else {
+            type = MultiInstanceType.PARALLEL;
+        }
+        currentElement = currentStep;
+        commandStack.append(SetCommand.create(editingDomain, currentStep, ProcessPackage.eINSTANCE.getMultiInstantiable_Type(), type));
         execute() ;
     }
 
@@ -1254,8 +1257,7 @@ public class ProcBuilder implements IProcBuilder {
 
 
     @Override
-    public void addEvent(String id, final String name, final Point location,final Dimension size, EventType eventType) throws ProcBuilderException {
-
+    public void addEvent(String id, final String name, final Point location, final Dimension size, EventType eventType) throws ProcBuilderException {
         id = NamingUtils.convertToId(id) ;
         Element createdElement = null ;
         if(eventType == EventType.TIMER_BOUNDARY
@@ -1287,7 +1289,6 @@ public class ProcBuilder implements IProcBuilder {
             final IElementType type = resolveEventType(eventType) ;
             createdElement = createShape(id,currentContainer,location,size,type);
         }
-
 
         commandStack.append(SetCommand.create(editingDomain, createdElement, ProcessPackage.eINSTANCE.getElement_Name(), name)) ;
 
@@ -1606,14 +1607,19 @@ public class ProcBuilder implements IProcBuilder {
         if(!(currentStep instanceof Activity)){
             throw new ProcBuilderException("Impossible to set duration property on "+ currentStep != null ? ((Element) currentStep).getName() : "null") ;
         }
-        commandStack.append(SetCommand.create(diagramPart.getEditingDomain(), currentStep, ProcessPackage.eINSTANCE.getActivity_IsLoop(),true)) ;
-        commandStack.append(SetCommand.create(diagramPart.getEditingDomain(), currentStep, ProcessPackage.eINSTANCE.getActivity_LoopCondition(),loopCondition)) ;
-        commandStack.append(SetCommand.create(diagramPart.getEditingDomain(), currentStep, ProcessPackage.eINSTANCE.getActivity_LoopMaximum(),maxLoopExpression)) ;
+        commandStack.append(SetCommand.create(diagramPart.getEditingDomain(), currentStep, ProcessPackage.eINSTANCE.getMultiInstantiable_Type(),
+                MultiInstanceType.STANDARD));
+        commandStack.append(SetCommand.create(diagramPart.getEditingDomain(), currentStep, ProcessPackage.eINSTANCE.getMultiInstantiable_LoopCondition(),
+                createExpression(loopCondition, Boolean.class.getName(), ExpressionConstants.GROOVY, ExpressionConstants.SCRIPT_TYPE)));
+        commandStack.append(SetCommand.create(diagramPart.getEditingDomain(), currentStep, ProcessPackage.eINSTANCE.getMultiInstantiable_LoopMaximum(),
+                createExpression(maxLoopExpression, Integer.class.getName(), ExpressionConstants.GROOVY, ExpressionConstants.SCRIPT_TYPE)));
         if(testTime != null){
             if(testTime == TestTimeType.BEFORE){
-                commandStack.append(SetCommand.create(diagramPart.getEditingDomain(), currentStep, ProcessPackage.eINSTANCE.getActivity_TestBefore(),true)) ;
+                commandStack.append(SetCommand.create(diagramPart.getEditingDomain(), currentStep, ProcessPackage.eINSTANCE.getMultiInstantiable_TestBefore(),
+                        true));
             }else{
-                commandStack.append(SetCommand.create(diagramPart.getEditingDomain(), currentStep, ProcessPackage.eINSTANCE.getActivity_TestBefore(),false)) ;
+                commandStack.append(SetCommand.create(diagramPart.getEditingDomain(), currentStep, ProcessPackage.eINSTANCE.getMultiInstantiable_TestBefore(),
+                        false));
             }
         }
     }

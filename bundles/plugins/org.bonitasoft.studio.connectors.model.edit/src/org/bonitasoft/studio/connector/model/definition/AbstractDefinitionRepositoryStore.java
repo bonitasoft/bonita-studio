@@ -5,14 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.connector.model.definition;
 
@@ -53,129 +51,128 @@ import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.osgi.framework.Bundle;
 
 public abstract class AbstractDefinitionRepositoryStore<T extends EMFFileStore> extends AbstractEMFRepositoryStore<T> implements IDefinitionRepositoryStore {
-	
-	private List<T> cachedFileStore = new ArrayList<T>();
-	private List<IConnectorDefinitionFilter> filters = new ArrayList<IConnectorDefinitionFilter>();
-	
-	public AbstractDefinitionRepositoryStore(){
-		super();
-		for(IConfigurationElement elem : BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements("org.bonitasoft.studio.connectors.connectorDefFilter")){
-			try {
-				filters.add((IConnectorDefinitionFilter) elem.createExecutableExtension("class"));
-			} catch (CoreException e) {
-				BonitaStudioLog.error(e);
-			}
-		}
-	}
-	
+
+    private final List<T> cachedFileStore = new ArrayList<T>();
+    private final List<IConnectorDefinitionFilter> filters = new ArrayList<IConnectorDefinitionFilter>();
+
+    public AbstractDefinitionRepositoryStore() {
+        super();
+        for (final IConfigurationElement elem : BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(
+                "org.bonitasoft.studio.connectors.connectorDefFilter")) {
+            try {
+                filters.add((IConnectorDefinitionFilter) elem.createExecutableExtension("class"));
+            } catch (final CoreException e) {
+                BonitaStudioLog.error(e);
+            }
+        }
+    }
+
     @Override
     public List<ConnectorDefinition> getDefinitions() {
         final List<ConnectorDefinition> result = new ArrayList<ConnectorDefinition>();
-        for(IRepositoryFileStore fileStore : getChildren()){
-            ConnectorDefinition def ;
-            try{
+        for (final IRepositoryFileStore fileStore : getChildren()) {
+            ConnectorDefinition def;
+            try {
                 def = (ConnectorDefinition) fileStore.getContent();
-            }catch(Exception e){
+            } catch (final Exception e) {
                 def = ConnectorDefinitionFactory.eINSTANCE.createUnloadableConnectorDefinition();
                 def.setId(fileStore.getName());
                 def.setVersion("");
             }
-            if(def == null){
-            	  def = ConnectorDefinitionFactory.eINSTANCE.createUnloadableConnectorDefinition();
-                  def.setId(fileStore.getName());
-                  def.setVersion("");
+            if (def == null) {
+                def = ConnectorDefinitionFactory.eINSTANCE.createUnloadableConnectorDefinition();
+                def.setId(fileStore.getName());
+                def.setVersion("");
             }
-            result.add(def) ;
+            result.add(def);
         }
-        return result ;
+        return result;
     }
 
     @Override
-    public ConnectorDefinition getDefinition(String id, String version) {
-        for(ConnectorDefinition def : getDefinitions()){
-            if(def.getId().equals(id) && def.getVersion().equals(version)){
-                return def ;
+    public ConnectorDefinition getDefinition(final String id, final String version) {
+        for (final ConnectorDefinition def : getDefinitions()) {
+            if (def.getId().equals(id) && def.getVersion().equals(version)) {
+                return def;
             }
         }
         return null;
     }
 
     @Override
-    public ConnectorDefinition getDefinition(String id, String version,Collection<ConnectorDefinition> existingDefinitions) {
-        for(ConnectorDefinition def : existingDefinitions){
-            if(def.getId().equals(id) && def.getVersion().equals(version)){
-                return def ;
+    public ConnectorDefinition getDefinition(final String id, final String version, final Collection<ConnectorDefinition> existingDefinitions) {
+        for (final ConnectorDefinition def : existingDefinitions) {
+            if (def.getId().equals(id) && def.getVersion().equals(version)) {
+                return def;
             }
         }
         return null;
     }
-    
-    
- 
-    
-    
+
     @Override
     public List<T> getChildren() {
         final List<T> result = super.getChildren();
-        if(cachedFileStore.isEmpty()){
-        	Enumeration<URL> connectorDefs = getBundle().findEntries(getName(), "*.def", false);
-        	if( connectorDefs != null ){
-        		while (connectorDefs.hasMoreElements()) {
-        			URL url = connectorDefs.nextElement();
-        			String[] segments = url.getFile().split("/") ;
-        			String fileName = segments[segments.length-1] ;
-        			if(fileName.lastIndexOf(".") != -1){
-        				String extension = fileName.substring(fileName.lastIndexOf(".")+1, fileName.length()) ;
-        				if(getCompatibleExtensions().contains(extension)){
-        					T defFileStore = getDefFileStore(url);
-        					boolean filtered = false;
-        					for(IConnectorDefinitionFilter filter : filters){
-        						if(filter.filter((ConnectorDefinition) defFileStore.getContent())){
-        							filtered = true;
-        						}
-        					}
-        					if(!filtered){
-        					cachedFileStore.add(defFileStore);
-        					result.add(defFileStore);
-        					}
-        				}
-        			}
-        		}
-        	}
-        } else {
-        	result.addAll(cachedFileStore);
-        }
-        return result ;
-    }
-
-    @Override
-    public T getChild(String fileName) {
-        T file = super.getChild(fileName) ;
-        if(file == null){
-            URL url = getBundle().getResource(getName()+ "/" +fileName);
-            if(url != null){
-            	T defFileStore = getDefFileStore(url) ;
-                for(IConnectorDefinitionFilter filter : filters){
-					if(filter.filter((ConnectorDefinition) defFileStore.getContent())){
-						return null;
-					}
-				}
-                return defFileStore;
-            }else{
-                return null ;
+        if (cachedFileStore.isEmpty()) {
+            final Enumeration<URL> connectorDefs = getBundle().findEntries(getName(), "*.def", false);
+            if (connectorDefs != null) {
+                while (connectorDefs.hasMoreElements()) {
+                    final URL url = connectorDefs.nextElement();
+                    final String[] segments = url.getFile().split("/");
+                    final String fileName = segments[segments.length - 1];
+                    if (fileName.lastIndexOf(".") != -1) {
+                        final String extension = fileName.substring(fileName.lastIndexOf(".") + 1, fileName.length());
+                        if (getCompatibleExtensions().contains(extension)) {
+                            final T defFileStore = getDefFileStore(url);
+                            boolean filtered = false;
+                            for (final IConnectorDefinitionFilter filter : filters) {
+                                if (filter.filter((ConnectorDefinition) defFileStore.getContent())) {
+                                    filtered = true;
+                                }
+                            }
+                            if (!filtered) {
+                                cachedFileStore.add(defFileStore);
+                                result.add(defFileStore);
+                            }
+                        }
+                    }
+                }
             }
-        }else{
-            return file ;
+        } else {
+            result.addAll(cachedFileStore);
+        }
+        return result;
+    }
+
+    @Override
+    public T getChild(final String fileName) {
+        final T file = super.getChild(fileName);
+        if (file == null) {
+            final URL url = getBundle().getResource(getName() + "/" + fileName);
+            if (url != null) {
+                final T defFileStore = getDefFileStore(url);
+                if (defFileStore != null) {
+                    for (final IConnectorDefinitionFilter filter : filters) {
+                        if (filter.filter((ConnectorDefinition) defFileStore.getContent())) {
+                            return null;
+                        }
+                    }
+                }
+                return defFileStore;
+            } else {
+                return null;
+            }
+        } else {
+            return file;
         }
 
     }
 
-    public void clearCachedFileStore(){
-    	cachedFileStore.clear();
+    public void clearCachedFileStore() {
+        cachedFileStore.clear();
     }
-    
+
     @Override
-    protected void addAdapterFactory(ComposedAdapterFactory adapterFactory) {
+    protected void addAdapterFactory(final ComposedAdapterFactory adapterFactory) {
         adapterFactory.addAdapterFactory(new ConnectorDefinitionAdapterFactory());
     }
 
@@ -183,38 +180,39 @@ public abstract class AbstractDefinitionRepositoryStore<T extends EMFFileStore> 
 
     protected abstract Bundle getBundle();
 
-	protected void performMigration(Migrator migrator, URI resourceURI, Release release) throws MigrationException {
-		migrator.setLevel(ValidationLevel.NONE);
-		ResourceSet rSet = migrator.migrateAndLoad(
-				Collections.singletonList(resourceURI), release,
-				null, Repository.NULL_PROGRESS_MONITOR);
-		if(!rSet.getResources().isEmpty()){
-			FileOutputStream fos = null;
-			try{
-				ConnectorDefinitionResourceImpl r = (ConnectorDefinitionResourceImpl) rSet.getResources().get(0);
-				Resource resource = new XMLResourceImpl(resourceURI) ;
-				DocumentRoot root = ConnectorDefinitionFactory.eINSTANCE.createDocumentRoot() ;
-				final ConnectorDefinition definition = EcoreUtil.copy(((DocumentRoot)r.getContents().get(0)).getConnectorDefinition());
-				root.setConnectorDefinition(definition);
-				resource.getContents().add(root) ;
-				Map<String, String> options = new HashMap<String, String>() ;
-				options.put(XMLResource.OPTION_ENCODING, "UTF-8");
-				options.put(XMLResource.OPTION_XML_VERSION, "1.0");
-				File target = new File(resourceURI.toFileString());
-				fos = new FileOutputStream(target)  ;
-				new ConnectorDefinitionXMLProcessor().save(fos, resource, options)  ;
-			}catch (Exception e) {
-				BonitaStudioLog.error(e, "org.bonitasoft.studio.connectors.model.edit");
-			}finally{
-				if(fos != null){
-					try {
-						fos.close() ;
-					} catch (IOException e) {
-						BonitaStudioLog.error(e,"org.bonitasoft.studio.connectors.model.edit");
-					}
-				}
-			}
-		}
-	}
-    
+    @Override
+    protected void performMigration(final Migrator migrator, final URI resourceURI, final Release release) throws MigrationException {
+        migrator.setLevel(ValidationLevel.NONE);
+        final ResourceSet rSet = migrator.migrateAndLoad(
+                Collections.singletonList(resourceURI), release,
+                null, Repository.NULL_PROGRESS_MONITOR);
+        if (!rSet.getResources().isEmpty()) {
+            FileOutputStream fos = null;
+            try {
+                final ConnectorDefinitionResourceImpl r = (ConnectorDefinitionResourceImpl) rSet.getResources().get(0);
+                final Resource resource = new XMLResourceImpl(resourceURI);
+                final DocumentRoot root = ConnectorDefinitionFactory.eINSTANCE.createDocumentRoot();
+                final ConnectorDefinition definition = EcoreUtil.copy(((DocumentRoot) r.getContents().get(0)).getConnectorDefinition());
+                root.setConnectorDefinition(definition);
+                resource.getContents().add(root);
+                final Map<String, String> options = new HashMap<String, String>();
+                options.put(XMLResource.OPTION_ENCODING, "UTF-8");
+                options.put(XMLResource.OPTION_XML_VERSION, "1.0");
+                final File target = new File(resourceURI.toFileString());
+                fos = new FileOutputStream(target);
+                new ConnectorDefinitionXMLProcessor().save(fos, resource, options);
+            } catch (final Exception e) {
+                BonitaStudioLog.error(e, "org.bonitasoft.studio.connectors.model.edit");
+            } finally {
+                if (fos != null) {
+                    try {
+                        fos.close();
+                    } catch (final IOException e) {
+                        BonitaStudioLog.error(e, "org.bonitasoft.studio.connectors.model.edit");
+                    }
+                }
+            }
+        }
+    }
+
 }

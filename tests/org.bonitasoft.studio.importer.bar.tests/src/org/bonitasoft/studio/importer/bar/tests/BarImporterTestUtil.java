@@ -52,12 +52,12 @@ import org.eclipse.ui.PartInitException;
 public class BarImporterTestUtil {
 
     /**
-     * 
+     *
      * @param resourceURL
      * @return the temporary migrated proc file
      * @throws Exception
      */
-    public static File migrateBar(URL resourceURL) throws Exception {
+    public static File migrateBar(final URL resourceURL) throws Exception {
         final File archive = new File( FileLocator.toFileURL(resourceURL).getFile());
         final ToProcProcessor processor =  new BarImporterFactory().createProcessor(archive.getName());
         assertNotNull("Failed to create processor", processor);
@@ -65,11 +65,11 @@ public class BarImporterTestUtil {
     }
 
     /**
-     * 
+     *
      * @param migratedProc
      * @return the loaded EMF resource
      */
-    public static Resource assertIsLoadable(File migratedProc) {
+    public static Resource assertIsLoadable(final File migratedProc) {
         final ResourceSet resourceSet = new ResourceSetImpl();
         final Resource resource = resourceSet.createResource(URI.createFileURI(migratedProc.getAbsolutePath()));
         if(resource == null){
@@ -77,14 +77,14 @@ public class BarImporterTestUtil {
         }
         try{
             resource.load(Collections.emptyMap());
-        }catch (Exception e) {
+        }catch (final Exception e) {
             fail("Resource is not loadable :\n"+e.getMessage());
         }
         return resource;
     }
 
 
-    public static MainProcess getMainProcess(Resource resource) {
+    public static MainProcess getMainProcess(final Resource resource) {
         if(resource.getContents().size() > 1){
             final EObject mainProcess = resource.getContents().get(0);
             if(mainProcess instanceof MainProcess){
@@ -94,7 +94,7 @@ public class BarImporterTestUtil {
             }
         }
         boolean mainProcFound = false ;
-        for(EObject c : resource.getContents()){
+        for(final EObject c : resource.getContents()){
             if(c instanceof MainProcess){
                 mainProcFound = true;
                 break;
@@ -109,20 +109,20 @@ public class BarImporterTestUtil {
      * @param resource
      * @throws PartInitException
      */
-    public static void assertViewsAreConsistent(Resource resource) throws PartInitException {
+    public static void assertViewsAreConsistent(final Resource resource) throws PartInitException {
         final MainProcess mainproc =  getMainProcess(resource);
-        Diagram diagram = ModelHelper.getDiagramFor(mainproc, null);
+        final Diagram diagram = ModelHelper.getDiagramFor(mainproc);
         assertNotNull("Diagram view not found", diagram);
         final List<Shape> shapes = ModelHelper.getAllItemsOfType(diagram, NotationPackage.Literals.SHAPE);
-        for(Shape shape : shapes){
+        for(final Shape shape : shapes){
             assertNotNull("A view (id="+EMFCoreUtil.getProxyID(shape)+", type="+shape.getType()+") is not bound to a semantic element",shape.eGet(NotationPackage.Literals.VIEW__ELEMENT,false));
         }
 
-        for(Form f : ModelHelper.getAllFormsContainedIn(mainproc)){
-            final Diagram formDiagram = ModelHelper.getDiagramFor(f, null);
+        for(final Form f : ModelHelper.getAllFormsContainedIn(mainproc)){
+            final Diagram formDiagram = ModelHelper.getDiagramFor(f);
             assertNotNull("Form Diagram view not found", formDiagram);
             final List<Shape> formViews = ModelHelper.getAllItemsOfType(diagram, NotationPackage.Literals.SHAPE);
-            for(Shape shape : formViews){
+            for(final Shape shape : formViews){
                 assertNotNull("A view (id="+EMFCoreUtil.getProxyID(shape)+", type="+shape.getType()+") is not bound to a semantic element",shape.eGet(NotationPackage.Literals.VIEW__ELEMENT,false));
             }
         }

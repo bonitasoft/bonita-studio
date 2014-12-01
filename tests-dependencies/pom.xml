@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>org.bonitasoft.studio</groupId>
 		<artifactId>studio</artifactId>
-		<version>6.4.0-SNAPSHOT</version>
+        <version>7.0.0-SNAPSHOT</version>
 	</parent>
 
 	<groupId>org.bonitasoft.studio.tests-dependencies</groupId>
@@ -17,6 +17,7 @@
 
 	<modules>
 		<module>org.mockito</module>
+        <module>cucumber-jvm</module>
 		<module>org.powermock</module>
 		<module>assertj-core</module>
 		<module>org.fest-util</module>

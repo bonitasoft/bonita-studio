@@ -43,9 +43,8 @@ public class TestDebugFeature extends SWTBotGefTestCase {
 	
 	@Test
 	public void testSimpleDebug() throws Exception{
-		long nbProcessDefinitions = getNBProcessDefinitions();
 		SWTBotTestUtil.createNewDiagram(bot);
-		long previousNbProc = getNBProcessDefinitions();
+		final long previousNbProc = getNBProcessDefinitions();
 		launchDebugWizard();
 		bot.button(Messages.DebugProcessButtonLabel).click();
 		checkNbOfProcDefInEngine("Simple debug is not working", previousNbProc +1);
@@ -53,9 +52,8 @@ public class TestDebugFeature extends SWTBotGefTestCase {
 
 	@Test
 	public void testDebugWithConnectorOnCallActivity() throws Exception{
-		long nbProcessDefinitions = getNBProcessDefinitions();
 		SWTBotTestUtil.importProcessWIthPathFromClass(bot, "DiagramToTestDebugWitghCallActivityWithConnector-1.0.bos", "Bonita 6.x", "DiagramToTestDebugWitghCallActivityWithConnector", TestDebugFeature.class, false);
-		long previousNbProc = getNBProcessDefinitions();
+		final long previousNbProc = getNBProcessDefinitions();
 		launchDebugWizard();
 		bot.button(Messages.DebugProcessButtonLabel).click();
 		checkNbOfProcDefInEngine("Debug with Connector on call activity is not working", previousNbProc +2);
@@ -81,14 +79,17 @@ public class TestDebugFeature extends SWTBotGefTestCase {
 			final long nbProcDefToCheck) {
 		bot.waitUntil(new ICondition() {
 
+            @Override
             public boolean test() throws Exception {
             	nbProcess=getNBProcessDefinitions();
                 return getNBProcessDefinitions() == nbProcDefToCheck ;
             }
 
-            public void init(SWTBot bot) {
+            @Override
+            public void init(final SWTBot bot) {
             }
 
+            @Override
             public String getFailureMessage() {
                 
 				return failureMessage+" should be "+nbProcDefToCheck+" instead of "+nbProcess;
@@ -99,10 +100,11 @@ public class TestDebugFeature extends SWTBotGefTestCase {
 	private void launchDebugWizard() {
 		final Runnable runnable = new Runnable() {
 			
-			public void run() {
+			@Override
+            public void run() {
 				try {
 					new DebugProcessCommand(true).execute(null);
-				} catch (ExecutionException e) {
+				} catch (final ExecutionException e) {
 					BonitaStudioLog.error(e);
 				}
 				

@@ -1,7 +1,7 @@
 /**
  * Copyright (C) 2012 BonitaSoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -41,7 +41,7 @@ import org.eclipse.emf.validation.IValidationContext;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 
 /**
- * 
+ *
  * @author Romain Bioteau
  *
  */
@@ -50,7 +50,7 @@ public class OpeartionReturnTypeWarningConstraint extends AbstractLiveValidation
 	private final OperationReturnTypesValidator validator =  new OperationReturnTypesValidator();
 
 	@Override
-	protected IStatus performLiveValidation(IValidationContext ctx) {
+	protected IStatus performLiveValidation(final IValidationContext ctx) {
 		final EStructuralFeature featureTriggered = ctx.getFeature();
 		if(featureTriggered.equals(ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE)){
 			final Expression expression = (Expression) ctx.getTarget();
@@ -60,15 +60,14 @@ public class OpeartionReturnTypeWarningConstraint extends AbstractLiveValidation
 					return ctx.createSuccessStatus();
 				}
 				if (op.eContainer() instanceof FileWidget){
-					FileWidget fileWidget = (FileWidget)op.eContainer();
+					final FileWidget fileWidget = (FileWidget)op.eContainer();
 					if (fileWidget.isDownloadOnly()){
 						return ctx.createSuccessStatus();
 					}
 				}
-				validator.setDataExpression(op.getLeftOperand());
 				final IStatus status = validator.validate(op.getRightOperand());
 				if(!status.isOK()){
-					FlowElement el = ModelHelper.getParentFlowElement(op);
+					final FlowElement el = ModelHelper.getParentFlowElement(op);
 					String activityName = null;
 					if(el != null){
 						activityName = el.getName();
@@ -86,7 +85,7 @@ public class OpeartionReturnTypeWarningConstraint extends AbstractLiveValidation
 	}
 
 	@Override
-	protected String getMarkerType(DiagramEditor editor) {
+	protected String getMarkerType(final DiagramEditor editor) {
 		if(editor instanceof ProcessDiagramEditor){
 			return ProcessMarkerNavigationProvider.MARKER_TYPE;
 		}else if(editor instanceof FormDiagramEditor){
@@ -101,13 +100,13 @@ public class OpeartionReturnTypeWarningConstraint extends AbstractLiveValidation
 	}
 
 	@Override
-	protected IStatus performBatchValidation(IValidationContext ctx) {
+	protected IStatus performBatchValidation(final IValidationContext ctx) {
 		final Expression expression = (Expression) ctx.getTarget();
 		if(!ModelHelper.isAnExpressionCopy(expression) && expression.eContainer() instanceof Operation){
 			final Operation op = (Operation) expression.eContainer();
 			if(op.eContainingFeature().equals(FormPackage.Literals.WIDGET__ACTION)){
-				Widget parentWidget = ModelHelper.getParentWidget(op);
-				if(parentWidget instanceof FormButton 
+				final Widget parentWidget = ModelHelper.getParentWidget(op);
+				if(parentWidget instanceof FormButton
 						|| parentWidget instanceof Info){
 					return ctx.createSuccessStatus();
 				}
@@ -116,18 +115,18 @@ public class OpeartionReturnTypeWarningConstraint extends AbstractLiveValidation
 				return ctx.createSuccessStatus();
 			}
 			if (op.eContainer() instanceof FileWidget){
-				FileWidget fileWidget = (FileWidget)op.eContainer();
+				final FileWidget fileWidget = (FileWidget)op.eContainer();
 				if (fileWidget.isDownloadOnly()){
 					return ctx.createSuccessStatus();
 				}
 			}
-			if(op.getLeftOperand() == null 
-					|| op.getLeftOperand().getContent() == null 
+			if(op.getLeftOperand() == null
+					|| op.getLeftOperand().getContent() == null
 					|| op.getLeftOperand().getContent().isEmpty()){
-				if(op.getRightOperand() != null 
-						&& op.getRightOperand() .getContent() != null 
+				if(op.getRightOperand() != null
+						&& op.getRightOperand() .getContent() != null
 						&& !op.getRightOperand() .getContent().isEmpty()){
-					Element el = ModelHelper.getParentElement(op);
+					final Element el = ModelHelper.getParentElement(op);
 					String activityName = null;
 					if(el != null){
 						activityName = el.getName();
@@ -135,10 +134,9 @@ public class OpeartionReturnTypeWarningConstraint extends AbstractLiveValidation
 					return ctx.createFailureStatus(Messages.bind(Messages.leftOperandMissing,activityName));
 				}
 			}
-			validator.setDataExpression(op.getLeftOperand());
 			final IStatus status = validator.validate(op.getRightOperand());
 			if(!status.isOK()){
-				FlowElement el = ModelHelper.getParentFlowElement(op);
+				final FlowElement el = ModelHelper.getParentFlowElement(op);
 				String activityName = null;
 				if(el != null){
 					activityName = el.getName();

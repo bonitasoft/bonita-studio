@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -21,7 +19,6 @@ import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.connector.model.definition.AbstractDefinitionRepositoryStore;
 import org.bonitasoft.studio.connector.model.definition.Category;
 import org.bonitasoft.studio.connector.model.i18n.DefinitionResourceProvider;
@@ -51,13 +48,9 @@ public class ConnectorDefRepositoryStore extends AbstractDefinitionRepositorySto
 
     private DefinitionResourceProvider resourceProvider;
 
-    @Override
-    public void createRepositoryStore(IRepository repository) {
-        super.createRepositoryStore(repository);
-    }
 
     @Override
-    public ConnectorDefFileStore createRepositoryFileStore(String fileName) {
+    public ConnectorDefFileStore createRepositoryFileStore(final String fileName) {
         if (fileName.endsWith(CONNECTOR_DEF_EXT)) {
             clearCachedFileStore();
             return new ConnectorDefFileStore(fileName, this);
@@ -74,8 +67,8 @@ public class ConnectorDefRepositoryStore extends AbstractDefinitionRepositorySto
     }
 
     @Override
-    protected ConnectorDefFileStore doImportInputStream(String fileName, InputStream inputStream) {
-        ConnectorDefFileStore definition = super.doImportInputStream(fileName, inputStream);
+    protected ConnectorDefFileStore doImportInputStream(final String fileName, final InputStream inputStream) {
+        final ConnectorDefFileStore definition = super.doImportInputStream(fileName, inputStream);
         if (definition != null) {
             final DefinitionResourceProvider resourceProvider = DefinitionResourceProvider.getInstance(this, getBundle());
             reloadCategories(definition.getContent(), resourceProvider);
@@ -83,9 +76,10 @@ public class ConnectorDefRepositoryStore extends AbstractDefinitionRepositorySto
         return definition;
     }
 
-    private void reloadCategories(org.bonitasoft.studio.connector.model.definition.ConnectorDefinition definition, DefinitionResourceProvider messageProvider) {
+    private void reloadCategories(final org.bonitasoft.studio.connector.model.definition.ConnectorDefinition definition,
+            final DefinitionResourceProvider messageProvider) {
         boolean reloadCategories = false;
-        for (Category c : definition.getCategory()) {
+        for (final Category c : definition.getCategory()) {
             if (!messageProvider.getAllCategories().contains(c)) {
                 reloadCategories = true;
                 break;
@@ -117,8 +111,13 @@ public class ConnectorDefRepositoryStore extends AbstractDefinitionRepositorySto
     }
 
     @Override
-    protected ConnectorDefFileStore getDefFileStore(URL url) {
-        return new URLConnectorDefFileStore(url, this);
+    protected ConnectorDefFileStore getDefFileStore(final URL url) {
+        for (final String compatibleExtension : getCompatibleExtensions()) {
+            if (url.getFile().endsWith(compatibleExtension)) {
+                return new URLConnectorDefFileStore(url, this);
+            }
+        }
+        return null;
     }
 
     @Override

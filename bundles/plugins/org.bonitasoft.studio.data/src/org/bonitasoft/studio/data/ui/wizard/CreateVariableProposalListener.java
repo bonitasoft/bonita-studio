@@ -1,60 +1,68 @@
+/**
+ * Copyright (C) 2014 Bonitasoft S.A.
+ * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2.0 of the License, or
+ * (at your option) any later version.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.bonitasoft.studio.data.ui.wizard;
 
 import java.util.HashSet;
 import java.util.Set;
 
+import org.bonitasoft.studio.data.i18n.Messages;
 import org.bonitasoft.studio.expression.editor.provider.IProposalListener;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Activity;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.studio.model.process.ReceiveTask;
+import org.bonitasoft.studio.model.process.SendTask;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.widgets.Display;
-
-/*******************************************************************************
- * Copyright (C) 2013 BonitaSoft S.A.
- * BonitaSoft is a trademark of BonitaSoft SA.
- * This software file is BONITASOFT CONFIDENTIAL. Not For Distribution.
- * For commercial licensing information, contact:
- * BonitaSoft, 32 rue Gustave Eiffel a 38000 Grenoble
- * or BonitaSoft US, 51 Federal Street, Suite 305, San Francisco, CA 94107
- *******************************************************************************/
+import org.eclipse.swt.widgets.Shell;
 
 /**
  * @author Maxence Raoux
- * 
+ *
  */
 public class CreateVariableProposalListener implements IProposalListener {
 
-    private boolean isPageFlowContext = false;
+    private boolean isPageFlowContext = true;
 
     private EStructuralFeature feature;
 
-    public CreateVariableProposalListener() {
-    }
-
     @Override
-    public String handleEvent(EObject context, String fixedReturnType) {
+    public String handleEvent(final EObject context, final String fixedReturnType) {
         Assert.isNotNull(context);
-        while (!(context instanceof AbstractProcess || context instanceof Activity)) {
-            context = context.eContainer();
-        }
+        final EObject dataContainer = getDataContainer(context);
         if (feature == null) {
             feature = ProcessPackage.Literals.DATA_AWARE__DATA;
         }
-        Set<EStructuralFeature> res = new HashSet<EStructuralFeature>();
+        final Set<EStructuralFeature> res = new HashSet<EStructuralFeature>();
         res.add(feature);
-        final DataWizard newWizard = new DataWizard(TransactionUtil.getEditingDomain(context), context, feature, res, true, fixedReturnType);
+        final DataWizard newWizard = new DataWizard(TransactionUtil.getEditingDomain(context), dataContainer, feature, res, true, fixedReturnType);
         newWizard.setIsPageFlowContext(isPageFlowContext);
-        final DataWizardDialog wizardDialog = new DataWizardDialog(Display
-                .getCurrent().getActiveShell().getParent().getShell(),
+        Shell activeShell = Display
+                .getDefault().getActiveShell();
+        if (activeShell.getParent() != null) {
+            activeShell = activeShell.getParent().getShell();
+        }
+        final DataWizardDialog wizardDialog = new DataWizardDialog(activeShell,
                 newWizard, null);
         if (wizardDialog.open() == Dialog.OK) {
-            EObject obj = newWizard.getWorkingCopy();
+            final EObject obj = newWizard.getWorkingCopy();
             if (obj instanceof Data) {
                 final Data d = (Data) obj;
                 if (d != null) {
@@ -62,9 +70,26 @@ public class CreateVariableProposalListener implements IProposalListener {
                 }
             }
         }
-
         return null;
+    }
 
+    protected EObject getDataContainer(EObject context) {
+        while (!isValidContainer(context)) {
+            context = context.eContainer();
+        }
+        return context;
+    }
+
+    private boolean isValidContainer(final EObject context) {
+        return (context instanceof AbstractProcess
+                || context instanceof Activity)
+                && !(context instanceof SendTask)
+                && !(context instanceof ReceiveTask);
+    }
+
+    @Override
+    public String toString() {
+        return Messages.createVariable;
     }
 
     /*
@@ -73,7 +98,7 @@ public class CreateVariableProposalListener implements IProposalListener {
      */
     @Override
     public boolean isPageFlowContext() {
-        return true;
+        return isPageFlowContext;
     }
 
     /*
@@ -81,9 +106,8 @@ public class CreateVariableProposalListener implements IProposalListener {
      * @see org.bonitasoft.studio.common.IBonitaVariableContext#setIsPageFlowContext(boolean)
      */
     @Override
-    public void setIsPageFlowContext(boolean isPageFlowContext) {
+    public void setIsPageFlowContext(final boolean isPageFlowContext) {
         this.isPageFlowContext = isPageFlowContext;
-
     }
 
     /*
@@ -91,7 +115,7 @@ public class CreateVariableProposalListener implements IProposalListener {
      * @see org.bonitasoft.studio.expression.editor.provider.IProposalListener#setEStructuralFeature(org.eclipse.emf.ecore.EStructuralFeature)
      */
     @Override
-    public void setEStructuralFeature(EStructuralFeature feature) {
+    public void setEStructuralFeature(final EStructuralFeature feature) {
         this.feature = feature;
 
     }
@@ -110,7 +134,12 @@ public class CreateVariableProposalListener implements IProposalListener {
      * @see org.bonitasoft.studio.common.IBonitaVariableContext#setIsOverviewContext(boolean)
      */
     @Override
-    public void setIsOverviewContext(boolean isOverviewContext) {
+    public void setIsOverviewContext(final boolean isOverviewContext) {
+    }
+
+    @Override
+    public boolean isRelevant(final EObject context) {
+        return true;
     }
 
 }

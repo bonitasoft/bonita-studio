@@ -112,8 +112,8 @@ public class AddMessageEventWizardPage extends WizardPage implements
 	 * @param performer
 	 * @param pageName
 	 */
-	protected AddMessageEventWizardPage(MainProcess diagram,
-			final ThrowMessageEvent element, Message originalMessage,
+	protected AddMessageEventWizardPage(final MainProcess diagram,
+			final ThrowMessageEvent element, final Message originalMessage,
 			Message workingCopyMessage) {
 		super(Messages.messageEventAddWizardPageName,
 				Messages.messageEventAddWizardPageTitle, Pics.getWizban());
@@ -145,10 +145,10 @@ public class AddMessageEventWizardPage extends WizardPage implements
 	 * .Composite)
 	 */
 	@Override
-	public void createControl(Composite parent) {
+	public void createControl(final Composite parent) {
 		databindingContext = new DataBindingContext();
 
-		Composite composite = new Composite(parent, SWT.NONE);
+		final Composite composite = new Composite(parent, SWT.NONE);
 		composite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2)
 				.spacing(15, 10).create());
 
@@ -166,7 +166,7 @@ public class AddMessageEventWizardPage extends WizardPage implements
 		setControl(composite);
 	}
 
-	private void createTableFolder(Composite composite) {
+	private void createTableFolder(final Composite composite) {
 		final TabFolder messageAndCorrelationFolder = new TabFolder(composite,
 				SWT.NONE);
 		messageAndCorrelationFolder.setLayout(GridLayoutFactory.fillDefaults()
@@ -192,7 +192,7 @@ public class AddMessageEventWizardPage extends WizardPage implements
 
 	}
 
-	private void createMessageContentComposite(Composite composite) {
+	private void createMessageContentComposite(final Composite composite) {
 		composite.setLayout(GridLayoutFactory.fillDefaults().margins(5, 10)
 				.create());
 		composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true)
@@ -213,9 +213,10 @@ public class AddMessageEventWizardPage extends WizardPage implements
 		ecv.setAddRowLabel(Messages.addMessageContentButton);
 		ecv.setRemoveRowLabel(Messages.removeMessageContent);
 		ecv.setLineTableCreator(new LineTableCreator(){
-			public ListExpression createListExpressionForNewLineInTable(int size) {
-				ListExpression rowExp = ExpressionFactory.eINSTANCE.createListExpression();
-				EList<Expression> expressions = rowExp.getExpressions();
+			@Override
+            public ListExpression createListExpressionForNewLineInTable(final int size) {
+				final ListExpression rowExp = ExpressionFactory.eINSTANCE.createListExpression();
+				final EList<Expression> expressions = rowExp.getExpressions();
 				for (int i = 0; i < size; i++) {
 					final Expression cellExpression = ExpressionFactory.eINSTANCE.createExpression();
 					if(i==0){
@@ -234,7 +235,7 @@ public class AddMessageEventWizardPage extends WizardPage implements
 
 		ecv.addModifyListener(new Listener() {
 			@Override
-			public void handleEvent(Event event) {
+			public void handleEvent(final Event event) {
 				final IStatus status = AddMessageEventWizardPage.this
 						.validateId(workingCopyMessage.getMessageContent(),
 								Messages.addMessageContent);
@@ -259,7 +260,7 @@ public class AddMessageEventWizardPage extends WizardPage implements
 		ecv.setViewerFilters(filters);
 	}
 
-	private void createcorrelationComposite(Composite composite) {
+	private void createcorrelationComposite(final Composite composite) {
 		composite.setLayout(GridLayoutFactory.fillDefaults().margins(5, 10)
 				.create());
 		composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true)
@@ -283,7 +284,7 @@ public class AddMessageEventWizardPage extends WizardPage implements
 		useCorrelationCheckbox.setSelection(false);
 		useCorrelationCheckbox.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e) {
+			public void widgetSelected(final SelectionEvent e) {
 				super.widgetSelected(e);
 				if (!useCorrelationCheckbox.getSelection()) {
 					workingCopyMessage.getCorrelation().setCorrelationType(
@@ -344,8 +345,8 @@ public class AddMessageEventWizardPage extends WizardPage implements
 		ecv.setSelection(correlationAssociation);
 		ecv.addModifyListener(new Listener() {
 			@Override
-			public void handleEvent(Event event) {
-				IStatus status = AddMessageEventWizardPage.this.validateId(
+			public void handleEvent(final Event event) {
+				final IStatus status = AddMessageEventWizardPage.this.validateId(
 						workingCopyMessage.getCorrelation()
 								.getCorrelationAssociation(),
 						Messages.correlation);
@@ -378,10 +379,10 @@ public class AddMessageEventWizardPage extends WizardPage implements
 		return correlationAssociation;
 	}
 
-	protected void updateValidationStatus(IStatus status) {
+	protected void updateValidationStatus(final IStatus status) {
 		if (status.isOK()) {
 			setErrorMessage(null);
-			Iterator<?> it = databindingContext.getValidationStatusProviders()
+			final Iterator<?> it = databindingContext.getValidationStatusProviders()
 					.iterator();
 			while (it.hasNext()) {
 				final ValidationStatusProvider provider = (ValidationStatusProvider) it
@@ -411,7 +412,7 @@ public class AddMessageEventWizardPage extends WizardPage implements
 		return messageContent;
 	}
 
-	protected IStatus hasAtLeastOneCorrelation(TableExpression expTable) {
+	protected IStatus hasAtLeastOneCorrelation(final TableExpression expTable) {
 		if (expTable == null) {
 			return ValidationStatus.error(Messages.oneCorrelationAtLeastNeeded);
 		} else if (expTable.getExpressions().isEmpty()) {
@@ -420,11 +421,11 @@ public class AddMessageEventWizardPage extends WizardPage implements
 		return Status.OK_STATUS;
 	}
 
-	protected IStatus validateId(TableExpression expTable, String tableName) {
+	protected IStatus validateId(final TableExpression expTable, final String tableName) {
 		final Set<String> ids = new HashSet<String>();
 		String duplicateId = null;
 
-		for (ListExpression row : expTable.getExpressions()) {
+		for (final ListExpression row : expTable.getExpressions()) {
 			if (row.getExpressions().size() > 0) {
 				final Expression expr = row.getExpressions().get(0);
 				final Expression value = row.getExpressions().get(1);
@@ -483,8 +484,8 @@ public class AddMessageEventWizardPage extends WizardPage implements
 		return Status.OK_STATUS;
 	}
 
-	private void createComboEventLine(Composite composite) {
-		Label eventNameLabel = new Label(composite, SWT.NONE);
+	private void createComboEventLine(final Composite composite) {
+		final Label eventNameLabel = new Label(composite, SWT.NONE);
 		eventNameLabel.setText(Messages.eventNameLabel + " *");
 		eventNameLabel.setLayoutData(GridDataFactory.fillDefaults()
 				.align(SWT.END, SWT.CENTER).create());
@@ -529,7 +530,7 @@ public class AddMessageEventWizardPage extends WizardPage implements
 
 	}
 
-	private void createProcessExpressionViewer(Composite composite) {
+	private void createProcessExpressionViewer(final Composite composite) {
 		final Label processNameLabel = new Label(composite, SWT.NONE);
 		processNameLabel.setLayoutData(GridDataFactory.fillDefaults()
 				.align(SWT.END, SWT.CENTER).create());
@@ -549,7 +550,6 @@ public class AddMessageEventWizardPage extends WizardPage implements
 		processExpressionViewer.setMessage(Messages.targetProcessMessageHint,
 				IStatus.INFO);
 		final IExpressionNatureProvider provider = new ProcessNamesExpressionNatureProviderForMessage();
-		provider.setContext(element);
 		processExpressionViewer.setExpressionNatureProvider(provider);
 		processExpressionViewer.setContext(element);
 		if (workingCopyMessage.getTargetProcessExpression() == null) {
@@ -573,14 +573,14 @@ public class AddMessageEventWizardPage extends WizardPage implements
 				.addSelectionChangedListener(new ISelectionChangedListener() {
 
 					@Override
-					public void selectionChanged(SelectionChangedEvent event) {
+					public void selectionChanged(final SelectionChangedEvent event) {
 						refreshTargetEventContent();
 					}
 				});
 	}
 
-	private Text createDescriptionLine(Composite composite) {
-		Label descLabel = new Label(composite, SWT.NONE);
+	private Text createDescriptionLine(final Composite composite) {
+		final Label descLabel = new Label(composite, SWT.NONE);
 		descLabel.setLayoutData(GridDataFactory.fillDefaults()
 				.align(SWT.END, SWT.TOP).create());
 		descLabel.setText(Messages.dataDescriptionLabel);
@@ -595,8 +595,8 @@ public class AddMessageEventWizardPage extends WizardPage implements
 		return descText;
 	}
 
-	private Text createNameLine(Composite composite) {
-		Label nameLabel = new Label(composite, SWT.NONE);
+	private Text createNameLine(final Composite composite) {
+		final Label nameLabel = new Label(composite, SWT.NONE);
 		nameLabel.setLayoutData(GridDataFactory.fillDefaults()
 				.align(SWT.END, SWT.CENTER).create());
 		nameLabel.setText(Messages.dataNameLabel);
@@ -605,19 +605,19 @@ public class AddMessageEventWizardPage extends WizardPage implements
 		nameText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false)
 				.create());
 
-		IValidator nameValidator = new IValidator() {
+		final IValidator nameValidator = new IValidator() {
 
 			@Override
-			public IStatus validate(Object arg0) {
+			public IStatus validate(final Object arg0) {
 				if (arg0 instanceof String) {
-					String s = (String) arg0;
+					final String s = (String) arg0;
 					if (s == null || s.isEmpty()) {
 						return ValidationStatus.error(Messages.emptyName);
 					} else {
-						List<Message> events = ModelHelper.getAllItemsOfType(
+						final List<Message> events = ModelHelper.getAllItemsOfType(
 								ModelHelper.getMainProcess(element),
 								ProcessPackage.eINSTANCE.getMessage());
-						for (Message ev : events) {
+						for (final Message ev : events) {
 							if (!ev.equals(originalMessage)
 									&& ev.getName().equals(s)) {
 								return ValidationStatus
@@ -630,7 +630,7 @@ public class AddMessageEventWizardPage extends WizardPage implements
 			}
 		};
 
-		UpdateValueStrategy uvs = new UpdateValueStrategy(/*
+		final UpdateValueStrategy uvs = new UpdateValueStrategy(/*
 														 * UpdateValueStrategy.
 														 * POLICY_CONVERT
 														 */);
@@ -648,16 +648,16 @@ public class AddMessageEventWizardPage extends WizardPage implements
 	private void refreshTargetEventContent() {
 		if (processExpressionViewer.getSelection() != null
 				&& !processExpressionViewer.getSelection().isEmpty()) {
-			Expression procName = (Expression) ((StructuredSelection) processExpressionViewer
+			final Expression procName = (Expression) ((StructuredSelection) processExpressionViewer
 					.getSelection()).getFirstElement();
 			if (procName.getType().equals(ExpressionConstants.CONSTANT_TYPE)) {
-				AbstractProcess proc = getProcessOnDiagram(
+				final AbstractProcess proc = getProcessOnDiagram(
 						ModelHelper.getMainProcess(element),
 						procName.getContent());
-					DiagramRepositoryStore store = (DiagramRepositoryStore) RepositoryManager
+					final DiagramRepositoryStore store = RepositoryManager
 							.getInstance().getRepositoryStore(
 									DiagramRepositoryStore.class);
-					List<AbstractProcess> processes = store
+					final List<AbstractProcess> processes = store
 							.findProcesses(procName.getContent());
 					if (proc != null) {
 						processes.add(proc);
@@ -671,9 +671,9 @@ public class AddMessageEventWizardPage extends WizardPage implements
 			}
 	}
 
-	private AbstractProcess getProcessOnDiagram(MainProcess mainProcess,
-			String procName) {
-		for (AbstractProcess proc : ModelHelper.getAllProcesses(mainProcess)) {
+	private AbstractProcess getProcessOnDiagram(final MainProcess mainProcess,
+			final String procName) {
+		for (final AbstractProcess proc : ModelHelper.getAllProcesses(mainProcess)) {
 			if (proc.getName().equals(procName)) {
 				return proc;
 			}

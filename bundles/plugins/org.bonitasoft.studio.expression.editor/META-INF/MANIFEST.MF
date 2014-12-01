@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Expression Editor Plugin
 Bundle-SymbolicName: org.bonitasoft.studio.expression.editor;singleton:=true
-Bundle-Version: 6.4.0.qualifier
+Bundle-Version: 7.0.0.qualifier
 Bundle-Activator: org.bonitasoft.studio.expression.editor.ExpressionEditorPlugin
 Bundle-Vendor: BonitaSoft S.A.
 Require-Bundle: org.eclipse.ui,
@@ -11,7 +11,7 @@ Require-Bundle: org.eclipse.ui,
  org.bonitasoft.studio.model.edit,
  org.eclipse.emf.edit.ui,
  org.bonitasoft.studio.common,
- org.eclipse.core.databinding,
+ org.eclipse.core.databinding;visibility:=reexport,
  org.eclipse.emf.databinding.edit,
  org.eclipse.emf.workspace,
  org.eclipse.jface.databinding,
@@ -27,9 +27,9 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.pde.core;bundle-version="3.7.1",
  org.junit;bundle-version="4.8.2";resolution:=optional,
  org.mockito;bundle-version="1.9.5";resolution:=optional,
- org.powermock;bundle-version="1.5.2";resolution:=optional,
  assertj-core;bundle-version="1.5.0";resolution:=optional,
- org.bonitasoft.studio.refactoring;bundle-version="6.3.0"
+ org.bonitasoft.studio.refactoring;bundle-version="6.3.0",
+ org.bonitasoft.studio.tests-utils;bundle-version="6.4.0";resolution:=optional
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: org.bonitasoft.studio.expression.editor,org.bonitasoft
@@ -39,8 +39,10 @@ Export-Package: org.bonitasoft.studio.expression.editor,org.bonitasoft
  o.expression.editor.i18n; x-friends:="org.bonitasoft.studio.propertie
  s.test,  org.bonitasoft.studio.test.swtbot.util,  org.bonitasoft.stud
  io.tests.ex,  org.bonitasoft.studio.expressions.test,  org.bonitasoft
- .studio.diagram.test,  org.bonitasoft.studio.connectors.test",org.bon
- itasoft.studio.expression.editor.operation,org.bonitasoft.studio.expr
- ession.editor.provider,org.bonitasoft.studio.expression.editor.viewer
+ .studio.diagram.test,  org.bonitasoft.studio.connectors.test,  org.bo
+ nitasoft.studio.qa.pt.test,  org.bonitasoft.studio.tests,  org.bonita
+ soft.studio.swtbot.framework",org.bonitasoft.studio.expression.editor
+ .operation,org.bonitasoft.studio.expression.editor.provider,org.bonit
+ asoft.studio.expression.editor.viewer
 Import-Package: org.bonitasoft.engine.bpm.document,
  org.bonitasoft.engine.expression

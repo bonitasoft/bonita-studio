@@ -14,11 +14,11 @@
  */
 package org.bonitasoft.studio.diagram.custom.wizard;
 
-import org.bonitasoft.studio.diagram.custom.Messages;
+import org.bonitasoft.studio.diagram.custom.i18n.Messages;
 
 public class DeleteDiagramWizard extends AbstractManageDiagramWizard {
 
-    DeleteDiagramWizardPage page;
+    protected DeleteDiagramWizardPage page;
 
     public DeleteDiagramWizard() {
         setNeedsProgressMonitor(true);
@@ -32,7 +32,7 @@ public class DeleteDiagramWizard extends AbstractManageDiagramWizard {
     @Override
     public void addPages() {
         page = new DeleteDiagramWizardPage(Messages.DeleteDiagramWizardPage_title);
-        super.addPage(page);
+        addPage(page);
     }
 
     @Override

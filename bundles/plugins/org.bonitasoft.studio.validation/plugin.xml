@@ -801,7 +801,7 @@
                   class="org.bonitasoft.studio.validation.constraints.process.MultiInstanceConstraintOutput"
                   id="org.bonitasoft.studio.validation.constraints.outputIteration"
                   lang="java"
-                  mode="Live"
+                  mode="Batch"
                   name="outputdataMultiInstanceCollection"
                   severity="WARNING"
                   statusCode="1">
@@ -815,7 +815,7 @@
                   class="org.bonitasoft.studio.validation.constraints.process.MultiInstanceConstraintInput"
                   id="org.bonitasoft.studio.validation.constraints.inputIteration"
                   lang="java"
-                  mode="Live"
+                  mode="Batch"
                   name="inputdataMultiInstanceCollection"
                   severity="WARNING"
                   statusCode="1">
@@ -885,7 +885,7 @@
                </target>
             </constraint>
             <constraint
-                  class="org.bonitasoft.studio.validation.constraints.process.ConnectorExistenceConstraint"
+                  class="org.bonitasoft.studio.validation.constraints.connector.ConnectorExistenceConstraint"
                   id="org.bonitasoft.studio.validation.constraints.connectorexistence"
                   isEnabledByDefault="true"
                   lang="Java"
@@ -916,7 +916,7 @@
                </target>
             </constraint>
               <constraint
-                    class="org.bonitasoft.studio.validation.constraints.process.ConnectorDefinitionAndConfigurationInputConsistencyConstraint"
+                    class="org.bonitasoft.studio.validation.constraints.connector.ConnectorDefinitionAndConfigurationInputConsistencyConstraint"
                     id="org.bonitasoft.studio.validation.constraints.connectorDefAndConfigInputConsistency"
                     isEnabledByDefault="true"
                     lang="Java"
@@ -932,7 +932,7 @@
                  </target>
               </constraint>
               <constraint
-                    class="org.bonitasoft.studio.validation.constraints.process.ConnectorDefinitionAndConfigurationOutputConsistencyConstraint"
+                    class="org.bonitasoft.studio.validation.constraints.connector.ConnectorDefinitionAndConfigurationOutputConsistencyConstraint"
                     id="org.bonitasoft.studio.validation.constraints.connectorDefAndConfigOutputConsistency"
                     isEnabledByDefault="true"
                     lang="Java"
@@ -977,6 +977,38 @@
                </message>
                <target
                      class="Operation">
+               </target>
+            </constraint>
+            <constraint
+                  class="org.bonitasoft.studio.validation.constraints.OperatorConsistencyConstraint"
+                  id="org.bonitasoft.studio.validation.operatorconsistency"
+                  isEnabledByDefault="true"
+                  lang="java"
+                  mode="Batch"
+                  name="Operator consistency"
+                  severity="ERROR"
+                  statusCode="1">
+               <message>
+                  {0}
+               </message>
+               <target
+                     class="Operation">
+               </target>
+            </constraint>
+            <constraint
+                  class="org.bonitasoft.studio.validation.constraints.connector.CMISConnectorDefinitionConstraint"
+                  id="org.bonitasoft.studio.validation.constraints.cmisConnectorConfigurationConstraint"
+                  isEnabledByDefault="true"
+                  lang="Java"
+                  mode="Batch"
+                  name="Connector definition and configuration output consistency"
+                  severity="ERROR"
+                  statusCode="1">
+               <message>
+                  {0}
+               </message>
+               <target
+                     class="Connector">
                </target>
             </constraint>
          </constraints>
@@ -1157,6 +1189,22 @@
                </message>
                <target
                      class="MultipleValuatedFormField">
+               </target>
+            </constraint>
+            <constraint
+                  class="org.bonitasoft.studio.validation.constraints.form.DuplicatedFileWidgetMultipleDocumentConsistencyConstraint"
+                  id="DuplicatedFileWidgetMultipleDocumentConsistencyConstraint"
+                  isEnabledByDefault="true"
+                  lang="Java"
+                  mode="Batch"
+                  name="%MultipleDocumentConstraint"
+                  severity="WARNING"
+                  statusCode="1">
+               <message>
+                  {0}
+               </message>
+               <target
+                     class="Widget">
                </target>
             </constraint>
          </constraints>

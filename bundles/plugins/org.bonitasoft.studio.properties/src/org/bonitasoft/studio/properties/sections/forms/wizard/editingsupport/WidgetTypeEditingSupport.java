@@ -21,7 +21,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-import org.bonitasoft.studio.common.NamingUtils;
+import org.bonitasoft.studio.common.palette.FormPaletteLabelProvider;
 import org.bonitasoft.studio.diagram.form.custom.model.WidgetMapping;
 import org.bonitasoft.studio.model.form.FormFactory;
 import org.bonitasoft.studio.model.form.Widget;
@@ -46,6 +46,7 @@ import org.eclipse.swt.widgets.Display;
 public class WidgetTypeEditingSupport extends EditingSupport {
 
     private final HashMap<String, EClass> widgetTypesByNames;
+    private final FormPaletteLabelProvider formPaletteLabelProvider;
 
     /**
      * @param viewer
@@ -53,6 +54,7 @@ public class WidgetTypeEditingSupport extends EditingSupport {
     public WidgetTypeEditingSupport(final ColumnViewer viewer) {
         super(viewer);
         widgetTypesByNames = new HashMap<String,EClass>();
+        formPaletteLabelProvider = new FormPaletteLabelProvider();
     }
 
     /* (non-Javadoc)
@@ -75,8 +77,8 @@ public class WidgetTypeEditingSupport extends EditingSupport {
         final CCombo combo = new CCombo((Composite) getViewer().getControl(), SWT.READ_ONLY);
         combo.setEditable(false);
         combo.setItems(getItemsFor(element));
-        final String value = NamingUtils.getFormPaletteText(false, ((WidgetMapping) element).getWidgetType().eClass());
-        combo.setText(value);
+        final String initialValue = getText(((WidgetMapping) element).getWidgetType().eClass(), (WidgetMapping) element);
+        combo.setText(initialValue);
         combo.addSelectionListener(new SelectionAdapter() {
 
             @Override
@@ -103,7 +105,7 @@ public class WidgetTypeEditingSupport extends EditingSupport {
     }
 
     public String getText(final EClass widgetType, final WidgetMapping mapping) {
-        return NamingUtils.getFormPaletteText(false, widgetType);
+        return formPaletteLabelProvider.getFormPaletteText(widgetType);
     }
 
     /* (non-Javadoc)
@@ -122,7 +124,7 @@ public class WidgetTypeEditingSupport extends EditingSupport {
      */
     @Override
     protected Object getValue(final Object element) {
-        return Arrays.asList(getItemsFor(element)).indexOf(NamingUtils.getFormPaletteText(false,((WidgetMapping)element).getWidgetType().eClass()));
+        return Arrays.asList(getItemsFor(element)).indexOf(formPaletteLabelProvider.getFormPaletteText(((WidgetMapping) element).getWidgetType().eClass()));
     }
 
     /* (non-Javadoc)

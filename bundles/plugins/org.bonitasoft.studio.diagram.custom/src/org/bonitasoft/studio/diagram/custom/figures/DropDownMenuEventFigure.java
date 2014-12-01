@@ -21,7 +21,7 @@ package org.bonitasoft.studio.diagram.custom.figures;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bonitasoft.studio.diagram.custom.Messages;
+import org.bonitasoft.studio.diagram.custom.i18n.Messages;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.ImageFigure;
 import org.eclipse.draw2d.Polyline;

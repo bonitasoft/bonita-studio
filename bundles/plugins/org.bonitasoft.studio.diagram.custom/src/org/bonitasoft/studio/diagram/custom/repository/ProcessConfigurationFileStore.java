@@ -17,7 +17,6 @@
 package org.bonitasoft.studio.diagram.custom.repository;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,7 +25,7 @@ import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.filestore.EMFFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
-import org.bonitasoft.studio.diagram.custom.Messages;
+import org.bonitasoft.studio.diagram.custom.i18n.Messages;
 import org.bonitasoft.studio.model.configuration.Configuration;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -41,24 +40,13 @@ import org.eclipse.ui.IWorkbenchPart;
  */
 public class ProcessConfigurationFileStore extends EMFFileStore implements IRepositoryFileStore {
 
-    public ProcessConfigurationFileStore(String folderName, IRepositoryStore<? extends EMFFileStore> store) {
+    public ProcessConfigurationFileStore(final String folderName, final IRepositoryStore<? extends EMFFileStore> store) {
         super(folderName, store);
     }
 
     @Override
     public Configuration getContent() {
-        Resource resource = getEMFResource() ;
-        if(!resource.isLoaded()){
-            try {
-                resource.load(Collections.EMPTY_MAP) ;
-            } catch (IOException e) {
-                BonitaStudioLog.error(e) ;
-            }
-        }
-        if(!resource.getContents().isEmpty()){
-            return (Configuration) resource.getContents().get(0) ;
-        }
-        return null ;
+        return (Configuration) super.getContent();
     }
 
     @Override
@@ -68,21 +56,21 @@ public class ProcessConfigurationFileStore extends EMFFileStore implements IRepo
 
 
     @Override
-    protected void doSave(Object content) {
-        Resource resource = getEMFResource() ;
+    protected void doSave(final Object content) {
+        final Resource resource = getEMFResource() ;
         if(content instanceof Configuration){
             resource.getContents().clear() ;
             resource.getContents().add(EcoreUtil.copy((Configuration)content)) ;
         }
         try {
-            Map<String, String> options = new HashMap<String, String>() ;
+            final Map<String, String> options = new HashMap<String, String>() ;
             options.put(XMLResource.OPTION_ENCODING, "UTF-8");
             options.put(XMLResource.OPTION_XML_VERSION, "1.0");
             resource.save(options) ;
             resource.unload() ;
 
 
-        } catch (IOException e) {
+        } catch (final IOException e) {
             BonitaStudioLog.error(e) ;
         }
     }
@@ -103,14 +91,14 @@ public class ProcessConfigurationFileStore extends EMFFileStore implements IRepo
 
     @Override
     public String getDisplayName() {
-        Configuration conf =  getContent() ;
+        final Configuration conf =  getContent() ;
         final DiagramRepositoryStore diagramStore =  RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class) ;
-        String confId = getName().substring(0,getName().lastIndexOf(".")) ;
+        final String confId = getName().substring(0,getName().lastIndexOf(".")) ;
         String confName = conf.getName() ;
         if(confName == null){
             confName = "Local" ;
         }
-        String processLabel = diagramStore.getLabelFor(confId);
+        final String processLabel = diagramStore.getLabelFor(confId);
         return Messages.bind(Messages.configuration, confName,processLabel != null ? processLabel : confId);
     }
 
@@ -118,10 +106,6 @@ public class ProcessConfigurationFileStore extends EMFFileStore implements IRepo
     public Image getIcon() {
         return getParentStore().getIcon() ;
     }
-
-
-
-
 
 
 }

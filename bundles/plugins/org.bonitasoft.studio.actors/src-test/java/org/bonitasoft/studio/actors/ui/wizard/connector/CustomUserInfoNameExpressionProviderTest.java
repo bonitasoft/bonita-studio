@@ -21,23 +21,23 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CustomUserInfoNameExpressionProviderTest {
-    
+
     private static final String ACME = "ACME.organization";
-    
+
     @Mock
     private OrganizationRepositoryStore repoStore;
-    
+
     @Mock
-    private OrganizationFileStore fileStore; 
-    
+    private OrganizationFileStore fileStore;
+
     private CustomUserInfoNameExpressionProvider provider;
 
     @Mock
     private Organization organization;
-    
+
     @Mock
     private CustomUserInfoDefinitions definitionsContainer;
-    
+
     @Before
     public void setUp() throws Exception {
         provider = new CustomUserInfoNameExpressionProvider(repoStore, ACME);
@@ -49,44 +49,44 @@ public class CustomUserInfoNameExpressionProviderTest {
     @Test
     public void getExpressions_return_empty_array_if_customUserDefition_container_is_null() throws Exception {
         given(organization.getCustomUserInfoDefinitions()).willReturn(null);
-        
+
         //when
-        Expression[] expressions = provider.getExpressions();
-        
+        final Expression[] expressions = provider.getExpressions(null);
+
         //then
         assertThat(expressions).isEmpty();
     }
-    
+
     @Test
     public void getExpressions_return_empty_array_if_customUserDefition_container_is_empty() throws Exception {
-        BasicEList<CustomUserInfoDefinition> elements = new BasicEList<CustomUserInfoDefinition>();
+        final BasicEList<CustomUserInfoDefinition> elements = new BasicEList<CustomUserInfoDefinition>();
         given(definitionsContainer.getCustomUserInfoDefinition()).willReturn(elements);
-        
+
         //when
-        Expression[] expressions = provider.getExpressions();
-        
+        final Expression[] expressions = provider.getExpressions(null);
+
         //then
         assertThat(expressions).isEmpty();
     }
 
     @Test
     public void getExpressions_return_one_expression_for_each_customUserDefition() throws Exception {
-        BasicEList<CustomUserInfoDefinition> elements = new BasicEList<CustomUserInfoDefinition>();
+        final BasicEList<CustomUserInfoDefinition> elements = new BasicEList<CustomUserInfoDefinition>();
         elements.add(getUserDefinition("Skills"));
         elements.add(getUserDefinition("Office location"));
         given(definitionsContainer.getCustomUserInfoDefinition()).willReturn(elements);
-        
+
         //when
-        Expression[] expressions = provider.getExpressions();
-        
+        final Expression[] expressions = provider.getExpressions(null);
+
         //then
         assertThat(expressions).hasSize(2);
         assertThat(expressions[0].getContent()).isEqualTo("Skills");
         assertThat(expressions[1].getContent()).isEqualTo("Office location");
     }
 
-    private CustomUserInfoDefinition getUserDefinition(String name) {
-        CustomUserInfoDefinition userInfoDefinition = mock(CustomUserInfoDefinition.class);
+    private CustomUserInfoDefinition getUserDefinition(final String name) {
+        final CustomUserInfoDefinition userInfoDefinition = mock(CustomUserInfoDefinition.class);
         when(userInfoDefinition.getName()).thenReturn(name);
         return userInfoDefinition;
     }

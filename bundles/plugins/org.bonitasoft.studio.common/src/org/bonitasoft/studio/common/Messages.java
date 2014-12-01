@@ -1,19 +1,16 @@
 /**
  * Copyright (C) 2009 BonitaSoft S.A.
  * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
- *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.common;
 
@@ -21,7 +18,7 @@ import org.eclipse.osgi.util.NLS;
 
 /**
  * @author Mickael Istria
- * 
+ *
  */
 public class Messages extends NLS {
 
@@ -229,8 +226,8 @@ public class Messages extends NLS {
     public static String SubprocessEventDefaultName;
     public static String SubprocessEvent_desc;
     public static String SubprocessEvent_title;
-    public static String CallActivity_desc ;
-    public static String CallActivity_title ;
+    public static String CallActivity_desc;
+    public static String CallActivity_title;
     public static String edit;
     public static String openNameAndVersionDialogTitle;
 
@@ -295,60 +292,65 @@ public class Messages extends NLS {
     public static String differentCaseSameNameError;
     public static String diagramAlreadyExists;
     public static String descriptionTitle;
-	public static String noToAll;
-	public static String yesToAll;
-	public static String overwriteTitle;
-	public static String overwriteMessage;
-	public static String deleteConfirmationTitle;
-	public static String deleteConfirmationMsg;
+    public static String noToAll;
+    public static String yesToAll;
+    public static String overwriteTitle;
+    public static String overwriteMessage;
+    public static String deleteConfirmationTitle;
+    public static String deleteConfirmationMsg;
 
-	public static String seeDetailsButtonLabel;
-	public static String diagramNameOrVersionMustBeChanged;
-	public static String bonitaName;
-	public static String bosProductName;
-	public static String bosSPProductName;
-	public static String bonitaStudioModuleName;
-	public static String bonitaPortalModuleName;
-	public static String bonitaEngineModuleName;
-	public static String bonitaBPMCommunity;
-	public static String bonitaBPMTeamworkSubscription;
-	public static String bonitaBPMEfficiencySubscription;
-	public static String bonitaBPMPerformanceSubscription;
-	public static String corporateName;
+    public static String seeDetailsButtonLabel;
+    public static String diagramNameOrVersionMustBeChanged;
+    public static String bonitaName;
+    public static String bosProductName;
+    public static String bosSPProductName;
+    public static String bonitaStudioModuleName;
+    public static String bonitaPortalModuleName;
+    public static String bonitaEngineModuleName;
+    public static String bonitaBPMCommunity;
+    public static String bonitaBPMTeamworkSubscription;
+    public static String bonitaBPMEfficiencySubscription;
+    public static String bonitaBPMPerformanceSubscription;
+    public static String corporateName;
     public static String nameMustStartWithLowerCase;
-	public static String reservedKeyword;
-	public static String nameFieldIssue;
-	public static String filterLabel;
-	public static String InvalidCharacterError;
-	public static String toolAlignHorizontal;
-	public static String toolAlignHorizontalDesc;
-	public static String toolAlignVertical;
-	public static String toolAlignVerticalDesc;
-	public static String fieldIsTooShort;
-	public static String nonInterruptingTimerEvent_desc;
-	public static String nonInterruptingTimerEvent_title;
-	public static String currentScript;
-	public static String refactoredScript;
-	public static String refactorTitle;
-	public static String reviewChangesMessageRefactoring;
-	public static String reviewChangesMessageRemoving;
-	public static String deleteFormFieldDialogTitle;
-	public static String askConfirmationForDeleting;
-	public static String removingWidgetReferences;
-	public static String removeTitle;
-	public static String delete;
-	public static String nameCantHaveAWhitespace;
-	public static String emptyListExpressionName;
-	public static String referenceTreeViewerTitle;
-	public static String dataListViewerTitle;
-	public static String searchIndexListViewerTitle;
-	public static String parameterListTitle;
-	public static String widgetListViewerTitle;
-	public static String outlineDialogRefactoringText;
-	public static String removalConfirmationDialogTitle;
-	
-	public static String errorValidationMessage;
-	public static String errorValidationContinueAnywayMessage;
-	public static String validationFailedTitle;
-	
+    public static String reservedKeyword;
+    public static String nameFieldIssue;
+    public static String filterLabel;
+    public static String InvalidCharacterError;
+    public static String toolAlignHorizontal;
+    public static String toolAlignHorizontalDesc;
+    public static String toolAlignVertical;
+    public static String toolAlignVerticalDesc;
+    public static String fieldIsTooShort;
+    public static String nonInterruptingTimerEvent_desc;
+    public static String nonInterruptingTimerEvent_title;
+    public static String currentScript;
+    public static String refactoredScript;
+    public static String refactorTitle;
+    public static String reviewChangesMessageRefactoring;
+    public static String reviewChangesMessageRemoving;
+    public static String reviewChangesMessageWithConditionPlace;
+    public static String deleteFormFieldDialogTitle;
+    public static String askConfirmationForDeleting;
+    public static String removingWidgetReferences;
+    public static String removeTitle;
+    public static String delete;
+    public static String nameCantHaveAWhitespace;
+    public static String emptyListExpressionName;
+    public static String referenceTreeViewerTitle;
+    public static String dataListViewerTitle;
+    public static String documentListViewerTitle;
+    public static String searchIndexListViewerTitle;
+    public static String parameterListTitle;
+    public static String widgetListViewerTitle;
+    public static String outlineDialogRefactoringText;
+    public static String removalConfirmationDialogTitle;
+
+    public static String errorValidationMessage;
+    public static String errorValidationContinueAnywayMessage;
+    public static String validationFailedTitle;
+    public static String endWarningMessage;
+    public static String createVariable;
+    public static String createAndNewButton;
+
 }

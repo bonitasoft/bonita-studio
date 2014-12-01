@@ -5,12 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -21,10 +21,8 @@ import static org.bonitasoft.studio.common.Messages.bosProductName;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -32,7 +30,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
-import org.bonitasoft.studio.common.Pair;
+import org.bonitasoft.studio.common.ProcessesValidationAction;
 import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -45,6 +43,7 @@ import org.bonitasoft.studio.common.repository.filestore.FileStoreChangeEvent.Ev
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
+import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -63,91 +62,121 @@ import org.eclipse.swt.widgets.Display;
 
 /**
  * @author Romain Bioteau
- * 
+ *
  */
 public class ImportBosArchiveOperation {
 
     private static final String TMP_IMPORT_PROJECT = "tmpImport";
-
-    private IStatus status;
-
     private String archiveFile;
-
-    private Set<String> resourceToOpen;
-
-    private final List<IRepositoryFileStore> fileStoresToOpen = new ArrayList<IRepositoryFileStore>();
-
     private IRepository currentRepository;
+    private BosArchiveImportStatus importStatus;
+    private final IResourceImporter iResourceImporter;
+    private final boolean launchValidationafterImport;
+
+    private boolean validate = true;
+
+    public ImportBosArchiveOperation() {
+        this(true);
+    }
+
+    public ImportBosArchiveOperation(final boolean launchValidationafterImport) {
+        iResourceImporter = new IResourceImporter();
+        this.launchValidationafterImport = launchValidationafterImport;
+    }
 
     public IStatus run(final IProgressMonitor monitor) {
-        status = Status.OK_STATUS;
         Assert.isNotNull(archiveFile);
         Assert.isNotNull(currentRepository);
         final File archive = new File(archiveFile);
         Assert.isTrue(archive.exists());
-        fileStoresToOpen.clear();
+
+        currentRepository.disableBuild();
+        IContainer container;
         try {
-            currentRepository.disableBuild();
-            final IContainer container = createTempProject(archive, monitor);
-            final Map<String, IRepositoryStore<? extends IRepositoryFileStore>> repositoryMap = new HashMap<String, IRepositoryStore<? extends IRepositoryFileStore>>();
+            container = createTempProject(archive, monitor);
+        } catch (final CoreException e1) {
+            restoreBuildState();
+            return new Status(IStatus.ERROR, CommonRepositoryPlugin.PLUGIN_ID, "Failed to create temporary project", e1);
+        }
 
-            currentRepository.notifyFileStoreEvent(new FileStoreChangeEvent(EventType.PRE_IMPORT, null));
-            final List<IRepositoryStore<? extends IRepositoryFileStore>> allRepositories = currentRepository.getAllStores();
+        currentRepository.notifyFileStoreEvent(new FileStoreChangeEvent(EventType.PRE_IMPORT, null));
+        final List<IRepositoryStore<? extends IRepositoryFileStore>> allRepositories = currentRepository.getAllStores();
 
-            FileActionDialog.activateYesNoToAll();
+        FileActionDialog.activateYesNoToAll();
+        final Map<String, IRepositoryStore<? extends IRepositoryFileStore>> repositoryMap = new HashMap<String, IRepositoryStore<? extends IRepositoryFileStore>>();
+        for (final IRepositoryStore<? extends IRepositoryFileStore> repository : allRepositories) {
+            repositoryMap.put(repository.getName(), repository);
+        }
 
-            for (final IRepositoryStore<? extends IRepositoryFileStore> repository : allRepositories) {
-                repositoryMap.put(repository.getName(), repository);
-            }
-
-            final IContainer rootContainer = getRootContainer(container, repositoryMap);
+        IContainer rootContainer = null;;
+        try {
+            rootContainer = getRootContainer(container, repositoryMap);
             if (rootContainer == null) {
+                restoreBuildState();
                 return new Status(IStatus.ERROR, CommonRepositoryPlugin.PLUGIN_ID, Messages.bind(Messages.invalidArchive, new Object[] { bosProductName }));
             }
-
-            updateResourcesToOpenList(rootContainer);
-            FileActionDialog.activateYesNoToAll();
-            final IResource[] folders = rootContainer.members(IContainer.FOLDER);
-            if (folders != null) {
-                final List<IResource> folderSortedList = new ArrayList<IResource>(Arrays.asList(folders));
-                final Comparator<IResource> importFolderComparator = new ImportFolderComparator();
-                Collections.sort(folderSortedList, importFolderComparator);
-                for (final IResource folder : folderSortedList) {
-                    try {
-                        if (folder instanceof IFolder) {
-                            Pair<IRepositoryStore<? extends IRepositoryFileStore>, IFolder> pair = findRepository(
-                                    repositoryMap, (IFolder) folder);
-                            if (pair == null) {
-                                for (final IResource subFolder : ((IContainer) folder).members(IContainer.FOLDER)) {
-                                    if (subFolder instanceof IFolder) {
-                                        pair = findRepository(repositoryMap, (IFolder) subFolder);
-                                        if (pair != null) {
-                                            importRepositoryStore(pair, monitor);
-                                        }
-                                    }
-                                }
-                            } else if (pair != null) {
-                                importRepositoryStore(pair, monitor);
-                            }
-                        }
-                    } catch (final Exception e) {
-                        BonitaStudioLog.error(e);
-                    }
-                }
-            }
-            FileActionDialog.deactivateYesNoToAll();
-            currentRepository.enableBuild();
-            currentRepository.refresh(Repository.NULL_PROGRESS_MONITOR);
-            currentRepository.notifyFileStoreEvent(new FileStoreChangeEvent(EventType.POST_IMPORT, null));
-        } catch (final Exception e) {
-            BonitaStudioLog.error(e);
-        } finally {
-            if(!currentRepository.isBuildEnable()){
-                currentRepository.enableBuild();
-            }
-            cleanTmpProject();
+        } catch (final CoreException e1) {
+            restoreBuildState();
+            return new Status(IStatus.ERROR, CommonRepositoryPlugin.PLUGIN_ID, "Failed to retrieve root container", e1);
         }
-        return status;
+
+
+        checkArchiveCompatibility(rootContainer);
+
+        FileActionDialog.activateYesNoToAll();
+        iResourceImporter.setResourcesToOpen(getResourcesToOpen(rootContainer));
+        try {
+            iResourceImporter.run(rootContainer, currentRepository, monitor);
+        } catch (final ResourceImportException e) {
+            return new Status(IStatus.ERROR, CommonRepositoryPlugin.PLUGIN_ID, "Failed to import resources in " + currentRepository.getName(), e);
+        } finally {
+            restoreBuildState();
+        }
+
+        FileActionDialog.deactivateYesNoToAll();
+
+        currentRepository.refresh(Repository.NULL_PROGRESS_MONITOR);
+        currentRepository.notifyFileStoreEvent(new FileStoreChangeEvent(EventType.POST_IMPORT, null));
+
+        if (launchValidationafterImport) {
+            validateAllAfterImport();
+        }
+
+
+        return Status.OK_STATUS;
+    }
+
+    protected void restoreBuildState() {
+        if (!currentRepository.isBuildEnable()) {
+            currentRepository.enableBuild();
+        }
+        cleanTmpProject();
+    }
+
+    public IStatus getValidationsStatus() {
+        return importStatus;
+    }
+
+    protected void validateAllAfterImport() {
+        final ImportBosArchiveStatusBuilder statusBuilder = new ImportBosArchiveStatusBuilder();
+        if (validate) {
+            for (final IRepositoryFileStore diagramFileStore : iResourceImporter.getImportedProcesses()) {
+
+                Display.getDefault().syncExec(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        final AbstractProcess process = (AbstractProcess) diagramFileStore.getContent();
+                        final ProcessesValidationAction validationAction = new ProcessesValidationAction(Collections.singletonList(process));
+                        validationAction.performValidation();
+                        statusBuilder.addStatus(process, validationAction.getStatus());
+                    }
+
+                });
+
+            }
+        }
+        importStatus = statusBuilder.done();
     }
 
     public void setCurrentRepository(final IRepository currentRepository) {
@@ -156,8 +185,7 @@ public class ImportBosArchiveOperation {
 
     protected IContainer getRootContainer(
             IContainer container,
-            final Map<String, IRepositoryStore<? extends IRepositoryFileStore>> repositoryMap)
-                    throws CoreException {
+            final Map<String, IRepositoryStore<? extends IRepositoryFileStore>> repositoryMap) throws CoreException {
         boolean isValid = false;
         while (container != null && !isValid) {
             IResource lastVisited = null;
@@ -184,31 +212,31 @@ public class ImportBosArchiveOperation {
     }
 
     public void openFilesToOpen() {
-        for (final IRepositoryFileStore f : fileStoresToOpen) {
+        for (final IRepositoryFileStore f : getFileStoresToOpen()) {
             f.open();
         }
     }
 
     public List<IRepositoryFileStore> getFileStoresToOpen() {
-        return fileStoresToOpen;
+        return iResourceImporter.getFileStoresToOpen();
     }
 
-    protected void importRepositoryStore(final Pair<IRepositoryStore<? extends IRepositoryFileStore>, IFolder> pair, final IProgressMonitor monitor)
-            throws CoreException {
-        final IFolder storeFolder = pair.getSecond();
-        final IRepositoryStore<? extends IRepositoryFileStore> repository = pair.getFirst();
-        for (final IResource child : storeFolder.members()) {
-            final String filename = child.getName();
-            final boolean openAfterImport = resourceToOpen != null && resourceToOpen.contains(filename)
-                    || resourceToOpen == null;
-            final IRepositoryFileStore fileStore = repository.importIResource(filename, child);
-            if (fileStore != null && openAfterImport) {
-                fileStoresToOpen.add(fileStore);
+
+
+    protected Set<String> getResourcesToOpen(final IContainer container) {
+        final Properties manifestProperties = getManifestInfo(container);
+        if (manifestProperties != null) {
+            final String toOpen = manifestProperties.getProperty(ExportBosArchiveOperation.TO_OPEN);
+            if (toOpen != null) {
+                final String[] array = toOpen.split(",");
+                return new HashSet<String>(Arrays.asList(array));
             }
         }
+        //No manifest means import all .proc
+        return null;
     }
 
-    private void updateResourcesToOpenList(final IContainer container) {
+    protected void checkArchiveCompatibility(final IContainer container) {
         final Properties manifestProperties = getManifestInfo(container);
         if (manifestProperties != null) {
             final String version = manifestProperties.getProperty(ExportBosArchiveOperation.VERSION);
@@ -222,13 +250,7 @@ public class ImportBosArchiveOperation {
                                 Messages.bind(Messages.incompatibleProductVersion, ProductVersion.CURRENT_VERSION, version));
                     }
                 });
-
                 throw new RuntimeException(Messages.bind(Messages.incompatibleProductVersion, ProductVersion.CURRENT_VERSION, version));
-            }
-            final String toOpen = manifestProperties.getProperty(ExportBosArchiveOperation.TO_OPEN);
-            if (toOpen != null) {
-                final String[] array = toOpen.split(",");
-                resourceToOpen = new HashSet<String>(Arrays.asList(array));
             }
         }
     }
@@ -305,22 +327,16 @@ public class ImportBosArchiveOperation {
         return null;
     }
 
-    private Pair<IRepositoryStore<? extends IRepositoryFileStore>, IFolder> findRepository(
-            final Map<String, IRepositoryStore<? extends IRepositoryFileStore>> map, final IFolder folder) {
-        final String path = folder.getProjectRelativePath().removeFirstSegments(1).toOSString();
-        final IRepositoryStore<? extends IRepositoryFileStore> store = map.get(path);
-        if (store != null) {
-            return new Pair<IRepositoryStore<? extends IRepositoryFileStore>, IFolder>(store, folder);
-        }
-
-        return null;
-    }
-
-    public IStatus getStatus() {
-        return status;
-    }
 
     public void setArchiveFile(final String archiveFile) {
         this.archiveFile = archiveFile;
+    }
+
+    public void disableValidation() {
+        validate = false;
+    }
+
+    public void enableValidation() {
+        validate = true;
     }
 }

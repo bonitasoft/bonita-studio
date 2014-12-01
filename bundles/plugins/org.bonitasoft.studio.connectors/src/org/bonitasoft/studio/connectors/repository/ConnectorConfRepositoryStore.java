@@ -16,11 +16,26 @@
  */
 package org.bonitasoft.studio.connectors.repository;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
+import org.bonitasoft.studio.common.FileUtil;
+import org.bonitasoft.studio.common.ModelVersion;
+import org.bonitasoft.studio.common.ProjectUtil;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.platform.tools.CopyInputStream;
+import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.filestore.DefinitionConfigurationFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.store.AbstractEMFRepositoryStore;
@@ -28,7 +43,19 @@ import org.bonitasoft.studio.connectors.ConnectorPlugin;
 import org.bonitasoft.studio.connectors.i18n.Messages;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
 import org.bonitasoft.studio.model.connectorconfiguration.util.ConnectorConfigurationAdapterFactory;
+import org.bonitasoft.studio.model.connectorconfiguration.util.ConnectorConfigurationResourceFactoryImpl;
+import org.bonitasoft.studio.model.connectorconfiguration.util.ConnectorConfigurationResourceImpl;
 import org.bonitasoft.studio.pics.Pics;
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.xmi.XMIResource;
+import org.eclipse.emf.ecore.xmi.XMLOptions;
+import org.eclipse.emf.ecore.xmi.XMLResource;
+import org.eclipse.emf.ecore.xmi.impl.XMLOptionsImpl;
+import org.eclipse.emf.edapt.history.Release;
+import org.eclipse.emf.edapt.migration.MigrationException;
+import org.eclipse.emf.edapt.migration.execution.Migrator;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.swt.graphics.Image;
 
@@ -50,7 +77,7 @@ public class ConnectorConfRepositoryStore extends AbstractEMFRepositoryStore<Def
      * @see org.bonitasoft.studio.common.repository.model.IRepositoryStore#createRepositoryFileStore(java.lang.String)
      */
     @Override
-    public DefinitionConfigurationFileStore createRepositoryFileStore(String fileName) {
+    public DefinitionConfigurationFileStore createRepositoryFileStore(final String fileName) {
         return new DefinitionConfigurationFileStore(fileName, this);
     }
 
@@ -88,17 +115,17 @@ public class ConnectorConfRepositoryStore extends AbstractEMFRepositoryStore<Def
     }
 
 
-    public List<ConnectorConfiguration> getFilterConfigurations() {
-        List<ConnectorConfiguration> result = new ArrayList<ConnectorConfiguration>() ;
-        for(IRepositoryFileStore child : getChildren()){
+    public List<ConnectorConfiguration> getConnectorConfigurations() {
+        final List<ConnectorConfiguration> result = new ArrayList<ConnectorConfiguration>();
+        for (final IRepositoryFileStore child : getChildren()) {
             result.add((ConnectorConfiguration) child.getContent()) ;
         }
         return result ;
     }
 
-    public List<ConnectorConfiguration> getFilterConfigurationsFor(String defintionId,String definitionVersion) {
-        List<ConnectorConfiguration> result = new ArrayList<ConnectorConfiguration>() ;
-        for(ConnectorConfiguration child : getFilterConfigurations()){
+    public List<ConnectorConfiguration> getConnectorConfigurationsFor(final String defintionId, final String definitionVersion) {
+        final List<ConnectorConfiguration> result = new ArrayList<ConnectorConfiguration>();
+        for (final ConnectorConfiguration child : getConnectorConfigurations()) {
             if(child.getDefinitionId().equals(defintionId) && child.getVersion().equals(definitionVersion) ){
                 result.add(child) ;
             }
@@ -106,10 +133,133 @@ public class ConnectorConfRepositoryStore extends AbstractEMFRepositoryStore<Def
         return result ;
     }
 
+    @Override
+    protected void addAdapterFactory(final ComposedAdapterFactory adapterFactory) {
+        adapterFactory.addAdapterFactory(new ConnectorConfigurationAdapterFactory());
+    }
 
     @Override
-    protected void addAdapterFactory(ComposedAdapterFactory adapterFactory) {
-        adapterFactory.addAdapterFactory(new ConnectorConfigurationAdapterFactory());
+    protected Release getRelease(final Migrator targetMigrator, final Resource resource) {
+        final Map<Object, Object> loadOptions = new HashMap<Object, Object>();
+        //Ignore unknown features
+        loadOptions.put(XMIResource.OPTION_RECORD_UNKNOWN_FEATURE, Boolean.TRUE);
+        final XMLOptions options = new XMLOptionsImpl();
+        options.setProcessAnyXML(true);
+        loadOptions.put(XMLResource.OPTION_XML_OPTIONS, options);
+        try {
+            resource.load(loadOptions);
+        } catch (final IOException e) {
+            BonitaStudioLog.error(e, CommonRepositoryPlugin.PLUGIN_ID);
+        }
+        final String modelVersion = getModelVersion(resource);
+        for (final Release release : targetMigrator.getReleases()) {
+            if (release.getLabel().equals(modelVersion)) {
+                return release;
+            }
+        }
+        return targetMigrator.getReleases().iterator().next(); //First release of all time
+    }
+
+    protected String getModelVersion(final Resource resource) {
+        final String modelVersion = ModelVersion.VERSION_6_0_0_ALPHA;
+        for (final EObject root : resource.getContents()) {
+            if (root instanceof ConnectorConfiguration) {
+                final String version = ((ConnectorConfiguration) root).getModelVersion();
+                if (version != null) {
+                    return version;
+                }
+            }
+        }
+        return modelVersion;
+    }
+
+    @Override
+    protected Resource getTmpEMFResource(final String fileName, final InputStream inputStream) {
+        FileOutputStream fos = null;
+        File tmpFile = null;
+        try {
+            tmpFile = File.createTempFile("tmp", fileName,
+                    ProjectUtil.getBonitaStudioWorkFolder());
+            fos = new FileOutputStream(tmpFile);
+            FileUtil.copy(inputStream, fos);
+            final Resource resource = new ConnectorConfigurationResourceFactoryImpl()
+                    .createResource(
+                    URI.createFileURI(tmpFile.getAbsolutePath()));
+            return resource;
+        } catch (final Exception e) {
+            BonitaStudioLog.error(e, CommonRepositoryPlugin.PLUGIN_ID);
+        } finally {
+            if (fos != null) {
+                try {
+                    fos.close();
+                } catch (final IOException e) {
+                    BonitaStudioLog.error(e, CommonRepositoryPlugin.PLUGIN_ID);
+                }
+            }
+            if (inputStream != null) {
+                try {
+                    inputStream.close();
+                } catch (final IOException e) {
+                    BonitaStudioLog.error(e, CommonRepositoryPlugin.PLUGIN_ID);
+                }
+            }
+        }
+
+        return null;
+    }
+
+    @Override
+    protected InputStream handlePreImport(final String fileName, final InputStream inputStream) throws MigrationException, IOException {
+        CopyInputStream copyIs = null;
+        try {
+            final InputStream is = super.handlePreImport(fileName, inputStream);
+            copyIs = new CopyInputStream(is);
+            final ConnectorConfigurationResourceImpl r = (ConnectorConfigurationResourceImpl) getTmpEMFResource("beforeImport",
+                    copyIs.getCopy());
+            try {
+                r.load(r.getDefaultLoadOptions());
+            } catch (final IOException e) {
+                BonitaStudioLog.error(e);
+            }
+            if (!r.getContents().isEmpty()) {
+                final ConnectorConfiguration configuration = (ConnectorConfiguration) r.getContents()
+                        .get(0);
+                if (configuration != null) {
+                    final String mVersion = configuration.getVersion();
+                    if (!ModelVersion.CURRENT_VERSION.equals(mVersion)) {
+                        configuration.setModelVersion(ModelVersion.CURRENT_VERSION);
+                    }
+                    try {
+                        r.save(r.getDefaultSaveOptions());
+                    } catch (final IOException e) {
+                        BonitaStudioLog.error(e);
+                    }
+                    try {
+                        return new FileInputStream(new File(r.getURI()
+                                .toFileString()));
+                    } catch (final FileNotFoundException e) {
+                        BonitaStudioLog.error(e);
+                    } finally {
+                        copyIs.close();
+                        try {
+                            r.delete(Collections.EMPTY_MAP);
+                        } catch (final IOException e) {
+                            BonitaStudioLog.error(e);
+                        }
+                    }
+                } else {
+                    return null;
+                }
+            }
+            return copyIs.getCopy();
+        } catch (final IOException e) {
+            BonitaStudioLog.error(e);
+            return null;
+        } finally {
+            if (copyIs != null) {
+                copyIs.close();
+            }
+        }
     }
 
 }

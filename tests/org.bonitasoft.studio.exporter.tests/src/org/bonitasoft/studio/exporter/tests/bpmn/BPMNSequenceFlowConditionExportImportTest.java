@@ -52,7 +52,7 @@ import org.omg.spec.bpmn.model.TSequenceFlow;
 public class BPMNSequenceFlowConditionExportImportTest extends TestCase {
 
     public void testProcessWithConstantCondition() throws ExecutionException, IOException{
-        Expression condition = ExpressionFactory.eINSTANCE.createExpression();
+        final Expression condition = ExpressionFactory.eINSTANCE.createExpression();
         condition.setContent("toto");
         condition.setType(ExpressionConstants.CONSTANT_TYPE);
         condition.setReturnType("java.lang.Boolean");
@@ -60,7 +60,7 @@ public class BPMNSequenceFlowConditionExportImportTest extends TestCase {
         testWithCondition(condition);
     }
     public void testProcessWithGroovyCondition() throws ExecutionException, IOException{
-        Expression condition = ExpressionFactory.eINSTANCE.createExpression();
+        final Expression condition = ExpressionFactory.eINSTANCE.createExpression();
         condition.setContent("return true;");
         condition.setInterpreter(ExpressionConstants.GROOVY);
         condition.setType(ExpressionConstants.SCRIPT_TYPE);
@@ -70,21 +70,21 @@ public class BPMNSequenceFlowConditionExportImportTest extends TestCase {
     }
 
 
-    protected void testWithCondition(Expression condition)
+    protected void testWithCondition(final Expression condition)
             throws ExecutionException, IOException, MalformedURLException {
-        DocumentRoot model2 = exportToBPMNProcessWithCondition(condition);
+        final DocumentRoot model2 = exportToBPMNProcessWithCondition(condition);
         checkConditionExistAtProcessLevelWithGoodStructure(model2);
 
-        MainProcess mainProcess = BPMNTestUtil.importBPMNFile(model2);
+        final MainProcess mainProcess = BPMNTestUtil.importBPMNFile(model2);
         compareProcessCondition(condition, mainProcess);
     }
 
-    private void checkConditionExistAtProcessLevelWithGoodStructure(DocumentRoot model2) {
-        for(TRootElement rootElement : model2.getDefinitions().getRootElement()){
+    private void checkConditionExistAtProcessLevelWithGoodStructure(final DocumentRoot model2) {
+        for(final TRootElement rootElement : model2.getDefinitions().getRootElement()){
             if(rootElement instanceof TProcess){
-                for (TFlowElement fe : ((TProcess) rootElement).getFlowElement()) {
+                for (final TFlowElement fe : ((TProcess) rootElement).getFlowElement()) {
                     if(fe instanceof TSequenceFlow){
-                        TExpression conditionExpression = ((TSequenceFlow)fe).getConditionExpression();
+                        final TExpression conditionExpression = ((TSequenceFlow)fe).getConditionExpression();
                         assertNotNull(conditionExpression);
                     }
                 }
@@ -92,13 +92,13 @@ public class BPMNSequenceFlowConditionExportImportTest extends TestCase {
         }
     }
 
-    private void compareProcessCondition(Expression initialCondition, MainProcess mainProcess) {
-        AbstractProcess abstractProcess = ModelHelper.getAllProcesses(mainProcess).get(0);
+    private void compareProcessCondition(final Expression initialCondition, final MainProcess mainProcess) {
+        final AbstractProcess abstractProcess = ModelHelper.getAllProcesses(mainProcess).get(0);
         final SequenceFlow sequenceFlowReimport = (SequenceFlow)abstractProcess.getConnections().get(0);
         compareSequenceFlows((SequenceFlow)initialCondition.eContainer(), sequenceFlowReimport);
     }
 
-    private void compareSequenceFlows(SequenceFlow initialSQ, SequenceFlow reImportedSQ) {
+    private void compareSequenceFlows(final SequenceFlow initialSQ, final SequenceFlow reImportedSQ) {
         assertEquals("Condition type is not the same", initialSQ.getConditionType(), reImportedSQ.getConditionType());
         if(SequenceFlowConditionType.EXPRESSION.equals(initialSQ.getConditionType())){
             compareConditions(initialSQ.getCondition(), reImportedSQ.getCondition());
@@ -108,24 +108,23 @@ public class BPMNSequenceFlowConditionExportImportTest extends TestCase {
 
     }
 
-    private void comparetableDecision(DecisionTable initialDecisionTable, DecisionTable reImportedDecisionTable) {
+    private void comparetableDecision(final DecisionTable initialDecisionTable, final DecisionTable reImportedDecisionTable) {
         // TODO Allow to import table decision
 
     }
 
-    private void compareConditions(Expression initialCondition, Expression reImportedCondition) {
+    private void compareConditions(final Expression initialCondition, final Expression reImportedCondition) {
         assertEquals(initialCondition.getContent(),reImportedCondition.getContent() );
         assertEquals(initialCondition.getInterpreter(), reImportedCondition.getInterpreter());
         assertEquals(initialCondition.getType(), reImportedCondition.getType());
     }
 
-    protected DocumentRoot exportToBPMNProcessWithCondition(Expression condition) throws ExecutionException, IOException {
+    protected DocumentRoot exportToBPMNProcessWithCondition(final Expression condition) throws ExecutionException, IOException {
         final NewDiagramCommandHandler newDiagramCommandHandler = new NewDiagramCommandHandler();
-        newDiagramCommandHandler.execute(null);
-        final DiagramFileStore newDiagramFileStore = newDiagramCommandHandler.getNewDiagramFileStore();
+        final DiagramFileStore newDiagramFileStore = newDiagramCommandHandler.execute(null);
 
-        AbstractProcess abstractProcess = newDiagramFileStore.getProcesses().get(0);
-        EditingDomain domain = TransactionUtil.getEditingDomain(abstractProcess);
+        final AbstractProcess abstractProcess = newDiagramFileStore.getProcesses().get(0);
+        final EditingDomain domain = TransactionUtil.getEditingDomain(abstractProcess);
         final SequenceFlow sequenceFlow = (SequenceFlow)abstractProcess.getConnections().get(0);
         domain.getCommandStack().execute(SetCommand.create(domain,sequenceFlow,ProcessPackage.Literals.SEQUENCE_FLOW__CONDITION,condition));
         domain.getCommandStack().execute(SetCommand.create(domain,sequenceFlow,ProcessPackage.Literals.SEQUENCE_FLOW__CONDITION_TYPE,SequenceFlowConditionType.EXPRESSION));

@@ -5,12 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -22,6 +22,7 @@ import static org.mockito.Mockito.when;
 
 import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.form.FormFactory;
+import org.bonitasoft.studio.model.form.Group;
 import org.bonitasoft.studio.model.form.SubmitFormButton;
 import org.bonitasoft.studio.model.form.TextAreaFormField;
 import org.bonitasoft.studio.model.form.ViewForm;
@@ -40,7 +41,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 /**
  * @author Romain Bioteau
- * 
+ *
  */
 @RunWith(MockitoJUnitRunner.class)
 public class FormButtonConstraintTest {
@@ -69,49 +70,63 @@ public class FormButtonConstraintTest {
 
     @Test
     public void shouldPerformBatchValidation_returns_ValidStatus_ForEntryFormWith_SubmitButton() throws Exception {
-        Pool pageFlow = ProcessFactory.eINSTANCE.createPool();
-        Form formWithSubmittButton = FormFactory.eINSTANCE.createForm();
-        SubmitFormButton b = FormFactory.eINSTANCE.createSubmitFormButton();
+        final Pool pageFlow = ProcessFactory.eINSTANCE.createPool();
+        final Form formWithSubmittButton = FormFactory.eINSTANCE.createForm();
+        final SubmitFormButton b = FormFactory.eINSTANCE.createSubmitFormButton();
         formWithSubmittButton.getWidgets().add(b);
         pageFlow.getForm().add(formWithSubmittButton);
         when(context.getTarget()).thenReturn(formWithSubmittButton);
-        IStatus status = constraintUnderTest.performBatchValidation(context);
+        final IStatus status = constraintUnderTest.performBatchValidation(context);
+        assertThat(status.isOK()).isTrue();
+    }
+
+    @Test
+    public void shouldPerformBatchValidation_returns_ValidStatus_ForEntryFormWith_SubmitButton_In_A_Group() throws Exception {
+        final Pool pageFlow = ProcessFactory.eINSTANCE.createPool();
+        final Form formWithSubmittButton = FormFactory.eINSTANCE.createForm();
+        final SubmitFormButton b = FormFactory.eINSTANCE.createSubmitFormButton();
+        final Group g = FormFactory.eINSTANCE.createGroup();
+        g.getWidgets().add(b);
+        formWithSubmittButton.getWidgets().add(g);
+        pageFlow.getForm().add(formWithSubmittButton);
+        when(context.getTarget()).thenReturn(formWithSubmittButton);
+        final IStatus status = constraintUnderTest.performBatchValidation(context);
         assertThat(status.isOK()).isTrue();
     }
 
     @Test
     public void shouldPerformBatchValidation_returns_ErrorStatus_ForEntryFormWithout_SubmitButton_or_NextButton() throws Exception {
-        Pool pageFlow = ProcessFactory.eINSTANCE.createPool();
-        Form formWithSubmittButton = FormFactory.eINSTANCE.createForm();
-        TextAreaFormField b = FormFactory.eINSTANCE.createTextAreaFormField();
+        final Pool pageFlow = ProcessFactory.eINSTANCE.createPool();
+        final Form formWithSubmittButton = FormFactory.eINSTANCE.createForm();
+        final TextAreaFormField b = FormFactory.eINSTANCE.createTextAreaFormField();
         formWithSubmittButton.getWidgets().add(b);
         pageFlow.getForm().add(formWithSubmittButton);
         when(context.getTarget()).thenReturn(formWithSubmittButton);
-        IStatus status = constraintUnderTest.performBatchValidation(context);
+        final IStatus status = constraintUnderTest.performBatchValidation(context);
         assertThat(status.isOK()).isFalse();
     }
 
     @Test
     public void shouldPerformBatchValidation_returns_ErrorStatus_ForOverviewFormWith_SubmitButton() throws Exception {
-        Pool pageFlow = ProcessFactory.eINSTANCE.createPool();
-        ViewForm formWithSubmittButton = FormFactory.eINSTANCE.createViewForm();
-        SubmitFormButton b = FormFactory.eINSTANCE.createSubmitFormButton();
+        final Pool pageFlow = ProcessFactory.eINSTANCE.createPool();
+        final ViewForm formWithSubmittButton = FormFactory.eINSTANCE.createViewForm();
+        final SubmitFormButton b = FormFactory.eINSTANCE.createSubmitFormButton();
         formWithSubmittButton.getWidgets().add(b);
         pageFlow.getRecapForms().add(formWithSubmittButton);
         when(context.getTarget()).thenReturn(b);
-        IStatus status = constraintUnderTest.performBatchValidation(context);
+        final IStatus status = constraintUnderTest.performBatchValidation(context);
         assertThat(status.isOK()).isFalse();
     }
 
     @Test
     public void shouldPerformBatchValidation_returns_ValidStatus_ForOverviewFormWithout_SubmitButton() throws Exception {
-        Pool pageFlow = ProcessFactory.eINSTANCE.createPool();
-        ViewForm formWithoutSubmittButton = FormFactory.eINSTANCE.createViewForm();
-        TextAreaFormField b = FormFactory.eINSTANCE.createTextAreaFormField();
+        final Pool pageFlow = ProcessFactory.eINSTANCE.createPool();
+        final ViewForm formWithoutSubmittButton = FormFactory.eINSTANCE.createViewForm();
+        final TextAreaFormField b = FormFactory.eINSTANCE.createTextAreaFormField();
         formWithoutSubmittButton.getWidgets().add(b);
         pageFlow.getRecapForms().add(formWithoutSubmittButton);
         when(context.getTarget()).thenReturn(b);
-        IStatus status = constraintUnderTest.performBatchValidation(context);
+        final IStatus status = constraintUnderTest.performBatchValidation(context);
         assertThat(status.isOK()).isTrue();
     }
 

@@ -26,6 +26,7 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.preferences.RepositoryPreferenceConstant;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRunnable;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -121,7 +122,7 @@ public class RepositoryManager {
 
 
     public <T> T getRepositoryStore(final Class<T> storeClass) {
-        return storeClass.cast(getCurrentRepository().getRepositoryStore(storeClass));
+        return storeClass.cast(repository.getRepositoryStore(storeClass));
     }
 
     public IRepository getRepository(final String repositoryName) {
@@ -142,6 +143,8 @@ public class RepositoryManager {
                 @Override
                 public void run(final IProgressMonitor monitor) throws CoreException {
                     result.add(repository) ;
+                    workspace.getRoot().refreshLocal(IResource.DEPTH_INFINITE, null);
+                    workspace.getRoot().getProjects();
                     for(final IProject p : workspace.getRoot().getProjects()){
                         if(p.exists() && p.getLocation() != null && p.getLocation().toFile().exists()){
                             try {
@@ -173,6 +176,10 @@ public class RepositoryManager {
     }
 
     public void setRepository(final String repositoryName) {
+        setRepository(repositoryName, false);
+    }
+
+    public void setRepository(final String repositoryName, final boolean migrateIfNeeded) {
         if(repository != null && repository.getName().equals(repositoryName)){
             return;
         }else{
@@ -182,9 +189,7 @@ public class RepositoryManager {
         if(repository == null){
             repository = createRepository(repositoryName) ;
         }
-        BonitaStudioLog.log("Creating repository: " + repositoryName);
-        repository.create();
-        BonitaStudioLog.log("Opening repository: " + repositoryName);
+        repository.create(migrateIfNeeded);
         repository.open();
         preferenceStore.setValue(RepositoryPreferenceConstant.CURRENT_REPOSITORY,repositoryName) ;
     }
