@@ -58,9 +58,11 @@ import org.eclipse.emf.compare.match.IComparisonFactory;
 import org.eclipse.emf.compare.match.IMatchEngine;
 import org.eclipse.emf.compare.match.eobject.IEObjectMatcher;
 import org.eclipse.emf.compare.postprocessor.IPostProcessor;
+import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.compare.utils.UseIdentifiers;
+import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -71,81 +73,81 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
  */
 public class RefactorActorMappingsOperation implements IRunnableWithProgress {
 
-	private Organization oldOrganization;
-	private Organization newOrganization;
+	private final Organization oldOrganization;
+	private final Organization newOrganization;
 
-	public RefactorActorMappingsOperation(Organization oldOrganization,
-			Organization newOrganization) {
+	public RefactorActorMappingsOperation(final Organization oldOrganization,
+			final Organization newOrganization) {
 		this.oldOrganization = oldOrganization;
 		this.newOrganization = newOrganization;
-		
+
 	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.operation.IRunnableWithProgress#run(org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	@Override
-	public void run(IProgressMonitor monitor) throws InvocationTargetException,
+	public void run(final IProgressMonitor monitor) throws InvocationTargetException,
 			InterruptedException {
 		monitor.beginTask(Messages.refactoringActorMappings,IProgressMonitor.UNKNOWN);
-	
-		ProcessConfigurationRepositoryStore confStore = (ProcessConfigurationRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ProcessConfigurationRepositoryStore.class);
-		DiagramRepositoryStore diagramStore = (DiagramRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
-		List<ActorMappingsType> actorMappings = getAllActorMappings(confStore, diagramStore);
-		
-		IComparisonScope scope = new DefaultComparisonScope(newOrganization.eResource().getResourceSet(), oldOrganization.eResource().getResourceSet(), null);
-		
-		IEObjectMatcher matcher = DefaultMatchEngine.createDefaultEObjectMatcher(UseIdentifiers.NEVER);
-		IComparisonFactory comparisonFactory = new DefaultComparisonFactory(new DefaultEqualityHelperFactory());
-		IMatchEngine matchEngine = new DefaultMatchEngine(matcher, comparisonFactory);
-	    IMatchEngine.Factory.Registry matchEngineRegistry = EMFCompareRCPPlugin.getDefault().getMatchEngineFactoryRegistry();
-	    IPostProcessor.Descriptor.Registry<String> postProcessorRegistry = EMFCompareRCPPlugin.getDefault().getPostProcessorRegistry();
-		EMFCompare comparator = EMFCompare.builder()
+
+		final ProcessConfigurationRepositoryStore confStore = RepositoryManager.getInstance().getRepositoryStore(ProcessConfigurationRepositoryStore.class);
+		final DiagramRepositoryStore diagramStore = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
+		final List<ActorMappingsType> actorMappings = getAllActorMappings(confStore, diagramStore);
+
+		final IComparisonScope scope = new DefaultComparisonScope(newOrganization.eResource().getResourceSet(), oldOrganization.eResource().getResourceSet(), null);
+
+		final IEObjectMatcher matcher = DefaultMatchEngine.createDefaultEObjectMatcher(UseIdentifiers.NEVER);
+		final IComparisonFactory comparisonFactory = new DefaultComparisonFactory(new DefaultEqualityHelperFactory());
+		final IMatchEngine matchEngine = new DefaultMatchEngine(matcher, comparisonFactory);
+	    final IMatchEngine.Factory.Registry matchEngineRegistry = EMFCompareRCPPlugin.getDefault().getMatchEngineFactoryRegistry();
+	    final IPostProcessor.Descriptor.Registry<String> postProcessorRegistry = EMFCompareRCPPlugin.getDefault().getPostProcessorRegistry();
+		final EMFCompare comparator = EMFCompare.builder()
 	                                           .setMatchEngineFactoryRegistry(matchEngineRegistry)
 	                                           .setPostProcessorRegistry(postProcessorRegistry)
 	                                           .build();
-		
-		Comparison comparison = comparator.compare(scope);
-		
+
+		final Comparison comparison = comparator.compare(scope);
+
 		// Merges all differences from model1 to model2
-		List<Diff> differences = comparison.getDifferences();
-		for(Diff difference : differences){
-			TreeIterator<EObject> eAllContents = difference.eAllContents();
+		final List<Diff> differences = comparison.getDifferences();
+		for(final Diff difference : differences){
+			final TreeIterator<EObject> eAllContents = difference.eAllContents();
 			while (eAllContents.hasNext()) {
-				EObject eObject = (EObject) eAllContents.next();
+				final EObject eObject = eAllContents.next();
 				if(eObject instanceof AttributeChange){
-					AttributeChange updatedAttribute = (AttributeChange) eObject;
-					EObject oldElement = updatedAttribute.getValue();
-					EObject newElement = updatedAttribute.getSource();
-					if(updatedAttribute.getAttribute().equals(OrganizationPackage.Literals.GROUP__NAME)){
+					final AttributeChange updateAttributeChange = (AttributeChange) eObject;
+                    final Object oldElement = updateAttributeChange.getValue();
+                    final Object newElement = updateAttributeChange.getSource();
+					final EAttribute attribute = updateAttributeChange.getAttribute();
+                    if(attribute.equals(OrganizationPackage.Literals.GROUP__NAME)){
 						refactorGroup((Group)oldElement,(Group)newElement,actorMappings);
 						refactorMembership((Group)oldElement,(Group)newElement,actorMappings);
-					}else if(updatedAttribute.getAttribute().equals(OrganizationPackage.Literals.ROLE__NAME)){
+					}else if(attribute.equals(OrganizationPackage.Literals.ROLE__NAME)){
 						refactorRole((Role)oldElement,(Role)newElement,actorMappings);
 						refactorMembership((Role)oldElement,(Role)newElement,actorMappings);
-					}else if(updatedAttribute.getAttribute().equals(OrganizationPackage.Literals.USER__USER_NAME)){
+					}else if(attribute.equals(OrganizationPackage.Literals.USER__USER_NAME)){
 						refactorUsername((User)oldElement,(User)newElement,actorMappings);
-					}else if(updatedAttribute.getAttribute().equals(OrganizationPackage.Literals.MEMBERSHIP__USER_NAME)){
+					}else if(attribute.equals(OrganizationPackage.Literals.MEMBERSHIP__USER_NAME)){
 						refactorUsername((org.bonitasoft.studio.actors.model.organization.Membership)oldElement,(org.bonitasoft.studio.actors.model.organization.Membership)newElement,actorMappings);
-					}else if(updatedAttribute.getAttribute().equals(OrganizationPackage.Literals.MEMBERSHIP__GROUP_NAME)){
+					}else if(attribute.equals(OrganizationPackage.Literals.MEMBERSHIP__GROUP_NAME)){
 						refactorGroup((org.bonitasoft.studio.actors.model.organization.Membership)oldElement,(org.bonitasoft.studio.actors.model.organization.Membership)newElement,actorMappings);
-					}else if(updatedAttribute.getAttribute().equals(OrganizationPackage.Literals.GROUP__PARENT_PATH)){
+					}else if(attribute.equals(OrganizationPackage.Literals.GROUP__PARENT_PATH)){
 						refactorGroup((Group)oldElement,(Group)newElement,actorMappings);
 						refactorMembership((Group)oldElement,(Group)newElement,actorMappings);
-					}else if(updatedAttribute.getAttribute().equals(OrganizationPackage.Literals.MEMBERSHIP__GROUP_PARENT_PATH)){
+					}else if(attribute.equals(OrganizationPackage.Literals.MEMBERSHIP__GROUP_PARENT_PATH)){
 						refactorGroup((org.bonitasoft.studio.actors.model.organization.Membership)oldElement,(org.bonitasoft.studio.actors.model.organization.Membership)newElement,actorMappings);
 					}
 				}
-				
 			}
 
-			List<ModelElementChangeLeftTarget> newElementChange = ModelHelper.getAllItemsOfType(difference, DiffPackage.Literals.MODEL_ELEMENT_CHANGE_LEFT_TARGET);
-			List<ModelElementChangeRightTarget> oldElementChange = ModelHelper.getAllItemsOfType(difference, DiffPackage.Literals.MODEL_ELEMENT_CHANGE_RIGHT_TARGET);
+			final List<ModelElementChangeLeftTarget> newElementChange = ModelHelper.getAllItemsOfType(difference, DiffPackage.Literals.MODEL_ELEMENT_CHANGE_LEFT_TARGET);
+			final List<ModelElementChangeRightTarget> oldElementChange = ModelHelper.getAllItemsOfType(difference, DiffPackage.Literals.MODEL_ELEMENT_CHANGE_RIGHT_TARGET);
 			if(!newElementChange.isEmpty() && !oldElementChange.isEmpty()){
-				ModelElementChangeLeftTarget leftTarget = newElementChange.get(0);
-				ModelElementChangeRightTarget rightTarget = oldElementChange.get(0);
-				EObject newEObject = leftTarget.getLeftElement();
-				EObject oldEObject = rightTarget.getRightElement();
+				final ModelElementChangeLeftTarget leftTarget = newElementChange.get(0);
+				final ModelElementChangeRightTarget rightTarget = oldElementChange.get(0);
+				final EObject newEObject = leftTarget.getLeftElement();
+				final EObject oldEObject = rightTarget.getRightElement();
 				if(newEObject instanceof Group && oldEObject instanceof Group){
 					refactorGroup((Group)oldEObject,(Group)newEObject,actorMappings);
 					refactorMembership((Group)oldEObject,(Group)newEObject,actorMappings);
@@ -165,15 +167,15 @@ public class RefactorActorMappingsOperation implements IRunnableWithProgress {
 		}
 		diagramStore.refresh();
 	}
-	
+
 
 	protected void refactorUsername(
-			org.bonitasoft.studio.actors.model.organization.Membership oldMembership,
-			org.bonitasoft.studio.actors.model.organization.Membership newMembership,
-			List<ActorMappingsType> actorMappings) {
-		for(ActorMappingsType ac :actorMappings){
+			final org.bonitasoft.studio.actors.model.organization.Membership oldMembership,
+			final org.bonitasoft.studio.actors.model.organization.Membership newMembership,
+			final List<ActorMappingsType> actorMappings) {
+		for(final ActorMappingsType ac :actorMappings){
 			if(!ac.getActorMapping().isEmpty()){
-				Users users = ac.getActorMapping().get(0).getUsers();
+				final Users users = ac.getActorMapping().get(0).getUsers();
 				if(users != null){
 					if(users.getUser().remove(oldMembership.getUserName())){
 						users.getUser().add(newMembership.getUserName());
@@ -184,13 +186,13 @@ public class RefactorActorMappingsOperation implements IRunnableWithProgress {
 		}
 	}
 
-	protected void refactorMembership(Role oldRole, Role newRole,
-			List<ActorMappingsType> actorMappings) {
-		for(ActorMappingsType ac :actorMappings){
+	protected void refactorMembership(final Role oldRole, final Role newRole,
+			final List<ActorMappingsType> actorMappings) {
+		for(final ActorMappingsType ac :actorMappings){
 			if(!ac.getActorMapping().isEmpty()){
-				Membership membership = ac.getActorMapping().get(0).getMemberships();
+				final Membership membership = ac.getActorMapping().get(0).getMemberships();
 				if(membership != null){
-					for(MembershipType membershipType : membership.getMembership()){
+					for(final MembershipType membershipType : membership.getMembership()){
 						if(membershipType.getRole().equals(oldRole.getName())){
 							membershipType.setRole(newRole.getName());
 							saveChange(ac);
@@ -201,13 +203,13 @@ public class RefactorActorMappingsOperation implements IRunnableWithProgress {
 		}
 	}
 
-	protected void refactorMembership(Group oldGroup, Group newGroup,
-			List<ActorMappingsType> actorMappings) {
-		for(ActorMappingsType ac :actorMappings){
+	protected void refactorMembership(final Group oldGroup, final Group newGroup,
+			final List<ActorMappingsType> actorMappings) {
+		for(final ActorMappingsType ac :actorMappings){
 			if(!ac.getActorMapping().isEmpty()){
-				Membership membership = ac.getActorMapping().get(0).getMemberships();
+				final Membership membership = ac.getActorMapping().get(0).getMemberships();
 				if(membership != null){
-					for(MembershipType membershipType : membership.getMembership()){
+					for(final MembershipType membershipType : membership.getMembership()){
 						if(membershipType.getGroup().equals(GroupContentProvider.getGroupPath(oldGroup))){
 							membershipType.setGroup(GroupContentProvider.getGroupPath(newGroup));
 							saveChange(ac);
@@ -218,11 +220,11 @@ public class RefactorActorMappingsOperation implements IRunnableWithProgress {
 		}
 	}
 
-	protected void refactorUsername(User oldUser, User newUser,
-			List<ActorMappingsType> actorMappings) {
-		for(ActorMappingsType ac :actorMappings){
+	protected void refactorUsername(final User oldUser, final User newUser,
+			final List<ActorMappingsType> actorMappings) {
+		for(final ActorMappingsType ac :actorMappings){
 			if(!ac.getActorMapping().isEmpty()){
-				Users users = ac.getActorMapping().get(0).getUsers();
+				final Users users = ac.getActorMapping().get(0).getUsers();
 				if(users != null){
 					if(users.getUser().remove(oldUser.getUserName())){
 						users.getUser().add(newUser.getUserName());
@@ -233,11 +235,11 @@ public class RefactorActorMappingsOperation implements IRunnableWithProgress {
 		}
 	}
 
-	protected void refactorRole(Role oldRole, Role newRole,
-			List<ActorMappingsType> actorMappings) {
-		for(ActorMappingsType ac :actorMappings){
+	protected void refactorRole(final Role oldRole, final Role newRole,
+			final List<ActorMappingsType> actorMappings) {
+		for(final ActorMappingsType ac :actorMappings){
 			if(!ac.getActorMapping().isEmpty()){
-				Roles roles = ac.getActorMapping().get(0).getRoles();
+				final Roles roles = ac.getActorMapping().get(0).getRoles();
 				if(roles != null){
 					if(roles.getRole().remove(oldRole.getName())){
 						roles.getRole().add(newRole.getName());
@@ -248,10 +250,10 @@ public class RefactorActorMappingsOperation implements IRunnableWithProgress {
 		}
 	}
 
-	protected void refactorGroup(Group oldGroup, Group newGroup, List<ActorMappingsType> actorMappings) {
-		for(ActorMappingsType ac :actorMappings){
+	protected void refactorGroup(final Group oldGroup, final Group newGroup, final List<ActorMappingsType> actorMappings) {
+		for(final ActorMappingsType ac :actorMappings){
 			if(!ac.getActorMapping().isEmpty()){
-				Groups groups = ac.getActorMapping().get(0).getGroups();
+				final Groups groups = ac.getActorMapping().get(0).getGroups();
 				if(groups != null){
 					if(groups.getGroup().remove(GroupContentProvider.getGroupPath(oldGroup))){
 						groups.getGroup().add(GroupContentProvider.getGroupPath(newGroup));
@@ -261,11 +263,11 @@ public class RefactorActorMappingsOperation implements IRunnableWithProgress {
 			}
 		}
 	}
-	
-	protected void refactorGroup(org.bonitasoft.studio.actors.model.organization.Membership oldMembership, org.bonitasoft.studio.actors.model.organization.Membership newMembership, List<ActorMappingsType> actorMappings) {
-		for(ActorMappingsType ac :actorMappings){
+
+	protected void refactorGroup(final org.bonitasoft.studio.actors.model.organization.Membership oldMembership, final org.bonitasoft.studio.actors.model.organization.Membership newMembership, final List<ActorMappingsType> actorMappings) {
+		for(final ActorMappingsType ac :actorMappings){
 			if(!ac.getActorMapping().isEmpty()){
-				Groups groups = ac.getActorMapping().get(0).getGroups();
+				final Groups groups = ac.getActorMapping().get(0).getGroups();
 				if(groups != null){
 					if(groups.getGroup().remove(GroupContentProvider.getGroupPath(oldMembership.getGroupName(),oldMembership.getGroupParentPath()))){
 						groups.getGroup().add(GroupContentProvider.getGroupPath(newMembership.getGroupName(),newMembership.getGroupParentPath()));
@@ -277,30 +279,30 @@ public class RefactorActorMappingsOperation implements IRunnableWithProgress {
 	}
 
 
-	private void saveChange(ActorMappingsType ac) {
+	private void saveChange(final ActorMappingsType ac) {
 		try {
-			Resource eResource = ac.eResource();
+			final Resource eResource = ac.eResource();
 			if(eResource != null){
 				eResource.save(Collections.emptyMap());
 			}
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			BonitaStudioLog.error(e);
 		}
 	}
 
 	protected List<ActorMappingsType> getAllActorMappings(
-			ProcessConfigurationRepositoryStore confStore,
-			DiagramRepositoryStore diagramStore) {
-		List<ActorMappingsType> allActorMappings = new ArrayList<ActorMappingsType>();
-		for(ProcessConfigurationFileStore fileStore : confStore.getChildren()){
-			Configuration c = fileStore.getContent();
+			final ProcessConfigurationRepositoryStore confStore,
+			final DiagramRepositoryStore diagramStore) {
+		final List<ActorMappingsType> allActorMappings = new ArrayList<ActorMappingsType>();
+		for(final ProcessConfigurationFileStore fileStore : confStore.getChildren()){
+			final Configuration c = fileStore.getContent();
 			if(c != null && c.getActorMappings() != null){
 				allActorMappings.add(c.getActorMappings());
 			}
 		}
-		for(DiagramFileStore fileStore : diagramStore.getChildren()){
-			for(AbstractProcess process: fileStore.getProcesses()){
-				for(Configuration c : process.getConfigurations()){
+		for(final DiagramFileStore fileStore : diagramStore.getChildren()){
+			for(final AbstractProcess process: fileStore.getProcesses()){
+				for(final Configuration c : process.getConfigurations()){
 					if(c != null && c.getActorMappings() != null){
 						allActorMappings.add(c.getActorMappings());
 					}
