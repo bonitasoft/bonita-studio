@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="remote_platform" sequenceNumber="138">
+<?pde version="3.8"?><target name="remote_platform" sequenceNumber="139">
 <locations>
 <location includeAllPlatforms="true" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.apache.log4j.source" version="1.2.15.v201012070815"/>
@@ -39,57 +39,6 @@
 <unit id="org.codehaus.groovy.eclipse.feature.feature.group" version="2.9.0.xx-201406301445-e44"/>
 <unit id="org.codehaus.groovy20.feature.feature.group" version="2.9.0.xx-201406301445-e44"/>
 <repository location="http://dist.springsource.org/milestone/GRECLIPSE/e4.4/"/>
-</location>
-<location includeAllPlatforms="true" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.babel.nls_eclipse_ja.feature.group" version="4.4.0.v20140623020002"/>
-<unit id="org.eclipse.babel.nls_mylyn_ja.feature.group" version="4.4.0.v20140623020002"/>
-<unit id="org.eclipse.babel.nls_webtools_ja.feature.group" version="4.4.0.v20140623020002"/>
-<unit id="org.eclipse.babel.nls_soa.stardust_fr.feature.group" version="4.4.0.v20140623020002"/>
-<unit id="org.eclipse.babel.nls_eclipse_fr.feature.group" version="4.4.0.v20140623020002"/>
-<unit id="org.eclipse.babel.nls_technology.packaging_de.feature.group" version="4.4.0.v20140623020002"/>
-<unit id="org.eclipse.babel.nls_tools.tm_it.feature.group" version="4.4.0.v20140623020002"/>
-<unit id="org.eclipse.babel.nls_datatools_it.feature.group" version="4.4.0.v20140623020002"/>
-<unit id="org.eclipse.babel.nls_eclipse_pt_BR.feature.group" version="4.4.0.v20140623020002"/>
-<unit id="org.eclipse.babel.nls_datatools_ja.feature.group" version="4.4.0.v20140623020002"/>
-<unit id="org.eclipse.babel.nls_technology.packaging_it.feature.group" version="4.4.0.v20140623020002"/>
-<unit id="org.eclipse.babel.nls_eclipse_es.feature.group" version="4.4.0.v20140623020002"/>
-<unit id="org.eclipse.babel.nls_tools.tm_fr.feature.group" version="4.4.0.v20140623020002"/>
-<unit id="org.eclipse.babel.nls_mylyn_es.feature.group" version="4.4.0.v20140623020002"/>
-<unit id="org.eclipse.babel.nls_soa.stardust_ja.feature.group" version="4.4.0.v20140623020002"/>
-<unit id="org.eclipse.babel.nls_datatools_de.feature.group" version="4.4.0.v20140623020002"/>
-<unit id="org.eclipse.babel.nls_soa.stardust_pt_BR.feature.group" version="4.4.0.v20140623020002"/>
-<unit id="org.eclipse.babel.nls_tools.tm_ja.feature.group" version="4.4.0.v20140623020002"/>
-<unit id="org.eclipse.babel.nls_rt.rap_fr.feature.group" version="4.4.0.v20140623020002"/>
-<unit id="org.eclipse.babel.nls_soa.stardust_es.feature.group" version="4.4.0.v20140623020002"/>
-<unit id="org.eclipse.babel.nls_rt.rap_es.feature.group" version="4.4.0.v20140623020002"/>
-<unit id="org.eclipse.babel.nls_mylyn_it.feature.group" version="4.4.0.v20140623020002"/>
-<unit id="org.eclipse.babel.nls_tools.tm_es.feature.group" version="4.4.0.v20140623020002"/>
-<unit id="org.eclipse.babel.nls_technology.packaging_pt_BR.feature.group" version="4.4.0.v20140623020002"/>
-<unit id="org.eclipse.babel.nls_eclipse_de.feature.group" version="4.4.0.v20140623020002"/>
-<unit id="org.eclipse.babel.nls_datatools_pt_BR.feature.group" version="4.4.0.v20140623020002"/>
-<unit id="org.eclipse.babel.nls_webtools_pt_BR.feature.group" version="4.4.0.v20140623020002"/>
-<unit id="org.eclipse.babel.nls_rt.rap_de.feature.group" version="4.4.0.v20140623020002"/>
-<unit id="org.eclipse.babel.nls_technology.packaging_es.feature.group" version="4.4.0.v20140623020002"/>
-<unit id="org.eclipse.babel.nls_rt.rap_ja.feature.group" version="4.4.0.v20140623020002"/>
-<unit id="org.eclipse.babel.nls_soa.stardust_de.feature.group" version="4.4.0.v20140623020002"/>
-<unit id="org.eclipse.babel.nls_eclipse_it.feature.group" version="4.4.0.v20140623020002"/>
-<unit id="org.eclipse.babel.nls_webtools_es.feature.group" version="4.4.0.v20140623020002"/>
-<unit id="org.eclipse.babel.nls_rt.rap_pt_BR.feature.group" version="4.4.0.v20140623020002"/>
-<unit id="org.eclipse.babel.nls_webtools_it.feature.group" version="4.4.0.v20140623020002"/>
-<unit id="org.eclipse.babel.nls_webtools_de.feature.group" version="4.4.0.v20140623020002"/>
-<unit id="org.eclipse.babel.nls_tools.tm_de.feature.group" version="4.4.0.v20140623020002"/>
-<unit id="org.eclipse.babel.nls_mylyn_de.feature.group" version="4.4.0.v20140623020002"/>
-<unit id="org.eclipse.babel.nls_mylyn_pt_BR.feature.group" version="4.4.0.v20140623020002"/>
-<unit id="org.eclipse.babel.nls_technology.packaging_fr.feature.group" version="4.4.0.v20140623020002"/>
-<unit id="org.eclipse.babel.nls_mylyn_fr.feature.group" version="4.4.0.v20140623020002"/>
-<unit id="org.eclipse.babel.nls_datatools_fr.feature.group" version="4.4.0.v20140623020002"/>
-<unit id="org.eclipse.babel.nls_tools.tm_pt_BR.feature.group" version="4.4.0.v20140623020002"/>
-<unit id="org.eclipse.babel.nls_technology.packaging_ja.feature.group" version="4.4.0.v20140623020002"/>
-<unit id="org.eclipse.babel.nls_webtools_fr.feature.group" version="4.4.0.v20140623020002"/>
-<unit id="org.eclipse.babel.nls_datatools_es.feature.group" version="4.4.0.v20140623020002"/>
-<unit id="org.eclipse.babel.nls_soa.stardust_it.feature.group" version="4.4.0.v20140623020002"/>
-<unit id="org.eclipse.babel.nls_rt.rap_it.feature.group" version="4.4.0.v20140623020002"/>
-<repository location="http://download.eclipse.org/technology/babel/update-site/R0.12.0/luna"/>
 </location>
 <location includeAllPlatforms="true" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.uguess.tribix.feature.group" version="2.5.2.201107181644"/>
@@ -200,6 +149,57 @@
 <unit id="org.eclipse.nebula.widgets.tablecombo.feature.feature.group" version="1.0.0.201412011502"/>
 <unit id="org.eclipse.nebula.widgets.gallery.feature.feature.group" version="1.0.0.201412011502"/>
 <repository location="http://download.eclipse.org/technology/nebula/snapshot"/>
+</location>
+<location includeAllPlatforms="true" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.babel.nls_technology.packaging_ja.feature.group" version="4.4.0.v20140623020002"/>
+<unit id="org.eclipse.babel.nls_datatools_es.feature.group" version="4.4.0.v20140623020002"/>
+<unit id="org.eclipse.babel.nls_technology.packaging_fr.feature.group" version="4.4.0.v20140623020002"/>
+<unit id="org.eclipse.babel.nls_technology.packaging_pt.feature.group" version="4.4.0.v20140623020002"/>
+<unit id="org.eclipse.babel.nls_tools.tm_de.feature.group" version="4.4.0.v20140623020002"/>
+<unit id="org.eclipse.babel.nls_tools.tm_es.feature.group" version="4.4.0.v20140623020002"/>
+<unit id="org.eclipse.babel.nls_tools.tm_ja.feature.group" version="4.4.0.v20140623020002"/>
+<unit id="org.eclipse.babel.nls_webtools_pt_BR.feature.group" version="4.4.0.v20140623020002"/>
+<unit id="org.eclipse.babel.nls_mylyn_pt_BR.feature.group" version="4.4.0.v20140623020002"/>
+<unit id="org.eclipse.babel.nls_tools.tm_pt.feature.group" version="4.4.0.v20140623020002"/>
+<unit id="org.eclipse.babel.nls_rt.rap_ja.feature.group" version="4.4.0.v20140623020002"/>
+<unit id="org.eclipse.babel.nls_datatools_pt.feature.group" version="4.4.0.v20140623020002"/>
+<unit id="org.eclipse.babel.nls_datatools_fr.feature.group" version="4.4.0.v20140623020002"/>
+<unit id="org.eclipse.babel.nls_rt.rap_de.feature.group" version="4.4.0.v20140623020002"/>
+<unit id="org.eclipse.babel.nls_soa.stardust_pt_BR.feature.group" version="4.4.0.v20140623020002"/>
+<unit id="org.eclipse.babel.nls_webtools_ja.feature.group" version="4.4.0.v20140623020002"/>
+<unit id="org.eclipse.babel.nls_technology.packaging_pt_BR.feature.group" version="4.4.0.v20140623020002"/>
+<unit id="org.eclipse.babel.nls_soa.stardust_ja.feature.group" version="4.4.0.v20140623020002"/>
+<unit id="org.eclipse.babel.nls_eclipse_fr.feature.group" version="4.4.0.v20140623020002"/>
+<unit id="org.eclipse.babel.nls_webtools_de.feature.group" version="4.4.0.v20140623020002"/>
+<unit id="org.eclipse.babel.nls_soa.stardust_de.feature.group" version="4.4.0.v20140623020002"/>
+<unit id="org.eclipse.babel.nls_datatools_pt_BR.feature.group" version="4.4.0.v20140623020002"/>
+<unit id="org.eclipse.babel.nls_soa.stardust_es.feature.group" version="4.4.0.v20140623020002"/>
+<unit id="org.eclipse.babel.nls_eclipse_es.feature.group" version="4.4.0.v20140623020002"/>
+<unit id="org.eclipse.babel.nls_mylyn_es.feature.group" version="4.4.0.v20140623020002"/>
+<unit id="org.eclipse.babel.nls_mylyn_pt.feature.group" version="4.4.0.v20140623020002"/>
+<unit id="org.eclipse.babel.nls_technology.packaging_de.feature.group" version="4.4.0.v20140623020002"/>
+<unit id="org.eclipse.babel.nls_mylyn_ja.feature.group" version="4.4.0.v20140623020002"/>
+<unit id="org.eclipse.babel.nls_eclipse_ja.feature.group" version="4.4.0.v20140623020002"/>
+<unit id="org.eclipse.babel.nls_eclipse_pt_BR.feature.group" version="4.4.0.v20140623020002"/>
+<unit id="org.eclipse.babel.nls_soa.stardust_fr.feature.group" version="4.4.0.v20140623020002"/>
+<unit id="org.eclipse.babel.nls_webtools_fr.feature.group" version="4.4.0.v20140623020002"/>
+<unit id="org.eclipse.babel.nls_eclipse_de.feature.group" version="4.4.0.v20140623020002"/>
+<unit id="org.eclipse.babel.nls_eclipse_pt.feature.group" version="4.4.0.v20140623020002"/>
+<unit id="org.eclipse.babel.nls_rt.rap_pt.feature.group" version="4.4.0.v20140623020002"/>
+<unit id="org.eclipse.babel.nls_webtools_es.feature.group" version="4.4.0.v20140623020002"/>
+<unit id="org.eclipse.babel.nls_mylyn_de.feature.group" version="4.4.0.v20140623020002"/>
+<unit id="org.eclipse.babel.nls_tools.tm_fr.feature.group" version="4.4.0.v20140623020002"/>
+<unit id="org.eclipse.babel.nls_rt.rap_fr.feature.group" version="4.4.0.v20140623020002"/>
+<unit id="org.eclipse.babel.nls_datatools_de.feature.group" version="4.4.0.v20140623020002"/>
+<unit id="org.eclipse.babel.nls_datatools_ja.feature.group" version="4.4.0.v20140623020002"/>
+<unit id="org.eclipse.babel.nls_soa.stardust_pt.feature.group" version="4.4.0.v20140623020002"/>
+<unit id="org.eclipse.babel.nls_tools.tm_pt_BR.feature.group" version="4.4.0.v20140623020002"/>
+<unit id="org.eclipse.babel.nls_technology.packaging_es.feature.group" version="4.4.0.v20140623020002"/>
+<unit id="org.eclipse.babel.nls_mylyn_fr.feature.group" version="4.4.0.v20140623020002"/>
+<unit id="org.eclipse.babel.nls_webtools_pt.feature.group" version="4.4.0.v20140623020002"/>
+<unit id="org.eclipse.babel.nls_rt.rap_pt_BR.feature.group" version="4.4.0.v20140623020002"/>
+<unit id="org.eclipse.babel.nls_rt.rap_es.feature.group" version="4.4.0.v20140623020002"/>
+<repository location="http://download.eclipse.org/technology/babel/update-site/R0.12.0/luna"/>
 </location>
 </locations>
 <targetJRE path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
