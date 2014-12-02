@@ -293,7 +293,7 @@ public class DiagramFileStore extends EMFFileStore implements IRepositoryFileSto
     }
 
     protected void setDefaultSelection(final DiagramEditor editor) {
-        Display.getDefault().asyncExec(new Runnable() {
+        Display.getDefault().syncExec(new Runnable() {
 
             @Override
             public void run() {
@@ -302,6 +302,8 @@ public class DiagramFileStore extends EMFFileStore implements IRepositoryFileSto
                 final IGraphicalEditPart editPart = editor.getDiagramEditPart().getChildBySemanticHint(String.valueOf(PoolEditPart.VISUAL_ID));
                 if (editPart != null && editPart.getFigure() != null) {
                     editor.getDiagramEditPart().getViewer().select(editPart);
+                    //force viewer to flush selection event
+                    editor.getDiagramEditPart().getViewer().flush();
                 }
             }
         });
