@@ -20,38 +20,42 @@ package org.bonitasoft.studio.application;
 import java.util.Map;
 
 import org.bonitasoft.studio.application.advisor.RecoverWorkspaceAdvisor;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Romain Bioteau
  *
  */
-public class RecoverWorkspaceApplication implements IApplication {
+public class RecoverWorkspaceApplication extends BonitaStudioApplication implements IApplication {
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.equinox.app.IApplication#start(org.eclipse.equinox.app.IApplicationContext)
-	 */
+    private String newWorkspaceLocation;
+
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.equinox.app.IApplication#start(org.eclipse.equinox.app.IApplicationContext)
+     */
 	@Override
-	public Object start(IApplicationContext context) throws Exception {
-		Map<?,?> argument = context.getArguments() ;
-		Object args = argument.get(IApplicationContext.APPLICATION_ARGS) ;
-		String newWorkspaceLocation = null ;
+    public Object start(final IApplicationContext context) {
+		final Map<?,?> argument = context.getArguments() ;
+		final Object args = argument.get(IApplicationContext.APPLICATION_ARGS) ;
 		if(args != null && args instanceof String[]){
-			String[] arguments =(String[]) args ;
-			for(int i = 0; i < ((String[]) arguments).length ; i++  ){
+			final String[] arguments =(String[]) args ;
+			for(int i = 0; i < arguments.length ; i++  ){
 				if(arguments[i].startsWith("-newWorkspaceLocation")){
 					newWorkspaceLocation = arguments[i+1] ;
 				}
 			}
 		}
-
-		BonitaStudioApplication.preStartupStudio();
-		PlatformUI.createAndRunWorkbench(Display.getDefault(), new RecoverWorkspaceAdvisor(newWorkspaceLocation)) ;
-		return IApplication.EXIT_OK;
+        Assert.isLegal(newWorkspaceLocation != null && !newWorkspaceLocation.isEmpty());
+        return super.start(context);
 	}
+
+    @Override
+    protected BonitaStudioWorkbenchAdvisor createWorkbenchAdvisor() {
+        return new RecoverWorkspaceAdvisor(newWorkspaceLocation);
+    }
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.equinox.app.IApplication#stop()
@@ -61,6 +65,6 @@ public class RecoverWorkspaceApplication implements IApplication {
 		// NOTHING TO DO
 	}
 
-	
+
 
 }
