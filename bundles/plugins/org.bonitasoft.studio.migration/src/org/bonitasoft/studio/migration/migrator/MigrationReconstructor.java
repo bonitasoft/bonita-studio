@@ -16,7 +16,6 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 
-import org.bonitasoft.studio.migration.migrator.MigrationReconstructor.MigrationReconstructorSwitch;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClass;
@@ -28,6 +27,7 @@ import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.edapt.common.MetamodelExtent;
 import org.eclipse.emf.edapt.common.MetamodelUtils;
+import org.eclipse.emf.edapt.common.ResourceSetFactoryImpl;
 import org.eclipse.emf.edapt.common.ResourceUtils;
 import org.eclipse.emf.edapt.declaration.OperationImplementation;
 import org.eclipse.emf.edapt.history.reconstruction.EcoreReconstructorSwitchBase;
@@ -35,17 +35,13 @@ import org.eclipse.emf.edapt.history.reconstruction.FinishedException;
 import org.eclipse.emf.edapt.history.reconstruction.Mapping;
 import org.eclipse.emf.edapt.history.reconstruction.ReconstructorBase;
 import org.eclipse.emf.edapt.history.reconstruction.ResolverBase;
+import org.eclipse.emf.edapt.internal.migration.Persistency;
 import org.eclipse.emf.edapt.internal.migration.execution.IClassLoader;
 import org.eclipse.emf.edapt.internal.migration.execution.OperationInstanceConverter;
 import org.eclipse.emf.edapt.internal.migration.execution.ValidationLevel;
 import org.eclipse.emf.edapt.internal.migration.execution.WrappedMigrationException;
 import org.eclipse.emf.edapt.migration.CustomMigration;
-import org.eclipse.emf.edapt.migration.Metamodel;
 import org.eclipse.emf.edapt.migration.MigrationException;
-import org.eclipse.emf.edapt.migration.MigrationFactory;
-import org.eclipse.emf.edapt.migration.Model;
-import org.eclipse.emf.edapt.migration.Persistency;
-import org.eclipse.emf.edapt.migration.Repository;
 import org.eclipse.emf.edapt.spi.history.Add;
 import org.eclipse.emf.edapt.spi.history.Change;
 import org.eclipse.emf.edapt.spi.history.Create;
@@ -57,6 +53,10 @@ import org.eclipse.emf.edapt.spi.history.OperationInstance;
 import org.eclipse.emf.edapt.spi.history.Release;
 import org.eclipse.emf.edapt.spi.history.Remove;
 import org.eclipse.emf.edapt.spi.history.Set;
+import org.eclipse.emf.edapt.spi.migration.Metamodel;
+import org.eclipse.emf.edapt.spi.migration.MigrationFactory;
+import org.eclipse.emf.edapt.spi.migration.Model;
+import org.eclipse.emf.edapt.spi.migration.Repository;
 
 /**
  * A reconstructor that perform the migration of models from a source release to
@@ -106,21 +106,21 @@ public class MigrationReconstructor extends ReconstructorBase {
 	protected CustomMigration customMigration;
 
 	/** Classloader to load {@link CustomMigration}s. */
-	protected final IClassLoader classLoader;
+    protected IClassLoader classLoader;
 
 	/** Validation level. */
-	protected final ValidationLevel level;
+    protected ValidationLevel level;
 
 	/** Constructor. */
-	public MigrationReconstructor(List<URI> modelURIs, Release sourceRelease,
-			Release targetRelease, IProgressMonitor monitor,
-			IClassLoader classLoader, ValidationLevel level) {
-		modelURIs = modelURIs;
-		sourceRelease = sourceRelease;
-		targetRelease = targetRelease;
-		monitor = monitor;
-		classLoader = classLoader;
-		level = level;
+	public MigrationReconstructor(final List<URI> modelURIs, final Release sourceRelease,
+			final Release targetRelease, final IProgressMonitor monitor,
+			final IClassLoader classLoader, final ValidationLevel level) {
+        this.modelURIs = modelURIs;
+        this.sourceRelease = sourceRelease;
+        this.targetRelease = targetRelease;
+        this.monitor = monitor;
+        this.classLoader = classLoader;
+        this.level = level;
 	}
 
 	/** {@inheritDoc} */
@@ -133,7 +133,7 @@ public class MigrationReconstructor extends ReconstructorBase {
 
 	/** {@inheritDoc} */
 	@Override
-	public void startRelease(Release originalRelease) {
+	public void startRelease(final Release originalRelease) {
 		if (isEnabled()) {
 			monitor.subTask("");
 		}
@@ -141,7 +141,7 @@ public class MigrationReconstructor extends ReconstructorBase {
 
 	/** {@inheritDoc} */
 	@Override
-	public void endRelease(Release originalRelease) {
+	public void endRelease(final Release originalRelease) {
 		if (originalRelease == targetRelease) {
 			disable();
 			checkConformanceIfMoreThan(ValidationLevel.HISTORY);
@@ -159,7 +159,7 @@ public class MigrationReconstructor extends ReconstructorBase {
 	 * Check the conformance of the model to the metamodel if the validation
 	 * level is greater or equal to a certain level.
 	 */
-	protected void checkConformanceIfMoreThan(ValidationLevel level) {
+	protected void checkConformanceIfMoreThan(final ValidationLevel level) {
 		if (level.compareTo(level) >= 0) {
 			checkConformance();
 		}
@@ -169,39 +169,39 @@ public class MigrationReconstructor extends ReconstructorBase {
 	protected void checkConformance() {
 		try {
 			repository.getModel().checkConformance();
-		} catch (MigrationException e) {
+		} catch (final MigrationException e) {
 			throwWrappedMigrationException(e);
 		}
 	}
 
 	/** Load the model before migration. */
 	protected void loadRepository() {
-		Metamodel metamodel = loadMetamodel();
+		final Metamodel metamodel = loadMetamodel();
 		metamodel.refreshCaches();
 		try {
-			Model model = Persistency.loadModel(modelURIs, metamodel);
+            final Model model = Persistency.loadModel(modelURIs, metamodel, new ResourceSetFactoryImpl());
 			repository = MigrationFactory.eINSTANCE.createRepository();
 			repository.setMetamodel(metamodel);
 			repository.setModel(model);
 			checkConformanceIfMoreThan(ValidationLevel.HISTORY);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throwWrappedMigrationException("Model could not be loaded", e);
 		}
 	}
 
 	/** Load the metamodel. */
 	protected Metamodel loadMetamodel() {
-		URI metamodelURI = URI.createFileURI(new File("metamodel."
+		final URI metamodelURI = URI.createFileURI(new File("metamodel."
 				+ ResourceUtils.ECORE_FILE_EXTENSION).getAbsolutePath());
-		Collection<EPackage> rootPackages = extent.getRootPackages();
-		ResourceSet resourceSet = MetamodelUtils
+		final Collection<EPackage> rootPackages = extent.getRootPackages();
+		final ResourceSet resourceSet = MetamodelUtils
 				.createIndependentMetamodelCopy(rootPackages, metamodelURI);
 		return Persistency.loadMetamodel(resourceSet);
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public void startChange(Change change) {
+	public void startChange(final Change change) {
 		if (isEnabled()) {
 			if (isStarted()) {
 				migrationSwitch.doSwitch(change);
@@ -212,7 +212,7 @@ public class MigrationReconstructor extends ReconstructorBase {
 
 	/** {@inheritDoc} */
 	@Override
-	public void endChange(Change change) {
+	public void endChange(final Change change) {
 		if (isEnabled()) {
 			checkResume(change);
 			if (isStarted()) {
@@ -223,7 +223,7 @@ public class MigrationReconstructor extends ReconstructorBase {
 								repository.getMetamodel());
 						monitor.worked(1);
 						checkConformanceIfMoreThan(ValidationLevel.CUSTOM_MIGRATION);
-					} catch (MigrationException e) {
+					} catch (final MigrationException e) {
 						throwWrappedMigrationException(e);
 					} finally {
 						customMigration = null;
@@ -237,7 +237,7 @@ public class MigrationReconstructor extends ReconstructorBase {
 	}
 
 	/** Check whether to pause migration generator. */
-	protected void checkResume(Change originalChange) {
+	protected void checkResume(final Change originalChange) {
 		if (trigger == originalChange) {
 			started = true;
 			trigger = null;
@@ -245,7 +245,7 @@ public class MigrationReconstructor extends ReconstructorBase {
 	}
 
 	/** Check whether to resume migration generator. */
-	protected void checkPause(Change originalChange) {
+	protected void checkPause(final Change originalChange) {
 		if (trigger != null) {
 			return;
 		}
@@ -277,13 +277,13 @@ public class MigrationReconstructor extends ReconstructorBase {
 	}
 
 	/** Wrap and throw a {@link MigrationException}. */
-	protected void throwWrappedMigrationException(String message, Throwable e) {
-		MigrationException me = new MigrationException(message, e);
+	protected void throwWrappedMigrationException(final String message, final Throwable e) {
+		final MigrationException me = new MigrationException(message, e);
 		throwWrappedMigrationException(me);
 	}
 
 	/** Wrap and throw a {@link MigrationException}. */
-	protected void throwWrappedMigrationException(MigrationException me) {
+	protected void throwWrappedMigrationException(final MigrationException me) {
 		throw new WrappedMigrationException(me);
 	}
 
@@ -315,16 +315,16 @@ public class MigrationReconstructor extends ReconstructorBase {
 
 		/** {@inheritDoc} */
 		@Override
-		public Object caseSet(Set set) {
-			EObject element = set.getElement();
-			EStructuralFeature feature = set.getFeature();
-			Object value = set.getValue();
+		public Object caseSet(final Set set) {
+			final EObject element = set.getElement();
+			final EStructuralFeature feature = set.getFeature();
+			final Object value = set.getValue();
 			if (feature == EcorePackage.eINSTANCE.getEReference_EOpposite()) {
 				repository.getMetamodel().setEOpposite(
 						(EReference) resolve(element),
 						(EReference) resolve((EObject) value));
 			} else if (feature instanceof EReference) {
-				EObject resolve = resolve((EObject) value);
+				final EObject resolve = resolve((EObject) value);
 				if (resolve instanceof EClass) {
 					if ("EGenericType".equals(((EClass) resolve).getName())) {
 						System.out.println();
@@ -341,10 +341,10 @@ public class MigrationReconstructor extends ReconstructorBase {
 
 		/** {@inheritDoc} */
 		@Override
-		public Object caseAdd(Add add) {
-			EObject element = add.getElement();
-			EStructuralFeature feature = add.getFeature();
-			Object value = add.getValue();
+		public Object caseAdd(final Add add) {
+			final EObject element = add.getElement();
+			final EStructuralFeature feature = add.getFeature();
+			final Object value = add.getValue();
 			if (feature instanceof EReference) {
 				add(resolve(element), feature, resolve((EObject) value));
 			} else {
@@ -356,10 +356,10 @@ public class MigrationReconstructor extends ReconstructorBase {
 
 		/** {@inheritDoc} */
 		@Override
-		public Object caseRemove(Remove remove) {
-			EObject element = remove.getElement();
-			EStructuralFeature feature = remove.getFeature();
-			Object value = remove.getValue();
+		public Object caseRemove(final Remove remove) {
+			final EObject element = remove.getElement();
+			final EStructuralFeature feature = remove.getFeature();
+			final Object value = remove.getValue();
 			if (feature instanceof EReference) {
 				remove(resolve(element), feature, resolve((EObject) value));
 			} else {
@@ -371,9 +371,9 @@ public class MigrationReconstructor extends ReconstructorBase {
 
 		/** {@inheritDoc} */
 		@Override
-		public Object caseCreate(Create create) {
-			EObject element = create.getTarget();
-			EReference reference = create.getReference();
+		public Object caseCreate(final Create create) {
+			final EObject element = create.getTarget();
+			final EReference reference = create.getReference();
 			create(resolve(element), reference, create.getElement().eClass());
 
 			return create;
@@ -381,8 +381,8 @@ public class MigrationReconstructor extends ReconstructorBase {
 
 		/** {@inheritDoc} */
 		@Override
-		public Object caseDelete(Delete delete) {
-			EObject element = delete.getElement();
+		public Object caseDelete(final Delete delete) {
+			final EObject element = delete.getElement();
 			delete(resolve(element));
 
 			return delete;
@@ -390,7 +390,7 @@ public class MigrationReconstructor extends ReconstructorBase {
 
 		/** {@inheritDoc} */
 		@Override
-		public Object caseMove(Move move) {
+		public Object caseMove(final Move move) {
 			move(resolve(move.getElement()), resolve(move.getTarget()),
 					move.getReference());
 
@@ -399,23 +399,23 @@ public class MigrationReconstructor extends ReconstructorBase {
 
 		/** {@inheritDoc} */
 		@Override
-		public Object caseMigrationChange(MigrationChange change) {
+		public Object caseMigrationChange(final MigrationChange change) {
 			try {
-				String migration = change.getMigration();
-				Class<?> c = classLoader.load(migration);
+				final String migration = change.getMigration();
+				final Class<?> c = classLoader.load(migration);
 				customMigration = (CustomMigration) c.newInstance();
 				customMigration.migrateBefore(repository.getModel(),
 						repository.getMetamodel());
-			} catch (ClassNotFoundException e) {
+			} catch (final ClassNotFoundException e) {
 				throwWrappedMigrationException(
 						"Custom migration could not be loaded", e);
-			} catch (InstantiationException e) {
+			} catch (final InstantiationException e) {
 				throwWrappedMigrationException(
 						"Custom migration could not be instantiated", e);
-			} catch (IllegalAccessException e) {
+			} catch (final IllegalAccessException e) {
 				throwWrappedMigrationException(
 						"Custom migration could not be accessed", e);
-			} catch (MigrationException e) {
+			} catch (final MigrationException e) {
 				throwWrappedMigrationException(e);
 			}
 
@@ -424,12 +424,12 @@ public class MigrationReconstructor extends ReconstructorBase {
 
 		/** {@inheritDoc} */
 		@Override
-		public Object caseOperationChange(OperationChange change) {
-			OperationInstance operationInstance = (OperationInstance) resolver
+		public Object caseOperationChange(final OperationChange change) {
+			final OperationInstance operationInstance = (OperationInstance) resolver
 					.copyResolve(change.getOperation(), true);
 
 			final Metamodel metamodel = repository.getMetamodel();
-            OperationImplementation operation = OperationInstanceConverter.convert(operationInstance, metamodel);
+            final OperationImplementation operation = OperationInstanceConverter.convert(operationInstance, metamodel);
 			if (operation == null) {
 				throwWrappedMigrationException("Operation could not be found: "
 						+ operationInstance.getName(), null);
@@ -437,7 +437,7 @@ public class MigrationReconstructor extends ReconstructorBase {
 				try {
 					operation.checkAndExecute(repository.getMetamodel(),
 							repository.getModel());
-				} catch (MigrationException e) {
+				} catch (final MigrationException e) {
 					throwWrappedMigrationException(e);
 				}
 			}
@@ -446,20 +446,20 @@ public class MigrationReconstructor extends ReconstructorBase {
 		}
 
 		/** Resolve an element using the resolver. */
-		protected EObject resolve(EObject element) {
+		protected EObject resolve(final EObject element) {
 			return resolver.resolve(element);
 		}
 
 		/** Find an element in the metamodel created for migration. */
 		@SuppressWarnings("unchecked")
-		protected EObject find(EObject sourceElement) {
+		protected EObject find(final EObject sourceElement) {
 			if (sourceElement == EcorePackage.eINSTANCE) {
 				return sourceElement;
 			}
-			EObject sourceParent = sourceElement.eContainer();
+			final EObject sourceParent = sourceElement.eContainer();
 			if (sourceParent == null) {
-				EPackage sourcePackage = (EPackage) sourceElement;
-				for (EPackage targetPackage : repository.getMetamodel()
+				final EPackage sourcePackage = (EPackage) sourceElement;
+				for (final EPackage targetPackage : repository.getMetamodel()
 						.getEPackages()) {
 					if (targetPackage.getNsURI().equals(
 							sourcePackage.getNsURI())) {
@@ -468,21 +468,21 @@ public class MigrationReconstructor extends ReconstructorBase {
 				}
 				return sourcePackage;
 			}
-			EObject targetParent = find(sourceParent);
+			final EObject targetParent = find(sourceParent);
 			if (targetParent == sourceParent) {
 				return sourceElement;
 			}
-			EReference reference = sourceElement.eContainmentFeature();
+			final EReference reference = sourceElement.eContainmentFeature();
 			if (reference.isMany()) {
-				List<EObject> targetChildren = (List<EObject>) targetParent
+				final List<EObject> targetChildren = (List<EObject>) targetParent
 						.eGet(reference);
-				List<EObject> sourceChildren = (List<EObject>) sourceParent
+				final List<EObject> sourceChildren = (List<EObject>) sourceParent
 						.eGet(reference);
-				int index = sourceChildren.indexOf(sourceElement);
-				EObject targetElement = targetChildren.get(index);
+				final int index = sourceChildren.indexOf(sourceElement);
+				final EObject targetElement = targetChildren.get(index);
 				return targetElement;
 			}
-			EObject targetElement = (EObject) targetParent.eGet(reference);
+			final EObject targetElement = (EObject) targetParent.eGet(reference);
 			return targetElement;
 		}
 	}

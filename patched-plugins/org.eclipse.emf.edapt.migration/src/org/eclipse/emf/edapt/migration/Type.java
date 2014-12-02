@@ -89,7 +89,7 @@ public interface Type {
 
 	/**
 	 * Returns the value of the '<em><b>Model</b></em>' container reference.
-	 * It is bidirectional and its opposite is '{@link org.eclipse.emf.edapt.migration.Model#getTypes <em>Types</em>}'.
+	 * It is bidirectional and its opposite is '{@link org.eclipse.emf.edapt.spi.migration.Model#getTypes <em>Types</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Model</em>' container reference isn't clear,
@@ -102,7 +102,7 @@ public interface Type {
 	 * @return the value of the '<em>Model</em>' container reference.
 	 * @see #setModel(Model)
 	 * @see org.eclipse.emf.edapt.migration.MigrationPackage#getType_Model()
-	 * @see org.eclipse.emf.edapt.migration.Model#getTypes
+	 * @see org.eclipse.emf.edapt.spi.migration.Model#getTypes
 	 * @model opposite="types" required="true" transient="false"
 	 * @generated
 	 */

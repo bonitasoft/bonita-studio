@@ -43,25 +43,25 @@ import org.eclipse.emf.edapt.declaration.OperationImplementation;
 import org.eclipse.emf.edapt.history.reconstruction.EcoreForwardReconstructor;
 import org.eclipse.emf.edapt.history.util.HistoryUtils;
 import org.eclipse.emf.edapt.internal.declaration.OperationRegistry;
+import org.eclipse.emf.edapt.internal.migration.BackupUtils;
+import org.eclipse.emf.edapt.internal.migration.MaterializingBackwardConverter;
+import org.eclipse.emf.edapt.internal.migration.Persistency;
+import org.eclipse.emf.edapt.internal.migration.PrintStreamProgressMonitor;
 import org.eclipse.emf.edapt.internal.migration.execution.ClassLoaderFacade;
 import org.eclipse.emf.edapt.internal.migration.execution.IClassLoader;
 import org.eclipse.emf.edapt.internal.migration.execution.MigratorCommandLine;
 import org.eclipse.emf.edapt.internal.migration.execution.ValidationLevel;
 import org.eclipse.emf.edapt.internal.migration.execution.WrappedMigrationException;
-import org.eclipse.emf.edapt.migration.BackupUtils;
 import org.eclipse.emf.edapt.migration.CustomMigration;
-import org.eclipse.emf.edapt.migration.MaterializingBackwardConverter;
-import org.eclipse.emf.edapt.migration.Metamodel;
 import org.eclipse.emf.edapt.migration.MigrationException;
-import org.eclipse.emf.edapt.migration.Model;
-import org.eclipse.emf.edapt.migration.Persistency;
-import org.eclipse.emf.edapt.migration.PrintStreamProgressMonitor;
 import org.eclipse.emf.edapt.migration.ReleaseUtils;
 import org.eclipse.emf.edapt.migration.execution.Migrator;
 import org.eclipse.emf.edapt.spi.history.Delete;
 import org.eclipse.emf.edapt.spi.history.History;
 import org.eclipse.emf.edapt.spi.history.HistoryPackage;
 import org.eclipse.emf.edapt.spi.history.Release;
+import org.eclipse.emf.edapt.spi.migration.Metamodel;
+import org.eclipse.emf.edapt.spi.migration.Model;
 
 /**
  * @author Romain Bioteau
@@ -79,7 +79,7 @@ public class BOSMigrator {
 	private final IClassLoader classLoader;
 
 	/** Validation level. */
-	private ValidationLevel level = ValidationLevel.CUSTOM_MIGRATION;
+    private ValidationLevel level = ValidationLevel.CUSTOM_MIGRATION;
 
 	private BOSReportReconstructor reportReconstructor;
 
@@ -92,14 +92,14 @@ public class BOSMigrator {
 		} catch (final IOException e) {
 			throw new MigrationException("History could not be loaded", e);
 		}
-		classLoader = classLoader;
+        this.classLoader = classLoader;
 		init();
 	}
 
 	/** Constructor. */
 	public BOSMigrator(final History history, final IClassLoader classLoader) {
-		history = history;
-		classLoader = classLoader;
+        this.history = history;
+        this.classLoader = classLoader;
 		init();
 	}
 
@@ -316,7 +316,7 @@ public class BOSMigrator {
 
 	/** Set the validation level. */
 	public void setLevel(final ValidationLevel level) {
-		level = level;
+        this.level = level;
 	}
 
 	/** Main method to perform migrations. */

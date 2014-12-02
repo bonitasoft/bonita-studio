@@ -36,7 +36,7 @@ package org.eclipse.emf.edapt.migration;
 public interface Repository {
 	/**
 	 * Returns the value of the '<em><b>Model</b></em>' containment reference.
-	 * It is bidirectional and its opposite is '{@link org.eclipse.emf.edapt.migration.Model#getRepository <em>Repository</em>}'.
+	 * It is bidirectional and its opposite is '{@link org.eclipse.emf.edapt.spi.migration.Model#getRepository <em>Repository</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Model</em>' containment reference isn't clear,
@@ -49,7 +49,7 @@ public interface Repository {
 	 * @return the value of the '<em>Model</em>' containment reference.
 	 * @see #setModel(Model)
 	 * @see org.eclipse.emf.edapt.migration.MigrationPackage#getRepository_Model()
-	 * @see org.eclipse.emf.edapt.migration.Model#getRepository
+	 * @see org.eclipse.emf.edapt.spi.migration.Model#getRepository
 	 * @model opposite="repository" containment="true" required="true"
 	 * @generated
 	 */

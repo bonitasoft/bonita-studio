@@ -26,8 +26,8 @@ import org.bonitasoft.studio.common.emf.tools.WidgetHelper;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinitionPackage;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.emf.edapt.migration.Instance;
-import org.eclipse.emf.edapt.migration.Model;
+import org.eclipse.emf.edapt.spi.migration.Instance;
+import org.eclipse.emf.edapt.spi.migration.Model;
 import org.w3c.dom.Document;
 
 /**

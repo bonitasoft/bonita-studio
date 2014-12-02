@@ -23,10 +23,10 @@ import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.CallActivity2EditPart;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.CallActivityName2EditPart;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.emf.edapt.migration.Instance;
-import org.eclipse.emf.edapt.migration.Metamodel;
 import org.eclipse.emf.edapt.migration.MigrationException;
-import org.eclipse.emf.edapt.migration.Model;
+import org.eclipse.emf.edapt.spi.migration.Instance;
+import org.eclipse.emf.edapt.spi.migration.Metamodel;
+import org.eclipse.emf.edapt.spi.migration.Model;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 
 

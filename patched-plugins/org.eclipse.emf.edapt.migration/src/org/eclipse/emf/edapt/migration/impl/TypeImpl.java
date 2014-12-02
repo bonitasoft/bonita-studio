@@ -27,7 +27,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
 import org.eclipse.emf.edapt.migration.Instance;
 import org.eclipse.emf.edapt.migration.MigrationFactory;
 import org.eclipse.emf.edapt.migration.MigrationPackage;
-import org.eclipse.emf.edapt.migration.Model;
+import org.eclipse.emf.edapt.spi.migration.Model;
 import org.eclipse.emf.edapt.migration.Type;
 
 

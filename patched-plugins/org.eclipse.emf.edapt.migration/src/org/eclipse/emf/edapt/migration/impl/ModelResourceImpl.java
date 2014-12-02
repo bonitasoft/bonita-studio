@@ -24,8 +24,8 @@ import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edapt.migration.Instance;
 import org.eclipse.emf.edapt.migration.MigrationPackage;
-import org.eclipse.emf.edapt.migration.Model;
-import org.eclipse.emf.edapt.migration.ModelResource;
+import org.eclipse.emf.edapt.spi.migration.Model;
+import org.eclipse.emf.edapt.spi.migration.ModelResource;
 
 
 /**

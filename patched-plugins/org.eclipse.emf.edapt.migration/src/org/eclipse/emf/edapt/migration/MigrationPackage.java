@@ -647,65 +647,65 @@ public interface MigrationPackage extends EPackage {
 
 
 	/**
-	 * Returns the meta object for class '{@link org.eclipse.emf.edapt.migration.Model <em>Model</em>}'.
+	 * Returns the meta object for class '{@link org.eclipse.emf.edapt.spi.migration.Model <em>Model</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for class '<em>Model</em>'.
-	 * @see org.eclipse.emf.edapt.migration.Model
+	 * @see org.eclipse.emf.edapt.spi.migration.Model
 	 * @generated
 	 */
 	EClass getModel();
 
 	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.emf.edapt.migration.Model#getMetamodel <em>Metamodel</em>}'.
+	 * Returns the meta object for the reference '{@link org.eclipse.emf.edapt.spi.migration.Model#getMetamodel <em>Metamodel</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the reference '<em>Metamodel</em>'.
-	 * @see org.eclipse.emf.edapt.migration.Model#getMetamodel()
+	 * @see org.eclipse.emf.edapt.spi.migration.Model#getMetamodel()
 	 * @see #getModel()
 	 * @generated
 	 */
 	EReference getModel_Metamodel();
 
 	/**
-	 * Returns the meta object for the containment reference list '{@link org.eclipse.emf.edapt.migration.Model#getTypes <em>Types</em>}'.
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.emf.edapt.spi.migration.Model#getTypes <em>Types</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the containment reference list '<em>Types</em>'.
-	 * @see org.eclipse.emf.edapt.migration.Model#getTypes()
+	 * @see org.eclipse.emf.edapt.spi.migration.Model#getTypes()
 	 * @see #getModel()
 	 * @generated
 	 */
 	EReference getModel_Types();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.emf.edapt.migration.Model#isReflection <em>Reflection</em>}'.
+	 * Returns the meta object for the attribute '{@link org.eclipse.emf.edapt.spi.migration.Model#isReflection <em>Reflection</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Reflection</em>'.
-	 * @see org.eclipse.emf.edapt.migration.Model#isReflection()
+	 * @see org.eclipse.emf.edapt.spi.migration.Model#isReflection()
 	 * @see #getModel()
 	 * @generated
 	 */
 	EAttribute getModel_Reflection();
 
 	/**
-	 * Returns the meta object for the containment reference list '{@link org.eclipse.emf.edapt.migration.Model#getResources <em>Resources</em>}'.
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.emf.edapt.spi.migration.Model#getResources <em>Resources</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the containment reference list '<em>Resources</em>'.
-	 * @see org.eclipse.emf.edapt.migration.Model#getResources()
+	 * @see org.eclipse.emf.edapt.spi.migration.Model#getResources()
 	 * @see #getModel()
 	 * @generated
 	 */
 	EReference getModel_Resources();
 
 	/**
-	 * Returns the meta object for the container reference '{@link org.eclipse.emf.edapt.migration.Model#getRepository <em>Repository</em>}'.
+	 * Returns the meta object for the container reference '{@link org.eclipse.emf.edapt.spi.migration.Model#getRepository <em>Repository</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the container reference '<em>Repository</em>'.
-	 * @see org.eclipse.emf.edapt.migration.Model#getRepository()
+	 * @see org.eclipse.emf.edapt.spi.migration.Model#getRepository()
 	 * @see #getModel()
 	 * @generated
 	 */
@@ -980,32 +980,32 @@ public interface MigrationPackage extends EPackage {
 	EReference getRepository_Metamodel();
 
 	/**
-	 * Returns the meta object for class '{@link org.eclipse.emf.edapt.migration.ModelResource <em>Model Resource</em>}'.
+	 * Returns the meta object for class '{@link org.eclipse.emf.edapt.spi.migration.ModelResource <em>Model Resource</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for class '<em>Model Resource</em>'.
-	 * @see org.eclipse.emf.edapt.migration.ModelResource
+	 * @see org.eclipse.emf.edapt.spi.migration.ModelResource
 	 * @generated
 	 */
 	EClass getModelResource();
 
 	/**
-	 * Returns the meta object for the reference list '{@link org.eclipse.emf.edapt.migration.ModelResource#getRootInstances <em>Root Instances</em>}'.
+	 * Returns the meta object for the reference list '{@link org.eclipse.emf.edapt.spi.migration.ModelResource#getRootInstances <em>Root Instances</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the reference list '<em>Root Instances</em>'.
-	 * @see org.eclipse.emf.edapt.migration.ModelResource#getRootInstances()
+	 * @see org.eclipse.emf.edapt.spi.migration.ModelResource#getRootInstances()
 	 * @see #getModelResource()
 	 * @generated
 	 */
 	EReference getModelResource_RootInstances();
 
 	/**
-	 * Returns the meta object for the container reference '{@link org.eclipse.emf.edapt.migration.ModelResource#getModel <em>Model</em>}'.
+	 * Returns the meta object for the container reference '{@link org.eclipse.emf.edapt.spi.migration.ModelResource#getModel <em>Model</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the container reference '<em>Model</em>'.
-	 * @see org.eclipse.emf.edapt.migration.ModelResource#getModel()
+	 * @see org.eclipse.emf.edapt.spi.migration.ModelResource#getModel()
 	 * @see #getModelResource()
 	 * @generated
 	 */

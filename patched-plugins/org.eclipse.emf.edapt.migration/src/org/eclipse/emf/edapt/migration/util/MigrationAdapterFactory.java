@@ -22,8 +22,8 @@ import org.eclipse.emf.edapt.migration.Instance;
 import org.eclipse.emf.edapt.migration.Metamodel;
 import org.eclipse.emf.edapt.migration.MetamodelResource;
 import org.eclipse.emf.edapt.migration.MigrationPackage;
-import org.eclipse.emf.edapt.migration.Model;
-import org.eclipse.emf.edapt.migration.ModelResource;
+import org.eclipse.emf.edapt.spi.migration.Model;
+import org.eclipse.emf.edapt.spi.migration.ModelResource;
 import org.eclipse.emf.edapt.migration.ReferenceSlot;
 import org.eclipse.emf.edapt.migration.Repository;
 import org.eclipse.emf.edapt.migration.Slot;
@@ -151,13 +151,13 @@ public class MigrationAdapterFactory extends AdapterFactoryImpl {
 
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.emf.edapt.migration.Model <em>Model</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.eclipse.emf.edapt.spi.migration.Model <em>Model</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see org.eclipse.emf.edapt.migration.Model
+	 * @see org.eclipse.emf.edapt.spi.migration.Model
 	 * @generated
 	 */
 	public Adapter createModelAdapter() {
@@ -263,13 +263,13 @@ public class MigrationAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.emf.edapt.migration.ModelResource <em>Model Resource</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.eclipse.emf.edapt.spi.migration.ModelResource <em>Model Resource</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see org.eclipse.emf.edapt.migration.ModelResource
+	 * @see org.eclipse.emf.edapt.spi.migration.ModelResource
 	 * @generated
 	 */
 	public Adapter createModelResourceAdapter() {

@@ -48,7 +48,7 @@ import org.eclipse.emf.edapt.migration.Metamodel;
 import org.eclipse.emf.edapt.migration.MetamodelResource;
 import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.emf.edapt.migration.MigrationPackage;
-import org.eclipse.emf.edapt.migration.Model;
+import org.eclipse.emf.edapt.spi.migration.Model;
 import org.eclipse.emf.edapt.migration.ReferenceSlot;
 import org.eclipse.emf.edapt.migration.Repository;
 

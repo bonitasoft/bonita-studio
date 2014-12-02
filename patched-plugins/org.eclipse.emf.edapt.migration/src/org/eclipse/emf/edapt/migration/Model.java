@@ -31,11 +31,11 @@ import org.eclipse.emf.ecore.EClass;
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link org.eclipse.emf.edapt.migration.Model#getMetamodel <em>Metamodel</em>}</li>
- *   <li>{@link org.eclipse.emf.edapt.migration.Model#getTypes <em>Types</em>}</li>
- *   <li>{@link org.eclipse.emf.edapt.migration.Model#isReflection <em>Reflection</em>}</li>
- *   <li>{@link org.eclipse.emf.edapt.migration.Model#getResources <em>Resources</em>}</li>
- *   <li>{@link org.eclipse.emf.edapt.migration.Model#getRepository <em>Repository</em>}</li>
+ *   <li>{@link org.eclipse.emf.edapt.spi.migration.Model#getMetamodel <em>Metamodel</em>}</li>
+ *   <li>{@link org.eclipse.emf.edapt.spi.migration.Model#getTypes <em>Types</em>}</li>
+ *   <li>{@link org.eclipse.emf.edapt.spi.migration.Model#isReflection <em>Reflection</em>}</li>
+ *   <li>{@link org.eclipse.emf.edapt.spi.migration.Model#getResources <em>Resources</em>}</li>
+ *   <li>{@link org.eclipse.emf.edapt.spi.migration.Model#getRepository <em>Repository</em>}</li>
  * </ul>
  * </p>
  *
@@ -64,7 +64,7 @@ public interface Model {
 	Metamodel getMetamodel();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.emf.edapt.migration.Model#getMetamodel <em>Metamodel</em>}' reference.
+	 * Sets the value of the '{@link org.eclipse.emf.edapt.spi.migration.Model#getMetamodel <em>Metamodel</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Metamodel</em>' reference.
@@ -114,7 +114,7 @@ public interface Model {
 	boolean isReflection();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.emf.edapt.migration.Model#isReflection <em>Reflection</em>}' attribute.
+	 * Sets the value of the '{@link org.eclipse.emf.edapt.spi.migration.Model#isReflection <em>Reflection</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Reflection</em>' attribute.
@@ -125,8 +125,8 @@ public interface Model {
 
 	/**
 	 * Returns the value of the '<em><b>Resources</b></em>' containment reference list.
-	 * The list contents are of type {@link org.eclipse.emf.edapt.migration.ModelResource}.
-	 * It is bidirectional and its opposite is '{@link org.eclipse.emf.edapt.migration.ModelResource#getModel <em>Model</em>}'.
+	 * The list contents are of type {@link org.eclipse.emf.edapt.spi.migration.ModelResource}.
+	 * It is bidirectional and its opposite is '{@link org.eclipse.emf.edapt.spi.migration.ModelResource#getModel <em>Model</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Resources</em>' containment reference list isn't clear,
@@ -138,7 +138,7 @@ public interface Model {
 	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Resources</em>' containment reference list.
 	 * @see org.eclipse.emf.edapt.migration.MigrationPackage#getModel_Resources()
-	 * @see org.eclipse.emf.edapt.migration.ModelResource#getModel
+	 * @see org.eclipse.emf.edapt.spi.migration.ModelResource#getModel
 	 * @model opposite="model" containment="true"
 	 * @generated
 	 */
@@ -166,7 +166,7 @@ public interface Model {
 	Repository getRepository();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.emf.edapt.migration.Model#getRepository <em>Repository</em>}' container reference.
+	 * Sets the value of the '{@link org.eclipse.emf.edapt.spi.migration.Model#getRepository <em>Repository</em>}' container reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Repository</em>' container reference.
