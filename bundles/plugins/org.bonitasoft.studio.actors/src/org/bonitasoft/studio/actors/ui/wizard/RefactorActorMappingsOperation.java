@@ -95,7 +95,7 @@ public class RefactorActorMappingsOperation implements IRunnableWithProgress {
 		final DiagramRepositoryStore diagramStore = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
 		final List<ActorMappingsType> actorMappings = getAllActorMappings(confStore, diagramStore);
 
-		final IComparisonScope scope = new DefaultComparisonScope(newOrganization.eResource().getResourceSet(), oldOrganization.eResource().getResourceSet(), null);
+        final IComparisonScope scope = new DefaultComparisonScope(newOrganization, oldOrganization, null);
 
 		final IEObjectMatcher matcher = DefaultMatchEngine.createDefaultEObjectMatcher(UseIdentifiers.NEVER);
 		final IComparisonFactory comparisonFactory = new DefaultComparisonFactory(new DefaultEqualityHelperFactory());
@@ -141,29 +141,33 @@ public class RefactorActorMappingsOperation implements IRunnableWithProgress {
 				}
 			}
 
-			final List<ModelElementChangeLeftTarget> newElementChange = ModelHelper.getAllItemsOfType(difference, DiffPackage.Literals.MODEL_ELEMENT_CHANGE_LEFT_TARGET);
-			final List<ModelElementChangeRightTarget> oldElementChange = ModelHelper.getAllItemsOfType(difference, DiffPackage.Literals.MODEL_ELEMENT_CHANGE_RIGHT_TARGET);
-			if(!newElementChange.isEmpty() && !oldElementChange.isEmpty()){
-				final ModelElementChangeLeftTarget leftTarget = newElementChange.get(0);
-				final ModelElementChangeRightTarget rightTarget = oldElementChange.get(0);
-				final EObject newEObject = leftTarget.getLeftElement();
-				final EObject oldEObject = rightTarget.getRightElement();
-				if(newEObject instanceof Group && oldEObject instanceof Group){
-					refactorGroup((Group)oldEObject,(Group)newEObject,actorMappings);
-					refactorMembership((Group)oldEObject,(Group)newEObject,actorMappings);
-				}
-				if(newEObject instanceof Role && oldEObject instanceof Role){
-					refactorRole((Role)oldEObject,(Role)newEObject,actorMappings);
-					refactorMembership((Role)oldEObject,(Role)newEObject,actorMappings);
-				}
-				if(newEObject instanceof User && oldEObject instanceof User){
-					refactorUsername((User)oldEObject,(User)newEObject,actorMappings);
-				}
-				if(newEObject instanceof Membership && oldEObject instanceof Membership){
-					refactorUsername((org.bonitasoft.studio.actors.model.organization.Membership)oldEObject,(org.bonitasoft.studio.actors.model.organization.Membership)newEObject,actorMappings);
-					refactorGroup((org.bonitasoft.studio.actors.model.organization.Membership)oldEObject,(org.bonitasoft.studio.actors.model.organization.Membership)newEObject,actorMappings);
-				}
-			}
+            final List<ModelElementChangeLeftTarget> newElementChange = ModelHelper.getAllItemsOfType(difference,
+                    DiffPackage.Literals.MODEL_ELEMENT_CHANGE_LEFT_TARGET);
+            final List<ModelElementChangeRightTarget> oldElementChange = ModelHelper.getAllItemsOfType(difference,
+                    DiffPackage.Literals.MODEL_ELEMENT_CHANGE_RIGHT_TARGET);
+            if (!newElementChange.isEmpty() && !oldElementChange.isEmpty()) {
+                final ModelElementChangeLeftTarget leftTarget = newElementChange.get(0);
+                final ModelElementChangeRightTarget rightTarget = oldElementChange.get(0);
+                final EObject newEObject = leftTarget.getLeftElement();
+                final EObject oldEObject = rightTarget.getRightElement();
+                if (newEObject instanceof Group && oldEObject instanceof Group) {
+                    refactorGroup((Group) oldEObject, (Group) newEObject, actorMappings);
+                    refactorMembership((Group) oldEObject, (Group) newEObject, actorMappings);
+                }
+                if (newEObject instanceof Role && oldEObject instanceof Role) {
+                    refactorRole((Role) oldEObject, (Role) newEObject, actorMappings);
+                    refactorMembership((Role) oldEObject, (Role) newEObject, actorMappings);
+                }
+                if (newEObject instanceof User && oldEObject instanceof User) {
+                    refactorUsername((User) oldEObject, (User) newEObject, actorMappings);
+                }
+                if (newEObject instanceof Membership && oldEObject instanceof Membership) {
+                    refactorUsername((org.bonitasoft.studio.actors.model.organization.Membership) oldEObject,
+                            (org.bonitasoft.studio.actors.model.organization.Membership) newEObject, actorMappings);
+                    refactorGroup((org.bonitasoft.studio.actors.model.organization.Membership) oldEObject,
+                            (org.bonitasoft.studio.actors.model.organization.Membership) newEObject, actorMappings);
+                }
+            }
 		}
 		diagramStore.refresh();
 	}
