@@ -1,19 +1,16 @@
 /**
- * Copyright (C) 2013 BonitaSoft S.A.
+ * Copyright (C) 2013-2014 BonitaSoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
- *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.actors.ui.wizard;
 
@@ -30,7 +27,6 @@ import org.bonitasoft.studio.actors.model.organization.OrganizationPackage;
 import org.bonitasoft.studio.actors.model.organization.Role;
 import org.bonitasoft.studio.actors.model.organization.User;
 import org.bonitasoft.studio.actors.ui.wizard.page.GroupContentProvider;
-import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
@@ -46,24 +42,17 @@ import org.bonitasoft.studio.model.actormapping.Users;
 import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.EMFCompare;
-import org.eclipse.emf.compare.match.DefaultComparisonFactory;
-import org.eclipse.emf.compare.match.DefaultEqualityHelperFactory;
-import org.eclipse.emf.compare.match.DefaultMatchEngine;
-import org.eclipse.emf.compare.match.IComparisonFactory;
 import org.eclipse.emf.compare.match.IMatchEngine;
-import org.eclipse.emf.compare.match.eobject.IEObjectMatcher;
 import org.eclipse.emf.compare.postprocessor.IPostProcessor;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
-import org.eclipse.emf.compare.utils.UseIdentifiers;
+import org.eclipse.emf.compare.utils.EMFComparePrettyPrinter;
 import org.eclipse.emf.ecore.EAttribute;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 
@@ -95,11 +84,14 @@ public class RefactorActorMappingsOperation implements IRunnableWithProgress {
 		final DiagramRepositoryStore diagramStore = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
 		final List<ActorMappingsType> actorMappings = getAllActorMappings(confStore, diagramStore);
 
-        final IComparisonScope scope = new DefaultComparisonScope(newOrganization, oldOrganization, null);
+        final Comparison comparison = compareOrganizations();
 
-		final IEObjectMatcher matcher = DefaultMatchEngine.createDefaultEObjectMatcher(UseIdentifiers.NEVER);
-		final IComparisonFactory comparisonFactory = new DefaultComparisonFactory(new DefaultEqualityHelperFactory());
-		final IMatchEngine matchEngine = new DefaultMatchEngine(matcher, comparisonFactory);
+		mergeDiferencesIntoActorMappings(actorMappings, comparison);
+		diagramStore.refresh();
+	}
+
+    protected Comparison compareOrganizations() {
+        final IComparisonScope scope = new DefaultComparisonScope(newOrganization, oldOrganization, null);
 	    final IMatchEngine.Factory.Registry matchEngineRegistry = EMFCompareRCPPlugin.getDefault().getMatchEngineFactoryRegistry();
 	    final IPostProcessor.Descriptor.Registry<String> postProcessorRegistry = EMFCompareRCPPlugin.getDefault().getPostProcessorRegistry();
 		final EMFCompare comparator = EMFCompare.builder()
@@ -108,70 +100,43 @@ public class RefactorActorMappingsOperation implements IRunnableWithProgress {
 	                                           .build();
 
 		final Comparison comparison = comparator.compare(scope);
+        return comparison;
+    }
 
-		// Merges all differences from model1 to model2
+    protected void mergeDiferencesIntoActorMappings(final List<ActorMappingsType> actorMappings, final Comparison comparison) {
 		final List<Diff> differences = comparison.getDifferences();
+        EMFComparePrettyPrinter.printComparison(comparison, System.out);
 		for(final Diff difference : differences){
-			final TreeIterator<EObject> eAllContents = difference.eAllContents();
-			while (eAllContents.hasNext()) {
-				final EObject eObject = eAllContents.next();
-				if(eObject instanceof AttributeChange){
-					final AttributeChange updateAttributeChange = (AttributeChange) eObject;
-                    final Object oldElement = updateAttributeChange.getValue();
-                    final Object newElement = updateAttributeChange.getSource();
-					final EAttribute attribute = updateAttributeChange.getAttribute();
-                    if(attribute.equals(OrganizationPackage.Literals.GROUP__NAME)){
-						refactorGroup((Group)oldElement,(Group)newElement,actorMappings);
-						refactorMembership((Group)oldElement,(Group)newElement,actorMappings);
-					}else if(attribute.equals(OrganizationPackage.Literals.ROLE__NAME)){
-						refactorRole((Role)oldElement,(Role)newElement,actorMappings);
-						refactorMembership((Role)oldElement,(Role)newElement,actorMappings);
-					}else if(attribute.equals(OrganizationPackage.Literals.USER__USER_NAME)){
-						refactorUsername((User)oldElement,(User)newElement,actorMappings);
-					}else if(attribute.equals(OrganizationPackage.Literals.MEMBERSHIP__USER_NAME)){
-						refactorUsername((org.bonitasoft.studio.actors.model.organization.Membership)oldElement,(org.bonitasoft.studio.actors.model.organization.Membership)newElement,actorMappings);
-					}else if(attribute.equals(OrganizationPackage.Literals.MEMBERSHIP__GROUP_NAME)){
-						refactorGroup((org.bonitasoft.studio.actors.model.organization.Membership)oldElement,(org.bonitasoft.studio.actors.model.organization.Membership)newElement,actorMappings);
-					}else if(attribute.equals(OrganizationPackage.Literals.GROUP__PARENT_PATH)){
-						refactorGroup((Group)oldElement,(Group)newElement,actorMappings);
-						refactorMembership((Group)oldElement,(Group)newElement,actorMappings);
-					}else if(attribute.equals(OrganizationPackage.Literals.MEMBERSHIP__GROUP_PARENT_PATH)){
-						refactorGroup((org.bonitasoft.studio.actors.model.organization.Membership)oldElement,(org.bonitasoft.studio.actors.model.organization.Membership)newElement,actorMappings);
-					}
-				}
-			}
+            if (difference instanceof AttributeChange) {
+                final AttributeChange updateAttributeChange = (AttributeChange) difference;
 
-            final List<ModelElementChangeLeftTarget> newElementChange = ModelHelper.getAllItemsOfType(difference,
-                    DiffPackage.Literals.MODEL_ELEMENT_CHANGE_LEFT_TARGET);
-            final List<ModelElementChangeRightTarget> oldElementChange = ModelHelper.getAllItemsOfType(difference,
-                    DiffPackage.Literals.MODEL_ELEMENT_CHANGE_RIGHT_TARGET);
-            if (!newElementChange.isEmpty() && !oldElementChange.isEmpty()) {
-                final ModelElementChangeLeftTarget leftTarget = newElementChange.get(0);
-                final ModelElementChangeRightTarget rightTarget = oldElementChange.get(0);
-                final EObject newEObject = leftTarget.getLeftElement();
-                final EObject oldEObject = rightTarget.getRightElement();
-                if (newEObject instanceof Group && oldEObject instanceof Group) {
-                    refactorGroup((Group) oldEObject, (Group) newEObject, actorMappings);
-                    refactorMembership((Group) oldEObject, (Group) newEObject, actorMappings);
-                }
-                if (newEObject instanceof Role && oldEObject instanceof Role) {
-                    refactorRole((Role) oldEObject, (Role) newEObject, actorMappings);
-                    refactorMembership((Role) oldEObject, (Role) newEObject, actorMappings);
-                }
-                if (newEObject instanceof User && oldEObject instanceof User) {
-                    refactorUsername((User) oldEObject, (User) newEObject, actorMappings);
-                }
-                if (newEObject instanceof Membership && oldEObject instanceof Membership) {
-                    refactorUsername((org.bonitasoft.studio.actors.model.organization.Membership) oldEObject,
-                            (org.bonitasoft.studio.actors.model.organization.Membership) newEObject, actorMappings);
-                    refactorGroup((org.bonitasoft.studio.actors.model.organization.Membership) oldEObject,
-                            (org.bonitasoft.studio.actors.model.organization.Membership) newEObject, actorMappings);
+                final Object oldElement = updateAttributeChange.getMatch().getRight();
+                final Object newElement = updateAttributeChange.getMatch().getLeft();
+                final EAttribute attribute = updateAttributeChange.getAttribute();
+                if (OrganizationPackage.Literals.GROUP__NAME.equals(attribute)) {
+                    refactorGroup((Group) oldElement, (Group) newElement, actorMappings);
+                    refactorMembership((Group) oldElement, (Group) newElement, actorMappings);
+                } else if (OrganizationPackage.Literals.ROLE__NAME.equals(attribute)) {
+                    refactorRole((Role) oldElement, (Role) newElement, actorMappings);
+                    refactorMembership((Role) oldElement, (Role) newElement, actorMappings);
+                } else if (OrganizationPackage.Literals.USER__USER_NAME.equals(attribute)) {
+                    refactorUsername((User) oldElement, (User) newElement, actorMappings);
+                } else if (OrganizationPackage.Literals.MEMBERSHIP__USER_NAME.equals(attribute)) {
+                    refactorUsername((org.bonitasoft.studio.actors.model.organization.Membership) oldElement,
+                            (org.bonitasoft.studio.actors.model.organization.Membership) newElement, actorMappings);
+                } else if (OrganizationPackage.Literals.MEMBERSHIP__GROUP_NAME.equals(attribute)) {
+                    refactorGroup((org.bonitasoft.studio.actors.model.organization.Membership) oldElement,
+                            (org.bonitasoft.studio.actors.model.organization.Membership) newElement, actorMappings);
+                } else if (OrganizationPackage.Literals.GROUP__PARENT_PATH.equals(attribute)) {
+                    refactorGroup((Group) oldElement, (Group) newElement, actorMappings);
+                    refactorMembership((Group) oldElement, (Group) newElement, actorMappings);
+                } else if (OrganizationPackage.Literals.MEMBERSHIP__GROUP_PARENT_PATH.equals(attribute)) {
+                    refactorGroup((org.bonitasoft.studio.actors.model.organization.Membership) oldElement,
+                            (org.bonitasoft.studio.actors.model.organization.Membership) newElement, actorMappings);
                 }
             }
 		}
-		diagramStore.refresh();
-	}
-
+    }
 
 	protected void refactorUsername(
 			final org.bonitasoft.studio.actors.model.organization.Membership oldMembership,
