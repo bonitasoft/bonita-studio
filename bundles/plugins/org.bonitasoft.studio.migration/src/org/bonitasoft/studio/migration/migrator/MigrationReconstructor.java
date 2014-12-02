@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 
+import org.bonitasoft.studio.migration.migrator.MigrationReconstructor.MigrationReconstructorSwitch;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClass;
@@ -29,22 +30,15 @@ import org.eclipse.emf.edapt.common.MetamodelExtent;
 import org.eclipse.emf.edapt.common.MetamodelUtils;
 import org.eclipse.emf.edapt.common.ResourceUtils;
 import org.eclipse.emf.edapt.declaration.OperationImplementation;
-import org.eclipse.emf.edapt.history.Add;
-import org.eclipse.emf.edapt.history.Change;
-import org.eclipse.emf.edapt.history.Create;
-import org.eclipse.emf.edapt.history.Delete;
-import org.eclipse.emf.edapt.history.MigrationChange;
-import org.eclipse.emf.edapt.history.Move;
-import org.eclipse.emf.edapt.history.OperationChange;
-import org.eclipse.emf.edapt.history.OperationInstance;
-import org.eclipse.emf.edapt.history.Release;
-import org.eclipse.emf.edapt.history.Remove;
-import org.eclipse.emf.edapt.history.Set;
 import org.eclipse.emf.edapt.history.reconstruction.EcoreReconstructorSwitchBase;
 import org.eclipse.emf.edapt.history.reconstruction.FinishedException;
 import org.eclipse.emf.edapt.history.reconstruction.Mapping;
 import org.eclipse.emf.edapt.history.reconstruction.ReconstructorBase;
 import org.eclipse.emf.edapt.history.reconstruction.ResolverBase;
+import org.eclipse.emf.edapt.internal.migration.execution.IClassLoader;
+import org.eclipse.emf.edapt.internal.migration.execution.OperationInstanceConverter;
+import org.eclipse.emf.edapt.internal.migration.execution.ValidationLevel;
+import org.eclipse.emf.edapt.internal.migration.execution.WrappedMigrationException;
 import org.eclipse.emf.edapt.migration.CustomMigration;
 import org.eclipse.emf.edapt.migration.Metamodel;
 import org.eclipse.emf.edapt.migration.MigrationException;
@@ -52,15 +46,22 @@ import org.eclipse.emf.edapt.migration.MigrationFactory;
 import org.eclipse.emf.edapt.migration.Model;
 import org.eclipse.emf.edapt.migration.Persistency;
 import org.eclipse.emf.edapt.migration.Repository;
-import org.eclipse.emf.edapt.migration.execution.IClassLoader;
-import org.eclipse.emf.edapt.migration.execution.OperationInstanceConverter;
-import org.eclipse.emf.edapt.migration.execution.ValidationLevel;
-import org.eclipse.emf.edapt.migration.execution.WrappedMigrationException;
+import org.eclipse.emf.edapt.spi.history.Add;
+import org.eclipse.emf.edapt.spi.history.Change;
+import org.eclipse.emf.edapt.spi.history.Create;
+import org.eclipse.emf.edapt.spi.history.Delete;
+import org.eclipse.emf.edapt.spi.history.MigrationChange;
+import org.eclipse.emf.edapt.spi.history.Move;
+import org.eclipse.emf.edapt.spi.history.OperationChange;
+import org.eclipse.emf.edapt.spi.history.OperationInstance;
+import org.eclipse.emf.edapt.spi.history.Release;
+import org.eclipse.emf.edapt.spi.history.Remove;
+import org.eclipse.emf.edapt.spi.history.Set;
 
 /**
  * A reconstructor that perform the migration of models from a source release to
  * a target release.
- * 
+ *
  * @author herrmama
  * @author $Author: mherrmannsd $
  * @version $Rev: 306 $
@@ -114,20 +115,20 @@ public class MigrationReconstructor extends ReconstructorBase {
 	public MigrationReconstructor(List<URI> modelURIs, Release sourceRelease,
 			Release targetRelease, IProgressMonitor monitor,
 			IClassLoader classLoader, ValidationLevel level) {
-		this.modelURIs = modelURIs;
-		this.sourceRelease = sourceRelease;
-		this.targetRelease = targetRelease;
-		this.monitor = monitor;
-		this.classLoader = classLoader;
-		this.level = level;
+		modelURIs = modelURIs;
+		sourceRelease = sourceRelease;
+		targetRelease = targetRelease;
+		monitor = monitor;
+		classLoader = classLoader;
+		level = level;
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public void init(Mapping mapping, MetamodelExtent extent) {
 		migrationSwitch = new MigrationReconstructorSwitch();
-		this.extent = extent;
-		this.mapping = mapping;
+		extent = extent;
+		mapping = mapping;
 	}
 
 	/** {@inheritDoc} */
@@ -159,7 +160,7 @@ public class MigrationReconstructor extends ReconstructorBase {
 	 * level is greater or equal to a certain level.
 	 */
 	protected void checkConformanceIfMoreThan(ValidationLevel level) {
-		if (this.level.compareTo(level) >= 0) {
+		if (level.compareTo(level) >= 0) {
 			checkConformance();
 		}
 	}
@@ -427,8 +428,8 @@ public class MigrationReconstructor extends ReconstructorBase {
 			OperationInstance operationInstance = (OperationInstance) resolver
 					.copyResolve(change.getOperation(), true);
 
-			OperationImplementation operation = OperationInstanceConverter
-					.convert(operationInstance, repository.getMetamodel());
+			final Metamodel metamodel = repository.getMetamodel();
+            OperationImplementation operation = OperationInstanceConverter.convert(operationInstance, metamodel);
 			if (operation == null) {
 				throwWrappedMigrationException("Operation could not be found: "
 						+ operationInstance.getName(), null);

@@ -22,12 +22,12 @@ import org.bonitasoft.studio.migration.model.report.MigrationReportFactory;
 import org.bonitasoft.studio.migration.model.report.Report;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.edapt.history.Change;
-import org.eclipse.emf.edapt.history.MigrationChange;
-import org.eclipse.emf.edapt.history.Release;
+import org.eclipse.emf.edapt.internal.migration.execution.IClassLoader;
+import org.eclipse.emf.edapt.internal.migration.execution.ValidationLevel;
 import org.eclipse.emf.edapt.migration.MigrationException;
-import org.eclipse.emf.edapt.migration.execution.IClassLoader;
-import org.eclipse.emf.edapt.migration.execution.ValidationLevel;
+import org.eclipse.emf.edapt.spi.history.Change;
+import org.eclipse.emf.edapt.spi.history.MigrationChange;
+import org.eclipse.emf.edapt.spi.history.Release;
 
 /**
  * @author Romain Bioteau
@@ -35,17 +35,17 @@ import org.eclipse.emf.edapt.migration.execution.ValidationLevel;
  */
 public class BOSReportReconstructor extends MigrationReconstructor {
 
-	private Report report;
+	private final Report report;
 
-	public BOSReportReconstructor(List<URI> modelURIs, Release sourceRelease,
-			Release targetRelease, IProgressMonitor monitor,
-			IClassLoader classLoader, ValidationLevel level) {
+	public BOSReportReconstructor(final List<URI> modelURIs, final Release sourceRelease,
+			final Release targetRelease, final IProgressMonitor monitor,
+			final IClassLoader classLoader, final ValidationLevel level) {
 		super(modelURIs, sourceRelease, targetRelease, monitor, classLoader, level);
-		this.report = MigrationReportFactory.eINSTANCE.createReport();
+		report = MigrationReportFactory.eINSTANCE.createReport();
 	}
 
 	@Override
-	public void endChange(Change change) {
+	public void endChange(final Change change) {
 		if (isEnabled()) {
 			checkResume(change);
 			if (isStarted()) {
@@ -59,7 +59,7 @@ public class BOSReportReconstructor extends MigrationReconstructor {
 						}
 						monitor.worked(1);
 						checkConformanceIfMoreThan(ValidationLevel.CUSTOM_MIGRATION);
-					} catch (MigrationException e) {
+					} catch (final MigrationException e) {
 						throwWrappedMigrationException(e);
 					} finally {
 						customMigration = null;
@@ -75,6 +75,6 @@ public class BOSReportReconstructor extends MigrationReconstructor {
 	public Report getReport() {
 		return report;
 	}
-	
-	
+
+
 }

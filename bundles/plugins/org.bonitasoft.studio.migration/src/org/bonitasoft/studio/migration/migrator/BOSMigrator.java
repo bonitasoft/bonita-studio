@@ -40,13 +40,14 @@ import org.eclipse.emf.edapt.common.MetamodelUtils;
 import org.eclipse.emf.edapt.common.ResourceUtils;
 import org.eclipse.emf.edapt.declaration.LibraryImplementation;
 import org.eclipse.emf.edapt.declaration.OperationImplementation;
-import org.eclipse.emf.edapt.declaration.OperationRegistry;
-import org.eclipse.emf.edapt.history.Delete;
-import org.eclipse.emf.edapt.history.History;
-import org.eclipse.emf.edapt.history.HistoryPackage;
-import org.eclipse.emf.edapt.history.Release;
 import org.eclipse.emf.edapt.history.reconstruction.EcoreForwardReconstructor;
 import org.eclipse.emf.edapt.history.util.HistoryUtils;
+import org.eclipse.emf.edapt.internal.declaration.OperationRegistry;
+import org.eclipse.emf.edapt.internal.migration.execution.ClassLoaderFacade;
+import org.eclipse.emf.edapt.internal.migration.execution.IClassLoader;
+import org.eclipse.emf.edapt.internal.migration.execution.MigratorCommandLine;
+import org.eclipse.emf.edapt.internal.migration.execution.ValidationLevel;
+import org.eclipse.emf.edapt.internal.migration.execution.WrappedMigrationException;
 import org.eclipse.emf.edapt.migration.BackupUtils;
 import org.eclipse.emf.edapt.migration.CustomMigration;
 import org.eclipse.emf.edapt.migration.MaterializingBackwardConverter;
@@ -56,12 +57,11 @@ import org.eclipse.emf.edapt.migration.Model;
 import org.eclipse.emf.edapt.migration.Persistency;
 import org.eclipse.emf.edapt.migration.PrintStreamProgressMonitor;
 import org.eclipse.emf.edapt.migration.ReleaseUtils;
-import org.eclipse.emf.edapt.migration.execution.ClassLoaderFacade;
-import org.eclipse.emf.edapt.migration.execution.IClassLoader;
 import org.eclipse.emf.edapt.migration.execution.Migrator;
-import org.eclipse.emf.edapt.migration.execution.MigratorCommandLine;
-import org.eclipse.emf.edapt.migration.execution.ValidationLevel;
-import org.eclipse.emf.edapt.migration.execution.WrappedMigrationException;
+import org.eclipse.emf.edapt.spi.history.Delete;
+import org.eclipse.emf.edapt.spi.history.History;
+import org.eclipse.emf.edapt.spi.history.HistoryPackage;
+import org.eclipse.emf.edapt.spi.history.Release;
 
 /**
  * @author Romain Bioteau
@@ -92,14 +92,14 @@ public class BOSMigrator {
 		} catch (final IOException e) {
 			throw new MigrationException("History could not be loaded", e);
 		}
-		this.classLoader = classLoader;
+		classLoader = classLoader;
 		init();
 	}
 
 	/** Constructor. */
 	public BOSMigrator(final History history, final IClassLoader classLoader) {
-		this.history = history;
-		this.classLoader = classLoader;
+		history = history;
+		classLoader = classLoader;
 		init();
 	}
 
@@ -135,8 +135,8 @@ public class BOSMigrator {
 			final Map<EPackage, String> packageMap) {
 		for (final Iterator<EObject> i = release.eAllContents(); i.hasNext();) {
 			final EObject element = i.next();
-			if (element instanceof org.eclipse.emf.edapt.history.Set) {
-				final org.eclipse.emf.edapt.history.Set set = (org.eclipse.emf.edapt.history.Set) element;
+            if (element instanceof org.eclipse.emf.edapt.spi.history.Set) {
+                final org.eclipse.emf.edapt.spi.history.Set set = (org.eclipse.emf.edapt.spi.history.Set) element;
 				if (set.getFeature() == EcorePackage.eINSTANCE
 						.getEPackage_NsURI()) {
 					final EPackage ePackage = (EPackage) set.getElement();
@@ -316,7 +316,7 @@ public class BOSMigrator {
 
 	/** Set the validation level. */
 	public void setLevel(final ValidationLevel level) {
-		this.level = level;
+		level = level;
 	}
 
 	/** Main method to perform migrations. */
