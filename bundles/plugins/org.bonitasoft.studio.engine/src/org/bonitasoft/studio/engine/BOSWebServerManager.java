@@ -357,11 +357,12 @@ public class BOSWebServerManager {
                 Repository.NULL_PROGRESS_MONITOR);
         IServerWorkingCopy server = configureServer(runtime, sType, file,
                 configurationFolder);
-
+        server.save(true, null);
         ServerPort tomcatPort = null;
         ServerPort adminPortServer = null;
         ServerPort ajpConnectorPort = null;
-        for (final ServerPort p : server.getServerPorts(Repository.NULL_PROGRESS_MONITOR)) {
+        final ServerPort[] serverPorts = server.getServerPorts(Repository.NULL_PROGRESS_MONITOR);
+        for (final ServerPort p : serverPorts) {
             if ("server".equals(p.getId())) {
                 adminPortServer = p;
             }
@@ -373,41 +374,43 @@ public class BOSWebServerManager {
                 ajpConnectorPort = p;
             }
         }
-        final int port = tomcatPort.getPort();
-        int serverPortNumber = adminPortServer.getPort();
-        int ajpConnectorPortNumber = ajpConnectorPort.getPort();
-        if (!isPortAvailable(port)) {
-            updatePortConfiguration(serverPortNumber, serverPortNumber + 1);
-            serverPortNumber++;
-            updatePortConfiguration(ajpConnectorPortNumber,
-                    ajpConnectorPortNumber + 1);
-            ajpConnectorPortNumber++;
-            server = updatePort(port, server, runtime, sType, file,
-                    configurationFolder);
-        }
-        if (!isPortAvailable(serverPortNumber)) {
-            server = updatePort(serverPortNumber, server, runtime, sType, file,
-                    configurationFolder);
-        }
+        if (serverPorts.length > 0) {
+            final int port = tomcatPort.getPort();
+            int serverPortNumber = adminPortServer.getPort();
+            int ajpConnectorPortNumber = ajpConnectorPort.getPort();
+            if (!isPortAvailable(port)) {
+                updatePortConfiguration(serverPortNumber, serverPortNumber + 1);
+                serverPortNumber++;
+                updatePortConfiguration(ajpConnectorPortNumber,
+                        ajpConnectorPortNumber + 1);
+                ajpConnectorPortNumber++;
+                server = updatePort(port, server, runtime, sType, file,
+                        configurationFolder);
+            }
+            if (!isPortAvailable(serverPortNumber)) {
+                server = updatePort(serverPortNumber, server, runtime, sType, file,
+                        configurationFolder);
+            }
 
-        if (!isPortAvailable(ajpConnectorPortNumber)) {
-            server = updatePort(ajpConnectorPortNumber, server, runtime, sType,
-                    file, configurationFolder);
-        }
-        final int tomcatPortNumber = getTomcatPort(server);
-        if (tomcatPortNumber != -1) {
-            BonitaHomeUtil.configureBonitaClient(BonitaHomeUtil.HTTP,
-                    "localhost", tomcatPortNumber);
-            BonitaStudioPreferencesPlugin
-                    .getDefault()
-                    .getPreferenceStore()
-                    .setValue(BonitaPreferenceConstants.CONSOLE_PORT,
-                            tomcatPortNumber);
-        } else {
-            BonitaHomeUtil.configureBonitaClient(BonitaHomeUtil.HTTP,
-                    "localhost", port);
-            BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
-                    .setValue(BonitaPreferenceConstants.CONSOLE_PORT, port);
+            if (!isPortAvailable(ajpConnectorPortNumber)) {
+                server = updatePort(ajpConnectorPortNumber, server, runtime, sType,
+                        file, configurationFolder);
+            }
+            final int tomcatPortNumber = getTomcatPort(server);
+            if (tomcatPortNumber != -1) {
+                BonitaHomeUtil.configureBonitaClient(BonitaHomeUtil.HTTP,
+                        "localhost", tomcatPortNumber);
+                BonitaStudioPreferencesPlugin
+                        .getDefault()
+                        .getPreferenceStore()
+                        .setValue(BonitaPreferenceConstants.CONSOLE_PORT,
+                                tomcatPortNumber);
+            } else {
+                BonitaHomeUtil.configureBonitaClient(BonitaHomeUtil.HTTP,
+                        "localhost", port);
+                BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
+                        .setValue(BonitaPreferenceConstants.CONSOLE_PORT, port);
+            }
         }
         return server.save(true, null);
     }

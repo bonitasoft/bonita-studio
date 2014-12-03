@@ -244,21 +244,14 @@ public class PlatformUtil {
      * @param resourceName
      * @return the copied resource
      */
-    public static void copyResource(final File destFolder, final File sourceFolder, final IProgressMonitor monitor) {
+    public static void copyResource(File destFolder, final File sourceFolder, final IProgressMonitor monitor) {
         if (fileSystem == null) {
             fileSystem = EFS.getLocalFileSystem();
         }
         if (sourceFolder.isDirectory()) {
-            final IFileStore sourceStore = fileSystem.fromLocalFile(sourceFolder);
-            final IFileStore destStore = fileSystem.fromLocalFile(destFolder);
-            try {
-                sourceStore.copy(destStore, EFS.OVERWRITE, new NullProgressMonitor());
-            } catch (final CoreException e) {
-                BonitaStudioLog.error(e);
-            }
-        } else {
-            copyResource(destFolder, sourceFolder.toURI(), monitor);
+            destFolder = destFolder.getParentFile();
         }
+        copyResource(destFolder, sourceFolder.toURI(), monitor);
     }
 
     /**
