@@ -5,7 +5,7 @@
   <parent>
     <artifactId>de</artifactId>
     <groupId>org.bonitasoft.studio.translations</groupId>
-<version>6.3.9-SNAPSHOT</version>
+<version>6.3.9</version>
   </parent>
   <groupId>org.bonitasoft.studio.translations.de</groupId>
   <artifactId>org.bonitasoft.studio.validation.nl_de</artifactId>
