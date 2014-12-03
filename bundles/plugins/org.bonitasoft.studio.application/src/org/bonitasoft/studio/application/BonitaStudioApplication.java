@@ -53,6 +53,7 @@ import org.osgi.framework.Version;
  */
 public class BonitaStudioApplication extends JobChangeAdapter implements IApplication {
 
+    private static final String INVALID_JAVA_VERSION_PREFIX = "1.8";
     private Display display;
     public static final String PREFERENCES_FILE = ".wsPreferences";
     public static final String WS_ROOT = "wsRootDir";
@@ -79,7 +80,9 @@ public class BonitaStudioApplication extends JobChangeAdapter implements IApplic
         if (display == null) {
             display = PlatformUI.createDisplay();
         }
-        checkJavaVersion(display);
+        if (!isJavaVersionSupported(display)) {
+            return IApplication.EXIT_OK;
+        }
         initWorkspaceLocation();
         //set our custom operation factory
         OperationHistoryFactory.setOperationHistory(new BonitaOperationHistory());
@@ -123,12 +126,13 @@ public class BonitaStudioApplication extends JobChangeAdapter implements IApplic
         return PlatformUI.isWorkbenchRunning();
     }
 
-    protected void checkJavaVersion(final Display display) {
+    protected boolean isJavaVersionSupported(final Display display) {
         final String javaVersion = getJavaVersion();
-        if (javaVersion.startsWith("1.8")) {
+        if (javaVersion.startsWith(INVALID_JAVA_VERSION_PREFIX)) {
             openErrorDialog(display, javaVersion);
-            throw new IllegalStateException("Incompatible java version: " + javaVersion);
+            return false;
         }
+        return true;
     }
 
     protected void openErrorDialog(final Display display, final String javaVersion) {
