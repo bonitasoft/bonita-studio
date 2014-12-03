@@ -17,14 +17,8 @@
  */
 package org.bonitasoft.studio.common.log;
 
-import java.security.AccessController;
-
-import org.bonitasoft.studio.common.Activator;
-import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.osgi.framework.log.FrameworkLogEntry;
-import org.eclipse.osgi.framework.util.SecureAction;
+import org.eclipse.e4.core.services.log.Logger;
 
 /**
  * @author Romain Bioteau
@@ -32,37 +26,18 @@ import org.eclipse.osgi.framework.util.SecureAction;
  */
 public class BonitaStudioLog {
 
-	/** The system property used to specify the log level */
-	private static final String PROP_LOG_LEVEL = "eclipse.log.level"; //$NON-NLS-1$
-	private static final SecureAction secureAction = AccessController.doPrivileged(SecureAction.createSecureAction());
-	private static int logLevel ;
-	static{
-		String newLogLevel = secureAction.getProperty(PROP_LOG_LEVEL);
-		if (newLogLevel != null) {
-			if (newLogLevel.equals("ERROR")) {
-				logLevel = FrameworkLogEntry.ERROR;
-			} else if (newLogLevel.equals("WARNING")) {
-				logLevel = FrameworkLogEntry.ERROR | FrameworkLogEntry.WARNING;
-			} else if (newLogLevel.equals("INFO")) {
-				logLevel = FrameworkLogEntry.INFO | FrameworkLogEntry.ERROR | FrameworkLogEntry.WARNING | FrameworkLogEntry.CANCEL;
-			}
-			else {
-				logLevel = FrameworkLogEntry.OK; // OK (0) means log everything
-			}
+
+	public static void log(final String message) {
+        final Logger logger = getLogger();
+		if(logger != null){
+            logger.info(message);
 		}
 	}
 
-	public static void log(String message) {
-		ILog logger = Activator.getDefault().getLogger();
+	public static void error(final Throwable exception) {
+        final Logger logger = getLogger();
 		if(logger != null){
-			logger.log(new Status(IStatus.INFO, Activator.PLUGIN_ID, message));
-		}
-	}
-
-	public static void error(Throwable exception) {
-		final ILog logger = getLogger();
-		if(logger != null){
-			logger.log(new Status(IStatus.ERROR, Activator.PLUGIN_ID, exception.getMessage(),exception));
+            logger.error(exception);
 		}else{
 			exception.printStackTrace();
 		}
@@ -73,21 +48,12 @@ public class BonitaStudioLog {
 	 * @param exception - the exception to log
 	 * @param bundleId - the bundle id of the original exception to log
 	 */
-	public static void error(Throwable exception,String bundleId){
-		final ILog logger = getLogger();
-		if(logger != null){
-			logger.log(new Status(IStatus.ERROR, bundleId, exception.getMessage(),exception));
-		}else{
-			exception.printStackTrace();
-		}
+	public static void error(final Throwable exception,final String bundleId){
+        error(exception);
 	}
 
-	protected static ILog getLogger() {
-		Activator activator = Activator.getDefault();
-		if(activator != null){
-			return Activator.getDefault().getLogger();
-		}
-		return null;
+    public static Logger getLogger() {
+        return BonitaStudioLogger.getLogger();
 	}
 
 	/**
@@ -95,10 +61,10 @@ public class BonitaStudioLog {
 	 * @param message - the message to log
 	 * @param bundleId - the bundle id of the original exception to log
 	 */
-	public static void error(String message,String bundleId){
-		final ILog logger = getLogger();
+	public static void error(final String message,final String bundleId){
+        final Logger logger = getLogger();
 		if(logger != null){
-			logger.log(new Status(IStatus.ERROR, bundleId, message));
+            logger.error(message);
 		}else{
 			System.err.println(message);
 		}
@@ -109,10 +75,10 @@ public class BonitaStudioLog {
 	 * @param message - the message to log
 	 * @param bundleId - the bundle id of the original exception to log
 	 */
-	public static void info(String message,String bundleId){
-		final ILog logger = getLogger();
+	public static void info(final String message,final String bundleId){
+        final Logger logger = getLogger();
 		if(logger != null){
-			logger.log(new Status(IStatus.INFO, bundleId, message));
+            logger.info(message);
 		}
 	}
 
@@ -121,10 +87,10 @@ public class BonitaStudioLog {
 	 * @param message - the message to log
 	 * @param bundleId - the bundle id of the original exception to log
 	 */
-	public static void warning(String message,String bundleId){
-		final ILog logger = getLogger();
+	public static void warning(final String message,final String bundleId){
+        final Logger logger = getLogger();
 		if(logger != null){
-			logger.log(new Status(IStatus.WARNING, bundleId, message));
+            logger.warn(message);
 		}
 	}
 
@@ -133,17 +99,22 @@ public class BonitaStudioLog {
 	 * @param message - the message to log
 	 * @param bundleId - the bundle id of the original exception to log
 	 */
-	public static void debug(String message,String bundleId){
-		final ILog logger = getLogger();
+	public static void debug(final String message,final String bundleId){
+        final Logger logger = getLogger();
 		if(logger != null){
-			logger.log(new Status(IStatus.OK,bundleId, message));
+            logger.debug(message);
 		}
 	}
 
-	public static boolean isLoggable(int level) {
-		if (logLevel == 0) {
-			return true;
-		}
-		return (level & logLevel) != 0;
+	public static boolean isLoggable(final int level) {
+        final Logger logger = getLogger();
+        switch (level) {
+            case IStatus.OK:return logger.isDebugEnabled();
+            case IStatus.ERROR:return logger.isErrorEnabled();
+            case IStatus.WARNING:return logger.isWarnEnabled();
+            case IStatus.INFO:return logger.isInfoEnabled();
+            default:
+                return true;
+        }
 	}
 }
