@@ -77,7 +77,7 @@ public class BonitaRegistration {
 		infos2.put("os.arch", System.getProperty("os.arch"));
 		infos2.put("os.version", System.getProperty("os.version"));
         infos2.put("field_user_loopfuse_lang", System.getProperty("osgi.nl"));
-        infos2.put("user_systeme_locale", Locale.getDefault().toString());
+        infos2.put("field_user_systeme_lang", Locale.getDefault().toString());
 		infos2.put("proc.number",
 				String.valueOf(Runtime.getRuntime().availableProcessors()));
 		infos2.put("mem.total",
