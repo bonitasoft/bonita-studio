@@ -16,9 +16,12 @@
  */
 package org.bonitasoft.studio.common.log;
 
+import java.lang.reflect.Field;
+
 import javax.annotation.PostConstruct;
 
 import org.eclipse.e4.core.services.log.Logger;
+import org.eclipse.e4.ui.internal.workbench.WorkbenchLogger;
 
 
 
@@ -35,8 +38,27 @@ public class BonitaStudioLogger {
         BonitaStudioLogger.logger = logger;
     }
 
-    public static Logger getLogger() {
+    public static Logger getLogger(final String bundleName) {
+        if (logger != null) {
+            setBundleName(bundleName);
+        }
         return logger;
+    }
+
+    protected static void setBundleName(final String bundleName) {
+        try {
+            final Field bundleNameField = WorkbenchLogger.class.getDeclaredField("bundleName");
+            bundleNameField.setAccessible(true);
+            bundleNameField.set(logger, bundleName);
+        } catch (final NoSuchFieldException e) {
+            e.printStackTrace();
+        } catch (final SecurityException e) {
+            e.printStackTrace();
+        } catch (final IllegalArgumentException e) {
+            e.printStackTrace();
+        } catch (final IllegalAccessException e) {
+            e.printStackTrace();
+        }
     }
 
 }
