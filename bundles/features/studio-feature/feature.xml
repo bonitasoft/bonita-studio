@@ -437,7 +437,7 @@
          id="org.codehaus.groovy"
          download-size="0"
          install-size="0"
-         version="1.8.6.xx-20130703-1600-e43-RELEASE"/>
+         version="1.8.6.xx-201406301445-e44"/>
 
    <plugin
          id="org.eclipse.ui.views.properties.tabbed"
