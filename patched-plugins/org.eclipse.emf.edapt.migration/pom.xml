@@ -9,6 +9,6 @@
     </parent>
   <groupId>org.bonitasoft.studio.patched-plugins</groupId>
   <artifactId>org.eclipse.emf.edapt.migration</artifactId>
-  <version>0.3.1</version>
+  <version>0.3.1.100</version>
   <packaging>eclipse-plugin</packaging>
 </project>

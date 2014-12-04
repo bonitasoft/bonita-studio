@@ -1,19 +1,22 @@
 Manifest-Version: 1.0
-Export-Package: org.eclipse.emf.edapt.migration,org.eclipse.emf.edapt.
- migration.impl,org.eclipse.emf.edapt.migration.util
-Bundle-ActivationPolicy: lazy
-Bundle-ClassPath: .
+Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
+Bundle-SymbolicName: org.eclipse.emf.edapt.migration;singleton:=true
+Bundle-Version: 0.3.1.100
+Bundle-ClassPath: .
+Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
-Require-Bundle: org.eclipse.core.runtime,org.eclipse.emf.ecore;visibil
- ity:=reexport,org.eclipse.ocl.ecore;visibility:=reexport,org.eclipse.
- emf.ecore.xmi,org.eclipse.emf.edapt.common
-Bundle-Vendor: %providerName
-Bundle-Version: 0.3.1
-Bundle-ManifestVersion: 2
-Bundle-Activator: org.eclipse.emf.edapt.migration.MigrationPlugin$Impl
- ementation
-Bundle-SymbolicName: org.eclipse.emf.edapt.migration;singleton:=true
-
-
+Export-Package: org.eclipse.emf.edapt.internal.migration;version="1.0.0";x-internal:=true,
+ org.eclipse.emf.edapt.internal.migration.impl;version="1.0.0";x-internal:=true,
+ org.eclipse.emf.edapt.migration;version="1.0.0",
+ org.eclipse.emf.edapt.spi.migration,
+ org.eclipse.emf.edapt.spi.migration.impl,
+ org.eclipse.emf.edapt.spi.migration.util
+Require-Bundle: org.eclipse.core.runtime;bundle-version="[3.7.0,4.0.0)",
+ org.eclipse.emf.ecore;bundle-version="[2.7.0,3.0.0)";visibility:=reexport,
+ org.eclipse.ocl.ecore;bundle-version="[3.1.0,4.0.0)";visibility:=reexport,
+ org.eclipse.emf.ecore.xmi;bundle-version="[2.7.0,3.0.0)",
+ org.eclipse.emf.edapt.common;bundle-version="[1.0.0,2.0.0)"
+Bundle-ActivationPolicy: lazy
+Bundle-Activator: org.eclipse.emf.edapt.spi.migration.MigrationPlugin$Implementation
