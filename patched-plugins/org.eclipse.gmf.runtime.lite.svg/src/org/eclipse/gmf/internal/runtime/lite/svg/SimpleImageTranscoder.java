@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2008 Borland Software Corporation
- * 
+ *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -29,13 +29,13 @@ import org.w3c.dom.Document;
 
 public class SimpleImageTranscoder extends SVGAbstractTranscoder {
 
-	private BufferedImage image;
-	private Document document;
+    private BufferedImage image;
+	private final Document document;
 	private int canvasWidth = -1, canvasHeight = -1;
 	private Rectangle2D canvasAOI;
-	private RenderingHints renderingHints;
+	private final RenderingHints renderingHints;
 
-	public SimpleImageTranscoder(Document document) {
+	public SimpleImageTranscoder(final Document document) {
 		this.document = document;
 		renderingHints = new RenderingHints(null);
 	}
@@ -56,12 +56,12 @@ public class SimpleImageTranscoder extends SVGAbstractTranscoder {
 		return canvasHeight;
 	}
 
-	public void setCanvasSize(int width, int height) {
-		if (this.canvasWidth == width && this.canvasHeight == height) {
+	public void setCanvasSize(final int width, final int height) {
+		if (canvasWidth == width && canvasHeight == height) {
 			return;
 		}
-		this.canvasWidth = width;
-		this.canvasHeight = height;
+		canvasWidth = width;
+		canvasHeight = height;
 		contentChanged();
 	}
 
@@ -69,12 +69,12 @@ public class SimpleImageTranscoder extends SVGAbstractTranscoder {
 		if (canvasAOI == null) {
 			return null;
 		}
-		Rectangle2D result = new Rectangle2D.Float();
+		final Rectangle2D result = new Rectangle2D.Float();
 		result.setRect(canvasAOI);
 		return result;
 	}
 
-	public void setCanvasAreaOfInterest(Rectangle2D value) {
+	public void setCanvasAreaOfInterest(final Rectangle2D value) {
 		if (value == null) {
 			if (canvasAOI == null) {
 				return;
@@ -96,10 +96,10 @@ public class SimpleImageTranscoder extends SVGAbstractTranscoder {
 	 * dispose bridge context if it was returned by this method.
 	 */
 	public BridgeContext initCSSEngine() {
-		if (this.document == null) {
+		if (document == null) {
 			return null;
 		}
-		SVGOMDocument sd = (SVGOMDocument) this.document;
+		final SVGOMDocument sd = (SVGOMDocument) document;
 		if (sd.getCSSEngine() != null) {
 			return null;
 		}
@@ -115,12 +115,12 @@ public class SimpleImageTranscoder extends SVGAbstractTranscoder {
 	}
 
 	public void contentChanged() {
-		//bufferedImage = null;
+        //bufferedImage = null;
 	}
 
-	private BufferedImage createImage() {
+    private BufferedImage createImage() {
 		if (document == null) {
-			return null;
+            return null;
 		}
 		try {
 			if (canvasWidth >= 0) {
@@ -138,45 +138,46 @@ public class SimpleImageTranscoder extends SVGAbstractTranscoder {
 			} else {
 				removeTranscodingHint(ImageTranscoder.KEY_AOI);
 			}
-			BufferedImage imageToReturn;
+            BufferedImage imageToReturn;
 			transcode(new TranscoderInput(document), new TranscoderOutput());
-			imageToReturn = this.image;
-			this.image = null;
-			return imageToReturn;
-		} catch (TranscoderException e) {
+            imageToReturn = image;
+            image = null;
+            return imageToReturn;
+		} catch (final TranscoderException e) {
 			Activator.logError("Error transcoding SVG image", e);
 		}
-		return null;
+        return null;
 	}
 
-	protected void transcode(Document document, String uri, TranscoderOutput output) throws TranscoderException {
+	@Override
+    protected void transcode(final Document document, final String uri, final TranscoderOutput output) throws TranscoderException {
 		super.transcode(document, uri, output);
-		int w = (int) (width + 0.5);
-		int h = (int) (height + 0.5);
-		ImageRenderer renderer = createImageRenderer();
+		final int w = (int) (width + 0.5);
+		final int h = (int) (height + 0.5);
+		final ImageRenderer renderer = createImageRenderer();
 		renderer.updateOffScreen(w, h);
 		// curTxf.translate(0.5, 0.5);
 		renderer.setTransform(curTxf);
-		renderer.setTree(this.root);
-		this.root = null; // We're done with it...
+		renderer.setTree(root);
+		root = null; // We're done with it...
 		try {
-			Shape raoi = new Rectangle2D.Float(0, 0, width, height);
+			final Shape raoi = new Rectangle2D.Float(0, 0, width, height);
 			// Warning: the renderer's AOI must be in user space
 			renderer.repaint(curTxf.createInverse().createTransformedShape(raoi));
-			image = renderer.getOffScreen();
-		} catch (Exception ex) {
+            image = renderer.getOffScreen();
+		} catch (final Exception ex) {
 			throw new TranscoderException(ex);
 		}
 	}
 
 	protected ImageRenderer createImageRenderer() {
-		StaticRenderer renderer = new StaticRenderer();
+		final StaticRenderer renderer = new StaticRenderer();
 		renderer.getRenderingHints().add(renderingHints);
 		return renderer;
 	}
 
 	public final BufferedImage getBufferedImage() {
-		return createImage();
-		
+        return createImage();
+
 	}
 }
