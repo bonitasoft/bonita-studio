@@ -81,7 +81,6 @@ public class BonitaStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 		}
 	}
 
-	@SuppressWarnings("restriction")
 	@Override
 	public void openIntro() {
 		PlatformUtil.closeIntro();
