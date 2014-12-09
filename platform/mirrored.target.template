@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde version="3.8"?>
 
-<target includeMode="feature" name="mirrored" sequenceNumber="168">
+<target includeMode="feature" name="mirrored" sequenceNumber="141">
 <locations>
 <location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <repository location="XXX_REPOSITORY_URL_XXX"/>
