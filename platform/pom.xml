@@ -674,10 +674,6 @@
                                     <id>org.eclipse.nebula.widgets.gallery.feature.feature.group</id>
                                 </iu>
                                 <iu>
-                                    <id>org.eclipse.babel.nls_technology.packaging_ja.feature.group</id>
-                                    <version>4.4.0.v20140623020002</version>
-                                </iu>
-                                <iu>
                                     <id>org.eclipse.babel.nls_datatools_es.feature.group</id>
                                     <version>4.4.0.v20140623020002</version>
                                 </iu>
@@ -698,23 +694,11 @@
                                     <version>4.4.0.v20140623020002</version>
                                 </iu>
                                 <iu>
-                                    <id>org.eclipse.babel.nls_tools.tm_ja.feature.group</id>
-                                    <version>4.4.0.v20140623020002</version>
-                                </iu>
-                                <iu>
-                                    <id>org.eclipse.babel.nls_webtools_pt_BR.feature.group</id>
-                                    <version>4.4.0.v20140623020002</version>
-                                </iu>
-                                <iu>
-                                    <id>org.eclipse.babel.nls_mylyn_pt_BR.feature.group</id>
+                                    <id>org.eclipse.babel.nls_rt.rap_it.feature.group</id>
                                     <version>4.4.0.v20140623020002</version>
                                 </iu>
                                 <iu>
                                     <id>org.eclipse.babel.nls_tools.tm_pt.feature.group</id>
-                                    <version>4.4.0.v20140623020002</version>
-                                </iu>
-                                <iu>
-                                    <id>org.eclipse.babel.nls_rt.rap_ja.feature.group</id>
                                     <version>4.4.0.v20140623020002</version>
                                 </iu>
                                 <iu>
@@ -726,27 +710,7 @@
                                     <version>4.4.0.v20140623020002</version>
                                 </iu>
                                 <iu>
-                                    <id>org.eclipse.babel.nls_rt.rap_de.feature.group</id>
-                                    <version>4.4.0.v20140623020002</version>
-                                </iu>
-                                <iu>
-                                    <id>org.eclipse.babel.nls_soa.stardust_pt_BR.feature.group</id>
-                                    <version>4.4.0.v20140623020002</version>
-                                </iu>
-                                <iu>
-                                    <id>org.eclipse.babel.nls_webtools_ja.feature.group</id>
-                                    <version>4.4.0.v20140623020002</version>
-                                </iu>
-                                <iu>
-                                    <id>org.eclipse.babel.nls_technology.packaging_pt_BR.feature.group</id>
-                                    <version>4.4.0.v20140623020002</version>
-                                </iu>
-                                <iu>
                                     <id>org.eclipse.babel.nls_soa.stardust_ja.feature.group</id>
-                                    <version>4.4.0.v20140623020002</version>
-                                </iu>
-                                <iu>
-                                    <id>org.eclipse.babel.nls_eclipse_fr.feature.group</id>
                                     <version>4.4.0.v20140623020002</version>
                                 </iu>
                                 <iu>
@@ -754,23 +718,15 @@
                                     <version>4.4.0.v20140623020002</version>
                                 </iu>
                                 <iu>
-                                    <id>org.eclipse.babel.nls_soa.stardust_de.feature.group</id>
-                                    <version>4.4.0.v20140623020002</version>
-                                </iu>
-                                <iu>
                                     <id>org.eclipse.babel.nls_datatools_pt_BR.feature.group</id>
                                     <version>4.4.0.v20140623020002</version>
                                 </iu>
                                 <iu>
+                                    <id>org.eclipse.babel.nls_soa.stardust_de.feature.group</id>
+                                    <version>4.4.0.v20140623020002</version>
+                                </iu>
+                                <iu>
                                     <id>org.eclipse.babel.nls_soa.stardust_es.feature.group</id>
-                                    <version>4.4.0.v20140623020002</version>
-                                </iu>
-                                <iu>
-                                    <id>org.eclipse.babel.nls_eclipse_es.feature.group</id>
-                                    <version>4.4.0.v20140623020002</version>
-                                </iu>
-                                <iu>
-                                    <id>org.eclipse.babel.nls_mylyn_es.feature.group</id>
                                     <version>4.4.0.v20140623020002</version>
                                 </iu>
                                 <iu>
@@ -782,7 +738,7 @@
                                     <version>4.4.0.v20140623020002</version>
                                 </iu>
                                 <iu>
-                                    <id>org.eclipse.babel.nls_mylyn_ja.feature.group</id>
+                                    <id>org.eclipse.babel.nls_eclipse_pt_BR.feature.group</id>
                                     <version>4.4.0.v20140623020002</version>
                                 </iu>
                                 <iu>
@@ -790,27 +746,7 @@
                                     <version>4.4.0.v20140623020002</version>
                                 </iu>
                                 <iu>
-                                    <id>org.eclipse.babel.nls_eclipse_pt_BR.feature.group</id>
-                                    <version>4.4.0.v20140623020002</version>
-                                </iu>
-                                <iu>
-                                    <id>org.eclipse.babel.nls_soa.stardust_fr.feature.group</id>
-                                    <version>4.4.0.v20140623020002</version>
-                                </iu>
-                                <iu>
-                                    <id>org.eclipse.babel.nls_webtools_fr.feature.group</id>
-                                    <version>4.4.0.v20140623020002</version>
-                                </iu>
-                                <iu>
-                                    <id>org.eclipse.babel.nls_eclipse_de.feature.group</id>
-                                    <version>4.4.0.v20140623020002</version>
-                                </iu>
-                                <iu>
                                     <id>org.eclipse.babel.nls_eclipse_pt.feature.group</id>
-                                    <version>4.4.0.v20140623020002</version>
-                                </iu>
-                                <iu>
-                                    <id>org.eclipse.babel.nls_rt.rap_pt.feature.group</id>
                                     <version>4.4.0.v20140623020002</version>
                                 </iu>
                                 <iu>
@@ -826,35 +762,11 @@
                                     <version>4.4.0.v20140623020002</version>
                                 </iu>
                                 <iu>
-                                    <id>org.eclipse.babel.nls_rt.rap_fr.feature.group</id>
-                                    <version>4.4.0.v20140623020002</version>
-                                </iu>
-                                <iu>
-                                    <id>org.eclipse.babel.nls_datatools_de.feature.group</id>
-                                    <version>4.4.0.v20140623020002</version>
-                                </iu>
-                                <iu>
                                     <id>org.eclipse.babel.nls_datatools_ja.feature.group</id>
                                     <version>4.4.0.v20140623020002</version>
                                 </iu>
                                 <iu>
-                                    <id>org.eclipse.babel.nls_soa.stardust_pt.feature.group</id>
-                                    <version>4.4.0.v20140623020002</version>
-                                </iu>
-                                <iu>
-                                    <id>org.eclipse.babel.nls_tools.tm_pt_BR.feature.group</id>
-                                    <version>4.4.0.v20140623020002</version>
-                                </iu>
-                                <iu>
-                                    <id>org.eclipse.babel.nls_technology.packaging_es.feature.group</id>
-                                    <version>4.4.0.v20140623020002</version>
-                                </iu>
-                                <iu>
                                     <id>org.eclipse.babel.nls_mylyn_fr.feature.group</id>
-                                    <version>4.4.0.v20140623020002</version>
-                                </iu>
-                                <iu>
-                                    <id>org.eclipse.babel.nls_webtools_pt.feature.group</id>
                                     <version>4.4.0.v20140623020002</version>
                                 </iu>
                                 <iu>
@@ -863,6 +775,126 @@
                                 </iu>
                                 <iu>
                                     <id>org.eclipse.babel.nls_rt.rap_es.feature.group</id>
+                                    <version>4.4.0.v20140623020002</version>
+                                </iu>
+                                <iu>
+                                    <id>org.eclipse.babel.nls_technology.packaging_ja.feature.group</id>
+                                    <version>4.4.0.v20140623020002</version>
+                                </iu>
+                                <iu>
+                                    <id>org.eclipse.babel.nls_mylyn_it.feature.group</id>
+                                    <version>4.4.0.v20140623020002</version>
+                                </iu>
+                                <iu>
+                                    <id>org.eclipse.babel.nls_soa.stardust_it.feature.group</id>
+                                    <version>4.4.0.v20140623020002</version>
+                                </iu>
+                                <iu>
+                                    <id>org.eclipse.babel.nls_webtools_it.feature.group</id>
+                                    <version>4.4.0.v20140623020002</version>
+                                </iu>
+                                <iu>
+                                    <id>org.eclipse.babel.nls_tools.tm_ja.feature.group</id>
+                                    <version>4.4.0.v20140623020002</version>
+                                </iu>
+                                <iu>
+                                    <id>org.eclipse.babel.nls_webtools_pt_BR.feature.group</id>
+                                    <version>4.4.0.v20140623020002</version>
+                                </iu>
+                                <iu>
+                                    <id>org.eclipse.babel.nls_mylyn_pt_BR.feature.group</id>
+                                    <version>4.4.0.v20140623020002</version>
+                                </iu>
+                                <iu>
+                                    <id>org.eclipse.babel.nls_tools.tm_it.feature.group</id>
+                                    <version>4.4.0.v20140623020002</version>
+                                </iu>
+                                <iu>
+                                    <id>org.eclipse.babel.nls_rt.rap_ja.feature.group</id>
+                                    <version>4.4.0.v20140623020002</version>
+                                </iu>
+                                <iu>
+                                    <id>org.eclipse.babel.nls_soa.stardust_pt_BR.feature.group</id>
+                                    <version>4.4.0.v20140623020002</version>
+                                </iu>
+                                <iu>
+                                    <id>org.eclipse.babel.nls_rt.rap_de.feature.group</id>
+                                    <version>4.4.0.v20140623020002</version>
+                                </iu>
+                                <iu>
+                                    <id>org.eclipse.babel.nls_webtools_ja.feature.group</id>
+                                    <version>4.4.0.v20140623020002</version>
+                                </iu>
+                                <iu>
+                                    <id>org.eclipse.babel.nls_technology.packaging_pt_BR.feature.group</id>
+                                    <version>4.4.0.v20140623020002</version>
+                                </iu>
+                                <iu>
+                                    <id>org.eclipse.babel.nls_technology.packaging_it.feature.group</id>
+                                    <version>4.4.0.v20140623020002</version>
+                                </iu>
+                                <iu>
+                                    <id>org.eclipse.babel.nls_eclipse_fr.feature.group</id>
+                                    <version>4.4.0.v20140623020002</version>
+                                </iu>
+                                <iu>
+                                    <id>org.eclipse.babel.nls_eclipse_es.feature.group</id>
+                                    <version>4.4.0.v20140623020002</version>
+                                </iu>
+                                <iu>
+                                    <id>org.eclipse.babel.nls_mylyn_es.feature.group</id>
+                                    <version>4.4.0.v20140623020002</version>
+                                </iu>
+                                <iu>
+                                    <id>org.eclipse.babel.nls_mylyn_ja.feature.group</id>
+                                    <version>4.4.0.v20140623020002</version>
+                                </iu>
+                                <iu>
+                                    <id>org.eclipse.babel.nls_soa.stardust_fr.feature.group</id>
+                                    <version>4.4.0.v20140623020002</version>
+                                </iu>
+                                <iu>
+                                    <id>org.eclipse.babel.nls_webtools_fr.feature.group</id>
+                                    <version>4.4.0.v20140623020002</version>
+                                </iu>
+                                <iu>
+                                    <id>org.eclipse.babel.nls_eclipse_de.feature.group</id>
+                                    <version>4.4.0.v20140623020002</version>
+                                </iu>
+                                <iu>
+                                    <id>org.eclipse.babel.nls_rt.rap_pt.feature.group</id>
+                                    <version>4.4.0.v20140623020002</version>
+                                </iu>
+                                <iu>
+                                    <id>org.eclipse.babel.nls_eclipse_it.feature.group</id>
+                                    <version>4.4.0.v20140623020002</version>
+                                </iu>
+                                <iu>
+                                    <id>org.eclipse.babel.nls_rt.rap_fr.feature.group</id>
+                                    <version>4.4.0.v20140623020002</version>
+                                </iu>
+                                <iu>
+                                    <id>org.eclipse.babel.nls_datatools_de.feature.group</id>
+                                    <version>4.4.0.v20140623020002</version>
+                                </iu>
+                                <iu>
+                                    <id>org.eclipse.babel.nls_tools.tm_pt_BR.feature.group</id>
+                                    <version>4.4.0.v20140623020002</version>
+                                </iu>
+                                <iu>
+                                    <id>org.eclipse.babel.nls_soa.stardust_pt.feature.group</id>
+                                    <version>4.4.0.v20140623020002</version>
+                                </iu>
+                                <iu>
+                                    <id>org.eclipse.babel.nls_technology.packaging_es.feature.group</id>
+                                    <version>4.4.0.v20140623020002</version>
+                                </iu>
+                                <iu>
+                                    <id>org.eclipse.babel.nls_datatools_it.feature.group</id>
+                                    <version>4.4.0.v20140623020002</version>
+                                </iu>
+                                <iu>
+                                    <id>org.eclipse.babel.nls_webtools_pt.feature.group</id>
                                     <version>4.4.0.v20140623020002</version>
                                 </iu>
                                 <iu>
