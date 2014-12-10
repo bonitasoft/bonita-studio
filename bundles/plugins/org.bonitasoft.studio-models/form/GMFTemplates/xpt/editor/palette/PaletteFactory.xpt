@@ -50,8 +50,9 @@ public class «factoryClassName» {
 
 
 «DEFINE createGroup FOR gmfgen::ToolGroup-»
+/*Set as protected by Bonita to override it*/
 	«EXPAND xpt::Common::generatedMemberComment('Creates \"' + title + '\" palette tool group')»
-	private org.eclipse.gef.palette.PaletteContainer «createMethodName»() {
+	protected org.eclipse.gef.palette.PaletteContainer «createMethodName»() {
 		«EXPAND newContainer('paletteContainer')-»
 		«EXPAND setIdentity('paletteContainer')-»
 		«EXPAND setDescription('paletteContainer', self) FOR description-»
