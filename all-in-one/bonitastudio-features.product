@@ -3,12 +3,11 @@
 
 <product name="BonitaBPM" uid="org.bonitasoft.studio.product" id="org.bonitasoft.studio.product" application="org.bonitasoft.studio.application.application" version="6.5.0.qualifier" useFeatures="true" includeLaunchers="true">
 
-
    <configIni use="default">
    </configIni>
 
    <launcherArgs>
-      <programArgs>--launcher.XXMaxPermSize512m -groovy.compiler.level 18 -clearPersistedState
+      <programArgs>--launcher.XXMaxPermSize512m -clearPersistedState
       </programArgs>
       <vmArgs>-Dosgi.requiredJavaVersion=1.6 -Dfile.encoding=UTF8 -Xmx512m -Xms128m -XX:MaxPermSize=256m
       </vmArgs>
@@ -35,7 +34,6 @@
          <bmp/>
       </win>
    </launcher>
-
 
    <vm>
       <linux include="false">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6</linux>
