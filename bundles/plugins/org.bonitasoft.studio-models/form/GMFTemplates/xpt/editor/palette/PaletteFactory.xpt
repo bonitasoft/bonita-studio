@@ -41,7 +41,7 @@ public class «factoryClassName» {
 
 «REM»Override this method with «EXPAND generateToolEntryClasses(true)» if you need to generate ToolEntry classes
      override also «DEFINE newEntry(toolVarName : String) FOR gmfgen::Palette»«ENDREM»
-«DEFINE generateToolEntryClasses FOR gmfgen::Palette»«EXPAND generateToolEntryClasses(false)»«ENDDEFINE»
+«DEFINE generateToolEntryClasses FOR gmfgen::Palette»«EXPAND generateToolEntryClasses(true)»«ENDDEFINE»
 
 «DEFINE generateToolEntryClasses(shouldGenerateEntryClasses : Boolean) FOR gmfgen::Palette-»
 	«IF needsNodeToolEntryClass(self) and shouldGenerateEntryClasses»«EXPAND nodeToolEntry»«ENDIF-»
@@ -114,7 +114,7 @@ public class «factoryClassName» {
 
 «REM»Override this method with «EXPAND newEntry(toolVarName, false)» if you need to generate ToolEntry classes
      override also «EXPAND generateToolEntryClasses(shouldGenerateEntryClasses : Boolean)» FOR gmfgen::Palette»«ENDREM»
-«DEFINE newEntry(toolVarName : String) FOR gmfgen::ToolEntry»«EXPAND newEntry(toolVarName, false)»«ENDDEFINE»
+«DEFINE newEntry(toolVarName : String) FOR gmfgen::ToolEntry»«EXPAND newEntry(toolVarName, true)»«ENDDEFINE»
 «DEFINE newEntry(toolVarName : String, shouldGenerateEntryClasses : Boolean) FOR gmfgen::ToolEntry-»
 «IF elements->isEmpty()-»
 org.eclipse.gef.palette.ToolEntry «toolVarName» = new org.eclipse.gef.palette.ToolEntry(«EXPAND i18nTitle», «EXPAND i18nDesc», null, null) {};
@@ -252,6 +252,7 @@ FIXME
 	}
 «ENDDEFINE»
 
+«REM»
 «DEFINE nodeToolEntry FOR gmfgen::Palette»
 	«EXPAND xpt::Common::generatedClassComment»
 	private static class NodeToolEntry extends org.eclipse.gmf.tooling.runtime.part.DefaultNodeToolEntry {
@@ -261,6 +262,39 @@ FIXME
 			super(title, description, elementTypes);
 		}
 		
+	}
+«ENDDEFINE»
+«ENDREM»
+
+«DEFINE nodeToolEntry FOR gmfgen::Palette»
+	«EXPAND xpt::Common::generatedClassComment»
+	«REM»set it public in order to be subclass in a subclass of PaletteFactory;«ENDREM»
+	/**@deprecated WARN : set t public only as a workaround in order to be able be used in a sublcass of PaletteToolEntry*/
+	public static class NodeToolEntry extends org.eclipse.gmf.runtime.diagram.ui.internal.services.palette.PaletteToolEntry {
+
+		«EXPAND xpt::Common::generatedMemberComment»
+		private final «EXPAND CodeStyle::G('java.util.List', 'org.eclipse.gmf.runtime.emf.type.core.IElementType') FOR diagram» elementTypes;;
+		
+		«REM»set it public in order to be used in subclass of PaletteFactory.«ENDREM»
+		«EXPAND xpt::Common::generatedMemberComment»
+		/**@deprecated WARN : set t public only as a workaround in order to be able be used in a sublcass of PaletteToolEntry*/
+		public NodeToolEntry(String title, String description, «EXPAND CodeStyle::G('java.util.List', 'org.eclipse.gmf.runtime.emf.type.core.IElementType') FOR diagram» elementTypes) {
+
+			super(null,org.bonitasoft.studio.common.NamingUtils.getFormPaletteTitle(elementTypes), null);
+			super.setDescription(org.bonitasoft.studio.common.NamingUtils.getFormPaletteDescription(elementTypes)) ;
+			this.elementTypes = elementTypes;
+		}
+
+		/**
+		* Used a custom tool to have a better feedback.
+		* @generated
+		*/
+		public org.eclipse.gef.Tool createTool() {
+«REM»Use a custom tool for palette to have better feedback«ENDREM»
+			org.eclipse.gef.Tool tool = new org.bonitasoft.studio.common.diagram.tools.BonitaUnspecifiedTypeCreationTool(elementTypes);
+			tool.setProperties(getToolProperties());
+			return tool;
+		}
 	}
 «ENDDEFINE»
 
