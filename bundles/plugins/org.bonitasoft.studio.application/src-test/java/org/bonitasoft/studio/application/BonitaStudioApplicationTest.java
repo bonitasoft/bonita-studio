@@ -85,14 +85,13 @@ public class BonitaStudioApplicationTest extends AbstractSWTTestCase {
         assertThat(result).isEqualTo(IApplication.EXIT_OK);
     }
 
-    @Test(expected = IllegalStateException.class)
-    public void shoul_start_exith_if_java_version_is_not_valid() throws Exception {
+    @Test
+    public void shoul_start_exit_if_java_version_is_not_valid() throws Exception {
         doReturn("1.8").when(application).getJavaVersion();
 
         application.start(null);
 
         verify(application).openErrorDialog(display, "1.8");
-        verify(application).createAndRunWorkbench(display);
         verify(application, never()).createAndRunWorkbench(display);
     }
 
