@@ -32,6 +32,7 @@ import org.bonitasoft.studio.common.properties.AbstractNamePropertySectionContri
 import org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.diagram.custom.parts.CustomPoolEditPart;
 import org.bonitasoft.studio.diagram.custom.refactoring.ProcessNamingTools;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.model.process.AbstractCatchMessageEvent;
@@ -47,6 +48,7 @@ import org.bonitasoft.studio.properties.i18n.Messages;
 import org.bonitasoft.studio.properties.operation.RenameDiagramOperation;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.databinding.UpdateValueStrategy;
+import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.IValueChangeListener;
 import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
 import org.eclipse.core.databinding.validation.IValidator;
@@ -56,14 +58,18 @@ import org.eclipse.emf.databinding.edit.EMFEditObservables;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.gef.EditPart;
 import org.eclipse.gmf.runtime.diagram.core.listener.DiagramEventBroker;
 import org.eclipse.gmf.runtime.diagram.core.listener.NotificationListener;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.ITextAwareEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.jface.databinding.fieldassist.ControlDecorationSupport;
 import org.eclipse.jface.databinding.swt.ISWTObservableValue;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
@@ -231,17 +237,60 @@ public class NameGridPropertySectionContribution extends AbstractNamePropertySec
         labelTargetToModelUpdate.setAfterConvertValidator(new SpecialCharactersValidator());
 
         observable = SWTObservables.observeDelayedValue(400, SWTObservables.observeText(text, SWT.Modify));
-        observable.addValueChangeListener(new IValueChangeListener() {
+
+        final IObservableValue nameObservable = EMFEditObservables.observeValue(editingDomain, element, ProcessPackage.Literals.ELEMENT__NAME);
+        nameObservable.addValueChangeListener(new IValueChangeListener() {
 
             @Override
             public void handleValueChange(final ValueChangeEvent event) {
                 updatePropertyTabTitle();
+                updatePartName((String) event.diff.getNewValue());
             }
         });
-
         ControlDecorationSupport.create(context.bindValue(observable,
-                EMFEditObservables.observeValue(editingDomain, element, ProcessPackage.Literals.ELEMENT__NAME), labelTargetToModelUpdate, null), SWT.LEFT);
+                nameObservable, labelTargetToModelUpdate, null), SWT.LEFT);
         bindingInitialized = true;
+    }
+
+    protected void updatePartName(final String name) {
+        if (selection != null && !selection.isEmpty()) {
+            final ITextAwareEditPart textAwareEditPart = getTextAwareEditPart((IStructuredSelection) selection);
+            if (textAwareEditPart != null) {
+                textAwareEditPart.setLabelText(name);
+                final EditPart poolEp = getPoolEditPart(textAwareEditPart);
+                if (poolEp != null) {
+                    poolEp.refresh();
+                }
+            }
+        }
+    }
+
+    protected EditPart getPoolEditPart(final EditPart textAwareEditPart) {
+        EditPart poolEp = textAwareEditPart;
+        while (poolEp != null && !(poolEp instanceof CustomPoolEditPart)) {
+            if (poolEp.getParent() instanceof EditPart) {
+                poolEp = poolEp.getParent();
+            } else {
+                poolEp = null;
+            }
+        }
+        return poolEp;
+    }
+
+    protected ITextAwareEditPart getTextAwareEditPart(final IStructuredSelection selection) {
+        final Object ep = selection.getFirstElement();
+        ITextAwareEditPart textAwareEditPart = null;
+        if (ep instanceof IGraphicalEditPart) {
+            if (ep instanceof ITextAwareEditPart) {
+                textAwareEditPart = (ITextAwareEditPart) ep;
+            }
+            for (final Object child : ((IGraphicalEditPart) ep).getChildren()) {
+                if (child instanceof ITextAwareEditPart) {
+                    textAwareEditPart = (ITextAwareEditPart) child;
+                }
+            }
+        }
+        return textAwareEditPart;
     }
 
     @Override

@@ -1,7 +1,7 @@
 /**
  * Copyright (C) 2009 BonitaSoft S.A.
  * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 package org.bonitasoft.studio.diagram.custom.parts;
 
 import org.bonitasoft.studio.common.diagram.tools.CustomTextDirectEditManager;
@@ -32,15 +32,16 @@ public class CustomPoolNameEditPart extends PoolNameEditPart {
 
 	private DirectEditManager manager;
 
-	public CustomPoolNameEditPart(View view) {
+	public CustomPoolNameEditPart(final View view) {
 		super(view);
 	}
 
-	
+
 	/* (non-Javadoc)
 	 * @see org.bonitasoft.studio.model.process.diagram.edit.parts.ActivityName2EditPart#getManager()
 	 */
-	protected DirectEditManager getManager() {
+	@Override
+    protected DirectEditManager getManager() {
 		if (manager == null) {
 			/*Create custom text director which use wrap label editor*/
 			setManager(new CustomTextDirectEditManager(this, CustomTextDirectEditManager
@@ -49,11 +50,17 @@ public class CustomPoolNameEditPart extends PoolNameEditPart {
 		}
 		return manager;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.bonitasoft.studio.model.process.diagram.edit.parts.ActivityName2EditPart#setManager(org.eclipse.gef.tools.DirectEditManager)
 	 */
-	protected void setManager(DirectEditManager manager) {
+	@Override
+    protected void setManager(final DirectEditManager manager) {
 		this.manager = manager;
 	}
+
+    @Override
+    public void setSelected(final int value) {
+        getParent().setSelected(value);
+    }
 }

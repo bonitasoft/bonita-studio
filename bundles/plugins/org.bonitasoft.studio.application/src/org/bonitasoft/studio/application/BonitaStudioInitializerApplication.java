@@ -2,30 +2,30 @@
  * Copyright (C) 2011 BonitaSoft S.A.
  * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
  * <<<<<<< HEAD
- * 
+ *
  * =======
- * 
+ *
  * >>>>>>> origin/master
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
  * <<<<<<< HEAD
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  * =======
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  * >>>>>>> origin/master
@@ -34,35 +34,15 @@ package org.bonitasoft.studio.application;
 
 import org.bonitasoft.studio.application.advisor.InitWorkspaceAdvisor;
 import org.eclipse.equinox.app.IApplication;
-import org.eclipse.equinox.app.IApplicationContext;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.PlatformUI;
 
 /**
- * @author Mickael Istria
  * @author Romain Bioteau
  */
-public class BonitaStudioInitializerApplication implements IApplication {
+public class BonitaStudioInitializerApplication extends BonitaStudioApplication implements IApplication {
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.equinox.app.IApplication#start(org.eclipse.equinox.app.IApplicationContext)
-     */
     @Override
-    public Object start(final IApplicationContext arg0) throws Exception {
-        BonitaStudioApplication.preStartupStudio();
-        final Display display = PlatformUI.createDisplay();
-        PlatformUI.createAndRunWorkbench(display, new InitWorkspaceAdvisor());
-
-        return IApplication.EXIT_OK;
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.equinox.app.IApplication#stop()
-     */
-    @Override
-    public void stop() {
+    protected BonitaStudioWorkbenchAdvisor createWorkbenchAdvisor() {
+        return new InitWorkspaceAdvisor();
     }
 
 }
