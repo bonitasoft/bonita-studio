@@ -43,7 +43,6 @@ import org.bonitasoft.studio.properties.i18n.Messages;
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.edit.command.AddCommand;
 import org.eclipse.emf.edit.command.SetCommand;
-import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ISelection;
@@ -62,7 +61,7 @@ import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 /**
  * @author Aurelien Pupier
  * @author Aurelie Zara (add validator on correlation keys)
- * 
+ *
  */
 public class CatchMessageEventCorrelationSection extends
 AbstractBonitaDescriptionSection {
@@ -121,7 +120,7 @@ AbstractBonitaDescriptionSection {
         final Button autoFillButton = aTabbedPropertySheetPage
                 .getWidgetFactory()
                 .createButton(parent, Messages.autoFillMessageContent, SWT.FLAT);
-        autoFillButton.setLayoutData(GridDataFactory.swtDefaults().indent(65, 0).hint(IDialogConstants.BUTTON_WIDTH, SWT.DEFAULT).create());
+        autoFillButton.setLayoutData(GridDataFactory.swtDefaults().indent(65, 0).create());
         autoFillButton.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(final SelectionEvent e) {
