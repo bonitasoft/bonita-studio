@@ -29,6 +29,7 @@ import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map.Entry;
 import java.util.Set;
 
@@ -61,27 +62,22 @@ public class BonitaRegistration {
 	public static final String BONITA_USER_ORGANIZATION = "user.register.organization";
 	public static final int BONITA_USER_REGISTER_MAXTRY = 6;
 
-	private static HashMap<String, String> initUserInfos(
-			final IPreferenceStore prefStore) {
+    protected static HashMap<String, String> initUserInfos(final IPreferenceStore prefStore) {
 		final HashMap<String, String> infos2 = new HashMap<String, String>();
-		infos2.put(BonitaRegistration.BONITA_USER_MAIL,
-				prefStore.getString(BonitaRegistration.BONITA_USER_MAIL));
-		infos2.put(BonitaRegistration.BONITA_USER_COUNTRY,
-				prefStore.getString(BonitaRegistration.BONITA_USER_COUNTRY));
-		infos2.put(BonitaRegistration.BONITA_USER_FIRST_NAME,
-				prefStore.getString(BonitaRegistration.BONITA_USER_FIRST_NAME));
-		infos2.put(BonitaRegistration.BONITA_USER_LAST_NAME,
-				prefStore.getString(BonitaRegistration.BONITA_USER_LAST_NAME));
-		infos2.put(BonitaRegistration.BONITA_USER_PHONE,
-				prefStore.getString(BonitaRegistration.BONITA_USER_PHONE));
-		infos2.put(BonitaRegistration.BONITA_USER_ORGANIZATION,
-				prefStore.getString(BonitaRegistration.BONITA_USER_ORGANIZATION));
+        addUserProvidedInfos(prefStore, infos2);
 		infos2.put("bonita.version", ProductVersion.CURRENT_VERSION);
-		infos2.put("java.version", System.getProperty("java.version"));
+        addSystemInfo(infos2);
+        return infos2;
+    }
+
+    private static void addSystemInfo(final HashMap<String, String> infos2) {
+        infos2.put("java.version", System.getProperty("java.version"));
 		infos2.put("java.vendor", System.getProperty("java.vendor"));
 		infos2.put("os.name", System.getProperty("os.name"));
 		infos2.put("os.arch", System.getProperty("os.arch"));
 		infos2.put("os.version", System.getProperty("os.version"));
+        infos2.put("field_user_loopfuse_lang", System.getProperty("osgi.nl"));
+        infos2.put("field_user_systeme_lang", Locale.getDefault().toString());
 		infos2.put("proc.number",
 				String.valueOf(Runtime.getRuntime().availableProcessors()));
 		infos2.put("mem.total",
@@ -90,21 +86,26 @@ public class BonitaRegistration {
 		infos2.put("mem.max",
 				String.valueOf(Runtime.getRuntime().maxMemory() / 1048576)
 						+ "mo");
-		final Display display = PlatformUI.getWorkbench().getDisplay();
-		if (display != null) {
-			infos2.put("screen.number",
-					String.valueOf(display.getMonitors().length));
-			Rectangle b = display.getMonitors()[0].getBounds();
-			String rez = b.width + "x" + b.height;
-			infos2.put("screen.main.size", rez);
-			if (display.getMonitors().length == 2) {
-				b = display.getMonitors()[1].getBounds();
-				rez = b.width + "x" + b.height;
-				infos2.put("screen.sec.size", rez);
-			}
-		}
-		// get ip adresses
-		Enumeration<NetworkInterface> e;
+		addScreenSizeInfo(infos2);
+		addIpAdressInfo(infos2);
+    }
+
+    private static void addUserProvidedInfos(final IPreferenceStore prefStore, final HashMap<String, String> infos2) {
+        addInfoFromPrefStore(prefStore, infos2, BonitaRegistration.BONITA_USER_MAIL);
+        addInfoFromPrefStore(prefStore, infos2, BonitaRegistration.BONITA_USER_COUNTRY);
+        addInfoFromPrefStore(prefStore, infos2, BonitaRegistration.BONITA_USER_FIRST_NAME);
+        addInfoFromPrefStore(prefStore, infos2, BonitaRegistration.BONITA_USER_LAST_NAME);
+        addInfoFromPrefStore(prefStore, infos2, BonitaRegistration.BONITA_USER_PHONE);
+        addInfoFromPrefStore(prefStore, infos2, BonitaRegistration.BONITA_USER_ORGANIZATION);
+    }
+
+    private static void addInfoFromPrefStore(final IPreferenceStore prefStore, final HashMap<String, String> infos2, final String bonitaUserMail) {
+        infos2.put(bonitaUserMail,
+				prefStore.getString(bonitaUserMail));
+    }
+
+    private static void addIpAdressInfo(final HashMap<String, String> infos2) {
+        Enumeration<NetworkInterface> e;
 		try {
 			e = NetworkInterface.getNetworkInterfaces();
 
@@ -129,8 +130,23 @@ public class BonitaRegistration {
 		} catch (final SocketException e1) {
 
 		}
-		return infos2;
-	}
+    }
+
+    private static void addScreenSizeInfo(final HashMap<String, String> infos2) {
+        final Display display = PlatformUI.getWorkbench().getDisplay();
+		if (display != null) {
+			infos2.put("screen.number",
+					String.valueOf(display.getMonitors().length));
+			Rectangle b = display.getMonitors()[0].getBounds();
+			String rez = b.width + "x" + b.height;
+			infos2.put("screen.main.size", rez);
+			if (display.getMonitors().length == 2) {
+				b = display.getMonitors()[1].getBounds();
+				rez = b.width + "x" + b.height;
+				infos2.put("screen.sec.size", rez);
+			}
+		}
+    }
 
 	/**
 	 * @param prefStore
@@ -195,7 +211,7 @@ public class BonitaRegistration {
 
 	}
 
-	private static void sendUserInfoEncoded(final IPreferenceStore prefStore,
+	protected static void sendUserInfoEncoded(final IPreferenceStore prefStore,
 			final String email, final String data) {
 
 		if (prefStore.getInt(BonitaRegistration.BONITA_INFO_SENT) != 1
