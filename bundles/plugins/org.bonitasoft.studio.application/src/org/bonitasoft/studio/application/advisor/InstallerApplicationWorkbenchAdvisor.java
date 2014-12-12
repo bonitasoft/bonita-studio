@@ -26,6 +26,7 @@ import org.bonitasoft.studio.engine.BOSWebServerManager;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRunnable;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -57,7 +58,7 @@ public abstract class InstallerApplicationWorkbenchAdvisor extends BonitaStudioW
 					}
 				}
 			} ;
-			workspaceOperation.run(monitor) ;
+            ResourcesPlugin.getWorkspace().run(workspaceOperation, monitor);
 
 	        BOSWebServerManager.getInstance().copyTomcatBundleInWorkspace(monitor) ;
 	        BonitaHomeUtil.initBonitaHome();
