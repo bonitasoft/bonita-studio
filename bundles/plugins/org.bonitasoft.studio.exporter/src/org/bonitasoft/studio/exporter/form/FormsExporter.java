@@ -649,8 +649,8 @@ public class FormsExporter {
                 }
                 if (action.eContainer() instanceof Widget) {
                     final Widget widget = (Widget) action.eContainer();
-            addConditionExpression(builder, widget);
-        }
+                    addConditionExpression(builder, widget);
+                }
     }
 
     /**
@@ -662,8 +662,13 @@ public class FormsExporter {
         if (widget.isInjectWidgetCondition()) {
             final org.bonitasoft.engine.expression.Expression engineExpression = EngineExpressionUtil
                     .createExpression(widget.getInjectWidgetScript());
-            builder.addConditionExpression(engineExpression.getName(), engineExpression.getContent(), engineExpression.getExpressionType(),
-                    engineExpression.getReturnType(), engineExpression.getInterpreter());
+            if (engineExpression != null) {
+                builder.addConditionExpression(engineExpression.getName(), engineExpression.getContent(), engineExpression.getExpressionType(),
+                        engineExpression.getReturnType(), engineExpression.getInterpreter() == null
+                                || engineExpression.getInterpreter().isEmpty() ? null
+                                : engineExpression.getInterpreter());
+                addExpressionDependency(builder, engineExpression);
+            }
         }
     }
 
