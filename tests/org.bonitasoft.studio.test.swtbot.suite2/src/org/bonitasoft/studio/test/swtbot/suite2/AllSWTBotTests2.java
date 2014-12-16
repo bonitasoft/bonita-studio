@@ -42,6 +42,7 @@ import org.bonitasoft.studio.tests.refactoring.widget.RefactorWidgetIT;
 import org.bonitasoft.studio.tests.timer.TestTimer;
 import org.bonitasoft.studio.util.test.BonitaTestSuite;
 import org.bonitasoft.studio.validators.test.swtbot.TestCreateValidatorWizard;
+import org.bonitasoft.studio.validators.test.swtbot.TestFormValidatorIT;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.ui.internal.browser.WebBrowserUIPlugin;
@@ -106,7 +107,8 @@ import org.junit.runners.Suite;
     TestBonitaGroovyEditorDialog.class,
         TestProcessDependencies.class,
         RefactorWidgetIT.class,
-        ExportImportWithoutMigrationIT.class
+        ExportImportWithoutMigrationIT.class,
+        TestFormValidatorIT.class
 })
 public class AllSWTBotTests2 {
 
