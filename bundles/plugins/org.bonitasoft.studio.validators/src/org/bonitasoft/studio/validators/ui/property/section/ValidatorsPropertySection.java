@@ -194,13 +194,13 @@ public class ValidatorsPropertySection extends AbstractBonitaDescriptionSection 
         // Label Label
         getWidgetFactory().createLabel(fieldsComposite, Messages.Validator_ErrorMessage+" *");
         // Label text
-        labelExpressionViewer = new ExpressionViewer(fieldsComposite,SWT.BORDER,getWidgetFactory(),getEditingDomain(),FormPackage.Literals.VALIDATOR__DISPLAY_NAME);
+        labelExpressionViewer = new ExpressionViewer(fieldsComposite, SWT.BORDER, getWidgetFactory());
         labelExpressionViewer.getControl().setLayoutData(new GridData(SWT.FILL, SWT.DEFAULT, true, false, 3, 1));
         labelExpressionViewer.addFilter(new AvailableExpressionTypeFilterWitoutContingentWidgets());
 
         /*create the parameter field */
         getWidgetFactory().createLabel(fieldsComposite, Messages.Validator_Parameter);
-        parameterExpressionViewer = new ExpressionViewer(fieldsComposite,SWT.BORDER,getWidgetFactory(),getEditingDomain(),FormPackage.Literals.VALIDATOR__PARAMETER);
+        parameterExpressionViewer = new ExpressionViewer(fieldsComposite, SWT.BORDER, getWidgetFactory());
         parameterExpressionViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().hint(300, SWT.DEFAULT).span(3, 1).create());
         parameterExpressionViewer.addFilter(new AvailableExpressionTypeFilterWitoutContingentWidgets());
 
@@ -597,12 +597,10 @@ public class ValidatorsPropertySection extends AbstractBonitaDescriptionSection 
                 final ValidatorDescriptor descriptior = validatorStore.getValidatorDescriptor(validatorId) ;
                 if(descriptior != null){
                     final boolean enabled = descriptior.getHasParameter() ;
-                    parameterExpressionViewer.getTextControl().setEnabled(enabled);
-                    parameterExpressionViewer.getButtonControl().setEnabled(enabled);
+                    parameterExpressionViewer.getControl().setEnabled(enabled);
                     if (descriptior.getName().equals(GROOVY_TYPE) && !currentValidator.getParameter().getReturnType().equals(Boolean.class.getName())){
                         getEditingDomain().getCommandStack().execute(SetCommand.create(getEditingDomain(), currentValidator.getParameter(), ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE, Boolean.class.getName()));
                         getEditingDomain().getCommandStack().execute(SetCommand.create(getEditingDomain(), currentValidator.getParameter(), ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE_FIXED, true));
-
                     }
                     else {
                         if (descriptior.getName().equals(REGULAR_TYPE)){
@@ -611,19 +609,9 @@ public class ValidatorsPropertySection extends AbstractBonitaDescriptionSection 
                         }
                     }
                 }
-
             }
         }
     }
-
-    //    /**
-    //     * @return
-    //     */
-    //    private boolean shouldShowEditParameterButton() {
-    //        return currentValidator != null &&
-    //                (GroovyFieldValidator.class.getName().equals(currentValidator.getValidatorClass())
-    //                        || GroovyFieldValidator.class.getName().equals(currentValidator.getValidatorClass()));
-    //    }
 
     /**
      * get the Validable
@@ -721,7 +709,6 @@ public class ValidatorsPropertySection extends AbstractBonitaDescriptionSection 
         tableViewer.refresh(true);
         tableViewer.setSelection(new StructuredSelection(validator));
     }
-
 
     @Override
     public void dispose() {
