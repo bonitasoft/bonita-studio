@@ -57,7 +57,9 @@ Require-Bundle: org.eclipse.ui.workbench,
  org.bonitasoft.studio.document,
  org.bonitasoft.studio.data;bundle-version="6.4.0",
  org.bonitasoft.studio.repository.themes;bundle-version="6.4.0",
- org.bonitasoft.studio.xml
+ org.bonitasoft.studio.xml,
+ org.bonitasoft.studio.condition.ui,
+ org.mockito;bundle-version="1.9.5"
 Export-Package: org.bonitasoft.studio.tests,org.bonitasoft.studio.test
  s.api,org.bonitasoft.studio.tests.bug,org.bonitasoft.studio.tests.con
  ditions,org.bonitasoft.studio.tests.connectors,org.bonitasoft.studio.
