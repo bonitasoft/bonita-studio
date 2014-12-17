@@ -64,7 +64,7 @@ public class XtextComparisonExpressionLoader {
         final Resource resource = loadResource(comparisonExpression, context);
         final EList<EObject> contents = resource.getContents();
         if (contents.isEmpty()) {
-            throw new ComparisonExpressionLoadException("Failed to laod comparison expression " + comparisonExpression);
+            throw new ComparisonExpressionLoadException("Failed to load comparison expression " + comparisonExpression);
         }
         if (context != null && context.eResource() != null) {
             return resolveProxies(resource, context.eResource().getResourceSet());
@@ -72,7 +72,13 @@ public class XtextComparisonExpressionLoader {
         return (Operation_Compare) contents.get(0);
     }
 
-    protected List<String> getAccessibleReferences(final EObject context) {
+    /**
+     * Public for test purpose
+     *
+     * @param context
+     * @return
+     */
+    public List<String> getAccessibleReferences(final EObject context) {
         final List<String> accessibleObjects = new ArrayList<String>();
         for (final Data d : ModelHelper.getAccessibleData(context)) {
             accessibleObjects.add(ModelHelper.getEObjectID(d));
