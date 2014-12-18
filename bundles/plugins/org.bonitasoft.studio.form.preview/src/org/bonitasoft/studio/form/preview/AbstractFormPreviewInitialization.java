@@ -60,271 +60,312 @@ import org.eclipse.ui.internal.browser.IBrowserDescriptor;
 public abstract class AbstractFormPreviewInitialization {
 
 
-	protected Form form;
-	protected Form formCopy;
-	protected ApplicationLookNFeelFileStore lookNFeel;
-	protected IBrowserDescriptor browser;
-	public static final String VERSION ="1.0";
-	private static final String EMPTY_LIST = "empty_list";
-	private static final String GROOVY_SCRIPT_EMPTY_LIST= "[]";
-	protected boolean isOnTask = false;
-	protected boolean canPreview = true;
+    protected Form form;
+    protected Form formCopy;
+    protected ApplicationLookNFeelFileStore lookNFeel;
+    protected IBrowserDescriptor browser;
+    public static final String VERSION ="1.0";
+    private static final String EMPTY_LIST = "empty_list";
+    private static final String GROOVY_SCRIPT_EMPTY_LIST= "[]";
+    protected boolean isOnTask = false;
+    protected boolean canPreview = true;
 
 
 
 
-	public AbstractFormPreviewInitialization(Form form,ApplicationLookNFeelFileStore lookNFeel,IBrowserDescriptor browser) {
-		this.form = form;
-		this.lookNFeel = lookNFeel;
-		this.browser = browser;
-		initializeForm();
-		initializeAllWidgets(formCopy);
-	}
+    public AbstractFormPreviewInitialization(final Form form,final ApplicationLookNFeelFileStore lookNFeel,final IBrowserDescriptor browser) {
+        this.form = form;
+        this.lookNFeel = lookNFeel;
+        this.browser = browser;
+        initializeForm();
+        initializeAllWidgets(formCopy);
+    }
 
 
-	public AbstractProcess createAbstractProcess(Configuration configuration){
-		AbstractProcess proc = ProcessFactory.eINSTANCE.createPool();
-		proc.setName(form.getName()+" preview");
-		proc.setVersion(VERSION);
-		if (lookNFeel !=null && lookNFeel.getName()!=null){
-			proc.setBasedOnLookAndFeel(lookNFeel.getName());
-		}
-		Element parent =ModelHelper.getParentFlowElement(form);
-		if (parent ==null){
-			proc.getForm().add(formCopy);
-
-		} else {
-			if (parent instanceof Task){
-				initializeTask(parent,proc,configuration);
-			}
-		}
-		configuration.setUsername(BonitaConstants.STUDIO_TECHNICAL_USER_NAME);
-		configuration.setPassword("bpm");
-		return proc;
-	}
-
-
-	private void initializeTask(Element parent,AbstractProcess proc, Configuration configuration){
-		AbstractProcess parentProc = ModelHelper.getParentProcess(parent);
-		Task task= ProcessFactory.eINSTANCE.createTask();
-		task.setName(((Task)parent).getName());
-		task.getForm().add(formCopy);
-		copyActors(parentProc, proc);
-		if (((Task)parent).getActor()!=null){
-			addActorToTask(task,((Task)parent).getActor());
-		} else {
-			if(ModelHelper.getParentContainer(parent) instanceof Lane){
-				Lane lane = ModelHelper.getParentLane(parent);
-				Actor actorCopy=addActorToTask(task,lane.getActor());
-				proc.getActors().add(actorCopy);
-			} else {
-				canPreview=false;
-				MessageDialog.openError(Display.getCurrent().getActiveShell(), Messages.noActorDefinedTitle, Messages.bind(Messages.noActorDefined, ((Task)parent).getName()));
-			}
-
-		}
-		setActorMapping(parentProc, configuration);
-		proc.setByPassFormsGeneration(true);
-		proc.getElements().add(task);
-		isOnTask = true;
-	}
+    public AbstractProcess createAbstractProcess(final Configuration configuration){
+        final AbstractProcess proc = ProcessFactory.eINSTANCE.createPool();
+        proc.setName(form.getName()+" preview");
+        proc.setVersion(VERSION);
+        if (lookNFeel !=null && lookNFeel.getName()!=null){
+            proc.setBasedOnLookAndFeel(lookNFeel.getName());
+        }
+        final Element parent =ModelHelper.getParentFlowElement(form);
+        if (parent ==null){
+            proc.getForm().add(formCopy);
+            initializeProcessActor(configuration, proc);
+        } else {
+            if (parent instanceof Task){
+                initializeTask(parent,proc,configuration);
+            }
+        }
+        configuration.setUsername(BonitaConstants.STUDIO_TECHNICAL_USER_NAME);
+        configuration.setPassword("bpm");
+        return proc;
+    }
 
 
-	private Actor addActorToTask(Task task,Actor actor){
-		Actor actorCopy = (Actor)EcoreUtil.copy(actor);
-		actorCopy.setInitiator(true);
-		task.setActor(actorCopy);
-		return actorCopy;
-	}
+    /**
+     * @param configuration
+     * @param proc
+     */
+    protected void initializeProcessActor(final Configuration configuration, final AbstractProcess proc) {
+        if (form.eContainer() instanceof AbstractProcess) {
+            final AbstractProcess parentProcess = (AbstractProcess) form.eContainer();
+            if (parentProcess.getActors().isEmpty()) {
+                canPreview = false;
+                openNoActorErrorMessage(parentProcess);
+
+            } else {
+                copyActors(parentProcess, proc);
+                setActorMapping(parentProcess, configuration);
+            }
+        }
+    }
 
 
-	private void setActorMapping(AbstractProcess proc,Configuration previewConfiguration){
-		ProcessConfigurationRepositoryStore configurationStore =  (ProcessConfigurationRepositoryStore)RepositoryManager.getInstance().getRepositoryStore(ProcessConfigurationRepositoryStore.class);
-		String id = ModelHelper.getEObjectID(proc);
-		ProcessConfigurationFileStore configurationFileStore = configurationStore.getChild(id+".conf");
-		Configuration configuration = configurationFileStore.getContent();
-		ActorMappingsType actorMapping = EcoreUtil.copy(configuration.getActorMappings());
-		if (actorMapping==null){
-			//MessageDialog.openError(Display.getCurrent().getActiveShell(),Messages.noActorMappingDefinedTitle ,  Messages.noActorMappingDefined);
-			//canPreview = false;
-			actorMapping = ActorMappingFactory.eINSTANCE.createActorMappingsType();
-			ActorMapping newMapping = ActorMappingFactory.eINSTANCE.createActorMapping();
-			newMapping.setName(proc.getActors().get(0).getName());
-			Users users = ActorMappingFactory.eINSTANCE.createUsers();
-			users.getUser().add(BonitaConstants.STUDIO_TECHNICAL_USER_NAME);
-			newMapping.setUsers(users);
-			newMapping.setGroups(ActorMappingFactory.eINSTANCE.createGroups());
-			newMapping.setMemberships(ActorMappingFactory.eINSTANCE.createMembership());
-			newMapping.setRoles(ActorMappingFactory.eINSTANCE.createRoles());
-			actorMapping.getActorMapping().add(newMapping);
-		} else {
-			for(ActorMapping mapping : actorMapping.getActorMapping()){
-				mapping.getMemberships().getMembership().clear();
-				mapping.getGroups().getGroup().clear();
-				mapping.getUsers().getUser().clear();
-				mapping.getRoles().getRole().clear();
-				mapping.getUsers().getUser().add(BonitaConstants.STUDIO_TECHNICAL_USER_NAME);
-			}
-		}
-		previewConfiguration.setActorMappings(actorMapping);
+    /**
+     * @param parentProcess
+     */
+    protected void openNoActorErrorMessage(final Element element) {
+        Display.getDefault().syncExec(new Runnable() {
 
-	}
+            @Override
+            public void run() {
+                MessageDialog.openError(Display.getDefault().getActiveShell(), Messages.noActorDefinedTitle,
+                        Messages.bind(Messages.noActorDefined, element.getName()));
 
-	private void initializeForm(){
-		formCopy = EcoreUtil.copy(form);
-		List<Expression> exprs = ModelHelper.getAllItemsOfType(formCopy, ExpressionPackage.Literals.EXPRESSION);
-		for (Expression expr:exprs){
-			expr = initializeExpression(form,expr);
-		}
-		formCopy.getData().clear();
-		formCopy.getKpis().clear();
-		formCopy.getValidators().clear();
-		formCopy.getActions().clear();
-		formCopy.getConnectors().clear();
-	}
-
-	protected abstract void initializeAllWidgets(Form formCopy);
-
-	private Expression initializeExpression(Form form,Expression expr){
-		if (ExpressionConstants.VARIABLE_TYPE.equals(expr.getType())){
-			handleVariableExpression(form, expr);
-		} else if (ExpressionConstants.PARAMETER_TYPE.equals(expr.getType())){
-			handleParameterExpression(expr);
-		} else if (ExpressionConstants.SCRIPT_TYPE.equals(expr.getType())){
-			handleScriptExpression(expr);
-		}
-		else if(!ExpressionConstants.CONSTANT_TYPE.equals(expr.getType())){
-			toEmptyConstantExpression(expr);
-		}
-		return expr;
-	}
-
-	protected void toEmptyConstantExpression(Expression expr) {
-		expr.setType(ExpressionConstants.CONSTANT_TYPE);
-		expr.setContent("");
-		expr.setName("");
-		expr.getReferencedElements().clear();
-	}
+            }
+        });
+    }
 
 
-	protected void handleParameterExpression(Expression expr) {
-		Parameter parameter = (Parameter) expr.getReferencedElements().get(0);
-		expr.setType(ExpressionConstants.CONSTANT_TYPE);
-		expr.setContent(parameter.getValue());
-	}
+    private void initializeTask(final Element parent,final AbstractProcess proc, final Configuration configuration){
+        final AbstractProcess parentProc = ModelHelper.getParentProcess(parent);
+        final Task task= ProcessFactory.eINSTANCE.createTask();
+        task.setName(((Task)parent).getName());
+        task.getForm().add(formCopy);
+        if (!parentProc.getActors().isEmpty()) {
+            copyActors(parentProc, proc);
 
-	
-	protected void handleScriptExpression(Expression expr){
-		if (expr.getReferencedElements()==null || expr.getReferencedElements().isEmpty()){
-			if (EMPTY_LIST.equals(expr.getName()) && GROOVY_SCRIPT_EMPTY_LIST.equals(expr.getContent())){
-				toEmptyConstantExpression(expr);
-			}
-		} if (expr.getReferencedElements()!=null && !expr.getReferencedElements().isEmpty()){
-			toEmptyConstantExpression(expr);
-		}
-	}
+            if (((Task) parent).getActor() != null) {
+                addActorToTask(task,((Task)parent).getActor());
+            } else {
+                if(ModelHelper.getParentContainer(parent) instanceof Lane){
+                    final Lane lane = ModelHelper.getParentLane(parent);
+                    final Actor actorCopy=addActorToTask(task,lane.getActor());
+                    proc.getActors().add(actorCopy);
+                } else {
+                    canPreview=false;
+                    openNoActorErrorMessage(task);
+                }
 
-	protected void handleVariableExpression(Form form, Expression expr) {
-		Data data = getReferencedData(form, expr);
-		if (data !=null && data.getDefaultValue()!=null && data.getDefaultValue().getContent()!=null && !data.getDefaultValue().getContent().isEmpty()){
-			if (data.getDataType() instanceof JavaType) {
-				expr.setType(ExpressionConstants.SCRIPT_TYPE);
-				expr.setInterpreter(ExpressionConstants.GROOVY);
-				if (data.getDefaultValue().getReferencedElements().isEmpty()){
-					expr.setContent(data.getDefaultValue().getContent());
-					expr.getReferencedElements().clear();
-				} else {
-					toEmptyConstantExpression(expr);
-				}
-			} else if (data.getDataType() instanceof XMLData){
-				toEmptyConstantExpression(expr);
-			} else {
-				String defaultValueType = data.getDefaultValue().getType();
-				if (defaultValueType.equals(ExpressionConstants.SCRIPT_TYPE) || defaultValueType.equals(ExpressionConstants.CONSTANT_TYPE)  ){
-					expr.setType(data.getDefaultValue().getType());
-					expr.setInterpreter(data.getDefaultValue().getInterpreter());
-					expr.setContent(data.getDefaultValue().getContent());
-					expr.getReferencedElements().clear();
-				} else {
-					toEmptyConstantExpression(expr);
-				}
-			}
-		} else {
-			toEmptyConstantExpression(expr);
-		}
-	}
-
-	private Data getReferencedData(Form form,Expression expr){
-		List<Data> datas = ModelHelper.getAccessibleData(form, true);
-		for (Data data:datas){
-			if (data.getName().equals(expr.getName())){
-				return data;
-			}
-		}
-		return null;
-	}
+            }
+            setActorMapping(parentProc, configuration);
+            proc.setByPassFormsGeneration(true);
+            proc.getElements().add(task);
+            isOnTask = true;
+        } else {
+            canPreview = false;
+            openNoActorErrorMessage(task);
+        }
+    }
 
 
-	private void copyActors(AbstractProcess proc,AbstractProcess procCopy){
-		List<Actor> actors = proc.getActors();
-		for (Actor actor:actors){
-			procCopy.getActors().add((Actor)EcoreUtil.copy(actor));
-		}
-	}
-
-	protected void deleteAllOperations(Widget widget){
-		List<Operation> operations = ModelHelper.getAllItemsOfType(widget, ExpressionPackage.Literals.OPERATION);
-		for (Operation operation:operations){
-			EcoreUtil.delete(operation);
-		}
-	}
-
-	/**
-	 * @return the form
-	 */
-	public Form getForm() {
-		return form;
-	}
+    private Actor addActorToTask(final Task task,final Actor actor){
+        final Actor actorCopy = EcoreUtil.copy(actor);
+        actorCopy.setInitiator(true);
+        task.setActor(actorCopy);
+        return actorCopy;
+    }
 
 
-	/**
-	 * @return the formCopy
-	 */
-	public Form getFormCopy() {
-		return formCopy;
-	}
+    protected void setActorMapping(final AbstractProcess proc, final Configuration previewConfiguration) {
+        final ProcessConfigurationRepositoryStore configurationStore =  RepositoryManager.getInstance().getRepositoryStore(ProcessConfigurationRepositoryStore.class);
+        final String id = ModelHelper.getEObjectID(proc);
+        final ProcessConfigurationFileStore configurationFileStore = configurationStore.getChild(id+".conf");
+        final Configuration configuration = configurationFileStore.getContent();
+        ActorMappingsType actorMapping = EcoreUtil.copy(configuration.getActorMappings());
+        if (actorMapping==null){
+            //MessageDialog.openError(Display.getCurrent().getActiveShell(),Messages.noActorMappingDefinedTitle ,  Messages.noActorMappingDefined);
+            //canPreview = false;
+            actorMapping = ActorMappingFactory.eINSTANCE.createActorMappingsType();
+            final ActorMapping newMapping = ActorMappingFactory.eINSTANCE.createActorMapping();
+            newMapping.setName(proc.getActors().get(0).getName());
+            final Users users = ActorMappingFactory.eINSTANCE.createUsers();
+            users.getUser().add(BonitaConstants.STUDIO_TECHNICAL_USER_NAME);
+            newMapping.setUsers(users);
+            newMapping.setGroups(ActorMappingFactory.eINSTANCE.createGroups());
+            newMapping.setMemberships(ActorMappingFactory.eINSTANCE.createMembership());
+            newMapping.setRoles(ActorMappingFactory.eINSTANCE.createRoles());
+            actorMapping.getActorMapping().add(newMapping);
+        } else {
+            for(final ActorMapping mapping : actorMapping.getActorMapping()){
+                mapping.getMemberships().getMembership().clear();
+                mapping.getGroups().getGroup().clear();
+                mapping.getUsers().getUser().clear();
+                mapping.getRoles().getRole().clear();
+                mapping.getUsers().getUser().add(BonitaConstants.STUDIO_TECHNICAL_USER_NAME);
+            }
+        }
+        previewConfiguration.setActorMappings(actorMapping);
+
+    }
+
+    private void initializeForm(){
+        formCopy = EcoreUtil.copy(form);
+        final List<Expression> exprs = ModelHelper.getAllItemsOfType(formCopy, ExpressionPackage.Literals.EXPRESSION);
+        for (Expression expr:exprs){
+            expr = initializeExpression(form,expr);
+        }
+        formCopy.getData().clear();
+        formCopy.getKpis().clear();
+        formCopy.getValidators().clear();
+        formCopy.getActions().clear();
+        formCopy.getConnectors().clear();
+    }
+
+    protected abstract void initializeAllWidgets(Form formCopy);
+
+    private Expression initializeExpression(final Form form,final Expression expr){
+        if (ExpressionConstants.VARIABLE_TYPE.equals(expr.getType())){
+            handleVariableExpression(form, expr);
+        } else if (ExpressionConstants.PARAMETER_TYPE.equals(expr.getType())){
+            handleParameterExpression(expr);
+        } else if (ExpressionConstants.SCRIPT_TYPE.equals(expr.getType())){
+            handleScriptExpression(expr);
+        }
+        else if(!ExpressionConstants.CONSTANT_TYPE.equals(expr.getType())){
+            toEmptyConstantExpression(expr);
+        }
+        return expr;
+    }
+
+    protected void toEmptyConstantExpression(final Expression expr) {
+        expr.setType(ExpressionConstants.CONSTANT_TYPE);
+        expr.setContent("");
+        expr.setName("");
+        expr.getReferencedElements().clear();
+    }
 
 
-	/**
-	 * @return the lookNFeel
-	 */
-	public ApplicationLookNFeelFileStore getLookNFeel() {
-		return lookNFeel;
-	}
+    protected void handleParameterExpression(final Expression expr) {
+        final Parameter parameter = (Parameter) expr.getReferencedElements().get(0);
+        expr.setType(ExpressionConstants.CONSTANT_TYPE);
+        expr.setContent(parameter.getValue());
+    }
 
 
-	/**
-	 * @return the browser
-	 */
-	public IBrowserDescriptor getBrowser() {
-		return browser;
-	}
+    protected void handleScriptExpression(final Expression expr){
+        if (expr.getReferencedElements()==null || expr.getReferencedElements().isEmpty()){
+            if (EMPTY_LIST.equals(expr.getName()) && GROOVY_SCRIPT_EMPTY_LIST.equals(expr.getContent())){
+                toEmptyConstantExpression(expr);
+            }
+        } if (expr.getReferencedElements()!=null && !expr.getReferencedElements().isEmpty()){
+            toEmptyConstantExpression(expr);
+        }
+    }
+
+    protected void handleVariableExpression(final Form form, final Expression expr) {
+        final Data data = getReferencedData(form, expr);
+        if (data !=null && data.getDefaultValue()!=null && data.getDefaultValue().getContent()!=null && !data.getDefaultValue().getContent().isEmpty()){
+            if (data.getDataType() instanceof JavaType) {
+                expr.setType(ExpressionConstants.SCRIPT_TYPE);
+                expr.setInterpreter(ExpressionConstants.GROOVY);
+                if (data.getDefaultValue().getReferencedElements().isEmpty()){
+                    expr.setContent(data.getDefaultValue().getContent());
+                    expr.getReferencedElements().clear();
+                } else {
+                    toEmptyConstantExpression(expr);
+                }
+            } else if (data.getDataType() instanceof XMLData){
+                toEmptyConstantExpression(expr);
+            } else {
+                final String defaultValueType = data.getDefaultValue().getType();
+                if (defaultValueType.equals(ExpressionConstants.SCRIPT_TYPE) || defaultValueType.equals(ExpressionConstants.CONSTANT_TYPE)  ){
+                    expr.setType(data.getDefaultValue().getType());
+                    expr.setInterpreter(data.getDefaultValue().getInterpreter());
+                    expr.setContent(data.getDefaultValue().getContent());
+                    expr.getReferencedElements().clear();
+                } else {
+                    toEmptyConstantExpression(expr);
+                }
+            }
+        } else {
+            toEmptyConstantExpression(expr);
+        }
+    }
+
+    private Data getReferencedData(final Form form,final Expression expr){
+        final List<Data> datas = ModelHelper.getAccessibleData(form, true);
+        for (final Data data:datas){
+            if (data.getName().equals(expr.getName())){
+                return data;
+            }
+        }
+        return null;
+    }
 
 
-	/**
-	 * @return the isOnTask
-	 */
-	public boolean isOnTask() {
-		return isOnTask;
-	}
+    private void copyActors(final AbstractProcess proc,final AbstractProcess procCopy){
+        final List<Actor> actors = proc.getActors();
+        for (final Actor actor:actors){
+            procCopy.getActors().add(EcoreUtil.copy(actor));
+        }
+    }
+
+    protected void deleteAllOperations(final Widget widget){
+        final List<Operation> operations = ModelHelper.getAllItemsOfType(widget, ExpressionPackage.Literals.OPERATION);
+        for (final Operation operation:operations){
+            EcoreUtil.delete(operation);
+        }
+    }
+
+    /**
+     * @return the form
+     */
+    public Form getForm() {
+        return form;
+    }
 
 
-	/**
-	 * @return the canPreview
-	 */
-	public boolean isCanPreview() {
-		return canPreview;
-	}
+    /**
+     * @return the formCopy
+     */
+    public Form getFormCopy() {
+        return formCopy;
+    }
+
+
+    /**
+     * @return the lookNFeel
+     */
+    public ApplicationLookNFeelFileStore getLookNFeel() {
+        return lookNFeel;
+    }
+
+
+    /**
+     * @return the browser
+     */
+    public IBrowserDescriptor getBrowser() {
+        return browser;
+    }
+
+
+    /**
+     * @return the isOnTask
+     */
+    public boolean isOnTask() {
+        return isOnTask;
+    }
+
+
+    /**
+     * @return the canPreview
+     */
+    public boolean isCanPreview() {
+        return canPreview;
+    }
 
 
 

@@ -41,6 +41,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xtext.EcoreUtil2;
+import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.ui.resource.XtextResourceSetProvider;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.util.StringInputStream;
@@ -98,7 +99,7 @@ public class XtextComparisonExpressionLoader {
             throw new ComparisonExpressionLoadException("Failed to create StringInputString from expression.", e);
         }
         try {
-            resource.load(inputStream, Collections.emptyMap());
+            resource.load(inputStream, Collections.singletonMap(XtextResource.OPTION_ENCODING, "UTF-8"));
         } catch (final IOException e) {
             throw new ComparisonExpressionLoadException("Failed to load Xtext resource.", e);
         }
