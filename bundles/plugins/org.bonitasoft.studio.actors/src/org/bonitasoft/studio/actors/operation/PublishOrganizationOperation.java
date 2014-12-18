@@ -16,7 +16,6 @@
  */
 package org.bonitasoft.studio.actors.operation;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -41,14 +40,12 @@ import org.bonitasoft.studio.actors.model.organization.DocumentRoot;
 import org.bonitasoft.studio.actors.model.organization.Organization;
 import org.bonitasoft.studio.actors.model.organization.OrganizationFactory;
 import org.bonitasoft.studio.actors.model.organization.PasswordType;
-import org.bonitasoft.studio.actors.model.organization.util.OrganizationXMLProcessor;
 import org.bonitasoft.studio.common.BonitaConstants;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.emf.ecore.xmi.impl.XMLResourceImpl;
@@ -61,32 +58,6 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
  *
  */
 public class PublishOrganizationOperation implements IRunnableWithProgress{
-
-    private static final class OrganizationXMLProcessorRespectingEncoding extends OrganizationXMLProcessor {
-
-        /*
-         * (non-Javadoc)
-         * @see org.eclipse.emf.ecore.xmi.util.XMLProcessor#saveToString(org.eclipse.emf.ecore.resource.Resource, java.util.Map)
-         * Override to fix Eclipse EMF bug https://bugs.eclipse.org/bugs/show_bug.cgi?id=441484
-         */
-        @Override
-        public String saveToString(final Resource resource, final Map<?, ?> options) throws IOException {
-            final ByteArrayOutputStream os = new ByteArrayOutputStream();
-            if (options != null) {
-                final Map<Object, Object> mergedOptions = new HashMap<Object, Object>(saveOptions);
-                mergedOptions.putAll(options);
-                ((XMLResource) resource).save(os, mergedOptions);
-            } else {
-                ((XMLResource) resource).save(os, saveOptions);
-            }
-            final Object encoding = options.get(XMLResource.OPTION_ENCODING);
-            if (encoding != null && encoding instanceof String) {
-                return os.toString((String) encoding);
-            } else {
-                return os.toString();
-            }
-        }
-    }
 
     private final Organization organization;
     private APISession session;
