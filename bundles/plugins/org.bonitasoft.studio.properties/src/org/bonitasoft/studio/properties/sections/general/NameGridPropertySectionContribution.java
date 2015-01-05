@@ -257,10 +257,17 @@ public class NameGridPropertySectionContribution extends AbstractNamePropertySec
             final ITextAwareEditPart textAwareEditPart = getTextAwareEditPart((IStructuredSelection) selection);
             if (textAwareEditPart != null) {
                 textAwareEditPart.setLabelText(name);
-                final EditPart poolEp = getPoolEditPart(textAwareEditPart);
-                if (poolEp != null) {
-                    poolEp.refresh();
-                }
+                Display.getDefault().asyncExec(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        final EditPart poolEp = getPoolEditPart(textAwareEditPart);
+                        if (poolEp != null) {
+                            poolEp.refresh();
+                        }
+                    }
+                });
+
             }
         }
     }
