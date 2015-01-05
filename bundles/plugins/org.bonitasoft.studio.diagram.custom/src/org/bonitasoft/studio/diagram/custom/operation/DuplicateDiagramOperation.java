@@ -49,6 +49,7 @@ import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.AssociatedFile;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.MainProcess;
+import org.bonitasoft.studio.model.process.PageFlow;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.ResourceFile;
@@ -244,32 +245,21 @@ public class DuplicateDiagramOperation implements IRunnableWithProgress {
                 }
             }
 
+
             /* Duplicate Confirmation Template */
-            final AssociatedFile confirmationTemplate = newProc.getConfirmationTemplate();
-            if (confirmationTemplate != null) {
-                final File confirmationFile = WebTemplatesUtil.getFile(confirmationTemplate.getPath());
-                if (confirmationFile != null) {
-                    final ApplicationResourceFileStore artifact = getApplicationResourceFileStore(
-                            resourceStore, newProcId);
-                    final String confTemplateRelative = artifact.setConfirmationTemplate(confirmationFile.getAbsolutePath(), newProc);
-                    confirmationTemplate.setPath(confTemplateRelative);
-                } else {
-                    newProc.setConfirmationTemplate(null);
-                }
-            }
-            /* And also in all tasks */
-            //TODO: duplicate confirmation template for tasks
-            /* Duplicate Error Template */
-            final AssociatedFile errorTemplate = newProc.getErrorTemplate();
-            if (errorTemplate != null) {
-                final File errorFile = WebTemplatesUtil.getFile(errorTemplate.getPath());
-                if (errorFile != null) {
-                    final ApplicationResourceFileStore artifact = getApplicationResourceFileStore(
-                            resourceStore, newProcId);
-                    final String errorTemplateRelative = artifact.setErrorTemplate(errorFile.getAbsolutePath());
-                    errorTemplate.setPath(errorTemplateRelative);
-                } else {
-                    newProc.setErrorTemplate(null);
+            final List<PageFlow> pageFlows = ModelHelper.getAllItemsOfType(newProc, ProcessPackage.Literals.PAGE_FLOW);
+            for (final PageFlow pageFlow : pageFlows) {
+                final AssociatedFile confirmationTemplate = pageFlow.getConfirmationTemplate();
+                if (confirmationTemplate != null) {
+                    final File confirmationFile = WebTemplatesUtil.getFile(confirmationTemplate.getPath());
+                    if (confirmationFile != null) {
+                        final ApplicationResourceFileStore artifact = getApplicationResourceFileStore(
+                                resourceStore, newProcId);
+                        final String confTemplateRelative = artifact.setConfirmationTemplate(confirmationFile.getAbsolutePath(), pageFlow);
+                        confirmationTemplate.setPath(confTemplateRelative);
+                    } else {
+                        pageFlow.setConfirmationTemplate(null);
+                    }
                 }
             }
 
