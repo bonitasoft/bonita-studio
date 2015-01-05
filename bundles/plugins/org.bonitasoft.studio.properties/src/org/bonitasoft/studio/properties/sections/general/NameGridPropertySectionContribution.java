@@ -107,7 +107,7 @@ public class NameGridPropertySectionContribution extends AbstractNamePropertySec
         }
     };
 
-    private final DiagramRepositoryStore diagramStore;
+    // private final DiagramRepositoryStore diagramStore;
 
     /**
      * @param tabbedPropertySheetPage
@@ -116,7 +116,6 @@ public class NameGridPropertySectionContribution extends AbstractNamePropertySec
     public NameGridPropertySectionContribution(final TabbedPropertySheetPage tabbedPropertySheetPage,
             final ExtensibleGridPropertySection extensibleGridPropertySection) {
         super(tabbedPropertySheetPage, extensibleGridPropertySection);
-        diagramStore = RepositoryManager.getInstance().getCurrentRepository().getRepositoryStore(DiagramRepositoryStore.class);
     }
 
     protected void updateEvents(final Element element) {
@@ -244,7 +243,7 @@ public class NameGridPropertySectionContribution extends AbstractNamePropertySec
             @Override
             public void handleValueChange(final ValueChangeEvent event) {
                 updatePropertyTabTitle();
-                updatePartName((String) event.diff.getNewValue());
+                updatePartName((String) event.diff.getNewValue(), Display.getDefault());
             }
         });
         ControlDecorationSupport.create(context.bindValue(observable,
@@ -252,24 +251,27 @@ public class NameGridPropertySectionContribution extends AbstractNamePropertySec
         bindingInitialized = true;
     }
 
-    protected void updatePartName(final String name) {
+    protected void updatePartName(final String name, final Display display) {
         if (selection != null && !selection.isEmpty()) {
             final ITextAwareEditPart textAwareEditPart = getTextAwareEditPart((IStructuredSelection) selection);
             if (textAwareEditPart != null) {
                 textAwareEditPart.setLabelText(name);
-                Display.getDefault().asyncExec(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        final EditPart poolEp = getPoolEditPart(textAwareEditPart);
-                        if (poolEp != null) {
-                            poolEp.refresh();
-                        }
-                    }
-                });
-
+                display.asyncExec(refreshPoolEditPart(textAwareEditPart));
             }
         }
+    }
+
+    protected Runnable refreshPoolEditPart(final ITextAwareEditPart textAwareEditPart) {
+        return new Runnable() {
+
+            @Override
+            public void run() {
+                final EditPart poolEp = getPoolEditPart(textAwareEditPart);
+                if (poolEp != null) {
+                    poolEp.refresh();
+                }
+            }
+        };
     }
 
     protected EditPart getPoolEditPart(final EditPart textAwareEditPart) {
@@ -312,6 +314,7 @@ public class NameGridPropertySectionContribution extends AbstractNamePropertySec
 
     protected void editDiagramAndPoolNameAndVersion() {
         final MainProcess diagram = ModelHelper.getMainProcess(element);
+        final DiagramRepositoryStore diagramStore = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
         final OpenNameAndVersionForDiagramDialog nameDialog = new OpenNameAndVersionForDiagramDialog(Display.getDefault().getActiveShell(), diagram,
                 diagramStore);
         if (nameDialog.open() == Dialog.OK) {
@@ -350,6 +353,7 @@ public class NameGridPropertySectionContribution extends AbstractNamePropertySec
 
     protected void editSinglePoolNameAndVersion() {
         final MainProcess diagram = ModelHelper.getMainProcess(element);
+        final DiagramRepositoryStore diagramStore = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
         final OpenNameAndVersionDialog dialog1 = new OpenNameAndVersionDialog(Display.getDefault().getActiveShell(), diagram, element.getName(),
                 ((Pool) element).getVersion(), diagramStore);
         if (dialog1.open() == Dialog.OK) {
