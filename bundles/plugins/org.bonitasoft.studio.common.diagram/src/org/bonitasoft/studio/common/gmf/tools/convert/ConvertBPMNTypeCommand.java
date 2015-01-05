@@ -30,10 +30,13 @@ import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.form.FormPackage;
 import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.form.WidgetDependency;
+import org.bonitasoft.studio.model.process.AbstractCatchMessageEvent;
 import org.bonitasoft.studio.model.process.Activity;
 import org.bonitasoft.studio.model.process.BoundaryEvent;
 import org.bonitasoft.studio.model.process.Connection;
+import org.bonitasoft.studio.model.process.MessageFlow;
 import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.studio.model.process.ThrowMessageEvent;
 import org.bonitasoft.studio.model.process.XORGateway;
 import org.bonitasoft.studio.model.simulation.SimulationPackage;
 import org.eclipse.core.commands.ExecutionException;
@@ -100,7 +103,7 @@ public class ConvertBPMNTypeCommand extends AbstractTransactionalCommand {
     private final GraphicalEditPart node;
     private final ElementTypeResolver elementTypeResolver;
 
-    public ConvertBPMNTypeCommand(TransactionalEditingDomain domain,EClass targetEClass, final GraphicalEditPart node, ElementTypeResolver elementTypeResolver) {
+    public ConvertBPMNTypeCommand(final TransactionalEditingDomain domain,final EClass targetEClass, final GraphicalEditPart node, final ElementTypeResolver elementTypeResolver) {
         super(domain, ConvertBPMNTypeCommand.class.getName(), null);
         this.targetEClass = targetEClass ;
         this.node = node ;
@@ -111,7 +114,7 @@ public class ConvertBPMNTypeCommand extends AbstractTransactionalCommand {
      * @see org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCommand#doExecuteWithResult(org.eclipse.core.runtime.IProgressMonitor, org.eclipse.core.runtime.IAdaptable)
      */
     @Override
-    protected CommandResult doExecuteWithResult(IProgressMonitor monitor,IAdaptable adaptable) throws ExecutionException {
+    protected CommandResult doExecuteWithResult(final IProgressMonitor monitor,final IAdaptable adaptable) throws ExecutionException {
         // Unselect text edit part in case it has focus
         // Avoid NPE when editing label and switching activity type
         node.getViewer().getSelectionManager().setSelection(new StructuredSelection());
@@ -119,9 +122,9 @@ public class ConvertBPMNTypeCommand extends AbstractTransactionalCommand {
         final TransactionalEditingDomain editingDomain = node.getEditingDomain();
         final EObject sourceElement = node.resolveSemanticElement();
         final IFigure nodeFigure = node.getFigure();
-        Point location = nodeFigure.getBounds().getTopLeft().getCopy();
+        final Point location = nodeFigure.getBounds().getTopLeft().getCopy();
         nodeFigure.translateToAbsolute(location);
-        Dimension size = nodeFigure.getSize();
+        final Dimension size = nodeFigure.getSize();
         final RootEditPart root = node.getRoot();
         if(root instanceof DiagramRootEditPart){
             final ZoomManager zoomManager = ((DiagramRootEditPart)root).getZoomManager();
@@ -135,8 +138,8 @@ public class ConvertBPMNTypeCommand extends AbstractTransactionalCommand {
 
         // TODO guess elementType from target instead of hardcoding. Depends on
         // target type and container
-        IElementType targetElementType = elementTypeResolver.getElementType(parentEditPart, targetEClass);
-        CreateViewRequest activityRequest = CreateViewRequestFactory.getCreateShapeRequest(targetElementType, node.getDiagramPreferencesHint());
+        final IElementType targetElementType = elementTypeResolver.getElementType(parentEditPart, targetEClass);
+        final CreateViewRequest activityRequest = CreateViewRequestFactory.getCreateShapeRequest(targetElementType, node.getDiagramPreferencesHint());
         activityRequest.setLocation(location);
         activityRequest.setSize(size) ;
         /*
@@ -145,16 +148,16 @@ public class ConvertBPMNTypeCommand extends AbstractTransactionalCommand {
          * the old editpart.
          */
         activityRequest.getExtendedData().put("convertOperation", "true");
-        Command command = parentEditPart.getCommand(activityRequest);
+        final Command command = parentEditPart.getCommand(activityRequest);
 
         command.execute();
         command.dispose();
-        
-        IAdaptable targetAdapter = (IAdaptable) ((List<?>) activityRequest.getNewObject()).get(0);
-        Node newNode = (Node) targetAdapter.getAdapter(EObject.class);
 
-      
-        
+        final IAdaptable targetAdapter = (IAdaptable) ((List<?>) activityRequest.getNewObject()).get(0);
+        final Node newNode = (Node) targetAdapter.getAdapter(EObject.class);
+
+
+
         /* Need a refresh when we are in OffscreenEditPart */
         parentEditPart.refresh();
 
@@ -166,32 +169,32 @@ public class ConvertBPMNTypeCommand extends AbstractTransactionalCommand {
         final GraphicalEditPart targetEditPart = (GraphicalEditPart) parentEditPart.findEditPart(parentEditPart, targetElement);
 
         if (ProcessPackage.eINSTANCE.getActivity().isSuperTypeOf(targetEClass)) {
-            ChangePropertyValueRequest fillReq = new ChangePropertyValueRequest("Fill Color", Properties.ID_FILLCOLOR, ((FillStyle) node.getNotationView()
+            final ChangePropertyValueRequest fillReq = new ChangePropertyValueRequest("Fill Color", Properties.ID_FILLCOLOR, ((FillStyle) node.getNotationView()
                     .getStyle(NotationPackage.eINSTANCE.getFillStyle())).getFillColor());
             targetEditPart.performRequest(fillReq);
-            ChangePropertyValueRequest lineReq = new ChangePropertyValueRequest("Line Color", Properties.ID_LINECOLOR, ((LineStyle) node.getNotationView()
+            final ChangePropertyValueRequest lineReq = new ChangePropertyValueRequest("Line Color", Properties.ID_LINECOLOR, ((LineStyle) node.getNotationView()
                     .getStyle(NotationPackage.eINSTANCE.getLineStyle())).getLineColor());
             targetEditPart.performRequest(lineReq);
         }
 
         if(node.getChildren().isEmpty()){
-            Request req = new ToggleConnectionLabelsRequest(false) ;
+            final Request req = new ToggleConnectionLabelsRequest(false) ;
             targetEditPart.performRequest(req)  ;
         }else{
-            Request req = new ToggleConnectionLabelsRequest(true) ;
+            final Request req = new ToggleConnectionLabelsRequest(true) ;
             targetEditPart.performRequest(req)  ;
         }
 
 
 
-        List<ICommand> commands = moveConnectionSourceAndTarget(node, editingDomain, parentEditPart, targetEditPart);
+        final List<ICommand> commands = moveConnectionSourceAndTarget(node, editingDomain, parentEditPart, targetEditPart);
 
-        List<Pair<EObject, Point>> childPositions = new ArrayList<Pair<EObject, Point>>();
-        for (Object object : node.getChildren()) {
+        final List<Pair<EObject, Point>> childPositions = new ArrayList<Pair<EObject, Point>>();
+        for (final Object object : node.getChildren()) {
             if (object instanceof GraphicalEditPart) {
-                GraphicalEditPart editPart = (GraphicalEditPart) object;
-                Point point = editPart.getFigure().getBounds().getLocation().getCopy();
-                EObject eObject = editPart.resolveSemanticElement();
+                final GraphicalEditPart editPart = (GraphicalEditPart) object;
+                final Point point = editPart.getFigure().getBounds().getLocation().getCopy();
+                final EObject eObject = editPart.resolveSemanticElement();
                 childPositions.add(new Pair<EObject, Point>(eObject, point));
             }
         }
@@ -202,9 +205,9 @@ public class ConvertBPMNTypeCommand extends AbstractTransactionalCommand {
 
 
         try {
-            CopyEObjectFeaturesCommand operation = new CopyEObjectFeaturesCommand(editingDomain, sourceElement, targetElement);
+            final CopyEObjectFeaturesCommand operation = new CopyEObjectFeaturesCommand(editingDomain, sourceElement, targetElement);
             OperationHistoryFactory.getOperationHistory().execute(operation, monitor, null);
-        } catch (ExecutionException e) {
+        } catch (final ExecutionException e) {
             BonitaStudioLog.error(e);
         }
         if(targetEditPart != null){
@@ -223,7 +226,7 @@ public class ConvertBPMNTypeCommand extends AbstractTransactionalCommand {
             // reset boundary connections
             commands.clear();
 
-            for (BoundaryEvent boundaryEvent : ((Activity) targetElement).getBoundaryIntermediateEvents()) {
+            for (final BoundaryEvent boundaryEvent : ((Activity) targetElement).getBoundaryIntermediateEvents()) {
                 final GraphicalEditPart boundaryEp = (GraphicalEditPart) targetEditPart.findEditPart(targetEditPart, boundaryEvent);
 
                 if (boundaryEp != null) {
@@ -233,21 +236,21 @@ public class ConvertBPMNTypeCommand extends AbstractTransactionalCommand {
 
                         if(boundaryTargetEP != null){
 
-                            ConnectionEditPart ep = (ConnectionEditPart) GMFTools.findEditPart((EditPart) parentEditPart.getRoot().getChildren().get(0),outgoing) ;
+                            final ConnectionEditPart ep = (ConnectionEditPart) GMFTools.findEditPart((EditPart) parentEditPart.getRoot().getChildren().get(0),outgoing) ;
                             if(ep != null){
                                 try {
                                     new DeleteCommand(ep.getNotationView()).execute(null, null);
-                                } catch (ExecutionException e) {
+                                } catch (final ExecutionException e) {
                                     BonitaStudioLog.error(e) ;
                                 }
                             }
 
-                            AbstractEMFOperation recreateExceptionFlowsOperation = new AbstractEMFOperation(editingDomain, "Recreate Exception flow") {
+                            final AbstractEMFOperation recreateExceptionFlowsOperation = new AbstractEMFOperation(editingDomain, "Recreate Exception flow") {
 
                                 @Override
-                                protected IStatus doExecute(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
-                                    IElementType elementType = ElementTypeRegistry.getInstance().getType("org.bonitasoft.studio.diagram.SequenceFlow_4001");
-                                    Edge edge = ViewService.getInstance().createEdge(elementType,
+                                protected IStatus doExecute(final IProgressMonitor monitor, final IAdaptable info) throws ExecutionException {
+                                    final IElementType elementType = ElementTypeRegistry.getInstance().getType("org.bonitasoft.studio.diagram.SequenceFlow_4001");
+                                    final Edge edge = ViewService.getInstance().createEdge(elementType,
                                             ModelHelper.getDiagramFor(ModelHelper.getMainProcess(targetElement),editingDomain),
                                             ((IHintedType) elementType).getSemanticHint(), -1, true, targetEditPart.getDiagramPreferencesHint());
                                     edge.setElement(outgoing);
@@ -261,7 +264,7 @@ public class ConvertBPMNTypeCommand extends AbstractTransactionalCommand {
                             };
                             try {
                                 recreateExceptionFlowsOperation.execute(monitor, null);
-                            } catch (ExecutionException e) {
+                            } catch (final ExecutionException e) {
                                 BonitaStudioLog.error(e);
                             }
                         } else {
@@ -292,17 +295,17 @@ public class ConvertBPMNTypeCommand extends AbstractTransactionalCommand {
         return CommandResult.newOKCommandResult(targetEditPart);
     }
 
-    protected static void refreshBoundaryElements(TransactionalEditingDomain editingDomain, final EObject targetElement,
-            final GraphicalEditPart targetEditPart, List<Pair<EObject, Point>> childPositions) {
-        for (Pair<EObject, Point> pair : childPositions) {
+    protected static void refreshBoundaryElements(final TransactionalEditingDomain editingDomain, final EObject targetElement,
+            final GraphicalEditPart targetEditPart, final List<Pair<EObject, Point>> childPositions) {
+        for (final Pair<EObject, Point> pair : childPositions) {
             final EObject childToResetPosition = pair.getFirst();
             if (targetElement.eContents().contains(childToResetPosition)) {
-                GraphicalEditPart editPart = (GraphicalEditPart) targetEditPart.findEditPart(targetEditPart, childToResetPosition);
+                final GraphicalEditPart editPart = (GraphicalEditPart) targetEditPart.findEditPart(targetEditPart, childToResetPosition);
                 if (editPart != null) {
-                    Point childPosition = pair.getSecond();
+                    final Point childPosition = pair.getSecond();
                     childPosition.x = childPosition.x - targetEditPart.getFigure().getBounds().x;
                     childPosition.y = childPosition.y - targetEditPart.getFigure().getBounds().y;
-                    ICommand moveCommand = new SetBoundsCommand(editPart.getEditingDomain(),
+                    final ICommand moveCommand = new SetBoundsCommand(editPart.getEditingDomain(),
                             DiagramUIMessages.Commands_MoveElement, new EObjectAdapter(
                                     (View) editPart.getModel()), childPosition);
                     editPart.getDiagramEditDomain().getDiagramCommandStack().execute(new ICommandProxy(moveCommand)) ;
@@ -313,10 +316,10 @@ public class ConvertBPMNTypeCommand extends AbstractTransactionalCommand {
                      */
                     if (targetElement instanceof Activity) {
 
-                        AbstractEMFOperation operation = new AbstractEMFOperation(editingDomain, "Remove boundary child") {
+                        final AbstractEMFOperation operation = new AbstractEMFOperation(editingDomain, "Remove boundary child") {
 
                             @Override
-                            protected IStatus doExecute(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
+                            protected IStatus doExecute(final IProgressMonitor monitor, final IAdaptable info) throws ExecutionException {
                                 /*
                                  * Remove the BoundaryEvent from the list and
                                  * its outgoing transition
@@ -330,7 +333,7 @@ public class ConvertBPMNTypeCommand extends AbstractTransactionalCommand {
                         };
                         try {
                             operation.execute(new NullProgressMonitor(), null);
-                        } catch (ExecutionException e) {
+                        } catch (final ExecutionException e) {
                             BonitaStudioLog.error(e);
                         }
 
@@ -341,29 +344,46 @@ public class ConvertBPMNTypeCommand extends AbstractTransactionalCommand {
         }
     }
 
-    protected static List<ICommand> moveConnectionSourceAndTarget(final GraphicalEditPart node, TransactionalEditingDomain editingDomain,
+    protected static List<ICommand> moveConnectionSourceAndTarget(final GraphicalEditPart node, final TransactionalEditingDomain editingDomain,
             final GraphicalEditPart parentEditPart, final GraphicalEditPart targetEditPart) {
-        List<ICommand> commands = new ArrayList<ICommand>();
-        for (org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionEditPart sourceConnection : (List<org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionEditPart>) node.getSourceConnections()) {
+        final List<ICommand> commands = new ArrayList<ICommand>();
 
-            SetConnectionEndsCommand setConnectionEndCommand = new SetConnectionEndsCommand(editingDomain, Messages.setConnectionEndCommandLabel);
+        for (final org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionEditPart sourceConnection : (List<org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionEditPart>) node.getSourceConnections()) {
+            if (sourceConnection.resolveSemanticElement() instanceof MessageFlow) {
+                if (!(targetEditPart.resolveSemanticElement() instanceof ThrowMessageEvent)) {
+                    //Delete message flow as it's no more consistent on new element type
+                    editingDomain.getCommandStack().execute(
+                            org.eclipse.emf.edit.command.DeleteCommand.create(editingDomain, sourceConnection.resolveSemanticElement()));
+                    commands.add(new DeleteCommand(editingDomain, sourceConnection.getNotationView()));
+                    continue;
+                }
+            }
+            final SetConnectionEndsCommand setConnectionEndCommand = new SetConnectionEndsCommand(editingDomain, Messages.setConnectionEndCommandLabel);
             setConnectionEndCommand.setEdgeAdaptor(sourceConnection);
             if (sourceConnection.getTarget().equals(sourceConnection.getSource())) { // Recursive
                 // Connection
                 setConnectionEndCommand.setNewSourceAdaptor(targetEditPart);
                 setConnectionEndCommand.setNewTargetAdaptor(targetEditPart);
-            } else {
+                } else {
                 setConnectionEndCommand.setNewSourceAdaptor(targetEditPart);
                 setConnectionEndCommand.setNewTargetAdaptor(sourceConnection.getTarget());
-            }
+                }
             commands.add(setConnectionEndCommand);
-
         }
 
-        for (org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionEditPart targetConnection : (List<org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionEditPart>) node
+        for (final org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionEditPart targetConnection : (List<org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionEditPart>) node
                 .getTargetConnections()) {
+            if (targetConnection.resolveSemanticElement() instanceof MessageFlow) {
+                if (!(targetEditPart.resolveSemanticElement() instanceof AbstractCatchMessageEvent)) {
+                    //Delete message flow as it's no more consistent on new element type
+                    editingDomain.getCommandStack().execute(
+                            org.eclipse.emf.edit.command.DeleteCommand.create(editingDomain, targetConnection.resolveSemanticElement()));
+                    commands.add(new DeleteCommand(editingDomain, targetConnection.getNotationView()));
+                    continue;
+                }
+            }
             if (!targetConnection.getTarget().equals(targetConnection.getSource())) {
-                SetConnectionEndsCommand setConnectionEndCommand = new SetConnectionEndsCommand(editingDomain, Messages.setConnectionEndCommandLabel);
+                final SetConnectionEndsCommand setConnectionEndCommand = new SetConnectionEndsCommand(editingDomain, Messages.setConnectionEndCommandLabel);
                 setConnectionEndCommand.setEdgeAdaptor(targetConnection);
                 setConnectionEndCommand.setNewSourceAdaptor(targetConnection.getSource());
                 setConnectionEndCommand.setNewTargetAdaptor(targetEditPart);
@@ -372,16 +392,16 @@ public class ConvertBPMNTypeCommand extends AbstractTransactionalCommand {
         }
         try {
             new CompositeCommand(Messages.setConnectionsCommandLabel, commands).execute(new NullProgressMonitor(), parentEditPart);
-        } catch (Exception ex) {
+        } catch (final Exception ex) {
             BonitaStudioLog.error(ex);
         }
         return commands;
     }
 
-    private static void updateWidgetContingencies(TransactionalEditingDomain editingDomain,Widget sourceElement,Widget targetElement) {
-        Form f = ModelHelper.getForm(sourceElement) ;
-        List<WidgetDependency> widgetsDependencies = ModelHelper.getAllItemsOfType(f, FormPackage.eINSTANCE.getWidgetDependency()) ;
-        for(WidgetDependency w : widgetsDependencies){
+    private static void updateWidgetContingencies(final TransactionalEditingDomain editingDomain,final Widget sourceElement,final Widget targetElement) {
+        final Form f = ModelHelper.getForm(sourceElement) ;
+        final List<WidgetDependency> widgetsDependencies = ModelHelper.getAllItemsOfType(f, FormPackage.eINSTANCE.getWidgetDependency()) ;
+        for(final WidgetDependency w : widgetsDependencies){
             if(w.getWidget() != null && w.getWidget().equals(sourceElement)){
                 editingDomain.getCommandStack().execute(new SetCommand(editingDomain, w, FormPackage.eINSTANCE.getWidgetDependency_Widget(), targetElement)) ;
             }
@@ -389,12 +409,12 @@ public class ConvertBPMNTypeCommand extends AbstractTransactionalCommand {
     }
 
     @Override
-    protected void didUndo(Transaction tx) {
+    protected void didUndo(final Transaction tx) {
         super.didUndo(tx);
     }
 
     @Override
-    protected void didRedo(Transaction tx) {
+    protected void didRedo(final Transaction tx) {
         super.didRedo(tx);
     }
 
