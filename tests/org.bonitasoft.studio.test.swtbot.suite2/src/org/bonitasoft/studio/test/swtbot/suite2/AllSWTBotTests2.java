@@ -1,6 +1,7 @@
 package org.bonitasoft.studio.test.swtbot.suite2;
 
 import org.bonitasoft.expressions.test.TestConnectorExpression;
+import org.bonitasoft.studio.actors.tests.SWTbot.TestOrganizationPassword;
 import org.bonitasoft.studio.commands.test.CopyPasteTests;
 import org.bonitasoft.studio.commands.test.DeleteCommandTest;
 import org.bonitasoft.studio.commands.test.DuplicateCommandTest;
@@ -108,7 +109,8 @@ import org.junit.runners.Suite;
         TestProcessDependencies.class,
         RefactorWidgetIT.class,
         ExportImportWithoutMigrationIT.class,
-        TestFormValidatorIT.class
+        TestFormValidatorIT.class,
+        TestOrganizationPassword.class
 })
 public class AllSWTBotTests2 {
 

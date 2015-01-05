@@ -57,5 +57,6 @@ Export-Package: org.bonitasoft.studio.swtbot.framework,
  org.bonitasoft.studio.swtbot.framework.draw,
  org.bonitasoft.studio.swtbot.framework.exception,
  org.bonitasoft.studio.swtbot.framework.expression,
+ org.bonitasoft.studio.swtbot.framework.organization,
  org.bonitasoft.studio.swtbot.framework.widget
 
