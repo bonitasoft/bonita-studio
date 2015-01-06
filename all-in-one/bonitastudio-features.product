@@ -3,7 +3,6 @@
 
 <product name="BonitaBPM" uid="org.bonitasoft.studio.product" id="org.bonitasoft.studio.product" application="org.bonitasoft.studio.application.application" version="6.4.1.qualifier" useFeatures="true" includeLaunchers="true">
 
-
    <configIni use="default">
    </configIni>
 
@@ -30,12 +29,17 @@
    <launcher name="BonitaBPMCommunity">
       <macosx icon="icons/bonitasoft-icon-128-128-transparent.icns"/>
       <solaris/>
-      <win useIco="true">
-         <ico path="icons/bonitasoft.ico"/>
-         <bmp/>
+      <win useIco="false">
+         <bmp
+            winSmallHigh="/studio/all-in-one/icons/bonitasoft_16_32.bmp"
+            winSmallLow="/studio/all-in-one/icons/bonitasoft_16_8.bmp"
+            winMediumHigh="/studio/all-in-one/icons/bonitasoft_32_32.bmp"
+            winMediumLow="/studio/all-in-one/icons/bonitasoft_32_8.bmp"
+            winLargeHigh="/studio/all-in-one/icons/bonitasoft_48_32.bmp"
+            winLargeLow="/studio/all-in-one/icons/bonitasoft_48_8.bmp"
+            winExtraLargeHigh="/studio/all-in-one/icons/bonitasoft_256.bmp"/>
       </win>
    </launcher>
-
 
    <vm>
       <linux include="false">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6</linux>
