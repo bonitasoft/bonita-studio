@@ -46,8 +46,6 @@ import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
-import org.eclipse.core.databinding.observable.value.IValueChangeListener;
-import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.ecore.EObject;
@@ -84,6 +82,7 @@ import org.eclipse.xtext.ui.editor.embedded.EmbeddedEditor;
 import org.eclipse.xtext.ui.editor.embedded.EmbeddedEditorFactory;
 import org.eclipse.xtext.ui.editor.embedded.EmbeddedEditorFactory.Builder;
 import org.eclipse.xtext.ui.editor.embedded.IEditedResourceProvider;
+import org.eclipse.xtext.ui.editor.model.IXtextModelListener;
 
 import com.google.inject.Injector;
 
@@ -105,7 +104,6 @@ public class ComparisonExpressionEditor extends SelectionAwareExpressionEditor i
 
     private Button addDependencyButton;
 
-    @SuppressWarnings("restriction")
     private EmbeddedEditor comparisonEditor;
 
     private final EObject context;
@@ -118,14 +116,9 @@ public class ComparisonExpressionEditor extends SelectionAwareExpressionEditor i
 
     private XtextResource resource;
 
-
     private boolean isPageFlowContext = false;
 
-
-    private final XtextComparisonExpressionLoader xtextComparisonExpressionLoader;
-
     public ComparisonExpressionEditor(final EObject context) {
-
         this.context = context;
         adapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
         adapterLabelProvider = new AdapterFactoryLabelProvider(adapterFactory);
@@ -134,8 +127,6 @@ public class ComparisonExpressionEditor extends SelectionAwareExpressionEditor i
         final ConditionModelJavaValidator validator = injector.getInstance(ConditionModelJavaValidator.class);
             validator.setCurrentResourceSet(context.eResource().getResourceSet());
         }
-
-        xtextComparisonExpressionLoader = new XtextComparisonExpressionLoader(injector);
     }
 
     /*
@@ -169,7 +160,6 @@ public class ComparisonExpressionEditor extends SelectionAwareExpressionEditor i
 
     }
 
-    @SuppressWarnings("restriction")
     protected void createComparisonEditor(final Composite parent) {
         final IEditedResourceProvider resourceProvider = new IEditedResourceProvider() {
 
@@ -203,6 +193,16 @@ public class ComparisonExpressionEditor extends SelectionAwareExpressionEditor i
                 comparisonEditor.getViewer().getControl().notifyListeners(SWT.Modify, new Event());
             }
         });
+
+        comparisonEditor.getDocument().addModelListener(new IXtextModelListener() {
+
+            @Override
+            public void modelChanged(final XtextResource resource) {
+                if (inputExpression.isAutomaticDependencies()) {
+                    updateDependencies(resource);
+                }
+            }
+        });
     }
 
     protected void createDependanciesResolutionComposite(final Composite parent) {
@@ -219,7 +219,8 @@ public class ComparisonExpressionEditor extends SelectionAwareExpressionEditor i
             public void widgetSelected(final SelectionEvent e) {
                 if (automaticResolutionButton.getSelection()) {
                     removeDependencyButton.setEnabled(false);
-                    updateDependencies();
+                    final String content = comparisonEditor.getDocument().get();
+                    comparisonEditor.getDocument().set(content);
                 }
                 dependencySection.setExpanded(!automaticResolutionButton.getSelection());
             }
@@ -274,9 +275,9 @@ public class ComparisonExpressionEditor extends SelectionAwareExpressionEditor i
 
     }
 
-    protected void updateDependencies() {
+    protected void updateDependencies(final XtextResource resource) {
         inputExpression.getReferencedElements().clear();
-        final Operation_Compare compareOp = xtextComparisonExpressionLoader.resolveProxies(resource, context.eResource().getResourceSet());
+        final Operation_Compare compareOp = (Operation_Compare) resource.getContents().get(0);
         if (compareOp != null) {
             final List<Expression_ProcessRef> references = ModelHelper.getAllItemsOfType(compareOp, ConditionModelPackage.Literals.EXPRESSION_PROCESS_REF);
             for (final Expression_ProcessRef ref : references) {
@@ -336,15 +337,15 @@ public class ComparisonExpressionEditor extends SelectionAwareExpressionEditor i
         final IObservableValue returnTypeModelObservable = EMFObservables.observeValue(inputExpression, ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE);
         final ISWTObservableValue observeText = SWTObservables.observeText(comparisonEditor.getViewer().getControl(), SWT.Modify);
         dataBindingContext.bindValue(observeText, contentModelObservable);
-        observeText.addValueChangeListener(new IValueChangeListener() {
-
-            @Override
-            public void handleValueChange(final ValueChangeEvent event) {
-                if (ComparisonExpressionEditor.this.inputExpression.isAutomaticDependencies()) {
-                    updateDependencies();
-                }
-            }
-        });
+        //        observeText.addValueChangeListener(new IValueChangeListener() {
+        //
+        //            @Override
+        //            public void handleValueChange(final ValueChangeEvent event) {
+        //                if (ComparisonExpressionEditor.this.inputExpression.isAutomaticDependencies()) {
+        //                    updateDependencies();
+        //                }
+        //            }
+        //        });
         dataBindingContext.bindValue(observeText, nameModelObservable);
         dataBindingContext.bindValue(ViewersObservables.observeInput(dependenciesViewer), dependenciesModelObservable);
 
@@ -407,6 +408,7 @@ public class ComparisonExpressionEditor extends SelectionAwareExpressionEditor i
     public void dispose() {
         if (resource != null) {
             try {
+                resource.unload();
                 resource.delete(Collections.emptyMap());
             } catch (final IOException e) {
                 BonitaStudioLog.error(e);
