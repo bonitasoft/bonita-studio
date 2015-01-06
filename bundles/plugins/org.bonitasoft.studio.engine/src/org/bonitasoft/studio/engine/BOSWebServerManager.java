@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2009-2011 BonitaSoft S.A.
+ * Copyright (C) 2009-2014 BonitaSoft S.A.
  * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +18,6 @@ package org.bonitasoft.studio.engine;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -48,6 +47,7 @@ import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.debug.core.DebugPlugin;
@@ -61,6 +61,8 @@ import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jst.server.tomcat.core.internal.ITomcatServer;
+import org.eclipse.jst.server.tomcat.core.internal.Tomcat70Configuration;
+import org.eclipse.jst.server.tomcat.core.internal.TomcatServer;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.server.core.IRuntime;
@@ -71,6 +73,8 @@ import org.eclipse.wst.server.core.IServerType;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
 import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.core.ServerPort;
+import org.eclipse.wst.server.core.model.ServerDelegate;
+import org.eclipse.wst.server.core.util.SocketUtil;
 
 /**
  * Provides all methods to manage Tomcat server in BonitaStudio.
@@ -194,6 +198,9 @@ public class BOSWebServerManager {
                 final IRuntime runtime = createServerRuntime(type);
                 tomcat = createServer(monitor, confProject, runtime);
                 createLaunchConfiguration(tomcat, monitor);
+                final TomcatServer tomcatServer = (TomcatServer) tomcat.loadAdapter(ServerDelegate.class, monitor);
+                ((Tomcat70Configuration) tomcatServer.getTomcatConfiguration()).load(tomcatServer.getServer().getServerConfiguration(),
+                        monitor);
                 tomcat.start("run", monitor);
                 waitServerRunning(monitor);
             } catch (final CoreException e) {
@@ -355,22 +362,20 @@ public class BOSWebServerManager {
                 sourceFolder, Repository.NULL_PROGRESS_MONITOR);
         configurationFolder.refreshLocal(IResource.DEPTH_INFINITE,
                 Repository.NULL_PROGRESS_MONITOR);
-        IServerWorkingCopy server = configureServer(runtime, sType, file,
+        IServerWorkingCopy wcServer = configureServer(runtime, sType, file,
                 configurationFolder);
-        server.save(true, null);
+        wcServer.save(true, null);
         ServerPort tomcatPort = null;
         ServerPort adminPortServer = null;
         ServerPort ajpConnectorPort = null;
-        final ServerPort[] serverPorts = server.getServerPorts(Repository.NULL_PROGRESS_MONITOR);
+        final ServerPort[] serverPorts = wcServer.getServerPorts(Repository.NULL_PROGRESS_MONITOR);
         for (final ServerPort p : serverPorts) {
-            if ("server".equals(p.getId())) {
+            final String serverPortId = p.getId();
+            if ("server".equals(serverPortId)) {
                 adminPortServer = p;
-            }
-            if ("0".equals(p.getId())) {
+            } else if ("0".equals(serverPortId)) {
                 tomcatPort = p;
-
-            }
-            if ("1".equals(p.getId())) {
+            } else if ("1".equals(serverPortId)) {
                 ajpConnectorPort = p;
             }
         }
@@ -384,19 +389,19 @@ public class BOSWebServerManager {
                 updatePortConfiguration(ajpConnectorPortNumber,
                         ajpConnectorPortNumber + 1);
                 ajpConnectorPortNumber++;
-                server = updatePort(port, server, runtime, sType, file,
+                wcServer = updatePort(port, wcServer, runtime, sType, file,
                         configurationFolder);
             }
             if (!isPortAvailable(serverPortNumber)) {
-                server = updatePort(serverPortNumber, server, runtime, sType, file,
+                wcServer = updatePort(serverPortNumber, wcServer, runtime, sType, file,
                         configurationFolder);
             }
 
             if (!isPortAvailable(ajpConnectorPortNumber)) {
-                server = updatePort(ajpConnectorPortNumber, server, runtime, sType,
+                wcServer = updatePort(ajpConnectorPortNumber, wcServer, runtime, sType,
                         file, configurationFolder);
             }
-            final int tomcatPortNumber = getTomcatPort(server);
+            final int tomcatPortNumber = getTomcatPort(wcServer);
             if (tomcatPortNumber != -1) {
                 BonitaHomeUtil.configureBonitaClient(BonitaHomeUtil.HTTP,
                         "localhost", tomcatPortNumber);
@@ -412,7 +417,7 @@ public class BOSWebServerManager {
                         .setValue(BonitaPreferenceConstants.CONSOLE_PORT, port);
             }
         }
-        return server.save(true, null);
+        return wcServer.saveAll(true, null);
     }
 
     private int getTomcatPort(final IServerWorkingCopy server) {
@@ -431,8 +436,9 @@ public class BOSWebServerManager {
         port = getNextAvailable(oldPort);
         updatePortConfiguration(oldPort, port);
         server = configureServer(runtime, sType, file, configurationFolder);
+        server.saveAll(true, new NullProgressMonitor());
         BonitaStudioLog.debug("Port " + oldPort
-                + " is not availble, studio will use next available port : "
+                + " is not available, studio will use next available port : "
                 + port, EnginePlugin.PLUGIN_ID);
         return server;
     }
@@ -703,31 +709,7 @@ public class BOSWebServerManager {
         if (port < MIN_PORT_NUMBER || port > MAX_PORT_NUMBER) {
             throw new IllegalArgumentException("Invalid start port: " + port);
         }
-
-        ServerSocket ss = null;
-        DatagramSocket ds = null;
-        try {
-            ss = new ServerSocket(port);
-            ss.setReuseAddress(true);
-            ds = new DatagramSocket(port);
-            ds.setReuseAddress(true);
-            return true;
-        } catch (final IOException e) {
-        } finally {
-            if (ds != null) {
-                ds.close();
-            }
-
-            if (ss != null) {
-                try {
-                    ss.close();
-                } catch (final IOException e) {
-                    /* should not be thrown */
-                }
-            }
-        }
-
-        return false;
+        return !SocketUtil.isPortInUse(port);
     }
 
     public static int getNextAvailable(final int fromPort) {
