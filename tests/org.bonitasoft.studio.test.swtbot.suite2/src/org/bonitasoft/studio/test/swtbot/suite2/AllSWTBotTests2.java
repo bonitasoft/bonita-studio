@@ -1,6 +1,7 @@
 package org.bonitasoft.studio.test.swtbot.suite2;
 
 import org.bonitasoft.expressions.test.TestConnectorExpression;
+import org.bonitasoft.studio.actors.tests.SWTbot.TestOrganizationPassword;
 import org.bonitasoft.studio.commands.test.CopyPasteTests;
 import org.bonitasoft.studio.commands.test.DeleteCommandTest;
 import org.bonitasoft.studio.commands.test.DuplicateCommandTest;
@@ -42,6 +43,7 @@ import org.bonitasoft.studio.tests.refactoring.widget.RefactorWidgetIT;
 import org.bonitasoft.studio.tests.timer.TestTimer;
 import org.bonitasoft.studio.util.test.BonitaTestSuite;
 import org.bonitasoft.studio.validators.test.swtbot.TestCreateValidatorWizard;
+import org.bonitasoft.studio.validators.test.swtbot.TestFormValidatorIT;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.ui.internal.browser.WebBrowserUIPlugin;
@@ -106,7 +108,9 @@ import org.junit.runners.Suite;
     TestBonitaGroovyEditorDialog.class,
         TestProcessDependencies.class,
         RefactorWidgetIT.class,
-        ExportImportWithoutMigrationIT.class
+        ExportImportWithoutMigrationIT.class,
+        TestFormValidatorIT.class,
+        TestOrganizationPassword.class
 })
 public class AllSWTBotTests2 {
 

@@ -38,9 +38,9 @@ Bundle-Vendor: BonitaSoft S.A.
 Import-Package: org.bonitasoft.engine.expression,
  org.bonitasoft.engine.operation,
  org.bonitasoft.studio.properties.i18n
-Export-Package: org.bonitasoft.studio.validation,org.bonitasoft.studio
- .validation.constraints,org.bonitasoft.studio.validation.constraints.
- connector,org.bonitasoft.studio.validation.constraints.form;x-friends
- :="org.bonitasoft.studio.validation.test",org.bonitasoft.studio.valid
- ation.constraints.process;x-friends:="org.bonitasoft.studio.validatio
- n.test"
+Export-Package: org.bonitasoft.studio.validation,
+ org.bonitasoft.studio.validation.constraints,
+ org.bonitasoft.studio.validation.constraints.connector,
+ org.bonitasoft.studio.validation.constraints.form;x-friends:="org.bonitasoft.studio.validation.test",
+ org.bonitasoft.studio.validation.constraints.process;x-friends:="org.bonitasoft.studio.validation.test",
+ org.bonitasoft.studio.validation.i18n
