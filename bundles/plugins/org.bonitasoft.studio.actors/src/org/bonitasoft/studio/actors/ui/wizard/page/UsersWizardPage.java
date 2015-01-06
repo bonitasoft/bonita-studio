@@ -1,18 +1,16 @@
 /**
- * Copyright (C) 2012 BonitaSoft S.A.
- * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2012-2014 BonitaSoft S.A.
+ * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.actors.ui.wizard.page;
 
@@ -53,6 +51,7 @@ import org.eclipse.core.databinding.observable.value.IValueChangeListener;
 import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
+import org.eclipse.core.internal.databinding.observable.masterdetail.DetailObservableValue;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.ECollections;
@@ -117,9 +116,6 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 
     private static final int CUSTOM_USER_DEFINITION_VALUE_LIMIT_SIZE = 255;
     private static final String DEFAULT_USER_PASSWORD = "bpm";
-    private static final int MIN_SC_WIDTH = 426;
-    private static final int MIN_SC_HEIGHT = 268;
-
 
     CustomUserInfoDefinitions infoDefinitions;
 
@@ -455,7 +451,17 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 
         final IObservableValue userPasswordObservableValue = EMFObservables.observeDetailValue(Realm.getDefault(), userSingleSelectionObservable, OrganizationPackage.Literals.USER__PASSWORD);
 
-        final IObservableValue passwordValueObservableValue = EMFObservables.observeDetailValue(Realm.getDefault(), userPasswordObservableValue, OrganizationPackage.Literals.PASSWORD_TYPE__VALUE);
+        final IObservableValue passwordValueObservableValue = EMFObservables.observeDetailValue(Realm.getDefault(), userPasswordObservableValue,
+                OrganizationPackage.Literals.PASSWORD_TYPE__VALUE);
+        passwordValueObservableValue.addValueChangeListener(new IValueChangeListener() {
+
+            @Override
+            public void handleValueChange(final ValueChangeEvent event) {
+                final IObservableValue value = event.getObservableValue();
+                final PasswordType password = (PasswordType) ((DetailObservableValue) value).getObserved();
+                password.setEncrypted(false);
+            }
+        });
 
         final Binding binding = context.bindValue(SWTObservables.observeText(passwordText, SWT.Modify), passwordValueObservableValue,mandatoryStrategy,null);
         ControlDecorationSupport.create(binding, SWT.LEFT, rightColumnComposite, new ControlDecorationUpdater(){

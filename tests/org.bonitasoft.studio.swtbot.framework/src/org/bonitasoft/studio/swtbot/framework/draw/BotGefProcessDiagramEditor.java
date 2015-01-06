@@ -22,14 +22,23 @@ import org.bonitasoft.studio.model.process.impl.LaneImpl;
 import org.bonitasoft.studio.model.process.impl.PoolImpl;
 import org.bonitasoft.studio.swtbot.framework.BotQAConstants;
 import org.bonitasoft.studio.swtbot.framework.diagram.BotProcessDiagramPropertiesViewFolder;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.draw2d.FigureCanvas;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.emf.transaction.RunnableWithResult;
+import org.eclipse.gef.ConnectionEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ITextAwareEditPart;
+import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
+import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefConnectionEditPart;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditPart;
 import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.finders.UIThreadRunnable;
@@ -413,6 +422,65 @@ public class BotGefProcessDiagramEditor extends BotGefBaseEditor {
         gmfEditor.doubleClick(oldName);
         new BotProcessDiagramPropertiesViewFolder(bot).selectGeneralTab().selectGeneralTab().setName(newName);
         return this;
+    }
+
+    /**
+     * @param sourceName
+     * @param targetName
+     */
+    public BotGefProcessDiagramEditor selectFlowBetween(final String sourceName, final String targetName) {
+        final SWTBotGefEditPart source = gmfEditor.getEditPart(sourceName).parent();
+        final SWTBotGefEditPart target = gmfEditor.getEditPart(targetName).parent();
+        for (final SWTBotGefConnectionEditPart outFlow : source.sourceConnections()) {
+            for (final SWTBotGefConnectionEditPart inFlow : target.targetConnections()) {
+                final ConnectionEditPart inPart = inFlow.part();
+                final ConnectionEditPart outPart = outFlow.part();
+                final RunnableWithResult<Boolean> runnableWithResult = new RunnableWithResult<Boolean>() {
+
+                    Boolean res = false;
+
+                    @Override
+                    public void run() {
+                        res = EcoreUtil.equals((EObject) inPart.getModel(), (EObject) outPart.getModel());
+                    }
+
+                    @Override
+                    public Boolean getResult() {
+                        return res;
+                    }
+
+                    @Override
+                    public void setStatus(final IStatus status) {
+                    }
+
+                    @Override
+                    public IStatus getStatus() {
+                        return Status.OK_STATUS;
+                    }
+                };
+                Display.getDefault().syncExec(runnableWithResult);
+                if (runnableWithResult.getResult()) {
+                    Display.getDefault().syncExec(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            inFlow.part().getViewer().deselectAll();
+                            inFlow.part().setFocus(true);
+                            inFlow.part().getViewer().setSelection(new StructuredSelection(inFlow.part()));
+
+                        }
+                    });
+                    //                    inFlow.focus();
+                    //                    inFlow.select();
+                    //                    inFlow.target().select();
+                    //                    inFlow.focus();
+                    //                    inFlow.select();
+                    //                    inFlow.focus();
+                    return this;
+                }
+            }
+        }
+        throw new IllegalStateException("No Flow found between " + sourceName + " and " + targetName);
     }
 
 }
