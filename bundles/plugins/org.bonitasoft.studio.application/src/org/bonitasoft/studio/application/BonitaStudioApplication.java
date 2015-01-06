@@ -21,10 +21,15 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Properties;
 
+import org.bonitasoft.studio.application.i18n.Messages;
+import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.editingdomain.BonitaOperationHistory;
+import org.bonitasoft.studio.common.jface.MessageDialogWithLink;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.eclipse.core.commands.operations.OperationHistoryFactory;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -34,138 +39,185 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
+import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.osgi.service.datalocation.Location;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
+import org.osgi.framework.Version;
 
 /**
  * This class controls all aspects of the application's execution
  */
-public class BonitaStudioApplication implements IApplication {
+public class BonitaStudioApplication extends JobChangeAdapter implements IApplication {
 
-	private Display display;
-	public static final String PREFERENCES_FILE = ".wsPreferences";
-	public static final String WS_ROOT   = "wsRootDir";
-	//    private static final String PATH_TO_SNAP_FILE = ".metadata"+File.separatorChar+".plugins"+File.separatorChar+"org.eclipse.core.resources"+File.separatorChar+".snap";
+    private static final String INVALID_JAVA_VERSION_PREFIX = "1.8";
+    private Display display;
+    public static final String PREFERENCES_FILE = ".wsPreferences";
+    public static final String WS_ROOT = "wsRootDir";
+    public static final String ONLINE_DOC_REQUIREMENTS = "http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=165&bos_redirect_product=bos&bos_redirect_major_version=";
 
-	public static long START_TIME  = 0;
+    public static long START_TIME = 0;
 
-	public BonitaStudioApplication() {
+    public BonitaStudioApplication() {
+    }
 
-	}
+    public BonitaStudioApplication(final Display display) {
+        this.display = display;
+    }
 
-	public BonitaStudioApplication(final Display display) {
-		this.display = display;
-	}
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.equinox.app.IApplication#start(org.eclipse.equinox.app.IApplicationContext)
+     */
+    @Override
+    public Object start(final IApplicationContext context) {
+        START_TIME = System.currentTimeMillis();
+        //avoid the execution of AutoBuild job during startup
+        addBuildJobListener();
+        if (display == null) {
+            display = PlatformUI.createDisplay();
+        }
+        if (!isJavaVersionSupported(display)) {
+            return IApplication.EXIT_OK;
+        }
+        initWorkspaceLocation();
+        //set our custom operation factory
+        OperationHistoryFactory.setOperationHistory(new BonitaOperationHistory());
+        return createAndRunWorkbench(display);
+    }
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.equinox.app.IApplication#start(org.eclipse.equinox.app.IApplicationContext)
-	 */
-	@Override
-	public Object start(final IApplicationContext context) {
-		//avoid the execution of AutoBuild job during startup
-        Job.getJobManager().addJobChangeListener(new JobChangeAdapter() {
+    protected Object createAndRunWorkbench(final Display display) {
+        try {
+            final int returnCode = PlatformUI.createAndRunWorkbench(display, createWorkbenchAdvisor());
+            if (returnCode == PlatformUI.RETURN_RESTART) {
+                return IApplication.EXIT_RESTART;
+            }
+            return IApplication.EXIT_OK;
+        } finally {
+            display.dispose();
+        }
+    }
 
-			@Override
-			public void scheduled(final IJobChangeEvent event) {
-				if(event.getJob().belongsTo(ResourcesPlugin.FAMILY_AUTO_BUILD)){
-					if(!PlatformUI.isWorkbenchRunning()){
-						event.getJob().cancel();
-					}
-				}
-			}
+    protected BonitaStudioWorkbenchAdvisor createWorkbenchAdvisor() {
+        return new BonitaStudioWorkbenchAdvisor();
+    }
 
-		});
-		START_TIME = System.currentTimeMillis() ;
+    protected void addBuildJobListener() {
+        Job.getJobManager().addJobChangeListener(this);
+    }
 
-		if (display == null) {
-			display = PlatformUI.createDisplay();
-		}
+    @Override
+    public void scheduled(final IJobChangeEvent event) {
+        cancelAutoBuildJobDuringStartup(event);
+    }
 
-		preStartupStudio();
+    protected void cancelAutoBuildJobDuringStartup(final IJobChangeEvent event) {
+        if (event.getJob().belongsTo(ResourcesPlugin.FAMILY_AUTO_BUILD)) {
+            if (!isWorkbenchRunning()) {
+                event.getJob().cancel();
+            }
+        }
+    }
 
-		OperationHistoryFactory.setOperationHistory(new BonitaOperationHistory());//set our custom operation factory
-		try {
-			final int returnCode = PlatformUI.createAndRunWorkbench(display, new BonitaStudioWorkbenchAdvisor());
-			if (returnCode == PlatformUI.RETURN_RESTART) {
-				return IApplication.EXIT_RESTART;
-			}
-			return IApplication.EXIT_OK;
-		} finally {
-			display.dispose();
-		}
-	}
+    protected boolean isWorkbenchRunning() {
+        return PlatformUI.isWorkbenchRunning();
+    }
 
+    protected boolean isJavaVersionSupported(final Display display) {
+        final String javaVersion = getJavaVersion();
+        if (javaVersion.startsWith(INVALID_JAVA_VERSION_PREFIX)) {
+            openErrorDialog(display, javaVersion);
+            return false;
+        }
+        return true;
+    }
 
-	public static void preStartupStudio() {
+    protected void openErrorDialog(final Display display, final String javaVersion) {
+        final Shell shell = new Shell(display);
+        try {
+            final Version version = Version.parseVersion(ProductVersion.CURRENT_VERSION);
+            final String uriWithProductVersion = ONLINE_DOC_REQUIREMENTS + version.getMajor() + "." + version.getMinor();
+            final URI uri = new URI(uriWithProductVersion);
+            final MessageDialogWithLink messageDialog = new MessageDialogWithLink(shell, Messages.incompatibleJavaVersionTitle, null, Messages.bind(
+                    Messages.incompatibleJavaVersionMessage,
+                    org.bonitasoft.studio.common.Messages.bonitaStudioModuleName, javaVersion),
+                    MessageDialog.ERROR,
+                    new String[] { IDialogConstants.OK_LABEL },
+                    0,
+                    uri);
+            messageDialog.open();
+        } catch (final URISyntaxException e) {
+            BonitaStudioLog.error(e);
+        } finally {
+            shell.dispose();
+        }
+    }
 
-		final Location instanceLoc = Platform.getInstanceLocation();
-		//if workspace is set via -Data, can't reset it
-		if(!instanceLoc.isSet()){
-			final String path2 = Platform.getInstallLocation().getURL().getFile()+ File.separator + PREFERENCES_FILE;
-			String lastUsedWs = null;//preferences.get(WS_ROOT, null);
-			final File propertiesFile = new File(path2);
-			if(propertiesFile.exists()){
-				final Properties properties = new Properties();
-				try {
-					final FileInputStream fis = new FileInputStream(propertiesFile) ;
-					properties.load(fis);
-					fis.close() ;
-					lastUsedWs = properties.getProperty(WS_ROOT);
-				} catch (final FileNotFoundException e) {
-					BonitaStudioLog.error(e);
-				} catch (final IOException e) {
-					BonitaStudioLog.error(e);
-				}
-			}
-			if(lastUsedWs != null && lastUsedWs.length()>1) {
-				// set the last used location and continue
-				try {
-					instanceLoc.set(new URL("file", null, lastUsedWs), true);
-				} catch (final Exception e) {
-					BonitaStudioLog.error(e);
-				}
-			}
-			//no pref found use default ws location
-			if(!instanceLoc.isSet()){
-				final String path = Platform.getInstallLocation().getURL().getPath() + "workspace";
-				try {
-					instanceLoc.set(new URL("file", null, path), true);
-				} catch (final Exception e) {
-					BonitaStudioLog.error(e);
-				}
-			}
+    protected void initWorkspaceLocation() {
+        final Location instanceLoc = Platform.getInstanceLocation();
+        //if workspace is set via -Data, can't reset it
+        if (!instanceLoc.isSet()) {
+            final String path2 = Platform.getInstallLocation().getURL().getFile() + File.separator + PREFERENCES_FILE;
+            String lastUsedWs = null;//preferences.get(WS_ROOT, null);
+            final File propertiesFile = new File(path2);
+            if (propertiesFile.exists()) {
+                final Properties properties = new Properties();
+                try {
+                    final FileInputStream fis = new FileInputStream(propertiesFile);
+                    properties.load(fis);
+                    fis.close();
+                    lastUsedWs = properties.getProperty(WS_ROOT);
+                } catch (final FileNotFoundException e) {
+                    BonitaStudioLog.error(e);
+                } catch (final IOException e) {
+                    BonitaStudioLog.error(e);
+                }
+            }
+            if (lastUsedWs != null && lastUsedWs.length() > 1) {
+                // set the last used location and continue
+                try {
+                    instanceLoc.set(new URL("file", null, lastUsedWs), true);
+                } catch (final Exception e) {
+                    BonitaStudioLog.error(e);
+                }
+            }
+            //no pref found use default ws location
+            if (!instanceLoc.isSet()) {
+                final String path = Platform.getInstallLocation().getURL().getPath() + "workspace";
+                try {
+                    instanceLoc.set(new URL("file", null, path), true);
+                } catch (final Exception e) {
+                    BonitaStudioLog.error(e);
+                }
+            }
+        }
+    }
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.equinox.app.IApplication#stop()
+     */
+    @Override
+    public void stop() {
+        final IWorkbench workbench = PlatformUI.getWorkbench();
+        if (workbench == null) {
+            return;
+        }
+        final Display display = workbench.getDisplay();
+        display.syncExec(new Runnable() {
 
+            @Override
+            public void run() {
+                if (!display.isDisposed()) {
+                    workbench.close();
+                }
+            }
+        });
+    }
 
-			// ResourcesPlugin.getPlugin().getPluginPreferences().setValue(ResourcesPlugin.PREF_AUTO_BUILDING, false);
-		}
-
-	}
-
-
-
-	public Display getDisplay() {
-		return display;
-	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.equinox.app.IApplication#stop()
-	 */
-	@Override
-	public void stop() {
-		final IWorkbench workbench = PlatformUI.getWorkbench();
-		if (workbench == null) {
-			return;
-		}
-		final Display display = workbench.getDisplay();
-		display.syncExec(new Runnable() {
-			@Override
-			public void run() {
-				if (!display.isDisposed()) {
-					workbench.close();
-				}
-			}
-		});
-	}
+    protected String getJavaVersion() {
+        return System.getProperty("java.version", "1.6");
+    }
 }

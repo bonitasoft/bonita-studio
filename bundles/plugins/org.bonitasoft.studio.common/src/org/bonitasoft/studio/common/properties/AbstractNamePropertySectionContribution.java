@@ -111,7 +111,7 @@ public abstract class AbstractNamePropertySectionContribution implements IExtens
      * Update the title of the details view.
      */
     protected void updatePropertyTabTitle() {
-        if(text != null){
+        if (text != null && !text.isDisposed()) {
             final TabbedPropertyComposite tabbedPropertyComposite = (TabbedPropertyComposite) tabbedPropertySheetPage.getControl();
             final TabbedPropertyTitle title = tabbedPropertyComposite.getTitle();
             if(title != null){
@@ -171,7 +171,7 @@ public abstract class AbstractNamePropertySectionContribution implements IExtens
 
     private boolean useEditButton() {
         //  return element instanceof MainProcess || element instanceof Pool|| (element instanceof Widget && element.eContainer() instanceof Form && ModelHelper.formIsCustomized((Form) element.eContainer()));
-        return element instanceof MainProcess || element instanceof Pool || (element instanceof Widget && isContainerIsAFormOrAGroup(element.eContainer()));
+        return element instanceof MainProcess || element instanceof Pool || element instanceof Widget && isContainerIsAFormOrAGroup(element.eContainer());
     }
 
 

@@ -25,7 +25,7 @@ import java.util.Map;
 import org.bonitasoft.studio.actors.model.organization.DocumentRoot;
 import org.bonitasoft.studio.actors.model.organization.Organization;
 import org.bonitasoft.studio.actors.model.organization.OrganizationFactory;
-import org.bonitasoft.studio.actors.model.organization.util.OrganizationXMLProcessor;
+import org.bonitasoft.studio.actors.operation.OrganizationXMLProcessorRespectingEncoding;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
@@ -115,7 +115,7 @@ public class OrganizationFileStore extends EMFFileStore {
 			}else{
 				to.mkdirs() ;
 			}
-			final XMLProcessor processor = new OrganizationXMLProcessor() ;
+            final XMLProcessor processor = new OrganizationXMLProcessorRespectingEncoding();
 
 			File target = null;
 			if(to.isDirectory()){

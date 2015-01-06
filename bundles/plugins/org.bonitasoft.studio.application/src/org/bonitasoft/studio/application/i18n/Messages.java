@@ -69,6 +69,9 @@ public class Messages extends NLS {
     public static String offlineRepositoryTitle;
     public static String offlineRepositoryMessage;
 
+    public static String incompatibleJavaVersionTitle;
+    public static String incompatibleJavaVersionMessage;
+
     static {
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);
     }

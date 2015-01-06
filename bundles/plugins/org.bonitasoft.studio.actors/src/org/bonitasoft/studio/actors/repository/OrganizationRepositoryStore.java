@@ -34,7 +34,7 @@ import org.bonitasoft.studio.actors.model.organization.OrganizationFactory;
 import org.bonitasoft.studio.actors.model.organization.util.OrganizationAdapterFactory;
 import org.bonitasoft.studio.actors.model.organization.util.OrganizationResourceFactoryImpl;
 import org.bonitasoft.studio.actors.model.organization.util.OrganizationResourceImpl;
-import org.bonitasoft.studio.actors.model.organization.util.OrganizationXMLProcessor;
+import org.bonitasoft.studio.actors.operation.OrganizationXMLProcessorRespectingEncoding;
 import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
@@ -199,7 +199,7 @@ public class OrganizationRepositoryStore extends AbstractEMFRepositoryStore<Orga
                 options.put(XMLResource.OPTION_XML_VERSION, "1.0");
                 final File target = new File(resourceURI.toFileString());
                 fos = new FileOutputStream(target);
-                new OrganizationXMLProcessor().save(fos, resource, options);
+                new OrganizationXMLProcessorRespectingEncoding().save(fos, resource, options);
             } catch (final Exception e) {
                 BonitaStudioLog.error(e, ActorsPlugin.PLUGIN_ID);
             } finally {

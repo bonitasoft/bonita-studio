@@ -93,6 +93,7 @@
 				<validVersion>
 					<bitness>@os_arch@</bitness>
 					<minVersion>1.6</minVersion>
+                    <maxVersion>1.7</maxVersion>
 					<requireJDK>0</requireJDK>
 					<vendor></vendor>
 				</validVersion>
