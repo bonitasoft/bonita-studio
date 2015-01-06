@@ -29,15 +29,9 @@
    <launcher name="BonitaBPMCommunity">
       <macosx icon="icons/bonitasoft-icon-128-128-transparent.icns"/>
       <solaris/>
-      <win useIco="false">
-         <bmp
-            winSmallHigh="/studio/all-in-one/icons/bonitasoft_16_32.bmp"
-            winSmallLow="/studio/all-in-one/icons/bonitasoft_16_8.bmp"
-            winMediumHigh="/studio/all-in-one/icons/bonitasoft_32_32.bmp"
-            winMediumLow="/studio/all-in-one/icons/bonitasoft_32_8.bmp"
-            winLargeHigh="/studio/all-in-one/icons/bonitasoft_48_32.bmp"
-            winLargeLow="/studio/all-in-one/icons/bonitasoft_48_8.bmp"
-            winExtraLargeHigh="/studio/all-in-one/icons/bonitasoft_256.bmp"/>
+      <win useIco="true">
+         <ico path="icons/bonitasoft.ico"/>
+         <bmp/>
       </win>
    </launcher>
 
