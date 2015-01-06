@@ -38,9 +38,9 @@ import org.eclipse.ui.ide.IDE;
 
 /**
  * Command to open the log file of the bonita engine.
- * 
+ *
  * @author Romain Bioteau
- * 
+ *
  */
 public class OpenEngineLogCommand extends AbstractHandler implements IHandler {
 
@@ -51,15 +51,15 @@ public class OpenEngineLogCommand extends AbstractHandler implements IHandler {
      * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
      */
     @Override
-    public Boolean execute(ExecutionEvent event) throws ExecutionException {
-        IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-        File logFile = BOSWebServerManager.getInstance().getBonitaLogFile();
+    public Boolean execute(final ExecutionEvent event) throws ExecutionException {
+        final IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+        final File logFile = BOSWebServerManager.getInstance().getBonitaLogFile();
         if(logFile != null && logFile.exists()){
             IFileStore fileStore;
             try {
                 fileStore = EFS.getLocalFileSystem().getStore(logFile.toURI());
                 final File localFile = fileStore.toLocalFile(EFS.NONE, Repository.NULL_PROGRESS_MONITOR);
-				long fileSize = localFile.length();
+				final long fileSize = localFile.length();
                 if(fileSize < MAX_FILE_SIZE){
                     IDE.openEditorOnFileStore(page, fileStore);
                 }else{
@@ -68,7 +68,7 @@ public class OpenEngineLogCommand extends AbstractHandler implements IHandler {
                 		textEditor = Program.findProgram("txt");
                 	}
                 	if(textEditor !=null){
-                		boolean success = textEditor.execute(localFile.getAbsolutePath());
+                		final boolean success = textEditor.execute(localFile.getAbsolutePath());
                 		if(!success){
                 			showWarningMessage(localFile);
                 		}
@@ -76,9 +76,9 @@ public class OpenEngineLogCommand extends AbstractHandler implements IHandler {
                 		showWarningMessage(localFile);
                 	}
                 }
-   
+
                 return Boolean.TRUE;
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 BonitaStudioLog.error(e);
                 return Boolean.FALSE;
             }
@@ -89,7 +89,8 @@ public class OpenEngineLogCommand extends AbstractHandler implements IHandler {
     }
 
 	protected void showWarningMessage(final File localFile) {
-		MessageDialog.openWarning(Display.getDefault().getActiveShell(), Messages.failedToOpenLogTitle, Messages.bind(Messages.failedToOpenLogMessage,localFile.getAbsolutePath()));
+        MessageDialog.openWarning(Display.getDefault().getActiveShell(), Messages.failedToOpenLogTitle,
+                Messages.bind(Messages.failedToOpenLogMessage, localFile.getAbsolutePath(), org.bonitasoft.studio.common.Messages.bonitaStudioModuleName));
 	}
 
 
