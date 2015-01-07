@@ -13,6 +13,7 @@ import org.bonitasoft.studio.swtbot.framework.BotBase;
 import org.bonitasoft.studio.swtbot.framework.BotQAUtil;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.form.data.BotDataFormPropertySection;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.form.general.BotGeneralPropertySection;
+import org.bonitasoft.studio.swtbot.framework.diagram.general.form.validator.BotValidatorPropertySection;
 import org.bonitasoft.studio.swtbot.framework.expression.BotExpressionEditorDialog;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 
@@ -52,9 +53,9 @@ public class BotGeneralFormPropertiesView extends BotBase {
         //TODO:
     }
 
-    public void selectValidatorsTab() {
+    public BotValidatorPropertySection selectValidatorsTab() {
         BotQAUtil.selectTabbedPropertyView(bot, "Validators");
-        //TODO:
+        return new BotValidatorPropertySection(bot);
     }
 
     /**

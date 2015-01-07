@@ -45,7 +45,9 @@ public class CatchMessageEventNamesExpressionNatureProvider implements IExpressi
 			final Set<String> names = new HashSet<String>();
 			for(final AbstractProcess process : processes){
 				for(final AbstractCatchMessageEvent catchMessage :  ModelHelper.getAllCatchEvent(process)){
-					if(!names.contains(catchMessage.getName()) && (catchMessage.getIncomingMessag() == null || catchMessage.getIncomingMessag().getSource().equals(throwMessage))){
+                    if (!names.contains(catchMessage.getName())
+                            && (catchMessage.getIncomingMessag() == null || catchMessage.getIncomingMessag().getSource() == null || catchMessage
+                                    .getIncomingMessag().getSource().equals(throwMessage))) {
 						names.add(catchMessage.getName());
 					}
 				}
