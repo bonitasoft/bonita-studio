@@ -262,6 +262,31 @@ public class PlatformUtil {
      * @param resourceName
      * @return the copied resource
      */
+    public static void copyResourceDirectory(final File destFolder, final File sourceFolder, final IProgressMonitor monitor) {
+        if (fileSystem == null) {
+            fileSystem = EFS.getLocalFileSystem();
+        }
+        if (sourceFolder.isDirectory()) {
+            final IFileStore sourceStore = fileSystem.fromLocalFile(sourceFolder);
+            final IFileStore destStore = fileSystem.fromLocalFile(destFolder);
+            try {
+                sourceStore.copy(destStore, EFS.OVERWRITE, new NullProgressMonitor());
+            } catch (final CoreException e) {
+                BonitaStudioLog.error(e);
+            }
+        } else {
+            copyResource(destFolder, sourceFolder.toURI(), monitor);
+        }
+    }
+
+    /**
+     * Copy a resource a the bundle to the destination path
+     *
+     * @param destinationFolder
+     * @param bundle
+     * @param resourceName
+     * @return the copied resource
+     */
     public static void copyResource(final File destFolder, final File sourceFolder, final FilenameFilter filter, final IProgressMonitor monitor) {
         if (sourceFolder.isDirectory()) {
             if (!destFolder.exists()) {
