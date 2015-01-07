@@ -416,27 +416,7 @@ public class BOSWebServerManager {
                         file, configurationFolder);
             }
         }
-        final IServer resServer = wcServer.saveAll(true, null);
-        final int tomcatPortNumber = getTomcatPort(resServer);
-        if (tomcatPortNumber != -1) {
-            BonitaHomeUtil.configureBonitaClient(BonitaHomeUtil.HTTP,
-                    "localhost", tomcatPortNumber);
-            BonitaStudioPreferencesPlugin
-                    .getDefault()
-                    .getPreferenceStore()
-                    .setValue(BonitaPreferenceConstants.CONSOLE_PORT,
-                            tomcatPortNumber);
-        }
-        return resServer;
-    }
-
-    private int getTomcatPort(final IServer server) {
-        for (final ServerPort p : server.getServerPorts(Repository.NULL_PROGRESS_MONITOR)) {
-            if ("0".equals(p.getId())) {
-                return p.getPort();
-            }
-        }
-        return -1;
+        return wcServer.saveAll(true, Repository.NULL_PROGRESS_MONITOR);
     }
 
     private IServerWorkingCopy updatePort(final String portId, int port, final IServerWorkingCopy server, final IRuntime runtime, final IServerType sType,
@@ -459,6 +439,15 @@ public class BOSWebServerManager {
         BonitaStudioLog.debug("Port " + oldPort
                 + " is not available, studio will use next available port : "
                 + port, EnginePlugin.PLUGIN_ID);
+        if ("0".equals(portId)) {
+            BonitaHomeUtil.configureBonitaClient(BonitaHomeUtil.HTTP,
+                    "localhost", port);
+            BonitaStudioPreferencesPlugin
+                    .getDefault()
+                    .getPreferenceStore()
+                    .setValue(BonitaPreferenceConstants.CONSOLE_PORT,
+                            port);
+        }
         return server;
     }
 
