@@ -41,6 +41,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
@@ -63,16 +64,20 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jst.server.tomcat.core.internal.ITomcatServer;
 import org.eclipse.jst.server.tomcat.core.internal.Tomcat70Configuration;
 import org.eclipse.jst.server.tomcat.core.internal.TomcatServer;
+import org.eclipse.jst.server.tomcat.core.internal.command.ModifyPortCommand;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.IRuntimeType;
 import org.eclipse.wst.server.core.IRuntimeWorkingCopy;
 import org.eclipse.wst.server.core.IServer;
+import org.eclipse.wst.server.core.IServerListener;
 import org.eclipse.wst.server.core.IServerType;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
 import org.eclipse.wst.server.core.ServerCore;
+import org.eclipse.wst.server.core.ServerEvent;
 import org.eclipse.wst.server.core.ServerPort;
+import org.eclipse.wst.server.core.internal.ProjectProperties;
 import org.eclipse.wst.server.core.model.ServerDelegate;
 import org.eclipse.wst.server.core.util.SocketUtil;
 
@@ -193,14 +198,14 @@ public class BOSWebServerManager {
             configureConsolePreferences();
             updateRuntimeLocationIfNeeded();
             final IRuntimeType type = ServerCore.findRuntimeType(TOMCAT_RUNTIME_TYPE);
+
             try {
                 final IProject confProject = createServerConfigurationProject(monitor);
                 final IRuntime runtime = createServerRuntime(type);
                 tomcat = createServer(monitor, confProject, runtime);
                 createLaunchConfiguration(tomcat, monitor);
-                final TomcatServer tomcatServer = (TomcatServer) tomcat.loadAdapter(ServerDelegate.class, monitor);
-                ((Tomcat70Configuration) tomcatServer.getTomcatConfiguration()).load(tomcatServer.getServer().getServerConfiguration(),
-                        monitor);
+                reloadConfiguration(monitor);
+                confProject.build(IncrementalProjectBuilder.INCREMENTAL_BUILD, monitor);
                 tomcat.start("run", monitor);
                 waitServerRunning(monitor);
             } catch (final CoreException e) {
@@ -208,6 +213,15 @@ public class BOSWebServerManager {
             }
 
         }
+    }
+
+    @SuppressWarnings("restriction")
+    protected void reloadConfiguration(final IProgressMonitor monitor) throws CoreException {
+        final TomcatServer tomcatServer = (TomcatServer) tomcat.loadAdapter(ServerDelegate.class, monitor);
+        final Tomcat70Configuration tomcat70Configuration = (Tomcat70Configuration) tomcatServer.getTomcatConfiguration();
+        final IFolder tomcatServerConfFolder = tomcatServer.getServer().getServerConfiguration();
+        tomcat70Configuration.load(tomcatServerConfFolder, monitor);
+        System.out.println(tomcat70Configuration);
     }
 
     private void handleCoreExceptionWhileStartingTomcat(final CoreException e) {
@@ -353,7 +367,7 @@ public class BOSWebServerManager {
     protected IServer createServer(final IProgressMonitor monitor, final IProject confProject, final IRuntime runtime) throws CoreException {
         final IServerType sType = ServerCore.findServerType(TOMCAT_SERVER_TYPE);
         final IFile file = confProject.getFile("bonitaTomcatServerSerialization");
-        confProject.open(Repository.NULL_PROGRESS_MONITOR);
+
         final IFolder configurationFolder = confProject
                 .getFolder("tomcat_conf");
         final File sourceFolder = new File(tomcatInstanceLocation, "conf");
@@ -389,16 +403,18 @@ public class BOSWebServerManager {
                 updatePortConfiguration(ajpConnectorPortNumber,
                         ajpConnectorPortNumber + 1);
                 ajpConnectorPortNumber++;
-                wcServer = updatePort(port, wcServer, runtime, sType, file,
+                wcServer = updatePort(tomcatPort.getId(), port, wcServer, runtime, sType, file,
+                        configurationFolder);
+                wcServer = updatePort(ajpConnectorPort.getId(), ajpConnectorPortNumber, wcServer, runtime, sType, file,
                         configurationFolder);
             }
             if (!isPortAvailable(serverPortNumber)) {
-                wcServer = updatePort(serverPortNumber, wcServer, runtime, sType, file,
+                wcServer = updatePort(adminPortServer.getId(), serverPortNumber, wcServer, runtime, sType, file,
                         configurationFolder);
             }
 
             if (!isPortAvailable(ajpConnectorPortNumber)) {
-                wcServer = updatePort(ajpConnectorPortNumber, wcServer, runtime, sType,
+                wcServer = updatePort(ajpConnectorPort.getId(), ajpConnectorPortNumber, wcServer, runtime, sType,
                         file, configurationFolder);
             }
             final int tomcatPortNumber = getTomcatPort(wcServer);
@@ -429,13 +445,22 @@ public class BOSWebServerManager {
         return -1;
     }
 
-    private IServerWorkingCopy updatePort(int port, IServerWorkingCopy server, final IRuntime runtime, final IServerType sType, final IFile file,
+    private IServerWorkingCopy updatePort(final String portId, int port, final IServerWorkingCopy server, final IRuntime runtime, final IServerType sType,
+            final IFile file,
             final IFolder configurationFolder)
             throws CoreException {
         final int oldPort = port;
         port = getNextAvailable(oldPort);
         updatePortConfiguration(oldPort, port);
-        server = configureServer(runtime, sType, file, configurationFolder);
+
+        final IServer iServer = ServerCore.findServer(server.getId());
+        final TomcatServer loadAdapter = (TomcatServer) iServer.loadAdapter(ServerDelegate.class, null);
+        final Tomcat70Configuration tomcat70Configuration0 = (Tomcat70Configuration) loadAdapter.getTomcatConfiguration();
+        new ModifyPortCommand(tomcat70Configuration0, portId, port).execute();
+
+        final TomcatServer tomcatServer = (TomcatServer) server.loadAdapter(ServerDelegate.class, null);
+        final Tomcat70Configuration tomcat70Configuration = (Tomcat70Configuration) tomcatServer.getTomcatConfiguration();
+        new ModifyPortCommand(tomcat70Configuration, portId, port).execute();
         server.saveAll(true, new NullProgressMonitor());
         BonitaStudioLog.debug("Port " + oldPort
                 + " is not available, studio will use next available port : "
@@ -471,6 +496,9 @@ public class BOSWebServerManager {
         final IProject confProject = ResourcesPlugin.getWorkspace().getRoot().getProject(SERVER_CONFIGURATION_PROJECT);
         if (!confProject.exists()) {
             confProject.create(Repository.NULL_PROGRESS_MONITOR);
+            confProject.open(Repository.NULL_PROGRESS_MONITOR);
+            final ProjectProperties projectProperties = new ProjectProperties(confProject);
+            projectProperties.setServerProject(true, monitor);
         }
         return confProject;
     }
