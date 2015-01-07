@@ -71,11 +71,9 @@ import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.IRuntimeType;
 import org.eclipse.wst.server.core.IRuntimeWorkingCopy;
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.IServerListener;
 import org.eclipse.wst.server.core.IServerType;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
 import org.eclipse.wst.server.core.ServerCore;
-import org.eclipse.wst.server.core.ServerEvent;
 import org.eclipse.wst.server.core.ServerPort;
 import org.eclipse.wst.server.core.internal.ProjectProperties;
 import org.eclipse.wst.server.core.model.ServerDelegate;
@@ -417,21 +415,16 @@ public class BOSWebServerManager {
                 wcServer = updatePort(ajpConnectorPort.getId(), ajpConnectorPortNumber, wcServer, runtime, sType,
                         file, configurationFolder);
             }
-            final int tomcatPortNumber = getTomcatPort(wcServer);
-            if (tomcatPortNumber != -1) {
-                BonitaHomeUtil.configureBonitaClient(BonitaHomeUtil.HTTP,
-                        "localhost", tomcatPortNumber);
-                BonitaStudioPreferencesPlugin
-                        .getDefault()
-                        .getPreferenceStore()
-                        .setValue(BonitaPreferenceConstants.CONSOLE_PORT,
-                                tomcatPortNumber);
-            } else {
-                BonitaHomeUtil.configureBonitaClient(BonitaHomeUtil.HTTP,
-                        "localhost", port);
-                BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore()
-                        .setValue(BonitaPreferenceConstants.CONSOLE_PORT, port);
-            }
+        }
+        final int tomcatPortNumber = getTomcatPort(wcServer);
+        if (tomcatPortNumber != -1) {
+            BonitaHomeUtil.configureBonitaClient(BonitaHomeUtil.HTTP,
+                    "localhost", tomcatPortNumber);
+            BonitaStudioPreferencesPlugin
+                    .getDefault()
+                    .getPreferenceStore()
+                    .setValue(BonitaPreferenceConstants.CONSOLE_PORT,
+                            tomcatPortNumber);
         }
         return wcServer.saveAll(true, null);
     }
