@@ -416,7 +416,8 @@ public class BOSWebServerManager {
                         file, configurationFolder);
             }
         }
-        final int tomcatPortNumber = getTomcatPort(wcServer);
+        final IServer resServer = wcServer.saveAll(true, null);
+        final int tomcatPortNumber = getTomcatPort(resServer);
         if (tomcatPortNumber != -1) {
             BonitaHomeUtil.configureBonitaClient(BonitaHomeUtil.HTTP,
                     "localhost", tomcatPortNumber);
@@ -426,10 +427,10 @@ public class BOSWebServerManager {
                     .setValue(BonitaPreferenceConstants.CONSOLE_PORT,
                             tomcatPortNumber);
         }
-        return wcServer.saveAll(true, null);
+        return resServer;
     }
 
-    private int getTomcatPort(final IServerWorkingCopy server) {
+    private int getTomcatPort(final IServer server) {
         for (final ServerPort p : server.getServerPorts(Repository.NULL_PROGRESS_MONITOR)) {
             if ("0".equals(p.getId())) {
                 return p.getPort();
