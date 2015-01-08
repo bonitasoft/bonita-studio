@@ -67,8 +67,8 @@ public class ComparisonExpressionValidator implements IExpressionValidator {
 			return ValidationStatus.ok();
 		}
 		final Injector injector = ConditionModelActivator.getInstance().getInjector(ConditionModelActivator.ORG_BONITASOFT_STUDIO_CONDITION_CONDITIONMODEL);
+        final XtextComparisonExpressionLoader xtextComparisonExpressionLoader = getXtextExpressionLoader(injector);
         Resource resource = null;
-        final XtextComparisonExpressionLoader xtextComparisonExpressionLoader = new XtextComparisonExpressionLoader(injector);
         try {
             resource = xtextComparisonExpressionLoader.loadResource(value.toString(), context);
         } catch (final ComparisonExpressionLoadException e) {
@@ -79,7 +79,7 @@ public class ComparisonExpressionValidator implements IExpressionValidator {
         final IResourceValidator xtextResourceChecker = injector.getInstance(IResourceValidator.class);
 		final MultiStatus status = new MultiStatus(ExpressionEditorPlugin.PLUGIN_ID, 0, "", null);
         final ConditionModelJavaValidator validator = injector.getInstance(ConditionModelJavaValidator.class);
-        final ResourceSet resourceSet = context.eResource().getResourceSet();
+        final ResourceSet resourceSet = getContextResourceSet();
         validator.setCurrentResourceSet(resourceSet);
 		final List<Issue> issues = xtextResourceChecker.validate(resource, CheckMode.FAST_ONLY, null);
 
@@ -98,6 +98,27 @@ public class ComparisonExpressionValidator implements IExpressionValidator {
 
 		return status;
 	}
+
+    /**
+     * Public for test purpose
+     * 
+     * @param injector
+     * @return
+     */
+    public XtextComparisonExpressionLoader getXtextExpressionLoader(final Injector injector) {
+        final XtextComparisonExpressionLoader xtextComparisonExpressionLoader = new XtextComparisonExpressionLoader(injector);
+        return xtextComparisonExpressionLoader;
+    }
+
+    /**
+     * Public for test purpose
+     *
+     * @return
+     */
+    public ResourceSet getContextResourceSet() {
+        final ResourceSet resourceSet = context.eResource().getResourceSet();
+        return resourceSet;
+    }
 
     private void updateDependencies(final Resource resource) {
 		if(domain != null && inputExpression != null){

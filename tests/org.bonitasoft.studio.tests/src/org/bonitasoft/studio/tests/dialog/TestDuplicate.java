@@ -17,30 +17,41 @@
  */
 package org.bonitasoft.studio.tests.dialog;
 
-import java.io.IOException;
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.io.File;
+import java.util.List;
 
 import org.bonitasoft.studio.common.Messages;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.diagram.custom.repository.ApplicationResourceFileStore;
+import org.bonitasoft.studio.diagram.custom.repository.ApplicationResourceRepositoryStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
+import org.bonitasoft.studio.diagram.custom.repository.WebTemplatesUtil;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.MainProcess;
+import org.bonitasoft.studio.model.process.PageFlow;
+import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
 import org.eclipse.swtbot.swt.finder.SWTBot;
+import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
 import org.eclipse.swtbot.swt.finder.waits.ICondition;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 /**
  * @author Aurelien Pupier
  *
  */
+@RunWith(SWTBotJunit4ClassRunner.class)
 public class TestDuplicate extends SWTBotGefTestCase {
 
     @Test
-    public void testDuplicateWithSeveralPool() throws IOException {
+    public void testDuplicateWithSeveralPool() throws Exception {
         SWTBotTestUtil.createNewDiagram(bot);
         final int nbEditorBefore = bot.editors().size();
         bot.menu("Diagram").menu("Duplicate...").click();
@@ -53,26 +64,29 @@ public class TestDuplicate extends SWTBotGefTestCase {
         bot.button(IDialogConstants.OK_LABEL).click();
         bot.waitUntil(new ICondition() {
 
+            @Override
             public boolean test() throws Exception {
                 return nbEditorBefore +1 == bot.editors().size();
             }
 
-            public void init(SWTBot bot) {}
+            @Override
+            public void init(final SWTBot bot) {}
 
+            @Override
             public String getFailureMessage() {
-                return "Deuplicate has failed !";
+                return "Duplicate has failed !";
             }
         });
 
-        DiagramRepositoryStore drs = (DiagramRepositoryStore)RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
-        MainProcess mainProcess  = drs.getDiagram("DuplicatedTestDuplicateWithSeveralPool","2.0").getContent();
+        final DiagramRepositoryStore drs = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
+        final MainProcess mainProcess  = drs.getDiagram("DuplicatedTestDuplicateWithSeveralPool","2.0").getContent();
 
 
         boolean pool1ok = false;
         boolean pool1Versionok = false;
 
 
-        for(AbstractProcess pool : ModelHelper.getAllProcesses(mainProcess)){
+        for(final AbstractProcess pool : ModelHelper.getAllProcesses(mainProcess)){
             final String poolName = pool.getName();
             if(poolName.equals("Pool_updated")){
                 pool1ok = true;
@@ -86,6 +100,81 @@ public class TestDuplicate extends SWTBotGefTestCase {
     }
 
 
+    @Test
+    public void should_duplicate_all_confirmation_templates() throws Exception {
+        SWTBotTestUtil.importProcessWIthPathFromClass(bot, "Test confirmation template-1.0.bos", "Bonita 6.x", "Test confirmation template",
+                this.getClass(), false);
+
+        final int nbEditorBefore = bot.editors().size();
+        bot.menu("Diagram").menu("Duplicate...").click();
+        bot.waitUntil(Conditions.shellIsActive(Messages.openNameAndVersionDialogTitle));
+        bot.textWithLabel("Version", 0).setText("2.0");
+        bot.textWithLabel("Version", 1).setText("2.0");
+
+        bot.button(IDialogConstants.OK_LABEL).click();
+        bot.waitUntil(new ICondition() {
+
+            @Override
+            public boolean test() throws Exception {
+                return nbEditorBefore + 1 == bot.editors().size();
+            }
+
+            @Override
+            public void init(final SWTBot bot) {
+            }
+
+            @Override
+            public String getFailureMessage() {
+                return "Duplicate has failed !";
+            }
+        });
+
+        final DiagramRepositoryStore drs = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
+        final MainProcess originalDiagram = drs.getDiagram("Test confirmation template", "1.0").getContent();
+        final AbstractProcess originalProcess = (AbstractProcess) originalDiagram.getElements().get(0);
+        assertThat(originalProcess).isNotNull();
+        assertThat(originalProcess.getConfirmationTemplate()).isNotNull();
+
+        final MainProcess duplicatedDiagram = drs.getDiagram("Test confirmation template", "2.0").getContent();
+        final AbstractProcess duplicatedProcess = (AbstractProcess) duplicatedDiagram.getElements().get(0);
+        assertThat(duplicatedProcess).isNotNull();
+        assertThat(duplicatedProcess.getConfirmationTemplate()).isNotNull().isNotEqualTo(originalProcess.getConfirmationTemplate());
+        assertThat(duplicatedProcess.getConfirmationTemplate().getPath()).isNotEqualTo(originalProcess.getConfirmationTemplate().getPath());
+
+        final ApplicationResourceRepositoryStore ars = RepositoryManager.getInstance().getRepositoryStore(ApplicationResourceRepositoryStore.class);
+        final ApplicationResourceFileStore originalResources = (ApplicationResourceFileStore) ars.getChild(ModelHelper.getEObjectID(originalProcess));
+        final ApplicationResourceFileStore duplicatedResources = (ApplicationResourceFileStore) ars.getChild(ModelHelper.getEObjectID(duplicatedProcess));
+        assertThat(originalResources).isNotNull();
+        assertThat(duplicatedResources).isNotNull();
+
+        File originalConfirmationFile = WebTemplatesUtil.getFile(originalProcess.getConfirmationTemplate().getPath());
+        File duplicatedConfirmationFile = WebTemplatesUtil.getFile(duplicatedProcess.getConfirmationTemplate().getPath());
+        assertThat(originalConfirmationFile).hasContentEqualTo(duplicatedConfirmationFile);
+
+        final List<PageFlow> pageFlows = ModelHelper.getAllItemsOfType(originalProcess, ProcessPackage.Literals.PAGE_FLOW);
+        PageFlow originalPageFlow = null;
+        for (final PageFlow pageFlow : pageFlows) {
+            if (pageFlow.getConfirmationTemplate() != null && !pageFlow.equals(originalProcess)) {
+                originalPageFlow = pageFlow;
+            }
+        }
+        assertThat(originalPageFlow).isNotNull();
+
+        final List<PageFlow> pageFlows2 = ModelHelper.getAllItemsOfType(duplicatedProcess, ProcessPackage.Literals.PAGE_FLOW);
+        PageFlow duplicatedPageFlow = null;
+        for (final PageFlow pageFlow : pageFlows2) {
+            if (pageFlow.getConfirmationTemplate() != null && !pageFlow.equals(duplicatedProcess)) {
+                duplicatedPageFlow = pageFlow;
+            }
+        }
+        assertThat(duplicatedPageFlow).isNotNull();
+        assertThat(originalPageFlow.getConfirmationTemplate()).isNotNull();
+        assertThat(originalPageFlow.getConfirmationTemplate().getPath()).isNotEqualTo(duplicatedPageFlow.getConfirmationTemplate().getPath());
+        originalConfirmationFile = WebTemplatesUtil.getFile(originalPageFlow.getConfirmationTemplate().getPath());
+        duplicatedConfirmationFile = WebTemplatesUtil.getFile(duplicatedPageFlow.getConfirmationTemplate().getPath());
+        assertThat(originalConfirmationFile).hasContentEqualTo(duplicatedConfirmationFile);
+
+    }
 
 
 }

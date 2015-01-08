@@ -43,6 +43,8 @@
     <group name="Group5">
       <displayName>Group5</displayName>
     </group>
+    <group name="GroupWithoutDisplayName">
+    </group>
   </groups>
   <memberships>
     <membership>

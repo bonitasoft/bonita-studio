@@ -97,8 +97,9 @@ public class OrganizationValidator implements IValidator {
             }
         }
         for (final Group group : organization.getGroups().getGroup()) {
-            if (!group.getDisplayName().isEmpty() && group.getDisplayName().length() > 75) {
-                return ValidationStatus.error(Messages.bind(Messages.groupDisplayLengthTooLong, group.getDisplayName()));
+            final String groupDisplayName = group.getDisplayName();
+            if (groupDisplayName != null && !groupDisplayName.isEmpty() && groupDisplayName.length() > 75) {
+                return ValidationStatus.error(Messages.bind(Messages.groupDisplayLengthTooLong, groupDisplayName));
             }
         }
         return ValidationStatus.ok() ;
