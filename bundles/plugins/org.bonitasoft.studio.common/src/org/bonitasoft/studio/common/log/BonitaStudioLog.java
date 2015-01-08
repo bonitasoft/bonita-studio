@@ -28,94 +28,104 @@ import org.eclipse.e4.core.services.log.Logger;
 public class BonitaStudioLog {
 
 
-	public static void log(final String message) {
+    public static void log(final String message) {
         final Logger logger = getLogger(Activator.PLUGIN_ID);
-		if(logger != null){
+        if (logger != null) {
             logger.info(message);
-		}
-	}
+        }
+    }
 
-	public static void error(final Throwable exception) {
+    public static void error(final Throwable exception) {
         final Logger logger = getLogger(Activator.PLUGIN_ID);
-		if(logger != null){
+        if (logger != null) {
             logger.error(exception);
-		}else{
-			exception.printStackTrace();
-		}
-	}
+        } else {
+            exception.printStackTrace();
+        }
+    }
 
-	/**
-	 * Log an error
-	 * @param exception - the exception to log
-	 * @param bundleId - the bundle id of the original exception to log
-	 */
-	public static void error(final Throwable exception,final String bundleId){
+    /**
+     * Log an error
+     * 
+     * @param exception - the exception to log
+     * @param bundleId - the bundle id of the original exception to log
+     */
+    public static void error(final Throwable exception, final String bundleId) {
         error(exception);
-	}
+    }
 
     public static Logger getLogger(final String bundleName) {
         return BonitaStudioLogger.getLogger(bundleName);
-	}
+    }
 
-	/**
-	 * Log an error
-	 * @param message - the message to log
-	 * @param bundleId - the bundle id of the original exception to log
-	 */
-	public static void error(final String message,final String bundleId){
+    /**
+     * Log an error
+     * 
+     * @param message - the message to log
+     * @param bundleId - the bundle id of the original exception to log
+     */
+    public static void error(final String message, final String bundleId) {
         final Logger logger = getLogger(bundleId);
-		if(logger != null){
+        if (logger != null) {
             logger.error(message);
-		}else{
-			System.err.println(message);
-		}
-	}
+        } else {
+            System.err.println(message);
+        }
+    }
 
-	/**
-	 * Log an information
-	 * @param message - the message to log
-	 * @param bundleId - the bundle id of the original exception to log
-	 */
-	public static void info(final String message,final String bundleId){
+    /**
+     * Log an information
+     * 
+     * @param message - the message to log
+     * @param bundleId - the bundle id of the original exception to log
+     */
+    public static void info(final String message, final String bundleId) {
         final Logger logger = getLogger(bundleId);
-		if(logger != null){
+        if (logger != null) {
             logger.info(message);
-		}
-	}
+        }
+    }
 
-	/**
-	 * Log a warning
-	 * @param message - the message to log
-	 * @param bundleId - the bundle id of the original exception to log
-	 */
-	public static void warning(final String message,final String bundleId){
+    /**
+     * Log a warning
+     * 
+     * @param message - the message to log
+     * @param bundleId - the bundle id of the original exception to log
+     */
+    public static void warning(final String message, final String bundleId) {
         final Logger logger = getLogger(bundleId);
-		if(logger != null){
+        if (logger != null) {
             logger.warn(message);
-		}
-	}
+        }
+    }
 
-	/**
-	 * Log a debug information
-	 * @param message - the message to log
-	 * @param bundleId - the bundle id of the original exception to log
-	 */
-	public static void debug(final String message,final String bundleId){
+    /**
+     * Log a debug information
+     * 
+     * @param message - the message to log
+     * @param bundleId - the bundle id of the original exception to log
+     */
+    public static void debug(final String message, final String bundleId) {
         final Logger logger = getLogger(bundleId);
-		if(logger != null){
+        if (logger != null) {
             //debug log are not shown otherwise
             logger.info(message);
-		}
-	}
-
-	public static boolean isLoggable(final int level) {
-        final Logger logger = getLogger(Activator.PLUGIN_ID);
-        switch (level) {
-            case IStatus.ERROR:return logger.isErrorEnabled();
-            case IStatus.WARNING:return logger.isWarnEnabled();
-            case IStatus.INFO:
-            default:
-                return logger.isInfoEnabled();
         }
-	}
+    }
+
+    public static boolean isLoggable(final int level) {
+        final Logger logger = getLogger(Activator.PLUGIN_ID);
+        if (logger != null) {
+            switch (level) {
+                case IStatus.ERROR:
+                    return logger.isErrorEnabled();
+                case IStatus.WARNING:
+                    return logger.isWarnEnabled();
+                case IStatus.INFO:
+                default:
+                    return logger.isInfoEnabled();
+            }
+        }
+        return false;
+    }
 }
