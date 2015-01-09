@@ -298,7 +298,7 @@ public class SWTBotTestUtil implements SWTBotConstants {
      */
     public static void selectEventOnProcess(final SWTGefBot bot, final SWTBotGefEditor gmfEditor, final String eventName) {
         final SWTBotGefEditPart event = gmfEditor.getEditPart(eventName).parent();
-        event.click();
+        event.select();
     }
 
     /**
