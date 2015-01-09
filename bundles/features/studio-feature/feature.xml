@@ -21,6 +21,8 @@
       <import feature="org.eclipse.rcp" version="4.3.1.v20130911-1000" match="greaterOrEqual"/>
       <import feature="org.eclipse.wst.web_ui.feature"/>
       <import feature="platform-specific-feature" version="6.5.0" match="equivalent"/>
+      <import feature="org.eclipse.m2m.qvt.oml" version="3.4.0.v20140610-1621"/>
+      <import feature="org.eclipse.m2m.qvt.oml.runtime" version="3.4.0.v20140610-1621"/>
    </requires>
 
    <plugin
