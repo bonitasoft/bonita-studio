@@ -16,7 +16,11 @@
  */
 package org.bonitasoft.studio.exporter.bpmn.transfo;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.math.BigInteger;
+
+import javax.xml.namespace.QName;
 
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.model.process.Activity;
@@ -25,7 +29,10 @@ import org.bonitasoft.studio.model.process.MultiInstanceType;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.Task;
+import org.bonitasoft.studio.model.process.builders.XMLDataBuilder;
+import org.bonitasoft.studio.model.process.builders.XMLDataTypeBuilder;
 import org.fest.assertions.Assertions;
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.omg.spec.bpmn.model.TActivity;
@@ -37,6 +44,13 @@ import org.omg.spec.bpmn.model.TTask;
 
 public class BonitaToBPMNTest extends BonitaToBPMN {
 
+    private BonitaToBPMN bonitaToBPMN;
+
+    @Before
+    public void setUp() throws Exception {
+        bonitaToBPMN = new BonitaToBPMN();
+    }
+
     @Test
     public void testMultiInstanceLoop() {
         final Task bonitaTask = ProcessFactory.eINSTANCE.createTask();
@@ -45,7 +59,7 @@ public class BonitaToBPMNTest extends BonitaToBPMN {
         bonitaTask.setLoopCondition(ExpressionHelper.createGroovyScriptExpression("my condition script", Boolean.class.getName()));
         bonitaTask.setTestBefore(true);
 
-        final TTask bpmTask = (TTask) new BonitaToBPMN().createActivity(bonitaTask);
+        final TTask bpmTask = (TTask) bonitaToBPMN.createActivity(bonitaTask);
         final TStandardLoopCharacteristics loopCharacteristics = (TStandardLoopCharacteristics) bpmTask.getLoopCharacteristics();
         Assertions.assertThat(loopCharacteristics).isNotNull();
         Assertions.assertThat(loopCharacteristics.getLoopMaximum()).isEqualTo(BigInteger.valueOf(45));
@@ -60,7 +74,7 @@ public class BonitaToBPMNTest extends BonitaToBPMN {
         bonitaActivity.setCompletionCondition(ExpressionHelper.createGroovyScriptExpression("my completion condition", Boolean.class.getName()));
         bonitaActivity.setCardinalityExpression(ExpressionHelper.createConstantExpression("45", Integer.class.getName()));
 
-        final TActivity bpmTask = (TActivity) new BonitaToBPMN().createActivity(bonitaActivity);
+        final TActivity bpmTask = (TActivity) bonitaToBPMN.createActivity(bonitaActivity);
         final TMultiInstanceLoopCharacteristics loopCharacteristics = (TMultiInstanceLoopCharacteristics) bpmTask.getLoopCharacteristics();
         Assertions.assertThat(loopCharacteristics).isNotNull();
         Assertions.assertThat(loopCharacteristics.isIsSequential()).isFalse();
@@ -74,7 +88,7 @@ public class BonitaToBPMNTest extends BonitaToBPMN {
         bonitaActivity.setType(MultiInstanceType.SEQUENTIAL);
         bonitaActivity.setCompletionCondition(ExpressionHelper.createGroovyScriptExpression("my completion condition", Boolean.class.getName()));
 
-        final TActivity bpmTask = (TActivity) new BonitaToBPMN().createActivity(bonitaActivity);
+        final TActivity bpmTask = (TActivity) bonitaToBPMN.createActivity(bonitaActivity);
         final TMultiInstanceLoopCharacteristics loopCharacteristics = (TMultiInstanceLoopCharacteristics) bpmTask.getLoopCharacteristics();
         Assertions.assertThat(loopCharacteristics).isNotNull();
         Assertions.assertThat(loopCharacteristics.isIsSequential()).isTrue();
@@ -100,12 +114,22 @@ public class BonitaToBPMNTest extends BonitaToBPMN {
         final Activity bonitaActivity = ProcessFactory.eINSTANCE.createActivity();
         bonitaActivity.setType(MultiInstanceType.PARALLEL);
 
-        final TActivity bpmTask = (TActivity) new BonitaToBPMN().createActivity(bonitaActivity);
+
+        final TActivity bpmTask = (TActivity) bonitaToBPMN.createActivity(bonitaActivity);
         final TMultiInstanceLoopCharacteristics loopCharacteristics = (TMultiInstanceLoopCharacteristics) bpmTask.getLoopCharacteristics();
         Assertions.assertThat(loopCharacteristics).isNotNull();
         Assertions.assertThat(loopCharacteristics.isIsSequential()).isFalse();
         Assertions.assertThat(loopCharacteristics.getCompletionCondition()).isNull();
         Assertions.assertThat(loopCharacteristics.getLoopCardinality()).isNull();
+    }
+
+    @Test
+    public void should_export_xmldata_without_namespace() throws Exception {
+        bonitaToBPMN.initializeDocumentRoot();
+        final QName ref = bonitaToBPMN.getStructureRef(XMLDataBuilder.createXMLDataBuilder().havingDataType(XMLDataTypeBuilder.create()).build());
+        final QName ref2 = bonitaToBPMN.getStructureRef(XMLDataBuilder.createXMLDataBuilder().havingDataType(XMLDataTypeBuilder.create()).build());
+        assertThat(ref.getLocalPart()).isEqualTo("n0:null");
+        assertThat(ref2.getLocalPart()).isEqualTo("n1:null");
     }
 
 }
