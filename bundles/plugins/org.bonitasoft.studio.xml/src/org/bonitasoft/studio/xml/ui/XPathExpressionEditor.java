@@ -49,6 +49,7 @@ import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.jface.databinding.swt.ISWTObservableValue;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -139,11 +140,6 @@ public class XPathExpressionEditor extends SelectionAwareExpressionEditor implem
             public void selectionChanged(final SelectionChangedEvent event) {
                 if (!event.getSelection().isEmpty()) {
                     xsdViewer.expandAll();
-                    // String content = editorInputExpression.getContent() ;
-                    // if(content == null){
-                    // content = "" ;
-                    // }
-                    // xsdViewer.setSelection(new StructuredSelection(createTreePath(content, provider)));
                     XPathExpressionEditor.this.fireSelectionChanged();
                 }
             }
@@ -199,7 +195,6 @@ public class XPathExpressionEditor extends SelectionAwareExpressionEditor implem
      */
     @Override
     public void okPressed() {
-
     }
 
     @Override
@@ -351,8 +346,10 @@ public class XPathExpressionEditor extends SelectionAwareExpressionEditor implem
         });
         dataBindingContext.bindValue(ViewersObservables.observeSingleSelection(viewer), referenceObservable, selectionToReferencedData,
                 referencedDataToSelection);
-        dataBindingContext.bindValue(SWTObservables.observeText(text, SWT.Modify), nameObservable, selectionToName, new UpdateValueStrategy(
+        final ISWTObservableValue observeText = SWTObservables.observeText(text, SWT.Modify);
+        dataBindingContext.bindValue(observeText, nameObservable, selectionToName, new UpdateValueStrategy(
                 UpdateValueStrategy.POLICY_NEVER));
+        dataBindingContext.bindValue(observeText, contentObservable);
 
         dataBindingContext.bindValue(SWTObservables.observeEnabled(xsdViewer.getTree()), ViewersObservables.observeSingleSelection(viewer),
                 new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER), enableStrategy);
@@ -411,16 +408,16 @@ public class XPathExpressionEditor extends SelectionAwareExpressionEditor implem
             @Override
             public void selectionChanged(final SelectionChangedEvent event) {
                 final ITreeSelection selection = (ITreeSelection) xsdViewer.getSelection();
-                final String xpath = computeXPath(selection, false);
-                if (dataName != null) {
-                    if (xpath == null || xpath.isEmpty()) {
-                        text.setText(dataName);
-                    } else {
-                        text.setText(xpath);
-                    }
-                }
+                //                final String xpath = computeXPath(selection, false);
+                //                if (dataName != null) {
+                //                    if (xpath == null || xpath.isEmpty()) {
+                //                        text.setText(dataName);
+                //                    } else {
+                //                        text.setText(xpath);
+                //                    }
+                //                }
                 text.redraw();
-                typeCombo.setSelection(new StructuredSelection(XPathReturnType.getType(selection.getFirstElement())));
+                //                typeCombo.setSelection(new StructuredSelection(XPathReturnType.getType(selection.getFirstElement())));
                 XPathExpressionEditor.this.fireSelectionChanged();
             }
         });
