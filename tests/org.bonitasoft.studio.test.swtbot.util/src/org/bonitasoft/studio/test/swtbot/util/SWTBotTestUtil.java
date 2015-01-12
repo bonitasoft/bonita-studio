@@ -92,8 +92,8 @@ import org.junit.Assert;
 
 public class SWTBotTestUtil implements SWTBotConstants {
 
-    private static final int X_MARGIN = 100;
-    private static final int Y_MARGIN = 90;
+    private static final int X_MARGIN = 90;
+    private static final int Y_MARGIN = 80;
     private static final String PAGEFLOW_LABEL = "Pageflow";
     public static final int CONTEXTUALPALETTE_STEP = 0;
     public static final int CONTEXTUALPALETTE_GATEWAY = 1;
