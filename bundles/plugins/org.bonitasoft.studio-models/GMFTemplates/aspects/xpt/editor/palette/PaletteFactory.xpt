@@ -292,7 +292,7 @@ FIXME
 		*/
 		public org.eclipse.gef.Tool createTool() {
 «REM»Use a custom tool for palette to have better feedback«ENDREM»
-			org.eclipse.gef.Tool tool = new org.bonitasoft.studio.common.diagram.tools.BonitaUnspecifiedTypeProcessCreationTool(elementTypes);
+			org.eclipse.gef.Tool tool = new org.bonitasoft.studio.common.diagram.tools.BonitaUnspecifiedTypeProcessCreationTool(org.bonitasoft.studio.common.diagram.tools.BonitaConnectionTypes.getTypesFor(elementTypes));
 			tool.setProperties(getToolProperties());
 			return tool;
 		}
@@ -301,11 +301,24 @@ FIXME
 
 «DEFINE linkToolEntry FOR gmfgen::Palette»
 	«EXPAND xpt::Common::generatedClassComment»
-	private static class LinkToolEntry extends org.eclipse.gmf.tooling.runtime.part.DefaultLinkToolEntry {
+	private static class LinkToolEntry extends org.eclipse.gef.palette.ToolEntry {
 
 		«EXPAND xpt::Common::generatedMemberComment»
-		private LinkToolEntry(String title, String description, java.util.List<org.eclipse.gmf.runtime.emf.type.core.IElementType> elementTypes) {
-			super(title, description, elementTypes);
+		private final java.util.List relationshipTypes;
+
+		«EXPAND xpt::Common::generatedMemberComment»
+		private LinkToolEntry(String title, String description, java.util.List relationshipTypes) {
+			super(org.bonitasoft.studio.common.NamingUtils.getPaletteTitle(relationshipTypes),
+			 org.bonitasoft.studio.common.NamingUtils.getPaletteDescription(relationshipTypes), null, null);
+			this.relationshipTypes = relationshipTypes;
+		}
+
+		«EXPAND xpt::Common::generatedMemberComment»
+		public org.eclipse.gef.Tool createTool() {
+			«REM»Use a custom tool for palette to have better feedback«ENDREM»
+			org.eclipse.gef.Tool tool = new org.bonitasoft.studio.common.diagram.tools.BonitaUnspecifiedTypeConnectionTool(org.bonitasoft.studio.common.diagram.tools.BonitaConnectionTypes.getRelationTypes());
+			tool.setProperties(getToolProperties());
+			return tool;
 		}
 	}
 «ENDDEFINE»
