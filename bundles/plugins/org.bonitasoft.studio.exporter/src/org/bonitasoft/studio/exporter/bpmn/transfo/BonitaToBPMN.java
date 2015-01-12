@@ -270,7 +270,6 @@ public class BonitaToBPMN implements IBonitaTransformer {
      */
     @Override
     public boolean transform(final IBonitaModelExporter modelExporter, final File destFile,final IProgressMonitor monitor) {
-        root = ModelFactory.eINSTANCE.createDocumentRoot();
 
         final MainProcessEditPart part = modelExporter.getMainProcessEditPart() ;
         final MainProcess mainProcess = modelExporter.getDiagram() ;
@@ -307,12 +306,8 @@ public class BonitaToBPMN implements IBonitaTransformer {
 
         populateWithSignals(definitions);
 
+        initializeDocumentRoot();
 
-        root.getXMLNSPrefixMap().put(JAVA_XMLNS, "http://jcp.org/en/jsr/detail?id=270");
-        root.getXMLNSPrefixMap().put(XMLNS_HTTP_BONITASOFT_COM_BONITA_CONNECTOR_DEFINITION, "http://www.bonitasoft.org/studio/connector/definition/6.0");
-        /*Two lines only for Bruce validation tools conformance... but it currently doesn't work either...*/
-        root.getXMLNSPrefixMap().put("xsi","http://www.w3.org/2001/XMLSchema-instance");
-        root.getXSISchemaLocation().put("schemaLocation", "http://www.omg.org/spec/BPMN/20100524/MODEL schemas/BPMN20.xsd");//http://www.omg.org/spec/BPMN/20100501/BPMN20.xsd
         root.setDefinitions(definitions);
         final ResourceSet resourceSet = new ResourceSetImpl();
         resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put(".bpmn", new ModelResourceFactoryImpl());
@@ -331,6 +326,15 @@ public class BonitaToBPMN implements IBonitaTransformer {
             return false;
         }
         return true;
+    }
+
+    protected void initializeDocumentRoot() {
+        root = ModelFactory.eINSTANCE.createDocumentRoot();
+        root.getXMLNSPrefixMap().put(JAVA_XMLNS, "http://jcp.org/en/jsr/detail?id=270");
+        root.getXMLNSPrefixMap().put(XMLNS_HTTP_BONITASOFT_COM_BONITA_CONNECTOR_DEFINITION, "http://www.bonitasoft.org/studio/connector/definition/6.0");
+        /* Two lines only for Bruce validation tools conformance... but it currently doesn't work either... */
+        root.getXMLNSPrefixMap().put("xsi", "http://www.w3.org/2001/XMLSchema-instance");
+        root.getXSISchemaLocation().put("schemaLocation", "http://www.omg.org/spec/BPMN/20100524/MODEL schemas/BPMN20.xsd");//http://www.omg.org/spec/BPMN/20100501/BPMN20.xsd
     }
 
     protected void populateWithMessageFlow(final MainProcess mainProcess) {
@@ -769,7 +773,8 @@ public class BonitaToBPMN implements IBonitaTransformer {
     private String getXmlns(final XMLData data) {
         final String dataTypeNamespace = data.getNamespace();
         for (final Entry<String, String> prefixMap : root.getXMLNSPrefixMap().entrySet()) {
-            if(prefixMap.getValue().equals(dataTypeNamespace)){
+            final String value = prefixMap.getValue();
+            if (value != null && value.equals(dataTypeNamespace)) {
                 return prefixMap.getKey();
             }
         }
