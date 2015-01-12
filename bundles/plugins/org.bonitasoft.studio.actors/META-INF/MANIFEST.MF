@@ -49,6 +49,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.mockito;bundle-version="1.9.5";resolution:=optional,
  org.bonitasoft.studio.expression.editor,
  org.apache.commons.lang;bundle-version="2.6.0",
+ org.eclipse.emf.databinding,
+ org.eclipse.core.databinding.observable,
  org.eclipse.emf.compare.rcp;bundle-version="2.2.0"
 Bundle-ActivationPolicy: lazy
 Import-Package: org.bonitasoft.engine.api,
