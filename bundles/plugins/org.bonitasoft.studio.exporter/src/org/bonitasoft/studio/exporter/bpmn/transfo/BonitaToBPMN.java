@@ -769,7 +769,8 @@ public class BonitaToBPMN implements IBonitaTransformer {
     private String getXmlns(final XMLData data) {
         final String dataTypeNamespace = data.getNamespace();
         for (final Entry<String, String> prefixMap : root.getXMLNSPrefixMap().entrySet()) {
-            if(prefixMap.getValue().equals(dataTypeNamespace)){
+            final String value = prefixMap.getValue();
+            if (value != null && value.equals(dataTypeNamespace)) {
                 return prefixMap.getKey();
             }
         }
