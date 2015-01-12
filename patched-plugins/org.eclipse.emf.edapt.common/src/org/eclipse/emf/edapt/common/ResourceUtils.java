@@ -131,8 +131,10 @@ public final class ResourceUtils {
 			// Whenever we load a resourceset, we will create a session and
 			// transaction.
 			// in case we deal with a CDO Resource.
-			final Resource resource = resourceSet.getResource(modelURI, true);
-			// Resource resource = resourceSet.createResource(modelURI);
+            Resource resource = resourceSet.getResource(modelURI, false);
+            if (resource == null) {
+                resource = resourceSet.createResource(modelURI);
+            }
 			try {
 				resource.load(options);
 			} catch (final Resource.IOWrappedException e) {
