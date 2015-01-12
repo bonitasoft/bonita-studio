@@ -319,7 +319,6 @@ public class TestWebPurchase extends SWTBotGefTestCase implements SWTBotConstant
 
 	private void stepReject(final SWTBotGefEditor gmfEditor){
 		SWTBotTestUtil.selectElementInContextualPaletteAndDragIt(gmfEditor, "Sales Review",SWTBotTestUtil.CONTEXTUALPALETTE_STEP,PositionConstants.SOUTH_EAST);
-		//  SWTBotTestUtil.selectElementInContextualPaletteAndDragIt(gmfEditor, "Sales Review",0,new Point(550,180));
 		SWTBotTestUtil.selectTabbedPropertyView(bot, "General");
 		bot.textWithLabel("Name").setText("Reject");
 		bot.sleep(1000);
@@ -328,7 +327,6 @@ public class TestWebPurchase extends SWTBotGefTestCase implements SWTBotConstant
 
 	private void stepExpressDelivery(final SWTBotGefEditor gmfEditor){
 		SWTBotTestUtil.selectElementInContextualPaletteAndDragIt(gmfEditor,"Pay",SWTBotTestUtil.CONTEXTUALPALETTE_STEP,PositionConstants.EAST);
-		// SWTBotTestUtil.selectElementInContextualPaletteAndDragIt(gmfEditor, "Pay",0,new Point(800,100));
 		SWTBotTestUtil.selectTabbedPropertyView(bot, "General");
 		bot.textWithLabel("Name").setText("Express Delivery");
 		bot.sleep(500);
@@ -336,9 +334,7 @@ public class TestWebPurchase extends SWTBotGefTestCase implements SWTBotConstant
 	}
 
 	private void stepArchive(final SWTBotGefEditor gmfEditor){
-		//  SWTBotTestUtil.increasePoolWidth(gmfEditor, "Web Purchase");
 		SWTBotTestUtil.selectElementInContextualPaletteAndDragIt(gmfEditor,"Pay", SWTBotTestUtil.CONTEXTUALPALETTE_STEP,PositionConstants.SOUTH_EAST);
-		//        SWTBotTestUtil.selectElementInContextualPaletteAndDragIt(gmfEditor, "Pay",0,new Point(550,155));
 		SWTBotTestUtil.selectTabbedPropertyView(bot, "General");
 		bot.textWithLabel("Name").setText("Archive");
 		bot.sleep(500);
