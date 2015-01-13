@@ -126,6 +126,7 @@ public class BonitaToBPMNTest extends BonitaToBPMN {
     @Test
     public void should_export_xmldata_without_namespace() throws Exception {
         bonitaToBPMN.initializeDocumentRoot();
+        bonitaToBPMN.configureNamespaces();
         final QName ref = bonitaToBPMN.getStructureRef(XMLDataBuilder.createXMLDataBuilder().havingDataType(XMLDataTypeBuilder.create()).build());
         final QName ref2 = bonitaToBPMN.getStructureRef(XMLDataBuilder.createXMLDataBuilder().havingDataType(XMLDataTypeBuilder.create()).build());
         assertThat(ref.getLocalPart()).isEqualTo("n0:null");
