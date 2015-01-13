@@ -337,15 +337,6 @@ public class ComparisonExpressionEditor extends SelectionAwareExpressionEditor i
         final IObservableValue returnTypeModelObservable = EMFObservables.observeValue(inputExpression, ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE);
         final ISWTObservableValue observeText = SWTObservables.observeText(comparisonEditor.getViewer().getControl(), SWT.Modify);
         dataBindingContext.bindValue(observeText, contentModelObservable);
-        //        observeText.addValueChangeListener(new IValueChangeListener() {
-        //
-        //            @Override
-        //            public void handleValueChange(final ValueChangeEvent event) {
-        //                if (ComparisonExpressionEditor.this.inputExpression.isAutomaticDependencies()) {
-        //                    updateDependencies();
-        //                }
-        //            }
-        //        });
         dataBindingContext.bindValue(observeText, nameModelObservable);
         dataBindingContext.bindValue(ViewersObservables.observeInput(dependenciesViewer), dependenciesModelObservable);
 
