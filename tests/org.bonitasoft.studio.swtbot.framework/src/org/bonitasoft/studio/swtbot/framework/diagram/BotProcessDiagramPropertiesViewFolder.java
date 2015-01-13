@@ -11,12 +11,13 @@ package org.bonitasoft.studio.swtbot.framework.diagram;
 import org.bonitasoft.studio.swtbot.framework.BotBase;
 import org.bonitasoft.studio.swtbot.framework.diagram.application.BotApplicationDiagramPropertiesView;
 import org.bonitasoft.studio.swtbot.framework.diagram.general.BotGeneralDiagramPropertiesView;
+import org.bonitasoft.studio.swtbot.framework.diagram.validation.BotValidationPropertiesView;
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 
 /**
  * Diagram properties view folder.
- * 
+ *
  * @author Joachim Segala
  */
 public class BotProcessDiagramPropertiesViewFolder extends BotBase {
@@ -27,7 +28,7 @@ public class BotProcessDiagramPropertiesViewFolder extends BotBase {
 
     /**
      * Select the general tab.
-     * 
+     *
      * @return
      */
     public BotGeneralDiagramPropertiesView selectGeneralTab() {
@@ -37,7 +38,7 @@ public class BotProcessDiagramPropertiesViewFolder extends BotBase {
 
     /**
      * Select the application tab.
-     * 
+     *
      * @return
      */
     public BotApplicationDiagramPropertiesView selectApplicationTab() {
@@ -55,8 +56,8 @@ public class BotProcessDiagramPropertiesViewFolder extends BotBase {
         //TODO:
     }
 
-    public void selectValidationStatusTab() {
-        bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_FORM_GENERAL).show();
-        //TODO:
+    public BotValidationPropertiesView selectValidationStatusTab() {
+        bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_VALIDATION_STATUS).show();
+        return new BotValidationPropertiesView(bot);
     }
 }

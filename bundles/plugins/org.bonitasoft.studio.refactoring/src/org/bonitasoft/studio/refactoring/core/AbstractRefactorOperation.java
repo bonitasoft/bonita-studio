@@ -69,19 +69,25 @@ public abstract class AbstractRefactorOperation<Y,Z,T extends RefactorPair<Y,Z>>
         this.operationType = operationType;
     }
 
-    @Override
-    public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-        Assert.isNotNull(domain);
+    public CompoundCommand getCommand(final IProgressMonitor monitor) {
         if (compoundCommand == null) {
             compoundCommand = new CompoundCommand("Refactor Operation");
-        }
-        if (monitor == null) {
-            monitor = new NullProgressMonitor();
         }
         updateReferencesInScripts();
         if (canExecute()) {
             doExecute(monitor);
         }
+        return compoundCommand;
+    }
+
+    @Override
+    public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+        Assert.isNotNull(domain);
+
+        if (monitor == null) {
+            monitor = new NullProgressMonitor();
+        }
+        compoundCommand = getCommand(monitor);
         if (canExecute()) {
             domain.getCommandStack().execute(compoundCommand);
             compoundCommand.dispose();
@@ -257,5 +263,6 @@ public abstract class AbstractRefactorOperation<Y,Z,T extends RefactorPair<Y,Z>>
     protected void setCancelled(final boolean isCancelled) {
         this.isCancelled = isCancelled;
     }
+
 
 }

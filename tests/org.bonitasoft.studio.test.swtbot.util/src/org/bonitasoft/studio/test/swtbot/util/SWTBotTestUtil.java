@@ -261,7 +261,7 @@ public class SWTBotTestUtil implements SWTBotConstants {
     }
 
     public static void waitUntilBonitaBPmShellIsActive(final SWTWorkbenchBot bot) {
-        bot.waitUntil(new ShellIsActiveWithThreadSTacksOnFailure("Bonita BPM"));
+        bot.waitUntil(new ShellIsActiveWithThreadSTacksOnFailure("Bonita BPM"), 40000);
     }
 
     /**
@@ -591,33 +591,33 @@ public class SWTBotTestUtil implements SWTBotConstants {
     }
 
     /**
-    *
-    * @param bot
-    * @param taskName
-    * @param newDiagramName
-    */
-   public static void changeDiagramName(final SWTGefBot bot, final String newDiagramName) {
+     *
+     * @param bot
+     * @param taskName
+     * @param newDiagramName
+     */
+    public static void changeDiagramName(final SWTGefBot bot, final String newDiagramName) {
 
-       final SWTBotEditor botEditor = bot.activeEditor();
-       final SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
+        final SWTBotEditor botEditor = bot.activeEditor();
+        final SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
 
-       gmfEditor.mainEditPart().click();
+        gmfEditor.mainEditPart().click();
 
-       bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL).show();
-       bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL).setFocus();
+        bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL).show();
+        bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL).setFocus();
 
-       selectTabbedPropertyView(bot, "Diagram");
-       bot.waitUntil(Conditions.widgetIsEnabled(bot.button(org.bonitasoft.studio.common.Messages.edit)));
-       bot.button(org.bonitasoft.studio.common.Messages.edit).click();
+        selectTabbedPropertyView(bot, "Diagram");
+        bot.waitUntil(Conditions.widgetIsEnabled(bot.button(org.bonitasoft.studio.common.Messages.edit)));
+        bot.button(org.bonitasoft.studio.common.Messages.edit).click();
 
 
-       // Open new Shell
-       bot.waitUntil(Conditions.shellIsActive(org.bonitasoft.studio.common.Messages.openNameAndVersionDialogTitle));
+        // Open new Shell
+        bot.waitUntil(Conditions.shellIsActive(org.bonitasoft.studio.common.Messages.openNameAndVersionDialogTitle));
 
-       bot.textWithLabel(org.bonitasoft.studio.common.Messages.name,0).setText(newDiagramName);
-       bot.button(IDialogConstants.OK_LABEL).click();
+        bot.textWithLabel(org.bonitasoft.studio.common.Messages.name,0).setText(newDiagramName);
+        bot.button(IDialogConstants.OK_LABEL).click();
 
-   }
+    }
 
     /**
      * @param bot

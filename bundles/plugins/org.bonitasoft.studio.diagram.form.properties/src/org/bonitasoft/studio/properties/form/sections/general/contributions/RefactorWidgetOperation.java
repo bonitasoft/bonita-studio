@@ -74,7 +74,7 @@ public class RefactorWidgetOperation extends AbstractRefactorOperation<Widget, W
             final List<Expression> expressions = ModelHelper.getAllItemsOfType(ModelHelper.getPageFlow(widget), ExpressionPackage.Literals.EXPRESSION);
             final List<Expression> expressionsList = new ArrayList<Expression>();
             for (final Expression exp : expressions) {
-                if (!ModelHelper.isAExpressionReferencedElement(exp)) {
+                if (!ModelHelper.isReferencedElementIsInExpression(exp)) {
                     expressionsList.add(exp);
                 }
             }

@@ -619,6 +619,7 @@ public class FormsExporter {
             widgetName = ((SubmitFormButton) action.eContainer()).getName();
         }
         addAction(builder, action, widgetName);
+
     }
 
     protected ActionType getActionType(final Operation operation) {
@@ -646,6 +647,29 @@ public class FormsExporter {
                 if (expression != null) {
                     addActionExpression(builder, expression);
                 }
+                if (action.eContainer() instanceof Widget) {
+                    final Widget widget = (Widget) action.eContainer();
+                    addConditionExpression(builder, widget);
+                }
+    }
+
+    /**
+     * @param builder
+     * @param widget
+     * @throws InvalidFormDefinitionException
+     */
+    protected void addConditionExpression(final IFormBuilder builder, final Widget widget) throws InvalidFormDefinitionException {
+        if (widget.isInjectWidgetCondition()) {
+            final org.bonitasoft.engine.expression.Expression engineExpression = EngineExpressionUtil
+                    .createExpression(widget.getInjectWidgetScript());
+            if (engineExpression != null) {
+                builder.addConditionExpression(engineExpression.getName(), engineExpression.getContent(), engineExpression.getExpressionType(),
+                        engineExpression.getReturnType(), engineExpression.getInterpreter() == null
+                                || engineExpression.getInterpreter().isEmpty() ? null
+                                : engineExpression.getInterpreter());
+                addExpressionDependency(builder, engineExpression);
+            }
+        }
     }
 
     protected ActionType getActionTypeFromStudioOperatorType(final String type) {
@@ -1029,6 +1053,7 @@ public class FormsExporter {
                 .getExpressionType(), engineExpression.getReturnType(),
                 engineExpression.getInterpreter().isEmpty() ? null
                         : engineExpression.getInterpreter());
+
         addExpressionDependency(builder, engineExpression);
 
     }

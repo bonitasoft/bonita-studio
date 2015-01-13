@@ -60,7 +60,7 @@ public class ScriptExpressionProvider implements IExpressionProvider {
     public Image getIcon(final Expression expression) {
         final String languageId = expression.getInterpreter();
         final IScriptLanguageProvider provider = ScriptLanguageService.getInstance().getScriptLanguageProvider(languageId);
-        if (expression != null && expression.getName() != null && !expression.getName().isEmpty() && provider != null) {
+        if (expression != null && provider != null) {
             return provider.getIcon();
         } else {
             return null;

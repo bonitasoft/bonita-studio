@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Validators Test Plugin
 Bundle-SymbolicName: org.bonitasoft.studio.validators.test;singleton:=true
-Bundle-Version: 6.4.0.qualifier
+Bundle-Version: 6.5.0.qualifier
 Bundle-Vendor: BonitaSoft S.A.
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.bonitasoft.studio.validators;bundle-version="1.0.0",
@@ -15,7 +15,9 @@ Require-Bundle: org.bonitasoft.studio.validators;bundle-version="1.0.0",
  org.bonitasoft.studio.engine;bundle-version="1.0.0",
  org.bonitasoft.studio.common;bundle-version="1.0.0",
  org.bonitasoft.studio.test.swtbot.util;bundle-version="1.0.0",
- org.junit
+ org.junit,
+ org.bonitasoft.studio.swtbot.framework;bundle-version="6.4.1",
+ org.bonitasoft.studio.expression.editor
 Export-Package: org.bonitasoft.studio.validators.test.swtbot
 Import-Package: org.bonitasoft.engine.api,
  org.bonitasoft.engine.session

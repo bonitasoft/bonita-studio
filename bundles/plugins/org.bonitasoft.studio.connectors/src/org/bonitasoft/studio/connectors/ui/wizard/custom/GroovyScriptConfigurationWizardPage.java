@@ -16,31 +16,25 @@
  */
 package org.bonitasoft.studio.connectors.ui.wizard.custom;
 
-import java.util.Arrays;
-
-import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
+import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
+import org.bonitasoft.studio.connector.model.definition.ConnectorDefinitionFactory;
 import org.bonitasoft.studio.connector.model.definition.Input;
 import org.bonitasoft.studio.connector.model.definition.wizard.AbstractConnectorConfigurationWizardPage;
 import org.bonitasoft.studio.connector.model.definition.wizard.PageComponentSwitchBuilder;
+import org.bonitasoft.studio.connectors.extension.ICanFinishProvider;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.expression.editor.viewer.GroovyOnlyExpressionViewer;
-import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfigurationFactory;
+import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfigurationPackage;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorParameter;
 import org.bonitasoft.studio.model.expression.AbstractExpression;
 import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
-import org.bonitasoft.studio.model.expression.ListExpression;
-import org.bonitasoft.studio.model.expression.TableExpression;
-import org.eclipse.core.databinding.UpdateListStrategy;
-import org.eclipse.core.databinding.conversion.Converter;
+import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -53,10 +47,10 @@ import org.eclipse.swt.widgets.Control;
  * @author Romain Bioteau
  *
  */
-public class GroovyScriptConfigurationWizardPage extends AbstractConnectorConfigurationWizardPage {
+public class GroovyScriptConfigurationWizardPage extends AbstractConnectorConfigurationWizardPage implements ICanFinishProvider {
 
+    private static final String FAKE_SCRIPT_EXPRESSION = "fakeScriptExpression";
     private static final String SCRIPT_INPUT_NAME = "script";
-    private static final String DEPENDENCIES_INPUT_NAME = "variables";
 
     @Override
     protected Control doCreateControl(final Composite parent, final EMFDataBindingContext context) {
@@ -78,19 +72,14 @@ public class GroovyScriptConfigurationWizardPage extends AbstractConnectorConfig
     }
 
     public ExpressionViewer createScriptEditorControl(final Composite composite, final EMFDataBindingContext context, final PageComponentSwitchBuilder builder) {
-        final ConnectorParameter scriptParameter = getConnectorParameter(getInput(SCRIPT_INPUT_NAME));
-
-        final Expression expression = (Expression) scriptParameter.getExpression();
-        expression.setType(ExpressionConstants.CONSTANT_TYPE);
-
-        final ConnectorParameter dependenciesParameter = getConnectorParameter(getInput(DEPENDENCIES_INPUT_NAME));
-        final ConnectorParameter parameter = buildScriptConnectorParameter();
+        final ConnectorParameter parameter = getScriptConnectorParameter();
         builder.createFieldLabel(composite, SWT.CENTER, SCRIPT_INPUT_NAME, true);
         final ExpressionViewer viewer = new GroovyOnlyExpressionViewer(composite, SWT.BORDER);
         viewer.setIsPageFlowContext(isPageFlowContext());
         viewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         viewer.setContext(getElementContainer());
-        viewer.setMandatoryField(builder.getLabel("script"), context);
+        final String fieldName = builder.getLabel("script");
+        viewer.setMandatoryField(fieldName, context);
         viewer.addFilter(getExpressionTypeFilter());
         viewer.setInput(parameter);
         final String desc = builder.getDescription(SCRIPT_INPUT_NAME);
@@ -100,82 +89,54 @@ public class GroovyScriptConfigurationWizardPage extends AbstractConnectorConfig
         context.bindValue(ViewersObservables.observeSingleSelection(viewer),
                 EMFObservables.observeValue(parameter, ConnectorConfigurationPackage.Literals.CONNECTOR_PARAMETER__EXPRESSION));
 
-        context.bindValue(EMFObservables.observeValue(scriptParameter.getExpression(), ExpressionPackage.Literals.EXPRESSION__CONTENT),
-                EMFObservables.observeValue(parameter.getExpression(), ExpressionPackage.Literals.EXPRESSION__CONTENT));
-        context.bindValue(EMFObservables.observeValue(scriptParameter.getExpression(), ExpressionPackage.Literals.EXPRESSION__NAME),
-                EMFObservables.observeValue(parameter.getExpression(), ExpressionPackage.Literals.EXPRESSION__NAME));
-
-        final UpdateListStrategy expressionToReferencedElements = new UpdateListStrategy();
-        expressionToReferencedElements.setConverter(new Converter(ListExpression.class, EObject.class) {
-
-            @Override
-            public Object convert(final Object from) {
-                if (from instanceof ListExpression) {
-                    if (((ListExpression) from).getExpressions().size() == 2) {
-                        final Expression expression = ((ListExpression) from).getExpressions().get(1);
-                        final EList<EObject> referencedElements = expression.getReferencedElements();
-                        if (referencedElements.isEmpty()) {
-                            return expression;
-                        } else {
-                            return referencedElements.get(0);
-                        }
-
-                    }
-                }
-                return null;
-            }
-        });
-        final UpdateListStrategy referencedElementsToExpressionTable = new UpdateListStrategy();
-        referencedElementsToExpressionTable.setConverter(new Converter(EObject.class, ListExpression.class) {
-
-            @Override
-            public Object convert(final Object from) {
-                if (from instanceof EObject) {
-                    final Expression depValueExpression = ExpressionHelper.createExpressionFromEObject((EObject) from);
-                    if (depValueExpression != null) {
-                        final ListExpression depLine = ExpressionFactory.eINSTANCE.createListExpression();
-                        final Expression depNameExpression = ExpressionHelper.createConstantExpression(depValueExpression.getName(), String.class.getName());
-                        final EList<Expression> expressions = depLine.getExpressions();
-                        expressions.addAll(Arrays.asList(depNameExpression, depValueExpression));
-                        return depLine;
-                    }
-                    return null;
-                }
-                return null;
-            }
-        });
-
-        context.bindList(EMFObservables.observeList(parameter.getExpression(), ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS),
-                EMFObservables.observeList(dependenciesParameter.getExpression(), ExpressionPackage.Literals.TABLE_EXPRESSION__EXPRESSIONS),
-                referencedElementsToExpressionTable,
-                expressionToReferencedElements);
+        context.bindValue(EMFObservables.observeValue(parameter.getExpression(), ExpressionPackage.Literals.EXPRESSION__CONTENT),
+                EMFObservables.observeValue(parameter.getExpression(), ExpressionPackage.Literals.EXPRESSION__CONTENT),
+                mandatoryScriptContentStrategy(fieldName), mandatoryScriptContentStrategy(fieldName));
 
         return viewer;
     }
 
+    private UpdateValueStrategy mandatoryScriptContentStrategy(final String fieldLabel) {
+        final UpdateValueStrategy startegy = new UpdateValueStrategy();
+        startegy.setAfterGetValidator(new EmptyInputValidator(fieldLabel));
+        return startegy;
+    }
+
     @Override
     protected AbstractExpression createExpression(final Input input) {
-        if (input.getName().equals(DEPENDENCIES_INPUT_NAME)) {
-            final TableExpression expression = ExpressionFactory.eINSTANCE.createTableExpression();
+        if (input.getName().equals(FAKE_SCRIPT_EXPRESSION)) {
+            final Expression expression = ExpressionHelper.createGroovyScriptExpression("", input.getType());
+            expression.setReturnTypeFixed(true);
+            expression.setName("");
             return expression;
         }
         return super.createExpression(input);
     }
 
-    private ConnectorParameter buildScriptConnectorParameter() {
-        final ConnectorParameter connectorParameter = ConnectorConfigurationFactory.eINSTANCE.createConnectorParameter();
-        connectorParameter.setKey("fakeScriptExpression");
-        final ConnectorParameter scriptParameter = getConnectorParameter(getInput(SCRIPT_INPUT_NAME));
-        final Expression scriptExpression = (Expression) scriptParameter.getExpression();
-        String scriptContent = null;
-        if (scriptExpression != null && scriptExpression.getContent() != null) {
-            scriptContent = scriptExpression.getContent();
+    private ConnectorParameter getScriptConnectorParameter() {
+        final Input input = getFakeInput();
+        return getConnectorParameter(input);
+    }
+
+    protected Input getFakeInput() {
+        final Input input = ConnectorDefinitionFactory.eINSTANCE.createInput();
+        input.setName(FAKE_SCRIPT_EXPRESSION);
+        input.setType(Object.class.getName());
+        return input;
+    }
+
+    @Override
+    public boolean canFinish(final ConnectorConfiguration configuration) {
+        for (final ConnectorParameter param : configuration.getParameters()) {
+            if (FAKE_SCRIPT_EXPRESSION.equals(param.getKey())) {
+                final AbstractExpression expression = param.getExpression();
+                if (expression != null && expression instanceof Expression && ((Expression) expression).getContent() != null
+                        && !((Expression) expression).getContent().isEmpty()) {
+                    return true;
+                }
+            }
         }
-        final Expression groovyScriptExpression = ExpressionHelper.createGroovyScriptExpression(scriptContent, Object.class.getName());
-        groovyScriptExpression.setName("Click on pencil to edit/view groovy script");
-        groovyScriptExpression.setReturnTypeFixed(true);
-        connectorParameter.setExpression(groovyScriptExpression);
-        return connectorParameter;
+        return false;
     }
 
 }

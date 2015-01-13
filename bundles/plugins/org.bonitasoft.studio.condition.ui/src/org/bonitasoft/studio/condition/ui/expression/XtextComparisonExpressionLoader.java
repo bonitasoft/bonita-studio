@@ -41,6 +41,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xtext.EcoreUtil2;
+import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.ui.resource.XtextResourceSetProvider;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.util.StringInputStream;
@@ -63,7 +64,7 @@ public class XtextComparisonExpressionLoader {
         final Resource resource = loadResource(comparisonExpression, context);
         final EList<EObject> contents = resource.getContents();
         if (contents.isEmpty()) {
-            throw new ComparisonExpressionLoadException("Failed to laod comparison expression " + comparisonExpression);
+            throw new ComparisonExpressionLoadException("Failed to load comparison expression " + comparisonExpression);
         }
         if (context != null && context.eResource() != null) {
             return resolveProxies(resource, context.eResource().getResourceSet());
@@ -71,7 +72,13 @@ public class XtextComparisonExpressionLoader {
         return (Operation_Compare) contents.get(0);
     }
 
-    protected List<String> getAccessibleReferences(final EObject context) {
+    /**
+     * Public for test purpose
+     *
+     * @param context
+     * @return
+     */
+    public List<String> getAccessibleReferences(final EObject context) {
         final List<String> accessibleObjects = new ArrayList<String>();
         for (final Data d : ModelHelper.getAccessibleData(context)) {
             accessibleObjects.add(ModelHelper.getEObjectID(d));
@@ -98,7 +105,7 @@ public class XtextComparisonExpressionLoader {
             throw new ComparisonExpressionLoadException("Failed to create StringInputString from expression.", e);
         }
         try {
-            resource.load(inputStream, Collections.emptyMap());
+            resource.load(inputStream, Collections.singletonMap(XtextResource.OPTION_ENCODING, "UTF-8"));
         } catch (final IOException e) {
             throw new ComparisonExpressionLoadException("Failed to load Xtext resource.", e);
         }

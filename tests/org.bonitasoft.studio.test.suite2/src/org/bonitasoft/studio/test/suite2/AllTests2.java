@@ -47,6 +47,7 @@ import org.bonitasoft.studio.tests.CloseAllEditors;
 import org.bonitasoft.studio.tests.IHeapDumper;
 import org.bonitasoft.studio.tests.api.TestBonitaAPI;
 import org.bonitasoft.studio.tests.bug.TestBugs;
+import org.bonitasoft.studio.tests.connectors.GroovyConnectorIT;
 import org.bonitasoft.studio.tests.connectors.TestDatabaseConnectorResulset;
 import org.bonitasoft.studio.tests.data.DataRefactorIT;
 import org.bonitasoft.studio.tests.form.TestCommands;
@@ -88,14 +89,10 @@ import org.junit.runners.Suite;
     TestSimulationResourceRepository.class,
     TestLookAndFeel.class,
     TestGroovyScriptExpressionEditor.class,
-
     TestExportProcessBar.class,
     TestThemeRepository.class,
     TestDirtyState.class,
     TestCSSModel.class,
-    /*
-    TestURLs.class,
-     */
     TestDuplicateCommand.class,
     BPMNImportExportTest.class,
     BPMNDataExportImportTest.class,
@@ -114,7 +111,8 @@ import org.junit.runners.Suite;
     TestWebserviceVersionForBPMNImport.class,
         TestTokenDispatcher.class,
         DocumentTypeMigrationIT.class,
-    CloseAllEditors.class,
+        GroovyConnectorIT.class,
+        CloseAllEditors.class
 })
 public class AllTests2 extends TestSuite {
 

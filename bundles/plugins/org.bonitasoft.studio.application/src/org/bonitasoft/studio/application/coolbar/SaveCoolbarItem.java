@@ -27,6 +27,8 @@ import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.jface.action.IContributionManager;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -46,204 +48,242 @@ import org.eclipse.ui.internal.handlers.DirtyStateTracker;
  * @author Romain Bioteau
  *
  */
-public class SaveCoolbarItem implements IBonitaContributionItem {
+public class SaveCoolbarItem implements IBonitaContributionItem, ISelectionChangedListener {
 
-	private ToolItem item;
-	private DirtyStateTracker dirtyStateTracker;
-
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.action.IContributionItem#dispose()
-	 */
-	@Override
-	public void dispose() {}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.action.IContributionItem#fill(org.eclipse.swt.widgets.Composite)
-	 */
-	@Override
-	public void fill(Composite parent) {}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.action.IContributionItem#fill(org.eclipse.swt.widgets.Menu, int)
-	 */
-	@Override
-	public void fill(Menu parent, int index) {}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.action.IContributionItem#fill(org.eclipse.swt.widgets.ToolBar, int)
-	 */
-	@Override
-	public void fill(ToolBar parent, int index) {
-
-	}
-
-	private Command getCommand() {
-		ICommandService service = (ICommandService)PlatformUI.getWorkbench().getService(ICommandService.class);
-		Command cmd = service.getCommand("org.eclipse.ui.file.save") ;
-		return cmd;
-	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.action.IContributionItem#fill(org.eclipse.swt.widgets.CoolBar, int)
-	 */
-	@Override
-	public void fill(CoolBar parent, int index) {}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.action.IContributionItem#getId()
-	 */
-	@Override
-	public String getId() {
-		return "org.bonitasoft.studio.coolbar.save";
-	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.action.IContributionItem#isEnabled()
-	 */
-	@Override
-	public boolean isEnabled() {
-		Command cmd = getCommand();
-		return cmd.isEnabled();
-	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.action.IContributionItem#isDirty()
-	 */
-	@Override
-	public boolean isDirty() {
-		return false;
-	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.action.IContributionItem#isDynamic()
-	 */
-	@Override
-	public boolean isDynamic() {
-		return false;
-	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.action.IContributionItem#isGroupMarker()
-	 */
-	@Override
-	public boolean isGroupMarker() {
-		return false;
-	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.action.IContributionItem#isSeparator()
-	 */
-	@Override
-	public boolean isSeparator() {
-		return false;
-	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.action.IContributionItem#isVisible()
-	 */
-	@Override
-	public boolean isVisible() {
-		return true;
-	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.action.IContributionItem#saveWidgetState()
-	 */
-	@Override
-	public void saveWidgetState() {
+    private ToolItem item;
+    private DirtyStateTracker dirtyStateTracker;
 
 
-	}
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.jface.action.IContributionItem#dispose()
+     */
+    @Override
+    public void dispose() {
+    }
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.action.IContributionItem#setParent(org.eclipse.jface.action.IContributionManager)
-	 */
-	@Override
-	public void setParent(IContributionManager parent) {
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.jface.action.IContributionItem#fill(org.eclipse.swt.widgets.Composite)
+     */
+    @Override
+    public void fill(final Composite parent) {
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.jface.action.IContributionItem#fill(org.eclipse.swt.widgets.Menu, int)
+     */
+    @Override
+    public void fill(final Menu parent, final int index) {
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.jface.action.IContributionItem#fill(org.eclipse.swt.widgets.ToolBar, int)
+     */
+    @Override
+    public void fill(final ToolBar parent, final int index) {
+
+    }
+
+    private Command getCommand() {
+        final ICommandService service = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
+        final Command cmd = service.getCommand("org.eclipse.ui.file.save");
+        return cmd;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.jface.action.IContributionItem#fill(org.eclipse.swt.widgets.CoolBar, int)
+     */
+    @Override
+    public void fill(final CoolBar parent, final int index) {
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.jface.action.IContributionItem#getId()
+     */
+    @Override
+    public String getId() {
+        return "org.bonitasoft.studio.coolbar.save";
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.jface.action.IContributionItem#isEnabled()
+     */
+    @Override
+    public boolean isEnabled() {
+        final Command cmd = getCommand();
+        return cmd.isEnabled();
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.jface.action.IContributionItem#isDirty()
+     */
+    @Override
+    public boolean isDirty() {
+        return false;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.jface.action.IContributionItem#isDynamic()
+     */
+    @Override
+    public boolean isDynamic() {
+        return false;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.jface.action.IContributionItem#isGroupMarker()
+     */
+    @Override
+    public boolean isGroupMarker() {
+        return false;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.jface.action.IContributionItem#isSeparator()
+     */
+    @Override
+    public boolean isSeparator() {
+        return false;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.jface.action.IContributionItem#isVisible()
+     */
+    @Override
+    public boolean isVisible() {
+        return true;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.jface.action.IContributionItem#saveWidgetState()
+     */
+    @Override
+    public void saveWidgetState() {
 
 
-	}
+    }
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.action.IContributionItem#setVisible(boolean)
-	 */
-	@Override
-	public void setVisible(boolean visible) {
-
-
-	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.action.IContributionItem#update()
-	 */
-	@Override
-	public void update() {
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.jface.action.IContributionItem#setParent(org.eclipse.jface.action.IContributionManager)
+     */
+    @Override
+    public void setParent(final IContributionManager parent) {
 
 
-	}
+    }
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.action.IContributionItem#update(java.lang.String)
-	 */
-	@Override
-	public void update(String id) {
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.jface.action.IContributionItem#setVisible(boolean)
+     */
+    @Override
+    public void setVisible(final boolean visible) {
 
-	}
 
-	@Override
-	public void fill(ToolBar toolbar, int index, int iconSize) {
-		item = new ToolItem(toolbar,  SWT.PUSH) ;
-		item.setToolTipText(Messages.SaveProcessButtonLabel) ;
-		if(iconSize < 0 ){
-			item.setText(Messages.SaveProcessButtonLabel) ;
-			item.setImage(Pics.getImage(PicsConstants.coolbar_save_48)) ;
-			item.setDisabledImage(Pics.getImage(PicsConstants.coolbar_save_disabled_48));
-		}else{
-			item.setImage(Pics.getImage(PicsConstants.coolbar_save_16)) ;
-			item.setDisabledImage(Pics.getImage(PicsConstants.coolbar_save_disabled_16));
-		}
-		 item.setEnabled(false);
-		item.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				IEditorPart editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor() ;
-				if(editor != null){
-					if(editor instanceof DiagramEditor){
-						IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService(IHandlerService.class);
-						Command command = getCommand() ;
-						ExecutionEvent executionEvent = new ExecutionEvent(command, Collections.EMPTY_MAP, null, handlerService.getClass());
-						try {
-							command.executeWithChecks(executionEvent);
-						} catch (Exception e1){
-							BonitaStudioLog.error(e1);
-						}
+    }
 
-					}else{
-						editor.doSave(null);
-					}
-				}
-			}
-		}) ;
-	}
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.jface.action.IContributionItem#update()
+     */
+    @Override
+    public void update() {
 
-	public DirtyStateTracker getDirtyStateTracker() {
-		return dirtyStateTracker;
-	}
 
-	public void createDirtyStateTracker() {
-		dirtyStateTracker = new DirtyStateTracker(){
-			@Override
-			public void propertyChanged(final Object source, int propID) {
-				if (source instanceof ISaveablePart && propID == ISaveablePart.PROP_DIRTY) {
-					update();
-					if(item != null && !item.isDisposed()){
-						item.setEnabled(((ISaveablePart) source).isDirty());
-					}
-				}
-			}
-		};
-	}
+    }
 
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.jface.action.IContributionItem#update(java.lang.String)
+     */
+    @Override
+    public void update(final String id) {
+
+    }
+
+    @Override
+    public void fill(final ToolBar toolbar, final int index, final int iconSize) {
+        item = new ToolItem(toolbar, SWT.PUSH);
+        item.setToolTipText(Messages.SaveProcessButtonLabel);
+        if (iconSize < 0) {
+            item.setText(Messages.SaveProcessButtonLabel);
+            item.setImage(Pics.getImage(PicsConstants.coolbar_save_48));
+            item.setDisabledImage(Pics.getImage(PicsConstants.coolbar_save_disabled_48));
+        } else {
+            item.setImage(Pics.getImage(PicsConstants.coolbar_save_16));
+            item.setDisabledImage(Pics.getImage(PicsConstants.coolbar_save_disabled_16));
+        }
+        item.setEnabled(false);
+        item.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(final SelectionEvent e) {
+                final IEditorPart editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+                if (editor != null) {
+                    if (editor instanceof DiagramEditor) {
+                        final IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService(IHandlerService.class);
+                        final Command command = getCommand();
+                        final ExecutionEvent executionEvent = new ExecutionEvent(command, Collections.EMPTY_MAP, null, handlerService.getClass());
+                        try {
+                            command.executeWithChecks(executionEvent);
+                        } catch (final Exception e1) {
+                            BonitaStudioLog.error(e1);
+                        }
+
+                    } else {
+                        editor.doSave(null);
+                    }
+                }
+            }
+        });
+    }
+
+    public DirtyStateTracker getDirtyStateTracker() {
+        return dirtyStateTracker;
+    }
+
+    public void createDirtyStateTracker() {
+        dirtyStateTracker = new DirtyStateTracker() {
+
+            @Override
+            public void propertyChanged(final Object source, final int propID) {
+                if (source instanceof ISaveablePart && propID == ISaveablePart.PROP_DIRTY) {
+                    update();
+                    if (item != null && !item.isDisposed()) {
+                        item.setEnabled(((ISaveablePart) source).isDirty());
+                    }
+                }
+            }
+        };
+    }
+
+    @Override
+    public void selectionChanged(final SelectionChangedEvent event) {
+        if (item != null && !item.isDisposed()) {
+            item.getDisplay().asyncExec(new Runnable() {
+
+                @Override
+                public void run() {
+                    if (item != null && !item.isDisposed()) {
+                        item.setEnabled(getCommand().isEnabled());
+                    }
+                }
+            });
+
+        }
+    }
 
 }
