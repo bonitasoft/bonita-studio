@@ -83,7 +83,6 @@ public class BonitaStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 
 	@Override
 	public void openIntro() {
-		PlatformUtil.closeIntro();
 		PrefUtil.getAPIPreferenceStore().setValue(IWorkbenchPreferenceConstants.SHOW_INTRO, true);
 		PrefUtil.saveAPIPrefs();
 		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
