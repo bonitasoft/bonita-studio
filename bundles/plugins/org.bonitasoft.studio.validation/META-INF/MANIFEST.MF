@@ -43,4 +43,4 @@ Export-Package: org.bonitasoft.studio.validation,org.bonitasoft.studio
  connector,org.bonitasoft.studio.validation.constraints.form;x-friends
  :="org.bonitasoft.studio.validation.test",org.bonitasoft.studio.valid
  ation.constraints.process;x-friends:="org.bonitasoft.studio.validatio
- n.test"
+ n.test",org.bonitasoft.studio.validation.i18n
