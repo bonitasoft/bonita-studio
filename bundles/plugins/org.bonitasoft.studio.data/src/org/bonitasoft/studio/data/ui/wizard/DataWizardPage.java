@@ -814,7 +814,7 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
         if (elementCombo != null && !elementCombo.isDisposed() && data instanceof XMLData) {
             elementCombo.removeAll();
             final XSDFileStore artifact = store.findArtifactWithNamespace(((XMLData) data).getNamespace());
-            if (((XMLData) data).getNamespace() != null) {
+            if (artifact != null && ((XMLData) data).getNamespace() != null) {
                 for (final String element : artifact.getElements()) {
                     elementCombo.add(element);
                 }
