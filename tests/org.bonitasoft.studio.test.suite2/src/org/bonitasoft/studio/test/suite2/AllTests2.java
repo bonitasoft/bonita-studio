@@ -52,6 +52,8 @@ import org.bonitasoft.studio.tests.connectors.GroovyConnectorIT;
 import org.bonitasoft.studio.tests.connectors.TestDatabaseConnectorResulset;
 import org.bonitasoft.studio.tests.data.DataRefactorIT;
 import org.bonitasoft.studio.tests.form.TestCommands;
+import org.bonitasoft.studio.tests.parameter.TestParametersRefactoring;
+import org.bonitasoft.studio.tests.parameter.TestProcessParameters;
 import org.bonitasoft.studio.tests.perspectives.TestAutomaticSwitchPerspective;
 import org.bonitasoft.studio.tests.processzoo.TestProcessZoo;
 import org.bonitasoft.studio.tests.refactoring.widget.TestRefactorWidgetOperation;
@@ -114,6 +116,8 @@ import org.junit.runners.Suite;
         DocumentTypeMigrationIT.class,
         GroovyConnectorIT.class,
         DeployBDROperationIT.class,
+        TestProcessParameters.class,
+        TestParametersRefactoring.class,
         CloseAllEditors.class
 })
 public class AllTests2 extends TestSuite {

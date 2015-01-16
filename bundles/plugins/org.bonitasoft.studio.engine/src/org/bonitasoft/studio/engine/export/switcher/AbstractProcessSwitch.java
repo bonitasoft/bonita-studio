@@ -23,6 +23,8 @@ import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Element;
 import org.eclipse.emf.ecore.EObject;
 
+import com.bonitasoft.engine.bpm.process.impl.ProcessDefinitionBuilderExt;
+
 
 /**
  * @author Romain Bioteau
@@ -32,20 +34,23 @@ public class AbstractProcessSwitch extends AbstractSwitch {
 
     protected final ProcessDefinitionBuilder builder;
 
-    public AbstractProcessSwitch(ProcessDefinitionBuilder processBuilder,Set<EObject> eObjectNotExported){
+    public AbstractProcessSwitch(final ProcessDefinitionBuilder processBuilder,final Set<EObject> eObjectNotExported){
     	super(eObjectNotExported);
         builder = processBuilder ;
     }
 
     @Override
-    public Element caseAbstractProcess(AbstractProcess object) {
+    public Element caseAbstractProcess(final AbstractProcess object) {
         addActors(builder,object);
         addData(builder,object) ;
+        if (builder instanceof ProcessDefinitionBuilderExt) {
+            addParameters((ProcessDefinitionBuilderExt) builder, object);
+        }
         addConnector(builder, object) ;
         addKPIBinding(builder, object);
         return object;
     }
-    
+
     public ProcessDefinitionBuilder getProcessBuilder(){
     	return builder;
     }

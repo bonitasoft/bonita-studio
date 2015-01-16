@@ -16,10 +16,13 @@ package org.bonitasoft.studio.engine.export.switcher;
 
 import java.util.Collection;
 
+import org.bonitasoft.engine.bpm.process.impl.BusinessDataDefinitionBuilder;
 import org.bonitasoft.engine.bpm.process.impl.DataDefinitionBuilder;
 import org.bonitasoft.engine.bpm.process.impl.FlowElementBuilder;
 import org.bonitasoft.engine.expression.Expression;
 import org.bonitasoft.studio.model.process.BooleanType;
+import org.bonitasoft.studio.model.process.BusinessObjectData;
+import org.bonitasoft.studio.model.process.BusinessObjectType;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.DateType;
 import org.bonitasoft.studio.model.process.DoubleType;
@@ -32,6 +35,8 @@ import org.bonitasoft.studio.model.process.LongType;
 import org.bonitasoft.studio.model.process.StringType;
 import org.bonitasoft.studio.model.process.XMLType;
 import org.bonitasoft.studio.model.process.util.ProcessSwitch;
+
+import com.bonitasoft.engine.bpm.process.impl.ProcessDefinitionBuilderExt;
 
 /**
  * @author Romain Bioteau
@@ -144,4 +149,14 @@ public class DataSwitch extends ProcessSwitch<DataDefinitionBuilder> {
         return builder.addDateData(data.getName(), expr);
     }
 
+    @Override
+    public DataDefinitionBuilder caseBusinessObjectType(
+            final BusinessObjectType object) {
+        final BusinessObjectData bod = (BusinessObjectData) getData();
+        final BusinessDataDefinitionBuilder businessDataBuilder = ((ProcessDefinitionBuilderExt) getBuilder()).addBusinessData(bod.getName(),
+                bod.getClassName(), getDefaultValueExpression());
+        businessDataBuilder.setMultiple(bod.isMultiple());
+        businessDataBuilder.addDescription(bod.getDocumentation());
+        return null;
+    }
 }

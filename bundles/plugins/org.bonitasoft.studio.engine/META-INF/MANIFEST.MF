@@ -51,9 +51,11 @@ Export-Package: org.bonitasoft.studio.engine,org.bonitasoft.studio.eng
 Bundle-Activator: org.bonitasoft.studio.engine.EnginePlugin
 Bundle-ActivationPolicy: lazy
 Import-Package: com.bonitasoft.engine.api,
+ com.bonitasoft.engine.bpm.process.impl,
  org.bonitasoft.engine.api,
  org.bonitasoft.engine.bpm,
  org.bonitasoft.engine.bpm.bar,
+ org.bonitasoft.engine.bpm.businessdata,
  org.bonitasoft.engine.bpm.connector,
  org.bonitasoft.engine.bpm.flownode,
  org.bonitasoft.engine.bpm.process,

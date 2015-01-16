@@ -31,6 +31,7 @@ import org.bonitasoft.studio.model.connectorconfiguration.ConnectorParameter;
 import org.bonitasoft.studio.model.expression.Operation;
 import org.bonitasoft.studio.model.kpi.AbstractKPIBinding;
 import org.bonitasoft.studio.model.kpi.DatabaseKPIBinding;
+import org.bonitasoft.studio.model.parameter.Parameter;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Actor;
 import org.bonitasoft.studio.model.process.ConnectableElement;
@@ -41,6 +42,8 @@ import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.util.ProcessSwitch;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
+
+import com.bonitasoft.engine.bpm.process.impl.ProcessDefinitionBuilderExt;
 
 /**
  * @author Romain Bioteau
@@ -70,6 +73,13 @@ public abstract class AbstractSwitch extends ProcessSwitch<Element> {
             if (a.isInitiator()) {
                 actorBuilder.setActorInitiator(a.getName());
             }
+        }
+    }
+
+    protected void addParameters(final ProcessDefinitionBuilderExt builder, final AbstractProcess process) {
+        for (final Parameter p : process.getParameters()) {
+            final String description = p.getDescription();
+            builder.addParameter(p.getName(), p.getTypeClassname()).addDescription(description == null ? "" : description);
         }
     }
 
