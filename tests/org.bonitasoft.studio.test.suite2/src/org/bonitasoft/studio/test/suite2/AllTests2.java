@@ -47,6 +47,7 @@ import org.bonitasoft.studio.tests.CloseAllEditors;
 import org.bonitasoft.studio.tests.IHeapDumper;
 import org.bonitasoft.studio.tests.api.TestBonitaAPI;
 import org.bonitasoft.studio.tests.bug.TestBugs;
+import org.bonitasoft.studio.tests.businessobject.DeployBDROperationIT;
 import org.bonitasoft.studio.tests.connectors.GroovyConnectorIT;
 import org.bonitasoft.studio.tests.connectors.TestDatabaseConnectorResulset;
 import org.bonitasoft.studio.tests.data.DataRefactorIT;
@@ -112,6 +113,7 @@ import org.junit.runners.Suite;
         TestTokenDispatcher.class,
         DocumentTypeMigrationIT.class,
         GroovyConnectorIT.class,
+        DeployBDROperationIT.class,
         CloseAllEditors.class
 })
 public class AllTests2 extends TestSuite {

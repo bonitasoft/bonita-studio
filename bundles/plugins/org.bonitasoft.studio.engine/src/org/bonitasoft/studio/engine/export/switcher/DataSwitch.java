@@ -42,7 +42,7 @@ public class DataSwitch extends ProcessSwitch<DataDefinitionBuilder> {
     private final FlowElementBuilder builder;
     private final Expression expr;
 
-    public DataSwitch(Data data, Expression defaultValue, FlowElementBuilder flowElementBuilder) {
+    public DataSwitch(final Data data, final Expression defaultValue, final FlowElementBuilder flowElementBuilder) {
         builder = flowElementBuilder;
         this.data = data;
         expr = defaultValue;
@@ -68,12 +68,12 @@ public class DataSwitch extends ProcessSwitch<DataDefinitionBuilder> {
         return builder.addLongTextData(data.getName(), expr);
     }
 
-    protected DataDefinitionBuilder addCollectionData(String name, Expression expr2) {
+    protected DataDefinitionBuilder addCollectionData(final String name, final Expression expr2) {
         return builder.addData(data.getName(), Collection.class.getName(), expr);
     }
 
     @Override
-    public DataDefinitionBuilder caseLongType(LongType object) {
+    public DataDefinitionBuilder caseLongType(final LongType object) {
         if (data.isMultiple()) {
             return addCollectionData(data.getName(), expr);
         }
@@ -81,7 +81,7 @@ public class DataSwitch extends ProcessSwitch<DataDefinitionBuilder> {
     }
 
     @Override
-    public DataDefinitionBuilder caseDoubleType(DoubleType object) {
+    public DataDefinitionBuilder caseDoubleType(final DoubleType object) {
         if (data.isMultiple()) {
             return addCollectionData(data.getName(), expr);
         }

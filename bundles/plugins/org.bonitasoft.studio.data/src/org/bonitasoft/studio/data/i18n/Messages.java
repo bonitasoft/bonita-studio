@@ -80,8 +80,6 @@ public class Messages extends NLS {
 
     public static String browseJava;
 
-    public static String attachementRepository;
-
     public static String addData;
 
     public static String removeData;
@@ -91,9 +89,6 @@ public class Messages extends NLS {
     public static String selectOnlyOneElementMessage;
 
     public static String selectOnlyOneElementTitle;
-
-    // Deletion
-    public static String deleteDataDialogTitle;
 
     public static String deleteDialogConfirmMessage;
 
@@ -157,8 +152,6 @@ public class Messages extends NLS {
 
     public static String dateTypeHint;
 
-    public static String refactoringData;
-
     public static String dataWizardPageReturnTypeNotCorresponding;
 
     public static String newVariable;
@@ -179,10 +172,6 @@ public class Messages extends NLS {
 
     public static String dataMoveErrorTargetCantBeSource;
 
-    public static String documentType;
-
-    public static String documentReferenceType;
-
     public static String xmlDefaultValueTooLongMessage;
 
     public static String xmlDefaultValueTooLongTitle;
@@ -194,6 +183,16 @@ public class Messages extends NLS {
     public static String transientDataWarning;
 
     public static String createVariable;
+
+    public static String dataSectionWithBusinessData;
+
+    public static String businessData;
+
+    public static String businessDataHint;
+
+    public static String processDataHint;
+
+    public static String processData;
 
     static {
         NLS.initializeMessages("messages", Messages.class);//$NON-NLS-1$

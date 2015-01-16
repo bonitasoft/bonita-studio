@@ -58,7 +58,7 @@ public class BotAddFormWizardDialog extends BotWizardDialog {
 
     /**
      * Return content of the Widget column of a given element
-     * 
+     *
      * @param dataName
      * @return
      */
@@ -66,4 +66,13 @@ public class BotAddFormWizardDialog extends BotWizardDialog {
         return bot.tree().getTreeItem(dataName).cell(1);
     }
 
+
+
+    /**
+     * Select Business data tab.
+     */
+    public BotBusinessDataMappingPanel selectBusinessDataTab() {
+        bot.tabItem(org.bonitasoft.studio.properties.i18n.Messages.businessData).activate();
+        return new BotBusinessDataMappingPanel(bot);
+    }
 }

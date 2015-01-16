@@ -16,6 +16,7 @@
 	<modules>
 		<module>org.bonitasoft.studio.actors.nl_pt</module>
 		<module>org.bonitasoft.studio.application.nl_pt</module>
+        <module>org.bonitasoft.studio.businessobject.nl_pt</module>
 		<module>org.bonitasoft.studio.common.nl_pt</module>
 		<module>org.bonitasoft.studio.common.repository.nl_pt</module>
 		<module>org.bonitasoft.studio.condition.nl_pt</module>

@@ -28,14 +28,15 @@ import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.WidgetHelper;
 import org.bonitasoft.studio.common.emf.tools.WidgetModifiersSwitch;
-import org.bonitasoft.studio.data.provider.DocumentReferenceExpressionProvider;
 import org.bonitasoft.studio.diagram.form.custom.model.WidgetContainer;
 import org.bonitasoft.studio.diagram.form.custom.model.WidgetMapping;
+import org.bonitasoft.studio.document.core.expression.DocumentReferenceExpressionProvider;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.expression.Operation;
 import org.bonitasoft.studio.model.expression.Operator;
 import org.bonitasoft.studio.model.form.CheckBoxSingleFormField;
+import org.bonitasoft.studio.model.form.Duplicable;
 import org.bonitasoft.studio.model.form.FileWidget;
 import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.form.FormFactory;
@@ -49,6 +50,7 @@ import org.bonitasoft.studio.model.form.TextFormField;
 import org.bonitasoft.studio.model.form.ViewForm;
 import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.form.WidgetLayoutInfo;
+import org.bonitasoft.studio.model.process.BusinessObjectData;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.Document;
 import org.bonitasoft.studio.model.process.Element;
@@ -61,13 +63,26 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.emf.codegen.ecore.genmodel.GenClass;
+import org.eclipse.emf.codegen.ecore.genmodel.GenFeature;
+import org.eclipse.emf.codegen.ecore.genmodel.GenModel;
+import org.eclipse.emf.codegen.ecore.genmodel.GenModelFactory;
+import org.eclipse.emf.codegen.ecore.genmodel.GenPackage;
 import org.eclipse.emf.codegen.util.CodeGenUtil;
+import org.eclipse.emf.ecore.EAttribute;
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.EcoreFactory;
+import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.edit.command.AddCommand;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCommand;
+
+import com.bonitasoft.engine.bdm.model.field.FieldType;
+import com.bonitasoft.engine.bdm.model.field.SimpleField;
 
 /**
  *
@@ -87,6 +102,7 @@ public class CreateFormCommand extends AbstractTransactionalCommand {
     private final Element pageFlow;
     private final String description;
     private final EStructuralFeature feature;
+    private boolean initialValueGenerated = true;
 
     public CreateFormCommand(final Element pageFlow,
             final EStructuralFeature feature,
@@ -109,6 +125,10 @@ public class CreateFormCommand extends AbstractTransactionalCommand {
             final String description,
             final TransactionalEditingDomain editingDomain) {
         this(pageFlow,feature,formName,description,Collections.<WidgetMapping>emptyList(),editingDomain);
+    }
+
+    public void setGenerateInitialValue(final boolean initialValueGenerated) {
+        this.initialValueGenerated = initialValueGenerated;
     }
 
     protected Expression createLabelExpression(final String name) {
@@ -208,6 +228,11 @@ public class CreateFormCommand extends AbstractTransactionalCommand {
             addNameAndDisplayLabel(mapping, widget);
             addMappingExpressions(mapping, widget);
             return widget;
+        } else if (!mapping.getChildren().isEmpty()) {
+            for (final WidgetMapping childMapping : mapping.getChildren()) {
+                createWidgetFromMapping(container, childMapping, horizontalSpan);
+            }
+            return null;
         }
         return null;
     }
@@ -244,9 +269,33 @@ public class CreateFormCommand extends AbstractTransactionalCommand {
         }else if(modelElement instanceof Document && widget instanceof FileWidget){
             addInputExpressionForDocument((Document)modelElement, (FileWidget)widget);
             addOutputOperationForDocument(mapping, (FileWidget) widget);
+        } else if (modelElement instanceof SimpleField) {
+            addMappingExpressionsForField(mapping, widget, (SimpleField) modelElement);
+            setMaxLength(widget, (SimpleField) modelElement);
         }
-
     }
+
+    protected void setMaxLength(final Widget widget, final SimpleField modelElement) {
+        if (widget instanceof TextFormField && modelElement.getType() == FieldType.STRING && modelElement.getLength() != null) {
+            ((TextFormField) widget).setMaxLength(modelElement.getLength());
+        }
+    }
+
+    protected void addMappingExpressionsForField(
+            final WidgetMapping mapping, final Widget widget, final SimpleField field) {
+        setWidgetModifier(field.getType().getClazz().getName(), widget);
+        if (widget instanceof Duplicable && ((Duplicable) widget).isDuplicate()) {
+            if (field.isNullable() != null && !field.isNullable()) {
+                ((Duplicable) widget).setLimitMinNumberOfDuplication(true);
+                ((Duplicable) widget).setMinNumberOfDuplication(ExpressionHelper.createConstantExpression("1", Integer.class.getName()));
+            }
+        }
+        final BusinessObjectData data = getBusinessOjectDataFor(mapping);
+        Assert.isNotNull(data);
+        addInputExpressionForBusinessDataField(data, field, widget);
+        addOutputOperationForBusinessDataField(data, field, widget);
+    }
+
 
     protected void addNameAndDisplayLabel(final WidgetMapping mapping,
             final Widget widget) {
@@ -256,6 +305,17 @@ public class CreateFormCommand extends AbstractTransactionalCommand {
             final String widgetId  = computeWidgetId(keyName,widget);
             widget.setName(widgetId);
             widget.setDisplayLabel(createLabelExpression(keyName));
+        } else if (modelElement instanceof SimpleField) {
+            final GenFeature genFeature = createGenFeature((SimpleField) modelElement);
+            final String widgetId = computeWidgetId(genFeature.getName(), widget);
+            widget.setName(widgetId);
+            widget.setDisplayLabel(createLabelExpression(genFeature.getCapName()));
+        }
+    }
+
+    protected void addOutputOperationForBusinessDataField(final BusinessObjectData data, final SimpleField field, final Widget widget) {
+        if (!isDataPageFlowTransient(data) && hasOutputOperation(widget)) {
+            widget.setAction(createBusinessDataOutputOperation(widget, field, data));
         }
     }
 
@@ -457,6 +517,93 @@ public class CreateFormCommand extends AbstractTransactionalCommand {
         storageExpression.setReturnType(org.bonitasoft.studio.common.DataUtil.getTechnicalTypeFor(data)) ;
         storageExpression.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(data)) ;
         return storageExpression;
+    }
+
+    protected void addInputExpressionForBusinessDataField(final BusinessObjectData data, final SimpleField field, final Widget widget) {
+        if (initialValueGenerated) {
+            if (!isOnInstantiationForm(data)) { // Do not set input expression if we are in an instantiation form
+                final String qualifiedClassname = org.bonitasoft.studio.common.DataUtil.getTechnicalTypeFor(data);
+                final Expression inputExpression = ExpressionFactory.eINSTANCE.createExpression();
+                inputExpression.setContent(getGetterFor(field));
+                inputExpression.setName(data.getName() + " - " + qualifiedClassname + "#" + getGetterFor(field));
+                inputExpression.setType(ExpressionConstants.JAVA_TYPE);
+                inputExpression.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(data));
+                String returnType = field.getType().getClazz().getName();
+                if (field.isCollection() != null && field.isCollection()) {
+                    returnType = List.class.getName();
+                }
+                inputExpression.setReturnType(returnType);
+                if (widget instanceof CheckBoxSingleFormField) {
+                    inputExpression.setReturnTypeFixed(true);
+                }
+                widget.setInputExpression(inputExpression);
+            }
+        }
+    }
+
+    protected Operation createBusinessDataOutputOperation(final Widget widget, final SimpleField field, final BusinessObjectData data) {
+        final Operation action = ExpressionFactory.eINSTANCE.createOperation();
+        final Operator operator = ExpressionFactory.eINSTANCE.createOperator();
+        operator.setType(ExpressionConstants.JAVA_METHOD_OPERATOR);
+        operator.setExpression(getSetterFor(field));
+        String returnType = field.getType().getClazz().getName();
+        if (field.isCollection() != null && field.isCollection()) {
+            returnType = List.class.getName();
+        }
+        operator.getInputTypes().add(returnType);
+        action.setOperator(operator);
+        action.setLeftOperand(createVariableExpression(data));
+
+        final Expression actionExpression = ExpressionFactory.eINSTANCE.createExpression();
+        actionExpression.setContent(WidgetHelper.FIELD_PREFIX + widget.getName());
+        actionExpression.setName(WidgetHelper.FIELD_PREFIX + widget.getName());
+        actionExpression.setType(ExpressionConstants.FORM_FIELD_TYPE);
+        actionExpression.setReturnType(WidgetHelper.getAssociatedReturnType(widget));
+        actionExpression.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(widget));
+        action.setRightOperand(actionExpression);
+        return action;
+    }
+
+    protected String getSetterFor(final SimpleField field) {
+        return "set" + createGenFeature(field).getAccessorName();
+    }
+
+    protected String getGetterFor(final SimpleField field) {
+        return createGenFeature(field).getGetAccessor();
+    }
+
+    protected GenFeature createGenFeature(final SimpleField field) {
+        final EPackage ePackage = EcoreFactory.eINSTANCE.createEPackage();
+        final EClass eClass = EcoreFactory.eINSTANCE.createEClass();
+        final EAttribute eAttribute = EcoreFactory.eINSTANCE.createEAttribute();
+        eAttribute.setName(field.getName());
+        if (field.getType() == FieldType.BOOLEAN) {
+            eAttribute.setEType(EcorePackage.Literals.EBOOLEAN);
+        }
+        eClass.getEStructuralFeatures().add(eAttribute);
+        ePackage.getEClassifiers().add(eClass);
+
+        final GenModel genModel = GenModelFactory.eINSTANCE.createGenModel();
+        final GenPackage genPackage = genModel.createGenPackage();
+        genPackage.setEcorePackage(ePackage);
+        final GenClass genClass = genModel.createGenClass();
+        genClass.setEcoreClass(eClass);
+        final GenFeature genFeature = genModel.createGenFeature();
+        genFeature.setEcoreFeature(eAttribute);
+        genFeature.setGenClass(genClass);
+        genPackage.getGenClasses().add(genClass);
+        genModel.getGenPackages().add(genPackage);
+        return genFeature;
+    }
+
+    protected BusinessObjectData getBusinessOjectDataFor(final WidgetMapping mapping) {
+        Object modelElement = mapping.getModelElement();
+        WidgetMapping currentMapping = mapping;
+        while (!(modelElement instanceof BusinessObjectData) && currentMapping != null && currentMapping.getParent() != null) {
+            currentMapping = currentMapping.getParent();
+            modelElement = currentMapping.getModelElement();
+        }
+        return (BusinessObjectData) modelElement;
     }
 
     protected boolean isDataPageFlowTransient(final Data data) {

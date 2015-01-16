@@ -17,9 +17,11 @@
 package org.bonitasoft.studio.properties.sections.forms.wizard;
 
 import static org.fest.assertions.Assertions.assertThat;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -27,20 +29,32 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
+import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.diagram.form.custom.model.WidgetMapping;
+import org.bonitasoft.studio.model.process.BusinessObjectData;
 import org.bonitasoft.studio.model.process.Data;
+import org.bonitasoft.studio.model.process.PageFlow;
 import org.bonitasoft.studio.model.process.ProcessFactory;
+import org.bonitasoft.studio.properties.sections.forms.wizard.provider.WidgetMappingTreeContentProvider;
 import org.eclipse.core.databinding.observable.set.IObservableSet;
 import org.eclipse.core.databinding.observable.set.SetChangeEvent;
 import org.eclipse.core.databinding.observable.set.SetDiff;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
+import org.eclipse.jface.viewers.ICheckStateProvider;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+
+import com.bonitasoft.engine.bdm.model.BusinessObject;
+import com.bonitasoft.engine.bdm.model.BusinessObjectModel;
+import com.bonitasoft.engine.bdm.model.field.FieldType;
+import com.bonitasoft.engine.bdm.model.field.SimpleField;
 
 /**
  * @author Romain Bioteau
@@ -50,6 +64,14 @@ import org.mockito.runners.MockitoJUnitRunner;
 public class SelectGeneratedWidgetsWizardPageTest {
 
 	private SelectGeneratedWidgetsWizardPage selectGeneratedWidgetsWizardPage;
+    @Mock
+    private BusinessObjectModelRepositoryStore store;
+    private BusinessObjectData businessData;
+    @Mock
+    private BusinessObjectModelFileStore fStore;
+
+    @Mock
+    private WidgetMappingTreeContentProvider widgetMappingTreeContentProvider;
 
 
 	/**
@@ -57,7 +79,29 @@ public class SelectGeneratedWidgetsWizardPageTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		selectGeneratedWidgetsWizardPage = spy(new SelectGeneratedWidgetsWizardPage("",Collections.<EObject>emptyList()));
+        final BusinessObjectModel bom = new BusinessObjectModel();
+        final BusinessObject car = new BusinessObject();
+        car.setQualifiedName("org.bonita.Car");
+        final SimpleField modelField = new SimpleField();
+        modelField.setName("model");
+        modelField.setType(FieldType.STRING);
+        car.getFields().add(modelField);
+        bom.getBusinessObjects().add(car);
+        when(fStore.getContent()).thenReturn(bom);
+        when(store.getChildByQualifiedName("org.bonita.Car")).thenReturn(fStore);
+        when(fStore.getBusinessObjects()).thenCallRealMethod();
+        when(fStore.getBusinessObject(anyString())).thenCallRealMethod();
+
+        final PageFlow pageFlow = ProcessFactory.eINSTANCE.createPool();
+        businessData = ProcessFactory.eINSTANCE.createBusinessObjectData();
+        businessData.setDataType(ProcessFactory.eINSTANCE.createBusinessObjectType());
+        businessData.setName("testData");
+        businessData.setClassName("org.bonita.Car");
+        pageFlow.getData().add(businessData);
+        final List<EObject> input = new ArrayList<EObject>();
+        input.add(businessData);
+        selectGeneratedWidgetsWizardPage = spy(new SelectGeneratedWidgetsWizardPage(pageFlow, "",
+                input, store));
 	}
 
 	/**
@@ -72,10 +116,10 @@ public class SelectGeneratedWidgetsWizardPageTest {
 	 */
 	@Test
 	public void shouldAsWidgetMappingList_ReturnsAListOfWidgetMappingFromAListOfData() throws Exception {
-		List<Data> data = new ArrayList<Data>();
-		Data myData = ProcessFactory.eINSTANCE.createData();
+		final List<Data> data = new ArrayList<Data>();
+		final Data myData = ProcessFactory.eINSTANCE.createData();
 		myData.setDataType(ProcessFactory.eINSTANCE.createStringType());
-		Data myData2 = ProcessFactory.eINSTANCE.createData();
+		final Data myData2 = ProcessFactory.eINSTANCE.createData();
 		myData2.setDataType(ProcessFactory.eINSTANCE.createBooleanType());
 		data.add(myData);
 		data.add(myData2);
@@ -85,12 +129,12 @@ public class SelectGeneratedWidgetsWizardPageTest {
 
 	@Test
 	public void shouldSetMappingEnabledRecursivly_EnableGenerationFor_AllChildrenMappings() throws Exception {
-		Data myData = ProcessFactory.eINSTANCE.createData();
+		final Data myData = ProcessFactory.eINSTANCE.createData();
 		myData.setDataType(ProcessFactory.eINSTANCE.createStringType());
-		WidgetMapping root = new WidgetMapping(myData);
-		WidgetMapping c1 = new WidgetMapping(myData);
-		WidgetMapping c2 = new WidgetMapping(myData);
-		WidgetMapping c1_c1 = new WidgetMapping(myData);
+		final WidgetMapping root = new WidgetMapping(myData);
+		final WidgetMapping c1 = new WidgetMapping(myData);
+		final WidgetMapping c2 = new WidgetMapping(myData);
+		final WidgetMapping c1_c1 = new WidgetMapping(myData);
 		root.addChild(c1);
 		root.addChild(c2);
 		c1.addChild(c1_c1);
@@ -99,23 +143,25 @@ public class SelectGeneratedWidgetsWizardPageTest {
 		assertThat(c2.isGenerated()).isFalse();
 		assertThat(c1_c1.isGenerated()).isFalse();
 		selectGeneratedWidgetsWizardPage.setMappingEnabledRecursivly(root, true);
-		assertThat(root.isGenerated()).isTrue();
-		assertThat(c1.isGenerated()).isTrue();
+
+        assertThat(root.isGenerated()).isFalse();
+        assertThat(c1.isGenerated()).isFalse();
+
 		assertThat(c2.isGenerated()).isTrue();
 		assertThat(c1_c1.isGenerated()).isTrue();
 	}
 
 	@Test
 	public void shouldSetMappingEnabledRecursivly_DisableGenerationFor_AllChildrenMappings() throws Exception {
-		Data myData = ProcessFactory.eINSTANCE.createData();
+		final Data myData = ProcessFactory.eINSTANCE.createData();
 		myData.setDataType(ProcessFactory.eINSTANCE.createStringType());
-		WidgetMapping root = new WidgetMapping(myData);
+		final WidgetMapping root = new WidgetMapping(myData);
 		root.setGenerated(true);
-		WidgetMapping c1 = new WidgetMapping(myData);
+		final WidgetMapping c1 = new WidgetMapping(myData);
 		c1.setGenerated(true);
-		WidgetMapping c2 = new WidgetMapping(myData);
+		final WidgetMapping c2 = new WidgetMapping(myData);
 		c2.setGenerated(true);
-		WidgetMapping c1_c1 = new WidgetMapping(myData);
+		final WidgetMapping c1_c1 = new WidgetMapping(myData);
 		c1_c1.setGenerated(true);
 		root.addChild(c1);
 		root.addChild(c2);
@@ -133,16 +179,16 @@ public class SelectGeneratedWidgetsWizardPageTest {
 
 	@Test
 	public void shouldFillAllMappings_AddAllChildren() throws Exception {
-		Data myData = ProcessFactory.eINSTANCE.createData();
+		final Data myData = ProcessFactory.eINSTANCE.createData();
 		myData.setDataType(ProcessFactory.eINSTANCE.createStringType());
-		WidgetMapping root = new WidgetMapping(myData);
-		WidgetMapping c1 = new WidgetMapping(myData);
-		WidgetMapping c2 = new WidgetMapping(myData);
-		WidgetMapping c1_c1 = new WidgetMapping(myData);
+		final WidgetMapping root = new WidgetMapping(myData);
+		final WidgetMapping c1 = new WidgetMapping(myData);
+		final WidgetMapping c2 = new WidgetMapping(myData);
+		final WidgetMapping c1_c1 = new WidgetMapping(myData);
 		root.addChild(c1);
 		root.addChild(c2);
 		c1.addChild(c1_c1);
-		List<WidgetMapping> allMappings = new ArrayList<WidgetMapping>();
+		final List<WidgetMapping> allMappings = new ArrayList<WidgetMapping>();
 		assertThat(allMappings).isEmpty();
 		selectGeneratedWidgetsWizardPage.fillAllMappings(allMappings , Collections.singletonList(root));
 		assertThat(allMappings).isNotEmpty().containsExactly(root,c1,c2,c1_c1);
@@ -150,19 +196,19 @@ public class SelectGeneratedWidgetsWizardPageTest {
 
 	@Test
 	public void shouldCheckStateChanged_CallSetSubtreeCheckedOfTree() throws Exception {
-		CheckboxTreeViewer viewer = mock(CheckboxTreeViewer.class);
-		Data myData = ProcessFactory.eINSTANCE.createData();
+		final CheckboxTreeViewer viewer = mock(CheckboxTreeViewer.class);
+		final Data myData = ProcessFactory.eINSTANCE.createData();
 		myData.setDataType(ProcessFactory.eINSTANCE.createStringType());
-		WidgetMapping root = new WidgetMapping(myData);
-		CheckStateChangedEvent event = new CheckStateChangedEvent(viewer, root, true);
+		final WidgetMapping root = new WidgetMapping(myData);
+		final CheckStateChangedEvent event = new CheckStateChangedEvent(viewer, root, true);
 		selectGeneratedWidgetsWizardPage.checkStateChanged(event);
 		verify(viewer).setSubtreeChecked(root, true);
 	}
-	
+
 
 	@Test
 	public void shouldUpdateGeneratedMappings_EnableGeneration_ForNewCheckedElement() throws Exception {
-		Data myData = ProcessFactory.eINSTANCE.createData();
+		final Data myData = ProcessFactory.eINSTANCE.createData();
 		myData.setDataType(ProcessFactory.eINSTANCE.createStringType());
 		final WidgetMapping root = new WidgetMapping(myData);
 		final WidgetMapping c1 = new WidgetMapping(myData);
@@ -170,7 +216,7 @@ public class SelectGeneratedWidgetsWizardPageTest {
 		root.addChild(c1);
 		root.addChild(c2);
 
-		SetDiff diff = new SetDiff() {
+		final SetDiff diff = new SetDiff() {
 
 			@Override
 			public Set<?> getRemovals() {
@@ -179,13 +225,13 @@ public class SelectGeneratedWidgetsWizardPageTest {
 
 			@Override
 			public Set<?> getAdditions() {
-				Set<WidgetMapping> additions =  new HashSet<WidgetMapping>();
+				final Set<WidgetMapping> additions =  new HashSet<WidgetMapping>();
 				additions.add(root);
 				return additions;
 			}
 		};
-		IObservableSet source = mock(IObservableSet.class);
-		SetChangeEvent event = new SetChangeEvent(source, diff);
+		final IObservableSet source = mock(IObservableSet.class);
+		final SetChangeEvent event = new SetChangeEvent(source, diff);
 		selectGeneratedWidgetsWizardPage.updateGeneratedMappings(event);
 		verify(selectGeneratedWidgetsWizardPage).setMappingEnabledRecursivly(root, true);
 		verify(selectGeneratedWidgetsWizardPage).setMappingEnabledRecursivly(c1, true);
@@ -194,7 +240,7 @@ public class SelectGeneratedWidgetsWizardPageTest {
 
 	@Test
 	public void shouldUpdateGeneratedMappings_DisableGeneration_ForUncheckCheckedElement() throws Exception {
-		Data myData = ProcessFactory.eINSTANCE.createData();
+		final Data myData = ProcessFactory.eINSTANCE.createData();
 		myData.setDataType(ProcessFactory.eINSTANCE.createStringType());
 		final WidgetMapping root = new WidgetMapping(myData);
 		final WidgetMapping c1 = new WidgetMapping(myData);
@@ -202,11 +248,11 @@ public class SelectGeneratedWidgetsWizardPageTest {
 		root.addChild(c1);
 		root.addChild(c2);
 
-		SetDiff diff = new SetDiff() {
+		final SetDiff diff = new SetDiff() {
 
 			@Override
 			public Set<?> getRemovals() {
-				Set<WidgetMapping> additions =  new HashSet<WidgetMapping>();
+				final Set<WidgetMapping> additions =  new HashSet<WidgetMapping>();
 				additions.add(root);
 				return additions;
 
@@ -217,14 +263,41 @@ public class SelectGeneratedWidgetsWizardPageTest {
 				return Collections.emptySet();
 			}
 		};
-		
-		IObservableSet source = mock(IObservableSet.class);
-		SetChangeEvent event = new SetChangeEvent(source, diff);
+
+		final IObservableSet source = mock(IObservableSet.class);
+		final SetChangeEvent event = new SetChangeEvent(source, diff);
 		selectGeneratedWidgetsWizardPage.updateGeneratedMappings(event);
 		verify(selectGeneratedWidgetsWizardPage).setMappingEnabledRecursivly(root, false);
 		verify(selectGeneratedWidgetsWizardPage).setMappingEnabledRecursivly(c1, false);
 		verify(selectGeneratedWidgetsWizardPage).setMappingEnabledRecursivly(c2, false);
 	}
 
+    @Test
+    public void shouldGetEClassFromBusinessObjectData_ReturnValidEClass() throws Exception {
+        final BusinessObject bo = selectGeneratedWidgetsWizardPage.getBusinessObjectFromData(businessData);
+        assertThat(bo).isNotNull();
+        assertThat(bo.getQualifiedName()).isEqualTo("org.bonita.Car");
+        assertThat(bo.getFields()).isNotEmpty();
+    }
 
+    @Test
+    public void should_a_widget_container_be_grayed_when_checked() throws Exception {
+        final Object element = new Object();
+        when(widgetMappingTreeContentProvider.hasChildren(element)).thenReturn(true);
+
+        final ICheckStateProvider checkStateProvider = selectGeneratedWidgetsWizardPage.getCheckStateProvider(widgetMappingTreeContentProvider);
+
+        assertThat(checkStateProvider.isGrayed(element)).isTrue();
+        assertThat(checkStateProvider.isChecked(element)).isFalse();
+    }
+
+    @Test
+    public void should_a_widget_not_grayed_if_a_leaf() throws Exception {
+        final Object element = new Object();
+        when(widgetMappingTreeContentProvider.hasChildren(element)).thenReturn(false);
+
+        final ICheckStateProvider checkStateProvider = selectGeneratedWidgetsWizardPage.getCheckStateProvider(widgetMappingTreeContentProvider);
+
+        assertThat(checkStateProvider.isGrayed(element)).isFalse();
+    }
 }

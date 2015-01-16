@@ -31,6 +31,7 @@ import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.bonitasoft.studio.properties.test.TestResources;
 import org.bonitasoft.studio.repository.test.swtbot.TestExportBosArchive;
 import org.bonitasoft.studio.tests.IHeapDumper;
+import org.bonitasoft.studio.tests.businessobject.CreateDeployExportBusinessObjectIT;
 import org.bonitasoft.studio.tests.data.DataWizardIT;
 import org.bonitasoft.studio.tests.dialog.OpenNameAndVersionForDiagramDialogTest;
 import org.bonitasoft.studio.tests.dialog.TestDuplicate;
@@ -110,7 +111,8 @@ import org.junit.runners.Suite;
         RefactorWidgetIT.class,
         ExportImportWithoutMigrationIT.class,
         TestFormValidatorIT.class,
-        TestOrganizationPassword.class
+        TestOrganizationPassword.class,
+        CreateDeployExportBusinessObjectIT.class
 })
 public class AllSWTBotTests2 {
 
