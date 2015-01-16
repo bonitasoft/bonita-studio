@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -54,23 +52,22 @@ import org.eclipse.swt.widgets.TableColumn;
 
 import com.bonitasoft.engine.bdm.model.BusinessObject;
 import com.bonitasoft.engine.bdm.model.BusinessObjectModel;
-import com.bonitasoft.engine.bdm.model.Index;
 import com.bonitasoft.engine.bdm.model.UniqueConstraint;
 
 /**
  * @author Romain Bioteau
- * 
  */
 public class UniqueConstraintTabItemControl extends AbstractTabItemControl {
 
     private static final String DEFAULT_UNIQUE_CONSTRAINT_NAME = "UNIQUE_CONSTRAINT_";
 
-    private IObservableList fieldsList;
+    private final IObservableList fieldsList;
 
-    private BusinessObjectModel bom;
+    private final BusinessObjectModel bom;
 
-    public UniqueConstraintTabItemControl(TabFolder parent, DataBindingContext ctx, IViewerObservableValue viewerObservableValue, IObservableList fieldsList,
-            BusinessObjectModel bom) {
+    public UniqueConstraintTabItemControl(final TabFolder parent, final DataBindingContext ctx, final IViewerObservableValue viewerObservableValue,
+            final IObservableList fieldsList,
+            final BusinessObjectModel bom) {
         super(parent, SWT.NONE);
         this.fieldsList = fieldsList;
         this.bom = bom;
@@ -95,7 +92,7 @@ public class UniqueConstraintTabItemControl extends AbstractTabItemControl {
         constraintsTableViewer.getTable().setHeaderVisible(true);
         constraintsTableViewer.setContentProvider(new ObservableListContentProvider());
 
-        TableLayout tableLayout = new TableLayout();
+        final TableLayout tableLayout = new TableLayout();
         tableLayout.addColumnData(new ColumnWeightData(1));
         tableLayout.addColumnData(new ColumnWeightData(2));
         constraintsTableViewer.getTable().setLayout(tableLayout);
@@ -104,20 +101,20 @@ public class UniqueConstraintTabItemControl extends AbstractTabItemControl {
         enableStrategy.setConverter(new Converter(Object.class, Boolean.class) {
 
             @Override
-            public Object convert(Object fromObject) {
+            public Object convert(final Object fromObject) {
                 return fromObject != null;
             }
         });
         ctx.bindValue(SWTObservables.observeEnabled(constraintsTableViewer.getTable()), viewerObservableValue, null, enableStrategy);
 
-        IViewerObservableValue constaintObserveSingleSelection = ViewersObservables.observeSingleSelection(constraintsTableViewer);
+        final IViewerObservableValue constaintObserveSingleSelection = ViewersObservables.observeSingleSelection(constraintsTableViewer);
         ctx.bindValue(SWTObservables.observeEnabled(deleteButton), constaintObserveSingleSelection, null, enableStrategy);
 
         enableStrategy = new UpdateValueStrategy();
         enableStrategy.setConverter(new Converter(Object.class, Boolean.class) {
 
             @Override
-            public Object convert(Object fromObject) {
+            public Object convert(final Object fromObject) {
                 return fromObject instanceof List && !((List<?>) fromObject).isEmpty();
             }
         });
@@ -125,7 +122,7 @@ public class UniqueConstraintTabItemControl extends AbstractTabItemControl {
         fieldsList.addListChangeListener(new IListChangeListener() {
 
             @Override
-            public void handleListChange(ListChangeEvent event) {
+            public void handleListChange(final ListChangeEvent event) {
                 addButton.setEnabled(!event.getObservableList().isEmpty());
             }
         });
@@ -143,7 +140,7 @@ public class UniqueConstraintTabItemControl extends AbstractTabItemControl {
              * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
              */
             @Override
-            public void widgetSelected(SelectionEvent e) {
+            public void widgetSelected(final SelectionEvent e) {
                 addUniqueConstraint(viewerObservableValue, uniqueConstraintObserveDetailList, constraintsTableViewer);
             }
         });
@@ -155,45 +152,42 @@ public class UniqueConstraintTabItemControl extends AbstractTabItemControl {
              * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
              */
             @Override
-            public void widgetSelected(SelectionEvent e) {
+            public void widgetSelected(final SelectionEvent e) {
                 deleteUniqueConstraint(uniqueConstraintObserveDetailList, constraintsTableViewer);
             }
         });
 
     }
 
-    protected void deleteUniqueConstraint(IObservableList uniqueConstraintListObservable, TableViewer constraintsTableViewer) {
-        IStructuredSelection selection = (IStructuredSelection) constraintsTableViewer.getSelection();
+    protected void deleteUniqueConstraint(final IObservableList uniqueConstraintListObservable, final TableViewer constraintsTableViewer) {
+        final IStructuredSelection selection = (IStructuredSelection) constraintsTableViewer.getSelection();
         uniqueConstraintListObservable.removeAll(selection.toList());
     }
 
-    protected void addUniqueConstraint(IViewerObservableValue viewerObservableValue, IObservableList uniqueConstraintObservableList,
-            TableViewer constraintsTableViewer) {
-        UniqueConstraint uc = new UniqueConstraint();
-        uc.setName(generateConstraintName(viewerObservableValue));
+    protected void addUniqueConstraint(final IViewerObservableValue viewerObservableValue, final IObservableList uniqueConstraintObservableList,
+            final TableViewer constraintsTableViewer) {
+        final UniqueConstraint uc = new UniqueConstraint();
+        uc.setName(generateConstraintName());
         uniqueConstraintObservableList.add(uc);
         constraintsTableViewer.editElement(uc, 0);
     }
 
-    protected String generateConstraintName(IViewerObservableValue viewerObservableValue) {
-        Set<String> existingNames = new HashSet<String>();
-        List<Index> indexes = new ArrayList<Index>();
-        for (BusinessObject businessObject : bom.getBusinessObjects()) {
-            indexes.addAll(businessObject.getIndexes());
-
+    protected String generateConstraintName() {
+        final Set<String> existingNames = new HashSet<String>();
+        final List<UniqueConstraint> constraints = new ArrayList<UniqueConstraint>();
+        for (final BusinessObject businessObject : bom.getBusinessObjects()) {
+            constraints.addAll(businessObject.getUniqueConstraints());
         }
-        if (indexes != null) {
-            for (Index index : indexes) {
-                existingNames.add(index.getName());
-            }
+        for (final UniqueConstraint constraint : constraints) {
+            existingNames.add(constraint.getName());
         }
-
         return NamingUtils.generateNewName(existingNames, DEFAULT_UNIQUE_CONSTRAINT_NAME);
     }
 
-    protected void createUniqueConstraintNameColumn(DataBindingContext ctx, TableViewer constraintsTableViewer, IViewerObservableValue viewerObservableValue) {
-        TableViewerColumn nameColumnViewer = new TableViewerColumn(constraintsTableViewer, SWT.LEFT);
-        TableColumn column = nameColumnViewer.getColumn();
+    protected void createUniqueConstraintNameColumn(final DataBindingContext ctx, final TableViewer constraintsTableViewer,
+            final IViewerObservableValue viewerObservableValue) {
+        final TableViewerColumn nameColumnViewer = new TableViewerColumn(constraintsTableViewer, SWT.LEFT);
+        final TableColumn column = nameColumnViewer.getColumn();
         column.setText(Messages.name + " *");
         nameColumnViewer.setLabelProvider(new ColumnLabelProvider() {
 
@@ -202,7 +196,7 @@ public class UniqueConstraintTabItemControl extends AbstractTabItemControl {
              * @see org.eclipse.jface.viewers.ColumnLabelProvider#getText(java.lang.Object)
              */
             @Override
-            public String getText(Object element) {
+            public String getText(final Object element) {
                 if (element instanceof UniqueConstraint) {
                     return ((UniqueConstraint) element).getName();
                 }
@@ -212,9 +206,10 @@ public class UniqueConstraintTabItemControl extends AbstractTabItemControl {
         nameColumnViewer.setEditingSupport(new UniqueConstraintNameEditingSupport(viewerObservableValue, nameColumnViewer.getViewer(), ctx));
     }
 
-    protected void createUniqueConstraintFieldsColumn(DataBindingContext ctx, TableViewer constraintsTableViewer, IViewerObservableValue viewerObservableValue) {
-        TableViewerColumn constraintFieldsColumnViewer = new TableViewerColumn(constraintsTableViewer, SWT.LEFT);
-        TableColumn column = constraintFieldsColumnViewer.getColumn();
+    protected void createUniqueConstraintFieldsColumn(final DataBindingContext ctx, final TableViewer constraintsTableViewer,
+            final IViewerObservableValue viewerObservableValue) {
+        final TableViewerColumn constraintFieldsColumnViewer = new TableViewerColumn(constraintsTableViewer, SWT.LEFT);
+        final TableColumn column = constraintFieldsColumnViewer.getColumn();
         column.setText(Messages.attributes);
         constraintFieldsColumnViewer.setLabelProvider(new ColumnLabelProvider() {
 
@@ -223,7 +218,7 @@ public class UniqueConstraintTabItemControl extends AbstractTabItemControl {
              * @see org.eclipse.jface.viewers.ColumnLabelProvider#getText(java.lang.Object)
              */
             @Override
-            public String getText(Object element) {
+            public String getText(final Object element) {
                 if (element instanceof UniqueConstraint && ((UniqueConstraint) element).getFieldNames() != null
                         && !((UniqueConstraint) element).getFieldNames().isEmpty()) {
                     return ((UniqueConstraint) element).getFieldNames().toString();
