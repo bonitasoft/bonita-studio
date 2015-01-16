@@ -48,6 +48,7 @@ import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.ApplicationResourceFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.ApplicationResourceRepositoryStore;
+import org.bonitasoft.studio.document.core.repository.DocumentRepositoryStore;
 import org.bonitasoft.studio.exporter.application.FormsXMLExporter;
 import org.bonitasoft.studio.exporter.application.ResourcesExporter;
 import org.bonitasoft.studio.exporter.application.TemplatesExporter;
