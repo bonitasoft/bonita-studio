@@ -101,13 +101,12 @@ public class CustomPoolCompartmentEditPart extends PoolPoolCompartmentEditPart {
 		super(view);
 		poolLanes = new LinkedList<CustomLaneEditPart>();
 		listener = new CustomPoolCompartmentEditPartListener();
-        addEditPartListener(listener);
 	}
 
 
 
 	@Override
-	public Object getAdapter(final Class key) {
+    public Object getAdapter(final Class key) {
 
 		if (key == SnapToHelper.class) {
 			EditPart parent = getParent();
@@ -246,6 +245,12 @@ public class CustomPoolCompartmentEditPart extends PoolPoolCompartmentEditPart {
 			}
 		};
 	}
+
+    @Override
+    public void activate() {
+        addEditPartListener(listener);
+        super.activate();
+    }
 
     @Override
     public void deactivate() {
