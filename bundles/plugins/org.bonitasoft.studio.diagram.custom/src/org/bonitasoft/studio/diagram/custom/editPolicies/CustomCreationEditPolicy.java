@@ -224,6 +224,9 @@ public class CustomCreationEditPolicy extends CreationEditPolicy {
 				if(((target instanceof CustomLaneCompartmentEditPart || target instanceof CustomLaneNameEditPart) && requestElementTypes.contains(ProcessElementTypes.Lane_3007)) ){
 					target = target.getParent().getParent() ;
 				}
+                if ((target instanceof CustomLaneEditPart && requestElementTypes.contains(ProcessElementTypes.Lane_3007))) {
+                    target = target.getParent();
+                }
 
 				/*if we are on an ITextAwareEditPart and ShapeCompartmentEditPart, set target to null???*/
 				if(target instanceof ITextAwareEditPart && target instanceof ShapeCompartmentEditPart){
