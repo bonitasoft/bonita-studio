@@ -20,6 +20,7 @@ package org.bonitasoft.studio.common.log;
 import org.bonitasoft.studio.common.Activator;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.e4.core.services.log.Logger;
+import org.eclipse.e4.ui.internal.workbench.WorkbenchLogger;
 
 /**
  * @author Romain Bioteau
@@ -46,7 +47,7 @@ public class BonitaStudioLog {
 
     /**
      * Log an error
-     * 
+     *
      * @param exception - the exception to log
      * @param bundleId - the bundle id of the original exception to log
      */
@@ -60,7 +61,7 @@ public class BonitaStudioLog {
 
     /**
      * Log an error
-     * 
+     *
      * @param message - the message to log
      * @param bundleId - the bundle id of the original exception to log
      */
@@ -75,7 +76,7 @@ public class BonitaStudioLog {
 
     /**
      * Log an information
-     * 
+     *
      * @param message - the message to log
      * @param bundleId - the bundle id of the original exception to log
      */
@@ -88,7 +89,7 @@ public class BonitaStudioLog {
 
     /**
      * Log a warning
-     * 
+     *
      * @param message - the message to log
      * @param bundleId - the bundle id of the original exception to log
      */
@@ -101,7 +102,7 @@ public class BonitaStudioLog {
 
     /**
      * Log a debug information
-     * 
+     *
      * @param message - the message to log
      * @param bundleId - the bundle id of the original exception to log
      */
@@ -127,5 +128,9 @@ public class BonitaStudioLog {
             }
         }
         return false;
+    }
+
+    public static void setLogger(final WorkbenchLogger workbenchLogger) {
+        BonitaStudioLogger.setLogger(workbenchLogger);
     }
 }
