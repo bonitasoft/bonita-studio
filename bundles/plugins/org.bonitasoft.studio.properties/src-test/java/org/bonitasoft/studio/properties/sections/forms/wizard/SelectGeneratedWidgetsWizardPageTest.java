@@ -36,7 +36,8 @@ import org.bonitasoft.studio.model.process.BusinessObjectData;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.PageFlow;
 import org.bonitasoft.studio.model.process.ProcessFactory;
-import org.bonitasoft.studio.properties.sections.forms.wizard.provider.WidgetMappingTreeContentProvider;
+import org.bonitasoft.studio.model.process.builders.BusinessObjectDataBuilder;
+import org.bonitasoft.studio.model.process.builders.BusinessObjectDataTypeBuilder;
 import org.eclipse.core.databinding.observable.set.IObservableSet;
 import org.eclipse.core.databinding.observable.set.SetChangeEvent;
 import org.eclipse.core.databinding.observable.set.SetDiff;
@@ -71,7 +72,7 @@ public class SelectGeneratedWidgetsWizardPageTest {
     private BusinessObjectModelFileStore fStore;
 
     @Mock
-    private WidgetMappingTreeContentProvider widgetMappingTreeContentProvider;
+    private CheckboxTreeViewer checkboxTreeViewer;
 
 
 	/**
@@ -281,23 +282,32 @@ public class SelectGeneratedWidgetsWizardPageTest {
     }
 
     @Test
-    public void should_a_widget_container_be_grayed_when_checked() throws Exception {
-        final Object element = new Object();
-        when(widgetMappingTreeContentProvider.hasChildren(element)).thenReturn(true);
+    public void should_a_widget_container_be_grayed_if_not_all_of_its_children_is_selected() throws Exception {
+        final WidgetMapping parent = new WidgetMapping(BusinessObjectDataBuilder.createBusinessObjectDataBuilder()
+                .havingDataType(BusinessObjectDataTypeBuilder.createBusinessObjectDataType()).build());
+        final SimpleField modelElement = new SimpleField();
+        modelElement.setType(FieldType.BOOLEAN);
+        final WidgetMapping mapping1 = new WidgetMapping(modelElement);
+        when(checkboxTreeViewer.getChecked(mapping1)).thenReturn(true);
+        final WidgetMapping mapping2 = new WidgetMapping(modelElement);
+        when(checkboxTreeViewer.getChecked(mapping2)).thenReturn(false);
+        parent.addChild(mapping1);
+        parent.addChild(mapping2);
 
-        final ICheckStateProvider checkStateProvider = selectGeneratedWidgetsWizardPage.getCheckStateProvider(widgetMappingTreeContentProvider);
+        final ICheckStateProvider checkStateProvider = selectGeneratedWidgetsWizardPage.getCheckStateProvider(checkboxTreeViewer);
 
-        assertThat(checkStateProvider.isGrayed(element)).isTrue();
-        assertThat(checkStateProvider.isChecked(element)).isFalse();
+        assertThat(checkStateProvider.isGrayed(parent)).isTrue();
+        assertThat(checkStateProvider.isChecked(parent)).isFalse();
     }
 
     @Test
     public void should_a_widget_not_grayed_if_a_leaf() throws Exception {
-        final Object element = new Object();
-        when(widgetMappingTreeContentProvider.hasChildren(element)).thenReturn(false);
+        final SimpleField modelElement = new SimpleField();
+        modelElement.setType(FieldType.BOOLEAN);
+        final WidgetMapping mapping1 = new WidgetMapping(modelElement);
+        when(checkboxTreeViewer.getChecked(mapping1)).thenReturn(true);
+        final ICheckStateProvider checkStateProvider = selectGeneratedWidgetsWizardPage.getCheckStateProvider(checkboxTreeViewer);
 
-        final ICheckStateProvider checkStateProvider = selectGeneratedWidgetsWizardPage.getCheckStateProvider(widgetMappingTreeContentProvider);
-
-        assertThat(checkStateProvider.isGrayed(element)).isFalse();
+        assertThat(checkStateProvider.isGrayed(mapping1)).isFalse();
     }
 }

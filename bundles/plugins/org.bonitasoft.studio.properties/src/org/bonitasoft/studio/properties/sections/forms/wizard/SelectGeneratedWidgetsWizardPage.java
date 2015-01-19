@@ -270,7 +270,7 @@ public class SelectGeneratedWidgetsWizardPage extends WizardSelectionPage implem
         final WidgetMappingTreeContentProvider widgetMappingTreeContentProvider = new WidgetMappingTreeContentProvider();
         treeViewer.setContentProvider(widgetMappingTreeContentProvider);
         treeViewer.addCheckStateListener(this);
-        treeViewer.setCheckStateProvider(getCheckStateProvider(widgetMappingTreeContentProvider));
+        treeViewer.setCheckStateProvider(getCheckStateProvider(treeViewer));
 
         final TreeViewerColumn nameTreeViewerColumn = new TreeViewerColumn(treeViewer, SWT.FILL);
         nameTreeViewerColumn.getColumn().setText(Messages.name);
@@ -331,16 +331,10 @@ public class SelectGeneratedWidgetsWizardPage extends WizardSelectionPage implem
              */
             @Override
             public void widgetSelected(final SelectionEvent e) {
-                if (selectAllCheckbox.getSelection()) {
-                    for (final WidgetMapping mapping : input) {
-                        treeViewer.setSubtreeChecked(mapping, true);
-                        setMappingEnabledRecursivly(mapping, true);
-                    }
-                } else {
-                    for (final WidgetMapping mapping : input) {
-                        treeViewer.setSubtreeChecked(mapping, false);
-                        setMappingEnabledRecursivly(mapping, false);
-                    }
+                for (final WidgetMapping mapping : input) {
+                    treeViewer.setSubtreeChecked(mapping, selectAllCheckbox.getSelection());
+                    setMappingEnabledRecursivly(mapping, selectAllCheckbox.getSelection());
+                    treeViewer.setGrayed(mapping, isGrayed(treeViewer, mapping));
                 }
             }
         });
@@ -353,7 +347,21 @@ public class SelectGeneratedWidgetsWizardPage extends WizardSelectionPage implem
         return treeViewer;
     }
 
-    protected ICheckStateProvider getCheckStateProvider(final WidgetMappingTreeContentProvider widgetMappingTreeContentProvider) {
+    protected boolean isGrayed(final CheckboxTreeViewer checkboxTreeViewer, final WidgetMapping mapping) {
+        boolean grayed = false;
+        WidgetMapping map = mapping;
+        if (mapping.getParent() != null) {
+            map = mapping.getParent();
+        }
+        for (final WidgetMapping c : map.getChildren()) {
+            if (!checkboxTreeViewer.getChecked(c)) {
+                grayed = true;
+            }
+        }
+        return grayed;
+    }
+
+    protected ICheckStateProvider getCheckStateProvider(final CheckboxTreeViewer viewer) {
         return new ICheckStateProvider() {
 
             @Override
@@ -363,7 +371,7 @@ public class SelectGeneratedWidgetsWizardPage extends WizardSelectionPage implem
 
             @Override
             public boolean isGrayed(final Object element) {
-                return widgetMappingTreeContentProvider.hasChildren(element);
+                return SelectGeneratedWidgetsWizardPage.this.isGrayed(viewer, (WidgetMapping) element);
             }
         };
     }
@@ -388,18 +396,30 @@ public class SelectGeneratedWidgetsWizardPage extends WizardSelectionPage implem
         final WidgetMapping mapping = (WidgetMapping) event.getElement();
 
         // SELECT/DESELECT ALL CHILDREN
-        ((CheckboxTreeViewer) event.getSource()).setSubtreeChecked(mapping, event.getChecked());
+        final CheckboxTreeViewer checkboxTreeViewer = (CheckboxTreeViewer) event.getSource();
+        checkboxTreeViewer.setSubtreeChecked(mapping, event.getChecked());
+
 
         // DESELECT PARENT IF NO CHILD SELECTED
         if (!event.getChecked() && mapping.getParent() != null) {
+            boolean deselect = true;
             for (final WidgetMapping m : mapping.getParent().getChildren()) {
-                if (((CheckboxTreeViewer) event.getSource()).getChecked(m)) {
-                    return;
+                if (checkboxTreeViewer.getChecked(m)) {
+                    deselect = false;
                 }
             }
             // ALL CHILD ARE UNCHECKED
-            ((CheckboxTreeViewer) event.getSource()).setChecked(mapping.getParent(), false);
+            if (deselect) {
+                checkboxTreeViewer.setChecked(mapping.getParent(), deselect);
+            }
         }
+
+        //COMPUTE GRAYED
+        WidgetMapping map = mapping;
+        if (mapping.getParent() != null) {
+            map = mapping.getParent();
+        }
+        checkboxTreeViewer.setGrayed(map, isGrayed(checkboxTreeViewer, map));
     }
 
     protected void fillAllMappings(final List<WidgetMapping> allMappings,
