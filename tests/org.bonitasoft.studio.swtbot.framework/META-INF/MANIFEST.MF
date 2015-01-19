@@ -62,3 +62,4 @@ Export-Package: org.bonitasoft.studio.swtbot.framework,
  org.bonitasoft.studio.swtbot.framework.organization,
  org.bonitasoft.studio.swtbot.framework.widget
 
+
