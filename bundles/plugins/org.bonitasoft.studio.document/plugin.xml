@@ -48,5 +48,11 @@
             class="org.bonitasoft.studio.document.core.repository.DocumentRepositoryStore">
       </repositoryStore>
    </extension>
+   <extension
+         point="org.bonitasoft.studio.bosArchiveProvider">
+      <bosArchiveProvider
+            providerClass="org.bonitasoft.studio.document.core.repository.DocumentFilseStoreProvider">
+      </bosArchiveProvider>
+   </extension>
 
 </plugin>

@@ -29,12 +29,6 @@
       </operatorEditor>
    </extension>
    <extension
-         point="org.bonitasoft.studio.bosArchiveProvider">
-      <bosArchiveProvider
-            providerClass="org.bonitasoft.studio.data.attachment.repository.DocumentFilseStoreProvider">
-      </bosArchiveProvider>
-   </extension>
-   <extension
          point="org.bonitasoft.studio.expression.proposalListener">
       <proposalListner
             name="%createDataLabel"
