@@ -60,113 +60,113 @@ import org.eclipse.swt.graphics.Image;
  */
 public class ProcessConfigurationRepositoryStore extends AbstractEMFRepositoryStore<ProcessConfigurationFileStore>{
 
-	public static final String STORE_NAME = "process_configurations" ;
-	private static final Set<String> extensions = new HashSet<String>() ;
-	public static final String CONF_EXT = "conf";
+    public static final String STORE_NAME = "process_configurations" ;
+    private static final Set<String> extensions = new HashSet<String>() ;
+    public static final String CONF_EXT = "conf";
 
-	static{
-		extensions.add(CONF_EXT) ;
-	}
-	/* (non-Javadoc)
-	 * @see org.bonitasoft.studio.common.repository.IRepositoryStore#getName()
-	 */
-	@Override
+    static{
+        extensions.add(CONF_EXT) ;
+    }
+    /* (non-Javadoc)
+     * @see org.bonitasoft.studio.common.repository.IRepositoryStore#getName()
+     */
+    @Override
     public String getName() {
-		return STORE_NAME ;
-	}
+        return STORE_NAME ;
+    }
 
 
-	@Override
+    @Override
     public String getDisplayName() {
-		return Messages.configurations;
-	}
+        return Messages.configurations;
+    }
 
-	@Override
+    @Override
     public Image getIcon() {
-		return Pics.getImage(PicsConstants.configuration);
-	}
+        return Pics.getImage(PicsConstants.configuration);
+    }
 
 
-	@Override
-	public ProcessConfigurationFileStore createRepositoryFileStore(final String fileName) {
-		return new ProcessConfigurationFileStore(fileName,this) ;
-	}
+    @Override
+    public ProcessConfigurationFileStore createRepositoryFileStore(final String fileName) {
+        return new ProcessConfigurationFileStore(fileName,this) ;
+    }
 
 
-	@Override
+    @Override
     public Set<String> getCompatibleExtensions() {
-		return extensions;
-	}
+        return extensions;
+    }
 
-	@Override
-	public boolean canBeShared() {
-		return false;
-	}
+    @Override
+    public boolean canBeShared() {
+        return false;
+    }
 
-	@Override
-	protected ProcessConfigurationFileStore doImportInputStream(final String fileName, final InputStream inputStream) {
-		final IFile file = getResource().getFile(fileName);
-		try{
-			if(file.exists()){
-				String fileNameLabel = fileName;
-				final String processUUID = fileName.substring(0, fileName.lastIndexOf("."));
-				final DiagramRepositoryStore diagramStore = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
-				final AbstractProcess process = diagramStore.getProcessByUUID(processUUID);
-				if(process != null){
-					fileNameLabel =Messages.bind(Messages.localConfigurationFor,process.getName() +" ("+process.getVersion()+")");
-				}
-				if(FileActionDialog.overwriteQuestion(fileNameLabel)){
-					file.setContents(inputStream, true, false, Repository.NULL_PROGRESS_MONITOR);
-				}else{
-					return createRepositoryFileStore(fileName);
-				}
-			} else {
-				final File f = file.getLocation().toFile();
-				if(!f.getParentFile().exists()){
-					f.getParentFile().mkdirs();
-					refresh();
-				}
-				file.create(inputStream, true, Repository.NULL_PROGRESS_MONITOR);
-			}
-		}catch(final Exception e){
-			BonitaStudioLog.error(e) ;
-		}
-		return createRepositoryFileStore(fileName) ;
-	}
+    @Override
+    protected ProcessConfigurationFileStore doImportInputStream(final String fileName, final InputStream inputStream) {
+        final IFile file = getResource().getFile(fileName);
+        try{
+            if(file.exists()){
+                String fileNameLabel = fileName;
+                final String processUUID = fileName.substring(0, fileName.lastIndexOf("."));
+                final DiagramRepositoryStore diagramStore = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
+                final AbstractProcess process = diagramStore.getProcessByUUID(processUUID);
+                if(process != null){
+                    fileNameLabel =Messages.bind(Messages.localConfigurationFor,process.getName() +" ("+process.getVersion()+")");
+                }
+                if(FileActionDialog.overwriteQuestion(fileNameLabel)){
+                    file.setContents(inputStream, true, false, Repository.NULL_PROGRESS_MONITOR);
+                }else{
+                    return createRepositoryFileStore(fileName);
+                }
+            } else {
+                final File f = file.getLocation().toFile();
+                if(!f.getParentFile().exists()){
+                    f.getParentFile().mkdirs();
+                    refresh();
+                }
+                file.create(inputStream, true, Repository.NULL_PROGRESS_MONITOR);
+            }
+        }catch(final Exception e){
+            BonitaStudioLog.error(e) ;
+        }
+        return createRepositoryFileStore(fileName) ;
+    }
 
-	@Override
-	protected Release getRelease(final Migrator targetMigrator, final Resource resource) {
+    @Override
+    protected Release getRelease(final Migrator targetMigrator, final Resource resource) {
         final Map<Object, Object> loadOptions = new HashMap<Object, Object>();
-		//Ignore unknown features
-		loadOptions.put(XMIResource.OPTION_RECORD_UNKNOWN_FEATURE, Boolean.TRUE);
-		final XMLOptions options = new XMLOptionsImpl() ;
-		options.setProcessAnyXML(true) ;
-		loadOptions.put(XMLResource.OPTION_XML_OPTIONS, options);
-		try {
-			resource.load(loadOptions);
-		} catch (final IOException e) {
-			BonitaStudioLog.error(e,CommonRepositoryPlugin.PLUGIN_ID);
-		}
-		final String modelVersion = getModelVersion(resource);
-		for(final Release release : targetMigrator.getReleases()){
-			if(release.getLabel().equals(modelVersion)){
-				return release;
-			}
-		}
-		return targetMigrator.getReleases().iterator().next(); //First release of all time
-	}
+        //Ignore unknown features
+        loadOptions.put(XMIResource.OPTION_RECORD_UNKNOWN_FEATURE, Boolean.TRUE);
+        final XMLOptions options = new XMLOptionsImpl() ;
+        options.setProcessAnyXML(true) ;
+        loadOptions.put(XMLResource.OPTION_XML_OPTIONS, options);
+        try {
+            resource.load(loadOptions);
+        } catch (final IOException e) {
+            BonitaStudioLog.error(e,CommonRepositoryPlugin.PLUGIN_ID);
+        }
+        final String modelVersion = getModelVersion(resource);
+        for(final Release release : targetMigrator.getReleases()){
+            if(release.getLabel().equals(modelVersion)){
+                return release;
+            }
+        }
+        return targetMigrator.getReleases().iterator().next(); //First release of all time
+    }
 
 
     protected String getModelVersion(final Resource resource) {
         final String modelVersion = ModelVersion.VERSION_6_0_0_ALPHA;
-		for(final EObject root : resource.getContents()){
-			if(root instanceof Configuration){
-				final String version = ((Configuration) root).getVersion();
-				if(version != null){
+        for(final EObject root : resource.getContents()){
+            if(root instanceof Configuration){
+                final String version = ((Configuration) root).getVersion();
+                if(version != null){
                     return version;
-				}
-			}
-		}
+                }
+            }
+        }
         return modelVersion;
     }
 
@@ -176,7 +176,7 @@ public class ProcessConfigurationRepositoryStore extends AbstractEMFRepositorySt
         try {
             final InputStream is = super.handlePreImport(fileName, inputStream);
             copyIs = new CopyInputStream(is);
-            final Resource r = getTmpEMFResource("beforeImport",
+            final Resource r = getTmpEMFResource("beforeImport.conf",
                     copyIs.getCopy());
             try {
                 r.load(Collections.EMPTY_MAP);
@@ -224,8 +224,8 @@ public class ProcessConfigurationRepositoryStore extends AbstractEMFRepositorySt
         }
     }
 
-	@Override
-	protected void addAdapterFactory(final ComposedAdapterFactory adapterFactory) {
-		adapterFactory.addAdapterFactory(new ConfigurationAdapterFactory()) ;
-	}
+    @Override
+    protected void addAdapterFactory(final ComposedAdapterFactory adapterFactory) {
+        adapterFactory.addAdapterFactory(new ConfigurationAdapterFactory()) ;
+    }
 }
