@@ -61,4 +61,8 @@ public class BonitaStudioLogger {
         }
     }
 
+    public static void setLogger(final WorkbenchLogger workbenchLogger) {
+        BonitaStudioLogger.logger = workbenchLogger;
+    }
+
 }
