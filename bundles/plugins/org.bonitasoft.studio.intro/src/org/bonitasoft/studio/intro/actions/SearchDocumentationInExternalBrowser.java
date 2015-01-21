@@ -23,9 +23,8 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Properties;
 
+import org.bonitasoft.studio.browser.operation.OpenBrowserOperation;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.engine.command.OpenBrowserCommand;
-import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.ui.intro.IIntroSite;
 import org.eclipse.ui.intro.config.IIntroAction;
 
@@ -34,31 +33,29 @@ import org.eclipse.ui.intro.config.IIntroAction;
  *
  */
 public class SearchDocumentationInExternalBrowser implements IIntroAction {
-	
+
 	private final static String SEARCH_DOC_URL = "http://documentation.bonitasoft.com/search/site/";
-	
+
 	@Override
-	public void run(IIntroSite arg0, Properties params) {
-		String urlToOpen = calculateURLToOpen(params);
+	public void run(final IIntroSite arg0, final Properties params) {
+		final String urlToOpen = calculateURLToOpen(params);
 		openInExternalBrowser(urlToOpen);
 	}
 
-	private void openInExternalBrowser(String urlToOpen) {
+	private void openInExternalBrowser(final String urlToOpen) {
 		try {
-			URL url = new URL(urlToOpen);
-			new OpenBrowserCommand(url, "", "").execute(null);
-		} catch (MalformedURLException e) {
-			BonitaStudioLog.error(e);
-		} catch (ExecutionException e) {
+			final URL url = new URL(urlToOpen);
+            new OpenBrowserOperation(url).execute();
+		} catch (final MalformedURLException e) {
 			BonitaStudioLog.error(e);
 		}
 	}
 
-	private String calculateURLToOpen(Properties params) {	
+	private String calculateURLToOpen(final Properties params) {
 		String searchField = "";
 		try {
 			searchField = URLEncoder.encode(params.getProperty("keys"), "UTF-8");
-		} catch (UnsupportedEncodingException e) {
+		} catch (final UnsupportedEncodingException e) {
 			BonitaStudioLog.error(e);
 		}
 		return SEARCH_DOC_URL + searchField;

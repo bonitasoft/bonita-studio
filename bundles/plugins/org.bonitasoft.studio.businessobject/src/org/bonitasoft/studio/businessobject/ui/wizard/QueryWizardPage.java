@@ -5,12 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -25,16 +25,15 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.bonitasoft.studio.browser.operation.OpenBrowserOperation;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.businessobject.ui.wizard.editingsupport.QueryParameterNameEditingSupport;
 import org.bonitasoft.studio.businessobject.ui.wizard.editingsupport.QueryParameterTypeEditingSupport;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.jface.BonitaStudioFontRegistry;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.engine.command.OpenBrowserCommand;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
-import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
@@ -84,7 +83,7 @@ import com.bonitasoft.engine.bdm.model.field.SimpleField;
 
 /**
  * @author Romain Bioteau
- * 
+ *
  */
 public class QueryWizardPage extends WizardPage {
 
@@ -107,33 +106,33 @@ public class QueryWizardPage extends WizardPage {
      * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
      */
     @Override
-    public void createControl(Composite parent) {
-        DataBindingContext ctx = new DataBindingContext();
+    public void createControl(final Composite parent) {
+        final DataBindingContext ctx = new DataBindingContext();
 
-        Composite composite = new Composite(parent, SWT.NONE);
+        final Composite composite = new Composite(parent, SWT.NONE);
         composite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(10, 10).create());
         composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
-        Link queryLabel = new Link(composite, SWT.NO_FOCUS);
+        final Link queryLabel = new Link(composite, SWT.NO_FOCUS);
         queryLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.CENTER).create());
         queryLabel.setText(Messages.queryLink);
         queryLabel.addSelectionListener(new SelectionAdapter() {
 
             @Override
-            public void widgetSelected(SelectionEvent e) {
+            public void widgetSelected(final SelectionEvent e) {
                 performHelp();
             }
         });
 
-        StyledText queryText = createQueryText(composite);
+        final StyledText queryText = createQueryText(composite);
         queryText.setFont(getMonospaceFont());
         queryText.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(300, 120).create());
 
         if (query.getContent() == null || query.getContent().isEmpty()) {
-            String queryExample = createQueryExample(businessObject);
+            final String queryExample = createQueryExample(businessObject);
             query.setContent(queryExample);
             if (query.getQueryParameters().isEmpty()) {
-                for (Field f : businessObject.getFields()) {
+                for (final Field f : businessObject.getFields()) {
                     if (f instanceof SimpleField) {
                         query.addQueryParameter(f.getName(), ((SimpleField) f).getType().getClazz().getName());
                     }
@@ -141,22 +140,22 @@ public class QueryWizardPage extends WizardPage {
             }
         }
 
-        UpdateValueStrategy targetStrategy = new UpdateValueStrategy();
+        final UpdateValueStrategy targetStrategy = new UpdateValueStrategy();
         targetStrategy.setAfterGetValidator(new IValidator() {
 
             @Override
-            public IStatus validate(Object value) {
+            public IStatus validate(final Object value) {
                 if (value == null || value.toString().trim().isEmpty()) {
                     return ValidationStatus.error(Messages.emptyQueryError);
                 }
                 return checkParametersUsage(value.toString());
             }
         });
-        UpdateValueStrategy strategy = new UpdateValueStrategy();
+        final UpdateValueStrategy strategy = new UpdateValueStrategy();
         strategy.setAfterGetValidator(new IValidator() {
 
             @Override
-            public IStatus validate(Object value) {
+            public IStatus validate(final Object value) {
                 return checkParametersUsage(value.toString());
             }
         });
@@ -164,29 +163,29 @@ public class QueryWizardPage extends WizardPage {
         queryBinding = ctx
                 .bindValue(SWTObservables.observeText(queryText, SWT.Modify), PojoObservables.observeValue(getQuery(), "content"), targetStrategy, strategy);
 
-        Label queryParamLabel = new Label(composite, SWT.NONE);
+        final Label queryParamLabel = new Label(composite, SWT.NONE);
         queryParamLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.FILL).indent(0, 10).create());
         queryParamLabel.setText(Messages.parameters);
 
-        ControlDecoration controlDecoration = new ControlDecoration(queryParamLabel, SWT.RIGHT);
+        final ControlDecoration controlDecoration = new ControlDecoration(queryParamLabel, SWT.RIGHT);
         controlDecoration.setImage(Pics.getImage(PicsConstants.hint));
         controlDecoration.setDescriptionText(Messages.jpqlParametersHint);
         controlDecoration.setShowOnlyOnFocus(false);
 
         createQueryParametersTable(composite, ctx);
 
-        Label queryResultTypeLabel = new Label(composite, SWT.NONE);
+        final Label queryResultTypeLabel = new Label(composite, SWT.NONE);
         queryResultTypeLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.CENTER).indent(0, 5).create());
         queryResultTypeLabel.setText(Messages.queryResultType);
 
-        ComboViewer resultTypeViewer = createReturnTypeComboViewer(composite);
+        final ComboViewer resultTypeViewer = createReturnTypeComboViewer(composite);
         resultTypeViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         resultTypeViewer.setContentProvider(ArrayContentProvider.getInstance());
         resultTypeViewer.setLabelProvider(new LabelProvider() {
 
             @Override
-            public String getText(Object element) {
-                String className = element.toString();
+            public String getText(final Object element) {
+                final String className = element.toString();
                 if (List.class.getName().equals(className)) {
                     return Messages.multipleReturnType;
                 } else if (Long.class.getName().equals(className)) {
@@ -200,12 +199,12 @@ public class QueryWizardPage extends WizardPage {
             }
         });
         resultTypeViewer.setInput(getSupportedReturnTypes(businessObject));
-        IViewerObservableValue returnTypeSelectionObservable = ViewersObservables.observeSingleSelection(resultTypeViewer);
+        final IViewerObservableValue returnTypeSelectionObservable = ViewersObservables.observeSingleSelection(resultTypeViewer);
         ctx.bindValue(returnTypeSelectionObservable, PojoObservables.observeValue(getQuery(), "returnType"));
         returnTypeSelectionObservable.addValueChangeListener(new IValueChangeListener() {
 
             @Override
-            public void handleValueChange(ValueChangeEvent event) {
+            public void handleValueChange(final ValueChangeEvent event) {
                 queryBinding.validateTargetToModel();
             }
         });
@@ -217,17 +216,17 @@ public class QueryWizardPage extends WizardPage {
         return BonitaStudioFontRegistry.getMonospaceFont();
     }
 
-    protected ComboViewer createReturnTypeComboViewer(Composite composite) {
+    protected ComboViewer createReturnTypeComboViewer(final Composite composite) {
         return new ComboViewer(composite, SWT.BORDER | SWT.READ_ONLY);
     }
 
-    protected StyledText createQueryText(Composite composite) {
+    protected StyledText createQueryText(final Composite composite) {
         return new StyledText(composite, SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
     }
 
-    private String createQueryExample(BusinessObject businessObject) {
-        String boName = NamingUtils.getSimpleName(businessObject.getQualifiedName());
-        char var = Character.toLowerCase(boName.charAt(0));
+    private String createQueryExample(final BusinessObject businessObject) {
+        final String boName = NamingUtils.getSimpleName(businessObject.getQualifiedName());
+        final char var = Character.toLowerCase(boName.charAt(0));
         StringBuilder sb = new StringBuilder();
         sb.append("SELECT ");
         sb.append(var);
@@ -238,7 +237,7 @@ public class QueryWizardPage extends WizardPage {
         sb.append(var);
         sb.append(" \n");
         sb.append("WHERE ");
-        for (Field f : businessObject.getFields()) {
+        for (final Field f : businessObject.getFields()) {
             if (f instanceof SimpleField) {
                 if (f.isCollection() != null && f.isCollection()) {
                     sb.append(":");
@@ -272,25 +271,25 @@ public class QueryWizardPage extends WizardPage {
         return sb.toString();
     }
 
-    private List<String> getSupportedReturnTypes(BusinessObject currentBo) {
+    private List<String> getSupportedReturnTypes(final BusinessObject currentBo) {
         return Arrays.asList(List.class.getName(), currentBo.getQualifiedName(), Long.class.getName(), Double.class.getName(), Float.class.getName(),
                 Integer.class.getName());
     }
 
-    protected IStatus checkParametersUsage(String queryContent) {
-        List<QueryParameter> parameters = getQuery().getQueryParameters();
-        Set<String> parametersList = new HashSet<String>();
-        for (QueryParameter p : parameters) {
+    protected IStatus checkParametersUsage(final String queryContent) {
+        final List<QueryParameter> parameters = getQuery().getQueryParameters();
+        final Set<String> parametersList = new HashSet<String>();
+        for (final QueryParameter p : parameters) {
             parametersList.add(":" + p.getName());
             if (!queryContent.contains(":" + p.getName())) {
                 return ValidationStatus.warning(Messages.bind(Messages.parameterNotUsedInQueryWarning, p.getName()));
             }
         }
 
-        Pattern pattern = Pattern.compile(":[\\w]+");
-        Matcher matcher = pattern.matcher(queryContent);
+        final Pattern pattern = Pattern.compile(":[\\w]+");
+        final Matcher matcher = pattern.matcher(queryContent);
         while (matcher.find()) {
-            String found = matcher.group();
+            final String found = matcher.group();
             if (!parametersList.contains(found)) {
                 return ValidationStatus.warning(Messages.bind(Messages.undefinedParameter, found));
             }
@@ -303,7 +302,7 @@ public class QueryWizardPage extends WizardPage {
         return ValidationStatus.ok();
     }
 
-    protected void createQueryParametersTable(Composite parent, DataBindingContext ctx) {
+    protected void createQueryParametersTable(final Composite parent, final DataBindingContext ctx) {
         final Composite composite = new Composite(parent, SWT.NONE);
         composite.setLayoutData(GridDataFactory.fillDefaults().create());
         composite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(0, 0).spacing(5, 0).create());
@@ -327,7 +326,7 @@ public class QueryWizardPage extends WizardPage {
         parametersTableViewer.getTable().setHeaderVisible(true);
         parametersTableViewer.setContentProvider(new ObservableListContentProvider());
 
-        TableLayout tableLayout = new TableLayout();
+        final TableLayout tableLayout = new TableLayout();
         tableLayout.addColumnData(new ColumnWeightData(3));
         tableLayout.addColumnData(new ColumnWeightData(2));
         parametersTableViewer.getTable().setLayout(tableLayout);
@@ -341,19 +340,19 @@ public class QueryWizardPage extends WizardPage {
              * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
              */
             @Override
-            public void widgetSelected(SelectionEvent e) {
-                QueryParameter param = new QueryParameter(generateName(), String.class.getName());
+            public void widgetSelected(final SelectionEvent e) {
+                final QueryParameter param = new QueryParameter(generateName(), String.class.getName());
                 queryParameterObserveDetailList.add(param);
                 parametersTableViewer.editElement(param, 0);
                 queryBinding.validateTargetToModel();
             }
         });
 
-        UpdateValueStrategy enableStrategy = new UpdateValueStrategy();
+        final UpdateValueStrategy enableStrategy = new UpdateValueStrategy();
         enableStrategy.setConverter(new Converter(Object.class, Boolean.class) {
 
             @Override
-            public Object convert(Object fromObject) {
+            public Object convert(final Object fromObject) {
                 return fromObject != null;
             }
         });
@@ -365,8 +364,8 @@ public class QueryWizardPage extends WizardPage {
              * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
              */
             @Override
-            public void widgetSelected(SelectionEvent e) {
-                List<?> element = ((IStructuredSelection) parametersTableViewer.getSelection()).toList();
+            public void widgetSelected(final SelectionEvent e) {
+                final List<?> element = ((IStructuredSelection) parametersTableViewer.getSelection()).toList();
                 queryParameterObserveDetailList.removeAll(element);
                 queryBinding.validateTargetToModel();
             }
@@ -381,14 +380,14 @@ public class QueryWizardPage extends WizardPage {
         return new Button(buttonsComposite, SWT.FLAT);
     }
 
-    protected void bindDeleteParameterButtonEnablement(DataBindingContext ctx, final Button deleteButton, final TableViewer parametersTableViewer,
-            UpdateValueStrategy enableStrategy) {
+    protected void bindDeleteParameterButtonEnablement(final DataBindingContext ctx, final Button deleteButton, final TableViewer parametersTableViewer,
+            final UpdateValueStrategy enableStrategy) {
         ctx.bindValue(SWTObservables.observeEnabled(deleteButton), ViewersObservables.observeSingleSelection(parametersTableViewer), null, enableStrategy);
     }
 
-    protected TableViewerColumn createNameColumn(DataBindingContext ctx, TableViewer tableViewer) {
-        TableViewerColumn nameColumnViewer = new TableViewerColumn(tableViewer, SWT.LEFT);
-        TableColumn column = nameColumnViewer.getColumn();
+    protected TableViewerColumn createNameColumn(final DataBindingContext ctx, final TableViewer tableViewer) {
+        final TableViewerColumn nameColumnViewer = new TableViewerColumn(tableViewer, SWT.LEFT);
+        final TableColumn column = nameColumnViewer.getColumn();
         column.setText(Messages.name + " *");
         nameColumnViewer.setLabelProvider(new ColumnLabelProvider() {
 
@@ -397,7 +396,7 @@ public class QueryWizardPage extends WizardPage {
              * @see org.eclipse.jface.viewers.ColumnLabelProvider#getText(java.lang.Object)
              */
             @Override
-            public String getText(Object element) {
+            public String getText(final Object element) {
                 if (element instanceof QueryParameter) {
                     return ((QueryParameter) element).getName();
                 }
@@ -409,8 +408,8 @@ public class QueryWizardPage extends WizardPage {
     }
 
     protected TableViewerColumn createTypeColumn(final DataBindingContext ctx, final TableViewer tableViewer) {
-        TableViewerColumn typeColumnViewer = new TableViewerColumn(tableViewer, SWT.FILL);
-        TableColumn column = typeColumnViewer.getColumn();
+        final TableViewerColumn typeColumnViewer = new TableViewerColumn(tableViewer, SWT.FILL);
+        final TableColumn column = typeColumnViewer.getColumn();
         column.setText(Messages.type);
         typeColumnViewer.setLabelProvider(new ColumnLabelProvider() {
 
@@ -419,7 +418,7 @@ public class QueryWizardPage extends WizardPage {
              * @see org.eclipse.jface.viewers.ColumnLabelProvider#getText(java.lang.Object)
              */
             @Override
-            public String getText(Object element) {
+            public String getText(final Object element) {
                 if (element instanceof QueryParameter) {
                     return ((QueryParameter) element).getClassName();
                 }
@@ -431,9 +430,9 @@ public class QueryWizardPage extends WizardPage {
     }
 
     protected String generateName() {
-        Set<String> existingNames = new HashSet<String>();
-        Query query = getQuery();
-        for (QueryParameter param : query.getQueryParameters()) {
+        final Set<String> existingNames = new HashSet<String>();
+        final Query query = getQuery();
+        for (final QueryParameter param : query.getQueryParameters()) {
             existingNames.add(param.getName());
         }
         return NamingUtils.generateNewName(existingNames, Messages.parameter);
@@ -443,11 +442,11 @@ public class QueryWizardPage extends WizardPage {
         return query;
     }
 
-    public void setQuery(Query query) {
+    public void setQuery(final Query query) {
         this.query = query;
     }
 
-    public void setBusinessObject(BusinessObject businessObject) {
+    public void setBusinessObject(final BusinessObject businessObject) {
         this.businessObject = businessObject;
     }
 
@@ -458,10 +457,8 @@ public class QueryWizardPage extends WizardPage {
     @Override
     public void performHelp() {
         try {
-            new OpenBrowserCommand(new URL(JPQL_HELP_URL), "", "").execute(null);
-        } catch (ExecutionException e) {
-            BonitaStudioLog.error(e);
-        } catch (MalformedURLException e) {
+            new OpenBrowserOperation(new URL(JPQL_HELP_URL)).execute();
+        } catch (final MalformedURLException e) {
             BonitaStudioLog.error(e);
         }
     }

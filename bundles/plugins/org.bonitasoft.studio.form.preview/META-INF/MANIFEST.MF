@@ -28,7 +28,8 @@ Require-Bundle: org.bonitasoft.studio.common;bundle-version="6.0.0",
  org.bonitasoft.studio.diagram.custom;bundle-version="1.0.0",
  org.bonitasoft.studio.configuration;bundle-version="6.0.0",
  org.bonitasoft.studio.profiles;bundle-version="6.0.0",
- org.mockito
+ org.mockito,
+ org.bonitasoft.studio.browser;bundle-version="6.5.0"
 Import-Package: org.bonitasoft.engine.api,
  org.bonitasoft.engine.bpm,
  org.bonitasoft.engine.bpm.bar,

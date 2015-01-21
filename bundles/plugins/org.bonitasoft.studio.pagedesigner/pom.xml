@@ -36,7 +36,7 @@
                             <groupId>com.bonitasoft.web</groupId>
                             <artifactId>page-builder-backend</artifactId>
                             <excludes>
-                                <exclude>WEB-INF/lib/slf4j-api-1.6.4.jar</exclude>
+                                <exclude>WEB-INF/lib/slf4j-api-*.jar</exclude>
                             </excludes>
                         </overlay>
                     </overlays>

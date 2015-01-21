@@ -129,10 +129,6 @@ public class Messages extends NLS {
 
     public static String undeploymentFailedMessage;
 
-    public static String noBrowserFoundMsg;
-
-    public static String noBrowserFoundTitle;
-
     public static String cannotStartTomcatTitle;
 
     public static String cannotStartTomcatMessage;
