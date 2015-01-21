@@ -35,6 +35,7 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.engine.i18n.Messages;
+import org.bonitasoft.studio.pagedesigner.PageDesignerPlugin;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.eclipse.core.resources.IFile;
@@ -164,12 +165,22 @@ public class BOSWebServerManager {
                 PlatformUtil.copyResource(targetFolder, tomcatFolder, monitor);
                 BonitaStudioLog.debug("Tomcat bundle copied in workspace.",
                         EnginePlugin.PLUGIN_ID);
+                addPageBuilderWar(targetFolder, monitor);
             }
         } catch (final IOException e) {
             BonitaStudioLog.error(e, EnginePlugin.PLUGIN_ID);
 
         }
 
+    }
+
+    protected void addPageBuilderWar(final File targetFolder, final IProgressMonitor monitor) throws IOException {
+        BonitaStudioLog.debug("Copying Page Builder war in tomcat/webapps...", EnginePlugin.PLUGIN_ID);
+        final URL url = Platform.getBundle(PageDesignerPlugin.PLUGIN_ID).getResource("webapp");
+        final File pageBuilderWarFile = new File(FileLocator.toFileURL(url).getFile(), "page-builder.war");
+        PlatformUtil.copyResource(new File(targetFolder, "webapps"), pageBuilderWarFile, monitor);
+        BonitaStudioLog.debug("Page Builder war copied in tomcat/webapps.",
+                EnginePlugin.PLUGIN_ID);
     }
 
     /**

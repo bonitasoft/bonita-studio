@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Page Designer Plugin
+Bundle-SymbolicName: org.bonitasoft.studio.pagedesigner
+Bundle-Version: 6.5.0.qualifier
+Bundle-Activator: org.bonitasoft.studio.pagedesigner.PageDesignerPlugin
+Bundle-Vendor: Bonitasoft S.A.
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ActivationPolicy: lazy
+Export-Package: org.bonitasoft.studio.pagedesigner
