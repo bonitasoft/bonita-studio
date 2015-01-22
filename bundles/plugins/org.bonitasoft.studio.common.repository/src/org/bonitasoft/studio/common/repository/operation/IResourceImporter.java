@@ -117,7 +117,7 @@ public class IResourceImporter {
             final boolean openAfterImport = resourcesToOpen != null && resourcesToOpen.contains(filename)
                     || resourcesToOpen == null;
             final IRepositoryFileStore fileStore = store.importIResource(filename, child);
-            if (filename.endsWith(".proc")) {
+            if (filename.endsWith(".proc") && fileStore != null) {
                 importedProcesses.add(fileStore);
             }
 
