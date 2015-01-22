@@ -19,6 +19,7 @@ package org.bonitasoft.studio.application;
 
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.perspectives.AutomaticSwitchPerspectivePartListener;
+import org.bonitasoft.studio.common.perspectives.BonitaPerspectivesUtils;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.eclipse.core.runtime.IProduct;
 import org.eclipse.core.runtime.Platform;
@@ -111,6 +112,7 @@ public class BonitaStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
         if (widget instanceof Shell) {
             ((Widget) widget).setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, SWTBotConstants.SWTBOT_ID_MAIN_SHELL);
         }
+        BonitaPerspectivesUtils.initializePerspectives();
 	}
 
 
