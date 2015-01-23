@@ -27,6 +27,9 @@ public class Messages extends NLS {
 
     public static String invalidURLTitle;
     public static String invalidURLMsg;
+    public static String formRepository;
+    public static String fragmentRepository;
+    public static String widgetRepository;
 
     static {
         NLS.initializeMessages("messages", Messages.class);

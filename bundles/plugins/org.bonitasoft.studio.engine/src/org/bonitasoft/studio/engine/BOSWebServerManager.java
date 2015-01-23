@@ -34,8 +34,10 @@ import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManag
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.engine.i18n.Messages;
 import org.bonitasoft.studio.pagedesigner.PageDesignerPlugin;
+import org.bonitasoft.studio.pagedesigner.core.WorkspaceSystemProperties;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.eclipse.core.resources.IFile;
@@ -346,6 +348,7 @@ public class BOSWebServerManager {
                     Repository.NULL_PROGRESS_MONITOR);
             workingCopy = conf.getWorkingCopy();
         }
+        RepositoryManager.getInstance().getCurrentRepository().getAllStores();
         workingCopy.setAttribute(
                 IJavaLaunchConfigurationConstants.ATTR_VM_ARGUMENTS,
                 getVMArgs());
@@ -541,12 +544,22 @@ public class BOSWebServerManager {
                 System.getProperty(WATCHDOG_TIMER, "20000"));
         addSystemProperty(args, "eclipse.product", Platform.getProduct()
                 .getApplication());
+
+        final WorkspaceSystemProperties workspaceSystemProperties = new WorkspaceSystemProperties();
+        addSystemProperty(args, workspaceSystemProperties.getPageRepositoryLocation());
+        addSystemProperty(args, workspaceSystemProperties.getWidgetRepositoryLocation());
+        addSystemProperty(args, workspaceSystemProperties.getFragmentRepositoryLocation());
         return args.toString();
     }
 
     protected void addSystemProperty(final StringBuilder sBuilder, final String key, final String value) {
         sBuilder.append(" ");
         sBuilder.append("-D" + key + "=" + value);
+    }
+
+    protected void addSystemProperty(final StringBuilder sBuilder, final String systemPropertyArgument) {
+        sBuilder.append(" ");
+        sBuilder.append(systemPropertyArgument);
     }
 
     protected void startWatchdog() {

@@ -98,8 +98,8 @@
 					<inherited>true</inherited>
 					<version>${tychoVersion}</version>
 					<configuration>
-						<source>6.0</source>
-						<target>6.0</target>
+						<source>7.0</source>
+						<target>7.0</target>
 					</configuration>
 				</plugin>
 				<plugin>

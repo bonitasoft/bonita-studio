@@ -20,5 +20,17 @@
          name="%OpenPageDesigner">
    </command>
 </extension>
+<extension
+      point="org.bonitasoft.studio.repositoryStore">
+   <repositoryStore
+         class="org.bonitasoft.studio.pagedesigner.core.repository.WebFormRepositoryStore">
+   </repositoryStore>
+   <repositoryStore
+         class="org.bonitasoft.studio.pagedesigner.core.repository.WebFragmentRepositoryStore">
+   </repositoryStore>
+   <repositoryStore
+         class="org.bonitasoft.studio.pagedesigner.core.repository.WebWidgetRepositoryStore">
+   </repositoryStore>
+</extension>
 
 </plugin>
