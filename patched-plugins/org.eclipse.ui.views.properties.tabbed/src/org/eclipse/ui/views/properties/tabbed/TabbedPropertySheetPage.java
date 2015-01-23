@@ -1,10 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2009 IBM Corporation and others.
+ * Copyright (c) 2001, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
@@ -61,7 +61,7 @@ import org.eclipse.ui.views.properties.PropertySheet;
 
 /**
  * A property sheet page that provides a tabbed UI.
- * 
+ *
  * @author Anthony Hunter
  */
 public class TabbedPropertySheetPage
@@ -75,7 +75,7 @@ public class TabbedPropertySheetPage
 
 	private ITabbedPropertySheetPageContributor contributor;
 
-	protected TabbedPropertyRegistry registry;
+    protected TabbedPropertyRegistry registry;
 
 	private ITabbedPropertySheetPageContributor selectionContributor = null;
 
@@ -87,23 +87,23 @@ public class TabbedPropertySheetPage
 
 	protected IStructuredContentProvider tabListContentProvider;
 
-	protected ISelection currentSelection;
+    protected ISelection currentSelection;
 
 	private boolean activePropertySheet;
 
-	protected TabbedPropertyViewer tabbedPropertyViewer;
+    protected TabbedPropertyViewer tabbedPropertyViewer;
 
 	private TabContents currentTab;
 
 	private Map descriptorToTab;
 
-	private Map tabToComposite;
+	private final Map tabToComposite;
 
-	protected List selectionQueue;
+    protected List selectionQueue;
 
-	protected boolean selectionQueueLocked;
+    protected boolean selectionQueueLocked;
 
-	private List tabSelectionListeners;
+	private final List tabSelectionListeners;
 
 	private IWorkbenchWindow cachedWorkbenchWindow;
 
@@ -112,38 +112,38 @@ public class TabbedPropertySheetPage
 	/**
 	 * a listener that is interested in part activation events.
 	 */
-	private IPartListener partActivationListener = new IPartListener() {
+	private final IPartListener partActivationListener = new IPartListener() {
 
-		public void partActivated(IWorkbenchPart part) {
+		public void partActivated(final IWorkbenchPart part) {
 			handlePartActivated(part);
 		}
 
-		public void partBroughtToTop(IWorkbenchPart part) {
+		public void partBroughtToTop(final IWorkbenchPart part) {
 		}
 
-		public void partClosed(IWorkbenchPart part) {
+		public void partClosed(final IWorkbenchPart part) {
 		}
 
-		public void partDeactivated(IWorkbenchPart part) {
+		public void partDeactivated(final IWorkbenchPart part) {
 		}
 
-		public void partOpened(IWorkbenchPart part) {
+		public void partOpened(final IWorkbenchPart part) {
 		}
 	};
 
 	private class TabbedPropertySheetPageContributorFromSelection
 		implements ITabbedPropertySheetPageContributor {
 
-		private String contributorId;
+		private final String contributorId;
 
 		/**
 		 * Constructor that takes in a contributor id taken from a selection.
-		 * 
+		 *
 		 * @param contributorId
 		 *            the contributor id.
 		 */
 		public TabbedPropertySheetPageContributorFromSelection(
-				String contributorId) {
+				final String contributorId) {
 			super();
 			this.contributorId = contributorId;
 		}
@@ -163,7 +163,8 @@ public class TabbedPropertySheetPage
 	class TabbedPropertySheetPageLabelProvider
 		extends LabelProvider {
 
-		public String getText(Object element) {
+		@Override
+        public String getText(final Object element) {
 			if (element instanceof ITabDescriptor) {
 				return ((ITabDescriptor) element).getLabel();
 			}
@@ -180,11 +181,11 @@ public class TabbedPropertySheetPage
 		/**
 		 * Shows the tab associated with the selection.
 		 */
-		public void selectionChanged(SelectionChangedEvent event) {
-			IStructuredSelection selection = (IStructuredSelection) event
+		public void selectionChanged(final SelectionChangedEvent event) {
+			final IStructuredSelection selection = (IStructuredSelection) event
 				.getSelection();
 			TabContents tab = null;
-			ITabDescriptor descriptor = (ITabDescriptor) selection
+			final ITabDescriptor descriptor = (ITabDescriptor) selection
 					.getFirstElement();
 
 			if (descriptor == null) {
@@ -195,39 +196,31 @@ public class TabbedPropertySheetPage
 				// can not cache based on the id - tabs may have the same id,
 				// but different section depending on the selection
 				tab = (TabContents) descriptorToTab.get(descriptor);
-				
-				/*Need to create tab more often than previously...*/
-				//TODO: improve creation of tab
-				if(tab == null){
-					tab = createTab(descriptor);
-					descriptorToTab.put(descriptor, tab);
-				}
-				
+
 				if (tab != currentTab) {
 					hideTab(currentTab);
 				}
-				if(tab != null){
-					Composite tabComposite = (Composite) tabToComposite.get(tab);
-					if (tabComposite == null) {
-						tabComposite = createTabComposite();
-						tab.createControls(tabComposite,
-								TabbedPropertySheetPage.this);
-						// tabAreaComposite.layout(true);
-						tabToComposite.put(tab, tabComposite);
-					}
-					// force widgets to be resized
-					tab.setInput(tabbedPropertyViewer.getWorkbenchPart(),
-							(ISelection) tabbedPropertyViewer.getInput());
 
-					// store tab selection
-					storeCurrentTabSelection(descriptor.getLabel());
-
-					if (tab != currentTab) {
-						showTab(tab);
-					}
-
-					tab.refresh();
+				Composite tabComposite = (Composite) tabToComposite.get(tab);
+				if (tabComposite == null) {
+					tabComposite = createTabComposite();
+					tab.createControls(tabComposite,
+						TabbedPropertySheetPage.this);
+					// tabAreaComposite.layout(true);
+					tabToComposite.put(tab, tabComposite);
 				}
+				// force widgets to be resized
+				tab.setInput(tabbedPropertyViewer.getWorkbenchPart(),
+					(ISelection) tabbedPropertyViewer.getInput());
+
+				// store tab selection
+				storeCurrentTabSelection(descriptor.getLabel());
+
+				if (tab != currentTab) {
+					showTab(tab);
+				}
+
+				tab.refresh();
 			}
 			tabbedPropertyComposite.getTabComposite().layout(true);
 			currentTab = tab;
@@ -241,9 +234,9 @@ public class TabbedPropertySheetPage
 		/**
 		 * Shows the given tab.
 		 */
-		private void showTab(TabContents target) {
+		private void showTab(final TabContents target) {
 			if (target != null) {
-				Composite tabComposite = (Composite) tabToComposite.get(target);
+				final Composite tabComposite = (Composite) tabToComposite.get(target);
 				if (tabComposite != null) {
 					/**
 					 * the following method call order is important - do not
@@ -259,9 +252,9 @@ public class TabbedPropertySheetPage
 		/**
 		 * Hides the given tab.
 		 */
-		private void hideTab(TabContents target) {
+		private void hideTab(final TabContents target) {
 			if (target != null) {
-				Composite tabComposite = (Composite) tabToComposite.get(target);
+				final Composite tabComposite = (Composite) tabToComposite.get(target);
 				if (tabComposite != null) {
 					target.aboutToBeHidden();
 					tabComposite.setVisible(false);
@@ -273,28 +266,28 @@ public class TabbedPropertySheetPage
 
 	/**
 	 * create a new tabbed property sheet page.
-	 * 
+	 *
 	 * @param tabbedPropertySheetPageContributor
 	 *            the tabbed property sheet page contributor.
 	 */
 	public TabbedPropertySheetPage(
-			ITabbedPropertySheetPageContributor tabbedPropertySheetPageContributor) {
+			final ITabbedPropertySheetPageContributor tabbedPropertySheetPageContributor) {
 		this(tabbedPropertySheetPageContributor, true);
 	}
-	
+
 	/**
 	 * create a new tabbed property sheet page.
 	 *
 	 * @param tabbedPropertySheetPageContributor
-	 *            the tabbed property sheet page contributor.	  
+	 *            the tabbed property sheet page contributor.
 	 * @param showTitleBar
-	 *            boolean indicating if the title bar should be shown; 
-	 *            default value is <code>true</code> 	
+	 *            boolean indicating if the title bar should be shown;
+	 *            default value is <code>true</code>
 	 * @since 3.5
 	 */
 	public TabbedPropertySheetPage(
-			ITabbedPropertySheetPageContributor tabbedPropertySheetPageContributor,
-			boolean showTitleBar) {
+			final ITabbedPropertySheetPageContributor tabbedPropertySheetPageContributor,
+			final boolean showTitleBar) {
 		hasTitleBar = showTitleBar;
 		contributor = tabbedPropertySheetPageContributor;
 		tabToComposite = new HashMap();
@@ -305,16 +298,16 @@ public class TabbedPropertySheetPage
 
 	/**
 	 * Handle the part activated event.
-	 * 
+	 *
 	 * @param part
 	 *            the new activated part.
 	 */
-	protected void handlePartActivated(IWorkbenchPart part) {
+	protected void handlePartActivated(final IWorkbenchPart part) {
 		/*
 		 * The properties view has been activated and the current page is this
 		 * instance of TabbedPropertySheetPage
 		 */
-		boolean thisActivated = part instanceof PropertySheet
+		final boolean thisActivated = part instanceof PropertySheet
 			&& ((PropertySheet) part).getCurrentPage() == this;
 
 		/*
@@ -330,11 +323,11 @@ public class TabbedPropertySheetPage
 			 * Is the part is a IContributedContentsView for the contributor,
 			 * for example, outline view.
 			 */
-			IContributedContentsView view = (IContributedContentsView) part
+			final IContributedContentsView view = (IContributedContentsView) part
 				.getAdapter(IContributedContentsView.class);
 			if (view == null
-				|| (view.getContributingPart() != null && !view
-					.getContributingPart().equals(contributor))) {
+				|| view.getContributingPart() != null && !view
+					.getContributingPart().equals(contributor)) {
 				if (activePropertySheet) {
 					if (currentTab != null) {
 						currentTab.aboutToBeHidden();
@@ -354,13 +347,14 @@ public class TabbedPropertySheetPage
 	/**
 	 * @see org.eclipse.ui.part.IPage#createControl(org.eclipse.swt.widgets.Composite)
 	 */
-	public void createControl(Composite parent) {
+	@Override
+    public void createControl(final Composite parent) {
 		widgetFactory = new TabbedPropertySheetWidgetFactory();
 		tabbedPropertyComposite = new TabbedPropertyComposite(parent,
 			widgetFactory, hasTitleBar);
 		widgetFactory.paintBordersFor(tabbedPropertyComposite);
 		tabbedPropertyComposite.setLayout(new FormLayout());
-		FormData formData = new FormData();
+		final FormData formData = new FormData();
 		formData.left = new FormAttachment(0, 0);
 		formData.right = new FormAttachment(100, 0);
 		formData.top = new FormAttachment(0, 0);
@@ -378,7 +372,8 @@ public class TabbedPropertySheetPage
 		tabbedPropertyComposite.getScrolledComposite().addControlListener(
 				new ControlAdapter() {
 
-					public void controlResized(ControlEvent e) {
+					@Override
+                    public void controlResized(final ControlEvent e) {
 						resizeScrolledComposite();
 					}
 				});
@@ -400,11 +395,11 @@ public class TabbedPropertySheetPage
 
 	/**
 	 * Initialize the contributor with the provided contributor id.
-	 * 
+	 *
 	 * @param contributorId
 	 *            the contributor id.
 	 */
-	private void initContributor(String contributorId) {
+	private void initContributor(final String contributorId) {
 		descriptorToTab = new HashMap();
 		if (contributor.getContributorId().equals(contributorId)) {
 			/**
@@ -440,7 +435,7 @@ public class TabbedPropertySheetPage
 
 	/**
 	 * Gets the tab list content provider for the contributor.
-	 * 
+	 *
 	 * @return the tab list content provider for the contributor.
 	 */
 	protected IStructuredContentProvider getTabListContentProvider() {
@@ -451,8 +446,9 @@ public class TabbedPropertySheetPage
 	 * Dispose the contributor with the provided contributor id. This happens on
 	 * part close as well as when contributors switch between the workbench
 	 * part and contributor from a selection.
+	 * @since 3.6
 	 */
-	private void disposeContributor() {
+	protected void disposeContributor() {
 		/**
 		 * If the current tab is about to be disposed we have to call
 		 * aboutToBeHidden
@@ -485,7 +481,8 @@ public class TabbedPropertySheetPage
 	/**
 	 * @see org.eclipse.ui.part.IPage#dispose()
 	 */
-	public void dispose() {
+	@Override
+    public void dispose() {
 
 		disposeContributor();
 
@@ -507,7 +504,7 @@ public class TabbedPropertySheetPage
 				contributor);
 			registry = null;
 		}
-        
+
         contributor = null;
         currentSelection = null;
 	}
@@ -515,25 +512,27 @@ public class TabbedPropertySheetPage
 	/**
 	 * @see org.eclipse.ui.part.IPage#getControl()
 	 */
-	public Control getControl() {
+	@Override
+    public Control getControl() {
 		return tabbedPropertyComposite;
 	}
 
 	/**
 	 * @see org.eclipse.ui.part.IPage#setActionBars(org.eclipse.ui.IActionBars)
 	 */
-	public void setActionBars(IActionBars actionBars) {
+	@Override
+    public void setActionBars(final IActionBars actionBars) {
 		// Override the undo and redo global action handlers
 		// to use the contributor action handlers
         IActionBars partActionBars = null;
 		if (contributor instanceof IEditorPart) {
-			IEditorPart editorPart = (IEditorPart) contributor;
+			final IEditorPart editorPart = (IEditorPart) contributor;
             partActionBars = editorPart.getEditorSite().getActionBars();
 		} else if (contributor instanceof IViewPart) {
-            IViewPart viewPart = (IViewPart) contributor;
+            final IViewPart viewPart = (IViewPart) contributor;
             partActionBars = viewPart.getViewSite().getActionBars();
-        } 
-        
+        }
+
         if (partActionBars != null) {
             IAction action = partActionBars.getGlobalActionHandler(ActionFactory.UNDO
                 .getId());
@@ -541,7 +540,7 @@ public class TabbedPropertySheetPage
                 actionBars.setGlobalActionHandler(ActionFactory.UNDO.getId(), action);
             }
             action = partActionBars.getGlobalActionHandler(ActionFactory.REDO
-                .getId()); 
+                .getId());
             if (action != null) {
                 actionBars.setGlobalActionHandler(ActionFactory.REDO.getId(), action);
             }
@@ -551,7 +550,8 @@ public class TabbedPropertySheetPage
 	/**
 	 * @see org.eclipse.ui.part.IPage#setFocus()
 	 */
-	public void setFocus() {
+	@Override
+    public void setFocus() {
 		getControl().setFocus();
 	}
 
@@ -559,7 +559,7 @@ public class TabbedPropertySheetPage
 	 * @see org.eclipse.ui.ISelectionListener#selectionChanged(org.eclipse.ui.IWorkbenchPart,
 	 *      org.eclipse.jface.viewers.ISelection)
 	 */
-	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
+	public void selectionChanged(final IWorkbenchPart part, final ISelection selection) {
 		setInput(part, selection);
 	}
 
@@ -570,7 +570,7 @@ public class TabbedPropertySheetPage
 	 * available for the input we try the second tab and so on. If none of the
 	 * tabs are available we default to the first tab available for the input.
 	 */
-	private void storeCurrentTabSelection(String label) {
+	private void storeCurrentTabSelection(final String label) {
 		if (!selectionQueueLocked) {
 			selectionQueue.remove(label);
 			selectionQueue.add(0, label);
@@ -578,46 +578,57 @@ public class TabbedPropertySheetPage
 	}
 
 	/**
-	 * Resize the scrolled composite enclosing the sections, which may result in the 
+	 * Resize the scrolled composite enclosing the sections, which may result in the
 	 * addition or removal of scroll bars.
-	 * 
+	 *
 	 * @since 3.5
 	 */
 	public void resizeScrolledComposite() {
 		Point currentTabSize = new Point(0, 0);
 		if (currentTab != null) {
-			Composite sizeReference = (Composite) tabToComposite
+			final Composite sizeReference = (Composite) tabToComposite
 				.get(currentTab);
 			if (sizeReference != null) {
-				currentTabSize = sizeReference.computeSize(SWT.DEFAULT, SWT.DEFAULT); 
+				currentTabSize = sizeReference.computeSize(SWT.DEFAULT, SWT.DEFAULT);
 			}
 		}
 		tabbedPropertyComposite.getScrolledComposite().setMinSize(
 				currentTabSize);
 
-		ScrollBar verticalScrollBar = tabbedPropertyComposite
+		final ScrollBar verticalScrollBar = tabbedPropertyComposite
 				.getScrolledComposite().getVerticalBar();
 		if (verticalScrollBar != null) {
-			Rectangle clientArea = tabbedPropertyComposite
+			final Rectangle clientArea = tabbedPropertyComposite
 					.getScrolledComposite().getClientArea();
-			int increment = clientArea.height - 5;
+			final int increment = clientArea.height - 5;
 			verticalScrollBar.setPageIncrement(increment);
 		}
 
-		ScrollBar horizontalScrollBar = tabbedPropertyComposite
+		final ScrollBar horizontalScrollBar = tabbedPropertyComposite
 				.getScrolledComposite().getHorizontalBar();
 		if (horizontalScrollBar != null) {
-			Rectangle clientArea = tabbedPropertyComposite
+			final Rectangle clientArea = tabbedPropertyComposite
 					.getScrolledComposite().getClientArea();
-			int increment = clientArea.width - 5;
+			final int increment = clientArea.width - 5;
 			horizontalScrollBar.setPageIncrement(increment);
 		}
 	}
 
-	private void disposeTabs(Collection tabs) {
-		for (Iterator iter = tabs.iterator(); iter.hasNext();) {
-			TabContents tab = (TabContents) iter.next();
-			Composite composite = (Composite) tabToComposite.remove(tab);
+	/**
+	 * Disposes the TabContents objects passed to this method. If the
+	 * 'currentTab' is going to be disposed, then the caller should call
+	 * aboutToBeHidden() on the currentTab and set it to null before calling
+	 * this method. Also, the caller needs to ensure that descriptorToTab map
+	 * entries corresponding to the disposed TabContents objects are also
+	 * removed.
+	 *
+	 * @param tabs
+	 * @since 3.6
+	 */
+	protected void disposeTabs(final Collection tabs) {
+		for (final Iterator iter = tabs.iterator(); iter.hasNext();) {
+			final TabContents tab = (TabContents) iter.next();
+			final Composite composite = (Composite) tabToComposite.remove(tab);
 			tab.dispose();
 			if (composite != null) {
 				composite.dispose();
@@ -628,11 +639,11 @@ public class TabbedPropertySheetPage
 	/**
 	 * Returns the last known selected tab for the given input.
 	 */
-	protected int getLastTabSelection(IWorkbenchPart part, ISelection input) {
-		ITabDescriptor[] descriptors = registry.getTabDescriptors(part, input);
+    protected int getLastTabSelection(final IWorkbenchPart part, final ISelection input) {
+		final ITabDescriptor[] descriptors = registry.getTabDescriptors(part, input);
 		if (descriptors.length != 0) {
-			for (Iterator iter = selectionQueue.iterator(); iter.hasNext();) {
-				String text = (String) iter.next();
+			for (final Iterator iter = selectionQueue.iterator(); iter.hasNext();) {
+				final String text = (String) iter.next();
 				for (int i = 0; i < descriptors.length; i++) {
 					if (text.equals(descriptors[i].getLabel())) {
 						return i;
@@ -650,9 +661,9 @@ public class TabbedPropertySheetPage
 	 * disposed) we have to send it an aboutToBeHidden() message.
 	 * @since 3.4
 	 */
-	protected void updateTabs(ITabDescriptor[] descriptors) {
-		Map newTabs = new HashMap(descriptors.length * 2);
-		boolean disposingCurrentTab = (currentTab != null);
+	protected void updateTabs(final ITabDescriptor[] descriptors) {
+		final Map newTabs = new HashMap(descriptors.length * 2);
+		boolean disposingCurrentTab = currentTab != null;
 		for (int i = 0; i < descriptors.length; i++) {
 			TabContents tab = (TabContents) descriptorToTab
 					.remove(descriptors[i]);
@@ -681,27 +692,27 @@ public class TabbedPropertySheetPage
 
 	/**
 	 * Create the tab contents for the provided tab descriptor.
-	 * 
+	 *
 	 * @param tabDescriptor
 	 *            the tab descriptor.
 	 * @return the tab contents.
 	 * @since 3.4
 	 */
-	protected TabContents createTab(ITabDescriptor tabDescriptor) {
+	protected TabContents createTab(final ITabDescriptor tabDescriptor) {
 		return tabDescriptor.createTab();
 	}
 
 	/**
 	 * Helper method for creating property tab composites.
-	 * 
+	 *
 	 * @return the property tab composite.
 	 */
 	private Composite createTabComposite() {
-		Composite result = widgetFactory.createComposite(
+		final Composite result = widgetFactory.createComposite(
 			tabbedPropertyComposite.getTabComposite(), SWT.NO_FOCUS);
 		result.setVisible(false);
 		result.setLayout(new FillLayout());
-		FormData data = new FormData();
+		final FormData data = new FormData();
 		if (hasTitleBar) {
 			data.top = new FormAttachment(tabbedPropertyComposite.getTitle(), 0);
 		} else {
@@ -714,16 +725,16 @@ public class TabbedPropertySheetPage
 		return result;
 	}
 
-	protected void setInput(IWorkbenchPart part, ISelection selection) {
+    protected void setInput(final IWorkbenchPart part, final ISelection selection) {
 		if (selection.equals(currentSelection)) {
 			return;
 		}
 
-		this.currentSelection = selection;
+		currentSelection = selection;
 
 		// see if the selection provides a new contributor
 		validateRegistry(selection);
-		ITabDescriptor[] descriptors = registry.getTabDescriptors(part,
+		final ITabDescriptor[] descriptors = registry.getTabDescriptors(part,
 				currentSelection);
 		// If there are no descriptors for the given input we do not need to
 		// touch the tab objects. We might reuse them for the next valid
@@ -733,8 +744,8 @@ public class TabbedPropertySheetPage
 		}
 		// update tabs list
 		tabbedPropertyViewer.setInput(part, currentSelection);
-		int lastTabSelectionIndex = getLastTabSelection(part, currentSelection);
-		Object selectedTab = tabbedPropertyViewer
+		final int lastTabSelectionIndex = getLastTabSelection(part, currentSelection);
+		final Object selectedTab = tabbedPropertyViewer
 			.getElementAt(lastTabSelectionIndex);
 		selectionQueueLocked = true;
 		try {
@@ -759,7 +770,7 @@ public class TabbedPropertySheetPage
 
 	/**
 	 * Get the currently active tab.
-	 * 
+	 *
 	 * @return the currently active tab.
 	 * @since 3.4
 	 */
@@ -769,40 +780,40 @@ public class TabbedPropertySheetPage
 
 	/**
 	 * Handle the tab selected change event.
-	 * 
+	 *
 	 * @param tabDescriptor
 	 *            the new selected tab.
 	 */
-	private void handleTabSelection(ITabDescriptor tabDescriptor) {
+	private void handleTabSelection(final ITabDescriptor tabDescriptor) {
 		if (selectionQueueLocked) {
 			/*
 			 * don't send tab selection events for non user changes.
 			 */
 			return;
 		}
-		for (Iterator i = tabSelectionListeners.iterator(); i.hasNext();) {
-			ITabSelectionListener listener = (ITabSelectionListener) i.next();
+		for (final Iterator i = tabSelectionListeners.iterator(); i.hasNext();) {
+			final ITabSelectionListener listener = (ITabSelectionListener) i.next();
 			listener.tabSelected(tabDescriptor);
 		}
 	}
 
 	/**
 	 * Add a tab selection listener.
-	 * 
+	 *
 	 * @param listener
 	 *            a tab selection listener.
 	 */
-	public void addTabSelectionListener(ITabSelectionListener listener) {
+	public void addTabSelectionListener(final ITabSelectionListener listener) {
 		tabSelectionListeners.add(listener);
 	}
 
 	/**
 	 * Remove a tab selection listener.
-	 * 
+	 *
 	 * @param listener
 	 *            a tab selection listener.
 	 */
-	public void removeTabSelectionListener(ITabSelectionListener listener) {
+	public void removeTabSelectionListener(final ITabSelectionListener listener) {
 		tabSelectionListeners.remove(listener);
 	}
 
@@ -814,14 +825,14 @@ public class TabbedPropertySheetPage
 	 */
 	public void overrideTabs() {
 		if (tabListContentProvider instanceof IOverridableTabListContentProvider) {
-			IOverridableTabListContentProvider overridableTabListContentProvider = (IOverridableTabListContentProvider) tabListContentProvider;
+			final IOverridableTabListContentProvider overridableTabListContentProvider = (IOverridableTabListContentProvider) tabListContentProvider;
 			overridableTabListContentProvider.overrideTabs();
 		}
 	}
 
 	/**
 	 * Get the widget factory.
-	 * 
+	 *
 	 * @return the widget factory.
 	 */
 	public TabbedPropertySheetWidgetFactory getWidgetFactory() {
@@ -831,9 +842,9 @@ public class TabbedPropertySheetPage
 	/**
 	 * Update the title bar of the contributor has a label provider.
 	 */
-	protected void refreshTitleBar() {
+    protected void refreshTitleBar() {
 		if (hasTitleBar) {
-			TabbedPropertyTitle title = tabbedPropertyComposite.getTitle();
+			final TabbedPropertyTitle title = tabbedPropertyComposite.getTitle();
 			if (currentTab == null) {
 				/**
 				 * No tabs are shown so hide the title bar, otherwise you see
@@ -841,9 +852,9 @@ public class TabbedPropertySheetPage
 				 */
 				title.setTitle(null, null);
 			} else {
-				String text = registry.getLabelProvider().getText(
+				final String text = registry.getLabelProvider().getText(
 					currentSelection);
-				Image image = registry.getLabelProvider().getImage(
+				final Image image = registry.getLabelProvider().getImage(
 					currentSelection);
 				title.setTitle(text, image);
 			}
@@ -853,19 +864,19 @@ public class TabbedPropertySheetPage
 	/**
 	 * @see org.eclipse.jface.viewers.ILabelProviderListener#labelProviderChanged(org.eclipse.jface.viewers.LabelProviderChangedEvent)
 	 */
-	public void labelProviderChanged(LabelProviderChangedEvent event) {
+	public void labelProviderChanged(final LabelProviderChangedEvent event) {
 		refreshTitleBar();
 	}
 
     /**
      * Retrieve the contributor from the selection.
-     * 
+     *
      * @param object -
      *            the selected element
      * @return the TabbedPropertySheetPageContributor or null if not applicable
      */
     private ITabbedPropertySheetPageContributor getTabbedPropertySheetPageContributor(
-            Object object) {
+            final Object object) {
         if (object instanceof ITabbedPropertySheetPageContributor) {
             return (ITabbedPropertySheetPageContributor) object;
         }
@@ -873,8 +884,8 @@ public class TabbedPropertySheetPage
         if (object instanceof IAdaptable
             && ((IAdaptable) object)
                 .getAdapter(ITabbedPropertySheetPageContributor.class) != null) {
-            return (ITabbedPropertySheetPageContributor) (((IAdaptable) object)
-                .getAdapter(ITabbedPropertySheetPageContributor.class));
+            return (ITabbedPropertySheetPageContributor) ((IAdaptable) object)
+                .getAdapter(ITabbedPropertySheetPageContributor.class);
         }
 
         if (Platform.getAdapterManager().hasAdapter(object,
@@ -896,11 +907,11 @@ public class TabbedPropertySheetPage
 	 * It is possible for elements in a selection to implement
 	 * ITabbedPropertySheetPageContributor to provide a different contributor id
 	 * and thus a differenent registry.
-	 * 
+	 *
 	 * @param selection
 	 *            the current selection in the active workbench part.
 	 */
-	protected void validateRegistry(ISelection selection) {
+    protected void validateRegistry(final ISelection selection) {
 		if (selection == null) {
 			return;
 		}
@@ -909,21 +920,21 @@ public class TabbedPropertySheetPage
 			return;
 		}
 
-		IStructuredSelection structuredSelection = (IStructuredSelection) selection;
+		final IStructuredSelection structuredSelection = (IStructuredSelection) selection;
 		if (structuredSelection.size() == 0) {
 			return;
 		}
 
         ITabbedPropertySheetPageContributor newContributor = getTabbedPropertySheetPageContributor(structuredSelection.getFirstElement());
-        
+
 		if (newContributor == null) {
 			/**
 			 * selection does not implement or adapt ITabbedPropertySheetPageContributor.
 			 */
 			newContributor = contributor;
 		}
-		
-        String selectionContributorId = newContributor.getContributorId();
+
+        final String selectionContributorId = newContributor.getContributorId();
 		if (selectionContributorId.equals(currentContributorId)) {
 			/**
 			 * selection has the same contributor id as current, so leave
@@ -938,7 +949,7 @@ public class TabbedPropertySheetPage
 		 * new id. If all contributor id do not match, then fall back to default
 		 * contributor from the workbench part.
 		 */
-		Iterator i = structuredSelection.iterator();
+		final Iterator i = structuredSelection.iterator();
         i.next();
 		while (i.hasNext()) {
             newContributor = getTabbedPropertySheetPageContributor(i.next());
@@ -971,22 +982,22 @@ public class TabbedPropertySheetPage
      */
     private void overrideActionBars() {
         if (registry.getActionProvider() != null ) {
-            IActionProvider actionProvider = registry.getActionProvider();
+            final IActionProvider actionProvider = registry.getActionProvider();
             actionProvider.setActionBars(contributor, getSite().getActionBars());
         }
     }
 
 	/**
 	 * Returns the currently selected tab.
-	 * 
+	 *
 	 * @return the currently selected tab or <code>null</code> if there is no
 	 *         tab selected.
 	 * @since 3.5
 	 */
 	public ITabDescriptor getSelectedTab() {
-		int selectedTab = tabbedPropertyViewer.getSelectionIndex();
+		final int selectedTab = tabbedPropertyViewer.getSelectionIndex();
 		if (selectedTab != -1) {
-			Object object = tabbedPropertyViewer.getElementAt(selectedTab);
+			final Object object = tabbedPropertyViewer.getElementAt(selectedTab);
 			if (object instanceof ITabDescriptor) {
 				return (ITabDescriptor) object;
 			}
@@ -996,32 +1007,32 @@ public class TabbedPropertySheetPage
 
 	/**
 	 * Returns the list of currently active tabs.
-	 * 
+	 *
 	 * @return the currently active tabs.
 	 * @since 3.5
 	 */
 	public ITabDescriptor[] getActiveTabs() {
-		List elements = tabbedPropertyViewer.getElements();
+		final List elements = tabbedPropertyViewer.getElements();
 		if (elements != null && elements.size() > 0) {
-			ITabDescriptor[] tabDescriptors = (ITabDescriptor[]) elements
+			final ITabDescriptor[] tabDescriptors = (ITabDescriptor[]) elements
 					.toArray(new ITabDescriptor[0]);
 			return tabDescriptors;
 		}
 		return new ITabDescriptor[] {};
 	}
-	
+
 	/**
 	 * Set the currently selected tab to be that of the provided tab id.
-	 * 
+	 *
 	 * @param id
 	 *            The string id of the tab to select.
 	 * @since 3.5
 	 */
-	public void setSelectedTab(String id) {
-		List elements = tabbedPropertyViewer.getElements();
+	public void setSelectedTab(final String id) {
+		final List elements = tabbedPropertyViewer.getElements();
 		if (elements != null && elements.size() > 0) {
-			for (Iterator i = elements.iterator(); i.hasNext();) {
-				ITabDescriptor tabDescriptor = (ITabDescriptor) i.next();
+			for (final Iterator i = elements.iterator(); i.hasNext();) {
+				final ITabDescriptor tabDescriptor = (ITabDescriptor) i.next();
 				if (tabDescriptor.getId() != null &&
 						tabDescriptor.getId().equals(id)) {
 					tabbedPropertyViewer.setSelection(new StructuredSelection(
@@ -1030,26 +1041,26 @@ public class TabbedPropertySheetPage
 			}
 		}
 	}
-	
+
 	/**
      * Returns text of the properties title for given selection. If selection is null,
      * then currentSelection is used
-     * 
-	 * @param selection Selection whose properties title text is to be returned 
+     *
+	 * @param selection Selection whose properties title text is to be returned
      * @return String representing title text.
 	 * @since 3.5
-     */	
+     */
     public String getTitleText(ISelection selection) {
     	if (selection == null) {
     		selection = currentSelection;
     	}
     	return registry.getLabelProvider().getText(selection);
     }
-    
+
     /**
      * Returns the title image for given selection. If selection is null,
-     * then currentSelection is used. 
-     * 
+     * then currentSelection is used.
+     *
      * @param selection Selection whose properties title image is to be returned
      * @return Image that is used as a title image.
      * @since 3.5
@@ -1060,4 +1071,57 @@ public class TabbedPropertySheetPage
     	}
 		return registry.getLabelProvider().getImage(selection);
     }
+
+	/**
+	 * Returns the TabContents object corresponding to the given tab-descriptor.
+	 *
+	 * @param tabDescriptor
+	 *            tab-descriptor whose TabContents object is to be returned
+	 * @return TabContents object corresponding to the given tab-descriptor key
+	 *         in descriptorToTab map, or null if the key does not exist in the
+	 *         map
+	 * @since 3.6
+	 */
+	protected TabContents getTabContents(final ITabDescriptor tabDescriptor) {
+		TabContents tabContents = null;
+		if (descriptorToTab.containsKey(tabDescriptor)) {
+			tabContents = (TabContents) descriptorToTab.get(tabDescriptor);
+		}
+		return tabContents;
+	}
+
+	/**
+	 * Get the current selection-contributor if any
+	 *
+	 * @return The selection-contributor, or null.
+	 * @since 3.6
+	 */
+	protected ITabbedPropertySheetPageContributor getSelectionContributor() {
+		return selectionContributor;
+	}
+
+	/**
+	 * Get the currently active contributor id. It may not match the contributor
+	 * id from the workbench part that created this instance because if all the
+	 * elements in a structured selection implement
+	 * ITabbedPropertySheetPageContributor and they all return the same unique
+	 * contributor ID, then tabs and sections associated with that contributor
+	 * ID are used by the tabbed property view for that selection.
+	 *
+	 * @return contributor id
+	 * @since 3.6
+	 */
+	protected String getCurrentContributorId() {
+		return currentContributorId;
+	}
+
+	/**
+	 * Get the current selection
+	 *
+	 * @return selection
+	 * @since 3.6
+	 */
+	protected ISelection getCurrentSelection() {
+		return currentSelection;
+	}
 }

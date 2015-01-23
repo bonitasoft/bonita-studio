@@ -23,8 +23,8 @@ import org.bonitasoft.studio.migration.model.report.Change;
 import org.bonitasoft.studio.migration.model.report.MigrationReportFactory;
 import org.bonitasoft.studio.migration.utils.StringToExpressionConverter;
 import org.eclipse.emf.edapt.migration.CustomMigration;
-import org.eclipse.emf.edapt.migration.Instance;
-import org.eclipse.emf.edapt.migration.Model;
+import org.eclipse.emf.edapt.spi.migration.Instance;
+import org.eclipse.emf.edapt.spi.migration.Model;
 
 /**
  * @author Romain Bioteau
@@ -32,10 +32,10 @@ import org.eclipse.emf.edapt.migration.Model;
  */
 public abstract class ReportCustomMigration extends CustomMigration implements IReportMigration {
 
-	private List<Change> changes = new ArrayList<Change>();
-	
-	public Change addReportChange(String elementName,String elementType,String elementUUID,String description,String propertyName, int status){
-		Change change = MigrationReportFactory.eINSTANCE.createChange();
+	private final List<Change> changes = new ArrayList<Change>();
+
+	public Change addReportChange(final String elementName,final String elementType,final String elementUUID,final String description,final String propertyName, final int status){
+		final Change change = MigrationReportFactory.eINSTANCE.createChange();
 		change.setElementName(elementName);
 		change.setElementType(elementType);
 		change.setElementUUID(elementUUID);
@@ -45,22 +45,22 @@ public abstract class ReportCustomMigration extends CustomMigration implements I
 		changes.add(change);
 		return change;
 	}
-	
+
 	@Override
 	public List<Change> getChanges() {
 		return changes;
 	}
-	
-	public StringToExpressionConverter getConverter(Model model,Instance container) {
+
+	public StringToExpressionConverter getConverter(final Model model,final Instance container) {
 		return new StringToExpressionConverter(model,container);
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param element
 	 * @return the parent process instance
 	 */
-	protected Instance getScope(Instance element){
+	protected Instance getScope(final Instance element){
 		Instance container = element;
 		while(container != null && !container.instanceOf("process.AbstractProcess")){
 			container = container.getContainer();

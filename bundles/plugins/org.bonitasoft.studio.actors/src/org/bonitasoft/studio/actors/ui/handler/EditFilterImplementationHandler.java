@@ -17,16 +17,16 @@
  */
 package org.bonitasoft.studio.actors.ui.handler;
 
+import org.bonitasoft.studio.actors.i18n.Messages;
 import org.bonitasoft.studio.actors.ui.wizard.FilterImplementationWizard;
 import org.bonitasoft.studio.actors.ui.wizard.SelectUserFilterImplementationWizard;
+import org.bonitasoft.studio.common.jface.CustomWizardDialog;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Display;
-import org.bonitasoft.studio.actors.i18n.Messages;
-import org.bonitasoft.studio.common.jface.CustomWizardDialog;
 
 /**
  * @author Romain Bioteau

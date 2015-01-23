@@ -18,12 +18,10 @@
 package org.bonitasoft.studio.application;
 
 
-import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.debug.DebugPlugin;
 import org.bonitasoft.studio.validation.ValidationPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
@@ -52,20 +50,21 @@ public class ApplicationPlugin extends AbstractUIPlugin {
 	 * (non-Javadoc)
 	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext)
 	 */
-	public void start(BundleContext context) throws Exception {
+	@Override
+    public void start(final BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
 		init(context);
 	}
 
-	private void init(BundleContext context) throws CoreException {
+	private void init(final BundleContext context) throws CoreException {
 		if(getDialogSettings().get(BAR_DEFAULT_PATH) == null){
 			getDialogSettings().put(BAR_DEFAULT_PATH, System.getProperty("user.home"));
 		}
 		try {
 			DebugPlugin.getDefault().getBundle().start();
 			ValidationPlugin.getDefault().getBundle().start();
-		} catch (BundleException e) {
+		} catch (final BundleException e) {
 			BonitaStudioLog.error(e);
 		}
 	}
@@ -74,7 +73,8 @@ public class ApplicationPlugin extends AbstractUIPlugin {
 	 * (non-Javadoc)
 	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext)
 	 */
-	public void stop(BundleContext context) throws Exception {
+	@Override
+    public void stop(final BundleContext context) throws Exception {
 		plugin = null;
 		super.stop(context);
 	}
@@ -95,7 +95,7 @@ public class ApplicationPlugin extends AbstractUIPlugin {
 	 * @param path the path
 	 * @return the image descriptor
 	 */
-	public static ImageDescriptor getImageDescriptor(String path) {
+	public static ImageDescriptor getImageDescriptor(final String path) {
 		return imageDescriptorFromPlugin(PLUGIN_ID, path);
 	}
 

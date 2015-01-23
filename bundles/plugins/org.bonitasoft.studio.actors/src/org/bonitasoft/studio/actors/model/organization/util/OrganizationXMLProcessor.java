@@ -20,11 +20,8 @@ package org.bonitasoft.studio.actors.model.organization.util;
 import java.util.Map;
 
 import org.bonitasoft.studio.actors.model.organization.OrganizationPackage;
-
 import org.eclipse.emf.ecore.EPackage;
-
 import org.eclipse.emf.ecore.resource.Resource;
-
 import org.eclipse.emf.ecore.xmi.util.XMLProcessor;
 
 /**

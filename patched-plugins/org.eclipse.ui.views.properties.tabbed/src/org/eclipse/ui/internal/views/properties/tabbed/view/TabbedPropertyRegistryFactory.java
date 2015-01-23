@@ -69,7 +69,7 @@ public class TabbedPropertyRegistryFactory {
 		 */
 		String key = target.getContributorId();
 		CacheData data = (CacheData) idToCacheData.get(key);
-		if (data == null) {
+			if (data == null) {
 			data = new CacheData();
 			/*use here custom TabbedPropertyRegistry
 			 * that are aware of viewID in which they are used*/
