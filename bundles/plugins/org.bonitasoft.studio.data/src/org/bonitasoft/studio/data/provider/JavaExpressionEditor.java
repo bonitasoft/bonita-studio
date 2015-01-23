@@ -53,7 +53,6 @@ import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.Signature;
 import org.eclipse.jdt.internal.corext.template.java.SignatureUtil;
-import org.eclipse.jdt.internal.corext.util.JavaModelUtil;
 import org.eclipse.jdt.internal.ui.viewsupport.JavaUILabelProvider;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
@@ -395,33 +394,15 @@ public class JavaExpressionEditor extends SelectionAwareExpressionEditor impleme
             public Object convert(final Object iType) {
                 if (!editorInputExpression.isReturnTypeFixed()) {
                     if (iType instanceof IMethod) {
-                        String qualifiedType = Object.class.getName();
+                        String typeErasure;
                         try {
-                            qualifiedType = JavaModelUtil.getResolvedTypeName(Signature.getTypeErasure(((IMethod) iType).getReturnType()),
-                                    ((IMethod) iType).getDeclaringType());
-                            if ("int".equals(qualifiedType)) {
-                                qualifiedType = Integer.class.getName();
-                            } else if ("boolean".equals(qualifiedType)) {
-                                qualifiedType = Boolean.class.getName();
-                            } else if ("long".equals(qualifiedType)) {
-                                qualifiedType = Long.class.getName();
-                            } else if ("float".equals(qualifiedType)) {
-                                qualifiedType = Float.class.getName();
-                            } else if ("double".equals(qualifiedType)) {
-                                qualifiedType = Double.class.getName();
-                            } else if ("short".equals(qualifiedType)) {
-                                qualifiedType = Short.class.getName();
-                            } else if ("byte".equals(qualifiedType)) {
-                                qualifiedType = Byte.class.getName();
-                            } else if ("E".equals(qualifiedType)) {
-                                qualifiedType = Object.class.getName();
-                            } else if ("V".equals(qualifiedType)) {
-                                qualifiedType = Object.class.getName();
-                            }
+                            typeErasure = Signature.getTypeErasure(((IMethod) iType).getReturnType());
                         } catch (final Exception e) {
                             BonitaStudioLog.error(e);
+                            return Object.class.getName();
                         }
-                        return qualifiedType;
+                        final IType declaringType = ((IMethod) iType).getDeclaringType();
+                        return JavaQualifiedTypeHelper.retrieveQualifiedType(typeErasure, declaringType);
                     } else if (iType instanceof IType) {
                         return ((IType) iType).getFullyQualifiedName();
                     }

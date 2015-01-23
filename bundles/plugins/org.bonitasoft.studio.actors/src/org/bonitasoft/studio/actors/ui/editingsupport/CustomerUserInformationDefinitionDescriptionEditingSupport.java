@@ -16,10 +16,7 @@
  */
 package org.bonitasoft.studio.actors.ui.editingsupport;
 
-import java.util.HashSet;
-
 import org.bonitasoft.studio.actors.validator.CustomerUserInformationDefinitionDescriptionValidator;
-import org.bonitasoft.studio.actors.validator.CustomerUserInformationDefinitionNameValidator;
 import org.bonitasoft.studio.common.jface.ColumnViewerUpdateListener;
 import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.DataBindingContext;

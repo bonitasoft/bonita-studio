@@ -126,9 +126,6 @@ public class BonitaPerspectivesUtils {
                     final IWorkbenchPage page = window.getActivePage();
                     final IPerspectiveDescriptor desc = registry.findPerspectiveWithId(perspectiveID);
                     page.setPerspective(desc);
-                    //                    final UIJob job = new UIJob("changePerspective") {
-                    //                        @Override
-                    //                        public IStatus runInUIThread(final IProgressMonitor monitor) {
                     Display.getDefault().syncExec(new Runnable() {
                         @Override
                         public void run() {
@@ -140,11 +137,6 @@ public class BonitaPerspectivesUtils {
 
                         }
                     });
-                    //                            return Status.OK_STATUS;
-                    //                        }
-                    //                    };
-                    //job.setSystem(true);
-                    //job.schedule();
                 }
             }
         }

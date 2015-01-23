@@ -40,7 +40,7 @@ import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
  * @author Anthony Hunter
  * @since 3.4
  */
-public class OverridableTabListContentProvider extends TabListContentProvider
+class OverridableTabListContentProvider extends TabListContentProvider
 		implements IOverridableTabListContentProvider, ITabSelectionListener {
 
 	/**

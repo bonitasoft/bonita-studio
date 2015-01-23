@@ -19,11 +19,8 @@ package org.bonitasoft.studio.actors.model.organization.impl;
 
 import org.bonitasoft.studio.actors.model.organization.CustomUserInfoDefinition;
 import org.bonitasoft.studio.actors.model.organization.OrganizationPackage;
-
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.ecore.EClass;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 
