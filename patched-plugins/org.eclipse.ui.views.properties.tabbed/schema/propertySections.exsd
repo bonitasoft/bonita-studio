@@ -117,13 +117,6 @@ A filter is used to override the type mapper and input for the selection. When a
                </documentation>
             </annotation>
          </attribute>
-         <attribute name="viewID" type="string">
-            <annotation>
-               <documentation>
-                  
-               </documentation>
-            </annotation>
-         </attribute>
       </complexType>
    </element>
 

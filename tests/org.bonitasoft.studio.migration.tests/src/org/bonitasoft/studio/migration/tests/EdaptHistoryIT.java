@@ -21,9 +21,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import org.bonitasoft.studio.common.ModelVersion;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.edapt.common.ResourceUtils;
-import org.eclipse.emf.edapt.history.History;
-import org.eclipse.emf.edapt.history.HistoryPackage;
-import org.eclipse.emf.edapt.history.Release;
+import org.eclipse.emf.edapt.spi.history.History;
+import org.eclipse.emf.edapt.spi.history.HistoryPackage;
+import org.eclipse.emf.edapt.spi.history.Release;
 import org.junit.Before;
 import org.junit.Test;
 

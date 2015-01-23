@@ -79,4 +79,5 @@
   <addons xmi:id="_7GC6sGp-Ed-QyNZjH9g15Q" elementId="MinMax Addon" contributionURI="bundleclass://org.eclipse.e4.ui.workbench.addons.swt/org.eclipse.e4.ui.workbench.addons.minmax.MinMaxAddon"/>
   <addons xmi:id="_00yosOXqEeGugqEu_OWUGQ" elementId="org.eclipse.ui.workbench.addon.0" contributionURI="bundleclass://org.eclipse.e4.ui.workbench/org.eclipse.e4.ui.internal.workbench.addons.HandlerProcessingAddon"/>
   <addons xmi:id="_s8MBsPtgEeKy1qSE7bOrWA" elementId="org.bonitasoft.studio.application.addon.0" contributionURI="bundleclass://org.bonitasoft.studio.application/org.bonitasoft.studio.application.OpenIntroAddon"/>
+  <addons xmi:id="_LQpUgHr3EeSGZs6Rx6niag" elementId="org.bonitasoft.studio.common.log.LoggerAddon" contributionURI="bundleclass://org.bonitasoft.studio.common/org.bonitasoft.studio.common.log.BonitaStudioLogger"/>
 </application:Application>

@@ -79,23 +79,22 @@ public class BonitaStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 		if(statusBar != null){
 			statusBar.setVisible(false);
 		}
+        window.getShell().setMaximized(true);
 	}
 
-	@SuppressWarnings("restriction")
 	@Override
 	public void openIntro() {
-		PlatformUtil.closeIntro();
-		PrefUtil.getAPIPreferenceStore().setValue(IWorkbenchPreferenceConstants.SHOW_INTRO, true);
-		PrefUtil.saveAPIPrefs();
-		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+        PrefUtil.getAPIPreferenceStore().setValue(IWorkbenchPreferenceConstants.SHOW_INTRO, true);
+        PrefUtil.saveAPIPrefs();
+        PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 
-			@Override
-			public void run() {
-				if(!PlatformUtil.isIntroOpen()){
-					PlatformUtil.openIntro();
-				}
-			}
-		});
+            @Override
+            public void run() {
+                if (!PlatformUtil.isIntroOpen()) {
+                    PlatformUtil.openIntro();
+                }
+            }
+        });
 
 	}
 

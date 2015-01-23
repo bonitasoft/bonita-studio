@@ -1,0 +1,26 @@
+diff --git a/patched-plugins/org.eclipse.emf.edapt.common/src/org/eclipse/emf/edapt/common/ResourceUtils.java b/patched-plugins/org.eclipse.emf.edapt.common/src/org/eclipse/emf/edapt/common/ResourceUtils.java
+index 54d5fef..16b7a51 100644
+--- a/patched-plugins/org.eclipse.emf.edapt.common/src/org/eclipse/emf/edapt/common/ResourceUtils.java
++++ b/patched-plugins/org.eclipse.emf.edapt.common/src/org/eclipse/emf/edapt/common/ResourceUtils.java
+@@ -36,7 +36,7 @@
+ 
+ /**
+  * Helper methods to load and save EMF resources.
+- * 
++ *
+  * @author herrmama
+  * @author $Author$
+  * @version $Rev$
+@@ -87,8 +87,10 @@
+ 			// Whenever we load a resourceset, we will create a session and
+ 			// transaction.
+ 			// in case we deal with a CDO Resource.
+-			final Resource resource = resourceSet.getResource(modelURI, true);
+-			// Resource resource = resourceSet.createResource(modelURI);
++            Resource resource = resourceSet.getResource(modelURI, false);
++            if (resource == null) {
++                resource = resourceSet.createResource(modelURI);
++            }
+ 			try {
+ 				resource.load(options);
+ 			} catch (final Resource.IOWrappedException e) {

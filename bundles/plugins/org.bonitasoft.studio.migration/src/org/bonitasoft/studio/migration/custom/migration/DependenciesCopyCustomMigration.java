@@ -20,10 +20,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.emf.edapt.migration.CustomMigration;
-import org.eclipse.emf.edapt.migration.Instance;
-import org.eclipse.emf.edapt.migration.Metamodel;
 import org.eclipse.emf.edapt.migration.MigrationException;
-import org.eclipse.emf.edapt.migration.Model;
+import org.eclipse.emf.edapt.spi.migration.Instance;
+import org.eclipse.emf.edapt.spi.migration.Metamodel;
+import org.eclipse.emf.edapt.spi.migration.Model;
 
 
 /**
@@ -33,16 +33,16 @@ import org.eclipse.emf.edapt.migration.Model;
 public class DependenciesCopyCustomMigration extends CustomMigration {
 
     /* (non-Javadoc)
-     * @see org.eclipse.emf.edapt.migration.CustomMigration#migrateAfter(org.eclipse.emf.edapt.migration.Model, org.eclipse.emf.edapt.migration.Metamodel)
+     * @see org.eclipse.emf.edapt.migration.CustomMigration#migrateAfter(org.eclipse.emf.edapt.spi.migration.Model, org.eclipse.emf.edapt.migration.Metamodel)
      */
     @Override
-    public void migrateAfter(Model model, Metamodel metamodel) throws MigrationException {
-        List<Instance> allReferencesToBeDeleted = new ArrayList<Instance>();
-        for(Instance expInstance : model.getAllInstances("expression.Expression")){
-            List<Instance> referencedElements = expInstance.get("referencedElements");
-            List<Instance> newReferencedElements = new ArrayList<Instance>();
-            List<Instance> referencesToBeDeleted = new ArrayList<Instance>();
-            for(Instance refElement : referencedElements){
+    public void migrateAfter(final Model model, final Metamodel metamodel) throws MigrationException {
+        final List<Instance> allReferencesToBeDeleted = new ArrayList<Instance>();
+        for(final Instance expInstance : model.getAllInstances("expression.Expression")){
+            final List<Instance> referencedElements = expInstance.get("referencedElements");
+            final List<Instance> newReferencedElements = new ArrayList<Instance>();
+            final List<Instance> referencesToBeDeleted = new ArrayList<Instance>();
+            for(final Instance refElement : referencedElements){
                 Instance newCleanedDependency = null;
                 if(refElement.instanceOf("form.Widget")){
                     newCleanedDependency = newCleanedWidgetDependency(refElement,model);
@@ -58,46 +58,46 @@ public class DependenciesCopyCustomMigration extends CustomMigration {
                     newReferencedElements.add(newCleanedDependency);
                 }
             }
-            for(Instance instanceToDelete : referencesToBeDeleted){
+            for(final Instance instanceToDelete : referencesToBeDeleted){
                 expInstance.remove("referencedElements", instanceToDelete);
             }
             allReferencesToBeDeleted.addAll(referencesToBeDeleted);
-            for(Instance newInstance : newReferencedElements){
+            for(final Instance newInstance : newReferencedElements){
                 expInstance.add("referencedElements", newInstance);
             }
         }
-        for(Instance instance : allReferencesToBeDeleted){
+        for(final Instance instance : allReferencesToBeDeleted){
             model.delete(instance);
         }
         allReferencesToBeDeleted.clear();
-        for(Instance expInstance : model.getAllInstances("expression.Expression")){
+        for(final Instance expInstance : model.getAllInstances("expression.Expression")){
             if(expInstance.getContainer() == null){
                 allReferencesToBeDeleted.add(expInstance);
             }
         }
-        for(Instance instance : allReferencesToBeDeleted){
+        for(final Instance instance : allReferencesToBeDeleted){
             model.delete(instance);
         }
         allReferencesToBeDeleted.clear();
     }
 
 
-    protected Instance newCleanedDocumentDependency(Instance refElement, Model model) {
-        Instance newInstance = model.newInstance(refElement.getEClass());
+    protected Instance newCleanedDocumentDependency(final Instance refElement, final Model model) {
+        final Instance newInstance = model.newInstance(refElement.getEClass());
         newInstance.set("name", refElement.get("name"));
         return newInstance;
     }
 
 
-    protected Instance newCleaneDataDependency(Instance refElement, Model model) {
-        Instance newInstance = refElement.copy();
+    protected Instance newCleaneDataDependency(final Instance refElement, final Model model) {
+        final Instance newInstance = refElement.copy();
         newInstance.set("defaultValue", null);
         return newInstance;
     }
 
 
-    protected Instance newCleanedWidgetDependency(Instance refElement, Model model) {
-        Instance newInstance = model.newInstance(refElement.getEClass());
+    protected Instance newCleanedWidgetDependency(final Instance refElement, final Model model) {
+        final Instance newInstance = model.newInstance(refElement.getEClass());
         newInstance.set("name", refElement.get("name"));
         Object modifier = refElement.get("returnTypeModifier");
         if(modifier == null){

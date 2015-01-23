@@ -17,11 +17,27 @@
  */
 package org.bonitasoft.studio.actors.model.organization.util;
 
-import org.bonitasoft.studio.actors.model.organization.*;
-
+import org.bonitasoft.studio.actors.model.organization.ContactData;
+import org.bonitasoft.studio.actors.model.organization.CustomUserInfoDefinition;
+import org.bonitasoft.studio.actors.model.organization.CustomUserInfoDefinitions;
+import org.bonitasoft.studio.actors.model.organization.CustomUserInfoValue;
+import org.bonitasoft.studio.actors.model.organization.CustomUserInfoValuesType;
+import org.bonitasoft.studio.actors.model.organization.DocumentRoot;
+import org.bonitasoft.studio.actors.model.organization.Group;
+import org.bonitasoft.studio.actors.model.organization.Groups;
+import org.bonitasoft.studio.actors.model.organization.Membership;
+import org.bonitasoft.studio.actors.model.organization.Memberships;
+import org.bonitasoft.studio.actors.model.organization.MetaDatasType;
+import org.bonitasoft.studio.actors.model.organization.Metadata;
+import org.bonitasoft.studio.actors.model.organization.Organization;
+import org.bonitasoft.studio.actors.model.organization.OrganizationPackage;
+import org.bonitasoft.studio.actors.model.organization.PasswordType;
+import org.bonitasoft.studio.actors.model.organization.Role;
+import org.bonitasoft.studio.actors.model.organization.Roles;
+import org.bonitasoft.studio.actors.model.organization.User;
+import org.bonitasoft.studio.actors.model.organization.Users;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-
 import org.eclipse.emf.ecore.util.Switch;
 
 /**

@@ -64,8 +64,6 @@ public class ImportArtifactsFromZip extends AbstractHandler {
                         new org.eclipse.core.runtime.Status(IStatus.ERROR, "org.bonitasoft.studio.repository.ex", e.getMessage(), e), IStatus.ERROR).open();
                 BonitaStudioLog.error(e);
             }
-
-            PlatformUtil.closeIntro();
             PlatformUtil.openIntro();
 
         }

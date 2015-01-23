@@ -1,7 +1,7 @@
 /**
  * Copyright (C) 2010 BonitaSoft S.A.
  * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -28,7 +28,6 @@ import java.util.Map;
 import org.bonitasoft.studio.common.diagram.tools.BonitaUnspecifiedTypeProcessCreationTool;
 import org.bonitasoft.studio.common.diagram.tools.FiguresHelper;
 import org.bonitasoft.studio.common.emf.tools.EMFtoGEFCommandWrapper;
-import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.diagram.custom.figures.IEventSelectionListener;
 import org.bonitasoft.studio.diagram.custom.figures.MenuEventFigure;
 import org.bonitasoft.studio.diagram.custom.parts.CustomLaneCompartmentEditPart;
@@ -37,16 +36,13 @@ import org.bonitasoft.studio.diagram.custom.parts.CustomLaneNameEditPart;
 import org.bonitasoft.studio.diagram.custom.parts.CustomPoolCompartmentEditPart;
 import org.bonitasoft.studio.diagram.custom.parts.CustomSubProcessEvent2EditPart;
 import org.bonitasoft.studio.diagram.custom.parts.CustomSubprocessEventCompartmentEditPart;
-import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.model.process.Container;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.Lane;
-import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.StartTimerEvent;
 import org.bonitasoft.studio.model.process.StartTimerScriptType;
-import org.bonitasoft.studio.model.process.TimerEvent;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.PoolNameEditPart;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.PoolPoolCompartmentEditPart;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.StartTimerEvent2EditPart;
@@ -61,8 +57,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.draw2d.FreeformLayer;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Point;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartViewer;
@@ -103,7 +97,8 @@ public class CustomCreationEditPolicy extends CreationEditPolicy {
 	private IElementType type;
 	private Object[] types;
 	private Cursor cursor;
-	public Command getCommand(Request request) {
+	@Override
+    public Command getCommand(final Request request) {
 		if (understandsRequest(request)) {
 			if (request instanceof CreateUnspecifiedTypeRequest){
 				return getUnspecifiedTypeCreateCommand((CreateUnspecifiedTypeRequest) request);
@@ -118,32 +113,32 @@ public class CustomCreationEditPolicy extends CreationEditPolicy {
 	 * @see org.eclipse.gmf.runtime.diagram.ui.editpolicies.CreationEditPolicy#getReparentCommand(org.eclipse.gef.requests.ChangeBoundsRequest)
 	 */
 	@Override
-	protected Command getReparentCommand(ChangeBoundsRequest request) {
-		CompoundCommand cc = new CompoundCommand();
+	protected Command getReparentCommand(final ChangeBoundsRequest request) {
+		final CompoundCommand cc = new CompoundCommand();
 		if(getHost() instanceof ITextAwareEditPart){
 			return UnexecutableCommand.INSTANCE;
-		}		
+		}
 		if(request.getExtendedData().get("DELETE_FROM_LANE") != null){
 			return super.getReparentCommand(request);
 		}
-		if(getHost() instanceof CustomPoolCompartmentEditPart  
-				&& request.getEditParts().get(0) != null 
+		if(getHost() instanceof CustomPoolCompartmentEditPart
+				&& request.getEditParts().get(0) != null
 				&& ((EditPart) request.getEditParts().get(0)).getParent() instanceof CustomLaneCompartmentEditPart){
 			return UnexecutableCommand.INSTANCE;
-		} 
-		
+		}
+
 		if(getHost() instanceof CustomSubprocessEventCompartmentEditPart
 				&& request.getEditParts().get(0) != null){
-			for(Object child : request.getEditParts()){
+			for(final Object child : request.getEditParts()){
 				if(child instanceof IGraphicalEditPart){
 					if(!((IGraphicalEditPart) child).getTargetConnections().isEmpty() ||
 							!((IGraphicalEditPart) child).getSourceConnections().isEmpty()){
 						return  UnexecutableCommand.INSTANCE;
 					} else {
-						if (child instanceof StartTimerEvent2EditPart 
-								&& !(((IGraphicalEditPart) child).getParent() instanceof CustomSubprocessEventCompartmentEditPart) 
+						if (child instanceof StartTimerEvent2EditPart
+								&& !(((IGraphicalEditPart) child).getParent() instanceof CustomSubprocessEventCompartmentEditPart)
 								&& !((IGraphicalEditPart)child).getParent().equals(getHost())){
-							Command editCommand = editTimerEventValue((IGraphicalEditPart)child);
+							final Command editCommand = editTimerEventValue((IGraphicalEditPart)child);
 							if (editCommand.canExecute()){
 								cc.add(editCommand);
 							}
@@ -158,7 +153,7 @@ public class CustomCreationEditPolicy extends CreationEditPolicy {
 
 		if(getHost() instanceof CustomLaneEditPart){
 			if( request.getLocation() != null){
-				return   UnexecutableCommand.INSTANCE; 
+				return   UnexecutableCommand.INSTANCE;
 			}
 
 		}
@@ -169,7 +164,7 @@ public class CustomCreationEditPolicy extends CreationEditPolicy {
 	 * Gets the command to create a new view (and optionally element) for an
 	 * unspecified type request. This command includes a command to popup a menu
 	 * to prompt the user for the type to be created.
-	 * 
+	 *
 	 * @param request
 	 *            the unspecified type request
 	 * @return the command
@@ -178,11 +173,11 @@ public class CustomCreationEditPolicy extends CreationEditPolicy {
 			final CreateUnspecifiedTypeRequest request) {
 
 		final Map<IElementType,Command> createCmds = new HashMap<IElementType,Command>();
-		List<IElementType> validTypes = new ArrayList<IElementType>();
-		List<?> requestElementTypes = request.getElementTypes();
-		for (Iterator<?> iter = requestElementTypes.iterator(); iter.hasNext();) {
-			IElementType elementType = (IElementType) iter.next();
-			Request createRequest = request.getRequestForType(elementType);
+		final List<IElementType> validTypes = new ArrayList<IElementType>();
+		final List<?> requestElementTypes = request.getElementTypes();
+		for (final Iterator<?> iter = requestElementTypes.iterator(); iter.hasNext();) {
+			final IElementType elementType = (IElementType) iter.next();
+			final Request createRequest = request.getRequestForType(elementType);
 			if (createRequest != null) {
 				EditPart target = getHost().getTargetEditPart(createRequest);
 				if ( target == null )  {
@@ -190,7 +185,7 @@ public class CustomCreationEditPolicy extends CreationEditPolicy {
 				}
 
 				//Handle LAne DnD case
-				if(target instanceof ITextAwareEditPart 
+				if(target instanceof ITextAwareEditPart
 						&& (requestElementTypes.contains(ProcessElementTypes.Pool_2007))){
 					target = null ;
 					continue ;
@@ -199,11 +194,13 @@ public class CustomCreationEditPolicy extends CreationEditPolicy {
 				/*If we are on NameEditPart of a Pool or EventSUbProcessPool, take the corresponding parent*/
 				if((target instanceof PoolNameEditPart && requestElementTypes.contains(ProcessElementTypes.Lane_3007))){
 					target = target.getParent() ;
-					for(Object child : target.getChildren()){
+					for(final Object child : target.getChildren()){
 						if(child instanceof CustomPoolCompartmentEditPart){
 							target = (EditPart) child ;
 						}
-						if(target instanceof CustomPoolCompartmentEditPart) break ;
+						if(target instanceof CustomPoolCompartmentEditPart) {
+                            break ;
+                        }
 					}
 				}
 
@@ -212,10 +209,10 @@ public class CustomCreationEditPolicy extends CreationEditPolicy {
 				 * The idea is to allow only creation of Lane in direct child of Pool.*/
 				if((target instanceof PoolPoolCompartmentEditPart)
 						&& !(requestElementTypes.contains(ProcessElementTypes.Lane_3007))){
-					List<Element> elements = ((Container)((IGraphicalEditPart) target).resolveSemanticElement()).getElements() ;
-					Iterator<Element> it = elements.iterator() ;
+					final List<Element> elements = ((Container)((IGraphicalEditPart) target).resolveSemanticElement()).getElements() ;
+					final Iterator<Element> it = elements.iterator() ;
 					while (it.hasNext()) {
-						Object object = (Object) it.next();
+						final Object object = it.next();
 						if(object instanceof Lane){
 							target = null ;
 							continue ;
@@ -227,6 +224,9 @@ public class CustomCreationEditPolicy extends CreationEditPolicy {
 				if(((target instanceof CustomLaneCompartmentEditPart || target instanceof CustomLaneNameEditPart) && requestElementTypes.contains(ProcessElementTypes.Lane_3007)) ){
 					target = target.getParent().getParent() ;
 				}
+                if ((target instanceof CustomLaneEditPart && requestElementTypes.contains(ProcessElementTypes.Lane_3007))) {
+                    target = target.getParent();
+                }
 
 				/*if we are on an ITextAwareEditPart and ShapeCompartmentEditPart, set target to null???*/
 				if(target instanceof ITextAwareEditPart && target instanceof ShapeCompartmentEditPart){
@@ -238,13 +238,14 @@ public class CustomCreationEditPolicy extends CreationEditPolicy {
 					target = target.getParent() ;
 				}
 
-				if(target == null)
-					continue;
+				if(target == null) {
+                    continue;
+                }
 
-				Command individualCmd = target.getCommand(createRequest);
+				final Command individualCmd = target.getCommand(createRequest);
 
 				if (individualCmd != null && individualCmd.canExecute() ) {
-					if(!(elementType.equals(ProcessElementTypes.Event_2024) 
+					if(!(elementType.equals(ProcessElementTypes.Event_2024)
 							|| elementType.equals(ProcessElementTypes.Event_3024))){
 						createCmds.put(elementType, individualCmd);
 						validTypes.add(elementType);
@@ -259,7 +260,7 @@ public class CustomCreationEditPolicy extends CreationEditPolicy {
 			return (Command) createCmds.values().toArray()[0];
 		} else {
 
-			CustomCreateOrSelectElementCommand selectAndCreateViewCmd = new CustomCreateOrSelectElementCommand(
+			final CustomCreateOrSelectElementCommand selectAndCreateViewCmd = new CustomCreateOrSelectElementCommand(
 					DiagramUIMessages.CreateCommand_Label, Display.getCurrent().getActiveShell(), validTypes, LayerManager.Helper.find(getHost()).getLayer(LayerConstants.HANDLE_LAYER)) {
 
 				private Command _createCmd;
@@ -272,14 +273,15 @@ public class CustomCreationEditPolicy extends CreationEditPolicy {
 				 * menu, then executes the command prepared for the element
 				 * type that the user selected.
 				 */
-				protected CommandResult doExecuteWithResult(
-						IProgressMonitor progressMonitor, IAdaptable info)
+				@Override
+                protected CommandResult doExecuteWithResult(
+						final IProgressMonitor progressMonitor, final IAdaptable info)
 				throws ExecutionException {
 
 
 					selectedFigure = FiguresHelper.getSelectedFigure(ProcessElementTypes.Event_2024.getEClass(),-1,-1,null,null);
-					IFigure layer = getLayerFigure();
-					Point loc = new Point(request.getLocation().x, request.getLocation().y);
+					final IFigure layer = getLayerFigure();
+					final Point loc = new Point(request.getLocation().x, request.getLocation().y);
 					FiguresHelper.translateToAbsolute(((GraphicalEditPart) getHost()).getFigure(), loc);
 					selectedFigure.setLocation(loc);
 					layer.add(selectedFigure);
@@ -295,34 +297,37 @@ public class CustomCreationEditPolicy extends CreationEditPolicy {
 
 					eventFigure.addSelectionListener(new IEventSelectionListener() {
 
-						public void eventSelected(SelectionEvent ev) {
+						@Override
+                        public void eventSelected(final SelectionEvent ev) {
 							types = (Object[])ev.data ;
 							eventFigure.hide();
 						}
 
 
 					});
-					Display display = Display.getCurrent() ;
+					final Display display = Display.getCurrent() ;
 					cursor = new Cursor(display, SWT.CURSOR_ARROW);
 
-					outsideClick = false ; 
+					outsideClick = false ;
 					display.addFilter(SWT.MouseDown, new Listener() {
 
-						public void handleEvent(Event event) {
-							outsideClick = true ; 
+						@Override
+                        public void handleEvent(final Event event) {
+							outsideClick = true ;
 
 						}
 					});
 
 					while (composite.isVisible() && !outsideClick) {
 						if (!display.readAndDispatch()){
-							EditPartViewer viewer = getHost().getViewer();
-							Control control = viewer.getControl();
+							final EditPartViewer viewer = getHost().getViewer();
+							final Control control = viewer.getControl();
 							if(control.getCursor() != null && !control.getCursor().equals(cursor)){
 								control.setCursor(cursor);
 							}
-							if(viewer.getEditDomain().getActiveTool() instanceof BonitaUnspecifiedTypeProcessCreationTool)
-								((BonitaUnspecifiedTypeProcessCreationTool)viewer.getEditDomain().getActiveTool()).setCursor(cursor,true);
+							if(viewer.getEditDomain().getActiveTool() instanceof BonitaUnspecifiedTypeProcessCreationTool) {
+                                ((BonitaUnspecifiedTypeProcessCreationTool)viewer.getEditDomain().getActiveTool()).setCursor(cursor,true);
+                            }
 							display.sleep();
 
 						}
@@ -334,14 +339,14 @@ public class CustomCreationEditPolicy extends CreationEditPolicy {
 					composite = null ;
 					layer.remove(selectedFigure);
 
-					CommandResult cmdResult = CommandResult.newOKCommandResult(types);
+					final CommandResult cmdResult = CommandResult.newOKCommandResult(types);
 					if (cmdResult.getReturnValue() == null || (outsideClick && types == null)) {
 						return cmdResult;
 					}
 
 					if(_createCmd == null){
-						for(Object t : types){
-							_createCmd = (Command) createCmds.get(t);
+						for(final Object t : types){
+							_createCmd = createCmds.get(t);
 							if(_createCmd != null) {
 								type =(IElementType) t ;
 								break ;
@@ -352,7 +357,7 @@ public class CustomCreationEditPolicy extends CreationEditPolicy {
 					Assert.isTrue(_createCmd != null && _createCmd.canExecute());
 
 					// validate the affected files
-					IStatus status = validateAffectedFiles(_createCmd);
+					final IStatus status = validateAffectedFiles(_createCmd);
 					if (!status.isOK()) {
 						layer.remove(selectedFigure);
 						return new CommandResult(status);
@@ -362,22 +367,23 @@ public class CustomCreationEditPolicy extends CreationEditPolicy {
 					_createCmd.execute();
 
 					// Set the result in the unspecified type request.
-					CreateRequest createRequest = request.getRequestForType(type);
+					final CreateRequest createRequest = request.getRequestForType(type);
 
-					Collection<?> newObject = ((Collection<?>) createRequest
+					final Collection<?> newObject = ((Collection<?>) createRequest
 							.getNewObject());
 					request.setNewObject(newObject);
 
 					return CommandResult.newOKCommandResult(newObject);
 				}
 
-				protected CommandResult doUndoWithResult(
-						IProgressMonitor progressMonitor, IAdaptable info)
+				@Override
+                protected CommandResult doUndoWithResult(
+						final IProgressMonitor progressMonitor, final IAdaptable info)
 				throws ExecutionException {
 
 					if (_createCmd != null && _createCmd.canUndo() ) {
 						// validate the affected files
-						IStatus status = validateAffectedFiles(_createCmd);
+						final IStatus status = validateAffectedFiles(_createCmd);
 						if (!status.isOK()) {
 							return new CommandResult(status);
 						}
@@ -386,13 +392,14 @@ public class CustomCreationEditPolicy extends CreationEditPolicy {
 					return super.doUndoWithResult(progressMonitor, info);
 				}
 
-				protected CommandResult doRedoWithResult(
-						IProgressMonitor progressMonitor, IAdaptable info)
+				@Override
+                protected CommandResult doRedoWithResult(
+						final IProgressMonitor progressMonitor, final IAdaptable info)
 				throws ExecutionException {
 
 					if (_createCmd != null && CommandUtilities.canRedo(_createCmd)) {
 						// validate the affected files
-						IStatus status = validateAffectedFiles(_createCmd);
+						final IStatus status = validateAffectedFiles(_createCmd);
 						if (!status.isOK()) {
 							return new CommandResult(status);
 						}
@@ -401,13 +408,13 @@ public class CustomCreationEditPolicy extends CreationEditPolicy {
 					return super.doRedoWithResult(progressMonitor, info);
 				}
 
-				private IStatus validateAffectedFiles(Command command) {
-					Collection<?> affectedFiles = CommandUtilities
+				private IStatus validateAffectedFiles(final Command command) {
+					final Collection<?> affectedFiles = CommandUtilities
 					.getAffectedFiles(command);
-					int fileCount = affectedFiles.size();
+					final int fileCount = affectedFiles.size();
 					if (fileCount > 0) {
 						return FileModificationValidator
-						.approveFileModification((IFile[]) affectedFiles
+						.approveFileModification(affectedFiles
 								.toArray(new IFile[fileCount]));
 					}
 					return Status.OK_STATUS;
@@ -421,19 +428,20 @@ public class CustomCreationEditPolicy extends CreationEditPolicy {
 	@Override
 	public void deactivate() {
 		super.deactivate();
-		if(cursor != null)
-			cursor.dispose();
+		if(cursor != null) {
+            cursor.dispose();
+        }
 	}
-	
-	private Command editTimerEventValue(IGraphicalEditPart timerPart){
-		CompoundCommand cc = new CompoundCommand();
-		StartTimerEvent timer = (StartTimerEvent) timerPart.resolveSemanticElement();
-		StartTimerScriptType scriptType = timer.getScriptType();
+
+	private Command editTimerEventValue(final IGraphicalEditPart timerPart){
+		final CompoundCommand cc = new CompoundCommand();
+		final StartTimerEvent timer = (StartTimerEvent) timerPart.resolveSemanticElement();
+		final StartTimerScriptType scriptType = timer.getScriptType();
 		if (!(scriptType.equals(StartTimerScriptType.GROOVY) || scriptType.equals(StartTimerScriptType.CONSTANT)) ){
 			cc.add (new EMFtoGEFCommandWrapper(new SetCommand(timerPart.getEditingDomain(), timer.getCondition(),ExpressionPackage.Literals.EXPRESSION__CONTENT, ""),timerPart.getEditingDomain()));
 			cc.add(new EMFtoGEFCommandWrapper(new SetCommand(timerPart.getEditingDomain(), timer.getCondition(),ExpressionPackage.Literals.EXPRESSION__NAME, ""), timerPart.getEditingDomain()));
 			cc.add(new EMFtoGEFCommandWrapper(new SetCommand(timerPart.getEditingDomain(),timer,ProcessPackage.Literals.START_TIMER_EVENT__SCRIPT_TYPE,StartTimerScriptType.GROOVY),timerPart.getEditingDomain()));
-	
+
 		}
 		return cc;
 	}

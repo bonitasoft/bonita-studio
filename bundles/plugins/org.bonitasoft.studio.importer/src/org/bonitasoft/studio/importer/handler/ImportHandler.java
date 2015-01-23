@@ -88,7 +88,6 @@ public class ImportHandler extends AbstractHandler {
 		for(final DiagramFileStore fileStore : operation.getFileStoresToOpen()){
 			fileStore.open();
 		}
-		PlatformUtil.closeIntro() ;
 		PlatformUtil.openIntroIfNoOtherEditorOpen() ;
 
         final IStatus importStatus = operation.getStatus();

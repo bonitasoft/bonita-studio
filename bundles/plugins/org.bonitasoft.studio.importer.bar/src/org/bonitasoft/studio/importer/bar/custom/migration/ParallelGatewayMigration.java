@@ -24,10 +24,10 @@ import org.bonitasoft.studio.migration.utils.CustomMigrationUtil;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.SequenceFlowNameEditPart;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.edapt.migration.Instance;
-import org.eclipse.emf.edapt.migration.Metamodel;
 import org.eclipse.emf.edapt.migration.MigrationException;
-import org.eclipse.emf.edapt.migration.Model;
+import org.eclipse.emf.edapt.spi.migration.Instance;
+import org.eclipse.emf.edapt.spi.migration.Metamodel;
+import org.eclipse.emf.edapt.spi.migration.Model;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 
 /**
