@@ -18,11 +18,16 @@ package org.bonitasoft.studio.pagedesigner.core.resources;
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.net.URLDecoder;
 import java.nio.file.Path;
 
+import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.extension.IGetLockStatusOperation;
+import org.bonitasoft.studio.common.repository.extension.ILockedResourceStatus;
 import org.bonitasoft.studio.common.repository.filestore.FileStoreChangeEvent;
 import org.bonitasoft.studio.common.repository.filestore.FileStoreChangeEvent.EventType;
 import org.bonitasoft.studio.common.repository.model.IRepository;
@@ -33,6 +38,8 @@ import org.bonitasoft.workspace.common.ResourceNotFoundException;
 import org.bonitasoft.workspace.common.WorkspaceAPIConstants;
 import org.bonitasoft.workspace.common.WorkspaceAPIEvent;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
 import org.restlet.data.Status;
 import org.restlet.resource.Get;
 import org.restlet.resource.Post;
@@ -110,10 +117,34 @@ public class WorkspaceServerResource extends ServerResource {
             if (fileStore == null) {
                 throw new ResourceNotFoundException(filePath);
             }
+            final IGetLockStatusOperation op = getLockStatusOperation();
+            final ILockedResourceStatus scanLock = op.scanLock(fileStore.getResource());
+            if (scanLock.isLocalyLocked()) {
+                return LockStatus.LOCKED_BY_ME.name();
+            } else if (scanLock.isLockedByOther()) {
+                return LockStatus.LOCKED_BY_OTHER.name();
+            }
         } catch (final UnsupportedEncodingException e) {
             throw new ResourceNotFoundException(filePath);
+        } catch (final InvocationTargetException e) {
+            BonitaStudioLog.error(e);
+        } catch (final CoreException e) {
+            BonitaStudioLog.error(e);
         }
         return LockStatus.UNLOCKED.name();
+    }
+
+    protected IGetLockStatusOperation getLockStatusOperation() {
+        final IConfigurationElement[] configurationElements = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(
+                "org.bonitasoft.studio.common.repository.lockStatusProvider");
+        for (final IConfigurationElement element : configurationElements) {
+            try {
+                return (IGetLockStatusOperation) element.createExecutableExtension("class");
+            } catch (final CoreException e) {
+                BonitaStudioLog.error(e);
+            }
+        }
+        return null;
     }
 
     @Override

@@ -9,6 +9,7 @@
    <extension-point id="org.bonitasodt.studio.repositoryImplementation" name="org.bonitasodt.studio.repositoryImplementation" schema="schema/org.bonitasodt.studio.repositoryImplementation.exsd"/>
    <extension-point id="org.bonitasoft.studio.bosArchiveProvider" name="org.bonitasoft.studio.bosArchiveProvider" schema="schema/org.bonitasoft.studio.bosArchiveProvider.exsd"/>
    <extension-point id="postinitrepository" name="Actions to hook at the end of the initialization repository job" schema="schema/postinitrepository.exsd"/>
+   <extension-point id="lockStatusProvider" name="lockStatusProvider" schema="schema/lockStatusProvider.exsd"/>
    <extension
          point="org.eclipse.core.runtime.preferences">
       <initializer
