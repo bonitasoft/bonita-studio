@@ -18,7 +18,7 @@ import org.eclipse.emf.common.util.URI;
  * 
  * @author herrmama
  * @author $Author: mherrmannsd $
- * @version $Rev: 138 $
+ * @version $Rev: 114 $
  * @levd.rating YELLOW Hash: 566A4B9AAB3B3C4B9C0A825DFC6105CE
  */
 public class MigrationException extends Exception {

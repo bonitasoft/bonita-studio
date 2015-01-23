@@ -33,7 +33,6 @@ import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.Signature;
 import org.eclipse.jdt.internal.corext.template.java.SignatureUtil;
-import org.eclipse.jdt.internal.corext.util.JavaModelUtil;
 import org.eclipse.jdt.internal.ui.viewsupport.JavaUILabelProvider;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -127,34 +126,7 @@ public class JavaSetterOperatorEditor implements IOperatorEditor {
                         operator.setExpression(item.getElementName()) ;
                         operator.getInputTypes().clear() ;
                         for(final String type : item.getParameterTypes()){
-                            String qualifiedType = Object.class.getName();
-                            try {
-                                qualifiedType = JavaModelUtil.getResolvedTypeName(Signature.getTypeErasure(type), item.getDeclaringType());
-                                if("int".equals(qualifiedType)){
-                                    qualifiedType = Integer.class.getName();
-                                }else if("boolean".equals(qualifiedType)){
-                                    qualifiedType = Boolean.class.getName();
-                                }else if("long".equals(qualifiedType)){
-                                    qualifiedType = Long.class.getName();
-                                }else if("float".equals(qualifiedType)){
-                                    qualifiedType = Float.class.getName();
-                                }else if("double".equals(qualifiedType)){
-                                    qualifiedType = Double.class.getName();
-                                }else if("short".equals(qualifiedType)){
-                                    qualifiedType = Short.class.getName();
-                                }else if("byte".equals(qualifiedType)){
-                                    qualifiedType = Byte.class.getName();
-                                }else if("E".equals(qualifiedType)){
-                                    qualifiedType = Object.class.getName();
-                                }else if("V".equals(qualifiedType)){
-                                    qualifiedType = Object.class.getName();
-                                }
-                            } catch (final JavaModelException e) {
-                                BonitaStudioLog.error(e);
-                            } catch (final IllegalArgumentException e) {
-                                BonitaStudioLog.error(e);
-                            }
-
+                            final String qualifiedType = retrieveQualifiedType(item, type);
                             operator.getInputTypes().add(qualifiedType) ;
                         }
                     }
@@ -162,6 +134,11 @@ public class JavaSetterOperatorEditor implements IOperatorEditor {
                 fireSelectionChange(event) ;
             }
 
+            protected String retrieveQualifiedType(final IMethod item, final String type) {
+                final String typeErasure = Signature.getTypeErasure(type);
+                final IType declaringType = item.getDeclaringType();
+                return JavaQualifiedTypeHelper.retrieveQualifiedType(typeErasure, declaringType);
+            }
         });
 
 

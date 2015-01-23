@@ -17,6 +17,7 @@
 
 	<modules>
 		<module>ca.ecliptical.gmf.ant</module>
+        <module>org.eclipse.emf.edapt.common</module>
 		<module>org.eclipse.emf.edapt.migration</module>
 		<module>org.eclipse.ui.views.properties.tabbed</module>
 		<module>org.eclipse.gmf.runtime.lite.svg</module>

@@ -21,10 +21,10 @@ import java.util.List;
 import org.bonitasoft.studio.common.DataTypeLabels;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.eclipse.emf.edapt.migration.CustomMigration;
-import org.eclipse.emf.edapt.migration.Instance;
-import org.eclipse.emf.edapt.migration.Metamodel;
 import org.eclipse.emf.edapt.migration.MigrationException;
-import org.eclipse.emf.edapt.migration.Model;
+import org.eclipse.emf.edapt.spi.migration.Instance;
+import org.eclipse.emf.edapt.spi.migration.Metamodel;
+import org.eclipse.emf.edapt.spi.migration.Model;
 
 /**
  * @author Romain Bioteau
@@ -33,15 +33,15 @@ import org.eclipse.emf.edapt.migration.Model;
 public class BusinessObjectTypeCustomMigration extends CustomMigration {
 
 	/* (non-Javadoc)
-	 * @see org.eclipse.emf.edapt.migration.CustomMigration#migrateAfter(org.eclipse.emf.edapt.migration.Model, org.eclipse.emf.edapt.migration.Metamodel)
+	 * @see org.eclipse.emf.edapt.migration.CustomMigration#migrateAfter(org.eclipse.emf.edapt.spi.migration.Model, org.eclipse.emf.edapt.migration.Metamodel)
 	 */
 	@Override
-	public void migrateAfter(Model model, Metamodel metamodel)
+	public void migrateAfter(final Model model, final Metamodel metamodel)
 			throws MigrationException {
-		for(Instance diagramInstance : model.getAllInstances("process.MainProcess")){
-			List<Instance> datatypes = diagramInstance.get("datatypes");
+		for(final Instance diagramInstance : model.getAllInstances("process.MainProcess")){
+			final List<Instance> datatypes = diagramInstance.get("datatypes");
 			if(!containsBusinessObjectType(datatypes)){
-				Instance datatypeInstance = model.newInstance("process.BusinessObjectType");
+				final Instance datatypeInstance = model.newInstance("process.BusinessObjectType");
 				datatypeInstance.set("name",NamingUtils.convertToId(DataTypeLabels.businessObjectType));
 				diagramInstance.add("datatypes", datatypeInstance);
 			}
@@ -49,8 +49,8 @@ public class BusinessObjectTypeCustomMigration extends CustomMigration {
 		}
 	}
 
-	private boolean containsBusinessObjectType(List<Instance> datatypes) {
-		for(Instance dt : datatypes){
+	private boolean containsBusinessObjectType(final List<Instance> datatypes) {
+		for(final Instance dt : datatypes){
 			if(dt.instanceOf("process.BusinessObjectType")){
 				return true;
 			}

@@ -955,5 +955,14 @@
             parentId="org.eclipse.ui.contexts.window">
       </context>
    </extension>
+   <extension
+         id="id1"
+         point="org.eclipse.e4.workbench.model">
+      <processor
+            apply="always"
+            beforefragment="false"
+            class="org.bonitasoft.studio.application.RemoveQuickAccessProcessor">
+      </processor>
+   </extension>
 
 </plugin>

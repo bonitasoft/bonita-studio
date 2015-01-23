@@ -16,7 +16,6 @@
  */
 package org.bonitasoft.studio.importer.bar.custom.migration.connector;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -37,8 +36,8 @@ import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.edapt.migration.Instance;
-import org.eclipse.emf.edapt.migration.Model;
+import org.eclipse.emf.edapt.spi.migration.Instance;
+import org.eclipse.emf.edapt.spi.migration.Model;
 import org.eclipse.osgi.util.NLS;
 
 /**
