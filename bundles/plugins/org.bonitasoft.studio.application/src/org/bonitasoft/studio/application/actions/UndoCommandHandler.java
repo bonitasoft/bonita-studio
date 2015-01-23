@@ -1,19 +1,16 @@
 /**
- * Copyright (C) 2009 BonitaSoft S.A.
- * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
- * 
+ * Copyright (C) 2009-2015 BonitaSoft S.A.
+ * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 package org.bonitasoft.studio.application.actions;
@@ -42,9 +39,9 @@ public class UndoCommandHandler  extends AbstractHandler implements IHandler  {
 	}
 
 	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException {
-		IEditorPart part = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor() ;
-		GlobalAction action = GlobalActionManager.getInstance().getGlobalActionHandler(part,GlobalActionId.UNDO);
+	public Object execute(final ExecutionEvent event) throws ExecutionException {
+		final IEditorPart part = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor() ;
+		final GlobalAction action = GlobalActionManager.getInstance().getGlobalActionHandler(part,GlobalActionId.UNDO);
 		if(action.isRunnable()){
 			action.run();
 		}
@@ -56,15 +53,16 @@ public class UndoCommandHandler  extends AbstractHandler implements IHandler  {
 	 */
 	@Override
 	public boolean isEnabled() {
-		IEditorPart editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor() ;
+		final IEditorPart editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor() ;
 		if(editor != null){
-			IOperationHistory history = (IOperationHistory) editor.getAdapter(IOperationHistory.class);
-			IUndoContext context = (IUndoContext) editor.getAdapter(IUndoContext.class);
+			final IOperationHistory history = (IOperationHistory) editor.getAdapter(IOperationHistory.class);
+			final IUndoContext context = (IUndoContext) editor.getAdapter(IUndoContext.class);
 			if(history != null && context != null){
-				IUndoableOperation[] undoHistory = history.getUndoHistory(context);
-				if(undoHistory != null){
-					IUndoableOperation ctxt = undoHistory[history.getUndoHistory(context).length-1] ;
-					if(ctxt.getLabel() != null && ctxt.getLabel().contains("Lane")){//Avoid Exception on undo //$NON-NLS-1$
+				final IUndoableOperation[] undoHistory = history.getUndoHistory(context);
+                if (undoHistory != null && undoHistory.length != 0) {
+                    final IUndoableOperation ctxt = undoHistory[undoHistory.length - 1];
+					final String ctxtLabel = ctxt.getLabel();
+                    if(ctxtLabel != null && ctxtLabel.contains("Lane")){//Avoid Exception on undo //$NON-NLS-1$
 						return false ;
 					} else {
 						return ctxt.canUndo();
