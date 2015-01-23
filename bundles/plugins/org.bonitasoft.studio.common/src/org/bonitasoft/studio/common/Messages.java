@@ -277,5 +277,7 @@ public class Messages extends NLS {
     public static String validationFailedTitle;
     public static String endWarningMessage;
     public static String createAndNewButton;
+    public static String Next_desc;
+    public static String Image_desc;
 
 }

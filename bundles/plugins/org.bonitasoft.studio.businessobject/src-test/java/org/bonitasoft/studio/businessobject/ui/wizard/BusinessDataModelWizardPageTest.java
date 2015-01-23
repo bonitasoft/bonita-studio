@@ -63,7 +63,7 @@ public class BusinessDataModelWizardPageTest extends AbstractSWTTestCase {
     }
 
     @Test
-    public void should_validatePackage_returns_an_error_status_for_package_with_reserved_prefix() throws Exception {
+    public void should_validatePackage_returns_an_error_status_for_package_with_sp_reserved_prefix() throws Exception {
         doReturn(Status.OK_STATUS).when(wizardPage).javaPackageValidation(any(Object.class));
         IStatus status = wizardPage.validatePackageName("com.bonitasoft");
 
@@ -91,10 +91,10 @@ public class BusinessDataModelWizardPageTest extends AbstractSWTTestCase {
     }
 
     @Test
-    public void should_validatePackage_returns_a_warning_status_for_package_with_reserved_prefix() throws Exception {
+    public void should_validatePackage_returns_an_error_status_for_package_with_bos_reserved_prefix() throws Exception {
         doReturn(Status.OK_STATUS).when(wizardPage).javaPackageValidation(any(Object.class));
         final IStatus status = wizardPage.validatePackageName("org.bonitasoft.model");
 
-        assertThat(status.getSeverity()).isEqualTo(IStatus.WARNING);
+        assertThat(status.getSeverity()).isEqualTo(IStatus.ERROR);
     }
 }

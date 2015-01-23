@@ -258,11 +258,7 @@ public class DiagramFileStore extends EMFFileStore implements IRepositoryFileSto
 
     @Override
     protected IWorkbenchPart doOpen() {
-        final IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-        final DiagramEditor openedEditor = getOpenedEditor();
-        if (openedEditor != null) {
-            activePage.closeEditor(openedEditor, false);
-        }
+        final IWorkbenchPage activePage = closeOpenedEditorWithoutSaving();
 
         IEditorPart part = null;
         try {
@@ -290,6 +286,15 @@ public class DiagramFileStore extends EMFFileStore implements IRepositoryFileSto
             BonitaStudioLog.error(e) ;
         }
         return part ;
+    }
+
+    protected IWorkbenchPage closeOpenedEditorWithoutSaving() {
+        final IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+        final DiagramEditor openedEditor = getOpenedEditor();
+        if (openedEditor != null) {
+            activePage.closeEditor(openedEditor, false);
+        }
+        return activePage;
     }
 
     protected void setDefaultSelection(final DiagramEditor editor) {

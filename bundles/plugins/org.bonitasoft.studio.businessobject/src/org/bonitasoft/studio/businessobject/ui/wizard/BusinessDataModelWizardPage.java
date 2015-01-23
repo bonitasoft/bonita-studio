@@ -409,7 +409,7 @@ public class BusinessDataModelWizardPage extends WizardPage {
                 return ValidationStatus.error(Messages.bind(Messages.error_reservedPackagePrefix, value.toString()));
             }
             if (value.toString().startsWith(ORG_BONITASOFT_PREFIX + ".") || value.toString().equals(ORG_BONITASOFT_PREFIX)) {
-                return ValidationStatus.warning(Messages.bind(Messages.warning_reservedPackagePrefix, value.toString()));
+                return ValidationStatus.error(Messages.bind(Messages.error_reservedPackagePrefix, value.toString()));
             }
         }
         return status;

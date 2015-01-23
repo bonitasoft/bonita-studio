@@ -26,6 +26,7 @@ import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.jdt.JDTTypeHierarchyManager;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionEditor;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionProvider;
 import org.bonitasoft.studio.model.expression.Expression;
@@ -60,7 +61,7 @@ public class DAOExpressionProvider implements IExpressionProvider {
             if (baseType == null) {
                 throw new RuntimeException(new ClassNotFoundException(BusinessObjectDAO.class.getName()));
             }
-            final ITypeHierarchy newTypeHierarchy = baseType.newTypeHierarchy(null);
+            final ITypeHierarchy newTypeHierarchy = new JDTTypeHierarchyManager().getTypeHierarchy(baseType);
             for (final IType daoType : newTypeHierarchy.getAllInterfaces()) {
                 if (!daoType.equals(baseType)) {
                     result.add(createExpression(daoType));
@@ -126,7 +127,7 @@ public class DAOExpressionProvider implements IExpressionProvider {
      */
     @Override
     public boolean isRelevantFor(final EObject context) {
-        return getBusinessObjectModel() != null;
+        return getBusinessFileStore() != null;
     }
 
     /*
@@ -149,11 +150,16 @@ public class DAOExpressionProvider implements IExpressionProvider {
     }
 
     protected BusinessObjectModel getBusinessObjectModel() {
-        final BusinessObjectModelRepositoryStore repositoryStore = RepositoryManager.getInstance().getRepositoryStore(BusinessObjectModelRepositoryStore.class);
-        final BusinessObjectModelFileStore fileStore = repositoryStore.getChild(BusinessObjectModelFileStore.DEFAULT_BDM_FILENAME);
+        final BusinessObjectModelFileStore fileStore = getBusinessFileStore();
         if (fileStore != null) {
             return fileStore.getContent();
         }
         return null;
+    }
+
+    protected BusinessObjectModelFileStore getBusinessFileStore() {
+        final BusinessObjectModelRepositoryStore repositoryStore = RepositoryManager.getInstance().getRepositoryStore(BusinessObjectModelRepositoryStore.class);
+        final BusinessObjectModelFileStore fileStore = repositoryStore.getChild(BusinessObjectModelFileStore.DEFAULT_BDM_FILENAME);
+        return fileStore;
     }
 }
