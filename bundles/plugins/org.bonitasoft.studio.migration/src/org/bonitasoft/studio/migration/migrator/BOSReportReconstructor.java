@@ -16,65 +16,69 @@
  */
 package org.bonitasoft.studio.migration.migrator;
 
+import java.lang.reflect.Field;
 import java.util.List;
 
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.migration.model.report.MigrationReportFactory;
 import org.bonitasoft.studio.migration.model.report.Report;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.edapt.history.Change;
-import org.eclipse.emf.edapt.history.MigrationChange;
-import org.eclipse.emf.edapt.history.Release;
-import org.eclipse.emf.edapt.migration.MigrationException;
-import org.eclipse.emf.edapt.migration.execution.IClassLoader;
-import org.eclipse.emf.edapt.migration.execution.ValidationLevel;
+import org.eclipse.emf.edapt.common.IResourceSetFactory;
+import org.eclipse.emf.edapt.internal.migration.execution.IClassLoader;
+import org.eclipse.emf.edapt.internal.migration.execution.ValidationLevel;
+import org.eclipse.emf.edapt.migration.CustomMigration;
+import org.eclipse.emf.edapt.spi.history.Change;
+import org.eclipse.emf.edapt.spi.history.MigrationChange;
+import org.eclipse.emf.edapt.spi.history.Release;
 
 /**
  * @author Romain Bioteau
  *
  */
-public class BOSReportReconstructor extends MigrationReconstructor {
+public class BOSReportReconstructor extends org.eclipse.emf.edapt.internal.migration.execution.MigrationReconstructor {
 
-	private Report report;
+    private final Report report;
 
-	public BOSReportReconstructor(List<URI> modelURIs, Release sourceRelease,
-			Release targetRelease, IProgressMonitor monitor,
-			IClassLoader classLoader, ValidationLevel level) {
-		super(modelURIs, sourceRelease, targetRelease, monitor, classLoader, level);
-		this.report = MigrationReportFactory.eINSTANCE.createReport();
-	}
+    public BOSReportReconstructor(final List<URI> modelURIs, final Release sourceRelease,
+            final Release targetRelease, final IProgressMonitor monitor,
+            final IClassLoader classLoader, final ValidationLevel level, final IResourceSetFactory resourceSetFactory) {
+        super(modelURIs, sourceRelease, targetRelease, monitor, classLoader, level, resourceSetFactory);
+        report = MigrationReportFactory.eINSTANCE.createReport();
+    }
 
-	@Override
-	public void endChange(Change change) {
-		if (isEnabled()) {
-			checkResume(change);
-			if (isStarted()) {
-				if (change instanceof MigrationChange
-						&& customMigration != null) {
-					try {
-						customMigration.migrateAfter(repository.getModel(),
-								repository.getMetamodel());
-						if(customMigration instanceof IReportMigration){
-							report.getChanges().addAll(((IReportMigration) customMigration).getChanges());
-						}
-						monitor.worked(1);
-						checkConformanceIfMoreThan(ValidationLevel.CUSTOM_MIGRATION);
-					} catch (MigrationException e) {
-						throwWrappedMigrationException(e);
-					} finally {
-						customMigration = null;
-					}
-				} else if (change.eContainer() instanceof Release) {
-					monitor.worked(1);
-					checkConformanceIfMoreThan(ValidationLevel.CHANGE);
-				}
-			}
-		}
-	}
+    @Override
+    public void endChange(final Change change) {
+        super.endChange(change);
+        if (change instanceof MigrationChange) {
+            final CustomMigration customMigration = getCustomMigration();
+            if (customMigration instanceof IReportMigration) {
+                report.getChanges().addAll(((IReportMigration) customMigration).getChanges());
+            }
+        }
+    }
 
-	public Report getReport() {
-		return report;
-	}
-	
-	
+    protected CustomMigration getCustomMigration() {
+        try {
+            final Field customMigrationInstance = org.eclipse.emf.edapt.internal.migration.execution.MigrationReconstructor.class
+                    .getDeclaredField("customMigration");
+            customMigrationInstance.setAccessible(true);
+            return  (CustomMigration) customMigrationInstance.get(this);
+        } catch (final NoSuchFieldException e) {
+            BonitaStudioLog.error(e);
+        } catch (final SecurityException e) {
+            BonitaStudioLog.error(e);
+        } catch (final IllegalArgumentException e) {
+            BonitaStudioLog.error(e);
+        } catch (final IllegalAccessException e) {
+            BonitaStudioLog.error(e);
+        }
+        return null;
+    }
+
+    public Report getReport() {
+        return report;
+    }
+
+
 }

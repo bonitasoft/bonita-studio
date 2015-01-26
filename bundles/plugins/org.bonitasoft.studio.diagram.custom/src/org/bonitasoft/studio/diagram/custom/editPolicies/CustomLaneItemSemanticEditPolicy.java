@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.diagram.custom.parts.CustomLaneCompartmentEditPart;
 import org.bonitasoft.studio.diagram.custom.parts.CustomLaneEditPart;
 import org.bonitasoft.studio.diagram.custom.parts.CustomPoolCompartmentEditPart;
@@ -37,13 +36,9 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EAnnotation;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.edit.command.SetCommand;
-import org.eclipse.emf.transaction.Transaction;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
-import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.diagram.core.commands.DeleteCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.CommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
@@ -73,21 +68,21 @@ public class CustomLaneItemSemanticEditPolicy extends LaneItemSemanticEditPolicy
 	 * @see org.bonitasoft.studio.model.process.diagram.edit.policies.Lane2ItemSemanticEditPolicy#getDestroyElementCommand(org.eclipse.gmf.runtime.emf.type.core.requests.DestroyElementRequest)
 	 */
 	@Override
-	protected Command getDestroyElementCommand(DestroyElementRequest req) {
+	protected Command getDestroyElementCommand(final DestroyElementRequest req) {
 
-		CustomPoolCompartmentEditPart poolCompartment = (CustomPoolCompartmentEditPart) getHost().getParent() ;
+		final CustomPoolCompartmentEditPart poolCompartment = (CustomPoolCompartmentEditPart) getHost().getParent() ;
 		GraphicalEditPart compartment = poolCompartment ;
 
 		CustomLaneCompartmentEditPart laneCompartment = null ;
-		List<CustomLaneEditPart> lanes = new ArrayList<CustomLaneEditPart>() ;
+		final List<CustomLaneEditPart> lanes = new ArrayList<CustomLaneEditPart>() ;
 
-		for(Object o : poolCompartment.getChildren()){
+		for(final Object o : poolCompartment.getChildren()){
 			if(o instanceof CustomLaneEditPart){
 				lanes.add((CustomLaneEditPart) o);
 			}
 		}
 
-		for(Object o : getHost().getChildren()){
+		for(final Object o : getHost().getChildren()){
 			if(o instanceof CustomLaneCompartmentEditPart){
 				laneCompartment = (CustomLaneCompartmentEditPart) o ;
 			}
@@ -110,14 +105,15 @@ public class CustomLaneItemSemanticEditPolicy extends LaneItemSemanticEditPolicy
 		}
 
 
-		List<GraphicalEditPart> newList = new ArrayList<GraphicalEditPart>();
-		for(Object e : laneCompartment.getChildren()){
-			if(e instanceof GraphicalEditPart)
-				newList.add(((GraphicalEditPart) e));
+		final List<GraphicalEditPart> newList = new ArrayList<GraphicalEditPart>();
+		for(final Object e : laneCompartment.getChildren()){
+			if(e instanceof GraphicalEditPart) {
+                newList.add(((GraphicalEditPart) e));
+            }
 		}
 
-		ChangeBoundsRequest request = new ChangeBoundsRequest();
-		HashMap<String,Object> extended = new HashMap<String, Object>() ;
+		final ChangeBoundsRequest request = new ChangeBoundsRequest();
+		final HashMap<String,Object> extended = new HashMap<String, Object>() ;
 		extended.put("DELETE_FROM_LANE", true) ;
 		request.setExtendedData(extended ) ;
 		request.setType(RequestConstants.REQ_ADD);
@@ -140,26 +136,26 @@ public class CustomLaneItemSemanticEditPolicy extends LaneItemSemanticEditPolicy
 
 
 
-		View view = (View) getHost().getModel();
-		CompositeTransactionalCommand cmd = new CompositeTransactionalCommand(
+		final View view = (View) getHost().getModel();
+		final CompositeTransactionalCommand cmd = new CompositeTransactionalCommand(
 				getEditingDomain(), null);
 		cmd.setTransactionNestingEnabled(true);
 
 
-		Lane lane = (Lane)((IGraphicalEditPart)getHost()).resolveSemanticElement();
+		final Lane lane = (Lane)((IGraphicalEditPart)getHost()).resolveSemanticElement();
 		if(lane != null){
-			for(Element element : lane.getElements()){
+			for(final Element element : lane.getElements()){
 				if(element instanceof Task) {
-					EditElementCommand eec = new SetValueCommand(new SetRequest(element, ProcessPackage.Literals.TASK__OVERRIDE_ACTORS_OF_THE_LANE, true)){
+					final EditElementCommand eec = new SetValueCommand(new SetRequest(element, ProcessPackage.Literals.TASK__OVERRIDE_ACTORS_OF_THE_LANE, true)){
 
 						/* (non-Javadoc)
 						 * @see org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCommand#doUndo(org.eclipse.core.runtime.IProgressMonitor, org.eclipse.core.runtime.IAdaptable)
 						 */
 						@Override
-						protected IStatus doUndo(IProgressMonitor monitor,
-								IAdaptable info) throws ExecutionException {
-							IStatus status = super.doUndo(monitor, info);
-							DiagramEditor editor = (DiagramEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+						protected IStatus doUndo(final IProgressMonitor monitor,
+								final IAdaptable info) throws ExecutionException {
+							final IStatus status = super.doUndo(monitor, info);
+							final DiagramEditor editor = (DiagramEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
 							ValidateAction.runValidation(editor.getDiagram());
 							return status;
 						}
@@ -172,7 +168,7 @@ public class CustomLaneItemSemanticEditPolicy extends LaneItemSemanticEditPolicy
 		}
 
 
-		EAnnotation annotation = view.getEAnnotation("Shortcut"); //$NON-NLS-1$
+		final EAnnotation annotation = view.getEAnnotation("Shortcut"); //$NON-NLS-1$
 		if (annotation == null) {
 			// there are indirectly referenced children, need extra commands: false
 			if(newList.size() > 0 && moveCmd != null){
@@ -190,8 +186,8 @@ public class CustomLaneItemSemanticEditPolicy extends LaneItemSemanticEditPolicy
 	}
 
 
-	public static CommandProxy arrangeAll(EditPart ep, List<GraphicalEditPart> newList) {
-		ArrangeRequest request = new ArrangeRequest(RequestConstants.REQ_ARRANGE_DEFERRED);
+	public static CommandProxy arrangeAll(final EditPart ep, final List<GraphicalEditPart> newList) {
+		final ArrangeRequest request = new ArrangeRequest(RequestConstants.REQ_ARRANGE_DEFERRED);
 		request.setPartsToArrange(newList);
 		request.setViewAdaptersToArrange(newList);
 		return new CommandProxy(ep.getCommand(request));

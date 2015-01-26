@@ -23,8 +23,8 @@ import java.util.List;
 import org.bonitasoft.studio.common.ModelVersion;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
-import org.eclipse.emf.edapt.history.Release;
 import org.eclipse.emf.edapt.migration.execution.Migrator;
+import org.eclipse.emf.edapt.spi.history.Release;
 import org.junit.Test;
 
 public class DiagramRepositoryStoreMigrationTest {

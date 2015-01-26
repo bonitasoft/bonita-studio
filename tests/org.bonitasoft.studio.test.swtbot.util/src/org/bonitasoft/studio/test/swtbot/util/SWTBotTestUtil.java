@@ -92,6 +92,8 @@ import org.junit.Assert;
 
 public class SWTBotTestUtil implements SWTBotConstants {
 
+    private static final int X_MARGIN = 90;
+    private static final int Y_MARGIN = 80;
     private static final String PAGEFLOW_LABEL = "Pageflow";
     public static final int CONTEXTUALPALETTE_STEP = 0;
     public static final int CONTEXTUALPALETTE_GATEWAY = 1;
@@ -299,6 +301,7 @@ public class SWTBotTestUtil implements SWTBotConstants {
     public static void selectEventOnProcess(final SWTGefBot bot, final SWTBotGefEditor gmfEditor, final String eventName) {
         final SWTBotGefEditPart event = gmfEditor.getEditPart(eventName).parent();
         event.click();
+        event.select();
     }
 
     /**
@@ -379,31 +382,29 @@ public class SWTBotTestUtil implements SWTBotConstants {
         final Rectangle bounds = graphicalEditPart.getFigure().getBounds();
         switch (position) {
             case PositionConstants.NORTH:
-                dropLocation = bounds.getTop().getCopy().translate(-20, -70);
+                dropLocation = bounds.getTop().getCopy().translate(-20, -Y_MARGIN);
                 break;
             case PositionConstants.SOUTH:
-                dropLocation = bounds.getBottom().getCopy().translate(-20, 70);
+                dropLocation = bounds.getBottom().getCopy().translate(-20, Y_MARGIN);
                 break;
             case PositionConstants.WEST:
-                dropLocation = bounds.getLeft().getCopy().translate(-80, yPaletteDelta);
+                dropLocation = bounds.getLeft().getCopy().translate(-X_MARGIN, yPaletteDelta);
                 break;
             case PositionConstants.EAST:
-                dropLocation = bounds.getRight().getCopy().translate(80, yPaletteDelta);
+                dropLocation = bounds.getRight().getCopy().translate(X_MARGIN, yPaletteDelta);
                 break;
-
             case PositionConstants.NORTH_EAST:
-                dropLocation = bounds.getTopRight().getCopy().translate(80, -70);
+                dropLocation = bounds.getTopRight().getCopy().translate(X_MARGIN, -Y_MARGIN);
                 break;
             case PositionConstants.NORTH_WEST:
-                dropLocation = bounds.getTopLeft().getCopy().translate(-80, 70);
+                dropLocation = bounds.getTopLeft().getCopy().translate(-X_MARGIN, Y_MARGIN);
                 break;
             case PositionConstants.SOUTH_EAST:
-                dropLocation = bounds.getBottomRight().getCopy().translate(80, 70);
+                dropLocation = bounds.getBottomRight().getCopy().translate(X_MARGIN, Y_MARGIN);
                 break;
             case PositionConstants.SOUTH_WEST:
-                dropLocation = bounds.getBottomLeft().getCopy().translate(-80, -70);
+                dropLocation = bounds.getBottomLeft().getCopy().translate(-X_MARGIN, -Y_MARGIN);
                 break;
-
             default:
                 throw new RuntimeException("Invalid position specified");
         }
@@ -1032,21 +1033,21 @@ public class SWTBotTestUtil implements SWTBotConstants {
 
         switch (position) {
             case PositionConstants.NORTH:
-                return graphicalEditPart.getFigure().getBounds().getTop().getCopy().translate(-20, -70);
+                return graphicalEditPart.getFigure().getBounds().getTop().getCopy().translate(-20, -Y_MARGIN);
             case PositionConstants.SOUTH:
-                return graphicalEditPart.getFigure().getBounds().getBottom().getCopy().translate(-20, 70);
+                return graphicalEditPart.getFigure().getBounds().getBottom().getCopy().translate(-20, Y_MARGIN);
             case PositionConstants.WEST:
-                return graphicalEditPart.getFigure().getBounds().getLeft().getCopy().translate(-80, 10);
+                return graphicalEditPart.getFigure().getBounds().getLeft().getCopy().translate(-X_MARGIN, 10);
             case PositionConstants.EAST:
-                return graphicalEditPart.getFigure().getBounds().getRight().getCopy().translate(80, 10);
+                return graphicalEditPart.getFigure().getBounds().getRight().getCopy().translate(X_MARGIN, 10);
             case PositionConstants.NORTH_EAST:
-                return graphicalEditPart.getFigure().getBounds().getTopRight().getCopy().translate(80, -70);
+                return graphicalEditPart.getFigure().getBounds().getTopRight().getCopy().translate(X_MARGIN, -Y_MARGIN);
             case PositionConstants.NORTH_WEST:
-                return graphicalEditPart.getFigure().getBounds().getTopLeft().getCopy().translate(-80, 70);
+                return graphicalEditPart.getFigure().getBounds().getTopLeft().getCopy().translate(-X_MARGIN, Y_MARGIN);
             case PositionConstants.SOUTH_EAST:
-                return graphicalEditPart.getFigure().getBounds().getBottomRight().getCopy().translate(-80, 70);
+                return graphicalEditPart.getFigure().getBounds().getBottomRight().getCopy().translate(-X_MARGIN, Y_MARGIN);
             case PositionConstants.SOUTH_WEST:
-                return graphicalEditPart.getFigure().getBounds().getBottomLeft().getCopy().translate(80, -70);
+                return graphicalEditPart.getFigure().getBounds().getBottomLeft().getCopy().translate(X_MARGIN, -Y_MARGIN);
             default:
                 throw new RuntimeException("Invalid position specified");
         }

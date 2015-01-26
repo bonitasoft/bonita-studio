@@ -34,10 +34,10 @@ import java.util.regex.Pattern;
 
 import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.ProjectUtil;
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.jface.BonitaErrorDialog;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.store.AbstractRepositoryStore;
@@ -55,7 +55,6 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.graphics.Image;
@@ -64,7 +63,7 @@ import org.eclipse.swt.widgets.Display;
 /**
  * @author Romain Bioteau
  * @author Baptiste Mesta
- * 
+ *
  */
 public class LookNFeelRepositoryStore extends AbstractRepositoryStore<LookNFeelFileStore> {
 
@@ -108,11 +107,11 @@ public class LookNFeelRepositoryStore extends AbstractRepositoryStore<LookNFeelF
     }
 
     @Override
-    public LookNFeelFileStore doImportInputStream(String fileName,InputStream inputStream) {
+    public LookNFeelFileStore doImportInputStream(final String fileName,final InputStream inputStream) {
         final String looknfeelName = fileName.substring(0,fileName.length() - LF_EXTENSION.length() - 1);
         final IFolder parentFolder = getResource().getFolder(looknfeelName);
 
-        LookNFeelFileStore artifcat = getChild(looknfeelName) ;
+        final LookNFeelFileStore artifcat = getChild(looknfeelName) ;
         if(artifcat != null && artifcat.isProvided()){
             Display.getDefault().syncExec(new Runnable() {
 
@@ -139,22 +138,22 @@ public class LookNFeelRepositoryStore extends AbstractRepositoryStore<LookNFeelF
                 extractThemeFromInputStream(parentFolder, inputStream);
                 replaceUrl(parentFolder);
             }
-        }catch (Exception e) {
+        }catch (final Exception e) {
             BonitaStudioLog.error(e) ;
             new BonitaErrorDialog(Display.getDefault().getActiveShell(), Messages.looknfeelimportErrorTitle,Messages.looknfeelImportErrorMessage , e).open() ;
             try {
 				parentFolder.delete(true, Repository.NULL_PROGRESS_MONITOR);
-			} catch (CoreException e1) {
+			} catch (final CoreException e1) {
 				BonitaStudioLog.error(e1);
 				return null;
 			}
 				return null ;
-			
+
         }finally{
         	if(inputStream != null){
         		try {
 					inputStream.close();
-				} catch (IOException e) {
+				} catch (final IOException e) {
 					BonitaStudioLog.error(e);
 				}
         	}
@@ -168,9 +167,9 @@ public class LookNFeelRepositoryStore extends AbstractRepositoryStore<LookNFeelF
         tmpZipFile.createNewFile();
         final FileOutputStream out = new FileOutputStream(tmpZipFile);
         FileUtil.copy(is, out);
-       
+
 		PlatformUtil.unzipZipFiles(tmpZipFile, parentFolder.getLocation().toFile(), Repository.NULL_PROGRESS_MONITOR);
-	
+
         out.close() ;
         parentFolder.refreshLocal(IResource.DEPTH_INFINITE, Repository.NULL_PROGRESS_MONITOR);
         tmpZipFile.delete();
@@ -180,12 +179,12 @@ public class LookNFeelRepositoryStore extends AbstractRepositoryStore<LookNFeelF
 
     @Override
     public List<LookNFeelFileStore> getChildren() {
-        List<LookNFeelFileStore> result =  super.getChildren();
-        Enumeration<URL> looknfeels = ThemeRepositoryPlugin.getDefault().getBundle().findEntries(STORE_NAME, "*", false);
+        final List<LookNFeelFileStore> result =  super.getChildren();
+        final Enumeration<URL> looknfeels = ThemeRepositoryPlugin.getDefault().getBundle().findEntries(STORE_NAME, "*", false);
         if(	looknfeels != null ){
             while (looknfeels.hasMoreElements()) {
-                URL url = looknfeels.nextElement();
-                LookNFeelFileStore f = createRepositoryFileStore(url.toString());
+                final URL url = looknfeels.nextElement();
+                final LookNFeelFileStore f = createRepositoryFileStore(url.toString());
                 if(f != null){
                     result.add(f) ;
                 }
@@ -196,13 +195,13 @@ public class LookNFeelRepositoryStore extends AbstractRepositoryStore<LookNFeelF
     }
 
     @Override
-    public LookNFeelFileStore getChild(String fileName) {
+    public LookNFeelFileStore getChild(final String fileName) {
         LookNFeelFileStore file = null;
-        IFolder folder = getResource().getFolder(fileName) ;
+        final IFolder folder = getResource().getFolder(fileName) ;
         if(!folder.isSynchronized(IResource.DEPTH_ONE) && folder.isAccessible()){
             try {
                 folder.refreshLocal(IResource.DEPTH_ONE, Repository.NULL_PROGRESS_MONITOR) ;
-            } catch (CoreException e) {
+            } catch (final CoreException e) {
                 BonitaStudioLog.error(e) ;
             }
         }
@@ -211,7 +210,7 @@ public class LookNFeelRepositoryStore extends AbstractRepositoryStore<LookNFeelF
         }
 
         if(file == null){
-            URL url = ThemeRepositoryPlugin.getDefault().getBundle().getResource(STORE_NAME+ "/" +fileName);
+            final URL url = ThemeRepositoryPlugin.getDefault().getBundle().getResource(STORE_NAME+ "/" +fileName);
             if(url != null){
                 return createRepositoryFileStore(url.toString()) ;
             }else{
@@ -269,7 +268,7 @@ public class LookNFeelRepositoryStore extends AbstractRepositoryStore<LookNFeelF
             while(matcher.find()) {
                 final String url = matcher.group(2);
                 if ((!(url.startsWith("http://") || url.startsWith("https://") || url.startsWith("file://") || url.startsWith("ftp://")))) {
-                    StringBuilder builder = new StringBuilder();
+                    final StringBuilder builder = new StringBuilder();
                     for (int i = 0; i < depth; i++) {
                         builder.append("../");
                     }
@@ -285,60 +284,60 @@ public class LookNFeelRepositoryStore extends AbstractRepositoryStore<LookNFeelF
     }
 
     @Override
-    public LookNFeelFileStore createRepositoryFileStore(String fileName) {
-        IFolder root = getResource().getFolder(fileName) ;
+    public LookNFeelFileStore createRepositoryFileStore(final String fileName) {
+        final IFolder root = getResource().getFolder(fileName) ;
         if(root.exists()){
             try {
                 root.refreshLocal(IResource.DEPTH_ONE, Repository.NULL_PROGRESS_MONITOR) ;
-            } catch (CoreException e1) {
+            } catch (final CoreException e1) {
                 BonitaStudioLog.error(e1) ;
             }
-            IFile descriptor = root.getFile(ThemeDescriptorManager.THEME_DESCRIPTOR_NAME) ;
+            final IFile descriptor = root.getFile(ThemeDescriptorManager.THEME_DESCRIPTOR_NAME) ;
             if(descriptor.exists()){
                 try {
-                    ThemeDescriptor themeDescriptor = getThemeDescriptorManager().getThemeDescriptor(descriptor.getLocation().toFile()) ;
+                    final ThemeDescriptor themeDescriptor = getThemeDescriptorManager().getThemeDescriptor(descriptor.getLocation().toFile()) ;
                     if(themeDescriptor.getType() == ThemeType.application){
                         return new ApplicationLookNFeelFileStore(fileName, this) ;
                     }else if(themeDescriptor.getType() == ThemeType.userXP){
                         return new UserXpFileStore(fileName, this) ;
                     }
-                } catch (ThemeDescriptorNotFoundException e) {
+                } catch (final ThemeDescriptorNotFoundException e) {
                     BonitaStudioLog.error(e) ;
                 }
             }else{
                 try {
-                    ThemeDescriptor themeDescriptor = getThemeDescriptorManager().createThemeDescriptor(fileName, descriptor.getLocation().toFile()) ;
+                    final ThemeDescriptor themeDescriptor = getThemeDescriptorManager().createThemeDescriptor(fileName, descriptor.getLocation().toFile()) ;
                     themeDescriptor.setType(ThemeType.application);
                     return new ApplicationLookNFeelFileStore(fileName, this) ;
-                } catch (IOException e) {
+                } catch (final IOException e) {
                     BonitaStudioLog.error(e);
                 }
             }
         }else{
             try {
-                URL url = new URL(fileName) ;
+                final URL url = new URL(fileName) ;
                 if(url != null){
-                    String path = FileLocator.toFileURL(url).getFile() ;
-                    File descriptor = new File(path,ThemeDescriptorManager.THEME_DESCRIPTOR_NAME) ;
+                    final String path = FileLocator.toFileURL(url).getFile() ;
+                    final File descriptor = new File(path,ThemeDescriptorManager.THEME_DESCRIPTOR_NAME) ;
                     if(descriptor.exists()){
                         try {
-                            ThemeDescriptor themeDescriptor = getThemeDescriptorManager().getThemeDescriptor(descriptor) ;
+                            final ThemeDescriptor themeDescriptor = getThemeDescriptorManager().getThemeDescriptor(descriptor) ;
                             if(themeDescriptor.getType() == ThemeType.application){
                                 return new URLApplicationLookNFeelFileStore(url, this) ;
                             }else if(themeDescriptor.getType() == ThemeType.userXP){
                                 return new URLUserXPFileStore(url, this) ;
                             }
-                        } catch (ThemeDescriptorNotFoundException e) {
+                        } catch (final ThemeDescriptorNotFoundException e) {
                             BonitaStudioLog.error(e) ;
                         }
                     }
                 }
-            } catch (MalformedURLException e) {
+            } catch (final MalformedURLException e) {
                 //            	ApplicationLookNFeelFileStore fileStore =  new ApplicationLookNFeelFileStore(fileName, this) ;
                 //            	fileStore.save(null);
             	//BonitaStudioLog.error(e) ;
                 return null;
-            }catch (Exception e1) {
+            }catch (final Exception e1) {
             	BonitaStudioLog.error("Exception when searching for file with name: "+ fileName, "org.bonitasoft.studio.repository.themes");
                 BonitaStudioLog.error(e1) ;
                 return null ;
@@ -354,8 +353,8 @@ public class LookNFeelRepositoryStore extends AbstractRepositoryStore<LookNFeelF
 
 
     public List<ApplicationLookNFeelFileStore> getApplicationLookNFeels(){
-        List<ApplicationLookNFeelFileStore> result =  new ArrayList<ApplicationLookNFeelFileStore>() ;
-        for(IRepositoryFileStore file : getChildren()){
+        final List<ApplicationLookNFeelFileStore> result =  new ArrayList<ApplicationLookNFeelFileStore>() ;
+        for(final IRepositoryFileStore file : getChildren()){
             if(file instanceof ApplicationLookNFeelFileStore){
                 result.add((ApplicationLookNFeelFileStore) file) ;
             }
@@ -364,8 +363,8 @@ public class LookNFeelRepositoryStore extends AbstractRepositoryStore<LookNFeelF
     }
 
     public List<UserXpFileStore> getUserXPLookNFeels(){
-        List<UserXpFileStore> result =  new ArrayList<UserXpFileStore>() ;
-        for(IRepositoryFileStore file : getChildren()){
+        final List<UserXpFileStore> result =  new ArrayList<UserXpFileStore>() ;
+        for(final IRepositoryFileStore file : getChildren()){
             if(file instanceof UserXpFileStore){
                 result.add((UserXpFileStore) file) ;
             }
@@ -382,17 +381,17 @@ public class LookNFeelRepositoryStore extends AbstractRepositoryStore<LookNFeelF
         }
 
         refresh() ;
-        File root = duplicateFrom.getRootFile() ;
+        final File root = duplicateFrom.getRootFile() ;
 
         if(getChild(name) != null || getResource().getFolder(name).exists()){
             return null ;
         }
 
 
-        PlatformUtil.copyResource(getResource().getLocation().append(name).toFile(), root, Repository.NULL_PROGRESS_MONITOR) ;
+        PlatformUtil.copyResourceDirectory(getResource().getLocation().append(name).toFile(), root, Repository.NULL_PROGRESS_MONITOR);
         refresh() ;
 
-        LookNFeelFileStore file = createRepositoryFileStore(name) ;
+        final LookNFeelFileStore file = createRepositoryFileStore(name) ;
         try {
             final ThemeDescriptor themeDescriptor = file.getThemeDescriptor();
             themeDescriptor.setCreationDate(System.currentTimeMillis());
@@ -407,7 +406,7 @@ public class LookNFeelRepositoryStore extends AbstractRepositoryStore<LookNFeelF
 
         return file ;
     }
-    
+
     @Override
     public void migrate() throws CoreException, MigrationException {
     	// Nothing Todo

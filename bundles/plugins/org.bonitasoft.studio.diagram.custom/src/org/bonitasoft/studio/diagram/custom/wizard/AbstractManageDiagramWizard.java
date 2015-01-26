@@ -84,7 +84,6 @@ public abstract class AbstractManageDiagramWizard extends Wizard implements IWiz
 
                     page.getDiagramTree().getViewer().setInput(new Object());
                     if(PlatformUtil.isIntroOpen()){
-                        PlatformUtil.closeIntro();
                         PlatformUtil.openIntro();
                     }
                     return true;
