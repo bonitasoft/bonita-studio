@@ -19,8 +19,10 @@
 
    <requires>
       <import feature="org.eclipse.rcp" version="4.3.1.v20130911-1000" match="greaterOrEqual"/>
-      <import feature="org.eclipse.wst.web_ui.feature"/>
       <import feature="platform-specific-feature" version="6.5.0" match="equivalent"/>
+      <import feature="org.eclipse.m2m.qvt.oml" version="3.4.0.v20140610-1621"/>
+      <import feature="org.eclipse.m2m.qvt.oml.runtime" version="3.4.0.v20140610-1621"/>
+      <import feature="org.eclipse.wst.web_ui.feature" version="3.6.1.v201409112028"/>
    </requires>
 
    <plugin
@@ -353,14 +355,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.bonitasoft.studio.logging.extension"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
          id="org.bonitasoft.studio.importer.bar"
          download-size="0"
          install-size="0"
@@ -445,13 +439,13 @@
          id="org.codehaus.groovy"
          download-size="0"
          install-size="0"
-         version="1.8.6.xx-20130703-1600-e43-RELEASE"/>
+         version="1.8.6.xx-201406301445-e44"/>
 
    <plugin
          id="org.eclipse.ui.views.properties.tabbed"
          download-size="0"
          install-size="0"
-         version="3.6.0.v20130515-1900"
+         version="3.6.100.v20140519-0906"
          unpack="false"/>
 
    <plugin
@@ -474,5 +468,19 @@
          install-size="0"
          version="0.0.0"
          unpack="false"/>
+
+   <plugin
+         id="org.eclipse.osgi.compatibility.state"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.emf.edapt.common"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
 
 </feature>

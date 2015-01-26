@@ -36,8 +36,8 @@ import org.xml.sax.helpers.XMLReaderFactory;
  * Helper methods for extraction of namespace URI and version from a model file.
  * 
  * @author herrmama
- * @author $Author: mherrmannsd $
- * @version $Rev: 160 $
+ * @author $Author$
+ * @version $Rev$
  * @levd.rating YELLOW Hash: 680A9E3F1CAE7963EB55E8E8749FF9E6
  */
 public final class ReleaseUtils {
@@ -56,15 +56,24 @@ public final class ReleaseUtils {
 	public static String getNamespaceURI_SAX(File file) {
 
 		ContentHandler contentHandler = new ContentHandler();
+		FileReader fileReader = null;
 		try {
 			XMLReader reader = XMLReaderFactory.createXMLReader();
 			reader.setContentHandler(contentHandler);
 
-			FileReader fileReader = new FileReader(file);
-
+			fileReader = new FileReader(file);
+			
 			reader.parse(new InputSource(fileReader));
 		} catch (Exception e) {
 			// loading should fail
+		} finally {
+			try {
+				if (fileReader != null) {
+					fileReader.close();
+				}
+			} catch (final Exception e) {
+				// ignore
+			}
 		}
 
 		return contentHandler.getNsURI();
@@ -98,8 +107,8 @@ public final class ReleaseUtils {
 		ResourceSet resourceSet = new ResourceSetImpl();
 
 		// register delegating package registry
-		PackageRegistry registry = new PackageRegistry(resourceSet
-				.getPackageRegistry());
+		PackageRegistry registry = new PackageRegistry(
+				resourceSet.getPackageRegistry());
 		resourceSet.setPackageRegistry(registry);
 
 		Resource resource = resourceSet.createResource(modelURI);

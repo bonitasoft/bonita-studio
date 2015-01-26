@@ -19,6 +19,7 @@ package org.bonitasoft.studio.application;
 
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.perspectives.AutomaticSwitchPerspectivePartListener;
+import org.bonitasoft.studio.common.perspectives.BonitaPerspectivesUtils;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.eclipse.core.runtime.IProduct;
 import org.eclipse.core.runtime.Platform;
@@ -79,23 +80,22 @@ public class BonitaStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 		if(statusBar != null){
 			statusBar.setVisible(false);
 		}
+        window.getShell().setMaximized(true);
 	}
 
-	@SuppressWarnings("restriction")
 	@Override
 	public void openIntro() {
-		PlatformUtil.closeIntro();
-		PrefUtil.getAPIPreferenceStore().setValue(IWorkbenchPreferenceConstants.SHOW_INTRO, true);
-		PrefUtil.saveAPIPrefs();
-		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+        PrefUtil.getAPIPreferenceStore().setValue(IWorkbenchPreferenceConstants.SHOW_INTRO, true);
+        PrefUtil.saveAPIPrefs();
+        PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 
-			@Override
-			public void run() {
-				if(!PlatformUtil.isIntroOpen()){
-					PlatformUtil.openIntro();
-				}
-			}
-		});
+            @Override
+            public void run() {
+                if (!PlatformUtil.isIntroOpen()) {
+                    PlatformUtil.openIntro();
+                }
+            }
+        });
 
 	}
 
@@ -112,6 +112,7 @@ public class BonitaStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
         if (widget instanceof Shell) {
             ((Widget) widget).setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY, SWTBotConstants.SWTBOT_ID_MAIN_SHELL);
         }
+        BonitaPerspectivesUtils.initializePerspectives();
 	}
 
 

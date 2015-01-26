@@ -26,7 +26,6 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.views.properties.tabbed.AbstractTabDescriptor;
 import org.eclipse.ui.views.properties.tabbed.ISectionDescriptor;
 
-
 /**
  * Represents the default implementation of a tab descriptor on the tabbed
  * property tabs extensions.

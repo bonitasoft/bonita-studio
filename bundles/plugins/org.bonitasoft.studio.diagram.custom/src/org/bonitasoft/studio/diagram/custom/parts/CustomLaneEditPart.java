@@ -74,46 +74,22 @@ public class CustomLaneEditPart extends LaneEditPart {
         return poolCompartment;
     }
 
-    public CustomLaneEditPart(View view) {
+    public CustomLaneEditPart(final View view) {
         super(view);
-        addEditPartListener(new EditPartListener() {
-
-            public void selectedStateChanged(EditPart arg0) {
-                refreshBounds();
-            }
-
-            public void removingChild(EditPart arg0, int arg1) {
-
-            }
-
-            public void partDeactivated(EditPart arg0) {
-
-            }
-
-            public void partActivated(EditPart arg0) {
-                if (!(getParent() instanceof CustomPoolCompartmentEditPart)) {
-                    logWrongParent();
-                } else {
-                    poolCompartment = (CustomPoolCompartmentEditPart) getParent();
-                }
-            }
-
-            public void childAdded(EditPart arg0, int arg1) {
-
-            }
-        });
+        listener = new CustomLaneEditPartListener();
     }
 
     @Override
     protected NodeFigure createNodePlate() {
-        NodeFigure figure = new DefaultSizeNodeFigure(getMapMode().DPtoLP(975), getMapMode().DPtoLP(100));
+        final NodeFigure figure = new DefaultSizeNodeFigure(getMapMode().DPtoLP(975), getMapMode().DPtoLP(100));
         figure.setMinimumSize(new Dimension(975, 100));
         return figure;
     }
 
-    protected IFigure setupContentPane(IFigure nodeShape) {
+    @Override
+    protected IFigure setupContentPane(final IFigure nodeShape) {
         if (nodeShape.getLayoutManager() == null) {
-            ConstrainedToolbarLayout layout = new ConstrainedToolbarLayout();
+            final ConstrainedToolbarLayout layout = new ConstrainedToolbarLayout();
             layout.setSpacing(0);
             nodeShape.setLayoutManager(layout);
         }
@@ -132,10 +108,11 @@ public class CustomLaneEditPart extends LaneEditPart {
 
     }
 
+    @Override
     public EditPolicy getPrimaryDragEditPolicy() {
-        EditPolicy result = super.getPrimaryDragEditPolicy();
+        final EditPolicy result = super.getPrimaryDragEditPolicy();
         if (result instanceof ResizableEditPolicy) {
-            ResizableEditPolicy ep = new CustomResizableEditPolicyEx();
+            final ResizableEditPolicy ep = new CustomResizableEditPolicyEx();
             ep.setResizeDirections(PositionConstants.NORTH | PositionConstants.SOUTH);
             return ep;
         }
@@ -147,7 +124,7 @@ public class CustomLaneEditPart extends LaneEditPart {
      * @see org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart#showSourceFeedback(org.eclipse.gef.Request)
      */
     @Override
-    public void showSourceFeedback(Request request) {
+    public void showSourceFeedback(final Request request) {
         if (request instanceof ChangeBoundsRequest) {
             if (request.getType().equals(RequestConstants.REQ_RESIZE)) {
                 super.showSourceFeedback(request);
@@ -161,7 +138,7 @@ public class CustomLaneEditPart extends LaneEditPart {
      * @see org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart#showTargetFeedback(org.eclipse.gef.Request)
      */
     @Override
-    public void showTargetFeedback(Request request) {
+    public void showTargetFeedback(final Request request) {
         // DO NOT SHOW FEEDBACK
     }
 
@@ -170,15 +147,15 @@ public class CustomLaneEditPart extends LaneEditPart {
      * @see org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeNodeEditPart#handleNotificationEvent(org.eclipse.emf.common.notify.Notification)
      */
     @Override
-    protected void handleNotificationEvent(Notification notification) {
-        Object feature = notification.getFeature();
+    protected void handleNotificationEvent(final Notification notification) {
+        final Object feature = notification.getFeature();
         if (NotationPackage.eINSTANCE.getSize_Width().equals(feature)
                 || NotationPackage.eINSTANCE.getSize_Height().equals(feature)
                 || NotationPackage.eINSTANCE.getLocation_X().equals(feature)
                 || NotationPackage.eINSTANCE.getLocation_Y().equals(feature)) {
 
             refreshBounds();
-            for (CustomLaneEditPart lane : ((CustomPoolCompartmentEditPart) getParent()).getPoolLanes()) {
+            for (final CustomLaneEditPart lane : ((CustomPoolCompartmentEditPart) getParent()).getPoolLanes()) {
                 if (!lane.equals(this)) {
                     lane.refreshBounds();
                 }
@@ -191,10 +168,10 @@ public class CustomLaneEditPart extends LaneEditPart {
     }
 
     protected void refreshOverlapping() {
-        RootEditPart root = getRoot();
-        for (Object child : root.getChildren()) {
+        final RootEditPart root = getRoot();
+        for (final Object child : root.getChildren()) {
             if (child instanceof MainProcessEditPart) {
-                for (Object child1 : ((MainProcessEditPart) child).getChildren()) {
+                for (final Object child1 : ((MainProcessEditPart) child).getChildren()) {
                     if (child1 instanceof CustomPoolEditPart && !child1.equals(getParent())) {
                         ((CustomPoolEditPart) child1).refreshBounds();
                     }
@@ -210,12 +187,12 @@ public class CustomLaneEditPart extends LaneEditPart {
                 logWrongParent();
             } else {
                 poolCompartment = (CustomPoolCompartmentEditPart) getParent();
-                Rectangle compartmentBounds = ((GraphicalEditPart) getParent()).getFigure().getBounds().getCopy();
+                final Rectangle compartmentBounds = ((GraphicalEditPart) getParent()).getFigure().getBounds().getCopy();
 
                 int offset = 0;
                 if (getParentCompartment() != null) {
-                    List<CustomLaneEditPart> lanes = getParentCompartment().getPoolLanes();
-                    for (CustomLaneEditPart i : lanes) {
+                    final List<CustomLaneEditPart> lanes = getParentCompartment().getPoolLanes();
+                    for (final CustomLaneEditPart i : lanes) {
                         if (!i.equals(this)) {
                             offset = offset + i.getFigure().getPreferredSize().height;
                         } else {
@@ -223,7 +200,7 @@ public class CustomLaneEditPart extends LaneEditPart {
                         }
                     }
                 }
-                CustomPoolEditPart parent = (CustomPoolEditPart) getParent().getParent();
+                final CustomPoolEditPart parent = (CustomPoolEditPart) getParent().getParent();
 
                 int width = parent.getFigure().getSize().width;
                 int height = ((Integer) getStructuralFeatureValue(NotationPackage.eINSTANCE.getSize_Height())).intValue();
@@ -244,14 +221,14 @@ public class CustomLaneEditPart extends LaneEditPart {
                     width = getFigure().getMinimumSize().width + 25;
                 }
 
-                int x = ((CustomPoolFigure) ((CustomPoolEditPart) poolCompartment.getParent()).getContentPane()).getLabelGridData().widthHint + 5;
+                final int x = ((CustomPoolFigure) ((CustomPoolEditPart) poolCompartment.getParent()).getContentPane()).getLabelGridData().widthHint + 5;
 
-                Dimension size = new Dimension(width - getMapMode().DPtoLP(x), height);
+                final Dimension size = new Dimension(width - getMapMode().DPtoLP(x), height);
                 getFigure().setPreferredSize(size);
                 getFigure().setSize(size);
 
-                int y = compartmentBounds.getTopLeft().y + offset;
-                Point loc = new Point(getMapMode().DPtoLP(x), y);
+                final int y = compartmentBounds.getTopLeft().y + offset;
+                final Point loc = new Point(getMapMode().DPtoLP(x), y);
 
                 ((GraphicalEditPart) getParent()).setLayoutConstraint(
                         this,
@@ -264,17 +241,17 @@ public class CustomLaneEditPart extends LaneEditPart {
     }
 
     private void logWrongParent() {
-        EObject resolvedSemanticElement = resolveSemanticElement();
-        String currentLaneName = resolvedSemanticElement instanceof Element ? ((Element) resolvedSemanticElement).getName() : resolvedSemanticElement
+        final EObject resolvedSemanticElement = resolveSemanticElement();
+        final String currentLaneName = resolvedSemanticElement instanceof Element ? ((Element) resolvedSemanticElement).getName() : resolvedSemanticElement
                 .toString();
-        EObject parentResolvedSemanticElement = ((GraphicalEditPart) getParent()).resolveSemanticElement();
-        String containerName = parentResolvedSemanticElement instanceof Element ? ((Element) parentResolvedSemanticElement).getName()
+        final EObject parentResolvedSemanticElement = ((GraphicalEditPart) getParent()).resolveSemanticElement();
+        final String containerName = parentResolvedSemanticElement instanceof Element ? ((Element) parentResolvedSemanticElement).getName()
                 : parentResolvedSemanticElement.toString();
         BonitaStudioLog.warning("Warning: the lane" + currentLaneName + " is contained in another thing than a PoolCompartment. It is contained in: "
                 + containerName, Activator.PLUGIN_ID);
     }
 
-    private int computeLaneHeight(List<CustomLaneEditPart> poolLanes) {
+    private int computeLaneHeight(final List<CustomLaneEditPart> poolLanes) {
         int height = 0;
         if (poolLanes.size() == 0 && ((Integer) getStructuralFeatureValue(NotationPackage.eINSTANCE.getSize_Height())).intValue() == -1) {
             height = ((CustomPoolEditPart) getParent().getParent()).getFigure().getBounds().getCopy().height;
@@ -306,9 +283,41 @@ public class CustomLaneEditPart extends LaneEditPart {
 
     @Override
     protected IFigure createNodeShape() {
-        CustomLaneFigure figure = new CustomLaneFigure();
+        final CustomLaneFigure figure = new CustomLaneFigure();
         figure.setUseLocalCoordinates(true);
         return primaryShape = figure;
+    }
+
+    private final class CustomLaneEditPartListener implements EditPartListener {
+
+        @Override
+        public void selectedStateChanged(final EditPart arg0) {
+            refreshBounds();
+        }
+
+        @Override
+        public void removingChild(final EditPart arg0, final int arg1) {
+
+        }
+
+        @Override
+        public void partDeactivated(final EditPart arg0) {
+
+        }
+
+        @Override
+        public void partActivated(final EditPart arg0) {
+            if (!(getParent() instanceof CustomPoolCompartmentEditPart)) {
+                logWrongParent();
+            } else {
+                poolCompartment = (CustomPoolCompartmentEditPart) getParent();
+            }
+        }
+
+        @Override
+        public void childAdded(final EditPart arg0, final int arg1) {
+
+        }
     }
 
     public class CustomLaneFigure extends LaneFigure {
@@ -321,22 +330,22 @@ public class CustomLaneEditPart extends LaneEditPart {
 
         public CustomLaneFigure() {
 
-            GridLayout layoutThis = new GridLayout();
+            final GridLayout layoutThis = new GridLayout();
             layoutThis.numColumns = 2;
             layoutThis.makeColumnsEqualWidth = false;
             layoutThis.horizontalSpacing = 0;
             layoutThis.verticalSpacing = 0;
             layoutThis.marginWidth = 5;
             layoutThis.marginHeight = 5;
-            this.setLayoutManager(layoutThis);
+            setLayoutManager(layoutThis);
 
-            this.setLineWidth(1);
-            this.setOutline(true);
-            this.setFill(true);
-            this.setBackgroundColor(THIS_BACK);
+            setLineWidth(1);
+            setOutline(true);
+            setFill(true);
+            setBackgroundColor(THIS_BACK);
             this.setPreferredSize(new Dimension(getMapMode().DPtoLP(975),
                     getMapMode().DPtoLP(100)));
-            this.setMinimumSize(new Dimension(getMapMode().DPtoLP(975),
+            setMinimumSize(new Dimension(getMapMode().DPtoLP(975),
                     getMapMode().DPtoLP(100)));
             createContents();
         }
@@ -381,7 +390,7 @@ public class CustomLaneEditPart extends LaneEditPart {
             fFigureLaneContainerFigure.setFill(false);
             fFigureLaneContainerFigure.setXOR(false);// BUG : XOR=true cause error on export as image
 
-            GridData constraintFFigureLaneContainerFigure = new GridData();
+            final GridData constraintFFigureLaneContainerFigure = new GridData();
             constraintFFigureLaneContainerFigure.verticalAlignment = GridData.FILL;
             constraintFFigureLaneContainerFigure.horizontalAlignment = GridData.FILL;
             constraintFFigureLaneContainerFigure.horizontalIndent = 0;
@@ -396,18 +405,21 @@ public class CustomLaneEditPart extends LaneEditPart {
 
         private boolean myUseLocalCoordinates = false;
 
+        @Override
         protected boolean useLocalCoordinates() {
             return myUseLocalCoordinates;
         }
 
-        protected void setUseLocalCoordinates(boolean useLocalCoordinates) {
+        protected void setUseLocalCoordinates(final boolean useLocalCoordinates) {
             myUseLocalCoordinates = useLocalCoordinates;
         }
 
+        @Override
         public WrappingLabel getFigureLaneNameFigure() {
             return fFigureLaneNameFigure;
         }
 
+        @Override
         public RectangleFigure getFigureLaneContainerFigure() {
             return fFigureLaneContainerFigure;
         }
@@ -419,9 +431,10 @@ public class CustomLaneEditPart extends LaneEditPart {
     }
 
     static final Color THIS_BACK = ColorConstants.white;
+    private final CustomLaneEditPartListener listener;
 
     public CustomLaneCompartmentEditPart getCompartment() {
-        for (Object child : getChildren()) {
+        for (final Object child : getChildren()) {
             if (child instanceof CustomLaneCompartmentEditPart) {
                 return (CustomLaneCompartmentEditPart) child;
             }
@@ -430,11 +443,11 @@ public class CustomLaneEditPart extends LaneEditPart {
     }
 
     @Override
-    protected void setFont(FontData fontData) {
+    protected void setFont(final FontData fontData) {
         super.setFont(fontData);
         if (fontData != null && ((Element) resolveSemanticElement()).getName() != null) {
             final Font font = new Font(Display.getCurrent(), fontData);
-            int height = FigureUtilities.getStringExtents(((Element) resolveSemanticElement()).getName(), font).height;
+            final int height = FigureUtilities.getStringExtents(((Element) resolveSemanticElement()).getName(), font).height;
             font.dispose();
             ((CustomLaneFigure) getContentPane()).getLabelGridData().widthHint = height + 2;
         }
@@ -442,6 +455,7 @@ public class CustomLaneEditPart extends LaneEditPart {
 
     @Override
     public void activate() {
+        addEditPartListener(listener);
         super.activate();
         primaryShape.validate();
     }
@@ -450,5 +464,6 @@ public class CustomLaneEditPart extends LaneEditPart {
     public void deactivate() {
         super.deactivate();
         primaryShape.invalidate();
+        removeEditPartListener(listener);
     }
 }

@@ -18,10 +18,10 @@ package org.bonitasoft.studio.migration.custom.migration;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.eclipse.emf.edapt.migration.CustomMigration;
-import org.eclipse.emf.edapt.migration.Instance;
-import org.eclipse.emf.edapt.migration.Metamodel;
 import org.eclipse.emf.edapt.migration.MigrationException;
-import org.eclipse.emf.edapt.migration.Model;
+import org.eclipse.emf.edapt.spi.migration.Instance;
+import org.eclipse.emf.edapt.spi.migration.Metamodel;
+import org.eclipse.emf.edapt.spi.migration.Model;
 
 
 /**
@@ -31,14 +31,14 @@ import org.eclipse.emf.edapt.migration.Model;
 public class InterpreterCustomMigration extends CustomMigration {
 
     /* (non-Javadoc)
-     * @see org.eclipse.emf.edapt.migration.CustomMigration#migrateAfter(org.eclipse.emf.edapt.migration.Model, org.eclipse.emf.edapt.migration.Metamodel)
+     * @see org.eclipse.emf.edapt.migration.CustomMigration#migrateAfter(org.eclipse.emf.edapt.spi.migration.Model, org.eclipse.emf.edapt.migration.Metamodel)
      */
     @Override
-    public void migrateAfter(Model model, Metamodel metamodel) throws MigrationException {
-        for(Instance expInstance : model.getAllInstances("expression.Expression")){
-            String type = expInstance.get("type");
+    public void migrateAfter(final Model model, final Metamodel metamodel) throws MigrationException {
+        for(final Instance expInstance : model.getAllInstances("expression.Expression")){
+            final String type = expInstance.get("type");
             if(ExpressionConstants.SCRIPT_TYPE.equals(type)){
-                String interpreter = expInstance.get("interpreter");
+                final String interpreter = expInstance.get("interpreter");
                 if(!ExpressionConstants.GROOVY.equals(interpreter)){
                     expInstance.set("interpreter", ExpressionConstants.GROOVY);
                 }

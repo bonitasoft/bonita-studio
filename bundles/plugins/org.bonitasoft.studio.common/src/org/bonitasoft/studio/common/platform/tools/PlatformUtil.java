@@ -168,7 +168,17 @@ public class PlatformUtil {
                 @Override
                 public void run() {
                     final IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
+                    final IWorkbenchPage activePage = window.getActivePage();
                     final IIntroManager introManager = workbench.getIntroManager();
+                    //colse intro to reload content if already opened
+                    if (introManager.getIntro() != null) {
+                        introManager.closeIntro(introManager.getIntro());
+                    } else if (activePage != null) {
+                        final IViewPart view = activePage.findView("org.eclipse.ui.internal.introview");
+                        if (view != null) {
+                            activePage.hideView(view);
+                        }
+                    }
                     final IntroModelRoot model = IntroPlugin.getDefault().getIntroModelRoot();
                     if (model != null
                             && introManager.getIntro() != null
@@ -244,7 +254,25 @@ public class PlatformUtil {
      * @param resourceName
      * @return the copied resource
      */
-    public static void copyResource(final File destFolder, final File sourceFolder, final IProgressMonitor monitor) {
+    public static void copyResource(File destFolder, final File sourceFolder, final IProgressMonitor monitor) {
+        if (fileSystem == null) {
+            fileSystem = EFS.getLocalFileSystem();
+        }
+        if (sourceFolder.isDirectory()) {
+            destFolder = destFolder.getParentFile();
+        }
+        copyResource(destFolder, sourceFolder.toURI(), monitor);
+    }
+
+    /**
+     * Copy a resource a the bundle to the destination path
+     *
+     * @param destinationFolder
+     * @param bundle
+     * @param resourceName
+     * @return the copied resource
+     */
+    public static void copyResourceDirectory(final File destFolder, final File sourceFolder, final IProgressMonitor monitor) {
         if (fileSystem == null) {
             fileSystem = EFS.getLocalFileSystem();
         }

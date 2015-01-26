@@ -65,10 +65,10 @@ import org.bonitasoft.studio.model.process.diagram.form.edit.parts.TextFormField
 import org.bonitasoft.studio.model.process.diagram.form.edit.parts.TextFormFieldNameEditPart;
 import org.bonitasoft.studio.model.process.diagram.form.edit.parts.TextInfoName2EditPart;
 import org.bonitasoft.studio.model.process.diagram.form.edit.parts.TextInfoNameEditPart;
-import org.eclipse.emf.edapt.migration.Instance;
-import org.eclipse.emf.edapt.migration.Metamodel;
 import org.eclipse.emf.edapt.migration.MigrationException;
-import org.eclipse.emf.edapt.migration.Model;
+import org.eclipse.emf.edapt.spi.migration.Instance;
+import org.eclipse.emf.edapt.spi.migration.Metamodel;
+import org.eclipse.emf.edapt.spi.migration.Model;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 
 
