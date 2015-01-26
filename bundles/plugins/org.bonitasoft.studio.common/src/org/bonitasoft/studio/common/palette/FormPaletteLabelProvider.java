@@ -86,7 +86,7 @@ public class FormPaletteLabelProvider {
         classifierIDToDescription.put(FormPackage.PREVIOUS_FORM_BUTTON, Messages.Previous_desc);
 
         classifierIDToTitle.put(FormPackage.NEXT_FORM_BUTTON, Messages.Next_title);
-        classifierIDToDescription.put(FormPackage.NEXT_FORM_BUTTON, Messages.Next_title);
+        classifierIDToDescription.put(FormPackage.NEXT_FORM_BUTTON, Messages.Next_desc);
 
         classifierIDToTitle.put(FormPackage.FORM_BUTTON, Messages.SimpleButton_title);
         classifierIDToDescription.put(FormPackage.FORM_BUTTON, Messages.SimpleButton_desc);
@@ -95,7 +95,7 @@ public class FormPaletteLabelProvider {
         classifierIDToDescription.put(FormPackage.FILE_WIDGET, Messages.File_desc);
 
         classifierIDToTitle.put(FormPackage.IMAGE_WIDGET, Messages.Image_title);
-        classifierIDToDescription.put(FormPackage.IMAGE_WIDGET, Messages.IFrame_desc);
+        classifierIDToDescription.put(FormPackage.IMAGE_WIDGET, Messages.Image_desc);
 
         classifierIDToTitle.put(FormPackage.TABLE, Messages.Table_title);
         classifierIDToDescription.put(FormPackage.TABLE, Messages.Table_desc);

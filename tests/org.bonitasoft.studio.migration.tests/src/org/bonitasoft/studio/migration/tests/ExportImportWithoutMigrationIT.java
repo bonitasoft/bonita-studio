@@ -119,7 +119,7 @@ public class ExportImportWithoutMigrationIT extends SWTBotGefTestCase {
         //delete diagram
         diagramFileStore.delete();
 
-        final ImportBosArchiveOperation importBosArchiveOperation = new ImportBosArchiveOperation();
+        final ImportBosArchiveOperation importBosArchiveOperation = new ImportBosArchiveOperation(false);
         importBosArchiveOperation.setArchiveFile(bosFile.getAbsolutePath());
         importBosArchiveOperation.setCurrentRepository(RepositoryManager.getInstance().getCurrentRepository());
         final IStatus status = importBosArchiveOperation.run(Repository.NULL_PROGRESS_MONITOR);
