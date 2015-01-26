@@ -22,10 +22,10 @@ import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.eclipse.emf.edapt.migration.CustomMigration;
-import org.eclipse.emf.edapt.migration.Instance;
-import org.eclipse.emf.edapt.migration.Metamodel;
 import org.eclipse.emf.edapt.migration.MigrationException;
-import org.eclipse.emf.edapt.migration.Model;
+import org.eclipse.emf.edapt.spi.migration.Instance;
+import org.eclipse.emf.edapt.spi.migration.Metamodel;
+import org.eclipse.emf.edapt.spi.migration.Model;
 
 /**
  * @author Romain Bioteau
@@ -34,9 +34,9 @@ import org.eclipse.emf.edapt.migration.Model;
 public class UpdateConfigurationId extends CustomMigration {
 
 	@Override
-	public void migrateAfter(Model model, Metamodel metamodel)
+	public void migrateAfter(final Model model, final Metamodel metamodel)
 			throws MigrationException {
-		for(Instance mainProc : model.getAllInstances("process.MainProcess")){
+		for(final Instance mainProc : model.getAllInstances("process.MainProcess")){
 			final MainProcess diagram = ProcessFactory.eINSTANCE.createMainProcess();
 			diagram.setName((String) mainProc.get("name"));
 			diagram.setVersion((String) mainProc.get("version"));
@@ -47,5 +47,5 @@ public class UpdateConfigurationId extends CustomMigration {
 			mainProc.set("configId",ConfigurationIdProvider.getConfigurationIdProvider().getConfigurationId(diagram));
 		}
 	}
-	
+
 }

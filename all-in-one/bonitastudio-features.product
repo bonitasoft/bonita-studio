@@ -8,13 +8,13 @@
    </configIni>
 
    <launcherArgs>
-      <programArgs>--launcher.XXMaxPermSize512m -groovy.compiler.level 18 -clearPersistedState
+      <programArgs>--launcher.XXMaxPermSize512m -clearPersistedState
       </programArgs>
       <vmArgs>-Dosgi.requiredJavaVersion=1.6 -Dfile.encoding=UTF8 -Xmx512m -Xms128m -XX:MaxPermSize=256m
       </vmArgs>
-      <vmArgsLin>-Dorg.eclipse.swt.browser.UseWebKitGTK=False -Dorg.eclipse.swt.browser.DefaultType=mozilla -Djava.endorsed.dirs=endorsed
+      <vmArgsLin>-Djava.endorsed.dirs=endorsed
       </vmArgsLin>
-      <vmArgsMac>-Xdock:name=BonitaBPM -XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts -Dorg.eclipse.swt.browser.DefaultType=webkit -Djava.endorsed.dirs=../../../endorsed
+      <vmArgsMac>-Xdock:name=BonitaBPM -XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts -Djava.endorsed.dirs=../../../endorsed
       </vmArgsMac>
       <vmArgsWin>-Dgreclipse.nonlocking=true -Djava.endorsed.dirs=endorsed
       </vmArgsWin>
@@ -35,7 +35,6 @@
          <bmp/>
       </win>
    </launcher>
-
 
    <vm>
       <linux include="false">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6</linux>
@@ -90,7 +89,6 @@ along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
       <property name="engine.version" value="${engine.version}" />
       <property name="file.encoding" value="UTF-8" />
       <property name="filters.version" value="${filters.version}" />
-      <property name="osgi.hook.configurators.exclude" value="org.eclipse.core.runtime.internal.adaptor.EclipseLogHook" />
       <property name="osgi.instance.area" value="@noDefault" />
       <property name="osgi.nls.warnings" value="ignore" />
       <property name="portal.version" value="${bundle.version}" />

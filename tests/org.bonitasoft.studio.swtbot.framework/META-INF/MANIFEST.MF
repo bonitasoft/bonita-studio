@@ -20,7 +20,9 @@ Require-Bundle: org.eclipse.swtbot.eclipse.gef.finder,
  org.apache.log4j;bundle-version="1.2.15",
  org.bonitasoft.studio.document;bundle-version="6.4.0",
  org.mockito,
- org.eclipse.swt
+ org.eclipse.swt,
+ org.bonitasoft.studio.validators;bundle-version="6.4.1",
+ org.bonitasoft.studio.validation;bundle-version="6.4.1"
 Import-Package: org.bonitasoft.studio.application.i18n,
  org.bonitasoft.studio.connector.model.i18n,
  org.bonitasoft.studio.connectors.i18n,
@@ -43,11 +45,14 @@ Export-Package: org.bonitasoft.studio.swtbot.framework,org.bonitasoft.
  asoft.studio.swtbot.framework.diagram.general.form,org.bonitasoft.stu
  dio.swtbot.framework.diagram.general.form.data,org.bonitasoft.studio.
  swtbot.framework.diagram.general.form.general,org.bonitasoft.studio.s
- wtbot.framework.diagram.general.general,org.bonitasoft.studio.swtbot.
- framework.diagram.general.iteration,org.bonitasoft.studio.swtbot.fram
- ework.diagram.general.lane,org.bonitasoft.studio.swtbot.framework.dia
- gram.general.operations,org.bonitasoft.studio.swtbot.framework.diagra
- m.general.pool,org.bonitasoft.studio.swtbot.framework.draw,org.bonita
- soft.studio.swtbot.framework.exception,org.bonitasoft.studio.swtbot.f
- ramework.expression,org.bonitasoft.studio.swtbot.framework.widget
+ wtbot.framework.diagram.general.form.validator,org.bonitasoft.studio.
+ swtbot.framework.diagram.general.general,org.bonitasoft.studio.swtbot
+ .framework.diagram.general.iteration,org.bonitasoft.studio.swtbot.fra
+ mework.diagram.general.lane,org.bonitasoft.studio.swtbot.framework.di
+ agram.general.operations,org.bonitasoft.studio.swtbot.framework.diagr
+ am.general.pool,org.bonitasoft.studio.swtbot.framework.diagram.valida
+ tion,org.bonitasoft.studio.swtbot.framework.draw,org.bonitasoft.studi
+ o.swtbot.framework.exception,org.bonitasoft.studio.swtbot.framework.e
+ xpression,org.bonitasoft.studio.swtbot.framework.organization,org.bon
+ itasoft.studio.swtbot.framework.widget
 

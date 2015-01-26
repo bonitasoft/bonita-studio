@@ -16,6 +16,8 @@
  */
 package org.bonitasoft.studio.migration.ui.wizard;
 
+import static org.bonitasoft.studio.common.Messages.bosProductName;
+
 import org.bonitasoft.studio.migration.MigrationPlugin;
 import org.bonitasoft.studio.migration.i18n.Messages;
 import org.bonitasoft.studio.migration.preferences.BarImporterPreferenceConstants;
@@ -32,7 +34,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
-import static org.bonitasoft.studio.common.Messages.bosProductName;
 
 /**
  * @author Romain Bioteau

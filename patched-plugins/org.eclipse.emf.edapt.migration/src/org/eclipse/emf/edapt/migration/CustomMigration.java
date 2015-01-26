@@ -1,11 +1,14 @@
 package org.eclipse.emf.edapt.migration;
 
+import org.eclipse.emf.edapt.spi.migration.Metamodel;
+import org.eclipse.emf.edapt.spi.migration.Model;
+
 /**
  * Base class for custom migrations.
  * 
  * @author herrmama
- * @author $Author: mherrmannsd $
- * @version $Rev: 138 $
+ * @author $Author$
+ * @version $Rev$
  * @levd.rating YELLOW Hash: 96A14ADC5A23DF56A44B210EF3A99D8C
  */
 public abstract class CustomMigration {

@@ -15,7 +15,9 @@ Require-Bundle: org.bonitasoft.studio.validators;bundle-version="1.0.0",
  org.bonitasoft.studio.engine;bundle-version="1.0.0",
  org.bonitasoft.studio.common;bundle-version="1.0.0",
  org.bonitasoft.studio.test.swtbot.util;bundle-version="1.0.0",
- org.junit
+ org.junit,
+ org.bonitasoft.studio.swtbot.framework;bundle-version="6.4.1",
+ org.bonitasoft.studio.expression.editor
 Export-Package: org.bonitasoft.studio.validators.test.swtbot
 Import-Package: org.bonitasoft.engine.api,
  org.bonitasoft.engine.session

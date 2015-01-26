@@ -18,7 +18,6 @@
 package org.bonitasoft.studio.actors.model.organization;
 
 import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.ecore.EObject;
 
 /**

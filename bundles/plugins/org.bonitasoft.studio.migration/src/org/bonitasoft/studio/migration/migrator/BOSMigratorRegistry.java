@@ -22,11 +22,11 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.edapt.common.LoggingUtils;
 import org.eclipse.emf.edapt.common.URIUtils;
+import org.eclipse.emf.edapt.internal.migration.execution.BundleClassLoader;
+import org.eclipse.emf.edapt.internal.migration.execution.IClassLoader;
 import org.eclipse.emf.edapt.migration.MigrationException;
-import org.eclipse.emf.edapt.migration.MigrationPlugin;
 import org.eclipse.emf.edapt.migration.ReleaseUtils;
-import org.eclipse.emf.edapt.migration.execution.BundleClassLoader;
-import org.eclipse.emf.edapt.migration.execution.IClassLoader;
+import org.eclipse.emf.edapt.spi.migration.MigrationPlugin;
 import org.osgi.framework.Bundle;
 
 
@@ -56,56 +56,56 @@ public final class BOSMigratorRegistry {
 
 	/** Register all migrators from extensions. */
 	private void registerExtensionMigrators() {
-		IExtensionRegistry extensionRegistry = Platform.getExtensionRegistry();
-		IConfigurationElement[] configurationElements = extensionRegistry
+		final IExtensionRegistry extensionRegistry = Platform.getExtensionRegistry();
+		final IConfigurationElement[] configurationElements = extensionRegistry
 				.getConfigurationElementsFor("org.bonitasoft.studio.edapt.migrators");
 
-		for (IConfigurationElement configurationElement : configurationElements) {
+		for (final IConfigurationElement configurationElement : configurationElements) {
 			registerExtensionMigrator(configurationElement);
 		}
 	}
 
 	/** Register migrator for one extension. */
 	private void registerExtensionMigrator(
-			IConfigurationElement configurationElement) {
+			final IConfigurationElement configurationElement) {
 
-		String migrationPath = configurationElement.getAttribute("path");
+		final String migrationPath = configurationElement.getAttribute("path");
 
-		IContributor contributor = configurationElement.getContributor();
-		String bundleName = contributor.getName();
-		Bundle bundle = Platform.getBundle(bundleName);
-		URI migratorURI = URI.createPlatformPluginURI("/" + bundleName + "/"
+		final IContributor contributor = configurationElement.getContributor();
+		final String bundleName = contributor.getName();
+		final Bundle bundle = Platform.getBundle(bundleName);
+		final URI migratorURI = URI.createPlatformPluginURI("/" + bundleName + "/"
 				+ migrationPath, true);
 		try {
 			registerMigrator(migratorURI, new BundleClassLoader(bundle));
-		} catch (MigrationException e) {
+		} catch (final MigrationException e) {
 			LoggingUtils.logError(MigrationPlugin.getPlugin(), e);
 		}
 	}
 
 	/** Register a migrator by its URL. */
-	public void registerMigrator(URL migratorURL, IClassLoader loader)
+	public void registerMigrator(final URL migratorURL, final IClassLoader loader)
 			throws MigrationException {
-		BOSMigrator migrator = new BOSMigrator(URIUtils.getURI(migratorURL), loader);
-		for (String nsURI : migrator.getNsURIs()) {
+		final BOSMigrator migrator = new BOSMigrator(URIUtils.getURI(migratorURL), loader);
+		for (final String nsURI : migrator.getNsURIs()) {
 			migrators.put(nsURI, migrator);
 		}
 	}
 
 	/** Register a migrator by its URI. */
-	public void registerMigrator(URI migratorURI, IClassLoader loader)
+	public void registerMigrator(final URI migratorURI, final IClassLoader loader)
 			throws MigrationException {
 		registerMigrator(URIUtils.getURL(migratorURI), loader);
 	}
 
 	/** Get a migrator by its namespace already stripped from version. */
-	public BOSMigrator getMigrator(String nsURI) {
+	public BOSMigrator getMigrator(final String nsURI) {
 		return migrators.get(nsURI);
 	}
 
 	/** Get a migrator for a certain model. */
-	public BOSMigrator getMigrator(URI modelURI) {
-		String nsURI = ReleaseUtils.getNamespaceURI(modelURI);
+	public BOSMigrator getMigrator(final URI modelURI) {
+		final String nsURI = ReleaseUtils.getNamespaceURI(modelURI);
 		return getMigrator(nsURI);
 	}
 }

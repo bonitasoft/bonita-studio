@@ -32,6 +32,7 @@ import org.bonitasoft.studio.actors.model.organization.Membership;
 import org.bonitasoft.studio.actors.model.organization.Organization;
 import org.bonitasoft.studio.actors.model.organization.User;
 import org.bonitasoft.studio.actors.repository.OrganizationRepositoryStore;
+import org.bonitasoft.studio.actors.ui.wizard.page.OrganizationValidator;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.eclipse.core.runtime.FileLocator;
@@ -63,7 +64,7 @@ public class TestImportOrganization {
 		final String orgaNameWithBosExtansion = organizationName.substring(0,organizationName.indexOf("."))+"."+OrganizationRepositoryStore.ORGANIZATION_EXT;
 		final Organization organizationTest = organizationStore.getChild(orgaNameWithBosExtansion).getContent();
 		assertNotNull(orgaNameWithBosExtansion+" was not imported",organizationTest);
-		assertTrue("not all groups have been imported",organizationTest.getGroups().getGroup().size()==5);
+        assertTrue("not all groups have been imported", organizationTest.getGroups().getGroup().size() == 6);
 		assertTrue("not all roles have been imported", organizationTest.getRoles().getRole().size()==3);
 		assertTrue("not all users have been imported",organizationTest.getUsers().getUser().size()==2);
 		final User user1=organizationTest.getUsers().getUser().get(0);
@@ -83,6 +84,7 @@ public class TestImportOrganization {
 		}
 		assertEquals("memberships are not imported correctly",userms.size(),1);
 		assertEquals("memberships are not imported correctly",userms2.size(),2);
+        assertTrue(new OrganizationValidator().validate(organizationTest).isOK());
 	}
 
     @Test

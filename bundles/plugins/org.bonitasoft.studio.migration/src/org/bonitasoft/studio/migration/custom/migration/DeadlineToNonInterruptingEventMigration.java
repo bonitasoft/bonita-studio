@@ -20,10 +20,10 @@ import org.bonitasoft.studio.migration.utils.DeadlineMigrationStore;
 import org.bonitasoft.studio.migration.utils.DeadlineStore;
 import org.bonitasoft.studio.migration.utils.StringToExpressionConverter;
 import org.eclipse.emf.edapt.migration.CustomMigration;
-import org.eclipse.emf.edapt.migration.Instance;
-import org.eclipse.emf.edapt.migration.Metamodel;
 import org.eclipse.emf.edapt.migration.MigrationException;
-import org.eclipse.emf.edapt.migration.Model;
+import org.eclipse.emf.edapt.spi.migration.Instance;
+import org.eclipse.emf.edapt.spi.migration.Metamodel;
+import org.eclipse.emf.edapt.spi.migration.Model;
 
 /**
  * @author Romain Bioteau
@@ -32,25 +32,25 @@ import org.eclipse.emf.edapt.migration.Model;
 public class DeadlineToNonInterruptingEventMigration extends CustomMigration {
 
 	@Override
-	public void migrateAfter(Model model, Metamodel metamodel)
+	public void migrateAfter(final Model model, final Metamodel metamodel)
 			throws MigrationException {
-		for(Instance task : model.getAllInstances("process.Task")){
+		for(final Instance task : model.getAllInstances("process.Task")){
 			if(DeadlineMigrationStore.hasDeadline(task.getUuid())){
 				addNonInterrutongTimerEvent(model, task);
 			}
 		}
-		for(Instance callactivity : model.getAllInstances("process.CallActivity")){
+		for(final Instance callactivity : model.getAllInstances("process.CallActivity")){
 			if(DeadlineMigrationStore.hasDeadline(callactivity.getUuid())){
 				addNonInterrutongTimerEvent(model, callactivity);
 			}
 		}
 	}
 
-	protected void addNonInterrutongTimerEvent(Model model, Instance task) {
-		for(DeadlineStore deadline : DeadlineMigrationStore.getDeadlines(task.getUuid())){
-			Instance instance = model.newInstance("process.NonInterruptingBoundaryTimerEvent");
+	protected void addNonInterrutongTimerEvent(final Model model, final Instance task) {
+		for(final DeadlineStore deadline : DeadlineMigrationStore.getDeadlines(task.getUuid())){
+			final Instance instance = model.newInstance("process.NonInterruptingBoundaryTimerEvent");
 			instance.set("name",deadline.getName());
-			Instance exp = new StringToExpressionConverter(model, task).parse(deadline.getCondition(), Long.class.getName(), false);
+			final Instance exp = new StringToExpressionConverter(model, task).parse(deadline.getCondition(), Long.class.getName(), false);
 			instance.set("condition", exp);
 			task.add("BoundaryIntermediateEvents", instance);
 		}

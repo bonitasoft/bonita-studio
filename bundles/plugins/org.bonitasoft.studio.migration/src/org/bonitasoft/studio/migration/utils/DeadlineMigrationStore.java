@@ -21,7 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.emf.edapt.migration.Instance;
+import org.eclipse.emf.edapt.spi.migration.Instance;
 
 /**
  * @author Romain Bioteau
@@ -30,8 +30,8 @@ import org.eclipse.emf.edapt.migration.Instance;
 public class DeadlineMigrationStore {
 
 	private static Map<String, List<DeadlineStore>> deadlines = new HashMap<String,List<DeadlineStore>>() ;
-	
-	public static void addDeadline(String taskUUID, Instance deadline){
+
+	public static void addDeadline(final String taskUUID, final Instance deadline){
 		List<DeadlineStore> deadlineList = deadlines.get(taskUUID);
 		if(deadlineList == null){
 			deadlineList = new ArrayList<DeadlineStore>();
@@ -39,17 +39,17 @@ public class DeadlineMigrationStore {
 		deadlineList.add(new DeadlineStore((String) ((Instance) deadline.get("connector")).get("name"), (String)deadline.get("condition")));
 		deadlines.put(taskUUID,deadlineList);
 	}
-	
-	public static List<DeadlineStore> getDeadlines(String taskUUID){
+
+	public static List<DeadlineStore> getDeadlines(final String taskUUID){
 		return deadlines.get(taskUUID);
 	}
 
-	public static boolean hasDeadline(String taskUUID){
+	public static boolean hasDeadline(final String taskUUID){
 		return deadlines.containsKey(taskUUID);
 	}
-	
+
 	public static void clearDeadlines(){
 		deadlines.clear();
 	}
-	
+
 }
