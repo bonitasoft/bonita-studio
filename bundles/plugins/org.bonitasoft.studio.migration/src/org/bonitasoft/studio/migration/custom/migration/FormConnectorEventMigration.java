@@ -20,10 +20,10 @@ package org.bonitasoft.studio.migration.custom.migration;
 
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.eclipse.emf.edapt.migration.CustomMigration;
-import org.eclipse.emf.edapt.migration.Instance;
-import org.eclipse.emf.edapt.migration.Metamodel;
 import org.eclipse.emf.edapt.migration.MigrationException;
-import org.eclipse.emf.edapt.migration.Model;
+import org.eclipse.emf.edapt.spi.migration.Instance;
+import org.eclipse.emf.edapt.spi.migration.Metamodel;
+import org.eclipse.emf.edapt.spi.migration.Model;
 
 /**
  * @author Florine Boudin
@@ -31,12 +31,12 @@ import org.eclipse.emf.edapt.migration.Model;
  */
 public class FormConnectorEventMigration extends CustomMigration {
 
-	
+
 	@Override
-	public void migrateBefore(Model model, Metamodel metamodel)
+	public void migrateBefore(final Model model, final Metamodel metamodel)
 			throws MigrationException {
-		for(Instance connector : model.getAllInstances("process.Connector")){
-			Instance container = connector.getContainer();
+		for(final Instance connector : model.getAllInstances("process.Connector")){
+			final Instance container = connector.getContainer();
 			if(connector.getReferences().get(0).getEReference() == ProcessPackage.Literals.PAGE_FLOW__PAGE_FLOW_CONNECTORS || container.instanceOf("form.Form") || container.instanceOf("form.SubmitFormButton")){
 				connector.set("throwErrorEvent", false);
 				connector.set("ignoreErrors", false);
@@ -44,5 +44,5 @@ public class FormConnectorEventMigration extends CustomMigration {
 			}
 		}
 	}
-	
+
 }

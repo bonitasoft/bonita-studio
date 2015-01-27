@@ -11,7 +11,7 @@
 	<groupId>org.bonitasoft.studio.plugins</groupId>
 	<artifactId>org.bonitasoft.studio-models</artifactId>
 	<packaging>eclipse-plugin</packaging>
-
+    
 	<profiles>
 		<profile>
 			<id>generate</id>
@@ -64,6 +64,10 @@
 									<artifactId>org.eclipse.equinox.ds</artifactId>
 									<type>eclipse-plugin</type>
 								</dependency>
+                                <dependency>
+                                    <artifactId>org.eclipse.osgi.compatibility.state</artifactId>
+                                    <type>eclipse-plugin</type>
+                                </dependency>
 							</dependencies>
 						</configuration>
 						<executions>

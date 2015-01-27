@@ -30,10 +30,10 @@ import org.bonitasoft.studio.validators.descriptor.validator.ValidatorDescriptor
 import org.bonitasoft.studio.validators.descriptor.validator.ValidatorFactory;
 import org.bonitasoft.studio.validators.descriptor.validator.ValidatorType;
 import org.bonitasoft.studio.validators.repository.ValidatorDescriptorRepositoryStore;
-import org.eclipse.emf.edapt.migration.Instance;
-import org.eclipse.emf.edapt.migration.Metamodel;
 import org.eclipse.emf.edapt.migration.MigrationException;
-import org.eclipse.emf.edapt.migration.Model;
+import org.eclipse.emf.edapt.spi.migration.Instance;
+import org.eclipse.emf.edapt.spi.migration.Metamodel;
+import org.eclipse.emf.edapt.spi.migration.Model;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;

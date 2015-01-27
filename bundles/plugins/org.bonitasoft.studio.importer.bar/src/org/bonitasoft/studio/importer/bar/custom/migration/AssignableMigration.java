@@ -19,10 +19,10 @@ package org.bonitasoft.studio.importer.bar.custom.migration;
 import org.bonitasoft.studio.importer.bar.i18n.Messages;
 import org.bonitasoft.studio.migration.migrator.ReportCustomMigration;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.emf.edapt.migration.Instance;
-import org.eclipse.emf.edapt.migration.Metamodel;
 import org.eclipse.emf.edapt.migration.MigrationException;
-import org.eclipse.emf.edapt.migration.Model;
+import org.eclipse.emf.edapt.spi.migration.Instance;
+import org.eclipse.emf.edapt.spi.migration.Metamodel;
+import org.eclipse.emf.edapt.spi.migration.Model;
 
 /**
  * @author Romain Bioteau
@@ -30,15 +30,15 @@ import org.eclipse.emf.edapt.migration.Model;
  */
 public class AssignableMigration extends ReportCustomMigration {
 
-	
+
 	@Override
-	public void migrateBefore(Model model, Metamodel metamodel)
+	public void migrateBefore(final Model model, final Metamodel metamodel)
 			throws MigrationException {
-		for(Instance deadline : model.getAllInstances("process.Deadline")){
-			Instance connector =  deadline.get("connector");
+		for(final Instance deadline : model.getAllInstances("process.Deadline")){
+			final Instance connector =  deadline.get("connector");
 			addReportChange((String) connector.get("name"),"Deadline", deadline.getContainer().getUuid(), Messages.removeDeadlinesMigrationDescription, Messages.connectorProperty, IStatus.ERROR);
 			model.delete(deadline);
 		}
 	}
-	
+
 }

@@ -18,6 +18,7 @@ package org.bonitasoft.studio.expression.editor.filter;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.jdt.JDTTypeHierarchyManager;
 import org.bonitasoft.studio.expression.editor.ExpressionEditorPlugin;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IType;
@@ -28,6 +29,7 @@ import org.eclipse.jdt.core.JavaModelException;
  *
  */
 public class ExpressionReturnTypeFilter {
+
 
     /**
      * @param currentReturnType
@@ -49,7 +51,7 @@ public class ExpressionReturnTypeFilter {
                     final IType currentType = javaProject.findType(currentReturnType);
                     final IType targetType = javaProject.findType(targetReturnType);
                     if (currentType != null && targetType != null) {
-                        return currentType.newTypeHierarchy(null).contains(targetType);
+                        return new JDTTypeHierarchyManager().getTypeHierarchy(targetType).contains(targetType);
                     }
                 } catch (final JavaModelException e1) {
 

@@ -33,7 +33,7 @@ import org.eclipse.core.runtime.FileLocator;
 
 /**
  * @author Romain Bioteau
- * 
+ *
  */
 public class BonitaHomeUtil {
 
@@ -65,9 +65,9 @@ public class BonitaHomeUtil {
 				+ File.separator + BonitaConstants.DEFAULT_DOMAIN
 				+ File.separator + "conf";
 	}
-	
+
 	public static File getPortalI18NFolder() {
-	    File bonitaFolder =  new File(ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString() + File.separator + "tomcat"+File.separator+"bonita");
+	    final File bonitaFolder =  new File(ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString() + File.separator + "tomcat"+File.separator+"bonita");
         return new File(bonitaFolder, "client"
                 + File.separator + "platform"
                 + File.separator + "work"
@@ -84,7 +84,7 @@ public class BonitaHomeUtil {
 	public static File getReferenceExternalFolder() {
 		try {
 			return new File(getReferenceBonitaHome(), "external");
-		} catch (Exception ex) {
+		} catch (final Exception ex) {
 			BonitaStudioLog.error(ex);
 			return null;
 		}
@@ -107,7 +107,7 @@ public class BonitaHomeUtil {
 			if (!destBonitaHome.exists()) {
 				BonitaStudioLog.debug("Initializing BONITA.HOME", Activator.PLUGIN_ID);
 				destBonitaHome.mkdir();
-				File srcBonitaHome = BonitaHomeUtil.getReferenceBonitaHome();
+				final File srcBonitaHome = BonitaHomeUtil.getReferenceBonitaHome();
 				FileUtil.copyDir(srcBonitaHome, destBonitaHome);
 				configureBonitaClient(HTTP,"localhost",8080);
 				BonitaStudioLog.debug("BONITA.HOME installed.", Activator.PLUGIN_ID);
@@ -118,20 +118,23 @@ public class BonitaHomeUtil {
 						destBonitaHome.getAbsolutePath());
 			}
 
-		}catch (Exception e) {
+		}catch (final Exception e) {
 			BonitaStudioLog.error(e);
 		}
 		return destBonitaHome;
 	}
 
-	public static void configureBonitaClient(String apiType,String host,int serverPort) {
+	public static void configureBonitaClient(final String apiType,final String host,final int serverPort) {
 		BonitaStudioLog.debug("Configuring bonita client on host "+host+":"+serverPort+" with API_TYPE="+apiType, Activator.PLUGIN_ID);
 		final File clientFolder = new File(BonitaHomeUtil.getBonitaHome(),"client"+File.separatorChar+"conf");
 		final File bonitaClientFile = new File(clientFolder,"bonita-client.properties");
 		if(!bonitaClientFile.exists()){
-			throw new RuntimeException("bonita-client.properties not found in the bonita home");
+            initBonitaHome();
+            if (!bonitaClientFile.exists()) {
+                throw new RuntimeException("bonita-client.properties not found in the bonita home");
+            }
 		}
-		Properties p = new Properties();
+		final Properties p = new Properties();
 		FileInputStream inStream = null;
 		FileOutputStream out = null;
 		try{
@@ -145,20 +148,20 @@ public class BonitaHomeUtil {
 			out = new FileOutputStream(bonitaClientFile);
 			p.store(out, null);
 			APITypeManager.refresh();
-		}catch (Exception e) {
+		}catch (final Exception e) {
 			BonitaStudioLog.error(e);
 		}finally{
 			if(inStream != null){
 				try {
 					inStream.close();
-				} catch (IOException e) {
+				} catch (final IOException e) {
 
 				}
 			}
 			if(out != null){
 				try {
 					out.close();
-				} catch (IOException e) {
+				} catch (final IOException e) {
 
 				}
 			}
@@ -169,31 +172,31 @@ public class BonitaHomeUtil {
 		return new File(STUDIO_ENGINE_LOGGING_PROPERTIES);
 	}
 
-	public static File getDefaultTenantSecurityConfigFile(long tenantId) {
-		File bonitaFolder =  new File(ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString() + File.separator + "tomcat"+File.separator+"bonita");
+	public static File getDefaultTenantSecurityConfigFile(final long tenantId) {
+		final File bonitaFolder =  new File(ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString() + File.separator + "tomcat"+File.separator+"bonita");
 		return new File(bonitaFolder,"client"+File.separator+"tenants"+File.separator+String.valueOf(tenantId)+File.separator+"conf"+File.separator+"security-config.properties");
 	}
-	
+
 	public static File getDefaultTenantSecurityConfigStudioFile() {
-		URL url = ProjectUtil.getConsoleLibsBundle().getEntry("bonita");
+		final URL url = ProjectUtil.getConsoleLibsBundle().getEntry("bonita");
 		File bonitaFolder = null;
 		try {
 			bonitaFolder = new File(FileLocator.toFileURL(url).getFile());
 			return new File(bonitaFolder,"client"+File.separator+"platform"+File.separator+"tenant-template"+File.separator+"conf"+File.separator+"security-config.properties");
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			BonitaStudioLog.error(e);
 		}
 
-		return null ;	
+		return null ;
 	}
 
 	public static File getDefaultPlatformTenantConfigFile() {
-		URL url = ProjectUtil.getConsoleLibsBundle().getEntry("bonita");
+		final URL url = ProjectUtil.getConsoleLibsBundle().getEntry("bonita");
 		File bonitaFolder = null;
 		try {
 			bonitaFolder = new File(FileLocator.toFileURL(url).getFile());
 			return new File(bonitaFolder,"client"+File.separator+"platform"+File.separator+"conf"+File.separator+"platform-tenant-config.properties");
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			BonitaStudioLog.error(e);
 		}
 

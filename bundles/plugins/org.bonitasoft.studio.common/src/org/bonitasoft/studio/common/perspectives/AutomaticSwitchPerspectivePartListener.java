@@ -79,10 +79,12 @@ public final class AutomaticSwitchPerspectivePartListener implements IPartListen
         final EModelService service =	part.getContext().get(EModelService.class);
         final MWindow window = service.getTopLevelWindowFor(part);
         final MPerspectiveStack pStack =  (MPerspectiveStack) service.find("PerspectiveStack", window);
-        final MPerspective selectedElement = pStack.getSelectedElement();
         String activePerspective =null;
-        if(selectedElement != null){
-            activePerspective = selectedElement.getElementId();
+        if (pStack != null) {
+            final MPerspective selectedElement = pStack.getSelectedElement();
+            if (selectedElement != null) {
+                activePerspective = selectedElement.getElementId();
+            }
         }
         return activePerspective;
     }
