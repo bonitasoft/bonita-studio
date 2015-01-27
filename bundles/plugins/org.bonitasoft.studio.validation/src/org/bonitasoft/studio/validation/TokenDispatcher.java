@@ -35,6 +35,7 @@ import org.bonitasoft.studio.model.process.SequenceFlow;
 import org.bonitasoft.studio.model.process.SourceElement;
 import org.bonitasoft.studio.model.process.TargetElement;
 import org.bonitasoft.studio.model.process.ThrowLinkEvent;
+import org.bonitasoft.studio.model.process.XORGateway;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
@@ -79,17 +80,17 @@ public class TokenDispatcher {
             if(isContinuous((FlowElement) sourceFlowElement)){ //Same token as previous one
                 token = getFirstIncomingSequenceFlow((TargetElement) sourceFlowElement).getPathToken();
             }else if(isStartingFlowElement((FlowElement) sourceFlowElement)){ //Set initial token
-                token = ModelHelper.getEObjectID(ModelHelper.getParentProcess(sourceFlowElement));
+                token = createToken(ModelHelper.getParentProcess(sourceFlowElement));
             }else if(isSplitting((FlowElement) sourceFlowElement)){
-                token = ModelHelper.getEObjectID(sourceFlowElement);
+                token = createToken(sourceFlowElement);
             }else if(isMerging((FlowElement) sourceFlowElement)){
-                token = getParentToken(sourceFlowElement);
+                token = getIncomingToken(sourceFlowElement);
             } else {
                 if (allIncomingTokenSet((FlowElement) sourceFlowElement)) {
                     if (sameTokenForAllIncomingFlows((FlowElement) sourceFlowElement)) {
                         token = getFirstIncomingSequenceFlow((TargetElement) sourceFlowElement).getPathToken();//Like continuous
                     } else {
-                        token = ModelHelper.getEObjectID(sourceFlowElement);//Like a split
+                        token = createToken(sourceFlowElement);//Like a split
                     }
                 } else {
                     return null;//Computed later
@@ -100,19 +101,23 @@ public class TokenDispatcher {
             final BoundaryEvent sourceBoundary = (BoundaryEvent) sourceFlowElement;
             final FlowElement flowElement = ModelHelper.getParentFlowElement(sourceBoundary);
             if(sourceBoundary instanceof NonInterruptingBoundaryTimerEvent){//NON INTERRUPTING ARE LIKE SPLIT
-                token = ModelHelper.getEObjectID(sourceBoundary);
+                token = createToken(sourceBoundary);
             }else{//INTERRUPTING ARE SUBSTITUTION OF PARENT WITH ONE AND ONLY OUTPUT FLOW
                 if(countIncomingSequenceFlows(flowElement) == 0){
-                    token = ModelHelper.getEObjectID(ModelHelper.getParentProcess(sourceFlowElement));
+                    token = createToken(ModelHelper.getParentProcess(sourceFlowElement));
                 }else if(countIncomingSequenceFlows(flowElement) == 1){
                     final SequenceFlow flow = getFirstIncomingSequenceFlow(flowElement);
                     token = flow.getPathToken();
                 }else{
-                    token = getParentToken(flowElement);
+                    token = getIncomingToken(flowElement);
                 }
             }
         }
         return token ;
+    }
+
+    protected String createToken(final EObject eObject) {
+        return ModelHelper.getEObjectID(eObject);
     }
 
     private boolean allIncomingTokenSet(final FlowElement sourceFlowElement) {
@@ -127,7 +132,7 @@ public class TokenDispatcher {
         return true;
     }
 
-    protected String getParentToken(final EObject sourceFlowElement) {
+    protected String getIncomingToken(final EObject sourceFlowElement) {
         String token;
         FlowElement lastSplit = (FlowElement) sourceFlowElement;
         while (isMerging(lastSplit)) {
@@ -136,7 +141,7 @@ public class TokenDispatcher {
             if(ftoken == null || ftoken.isEmpty()){
                 return null; //Will be compute later
             }
-            if(!ftoken.equals( ModelHelper.getEObjectID(ModelHelper.getParentProcess(sourceFlowElement)))){
+            if (!ftoken.equals(createToken(ModelHelper.getParentProcess(sourceFlowElement)))) {
                 final EObject tokenSourceElement = lastSplit.eResource().getEObject(ftoken);
                 if (tokenSourceElement instanceof FlowElement) {
                     lastSplit = (FlowElement) tokenSourceElement;
@@ -226,6 +231,9 @@ public class TokenDispatcher {
 
 
     protected boolean isContinuous(final FlowElement sourceFlowElement) {
+        if (sourceFlowElement instanceof XORGateway) {
+            return true;
+        }
         return countOutgoingSequenceFlows(sourceFlowElement) == 1 && countIncomingSequenceFlows(sourceFlowElement) == 1;
 
     }
