@@ -653,7 +653,7 @@ public class FlowElementSwitch extends AbstractSwitch {
         addDescription(taskBuilder, activity.getDocumentation());
     }
 
-    private void addBoundaryEvents(final ActivityDefinitionBuilder taskBuilder, final Activity activity) {
+    protected void addBoundaryEvents(final ActivityDefinitionBuilder taskBuilder, final Activity activity) {
         for (final BoundaryEvent boundaryEvent : activity.getBoundaryIntermediateEvents()) {
             final BoundaryEventDefinitionBuilder boundaryEventBuilder = taskBuilder.addBoundaryEvent(boundaryEvent.getName(),
                     !(boundaryEvent instanceof NonInterruptingBoundaryTimerEvent));
@@ -667,6 +667,7 @@ public class FlowElementSwitch extends AbstractSwitch {
                 final CatchMessageEventTriggerDefinitionBuilder catchMessageEventTriggerDefinitionBuilder = boundaryEventBuilder
                         .addMessageEventTrigger(((BoundaryMessageEvent) boundaryEvent).getEvent());
                 addMessageContent((BoundaryMessageEvent) boundaryEvent, catchMessageEventTriggerDefinitionBuilder);
+                addMessageCorrelation((BoundaryMessageEvent) boundaryEvent, catchMessageEventTriggerDefinitionBuilder);
             } else if (boundaryEvent instanceof BoundaryTimerEvent) {
                 final TimerType timerType = getTimerType((BoundaryTimerEvent) boundaryEvent);
                 if (timerType != null) {
