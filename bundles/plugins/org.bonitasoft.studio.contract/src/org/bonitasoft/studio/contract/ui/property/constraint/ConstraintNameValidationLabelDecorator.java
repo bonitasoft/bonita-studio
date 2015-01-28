@@ -17,6 +17,7 @@
 package org.bonitasoft.studio.contract.ui.property.constraint;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.common.jface.AbstractLabelDecorator;
 import org.bonitasoft.studio.contract.core.validation.ContractConstraintDuplicationValidationRule;
 import org.bonitasoft.studio.contract.core.validation.ContractConstraintNameValidationRule;
 import org.bonitasoft.studio.contract.i18n.Messages;
@@ -30,8 +31,6 @@ import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.DecorationOverlayIcon;
 import org.eclipse.jface.viewers.IDecoration;
-import org.eclipse.jface.viewers.ILabelDecorator;
-import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.swt.graphics.Image;
 
 
@@ -39,7 +38,7 @@ import org.eclipse.swt.graphics.Image;
  * @author Romain Bioteau
  *
  */
-public class ConstraintNameValidationLabelDecorator implements ILabelDecorator {
+public class ConstraintNameValidationLabelDecorator extends AbstractLabelDecorator {
 
     private final ContractConstraintNameValidationRule constraintNameValidationRule;
     private final ContractConstraintDuplicationValidationRule constraintNameDuplicationValidationRule;
@@ -47,26 +46,6 @@ public class ConstraintNameValidationLabelDecorator implements ILabelDecorator {
     public ConstraintNameValidationLabelDecorator() {
         constraintNameValidationRule = new ContractConstraintNameValidationRule();
         constraintNameDuplicationValidationRule = new ContractConstraintDuplicationValidationRule();
-    }
-
-    @Override
-    public void addListener(final ILabelProviderListener listener) {
-        //Listener not supported
-    }
-
-    @Override
-    public void dispose() {
-        //Nothing to dispose
-    }
-
-    @Override
-    public boolean isLabelProperty(final Object element, final String property) {
-        return true;
-    }
-
-    @Override
-    public void removeListener(final ILabelProviderListener listener) {
-        //Listener not supported
     }
 
     @Override

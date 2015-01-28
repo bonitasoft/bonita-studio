@@ -30,7 +30,6 @@ import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.swt.AbstractSWTTestCase;
 import org.eclipse.jface.fieldassist.FieldDecoration;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.widgets.Composite;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -46,7 +45,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class ConstraintNameValidationLabelDecoratorTest extends AbstractSWTTestCase {
 
-    private Composite container;
     private ConstraintNameValidationLabelDecorator decorator;
     private Image baseImage;
     private Image decoratorImage;
@@ -59,7 +57,7 @@ public class ConstraintNameValidationLabelDecoratorTest extends AbstractSWTTestC
      */
     @Before
     public void setUp() throws Exception {
-        container = createDisplayAndRealm();
+        createDisplayAndRealm();
         decorator = spy(new ConstraintNameValidationLabelDecorator());
         decoratorImage = createImage();
         baseImage = createImage();

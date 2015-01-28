@@ -55,10 +55,10 @@ public abstract class AbstractBonitaDescriptionSection extends AbstractModelerPr
 
         tabbedPropertySheetPage=aTabbedPropertySheetPage;
         final TabbedPropertySheetWidgetFactory widgetFactory = tabbedPropertySheetPage.getWidgetFactory();
-
         form = widgetFactory.createForm(parent);
         form.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).create());
         form.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+
         final Composite formBodyComposite = form.getBody();
         formBodyComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).create());
         formBodyComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());

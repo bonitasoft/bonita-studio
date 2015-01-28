@@ -16,14 +16,13 @@
  */
 package org.bonitasoft.studio.contract.ui.property.constraint;
 
+import org.bonitasoft.studio.common.jface.AbstractLabelDecorator;
 import org.bonitasoft.studio.contract.core.validation.ContractConstraintExpressionValidationRule;
 import org.bonitasoft.studio.contract.core.validation.ContractConstraintInputsValidationRule;
 import org.bonitasoft.studio.model.process.ContractConstraint;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.fieldassist.FieldDecoration;
 import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
-import org.eclipse.jface.viewers.ILabelDecorator;
-import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.swt.graphics.Image;
 
 
@@ -31,7 +30,7 @@ import org.eclipse.swt.graphics.Image;
  * @author Romain Bioteau
  *
  */
-public class ConstraintExpressionValidationLabelDecorator implements ILabelDecorator {
+public class ConstraintExpressionValidationLabelDecorator extends AbstractLabelDecorator {
 
     private final ContractConstraintExpressionValidationRule expressionValidationRule;
     private final ContractConstraintInputsValidationRule dependenciesValidationRule;
@@ -39,26 +38,6 @@ public class ConstraintExpressionValidationLabelDecorator implements ILabelDecor
     public ConstraintExpressionValidationLabelDecorator() {
         expressionValidationRule = new ContractConstraintExpressionValidationRule();
         dependenciesValidationRule = new ContractConstraintInputsValidationRule();
-    }
-
-    @Override
-    public void addListener(final ILabelProviderListener listener) {
-        //Listener not supported
-    }
-
-    @Override
-    public void dispose() {
-        //Nothing to dispose
-    }
-
-    @Override
-    public boolean isLabelProperty(final Object element, final String property) {
-        return true;
-    }
-
-    @Override
-    public void removeListener(final ILabelProviderListener listener) {
-        //Listener not supported
     }
 
     @Override
@@ -73,10 +52,9 @@ public class ConstraintExpressionValidationLabelDecorator implements ILabelDecor
         final IStatus dependenciesStatus = dependenciesValidationRule.validate(contractConstraint);
         if (!status.isOK()) {
             return getErrorDecorator().getImage();
-        } else if (!dependenciesStatus.isOK()) {
-            if (dependenciesStatus.getMessage().contains(name)) {
+        } else if (!dependenciesStatus.isOK()
+                && dependenciesStatus.getMessage().contains(name)) {
                 return getErrorDecorator().getImage();
-            }
         }
         return null;
     }

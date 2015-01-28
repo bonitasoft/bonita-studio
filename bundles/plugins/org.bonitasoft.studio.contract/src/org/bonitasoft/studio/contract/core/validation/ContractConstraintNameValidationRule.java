@@ -31,6 +31,8 @@ import org.eclipse.emf.ecore.EObject;
  */
 public class ContractConstraintNameValidationRule extends MessageValidationRule implements IValidationRule {
 
+    private static final int MAX_NAME_LENGTH = 50;
+
     protected static final String NAME_CONSTRAINT_ID = "constraint_name";
 
     private final MultiValidator multiValidator;
@@ -38,7 +40,7 @@ public class ContractConstraintNameValidationRule extends MessageValidationRule 
     public ContractConstraintNameValidationRule() {
         multiValidator = new MultiValidator();
         multiValidator.addValidator(new EmptyInputValidator(Messages.name));
-        multiValidator.addValidator(new InputLengthValidator(Messages.name, 50));
+        multiValidator.addValidator(new InputLengthValidator(Messages.name, MAX_NAME_LENGTH));
     }
 
     @Override

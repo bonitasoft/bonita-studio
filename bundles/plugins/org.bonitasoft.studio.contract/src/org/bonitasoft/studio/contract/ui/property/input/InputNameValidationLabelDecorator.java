@@ -17,6 +17,7 @@
 package org.bonitasoft.studio.contract.ui.property.input;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.common.jface.AbstractLabelDecorator;
 import org.bonitasoft.studio.contract.core.validation.ContractInputNameDuplicationValidationRule;
 import org.bonitasoft.studio.contract.core.validation.ContractInputNameValidationRule;
 import org.bonitasoft.studio.contract.i18n.Messages;
@@ -30,8 +31,6 @@ import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.DecorationOverlayIcon;
 import org.eclipse.jface.viewers.IDecoration;
-import org.eclipse.jface.viewers.ILabelDecorator;
-import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.swt.graphics.Image;
 
 
@@ -39,7 +38,7 @@ import org.eclipse.swt.graphics.Image;
  * @author Romain Bioteau
  *
  */
-public class InputNameValidationLabelDecorator implements ILabelDecorator {
+public class InputNameValidationLabelDecorator extends AbstractLabelDecorator {
 
     private final ContractInputNameValidationRule inputNameValidationRule;
     private final ContractInputNameDuplicationValidationRule inputNameDuplicationValidationRule;
@@ -49,25 +48,6 @@ public class InputNameValidationLabelDecorator implements ILabelDecorator {
         inputNameDuplicationValidationRule = new ContractInputNameDuplicationValidationRule();
     }
 
-    @Override
-    public void addListener(final ILabelProviderListener listener) {
-        //Listener not supported
-    }
-
-    @Override
-    public void dispose() {
-        //Nothing to dispose
-    }
-
-    @Override
-    public boolean isLabelProperty(final Object element, final String property) {
-        return true;
-    }
-
-    @Override
-    public void removeListener(final ILabelProviderListener listener) {
-        //Listener not supported
-    }
 
     @Override
     public Image decorateImage(final Image image, final Object element) {

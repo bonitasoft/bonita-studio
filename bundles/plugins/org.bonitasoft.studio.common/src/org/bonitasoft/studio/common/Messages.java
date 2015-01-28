@@ -353,6 +353,8 @@ public class Messages extends NLS {
     public static String createVariable;
     public static String showHelp;
     public static String createAndNewButton;
+    public static String hideHelp;
+    public static String toggleHelp;
 
 
 }

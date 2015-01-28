@@ -45,6 +45,7 @@ public class TogglePropertyHelpContributionItem implements IContributionItem {
     private final Form form;
     private final FormToolkit toolkit;
     private Label decriptionLabel;
+    private MenuItem menuItem;
 
     public TogglePropertyHelpContributionItem(final FormToolkit toolkit, final Form form, final String helpContent) {
         this.helpContent = helpContent;
@@ -121,9 +122,11 @@ public class TogglePropertyHelpContributionItem implements IContributionItem {
             decriptionLabel.dispose();
             form.setHeadClient(null);
             decriptionLabel = null;
+            menuItem.setText(Messages.showHelp);
         } else {
             decriptionLabel = toolkit.createLabel(form.getHead(), helpContent, SWT.WRAP);
             form.setHeadClient(decriptionLabel);
+            menuItem.setText(Messages.hideHelp);
         }
         form.getParent().getParent().layout(true, true);
     }
@@ -131,7 +134,7 @@ public class TogglePropertyHelpContributionItem implements IContributionItem {
     @Override
     public void fill(final ToolBar toolbar, final int arg1) {
         final ToolItem toolItem = new ToolItem(toolbar, SWT.LEFT | SWT.PUSH | SWT.NO_FOCUS);
-        toolItem.setToolTipText(Messages.showHelp);
+        toolItem.setToolTipText(Messages.toggleHelp);
         toolItem.setImage(JFaceResources.getImage(Dialog.DLG_IMG_HELP));
         toolItem.addSelectionListener(new SelectionAdapter() {
 
@@ -141,15 +144,18 @@ public class TogglePropertyHelpContributionItem implements IContributionItem {
             public void widgetSelected(final SelectionEvent e) {
                 toggleHelp();
             }
-
-
         });
     }
 
     @Override
     public void fill(final Menu parent, final int index) {
-        final MenuItem menuItem = new MenuItem(parent, SWT.CHECK);
-        menuItem.setText(Messages.showHelp);
+        menuItem = new MenuItem(parent, SWT.PUSH);
+        if(decriptionLabel==null){
+            menuItem.setText(Messages.showHelp);
+        }else{
+            menuItem.setText(Messages.hideHelp);
+        }
+
         menuItem.addSelectionListener(new SelectionAdapter() {
 
             @Override
