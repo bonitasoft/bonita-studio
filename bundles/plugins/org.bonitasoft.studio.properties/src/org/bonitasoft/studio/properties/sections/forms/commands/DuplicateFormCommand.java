@@ -47,7 +47,7 @@ import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCo
  * @author Baptiste Mesta
  * @author Aurelien Pupier - use AbstractTransactionalCommand to avoid memory leaks (instead of Command)
  */
-public class DuplicateFormCommand  extends AbstractTransactionalCommand {
+public class DuplicateFormCommand extends AbstractTransactionalCommand {
 
     private final Element pageFlow;
     private final Form baseForm;

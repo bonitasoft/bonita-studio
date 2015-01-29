@@ -22,7 +22,6 @@ import java.io.FileWriter;
 
 import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.NamingUtils;
-import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.BonitaErrorDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -77,8 +76,6 @@ import org.eclipse.ui.PlatformUI;
  */
 public class FormsUtils {
 
-    protected static final String TMP_DIR = ProjectUtil.getBonitaStudioWorkFolder().getAbsolutePath();
-
     public static enum WidgetEnum {
         TEXT, TEXT_AREA, COMBO, CHECKBOX,CHECKBOX_LIST, DATE, LIST, PASSWORD, RADIO, SELECT, FILE
     };
@@ -118,7 +115,7 @@ public class FormsUtils {
         try {
             OperationHistoryFactory.getOperationHistory().execute(command, null, null);
         } catch (final ExecutionException e) {
-            FormDiagramEditorPlugin.getInstance().logError("Unable to create model and diagram", e); //$NON-NLS-1$
+            BonitaStudioLog.error(e); //$NON-NLS-1$
         }
     }
 
