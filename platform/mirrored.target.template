@@ -125,11 +125,9 @@
 <unit id="org.eclipse.babel.nls_mylyn_pt.feature.group" version="4.4.0.v20141223043836"/>
 <unit id="org.eclipse.babel.nls_webtools_fr.feature.group" version="4.4.0.v20141223043836"/>
 <unit id="org.eclipse.babel.nls_webtools_pt_BR.feature.group" version="4.4.0.v20141223043836"/>
-<unit id="org.eclipse.babel.nls_modeling.emfstore_it.feature.group" version="4.4.0.v20141223043836"/>
 <unit id="org.eclipse.babel.nls_technology.packaging_ja.feature.group" version="4.4.0.v20141223043836"/>
 <unit id="org.eclipse.babel.nls_birt_de.feature.group" version="4.4.0.v20141223043836"/>
 <unit id="org.eclipse.babel.nls_tools.tm_pt.feature.group" version="4.4.0.v20141223043836"/>
-<unit id="org.eclipse.babel.nls_modeling.emfstore_de.feature.group" version="4.4.0.v20141223043836"/>
 <unit id="org.eclipse.babel.nls_webtools_es.feature.group" version="4.4.0.v20141223043836"/>
 <unit id="org.eclipse.babel.nls_tools.tm_fr.feature.group" version="4.4.0.v20141223043836"/>
 <unit id="org.eclipse.babel.nls_birt_ja.feature.group" version="4.4.0.v20141223043836"/>
@@ -140,7 +138,6 @@
 <unit id="org.eclipse.babel.nls_technology.packaging_fr.feature.group" version="4.4.0.v20141223043836"/>
 <unit id="org.eclipse.babel.nls_mylyn_fr.feature.group" version="4.4.0.v20141223043836"/>
 <unit id="org.eclipse.babel.nls_datatools_ja.feature.group" version="4.4.0.v20141223043836"/>
-<unit id="org.eclipse.babel.nls_modeling.emfstore_pt_BR.feature.group" version="4.4.0.v20141223043836"/>
 <unit id="org.eclipse.babel.nls_modeling.ecp_pt_BR.feature.group" version="4.4.0.v20141223043836"/>
 <unit id="org.eclipse.babel.nls_tools.tm_de.feature.group" version="4.4.0.v20141223043836"/>
 <unit id="org.eclipse.babel.nls_modeling.ecp_it.feature.group" version="4.4.0.v20141223043836"/>
@@ -153,7 +150,6 @@
 <unit id="org.eclipse.babel.nls_webtools_ja.feature.group" version="4.4.0.v20141223043836"/>
 <unit id="org.eclipse.babel.nls_modeling.ecp_fr.feature.group" version="4.4.0.v20141223043836"/>
 <unit id="org.eclipse.babel.nls_technology.recommenders_pt.feature.group" version="4.4.0.v20141223043836"/>
-<unit id="org.eclipse.babel.nls_modeling.emfstore_es.feature.group" version="4.4.0.v20141223043836"/>
 <unit id="org.eclipse.babel.nls_technology.recommenders_pt_BR.feature.group" version="4.4.0.v20141223043836"/>
 <unit id="org.eclipse.babel.nls_technology.packaging_es.feature.group" version="4.4.0.v20141223043836"/>
 <unit id="org.eclipse.babel.nls_modeling.ecp_de.feature.group" version="4.4.0.v20141223043836"/>
@@ -164,7 +160,6 @@
 <unit id="org.eclipse.babel.nls_eclipse_pt.feature.group" version="4.4.0.v20141223043836"/>
 <unit id="org.eclipse.babel.nls_datatools_it.feature.group" version="4.4.0.v20141223043836"/>
 <unit id="org.eclipse.babel.nls_webtools_it.feature.group" version="4.4.0.v20141223043836"/>
-<unit id="org.eclipse.babel.nls_modeling.emfstore_pt.feature.group" version="4.4.0.v20141223043836"/>
 <unit id="org.eclipse.babel.nls_technology.packaging_it.feature.group" version="4.4.0.v20141223043836"/>
 <unit id="org.eclipse.babel.nls_technology.recommenders_ja.feature.group" version="4.4.0.v20141223043836"/>
 <unit id="org.eclipse.babel.nls_technology.recommenders_de.feature.group" version="4.4.0.v20141223043836"/>
@@ -174,11 +169,9 @@
 <unit id="org.eclipse.babel.nls_mylyn_de.feature.group" version="4.4.0.v20141223043836"/>
 <unit id="org.eclipse.babel.nls_birt_fr.feature.group" version="4.4.0.v20141223043836"/>
 <unit id="org.eclipse.babel.nls_modeling.ecp_ja.feature.group" version="4.4.0.v20141223043836"/>
-<unit id="org.eclipse.babel.nls_modeling.emfstore_fr.feature.group" version="4.4.0.v20141223043836"/>
 <unit id="org.eclipse.babel.nls_eclipse_ja.feature.group" version="4.4.0.v20141223043836"/>
 <unit id="org.eclipse.babel.nls_birt_pt.feature.group" version="4.4.0.v20141223043836"/>
 <unit id="org.eclipse.babel.nls_datatools_pt_BR.feature.group" version="4.4.0.v20141223043836"/>
-<unit id="org.eclipse.babel.nls_modeling.emfstore_ja.feature.group" version="4.4.0.v20141223043836"/>
 <unit id="org.eclipse.babel.nls_birt_it.feature.group" version="4.4.0.v20141223043836"/>
 <unit id="org.eclipse.babel.nls_technology.recommenders_fr.feature.group" version="4.4.0.v20141223043836"/>
 <unit id="org.eclipse.babel.nls_technology.recommenders_it.feature.group" version="4.4.0.v20141223043836"/>
