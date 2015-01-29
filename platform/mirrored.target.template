@@ -123,11 +123,9 @@
 <unit id="org.restlet.ext.jackson.feature.group" version="2.2.3.v20141127-1706"/>
 <unit id="org.eclipse.babel.nls_mylyn_pt_BR.feature.group" version="4.4.0.v20141223043836"/>
 <unit id="org.eclipse.babel.nls_mylyn_pt.feature.group" version="4.4.0.v20141223043836"/>
-<unit id="org.eclipse.babel.nls_tools.pdt_ja.feature.group" version="4.4.0.v20141223043836"/>
 <unit id="org.eclipse.babel.nls_webtools_fr.feature.group" version="4.4.0.v20141223043836"/>
 <unit id="org.eclipse.babel.nls_webtools_pt_BR.feature.group" version="4.4.0.v20141223043836"/>
 <unit id="org.eclipse.babel.nls_modeling.emfstore_it.feature.group" version="4.4.0.v20141223043836"/>
-<unit id="org.eclipse.babel.nls_tools.pdt_de.feature.group" version="4.4.0.v20141223043836"/>
 <unit id="org.eclipse.babel.nls_technology.packaging_ja.feature.group" version="4.4.0.v20141223043836"/>
 <unit id="org.eclipse.babel.nls_birt_de.feature.group" version="4.4.0.v20141223043836"/>
 <unit id="org.eclipse.babel.nls_tools.tm_pt.feature.group" version="4.4.0.v20141223043836"/>
@@ -145,7 +143,6 @@
 <unit id="org.eclipse.babel.nls_modeling.emfstore_pt_BR.feature.group" version="4.4.0.v20141223043836"/>
 <unit id="org.eclipse.babel.nls_modeling.ecp_pt_BR.feature.group" version="4.4.0.v20141223043836"/>
 <unit id="org.eclipse.babel.nls_tools.tm_de.feature.group" version="4.4.0.v20141223043836"/>
-<unit id="org.eclipse.babel.nls_tools.pdt_fr.feature.group" version="4.4.0.v20141223043836"/>
 <unit id="org.eclipse.babel.nls_modeling.ecp_it.feature.group" version="4.4.0.v20141223043836"/>
 <unit id="org.eclipse.babel.nls_webtools_de.feature.group" version="4.4.0.v20141223043836"/>
 <unit id="org.eclipse.babel.nls_mylyn_ja.feature.group" version="4.4.0.v20141223043836"/>
@@ -153,9 +150,7 @@
 <unit id="org.eclipse.babel.nls_technology.packaging_de.feature.group" version="4.4.0.v20141223043836"/>
 <unit id="org.eclipse.babel.nls_technology.packaging_pt_BR.feature.group" version="4.4.0.v20141223043836"/>
 <unit id="org.eclipse.babel.nls_datatools_fr.feature.group" version="4.4.0.v20141223043836"/>
-<unit id="org.eclipse.babel.nls_tools.pdt_es.feature.group" version="4.4.0.v20141223043836"/>
 <unit id="org.eclipse.babel.nls_webtools_ja.feature.group" version="4.4.0.v20141223043836"/>
-<unit id="org.eclipse.babel.nls_tools.pdt_it.feature.group" version="4.4.0.v20141223043836"/>
 <unit id="org.eclipse.babel.nls_modeling.ecp_fr.feature.group" version="4.4.0.v20141223043836"/>
 <unit id="org.eclipse.babel.nls_technology.recommenders_pt.feature.group" version="4.4.0.v20141223043836"/>
 <unit id="org.eclipse.babel.nls_modeling.emfstore_es.feature.group" version="4.4.0.v20141223043836"/>
@@ -181,7 +176,6 @@
 <unit id="org.eclipse.babel.nls_modeling.ecp_ja.feature.group" version="4.4.0.v20141223043836"/>
 <unit id="org.eclipse.babel.nls_modeling.emfstore_fr.feature.group" version="4.4.0.v20141223043836"/>
 <unit id="org.eclipse.babel.nls_eclipse_ja.feature.group" version="4.4.0.v20141223043836"/>
-<unit id="org.eclipse.babel.nls_tools.pdt_pt.feature.group" version="4.4.0.v20141223043836"/>
 <unit id="org.eclipse.babel.nls_birt_pt.feature.group" version="4.4.0.v20141223043836"/>
 <unit id="org.eclipse.babel.nls_datatools_pt_BR.feature.group" version="4.4.0.v20141223043836"/>
 <unit id="org.eclipse.babel.nls_modeling.emfstore_ja.feature.group" version="4.4.0.v20141223043836"/>
@@ -191,7 +185,6 @@
 <unit id="org.eclipse.babel.nls_modeling.ecp_pt.feature.group" version="4.4.0.v20141223043836"/>
 <unit id="org.eclipse.babel.nls_datatools_pt.feature.group" version="4.4.0.v20141223043836"/>
 <unit id="org.eclipse.babel.nls_tools.tm_ja.feature.group" version="4.4.0.v20141223043836"/>
-<unit id="org.eclipse.babel.nls_tools.pdt_pt_BR.feature.group" version="4.4.0.v20141223043836"/>
 <unit id="org.eclipse.babel.nls_eclipse_de.feature.group" version="4.4.0.v20141223043836"/>
 <unit id="org.eclipse.babel.nls_birt_es.feature.group" version="4.4.0.v20141223043836"/>
 <unit id="org.eclipse.babel.nls_tools.tm_pt_BR.feature.group" version="4.4.0.v20141223043836"/>
