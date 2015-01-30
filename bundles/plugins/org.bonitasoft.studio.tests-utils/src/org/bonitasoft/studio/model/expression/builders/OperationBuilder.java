@@ -31,7 +31,7 @@ public class OperationBuilder {
         this.operation = operation;
     }
 
-    public static OperationBuilder create() {
+    public static OperationBuilder anOperation() {
         return new OperationBuilder(ExpressionFactory.eINSTANCE.createOperation());
     }
 
