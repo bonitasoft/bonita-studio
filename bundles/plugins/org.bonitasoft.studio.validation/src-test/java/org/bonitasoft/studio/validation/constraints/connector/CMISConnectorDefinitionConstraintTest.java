@@ -146,14 +146,14 @@ public class CMISConnectorDefinitionConstraintTest {
 
     @Test
     public void should_isAnExpressionWithContent_return_false() throws Exception {
-        assertThat(cmisConnectorDefinitionConstraint.isAnExpressionWithContent(ExpressionBuilder.create().build())).isFalse();
-        assertThat(cmisConnectorDefinitionConstraint.isAnExpressionWithContent(ExpressionBuilder.create().withContent("").build())).isFalse();
+        assertThat(cmisConnectorDefinitionConstraint.isAnExpressionWithContent(ExpressionBuilder.anExpression().build())).isFalse();
+        assertThat(cmisConnectorDefinitionConstraint.isAnExpressionWithContent(ExpressionBuilder.anExpression().withContent("").build())).isFalse();
         assertThat(cmisConnectorDefinitionConstraint.isAnExpressionWithContent(null)).isFalse();
     }
 
     @Test
     public void should_isAnExpressionWithContent_return_true() throws Exception {
-        assertThat(cmisConnectorDefinitionConstraint.isAnExpressionWithContent(ExpressionBuilder.create().withContent("content").build())).isTrue();
+        assertThat(cmisConnectorDefinitionConstraint.isAnExpressionWithContent(ExpressionBuilder.anExpression().withContent("content").build())).isTrue();
     }
 
     private Connector aNonCMISConnectorConfig() {
@@ -181,7 +181,7 @@ public class CMISConnectorDefinitionConstraintTest {
         final ConnectorParameterBuilder builder =  ConnectorParameterBuilder.create().
                 withKey(key);
         if(expressionContent != null){
-            builder.havingExpression(ExpressionBuilder.create().withContent(expressionContent));
+            builder.havingExpression(ExpressionBuilder.anExpression().withContent(expressionContent));
         }
         return builder;
     }
