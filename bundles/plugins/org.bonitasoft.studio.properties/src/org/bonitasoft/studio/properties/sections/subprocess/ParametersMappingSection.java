@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.BonitaStudioFontRegistry;
 import org.bonitasoft.studio.common.jface.EMFFeatureLabelProvider;
@@ -40,12 +41,16 @@ import org.bonitasoft.studio.model.process.OutputMapping;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.properties.i18n.Messages;
+import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.command.AddCommand;
 import org.eclipse.emf.edit.command.RemoveCommand;
 import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ComboViewer;
+import org.eclipse.jface.viewers.IElementComparer;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -166,7 +171,10 @@ public class ParametersMappingSection extends EObjectSelectionProviderSection {
             mappedOutputData.add(existingMapping.getProcessTarget());
         }
         for(final InputMapping existingMapping : getCallActivity().getInputMappings()){
-            mappedInputData.add(existingMapping.getProcessSource());
+            final EList<EObject> referencedElements = existingMapping.getProcessSource().getReferencedElements();
+            if (!referencedElements.isEmpty()) {
+                mappedInputData.add((Data) referencedElements.get(0));
+            }
         }
         for (final Data data : accessibleData) {
             if (!mappedOutputData.contains(data) || !mappedInputData.contains(data)) {
@@ -363,7 +371,7 @@ public class ParametersMappingSection extends EObjectSelectionProviderSection {
     private void createInputMapping(final Data source, final String target) {
         final InputMapping mapping = ProcessFactory.eINSTANCE.createInputMapping();
         if(source != null){
-            mapping.setProcessSource(source);
+            mapping.setProcessSource(ExpressionHelper.createVariableExpression(source));
         }
         if(target != null){
             mapping.setSubprocessTarget(target);
@@ -433,6 +441,18 @@ public class ParametersMappingSection extends EObjectSelectionProviderSection {
 
 	private ComboViewer createInputMappingSourceCombo(final Composite outputMappingControl, final InputMapping mapping) {
 		final ComboViewer srcCombo = new ComboViewer(getWidgetFactory().createCCombo(outputMappingControl, SWT.READ_ONLY | SWT.BORDER));
+        srcCombo.setComparer(new IElementComparer() {
+
+            @Override
+            public int hashCode(final Object element) {
+                return element.hashCode();
+            }
+
+            @Override
+            public boolean equals(final Object a, final Object b) {
+                return EcoreUtil.equals((EObject) a, (EObject) b);
+            }
+        });
         srcCombo.setContentProvider(new InputDataMappingContentProvider(getEObjectObservable(), ExpressionEditorService.getInstance().getExpressionProvider(
                 ExpressionConstants.VARIABLE_TYPE)));
         srcCombo.setLabelProvider(new EMFFeatureLabelProvider(ProcessPackage.Literals.ELEMENT__NAME));

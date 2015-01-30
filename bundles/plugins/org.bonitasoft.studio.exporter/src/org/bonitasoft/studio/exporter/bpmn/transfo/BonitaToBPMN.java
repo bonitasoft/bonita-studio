@@ -1523,10 +1523,9 @@ public class BonitaToBPMN implements IBonitaTransformer {
         ca.getDataInputAssociation().add(dia);
         for (final InputMapping im : callActivity.getInputMappings()) {
             final TAssignment inputAssignment = ModelFactory.eINSTANCE.createTAssignment();
-            final Data processSource = im.getProcessSource();
+            final Expression processSource = im.getProcessSource();
             if(processSource != null){
-                final TItemDefinition dataFrom = dataMap.get(processSource);
-                inputAssignment.setFrom(createBPMNExpressionFromString(dataFrom != null ? dataFrom.getId() : processSource.getName()));
+                inputAssignment.setFrom(createBPMNExpressionFromString(processSource.getName()));
                 final String dataTo = getDataReferenceValue(callActivity, im.getSubprocessTarget());
                 inputAssignment.setTo(createBPMNExpressionFromString(dataTo));//FIXME: I think we need to search the real targeted data to find the correct id
                 dia.getAssignment().add(inputAssignment);

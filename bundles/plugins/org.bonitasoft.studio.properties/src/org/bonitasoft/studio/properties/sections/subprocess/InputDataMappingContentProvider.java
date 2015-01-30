@@ -18,7 +18,6 @@ package org.bonitasoft.studio.properties.sections.subprocess;
 
 import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Iterables.toArray;
-import static com.google.common.collect.Iterables.transform;
 
 import java.util.Set;
 
@@ -26,12 +25,10 @@ import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionProvider;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 
-import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 
 /**
@@ -55,23 +52,9 @@ public class InputDataMappingContentProvider extends ArrayContentProvider implem
     public Object[] getElements(final Object inputElement) {
         final Set<Expression> expressions = expressionProvider.getExpressions((EObject) callActivityObservable.getValue());
         final Iterable<Expression> dataExpressions = variableExpressions(expressions);
-        final Iterable<EObject> data = expressionReferencedEObject(dataExpressions);
-        return toArray(data, Object.class);
+        return toArray(dataExpressions, Object.class);
     }
 
-    protected Iterable<EObject> expressionReferencedEObject(final Iterable<Expression> expressions) {
-        return transform(expressions, new Function<Expression, EObject>() {
-
-            @Override
-            public EObject apply(final Expression expression) {
-                final EList<EObject> referencedElements = expression.getReferencedElements();
-                if (!referencedElements.isEmpty()) {
-                    return referencedElements.get(0);
-                }
-                return null;
-            }
-        });
-    }
 
     protected Iterable<Expression> variableExpressions(final Iterable<Expression> expressions) {
         return filter(expressions, new Predicate<Expression>() {

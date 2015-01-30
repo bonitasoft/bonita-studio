@@ -74,18 +74,6 @@ public class InputDataMappingContentProviderTest {
     }
 
     @Test
-    public void should_expressionReferencedEObject_returns_EObject_iterable() throws Exception {
-        final Data data1 = aData().withName("data1").build();
-        final Data data2 = aData().withName("data2").build();
-        final ArrayList<Expression> expressions = newArrayList(
-                anExpression().havingReferencedElements(data1).build(),
-                anExpression().havingReferencedElements(data2).build(),
-                anExpression().build());
-
-        assertThat(inputDataMappingContentProvider.expressionReferencedEObject(expressions)).containsExactly(data1, data2, null);
-    }
-
-    @Test
     public void should_variableExpressions_returns_expressions_with_variable_type() throws Exception {
         final ArrayList<Expression> expressions = newArrayList(
                 anExpression().withExpressionType(ExpressionConstants.VARIABLE_TYPE).build(),

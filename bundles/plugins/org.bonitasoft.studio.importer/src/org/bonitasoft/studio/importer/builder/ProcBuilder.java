@@ -1394,7 +1394,7 @@ public class ProcBuilder implements IProcBuilder {
         if(currentStep instanceof CallActivity){
             final InputMapping inputMapping = ProcessFactory.eINSTANCE.createInputMapping();
             if(dataByName.get(sourceDataId) != null){
-                inputMapping.setProcessSource(dataByName.get(NamingUtils.convertToId(sourceDataId)));
+                inputMapping.setProcessSource(ExpressionHelper.createVariableExpression(dataByName.get(NamingUtils.convertToId(sourceDataId))));
             }
             if(dataByName.get(targetDataId) != null){
                 inputMapping.setSubprocessTarget(dataByName.get(NamingUtils.convertToId(targetDataId)).getName());
