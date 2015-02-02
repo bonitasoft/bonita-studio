@@ -22,6 +22,7 @@ import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractConstraint;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.eclipse.core.databinding.validation.ValidationStatus;
+import org.eclipse.core.runtime.AssertionFailedException;
 import org.eclipse.core.runtime.IStatus;
 import org.junit.After;
 import org.junit.Before;
@@ -93,7 +94,7 @@ public class ContractConstraintDuplicationValidationRuleTest {
         assertThat(validationRule.getMessage(ValidationStatus.ok())).isNotEmpty();
     }
 
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = AssertionFailedException.class)
     public void should_getMessage_thrown_IllegalArgumentException() throws Exception {
         validationRule.getMessage(null);
     }
