@@ -16,8 +16,7 @@
  */
 package org.bonitasoft.studio.migration.custom.migration.multiinstance;
 
-import static com.google.common.base.Predicates.and;
-import static com.google.common.collect.Iterables.all;
+import static com.google.common.collect.Iterables.filter;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -42,18 +41,10 @@ public class CallActivityInputMappingCustomMigration extends CustomMigration {
 
     @Override
     public void migrateBefore(final Model model, final Metamodel metamodel) throws MigrationException {
-        all(model.getAllInstances("process.InputMapping"), and(withProcessSource(), storeDataInstance()));
-    }
-
-    private Predicate<Instance> storeDataInstance() {
-        return new Predicate<Instance>() {
-
-            @Override
-            public boolean apply(final Instance inputMappingInstance) {
-                dataInstances.put(inputMappingInstance.getUuid(), ((Instance) inputMappingInstance.get("processSource")).copy());
-                return true;
-            }
-        };
+        final Iterable<Instance> instancesWithProcessSource = filter(model.getAllInstances("process.InputMapping"), withProcessSource());
+        for (final Instance instance : instancesWithProcessSource) {
+            dataInstances.put(instance.getUuid(), ((Instance) instance.get("processSource")).copy());
+        }
     }
 
     private Predicate<Instance> withProcessSource() {
@@ -72,32 +63,28 @@ public class CallActivityInputMappingCustomMigration extends CustomMigration {
 
     @Override
     public void migrateAfter(final Model model, final Metamodel metamodel) throws MigrationException {
-        all(model.getAllInstances("process.InputMapping"), and(matchingUUID(), convertDataToExpression(model)));
+        final Iterable<Instance> instancesToMigrate = filter(model.getAllInstances("process.InputMapping"), matchingUUID());
+        for (final Instance instance : instancesToMigrate) {
+            convertDataToExpression(model, instance);
+        }
     }
 
-    private Predicate<Instance> convertDataToExpression(final Model model) {
-        return new Predicate<Instance>() {
-
-            @Override
-            public boolean apply(final Instance inputMappingInstance) {
-                final Instance dataInstance = dataInstances.get(inputMappingInstance.getUuid());
-                final String name = dataInstance.get("name");
-                final Instance defaultValueExpression = dataInstance.get("defaultValue");
-                if (defaultValueExpression != null) {
-                    model.delete(defaultValueExpression);
-                }
-                final Instance expressionInstance = StringToExpressionConverter.createExpressionInstanceWithDependency(model,
-                        name,
-                        name,
-                        StringToExpressionConverter.getDataReturnType(dataInstance),
-                        ExpressionConstants.VARIABLE_TYPE,
-                        false,
-                        dataInstance);
-                model.delete(dataInstance);
-                inputMappingInstance.set("processSource", expressionInstance);
-                return true;
-            }
-        };
+    private void convertDataToExpression(final Model model, final Instance inputMappingInstance) {
+        final Instance dataInstance = dataInstances.get(inputMappingInstance.getUuid());
+        final String name = dataInstance.get("name");
+        final Instance defaultValueExpression = dataInstance.get("defaultValue");
+        if (defaultValueExpression != null) {
+            model.delete(defaultValueExpression);
+        }
+        final Instance expressionInstance = StringToExpressionConverter.createExpressionInstanceWithDependency(model,
+                name,
+                name,
+                StringToExpressionConverter.getDataReturnType(dataInstance),
+                ExpressionConstants.VARIABLE_TYPE,
+                false,
+                dataInstance);
+        model.delete(dataInstance);
+        inputMappingInstance.set("processSource", expressionInstance);
     }
 
     private Predicate<Instance> matchingUUID() {
