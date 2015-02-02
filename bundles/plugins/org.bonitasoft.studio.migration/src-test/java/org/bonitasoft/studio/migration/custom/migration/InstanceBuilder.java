@@ -93,4 +93,10 @@ public class InstanceBuilder {
         return model;
     }
 
+    public static void clearModel() {
+        if (model != null) {
+            model = null;
+        }
+    }
+
 }

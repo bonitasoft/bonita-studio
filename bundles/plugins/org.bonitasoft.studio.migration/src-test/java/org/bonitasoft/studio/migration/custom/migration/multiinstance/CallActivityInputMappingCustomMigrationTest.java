@@ -20,6 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.bonitasoft.studio.migration.custom.migration.InstanceBuilder.aModel;
 import static org.bonitasoft.studio.migration.custom.migration.InstanceBuilder.aStringDataInstance;
 import static org.bonitasoft.studio.migration.custom.migration.InstanceBuilder.anInstance;
+import static org.bonitasoft.studio.migration.custom.migration.InstanceBuilder.clearModel;
 
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.model.process.ProcessPackage;
@@ -72,6 +73,7 @@ public class CallActivityInputMappingCustomMigrationTest {
      */
     @After
     public void tearDown() throws Exception {
+        clearModel();
     }
 
     @Test
@@ -97,5 +99,8 @@ public class CallActivityInputMappingCustomMigrationTest {
                 ExpressionPackage.Literals.EXPRESSION);
         assertThat(((Instance) inputMapping2.get(ProcessPackage.Literals.INPUT_MAPPING__PROCESS_SOURCE)).getType().getEClass()).isEqualTo(
                 ExpressionPackage.Literals.EXPRESSION);
+
+        //Data instances are deleted
+        assertThat(callActivityInputMappingCustomMigration.getDataInstances().values()).hasSize(2).extracting("type").containsExactly(null, null);
     }
 }
