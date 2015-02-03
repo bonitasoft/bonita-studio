@@ -18,18 +18,24 @@ package org.bonitasoft.studio.exporter.bpmn.transfo.expression;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.collect.Iterables.tryFind;
+import static org.bonitasoft.studio.common.emf.tools.ModelHelper.getAccessibleData;
+import static org.bonitasoft.studio.common.emf.tools.ModelHelper.getParentProcess;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.exporter.bpmn.transfo.data.DataScope;
 import org.bonitasoft.studio.model.expression.Expression;
+import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Data;
-import org.bonitasoft.studio.model.process.Element;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.FeatureMapUtil;
 import org.omg.spec.bpmn.model.TFormalExpression;
 import org.omg.spec.bpmn.model.TItemDefinition;
+
+import com.google.common.base.Optional;
+import com.google.common.base.Predicate;
 
 /**
  * @author Romain Bioteau
@@ -37,6 +43,8 @@ import org.omg.spec.bpmn.model.TItemDefinition;
  */
 public class VariableFormalExpressionTransformer extends FormalExpressionTransformer {
 
+    private static final String DATA_OBJECT_PATTERN = "getDataObject('%s')";
+    private static final String ACTIVITY_PROPERTY_PATTERN = "getActivityProperty('%s','%s')";
     private final DataScope dataScope;
 
     public VariableFormalExpressionTransformer(final DataScope dataScope) {
@@ -53,26 +61,37 @@ public class VariableFormalExpressionTransformer extends FormalExpressionTransfo
         checkArgument(!referencedElements.isEmpty(), "Missing referenced elements for variable expression %s", bonitaExpression.getName());
 
         final Data bonitaData = (Data) referencedElements.get(0);
-        if (bonitaData != null) {
-            final TItemDefinition bpmnData = dataScope.get(ModelHelper.getDataReferencedInExpression(bonitaData));
-            if (bonitaData.isTransient()) {
-                if (bpmnData != null) {
-                    FeatureMapUtil.addText(formalExpression.getMixed(), "getActivityProperty('"
-                            + ((Element) bonitaData.eContainer().eContainer().eContainer().eContainer()).getName() + "','" + bpmnData.getId() + "')");
-                } else {//fallback
-                    FeatureMapUtil.addText(formalExpression.getMixed(), "getActivityProperty('"
-                            + ((Element) bonitaData.eContainer().eContainer().eContainer().eContainer()).getName() + "','" + bonitaExpression.getContent()
-                            + "')");
-                }
-            } else {
-                if (bpmnData != null) {
-                    FeatureMapUtil.addText(formalExpression.getMixed(), "getDataObject('" + bonitaData.getName() + "')");
-                } else {//fallback
-                    FeatureMapUtil.addText(formalExpression.getMixed(), "getDataObject('" + bonitaExpression.getContent() + "')");
-                }
-            }
-        }
+        checkNotNull(bonitaData);
+        final TItemDefinition bpmnData = dataScope.get(resolveData(bonitaData));
+        FeatureMapUtil.addText(formalExpression.getMixed(), createContentFor(bpmnData, bonitaData, bonitaExpression.getContent()));
         return formalExpression;
+    }
+
+    private String createContentFor(final TItemDefinition bpmnData, final Data bonitaData, final String expressionContent) {
+        if (bonitaData.isTransient()) {
+            return createContentForTransientData(bpmnData, bonitaData, expressionContent);
+        }
+        return createContentForData(bpmnData, bonitaData, expressionContent);
+    }
+
+    private String createContentForData(final TItemDefinition bpmnData, final Data bonitaData, final String expressionContent) {
+        return String.format(DATA_OBJECT_PATTERN, bpmnData != null ? bpmnData.getId() : expressionContent);
+    }
+
+    private String createContentForTransientData(final TItemDefinition bpmnData, final Data bonitaData, final String expressionContent) {
+        final AbstractProcess parentProcess = ModelHelper.getParentProcess(bonitaData);
+        return String.format(ACTIVITY_PROPERTY_PATTERN, parentProcess.getName(), bpmnData != null ? bpmnData.getId() : expressionContent);
+    }
+
+    private static Data resolveData(final Data referencedData) {
+        final Optional<Data> resolvedData = tryFind(getAccessibleData(getParentProcess(referencedData)), new Predicate<Data>() {
+
+            @Override
+            public boolean apply(final Data data) {
+                return data.getName().equals(referencedData.getName());
+            }
+        });
+        return resolvedData.get();
     }
 
 }

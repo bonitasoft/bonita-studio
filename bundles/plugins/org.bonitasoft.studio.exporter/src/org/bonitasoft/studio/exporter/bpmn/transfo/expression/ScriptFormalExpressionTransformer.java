@@ -16,9 +16,10 @@
  */
 package org.bonitasoft.studio.exporter.bpmn.transfo.expression;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.model.expression.Expression;
-import org.eclipse.emf.ecore.util.FeatureMapUtil;
 import org.omg.spec.bpmn.model.TFormalExpression;
 
 
@@ -30,11 +31,16 @@ public class ScriptFormalExpressionTransformer extends FormalExpressionTransform
 
 
     @Override
-    protected TFormalExpression addContent(final Expression bonitaExpression, final TFormalExpression formalExpression) {
+    public TFormalExpression transform(final Expression bonitaExpression) {
+        checkArgument(ExpressionConstants.SCRIPT_TYPE.equals(bonitaExpression.getType()), "Expression type is invalid. Expected %s but was %s",
+                ExpressionConstants.SCRIPT_TYPE, bonitaExpression.getType());
+
+        final TFormalExpression formalExpression = super.transform(bonitaExpression);
+
         if (!ExpressionConstants.GROOVY.equals(bonitaExpression.getInterpreter())) {
             formalExpression.setLanguage(bonitaExpression.getInterpreter());//it is another Interpreter, doesn't exist yet
         }
-        FeatureMapUtil.addText(formalExpression.getMixed(), bonitaExpression.getContent());
+
         return formalExpression;
     }
 

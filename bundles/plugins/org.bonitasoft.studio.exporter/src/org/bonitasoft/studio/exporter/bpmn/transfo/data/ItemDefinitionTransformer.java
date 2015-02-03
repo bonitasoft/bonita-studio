@@ -14,6 +14,8 @@
  */
 package org.bonitasoft.studio.exporter.bpmn.transfo.data;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import javax.xml.namespace.QName;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
@@ -36,6 +38,8 @@ public class ItemDefinitionTransformer implements BonitaToBPMNFunction<Data, TIt
     private final XMLNamespaceResolver xmlNamespaceResolver;
 
     public ItemDefinitionTransformer(final TDefinitions bpmnDefinitions, final XMLNamespaceResolver xmlNamespaceResolver) {
+        checkNotNull(bpmnDefinitions);
+        checkNotNull(xmlNamespaceResolver);
         this.bpmnDefinitions = bpmnDefinitions;
         this.xmlNamespaceResolver = xmlNamespaceResolver;
     }

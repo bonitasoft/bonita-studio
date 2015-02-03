@@ -14,24 +14,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.model.process.builders;
+package org.bonitasoft.studio.exporter.bpmn.transfo.expression;
 
-import org.bonitasoft.studio.model.process.ProcessFactory;
-import org.bonitasoft.studio.model.process.StringType;
+import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.exporter.bpmn.transfo.data.DataScope;
 
 /**
  * @author Romain Bioteau
  *
  */
-public class StringDataTypeBuilder extends DataTypeBuilder<StringType, StringDataTypeBuilder> {
+public class FormalExpressionTransformerFactory {
 
-    public static StringDataTypeBuilder aStringDataType() {
-        return new StringDataTypeBuilder();
+    public FormalExpressionTransformer newFormalExpressionTransformer(final DataScope dataScope, final String expressionType) {
+        if (ExpressionConstants.SCRIPT_TYPE.equals(expressionType)) {
+            return new ScriptFormalExpressionTransformer();
+        }
+        if (ExpressionConstants.VARIABLE_TYPE.equals(expressionType)) {
+            return new VariableFormalExpressionTransformer(dataScope);
+        }
+        return new FormalExpressionTransformer();
     }
-
-    @Override
-    protected StringType newInstance() {
-        return ProcessFactory.eINSTANCE.createStringType();
-    }
-
 }

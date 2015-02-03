@@ -71,7 +71,7 @@ public class CreateVariableProposalListenerTest {
 
     @Test
     public void should_getDataContainer_return_activity_if_in_an_activity() throws Exception {
-        final EObject dataContainer = createVariableProposalListener.getDataContainer(ActivityBuilder.createActivityBuilder().build());
+        final EObject dataContainer = createVariableProposalListener.getDataContainer(ActivityBuilder.anActivity().build());
         assertThat(dataContainer).isInstanceOf(Activity.class);
     }
 

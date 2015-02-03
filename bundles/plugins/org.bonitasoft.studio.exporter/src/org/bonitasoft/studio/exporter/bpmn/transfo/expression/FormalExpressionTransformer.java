@@ -16,6 +16,8 @@
  */
 package org.bonitasoft.studio.exporter.bpmn.transfo.expression;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import javax.xml.namespace.QName;
 
 import org.bonitasoft.studio.exporter.bpmn.transfo.BPMNConstants;
@@ -35,11 +37,16 @@ public class FormalExpressionTransformer implements BonitaToBPMNFunction<Express
 
     @Override
     public TFormalExpression transform(final Expression bonitaExpression) {
+        checkNotNull(bonitaExpression);
         final TFormalExpression formalExpression = newTFormalExpression();
         formalExpression.setId(EcoreUtil.generateUUID());
-        formalExpression.setEvaluatesToTypeRef(QName.valueOf(JAVA_XMLNS + ":" + bonitaExpression.getReturnType()));
+        formalExpression.setEvaluatesToTypeRef(newQName(JAVA_XMLNS, bonitaExpression.getReturnType()));
         formalExpression.setLanguage(getFormalExpressionLanguage());
         return addContent(bonitaExpression, formalExpression);
+    }
+
+    protected QName newQName(final String nsPrefix, final String typeRef) {
+        return QName.valueOf(JAVA_XMLNS + ":" + typeRef);
     }
 
     protected TFormalExpression newTFormalExpression() {

@@ -58,7 +58,10 @@ import org.bonitasoft.studio.connectors.repository.ConnectorDefFileStore;
 import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.exporter.Messages;
+import org.bonitasoft.studio.exporter.bpmn.transfo.data.DataScope;
+import org.bonitasoft.studio.exporter.bpmn.transfo.data.ItemDefinitionTransformer;
 import org.bonitasoft.studio.exporter.bpmn.transfo.data.XMLNamespaceResolver;
+import org.bonitasoft.studio.exporter.bpmn.transfo.expression.FormalExpressionTransformerFactory;
 import org.bonitasoft.studio.exporter.extension.IBonitaModelExporter;
 import org.bonitasoft.studio.exporter.extension.IBonitaTransformer;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorParameter;
@@ -250,15 +253,16 @@ public class BonitaToBPMN implements IBonitaTransformer {
     private final Map<String, TSignal> signalCodeTSignal = new HashMap<String, TSignal>();
     private final Set<TSignal> tSignals = new HashSet<TSignal>();
     private TDefinitions definitions;
-    private final Map<Data, TItemDefinition> dataMap = new HashMap<Data, TItemDefinition>();
+    private DataScope dataScope;
     private DocumentRoot root;
     private File destBpmnFile;
     private BPMNDiagram bpmnDiagram;
     private XMLNamespaceResolver xmlNamespaceResolver;
-
+    private final FormalExpressionTransformerFactory formalExpressionTransformerFactory;
     public BonitaToBPMN() {
         errors = new ArrayList<String>();
         errors.add(Messages.formsNotExported);
+        formalExpressionTransformerFactory = new FormalExpressionTransformerFactory();
     }
 
     /**
@@ -300,7 +304,7 @@ public class BonitaToBPMN implements IBonitaTransformer {
         configureNamespaces();
         //handleBonitaConnectorDefinition(destFile.getParentFile());
         //NO more sense? will create one xsd file on the fly for each required bpmn2 file
-
+        dataScope = new DataScope(new ItemDefinitionTransformer(definitions, xmlNamespaceResolver));
         for (final Object childPart : part.getChildren()) {
             if (childPart instanceof PoolEditPart) {
                 processPool((PoolEditPart)childPart, definitions, collaboration);
@@ -471,7 +475,6 @@ public class BonitaToBPMN implements IBonitaTransformer {
     private static Templates xslTemplate = null;
 
     private void generateXSDForConnector(final File connectorToTransform) throws URISyntaxException, IOException, TransformerException {
-
         if(xslTemplate == null){
             final TransformerFactory transFact = TransformerFactory.newInstance();
             final URL xsltUrl = ConnectorPlugin.getDefault().getBundle().getEntry("transfo/genConnectorsXSD.xsl");
@@ -570,13 +573,12 @@ public class BonitaToBPMN implements IBonitaTransformer {
     }
 
     protected void populateWithData(final Pool pool, final TProcess bpmnProcess) {
-        dataMap.clear();
+        dataScope.initializeContext(pool);
         for (final EObject item : pool.getData()) {
             final Data bonitaData = (Data) item;
 
             /*Create the itemDefinition*/
-            final TItemDefinition dataItemDefinition = createDataItemDefinition(bonitaData);
-            dataMap.put(bonitaData, dataItemDefinition);
+            final TItemDefinition dataItemDefinition = dataScope.get(bonitaData);
             final QName dataItemDefinitionIdAsQname = QName.valueOf(dataItemDefinition.getId());
 
             /*Add the dataObject using the reference*/
@@ -594,6 +596,7 @@ public class BonitaToBPMN implements IBonitaTransformer {
                 tDataInputAssociation.getAnyAttribute();
             }
         }
+
         TInputOutputSpecification ioSpecification = bpmnProcess.getIoSpecification();
         if(ioSpecification == null){
             ioSpecification = ModelFactory.eINSTANCE.createTInputOutputSpecification();
@@ -728,43 +731,7 @@ public class BonitaToBPMN implements IBonitaTransformer {
     }
 
     protected TFormalExpression createBPMNFormalExpressionFromBonitaExpression(final Expression bonitaExpression) {
-        final TFormalExpression res = ModelFactory.eINSTANCE.createTFormalExpression();
-        res.setId(EcoreUtil.generateUUID());
-
-        if(ExpressionConstants.SCRIPT_TYPE.equals(bonitaExpression.getType())
-                && ExpressionConstants.GROOVY.equals(bonitaExpression.getInterpreter())){
-            //The default one is Groovy
-            //fromExpression.setLanguage(ExpressionConstants.GROOVY);//TODO: convert interpreter Bonita to official interpreter name?
-            FeatureMapUtil.addText(res.getMixed(), bonitaExpression.getContent());
-        } else if(ExpressionConstants.SCRIPT_TYPE.equals(bonitaExpression.getType())){
-            res.setLanguage(bonitaExpression.getInterpreter());//it is another Interpreter, doesn't exist yet
-            FeatureMapUtil.addText(res.getMixed(), bonitaExpression.getContent());
-        } else if(ExpressionConstants.VARIABLE_TYPE.equals(bonitaExpression.getType())){
-            final Data bonitaData = (Data) bonitaExpression.getReferencedElements().get(0);
-            if(bonitaData != null){
-                final TItemDefinition bpmnData = dataMap.get(ModelHelper.getDataReferencedInExpression(bonitaData));
-                if(bonitaData.isTransient()){
-                    if(bpmnData != null){
-                        FeatureMapUtil.addText(res.getMixed(), "getActivityProperty('"+((Element)bonitaData.eContainer().eContainer().eContainer().eContainer()).getName()+"','"+bpmnData.getId()+"')");
-                    } else {//fallback
-                        FeatureMapUtil.addText(res.getMixed(), "getActivityProperty('"+((Element)bonitaData.eContainer().eContainer().eContainer().eContainer()).getName()+"','"+bonitaExpression.getContent()+"')");
-                    }
-                } else {
-                    if(bpmnData != null){
-                        FeatureMapUtil.addText(res.getMixed(), "getDataObject('"+bonitaData.getName()+"')");
-                    } else {//fallback
-                        FeatureMapUtil.addText(res.getMixed(), "getDataObject('"+bonitaExpression.getContent()+"')");
-                    }
-                }
-            }
-            res.setLanguage("http://www.w3.org/1999/XPath");
-        } else {
-            //FIXME : how to transmit information of Variable or constant more easily
-            FeatureMapUtil.addText(res.getMixed(), bonitaExpression.getContent());
-            res.setLanguage("http://www.w3.org/1999/XPath");
-        }
-        res.setEvaluatesToTypeRef(QName.valueOf(JAVA_XMLNS+":"+bonitaExpression.getReturnType()));
-        return res;
+        return formalExpressionTransformerFactory.newFormalExpressionTransformer(dataScope, bonitaExpression.getType()).transform(bonitaExpression);
     }
 
     protected QName getStructureRef(final Data data) {
@@ -1527,7 +1494,7 @@ public class BonitaToBPMN implements IBonitaTransformer {
             outputAssignment.setFrom(createBPMNExpressionFromString(dataFrom));//FIXME: I think we need to search the real targeted data to find the correct id
             final Data processTarget = om.getProcessTarget();
             if(processTarget != null){
-                final TItemDefinition dataTo = dataMap.get(processTarget);
+                final TItemDefinition dataTo = dataScope.get(processTarget);
                 outputAssignment.setTo(createBPMNExpressionFromString(dataTo != null ? dataTo.getId() : processTarget.getName()));
                 doa.getAssignment().add(outputAssignment);
             }
