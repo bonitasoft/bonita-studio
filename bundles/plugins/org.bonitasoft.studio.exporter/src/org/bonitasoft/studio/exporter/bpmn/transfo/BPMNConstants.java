@@ -14,35 +14,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.model.process.builders;
+package org.bonitasoft.studio.exporter.bpmn.transfo;
 
-import org.bonitasoft.studio.model.process.ProcessFactory;
-import org.bonitasoft.studio.model.process.XMLData;
 
 /**
  * @author Romain Bioteau
  *
  */
-public class XMLDataBuilder extends DataBuilder<XMLData, XMLDataBuilder> {
+public interface BPMNConstants {
 
-    public static XMLDataBuilder anXMLData() {
-        return new XMLDataBuilder();
-    }
+    public static final String XPATH_LANGUAGE_NS = "http://www.w3.org/1999/XPath";
 
-    public XMLDataBuilder withNamespace(final String namespace) {
-        getBuiltInstance().setNamespace(namespace);
-        return getThis();
-    }
-
-    public XMLDataBuilder withElementType(final String elementType) {
-        getBuiltInstance().setType(elementType);
-        return getThis();
-    }
-
-    @Override
-    protected XMLData newInstance() {
-        return ProcessFactory.eINSTANCE.createXMLData();
-    }
-
+    public static final String JAVA_XMLNS = "java";
 }
-

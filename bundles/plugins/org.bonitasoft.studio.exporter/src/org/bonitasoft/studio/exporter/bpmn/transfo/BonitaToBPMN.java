@@ -30,7 +30,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 
 import javax.xml.namespace.QName;
@@ -59,6 +58,7 @@ import org.bonitasoft.studio.connectors.repository.ConnectorDefFileStore;
 import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.exporter.Messages;
+import org.bonitasoft.studio.exporter.bpmn.transfo.data.XMLNamespaceResolver;
 import org.bonitasoft.studio.exporter.extension.IBonitaModelExporter;
 import org.bonitasoft.studio.exporter.extension.IBonitaTransformer;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorParameter;
@@ -254,6 +254,7 @@ public class BonitaToBPMN implements IBonitaTransformer {
     private DocumentRoot root;
     private File destBpmnFile;
     private BPMNDiagram bpmnDiagram;
+    private XMLNamespaceResolver xmlNamespaceResolver;
 
     public BonitaToBPMN() {
         errors = new ArrayList<String>();
@@ -342,6 +343,7 @@ public class BonitaToBPMN implements IBonitaTransformer {
 
     protected void initializeDocumentRoot() {
         root = ModelFactory.eINSTANCE.createDocumentRoot();
+        xmlNamespaceResolver = new XMLNamespaceResolver(root);
     }
 
     protected void populateWithMessageFlow(final MainProcess mainProcess) {
@@ -738,7 +740,7 @@ public class BonitaToBPMN implements IBonitaTransformer {
             res.setLanguage(bonitaExpression.getInterpreter());//it is another Interpreter, doesn't exist yet
             FeatureMapUtil.addText(res.getMixed(), bonitaExpression.getContent());
         } else if(ExpressionConstants.VARIABLE_TYPE.equals(bonitaExpression.getType())){
-            final Data bonitaData = (Data)bonitaExpression.getReferencedElements().get(0);
+            final Data bonitaData = (Data) bonitaExpression.getReferencedElements().get(0);
             if(bonitaData != null){
                 final TItemDefinition bpmnData = dataMap.get(ModelHelper.getDataReferencedInExpression(bonitaData));
                 if(bonitaData.isTransient()){
@@ -767,7 +769,7 @@ public class BonitaToBPMN implements IBonitaTransformer {
 
     protected QName getStructureRef(final Data data) {
         if(data.getDataType() instanceof XMLType){
-            final String xmlnsDataType = getXmlns((XMLData)data);
+            final String xmlnsDataType = xmlNamespaceResolver.resolveNamespacePrefix((XMLData) data);
             return QName.valueOf(xmlnsDataType+":"+((XMLData)data).getType());
         } else {
             final String technicalTypeFor = org.bonitasoft.studio.common.DataUtil.getTechnicalTypeFor(data);
@@ -775,21 +777,6 @@ public class BonitaToBPMN implements IBonitaTransformer {
         }
     }
 
-    private int n = 0;
-
-    private String getXmlns(final XMLData data) {
-        final String dataTypeNamespace = data.getNamespace();
-        for (final Entry<String, String> prefixMap : root.getXMLNSPrefixMap().entrySet()) {
-            final String value = prefixMap.getValue();
-            if (value != null && value.equals(dataTypeNamespace)) {
-                return prefixMap.getKey();
-            }
-        }
-        final String xmlnsIndex = "n"+n;
-        root.getXMLNSPrefixMap().put(xmlnsIndex, dataTypeNamespace);
-        n++;
-        return xmlnsIndex;
-    }
 
     protected void populateWithSequenceFlow(final PoolEditPart poolEditPart, final TProcess bpmnProcess) {
         final Pool pool = (Pool) poolEditPart.resolveSemanticElement();

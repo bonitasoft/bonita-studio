@@ -26,7 +26,7 @@ import org.bonitasoft.studio.model.process.ProcessFactory;
  */
 public class PoolBuilder extends ElementBuilder<Pool, PoolBuilder> {
 
-    public static PoolBuilder create() {
+    public static PoolBuilder aPool() {
         return new PoolBuilder();
     }
 

@@ -61,10 +61,10 @@ public class BonitaToBPMNTest extends BonitaToBPMN {
 
         final TTask bpmTask = (TTask) bonitaToBPMN.createActivity(bonitaTask);
         final TStandardLoopCharacteristics loopCharacteristics = (TStandardLoopCharacteristics) bpmTask.getLoopCharacteristics();
-        Assertions.assertThat(loopCharacteristics).isNotNull();
-        Assertions.assertThat(loopCharacteristics.getLoopMaximum()).isEqualTo(BigInteger.valueOf(45));
-        Assertions.assertThat(((TFormalExpression) loopCharacteristics.getLoopCondition()).getMixed().getValue(0)).isEqualTo("my condition script");
-        Assertions.assertThat(loopCharacteristics.isTestBefore()).isTrue();
+        assertThat(loopCharacteristics).isNotNull();
+        assertThat(loopCharacteristics.getLoopMaximum()).isEqualTo(BigInteger.valueOf(45));
+        assertThat(((TFormalExpression) loopCharacteristics.getLoopCondition()).getMixed().getValue(0)).isEqualTo("my condition script");
+        assertThat(loopCharacteristics.isTestBefore()).isTrue();
     }
 
     @Test
@@ -127,8 +127,8 @@ public class BonitaToBPMNTest extends BonitaToBPMN {
     public void should_export_xmldata_without_namespace() throws Exception {
         bonitaToBPMN.initializeDocumentRoot();
         bonitaToBPMN.configureNamespaces();
-        final QName ref = bonitaToBPMN.getStructureRef(XMLDataBuilder.createXMLDataBuilder().havingDataType(XMLDataTypeBuilder.create()).build());
-        final QName ref2 = bonitaToBPMN.getStructureRef(XMLDataBuilder.createXMLDataBuilder().havingDataType(XMLDataTypeBuilder.create()).build());
+        final QName ref = bonitaToBPMN.getStructureRef(XMLDataBuilder.anXMLData().havingDataType(XMLDataTypeBuilder.create()).build());
+        final QName ref2 = bonitaToBPMN.getStructureRef(XMLDataBuilder.anXMLData().havingDataType(XMLDataTypeBuilder.create()).build());
         assertThat(ref.getLocalPart()).isEqualTo("n0:null");
         assertThat(ref2.getLocalPart()).isEqualTo("n1:null");
     }
