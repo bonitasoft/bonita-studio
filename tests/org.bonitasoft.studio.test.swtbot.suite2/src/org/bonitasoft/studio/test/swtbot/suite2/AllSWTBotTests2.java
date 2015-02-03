@@ -39,6 +39,7 @@ import org.bonitasoft.studio.tests.document.TestRunWithDocument;
 import org.bonitasoft.studio.tests.draw2d.TestLifeCycleWidget;
 import org.bonitasoft.studio.tests.form.TestBug1682;
 import org.bonitasoft.studio.tests.iteration.MultiInstantiationIT;
+import org.bonitasoft.studio.tests.migration.BarImportReportIT;
 import org.bonitasoft.studio.tests.refactoring.widget.RefactorWidgetIT;
 import org.bonitasoft.studio.tests.timer.TestTimer;
 import org.bonitasoft.studio.util.test.BonitaTestSuite;
@@ -110,7 +111,8 @@ import org.junit.runners.Suite;
         RefactorWidgetIT.class,
         ExportImportWithoutMigrationIT.class,
         TestFormValidatorIT.class,
-        TestOrganizationPassword.class
+        TestOrganizationPassword.class,
+        BarImportReportIT.class
 })
 public class AllSWTBotTests2 {
 
