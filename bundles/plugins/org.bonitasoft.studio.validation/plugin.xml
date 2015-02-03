@@ -912,7 +912,7 @@
                   {0}
                </message>
                <target
-                     class="ANDGateway::http://www.bonitasoft.org/ns/studio/process">
+                     class="ANDGateway:http://www.bonitasoft.org/ns/studio/process">
                </target>
             </constraint>
               <constraint
@@ -928,7 +928,7 @@
                     {0}
                  </message>
                  <target
-                       class="Connector::http://www.bonitasoft.org/ns/studio/process">
+                       class="Connector:http://www.bonitasoft.org/ns/studio/process">
                  </target>
               </constraint>
               <constraint
@@ -944,7 +944,7 @@
                     {0}
                  </message>
                  <target
-                       class="Connector::http://www.bonitasoft.org/ns/studio/process">
+                       class="Connector:http://www.bonitasoft.org/ns/studio/process">
                  </target>
               </constraint>
               <constraint
@@ -960,7 +960,7 @@
                     {0}
                  </message>
                  <target
-                       class="SequenceFlow::http://www.bonitasoft.org/ns/studio/process">
+                       class="SequenceFlow:http://www.bonitasoft.org/ns/studio/process">
                  </target>
               </constraint>
             <constraint
@@ -976,7 +976,7 @@
                   {0}
                </message>
                <target
-                     class="Operation::http://www.bonitasoft.org/ns/studio/process">
+                     class="Operation:http://www.bonitasoft.org/ns/studio/process">
                </target>
             </constraint>
             <constraint
@@ -992,7 +992,7 @@
                   {0}
                </message>
                <target
-                     class="Operation::http://www.bonitasoft.org/ns/studio/process">
+                     class="Operation:http://www.bonitasoft.org/ns/studio/process">
                </target>
             </constraint>
             <constraint
@@ -1008,7 +1008,7 @@
                   {0}
                </message>
                <target
-                     class="Connector::http://www.bonitasoft.org/ns/studio/process">
+                     class="Connector:http://www.bonitasoft.org/ns/studio/process">
                </target>
             </constraint>
          </constraints>
