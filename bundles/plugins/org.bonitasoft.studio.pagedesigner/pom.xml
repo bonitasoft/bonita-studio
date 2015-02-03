@@ -9,18 +9,18 @@
     </parent>
     <groupId>org.bonitasoft.studio.bundles.plugins</groupId>
     <artifactId>org.bonitasoft.studio.pagedesigner</artifactId>
-    <packaging>eclipse-plugin</packaging>
+    <packaging>jar</packaging>
 
     <properties>
         <webapp.dir>webapp</webapp.dir>
-        <page.builder.version>1.0.0-SNAPSHOT</page.builder.version>
+        <page.designer.version>1.0.0-SNAPSHOT</page.designer.version>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>com.bonitasoft.web</groupId>
-            <artifactId>page-builder-backend</artifactId>
-            <version>${page.builder.version}</version>
+            <artifactId>page-designer-backend</artifactId>
+            <version>${page.designer.version}</version>
             <type>war</type>
         </dependency>
     </dependencies>
@@ -41,7 +41,7 @@
                         </overlay>
                     </overlays>
                     <workDirectory>target/overlay-war-folder</workDirectory>
-                    <warName>page-builder</warName>
+                    <warName>page-designer</warName>
                     <outputDirectory>${webapp.dir}</outputDirectory>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
                 </configuration>
