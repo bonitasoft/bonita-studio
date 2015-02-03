@@ -87,11 +87,11 @@ public class BonitaStudioApplicationTest extends AbstractSWTTestCase {
 
     @Test
     public void shoul_start_exit_if_java_version_is_not_valid() throws Exception {
-        doReturn("1.8").when(application).getJavaVersion();
+        doReturn("1.9").when(application).getJavaVersion();
 
         application.start(null);
 
-        verify(application).openErrorDialog(display, "1.8");
+        verify(application).openErrorDialog(display, "1.9");
         verify(application, never()).createAndRunWorkbench(display);
     }
 

@@ -53,7 +53,7 @@ import org.osgi.framework.Version;
  */
 public class BonitaStudioApplication extends JobChangeAdapter implements IApplication {
 
-    private static final String INVALID_JAVA_VERSION_PREFIX = "1.8";
+    private static final String INVALID_JAVA_VERSION_PREFIX = "1.9";
     private Display display;
     public static final String PREFERENCES_FILE = ".wsPreferences";
     public static final String WS_ROOT = "wsRootDir";
