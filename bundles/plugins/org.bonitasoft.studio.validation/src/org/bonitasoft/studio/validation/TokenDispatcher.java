@@ -21,13 +21,11 @@ import java.util.List;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.model.process.ANDGateway;
 import org.bonitasoft.studio.model.process.Activity;
 import org.bonitasoft.studio.model.process.BoundaryEvent;
 import org.bonitasoft.studio.model.process.CatchLinkEvent;
 import org.bonitasoft.studio.model.process.Connection;
 import org.bonitasoft.studio.model.process.FlowElement;
-import org.bonitasoft.studio.model.process.InclusiveGateway;
 import org.bonitasoft.studio.model.process.NonInterruptingBoundaryTimerEvent;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
@@ -201,8 +199,7 @@ public class TokenDispatcher {
 
 
     protected boolean isMerging(final FlowElement sourceFlowElement) {
-        final int cpt = countIncomingSequenceFlows(sourceFlowElement);
-        return cpt > 1 && (sourceFlowElement instanceof ANDGateway || sourceFlowElement instanceof InclusiveGateway);
+        return countIncomingSequenceFlows(sourceFlowElement) > 1;
     }
 
 
