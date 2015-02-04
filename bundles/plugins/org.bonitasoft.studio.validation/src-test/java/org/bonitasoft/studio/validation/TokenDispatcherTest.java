@@ -57,7 +57,7 @@ public class TokenDispatcherTest {
     }
 
     @Test
-    public void should_a_FlowElement_with_more_than_one_incoming_flow_be_merging() throws Exception {
+    public void should_a_FlowElement_with_be_continous() throws Exception {
         final TaskBuilder t1 = aTask();
         final TaskBuilder t2 = aTask();
         t1.goingTo(t2).goingTo(t1);
@@ -65,8 +65,11 @@ public class TokenDispatcherTest {
         aPool()
                 .havingElements(aStartEvent().goingTo(t1), t1, t2).build();
 
-        assertThat(tokenDispatcher.isMerging(t1.build())).isTrue();
+        assertThat(tokenDispatcher.isMerging(t1.build())).isFalse();
         assertThat(tokenDispatcher.isMerging(t2.build())).isFalse();
+
+        assertThat(tokenDispatcher.isContinuous(t1.build())).isTrue();
+        assertThat(tokenDispatcher.isContinuous(t2.build())).isTrue();
     }
 
 }
