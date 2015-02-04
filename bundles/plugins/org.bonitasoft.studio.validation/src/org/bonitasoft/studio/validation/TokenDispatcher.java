@@ -21,11 +21,13 @@ import java.util.List;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.model.process.ANDGateway;
 import org.bonitasoft.studio.model.process.Activity;
 import org.bonitasoft.studio.model.process.BoundaryEvent;
 import org.bonitasoft.studio.model.process.CatchLinkEvent;
 import org.bonitasoft.studio.model.process.Connection;
 import org.bonitasoft.studio.model.process.FlowElement;
+import org.bonitasoft.studio.model.process.InclusiveGateway;
 import org.bonitasoft.studio.model.process.NonInterruptingBoundaryTimerEvent;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
@@ -33,7 +35,6 @@ import org.bonitasoft.studio.model.process.SequenceFlow;
 import org.bonitasoft.studio.model.process.SourceElement;
 import org.bonitasoft.studio.model.process.TargetElement;
 import org.bonitasoft.studio.model.process.ThrowLinkEvent;
-import org.bonitasoft.studio.model.process.XORGateway;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
@@ -75,10 +76,10 @@ public class TokenDispatcher {
                 token = getFirstIncomingSequenceFlow(catchLink.getFrom().get(0)).getPathToken();
             }
         }else if(sourceFlowElement instanceof FlowElement){
-            if(isContinuous((FlowElement) sourceFlowElement)){ //Same token as previous one
-                token = getFirstIncomingSequenceFlow((TargetElement) sourceFlowElement).getPathToken();
-            }else if(isStartingFlowElement((FlowElement) sourceFlowElement)){ //Set initial token
+            if (isStartingFlowElement((FlowElement) sourceFlowElement)) { //Set initial token
                 token = createToken(ModelHelper.getParentProcess(sourceFlowElement));
+            } else if (isContinuous((FlowElement) sourceFlowElement)) { //Same token as previous one
+                token = getFirstIncomingSequenceFlow((TargetElement) sourceFlowElement).getPathToken();
             }else if(isSplitting((FlowElement) sourceFlowElement)){
                 token = createToken(sourceFlowElement);
             }else if(isMerging((FlowElement) sourceFlowElement)){
@@ -199,7 +200,7 @@ public class TokenDispatcher {
 
 
     protected boolean isMerging(final FlowElement sourceFlowElement) {
-        return countIncomingSequenceFlows(sourceFlowElement) > 1;
+        return countIncomingSequenceFlows(sourceFlowElement) > 1 && (sourceFlowElement instanceof InclusiveGateway || sourceFlowElement instanceof ANDGateway);
     }
 
 
@@ -228,10 +229,10 @@ public class TokenDispatcher {
 
 
     protected boolean isContinuous(final FlowElement sourceFlowElement) {
-        if (sourceFlowElement instanceof XORGateway) {
-            return true;
+        if (sourceFlowElement instanceof ANDGateway || sourceFlowElement instanceof InclusiveGateway) {
+            return countOutgoingSequenceFlows(sourceFlowElement) == 1 && countIncomingSequenceFlows(sourceFlowElement) == 1;
         }
-        return countOutgoingSequenceFlows(sourceFlowElement) == 1 && countIncomingSequenceFlows(sourceFlowElement) == 1;
+        return true;
 
     }
 
