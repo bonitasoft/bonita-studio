@@ -16,6 +16,8 @@
  */
 package org.bonitasoft.studio.validation.operation;
 
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.swt.widgets.Shell;
@@ -38,6 +40,11 @@ public class OffscreenDiagramEditPartRunnable implements Runnable {
     @Override
     public void run() {
         shell = new Shell();
+        if (TransactionUtil.getEditingDomain(diagram) == null) {
+            BonitaStudioLog.log("The diagram doesn't have any Editing domain, we can't create a DiagramEditPart: " + diagram.getName());
+            return;
+        }
+
         diagramEp = org.eclipse.gmf.runtime.diagram.ui.OffscreenEditPartFactory.getInstance().createDiagramEditPart(diagram, shell);
     }
 
