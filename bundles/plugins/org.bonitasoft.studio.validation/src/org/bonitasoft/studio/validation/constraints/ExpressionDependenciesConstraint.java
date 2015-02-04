@@ -16,17 +16,13 @@
  */
 package org.bonitasoft.studio.validation.constraints;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.common.emf.tools.WidgetHelper;
 import org.bonitasoft.studio.expression.editor.provider.ExpressionTypeLabelProvider;
 import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.model.form.Widget;
-import org.bonitasoft.studio.model.parameter.Parameter;
-import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.validation.i18n.Messages;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
@@ -38,79 +34,48 @@ import org.eclipse.emf.validation.IValidationContext;
  */
 public class ExpressionDependenciesConstraint  extends AbstractLiveValidationMarkerConstraint {
 
-	private static final String CONSTRAINT_ID = "org.bonitasoft.studio.validation.constraint.expressionDependencies";
+    private static final String CONSTRAINT_ID = "org.bonitasoft.studio.validation.constraint.expressionDependencies";
+    private static Set<String> supportedTypes;
+    static {
+        supportedTypes = new HashSet<String>();
+        supportedTypes.add(ExpressionConstants.VARIABLE_TYPE);
+        supportedTypes.add(ExpressionConstants.PARAMETER_TYPE);
+    }
 
 
-	@Override
-	protected IStatus performLiveValidation(IValidationContext context) {
-		return null;
-	}
+    @Override
+    protected IStatus performLiveValidation(final IValidationContext context) {
+        return null;
+    }
 
-	@Override
-	protected IStatus performBatchValidation(IValidationContext context) {
-		final EObject eObj = context.getTarget();
-		if (eObj instanceof Expression 
-				&& ((Expression)eObj).isAutomaticDependencies()
-				&& !ModelHelper.isAnExpressionCopy((Expression) eObj)
-				&& !ExpressionConstants.CONSTANT_TYPE.equals(((Expression) eObj).getType()))  {
-			return evaluateExpression(context, eObj);
-		}
-		return context.createSuccessStatus();
-	}
+    @Override
+    protected IStatus performBatchValidation(final IValidationContext context) {
+        final Expression expression = (Expression) context.getTarget();
+        if (expression.hasContent()
+                && !ModelHelper.isAnExpressionCopy(expression)
+                && appliesTo(expression.getType())) {
+            return evaluateExpression(context, expression);
+        }
+        return context.createSuccessStatus();
+    }
 
-	private IStatus evaluateExpression(IValidationContext context,final EObject eObj) {
-		final Expression expression = (Expression) eObj;
-		final String type = expression.getType();
-		if(type.equals(ExpressionConstants.SCRIPT_TYPE)){
+    private boolean appliesTo(final String type) {
+        return supportedTypes.contains(type);
+    }
 
-		}else if(type.equals(ExpressionConstants.PATTERN_TYPE)){
-			String content = expression.getContent();
-			Pattern pattern = Pattern.compile("(.*)\\${(\\w+)}(.*)");
-			Matcher matcher = pattern.matcher(content) ;  
-			while (matcher.find()) {  
-				String depName = matcher.group(); 
-				boolean found = false;
-				for(EObject dep : expression.getReferencedElements()){
-					if(dep instanceof Data){
-						String name = ((Data) dep).getName();
-						if(depName.equals(name)){
-							found = true;
-							break;
-						}
-					}
-					if(dep instanceof Parameter){
-						String name = ((Parameter) dep).getName();
-						if(depName.equals(name)){
-							found = true;
-							break;
-						}
-					}
-					if(dep instanceof Widget){
-						String name = WidgetHelper.FIELD_PREFIX+((Widget) dep).getName();
-						if(depName.equals(name)){
-							found = true;
-							break;
-						}
-					}
-				}
-				if(!found){
-					return context.createFailureStatus(Messages.bind(Messages.unresolvedPatternDependenciesFor,depName, expression.getName()));
-				}
-			}
+    private IStatus evaluateExpression(final IValidationContext context, final EObject eObj) {
+        final Expression expression = (Expression) eObj;
+        final String type = expression.getType();
+        if (expression.getReferencedElements().isEmpty()) {
+            return context.createFailureStatus(Messages.bind(Messages.unresolvedDependenciesFor, expression.getName(),
+                    new ExpressionTypeLabelProvider().getText(type)));
+        }
+        return context.createSuccessStatus();
+    }
 
-		}else if(type.equals(ExpressionConstants.CONDITION_TYPE)){
-
-		}else{
-			if(expression.getReferencedElements().isEmpty()){
-				return context.createFailureStatus(Messages.bind(Messages.unresolvedDependenciesFor, expression.getName(),new ExpressionTypeLabelProvider().getText(type)));
-			}
-		}
-		return context.createSuccessStatus();
-	}
-
-	@Override
-	protected String getConstraintId() {
-		return CONSTRAINT_ID;
-	}
+    @Override
+    protected String getConstraintId() {
+        return CONSTRAINT_ID;
+    }
 
 }
