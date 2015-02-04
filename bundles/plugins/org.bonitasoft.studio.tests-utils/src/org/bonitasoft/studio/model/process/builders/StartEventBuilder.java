@@ -16,43 +16,22 @@
  */
 package org.bonitasoft.studio.model.process.builders;
 
-import org.bonitasoft.studio.model.process.Actor;
 import org.bonitasoft.studio.model.process.ProcessFactory;
-import org.bonitasoft.studio.model.process.Task;
+import org.bonitasoft.studio.model.process.StartEvent;
 
 /**
  * @author Romain Bioteau
  *
  */
-public class TaskBuilder extends ActivityBuilder<Task, TaskBuilder> {
+public class StartEventBuilder extends FlowElementBuilder<StartEvent, StartEventBuilder> {
 
-    public static TaskBuilder aTask() {
-        return new TaskBuilder();
-    }
-
-    public TaskBuilder havingActor(final Actor actor) {
-        getBuiltInstance().setActor(actor);
-        return this;
-    }
-
-    public TaskBuilder overrideActorsOfTheLane() {
-        getBuiltInstance().setOverrideActorsOfTheLane(true);
-        return this;
-    }
-
-    public TaskBuilder reuseActorOfTheLane() {
-        getBuiltInstance().setOverrideActorsOfTheLane(false);
-        return this;
-    }
-
-    public TaskBuilder withPriority(final int priority) {
-        getBuiltInstance().setPriority(priority);
-        return this;
+    public static StartEventBuilder aStartEvent() {
+        return new StartEventBuilder();
     }
 
     @Override
-    protected Task newInstance() {
-        return ProcessFactory.eINSTANCE.createTask();
+    protected StartEvent newInstance() {
+        return ProcessFactory.eINSTANCE.createStartEvent();
     }
 
 }

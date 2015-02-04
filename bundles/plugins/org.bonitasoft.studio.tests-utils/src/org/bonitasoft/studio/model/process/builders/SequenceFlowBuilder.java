@@ -16,43 +16,37 @@
  */
 package org.bonitasoft.studio.model.process.builders;
 
-import org.bonitasoft.studio.model.process.Actor;
+import org.bonitasoft.studio.model.expression.builders.ExpressionBuilder;
 import org.bonitasoft.studio.model.process.ProcessFactory;
-import org.bonitasoft.studio.model.process.Task;
+import org.bonitasoft.studio.model.process.SequenceFlow;
 
 /**
  * @author Romain Bioteau
  *
  */
-public class TaskBuilder extends ActivityBuilder<Task, TaskBuilder> {
+public class SequenceFlowBuilder extends ConnectionBuilder<SequenceFlow, SequenceFlowBuilder> {
 
-    public static TaskBuilder aTask() {
-        return new TaskBuilder();
-    }
-
-    public TaskBuilder havingActor(final Actor actor) {
-        getBuiltInstance().setActor(actor);
-        return this;
-    }
-
-    public TaskBuilder overrideActorsOfTheLane() {
-        getBuiltInstance().setOverrideActorsOfTheLane(true);
-        return this;
-    }
-
-    public TaskBuilder reuseActorOfTheLane() {
-        getBuiltInstance().setOverrideActorsOfTheLane(false);
-        return this;
-    }
-
-    public TaskBuilder withPriority(final int priority) {
-        getBuiltInstance().setPriority(priority);
-        return this;
+    public static SequenceFlowBuilder aSequenceFlow() {
+        return new SequenceFlowBuilder();
     }
 
     @Override
-    protected Task newInstance() {
-        return ProcessFactory.eINSTANCE.createTask();
+    protected SequenceFlow newInstance() {
+        return ProcessFactory.eINSTANCE.createSequenceFlow();
     }
 
+    public SequenceFlowBuilder havingCondition(final ExpressionBuilder conditionExpression) {
+        getBuiltInstance().setCondition(conditionExpression.build());
+        return getThis();
+    }
+
+    public SequenceFlowBuilder defaultFlow() {
+        getBuiltInstance().setIsDefault(true);
+        return getThis();
+    }
+
+    public SequenceFlowBuilder notDefaultFlow() {
+        getBuiltInstance().setIsDefault(false);
+        return getThis();
+    }
 }

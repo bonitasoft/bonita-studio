@@ -70,7 +70,7 @@ public class CreateWidgetSwitchTest {
 	@Before
 	public void setUp() throws Exception {
 		formFactory = FormFactory.eINSTANCE;
-        createWidgetSwitch = new CreateWidgetSwitch(TaskBuilder.createTaskBuilder().build(), initializer);
+        createWidgetSwitch = new CreateWidgetSwitch(TaskBuilder.aTask().build(), initializer);
 	}
 
 	/**
