@@ -18,7 +18,7 @@ package org.bonitasoft.studio.exporter.bpmn.transfo.expression;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.collect.Iterables.tryFind;
+import static com.google.common.collect.Iterables.find;
 import static org.bonitasoft.studio.common.emf.tools.ModelHelper.getAccessibleData;
 import static org.bonitasoft.studio.common.emf.tools.ModelHelper.getParentProcess;
 
@@ -34,7 +34,6 @@ import org.eclipse.emf.ecore.util.FeatureMapUtil;
 import org.omg.spec.bpmn.model.TFormalExpression;
 import org.omg.spec.bpmn.model.TItemDefinition;
 
-import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 
 /**
@@ -84,14 +83,13 @@ public class VariableFormalExpressionTransformer extends FormalExpressionTransfo
     }
 
     private static Data resolveData(final Data referencedData) {
-        final Optional<Data> resolvedData = tryFind(getAccessibleData(getParentProcess(referencedData)), new Predicate<Data>() {
+        return find(getAccessibleData(getParentProcess(referencedData)), new Predicate<Data>() {
 
             @Override
             public boolean apply(final Data data) {
                 return data.getName().equals(referencedData.getName());
             }
         });
-        return resolvedData.get();
     }
 
 }
