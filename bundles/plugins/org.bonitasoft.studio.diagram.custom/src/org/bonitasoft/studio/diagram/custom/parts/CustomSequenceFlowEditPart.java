@@ -1,7 +1,7 @@
 /**
  * Copyright (C) 2009 BonitaSoft S.A.
  * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -35,8 +35,8 @@ import org.eclipse.draw2d.RotatableDecoration;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.EditPart;
-import org.eclipse.gef.Request;
 import org.eclipse.gmf.runtime.diagram.core.listener.DiagramEventBroker;
 import org.eclipse.gmf.runtime.diagram.core.listener.NotificationListener;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
@@ -54,12 +54,13 @@ public class CustomSequenceFlowEditPart extends SequenceFlowEditPart {
     private static final int ALL = 2;
     private final NotificationListener notificationListener = new NotificationListener() {
 
-        public void notifyChanged(Notification notification) {
+        @Override
+        public void notifyChanged(final Notification notification) {
             handleNotificationEvent(notification);
         }
     };
 
-    public CustomSequenceFlowEditPart(View view) {
+    public CustomSequenceFlowEditPart(final View view) {
         super(view);
     }
 
@@ -69,12 +70,12 @@ public class CustomSequenceFlowEditPart extends SequenceFlowEditPart {
     	installEditPolicy(EditPolicyRoles.CREATION_ROLE,
 				new SequenceFlowCreationEditPolicy());
     }
-    
+
 
     @Override
     public void activate() {
         super.activate();
-        SequenceFlow modelElement = (SequenceFlow) resolveSemanticElement();
+        final SequenceFlow modelElement = (SequenceFlow) resolveSemanticElement();
         DiagramEventBroker.getInstance(getEditingDomain()).addNotificationListener(modelElement.getCondition(),ExpressionPackage.Literals.EXPRESSION__CONTENT, notificationListener);
         checkDecorator();
     }
@@ -82,13 +83,15 @@ public class CustomSequenceFlowEditPart extends SequenceFlowEditPart {
     @Override
     public void deactivate() {
         super.deactivate();
-        SequenceFlow modelElement = (SequenceFlow) resolveSemanticElement();
-        DiagramEventBroker.getInstance(getEditingDomain()).removeNotificationListener(modelElement, notificationListener);
+        final EObject modelElement = resolveSemanticElement();
+        if (modelElement instanceof SequenceFlow) {
+            DiagramEventBroker.getInstance(getEditingDomain()).removeNotificationListener(modelElement, notificationListener);
+        }
     }
 
     @Override
-    protected void handleNotificationEvent(Notification notification) {
-        Object feature = notification.getFeature();
+    protected void handleNotificationEvent(final Notification notification) {
+        final Object feature = notification.getFeature();
         if(feature.equals(ProcessPackage.Literals.SEQUENCE_FLOW__IS_DEFAULT)
                 || feature.equals(ProcessPackage.Literals.SEQUENCE_FLOW__CONDITION)
                 || feature.equals(ProcessPackage.Literals.SEQUENCE_FLOW__CONDITION_TYPE)
@@ -105,7 +108,7 @@ public class CustomSequenceFlowEditPart extends SequenceFlowEditPart {
     }
 
     private void checkDecorator() {
-        SequenceFlow semantic = (SequenceFlow)resolveSemanticElement();
+        final SequenceFlow semantic = (SequenceFlow)resolveSemanticElement();
         if (semantic == null) {
             return;
         }
@@ -115,12 +118,12 @@ public class CustomSequenceFlowEditPart extends SequenceFlowEditPart {
             sequenceFlowFigure.addDecoration(DEFAULT) ;
         } else {
             sequenceFlowFigure.removeDecoration(ALL);
-            boolean hasDiamond =
+            final boolean hasDiamond =
                     ! (semantic.getSource() instanceof Gateway)
                     && (semantic.getConditionType() == SequenceFlowConditionType.DECISION_TABLE
-                    || (semantic.getConditionType() == SequenceFlowConditionType.EXPRESSION
+                    || semantic.getConditionType() == SequenceFlowConditionType.EXPRESSION
                     && semantic.getCondition() != null && semantic.getCondition().getContent() != null
-                    && !semantic.getCondition().getContent().isEmpty()));
+                    && !semantic.getCondition().getContent().isEmpty());
             if (hasDiamond) {
                 sequenceFlowFigure.removeDecoration(ALL) ;
                 sequenceFlowFigure.addDecoration(CONDITIONNAL) ;
@@ -138,7 +141,7 @@ public class CustomSequenceFlowEditPart extends SequenceFlowEditPart {
      */
     @Override
     public EditPart getPrimaryChildEditPart() {
-        boolean condition = Activator.getDefault().getBonitaPreferenceStore().getBoolean(BonitaPreferenceConstants.SHOW_CONDITION_ON_TRANSITION);
+        final boolean condition = Activator.getDefault().getBonitaPreferenceStore().getBoolean(BonitaPreferenceConstants.SHOW_CONDITION_ON_TRANSITION);
         if(condition){
             if (getChildren().size() > 1 ) {
                 return (EditPart) getChildren().get(1);
@@ -177,7 +180,7 @@ public class CustomSequenceFlowEditPart extends SequenceFlowEditPart {
         }
 
 
-        public void removeDecoration(int type) {
+        public void removeDecoration(final int type) {
             if( type == CONDITIONNAL){
                 if(losangeDecoration.equals(currentDecorator)) {
                     setSourceDecoration(null);
@@ -191,7 +194,7 @@ public class CustomSequenceFlowEditPart extends SequenceFlowEditPart {
             }
         }
 
-        public void addDecoration(int type) {
+        public void addDecoration(final int type) {
             if( type == CONDITIONNAL){
                 setSourceDecoration(losangeDecoration);
                 currentDecorator = losangeDecoration ;
@@ -202,11 +205,11 @@ public class CustomSequenceFlowEditPart extends SequenceFlowEditPart {
         }
 
         private RotatableDecoration createConditionalSourceDecoration() {
-            PolygonDecoration df = new PolygonDecoration();
+            final PolygonDecoration df = new PolygonDecoration();
             df.setFill(true);
             df.setLineWidth(1);
             df.setBackgroundColor(ColorConstants.white);
-            PointList pl = new PointList();
+            final PointList pl = new PointList();
             pl.addPoint(0, 0);
             pl.addPoint(-1, 1);
             pl.addPoint(-2, 0);
@@ -219,15 +222,15 @@ public class CustomSequenceFlowEditPart extends SequenceFlowEditPart {
         private RotatableDecoration createDefaultSourceDecoration() {
 
 
-            PolylineDecoration df = new PolylineDecoration();
-            Point startPoint =	new Point(-2, -1) ;
-            Point endPoint = new Point(-1, 1) ;
+            final PolylineDecoration df = new PolylineDecoration();
+            final Point startPoint =	new Point(-2, -1) ;
+            final Point endPoint = new Point(-1, 1) ;
             df.setFill(true);
             df.setLineWidth(1);
             df.setOutline(true);
             df.addPoint(startPoint);
             df.addPoint(endPoint);
-            PointList pl = new PointList() ;
+            final PointList pl = new PointList() ;
             pl.addPoint(startPoint);
             pl.addPoint(endPoint);
             df.setTemplate(pl);
