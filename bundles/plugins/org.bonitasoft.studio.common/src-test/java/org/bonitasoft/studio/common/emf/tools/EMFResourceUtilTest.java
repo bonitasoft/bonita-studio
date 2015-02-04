@@ -54,12 +54,12 @@ public class EMFResourceUtilTest {
     @After
     public void tearDown() throws Exception {
     }
-    
+
     @Test(expected=AssertionFailedException.class)
     public void shouldConstructor_ThrowAssertionFailedException() throws Exception {
         new EMFResourceUtil(null);
     }
-    
+
     @Test(expected=IllegalArgumentException.class)
     public void shouldConstructor_ThrowIllegalArgumentException() throws Exception {
         new EMFResourceUtil(new File("unknown.proc"));
@@ -72,42 +72,44 @@ public class EMFResourceUtilTest {
         assertThat(eObjectIDUtil.getFeatureValuesFromEObjectId("_5yAwIKXvEeOHX5ykhwuMLg", "name")).containsExactly("Start1");
         assertThat(eObjectIDUtil.getFeatureValuesFromEObjectId("_5CIyaqXvEeOHX5ykhwuMLg", "measurementUnit")).containsExactly("Pixel");
     }
-    
+
     @Test
     public void shouldGetFeatureValuesFromEObjectId_Return_FeatureValue_ForSingleFeature() throws Exception {
         assertThat(eObjectIDUtil.getFeatureValuesFromEObjectId("_5NaOQKXvEeOHX5ykhwuMLg", ProcessPackage.Literals.ELEMENT__NAME)).containsExactly("Poolū");
         assertThat(eObjectIDUtil.getFeatureValuesFromEObjectId("_5CIyaqXvEeOHX5ykhwuMLg", NotationPackage.Literals.DIAGRAM__MEASUREMENT_UNIT)).containsExactly("Pixel");
     }
-    
+
     @Test
     public void shouldGetFeatureValuesFromEObjectId_Return_DefaultFeatureValue_ForSingleFeature() throws Exception {
         assertThat(eObjectIDUtil.getFeatureValuesFromEObjectId("_5NaOQKXvEeOHX5ykhwuMLg", ProcessPackage.Literals.ABSTRACT_PROCESS__VERSION)).containsExactly("1.0");
     }
-    
+
     @Test
     public void shouldGetFeatureValuesFromEObjectId_Return_FeatureValues_ForMultipleFeatureNames() throws Exception {
         assertThat(eObjectIDUtil.getFeatureValuesFromEObjectId("_5NaOQKXvEeOHX5ykhwuMLg", "name","basedOnLookAndFeel")).containsExactly("Poolū","Default Application");
     }
-    
+
     @Test
     public void shouldGetFeatureValuesFromEObjectId_Return_FeatureValues_ForMultipleFeatures() throws Exception {
         assertThat(eObjectIDUtil.getFeatureValuesFromEObjectId("_5NaOQKXvEeOHX5ykhwuMLg", ProcessPackage.Literals.ELEMENT__NAME,ProcessPackage.Literals.PROCESS_APPLICATION__BASED_ON_LOOK_AND_FEEL)).containsExactly("Poolū","Default Application");
     }
-    
+
     @Test
     public void shouldGetFeatureValuesFromEObjectId_Return_DefaultFeatureValues_ForMultipleFeatures() throws Exception {
         assertThat(eObjectIDUtil.getFeatureValuesFromEObjectId("_5NaOQKXvEeOHX5ykhwuMLg", ProcessPackage.Literals.ELEMENT__NAME,ProcessPackage.Literals.ABSTRACT_PROCESS__VERSION)).containsExactly("Poolū","1.0");
     }
-    
+
     @Test(expected=FeatureNotFoundException.class)
     public void shouldGetFeatureValuesFromEObjectId_ThrowsFeatureNotFoundException() throws Exception {
         eObjectIDUtil.getFeatureValuesFromEObjectId("_5NaOQKXvEeOHX5ykhwuMLg", "name","version");
     }
-    
+
     @Test
     public void shouldGetFeatureValueFromEObjectType_Return_FeatureValue() throws Exception {
-        assertThat(eObjectIDUtil.getFeatureValueFromEObjectType("process:Pool", ProcessPackage.Literals.ELEMENT__NAME)).containsExactly(entry("_5NaOQKXvEeOHX5ykhwuMLg",new String[]{"Poolū"}),entry("_8mseQKXvEeOHX5ykhwuMLg",new String[]{"Pool1"}));
-        assertThat(eObjectIDUtil.getFeatureValueFromEObjectType("process:MainProcess", ProcessPackage.Literals.ELEMENT__NAME)).containsExactly(entry("_5CIyYKXvEeOHX5ykhwuMLg",new String[]{"EP3.PR.N1001 Šalutiniai gyvūniniai produktai"}));
+        assertThat(eObjectIDUtil.getFeatureValueFromEObjectType("process:Pool", ProcessPackage.Literals.ELEMENT__NAME)).containsOnly(
+                entry("_5NaOQKXvEeOHX5ykhwuMLg", new String[] { "Poolū" }), entry("_8mseQKXvEeOHX5ykhwuMLg", new String[] { "Pool1" }));
+        assertThat(eObjectIDUtil.getFeatureValueFromEObjectType("process:MainProcess", ProcessPackage.Literals.ELEMENT__NAME)).containsOnly(
+                entry("_5CIyYKXvEeOHX5ykhwuMLg", new String[] { "EP3.PR.N1001 Šalutiniai gyvūniniai produktai" }));
     }
 
 }
