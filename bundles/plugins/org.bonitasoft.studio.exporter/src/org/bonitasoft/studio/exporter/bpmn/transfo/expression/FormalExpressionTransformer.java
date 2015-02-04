@@ -46,7 +46,7 @@ public class FormalExpressionTransformer implements BonitaToBPMNFunction<Express
     }
 
     protected QName newQName(final String nsPrefix, final String typeRef) {
-        return QName.valueOf(JAVA_XMLNS + ":" + typeRef);
+        return QName.valueOf(nsPrefix + ":" + typeRef);
     }
 
     protected TFormalExpression newTFormalExpression() {
