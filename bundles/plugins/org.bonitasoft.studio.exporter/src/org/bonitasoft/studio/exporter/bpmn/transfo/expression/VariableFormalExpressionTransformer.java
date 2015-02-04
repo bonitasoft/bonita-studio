@@ -89,7 +89,7 @@ public class VariableFormalExpressionTransformer extends FormalExpressionTransfo
             public boolean apply(final Data data) {
                 return data.getName().equals(referencedData.getName());
             }
-        });
+        }, null);
     }
 
 }
