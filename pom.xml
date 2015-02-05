@@ -22,7 +22,7 @@
 		<watchdog.version>6.0.1</watchdog.version>
 		<p2MirrorUrl>http://repositories.rd.lan/p2/6.5</p2MirrorUrl>
 		<!-- Sonar -->
-		<jacoco.version>0.6.4.201312101107</jacoco.version>
+		<jacoco.version>0.7.2.201409121644</jacoco.version>
 		<sonar.language>java</sonar.language>
 		<sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
 		<sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
