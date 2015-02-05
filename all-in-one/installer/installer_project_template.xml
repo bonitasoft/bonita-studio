@@ -76,12 +76,6 @@
             <resolveUCN>1</resolveUCN>
         </language>
     </customLanguageFileList>
-    <preBuildActionList>
-        <runProgram>
-           <program>java</program>
-           <programArguments>-jar "i18n/property-file-converter-1.0.0.jar" "i18n"</programArguments>
-       </runProgram>
-    </preBuildActionList>
 	<preShowHelpActionList>
 		<setInstallerVariable>
 			<!-- Set default path to C: on Windows -->
