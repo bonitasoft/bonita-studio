@@ -37,6 +37,7 @@ import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.engine.i18n.Messages;
 import org.bonitasoft.studio.pagedesigner.PageDesignerPlugin;
+import org.bonitasoft.studio.pagedesigner.core.WorkspaceResourceServerManager;
 import org.bonitasoft.studio.pagedesigner.core.WorkspaceSystemProperties;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
@@ -200,6 +201,11 @@ public class BOSWebServerManager {
                         EnginePlugin.PLUGIN_ID);
             }
             startWatchdog();
+            try {
+                WorkspaceResourceServerManager.getInstance().start(org.eclipse.jdt.launching.SocketUtil.findFreePort());
+            } catch (final Exception e1) {
+                BonitaStudioLog.error(e1);
+            }
             if (tomcat != null) {
                 try {
                     tomcat.delete();
@@ -549,6 +555,7 @@ public class BOSWebServerManager {
         addSystemProperty(args, workspaceSystemProperties.getPageRepositoryLocation());
         addSystemProperty(args, workspaceSystemProperties.getWidgetRepositoryLocation());
         addSystemProperty(args, workspaceSystemProperties.getFragmentRepositoryLocation());
+        addSystemProperty(args, workspaceSystemProperties.getRestAPIURL(WorkspaceResourceServerManager.getInstance().runningPort()));
         return args.toString();
     }
 
@@ -657,6 +664,11 @@ public class BOSWebServerManager {
                         EnginePlugin.PLUGIN_ID);
             }
             stopWatchdog();
+            try {
+                WorkspaceResourceServerManager.getInstance().stop();
+            } catch (final Exception e1) {
+                BonitaStudioLog.error(e1, EnginePlugin.PLUGIN_ID);
+            }
             tomcat.stop(true);
             waitServerStopped(monitor);
             try {

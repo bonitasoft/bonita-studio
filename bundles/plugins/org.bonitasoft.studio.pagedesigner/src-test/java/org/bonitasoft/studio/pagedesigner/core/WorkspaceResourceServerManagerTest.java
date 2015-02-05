@@ -112,12 +112,23 @@ public class WorkspaceResourceServerManagerTest {
         final RouteList routes = defaultHost.getRoutes();
         assertThat(routes).hasSize(2);
         final TemplateRoute r1 = (TemplateRoute) routes.get(0);
-        assertThat(r1.getTemplate().getPattern()).isEqualTo("/workspace/{filePath}/{action}");
+        assertThat(r1.getTemplate().getPattern()).isEqualTo("api/workspace/{filePath}/{action}");
         assertThat(((Finder) r1.getNext()).getTargetClass()).isEqualTo(WorkspaceServerResource.class);
 
         final TemplateRoute r2 = (TemplateRoute) routes.get(1);
-        assertThat(r2.getTemplate().getPattern()).isEqualTo("/workspace/{action}");
+        assertThat(r2.getTemplate().getPattern()).isEqualTo("api/workspace/{action}");
         assertThat(((Finder) r2.getNext()).getTargetClass()).isEqualTo(WorkspaceServerResource.class);
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void should_runningPort_throw_IllegalStateException_if_server_is_not_running() throws Exception {
+        workspaceResourceServerManager.stop();
+        workspaceResourceServerManager.runningPort();
+    }
+
+    @Test
+    public void should_runningPort_return_server_port() throws Exception {
+        assertThat(workspaceResourceServerManager.runningPort()).isEqualTo(port);
     }
 
 }

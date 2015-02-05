@@ -142,4 +142,10 @@ public class WorkspaceSystemPropertiesTest {
         final File folder = tmpFolder.newFolder();
         assertThat(WorkspaceSystemProperties.aSystemProperty("aProperty.name", folder)).isEqualTo("-DaProperty.name=\"" + folder.getAbsolutePath() + "\"");
     }
+
+    @Test
+    public void should_getRestAPIURL_return_the_rest_resource_server_url() throws Exception {
+        assertThat(workspaceSystemProperties.getRestAPIURL(6666)).isEqualTo(
+                "-Dworkspace.api.rest.url=http://localhost:6666/api/workspace");
+    }
 }

@@ -85,6 +85,9 @@ public class WorkspaceServerResource extends ServerResource {
             case PRE_OPEN:
                 preOpen(fileStore);
                 break;
+            case POST_SAVE:
+                postSave(fileStore);
+                break;
             case POST_CLOSE:
                 postClose(fileStore);
                 break;
@@ -167,15 +170,30 @@ public class WorkspaceServerResource extends ServerResource {
     }
 
     protected void postDelete(final IRepositoryFileStore fileStore) throws ResourceNotFoundException {
+        fileStore.getParentStore().refresh();
         repository.notifyFileStoreEvent(new FileStoreChangeEvent(EventType.POST_DELETE, fileStore));
     }
 
     protected void postClose(final IRepositoryFileStore fileStore) throws ResourceNotFoundException {
+        checkExists(fileStore);
         repository.notifyFileStoreEvent(new FileStoreChangeEvent(EventType.POST_CLOSE, fileStore));
     }
 
     protected void preOpen(final IRepositoryFileStore fileStore) throws LockedResourceException, ResourceNotFoundException {
+        fileStore.getParentStore().refresh();
+        checkExists(fileStore);
         repository.notifyFileStoreEvent(new FileStoreChangeEvent(EventType.PRE_OPEN, fileStore));
+    }
+
+    private void postSave(final IRepositoryFileStore fileStore) {
+        fileStore.getParentStore().refresh();
+        repository.notifyFileStoreEvent(new FileStoreChangeEvent(EventType.POST_SAVE, fileStore));
+    }
+
+    private void checkExists(final IRepositoryFileStore fileStore) throws ResourceNotFoundException {
+        if (!fileStore.getResource().exists()) {
+            throw new ResourceNotFoundException(fileStore.getResource().getLocation().toString());
+        }
     }
 
     protected IRepositoryFileStore toFileStore(final Path path) throws ResourceNotFoundException {

@@ -29,7 +29,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
  */
 public class PageDesignerURLBuilder {
 
-    private static final String PAGE_BUILDER_ROOT = "page-builder";
+    private static final String PAGE_BUILDER_ROOT = "page-designer";
     private final IPreferenceStore preferenceStore;
 
     public PageDesignerURLBuilder(final IPreferenceStore preferenceStore) {

@@ -61,7 +61,7 @@ public class PageDesignerURLBuilderTest {
 
     @Test
     public void should_build_return_URL_pointing_to_page_builder_webapp() throws Exception {
-        assertThat(pageDesignerURLBuilder.build()).isEqualTo(new URL("http://localhost:8080/page-builder"));
+        assertThat(pageDesignerURLBuilder.build()).isEqualTo(new URL("http://localhost:8080/page-designer"));
     }
 
 }

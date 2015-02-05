@@ -31,7 +31,8 @@ public class WorkspaceSystemProperties {
 
     private static final String REPOSITORY_PAGES_PROPERTIES = "repository.pages";
     private static final String REPOSITORY_FRAGMENTS_PROPERTIES = "repository.fragments";
-    private static final String REPOSITORY_WIDGETS_PROPERTIES = "repository.widgets";;
+    private static final String REPOSITORY_WIDGETS_PROPERTIES = "repository.widgets";
+    private static final String WORKSPACE_API_REST_URL = "workspace.api.rest.url";
 
     public String getPageRepositoryLocation() {
         final WebFormRepositoryStore webFormRepository = getWebFormRepository();
@@ -75,6 +76,10 @@ public class WorkspaceSystemProperties {
             properyValue = "\"" + ((File) value).getAbsolutePath() + "\"";
         }
         return "-D" + propertyName + "=" + properyValue;
+    }
+
+    public String getRestAPIURL(final int port) {
+        return aSystemProperty(WORKSPACE_API_REST_URL, String.format("http://localhost:%s/api/workspace", port));
     }
 
 }
