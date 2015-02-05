@@ -1540,9 +1540,8 @@ public class BonitaToBPMN implements IBonitaTransformer {
 
             final EList<TAssignment> outputAssignments = tDataOutputAssociation.getAssignment();
             for(final Operation opm : connector.getOutputs()){
-                if(opm.getRightOperand() != null
-                        && opm.getRightOperand().getName() != null
-                        && opm.getLeftOperand().getContent() != null){
+                if (opm.getRightOperand().hasName() &&
+                        opm.getRightOperand().hasContent()) {
                     final TAssignment outputAssignment = ModelFactory.eINSTANCE.createTAssignment();
                     if(ExpressionConstants.CONNECTOR_OUTPUT_TYPE.equals(opm.getRightOperand().getType())){
                         outputAssignment.setFrom(createBPMNExpressionFromString("getDataOutput('"+dataInput.getId()+"')/"+XMLNS_HTTP_BONITASOFT_COM_BONITA_CONNECTOR_DEFINITION+":"+opm.getRightOperand().getName()));
