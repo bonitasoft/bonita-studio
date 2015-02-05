@@ -58,6 +58,7 @@ public class CustomSequenceFlowEditPart extends SequenceFlowEditPart {
             handleNotificationEvent(notification);
         }
     };
+    private SequenceFlow modelElement = null;
 
     public CustomSequenceFlowEditPart(final View view) {
         super(view);
@@ -74,7 +75,7 @@ public class CustomSequenceFlowEditPart extends SequenceFlowEditPart {
     @Override
     public void activate() {
         super.activate();
-        final SequenceFlow modelElement = (SequenceFlow) resolveSemanticElement();
+        modelElement = (SequenceFlow) resolveSemanticElement();
         DiagramEventBroker.getInstance(getEditingDomain()).addNotificationListener(modelElement.getCondition(),ExpressionPackage.Literals.EXPRESSION__CONTENT, notificationListener);
         checkDecorator();
     }
@@ -82,8 +83,8 @@ public class CustomSequenceFlowEditPart extends SequenceFlowEditPart {
     @Override
     public void deactivate() {
         super.deactivate();
-        final SequenceFlow modelElement = (SequenceFlow) resolveSemanticElement();
         DiagramEventBroker.getInstance(getEditingDomain()).removeNotificationListener(modelElement, notificationListener);
+        modelElement = null;
     }
 
     @Override
