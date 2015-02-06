@@ -1441,8 +1441,6 @@ public class BPMNToProc extends ToProcProcessor {
                         + XMLNS_HTTP_BONITASOFT_COM_BONITA_CONNECTOR_DEFINITION
                         + ":(.+)");
 
-        final Pattern outputTargetDataObject = Pattern
-                .compile("getDataObject\\(\'(.+)\'\\)");
         final Map<Expression, Expression> outputOperations = new HashMap<Expression, Expression>();
         for (final TDataOutputAssociation doa : tServiceTask
                 .getDataOutputAssociation()) {
@@ -1453,7 +1451,7 @@ public class BPMNToProc extends ToProcProcessor {
                         .matcher(fromString);
 
                 Expression rightOperand = null;
-                final Expression leftOperand = null;
+                Expression leftOperand = null;
                 if (outputConnectorMatcher.find()) {
                     final String outputKey = outputConnectorMatcher.group(1);
                     final Output output = ConnectorDefinitionFactory.eINSTANCE.createOutput();
@@ -1463,26 +1461,12 @@ public class BPMNToProc extends ToProcProcessor {
                     final TExpression inputValue = getAssignmentFromExpression(outputAssignment);
                     rightOperand = getBonitaExpressionFromBPMNExpression(inputValue);
                 }
-                final Expression leftOperandExpression = getBonitaExpressionFromBPMNExpression(outputAssignment.getTo());
-                outputOperations.put(leftOperandExpression, rightOperand);
-
+                leftOperand = getBonitaExpressionFromBPMNExpression(outputAssignment.getTo());
+                if (leftOperand != null && leftOperand.hasContent() && rightOperand != null && rightOperand.hasContent()) {
+                    outputOperations.put(leftOperand, rightOperand);
+                }
             }
         }
-
-        //        for (final TDataOutputAssociation doa : tServiceTask
-        //                .getDataOutputAssociation()) {
-        //            for (final TAssignment outputAssignment : doa.getAssignment()) {
-        //                String dataObjectId = "";
-        //                final String toString = getAssignmentToValue(outputAssignment);
-        //                final Matcher matcher = outputTargetDataObject
-        //                        .matcher(toString);
-        //                if (matcher.find()) {
-        //                    dataObjectId = matcher.group(1);
-        //                }
-        //                connectorOuputs.put(dataObjectId,
-        //                        outputAssignment.getFrom());
-        //            }
-        //        }
         // FIXME: connectorID deducted by operationRef local part... is
         // it true? Is there a best way?
         builder.addConnector(id, name, connectorId, version,
@@ -1502,7 +1486,7 @@ public class BPMNToProc extends ToProcProcessor {
                 .entrySet()) {
             final Expression leftOperand = entry.getKey();
             final Expression rightOperand = entry.getValue();
-                builder.addConnectorOutput(leftOperand.getName(),
+            builder.addConnectorOutput(leftOperand.getContent(),
                     rightOperand.getContent(),
                     rightOperand.getReturnType(),
                     rightOperand.getInterpreter(),

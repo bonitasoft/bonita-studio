@@ -1548,7 +1548,9 @@ public class BonitaToBPMN implements IBonitaTransformer {
                     } else {
                         outputAssignment.setFrom(createBPMNFormalExpressionFromBonitaExpression(opm.getRightOperand()));
                     }
-                    outputAssignment.setTo(createBPMNFormalExpressionFromBonitaExpression(opm.getLeftOperand()));
+                    if (opm.getLeftOperand().hasContent()) {
+                        outputAssignment.setTo(createBPMNFormalExpressionFromBonitaExpression(opm.getLeftOperand()));
+                    }
                     outputAssignments.add(outputAssignment);
                 }
             }
