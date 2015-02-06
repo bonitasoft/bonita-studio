@@ -23,6 +23,7 @@ import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
@@ -35,9 +36,10 @@ public class ConnectorOutputWizardPage extends AbstractConnectorOutputWizardPage
 
     @Override
     protected Control doCreateControl(final Composite parent, final EMFDataBindingContext context) {
-        final Composite mainComposite = new Composite(parent, SWT.NONE);
-        mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
-        mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).create());
+        final ScrolledComposite scrolledComposite = new ScrolledComposite(parent, SWT.V_SCROLL);
+        scrolledComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).create());
+        scrolledComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+
         final AvailableExpressionTypeFilter leftFilter = new AvailableExpressionTypeFilter(new String[] {
                 ExpressionConstants.VARIABLE_TYPE,
                 ExpressionConstants.DOCUMENT_REF_TYPE });
@@ -50,8 +52,11 @@ public class ConnectorOutputWizardPage extends AbstractConnectorOutputWizardPage
                 ExpressionConstants.DOCUMENT_TYPE
         });
 
+        final Composite mainComposite = new Composite(scrolledComposite, SWT.NONE);
+        mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).create());
         lineComposite = new WizardPageOperationsComposite(null, mainComposite, rightFilter, leftFilter, isPageFlowContext());
-        lineComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+        lineComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 280).create());
         final IExpressionNatureProvider storageExpressionProvider = getStorageExpressionProvider();
         if (storageExpressionProvider != null) {
             lineComposite.setStorageExpressionNatureContentProvider(storageExpressionProvider);
@@ -60,6 +65,11 @@ public class ConnectorOutputWizardPage extends AbstractConnectorOutputWizardPage
         lineComposite.setContext(getElementContainer());
         lineComposite.setEObject(getConnector());
         lineComposite.fillTable();
+
+        scrolledComposite.setContent(mainComposite);
+        scrolledComposite.setExpandVertical(true);
+        scrolledComposite.setExpandHorizontal(true);
+        scrolledComposite.setMinSize(lineComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT));
         return mainComposite;
     }
 
