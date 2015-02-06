@@ -45,6 +45,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.Document;
@@ -212,11 +213,22 @@ public abstract class AbstractRefactorOperation<Y,Z,T extends RefactorPair<Y,Z>>
                 } catch (final BadLocationException e) {
                     BonitaStudioLog.error(e);
                 }
-                return document.get();
+                final String scriptRefactored = document.get();
+                forceDelete(compilationUnitFrom);
+                return scriptRefactored;
             }
         }
         tmpGroovyFileStore.delete();
+        forceDelete(compilationUnitFrom);
         return script;
+    }
+
+    protected void forceDelete(final GroovyCompilationUnit compilationUnit) {
+        try {
+            compilationUnit.delete(true, new NullProgressMonitor());
+        } catch (final JavaModelException e) {
+            BonitaStudioLog.error(e);
+        }
     }
 
     public void setEditingDomain(final TransactionalEditingDomain domain) {
