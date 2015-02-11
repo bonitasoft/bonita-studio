@@ -49,6 +49,7 @@ import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.diagram.tools.FiguresHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.common.gmf.CustomEventLabelEditPart;
 import org.bonitasoft.studio.common.gmf.tools.GMFTools;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
@@ -125,6 +126,7 @@ import org.bonitasoft.studio.model.process.XORGateway;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.LaneEditPart;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.MainProcessEditPart;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.PoolEditPart;
+import org.bonitasoft.studio.model.process.diagram.edit.parts.SequenceFlowNameEditPart;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.SubProcessEvent2EditPart;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.SubProcessEventEditPart;
 import org.eclipse.core.runtime.FileLocator;
@@ -814,7 +816,8 @@ public class BonitaToBPMN implements IBonitaTransformer {
                     final ConnectionNodeEditPart editPart = (ConnectionNodeEditPart)GMFTools.findEditPart(poolEditPart, bonitaFlow);
                     final BPMNEdge edge = DiFactory.eINSTANCE.createBPMNEdge();
                     edge.setBpmnElement(QName.valueOf(bpmnFlow.getId()));
-
+                    final SequenceFlowNameEditPart labelPart = getSequenceFlowNameEditPart(editPart);
+                    setSequenceFLowLabel(labelPart, edge);
                     final PointList pointList = editPart.getConnectionFigure().getPoints();
                     for (int i = 0; i < pointList.size(); i++) {
                         final org.omg.spec.dd.dc.Point ddPoint = DcFactory.eINSTANCE.createPoint();
@@ -848,6 +851,29 @@ public class BonitaToBPMN implements IBonitaTransformer {
         }
     }
 
+    private SequenceFlowNameEditPart getSequenceFlowNameEditPart(final ConnectionNodeEditPart editPart){
+        final List<Object> children = editPart.getChildren();
+        for (final Object child:children){
+            if (child instanceof SequenceFlowNameEditPart){
+                return (SequenceFlowNameEditPart) child;
+            }
+        }
+        return null;
+    }
+
+    private void setSequenceFLowLabel(final SequenceFlowNameEditPart labelPart,final BPMNEdge edge){
+        final BPMNLabel label = DiFactory.eINSTANCE.createBPMNLabel();
+        final IFigure bonitaElementFigure = labelPart.getFigure();
+        final Rectangle bounds = bonitaElementFigure.getBounds().getCopy();
+        FiguresHelper.translateToAbsolute(bonitaElementFigure, bounds);
+        final Bounds elementBounds = DcFactory.eINSTANCE.createBounds();
+        elementBounds.setHeight(bounds.preciseHeight());
+        elementBounds.setWidth(bounds.preciseWidth());
+        elementBounds.setX(bounds.preciseX());
+        elementBounds.setY(bounds.preciseY());
+        label.setBounds(elementBounds);
+        edge.setBPMNLabel(label);
+    }
     /**
      * @param bpmnProcess
      * @param bpmnProcessDiagram
@@ -1072,13 +1098,39 @@ public class BonitaToBPMN implements IBonitaTransformer {
             final BPMNLabelStyle labelStyle = getLabelStyle(font);
             label.setId(EcoreUtil.generateUUID());
             label.setLabelStyle(QName.valueOf(labelStyle.getId()));
-            elementShape.setBPMNLabel(label);
+            final CustomEventLabelEditPart labelPart = getLabelEditPart(bonitaElementPart);
+            if (labelPart!=null){
+                setLabelBounds(labelPart, label);
+                elementShape.setBPMNLabel(label);
+            }
+
         }
 
         final Map<String, String> colors = getShapeColors(bonitaElementPart);
         //TODO add an extension for colors
-
         return elementShape;
+    }
+
+    private void setLabelBounds(final CustomEventLabelEditPart labelPart,final BPMNLabel label){
+        final IFigure bonitaElementFigure = labelPart.getFigure();
+        final Rectangle bounds = bonitaElementFigure.getBounds().getCopy();
+        FiguresHelper.translateToAbsolute(bonitaElementFigure, bounds);
+        final Bounds elementBounds = DcFactory.eINSTANCE.createBounds();
+        elementBounds.setHeight(bounds.preciseHeight());
+        elementBounds.setWidth(bounds.preciseWidth());
+        elementBounds.setX(bounds.preciseX());
+        elementBounds.setY(bounds.preciseY());
+        label.setBounds(elementBounds);
+    }
+
+    private CustomEventLabelEditPart getLabelEditPart(final ShapeNodeEditPart bonitaElementPart){
+        final List<?> children = bonitaElementPart.getChildren();
+       for (final Object child:children){
+           if (child instanceof CustomEventLabelEditPart){
+               return (CustomEventLabelEditPart) child;
+           }
+       }
+        return null;
     }
 
     private Map<String, String> getShapeColors(final ShapeNodeEditPart bonitaElementPart) {
@@ -1693,6 +1745,8 @@ public class BonitaToBPMN implements IBonitaTransformer {
         }
         return res;
     }
+
+
 
     protected TFlowElement createActivity(final FlowElement child) {
         // Tasks
