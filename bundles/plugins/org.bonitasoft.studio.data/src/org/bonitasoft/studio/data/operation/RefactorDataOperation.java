@@ -23,7 +23,6 @@ import org.bonitasoft.studio.common.DataUtil;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.data.i18n.Messages;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.model.process.AbstractProcess;
@@ -52,9 +51,8 @@ import org.eclipse.emf.edit.domain.EditingDomain;
  *
  */
 public class RefactorDataOperation extends AbstractRefactorOperation<Data,Data,DataRefactorPair> {
-    private AbstractProcess parentProcess;
 
-    //private DataRefactorPair pairToRefactor = null;
+    private AbstractProcess parentProcess;
 
     private boolean updateDataReferences = false;
 
@@ -72,7 +70,6 @@ public class RefactorDataOperation extends AbstractRefactorOperation<Data,Data,D
         final CompoundCommand deleteCommands = new CompoundCommand("Compound commands conating all delete operations to do at last step");
         for(final DataRefactorPair pairToRefactor : pairsToRefactor){
             Assert.isNotNull(pairToRefactor.getOldValue());
-            monitor.beginTask(Messages.refactoringData, IProgressMonitor.UNKNOWN);
             if (pairToRefactor.getNewValue() != null) {
                 updateDataReferenceInVariableExpressions(compoundCommand);
                 updateDataReferenceInExpressions(compoundCommand);

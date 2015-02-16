@@ -58,6 +58,7 @@ import org.eclipse.text.edits.MultiTextEdit;
  */
 public abstract class AbstractRefactorOperation<Y,Z,T extends RefactorPair<Y,Z>> implements IRunnableWithProgress {
 
+    private static final int MIN_MONITOR_WORK = 3;
     protected TransactionalEditingDomain domain;
     protected CompoundCommand compoundCommand;
     private boolean canExecute = true;
@@ -70,15 +71,19 @@ public abstract class AbstractRefactorOperation<Y,Z,T extends RefactorPair<Y,Z>>
         this.operationType = operationType;
     }
 
-    public CompoundCommand getCommand(final IProgressMonitor monitor) {
+    public CompoundCommand getCommand(final IProgressMonitor monitor) throws InterruptedException {
         if (compoundCommand == null) {
             compoundCommand = new CompoundCommand("Refactor Operation");
         }
-        updateReferencesInScripts();
+        updateReferencesInScripts(monitor);
         if (canExecute()) {
             doExecute(monitor);
         }
         return compoundCommand;
+    }
+
+    protected boolean shouldUpdateReferencesInScripts(final RefactorPair<Y, Z> pairRefactor) {
+        return !pairRefactor.getOldValueName().equals(pairRefactor.getNewValueName());
     }
 
     @Override
@@ -99,17 +104,23 @@ public abstract class AbstractRefactorOperation<Y,Z,T extends RefactorPair<Y,Z>>
 
     protected abstract void doExecute(IProgressMonitor monitor);
 
-    protected void updateReferencesInScripts() {
+    protected void updateReferencesInScripts(final IProgressMonitor monitor) throws InterruptedException {
         final Set<Expression> scriptExpressionsSetToRefactor = new HashSet<Expression>();
         for(final RefactorPair<Y,Z> pairRefactor : pairsToRefactor){
-            final Z oldValue = pairRefactor.getOldValue();
-            if(oldValue instanceof EObject){
-                scriptExpressionsSetToRefactor.addAll(ModelHelper.findAllScriptAndConditionsExpressionWithReferencedElement(getContainer(oldValue), (EObject) oldValue));
+            if (shouldUpdateReferencesInScripts(pairRefactor)) {
+                final Z oldValue = pairRefactor.getOldValue();
+                if (oldValue instanceof EObject) {
+                    scriptExpressionsSetToRefactor.addAll(ModelHelper.findAllScriptAndConditionsExpressionWithReferencedElement(getContainer(oldValue),
+                            (EObject) oldValue));
+                }
             }
         }
         final List<Expression> scripExpressionsToRefactor = new ArrayList<Expression>(scriptExpressionsSetToRefactor);
-        final List<Expression> refactoredScriptExpression = performRefactoringForAllScripts(scripExpressionsToRefactor);
         if (!scripExpressionsToRefactor.isEmpty()) {
+            if (scripExpressionsToRefactor.size() > MIN_MONITOR_WORK) {
+                monitor.beginTask("Refactoring", scripExpressionsToRefactor.size());
+            }
+            final List<Expression> refactoredScriptExpression = performRefactoringForAllScripts(scripExpressionsToRefactor, monitor);
             //TODO: improve in order to filter only the data refactored AND with references
             final AbstractScriptExpressionRefactoringAction<T> action = getScriptExpressionRefactoringAction(pairsToRefactor,
                     scripExpressionsToRefactor, refactoredScriptExpression, compoundCommand, domain, operationType);
@@ -131,9 +142,18 @@ public abstract class AbstractRefactorOperation<Y,Z,T extends RefactorPair<Y,Z>>
             List<Expression> scriptExpressions,
             List<Expression> refactoredScriptExpression, CompoundCommand compoundCommand, EditingDomain domain, RefactoringOperationType operationType);
 
-    protected List<Expression> performRefactoringForAllScripts(final List<Expression> groovyScriptExpressions) {
+    protected List<Expression> performRefactoringForAllScripts(final List<Expression> groovyScriptExpressions, final IProgressMonitor monitor)
+            throws InterruptedException {
         final List<Expression> newExpressions = new ArrayList<Expression>(groovyScriptExpressions.size());
         for (final Expression expr : groovyScriptExpressions) {
+            if (groovyScriptExpressions.size() > MIN_MONITOR_WORK) {
+                if (monitor.isCanceled()) {
+                    throw new InterruptedException("Monitor cancelled by user");
+                }
+                monitor.subTask(String.format("Searching '%s' references in script expressions... [%s/%s]", pairsToRefactor.get(0).getOldValueName(),
+                        groovyScriptExpressions.indexOf(expr) + 1,
+                        groovyScriptExpressions.size()));
+            }
             final Expression newExpr = EcoreUtil.copy(expr);
             if (ExpressionConstants.SCRIPT_TYPE.equals(expr.getType())) {
                 newExpr.setContent(performGroovyRefactoring(expr.getContent()));
@@ -145,6 +165,7 @@ public abstract class AbstractRefactorOperation<Y,Z,T extends RefactorPair<Y,Z>>
                 newExpr.setContent(textRefactored);
             }
             newExpressions.add(newExpr);
+            monitor.worked(1);
         }
         return newExpressions;
     }

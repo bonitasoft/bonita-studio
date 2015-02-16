@@ -748,7 +748,11 @@ public class IterationPropertySection extends EObjectSelectionProviderSection im
         op.setContainer(ModelHelper.getParentProcess(container));
         op.addItemToRefactor(newItem, oldItem);
         op.setEditingDomain(getEditingDomain());
-        return op.getCommand(Repository.NULL_PROGRESS_MONITOR);
+        try {
+            return op.getCommand(Repository.NULL_PROGRESS_MONITOR);
+        } catch (final InterruptedException e) {
+            return null;
+        }
     }
 
     protected Object getReturnTypeInput() {
