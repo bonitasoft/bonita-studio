@@ -3,7 +3,7 @@ package org.bonitasoft.studio.properties.form.sections.actions.contributions;
 import java.util.Date;
 
 import org.bonitasoft.studio.common.DateUtil;
-import org.bonitasoft.studio.common.databinding.DateTimeObservable;
+import org.bonitasoft.studio.common.jface.databinding.DateTimeObservable;
 import org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection;
 import org.bonitasoft.studio.form.properties.i18n.Messages;
 import org.bonitasoft.studio.model.form.DateFormField;

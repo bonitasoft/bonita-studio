@@ -21,7 +21,7 @@ package org.bonitasoft.studio.validators.ui.wizard;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bonitasoft.studio.common.databinding.MultiValidator;
+import org.bonitasoft.studio.common.jface.databinding.MultiValidator;
 import org.bonitasoft.studio.common.jface.databinding.validator.InputLengthValidator;
 import org.bonitasoft.studio.common.jface.databinding.validator.URLEncodableInputValidator;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
