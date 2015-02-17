@@ -31,6 +31,7 @@ import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.util.ProcessAdapterFactory;
+import org.bonitasoft.studio.swt.AbstractSWTTestCase;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
@@ -43,17 +44,14 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.mockito.runners.MockitoJUnitRunner;
 
 /**
  * @author Romain Bioteau
  *
  */
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(Display.class)
-public class DataWizardTest {
+@RunWith(MockitoJUnitRunner.class)
+public class DataWizardTest extends AbstractSWTTestCase {
 
     private DataWizard wizard;
 
@@ -73,8 +71,8 @@ public class DataWizardTest {
      */
     @Before
     public void setUp() throws Exception {
-        PowerMockito.mockStatic(Display.class);
-        PowerMockito.when(Display.getCurrent()).thenReturn(display);
+        createDisplayAndRealm();
+
         when(refactorOperation.canExecute()).thenReturn(true);
         editingDomain = new TransactionalEditingDomainImpl(new ProcessAdapterFactory(), new TransactionalCommandStackImpl());
         final Data data = ProcessFactory.eINSTANCE.createData();
@@ -92,12 +90,13 @@ public class DataWizardTest {
      */
     @After
     public void tearDown() throws Exception {
+        dispose();
     }
 
     @Test
     public void should_performFinish_execute_refactor_operation() throws Exception {
         wizard.performFinish();
-        verify(wizardContainer).run(true, false, refactorOperation);
+        verify(wizardContainer).run(true, true, refactorOperation);
     }
 
 }
