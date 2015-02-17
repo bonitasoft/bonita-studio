@@ -37,7 +37,7 @@ import org.eclipse.core.runtime.Status;
  * @author Romain Bioteau
  *
  */
-public class OrganizationValidator implements IValidator {
+public class OrganizationValidator implements IValidator, ValidatorConstants {
 
     /* (non-Javadoc)
      * @see org.eclipse.core.databinding.validation.IValidator#validate(java.lang.Object)
@@ -95,12 +95,6 @@ public class OrganizationValidator implements IValidator {
             }
             if(!membershipFound){
                 return ValidationStatus.error(Messages.bind(Messages.missingMembershipForUser,u.getUserName()));
-            }
-        }
-        for (final Group group : organization.getGroups().getGroup()) {
-            final String groupDisplayName = group.getDisplayName();
-            if (groupDisplayName != null && !groupDisplayName.isEmpty() && groupDisplayName.length() > 75) {
-                return ValidationStatus.error(Messages.bind(Messages.groupDisplayLengthTooLong, groupDisplayName));
             }
         }
         return ValidationStatus.ok() ;
