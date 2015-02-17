@@ -16,7 +16,8 @@
  */
 package org.bonitasoft.studio.common.jface.databinding.validator;
 
-import org.bonitasoft.studio.common.Messages;
+import java.util.regex.Pattern;
+
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
@@ -26,19 +27,14 @@ import org.eclipse.core.runtime.IStatus;
  * @author Romain Bioteau
  *
  */
-public class InputLengthValidator implements IValidator {
+public class RegExpValidator implements IValidator {
 
-    private final int maxChar;
-    private final String inputName;
-	private final int minChar;
+    private final String errorMessage;
+    private final String regex;
 
-    public InputLengthValidator(final String inputName,final int maxChar){
-        this(inputName,0,maxChar);
-    }
-    public InputLengthValidator(final String inputName,final int minChar,final int maxChar){
-        this.maxChar = maxChar ;
-        this.inputName = inputName ;
-        this.minChar = minChar;
+    public RegExpValidator(final String errorMessage, final String regex) {
+        this.errorMessage = errorMessage;
+        this.regex = regex;
     }
 
     /* (non-Javadoc)
@@ -46,11 +42,8 @@ public class InputLengthValidator implements IValidator {
      */
     @Override
     public IStatus validate(final Object input) {
-    	 if(input != null && input.toString().trim().length() < minChar){
-             return ValidationStatus.error(Messages.bind(Messages.fieldIsTooShort,inputName,minChar)) ;
-         }
-        if (input != null && input.toString().length() > maxChar) {
-            return ValidationStatus.error(Messages.bind(Messages.fieldIsTooLong,inputName,maxChar)) ;
+        if (input != null && !Pattern.matches(regex, input.toString())) {
+            return ValidationStatus.error(errorMessage);
         }
         return ValidationStatus.ok() ;
     }

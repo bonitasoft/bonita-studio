@@ -17,9 +17,9 @@
  */
 package org.bonitasoft.studio.simulation.wizards;
 
-import org.bonitasoft.studio.common.databinding.MultiValidator;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.extension.IWidgetContribtution;
+import org.bonitasoft.studio.common.jface.databinding.MultiValidator;
 import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
 import org.bonitasoft.studio.common.jface.databinding.validator.URLEncodableInputValidator;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
