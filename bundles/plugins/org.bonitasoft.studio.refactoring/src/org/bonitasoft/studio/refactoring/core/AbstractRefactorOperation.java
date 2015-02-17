@@ -83,7 +83,10 @@ public abstract class AbstractRefactorOperation<Y,Z,T extends RefactorPair<Y,Z>>
     }
 
     protected boolean shouldUpdateReferencesInScripts(final RefactorPair<Y, Z> pairRefactor) {
-        return !pairRefactor.getOldValueName().equals(pairRefactor.getNewValueName());
+        if (pairRefactor.getOldValueName() != null) {
+            return !pairRefactor.getOldValueName().equals(pairRefactor.getNewValueName());
+        }
+        return false;
     }
 
     public IRunnableWithProgress createRunnableWithProgress() {
