@@ -58,8 +58,9 @@ import org.eclipse.text.edits.MultiTextEdit;
  */
 public abstract class AbstractRefactorOperation<Y,Z,T extends RefactorPair<Y,Z>> implements IRunnableWithProgress {
 
-    protected TransactionalEditingDomain domain;
-    protected CompoundCommand compoundCommand;
+    private static final int MIN_MONITOR_WORK = 3;
+    private TransactionalEditingDomain domain;
+    private CompoundCommand compoundCommand;
     private boolean canExecute = true;
     private boolean isCancelled = false;
     protected RefactoringOperationType operationType;
@@ -70,15 +71,32 @@ public abstract class AbstractRefactorOperation<Y,Z,T extends RefactorPair<Y,Z>>
         this.operationType = operationType;
     }
 
-    public CompoundCommand getCommand(final IProgressMonitor monitor) {
+    protected CompoundCommand buildCompoundCommand(final IProgressMonitor monitor) throws InterruptedException {
         if (compoundCommand == null) {
             compoundCommand = new CompoundCommand("Refactor Operation");
         }
-        updateReferencesInScripts();
+        updateReferencesInScripts(monitor);
         if (canExecute()) {
-            doExecute(monitor);
+            compoundCommand = doBuildCompoundCommand(compoundCommand, monitor);
         }
         return compoundCommand;
+    }
+
+    protected boolean shouldUpdateReferencesInScripts(final RefactorPair<Y, Z> pairRefactor) {
+        if (pairRefactor.getOldValueName() != null) {
+            return !pairRefactor.getOldValueName().equals(pairRefactor.getNewValueName());
+        }
+        return false;
+    }
+
+    public IRunnableWithProgress createRunnableWithProgress() {
+        return new IRunnableWithProgress() {
+
+            @Override
+            public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+                buildCompoundCommand(monitor);
+            }
+        };
     }
 
     @Override
@@ -88,7 +106,7 @@ public abstract class AbstractRefactorOperation<Y,Z,T extends RefactorPair<Y,Z>>
         if (monitor == null) {
             monitor = new NullProgressMonitor();
         }
-        compoundCommand = getCommand(monitor);
+        compoundCommand = buildCompoundCommand(monitor);
         if (canExecute()) {
             domain.getCommandStack().execute(compoundCommand);
             compoundCommand.dispose();
@@ -97,19 +115,25 @@ public abstract class AbstractRefactorOperation<Y,Z,T extends RefactorPair<Y,Z>>
         monitor.done();
     }
 
-    protected abstract void doExecute(IProgressMonitor monitor);
+    protected abstract CompoundCommand doBuildCompoundCommand(CompoundCommand cc, IProgressMonitor monitor);
 
-    protected void updateReferencesInScripts() {
+    protected void updateReferencesInScripts(final IProgressMonitor monitor) throws InterruptedException {
         final Set<Expression> scriptExpressionsSetToRefactor = new HashSet<Expression>();
         for(final RefactorPair<Y,Z> pairRefactor : pairsToRefactor){
-            final Z oldValue = pairRefactor.getOldValue();
-            if(oldValue instanceof EObject){
-                scriptExpressionsSetToRefactor.addAll(ModelHelper.findAllScriptAndConditionsExpressionWithReferencedElement(getContainer(oldValue), (EObject) oldValue));
+            if (shouldUpdateReferencesInScripts(pairRefactor)) {
+                final Z oldValue = pairRefactor.getOldValue();
+                if (oldValue instanceof EObject) {
+                    scriptExpressionsSetToRefactor.addAll(ModelHelper.findAllScriptAndConditionsExpressionWithReferencedElement(getContainer(oldValue),
+                            (EObject) oldValue));
+                }
             }
         }
         final List<Expression> scripExpressionsToRefactor = new ArrayList<Expression>(scriptExpressionsSetToRefactor);
-        final List<Expression> refactoredScriptExpression = performRefactoringForAllScripts(scripExpressionsToRefactor);
         if (!scripExpressionsToRefactor.isEmpty()) {
+            if (scripExpressionsToRefactor.size() > MIN_MONITOR_WORK) {
+                monitor.beginTask("Refactoring", scripExpressionsToRefactor.size());
+            }
+            final List<Expression> refactoredScriptExpression = performRefactoringForAllScripts(scripExpressionsToRefactor, monitor);
             //TODO: improve in order to filter only the data refactored AND with references
             final AbstractScriptExpressionRefactoringAction<T> action = getScriptExpressionRefactoringAction(pairsToRefactor,
                     scripExpressionsToRefactor, refactoredScriptExpression, compoundCommand, domain, operationType);
@@ -131,9 +155,18 @@ public abstract class AbstractRefactorOperation<Y,Z,T extends RefactorPair<Y,Z>>
             List<Expression> scriptExpressions,
             List<Expression> refactoredScriptExpression, CompoundCommand compoundCommand, EditingDomain domain, RefactoringOperationType operationType);
 
-    protected List<Expression> performRefactoringForAllScripts(final List<Expression> groovyScriptExpressions) {
+    protected List<Expression> performRefactoringForAllScripts(final List<Expression> groovyScriptExpressions, final IProgressMonitor monitor)
+            throws InterruptedException {
         final List<Expression> newExpressions = new ArrayList<Expression>(groovyScriptExpressions.size());
         for (final Expression expr : groovyScriptExpressions) {
+            if (groovyScriptExpressions.size() > MIN_MONITOR_WORK) {
+                if (monitor.isCanceled()) {
+                    throw new InterruptedException("Monitor cancelled by user");
+                }
+                monitor.subTask(String.format("Searching '%s' references in script expressions... [%s/%s]", pairsToRefactor.get(0).getOldValueName(),
+                        groovyScriptExpressions.indexOf(expr) + 1,
+                        groovyScriptExpressions.size()));
+            }
             final Expression newExpr = EcoreUtil.copy(expr);
             if (ExpressionConstants.SCRIPT_TYPE.equals(expr.getType())) {
                 newExpr.setContent(performGroovyRefactoring(expr.getContent()));
@@ -145,6 +178,7 @@ public abstract class AbstractRefactorOperation<Y,Z,T extends RefactorPair<Y,Z>>
                 newExpr.setContent(textRefactored);
             }
             newExpressions.add(newExpr);
+            monitor.worked(1);
         }
         return newExpressions;
     }
@@ -235,6 +269,10 @@ public abstract class AbstractRefactorOperation<Y,Z,T extends RefactorPair<Y,Z>>
         this.domain = domain;
     }
 
+    protected TransactionalEditingDomain getEditingDomain() {
+        return domain;
+    }
+
     /**
      * if you are using it surely means that you are doing things in several transactions
      * and it is bad as it breaks undo/redo
@@ -242,6 +280,10 @@ public abstract class AbstractRefactorOperation<Y,Z,T extends RefactorPair<Y,Z>>
     @Deprecated ()
     public void setCompoundCommand(final CompoundCommand compoundCommand) {
         this.compoundCommand = compoundCommand;
+    }
+
+    public CompoundCommand getCompoundCommand() {
+        return compoundCommand;
     }
 
     public void setAskConfirmation(final boolean askConfirmation) {
