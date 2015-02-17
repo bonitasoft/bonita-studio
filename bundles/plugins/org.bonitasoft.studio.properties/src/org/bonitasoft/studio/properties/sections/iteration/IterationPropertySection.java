@@ -16,6 +16,7 @@
  */
 package org.bonitasoft.studio.properties.sections.iteration;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
 
 import org.bonitasoft.studio.common.DataUtil;
@@ -25,7 +26,6 @@ import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.databinding.validator.GroovyReferenceValidator;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.properties.EObjectSelectionProviderSection;
-import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.data.operation.RefactorDataOperation;
 import org.bonitasoft.studio.data.provider.DataExpressionProvider;
@@ -107,6 +107,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
+import org.eclipse.ui.internal.progress.ProgressManager;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 
@@ -141,8 +142,6 @@ public class IterationPropertySection extends EObjectSelectionProviderSection im
             return true;
         }
     }
-
-    private final MutexRule mutexRule = new MutexRule();
 
     private EMFDataBindingContext context;
 
@@ -749,8 +748,12 @@ public class IterationPropertySection extends EObjectSelectionProviderSection im
         op.addItemToRefactor(newItem, oldItem);
         op.setEditingDomain(getEditingDomain());
         try {
-            return op.getCommand(Repository.NULL_PROGRESS_MONITOR);
+            ProgressManager.getInstance().busyCursorWhile(op.createRunnableWithProgress());
+            return op.getCompoundCommand();
         } catch (final InterruptedException e) {
+            return null;
+        } catch (final InvocationTargetException e) {
+            BonitaStudioLog.error(e);
             return null;
         }
     }
@@ -766,7 +769,6 @@ public class IterationPropertySection extends EObjectSelectionProviderSection im
     /**
      * @param classText
      */
-    @SuppressWarnings("restriction")
     private String openClassSelectionDialog() {
         final JavaSearchScope scope = new JavaSearchScope();
         try {

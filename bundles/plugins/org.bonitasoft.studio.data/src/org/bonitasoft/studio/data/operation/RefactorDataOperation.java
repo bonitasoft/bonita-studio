@@ -65,7 +65,7 @@ public class RefactorDataOperation extends AbstractRefactorOperation<Data,Data,D
     }
 
     @Override
-    protected void doExecute(final IProgressMonitor monitor) {
+    protected CompoundCommand doBuildCompoundCommand(final CompoundCommand compoundCommand, final IProgressMonitor monitor) {
         Assert.isNotNull(parentProcess);
         final CompoundCommand deleteCommands = new CompoundCommand("Compound commands conating all delete operations to do at last step");
         for(final DataRefactorPair pairToRefactor : pairsToRefactor){
@@ -77,12 +77,13 @@ public class RefactorDataOperation extends AbstractRefactorOperation<Data,Data,D
                     updateDataReferenceInMultinstanciation(compoundCommand);
                     final List<?> dataList = (List<?>) parentProcess.eGet(dataContainmentFeature);
                     final int index = dataList.indexOf(pairToRefactor.getOldValue());
-                    compoundCommand.append(RemoveCommand.create(domain, directContainer, dataContainmentFeature, pairToRefactor.getOldValue()));
-                    compoundCommand.append(AddCommand.create(domain, directContainer, dataContainmentFeature, pairToRefactor.getNewValue(), index));
+                    compoundCommand.append(RemoveCommand.create(getEditingDomain(), directContainer, dataContainmentFeature, pairToRefactor.getOldValue()));
+                    compoundCommand.append(AddCommand.create(getEditingDomain(), directContainer, dataContainmentFeature, pairToRefactor.getNewValue(), index));
                 } else {
                     for (final EStructuralFeature feature : pairToRefactor.getOldValue().eClass().getEAllStructuralFeatures()) {
                         if (pairToRefactor.getNewValue().eClass().getEAllStructuralFeatures().contains(feature)) {
-                            compoundCommand.append(SetCommand.create(domain, pairToRefactor.getOldValue(), feature, pairToRefactor.getNewValue().eGet(feature)));
+                            compoundCommand.append(SetCommand.create(getEditingDomain(), pairToRefactor.getOldValue(), feature, pairToRefactor.getNewValue()
+                                    .eGet(feature)));
                         }
                     }
                 }
@@ -90,10 +91,11 @@ public class RefactorDataOperation extends AbstractRefactorOperation<Data,Data,D
                 removeAllDataReferences(compoundCommand, pairToRefactor);
             }
             if(RefactoringOperationType.REMOVE.equals(operationType)){
-                deleteCommands.append(DeleteCommand.create(domain, pairToRefactor.getOldValue()));
+                deleteCommands.append(DeleteCommand.create(getEditingDomain(), pairToRefactor.getOldValue()));
             }
         }
         compoundCommand.appendIfCanExecute(deleteCommands);
+        return compoundCommand;
     }
 
     private void updateDataReferenceInExpressions(final CompoundCommand finalCommand) {
@@ -106,8 +108,9 @@ public class RefactorDataOperation extends AbstractRefactorOperation<Data,Data,D
                     if (dependency instanceof Data) {
                         for(final DataRefactorPair  pairToRefactor : pairsToRefactor){
                             if (((Data) dependency).getName().equals(pairToRefactor.getOldValue().getName())) {
-                                finalCommand.append(RemoveCommand.create(domain, exp, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS, dependency));
-                                finalCommand.append(AddCommand.create(domain, exp, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS,
+                                finalCommand.append(RemoveCommand.create(getEditingDomain(), exp, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS,
+                                        dependency));
+                                finalCommand.append(AddCommand.create(getEditingDomain(), exp, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS,
                                         ExpressionHelper.createDependencyFromEObject(pairToRefactor.getNewValue())));
                             }
                         }
@@ -122,13 +125,13 @@ public class RefactorDataOperation extends AbstractRefactorOperation<Data,Data,D
         for (final Expression exp : expressions) {
             if (ExpressionConstants.VARIABLE_TYPE.equals(exp.getType()) && exp.getName().equals(pairToRefactor.getOldValue().getName())) {
                 // update name and content
-                cc.append(SetCommand.create(domain, exp, ExpressionPackage.Literals.EXPRESSION__NAME, ""));
-                cc.append(SetCommand.create(domain, exp, ExpressionPackage.Literals.EXPRESSION__CONTENT, ""));
+                cc.append(SetCommand.create(getEditingDomain(), exp, ExpressionPackage.Literals.EXPRESSION__NAME, ""));
+                cc.append(SetCommand.create(getEditingDomain(), exp, ExpressionPackage.Literals.EXPRESSION__CONTENT, ""));
                 // update return type
-                cc.append(SetCommand.create(domain, exp, ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE, String.class.getName()));
-                cc.append(SetCommand.create(domain, exp, ExpressionPackage.Literals.EXPRESSION__TYPE, ExpressionConstants.CONSTANT_TYPE));
+                cc.append(SetCommand.create(getEditingDomain(), exp, ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE, String.class.getName()));
+                cc.append(SetCommand.create(getEditingDomain(), exp, ExpressionPackage.Literals.EXPRESSION__TYPE, ExpressionConstants.CONSTANT_TYPE));
                 // update referenced data
-                cc.append(RemoveCommand.create(domain, exp, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS, exp.getReferencedElements()));
+                cc.append(RemoveCommand.create(getEditingDomain(), exp, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS, exp.getReferencedElements()));
             }
         }
     }
@@ -155,10 +158,10 @@ public class RefactorDataOperation extends AbstractRefactorOperation<Data,Data,D
                     if (container != null && container.eGet(eContainmentFeature) instanceof Collection<?>) {
                         final List<?> dataList = (List<?>) container.eGet(eContainmentFeature);
                         final int index = dataList.indexOf(d);
-                        cc.append(RemoveCommand.create(domain, container, eContainmentFeature, d));
-                        cc.append(AddCommand.create(domain, container, eContainmentFeature, copy, index));
+                        cc.append(RemoveCommand.create(getEditingDomain(), container, eContainmentFeature, d));
+                        cc.append(AddCommand.create(getEditingDomain(), container, eContainmentFeature, copy, index));
                     } else if (container != null && container.eGet(eContainmentFeature) instanceof Data) {
-                        cc.append(SetCommand.create(domain, container, eContainmentFeature, copy));
+                        cc.append(SetCommand.create(getEditingDomain(), container, eContainmentFeature, copy));
                     }
                 }
             }
@@ -171,10 +174,12 @@ public class RefactorDataOperation extends AbstractRefactorOperation<Data,Data,D
             for (final Expression exp : expressions) {
                 if (ExpressionConstants.VARIABLE_TYPE.equals(exp.getType()) && exp.getName().equals(pairToRefactor.getOldValue().getName())) {
                     // update name and content
-                    cc.append(SetCommand.create(domain, exp, ExpressionPackage.Literals.EXPRESSION__NAME, pairToRefactor.getNewValue().getName()));
-                    cc.append(SetCommand.create(domain, exp, ExpressionPackage.Literals.EXPRESSION__CONTENT, pairToRefactor.getNewValue().getName()));
+                    cc.append(SetCommand.create(getEditingDomain(), exp, ExpressionPackage.Literals.EXPRESSION__NAME, pairToRefactor.getNewValue().getName()));
+                    cc.append(SetCommand
+                            .create(getEditingDomain(), exp, ExpressionPackage.Literals.EXPRESSION__CONTENT, pairToRefactor.getNewValue().getName()));
                     // update return type
-                    cc.append(SetCommand.create(domain, exp, ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE, DataUtil.getTechnicalTypeFor(pairToRefactor.getNewValue())));
+                    cc.append(SetCommand.create(getEditingDomain(), exp, ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE,
+                            DataUtil.getTechnicalTypeFor(pairToRefactor.getNewValue())));
                 }
             }
         }
@@ -186,17 +191,19 @@ public class RefactorDataOperation extends AbstractRefactorOperation<Data,Data,D
             for (final MultiInstantiable multiInstantiation : multiInstanciations) {
                 final Data outputData = multiInstantiation.getOutputData();
                 if (outputData != null && outputData.equals(pairToRefactor.getOldValue())) {
-                    cc.append(SetCommand.create(domain, multiInstantiation, ProcessPackage.Literals.MULTI_INSTANTIABLE__OUTPUT_DATA,
+                    cc.append(SetCommand.create(getEditingDomain(), multiInstantiation, ProcessPackage.Literals.MULTI_INSTANTIABLE__OUTPUT_DATA,
                             pairToRefactor.getNewValue()));
                 }
                 final Data collectionToMultiinstanciateData = multiInstantiation.getCollectionDataToMultiInstantiate();
                 if (collectionToMultiinstanciateData != null && collectionToMultiinstanciateData.equals(pairToRefactor.getOldValue())) {
-                    cc.append(SetCommand.create(domain, multiInstantiation, ProcessPackage.Literals.MULTI_INSTANTIABLE__COLLECTION_DATA_TO_MULTI_INSTANTIATE,
+                    cc.append(SetCommand.create(getEditingDomain(), multiInstantiation,
+                            ProcessPackage.Literals.MULTI_INSTANTIABLE__COLLECTION_DATA_TO_MULTI_INSTANTIATE,
                             pairToRefactor.getNewValue()));
                 }
                 final Data listDataContainingOutputResults = multiInstantiation.getListDataContainingOutputResults();
                 if (listDataContainingOutputResults != null && listDataContainingOutputResults.equals(pairToRefactor.getOldValue())) {
-                    cc.append(SetCommand.create(domain, multiInstantiation, ProcessPackage.Literals.MULTI_INSTANTIABLE__LIST_DATA_CONTAINING_OUTPUT_RESULTS,
+                    cc.append(SetCommand.create(getEditingDomain(), multiInstantiation,
+                            ProcessPackage.Literals.MULTI_INSTANTIABLE__LIST_DATA_CONTAINING_OUTPUT_RESULTS,
                             pairToRefactor.getNewValue()));
                 }
             }

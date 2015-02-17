@@ -59,8 +59,8 @@ import org.eclipse.text.edits.MultiTextEdit;
 public abstract class AbstractRefactorOperation<Y,Z,T extends RefactorPair<Y,Z>> implements IRunnableWithProgress {
 
     private static final int MIN_MONITOR_WORK = 3;
-    protected TransactionalEditingDomain domain;
-    protected CompoundCommand compoundCommand;
+    private TransactionalEditingDomain domain;
+    private CompoundCommand compoundCommand;
     private boolean canExecute = true;
     private boolean isCancelled = false;
     protected RefactoringOperationType operationType;
@@ -71,19 +71,29 @@ public abstract class AbstractRefactorOperation<Y,Z,T extends RefactorPair<Y,Z>>
         this.operationType = operationType;
     }
 
-    public CompoundCommand getCommand(final IProgressMonitor monitor) throws InterruptedException {
+    protected CompoundCommand buildCompoundCommand(final IProgressMonitor monitor) throws InterruptedException {
         if (compoundCommand == null) {
             compoundCommand = new CompoundCommand("Refactor Operation");
         }
         updateReferencesInScripts(monitor);
         if (canExecute()) {
-            doExecute(monitor);
+            compoundCommand = doBuildCompoundCommand(compoundCommand, monitor);
         }
         return compoundCommand;
     }
 
     protected boolean shouldUpdateReferencesInScripts(final RefactorPair<Y, Z> pairRefactor) {
         return !pairRefactor.getOldValueName().equals(pairRefactor.getNewValueName());
+    }
+
+    public IRunnableWithProgress createRunnableWithProgress() {
+        return new IRunnableWithProgress() {
+
+            @Override
+            public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+                buildCompoundCommand(monitor);
+            }
+        };
     }
 
     @Override
@@ -93,7 +103,7 @@ public abstract class AbstractRefactorOperation<Y,Z,T extends RefactorPair<Y,Z>>
         if (monitor == null) {
             monitor = new NullProgressMonitor();
         }
-        compoundCommand = getCommand(monitor);
+        compoundCommand = buildCompoundCommand(monitor);
         if (canExecute()) {
             domain.getCommandStack().execute(compoundCommand);
             compoundCommand.dispose();
@@ -102,7 +112,7 @@ public abstract class AbstractRefactorOperation<Y,Z,T extends RefactorPair<Y,Z>>
         monitor.done();
     }
 
-    protected abstract void doExecute(IProgressMonitor monitor);
+    protected abstract CompoundCommand doBuildCompoundCommand(CompoundCommand cc, IProgressMonitor monitor);
 
     protected void updateReferencesInScripts(final IProgressMonitor monitor) throws InterruptedException {
         final Set<Expression> scriptExpressionsSetToRefactor = new HashSet<Expression>();
@@ -256,6 +266,10 @@ public abstract class AbstractRefactorOperation<Y,Z,T extends RefactorPair<Y,Z>>
         this.domain = domain;
     }
 
+    protected TransactionalEditingDomain getEditingDomain() {
+        return domain;
+    }
+
     /**
      * if you are using it surely means that you are doing things in several transactions
      * and it is bad as it breaks undo/redo
@@ -263,6 +277,10 @@ public abstract class AbstractRefactorOperation<Y,Z,T extends RefactorPair<Y,Z>>
     @Deprecated ()
     public void setCompoundCommand(final CompoundCommand compoundCommand) {
         this.compoundCommand = compoundCommand;
+    }
+
+    public CompoundCommand getCompoundCommand() {
+        return compoundCommand;
     }
 
     public void setAskConfirmation(final boolean askConfirmation) {
