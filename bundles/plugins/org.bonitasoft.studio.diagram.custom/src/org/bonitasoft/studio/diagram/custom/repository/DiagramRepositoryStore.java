@@ -5,20 +5,20 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.diagram.custom.repository;
 
+import static com.google.common.base.Predicates.instanceOf;
+import static com.google.common.collect.Iterables.filter;
+
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,6 +28,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -53,7 +54,7 @@ import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
-import org.bonitasoft.studio.model.process.util.ProcessAdapterFactory;
+import org.bonitasoft.studio.model.process.provider.ProcessItemProviderAdapterFactory;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.resources.IFile;
@@ -61,6 +62,7 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.xmi.FeatureNotFoundException;
 import org.eclipse.emf.edapt.migration.MigrationException;
@@ -78,7 +80,6 @@ import org.eclipse.swt.widgets.Display;
 
 /**
  * @author Romain Bioteau
- *
  */
 public class DiagramRepositoryStore extends
 AbstractEMFRepositoryStore<DiagramFileStore> {
@@ -95,7 +96,6 @@ AbstractEMFRepositoryStore<DiagramFileStore> {
 
     /*
      * (non-Javadoc)
-     *
      * @see org.bonitasoft.studio.common.repository.IRepositoryStore#getName()
      */
     @Override
@@ -181,7 +181,7 @@ AbstractEMFRepositoryStore<DiagramFileStore> {
         return null;
     }
 
-    public  List<DiagramFileStore> getRecentChildren(final int nbResult) {
+    public List<DiagramFileStore> getRecentChildren(final int nbResult) {
         refresh();
 
         final List<DiagramFileStore> result = new ArrayList<DiagramFileStore>();
@@ -200,6 +200,7 @@ AbstractEMFRepositoryStore<DiagramFileStore> {
         }
 
         Collections.sort(resources, new Comparator<IResource>() {
+
             @Override
             public int compare(final IResource arg0, final IResource arg1) {
                 final long lastModifiedArg1 = arg1.getLocation().toFile()
@@ -347,7 +348,7 @@ AbstractEMFRepositoryStore<DiagramFileStore> {
                 BonitaStudioLog.error(e);
             }
             if (poolIds != null && Arrays.asList(poolIds).contains(processUUID)) {
-                final MainProcess diagram =  fStore.getContent();
+                final MainProcess diagram = fStore.getContent();
                 for (final Element pool : diagram.getElements()) {
                     if (pool instanceof Pool
                             && processUUID.equals(ModelHelper
@@ -371,7 +372,7 @@ AbstractEMFRepositoryStore<DiagramFileStore> {
         .addAdapterFactory(new ResourceItemProviderAdapterFactory());
         adapterFactory
         .addAdapterFactory(new ReflectiveItemProviderAdapterFactory());
-        adapterFactory.addAdapterFactory(new ProcessAdapterFactory());
+        adapterFactory.addAdapterFactory(new ProcessItemProviderAdapterFactory());
         adapterFactory.addAdapterFactory(new NotationAdapterFactory());
         labelProvider = new AdapterFactoryLabelProvider(adapterFactory);
         return labelProvider;
@@ -379,91 +380,90 @@ AbstractEMFRepositoryStore<DiagramFileStore> {
 
     @Override
     protected void addAdapterFactory(final ComposedAdapterFactory adapterFactory) {
-        adapterFactory.addAdapterFactory(new ProcessAdapterFactory());
+        adapterFactory.addAdapterFactory(new ProcessItemProviderAdapterFactory());
         adapterFactory.addAdapterFactory(new NotationAdapterFactory());
     }
 
     @Override
     protected InputStream handlePreImport(final String fileName,
-            final InputStream inputStream) throws MigrationException {
+            final InputStream inputStream) throws MigrationException, IOException {
         CopyInputStream copyIs = null;
+        Resource diagramResource = null;
         try {
             final InputStream is = super.handlePreImport(fileName, inputStream);
             copyIs = new CopyInputStream(is);
-            final Resource r = getTmpEMFResource("beforeImport.proc",
+            diagramResource = getTmpEMFResource("beforeImport.proc",
                     copyIs.getCopy());
-            try {
-                r.load(Collections.EMPTY_MAP);
-            } catch (final IOException e) {
-                BonitaStudioLog.error(e);
-            }
-            if (!r.getContents().isEmpty()) {
-                final MainProcess diagram = (MainProcess) r.getContents()
-                        .get(0);
-                if (diagram != null) {
-                    final String pVersion = diagram.getBonitaVersion();
-                    final String mVersion = diagram.getBonitaModelVersion();
-                    if (!ConfigurationIdProvider.getConfigurationIdProvider()
-                            .isConfigurationIdValid(diagram)) {
-                        Display.getDefault().syncExec(new Runnable() {
 
-                            @Override
-                            public void run() {
-                                BonitaStudioLog.log("Incompatible Version for "
-                                        + fileName);
-                                MessageDialog.openWarning(Display.getDefault()
-                                        .getActiveShell(),
-                                        Messages.incompatibleVersionTitle,
-                                        Messages.incompatibleVersionMsg);
-                            }
-                        });
-                        return null;
-                    }
-
-                    if (!ProductVersion.CURRENT_VERSION.equals(pVersion)) {
-                        diagram.setBonitaVersion(ProductVersion.CURRENT_VERSION);
-                    }
-                    if (!ModelVersion.CURRENT_VERSION.equals(mVersion)) {
-                        diagram.setBonitaModelVersion(ModelVersion.CURRENT_VERSION);
-                    }
-                    diagram.setConfigId(ConfigurationIdProvider
-                            .getConfigurationIdProvider().getConfigurationId(
-                                    diagram));
-                    if (diagram.getAuthor() == null) {
-                        diagram.setAuthor(System.getProperty("user.name",
-                                "Unknown"));
-                    }
-                    try {
-                        r.save(Collections.EMPTY_MAP);
-                    } catch (final IOException e) {
-                        BonitaStudioLog.error(e);
-                    }
-                    try {
-                        return new FileInputStream(new File(r.getURI()
-                                .toFileString()));
-                    } catch (final FileNotFoundException e) {
-                        BonitaStudioLog.error(e);
-                    } finally {
-                        copyIs.close();
-                        try {
-                            r.delete(Collections.EMPTY_MAP);
-                        } catch (final IOException e) {
-                            BonitaStudioLog.error(e);
-                        }
-                    }
-                } else {
-                    return null;
-                }
+            diagramResource.load(Collections.EMPTY_MAP);
+            if (diagramResource.getContents().isEmpty()) {
+                throw new IOException("Resource is empty.");
             }
-            return copyIs.getCopy();
-        } catch (final IOException e) {
-            BonitaStudioLog.error(e);
-            return null;
+
+            final Iterable<EObject> mainProcess = filter(diagramResource.getContents(), instanceOf(MainProcess.class));
+            final Iterator<EObject> iterator = mainProcess.iterator();
+            final MainProcess diagram = (MainProcess) iterator.next();
+            if (iterator.hasNext()) {
+                throw new IOException("Resource content is invalid. There should be only one MainProcess per .proc file.");
+            }
+            if (diagram == null) {
+                throw new IOException("Resource content is null.");
+            }
+
+            if (!ConfigurationIdProvider.getConfigurationIdProvider()
+                    .isConfigurationIdValid(diagram)) {
+                return openError(fileName);
+            }
+            updateConfigurationId(diagramResource, diagram);
+            return new FileInputStream(new File(diagramResource.getURI()
+                    .toFileString()));
         } finally {
             if (copyIs != null) {
                 copyIs.close();
             }
+            if (diagramResource != null) {
+                diagramResource.delete(Collections.EMPTY_MAP);
+            }
         }
+    }
+
+    protected void updateConfigurationId(final Resource diagramResource, final MainProcess diagram) {
+        final String pVersion = diagram.getBonitaVersion();
+        final String mVersion = diagram.getBonitaModelVersion();
+        if (!ProductVersion.CURRENT_VERSION.equals(pVersion)) {
+            diagram.setBonitaVersion(ProductVersion.CURRENT_VERSION);
+        }
+        if (!ModelVersion.CURRENT_VERSION.equals(mVersion)) {
+            diagram.setBonitaModelVersion(ModelVersion.CURRENT_VERSION);
+        }
+        diagram.setConfigId(ConfigurationIdProvider
+                .getConfigurationIdProvider().getConfigurationId(
+                        diagram));
+        if (diagram.getAuthor() == null) {
+            diagram.setAuthor(System.getProperty("user.name",
+                    "Unknown"));
+        }
+        try {
+            diagramResource.save(Collections.EMPTY_MAP);
+        } catch (final IOException e) {
+            BonitaStudioLog.error(e);
+        }
+    }
+
+    protected InputStream openError(final String fileName) {
+        Display.getDefault().syncExec(new Runnable() {
+
+            @Override
+            public void run() {
+                BonitaStudioLog.log("Incompatible Version for "
+                        + fileName);
+                MessageDialog.openWarning(Display.getDefault()
+                        .getActiveShell(),
+                        Messages.incompatibleVersionTitle,
+                        Messages.incompatibleVersionMsg);
+            }
+        });
+        return null;
     }
 
     @Override
