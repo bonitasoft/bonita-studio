@@ -2,7 +2,7 @@
  * Copyright (C) 2010-2012 BonitaSoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  */
-package org.bonitasoft.studio.common.databinding;
+package org.bonitasoft.studio.common.jface.databinding;
 
 import org.eclipse.core.databinding.property.INativePropertyListener;
 import org.eclipse.core.databinding.property.ISimplePropertyListener;
