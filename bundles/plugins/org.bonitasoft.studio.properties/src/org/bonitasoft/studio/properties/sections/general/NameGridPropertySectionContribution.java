@@ -230,7 +230,7 @@ public class NameGridPropertySectionContribution extends AbstractNamePropertySec
 
         labelTargetToModelUpdate.setAfterGetValidator(new UTF8InputValidator(Messages.name));
         final List<IValidator> validators = new ArrayList<IValidator>();
-        validators.add(new InputLengthValidator(Messages.name, element instanceof SequenceFlow ? 0 : 1, 50));
+        validators.add(new InputLengthValidator(Messages.name, element instanceof SequenceFlow ? 0 : 1, 255));
         final MultiValidator multiValidation = new MultiValidator(validators);
         labelTargetToModelUpdate.setBeforeSetValidator(multiValidation);
         labelTargetToModelUpdate.setAfterConvertValidator(new SpecialCharactersValidator());

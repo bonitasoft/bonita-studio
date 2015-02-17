@@ -17,6 +17,7 @@ package org.bonitasoft.studio.common.jface.databinding;
 import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
 import org.bonitasoft.studio.common.jface.databinding.validator.InputLengthValidator;
 import org.bonitasoft.studio.common.jface.databinding.validator.RegExpValidator;
+import org.bonitasoft.studio.common.jface.databinding.validator.URLEncodableInputValidator;
 import org.eclipse.core.databinding.validation.IValidator;
 
 /**
@@ -42,6 +43,10 @@ public class ValidatorFactory {
 
     public static IValidator regExpValidator(final String errorMessage, final String regExp) {
         return new RegExpValidator(errorMessage, regExp);
+    }
+
+    public static IValidator urlEncodableInputValidator(final String inputName) {
+        return new URLEncodableInputValidator(inputName);
     }
 
 }
