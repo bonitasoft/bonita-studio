@@ -827,21 +827,6 @@
                </target>
             </constraint>
             <constraint
-                  class="org.bonitasoft.studio.validation.constraints.process.InclusiveMergeGatewayConstraint"
-                  id="org.bonitasoft.studio.validation.constraints.inclusiveMerge"
-                  lang="java"
-                  mode="Batch"
-                  name="Inclusive merge"
-                  severity="WARNING"
-                  statusCode="1">
-               <message>
-                  {0}
-               </message>
-               <target
-                     class="InclusiveGateway:http://www.bonitasoft.org/ns/studio/process">
-               </target>
-            </constraint>
-            <constraint
                   class="org.bonitasoft.studio.validation.constraints.process.OperationNotEmptyConstraint"
                   id="org.bonitasoft.studio.validation.constraint.non.empty.operation"
                   isEnabledByDefault="true"
