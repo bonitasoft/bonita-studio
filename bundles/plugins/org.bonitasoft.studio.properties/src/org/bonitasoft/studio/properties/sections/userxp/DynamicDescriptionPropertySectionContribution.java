@@ -48,7 +48,7 @@ public class DynamicDescriptionPropertySectionContribution extends AbstractPrope
 
     private ExpressionViewer expressionViewer;
     private EMFDataBindingContext dataBindingContext;
-    private final int maxLength = 254;
+    private final static int MAX_LENGTH = 255;
 
     @Override
     public void createControl(final Composite composite,
@@ -61,7 +61,7 @@ public class DynamicDescriptionPropertySectionContribution extends AbstractPrope
         expressionViewer.addFilter(new AvailableExpressionTypeFilter(new String[]{ExpressionConstants.CONSTANT_TYPE,ExpressionConstants.VARIABLE_TYPE,ExpressionConstants.PARAMETER_TYPE,ExpressionConstants.SCRIPT_TYPE}));
         expressionViewer.setInput(eObject) ;
         expressionViewer.setMessage(Messages.dynamicDescriptionHint,IStatus.INFO) ;
-        expressionViewer.addExpressionValidator(new ExpressionLengthValidator(maxLength));
+        expressionViewer.addExpressionValidator(new ExpressionLengthValidator(MAX_LENGTH));
         refreshDataBindingContext();
     }
 
