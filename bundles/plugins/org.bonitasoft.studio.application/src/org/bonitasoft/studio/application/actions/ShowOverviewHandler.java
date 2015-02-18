@@ -54,12 +54,15 @@ public class ShowOverviewHandler extends AbstractHandler {
                     action.run();
                 }
             }
-            for (final Control control : ((PageBook) view.getCurrentPage().getControl()).getTabList()) {
-                if (control instanceof FilteredTree) {
-                    final Text filterText = ((FilteredTree) control).getFilterControl();
-                    filterText.setFocus();
-                    if (filterText.getText() != null) {
-                        filterText.setSelection(0, filterText.getText().length());
+            final Control pageBook = view.getCurrentPage().getControl();
+            if (pageBook instanceof PageBook) {
+                for (final Control control : ((PageBook) pageBook).getTabList()) {
+                    if (control instanceof FilteredTree) {
+                        final Text filterText = ((FilteredTree) control).getFilterControl();
+                        filterText.setFocus();
+                        if (filterText.getText() != null) {
+                            filterText.setSelection(0, filterText.getText().length());
+                        }
                     }
                 }
             }
