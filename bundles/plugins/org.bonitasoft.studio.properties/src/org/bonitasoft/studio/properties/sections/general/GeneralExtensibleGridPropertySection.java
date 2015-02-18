@@ -41,7 +41,7 @@ public class GeneralExtensibleGridPropertySection extends ExtensibleGridProperty
 	 * @see org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection#addContributions()
 	 */
 	protected void addContributions() {
-		addContribution(new NameGridPropertySectionContribution(getTabbedPropertySheetPage(),this));
+		addContribution(new ProcessElementNameContribution(getTabbedPropertySheetPage(),this));
 		addContribution(new MessageFlowContribution());
 		addContribution(new VersionGridPropertySectionContribution());
 		addContribution(new DescriptionGridPropertySectionContribution());

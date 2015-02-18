@@ -20,7 +20,7 @@
                   class="org.bonitasoft.studio.validation.constraints.process.EmptyNameConstraint"
                   id="org.bonitasoft.studio.validation.constraints.nonemptynames"
                   lang="Java"
-                  mode="Batch"
+                  mode="Live"
                   name="%NotEmptyNameConstraint"
                   severity="WARNING"
                   statusCode="1">
@@ -29,6 +29,18 @@
                </message>
                <target
                      class="Element:http://www.bonitasoft.org/ns/studio/process">
+                  <event
+                        name="Set">
+                     <feature
+                           name="name">
+                     </feature>
+                  </event>
+                  <event
+                        name="Unset">
+                     <feature
+                           name="name">
+                     </feature>
+                  </event>
                </target>
                <description>
                   %constraints.element.desc
