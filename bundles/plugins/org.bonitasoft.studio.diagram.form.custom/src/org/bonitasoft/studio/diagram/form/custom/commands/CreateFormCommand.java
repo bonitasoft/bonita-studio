@@ -5,14 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.diagram.form.custom.commands;
 
@@ -21,6 +19,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
+import org.bonitasoft.engine.bdm.model.field.FieldType;
+import org.bonitasoft.engine.bdm.model.field.SimpleField;
 import org.bonitasoft.engine.bpm.document.DocumentValue;
 import org.bonitasoft.studio.common.DataUtil;
 import org.bonitasoft.studio.common.ExpressionConstants;
@@ -81,23 +81,17 @@ import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCommand;
 
-import com.bonitasoft.engine.bdm.model.field.FieldType;
-import com.bonitasoft.engine.bdm.model.field.SimpleField;
-
 /**
- *
  * Add a new Form to a pageFlow It also create the Diagram and open it
  *
  * @author Romain Bioteau
  */
 public class CreateFormCommand extends AbstractTransactionalCommand {
 
-
     private static final int MIN_BUTTON_LINE = 2;
 
     private final String formName;
     private final List<? extends WidgetMapping> widgesMappings;
-
 
     private final Element pageFlow;
     private final String description;
@@ -112,7 +106,7 @@ public class CreateFormCommand extends AbstractTransactionalCommand {
             final TransactionalEditingDomain editingDomain) {
         super(editingDomain, "Create form", getWorkspaceFiles(pageFlow));
         Assert.isNotNull(widgesMappings);
-        this.formName = NamingUtils.toJavaIdentifier(formName,true);
+        this.formName = NamingUtils.toJavaIdentifier(formName, true);
         this.description = description;
         this.widgesMappings = widgesMappings;
         this.pageFlow = pageFlow;
@@ -124,7 +118,7 @@ public class CreateFormCommand extends AbstractTransactionalCommand {
             final String formName,
             final String description,
             final TransactionalEditingDomain editingDomain) {
-        this(pageFlow,feature,formName,description,Collections.<WidgetMapping>emptyList(),editingDomain);
+        this(pageFlow, feature, formName, description, Collections.<WidgetMapping> emptyList(), editingDomain);
     }
 
     public void setGenerateInitialValue(final boolean initialValueGenerated) {
@@ -145,7 +139,7 @@ public class CreateFormCommand extends AbstractTransactionalCommand {
     }
 
     protected int getHorizontalSpan(final Form myForm) {
-        if(myForm instanceof ViewForm){
+        if (myForm instanceof ViewForm) {
             return 1;
         }
         int res = 1;
@@ -160,20 +154,19 @@ public class CreateFormCommand extends AbstractTransactionalCommand {
 
     protected int getLineIndex(final WidgetContainer container) {
         int nbLines = 0;
-        for(final Widget w : container.getWidgets()){
+        for (final Widget w : container.getWidgets()) {
             nbLines += incrementLineIndex(w);
         }
         return nbLines;
     }
 
-
     private int incrementLineIndex(final Widget w) {
-        int nbLines = 0 ;
-        if(w instanceof Group){
-            for(final Widget groupChild : ((Group) w).getWidgets()){
+        int nbLines = 0;
+        if (w instanceof Group) {
+            for (final Widget groupChild : ((Group) w).getWidgets()) {
                 nbLines += incrementLineIndex(groupChild);
             }
-        }else{
+        } else {
             nbLines = 1;
         }
         return nbLines;
@@ -190,7 +183,7 @@ public class CreateFormCommand extends AbstractTransactionalCommand {
         final int hSpan = getHorizontalSpan(form);
         form.setNColumn(hSpan);
         final WidgetContainer formContainer = new WidgetContainer(form);
-        addWidgetsToForm(formContainer,hSpan);
+        addWidgetsToForm(formContainer, hSpan);
 
         // add a "previous" button if there is more than one form
         if (((List<?>) pageFlow.eGet(feature)).size() != 0) {
@@ -207,23 +200,23 @@ public class CreateFormCommand extends AbstractTransactionalCommand {
         return CommandResult.newOKCommandResult(form);
     }
 
-    protected void addWidgetsToForm(final WidgetContainer container,final int horizontalSpan) {
+    protected void addWidgetsToForm(final WidgetContainer container, final int horizontalSpan) {
         for (final WidgetMapping mapping : widgesMappings) {
-            createWidgetFromMapping(container,mapping,horizontalSpan);
+            createWidgetFromMapping(container, mapping, horizontalSpan);
         }
     }
 
     protected Widget createWidgetFromMapping(final WidgetContainer container, final WidgetMapping mapping, final int horizontalSpan) {
-        if(mapping.isGenerated()){
+        if (mapping.isGenerated()) {
             final Widget widget = new CreateWidgetSwitch(pageFlow, ElementInitializers.getInstance()).doSwitch(mapping.getWidgetType());
             widget.setInjectWidgetScript(createInsertWidgetIfScript());
-            if(supportReadOnly(widget)){
+            if (supportReadOnly(widget)) {
                 widget.setReadOnly(mapping.isReadOnly());
             }
-            if(supportMandatory(widget)){
+            if (supportMandatory(widget)) {
                 widget.setMandatory(mapping.isMandatory());
             }
-            widget.setWidgetLayoutInfo(createWidgetLayout(getLineIndex(container), 0,horizontalSpan,getVerticalSpan(widget)));
+            widget.setWidgetLayoutInfo(createWidgetLayout(getLineIndex(container), 0, horizontalSpan, getVerticalSpan(widget)));
             container.getWidgets().add(widget);
             addNameAndDisplayLabel(mapping, widget);
             addMappingExpressions(mapping, widget);
@@ -237,15 +230,14 @@ public class CreateFormCommand extends AbstractTransactionalCommand {
         return null;
     }
 
-
     protected int getVerticalSpan(final Widget widget) {
-        if(widget instanceof Group){
+        if (widget instanceof Group) {
             int vSpan = 0;
-            for(final Widget w : ((Group) widget).getWidgets()){
+            for (final Widget w : ((Group) widget).getWidgets()) {
                 vSpan += getVerticalSpan(w);
             }
             return vSpan;
-        }else{
+        } else {
             return 1;
         }
     }
@@ -255,19 +247,18 @@ public class CreateFormCommand extends AbstractTransactionalCommand {
         return isAFormFieldAndNotHiddenWidget || widget instanceof Group;
     }
 
-
     protected boolean supportReadOnly(final Widget widget) {
         return (widget instanceof FormField || widget instanceof Group) && !(widget instanceof FileWidget);
     }
 
     protected void addMappingExpressions(final WidgetMapping mapping, final Widget widget) {
         final Object modelElement = mapping.getModelElement();
-        if(modelElement instanceof Data){
-            setWidgetModifier(DataUtil.getTechnicalTypeFor((Data) modelElement),widget);
+        if (modelElement instanceof Data) {
+            setWidgetModifier(DataUtil.getTechnicalTypeFor((Data) modelElement), widget);
             addInputExpressionForData((Data) modelElement, widget);
-            addOutputOperationForData(widget,mapping);
-        }else if(modelElement instanceof Document && widget instanceof FileWidget){
-            addInputExpressionForDocument((Document)modelElement, (FileWidget)widget);
+            addOutputOperationForData(widget, mapping);
+        } else if (modelElement instanceof Document && widget instanceof FileWidget) {
+            addInputExpressionForDocument((Document) modelElement, (FileWidget) widget);
             addOutputOperationForDocument(mapping, (FileWidget) widget);
         } else if (modelElement instanceof SimpleField) {
             addMappingExpressionsForField(mapping, widget, (SimpleField) modelElement);
@@ -296,13 +287,12 @@ public class CreateFormCommand extends AbstractTransactionalCommand {
         addOutputOperationForBusinessDataField(data, field, widget);
     }
 
-
     protected void addNameAndDisplayLabel(final WidgetMapping mapping,
             final Widget widget) {
         final Object modelElement = mapping.getModelElement();
-        if(modelElement instanceof Element){
+        if (modelElement instanceof Element) {
             final String keyName = ((Element) modelElement).getName();
-            final String widgetId  = computeWidgetId(keyName,widget);
+            final String widgetId = computeWidgetId(keyName, widget);
             widget.setName(widgetId);
             widget.setDisplayLabel(createLabelExpression(keyName));
         } else if (modelElement instanceof SimpleField) {
@@ -321,55 +311,55 @@ public class CreateFormCommand extends AbstractTransactionalCommand {
 
     protected void setWidgetModifier(final String type, final Widget widget) {
         final Collection<String> supportedModifiers = new WidgetModifiersSwitch().doSwitch(widget);
-        if(supportedModifiers.contains(type) && widget instanceof TextFormField){
+        if (supportedModifiers.contains(type) && widget instanceof TextFormField) {
             widget.setReturnTypeModifier(type);
-        }else{
+        } else {
             widget.setReturnTypeModifier(null);
         }
     }
 
     protected void addInputExpressionForData(final Data data, final Widget widget) {
         Expression inputExpression = ExpressionFactory.eINSTANCE.createExpression();
-        inputExpression.setContent(data.getName()) ;
-        inputExpression.setName(data.getName()) ;
-        inputExpression.setType(ExpressionConstants.VARIABLE_TYPE) ;
-        inputExpression.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(data)) ;
-        inputExpression.setReturnType(org.bonitasoft.studio.common.DataUtil.getTechnicalTypeFor(data)) ;
+        inputExpression.setContent(data.getName());
+        inputExpression.setName(data.getName());
+        inputExpression.setType(ExpressionConstants.VARIABLE_TYPE);
+        inputExpression.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(data));
+        inputExpression.setReturnType(org.bonitasoft.studio.common.DataUtil.getTechnicalTypeFor(data));
 
-        if(widget instanceof CheckBoxSingleFormField){
+        if (widget instanceof CheckBoxSingleFormField) {
             inputExpression.setReturnTypeFixed(true);
         }
 
         if (isAnEnumOnAMultipleValuatedFormField(data, widget)) {
-            if(!isOnInstantiationForm(data)){
+            if (!isOnInstantiationForm(data)) {
                 ((MultipleValuatedFormField) widget).setDefaultExpression(inputExpression);
             }
             inputExpression = ExpressionHelper.createExpressionFromEnumType((EnumType) data.getDataType());
             widget.setInputExpression(inputExpression);
-        }else if(!isOnInstantiationForm(data)){ //Do not set input expression if we are in an instantiation form
+        } else if (!isOnInstantiationForm(data)) { //Do not set input expression if we are in an instantiation form
             widget.setInputExpression(inputExpression);
         }
     }
 
-    protected boolean isAnEnumOnAMultipleValuatedFormField(final Data data,final Widget widget) {
+    protected boolean isAnEnumOnAMultipleValuatedFormField(final Data data, final Widget widget) {
         return data.getDataType() instanceof EnumType && widget instanceof MultipleValuatedFormField;
     }
 
     protected boolean isOnInstantiationForm(final Data data) {
         return ProcessPackage.Literals.PAGE_FLOW__FORM.equals(feature) //Entry form
-                && pageFlow instanceof Pool  //On a pool
+                && pageFlow instanceof Pool //On a pool
                 && !ProcessPackage.Literals.PAGE_FLOW__TRANSIENT_DATA.equals(data.eContainingFeature()); //Not a pageflow data
     }
 
-    protected void addOutputOperationForData(final Widget widget,final WidgetMapping mapping) {
-        final Data data = (Data)mapping.getModelElement();
-        if(!isDataPageFlowTransient(data) && hasOutputOperation(widget)) {
-            widget.setAction(createDataOutputOperation(widget, data)) ;
+    protected void addOutputOperationForData(final Widget widget, final WidgetMapping mapping) {
+        final Data data = (Data) mapping.getModelElement();
+        if (!isDataPageFlowTransient(data) && hasOutputOperation(widget)) {
+            widget.setAction(createDataOutputOperation(widget, data));
         }
     }
 
     protected boolean hasOutputOperation(final Widget widget) {
-        return !(widget instanceof Info) && !(widget instanceof Table) ;
+        return !(widget instanceof Info) && !(widget instanceof Table);
     }
 
     protected void addOutputOperationForDocument(final WidgetMapping mapping, final FileWidget widget) {
@@ -380,7 +370,7 @@ public class CreateFormCommand extends AbstractTransactionalCommand {
     protected void addInputExpressionForDocument(final Document key, final FileWidget widget) {
         final DocumentReferenceExpressionProvider drep = new DocumentReferenceExpressionProvider();
         final Expression inputExpression = drep.createDocRefExpression(key);
-        if(!(feature.equals(ProcessPackage.Literals.PAGE_FLOW__FORM) && pageFlow instanceof Pool)){ //Do not set input expression if we are in an instantiation form
+        if (!(feature.equals(ProcessPackage.Literals.PAGE_FLOW__FORM) && pageFlow instanceof Pool)) { //Do not set input expression if we are in an instantiation form
             widget.setInputExpression(inputExpression);
         }
         widget.setReturnTypeModifier(WidgetModifiersSwitch.ENGINE_DOCUMENT_QUALIFIED_NAME);
@@ -394,7 +384,7 @@ public class CreateFormCommand extends AbstractTransactionalCommand {
         submitButton.setInjectWidgetScript(createInsertWidgetIfScript());
         final WidgetLayoutInfo wLayout = FormFactory.eINSTANCE.createWidgetLayoutInfo();
         final int numberOfLines = getLineIndex(new WidgetContainer(myForm));
-        wLayout.setLine(Math.max(((List<?>) pageFlow.eGet(feature)).size() != 0 ? numberOfLines-1 : numberOfLines, MIN_BUTTON_LINE));
+        wLayout.setLine(Math.max(((List<?>) pageFlow.eGet(feature)).size() != 0 ? numberOfLines - 1 : numberOfLines, MIN_BUTTON_LINE));
         if (((List<?>) pageFlow.eGet(feature)).size() != 0) {
             wLayout.setColumn(1);
         }
@@ -417,10 +407,10 @@ public class CreateFormCommand extends AbstractTransactionalCommand {
     protected Form createForm() {
         Form myForm;
         /* set the numColumn (which will be the horizontal span for widgets) */
-        if(feature.equals(ProcessPackage.Literals.PAGE_FLOW__FORM)){
+        if (feature.equals(ProcessPackage.Literals.PAGE_FLOW__FORM)) {
             myForm = FormFactory.eINSTANCE.createForm();
 
-        }else{
+        } else {
             myForm = FormFactory.eINSTANCE.createViewForm();
             // submit button
         }
@@ -431,7 +421,7 @@ public class CreateFormCommand extends AbstractTransactionalCommand {
         return myForm;
     }
 
-    protected WidgetLayoutInfo createWidgetLayout(final int nLine, final int nCol, final int horizontalSpan,final int verticalSpan) {
+    protected WidgetLayoutInfo createWidgetLayout(final int nLine, final int nCol, final int horizontalSpan, final int verticalSpan) {
         final WidgetLayoutInfo wLayout = FormFactory.eINSTANCE.createWidgetLayoutInfo();
         wLayout.setLine(nLine);
         wLayout.setColumn(nCol);
@@ -440,14 +430,12 @@ public class CreateFormCommand extends AbstractTransactionalCommand {
         return wLayout;
     }
 
-
-
     protected Operation createDocumentOutputOperation(final FileWidget widget, final Document doc) {
-        final Operation action = ExpressionFactory.eINSTANCE.createOperation() ;
+        final Operation action = ExpressionFactory.eINSTANCE.createOperation();
 
         final Operator assignment = ExpressionFactory.eINSTANCE.createOperator();
-        assignment.setType(ExpressionConstants.SET_DOCUMENT_OPERATOR) ;
-        action.setOperator(assignment) ;
+        assignment.setType(ExpressionConstants.SET_DOCUMENT_OPERATOR);
+        action.setOperator(assignment);
 
         final Expression storageExpression = createStorageExpressionForDocument(doc, false);
         action.setLeftOperand(storageExpression);
@@ -459,15 +447,15 @@ public class CreateFormCommand extends AbstractTransactionalCommand {
 
     protected Expression createStorageExpressionForDocument(final Document doc, final boolean isMultiple) {
         final Expression storageExpression = ExpressionFactory.eINSTANCE.createExpression();
-        storageExpression.setContent(doc.getName()) ;
-        storageExpression.setName(doc.getName()) ;
-        storageExpression.setType(ExpressionConstants.DOCUMENT_REF_TYPE) ;
+        storageExpression.setContent(doc.getName());
+        storageExpression.setName(doc.getName());
+        storageExpression.setType(ExpressionConstants.DOCUMENT_REF_TYPE);
         if (isMultiple) {
             storageExpression.setReturnType(List.class.getName());
         } else {
             storageExpression.setReturnType(String.class.getName());
         }
-        storageExpression.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(doc)) ;
+        storageExpression.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(doc));
         return storageExpression;
 
     }
@@ -488,12 +476,12 @@ public class CreateFormCommand extends AbstractTransactionalCommand {
     }
 
     protected Operation createDataOutputOperation(final Widget widget, final Data data) {
-        final Operation action = ExpressionFactory.eINSTANCE.createOperation() ;
+        final Operation action = ExpressionFactory.eINSTANCE.createOperation();
         final Operator assignment = ExpressionFactory.eINSTANCE.createOperator();
-        assignment.setType(ExpressionConstants.ASSIGNMENT_OPERATOR) ;
-        action.setOperator(assignment) ;
-        action.setLeftOperand(createVariableExpression(data)) ;
-        action.setRightOperand(createWidgetExpression(widget)) ;
+        assignment.setType(ExpressionConstants.ASSIGNMENT_OPERATOR);
+        action.setOperator(assignment);
+        action.setLeftOperand(createVariableExpression(data));
+        action.setRightOperand(createWidgetExpression(widget));
         return action;
     }
 
@@ -502,20 +490,19 @@ public class CreateFormCommand extends AbstractTransactionalCommand {
         final String widgetName = widget.getName();
         actionExpression.setContent(WidgetHelper.FIELD_PREFIX + widgetName);
         actionExpression.setName(WidgetHelper.FIELD_PREFIX + widgetName);
-        actionExpression.setType(ExpressionConstants.FORM_FIELD_TYPE) ;
-        actionExpression.setReturnType(WidgetHelper.getAssociatedReturnType(widget)) ;
-        actionExpression.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(widget)) ;
+        actionExpression.setType(ExpressionConstants.FORM_FIELD_TYPE);
+        actionExpression.setReturnType(WidgetHelper.getAssociatedReturnType(widget));
+        actionExpression.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(widget));
         return actionExpression;
     }
 
-
     protected Expression createVariableExpression(final Data data) {
         final Expression storageExpression = ExpressionFactory.eINSTANCE.createExpression();
-        storageExpression.setContent(data.getName()) ;
-        storageExpression.setName(data.getName()) ;
-        storageExpression.setType(ExpressionConstants.VARIABLE_TYPE) ;
-        storageExpression.setReturnType(org.bonitasoft.studio.common.DataUtil.getTechnicalTypeFor(data)) ;
-        storageExpression.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(data)) ;
+        storageExpression.setContent(data.getName());
+        storageExpression.setName(data.getName());
+        storageExpression.setType(ExpressionConstants.VARIABLE_TYPE);
+        storageExpression.setReturnType(org.bonitasoft.studio.common.DataUtil.getTechnicalTypeFor(data));
+        storageExpression.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(data));
         return storageExpression;
     }
 
@@ -608,7 +595,7 @@ public class CreateFormCommand extends AbstractTransactionalCommand {
 
     protected boolean isDataPageFlowTransient(final Data data) {
         final EReference reference = data.eContainmentFeature();
-        if(reference!=null){
+        if (reference != null) {
             return reference.equals(ProcessPackage.Literals.PAGE_FLOW__TRANSIENT_DATA)
                     || reference.equals(ProcessPackage.Literals.VIEW_PAGE_FLOW__VIEW_TRANSIENT_DATA)
                     || reference.equals(ProcessPackage.Literals.RECAP_FLOW__RECAP_TRANSIENT_DATA);
@@ -616,7 +603,8 @@ public class CreateFormCommand extends AbstractTransactionalCommand {
         return false;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see org.eclipse.emf.workspace.AbstractEMFOperation#canUndo()
      */
     @Override
@@ -624,22 +612,22 @@ public class CreateFormCommand extends AbstractTransactionalCommand {
         return false;//avoid issues when a form was created an en editor is open on it
     }
 
-    protected Expression createInsertWidgetIfScript(){
+    protected Expression createInsertWidgetIfScript() {
         final Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression("");
         exp.setReturnType(Boolean.class.getName());
         exp.setReturnTypeFixed(true);
-        return exp ;
+        return exp;
     }
 
-    protected String computeWidgetId(String key, final Widget widget){
-        final PageFlow pf = (PageFlow)pageFlow;
-        if(widget.eContainer() instanceof Group){
-            key = ((Element) widget.eContainer()).getName()+"_"+key;
+    protected String computeWidgetId(String key, final Widget widget) {
+        final PageFlow pf = (PageFlow) pageFlow;
+        if (widget.eContainer() instanceof Group) {
+            key = ((Element) widget.eContainer()).getName() + "_" + key;
         }
-        if (pf !=null){
+        if (pf != null) {
             int number = NamingUtils.getMaxElements(pageFlow, key);
             number++;
-            key +=number;
+            key += number;
         }
         return key;
     }

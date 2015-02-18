@@ -5,14 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.diagram.form.custom.model;
 
@@ -21,6 +19,9 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import org.bonitasoft.engine.bdm.model.field.Field;
+import org.bonitasoft.engine.bdm.model.field.FieldType;
+import org.bonitasoft.engine.bdm.model.field.SimpleField;
 import org.bonitasoft.studio.model.form.FormFactory;
 import org.bonitasoft.studio.model.form.FormPackage;
 import org.bonitasoft.studio.model.form.Widget;
@@ -35,19 +36,13 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 
-import com.bonitasoft.engine.bdm.model.field.Field;
-import com.bonitasoft.engine.bdm.model.field.FieldType;
-import com.bonitasoft.engine.bdm.model.field.SimpleField;
-
 /**
  * @author Romain Bioteau
- *
  */
 public class WidgetMapping {
 
-
-    protected static List<EClass> singleValuatedTextWidgetType ;
-    static{
+    protected static List<EClass> singleValuatedTextWidgetType;
+    static {
         singleValuatedTextWidgetType = new ArrayList<EClass>();
         singleValuatedTextWidgetType.add(FormPackage.Literals.TEXT_FORM_FIELD);
         singleValuatedTextWidgetType.add(FormPackage.Literals.PASSWORD_FORM_FIELD);
@@ -71,7 +66,7 @@ public class WidgetMapping {
 
     private WidgetMapping parent;
 
-    public WidgetMapping(final Object modelElement){
+    public WidgetMapping(final Object modelElement) {
         Assert.isNotNull(modelElement);
         this.modelElement = modelElement;
         children = new ArrayList<WidgetMapping>();
@@ -86,7 +81,7 @@ public class WidgetMapping {
      * @return
      */
     private Widget initializeWidgetType() {
-        if(modelElement instanceof Document){
+        if (modelElement instanceof Document) {
             return FormFactory.eINSTANCE.createFileWidget();
         }
         return initializeWidgetTypeForData();
@@ -94,7 +89,7 @@ public class WidgetMapping {
 
     protected Widget initializeWidgetTypeForData() {
         final List<EClass> widgetType = getCompatibleWidgetTypes();
-        if(!widgetType.isEmpty()){
+        if (!widgetType.isEmpty()) {
             final EClass eClass = widgetType.get(0);
             return (Widget) FormFactory.eINSTANCE.create(eClass);
         }
@@ -142,7 +137,6 @@ public class WidgetMapping {
     public void setReadOnly(final boolean isReadOnly) {
         this.isReadOnly = isReadOnly;
     }
-
 
     public List<EClass> getCompatibleWidgetTypes() {
         if (modelElement instanceof BusinessObjectData) {
@@ -226,16 +220,16 @@ public class WidgetMapping {
     }
 
     protected List<EClass> getWidgetTypeForSingleData(final DataType dataType) {
-        return new ProcessSwitch<List<EClass>>(){
+        return new ProcessSwitch<List<EClass>>() {
 
             @Override
             public List<EClass> caseDateType(final org.bonitasoft.studio.model.process.DateType object) {
-                return Collections.<EClass>singletonList(FormPackage.Literals.DATE_FORM_FIELD);
+                return Collections.<EClass> singletonList(FormPackage.Literals.DATE_FORM_FIELD);
             }
 
             @Override
             public List<EClass> caseBooleanType(final org.bonitasoft.studio.model.process.BooleanType object) {
-                return Collections.<EClass>singletonList(FormPackage.Literals.CHECK_BOX_SINGLE_FORM_FIELD);
+                return Collections.<EClass> singletonList(FormPackage.Literals.CHECK_BOX_SINGLE_FORM_FIELD);
             }
 
             @Override
@@ -253,7 +247,7 @@ public class WidgetMapping {
 
             @Override
             public List<EClass> defaultCase(final org.eclipse.emf.ecore.EObject object) {
-                return Collections.<EClass>singletonList(FormPackage.Literals.TEXT_FORM_FIELD);
+                return Collections.<EClass> singletonList(FormPackage.Literals.TEXT_FORM_FIELD);
             }
 
         }.doSwitch(dataType);
@@ -264,7 +258,7 @@ public class WidgetMapping {
     }
 
     public void addChild(final WidgetMapping child) {
-        if(!children.contains(child)){
+        if (!children.contains(child)) {
             child.setParent(this);
             children.add(child);
         }
