@@ -40,7 +40,7 @@ public class EmptyNameConstraint extends AbstractLiveValidationMarkerConstraint 
 
     @Override
     protected IStatus performLiveValidation(final IValidationContext ctx) {
-        return ctx.createSuccessStatus();
+        return doValidate(ctx);
     }
 
     @Override
