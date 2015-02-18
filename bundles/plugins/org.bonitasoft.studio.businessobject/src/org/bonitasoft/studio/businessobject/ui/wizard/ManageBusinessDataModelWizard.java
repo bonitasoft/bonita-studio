@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -18,6 +16,11 @@ package org.bonitasoft.studio.businessobject.ui.wizard;
 
 import java.lang.reflect.InvocationTargetException;
 
+import org.bonitasoft.engine.bdm.model.BusinessObject;
+import org.bonitasoft.engine.bdm.model.BusinessObjectModel;
+import org.bonitasoft.engine.bdm.model.Index;
+import org.bonitasoft.engine.bdm.model.UniqueConstraint;
+import org.bonitasoft.engine.bdm.model.field.Field;
 import org.bonitasoft.studio.businessobject.core.operation.DeployBDMOperation;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
@@ -37,15 +40,8 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.swt.widgets.Display;
 
-import org.bonitasoft.engine.bdm.model.BusinessObject;
-import org.bonitasoft.engine.bdm.model.BusinessObjectModel;
-import org.bonitasoft.engine.bdm.model.Index;
-import org.bonitasoft.engine.bdm.model.UniqueConstraint;
-import org.bonitasoft.engine.bdm.model.field.Field;
-
 /**
  * @author Romain Bioteau
- *
  */
 public class ManageBusinessDataModelWizard extends Wizard {
 
@@ -89,7 +85,7 @@ public class ManageBusinessDataModelWizard extends Wizard {
     public boolean performFinish() {
         if (businessObjectModel != null) {
             boolean confirm = true;
-            if (!newBdm /* && !fStore.sameContentAs(businessObjectModel) */) {
+            if (!newBdm) {
                 final IPreferenceStore preferenceStore = getPreferenceStore();
                 final MessageDialogWithToggle confirmDialog = MessageDialogWithPrompt.openOkCancelConfirm(getShell(), Messages.bdmCompatibilityTitle,
                         Messages.bdmCompatibilityMsg,

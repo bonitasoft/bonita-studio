@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.bonitasoft.studio.businessobject.ui.expression;
 
@@ -57,7 +57,6 @@ import org.eclipse.swt.widgets.Text;
 
 /**
  * @author Romain
- * 
  */
 public class QueryExpressionEditor extends SelectionAwareExpressionEditor implements IExpressionEditor {
 
@@ -65,7 +64,7 @@ public class QueryExpressionEditor extends SelectionAwareExpressionEditor implem
 
     private IViewerObservableValue observeQuerySingleSelection;
 
-    private final QueryExpressionProvider queryExpressionProvider = new QueryExpressionProvider();
+    private final QueryExpressionProvider queryExpressionProvider;
 
     private ReferencedExpressionEditingSupport editingSupport;
 
@@ -74,6 +73,10 @@ public class QueryExpressionEditor extends SelectionAwareExpressionEditor implem
     private QueryExpressionModel queryExpressionModel;
 
     private IObservableList queryParameterObserveDetailList;
+
+    public QueryExpressionEditor(final QueryExpressionProvider queryExpressionProvider) {
+        this.queryExpressionProvider = queryExpressionProvider;
+    }
 
     @Override
     public Control createExpressionEditor(final Composite parent, final EMFDataBindingContext ctx) {
@@ -319,7 +322,8 @@ public class QueryExpressionEditor extends SelectionAwareExpressionEditor implem
     }
 
     @Override
-    public void bindExpression(final EMFDataBindingContext dataBindingContext, final EObject context, final Expression inputExpression, final ViewerFilter[] viewerTypeFilters,
+    public void bindExpression(final EMFDataBindingContext dataBindingContext, final EObject context, final Expression inputExpression,
+            final ViewerFilter[] viewerTypeFilters,
             final ExpressionViewer viewer) {
         editingSupport.setInput(context);
         this.inputExpression = inputExpression;

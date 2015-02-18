@@ -42,6 +42,8 @@ import org.eclipse.swt.graphics.Image;
  */
 public class QueryExpressionProvider implements IExpressionProvider {
 
+    private BusinessObjectModelFileStore fileStore;
+
     /*
      * (non-Javadoc)
      * @see org.bonitasoft.studio.expression.editor.provider.IExpressionProvider#getExpressions(org.eclipse.emf.ecore.EObject)
@@ -117,7 +119,9 @@ public class QueryExpressionProvider implements IExpressionProvider {
 
     protected BusinessObjectModel getBusinessObjectModel() {
         final BusinessObjectModelRepositoryStore repositoryStore = RepositoryManager.getInstance().getRepositoryStore(BusinessObjectModelRepositoryStore.class);
-        final BusinessObjectModelFileStore fileStore = repositoryStore.getChild(BusinessObjectModelFileStore.DEFAULT_BDM_FILENAME);
+        if (fileStore == null) {
+            fileStore = repositoryStore.getChild(BusinessObjectModelFileStore.DEFAULT_BDM_FILENAME);
+        }
         if (fileStore != null) {
             return fileStore.getContent();
         }
@@ -186,7 +190,7 @@ public class QueryExpressionProvider implements IExpressionProvider {
      */
     @Override
     public IExpressionEditor getExpressionEditor(final Expression expression, final EObject context) {
-        return new QueryExpressionEditor();
+        return new QueryExpressionEditor(this);
     }
 
 }

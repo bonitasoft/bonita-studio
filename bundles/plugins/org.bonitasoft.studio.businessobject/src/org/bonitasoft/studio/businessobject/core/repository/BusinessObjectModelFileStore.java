@@ -11,7 +11,9 @@ package org.bonitasoft.studio.businessobject.core.repository;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.bonitasoft.engine.bdm.BusinessObjectModelConverter;
 import org.bonitasoft.engine.bdm.model.BusinessObject;
@@ -42,6 +44,8 @@ public class BusinessObjectModelFileStore extends AbstractFileStore {
 
     public BusinessObjectModelConverter converter;
 
+    public Map<Long, BusinessObjectModel> cachedBusinessObjectModel = new HashMap<Long, BusinessObjectModel>();
+
     public BusinessObjectModelFileStore(final String fileName, final IRepositoryStore<BusinessObjectModelFileStore> store) {
         super(fileName, store);
         converter = new BusinessObjectModelConverter();
@@ -51,13 +55,21 @@ public class BusinessObjectModelFileStore extends AbstractFileStore {
     public BusinessObjectModel getContent() {
         final IFile resource = getResource();
         if (!resource.exists()) {
+            cachedBusinessObjectModel = null;
             return null;
+        }
+        final long modificationStamp = resource.getModificationStamp();
+        if (cachedBusinessObjectModel.containsKey(modificationStamp)) {
+            return cachedBusinessObjectModel.get(modificationStamp);
         }
         InputStream contents = null;
         try {
             contents = resource.getContents();
             final byte[] bytes = FileUtil.loadBytes(contents);
-            return converter.unzip(bytes);
+            final BusinessObjectModel bom = converter.unzip(bytes);
+            cachedBusinessObjectModel.clear();
+            cachedBusinessObjectModel.put(modificationStamp, bom);
+            return bom;
         } catch (final Exception e) {
             BonitaStudioLog.error(e);
         } finally {
@@ -90,6 +102,8 @@ public class BusinessObjectModelFileStore extends AbstractFileStore {
             } else {
                 resource.create(source, IResource.FORCE, Repository.NULL_PROGRESS_MONITOR);
             }
+            cachedBusinessObjectModel.clear();
+            cachedBusinessObjectModel.put(resource.getModificationStamp(), (BusinessObjectModel) content);
         } catch (final Exception e) {
             BonitaStudioLog.error(e);
         }
@@ -103,6 +117,7 @@ public class BusinessObjectModelFileStore extends AbstractFileStore {
             depJar.delete();
         }
         super.doDelete();
+        cachedBusinessObjectModel = null;
     }
 
     protected DependencyRepositoryStore getDependencyRepositoryStore() {
