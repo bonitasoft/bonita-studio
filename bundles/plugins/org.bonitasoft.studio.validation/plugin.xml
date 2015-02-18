@@ -997,6 +997,21 @@
                      class="Expression:http://www.bonitasoft.org/ns/studio/expression">
                </target>
             </constraint>
+            <constraint
+                  class="org.bonitasoft.studio.validation.constraints.process.MultiInstanceIteratorConstraint"
+                  id="org.bonitasoft.studio.validation.multiInstanceIterator"
+                  lang="Java"
+                  mode="Batch"
+                  name="MultiInstance iterator constraint"
+                  severity="WARNING"
+                  statusCode="1">
+               <message>
+                  {0}
+               </message>
+               <target
+                     class="MultiInstantiable:http://www.bonitasoft.org/ns/studio/process">
+               </target>
+            </constraint>
          </constraints>
          <package
                namespaceUri="http://www.bonitasoft.org/ns/studio/process">
