@@ -86,6 +86,7 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeNodeEditPart;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.omg.spec.bpmn.di.BPMNDiagram;
 import org.omg.spec.bpmn.di.BPMNEdge;
+import org.omg.spec.bpmn.di.BPMNLabel;
 import org.omg.spec.bpmn.di.BPMNLabelStyle;
 import org.omg.spec.bpmn.di.BPMNPlane;
 import org.omg.spec.bpmn.di.BPMNShape;
@@ -612,6 +613,7 @@ public class BPMNToProc extends ToProcProcessor {
 
                         builder.addDescription(retrieveDocumentation(flowNode));
                         populateEvent(flowNode, eventType);
+                        initializeLabelPositionOnEvent(flowNode.getId());
 
                     } else if (flowNode instanceof TBoundaryEvent) {
                         status.add(new Status(IStatus.ERROR, ImporterPlugin.PLUGIN_ID, flowNode.eClass().getName() + ": "
@@ -1044,6 +1046,7 @@ public class BPMNToProc extends ToProcProcessor {
                 final String targetId = sequenceFlow.getTargetRef();
                 builder.addSequenceFlow(sequenceFlow.getName(), sourceId,
                         targetId, isDefault, null, null, bendpoints);
+                initializeLabelPositionOnSequenceFlow(sequenceFlowID);
                 if (sequenceFlow.getConditionExpression() != null) {
                     final Expression basedExpression = getBonitaExpressionFromBPMNExpression(sequenceFlow
                             .getConditionExpression());
@@ -1054,6 +1057,15 @@ public class BPMNToProc extends ToProcProcessor {
                 }
             }
         }
+    }
+
+    private void initializeLabelPositionOnSequenceFlow(final String sequenceFlowID) throws ProcBuilderException{
+        final BPMNEdge edge = getBPMNEdgeFor(sequenceFlowID);
+       final BPMNLabel label= edge.getBPMNLabel();
+       if (label!=null){
+           final Bounds bounds=label.getBounds();
+           builder.setLabelPositionOnSequenceFlowOrEvent(new org.eclipse.draw2d.geometry.Point(bounds.getX(),(int)bounds.getY()));
+       }
     }
 
     private boolean isSequenceFlowDefault(final TSequenceFlow sequenceFlow, final String sequenceFlowID) {
@@ -1180,12 +1192,13 @@ public class BPMNToProc extends ToProcProcessor {
                             builder.addDescription(documentation);
 
                             populateEvent(flowNode, eventType);
-
+                            initializeLabelPositionOnEvent(flowNode.getId());
                         } else if (isGateway) {
                             final String gatewayName = flowNode.getName();
                             builder.addGateway(flowNode.getId(), name,
                                     location, null, gateType,gatewayName != null && !gatewayName.isEmpty());
                             builder.addDescription(documentation);
+                            initializeLabelPositionOnEvent(flowNode.getId());
                         } else if (isSubprocessEvent) {
                             processSubProcessEvent(fromSubProcess, flowNode, location, name, documentation);
                         } else {
@@ -1682,6 +1695,15 @@ public class BPMNToProc extends ToProcProcessor {
         }
     }
 
+    private void initializeLabelPositionOnEvent(final String eventId) throws ProcBuilderException{
+        final BPMNShape shape = getBPMNShapeForBpmnID(eventId);
+       final BPMNLabel label= shape.getBPMNLabel();
+       if (label!=null){
+           final Bounds bounds=label.getBounds();
+           builder.setLabelPositionOnSequenceFlowOrEvent(new org.eclipse.draw2d.geometry.Point(bounds.getX(),(int)bounds.getY()));
+       }
+    }
+
     private void populateErrorEvent(final TFlowNode flowNode)
             throws ProcBuilderException {
         String errorCode = null;
@@ -1700,6 +1722,7 @@ public class BPMNToProc extends ToProcProcessor {
         }
         if (errorCode != null) {
             builder.addErrorCode(errorCode);
+
         }
     }
 
