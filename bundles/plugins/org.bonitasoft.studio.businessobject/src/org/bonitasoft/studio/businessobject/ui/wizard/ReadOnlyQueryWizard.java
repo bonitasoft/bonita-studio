@@ -18,8 +18,8 @@ package org.bonitasoft.studio.businessobject.ui.wizard;
 
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 
-import com.bonitasoft.engine.bdm.model.BusinessObject;
-import com.bonitasoft.engine.bdm.model.Query;
+import org.bonitasoft.engine.bdm.model.BusinessObject;
+import org.bonitasoft.engine.bdm.model.Query;
 
 /**
  * @author Romain Bioteau

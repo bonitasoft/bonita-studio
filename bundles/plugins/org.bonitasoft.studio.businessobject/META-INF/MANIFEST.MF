@@ -42,13 +42,13 @@ Require-Bundle: org.bonitasoft.studio.engine;bundle-version="1.0.0",
 Export-Package: org.bonitasoft.studio.businessobject.core.operation,or
  g.bonitasoft.studio.businessobject.core.repository,org.bonitasoft.stu
  dio.businessobject.ui,org.bonitasoft.studio.businessobject.ui.wizard
-Import-Package: com.bonitasoft.engine.api,
- com.bonitasoft.engine.bdm,
- com.bonitasoft.engine.bdm.dao,
- com.bonitasoft.engine.bdm.model,
- com.bonitasoft.engine.bdm.model.field,
- com.bonitasoft.engine.bdm.validator,
- com.bonitasoft.engine.businessdata,
+Import-Package: org.bonitasoft.engine.api,
+ org.bonitasoft.engine.bdm,
+ org.bonitasoft.engine.bdm.dao,
+ org.bonitasoft.engine.bdm.model,
+ org.bonitasoft.engine.bdm.model.field,
+ org.bonitasoft.engine.bdm.validator,
+ org.bonitasoft.engine.business.data,
  org.bonitasoft.engine.exception,
  org.bonitasoft.engine.platform,
  org.bonitasoft.engine.session

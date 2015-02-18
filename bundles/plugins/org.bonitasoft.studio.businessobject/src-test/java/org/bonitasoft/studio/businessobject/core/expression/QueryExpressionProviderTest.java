@@ -24,11 +24,11 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.bonitasoft.engine.bdm.model.BusinessObject;
-import com.bonitasoft.engine.bdm.model.BusinessObjectModel;
-import com.bonitasoft.engine.bdm.model.Query;
-import com.bonitasoft.engine.bdm.model.field.FieldType;
-import com.bonitasoft.engine.bdm.model.field.SimpleField;
+import org.bonitasoft.engine.bdm.model.BusinessObject;
+import org.bonitasoft.engine.bdm.model.BusinessObjectModel;
+import org.bonitasoft.engine.bdm.model.Query;
+import org.bonitasoft.engine.bdm.model.field.FieldType;
+import org.bonitasoft.engine.bdm.model.field.SimpleField;
 
 /**
  * @author Romain Bioteau

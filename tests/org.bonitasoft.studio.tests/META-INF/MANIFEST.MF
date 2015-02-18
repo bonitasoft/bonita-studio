@@ -8,10 +8,9 @@ Eclipse-BundleShape: dir
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ClassPath: .
 Bundle-Activator: org.bonitasoft.studio.tests.Activator
-Import-Package: com.bonitasoft.engine.api,
- com.bonitasoft.engine.bdm.model,
- com.bonitasoft.engine.bdm.model.field,
- org.bonitasoft.engine.api,
+Import-Package: org.bonitasoft.engine.api,
+ org.bonitasoft.engine.bdm.model,
+ org.bonitasoft.engine.bdm.model.field,
  org.bonitasoft.engine.bpm,
  org.bonitasoft.engine.bpm.bar,
  org.bonitasoft.engine.bpm.connector,

@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -21,31 +19,28 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.List;
 
 import org.bonitasoft.engine.bpm.businessdata.BusinessDataDefinition;
+import org.bonitasoft.engine.bpm.process.impl.ProcessDefinitionBuilder;
 import org.bonitasoft.studio.model.process.BusinessObjectData;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.bonitasoft.engine.bpm.process.impl.ProcessDefinitionBuilderExt;
-
-
 /**
  * @author Romain Bioteau
- *
  */
 public class DataSwitchTest {
 
     private DataSwitch switchUnderTest;
     private BusinessObjectData data;
-    private ProcessDefinitionBuilderExt designProcessDefinitionBuilderEx;
+    private ProcessDefinitionBuilder designProcessDefinitionBuilderEx;
 
     /**
      * @throws java.lang.Exception
      */
     @Before
     public void setUp() throws Exception {
-        designProcessDefinitionBuilderEx = new ProcessDefinitionBuilderExt().createNewInstance("p1", "1.0");
+        designProcessDefinitionBuilderEx = new ProcessDefinitionBuilder().createNewInstance("p1", "1.0");
         data = ProcessFactory.eINSTANCE.createBusinessObjectData();
         data.setName("myLeaveRequest");
         data.setClassName("org.bonitasoft.hr.LeaveRequest");

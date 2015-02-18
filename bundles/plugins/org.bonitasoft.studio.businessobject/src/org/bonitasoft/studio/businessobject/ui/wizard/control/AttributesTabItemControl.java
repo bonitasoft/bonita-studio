@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -22,6 +20,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.bonitasoft.engine.bdm.model.BusinessObject;
+import org.bonitasoft.engine.bdm.model.BusinessObjectModel;
+import org.bonitasoft.engine.bdm.model.field.Field;
+import org.bonitasoft.engine.bdm.model.field.FieldType;
+import org.bonitasoft.engine.bdm.model.field.RelationField;
+import org.bonitasoft.engine.bdm.model.field.RelationField.FetchType;
+import org.bonitasoft.engine.bdm.model.field.RelationField.Type;
+import org.bonitasoft.engine.bdm.model.field.SimpleField;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.businessobject.ui.wizard.editingsupport.FieldNameEditingSupport;
 import org.bonitasoft.studio.businessobject.ui.wizard.editingsupport.FieldTypeEditingSupport;
@@ -80,27 +86,17 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TableColumn;
 
-import com.bonitasoft.engine.bdm.model.BusinessObject;
-import com.bonitasoft.engine.bdm.model.BusinessObjectModel;
-import com.bonitasoft.engine.bdm.model.field.Field;
-import com.bonitasoft.engine.bdm.model.field.FieldType;
-import com.bonitasoft.engine.bdm.model.field.RelationField;
-import com.bonitasoft.engine.bdm.model.field.RelationField.FetchType;
-import com.bonitasoft.engine.bdm.model.field.RelationField.Type;
-import com.bonitasoft.engine.bdm.model.field.SimpleField;
-
 /**
  * @author Romain Bioteau
- *
  */
-@SuppressWarnings("restriction")
 public class AttributesTabItemControl extends AbstractTabItemControl {
 
     private final IObservableList fieldsList;
 
     private final BusinessObjectModel businessObjectModel;
 
-    public AttributesTabItemControl(final TabFolder parent, final DataBindingContext ctx, final IViewerObservableValue viewerObservableValue, final IObservableList fieldsList,
+    public AttributesTabItemControl(final TabFolder parent, final DataBindingContext ctx, final IViewerObservableValue viewerObservableValue,
+            final IObservableList fieldsList,
             final BusinessObjectModel businessObjectModel) {
         super(parent, SWT.NONE);
         this.businessObjectModel = businessObjectModel;
@@ -163,7 +159,8 @@ public class AttributesTabItemControl extends AbstractTabItemControl {
         return composite;
     }
 
-    private Composite createStringFieldDetailContent(final Group detailGroup, final DataBindingContext ctx, final IViewerObservableValue attributeSelectionObservable) {
+    private Composite createStringFieldDetailContent(final Group detailGroup, final DataBindingContext ctx,
+            final IViewerObservableValue attributeSelectionObservable) {
         final Composite composite = new Composite(detailGroup, SWT.NONE);
         composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         composite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(10, 10).spacing(15, 5).create());
@@ -222,7 +219,8 @@ public class AttributesTabItemControl extends AbstractTabItemControl {
         return values.toArray(new String[values.size()]);
     }
 
-    private Composite createRelationFieldDetailContent(final Group detailGroup, final DataBindingContext ctx, final IViewerObservableValue attributeSelectionObservable,
+    private Composite createRelationFieldDetailContent(final Group detailGroup, final DataBindingContext ctx,
+            final IViewerObservableValue attributeSelectionObservable,
             final IViewerObservableValue viewerObservableValue) {
         final Composite composite = new Composite(detailGroup, SWT.NONE);
         composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());

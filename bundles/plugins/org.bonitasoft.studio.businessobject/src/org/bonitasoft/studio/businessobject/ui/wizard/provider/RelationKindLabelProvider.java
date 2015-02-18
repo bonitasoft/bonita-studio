@@ -19,8 +19,8 @@ package org.bonitasoft.studio.businessobject.ui.wizard.provider;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 
-import com.bonitasoft.engine.bdm.model.field.RelationField;
-import com.bonitasoft.engine.bdm.model.field.RelationField.Type;
+import org.bonitasoft.engine.bdm.model.field.RelationField;
+import org.bonitasoft.engine.bdm.model.field.RelationField.Type;
 
 /**
  * @author Romain Bioteau

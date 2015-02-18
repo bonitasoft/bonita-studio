@@ -24,9 +24,9 @@ import org.eclipse.jdt.core.JavaConventions;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jface.viewers.ICellEditorValidator;
 
-import com.bonitasoft.engine.bdm.BDMQueryUtil;
-import com.bonitasoft.engine.bdm.model.Query;
-import com.bonitasoft.engine.bdm.model.QueryParameter;
+import org.bonitasoft.engine.bdm.BDMQueryUtil;
+import org.bonitasoft.engine.bdm.model.Query;
+import org.bonitasoft.engine.bdm.model.QueryParameter;
 
 /**
  * @author Romain Bioteau

@@ -30,9 +30,9 @@ import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
-import com.bonitasoft.engine.bdm.model.BusinessObject;
-import com.bonitasoft.engine.bdm.model.Query;
-import com.bonitasoft.engine.bdm.model.QueryParameter;
+import org.bonitasoft.engine.bdm.model.BusinessObject;
+import org.bonitasoft.engine.bdm.model.Query;
+import org.bonitasoft.engine.bdm.model.QueryParameter;
 
 /**
  * @author Romain Bioteau

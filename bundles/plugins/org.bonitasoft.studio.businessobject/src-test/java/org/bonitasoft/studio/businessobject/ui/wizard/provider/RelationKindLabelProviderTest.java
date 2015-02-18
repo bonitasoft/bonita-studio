@@ -23,9 +23,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.bonitasoft.engine.bdm.model.field.RelationField;
-import com.bonitasoft.engine.bdm.model.field.RelationField.Type;
-import com.bonitasoft.engine.bdm.model.field.SimpleField;
+import org.bonitasoft.engine.bdm.model.field.RelationField;
+import org.bonitasoft.engine.bdm.model.field.RelationField.Type;
+import org.bonitasoft.engine.bdm.model.field.SimpleField;
 
 /**
  * @author Romain Bioteau

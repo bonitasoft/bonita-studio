@@ -37,11 +37,11 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.swt.widgets.Display;
 
-import com.bonitasoft.engine.bdm.model.BusinessObject;
-import com.bonitasoft.engine.bdm.model.BusinessObjectModel;
-import com.bonitasoft.engine.bdm.model.Index;
-import com.bonitasoft.engine.bdm.model.UniqueConstraint;
-import com.bonitasoft.engine.bdm.model.field.Field;
+import org.bonitasoft.engine.bdm.model.BusinessObject;
+import org.bonitasoft.engine.bdm.model.BusinessObjectModel;
+import org.bonitasoft.engine.bdm.model.Index;
+import org.bonitasoft.engine.bdm.model.UniqueConstraint;
+import org.bonitasoft.engine.bdm.model.field.Field;
 
 /**
  * @author Romain Bioteau

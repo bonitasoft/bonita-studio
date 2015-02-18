@@ -24,9 +24,9 @@ import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.jface.wizard.Wizard;
 
-import com.bonitasoft.engine.bdm.model.BusinessObject;
-import com.bonitasoft.engine.bdm.model.Query;
-import com.bonitasoft.engine.bdm.model.QueryParameter;
+import org.bonitasoft.engine.bdm.model.BusinessObject;
+import org.bonitasoft.engine.bdm.model.Query;
+import org.bonitasoft.engine.bdm.model.QueryParameter;
 
 /**
  * @author Romain Bioteau

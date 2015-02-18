@@ -19,7 +19,7 @@ package org.bonitasoft.studio.businessobject.ui.wizard.provider;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.common.jface.AbstractCheckboxLabelProvider;
 
-import com.bonitasoft.engine.bdm.model.field.Field;
+import org.bonitasoft.engine.bdm.model.field.Field;
 
 public class MandatoryCheckboxLabelProvider extends AbstractCheckboxLabelProvider {
 

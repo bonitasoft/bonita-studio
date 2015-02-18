@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -27,6 +25,11 @@ import static org.mockito.Mockito.when;
 
 import java.io.File;
 
+import org.bonitasoft.engine.api.TenantAdministrationAPI;
+import org.bonitasoft.engine.bdm.model.BusinessObject;
+import org.bonitasoft.engine.bdm.model.BusinessObjectModel;
+import org.bonitasoft.engine.bdm.model.field.FieldType;
+import org.bonitasoft.engine.bdm.model.field.SimpleField;
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.common.repository.Repository;
@@ -39,15 +42,8 @@ import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import com.bonitasoft.engine.api.TenantManagementAPI;
-import com.bonitasoft.engine.bdm.model.BusinessObject;
-import com.bonitasoft.engine.bdm.model.BusinessObjectModel;
-import com.bonitasoft.engine.bdm.model.field.FieldType;
-import com.bonitasoft.engine.bdm.model.field.SimpleField;
-
 /**
  * @author Romain Bioteau
- *
  */
 @RunWith(MockitoJUnitRunner.class)
 public class DeployBDMOperationTest {
@@ -58,7 +54,7 @@ public class DeployBDMOperationTest {
     private BOSEngineManager manager;
 
     @Mock
-    private TenantManagementAPI tenantManagementAPI;
+    private TenantAdministrationAPI tenantAdminAPI;
 
     @Mock
     private BusinessObjectModelFileStore bdmFileStore;
@@ -84,7 +80,7 @@ public class DeployBDMOperationTest {
         doReturn(bom).when(bdmFileStore).getContent();
         doReturn(new byte[512]).when(operationUnderTest).retrieveModelJarContent(any(byte[].class));
         doReturn(false).when(operationUnderTest).dropDBOnInstall();
-        when(manager.getTenantManagementAPI((APISession) anyObject())).thenReturn(tenantManagementAPI);
+        when(manager.getTenantAdministrationAPI((APISession) anyObject())).thenReturn(tenantAdminAPI);
         doReturn(manager).when(operationUnderTest).getBOSEngineManagerEx();
         doNothing().when(operationUnderTest).updateDependency(any(byte[].class));
         parentFolder = new File("test");
@@ -112,12 +108,12 @@ public class DeployBDMOperationTest {
         operationUnderTest.run(Repository.NULL_PROGRESS_MONITOR);
         verify(manager).loginDefaultTenant(Repository.NULL_PROGRESS_MONITOR);
         verify(bdmFileStore).getContent();
-        final InOrder inOrder = inOrder(tenantManagementAPI);
-        inOrder.verify(tenantManagementAPI).pause();
-        inOrder.verify(tenantManagementAPI).uninstallBusinessDataModel();
-        inOrder.verify(tenantManagementAPI).installBusinessDataModel(any(byte[].class));
-        inOrder.verify(tenantManagementAPI).resume();
-        verify(tenantManagementAPI).getClientBDMZip();
+        final InOrder inOrder = inOrder(tenantAdminAPI);
+        inOrder.verify(tenantAdminAPI).pause();
+        inOrder.verify(tenantAdminAPI).uninstallBusinessDataModel();
+        inOrder.verify(tenantAdminAPI).installBusinessDataModel(any(byte[].class));
+        inOrder.verify(tenantAdminAPI).resume();
+        verify(tenantAdminAPI).getClientBDMZip();
     }
 
     @Test
@@ -127,12 +123,12 @@ public class DeployBDMOperationTest {
         operationUnderTest.run(Repository.NULL_PROGRESS_MONITOR);
         verify(manager).loginDefaultTenant(Repository.NULL_PROGRESS_MONITOR);
         verify(bdmFileStore).getContent();
-        final InOrder inOrder = inOrder(tenantManagementAPI);
-        inOrder.verify(tenantManagementAPI).pause();
-        inOrder.verify(tenantManagementAPI).cleanAndUninstallBusinessDataModel();
-        inOrder.verify(tenantManagementAPI).installBusinessDataModel(any(byte[].class));
-        inOrder.verify(tenantManagementAPI).resume();
-        verify(tenantManagementAPI).getClientBDMZip();
+        final InOrder inOrder = inOrder(tenantAdminAPI);
+        inOrder.verify(tenantAdminAPI).pause();
+        inOrder.verify(tenantAdminAPI).cleanAndUninstallBusinessDataModel();
+        inOrder.verify(tenantAdminAPI).installBusinessDataModel(any(byte[].class));
+        inOrder.verify(tenantAdminAPI).resume();
+        verify(tenantAdminAPI).getClientBDMZip();
     }
 
 }

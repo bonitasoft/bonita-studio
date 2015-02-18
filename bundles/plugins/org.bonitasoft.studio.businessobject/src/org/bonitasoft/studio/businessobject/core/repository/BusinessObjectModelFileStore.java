@@ -13,6 +13,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
+import org.bonitasoft.engine.bdm.BusinessObjectModelConverter;
+import org.bonitasoft.engine.bdm.model.BusinessObject;
+import org.bonitasoft.engine.bdm.model.BusinessObjectModel;
 import org.bonitasoft.studio.businessobject.BusinessObjectPlugin;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.common.FileUtil;
@@ -30,13 +33,8 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IWorkbenchPart;
 
-import com.bonitasoft.engine.bdm.BusinessObjectModelConverter;
-import com.bonitasoft.engine.bdm.model.BusinessObject;
-import com.bonitasoft.engine.bdm.model.BusinessObjectModel;
-
 /**
  * @author Romain Bioteau
- * 
  */
 public class BusinessObjectModelFileStore extends AbstractFileStore {
 
@@ -44,29 +42,29 @@ public class BusinessObjectModelFileStore extends AbstractFileStore {
 
     public BusinessObjectModelConverter converter;
 
-    public BusinessObjectModelFileStore(String fileName, IRepositoryStore<BusinessObjectModelFileStore> store) {
+    public BusinessObjectModelFileStore(final String fileName, final IRepositoryStore<BusinessObjectModelFileStore> store) {
         super(fileName, store);
         converter = new BusinessObjectModelConverter();
     }
 
     @Override
     public BusinessObjectModel getContent() {
-        IFile resource = getResource();
+        final IFile resource = getResource();
         if (!resource.exists()) {
             return null;
         }
         InputStream contents = null;
         try {
             contents = resource.getContents();
-            byte[] bytes = FileUtil.loadBytes(contents);
+            final byte[] bytes = FileUtil.loadBytes(contents);
             return converter.unzip(bytes);
-        } catch (Exception e) {
+        } catch (final Exception e) {
             BonitaStudioLog.error(e);
         } finally {
             if (contents != null) {
                 try {
                     contents.close();
-                } catch (IOException e) {
+                } catch (final IOException e) {
                     BonitaStudioLog.error(e);
                 }
             }
@@ -80,19 +78,19 @@ public class BusinessObjectModelFileStore extends AbstractFileStore {
     }
 
     @Override
-    protected void doSave(Object content) {
+    protected void doSave(final Object content) {
         Assert.isNotNull(content);
         Assert.isLegal(content instanceof BusinessObjectModel);
         try {
-            byte[] zip = converter.zip((BusinessObjectModel) content);
-            ByteArrayInputStream source = new ByteArrayInputStream(zip);
-            IFile resource = getResource();
+            final byte[] zip = converter.zip((BusinessObjectModel) content);
+            final ByteArrayInputStream source = new ByteArrayInputStream(zip);
+            final IFile resource = getResource();
             if (resource.exists()) {
                 resource.setContents(source, IResource.FORCE, Repository.NULL_PROGRESS_MONITOR);
             } else {
                 resource.create(source, IResource.FORCE, Repository.NULL_PROGRESS_MONITOR);
             }
-        } catch (Exception e) {
+        } catch (final Exception e) {
             BonitaStudioLog.error(e);
         }
     }
@@ -100,7 +98,7 @@ public class BusinessObjectModelFileStore extends AbstractFileStore {
     @Override
     protected void doDelete() {
         final DependencyRepositoryStore depStore = getDependencyRepositoryStore();
-        DependencyFileStore depJar = depStore.getChild(getDependencyName());
+        final DependencyFileStore depJar = depStore.getChild(getDependencyName());
         if (depJar != null) {
             depJar.delete();
         }
@@ -117,7 +115,7 @@ public class BusinessObjectModelFileStore extends AbstractFileStore {
     }
 
     public List<BusinessObject> getBusinessObjects() {
-        BusinessObjectModel content = getContent();
+        final BusinessObjectModel content = getContent();
         Assert.isNotNull(content);
         return content.getBusinessObjects();
     }
@@ -140,8 +138,8 @@ public class BusinessObjectModelFileStore extends AbstractFileStore {
 
     }
 
-    public BusinessObject getBusinessObject(String qualifiedName) {
-        for (BusinessObject bo : getContent().getBusinessObjects()) {
+    public BusinessObject getBusinessObject(final String qualifiedName) {
+        for (final BusinessObject bo : getContent().getBusinessObjects()) {
             if (bo.getQualifiedName().equals(qualifiedName)) {
                 return bo;
             }
@@ -152,7 +150,7 @@ public class BusinessObjectModelFileStore extends AbstractFileStore {
     public byte[] toByteArray() {
         try {
             return converter.zip(getContent());
-        } catch (Exception e) {
+        } catch (final Exception e) {
             BonitaStudioLog.error(e);
         }
         return null;
@@ -171,8 +169,8 @@ public class BusinessObjectModelFileStore extends AbstractFileStore {
         return getName().replace(".zip", "") + "-client-pojo.jar";
     }
 
-    public boolean sameContentAs(BusinessObjectModel businessObjectModel) {
-        BusinessObjectModel originalContent = getContent();
+    public boolean sameContentAs(final BusinessObjectModel businessObjectModel) {
+        final BusinessObjectModel originalContent = getContent();
         if (businessObjectModel == null && originalContent == null) {
             return true;
         } else if (businessObjectModel != null) {
