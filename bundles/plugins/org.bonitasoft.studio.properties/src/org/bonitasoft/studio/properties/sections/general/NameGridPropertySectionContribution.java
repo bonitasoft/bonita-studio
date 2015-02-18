@@ -14,8 +14,13 @@
  */
 package org.bonitasoft.studio.properties.sections.general;
 
+import static org.bonitasoft.studio.common.jface.databinding.UpdateStrategyFactory.updateValueStrategy;
+import static org.bonitasoft.studio.common.jface.databinding.ValidatorFactory.forbiddenCharactersValidator;
+import static org.bonitasoft.studio.common.jface.databinding.ValidatorFactory.minMaxLengthValidator;
+import static org.bonitasoft.studio.common.jface.databinding.ValidatorFactory.multiValidator;
+import static org.bonitasoft.studio.common.jface.databinding.ValidatorFactory.utf8InputValidator;
+
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.bonitasoft.studio.common.OpenNameAndVersionDialog;
@@ -23,10 +28,6 @@ import org.bonitasoft.studio.common.OpenNameAndVersionForDiagramDialog;
 import org.bonitasoft.studio.common.OpenNameAndVersionForDiagramDialog.ProcessesNameVersion;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.common.jface.databinding.MultiValidator;
-import org.bonitasoft.studio.common.jface.databinding.validator.InputLengthValidator;
-import org.bonitasoft.studio.common.jface.databinding.validator.SpecialCharactersValidator;
-import org.bonitasoft.studio.common.jface.databinding.validator.UTF8InputValidator;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.properties.AbstractNamePropertySectionContribution;
 import org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection;
@@ -51,7 +52,6 @@ import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.IValueChangeListener;
 import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
-import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.edit.EMFEditObservables;
@@ -226,14 +226,10 @@ public class NameGridPropertySectionContribution extends AbstractNamePropertySec
 
     @Override
     protected void createBinding(final EMFDataBindingContext context) {
-        labelTargetToModelUpdate = new UpdateValueStrategy();
-
-        labelTargetToModelUpdate.setAfterGetValidator(new UTF8InputValidator(Messages.name));
-        final List<IValidator> validators = new ArrayList<IValidator>();
-        validators.add(new InputLengthValidator(Messages.name, element instanceof SequenceFlow ? 0 : 1, 255));
-        final MultiValidator multiValidation = new MultiValidator(validators);
-        labelTargetToModelUpdate.setBeforeSetValidator(multiValidation);
-        labelTargetToModelUpdate.setAfterConvertValidator(new SpecialCharactersValidator());
+        labelTargetToModelUpdate = updateValueStrategy().withValidator(multiValidator()
+                .addValidator(minMaxLengthValidator(Messages.name, element instanceof SequenceFlow ? 0 : 1, 255))
+                .addValidator(utf8InputValidator(Messages.name))
+                .addValidator(forbiddenCharactersValidator(Messages.name, '#', '%', '$')).create()).create();
 
         observable = SWTObservables.observeDelayedValue(400, SWTObservables.observeText(text, SWT.Modify));
 

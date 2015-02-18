@@ -29,18 +29,6 @@
                </message>
                <target
                      class="Element:http://www.bonitasoft.org/ns/studio/process">
-                  <event
-                        name="Set">
-                     <feature
-                           name="name">
-                     </feature>
-                  </event>
-                  <event
-                        name="Unset">
-                     <feature
-                           name="name">
-                     </feature>
-                  </event>
                </target>
                <description>
                   %constraints.element.desc
@@ -692,34 +680,6 @@
                </target>
             </constraint>
             <constraint
-                  class="org.bonitasoft.studio.validation.constraints.MaxLengthNames"
-                  id="org.bonitasoft.studio.validation.constraints.maxlengthnames"
-                  isEnabledByDefault="true"
-                  lang="Java"
-                  mode="Live"
-                  name="Max-length names"
-                  severity="WARNING"
-                  statusCode="1">
-               <message>
-                  %constraints.maxlengthname.message
-               </message>
-               <target
-                     class="Activity:http://www.bonitasoft.org/ns/studio/process">
-                  <event
-                        name="Set">
-                     <feature
-                           name="name">
-                     </feature>
-                  </event>
-                  <event
-                        name="Unset">
-                     <feature
-                           name="name">
-                     </feature>
-                  </event>
-               </target>
-            </constraint>
-            <constraint
                   class="org.bonitasoft.studio.validation.constraints.GroovyCompilationOnScriptExpressionConstraint"
                   id="org.bonitasoft.studio.validation.constraint.groovyCompilationFailure"
                   lang="java"
@@ -897,7 +857,7 @@
                   {0}
                </message>
                <target
-                     class="ANDGateway::http://www.bonitasoft.org/ns/studio/process">
+                     class="ANDGateway:http://www.bonitasoft.org/ns/studio/process">
                </target>
             </constraint>
               <constraint
@@ -913,7 +873,7 @@
                     {0}
                  </message>
                  <target
-                       class="Connector::http://www.bonitasoft.org/ns/studio/process">
+                       class="Connector:http://www.bonitasoft.org/ns/studio/process">
                  </target>
               </constraint>
               <constraint
@@ -929,7 +889,7 @@
                     {0}
                  </message>
                  <target
-                       class="Connector::http://www.bonitasoft.org/ns/studio/process">
+                       class="Connector:http://www.bonitasoft.org/ns/studio/process">
                  </target>
               </constraint>
               <constraint
@@ -945,7 +905,7 @@
                     {0}
                  </message>
                  <target
-                       class="SequenceFlow::http://www.bonitasoft.org/ns/studio/process">
+                       class="SequenceFlow:http://www.bonitasoft.org/ns/studio/process">
                  </target>
               </constraint>
             <constraint
@@ -961,7 +921,7 @@
                   {0}
                </message>
                <target
-                     class="Operation::http://www.bonitasoft.org/ns/studio/process">
+                     class="Operation:http://www.bonitasoft.org/ns/studio/expression">
                </target>
             </constraint>
             <constraint
@@ -977,7 +937,7 @@
                   {0}
                </message>
                <target
-                     class="Operation::http://www.bonitasoft.org/ns/studio/process">
+                     class="Operation:http://www.bonitasoft.org/ns/studio/expression">
                </target>
             </constraint>
             <constraint
@@ -993,7 +953,7 @@
                   {0}
                </message>
                <target
-                     class="Connector::http://www.bonitasoft.org/ns/studio/process">
+                     class="Connector:http://www.bonitasoft.org/ns/studio/process">
                </target>
             </constraint>
          </constraints>
