@@ -1,4 +1,4 @@
-package org.bonitasoft.studio.common.databinding;
+package org.bonitasoft.studio.common.jface.databinding;
 
 import java.util.Calendar;
 import java.util.Date;

@@ -14,22 +14,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.actors.ui.wizard;
-
-import org.eclipse.core.runtime.IStatus;
+package org.bonitasoft.studio.common.jface.databinding;
 
 
 /**
  * @author Romain Bioteau
  *
  */
-public class OrganizationValidationException extends Exception {
+public enum ValidatorEvent {
 
-    private static final long serialVersionUID = 578679768520738028L;
-
-    public OrganizationValidationException(final IStatus status) {
-        super(status.getMessage());
-    }
-
+    AFTER_GET, AFTER_CONVERT, BEFORE_SET
 
 }

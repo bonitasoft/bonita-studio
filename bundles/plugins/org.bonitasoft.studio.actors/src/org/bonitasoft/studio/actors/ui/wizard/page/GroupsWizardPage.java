@@ -16,6 +16,12 @@
  */
 package org.bonitasoft.studio.actors.ui.wizard.page;
 
+import static org.bonitasoft.studio.common.jface.databinding.UpdateStrategyFactory.updateValueStrategy;
+import static org.bonitasoft.studio.common.jface.databinding.ValidatorFactory.mandatoryValidator;
+import static org.bonitasoft.studio.common.jface.databinding.ValidatorFactory.maxLengthValidator;
+import static org.bonitasoft.studio.common.jface.databinding.ValidatorFactory.multiValidator;
+import static org.bonitasoft.studio.common.jface.databinding.ValidatorFactory.regExpValidator;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -26,10 +32,11 @@ import org.bonitasoft.studio.actors.model.organization.Membership;
 import org.bonitasoft.studio.actors.model.organization.Organization;
 import org.bonitasoft.studio.actors.model.organization.OrganizationFactory;
 import org.bonitasoft.studio.actors.model.organization.OrganizationPackage;
-import org.bonitasoft.studio.actors.validator.DisplayNameValidator;
+import org.bonitasoft.studio.actors.validator.ValidatorConstants;
 import org.bonitasoft.studio.common.NamingUtils;
+import org.bonitasoft.studio.common.jface.databinding.UpdateStrategyFactory;
+import org.bonitasoft.studio.common.jface.databinding.validator.InputLengthValidator;
 import org.eclipse.core.databinding.Binding;
-import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.beans.PojoObservables;
 import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
@@ -74,8 +81,41 @@ import org.eclipse.ui.dialogs.PatternFilter;
  * @author Romain Bioteau
  *
  */
-public class GroupsWizardPage extends AbstractOrganizationWizardPage {
+public class GroupsWizardPage extends AbstractOrganizationWizardPage implements ValidatorConstants {
 
+    final class GroupParentPathLengthValidator implements IValidator {
+
+        private final IObservableValue groupParentPathValue;
+        InputLengthValidator lengthValidator = new InputLengthValidator(Messages.groupPath, LONG_FIELD_MAX_LENGTH);
+
+        GroupParentPathLengthValidator(final IObservableValue groupParentPathValue) {
+            this.groupParentPathValue = groupParentPathValue;
+        }
+
+        @Override
+        public IStatus validate(final Object value) {
+            return lengthValidator.validate(groupParentPathValue.getValue());
+        }
+    }
+
+    final class UniqueGroupNameValidator implements IValidator {
+
+        @Override
+        public IStatus validate(final Object value) {
+            for (final org.bonitasoft.studio.actors.model.organization.Group g : groupList) {
+                final org.bonitasoft.studio.actors.model.organization.Group selectedGroup = (org.bonitasoft.studio.actors.model.organization.Group) groupSingleSelectionObservable
+                        .getValue();
+                if (!g.equals(selectedGroup)) {
+                    if (g.getName().equals(value)
+                            && (g.getParentPath() != null && g.getParentPath().equals(selectedGroup.getParentPath())
+                            || g.getParentPath() == null && selectedGroup.getParentPath() == null)) {
+                        return ValidationStatus.error(Messages.groupNameAlreadyExistsForLevel);
+                    }
+                }
+            }
+            return Status.OK_STATUS;
+        }
+    }
 
     private final List<Membership> groupMemberShips = new ArrayList<Membership>();
     private Button addSubGroupButton;
@@ -298,11 +338,10 @@ public class GroupsWizardPage extends AbstractOrganizationWizardPage {
         displayNamedText.setMessage(Messages.groupNameExample);
         displayNamedText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
 
-        final UpdateValueStrategy displayNameStrategy = new UpdateValueStrategy();
-        displayNameStrategy.setAfterGetValidator(new DisplayNameValidator());
 
         final IObservableValue displayNameValue = EMFObservables.observeDetailValue(Realm.getDefault(), groupSingleSelectionObservable, OrganizationPackage.Literals.GROUP__DISPLAY_NAME);
-        final Binding binding = context.bindValue(SWTObservables.observeText(displayNamedText,SWT.Modify), displayNameValue, displayNameStrategy, null) ;
+        final Binding binding = context.bindValue(SWTObservables.observeText(displayNamedText,SWT.Modify), displayNameValue, UpdateStrategyFactory.updateValueStrategy()
+                .withValidator(maxLengthValidator(Messages.displayName, LONG_FIELD_MAX_LENGTH)).create(), null);
         ControlDecorationSupport.create(binding, SWT.LEFT);
 
         displayNameValue.addValueChangeListener(new IValueChangeListener() {
@@ -310,7 +349,6 @@ public class GroupsWizardPage extends AbstractOrganizationWizardPage {
             @Override
             public void handleValueChange(final ValueChangeEvent event) {
                 handleGroupDisplayName(event);
-
             }
 
         });
@@ -326,7 +364,8 @@ public class GroupsWizardPage extends AbstractOrganizationWizardPage {
         final Text pathText = new Text(group, SWT.BORDER | SWT.READ_ONLY) ;
         pathText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
 
-        final IObservableValue groupParentPathValue = EMFObservables.observeDetailValue(Realm.getDefault(),groupSingleSelectionObservable, OrganizationPackage.Literals.GROUP__PARENT_PATH) ;
+        final IObservableValue groupParentPathValue = EMFObservables.observeDetailValue(Realm.getDefault(), groupSingleSelectionObservable,
+                OrganizationPackage.Literals.GROUP__PARENT_PATH);
         groupParentPathValue.addValueChangeListener(new IValueChangeListener() {
 
             @Override
@@ -349,6 +388,8 @@ public class GroupsWizardPage extends AbstractOrganizationWizardPage {
         groupNameText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).minSize(130, SWT.DEFAULT).create()) ;
 
         final IObservableValue groupNameValue =  EMFObservables.observeDetailValue(Realm.getDefault(), groupSingleSelectionObservable, OrganizationPackage.Literals.GROUP__NAME);
+        final IObservableValue groupParentPathValue = EMFObservables.observeDetailValue(Realm.getDefault(), groupSingleSelectionObservable,
+                OrganizationPackage.Literals.GROUP__PARENT_PATH);
         groupPathObserveValue = PojoObservables.observeValue(this, "groupPath");
         groupNameValue.addValueChangeListener(new IValueChangeListener() {
 
@@ -358,35 +399,16 @@ public class GroupsWizardPage extends AbstractOrganizationWizardPage {
             }
         }) ;
 
-        final UpdateValueStrategy strategy = new UpdateValueStrategy() ;
-        strategy.setAfterGetValidator(new IValidator() {
-
-            @Override
-            public IStatus validate(final Object value) {
-                if(value.toString().isEmpty()){
-                    return ValidationStatus.error(Messages.nameIsEmpty) ;
-                }
-                if(value.toString().length()>NAME_SIZE){
-                    return ValidationStatus.error(Messages.nameLimitSize);
-                }
-                if(value.toString().contains("/")){
-                    return ValidationStatus.error(Messages.illegalCharacter) ;
-                }
-                for(final org.bonitasoft.studio.actors.model.organization.Group g : groupList){
-                    final org.bonitasoft.studio.actors.model.organization.Group selectedGroup = (org.bonitasoft.studio.actors.model.organization.Group) groupSingleSelectionObservable.getValue();
-                    if(!g.equals(selectedGroup)){
-                        if(g.getName().equals(value)
-                                &&  (g.getParentPath() != null && g.getParentPath().equals(selectedGroup.getParentPath())
-                                || g.getParentPath() == null && selectedGroup.getParentPath() == null)){
-                            return ValidationStatus.error(Messages.groupNameAlreadyExistsForLevel) ;
-                        }
-                    }
-                }
-                return Status.OK_STATUS;
-            }
-        });
-
-        final Binding binding = context.bindValue(SWTObservables.observeText(groupNameText,SWT.Modify),groupNameValue,strategy,null);
+        final GroupParentPathLengthValidator groupParentPathLengthValidator = new GroupParentPathLengthValidator(groupParentPathValue);
+        final Binding binding = context.bindValue(SWTObservables.observeText(groupNameText, SWT.Modify), groupNameValue, updateValueStrategy().withValidator(
+                multiValidator()
+                .addValidator(mandatoryValidator(Messages.name))
+                        .addValidator(maxLengthValidator(Messages.name, GROUP_NAME_MAX_LENGTH))
+                .addValidator(regExpValidator(Messages.illegalCharacter, "^[^/]*$"))
+                        .addValidator(new UniqueGroupNameValidator())
+                        .addValidator(groupParentPathLengthValidator).create())
+                .create(),
+                null);
         ControlDecorationSupport.create(binding, SWT.LEFT,group,new ControlDecorationUpdater(){
             @Override
             protected void update(final ControlDecoration decoration, final IStatus status) {
@@ -396,6 +418,7 @@ public class GroupsWizardPage extends AbstractOrganizationWizardPage {
 
             }
         });
+
     }
 
     @Override
