@@ -1,19 +1,16 @@
 /**
  * Copyright (C) 2011 BonitaSoft S.A.
  * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
- *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.application.actions;
 
@@ -36,46 +33,44 @@ import org.eclipse.ui.part.PageBook;
 
 /**
  * @author Mickael Istria
- *
  */
 public class FindHandler extends AbstractHandler {
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
      */
     @Override
-    public Object execute(ExecutionEvent event) throws ExecutionException {
-//        final IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-//        IEditorPart editor = workbenchWindow.getActivePage().getActiveEditor() ;
-//
-//        BonitaContentOutlineTreeView view;
-//        try {
-//            view = (BonitaContentOutlineTreeView) workbenchWindow.getActivePage().showView(BonitaContentOutlineTreeView.VIEW_ID);
-//            view.setFocus();
-//            if (editor != null && editor instanceof ProcessDiagramEditor ) {
-//                IAction action =((ProcessDiagramEditor)editor).getShowOutlineAction();
-//                if(action != null){
-//                    action.run();
-//                }
-//            }else if(editor != null && editor instanceof FormDiagramEditor){
-//                IAction action =((FormDiagramEditor)editor).getShowOutlineAction();
-//                if(action != null){
-//                    action.run();
-//                }
-//            }
-//            for (Control control : ((PageBook)view.getCurrentPage().getControl()).getTabList()) {
-//                if (control instanceof FilteredTree) {
-//                    final Text filterText = ((FilteredTree)control).getFilterControl();
-//                    filterText.setFocus();
-//                    if (filterText.getText() != null) {
-//                        filterText.setSelection(0, filterText.getText().length());
-//                    }
-//                }
-//            }
-//        } catch (PartInitException e) {
-//            BonitaStudioLog.error(e);
-//        }
-
+    public Object execute(final ExecutionEvent event) throws ExecutionException {
+        final IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+        final IEditorPart editor = workbenchWindow.getActivePage().getActiveEditor();
+        BonitaContentOutlineTreeView view;
+        try {
+            view = (BonitaContentOutlineTreeView) workbenchWindow.getActivePage().showView(BonitaContentOutlineTreeView.VIEW_ID);
+            view.setFocus();
+            if (editor != null && editor instanceof ProcessDiagramEditor) {
+                final IAction action = ((ProcessDiagramEditor) editor).getShowOutlineAction();
+                if (action != null) {
+                    action.run();
+                }
+            } else if (editor != null && editor instanceof FormDiagramEditor) {
+                final IAction action = ((FormDiagramEditor) editor).getShowOutlineAction();
+                if (action != null) {
+                    action.run();
+                }
+            }
+            for (final Control control : ((PageBook) view.getCurrentPage().getControl()).getTabList()) {
+                if (control instanceof FilteredTree) {
+                    final Text filterText = ((FilteredTree) control).getFilterControl();
+                    filterText.setFocus();
+                    if (filterText.getText() != null) {
+                        filterText.setSelection(0, filterText.getText().length());
+                    }
+                }
+            }
+        } catch (final PartInitException e) {
+            BonitaStudioLog.error(e);
+        }
 
         return null;
     }

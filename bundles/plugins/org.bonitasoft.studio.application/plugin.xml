@@ -826,6 +826,12 @@
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
             sequence="F11">
       </key>
+      <key
+            commandId="org.bonitasoft.studio.application.showOverviewCommand"
+            contextId="org.eclipse.ui.contexts.dialogAndWindow"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+M2+O">
+      </key>
    </extension>
    <extension
          point="org.bonitasoft.studio.application.prestartup">
