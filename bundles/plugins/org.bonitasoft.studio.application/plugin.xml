@@ -830,7 +830,7 @@
             commandId="org.bonitasoft.studio.application.showOverviewCommand"
             contextId="org.eclipse.ui.contexts.dialogAndWindow"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-            sequence="M1+M2+O">
+            sequence="M1+M3+O">
       </key>
    </extension>
    <extension
