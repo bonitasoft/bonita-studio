@@ -25,10 +25,10 @@ import java.util.Map;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
-import org.bonitasoft.studio.common.databinding.BonitaNumberFormat;
-import org.bonitasoft.studio.common.databinding.MultiValidator;
-import org.bonitasoft.studio.common.databinding.WrappingValidator;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.common.jface.databinding.BonitaNumberFormat;
+import org.bonitasoft.studio.common.jface.databinding.MultiValidator;
+import org.bonitasoft.studio.common.jface.databinding.WrappingValidator;
 import org.bonitasoft.studio.common.jface.databinding.validator.GroovyReferenceValidator;
 import org.bonitasoft.studio.common.properties.DynamicAddRemoveLineComposite;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;

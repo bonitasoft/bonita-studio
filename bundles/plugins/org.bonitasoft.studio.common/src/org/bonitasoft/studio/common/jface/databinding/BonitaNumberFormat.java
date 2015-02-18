@@ -1,6 +1,7 @@
 /**
- * Copyright (C) 2014 BonitaSoft S.A.
+ * Copyright (C) 2010 BonitaSoft S.A.
  * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -14,30 +15,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.actors.validator;
+package org.bonitasoft.studio.common.jface.databinding;
 
-import org.bonitasoft.studio.actors.i18n.Messages;
-import org.eclipse.core.databinding.validation.IValidator;
-import org.eclipse.core.databinding.validation.ValidationStatus;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
+import com.ibm.icu.text.DecimalFormat;
+import com.ibm.icu.text.NumberFormat;
 
 /**
- * @author Florine Boudin
+ * @author Romain Bioteau
  *
  */
-public class DisplayNameValidator implements IValidator {
+public class BonitaNumberFormat {
 
-	
-	final int DISPLAY_NAME_SIZE=75;
+	private static DecimalFormat PERCENT_INSTANCE;
 
-
-	@Override
-	public IStatus validate(Object text) {
-		if(text!=null && text.toString().length()>DISPLAY_NAME_SIZE){
-			return ValidationStatus.error(Messages.displayNameLimitSize);
+	public static NumberFormat getPercentInstance(){
+		if(PERCENT_INSTANCE == null){
+			PERCENT_INSTANCE = new DecimalFormat("#,##0"+"\u0025") ;
 		}
-		return Status.OK_STATUS;
+		return PERCENT_INSTANCE ;
 	}
-
+	
 }
