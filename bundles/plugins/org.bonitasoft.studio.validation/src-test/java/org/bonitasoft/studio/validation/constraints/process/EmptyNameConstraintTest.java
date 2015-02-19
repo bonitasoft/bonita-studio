@@ -15,7 +15,7 @@
 package org.bonitasoft.studio.validation.constraints.process;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.bonitasoft.studio.model.process.builders.TaskBuilder.createTaskBuilder;
+import static org.bonitasoft.studio.model.process.builders.TaskBuilder.aTask;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
@@ -65,7 +65,7 @@ public class EmptyNameConstraintTest {
 
     @Test
     public void should_accept_non_empty_names_without_special_characters() throws Exception {
-        when(ctx.getTarget()).thenReturn(createTaskBuilder().withName("My name is not empty and have no special characters").build());
+        when(ctx.getTarget()).thenReturn(aTask().withName("My name is not empty and have no special characters").build());
 
         final IStatus iStatus = emptyNameConstraint.performBatchValidation(ctx);
 
@@ -74,7 +74,7 @@ public class EmptyNameConstraintTest {
 
     @Test
     public void should_fail_empty_names_for_flow_element() throws Exception {
-        when(ctx.getTarget()).thenReturn(createTaskBuilder().withName("").build());
+        when(ctx.getTarget()).thenReturn(aTask().withName("").build());
 
         final IStatus iStatus = emptyNameConstraint.performBatchValidation(ctx);
 
@@ -125,7 +125,7 @@ public class EmptyNameConstraintTest {
 
     @Test
     public void should_fail_names_with_special_characters() throws Exception {
-        when(ctx.getTarget()).thenReturn(createTaskBuilder().withName("hello#").build());
+        when(ctx.getTarget()).thenReturn(aTask().withName("hello#").build());
 
         final IStatus iStatus = emptyNameConstraint.performBatchValidation(ctx);
 
