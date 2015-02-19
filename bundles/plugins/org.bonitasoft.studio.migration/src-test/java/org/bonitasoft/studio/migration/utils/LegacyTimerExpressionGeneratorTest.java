@@ -110,7 +110,7 @@ public class LegacyTimerExpressionGeneratorTest {
     public void should_getTimerExpressionContent_return_expression_content_for_GROOVY_type() throws Exception {
         final String content = "new Date()";
         final String expressionContent = legacyTimerExpressionGenerator.getTimerExpressionContent(StartTimerEventBuilder.createStartTimerEventBuilder()
-                .withScriptType(StartTimerScriptType.GROOVY).havingConditionExpression(ExpressionBuilder.create().withContent(content))
+                .withScriptType(StartTimerScriptType.GROOVY).havingConditionExpression(ExpressionBuilder.anExpression().withContent(content))
                 .build());
         assertThat(expressionContent).isEqualTo(content);
     }

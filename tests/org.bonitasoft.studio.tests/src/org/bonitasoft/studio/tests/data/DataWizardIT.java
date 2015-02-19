@@ -105,8 +105,9 @@ public class DataWizardIT extends SWTBotGefTestCase {
         assertTrue("no data added",pool.getData().size()==1);
         assertTrue("wrong data added",pool.getData().get(0).getName().equals("newData"));
 
-        bot.menu("Diagram").menu("Close").click();
+        final BotApplicationWorkbenchWindow applicationWorkbenchWindow = new BotApplicationWorkbenchWindow(bot);
 
+        applicationWorkbenchWindow.close();
     }
 
     @Test
@@ -163,13 +164,15 @@ public class DataWizardIT extends SWTBotGefTestCase {
 
         SWTBotTestUtil.waitUntilBonitaBPmShellIsActive(bot);
         final SWTBotMenu menuDiagram = bot.menu("Diagram");
-        menuDiagram.menu("Save").click();
+        final BotApplicationWorkbenchWindow applicationWorkbenchWindow = new BotApplicationWorkbenchWindow(bot);
+        applicationWorkbenchWindow.save();
+
 
         assertEquals("data not removed",nbData -1, pool.getData().size());
         assertFalse("the wrong data was removed",firstData.equals(pool.getData().get(0)));
 
         SWTBotTestUtil.waitUntilBonitaBPmShellIsActive(bot);
-        menuDiagram.menu("Close").click();
+        applicationWorkbenchWindow.close();
     }
 
     @Test
@@ -244,7 +247,8 @@ public class DataWizardIT extends SWTBotGefTestCase {
         bot.waitUntil(Conditions.widgetIsEnabled(bot.button(IDialogConstants.FINISH_LABEL)));
         bot.button(IDialogConstants.FINISH_LABEL).click();
         SWTBotTestUtil.waitUntilBonitaBPmShellIsActive(bot);
-        bot.menu("Diagram").menu("Save").click();
+        final BotApplicationWorkbenchWindow applicationWorkbenchWindow = new BotApplicationWorkbenchWindow(bot);
+        applicationWorkbenchWindow.save();
         SWTBotTestUtil.waitUntilBonitaBPmShellIsActive(bot);
     }
 
@@ -292,10 +296,11 @@ public class DataWizardIT extends SWTBotGefTestCase {
         bot.waitUntil(Conditions.widgetIsEnabled(bot.button(IDialogConstants.FINISH_LABEL)));
         bot.button(IDialogConstants.FINISH_LABEL).click();
         SWTBotTestUtil.waitUntilBonitaBPmShellIsActive(bot);
-        bot.menu("Diagram").menu("Save").click();
+        final BotApplicationWorkbenchWindow applicationWorkbenchWindow = new BotApplicationWorkbenchWindow(bot);
+        applicationWorkbenchWindow.save();
 
         SWTBotTestUtil.waitUntilBonitaBPmShellIsActive(bot);
-        bot.menu("Diagram").menu("Close").click();
+        applicationWorkbenchWindow.close();
     }
 
     @Test

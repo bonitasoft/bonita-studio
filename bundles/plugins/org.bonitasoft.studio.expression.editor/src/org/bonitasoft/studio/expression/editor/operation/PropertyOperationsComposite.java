@@ -40,9 +40,9 @@ public class PropertyOperationsComposite extends OperationsComposite {
 	 */
 	@Override
 	public void refresh() {
-		Composite shell = mainComposite.getParent().getParent().getParent().getParent();
+		Composite shell = parent.getParent().getParent().getParent().getParent();
 		shell.layout(true,true);
-		mainComposite.layout(true,true);
+		parent.layout(true,true);
 		layout(true,true);
 		if (tabbedPropertySheetPage != null) {
 			tabbedPropertySheetPage.resizeScrolledComposite();

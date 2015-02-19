@@ -1480,8 +1480,10 @@ public class ProcBuilder implements IProcBuilder {
     public void addCallActivityInParameter(final String sourceDataId, final String targetDataId) throws ProcBuilderException {
         if (currentStep instanceof CallActivity) {
             final InputMapping inputMapping = ProcessFactory.eINSTANCE.createInputMapping();
-            if (dataByName.get(sourceDataId) != null) {
-                inputMapping.setProcessSource(dataByName.get(NamingUtils.convertToId(sourceDataId)));
+
+            if(dataByName.get(sourceDataId) != null){
+                inputMapping.setProcessSource(ExpressionHelper.createVariableExpression(dataByName.get(NamingUtils.convertToId(sourceDataId))));
+
             }
             if (dataByName.get(targetDataId) != null) {
                 inputMapping.setSubprocessTarget(dataByName.get(NamingUtils.convertToId(targetDataId)).getName());

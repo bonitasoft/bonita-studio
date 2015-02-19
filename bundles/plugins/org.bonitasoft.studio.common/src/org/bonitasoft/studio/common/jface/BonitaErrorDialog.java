@@ -17,6 +17,8 @@
  */
 package org.bonitasoft.studio.common.jface;
 
+import java.lang.reflect.InvocationTargetException;
+
 import org.bonitasoft.studio.common.Activator;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -56,7 +58,7 @@ public class BonitaErrorDialog extends ErrorDialog {
 	 * @param status
 	 * @param displayMask
 	 */
-	public BonitaErrorDialog(Shell parentShell, String dialogTitle, String message, IStatus status, int displayMask) {
+	public BonitaErrorDialog(final Shell parentShell, final String dialogTitle, final String message, final IStatus status, final int displayMask) {
 		super(parentShell, dialogTitle, message, status, displayMask);
 		this.message = message;
 		if(status.getException() == null){
@@ -67,11 +69,11 @@ public class BonitaErrorDialog extends ErrorDialog {
 		setStatus(this.status);
 	}
 
-	public BonitaErrorDialog(Shell parentShell, String dialogTitle, String message, Throwable t) {
+	public BonitaErrorDialog(final Shell parentShell, final String dialogTitle, final String message, final Throwable t) {
 		super(parentShell, dialogTitle, message, new Status(IStatus.ERROR, Activator.PLUGIN_ID, message, t), IStatus.ERROR);
 		this.message = message;
-		this.status = new Status(IStatus.ERROR, Activator.PLUGIN_ID, message, t);
-		setStatus(this.status);
+		status = new Status(IStatus.ERROR, Activator.PLUGIN_ID, message, t);
+		setStatus(status);
 	}
 	/*
 	 * (non-Javadoc) Method declared on Dialog. Handles the pressing of the Ok
@@ -80,7 +82,8 @@ public class BonitaErrorDialog extends ErrorDialog {
 	 * of the error details area. Note that the Details button will only be
 	 * visible if the error being displayed specifies child details.
 	 */
-	protected void buttonPressed(int id) {
+	@Override
+    protected void buttonPressed(final int id) {
 		if (id == IDialogConstants.DETAILS_ID) {
 			// was the details button pressed?
 			toggleDetailsArea();
@@ -93,32 +96,34 @@ public class BonitaErrorDialog extends ErrorDialog {
 	 * @see org.eclipse.jface.dialogs.ErrorDialog#createDropDownList(org.eclipse.swt.widgets.Composite)
 	 */
 	@Override
-	protected List createDropDownList(Composite parent) {
+	protected List createDropDownList(final Composite parent) {
 		list = new List(parent, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL
 				| SWT.MULTI);
 		// fill the list
-		populateList(list);
-		GridData data = new GridData(GridData.HORIZONTAL_ALIGN_FILL
+		populateStackDetails(list);
+		final GridData data = new GridData(GridData.HORIZONTAL_ALIGN_FILL
 				| GridData.GRAB_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL
 				| GridData.GRAB_VERTICAL);
 		data.heightHint = list.getItemHeight() * 7;
 		data.horizontalSpan = 2;
 		list.setLayoutData(data);
 		list.setFont(parent.getFont());
-		Menu copyMenu = new Menu(list);
-		MenuItem copyItem = new MenuItem(copyMenu, SWT.NONE);
+		final Menu copyMenu = new Menu(list);
+		final MenuItem copyItem = new MenuItem(copyMenu, SWT.NONE);
 		copyItem.addSelectionListener(new SelectionListener() {
 			/*
 			 * @see SelectionListener.widgetSelected (SelectionEvent)
 			 */
-			public void widgetSelected(SelectionEvent e) {
+			@Override
+            public void widgetSelected(final SelectionEvent e) {
 				copyToClipboard();
 			}
 
 			/*
 			 * @see SelectionListener.widgetDefaultSelected(SelectionEvent)
 			 */
-			public void widgetDefaultSelected(SelectionEvent e) {
+			@Override
+            public void widgetDefaultSelected(final SelectionEvent e) {
 				copyToClipboard();
 			}
 		});
@@ -128,29 +133,47 @@ public class BonitaErrorDialog extends ErrorDialog {
 		return list;
 	}
 
-	private void populateList(List list) {
-		Throwable exception = status.getException();
+    protected void populateStackDetails(final List list) {
+		final Throwable exception = getStatusException();
 		if(exception != null){
-			String message = exception.getLocalizedMessage();
-			if(message != null){
-				for (String line : message.split(System.getProperty("line.separator"))) {
-					list.add(line);
-				}
-			}
+            addLocalizedMesssageToList(list, exception);
 		}
-		for (StackTraceElement stack : exception.getStackTrace()) {
-			list.add(stack.toString());
-		}
+        if (exception instanceof InvocationTargetException) {
+            final Throwable targetException = ((InvocationTargetException) exception).getTargetException();
+            if (targetException != null) {
+                addLocalizedMesssageToList(list, targetException);
+                addStackTraceToList(list, targetException);
+            }
+        }
+		addStackTraceToList(list, exception);
 	}
 
+    protected Throwable getStatusException() {
+        return status.getException();
+    }
+
+    private void addStackTraceToList(final List list, final Throwable targetException) {
+        for (final StackTraceElement stack : targetException.getStackTrace()) {
+            list.add(stack.toString());
+        }
+    }
+
+    private void addLocalizedMesssageToList(final List list, final Throwable exception) {
+        final String message = exception.getLocalizedMessage();
+        if (message != null) {
+            for (final String line : message.split(System.getProperty("line.separator"))) {
+                list.add(line);
+            }
+        }
+    }
 
 	/**
 	 * Toggles the unfolding of the details area. This is triggered by the user
 	 * pressing the details button.
 	 */
 	private void toggleDetailsArea() {
-		Point windowSize = getShell().getSize();
-		Point oldSize = getShell().computeSize(SWT.DEFAULT, SWT.DEFAULT);
+		final Point windowSize = getShell().getSize();
+		final Point oldSize = getShell().computeSize(SWT.DEFAULT, SWT.DEFAULT);
 		if (listCreated) {
 			list.dispose();
 			listCreated = false;
@@ -160,7 +183,7 @@ public class BonitaErrorDialog extends ErrorDialog {
 			detailsButton.setText(IDialogConstants.HIDE_DETAILS_LABEL);
 			getContents().getShell().layout();
 		}
-		Point newSize = getShell().computeSize(SWT.DEFAULT, SWT.DEFAULT);
+		final Point newSize = getShell().computeSize(SWT.DEFAULT, SWT.DEFAULT);
 		getShell()
 		.setSize(
 				new Point(windowSize.x, windowSize.y
@@ -168,7 +191,8 @@ public class BonitaErrorDialog extends ErrorDialog {
 	}
 
 
-	protected void createDetailsButton(Composite parent) {
+	@Override
+    protected void createDetailsButton(final Composite parent) {
 		if (shouldShowDetailsButton()) {
 			detailsButton = createButton(parent, IDialogConstants.DETAILS_ID,
 					IDialogConstants.SHOW_DETAILS_LABEL, false);
@@ -182,7 +206,7 @@ public class BonitaErrorDialog extends ErrorDialog {
 		if (clipboard != null) {
 			clipboard.dispose();
 		}
-		StringBuffer statusBuffer = new StringBuffer();
+		final StringBuffer statusBuffer = new StringBuffer();
 		populateCopyBuffer(status, statusBuffer, 0);
 		clipboard = new Clipboard(list.getDisplay());
 		clipboard.setContents(new Object[] { statusBuffer.toString() },
@@ -190,16 +214,16 @@ public class BonitaErrorDialog extends ErrorDialog {
 	}
 	/**
 	 * Put the details of the status of the error onto the stream.
-	 * 
+	 *
 	 * @param buildingStatus
 	 * @param buffer
 	 * @param nesting
 	 */
-	private void populateCopyBuffer(IStatus buildingStatus,
-			StringBuffer buffer, int nesting) {
+	private void populateCopyBuffer(final IStatus buildingStatus,
+			final StringBuffer buffer, final int nesting) {
 		buffer.append(buildingStatus.getMessage());
 		buffer.append("\n"); //$NON-NLS-1$
-		for (StackTraceElement trace : buildingStatus.getException().getStackTrace()) {
+		for (final StackTraceElement trace : buildingStatus.getException().getStackTrace()) {
 
 			buffer.append(trace.toString());
 			buffer.append("\n"); //$NON-NLS-1$
@@ -207,10 +231,11 @@ public class BonitaErrorDialog extends ErrorDialog {
 	}
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.eclipse.jface.window.Window#close()
 	 */
-	public boolean close() {
+	@Override
+    public boolean close() {
 		if (clipboard != null) {
 			clipboard.dispose();
 		}
