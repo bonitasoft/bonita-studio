@@ -30,12 +30,12 @@ public class InputLengthValidator implements IValidator {
 
     private final int maxChar;
     private final String inputName;
-	private int minChar;
+	private final int minChar;
 
-    public InputLengthValidator(String inputName,int maxChar){
+    public InputLengthValidator(final String inputName,final int maxChar){
         this(inputName,0,maxChar);
     }
-    public InputLengthValidator(String inputName,int minChar,int maxChar){
+    public InputLengthValidator(final String inputName,final int minChar,final int maxChar){
         this.maxChar = maxChar ;
         this.inputName = inputName ;
         this.minChar = minChar;
@@ -45,11 +45,11 @@ public class InputLengthValidator implements IValidator {
      * @see org.eclipse.core.databinding.validation.IValidator#validate(java.lang.Object)
      */
     @Override
-    public IStatus validate(Object input) {
+    public IStatus validate(final Object input) {
     	 if(input != null && input.toString().trim().length() < minChar){
              return ValidationStatus.error(Messages.bind(Messages.fieldIsTooShort,inputName,minChar)) ;
          }
-        if(input != null && input.toString().length() >= maxChar){
+        if (input != null && input.toString().length() > maxChar) {
             return ValidationStatus.error(Messages.bind(Messages.fieldIsTooLong,inputName,maxChar)) ;
         }
         return ValidationStatus.ok() ;

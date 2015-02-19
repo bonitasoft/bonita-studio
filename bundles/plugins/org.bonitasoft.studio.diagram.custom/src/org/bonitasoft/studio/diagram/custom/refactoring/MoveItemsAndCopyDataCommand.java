@@ -19,16 +19,17 @@ package org.bonitasoft.studio.diagram.custom.refactoring;
 
 import java.util.List;
 
+import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.gmf.tools.GMFTools;
 import org.bonitasoft.studio.diagram.custom.clipboard.CustomPasteCommand;
 import org.bonitasoft.studio.diagram.custom.clipboard.CustomPasteCommand.LocationStrategy;
 import org.bonitasoft.studio.model.process.AbstractProcess;
+import org.bonitasoft.studio.model.process.CallActivity;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.InputMapping;
 import org.bonitasoft.studio.model.process.OutputMapping;
 import org.bonitasoft.studio.model.process.ProcessFactory;
-import org.bonitasoft.studio.model.process.CallActivity;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.MainProcessEditPart;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.operations.IUndoableOperation;
@@ -50,16 +51,16 @@ import org.eclipse.gmf.runtime.notation.Node;
  */
 public class MoveItemsAndCopyDataCommand extends AbstractTransactionalCommand implements IUndoableOperation {
 
-	private CreateViewAndElementRequest req;
-	private List<IGraphicalEditPart> parts;
-	private ViewAndElementDescriptor subprocessDescriptor;
+	private final CreateViewAndElementRequest req;
+	private final List<IGraphicalEditPart> parts;
+	private final ViewAndElementDescriptor subprocessDescriptor;
 
 	/**
 	 * @param req
-	 * @param subprocessDescriptor 
+	 * @param subprocessDescriptor
 	 * @param parts
 	 */
-	public MoveItemsAndCopyDataCommand(TransactionalEditingDomain domain, CreateViewAndElementRequest req, ViewAndElementDescriptor subprocessDescriptor, List<IGraphicalEditPart> parts) {
+	public MoveItemsAndCopyDataCommand(final TransactionalEditingDomain domain, final CreateViewAndElementRequest req, final ViewAndElementDescriptor subprocessDescriptor, final List<IGraphicalEditPart> parts) {
 		super(domain, "Move items", getWorkspaceFiles(parts.get(0).resolveSemanticElement()));
 		this.req = req;
 		this.parts = parts;
@@ -70,7 +71,7 @@ public class MoveItemsAndCopyDataCommand extends AbstractTransactionalCommand im
 	 * @see org.eclipse.gmf.runtime.common.core.command.AbstractCommand#doExecuteWithResult(org.eclipse.core.runtime.IProgressMonitor, org.eclipse.core.runtime.IAdaptable)
 	 */
 	@Override
-	protected CommandResult doExecuteWithResult(IProgressMonitor progressMonitor, IAdaptable info) throws ExecutionException {
+	protected CommandResult doExecuteWithResult(final IProgressMonitor progressMonitor, final IAdaptable info) throws ExecutionException {
 		IGraphicalEditPart rootPart = GMFTools.getFirstNodeShapeEditPart(parts);
 		while (!(rootPart instanceof MainProcessEditPart)) {
 			rootPart = (IGraphicalEditPart)rootPart.getParent();
@@ -78,20 +79,20 @@ public class MoveItemsAndCopyDataCommand extends AbstractTransactionalCommand im
 		final Node targetNode = (Node) req.getViewAndElementDescriptor().getAdapter(Node.class);
 		final AbstractProcess targetProcess = (AbstractProcess) targetNode.getElement();
 		final IGraphicalEditPart targetPart = (IGraphicalEditPart) rootPart.findEditPart(rootPart, targetProcess);
-			
-		CustomPasteCommand pasteCommand = new CustomPasteCommand("paste", targetPart);
+
+		final CustomPasteCommand pasteCommand = new CustomPasteCommand("paste", targetPart);
 		pasteCommand.setLocationStrategy(LocationStrategy.COPY);
 		pasteCommand.performPaste(progressMonitor, GMFTools.addMissingConnectionsAndBoundaries(parts));
 		final AbstractProcess sourceProcess = ModelHelper.getParentProcess(parts.get(0).resolveSemanticElement());
-		CallActivity subprocessStep = (CallActivity) subprocessDescriptor.getElementAdapter().getAdapter(EObject.class);
-		for (Data sourceData : sourceProcess.getData()) {
-			Data targetData = EcoreUtil.copy(sourceData);
+		final CallActivity subprocessStep = (CallActivity) subprocessDescriptor.getElementAdapter().getAdapter(EObject.class);
+		for (final Data sourceData : sourceProcess.getData()) {
+			final Data targetData = EcoreUtil.copy(sourceData);
 			targetProcess.getData().add(targetData);
-			InputMapping inputMapping = ProcessFactory.eINSTANCE.createInputMapping();
-			inputMapping.setProcessSource(sourceData);
+			final InputMapping inputMapping = ProcessFactory.eINSTANCE.createInputMapping();
+            inputMapping.setProcessSource(ExpressionHelper.createVariableExpression(sourceData));
 			inputMapping.setSubprocessTarget(sourceData.getName());
 			subprocessStep.getInputMappings().add(inputMapping);
-			OutputMapping outputMapping = ProcessFactory.eINSTANCE.createOutputMapping();
+			final OutputMapping outputMapping = ProcessFactory.eINSTANCE.createOutputMapping();
 			outputMapping.setProcessTarget(sourceData);
 			outputMapping.setSubprocessSource(sourceData.getName());
 		}

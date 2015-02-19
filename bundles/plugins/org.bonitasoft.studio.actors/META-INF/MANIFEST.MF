@@ -7,13 +7,15 @@ Bundle-ClassPath: .
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Export-Package: org.bonitasoft.studio.actors,org.bonitasoft.studio.act
- ors.i18n; x-friends:="org.bonitasoft.studio.actors.tests,  org.bonita
- soft.studio.test.swtbot.util,  org.bonitasoft.studio.tests",org.bonit
- asoft.studio.actors.model.organization,org.bonitasoft.studio.actors.m
- odel.organization.impl,org.bonitasoft.studio.actors.model.organizatio
- n.util,org.bonitasoft.studio.actors.preference,org.bonitasoft.studio.
- actors.repository,org.bonitasoft.studio.actors.ui.wizard.page
+Export-Package: org.bonitasoft.studio.actors,
+ org.bonitasoft.studio.actors.i18n;x-friends:="org.bonitasoft.studio.actors.tests,org.bonitasoft.studio.test.swtbot.util,org.bonitasoft.studio.tests",
+ org.bonitasoft.studio.actors.model.organization,
+ org.bonitasoft.studio.actors.model.organization.impl,
+ org.bonitasoft.studio.actors.model.organization.util,
+ org.bonitasoft.studio.actors.preference,
+ org.bonitasoft.studio.actors.repository,
+ org.bonitasoft.studio.actors.ui.wizard.page,
+ org.bonitasoft.studio.actors.validator
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui,
  org.eclipse.emf.ecore;visibility:=reexport,
@@ -51,7 +53,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.apache.commons.lang;bundle-version="2.6.0",
  org.eclipse.emf.databinding,
  org.eclipse.core.databinding.observable,
- org.eclipse.emf.compare.rcp;bundle-version="2.2.0"
+ org.eclipse.emf.compare.rcp;bundle-version="2.2.0",
+ org.eclipse.jdt.groovy.core;bundle-version="2.9.1"
 Bundle-ActivationPolicy: lazy
 Import-Package: org.bonitasoft.engine.api,
  org.bonitasoft.engine.bpm,

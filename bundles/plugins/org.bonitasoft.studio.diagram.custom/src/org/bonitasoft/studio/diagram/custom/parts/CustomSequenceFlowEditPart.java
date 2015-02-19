@@ -35,12 +35,14 @@ import org.eclipse.draw2d.RotatableDecoration;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gmf.runtime.diagram.core.listener.DiagramEventBroker;
 import org.eclipse.gmf.runtime.diagram.core.listener.NotificationListener;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
+
 
 /**
  * @author Romain Bioteau
@@ -58,7 +60,6 @@ public class CustomSequenceFlowEditPart extends SequenceFlowEditPart {
             handleNotificationEvent(notification);
         }
     };
-    private SequenceFlow modelElement = null;
 
     public CustomSequenceFlowEditPart(final View view) {
         super(view);
@@ -75,7 +76,7 @@ public class CustomSequenceFlowEditPart extends SequenceFlowEditPart {
     @Override
     public void activate() {
         super.activate();
-        modelElement = (SequenceFlow) resolveSemanticElement();
+        final SequenceFlow modelElement = (SequenceFlow) resolveSemanticElement();
         DiagramEventBroker.getInstance(getEditingDomain()).addNotificationListener(modelElement.getCondition(),ExpressionPackage.Literals.EXPRESSION__CONTENT, notificationListener);
         checkDecorator();
     }
@@ -83,8 +84,10 @@ public class CustomSequenceFlowEditPart extends SequenceFlowEditPart {
     @Override
     public void deactivate() {
         super.deactivate();
-        DiagramEventBroker.getInstance(getEditingDomain()).removeNotificationListener(modelElement, notificationListener);
-        modelElement = null;
+        final EObject modelElement = resolveSemanticElement();
+        if (modelElement instanceof SequenceFlow) {
+            DiagramEventBroker.getInstance(getEditingDomain()).removeNotificationListener(modelElement, notificationListener);
+        }
     }
 
     @Override
@@ -119,9 +122,9 @@ public class CustomSequenceFlowEditPart extends SequenceFlowEditPart {
             final boolean hasDiamond =
                     ! (semantic.getSource() instanceof Gateway)
                     && (semantic.getConditionType() == SequenceFlowConditionType.DECISION_TABLE
-                    || (semantic.getConditionType() == SequenceFlowConditionType.EXPRESSION
+                    || semantic.getConditionType() == SequenceFlowConditionType.EXPRESSION
                     && semantic.getCondition() != null && semantic.getCondition().getContent() != null
-                    && !semantic.getCondition().getContent().isEmpty()));
+                    && !semantic.getCondition().getContent().isEmpty());
             if (hasDiamond) {
                 sequenceFlowFigure.removeDecoration(ALL) ;
                 sequenceFlowFigure.addDecoration(CONDITIONNAL) ;

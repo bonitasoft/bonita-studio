@@ -166,6 +166,8 @@ public class BarExporter {
         Configuration configuration = null ;
         if(configurationId != null){
             configuration = getConfiguration(process, configurationId);
+        } else {
+            //  configuration = getConfiguration(process,)
         }
         return createBusinessArchive(process, configuration, excludedObject);
     }

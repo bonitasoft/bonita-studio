@@ -14,22 +14,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.actors.ui.wizard;
+package org.bonitasoft.studio.model.process.builders;
 
-import org.eclipse.core.runtime.IStatus;
-
+import org.bonitasoft.studio.model.process.Connection;
+import org.bonitasoft.studio.model.process.SourceElement;
+import org.bonitasoft.studio.model.process.TargetElement;
 
 /**
  * @author Romain Bioteau
  *
  */
-public class OrganizationValidationException extends Exception {
+public abstract class ConnectionBuilder<T extends Connection, B extends ConnectionBuilder<T, B>> extends ElementBuilder<T, B> {
 
-    private static final long serialVersionUID = 578679768520738028L;
-
-    public OrganizationValidationException(final IStatus status) {
-        super(status.getMessage());
+    public B havingSource(final SourceElement sourceElement) {
+        getBuiltInstance().setSource(sourceElement);
+        return getThis();
     }
 
+    public B havingTarget(final TargetElement targetElement) {
+        getBuiltInstance().setTarget(targetElement);
+        return getThis();
+    }
 
 }

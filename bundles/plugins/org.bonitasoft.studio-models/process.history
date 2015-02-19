@@ -8749,5 +8749,13 @@
   <releases date="2014-11-04T10:45:10.092+0100" label="6.4.0-005">
     <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.custom.migration.connector.UpdateGroovyConnectorVersionTo101"/>
   </releases>
+  <releases date="2015-01-30T14:49:24.161+0100" label="6.5.0-001">
+    <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.custom.migration.multiinstance.CallActivityInputMappingCustomMigration">
+      <changes xsi:type="history:Set" element="process.ecore#//InputMapping/processSource"
+          featureName="containment" dataValue="true" oldDataValue="false"/>
+      <changes xsi:type="history:Set" element="process.ecore#//InputMapping/processSource"
+          featureName="eType" referenceValue="expression.ecore#//Expression" oldReferenceValue="process.ecore#//Data"/>
+    </changes>
+  </releases>
   <releases/>
 </history:History>

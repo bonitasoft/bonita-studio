@@ -886,21 +886,6 @@
                       </target>
              </constraint>
               <constraint
-                  class="org.bonitasoft.studio.validation.constraints.process.ParalellMergeGatewayConstraint"
-                  id="org.bonitasoft.studio.validation.constraints.paralellMerge"
-                  lang="java"
-                  mode="Batch"
-                  name="Paralell merge"
-                  severity="WARNING"
-                  statusCode="1">
-               <message>
-                  {0}
-               </message>
-               <target
-                     class="ANDGateway::http://www.bonitasoft.org/ns/studio/process">
-               </target>
-            </constraint>
-              <constraint
                     class="org.bonitasoft.studio.validation.constraints.connector.ConnectorDefinitionAndConfigurationInputConsistencyConstraint"
                     id="org.bonitasoft.studio.validation.constraints.connectorDefAndConfigInputConsistency"
                     isEnabledByDefault="true"
@@ -913,7 +898,7 @@
                     {0}
                  </message>
                  <target
-                       class="Connector::http://www.bonitasoft.org/ns/studio/process">
+                       class="Connector:http://www.bonitasoft.org/ns/studio/process">
                  </target>
               </constraint>
               <constraint
@@ -929,7 +914,7 @@
                     {0}
                  </message>
                  <target
-                       class="Connector::http://www.bonitasoft.org/ns/studio/process">
+                       class="Connector:http://www.bonitasoft.org/ns/studio/process">
                  </target>
               </constraint>
               <constraint
@@ -945,7 +930,7 @@
                     {0}
                  </message>
                  <target
-                       class="SequenceFlow::http://www.bonitasoft.org/ns/studio/process">
+                       class="SequenceFlow:http://www.bonitasoft.org/ns/studio/process">
                  </target>
               </constraint>
             <constraint
@@ -961,7 +946,7 @@
                   {0}
                </message>
                <target
-                     class="Operation::http://www.bonitasoft.org/ns/studio/process">
+                     class="Operation:http://www.bonitasoft.org/ns/studio/expression">
                </target>
             </constraint>
             <constraint
@@ -977,7 +962,7 @@
                   {0}
                </message>
                <target
-                     class="Operation::http://www.bonitasoft.org/ns/studio/process">
+                     class="Operation:http://www.bonitasoft.org/ns/studio/expression">
                </target>
             </constraint>
             <constraint
@@ -993,7 +978,23 @@
                   {0}
                </message>
                <target
-                     class="Connector::http://www.bonitasoft.org/ns/studio/process">
+                     class="Connector:http://www.bonitasoft.org/ns/studio/process">
+               </target>
+            </constraint>
+            <constraint
+                  class="org.bonitasoft.studio.validation.constraints.ExpressionDependenciesConstraint"
+                  id="org.bonitasoft.studio.validation.constraint.expressionDependencies"
+                  isEnabledByDefault="true"
+                  lang="Java"
+                  mode="Batch"
+                  name="Expression dependency consistency constraint"
+                  severity="ERROR"
+                  statusCode="1">
+               <message>
+                  {0}
+               </message>
+               <target
+                     class="Expression:http://www.bonitasoft.org/ns/studio/expression">
                </target>
             </constraint>
          </constraints>

@@ -84,11 +84,11 @@ public class BPMNConnectorExportImportTest extends SWTBotGefTestCase {
 
     @Test
     public void testSingleConnectorOnServiceTask_configuration_globalTextData() {
-        ConnectorConfiguration connectorConfiguration = connectorAfterReimport.getConfiguration();
-        for (ConnectorParameter connectorParameter : connectorConfiguration.getParameters()) {
+        final ConnectorConfiguration connectorConfiguration = connectorAfterReimport.getConfiguration();
+        for (final ConnectorParameter connectorParameter : connectorConfiguration.getParameters()) {
             final String key = connectorParameter.getKey();
             if("from".equals(key)){
-                Expression expression = (Expression) connectorParameter.getExpression();
+                final Expression expression = (Expression) connectorParameter.getExpression();
                 assertEquals("The name of data referenced is not good","globalDataText", expression.getContent());
                 assertEquals("Wrong type for a global variable data", ExpressionConstants.VARIABLE_TYPE, expression.getType());
                 assertFalse("There shoudl be a data referenced", expression.getReferencedElements().isEmpty());
@@ -100,11 +100,11 @@ public class BPMNConnectorExportImportTest extends SWTBotGefTestCase {
 
     @Test
     public void testSingleConnectorOnServiceTask_configuration_transientTextData() {
-        ConnectorConfiguration connectorConfiguration = connectorAfterReimport.getConfiguration();
-        for (ConnectorParameter connectorParameter : connectorConfiguration.getParameters()) {
+        final ConnectorConfiguration connectorConfiguration = connectorAfterReimport.getConfiguration();
+        for (final ConnectorParameter connectorParameter : connectorConfiguration.getParameters()) {
             final String key = connectorParameter.getKey();
             if("to".equals(key)){
-                Expression expression = (Expression) connectorParameter.getExpression();
+                final Expression expression = (Expression) connectorParameter.getExpression();
                 assertEquals("The name of data referenced is not good","transientDataText", expression.getContent());
                 assertEquals("Wrong type for a global variable data", ExpressionConstants.VARIABLE_TYPE, expression.getType());
                 assertFalse("There should be a data referenced", expression.getReferencedElements().isEmpty());
@@ -116,11 +116,11 @@ public class BPMNConnectorExportImportTest extends SWTBotGefTestCase {
 
     @Test
     public void testSingleConnectorOnServiceTask_configuration_constant() {
-        ConnectorConfiguration connectorConfiguration = connectorAfterReimport.getConfiguration();
-        for (ConnectorParameter connectorParameter : connectorConfiguration.getParameters()) {
+        final ConnectorConfiguration connectorConfiguration = connectorAfterReimport.getConfiguration();
+        for (final ConnectorParameter connectorParameter : connectorConfiguration.getParameters()) {
             final String key = connectorParameter.getKey();
             if("subject".equals(key)){
-                Expression expression = (Expression) connectorParameter.getExpression();
+                final Expression expression = (Expression) connectorParameter.getExpression();
                 assertEquals("The name is not good","connectorParameterConstant", expression.getName());
                 assertEquals("Wrong type for a global variable data", ExpressionConstants.CONSTANT_TYPE, expression.getType());
                 return;
@@ -131,13 +131,14 @@ public class BPMNConnectorExportImportTest extends SWTBotGefTestCase {
 
     @Test
     public void testSingleConnectorOnServiceTask_output_constant() {
-        for (Operation operation : connectorAfterReimport.getOutputs()) {
+        for (final Operation operation : connectorAfterReimport.getOutputs()) {
             assertEquals("Opeator is not the right one", ExpressionConstants.ASSIGNMENT_OPERATOR, operation.getOperator().getType());
-            Expression rightOperand2 = operation.getRightOperand();
+            final Expression rightOperand2 = operation.getRightOperand();
             if(rightOperand2 != null){
                 if("connectorOuputConstant".equals(rightOperand2.getName())){
                     assertEquals(ExpressionConstants.CONSTANT_TYPE, rightOperand2.getType());
-                    Expression leftOperand = operation.getLeftOperand();
+                    final Expression leftOperand = operation.getLeftOperand();
+                    assertNotNull(leftOperand);
                     assertEquals(ExpressionConstants.VARIABLE_TYPE, leftOperand.getType());
                     assertFalse("There should be a referenced element", leftOperand.getReferencedElements().isEmpty());
                     return;
@@ -150,14 +151,14 @@ public class BPMNConnectorExportImportTest extends SWTBotGefTestCase {
 
     @Test
     public void testSingleConnectorOnServiceTask_output_groovy() {
-        for (Operation operation : connectorAfterReimport.getOutputs()) {
+        for (final Operation operation : connectorAfterReimport.getOutputs()) {
             assertEquals("Operator is not the right one", ExpressionConstants.ASSIGNMENT_OPERATOR, operation.getOperator().getType());
-            Expression rightOperand = operation.getRightOperand();
+            final Expression rightOperand = operation.getRightOperand();
             if(rightOperand != null){
                 if("groovyExpression".equals(rightOperand.getName())){
                     assertEquals(ExpressionConstants.SCRIPT_TYPE, rightOperand.getType());
                     assertEquals("Wrong return type for Groovy connector output", String.class.getName(), rightOperand.getReturnType());
-                    Expression leftOperand = operation.getLeftOperand();
+                    final Expression leftOperand = operation.getLeftOperand();
                     assertEquals(ExpressionConstants.VARIABLE_TYPE, leftOperand.getType());
                     assertFalse("There should be a referenced element", leftOperand.getReferencedElements().isEmpty());
                     return;
@@ -170,14 +171,14 @@ public class BPMNConnectorExportImportTest extends SWTBotGefTestCase {
 
     @Test
     public void testSingleConnectorOnServiceTask_output_connectoroutput() {
-        for (Operation operation : connectorAfterReimport.getOutputs()) {
+        for (final Operation operation : connectorAfterReimport.getOutputs()) {
             assertEquals("Operator is not the right one", ExpressionConstants.ASSIGNMENT_OPERATOR, operation.getOperator().getType());
-            Expression rightOperand = operation.getRightOperand();
+            final Expression rightOperand = operation.getRightOperand();
             if(rightOperand != null){
                 if("isSent".equals(rightOperand.getName())){
                     assertEquals(ExpressionConstants.CONNECTOR_OUTPUT_TYPE, rightOperand.getType());
                     assertEquals("Wrong return type for Connector output", String.class.getName(), rightOperand.getReturnType());
-                    Expression leftOperand = operation.getLeftOperand();
+                    final Expression leftOperand = operation.getLeftOperand();
                     assertEquals(ExpressionConstants.VARIABLE_TYPE, leftOperand.getType());
                     assertFalse("There should be a referenced element", leftOperand.getReferencedElements().isEmpty());
                     return;
@@ -194,20 +195,20 @@ public class BPMNConnectorExportImportTest extends SWTBotGefTestCase {
 
     protected void prepareTest() throws IOException {
         SWTBotTestUtil.importProcessWIthPathFromClass(bot, "diagramToTestConnectorBPMNImportExport-1.0.bos", "Bonita 6.x", "diagramToTestConnectorBPMNImportExport", BPMNConnectorExportImportTest.class, false);
-        SWTBotGefEditor editor1 = bot.gefEditor(bot.activeEditor().getTitle());
-        SWTBotGefEditPart step1Part = editor1.getEditPart("Step1").parent();
-        MainProcessEditPart mped = (MainProcessEditPart) step1Part.part().getRoot().getChildren().get(0);
-        IBonitaModelExporter exporter = new BonitaModelExporterImpl(mped) ;
-        File bpmnFileExported = File.createTempFile("testSingleConnectorOnServiceTask", ".bpmn");
+        final SWTBotGefEditor editor1 = bot.gefEditor(bot.activeEditor().getTitle());
+        final SWTBotGefEditPart step1Part = editor1.getEditPart("Step1").parent();
+        final MainProcessEditPart mped = (MainProcessEditPart) step1Part.part().getRoot().getChildren().get(0);
+        final IBonitaModelExporter exporter = new BonitaModelExporterImpl(mped) ;
+        final File bpmnFileExported = File.createTempFile("testSingleConnectorOnServiceTask", ".bpmn");
         final boolean transformed = new BonitaToBPMN().transform(exporter, bpmnFileExported, new NullProgressMonitor());
         assertTrue("Error during export", transformed);
 
 
-        ResourceSet resourceSet1 = new ResourceSetImpl();
+        final ResourceSet resourceSet1 = new ResourceSetImpl();
         final Map<String, Object> extensionToFactoryMap = resourceSet1.getResourceFactoryRegistry().getExtensionToFactoryMap();
         final DiResourceFactoryImpl diResourceFactoryImpl = new DiResourceFactoryImpl();
         extensionToFactoryMap.put("bpmn", diResourceFactoryImpl);
-        Resource resource2 = resourceSet1.createResource(URI.createFileURI(bpmnFileExported.getAbsolutePath()));
+        final Resource resource2 = resourceSet1.createResource(URI.createFileURI(bpmnFileExported.getAbsolutePath()));
         resource2.load(Collections.emptyMap());
 
         final DocumentRoot model2 = (DocumentRoot) resource2.getContents().get(0);
@@ -217,15 +218,15 @@ public class BPMNConnectorExportImportTest extends SWTBotGefTestCase {
             public void run() {
                 try {
                     mainProcessAfterReimport = BPMNTestUtil.importBPMNFile(model2);
-                } catch (MalformedURLException e) {
+                } catch (final MalformedURLException e) {
                     e.printStackTrace();
                 }
             }
         });
 
-        for(Element element : ((Lane)((Pool)mainProcessAfterReimport.getElements().get(0)).getElements().get(0)).getElements()){
+        for(final Element element : ((Lane)((Pool)mainProcessAfterReimport.getElements().get(0)).getElements().get(0)).getElements()){
             if(element instanceof ServiceTask){
-                ServiceTask serviceTask = (ServiceTask) element;
+                final ServiceTask serviceTask = (ServiceTask) element;
                 connectorAfterReimport = serviceTask.getConnectors().get(0);
                 break;
             }
