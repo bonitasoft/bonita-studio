@@ -37,27 +37,6 @@
             </plugin>
             <plugin>
                 <groupId>org.eclipse.tycho</groupId>
-                <artifactId>target-platform-configuration</artifactId>
-                <version>${tychoVersion}</version>
-                <configuration>
-                    <dependency-resolution>
-                        <extraRequirements>
-                            <requirement>
-                                <type>eclipse-feature</type>
-                                <id>tests-feature</id>
-                                <versionRange>0.0.0</versionRange>
-                            </requirement>
-                             <requirement>
-                                <type>eclipse-feature</type>
-                                <id>studio-feature</id>
-                                <versionRange>0.0.0</versionRange>
-                            </requirement>
-                        </extraRequirements>
-                    </dependency-resolution>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.eclipse.tycho</groupId>
                 <artifactId>tycho-surefire-plugin</artifactId>
                 <version>${tychoVersion}</version>
                 <configuration>
