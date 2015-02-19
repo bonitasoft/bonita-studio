@@ -147,14 +147,8 @@
 			<plugin>
 				<groupId>org.eclipse.tycho.extras</groupId>
 				<artifactId>tycho-eclipserun-plugin</artifactId>
+				<version>0.16.0</version>
 				<configuration>
-                   <repositories>
-                       <repository>
-                          <id>bonita target platform</id>
-                           <layout>p2</layout>
-                           <url>${p2MirrorUrl}</url>
-                         </repository>
-                    </repositories>
 					<appArgLine>${os-jvm-flags} -application org.eclipse.ant.core.antRunner -buildfile p2AllInOne.xml -clean -noSplash -consoleLog -Droot.dir=${project.build.directory}/${product.short.name}-${project.version}/</appArgLine>
 					<argLine>-Xmx512m -Xms256m -XX:MaxPermSize=512m</argLine>
 					<dependencies>

@@ -23,14 +23,8 @@
 						<plugin>
 							<groupId>org.eclipse.tycho.extras</groupId>
 							<artifactId>tycho-eclipserun-plugin</artifactId>
+							<version>0.16.0</version>
 							<configuration>
-                            <repositories>
-                                 <repository>
-                                  <id>bonita target platform</id>
-                                  <layout>p2</layout>
-                                  <url>${p2MirrorUrl}</url>
-                                 </repository>
-                            </repositories>
 							<appArgLine>${os-jvm-flags} -data ${workspacePath} -application org.eclipse.ant.core.antRunner -buildfile generateGenModels.xml -clean -noSplash -consoleLog</appArgLine>
 							<argLine>-Xmx512m -Xms256m -XX:MaxPermSize=512m -DworkspacePath=${workspacePath}</argLine>
 							<dependencies>
