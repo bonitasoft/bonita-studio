@@ -1,7 +1,7 @@
 package org.bonitasoft.studio.properties.sections.general;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.bonitasoft.studio.model.process.builders.TaskBuilder.createTaskBuilder;
+import static org.bonitasoft.studio.model.process.builders.TaskBuilder.aTask;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -63,7 +63,7 @@ public class ProcessElementNameContributionTest extends AbstractSWTTestCase {
 
     @Test
     public void should_updatePartName_call_refresh_on_pool_edit_part_asynchronously() throws Exception {
-        final Task task = createTaskBuilder().build();
+        final Task task = aTask().build();
         nameGridPropertySectionContribution.setEObject(task);
         when(editPart.resolveSemanticElement()).thenReturn(task);
         when(editPart.getChildren()).thenReturn(Arrays.asList(textAwareEP));
