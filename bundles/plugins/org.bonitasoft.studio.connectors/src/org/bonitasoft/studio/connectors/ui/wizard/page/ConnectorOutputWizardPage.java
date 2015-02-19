@@ -33,10 +33,11 @@ import org.eclipse.swt.widgets.Control;
 public class ConnectorOutputWizardPage extends AbstractConnectorOutputWizardPage {
 
     private OperationsComposite lineComposite;
+    private ScrolledComposite scrolledComposite;
 
     @Override
     protected Control doCreateControl(final Composite parent, final EMFDataBindingContext context) {
-        final ScrolledComposite scrolledComposite = new ScrolledComposite(parent, SWT.V_SCROLL);
+        scrolledComposite = new ScrolledComposite(parent, SWT.V_SCROLL);
         scrolledComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).create());
         scrolledComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
@@ -71,6 +72,14 @@ public class ConnectorOutputWizardPage extends AbstractConnectorOutputWizardPage
         scrolledComposite.setExpandHorizontal(true);
         scrolledComposite.setMinSize(lineComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT));
         return mainComposite;
+    }
+
+    @Override
+    public void setVisible(final boolean visible) {
+        super.setVisible(visible);
+        if (visible) {
+            scrolledComposite.getParent().layout(true, true);
+        }
     }
 
     /*
