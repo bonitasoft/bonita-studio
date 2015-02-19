@@ -20,7 +20,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.jface.databinding;bundle-version="1.5.0",
  org.junit;bundle-version="4.8.2";resolution:=optional,
  org.mockito;bundle-version="1.9.5";resolution:=optional,
- org.fest-assert;resolution:=optional
+ assertj-core;bundle-version="1.5.0";resolution:=optional
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: org.bonitasoft.studio.dependencies,org.bonitasoft.stud
