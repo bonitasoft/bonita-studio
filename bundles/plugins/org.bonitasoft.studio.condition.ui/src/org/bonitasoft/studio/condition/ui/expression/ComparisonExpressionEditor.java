@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -49,7 +47,6 @@ import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jface.databinding.fieldassist.ControlDecorationSupport;
@@ -124,7 +121,7 @@ public class ComparisonExpressionEditor extends SelectionAwareExpressionEditor i
         adapterLabelProvider = new AdapterFactoryLabelProvider(adapterFactory);
         final Injector injector = ConditionModelActivator.getInstance().getInjector(ConditionModelActivator.ORG_BONITASOFT_STUDIO_CONDITION_CONDITIONMODEL);
         if (context != null && context.eResource() != null) {
-        final ConditionModelJavaValidator validator = injector.getInstance(ConditionModelJavaValidator.class);
+            final ConditionModelJavaValidator validator = injector.getInstance(ConditionModelJavaValidator.class);
             validator.setCurrentResourceSet(context.eResource().getResourceSet());
         }
     }
@@ -281,26 +278,10 @@ public class ComparisonExpressionEditor extends SelectionAwareExpressionEditor i
         if (compareOp != null) {
             final List<Expression_ProcessRef> references = ModelHelper.getAllItemsOfType(compareOp, ConditionModelPackage.Literals.EXPRESSION_PROCESS_REF);
             for (final Expression_ProcessRef ref : references) {
-                final EObject dep = getResolvedDependency(ref);
+                final EObject dep = ComparisonExpressionUtil.getResolvedDependency(context, ref);
                 inputExpression.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(dep));
             }
         }
-    }
-
-    /**
-     * @param ref
-     * @return
-     */
-    private EObject getResolvedDependency(final Expression_ProcessRef ref) {
-        EObject dep = ref.getValue();
-        final List<EObject> orignalDep = ModelHelper.getAllItemsOfType(ModelHelper.getMainProcess(context), dep.eClass());
-        for (final EObject d : orignalDep) {
-            if (EcoreUtil.equals(dep, d)) {
-                dep = d;
-                break;
-            }
-        }
-        return dep;
     }
 
     protected void createReturnTypeComposite(final Composite parent) {
@@ -342,7 +323,6 @@ public class ComparisonExpressionEditor extends SelectionAwareExpressionEditor i
 
         final UpdateValueStrategy opposite = new UpdateValueStrategy();
         opposite.setConverter(new BooleanInverserConverter());
-
 
         dataBindingContext.bindValue(SWTObservables.observeSelection(automaticResolutionButton), autoDepsModelObservable);
         dataBindingContext.bindValue(SWTObservables.observeSelection(automaticResolutionButton), SWTObservables.observeEnabled(addDependencyButton), opposite,
