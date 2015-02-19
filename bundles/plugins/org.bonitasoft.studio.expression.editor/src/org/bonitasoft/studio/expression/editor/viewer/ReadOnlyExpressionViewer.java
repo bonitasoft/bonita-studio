@@ -91,6 +91,11 @@ public class ReadOnlyExpressionViewer extends ExpressionViewer {
     @Override
     protected Set<Expression> getFilteredExpressions() {
         final Set<Expression> result = super.getFilteredExpressions();
+        filterOutTransientData(result);
+        return result;
+    }
+
+    protected void filterOutTransientData(final Set<Expression> result) {
         final Set<Expression> toRemove = new HashSet<Expression>();
 
         final boolean isATransientDataInitialization = isTransientDataInitialization(expressionNatureProvider);
@@ -110,7 +115,6 @@ public class ReadOnlyExpressionViewer extends ExpressionViewer {
             }
         }
         result.removeAll(toRemove);
-        return result;
     }
 
     private boolean isTransientDataInitialization(final IExpressionNatureProvider expressionNatureProvider) {
@@ -151,7 +155,7 @@ public class ReadOnlyExpressionViewer extends ExpressionViewer {
             if (selectedExpression != null && ExpressionPackage.Literals.OPERATION__LEFT_OPERAND.equals(selectedExpression.eContainingFeature())) {
                 final Operator operator = ((Operation) context).getOperator();
                 final String newOperatorType = updateOperatorType(cc, operator, copy);
-                updateRightOperand(cc, (Operation) context, newOperatorType);
+                updateRightOperand(cc, (Operation) context, newOperatorType, copy);
             }
         }
     }
@@ -205,15 +209,15 @@ public class ReadOnlyExpressionViewer extends ExpressionViewer {
                 || ExpressionConstants.ATTACH_EXISTING_BUSINESS_DATA.equals(currentOperatorType);
     }
 
-    protected void updateRightOperand(final CompoundCommand cc, final Operation action, final String newOperatorType) {
+    protected void updateRightOperand(final CompoundCommand cc, final Operation action, final String newOperatorType, final Expression newLeftOperand) {
         final Expression right = action.getRightOperand();
-        final Expression left = action.getLeftOperand();
-        if (left != null && right != null) {
+        //final Expression newLeftOperand = action.getLeftOperand();
+        if (newLeftOperand != null && right != null) {
             if (ExpressionConstants.ASSIGNMENT_OPERATOR.equals(newOperatorType)
-                    && !left.getReturnType().equals(right.getReturnType())) {
+                    && !newLeftOperand.getReturnType().equals(right.getReturnType())) {
                 if (ExpressionConstants.CONSTANT_TYPE.equals(right.getType())
-                        && isPrimitiveType(left.getReturnType())) {
-                    appendCommandToSetReturnType(cc, right, left.getReturnType());
+                        && isPrimitiveType(newLeftOperand.getReturnType())) {
+                    appendCommandToSetReturnType(cc, right, newLeftOperand.getReturnType());
                 } else if (DocumentValue.class.getName().equals(right.getReturnType())) {
                     appendCommandToSetReturnType(cc, right, DocumentValue.class.getName());
                 }

@@ -858,21 +858,6 @@
                       </target>
              </constraint>
               <constraint
-                  class="org.bonitasoft.studio.validation.constraints.process.ParalellMergeGatewayConstraint"
-                  id="org.bonitasoft.studio.validation.constraints.paralellMerge"
-                  lang="java"
-                  mode="Batch"
-                  name="Paralell merge"
-                  severity="WARNING"
-                  statusCode="1">
-               <message>
-                  {0}
-               </message>
-               <target
-                     class="ANDGateway:http://www.bonitasoft.org/ns/studio/process">
-               </target>
-            </constraint>
-              <constraint
                     class="org.bonitasoft.studio.validation.constraints.connector.ConnectorDefinitionAndConfigurationInputConsistencyConstraint"
                     id="org.bonitasoft.studio.validation.constraints.connectorDefAndConfigInputConsistency"
                     isEnabledByDefault="true"
@@ -966,6 +951,37 @@
                </message>
                <target
                      class="Connector:http://www.bonitasoft.org/ns/studio/process">
+               </target>
+            </constraint>
+            <constraint
+                  class="org.bonitasoft.studio.validation.constraints.ExpressionDependenciesConstraint"
+                  id="org.bonitasoft.studio.validation.constraint.expressionDependencies"
+                  isEnabledByDefault="true"
+                  lang="Java"
+                  mode="Batch"
+                  name="Expression dependency consistency constraint"
+                  severity="ERROR"
+                  statusCode="1">
+               <message>
+                  {0}
+               </message>
+               <target
+                     class="Expression:http://www.bonitasoft.org/ns/studio/expression">
+               </target>
+            </constraint>
+            <constraint
+                  class="org.bonitasoft.studio.validation.constraints.process.MultiInstanceIteratorConstraint"
+                  id="org.bonitasoft.studio.validation.multiInstanceIterator"
+                  lang="Java"
+                  mode="Batch"
+                  name="MultiInstance iterator constraint"
+                  severity="WARNING"
+                  statusCode="1">
+               <message>
+                  {0}
+               </message>
+               <target
+                     class="MultiInstantiable:http://www.bonitasoft.org/ns/studio/process">
                </target>
             </constraint>
          </constraints>

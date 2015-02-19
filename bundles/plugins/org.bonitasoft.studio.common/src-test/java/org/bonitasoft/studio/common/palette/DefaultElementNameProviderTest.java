@@ -54,7 +54,7 @@ public class DefaultElementNameProviderTest {
 
     @Test
     public void should_getNameFor_a_process_element() throws Exception {
-        assertThat(defaultElementNameProvider.getNameFor(ActivityBuilder.createActivityBuilder().build())).isEqualTo(Messages.StepDefaultName);
+        assertThat(defaultElementNameProvider.getNameFor(ActivityBuilder.anActivity().build())).isEqualTo(Messages.StepDefaultName);
         final FlowElement flowElement = ProcessFactory.eINSTANCE.createFlowElement();
         assertThat(defaultElementNameProvider.getNameFor(flowElement)).isEqualTo(flowElement.eClass().getName());
     }

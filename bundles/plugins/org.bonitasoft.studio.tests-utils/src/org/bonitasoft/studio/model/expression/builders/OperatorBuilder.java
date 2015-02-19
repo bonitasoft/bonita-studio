@@ -31,7 +31,7 @@ public class OperatorBuilder {
         this.operator = operator;
     }
 
-    public static OperatorBuilder create() {
+    public static OperatorBuilder anOperator() {
         return new OperatorBuilder(ExpressionFactory.eINSTANCE.createOperator());
     }
 

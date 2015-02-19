@@ -16,6 +16,7 @@ package org.bonitasoft.studio.common.jface.databinding;
 
 import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
 import org.bonitasoft.studio.common.jface.databinding.validator.ForbiddenCharactersValidator;
+import org.bonitasoft.studio.common.jface.databinding.validator.GroovyReferenceValidator;
 import org.bonitasoft.studio.common.jface.databinding.validator.InputLengthValidator;
 import org.bonitasoft.studio.common.jface.databinding.validator.RegExpValidator;
 import org.bonitasoft.studio.common.jface.databinding.validator.URLEncodableInputValidator;
@@ -36,7 +37,7 @@ public class ValidatorFactory {
     }
 
     public static IValidator minMaxLengthValidator(final String inputName, final int minLength, final int maxLength) {
-        return new InputLengthValidator(inputName,minLength, maxLength);
+        return new InputLengthValidator(inputName, minLength, maxLength);
     }
 
     public static IValidator mandatoryValidator(final String inputName) {
@@ -57,6 +58,10 @@ public class ValidatorFactory {
 
     public static IValidator utf8InputValidator(final String inputName) {
         return new UTF8InputValidator(inputName);
+    }
+
+    public static IValidator groovyReferenceValidator(final String inputName, final boolean checkEmptyField, final boolean checkLowerCaseForFirstChar) {
+        return new GroovyReferenceValidator(inputName, checkEmptyField, checkLowerCaseForFirstChar);
     }
 
 }

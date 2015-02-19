@@ -142,7 +142,7 @@ public class FormsExporterTest {
     public void should_addFileWidgetInitialValueExpression_whenDocumentIsScript() throws InvalidFormDefinitionException {
         final FileWidget fileWidget = FileWidgetBuilder.createFileWidgetBuilder().
                 withInputType(FileWidgetInputType.DOCUMENT).
-                havingInputExpression(ExpressionBuilder.create().
+                havingInputExpression(ExpressionBuilder.anExpression().
                         withName("myDocumentScript").
                         withContent("myDocumentScript").
                         withExpressionType(ExpressionConstants.SCRIPT_TYPE).

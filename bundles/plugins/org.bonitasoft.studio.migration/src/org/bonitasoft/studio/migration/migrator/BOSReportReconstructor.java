@@ -39,6 +39,7 @@ import org.eclipse.emf.edapt.spi.history.Release;
 public class BOSReportReconstructor extends org.eclipse.emf.edapt.internal.migration.execution.MigrationReconstructor {
 
     private final Report report;
+    private CustomMigration customMigration;
 
     public BOSReportReconstructor(final List<URI> modelURIs, final Release sourceRelease,
             final Release targetRelease, final IProgressMonitor monitor,
@@ -48,12 +49,20 @@ public class BOSReportReconstructor extends org.eclipse.emf.edapt.internal.migra
     }
 
     @Override
+    public void startChange(final Change change) {
+        super.startChange(change);
+        if (change instanceof MigrationChange) {
+            customMigration = getCustomMigration();
+        }
+    }
+
+    @Override
     public void endChange(final Change change) {
         super.endChange(change);
         if (change instanceof MigrationChange) {
-            final CustomMigration customMigration = getCustomMigration();
             if (customMigration instanceof IReportMigration) {
                 report.getChanges().addAll(((IReportMigration) customMigration).getChanges());
+                customMigration = null;
             }
         }
     }

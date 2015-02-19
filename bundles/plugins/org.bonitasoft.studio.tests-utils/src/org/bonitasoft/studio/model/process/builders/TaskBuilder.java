@@ -26,7 +26,7 @@ import org.bonitasoft.studio.model.process.Task;
  */
 public class TaskBuilder extends ActivityBuilder<Task, TaskBuilder> {
 
-    public static TaskBuilder createTaskBuilder() {
+    public static TaskBuilder aTask() {
         return new TaskBuilder();
     }
 
