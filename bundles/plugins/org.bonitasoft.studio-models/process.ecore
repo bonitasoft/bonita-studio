@@ -255,7 +255,8 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="InclusiveGateway" eSuperTypes="#//Gateway"/>
   <eClassifiers xsi:type="ecore:EClass" name="InputMapping">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="processSource" eType="#//Data"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="processSource" eType="ecore:EClass expression.ecore#//Expression"
+        containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="subprocessTarget" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IntegerType" eSuperTypes="#//DataType"/>

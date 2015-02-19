@@ -42,4 +42,9 @@ public class ImportBosArchiveStatusBuilder {
         return status;
     }
 
+    public ImportBosArchiveStatusBuilder addStatus(final IStatus status) {
+        this.status.add(status);
+        return this;
+    }
+
 }

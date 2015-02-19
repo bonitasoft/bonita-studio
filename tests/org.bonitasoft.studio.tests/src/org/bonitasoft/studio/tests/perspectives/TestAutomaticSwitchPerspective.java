@@ -109,7 +109,7 @@ public class TestAutomaticSwitchPerspective extends TestCase {
         final CreateFormCommand formCommand = new CreateFormCommand(pageflow,ProcessPackage.Literals.PAGE_FLOW__FORM,"testForm","form to test perspectives", Collections.<WidgetMapping>emptyList(), editingDomain);
         formCommand.execute(new NullProgressMonitor(), null);
         final Form createdForm = (Form) formCommand.getCommandResult().getReturnValue();
-		FormsUtils.createDiagram(createdForm, editingDomain, pageflow);
+        FormsUtils.createFormDiagram(createdForm, editingDomain);
         FormsUtils.openDiagram(createdForm, editingDomain);
 
         assertTrue("Wrong perspective when opening the form",new TestAsyncThread(10, 500) {

@@ -19,8 +19,10 @@ package org.bonitasoft.studio.expression.editor.operation;
 
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 
 /**
@@ -30,16 +32,16 @@ import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 public class WizardPageOperationsComposite extends OperationsComposite {
 
 	public WizardPageOperationsComposite(
-			TabbedPropertySheetPage tabbedPropertySheetPage,
-			Composite mainComposite, ViewerFilter actionExpressionFilter,
-			ViewerFilter storageExpressionFilter) {
+			final TabbedPropertySheetPage tabbedPropertySheetPage,
+			final Composite mainComposite, final ViewerFilter actionExpressionFilter,
+			final ViewerFilter storageExpressionFilter) {
 		super(tabbedPropertySheetPage, mainComposite, actionExpressionFilter,
 				storageExpressionFilter);
 	}
-	
-	public WizardPageOperationsComposite(TabbedPropertySheetPage tabbedPropertySheetPage,
-			Composite mainComposite, ViewerFilter actionExpressionFilter,
-			ViewerFilter storageExpressionFilter,boolean isPageFlowContext) {
+
+	public WizardPageOperationsComposite(final TabbedPropertySheetPage tabbedPropertySheetPage,
+			final Composite mainComposite, final ViewerFilter actionExpressionFilter,
+			final ViewerFilter storageExpressionFilter,final boolean isPageFlowContext) {
 		super(tabbedPropertySheetPage, mainComposite, actionExpressionFilter,
 				storageExpressionFilter,isPageFlowContext);
 	}
@@ -49,16 +51,28 @@ public class WizardPageOperationsComposite extends OperationsComposite {
 	 */
 	@Override
 	public void refresh() {
-		Composite shell = mainComposite.getShell();
-		Point compositesize = mainComposite.getSize();
-		Point newcompositesize = mainComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
-		Point defaultSize = shell.getSize();
-		Point size = shell.computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
-		if(compositesize.y < newcompositesize.y){
-			shell.setSize(defaultSize.x, size.y);
-		}
-		shell.layout(true,true);
+        final Composite shell = parent.getShell();
+        final Point compositesize = parent.getSize();
+        final Point newcompositesize = computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
+        final Point defaultSize = shell.getSize();
+        final Point size = shell.computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
+        if (compositesize.x < newcompositesize.x) {
+            shell.setSize(size.x, defaultSize.y);
+        }
+        shell.layout(true, true);
 
+        if (parent.getParent() instanceof ScrolledComposite) {
+            final ScrolledComposite scrolledComposite = (ScrolledComposite) parent.getParent();
+            scrolledComposite.setMinSize(computeSize(SWT.DEFAULT, SWT.DEFAULT));
+            Display.getDefault().asyncExec(new Runnable() {
+
+                @Override
+                public void run() {
+                    scrolledComposite.getVerticalBar().setSelection(scrolledComposite.getVerticalBar().getMaximum());
+                }
+            });
+
+        }
 		if (tabbedPropertySheetPage != null) {
 			tabbedPropertySheetPage.resizeScrolledComposite();
 		}
@@ -79,7 +93,7 @@ public class WizardPageOperationsComposite extends OperationsComposite {
 	 * @see org.bonitasoft.studio.common.IBonitaVariableContext#setIsOverviewContext(boolean)
 	 */
 	@Override
-	public void setIsOverviewContext(boolean isOverviewContext) {
+	public void setIsOverviewContext(final boolean isOverviewContext) {
 	}
 
 }

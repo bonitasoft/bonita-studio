@@ -16,7 +16,9 @@
  */
 package org.bonitasoft.studio.model.process.builders;
 
+import org.bonitasoft.studio.model.expression.Operation;
 import org.bonitasoft.studio.model.expression.builders.ExpressionBuilder;
+import org.bonitasoft.studio.model.expression.builders.OperationBuilder;
 import org.bonitasoft.studio.model.process.Activity;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.MultiInstanceType;
@@ -28,7 +30,7 @@ import org.bonitasoft.studio.model.process.ProcessFactory;
  */
 public class ActivityBuilder<T extends Activity, B extends ActivityBuilder<T, B>> extends FlowElementBuilder<T, B> {
 
-    public static <B extends ActivityBuilder<Activity, B>> ActivityBuilder<Activity, B> createActivityBuilder() {
+    public static <B extends ActivityBuilder<Activity, B>> ActivityBuilder<Activity, B> anActivity() {
         return new ActivityBuilder<Activity, B>();
     }
 
@@ -116,6 +118,24 @@ public class ActivityBuilder<T extends Activity, B extends ActivityBuilder<T, B>
         if (data != null) {
             for (final DataBuilder<?, ?> dataBuilder : data) {
                 getBuiltInstance().getData().add(dataBuilder.build());
+            }
+        }
+        return getThis();
+    }
+
+    public B havingOperations(final OperationBuilder... operations) {
+        if (operations != null) {
+            for (final OperationBuilder operationBuilder : operations) {
+                getBuiltInstance().getOperations().add(operationBuilder.build());
+            }
+        }
+        return getThis();
+    }
+
+    public B havingOperations(final Operation... operations) {
+        if (operations != null) {
+            for (final Operation operation : operations) {
+                getBuiltInstance().getOperations().add(operation);
             }
         }
         return getThis();

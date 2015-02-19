@@ -25,7 +25,7 @@ import org.bonitasoft.studio.model.process.StringType;
  */
 public class StringDataTypeBuilder extends DataTypeBuilder<StringType, StringDataTypeBuilder> {
 
-    public static StringDataTypeBuilder create() {
+    public static StringDataTypeBuilder aStringDataType() {
         return new StringDataTypeBuilder();
     }
 

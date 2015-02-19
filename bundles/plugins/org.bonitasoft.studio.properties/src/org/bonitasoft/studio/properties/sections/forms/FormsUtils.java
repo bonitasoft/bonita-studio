@@ -19,12 +19,9 @@ package org.bonitasoft.studio.properties.sections.forms;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.NamingUtils;
-import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.BonitaErrorDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -50,11 +47,8 @@ import org.bonitasoft.studio.properties.sections.forms.adapters.WidgetAddedOrRem
 import org.bonitasoft.studio.properties.sections.forms.commands.DuplicateFormCommand;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.operations.OperationHistoryFactory;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.ui.URIEditorInput;
 import org.eclipse.emf.common.util.EList;
@@ -82,8 +76,6 @@ import org.eclipse.ui.PlatformUI;
  */
 public class FormsUtils {
 
-    protected static final String TMP_DIR = ProjectUtil.getBonitaStudioWorkFolder().getAbsolutePath();
-
     public static enum WidgetEnum {
         TEXT, TEXT_AREA, COMBO, CHECKBOX,CHECKBOX_LIST, DATE, LIST, PASSWORD, RADIO, SELECT, FILE
     };
@@ -105,17 +97,8 @@ public class FormsUtils {
      *            create the diagram corresponding to this form
      * @return created diagram
      */
-    public static void createDiagram(final Form form, final TransactionalEditingDomain editingDomain, final Element pageFlow) {
-        final List<IFile> list = new ArrayList<IFile>();
-        for (final Resource resource : editingDomain.getResourceSet().getResources()) {
-            if (resource.getURI().isPlatform()) {
-                list.add(ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(resource.getURI().toPlatformString(true))));
-            } else {
-                list.add(ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(resource.getURI().toFileString())));
-            }
-        }
-
-        final AbstractTransactionalCommand command = new AbstractTransactionalCommand(editingDomain, "", list) { //$NON-NLS-1$
+    public static void createFormDiagram(final Form form, final TransactionalEditingDomain editingDomain) {
+        final AbstractTransactionalCommand command = new AbstractTransactionalCommand(editingDomain, "", null) { //$NON-NLS-1$
 
             @Override
             protected CommandResult doExecuteWithResult(final IProgressMonitor monitor, final IAdaptable info) throws ExecutionException {
@@ -132,9 +115,10 @@ public class FormsUtils {
         try {
             OperationHistoryFactory.getOperationHistory().execute(command, null, null);
         } catch (final ExecutionException e) {
-            FormDiagramEditorPlugin.getInstance().logError("Unable to create model and diagram", e); //$NON-NLS-1$
+            BonitaStudioLog.error(e); //$NON-NLS-1$
         }
     }
+
 
     /**
      * open the diagram corresponding to the form
@@ -163,7 +147,7 @@ public class FormsUtils {
         ensureAdaptersForDeletionOrRenamingWellSetted(form, formEditor);
         final MainProcess mainProcess = ModelHelper.getMainProcess(form);
 
-        final DiagramRepositoryStore diagramStore = (DiagramRepositoryStore) RepositoryManager.getInstance().getCurrentRepository()
+        final DiagramRepositoryStore diagramStore = RepositoryManager.getInstance().getCurrentRepository()
                 .getRepositoryStore(DiagramRepositoryStore.class);
         final IRepositoryFileStore file = diagramStore.getChild(NamingUtils.toDiagramFilename(mainProcess));
         if (file.isReadOnly()) {
@@ -174,7 +158,7 @@ public class FormsUtils {
 
     protected static void handleReadOnlyModeOnEditor(final FormDiagramEditor formEditor, final MainProcess diagram) {
         if (diagram != null) {
-            final DiagramRepositoryStore diagramStore = (DiagramRepositoryStore) RepositoryManager.getInstance().getCurrentRepository()
+            final DiagramRepositoryStore diagramStore = RepositoryManager.getInstance().getCurrentRepository()
                     .getRepositoryStore(DiagramRepositoryStore.class);
             final DiagramFileStore diagramFile = diagramStore.getDiagram(diagram.getName(), diagram.getVersion());
 

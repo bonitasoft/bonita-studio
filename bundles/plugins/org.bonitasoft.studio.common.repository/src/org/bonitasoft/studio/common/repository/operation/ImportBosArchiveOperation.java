@@ -1,22 +1,22 @@
 /**
- * Copyright (C) 2012 BonitaSoft S.A.
+ * Copyright (C) 2012-2015 BonitaSoft S.A.
  * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.common.repository.operation;
 
 import static org.bonitasoft.studio.common.Messages.bosProductName;
+import static org.bonitasoft.studio.common.jface.FileActionDialog.activateYesNoToAll;
+import static org.bonitasoft.studio.common.jface.FileActionDialog.deactivateYesNoToAll;
 
 import java.io.File;
 import java.io.IOException;
@@ -32,7 +32,6 @@ import java.util.Set;
 
 import org.bonitasoft.studio.common.ProcessesValidationAction;
 import org.bonitasoft.studio.common.ProductVersion;
-import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
@@ -44,6 +43,7 @@ import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.model.process.AbstractProcess;
+import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -55,6 +55,7 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -69,7 +70,7 @@ public class ImportBosArchiveOperation {
     private static final String TMP_IMPORT_PROJECT = "tmpImport";
     private String archiveFile;
     private IRepository currentRepository;
-    private BosArchiveImportStatus importStatus;
+    private Status importStatus;
     private final IResourceImporter iResourceImporter;
     private final boolean launchValidationafterImport;
 
@@ -102,13 +103,13 @@ public class ImportBosArchiveOperation {
         currentRepository.notifyFileStoreEvent(new FileStoreChangeEvent(EventType.PRE_IMPORT, null));
         final List<IRepositoryStore<? extends IRepositoryFileStore>> allRepositories = currentRepository.getAllStores();
 
-        FileActionDialog.activateYesNoToAll();
+        activateYesNoToAll();
         final Map<String, IRepositoryStore<? extends IRepositoryFileStore>> repositoryMap = new HashMap<String, IRepositoryStore<? extends IRepositoryFileStore>>();
         for (final IRepositoryStore<? extends IRepositoryFileStore> repository : allRepositories) {
             repositoryMap.put(repository.getName(), repository);
         }
 
-        IContainer rootContainer = null;;
+        IContainer rootContainer = null;
         try {
             rootContainer = getRootContainer(container, repositoryMap);
             if (rootContainer == null) {
@@ -123,7 +124,7 @@ public class ImportBosArchiveOperation {
 
         checkArchiveCompatibility(rootContainer);
 
-        FileActionDialog.activateYesNoToAll();
+        activateYesNoToAll();
         iResourceImporter.setResourcesToOpen(getResourcesToOpen(rootContainer));
         try {
             iResourceImporter.run(rootContainer, currentRepository, monitor);
@@ -133,7 +134,12 @@ public class ImportBosArchiveOperation {
             restoreBuildState();
         }
 
-        FileActionDialog.deactivateYesNoToAll();
+        deactivateYesNoToAll();
+
+        final MultiStatus status = new MultiStatus(CommonRepositoryPlugin.PLUGIN_ID, 0, null, null);
+        for (final String fileName : iResourceImporter.getFailedProcesses()) {
+            status.add(ValidationStatus.error(String.format("Failed to import %s", fileName)));
+        }
 
         currentRepository.refresh(Repository.NULL_PROGRESS_MONITOR);
         currentRepository.notifyFileStoreEvent(new FileStoreChangeEvent(EventType.POST_IMPORT, null));
@@ -142,8 +148,7 @@ public class ImportBosArchiveOperation {
             validateAllAfterImport();
         }
 
-
-        return Status.OK_STATUS;
+        return status;
     }
 
     protected void restoreBuildState() {
@@ -287,6 +292,7 @@ public class ImportBosArchiveOperation {
         try {
             PlatformUtil.unzipZipFiles(archive, container.getLocation().toFile(), Repository.NULL_PROGRESS_MONITOR);
         } catch (final Exception e) {
+            importStatus = new Status(IStatus.ERROR, CommonRepositoryPlugin.PLUGIN_ID, e.getMessage(), e);
             BonitaStudioLog.error(e);
             Display.getDefault().syncExec(new Runnable() {
 
