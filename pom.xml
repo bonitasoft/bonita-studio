@@ -242,13 +242,7 @@
 							<arch>x86_64</arch>
 						</environment>
 					</environments>
-                    <repositories>
-                      <repository>
-   <id>BonitaBPM P2 Repository</id>
-   <url>${p2MirrorUrl}</url>
-   <layout>p2</layout>
-</repository>
-                    </repositories>
+
                   
 <!-- 					<target> -->
 <!-- 						<artifact> -->
@@ -268,6 +262,14 @@
 			</plugin>
 		</plugins>
 	</build>
+
+    <repositories>
+       <repository>
+       <id>BonitaBPM P2 Repository</id>
+       <url>${p2MirrorUrl}</url>
+       <layout>p2</layout>
+    </repository>
+    </repositories>
 
 	<profiles>
 		<profile>
