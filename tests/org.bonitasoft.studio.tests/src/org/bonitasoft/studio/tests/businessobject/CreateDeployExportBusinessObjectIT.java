@@ -157,7 +157,7 @@ public class CreateDeployExportBusinessObjectIT extends SWTBotGefTestCase {
         assertThat(fStore).isNotNull();
         final BusinessObjectModel businessObjectModel = fStore.getContent();
         assertThat(businessObjectModel).isNotNull();
-        assertThat(businessObjectModel.getBusinessObjects()).extracting("qualifiedName").containsOnly("org.bonitasoft.test.Employee");
+        assertThat(businessObjectModel.getBusinessObjects()).extracting("qualifiedName").containsOnly("org.model.test.Employee");
         final BusinessObject employeeBusinessObject = businessObjectModel.getBusinessObjects().get(0);
         assertThat(employeeBusinessObject.getFields())
                 .extracting("name", "type")
