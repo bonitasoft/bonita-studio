@@ -47,9 +47,8 @@ import org.junit.runner.RunWith;
 @RunWith(SWTBotJunit4ClassRunner.class)
 public class TestDocument extends SWTBotGefTestCase {
 
-
     @Before
-    public void cleanRepo(){
+    public void cleanRepo() {
         bot.saveAllEditors();
         bot.closeAllEditors();
         final DiagramRepositoryStore repositoryStore = RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
@@ -235,8 +234,6 @@ public class TestDocument extends SWTBotGefTestCase {
 
     }
 
-
-
     protected BotDocumentsPropertySection createDiagramAndGoToDocumentSection() {
         final BotApplicationWorkbenchWindow botApplicationWorkbenchWindow = new BotApplicationWorkbenchWindow(bot);
         final BotProcessDiagramPerspective botProcessDiagramPerspective = botApplicationWorkbenchWindow.createNewDiagram();
@@ -244,7 +241,6 @@ public class TestDocument extends SWTBotGefTestCase {
         final BotDocumentsPropertySection botDocumentsPropertySection = botProcessDiagramPropertiesViewFolder.selectGeneralTab().selectDocumentsTab();
         return botDocumentsPropertySection;
     }
-
 
     @Test
     public void testErrorMessageAndButtonBehaviorForMultipleDocument() throws Exception {
@@ -294,9 +290,7 @@ public class TestDocument extends SWTBotGefTestCase {
         Assertions.assertThat(botAddDocumentDialog.isMymeTypeFieldEnabled()).isFalse();
         botAddDocumentDialog.finish();
 
-
     }
-
 
     @Test
     public void test_UpdateReturnTypeInLeftOperandOperation_when_refactor_document() throws Exception {
@@ -320,6 +314,7 @@ public class TestDocument extends SWTBotGefTestCase {
             botAddFormWizardDialog.next();
         }
 
+        botAddFormWizardDialog.selectProcessDataTab();
         botAddFormWizardDialog.selectAll();
         assertEquals("File", botAddFormWizardDialog.getDataWidget("doc1"));
 
