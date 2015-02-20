@@ -242,11 +242,14 @@
 							<arch>x86_64</arch>
 						</environment>
 					</environments>
-                    <repository>
+                    <repositories>
+                      <repository>
    <id>BonitaBPM P2 Repository</id>
    <url>${p2MirrorUrl}</url>
    <layout>p2</layout>
 </repository>
+                    </repositories>
+                  
 <!-- 					<target> -->
 <!-- 						<artifact> -->
 <!-- 							<groupId>org.bonitasoft.studio</groupId> -->
