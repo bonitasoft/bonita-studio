@@ -31,6 +31,7 @@ import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.bonitasoft.studio.properties.test.TestResources;
 import org.bonitasoft.studio.repository.test.swtbot.TestExportBosArchive;
 import org.bonitasoft.studio.tests.IHeapDumper;
+import org.bonitasoft.studio.tests.conditions.SWTBOTTestConditions;
 import org.bonitasoft.studio.tests.data.DataWizardIT;
 import org.bonitasoft.studio.tests.dialog.OpenNameAndVersionForDiagramDialogTest;
 import org.bonitasoft.studio.tests.dialog.TestDuplicate;
@@ -79,6 +80,7 @@ import org.junit.runners.Suite;
     NewRunTest.class,
     TestBug1682.class,
     DataWizardIT.class,
+    SWTBOTTestConditions.class,
     TestConvertToMessage.class,
     ExtractAsSubprocessTest.class,
     BPMNExportTests.class,
