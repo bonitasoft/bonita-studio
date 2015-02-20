@@ -23,6 +23,7 @@
       <import feature="org.eclipse.m2m.qvt.oml" version="3.4.0.v20140610-1621"/>
       <import feature="org.eclipse.m2m.qvt.oml.runtime" version="3.4.0.v20140610-1621"/>
       <import feature="org.eclipse.wst.web_ui.feature" version="3.6.1.v201409112028"/>
+      <import feature="org.eclipse.gmf.runtime.thirdparty" version="1.8.0.201408201453"/>
    </requires>
 
    <plugin
