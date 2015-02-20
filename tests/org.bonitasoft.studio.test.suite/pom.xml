@@ -79,7 +79,7 @@
                         <include>**/AllTests.java</include>
                     </includes>
                     <argLine>${tycho.testArgLine} ${javaOPTS} -Dbonita.client.home=${license.dir} ${additionalArgs}</argLine>
-                    <appArgLine>-nl en</appArgLine>
+                    <appArgLine>-nl en -clean</appArgLine>
                     <osgiDataDirectory>${project.parent.basedir}/lé test</osgiDataDirectory>
                     <bundleStartLevel>
                         <bundle>
