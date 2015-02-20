@@ -46,6 +46,7 @@
                 <configuration>
                     <filesets>
                         <fileset>
+                       
                             <directory>${basedir}</directory>
                             <includes>
                                 <include>*.log</include>
@@ -55,7 +56,10 @@
                             <followSymlinks>false</followSymlinks>
                         </fileset>
                         <fileset>
-                            <directory>${project.parent.basedir}/lé test/plugins</directory>
+                             <directory>${project.parent.basedir}/lé test</directory>
+                             <includes>
+                                <include>**</include>
+                                </includes>
                             <followSymlinks>false</followSymlinks>
                         </fileset>
                     </filesets>
