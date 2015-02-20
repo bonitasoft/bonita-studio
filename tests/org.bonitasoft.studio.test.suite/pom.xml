@@ -46,9 +46,6 @@
                 <configuration>
                     <filesets>
                         <fileset>
-                            <directory>${project.build.directory}</directory>
-                        </fileset>
-                        <fileset>
                             <directory>${basedir}</directory>
                             <includes>
                                 <include>*.log</include>
