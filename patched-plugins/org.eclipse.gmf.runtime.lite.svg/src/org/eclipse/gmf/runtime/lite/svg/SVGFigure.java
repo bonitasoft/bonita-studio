@@ -25,6 +25,7 @@ import javax.xml.xpath.XPathFactory;
 import org.apache.batik.bridge.BridgeContext;
 import org.apache.batik.dom.svg.SAXSVGDocumentFactory;
 import org.apache.batik.util.XMLResourceDescriptor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.geometry.Rectangle;
@@ -116,6 +117,7 @@ public class SVGFigure extends Figure {
         } catch (final IOException e) {
             final boolean saxParserNotFound = !(e instanceof FileNotFoundException) || e.getMessage().contains("org.apache.xerces.parsers.SAXParser not found");
             if (!forceClassLoader && saxParserNotFound && Thread.currentThread().getContextClassLoader() == null) {
+                Activator.log(IStatus.WARNING, "Retrying to createDocument using current thread classloader", e);
                 return createDocument(factory, true);
             } else {
                 Activator.logError("Error loading SVG file", e);
