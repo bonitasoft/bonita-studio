@@ -20,7 +20,7 @@
 		<filters.version>6.5.0-SNAPSHOT</filters.version>
 		<theme.builder.version>6.1.0</theme.builder.version>
 		<watchdog.version>6.0.1</watchdog.version>
-		<p2MirrorUrl>http://repositories.rd.lan/p2/6.5</p2MirrorUrl>
+		<p2MirrorUrl>http://repositories.rd.lan/p2/6.5-new</p2MirrorUrl>
 		<!-- Sonar -->
 		<jacoco.version>0.7.2.201409121644</jacoco.version>
 		<sonar.language>java</sonar.language>
@@ -242,13 +242,18 @@
 							<arch>x86_64</arch>
 						</environment>
 					</environments>
-					<target>
-						<artifact>
-							<groupId>org.bonitasoft.studio</groupId>
-							<artifactId>platform</artifactId>
-							<version>6.5.0-SNAPSHOT</version>
-						</artifact>
-					</target>
+                    <repository>
+   <id>BonitaBPM P2 Repository</id>
+   <url>${p2MirrorUrl}</url>
+   <layout>p2</layout>
+</repository>
+<!-- 					<target> -->
+<!-- 						<artifact> -->
+<!-- 							<groupId>org.bonitasoft.studio</groupId> -->
+<!-- 							<artifactId>platform</artifactId> -->
+<!-- 							<version>6.5.0-SNAPSHOT</version> -->
+<!-- 						</artifact> -->
+<!-- 					</target> -->
 					<filters>
 						<filter>
 							<type>eclipse-plugin</type>
