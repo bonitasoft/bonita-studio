@@ -116,7 +116,8 @@ public class SVGFigure extends Figure {
             return factory.createDocument(uri);
         } catch (final IOException e) {
             Activator.log(IStatus.WARNING, "Failed to create document", e);
-            final boolean saxParserNotFound = !(e instanceof FileNotFoundException) || e.getMessage().contains("org.apache.xerces.parsers.SAXParser not found");
+            final boolean saxParserNotFound = !(e instanceof FileNotFoundException) 
+                || (e.getMessage() != null && e.getMessage().contains("SAX2 driver class org.apache.xerces.parsers.SAXParser not found"));
             if (!forceClassLoader && saxParserNotFound && Thread.currentThread().getContextClassLoader() == null) {
                 Activator.log(IStatus.WARNING, "Retrying to createDocument using current thread classloader", e);
                 return createDocument(factory, true);
