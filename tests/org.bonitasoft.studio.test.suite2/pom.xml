@@ -59,16 +59,6 @@
 							<autoStart>true</autoStart>
 						</bundle>
 					</bundleStartLevel>
-					<dependencies>
-						<dependency>
-							<type>eclipse-feature</type>
-							<artifactId>tests-feature</artifactId>
-						</dependency>
-						<dependency>
-							<type>eclipse-feature</type>
-							<artifactId>studio-feature</artifactId>
-						</dependency>
-					</dependencies>
 				</configuration>
 			</plugin>
 		</plugins>
