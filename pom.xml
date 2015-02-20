@@ -242,15 +242,13 @@
 							<arch>x86_64</arch>
 						</environment>
 					</environments>
-
-                  
-<!-- 					<target> -->
-<!-- 						<artifact> -->
-<!-- 							<groupId>org.bonitasoft.studio</groupId> -->
-<!-- 							<artifactId>platform</artifactId> -->
-<!-- 							<version>6.5.0-SNAPSHOT</version> -->
-<!-- 						</artifact> -->
-<!-- 					</target> -->
+					<target>
+						<artifact>
+							<groupId>org.bonitasoft.studio</groupId>
+							<artifactId>platform</artifactId>
+							<version>6.5.0-SNAPSHOT</version>
+						</artifact>
+					</target>
 					<filters>
 						<filter>
 							<type>eclipse-plugin</type>
@@ -262,14 +260,6 @@
 			</plugin>
 		</plugins>
 	</build>
-
-    <repositories>
-       <repository>
-       <id>BonitaBPM P2 Repository</id>
-       <url>${p2MirrorUrl}</url>
-       <layout>p2</layout>
-    </repository>
-    </repositories>
 
 	<profiles>
 		<profile>
