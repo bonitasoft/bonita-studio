@@ -43,7 +43,7 @@
             <plugin>
                 <groupId>org.eclipse.tycho</groupId>
                 <artifactId>target-platform-configuration</artifactId>
-                <version>${tycho-version}</version>
+                <version>${tychoVersion}</version>
                 <configuration>
                     <dependency-resolution>
                         <extraRequirements>
@@ -62,7 +62,7 @@
                 <artifactId>tycho-surefire-plugin</artifactId>
                 <version>${tychoVersion}</version>
                 <configuration>
-                     <testRuntime>p2Installed</testRuntime>
+                    <testRuntime>p2Installed</testRuntime>
                     <useUIThread>true</useUIThread>
                     <useUIHarness>true</useUIHarness>
                     <application>org.bonitasoft.studio.application.application</application>
