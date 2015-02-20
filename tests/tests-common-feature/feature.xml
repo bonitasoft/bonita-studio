@@ -183,34 +183,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.bonitasoft.studio.test.suite"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.bonitasoft.studio.test.suite2"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.bonitasoft.studio.test.swtbot.suite"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.bonitasoft.studio.test.swtbot.suite2"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.bonitasoft.studio.jre.extension"
          download-size="0"
          install-size="0"
