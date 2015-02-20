@@ -79,7 +79,7 @@
                     </includes>
                     <argLine>${tycho.testArgLine} ${javaOPTS} -Dbonita.client.home=${license.dir} ${additionalArgs}</argLine>
                     <appArgLine>-nl en</appArgLine>
-                    <work>${project.parent.basedir}/lé test</work>
+                    <osgiDataDirectory>${project.parent.basedir}/lé test</osgiDataDirectory>
                     <bundleStartLevel>
                         <bundle>
                             <id>org.eclipse.equinox.ds</id>

@@ -50,7 +50,7 @@
                     </includes>
                     <argLine>${tycho.testArgLine} -Xms512m -Xmx1024m -XX:MaxPermSize=640m -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=SWTBotTests.hprof -Dbonita.client.home=${license.dir} -Dorg.eclipse.swt.browser.DefaultType=mozilla -Dbonita.noregister=1 -Dbonita.noExpireWarning=1 -Declipse.log.level=${tests.log.level}</argLine>
                     <appArgLine>-nl en</appArgLine>
-                    <work>${project.parent.basedir}/lé test</work>
+                    <osgiDataDirectory>${project.parent.basedir}/lé test</osgiDataDirectory>
                     <bundleStartLevel>
                         <bundle>
                             <id>org.eclipse.equinox.ds</id>
