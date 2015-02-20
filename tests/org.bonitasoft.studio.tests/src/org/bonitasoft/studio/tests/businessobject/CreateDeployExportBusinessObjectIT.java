@@ -77,12 +77,11 @@ public class CreateDeployExportBusinessObjectIT extends SWTBotGefTestCase {
 
     @Test
     public void shouldCreateAndPublishABusinessObject() throws Exception {
-
         // Create a business object
         bot.menu("Development").menu("Business Data Model").menu("Manage...").click();
         bot.waitUntil(Conditions.shellIsActive("Manage Business Data Model"));
 
-        bot.textWithLabel("Package").setText("org.bonitasoft.test");
+        bot.textWithLabel("Package").setText("org.model.test");
 
         // Add Employee Business Object
         final String listBOGroupTitle = "List of Business Objects";

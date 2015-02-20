@@ -55,7 +55,7 @@ public class BusinessObjectModelFileStore extends AbstractFileStore {
     public BusinessObjectModel getContent() {
         final IFile resource = getResource();
         if (!resource.exists()) {
-            cachedBusinessObjectModel = null;
+            cachedBusinessObjectModel.clear();
             return null;
         }
         final long modificationStamp = resource.getModificationStamp();
@@ -117,7 +117,7 @@ public class BusinessObjectModelFileStore extends AbstractFileStore {
             depJar.delete();
         }
         super.doDelete();
-        cachedBusinessObjectModel = null;
+        cachedBusinessObjectModel.clear();
     }
 
     protected DependencyRepositoryStore getDependencyRepositoryStore() {
