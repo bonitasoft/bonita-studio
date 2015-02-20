@@ -1,19 +1,16 @@
 /**
  * Copyright (C) 2009-2012 BonitaSoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
- *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.tests;
 
@@ -25,6 +22,8 @@ import java.util.Collections;
 
 import junit.framework.TestCase;
 
+import org.bonitasoft.studio.application.ApplicationPlugin;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.diagram.custom.commands.NewDiagramCommandHandler;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
@@ -55,10 +54,10 @@ import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.IHandlerService;
+import org.osgi.framework.Bundle;
 
 /**
  * @author Mickael Istria
- *
  */
 public class TestFullScenario extends TestCase {
 
@@ -66,10 +65,12 @@ public class TestFullScenario extends TestCase {
 
         private int nbProc;
 
-        /* (non-Javadoc)
+        /*
+         * (non-Javadoc)
          * @see org.eclipse.core.resources.IResourceVisitor#visit(org.eclipse.core.resources.IResource)
          */
-        public boolean visit(IResource resource) throws CoreException {
+        @Override
+        public boolean visit(final IResource resource) throws CoreException {
             if (resource.getName().endsWith(DiagramFileStore.PROC_EXT)) {
                 nbProc++;
             }
@@ -83,7 +84,7 @@ public class TestFullScenario extends TestCase {
     }
 
     /**
-     * 
+     *
      */
     private static final String TESTNAME = "TESTNAME";
     private static ProcessDiagramEditor processEditor;
@@ -98,7 +99,19 @@ public class TestFullScenario extends TestCase {
      * @throws ExecutionException
      */
     public void testNewProcess() throws Exception {
-        CountProcessesResourceVisitor visitor = new CountProcessesResourceVisitor();
+
+        final Bundle[] bundles = ApplicationPlugin.getDefault().getBundle().getBundleContext().getBundles();
+        final StringBuilder sb = new StringBuilder();
+        for (final Bundle bundle : bundles) {
+            sb.append(bundle.getSymbolicName());
+            sb.append(" (");
+            sb.append(bundle.getVersion());
+            sb.append(")");
+            sb.append("\n");
+        }
+        BonitaStudioLog.info(sb.toString(), Activator.PLUGIN_ID);
+
+        final CountProcessesResourceVisitor visitor = new CountProcessesResourceVisitor();
         RepositoryManager.getInstance().getCurrentRepository().getProject().accept(visitor);
         nbProcBefore = visitor.getNbProc();
 
@@ -110,18 +123,17 @@ public class TestFullScenario extends TestCase {
         execute();
     }
 
-	protected void createProcess() throws ExecutionException {
-		new NewDiagramCommandHandler().execute(null);
+    protected void createProcess() throws ExecutionException {
+        new NewDiagramCommandHandler().execute(null);
         processEditor = getTheOnlyOneEditor();
         input = processEditor.getEditorInput();
 
         task = getTheTask(processEditor.getDiagramEditPart());
         assertNotNull("Default process should contain one task", task);
-	}
+    }
 
     /**
      * @throws ExecutionException
-     * 
      */
     public void editAndSave() throws ExecutionException {
         processEditor = getTheOnlyOneEditor();
@@ -131,23 +143,23 @@ public class TestFullScenario extends TestCase {
                         ProcessPackage.Literals.ELEMENT__NAME,
                         TESTNAME));
 
-        IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService(IHandlerService.class);
-        ICommandService commandService = (ICommandService)  PlatformUI.getWorkbench().getService(ICommandService.class);
-        Command saveCommand = commandService.getCommand("org.eclipse.ui.file.save");
-        ExecutionEvent executionEvent = new ExecutionEvent(saveCommand, Collections.EMPTY_MAP, null, handlerService.getClass());
+        final IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService(IHandlerService.class);
+        final ICommandService commandService = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
+        final Command saveCommand = commandService.getCommand("org.eclipse.ui.file.save");
+        final ExecutionEvent executionEvent = new ExecutionEvent(saveCommand, Collections.EMPTY_MAP, null, handlerService.getClass());
         try {
             saveCommand.executeWithChecks(executionEvent);
-        } catch (NotDefinedException e) {
+        } catch (final NotDefinedException e) {
             e.printStackTrace();
-        } catch (NotEnabledException e) {
+        } catch (final NotEnabledException e) {
             e.printStackTrace();
-        } catch (NotHandledException e) {
+        } catch (final NotHandledException e) {
             e.printStackTrace();
         }
     }
 
     /**
-     * 
+     *
      */
     public void reopenEditedProcess() {
         processEditor = getTheOnlyOneEditor();
@@ -156,16 +168,14 @@ public class TestFullScenario extends TestCase {
                 TESTNAME, task.getName());
     }
 
-
     /**
      * @throws CoreException
      * @throws ExecutionException
-     * 
      */
     public void renameProcess() throws CoreException, ExecutionException {
         processEditor = getTheOnlyOneEditor();
         process = (MainProcess) processEditor.getDiagramEditPart().resolveSemanticElement();
-        MainProcess oldProc = EcoreUtil.copy(process) ;
+        final MainProcess oldProc = EcoreUtil.copy(process);
 
         processEditor.getEditingDomain().getCommandStack().execute(new SetCommand(
                 processEditor.getEditingDomain(),
@@ -178,17 +188,17 @@ public class TestFullScenario extends TestCase {
                 ProcessPackage.Literals.ABSTRACT_PROCESS__VERSION,
                 webPurchaseVersion));
 
-        IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService(IHandlerService.class);
-        ICommandService commandService = (ICommandService)  PlatformUI.getWorkbench().getService(ICommandService.class);
-        Command saveCommand = commandService.getCommand("org.eclipse.ui.file.save");
-        ExecutionEvent executionEvent = new ExecutionEvent(saveCommand, Collections.EMPTY_MAP, null, handlerService.getClass());
+        final IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService(IHandlerService.class);
+        final ICommandService commandService = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
+        final Command saveCommand = commandService.getCommand("org.eclipse.ui.file.save");
+        final ExecutionEvent executionEvent = new ExecutionEvent(saveCommand, Collections.EMPTY_MAP, null, handlerService.getClass());
         try {
             saveCommand.executeWithChecks(executionEvent);
-        } catch (NotDefinedException e) {
+        } catch (final NotDefinedException e) {
             e.printStackTrace();
-        } catch (NotEnabledException e) {
+        } catch (final NotEnabledException e) {
             e.printStackTrace();
-        } catch (NotHandledException e) {
+        } catch (final NotHandledException e) {
             e.printStackTrace();
         }
 
@@ -257,35 +267,34 @@ public class TestFullScenario extends TestCase {
      */
     public void execute() throws ExecutionException, Exception, InterruptedException, IOException {
         BOSEngineManager.getInstance().start();
-        RunProcessCommand deployProcessCommand = new RunProcessCommand(true);
+        final RunProcessCommand deployProcessCommand = new RunProcessCommand(true);
 
         deployProcessCommand.execute(new ExecutionEvent());
-        BufferedReader reader = new BufferedReader(new InputStreamReader((InputStream) deployProcessCommand.getUrl().getContent()));
+        final BufferedReader reader = new BufferedReader(new InputStreamReader((InputStream) deployProcessCommand.getUrl().getContent()));
         String line = null;
         while ((line = reader.readLine()) != null) {
             if (line.toLowerCase().contains("bonita")) {
-                return ; // OK
+                return; // OK
             }
         }
         fail("A line in application should contain \"Bonita\"...");
     }
 
-
     /**
      * @param diagramEditPart
      * @return
      */
-    private Task getTheTask(IGraphicalEditPart diagramEditPart) {
-        MainProcess process = (MainProcess)diagramEditPart.resolveSemanticElement();
-        Pool pool = (Pool)process.getElements().get(0);
+    private Task getTheTask(final IGraphicalEditPart diagramEditPart) {
+        final MainProcess process = (MainProcess) diagramEditPart.resolveSemanticElement();
+        final Pool pool = (Pool) process.getElements().get(0);
         Task task = null;
-        for (Element item : pool.getElements()) {
+        for (final Element item : pool.getElements()) {
             if (item instanceof Task) {
-                task = (Task)item;
-            } else if(item instanceof Lane){
-                for (Element laneItem : ((Lane) item).getElements()) {
+                task = (Task) item;
+            } else if (item instanceof Lane) {
+                for (final Element laneItem : ((Lane) item).getElements()) {
                     if (laneItem instanceof Task) {
-                        task = (Task)laneItem;
+                        task = (Task) laneItem;
                     }
                 }
             }
@@ -300,17 +309,17 @@ public class TestFullScenario extends TestCase {
         IEditorPart editor;
         ProcessDiagramEditor processEditor;
 
-        IEditorReference[] editorReferences = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getEditorReferences();
-        StringBuilder sb = new StringBuilder();
-        for (IEditorReference iEditorReference : editorReferences) {
+        final IEditorReference[] editorReferences = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getEditorReferences();
+        final StringBuilder sb = new StringBuilder();
+        for (final IEditorReference iEditorReference : editorReferences) {
             sb.append(iEditorReference);
         }
-        assertEquals("There should be only be 1 editor after save. But there are:\n"+sb.toString(),
+        assertEquals("There should be only be 1 editor after save. But there are:\n" + sb.toString(),
                 1,
                 editorReferences.length);
         editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
         assertTrue(editor instanceof ProcessDiagramEditor);
-        processEditor = (ProcessDiagramEditor)editor;
+        processEditor = (ProcessDiagramEditor) editor;
         return processEditor;
     }
 }
