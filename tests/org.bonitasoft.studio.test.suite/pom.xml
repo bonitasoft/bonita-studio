@@ -19,7 +19,7 @@
 
     <build>
         <plugins>
-        <plugin>
+            <plugin>
                 <groupId>org.eclipse.tycho</groupId>
                 <artifactId>target-platform-configuration</artifactId>
                 <version>${tychoVersion}</version>
@@ -45,6 +45,9 @@
                 <artifactId>maven-clean-plugin</artifactId>
                 <configuration>
                     <filesets>
+                        <fileset>
+                            <directory>${project.build.directory}</directory>
+                        </fileset>
                         <fileset>
                             <directory>${basedir}</directory>
                             <includes>
