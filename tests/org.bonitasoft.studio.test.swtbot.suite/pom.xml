@@ -39,7 +39,7 @@
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>tycho-surefire-plugin</artifactId>
-				<version>${tychoVersion}</version>
+				 <version>0.20</version>
 				<configuration>
 					<useUIThread>false</useUIThread>
 					<useUIHarness>true</useUIHarness>

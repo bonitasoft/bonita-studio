@@ -38,13 +38,6 @@
                             </requirement>
                         </extraRequirements>
                     </dependency-resolution>
-                    <filters>
-                        <filter>
-                            <type>eclipse-plugin</type>
-                            <id>org.apache.xerces</id>
-                            <removeAll />
-                        </filter>
-                    </filters>
                 </configuration>
             </plugin>
             <plugin>
@@ -75,7 +68,7 @@
             <plugin>
                 <groupId>org.eclipse.tycho</groupId>
                 <artifactId>tycho-surefire-plugin</artifactId>
-                <version>${tychoVersion}</version>
+                <version>0.20</version>
                 <configuration>
                     <useUIThread>true</useUIThread>
                     <useUIHarness>true</useUIHarness>
