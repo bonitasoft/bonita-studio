@@ -38,6 +38,13 @@
                             </requirement>
                         </extraRequirements>
                     </dependency-resolution>
+                    <filters>
+                        <filter>
+                            <type>eclipse-plugin</type>
+                            <id>org.apache.xerces</id>
+                            <removeAll />
+                        </filter>
+                    </filters>
                 </configuration>
             </plugin>
             <plugin>
