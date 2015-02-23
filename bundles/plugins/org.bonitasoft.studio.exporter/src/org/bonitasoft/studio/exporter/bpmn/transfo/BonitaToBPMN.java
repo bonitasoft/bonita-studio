@@ -818,11 +818,11 @@ public class BonitaToBPMN implements IBonitaTransformer {
         return null;
     }
 
-    private void setSequenceFLowLabel(final SequenceFlowNameEditPart labelPart,final BPMNEdge edge){
+    protected void setSequenceFLowLabel(final SequenceFlowNameEditPart labelPart,final BPMNEdge edge){
         final LayoutConstraint constraint = ((Node)labelPart.getNotationView()).getLayoutConstraint();
         final BPMNLabel label = DiFactory.eINSTANCE.createBPMNLabel();
         final IFigure bonitaElementFigure = labelPart.getFigure();
-        setLabelBounds(constraint, label, bonitaElementFigure);
+        setLabelBounds((Location)constraint, label, bonitaElementFigure);
         edge.setBPMNLabel(label);
     }
 
@@ -831,20 +831,20 @@ public class BonitaToBPMN implements IBonitaTransformer {
      * @param label
      * @param bonitaElementFigure
      */
-    private void setLabelBounds(final LayoutConstraint constraint, final BPMNLabel label, final IFigure bonitaElementFigure) {
+    protected void setLabelBounds(final Location constraint, final BPMNLabel label, final IFigure bonitaElementFigure) {
         final Rectangle bounds = bonitaElementFigure.getBounds();
         final Bounds elementBounds = DcFactory.eINSTANCE.createBounds();
         elementBounds.setHeight(bounds.preciseHeight());
         elementBounds.setWidth(bounds.preciseWidth());
-        elementBounds.setX(((Location)constraint).getX());
-        elementBounds.setY(((Location)constraint).getY());
+        elementBounds.setX(constraint.getX());
+        elementBounds.setY(constraint.getY());
         label.setBounds(elementBounds);
     }
 
-    private void setEventLabelBounds(final CustomEventLabelEditPart labelPart,final BPMNLabel label){
+    protected void setEventLabelBounds(final CustomEventLabelEditPart labelPart,final BPMNLabel label){
         final LayoutConstraint constraint = ((Node)labelPart.getNotationView()).getLayoutConstraint();
         final IFigure bonitaElementFigure = labelPart.getFigure();
-        setLabelBounds(constraint, label, bonitaElementFigure);
+        setLabelBounds((Location)constraint, label, bonitaElementFigure);
     }
     /**
      * @param bpmnProcess
@@ -1095,7 +1095,7 @@ public class BonitaToBPMN implements IBonitaTransformer {
         return null;
     }
 
-    private Map<String, String> getShapeColors(final ShapeNodeEditPart bonitaElementPart) {
+    protected Map<String, String> getShapeColors(final ShapeNodeEditPart bonitaElementPart) {
         final Map<String, String> colorsMap = new HashMap<String, String>();
         final View shape = bonitaElementPart.getNotationView();
         final FontStyle fontStyle = (FontStyle) shape.getStyle(NotationPackage.Literals.FONT_STYLE);
@@ -1113,7 +1113,7 @@ public class BonitaToBPMN implements IBonitaTransformer {
         return colorsMap;
     }
 
-    private BPMNLabelStyle getLabelStyle(final Font font) {
+    protected BPMNLabelStyle getLabelStyle(final Font font) {
         final Comparator<Font> fontComparator = new Comparator<Font>() {
             @Override
             public int compare(final Font font1, final Font font2) {
