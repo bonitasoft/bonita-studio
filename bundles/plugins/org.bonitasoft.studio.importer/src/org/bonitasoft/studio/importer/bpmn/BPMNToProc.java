@@ -1063,12 +1063,14 @@ public class BPMNToProc extends ToProcProcessor {
     }
 
     private void initializeLabelPositionOnSequenceFlow(final String sequenceFlowID) throws ProcBuilderException{
-        final BPMNEdge edge = getBPMNEdgeFor(sequenceFlowID);
-       final BPMNLabel label= edge.getBPMNLabel();
-       if (label!=null){
-           final Bounds bounds=label.getBounds();
-           builder.setLabelPositionOnSequenceFlowOrEvent(new org.eclipse.draw2d.geometry.Point(bounds.getX(),(int)bounds.getY()));
-       }
+        if (sequenceFlowID!=null && !sequenceFlowID.isEmpty()){
+            final BPMNEdge edge = getBPMNEdgeFor(sequenceFlowID);
+            final BPMNLabel label= edge.getBPMNLabel();
+            if (label!=null){
+                final Bounds bounds=label.getBounds();
+                builder.setLabelPositionOnSequenceFlowOrEvent(new org.eclipse.draw2d.geometry.Point(bounds.getX(),(int)bounds.getY()));
+            }
+        }
     }
 
     private boolean isSequenceFlowDefault(final TSequenceFlow sequenceFlow, final String sequenceFlowID) {
@@ -1690,12 +1692,14 @@ public class BPMNToProc extends ToProcProcessor {
     }
 
     private void initializeLabelPositionOnEvent(final String eventId) throws ProcBuilderException{
-        final BPMNShape shape = getBPMNShapeForBpmnID(eventId);
-       final BPMNLabel label= shape.getBPMNLabel();
-       if (label!=null){
-           final Bounds bounds=label.getBounds();
-           builder.setLabelPositionOnSequenceFlowOrEvent(new org.eclipse.draw2d.geometry.Point(bounds.getX(),(int)bounds.getY()));
-       }
+        if (eventId !=null && !eventId.isEmpty()){
+            final BPMNShape shape = getBPMNShapeForBpmnID(eventId);
+            final BPMNLabel label= shape.getBPMNLabel();
+            if (label!=null){
+                final Bounds bounds=label.getBounds();
+                builder.setLabelPositionOnSequenceFlowOrEvent(new org.eclipse.draw2d.geometry.Point(bounds.getX(),(int)bounds.getY()));
+            }
+        }
     }
 
     private void populateErrorEvent(final TFlowNode flowNode)
