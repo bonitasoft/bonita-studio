@@ -1067,7 +1067,7 @@ public class BPMNToProc extends ToProcProcessor {
             final BPMNEdge edge = getBPMNEdgeFor(sequenceFlowID);
             if (edge!=null){
                 final BPMNLabel label= edge.getBPMNLabel();
-                if (label!=null){
+                if (label!=null && label.getBounds()!=null){
                     final Bounds bounds=label.getBounds();
                     builder.setLabelPositionOnSequenceFlowOrEvent(new org.eclipse.draw2d.geometry.Point(bounds.getX(),(int)bounds.getY()));
                 }
@@ -1698,7 +1698,7 @@ public class BPMNToProc extends ToProcProcessor {
             final BPMNShape shape = getBPMNShapeForBpmnID(eventId);
             if (shape !=null){
                 final BPMNLabel label= shape.getBPMNLabel();
-                if (label!=null){
+                if (label!=null && label.getBounds()!=null){
                     final Bounds bounds=label.getBounds();
                     builder.setLabelPositionOnSequenceFlowOrEvent(new org.eclipse.draw2d.geometry.Point(bounds.getX(),(int)bounds.getY()));
                 }
