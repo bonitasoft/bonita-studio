@@ -51,7 +51,7 @@ import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
@@ -72,7 +72,7 @@ public abstract class OperationsComposite extends Composite implements IBonitaVa
     protected ArrayList<List<Binding>> bindings = new ArrayList<List<Binding>>();
     private TabbedPropertySheetWidgetFactory widgetFactory;
     private EObject eObject;
-    protected final Composite mainComposite;
+    protected final Composite parent;
     private EReference operationContainmentFeature;
     private final ViewerFilter storageExpressionFilter;
     private final ViewerFilter actionExpressionFilter;
@@ -81,25 +81,35 @@ public abstract class OperationsComposite extends Composite implements IBonitaVa
     private final List<IExpressionValidator> validators = new ArrayList<IExpressionValidator>();
     private EObject eObjectContext;
     private boolean isPageFlowContext = false;
+    private final Composite operationComposite;
 
 
     public OperationsComposite(final TabbedPropertySheetPage tabbedPropertySheetPage,
             final Composite mainComposite, final ViewerFilter actionExpressionFilter,
             final ViewerFilter storageExpressionFilter,final boolean isPageFlowContext){
         super(mainComposite, SWT.NONE);
-        this.mainComposite = mainComposite;
+        parent = mainComposite;
+        setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).extendedMargins(0, 20, 0, 0).create());
+        operationComposite = new Composite(this, SWT.NONE);
+        operationComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).create());
+        operationComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+        final Composite buttonComposite = new Composite(this, SWT.NONE);
+        buttonComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).create());
+        buttonComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         this.isPageFlowContext=isPageFlowContext;
         if (tabbedPropertySheetPage != null) {
             widgetFactory = tabbedPropertySheetPage.getWidgetFactory();
             if (widgetFactory != null) {
                 widgetFactory.adapt(this);
+                widgetFactory.adapt(operationComposite);
+                widgetFactory.adapt(buttonComposite);
             }
             this.tabbedPropertySheetPage = tabbedPropertySheetPage;
         }
         this.actionExpressionFilter = actionExpressionFilter;
         this.storageExpressionFilter = storageExpressionFilter;
-        setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
-        createAddButton(mainComposite);
+
+        createAddButton(buttonComposite);
     }
 
     public OperationsComposite(final TabbedPropertySheetPage tabbedPropertySheetPage,
@@ -108,7 +118,7 @@ public abstract class OperationsComposite extends Composite implements IBonitaVa
         this(tabbedPropertySheetPage,mainComposite,actionExpressionFilter,storageExpressionFilter,false);
 
     }
-    
+
     private void createAddButton(final Composite mainComposite) {
         Button addButton = null;
         if (widgetFactory != null) {
@@ -194,11 +204,12 @@ public abstract class OperationsComposite extends Composite implements IBonitaVa
     public void addLineUI(final Operation action) {
         final OperationViewer opViewer = createOperationViewer(action);
         operationViewers.add(opViewer);
-        removes.add(createRemoveButton());
+        removes.add(createRemoveButton(opViewer));
     }
 
     protected OperationViewer createOperationViewer(final Operation action) {
-        final OperationViewer viewer = new OperationViewer(this, widgetFactory, getEditingDomain(), actionExpressionFilter, storageExpressionFilter,isPageFlowContext) ;
+        final OperationViewer viewer = new OperationViewer(operationComposite, widgetFactory, getEditingDomain(), actionExpressionFilter,
+                storageExpressionFilter, isPageFlowContext);
         viewer.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         if(context != null){
             viewer.setContext(context);
@@ -230,8 +241,10 @@ public abstract class OperationsComposite extends Composite implements IBonitaVa
         validators.add(validator);
     }
 
-    protected Button createRemoveButton() {
-        final Button remove = new Button(this, SWT.FLAT);
+    protected Button createRemoveButton(final OperationViewer opViewer) {
+        final GridLayout gridLayout = (GridLayout) opViewer.getLayout();
+        gridLayout.numColumns++;
+        final Button remove = new Button(opViewer, SWT.FLAT);
         if (widgetFactory != null) {
             widgetFactory.adapt(remove, false, false);
         }
@@ -244,7 +257,7 @@ public abstract class OperationsComposite extends Composite implements IBonitaVa
                 removeLine(removes.indexOf(e.getSource()));
             }
         });
-
+        opViewer.layout(true, true);
         return remove;
     }
 

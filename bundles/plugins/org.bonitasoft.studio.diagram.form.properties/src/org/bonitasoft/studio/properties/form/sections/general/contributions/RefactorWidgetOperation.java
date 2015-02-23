@@ -62,12 +62,8 @@ public class RefactorWidgetOperation extends AbstractRefactorOperation<Widget, W
 
 
     @Override
-    protected void doExecute(final IProgressMonitor monitor) {
+    protected CompoundCommand doBuildCompoundCommand(final CompoundCommand compoundCommand, final IProgressMonitor monitor) {
         monitor.beginTask(Messages.updatingWidgetReferences, IProgressMonitor.UNKNOWN);
-        if (compoundCommand == null) {
-            compoundCommand = new CompoundCommand();
-        }
-
         for(final WidgetRefactorPair pairToRefactor : pairsToRefactor){
             final Widget widget = pairToRefactor.getOldValue();
             final String newReferenceName = pairToRefactor.getNewValueName();
@@ -78,25 +74,26 @@ public class RefactorWidgetOperation extends AbstractRefactorOperation<Widget, W
                     expressionsList.add(exp);
                 }
             }
-            compoundCommand.append(SetCommand.create(domain, widget, ProcessPackage.Literals.ELEMENT__NAME, pairToRefactor.getNewValue().getName()));
+            compoundCommand
+                    .append(SetCommand.create(getEditingDomain(), widget, ProcessPackage.Literals.ELEMENT__NAME, pairToRefactor.getNewValue().getName()));
 
             for (final Expression exp : expressionsList) {
                 final String fieldExpressionName = exp.getName();
                 final String oldExpressionName = WidgetHelper.FIELD_PREFIX + widget.getName();
                 if (ExpressionConstants.FORM_FIELD_TYPE.equals(exp.getType()) && fieldExpressionName.equals(oldExpressionName)) {
                     // update name and content
-                    compoundCommand.append(SetCommand.create(domain, exp, ExpressionPackage.Literals.EXPRESSION__NAME, newReferenceName));
-                    compoundCommand.append(SetCommand.create(domain, exp, ExpressionPackage.Literals.EXPRESSION__CONTENT, newReferenceName));
-                    compoundCommand.append(RemoveCommand.create(domain, exp, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS,
+                    compoundCommand.append(SetCommand.create(getEditingDomain(), exp, ExpressionPackage.Literals.EXPRESSION__NAME, newReferenceName));
+                    compoundCommand.append(SetCommand.create(getEditingDomain(), exp, ExpressionPackage.Literals.EXPRESSION__CONTENT, newReferenceName));
+                    compoundCommand.append(RemoveCommand.create(getEditingDomain(), exp, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS,
                             exp.getReferencedElements()));
-                    compoundCommand.append(AddCommand.create(domain, exp, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS,
+                    compoundCommand.append(AddCommand.create(getEditingDomain(), exp, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS,
                             ExpressionHelper.createDependencyFromEObject(pairToRefactor.getNewValue())));
                 }
             }
 
             if (widget.eContainer() instanceof Form && ModelHelper.formIsCustomized((Form) widget.eContainer())) {
                 final String srcName = widget.getName();
-                compoundCommand.append(new AbstractOverrideableCommand(domain, "Change Id in template") {
+                compoundCommand.append(new AbstractOverrideableCommand(getEditingDomain(), "Change Id in template") {
 
                     @Override
                     public void doUndo() {
@@ -121,6 +118,7 @@ public class RefactorWidgetOperation extends AbstractRefactorOperation<Widget, W
                 });
             }
         }
+        return compoundCommand;
     }
 
     @Override

@@ -56,7 +56,7 @@ public class CreateVariableProposalListenerTest {
     @Test
     public void should_getDataContainer_return_process_if_in_a_send_task() throws Exception {
         final SendTaskBuilder sendTask = SendTaskBuilder.createSendTaskBuilder();
-        PoolBuilder.create().havingElements(sendTask).build();
+        PoolBuilder.aPool().havingElements(sendTask).build();
         final EObject dataContainer = createVariableProposalListener.getDataContainer(sendTask.build());
         assertThat(dataContainer).isInstanceOf(Pool.class);
     }
@@ -64,20 +64,20 @@ public class CreateVariableProposalListenerTest {
     @Test
     public void should_getDataContainer_return_process_if_in_a_receive_task() throws Exception {
         final ReceiveTaskBuilder receiveTask = ReceiveTaskBuilder.createReceiveTaskBuilder();
-        PoolBuilder.create().havingElements(receiveTask).build();
+        PoolBuilder.aPool().havingElements(receiveTask).build();
         final EObject dataContainer = createVariableProposalListener.getDataContainer(receiveTask.build());
         assertThat(dataContainer).isInstanceOf(Pool.class);
     }
 
     @Test
     public void should_getDataContainer_return_activity_if_in_an_activity() throws Exception {
-        final EObject dataContainer = createVariableProposalListener.getDataContainer(ActivityBuilder.createActivityBuilder().build());
+        final EObject dataContainer = createVariableProposalListener.getDataContainer(ActivityBuilder.anActivity().build());
         assertThat(dataContainer).isInstanceOf(Activity.class);
     }
 
     @Test
     public void should_getDataContainer_return_pool_if_at_pool_level() throws Exception {
-        final EObject dataContainer = createVariableProposalListener.getDataContainer(PoolBuilder.create().build());
+        final EObject dataContainer = createVariableProposalListener.getDataContainer(PoolBuilder.aPool().build());
         assertThat(dataContainer).isInstanceOf(Pool.class);
     }
 

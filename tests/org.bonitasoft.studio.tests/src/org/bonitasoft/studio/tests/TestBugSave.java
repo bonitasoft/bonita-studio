@@ -44,10 +44,10 @@ public class TestBugSave extends TestCase {
         new NewDiagramCommandHandler().execute(null);
         ProcessDiagramEditor processEditor = (ProcessDiagramEditor)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
         MainProcess mainProcess = (MainProcess)processEditor.getDiagramEditPart().resolveSemanticElement();
-        CreateFormCommand formCommand = new CreateFormCommand(mainProcess,ProcessPackage.Literals.PAGE_FLOW__FORM,"form", "", Collections.<WidgetMapping>emptyList(), processEditor.getEditingDomain());
+        final CreateFormCommand formCommand = new CreateFormCommand(mainProcess,ProcessPackage.Literals.PAGE_FLOW__FORM,"form", "", Collections.<WidgetMapping>emptyList(), processEditor.getEditingDomain());
         formCommand.execute(new NullProgressMonitor(), null);
-        Form createdForm = (Form) formCommand.getCommandResult().getReturnValue();
-		FormsUtils.createDiagram(createdForm, processEditor.getEditingDomain(), mainProcess);
+        final Form createdForm = (Form) formCommand.getCommandResult().getReturnValue();
+        FormsUtils.createFormDiagram(createdForm, processEditor.getEditingDomain());
         FormsUtils.openDiagram(createdForm, processEditor.getEditingDomain());
         assertEquals("There should be only one resource", 1, processEditor.getEditingDomain().getResourceSet().getResources().size());
         // form
@@ -64,7 +64,7 @@ public class TestBugSave extends TestCase {
         processEditor = (ProcessDiagramEditor)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
         assertEquals("There should be only one resource", 1, processEditor.getEditingDomain().getResourceSet().getResources().size());
         mainProcess = (MainProcess)processEditor.getDiagramEditPart().resolveSemanticElement();
-        SetCommand touchProcessCommand = new SetCommand(processEditor.getEditingDomain(), mainProcess, ProcessPackage.Literals.ELEMENT__DOCUMENTATION, "descProc");
+        final SetCommand touchProcessCommand = new SetCommand(processEditor.getEditingDomain(), mainProcess, ProcessPackage.Literals.ELEMENT__DOCUMENTATION, "descProc");
         processEditor.getEditingDomain().getCommandStack().execute(touchProcessCommand);
         assertEquals("There should be only one resource", 1, processEditor.getEditingDomain().getResourceSet().getResources().size());
         FormsUtils.openDiagram(mainProcess.getForm().get(0),processEditor.getEditingDomain());
