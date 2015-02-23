@@ -1065,10 +1065,12 @@ public class BPMNToProc extends ToProcProcessor {
     private void initializeLabelPositionOnSequenceFlow(final String sequenceFlowID) throws ProcBuilderException{
         if (sequenceFlowID!=null && !sequenceFlowID.isEmpty()){
             final BPMNEdge edge = getBPMNEdgeFor(sequenceFlowID);
-            final BPMNLabel label= edge.getBPMNLabel();
-            if (label!=null){
-                final Bounds bounds=label.getBounds();
-                builder.setLabelPositionOnSequenceFlowOrEvent(new org.eclipse.draw2d.geometry.Point(bounds.getX(),(int)bounds.getY()));
+            if (edge!=null){
+                final BPMNLabel label= edge.getBPMNLabel();
+                if (label!=null){
+                    final Bounds bounds=label.getBounds();
+                    builder.setLabelPositionOnSequenceFlowOrEvent(new org.eclipse.draw2d.geometry.Point(bounds.getX(),(int)bounds.getY()));
+                }
             }
         }
     }
@@ -1694,10 +1696,12 @@ public class BPMNToProc extends ToProcProcessor {
     private void initializeLabelPositionOnEvent(final String eventId) throws ProcBuilderException{
         if (eventId !=null && !eventId.isEmpty()){
             final BPMNShape shape = getBPMNShapeForBpmnID(eventId);
-            final BPMNLabel label= shape.getBPMNLabel();
-            if (label!=null){
-                final Bounds bounds=label.getBounds();
-                builder.setLabelPositionOnSequenceFlowOrEvent(new org.eclipse.draw2d.geometry.Point(bounds.getX(),(int)bounds.getY()));
+            if (shape !=null){
+                final BPMNLabel label= shape.getBPMNLabel();
+                if (label!=null){
+                    final Bounds bounds=label.getBounds();
+                    builder.setLabelPositionOnSequenceFlowOrEvent(new org.eclipse.draw2d.geometry.Point(bounds.getX(),(int)bounds.getY()));
+                }
             }
         }
     }
