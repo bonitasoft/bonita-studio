@@ -22,8 +22,6 @@ import java.util.Collections;
 
 import junit.framework.TestCase;
 
-import org.bonitasoft.studio.application.ApplicationPlugin;
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.diagram.custom.commands.NewDiagramCommandHandler;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
@@ -54,7 +52,6 @@ import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.IHandlerService;
-import org.osgi.framework.Bundle;
 
 /**
  * @author Mickael Istria
@@ -99,18 +96,6 @@ public class TestFullScenario extends TestCase {
      * @throws ExecutionException
      */
     public void testNewProcess() throws Exception {
-
-        final Bundle[] bundles = ApplicationPlugin.getDefault().getBundle().getBundleContext().getBundles();
-        final StringBuilder sb = new StringBuilder();
-        for (final Bundle bundle : bundles) {
-            sb.append(bundle.getSymbolicName());
-            sb.append(" (");
-            sb.append(bundle.getVersion());
-            sb.append(")");
-            sb.append("\n");
-        }
-        BonitaStudioLog.info(sb.toString(), Activator.PLUGIN_ID);
-
         final CountProcessesResourceVisitor visitor = new CountProcessesResourceVisitor();
         RepositoryManager.getInstance().getCurrentRepository().getProject().accept(visitor);
         nbProcBefore = visitor.getNbProc();
