@@ -1,16 +1,14 @@
 /**
- * Copyright (C) 2014 Bonitasoft S.A.
+ * Copyright (C) 2014-2015 Bonitasoft S.A.
  * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -75,7 +73,6 @@ public class BonitaToBPMNTest extends BonitaToBPMN {
 
 
 	private BonitaToBPMN bonitaToBPMN;
-
 
 
     @Before
@@ -146,7 +143,6 @@ public class BonitaToBPMNTest extends BonitaToBPMN {
         final Activity bonitaActivity = ProcessFactory.eINSTANCE.createActivity();
         bonitaActivity.setType(MultiInstanceType.PARALLEL);
 
-
         final TActivity bpmTask = (TActivity) bonitaToBPMN.createActivity(bonitaActivity);
         final TMultiInstanceLoopCharacteristics loopCharacteristics = (TMultiInstanceLoopCharacteristics) bpmTask.getLoopCharacteristics();
         Assertions.assertThat(loopCharacteristics).isNotNull();
@@ -180,7 +176,6 @@ public class BonitaToBPMNTest extends BonitaToBPMN {
     	final BPMNEdge edge = DiFactory.eINSTANCE.createBPMNEdge();
     	bonitaToBPMN.setSequenceFLowLabel(labelPart, edge);
     	assertNotNull(edge.getBPMNLabel());
-
     }
 
     @Test
@@ -197,7 +192,6 @@ public class BonitaToBPMNTest extends BonitaToBPMN {
     	bonitaToBPMN.setEventLabelBounds(labelPart, label);
     	assertEquals(15,(int)label.getBounds().getX());
     	assertEquals(30,(int)label.getBounds().getY());
-
     }
 
     @Test
