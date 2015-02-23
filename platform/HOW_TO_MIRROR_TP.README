@@ -1,9 +1,0 @@
-Add To Mirrored Target Platform plugins used in build to generate models and build all-in-one zip :
-
-java -jar <eclipse_location>plugins/org.eclipse.equinox.launcher_*.jar 
--application org.eclipse.equinox.p2.publisher.FeaturesAndBundlesPublisher 
--metadataRepository file:/<target repository golder>
- -artifactRepository file:/<target repository golder>
- -source <bonita-studio>\platform\repository -configs ANY 
- -append 
- -publishArtifacts

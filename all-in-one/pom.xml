@@ -154,6 +154,11 @@
                                     <layout>p2</layout>
                                     <url>${p2MirrorUrl}</url>
                                 </repository>
+                                  <repository>
+                                    <id>Additional Build Dependencies P2 Repository</id>
+                                    <layout>p2</layout>
+                                    <url>${project.baseUri}/repository/</url>
+                                </repository>
                             </repositories>
                             <dependencies>
                                 <dependency>
