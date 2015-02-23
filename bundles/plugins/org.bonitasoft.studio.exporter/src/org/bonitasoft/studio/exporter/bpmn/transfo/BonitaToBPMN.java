@@ -158,10 +158,7 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeCompartmentEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeNodeEditPart;
 import org.eclipse.gmf.runtime.notation.FillStyle;
 import org.eclipse.gmf.runtime.notation.FontStyle;
-import org.eclipse.gmf.runtime.notation.LayoutConstraint;
 import org.eclipse.gmf.runtime.notation.LineStyle;
-import org.eclipse.gmf.runtime.notation.Location;
-import org.eclipse.gmf.runtime.notation.Node;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.osgi.util.NLS;
@@ -541,8 +538,7 @@ public class BonitaToBPMN implements IBonitaTransformer {
         final BPMNShape processShape = createBPMNShape(childPart);
         processShape.setBpmnElement(QName.valueOf(bpmnProcess.getId()));
         final IFigure bonitaPoolFigure = childPart.getFigure();
-        final Rectangle bounds = bonitaPoolFigure.getBounds().getCopy();
-        FiguresHelper.translateToAbsolute(bonitaPoolFigure, bounds);
+        final Rectangle bounds = getAbsoluteLabelBounds(bonitaPoolFigure);
         final Bounds laneBounds = DcFactory.eINSTANCE.createBounds();
         laneBounds.setHeight(bounds.preciseHeight());
         laneBounds.setWidth(bounds.preciseWidth());
@@ -819,10 +815,9 @@ public class BonitaToBPMN implements IBonitaTransformer {
     }
 
     protected void setSequenceFLowLabel(final SequenceFlowNameEditPart labelPart,final BPMNEdge edge){
-        final LayoutConstraint constraint = ((Node)labelPart.getNotationView()).getLayoutConstraint();
         final BPMNLabel label = DiFactory.eINSTANCE.createBPMNLabel();
         final IFigure bonitaElementFigure = labelPart.getFigure();
-        setLabelBounds((Location)constraint, label, bonitaElementFigure);
+        setLabelBounds(label, bonitaElementFigure);
         edge.setBPMNLabel(label);
     }
 
@@ -831,20 +826,30 @@ public class BonitaToBPMN implements IBonitaTransformer {
      * @param label
      * @param bonitaElementFigure
      */
-    protected void setLabelBounds(final Location constraint, final BPMNLabel label, final IFigure bonitaElementFigure) {
-        final Rectangle bounds = bonitaElementFigure.getBounds();
+    protected void setLabelBounds(final BPMNLabel label, final IFigure bonitaElementFigure) {
+        final Rectangle bounds = getAbsoluteLabelBounds(bonitaElementFigure);
         final Bounds elementBounds = DcFactory.eINSTANCE.createBounds();
         elementBounds.setHeight(bounds.preciseHeight());
         elementBounds.setWidth(bounds.preciseWidth());
-        elementBounds.setX(constraint.getX());
-        elementBounds.setY(constraint.getY());
+        elementBounds.setX(bounds.preciseX());
+        elementBounds.setY(bounds.preciseY());
         label.setBounds(elementBounds);
     }
 
+    /**
+     * @param bonitaElementFigure
+     * @return
+     */
+    protected Rectangle getAbsoluteLabelBounds(final IFigure bonitaElementFigure) {
+        final Rectangle bounds = bonitaElementFigure.getBounds().getCopy();
+        FiguresHelper.translateToAbsolute(bonitaElementFigure, bounds);
+        return bounds;
+    }
+
+
     protected void setEventLabelBounds(final CustomEventLabelEditPart labelPart,final BPMNLabel label){
-        final LayoutConstraint constraint = ((Node)labelPart.getNotationView()).getLayoutConstraint();
         final IFigure bonitaElementFigure = labelPart.getFigure();
-        setLabelBounds((Location)constraint, label, bonitaElementFigure);
+        setLabelBounds( label, bonitaElementFigure);
     }
     /**
      * @param bpmnProcess
@@ -896,8 +901,7 @@ public class BonitaToBPMN implements IBonitaTransformer {
                 final BPMNShape laneShape = createBPMNShape(bonitaLanePart);
                 laneShape.setBpmnElement(QName.valueOf(bpmnLane.getId()));
                 final IFigure bonitaLaneFigure = bonitaLanePart.getFigure();
-                final Rectangle bounds = bonitaLaneFigure.getBounds().getCopy();
-                FiguresHelper.translateToAbsolute(bonitaLaneFigure, bounds);
+                final Rectangle bounds = getAbsoluteLabelBounds(bonitaLaneFigure);
                 final Bounds laneBounds = DcFactory.eINSTANCE.createBounds();
                 laneBounds.setHeight(bounds.preciseHeight());
                 laneBounds.setWidth(bounds.preciseWidth());
@@ -957,8 +961,7 @@ public class BonitaToBPMN implements IBonitaTransformer {
                 elementShape.setIsExpanded(isExpanded);
                 elementShape.setBpmnElement(QName.valueOf(bpmnSubProcess.getId()));
                 final IFigure bonitaElementFigure = bonitaElementPart.getFigure();
-                final Rectangle bounds = bonitaElementFigure.getBounds().getCopy();
-                FiguresHelper.translateToAbsolute(bonitaElementFigure, bounds);
+                final Rectangle bounds = getAbsoluteLabelBounds(bonitaElementFigure);
                 final Bounds elementBounds = DcFactory.eINSTANCE.createBounds();
                 elementBounds.setHeight(bounds.preciseHeight());
                 elementBounds.setWidth(bounds.preciseWidth());
@@ -1028,8 +1031,7 @@ public class BonitaToBPMN implements IBonitaTransformer {
                 elementShape.setIsExpanded(isExpanded);
                 elementShape.setBpmnElement(QName.valueOf(bpmnSubProcess.getId()));
                 final IFigure bonitaElementFigure = bonitaElementPart.getFigure();
-                final Rectangle bounds = bonitaElementFigure.getBounds().getCopy();
-                FiguresHelper.translateToAbsolute(bonitaElementFigure, bounds);
+                final Rectangle bounds = getAbsoluteLabelBounds(bonitaElementFigure);
                 final Bounds elementBounds = DcFactory.eINSTANCE.createBounds();
                 elementBounds.setHeight(bounds.preciseHeight());
                 elementBounds.setWidth(bounds.preciseWidth());
@@ -1049,8 +1051,7 @@ public class BonitaToBPMN implements IBonitaTransformer {
 
         elementShape.setBpmnElement(QName.valueOf(bpmnElement.getId()));
         final IFigure bonitaElementFigure = bonitaElementPart.getFigure();
-        final Rectangle bounds = bonitaElementFigure.getBounds().getCopy();
-        FiguresHelper.translateToAbsolute(bonitaElementFigure, bounds);
+        final Rectangle bounds = getAbsoluteLabelBounds(bonitaElementFigure);
         final Bounds elementBounds = DcFactory.eINSTANCE.createBounds();
         elementBounds.setHeight(bounds.preciseHeight());
         elementBounds.setWidth(bounds.preciseWidth());
@@ -1237,8 +1238,7 @@ public class BonitaToBPMN implements IBonitaTransformer {
                 boundaryShape.setBpmnElement(QName.valueOf(bpmnBoundary.getId()));
                 final IGraphicalEditPart boundaryElementPart = GMFTools.findEditPart(bonitaElementPart, boundaryEvent);
                 final IFigure bonitaBoundaryFigure = boundaryElementPart.getFigure();
-                final Rectangle bBounds = bonitaBoundaryFigure.getBounds().getCopy();
-                FiguresHelper.translateToAbsolute(bonitaBoundaryFigure, bBounds);
+                final Rectangle bBounds = getAbsoluteLabelBounds(bonitaBoundaryFigure);
                 final Bounds boundaryBounds = DcFactory.eINSTANCE.createBounds();
                 boundaryBounds.setHeight(bBounds.preciseHeight());
                 boundaryBounds.setWidth(bBounds.preciseWidth());
