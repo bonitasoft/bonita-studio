@@ -34,7 +34,6 @@
 							<goal>validate-target-platform</goal>
 						</goals>
 						<configuration>
-                            <failOnError>false</failOnError>
 							<targetFiles>
 								<param>platform.target</param>
 							</targetFiles>
