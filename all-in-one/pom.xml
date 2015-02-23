@@ -24,169 +24,163 @@
         <product.short.name>BonitaBPMCommunity</product.short.name>
         <repositoryId>studio-repository</repositoryId>
         <productId>org.bonitasoft.studio.product</productId>
+        <antRunner>-application org.eclipse.ant.core.antRunner</antRunner>
+        <p2BuildFile>-buildfile p2AllInOne.xml -clean -noSplash -consoleLog</p2BuildFile>
+        <root.dir.arg>-Droot.dir=${project.build.directory}/${product.short.name}-${project.version}</root.dir.arg>
+        <argLine>${antRunner} ${p2BuildFile} ${root.dir.arg}</argLine>
     </properties>
 
 
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.bonitasoft.maven</groupId>
+                <artifactId>image-overlay-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>topRightVersion</id>
+                        <configuration>
+                            <baseImgPath>${basedir}/installer/images/topRight_without_version.png</baseImgPath>
+                            <outputImagePath>${basedir}/installer/images/logo-installer.png</outputImagePath>
+                            <outputImageFormat>png</outputImageFormat>
+                            <xLocation>52</xLocation>
+                            <yLocation>44</yLocation>
+                            <fontSize>14</fontSize>
+                            <color>55738c</color>
+                            <versionLabel>${project.version}</versionLabel>
+                        </configuration>
+                        <goals>
+                            <goal>create-image</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>splashVersion</id>
+                        <configuration>
+                            <baseImgPath>${basedir}/installer/images/splash_without_version.png</baseImgPath>
+                            <outputImagePath>${basedir}/installer/images/splash.png</outputImagePath>
+                            <outputImageFormat>png</outputImageFormat>
+                            <xLocation>208</xLocation>
+                            <yLocation>133</yLocation>
+                            <fontSize>25</fontSize>
+                            <versionLabel>${project.version}</versionLabel>
+                        </configuration>
+                        <goals>
+                            <goal>create-image</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.eclipse.tycho</groupId>
+                <artifactId>tycho-p2-repository-plugin</artifactId>
+                <version>${tychoVersion}</version>
+                <configuration>
+                    <includeAllDependencies>true</includeAllDependencies>
+                    <finalName>${repositoryId}-${project.version}</finalName>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.eclipse.tycho</groupId>
+                <artifactId>tycho-p2-director-plugin</artifactId>
+                <version>${tychoVersion}</version>
+                <configuration>
+                    <formats>
+                        <macosx>tar.gz</macosx>
+                        <linux>tar.gz</linux>
+                        <win>zip</win>
+                    </formats>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>materialize-products</id>
+                        <goals>
+                            <goal>materialize-products</goal>
+                        </goals>
+                        <phase>package</phase>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- all-in-one assembly with all platforms -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>make-directory-assembly</id>
+                        <phase>package</phase>
+                        <configuration>
+                            <appendAssemblyId>false</appendAssemblyId>
+                            <descriptor>${basedir}/assembly-descriptor.xml</descriptor>
+                            <finalName>${product.short.name}-${project.version}</finalName>
+                        </configuration>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>make-zip-assembly</id>
+                        <phase>install</phase>
+                        <configuration>
+                            <appendAssemblyId>false</appendAssemblyId>
+                            <descriptor>${basedir}/assembly-zip-descriptor.xml</descriptor>
+                            <finalName>${product.short.name}-${project.version}</finalName>
+                        </configuration>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- Create a proper bundles.info for all-in-one -->
+            <plugin>
+                <groupId>org.eclipse.tycho.extras</groupId>
+                <artifactId>tycho-eclipserun-plugin</artifactId>
+                <configuration>
+                    <appArgLine>${os-jvm-flags} ${argLine}/</appArgLine>
+                    <argLine>-Xmx512m -Xms256m -XX:MaxPermSize=512m</argLine>
+                    <repositories>
+                        <repository>
+                            <id>BonitaBPM P2 Repository</id>
+                            <layout>p2</layout>
+                            <url>${p2MirrorUrl}</url>
+                        </repository>
+                        <repository>
+                            <id>Additional Build Dependencies P2 Repository</id>
+                            <layout>p2</layout>
+                            <url>${project.baseUri}/repository/</url>
+                        </repository>
+                    </repositories>
+                    <dependencies>
+                        <dependency>
+                            <artifactId>org.bonitasoft.studio_antTasks</artifactId>
+                            <type>eclipse-plugin</type>
+                        </dependency>
+                        <dependency>
+                            <artifactId>org.apache.ant</artifactId>
+                            <type>eclipse-plugin</type>
+                        </dependency>
+                        <dependency>
+                            <artifactId>org.eclipse.equinox.ds</artifactId>
+                            <type>eclipse-plugin</type>
+                        </dependency>
+                    </dependencies>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>eclipse-run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
     <profiles>
-        <profile>
-            <id>buildAllInOneZip</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <properties>
-                <antRunner>-application org.eclipse.ant.core.antRunner</antRunner>
-                <p2BuildFile>-buildfile p2AllInOne.xml -clean -noSplash -consoleLog</p2BuildFile>
-                <root.dir.arg>-Droot.dir=${project.build.directory}/${product.short.name}-${project.version}</root.dir.arg>
-                <argLine>${antRunner} ${p2BuildFile} ${root.dir.arg}</argLine>
-            </properties>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.bonitasoft.maven</groupId>
-                        <artifactId>image-overlay-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>topRightVersion</id>
-                                <configuration>
-                                    <baseImgPath>${basedir}/installer/images/topRight_without_version.png</baseImgPath>
-                                    <outputImagePath>${basedir}/installer/images/logo-installer.png</outputImagePath>
-                                    <outputImageFormat>png</outputImageFormat>
-                                    <xLocation>52</xLocation>
-                                    <yLocation>44</yLocation>
-                                    <fontSize>14</fontSize>
-                                    <color>55738c</color>
-                                    <versionLabel>${project.version}</versionLabel>
-                                </configuration>
-                                <goals>
-                                    <goal>create-image</goal>
-                                </goals>
-                            </execution>
-                            <execution>
-                                <id>splashVersion</id>
-                                <configuration>
-                                    <baseImgPath>${basedir}/installer/images/splash_without_version.png</baseImgPath>
-                                    <outputImagePath>${basedir}/installer/images/splash.png</outputImagePath>
-                                    <outputImageFormat>png</outputImageFormat>
-                                    <xLocation>208</xLocation>
-                                    <yLocation>133</yLocation>
-                                    <fontSize>25</fontSize>
-                                    <versionLabel>${project.version}</versionLabel>
-                                </configuration>
-                                <goals>
-                                    <goal>create-image</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.eclipse.tycho</groupId>
-                        <artifactId>tycho-p2-repository-plugin</artifactId>
-                        <version>${tychoVersion}</version>
-                        <configuration>
-                            <includeAllDependencies>true</includeAllDependencies>
-                            <finalName>${repositoryId}-${project.version}</finalName>
-                        </configuration>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.eclipse.tycho</groupId>
-                        <artifactId>tycho-p2-director-plugin</artifactId>
-                        <version>${tychoVersion}</version>
-                        <configuration>
-                            <formats>
-                                <macosx>tar.gz</macosx>
-                                <linux>tar.gz</linux>
-                                <win>zip</win>
-                            </formats>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <id>materialize-products</id>
-                                <goals>
-                                    <goal>materialize-products</goal>
-                                </goals>
-                                <phase>package</phase>
-                            </execution>
-                        </executions>
-                    </plugin>
-
-                    <!-- all-in-one assembly with all platforms -->
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-assembly-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>make-directory-assembly</id>
-                                <phase>package</phase>
-                                <configuration>
-                                    <appendAssemblyId>false</appendAssemblyId>
-                                    <descriptor>${basedir}/assembly-descriptor.xml</descriptor>
-                                    <finalName>${product.short.name}-${project.version}</finalName>
-                                </configuration>
-                                <goals>
-                                    <goal>single</goal>
-                                </goals>
-                            </execution>
-                            <execution>
-                                <id>make-zip-assembly</id>
-                                <phase>install</phase>
-                                <configuration>
-                                    <appendAssemblyId>false</appendAssemblyId>
-                                    <descriptor>${basedir}/assembly-zip-descriptor.xml</descriptor>
-                                    <finalName>${product.short.name}-${project.version}</finalName>
-                                </configuration>
-                                <goals>
-                                    <goal>single</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-
-                    <!-- Create a proper bundles.info for all-in-one -->
-                    <plugin>
-                        <groupId>org.eclipse.tycho.extras</groupId>
-                        <artifactId>tycho-eclipserun-plugin</artifactId>
-                        <configuration>
-                            <appArgLine>${os-jvm-flags} ${argLine}/</appArgLine>
-                            <argLine>-Xmx512m -Xms256m -XX:MaxPermSize=512m</argLine>
-                            <repositories>
-                                <repository>
-                                    <id>BonitaBPM P2 Repository</id>
-                                    <layout>p2</layout>
-                                    <url>${p2MirrorUrl}</url>
-                                </repository>
-                                  <repository>
-                                    <id>Additional Build Dependencies P2 Repository</id>
-                                    <layout>p2</layout>
-                                    <url>${project.baseUri}/repository/</url>
-                                </repository>
-                            </repositories>
-                            <dependencies>
-                                <dependency>
-                                    <artifactId>org.bonitasoft.studio_antTasks</artifactId>
-                                    <type>eclipse-plugin</type>
-                                </dependency>
-                                <dependency>
-                                    <artifactId>org.apache.ant</artifactId>
-                                    <type>eclipse-plugin</type>
-                                </dependency>
-                                <dependency>
-                                    <artifactId>org.eclipse.equinox.ds</artifactId>
-                                    <type>eclipse-plugin</type>
-                                </dependency>
-                            </dependencies>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <phase>package</phase>
-                                <goals>
-                                    <goal>eclipse-run</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
         <profile>
             <id>buildInstaller</id>
             <activation>
