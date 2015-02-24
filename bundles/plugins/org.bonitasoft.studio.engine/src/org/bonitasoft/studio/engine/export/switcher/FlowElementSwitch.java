@@ -106,6 +106,7 @@ import org.bonitasoft.studio.model.process.StartSignalEvent;
 import org.bonitasoft.studio.model.process.StartTimerEvent;
 import org.bonitasoft.studio.model.process.SubProcessEvent;
 import org.bonitasoft.studio.model.process.Task;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
@@ -422,11 +423,16 @@ public class FlowElementSwitch extends AbstractSwitch {
         for (final InputMapping mapping : object.getInputMappings()) {
             final OperationBuilder opBuilder = new OperationBuilder();
             opBuilder.createNewInstance();
-            opBuilder.setRightOperand(EngineExpressionUtil.createVariableExpression(mapping.getProcessSource()));
+            opBuilder.setRightOperand(EngineExpressionUtil.createExpression(mapping.getProcessSource()));
             final LeftOperandBuilder builder = new LeftOperandBuilder() ;
             builder.createNewInstance() ;
             builder.setName(mapping.getSubprocessTarget()) ;
-            builder.setType(getLeftOperandTypeForData(mapping.getProcessSource()));
+            final EList<EObject> referencedElements = mapping.getProcessSource().getReferencedElements();
+            String type = LeftOperand.TYPE_DATA;
+            if (!referencedElements.isEmpty()) {
+                type = getLeftOperandTypeForData((Data) referencedElements.get(0));
+            }
+            builder.setType(type);
             opBuilder.setLeftOperand(builder.done());
             opBuilder.setType(OperatorType.ASSIGNMENT);
             activityBuilder.addDataInputOperation(opBuilder.done());
@@ -653,7 +659,7 @@ public class FlowElementSwitch extends AbstractSwitch {
         addDescription(taskBuilder, activity.getDocumentation());
     }
 
-    private void addBoundaryEvents(final ActivityDefinitionBuilder taskBuilder, final Activity activity) {
+    protected void addBoundaryEvents(final ActivityDefinitionBuilder taskBuilder, final Activity activity) {
         for (final BoundaryEvent boundaryEvent : activity.getBoundaryIntermediateEvents()) {
             final BoundaryEventDefinitionBuilder boundaryEventBuilder = taskBuilder.addBoundaryEvent(boundaryEvent.getName(),
                     !(boundaryEvent instanceof NonInterruptingBoundaryTimerEvent));
@@ -667,6 +673,7 @@ public class FlowElementSwitch extends AbstractSwitch {
                 final CatchMessageEventTriggerDefinitionBuilder catchMessageEventTriggerDefinitionBuilder = boundaryEventBuilder
                         .addMessageEventTrigger(((BoundaryMessageEvent) boundaryEvent).getEvent());
                 addMessageContent((BoundaryMessageEvent) boundaryEvent, catchMessageEventTriggerDefinitionBuilder);
+                addMessageCorrelation((BoundaryMessageEvent) boundaryEvent, catchMessageEventTriggerDefinitionBuilder);
             } else if (boundaryEvent instanceof BoundaryTimerEvent) {
                 final TimerType timerType = getTimerType((BoundaryTimerEvent) boundaryEvent);
                 if (timerType != null) {

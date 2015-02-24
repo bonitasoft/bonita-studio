@@ -1,18 +1,16 @@
 /**
- * Copyright (C) 2013-2014 Bonitasoft S.A.
+ * Copyright (C) 2013-2015 Bonitasoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.importer.processors;
 
@@ -30,9 +28,11 @@ import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.importer.ImporterFactory;
+import org.bonitasoft.studio.importer.ImporterPlugin;
 import org.bonitasoft.studio.importer.i18n.Messages;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 
 /**
@@ -69,10 +69,12 @@ public class ImportFileOperation implements IRunnableWithProgress {
 		try {
 			processor.createDiagram(fileToImport.toURI().toURL(), monitor)  ;
 		} catch (final MalformedURLException e) {
+            status = new Status(IStatus.ERROR, ImporterPlugin.PLUGIN_ID, e.getMessage(), e);
 			throw new InvocationTargetException(e, e.getMessage());
 		} catch (final Exception e) {
+            status = new Status(IStatus.ERROR, ImporterPlugin.PLUGIN_ID, e.getMessage(), e);
 			throw new InvocationTargetException(e, e.getMessage());
-		}
+        }
         //handleErrors(processor);
 		addFileStoresToOpen(processor);
         status = processor.getStatus();
@@ -107,13 +109,14 @@ public class ImportFileOperation implements IRunnableWithProgress {
 				FileInputStream fis = null;
 				try {
 					fis = new FileInputStream(f);
-					final DiagramRepositoryStore diagramStore = (DiagramRepositoryStore) RepositoryManager.getInstance().getCurrentRepository().getRepositoryStore(DiagramRepositoryStore.class) ;
+					final DiagramRepositoryStore diagramStore = RepositoryManager.getInstance().getCurrentRepository().getRepositoryStore(DiagramRepositoryStore.class) ;
 					final DiagramFileStore fileStore = diagramStore.importInputStream(f.getName(), fis);
 					if(fileStore instanceof DiagramFileStore){
 					    fileStoresToOpen.add(fileStore) ;
 					}
 					f.delete();
 				} catch (final FileNotFoundException e) {
+                    status = new Status(IStatus.ERROR, ImporterPlugin.PLUGIN_ID, e.getMessage(), e);
 					throw new InvocationTargetException(e);
 				}finally{
 					if(fis != null){

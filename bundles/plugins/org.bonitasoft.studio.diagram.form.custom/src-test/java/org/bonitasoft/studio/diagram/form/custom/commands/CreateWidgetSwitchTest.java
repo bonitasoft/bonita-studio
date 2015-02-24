@@ -70,7 +70,7 @@ public class CreateWidgetSwitchTest {
 	@Before
 	public void setUp() throws Exception {
 		formFactory = FormFactory.eINSTANCE;
-        createWidgetSwitch = new CreateWidgetSwitch(TaskBuilder.createTaskBuilder().build(), initializer);
+        createWidgetSwitch = new CreateWidgetSwitch(TaskBuilder.aTask().build(), initializer);
 	}
 
 	/**
@@ -143,7 +143,7 @@ public class CreateWidgetSwitchTest {
         assertThat(((FileWidget) widget).getInputType()).isEqualTo(FileWidgetInputType.DOCUMENT);
 		verify(initializer).init_FileWidget_3119((FileWidget) widget);
 
-        createWidgetSwitch = new CreateWidgetSwitch(PoolBuilder.create().build(), initializer);
+        createWidgetSwitch = new CreateWidgetSwitch(PoolBuilder.aPool().build(), initializer);
         widget = createWidgetSwitch.doSwitch(formFactory.createFileWidget());
         assertThat(((FileWidget) widget).getInputType()).isEqualTo(FileWidgetInputType.RESOURCE);
 	}

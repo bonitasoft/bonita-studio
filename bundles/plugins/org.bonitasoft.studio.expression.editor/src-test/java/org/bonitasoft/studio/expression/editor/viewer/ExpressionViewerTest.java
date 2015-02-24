@@ -83,8 +83,8 @@ public class ExpressionViewerTest extends AbstractSWTTestCase {
 
     @Test
     public void should_erase_reset_expression() throws Exception {
-        final Expression selectedExpression = ExpressionBuilder.create().withName("name").withContent("name").withReturnType(Integer.class.getName())
-                .withExpressionType(ExpressionConstants.VARIABLE_TYPE).havingReferencedElements(DataBuilder.createDataBuilder().build()).build();
+        final Expression selectedExpression = ExpressionBuilder.anExpression().withName("name").withContent("name").withReturnType(Integer.class.getName())
+                .withExpressionType(ExpressionConstants.VARIABLE_TYPE).havingReferencedElements(DataBuilder.aData().build()).build();
 
         expressionViewer.erase(selectedExpression);
 
@@ -97,9 +97,9 @@ public class ExpressionViewerTest extends AbstractSWTTestCase {
 
     @Test
     public void should_erase_reset_expression_with_fixed_return_type() throws Exception {
-        final Expression selectedExpression = ExpressionBuilder.create().withName("name").withContent("name").withReturnType(Integer.class.getName())
+        final Expression selectedExpression = ExpressionBuilder.anExpression().withName("name").withContent("name").withReturnType(Integer.class.getName())
                 .fixedReturnType()
-                .withExpressionType(ExpressionConstants.VARIABLE_TYPE).havingReferencedElements(DataBuilder.createDataBuilder().build()).build();
+                .withExpressionType(ExpressionConstants.VARIABLE_TYPE).havingReferencedElements(DataBuilder.aData().build()).build();
 
         expressionViewer.erase(selectedExpression);
 

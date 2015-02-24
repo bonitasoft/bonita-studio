@@ -17,6 +17,9 @@
 package org.bonitasoft.studio.model.process.builders;
 
 import org.bonitasoft.studio.model.parameter.builders.ParameterBuilder;
+import org.bonitasoft.studio.model.process.Connection;
+import org.bonitasoft.studio.model.process.Element;
+import org.bonitasoft.studio.model.process.FlowElement;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 
@@ -26,14 +29,27 @@ import org.bonitasoft.studio.model.process.ProcessFactory;
  */
 public class PoolBuilder extends ElementBuilder<Pool, PoolBuilder> {
 
-    public static PoolBuilder create() {
+    public static PoolBuilder aPool() {
         return new PoolBuilder();
     }
 
     public PoolBuilder havingElements(final ElementBuilder<?, ?>... elements) {
         if (elements != null) {
             for (final ElementBuilder<?, ?> elementBuilder : elements) {
-                getBuiltInstance().getElements().add(elementBuilder.build());
+                final Element element = elementBuilder.build();
+                getBuiltInstance().getElements().add(element);
+                if (element instanceof FlowElement) {
+                    for (final Connection connection : ((FlowElement) element).getOutgoing()) {
+                        if (connection.eContainer() == null) {
+                            getBuiltInstance().getConnections().add(connection);
+                        }
+                    }
+                    for (final Connection connection : ((FlowElement) element).getIncoming()) {
+                        if (connection.eContainer() == null) {
+                            getBuiltInstance().getConnections().add(connection);
+                        }
+                    }
+                }
             }
         }
         return getThis();

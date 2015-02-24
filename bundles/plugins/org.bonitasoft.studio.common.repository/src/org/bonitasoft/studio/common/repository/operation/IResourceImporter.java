@@ -28,7 +28,9 @@ import org.bonitasoft.studio.common.Pair;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
+import org.eclipse.core.internal.jobs.Counter;
 import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.Assert;
@@ -45,6 +47,7 @@ public class IResourceImporter {
     private Set<String> resourcesToOpen;
     private final List<IRepositoryFileStore> fileStoresToOpen = new ArrayList<IRepositoryFileStore>();
     private final List<IRepositoryFileStore> importedProcesses = new ArrayList<IRepositoryFileStore>();
+    private final List<String> failedProcesses = new ArrayList<String>();
 
     public void run(final IContainer rootContainer, final IRepository repository, final IProgressMonitor monitor) throws ResourceImportException {
         Assert.isLegal(rootContainer != null);
@@ -56,9 +59,32 @@ public class IResourceImporter {
         }
 
         final List<IFolder> folderSortedList = getFolders(rootContainer);
+
         Collections.sort(folderSortedList, importFolderComparator);
+        final Counter nbFileToImport = new Counter();
+        for (final IFolder folder : folderSortedList) {
+            try {
+                processContainer(folder, nbFileToImport);
+            } catch (final CoreException e) {
+
+            }
+        }
+        monitor.beginTask("Importing BOS archive...", (int) nbFileToImport.increment());
         for (final IFolder folder : folderSortedList) {
             findRepository(repositoryStoreMap, folder, monitor);
+        }
+    }
+
+    void processContainer(final IContainer container, final Counter nbFileToImport) throws CoreException
+    {
+        final IResource[] members = container.members();
+        for (final IResource member : members)
+        {
+            if (member instanceof IFolder) {
+                processContainer((IFolder) member, nbFileToImport);
+            } else if (member instanceof IFile) {
+                nbFileToImport.increment();
+            }
         }
     }
 
@@ -68,6 +94,10 @@ public class IResourceImporter {
 
     public List<IRepositoryFileStore> getFileStoresToOpen() {
         return fileStoresToOpen;
+    }
+
+    public List<String> getFailedProcesses() {
+        return failedProcesses;
     }
 
     private void findRepository(
@@ -116,6 +146,7 @@ public class IResourceImporter {
             final String filename = child.getName();
             final boolean openAfterImport = resourcesToOpen != null && resourcesToOpen.contains(filename)
                     || resourcesToOpen == null;
+            monitor.subTask(String.format("Importing %s in %s", filename, storeFolder.getName()));
             final IRepositoryFileStore fileStore = store.importIResource(filename, child);
             if (filename.endsWith(".proc") && fileStore != null) {
                 importedProcesses.add(fileStore);
@@ -124,6 +155,11 @@ public class IResourceImporter {
             if (fileStore != null && openAfterImport) {
                 fileStoresToOpen.add(fileStore);
             }
+
+            if (fileStore == null && filename.endsWith(".proc")) {
+                failedProcesses.add(filename);
+            }
+            monitor.worked(1);
         }
     }
 

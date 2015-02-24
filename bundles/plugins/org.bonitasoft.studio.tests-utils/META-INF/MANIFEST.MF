@@ -5,14 +5,18 @@ Bundle-SymbolicName: org.bonitasoft.studio.tests-utils
 Bundle-Version: 7.0.0.qualifier
 Bundle-Vendor: BonitaSoft S.A.
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Export-Package: org.bonitasoft.studio.model.connectorconfiguration.bui
- lders,org.bonitasoft.studio.model.expression.assertions,org.bonitasof
- t.studio.model.expression.builders,org.bonitasoft.studio.model.form.b
- uilders,org.bonitasoft.studio.model.parameter.builders,org.bonitasoft
- .studio.model.process.assertions,org.bonitasoft.studio.model.process.
- builders,org.bonitasoft.studio.swt
+Export-Package: org.bonitasoft.studio.assertions,
+ org.bonitasoft.studio.model.connectorconfiguration.builders,
+ org.bonitasoft.studio.model.expression.assertions,
+ org.bonitasoft.studio.model.expression.builders,
+ org.bonitasoft.studio.model.form.builders,
+ org.bonitasoft.studio.model.parameter.builders,
+ org.bonitasoft.studio.model.process.assertions,
+ org.bonitasoft.studio.model.process.builders,
+ org.bonitasoft.studio.swt
 Require-Bundle: assertj-core,
  org.bonitasoft.studio.model,
  org.eclipse.swt,
  org.eclipse.core.databinding.observable,
- org.eclipse.jface.databinding
+ org.eclipse.jface.databinding,
+ org.eclipse.core.runtime

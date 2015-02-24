@@ -16,7 +16,10 @@
  */
 package org.bonitasoft.studio.model.process.builders;
 
+import static org.bonitasoft.studio.model.process.builders.SequenceFlowBuilder.aSequenceFlow;
+
 import org.bonitasoft.studio.model.expression.builders.ExpressionBuilder;
+import org.bonitasoft.studio.model.process.Connection;
 import org.bonitasoft.studio.model.process.FlowElement;
 
 /**
@@ -45,5 +48,42 @@ public abstract class FlowElementBuilder<T extends FlowElement, B extends FlowEl
         return getThis();
     }
 
+    public B havingOutgoingConnections(final Connection... connections) {
+        if (connections != null) {
+            for (final Connection connection : connections) {
+                getBuiltInstance().getOutgoing().add(connection);
+            }
+        }
+        return getThis();
+    }
+
+    public B havingOutgoingConnections(final ConnectionBuilder<?, ?>... connectionBuilders) {
+        if (connectionBuilders != null) {
+            for (final ConnectionBuilder<?, ?> connectionBuilder : connectionBuilders) {
+                getBuiltInstance().getOutgoing().add(connectionBuilder.build());
+            }
+        }
+        return getThis();
+    }
+
+    public FlowElementBuilder<?, ?> goingTo(final FlowElementBuilder<?, ?>... flowElementBuilders) {
+        if (flowElementBuilders != null) {
+            for (final FlowElementBuilder<?, ?> flowElementBuilder : flowElementBuilders) {
+                havingOutgoingConnections(aSequenceFlow().havingSource(getBuiltInstance()).havingTarget(flowElementBuilder.build()));
+            }
+        }
+
+        return getThis();
+    }
+
+    public FlowElementBuilder<?, ?> goingTo(final FlowElement... flowElements) {
+        if (flowElements != null) {
+            for (final FlowElement flowElement : flowElements) {
+                havingOutgoingConnections(aSequenceFlow().havingSource(getBuiltInstance()).havingTarget(flowElement));
+            }
+        }
+
+        return getThis();
+    }
 
 }

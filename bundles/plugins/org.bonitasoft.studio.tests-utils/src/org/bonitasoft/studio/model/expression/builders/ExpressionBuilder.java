@@ -33,7 +33,7 @@ public class ExpressionBuilder {
         this.expression = expression;
     }
 
-    public static ExpressionBuilder create() {
+    public static ExpressionBuilder anExpression() {
         return new ExpressionBuilder(ExpressionFactory.eINSTANCE.createExpression());
     }
 

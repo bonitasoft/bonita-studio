@@ -212,10 +212,15 @@
                id="org.bonitasoft.studio.menu.edit"
                label="%editMenu_label">
             <command
-                  commandId="org.eclipse.ui.edit.findReplace"
+                  commandId="org.eclipse.ui.views.showView"
                   icon="icons/find.png"
                   label="%findLabel"
+                  mnemonic="F"
                   style="push">
+               <parameter
+                     name="org.eclipse.ui.views.showView.viewId"
+                     value="org.bonitasoft.studio.views.overview.tree">
+               </parameter>
             </command>
              <separator
                   name="org.bonitasoft.studio.application.separator20"
@@ -289,10 +294,14 @@
                </command>
             </menu>
             <command
-                  commandId="org.bonitasoft.studio.application.showOverviewCommand"
+                  commandId="org.eclipse.ui.views.showView"
                   icon="icons/show_view.png"
                   label="%showOverview_label"
                   style="push">
+               <parameter
+                     name="org.eclipse.ui.views.showView.viewId"
+                     value="org.bonitasoft.studio.views.overview">
+               </parameter>
             </command>
             <command
                   commandId="org.bonitasoft.studio.application.resetWindowCommand"
@@ -397,11 +406,6 @@
             defaultHandler="org.bonitasoft.studio.application.actions.ResetPerspectiveCommand"
             id="org.bonitasoft.studio.application.resetWindowCommand"
             name="%resetPerspective_label">
-      </command>
-      <command
-            defaultHandler="org.bonitasoft.studio.application.actions.ShowOverviewHandler"
-            id="org.bonitasoft.studio.application.showOverviewCommand"
-            name="%showOverview_label">
       </command>
       <command
             defaultHandler="org.bonitasoft.studio.application.actions.ShowHelpCommand"
@@ -573,15 +577,6 @@
                   definitionId="isActiveEditorAnInstanceOfBonitaEditor">
             </reference>
          </enabledWhen>
-      </handler>
-      <handler
-            class="org.bonitasoft.studio.application.actions.FindHandler"
-            commandId="org.eclipse.ui.edit.findReplace">
-         <activeWhen>
-            <reference
-                  definitionId="isActiveEditorAnInstanceOfBonitaEditor">
-            </reference>
-         </activeWhen>
       </handler>
       <handler
             class="org.bonitasoft.studio.application.actions.SaveCommandHandler"
@@ -809,23 +804,48 @@
             commandId="org.bonitasoft.studio.application.fullscreen"
             contextId="org.eclipse.ui.contexts.dialogAndWindow"
             platform="win32"
-            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            schemeId="org.bonitasoft.studio.application.scheme"
             sequence="F11">
       </key>
       <key
             commandId="org.bonitasoft.studio.application.fullscreen"
             contextId="org.eclipse.ui.contexts.dialogAndWindow"
             platform="cocoa"
-            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            schemeId="org.bonitasoft.studio.application.scheme"
             sequence="M1+M3+F11">
       </key>
       <key
             commandId="org.bonitasoft.studio.application.fullscreen"
             contextId="org.eclipse.ui.contexts.dialogAndWindow"
             platform="gtk"
-            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            schemeId="org.bonitasoft.studio.application.scheme"
             sequence="F11">
       </key>
+      <key
+            commandId="org.eclipse.ui.views.showView"
+            contextId="org.eclipse.ui.contexts.dialogAndWindow"
+            schemeId="org.bonitasoft.studio.application.scheme"
+            sequence="M1+F">
+         <parameter
+               id="org.eclipse.ui.views.showView.viewId"
+               value="org.bonitasoft.studio.views.overview.tree">
+         </parameter>
+      </key>
+      <key
+            commandId="org.eclipse.ui.views.showView"
+            contextId="org.eclipse.ui.contexts.dialogAndWindow"
+            schemeId="org.bonitasoft.studio.application.scheme"
+            sequence="M1+M3+O">
+         <parameter
+               id="org.eclipse.ui.views.showView.viewId"
+               value="org.bonitasoft.studio.views.overview">
+         </parameter>
+      </key>
+      <scheme
+            id="org.bonitasoft.studio.application.scheme"
+            name="BonitaBPM Scheme"
+            parentId="org.eclipse.ui.defaultAcceleratorConfiguration">
+      </scheme>
    </extension>
    <extension
          point="org.bonitasoft.studio.application.prestartup">

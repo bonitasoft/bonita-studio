@@ -17,8 +17,12 @@
 package org.bonitasoft.studio.validation;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.bonitasoft.studio.model.process.builders.PoolBuilder.aPool;
+import static org.bonitasoft.studio.model.process.builders.StartEventBuilder.aStartEvent;
+import static org.bonitasoft.studio.model.process.builders.TaskBuilder.aTask;
 
 import org.bonitasoft.studio.model.process.ProcessFactory;
+import org.bonitasoft.studio.model.process.builders.TaskBuilder;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -50,6 +54,22 @@ public class TokenDispatcherTest {
     @Test
     public void should_a_XORGateway_propagate_token_continously() throws Exception {
         assertThat(tokenDispatcher.isContinuous(ProcessFactory.eINSTANCE.createXORGateway())).isTrue();
+    }
+
+    @Test
+    public void should_a_FlowElement_with_be_continous() throws Exception {
+        final TaskBuilder t1 = aTask();
+        final TaskBuilder t2 = aTask();
+        t1.goingTo(t2).goingTo(t1);
+
+        aPool()
+                .havingElements(aStartEvent().goingTo(t1), t1, t2).build();
+
+        assertThat(tokenDispatcher.isMerging(t1.build())).isFalse();
+        assertThat(tokenDispatcher.isMerging(t2.build())).isFalse();
+
+        assertThat(tokenDispatcher.isContinuous(t1.build())).isTrue();
+        assertThat(tokenDispatcher.isContinuous(t2.build())).isTrue();
     }
 
 }

@@ -16,6 +16,7 @@
  */
 package org.bonitasoft.studio.configuration.test.swtbot;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.bonitasoft.studio.model.process.MainProcess;
@@ -53,17 +54,17 @@ public class TestConfigurationDialog extends SWTBotGefTestCase {
 	@Before
 	public void setUp() throws Exception {
 		SWTBotTestUtil.createNewDiagram(bot);
-		SWTBotEditor botEditor = bot.activeEditor();
-		SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
-		List<SWTBotGefEditPart> runnableEPs = gmfEditor.editParts(new BaseMatcher<EditPart>() {
+		final SWTBotEditor botEditor = bot.activeEditor();
+		final SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
+		final List<SWTBotGefEditPart> runnableEPs = gmfEditor.editParts(new BaseMatcher<EditPart>() {
 
 			@Override
-			public boolean matches(Object item) {
+			public boolean matches(final Object item) {
 				return item instanceof PoolEditPart;
 			}
 
 			@Override
-			public void describeTo(Description description) {
+			public void describeTo(final Description description) {
 
 			}
 		});
@@ -72,35 +73,55 @@ public class TestConfigurationDialog extends SWTBotGefTestCase {
 	}
 
 	@Test
+	public void importDiagramWithCustomActorMappingAndOpenConfiguration() throws IOException{
+	    SWTBotTestUtil.importProcessWIthPathFromClass(bot, "TestImport-1.0.bos", "Bonita 6.x", "TestImport (1.0)", this.getClass(), false);
+	    final SWTBotEditor botEditor = bot.activeEditor();
+	    clickOnConfigure();
+	    final SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
+        final IGraphicalEditPart part = (IGraphicalEditPart)gmfEditor.mainEditPart().part();
+        final MainProcess model = (MainProcess)part.resolveSemanticElement();
+        final Pool pool = (Pool)model.getElements().get(0);
+        final String processLabel = pool.getName() +" ("+pool.getVersion()+")";
+	    bot.waitUntil(Conditions.shellIsActive("Local configuration for "+processLabel));
+	    bot.button(IDialogConstants.FINISH_LABEL).click();
+	}
+
+
+	@Test
 	public void testOpenDialog(){
-		SWTBotEditor botEditor = bot.activeEditor();
-		SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
-
-		IGraphicalEditPart part = (IGraphicalEditPart)gmfEditor.mainEditPart().part();
-		MainProcess model = (MainProcess)part.resolveSemanticElement();
-		Pool pool = (Pool)model.getElements().get(0);
-		String processLabel = pool.getName() +" ("+pool.getVersion()+")";
-		clickOnConfigure();
-		bot.waitUntil(Conditions.shellIsActive("Local configuration for "+processLabel));
+		openDialog();
+	}
 
 
-		if(SWTBotTestUtil.testingBosSp()){
-			bot.table().getTableItem("Parameter").select();
-		}
-		bot.table().getTableItem("Actor mapping").select();
+	private void openDialog(){
+	    final SWTBotEditor botEditor = bot.activeEditor();
+        final SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
 
-		bot.button(IDialogConstants.FINISH_LABEL).click();
+        final IGraphicalEditPart part = (IGraphicalEditPart)gmfEditor.mainEditPart().part();
+        final MainProcess model = (MainProcess)part.resolveSemanticElement();
+        final Pool pool = (Pool)model.getElements().get(0);
+        final String processLabel = pool.getName() +" ("+pool.getVersion()+")";
+        clickOnConfigure();
+        bot.waitUntil(Conditions.shellIsActive("Local configuration for "+processLabel));
+
+
+        if(SWTBotTestUtil.testingBosSp()){
+            bot.table().getTableItem("Parameter").select();
+        }
+        bot.table().getTableItem("Actor mapping").select();
+
+        bot.button(IDialogConstants.FINISH_LABEL).click();
 	}
 
 	@Test
 	public void testAdvancedCheckbox(){
-		SWTBotEditor botEditor = bot.activeEditor();
-		SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
+		final SWTBotEditor botEditor = bot.activeEditor();
+		final SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
 
-		IGraphicalEditPart part = (IGraphicalEditPart)gmfEditor.mainEditPart().part();
-		MainProcess model = (MainProcess)part.resolveSemanticElement();
-		Pool pool = (Pool)model.getElements().get(0);
-		String processLabel = pool.getName() +" ("+pool.getVersion()+")";
+		final IGraphicalEditPart part = (IGraphicalEditPart)gmfEditor.mainEditPart().part();
+		final MainProcess model = (MainProcess)part.resolveSemanticElement();
+		final Pool pool = (Pool)model.getElements().get(0);
+		final String processLabel = pool.getName() +" ("+pool.getVersion()+")";
 		if(SWTBotTestUtil.testingBosSp()){
 			bot.toolbarDropDownButton("Configure").click();
 		}else{
@@ -113,7 +134,7 @@ public class TestConfigurationDialog extends SWTBotGefTestCase {
 		boolean notFound = false ;
 		try{
 			bot.table().getTableItem("Process dependencies").select();
-		}catch (WidgetNotFoundException e) {
+		}catch (final WidgetNotFoundException e) {
 			notFound = true ;
 		}
 		assertTrue("Proces dependencies menu should not be visible", notFound);
@@ -135,13 +156,13 @@ public class TestConfigurationDialog extends SWTBotGefTestCase {
 
 	@Test
 	public void testMappingOfActors(){
-		SWTBotEditor botEditor = bot.activeEditor();
-		SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
+		final SWTBotEditor botEditor = bot.activeEditor();
+		final SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
 
-		IGraphicalEditPart part = (IGraphicalEditPart)gmfEditor.mainEditPart().part();
-		MainProcess model = (MainProcess)part.resolveSemanticElement();
-		Pool pool = (Pool)model.getElements().get(0);
-		String processLabel = pool.getName() +" ("+pool.getVersion()+")";
+		final IGraphicalEditPart part = (IGraphicalEditPart)gmfEditor.mainEditPart().part();
+		final MainProcess model = (MainProcess)part.resolveSemanticElement();
+		final Pool pool = (Pool)model.getElements().get(0);
+		final String processLabel = pool.getName() +" ("+pool.getVersion()+")";
 		clickOnConfigure();
 		bot.waitUntil(Conditions.shellIsActive("Local configuration for "+processLabel));
 		bot.table().getTableItem("Actor mapping").select();
