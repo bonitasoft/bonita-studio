@@ -65,4 +65,7 @@ public class BotTableWidget extends BotWidget {
         return getSWTBotWidget().containsItem(item);
     }
 
+    public int numberOfRows() {
+        return getSWTBotWidget().rowCount();
+    }
 }

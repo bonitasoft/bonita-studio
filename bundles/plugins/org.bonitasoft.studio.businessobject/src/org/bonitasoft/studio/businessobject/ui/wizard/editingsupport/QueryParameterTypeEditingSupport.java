@@ -21,7 +21,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.bonitasoft.studio.businessobject.ui.wizard.listener.ColumnViewerUpdateListener;
-import org.bonitasoft.studio.common.databinding.CellEditorViewerProperties;
+import org.bonitasoft.studio.common.jface.databinding.CellEditorViewerProperties;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.PojoObservables;
 import org.eclipse.core.databinding.observable.value.IObservableValue;

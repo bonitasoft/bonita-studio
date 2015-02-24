@@ -34,14 +34,9 @@ import org.eclipse.jface.viewers.StructuredSelection;
  */
 public class CustomerUserInformationDefinitionNameValidator implements IValidator {
 
-
-
-    Organization organization;
-    Set<String> exisingNames=new HashSet<String>();
-
+    private final Set<String> exisingNames = new HashSet<String>();
 
     public CustomerUserInformationDefinitionNameValidator(final Organization organization, final ColumnViewer viewer) {
-        this.organization=organization;
         final StructuredSelection structuredSelection = (StructuredSelection) viewer.getSelection();
         final CustomUserInfoDefinition selectedCustomUserDef = (CustomUserInfoDefinition) structuredSelection.getFirstElement();
         final String selectedDefinitionName = selectedCustomUserDef.getName();

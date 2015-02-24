@@ -3,7 +3,7 @@
  * BonitaSoft is a trademark of Bonitasoft SA.
  * This software file is BONITASOFT CONFIDENTIAL. Not For Distribution.
  * For commercial licensing information, contact:
- *      BonitaSoft, 32 rue Gustave Eiffel â€“ 38000 Grenoble
+ *      BonitaSoft, 32 rue Gustave Eiffel – 38000 Grenoble
  *      or BonitaSoft US, 51 Federal Street, Suite 305, San Francisco, CA 94107
  *******************************************************************************/
 package org.bonitasoft.studio.parameters.action;
@@ -38,38 +38,38 @@ import org.eclipse.emf.edit.domain.EditingDomain;
 
 /**
  * @author aurelie Zara
- * 
+ *
  */
 public class RefactorParametersOperation extends AbstractRefactorOperation<Parameter, Parameter, ParameterRefactorPair> {
 
-    private AbstractProcess process;
+    private final AbstractProcess process;
 
-    public RefactorParametersOperation(AbstractProcess process) {
+    public RefactorParametersOperation(final AbstractProcess process) {
         super(RefactoringOperationType.UPDATE);
         this.process = process;
     }
 
-    private void refactorConfParameter(EditingDomain editingDomain, CompoundCommand cc) {
-        String id = ModelHelper.getEObjectID(process);
-        String fileName = id + ".conf";
-        ProcessConfigurationRepositoryStore processConfStore = (ProcessConfigurationRepositoryStore) RepositoryManager.getInstance().getCurrentRepository()
+    private void refactorConfParameter(final EditingDomain editingDomain, final CompoundCommand cc) {
+        final String id = ModelHelper.getEObjectID(process);
+        final String fileName = id + ".conf";
+        final ProcessConfigurationRepositoryStore processConfStore = RepositoryManager.getInstance().getCurrentRepository()
                 .getRepositoryStore(ProcessConfigurationRepositoryStore.class);
-        ProcessConfigurationFileStore file = processConfStore.getChild(fileName);
+        final ProcessConfigurationFileStore file = processConfStore.getChild(fileName);
         Configuration localeConfiguration = null;
         Configuration localConfigurationCopy = null;
         if (file != null) {
             localeConfiguration = file.getContent();
             localConfigurationCopy = EcoreUtil.copy(localeConfiguration);
         }
-        List<Configuration> configurations = new ArrayList<Configuration>();
+        final List<Configuration> configurations = new ArrayList<Configuration>();
         if (localeConfiguration != null) {
             configurations.add(localeConfiguration);
         }
         configurations.addAll(process.getConfigurations());
-        for (Configuration configuration : configurations) {
-        	List<Parameter> parameters = configuration.getParameters();
-        	for (Parameter confParameter : parameters) {
-        		for(ParameterRefactorPair pairToRefactor : pairsToRefactor){
+        for (final Configuration configuration : configurations) {
+        	final List<Parameter> parameters = configuration.getParameters();
+        	for (final Parameter confParameter : parameters) {
+        		for(final ParameterRefactorPair pairToRefactor : pairsToRefactor){
         			if (pairToRefactor.getOldValueName().equals(confParameter.getName())) {
         				cc.append(SetCommand.create(editingDomain, confParameter, ParameterPackage.Literals.PARAMETER__NAME, pairToRefactor.getNewValueName()));
         				cc.append(SetCommand.create(editingDomain, confParameter, ParameterPackage.Literals.PARAMETER__DESCRIPTION, pairToRefactor.getNewValue().getDescription()));
@@ -84,10 +84,10 @@ public class RefactorParametersOperation extends AbstractRefactorOperation<Param
         }
     }
 
-    private void refactorReferencedExpressions(EditingDomain editingDomain, CompoundCommand cc) {
-        List<Expression> expressions = ModelHelper.getAllItemsOfType(process, ExpressionPackage.Literals.EXPRESSION);
-        for (Expression exp : expressions) {
-        	for(ParameterRefactorPair pairToRefactor : pairsToRefactor){
+    private void refactorReferencedExpressions(final EditingDomain editingDomain, final CompoundCommand cc) {
+        final List<Expression> expressions = ModelHelper.getAllItemsOfType(process, ExpressionPackage.Literals.EXPRESSION);
+        for (final Expression exp : expressions) {
+        	for(final ParameterRefactorPair pairToRefactor : pairsToRefactor){
         		if (ExpressionConstants.PARAMETER_TYPE.equals(exp.getType()) && pairToRefactor.getOldValueName().equals(exp.getName())) {
         			cc.append(SetCommand.create(editingDomain, exp, ExpressionPackage.Literals.EXPRESSION__NAME, pairToRefactor.getNewValueName()));
         			cc.append(SetCommand.create(editingDomain, exp, ExpressionPackage.Literals.EXPRESSION__CONTENT, pairToRefactor.getNewValueName()));
@@ -101,27 +101,28 @@ public class RefactorParametersOperation extends AbstractRefactorOperation<Param
     }
 
     @Override
-    protected void doExecute(IProgressMonitor monitor) {
+    protected CompoundCommand doBuildCompoundCommand(final CompoundCommand compoundCommand, final IProgressMonitor monitor) {
         monitor.beginTask(Messages.updatingParameterReferences, IProgressMonitor.UNKNOWN);
-        refactorConfParameter(domain, compoundCommand);
-        refactorReferencedExpressions(domain, compoundCommand);
+        refactorConfParameter(getEditingDomain(), compoundCommand);
+        refactorReferencedExpressions(getEditingDomain(), compoundCommand);
+        return compoundCommand;
     }
 
     @Override
-    protected AbstractScriptExpressionRefactoringAction<ParameterRefactorPair> getScriptExpressionRefactoringAction(List<ParameterRefactorPair> pairsToRefactor,
-            List<Expression> scriptExpressions, List<Expression> refactoredScriptExpression, CompoundCommand compoundCommand, EditingDomain domain,
-            RefactoringOperationType operationType) {
+    protected AbstractScriptExpressionRefactoringAction<ParameterRefactorPair> getScriptExpressionRefactoringAction(final List<ParameterRefactorPair> pairsToRefactor,
+            final List<Expression> scriptExpressions, final List<Expression> refactoredScriptExpression, final CompoundCommand compoundCommand, final EditingDomain domain,
+            final RefactoringOperationType operationType) {
         return new ParameterScriptExpressionRefactoringAction(pairsToRefactor, scriptExpressions, refactoredScriptExpression, compoundCommand,
                 domain, operationType);
     }
 
     @Override
-    protected EObject getContainer(Parameter olValue) {
+    protected EObject getContainer(final Parameter olValue) {
         return process;
     }
-    
+
 	@Override
-	protected ParameterRefactorPair createRefactorPair(Parameter newItem, Parameter oldItem) {
+	protected ParameterRefactorPair createRefactorPair(final Parameter newItem, final Parameter oldItem) {
 		return new ParameterRefactorPair(newItem, oldItem);
 	}
 

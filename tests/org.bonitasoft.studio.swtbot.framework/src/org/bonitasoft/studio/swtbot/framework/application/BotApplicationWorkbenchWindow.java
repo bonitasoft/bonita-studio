@@ -80,7 +80,7 @@ public class BotApplicationWorkbenchWindow extends AbstractBotMenu {
             public String getFailureMessage() {
                 return "The save took too much time";
             }
-        });
+        },40000);
         return this;
     }
 

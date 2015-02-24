@@ -16,6 +16,7 @@
  */
 package org.bonitasoft.studio.model.expression.builders;
 
+import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.expression.Operation;
 
@@ -31,7 +32,7 @@ public class OperationBuilder {
         this.operation = operation;
     }
 
-    public static OperationBuilder create() {
+    public static OperationBuilder anOperation() {
         return new OperationBuilder(ExpressionFactory.eINSTANCE.createOperation());
     }
 
@@ -42,6 +43,11 @@ public class OperationBuilder {
 
     public OperationBuilder havingRightOperand(final ExpressionBuilder rightOperand) {
         operation.setRightOperand(rightOperand.build());
+        return this;
+    }
+
+    public OperationBuilder havingRightOperand(final Expression rightOperand) {
+        operation.setRightOperand(rightOperand);
         return this;
     }
 

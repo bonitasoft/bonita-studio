@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Localization: plugin
 Bundle-Name: Parameters Plugin
 Bundle-SymbolicName: org.bonitasoft.studio.parameters;singleton:=true
-Bundle-Version: 6.5.0.qualifier
+Bundle-Version: 7.0.0.qualifier
 Bundle-Activator: org.bonitasoft.studio.parameters.ParameterPlugin
 Bundle-Vendor: BonitaSoft S.A.
 Require-Bundle: org.eclipse.ui,
@@ -27,7 +27,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.jface,
  org.bonitasoft.studio.diagram.custom,
  org.bonitasoft.studio.groovy.ui;bundle-version="6.2.0",
- org.bonitasoft.studio.refactoring;bundle-version="6.3.0"
+ org.bonitasoft.studio.refactoring;bundle-version="6.3.0",
+ org.eclipse.jdt.groovy.core;bundle-version="2.9.1"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: org.bonitasoft.studio.parameters.action,org.bonitasoft

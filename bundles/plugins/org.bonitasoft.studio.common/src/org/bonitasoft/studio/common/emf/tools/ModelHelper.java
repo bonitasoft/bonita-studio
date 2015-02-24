@@ -1862,16 +1862,6 @@ public class ModelHelper {
         return form.getHtmlTemplate() != null && form.getHtmlTemplate().getPath() != null && !form.getHtmlTemplate().getPath().isEmpty();
     }
 
-    /** Currently a copy of the data is done, so need to use this to have access to the original data */
-    public static Data getDataReferencedInExpression(final Data referencedData) {
-        final List<Data> accessibleData = ModelHelper.getAccessibleData(referencedData.eContainer().eContainer().eContainer().eContainer().eContainer());
-        for (final Data data : accessibleData) {
-            if (data.getName().equals(referencedData.getName())) {
-                return data;
-            }
-        }
-        return null;
-    }
 
     public static Document getDocumentReferencedInExpression(final Expression expr) {
         final List<EObject> refs = expr.getReferencedElements();

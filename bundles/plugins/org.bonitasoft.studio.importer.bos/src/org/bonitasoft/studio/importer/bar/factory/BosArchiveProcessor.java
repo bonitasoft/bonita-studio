@@ -35,6 +35,7 @@ import org.eclipse.emf.common.util.URI;
 public class BosArchiveProcessor extends ToProcProcessor {
 
     private ImportBosArchiveOperation operation;
+    private IStatus runStatus;
 
     public BosArchiveProcessor(final String resourceName) {
 
@@ -47,16 +48,25 @@ public class BosArchiveProcessor extends ToProcProcessor {
     @Override
     public File createDiagram(final URL sourceFileURL, final IProgressMonitor progressMonitor) throws Exception {
         final File archiveFile = new File(URI.decode(sourceFileURL.getFile()));
+        operation = createOperation(archiveFile);
+        runStatus = operation.run(progressMonitor);
+        return null;
+    }
+
+    protected ImportBosArchiveOperation createOperation(final File archiveFile) {
         operation = new ImportBosArchiveOperation();
         operation.setArchiveFile(archiveFile.getAbsolutePath());
         operation.setCurrentRepository(RepositoryManager.getInstance().getCurrentRepository());
-        operation.run(progressMonitor);
-        return null;
+        return operation;
     }
 
     @Override
     public IStatus getStatus() {
-        return operation.getValidationsStatus();
+        if (runStatus != null && !runStatus.isOK()) {
+            return runStatus;
+        } else {
+            return operation.getValidationsStatus();
+        }
     }
 
     /*

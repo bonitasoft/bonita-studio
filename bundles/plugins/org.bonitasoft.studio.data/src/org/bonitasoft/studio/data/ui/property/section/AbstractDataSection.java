@@ -419,7 +419,7 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
             }
             try {
                 if (op.canExecute()) {
-                    service.run(true, false, op);
+                    service.run(true, true, op);
                 }
             } catch (final InvocationTargetException e) {
                 BonitaStudioLog.error(e, DataPlugin.PLUGIN_ID);

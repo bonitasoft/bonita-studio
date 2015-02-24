@@ -28,11 +28,11 @@ import java.util.TreeSet;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.IBonitaVariableContext;
-import org.bonitasoft.studio.common.databinding.CustomEMFEditObservables;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.WidgetHelper;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
+import org.bonitasoft.studio.common.jface.databinding.CustomEMFEditObservables;
 import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.expression.editor.ExpressionEditorPlugin;
@@ -391,18 +391,18 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
     }
 
     private void clearExpression(final Expression selectedExpression) {
-        final String type = getDefaultExpressionType(selectedExpression);
+        final String defaultType = getDefaultExpressionType(selectedExpression);
         final EditingDomain editingDomain = getEditingDomain();
         if (editingDomain != null) {
             final CompoundCommand cc = ExpressionHelper.clearExpression(selectedExpression, editingDomain);
-            cc.append(SetCommand.create(editingDomain, selectedExpression, ExpressionPackage.Literals.EXPRESSION__TYPE, type));
+            cc.append(SetCommand.create(editingDomain, selectedExpression, ExpressionPackage.Literals.EXPRESSION__TYPE, defaultType));
             final boolean hasBeenExecuted = executeRemoveOperation(cc);
             if (!hasBeenExecuted) {
                 editingDomain.getCommandStack().execute(cc);
             }
         } else {
             ExpressionHelper.clearExpression(selectedExpression);
-            selectedExpression.setType(type);
+            selectedExpression.setType(defaultType);
         }
     }
 
@@ -475,7 +475,6 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
             final Expression newExpression = dialog.getExpression();
             executeOperation(newExpression.getName());
             updateSelection(new CompoundCommand(), newExpression);
-            //    setSelection(new StructuredSelection(selectedExpression));
             final Expression selectedExpression = getSelectedExpression();
             final EditingDomain editingDomain = getEditingDomain();
             if (editingDomain == null) {

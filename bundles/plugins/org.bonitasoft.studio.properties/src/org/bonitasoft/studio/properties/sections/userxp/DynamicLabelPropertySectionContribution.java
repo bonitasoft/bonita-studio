@@ -52,7 +52,7 @@ public class DynamicLabelPropertySectionContribution extends AbstractPropertySec
 
     private ExpressionViewer expressionViewer;
     private EMFDataBindingContext dataBindingContext;
-    private final int maxLength=74;
+    private final static int MAX_LENGTH = 255;
     /* (non-Javadoc)
      * @see org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution#createControl(org.eclipse.swt.widgets.Composite, org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory, org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection)
      */
@@ -60,7 +60,7 @@ public class DynamicLabelPropertySectionContribution extends AbstractPropertySec
     public void createControl(final Composite composite, final TabbedPropertySheetWidgetFactory widgetFactory, final ExtensibleGridPropertySection extensibleGridPropertySection) {
         composite.setLayout(new GridLayout(1, true));
         composite.setLayoutData(new GridData(SWT.FILL, SWT.DEFAULT, true, false));
-        final CLabel label = widgetFactory.createCLabel(composite,Messages.bind(Messages.warningDisplayLabelMaxLength,maxLength+1,"255"));
+        final CLabel label = widgetFactory.createCLabel(composite, Messages.bind(Messages.warningDisplayLabelMaxLength, MAX_LENGTH, MAX_LENGTH));
         label.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         label.setLayout(GridLayoutFactory.fillDefaults().spacing(0,10).create());
         label.setImage(PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_WARN_TSK));
@@ -69,7 +69,7 @@ public class DynamicLabelPropertySectionContribution extends AbstractPropertySec
         expressionViewer.addFilter(new AvailableExpressionTypeFilter(new String[]{ExpressionConstants.CONSTANT_TYPE,ExpressionConstants.VARIABLE_TYPE,ExpressionConstants.PARAMETER_TYPE,ExpressionConstants.SCRIPT_TYPE}));
         expressionViewer.setInput(eObject) ;
         expressionViewer.setMessage(Messages.dynamicLabelHint,IStatus.INFO) ;
-        expressionViewer.addExpressionValidator(new ExpressionLengthValidator(maxLength));
+        expressionViewer.addExpressionValidator(new ExpressionLengthValidator(MAX_LENGTH));
         refreshDataBindingContext();
     }
 

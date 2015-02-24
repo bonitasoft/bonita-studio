@@ -14,6 +14,7 @@
  */
 package org.bonitasoft.studio.diagram.test;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.bonitasoft.studio.data.i18n.Messages.datatypeLabel;
 import static org.bonitasoft.studio.data.i18n.Messages.name;
 import static org.bonitasoft.studio.data.i18n.Messages.newVariable;
@@ -140,6 +141,15 @@ public class DiagramTests extends SWTBotGefTestCase {
         // create a new process
         SWTBotTestUtil.createNewDiagram(bot);
 
+        assertThat(bot.viewById("org.bonitasoft.studio.views.overview").isActive()).isFalse();
+
+        bot.menu("View").menu("Show overview").click();
+        assertThat(bot.viewById("org.bonitasoft.studio.views.overview").isActive()).isTrue();
+
+        assertThat(bot.viewById("org.bonitasoft.studio.views.overview.tree").isActive()).isFalse();
+        bot.menu("Edit").menu("Find").click();
+        assertThat(bot.viewById("org.bonitasoft.studio.views.overview.tree").isActive()).isTrue();
+        
         //Create 3 variables
         final SWTBotEditor botEditor = bot.activeEditor();
         final SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());

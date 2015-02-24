@@ -18,7 +18,12 @@ package org.bonitasoft.studio.migration.tests;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.io.File;
+import java.net.URL;
+
 import org.bonitasoft.studio.common.ModelVersion;
+import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.edapt.common.ResourceUtils;
 import org.eclipse.emf.edapt.spi.history.History;
@@ -37,7 +42,8 @@ public class EdaptHistoryIT {
 
     @Before
     public void setUp() throws Exception{
-        final URI historyURI = URI.createPlatformPluginURI("org.bonitasoft.studio-models/process.history", false);
+        final URL resource = Platform.getBundle("org.bonitasoft.studio-models").getResource("process.history");
+        final URI historyURI = URI.createFileURI(new File(FileLocator.toFileURL(resource).getFile()).getAbsolutePath());
         HistoryPackage.eINSTANCE.getHistory();
         history = ResourceUtils.loadElement(historyURI);
     }

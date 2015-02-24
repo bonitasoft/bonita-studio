@@ -46,7 +46,10 @@ import org.bonitasoft.engine.bpm.connector.ConnectorEvent;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.ProjectUtil;
+import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.connector.model.definition.ConnectorDefinitionFactory;
+import org.bonitasoft.studio.connector.model.definition.Output;
 import org.bonitasoft.studio.importer.ImporterPlugin;
 import org.bonitasoft.studio.importer.builder.IProcBuilder;
 import org.bonitasoft.studio.importer.builder.IProcBuilder.DataType;
@@ -1437,7 +1440,8 @@ public class BPMNToProc extends ToProcProcessor {
                         + "\'\\)/"
                         + XMLNS_HTTP_BONITASOFT_COM_BONITA_CONNECTOR_DEFINITION
                         + ":(.+)");
-        final Map<TExpression, String> connectorOutputs = new HashMap<TExpression, String>();
+
+        final Map<Expression, Expression> outputOperations = new HashMap<Expression, Expression>();
         for (final TDataOutputAssociation doa : tServiceTask
                 .getDataOutputAssociation()) {
             for (final TAssignment outputAssignment : doa.getAssignment()) {
@@ -1445,30 +1449,22 @@ public class BPMNToProc extends ToProcProcessor {
                 // pattern for name and get it
                 final Matcher outputConnectorMatcher = connectorOuputMatcher
                         .matcher(fromString);
+
+                Expression rightOperand = null;
+                Expression leftOperand = null;
                 if (outputConnectorMatcher.find()) {
                     final String outputKey = outputConnectorMatcher.group(1);
+                    final Output output = ConnectorDefinitionFactory.eINSTANCE.createOutput();
+                    output.setName(outputKey);
+                    rightOperand = ExpressionHelper.createConnectorOutputExpression(output);
+                }else{
                     final TExpression inputValue = getAssignmentFromExpression(outputAssignment);
-                    connectorOutputs.put(inputValue, outputKey);
+                    rightOperand = getBonitaExpressionFromBPMNExpression(inputValue);
                 }
-            }
-        }
-
-        final Pattern outputTargetDataObject = Pattern
-                .compile("getDataObject\\(\'(.+)\'\\)");
-        final Map<String, TExpression> connectorOuputs = new HashMap<String, TExpression>();
-
-        for (final TDataOutputAssociation doa : tServiceTask
-                .getDataOutputAssociation()) {
-            for (final TAssignment outputAssignment : doa.getAssignment()) {
-                String dataObjectId = "";
-                final String toString = getAssignmentToValue(outputAssignment);
-                final Matcher matcher = outputTargetDataObject
-                        .matcher(toString);
-                if (matcher.find()) {
-                    dataObjectId = matcher.group(1);
+                leftOperand = getBonitaExpressionFromBPMNExpression(outputAssignment.getTo());
+                if (leftOperand != null && leftOperand.hasContent() && rightOperand != null && rightOperand.hasContent()) {
+                    outputOperations.put(leftOperand, rightOperand);
                 }
-                connectorOuputs.put(dataObjectId,
-                        outputAssignment.getFrom());
             }
         }
         // FIXME: connectorID deducted by operationRef local part... is
@@ -1486,25 +1482,16 @@ public class BPMNToProc extends ToProcProcessor {
                     bExpression.getInterpreter(),
                     bExpression.getType());// TODO how to define the real expression type
         }
-        for (final java.util.Map.Entry<String, TExpression> entry : connectorOuputs
+        for (final java.util.Map.Entry<Expression, Expression> entry : outputOperations
                 .entrySet()) {
-            final String connectorOuput = connectorOutputs.get(entry
-                    .getValue());
-            if (connectorOuput != null) {// it is a connector output
-                // type
-                builder.addConnectorOutput(entry.getKey(),
-                        connectorOuput, null,// Need to get return type
-                        // from connector xsd?
-                        null, ExpressionConstants.CONNECTOR_OUTPUT_TYPE);
-            } else {
-                final Expression outputExpression = getBonitaExpressionFromBPMNExpression(entry
-                        .getValue());
-                builder.addConnectorOutput(entry.getKey(),
-                        outputExpression.getContent(),
-                        outputExpression.getReturnType(),
-                        outputExpression.getInterpreter(),
-                        outputExpression.getType());
-            }
+            final Expression leftOperand = entry.getKey();
+            final Expression rightOperand = entry.getValue();
+            builder.addConnectorOutput(leftOperand.getContent(),
+                    rightOperand.getContent(),
+                    rightOperand.getReturnType(),
+                    rightOperand.getInterpreter(),
+                    rightOperand.getType());
+
         }
     }
 
@@ -1536,9 +1523,9 @@ public class BPMNToProc extends ToProcProcessor {
                     final Matcher mProperty = propertyPattern
                             .matcher(getAssignmentValue(expression));
                     if (mDataObject.find()) {
-                        final TItemDefinition tid = getItemDefinitionForDataObjectName(mDataObject
+                        final TDataObject dataObject = getDataObjectNameByName(mDataObject
                                 .group(1));
-                        if (tid != null) {
+                        if (dataObject != null) {
                             // FIXME : dataNameByItemDefinition can't be
                             // calculated for now, fnd a way in order to
                             // final Data data =
@@ -1546,15 +1533,12 @@ public class BPMNToProc extends ToProcProcessor {
                             // if(data != null){
                             // res.getReferencedElements().add(data);
                             // }
-                            final Data d = ProcessFactory.eINSTANCE.createData();
-                            d.setName(mDataObject.group(1));
-                            res.getReferencedElements().add(d);
-                            res.setType(ExpressionConstants.VARIABLE_TYPE);
-                            res.setContent(mDataObject.group(1));
-                            res.setInterpreter(null);
+                            dataObjectToExpression(res, dataObject);
                         } else {
+                            final String assignmentValue = getAssignmentValue(expression);
+                            res.setName(assignmentValue);
                             res.setType(ExpressionConstants.VARIABLE_TYPE);
-                            res.setContent(getAssignmentValue(expression));
+                            res.setContent(assignmentValue);
                             res.setInterpreter(null);
                         }
                     } else if (mProperty.find()) {
@@ -1617,6 +1601,16 @@ public class BPMNToProc extends ToProcProcessor {
         }
 
         return res;
+    }
+
+    protected void dataObjectToExpression(final Expression res, final TDataObject dataObject) {
+        final Data d = ProcessFactory.eINSTANCE.createData();
+        d.setName(dataObject.getName());
+        res.setName(dataObject.getName());
+        res.getReferencedElements().add(d);
+        res.setType(ExpressionConstants.VARIABLE_TYPE);
+        res.setContent(dataObject.getName());
+        res.setInterpreter(null);
     }
 
     private TExpression getAssignmentFromExpression(final TAssignment inputAssignment) {
@@ -2143,7 +2137,7 @@ public class BPMNToProc extends ToProcProcessor {
         return null;
     }
 
-    private TItemDefinition getItemDefinitionForDataObjectName(
+    private TDataObject getDataObjectNameByName(
             final String dataObjectName) {
         if (dataObjectName == null) {
             return null;
@@ -2153,8 +2147,7 @@ public class BPMNToProc extends ToProcProcessor {
             if (rootElement instanceof TDataObject) {
                 if (dataObjectName
                         .equals(((TDataObject) rootElement).getName())) {
-                    return getItemDefinition(((TDataObject) rootElement)
-                            .getItemSubjectRef());
+                    return (TDataObject) rootElement;
                 }
             } else if (rootElement instanceof TProcess) {
                 for (final TFlowElement tfe : ((TProcess) rootElement)
@@ -2163,9 +2156,8 @@ public class BPMNToProc extends ToProcProcessor {
                         if (dataObjectName
                                 .equals(((TDataObject) tfe).getName())
                                 || dataObjectName.equals(((TDataObject) tfe)
-                                        .getId())) {
-                            return getItemDefinition(((TDataObject) tfe)
-                                    .getItemSubjectRef());
+                                        .getItemSubjectRef().getLocalPart())) {
+                            return (TDataObject) tfe;
                         }
                     } else if (rootElement instanceof TSubProcess) {// FIXME
                         // handle
@@ -2175,8 +2167,7 @@ public class BPMNToProc extends ToProcProcessor {
                             if (tfe2 instanceof TDataObject) {
                                 if (dataObjectName.equals(((TDataObject) tfe2)
                                         .getName())) {
-                                    return getItemDefinition(((TDataObject) tfe2)
-                                            .getItemSubjectRef());
+                                    return (TDataObject) tfe2;
                                 }
                             }
                         }
@@ -2188,7 +2179,6 @@ public class BPMNToProc extends ToProcProcessor {
     }
 
     private GatewayType getGatewayType(final TGateway flowNode) {
-
         if (flowNode instanceof TParallelGateway) {
             return GatewayType.AND;
         } else if (flowNode instanceof TInclusiveGateway) {

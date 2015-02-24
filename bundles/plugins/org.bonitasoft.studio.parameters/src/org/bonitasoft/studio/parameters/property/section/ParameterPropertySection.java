@@ -44,7 +44,6 @@ import org.eclipse.core.databinding.observable.IChangeListener;
 import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.databinding.edit.EMFEditObservables;
 import org.eclipse.emf.databinding.edit.EMFEditProperties;
 import org.eclipse.emf.databinding.edit.IEMFEditListProperty;
@@ -167,7 +166,6 @@ public class ParameterPropertySection extends AbstractBonitaDescriptionSection i
 
             @Override
             public void widgetSelected(final SelectionEvent e) {
-
                 final IStructuredSelection selection = (IStructuredSelection) parameterTableViewer.getSelection();
                 final StringBuilder sb = new StringBuilder();
                 for (final Object selectionElement : selection.toList()) {
@@ -179,9 +177,7 @@ public class ParameterPropertySection extends AbstractBonitaDescriptionSection i
                     sb.delete(sb.length() - 1, sb.length());
                 }
                 final String[] buttonList = { IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL };
-                @SuppressWarnings("unchecked")
-                final
-                List<Object> selectionList = ((IStructuredSelection) parameterTableViewer.getSelection()).toList();
+                final List<Object> selectionList = ((IStructuredSelection) parameterTableViewer.getSelection()).toList();
                 final OutlineDialog dialog = new OutlineDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), removalConfirmationDialogTitle, Display
                         .getCurrent().getSystemImage(SWT.ICON_WARNING), NLS.bind(Messages.areYouSureMessage, sb.toString()), MessageDialog.CONFIRM, buttonList,
                         1, selectionList);
@@ -190,7 +186,6 @@ public class ParameterPropertySection extends AbstractBonitaDescriptionSection i
                     for (final Object parameter : selection.toList()) {
                         final RemoveParametersOperation op = new RemoveParametersOperation((Parameter) parameter, (AbstractProcess) getEObject());
                         op.setEditingDomain(getEditingDomain());
-                        op.setCompoundCommand(new CompoundCommand());
                         op.setAskConfirmation(true);
                         final IProgressService service = PlatformUI.getWorkbench().getProgressService();
                         try {
