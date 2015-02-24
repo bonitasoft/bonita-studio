@@ -1,60 +1,46 @@
 /**
  * Copyright (C) 2009-2011 BonitaSoft S.A.
  * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
- *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.validation.constraints.process;
 
-import org.bonitasoft.studio.common.jface.databinding.validator.InputLengthValidator;
-import org.bonitasoft.studio.common.jface.databinding.validator.SpecialCharactersValidator;
+import static com.google.common.base.Preconditions.checkArgument;
+import static org.bonitasoft.studio.common.jface.databinding.ValidatorFactory.forbiddenCharactersValidator;
+import static org.bonitasoft.studio.common.jface.databinding.ValidatorFactory.maxLengthValidator;
+import static org.bonitasoft.studio.common.jface.databinding.ValidatorFactory.multiValidator;
+
 import org.bonitasoft.studio.model.form.Group;
 import org.bonitasoft.studio.model.form.GroupIterator;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.FlowElement;
 import org.bonitasoft.studio.model.process.SequenceFlow;
 import org.bonitasoft.studio.model.process.TextAnnotation;
-import org.bonitasoft.studio.model.process.diagram.form.part.FormDiagramEditor;
-import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditor;
-import org.bonitasoft.studio.model.process.diagram.providers.ProcessMarkerNavigationProvider;
 import org.bonitasoft.studio.validation.constraints.AbstractLiveValidationMarkerConstraint;
 import org.bonitasoft.studio.validation.i18n.Messages;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.validation.IValidationContext;
-import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 
 /**
- *
  * @author Romain Bioteau
- *
  */
-public class EmptyNameConstraint extends AbstractLiveValidationMarkerConstraint{
+public class EmptyNameConstraint extends AbstractLiveValidationMarkerConstraint {
+
+    private static final int MAX_NAME_LENGTH = 255;
 
     @Override
     protected IStatus performLiveValidation(final IValidationContext ctx) {
-        return ctx.createSuccessStatus();
-    }
-
-    @Override
-    protected String getMarkerType(final DiagramEditor editor) {
-        if(editor instanceof ProcessDiagramEditor){
-            return ProcessMarkerNavigationProvider.MARKER_TYPE;
-        }else if(editor instanceof FormDiagramEditor){
-            return org.bonitasoft.studio.model.process.diagram.form.providers.ProcessMarkerNavigationProvider.MARKER_TYPE;
-        }
-        return ProcessMarkerNavigationProvider.MARKER_TYPE;
+        return doValidate(ctx);
     }
 
     @Override
@@ -64,29 +50,55 @@ public class EmptyNameConstraint extends AbstractLiveValidationMarkerConstraint{
 
     @Override
     protected IStatus performBatchValidation(final IValidationContext ctx) {
-        final EObject eObj = ctx.getTarget();
-        if (eObj instanceof Element){
-            final String name = ((Element) eObj).getName();
-            if (name == null || name.trim().isEmpty()){
-                if (eObj instanceof SequenceFlow || eObj instanceof TextAnnotation || eObj instanceof GroupIterator
-                        && !((Group) eObj.eContainer()).isUseIterator()) {
-                    return ctx.createSuccessStatus();
-                }
-                return ctx.createFailureStatus(Messages.bind(Messages.emptynameMessage,eObj.eClass().getName()));
-            }else if(eObj instanceof SequenceFlow || eObj instanceof FlowElement){
-                IStatus status = new SpecialCharactersValidator().validate(name);
-                if(!status.isOK()){
-                    return ctx.createFailureStatus(status.getMessage());
-                }
-                status = new InputLengthValidator(eObj.eClass().getName() + " " + Messages.elementName,50).validate(name);
-                if(!status.isOK()){
-                    return ctx.createFailureStatus(status.getMessage());
-                }
-                return ctx.createSuccessStatus();
+        return doValidate(ctx);
+    }
 
-            }
+    protected IStatus doValidate(final IValidationContext ctx) {
+        final EObject eObj = ctx.getTarget();
+        checkArgument(eObj instanceof Element);
+        final Element element = (Element) eObj;
+        final String name = element.getName();
+        if (isBlank(name)) {
+            return elementCanHaveEmptyName(eObj) ? ctx.createSuccessStatus() : ctx.createFailureStatus(Messages.bind(Messages.emptynameMessage,
+                    eClassName(eObj)));
+        }
+        return elementMustHaveARestrictedName(eObj) ? doValidateNameRestriction((Element) eObj, ctx) : ctx.createSuccessStatus();
+    }
+
+    private String eClassName(final EObject eObj) {
+        return eObj
+                .eClass().getName();
+    }
+
+    private IStatus doValidateNameRestriction(final Element element, final IValidationContext ctx) {
+        final String inputName = String.format("%s %s", eClassName(element), Messages.elementName);
+        final IStatus status = multiValidator()
+                .addValidator(forbiddenCharactersValidator(inputName, '#', '%', '$'))
+                .addValidator(maxLengthValidator(inputName, MAX_NAME_LENGTH)).create().validate(element.getName());
+        if (!status.isOK()) {
+            return ctx.createFailureStatus(status.getMessage());
         }
         return ctx.createSuccessStatus();
+    }
+
+    private boolean isBlank(final String name) {
+        return name == null || name.trim().isEmpty();
+    }
+
+    private boolean elementMustHaveARestrictedName(final EObject eObj) {
+        return eObj instanceof SequenceFlow
+                || eObj instanceof FlowElement;
+    }
+
+    private boolean elementCanHaveEmptyName(final EObject eObj) {
+        return eObj instanceof SequenceFlow
+                || eObj instanceof TextAnnotation
+                || aDisabledGroupIterator(eObj);
+    }
+
+    private boolean aDisabledGroupIterator(final EObject eObj) {
+        return eObj instanceof GroupIterator
+                && !((Group) eObj.eContainer()).isUseIterator();
     }
 
 }

@@ -20,7 +20,7 @@
                   class="org.bonitasoft.studio.validation.constraints.process.EmptyNameConstraint"
                   id="org.bonitasoft.studio.validation.constraints.nonemptynames"
                   lang="Java"
-                  mode="Batch"
+                  mode="Live"
                   name="%NotEmptyNameConstraint"
                   severity="WARNING"
                   statusCode="1">
@@ -687,34 +687,6 @@
                         name="Unset">
                      <feature
                            name="returnType">
-                     </feature>
-                  </event>
-               </target>
-            </constraint>
-            <constraint
-                  class="org.bonitasoft.studio.validation.constraints.MaxLengthNames"
-                  id="org.bonitasoft.studio.validation.constraints.maxlengthnames"
-                  isEnabledByDefault="true"
-                  lang="Java"
-                  mode="Live"
-                  name="Max-length names"
-                  severity="WARNING"
-                  statusCode="1">
-               <message>
-                  %constraints.maxlengthname.message
-               </message>
-               <target
-                     class="Activity:http://www.bonitasoft.org/ns/studio/process">
-                  <event
-                        name="Set">
-                     <feature
-                           name="name">
-                     </feature>
-                  </event>
-                  <event
-                        name="Unset">
-                     <feature
-                           name="name">
                      </feature>
                   </event>
                </target>

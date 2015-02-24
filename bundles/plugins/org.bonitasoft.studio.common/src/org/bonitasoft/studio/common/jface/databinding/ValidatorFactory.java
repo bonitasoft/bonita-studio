@@ -15,9 +15,12 @@
 package org.bonitasoft.studio.common.jface.databinding;
 
 import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
+import org.bonitasoft.studio.common.jface.databinding.validator.ForbiddenCharactersValidator;
 import org.bonitasoft.studio.common.jface.databinding.validator.GroovyReferenceValidator;
 import org.bonitasoft.studio.common.jface.databinding.validator.InputLengthValidator;
 import org.bonitasoft.studio.common.jface.databinding.validator.RegExpValidator;
+import org.bonitasoft.studio.common.jface.databinding.validator.URLEncodableInputValidator;
+import org.bonitasoft.studio.common.jface.databinding.validator.UTF8InputValidator;
 import org.eclipse.core.databinding.validation.IValidator;
 
 /**
@@ -43,6 +46,18 @@ public class ValidatorFactory {
 
     public static IValidator regExpValidator(final String errorMessage, final String regExp) {
         return new RegExpValidator(errorMessage, regExp);
+    }
+
+    public static IValidator forbiddenCharactersValidator(final String inputName, final char... forbiddenCharacters) {
+        return new ForbiddenCharactersValidator(inputName, forbiddenCharacters);
+    }
+
+    public static IValidator urlEncodableInputValidator(final String inputName) {
+        return new URLEncodableInputValidator(inputName);
+    }
+
+    public static IValidator utf8InputValidator(final String inputName) {
+        return new UTF8InputValidator(inputName);
     }
 
     public static IValidator groovyReferenceValidator(final String inputName, final boolean checkEmptyField, final boolean checkLowerCaseForFirstChar) {

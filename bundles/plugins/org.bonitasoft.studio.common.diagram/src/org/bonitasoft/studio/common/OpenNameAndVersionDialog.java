@@ -27,7 +27,7 @@ import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.databinding.DialogSupport;
 import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
 import org.bonitasoft.studio.common.jface.databinding.validator.InputLengthValidator;
-import org.bonitasoft.studio.common.jface.databinding.validator.SpecialCharactersValidator;
+import org.bonitasoft.studio.common.jface.databinding.validator.ForbiddenCharactersValidator;
 import org.bonitasoft.studio.common.jface.databinding.validator.UTF8InputValidator;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
@@ -57,7 +57,7 @@ import org.eclipse.swt.widgets.Text;
 
 /**
  * @author Romain Bioteau
- * 
+ *
  */
 public class OpenNameAndVersionDialog extends Dialog {
 
@@ -222,7 +222,7 @@ public class OpenNameAndVersionDialog extends Dialog {
         final UpdateValueStrategy nameTargetToModel = new UpdateValueStrategy();
         final EmptyInputValidator emptyValidator = new EmptyInputValidator(Messages.name);
         final InputLengthValidator lenghtValidator = new InputLengthValidator(Messages.name, 50);
-        final SpecialCharactersValidator specialCharValidator = new SpecialCharactersValidator();
+        final ForbiddenCharactersValidator specialCharValidator = new ForbiddenCharactersValidator(Messages.name, '#', '%', '$');
         nameTargetToModel.setAfterGetValidator(new IValidator() {
 
             @Override
