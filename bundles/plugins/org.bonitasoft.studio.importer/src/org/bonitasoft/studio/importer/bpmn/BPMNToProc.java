@@ -1062,60 +1062,62 @@ public class BPMNToProc extends ToProcProcessor {
         }
     }
 
-    private void initializeLabelPositionOnSequenceFlow(final String sequenceFlowID) throws ProcBuilderException{
-        if (sequenceFlowID!=null && !sequenceFlowID.isEmpty()){
+    private void initializeLabelPositionOnSequenceFlow(final String sequenceFlowID) throws ProcBuilderException {
+        if (sequenceFlowID != null && !sequenceFlowID.isEmpty()) {
             final BPMNEdge edge = getBPMNEdgeFor(sequenceFlowID);
-            if (edge!=null){
-                final BPMNLabel label= edge.getBPMNLabel();
-                if (label!=null && label.getBounds()!=null){
-                    final Bounds bounds=label.getBounds();
+            if (edge != null) {
+                final BPMNLabel label = edge.getBPMNLabel();
+                if (label != null && label.getBounds() != null) {
+                    final Bounds bounds = label.getBounds();
                     final Point edgeCenter = getEdgeCenter(edge.getWaypoint());
-                    final double x=bounds.getX()-edgeCenter.x()+bounds.getWidth()/2;
-                    final double y=bounds.getY()-edgeCenter.y()+10+bounds.getHeight()/2;
-                    builder.setLabelPositionOnSequenceFlowOrEvent(new org.eclipse.draw2d.geometry.Point(x,y));
+                    final double x = bounds.getX() - edgeCenter.x() + bounds.getWidth() / 2;
+                    final double y = bounds.getY() - edgeCenter.y() + 10 + bounds.getHeight() / 2;
+                    builder.setLabelPositionOnSequenceFlowOrEvent(new org.eclipse.draw2d.geometry.Point(x, y));
                 }
             }
         }
     }
 
-
-    private Point getEdgeCenter(final EList<org.omg.spec.dd.dc.Point> eList){
-        final double edgeHalfLength = computeEdgeLength(eList)/2;
-        double total=0;
-        double tmp =0;
-        for (int i=0;i<eList.size()-1;i++){
+    private Point getEdgeCenter(final EList<org.omg.spec.dd.dc.Point> eList) {
+        final double edgeHalfLength = computeEdgeLength(eList) / 2;
+        double total = 0;
+        double tmp = 0;
+        for (int i = 0; i < eList.size() - 1; i++) {
             tmp = total;
-            total = total + Math.sqrt(Math.pow(eList.get(i+1).getX()-eList.get(i).getX(),2)+Math.pow(eList.get(i+1).getY()-eList.get(i).getY(),2));
-            if (total>edgeHalfLength){
-                return  computeEdgeCenter(edgeHalfLength-tmp,eList.get(i),eList.get(i+1));
+            final org.omg.spec.dd.dc.Point pointA = eList.get(i);
+            final org.omg.spec.dd.dc.Point pointB = eList.get(i + 1);
+            total = total + computeSegmentLength(pointA, pointB);
+            if (total > edgeHalfLength) {
+                return computeEdgeCenter(edgeHalfLength - tmp, pointA, pointB);
             }
         }
-        return new Point(-1,-1);
+        return new Point(-1, -1);
     }
 
-    private double computeEdgeLength(final EList<org.omg.spec.dd.dc.Point> eList){
-        double total=0;
-        for (int i=0;i<eList.size()-1;i++){
-            total = total + Math.sqrt(Math.pow(eList.get(i+1).getX()-eList.get(i).getX(),2)+Math.pow(eList.get(i+1).getY()-eList.get(i).getY(),2));
+    private double computeEdgeLength(final EList<org.omg.spec.dd.dc.Point> eList) {
+        double total = 0;
+        for (int i = 0; i < eList.size() - 1; i++) {
+            final org.omg.spec.dd.dc.Point pointA = eList.get(i);
+            final org.omg.spec.dd.dc.Point pointB = eList.get(i + 1);
+            total = total + computeSegmentLength(pointA, pointB);
         }
         return total;
     }
 
-    private Point computeEdgeCenter(final double segmentLength,final org.omg.spec.dd.dc.Point a,final org.omg.spec.dd.dc.Point b){
-        if (a.getX()-b.getX()==0){
-            return new Point(a.getX(),segmentLength+a.getY());
-        } else {
-            if (a.getY()-b.getY()==0){
-                return new Point(segmentLength+a.getX(),a.getY());
-            }
-        }
-        return new Point(-1,-1);
+    protected double computeSegmentLength(final org.omg.spec.dd.dc.Point pointA, final org.omg.spec.dd.dc.Point pointB) {
+        return Math.sqrt(Math.pow(pointB.getX() - pointA.getX(), 2) + Math.pow(pointB.getY() - pointA.getY(), 2));
     }
 
-
-
-
-
+    private Point computeEdgeCenter(final double segmentLength, final org.omg.spec.dd.dc.Point a, final org.omg.spec.dd.dc.Point b) {
+        if (a.getX() - b.getX() == 0) {
+            return new Point(a.getX(), segmentLength + a.getY());
+        } else {
+            if (a.getY() - b.getY() == 0) {
+                return new Point(segmentLength + a.getX(), a.getY());
+            }
+        }
+        return new Point(-1, -1);
+    }
 
     private boolean isSequenceFlowDefault(final TSequenceFlow sequenceFlow, final String sequenceFlowID) {
         boolean isDefault = false;
