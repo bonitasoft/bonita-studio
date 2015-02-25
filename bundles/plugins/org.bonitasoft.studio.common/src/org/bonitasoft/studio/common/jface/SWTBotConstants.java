@@ -57,4 +57,6 @@ public interface SWTBotConstants {
     public static final String APPLICATION_SECTION_FORMS_SELECTION_TREE = "org.bonitasoft.studio.application.formTree";
 
     public static final String SWTBOT_ID_MAIN_SHELL = "SWTBOT_ID_MAIN_SHELL";
+
+    public static final String SWTBOT_ID_MIGRATION_REPORT_TABLE = "org.bonitasoft.studio.importer.bar.reportTable";
 }

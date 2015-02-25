@@ -1,22 +1,20 @@
 /**
  * Copyright (C) 2010-2012 BonitaSoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
- *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.diagram.test;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.bonitasoft.studio.data.i18n.Messages.datatypeLabel;
 import static org.bonitasoft.studio.data.i18n.Messages.name;
 import static org.bonitasoft.studio.data.i18n.Messages.newVariable;
@@ -66,317 +64,333 @@ import org.hamcrest.Description;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
 /**
  * @author Mickael Istria
  * @author Florine Boudin
- *
  */
 @RunWith(SWTBotJunit4ClassRunner.class)
 public class DiagramTests extends SWTBotGefTestCase {
 
-	private static final String DATA_NAME_LABEL = name +" *";
-	private static final String PAGEFLOW_LABEL = "Pageflow";
+    private static final String DATA_NAME_LABEL = name + " *";
+    private static final String PAGEFLOW_LABEL = "Pageflow";
 
-	//@Test TODO reactivate me
-	public void testBug1678() {
-		SWTBotTestUtil.createNewDiagram(bot);
-		SWTBotEditor botEditor = bot.activeEditor();
-		SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
-		SWTBotGefEditPart part = getPartRecursively(gmfEditor.rootEditPart(), "Step1");
-		part.select();
-		Assert.assertTrue(bot.menu("Edit").menu("Copy").isEnabled());
-	}
+    //@Test TODO reactivate me
+    public void testBug1678() {
+        SWTBotTestUtil.createNewDiagram(bot);
+        final SWTBotEditor botEditor = bot.activeEditor();
+        final SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
+        final SWTBotGefEditPart part = getPartRecursively(gmfEditor.rootEditPart(), "Step1");
+        part.select();
+        Assert.assertTrue(bot.menu("Edit").menu("Copy").isEnabled());
+    }
 
-	@Test
-	public void testDiagramTest() throws ExecutionException {
-		SWTBotTestUtil.createNewDiagram(bot);
-		SWTBotEditor botEditor = bot.activeEditor();
-		SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
-		gmfEditor.activateTool(Messages.Step_title);
-		gmfEditor.click(200, 200);
-		bot.waitUntil(Conditions.widgetIsEnabled(bot.toolbarButton("Save")));
-		bot.toolbarButton("Save").click();
-		//bot.menu("Diagram").menu("Save").click();
-		IGraphicalEditPart part = (IGraphicalEditPart)gmfEditor.mainEditPart().part();
-		MainProcess model = (MainProcess)part.resolveSemanticElement();
-		Pool pool = (Pool)model.getElements().get(0);
-		Lane lane = (Lane)pool.getElements().get(0);
-		Assert.assertEquals("Lane should contain 3 nodes", 3, lane.getElements().size());
-	}
+    @Test
+    public void testDiagramTest() throws ExecutionException {
+        SWTBotTestUtil.createNewDiagram(bot);
+        final SWTBotEditor botEditor = bot.activeEditor();
+        final SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
+        gmfEditor.activateTool(Messages.Step_title);
+        gmfEditor.click(200, 200);
+        bot.waitUntil(Conditions.widgetIsEnabled(bot.toolbarButton("Save")));
+        bot.toolbarButton("Save").click();
+        //bot.menu("Diagram").menu("Save").click();
+        final IGraphicalEditPart part = (IGraphicalEditPart) gmfEditor.mainEditPart().part();
+        final MainProcess model = (MainProcess) part.resolveSemanticElement();
+        final Pool pool = (Pool) model.getElements().get(0);
+        final Lane lane = (Lane) pool.getElements().get(0);
+        Assert.assertEquals("Lane should contain 3 nodes", 3, lane.getElements().size());
+    }
 
-	@Test
-	public void testConvert() throws Exception {
-		SWTBotTestUtil.createNewDiagram(bot);
-		SWTBotEditor botEditor = bot.activeEditor();
-		SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
-		ProcessDiagramEditor processEditor = (ProcessDiagramEditor) gmfEditor.getReference().getEditor(false);
-		//gmfEditor
-		SWTBotGefEditPart part = getPartRecursively(gmfEditor.rootEditPart(), "Step1");
-		part.select();
-		IGraphicalEditPart graphicalEditPart = (IGraphicalEditPart) part.part();
-		ActivitySwitchEditPolicy convertPolicy = (ActivitySwitchEditPolicy) graphicalEditPart.getEditPolicy(ActivitySwitchEditPolicy.SWITCH_TYPE_ROLE);
-		Class<?> beforeClass = graphicalEditPart.resolveSemanticElement().getClass();
-		SlideMenuBarFigure toolbarFigure = convertPolicy.getToolbarFigure();
-		int x = toolbarFigure.getBounds().x + toolbarFigure.getBounds().width / 2;
-		int y = toolbarFigure.getBounds().y + toolbarFigure.getBounds().height / 2;
-		gmfEditor.click(x, y);
-		y += toolbarFigure.getBounds().height; // move cursor down to first sub item
-		gmfEditor.click(x, y);
-		//bot.activeEditor().save();
-		bot.waitUntil(Conditions.widgetIsEnabled(bot.toolbarButton("Save")));
-		bot.toolbarButton("Save").click();
-		graphicalEditPart = (IGraphicalEditPart) processEditor.getDiagramGraphicalViewer().getSelectedEditParts().get(0);
-		Activity newModelElement = (Activity)graphicalEditPart.resolveSemanticElement();
-		Assert.assertEquals("Step1", newModelElement.getName());
-		Assert.assertNotSame(beforeClass, newModelElement.getClass());
-	}
+    @Test
+    public void testConvert() throws Exception {
+        SWTBotTestUtil.createNewDiagram(bot);
+        final SWTBotEditor botEditor = bot.activeEditor();
+        final SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
+        final ProcessDiagramEditor processEditor = (ProcessDiagramEditor) gmfEditor.getReference().getEditor(false);
+        //gmfEditor
+        final SWTBotGefEditPart part = getPartRecursively(gmfEditor.rootEditPart(), "Step1");
+        part.select();
+        IGraphicalEditPart graphicalEditPart = (IGraphicalEditPart) part.part();
+        final ActivitySwitchEditPolicy convertPolicy = (ActivitySwitchEditPolicy) graphicalEditPart.getEditPolicy(ActivitySwitchEditPolicy.SWITCH_TYPE_ROLE);
+        final Class<?> beforeClass = graphicalEditPart.resolveSemanticElement().getClass();
+        final SlideMenuBarFigure toolbarFigure = convertPolicy.getToolbarFigure();
+        final int x = toolbarFigure.getBounds().x + toolbarFigure.getBounds().width / 2;
+        int y = toolbarFigure.getBounds().y + toolbarFigure.getBounds().height / 2;
+        gmfEditor.click(x, y);
+        y += toolbarFigure.getBounds().height; // move cursor down to first sub item
+        gmfEditor.click(x, y);
+        //bot.activeEditor().save();
+        bot.waitUntil(Conditions.widgetIsEnabled(bot.toolbarButton("Save")));
+        bot.toolbarButton("Save").click();
+        graphicalEditPart = (IGraphicalEditPart) processEditor.getDiagramGraphicalViewer().getSelectedEditParts().get(0);
+        final Activity newModelElement = (Activity) graphicalEditPart.resolveSemanticElement();
+        Assert.assertEquals("Step1", newModelElement.getName());
+        Assert.assertNotSame(beforeClass, newModelElement.getClass());
+    }
 
-	/** Create & run a 4 tasks process
-	 * @author Florine Boudin
-	 * @throws Exception
-	 */
-	@Test
-	public void test4TasksDiagram() throws Exception {
+    /**
+     * Create & run a 4 tasks process
+     *
+     * @author Florine Boudin
+     * @throws Exception
+     */
+    @Test
+    public void test4TasksDiagram() throws Exception {
 
-		// create a new process
-		SWTBotTestUtil.createNewDiagram(bot);
+        // create a new process
+        SWTBotTestUtil.createNewDiagram(bot);
 
-		//Create 3 variables
-		SWTBotEditor botEditor = bot.activeEditor();
-		SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
-		gmfEditor.click(200, 200);
+        assertThat(bot.viewById("org.bonitasoft.studio.views.overview").isActive()).isFalse();
 
-		bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL).show();
-		SWTBotTestUtil.selectTabbedPropertyView(bot, "Data");
+        bot.menu("View").menu("Show overview").click();
+        assertThat(bot.viewById("org.bonitasoft.studio.views.overview").isActive()).isTrue();
 
-		// Create 3 new variables
-		setNewVariable("varText"   , "Text"   , false);
-		setNewVariable("varBoolean", "Boolean", false);
-		setNewVariable("varInteger", "Integer", false);
+        assertThat(bot.viewById("org.bonitasoft.studio.views.overview.tree").isActive()).isFalse();
+        bot.menu("Edit").menu("Find").click();
+        assertThat(bot.viewById("org.bonitasoft.studio.views.overview.tree").isActive()).isTrue();
+        
+        //Create 3 variables
+        final SWTBotEditor botEditor = bot.activeEditor();
+        final SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
+        gmfEditor.click(200, 200);
 
-		// check 3 variables where created
-		bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL).show();
-		SWTBotTestUtil.selectTabbedPropertyView(bot, "Data");
+        bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL).show();
+        SWTBotTestUtil.selectTabbedPropertyView(bot, "Data");
 
-		// check the table has 3 variables
-		SWTBotTable table = bot.table(0);
-		Assert.assertEquals("Error: wrong number of variable created", 3, table.rowCount());
+        // Create 3 new variables
+        setNewVariable("varText", "Text", false);
+        setNewVariable("varBoolean", "Boolean", false);
+        setNewVariable("varInteger", "Integer", false);
 
-		final Vector<String> taskNameList = new Vector<String>(Arrays.asList(new String[]{"Step1", "Step2", "Step3", "Step4"}));
-		// Create 3 human tasks
-		int i=400;
-		for(String taskName : taskNameList){
+        // check 3 variables where created
+        bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL).show();
+        SWTBotTestUtil.selectTabbedPropertyView(bot, "Data");
 
-			setTaskAsHuman(gmfEditor, taskName);
+        // check the table has 3 variables
+        final SWTBotTable table = bot.table(0);
+        Assert.assertEquals("Error: wrong number of variable created", 3, table.rowCount());
 
-			if(taskName!="Step4"){
-				// create new Task
-				System.out.println("s = "+taskName);
-				Assert.assertNotNull("Error: No "+taskName+" task found.",gmfEditor.getEditPart(taskName));
-				SWTBotTestUtil.selectTaskFromSelectedElementAndDragIt(gmfEditor, taskName, new Point(i,110));
-				i+=200;
-			}
+        final Vector<String> taskNameList = new Vector<String>(Arrays.asList(new String[] { "Step1", "Step2", "Step3", "Step4" }));
+        // Create 3 human tasks
+        int i = 400;
+        for (final String taskName : taskNameList) {
 
-		}
-		bot.menu("Diagram").menu("Save");
+            setTaskAsHuman(gmfEditor, taskName);
 
-		// check the gmfEditor has 4 human tasks
-		IGraphicalEditPart ig = (IGraphicalEditPart) gmfEditor.mainEditPart().part();
-		MainProcess mp = (MainProcess) ig.resolveSemanticElement();
+            if (taskName != "Step4") {
+                // create new Task
+                System.out.println("s = " + taskName);
+                Assert.assertNotNull("Error: No " + taskName + " task found.", gmfEditor.getEditPart(taskName));
+                SWTBotTestUtil.selectTaskFromSelectedElementAndDragIt(gmfEditor, taskName, new Point(i, 110));
+                i += 200;
+            }
 
+        }
+        bot.menu("Diagram").menu("Save");
 
-		int nbHumanTasks = ModelHelper.getAllItemsOfType(mp, ProcessPackage.Literals.TASK).size();
-		Assert.assertEquals("Error: wrong number of tasks in the process.", 4, nbHumanTasks);
+        // check the gmfEditor has 4 human tasks
+        final IGraphicalEditPart ig = (IGraphicalEditPart) gmfEditor.mainEditPart().part();
+        final MainProcess mp = (MainProcess) ig.resolveSemanticElement();
 
+        final int nbHumanTasks = ModelHelper.getAllItemsOfType(mp, ProcessPackage.Literals.TASK).size();
+        Assert.assertEquals("Error: wrong number of tasks in the process.", 4, nbHumanTasks);
 
-		int nbTransistions = ModelHelper.getAllItemsOfType(mp, ProcessPackage.Literals.CONNECTION).size();
-		Assert.assertEquals("Error: wrong number of connections in the process.", 4, nbTransistions);
+        final int nbTransistions = ModelHelper.getAllItemsOfType(mp, ProcessPackage.Literals.CONNECTION).size();
+        Assert.assertEquals("Error: wrong number of connections in the process.", 4, nbTransistions);
 
-		// For the 3 first tasks, add a form
-		int itmp=0;
-		// create a form
-		for(String nametask : taskNameList){
+        // For the 3 first tasks, add a form
+        int itmp = 0;
+        // create a form
+        for (final String nametask : taskNameList) {
 
-			if (nametask!="Step4") {
-				//System.out.println("s = "+s);
-				gmfEditor.getEditPart(nametask).click();
-				bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_APPLICATION).show();
-				SWTBotTestUtil.selectTabbedPropertyView(bot, PAGEFLOW_LABEL);
+            if (nametask != "Step4") {
+                //System.out.println("s = "+s);
+                gmfEditor.getEditPart(nametask).click();
+                bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_APPLICATION).show();
+                SWTBotTestUtil.selectTabbedPropertyView(bot, PAGEFLOW_LABEL);
 
-				// add a form
-				bot.button(addForm, 0).click();
-				// first shell "Add form..."
-				bot.waitUntil(Conditions.shellIsActive(addFormTitle));
+                // add a form
+                bot.button(addForm, 0).click();
+                // first shell "Add form..."
+                bot.waitUntil(Conditions.shellIsActive(addFormTitle));
 
-				if (SWTBotTestUtil.testingBosSp()) {
-					//second shell "Add form..."
-					List<Button> buttons = bot.getFinder().findControls(new BaseMatcher<Button>(){
+                if (SWTBotTestUtil.testingBosSp()) {
+                    //second shell "Add form..."
+                    final List<Button> buttons = bot.getFinder().findControls(new BaseMatcher<Button>() {
 
-						public void describeTo(Description description) {
+                        @Override
+                        public void describeTo(final Description description) {
 
-						}
+                        }
 
-						public boolean matches(Object item) {
-							if( item instanceof Button){
-								return IDialogConstants.NEXT_LABEL.equals(((Button)item).getText());
-							}
-							return false;
-						}
+                        @Override
+                        public boolean matches(final Object item) {
+                            if (item instanceof Button) {
+                                return IDialogConstants.NEXT_LABEL.equals(((Button) item).getText());
+                            }
+                            return false;
+                        }
 
-					});
-					if(!buttons.isEmpty()){
-						SWTBotButton nextButton = bot.button(IDialogConstants.NEXT_LABEL);
-						if(nextButton != null){
-							nextButton.click();
-						}
-					}
-				}
+                    });
+                    if (!buttons.isEmpty()) {
+                        final SWTBotButton nextButton = bot.button(IDialogConstants.NEXT_LABEL);
+                        if (nextButton != null) {
+                            nextButton.click();
+                        }
+                    }
+                }
 
-				// add 1 variable in the form
-				if(itmp == 0){
-					bot.tree().getTreeItem("varText").check();
-				}else if(itmp == 1){
-					bot.tree().getTreeItem("varInteger").check();
-				}else{
-					bot.tree().getTreeItem("varBoolean").check();
-				}
-			
-		
-				SWTBotShell activeShell = bot.activeShell();
-				bot.button(IDialogConstants.FINISH_LABEL).click();
-				bot.waitUntil(Conditions.shellCloses(activeShell));
-				// add script to conver to an integer on "Step3"
-				if(nametask.equals("Step2")){
-					SWTBotGefEditor formEditor = bot.gefEditor(bot.activeEditor().getTitle());
-					formEditor.getEditPart("Var Integer").click();
-					bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_FORM_GENERAL).show();
-					SWTBotTestUtil.selectTabbedPropertyView(bot, "Data");
-					bot.toolbarButtonWithId(ExpressionViewer.SWTBOT_ID_EDITBUTTON, 1).click();
-					String valueOf = "Integer.valueOf(field_varInteger1)";
-					SWTBotTestUtil.setScriptExpression(bot, "theInteger", valueOf, Integer.class.getName());
-					bot.waitUntil(new ICondition() {
+                bot.tabItem(org.bonitasoft.studio.properties.i18n.Messages.processData).activate();
 
-						public boolean test() throws Exception {
-							return bot.textWithId(ExpressionViewer.SWTBOT_ID_EXPRESSIONVIEWER_TEXT,2).getText().equals("theInteger");
-						}
+                // add 1 variable in the form
+                if (itmp == 0) {
+                    bot.tree().getTreeItem("varText").check();
+                } else if (itmp == 1) {
+                    bot.tree().getTreeItem("varInteger").check();
+                } else {
+                    bot.tree().getTreeItem("varBoolean").check();
+                }
 
-						public void init(SWTBot bot) {
+                final SWTBotShell activeShell = bot.activeShell();
+                bot.button(IDialogConstants.FINISH_LABEL).click();
+                bot.waitUntil(Conditions.shellCloses(activeShell));
+                // add script to conver to an integer on "Step3"
+                if (nametask.equals("Step2")) {
+                    final SWTBotGefEditor formEditor = bot.gefEditor(bot.activeEditor().getTitle());
+                    formEditor.getEditPart("Var Integer").click();
+                    bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_FORM_GENERAL).show();
+                    SWTBotTestUtil.selectTabbedPropertyView(bot, "Data");
+                    bot.toolbarButtonWithId(ExpressionViewer.SWTBOT_ID_EDITBUTTON, 1).click();
+                    final String valueOf = "Integer.valueOf(field_varInteger1)";
+                    SWTBotTestUtil.setScriptExpression(bot, "theInteger", valueOf, Integer.class.getName());
+                    bot.waitUntil(new ICondition() {
 
-						}
+                        @Override
+                        public boolean test() throws Exception {
+                            return bot.textWithId(ExpressionViewer.SWTBOT_ID_EXPRESSIONVIEWER_TEXT, 2).getText().equals("theInteger");
+                        }
 
-						public String getFailureMessage() {
-							return "Expression not set properly";
-						}
-					});
-				}
+                        @Override
+                        public void init(final SWTBot bot) {
 
+                        }
 
-				bot.activeEditor().saveAndClose();
-				itmp++;
-			}
-		}
+                        @Override
+                        public String getFailureMessage() {
+                            return "Expression not set properly";
+                        }
+                    });
+                }
 
+                bot.activeEditor().saveAndClose();
+                itmp++;
+            }
+        }
 
+        // Create the form for the 4th task
+        gmfEditor.getEditPart("Step4").click();
 
+        bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_APPLICATION).show();
+        SWTBotTestUtil.selectTabbedPropertyView(bot, PAGEFLOW_LABEL);
 
-		// Create the form for the 4th task
-		gmfEditor.getEditPart("Step4").click();
+        bot.button(addForm, 0).click();
 
-		bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_APPLICATION).show();
-		SWTBotTestUtil.selectTabbedPropertyView(bot, PAGEFLOW_LABEL);
+        // first shell "Add form..."
+        bot.waitUntil(Conditions.shellIsActive(addFormTitle));
 
-		bot.button(addForm,0).click();
+        if (SWTBotTestUtil.testingBosSp()) {
+            //second shell "Add form..."
+            bot.button(IDialogConstants.NEXT_LABEL).click();
+        }
+        bot.tabItem(org.bonitasoft.studio.properties.i18n.Messages.processData).activate();
+        bot.checkBox("Select all").select();
 
-		// first shell "Add form..."
-		bot.waitUntil(Conditions.shellIsActive(addFormTitle));
+        // last shell "Add form..."
+        bot.button(IDialogConstants.FINISH_LABEL).click();
 
-		if(SWTBotTestUtil.testingBosSp()){
-			//second shell "Add form..."
-			bot.button(IDialogConstants.NEXT_LABEL).click();
-		}
-		bot.checkBox("Select all").select();
+        final SWTBotGefEditor formEditor = bot.gefEditor(bot.activeEditor().getTitle());
 
-		// last shell "Add form..."
-		bot.button(IDialogConstants.FINISH_LABEL).click();
+        final String[] varTab = new String[] { "Var Text", "Var Boolean", "Var Integer" };
+        for (final String s : varTab) {
 
-		SWTBotGefEditor formEditor = bot.gefEditor(bot.activeEditor().getTitle());
+            formEditor.getEditPart(s).click();
+            bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_FORM_GENERAL).show();
+            SWTBotTestUtil.selectTabbedPropertyView(bot, "General");
 
-		final String[] varTab = new String[]{"Var Text", "Var Boolean", "Var Integer"};
-		for(String s : varTab){
+            // "Field type"
+            bot.comboBoxWithLabel(formFieldType).setSelection("Text");
+            bot.activeEditor().save();
+        }
 
-			formEditor.getEditPart(s).click();
-			bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_FORM_GENERAL).show();
-			SWTBotTestUtil.selectTabbedPropertyView(bot, "General");
+        bot.activeEditor().saveAndClose();
+        final IStatus status = SWTBotTestUtil.selectAndRunFirstPoolFound(bot);
+        assertTrue(status.getMessage(), status.isOK());
 
-			// "Field type"
-			bot.comboBoxWithLabel(formFieldType).setSelection("Text");
-			bot.activeEditor().save();
-		}
+    }
 
-		bot.activeEditor().saveAndClose();
-		IStatus status = SWTBotTestUtil.selectAndRunFirstPoolFound(bot);
-		assertTrue(status.getMessage(),status.isOK());
+    /**
+     * Change the type of a Task to be 'Human'
+     *
+     * @param gmfEditor
+     * @param nameTask name of the Task
+     */
+    private void setTaskAsHuman(final SWTBotGefEditor gmfEditor, final String nameTask) {
+        gmfEditor.getEditPart(nameTask).click();
 
-	}
+        // set the Task as Human Task
+        bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL).show();
+        SWTBotTestUtil.selectTabbedPropertyView(bot, "General");
 
-	/** Change the type of a Task to be 'Human'
-	 * @param gmfEditor
-	 * @param nameTask name of the Task
-	 */
-	private void setTaskAsHuman(SWTBotGefEditor gmfEditor, String nameTask) {
-		gmfEditor.getEditPart(nameTask).click();
+        // "Task type" , "Human"
+        bot.comboBoxWithLabel(activityType).setSelection(activityType_task);
+    }
 
-		// set the Task as Human Task
-		bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL).show();
-		SWTBotTestUtil.selectTabbedPropertyView(bot, "General");
+    /**
+     * Add and set a new variable in the data entry of the General tab of a Task
+     *
+     * @param varName name of the variable
+     * @param varType type of the variable : "Text", "Integer", "String", "Boolean", etc...
+     * @param autoGenerateForm BOS-SP only : true if the checkBox must be selected, else false
+     */
+    private void setNewVariable(final String varName, final String varType, final boolean autoGenerateForm) {
+        bot.button("Add...").click();
 
-		// "Task type" , "Human"
-		bot.comboBoxWithLabel(activityType).setSelection(activityType_task);
-	}
+        // open shell "New variable"
+        bot.waitUntil(Conditions.shellIsActive(newVariable));
 
-	/** Add and set a new variable in the data entry of the General tab of a Task
-	 * @param varName name of the variable
-	 * @param varType type of the variable : "Text", "Integer", "String", "Boolean", etc...
-	 * @param autoGenerateForm  BOS-SP only : true if the checkBox must be selected, else false
-	 */
-	private void setNewVariable(String varName, String varType, boolean autoGenerateForm ) {
-		bot.button("Add...").click();
+        // "Name"
+        bot.textWithLabel(DATA_NAME_LABEL).setText(varName);
 
-		// open shell "New variable"
-		bot.waitUntil(Conditions.shellIsActive(newVariable));
+        // "Data type"
+        bot.comboBoxWithLabel(datatypeLabel).setSelection(varType);
 
-		// "Name"
-		bot.textWithLabel(DATA_NAME_LABEL).setText(varName);
+        if (SWTBotTestUtil.testingBosSp()) {
+            final SWTBotCheckBox cb = bot.checkBox("Auto-generate form");
+            if (cb.isChecked() && !autoGenerateForm) {
+                cb.deselect();
+            } else if (!cb.isChecked() && autoGenerateForm) {
+                cb.select();
+            }
+        }
 
-		// "Data type"
-		bot.comboBoxWithLabel(datatypeLabel).setSelection(varType);
+        bot.button(IDialogConstants.FINISH_LABEL).click();
+    }
 
-		if(SWTBotTestUtil.testingBosSp()){
-			SWTBotCheckBox cb = bot.checkBox("Auto-generate form");
-			if(cb.isChecked() && !autoGenerateForm){
-				cb.deselect();		
-			}else if(!cb.isChecked() && autoGenerateForm){
-				cb.select();
-			}
-		}
-
-		bot.button(IDialogConstants.FINISH_LABEL).click();
-	}
-
-	public SWTBotGefEditPart getPartRecursively(SWTBotGefEditPart from, String label) {
-		for (SWTBotGefEditPart child : from.children()) {
-			Element model = (Element) ((IGraphicalEditPart)child.part()).resolveSemanticElement();
-			if (model.getName().equals(label)) {
-				return child;
-			}
-		}
-		SWTBotGefEditPart res = null;
-		for (SWTBotGefEditPart child : from.children()) {
-			res = getPartRecursively(child, label);
-			if (res != null) {
-				return res;
-			}
-		}
-		return res;
-	}
+    public SWTBotGefEditPart getPartRecursively(final SWTBotGefEditPart from, final String label) {
+        for (final SWTBotGefEditPart child : from.children()) {
+            final Element model = (Element) ((IGraphicalEditPart) child.part()).resolveSemanticElement();
+            if (model.getName().equals(label)) {
+                return child;
+            }
+        }
+        SWTBotGefEditPart res = null;
+        for (final SWTBotGefEditPart child : from.children()) {
+            res = getPartRecursively(child, label);
+            if (res != null) {
+                return res;
+            }
+        }
+        return res;
+    }
 }

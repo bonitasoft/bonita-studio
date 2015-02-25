@@ -78,22 +78,22 @@ public class ComparisonExpressionConverterTest {
     @Before
     public void setUp() throws Exception {
         comparisonExpressionConverter = new ComparisonExpressionConverter(loader);
-        variable = DataBuilder.createDataBuilder().withName("amount").havingDataType(DoubleDataTypeBuilder.create()).build();
-        validVariable = DataBuilder.createDataBuilder().withName("valid").havingDataType(BooleanDataTypeBuilder.create()).build();
+        variable = DataBuilder.aData().withName("amount").havingDataType(DoubleDataTypeBuilder.create()).build();
+        validVariable = DataBuilder.aData().withName("valid").havingDataType(BooleanDataTypeBuilder.create()).build();
         parameter = ParameterBuilder.create().withName("commission").withType(Double.class.getName()).build();
-        binaryExpression = ExpressionBuilder.create()
+        binaryExpression = ExpressionBuilder.anExpression()
                 .withExpressionType(ExpressionConstants.CONDITION_TYPE)
                 .withContent("amount <= commission")
                 .withReturnType(Boolean.class.getName())
                 .havingReferencedElements(EcoreUtil.copy(variable), EcoreUtil.copy(parameter)).build();
 
-        notUnaryExpression = ExpressionBuilder.create()
+        notUnaryExpression = ExpressionBuilder.anExpression()
                 .withExpressionType(ExpressionConstants.CONDITION_TYPE)
                 .withContent("!valid")
                 .withReturnType(Boolean.class.getName())
                 .havingReferencedElements(EcoreUtil.copy(validVariable)).build();
 
-        unaryExpression = ExpressionBuilder.create()
+        unaryExpression = ExpressionBuilder.anExpression()
                 .withExpressionType(ExpressionConstants.CONDITION_TYPE)
                 .withContent("valid")
                 .withReturnType(Boolean.class.getName())
@@ -112,7 +112,7 @@ public class ComparisonExpressionConverterTest {
     public void should_appliesTo_Condition_expression_type() throws Exception {
         assertThat(comparisonExpressionConverter.appliesTo(binaryExpression)).isTrue();
         assertThat(comparisonExpressionConverter.appliesTo(null)).isFalse();
-        assertThat(comparisonExpressionConverter.appliesTo(ExpressionBuilder.create().withExpressionType(ExpressionConstants.CONSTANT_TYPE).build())).isFalse();
+        assertThat(comparisonExpressionConverter.appliesTo(ExpressionBuilder.anExpression().withExpressionType(ExpressionConstants.CONSTANT_TYPE).build())).isFalse();
     }
 
     @Test

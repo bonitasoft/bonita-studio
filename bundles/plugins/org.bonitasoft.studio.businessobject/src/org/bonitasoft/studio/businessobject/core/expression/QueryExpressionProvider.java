@@ -13,6 +13,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+import org.bonitasoft.engine.bdm.BDMQueryUtil;
+import org.bonitasoft.engine.bdm.model.BusinessObject;
+import org.bonitasoft.engine.bdm.model.BusinessObjectModel;
+import org.bonitasoft.engine.bdm.model.Query;
+import org.bonitasoft.engine.bdm.model.QueryParameter;
 import org.bonitasoft.studio.businessobject.BusinessObjectPlugin;
 import org.bonitasoft.studio.businessobject.core.expression.model.BusinessObjectExpressionQuery;
 import org.bonitasoft.studio.businessobject.core.expression.model.QueryExpressionModel;
@@ -32,34 +37,29 @@ import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.swt.graphics.Image;
 
-import com.bonitasoft.engine.bdm.BDMQueryUtil;
-import com.bonitasoft.engine.bdm.model.BusinessObject;
-import com.bonitasoft.engine.bdm.model.BusinessObjectModel;
-import com.bonitasoft.engine.bdm.model.Query;
-import com.bonitasoft.engine.bdm.model.QueryParameter;
-
 /**
  * @author Romain Bioteau
- * 
  */
 public class QueryExpressionProvider implements IExpressionProvider {
+
+    private BusinessObjectModelFileStore fileStore;
 
     /*
      * (non-Javadoc)
      * @see org.bonitasoft.studio.expression.editor.provider.IExpressionProvider#getExpressions(org.eclipse.emf.ecore.EObject)
      */
     @Override
-    public Set<Expression> getExpressions(EObject context) {
+    public Set<Expression> getExpressions(final EObject context) {
         return Collections.emptySet();
     }
 
     public QueryExpressionModel buildQueryExpressionModel() {
-        BusinessObjectModel businessObjectModel = getBusinessObjectModel();
-        QueryExpressionModel queryExpressionModel = new QueryExpressionModel();
+        final BusinessObjectModel businessObjectModel = getBusinessObjectModel();
+        final QueryExpressionModel queryExpressionModel = new QueryExpressionModel();
         if (businessObjectModel != null) {
-            for (BusinessObject bo : businessObjectModel.getBusinessObjects()) {
-                BusinessObjectExpressionQuery boQuery = new BusinessObjectExpressionQuery(bo.getQualifiedName());
-                List<Expression> expressions = getExpressions(bo);
+            for (final BusinessObject bo : businessObjectModel.getBusinessObjects()) {
+                final BusinessObjectExpressionQuery boQuery = new BusinessObjectExpressionQuery(bo.getQualifiedName());
+                final List<Expression> expressions = getExpressions(bo);
                 if (!expressions.isEmpty()) {
                     boQuery.getQueryExpressions().addAll(expressions);
                     queryExpressionModel.getBusinessObjects().add(boQuery);
@@ -69,57 +69,59 @@ public class QueryExpressionProvider implements IExpressionProvider {
         return queryExpressionModel;
     }
 
-    protected List<Expression> getExpressions(BusinessObject bo) {
-        List<Expression> result = new ArrayList<Expression>();
-        for (Query q : BDMQueryUtil.createProvidedQueriesForBusinessObject(bo)) {
+    protected List<Expression> getExpressions(final BusinessObject bo) {
+        final List<Expression> result = new ArrayList<Expression>();
+        for (final Query q : BDMQueryUtil.createProvidedQueriesForBusinessObject(bo)) {
             result.add(createExpression(bo, q));
         }
-        for (Query q : bo.getQueries()) {
+        for (final Query q : bo.getQueries()) {
             result.add(createExpression(bo, q));
         }
         return result;
     }
 
-    private Expression createExpression(BusinessObject bo, Query q) {
-        Expression query = ExpressionFactory.eINSTANCE.createExpression();
-        String queryName = toQueryName(bo, q);
+    private Expression createExpression(final BusinessObject bo, final Query q) {
+        final Expression query = ExpressionFactory.eINSTANCE.createExpression();
+        final String queryName = toQueryName(bo, q);
         query.setName(queryName);
         query.setContent(q.getContent());
         query.setReturnType(q.getReturnType());
         query.setType(getExpressionType());
-        for (QueryParameter param : q.getQueryParameters()) {
+        for (final QueryParameter param : q.getQueryParameters()) {
             query.getReferencedElements().add(createQueryParameterExpression(param, ""));
         }
         if (List.class.getName().equals(q.getReturnType())) {// Add pagination parameters
-            QueryParameter startIndexParam = new QueryParameter(BDMQueryUtil.START_INDEX_PARAM_NAME, Integer.class.getName());
+            final QueryParameter startIndexParam = new QueryParameter(BDMQueryUtil.START_INDEX_PARAM_NAME, Integer.class.getName());
             query.getReferencedElements().add(createQueryParameterExpression(startIndexParam, "0"));
-            QueryParameter maxResultsParam = new QueryParameter(BDMQueryUtil.MAX_RESULTS_PARAM_NAME, Integer.class.getName());
+            final QueryParameter maxResultsParam = new QueryParameter(BDMQueryUtil.MAX_RESULTS_PARAM_NAME, Integer.class.getName());
             query.getReferencedElements().add(createQueryParameterExpression(maxResultsParam, "20"));
         }
         return query;
     }
 
-    private String toQueryName(BusinessObject bo, Query q) {
-        String name = NamingUtils.getSimpleName(bo.getQualifiedName());
+    private String toQueryName(final BusinessObject bo, final Query q) {
+        final String name = NamingUtils.getSimpleName(bo.getQualifiedName());
         return name + "." + q.getName();
     }
 
-    private Expression createQueryParameterExpression(QueryParameter param, String defaultValue) {
-        Expression queryParameter = ExpressionFactory.eINSTANCE.createExpression();
+    private Expression createQueryParameterExpression(final QueryParameter param, final String defaultValue) {
+        final Expression queryParameter = ExpressionFactory.eINSTANCE.createExpression();
         queryParameter.setName(param.getName());
         queryParameter.setContent(param.getName());
         queryParameter.setType("QUERY_PARAM_TYPE");
         queryParameter.setReturnTypeFixed(true);
         queryParameter.setReturnType(param.getClassName());
-        Expression constantExpression = ExpressionHelper.createConstantExpression(defaultValue, param.getClassName());
+        final Expression constantExpression = ExpressionHelper.createConstantExpression(defaultValue, param.getClassName());
         constantExpression.setReturnTypeFixed(true);
         queryParameter.getReferencedElements().add(constantExpression);
         return queryParameter;
     }
 
     protected BusinessObjectModel getBusinessObjectModel() {
-        BusinessObjectModelRepositoryStore repositoryStore = RepositoryManager.getInstance().getRepositoryStore(BusinessObjectModelRepositoryStore.class);
-        BusinessObjectModelFileStore fileStore = repositoryStore.getChild(BusinessObjectModelFileStore.DEFAULT_BDM_FILENAME);
+        final BusinessObjectModelRepositoryStore repositoryStore = RepositoryManager.getInstance().getRepositoryStore(BusinessObjectModelRepositoryStore.class);
+        if (fileStore == null) {
+            fileStore = repositoryStore.getChild(BusinessObjectModelFileStore.DEFAULT_BDM_FILENAME);
+        }
         if (fileStore != null) {
             return fileStore.getContent();
         }
@@ -140,7 +142,7 @@ public class QueryExpressionProvider implements IExpressionProvider {
      * @see org.bonitasoft.studio.expression.editor.provider.IExpressionProvider#getIcon(org.bonitasoft.studio.model.expression.Expression)
      */
     @Override
-    public Image getIcon(Expression expression) {
+    public Image getIcon(final Expression expression) {
         return Pics.getImage("query.png", BusinessObjectPlugin.getDefault());
     }
 
@@ -158,7 +160,7 @@ public class QueryExpressionProvider implements IExpressionProvider {
      * @see org.bonitasoft.studio.expression.editor.provider.IExpressionProvider#getProposalLabel(org.bonitasoft.studio.model.expression.Expression)
      */
     @Override
-    public String getProposalLabel(Expression expression) {
+    public String getProposalLabel(final Expression expression) {
         return null;
     }
 
@@ -167,8 +169,8 @@ public class QueryExpressionProvider implements IExpressionProvider {
      * @see org.bonitasoft.studio.expression.editor.provider.IExpressionProvider#isRelevantFor(org.eclipse.emf.ecore.EObject)
      */
     @Override
-    public boolean isRelevantFor(EObject context) {
-        QueryExpressionModel buildQueryExpressionModel = buildQueryExpressionModel();
+    public boolean isRelevantFor(final EObject context) {
+        final QueryExpressionModel buildQueryExpressionModel = buildQueryExpressionModel();
         return !buildQueryExpressionModel.getBusinessObjects().isEmpty();
     }
 
@@ -187,8 +189,8 @@ public class QueryExpressionProvider implements IExpressionProvider {
      * org.eclipse.emf.ecore.EObject)
      */
     @Override
-    public IExpressionEditor getExpressionEditor(Expression expression, EObject context) {
-        return new QueryExpressionEditor();
+    public IExpressionEditor getExpressionEditor(final Expression expression, final EObject context) {
+        return new QueryExpressionEditor(this);
     }
 
 }

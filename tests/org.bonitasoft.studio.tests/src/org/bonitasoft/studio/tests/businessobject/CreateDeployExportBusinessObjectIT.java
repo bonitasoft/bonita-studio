@@ -15,6 +15,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.bonitasoft.engine.bdm.model.BusinessObject;
+import org.bonitasoft.engine.bdm.model.BusinessObjectModel;
+import org.bonitasoft.engine.bdm.model.field.FieldType;
+import org.bonitasoft.engine.bdm.model.field.RelationField.Type;
+import org.bonitasoft.engine.bdm.model.field.SimpleField;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelFileStore;
 import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
@@ -33,12 +38,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import com.bonitasoft.engine.bdm.model.BusinessObject;
-import com.bonitasoft.engine.bdm.model.BusinessObjectModel;
-import com.bonitasoft.engine.bdm.model.field.FieldType;
-import com.bonitasoft.engine.bdm.model.field.RelationField.Type;
-import com.bonitasoft.engine.bdm.model.field.SimpleField;
 
 /**
  * @author Romain Bioteau
@@ -78,12 +77,11 @@ public class CreateDeployExportBusinessObjectIT extends SWTBotGefTestCase {
 
     @Test
     public void shouldCreateAndPublishABusinessObject() throws Exception {
-
         // Create a business object
         bot.menu("Development").menu("Business Data Model").menu("Manage...").click();
         bot.waitUntil(Conditions.shellIsActive("Manage Business Data Model"));
 
-        bot.textWithLabel("Package").setText("org.bonitasoft.test");
+        bot.textWithLabel("Package").setText("org.model.test");
 
         // Add Employee Business Object
         final String listBOGroupTitle = "List of Business Objects";
@@ -159,43 +157,43 @@ public class CreateDeployExportBusinessObjectIT extends SWTBotGefTestCase {
         assertThat(fStore).isNotNull();
         final BusinessObjectModel businessObjectModel = fStore.getContent();
         assertThat(businessObjectModel).isNotNull();
-        assertThat(businessObjectModel.getBusinessObjects()).extracting("qualifiedName").containsOnly("org.bonitasoft.test.Employee");
+        assertThat(businessObjectModel.getBusinessObjects()).extracting("qualifiedName").containsOnly("org.model.test.Employee");
         final BusinessObject employeeBusinessObject = businessObjectModel.getBusinessObjects().get(0);
         assertThat(employeeBusinessObject.getFields())
-        .extracting("name", "type")
-        .contains(tuple("firstName", FieldType.STRING),
-                tuple("lastName", FieldType.STRING),
-                tuple("birthDate", FieldType.DATE),
-                tuple("age", FieldType.INTEGER),
-                tuple("married", FieldType.BOOLEAN),
-                tuple("resume", FieldType.TEXT),
-                tuple("salary", FieldType.DOUBLE),
-                tuple("skills", FieldType.STRING));
+                .extracting("name", "type")
+                .contains(tuple("firstName", FieldType.STRING),
+                        tuple("lastName", FieldType.STRING),
+                        tuple("birthDate", FieldType.DATE),
+                        tuple("age", FieldType.INTEGER),
+                        tuple("married", FieldType.BOOLEAN),
+                        tuple("resume", FieldType.TEXT),
+                        tuple("salary", FieldType.DOUBLE),
+                        tuple("skills", FieldType.STRING));
         assertThat(employeeBusinessObject.getFields())
-        .extractingResultOf("isNullable", Boolean.class)
-        .containsExactly(false,
-                true,
-                true,
-                true,
-                true,
-                true,
-                true,
-                true,
-                true);
+                .extractingResultOf("isNullable", Boolean.class)
+                .containsExactly(false,
+                        true,
+                        true,
+                        true,
+                        true,
+                        true,
+                        true,
+                        true,
+                        true);
         assertThat(employeeBusinessObject.getFields())
-        .extractingResultOf("isCollection", Boolean.class)
-        .containsExactly(false,
-                false,
-                false,
-                false,
-                false,
-                false,
-                false,
-                true,
-                false);
+                .extractingResultOf("isCollection", Boolean.class)
+                .containsExactly(false,
+                        false,
+                        false,
+                        false,
+                        false,
+                        false,
+                        false,
+                        true,
+                        false);
         assertThat(employeeBusinessObject.getFields())
-        .extracting("name", "type")
-        .contains(tuple("manager", Type.AGGREGATION));
+                .extracting("name", "type")
+                .contains(tuple("manager", Type.AGGREGATION));
         assertThat(((SimpleField) employeeBusinessObject.getFields().get(0)).getLength()).isEqualTo(25);
 
         assertThat(employeeBusinessObject.getUniqueConstraints()).hasSize(1);
@@ -203,15 +201,16 @@ public class CreateDeployExportBusinessObjectIT extends SWTBotGefTestCase {
         assertThat(employeeBusinessObject.getUniqueConstraints().get(0).getFieldNames()).contains("firstName", "lastName");
 
         assertThat(employeeBusinessObject.getIndexes()).extracting("name", "fieldNames")
-        .containsExactly(tuple("NAMEINDEX", Arrays.asList("lastName", "firstName")));
+                .containsExactly(tuple("NAMEINDEX", Arrays.asList("lastName", "firstName")));
 
         assertThat(employeeBusinessObject.getQueries()).extracting("name", "content", "returnType")
-        .containsExactly(tuple("findByMaxSalary", "SELECT e FROM Employee e WHERE e.salary < :maxSalary", List.class.getName()));
+                .containsExactly(tuple("findByMaxSalary", "SELECT e FROM Employee e WHERE e.salary < :maxSalary", List.class.getName()));
         assertThat(employeeBusinessObject.getQueries().get(0).getQueryParameters()).extracting("name", "className")
-        .containsExactly(tuple("maxSalary", Double.class.getName()));
+                .containsExactly(tuple("maxSalary", Double.class.getName()));
     }
 
-    protected void addCustomQuery(final String boName, final String queryName, final String content, final Map<String, String> queryParam, final String returnType, final int queryIndex) {
+    protected void addCustomQuery(final String boName, final String queryName, final String content, final Map<String, String> queryParam,
+            final String returnType, final int queryIndex) {
         bot.tabItem("Queries").activate();
         bot.radio("Custom").click();
         bot.buttonInGroup("Add", boName).click();

@@ -161,7 +161,7 @@ public class SelectFormWizard extends Wizard {
             BonitaStudioLog.error(e);
         }
         final Form createdForm = (Form) createFormCmd.getCommandResult().getReturnValue();
-        FormsUtils.createDiagram(createdForm, editingDomain, pageFlow);
+        FormsUtils.createFormDiagram(createdForm, editingDomain);
         return FormsUtils.openDiagram(createdForm, editingDomain) != null;
     }
 

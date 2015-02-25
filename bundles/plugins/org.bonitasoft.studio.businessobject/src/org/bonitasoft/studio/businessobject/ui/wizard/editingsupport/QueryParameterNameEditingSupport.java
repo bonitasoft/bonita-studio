@@ -5,17 +5,17 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.businessobject.ui.wizard.editingsupport;
 
+import org.bonitasoft.engine.bdm.model.Query;
+import org.bonitasoft.engine.bdm.model.QueryParameter;
 import org.bonitasoft.studio.businessobject.ui.wizard.listener.ColumnViewerUpdateListener;
 import org.bonitasoft.studio.businessobject.ui.wizard.validator.QueryParameterNameCellEditorValidator;
 import org.eclipse.core.databinding.Binding;
@@ -35,28 +35,23 @@ import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 
-import com.bonitasoft.engine.bdm.model.Query;
-import com.bonitasoft.engine.bdm.model.QueryParameter;
-
 /**
  * @author Romain Bioteau
- * 
  */
-@SuppressWarnings({ "restriction" })
 public class QueryParameterNameEditingSupport extends ObservableValueEditingSupport {
 
-    private DataBindingContext dbc;
+    private final DataBindingContext dbc;
 
-    private Query query;
+    private final Query query;
 
-    private Binding queryBinding;
+    private final Binding queryBinding;
 
     /**
      * @param queryBinding
      * @param viewer
      * @param dbc
      */
-    public QueryParameterNameEditingSupport(Query query, Binding queryBinding, ColumnViewer viewer, DataBindingContext dbc) {
+    public QueryParameterNameEditingSupport(final Query query, final Binding queryBinding, final ColumnViewer viewer, final DataBindingContext dbc) {
         super(viewer, dbc);
         this.dbc = dbc;
         this.query = query;
@@ -64,18 +59,18 @@ public class QueryParameterNameEditingSupport extends ObservableValueEditingSupp
     }
 
     @Override
-    protected CellEditor getCellEditor(Object element) {
+    protected CellEditor getCellEditor(final Object element) {
         return new TextCellEditor((Composite) getViewer().getControl());
     }
 
     @Override
-    protected IObservableValue doCreateElementObservable(final Object element, ViewerCell cell) {
-        IObservableValue observeValue = PojoObservables.observeValue(element, "name");
+    protected IObservableValue doCreateElementObservable(final Object element, final ViewerCell cell) {
+        final IObservableValue observeValue = PojoObservables.observeValue(element, "name");
         observeValue.addValueChangeListener(new ColumnViewerUpdateListener(getViewer(), element));
         observeValue.addValueChangeListener(new IValueChangeListener() {
 
             @Override
-            public void handleValueChange(ValueChangeEvent event) {
+            public void handleValueChange(final ValueChangeEvent event) {
                 queryBinding.validateTargetToModel();
             }
         });
@@ -83,7 +78,7 @@ public class QueryParameterNameEditingSupport extends ObservableValueEditingSupp
     }
 
     @Override
-    protected IObservableValue doCreateCellEditorObservable(CellEditor cellEditor) {
+    protected IObservableValue doCreateCellEditorObservable(final CellEditor cellEditor) {
         return SWTObservables.observeText(cellEditor.getControl(), SWT.Modify);
     }
 
@@ -93,8 +88,8 @@ public class QueryParameterNameEditingSupport extends ObservableValueEditingSupp
      * org.eclipse.core.databinding.observable.value.IObservableValue)
      */
     @Override
-    protected Binding createBinding(IObservableValue target, IObservableValue model) {
-        UpdateValueStrategy targetToModel = new UpdateValueStrategy();
+    protected Binding createBinding(final IObservableValue target, final IObservableValue model) {
+        final UpdateValueStrategy targetToModel = new UpdateValueStrategy();
         targetToModel.setAfterGetValidator(new QueryParameterNameCellEditorValidator(query, (QueryParameter) ((BeanObservableValueDecorator) model)
                 .getObserved()));
         return dbc.bindValue(target, model, targetToModel, null);

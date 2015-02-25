@@ -25,9 +25,9 @@ import org.eclipse.jdt.core.JavaConventions;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jface.viewers.ICellEditorValidator;
 
-import com.bonitasoft.engine.bdm.model.BusinessObject;
-import com.bonitasoft.engine.bdm.model.UniqueConstraint;
-import com.bonitasoft.engine.bdm.validator.SQLNameValidator;
+import org.bonitasoft.engine.bdm.model.BusinessObject;
+import org.bonitasoft.engine.bdm.model.UniqueConstraint;
+import org.bonitasoft.engine.bdm.validator.SQLNameValidator;
 
 /**
  * @author Romain Bioteau

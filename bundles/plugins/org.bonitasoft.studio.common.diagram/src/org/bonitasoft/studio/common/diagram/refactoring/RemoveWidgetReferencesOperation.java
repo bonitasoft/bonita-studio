@@ -5,12 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -39,59 +39,59 @@ import org.eclipse.emf.edit.domain.EditingDomain;
 /**
  * @author Aurelie Zara
  * @author Romain Bioteau
- * 
+ *
  */
 public class RemoveWidgetReferencesOperation extends AbstractRefactorOperation<Widget, Widget, WidgetRefactorPair> {
 
 
-    private EObject container;
+    private final EObject container;
 
-    private EditingDomain editingDomain;
-
-    public RemoveWidgetReferencesOperation(EObject container, Widget widgetToRemove) {
+    public RemoveWidgetReferencesOperation(final EObject container, final Widget widgetToRemove) {
         super(RefactoringOperationType.REMOVE);
         this.container = container;
         addItemToRefactor(null, widgetToRemove);
     }
 
     @Override
-    protected void doExecute(IProgressMonitor monitor) {
+    protected CompoundCommand doBuildCompoundCommand(final CompoundCommand compoundCommand, final IProgressMonitor monitor) {
         monitor.beginTask(Messages.removingWidgetReferences, IProgressMonitor.UNKNOWN);
-        List<Expression> expressions = ModelHelper.getAllItemsOfType(container, ExpressionPackage.Literals.EXPRESSION);
-        for (Expression exp : expressions) {
-        	for(WidgetRefactorPair pairToRefactor : pairsToRefactor){
+        final List<Expression> expressions = ModelHelper.getAllItemsOfType(container, ExpressionPackage.Literals.EXPRESSION);
+        for (final Expression exp : expressions) {
+        	for(final WidgetRefactorPair pairToRefactor : pairsToRefactor){
         		if (ExpressionConstants.FORM_FIELD_TYPE.equals(exp.getType()) && exp.getName().equals(pairToRefactor.getNewValueName())) {
         			// update name and content
-        			compoundCommand.append(SetCommand.create(editingDomain, exp, ExpressionPackage.Literals.EXPRESSION__NAME, ""));
-        			compoundCommand.append(SetCommand.create(editingDomain, exp, ExpressionPackage.Literals.EXPRESSION__CONTENT, ""));
+                    compoundCommand.append(SetCommand.create(getEditingDomain(), exp, ExpressionPackage.Literals.EXPRESSION__NAME, ""));
+                    compoundCommand.append(SetCommand.create(getEditingDomain(), exp, ExpressionPackage.Literals.EXPRESSION__CONTENT, ""));
         			// update return type
-        			compoundCommand.append(SetCommand.create(editingDomain, exp, ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE, String.class.getName()));
+                    compoundCommand.append(SetCommand.create(getEditingDomain(), exp, ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE,
+                            String.class.getName()));
         			compoundCommand.append(SetCommand
-        					.create(editingDomain, exp, ExpressionPackage.Literals.EXPRESSION__TYPE, ExpressionConstants.CONSTANT_TYPE));
+                            .create(getEditingDomain(), exp, ExpressionPackage.Literals.EXPRESSION__TYPE, ExpressionConstants.CONSTANT_TYPE));
         			// update referenced data
-        			compoundCommand.append(RemoveCommand.create(editingDomain, exp, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS,
+                    compoundCommand.append(RemoveCommand.create(getEditingDomain(), exp, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS,
         					exp.getReferencedElements()));
         		}
         	}
         }
+        return compoundCommand;
     }
 
     @Override
-    protected EObject getContainer(Widget oldValue) {
+    protected EObject getContainer(final Widget oldValue) {
         return container;
     }
 
     @Override
-    protected AbstractScriptExpressionRefactoringAction<WidgetRefactorPair> getScriptExpressionRefactoringAction(List<WidgetRefactorPair> pairsToRefactor,
-            List<Expression> scriptExpressions, List<Expression> refactoredScriptExpression, CompoundCommand compoundCommand, EditingDomain domain,
-            RefactoringOperationType operationType) {
+    protected AbstractScriptExpressionRefactoringAction<WidgetRefactorPair> getScriptExpressionRefactoringAction(final List<WidgetRefactorPair> pairsToRefactor,
+            final List<Expression> scriptExpressions, final List<Expression> refactoredScriptExpression, final CompoundCommand compoundCommand, final EditingDomain domain,
+            final RefactoringOperationType operationType) {
         return new WidgetScriptExpressionRefactoringAction(pairsToRefactor, scriptExpressions,
                 refactoredScriptExpression, compoundCommand, domain,
                 operationType);
     }
 
 	@Override
-	protected WidgetRefactorPair createRefactorPair(Widget newItem,	Widget oldItem) {
+	protected WidgetRefactorPair createRefactorPair(final Widget newItem,	final Widget oldItem) {
 		return new WidgetRefactorPair(newItem, oldItem);
 	}
 

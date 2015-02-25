@@ -187,6 +187,22 @@ public class Messages extends NLS {
 
     public static String cmisConnectorWebserviceConfigMissingUrl;
 
+    public static String queryReturnTypeIsInvalid;
+
+    public static String queryNotExistsInBusinessObject;
+
+    public static String queryReferencedAnUnexistingBusinessObject;
+
+    public static String invalidQueryExpression;
+
+    public static String queryParameterDoesNotExistInQueryDefinition;
+
+    public static String queryParameterReturnTypeIsInvalid;
+
+    public static String queryParameterDoesNotExistInExpression;
+
+    public static String businessObjectDefinitionNotFound;
+
     static {
         // initialize resource bundle
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

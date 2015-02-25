@@ -23,7 +23,7 @@
    <extension
          point="org.eclipse.ui.menus">
       <menuContribution
-            locationURI="menu:org.bonitasoft.studio.development?after=org.bonitasoft.studio.datacomplex.menu">
+            locationURI="menu:org.bonitasoft.studio.development?after=org.bonitasoft.studio.menu.filter">
            <menu
                  icon="icons/bdm.png"
                  id="org.bonitasoft.studio.businessobject.menu"

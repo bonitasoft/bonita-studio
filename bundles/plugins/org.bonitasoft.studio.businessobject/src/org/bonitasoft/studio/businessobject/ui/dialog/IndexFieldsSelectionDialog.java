@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -22,6 +20,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
+import org.bonitasoft.engine.bdm.model.field.Field;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.AbstractTreeViewer;
@@ -49,11 +48,8 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.dialogs.PatternFilter;
 import org.eclipse.ui.dialogs.SelectionDialog;
 
-import com.bonitasoft.engine.bdm.model.field.Field;
-
 /**
  * @author Romain Bioteau
- * 
  */
 public class IndexFieldsSelectionDialog extends SelectionDialog {
 
@@ -69,12 +65,12 @@ public class IndexFieldsSelectionDialog extends SelectionDialog {
 
     protected boolean unique;
 
-    public IndexFieldsSelectionDialog(Shell parentShell,
-            ILabelProvider labelProvider,
-            List<Field> currentValues,
-            List<Field> choiceOfValues,
-            boolean sortChoices,
-            boolean unique) {
+    public IndexFieldsSelectionDialog(final Shell parentShell,
+            final ILabelProvider labelProvider,
+            final List<Field> currentValues,
+            final List<Field> choiceOfValues,
+            final boolean sortChoices,
+            final boolean unique) {
         super(parentShell);
         setShellStyle(getShellStyle() | SWT.RESIZE | SWT.MAX);
         this.labelProvider = labelProvider;
@@ -88,8 +84,8 @@ public class IndexFieldsSelectionDialog extends SelectionDialog {
     }
 
     @Override
-    protected Label createMessageArea(Composite composite) {
-        Label label = new Label(composite, SWT.WRAP);
+    protected Label createMessageArea(final Composite composite) {
+        final Label label = new Label(composite, SWT.WRAP);
         if (getMessage() != null) {
             label.setText(getMessage());
         }
@@ -98,26 +94,26 @@ public class IndexFieldsSelectionDialog extends SelectionDialog {
     }
 
     @Override
-    protected Control createDialogArea(Composite parent) {
-        Composite contents = (Composite) super.createDialogArea(parent);
+    protected Control createDialogArea(final Composite parent) {
+        final Composite contents = (Composite) super.createDialogArea(parent);
 
-        Label messageLabel = createMessageArea(contents);
+        final Label messageLabel = createMessageArea(contents);
         messageLabel.setLayoutData(GridDataFactory.fillDefaults().grab(false, false).span(3, 1).hint(300, SWT.DEFAULT).create());
 
-        GridLayout contentsGridLayout = (GridLayout) contents.getLayout();
+        final GridLayout contentsGridLayout = (GridLayout) contents.getLayout();
         contentsGridLayout.numColumns = 3;
 
-        GridData contentsGridData = (GridData) contents.getLayoutData();
+        final GridData contentsGridData = (GridData) contents.getLayoutData();
         contentsGridData.horizontalAlignment = SWT.FILL;
         contentsGridData.verticalAlignment = SWT.FILL;
 
-        Composite choiceComposite = new Composite(contents, SWT.NONE);
+        final Composite choiceComposite = new Composite(contents, SWT.NONE);
         {
-            GridData data = new GridData(SWT.FILL, SWT.FILL, true, true);
+            final GridData data = new GridData(SWT.FILL, SWT.FILL, true, true);
             data.horizontalAlignment = SWT.END;
             choiceComposite.setLayoutData(data);
 
-            GridLayout layout = new GridLayout();
+            final GridLayout layout = new GridLayout();
             data.horizontalAlignment = SWT.FILL;
             layout.marginHeight = 0;
             layout.marginWidth = 0;
@@ -125,9 +121,9 @@ public class IndexFieldsSelectionDialog extends SelectionDialog {
             choiceComposite.setLayout(layout);
         }
 
-        Label choiceLabel = new Label(choiceComposite, SWT.NONE);
+        final Label choiceLabel = new Label(choiceComposite, SWT.NONE);
         choiceLabel.setText(Messages.availableAttributes);
-        GridData choiceLabelGridData = new GridData();
+        final GridData choiceLabelGridData = new GridData();
         choiceLabelGridData.verticalAlignment = SWT.FILL;
         choiceLabelGridData.horizontalAlignment = SWT.FILL;
         choiceLabel.setLayoutData(choiceLabelGridData);
@@ -135,7 +131,7 @@ public class IndexFieldsSelectionDialog extends SelectionDialog {
         final Table choiceTable = choiceOfValues == null ? null : new Table(choiceComposite, SWT.MULTI | SWT.BORDER);
         if (choiceTable != null)
         {
-            GridData choiceTableGridData = new GridData();
+            final GridData choiceTableGridData = new GridData();
             choiceTableGridData.widthHint = 200;
             choiceTableGridData.heightHint = 100;
             choiceTableGridData.verticalAlignment = SWT.FILL;
@@ -155,7 +151,7 @@ public class IndexFieldsSelectionDialog extends SelectionDialog {
                     {
 
                         @Override
-                        protected boolean isParentMatch(Viewer viewer, Object element)
+                        protected boolean isParentMatch(final Viewer viewer, final Object element)
                         {
                             return viewer instanceof AbstractTreeViewer && super.isParentMatch(viewer, element);
                         }
@@ -165,7 +161,7 @@ public class IndexFieldsSelectionDialog extends SelectionDialog {
                 choiceTableViewer.addFilter(new ViewerFilter() {
 
                     @Override
-                    public boolean select(Viewer viewer, Object parentElement, Object element) {
+                    public boolean select(final Viewer viewer, final Object parentElement, final Object element) {
                         return !values.contains(element);
                     }
                 });
@@ -173,57 +169,57 @@ public class IndexFieldsSelectionDialog extends SelectionDialog {
             choiceTableViewer.setInput(choiceOfValues);
         }
 
-        Composite controlButtons = new Composite(contents, SWT.NONE);
-        GridData controlButtonsGridData = new GridData();
+        final Composite controlButtons = new Composite(contents, SWT.NONE);
+        final GridData controlButtonsGridData = new GridData();
         controlButtonsGridData.verticalAlignment = SWT.FILL;
         controlButtonsGridData.horizontalAlignment = SWT.FILL;
         controlButtons.setLayoutData(controlButtonsGridData);
 
-        GridLayout controlsButtonGridLayout = new GridLayout();
+        final GridLayout controlsButtonGridLayout = new GridLayout();
         controlButtons.setLayout(controlsButtonGridLayout);
 
         new Label(controlButtons, SWT.NONE);
 
         final Button addButton = new Button(controlButtons, SWT.PUSH);
         addButton.setText(Messages.add);
-        GridData addButtonGridData = new GridData();
+        final GridData addButtonGridData = new GridData();
         addButtonGridData.verticalAlignment = SWT.FILL;
         addButtonGridData.horizontalAlignment = SWT.FILL;
         addButton.setLayoutData(addButtonGridData);
 
         final Button removeButton = new Button(controlButtons, SWT.PUSH);
         removeButton.setText(Messages.Remove);
-        GridData removeButtonGridData = new GridData();
+        final GridData removeButtonGridData = new GridData();
         removeButtonGridData.verticalAlignment = SWT.FILL;
         removeButtonGridData.horizontalAlignment = SWT.FILL;
         removeButton.setLayoutData(removeButtonGridData);
 
-        Label spaceLabel = new Label(controlButtons, SWT.NONE);
-        GridData spaceLabelGridData = new GridData();
+        final Label spaceLabel = new Label(controlButtons, SWT.NONE);
+        final GridData spaceLabelGridData = new GridData();
         spaceLabelGridData.verticalSpan = 2;
         spaceLabel.setLayoutData(spaceLabelGridData);
 
         final Button upButton = new Button(controlButtons, SWT.PUSH);
         upButton.setText(Messages.up);
-        GridData upButtonGridData = new GridData();
+        final GridData upButtonGridData = new GridData();
         upButtonGridData.verticalAlignment = SWT.FILL;
         upButtonGridData.horizontalAlignment = SWT.FILL;
         upButton.setLayoutData(upButtonGridData);
 
         final Button downButton = new Button(controlButtons, SWT.PUSH);
         downButton.setText(Messages.down);
-        GridData downButtonGridData = new GridData();
+        final GridData downButtonGridData = new GridData();
         downButtonGridData.verticalAlignment = SWT.FILL;
         downButtonGridData.horizontalAlignment = SWT.FILL;
         downButton.setLayoutData(downButtonGridData);
 
-        Composite featureComposite = new Composite(contents, SWT.NONE);
+        final Composite featureComposite = new Composite(contents, SWT.NONE);
         {
-            GridData data = new GridData(SWT.FILL, SWT.FILL, true, true);
+            final GridData data = new GridData(SWT.FILL, SWT.FILL, true, true);
             data.horizontalAlignment = SWT.END;
             featureComposite.setLayoutData(data);
 
-            GridLayout layout = new GridLayout();
+            final GridLayout layout = new GridLayout();
             data.horizontalAlignment = SWT.FILL;
             layout.marginHeight = 0;
             layout.marginWidth = 0;
@@ -231,16 +227,16 @@ public class IndexFieldsSelectionDialog extends SelectionDialog {
             featureComposite.setLayout(layout);
         }
 
-        Label selectedFieldLabel = new Label(featureComposite, SWT.NONE);
+        final Label selectedFieldLabel = new Label(featureComposite, SWT.NONE);
         selectedFieldLabel.setText(Messages.indexedAttributes);
-        GridData featureLabelGridData = new GridData();
+        final GridData featureLabelGridData = new GridData();
         featureLabelGridData.horizontalSpan = 2;
         featureLabelGridData.horizontalAlignment = SWT.FILL;
         featureLabelGridData.verticalAlignment = SWT.FILL;
         selectedFieldLabel.setLayoutData(featureLabelGridData);
 
         final Table selectedFieldTable = new Table(featureComposite, SWT.MULTI | SWT.BORDER);
-        GridData featureTableGridData = new GridData();
+        final GridData featureTableGridData = new GridData();
         featureTableGridData.widthHint = 200;
         featureTableGridData.heightHint = 100;
         featureTableGridData.verticalAlignment = SWT.FILL;
@@ -264,7 +260,8 @@ public class IndexFieldsSelectionDialog extends SelectionDialog {
             choiceTableViewer.addDoubleClickListener(new IDoubleClickListener()
             {
 
-                public void doubleClick(DoubleClickEvent event)
+                @Override
+                public void doubleClick(final DoubleClickEvent event)
                 {
                     if (addButton.isEnabled())
                     {
@@ -276,7 +273,8 @@ public class IndexFieldsSelectionDialog extends SelectionDialog {
             selectedFieldTableViewer.addDoubleClickListener(new IDoubleClickListener()
             {
 
-                public void doubleClick(DoubleClickEvent event)
+                @Override
+                public void doubleClick(final DoubleClickEvent event)
                 {
                     if (removeButton.isEnabled())
                     {
@@ -291,14 +289,14 @@ public class IndexFieldsSelectionDialog extends SelectionDialog {
                 {
 
                     @Override
-                    public void widgetSelected(SelectionEvent event)
+                    public void widgetSelected(final SelectionEvent event)
                     {
-                        IStructuredSelection selection = (IStructuredSelection) selectedFieldTableViewer.getSelection();
+                        final IStructuredSelection selection = (IStructuredSelection) selectedFieldTableViewer.getSelection();
                         int minIndex = 0;
-                        for (Iterator<?> i = selection.iterator(); i.hasNext();)
+                        for (final Iterator<?> i = selection.iterator(); i.hasNext();)
                         {
-                            Object value = i.next();
-                            int index = children.indexOf(value);
+                            final Object value = i.next();
+                            final int index = children.indexOf(value);
                             Collections.swap(children, Math.max(index - 1, minIndex++), index);
                         }
                         selectedFieldTableViewer.refresh();
@@ -310,15 +308,15 @@ public class IndexFieldsSelectionDialog extends SelectionDialog {
                 {
 
                     @Override
-                    public void widgetSelected(SelectionEvent event)
+                    public void widgetSelected(final SelectionEvent event)
                     {
-                        IStructuredSelection selection = (IStructuredSelection) selectedFieldTableViewer.getSelection();
+                        final IStructuredSelection selection = (IStructuredSelection) selectedFieldTableViewer.getSelection();
                         int maxIndex = children.size() - 1;
-                        List<?> objects = selection.toList();
-                        for (ListIterator<?> i = objects.listIterator(objects.size()); i.hasPrevious();)
+                        final List<?> objects = selection.toList();
+                        for (final ListIterator<?> i = objects.listIterator(objects.size()); i.hasPrevious();)
                         {
-                            Object value = i.previous();
-                            int index = children.indexOf(value);
+                            final Object value = i.previous();
+                            final int index = children.indexOf(value);
                             Collections.swap(children, Math.min(index + 1, maxIndex--), index);
                         }
                         selectedFieldTableViewer.refresh();
@@ -331,13 +329,13 @@ public class IndexFieldsSelectionDialog extends SelectionDialog {
 
                     // event is null when choiceTableViewer is double clicked
                     @Override
-                    public void widgetSelected(SelectionEvent event)
+                    public void widgetSelected(final SelectionEvent event)
                     {
                         if (choiceTableViewer != null) {
-                            IStructuredSelection selection = (IStructuredSelection) choiceTableViewer.getSelection();
-                            for (Iterator<?> i = selection.iterator(); i.hasNext();)
+                            final IStructuredSelection selection = (IStructuredSelection) choiceTableViewer.getSelection();
+                            for (final Iterator<?> i = selection.iterator(); i.hasNext();)
                             {
-                                Field value = (Field) i.next();
+                                final Field value = (Field) i.next();
                                 if (!unique || !children.contains(value))
                                 {
                                     children.add(value);
@@ -357,13 +355,13 @@ public class IndexFieldsSelectionDialog extends SelectionDialog {
 
                     // event is null when featureTableViewer is double clicked
                     @Override
-                    public void widgetSelected(SelectionEvent event)
+                    public void widgetSelected(final SelectionEvent event)
                     {
-                        IStructuredSelection selection = (IStructuredSelection) selectedFieldTableViewer.getSelection();
+                        final IStructuredSelection selection = (IStructuredSelection) selectedFieldTableViewer.getSelection();
                         Object firstValue = null;
-                        for (Iterator<?> i = selection.iterator(); i.hasNext();)
+                        for (final Iterator<?> i = selection.iterator(); i.hasNext();)
                         {
-                            Object value = i.next();
+                            final Object value = i.next();
                             if (firstValue == null)
                             {
                                 firstValue = value;
@@ -387,6 +385,7 @@ public class IndexFieldsSelectionDialog extends SelectionDialog {
         return contents;
     }
 
+    @Override
     protected void okPressed() {
         setResult(values);
         super.okPressed();

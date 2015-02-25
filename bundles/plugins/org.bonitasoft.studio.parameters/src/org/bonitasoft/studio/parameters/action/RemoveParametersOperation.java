@@ -3,7 +3,7 @@
  * BonitaSoft is a trademark of Bonitasoft SA.
  * This software file is BONITASOFT CONFIDENTIAL. Not For Distribution.
  * For commercial licensing information, contact:
- *      BonitaSoft, 32 rue Gustave Eiffel â€“ 38000 Grenoble
+ *      BonitaSoft, 32 rue Gustave Eiffel – 38000 Grenoble
  *      or BonitaSoft US, 51 Federal Street, Suite 305, San Francisco, CA 94107
  *******************************************************************************/
 package org.bonitasoft.studio.parameters.action;
@@ -37,21 +37,21 @@ import org.eclipse.emf.edit.domain.EditingDomain;
 
 /**
  * @author aurelie
- * 
+ *
  */
 public class RemoveParametersOperation extends AbstractRefactorOperation<Parameter, Parameter, ParameterRefactorPair> {
 
-    private AbstractProcess process;
+    private final AbstractProcess process;
 
-    public RemoveParametersOperation(Parameter parameterToRemove, AbstractProcess process) {
+    public RemoveParametersOperation(final Parameter parameterToRemove, final AbstractProcess process) {
         super(RefactoringOperationType.REMOVE);
         addItemToRefactor(null, parameterToRemove);
         this.process = process;
     }
 
-    private void deleteAllReferencesToParameter(EditingDomain editingDomain, Parameter parameter, CompoundCommand cc) {
-        List<Expression> expressions = ModelHelper.getAllItemsOfType(process, ExpressionPackage.Literals.EXPRESSION);
-        for (Expression exp : expressions) {
+    private void deleteAllReferencesToParameter(final EditingDomain editingDomain, final Parameter parameter, final CompoundCommand cc) {
+        final List<Expression> expressions = ModelHelper.getAllItemsOfType(process, ExpressionPackage.Literals.EXPRESSION);
+        for (final Expression exp : expressions) {
             if (ExpressionConstants.PARAMETER_TYPE.equals(exp.getType()) && exp.getName().equals(parameter.getName())) {
                 // update name and content
                 cc.append(SetCommand.create(editingDomain, exp, ExpressionPackage.Literals.EXPRESSION__NAME, ""));
@@ -67,52 +67,54 @@ public class RemoveParametersOperation extends AbstractRefactorOperation<Paramet
     }
 
     @Override
-    protected void doExecute(IProgressMonitor monitor) {
-    	monitor.beginTask(Messages.removeParameters, IProgressMonitor.UNKNOWN);
-    	for(ParameterRefactorPair pairToRefactor : pairsToRefactor){
-    		deleteAllReferencesToParameter(domain, pairToRefactor.getOldValue(), compoundCommand);
-    		String id = ModelHelper.getEObjectID(process);
-    		String fileName = id + ".conf";
-    		ProcessConfigurationRepositoryStore processConfStore = (ProcessConfigurationRepositoryStore) RepositoryManager.getInstance().getCurrentRepository()
-    				.getRepositoryStore(ProcessConfigurationRepositoryStore.class);
-    		ProcessConfigurationFileStore file = processConfStore.getChild(fileName);
-    		Configuration localeConfiguration = null;
-    		Configuration localeConfigurationWorkingCopy = null;
-    		if (file != null) {
-    			localeConfiguration = file.getContent();
-    			localeConfigurationWorkingCopy = EcoreUtil.copy(localeConfiguration);
-    		}
-    		if (localeConfiguration != null) {
+    protected CompoundCommand doBuildCompoundCommand(final CompoundCommand compoundCommand, final IProgressMonitor monitor) {
+        monitor.beginTask(Messages.removeParameters, IProgressMonitor.UNKNOWN);
+        for(final ParameterRefactorPair pairToRefactor : pairsToRefactor){
+            deleteAllReferencesToParameter(getEditingDomain(), pairToRefactor.getOldValue(), compoundCommand);
+            final String id = ModelHelper.getEObjectID(process);
+            final String fileName = id + ".conf";
+            final ProcessConfigurationRepositoryStore processConfStore = RepositoryManager.getInstance().getCurrentRepository()
+                    .getRepositoryStore(ProcessConfigurationRepositoryStore.class);
+            final ProcessConfigurationFileStore file = processConfStore.getChild(fileName);
+            Configuration localeConfiguration = null;
+            Configuration localeConfigurationWorkingCopy = null;
+            if (file != null) {
+                localeConfiguration = file.getContent();
+                localeConfigurationWorkingCopy = EcoreUtil.copy(localeConfiguration);
+            }
+            if (localeConfiguration != null) {
 
-    			for (Parameter configParameter : localeConfiguration.getParameters()) {
-    				if (configParameter.getName().equals(pairToRefactor.getOldValueName())) {
-    					compoundCommand.append(new RemoveCommand(domain, localeConfiguration, ConfigurationPackage.Literals.CONFIGURATION__PARAMETERS,
-    							configParameter));
-    				}
-    			}
-    			compoundCommand.append(new SaveConfigurationEMFCommand(file, localeConfigurationWorkingCopy, localeConfiguration));
+                for (final Parameter configParameter : localeConfiguration.getParameters()) {
+                    if (configParameter.getName().equals(pairToRefactor.getOldValueName())) {
+                        compoundCommand.append(new RemoveCommand(getEditingDomain(), localeConfiguration,
+                                ConfigurationPackage.Literals.CONFIGURATION__PARAMETERS,
+                                configParameter));
+                    }
+                }
+                compoundCommand.append(new SaveConfigurationEMFCommand(file, localeConfigurationWorkingCopy, localeConfiguration));
 
-    		}
-    		compoundCommand.append(DeleteCommand.create(domain, pairToRefactor.getOldValue()));
-    	}
+            }
+            compoundCommand.append(DeleteCommand.create(getEditingDomain(), pairToRefactor.getOldValue()));
+        }
+        return compoundCommand;
     }
 
     @Override
-    protected AbstractScriptExpressionRefactoringAction<ParameterRefactorPair> getScriptExpressionRefactoringAction(List<ParameterRefactorPair> pairsToRefactor,
-            List<Expression> scriptExpressions, List<Expression> refactoredScriptExpression, CompoundCommand compoundCommand, EditingDomain domain,
-            RefactoringOperationType operationType) {
+    protected AbstractScriptExpressionRefactoringAction<ParameterRefactorPair> getScriptExpressionRefactoringAction(final List<ParameterRefactorPair> pairsToRefactor,
+            final List<Expression> scriptExpressions, final List<Expression> refactoredScriptExpression, final CompoundCommand compoundCommand, final EditingDomain domain,
+            final RefactoringOperationType operationType) {
         return new ParameterScriptExpressionRefactoringAction(pairsToRefactor, scriptExpressions, refactoredScriptExpression, compoundCommand,
                 domain, operationType);
     }
 
     @Override
-    protected EObject getContainer(Parameter oldValue) {
+    protected EObject getContainer(final Parameter oldValue) {
         return process;
     }
 
-	@Override
-	protected ParameterRefactorPair createRefactorPair(Parameter newItem,	Parameter oldItem) {
-		return new ParameterRefactorPair(newItem, oldItem);
-	}
+    @Override
+    protected ParameterRefactorPair createRefactorPair(final Parameter newItem,	final Parameter oldItem) {
+        return new ParameterRefactorPair(newItem, oldItem);
+    }
 
 }

@@ -43,8 +43,6 @@ import org.bonitasoft.studio.model.process.util.ProcessSwitch;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 
-import com.bonitasoft.engine.bpm.process.impl.ProcessDefinitionBuilderExt;
-
 /**
  * @author Romain Bioteau
  */
@@ -76,7 +74,7 @@ public abstract class AbstractSwitch extends ProcessSwitch<Element> {
         }
     }
 
-    protected void addParameters(final ProcessDefinitionBuilderExt builder, final AbstractProcess process) {
+    protected void addParameters(final ProcessDefinitionBuilder builder, final AbstractProcess process) {
         for (final Parameter p : process.getParameters()) {
             final String description = p.getDescription();
             builder.addParameter(p.getName(), p.getTypeClassname()).addDescription(description == null ? "" : description);
@@ -98,7 +96,6 @@ public abstract class AbstractSwitch extends ProcessSwitch<Element> {
             }
         }
     }
-
 
     private boolean isGroovyConnector(final Connector connector) {
         return "scripting-groovy-script".equals(connector.getDefinitionId());
@@ -159,7 +156,8 @@ public abstract class AbstractSwitch extends ProcessSwitch<Element> {
         }
     }
 
-    protected void addData(final FlowElementBuilder dataContainerBuilder, final DataAware dataAwareContainer) {
+    protected void addData(final FlowElementBuilder dataContainerBuilder,
+            final DataAware dataAwareContainer) {
         for (final Data data : dataAwareContainer.getData()) {
             Expression expr = EngineExpressionUtil.createExpression(data.getDefaultValue());
             if (expr == null && data.isMultiple()) {

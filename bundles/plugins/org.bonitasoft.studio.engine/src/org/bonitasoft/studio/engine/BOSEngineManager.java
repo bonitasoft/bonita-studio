@@ -27,6 +27,7 @@ import org.bonitasoft.engine.api.LoginAPI;
 import org.bonitasoft.engine.api.ProcessAPI;
 import org.bonitasoft.engine.api.ProfileAPI;
 import org.bonitasoft.engine.api.TenantAPIAccessor;
+import org.bonitasoft.engine.api.TenantAdministrationAPI;
 import org.bonitasoft.engine.exception.BonitaHomeNotSetException;
 import org.bonitasoft.engine.exception.ServerAPIException;
 import org.bonitasoft.engine.exception.UnknownAPITypeException;
@@ -48,8 +49,6 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.preference.IPreferenceStore;
-
-import com.bonitasoft.engine.api.TenantManagementAPI;
 
 /**
  * @author Romain Bioteau
@@ -138,6 +137,17 @@ public class BOSEngineManager {
     }
 
     protected void postEngineStart() {
+        //RESUME ENGINE IF PAUSED AT STARTUP
+        try {
+            final APISession apiSession = getLoginAPI().login(BONITA_TECHNICAL_USER, BONITA_TECHNICAL_USER_PASSWORD);
+            final TenantAdministrationAPI tenantManagementAPI = getTenantAdministrationAPI(apiSession);
+            if (tenantManagementAPI.isPaused()) {
+                tenantManagementAPI.resume();
+            }
+        } catch (final Exception e) {
+            BonitaStudioLog.error(e);
+        }
+
         try {
             executePostStartupContributions();
         } catch (final Exception e) {
@@ -145,13 +155,12 @@ public class BOSEngineManager {
         }
     }
 
-
     public synchronized void stop() {
         APISession session = null;
-        TenantManagementAPI tenantManagementAPI = null;
+        TenantAdministrationAPI tenantManagementAPI = null;
         try {
             session = loginDefaultTenant(null);
-            tenantManagementAPI = getTenantManagementAPI(session);
+            tenantManagementAPI = getTenantAdministrationAPI(session);
             tenantManagementAPI.pause();
             if (dropBusinessDataDBOnExit()) {
                 tenantManagementAPI.cleanAndUninstallBusinessDataModel();
@@ -238,7 +247,8 @@ public class BOSEngineManager {
         return loginTenant(login, password, true, monitor);
     }
 
-    protected APISession loginTenant(final String login, final String password, final boolean waitForOrganization, final IProgressMonitor monitor) throws LoginException,
+    protected APISession loginTenant(final String login, final String password, final boolean waitForOrganization, final IProgressMonitor monitor)
+            throws LoginException,
             BonitaHomeNotSetException, ServerAPIException, UnknownAPITypeException {
         if (!isRunning()) {
             if (monitor != null) {
@@ -295,19 +305,20 @@ public class BOSEngineManager {
         return TenantAPIAccessor.getIdentityAPI(session);
     }
 
-    public CommandAPI getCommandAPI(final APISession session) throws InvalidSessionException, BonitaHomeNotSetException, ServerAPIException, UnknownAPITypeException {
+    public CommandAPI getCommandAPI(final APISession session) throws InvalidSessionException, BonitaHomeNotSetException, ServerAPIException,
+            UnknownAPITypeException {
         return TenantAPIAccessor.getCommandAPI(session);
     }
 
-    public ProfileAPI getProfileAPI(final APISession session) throws InvalidSessionException, BonitaHomeNotSetException, ServerAPIException, UnknownAPITypeException {
+    public ProfileAPI getProfileAPI(final APISession session) throws InvalidSessionException, BonitaHomeNotSetException, ServerAPIException,
+            UnknownAPITypeException {
         return TenantAPIAccessor.getProfileAPI(session);
     }
 
-    public TenantManagementAPI getTenantManagementAPI(final APISession session)
+    public TenantAdministrationAPI getTenantAdministrationAPI(final APISession session)
             throws BonitaHomeNotSetException,
             ServerAPIException, UnknownAPITypeException {
-        return com.bonitasoft.engine.api.TenantAPIAccessor.getTenantManagementAPI(session);
+        return TenantAPIAccessor.getTenantAdministrationAPI(session);
     }
-
 
 }

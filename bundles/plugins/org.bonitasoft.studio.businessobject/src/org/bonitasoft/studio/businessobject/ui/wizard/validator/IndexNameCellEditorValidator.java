@@ -5,17 +5,19 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.businessobject.ui.wizard.validator;
 
+import org.bonitasoft.engine.bdm.model.BusinessObject;
+import org.bonitasoft.engine.bdm.model.BusinessObjectModel;
+import org.bonitasoft.engine.bdm.model.Index;
+import org.bonitasoft.engine.bdm.validator.SQLNameValidator;
 import org.bonitasoft.studio.businessobject.i18n.Messages;
 import org.bonitasoft.studio.common.jface.databinding.validator.InputLengthValidator;
 import org.eclipse.core.databinding.validation.IValidator;
@@ -25,29 +27,23 @@ import org.eclipse.jdt.core.JavaConventions;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jface.viewers.ICellEditorValidator;
 
-import com.bonitasoft.engine.bdm.model.BusinessObject;
-import com.bonitasoft.engine.bdm.model.BusinessObjectModel;
-import com.bonitasoft.engine.bdm.model.Index;
-import com.bonitasoft.engine.bdm.validator.SQLNameValidator;
-
 /**
  * @author Romain Bioteau
- * 
  */
 public class IndexNameCellEditorValidator implements ICellEditorValidator, IValidator {
 
     public static final int MAX_INDEX_NAME_LENGTH = 20;
 
-    private BusinessObjectModel bom;
+    private final BusinessObjectModel bom;
 
-    private Index index;
+    private final Index index;
 
-    private SQLNameValidator sqlNameValidator;
+    private final SQLNameValidator sqlNameValidator;
 
-    public IndexNameCellEditorValidator(BusinessObjectModel bom, Index index) {
+    public IndexNameCellEditorValidator(final BusinessObjectModel bom, final Index index) {
         this.bom = bom;
         this.index = index;
-        this.sqlNameValidator = new SQLNameValidator(MAX_INDEX_NAME_LENGTH);
+        sqlNameValidator = new SQLNameValidator(MAX_INDEX_NAME_LENGTH);
     }
 
     /*
@@ -55,15 +51,15 @@ public class IndexNameCellEditorValidator implements ICellEditorValidator, IVali
      * @see org.eclipse.jface.viewers.ICellEditorValidator#isValid(java.lang.Object)
      */
     @Override
-    public String isValid(Object value) {
-        IStatus status = doValidate(value);
+    public String isValid(final Object value) {
+        final IStatus status = doValidate(value);
         if (!status.isOK()) {
             return status.getMessage();
         }
         return null;
     }
 
-    protected IStatus doValidate(Object value) {
+    protected IStatus doValidate(final Object value) {
         IStatus status = JavaConventions.validateFieldName((String) value, JavaCore.VERSION_1_6, JavaCore.VERSION_1_6);
         if (!status.isOK()) {
             return status;
@@ -78,8 +74,8 @@ public class IndexNameCellEditorValidator implements ICellEditorValidator, IVali
         if (!sqlNameValidator.isValid(value.toString())) {
             return ValidationStatus.error(Messages.bind(Messages.invalidSQLIdentifier, value.toString()));
         }
-        for (BusinessObject bo : bom.getBusinessObjects()) {
-            for (Index index : bo.getIndexes()) {
+        for (final BusinessObject bo : bom.getBusinessObjects()) {
+            for (final Index index : bo.getIndexes()) {
                 if (index.getName().equalsIgnoreCase(value.toString()) && !this.index.equals(index)) {
                     return ValidationStatus.error(Messages.indexNameAlreadyExists);
                 }
@@ -93,7 +89,7 @@ public class IndexNameCellEditorValidator implements ICellEditorValidator, IVali
      * @see org.eclipse.core.databinding.validation.IValidator#validate(java.lang.Object)
      */
     @Override
-    public IStatus validate(Object value) {
+    public IStatus validate(final Object value) {
         return doValidate(value);
     }
 

@@ -109,6 +109,7 @@ public abstract class AbstractRepositoryStore<T extends IRepositoryFileStore> im
         try {
             newIs = handlePreImport(fileName, inputStream);
         } catch (final MigrationException e) {
+            BonitaStudioLog.error(e);
             if (!FileActionDialog.getDisablePopup()) {
                 Display.getDefault().syncExec(new Runnable() {
 
@@ -120,13 +121,14 @@ public abstract class AbstractRepositoryStore<T extends IRepositoryFileStore> im
             }
             return null;
         } catch (final IOException e) {
+            BonitaStudioLog.error(e);
             if (!FileActionDialog.getDisablePopup()) {
                 Display.getDefault().syncExec(new Runnable() {
 
                     @Override
                     public void run() {
                         new BonitaErrorDialog(Display.getDefault().getActiveShell(), Messages.importedFileIsInvalidTitle, Messages.bind(
-                                Messages.importedFileIsInvalid, e.getMessage()), e).open();
+                                Messages.importedFileIsInvalid, fileName), e).open();
                     }
                 });
             }

@@ -31,8 +31,6 @@ import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.progress.IProgressService;
 import org.eclipse.xtext.ui.XtextProjectHelper;
 
 /**
@@ -58,6 +56,7 @@ public class EditParameterWizard extends Wizard {
         parameterWorkingCopy = EcoreUtil.copy(parameter);
         this.editingDomain = editingDomain;
         setWindowTitle(Messages.editParameterWizardTitle);
+        setNeedsProgressMonitor(true);
         setDefaultPageImageDescriptor(Pics.getWizban());
     }
 
@@ -67,9 +66,8 @@ public class EditParameterWizard extends Wizard {
         operation.addItemToRefactor(parameterWorkingCopy, parameter);
         operation.setEditingDomain(TransactionUtil.getEditingDomain(container));
         operation.setAskConfirmation(!parameter.getName().equals(parameterWorkingCopy.getName()));
-        final IProgressService service = PlatformUI.getWorkbench().getProgressService();
         try {
-            service.busyCursorWhile(operation);
+            getContainer().run(true, true, operation);
         } catch (final InvocationTargetException e) {
             BonitaStudioLog.error(e);
             return false;

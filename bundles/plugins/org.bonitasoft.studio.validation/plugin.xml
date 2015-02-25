@@ -20,7 +20,7 @@
                   class="org.bonitasoft.studio.validation.constraints.process.EmptyNameConstraint"
                   id="org.bonitasoft.studio.validation.constraints.nonemptynames"
                   lang="Java"
-                  mode="Batch"
+                  mode="Live"
                   name="%NotEmptyNameConstraint"
                   severity="WARNING"
                   statusCode="1">
@@ -692,34 +692,6 @@
                </target>
             </constraint>
             <constraint
-                  class="org.bonitasoft.studio.validation.constraints.MaxLengthNames"
-                  id="org.bonitasoft.studio.validation.constraints.maxlengthnames"
-                  isEnabledByDefault="true"
-                  lang="Java"
-                  mode="Live"
-                  name="Max-length names"
-                  severity="WARNING"
-                  statusCode="1">
-               <message>
-                  %constraints.maxlengthname.message
-               </message>
-               <target
-                     class="Activity:http://www.bonitasoft.org/ns/studio/process">
-                  <event
-                        name="Set">
-                     <feature
-                           name="name">
-                     </feature>
-                  </event>
-                  <event
-                        name="Unset">
-                     <feature
-                           name="name">
-                     </feature>
-                  </event>
-               </target>
-            </constraint>
-            <constraint
                   class="org.bonitasoft.studio.validation.constraints.GroovyCompilationOnScriptExpressionConstraint"
                   id="org.bonitasoft.studio.validation.constraint.groovyCompilationFailure"
                   lang="java"
@@ -827,21 +799,6 @@
                </target>
             </constraint>
             <constraint
-                  class="org.bonitasoft.studio.validation.constraints.process.InclusiveMergeGatewayConstraint"
-                  id="org.bonitasoft.studio.validation.constraints.inclusiveMerge"
-                  lang="java"
-                  mode="Batch"
-                  name="Inclusive merge"
-                  severity="WARNING"
-                  statusCode="1">
-               <message>
-                  {0}
-               </message>
-               <target
-                     class="InclusiveGateway:http://www.bonitasoft.org/ns/studio/process">
-               </target>
-            </constraint>
-            <constraint
                   class="org.bonitasoft.studio.validation.constraints.process.OperationNotEmptyConstraint"
                   id="org.bonitasoft.studio.validation.constraint.non.empty.operation"
                   isEnabledByDefault="true"
@@ -901,21 +858,6 @@
                       </target>
              </constraint>
               <constraint
-                  class="org.bonitasoft.studio.validation.constraints.process.ParalellMergeGatewayConstraint"
-                  id="org.bonitasoft.studio.validation.constraints.paralellMerge"
-                  lang="java"
-                  mode="Batch"
-                  name="Paralell merge"
-                  severity="WARNING"
-                  statusCode="1">
-               <message>
-                  {0}
-               </message>
-               <target
-                     class="ANDGateway::http://www.bonitasoft.org/ns/studio/process">
-               </target>
-            </constraint>
-              <constraint
                     class="org.bonitasoft.studio.validation.constraints.connector.ConnectorDefinitionAndConfigurationInputConsistencyConstraint"
                     id="org.bonitasoft.studio.validation.constraints.connectorDefAndConfigInputConsistency"
                     isEnabledByDefault="true"
@@ -928,7 +870,7 @@
                     {0}
                  </message>
                  <target
-                       class="Connector::http://www.bonitasoft.org/ns/studio/process">
+                       class="Connector:http://www.bonitasoft.org/ns/studio/process">
                  </target>
               </constraint>
               <constraint
@@ -944,7 +886,7 @@
                     {0}
                  </message>
                  <target
-                       class="Connector::http://www.bonitasoft.org/ns/studio/process">
+                       class="Connector:http://www.bonitasoft.org/ns/studio/process">
                  </target>
               </constraint>
               <constraint
@@ -960,7 +902,7 @@
                     {0}
                  </message>
                  <target
-                       class="SequenceFlow::http://www.bonitasoft.org/ns/studio/process">
+                       class="SequenceFlow:http://www.bonitasoft.org/ns/studio/process">
                  </target>
               </constraint>
             <constraint
@@ -976,7 +918,7 @@
                   {0}
                </message>
                <target
-                     class="Operation::http://www.bonitasoft.org/ns/studio/process">
+                     class="Operation:http://www.bonitasoft.org/ns/studio/expression">
                </target>
             </constraint>
             <constraint
@@ -992,7 +934,7 @@
                   {0}
                </message>
                <target
-                     class="Operation::http://www.bonitasoft.org/ns/studio/process">
+                     class="Operation:http://www.bonitasoft.org/ns/studio/expression">
                </target>
             </constraint>
             <constraint
@@ -1008,7 +950,38 @@
                   {0}
                </message>
                <target
-                     class="Connector::http://www.bonitasoft.org/ns/studio/process">
+                     class="Connector:http://www.bonitasoft.org/ns/studio/process">
+               </target>
+            </constraint>
+            <constraint
+                  class="org.bonitasoft.studio.validation.constraints.ExpressionDependenciesConstraint"
+                  id="org.bonitasoft.studio.validation.constraint.expressionDependencies"
+                  isEnabledByDefault="true"
+                  lang="Java"
+                  mode="Batch"
+                  name="Expression dependency consistency constraint"
+                  severity="ERROR"
+                  statusCode="1">
+               <message>
+                  {0}
+               </message>
+               <target
+                     class="Expression:http://www.bonitasoft.org/ns/studio/expression">
+               </target>
+            </constraint>
+            <constraint
+                  class="org.bonitasoft.studio.validation.constraints.process.MultiInstanceIteratorConstraint"
+                  id="org.bonitasoft.studio.validation.multiInstanceIterator"
+                  lang="Java"
+                  mode="Batch"
+                  name="MultiInstance iterator constraint"
+                  severity="WARNING"
+                  statusCode="1">
+               <message>
+                  {0}
+               </message>
+               <target
+                     class="MultiInstantiable:http://www.bonitasoft.org/ns/studio/process">
                </target>
             </constraint>
          </constraints>
@@ -1211,7 +1184,46 @@
          <package
                namespaceUri="http://www.bonitasoft.org/ns/studio/expression">
          </package>
+         <constraints
+               categories="org.bonitasoft.studio.validation.constraints.businessobject">
+            <constraint
+                  class="org.bonitasoft.studio.validation.constraints.process.BusinessObjectDefinitionValidationConstraint"
+                  id="org.bonitasoft.studio.validation.ex.constraint.businessobject.checkBusinessObjectExist"
+                  isEnabledByDefault="true"
+                  lang="java"
+                  mode="Batch"
+                  name="Business Object definition reference consistency"
+                  severity="WARNING"
+                  statusCode="1">
+               <message>
+                  {0}
+               </message>
+               <target
+                     class="BusinessObjectData:http://www.bonitasoft.org/ns/studio/process">
+               </target>
+            </constraint>
+            <constraint
+                  class="org.bonitasoft.studio.validation.constraints.process.QueryExpressionValidationConstraint"
+                  id="org.bonitasoft.studio.validation.ex.constraint.businessobject.checkQueryExpression"
+                  isEnabledByDefault="true"
+                  lang="java"
+                  mode="Batch"
+                  name="Query Expression consistency"
+                  severity="WARNING"
+                  statusCode="1">
+               <message>
+                  {0}
+               </message>
+               <target
+                     class="Expression:http://www.bonitasoft.org/ns/studio/expression">
+               </target>
+            </constraint>
+         </constraints>
       </constraintProvider>
+      <category
+            id="org.bonitasoft.studio.validation.constraints.businessobject"
+            name="Business Data Model">
+      </category>
    </extension>
       <extension
          point="org.eclipse.emf.validation.constraintBindings">
@@ -1228,6 +1240,10 @@
       </binding>
       <binding
             category="org.bonitasoft.studio.validation.forms.constraints"
+            context="org.bonitasoft.studio.validation.bonitaContext">
+      </binding>
+      <binding
+            category="org.bonitasoft.studio.validation.constraints.businessobject"
             context="org.bonitasoft.studio.validation.bonitaContext">
       </binding>
    </extension>

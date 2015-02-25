@@ -18,12 +18,11 @@
 
 package org.bonitasoft.studio.validators.ui.wizard;
 
-import java.util.ArrayList;
-import java.util.List;
+import static org.bonitasoft.studio.common.jface.databinding.UpdateStrategyFactory.updateValueStrategy;
+import static org.bonitasoft.studio.common.jface.databinding.ValidatorFactory.minMaxLengthValidator;
+import static org.bonitasoft.studio.common.jface.databinding.ValidatorFactory.multiValidator;
+import static org.bonitasoft.studio.common.jface.databinding.ValidatorFactory.urlEncodableInputValidator;
 
-import org.bonitasoft.studio.common.databinding.MultiValidator;
-import org.bonitasoft.studio.common.jface.databinding.validator.InputLengthValidator;
-import org.bonitasoft.studio.common.jface.databinding.validator.URLEncodableInputValidator;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
@@ -93,7 +92,7 @@ public class ValidatorWizardPage extends NewTypeWizardPage implements ISelection
 
     private final boolean editMode;
 
-    protected ValidatorWizardPage(ValidatorDescriptor validator, boolean editMode) {
+    protected ValidatorWizardPage(final ValidatorDescriptor validator, final boolean editMode) {
         super(true, ValidatorWizardPage.class.getName());
         setImageDescriptor(Pics.getWizban());
         setTitle(Messages.ValidatorWizardPage_title) ;
@@ -102,9 +101,9 @@ public class ValidatorWizardPage extends NewTypeWizardPage implements ISelection
         this.editMode = editMode ;
         final ValidatorSourceRepositorySotre store = RepositoryManager.getInstance().getRepositoryStore(ValidatorSourceRepositorySotre.class) ;
         try {
-            IPackageFragmentRoot root = RepositoryManager.getInstance().getCurrentRepository().getJavaProject().findPackageFragmentRoot(store.getResource().getFullPath());
+            final IPackageFragmentRoot root = RepositoryManager.getInstance().getCurrentRepository().getJavaProject().findPackageFragmentRoot(store.getResource().getFullPath());
             setPackageFragmentRoot(root, false) ;
-        } catch (JavaModelException e) {
+        } catch (final JavaModelException e) {
             BonitaStudioLog.error(e) ;
         }
 
@@ -122,8 +121,8 @@ public class ValidatorWizardPage extends NewTypeWizardPage implements ISelection
     }
 
     @Override
-    public void createControl(Composite parent) {
-        Composite mainComposite = new Composite(parent, SWT.NONE);
+    public void createControl(final Composite parent) {
+        final Composite mainComposite = new Composite(parent, SWT.NONE);
         mainComposite.setLayout(new GridLayout(3, false));
 
         context = new EMFDataBindingContext() ;
@@ -137,15 +136,15 @@ public class ValidatorWizardPage extends NewTypeWizardPage implements ISelection
     }
 
     @Override
-    public void setVisible(boolean visible){
+    public void setVisible(final boolean visible){
         super.setVisible(visible);
         if(visible && pageSupport == null){
             pageSupport =  WizardPageSupport.create(this, context) ;
         }
     }
 
-    protected void createTypeCombo(Composite mainComposite) {
-        Label typeLabel = new Label(mainComposite, SWT.NONE);
+    protected void createTypeCombo(final Composite mainComposite) {
+        final Label typeLabel = new Label(mainComposite, SWT.NONE);
         typeLabel.setText(Messages.validatorType);
         typeLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).create()) ;
 
@@ -154,7 +153,7 @@ public class ValidatorWizardPage extends NewTypeWizardPage implements ISelection
         typeViewer.setContentProvider(new ArrayContentProvider()) ;
         typeViewer.setLabelProvider(new LabelProvider(){
             @Override
-            public String getText(Object element) {
+            public String getText(final Object element) {
                 if(element == ValidatorType.FILED_VALIDATOR){
                     return Messages.fieldValidator ;
                 }else if(element == ValidatorType.PAGE_VALIDATOR){
@@ -168,8 +167,8 @@ public class ValidatorWizardPage extends NewTypeWizardPage implements ISelection
         context.bindValue(ViewersObservables.observeSingleSelection(typeViewer), EMFObservables.observeValue(validator, ValidatorPackage.Literals.VALIDATOR_DESCRIPTOR__TYPE)) ;
     }
 
-    protected void createDependenciesViewer(Composite mainComposite) {
-        Label dependencyLabel = new Label(mainComposite, SWT.NONE);
+    protected void createDependenciesViewer(final Composite mainComposite) {
+        final Label dependencyLabel = new Label(mainComposite, SWT.NONE);
         dependencyLabel.setText(Messages.dependencies);
         dependencyLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.TOP).create()) ;
 
@@ -179,7 +178,7 @@ public class ValidatorWizardPage extends NewTypeWizardPage implements ISelection
         viewer.addSelectionChangedListener(this) ;
         viewer.setLabelProvider(new LabelProvider(){
             @Override
-            public Image getImage(Object element) {
+            public Image getImage(final Object element) {
                 return Pics.getImage("jar.gif",ValidatorPlugin.getDefault());
             }
         }) ;
@@ -196,11 +195,11 @@ public class ValidatorWizardPage extends NewTypeWizardPage implements ISelection
         addButton.addSelectionListener(new SelectionAdapter() {
 
             @Override
-            public void widgetSelected(SelectionEvent e) {
-                SelectJarsDialog dialog =  new SelectJarsDialog(Display.getDefault().getActiveShell()) ;
+            public void widgetSelected(final SelectionEvent e) {
+                final SelectJarsDialog dialog =  new SelectJarsDialog(Display.getDefault().getActiveShell()) ;
                 if(dialog.open() == Dialog.OK){
-                    for (IRepositoryFileStore jarFile : dialog.getSelectedJars()) {
-                        String jar = jarFile.getName() ;
+                    for (final IRepositoryFileStore jarFile : dialog.getSelectedJars()) {
+                        final String jar = jarFile.getName() ;
                         if(!validator.getDependencies().contains(jar)){
                             validator.getDependencies().add(jar) ;
                         }
@@ -215,9 +214,9 @@ public class ValidatorWizardPage extends NewTypeWizardPage implements ISelection
         removeButton.setText(Messages.Remove) ;
         removeButton.addSelectionListener(new SelectionAdapter() {
             @Override
-            public void widgetSelected(SelectionEvent e) {
+            public void widgetSelected(final SelectionEvent e) {
                 final IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
-                for(Object selected :selection.toList()){
+                for(final Object selected :selection.toList()){
                     if(selected instanceof String){
                         validator.getDependencies().remove(selected) ;
                     }
@@ -228,24 +227,25 @@ public class ValidatorWizardPage extends NewTypeWizardPage implements ISelection
 
     }
 
-    private void createDisplayNameLine(Composite mainComposite) {
-        Label displayNameLabel = new Label(mainComposite, SWT.NONE);
+    private void createDisplayNameLine(final Composite mainComposite) {
+        final Label displayNameLabel = new Label(mainComposite, SWT.NONE);
         displayNameLabel.setText(Messages.createValidatorWizardPage_displayNameLabel +" *");
         displayNameLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).create()) ;
 
         final Text displayNameText = new Text(mainComposite, SWT.BORDER);
         displayNameText.setLayoutData(GridDataFactory.fillDefaults().grab(true,false).span(2, 1).create());
 
-        UpdateValueStrategy targetToModel = new UpdateValueStrategy() ;
-        List<IValidator> validators = new ArrayList<IValidator>();
-        validators.add(new InputLengthValidator(Messages.createValidatorWizardPage_displayNameLabel,1,50));
-        validators.add(new URLEncodableInputValidator(Messages.createValidatorWizardPage_displayNameLabel));
-		targetToModel.setBeforeSetValidator(new MultiValidator(validators ));
-        context.bindValue(SWTObservables.observeText(displayNameText, SWT.Modify), EMFObservables.observeValue(validator, ValidatorPackage.Literals.VALIDATOR_DESCRIPTOR__NAME),targetToModel,null) ;
+        context.bindValue(SWTObservables.observeText(displayNameText, SWT.Modify),
+                EMFObservables.observeValue(validator, ValidatorPackage.Literals.VALIDATOR_DESCRIPTOR__NAME),
+                updateValueStrategy().withValidator(multiValidator()
+                        .addValidator(minMaxLengthValidator(Messages.createValidatorWizardPage_displayNameLabel, 1, 50))
+                        .addValidator(urlEncodableInputValidator(Messages.createValidatorWizardPage_displayNameLabel)).create()
+                        ).create()
+                , null);
     }
 
-    private void createClassAndPackageName(Composite mainComposite) {
-        Label classNameLabel = new Label(mainComposite, SWT.NONE);
+    private void createClassAndPackageName(final Composite mainComposite) {
+        final Label classNameLabel = new Label(mainComposite, SWT.NONE);
         classNameLabel.setText(Messages.createValidatorWizardPage_classNameLabel +" *");
         classNameLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).create()) ;
 
@@ -260,13 +260,13 @@ public class ValidatorWizardPage extends NewTypeWizardPage implements ISelection
         packageText.setLayoutData(GridDataFactory.swtDefaults().align(SWT.FILL, SWT.CENTER).grab(true,false).create());
 
 
-        UpdateValueStrategy packageTargetToModel = new UpdateValueStrategy() ;
+        final UpdateValueStrategy packageTargetToModel = new UpdateValueStrategy() ;
         packageTargetToModel.setConverter(new Converter(String.class,String.class) {
 
             @Override
-            public Object convert(Object from) {
+            public Object convert(final Object from) {
                 if(from != null){
-                    String packageName = from.toString() ;
+                    final String packageName = from.toString() ;
                     if(classNameText != null && !classNameText.isDisposed()){
                         return packageName +"." + classNameText.getText() ;
                     }
@@ -277,7 +277,7 @@ public class ValidatorWizardPage extends NewTypeWizardPage implements ISelection
         packageTargetToModel.setAfterGetValidator(new IValidator() {
 
             @Override
-            public IStatus validate(Object value) {
+            public IStatus validate(final Object value) {
                 if(!value.toString().isEmpty()){
                     return JavaConventions.validatePackageName(value.toString(), JavaCore.VERSION_1_6, JavaCore.VERSION_1_6);
                 } else {
@@ -286,15 +286,15 @@ public class ValidatorWizardPage extends NewTypeWizardPage implements ISelection
             }
         }) ;
 
-        UpdateValueStrategy packageModelToTarget = new UpdateValueStrategy() ;
+        final UpdateValueStrategy packageModelToTarget = new UpdateValueStrategy() ;
         packageModelToTarget.setConverter(new Converter(String.class,String.class) {
 
             @Override
-            public Object convert(Object from) {
+            public Object convert(final Object from) {
                 if(from != null){
-                    String qualifiedClassname = from.toString() ;
+                    final String qualifiedClassname = from.toString() ;
                     if(qualifiedClassname.indexOf(".") != -1){
-                        int i = qualifiedClassname.lastIndexOf(".") ;
+                        final int i = qualifiedClassname.lastIndexOf(".") ;
                         return qualifiedClassname.subSequence(0, i) ;
                     }else{
                         return "" ;
@@ -303,26 +303,26 @@ public class ValidatorWizardPage extends NewTypeWizardPage implements ISelection
                 return null;
             }
         }) ;
-        
+
         packageModelToTarget.setAfterConvertValidator(new IValidator() {
 
             @Override
-            public IStatus validate(Object value) {
+            public IStatus validate(final Object value) {
                 if(value == null || value.toString().isEmpty()){
                     return new Status(IStatus.ERROR, ValidatorPlugin.PLUGIN_ID,Messages.missingPackageName) ;
                 }
                 return JavaConventions.validatePackageName(value.toString(), JavaCore.VERSION_1_6, JavaCore.VERSION_1_6);
             }
         }) ;
-        
 
-        UpdateValueStrategy classTargetToModel = new UpdateValueStrategy() ;
+
+        final UpdateValueStrategy classTargetToModel = new UpdateValueStrategy() ;
         classTargetToModel.setConverter(new Converter(String.class,String.class) {
 
             @Override
-            public Object convert(Object from) {
+            public Object convert(final Object from) {
                 if(from != null){
-                    String className = from.toString() ;
+                    final String className = from.toString() ;
                     if(packageText != null && !packageText.isDisposed()){
                         return packageText.getText() +"." + className ;
                     }
@@ -333,7 +333,7 @@ public class ValidatorWizardPage extends NewTypeWizardPage implements ISelection
         classTargetToModel.setAfterGetValidator(new IValidator() {
 
             @Override
-            public IStatus validate(Object value) {
+            public IStatus validate(final Object value) {
                 if(value == null || value.toString().isEmpty()){
                     return new Status(IStatus.ERROR, ValidatorPlugin.PLUGIN_ID,Messages.missingClassname) ;
                 }
@@ -341,15 +341,15 @@ public class ValidatorWizardPage extends NewTypeWizardPage implements ISelection
             }
         }) ;
 
-        UpdateValueStrategy classModelToTarget = new UpdateValueStrategy() ;
+        final UpdateValueStrategy classModelToTarget = new UpdateValueStrategy() ;
         classModelToTarget.setConverter(new Converter(String.class,String.class) {
 
             @Override
-            public Object convert(Object from) {
+            public Object convert(final Object from) {
                 if(from != null){
-                    String qualifiedClassname = from.toString() ;
+                    final String qualifiedClassname = from.toString() ;
                     if(qualifiedClassname.indexOf(".") != -1){
-                        int i = qualifiedClassname.lastIndexOf(".") ;
+                        final int i = qualifiedClassname.lastIndexOf(".") ;
                         return qualifiedClassname.subSequence(i+1,qualifiedClassname.length()) ;
                     }else{
                         return qualifiedClassname ;
@@ -366,8 +366,8 @@ public class ValidatorWizardPage extends NewTypeWizardPage implements ISelection
         browsePackagesButton.setText(Messages.createValidatorWizardPage_browsePackages);
         browsePackagesButton.addListener(SWT.Selection, new Listener() {
             @Override
-            public void handleEvent(Event event) {
-                IPackageFragment selectedPackage = ValidatorWizardPage.this.choosePackage();
+            public void handleEvent(final Event event) {
+                final IPackageFragment selectedPackage = ValidatorWizardPage.this.choosePackage();
                 if (selectedPackage != null) {
                     packageText.setText(selectedPackage.getElementName());
                 }
@@ -377,11 +377,11 @@ public class ValidatorWizardPage extends NewTypeWizardPage implements ISelection
     }
 
     @Override
-    public void selectionChanged(SelectionChangedEvent event) {
+    public void selectionChanged(final SelectionChangedEvent event) {
         updateButtons(event.getSelection()) ;
     }
 
-    private void updateButtons(ISelection selection) {
+    private void updateButtons(final ISelection selection) {
         if(removeButton != null && !removeButton.isDisposed()){
             removeButton.setEnabled(!selection.isEmpty()) ;
         }

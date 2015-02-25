@@ -17,6 +17,8 @@
 package org.bonitasoft.studio.refactoring.core;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.bonitasoft.studio.model.expression.builders.ExpressionBuilder.anExpression;
+import static org.bonitasoft.studio.model.process.builders.DataBuilder.aData;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -51,7 +53,7 @@ public class DataScriptExpressionRefactoringActionTest {
     @Before
     public void setUp() throws Exception {
         final List<DataRefactorPair> pairsToRefactor = new ArrayList<DataRefactorPair>();
-        oldData = DataBuilder.createDataBuilder().withName("myData").build();
+        oldData = aData().withName("myData").build();
         pairsToRefactor.add(new DataRefactorPair(oldData, oldData));
         refactoringAction = new DataScriptExpressionRefactoringAction(pairsToRefactor,
                 Collections.<Expression> emptyList(),
@@ -69,8 +71,8 @@ public class DataScriptExpressionRefactoringActionTest {
 
     @Test
     public void should_retrieve_data_in_expression_dependencies() throws Exception {
-        final Data createData = DataBuilder.createDataBuilder().withName("myData").build();
-        final Expression expr = ExpressionBuilder.create().
+        final Data createData = aData().withName("myData").build();
+        final Expression expr = anExpression().
                 havingReferencedElements(createData,
                         ParameterBuilder.create().withName("myData").build()).build();
         final Map<EObject, EObject> eObject = refactoringAction.getReferencedObjectInScriptsOperation(expr);

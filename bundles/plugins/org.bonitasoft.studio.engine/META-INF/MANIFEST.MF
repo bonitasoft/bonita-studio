@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Bonita Workflow Engine
 Bundle-SymbolicName: org.bonitasoft.studio.engine;singleton:=true
-Bundle-Version: 6.5.0.qualifier
+Bundle-Version: 7.0.0.qualifier
 Bundle-Localization: plugin
 Bundle-Vendor: BonitaSoft S.A.
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
@@ -52,9 +52,7 @@ Export-Package: org.bonitasoft.studio.engine,org.bonitasoft.studio.eng
  tudio.engine.ui.dialog,org.bonitasoft.studio.engine.ui.wizard
 Bundle-Activator: org.bonitasoft.studio.engine.EnginePlugin
 Bundle-ActivationPolicy: lazy
-Import-Package: com.bonitasoft.engine.api,
- com.bonitasoft.engine.bpm.process.impl,
- org.bonitasoft.engine.api,
+Import-Package: org.bonitasoft.engine.api,
  org.bonitasoft.engine.bpm,
  org.bonitasoft.engine.bpm.bar,
  org.bonitasoft.engine.bpm.businessdata,

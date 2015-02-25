@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -24,6 +22,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import org.bonitasoft.engine.api.TenantAdministrationAPI;
+import org.bonitasoft.engine.business.data.BusinessDataRepositoryDeploymentException;
 import org.bonitasoft.engine.exception.UpdateException;
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.businessobject.BusinessObjectPlugin;
@@ -43,12 +43,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.IPreferenceStore;
 
-import com.bonitasoft.engine.api.TenantManagementAPI;
-import com.bonitasoft.engine.businessdata.BusinessDataRepositoryDeploymentException;
-
 /**
  * @author Romain Bioteau
- *
  */
 public class DeployBDMOperation implements IRunnableWithProgress {
 
@@ -104,10 +100,10 @@ public class DeployBDMOperation implements IRunnableWithProgress {
         BonitaStudioLog.debug(Messages.deployingBusinessObjects, BusinessObjectPlugin.PLUGIN_ID);
 
         final BOSEngineManager engineManagerEx = getBOSEngineManagerEx();
-        TenantManagementAPI tenantManagementAPI = null;
 
+        TenantAdministrationAPI tenantManagementAPI = null;
         try {
-            tenantManagementAPI = engineManagerEx.getTenantManagementAPI(session);
+            tenantManagementAPI = engineManagerEx.getTenantAdministrationAPI(session);
             if (!tenantManagementAPI.isPaused()) {
                 tenantManagementAPI.pause();
             }
