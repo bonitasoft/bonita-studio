@@ -18,6 +18,7 @@ import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValida
 import org.bonitasoft.studio.common.jface.databinding.validator.GroovyReferenceValidator;
 import org.bonitasoft.studio.common.jface.databinding.validator.InputLengthValidator;
 import org.bonitasoft.studio.common.jface.databinding.validator.RegExpValidator;
+import org.bonitasoft.studio.common.jface.databinding.validator.URLEncodableInputValidator;
 import org.eclipse.core.databinding.validation.IValidator;
 
 /**
@@ -47,6 +48,10 @@ public class ValidatorFactory {
 
     public static IValidator groovyReferenceValidator(final String inputName, final boolean checkEmptyField, final boolean checkLowerCaseForFirstChar) {
         return new GroovyReferenceValidator(inputName, checkEmptyField, checkLowerCaseForFirstChar);
+    }
+
+    public static IValidator urlEncodableInputValidator(final String inputName) {
+        return new URLEncodableInputValidator(inputName);
     }
 
 }
