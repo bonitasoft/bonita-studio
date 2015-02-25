@@ -35,6 +35,13 @@ public class TaskBuilder extends ActivityBuilder<Task, TaskBuilder> {
         return this;
     }
 
+    public TaskBuilder havingFormMapping(final FormMappingBuilder... formMappings) {
+        for (FormMappingBuilder formMappingBuilder : formMappings) {
+            getBuiltInstance().getFormMappings().add(formMappingBuilder.build());
+        }
+        return this;
+    }
+
     public TaskBuilder overrideActorsOfTheLane() {
         getBuiltInstance().setOverrideActorsOfTheLane(true);
         return this;

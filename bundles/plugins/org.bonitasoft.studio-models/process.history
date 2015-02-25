@@ -8757,5 +8757,177 @@
           featureName="eType" referenceValue="expression.ecore#//Expression" oldReferenceValue="process.ecore#//Data"/>
     </changes>
   </releases>
-  <releases/>
+  <releases>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Create" target="process.ecore#/" referenceName="eClassifiers"
+          element="process.ecore#//FormMapping">
+        <changes xsi:type="history:Set" element="process.ecore#//FormMapping" featureName="name"
+            dataValue="FormMapping"/>
+      </changes>
+      <operation name="newClass">
+        <parameters name="ePackage">
+          <referenceValue element="process.ecore#/"/>
+        </parameters>
+        <parameters name="name">
+          <dataValue>FormMapping</dataValue>
+        </parameters>
+        <parameters name="superClasses"/>
+        <parameters name="abstr">
+          <dataValue>false</dataValue>
+        </parameters>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Create" target="process.ecore#//FormMapping" referenceName="eStructuralFeatures"
+          element="process.ecore#//FormMapping/taskName">
+        <changes xsi:type="history:Set" element="process.ecore#//FormMapping/taskName"
+            featureName="name" dataValue="taskName"/>
+        <changes xsi:type="history:Set" element="process.ecore#//FormMapping/taskName"
+            featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      </changes>
+      <operation name="newAttribute">
+        <parameters name="eClass">
+          <referenceValue element="process.ecore#//FormMapping"/>
+        </parameters>
+        <parameters name="name">
+          <dataValue>taskName</dataValue>
+        </parameters>
+        <parameters name="type">
+          <referenceValue element="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        </parameters>
+        <parameters name="lowerBound">
+          <dataValue>0</dataValue>
+        </parameters>
+        <parameters name="upperBound">
+          <dataValue>1</dataValue>
+        </parameters>
+        <parameters name="defaultValue">
+          <dataValue xsi:nil="true"/>
+        </parameters>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Create" target="process.ecore#//FormMapping" referenceName="eStructuralFeatures"
+          element="process.ecore#//FormMapping/targetForm">
+        <changes xsi:type="history:Set" element="process.ecore#//FormMapping/targetForm"
+            featureName="name" dataValue="targetForm"/>
+        <changes xsi:type="history:Set" element="process.ecore#//FormMapping/targetForm"
+            featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      </changes>
+      <operation name="newAttribute">
+        <parameters name="eClass">
+          <referenceValue element="process.ecore#//FormMapping"/>
+        </parameters>
+        <parameters name="name">
+          <dataValue>targetForm</dataValue>
+        </parameters>
+        <parameters name="type">
+          <referenceValue element="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        </parameters>
+        <parameters name="lowerBound">
+          <dataValue>0</dataValue>
+        </parameters>
+        <parameters name="upperBound">
+          <dataValue>1</dataValue>
+        </parameters>
+        <parameters name="defaultValue">
+          <dataValue xsi:nil="true"/>
+        </parameters>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Create" target="process.ecore#//FormMapping" referenceName="eStructuralFeatures"
+          element="process.ecore#//FormMapping/external">
+        <changes xsi:type="history:Set" element="process.ecore#//FormMapping/external"
+            featureName="name" dataValue="external"/>
+        <changes xsi:type="history:Set" element="process.ecore#//FormMapping/external"
+            featureName="defaultValueLiteral" dataValue="false"/>
+        <changes xsi:type="history:Set" element="process.ecore#//FormMapping/external"
+            featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+      </changes>
+      <operation name="newAttribute">
+        <parameters name="eClass">
+          <referenceValue element="process.ecore#//FormMapping"/>
+        </parameters>
+        <parameters name="name">
+          <dataValue>external</dataValue>
+        </parameters>
+        <parameters name="type">
+          <referenceValue element="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+        </parameters>
+        <parameters name="lowerBound">
+          <dataValue>0</dataValue>
+        </parameters>
+        <parameters name="upperBound">
+          <dataValue>1</dataValue>
+        </parameters>
+        <parameters name="defaultValue">
+          <dataValue>false</dataValue>
+        </parameters>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Create" target="process.ecore#//FormMapping" referenceName="eStructuralFeatures"
+          element="process.ecore#//FormMapping/overview">
+        <changes xsi:type="history:Set" element="process.ecore#//FormMapping/overview"
+            featureName="name" dataValue="overview"/>
+        <changes xsi:type="history:Set" element="process.ecore#//FormMapping/overview"
+            featureName="defaultValueLiteral" dataValue="false"/>
+        <changes xsi:type="history:Set" element="process.ecore#//FormMapping/overview"
+            featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+      </changes>
+      <operation name="newAttribute">
+        <parameters name="eClass">
+          <referenceValue element="process.ecore#//FormMapping"/>
+        </parameters>
+        <parameters name="name">
+          <dataValue>overview</dataValue>
+        </parameters>
+        <parameters name="type">
+          <referenceValue element="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+        </parameters>
+        <parameters name="lowerBound">
+          <dataValue>0</dataValue>
+        </parameters>
+        <parameters name="upperBound">
+          <dataValue>1</dataValue>
+        </parameters>
+        <parameters name="defaultValue">
+          <dataValue>false</dataValue>
+        </parameters>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Create" target="process.ecore#//PageFlow" referenceName="eStructuralFeatures"
+          element="process.ecore#//PageFlow/formMappings">
+        <changes xsi:type="history:Set" element="process.ecore#//PageFlow/formMappings"
+            featureName="name" dataValue="formMappings"/>
+        <changes xsi:type="history:Set" element="process.ecore#//PageFlow/formMappings"
+            featureName="upperBound" dataValue="-1" oldDataValue="1"/>
+        <changes xsi:type="history:Set" element="process.ecore#//PageFlow/formMappings"
+            featureName="eType" referenceValue="process.ecore#//FormMapping"/>
+      </changes>
+      <operation name="newReference">
+        <parameters name="eClass">
+          <referenceValue element="process.ecore#//PageFlow"/>
+        </parameters>
+        <parameters name="name">
+          <dataValue>formMappings</dataValue>
+        </parameters>
+        <parameters name="type">
+          <referenceValue element="process.ecore#//FormMapping"/>
+        </parameters>
+        <parameters name="lowerBound">
+          <dataValue>0</dataValue>
+        </parameters>
+        <parameters name="upperBound">
+          <dataValue>-1</dataValue>
+        </parameters>
+        <parameters name="containment">
+          <dataValue>false</dataValue>
+        </parameters>
+        <parameters name="opposite"/>
+      </operation>
+    </changes>
+  </releases>
 </history:History>

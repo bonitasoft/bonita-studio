@@ -244,6 +244,14 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="stepSummary" eType="ecore:EClass expression.ecore#//Expression"
         containment="true"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="FormMapping">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="taskName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="targetForm" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="external" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
+        defaultValueLiteral="false"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="overview" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
+        defaultValueLiteral="false"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Gateway" eSuperTypes="#//FlowElement">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="gatewayType" eType="#//GatewayType"/>
   </eClassifiers>
@@ -377,6 +385,8 @@
         defaultValueLiteral="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="confirmationMessage" eType="ecore:EClass expression.ecore#//Expression"
         containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="formMappings" upperBound="-1"
+        eType="#//FormMapping"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="PageFlowTransition">
     <eStructuralFeatures xsi:type="ecore:EReference" name="from" eType="ecore:EClass form.ecore#//Form"/>
