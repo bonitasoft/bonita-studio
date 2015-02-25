@@ -16,8 +16,6 @@
  */
 package org.bonitasoft.studio.tests.repository;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import java.io.InputStream;
 import java.nio.file.Paths;
 import java.util.HashMap;
@@ -27,12 +25,8 @@ import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.pagedesigner.core.WorkspaceResourceServerManager;
 import org.bonitasoft.studio.pagedesigner.core.repository.WebPageFileStore;
 import org.bonitasoft.studio.pagedesigner.core.repository.WebPageRepositoryStore;
+import org.bonitasoft.studio.pagedesigner.core.resources.WorkspaceAPIEvent;
 import org.bonitasoft.studio.pagedesigner.core.resources.WorkspaceServerResource;
-import org.bonitasoft.workspace.client.api.WorkspaceResourceHandler;
-import org.bonitasoft.workspace.client.impl.StudioWorkspaceResourceHandler;
-import org.bonitasoft.workspace.common.LockStatus;
-import org.bonitasoft.workspace.common.ResourceNotFoundException;
-import org.bonitasoft.workspace.common.WorkspaceAPIEvent;
 import org.eclipse.jdt.launching.SocketUtil;
 import org.junit.After;
 import org.junit.Before;
@@ -93,24 +87,5 @@ public class PageDesignerWorkspaceIntegrationIT {
         final Response response = new Response(request);
         workspaceServerResource.init(null, request, response);
         workspaceServerResource.dispatch(fileStore.getResource().getLocation().toFile().toPath().toString());
-    }
-
-    @Test
-    public void should_a_client_preOpen_call_notify_repository() throws Exception {
-        final WorkspaceResourceHandler resourceHandler = new StudioWorkspaceResourceHandler("localhost", String.valueOf(port));
-        final Response response = resourceHandler.preOpen(Paths.get(WebPageRepositoryStore.WEB_FORM_REPOSITORY_NAME, fileName));
-        assertThat(response.getStatus().isSuccess()).isTrue();
-    }
-
-    @Test
-    public void should_a_client_getLockStatus_call_return_unlocked() throws Exception {
-        final WorkspaceResourceHandler resourceHandler = new StudioWorkspaceResourceHandler("localhost", String.valueOf(port));
-        assertThat(resourceHandler.getLockStatus(Paths.get(WebPageRepositoryStore.WEB_FORM_REPOSITORY_NAME, fileName))).isEqualTo(LockStatus.UNLOCKED);
-    }
-
-    @Test(expected=ResourceNotFoundException.class)
-    public void should_a_client_getLockStatus_call_throw_a_ResourceNotFoundException() throws Exception {
-        final WorkspaceResourceHandler resourceHandler = new StudioWorkspaceResourceHandler("localhost", String.valueOf(port));
-        resourceHandler.getLockStatus(Paths.get(WebPageRepositoryStore.WEB_FORM_REPOSITORY_NAME, "notexisting"));
     }
 }
