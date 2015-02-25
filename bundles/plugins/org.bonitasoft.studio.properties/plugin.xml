@@ -65,6 +65,7 @@
                label="%tab.throwMessage.label">
          </propertyTab>
          <propertyTab
+               afterTab="tab.forms.mapping"
                category="domain"
                id="tab.forms.entry"
                label="%tab.forms.entry">
@@ -151,6 +152,11 @@
                category="domain"
                id="tab.index"
                label="%tab.index.label">
+         </propertyTab>
+         <propertyTab
+               category="domain"
+               id="tab.forms.mapping"
+               label="%tab.forms.mapping">
          </propertyTab>
       </propertyTabs>
    </extension>
@@ -287,6 +293,14 @@
                       id="section.general.tab.transitionordering"
                       tab="tab.transitionordering"
                       viewID="org.bonitasoft.studio.views.properties.process.general">
+                </propertySection>
+                <propertySection
+                      class="org.bonitasoft.studio.properties.sections.forms.mapping.FormMappingSection"
+                      enablesFor="1"
+                      filter="org.bonitasoft.studio.properties.filters.PageFlowFilter"
+                      id="FormsMappingSection"
+                      tab="tab.forms.mapping"
+                      viewID="org.bonitasoft.studio.views.properties.application">
                 </propertySection>
       </propertySections>
    </extension>
