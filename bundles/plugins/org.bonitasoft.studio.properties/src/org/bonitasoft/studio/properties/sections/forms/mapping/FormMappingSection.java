@@ -63,21 +63,25 @@ public class FormMappingSection extends EObjectSelectionProviderSection {
         final TabbedPropertySheetWidgetFactory widgetFactory = aTabbedPropertySheetPage.getWidgetFactory();
     
         Composite mainComposite = widgetFactory.createComposite(parent);
+        mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
+      
         Composite buttonsComposite = widgetFactory.createComposite(mainComposite);
-        buttonsComposite.setLayoutData(GridDataFactory.swtDefaults().grab(false, true).create());
+        buttonsComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).create());
         buttonsComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0,0).spacing(0, 3).create());
         
         Button addButton = widgetFactory.createButton(buttonsComposite, "Add...", SWT.PUSH);
+        addButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         addButton.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
                addFormMapping();
             }
         });
-        widgetFactory.createButton(buttonsComposite, "Edit...", SWT.PUSH);
+        Button editButton = widgetFactory.createButton(buttonsComposite, "Edit...", SWT.PUSH);
+        editButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         Button removeButton = widgetFactory.createButton(buttonsComposite, "Remove", SWT.PUSH);
-       
+        removeButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         
         
         Table table = widgetFactory.createTable(mainComposite, SWT.BORDER);

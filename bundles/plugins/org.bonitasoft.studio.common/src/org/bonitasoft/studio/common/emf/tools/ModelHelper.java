@@ -2095,4 +2095,20 @@ public class ModelHelper {
         }
     }
 
+    public static Pool getParentPool(EObject semanticElement) {
+        EObject process = semanticElement;
+        while (process != null &&  !(process instanceof Pool)) {
+            if (process.eContainer() != null) {
+                process = process.eContainer();
+            } else {
+                break;
+            }
+        }
+        if (process instanceof Pool) {
+            return (Pool) process;
+        } else {
+            return null;
+        }
+    }
+
 }
