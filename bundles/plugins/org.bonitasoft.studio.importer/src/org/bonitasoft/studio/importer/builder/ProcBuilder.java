@@ -1832,7 +1832,7 @@ public class ProcBuilder implements IProcBuilder {
         commandStack.append(SetCommand.create(editingDomain,labelLocation,NotationPackage.Literals.LOCATION__X,location.x()));
         commandStack.append(SetCommand.create(editingDomain,labelLocation,NotationPackage.Literals.LOCATION__Y,location.y()));
         execute();
-        System.out.println(labelLocation);
+
     }
 
 
