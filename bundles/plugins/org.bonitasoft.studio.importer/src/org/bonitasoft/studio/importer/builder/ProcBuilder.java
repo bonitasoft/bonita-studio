@@ -1827,14 +1827,11 @@ public class ProcBuilder implements IProcBuilder {
      * @param labelPart
      */
     private void setLabelPosition(final Point location, final Node labelNode) {
-
         final Location labelLocation = (Location)labelNode.getLayoutConstraint();
         commandStack.append(SetCommand.create(editingDomain,labelLocation,NotationPackage.Literals.LOCATION__X,location.x()));
         commandStack.append(SetCommand.create(editingDomain,labelLocation,NotationPackage.Literals.LOCATION__Y,location.y()));
         execute();
-
+        System.out.println(labelLocation);
     }
-
-
 
 }
