@@ -19,8 +19,8 @@ package org.bonitasoft.studio.pagedesigner.core;
 import java.io.File;
 
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.pagedesigner.core.repository.WebFormRepositoryStore;
 import org.bonitasoft.studio.pagedesigner.core.repository.WebFragmentRepositoryStore;
+import org.bonitasoft.studio.pagedesigner.core.repository.WebPageRepositoryStore;
 import org.bonitasoft.studio.pagedesigner.core.repository.WebWidgetRepositoryStore;
 
 /**
@@ -35,7 +35,7 @@ public class WorkspaceSystemProperties {
     private static final String WORKSPACE_API_REST_URL = "workspace.api.rest.url";
 
     public String getPageRepositoryLocation() {
-        final WebFormRepositoryStore webFormRepository = getWebFormRepository();
+        final WebPageRepositoryStore webFormRepository = getWebPageRepository();
         if(webFormRepository == null){
             throw new IllegalStateException("WebFormRepositoryStore has not be loaded yet.");
         }
@@ -58,8 +58,8 @@ public class WorkspaceSystemProperties {
         return aSystemProperty(REPOSITORY_WIDGETS_PROPERTIES, webWidgetRepository.getResource().getLocation().toFile());
     }
 
-    protected WebFormRepositoryStore getWebFormRepository() {
-        return RepositoryManager.getInstance().getRepositoryStore(WebFormRepositoryStore.class);
+    protected WebPageRepositoryStore getWebPageRepository() {
+        return RepositoryManager.getInstance().getRepositoryStore(WebPageRepositoryStore.class);
     }
 
     protected WebFragmentRepositoryStore getWebFragmentRepository() {

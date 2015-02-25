@@ -25,8 +25,8 @@ import java.util.HashMap;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.pagedesigner.core.WorkspaceResourceServerManager;
-import org.bonitasoft.studio.pagedesigner.core.repository.WebFormFileStore;
-import org.bonitasoft.studio.pagedesigner.core.repository.WebFormRepositoryStore;
+import org.bonitasoft.studio.pagedesigner.core.repository.WebPageFileStore;
+import org.bonitasoft.studio.pagedesigner.core.repository.WebPageRepositoryStore;
 import org.bonitasoft.studio.pagedesigner.core.resources.WorkspaceServerResource;
 import org.bonitasoft.workspace.client.api.WorkspaceResourceHandler;
 import org.bonitasoft.workspace.client.impl.StudioWorkspaceResourceHandler;
@@ -47,7 +47,7 @@ import org.restlet.Response;
 public class PageDesignerWorkspaceIntegrationIT {
 
     private String fileName;
-    private WebFormFileStore fileStore;
+    private WebPageFileStore fileStore;
     private WorkspaceResourceServerManager workspaceResourceServerManager;
     private int port;
 
@@ -56,7 +56,7 @@ public class PageDesignerWorkspaceIntegrationIT {
         FileActionDialog.setDisablePopup(true);
         fileName = "7aaad167-cc7e-4afc-a8e6-391a389b8b32.json";
         final InputStream resourceAsStream = PageDesignerWorkspaceIntegrationIT.class.getResourceAsStream(fileName);
-        final WebFormRepositoryStore repositoryStore = RepositoryManager.getInstance().getRepositoryStore(WebFormRepositoryStore.class);
+        final WebPageRepositoryStore repositoryStore = RepositoryManager.getInstance().getRepositoryStore(WebPageRepositoryStore.class);
         fileStore = repositoryStore.importInputStream(fileName, resourceAsStream);
 
         workspaceResourceServerManager = WorkspaceResourceServerManager.getInstance();
@@ -80,7 +80,7 @@ public class PageDesignerWorkspaceIntegrationIT {
         request.setAttributes(attributes);
         final Response response = new Response(request);
         workspaceServerResource.init(null, request, response);
-        workspaceServerResource.dispatch(Paths.get(WebFormRepositoryStore.WEB_FORM_REPOSITORY_NAME, fileName).toString());
+        workspaceServerResource.dispatch(Paths.get(WebPageRepositoryStore.WEB_FORM_REPOSITORY_NAME, fileName).toString());
     }
 
     @Test
@@ -98,19 +98,19 @@ public class PageDesignerWorkspaceIntegrationIT {
     @Test
     public void should_a_client_preOpen_call_notify_repository() throws Exception {
         final WorkspaceResourceHandler resourceHandler = new StudioWorkspaceResourceHandler("localhost", String.valueOf(port));
-        final Response response = resourceHandler.preOpen(Paths.get(WebFormRepositoryStore.WEB_FORM_REPOSITORY_NAME, fileName));
+        final Response response = resourceHandler.preOpen(Paths.get(WebPageRepositoryStore.WEB_FORM_REPOSITORY_NAME, fileName));
         assertThat(response.getStatus().isSuccess()).isTrue();
     }
 
     @Test
     public void should_a_client_getLockStatus_call_return_unlocked() throws Exception {
         final WorkspaceResourceHandler resourceHandler = new StudioWorkspaceResourceHandler("localhost", String.valueOf(port));
-        assertThat(resourceHandler.getLockStatus(Paths.get(WebFormRepositoryStore.WEB_FORM_REPOSITORY_NAME, fileName))).isEqualTo(LockStatus.UNLOCKED);
+        assertThat(resourceHandler.getLockStatus(Paths.get(WebPageRepositoryStore.WEB_FORM_REPOSITORY_NAME, fileName))).isEqualTo(LockStatus.UNLOCKED);
     }
 
     @Test(expected=ResourceNotFoundException.class)
     public void should_a_client_getLockStatus_call_throw_a_ResourceNotFoundException() throws Exception {
         final WorkspaceResourceHandler resourceHandler = new StudioWorkspaceResourceHandler("localhost", String.valueOf(port));
-        resourceHandler.getLockStatus(Paths.get(WebFormRepositoryStore.WEB_FORM_REPOSITORY_NAME, "notexisting"));
+        resourceHandler.getLockStatus(Paths.get(WebPageRepositoryStore.WEB_FORM_REPOSITORY_NAME, "notexisting"));
     }
 }

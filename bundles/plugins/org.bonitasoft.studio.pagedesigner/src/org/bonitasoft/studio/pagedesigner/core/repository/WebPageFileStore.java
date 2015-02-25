@@ -27,9 +27,9 @@ import org.eclipse.ui.IWorkbenchPart;
  * @author Romain Bioteau
  *
  */
-public class WebFormFileStore extends AbstractFileStore {
+public class WebPageFileStore extends AbstractFileStore {
 
-    public WebFormFileStore(final String fileName, final IRepositoryStore<? extends IRepositoryFileStore> parentStore) {
+    public WebPageFileStore(final String fileName, final IRepositoryStore<? extends IRepositoryFileStore> parentStore) {
         super(fileName, parentStore);
     }
 

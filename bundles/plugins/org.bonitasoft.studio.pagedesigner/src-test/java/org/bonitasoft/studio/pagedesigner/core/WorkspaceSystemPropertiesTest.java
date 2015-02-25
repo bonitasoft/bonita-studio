@@ -23,8 +23,8 @@ import static org.mockito.Mockito.when;
 
 import java.io.File;
 
-import org.bonitasoft.studio.pagedesigner.core.repository.WebFormRepositoryStore;
 import org.bonitasoft.studio.pagedesigner.core.repository.WebFragmentRepositoryStore;
+import org.bonitasoft.studio.pagedesigner.core.repository.WebPageRepositoryStore;
 import org.bonitasoft.studio.pagedesigner.core.repository.WebWidgetRepositoryStore;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.Path;
@@ -48,7 +48,7 @@ public class WorkspaceSystemPropertiesTest {
     private WorkspaceSystemProperties workspaceSystemProperties;
 
     @Mock
-    private WebFormRepositoryStore webFormRepository;
+    private WebPageRepositoryStore webPageRepository;
 
     @Mock
     private WebFragmentRepositoryStore webFragmentRepository;
@@ -86,9 +86,9 @@ public class WorkspaceSystemPropertiesTest {
 
         when(webWidgetRepository.getResource()).thenReturn(widgetResource);
         when(webFragmentRepository.getResource()).thenReturn(fragmentResource);
-        when(webFormRepository.getResource()).thenReturn(formResource);
+        when(webPageRepository.getResource()).thenReturn(formResource);
 
-        doReturn(webFormRepository).when(workspaceSystemProperties).getWebFormRepository();
+        doReturn(webPageRepository).when(workspaceSystemProperties).getWebPageRepository();
         doReturn(webFragmentRepository).when(workspaceSystemProperties).getWebFragmentRepository();
         doReturn(webWidgetRepository).when(workspaceSystemProperties).getWebWidgetRepository();
     }
@@ -102,7 +102,7 @@ public class WorkspaceSystemPropertiesTest {
 
     @Test(expected = IllegalStateException.class)
     public void should_getPageRepositoryLocation_throw_an_IllegalStateException_if_store_is_not_loaded() throws Exception {
-        doReturn(null).when(workspaceSystemProperties).getWebFormRepository();
+        doReturn(null).when(workspaceSystemProperties).getWebPageRepository();
         workspaceSystemProperties.getPageRepositoryLocation();
     }
 

@@ -23,7 +23,7 @@
 <extension
       point="org.bonitasoft.studio.repositoryStore">
    <repositoryStore
-         class="org.bonitasoft.studio.pagedesigner.core.repository.WebFormRepositoryStore">
+         class="org.bonitasoft.studio.pagedesigner.core.repository.WebPageRepositoryStore">
    </repositoryStore>
    <repositoryStore
          class="org.bonitasoft.studio.pagedesigner.core.repository.WebFragmentRepositoryStore">

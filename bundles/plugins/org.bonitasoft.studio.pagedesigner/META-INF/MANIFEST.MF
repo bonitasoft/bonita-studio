@@ -22,9 +22,5 @@ Bundle-ActivationPolicy: lazy
 Export-Package: org.bonitasoft.studio.pagedesigner,
  org.bonitasoft.studio.pagedesigner.core,
  org.bonitasoft.studio.pagedesigner.core.repository,
- org.bonitasoft.studio.pagedesigner.core.resources,
- org.bonitasoft.workspace.client.api,
- org.bonitasoft.workspace.client.impl,
- org.bonitasoft.workspace.common
-Bundle-ClassPath: lib/workspace-api-1.0.0-SNAPSHOT.jar,
- .
+ org.bonitasoft.studio.pagedesigner.core.resources
+Bundle-ClassPath: .

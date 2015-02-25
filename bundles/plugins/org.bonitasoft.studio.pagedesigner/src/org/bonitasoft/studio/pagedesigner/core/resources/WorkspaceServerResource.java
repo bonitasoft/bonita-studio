@@ -32,11 +32,6 @@ import org.bonitasoft.studio.common.repository.filestore.FileStoreChangeEvent;
 import org.bonitasoft.studio.common.repository.filestore.FileStoreChangeEvent.EventType;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
-import org.bonitasoft.workspace.common.LockStatus;
-import org.bonitasoft.workspace.common.LockedResourceException;
-import org.bonitasoft.workspace.common.ResourceNotFoundException;
-import org.bonitasoft.workspace.common.WorkspaceAPIConstants;
-import org.bonitasoft.workspace.common.WorkspaceAPIEvent;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -54,6 +49,7 @@ public class WorkspaceServerResource extends ServerResource {
 
     public static final String ACTION_ATTRIBUTE = "action";
     public static final String FILEPATH_ATTRIBUTE = "filePath";
+    private static final String GET_LOCK_STATUS = "lockStatus";
 
     private String action;
 
@@ -72,7 +68,7 @@ public class WorkspaceServerResource extends ServerResource {
     }
 
     @Post
-    public void dispatch(final String filePath) throws ResourceNotFoundException, LockedResourceException {
+    public void dispatch(final String filePath) throws ResourceNotFoundException, LockedResourceException{
         if (filePath == null) {
             throw new IllegalArgumentException("filePath is null");
         }
@@ -106,11 +102,11 @@ public class WorkspaceServerResource extends ServerResource {
     }
 
     @Get
-    public String getLockStatus() throws ResourceNotFoundException {
+    public String getLockStatus() throws ResourceNotFoundException  {
         if (filePath == null) {
             throw new IllegalArgumentException("filePath is not set");
         }
-        if (!WorkspaceAPIConstants.GET_LOCK_STATUS.equals(action)) {
+        if (!GET_LOCK_STATUS.equals(action)) {
             throw new IllegalArgumentException("Unsupported action attribute "+action);
         }
         try {

@@ -28,11 +28,11 @@ import org.eclipse.swt.graphics.Image;
  * @author Romain Bioteau
  *
  */
-public class WebFormRepositoryStore extends AbstractRepositoryStore<WebFormFileStore> {
+public class WebPageRepositoryStore extends AbstractRepositoryStore<WebPageFileStore> {
 
     private final static Set<String> extensions = new HashSet<String>();
     public static final String JSON_EXTENSION = "json";
-    public static final String WEB_FORM_REPOSITORY_NAME = "web_forms";
+    public static final String WEB_FORM_REPOSITORY_NAME = "web_page";
 
     static {
         extensions.add(JSON_EXTENSION);
@@ -59,8 +59,8 @@ public class WebFormRepositoryStore extends AbstractRepositoryStore<WebFormFileS
     }
 
     @Override
-    public WebFormFileStore createRepositoryFileStore(final String fileName) {
-        return new WebFormFileStore(fileName, this);
+    public WebPageFileStore createRepositoryFileStore(final String fileName) {
+        return new WebPageFileStore(fileName, this);
     }
 
 }
