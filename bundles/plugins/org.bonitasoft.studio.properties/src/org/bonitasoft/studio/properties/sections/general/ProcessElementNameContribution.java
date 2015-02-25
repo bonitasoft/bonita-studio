@@ -14,8 +14,12 @@
  */
 package org.bonitasoft.studio.properties.sections.general;
 
+import static org.bonitasoft.studio.common.jface.databinding.ValidatorFactory.forbiddenCharactersValidator;
+import static org.bonitasoft.studio.common.jface.databinding.ValidatorFactory.minMaxLengthValidator;
+import static org.bonitasoft.studio.common.jface.databinding.ValidatorFactory.multiValidator;
+import static org.bonitasoft.studio.common.jface.databinding.ValidatorFactory.utf8InputValidator;
+
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.bonitasoft.studio.common.OpenNameAndVersionDialog;
@@ -23,10 +27,6 @@ import org.bonitasoft.studio.common.OpenNameAndVersionForDiagramDialog;
 import org.bonitasoft.studio.common.OpenNameAndVersionForDiagramDialog.ProcessesNameVersion;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.common.jface.databinding.MultiValidator;
-import org.bonitasoft.studio.common.jface.databinding.validator.InputLengthValidator;
-import org.bonitasoft.studio.common.jface.databinding.validator.SpecialCharactersValidator;
-import org.bonitasoft.studio.common.jface.databinding.validator.UTF8InputValidator;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.properties.AbstractNamePropertySectionContribution;
 import org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection;
@@ -51,7 +51,8 @@ import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.IValueChangeListener;
 import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
-import org.eclipse.core.databinding.validation.IValidator;
+import org.eclipse.core.databinding.validation.MultiValidator;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.edit.EMFEditObservables;
@@ -82,7 +83,7 @@ import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
  * @author Mickael Istria
  * @author Romain Bioteau
  */
-public class NameGridPropertySectionContribution extends AbstractNamePropertySectionContribution {
+public class ProcessElementNameContribution extends AbstractNamePropertySectionContribution {
 
     protected ISWTObservableValue observable;
     private UpdateValueStrategy labelModelToTargetUpdate;
@@ -107,13 +108,11 @@ public class NameGridPropertySectionContribution extends AbstractNamePropertySec
         }
     };
 
-    // private final DiagramRepositoryStore diagramStore;
-
     /**
      * @param tabbedPropertySheetPage
      * @param extensibleGridPropertySection
      */
-    public NameGridPropertySectionContribution(final TabbedPropertySheetPage tabbedPropertySheetPage,
+    public ProcessElementNameContribution(final TabbedPropertySheetPage tabbedPropertySheetPage,
             final ExtensibleGridPropertySection extensibleGridPropertySection) {
         super(tabbedPropertySheetPage, extensibleGridPropertySection);
     }
@@ -148,7 +147,6 @@ public class NameGridPropertySectionContribution extends AbstractNamePropertySec
      */
     @Override
     public void setEObject(final EObject object) {
-
         if (object instanceof Lane) {
             element = ModelHelper.getParentProcess(object);
         } else {
@@ -226,16 +224,7 @@ public class NameGridPropertySectionContribution extends AbstractNamePropertySec
 
     @Override
     protected void createBinding(final EMFDataBindingContext context) {
-        labelTargetToModelUpdate = new UpdateValueStrategy();
-
-        labelTargetToModelUpdate.setAfterGetValidator(new UTF8InputValidator(Messages.name));
-        final List<IValidator> validators = new ArrayList<IValidator>();
-        validators.add(new InputLengthValidator(Messages.name, element instanceof SequenceFlow ? 0 : 1, 50));
-        final MultiValidator multiValidation = new MultiValidator(validators);
-        labelTargetToModelUpdate.setBeforeSetValidator(multiValidation);
-        labelTargetToModelUpdate.setAfterConvertValidator(new SpecialCharactersValidator());
-
-        observable = SWTObservables.observeDelayedValue(400, SWTObservables.observeText(text, SWT.Modify));
+        observable = SWTObservables.observeDelayedValue(250, SWTObservables.observeText(text, SWT.Modify));
 
         final IObservableValue nameObservable = EMFEditObservables.observeValue(editingDomain, element, ProcessPackage.Literals.ELEMENT__NAME);
         nameObservable.addValueChangeListener(new IValueChangeListener() {
@@ -246,9 +235,26 @@ public class NameGridPropertySectionContribution extends AbstractNamePropertySec
                 updatePartName((String) event.diff.getNewValue(), Display.getDefault());
             }
         });
-        ControlDecorationSupport.create(context.bindValue(observable,
-                nameObservable, labelTargetToModelUpdate, null), SWT.LEFT);
+        context.bindValue(observable,
+                nameObservable);
+        final MultiValidator validationStatusProvider = nameValidationStatusProvider(observable);
+        context.addValidationStatusProvider(validationStatusProvider);
+        ControlDecorationSupport.create(validationStatusProvider, SWT.LEFT);
         bindingInitialized = true;
+    }
+
+    protected MultiValidator nameValidationStatusProvider(final IObservableValue nameTextObservable) {
+        return new MultiValidator() {
+
+            @Override
+            protected IStatus validate() {
+                return multiValidator()
+                        .addValidator(minMaxLengthValidator(Messages.name, element instanceof SequenceFlow ? 0 : 1, 255))
+                        .addValidator(utf8InputValidator(Messages.name))
+                        .addValidator(forbiddenCharactersValidator(Messages.name, '#', '%', '$')).create()
+                        .validate(nameTextObservable.getValue());
+            }
+        };
     }
 
     protected void updatePartName(final String name, final Display display) {
@@ -289,7 +295,7 @@ public class NameGridPropertySectionContribution extends AbstractNamePropertySec
     protected ITextAwareEditPart getTextAwareEditPart(final IStructuredSelection selection) {
         final Object ep = selection.getFirstElement();
         ITextAwareEditPart textAwareEditPart = null;
-        if (ep instanceof IGraphicalEditPart) {
+        if (ep instanceof IGraphicalEditPart && element.equals(((IGraphicalEditPart) ep).resolveSemanticElement())) {
             if (ep instanceof ITextAwareEditPart) {
                 textAwareEditPart = (ITextAwareEditPart) ep;
             }
@@ -310,7 +316,6 @@ public class NameGridPropertySectionContribution extends AbstractNamePropertySec
             editDiagramAndPoolNameAndVersion();
         }
     }
-
 
     protected void editDiagramAndPoolNameAndVersion() {
         final MainProcess diagram = ModelHelper.getMainProcess(element);

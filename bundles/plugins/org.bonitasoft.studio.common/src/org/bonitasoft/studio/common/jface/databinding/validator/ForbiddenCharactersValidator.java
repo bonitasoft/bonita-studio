@@ -20,28 +20,31 @@ import org.bonitasoft.studio.common.Messages;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.osgi.util.NLS;
 
 
 /**
  * @author Romain Bioteau
  */
-public class SpecialCharactersValidator implements IValidator{
+public class ForbiddenCharactersValidator implements IValidator{
 
     private final String inputName;
     private final char[] forbiddenCharacters;
 
-    public SpecialCharactersValidator(final String inputName, final char... forbiddenCharacters) {
+    public ForbiddenCharactersValidator(final String inputName, final char... forbiddenCharacters) {
         this.inputName = inputName;
         this.forbiddenCharacters = forbiddenCharacters;
     }
 
 	@Override
 	public IStatus validate(final Object value) {
-		if (value!=null && value instanceof String){
-			final String s = (String)value;
-			if (s.contains("%") || s.contains("#") || s.contains("$")){
-				return  ValidationStatus.error(Messages.InvalidCharacterError);
-			}
+        if (value != null) {
+            final String s = value.toString();
+            for (final char ch : forbiddenCharacters) {
+                if (s.indexOf(ch) != -1) {
+                    return ValidationStatus.error(NLS.bind(Messages.InvalidCharacterError, inputName, String.valueOf(ch)));
+                }
+            }
 		}
 		return ValidationStatus.ok();
 	}
