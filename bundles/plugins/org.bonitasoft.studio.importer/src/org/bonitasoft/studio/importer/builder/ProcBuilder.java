@@ -1806,12 +1806,11 @@ public class ProcBuilder implements IProcBuilder {
         execute();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bonitasoft.studio.importer.builder.IProcBuilder#setLabelPositionOnSequenceFlow(java.lang.String, double, double, double, double)
+    /**
+     * For SequenceFlow, the location need to be computed in the referential with x following the direction of the edge and y in anti-trigo
      */
     @Override
-    public void setLabelPositionOnSequenceFlowOrEvent( final Point location) throws ProcBuilderException {
+    public void setLabelPositionOnSequenceFlowOrEvent(final Point location) throws ProcBuilderException {
         if (currentView == null) {
             throw new ProcBuilderException("Impossible to set font style property. There is no view set");
         }
@@ -1820,7 +1819,6 @@ public class ProcBuilder implements IProcBuilder {
             setLabelPosition(location, labelNode);
         }
     }
-
 
     /**
      * @param location
