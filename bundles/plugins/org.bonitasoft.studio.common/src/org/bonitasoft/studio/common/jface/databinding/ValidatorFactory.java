@@ -67,17 +67,6 @@ public class ValidatorFactory {
     public static IValidator groovyReferenceValidator(final String inputName, final boolean checkEmptyField, final boolean checkLowerCaseForFirstChar) {
         return new GroovyReferenceValidator(inputName, checkEmptyField, checkLowerCaseForFirstChar);
     }
-        
-    public static IValidator forbiddenCharactersValidator(final String inputName, final char... forbiddenCharacters) {
-        return new ForbiddenCharactersValidator(inputName, forbiddenCharacters);
-    }
 
-    public static IValidator urlEncodableInputValidator(final String inputName) {
-        return new URLEncodableInputValidator(inputName);
-    }
-
-    public static IValidator utf8InputValidator(final String inputName) {
-        return new UTF8InputValidator(inputName);
-    }
 
 }
