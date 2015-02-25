@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Localization: plugin
 Bundle-Name: Page Designer Plugin
 Bundle-SymbolicName: org.bonitasoft.studio.pagedesigner;singleton:=true
-Bundle-Version: 6.5.0.qualifier
+Bundle-Version: 7.0.0.qualifier
 Bundle-Activator: org.bonitasoft.studio.pagedesigner.PageDesignerPlugin
 Bundle-Vendor: Bonitasoft S.A.
 Require-Bundle: org.eclipse.ui,
