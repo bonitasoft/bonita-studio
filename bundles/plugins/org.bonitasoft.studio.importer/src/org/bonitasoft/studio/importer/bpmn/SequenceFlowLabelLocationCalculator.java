@@ -47,7 +47,7 @@ public class SequenceFlowLabelLocationCalculator {
         return computeLabelLocation(bounds, edgeCenter, startPointOfCenterEdge, endPointOfCenterEdge);
     }
 
-    private Point computeLabelLocation(final Bounds bounds, final Point edgeCenter, final org.omg.spec.dd.dc.Point pointA, final org.omg.spec.dd.dc.Point pointB) {
+    protected Point computeLabelLocation(final Bounds bounds, final Point edgeCenter, final org.omg.spec.dd.dc.Point pointA, final org.omg.spec.dd.dc.Point pointB) {
         if (pointA.getX() - pointB.getX() == 0) {
             if (pointA.getY() - pointB.getY() > 0) {
                 return new Point(-(bounds.getY() - edgeCenter.y()), bounds.getX() - edgeCenter.x());//vertical Bottom-Up
@@ -67,7 +67,7 @@ public class SequenceFlowLabelLocationCalculator {
         return new Point(0, 0);
     }
 
-    private Point getEdgeCenter(final EList<org.omg.spec.dd.dc.Point> eList) {
+    protected Point getEdgeCenter(final EList<org.omg.spec.dd.dc.Point> eList) {
         final double edgeHalfLength = computeEdgeLength(eList) / 2;
         double total = 0;
         double tmp = 0;
@@ -85,7 +85,7 @@ public class SequenceFlowLabelLocationCalculator {
         return new Point(0, 0);
     }
 
-    private double computeEdgeLength(final EList<org.omg.spec.dd.dc.Point> eList) {
+    protected double computeEdgeLength(final EList<org.omg.spec.dd.dc.Point> eList) {
         double total = 0;
         for (int i = 0; i < eList.size() - 1; i++) {
             final org.omg.spec.dd.dc.Point pointA = eList.get(i);
@@ -99,23 +99,23 @@ public class SequenceFlowLabelLocationCalculator {
         return Math.sqrt(Math.pow(pointB.getX() - pointA.getX(), 2) + Math.pow(pointB.getY() - pointA.getY(), 2));
     }
 
-    private Point computeEdgeCenter(final double segmentLength, final org.omg.spec.dd.dc.Point a, final org.omg.spec.dd.dc.Point b) {
-        if (a.getX() - b.getX() == 0) {//Horizontal
-            if (a.getY() - b.getY() > 0) {//Right-to-left
+    protected Point computeEdgeCenter(final double segmentLength, final org.omg.spec.dd.dc.Point a, final org.omg.spec.dd.dc.Point b) {
+        if (a.getX() - b.getX() == 0) {//Vertical
+            if (a.getY() - b.getY() > 0) {//up_to_down
                 return new Point(a.getX(), a.getY() - segmentLength);
             } else {//Left-to-right
                 return new Point(a.getX(), a.getY() + segmentLength);
             }
         } else {
-            if (a.getY() - b.getY() == 0) {//Vertical
-                if (a.getX() - b.getX() > 0) {
+            if (a.getY() - b.getY() == 0) {//Horizontal
+                if (a.getX() - b.getX() > 0) {//right_to_left
                     return new Point(a.getX() - segmentLength, a.getY());
                 } else {
                     return new Point(a.getX() + segmentLength, a.getY());
                 }
             }
         }
-        return new Point(-1, -1);
+        return new Point(a.getX(),b.getX());
     }
 
 }
