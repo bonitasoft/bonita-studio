@@ -15,17 +15,14 @@
 package org.bonitasoft.studio.common.jface.databinding;
 
 import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
-<<<<<<< HEAD
-//github.com/bonitasoft/bonita-studio.git
-=======
->>>>>>> refs/remotes/origin/master
-import org.bonitasoft.studio.common.jface.databinding.validator.ForbiddenCharactersValidator;
-import org.bonitasoft.studio.common.jface.databinding.validator.GroovyReferenceValidator;
 import org.bonitasoft.studio.common.jface.databinding.validator.InputLengthValidator;
 import org.bonitasoft.studio.common.jface.databinding.validator.RegExpValidator;
+import org.eclipse.core.databinding.validation.IValidator;
+//github.com/bonitasoft/bonita-studio.git
+import org.bonitasoft.studio.common.jface.databinding.validator.ForbiddenCharactersValidator;
+import org.bonitasoft.studio.common.jface.databinding.validator.GroovyReferenceValidator;
 import org.bonitasoft.studio.common.jface.databinding.validator.URLEncodableInputValidator;
 import org.bonitasoft.studio.common.jface.databinding.validator.UTF8InputValidator;
-import org.eclipse.core.databinding.validation.IValidator;
 
 /**
  * @author Romain Bioteau
