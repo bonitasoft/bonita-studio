@@ -18,11 +18,13 @@ import org.bonitasoft.studio.common.jface.databinding.CustomEMFEditObservables;
 import org.bonitasoft.studio.common.properties.EObjectSelectionProviderSection;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.FormMapping;
+import org.bonitasoft.studio.model.process.Lane;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -122,6 +124,14 @@ public class FormMappingSection extends EObjectSelectionProviderSection {
         formsMappingListObservable.add(formMapping);
     }
 
+    @Override
+    protected EObject adaptEObject(EObject semanticElement) {
+        if(semanticElement instanceof Lane){
+            return semanticElement.eContainer();
+        }
+        return super.adaptEObject(semanticElement);
+    }
+    
     @Override
     public void dispose() {
         super.dispose();

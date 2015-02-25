@@ -105,8 +105,12 @@ public abstract class EObjectSelectionProviderSection extends AbstractBonitaDesc
     public void setInput(final IWorkbenchPart part, final ISelection selection) {
         super.setInput(part, selection);
         final EObject semanticElement = ((IGraphicalEditPart) ((IStructuredSelection) selection).getFirstElement()).resolveSemanticElement();
-        setSelection(new StructuredSelection(semanticElement));
+        setSelection(new StructuredSelection(adaptEObject(semanticElement)));
         setPoolContainer((Pool) ModelHelper.getParentPool(semanticElement));
+    }
+
+    protected EObject adaptEObject(EObject semanticElement) {
+        return semanticElement;
     }
 
     public Pool getPoolContainer() {

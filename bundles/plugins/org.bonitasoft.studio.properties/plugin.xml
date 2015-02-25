@@ -297,7 +297,7 @@
                 <propertySection
                       class="org.bonitasoft.studio.properties.sections.forms.mapping.FormMappingSection"
                       enablesFor="1"
-                      filter="org.bonitasoft.studio.properties.filters.PageFlowFilter"
+                      filter="org.bonitasoft.studio.properties.filters.FormMappingSectionFilter"
                       id="FormsMappingSection"
                       tab="tab.forms.mapping"
                       viewID="org.bonitasoft.studio.views.properties.application">
