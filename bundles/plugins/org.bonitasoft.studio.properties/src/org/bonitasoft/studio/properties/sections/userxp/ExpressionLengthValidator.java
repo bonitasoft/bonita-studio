@@ -12,41 +12,39 @@ import org.eclipse.emf.edit.domain.EditingDomain;
 
 public class ExpressionLengthValidator implements IExpressionValidator {
 
-	private Expression inputExpression;
-	private final int maxLength;
+    private Expression inputExpression;
+    private final int maxLength;
 
-	public ExpressionLengthValidator(final int maxLength){
-		this.maxLength=maxLength;
-	}
+    public ExpressionLengthValidator(final int maxLength) {
+        this.maxLength = maxLength;
+    }
 
-	@Override
-	public IStatus validate(final Object value) {
-		if (ExpressionConstants.CONSTANT_TYPE.equals(inputExpression.getType())){
-			if (((String)value).length()>maxLength){
-				return ValidationStatus.error(Messages.bind(Messages.errorDisplayLabelMaxLength,maxLength+1));
-			}
-		}
-	return Status.OK_STATUS;
+    @Override
+    public IStatus validate(final Object value) {
+        if (ExpressionConstants.CONSTANT_TYPE.equals(inputExpression.getType())) {
+            if (value instanceof String && ((String) value).length() > maxLength) {
+                return ValidationStatus.error(Messages.bind(Messages.errorDisplayLabelMaxLength, maxLength));
+            }
+        }
+        return Status.OK_STATUS;
 
-	}
+    }
 
-	@Override
-	public void setInputExpression(final Expression inputExpression) {
-		this.inputExpression = inputExpression;
+    @Override
+    public void setInputExpression(final Expression inputExpression) {
+        this.inputExpression = inputExpression;
 
-	}
+    }
 
-	@Override
-	public void setDomain(final EditingDomain domain) {
+    @Override
+    public void setDomain(final EditingDomain domain) {
 
+    }
 
-	}
+    @Override
+    public void setContext(final EObject context) {
 
-	@Override
-	public void setContext(final EObject context) {
-
-
-	}
+    }
 
     @Override
     public boolean isRelevantForExpressionType(final String type) {

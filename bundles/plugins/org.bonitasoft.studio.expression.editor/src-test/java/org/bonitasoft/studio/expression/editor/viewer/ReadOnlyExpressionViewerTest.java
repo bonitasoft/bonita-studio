@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014 Bonitasoft S.A.
+ * Copyright (C) 2014-2015 Bonitasoft S.A.
  * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -166,72 +166,107 @@ public class ReadOnlyExpressionViewerTest {
 
     @Test
     public void testUpdateRightOperandWithDocument() {
-        doCallRealMethod().when(roew).updateRightOperand(any(CompoundCommand.class), any(Operation.class), any(String.class));
+        doCallRealMethod().when(roew).updateRightOperand(any(CompoundCommand.class), any(Operation.class), any(String.class), any(Expression.class));
 
-        final Operation operation = ExpressionFactory.eINSTANCE.createOperation();
-        final Expression oldRightOperand = ExpressionFactory.eINSTANCE.createExpression();
-        operation.setRightOperand(oldRightOperand);
-        final Expression leftOperand = ExpressionFactory.eINSTANCE.createExpression();
-        operation.setLeftOperand(leftOperand);
-        roew.updateRightOperand(new CompoundCommand(), operation, ExpressionConstants.SET_DOCUMENT_OPERATOR);
+        final Operation operation = createEmptyOperation();
+
+        final Expression newLeftOperand = ExpressionFactory.eINSTANCE.createExpression();
+        operation.setLeftOperand(newLeftOperand);
+
+        roew.updateRightOperand(new CompoundCommand(), operation, ExpressionConstants.SET_DOCUMENT_OPERATOR, newLeftOperand);
 
         verify(roew).appendCommandToSetReturnType(any(CompoundCommand.class), any(Expression.class), eq(DocumentValue.class.getName()));
     }
 
-    @Test
-    public void testUpdateRightOperandWithDocumentMultiple() {
-        doCallRealMethod().when(roew).updateRightOperand(any(CompoundCommand.class), any(Operation.class), any(String.class));
-
+    protected Operation createEmptyOperation() {
         final Operation operation = ExpressionFactory.eINSTANCE.createOperation();
         final Expression oldRightOperand = ExpressionFactory.eINSTANCE.createExpression();
         operation.setRightOperand(oldRightOperand);
         final Expression leftOperand = ExpressionFactory.eINSTANCE.createExpression();
+        operation.setLeftOperand(leftOperand);
+        return operation;
+    }
+
+    @Test
+    public void testUpdateRightOperandWithDocumentMultiple() {
+        doCallRealMethod().when(roew).updateRightOperand(any(CompoundCommand.class), any(Operation.class), any(String.class), any(Expression.class));
+
+        final Operation operation = createEmptyOperation();
+
+        final Expression newLeftOperand = ExpressionFactory.eINSTANCE.createExpression();
         final Document documentReferenced = ProcessFactory.eINSTANCE.createDocument();
         documentReferenced.setMultiple(true);
-        leftOperand.getReferencedElements().add(documentReferenced);
-        operation.setLeftOperand(leftOperand);
-        roew.updateRightOperand(new CompoundCommand(), operation, ExpressionConstants.SET_LIST_DOCUMENT_OPERATOR);
+        newLeftOperand.getReferencedElements().add(documentReferenced);
+        operation.setLeftOperand(newLeftOperand);
+
+        roew.updateRightOperand(new CompoundCommand(), operation, ExpressionConstants.SET_LIST_DOCUMENT_OPERATOR, newLeftOperand);
 
         verify(roew).appendCommandToSetReturnType(any(CompoundCommand.class), any(Expression.class), eq(List.class.getName()));
     }
 
     @Test
     public void testUpdateRightOperandWithDocumentFromDocumentAndClearedExpression() {
-        doCallRealMethod().when(roew).updateRightOperand(any(CompoundCommand.class), any(Operation.class), any(String.class));
+        doCallRealMethod().when(roew).updateRightOperand(any(CompoundCommand.class), any(Operation.class), any(String.class), any(Expression.class));
 
-        final Operation operation = ExpressionFactory.eINSTANCE.createOperation();
-        final Expression oldRightOperand = ExpressionFactory.eINSTANCE.createExpression();
-        operation.setRightOperand(oldRightOperand);
-        final Expression leftOperand = ExpressionFactory.eINSTANCE.createExpression();
-        operation.setLeftOperand(leftOperand);
-        roew.updateRightOperand(new CompoundCommand(), operation, ExpressionConstants.SET_DOCUMENT_OPERATOR);
+        final Operation operation = createEmptyOperation();
+
+        final Expression newLeftOperand = ExpressionFactory.eINSTANCE.createExpression();
+        newLeftOperand.setReturnType(String.class.getName());
+        operation.setLeftOperand(newLeftOperand);
+
+        roew.updateRightOperand(new CompoundCommand(), operation, ExpressionConstants.SET_DOCUMENT_OPERATOR, newLeftOperand);
 
         verify(roew).appendCommandToSetReturnType(any(CompoundCommand.class), any(Expression.class), eq(DocumentValue.class.getName()));
     }
 
     @Test
     public void testUpdateRightOperandWithPrimitiveType() {
-        doCallRealMethod().when(roew).updateRightOperand(any(CompoundCommand.class), any(Operation.class), any(String.class));
+        doCallRealMethod().when(roew).updateRightOperand(any(CompoundCommand.class), any(Operation.class), any(String.class), any(Expression.class));
 
-        final Operation operation = ExpressionFactory.eINSTANCE.createOperation();
-        final Expression oldRightOperand = ExpressionHelper.createConstantExpression("", "");
-        operation.setRightOperand(oldRightOperand);
-        final Expression leftOperand = ExpressionFactory.eINSTANCE.createExpression();
-        leftOperand.setReturnType(String.class.getName());
-        operation.setLeftOperand(leftOperand);
-        roew.updateRightOperand(new CompoundCommand(), operation, ExpressionConstants.ASSIGNMENT_OPERATOR);
+        final Operation operation = createOperationWithEmptyConstantRightOperand();
+
+        final Expression newLeftOperand = ExpressionFactory.eINSTANCE.createExpression();
+        newLeftOperand.setReturnType(String.class.getName());
+        operation.setLeftOperand(newLeftOperand);
+
+        roew.updateRightOperand(new CompoundCommand(), operation, ExpressionConstants.ASSIGNMENT_OPERATOR, newLeftOperand);
 
         verify(roew).appendCommandToSetReturnType(any(CompoundCommand.class), any(Expression.class), eq(String.class.getName()));
     }
 
     @Test
+    public void testUpdateRightOperandWithBooleanPrimitiveType() {
+        doCallRealMethod().when(roew).updateRightOperand(any(CompoundCommand.class), any(Operation.class), any(String.class), any(Expression.class));
+
+        final Operation operation = createOperationWithEmptyConstantRightOperand();
+
+        final Expression newLeftOperand = ExpressionFactory.eINSTANCE.createExpression();
+        newLeftOperand.setReturnType(Boolean.class.getName());
+        operation.setLeftOperand(newLeftOperand);
+
+        roew.updateRightOperand(new CompoundCommand(), operation, ExpressionConstants.ASSIGNMENT_OPERATOR, newLeftOperand);
+
+        verify(roew).appendCommandToSetReturnType(any(CompoundCommand.class), any(Expression.class), eq(Boolean.class.getName()));
+    }
+
+    protected Operation createOperationWithEmptyConstantRightOperand() {
+        final Operation operation = ExpressionFactory.eINSTANCE.createOperation();
+        final Expression oldRightOperand = ExpressionHelper.createConstantExpression("", "");
+        operation.setRightOperand(oldRightOperand);
+        final Expression oldLeftOperand = ExpressionFactory.eINSTANCE.createExpression();
+        oldLeftOperand.setReturnType(String.class.getName());
+        operation.setLeftOperand(oldLeftOperand);
+        return operation;
+    }
+
+    @Test
     public void testUpdateRightOperandNotDoneWithNoLeftOperand() {
-        doCallRealMethod().when(roew).updateRightOperand(any(CompoundCommand.class), any(Operation.class), any(String.class));
+        doCallRealMethod().when(roew).updateRightOperand(any(CompoundCommand.class), any(Operation.class), any(String.class), any(Expression.class));
 
         final Operation operation = ExpressionFactory.eINSTANCE.createOperation();
         final Expression oldRightOperand = ExpressionFactory.eINSTANCE.createExpression();
         operation.setRightOperand(oldRightOperand);
-        roew.updateRightOperand(new CompoundCommand(), operation, ExpressionConstants.SET_DOCUMENT_OPERATOR);
+        roew.updateRightOperand(new CompoundCommand(), operation, ExpressionConstants.SET_DOCUMENT_OPERATOR, null);
 
         verify(roew, times(0)).appendCommandToSetReturnType(any(CompoundCommand.class), any(Expression.class), eq(DocumentValue.class.getName()));
     }

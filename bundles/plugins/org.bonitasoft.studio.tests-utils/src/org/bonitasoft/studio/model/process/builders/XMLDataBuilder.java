@@ -25,7 +25,7 @@ import org.bonitasoft.studio.model.process.XMLData;
  */
 public class XMLDataBuilder extends DataBuilder<XMLData, XMLDataBuilder> {
 
-    public static XMLDataBuilder createXMLDataBuilder() {
+    public static XMLDataBuilder anXMLData() {
         return new XMLDataBuilder();
     }
 

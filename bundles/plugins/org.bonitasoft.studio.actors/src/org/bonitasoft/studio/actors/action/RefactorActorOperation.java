@@ -57,11 +57,11 @@ public class RefactorActorOperation extends AbstractRefactorOperation<String, Ac
     }
 
     @Override
-    protected void doExecute(final IProgressMonitor monitor) {
+    protected CompoundCommand doBuildCompoundCommand(final CompoundCommand compoundCommand, final IProgressMonitor monitor) {
         monitor.beginTask(Messages.updateActorReferences, IProgressMonitor.UNKNOWN);
         final String id = ModelHelper.getEObjectID(process);
         final String fileName = id + ".conf";
-        final ProcessConfigurationRepositoryStore processConfStore = (ProcessConfigurationRepositoryStore) RepositoryManager.getInstance().getCurrentRepository()
+        final ProcessConfigurationRepositoryStore processConfStore = RepositoryManager.getInstance().getCurrentRepository()
                 .getRepositoryStore(ProcessConfigurationRepositoryStore.class);
         final ProcessConfigurationFileStore file = processConfStore.getChild(fileName);
         Configuration localeConfiguration = null;
@@ -75,10 +75,6 @@ public class RefactorActorOperation extends AbstractRefactorOperation<String, Ac
             configurations.add(localeConfiguration);
         }
         configurations.addAll(process.getConfigurations());
-
-        if (compoundCommand == null) {
-            compoundCommand = new CompoundCommand();
-        }
         for(final ActorRefactorPair pairToRefactor : pairsToRefactor){
             final Actor actor = pairToRefactor.getOldValue();
             for (final Configuration configuration : configurations) {
@@ -86,7 +82,7 @@ public class RefactorActorOperation extends AbstractRefactorOperation<String, Ac
                     final List<ActorMapping> actorMappings = configuration.getActorMappings().getActorMapping();
                     for (final ActorMapping actorMapping : actorMappings) {
                         if (actorMapping.getName().equals(actor.getName())) {
-                            compoundCommand.append(SetCommand.create(domain, actorMapping, ActorMappingPackage.Literals.ACTOR_MAPPING__NAME,
+                            compoundCommand.append(SetCommand.create(getEditingDomain(), actorMapping, ActorMappingPackage.Literals.ACTOR_MAPPING__NAME,
                                     pairToRefactor.getNewValueName()));
                         }
                     }
@@ -95,8 +91,9 @@ public class RefactorActorOperation extends AbstractRefactorOperation<String, Ac
                     }
                 }
             }
-            compoundCommand.append(SetCommand.create(domain, actor, ProcessPackage.Literals.ELEMENT__NAME, pairToRefactor.getNewValueName()));
+            compoundCommand.append(SetCommand.create(getEditingDomain(), actor, ProcessPackage.Literals.ELEMENT__NAME, pairToRefactor.getNewValueName()));
         }
+        return compoundCommand;
     }
 
     @Override

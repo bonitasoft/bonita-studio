@@ -23,7 +23,7 @@ import org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionCon
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.Lane;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditor;
-import org.bonitasoft.studio.properties.sections.general.NameGridPropertySectionContribution;
+import org.bonitasoft.studio.properties.sections.general.ProcessElementNameContribution;
 import org.eclipse.core.databinding.observable.ChangeEvent;
 import org.eclipse.core.databinding.observable.IChangeListener;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
@@ -38,7 +38,7 @@ import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
  * @author Mickael Istria
  *
  */
-public class LaneNameSectionContribution extends NameGridPropertySectionContribution implements IExtensibleGridPropertySectionContribution {
+public class LaneNameSectionContribution extends ProcessElementNameContribution implements IExtensibleGridPropertySectionContribution {
 
 	public LaneNameSectionContribution(
 			TabbedPropertySheetPage tabbedPropertySheetPage, ExtensibleGridPropertySection extensibleGridPropertySection) {
