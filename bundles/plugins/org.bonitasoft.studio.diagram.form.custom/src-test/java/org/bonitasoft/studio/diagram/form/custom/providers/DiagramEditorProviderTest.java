@@ -21,6 +21,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Map;
 
+import org.assertj.core.api.Assertions;
 import org.bonitasoft.studio.diagram.form.custom.part.CustomFormDiagramEditor;
 import org.bonitasoft.studio.importer.builder.ProcBuilderException;
 import org.bonitasoft.studio.model.form.FormPackage;
@@ -33,7 +34,6 @@ import org.eclipse.gmf.runtime.emf.core.resources.GMFResourceFactory;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.part.FileEditorInput;
-import org.fest.assertions.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

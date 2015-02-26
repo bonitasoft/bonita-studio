@@ -60,7 +60,7 @@ public class IResourceImporter {
 
         final List<IFolder> folderSortedList = getFolders(rootContainer);
 
-        Collections.sort(folderSortedList, importFolderComparator);
+        Collections.sort(folderSortedList,Collections.reverseOrder(importFolderComparator));
         final Counter nbFileToImport = new Counter();
         for (final IFolder folder : folderSortedList) {
             try {
