@@ -175,6 +175,9 @@ public class BPMNToProc extends ToProcProcessor {
     private EList<TRootElement> rootElements;
     protected Diagram diagram;
     private IProcBuilder builder;
+
+
+
     private final List<String> subProcessesId = new ArrayList<String>();
     private File result;
     protected Map<String, Actor> participants;
@@ -1062,7 +1065,7 @@ public class BPMNToProc extends ToProcProcessor {
         }
     }
 
-    private void initializeLabelPositionOnSequenceFlow(final String sequenceFlowID) throws ProcBuilderException {
+    protected void initializeLabelPositionOnSequenceFlow(final String sequenceFlowID) throws ProcBuilderException {
         if (sequenceFlowID != null && !sequenceFlowID.isEmpty()) {
             final BPMNEdge edge = getBPMNEdgeFor(sequenceFlowID);
             if (edge != null) {
@@ -1695,7 +1698,7 @@ public class BPMNToProc extends ToProcProcessor {
         }
     }
 
-    private void initializeLabelPositionOnEvent(final String eventId) throws ProcBuilderException{
+    protected void initializeLabelPositionOnEvent(final String eventId) throws ProcBuilderException{
         if (eventId !=null && !eventId.isEmpty()){
             final BPMNShape shape = getBPMNShapeForBpmnID(eventId);
             if (shape !=null){
@@ -2774,7 +2777,7 @@ public class BPMNToProc extends ToProcProcessor {
      * @param id
      * @return the BPMNEdge corresponding to the bpmn element with id
      */
-    private BPMNEdge getBPMNEdgeFor(final String id) {
+    protected BPMNEdge getBPMNEdgeFor(final String id) {
         for (final BPMNPlane processDiagram : bpmnProcessDiagrams) {
             for (final DiagramElement diagramElement : processDiagram
                     .getDiagramElement()) {
@@ -2844,5 +2847,20 @@ public class BPMNToProc extends ToProcProcessor {
     @Override
     public List<File> getResources() {
         return Collections.singletonList(result);
+    }
+
+    /**
+     * @return the builder
+     */
+    public IProcBuilder getBuilder() {
+        return builder;
+    }
+
+
+    /**
+     * @param builder the builder to set
+     */
+    public void setBuilder(final IProcBuilder builder) {
+        this.builder = builder;
     }
 }

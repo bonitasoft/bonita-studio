@@ -10,7 +10,7 @@ import org.omg.spec.bpmn.di.DiFactory;
 import org.omg.spec.dd.dc.Bounds;
 import org.omg.spec.dd.dc.DcFactory;
 import org.omg.spec.dd.dc.Point;
-;
+
 
 
 

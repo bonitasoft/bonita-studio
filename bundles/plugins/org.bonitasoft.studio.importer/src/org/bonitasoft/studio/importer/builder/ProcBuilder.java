@@ -190,9 +190,15 @@ public class ProcBuilder implements IProcBuilder {
     private final Map<Element, String> elementToReplaceName;
     private View currentView;
 
+
     public ProcBuilder() {
         this(new NullProgressMonitor());
     }
+
+
+
+
+
 
     public ProcBuilder(final IProgressMonitor progressMonitor) {
         monitor = progressMonitor;
@@ -1728,18 +1734,6 @@ public class ProcBuilder implements IProcBuilder {
         }
     }
 
-    public void addSourceAnchor(final Point sourceAnchor) throws ProcBuilderException {
-        if (!(currentElement instanceof Connection)) {
-            throw new ProcBuilderException("Impossible to add a source anchor on " + currentElement != null ? ((Element) currentElement).getName() : "null");
-        }
-
-        final IGraphicalEditPart edge = GMFTools.findEditPart(diagramPart, currentElement);
-
-        if (edge != null) {
-
-        }
-
-    }
 
     public void addTargetAnchor(final Point targetAnchor) throws ProcBuilderException {
         if (!(currentElement instanceof Connection)) {
@@ -1824,12 +1818,26 @@ public class ProcBuilder implements IProcBuilder {
      * @param location
      * @param labelPart
      */
-    private void setLabelPosition(final Point location, final Node labelNode) {
+    protected void setLabelPosition(final Point location, final Node labelNode) {
         final Location labelLocation = (Location)labelNode.getLayoutConstraint();
         commandStack.append(SetCommand.create(editingDomain,labelLocation,NotationPackage.Literals.LOCATION__X,location.x()));
         commandStack.append(SetCommand.create(editingDomain,labelLocation,NotationPackage.Literals.LOCATION__Y,location.y()));
         execute();
-        System.out.println(labelLocation);
     }
+
+    /**
+     * @param currentView the currentView to set
+     */
+    public void setCurrentView(final View currentView) {
+        this.currentView = currentView;
+    }
+
+    /**
+     * @return the currentView
+     */
+    public View getCurrentView() {
+        return currentView;
+    }
+
 
 }
