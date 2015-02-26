@@ -12,24 +12,27 @@ public class FormMappingAssert extends AbstractAssert<FormMappingAssert, FormMap
 
     /**
      * Creates a new </code>{@link FormMappingAssert}</code> to make assertions on actual FormMapping.
+     * 
      * @param actual the FormMapping we want to make assertions on.
      */
-    public FormMappingAssert(FormMapping actual) {
+    public FormMappingAssert(final FormMapping actual) {
         super(actual, FormMappingAssert.class);
     }
 
     /**
      * An entry point for FormMappingAssert to follow AssertJ standard <code>assertThat()</code> statements.<br>
      * With a static import, one's can write directly : <code>assertThat(myFormMapping)</code> and get specific assertion with code completion.
+     * 
      * @param actual the FormMapping we want to make assertions on.
      * @return a new </code>{@link FormMappingAssert}</code>
      */
-    public static FormMappingAssert assertThat(FormMapping actual) {
+    public static FormMappingAssert assertThat(final FormMapping actual) {
         return new FormMappingAssert(actual);
     }
 
     /**
      * Verifies that the actual FormMapping is external.
+     * 
      * @return this assertion object.
      * @throws AssertionError - if the actual FormMapping is not external.
      */
@@ -38,11 +41,12 @@ public class FormMappingAssert extends AbstractAssert<FormMappingAssert, FormMap
         isNotNull();
 
         // we overrides the default error message with a more explicit one
-        String errorMessage = format("Expected actual FormMapping to be external but was not.", actual);
+        final String errorMessage = format("Expected actual FormMapping to be external but was not.", actual);
 
         // check
-        if (!actual.isExternal())
+        if (!actual.isExternal()) {
             throw new AssertionError(errorMessage);
+        }
 
         // return the current assertion for method chaining
         return this;
@@ -50,6 +54,7 @@ public class FormMappingAssert extends AbstractAssert<FormMappingAssert, FormMap
 
     /**
      * Verifies that the actual FormMapping is not external.
+     * 
      * @return this assertion object.
      * @throws AssertionError - if the actual FormMapping is external.
      */
@@ -58,11 +63,12 @@ public class FormMappingAssert extends AbstractAssert<FormMappingAssert, FormMap
         isNotNull();
 
         // we overrides the default error message with a more explicit one
-        String errorMessage = format("Expected actual FormMapping not to be external but was.", actual);
+        final String errorMessage = format("Expected actual FormMapping not to be external but was.", actual);
 
         // check
-        if (actual.isExternal())
+        if (actual.isExternal()) {
             throw new AssertionError(errorMessage);
+        }
 
         // return the current assertion for method chaining
         return this;
@@ -70,6 +76,7 @@ public class FormMappingAssert extends AbstractAssert<FormMappingAssert, FormMap
 
     /**
      * Verifies that the actual FormMapping is overview.
+     * 
      * @return this assertion object.
      * @throws AssertionError - if the actual FormMapping is not overview.
      */
@@ -78,11 +85,12 @@ public class FormMappingAssert extends AbstractAssert<FormMappingAssert, FormMap
         isNotNull();
 
         // we overrides the default error message with a more explicit one
-        String errorMessage = format("Expected actual FormMapping to be overview but was not.", actual);
+        final String errorMessage = format("Expected actual FormMapping to be overview but was not.", actual);
 
         // check
-        if (!actual.isOverview())
+        if (!actual.isOverview()) {
             throw new AssertionError(errorMessage);
+        }
 
         // return the current assertion for method chaining
         return this;
@@ -90,6 +98,7 @@ public class FormMappingAssert extends AbstractAssert<FormMappingAssert, FormMap
 
     /**
      * Verifies that the actual FormMapping is not overview.
+     * 
      * @return this assertion object.
      * @throws AssertionError - if the actual FormMapping is overview.
      */
@@ -98,11 +107,12 @@ public class FormMappingAssert extends AbstractAssert<FormMappingAssert, FormMap
         isNotNull();
 
         // we overrides the default error message with a more explicit one
-        String errorMessage = format("Expected actual FormMapping not to be overview but was.", actual);
+        final String errorMessage = format("Expected actual FormMapping not to be overview but was.", actual);
 
         // check
-        if (actual.isOverview())
+        if (actual.isOverview()) {
             throw new AssertionError(errorMessage);
+        }
 
         // return the current assertion for method chaining
         return this;
@@ -110,16 +120,17 @@ public class FormMappingAssert extends AbstractAssert<FormMappingAssert, FormMap
 
     /**
      * Verifies that the actual FormMapping's targetForm is equal to the given one.
+     * 
      * @param targetForm the given targetForm to compare the actual FormMapping's targetForm to.
      * @return this assertion object.
      * @throws AssertionError - if the actual FormMapping's targetForm is not equal to the given one.
      */
-    public FormMappingAssert hasTargetForm(String targetForm) {
+    public FormMappingAssert hasTargetForm(final String targetForm) {
         // check that actual FormMapping we want to make assertions on is not null.
         isNotNull();
 
         // we overrides the default error message with a more explicit one
-        String errorMessage = format("\nExpected <%s> targetForm to be:\n  <%s>\n but was:\n  <%s>", actual, targetForm, actual.getTargetForm());
+        final String errorMessage = format("\nExpected <%s> targetForm to be:\n  <%s>\n but was:\n  <%s>", actual, targetForm, actual.getTargetForm());
 
         // check
         if (!actual.getTargetForm().equals(targetForm)) {
@@ -132,19 +143,43 @@ public class FormMappingAssert extends AbstractAssert<FormMappingAssert, FormMap
 
     /**
      * Verifies that the actual FormMapping's taskName is equal to the given one.
+     * 
      * @param taskName the given taskName to compare the actual FormMapping's taskName to.
      * @return this assertion object.
      * @throws AssertionError - if the actual FormMapping's taskName is not equal to the given one.
      */
-    public FormMappingAssert hasTaskName(String taskName) {
+    public FormMappingAssert hasTaskName(final String taskName) {
         // check that actual FormMapping we want to make assertions on is not null.
         isNotNull();
 
         // we overrides the default error message with a more explicit one
-        String errorMessage = format("\nExpected <%s> taskName to be:\n  <%s>\n but was:\n  <%s>", actual, taskName, actual.getTaskName());
+        final String errorMessage = format("\nExpected <%s> taskName to be:\n  <%s>\n but was:\n  <%s>", actual, taskName, actual.getTaskName());
 
         // check
         if (!actual.getTaskName().equals(taskName)) {
+            throw new AssertionError(errorMessage);
+        }
+
+        // return the current assertion for method chaining
+        return this;
+    }
+
+    /**
+     * Verifies that the actual FormMapping's url is equal to the given one.
+     * 
+     * @param url the given url to compare the actual FormMapping's url to.
+     * @return this assertion object.
+     * @throws AssertionError - if the actual FormMapping's url is not equal to the given one.
+     */
+    public FormMappingAssert hasUrl(final String url) {
+        // check that actual FormMapping we want to make assertions on is not null.
+        isNotNull();
+
+        // we overrides the default error message with a more explicit one
+        final String errorMessage = format("\nExpected <%s> url to be:\n  <%s>\n but was:\n  <%s>", actual, url, actual.getUrl());
+
+        // check
+        if (!actual.getUrl().equals(url)) {
             throw new AssertionError(errorMessage);
         }
 

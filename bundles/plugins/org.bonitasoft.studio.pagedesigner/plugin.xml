@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?eclipse version="3.4"?>
 <plugin>
 
 <extension
@@ -32,5 +31,20 @@
          class="org.bonitasoft.studio.pagedesigner.core.repository.WebWidgetRepositoryStore">
    </repositoryStore>
 </extension>
-
+<extension
+      point="org.eclipse.ui.propertiesView">
+   <excludeSources
+         id="org.bonitasoft.studio.pagedesigner.formMapping">
+   </excludeSources>
+</extension>
+<extension
+      point="org.eclipse.ui.views">
+   <e4view
+         category="org.bonitasoft.studio.application.bonita"
+         class="org.bonitasoft.studio.pagedesigner.ui.part.FormMappingPart"
+         id="org.bonitasoft.studio.pagedesigner.formMapping"
+         name="FormMapping"
+         restorable="true">
+   </e4view>
+</extension>
 </plugin>

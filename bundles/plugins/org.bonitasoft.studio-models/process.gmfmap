@@ -343,6 +343,15 @@
               body="return org.bonitasoft.studio.common.emf.tools.ExpressionHelper.createExpression(&quot;multiInstanceIterator&quot;,&quot;multiInstanceIterator&quot;,org.bonitasoft.studio.common.ExpressionConstants.MULTIINSTANCE_ITERATOR_TYPE,Object.class.getName(),false);"
               language="java"/>
         </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//PageFlow/formMapping"/>
+          <value
+              body="return org.bonitasoft.studio.model.process.ProcessFactory.eINSTANCE.createFormMapping();"
+              language="java"/>
+        </initializers>
       </domainInitializer>
       <labelMappings
           xsi:type="gmfmap:FeatureLabelMapping">
@@ -1984,6 +1993,15 @@
               href="process.ecore#//RecapFlow/recapPageFlowRedirectionURL"/>
           <value
               body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//PageFlow/formMapping"/>
+          <value
+              body="return org.bonitasoft.studio.model.process.ProcessFactory.eINSTANCE.createFormMapping();"
               language="java"/>
         </initializers>
       </domainInitializer>

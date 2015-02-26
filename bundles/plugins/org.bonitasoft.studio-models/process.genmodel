@@ -623,6 +623,7 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//FormMapping/targetForm"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//FormMapping/external"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//FormMapping/overview"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//FormMapping/url"/>
     </genClasses>
     <genClasses ecoreClass="process.ecore#//Gateway">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//Gateway/gatewayType"/>
@@ -703,7 +704,7 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//PageFlow/entryRedirectionActions"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//PageFlow/transmitURLAsParameter"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EReference process.ecore#//PageFlow/confirmationMessage"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference process.ecore#//PageFlow/formMappings"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//PageFlow/formMapping"/>
     </genClasses>
     <genClasses ecoreClass="process.ecore#//PageFlowTransition">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference process.ecore#//PageFlowTransition/from"/>
