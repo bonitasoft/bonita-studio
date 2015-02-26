@@ -14,9 +14,12 @@
  */
 package org.bonitasoft.studio.importer.bpmn;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
@@ -24,6 +27,7 @@ import static org.mockito.Mockito.verify;
 import org.bonitasoft.studio.importer.builder.ProcBuilder;
 import org.bonitasoft.studio.importer.builder.ProcBuilderException;
 import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.emf.common.util.EMap;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,6 +36,9 @@ import org.omg.spec.bpmn.di.BPMNEdge;
 import org.omg.spec.bpmn.di.BPMNLabel;
 import org.omg.spec.bpmn.di.BPMNShape;
 import org.omg.spec.bpmn.di.DiFactory;
+import org.omg.spec.bpmn.model.DocumentRoot;
+import org.omg.spec.bpmn.model.ModelFactory;
+import org.omg.spec.bpmn.model.TEvent;
 import org.omg.spec.dd.dc.Bounds;
 import org.omg.spec.dd.dc.DcFactory;
 
@@ -219,7 +226,36 @@ public class BPMNToProcTest {
         verify(builder,never()).setLabelPositionOnSequenceFlowOrEvent(any(Point.class));
     }
 
+    @Test
+    public void shouldNotUpdateXMLNamespace(){
+        final DocumentRoot documentRoot = mock(DocumentRoot.class);
+        final EMap<String, String> map=mock(EMap.class);
+        doReturn(map).when(documentRoot).getXMLNSPrefixMap();
+        bpmnToProc.updateXMLNamespaceIfNeeded(documentRoot);
+    }
 
+  @Test
+  public void shouldReturnNullWhenComputingBoundaryName(){
+    final TEvent event = ModelFactory.eINSTANCE.createTBoundaryEvent();
+    final String name=bpmnToProc.computeBoundaryName(event);
+    assertNull(name);
+  }
 
+  @Test
+  public void shouldReturnStringWhenComputingBoundaryName(){
+      final TEvent event = ModelFactory.eINSTANCE.createTBoundaryEvent();
+      final String name = "myEvent";
+      event.setName(name);
+      assertEquals(name,bpmnToProc.computeBoundaryName(event));
+  }
+
+  @Test
+  public void shouldReturnIdWhenComputingBoundaryName(){
+      final TEvent event = ModelFactory.eINSTANCE.createTBoundaryEvent();
+      event.setName("");
+      final String id = "myEvent";
+      event.setId(id);
+      assertEquals(id,bpmnToProc.computeBoundaryName(event));
+  }
 
 }

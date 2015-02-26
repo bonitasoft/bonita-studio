@@ -329,7 +329,7 @@ public class BPMNToProc extends ToProcProcessor {
         return null;
     }
 
-    private void updateXMLNamespaceIfNeeded(final DocumentRoot docRoot) {
+    protected void updateXMLNamespaceIfNeeded(final DocumentRoot docRoot) {
         for (final java.util.Map.Entry<String, String> entry : docRoot
                 .getXMLNSPrefixMap().entrySet()) {
             if ("http://jcp.org/en/jsr/detail?id=270".equals(entry
@@ -343,7 +343,7 @@ public class BPMNToProc extends ToProcProcessor {
         }
     }
 
-    private String calculateBonitaDiagramName(final TDefinitions docRootDefinitions) {
+    protected String calculateBonitaDiagramName(final TDefinitions docRootDefinitions) {
         String name = null;
         if (docRootDefinitions.getName() == null
                 || docRootDefinitions.getName().isEmpty()) {
@@ -630,7 +630,7 @@ public class BPMNToProc extends ToProcProcessor {
         }
     }
 
-    private String computeBoundaryName(final TEvent flowNode) {
+    protected String computeBoundaryName(final TEvent flowNode) {
         String name;
         if (flowNode.getName() != null
                 && flowNode.getName().length() > 0) {
