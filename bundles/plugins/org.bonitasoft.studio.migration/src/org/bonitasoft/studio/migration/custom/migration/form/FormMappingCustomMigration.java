@@ -14,12 +14,16 @@
  */
 package org.bonitasoft.studio.migration.custom.migration.form;
 
+import static com.google.common.collect.FluentIterable.from;
+
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.eclipse.emf.edapt.migration.CustomMigration;
 import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.emf.edapt.spi.migration.Instance;
 import org.eclipse.emf.edapt.spi.migration.Metamodel;
 import org.eclipse.emf.edapt.spi.migration.Model;
+
+import com.google.common.base.Predicate;
 
 /**
  * @author Romain Bioteau
@@ -28,11 +32,24 @@ public class FormMappingCustomMigration extends CustomMigration {
 
     @Override
     public void migrateAfter(final Model model, final Metamodel metamodel) throws MigrationException {
-        for (final Instance pageFlowInstance : model.getAllInstances("process.PageFlow")) {
-            if (!pageFlowInstance.isSet(ProcessPackage.Literals.PAGE_FLOW__FORM_MAPPING)) {
-                pageFlowInstance.set("formMapping", model.newInstance("process.FormMapping"));
-            }
+        for (final Instance instance : from(model.getAllInstances("process.PageFlow")).filter(
+                withoutFormMapping()).toList()) {
+            instantiateFormMapping(instance, model);
         }
+    }
+
+    private Predicate<Instance> withoutFormMapping() {
+        return new Predicate<Instance>() {
+
+            @Override
+            public boolean apply(final Instance input) {
+                return !input.isSet(ProcessPackage.Literals.PAGE_FLOW__FORM_MAPPING);
+            }
+        };
+    }
+
+    private void instantiateFormMapping(final Instance input, final Model model) {
+        input.set("formMapping", model.newInstance("process.FormMapping"));
     }
 
 }

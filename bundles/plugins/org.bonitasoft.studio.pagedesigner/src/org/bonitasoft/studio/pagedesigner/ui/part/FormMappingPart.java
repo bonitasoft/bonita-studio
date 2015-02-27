@@ -14,15 +14,25 @@
  */
 package org.bonitasoft.studio.pagedesigner.ui.part;
 
+import java.util.Arrays;
+
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.jface.databinding.CustomEMFEditObservables;
+import org.bonitasoft.studio.expression.editor.provider.ExpressionLabelProvider;
+import org.bonitasoft.studio.expression.editor.widget.ContentAssistText;
+import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.core.databinding.observable.value.IValueChangeListener;
+import org.eclipse.core.databinding.observable.value.SelectObservableValue;
+import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.di.Focus;
 import org.eclipse.e4.ui.services.IServiceConstants;
@@ -37,6 +47,7 @@ import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
@@ -45,7 +56,7 @@ public class FormMappingPart {
     private EMFDataBindingContext context;
 
     @Inject
-    private EObjectAdaptableSelectionProvider selectionProvider;
+    private PageFlowAdaptableSelectionProvider selectionProvider;
 
     @PostConstruct
     public void createControls(final Composite parent) {
@@ -53,48 +64,125 @@ public class FormMappingPart {
         final FormToolkit toolkit = new FormToolkit(parent.getDisplay());
 
         final Composite mainComposite = toolkit.createComposite(parent);
-        mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).create());
+        final StackLayout mainStackLayout = new StackLayout();
+        mainComposite.setLayout(mainStackLayout);
 
-        final Form form = toolkit.createForm(mainComposite);
+        final Composite noContentComposite = toolkit.createComposite(mainComposite);
+        noContentComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(15, 15).create());
+
+        toolkit.createLabel(noContentComposite, "Form mapping is only available on Pool and Human task elements.");
+
+        final Composite contentComposite = toolkit.createComposite(mainComposite);
+        contentComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).create());
+
+        final IObservableValue eObjectSelectionObservable = ViewersObservables.observeSingleSelection(selectionProvider);
+        eObjectSelectionObservable.addValueChangeListener(new IValueChangeListener() {
+
+            @Override
+            public void handleValueChange(final ValueChangeEvent event) {
+                final Object eObject = event.diff.getNewValue();
+                if (eObject != null) {
+                    mainStackLayout.topControl = contentComposite;
+                } else {
+                    mainStackLayout.topControl = noContentComposite;
+                }
+                mainComposite.layout();
+            }
+        });
+        final Object value = eObjectSelectionObservable.getValue();
+        mainStackLayout.topControl = value != null ? contentComposite : noContentComposite;
+
+        final Form form = toolkit.createForm(contentComposite);
+        toolkit.decorateFormHeading(form);
         form.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         form.setText("Form Mapping");
 
         final Composite body = form.getBody();
-        body.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).create());
+        body.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).extendedMargins(10, 10, 10, 10).create());
 
         final Button pageDesignerRadio = toolkit.createButton(body, "Page designer", SWT.RADIO);
+        pageDesignerRadio.setLayoutData(GridDataFactory.swtDefaults().align(SWT.LEFT, SWT.CENTER).create());
         final Button externalRadio = toolkit.createButton(body, "External URL", SWT.RADIO);
+        externalRadio.setLayoutData(GridDataFactory.swtDefaults().align(SWT.LEFT, SWT.CENTER).create());
 
-        final Composite stackedComposite = toolkit.createComposite(body);
-        stackedComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        final StackLayout stackLayout = new StackLayout();
-        stackedComposite.setLayout(stackLayout);
-
-        final Composite pageDesignerMappingComposite = createPageDesignerMappingComposite(toolkit, stackedComposite);
-
-    }
-
-    private Composite createPageDesignerMappingComposite(final FormToolkit toolkit, final Composite stackedComposite) {
-        final Composite composite = toolkit.createComposite(stackedComposite);
-        final Label label = toolkit.createLabel(composite, "Form id");
-        label.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        final SelectObservableValue externalObservable = new SelectObservableValue(Boolean.class);
+        externalObservable.addOption(Boolean.FALSE, SWTObservables.observeSelection(pageDesignerRadio));
+        externalObservable.addOption(Boolean.TRUE, SWTObservables.observeSelection(externalRadio));
 
         final IObservableValue formMappingObservable = CustomEMFEditObservables.observeDetailValue(Realm.getDefault(),
                 ViewersObservables.observeSingleSelection(selectionProvider),
                 ProcessPackage.Literals.PAGE_FLOW__FORM_MAPPING);
-        context.bindValue(SWTObservables.observeText(label, SWT.Modify),
+
+        context.bindValue(externalObservable,
+                CustomEMFEditObservables.observeDetailValue(Realm.getDefault(),
+                        formMappingObservable,
+                        ProcessPackage.Literals.FORM_MAPPING__EXTERNAL));
+
+        final Composite stackedComposite = toolkit.createComposite(body);
+        stackedComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).span(2, 1).create());
+        final StackLayout stackLayout = new StackLayout();
+        stackedComposite.setLayout(stackLayout);
+
+        final Composite pageDesignerMappingComposite = createPageDesignerMappingComposite(toolkit, stackedComposite);
+        final Composite urlMappingComposite = createURLMappingComposite(toolkit, stackedComposite);
+        externalObservable.addValueChangeListener(new IValueChangeListener() {
+
+            @Override
+            public void handleValueChange(final ValueChangeEvent event) {
+                final Boolean newValue = (Boolean) event.diff.getNewValue();
+                if (newValue) {
+                    stackLayout.topControl = urlMappingComposite;
+                } else {
+                    stackLayout.topControl = pageDesignerMappingComposite;
+                }
+                stackedComposite.layout();
+            }
+        });
+        final Object externalValue = externalObservable.getValue();
+        stackLayout.topControl = externalValue != null && (Boolean) externalValue ? urlMappingComposite : pageDesignerMappingComposite;
+    }
+
+    private Composite createPageDesignerMappingComposite(final FormToolkit toolkit, final Composite stackedComposite) {
+        final Composite composite = toolkit.createComposite(stackedComposite);
+        composite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).extendedMargins(10, 0, 10, 0).create());
+        final Label label = toolkit.createLabel(composite, "Target form");
+        label.setLayoutData(GridDataFactory.swtDefaults().align(SWT.RIGHT, SWT.CENTER).create());
+
+        final ContentAssistText targetFormText = new ContentAssistText(composite, new ExpressionLabelProvider(), SWT.BORDER);
+        targetFormText.setLayoutData(GridDataFactory.fillDefaults().hint(300, SWT.DEFAULT).create());
+        targetFormText.setProposalEnabled(true);
+        targetFormText.getAutocompletion().setFilteredExpressionType(Arrays.asList(ExpressionConstants.VARIABLE_TYPE,
+                ExpressionConstants.PARAMETER_TYPE, ExpressionConstants.DOCUMENT_TYPE, ExpressionConstants.DOCUMENT_REF_TYPE));
+        targetFormText.getAutocompletion().setCreateShortcutZone(true);
+        targetFormText.getAutocompletion().setProposals(
+                new Expression[] { ExpressionHelper.createConstantExpression("form-name", "form-id1", String.class.getName()) });
+
+        final IObservableValue formMappingObservable = CustomEMFEditObservables.observeDetailValue(Realm.getDefault(),
+                ViewersObservables.observeSingleSelection(selectionProvider),
+                ProcessPackage.Literals.PAGE_FLOW__FORM_MAPPING);
+        context.bindValue(SWTObservables.observeText(targetFormText.getTextControl(), SWT.Modify),
                 CustomEMFEditObservables.observeDetailValue(Realm.getDefault(), formMappingObservable, ProcessPackage.Literals.FORM_MAPPING__TARGET_FORM));
         return composite;
     }
 
     private Composite createURLMappingComposite(final FormToolkit toolkit, final Composite stackedComposite) {
         final Composite composite = toolkit.createComposite(stackedComposite);
-        final Label label = toolkit.createLabel(composite, "URL");
-        label.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        composite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).extendedMargins(10, 0, 10, 0).create());
+        composite.setLayoutData(GridDataFactory.fillDefaults().create());
 
-        context.bindValue(SWTObservables.observeText(label, SWT.Modify), CustomEMFEditObservables.observeDetailValue(Realm.getDefault(),
+        final Label label = toolkit.createLabel(composite, "URL");
+        label.setLayoutData(GridDataFactory.swtDefaults().align(SWT.LEFT, SWT.CENTER).create());
+
+        final Text urlText = toolkit.createText(composite, "", SWT.BORDER);
+        urlText.setLayoutData(GridDataFactory.fillDefaults().hint(300, SWT.DEFAULT).create());
+
+        final IObservableValue formMappingObservable = CustomEMFEditObservables.observeDetailValue(Realm.getDefault(),
                 ViewersObservables.observeSingleSelection(selectionProvider),
-                ProcessPackage.Literals.ELEMENT__NAME));
+                ProcessPackage.Literals.PAGE_FLOW__FORM_MAPPING);
+
+        context.bindValue(SWTObservables.observeText(urlText, SWT.Modify), CustomEMFEditObservables.observeDetailValue(Realm.getDefault(),
+                formMappingObservable,
+                ProcessPackage.Literals.FORM_MAPPING__URL));
         return composite;
     }
 

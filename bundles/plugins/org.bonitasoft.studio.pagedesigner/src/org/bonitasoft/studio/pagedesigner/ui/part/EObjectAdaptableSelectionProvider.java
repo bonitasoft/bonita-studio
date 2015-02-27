@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.e4.core.di.annotations.Creatable;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -30,10 +29,9 @@ import org.eclipse.jface.viewers.StructuredSelection;
 /**
  * @author Romain Bioteau
  */
-@Creatable
-public class EObjectAdaptableSelectionProvider implements ISelectionProvider {
+public abstract class EObjectAdaptableSelectionProvider implements ISelectionProvider, IAdaptable {
 
-    private ISelection selection;
+    protected ISelection selection;
     private final List<ISelectionChangedListener> listeners = new ArrayList<ISelectionChangedListener>();
 
     @Override
@@ -60,15 +58,20 @@ public class EObjectAdaptableSelectionProvider implements ISelectionProvider {
         if (selection == null) {
             return;
         }
-        this.selection = new StructuredSelection();
+        this.selection = selection;
+        this.selection = adaptSelection(selection);
+        fireSelectionChanged(this.selection);
+    }
+
+    private ISelection adaptSelection(final ISelection selection) {
         final Object firstElement = ((IStructuredSelection) selection).getFirstElement();
         if (firstElement instanceof IAdaptable) {
-            final Object adapter = ((IAdaptable) firstElement).getAdapter(EObject.class);
+            final Object adapter = getAdapter(EObject.class);
             if (adapter != null) {
-                this.selection = new StructuredSelection(adapter);
+                return new StructuredSelection(adapter);
             }
         }
-        fireSelectionChanged(this.selection);
+        return new StructuredSelection();
     }
 
     private void fireSelectionChanged(final ISelection selection) {
@@ -77,4 +80,7 @@ public class EObjectAdaptableSelectionProvider implements ISelectionProvider {
         }
     }
 
+    @SuppressWarnings("rawtypes")
+    @Override
+    public abstract Object getAdapter(Class adapter);
 }

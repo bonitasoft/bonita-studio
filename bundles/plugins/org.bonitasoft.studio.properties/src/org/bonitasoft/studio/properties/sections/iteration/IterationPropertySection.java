@@ -191,18 +191,15 @@ public class IterationPropertySection extends EObjectSelectionProviderSection im
                 switch (type) {
                     case NONE:
                         stackLayout.topControl = noneComposite;
-                        stackedComposite.layout();
                         break;
                     case STANDARD:
                         stackLayout.topControl = standardLoopContent;
-                        stackedComposite.layout();
                         break;
                     default:
                         stackLayout.topControl = multiInstanceContent;
-                        stackedComposite.layout();
                         break;
                 }
-
+                stackedComposite.layout();
             }
         });
 

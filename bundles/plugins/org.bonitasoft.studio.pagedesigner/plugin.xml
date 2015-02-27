@@ -47,4 +47,12 @@
          restorable="true">
    </e4view>
 </extension>
+<extension
+      point="org.bonitasoft.studio.expression.proposalListener">
+   <proposalListner
+         name="&lt;A&gt;Create a new form...&lt;/A&gt;"
+         providerClass="org.bonitasoft.studio.pagedesigner.ui.part.CreateNewFormProposal"
+         type="TYPE_CONSTANT">
+   </proposalListner>
+</extension>
 </plugin>
