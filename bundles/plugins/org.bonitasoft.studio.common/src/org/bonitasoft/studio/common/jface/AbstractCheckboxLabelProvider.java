@@ -16,6 +16,7 @@
  */
 package org.bonitasoft.studio.common.jface;
 
+
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.StyledCellLabelProvider;
@@ -42,6 +43,7 @@ public abstract class AbstractCheckboxLabelProvider extends StyledCellLabelProvi
     protected static final String DISABLED_CHECKED_KEY = "checkedKeyDisabled";// NON-NLS-1
 
     protected static final String DISABLED_UNCHECKED_KEY = "uncheckKeyDisabled";// NON-NLS-1
+
 
     public AbstractCheckboxLabelProvider() {
         if (JFaceResources.getImageRegistry().getDescriptor(UNCHECK_KEY) == null) {
@@ -94,15 +96,16 @@ public abstract class AbstractCheckboxLabelProvider extends StyledCellLabelProvi
         return true;
     }
 
+
     private Image makeShot(final boolean type, final boolean enabled) {
-        // Hopefully no platform uses exactly this color because we'll make
-        // it transparent in the image.
         final Display display = Display.getDefault();
         final Color greenScreen = new Color(display, 222, 223, 224);
+
 
         final Shell shell = new Shell(SWT.NO_TRIM);
         shell.setVisible(false);
         shell.setLocation(42, 42);
+
         // otherwise we have a default gray color
         shell.setBackground(greenScreen);
 
@@ -112,7 +115,6 @@ public abstract class AbstractCheckboxLabelProvider extends StyledCellLabelProvi
         if (!enabled) {
             button.setEnabled(false);
         }
-
         // otherwise an image is located in a corner
         button.setLocation(1, 1);
         final Point bsize = button.computeSize(SWT.DEFAULT, SWT.DEFAULT);
@@ -169,6 +171,8 @@ public abstract class AbstractCheckboxLabelProvider extends StyledCellLabelProvi
         }
 
     }
+
+
 
     @Override
     protected void measure(final Event event, final Object element) {

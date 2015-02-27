@@ -44,15 +44,19 @@ public class AvailableExpressionTypeFilter extends ViewerFilter {
      */
     @Override
     public boolean select(final Viewer viewer, final Object context, final Object element) {
-        if (contentTypes.contains(ExpressionConstants.VARIABLE_TYPE)) {
-            contentTypes.add(ExpressionConstants.JAVA_TYPE);
-            contentTypes.add(ExpressionConstants.XPATH_TYPE);
-            contentTypes.add(ExpressionConstants.MULTIINSTANCE_ITERATOR_TYPE);
+        return isExpressionAllowed(element, getContentTypes());
+    }
+
+    protected boolean isExpressionAllowed(final Object element, final Set<String> allowedExpressionTypes) {
+        if (allowedExpressionTypes.contains(ExpressionConstants.VARIABLE_TYPE)) {
+            allowedExpressionTypes.add(ExpressionConstants.JAVA_TYPE);
+            allowedExpressionTypes.add(ExpressionConstants.XPATH_TYPE);
+            allowedExpressionTypes.add(ExpressionConstants.MULTIINSTANCE_ITERATOR_TYPE);
         }
         if (element instanceof Expression) {
-            return contentTypes.contains(((Expression) element).getType());
+            return allowedExpressionTypes.contains(((Expression) element).getType());
         } else if (element instanceof IExpressionProvider) {
-            return contentTypes.contains(((IExpressionProvider) element).getExpressionType());
+            return allowedExpressionTypes.contains(((IExpressionProvider) element).getExpressionType());
         }
         return true;
     }

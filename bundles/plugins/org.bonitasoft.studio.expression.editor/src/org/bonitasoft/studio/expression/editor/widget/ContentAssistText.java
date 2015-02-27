@@ -25,9 +25,6 @@ import org.bonitasoft.studio.expression.editor.autocompletion.AutoCompletionFiel
 import org.bonitasoft.studio.expression.editor.autocompletion.IBonitaContentProposalListener2;
 import org.bonitasoft.studio.expression.editor.autocompletion.IExpressionProposalLabelProvider;
 import org.bonitasoft.studio.pics.Pics;
-import org.eclipse.core.databinding.observable.value.IValueChangeListener;
-import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
-import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.fieldassist.TextContentAdapter;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -84,7 +81,7 @@ public class ContentAssistText extends Composite implements SWTBotConstants {
         setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
 
 
-        textControl = new Text(this, style | SWT.SINGLE);
+        textControl = new Text(this,style | SWT.SINGLE);
         textControl.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
         textControl.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         textControl.addFocusListener(new FocusListener() {
@@ -165,11 +162,7 @@ public class ContentAssistText extends Composite implements SWTBotConstants {
     }
 
     public void setProposalEnabled(final boolean proposalEnabled) {
-        if(!proposalEnabled){
-            tb.setEnabled(false);
-        } else {
-            tb.setEnabled(true);
-        }
+        tb.setEnabled(proposalEnabled);
     }
 
     protected void fireOpenProposalEvent() {

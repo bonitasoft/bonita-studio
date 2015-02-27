@@ -47,7 +47,9 @@ import org.bonitasoft.studio.model.process.AbstractCatchMessageEvent;
 import org.bonitasoft.studio.model.process.AbstractPageFlow;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Activity;
+import org.bonitasoft.studio.model.process.BooleanType;
 import org.bonitasoft.studio.model.process.BoundaryEvent;
+import org.bonitasoft.studio.model.process.BusinessObjectType;
 import org.bonitasoft.studio.model.process.CallActivity;
 import org.bonitasoft.studio.model.process.CatchLinkEvent;
 import org.bonitasoft.studio.model.process.ConnectableElement;
@@ -57,11 +59,16 @@ import org.bonitasoft.studio.model.process.Container;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.DataAware;
 import org.bonitasoft.studio.model.process.DataType;
+import org.bonitasoft.studio.model.process.DateType;
 import org.bonitasoft.studio.model.process.Document;
+import org.bonitasoft.studio.model.process.DoubleType;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.EnumType;
 import org.bonitasoft.studio.model.process.FlowElement;
+import org.bonitasoft.studio.model.process.IntegerType;
+import org.bonitasoft.studio.model.process.JavaType;
 import org.bonitasoft.studio.model.process.Lane;
+import org.bonitasoft.studio.model.process.LongType;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.Message;
 import org.bonitasoft.studio.model.process.MessageFlow;
@@ -75,11 +82,13 @@ import org.bonitasoft.studio.model.process.SearchIndex;
 import org.bonitasoft.studio.model.process.SendTask;
 import org.bonitasoft.studio.model.process.SequenceFlow;
 import org.bonitasoft.studio.model.process.ServiceTask;
+import org.bonitasoft.studio.model.process.StringType;
 import org.bonitasoft.studio.model.process.SubProcessEvent;
 import org.bonitasoft.studio.model.process.Task;
 import org.bonitasoft.studio.model.process.ThrowLinkEvent;
 import org.bonitasoft.studio.model.process.ThrowMessageEvent;
 import org.bonitasoft.studio.model.process.ViewPageFlow;
+import org.bonitasoft.studio.model.process.XMLType;
 import org.bonitasoft.studio.model.simulation.SimulationData;
 import org.bonitasoft.studio.model.simulation.SimulationDataContainer;
 import org.bonitasoft.studio.model.simulation.SimulationTransition;
@@ -147,6 +156,7 @@ public class ModelHelper {
         return res;
     }
 
+
     public static FileWidgetInputType getDefaultFileWidgetInputType(final FileWidget widget) {
         final Form parentForm = ModelHelper.getParentForm(widget);
         if (parentForm == null) {
@@ -157,6 +167,7 @@ public class ModelHelper {
         }
         return FileWidgetInputType.DOCUMENT;
     }
+
 
     private static List<AbstractProcess> findAllProcesses(final Element element, final List<AbstractProcess> processes) {
 
@@ -649,53 +660,72 @@ public class ModelHelper {
      * @param proc
      */
     public static void addDataTypes(final MainProcess proc) {
-        // bool
-        final DataType boolDataType = ProcessFactory.eINSTANCE.createBooleanType();
-        boolDataType.setName(DataTypeLabels.booleanDataType);
-        proc.getDatatypes().add(boolDataType);
-        // date
-        final DataType dateDataType = ProcessFactory.eINSTANCE.createDateType();
-        dateDataType.setName(DataTypeLabels.dateDataType);
-        proc.getDatatypes().add(dateDataType);
-        // int
-        final DataType intDataType = ProcessFactory.eINSTANCE.createIntegerType();
-        intDataType.setName(DataTypeLabels.integerDataType);
-        proc.getDatatypes().add(intDataType);
-        // long
-        final DataType longDataType = ProcessFactory.eINSTANCE.createLongType();
-        longDataType.setName(DataTypeLabels.longDataType);
-        proc.getDatatypes().add(longDataType);
-        // long
-        final DataType doubleDataType = ProcessFactory.eINSTANCE.createDoubleType();
-        doubleDataType.setName(DataTypeLabels.doubleDataType);
-        proc.getDatatypes().add(doubleDataType);
-        // float NOT SUPORTED IN ENGINE YET
-        //        DataType floatDataType = ProcessFactory.eINSTANCE.createFloatType();
-        //        floatDataType.setName(DataTypeLabels.floatDataType);
-        //        proc.getDatatypes().add(floatDataType);
-        // string
-        final DataType stringDataType = ProcessFactory.eINSTANCE.createStringType();
-        stringDataType.setName(DataTypeLabels.stringDataType);
-        proc.getDatatypes().add(stringDataType);
-        //        // attachement
-        //        DataType attachedDocDataType = ProcessFactory.eINSTANCE.createAttachmentType();
-        //        attachedDocDataType.setName(DataTypeLabels.attachedDocDataType);
-        //
-        //        proc.getDatatypes().add(attachedDocDataType);
-        // java
-        final DataType javaDataType = ProcessFactory.eINSTANCE.createJavaType();
-        javaDataType.setName(NamingUtils.convertToId(DataTypeLabels.javaDataType, javaDataType));
-        proc.getDatatypes().add(javaDataType);
-        // xml
-        final DataType xmlDataType = ProcessFactory.eINSTANCE.createXMLType();
-        xmlDataType.setName(DataTypeLabels.xmlDataType);
-        proc.getDatatypes().add(xmlDataType);
-
-        // xml
-        final DataType businessObjectType = ProcessFactory.eINSTANCE.createBusinessObjectType();
-        businessObjectType.setName(NamingUtils.convertToId(DataTypeLabels.businessObjectType));
-        proc.getDatatypes().add(businessObjectType);
+        proc.getDatatypes().add(createBooleanDataType());
+        proc.getDatatypes().add(createDateDataType());
+        proc.getDatatypes().add(createIntegerDataType());
+        proc.getDatatypes().add(createLongDataType());
+        proc.getDatatypes().add(createDoubleDataType());
+        proc.getDatatypes().add(createStringDataType());
+        proc.getDatatypes().add(createJavaDataType());
+        proc.getDatatypes().add(createXMLDataType());
+        proc.getDatatypes().add(createBusinessObjectType());
     }
+
+
+    public static BusinessObjectType createBusinessObjectType() {
+        final BusinessObjectType businessObjectType = ProcessFactory.eINSTANCE.createBusinessObjectType();
+        businessObjectType.setName(NamingUtils.convertToId(DataTypeLabels.businessObjectType));
+        return businessObjectType;
+    }
+
+    public static XMLType createXMLDataType() {
+        final XMLType xmlDataType = ProcessFactory.eINSTANCE.createXMLType();
+        xmlDataType.setName(DataTypeLabels.xmlDataType);
+        return xmlDataType;
+    }
+
+    public static JavaType createJavaDataType() {
+        final JavaType javaDataType = ProcessFactory.eINSTANCE.createJavaType();
+        javaDataType.setName(NamingUtils.convertToId(DataTypeLabels.javaDataType, javaDataType));
+        return javaDataType;
+    }
+
+    public static StringType createStringDataType() {
+        final StringType stringDataType = ProcessFactory.eINSTANCE.createStringType();
+        stringDataType.setName(DataTypeLabels.stringDataType);
+        return stringDataType;
+    }
+
+    public static DoubleType createDoubleDataType() {
+        final DoubleType doubleDataType = ProcessFactory.eINSTANCE.createDoubleType();
+        doubleDataType.setName(DataTypeLabels.doubleDataType);
+        return doubleDataType;
+    }
+
+    public static LongType createLongDataType() {
+        final LongType longDataType = ProcessFactory.eINSTANCE.createLongType();
+        longDataType.setName(DataTypeLabels.longDataType);
+        return longDataType;
+    }
+
+    public static IntegerType createIntegerDataType() {
+        final IntegerType intDataType = ProcessFactory.eINSTANCE.createIntegerType();
+        intDataType.setName(DataTypeLabels.integerDataType);
+        return intDataType;
+    }
+
+    public static DateType createDateDataType() {
+        final DateType dateDataType = ProcessFactory.eINSTANCE.createDateType();
+        dateDataType.setName(DataTypeLabels.dateDataType);
+        return dateDataType;
+    }
+
+    public static BooleanType createBooleanDataType() {
+        final BooleanType boolDataType = ProcessFactory.eINSTANCE.createBooleanType();
+        boolDataType.setName(DataTypeLabels.booleanDataType);
+        return boolDataType;
+    }
+
 
     public static DataType getDataTypeForID(final EObject elem, final String name) {
         final MainProcess proc = getMainProcess(elem);
@@ -1863,6 +1893,7 @@ public class ModelHelper {
     }
 
 
+
     public static Document getDocumentReferencedInExpression(final Expression expr) {
         final List<EObject> refs = expr.getReferencedElements();
         for (final EObject ref : refs) {
@@ -1999,13 +2030,14 @@ public class ModelHelper {
     }
 
 
-    public static boolean isObjectIsReferencedInExpression(final Expression expr, final Object elementToDisplay) {
+    public static boolean isObjectIsReferencedInExpression(final Expression expr, final Object elementToDisplay){
         for (final EObject referencedElement:expr.getReferencedElements()){
             if (referencedElement instanceof Parameter && elementToDisplay instanceof Parameter && ((Parameter)referencedElement).getName().equals(((Parameter)elementToDisplay).getName())){
                 return true;
             }
 
-            if (referencedElement instanceof SearchIndex && elementToDisplay instanceof SearchIndex && ((SearchIndex)referencedElement).getName().getName().equals(((SearchIndex)elementToDisplay).getName().getName())){
+            if (referencedElement instanceof SearchIndex && elementToDisplay instanceof SearchIndex
+                    && ((SearchIndex) referencedElement).getName().getName().equals(((SearchIndex) elementToDisplay).getName().getName())) {
                 return true;
             }
 
@@ -2095,4 +2127,12 @@ public class ModelHelper {
         }
     }
 
+    @SuppressWarnings("unchecked")
+    public static <T extends EObject> T getFirstContainerOfType(final EObject element, final Class<T> type) {
+        EObject current = element;
+        while (current != null && !type.isAssignableFrom(current.getClass())) {
+            current = current.eContainer();
+        }
+        return (T) current;
+    }
 }

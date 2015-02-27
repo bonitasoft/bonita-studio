@@ -21,8 +21,10 @@ import java.util.Set;
 
 import org.bonitasoft.engine.bpm.connector.ConnectorEvent;
 import org.bonitasoft.studio.common.widgets.LifeCycleWidget;
+import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.wizard.SelectNameAndDescWizardPage;
 import org.bonitasoft.studio.connectors.i18n.Messages;
+import org.bonitasoft.studio.connectors.ui.wizard.ConnectorWizard;
 import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.form.FormPackage;
 import org.bonitasoft.studio.model.form.SubmitFormButton;
@@ -56,162 +58,169 @@ public class SelectEventConnectorNameAndDescWizardPage extends SelectNameAndDesc
     private LifeCycleWidget lifeCycle;
 
 
-    public SelectEventConnectorNameAndDescWizardPage(EObject container, Connector connectorWorkingCopy,Connector originalConnector, Set<EStructuralFeature> featureToCheckForUniqueID) {
+    public SelectEventConnectorNameAndDescWizardPage(final EObject container, final Connector connectorWorkingCopy,final Connector originalConnector, final Set<EStructuralFeature> featureToCheckForUniqueID) {
         super(container,connectorWorkingCopy, originalConnector,featureToCheckForUniqueID);
     }
 
 
     @Override
-    protected Composite doCreateControl(Composite parent, EMFDataBindingContext context) {
-        Composite composite = super.doCreateControl(parent, context);
+    protected Composite doCreateControl(final Composite parent, final EMFDataBindingContext context) {
+        final Composite composite = super.doCreateControl(parent, context);
         createLifecycle(composite) ;
         createConnectorFailsControls(composite,context);
         return composite ;
     }
 
 
-    protected void createLifecycle(Composite composite) {
-    	if( connector.eContainingFeature() != ProcessPackage.Literals.PAGE_FLOW__PAGE_FLOW_CONNECTORS){
-    		if (container != null && activityHasLifecycle()
-    				&& !ProcessPackage.Literals.CATCH_MESSAGE_EVENT.isSuperTypeOf(container.eClass())
-    				&& !ProcessPackage.Literals.CATCH_SIGNAL_EVENT.isSuperTypeOf(container.eClass())
-    				&& !ProcessPackage.Literals.ERROR_EVENT.isSuperTypeOf(container.eClass())
-    				&& !ProcessPackage.Literals.TIMER_EVENT.isSuperTypeOf(container.eClass())) {
+    protected void createLifecycle(final Composite composite) {
+        if (connector.eContainingFeature() != ProcessPackage.Literals.PAGE_FLOW__PAGE_FLOW_CONNECTORS) {
+            if (container != null && activityHasLifecycle()
+                    && !ProcessPackage.Literals.CATCH_MESSAGE_EVENT.isSuperTypeOf(container.eClass())
+                    && !ProcessPackage.Literals.CATCH_SIGNAL_EVENT.isSuperTypeOf(container.eClass())
+                    && !ProcessPackage.Literals.ERROR_EVENT.isSuperTypeOf(container.eClass())
+                    && !ProcessPackage.Literals.TIMER_EVENT.isSuperTypeOf(container.eClass())) {
 
-    			Label eventLabel = new Label(composite, SWT.NONE);
-    			eventLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.TOP).create());
-    			eventLabel.setText(Messages.selectActivityEvent);
+                final Label eventLabel = new Label(composite, SWT.NONE);
+                eventLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.TOP).create());
+                eventLabel.setText(Messages.selectActivityEvent);
 
-    			lifeCycle = new LifeCycleWidget(composite, getEvent(),null) ;
+                lifeCycle = new LifeCycleWidget(composite, getEvent(), null);
 
-    			GridData gd1 = new GridData(lifeCycle.getWidth(), lifeCycle.getHeight());
-    			gd1.horizontalIndent = 0 ;
-    			lifeCycle.setLayoutData(gd1);
-    			lifeCycle.addSelectionListener(new SelectionAdapter() {
-    				@Override
-    				public void widgetSelected(SelectionEvent e) {
-    					setEvent(lifeCycle.getEvent());
-    				}
-    			});
+                final GridData gd1 = new GridData(lifeCycle.getWidth(), lifeCycle.getHeight());
+                gd1.horizontalIndent = 0;
+                lifeCycle.setLayoutData(gd1);
+                lifeCycle.addSelectionListener(new SelectionAdapter() {
 
-    			if(connector != null && connector.getEvent() != null){
-    				setEvent(connector.getEvent());
-    			} else {
-    				setEvent(ConnectorEvent.ON_FINISH.toString());
-    			}
-    		} else {
-    			setEvent(ConnectorEvent.ON_FINISH.toString());
-    		}
-    	}
+                    @Override
+                    public void widgetSelected(final SelectionEvent e) {
+                        setEvent(lifeCycle.getEvent());
+                    }
+                });
+
+                if (connector != null && connector.getEvent() != null) {
+                    setEvent(connector.getEvent());
+                } else {
+                    setEvent(ConnectorEvent.ON_FINISH.toString());
+                }
+            } else {
+                setEvent(ConnectorEvent.ON_FINISH.toString());
+            }
+        }
     }
 
 
-    protected void createConnectorFailsControls(Composite composite,EMFDataBindingContext context) {
-        Label connectorFailsLabel = new Label(composite, SWT.NONE);
+    protected void createConnectorFailsControls(final Composite composite,final EMFDataBindingContext context) {
+        final Label connectorFailsLabel = new Label(composite, SWT.NONE);
         connectorFailsLabel.setText(Messages.connectorCrashLabel);
         connectorFailsLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).create());
 
         if(connector.eContainingFeature() == ProcessPackage.Literals.PAGE_FLOW__PAGE_FLOW_CONNECTORS || container instanceof Form || container instanceof SubmitFormButton ){
-        	
-        	Label connectorFailText = new Label(composite, SWT.NONE);
-        	connectorFailText.setText(Messages.connectorFails_throwException);
-        	connectorFailText.setLayoutData(GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.CENTER).create());
-        	
-        	connector.setThrowErrorEvent(false);
-        	connector.setIgnoreErrors(false);
-        	connector.setNamedError("");
-        	
+
+            final Label connectorFailText = new Label(composite, SWT.NONE);
+            connectorFailText.setText(Messages.connectorFails_throwException);
+            connectorFailText.setLayoutData(GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.CENTER).create());
+
+            connector.setThrowErrorEvent(false);
+            connector.setIgnoreErrors(false);
+            connector.setNamedError("");
+
         } else  {
-        
-        final Combo connectorFailsCombo = new Combo(composite, SWT.READ_ONLY);
-        connectorFailsCombo.add(Messages.connectorFails_crash);
-        connectorFailsCombo.add(Messages.connectorFails_ignore);
-       
-        // Throw Event are not allowed in Connector in forms
-        if(!(container instanceof Form || container instanceof SubmitFormButton )){
-        	connectorFailsCombo.add(Messages.connectorFails_throwEvent);
-        }
-        
 
-        UpdateValueStrategy ignoreEventStrategyTarget = new UpdateValueStrategy() ;
-        ignoreEventStrategyTarget.setConverter(new Converter(String.class,Boolean.class) {
+            final Combo connectorFailsCombo = new Combo(composite, SWT.READ_ONLY);
+            connectorFailsCombo.add(Messages.connectorFails_crash);
+            connectorFailsCombo.add(Messages.connectorFails_ignore);
 
-            @Override
-            public Object convert(Object from) {
-                if(from != null){
-                    return from.toString().equals(Messages.connectorFails_ignore) ;
-                }
-                return Boolean.FALSE;
+            // Throw Event are not allowed in Connector in forms
+            if (!(container instanceof Form || container instanceof SubmitFormButton)) {
+                connectorFailsCombo.add(Messages.connectorFails_throwEvent);
             }
-        }) ;
-        UpdateValueStrategy  ignoreEventStrategyModel = new UpdateValueStrategy() ;
-        ignoreEventStrategyModel.setConverter(new Converter(Boolean.class,String.class) {
 
-            @Override
-            public Object convert(Object from) {
-                if((Boolean) from){
-                    return Messages.connectorFails_ignore ;
-                }else if(connector.isThrowErrorEvent()){
-                    return Messages.connectorFails_throwEvent ;
+
+            final UpdateValueStrategy ignoreEventStrategyTarget = new UpdateValueStrategy();
+            ignoreEventStrategyTarget.setConverter(new Converter(String.class, Boolean.class) {
+
+                @Override
+                public Object convert(final Object from) {
+                    if (from != null) {
+                        return from.toString().equals(Messages.connectorFails_ignore);
+                    }
+                    return Boolean.FALSE;
                 }
-                return Messages.connectorFails_crash;
-            }
-        }) ;
+            });
+            final UpdateValueStrategy ignoreEventStrategyModel = new UpdateValueStrategy();
+            ignoreEventStrategyModel.setConverter(new Converter(Boolean.class, String.class) {
 
-        context.bindValue(WidgetProperties.text().observe(connectorFailsCombo), EMFObservables.observeValue(connector, ProcessPackage.Literals.CONNECTOR__IGNORE_ERRORS),ignoreEventStrategyTarget,ignoreEventStrategyModel) ;
-
-
-        UpdateValueStrategy throwEventStrategyTarget = new UpdateValueStrategy() ;
-        throwEventStrategyTarget.setConverter(new Converter(String.class,Boolean.class) {
-
-            @Override
-            public Object convert(Object from) {
-                if(from != null){
-                    return from.toString().equals(Messages.connectorFails_throwEvent) ;
+                @Override
+                public Object convert(final Object from) {
+                    if ((Boolean) from) {
+                        return Messages.connectorFails_ignore;
+                    } else if (connector.isThrowErrorEvent()) {
+                        return Messages.connectorFails_throwEvent;
+                    }
+                    return Messages.connectorFails_crash;
                 }
-                return Boolean.FALSE;
-            }
-        }) ;
+            });
 
-        UpdateValueStrategy throwEventStrategyModel = new UpdateValueStrategy() ;
-        throwEventStrategyModel.setConverter(new Converter(Boolean.class,String.class) {
+            context.bindValue(WidgetProperties.text().observe(connectorFailsCombo),
+                    EMFObservables.observeValue(connector, ProcessPackage.Literals.CONNECTOR__IGNORE_ERRORS), ignoreEventStrategyTarget,
+                    ignoreEventStrategyModel);
 
-            @Override
-            public Object convert(Object from) {
-                if((Boolean) from){
-                    return Messages.connectorFails_throwEvent ;
-                }else if(connector.isIgnoreErrors()){
-                    return Messages.connectorFails_ignore ;
+
+            final UpdateValueStrategy throwEventStrategyTarget = new UpdateValueStrategy();
+            throwEventStrategyTarget.setConverter(new Converter(String.class, Boolean.class) {
+
+                @Override
+                public Object convert(final Object from) {
+                    if (from != null) {
+                        return from.toString().equals(Messages.connectorFails_throwEvent);
+                    }
+                    return Boolean.FALSE;
                 }
-                return Messages.connectorFails_crash;
-            }
-        }) ;
-        context.bindValue(WidgetProperties.text().observe(connectorFailsCombo), EMFObservables.observeValue(connector, ProcessPackage.Literals.CONNECTOR__THROW_ERROR_EVENT),throwEventStrategyTarget,throwEventStrategyModel) ;
+            });
 
+            final UpdateValueStrategy throwEventStrategyModel = new UpdateValueStrategy();
+            throwEventStrategyModel.setConverter(new Converter(Boolean.class, String.class) {
 
-        Label namedErrorEvent = new Label(composite, SWT.NONE);
-        namedErrorEvent.setText(Messages.connectorFails_namedError);
-        namedErrorEvent.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).create());
-
-        final Text namedErrorText = new Text(composite, SWT.BORDER);
-        namedErrorText.setTextLimit(255);
-        namedErrorText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
-
-        UpdateValueStrategy enableNamedErrorStrategyTarget = new UpdateValueStrategy() ;
-        enableNamedErrorStrategyTarget.setConverter(new Converter(String.class,Boolean.class) {
-
-            @Override
-            public Object convert(Object from) {
-                if(from != null){
-                    return from.toString().equals(Messages.connectorFails_throwEvent) ;
+                @Override
+                public Object convert(final Object from) {
+                    if ((Boolean) from) {
+                        return Messages.connectorFails_throwEvent;
+                    } else if (connector.isIgnoreErrors()) {
+                        return Messages.connectorFails_ignore;
+                    }
+                    return Messages.connectorFails_crash;
                 }
-                return Boolean.FALSE;
-            }
-        }) ;
+            });
+            context.bindValue(WidgetProperties.text().observe(connectorFailsCombo),
+                    EMFObservables.observeValue(connector, ProcessPackage.Literals.CONNECTOR__THROW_ERROR_EVENT), throwEventStrategyTarget,
+                    throwEventStrategyModel);
 
-        context.bindValue(SWTObservables.observeText(namedErrorText, SWT.Modify), EMFObservables.observeValue(connector, ProcessPackage.Literals.CONNECTOR__NAMED_ERROR)) ;
-        namedErrorText.setEnabled(connector.isThrowErrorEvent()) ;
-        context.bindValue(WidgetProperties.text().observe(connectorFailsCombo),SWTObservables.observeEnabled(namedErrorText),enableNamedErrorStrategyTarget,new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER)) ;
+
+            final Label namedErrorEvent = new Label(composite, SWT.NONE);
+            namedErrorEvent.setText(Messages.connectorFails_namedError);
+            namedErrorEvent.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).create());
+
+            final Text namedErrorText = new Text(composite, SWT.BORDER);
+            namedErrorText.setTextLimit(255);
+            namedErrorText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+
+            final UpdateValueStrategy enableNamedErrorStrategyTarget = new UpdateValueStrategy();
+            enableNamedErrorStrategyTarget.setConverter(new Converter(String.class, Boolean.class) {
+
+                @Override
+                public Object convert(final Object from) {
+                    if (from != null) {
+                        return from.toString().equals(Messages.connectorFails_throwEvent);
+                    }
+                    return Boolean.FALSE;
+                }
+            });
+
+            context.bindValue(SWTObservables.observeText(namedErrorText, SWT.Modify),
+                    EMFObservables.observeValue(connector, ProcessPackage.Literals.CONNECTOR__NAMED_ERROR));
+            namedErrorText.setEnabled(connector.isThrowErrorEvent());
+            context.bindValue(WidgetProperties.text().observe(connectorFailsCombo), SWTObservables.observeEnabled(namedErrorText),
+                    enableNamedErrorStrategyTarget, new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER));
 
         }
     }
@@ -229,8 +238,16 @@ public class SelectEventConnectorNameAndDescWizardPage extends SelectNameAndDesc
 
 
 
-    public void setEvent(String event) {
-        connector.setEvent(event) ;
+    public void setEvent(final String event) {
+        final String currentEvent = connector.getEvent();
+        if (!event.equals(currentEvent)) {
+            connector.setEvent(event);
+            final ConnectorWizard connectorWizard = (ConnectorWizard) getWizard();
+            final ConnectorDefinition definition = connectorWizard.getDefinition();
+            if (definition != null) {
+                connectorWizard.recreateConnectorConfigurationPages(definition, false);
+            }
+        }
     }
 
 

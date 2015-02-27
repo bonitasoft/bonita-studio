@@ -40,20 +40,23 @@ public class OperationsPropertySection extends AbstractBonitaDescriptionSection 
 
     protected OperationsComposite operationComposite;
 
-    protected TabbedPropertySheetPage tabbedPropertySheetPage;
-
     private Object lastEObject;
 
     @Override
     public void createControls(final Composite parent, final TabbedPropertySheetPage aTabbedPropertySheetPage) {
         super.createControls(parent, aTabbedPropertySheetPage);
-        tabbedPropertySheetPage = aTabbedPropertySheetPage;
-        final Composite mainComposite = getWidgetFactory().createComposite(super.composite);
+
+    }
+
+    @Override
+    protected void createContent(final Composite parent) {
+        final Composite mainComposite = getWidgetFactory().createComposite(parent);
         mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(15, 15).create());
         mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         operationComposite = createActionLinesComposite(mainComposite);
         operationComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
     }
+
 
     @Override
     public void refresh() {
@@ -65,9 +68,10 @@ public class OperationsPropertySection extends AbstractBonitaDescriptionSection 
         final AvailableExpressionTypeFilter actionFilter = new AvailableExpressionTypeFilter(new String[] {
                 ExpressionConstants.CONSTANT_TYPE,
                 ExpressionConstants.VARIABLE_TYPE,
-                ExpressionConstants.SCRIPT_TYPE,
+                ExpressionConstants.CONTRACT_INPUT_TYPE,
                 ExpressionConstants.PARAMETER_TYPE,
                 ExpressionConstants.DOCUMENT_TYPE,
+                ExpressionConstants.SCRIPT_TYPE,
                 ExpressionConstants.QUERY_TYPE
         });
 
@@ -77,7 +81,7 @@ public class OperationsPropertySection extends AbstractBonitaDescriptionSection 
                 ExpressionConstants.DOCUMENT_REF_TYPE
         });
 
-        return new PropertyOperationsComposite(tabbedPropertySheetPage, parent, actionFilter, dataFilter);
+        return new PropertyOperationsComposite(getTabbedPropertySheetPage(), parent, actionFilter, dataFilter);
     }
 
     @Override

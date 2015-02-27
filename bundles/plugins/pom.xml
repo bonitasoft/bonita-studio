@@ -28,6 +28,7 @@
 		<module>org.bonitasoft.studio.common</module>
 		<module>org.bonitasoft.studio.common.diagram</module>
 		<module>org.bonitasoft.studio.common.repository</module>
+        <module>org.bonitasoft.studio.contract</module>
 		<module>org.bonitasoft.studio.configuration</module>
 		<module>org.bonitasoft.studio.connectors</module>
 		<module>org.bonitasoft.studio.connectors.database.drivers</module>

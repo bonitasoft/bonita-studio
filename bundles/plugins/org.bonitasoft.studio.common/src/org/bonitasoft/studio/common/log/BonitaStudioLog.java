@@ -55,6 +55,16 @@ public class BonitaStudioLog {
         error(exception);
     }
 
+    public static void error(final String message, final Throwable t, final String bundleId) {
+        final Logger logger = getLogger(bundleId);
+        if (logger != null) {
+            logger.error(t, message);
+        } else {
+            System.err.println(message);
+            t.printStackTrace();
+        }
+    }
+
     public static Logger getLogger(final String bundleName) {
         return BonitaStudioLogger.getLogger(bundleName);
     }
@@ -133,4 +143,5 @@ public class BonitaStudioLog {
     public static void setLogger(final WorkbenchLogger workbenchLogger) {
         BonitaStudioLogger.setLogger(workbenchLogger);
     }
+
 }

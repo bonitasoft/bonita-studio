@@ -14,16 +14,10 @@
  */
 package org.bonitasoft.studio.groovy.ui.viewer;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
@@ -37,21 +31,19 @@ import org.bonitasoft.studio.expression.editor.provider.ExpressionContentProvide
 import org.bonitasoft.studio.expression.editor.provider.ICustomExpressionNatureProvider;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionNatureProvider;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionProvider;
+import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.groovy.GroovyUtil;
 import org.bonitasoft.studio.groovy.ScriptVariable;
 import org.bonitasoft.studio.groovy.repository.GroovyFileStore;
 import org.bonitasoft.studio.groovy.repository.ProvidedGroovyRepositoryStore;
-import org.bonitasoft.studio.groovy.ui.Messages;
+import org.bonitasoft.studio.groovy.ui.job.UnknownElementsIndexer;
 import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.parameter.Parameter;
 import org.bonitasoft.studio.model.process.AbstractProcess;
-import org.codehaus.groovy.ast.Variable;
-import org.codehaus.groovy.ast.stmt.BlockStatement;
 import org.codehaus.groovy.eclipse.GroovyPlugin;
-import org.codehaus.groovy.eclipse.codeassist.requestor.CompletionNodeFinder;
-import org.codehaus.groovy.eclipse.codeassist.requestor.ContentAssistContext;
 import org.codehaus.groovy.eclipse.core.preferences.PreferenceConstants;
+import org.codehaus.groovy.eclipse.editor.GroovyEditor;
 import org.codehaus.jdt.groovy.model.GroovyCompilationUnit;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -60,19 +52,12 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.internal.corext.util.JavaModelUtil;
-import org.eclipse.jdt.internal.ui.javaeditor.JavaMarkerAnnotation;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.DocumentEvent;
-import org.eclipse.jface.text.FindReplaceDocumentAdapter;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentListener;
-import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextListener;
-import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.TextEvent;
-import org.eclipse.jface.text.source.Annotation;
-import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.jface.viewers.ViewerFilter;
@@ -92,7 +77,7 @@ import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
 /**
  * @author Romain Bioteau
  */
-public class GroovyViewer {
+public class GroovyViewer implements IDocumentListener {
 
     public static final String CONTEXT_DATA_KEY = "context";
 
@@ -102,7 +87,7 @@ public class GroovyViewer {
 
     public static final int MAX_SCRIPT_LENGTH = 65535;
 
-    private BonitaGroovyEditor editor;
+    private GroovyEditor editor;
 
     private IEditorInput input;
 
@@ -112,18 +97,16 @@ public class GroovyViewer {
 
     private AbstractHandler triggerAssistantHandler;
 
-    private boolean isComputing = false;
-
     private GroovyFileStore tmpGroovyFileStore;
-
-    private boolean contextInitialized = false;
 
     private Set<String> knowVariables;
 
     private boolean isPageFlowContext;
 
+    private UnknownElementsIndexer unknownElementsIndexer;
+
     public GroovyViewer(final Composite mainComposite) {
-        this(mainComposite, null);
+        this(mainComposite, null, null);
     }
 
     public GroovyViewer(final Composite mainComposite, final boolean isPageFlowContext) {
@@ -131,11 +114,11 @@ public class GroovyViewer {
     }
 
     public GroovyViewer(final Composite mainComposite, final IEditorInput input, final boolean isPageFlowContext) {
-        this(mainComposite, input);
+        this(mainComposite, input, null);
         this.isPageFlowContext = isPageFlowContext;
     }
 
-    public GroovyViewer(final Composite mainComposite, final IEditorInput input) {
+    public GroovyViewer(final Composite mainComposite, final IEditorInput input, final GroovyEditor groovyEditor) {
         final IPreferenceStore groovyStore = org.codehaus.groovy.eclipse.GroovyPlugin.getDefault().getPreferenceStore();
         groovyStore.setDefault(PreferenceConstants.GROOVY_SEMANTIC_HIGHLIGHTING, false);
         groovyStore.setValue(PreferenceConstants.GROOVY_SEMANTIC_HIGHLIGHTING, false);
@@ -148,8 +131,10 @@ public class GroovyViewer {
         } else {
             this.input = input;
         }
-
-        editor = new BonitaGroovyEditor(GroovyPlugin.getDefault().getPreferenceStore());
+        editor = groovyEditor;
+        if (editor == null) {
+            editor = new BonitaGroovyEditor(GroovyPlugin.getDefault().getPreferenceStore());
+        }
         try {
             editor.getDocumentProvider().connect(input);
             editor.init(new DummyEditorSite(mainComposite.getShell(), editor), this.input);
@@ -220,50 +205,6 @@ public class GroovyViewer {
         enableContextAssitShortcut();
 
         getSourceViewer().getTextWidget().setData(BONITA_KEYWORDS_DATA_KEY, getProvidedVariables(null, null));
-        getSourceViewer().getDocument().addDocumentListener(new IDocumentListener() {
-
-            private Object previousContent;
-
-            @Override
-            public void documentChanged(final DocumentEvent event) {
-                if (contextInitialized) {
-                    final String currentContent = event.getText();
-                    if (!isComputing && !currentContent.equals(previousContent)) {
-                        previousContent = currentContent;
-                        isComputing = true;
-                        final IAnnotationModel model = getSourceViewer().getAnnotationModel();
-                        final List<ScriptVariable> emptyList = Collections.emptyList();
-                        final Map<String, Serializable> result = TestGroovyScriptUtil.createVariablesMap(getGroovyCompilationUnit(), emptyList);
-                        final Map<String, Position> declaredVariables = getAllDeclaredVariablesInScript();
-
-                        final Iterator<?> it = model.getAnnotationIterator();
-                        while (it.hasNext()) {
-                            final Object annotation = it.next();
-                            model.removeAnnotation((Annotation) annotation);
-                        }
-                        for (final Entry<String, Serializable> entry : result.entrySet()) {
-                            if (!knowVariables.contains(entry.getKey())) {
-                                createWarningAnnotation(entry.getKey());
-                            }
-                        }
-                        for (final String declaredVariable : declaredVariables.keySet()) {
-                            if (knowVariables.contains(declaredVariable)) {
-                                model.addAnnotation(
-                                        new Annotation(JavaMarkerAnnotation.WARNING_ANNOTATION_TYPE, false, Messages.bind(
-                                                Messages.warningAssigningAVariableWithSameNameAsProcessVariable, declaredVariable)),
-                                                declaredVariables.get(declaredVariable));
-                            }
-                        }
-                        isComputing = false;
-                    }
-                }
-            }
-
-            @Override
-            public void documentAboutToBeChanged(final DocumentEvent event) {
-
-            }
-        });
         mainComposite.getShell().addDisposeListener(new DisposeListener() {
 
             @Override
@@ -290,28 +231,7 @@ public class GroovyViewer {
         }
     }
 
-    protected Map<String, Position> getAllDeclaredVariablesInScript() {
-        final Map<String, Position> declaredVariables = new HashMap<String, Position>();
-        final GroovyCompilationUnit groovyCompilationUnit = getGroovyCompilationUnit();
-        if (groovyCompilationUnit != null) {
-            final CompletionNodeFinder finder = new CompletionNodeFinder(0, 0, 0, "", ""); //$NON-NLS-1$ //$NON-NLS-2$
-            final ContentAssistContext assistContext = finder.findContentAssistContext(groovyCompilationUnit);
 
-            org.codehaus.groovy.ast.ASTNode astNode = null;
-            if (assistContext != null) {
-                astNode = assistContext.containingCodeBlock;
-            }
-
-            if (astNode instanceof BlockStatement) {
-                final Iterator<Variable> declaredVariablesIterator = ((BlockStatement) astNode).getVariableScope().getDeclaredVariablesIterator();
-                while (declaredVariablesIterator.hasNext()) {
-                    final Variable variable = declaredVariablesIterator.next();
-                    declaredVariables.put(variable.getName(), new Position(variable.getType().getStart()));
-                }
-            }
-        }
-        return declaredVariables;
-    }
 
     public IDocument getDocument() {
         return editor.getDocumentProvider().getDocument(input);
@@ -326,7 +246,8 @@ public class GroovyViewer {
         getSourceViewer().getTextWidget().setLayoutData(layoutData);
     }
 
-    public void setContext(final EObject context, final ViewerFilter[] filters, final IExpressionNatureProvider expressionProvider) {
+    public void setContext(final ExpressionViewer viewer, final EObject context, final ViewerFilter[] filters,
+            final IExpressionNatureProvider expressionProvider) {
         nodes = new ArrayList<ScriptVariable>();
 
         IExpressionNatureProvider provider = expressionProvider;
@@ -340,7 +261,7 @@ public class GroovyViewer {
             if (context != null && filters != null) {
                 for (final Expression exp : expressions) {
                     for (final ViewerFilter filter : filters) {
-                        if (filter != null && !filter.select(getSourceViewer(), context, exp)) {
+                        if (filter != null && !filter.select(viewer, input, exp)) {
                             filteredExpressions.remove(exp);
                         }
                     }
@@ -375,6 +296,7 @@ public class GroovyViewer {
         final List<ScriptVariable> providedVariables = getProvidedVariables(context, filters);
         getSourceViewer().getTextWidget().setData(BONITA_KEYWORDS_DATA_KEY, providedVariables);
         getSourceViewer().getTextWidget().setData(CONTEXT_DATA_KEY, context);
+        getSourceViewer().getDocument().addDocumentListener(this);
 
         knowVariables = new HashSet<String>();
         if (nodes != null) {
@@ -387,8 +309,10 @@ public class GroovyViewer {
                 knowVariables.add(n.getName());
             }
         }
-        contextInitialized = true;
+        unknownElementsIndexer = new UnknownElementsIndexer(knowVariables, getGroovyCompilationUnit());
+        unknownElementsIndexer.addJobChangeListener(new UpdateUnknownReferencesListener(getDocument(), getSourceViewer().getAnnotationModel()));
     }
+
 
     public List<ScriptVariable> getProvidedVariables(final EObject context, final ViewerFilter[] filters) {
         final List<ScriptVariable> providedScriptVariable = GroovyUtil.getBonitaVariables(context, filters, isPageFlowContext);
@@ -435,48 +359,18 @@ public class GroovyViewer {
         getSourceViewer().getTextWidget().setData(PROCESS_VARIABLES_DATA_KEY, fieldNodes);
     }
 
-    private void createWarningAnnotation(final String key) {
-        if (getSourceViewer() != null) {
-            final IAnnotationModel model = getSourceViewer().getAnnotationModel();
-            final FindReplaceDocumentAdapter finder = new FindReplaceDocumentAdapter(getSourceViewer().getDocument());
-            final String expression = getSourceViewer().getDocument().get();
-            try {
-                IRegion region = finder.find(0, key, true, true, true, false);
-                while (region != null) {
-                    final Position position = new Position(region.getOffset(), region.getLength());
-                    if (!isInAStringExpression(key, region, expression)) {
-                        model.addAnnotation(new Annotation(JavaMarkerAnnotation.WARNING_ANNOTATION_TYPE, false, createDescription(key)), position);
-                    }
-                    region = finder.find(position.getOffset() + position.getLength(), key, true, true, true, false);
 
-                }
-            } catch (final BadLocationException e) {
+    @Override
+    public void documentAboutToBeChanged(final DocumentEvent event) {
 
-            }
-        }
     }
 
-    private boolean isInAStringExpression(final String name, final IRegion index, final String expression) {
-        if (index.getOffset() > 0) {
-            int nbStringChars1 = 0;
-            int nbStringChars2 = 0;
-
-            for (int i = 0; i < index.getOffset(); i++) {
-                final char c = expression.charAt(i);
-                if ('"' == c) {
-                    nbStringChars1++;
-                } else if ('\'' == c) {
-                    nbStringChars2++;
-                }
-            }
-            return !(nbStringChars1 % 2 == 0 && nbStringChars2 % 2 == 0);
-
+    @Override
+    public void documentChanged(final DocumentEvent event) {
+        if (unknownElementsIndexer != null) {
+            unknownElementsIndexer.schedule();
         }
-        return false;
-    }
 
-    private String createDescription(final String key) {
-        return key + " " + Messages.groovyUnresolved;
     }
 
 }

@@ -68,7 +68,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
-import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 /**
  *
  * @author Romain Bioteau
@@ -82,23 +81,14 @@ public class ConnectorSection extends AbstractBonitaDescriptionSection implement
     private Composite mainComposite;
     private TableViewer tableViewer;
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * org.bonitasoft.studio.properties.sections.data.DataSection#createControls
-     * (org.eclipse.swt.widgets.Composite,
-     * org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage)
-     */
     @Override
-    public void createControls(final Composite parent, final TabbedPropertySheetPage aTabbedPropertySheetPage) {
-        super.createControls(parent, aTabbedPropertySheetPage);
+    protected void createContent(final Composite parent) {
         mainComposite = getWidgetFactory().createComposite(parent);
         mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(20, 15).create());
         mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        final Composite viewerComposite = getWidgetFactory().createComposite(mainComposite) ;
-        viewerComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create()) ;
-        viewerComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(0, 0).create()) ;
+        final Composite viewerComposite = getWidgetFactory().createComposite(mainComposite);
+        viewerComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        viewerComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(0, 0).create());
         createConnectorComposite(viewerComposite);
     }
 

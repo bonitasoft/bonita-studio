@@ -1,10 +1,6 @@
 /**
  * Copyright (C) 2009 BonitaSoft S.A.
  * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 2.0 of the License, or
- * (at your option) any later version.
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
@@ -186,6 +182,8 @@ public class Messages extends NLS {
     public static String cmisConnectorAtomPubConfigMissingUrl;
 
     public static String cmisConnectorWebserviceConfigMissingUrl;
+
+    public static String invalidContractDefinition;
 
     static {
         // initialize resource bundle

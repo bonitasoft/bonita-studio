@@ -54,6 +54,8 @@ public interface ExpressionConstants {
 
     String BUSINESS_DATA_TYPE = ExpressionType.TYPE_BUSINESS_DATA.name();
 
+    String CONTRACT_INPUT_TYPE = ExpressionType.TYPE_CONTRACT_INPUT.name();
+
     String URL_ATTRIBUTE_TYPE = "URL_ATTRIBUTE_TYPE";
 
     String CONNECTOR_TYPE = "CONNECTOR_TYPE";
@@ -106,6 +108,7 @@ public interface ExpressionConstants {
     String LEFT_OPERAND_EXTERNAL_DATA = LeftOperand.TYPE_EXTERNAL_DATA;
     String LEFT_OPERAND_TRANSIENT_DATA = LeftOperand.TYPE_TRANSIENT_DATA;
     String LEFT_OPERAND_BUSINESS_DATA = LeftOperand.TYPE_BUSINESS_DATA;
+    
 
     /*
      * It is an assignment to a left operand that is a a business data (business data do not exists exists)
@@ -121,5 +124,6 @@ public interface ExpressionConstants {
      * It is an assignment to a left operand that is a a business data (business data already exists)
      */
     String ATTACH_EXISTING_BUSINESS_DATA = "ATTACH_EXISTING_BUSINESS_DATA";
+
 
 }

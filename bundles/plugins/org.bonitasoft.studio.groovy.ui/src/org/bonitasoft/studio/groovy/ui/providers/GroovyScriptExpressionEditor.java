@@ -462,7 +462,7 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
         inputExpression.setType(ExpressionConstants.SCRIPT_TYPE);
         inputExpression.setInterpreter(ExpressionConstants.GROOVY);
 
-        groovyViewer.setContext(context, filters, viewer.getExpressionNatureProvider());
+        groovyViewer.setContext(viewer, context, filters, viewer.getExpressionNatureProvider());
         nodes = new ArrayList<ScriptVariable>(groovyViewer.getFieldNodes());
 
         if (context == null && nodes == null) {

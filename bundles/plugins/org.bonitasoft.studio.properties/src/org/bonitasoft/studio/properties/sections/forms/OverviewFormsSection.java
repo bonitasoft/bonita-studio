@@ -61,7 +61,6 @@ public class OverviewFormsSection extends AbstractFormsSection {
 
 	@Override
 	public String getSectionDescription() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

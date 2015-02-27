@@ -45,6 +45,7 @@ import org.bonitasoft.studio.model.parameter.Parameter;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Activity;
 import org.bonitasoft.studio.model.process.Connection;
+import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.DataAware;
 import org.bonitasoft.studio.model.process.Element;
@@ -555,6 +556,12 @@ public class GroovyUtil {
         } else if (org.bonitasoft.studio.common.ExpressionConstants.MULTIINSTANCE_ITERATOR_TYPE.equals(e.getType())) {
             final ScriptVariable scriptVariable = new ScriptVariable(e.getName(), e.getReturnType());
             scriptVariable.setCategory("step" + org.bonitasoft.studio.common.ExpressionConstants.VARIABLE_TYPE);
+            return scriptVariable;
+        } else if (org.bonitasoft.studio.common.ExpressionConstants.CONTRACT_INPUT_TYPE
+                .equals(e.getType())) {
+            final ContractInput input = (ContractInput) e.getReferencedElements().get(0);
+            final ScriptVariable scriptVariable = new ScriptVariable(input.getName(), e.getReturnType());
+            scriptVariable.setCategory(org.bonitasoft.studio.common.ExpressionConstants.CONTRACT_INPUT_TYPE);
             return scriptVariable;
         } else if (org.bonitasoft.studio.common.ExpressionConstants.VARIABLE_TYPE.equals(e.getType())) {
             final Data data = (Data) e.getReferencedElements().get(0);

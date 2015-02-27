@@ -7,6 +7,18 @@ Bundle-Vendor: BonitaSoft S.A.
 Eclipse-BundleShape: dir
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ClassPath: .
+Require-Bundle: org.junit;bundle-version="4.11.0",
+ org.eclipse.core.runtime,
+ org.bonitasoft.studio.engine.test,
+ org.bonitasoft.studio.repository.test,
+ org.bonitasoft.studio.properties.test,
+ org.bonitasoft.studio.application,
+ org.eclipse.ui,
+ org.bonitasoft.studio.diagram,
+ org.eclipse.ui.ide,
+ org.eclipse.emf.edit,
+ org.eclipse.gmf.runtime.diagram.ui,
+ org.eclipse.gmf.runtime.diagram.ui.resources.editor,
 Bundle-Activator: org.bonitasoft.studio.tests.Activator
 Import-Package: org.bonitasoft.engine.api,
  org.bonitasoft.engine.bpm,
@@ -65,6 +77,7 @@ Export-Package: org.bonitasoft.studio.tests,
  org.bonitasoft.studio.tests.bug,
  org.bonitasoft.studio.tests.conditions,
  org.bonitasoft.studio.tests.connectors,
+ org.bonitasoft.studio.tests.contract,
  org.bonitasoft.studio.tests.data,
  org.bonitasoft.studio.tests.debug,
  org.bonitasoft.studio.tests.dialog,

@@ -48,17 +48,6 @@ public class FormActionsPropertySection extends AbstractBonitaDescriptionSection
 
     private Object lastEObject;
 
-    @Override
-    public void createControls(final Composite parent, final TabbedPropertySheetPage aTabbedPropertySheetPage) {
-        super.createControls(parent, aTabbedPropertySheetPage);
-        tabbedPropertySheetPage = aTabbedPropertySheetPage;
-        mainComposite = getWidgetFactory().createComposite(parent);
-        mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(15, 15).create());
-        mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        table = createActionLinesComposite();
-        table.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
-    }
-
     protected OperationsComposite createActionLinesComposite() {
         final AvailableExpressionTypeFilter actionFilter = new AvailableExpressionTypeFilter(new String[] {
                 ExpressionConstants.CONSTANT_TYPE,
@@ -114,8 +103,16 @@ public class FormActionsPropertySection extends AbstractBonitaDescriptionSection
 
     @Override
     public String getSectionDescription() {
-        // TODO Auto-generated method stub
         return null;
+    }
+
+    @Override
+    protected void createContent(final Composite parent) {
+        mainComposite = getWidgetFactory().createComposite(parent);
+        mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(15, 15).create());
+        mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        table = createActionLinesComposite();
+        table.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
     }
 
 }

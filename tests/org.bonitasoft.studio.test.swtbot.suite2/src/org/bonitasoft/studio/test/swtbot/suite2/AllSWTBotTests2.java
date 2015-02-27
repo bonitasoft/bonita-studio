@@ -31,13 +31,14 @@ import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.bonitasoft.studio.properties.test.TestResources;
 import org.bonitasoft.studio.repository.test.swtbot.TestExportBosArchive;
 import org.bonitasoft.studio.tests.IHeapDumper;
+import org.bonitasoft.studio.tests.contract.ContractIT;
 import org.bonitasoft.studio.tests.data.DataWizardIT;
 import org.bonitasoft.studio.tests.dialog.OpenNameAndVersionForDiagramDialogTest;
 import org.bonitasoft.studio.tests.dialog.TestDuplicate;
 import org.bonitasoft.studio.tests.document.TestDocument;
 import org.bonitasoft.studio.tests.document.TestRunWithDocument;
 import org.bonitasoft.studio.tests.draw2d.TestLifeCycleWidget;
-import org.bonitasoft.studio.tests.form.TestBug1682;
+import org.bonitasoft.studio.tests.form.DeleteWidgetWithContextMenuIT;
 import org.bonitasoft.studio.tests.iteration.MultiInstantiationIT;
 import org.bonitasoft.studio.tests.migration.BarImportReportIT;
 import org.bonitasoft.studio.tests.refactoring.widget.RefactorWidgetIT;
@@ -77,7 +78,7 @@ import org.junit.runners.Suite;
 @Suite.SuiteClasses({
     TestBug1640.class,
     NewRunTest.class,
-    TestBug1682.class,
+        DeleteWidgetWithContextMenuIT.class,
     DataWizardIT.class,
     TestConvertToMessage.class,
     ExtractAsSubprocessTest.class,
@@ -89,7 +90,7 @@ import org.junit.runners.Suite;
     OpenNameAndVersionForDiagramDialogTest.class,
     TestDuplicate.class,
     CopyPasteTests.class,
-        DeleteCommandTest.class,
+    DeleteCommandTest.class,
     TestCreateValidatorWizard.class,
     TestLifeCycleWidget.class,
     TestConnectorExpression.class,
@@ -99,7 +100,7 @@ import org.junit.runners.Suite;
     BPMNEventSubProcessExportImportTest.class,
     BarExporterTest.class,
     TestRunWithDocument.class,
-        TestDocument.class,
+    TestDocument.class,
     DuplicateCommandTest.class,
     TestExportBosArchive.class,
     TestSave.class,
@@ -108,8 +109,8 @@ import org.junit.runners.Suite;
     TestTimer.class,
     TestBonitaGroovyEditorDialog.class,
         TestProcessDependencies.class,
+        ContractIT.class,
         RefactorWidgetIT.class,
-        ExportImportWithoutMigrationIT.class,
         TestFormValidatorIT.class,
         TestOrganizationPassword.class,
         BarImportReportIT.class

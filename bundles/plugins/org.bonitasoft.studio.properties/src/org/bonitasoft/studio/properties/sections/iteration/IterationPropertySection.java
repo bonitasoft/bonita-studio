@@ -163,11 +163,9 @@ public class IterationPropertySection extends EObjectSelectionProviderSection im
     }
 
     @Override
-    public void createControls(final Composite parent, final TabbedPropertySheetPage aTabbedPropertySheetPage) {
-        super.createControls(parent, aTabbedPropertySheetPage);
-
+    protected void createContent(final Composite parent) {
         context = new EMFDataBindingContext();
-        final TabbedPropertySheetWidgetFactory widgetFactory = aTabbedPropertySheetPage.getWidgetFactory();
+        final TabbedPropertySheetWidgetFactory widgetFactory = getWidgetFactory();
 
         final Composite composite = widgetFactory.createPlainComposite(parent, SWT.NONE);
         composite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(10, 5).create());

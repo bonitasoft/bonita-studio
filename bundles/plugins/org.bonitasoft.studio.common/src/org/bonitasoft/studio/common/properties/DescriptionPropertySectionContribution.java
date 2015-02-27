@@ -17,11 +17,6 @@
  */
 package org.bonitasoft.studio.common.properties;
 
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.PropertyException;
-import javax.xml.bind.ValidationEventHandler;
-import javax.xml.bind.Validator;
-
 import org.bonitasoft.studio.common.Messages;
 import org.bonitasoft.studio.common.jface.databinding.validator.InputLengthValidator;
 import org.bonitasoft.studio.model.process.Element;
@@ -61,18 +56,19 @@ public class DescriptionPropertySectionContribution implements IExtensibleGridPr
 	 * #createControl(org.eclipse.swt.widgets.Composite,
 	 * org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory)
 	 */
-	public void createControl(Composite composite, TabbedPropertySheetWidgetFactory widgetFactory,
-			ExtensibleGridPropertySection page) {
+	@Override
+    public void createControl(final Composite composite, final TabbedPropertySheetWidgetFactory widgetFactory,
+			final ExtensibleGridPropertySection page) {
 
 		composite.setLayout(new RowLayout());
-		Text text = widgetFactory.createText(composite, element.getDocumentation(), SWT.BORDER | SWT.MULTI | SWT.WRAP); 
-		RowData rd = new RowData();
+		final Text text = widgetFactory.createText(composite, element.getDocumentation(), SWT.BORDER | SWT.MULTI | SWT.WRAP); 
+		final RowData rd = new RowData();
 		rd.width = 300;
 		rd.height = 60;
 		text.setLayoutData(rd);
 		
 		context = new EMFDataBindingContext();
-		UpdateValueStrategy strategy = new UpdateValueStrategy();
+		final UpdateValueStrategy strategy = new UpdateValueStrategy();
 		strategy.setBeforeSetValidator(new InputLengthValidator(Messages.GeneralSection_Description, 254));
 	//	context.bindValue(SWTObservables.observeDelayedValue(400, SWTObservables.observeText(text, SWT.Modify)), EMFEditObservables.observeValue(editingDomain, element, ProcessPackage.Literals.ELEMENT__DOCUMENTATION),strategy,null);
 		ControlDecorationSupport.create(context.bindValue(SWTObservables.observeDelayedValue(400, SWTObservables.observeText(text, SWT.Modify)), EMFEditObservables.observeValue(editingDomain, element, ProcessPackage.Literals.ELEMENT__DOCUMENTATION),strategy,null), SWT.LEFT|SWT.TOP);
@@ -85,7 +81,8 @@ public class DescriptionPropertySectionContribution implements IExtensibleGridPr
 	 * @seeorg.bonitasoft.studio.properties.sections.general.
 	 * IExtenstibleGridPropertySectionContribution#getLabel()
 	 */
-	public String getLabel() {
+	@Override
+    public String getLabel() {
 		return Messages.GeneralSection_Description;
 	}
 
@@ -95,7 +92,8 @@ public class DescriptionPropertySectionContribution implements IExtensibleGridPr
 	 * @seeorg.bonitasoft.studio.properties.sections.general.
 	 * IExtenstibleGridPropertySectionContribution#refresh()
 	 */
-	public void refresh() {
+	@Override
+    public void refresh() {
 
 	}
 
@@ -106,8 +104,9 @@ public class DescriptionPropertySectionContribution implements IExtensibleGridPr
 	 * IExtenstibleGridPropertySectionContribution
 	 * #setEObject(org.eclipse.emf.ecore.EObject)
 	 */
-	public void setEObject(EObject object) {
-		this.element = (Element) object;
+	@Override
+    public void setEObject(final EObject object) {
+		element = (Element) object;
 	}
 
 	/*
@@ -117,7 +116,8 @@ public class DescriptionPropertySectionContribution implements IExtensibleGridPr
 	 * IExtenstibleGridPropertySectionContribution
 	 * #setEditingDomain(org.eclipse.emf.transaction.TransactionalEditingDomain)
 	 */
-	public void setEditingDomain(TransactionalEditingDomain editingDomain) {
+	@Override
+    public void setEditingDomain(final TransactionalEditingDomain editingDomain) {
 		this.editingDomain = editingDomain;
 	}
 
@@ -128,7 +128,8 @@ public class DescriptionPropertySectionContribution implements IExtensibleGridPr
 	 * IExtenstibleGridPropertySectionContribution
 	 * #isRelevantFor(org.eclipse.emf.ecore.EObject)
 	 */
-	public boolean isRelevantFor(EObject eObject) {
+	@Override
+    public boolean isRelevantFor(final EObject eObject) {
 		return eObject instanceof Element && !(eObject instanceof TextAnnotation);
 	}
 
@@ -139,16 +140,19 @@ public class DescriptionPropertySectionContribution implements IExtensibleGridPr
 	 * IExtenstibleGridPropertySectionContribution
 	 * #setSelection(org.eclipse.jface.viewers.ISelection)
 	 */
-	public void setSelection(ISelection selection) {
+	@Override
+    public void setSelection(final ISelection selection) {
 		// NOTHING
 	}
 
 	/* (non-Javadoc)
 	 * @see org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution#dispose()
 	 */
-	public void dispose() {
-		if(context!= null)
-			context.dispose();
+	@Override
+    public void dispose() {
+		if(context!= null) {
+            context.dispose();
+        }
 	}
 
 }
