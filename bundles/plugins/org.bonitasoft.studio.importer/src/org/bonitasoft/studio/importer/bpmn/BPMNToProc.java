@@ -1080,7 +1080,7 @@ public class BPMNToProc extends ToProcProcessor {
 
 
 
-    private boolean isSequenceFlowDefault(final TSequenceFlow sequenceFlow, final String sequenceFlowID) {
+    protected boolean isSequenceFlowDefault(final TSequenceFlow sequenceFlow, final String sequenceFlowID) {
         boolean isDefault = false;
         if (sequenceFlowID != null) {
             final String sourceRef = sequenceFlow.getSourceRef();
@@ -1126,7 +1126,15 @@ public class BPMNToProc extends ToProcProcessor {
         return isDefault;
     }
 
-    private PointList computeBendpoints(final String sequenceFlowID) {
+    public List<TProcess> getBpmnProcess() {
+		return bpmnProcess;
+	}
+
+	public void setBpmnProcess(List<TProcess> bpmnProcess) {
+		this.bpmnProcess = bpmnProcess;
+	}
+
+	private PointList computeBendpoints(final String sequenceFlowID) {
         final BPMNEdge edge = getBPMNEdgeFor(sequenceFlowID);
         final PointList bendpoints = new PointList();
         if (edge != null) {

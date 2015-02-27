@@ -14,8 +14,7 @@
  */
 package org.bonitasoft.studio.importer.bpmn;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
@@ -23,6 +22,10 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Matchers.eq;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.bonitasoft.studio.importer.builder.ProcBuilder;
 import org.bonitasoft.studio.importer.builder.ProcBuilderException;
@@ -38,7 +41,14 @@ import org.omg.spec.bpmn.di.BPMNShape;
 import org.omg.spec.bpmn.di.DiFactory;
 import org.omg.spec.bpmn.model.DocumentRoot;
 import org.omg.spec.bpmn.model.ModelFactory;
+import org.omg.spec.bpmn.model.TComplexGateway;
 import org.omg.spec.bpmn.model.TEvent;
+import org.omg.spec.bpmn.model.TExclusiveGateway;
+import org.omg.spec.bpmn.model.TFlowElement;
+import org.omg.spec.bpmn.model.TInclusiveGateway;
+import org.omg.spec.bpmn.model.TProcess;
+import org.omg.spec.bpmn.model.TSequenceFlow;
+import org.omg.spec.bpmn.model.TUserTask;
 import org.omg.spec.dd.dc.Bounds;
 import org.omg.spec.dd.dc.DcFactory;
 
@@ -257,5 +267,177 @@ public class BPMNToProcTest {
       event.setId(id);
       assertEquals(id,bpmnToProc.computeBoundaryName(event));
   }
+  
+  @Test
+  public void isDefaultSequenceFlow_shouldReturnFalse_WhenSequenceFlowHasNotId(){
+	  assertFalse(bpmnToProc.isSequenceFlowDefault(ModelFactory.eINSTANCE.createTSequenceFlow(),null));
+  }
+  
+  @Test
+  public void isDefaultSequenceFlow_shouldReturnFalse_WhenSequenceFlowHasNoSourceRef(){
+	  assertFalse(bpmnToProc.isSequenceFlowDefault(ModelFactory.eINSTANCE.createTSequenceFlow(),"myId"));
+	  
+  }
+  
+  @Test
+  public void isDefaultSequenceFlow_shouldReturnFalse_WhenSequenceFlowourceRefIsEmpty(){
+	  TSequenceFlow sequenceFlow = ModelFactory.eINSTANCE.createTSequenceFlow();
+	  sequenceFlow.setSourceRef("");
+	  assertFalse(bpmnToProc.isSequenceFlowDefault(sequenceFlow,"myId"));
+	  
+  }
+  
+  @Test
+  public void isDefaultSequenceFlow_shouldReturnFalse_WhenSequenceFlowourceRefIsUserTask_andDefaultIsNotSet(){
+	  TProcess process = ModelFactory.eINSTANCE.createTProcess();
+	  process.setId("processId");
+	  List<TProcess> processes = new ArrayList<TProcess>();
+	  processes.add(process);
+	  TSequenceFlow sequenceFlow = ModelFactory.eINSTANCE.createTSequenceFlow();
+	  String sequenceFlowId = "sequenceFlowId";
+	  sequenceFlow.setId(sequenceFlowId);
+	  TUserTask userTask = ModelFactory.eINSTANCE.createTUserTask();
+	  String userTaskId = "userTaskId";
+	  userTask.setId(userTaskId);
+	  sequenceFlow.setSourceRef(userTaskId);
+	  process.getFlowElement().add(userTask);
+	  bpmnToProc.setBpmnProcess(processes);
+	  assertFalse(bpmnToProc.isSequenceFlowDefault(sequenceFlow,sequenceFlowId));
+	  
+  }
 
+  @Test
+  public void isDefaultSequenceFlow_shouldReturnTrue_WhenSequenceFlowourceRefIsUserTask_andDefaultIsSet(){
+	  TProcess process = ModelFactory.eINSTANCE.createTProcess();
+	  process.setId("processId");
+	  List<TProcess> processes = new ArrayList<TProcess>();
+	  processes.add(process);
+	  TSequenceFlow sequenceFlow = ModelFactory.eINSTANCE.createTSequenceFlow();
+	  String sequenceFlowId = "sequenceFlowId";
+	  sequenceFlow.setId(sequenceFlowId);
+	  TUserTask userTask = ModelFactory.eINSTANCE.createTUserTask();
+	  String userTaskId = "userTaskId";
+	  userTask.setId(userTaskId);
+	  userTask.setDefault(sequenceFlowId);
+	  sequenceFlow.setSourceRef(userTaskId);
+	  process.getFlowElement().add(userTask);
+	  bpmnToProc.setBpmnProcess(processes);
+	  assertTrue(bpmnToProc.isSequenceFlowDefault(sequenceFlow,sequenceFlowId));
+  }
+  
+  @Test
+  public void isDefaultSequenceFlow_shouldReturnFalse_WhenSequenceFlowourceRefIsInclusiveGateway_andDefaultIsNotSet(){
+	  TProcess process = ModelFactory.eINSTANCE.createTProcess();
+	  process.setId("processId");
+	  List<TProcess> processes = new ArrayList<TProcess>();
+	  processes.add(process);
+	  TSequenceFlow sequenceFlow = ModelFactory.eINSTANCE.createTSequenceFlow();
+	  String sequenceFlowId = "sequenceFlowId";
+	  sequenceFlow.setId(sequenceFlowId);
+	  TInclusiveGateway inclusiveGateway = ModelFactory.eINSTANCE.createTInclusiveGateway();
+	  String inclusiveGatewayId = "inclusiveGatewayId";
+	  inclusiveGateway.setId(inclusiveGatewayId);
+	  sequenceFlow.setSourceRef(inclusiveGatewayId);
+	  process.getFlowElement().add(inclusiveGateway);
+	  bpmnToProc.setBpmnProcess(processes);
+	  assertFalse(bpmnToProc.isSequenceFlowDefault(sequenceFlow,sequenceFlowId));
+	  
+  }
+  
+  @Test
+  public void isDefaultSequenceFlow_shouldReturnFalse_WhenSequenceFlowourceRefIsInclusiveGateway_andDefaultIsSet(){
+	  TProcess process = ModelFactory.eINSTANCE.createTProcess();
+	  process.setId("processId");
+	  List<TProcess> processes = new ArrayList<TProcess>();
+	  processes.add(process);
+	  TSequenceFlow sequenceFlow = ModelFactory.eINSTANCE.createTSequenceFlow();
+	  String sequenceFlowId = "sequenceFlowId";
+	  sequenceFlow.setId(sequenceFlowId);
+	  TInclusiveGateway inclusiveGateway = ModelFactory.eINSTANCE.createTInclusiveGateway();
+	  String inclusiveGatewayId = "inclusiveGatewayId";
+	  inclusiveGateway.setId(inclusiveGatewayId);
+	  inclusiveGateway.setDefault(sequenceFlowId);
+	  sequenceFlow.setSourceRef(inclusiveGatewayId);
+	  process.getFlowElement().add(inclusiveGateway);
+	  bpmnToProc.setBpmnProcess(processes);
+	  assertTrue(bpmnToProc.isSequenceFlowDefault(sequenceFlow,sequenceFlowId));
+  }
+  
+  @Test
+  public void isDefaultSequenceFlow_shouldReturnFalse_WhenSequenceFlowourceRefIsExclusiveGateway_andDefaultIsNotSet(){
+	  TProcess process = ModelFactory.eINSTANCE.createTProcess();
+	  process.setId("processId");
+	  List<TProcess> processes = new ArrayList<TProcess>();
+	  processes.add(process);
+	  TSequenceFlow sequenceFlow = ModelFactory.eINSTANCE.createTSequenceFlow();
+	  String sequenceFlowId = "sequenceFlowId";
+	  sequenceFlow.setId(sequenceFlowId);
+	  TExclusiveGateway exclusiveGateway = ModelFactory.eINSTANCE.createTExclusiveGateway();
+	  String exclusiveGatewayId = "exclusiveGatewayId";
+	  exclusiveGateway.setId(exclusiveGatewayId);
+	  sequenceFlow.setSourceRef(exclusiveGatewayId);
+	  process.getFlowElement().add(exclusiveGateway);
+	  bpmnToProc.setBpmnProcess(processes);
+	  assertFalse(bpmnToProc.isSequenceFlowDefault(sequenceFlow,sequenceFlowId));
+	  
+  }
+  
+  @Test
+  public void isDefaultSequenceFlow_shouldReturnFalse_WhenSequenceFlowourceRefIsExclusiveGateway_andDefaultIsSet(){
+	  TProcess process = ModelFactory.eINSTANCE.createTProcess();
+	  process.setId("processId");
+	  List<TProcess> processes = new ArrayList<TProcess>();
+	  processes.add(process);
+	  TSequenceFlow sequenceFlow = ModelFactory.eINSTANCE.createTSequenceFlow();
+	  String sequenceFlowId = "sequenceFlowId";
+	  sequenceFlow.setId(sequenceFlowId);
+	  TExclusiveGateway exclusiveGateway = ModelFactory.eINSTANCE.createTExclusiveGateway();
+	  String exclusiveGatewayId = "exclusiveGatewayId";
+	  exclusiveGateway.setId(exclusiveGatewayId);
+	  exclusiveGateway.setDefault(sequenceFlowId);
+	  sequenceFlow.setSourceRef(exclusiveGatewayId);
+	  process.getFlowElement().add(exclusiveGateway);
+	  bpmnToProc.setBpmnProcess(processes);
+	  assertTrue(bpmnToProc.isSequenceFlowDefault(sequenceFlow,sequenceFlowId));
+  }
+  
+  @Test
+  public void isDefaultSequenceFlow_shouldReturnFalse_WhenSequenceFlowourceRefIsComplexGateway_andDefaultIsNotSet(){
+	  TProcess process = ModelFactory.eINSTANCE.createTProcess();
+	  process.setId("processId");
+	  List<TProcess> processes = new ArrayList<TProcess>();
+	  processes.add(process);
+	  TSequenceFlow sequenceFlow = ModelFactory.eINSTANCE.createTSequenceFlow();
+	  String sequenceFlowId = "sequenceFlowId";
+	  sequenceFlow.setId(sequenceFlowId);
+	  TComplexGateway complexGateway = ModelFactory.eINSTANCE.createTComplexGateway();
+	  String complexGatewayId = "complexGatewayId";
+	  complexGateway.setId(complexGatewayId);
+	  sequenceFlow.setSourceRef(complexGatewayId);
+	  process.getFlowElement().add(complexGateway);
+	  bpmnToProc.setBpmnProcess(processes);
+	  assertFalse(bpmnToProc.isSequenceFlowDefault(sequenceFlow,sequenceFlowId));
+	  
+  }
+  
+  @Test
+  public void isDefaultSequenceFlow_shouldReturnFalse_WhenSequenceFlowourceRefIsComplexGateway_andDefaultIsSet(){
+	  TProcess process = ModelFactory.eINSTANCE.createTProcess();
+	  process.setId("processId");
+	  List<TProcess> processes = new ArrayList<TProcess>();
+	  processes.add(process);
+	  TSequenceFlow sequenceFlow = ModelFactory.eINSTANCE.createTSequenceFlow();
+	  String sequenceFlowId = "sequenceFlowId";
+	  sequenceFlow.setId(sequenceFlowId);
+	  TComplexGateway complexGateway = ModelFactory.eINSTANCE.createTComplexGateway();
+	  String complexGatewayId = "exclusiveGatewayId";
+	  complexGateway.setId(complexGatewayId);
+	  complexGateway.setDefault(sequenceFlowId);
+	  sequenceFlow.setSourceRef(complexGatewayId);
+	  process.getFlowElement().add(complexGateway);
+	  bpmnToProc.setBpmnProcess(processes);
+	  assertTrue(bpmnToProc.isSequenceFlowDefault(sequenceFlow,sequenceFlowId));
+  }
+  
+  
 }
