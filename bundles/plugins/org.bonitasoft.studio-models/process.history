@@ -8931,6 +8931,14 @@
           featureName="name" dataValue="constraints"/>
       <changes xsi:type="history:Set" element="process.ecore#//Contract/constraints"
           featureName="eType" referenceValue="process.ecore#//ContractConstraint"/>
+      <changes xsi:type="history:Create" target="process.ecore#//Task" referenceName="eStructuralFeatures"
+          element="process.ecore#//Task/contract"/>
+      <changes xsi:type="history:Set" element="process.ecore#//Task/contract" featureName="name"
+          dataValue="contract"/>
+      <changes xsi:type="history:Set" element="process.ecore#//Task/contract" featureName="containment"
+          dataValue="true" oldDataValue="false"/>
+      <changes xsi:type="history:Set" element="process.ecore#//Task/contract" featureName="eType"
+          referenceValue="process.ecore#//Contract"/>
     </changes>
   </releases>
   <releases/>
