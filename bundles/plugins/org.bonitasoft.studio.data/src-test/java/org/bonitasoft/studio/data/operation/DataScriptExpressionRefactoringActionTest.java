@@ -51,7 +51,7 @@ public class DataScriptExpressionRefactoringActionTest {
     @Before
     public void setUp() throws Exception {
     	final List<DataRefactorPair> pairsToRefactor = new ArrayList<DataRefactorPair>();
-        oldData = DataBuilder.createDataBuilder().withName("myData").build();
+        oldData = DataBuilder.aData().withName("myData").build();
 		pairsToRefactor.add(new DataRefactorPair(oldData, oldData));
         refactoringAction = new DataScriptExpressionRefactoringAction(pairsToRefactor,
                 Collections.<Expression> emptyList(),
@@ -69,8 +69,8 @@ public class DataScriptExpressionRefactoringActionTest {
 
     @Test
     public void should_retrieve_data_in_expression_dependencies() throws Exception {
-        final Data createData = DataBuilder.createDataBuilder().withName("myData").build();
-        final Expression expr = ExpressionBuilder.create().
+        final Data createData = DataBuilder.aData().withName("myData").build();
+        final Expression expr = ExpressionBuilder.anExpression().
                 havingReferencedElements(createData,
                         ParameterBuilder.create().withName("myData").build()).build();
         final Map<EObject,EObject> eObject = refactoringAction.getReferencedObjectInScriptsOperation(expr);

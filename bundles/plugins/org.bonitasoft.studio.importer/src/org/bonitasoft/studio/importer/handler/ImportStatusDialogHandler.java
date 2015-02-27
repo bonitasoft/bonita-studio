@@ -77,15 +77,20 @@ public class ImportStatusDialogHandler {
             return org.bonitasoft.studio.importer.i18n.Messages.importSucessfulMessage;
         }
         if (status instanceof MultiStatus) {
-            final StringBuilder sb = new StringBuilder(Messages.processesWithErrorAfterImport);
-            sb.append(SWT.CR);
+            final StringBuilder sb = new StringBuilder();
+            if (status instanceof BosArchiveImportStatus) {
+                sb.append(Messages.processesWithErrorAfterImport);
+                sb.append(SWT.CR);
+            }
             for (final IStatus childStatus : status.getChildren()) {
                 if (!childStatus.isOK()) {
-                sb.append(childStatus.getMessage());
-                sb.append(SWT.CR);
+                    sb.append(childStatus.getMessage());
+                    sb.append(SWT.CR);
                 }
             }
-            sb.append(Messages.openDiagramWithErrors);
+            if (status instanceof BosArchiveImportStatus) {
+                sb.append(Messages.openDiagramWithErrors);
+            }
             return sb.toString();
         }
         return status.getMessage();

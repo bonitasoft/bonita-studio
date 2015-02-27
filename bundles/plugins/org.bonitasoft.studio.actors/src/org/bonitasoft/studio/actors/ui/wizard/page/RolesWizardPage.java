@@ -16,6 +16,11 @@
  */
 package org.bonitasoft.studio.actors.ui.wizard.page;
 
+import static org.bonitasoft.studio.common.jface.databinding.UpdateStrategyFactory.updateValueStrategy;
+import static org.bonitasoft.studio.common.jface.databinding.ValidatorFactory.mandatoryValidator;
+import static org.bonitasoft.studio.common.jface.databinding.ValidatorFactory.maxLengthValidator;
+import static org.bonitasoft.studio.common.jface.databinding.ValidatorFactory.multiValidator;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -27,11 +32,10 @@ import org.bonitasoft.studio.actors.model.organization.Organization;
 import org.bonitasoft.studio.actors.model.organization.OrganizationFactory;
 import org.bonitasoft.studio.actors.model.organization.OrganizationPackage;
 import org.bonitasoft.studio.actors.model.organization.Role;
-import org.bonitasoft.studio.actors.validator.DisplayNameValidator;
+import org.bonitasoft.studio.actors.validator.ValidatorConstants;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.jface.TableColumnSorter;
 import org.eclipse.core.databinding.Binding;
-import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.IValueChangeListener;
@@ -69,9 +73,23 @@ import org.eclipse.swt.widgets.Text;
  * @author Romain Bioteau
  *
  */
-public class RolesWizardPage extends AbstractOrganizationWizardPage {
+public class RolesWizardPage extends AbstractOrganizationWizardPage implements ValidatorConstants{
 
 
+    final class UniqueRoleNameValidator implements IValidator {
+
+        @Override
+        public IStatus validate(final Object value) {
+            for (final Role role : roleList) {
+                if (!role.equals(roleSingleSelectionObservable.getValue())) {
+                    if (role.getName().equals(value)) {
+                        return ValidationStatus.error(Messages.roleNameAlreadyExists);
+                    }
+                }
+            }
+            return Status.OK_STATUS;
+        }
+    }
 
     private final List<Membership> roleMemberShips = new ArrayList<Membership>();
     private IViewerObservableValue roleSingleSelectionObservable;
@@ -223,12 +241,9 @@ public class RolesWizardPage extends AbstractOrganizationWizardPage {
         final Text displayNamedText = new Text(group, SWT.BORDER) ;
         displayNamedText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
 
-
-        final UpdateValueStrategy roleDisplayNameStrategy = new UpdateValueStrategy();
-        roleDisplayNameStrategy.setAfterGetValidator(new DisplayNameValidator());
-
         final IObservableValue roleDisplayNameValue = EMFObservables.observeDetailValue(Realm.getDefault(), roleSingleSelectionObservable, OrganizationPackage.Literals.ROLE__DISPLAY_NAME);
-        final Binding binding =context.bindValue(SWTObservables.observeText(displayNamedText, SWT.Modify), roleDisplayNameValue,roleDisplayNameStrategy,null);
+        final Binding binding =context.bindValue(SWTObservables.observeText(displayNamedText, SWT.Modify), roleDisplayNameValue,
+                updateValueStrategy().withValidator(maxLengthValidator(Messages.displayName, LONG_FIELD_MAX_LENGTH)).create(), null);
         ControlDecorationSupport.create(binding, SWT.LEFT);
 
         roleDisplayNameValue.addValueChangeListener(new IValueChangeListener() {
@@ -249,31 +264,16 @@ public class RolesWizardPage extends AbstractOrganizationWizardPage {
         final Text roleNameText = new Text(group, SWT.BORDER) ;
         roleNameText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).minSize(130, SWT.DEFAULT).create()) ;
 
-        final UpdateValueStrategy roleNameStrategy = new UpdateValueStrategy();
-        roleNameStrategy.setAfterGetValidator(new IValidator() {
-
-            @Override
-            public IStatus validate(final Object value) {
-                if(value.toString().isEmpty()){
-                    return ValidationStatus.error(Messages.nameIsEmpty) ;
-                }
-                if(value.toString().length()>NAME_SIZE){
-                    return ValidationStatus.error(Messages.nameLimitSize) ;
-                }
-
-                for(final Role role : roleList){
-                    if(!role.equals(roleSingleSelectionObservable.getValue())){
-                        if(role.getName().equals(value)){
-                            return ValidationStatus.error(Messages.roleNameAlreadyExists) ;
-                        }
-                    }
-                }
-                return Status.OK_STATUS;
-            }
-        });
 
         final IObservableValue roleNameValue = EMFObservables.observeDetailValue(Realm.getDefault(), roleSingleSelectionObservable, OrganizationPackage.Literals.ROLE__NAME);
-        final Binding binding = context.bindValue(SWTObservables.observeText(roleNameText, SWT.Modify), roleNameValue, roleNameStrategy,null);
+        final Binding binding = context.bindValue(SWTObservables.observeText(roleNameText, SWT.Modify),
+                roleNameValue,
+                updateValueStrategy().withValidator(multiValidator()
+                .addValidator(mandatoryValidator(Messages.name))
+                .addValidator(maxLengthValidator(Messages.name, LONG_FIELD_MAX_LENGTH))
+                        .addValidator(new UniqueRoleNameValidator()).create()).create()
+                , null);
+
         ControlDecorationSupport.create(binding, SWT.LEFT, group, new ControlDecorationUpdater(){
             @Override
             protected void update(final ControlDecoration decoration, final IStatus status) {

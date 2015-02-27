@@ -18,7 +18,7 @@ package org.bonitasoft.studio.contract.ui.property.input;
 
 import java.util.List;
 
-import org.bonitasoft.studio.common.databinding.CustomEMFEditObservables;
+import org.bonitasoft.studio.common.jface.databinding.CustomEMFEditObservables;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.contract.core.validation.ContractDefinitionValidator;

@@ -22,9 +22,12 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.util.Collections;
 
+import org.bonitasoft.engine.bpm.process.impl.ActivityDefinitionBuilder;
+import org.bonitasoft.engine.bpm.process.impl.BoundaryEventDefinitionBuilder;
 import org.bonitasoft.engine.bpm.process.impl.CatchMessageEventTriggerDefinitionBuilder;
 import org.bonitasoft.engine.bpm.process.impl.ProcessDefinitionBuilder;
 import org.bonitasoft.engine.bpm.process.impl.UserFilterDefinitionBuilder;
@@ -34,7 +37,11 @@ import org.bonitasoft.studio.engine.contribution.IEngineDefinitionBuilder;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfigurationFactory;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorParameter;
+import org.bonitasoft.studio.model.expression.ExpressionFactory;
+import org.bonitasoft.studio.model.expression.TableExpression;
+import org.bonitasoft.studio.model.process.Activity;
 import org.bonitasoft.studio.model.process.ActorFilter;
+import org.bonitasoft.studio.model.process.BoundaryMessageEvent;
 import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.StartMessageEvent;
@@ -55,6 +62,14 @@ import org.mockito.runners.MockitoJUnitRunner;
 public class FlowElementSwitchTest {
 
     private FlowElementSwitch flowElementSwitch;
+    private ProcessDefinitionBuilder instance;
+    @Mock
+    ActivityDefinitionBuilder activityDefinitionBuilder;
+
+    @Mock
+    BoundaryEventDefinitionBuilder boundaryEventBuilder;
+    @Mock
+    CatchMessageEventTriggerDefinitionBuilder catchMessageEventTriggerDefinitionBuilder;
 
     @Mock
     private UserFilterDefinitionBuilder userFilterBuilder;
@@ -70,7 +85,7 @@ public class FlowElementSwitchTest {
      */
     @Before
     public void setUp() throws Exception {
-        final ProcessDefinitionBuilder instance = new ProcessDefinitionBuilder().createNewInstance("test", "1.0");
+        instance = new ProcessDefinitionBuilder().createNewInstance("test", "1.0");
         flowElementSwitch = spy(new FlowElementSwitch(instance, Collections.<EObject> emptySet()));
         doReturn(engineContractBuilder).when(flowElementSwitch).getEngineDefinitionBuilder(any(Contract.class));
 
@@ -111,6 +126,21 @@ public class FlowElementSwitchTest {
     }
 
     @Test
+    public void should_addCorrelations_whenActivity_isBoundaryMessageEvent() {
+        final BoundaryMessageEvent bmEvent = ProcessFactory.eINSTANCE.createBoundaryMessageEvent();
+        final TableExpression correlations = ExpressionFactory.eINSTANCE.createTableExpression();
+        bmEvent.setEvent("myEvent");
+        bmEvent.setName("bmEvent");
+        bmEvent.setCorrelation(correlations);
+        final Activity activity = ProcessFactory.eINSTANCE.createActivity();
+        activity.getBoundaryIntermediateEvents().add(bmEvent);
+        when(activityDefinitionBuilder.addBoundaryEvent(bmEvent.getName(), true)).thenReturn(boundaryEventBuilder);
+        when(boundaryEventBuilder.addMessageEventTrigger(bmEvent.getEvent())).thenReturn(catchMessageEventTriggerDefinitionBuilder);
+        flowElementSwitch.addBoundaryEvents(activityDefinitionBuilder, activity);
+        verify(flowElementSwitch).addMessageCorrelation(eq(bmEvent), any(CatchMessageEventTriggerDefinitionBuilder.class));
+	}
+	
+	@Test
     public void should_addContract_build_an_engine_contract() throws Exception {
         final Contract contract = ProcessFactory.eINSTANCE.createContract();
         flowElementSwitch.addContract(taskBuilder, contract);

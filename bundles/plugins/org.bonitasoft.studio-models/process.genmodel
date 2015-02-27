@@ -115,6 +115,8 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute expression.ecore#//Expression/returnTypeFixed"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute expression.ecore#//Expression/automaticDependencies"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute expression.ecore#//Expression/htmlAllowed"/>
+      <genOperations ecoreOperation="expression.ecore#//Expression/hasContent"/>
+      <genOperations ecoreOperation="expression.ecore#//Expression/hasName"/>
     </genClasses>
     <genClasses ecoreClass="expression.ecore#//ListExpression">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference expression.ecore#//ListExpression/expressions"/>

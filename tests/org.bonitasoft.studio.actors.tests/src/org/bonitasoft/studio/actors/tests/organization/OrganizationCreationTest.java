@@ -34,6 +34,7 @@ import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotButton;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotText;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -143,8 +144,10 @@ public class OrganizationCreationTest extends SWTBotGefTestCase {
             final List<String[]> memberShip) {
         bot.button(Messages.add).click();
         bot.tabItem(Messages.general).activate();
-
-        bot.textWithLabel(Messages.userName + " *").setText(username);
+        System.out.println("typing :" + username);
+        final SWTBotText usernameText = bot.textWithLabel(Messages.userName + " *");
+        usernameText.setText("");
+        usernameText.setText(username);
         //bot.sleep(1000);
         if(manager != null && !manager.isEmpty()){
             bot.comboBoxWithLabel(Messages.manager).setSelection(manager);

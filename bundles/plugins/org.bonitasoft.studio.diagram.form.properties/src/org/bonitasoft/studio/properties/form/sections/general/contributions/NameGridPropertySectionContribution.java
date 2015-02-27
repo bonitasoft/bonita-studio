@@ -21,9 +21,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bonitasoft.studio.common.databinding.MultiValidator;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.OpenNameDialog;
+import org.bonitasoft.studio.common.jface.databinding.MultiValidator;
 import org.bonitasoft.studio.common.jface.databinding.validator.GroovyReferenceValidator;
 import org.bonitasoft.studio.common.jface.databinding.validator.InputLengthValidator;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;

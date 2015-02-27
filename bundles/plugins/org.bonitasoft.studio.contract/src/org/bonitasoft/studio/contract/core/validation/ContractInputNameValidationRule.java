@@ -16,7 +16,7 @@
  */
 package org.bonitasoft.studio.contract.core.validation;
 
-import org.bonitasoft.studio.common.databinding.MultiValidator;
+import org.bonitasoft.studio.common.jface.databinding.MultiValidator;
 import org.bonitasoft.studio.common.jface.databinding.validator.GroovyReferenceValidator;
 import org.bonitasoft.studio.common.jface.databinding.validator.InputLengthValidator;
 import org.bonitasoft.studio.contract.i18n.Messages;

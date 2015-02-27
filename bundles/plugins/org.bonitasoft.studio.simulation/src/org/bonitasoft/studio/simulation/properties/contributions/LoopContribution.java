@@ -17,8 +17,8 @@
  */
 package org.bonitasoft.studio.simulation.properties.contributions;
 
-import org.bonitasoft.studio.common.databinding.BonitaNumberFormat;
-import org.bonitasoft.studio.common.databinding.WrappingValidator;
+import org.bonitasoft.studio.common.jface.databinding.BonitaNumberFormat;
+import org.bonitasoft.studio.common.jface.databinding.WrappingValidator;
 import org.bonitasoft.studio.common.properties.AbstractPropertySectionContribution;
 import org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;

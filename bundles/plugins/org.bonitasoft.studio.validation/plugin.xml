@@ -20,7 +20,7 @@
                   class="org.bonitasoft.studio.validation.constraints.process.EmptyNameConstraint"
                   id="org.bonitasoft.studio.validation.constraints.nonemptynames"
                   lang="Java"
-                  mode="Batch"
+                  mode="Live"
                   name="%NotEmptyNameConstraint"
                   severity="WARNING"
                   statusCode="1">
@@ -692,34 +692,6 @@
                </target>
             </constraint>
             <constraint
-                  class="org.bonitasoft.studio.validation.constraints.MaxLengthNames"
-                  id="org.bonitasoft.studio.validation.constraints.maxlengthnames"
-                  isEnabledByDefault="true"
-                  lang="Java"
-                  mode="Live"
-                  name="Max-length names"
-                  severity="WARNING"
-                  statusCode="1">
-               <message>
-                  %constraints.maxlengthname.message
-               </message>
-               <target
-                     class="Activity:http://www.bonitasoft.org/ns/studio/process">
-                  <event
-                        name="Set">
-                     <feature
-                           name="name">
-                     </feature>
-                  </event>
-                  <event
-                        name="Unset">
-                     <feature
-                           name="name">
-                     </feature>
-                  </event>
-               </target>
-            </constraint>
-            <constraint
                   class="org.bonitasoft.studio.validation.constraints.GroovyCompilationOnScriptExpressionConstraint"
                   id="org.bonitasoft.studio.validation.constraint.groovyCompilationFailure"
                   lang="java"
@@ -886,21 +858,6 @@
                       </target>
              </constraint>
               <constraint
-                  class="org.bonitasoft.studio.validation.constraints.process.ParalellMergeGatewayConstraint"
-                  id="org.bonitasoft.studio.validation.constraints.paralellMerge"
-                  lang="java"
-                  mode="Batch"
-                  name="Paralell merge"
-                  severity="WARNING"
-                  statusCode="1">
-               <message>
-                  {0}
-               </message>
-               <target
-                     class="ANDGateway::http://www.bonitasoft.org/ns/studio/process">
-               </target>
-            </constraint>
-              <constraint
                     class="org.bonitasoft.studio.validation.constraints.connector.ConnectorDefinitionAndConfigurationInputConsistencyConstraint"
                     id="org.bonitasoft.studio.validation.constraints.connectorDefAndConfigInputConsistency"
                     isEnabledByDefault="true"
@@ -913,7 +870,7 @@
                     {0}
                  </message>
                  <target
-                       class="Connector::http://www.bonitasoft.org/ns/studio/process">
+                       class="Connector:http://www.bonitasoft.org/ns/studio/process">
                  </target>
               </constraint>
               <constraint
@@ -929,7 +886,7 @@
                     {0}
                  </message>
                  <target
-                       class="Connector::http://www.bonitasoft.org/ns/studio/process">
+                       class="Connector:http://www.bonitasoft.org/ns/studio/process">
                  </target>
               </constraint>
               <constraint
@@ -945,7 +902,7 @@
                     {0}
                  </message>
                  <target
-                       class="SequenceFlow::http://www.bonitasoft.org/ns/studio/process">
+                       class="SequenceFlow:http://www.bonitasoft.org/ns/studio/process">
                  </target>
               </constraint>
             <constraint
@@ -961,7 +918,7 @@
                   {0}
                </message>
                <target
-                     class="Operation::http://www.bonitasoft.org/ns/studio/process">
+                     class="Operation:http://www.bonitasoft.org/ns/studio/expression">
                </target>
             </constraint>
             <constraint
@@ -977,7 +934,7 @@
                   {0}
                </message>
                <target
-                     class="Operation::http://www.bonitasoft.org/ns/studio/process">
+                     class="Operation:http://www.bonitasoft.org/ns/studio/expression">
                </target>
             </constraint>
             <constraint
@@ -993,7 +950,38 @@
                   {0}
                </message>
                <target
-                     class="Connector::http://www.bonitasoft.org/ns/studio/process">
+                     class="Connector:http://www.bonitasoft.org/ns/studio/process">
+               </target>
+            </constraint>
+            <constraint
+                  class="org.bonitasoft.studio.validation.constraints.ExpressionDependenciesConstraint"
+                  id="org.bonitasoft.studio.validation.constraint.expressionDependencies"
+                  isEnabledByDefault="true"
+                  lang="Java"
+                  mode="Batch"
+                  name="Expression dependency consistency constraint"
+                  severity="ERROR"
+                  statusCode="1">
+               <message>
+                  {0}
+               </message>
+               <target
+                     class="Expression:http://www.bonitasoft.org/ns/studio/expression">
+               </target>
+            </constraint>
+            <constraint
+                  class="org.bonitasoft.studio.validation.constraints.process.MultiInstanceIteratorConstraint"
+                  id="org.bonitasoft.studio.validation.multiInstanceIterator"
+                  lang="Java"
+                  mode="Batch"
+                  name="MultiInstance iterator constraint"
+                  severity="WARNING"
+                  statusCode="1">
+               <message>
+                  {0}
+               </message>
+               <target
+                     class="MultiInstantiable:http://www.bonitasoft.org/ns/studio/process">
                </target>
             </constraint>
             <constraint

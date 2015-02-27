@@ -54,9 +54,9 @@ public class ExpressionConditionModelSwitchTest {
      */
     @Before
     public void setUp() throws Exception {
-        variable = DataBuilder.createDataBuilder().withName("amount").havingDataType(DoubleDataTypeBuilder.create()).build();
+        variable = DataBuilder.aData().withName("amount").havingDataType(DoubleDataTypeBuilder.create()).build();
         parameter = ParameterBuilder.create().withName("commission").withType(Double.class.getName()).build();
-        final ExpressionBuilder builder = ExpressionBuilder.create()
+        final ExpressionBuilder builder = ExpressionBuilder.anExpression()
         .withExpressionType(ExpressionConstants.CONDITION_TYPE)
                 .withContent("amount <= 10000 + commission")
         .withReturnType(Boolean.class.getName())

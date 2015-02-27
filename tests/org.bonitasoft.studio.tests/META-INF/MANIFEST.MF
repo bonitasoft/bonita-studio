@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: General and master tests for BonitaStudio
 Bundle-SymbolicName: org.bonitasoft.studio.tests;singleton:=true
-Bundle-Version: 6.5.0.qualifier
+Bundle-Version: 7.0.0.qualifier
 Bundle-Vendor: BonitaSoft S.A.
 Eclipse-BundleShape: dir
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
@@ -63,7 +63,6 @@ Require-Bundle: org.eclipse.ui.workbench,
  org.eclipse.emf.common.ui,
  org.bonitasoft.studio.refactoring;bundle-version="6.3.0",
  org.bonitasoft.studio.swtbot.framework;bundle-version="6.4.0",
- cucumber-jvm;bundle-version="1.1.8",
  org.bonitasoft.studio.tests-utils;bundle-version="6.4.0",
  org.eclipse.core.databinding;bundle-version="1.4.1",
  org.bonitasoft.studio.debug;bundle-version="6.4.0",
@@ -86,6 +85,7 @@ Export-Package: org.bonitasoft.studio.tests,
  org.bonitasoft.studio.tests.draw2d,
  org.bonitasoft.studio.tests.form,
  org.bonitasoft.studio.tests.iteration,
+ org.bonitasoft.studio.tests.migration,
  org.bonitasoft.studio.tests.pagetemplate,
  org.bonitasoft.studio.tests.perspectives,
  org.bonitasoft.studio.tests.processzoo,
