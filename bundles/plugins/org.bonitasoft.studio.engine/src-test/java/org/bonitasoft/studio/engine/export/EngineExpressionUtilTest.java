@@ -11,7 +11,7 @@ import org.bonitasoft.engine.expression.ExpressionType;
 import org.bonitasoft.studio.common.DatasourceConstants;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
-import org.bonitasoft.studio.data.provider.DocumentReferenceExpressionProvider;
+import org.bonitasoft.studio.document.core.expression.DocumentReferenceExpressionProvider;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.expression.Operation;

@@ -82,6 +82,14 @@ public class Messages extends NLS {
 
     public static String AddSimple;
 
+    public static String documentRepository;
+
+    public static String returnType;
+
+    public static String documentReferenceType;
+
+    public static String documentType;
+
     static {
         // initialize resource bundle
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

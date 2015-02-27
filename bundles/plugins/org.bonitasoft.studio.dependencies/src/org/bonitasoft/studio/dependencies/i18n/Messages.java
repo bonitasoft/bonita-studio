@@ -45,6 +45,8 @@ public class Messages extends NLS {
 	public static String zipFileIsCorrupted;
 	public static String dependencyExistsInRuntimeContainer;
 	public static String dependencyExistsInRuntimeContainerWithAnotherVersion;
+    public static String addingJar;
+    public static String beginToAddJars;
 
 
 }

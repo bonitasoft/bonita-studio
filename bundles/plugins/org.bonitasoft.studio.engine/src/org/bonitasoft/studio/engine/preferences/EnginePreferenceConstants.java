@@ -1,7 +1,7 @@
 /**
  * Copyright (C) 2010 BonitaSoft S.A.
  * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -39,4 +39,7 @@ public class EnginePreferenceConstants {
     public static final String REST_SERVER_ADDRESS_PROPERTY = BonitaConstants.REST_SERVER_ADDRESS_PROPERTY ;
     public static final String DEBUG_MODE = "debug";
     public static final String TOGGLE_STATE_FOR_NO_INITIATOR="toggleStateForNoInitiatorWarning";
+    public static final String DROP_BUSINESS_DATA_DB_ON_EXIT_PREF = "DROP_BUSINESS_DATA_DB_ON_EXIT_PREF";
+    public static final String DROP_BUSINESS_DATA_DB_ON_INSTALL = "DROP_BUSINESS_DATA_DB_ON_INSTALL";
+
 }

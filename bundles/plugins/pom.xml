@@ -25,6 +25,7 @@
 		<module>org.bonitasoft.studio.diagram</module>
 		<module>org.bonitasoft.studio.diagram.form</module>
 		<module>org.bonitasoft.studio.actors</module>
+        <module>org.bonitasoft.studio.businessobject</module>
 		<module>org.bonitasoft.studio.common</module>
 		<module>org.bonitasoft.studio.common.diagram</module>
 		<module>org.bonitasoft.studio.common.repository</module>
@@ -59,6 +60,7 @@
 		<module>org.bonitasoft.studio.jpdl</module>
 		<module>org.bonitasoft.studio.model.edit.custom</module>
 		<module>org.bonitasoft.studio.refactoring</module>
+        <module>org.bonitasoft.studio.parameters</module>
 		<module>org.bonitasoft.studio.pics</module>
 		<module>org.bonitasoft.studio.pics.bonitasoft</module>
 		<module>org.bonitasoft.studio.preferences</module>

@@ -1,7 +1,7 @@
 /**
  * Copyright (C) 2010 BonitaSoft S.A.
  * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -34,10 +34,12 @@ public class EnginePreferencesInitializer extends AbstractPreferenceInitializer 
      */
     @Override
     public void initializeDefaultPreferences() {
-        IPreferenceStore store = EnginePlugin.getDefault().getPreferenceStore();
+        final IPreferenceStore store = EnginePlugin.getDefault().getPreferenceStore();
         store.setDefault(EnginePreferenceConstants.CURRENT_CONFIG, EnginePreferenceConstants.DEFAULT_CONFIG);
         store.setDefault(EnginePreferenceConstants.REMOTE_DEPLOYMENT_CHOICE, EnginePreferenceConstants.STANDARD_MODE);
         store.setDefault(EnginePreferenceConstants.TOGGLE_STATE_FOR_NO_INITIATOR,MessageDialogWithToggle.NEVER);
+        store.setDefault(EnginePreferenceConstants.DROP_BUSINESS_DATA_DB_ON_EXIT_PREF, true);
+        store.setDefault(EnginePreferenceConstants.DROP_BUSINESS_DATA_DB_ON_INSTALL, false);
     }
 
 }

@@ -17,7 +17,6 @@
  */
 package org.bonitasoft.studio.application.splash;
 
-import org.bonitasoft.studio.application.i18n.Messages;
 import org.eclipse.core.runtime.IProduct;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
@@ -77,7 +76,7 @@ public class BOSSplashHandler extends AbstractSplashHandler {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.ui.splash.AbstractSplashHandler#dispose()
      */
     @Override
@@ -91,11 +90,11 @@ public class BOSSplashHandler extends AbstractSplashHandler {
     /**
      * Set the foreground text color. This method has no effect after
      * {@link #getBundleProgressMonitor()} has been invoked.
-     * 
+     *
      * @param foregroundRGB
      *            the color
      */
-    protected void setForeground(RGB foregroundRGB) {
+    protected void setForeground(final RGB foregroundRGB) {
         if (monitor != null) {
             return;
         }
@@ -109,7 +108,7 @@ public class BOSSplashHandler extends AbstractSplashHandler {
     /**
      * Get the foreground text color. This color should not be disposed by
      * callers.
-     * 
+     *
      * @return the foreground color
      */
     protected Color getForeground() {
@@ -119,50 +118,50 @@ public class BOSSplashHandler extends AbstractSplashHandler {
     /**
      * Set the location of the message text in the splash. This method has no
      * effect after {@link #getBundleProgressMonitor()} has been invoked.
-     * 
+     *
      * @param messageRect
      *            the location of the message text
      */
-    protected void setMessageRect(Rectangle messageRect) {
+    protected void setMessageRect(final Rectangle messageRect) {
         this.messageRect = messageRect;
     }
 
     /**
      * Set the location of the progress bar in the splash. This method has no
      * effect after {@link #getBundleProgressMonitor()} has been invoked.
-     * 
+     *
      * @param progressRect
      *            the location of the progress bar
      */
-    protected void setProgressRect(Rectangle progressRect) {
+    protected void setProgressRect(final Rectangle progressRect) {
         this.progressRect = progressRect;
     }
 
 
 
     @Override
-    public void init(Shell splash) {
+    public void init(final Shell splash) {
         super.init(splash);
         String progressRectString = null;
         String messageRectString = null;
         String foregroundColorString = null;
-        IProduct product = Platform.getProduct();
+        final IProduct product = Platform.getProduct();
         if (product != null) {
             progressRectString = product.getProperty(IProductConstants.STARTUP_PROGRESS_RECT);
             messageRectString = product.getProperty(IProductConstants.STARTUP_MESSAGE_RECT);
             foregroundColorString = product.getProperty(IProductConstants.STARTUP_FOREGROUND_COLOR);
         }
 
-        Rectangle progressRect = StringConverter.asRectangle(progressRectString);
+        final Rectangle progressRect = StringConverter.asRectangle(progressRectString);
         setProgressRect(progressRect);
 
-        Rectangle messageRect = StringConverter.asRectangle(messageRectString);
+        final Rectangle messageRect = StringConverter.asRectangle(messageRectString);
         setMessageRect(messageRect);
 
         int foregroundColorInteger;
         try {
             foregroundColorInteger = Integer.parseInt(foregroundColorString, 16);
-        } catch (Exception ex) {
+        } catch (final Exception ex) {
             foregroundColorInteger = 0xD2D7FF; // off white
         }
 
@@ -181,13 +180,13 @@ public class BOSSplashHandler extends AbstractSplashHandler {
                     "eclipse.buildId", "Unknown Build"); //$NON-NLS-1$ //$NON-NLS-2$
             // find the specified location.  Not currently API
             // hardcoded to be sensible with our current splash Graphic
-            String buildIdLocString = product.getProperty("buildIdLocation"); //$NON-NLS-1$
+            final String buildIdLocString = product.getProperty("buildIdLocation"); //$NON-NLS-1$
             final Point buildIdPoint = StringConverter.asPoint(buildIdLocString,
                     new Point(322, 190));
             getContent().addPaintListener(new PaintListener() {
 
                 @Override
-                public void paintControl(PaintEvent e) {
+                public void paintControl(final PaintEvent e) {
                     e.gc.setForeground(getForeground());
                     e.gc.setBackground(getForeground()) ;
                     e.gc
@@ -211,8 +210,8 @@ public class BOSSplashHandler extends AbstractSplashHandler {
             if(getSplash() == null){
                 return null ;
             }
-            Composite parent = new Composite(getSplash(), Window.getDefaultOrientation());
-            Point size = getSplash().getSize();
+            final Composite parent = new Composite(getSplash(), Window.getDefaultOrientation());
+            final Point size = getSplash().getSize();
             parent.setBounds(new Rectangle(0,0,size.x,size.y));
             monitor = new CustomAbsolutePositionProgressMonitorPart(parent);
             monitor.setSize(size);
@@ -238,19 +237,19 @@ public class BOSSplashHandler extends AbstractSplashHandler {
     }
 
     private void updateUI(final Runnable r) {
-        Shell splashShell = getSplash();
+        final Shell splashShell = getSplash();
         if (splashShell == null || splashShell.isDisposed()) {
             return;
         }
 
-        Display display = splashShell.getDisplay();
+        final Display display = splashShell.getDisplay();
 
         if (Thread.currentThread() == display.getThread()) {
             r.run(); // run immediatley if we're on the UI thread
         } else {
             // wrapper with a StartupRunnable to ensure that it will run before
             // the UI is fully initialized
-            StartupRunnable startupRunnable = new StartupRunnable() {
+            final StartupRunnable startupRunnable = new StartupRunnable() {
 
                 @Override
                 public void runWithException() throws Throwable {
@@ -268,9 +267,9 @@ public class BOSSplashHandler extends AbstractSplashHandler {
      */
     class CustomAbsolutePositionProgressMonitorPart extends ProgressMonitorPart {
 
-        private boolean noMoreUpdate =false;
+        private final boolean noMoreUpdate =false;
 
-        public CustomAbsolutePositionProgressMonitorPart(Composite parent) {
+        public CustomAbsolutePositionProgressMonitorPart(final Composite parent) {
             super(parent, null);
             setLayout(null);
         }
@@ -309,7 +308,7 @@ public class BOSSplashHandler extends AbstractSplashHandler {
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see org.eclipse.jface.wizard.ProgressMonitorPart#done()
          */
         @Override
@@ -327,15 +326,15 @@ public class BOSSplashHandler extends AbstractSplashHandler {
             });
 
         }
-        
+
         @Override
-        public void subTask(String name) {
+        public void subTask(final String name) {
         	super.subTask("");
         }
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see org.eclipse.jface.wizard.ProgressMonitorPart#internalWorked(double)
          */
         @Override
@@ -356,7 +355,7 @@ public class BOSSplashHandler extends AbstractSplashHandler {
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see org.eclipse.jface.wizard.ProgressMonitorPart#setFont(org.eclipse.swt.graphics.Font)
          */
         @Override
@@ -377,7 +376,7 @@ public class BOSSplashHandler extends AbstractSplashHandler {
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see org.eclipse.jface.wizard.ProgressMonitorPart#updateLabel()
          */
         @Override
@@ -402,11 +401,6 @@ public class BOSSplashHandler extends AbstractSplashHandler {
                         //Force an update as we are in the UI Thread
                         fLabel.update();
                     }
-                    if(fSubTaskName != null && fSubTaskName.equals(Messages.openingStudio)){
-                        noMoreUpdate = true ;
-                    }
-
-
                 }
             });
 

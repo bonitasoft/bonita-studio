@@ -29,77 +29,42 @@ public class Messages extends NLS {
     public static String GatewayDefaultName;
     public static String StepDefaultName;
     public static String SequenceFlowDefaultName;
-    public static String WidgetDefaultLabel;
-    public static String SubmitFormButtonDefaultLabel;
-    public static String PreviousFormButtonDefaultLabel;
-    public static String NextFormButtonDefaultLabel;
     public static String startEventDefaultName;
     public static String endEventDefaultName;
     public static String GeneralSection_Description;
     public static String GeneralSection_TextAnnotation;
-    public static String CustomizedFormButtonDefaultLabel;
+
     public static String PoolDefaultName;
     public static String setConnectionEndCommandLabel;
     public static String setConnectionsCommandLabel;
-    public static String TextFormFieldDefaultLabel;
-    public static String TextAreaFormFieldDefaultLabel;
-    public static String CheckBoxSingleFormFieldDefaultLabel;
-    public static String CheckBoxMultipleFormFieldDefaultLabel;
-    public static String ListFormFieldDefaultLabel;
-    public static String PasswordFormFieldDefaultLabel;
-    public static String RadioFormFieldDefaultLabel;
-    public static String SelectFormFieldDefaultLabel;
-    public static String MessageInfoDefaultLabel;
-    public static String TextInfoDefaultLabel;
-    public static String DateFormFieldDefaultLabel;
-    public static String FileWidgetDefaultLabel;
-    public static String identifierTootltip;
     public static String daysLabel;
     public static String hoursLabel;
     public static String minutesLabel;
     public static String secondsLabel;
     public static String intermediateMessageEventDefaultName;
     public static String MessageFlowDefaultName;
-    public static String DurationFormFieldDefaultLabel;
     public static String intermeiateTimerEventDefaultName;
     public static String handleShellCloseEventTitle;
     public static String handleShellCloseEventMessage;
     public static String monthsLabel;
     public static String yearsLabel;
-    public static String GroupDefaultLabel;
 
     public static String StringType;
     public static String IntegerType;
     public static String FloatType;
-    public static String AttachmentType;
     public static String BooleanType;
     public static String DataType;
     public static String JavaType;
 
-    public static String autoGenerateIdsLabel;
     public static String linkEventDefaultName;
-    public static String ImageWidgetDefaultLabel;
-    public static String HiddenWidgetDefaultLabel;
-    public static String FormButtonDefaultLabel;
-    public static String TableDefaultLabel;
-    public static String RichTextAreaFormFieldDefaultLabel;
     public static String IntermediateErrorCatchEventLabel;
-    public static String IntermediateErrorCatchEventName;
     public static String switchPaletteAction;
-    public static String paletteSimple;
-    public static String paletteAdvanced;
-    public static String SpreadsheetDefaultLabel;
     public static String signalEventDefaultName;
-    public static String paletteTooltipOnlyIcone;
-    public static String paletteTooltipFull;
-    public static String paletteTooltipSimple;
 
     public static String Step_title;
     public static String Step_desc;
     public static String Human_title;
     public static String Human_desc;
-    public static String Subprocess_title;
-    public static String Subprocess_desc;
     public static String Gate_title;
     public static String Gate_desc;
     public static String XORGate_title;
@@ -188,13 +153,11 @@ public class Messages extends NLS {
     public static String Previous_title;
     public static String Previous_desc;
     public static String Next_title;
-    public static String Next_desc;
     public static String SimpleButton_title;
     public static String SimpleButton_desc;
     public static String File_title;
     public static String File_desc;
     public static String Image_title;
-    public static String Image_desc;
     public static String Table_title;
     public static String Table_desc;
     public static String EditableGrid_title;
@@ -205,8 +168,6 @@ public class Messages extends NLS {
     public static String Group_title;
     public static String IFrame_title;
     public static String IFrame_desc;
-    public static String confirmDelete_title;
-    public static String confirmDelete_message;
     public static String StartError_desc;
     public static String StartError_title;
     public static String SuggestBox_desc;
@@ -231,31 +192,6 @@ public class Messages extends NLS {
     public static String edit;
     public static String openNameAndVersionDialogTitle;
 
-    public static String StartTimerCondition_everyYear;
-    public static String StartTimerCondition_everyMonth;
-    public static String StartTimerCondition_everyDay;
-    public static String StartTimerCondition_everyWeek;
-    public static String StartTimerCondition_everyHour;
-    public static String StartTimerCondition_everyMinutes;
-    public static String StartTimerCondition_script;
-    public static String StartTimerCondition_dayOfMonth;
-    public static String StartTimerCondition_dayOfYear;
-    public static String StartTimerCondition_dayOfMonthInWeek;
-    public static String StartTimerCondition_from;
-    public static String StartTimerCondition_at;
-    public static String StartTimerCondition_every;
-    public static String StartTimerCondition_hours;
-    public static String StartTimerCondition_minutes;
-    public static String StartTimerCondition_everyDayAt;
-    public static String StartTimerCondition_ofEachWeek;
-    public static String StartTimerCondition_ofEachMonth;
-    public static String StartTimerCondition_dayOfTheYear;
-    public static String StartTimerCondition_of;
-    public static String StartTimerCondition_fixedDate;
-    public static String StartTimerCondition_hint_monthlyDayOfTheWeek;
-    public static String StartTimerCondition_customize;
-
-    public static String timerConditionWizardTitle;
 
     public static String january;
     public static String february;
@@ -278,11 +214,7 @@ public class Messages extends NLS {
     public static String saturday;
     public static String sunday;
 
-    public static String nameNeedToBeSpecified;
-    public static String versionNeedToBeSpecified;
-    public static String sameIDIssue;
     public static String defaultValue;
-    public static String mandatoryNotSet;
     public static String emptyField;
     public static String fieldIsTooLong;
     public static String containsNonUTF8Characters;
@@ -306,15 +238,10 @@ public class Messages extends NLS {
     public static String bosSPProductName;
     public static String bonitaStudioModuleName;
     public static String bonitaPortalModuleName;
-    public static String bonitaEngineModuleName;
     public static String bonitaBPMCommunity;
-    public static String bonitaBPMTeamworkSubscription;
-    public static String bonitaBPMEfficiencySubscription;
-    public static String bonitaBPMPerformanceSubscription;
     public static String corporateName;
     public static String nameMustStartWithLowerCase;
     public static String reservedKeyword;
-    public static String nameFieldIssue;
     public static String filterLabel;
     public static String InvalidCharacterError;
     public static String toolAlignHorizontal;
@@ -330,7 +257,6 @@ public class Messages extends NLS {
     public static String reviewChangesMessageRefactoring;
     public static String reviewChangesMessageRemoving;
     public static String reviewChangesMessageWithConditionPlace;
-    public static String deleteFormFieldDialogTitle;
     public static String askConfirmationForDeleting;
     public static String removingWidgetReferences;
     public static String removeTitle;
@@ -350,7 +276,8 @@ public class Messages extends NLS {
     public static String errorValidationContinueAnywayMessage;
     public static String validationFailedTitle;
     public static String endWarningMessage;
-    public static String createVariable;
     public static String createAndNewButton;
+    public static String Next_desc;
+    public static String Image_desc;
 
 }
