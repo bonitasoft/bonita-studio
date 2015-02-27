@@ -56,7 +56,6 @@ public class ExpressionHelper {
 
     }
 
-
     public static Expression createExpressionFromEnumType(final EnumType type) {
         final Expression generatedExp = ExpressionFactory.eINSTANCE.createExpression();
         generatedExp.setInterpreter(ExpressionConstants.GROOVY);
@@ -126,11 +125,20 @@ public class ExpressionHelper {
         return exp;
     }
 
+    public static Expression createFormReferenceExpression(final String formName, final String formId) {
+        final Expression exp = ExpressionFactory.eINSTANCE.createExpression();
+        exp.setType(ExpressionConstants.FORM_REFERENCE_TYPE);
+        exp.setName(formName);
+        exp.setContent(formId);
+        exp.setReturnType(String.class.getName());
+        exp.setReturnTypeFixed(true);
+        return exp;
+    }
 
-    public static Expression createConstantExpression(final String name,final String content, final String returnClassName) {
+    public static Expression createConstantExpression(final String name, final String content, final String returnClassName) {
         final Expression exp = createConstantExpression(content, returnClassName);
         exp.setName(name);
-        return  exp;
+        return exp;
     }
 
     public static EObject createDependencyFromEObject(final EObject dependency) {
@@ -265,19 +273,19 @@ public class ExpressionHelper {
             return createWidgetExpression((Widget) element);
         } else if (element instanceof Document) {
             return createDocumentReferenceExpression((Document) element);
-        }else if (element instanceof GroupIterator) {
+        } else if (element instanceof GroupIterator) {
             return createGroupIteratorExpression((GroupIterator) element);
         }
         throw new IllegalArgumentException("element argument is not supported: " + element);
     }
 
     public static Expression createGroupIteratorExpression(final GroupIterator iterator) {
-        final Expression exp = ExpressionFactory.eINSTANCE.createExpression() ;
+        final Expression exp = ExpressionFactory.eINSTANCE.createExpression();
         final String iteratorName = iterator.getName();
         exp.setName(iteratorName);
         exp.setContent(iteratorName);
         String className = Object.class.getName();
-        if(iterator.getClassName() != null){
+        if (iterator.getClassName() != null) {
             className = iterator.getClassName();
         }
         exp.setReturnType(className);

@@ -3399,7 +3399,7 @@
             xsi:type="gmfgen:GenFeatureSeqInitializer">
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.192">
+              value="//@expressionProviders/@providers.0/@expressions.193">
             <feature
                 href="process.genmodel#//process/Element/name"/>
           </initializers>
@@ -3615,31 +3615,31 @@
             xsi:type="gmfgen:GenFeatureSeqInitializer">
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.193">
+              value="//@expressionProviders/@providers.0/@expressions.194">
             <feature
                 href="process.genmodel#//process/Element/name"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.194">
+              value="//@expressionProviders/@providers.0/@expressions.195">
             <feature
                 href="process.genmodel#//process/FlowElement/dynamicDescription"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.195">
+              value="//@expressionProviders/@providers.0/@expressions.196">
             <feature
                 href="process.genmodel#//process/FlowElement/dynamicLabel"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.196">
+              value="//@expressionProviders/@providers.0/@expressions.197">
             <feature
                 href="process.genmodel#//process/FlowElement/stepSummary"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.197">
+              value="//@expressionProviders/@providers.0/@expressions.198">
             <feature
                 href="process.genmodel#//process/ViewPageFlow/viewPageFlowRedirectionURL"/>
           </initializers>
@@ -3701,31 +3701,31 @@
             xsi:type="gmfgen:GenFeatureSeqInitializer">
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.198">
+              value="//@expressionProviders/@providers.0/@expressions.199">
             <feature
                 href="process.genmodel#//process/Element/name"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.199">
+              value="//@expressionProviders/@providers.0/@expressions.200">
             <feature
                 href="process.genmodel#//process/FlowElement/dynamicDescription"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.200">
+              value="//@expressionProviders/@providers.0/@expressions.201">
             <feature
                 href="process.genmodel#//process/FlowElement/dynamicLabel"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.201">
+              value="//@expressionProviders/@providers.0/@expressions.202">
             <feature
                 href="process.genmodel#//process/FlowElement/stepSummary"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.202">
+              value="//@expressionProviders/@providers.0/@expressions.203">
             <feature
                 href="process.genmodel#//process/ViewPageFlow/viewPageFlowRedirectionURL"/>
           </initializers>
@@ -5204,6 +5204,12 @@
             <feature
                 href="process.genmodel#//process/PageFlow/formMapping"/>
           </initializers>
+          <initializers
+              xsi:type="gmfgen:GenFeatureValueSpec"
+              value="//@expressionProviders/@providers.0/@expressions.192">
+            <feature
+                href="process.genmodel#//process/RecapFlow/overviewFormMapping"/>
+          </initializers>
         </modelElementInitializer>
       </modelFacet>
       <labels
@@ -5845,31 +5851,31 @@
             xsi:type="gmfgen:GenFeatureSeqInitializer">
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.198">
+              value="//@expressionProviders/@providers.0/@expressions.199">
             <feature
                 href="process.genmodel#//process/Element/name"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.199">
+              value="//@expressionProviders/@providers.0/@expressions.200">
             <feature
                 href="process.genmodel#//process/FlowElement/dynamicDescription"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.200">
+              value="//@expressionProviders/@providers.0/@expressions.201">
             <feature
                 href="process.genmodel#//process/FlowElement/dynamicLabel"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.201">
+              value="//@expressionProviders/@providers.0/@expressions.202">
             <feature
                 href="process.genmodel#//process/FlowElement/stepSummary"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.202">
+              value="//@expressionProviders/@providers.0/@expressions.203">
             <feature
                 href="process.genmodel#//process/ViewPageFlow/viewPageFlowRedirectionURL"/>
           </initializers>
@@ -5931,31 +5937,31 @@
             xsi:type="gmfgen:GenFeatureSeqInitializer">
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.193">
+              value="//@expressionProviders/@providers.0/@expressions.194">
             <feature
                 href="process.genmodel#//process/Element/name"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.194">
+              value="//@expressionProviders/@providers.0/@expressions.195">
             <feature
                 href="process.genmodel#//process/FlowElement/dynamicDescription"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.195">
+              value="//@expressionProviders/@providers.0/@expressions.196">
             <feature
                 href="process.genmodel#//process/FlowElement/dynamicLabel"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.196">
+              value="//@expressionProviders/@providers.0/@expressions.197">
             <feature
                 href="process.genmodel#//process/FlowElement/stepSummary"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.197">
+              value="//@expressionProviders/@providers.0/@expressions.198">
             <feature
                 href="process.genmodel#//process/ViewPageFlow/viewPageFlowRedirectionURL"/>
           </initializers>
@@ -6643,13 +6649,13 @@
             xsi:type="gmfgen:GenFeatureSeqInitializer">
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.203">
+              value="//@expressionProviders/@providers.0/@expressions.204">
             <feature
                 href="process.genmodel#//process/SequenceFlow/decisionTable"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.204">
+              value="//@expressionProviders/@providers.0/@expressions.205">
             <feature
                 href="process.genmodel#//process/SequenceFlow/condition"/>
           </initializers>
@@ -6684,7 +6690,7 @@
         </modelFacet>
       </labels>
       <creationConstraints
-          sourceEnd="//@expressionProviders/@providers.0/@expressions.205"/>
+          sourceEnd="//@expressionProviders/@providers.0/@expressions.206"/>
     </links>
     <links
         visualID="4002"
@@ -6714,7 +6720,7 @@
             xsi:type="gmfgen:GenFeatureSeqInitializer">
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.206">
+              value="//@expressionProviders/@providers.0/@expressions.207">
             <feature
                 href="process.genmodel#//process/Element/name"/>
           </initializers>
@@ -6750,7 +6756,7 @@
         </modelFacet>
       </labels>
       <creationConstraints
-          sourceEnd="//@expressionProviders/@providers.0/@expressions.207"/>
+          sourceEnd="//@expressionProviders/@providers.0/@expressions.208"/>
     </links>
     <links
         visualID="4003"
@@ -10369,7 +10375,7 @@
       <expressions
           body="return org.bonitasoft.studio.common.emf.tools.ExpressionHelper.createExpression(&quot;multiInstanceIterator&quot;,&quot;multiInstanceIterator&quot;,org.bonitasoft.studio.common.ExpressionConstants.MULTIINSTANCE_ITERATOR_TYPE,Object.class.getName(),false);"/>
       <expressions
-          body="return org.bonitasoft.studio.model.process.ProcessFactory.eINSTANCE.createFormMapping();"/>
+          body="org.bonitasoft.studio.model.process.FormMapping mapping = org.bonitasoft.studio.model.process.ProcessFactory.eINSTANCE.createFormMapping();&#xD;&#xA;mapping.setTargetForm(org.bonitasoft.studio.common.emf.tools.ExpressionHelper.createFormReferenceExpression(&quot;&quot;,&quot;&quot;));&#xD;&#xA;return mapping ;"/>
       <expressions
           body="return org.bonitasoft.studio.common.NamingUtils.getInstance(self).generateName(self, self);"/>
       <expressions
@@ -10695,7 +10701,9 @@
       <expressions
           body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"/>
       <expressions
-          body="return org.bonitasoft.studio.model.process.ProcessFactory.eINSTANCE.createFormMapping();"/>
+          body="org.bonitasoft.studio.model.process.FormMapping mapping = org.bonitasoft.studio.model.process.ProcessFactory.eINSTANCE.createFormMapping();&#xD;&#xA;mapping.setTargetForm(org.bonitasoft.studio.common.emf.tools.ExpressionHelper.createFormReferenceExpression(&quot;&quot;,&quot;&quot;));&#xD;&#xA;return mapping ;"/>
+      <expressions
+          body="org.bonitasoft.studio.model.process.FormMapping mapping = org.bonitasoft.studio.model.process.ProcessFactory.eINSTANCE.createFormMapping();&#xD;&#xA;mapping.setTargetForm(org.bonitasoft.studio.common.emf.tools.ExpressionHelper.createFormReferenceExpression(&quot;&quot;,&quot;&quot;));&#xD;&#xA;return mapping ;"/>
       <expressions
           body="return org.bonitasoft.studio.common.NamingUtils.getInstance(self).generateName(self, self);"/>
       <expressions

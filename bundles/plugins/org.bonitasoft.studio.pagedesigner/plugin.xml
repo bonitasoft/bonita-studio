@@ -52,7 +52,13 @@
    <proposalListner
          name="&lt;A&gt;Create a new form...&lt;/A&gt;"
          providerClass="org.bonitasoft.studio.pagedesigner.ui.part.CreateNewFormProposal"
-         type="TYPE_CONSTANT">
+         type="FORM_REFERENCE_TYPE">
    </proposalListner>
+</extension>
+<extension
+      point="org.bonitasoft.studio.expression.expressionProvider">
+   <expressionProvider
+         providerClass="org.bonitasoft.studio.pagedesigner.core.expression.FormReferenceExpressionProvider">
+   </expressionProvider>
 </extension>
 </plugin>

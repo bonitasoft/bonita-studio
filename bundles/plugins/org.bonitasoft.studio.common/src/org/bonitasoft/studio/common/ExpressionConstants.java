@@ -122,4 +122,6 @@ public interface ExpressionConstants {
      */
     String ATTACH_EXISTING_BUSINESS_DATA = "ATTACH_EXISTING_BUSINESS_DATA";
 
+    String FORM_REFERENCE_TYPE = "FORM_REFERENCE_TYPE";
+
 }

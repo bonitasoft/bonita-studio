@@ -14,19 +14,15 @@
  */
 package org.bonitasoft.studio.pagedesigner.ui.part;
 
-import java.util.Arrays;
-
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
-import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.jface.databinding.CustomEMFEditObservables;
-import org.bonitasoft.studio.expression.editor.provider.ExpressionLabelProvider;
-import org.bonitasoft.studio.expression.editor.widget.ContentAssistText;
-import org.bonitasoft.studio.model.expression.Expression;
+import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
+import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
@@ -34,7 +30,6 @@ import org.eclipse.core.databinding.observable.value.IValueChangeListener;
 import org.eclipse.core.databinding.observable.value.SelectObservableValue;
 import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
 import org.eclipse.e4.core.di.annotations.Optional;
-import org.eclipse.e4.ui.di.Focus;
 import org.eclipse.e4.ui.services.IServiceConstants;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.jface.databinding.swt.SWTObservables;
@@ -148,19 +143,17 @@ public class FormMappingPart {
         final Label label = toolkit.createLabel(composite, "Target form");
         label.setLayoutData(GridDataFactory.swtDefaults().align(SWT.RIGHT, SWT.CENTER).create());
 
-        final ContentAssistText targetFormText = new ContentAssistText(composite, new ExpressionLabelProvider(), SWT.BORDER);
-        targetFormText.setLayoutData(GridDataFactory.fillDefaults().hint(300, SWT.DEFAULT).create());
-        targetFormText.setProposalEnabled(true);
-        targetFormText.getAutocompletion().setFilteredExpressionType(Arrays.asList(ExpressionConstants.VARIABLE_TYPE,
-                ExpressionConstants.PARAMETER_TYPE, ExpressionConstants.DOCUMENT_TYPE, ExpressionConstants.DOCUMENT_REF_TYPE));
-        targetFormText.getAutocompletion().setCreateShortcutZone(true);
-        targetFormText.getAutocompletion().setProposals(
-                new Expression[] { ExpressionHelper.createConstantExpression("form-name", "form-id1", String.class.getName()) });
+        final ExpressionViewer targetFormExpressionViewer = new ExpressionViewer(composite, SWT.BORDER);
+        targetFormExpressionViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().hint(300, SWT.DEFAULT).create());
+        targetFormExpressionViewer.setExpressionProposalLableProvider(new FormReferenceProposalLabelProvider());
+        targetFormExpressionViewer.addFilter(new AvailableExpressionTypeFilter(new String[] { ExpressionConstants.FORM_REFERENCE_TYPE }));
 
         final IObservableValue formMappingObservable = CustomEMFEditObservables.observeDetailValue(Realm.getDefault(),
                 ViewersObservables.observeSingleSelection(selectionProvider),
                 ProcessPackage.Literals.PAGE_FLOW__FORM_MAPPING);
-        context.bindValue(SWTObservables.observeText(targetFormText.getTextControl(), SWT.Modify),
+
+        context.bindValue(ViewersObservables.observeInput(targetFormExpressionViewer), formMappingObservable);
+        context.bindValue(ViewersObservables.observeSingleSelection(targetFormExpressionViewer),
                 CustomEMFEditObservables.observeDetailValue(Realm.getDefault(), formMappingObservable, ProcessPackage.Literals.FORM_MAPPING__TARGET_FORM));
         return composite;
     }
@@ -184,11 +177,6 @@ public class FormMappingPart {
                 formMappingObservable,
                 ProcessPackage.Literals.FORM_MAPPING__URL));
         return composite;
-    }
-
-    @Focus
-    public void onFocus() {
-
     }
 
     @PreDestroy

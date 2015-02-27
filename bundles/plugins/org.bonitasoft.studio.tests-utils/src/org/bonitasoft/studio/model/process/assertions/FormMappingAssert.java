@@ -3,6 +3,7 @@ package org.bonitasoft.studio.model.process.assertions;
 import static java.lang.String.format;
 
 import org.assertj.core.api.AbstractAssert;
+import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.process.FormMapping;
 
 /**
@@ -75,57 +76,13 @@ public class FormMappingAssert extends AbstractAssert<FormMappingAssert, FormMap
     }
 
     /**
-     * Verifies that the actual FormMapping is overview.
-     * 
-     * @return this assertion object.
-     * @throws AssertionError - if the actual FormMapping is not overview.
-     */
-    public FormMappingAssert isOverview() {
-        // check that actual FormMapping we want to make assertions on is not null.
-        isNotNull();
-
-        // we overrides the default error message with a more explicit one
-        final String errorMessage = format("Expected actual FormMapping to be overview but was not.", actual);
-
-        // check
-        if (!actual.isOverview()) {
-            throw new AssertionError(errorMessage);
-        }
-
-        // return the current assertion for method chaining
-        return this;
-    }
-
-    /**
-     * Verifies that the actual FormMapping is not overview.
-     * 
-     * @return this assertion object.
-     * @throws AssertionError - if the actual FormMapping is overview.
-     */
-    public FormMappingAssert isNotOverview() {
-        // check that actual FormMapping we want to make assertions on is not null.
-        isNotNull();
-
-        // we overrides the default error message with a more explicit one
-        final String errorMessage = format("Expected actual FormMapping not to be overview but was.", actual);
-
-        // check
-        if (actual.isOverview()) {
-            throw new AssertionError(errorMessage);
-        }
-
-        // return the current assertion for method chaining
-        return this;
-    }
-
-    /**
      * Verifies that the actual FormMapping's targetForm is equal to the given one.
      * 
      * @param targetForm the given targetForm to compare the actual FormMapping's targetForm to.
      * @return this assertion object.
      * @throws AssertionError - if the actual FormMapping's targetForm is not equal to the given one.
      */
-    public FormMappingAssert hasTargetForm(final String targetForm) {
+    public FormMappingAssert hasTargetForm(final Expression targetForm) {
         // check that actual FormMapping we want to make assertions on is not null.
         isNotNull();
 
@@ -134,29 +91,6 @@ public class FormMappingAssert extends AbstractAssert<FormMappingAssert, FormMap
 
         // check
         if (!actual.getTargetForm().equals(targetForm)) {
-            throw new AssertionError(errorMessage);
-        }
-
-        // return the current assertion for method chaining
-        return this;
-    }
-
-    /**
-     * Verifies that the actual FormMapping's taskName is equal to the given one.
-     * 
-     * @param taskName the given taskName to compare the actual FormMapping's taskName to.
-     * @return this assertion object.
-     * @throws AssertionError - if the actual FormMapping's taskName is not equal to the given one.
-     */
-    public FormMappingAssert hasTaskName(final String taskName) {
-        // check that actual FormMapping we want to make assertions on is not null.
-        isNotNull();
-
-        // we overrides the default error message with a more explicit one
-        final String errorMessage = format("\nExpected <%s> taskName to be:\n  <%s>\n but was:\n  <%s>", actual, taskName, actual.getTaskName());
-
-        // check
-        if (!actual.getTaskName().equals(taskName)) {
             throw new AssertionError(errorMessage);
         }
 

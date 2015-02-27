@@ -55,7 +55,7 @@ public abstract class EObjectAdaptableSelectionProvider implements ISelectionPro
 
     @Override
     public void setSelection(final ISelection selection) {
-        if (selection == null) {
+        if (!(selection instanceof IStructuredSelection)) {
             return;
         }
         this.selection = selection;

@@ -619,11 +619,9 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EReference process.ecore#//FlowElement/stepSummary"/>
     </genClasses>
     <genClasses ecoreClass="process.ecore#//FormMapping">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//FormMapping/taskName"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//FormMapping/targetForm"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//FormMapping/external"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//FormMapping/overview"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//FormMapping/url"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EReference process.ecore#//FormMapping/targetForm"/>
     </genClasses>
     <genClasses ecoreClass="process.ecore#//Gateway">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//Gateway/gatewayType"/>
@@ -735,6 +733,7 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//RecapFlow/recapFlowConnectors"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//RecapFlow/recapPageFlowType"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EReference process.ecore#//RecapFlow/recapPageFlowRedirectionURL"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//RecapFlow/overviewFormMapping"/>
     </genClasses>
     <genClasses ecoreClass="process.ecore#//ReceiveTask"/>
     <genClasses ecoreClass="process.ecore#//ResourceContainer">
