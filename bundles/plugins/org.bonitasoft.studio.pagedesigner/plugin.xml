@@ -38,20 +38,10 @@
    </excludeSources>
 </extension>
 <extension
-      point="org.eclipse.ui.views">
-   <e4view
-         category="org.bonitasoft.studio.application.bonita"
-         class="org.bonitasoft.studio.pagedesigner.ui.part.FormMappingPart"
-         id="org.bonitasoft.studio.pagedesigner.formMapping"
-         name="FormMapping"
-         restorable="true">
-   </e4view>
-</extension>
-<extension
       point="org.bonitasoft.studio.expression.proposalListener">
    <proposalListner
          name="&lt;A&gt;Create a new form...&lt;/A&gt;"
-         providerClass="org.bonitasoft.studio.pagedesigner.ui.part.CreateNewFormProposal"
+         providerClass="org.bonitasoft.studio.pagedesigner.core.expression.CreateNewFormProposal"
          type="FORM_REFERENCE_TYPE">
    </proposalListner>
 </extension>
@@ -60,5 +50,51 @@
    <expressionProvider
          providerClass="org.bonitasoft.studio.pagedesigner.core.expression.FormReferenceExpressionProvider">
    </expressionProvider>
+</extension>
+<extension
+      point="org.eclipse.ui.views.properties.tabbed.propertyTabs">
+   <propertyTabs
+         contributorId="org.bonitasoft.studio.diagram">
+      <propertyTab
+            category="domain"
+            id="tab.form.mapping.entry"
+            label="Entry">
+      </propertyTab>
+      <propertyTab
+            afterTab="tab.form.mapping.entry"
+            category="domain"
+            id="tab.form.mapping.overview"
+            label="Overview">
+      </propertyTab>
+   </propertyTabs>
+</extension>
+<extension
+      point="org.eclipse.ui.views.properties.tabbed.propertySections">
+   <propertySections
+         contributorId="org.bonitasoft.studio.diagram">
+      <propertySection
+            class="org.bonitasoft.studio.pagedesigner.ui.property.section.EntryFormMappingPropertySection"
+            enablesFor="1"
+            filter="org.bonitasoft.studio.pagedesigner.ui.property.filter.TaskFilter"
+            id="TaskEntryFormMapping"
+            tab="tab.form.mapping.entry"
+            viewID="org.bonitasoft.studio.views.properties.process.formMapping">
+      </propertySection>
+      <propertySection
+            class="org.bonitasoft.studio.pagedesigner.ui.property.section.EntryFormMappingPropertySection"
+            enablesFor="1"
+            filter="org.bonitasoft.studio.pagedesigner.ui.property.filter.PoolOrLaneFilter"
+            id="PoolEntryFormMapping"
+            tab="tab.form.mapping.entry"
+            viewID="org.bonitasoft.studio.views.properties.process.formMapping">
+      </propertySection>
+      <propertySection
+            class="org.bonitasoft.studio.pagedesigner.ui.property.section.PoolFormOverviewMappingPropertySection"
+            filter="org.bonitasoft.studio.pagedesigner.ui.property.filter.PoolOrLaneFilter"
+            id="PoolOverviewFormMapping"
+            tab="tab.form.mapping.overview"
+            viewID="org.bonitasoft.studio.views.properties.process.formMapping">
+      </propertySection>
+   </propertySections>
 </extension>
 </plugin>

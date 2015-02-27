@@ -545,6 +545,13 @@
             name="%TreeOverView"
             restorable="true">
       </view>
+      <view
+            category="org.bonitasoft.studio.application.bonita"
+            class="org.bonitasoft.studio.application.views.process.BonitaFormMappingPropertiesView"
+            id="org.bonitasoft.studio.views.properties.process.formMapping"
+            name="Form Mapping"
+            restorable="true">
+      </view>
    </extension>
    <extension
          point="org.eclipse.ui.activities">
