@@ -90,8 +90,6 @@ import org.junit.runners.Suite;
     TestResources.class,
     OpenNameAndVersionForDiagramDialogTest.class,
     TestDuplicate.class,
-    CopyPasteTests.class,
-        DeleteCommandTest.class,
     TestCreateValidatorWizard.class,
     TestLifeCycleWidget.class,
     TestConnectorExpression.class,
@@ -101,7 +99,7 @@ import org.junit.runners.Suite;
     BPMNEventSubProcessExportImportTest.class,
     BarExporterTest.class,
     TestRunWithDocument.class,
-        TestDocument.class,
+    TestDocument.class,
     DuplicateCommandTest.class,
     TestExportBosArchive.class,
     TestSave.class,
@@ -109,12 +107,14 @@ import org.junit.runners.Suite;
     MigrationReporTest.class,
     TestTimer.class,
     TestBonitaGroovyEditorDialog.class,
-        TestProcessDependencies.class,
-        RefactorWidgetIT.class,
-        ExportImportWithoutMigrationIT.class,
-        TestFormValidatorIT.class,
-        TestOrganizationPassword.class,
-        BarImportReportIT.class
+    TestProcessDependencies.class,
+    RefactorWidgetIT.class,
+    ExportImportWithoutMigrationIT.class,
+    TestFormValidatorIT.class,
+    TestOrganizationPassword.class,
+    BarImportReportIT.class,
+    CopyPasteTests.class,
+    DeleteCommandTest.class
 })
 public class AllSWTBotTests2 {
 

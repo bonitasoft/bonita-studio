@@ -1,4 +1,5 @@
 package org.bonitasoft.studio.diagram.form.custom.commands;
+
 /**
  * Copyright (C) 2013 BonitaSoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
@@ -6,18 +7,15 @@ package org.bonitasoft.studio.diagram.form.custom.commands;
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
-import static org.fest.assertions.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Collections;
 import java.util.List;
@@ -62,7 +60,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 /**
  * @author Romain Bioteau
- *
  */
 @RunWith(MockitoJUnitRunner.class)
 public class CreateFormCommandTest {
@@ -81,7 +78,7 @@ public class CreateFormCommandTest {
                 ProcessPackage.Literals.PAGE_FLOW__FORM,
                 "Test form",
                 "Test form description",
-                Collections.<WidgetMapping>emptyList(),
+                Collections.<WidgetMapping> emptyList(),
                 null);
     }
 
@@ -122,7 +119,7 @@ public class CreateFormCommandTest {
                 ProcessPackage.Literals.VIEW_PAGE_FLOW__VIEW_FORM,
                 "Test form",
                 "Test form description",
-                Collections.<WidgetMapping>emptyList(),
+                Collections.<WidgetMapping> emptyList(),
                 null);
         final Form viewForm = commandUnderTest.createForm();
         assertThat(viewForm).isNotNull().isInstanceOf(ViewForm.class);
@@ -144,7 +141,7 @@ public class CreateFormCommandTest {
                 ProcessPackage.Literals.PAGE_FLOW__FORM,
                 "Test form",
                 "Test form description",
-                Collections.<WidgetMapping>emptyList(),
+                Collections.<WidgetMapping> emptyList(),
                 null);
         final Form form = commandUnderTest.createForm();
         assertThat(form).isNotNull().isInstanceOf(Form.class);
@@ -161,13 +158,12 @@ public class CreateFormCommandTest {
         assertThat(exp.getReferencedElements()).isEmpty();
     }
 
-
     @Test
     public void shouldGetVerticalSpan_ReturnOneIfWidgetIsNotAGroup() throws Exception {
-        for(final EClassifier eClass : FormFactory.eINSTANCE.getEPackage().getEClassifiers()){
-            if(eClass instanceof EClass && !((EClass) eClass).isAbstract() && FormPackage.Literals.WIDGET.isSuperTypeOf((EClass) eClass)){
+        for (final EClassifier eClass : FormFactory.eINSTANCE.getEPackage().getEClassifiers()) {
+            if (eClass instanceof EClass && !((EClass) eClass).isAbstract() && FormPackage.Literals.WIDGET.isSuperTypeOf((EClass) eClass)) {
                 final Widget w = (Widget) FormFactory.eINSTANCE.create((EClass) eClass);
-                if(!(w instanceof Group)){
+                if (!(w instanceof Group)) {
                     assertThat(commandUnderTest.getVerticalSpan(w)).isEqualTo(1);
                 }
             }

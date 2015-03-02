@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target includeMode="feature" name="remote_platform" sequenceNumber="149">
+<?pde version="3.8"?><target includeMode="feature" name="remote_platform" sequenceNumber="150">
 <locations>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.apache.log4j.source" version="1.2.15.v201012070815"/>
@@ -62,10 +62,10 @@
 <repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20140525021250/repository"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.polarion.eclipse.team.svn.connector.svnkit18.feature.group" version="4.1.2.I20141224-1700"/>
-<unit id="org.polarion.eclipse.team.svn.connector.source.feature.group" version="4.1.2.I20141224-1700"/>
-<unit id="org.polarion.eclipse.team.svn.connector.svnkit17.feature.group" version="4.1.2.I20141224-1700"/>
-<unit id="org.polarion.eclipse.team.svn.connector.feature.group" version="4.1.2.I20141224-1700"/>
+<unit id="org.polarion.eclipse.team.svn.connector.svnkit18.feature.group" version="4.1.3.I20150214-1700"/>
+<unit id="org.polarion.eclipse.team.svn.connector.source.feature.group" version="4.1.3.I20150214-1700"/>
+<unit id="org.polarion.eclipse.team.svn.connector.svnkit17.feature.group" version="4.1.3.I20150214-1700"/>
+<unit id="org.polarion.eclipse.team.svn.connector.feature.group" version="4.1.3.I20150214-1700"/>
 <repository location="http://community.polarion.com/projects/subversive/download/eclipse/4.0/update-site/"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
@@ -173,13 +173,11 @@
 <unit id="org.eclipse.babel.nls_eclipse_pt_BR.feature.group" version="4.4.0.v20141223043836"/>
 <unit id="org.eclipse.babel.nls_technology.recommenders_es.feature.group" version="4.4.0.v20141223043836"/>
 <unit id="org.eclipse.babel.nls_modeling.ecp_es.feature.group" version="4.4.0.v20141223043836"/>
-<unit id="org.eclipse.babel.nls_rt.rap_it.feature.group" version="4.4.0.v20141223043836"/>
 <unit id="org.eclipse.babel.nls_modeling.graphiti_de.feature.group" version="4.4.0.v20141223043836"/>
 <unit id="org.eclipse.babel.nls_technology.packaging_pt.feature.group" version="4.4.0.v20141223043836"/>
 <unit id="org.eclipse.babel.nls_technology.packaging_fr.feature.group" version="4.4.0.v20141223043836"/>
 <unit id="org.eclipse.babel.nls_soa.stardust_it.feature.group" version="4.4.0.v20141223043836"/>
 <unit id="org.eclipse.babel.nls_modeling.graphiti_fr.feature.group" version="4.4.0.v20141223043836"/>
-<unit id="org.eclipse.babel.nls_rt.rap_es.feature.group" version="4.4.0.v20141223043836"/>
 <unit id="org.eclipse.babel.nls_mylyn_fr.feature.group" version="4.4.0.v20141223043836"/>
 <unit id="org.eclipse.babel.nls_datatools_ja.feature.group" version="4.4.0.v20141223043836"/>
 <unit id="org.eclipse.babel.nls_tools.linuxtools_es.feature.group" version="4.4.0.v20141223043836"/>
@@ -188,7 +186,6 @@
 <unit id="org.eclipse.babel.nls_modeling.ecp_pt_BR.feature.group" version="4.4.0.v20141223043836"/>
 <unit id="org.eclipse.babel.nls_tools.tm_de.feature.group" version="4.4.0.v20141223043836"/>
 <unit id="org.eclipse.babel.nls_tools.pdt_fr.feature.group" version="4.4.0.v20141223043836"/>
-<unit id="org.eclipse.babel.nls_rt.rap_fr.feature.group" version="4.4.0.v20141223043836"/>
 <unit id="org.eclipse.babel.nls_modeling.ecp_it.feature.group" version="4.4.0.v20141223043836"/>
 <unit id="org.eclipse.babel.nls_webtools_de.feature.group" version="4.4.0.v20141223043836"/>
 <unit id="org.eclipse.babel.nls_soa.stardust_ja.feature.group" version="4.4.0.v20141223043836"/>
@@ -196,7 +193,6 @@
 <unit id="org.eclipse.babel.nls_datatools_es.feature.group" version="4.4.0.v20141223043836"/>
 <unit id="org.eclipse.babel.nls_technology.packaging_de.feature.group" version="4.4.0.v20141223043836"/>
 <unit id="org.eclipse.babel.nls_technology.packaging_pt_BR.feature.group" version="4.4.0.v20141223043836"/>
-<unit id="org.eclipse.babel.nls_rt.rap_de.feature.group" version="4.4.0.v20141223043836"/>
 <unit id="org.eclipse.babel.nls_tools.linuxtools_de.feature.group" version="4.4.0.v20141223043836"/>
 <unit id="org.eclipse.babel.nls_datatools_fr.feature.group" version="4.4.0.v20141223043836"/>
 <unit id="org.eclipse.babel.nls_tools.pdt_es.feature.group" version="4.4.0.v20141223043836"/>
@@ -221,11 +217,9 @@
 <unit id="org.eclipse.babel.nls_soa.stardust_fr.feature.group" version="4.4.0.v20141223043836"/>
 <unit id="org.eclipse.babel.nls_modeling.graphiti_it.feature.group" version="4.4.0.v20141223043836"/>
 <unit id="org.eclipse.babel.nls_technology.recommenders_de.feature.group" version="4.4.0.v20141223043836"/>
-<unit id="org.eclipse.babel.nls_rt.rap_ja.feature.group" version="4.4.0.v20141223043836"/>
 <unit id="org.eclipse.babel.nls_mylyn_it.feature.group" version="4.4.0.v20141223043836"/>
 <unit id="org.eclipse.babel.nls_tools.tm_it.feature.group" version="4.4.0.v20141223043836"/>
 <unit id="org.eclipse.babel.nls_eclipse_es.feature.group" version="4.4.0.v20141223043836"/>
-<unit id="org.eclipse.babel.nls_rt.rap_pt_BR.feature.group" version="4.4.0.v20141223043836"/>
 <unit id="org.eclipse.babel.nls_tools.linuxtools_it.feature.group" version="4.4.0.v20141223043836"/>
 <unit id="org.eclipse.babel.nls_mylyn_de.feature.group" version="4.4.0.v20141223043836"/>
 <unit id="org.eclipse.babel.nls_birt_fr.feature.group" version="4.4.0.v20141223043836"/>
@@ -237,7 +231,6 @@
 <unit id="org.eclipse.babel.nls_eclipse_ja.feature.group" version="4.4.0.v20141223043836"/>
 <unit id="org.eclipse.babel.nls_tools.pdt_pt.feature.group" version="4.4.0.v20141223043836"/>
 <unit id="org.eclipse.babel.nls_birt_pt.feature.group" version="4.4.0.v20141223043836"/>
-<unit id="org.eclipse.babel.nls_rt.rap_pt.feature.group" version="4.4.0.v20141223043836"/>
 <unit id="org.eclipse.babel.nls_modeling.graphiti_es.feature.group" version="4.4.0.v20141223043836"/>
 <unit id="org.eclipse.babel.nls_datatools_pt_BR.feature.group" version="4.4.0.v20141223043836"/>
 <unit id="org.eclipse.babel.nls_modeling.emfstore_ja.feature.group" version="4.4.0.v20141223043836"/>
@@ -264,6 +257,10 @@
 <unit id="org.codehaus.groovy.jdt.patch.feature.group" version="2.9.1.xx-201411061335-e44-RELEASE"/>
 <unit id="org.codehaus.groovy23.feature.feature.group" version="2.9.1.xx-201411061335-e44-RELEASE"/>
 <repository location="http://dist.springsource.org/release/GRECLIPSE/e4.4/"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="build.dependencies.feature.feature.group" version="1.0.0.201502221152"/>
+<repository location="file:/Users/romain/git/bonita-studio/platform/repository/"/>
 </location>
 </locations>
 <targetJRE path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>

@@ -31,6 +31,7 @@ import java.util.Map;
 
 import javax.xml.namespace.QName;
 
+import org.assertj.core.api.Assertions;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.gmf.CustomEventLabelEditPart;
 import org.bonitasoft.studio.model.process.Activity;
@@ -48,7 +49,6 @@ import org.eclipse.gef.EditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeNodeEditPart;
 import org.eclipse.gmf.runtime.notation.Location;
 import org.eclipse.gmf.runtime.notation.Node;
-import org.fest.assertions.Assertions;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -64,7 +64,9 @@ import org.omg.spec.bpmn.model.TFormalExpression;
 import org.omg.spec.bpmn.model.TMultiInstanceLoopCharacteristics;
 import org.omg.spec.bpmn.model.TStandardLoopCharacteristics;
 import org.omg.spec.bpmn.model.TTask;
+
 import org.omg.spec.dd.dc.Font;
+
 
 
 @RunWith(MockitoJUnitRunner.class)

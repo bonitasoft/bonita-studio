@@ -22,15 +22,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.process.MainProcess;
-import org.bonitasoft.studio.model.process.Pool;
-import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.diagram.form.providers.ProcessMarkerNavigationProvider;
 import org.bonitasoft.studio.model.process.diagram.part.ValidateAction;
-import org.bonitasoft.studio.validation.TokenDispatcher;
 import org.bonitasoft.studio.validation.ValidationPlugin;
 import org.bonitasoft.studio.validation.i18n.Messages;
 import org.eclipse.core.resources.IFile;
@@ -65,6 +61,7 @@ public class BatchValidationOperation implements IRunnableWithProgress {
     public BatchValidationOperation(final org.bonitasoft.studio.validation.operation.OffscreenEditPartFactory offscreenEditPartFactory) {
         this.offscreenEditPartFactory = offscreenEditPartFactory;
     }
+
     /*
      * (non-Javadoc)
      * @see org.eclipse.jface.operation.IRunnableWithProgress#run(org.eclipse.core.runtime.IProgressMonitor)
@@ -82,7 +79,6 @@ public class BatchValidationOperation implements IRunnableWithProgress {
             if (diagramEp != null) {
                 final EObject resolvedSemanticElement = diagramEp.resolveSemanticElement();
                 if (resolvedSemanticElement instanceof MainProcess) {
-                    updateSequenceFlowToken((MainProcess) resolvedSemanticElement);
                     ValidateAction.runValidation(diagramEp, diagram);
                 } else if (resolvedSemanticElement instanceof Form) {
                     org.bonitasoft.studio.model.process.diagram.form.part.ValidateAction.runValidation(diagramEp, diagram);
@@ -94,20 +90,13 @@ public class BatchValidationOperation implements IRunnableWithProgress {
         offscreenEditPartFactory.dispose();
     }
 
-    protected void updateSequenceFlowToken(final MainProcess diagram) {
-        final List<Pool> processes = ModelHelper.getAllItemsOfType(diagram, ProcessPackage.Literals.POOL);
-        final TokenDispatcher tokenDispatcher = new TokenDispatcher();
-        for (final Pool process : processes) {
-            tokenDispatcher.recomputeAllToken(process);
-        }
-
-    }
     private void buildEditPart() {
         for (final Diagram diagram : diagramsToDiagramEditPart.keySet()) {
             diagramsToDiagramEditPart.put(diagram, getDiagramEditPart(diagram));
         }
 
     }
+
     private void clearMarkers() {
         final Iterator<Entry<Diagram, DiagramEditPart>> iterator = diagramsToDiagramEditPart.entrySet().iterator();
         while (iterator.hasNext()) {
@@ -126,7 +115,6 @@ public class BatchValidationOperation implements IRunnableWithProgress {
             }
         }
     }
-
 
     private DiagramEditPart getDiagramEditPart(final Diagram d) {
         DiagramEditPart res = retrieveEditPartFromOpenedEditors(d);
@@ -150,6 +138,7 @@ public class BatchValidationOperation implements IRunnableWithProgress {
         }
         return null;
     }
+
     protected DiagramEditPart createDiagramEditPart(final Diagram d) {
         if (d != null && d.eResource() != null) {
             DiagramEditPart offscreenDiagramEditPart = null;
@@ -170,7 +159,6 @@ public class BatchValidationOperation implements IRunnableWithProgress {
         }
         return null;
     }
-
 
     public IStatus getResult() {
         final MultiStatus result = new MultiStatus(ValidationPlugin.PLUGIN_ID, IStatus.OK, "", null);

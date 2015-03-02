@@ -14,13 +14,16 @@
  */
 package org.bonitasoft.studio.common.jface;
 
+import static org.mockito.Mockito.doCallRealMethod;
+
 import java.lang.reflect.InvocationTargetException;
 
 import org.assertj.core.api.Assertions;
+import org.bonitasoft.studio.swt.AbstractSWTTestCase;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.List;
-import org.eclipse.swt.widgets.Shell;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,16 +32,27 @@ import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
-public class BonitaErrorDialogTest {
+public class BonitaErrorDialogTest extends AbstractSWTTestCase {
 
     @Mock
     private BonitaErrorDialog bed;
 
     private List list;
 
+    @Before
+    public void init() throws Exception {
+        final Composite composite = createDisplayAndRealm();
+        list = new List(composite, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL);
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        dispose();
+    }
+
     @Test
     public void testPopulateStackDetailsSimple() {
-        Mockito.doCallRealMethod().when(bed).populateStackDetails(Mockito.any(List.class));
+        doCallRealMethod().when(bed).populateStackDetails(Mockito.any(List.class));
         final RuntimeException runtimeException = new RuntimeException("plop");
         final StackTraceElement stackTraceElement = new StackTraceElement(this.getClass().getName(), "plopMethod", "fileName", 100);
         runtimeException.setStackTrace(new StackTraceElement[] { stackTraceElement });
@@ -52,7 +66,7 @@ public class BonitaErrorDialogTest {
 
     @Test
     public void testPopulateStackDetailsWithInvocationTargetException() {
-        Mockito.doCallRealMethod().when(bed).populateStackDetails(Mockito.any(List.class));
+        doCallRealMethod().when(bed).populateStackDetails(Mockito.any(List.class));
         final Throwable targetException = new RuntimeException("targetException");
         final StackTraceElement stackTraceElement = new StackTraceElement("targetClassName", "plopMethod", "fileName", 100);
         targetException.setStackTrace(new StackTraceElement[] { stackTraceElement });
@@ -64,12 +78,6 @@ public class BonitaErrorDialogTest {
         Assertions.assertThat(list.getItem(0)).isEqualTo("Invocation exception");
         Assertions.assertThat(list.getItem(1)).isEqualTo("targetException");
         Assertions.assertThat(list.getItem(2)).isEqualTo("targetClassName.plopMethod(fileName:100)");
-    }
-
-    @Before
-    public void init() {
-        final Shell shell = new Shell(Display.getDefault());
-        list = new List(shell, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL);
     }
 
 }

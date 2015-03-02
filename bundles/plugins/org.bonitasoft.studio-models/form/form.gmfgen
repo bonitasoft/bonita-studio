@@ -8331,8 +8331,6 @@
     <requiredPlugins>org.bonitasoft.studio.common.diagram</requiredPlugins>
     <requiredPlugins>org.bonitasoft.studio.pics</requiredPlugins>
     <requiredPlugins>org.bonitasoft.studio.diagram</requiredPlugins>
-    <requiredPlugins>org.junit</requiredPlugins>
-    <requiredPlugins>assertj-core</requiredPlugins>
   </plugin>
   <editor
       className="FormDiagramEditor"/>
