@@ -12,27 +12,32 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.pagedesigner.i18n;
+package org.bonitasoft.studio.pagedesigner.ui.property.section.control;
 
-import org.eclipse.osgi.util.NLS;
+import org.eclipse.swt.custom.StackLayout;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 
 /**
  * @author Romain Bioteau
  */
-public class Messages extends NLS {
+public class CustomStackLayout extends StackLayout {
 
-    public static String invalidURLTitle;
-    public static String invalidURLMsg;
-    public static String formRepository;
-    public static String fragmentRepository;
-    public static String widgetRepository;
-    public static String pageDesigner;
-    public static String externalURL;
-    public static String targetForm;
-    public static String url;
+    private Control topControl;
+    private final Composite composite;
 
-    static {
-        NLS.initializeMessages("messages", Messages.class);
+    public CustomStackLayout(final Composite composite) {
+        super();
+        this.composite = composite;
     }
 
+    public void setTopControl(final Control topControl) {
+        this.topControl = topControl;
+        super.topControl = topControl;
+        composite.layout();
+    }
+
+    public Control getTopControl() {
+        return topControl;
+    }
 }

@@ -14,6 +14,7 @@
  */
 package org.bonitasoft.studio.expression.editor.autocompletion;
 
+import org.assertj.core.util.Strings;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.fieldassist.IContentProposal;
@@ -34,7 +35,8 @@ public class ExpressionProposal implements IContentProposal {
         this.expression = expression;
         content = labelProvider.getContent(expression);
         description = labelProvider.getDescription(expression);
-        label = String.format("%s -- %s", labelProvider.getText(expression), description);
+        label = Strings.isNullOrEmpty(description) ? labelProvider.getText(expression) : String.format("%s -- %s", labelProvider.getText(expression),
+                description);
     }
 
     /*

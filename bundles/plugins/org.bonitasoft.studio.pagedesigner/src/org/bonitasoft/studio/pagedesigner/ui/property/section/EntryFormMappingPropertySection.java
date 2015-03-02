@@ -14,140 +14,52 @@
  */
 package org.bonitasoft.studio.pagedesigner.ui.property.section;
 
-import org.bonitasoft.studio.common.ExpressionConstants;
+import javax.inject.Inject;
+
 import org.bonitasoft.studio.common.jface.databinding.CustomEMFEditObservables;
 import org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection;
-import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
-import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.studio.pagedesigner.ui.property.section.control.FormMappingRadioGroup;
 import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
-import org.eclipse.core.databinding.observable.value.IValueChangeListener;
-import org.eclipse.core.databinding.observable.value.SelectObservableValue;
-import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.e4.core.di.extensions.Preference;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.ecore.EReference;
-import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
-import org.eclipse.jface.layout.GridDataFactory;
-import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.StackLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 
 /**
  * @author Romain Bioteau
  */
+
 public class EntryFormMappingPropertySection extends AbstractBonitaDescriptionSection {
 
     private EMFDataBindingContext context;
-    private final EObjectAdaptableSelectionProvider selectionProvider;
 
-    public EntryFormMappingPropertySection() {
-        selectionProvider = new PageFlowAdaptableSelectionProvider();
-    }
+    @Inject
+    private PageFlowAdaptableSelectionProvider selectionProvider;
 
-    public EntryFormMappingPropertySection(final EObjectAdaptableSelectionProvider selectionProvider) {
-        this.selectionProvider = selectionProvider;
-    }
+    @Inject
+    @Preference(nodePath = "org.bonitasoft.studio.preferences")
+    private IEclipsePreferences preferenceStore;
 
     @Override
-    public void createControls(final Composite parent, final org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage aTabbedPropertySheetPage) {
+    public void createControls(final Composite parent, final TabbedPropertySheetPage aTabbedPropertySheetPage) {
+        super.createControls(parent, aTabbedPropertySheetPage);
         context = new EMFDataBindingContext();
         final TabbedPropertySheetWidgetFactory toolkit = aTabbedPropertySheetPage.getWidgetFactory();
 
-        final Composite contentComposite = toolkit.createComposite(parent);
-        contentComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).extendedMargins(10, 10, 10, 10).create());
-
-        final Button pageDesignerRadio = toolkit.createButton(contentComposite, "Page designer", SWT.RADIO);
-        pageDesignerRadio.setLayoutData(GridDataFactory.swtDefaults().align(SWT.LEFT, SWT.CENTER).create());
-        final Button externalRadio = toolkit.createButton(contentComposite, "External URL", SWT.RADIO);
-        externalRadio.setLayoutData(GridDataFactory.swtDefaults().align(SWT.LEFT, SWT.CENTER).create());
-
-        final SelectObservableValue externalObservable = new SelectObservableValue(Boolean.class);
-        externalObservable.addOption(Boolean.FALSE, SWTObservables.observeSelection(pageDesignerRadio));
-        externalObservable.addOption(Boolean.TRUE, SWTObservables.observeSelection(externalRadio));
-
         final IObservableValue formMappingObservable = CustomEMFEditObservables.observeDetailValue(Realm.getDefault(),
                 ViewersObservables.observeSingleSelection(selectionProvider),
                 getFormMappingFeature());
 
-        context.bindValue(externalObservable,
-                CustomEMFEditObservables.observeDetailValue(Realm.getDefault(),
-                        formMappingObservable,
-                        ProcessPackage.Literals.FORM_MAPPING__EXTERNAL));
-
-        final Composite stackedComposite = toolkit.createComposite(contentComposite);
-        stackedComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).span(2, 1).create());
-        final StackLayout stackLayout = new StackLayout();
-        stackedComposite.setLayout(stackLayout);
-
-        final Composite pageDesignerMappingComposite = createPageDesignerMappingComposite(toolkit, stackedComposite);
-        final Composite urlMappingComposite = createURLMappingComposite(toolkit, stackedComposite);
-        externalObservable.addValueChangeListener(new IValueChangeListener() {
-
-            @Override
-            public void handleValueChange(final ValueChangeEvent event) {
-                final Boolean newValue = (Boolean) event.diff.getNewValue();
-                if (newValue) {
-                    stackLayout.topControl = urlMappingComposite;
-                } else {
-                    stackLayout.topControl = pageDesignerMappingComposite;
-                }
-                stackedComposite.layout();
-            }
-        });
-        final Object externalValue = externalObservable.getValue();
-        stackLayout.topControl = externalValue != null && (Boolean) externalValue ? urlMappingComposite : pageDesignerMappingComposite;
-    }
-
-    private Composite createPageDesignerMappingComposite(final FormToolkit toolkit, final Composite stackedComposite) {
-        final Composite composite = toolkit.createComposite(stackedComposite);
-        composite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).extendedMargins(10, 0, 10, 0).create());
-        final Label label = toolkit.createLabel(composite, "Target form");
-        label.setLayoutData(GridDataFactory.swtDefaults().align(SWT.RIGHT, SWT.CENTER).create());
-
-        final ExpressionViewer targetFormExpressionViewer = new ExpressionViewer(composite, SWT.BORDER, (TabbedPropertySheetWidgetFactory) toolkit);
-        targetFormExpressionViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().hint(300, SWT.DEFAULT).create());
-        targetFormExpressionViewer.setExpressionProposalLableProvider(new FormReferenceProposalLabelProvider());
-        targetFormExpressionViewer.addFilter(new AvailableExpressionTypeFilter(new String[] { ExpressionConstants.FORM_REFERENCE_TYPE }));
-
-        final IObservableValue formMappingObservable = CustomEMFEditObservables.observeDetailValue(Realm.getDefault(),
-                ViewersObservables.observeSingleSelection(selectionProvider),
-                getFormMappingFeature());
-
-        context.bindValue(ViewersObservables.observeInput(targetFormExpressionViewer), formMappingObservable);
-        context.bindValue(ViewersObservables.observeSingleSelection(targetFormExpressionViewer),
-                CustomEMFEditObservables.observeDetailValue(Realm.getDefault(), formMappingObservable, ProcessPackage.Literals.FORM_MAPPING__TARGET_FORM));
-        return composite;
-    }
-
-    private Composite createURLMappingComposite(final FormToolkit toolkit, final Composite stackedComposite) {
-        final Composite composite = toolkit.createComposite(stackedComposite);
-        composite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).extendedMargins(10, 0, 10, 0).create());
-        composite.setLayoutData(GridDataFactory.fillDefaults().create());
-
-        final Label label = toolkit.createLabel(composite, "URL");
-        label.setLayoutData(GridDataFactory.swtDefaults().align(SWT.LEFT, SWT.CENTER).create());
-
-        final Text urlText = toolkit.createText(composite, "", SWT.BORDER);
-        urlText.setLayoutData(GridDataFactory.fillDefaults().hint(300, SWT.DEFAULT).create());
-
-        final IObservableValue formMappingObservable = CustomEMFEditObservables.observeDetailValue(Realm.getDefault(),
-                ViewersObservables.observeSingleSelection(selectionProvider),
-                getFormMappingFeature());
-
-        context.bindValue(SWTObservables.observeText(urlText, SWT.Modify), CustomEMFEditObservables.observeDetailValue(Realm.getDefault(),
-                formMappingObservable,
-                ProcessPackage.Literals.FORM_MAPPING__URL));
-        return composite;
+        final FormMappingRadioGroup formMappingRadioGroup = new FormMappingRadioGroup(parent, toolkit, preferenceStore);
+        formMappingRadioGroup.doBindControl(context, formMappingObservable);
     }
 
     protected EReference getFormMappingFeature() {

@@ -1,39 +1,35 @@
 /*
  * Copyright (C) 2009-2012 BonitaSoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
- * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.preferences;
 
-
 /**
  * @author Romain Bioteau
- * Constant definitions for plug-in preferences
+ *         Constant definitions for plug-in preferences
  */
-public class BonitaPreferenceConstants {
+public interface BonitaPreferenceConstants {
 
     public static final String APLLICATION_DEPLOYMENT_MODE = "appliDeploymentMode"; //$NON-NLS-1$
     public static final String ALL_IN_BAR = "allInBar"; //$NON-NLS-1$
     public static final String WAR_GENERATION = "warGeneration"; //$NON-NLS-1$
     public static final String CONSOLE_PORT = "consolePortPreference"; //$NON-NLS-1$
-    public static final String CONSOLE_HOST = "consoleHost" ; //$NON-NLS-1$
+    public static final String CONSOLE_HOST = "consoleHost"; //$NON-NLS-1$
     public static final String CONSOLE_BROWSER_CHOICE = "browser-choice"; //$NON-NLS-1$
     public static final String INTERNAL_BROWSER = "0"; //$NON-NLS-1$
     public static final String EXTERNAL_BROWSER = "1"; //$NON-NLS-1$
     public static final String CONSOLE_BROWSER_ID = "org.bonitasoft.studio.console.browser"; //$NON-NLS-1$
-    public static final String APPLICATION_BROWSER_ID =  "org.bonitasoft.studio.application.browser"; //$NON-NLS-1$
+    public static final String APPLICATION_BROWSER_ID = "org.bonitasoft.studio.application.browser"; //$NON-NLS-1$
     public static final String HELP_BROWSER_ID = "org.bonitasoft.studio.help.browser"; //$NON-NLS-1$
     public static final String USER_NAME = "bonitaUserName"; //$NON-NLS-1$
     public static final String USER_PASSWORD = "bonitaUserPassword"; //$NON-NLS-1$
@@ -111,6 +107,7 @@ public class BonitaPreferenceConstants {
 
     /**
      * enable status line content; Global Preference
+     *
      * @since 1.2
      */
     public static final String PREF_SHOW_STATUS_LINE = "Global.showStatusLine"; //$NON-NLS-1$
@@ -118,19 +115,19 @@ public class BonitaPreferenceConstants {
     /**
      * show grid preference; Grid/Rulers Preference Page
      */
-    public static final String PREF_SHOW_GRID    = "GridRuler.showGrid";    //$NON-NLS-1$
+    public static final String PREF_SHOW_GRID = "GridRuler.showGrid"; //$NON-NLS-1$
     /**
      * Show Rulers Preference; Grid/Rulers Preference Page
      */
-    public static final String PREF_SHOW_RULERS  = "GridRuler.showRulers";  //$NON-NLS-1$
+    public static final String PREF_SHOW_RULERS = "GridRuler.showRulers"; //$NON-NLS-1$
     /**
      * Snap to grid preference; Grid/Rulers Preference Page
      */
-    public static final String PREF_SNAP_TO_GRID = "GridRuler.snapToGrid";  //$NON-NLS-1$
+    public static final String PREF_SNAP_TO_GRID = "GridRuler.snapToGrid"; //$NON-NLS-1$
     /**
      * ruler units preference; Grid/Rulers Preference Page
      */
-    public static final String PREF_RULER_UNITS  = "GridRuler.rulerUnits";  //$NON-NLS-1$
+    public static final String PREF_RULER_UNITS = "GridRuler.rulerUnits"; //$NON-NLS-1$
     /**
      * grid spacing preference; Grid/Rulers Preference Page
      */
@@ -139,9 +136,6 @@ public class BonitaPreferenceConstants {
      * snap to geometry preference; Grid/Rulers Preference Page
      */
     public static final String PREF_SNAP_TO_GEOMETRY = "GridRuler.snapToGeometry"; //$NON-NLS-1$
-
-
-
 
     // PRINTING PREFERENCES
     public static String PREF_USE_WORKSPACE_SETTINGS = "print.useWorkspaceSettings"; //$NON-NLS-1$
@@ -162,10 +156,6 @@ public class BonitaPreferenceConstants {
     public static String PREF_MARGIN_LEFT = "print.margin.left"; //$NON-NLS-1$
     public static String PREF_MARGIN_RIGHT = "print.margin.right"; //$NON-NLS-1$
     // END PRINTING PREFERENCES
-	
-
-
-
 
     public static final String PREF_ENABLE_VALIDATION = "org.bonitasoft.studio.enableValidation";
     public static final String DEFAULT_USERXP_THEME = "defaultUserXPTheme";
@@ -173,11 +163,12 @@ public class BonitaPreferenceConstants {
     public static final String DEFAULT_ORGANIZATION = "defaultOrganization";
     public static final String DEFAULT_ORGANIZATION_NAME = "ACME";
     public static final String VALIDATION_BEFORE_RUN = "validateBeforeRun";
-	public static final String ASK_RENAME_ON_FIRST_SAVE = "renameOnFirstSave";
-	public static final String ALWAYS_USE_SCRIPTING_MODE = "useScriptingMode";
-	public static final String TOGGLE_STATE_FOR_PUBLISH_ORGANIZATION="toggleStateForPublishOrganization";
-	public static final String PUBLISH_ORGANIZATION="publishOrganization";
-	public static final String DEFAULT_STUDIO_LOCALE = "defaultLocale";
-
+    public static final String ASK_RENAME_ON_FIRST_SAVE = "renameOnFirstSave";
+    public static final String ALWAYS_USE_SCRIPTING_MODE = "useScriptingMode";
+    public static final String TOGGLE_STATE_FOR_PUBLISH_ORGANIZATION = "toggleStateForPublishOrganization";
+    public static final String PUBLISH_ORGANIZATION = "publishOrganization";
+    public static final String DEFAULT_STUDIO_LOCALE = "defaultLocale";
+    public static final int DEFAULT_PORT = 8080;
+    public static final String DEFAULT_HOST = "localhost";
 
 }

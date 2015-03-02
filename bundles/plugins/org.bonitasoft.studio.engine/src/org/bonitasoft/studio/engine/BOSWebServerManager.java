@@ -34,6 +34,7 @@ import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManag
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.engine.i18n.Messages;
 import org.bonitasoft.studio.pagedesigner.PageDesignerPlugin;
@@ -248,12 +249,12 @@ public class BOSWebServerManager {
             @Override
             public void run() {
                 MessageDialog
-                .openInformation(
+                        .openInformation(
                                 PlatformUI.getWorkbench()
                                         .getActiveWorkbenchWindow()
                                         .getShell(),
-                        "",
-                        "Tomcat cannot be launched:\nthe port might be already used by another application.\nPossible causes are that another Studio or another Tomcat is already running.");
+                                "",
+                                "Tomcat cannot be launched:\nthe port might be already used by another application.\nPossible causes are that another Studio or another Tomcat is already running.");
 
             }
         });
@@ -551,7 +552,9 @@ public class BOSWebServerManager {
         addSystemProperty(args, "eclipse.product", Platform.getProduct()
                 .getApplication());
 
-        final WorkspaceSystemProperties workspaceSystemProperties = new WorkspaceSystemProperties();
+        final RepositoryAccessor repositoryAccessor = new RepositoryAccessor();
+        repositoryAccessor.init();
+        final WorkspaceSystemProperties workspaceSystemProperties = new WorkspaceSystemProperties(repositoryAccessor);
         addSystemProperty(args, workspaceSystemProperties.getPageRepositoryLocation());
         addSystemProperty(args, workspaceSystemProperties.getWidgetRepositoryLocation());
         addSystemProperty(args, workspaceSystemProperties.getFragmentRepositoryLocation());

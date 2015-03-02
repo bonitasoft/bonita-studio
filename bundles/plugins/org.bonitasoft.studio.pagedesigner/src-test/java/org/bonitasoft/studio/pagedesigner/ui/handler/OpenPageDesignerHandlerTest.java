@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -27,7 +25,6 @@ import java.net.URL;
 import org.bonitasoft.studio.browser.operation.OpenBrowserOperation;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
-import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.junit.After;
 import org.junit.Before;
@@ -36,10 +33,8 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-
 /**
  * @author Romain Bioteau
- *
  */
 @RunWith(MockitoJUnitRunner.class)
 public class OpenPageDesignerHandlerTest {
@@ -60,7 +55,7 @@ public class OpenPageDesignerHandlerTest {
         FileActionDialog.setDisablePopup(true);
         openPageDesignerHandler = spy(new OpenPageDesignerHandler());
         when(preferenceStore.getString(BonitaPreferenceConstants.CONSOLE_HOST)).thenReturn("localhost");
-        when(preferenceStore.getString(BonitaPreferenceConstants.CONSOLE_PORT)).thenReturn("8080");
+        when(preferenceStore.getInt(BonitaPreferenceConstants.CONSOLE_PORT)).thenReturn(8080);
 
         doReturn(preferenceStore).when(openPageDesignerHandler).getPreferenceStore();
         doReturn(openBrowserOperation).when(openPageDesignerHandler).createOpenBrowserOperation(any(URL.class));
@@ -77,18 +72,23 @@ public class OpenPageDesignerHandlerTest {
     @Test
     public void should_execute_open_an_external_browser_with_page_builder_url() throws Exception {
         when(preferenceStore.getString(BonitaPreferenceConstants.CONSOLE_HOST)).thenReturn("localhost");
-        when(preferenceStore.getString(BonitaPreferenceConstants.CONSOLE_PORT)).thenReturn("8080");
+        when(preferenceStore.getInt(BonitaPreferenceConstants.CONSOLE_PORT)).thenReturn(8080);
 
-       openPageDesignerHandler.execute(null);
+        openPageDesignerHandler.execute(null);
         verify(openBrowserOperation).execute();
     }
 
-    @Test(expected = ExecutionException.class)
-    public void should_execute_throw_an_executionException_if_url_is_invalid() throws Exception {
+    @Test(expected = NullPointerException.class)
+    public void should_execute_throw_an_executionException_if_host_is_null() throws Exception {
         when(preferenceStore.getString(BonitaPreferenceConstants.CONSOLE_HOST)).thenReturn(null);
-        when(preferenceStore.getString(BonitaPreferenceConstants.CONSOLE_PORT)).thenReturn(null);
 
         openPageDesignerHandler.execute(null);
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void should_execute_throw_an_executionException_if_port_is_zero_or_less() throws Exception {
+        when(preferenceStore.getInt(BonitaPreferenceConstants.CONSOLE_PORT)).thenReturn(0);
+
+        openPageDesignerHandler.execute(null);
+    }
 }

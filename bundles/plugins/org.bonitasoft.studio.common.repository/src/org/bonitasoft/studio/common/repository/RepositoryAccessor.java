@@ -17,7 +17,6 @@ package org.bonitasoft.studio.common.repository;
 import javax.annotation.PostConstruct;
 import javax.inject.Singleton;
 
-import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.core.di.annotations.Creatable;
 
 /**
@@ -30,7 +29,7 @@ public class RepositoryAccessor {
     private RepositoryManager repositoryManagerInstance;
 
     @PostConstruct
-    protected void init(final IEclipseContext context) {
+    public void init() {
         repositoryManagerInstance = RepositoryManager.getInstance();
     }
 

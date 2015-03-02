@@ -21,8 +21,9 @@ import org.bonitasoft.studio.browser.operation.OpenBrowserOperation;
 import org.bonitasoft.studio.common.jface.BonitaErrorDialog;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.pagedesigner.PageDesignerPlugin;
-import org.bonitasoft.studio.pagedesigner.core.PageDesignerURLBuilder;
+import org.bonitasoft.studio.pagedesigner.core.PageDesignerURLFactory;
 import org.bonitasoft.studio.pagedesigner.i18n.Messages;
+import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -39,9 +40,12 @@ public class OpenPageDesignerHandler extends AbstractHandler {
 
     @Override
     public Object execute(final ExecutionEvent event) throws ExecutionException {
-        final PageDesignerURLBuilder pageDesignerURLBuilder = new PageDesignerURLBuilder(getPreferenceStore());
+        final IPreferenceStore preferenceStore = getPreferenceStore();
+        final String host = preferenceStore.getString(BonitaPreferenceConstants.CONSOLE_HOST);
+        final int port = preferenceStore.getInt(BonitaPreferenceConstants.CONSOLE_PORT);
+        final PageDesignerURLFactory pageDesignerURLBuilder = new PageDesignerURLFactory(host, port);
         try {
-            createOpenBrowserOperation(pageDesignerURLBuilder.build()).execute();
+            createOpenBrowserOperation(pageDesignerURLBuilder.openPageDesignerHome()).execute();
         } catch (final MalformedURLException e) {
             if (!FileActionDialog.getDisablePopup()) {
                 BonitaErrorDialog.openError(Display.getDefault().getActiveShell(),

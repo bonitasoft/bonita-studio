@@ -27,9 +27,12 @@ import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.process.SearchIndex;
 import org.bonitasoft.studio.model.process.SequenceFlow;
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.InvalidRegistryObjectException;
 import org.eclipse.core.runtime.ListenerList;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.e4.core.contexts.ContextInjectionFactory;
+import org.eclipse.e4.core.di.InjectionException;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.jface.bindings.keys.KeyStroke;
@@ -71,6 +74,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.internal.Workbench;
 
 /**
  * ContentProposalAdapter can be used to attach content proposal behavior to a
@@ -730,8 +735,11 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
                         createDataLink = new Link(creationZoneComposite, SWT.NONE);
                         final String name = element.getAttribute("name");
                         createDataLink.setText(name);
+                        final Workbench workbench = (Workbench) PlatformUI.getWorkbench();
                         try {
-                            final IProposalListener listener = (IProposalListener) element.createExecutableExtension("providerClass");
+                            final IProposalListener listener = (IProposalListener) ContextInjectionFactory.make(Platform.getBundle(
+                                    element.getDeclaringExtension().getNamespaceIdentifier()).loadClass(
+                                    element.getAttribute("providerClass")), workbench.getContext());
                             createDataLink.addSelectionListener(new SelectionAdapter() {
 
                                 @Override
@@ -742,8 +750,12 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
                                 }
 
                             });
-                        } catch (final CoreException e) {
-                            BonitaStudioLog.error(e);
+                        } catch (final InjectionException e1) {
+                            BonitaStudioLog.error(e1);
+                        } catch (final ClassNotFoundException e1) {
+                            BonitaStudioLog.error(e1);
+                        } catch (final InvalidRegistryObjectException e1) {
+                            BonitaStudioLog.error(e1);
                         }
                         linkList.add(createDataLink);
                     }

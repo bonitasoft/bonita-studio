@@ -41,7 +41,7 @@
       point="org.bonitasoft.studio.expression.proposalListener">
    <proposalListner
          name="&lt;A&gt;Create a new form...&lt;/A&gt;"
-         providerClass="org.bonitasoft.studio.pagedesigner.core.expression.CreateNewFormProposal"
+         providerClass="org.bonitasoft.studio.pagedesigner.core.expression.CreateNewFormProposalListener"
          type="FORM_REFERENCE_TYPE">
    </proposalListner>
 </extension>
@@ -58,13 +58,13 @@
       <propertyTab
             category="domain"
             id="tab.form.mapping.entry"
-            label="Entry">
+            label="%EntryFormMapping">
       </propertyTab>
       <propertyTab
             afterTab="tab.form.mapping.entry"
             category="domain"
             id="tab.form.mapping.overview"
-            label="Overview">
+            label="%OverviewFormMapping">
       </propertyTab>
    </propertyTabs>
 </extension>

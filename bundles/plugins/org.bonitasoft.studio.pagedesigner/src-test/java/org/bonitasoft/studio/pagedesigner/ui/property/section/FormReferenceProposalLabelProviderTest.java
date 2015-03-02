@@ -14,18 +14,31 @@
  */
 package org.bonitasoft.studio.pagedesigner.ui.property.section;
 
-import org.bonitasoft.studio.expression.editor.autocompletion.IExpressionProposalLabelProvider;
-import org.bonitasoft.studio.expression.editor.provider.ExpressionLabelProvider;
-import org.bonitasoft.studio.model.expression.Expression;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.bonitasoft.studio.model.expression.builders.ExpressionBuilder.anExpression;
+
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * @author Romain Bioteau
  */
-public class FormReferenceProposalLabelProvider extends ExpressionLabelProvider implements IExpressionProposalLabelProvider {
+public class FormReferenceProposalLabelProviderTest {
 
-    @Override
-    public String getDescription(final Expression expression) {
-        return null;
+    private FormReferenceProposalLabelProvider formReferenceProposalLabelProvider;
+
+    /**
+     * @throws java.lang.Exception
+     */
+    @Before
+    public void setUp() throws Exception {
+        formReferenceProposalLabelProvider = new FormReferenceProposalLabelProvider();
     }
 
+    @Test
+    public void should_have_a_null_description() throws Exception {
+        final String description = formReferenceProposalLabelProvider.getDescription(anExpression().build());
+
+        assertThat(description).isNull();
+    }
 }

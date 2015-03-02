@@ -14,6 +14,7 @@
  */
 package org.bonitasoft.studio.pagedesigner.ui.property.section;
 
+import org.bonitasoft.studio.common.jface.selection.EObjectAdaptableSelectionProvider;
 import org.bonitasoft.studio.model.process.Lane;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.PageFlow;

@@ -5,51 +5,37 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.pagedesigner.core;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
 
 import java.net.URL;
+import java.util.Locale;
 
-import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
-
 
 /**
  * @author Romain Bioteau
- *
  */
-@RunWith(MockitoJUnitRunner.class)
-public class PageDesignerURLBuilderTest {
+public class PageDesignerURLFactoryTest {
 
-    @Mock
-    private IPreferenceStore preferenceStore;
-    private PageDesignerURLBuilder pageDesignerURLBuilder;
+    private PageDesignerURLFactory pageDesignerURLBuilder;
 
     /**
      * @throws java.lang.Exception
      */
     @Before
     public void setUp() throws Exception {
-        pageDesignerURLBuilder = new PageDesignerURLBuilder(preferenceStore);
-        when(preferenceStore.getString(BonitaPreferenceConstants.CONSOLE_HOST)).thenReturn("localhost");
-        when(preferenceStore.getString(BonitaPreferenceConstants.CONSOLE_PORT)).thenReturn("8080");
+        pageDesignerURLBuilder = new PageDesignerURLFactory("localhost", 8080);
     }
 
     /**
@@ -60,8 +46,20 @@ public class PageDesignerURLBuilderTest {
     }
 
     @Test
-    public void should_build_return_URL_pointing_to_page_builder_webapp() throws Exception {
-        assertThat(pageDesignerURLBuilder.build()).isEqualTo(new URL("http://localhost:8080/page-designer"));
+    public void should_openPageDesignerHome_return_URL_pointing_to_page_builder_webapp() throws Exception {
+        assertThat(pageDesignerURLBuilder.openPageDesignerHome()).isEqualTo(new URL("http://localhost:8080/page-designer"));
+    }
+
+    @Test
+    public void should_openPage_return_URL_pointing_to_page_builder_webapp_on_the_given_page() throws Exception {
+        assertThat(pageDesignerURLBuilder.openPage("page-id")).isEqualTo(
+                new URL("http://localhost:8080/page-designer/#/" + Locale.getDefault().getLanguage() + "/pages/page-id"));
+    }
+
+    @Test
+    public void should_newPage_return_URL_to_post_a_new_page() throws Exception {
+        assertThat(pageDesignerURLBuilder.newPage()).isEqualTo(
+                new URL("http://localhost:8080/page-designer/api/rest/pages/"));
     }
 
 }

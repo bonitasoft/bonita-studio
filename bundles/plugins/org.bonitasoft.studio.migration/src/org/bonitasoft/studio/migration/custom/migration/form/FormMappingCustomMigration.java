@@ -14,9 +14,12 @@
  */
 package org.bonitasoft.studio.migration.custom.migration.form;
 
-import static com.google.common.collect.FluentIterable.from;
+import static com.google.common.collect.Iterables.filter;
 
+import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.edapt.migration.CustomMigration;
 import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.emf.edapt.spi.migration.Instance;
@@ -32,24 +35,41 @@ public class FormMappingCustomMigration extends CustomMigration {
 
     @Override
     public void migrateAfter(final Model model, final Metamodel metamodel) throws MigrationException {
-        for (final Instance instance : from(model.getAllInstances("process.PageFlow")).filter(
-                withoutFormMapping()).toList()) {
-            instantiateFormMapping(instance, model);
+        for (final Instance instance : filter(model.getAllInstances("process.PageFlow"), withoutFormMapping(ProcessPackage.Literals.PAGE_FLOW__FORM_MAPPING))) {
+            instantiateFormMapping(instance, model, ProcessPackage.Literals.PAGE_FLOW__FORM_MAPPING);
+        }
+
+        for (final Instance instance : filter(model.getAllInstances("process.RecapFlow"),
+                withoutFormMapping(ProcessPackage.Literals.RECAP_FLOW__OVERVIEW_FORM_MAPPING))) {
+            instantiateFormMapping(instance, model, ProcessPackage.Literals.RECAP_FLOW__OVERVIEW_FORM_MAPPING);
         }
     }
 
-    private Predicate<Instance> withoutFormMapping() {
+    private Predicate<Instance> withoutFormMapping(final EStructuralFeature feature) {
         return new Predicate<Instance>() {
 
             @Override
             public boolean apply(final Instance input) {
-                return !input.isSet(ProcessPackage.Literals.PAGE_FLOW__FORM_MAPPING);
+                return !input.isSet(feature);
             }
         };
     }
 
-    private void instantiateFormMapping(final Instance input, final Model model) {
-        input.set("formMapping", model.newInstance("process.FormMapping"));
+    private void instantiateFormMapping(final Instance input, final Model model, final EReference pageFlowFormMapping) {
+        final Instance newInstance = model.newInstance("process.FormMapping");
+        final Instance targetFormExpression = newTargetFormExpressionInstance(model);
+        newInstance.set("targetForm", targetFormExpression);
+        input.set(pageFlowFormMapping, newInstance);
+    }
+
+    private Instance newTargetFormExpressionInstance(final Model model) {
+        final Instance targetFormExpression = model.newInstance("expression.Expression");
+        targetFormExpression.set("name", "");
+        targetFormExpression.set("content", "");
+        targetFormExpression.set("returnType", String.class.getName());
+        targetFormExpression.set("type", ExpressionConstants.FORM_REFERENCE_TYPE);
+        targetFormExpression.set("returnTypeFixed", true);
+        return targetFormExpression;
     }
 
 }
