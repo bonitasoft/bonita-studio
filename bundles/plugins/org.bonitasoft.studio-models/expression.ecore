@@ -7,6 +7,16 @@
   </eAnnotations>
   <eClassifiers xsi:type="ecore:EClass" name="AbstractExpression" abstract="true"/>
   <eClassifiers xsi:type="ecore:EClass" name="Expression" eSuperTypes="#//AbstractExpression">
+    <eOperations name="hasContent" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="body" value="return content != null &amp;&amp; !content.isEmpty();"/>
+      </eAnnotations>
+    </eOperations>
+    <eOperations name="hasName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="body" value="return name != null &amp;&amp; !name.isEmpty();"/>
+      </eAnnotations>
+    </eOperations>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="content" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="interpreter" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"

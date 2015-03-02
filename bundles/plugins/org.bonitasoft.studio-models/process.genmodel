@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
-    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" copyrightText="Copyright (C) 2009-2013 BonitaSoft S.A.&#xA;BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble&#xA;&#xA;This program is free software: you can redistribute it and/or modify&#xA;it under the terms of the GNU General Public License as published by&#xA;the Free Software Foundation, either version 2.0 of the License, or&#xA;(at your option) any later version.&#xA;&#xA;This program is distributed in the hope that it will be useful,&#xA;but WITHOUT ANY WARRANTY; without even the implied warranty of&#xA;MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the&#xA;GNU General Public License for more details.&#xA;&#xA;You should have received a copy of the GNU General Public License&#xA;along with this program.  If not, see &lt;http://www.gnu.org/licenses/>."
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" copyrightText="Copyright (C) 2009-2015 BonitaSoft S.A.&#xD;&#xA;BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble&#xD;&#xA;&#xD;&#xA;This program is free software: you can redistribute it and/or modify&#xD;&#xA;it under the terms of the GNU General Public License as published by&#xD;&#xA;the Free Software Foundation, either version 2.0 of the License, or&#xD;&#xA;(at your option) any later version.&#xD;&#xA;&#xD;&#xA;This program is distributed in the hope that it will be useful,&#xD;&#xA;but WITHOUT ANY WARRANTY; without even the implied warranty of&#xD;&#xA;MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the&#xD;&#xA;GNU General Public License for more details.&#xD;&#xA;&#xD;&#xA;You should have received a copy of the GNU General Public License&#xD;&#xA;along with this program.  If not, see &lt;http://www.gnu.org/licenses/>."
     modelDirectory="/org.bonitasoft.studio.model/src" editDirectory="/org.bonitasoft.studio.model.edit/src"
     modelPluginID="org.bonitasoft.studio.model" templateDirectory="org.bonitasoft.studio-models/EMFTemplates/"
     dynamicTemplates="true" redirection="" forceOverwrite="true" modelName="Process"
@@ -57,13 +57,15 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute configuration.ecore#//Configuration/name"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute configuration.ecore#//Configuration/description"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference configuration.ecore#//Configuration/actorMappings"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute configuration.ecore#//Configuration/username"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute configuration.ecore#//Configuration/password"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute configuration.ecore#//Configuration/anonymousUserName"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute configuration.ecore#//Configuration/anonymousPassword"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference configuration.ecore#//Configuration/definitionMappings"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference configuration.ecore#//Configuration/processDependencies"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference configuration.ecore#//Configuration/applicationDependencies"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference configuration.ecore#//Configuration/parameters"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute configuration.ecore#//Configuration/version"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute configuration.ecore#//Configuration/username"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute configuration.ecore#//Configuration/password"/>
     </genClasses>
     <genClasses ecoreClass="configuration.ecore#//Fragment">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute configuration.ecore#//Fragment/key"/>
@@ -113,6 +115,8 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute expression.ecore#//Expression/returnTypeFixed"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute expression.ecore#//Expression/automaticDependencies"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute expression.ecore#//Expression/htmlAllowed"/>
+      <genOperations ecoreOperation="expression.ecore#//Expression/hasContent"/>
+      <genOperations ecoreOperation="expression.ecore#//Expression/hasName"/>
     </genClasses>
     <genClasses ecoreClass="expression.ecore#//ListExpression">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference expression.ecore#//ListExpression/expressions"/>
@@ -555,6 +559,7 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//Document/url"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//Document/documentType"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//Document/initialMultipleContent"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//Document/multiple"/>
     </genClasses>
     <genClasses ecoreClass="process.ecore#//DoubleType"/>
     <genClasses image="false" ecoreClass="process.ecore#//ErrorEvent">
@@ -838,9 +843,9 @@
     </genClasses>
     <genClasses ecoreClass="process.ecore#//ContractConstraint">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//ContractConstraint/expression"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//ContractConstraint/errorMesage"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EReference process.ecore#//ContractConstraint/inputNames"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//ContractConstraint/errorMessage"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//ContractConstraint/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//ContractConstraint/inputNames"/>
     </genClasses>
     <nestedGenPackages prefix="Decision" basePackage="org.bonitasoft.studio.model.process"
         disposableProviderFactory="true" ecorePackage="process.ecore#//decision">
