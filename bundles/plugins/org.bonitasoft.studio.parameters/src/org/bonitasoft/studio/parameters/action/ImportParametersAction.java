@@ -1,11 +1,17 @@
-/*******************************************************************************
- * Copyright (C) 2009, 2013 BonitaSoft S.A.
- * BonitaSoft is a trademark of BonitaSoft SA.
- * This software file is BONITASOFT CONFIDENTIAL. Not For Distribution.
- * For commercial licensing information, contact:
- *      BonitaSoft, 32 rue Gustave Eiffel – 38000 Grenoble
- *      or BonitaSoft US, 51 Federal Street, Suite 305, San Francisco, CA 94107
- *******************************************************************************/
+/**
+ * Copyright (C) 2015 Bonitasoft S.A.
+ * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2.0 of the License, or
+ * (at your option) any later version.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.bonitasoft.studio.parameters.action;
 
 import java.io.FileInputStream;
@@ -39,16 +45,16 @@ public class ImportParametersAction extends Action implements IConfigurationImpo
     @Override
     public void run() {
         if(filePath == null){
-            FileDialog fd = new FileDialog(Display.getDefault().getActiveShell(), SWT.OPEN) ;
+            final FileDialog fd = new FileDialog(Display.getDefault().getActiveShell(), SWT.OPEN) ;
             fd.setFilterExtensions(new String[]{"*.properties"}) ;
             filePath = fd.open() ;
         }
         if(filePath != null){
-            Properties p = loadProperties(filePath) ;
-            for(Entry<Object, Object> entry : p.entrySet()){
-                String name = (String) entry.getKey() ;
-                String value = (String) entry.getValue() ;
-                for(Parameter param : configuration.getParameters()){
+            final Properties p = loadProperties(filePath) ;
+            for(final Entry<Object, Object> entry : p.entrySet()){
+                final String name = (String) entry.getKey() ;
+                final String value = (String) entry.getValue() ;
+                for(final Parameter param : configuration.getParameters()){
                     if(param.getName().equals(name)){
                         param.setValue(value) ;
                     }
@@ -58,20 +64,20 @@ public class ImportParametersAction extends Action implements IConfigurationImpo
         }
     }
 
-    protected Properties loadProperties(String path) {
+    protected Properties loadProperties(final String path) {
         FileInputStream fis = null ;
         Properties p = null ;
         try{
             fis = new FileInputStream(path) ;
             p = new Properties() ;
             p.load(fis) ;
-        }catch (Exception e) {
+        }catch (final Exception e) {
             BonitaStudioLog.error(e) ;
         }finally{
             if(fis != null){
                 try {
                     fis.close() ;
-                } catch (IOException e1) {
+                } catch (final IOException e1) {
 
                 }
             }
@@ -81,16 +87,16 @@ public class ImportParametersAction extends Action implements IConfigurationImpo
     }
 
     @Override
-    public void setConfiguration(Configuration configuration) {
+    public void setConfiguration(final Configuration configuration) {
         this.configuration = configuration ;
     }
 
     @Override
-    public void setProcess(AbstractProcess process) {
+    public void setProcess(final AbstractProcess process) {
     }
 
     @Override
-    public void setFilePath(String absolutePath) {
+    public void setFilePath(final String absolutePath) {
         filePath = absolutePath ;
     }
 
