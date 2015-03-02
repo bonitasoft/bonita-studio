@@ -59,19 +59,26 @@ public abstract class EObjectAdaptableSelectionProvider implements ISelectionPro
             return;
         }
         this.selection = selection;
-        this.selection = adaptSelection(selection);
+        this.selection = adaptSelection((IStructuredSelection) selection);
         fireSelectionChanged(this.selection);
     }
 
-    private ISelection adaptSelection(final ISelection selection) {
-        final Object firstElement = ((IStructuredSelection) selection).getFirstElement();
-        if (firstElement instanceof IAdaptable) {
+    private ISelection adaptSelection(final IStructuredSelection selection) {
+        final Object element = unwrap(selection);
+        if (element instanceof IAdaptable) {
             final Object adapter = getAdapter(EObject.class);
             if (adapter != null) {
                 return new StructuredSelection(adapter);
             }
         }
         return new StructuredSelection();
+    }
+
+    protected Object unwrap(final ISelection selection) {
+        if (selection instanceof IStructuredSelection) {
+            return ((IStructuredSelection) selection).getFirstElement();
+        }
+        return null;
     }
 
     private void fireSelectionChanged(final ISelection selection) {

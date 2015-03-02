@@ -21,7 +21,6 @@ import org.bonitasoft.studio.model.process.PageFlow;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.e4.core.di.annotations.Creatable;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.jface.viewers.IStructuredSelection;
 
 /**
  * @author Romain Bioteau
@@ -37,23 +36,14 @@ public class PageFlowAdaptableSelectionProvider extends EObjectAdaptableSelectio
     @Override
     public Object getAdapter(final Class adapter) {
         if (EObject.class.equals(adapter)) {
-            if (selection instanceof IStructuredSelection) {
-                final Object selectedElement = ((IStructuredSelection) selection).getFirstElement();
-                EObject semanticElement = null;
-                if (selectedElement instanceof IAdaptable) {
-                    semanticElement = (EObject) ((IAdaptable) selectedElement).getAdapter(EObject.class);
-                } else if (selectedElement instanceof EObject) {
-                    semanticElement = (EObject) selectedElement;
-                }
-                return asPageflow(semanticElement);
-            }
-
+            return asPageflow((EObject) ((IAdaptable) unwrap(selection)).getAdapter(EObject.class));
         }
         return null;
     }
 
     private static PageFlow asPageflow(final EObject semanticElement) {
-        if (semanticElement instanceof PageFlow && !(semanticElement instanceof MainProcess)) {
+        if (semanticElement instanceof PageFlow
+                && !(semanticElement instanceof MainProcess)) {
             return (PageFlow) semanticElement;
         }
         if (semanticElement instanceof Lane) {

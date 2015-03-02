@@ -21,7 +21,6 @@ import org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.pagedesigner.ui.property.section.control.FormMappingRadioGroup;
 import org.eclipse.core.databinding.observable.Realm;
-import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.e4.core.di.extensions.Preference;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
@@ -31,7 +30,6 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
-import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 
 /**
  * @author Romain Bioteau
@@ -52,14 +50,10 @@ public class EntryFormMappingPropertySection extends AbstractBonitaDescriptionSe
     public void createControls(final Composite parent, final TabbedPropertySheetPage aTabbedPropertySheetPage) {
         super.createControls(parent, aTabbedPropertySheetPage);
         context = new EMFDataBindingContext();
-        final TabbedPropertySheetWidgetFactory toolkit = aTabbedPropertySheetPage.getWidgetFactory();
-
-        final IObservableValue formMappingObservable = CustomEMFEditObservables.observeDetailValue(Realm.getDefault(),
+        final FormMappingRadioGroup formMappingRadioGroup = new FormMappingRadioGroup(parent, aTabbedPropertySheetPage.getWidgetFactory(), preferenceStore);
+        formMappingRadioGroup.doBindControl(context, CustomEMFEditObservables.observeDetailValue(Realm.getDefault(),
                 ViewersObservables.observeSingleSelection(selectionProvider),
-                getFormMappingFeature());
-
-        final FormMappingRadioGroup formMappingRadioGroup = new FormMappingRadioGroup(parent, toolkit, preferenceStore);
-        formMappingRadioGroup.doBindControl(context, formMappingObservable);
+                getFormMappingFeature()));
     }
 
     protected EReference getFormMappingFeature() {
