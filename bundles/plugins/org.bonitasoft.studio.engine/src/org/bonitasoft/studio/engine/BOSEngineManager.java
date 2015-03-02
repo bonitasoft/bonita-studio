@@ -27,9 +27,11 @@ import org.bonitasoft.engine.api.LoginAPI;
 import org.bonitasoft.engine.api.ProcessAPI;
 import org.bonitasoft.engine.api.ProfileAPI;
 import org.bonitasoft.engine.api.TenantAPIAccessor;
+import org.bonitasoft.engine.api.TenantAdministrationAPI;
 import org.bonitasoft.engine.exception.BonitaHomeNotSetException;
 import org.bonitasoft.engine.exception.ServerAPIException;
 import org.bonitasoft.engine.exception.UnknownAPITypeException;
+import org.bonitasoft.engine.exception.UpdateException;
 import org.bonitasoft.engine.platform.LoginException;
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.engine.session.InvalidSessionException;
@@ -40,11 +42,13 @@ import org.bonitasoft.studio.common.extension.IEngineAction;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.engine.i18n.Messages;
+import org.bonitasoft.studio.engine.preferences.EnginePreferenceConstants;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.preference.IPreferenceStore;
 
 /**
  * @author Romain Bioteau
@@ -75,7 +79,7 @@ public class BOSEngineManager {
 
     private IProgressMonitor monitor;
 
-    protected BOSEngineManager(IProgressMonitor monitor) {
+    protected BOSEngineManager(final IProgressMonitor monitor) {
         if (monitor == null) {
             this.monitor = Repository.NULL_PROGRESS_MONITOR;
         } else {
@@ -87,7 +91,7 @@ public class BOSEngineManager {
         return getInstance(null);
     }
 
-    public static synchronized BOSEngineManager getInstance(IProgressMonitor monitor) {
+    public static synchronized BOSEngineManager getInstance(final IProgressMonitor monitor) {
         if (INSTANCE == null) {
             // Setting useCaches to false avoids a memory leak of URLJarFile
             // instances
@@ -101,7 +105,7 @@ public class BOSEngineManager {
                 // As long as we don't get an input/output stream, no operations
                 // should occur...
                 new URL("http://a").openConnection().setDefaultUseCaches(false); //$NON-NLS-1$
-            } catch (IOException ioe) {
+            } catch (final IOException ioe) {
                 // Can't Log this. Should we send to STDOUT/STDERR?
             }
             INSTANCE = createInstance(monitor);
@@ -109,11 +113,11 @@ public class BOSEngineManager {
         return INSTANCE;
     }
 
-    protected static BOSEngineManager createInstance(IProgressMonitor monitor) {
-        for (IConfigurationElement element : BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(ENGINESERVERMANAGER_EXTENSION_D)) {
+    protected static BOSEngineManager createInstance(final IProgressMonitor monitor) {
+        for (final IConfigurationElement element : BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(ENGINESERVERMANAGER_EXTENSION_D)) {
             try {
                 return (BOSEngineManager) element.createExecutableExtension("class");
-            } catch (CoreException e) {
+            } catch (final CoreException e) {
                 BonitaStudioLog.error(e, EnginePlugin.PLUGIN_ID);
             }
         }
@@ -133,32 +137,74 @@ public class BOSEngineManager {
     }
 
     protected void postEngineStart() {
+        //RESUME ENGINE IF PAUSED AT STARTUP
+        try {
+            final APISession apiSession = getLoginAPI().login(BONITA_TECHNICAL_USER, BONITA_TECHNICAL_USER_PASSWORD);
+            final TenantAdministrationAPI tenantManagementAPI = getTenantAdministrationAPI(apiSession);
+            if (tenantManagementAPI.isPaused()) {
+                tenantManagementAPI.resume();
+            }
+        } catch (final Exception e) {
+            BonitaStudioLog.error(e);
+        }
+
         try {
             executePostStartupContributions();
-        } catch (Exception e) {
+        } catch (final Exception e) {
             BonitaStudioLog.error(e);
         }
     }
 
     public synchronized void stop() {
+        APISession session = null;
+        TenantAdministrationAPI tenantManagementAPI = null;
+        try {
+            session = loginDefaultTenant(null);
+            tenantManagementAPI = getTenantAdministrationAPI(session);
+            tenantManagementAPI.pause();
+            if (dropBusinessDataDBOnExit()) {
+                tenantManagementAPI.cleanAndUninstallBusinessDataModel();
+            } else {
+                tenantManagementAPI.uninstallBusinessDataModel();
+            }
+            tenantManagementAPI.resume();
+        } catch (final Exception e) {
+            BonitaStudioLog.error(e);
+        } finally {
+            if (tenantManagementAPI != null && tenantManagementAPI.isPaused()) {
+                try {
+                    tenantManagementAPI.resume();
+                } catch (final UpdateException e) {
+                    BonitaStudioLog.error(e);
+                }
+            }
+            if (session != null) {
+                logoutDefaultTenant(session);
+            }
+        }
+
         if (isRunning()) {
             BOSWebServerManager.getInstance().stopServer(monitor);
             isRunning = false;
         }
         BOSWebServerManager.getInstance().cleanBeforeShutdown();
+    }
 
+    private boolean dropBusinessDataDBOnExit() {
+        final IPreferenceStore preferenceStore = EnginePlugin.getDefault().getPreferenceStore();
+        return preferenceStore.getBoolean(EnginePreferenceConstants.DROP_BUSINESS_DATA_DB_ON_EXIT_PREF);
     }
 
     protected void executePostStartupContributions() throws Exception {
-        IConfigurationElement[] elements = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(POSTSTARTUP_CONTIBUTION_ID);
+        final IConfigurationElement[] elements = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(POSTSTARTUP_CONTIBUTION_ID);
         IEngineAction contrib = null;
-        for (IConfigurationElement elem : elements) {
+        for (final IConfigurationElement elem : elements) {
             try {
                 contrib = (IEngineAction) elem.createExecutableExtension("class"); //$NON-NLS-1$
-            } catch (CoreException e) {
+            } catch (final CoreException e) {
                 BonitaStudioLog.error(e);
             }
-            APISession session = getLoginAPI().login(BONITA_TECHNICAL_USER, BONITA_TECHNICAL_USER_PASSWORD);
+            final APISession session = getLoginAPI().login(BONITA_TECHNICAL_USER, BONITA_TECHNICAL_USER_PASSWORD);
             try {
                 contrib.run(session);
             } finally {
@@ -178,10 +224,10 @@ public class BOSEngineManager {
         return isRunning;
     }
 
-    public ProcessAPI getProcessAPI(APISession session) {
+    public ProcessAPI getProcessAPI(final APISession session) {
         try {
             return TenantAPIAccessor.getProcessAPI(session);
-        } catch (Exception e) {
+        } catch (final Exception e) {
             BonitaStudioLog.error(e);
         }
         return null;
@@ -191,17 +237,18 @@ public class BOSEngineManager {
         return TenantAPIAccessor.getLoginAPI();
     }
 
-    public APISession loginDefaultTenant(IProgressMonitor monitor) throws LoginException, BonitaHomeNotSetException, ServerAPIException,
+    public APISession loginDefaultTenant(final IProgressMonitor monitor) throws LoginException, BonitaHomeNotSetException, ServerAPIException,
             UnknownAPITypeException {
         return loginTenant(BONITA_TECHNICAL_USER, BONITA_TECHNICAL_USER_PASSWORD, false, monitor);
     }
 
-    public APISession loginTenant(String login, String password, IProgressMonitor monitor) throws LoginException, BonitaHomeNotSetException,
+    public APISession loginTenant(final String login, final String password, final IProgressMonitor monitor) throws LoginException, BonitaHomeNotSetException,
             ServerAPIException, UnknownAPITypeException {
         return loginTenant(login, password, true, monitor);
     }
 
-    protected APISession loginTenant(String login, String password, boolean waitForOrganization, IProgressMonitor monitor) throws LoginException,
+    protected APISession loginTenant(final String login, final String password, final boolean waitForOrganization, final IProgressMonitor monitor)
+            throws LoginException,
             BonitaHomeNotSetException, ServerAPIException, UnknownAPITypeException {
         if (!isRunning()) {
             if (monitor != null) {
@@ -212,7 +259,7 @@ public class BOSEngineManager {
         if (BonitaStudioLog.isLoggable(IStatus.OK)) {
             BonitaStudioLog.debug("Attempt to login as " + login, EnginePlugin.PLUGIN_ID);
         }
-        APISession session = getLoginAPI().login(login, password);
+        final APISession session = getLoginAPI().login(login, password);
         if (session != null) {
             if (BonitaStudioLog.isLoggable(IStatus.OK)) {
                 BonitaStudioLog.debug("Login successful.", EnginePlugin.PLUGIN_ID);
@@ -222,48 +269,56 @@ public class BOSEngineManager {
         return session;
     }
 
-    public void logoutDefaultTenant(APISession session) {
+    public void logoutDefaultTenant(final APISession session) {
         try {
             getLoginAPI().logout(session);
-        } catch (Exception e) {
+        } catch (final Exception e) {
             BonitaStudioLog.error(e);
         }
     }
 
     protected ClassLoader createEngineClassloader() {
-        Set<URL> urls = new HashSet<URL>();
+        final Set<URL> urls = new HashSet<URL>();
         Enumeration<URL> foundJars = ProjectUtil.getConsoleLibsBundle().findEntries("/lib", "*.jar", true);
         while (foundJars.hasMoreElements()) {
-            URL url = foundJars.nextElement();
+            final URL url = foundJars.nextElement();
             try {
                 urls.add(FileLocator.toFileURL(url));
-            } catch (IOException e) {
+            } catch (final IOException e) {
                 BonitaStudioLog.error(e);
             }
         }
         foundJars = ProjectUtil.getConsoleLibsBundle().findEntries("/h2", "h2-*.jar", true);
         while (foundJars.hasMoreElements()) {
-            URL url = foundJars.nextElement();
+            final URL url = foundJars.nextElement();
             try {
                 urls.add(FileLocator.toFileURL(url));
-            } catch (IOException e) {
+            } catch (final IOException e) {
                 BonitaStudioLog.error(e);
             }
         }
         return new NonLockingJarFileClassLoader("Bonita Engine CLassloader", urls.toArray(new URL[] {}));
     }
 
-    public IdentityAPI getIdentityAPI(APISession session) throws InvalidSessionException, BonitaHomeNotSetException, ServerAPIException,
+    public IdentityAPI getIdentityAPI(final APISession session) throws InvalidSessionException, BonitaHomeNotSetException, ServerAPIException,
             UnknownAPITypeException {
         return TenantAPIAccessor.getIdentityAPI(session);
     }
 
-    public CommandAPI getCommandAPI(APISession session) throws InvalidSessionException, BonitaHomeNotSetException, ServerAPIException, UnknownAPITypeException {
+    public CommandAPI getCommandAPI(final APISession session) throws InvalidSessionException, BonitaHomeNotSetException, ServerAPIException,
+            UnknownAPITypeException {
         return TenantAPIAccessor.getCommandAPI(session);
     }
 
-    public ProfileAPI getProfileAPI(APISession session) throws InvalidSessionException, BonitaHomeNotSetException, ServerAPIException, UnknownAPITypeException {
+    public ProfileAPI getProfileAPI(final APISession session) throws InvalidSessionException, BonitaHomeNotSetException, ServerAPIException,
+            UnknownAPITypeException {
         return TenantAPIAccessor.getProfileAPI(session);
+    }
+
+    public TenantAdministrationAPI getTenantAdministrationAPI(final APISession session)
+            throws BonitaHomeNotSetException,
+            ServerAPIException, UnknownAPITypeException {
+        return TenantAPIAccessor.getTenantAdministrationAPI(session);
     }
 
 }

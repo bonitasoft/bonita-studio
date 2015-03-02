@@ -17,8 +17,8 @@ package org.bonitasoft.studio.document;
 
 import static org.bonitasoft.studio.common.Messages.bonitaStudioModuleName;
 
-import org.bonitasoft.studio.data.attachment.repository.DocumentFileStore;
-import org.bonitasoft.studio.data.attachment.repository.DocumentRepositoryStore;
+import org.bonitasoft.studio.document.core.repository.DocumentFileStore;
+import org.bonitasoft.studio.document.core.repository.DocumentRepositoryStore;
 import org.bonitasoft.studio.document.i18n.Messages;
 import org.eclipse.jface.window.IShellProvider;
 import org.eclipse.swt.widgets.Shell;

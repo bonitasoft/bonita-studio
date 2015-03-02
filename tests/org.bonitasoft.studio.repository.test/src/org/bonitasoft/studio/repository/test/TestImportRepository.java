@@ -1,17 +1,17 @@
 /**
  * Copyright (C) 2009 BonitaSoft S.A.
  * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -26,8 +26,8 @@ import junit.framework.TestCase;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.operation.ImportBosArchiveOperation;
-import org.bonitasoft.studio.data.attachment.repository.DocumentFileStore;
-import org.bonitasoft.studio.data.attachment.repository.DocumentRepositoryStore;
+import org.bonitasoft.studio.document.core.repository.DocumentFileStore;
+import org.bonitasoft.studio.document.core.repository.DocumentRepositoryStore;
 import org.bonitasoft.studio.groovy.repository.GroovyFileStore;
 import org.bonitasoft.studio.groovy.repository.GroovyRepositoryStore;
 import org.eclipse.core.runtime.FileLocator;
@@ -35,7 +35,7 @@ import org.junit.Test;
 
 /**
  * @author Mickael Istria
- * 
+ *
  */
 public class TestImportRepository extends TestCase {
 
@@ -53,15 +53,15 @@ public class TestImportRepository extends TestCase {
      */
     @Override
     protected void setUp() throws Exception {
-        URL url = TestImportRepository.class.getResource(TEST_ATTACHMENT_BAR_NAME);
+        final URL url = TestImportRepository.class.getResource(TEST_ATTACHMENT_BAR_NAME);
         try {
-            URL fileUrl = FileLocator.toFileURL(url);
+            final URL fileUrl = FileLocator.toFileURL(url);
             bosFile = new File(fileUrl.getFile());
-            ImportBosArchiveOperation op = new ImportBosArchiveOperation();
+            final ImportBosArchiveOperation op = new ImportBosArchiveOperation();
             op.setArchiveFile(bosFile.getAbsolutePath());
             op.setCurrentRepository(RepositoryManager.getInstance().getCurrentRepository());
             op.run(Repository.NULL_PROGRESS_MONITOR);
-        } catch (Exception e) {
+        } catch (final Exception e) {
             e.printStackTrace();
             fail("Unable to find the test bar file"); //$NON-NLS-1$
         }
@@ -73,24 +73,24 @@ public class TestImportRepository extends TestCase {
      */
     @Override
     protected void tearDown() throws Exception {
-        GroovyRepositoryStore gStore = (GroovyRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(GroovyRepositoryStore.class);
-        for (GroovyFileStore artifact : gStore.getChildren()) {
+        final GroovyRepositoryStore gStore = RepositoryManager.getInstance().getRepositoryStore(GroovyRepositoryStore.class);
+        for (final GroovyFileStore artifact : gStore.getChildren()) {
             artifact.delete();
         }
-        final DocumentRepositoryStore store = (DocumentRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DocumentRepositoryStore.class);
-        for (DocumentFileStore artifact : store.getChildren()) {
+        final DocumentRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(DocumentRepositoryStore.class);
+        for (final DocumentFileStore artifact : store.getChildren()) {
             artifact.delete();
         }
     }
 
     @Test
     public void testImportAttachments() throws Exception {
-        final DocumentRepositoryStore store = (DocumentRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DocumentRepositoryStore.class);
+        final DocumentRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(DocumentRepositoryStore.class);
         final DocumentFileStore fileStore = store.getChild(TEST_ATTACHMENT_ARTIFACT_ID);
 
         assertNotNull(fileStore);
         assertEquals(fileStore.getName(), TEST_ATTACHMENT_ARTIFACT_ID);
-        InputStream is = (InputStream) fileStore.getContent();
+        final InputStream is = (InputStream) fileStore.getContent();
         assertTrue(is.read() > 0);
         /* don't forget to close the inputStream */
         is.close();
@@ -99,11 +99,11 @@ public class TestImportRepository extends TestCase {
 
     @Test
     public void testImportGroovy() throws Exception {
-        GroovyRepositoryStore gStore = (GroovyRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(GroovyRepositoryStore.class);
-        GroovyFileStore artifact = gStore.getChild(TEST_GROOVY_ARTIFACT_ID);
+        final GroovyRepositoryStore gStore = RepositoryManager.getInstance().getRepositoryStore(GroovyRepositoryStore.class);
+        final GroovyFileStore artifact = gStore.getChild(TEST_GROOVY_ARTIFACT_ID);
         assertNotNull(artifact);
         assertEquals(artifact.getName(), TEST_GROOVY_ARTIFACT_ID);
-        InputStream is = artifact.getResource().getContents();
+        final InputStream is = artifact.getResource().getContents();
         assertTrue(is.read() > 0);
         /* don't forget to close the inputStream */
         is.close();

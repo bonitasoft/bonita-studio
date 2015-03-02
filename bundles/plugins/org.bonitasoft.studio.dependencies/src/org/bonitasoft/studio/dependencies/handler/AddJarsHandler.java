@@ -17,7 +17,6 @@
  */
 package org.bonitasoft.studio.dependencies.handler;
 
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -29,8 +28,8 @@ import java.util.zip.ZipEntry;
 
 import org.bonitasoft.studio.common.ZipInputStreamIFileFriendly;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.dependencies.i18n.Messages;
 import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -49,7 +48,7 @@ public class AddJarsHandler extends AbstractHandler {
 	private String[] filenames = null;
 
 	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException {
+	public Object execute(final ExecutionEvent event) throws ExecutionException {
 
 		final FileDialog fd = new FileDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), SWT.OPEN | SWT.MULTI);
 		fd.setFilterExtensions(new String[] { "*.jar;*.zip" });
@@ -57,16 +56,16 @@ public class AddJarsHandler extends AbstractHandler {
 			fd.setFilterNames(filenames);
 		}
 		if (fd.open() != null) {
-			final DependencyRepositoryStore libStore = (DependencyRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DependencyRepositoryStore.class) ;
+			final DependencyRepositoryStore libStore = RepositoryManager.getInstance().getRepositoryStore(DependencyRepositoryStore.class) ;
 			final String[] jars = fd.getFileNames();
-			IProgressService progressManager = PlatformUI.getWorkbench().getProgressService() ;
-			IRunnableWithProgress runnable = new IRunnableWithProgress(){
+			final IProgressService progressManager = PlatformUI.getWorkbench().getProgressService() ;
+			final IRunnableWithProgress runnable = new IRunnableWithProgress(){
 				@Override
-				public void run(IProgressMonitor monitor)
+				public void run(final IProgressMonitor monitor)
 						throws InvocationTargetException, InterruptedException {
 					monitor.beginTask(Messages.beginToAddJars, jars.length);
-					Map<String, InputStream> jarsToImportMap = new HashMap<String, InputStream>();
-					for (String jar : jars) {
+					final Map<String, InputStream> jarsToImportMap = new HashMap<String, InputStream>();
+					for (final String jar : jars) {
 						try {
 							if (monitor.isCanceled()) {
 								return;
@@ -78,12 +77,12 @@ public class AddJarsHandler extends AbstractHandler {
 								file = new File(fd.getFilterPath() + File.separator + jar);
 							}
 
-							FileInputStream fis = new FileInputStream(file);
+							final FileInputStream fis = new FileInputStream(file);
 							if (file.getName().endsWith(".jar")) { //$NON-NLS-1$
 								monitor.setTaskName(Messages.addingJar + " " + file.getName());
 							jarsToImportMap.put(file.getName(), fis);
 							} else if (file.getName().endsWith(".zip")) { //$NON-NLS-1$
-								ZipInputStreamIFileFriendly zip = new ZipInputStreamIFileFriendly(fis);
+								final ZipInputStreamIFileFriendly zip = new ZipInputStreamIFileFriendly(fis);
 							ZipEntry entry = zip.getNextEntry();
 							if(entry == null){
 								throw new InvocationTargetException(new Exception(org.bonitasoft.studio.dependencies.i18n.Messages.zipFileIsCorrupted),org.bonitasoft.studio.dependencies.i18n.Messages.zipFileIsCorrupted);
@@ -99,7 +98,7 @@ public class AddJarsHandler extends AbstractHandler {
 							fis.close();
 							}
 
-						} catch (Exception ex) {
+						} catch (final Exception ex) {
 							BonitaStudioLog.error(ex);
 							throw new InvocationTargetException(ex);
 						}
@@ -115,7 +114,7 @@ public class AddJarsHandler extends AbstractHandler {
 									is = entry.getValue()  ;
 									libStore.importInputStream(entry.getKey(), is) ;
 									is.close() ;
-								}catch (Exception e) {
+								}catch (final Exception e) {
 									BonitaStudioLog.error(e) ;
 								}
 							}
@@ -131,26 +130,26 @@ public class AddJarsHandler extends AbstractHandler {
 				progressManager.run(true, false, new IRunnableWithProgress() {
 
 					@Override
-					public void run(IProgressMonitor monitor) throws InvocationTargetException,
+					public void run(final IProgressMonitor monitor) throws InvocationTargetException,
 					InterruptedException {
 						RepositoryManager.getInstance().getCurrentRepository().refresh(monitor) ;
 					}
 				}) ;
-			} catch (InvocationTargetException e1) {
+			} catch (final InvocationTargetException e1) {
 				BonitaStudioLog.error(e1);
 				if(e1.getCause() != null && e1.getCause().getMessage() != null){
 					MessageDialog.openError(Display.getDefault().getActiveShell(), org.bonitasoft.studio.dependencies.i18n.Messages.importJar,e1.getCause().getMessage());
 				}
-			} catch (InterruptedException e2) {
+			} catch (final InterruptedException e2) {
 				BonitaStudioLog.error(e2);
 			}
 
 		}
 		return fd.getFileNames();
 	}
-	
-	public void setFileNameFilter(String[] fileNames){
-		this.filenames  = fileNames;
+
+	public void setFileNameFilter(final String[] fileNames){
+		filenames  = fileNames;
 	}
 
 }

@@ -149,7 +149,7 @@ public class DiagramTests extends SWTBotGefTestCase {
         assertThat(bot.viewById("org.bonitasoft.studio.views.overview.tree").isActive()).isFalse();
         bot.menu("Edit").menu("Find").click();
         assertThat(bot.viewById("org.bonitasoft.studio.views.overview.tree").isActive()).isTrue();
-
+        
         //Create 3 variables
         final SWTBotEditor botEditor = bot.activeEditor();
         final SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
@@ -241,6 +241,8 @@ public class DiagramTests extends SWTBotGefTestCase {
                     }
                 }
 
+                bot.tabItem(org.bonitasoft.studio.properties.i18n.Messages.processData).activate();
+
                 // add 1 variable in the form
                 if (itmp == 0) {
                     bot.tree().getTreeItem("varText").check();
@@ -301,6 +303,7 @@ public class DiagramTests extends SWTBotGefTestCase {
             //second shell "Add form..."
             bot.button(IDialogConstants.NEXT_LABEL).click();
         }
+        bot.tabItem(org.bonitasoft.studio.properties.i18n.Messages.processData).activate();
         bot.checkBox("Select all").select();
 
         // last shell "Add form..."

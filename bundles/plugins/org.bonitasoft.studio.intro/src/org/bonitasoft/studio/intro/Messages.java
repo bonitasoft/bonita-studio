@@ -18,6 +18,7 @@
 package org.bonitasoft.studio.intro;
 
 import java.lang.reflect.Field;
+
 import org.eclipse.osgi.util.NLS;
 
 
@@ -49,20 +50,18 @@ public class Messages extends NLS {
 	public static String examples;
 	public static String resources2;
 	public static String migrationOngoing;
-	public static String importErrorTitle;
-	public static String importErrorMessage;
 	
 	/**
 	 * @param id
 	 * @return
 	 */
-	public static String getMessage(String id) {
+	public static String getMessage(final String id) {
 		try {
 			final Field field = Messages.class.getField(id);
 			return (String)field.get(null);
-		} catch (NoSuchFieldException ex) {
+		} catch (final NoSuchFieldException ex) {
 			return "Field [" + id + "] does not exist";
-		} catch (IllegalAccessException ex1) {
+		} catch (final IllegalAccessException ex1) {
 			return "Could not easily access to field [" + ex1 + "]\n" + ex1.getMessage();
 		}
 	}
