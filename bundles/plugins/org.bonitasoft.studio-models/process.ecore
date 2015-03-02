@@ -142,6 +142,7 @@
         eType="#//DocumentType" defaultValueLiteral="NONE"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="initialMultipleContent"
         eType="ecore:EClass expression.ecore#//Expression" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="multiple" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="DoubleType" eSuperTypes="#//DataType"/>
   <eClassifiers xsi:type="ecore:EEnum" name="EntryPageFlowType">
@@ -578,8 +579,9 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Contract">
     <eStructuralFeatures xsi:type="ecore:EReference" name="inputs" upperBound="-1"
-        eType="#//ContractInput"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="constraints" eType="#//ContractConstraint"/>
+        eType="#//ContractInput" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="constraints" upperBound="-1"
+        eType="#//ContractConstraint" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ContractInputMapping">
     <eStructuralFeatures xsi:type="ecore:EReference" name="data" lowerBound="1" eType="#//Data"/>
@@ -592,16 +594,17 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="multiple" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="mandatory" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="mapping" eType="#//ContractInputMapping"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="mapping" eType="#//ContractInputMapping"
+        containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="inputs" upperBound="-1"
-        eType="#//ContractInput"/>
+        eType="#//ContractInput" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ContractConstraint">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="expression" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="errorMesage" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="inputNames" upperBound="-1"
-        eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EStringToStringMapEntry"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="errorMessage" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="inputNames" upperBound="-1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="ContractInputType">
     <eLiterals name="TEXT"/>
