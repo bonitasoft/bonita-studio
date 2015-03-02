@@ -20,6 +20,7 @@ import org.bonitasoft.studio.browser.operation.OpenBrowserOperation;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.jface.databinding.CustomEMFEditObservables;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.model.expression.Expression;
@@ -54,7 +55,11 @@ public class PageDesignerMappingComposite extends Composite implements BonitaPre
     private final ExpressionViewer targetFormExpressionViewer;
     private final IEclipsePreferences preferenceStore;
 
-    public PageDesignerMappingComposite(final Composite parent, final TabbedPropertySheetWidgetFactory widgetFactory, final IEclipsePreferences preferenceStore) {
+    public PageDesignerMappingComposite(final Composite parent,
+            final TabbedPropertySheetWidgetFactory widgetFactory,
+            final IEclipsePreferences preferenceStore,
+            final RepositoryAccessor repositoryAccessor,
+            final FormReferenceExpressionValidator formReferenceExpressionValidator) {
         super(parent, SWT.NONE);
         this.preferenceStore = preferenceStore;
         setLayout(GridLayoutFactory.fillDefaults().numColumns(2).extendedMargins(10, 0, 10, 0).create());
@@ -64,6 +69,7 @@ public class PageDesignerMappingComposite extends Composite implements BonitaPre
         targetFormExpressionViewer = new ExpressionViewer(this, SWT.BORDER, widgetFactory);
         targetFormExpressionViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().hint(WIDTH_HINT, SWT.DEFAULT).create());
         targetFormExpressionViewer.setExpressionProposalLableProvider(new FormReferenceProposalLabelProvider());
+        targetFormExpressionViewer.addExpressionValidator(formReferenceExpressionValidator);
         targetFormExpressionViewer.addFilter(new AvailableExpressionTypeFilter(new String[] { ExpressionConstants.FORM_REFERENCE_TYPE }));
 
         widgetFactory.adapt(this);
@@ -86,7 +92,7 @@ public class PageDesignerMappingComposite extends Composite implements BonitaPre
         });
     }
 
-    protected void clearExistingSelectionListeners(final ToolItem editControl) {
+    private void clearExistingSelectionListeners(final ToolItem editControl) {
         final Listener[] toRemove = editControl.getListeners(SWT.Selection);
         for (final Listener l : toRemove) {
             editControl.removeListener(SWT.Selection, l);

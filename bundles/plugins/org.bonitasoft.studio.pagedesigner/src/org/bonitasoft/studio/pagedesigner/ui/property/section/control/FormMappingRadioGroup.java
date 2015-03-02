@@ -18,6 +18,7 @@ import static org.bonitasoft.studio.common.jface.databinding.UpdateStrategyFacto
 import static org.bonitasoft.studio.common.jface.databinding.UpdateStrategyFactory.updateValueStrategy;
 
 import org.bonitasoft.studio.common.jface.databinding.CustomEMFEditObservables;
+import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.pagedesigner.i18n.Messages;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
@@ -47,7 +48,8 @@ public class FormMappingRadioGroup extends Composite implements BonitaPreference
     private final URLMappingComposite urlMappingComposite;
     private final CustomStackLayout stackLayout;
 
-    public FormMappingRadioGroup(final Composite parent, final TabbedPropertySheetWidgetFactory widgetFactory, final IEclipsePreferences preferenceStore) {
+    public FormMappingRadioGroup(final Composite parent, final TabbedPropertySheetWidgetFactory widgetFactory, final IEclipsePreferences preferenceStore,
+            final RepositoryAccessor repositoryAccessor, final FormReferenceExpressionValidator formReferenceExpressionValidator) {
         super(parent, SWT.NONE);
         setLayout(GridLayoutFactory.fillDefaults().numColumns(2).extendedMargins(10, 10, 10, 10).create());
 
@@ -66,7 +68,8 @@ public class FormMappingRadioGroup extends Composite implements BonitaPreference
         stackLayout = new CustomStackLayout(stackedComposite);
         stackedComposite.setLayout(stackLayout);
 
-        pageDesignerMappingComposite = new PageDesignerMappingComposite(stackedComposite, widgetFactory, preferenceStore);
+        pageDesignerMappingComposite = new PageDesignerMappingComposite(stackedComposite, widgetFactory, preferenceStore, repositoryAccessor,
+                formReferenceExpressionValidator);
         urlMappingComposite = new URLMappingComposite(stackedComposite, widgetFactory);
 
         final Object externalValue = externalObservable.getValue();

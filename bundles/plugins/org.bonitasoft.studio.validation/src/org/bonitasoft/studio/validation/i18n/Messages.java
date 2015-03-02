@@ -203,6 +203,12 @@ public class Messages extends NLS {
 
     public static String businessObjectDefinitionNotFound;
 
+    public static String invalidFormMapping;
+
+    public static String entryFormMapping;
+
+    public static String overviewFormMapping;
+
     static {
         // initialize resource bundle
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

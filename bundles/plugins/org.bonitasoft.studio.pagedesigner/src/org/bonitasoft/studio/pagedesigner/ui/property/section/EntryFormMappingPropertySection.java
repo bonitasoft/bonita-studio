@@ -18,8 +18,10 @@ import javax.inject.Inject;
 
 import org.bonitasoft.studio.common.jface.databinding.CustomEMFEditObservables;
 import org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection;
+import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.pagedesigner.ui.property.section.control.FormMappingRadioGroup;
+import org.bonitasoft.studio.pagedesigner.ui.property.section.control.FormReferenceExpressionValidator;
 import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.e4.core.di.extensions.Preference;
@@ -46,11 +48,18 @@ public class EntryFormMappingPropertySection extends AbstractBonitaDescriptionSe
     @Preference(nodePath = "org.bonitasoft.studio.preferences")
     private IEclipsePreferences preferenceStore;
 
+    @Inject
+    private RepositoryAccessor repositoryAccessor;
+
+    @Inject
+    private FormReferenceExpressionValidator formReferenceExpressionValidator;
+
     @Override
     public void createControls(final Composite parent, final TabbedPropertySheetPage aTabbedPropertySheetPage) {
         super.createControls(parent, aTabbedPropertySheetPage);
         context = new EMFDataBindingContext();
-        final FormMappingRadioGroup formMappingRadioGroup = new FormMappingRadioGroup(parent, aTabbedPropertySheetPage.getWidgetFactory(), preferenceStore);
+        final FormMappingRadioGroup formMappingRadioGroup = new FormMappingRadioGroup(parent, aTabbedPropertySheetPage.getWidgetFactory(), preferenceStore,
+                repositoryAccessor, formReferenceExpressionValidator);
         formMappingRadioGroup.doBindControl(context, CustomEMFEditObservables.observeDetailValue(Realm.getDefault(),
                 ViewersObservables.observeSingleSelection(selectionProvider),
                 getFormMappingFeature()));

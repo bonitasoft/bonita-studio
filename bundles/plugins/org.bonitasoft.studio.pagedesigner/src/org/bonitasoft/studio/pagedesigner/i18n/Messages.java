@@ -30,6 +30,7 @@ public class Messages extends NLS {
     public static String externalURL;
     public static String targetForm;
     public static String url;
+    public static String pageDoesntExists;
 
     static {
         NLS.initializeMessages("messages", Messages.class);
