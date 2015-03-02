@@ -22,6 +22,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
+import org.bonitasoft.studio.businessobject.ui.BusinessObjectDataStyledLabelProvider;
+import org.bonitasoft.studio.businessobject.ui.wizard.AddBusinessObjectDataWizard;
+import org.bonitasoft.studio.businessobject.ui.wizard.EditBusinessObjectDataWizard;
 import org.bonitasoft.studio.common.IBonitaVariableContext;
 import org.bonitasoft.studio.common.dialog.OutlineDialog;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
@@ -33,20 +37,23 @@ import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.data.DataPlugin;
 import org.bonitasoft.studio.data.commands.MoveDataCommand;
 import org.bonitasoft.studio.data.i18n.Messages;
-import org.bonitasoft.studio.data.operation.RefactorDataOperation;
 import org.bonitasoft.studio.data.ui.wizard.DataWizard;
 import org.bonitasoft.studio.data.ui.wizard.DataWizardDialog;
 import org.bonitasoft.studio.data.ui.wizard.MoveDataWizard;
 import org.bonitasoft.studio.model.process.AbstractProcess;
+import org.bonitasoft.studio.model.process.BusinessObjectData;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.DataAware;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.Lane;
+import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.studio.pics.Pics;
+import org.bonitasoft.studio.pics.PicsConstants;
+import org.bonitasoft.studio.refactoring.core.RefactorDataOperation;
 import org.bonitasoft.studio.refactoring.core.RefactoringOperationType;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.operations.OperationHistoryFactory;
-import org.eclipse.core.databinding.ObservablesManager;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.observable.list.IObservableList;
@@ -66,13 +73,18 @@ import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -82,7 +94,9 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressService;
 
@@ -100,8 +114,6 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
 
     protected Composite mainComposite;
 
-    protected ObservablesManager observablesManager = new ObservablesManager();
-
     private TableViewer dataTableViewer;
 
     private boolean isPageFlowContext = false;
@@ -112,21 +124,197 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
 
     private static final String XTEXT_BUILDER_ID = "org.eclipse.xtext.ui.shared.xtextBuilder";
 
+    private TableViewer businessDataTableViewer;
+
+    private Button updateBusinessDataButton;
+
+    private Button removeBusinessDataButton;
+
+    private Composite businessDataComposite;
 
     @Override
     protected void createContent(final Composite parent) {
         mainComposite = getWidgetFactory().createComposite(parent);
         mainComposite.setLayout(createMainCompositeLayout());
-
         mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+
+
         final Composite dataComposite = getWidgetFactory().createComposite(mainComposite);
         dataComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         dataComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(0, 0).create());
         createDataComposite(dataComposite);
+
+        createBusinessData();
+    }
+
+    protected void createBusinessData() {
+        businessDataComposite = createMainComposite();
+        createBusinessDataComposite(businessDataComposite);
+    }
+
+    protected Composite createMainComposite() {
+        final Composite dataComposite = getWidgetFactory().createComposite(mainComposite);
+        dataComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).indent(20, 0).create());
+        dataComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(0, 0).spacing(2, 3).create());
+        return dataComposite;
+    }
+
+    protected ViewerFilter hideBusinessObjectData() {
+        return new ViewerFilter() {
+
+            @Override
+            public boolean select(final Viewer viewer, final Object parentElement, final Object element) {
+                return !(element instanceof BusinessObjectData);
+            }
+        };
+    }
+
+    protected BusinessObjectModelRepositoryStore getBusinessObjectDefinitionRepositoryStore() {
+        return RepositoryManager.getInstance().getRepositoryStore(BusinessObjectModelRepositoryStore.class);
+    }
+
+    protected WizardDialog createWizardDialog(
+            final Wizard wizard, final String finishLabel) {
+        return new CustomWizardDialog(getActiveShell(), wizard, finishLabel);
+    }
+
+
+    protected void createBusinessDataComposite(final Composite parent) {
+        final Composite mainComposite = getWidgetFactory().createComposite(parent, SWT.NONE);
+        mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).indent(20, 0).span(2, 1).create());
+        mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(0, 0).create());
+
+        getWidgetFactory().createLabel(mainComposite, "", SWT.NONE);
+        final Label label = getWidgetFactory().createLabel(mainComposite, Messages.businessData, SWT.NONE);
+        label.setLayoutData(GridDataFactory.swtDefaults().grab(false, false).span(1, 1).create());
+
+        final ControlDecoration controlDecoration = new ControlDecoration(label, SWT.RIGHT, mainComposite);
+        controlDecoration.setShowOnlyOnFocus(false);
+        controlDecoration.setDescriptionText(Messages.businessDataHint);
+        controlDecoration.setImage(Pics.getImage(PicsConstants.hint));
+
+        final Composite buttonsComposite = getWidgetFactory().createPlainComposite(mainComposite, SWT.NONE);
+        buttonsComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).create());
+        buttonsComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).spacing(3, 3).create());
+
+        createAddBusinessDataButton(buttonsComposite);
+        updateBusinessDataButton = createEditBusinessDataButton(buttonsComposite);
+        removeBusinessDataButton = createRemoveBusinessDataButton(buttonsComposite);
+
+        businessDataTableViewer = new TableViewer(mainComposite, SWT.BORDER | SWT.MULTI | SWT.NO_FOCUS | SWT.H_SCROLL | SWT.V_SCROLL);
+        businessDataTableViewer.getTable().setLayout(GridLayoutFactory.fillDefaults().create());
+        getWidgetFactory().adapt(businessDataTableViewer.getTable(), false, false);
+        businessDataTableViewer.getTable().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(200, 100).create());
+        businessDataTableViewer.setSorter(new ViewerSorter());
+        businessDataTableViewer.addDoubleClickListener(new IDoubleClickListener() {
+
+            @Override
+            public void doubleClick(final DoubleClickEvent event) {
+                editBusinessData();
+            }
+        });
+
+        businessDataTableViewer.addFilter(acceptBusinessObjectData());
+
+        final ObservableListContentProvider contentProvider = new ObservableListContentProvider();
+        businessDataTableViewer.setContentProvider(contentProvider);
+        final IObservableSet knownElements = contentProvider.getKnownElements();
+        final IObservableMap[] labelMaps = EMFObservables.observeMaps(knownElements, new EStructuralFeature[] { ProcessPackage.Literals.ELEMENT__NAME,
+                ProcessPackage.Literals.JAVA_OBJECT_DATA__CLASS_NAME });
+        businessDataTableViewer.setLabelProvider(new BusinessObjectDataStyledLabelProvider(RepositoryManager.getInstance().getRepositoryStore(
+                BusinessObjectModelRepositoryStore.class), labelMaps));
+
+    }
+
+    protected void createAddBusinessDataButton(final Composite parent) {
+        final Button addBusinessObjectDataButton = new Button(parent, SWT.FLAT);
+        addBusinessObjectDataButton.setText(Messages.addData);
+        addBusinessObjectDataButton.setLayoutData(GridDataFactory.fillDefaults().minSize(IDialogConstants.BUTTON_WIDTH, SWT.DEFAULT).create());
+        addBusinessObjectDataButton.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(final SelectionEvent e) {
+                addBusinessData();
+            }
+        });
+    }
+
+    protected void addBusinessData() {
+        final AddBusinessObjectDataWizard addBusinessObjectDataWizard = createAddBusinessObjectDataWizard();
+        createWizardDialog(addBusinessObjectDataWizard, IDialogConstants.FINISH_LABEL).open();
+    }
+
+    protected AddBusinessObjectDataWizard createAddBusinessObjectDataWizard() {
+        return new AddBusinessObjectDataWizard((DataAware) getEObject(),
+                getBusinessObjectDefinitionRepositoryStore(),
+                getEditingDomain());
+    }
+
+    protected Shell getActiveShell() {
+        return Display.getDefault().getActiveShell();
+    }
+
+    protected ViewerFilter acceptBusinessObjectData() {
+        return new ViewerFilter() {
+
+            @Override
+            public boolean select(final Viewer viewer, final Object parentElement, final Object element) {
+                return element instanceof BusinessObjectData;
+            }
+        };
+    }
+
+    protected Button createRemoveBusinessDataButton(final Composite buttonsComposite) {
+        final Button removeButton = getWidgetFactory().createButton(buttonsComposite, Messages.removeData, SWT.FLAT);
+        removeButton.setLayoutData(GridDataFactory.fillDefaults().minSize(IDialogConstants.BUTTON_WIDTH, SWT.DEFAULT).create());
+        removeButton.addListener(SWT.Selection, new Listener() {
+
+            @Override
+            public void handleEvent(final Event event) {
+                removeData(getStructuredSelection(businessDataTableViewer));
+            }
+        });
+        return removeButton;
+    }
+
+    protected Button createEditBusinessDataButton(final Composite buttonsComposite) {
+        final Button updateButton = getWidgetFactory().createButton(buttonsComposite, Messages.updateData, SWT.FLAT);
+        updateButton.setLayoutData(GridDataFactory.fillDefaults().minSize(IDialogConstants.BUTTON_WIDTH, SWT.DEFAULT).create());
+        updateButton.addListener(SWT.Selection, new Listener() {
+
+            @Override
+            public void handleEvent(final Event event) {
+                editBusinessData();
+            }
+        });
+        return updateButton;
+    }
+
+    protected void editBusinessData() {
+        final IStructuredSelection selection = getStructuredSelection(businessDataTableViewer);
+        if (onlyOneElementSelected(selection)) {
+            final BusinessObjectData selectedData = (BusinessObjectData) selection.getFirstElement();
+            final EditBusinessObjectDataWizard wizard = createEditBusinessDataWizard(selectedData);
+            createWizardDialog(wizard, IDialogConstants.OK_LABEL).open();
+            refreshBusinessDataTableViewer();
+        }
+    }
+
+    protected void refreshBusinessDataTableViewer() {
+        businessDataTableViewer.refresh();
+    }
+
+    protected IStructuredSelection getStructuredSelection(final ISelectionProvider selectionProvider) {
+        return (IStructuredSelection) selectionProvider.getSelection();
+    }
+
+    protected EditBusinessObjectDataWizard createEditBusinessDataWizard(
+            final BusinessObjectData selectedData) {
+        return new EditBusinessObjectDataWizard(selectedData, getBusinessObjectDefinitionRepositoryStore(), getEditingDomain());
     }
 
     protected GridLayout createMainCompositeLayout() {
-        return GridLayoutFactory.fillDefaults().numColumns(1).margins(20, 15).create();
+        return GridLayoutFactory.fillDefaults().numColumns(2).margins(20, 15).create();
     }
 
     protected void createDataComposite(final Composite parent) {
@@ -149,7 +337,7 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
         dataTableViewer.addDoubleClickListener(this);
         final ObservableListContentProvider contentProvider = new ObservableListContentProvider();
         dataTableViewer.setContentProvider(contentProvider);
-
+        dataTableViewer.addFilter(hideBusinessObjectData());
         // create the label provider including monitoring
         // of the changes of the labels
         final IObservableSet knownElements = contentProvider.getKnownElements();
@@ -159,11 +347,21 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
 
     }
 
+    protected void createLabel(final Composite parent) {
+        getWidgetFactory().createLabel(parent, "", SWT.NONE);
+        final Label label = getWidgetFactory().createLabel(parent, Messages.processData, SWT.NONE);
+        label.setLayoutData(GridDataFactory.swtDefaults().grab(false, false).span(1, 1).create());
+
+        final ControlDecoration controlDecoration = new ControlDecoration(label, SWT.RIGHT);
+        controlDecoration.setShowOnlyOnFocus(false);
+        controlDecoration.setDescriptionText(Messages.processDataHint);
+        controlDecoration.setImage(Pics.getImage(PicsConstants.hint));
+    }
+
     public TableViewer getDataTableViewer() {
         return dataTableViewer;
     }
 
-    protected abstract void createLabel(Composite dataComposite);
 
     protected Button createRemoveDataButton(final Composite parent) {
         final Button removeButton = getWidgetFactory().createButton(parent, Messages.removeData, SWT.FLAT);
@@ -384,6 +582,29 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
                     context.bindValue(SWTObservables.observeEnabled(promoteDataButton), ViewersObservables.observeSingleSelection(dataTableViewer),
                             new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER), enableMoveStrategy);
                 }
+
+                if (businessDataComposite != null) {
+                    businessDataComposite.setVisible(getEObject() instanceof Pool);
+                    final UpdateValueStrategy enableStrategy2 = new UpdateValueStrategy();
+                    enableStrategy2.setConverter(new Converter(Data.class, Boolean.class) {
+
+                        @Override
+                        public Object convert(final Object fromObject) {
+                            return fromObject != null;
+                        }
+
+                    });
+
+                    final IObservableList businessDataObservableList = EMFEditObservables.observeList(getEditingDomain(), getEObject(), getDataFeature());
+                    businessDataTableViewer.setInput(businessDataObservableList);
+
+                    context.bindValue(SWTObservables.observeEnabled(updateBusinessDataButton),
+                            ViewersObservables.observeSingleSelection(businessDataTableViewer),
+                            new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER), enableStrategy2);
+                    context.bindValue(SWTObservables.observeEnabled(removeBusinessDataButton),
+                            ViewersObservables.observeSingleSelection(businessDataTableViewer),
+                            new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER), enableStrategy2);
+                }
             }
         }
     }
@@ -432,6 +653,9 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
 
     @Override
     public String getSectionDescription() {
+        if (getEObject() instanceof Pool) {
+            return Messages.dataSectionWithBusinessData;
+        }
         return Messages.dataSectionDescription;
     }
 

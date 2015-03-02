@@ -54,7 +54,6 @@ public class Messages extends NLS {
     public static String createForm_defaultName;
     public static String createForm_noData;
     public static String error_allreadyExists;
-    public static String error_documentAllreadyexist;
     public static String error_empty;
     public static String duplicateForm_desc;
     public static String duplicateForm_title;
@@ -72,19 +71,10 @@ public class Messages extends NLS {
     public static String formUp;
     public static String formDown;
     public static String selectAll;
-    public static String unselectAll;
     public static String FormsSection_ConfirmationTemplate;
-    public static String formAddFormCommandDescription;
-    public static String formAddFormCommandLabel;
     public static String formRemoveFormCommand;
-    public static String FormsSection_widgetTypeDate;
-    public static String FormsSection_widgetTypeText;
-    public static String FormsSection_widgetTypeFile;
-    public static String FormsSection_widgetTypeCheckBox;
-    public static String FormsSection_widgetTypeRadio;
     public static String FormsSection_wizardVarsGroup_Title;
     public static String FormsSection_wizardVarsGroup_Tooltip;
-    public static String multipleWidget;
 
     // resource section
     public static String Browse;
@@ -100,15 +90,12 @@ public class Messages extends NLS {
     public static String ResourceSection_LoginPage;
     public static String ResourceSection_AutoLogin;
     public static String ResourceSection_AutoLoginTooltip;
-    public static String ResourceSection_HostPageTemplate;
 
     //
     public static String up;
     public static String down;
 
     public static String priority;
-
-    public static String isMultiInstantiated;
 
     public static String durationLabel;
     public static String estimatadExecutionTimeLabel;
@@ -153,10 +140,6 @@ public class Messages extends NLS {
 
     public static String eventNameLabel;
 
-    public static String External;
-
-    public static String Internal;
-
     public static String gotoLabel;
 
     public static String fromLinksLabel;
@@ -170,7 +153,6 @@ public class Messages extends NLS {
     public static String selectSignalEventLabel;
     public static String defaultFlowLabel;
 
-    public static String isLoopLabel;
     public static String testBeforeLabel;
     public static String loopConditionLabel;
     public static String maximumLoopLabel;
@@ -292,7 +274,6 @@ public class Messages extends NLS {
     public static String ResourceSection_ProcessTemplate_hint;
     public static String ResourceSection_PageTemplate_hint;
     public static String ResourceSection_ErrorTemplate_hint;
-    public static String ResourceSection_HostPageTemplate_hint;
     public static String ResourceSection_ViewTemplate_hint;
     public static String autoMap;
     public static String autoMap_description;
@@ -326,47 +307,22 @@ public class Messages extends NLS {
     public static String transitionOrderingExplanation;
     public static String transitionOrderingExplanation_Short;
 
-    public static String documentDefaultName;
-
-    public static String remove;
-    public static String selectDocumentDescription;
-    public static String explanationExternalDocument;
-    public static String explanationInternalDocument;
-    public static String selectDocumentDialogTitle;
-    public static String importEtc;
     public static String AddSimple;
     public static String description;
-    public static String mimeType;
-    public static String hintExternalUrl;
 
-    public static String explanationMimeTypeDocument;
-    public static String hintMimeTypeDocument;
     public static String calledProcessVersionHint;
     public static String avoidElement;
     public static String avoidElementHint;
 
-    public static String multiInstance_useCollection;
-    public static String multiInstance_inputData;
-    public static String multiInstance_outputData;
-    public static String multiInstance_useCardinality;
     public static String clearSelection;
-    public static String multiInstance_inputDataDescription;
-    public static String multiInstance_sequentialDescription;
     public static String multiInstance_completionConditionLabel;
     public static String multiInstance_completionConditionDescription;
-    public static String multiInstance_sequentialButton;
-    public static String multiInstance_useCollectionDescription;
-    public static String multiInstance_outputDataDescription;
-    public static String multiInstance_useCardinalityDescription;
-    public static String multiInstance_listOutputDataDescription;
-    public static String multiInstance_listOutputDataLabel;
     public static String addFormTitle;
     public static String correlationKey;
     public static String correlationValue;
     public static String messageContentID;
     public static String expressionName;
     public static String messageContentIdExistenceWarning;
-    public static String throwMessageExpressionTypeWarning;
     public static String NoIncomingMessageWarning;
     public static String generalPropertiesSectionDescription;
     public static String diagramSectionDescription;
@@ -379,7 +335,6 @@ public class Messages extends NLS {
     public static String userXPSectionDescription;
     public static String confirmationPropertySectionDescription;
     public static String loopSectionDescription;
-    public static String correlationHelp;
     public static String exportSuccessfullMsg;
     public static String exportSuccessfullTitle;
     public static String exporting;
@@ -390,8 +345,6 @@ public class Messages extends NLS {
     public static String idShouldBeDefined;
     public static String conditionExpresssionHelpMessage;
     public static String isMandatory;
-    public static String errorOutputDataMultiInstanceCollection;
-    public static String errorInputDataMultiInstanceCollection;
     public static String messagesSectionDescription;
     public static String minutes;
     public static String every;
@@ -435,8 +388,6 @@ public class Messages extends NLS {
     public static String startTimerConditionHint;
     public static String cronShortDescription;
     public static String notAValidInput;
-
-    public static String transientDataWarning;
 
     public static String errorDisplayLabelMaxLength;
 
@@ -485,7 +436,18 @@ public class Messages extends NLS {
     public static String type;
 
     public static String typeHint;
-	public static String areYouSureMessage;
+
+    public static String processData;
+
+    public static String noProcessDataAvailable;
+
+    public static String businessData;
+
+    public static String generateInitialValueForBusinessData;
+
+    public static String generateInitialValueForBusinessDataHint;
+
+    public static String noBusinessDataAvailable;
 
     static {
         // initialize resource bundle

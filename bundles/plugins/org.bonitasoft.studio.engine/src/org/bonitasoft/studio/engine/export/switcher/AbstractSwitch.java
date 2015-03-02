@@ -35,6 +35,7 @@ import org.bonitasoft.studio.model.connectorconfiguration.ConnectorParameter;
 import org.bonitasoft.studio.model.expression.Operation;
 import org.bonitasoft.studio.model.kpi.AbstractKPIBinding;
 import org.bonitasoft.studio.model.kpi.DatabaseKPIBinding;
+import org.bonitasoft.studio.model.parameter.Parameter;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Actor;
 import org.bonitasoft.studio.model.process.ConnectableElement;
@@ -114,6 +115,13 @@ public abstract class AbstractSwitch extends ProcessSwitch<Element> {
         }
     }
 
+    protected void addParameters(final ProcessDefinitionBuilder builder, final AbstractProcess process) {
+        for (final Parameter p : process.getParameters()) {
+            final String description = p.getDescription();
+            builder.addParameter(p.getName(), p.getTypeClassname()).addDescription(description == null ? "" : description);
+        }
+    }
+
     protected void addConnector(final FlowElementBuilder builder, final ConnectableElement element) {
         for (Connector connector : element.getConnectors()) {
             if (!eObjectNotExported.contains(connector)) {
@@ -129,7 +137,6 @@ public abstract class AbstractSwitch extends ProcessSwitch<Element> {
             }
         }
     }
-
 
     private boolean isGroovyConnector(final Connector connector) {
         return "scripting-groovy-script".equals(connector.getDefinitionId());
@@ -189,7 +196,8 @@ public abstract class AbstractSwitch extends ProcessSwitch<Element> {
         }
     }
 
-    protected void addData(final FlowElementBuilder dataContainerBuilder, final DataAware dataAwareContainer) {
+    protected void addData(final FlowElementBuilder dataContainerBuilder,
+            final DataAware dataAwareContainer) {
         for (final Data data : dataAwareContainer.getData()) {
             Expression expr = EngineExpressionUtil.createExpression(data.getDefaultValue());
             if (expr == null && data.isMultiple()) {

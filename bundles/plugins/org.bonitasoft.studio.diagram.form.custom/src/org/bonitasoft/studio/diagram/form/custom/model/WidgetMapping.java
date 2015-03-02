@@ -5,25 +5,28 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.diagram.form.custom.model;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import org.bonitasoft.engine.bdm.model.field.Field;
+import org.bonitasoft.engine.bdm.model.field.FieldType;
+import org.bonitasoft.engine.bdm.model.field.SimpleField;
 import org.bonitasoft.studio.model.form.FormFactory;
 import org.bonitasoft.studio.model.form.FormPackage;
 import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.process.BooleanType;
+import org.bonitasoft.studio.model.process.BusinessObjectData;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.DataType;
 import org.bonitasoft.studio.model.process.Document;
@@ -35,13 +38,11 @@ import org.eclipse.emf.ecore.EObject;
 
 /**
  * @author Romain Bioteau
- *
  */
 public class WidgetMapping {
 
-
-    protected static List<EClass> singleValuatedTextWidgetType ;
-    static{
+    protected static List<EClass> singleValuatedTextWidgetType;
+    static {
         singleValuatedTextWidgetType = new ArrayList<EClass>();
         singleValuatedTextWidgetType.add(FormPackage.Literals.TEXT_FORM_FIELD);
         singleValuatedTextWidgetType.add(FormPackage.Literals.PASSWORD_FORM_FIELD);
@@ -65,18 +66,22 @@ public class WidgetMapping {
 
     private WidgetMapping parent;
 
-    public WidgetMapping(final Object modelElement){
+    public WidgetMapping(final Object modelElement) {
         Assert.isNotNull(modelElement);
         this.modelElement = modelElement;
         children = new ArrayList<WidgetMapping>();
+        if (modelElement instanceof Field) {
+            setMandatory(((Field) modelElement).isNullable() != null && !((Field) modelElement).isNullable());
+        }
         setWidgetType(initializeWidgetType());
+
     }
 
     /**
      * @return
      */
     private Widget initializeWidgetType() {
-        if(modelElement instanceof Document){
+        if (modelElement instanceof Document) {
             return FormFactory.eINSTANCE.createFileWidget();
         }
         return initializeWidgetTypeForData();
@@ -84,7 +89,7 @@ public class WidgetMapping {
 
     protected Widget initializeWidgetTypeForData() {
         final List<EClass> widgetType = getCompatibleWidgetTypes();
-        if(!widgetType.isEmpty()){
+        if (!widgetType.isEmpty()) {
             final EClass eClass = widgetType.get(0);
             return (Widget) FormFactory.eINSTANCE.create(eClass);
         }
@@ -112,8 +117,8 @@ public class WidgetMapping {
     }
 
     public void setWidgetType(final Widget widgetType) {
-        Assert.isNotNull(widgetType);
-        Assert.isLegal(getCompatibleWidgetTypes().contains(widgetType.eClass()),widgetType.eClass().getName() + " is not compatible with "+ modelElement);
+        //        Assert.isNotNull(widgetType);
+        //        Assert.isLegal(getCompatibleWidgetTypes().contains(widgetType.eClass()),widgetType.eClass().getName() + " is not compatible with "+ modelElement);
         this.widgetType = widgetType;
     }
 
@@ -133,14 +138,57 @@ public class WidgetMapping {
         this.isReadOnly = isReadOnly;
     }
 
-
     public List<EClass> getCompatibleWidgetTypes() {
-        if (modelElement instanceof Data) {
+        if (modelElement instanceof BusinessObjectData) {
+            return getCompatibleWidgetTypesForBusinessObjectData((BusinessObjectData) modelElement);
+        } else if (modelElement instanceof Data) {
             return getCompatibleWidgetTypesForData((Data) modelElement);
         } else if (modelElement instanceof Document) {
             return getCompatibleWidgetTypesForDocument((Document) modelElement);
+        } else if (modelElement instanceof SimpleField) {
+            return getCompatibleWidgetTypesForField((SimpleField) modelElement);
         }
         return Collections.<EClass> emptyList();
+    }
+
+    protected List<EClass> getCompatibleWidgetTypesForField(final SimpleField field) {
+        Assert.isNotNull(field);
+        final FieldType fieldType = field.getType();
+        Assert.isNotNull(fieldType);
+        final boolean isMultiple = field.isCollection() != null && field.isCollection();
+        if (isMultiple) {
+            final List<EClass> compatibleTypes = new ArrayList<EClass>();
+            switch (fieldType) {
+                case BOOLEAN:
+                    compatibleTypes.add(FormPackage.Literals.CHECK_BOX_MULTIPLE_FORM_FIELD);
+                    compatibleTypes.add(FormPackage.Literals.CHECK_BOX_SINGLE_FORM_FIELD);
+                    break;
+                default:
+                    compatibleTypes.add(FormPackage.Literals.LIST_FORM_FIELD);
+                    compatibleTypes.add(FormPackage.Literals.TEXT_FORM_FIELD);
+                    break;
+            }
+            return compatibleTypes;
+        } else {
+            switch (fieldType) {
+                case BOOLEAN:
+                    return Collections.<EClass> singletonList(FormPackage.Literals.CHECK_BOX_SINGLE_FORM_FIELD);
+                case DATE:
+                    return Collections.<EClass> singletonList(FormPackage.Literals.DATE_FORM_FIELD);
+                case STRING:
+                    return singleValuatedTextWidgetType;
+                case TEXT:
+                    return Arrays.asList(FormPackage.Literals.TEXT_AREA_FORM_FIELD, FormPackage.Literals.RICH_TEXT_AREA_FORM_FIELD,
+                            FormPackage.Literals.MESSAGE_INFO);
+                default:
+                    return Collections.<EClass> singletonList(FormPackage.Literals.TEXT_FORM_FIELD);
+            }
+        }
+    }
+
+    protected List<EClass> getCompatibleWidgetTypesForBusinessObjectData(
+            final BusinessObjectData modelElement) {
+        return Collections.emptyList();
     }
 
     protected List<EClass> getCompatibleWidgetTypesForDocument(final Document currentDocument) {
@@ -172,16 +220,16 @@ public class WidgetMapping {
     }
 
     protected List<EClass> getWidgetTypeForSingleData(final DataType dataType) {
-        return new ProcessSwitch<List<EClass>>(){
+        return new ProcessSwitch<List<EClass>>() {
 
             @Override
             public List<EClass> caseDateType(final org.bonitasoft.studio.model.process.DateType object) {
-                return Collections.<EClass>singletonList(FormPackage.Literals.DATE_FORM_FIELD);
+                return Collections.<EClass> singletonList(FormPackage.Literals.DATE_FORM_FIELD);
             }
 
             @Override
             public List<EClass> caseBooleanType(final org.bonitasoft.studio.model.process.BooleanType object) {
-                return Collections.<EClass>singletonList(FormPackage.Literals.CHECK_BOX_SINGLE_FORM_FIELD);
+                return Collections.<EClass> singletonList(FormPackage.Literals.CHECK_BOX_SINGLE_FORM_FIELD);
             }
 
             @Override
@@ -199,7 +247,7 @@ public class WidgetMapping {
 
             @Override
             public List<EClass> defaultCase(final org.eclipse.emf.ecore.EObject object) {
-                return Collections.<EClass>singletonList(FormPackage.Literals.TEXT_FORM_FIELD);
+                return Collections.<EClass> singletonList(FormPackage.Literals.TEXT_FORM_FIELD);
             }
 
         }.doSwitch(dataType);
@@ -210,7 +258,7 @@ public class WidgetMapping {
     }
 
     public void addChild(final WidgetMapping child) {
-        if(!children.contains(child)){
+        if (!children.contains(child)) {
             child.setParent(this);
             children.add(child);
         }

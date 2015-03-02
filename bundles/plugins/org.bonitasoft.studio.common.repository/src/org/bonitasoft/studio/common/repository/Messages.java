@@ -23,13 +23,10 @@ public final class Messages extends NLS {
 
     private static final String BUNDLE_NAME = "messages";//$NON-NLS-1$
 
-    public static String beginToAddJars;
-    public static String addingJar;
     public static String exportArtifactsWizard_title;
     public static String browse;
     public static String exportArtifactsWizard_desc;
     public static String exportArtifactsWizard_desc_toFile;
-    public static String openingStudio;
     public static String exportLabel;
     public static String exportRepositoryTitle;
     public static String exportRepositoryFileTitle;
@@ -66,10 +63,6 @@ public final class Messages extends NLS {
 
 	public static String writePermission;
 	public static String exportFailed;
-
-    public static String importResultTitle;
-
-    public static String importSucessfulMessage;
 
     public static String issueFoundIn;
     public static String issuesFoundIn;

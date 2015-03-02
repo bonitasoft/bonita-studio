@@ -16,10 +16,14 @@ package org.bonitasoft.studio.engine.export.switcher;
 
 import java.util.Collection;
 
+import org.bonitasoft.engine.bpm.process.impl.BusinessDataDefinitionBuilder;
 import org.bonitasoft.engine.bpm.process.impl.DataDefinitionBuilder;
 import org.bonitasoft.engine.bpm.process.impl.FlowElementBuilder;
+import org.bonitasoft.engine.bpm.process.impl.ProcessDefinitionBuilder;
 import org.bonitasoft.engine.expression.Expression;
 import org.bonitasoft.studio.model.process.BooleanType;
+import org.bonitasoft.studio.model.process.BusinessObjectData;
+import org.bonitasoft.studio.model.process.BusinessObjectType;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.DateType;
 import org.bonitasoft.studio.model.process.DoubleType;
@@ -42,7 +46,7 @@ public class DataSwitch extends ProcessSwitch<DataDefinitionBuilder> {
     private final FlowElementBuilder builder;
     private final Expression expr;
 
-    public DataSwitch(Data data, Expression defaultValue, FlowElementBuilder flowElementBuilder) {
+    public DataSwitch(final Data data, final Expression defaultValue, final FlowElementBuilder flowElementBuilder) {
         builder = flowElementBuilder;
         this.data = data;
         expr = defaultValue;
@@ -60,6 +64,10 @@ public class DataSwitch extends ProcessSwitch<DataDefinitionBuilder> {
         return builder;
     }
 
+    public ProcessDefinitionBuilder getProcessBuilder() {
+        return (ProcessDefinitionBuilder) builder;
+    }
+
     @Override
     public DataDefinitionBuilder caseStringType(final StringType type) {
         if (data.isMultiple()) {
@@ -68,12 +76,12 @@ public class DataSwitch extends ProcessSwitch<DataDefinitionBuilder> {
         return builder.addLongTextData(data.getName(), expr);
     }
 
-    protected DataDefinitionBuilder addCollectionData(String name, Expression expr2) {
+    protected DataDefinitionBuilder addCollectionData(final String name, final Expression expr2) {
         return builder.addData(data.getName(), Collection.class.getName(), expr);
     }
 
     @Override
-    public DataDefinitionBuilder caseLongType(LongType object) {
+    public DataDefinitionBuilder caseLongType(final LongType object) {
         if (data.isMultiple()) {
             return addCollectionData(data.getName(), expr);
         }
@@ -81,7 +89,7 @@ public class DataSwitch extends ProcessSwitch<DataDefinitionBuilder> {
     }
 
     @Override
-    public DataDefinitionBuilder caseDoubleType(DoubleType object) {
+    public DataDefinitionBuilder caseDoubleType(final DoubleType object) {
         if (data.isMultiple()) {
             return addCollectionData(data.getName(), expr);
         }
@@ -144,4 +152,14 @@ public class DataSwitch extends ProcessSwitch<DataDefinitionBuilder> {
         return builder.addDateData(data.getName(), expr);
     }
 
+    @Override
+    public DataDefinitionBuilder caseBusinessObjectType(
+            final BusinessObjectType object) {
+        final BusinessObjectData bod = (BusinessObjectData) getData();
+        final BusinessDataDefinitionBuilder businessDataBuilder = getProcessBuilder().addBusinessData(bod.getName(),
+                bod.getClassName(), getDefaultValueExpression());
+        businessDataBuilder.setMultiple(bod.isMultiple());
+        businessDataBuilder.addDescription(bod.getDocumentation());
+        return null;
+    }
 }

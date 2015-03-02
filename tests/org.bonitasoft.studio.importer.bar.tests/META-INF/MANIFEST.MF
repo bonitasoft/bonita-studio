@@ -25,7 +25,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.bonitasoft.studio.validators;bundle-version="1.0.0",
  org.bonitasoft.studio.connectors,
  org.bonitasoft.studio.connectors.model,
- org.bonitasoft.studio.connectors.model.edit
+ org.bonitasoft.studio.connectors.model.edit,
+ org.bonitasoft.studio.document
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: org.bonitasoft.studio.importer.bar.tests,org.bonitasof

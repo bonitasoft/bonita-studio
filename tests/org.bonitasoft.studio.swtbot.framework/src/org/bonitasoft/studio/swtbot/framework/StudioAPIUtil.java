@@ -13,11 +13,11 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.data.attachment.repository.DocumentRepositoryStore;
+import org.bonitasoft.studio.document.core.repository.DocumentRepositoryStore;
 
 /**
  * Usefull methods through STudio API.
- * 
+ *
  * @author Joachim Segala
  */
 public class StudioAPIUtil {

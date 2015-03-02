@@ -85,7 +85,6 @@ public class Messages extends NLS {
     public static String destinationLabel;
     public static String inculeSourcesLabel;
     public static String addDependencies;
-    public static String existingFileWillBeOverwrite;
     public static String connectorSourceRepositoryName;
     public static String addingDefinitionDependencies;
     public static String exporting;
@@ -128,8 +127,6 @@ public class Messages extends NLS {
 	public static String connectorExpressionViewerLabel; 			
 	public static String connectorExpressionViewerMessage;
 	public static String connectorTypeValidationMessage;
-	public static String connectorTypeIsExpressionValidationMessage;
-	public static String connectorItemToolTip;
 	public static String unserializableOutputWarning;
 	public static String selectConnectorConfigurationWizardPageDescription;
 	public static String connectorAdditionalDependencyTitle;
@@ -166,7 +163,6 @@ public class Messages extends NLS {
 	public static String unresolvedPatternOrScriptExpression;
 	public static String unresolvedExpression;
 	public static String deleteConnectorDefinition;
-	public static String transientDataWarning;
 	public static String destFileNameLabel;
 	public static String notAZipFile;
 	public static String connectorOutput;
@@ -178,10 +174,10 @@ public class Messages extends NLS {
      * @param event
      * @return
      */
-    public static String getValue(String event) {
+    public static String getValue(final String event) {
         try {
             return (String) Messages.class.getField(event).get(null);
-        } catch (Exception ex) {
+        } catch (final Exception ex) {
             return "";
         }
     }
