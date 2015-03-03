@@ -12,31 +12,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.pagedesigner.i18n;
+package org.bonitasoft.studio.pagedesigner.ui.property.section;
 
-import org.eclipse.osgi.util.NLS;
+import org.bonitasoft.studio.pagedesigner.i18n.Messages;
 
 /**
  * @author Romain Bioteau
  */
-public class Messages extends NLS {
 
-    public static String invalidURLTitle;
-    public static String invalidURLMsg;
-    public static String formRepository;
-    public static String fragmentRepository;
-    public static String widgetRepository;
-    public static String pageDesigner;
-    public static String externalURL;
-    public static String targetForm;
-    public static String url;
-    public static String pageDoesntExists;
-    public static String caseStartFormMappingDescription;
-    public static String entryFormMappingDescription;
-    public static String caseOverviewFormMappingDescription;
+public class CaseStartFormMappingPropertySection extends EntryFormMappingPropertySection {
 
-    static {
-        NLS.initializeMessages("messages", Messages.class);
+    @Override
+    public String getSectionDescription() {
+        return Messages.caseStartFormMappingDescription;
     }
 
 }

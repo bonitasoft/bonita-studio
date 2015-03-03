@@ -63,6 +63,12 @@
       <propertyTab
             afterTab="tab.form.mapping.entry"
             category="domain"
+            id="tab.form.mapping.caseStart"
+            label="%CaseStartFormMapping">
+      </propertyTab>
+      <propertyTab
+            afterTab="tab.form.mapping.caseStart"
+            category="domain"
             id="tab.form.mapping.overview"
             label="%OverviewFormMapping">
       </propertyTab>
@@ -81,15 +87,15 @@
             viewID="org.bonitasoft.studio.views.properties.process.formMapping">
       </propertySection>
       <propertySection
-            class="org.bonitasoft.studio.pagedesigner.ui.property.section.EntryFormMappingPropertySection"
+            class="org.bonitasoft.studio.pagedesigner.ui.property.section.CaseStartFormMappingPropertySection"
             enablesFor="1"
             filter="org.bonitasoft.studio.pagedesigner.ui.property.filter.PoolOrLaneFilter"
             id="PoolEntryFormMapping"
-            tab="tab.form.mapping.entry"
+            tab="tab.form.mapping.caseStart"
             viewID="org.bonitasoft.studio.views.properties.process.formMapping">
       </propertySection>
       <propertySection
-            class="org.bonitasoft.studio.pagedesigner.ui.property.section.PoolFormOverviewMappingPropertySection"
+            class="org.bonitasoft.studio.pagedesigner.ui.property.section.CaseOverviewFormMappingPropertySection"
             filter="org.bonitasoft.studio.pagedesigner.ui.property.filter.PoolOrLaneFilter"
             id="PoolOverviewFormMapping"
             tab="tab.form.mapping.overview"

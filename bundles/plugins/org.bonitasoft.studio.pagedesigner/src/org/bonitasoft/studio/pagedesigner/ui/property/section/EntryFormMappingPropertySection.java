@@ -20,6 +20,7 @@ import org.bonitasoft.studio.common.jface.databinding.CustomEMFEditObservables;
 import org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.studio.pagedesigner.i18n.Messages;
 import org.bonitasoft.studio.pagedesigner.ui.property.section.control.FormMappingRadioGroup;
 import org.bonitasoft.studio.pagedesigner.ui.property.section.control.FormReferenceExpressionValidator;
 import org.eclipse.core.databinding.observable.Realm;
@@ -87,7 +88,7 @@ public class EntryFormMappingPropertySection extends AbstractBonitaDescriptionSe
      */
     @Override
     public String getSectionDescription() {
-        return null;
+        return Messages.entryFormMappingDescription;
     }
 
 }

@@ -5,12 +5,10 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -34,10 +32,8 @@ import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
-
 /**
  * @author Romain Bioteau
- *
  */
 public class TogglePropertyHelpContributionItem implements IContributionItem {
 
@@ -122,11 +118,15 @@ public class TogglePropertyHelpContributionItem implements IContributionItem {
             decriptionLabel.dispose();
             form.setHeadClient(null);
             decriptionLabel = null;
-            menuItem.setText(Messages.showHelp);
+            if (menuItem != null) {
+                menuItem.setText(Messages.showHelp);
+            }
         } else {
             decriptionLabel = toolkit.createLabel(form.getHead(), helpContent, SWT.WRAP);
             form.setHeadClient(decriptionLabel);
-            menuItem.setText(Messages.hideHelp);
+            if (menuItem != null) {
+                menuItem.setText(Messages.hideHelp);
+            }
         }
         form.getParent().getParent().layout(true, true);
     }
@@ -138,8 +138,6 @@ public class TogglePropertyHelpContributionItem implements IContributionItem {
         toolItem.setImage(JFaceResources.getImage(Dialog.DLG_IMG_HELP));
         toolItem.addSelectionListener(new SelectionAdapter() {
 
-
-
             @Override
             public void widgetSelected(final SelectionEvent e) {
                 toggleHelp();
@@ -150,9 +148,9 @@ public class TogglePropertyHelpContributionItem implements IContributionItem {
     @Override
     public void fill(final Menu parent, final int index) {
         menuItem = new MenuItem(parent, SWT.PUSH);
-        if(decriptionLabel==null){
+        if (decriptionLabel == null) {
             menuItem.setText(Messages.showHelp);
-        }else{
+        } else {
             menuItem.setText(Messages.hideHelp);
         }
 

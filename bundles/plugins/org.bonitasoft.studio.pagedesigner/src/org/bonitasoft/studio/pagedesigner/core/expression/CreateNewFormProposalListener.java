@@ -43,6 +43,15 @@ public class CreateNewFormProposalListener extends IProposalAdapter implements B
     @Inject
     private IProgressService progressService;
 
+    CreateNewFormProposalListener() {
+
+    }
+
+    public CreateNewFormProposalListener(final IEclipsePreferences preferenceStore, final IProgressService progressService) {
+        this.preferenceStore = preferenceStore;
+        this.progressService = progressService;
+    }
+
     /*
      * (non-Javadoc)
      * @see org.bonitasoft.studio.expression.editor.provider.IProposalListener#handleEvent(org.eclipse.emf.ecore.EObject, java.lang.String)

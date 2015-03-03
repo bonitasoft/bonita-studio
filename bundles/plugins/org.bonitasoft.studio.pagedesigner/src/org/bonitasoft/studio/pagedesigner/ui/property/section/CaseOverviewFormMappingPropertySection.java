@@ -14,30 +14,27 @@
  */
 package org.bonitasoft.studio.pagedesigner.ui.property.section;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import org.bonitasoft.studio.model.process.ProcessPackage;
-import org.junit.Before;
-import org.junit.Test;
+import org.bonitasoft.studio.pagedesigner.i18n.Messages;
+import org.eclipse.emf.ecore.EReference;
 
 /**
  * @author Romain Bioteau
  */
-public class PoolFormOverviewMappingPropertySectionTest {
+public class CaseOverviewFormMappingPropertySection extends EntryFormMappingPropertySection {
 
-    private PoolFormOverviewMappingPropertySection poolFormOverviewMappingPropertySection;
-
-    /**
-     * @throws java.lang.Exception
-     */
-    @Before
-    public void setUp() throws Exception {
-        poolFormOverviewMappingPropertySection = new PoolFormOverviewMappingPropertySection();
+    @Override
+    protected EReference getFormMappingFeature() {
+        return ProcessPackage.Literals.RECAP_FLOW__OVERVIEW_FORM_MAPPING;
     }
 
-    @Test
-    public void should_have_RecapFlow_Overview_FormMapping_feature() throws Exception {
-        assertThat(poolFormOverviewMappingPropertySection.getFormMappingFeature()).isEqualTo(ProcessPackage.Literals.RECAP_FLOW__OVERVIEW_FORM_MAPPING);
+    /*
+     * (non-Javadoc)
+     * @see org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection#getSectionDescription()
+     */
+    @Override
+    public String getSectionDescription() {
+        return Messages.caseOverviewFormMappingDescription;
     }
 
 }
