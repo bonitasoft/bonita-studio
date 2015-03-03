@@ -45,7 +45,7 @@ public class PageFlowAdaptableSelectionProviderTest {
     }
 
     @Test
-    public void should_return_null_for_unstructuredçselection() throws Exception {
+    public void should_return_null_for_unstructured_selection() throws Exception {
         pageFlowAdaptableSelectionProvider.setSelection(mock(ISelection.class));
 
         assertThat(pageFlowAdaptableSelectionProvider.getSelection()).isNull();
