@@ -4,7 +4,7 @@
 <target includeMode="feature" name="mirrored" sequenceNumber="142">
 <locations>
 <location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-<repository location="file:/C:/Users/Romain/git/bonita-studio/platform/target/platform.target.repo/"/>
+<repository location="http://repositories.rd.lan/p2/7.0"/>
 <unit id="org.eclipse.wst.ws_core.feature.feature.group" version="3.6.0.v201405061940-7L7UFy5FGtGd0JoN43kj5s2766"/>
 <unit id="org.jdom" version="1.0.0.v201005080400"/>
 <unit id="org.eclipse.xtend.ui.feature.group" version="2.0.0.v201406030414"/>
