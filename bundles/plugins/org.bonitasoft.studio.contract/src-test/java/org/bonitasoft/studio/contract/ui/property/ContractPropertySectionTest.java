@@ -27,7 +27,9 @@ import org.bonitasoft.studio.model.process.Contract;
 import org.bonitasoft.studio.model.process.ContractInput;
 import org.bonitasoft.studio.model.process.ContractInputType;
 import org.bonitasoft.studio.model.process.ProcessFactory;
+import org.bonitasoft.studio.pagedesigner.ui.contribution.NewFormContributionItem;
 import org.bonitasoft.studio.swt.AbstractSWTTestCase;
+import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -60,6 +62,12 @@ public class ContractPropertySectionTest extends AbstractSWTTestCase {
     private TaskAdaptableSelectionProvider selectionProvider;
 
     @Mock
+    private NewFormContributionItem contributionItem;
+
+    @Mock
+    private IEclipseContext eclipseContext;
+
+    @Mock
     private TabbedPropertySheetPage tabbedPropertySheetPage;
 
     private Composite parent;
@@ -71,6 +79,7 @@ public class ContractPropertySectionTest extends AbstractSWTTestCase {
     public void setUp() throws Exception {
         parent = createDisplayAndRealm();
         when(tabbedPropertySheetPage.getWidgetFactory()).thenReturn(new TabbedPropertySheetWidgetFactory());
+        doReturn(contributionItem).when(section).newContributionItem(NewFormContributionItem.class);
     }
 
     /**

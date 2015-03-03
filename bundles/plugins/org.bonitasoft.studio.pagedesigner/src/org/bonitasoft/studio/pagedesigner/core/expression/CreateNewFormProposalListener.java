@@ -27,6 +27,7 @@ import org.bonitasoft.studio.pagedesigner.core.PageDesignerURLFactory;
 import org.bonitasoft.studio.pagedesigner.core.operation.CreateFormOperation;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.e4.core.di.annotations.Creatable;
 import org.eclipse.e4.core.di.extensions.Preference;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.ui.progress.IProgressService;
@@ -34,6 +35,7 @@ import org.eclipse.ui.progress.IProgressService;
 /**
  * @author Romain Bioteau
  */
+@Creatable
 public class CreateNewFormProposalListener extends IProposalAdapter implements BonitaPreferenceConstants {
 
     @Inject

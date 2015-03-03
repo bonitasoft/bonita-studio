@@ -16,6 +16,8 @@ package org.bonitasoft.studio.pagedesigner.ui.contribution;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 
+import javax.inject.Inject;
+
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.model.expression.Expression;
@@ -33,32 +35,33 @@ import org.bonitasoft.studio.pagedesigner.core.repository.WebPageFileStore;
 import org.bonitasoft.studio.pagedesigner.core.repository.WebPageRepositoryStore;
 import org.bonitasoft.studio.pagedesigner.i18n.Messages;
 import org.bonitasoft.studio.pics.Pics;
-import org.eclipse.core.databinding.observable.value.IObservableValue;
-import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.e4.core.di.annotations.Creatable;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.action.ContributionItem;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionProvider;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
-import org.eclipse.ui.progress.IProgressService;
 
 /**
  * @author Romain Bioteau
  */
+@Creatable
 public class NewFormContributionItem extends ContributionItem {
 
-    private final IObservableValue selectionObservableValue;
     private ToolItem toolItem;
-    private final CreateNewFormProposalListener createNewFormListener;
-    private final RepositoryAccessor repositoryAccessor;
 
-    public NewFormContributionItem(final IEclipsePreferences preferenceStore, final IProgressService progressService,
-            final IObservableValue selectionObservableValue, final RepositoryAccessor repositoryAccessor) {
-        this.selectionObservableValue = selectionObservableValue;
-        createNewFormListener = new CreateNewFormProposalListener(preferenceStore, progressService);
-        this.repositoryAccessor = repositoryAccessor;
-    }
+    @Inject
+    private CreateNewFormProposalListener createNewFormListener;
+
+    @Inject
+    private RepositoryAccessor repositoryAccessor;
+
+    private ISelectionProvider selectionProvider;
 
     @Override
     public void update() {
@@ -69,12 +72,19 @@ public class NewFormContributionItem extends ContributionItem {
 
     @Override
     public boolean isEnabled() {
-        final Task task = (Task) selectionObservableValue.getValue();
+        final Task task = (Task) unwrap(selectionProvider.getSelection());
         if (task != null) {
             final FormMapping formMapping = task.getFormMapping();
             return formMapping.isExternal() ? isNullOrEmpty(formMapping.getUrl()) : !formMapping.getTargetForm().hasName();
         }
         return false;
+    }
+
+    private EObject unwrap(final ISelection selection) {
+        if (selection instanceof IStructuredSelection) {
+            return (EObject) ((IStructuredSelection) selection).getFirstElement();
+        }
+        return null;
     }
 
     @Override
@@ -93,8 +103,9 @@ public class NewFormContributionItem extends ContributionItem {
     }
 
     protected void createNewForm() {
-        final Task task = (Task) selectionObservableValue.getValue();
+        final Task task = (Task) unwrap(selectionProvider.getSelection());
         final String newPageId = createNewFormListener.handleEvent(task.getFormMapping(), null);
+
         final ExpressionItemProvider expressionItemProvider = new ExpressionItemProvider(new ExpressionItemProviderAdapterFactory());
         final WebPageRepositoryStore repositoryStore = repositoryAccessor.getRepositoryStore(WebPageRepositoryStore.class);
         repositoryStore.refresh();
@@ -115,6 +126,10 @@ public class NewFormContributionItem extends ContributionItem {
             formMappingItemProvider.setPropertyValue(task.getFormMapping(), ProcessPackage.Literals.FORM_MAPPING__EXTERNAL.getName(), false);
             toolItem.setEnabled(false);
         }
+    }
+
+    public void setSelectionProvider(final ISelectionProvider selectionProvider) {
+        this.selectionProvider = selectionProvider;
     }
 
 }

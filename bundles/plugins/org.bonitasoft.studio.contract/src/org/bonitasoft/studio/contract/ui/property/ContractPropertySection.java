@@ -18,7 +18,6 @@ import javax.inject.Inject;
 
 import org.bonitasoft.studio.common.jface.databinding.CustomEMFEditObservables;
 import org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection;
-import org.bonitasoft.studio.common.repository.RepositoryAccessor;
 import org.bonitasoft.studio.contract.core.validation.ContractDefinitionValidator;
 import org.bonitasoft.studio.contract.i18n.Messages;
 import org.bonitasoft.studio.contract.ui.property.constraint.ContractConstraintController;
@@ -40,8 +39,8 @@ import org.eclipse.core.databinding.observable.list.ListChangeEvent;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.IValueChangeListener;
 import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
-import org.eclipse.core.runtime.preferences.IEclipsePreferences;
-import org.eclipse.e4.core.di.extensions.Preference;
+import org.eclipse.e4.core.contexts.ContextInjectionFactory;
+import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
@@ -61,7 +60,6 @@ import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.progress.IProgressService;
 
 /**
  * @author Romain Bioteau
@@ -77,17 +75,10 @@ public class ContractPropertySection extends AbstractBonitaDescriptionSection {
     private ContractConstraintController constraintController;
 
     @Inject
-    @Preference
-    private IEclipsePreferences preferenceStore;
-
-    @Inject
     private TaskAdaptableSelectionProvider selectionProvider;
 
     @Inject
-    private RepositoryAccessor repositoryAccessor;
-
-    @Inject
-    private IProgressService progressService;
+    private IEclipseContext eclipseContext;
 
     @Override
     public String getSectionDescription() {
@@ -109,8 +100,13 @@ public class ContractPropertySection extends AbstractBonitaDescriptionSection {
 
     @Override
     protected void updateToolbar(final IToolBarManager toolbarManager) {
-        toolbarManager.add(new NewFormContributionItem(preferenceStore, progressService, ViewersObservables.observeSingleSelection(selectionProvider),
-                repositoryAccessor));
+        final NewFormContributionItem newFormContributionItem = newContributionItem(NewFormContributionItem.class);
+        newFormContributionItem.setSelectionProvider(selectionProvider);
+        toolbarManager.add(newFormContributionItem);
+    }
+
+    protected <T> T newContributionItem(final Class<T> clazz) {
+        return ContextInjectionFactory.make(clazz, eclipseContext);
     }
 
     @Override
