@@ -17,6 +17,7 @@ package org.bonitasoft.studio.validation.constraints.process;
 import static org.bonitasoft.studio.assertions.StatusAssert.assertThat;
 import static org.bonitasoft.studio.model.expression.builders.ExpressionBuilder.anExpression;
 import static org.bonitasoft.studio.model.process.builders.FormMappingBuilder.aFormMapping;
+import static org.bonitasoft.studio.model.process.builders.TaskBuilder.aTask;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doReturn;
 
@@ -63,7 +64,9 @@ public class FormMappingConstraintTest {
 
     @Test
     public void should_return_an_error_if_form_doesnt_exists_in_repository() throws Exception {
-        doReturn(aFormMapping().internal().havingTargetForm(anExpression().withContent("an_id_that_doesnt_esists")).build()).when(ctx).getTarget();
+        doReturn(
+                aTask().withName("t1").havingFormMapping(aFormMapping().internal().havingTargetForm(anExpression().withContent("an_id_that_doesnt_esists")))
+                        .build().getFormMapping()).when(ctx).getTarget();
 
         final IStatus status = formMappingConstraint.performBatchValidation(ctx);
 
