@@ -60,6 +60,7 @@ Require-Bundle: org.eclipse.ui.workbench,
  org.bonitasoft.studio.xml,
  org.bonitasoft.studio.condition.ui,
  org.mockito;bundle-version="1.9.5",
+ org.bonitasoft.studio.validation.test,
  assertj-core;bundle-version="1.5.0"
 Export-Package: org.bonitasoft.studio.tests,
  org.bonitasoft.studio.tests.api,

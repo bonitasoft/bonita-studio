@@ -95,7 +95,7 @@ public class ValidationTestBase {
      *            the status, which may be multi or not
      * @return all of the statuses represented by the incoming <code>status</code>
      */
-    protected IStatus[] getStatuses(final IStatus status) {
+    public IStatus[] getStatuses(final IStatus status) {
         if (status.getCode() == EMFModelValidationStatusCodes.NO_CONSTRAINTS_EVALUATED) {
             return new IStatus[0];
         }
