@@ -74,8 +74,6 @@ public class ContractPropertySection extends AbstractBonitaDescriptionSection {
     @Inject
     private TaskAdaptableSelectionProvider selectionProvider;
 
-    private NewFormContributionItem newFormContributionItem;
-
     @Override
     public String getSectionDescription() {
         return Messages.contractSectionDescription;
@@ -92,7 +90,6 @@ public class ContractPropertySection extends AbstractBonitaDescriptionSection {
         setInputController(new ContractInputController(getContractDefinitionValidator()));
         setConstraintController(new ContractConstraintController(getContractDefinitionValidator()));
         setContext(new EMFDataBindingContext());
-        newFormContributionItem = new NewFormContributionItem(ViewersObservables.observeSingleSelection(selectionProvider));
     }
 
     @Override
