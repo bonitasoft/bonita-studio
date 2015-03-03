@@ -7,8 +7,10 @@ Bundle-ClassPath: .
 Bundle-Activator: org.bonitasoft.studio.pagedesigner.PageDesignerPlugin
 Bundle-Vendor: Bonitasoft S.A.
 Bundle-Localization: plugin
+Eclipse-BundleShape: dir
 Export-Package: org.bonitasoft.studio.pagedesigner,
  org.bonitasoft.studio.pagedesigner.core,
+ org.bonitasoft.studio.pagedesigner.core.expression,
  org.bonitasoft.studio.pagedesigner.core.repository,
  org.bonitasoft.studio.pagedesigner.core.resources
 Require-Bundle: org.eclipse.ui,
