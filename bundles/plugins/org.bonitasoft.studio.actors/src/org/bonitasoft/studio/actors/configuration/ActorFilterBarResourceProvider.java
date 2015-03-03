@@ -5,14 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.actors.configuration;
 
@@ -49,106 +47,104 @@ import org.eclipse.emf.ecore.EObject;
 
 /**
  * @author Romain Bioteau
- *
  */
 public class ActorFilterBarResourceProvider implements BARResourcesProvider {
 
+    @Override
+    public void addResourcesForConfiguration(final BusinessArchiveBuilder builder, final AbstractProcess process, final Configuration configuration,
+            final Set<EObject> excludedObjects) {
+        if (configuration == null) {
+            return;
+        }
 
-	@Override
-	public List<BarResource> addResourcesForConfiguration(final BusinessArchiveBuilder builder, final AbstractProcess process, final Configuration configuration,final Set<EObject> excludedObjects) {
-		final List<BarResource> resources = new ArrayList<BarResource>() ;
-		if(configuration == null){
-			return resources ;
-		}
+        final List<BarResource> resources = new ArrayList<BarResource>();
+        final DependencyRepositoryStore libStore = RepositoryManager.getInstance().getRepositoryStore(DependencyRepositoryStore.class);
+        final ActorFilterImplRepositoryStore implStore = RepositoryManager.getInstance().getRepositoryStore(ActorFilterImplRepositoryStore.class);
+        for (final DefinitionMapping association : configuration.getDefinitionMappings()) {
+            if (association.getType().equals(FragmentTypes.ACTOR_FILTER)) {
+                final String implId = association.getImplementationId();
+                final String implVersion = association.getImplementationVersion();
+                if (implId != null && implVersion != null) {
+                    final ConnectorImplementation implementation = implStore.getImplementation(implId, implVersion);
+                    if (implementation == null) {
+                        throw new RuntimeException(implId + "(" + implVersion + ") not found in repository");
+                    }
+                    final String fileName = URI.decode(implementation.eResource().getURI().lastSegment());
+                    final EMFFileStore file = implStore.getChild(fileName);
+                    Assert.isNotNull(file);
+                    final boolean isUserImplementation = file.canBeShared();
+                    try {
+                        File implementationFile = file.getResource().getLocation().toFile();
+                        if (!implementationFile.exists()) {
+                            implementationFile = new File(URI.decode(file.getEMFResource().getURI().toFileString()));
+                        }
+                        final FileInputStream fis = new FileInputStream(implementationFile);
+                        final byte[] content = new byte[fis.available()];
+                        fis.read(content);
+                        fis.close();
 
-		final DependencyRepositoryStore libStore = RepositoryManager.getInstance().getRepositoryStore(DependencyRepositoryStore.class) ;
-		final ActorFilterImplRepositoryStore implStore = RepositoryManager.getInstance().getRepositoryStore(ActorFilterImplRepositoryStore.class) ;
-		for(final DefinitionMapping association :  configuration.getDefinitionMappings()){
-			if(association.getType().equals(FragmentTypes.ACTOR_FILTER)){
-				final String implId = association.getImplementationId() ;
-				final String implVersion = association.getImplementationVersion() ;
-				if(implId != null&& implVersion != null){
-					final ConnectorImplementation implementation = implStore.getImplementation(implId, implVersion) ;
-					if(implementation == null){
-						throw new RuntimeException(implId + "("+implVersion+") not found in repository") ;
-					}
-					final String fileName = URI.decode(implementation.eResource().getURI().lastSegment());
-					final EMFFileStore file = implStore.getChild(fileName) ;
-					Assert.isNotNull(file) ;
-					final boolean isUserImplementation = file.canBeShared() ;
-					try{
-						File implementationFile = file.getResource().getLocation().toFile() ;
-						if(!implementationFile.exists()){
-							implementationFile =  new File(URI.decode(file.getEMFResource().getURI().toFileString())) ;
-						}
-						final FileInputStream fis = new FileInputStream(implementationFile) ;
-						final byte[] content = new byte[fis.available()] ;
-						fis.read(content) ;
-						fis.close() ;
+                        builder.addUserFilters(new BarResource(NamingUtils.toConnectorImplementationFilename(implId, implVersion, true), content));
 
-						builder.addUserFilters(new BarResource(NamingUtils.toConnectorImplementationFilename(implId, implVersion, true), content)) ;
+                        if (isUserImplementation) { //Generate jar from source file
+                            addImplementationJar(builder, implementation);
+                        }
 
-						if(isUserImplementation){ //Generate jar from source file
-							addImplementationJar(builder,implementation) ;
-						}
-
-						//Add jar dependencies
-						for(final FragmentContainer fc : configuration.getProcessDependencies()){
-							if(fc.getId().equals(FragmentTypes.ACTOR_FILTER)){
-								for(final FragmentContainer connector : fc.getChildren()){
-									if(connector.getId().equals(NamingUtils.toConnectorImplementationFilename(implId, implVersion, false))){
-										for(final Fragment fragment : connector.getFragments()){
-											final String jarName = fragment.getValue() ;
-											if(jarName.endsWith(".jar") && fragment.isExported()){
-												final IRepositoryFileStore jarFile =  libStore.getChild(jarName) ;
-												if(jarFile != null){
+                        //Add jar dependencies
+                        for (final FragmentContainer fc : configuration.getProcessDependencies()) {
+                            if (fc.getId().equals(FragmentTypes.ACTOR_FILTER)) {
+                                for (final FragmentContainer connector : fc.getChildren()) {
+                                    if (connector.getId().equals(NamingUtils.toConnectorImplementationFilename(implId, implVersion, false))) {
+                                        for (final Fragment fragment : connector.getFragments()) {
+                                            final String jarName = fragment.getValue();
+                                            if (jarName.endsWith(".jar") && fragment.isExported()) {
+                                                final IRepositoryFileStore jarFile = libStore.getChild(jarName);
+                                                if (jarFile != null) {
                                                     BarResourcesProviderUtil.addFileContents(resources, jarFile.getResource().getLocation().toFile());
-												}
-											}
-										}
-									}
-								}
-							}
-						}
-					}catch (final Exception e) {
-						BonitaStudioLog.error(e) ;
-					}
-				}
-			}
-		}
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    } catch (final Exception e) {
+                        BonitaStudioLog.error(e);
+                    }
+                }
+            }
+        }
 
-		for(final BarResource barResource : resources ){
-			builder.addClasspathResource(barResource) ;
-		}
+        for (final BarResource barResource : resources) {
+            builder.addClasspathResource(barResource);
+        }
+    }
 
-		return resources;
-	}
+    private void addImplementationJar(final BusinessArchiveBuilder builder, final ConnectorImplementation impl) {
+        final ActorFilterSourceRepositoryStore sourceStore = RepositoryManager.getInstance().getRepositoryStore(ActorFilterSourceRepositoryStore.class);
+        final String connectorJarName = NamingUtils.toConnectorImplementationFilename(impl.getImplementationId(), impl.getImplementationVersion(), false)
+                + ".jar";
+        final String qualifiedClassName = impl.getImplementationClassname();
+        String packageName = "";
+        if (qualifiedClassName.indexOf(".") != -1) {
+            packageName = qualifiedClassName.substring(0, qualifiedClassName.lastIndexOf("."));
+        }
+        final PackageFileStore file = (PackageFileStore) sourceStore.getChild(packageName);
+        if (file != null) {
+            final File tmpFile = new File(ProjectUtil.getBonitaStudioWorkFolder(), connectorJarName);
+            tmpFile.delete();
+            try {
+                file.exportAsJar(tmpFile.getAbsolutePath(), false);
+                final FileInputStream fis = new FileInputStream(tmpFile);
+                final byte[] content = new byte[fis.available()];
+                fis.read(content);
+                fis.close();
+                tmpFile.delete();
+                builder.addClasspathResource(new BarResource(connectorJarName, content));
+            } catch (final Exception e) {
+                BonitaStudioLog.error(e);
+            }
+        }
 
-	private void addImplementationJar(final BusinessArchiveBuilder builder, final ConnectorImplementation impl) {
-		final ActorFilterSourceRepositoryStore sourceStore = RepositoryManager.getInstance().getRepositoryStore(ActorFilterSourceRepositoryStore.class) ;
-		final String connectorJarName = NamingUtils.toConnectorImplementationFilename(impl.getImplementationId(), impl.getImplementationVersion(), false)  +".jar";
-		final String qualifiedClassName = impl.getImplementationClassname() ;
-		String packageName ="" ;
-		if(qualifiedClassName.indexOf(".")!= -1){
-			packageName = qualifiedClassName.substring(0, qualifiedClassName.lastIndexOf(".")) ;
-		}
-		final PackageFileStore file =  (PackageFileStore) sourceStore.getChild(packageName) ;
-		if(file != null){
-			final File tmpFile = new File(ProjectUtil.getBonitaStudioWorkFolder(), connectorJarName) ;
-			tmpFile.delete();
-			try{
-				file.exportAsJar(tmpFile.getAbsolutePath(), false) ;
-				final FileInputStream fis = new FileInputStream(tmpFile) ;
-				final byte[] content = new byte[fis.available()] ;
-				fis.read(content) ;
-				fis.close() ;
-				tmpFile.delete();
-				builder.addClasspathResource(new BarResource(connectorJarName,content)) ;
-			}catch (final Exception e) {
-				BonitaStudioLog.error(e) ;
-			}
-		}
-
-	}
+    }
 
 }

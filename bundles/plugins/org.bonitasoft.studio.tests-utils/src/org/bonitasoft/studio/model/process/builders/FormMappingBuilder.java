@@ -38,6 +38,11 @@ public class FormMappingBuilder {
         return this;
     }
 
+    public FormMappingBuilder withURL(final String url) {
+        instance.setUrl(url);
+        return this;
+    }
+
     public FormMappingBuilder external() {
         instance.setExternal(true);
         return this;

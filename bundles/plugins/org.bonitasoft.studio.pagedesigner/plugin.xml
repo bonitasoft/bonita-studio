@@ -97,4 +97,10 @@
       </propertySection>
    </propertySections>
 </extension>
+<extension
+      point="org.bonitasoft.studio.common.barResourcesProvider">
+   <barResourceProvider
+         providerClass="org.bonitasoft.studio.pagedesigner.core.bar.FormMappingBarResourceProvider">
+   </barResourceProvider>
+</extension>
 </plugin>

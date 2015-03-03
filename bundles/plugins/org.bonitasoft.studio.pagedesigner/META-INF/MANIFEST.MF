@@ -43,3 +43,6 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.core.databinding.property;bundle-version="1.4.200"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
+Import-Package: org.bonitasoft.engine.bpm.bar,
+ org.bonitasoft.engine.bpm.bar.form.model,
+ org.bonitasoft.engine.form
