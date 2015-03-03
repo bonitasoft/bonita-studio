@@ -80,7 +80,7 @@ public class FormMappingBarResourceProvider implements BARResourcesProvider {
     }
 
     private String formValue(final FormMapping formMapping) {
-        return formMapping.isExternal() ? formMapping.getUrl() : formMapping.getTargetForm().getContent();
+        return formMapping.isExternal() ? formMapping.getUrl() : String.format("custompage_%s", formMapping.getTargetForm().getName());
     }
 
     private String taskName(final FormMapping formMapping) {
@@ -93,6 +93,6 @@ public class FormMappingBarResourceProvider implements BARResourcesProvider {
     }
 
     private boolean isValid(final FormMapping formMapping) {
-        return formMapping.isExternal() ? !isNullOrEmpty(formMapping.getUrl()) : formMapping.getTargetForm().hasContent();
+        return formMapping.isExternal() ? !isNullOrEmpty(formMapping.getUrl()) : formMapping.getTargetForm().hasName();
     }
 }

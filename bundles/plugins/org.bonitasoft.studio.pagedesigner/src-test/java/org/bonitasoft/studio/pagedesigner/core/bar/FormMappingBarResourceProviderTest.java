@@ -64,9 +64,12 @@ public class FormMappingBarResourceProviderTest {
 
     @Test
     public void should_add_formMapping_resource_in_bar() throws Exception {
-        final Pool pool = aPool().havingOverviewFormMapping(aFormMapping().external().withURL("http://www.bonitasoft.com"))
-                .havingFormMapping(aFormMapping().internal().havingTargetForm(anExpression().withContent("process-form-id")))
-                .havingElements(aTask().withName("Step1").havingFormMapping(aFormMapping().havingTargetForm(anExpression().withContent("step-form-id"))))
+        final Pool pool = aPool()
+                .havingOverviewFormMapping(aFormMapping().external().withURL("http://www.bonitasoft.com"))
+                .havingFormMapping(aFormMapping().internal().havingTargetForm(anExpression().withName("processForm").withContent("process-form-id")))
+                .havingElements(
+                        aTask().withName("Step1").havingFormMapping(
+                                aFormMapping().havingTargetForm(anExpression().withName("StepForm").withContent("step-form-id"))))
                 .build();
 
         final FormMappingModel formMappingModel = formMappingBarResourceProvider.buildFormMappingModel(pool);
@@ -79,15 +82,18 @@ public class FormMappingBarResourceProviderTest {
         assertThat(formMappingModel.getFormMappings()).hasSize(3);
         assertThat(formMappingModel.getFormMappings()).extracting("external", "form", "type", "taskname")
                 .contains(tuple(true, "http://www.bonitasoft.com", FormMappingType.PROCESS_OVERVIEW, null),
-                        tuple(false, "process-form-id", FormMappingType.PROCESS_START, null),
-                        tuple(false, "step-form-id", FormMappingType.TASK, "Step1"));
+                        tuple(false, "custompage_processForm", FormMappingType.PROCESS_START, null),
+                        tuple(false, "custompage_StepForm", FormMappingType.TASK, "Step1"));
     }
 
     @Test
     public void should_not_add_formMapping_resource_in_bar_if_mapping_is_invalid() throws Exception {
-        final Pool pool = aPool().havingOverviewFormMapping(aFormMapping().external().withURL(""))
+        final Pool pool = aPool()
+                .havingOverviewFormMapping(aFormMapping().external().withURL(""))
                 .havingFormMapping(aFormMapping().internal().havingTargetForm(anExpression().withContent(null)))
-                .havingElements(aTask().withName("Step1").havingFormMapping(aFormMapping().havingTargetForm(anExpression().withContent("step-form-id"))))
+                .havingElements(
+                        aTask().withName("Step1").havingFormMapping(
+                                aFormMapping().havingTargetForm(anExpression().withName("Step1").withContent("step-form-id"))))
                 .build();
 
         final FormMappingModel formMappingModel = formMappingBarResourceProvider.buildFormMappingModel(pool);
@@ -100,6 +106,6 @@ public class FormMappingBarResourceProviderTest {
         assertThat(formMappingModel.getFormMappings()).hasSize(1);
         assertThat(formMappingModel.getFormMappings()).extracting("external", "form", "type", "taskname")
                 .contains(
-                        tuple(false, "step-form-id", FormMappingType.TASK, "Step1"));
+                        tuple(false, "custompage_Step1", FormMappingType.TASK, "Step1"));
     }
 }
