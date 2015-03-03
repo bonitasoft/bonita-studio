@@ -44,7 +44,8 @@ Require-Bundle: org.eclipse.core.runtime;bundle-version="3.9.0",
  org.eclipse.gmf.runtime.diagram.ui.properties;bundle-version="1.7.0",
  org.eclipse.e4.core.di,
  org.bonitasoft.studio.pagedesigner;bundle-version="7.0.0",
- org.bonitasoft.studio.preferences;bundle-version="7.0.0"
+ org.bonitasoft.studio.preferences;bundle-version="7.0.0",
+ org.eclipse.e4.core.di.extensions
 Bundle-Activator: org.bonitasoft.studio.contract.ContractPlugin
 Bundle-ActivationPolicy: lazy
 Export-Package: org.bonitasoft.studio.contract.core,

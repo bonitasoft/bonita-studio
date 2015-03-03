@@ -34,6 +34,7 @@ public class Messages extends NLS {
     public static String caseStartFormMappingDescription;
     public static String entryFormMappingDescription;
     public static String caseOverviewFormMappingDescription;
+    public static String newFormTooltip;
 
     static {
         NLS.initializeMessages("messages", Messages.class);
