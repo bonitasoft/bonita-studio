@@ -217,7 +217,7 @@
                 <artifactId>target-platform-configuration</artifactId>
                 <version>${tychoVersion}</version>
                 <configuration>
-                    <executionEnvironment>JavaSE-1.6</executionEnvironment>
+                    <executionEnvironment>JavaSE-1.7</executionEnvironment>
                     <environments>
                         <environment>
                             <os>linux</os>
